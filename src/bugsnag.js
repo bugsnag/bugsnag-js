@@ -29,7 +29,7 @@ window.Bugsnag = (function () {
     for (var key in payload) {
       if (payload.hasOwnProperty(key)) {
         var value = payload[key];
-        if (key !== undefined && key !== null && value !== undefined && value !== null) {
+        if (key != null && value != null) {
           params.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
         }
       }
@@ -98,7 +98,7 @@ window.Bugsnag = (function () {
   self.notify = function (e, metaData) {
     // Validate the API key
     var apiKey = getSetting("apiKey");
-    if (apiKey === undefined || apiKey === null || !apiKey.match(API_KEY_REGEX)) {
+    if (apiKey == null || !apiKey.match(API_KEY_REGEX)) {
       log("[Bugsnag] Invalid API key '" + apiKey + "'");
       return;
     }
