@@ -14,7 +14,7 @@ How to Install
 --------------
 
 Copy `bugsnag.js` to your website, and include a script tag near the top of 
-your page in youe `head` section. You'll need to include your Bugsnag API
+your page in your `head` section. You'll need to include your Bugsnag API
 key in the `data-apikey` attribute on the script tag:
 
 ```html
@@ -50,7 +50,7 @@ Bugsnag.notify("ErrorType", "Something bad happened here too");
 ```
 
 Both of these functions can also be passed an optional `metaData` parameter,
-which should take the same format as [metaData](#metaData) described below.
+which should take the same format as [metaData](#metadata) described below.
 
 
 Additional Configuration
