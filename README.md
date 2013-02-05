@@ -13,19 +13,85 @@ capturing errors from your applications.
 How to Install
 --------------
 
-TODO
+Copy `bugsnag.js` to your website, and include a script tag near the top of 
+your page in youe `head` section. You'll need to include your Bugsnag API
+key in the `data-apikey` attribute on the script tag:
+
+```html
+<script src="path/to/bugsnag.js" data-apikey="YOUR-API-KEY-HERE"></script>
+```
+
+If you would like to merge `bugsnag.js` into a combined JavaScript file,
+you may not want to use the `data-apikey` approach.
+In these situations, you can set your API key using JavaScript:
+
+```
+<script src="path/to/your-combined-code.js"></script>
+<script>
+  Bugsnag.apiKey = "YOUR-API-KEY-HERE";
+</script>
 
 
 Sending Custom Errors or Non-Fatal Exceptions
 ---------------------------------------------
 
-TODO
+You can easily tell Bugsnag about non-fatal or caught exceptions by 
+calling `Bugsnag::notifyException`:
+
+```javascript
+Bugsnag.notifyException(new Error("Something bad happened"));
+```
+
+You can also send custom errors to Bugsnag with `Bugsnag.notify`:
+
+```javascript
+Bugsnag.notify("ErrorType", "Something bad happened here too");
+```
+
+Both of these functions can also be passed an optional `metaData` parameter,
+which should take the same format as [metaData](#metaData) described below.
 
 
 Additional Configuration
 ------------------------
 
-TODO
+###apiKey
+
+Set your Bugsnag API key. You can find your API key on your dashboard.
+
+```javascript
+Bugsnag.apiKey = "YOUR-API-KEY-HERE";
+```
+
+###metaData
+
+Set additional meta-data to send to Bugsnag with every error. You can use this
+to add custom tabs of data to each error on your Bugsnag dashboard.
+
+This function should return an object of objects, the outer object should 
+represent the "tabs" to display on your Bugsnag dashboard, and the inner
+objects should be the values to display on each tab, for example:
+
+```javascript
+Bugsnag.metaData = {
+  user: {
+    name: "James",
+    email: "james@example.com"
+  }
+};
+```
+
+###releaseStage
+
+If you would like to distinguish between errors that happen in different
+stages of the application release process (development, production, etc)
+you can set the `releaseStage` that is reported to Bugsnag.
+
+```javascript
+Bugsnag.releaseStage = "development";
+```
+    
+By default this is set to be "production".
 
 
 Reporting Bugs or Feature Requests
