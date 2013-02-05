@@ -83,19 +83,8 @@ window.Bugsnag = (function () {
     return self[name] || data[name.toLowerCase()];
   }
 
-  // Set up auto-notification
-  var oldOnError = window.onerror;
-  window.onerror = function (message, url, lineNo) {
-    // TODO: Send to bugsnag
-
-    // Fire any previous onerror function
-    if (oldOnError) {
-      oldOnError(message, url, lineNo);
-    }
-  };
-
-  // Notify Bugsnag of an exception
-  self.notify = function (e, metaData) {
+  // Send error details to Bugsnag
+  function sendToBugsnag(details, metaData) {
     // Validate the API key
     var apiKey = getSetting("apiKey");
     if (apiKey == null || !apiKey.match(API_KEY_REGEX)) {
@@ -121,15 +110,63 @@ window.Bugsnag = (function () {
       metaData: mergedMetaData,
       releaseStage: getSetting("releaseStage"),
 
-      // Extract data from exceptions
-      name: e.name,
-      message: e.message,
-      stacktrace: e.stack || e.backtrace,
-      type: e.type,
-      source: e.source,
-      file: e.fileName || e.sourceURL,
-      lineNumber: e.lineNumber || e.line
+      // Error details
+      name: details.name,
+      message: details.message,
+      stacktrace: details.stacktrace,
+      file: details.file,
+      lineNumber: details.lineNumber
     });
+  }
+
+  // Generate a stacktrace
+  function generateStacktrace() {
+    var stacktrace;
+
+    try {
+      throw new Error("stackgen");
+    } catch (exception) {
+      return exception.stack || exception.backtrace
+    }
+    
+    return stacktrace;
+  }
+
+  // Set up auto-notification
+  var oldOnError = window.onerror;
+  window.onerror = function (message, url, lineNo) {
+    sendToBugsnag({
+      name: "Fatal Error",
+      message: message,
+      file: url,
+      lineNumber: lineNo
+    });
+
+    // Fire any previous onerror function
+    if (oldOnError) {
+      oldOnError(message, url, lineNo);
+    }
+  };
+
+  // Notify Bugsnag of a named error
+  self.notify = function (name, message, metaData) {
+    sendToBugsnag({
+      name: name,
+      message: message,
+      stacktrace: generateStacktrace(),
+      discardTopFrame: true
+    }, metaData);
+  };
+
+  // Notify Bugsnag of an exception
+  self.notifyException = function (exception, metaData) {
+    sendToBugsnag({
+      name: exception.name,
+      message: exception.message,
+      stacktrace: exception.stack || exception.backtrace,
+      file: exception.fileName || exception.sourceURL,
+      lineNumber: exception.lineNumber || exception.line
+    }, metaData);
   };
 
   return self;
