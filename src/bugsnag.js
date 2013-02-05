@@ -18,7 +18,7 @@ window.Bugsnag = (function () {
   function log(msg) {
     var console = window.console;
     if (console !== undefined && console.log !== undefined) {
-      console.log(msg);
+      console.log("[Bugsnag] " + msg);
     }
   }
 
@@ -99,7 +99,7 @@ window.Bugsnag = (function () {
     // Validate the API key
     var apiKey = getSetting("apiKey");
     if (apiKey == null || !apiKey.match(API_KEY_REGEX)) {
-      log("[Bugsnag] Invalid API key '" + apiKey + "'");
+      log("Invalid API key '" + apiKey + "'");
       return;
     }
 
