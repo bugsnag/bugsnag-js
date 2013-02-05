@@ -3,6 +3,7 @@
 */
 
 window.Bugsnag = (function () {
+  "use strict";
   var self = {};
 
   // Constants
@@ -13,6 +14,7 @@ window.Bugsnag = (function () {
   // Keep a reference to the running script
   var scripts = document.getElementsByTagName("script");
   var thisScript = scripts[scripts.length - 1];
+  var data;
 
   // Safe console.log wrapper
   function log(msg) {
@@ -78,8 +80,8 @@ window.Bugsnag = (function () {
   }
 
   // Get a setting from self or data
-  var data = getData(thisScript);
   function getSetting(name) {
+    data = data || getData(thisScript);
     return self[name] || data[name.toLowerCase()];
   }
 
@@ -132,7 +134,13 @@ window.Bugsnag = (function () {
     return stacktrace;
   }
 
-  // Set up auto-notification
+
+
+  //
+  // Automatic error handlers
+  //
+
+  // window.onerror (mostly js compile/parse errors)
   var oldOnError = window.onerror;
   window.onerror = function (message, url, lineNo) {
     sendToBugsnag({
@@ -147,6 +155,12 @@ window.Bugsnag = (function () {
       oldOnError(message, url, lineNo);
     }
   };
+
+
+
+  //
+  // Manual error notification
+  //
 
   // Notify Bugsnag of a named error
   self.notify = function (name, message, metaData) {
