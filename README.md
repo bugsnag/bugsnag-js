@@ -37,7 +37,7 @@ Sending Custom Errors or Non-Fatal Exceptions
 ---------------------------------------------
 
 You can easily tell Bugsnag about non-fatal or caught exceptions by 
-calling `Bugsnag::notifyException`:
+calling `Bugsnag.notifyException`:
 
 ```javascript
 Bugsnag.notifyException(new Error("Something bad happened"));
