@@ -1,4 +1,5 @@
 var prompt = require("prompt");
+var exec = require('child_process').exec;
 
 module.exports = function (grunt) {
   // Project configuration
@@ -81,15 +82,35 @@ module.exports = function (grunt) {
     prompt.get(schema, function (err, result) {
       if(err) done(false);
 
+      process.env.RELEASE_VERSION = result.version;
       grunt.task.run("replace:version:" + result.version);
       done();
+    });
+  });
+
+  // Task to tag a version in git
+  grunt.registerTask("git-tag", "Tags a release in git", function (version) {
+    var done = this.async();
+    var releaseVersion = process.env.RELEASE_VERSION || version;
+
+    if(!releaseVersion) {
+      done(false);
+    }
+
+    var child = exec("git tag v" + releaseVersion, function (error, stdout, stderr) {
+      if(error !== null) {
+        console.log("Error running git tag: " + error);
+        done(false);
+      } else {
+        done();
+      }
     });
   });
 
 
   // Release task
   // lint, update version, minify, tag in git, copy to s3
-  grunt.registerTask("release", "lint update-version min");
+  grunt.registerTask("release", "lint update-version min git-tag");
 
 
   // Load tasks from plugins
