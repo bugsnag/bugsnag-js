@@ -128,7 +128,7 @@ window.Bugsnag = (function () {
     try {
       throw new Error("stackgen");
     } catch (exception) {
-      return exception.stack || exception.backtrace
+      return exception.stack || exception.backtrace;
     }
     
     return stacktrace;

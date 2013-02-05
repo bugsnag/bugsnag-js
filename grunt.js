@@ -3,7 +3,7 @@ module.exports = function (grunt) {
   grunt.initConfig({
     // Files to lint
     lint: {
-      all: ["lib/**/*.js", "test/**/*.js"]
+      all: ["src/**/*.js", "test/**/*.js"]
     },
 
     // JSHint rules (see http://www.jshint.com/docs/)
