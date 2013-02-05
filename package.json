@@ -3,6 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "devDependencies": {
-    "grunt": "latest"
+    "grunt": "latest",
+    "prompt": "latest",
+    "grunt-text-replace": "latest"
   }
 }
