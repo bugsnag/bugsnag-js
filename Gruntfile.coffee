@@ -1,6 +1,3 @@
-prompt = require "prompt"
-exec = require("child_process").exec
-
 module.exports = (grunt) ->
 
   #
@@ -82,6 +79,7 @@ module.exports = (grunt) ->
 
   # Task to tag a version in git
   grunt.registerTask "git-tag", "Tags a release in git", ->
+    exec = require("child_process").exec
     done = this.async()
     releaseVersion = grunt.template.process("<%= pkg.version %>")
 

@@ -6,10 +6,8 @@
     "grunt": "~0.4.0rc7",
     "grunt-contrib-jshint": "~0.1.1rc6",
     "grunt-contrib-uglify": "~0.1.1rc6",
-    "prompt": "latest",
+    "grunt-contrib-concat": "~0.1.2rc6",
     "grunt-s3": "git://github.com/pifantastic/grunt-s3",
-    "grunt-contrib-copy": "~0.4.0rc7",
-    "grunt-bumpx": "~0.1.0",
-    "grunt-contrib-concat": "~0.1.2rc6"
+    "grunt-bumpx": "~0.1.0"
   }
 }
