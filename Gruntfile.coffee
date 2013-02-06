@@ -98,5 +98,8 @@ module.exports = (grunt) ->
   # Release meta-task
   grunt.registerTask "release", ["jshint", "concat", "uglify", "git-tag", "s3"]
 
+  # Run a webserver for testing
+  grunt.registerTask "server", ["connect:server:keepalive"]
+
   # Default meta-task
   grunt.registerTask "default", ["jshint", "concat", "uglify"]
