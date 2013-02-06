@@ -13,24 +13,14 @@ capturing errors from your applications.
 How to Install
 --------------
 
-Copy `bugsnag.js` to your website, and include a script tag near the top of 
-your page in your `head` section. You'll need to include your Bugsnag API
-key in the `data-apikey` attribute on the script tag:
+Include bugsnag.js from our CDN in the `<head>` tag of your website:
 
 ```html
-<script src="path/to/bugsnag.js" data-apikey="YOUR-API-KEY-HERE"></script>
+<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-1.0.0.min.js" data-apikey="YOUR-API-KEY-HERE"></script>
 ```
 
-If you would like to merge `bugsnag.js` into a combined JavaScript file,
-you may not want to use the `data-apikey` approach.
-In these situations, you can set your API key using JavaScript:
-
-```html
-<script src="path/to/your-combined-code.js"></script>
-<script>
-  Bugsnag.apiKey = "YOUR-API-KEY-HERE";
-</script>
-```
+Make sure to set your Bugsnag API key in the `data-apikey` attribute on the
+script tag.
 
 
 Sending Custom Errors or Non-Fatal Exceptions
