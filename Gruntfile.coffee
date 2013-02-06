@@ -54,10 +54,10 @@ module.exports = (grunt) ->
 
       upload: [
         src: "src/bugsnag.js",
-        dest: "bugsnag-<%= process.env.RELEASE_VERSION %>.js"
+        dest: "bugsnag-<%= pkg.version %>.js"
       ,
         src: "dist/bugsnag.min.js",
-        dest: "bugsnag-<%= process.env.RELEASE_VERSION %>.min.js"
+        dest: "bugsnag-<%= pkg.version %>.min.js"
       ]
 
     # Version bumping
