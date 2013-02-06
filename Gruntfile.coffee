@@ -31,7 +31,7 @@ module.exports = (grunt) ->
 
       dist:
         files:
-          src: ["src/**/*.js", "test/**/*.js"]
+          src: ["src/**/*.js"]
 
     # File concatenation, copying and templating
     concat:
@@ -89,7 +89,7 @@ module.exports = (grunt) ->
       done(!error?)
 
   # Release meta-task
-  grunt.registerTask "release", ["jshint", "uglify", "git-tag", "s3"]
+  grunt.registerTask "release", ["jshint", "concat", "uglify", "git-tag", "s3"]
 
   # Default meta-task
-  grunt.registerTask "default", ["jshint", "uglify"]
+  grunt.registerTask "default", ["jshint", "concat", "uglify"]
