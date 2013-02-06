@@ -51,6 +51,7 @@ module.exports = (grunt) ->
     s3:
       bucket: "bugsnagcdn"
       access: "public-read"
+      gzip: true
 
       upload: [
         src: "src/bugsnag.js",
