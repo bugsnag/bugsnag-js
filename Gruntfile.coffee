@@ -74,18 +74,13 @@ module.exports = (grunt) ->
   #
 
   # Task to tag a version in git
-  grunt.registerTask "git-tag", "Tags a release in git", (version) ->
+  grunt.registerTask "git-tag", "Tags a release in git", ->
     done = this.async()
-    releaseVersion = process.env.RELEASE_VERSION || version
+    releaseVersion = grunt.template.process("<%= pkg.version %>")
 
-    done(false) unless releaseVersion
-
-    child = exec "git tag v#{releaseVersion}" (error, stdout, stderr) ->
-      if error?
-        console.log("Error running git tag: " + error);
-        done(false)
-      else
-        done()
+    child = exec "git tag v#{releaseVersion}", (error, stdout, stderr) ->
+      console.log("Error running git tag: " + error) if error?
+      done(!error?)
 
   # Load tasks from plugins
   grunt.loadNpmTasks "grunt-contrib-jshint"
@@ -95,8 +90,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks "grunt-s3"
 
   # Release meta-task
-  # lint, update version, minify, tag in git, copy to s3
-  # grunt.registerTask "release", ["jshint", "update-version", "uglify", "git-tag"]
+  grunt.registerTask "release", ["jshint", "uglify", "git-tag", "s3"]
 
   # Default meta-task
   grunt.registerTask "default", ["jshint", "uglify"]
