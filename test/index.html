@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+<head>
+  <title>Bugsnag.js Test Suite</title>
+  <link rel="stylesheet" href="../node_modules/mocha/mocha.css" />
+</head>
+
+<body>
+  <!-- Mocha -->
+  <div id="mocha"></div>
+  <script src="../node_modules/mocha/mocha.js"></script>
+  <script src="../node_modules/chai/chai.js"></script>
+  <script src="../node_modules/sinon-chai/lib/sinon-chai.js"></script>
+  <script src="../node_modules/sinon/lib/sinon.js"></script>
+  <script src="../node_modules/sinon/lib/sinon/spy.js"></script>
+  <script src="../node_modules/sinon/lib/sinon/stub.js"></script>
+  <script>var qs = exports = {};</script>
+  <script src="../node_modules/qs/index.js"></script>
+  <script>
+    mocha.setup({ignoreLeaks: true, ui: "bdd"});
+    var expect = chai.expect;
+  </script>
+
+  <!-- Tests -->
+  <script src="test.bugsnag.js"></script>
+  <script>
+    mocha.run();
+  </script>
+</body>
+</html>
