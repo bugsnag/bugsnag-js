@@ -54,7 +54,7 @@ module.exports = (grunt) ->
       gzip: true
 
       upload: [
-        src: "src/bugsnag.js",
+        src: "dist/bugsnag.js",
         dest: "bugsnag-<%= pkg.version %>.js"
       ,
         src: "dist/bugsnag.min.js",
