@@ -65,6 +65,7 @@ module.exports = (grunt) ->
 
     # Version bumping
     bump:
+      options: part: "patch"
       files: ["package.json", "component.json"]
 
 
@@ -90,6 +91,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks "grunt-contrib-jshint"
   grunt.loadNpmTasks "grunt-contrib-concat"
   grunt.loadNpmTasks "grunt-contrib-uglify"
+  grunt.loadNpmTasks "grunt-bumpx"
   grunt.loadNpmTasks "grunt-s3"
 
   # Release meta-task
