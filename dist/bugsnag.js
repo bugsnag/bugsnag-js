@@ -5,7 +5,7 @@ window.Bugsnag = (function () {
   // Constants
   var API_KEY_REGEX = /^[0-9a-f]{32}$/i;
   var DEFAULT_ENDPOINT = "https://notify.bugsnag.com/js";
-  var NOTIFIER_VERSION = "1.0.0";
+  var NOTIFIER_VERSION = "1.0.1";
 
   // Keep a reference to the running script
   var scripts = document.getElementsByTagName("script");
