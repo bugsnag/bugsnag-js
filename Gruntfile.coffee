@@ -1,3 +1,5 @@
+MochaCloud = require "mocha-cloud"
+
 module.exports = (grunt) ->
 
   #
@@ -66,6 +68,10 @@ module.exports = (grunt) ->
       options: part: "patch"
       files: ["package.json", "component.json"]
 
+    # Web server
+    connect:
+      server: {}
+
 
   #
   # Tasks
@@ -75,6 +81,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks "grunt-contrib-jshint"
   grunt.loadNpmTasks "grunt-contrib-concat"
   grunt.loadNpmTasks "grunt-contrib-uglify"
+  grunt.loadNpmTasks "grunt-contrib-connect"
   grunt.loadNpmTasks "grunt-bumpx"
   grunt.loadNpmTasks "grunt-s3"
 
