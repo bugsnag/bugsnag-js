@@ -20,23 +20,23 @@ window.Bugsnag = (function () {
     }
   }
 
-  // Make a GET request with this url and payload
-  function request(url, payload) {
-    // Build escaped querystring params
-    var params = [];
-    for (var key in payload) {
-      if (payload.hasOwnProperty(key)) {
-        var value = payload[key];
-        if (key != null && value != null) {
-          params.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
-        }
+  // Serialize an object into a querystring
+  function serialize(obj, prefix) {
+    var str = [];
+    for (var p in obj) {
+      if (obj.hasOwnProperty(p)) {
+        var k = prefix ? prefix + "[" + encodeURIComponent(p) + "]" : p, v = obj[p];
+        str.push(typeof v === "object" ? serialize(v, k) : encodeURIComponent(k) + "=" + encodeURIComponent(v));
       }
     }
+    return str.join("&");
+  }
 
-    // Create jsonp script tag
+  // Make a GET request with this url and payload
+  function request(url, payload) {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src = url + "?" + params.join("&");
+    script.src = url + "?" + serialize(payload);
     document.getElementsByTagName("head")[0].appendChild(script);
   }
 
