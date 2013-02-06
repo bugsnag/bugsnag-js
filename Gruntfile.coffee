@@ -73,6 +73,13 @@ module.exports = (grunt) ->
   # Tasks
   #
 
+  # Load tasks from plugins
+  grunt.loadNpmTasks "grunt-contrib-jshint"
+  grunt.loadNpmTasks "grunt-contrib-concat"
+  grunt.loadNpmTasks "grunt-contrib-uglify"
+  grunt.loadNpmTasks "grunt-bumpx"
+  grunt.loadNpmTasks "grunt-s3"
+
   # Task to tag a version in git
   grunt.registerTask "git-tag", "Tags a release in git", ->
     done = this.async()
@@ -81,13 +88,6 @@ module.exports = (grunt) ->
     child = exec "git tag v#{releaseVersion}", (error, stdout, stderr) ->
       console.log("Error running git tag: " + error) if error?
       done(!error?)
-
-  # Load tasks from plugins
-  grunt.loadNpmTasks "grunt-contrib-jshint"
-  grunt.loadNpmTasks "grunt-contrib-concat"
-  grunt.loadNpmTasks "grunt-contrib-uglify"
-  grunt.loadNpmTasks "grunt-bumpx"
-  grunt.loadNpmTasks "grunt-s3"
 
   # Release meta-task
   grunt.registerTask "release", ["jshint", "uglify", "git-tag", "s3"]
