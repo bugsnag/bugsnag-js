@@ -137,7 +137,7 @@ window.Bugsnag = (function () {
   //
 
   // window.onerror (mostly js compile/parse errors)
-  var oldOnError = window.onerror;
+  self._onerror = window.onerror;
   window.onerror = function (message, url, lineNo) {
     sendToBugsnag({
       name: "Fatal Error",
@@ -147,8 +147,8 @@ window.Bugsnag = (function () {
     });
 
     // Fire any previous onerror function
-    if (oldOnError) {
-      oldOnError(message, url, lineNo);
+    if (self._onerror) {
+      self._onerror(message, url, lineNo);
     }
   };
 
