@@ -1,4 +1,4 @@
-window.Bugsnag = (function () {
+window.Bugsnag = (function (window, document) {
   "use strict";
   var self = {};
 
@@ -20,13 +20,18 @@ window.Bugsnag = (function () {
     }
   }
 
+  // Encode strings for use in a querystring
+  function encodeForQueryString(str) {
+    return encodeURIComponent(str).replace(/%20/g, "+");
+  }
+
   // Serialize an object into a querystring
   function serialize(obj, prefix) {
     var str = [];
     for (var p in obj) {
-      if (obj.hasOwnProperty(p)) {
-        var k = prefix ? prefix + "[" + encodeURIComponent(p) + "]" : p, v = obj[p];
-        str.push(typeof v === "object" ? serialize(v, k) : encodeURIComponent(k) + "=" + encodeURIComponent(v));
+      if (obj.hasOwnProperty(p) && p != null && obj[p] != null) {
+        var k = prefix ? prefix + "[" + encodeForQueryString(p) + "]" : p, v = obj[p];
+        str.push(typeof v === "object" ? serialize(v, k) : encodeForQueryString(k) + "=" + encodeForQueryString(v));
       }
     }
     return str.join("&");
@@ -42,6 +47,11 @@ window.Bugsnag = (function () {
 
   // Merge source object into target
   function merge(target, source) {
+    if (source == null) {
+      return target;
+    }
+
+    target = target || {};
     for (var key in source) {
       if (source.hasOwnProperty(key)) {
         try {
@@ -91,8 +101,7 @@ window.Bugsnag = (function () {
     }
 
     // Fetch and merge metaData objects
-    var mergedMetaData = getSetting("metaData") || {};
-    merge(mergedMetaData, metaData);
+    var mergedMetaData = merge(getSetting("metaData"), metaData);
 
     // Make the request
     var endpoint = getSetting("endpoint") || DEFAULT_ENDPOINT;
@@ -172,12 +181,12 @@ window.Bugsnag = (function () {
   self.notifyException = function (exception, metaData) {
     sendToBugsnag({
       name: exception.name,
-      message: exception.message,
-      stacktrace: exception.stack || exception.backtrace,
+      message: exception.message || exception.description,
+      stacktrace: exception.stack || exception.backtrace || exception.stacktrace,
       file: exception.fileName || exception.sourceURL,
       lineNumber: exception.lineNumber || exception.line
     }, metaData);
   };
 
   return self;
-}());
+}(window, document));
