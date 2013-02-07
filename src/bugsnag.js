@@ -40,7 +40,7 @@ window.Bugsnag = (function (window, document) {
   // Make a GET request with this url and payload
   function request(url, payload) {
     var req = new Image();
-    req.src = url + "?" + serialize(payload);
+    req.src = url + "?" + serialize(payload) + "&ct=img";
   }
 
   // Merge source object into target
