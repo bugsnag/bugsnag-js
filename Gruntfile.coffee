@@ -67,7 +67,9 @@ module.exports = (grunt) ->
 
     # Web server
     connect:
-      server: {}
+      server:
+        options:
+          port: 8888
 
   # Load tasks from plugins
   grunt.loadNpmTasks "grunt-contrib-jshint"

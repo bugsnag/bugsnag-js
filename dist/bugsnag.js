@@ -5,7 +5,7 @@ window.Bugsnag = (function (window, document) {
   // Constants
   var API_KEY_REGEX = /^[0-9a-f]{32}$/i;
   var DEFAULT_ENDPOINT = "https://notify.bugsnag.com/js";
-  var NOTIFIER_VERSION = "1.0.1";
+  var NOTIFIER_VERSION = "1.0.2";
 
   // Keep a reference to the running script
   var scripts = document.getElementsByTagName("script");
@@ -30,7 +30,7 @@ window.Bugsnag = (function (window, document) {
     var str = [];
     for (var p in obj) {
       if (obj.hasOwnProperty(p) && p != null && obj[p] != null) {
-        var k = prefix ? prefix + "[" + encodeForQueryString(p) + "]" : p, v = obj[p];
+        var k = prefix ? prefix + "[" + p + "]" : p, v = obj[p];
         str.push(typeof v === "object" ? serialize(v, k) : encodeForQueryString(k) + "=" + encodeForQueryString(v));
       }
     }
@@ -39,10 +39,8 @@ window.Bugsnag = (function (window, document) {
 
   // Make a GET request with this url and payload
   function request(url, payload) {
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src = url + "?" + serialize(payload);
-    document.getElementsByTagName("head")[0].appendChild(script);
+    var req = new Image();
+    req.src = url + "?" + serialize(payload);
   }
 
   // Merge source object into target
@@ -133,7 +131,7 @@ window.Bugsnag = (function (window, document) {
     try {
       throw new Error("stackgen");
     } catch (exception) {
-      return exception.stack || exception.backtrace;
+      return exception.stack || exception.backtrace || exception.stacktrace;
     }
     
     return stacktrace;
