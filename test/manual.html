@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<head>
+  <script src="../dist/bugsnag.js" data-apikey="9e68f5104323042c09d8809674e8d05c"></script>
+</head>
+
+<body>
+  <script>
+  function parentOfCrashyFunction () {
+    crashyFunction();
+  }
+
+  function crashyFunction () {
+    try {
+      throw new Error("Something broke");
+    } catch (exception) {
+      Bugsnag.notifyException(exception);
+    }
+  }
+  
+  parentOfCrashyFunction();
+  </script>
+</body>
+</html>

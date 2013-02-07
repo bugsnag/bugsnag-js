@@ -1,11 +1,8 @@
+require "colors"
 MochaCloud = require "mocha-cloud"
 
 module.exports = (grunt) ->
-
-  #
   # Configuration
-  #
-  
   grunt.initConfig
     # Package information
     pkg: grunt.file.readJSON "package.json"
@@ -72,11 +69,6 @@ module.exports = (grunt) ->
     connect:
       server: {}
 
-
-  #
-  # Tasks
-  #
-
   # Load tasks from plugins
   grunt.loadNpmTasks "grunt-contrib-jshint"
   grunt.loadNpmTasks "grunt-contrib-concat"
@@ -94,6 +86,44 @@ module.exports = (grunt) ->
     child = exec "git tag v#{releaseVersion}", (error, stdout, stderr) ->
       console.log("Error running git tag: " + error) if error?
       done(!error?)
+
+  # Testing
+  grunt.registerTask "test", "Tests using mocha-cloud", ->
+    done = this.async()
+
+    # Set up mocha-cloud
+    cloud = new MochaCloud("bugsnag", "bugsnag", "17ac72ca-9c02-4d40-a5b2-f698e512c58b")
+    cloud.browser "chrome", "", "Mac 10.8"
+    cloud.browser "chrome", "", "Windows 2003"
+    cloud.browser "firefox", "11", "Mac 10.6"
+    cloud.browser "firefox", "11", "Windows 2003"
+    cloud.browser "safari", "5", "Mac 10.6"
+    cloud.browser "safari", "6", "Mac 10.8"
+    cloud.browser "iexplore", "9", "Windows 2008"
+    # cloud.browser "opera", "12", "Windows 2008"
+
+    cloud.url "http://localhost:8000/test/"
+
+    # Hooks
+    success = true
+    cloud.on "init", (browser) ->
+      console.log "[#{browser.browserName} #{browser.version} #{browser.platform}] Loading VM"
+
+    cloud.on "start", (browser) ->
+      console.log "[#{browser.browserName} #{browser.version} #{browser.platform}] Starting tests"
+
+    cloud.on "end", (browser, res) ->
+      if res.failures > 0
+        success = false
+        console.log "[#{browser.browserName} #{browser.version} #{browser.platform}] #{res.failures} test(s) failed:".red
+        for f in res.failed
+          console.log "-   #{f.fullTitle}".red
+          console.log "    #{f.error.message}".red
+      else
+        console.log "[#{browser.browserName} #{browser.version} #{browser.platform}] All tests passed".green
+
+    # Start tests
+    cloud.start -> done(success)
 
   # Release meta-task
   grunt.registerTask "release", ["jshint", "concat", "uglify", "git-tag", "s3"]

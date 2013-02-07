@@ -24,7 +24,7 @@ window.Bugsnag = (function () {
   function serialize(obj, prefix) {
     var str = [];
     for (var p in obj) {
-      if (obj.hasOwnProperty(p)) {
+      if (obj.hasOwnProperty(p) && p != null && obj[p] != null) {
         var k = prefix ? prefix + "[" + encodeURIComponent(p) + "]" : p, v = obj[p];
         str.push(typeof v === "object" ? serialize(v, k) : encodeURIComponent(k) + "=" + encodeURIComponent(v));
       }
