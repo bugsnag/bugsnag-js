@@ -219,7 +219,7 @@ function browserSupportsStacktrace() {
   }
 }
 
-// Micro assertion library
+// Micro assertion library (works in old IE)
 function assert(statement, message) {
   if(statement == false) {
     throw new Error(message);
