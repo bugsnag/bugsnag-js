@@ -71,6 +71,22 @@ module.exports = (grunt) ->
         options:
           port: 8888
 
+    # Tests
+    mochaCloud:
+      username: process.env.SAUCE_USERNAME
+      accessKey: process.env.SAUCE_ACCESS_KEY
+      url: "http://localhost:8888/test/"
+      browsers: [
+        ["chrome", "", "Mac 10.8"]
+        ["chrome", "", "Windows 2003"]
+        ["firefox", "11", "Mac 10.6"]
+        ["firefox", "11", "Windows 2003"]
+        ["safari", "5", "Mac 10.6"]
+        ["safari", "6", "Mac 10.8"]
+        ["iexplore", "8", "Windows 2003"]
+        ["iexplore", "9", "Windows 2008"]
+      ]
+
   # Load tasks from plugins
   grunt.loadNpmTasks "grunt-contrib-jshint"
   grunt.loadNpmTasks "grunt-contrib-concat"
@@ -90,48 +106,41 @@ module.exports = (grunt) ->
       done(!error?)
 
   # Testing
-  grunt.registerTask "test", "Tests using mocha-cloud", ->
+  grunt.registerTask "mocha-cloud", "Run mocha browser tests using mocha-cloud and Sauce Labs", ->
     done = this.async()
+    options = grunt.config.get("mochaCloud")
 
     # Set up mocha-cloud
-    cloud = new MochaCloud("bugsnag", "bugsnag", "17ac72ca-9c02-4d40-a5b2-f698e512c58b")
-    cloud.browser "chrome", "", "Mac 10.8"
-    cloud.browser "chrome", "", "Windows 2003"
-    cloud.browser "firefox", "11", "Mac 10.6"
-    cloud.browser "firefox", "11", "Windows 2003"
-    cloud.browser "safari", "5", "Mac 10.6"
-    cloud.browser "safari", "6", "Mac 10.8"
-    cloud.browser "iexplore", "9", "Windows 2008"
-    # cloud.browser "opera", "12", "Windows 2008"
+    cloud = new MochaCloud("", options.username, options.accessKey)
+    cloud.url options.url
+    cloud.browser b... for b in options.browsers
 
-    cloud.url "http://localhost:8000/test/"
-
-    # Hooks
-    success = true
-    cloud.on "init", (browser) ->
-      console.log "[#{browser.browserName} #{browser.version} #{browser.platform}] Loading VM"
-
+    # Progress hooks
     cloud.on "start", (browser) ->
       console.log "[#{browser.browserName} #{browser.version} #{browser.platform}] Starting tests"
-
+    
     cloud.on "end", (browser, res) ->
       if res.failures > 0
-        success = false
         console.log "[#{browser.browserName} #{browser.version} #{browser.platform}] #{res.failures} test(s) failed:".red
         for f in res.failed
           console.log "-   #{f.fullTitle}".red
           console.log "    #{f.error.message}".red
       else
         console.log "[#{browser.browserName} #{browser.version} #{browser.platform}] All tests passed".green
-
+    
     # Start tests
-    cloud.start -> done(success)
+    cloud.start (err, res) ->
+      console.log(err) if err?
+      done(!err? && res[0].failures == 0)
 
   # Release meta-task
   grunt.registerTask "release", ["jshint", "concat", "uglify", "git-tag", "s3"]
 
   # Run a webserver for testing
   grunt.registerTask "server", ["connect:server:keepalive"]
+
+  # Run tests
+  grunt.registerTask "test", ["connect", "mocha-cloud"]
 
   # Default meta-task
   grunt.registerTask "default", ["jshint", "concat", "uglify"]

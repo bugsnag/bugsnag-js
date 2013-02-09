@@ -1,4 +1,4 @@
-window.Bugsnag = (function (window, document) {
+window.Bugsnag = (function (window, document, navigator) {
   "use strict";
   var self = {};
 
@@ -39,8 +39,12 @@ window.Bugsnag = (function (window, document) {
 
   // Make a GET request with this url and payload
   function request(url, payload) {
-    var req = new Image();
-    req.src = url + "?" + serialize(payload) + "&ct=img";
+    if (self.testRequest) {
+      self.testRequest(url, payload);
+    } else {
+      var img = new Image();
+      img.src = url + "?" + serialize(payload) + "&ct=img";
+    }
   }
 
   // Merge source object into target
@@ -115,6 +119,11 @@ window.Bugsnag = (function (window, document) {
       metaData: mergedMetaData,
       releaseStage: getSetting("releaseStage"),
 
+      // Useful data
+      url: window.location.href,
+      userAgent: navigator.userAgent,
+      language: navigator.language || navigator.userLanguage,
+
       // Error details
       name: details.name,
       message: details.message,
@@ -187,4 +196,4 @@ window.Bugsnag = (function (window, document) {
   };
 
   return self;
-}(window, document));
+}(window, document, navigator));

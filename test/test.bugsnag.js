@@ -1,168 +1,192 @@
 describe("Bugsnag", function () {
-  beforeEach(function (done) {
-    buildUp(done);
-  });
+  beforeEach(buildUp);
+  afterEach(tearDown);
 
-  afterEach(function () {
-    tearDown();
-  });
-
-  it("should export a Bugsnag object on window", function () {
-    expect(window).to.have.property("Bugsnag");
-  });
-
-  describe("notification", function () {
+  describe("notifyException", function () {
     it("should not notify if apiKey is not set", function () {
       Bugsnag.apiKey = null;
       Bugsnag.notifyException(new Error("Example error"));
 
-      testRequest(function (request, url, params) {
-        expect(request).to.not.have.been.called;
-      });
+      assert(!Bugsnag.testRequest.called, "Bugsnag.testRequest should not have been called");
     });
-  
+      
     it("should not notify if apiKey is invalid", function () {
       Bugsnag.apiKey = "bad-api-key";
       Bugsnag.notifyException(new Error("Example error"));
-
-      testRequest(function (request, url, params) {
-        expect(request).to.not.have.been.called;
-      });
-    });
       
+      assert(!Bugsnag.testRequest.called, "Bugsnag.testRequest should not have been called");
+    });
+
     it("should contain an apiKey", function () {
       Bugsnag.notifyException(new Error("Example error"));
 
-      testRequest(function (request, url, params) {
-        expect(request).to.have.been.calledOnce;
-        expect(params).to.have.property("apiKey");
-      });
+      assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
+      assert(!!requestData().params.apiKey, "apiKey should be in request params");
     });
-      
-    it("should have the right exception class", function () {
+
+    it("should contain the correct exception class", function () {
       Bugsnag.notifyException(new URIError("Example error"));
 
-      testRequest(function (request, url, params) {
-        expect(request).to.have.been.calledOnce;
-        expect(params.name).to.equal("URIError");
-      });
+      assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
+      assert.equal(requestData().params.name, "URIError");
     });
-  
-    it("should have the right exception message", function () {
-      Bugsnag.notifyException(new Error("Example error"));
 
-      testRequest(function (request, url, params) {
-        expect(request).to.have.been.calledOnce;
-        expect(params.message).to.equal("Example error");
-      });
+    it("should contain the correct exception message", function () {
+      Bugsnag.notifyException(new Error("Example error"));
+      
+      assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
+      assert.equal(requestData().params.message, "Example error");
     });
 
     it("should contain a stacktrace on supported browsers", function () {
-      // Stacktrace is only generated on a throw in Safari
       try {
         throw new Error("Example error");
       } catch (e) {
         Bugsnag.notifyException(e);
       }
-
-      testRequest(function (request, url, params) {
-        expect(request).to.have.been.calledOnce;
-
-        if(browserSupportsStacktrace()) {
-          expect(params.stacktrace).to.exist;
-          expect(params.stacktrace).to.not.be.empty;
-        }
-      });
+      
+      assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
+      if(browserSupportsStacktrace()) {
+        assert(requestData().params.stacktrace != null, "stacktrace should be in request params");
+      }
     });
 
     it("should contain a releaseStage if set", function () {
       Bugsnag.releaseStage = "development";
       Bugsnag.notifyException(new Error("Example error"));
 
-      testRequest(function (request, url, params) {
-        expect(request).to.have.been.calledOnce;
-        expect(params.releaseStage).to.equal("development");
-      });
+      assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
+      assert.equal(requestData().params.releaseStage, "development");
     });
 
     it("should contain global metaData if set", function () {
       var metaData = {some: {data: "here"}};
-
+      
       Bugsnag.metaData = metaData;
       Bugsnag.notifyException(new Error("Example error"));
-
-      testRequest(function (request, url, params) {
-        expect(request).to.have.been.calledOnce;
-        expect(params.metaData).to.deep.equal(metaData);
-      });
+      
+      assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
+      assert.deepEqual(requestData().params.metaData, metaData, "metaData should match");
     });
 
     it("should contain local metaData if set", function () {
       var metaData = {some: {data: "here"}};
-
+      
       Bugsnag.notifyException(new Error("Example error"), metaData);
-
-      testRequest(function (request, url, params) {
-        expect(request).to.have.been.calledOnce;
-        expect(params.metaData).to.deep.equal(metaData);
-      });
+      
+      assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
+      assert.deepEqual(requestData().params.metaData, metaData, "metaData should match");
     });
 
     it("should contain merged metaData if both local and global metaData are set", function () {
       var globalMetaData = {some: {data: "here"}};
       var localMetaData = {some: {extra: {data: "here"}}};
-
+      
       Bugsnag.metaData = globalMetaData;
       Bugsnag.notifyException(new Error("Example error"), localMetaData);
-
-      testRequest(function (request, url, params) {
-        expect(request).to.have.been.calledOnce;
-        expect(params.metaData).to.deep.equal({
-          some: {
-            data: "here",
-            extra: {
-              data: "here"
-            }
-          }
-        });
-      });
+      
+      assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
+      assert.deepEqual(requestData().params.metaData, {
+        some: {
+          data: "here",
+          extra: { data: "here" }
+        }
+      }, "metaData should match");
     });
 
     it("should use the https://notify.bugsnag.com/js endpoint by default", function () {
       Bugsnag.notifyException(new Error("Example error"));
-
-      testRequest(function (request, url, params) {
-        expect(request).to.have.been.calledOnce;
-        expect(url).to.equal("https://notify.bugsnag.com/js");
-      });
+      
+      assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
+      assert.equal(requestData().url, "https://notify.bugsnag.com/js");
     });
   });
+  
+  describe("notify", function () {
+    it("should contain the correct error name", function () {
+      Bugsnag.notify("CustomError", "Something broke");
+    
+      assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
+      assert.equal(requestData().params.name, "CustomError");
+    });
 
-  describe("onerror", function () {
-    // TODO: Implement these tests. This is difficult because Mocha uses window.onerror
-    it("should notify bugsnag");
-    it("should call the original onerror");
+    it("should contain the correct error message", function () {
+      Bugsnag.notify("CustomError", "Something broke");
+    
+      assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
+      assert.equal(requestData().params.message, "Something broke");
+    });
+
+    it("should contain an auto-generated stacktrace on supported browsers", function () {
+      Bugsnag.notify("CustomError", "Something broke");
+      
+      assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
+      if(browserSupportsStacktrace()) {
+        assert(requestData().params.stacktrace != null, "stacktrace should be present");
+      }
+    });
   });
 });
 
+describe("window", function () {
+  beforeEach(buildUp);
+  afterEach(tearDown);
+
+  it("should contain a Bugsnag object", function () {
+    assert("Bugsnag" in window, "should have Bugsnag object on window");
+  });
+
+  describe("onerror", function() {
+    it("should notify bugsnag", function () {
+      Bugsnag._onerror = null; // Disable mocha's onerror for this test
+  
+      window.onerror("Something broke", "http://example.com/example.js", 123);
+  
+      var params = requestData().params;
+      assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
+      assert.equal(params.name, "Fatal Error");
+      assert.equal(params.message, "Something broke");
+      assert.equal(params.lineNumber, 123);
+    });
+
+    it("should call the original onerror", function () {
+      Bugsnag._onerror = function () {
+        Bugsnag._onerror.called = true;
+      };
+
+      stub(Bugsnag, "_onerror");
+      
+      window.onerror("Something broke", "http://example.com/example.js", 123);
+
+      assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
+      assert(Bugsnag._onerror.calledOnce, "Bugsnag._onerror should have been called once");
+    });
+  });
+});
 
 function buildUp(cb) {
-  // Stub out head.appendChild (jsonp request)
-  var head = document.getElementsByTagName("head")[0];
-  sinon.stub(head, "appendChild");
-
   // Keep track of mocha's window.onerror
   window._onerror = window.onerror;
 
-  // Add the bugsnag.js script tag
+  // Create bugsnag.js script tag
   var bugsnag = document.createElement("script");
   bugsnag.id = "bugsnag";
   bugsnag.type = "text/javascript";
   bugsnag.src = "../dist/bugsnag.js";
-  bugsnag.onload = function () {
-    Bugsnag.apiKey = "9e68f5104323042c09d8809674e8d05c";    
-    cb();
+  bugsnag.onload = bugsnag.onreadystatechange = function () {
+    if(!this.readyState || this.readyState === "loaded" || this.readyState === "complete") {
+      // Set api key to use when testing
+      Bugsnag.apiKey = "9e68f5104323042c09d8809674e8d05c";
+
+      // Stub out requests
+      stub(Bugsnag, "testRequest");
+
+      // Setup is done
+      cb();
+    }
   };
+
+  // Add bugsnag.js script tag to dom
   document.getElementsByTagName("body")[0].appendChild(bugsnag);
 }
 
@@ -172,32 +196,19 @@ function tearDown() {
   bugsnag.parentNode.removeChild(bugsnag);
 
   // Remove the Bugsnag object
-  delete window.Bugsnag;
+  window.Bugsnag = null;
 
   // Reset mocha's window.onerror
   window.onerror = window._onerror;
-  delete window._onerror;
-
-  // Un-stub head.appendChild
-  document.getElementsByTagName("head")[0].appendChild.restore();
+  window._onerror = null
 }
 
-function testRequest(testCallback) {
-  var appendChild = document.getElementsByTagName("head")[0].appendChild;
-  var url;
-  var params = {};
-
-  if(appendChild.called) {
-    var src = appendChild.args[0][0].src;
-    expect(src).to.not.be.empty;
-
-    var parts = src.split("?");
-    url = parts[0];
-    params = qs.parse(parts[1]);
-  }
-
-  // Call the test callback
-  testCallback(appendChild, url, params);
+function requestData() {
+  var args = Bugsnag.testRequest.args;
+  return {
+    url: Bugsnag.testRequest.args[0][0],
+    params: Bugsnag.testRequest.args[0][1]
+  };
 }
 
 function browserSupportsStacktrace() {
@@ -206,4 +217,36 @@ function browserSupportsStacktrace() {
   } catch (exception) {
     return exception.stack || exception.backtrace;
   }
+}
+
+// Micro assertion library
+function assert(statement, message) {
+  if(statement == false) {
+    throw new Error(message);
+  }
+}
+
+assert.equal = function (a, b, message) {
+  assert(a == b, message);
+};
+
+assert.deepEqual = function (a, b, message) {
+  assert(deepEqual(a, b));
+};
+
+// Micro stubbing library
+function stub(obj, fname) {
+  origFunction = obj[fname];
+  obj[fname] = function () {
+    var self = obj[fname];
+    self.args = self.args || [];
+    self.args.push(arguments);
+    self.calledCount = self.calledCount ? self.calledCount + 1 : 1;
+    self.calledOnce = (self.calledCount == 1);
+    self.called = true;
+    self.restore = function () { obj[fname] = origFunction };
+    return self;
+  };
+
+  obj[fname].origFunction = origFunction;
 }
