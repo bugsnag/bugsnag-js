@@ -24,11 +24,18 @@ describe("Bugsnag", function () {
       assert(!!requestData().params.apiKey, "apiKey should be in request params");
     });
 
-    it("should contain the correct exception class", function () {
+    it("should contain exception class name", function () {
       Bugsnag.notifyException(new URIError("Example error"));
 
       assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
       assert.equal(requestData().params.name, "URIError");
+    });
+
+    it("should contain the custom class name if overridden", function () {
+      Bugsnag.notifyException(new URIError("Example error"), "CustomError");
+
+      assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
+      assert.equal(requestData().params.name, "CustomError");
     });
 
     it("should contain the correct exception message", function () {

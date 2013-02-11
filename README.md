@@ -33,14 +33,31 @@ calling `Bugsnag.notifyException`:
 Bugsnag.notifyException(new Error("Something bad happened"));
 ```
 
-You can also send custom errors to Bugsnag with `Bugsnag.notify`:
+Since many exceptions in JavaScript are named simply `Error`, we also allow
+you to provide a custom error name when calling `notifyException`:
 
 ```javascript
-Bugsnag.notify("ErrorType", "Something bad happened here too");
+Bugsnag.notifyException(new Error("Something bad happened"), "MyErrorName");
 ```
 
-Both of these functions can also be passed an optional `metaData` parameter,
-which should take the same format as [metaData](#metadata) described below.
+You can also send errors to Bugsnag without an exception, by calling
+`Bugsnag.notify`:
+
+```javascript
+Bugsnag.notify("ErrorName", "Something bad happened here too");
+```
+
+Both of these functions can also be passed an optional `metaData` object as
+the last parameter, which should take the same format as [metaData](#metadata)
+described below.
+
+
+Limitations
+-----------
+
+Some browsers, notably IE9 and below, don't support stacktraces on exceptions. 
+In these situations we'll attempt to construct an approximate stacktrace, 
+which will unfortunately not contain URL or line number information.
 
 
 Additional Configuration

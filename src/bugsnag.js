@@ -197,9 +197,16 @@ window.Bugsnag = (function (window, document, navigator) {
   };
 
   // Notify Bugsnag of an exception
-  self.notifyException = function (exception, metaData) {
+  self.notifyException = function (exception, metaDataOrName, metaData) {
+    var name;
+    if (typeof metaDataOrName === "string") {
+      name = metaDataOrName;
+    } else {
+      metaData = metaDataOrName;
+    }
+
     sendToBugsnag({
-      name: exception.name,
+      name: name || exception.name,
       message: exception.message || exception.description,
       stacktrace: exception.stack || exception.backtrace || exception.stacktrace || generateStacktrace(),
       file: exception.fileName || exception.sourceURL,
