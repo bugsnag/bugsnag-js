@@ -16,7 +16,7 @@ How to Install
 Include bugsnag.js from our CDN in the `<head>` tag of your website:
 
 ```html
-<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-1.0.2.min.js" data-apikey="YOUR-API-KEY-HERE"></script>
+<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-1.0.3.min.js" data-apikey="YOUR-API-KEY-HERE"></script>
 ```
 
 Make sure to set your Bugsnag API key in the `data-apikey` attribute on the
