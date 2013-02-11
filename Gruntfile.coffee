@@ -84,6 +84,8 @@ module.exports = (grunt) ->
         ["firefox", "11", "Windows 2003"]
         ["safari", "5", "Mac 10.6"]
         ["safari", "6", "Mac 10.8"]
+        ["iexplore", "6", "Windows 2003"]
+        ["iexplore", "7", "Windows 2003"]
         ["iexplore", "8", "Windows 2003"]
         ["iexplore", "9", "Windows 2008"]
       ]
