@@ -9,11 +9,11 @@ describe("Bugsnag", function () {
 
       assert(!Bugsnag.testRequest.called, "Bugsnag.testRequest should not have been called");
     });
-      
+
     it("should not notify if apiKey is invalid", function () {
       Bugsnag.apiKey = "bad-api-key";
       Bugsnag.notifyException(new Error("Example error"));
-      
+
       assert(!Bugsnag.testRequest.called, "Bugsnag.testRequest should not have been called");
     });
 
@@ -40,7 +40,7 @@ describe("Bugsnag", function () {
 
     it("should contain the correct exception message", function () {
       Bugsnag.notifyException(new Error("Example error"));
-      
+
       assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
       assert.equal(requestData().params.message, "Example error");
     });
@@ -51,7 +51,7 @@ describe("Bugsnag", function () {
       } catch (e) {
         Bugsnag.notifyException(e);
       }
-      
+
       assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
       assert(requestData().params.stacktrace != null, "stacktrace should be in request params");
     });
@@ -66,19 +66,28 @@ describe("Bugsnag", function () {
 
     it("should contain global metaData if set", function () {
       var metaData = {some: {data: "here"}};
-      
+
       Bugsnag.metaData = metaData;
       Bugsnag.notifyException(new Error("Example error"));
-      
+
       assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
       assert.deepEqual(requestData().params.metaData, metaData, "metaData should match");
     });
 
     it("should contain local metaData if set", function () {
       var metaData = {some: {data: "here"}};
-      
+
       Bugsnag.notifyException(new Error("Example error"), metaData);
-      
+
+      assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
+      assert.deepEqual(requestData().params.metaData, metaData, "metaData should match");
+    });
+
+    it("should accept local metaData as a third parameter", function () {
+      var metaData = {some: {data: "here"}};
+
+      Bugsnag.notifyException(new Error("Example error"), "CustomError", metaData);
+
       assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
       assert.deepEqual(requestData().params.metaData, metaData, "metaData should match");
     });
@@ -86,10 +95,10 @@ describe("Bugsnag", function () {
     it("should contain merged metaData if both local and global metaData are set", function () {
       var globalMetaData = {some: {data: "here"}};
       var localMetaData = {some: {extra: {data: "here"}}};
-      
+
       Bugsnag.metaData = globalMetaData;
       Bugsnag.notifyException(new Error("Example error"), localMetaData);
-      
+
       assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
       assert.deepEqual(requestData().params.metaData, {
         some: {
@@ -101,30 +110,30 @@ describe("Bugsnag", function () {
 
     it("should use the https://notify.bugsnag.com/js endpoint by default", function () {
       Bugsnag.notifyException(new Error("Example error"));
-      
+
       assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
       assert.equal(requestData().url, "https://notify.bugsnag.com/js");
     });
   });
-  
+
   describe("notify", function () {
     it("should contain the correct error name", function () {
       Bugsnag.notify("CustomError", "Something broke");
-    
+
       assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
       assert.equal(requestData().params.name, "CustomError");
     });
 
     it("should contain the correct error message", function () {
       Bugsnag.notify("CustomError", "Something broke");
-    
+
       assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
       assert.equal(requestData().params.message, "Something broke");
     });
 
     it("should contain an auto-generated stacktrace", function () {
       Bugsnag.notify("CustomError", "Something broke");
-      
+
       assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
       assert(requestData().params.stacktrace != null, "stacktrace should be present");
     });
@@ -142,9 +151,9 @@ describe("window", function () {
   describe("onerror", function() {
     it("should notify bugsnag", function () {
       Bugsnag._onerror = null; // Disable mocha's onerror for this test
-  
+
       window.onerror("Something broke", "http://example.com/example.js", 123);
-  
+
       var params = requestData().params;
       assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
       assert.equal(params.name, "window.onerror");
@@ -158,7 +167,7 @@ describe("window", function () {
       };
 
       stub(Bugsnag, "_onerror");
-      
+
       window.onerror("Something broke", "http://example.com/example.js", 123);
 
       assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
