@@ -7,7 +7,7 @@ window.Bugsnag = (function (window, document, navigator) {
   var MAX_FAKE_STACK_SIZE = 10;
   var ANONYMOUS_FUNCTION_PLACEHOLDER = "[anonymous]";
   var DEFAULT_ENDPOINT = "https://notify.bugsnag.com/js";
-  var NOTIFIER_VERSION = "1.0.2";
+  var NOTIFIER_VERSION = "1.0.3";
 
   // Keep a reference to the running script
   var scripts = document.getElementsByTagName("script");
