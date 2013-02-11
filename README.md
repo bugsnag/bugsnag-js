@@ -23,28 +23,36 @@ Make sure to set your Bugsnag API key in the `data-apikey` attribute on the
 script tag.
 
 
-Sending Custom Errors or Non-Fatal Exceptions
----------------------------------------------
+Sending Caught Exceptions or Custom Errors
+------------------------------------------
 
-You can easily tell Bugsnag about non-fatal or caught exceptions by 
-calling `Bugsnag.notifyException`:
+You can easily tell Bugsnag about caught exceptions by calling
+`Bugsnag.notifyException`:
 
 ```javascript
-Bugsnag.notifyException(new Error("Something bad happened"));
+try {
+  // Some code which might throw an exception
+} catch (e) {
+  Bugsnag.notifyException(e);
+}
 ```
 
 Since many exceptions in JavaScript are named simply `Error`, we also allow
 you to provide a custom error name when calling `notifyException`:
 
 ```javascript
-Bugsnag.notifyException(new Error("Something bad happened"), "MyErrorName");
+try {
+  // Some code which might throw an exception
+} catch (e) {
+  Bugsnag.notifyException(e, "CustomErrorName");
+}
 ```
 
-You can also send errors to Bugsnag without an exception, by calling
-`Bugsnag.notify`:
+You can also send custom errors to Bugsnag without any exception,
+by calling `Bugsnag.notify`:
 
 ```javascript
-Bugsnag.notify("ErrorName", "Something bad happened here too");
+Bugsnag.notify("ErrorName", "Something bad happened here");
 ```
 
 Both of these functions can also be passed an optional `metaData` object as
