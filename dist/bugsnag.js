@@ -7,7 +7,7 @@ window.Bugsnag = (function (window, document, navigator) {
   var MAX_FAKE_STACK_SIZE = 10;
   var ANONYMOUS_FUNCTION_PLACEHOLDER = "[anonymous]";
   var DEFAULT_ENDPOINT = "https://notify.bugsnag.com/js";
-  var NOTIFIER_VERSION = "1.0.3";
+  var NOTIFIER_VERSION = "1.0.4";
 
   // Keep a reference to the running script
   var scripts = document.getElementsByTagName("script");
@@ -197,9 +197,16 @@ window.Bugsnag = (function (window, document, navigator) {
   };
 
   // Notify Bugsnag of an exception
-  self.notifyException = function (exception, metaData) {
+  self.notifyException = function (exception, metaDataOrName, metaData) {
+    var name;
+    if (typeof metaDataOrName === "string") {
+      name = metaDataOrName;
+    } else {
+      metaData = metaDataOrName;
+    }
+
     sendToBugsnag({
-      name: exception.name,
+      name: name || exception.name,
       message: exception.message || exception.description,
       stacktrace: exception.stack || exception.backtrace || exception.stacktrace || generateStacktrace(),
       file: exception.fileName || exception.sourceURL,

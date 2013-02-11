@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.0.4
+-----
+-   Allow the setting of custom error names on notifyException
+
 1.0.3
 -----
 -   Added stacktrace approximation for browsers that don't support stacktraces
