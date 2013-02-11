@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-  <script src="../dist/bugsnag.js" data-apikey="9e68f5104323042c09d8809674e8d05c"></script>
+  <script src="../dist/bugsnag.js" data-apikey="328dabd9a66ffd44465aa74e0d80ba80"></script>
   <script>
     Bugsnag.metaData = {
       "User Details": {
@@ -13,20 +13,31 @@
 </head>
 
 <body>
+  <h1>Bugsnag JS Example</h1>
+  
   <script>
-  function parentOfCrashyFunction () {
+  function parentOfCrashyFunction (arg1, arg2) {
     crashyFunction();
   }
 
   function crashyFunction () {
-    try {
-      throw new Error("Something broke");
-    } catch (exception) {
-      Bugsnag.notifyException(exception);
-    }
+    // Anonymous function
+    (function () {
+      try {
+        throw new Error("Something broke");
+      } catch (exception) {
+        Bugsnag.notifyException(exception);
+      }
+    })();
   }
-  
-  parentOfCrashyFunction();
+
+  // Top-level function call
+  parentOfCrashyFunction("random", 123);
+
+  // Parse error (triggers window.onerror and stops script execution)
+  // parseError("
   </script>
+
+  <a href="#" onclick="javascript:parentOfCrashyFunction('test', 456); return false;">Click to call crashyFunction</a>
 </body>
 </html>

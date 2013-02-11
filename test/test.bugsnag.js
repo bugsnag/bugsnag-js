@@ -38,7 +38,7 @@ describe("Bugsnag", function () {
       assert.equal(requestData().params.message, "Example error");
     });
 
-    it("should contain a stacktrace on supported browsers", function () {
+    it("should contain a stacktrace", function () {
       try {
         throw new Error("Example error");
       } catch (e) {
@@ -46,9 +46,7 @@ describe("Bugsnag", function () {
       }
       
       assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
-      if(browserSupportsStacktrace()) {
-        assert(requestData().params.stacktrace != null, "stacktrace should be in request params");
-      }
+      assert(requestData().params.stacktrace != null, "stacktrace should be in request params");
     });
 
     it("should contain a releaseStage if set", function () {
@@ -117,13 +115,11 @@ describe("Bugsnag", function () {
       assert.equal(requestData().params.message, "Something broke");
     });
 
-    it("should contain an auto-generated stacktrace on supported browsers", function () {
+    it("should contain an auto-generated stacktrace", function () {
       Bugsnag.notify("CustomError", "Something broke");
       
       assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
-      if(browserSupportsStacktrace()) {
-        assert(requestData().params.stacktrace != null, "stacktrace should be present");
-      }
+      assert(requestData().params.stacktrace != null, "stacktrace should be present");
     });
   });
 });
@@ -144,7 +140,7 @@ describe("window", function () {
   
       var params = requestData().params;
       assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
-      assert.equal(params.name, "Fatal Error");
+      assert.equal(params.name, "window.onerror");
       assert.equal(params.message, "Something broke");
       assert.equal(params.lineNumber, 123);
     });
@@ -209,14 +205,6 @@ function requestData() {
     url: Bugsnag.testRequest.args[0][0],
     params: Bugsnag.testRequest.args[0][1]
   };
-}
-
-function browserSupportsStacktrace() {
-  try {
-    throw new Error("test");
-  } catch (exception) {
-    return exception.stack || exception.backtrace;
-  }
 }
 
 // Micro assertion library (works in old IE)

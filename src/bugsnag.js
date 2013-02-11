@@ -1,9 +1,11 @@
 window.Bugsnag = (function (window, document, navigator) {
-  "use strict";
   var self = {};
 
   // Constants
   var API_KEY_REGEX = /^[0-9a-f]{32}$/i;
+  var FUNCTION_REGEX = /function\s*([\w\-$]+)?\s*\(/i;
+  var MAX_FAKE_STACK_SIZE = 10;
+  var ANONYMOUS_FUNCTION_PLACEHOLDER = "[anonymous]";
   var DEFAULT_ENDPOINT = "https://notify.bugsnag.com/js";
   var NOTIFIER_VERSION = "<%= pkg.version %>";
 
@@ -20,14 +22,10 @@ window.Bugsnag = (function (window, document, navigator) {
     }
   }
 
-  // Encode strings for use in a querystring
-  function encodeForQueryString(str) {
-    return encodeURIComponent(str).replace(/%20/g, "+");
-  }
-
   // Serialize an object into a querystring
   function serialize(obj, prefix) {
     var str = [];
+    var encodeForQueryString = encodeURIComponent;
     for (var p in obj) {
       if (obj.hasOwnProperty(p) && p != null && obj[p] != null) {
         var k = prefix ? prefix + "[" + p + "]" : p, v = obj[p];
@@ -43,7 +41,7 @@ window.Bugsnag = (function (window, document, navigator) {
       self.testRequest(url, payload);
     } else {
       var img = new Image();
-      img.src = url + "?" + serialize(payload) + "&ct=img";
+      img.src = url + "?" + serialize(payload) + "&ct=img&cb=" + new Date().getTime();
     }
   }
 
@@ -137,12 +135,27 @@ window.Bugsnag = (function (window, document, navigator) {
   function generateStacktrace() {
     var stacktrace;
 
+    // Try to generate a real stacktrace (most browsers)
     try {
       throw new Error("stackgen");
     } catch (exception) {
-      return exception.stack || exception.backtrace || exception.stacktrace;
+      stacktrace = exception.stack || exception.backtrace || exception.stacktrace;
     }
-    
+
+    // Otherwise, build a fake stacktrace from the list of method names (IE9 and lower)
+    if (!stacktrace) {
+      // Loop through the list of functions that called this one (and skip whoever called us)
+      var functionStack = [];
+      var curr = arguments.callee.caller.caller;
+      while (curr && functionStack.length < MAX_FAKE_STACK_SIZE) {
+        var fn = FUNCTION_REGEX.test(curr.toString()) ? RegExp.$1 || ANONYMOUS_FUNCTION_PLACEHOLDER : ANONYMOUS_FUNCTION_PLACEHOLDER;
+        functionStack.push(fn);
+        curr = curr.caller;
+      }
+
+      stacktrace = functionStack.join("\n");
+    }
+
     return stacktrace;
   }
 
@@ -156,7 +169,7 @@ window.Bugsnag = (function (window, document, navigator) {
   self._onerror = window.onerror;
   window.onerror = function (message, url, lineNo) {
     sendToBugsnag({
-      name: "Fatal Error",
+      name: "window.onerror",
       message: message,
       file: url,
       lineNumber: lineNo
@@ -179,8 +192,7 @@ window.Bugsnag = (function (window, document, navigator) {
     sendToBugsnag({
       name: name,
       message: message,
-      stacktrace: generateStacktrace(),
-      discardTopFrame: true
+      stacktrace: generateStacktrace()
     }, metaData);
   };
 
@@ -189,7 +201,7 @@ window.Bugsnag = (function (window, document, navigator) {
     sendToBugsnag({
       name: exception.name,
       message: exception.message || exception.description,
-      stacktrace: exception.stack || exception.backtrace || exception.stacktrace,
+      stacktrace: exception.stack || exception.backtrace || exception.stacktrace || generateStacktrace(),
       file: exception.fileName || exception.sourceURL,
       lineNumber: exception.lineNumber || exception.line
     }, metaData);

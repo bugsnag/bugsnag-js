@@ -69,6 +69,7 @@ module.exports = (grunt) ->
     connect:
       server:
         options:
+          hostname: null
           port: 8888
 
     # Tests
