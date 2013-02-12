@@ -4,23 +4,27 @@ Bugsnag Notifier for JavaScript
 The Bugsnag Notifier for JavaScript gives you instant notification of errors and
 exceptions in your website's JavaScript code.
 
-[Bugsnag](https://bugsnag.com) captures errors in real-time from your web, 
-mobile and desktop applications, helping you to understand and resolve them 
-as fast as possible. [Create a free account](https://bugsnag.com) to start 
+Bugsnag's JavaScript notifier is incredibly small, and has no external
+dependencies (not even jQuery!) so you can use it on any website.
+
+[Bugsnag](https://bugsnag.com) captures errors in real-time from your web,
+mobile and desktop applications, helping you to understand and resolve them
+as fast as possible. [Create a free account](https://bugsnag.com) to start
 capturing errors from your applications.
 
 
 How to Install
 --------------
 
-Include bugsnag.js from our CDN in the `<head>` tag of your website:
+Include `bugsnag.js` from our CDN in the `<head>` tag of your website, before
+any other `<script>` tags.
 
 ```html
 <script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-1.0.4.min.js" data-apikey="YOUR-API-KEY-HERE"></script>
 ```
 
 Make sure to set your Bugsnag API key in the `data-apikey` attribute on the
-script tag.
+script tag, or manually set [Bugnsag.apiKey](#apiKey).
 
 
 Sending Caught Exceptions or Custom Errors
@@ -63,8 +67,8 @@ described below.
 Limitations
 -----------
 
-Some browsers, notably IE9 and below, don't support stacktraces on exceptions. 
-In these situations we'll attempt to construct an approximate stacktrace, 
+Some browsers, notably IE9 and below, don't support stacktraces on exceptions.
+In these situations we'll attempt to construct an approximate stacktrace,
 which will unfortunately not contain URL or line number information.
 
 
@@ -84,7 +88,7 @@ Bugsnag.apiKey = "YOUR-API-KEY-HERE";
 Set additional meta-data to send to Bugsnag with every error. You can use this
 to add custom tabs of data to each error on your Bugsnag dashboard.
 
-This function should return an object of objects, the outer object should 
+This function should return an object of objects, the outer object should
 represent the "tabs" to display on your Bugsnag dashboard, and the inner
 objects should be the values to display on each tab, for example:
 
@@ -106,7 +110,7 @@ you can set the `releaseStage` that is reported to Bugsnag.
 ```javascript
 Bugsnag.releaseStage = "development";
 ```
-    
+
 By default this is set to be "production".
 
 
@@ -131,5 +135,5 @@ Contributing
 License
 -------
 
-The Bugsnag JavaScript notifier is free software released under the MIT License. 
+The Bugsnag JavaScript notifier is free software released under the MIT License.
 See [LICENSE.txt](https://github.com/bugsnag/bugsnag-js/blob/master/LICENSE.txt) for details.
