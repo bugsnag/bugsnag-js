@@ -90,6 +90,12 @@ module.exports = (grunt) ->
         ["iexplore", "9", "Windows 2008"]
       ]
 
+    # Documentation
+    docco:
+      dist:
+        src: ["src/**/*.js"]
+        dest: "lxdocs/"
+
   # Load tasks from plugins
   grunt.loadNpmTasks "grunt-contrib-jshint"
   grunt.loadNpmTasks "grunt-contrib-concat"
@@ -97,6 +103,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks "grunt-contrib-connect"
   grunt.loadNpmTasks "grunt-bumpx"
   grunt.loadNpmTasks "grunt-s3"
+  grunt.loadNpmTasks "grunt-docco"
 
   # Task to tag a version in git
   grunt.registerTask "git-tag", "Tags a release in git", ->
@@ -137,7 +144,7 @@ module.exports = (grunt) ->
       done(!err? && res[0].failures == 0)
 
   # Release meta-task
-  grunt.registerTask "release", ["jshint", "concat", "uglify", "git-tag", "s3"]
+  grunt.registerTask "release", ["jshint", "concat", "uglify", "docco", "git-tag", "s3"]
 
   # Run a webserver for testing
   grunt.registerTask "server", ["connect:server:keepalive"]
@@ -146,4 +153,4 @@ module.exports = (grunt) ->
   grunt.registerTask "test", ["connect", "mocha-cloud"]
 
   # Default meta-task
-  grunt.registerTask "default", ["jshint", "concat", "uglify"]
+  grunt.registerTask "default", ["jshint", "concat", "uglify", "docco"]

@@ -17,6 +17,7 @@
     "sinon-chai": "~2.3.1",
     "qs": "~0.5.3",
     "sinon": "~1.5.2",
-    "colors": "~0.6.0-1"
+    "colors": "~0.6.0-1",
+    "grunt-docco": "git://github.com/bdougherty/grunt-docco#grunt-0.4"
   }
 }
