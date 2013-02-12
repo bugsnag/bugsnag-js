@@ -24,7 +24,7 @@ any other `<script>` tags.
 ```
 
 Make sure to set your Bugsnag API key in the `data-apikey` attribute on the
-script tag, or manually set [Bugsnag.apiKey](#apiKey).
+script tag, or manually set [Bugsnag.apiKey](#apikey).
 
 
 Sending Caught Exceptions or Custom Errors
