@@ -1,5 +1,5 @@
 //
-// Bugsnag.js is the official JavaScript notifier for
+// **Bugsnag.js** is the official JavaScript notifier for
 // [Bugsnag](https://bugsnag.com).
 //
 // Bugsnag gives you instant notification of errors and
@@ -14,7 +14,7 @@ window.Bugsnag = (function (window, document, navigator) {
   var self = {};
 
   //
-  // ### Manual error notification
+  // ### Manual error notification (public methods)
   //
 
   // Notify Bugsnag about a given `exception`, typically that you've caught
@@ -23,7 +23,7 @@ window.Bugsnag = (function (window, document, navigator) {
   // Since most JavaScript exceptions use the `Error` class, we also allow
   // you to provide a custom error name when calling `notifyException`.
   self.notifyException = function (exception, name, metaData) {
-    if (typeof metaDataOrName !== "string") {
+    if (typeof name !== "string") {
       metaData = name;
     }
 
