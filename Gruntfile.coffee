@@ -94,7 +94,7 @@ module.exports = (grunt) ->
     docco:
       dist:
         src: ["src/**/*.js"]
-        dest: "lxdocs/"
+        dest: "docs/"
 
   # Load tasks from plugins
   grunt.loadNpmTasks "grunt-contrib-jshint"
