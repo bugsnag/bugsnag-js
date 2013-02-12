@@ -5,7 +5,7 @@ The Bugsnag Notifier for JavaScript gives you instant notification of errors and
 exceptions in your website's JavaScript code.
 
 Bugsnag's JavaScript notifier is incredibly small, and has no external
-dependencies (not even jQuery!) so you can use it on any website.
+dependencies (not even jQuery!) so you can safely use it on any website.
 
 [Bugsnag](https://bugsnag.com) captures errors in real-time from your web,
 mobile and desktop applications, helping you to understand and resolve them
@@ -24,7 +24,7 @@ any other `<script>` tags.
 ```
 
 Make sure to set your Bugsnag API key in the `data-apikey` attribute on the
-script tag, or manually set [Bugnsag.apiKey](#apiKey).
+script tag, or manually set [Bugsnag.apiKey](#apiKey).
 
 
 Sending Caught Exceptions or Custom Errors
@@ -64,8 +64,8 @@ the last parameter, which should take the same format as [metaData](#metadata)
 described below.
 
 
-Limitations
------------
+Browser Support
+---------------
 
 Some browsers, notably IE9 and below, don't support stacktraces on exceptions.
 In these situations we'll attempt to construct an approximate stacktrace,
