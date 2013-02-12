@@ -17,6 +17,8 @@ window.Bugsnag = (function (window, document, navigator) {
   // ### Manual error notification (public methods)
   //
 
+  // #### Bugsnag.notifyException
+  //
   // Notify Bugsnag about a given `exception`, typically that you've caught
   // with a `try/catch` statement or that you've generated yourself.
   //
@@ -36,6 +38,8 @@ window.Bugsnag = (function (window, document, navigator) {
     }, metaData);
   };
 
+  // #### Bugsnag.notify
+  //
   // Notify Bugsnag about an error by passing in a `name` and `message`,
   // without requiring an exception.
   self.notify = function (name, message, metaData) {
