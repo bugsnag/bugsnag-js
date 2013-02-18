@@ -32,7 +32,7 @@ window.Bugsnag = (function (window, document, navigator) {
     sendToBugsnag({
       name: name || exception.name,
       message: exception.message || exception.description,
-      stacktrace: exception.stack || exception.backtrace || exception.stacktrace || generateStacktrace(),
+      stacktrace: stacktraceFromException(exception) || generateStacktrace(),
       file: exception.fileName || exception.sourceURL,
       lineNumber: exception.lineNumber || exception.line
     }, metaData);
@@ -237,11 +237,12 @@ window.Bugsnag = (function (window, document, navigator) {
     try {
       throw new Error("");
     } catch (exception) {
-      stacktrace = exception.stack || exception.backtrace || exception.stacktrace;
+      stacktrace = stacktraceFromException(exception);
     }
 
-    // Otherwise, build a fake stacktrace from the list of method names by looping
-    // through the list of functions that called this one (and skip whoever called us).
+    // Otherwise, build a fake stacktrace from the list of method names by
+    // looping through the list of functions that called this one (and skip
+    // whoever called us).
     if (!stacktrace) {
       var functionStack = [];
       var curr = arguments.callee.caller.caller;
@@ -255,6 +256,11 @@ window.Bugsnag = (function (window, document, navigator) {
     }
 
     return stacktrace;
+  }
+
+  // Get the stacktrace string from an exception
+  function stacktraceFromException(exception) {
+    return exception.stack || exception.backtrace || exception.stacktrace;
   }
 
   return self;
