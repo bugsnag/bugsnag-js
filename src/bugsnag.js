@@ -87,6 +87,8 @@ window.Bugsnag = (function (window, document, navigator) {
   // Set up default notifier settings.
   var DEFAULT_ENDPOINT = "https://notify.bugsnag.com/js";
   var NOTIFIER_VERSION = "<%= pkg.version %>";
+  var DEFAULT_RELEASE_STAGE = "production";
+  var DEFAULT_NOTIFY_RELEASE_STAGES = ["production"];
 
   // Keep a reference to the currently executing script in the DOM.
   // We'll use this later to extract settings from attributes.
@@ -192,6 +194,12 @@ window.Bugsnag = (function (window, document, navigator) {
   //    user-agent and locale, `metaData` and settings.
   // 5. Make the HTTP request.
   function sendToBugsnag(details, metaData) {
+    var releaseStage = getSetting("releaseStage") || DEFAULT_RELEASE_STAGE;
+    var notifyReleaseStages = getSetting("notifyReleaseStages") || DEFAULT_NOTIFY_RELEASE_STAGES;
+    if (notifyReleaseStages.indexOf(releaseStage) == -1) {
+      return;
+    }
+
     var apiKey = getSetting("apiKey");
     if (apiKey == null || !apiKey.match(API_KEY_REGEX)) {
       log("Invalid API key '" + apiKey + "'");
@@ -209,7 +217,7 @@ window.Bugsnag = (function (window, document, navigator) {
       projectRoot: getSetting("projectRoot") || location.protocol + "//" + location.host,
       context: getSetting("context") || location.pathname,
       metaData: mergedMetaData,
-      releaseStage: getSetting("releaseStage"),
+      releaseStage: releaseStage,
 
       url: window.location.href,
       userAgent: navigator.userAgent,
