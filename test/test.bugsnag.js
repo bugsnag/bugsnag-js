@@ -21,7 +21,7 @@ describe("Bugsnag", function () {
       Bugsnag.notifyException(new Error("Example error"));
 
       assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
-      assert(!!requestData().params.apiKey, "apiKey should be in request params");
+      assert(requestData().params.apiKey, "apiKey should be in request params");
     });
 
     it("should contain exception class name", function () {
@@ -162,10 +162,6 @@ describe("window", function () {
     });
 
     it("should call the original onerror", function () {
-      Bugsnag._onerror = function () {
-        Bugsnag._onerror.called = true;
-      };
-
       stub(Bugsnag, "_onerror");
 
       window.onerror("Something broke", "http://example.com/example.js", 123);
@@ -216,27 +212,11 @@ function tearDown() {
 }
 
 function requestData() {
-  var args = Bugsnag.testRequest.args;
   return {
     url: Bugsnag.testRequest.args[0][0],
     params: Bugsnag.testRequest.args[0][1]
   };
 }
-
-// Micro assertion library (works in old IE)
-function assert(statement, message) {
-  if(statement == false) {
-    throw new Error(message);
-  }
-}
-
-assert.equal = function (a, b, message) {
-  assert(a == b, message);
-};
-
-assert.deepEqual = function (a, b, message) {
-  assert(deepEqual(a, b));
-};
 
 // Micro stubbing library
 function stub(obj, fname) {
