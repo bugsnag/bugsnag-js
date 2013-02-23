@@ -32,7 +32,7 @@ window.Bugsnag = (function (window, document, navigator) {
     sendToBugsnag({
       name: name || exception.name,
       message: exception.message || exception.description,
-      stacktrace: exception.stack || exception.backtrace || exception.stacktrace || generateStacktrace(),
+      stacktrace: stacktraceFromException(exception) || generateStacktrace(),
       file: exception.fileName || exception.sourceURL,
       lineNumber: exception.lineNumber || exception.line
     }, metaData);
@@ -86,7 +86,9 @@ window.Bugsnag = (function (window, document, navigator) {
 
   // Set up default notifier settings.
   var DEFAULT_ENDPOINT = "https://notify.bugsnag.com/js";
-  var NOTIFIER_VERSION = "1.0.4";
+  var NOTIFIER_VERSION = "1.0.5";
+  var DEFAULT_RELEASE_STAGE = "production";
+  var DEFAULT_NOTIFY_RELEASE_STAGES = [DEFAULT_RELEASE_STAGE];
 
   // Keep a reference to the currently executing script in the DOM.
   // We'll use this later to extract settings from attributes.
@@ -184,23 +186,37 @@ window.Bugsnag = (function (window, document, navigator) {
   }
 
   // Send error details to Bugsnag:
-  //
-  // 1. Validate the configured API key.
-  // 2. Merge the local and global `metaData`.
-  // 3. Work out which endpoint to send to.
-  // 4. Combine error information with other data such as
-  //    user-agent and locale, `metaData` and settings.
-  // 5. Make the HTTP request.
   function sendToBugsnag(details, metaData) {
+    // Validate the configured API key.
     var apiKey = getSetting("apiKey");
     if (apiKey == null || !apiKey.match(API_KEY_REGEX)) {
       log("Invalid API key '" + apiKey + "'");
       return;
     }
 
+    // Check if we should notify for this release stage.
+    var releaseStage = getSetting("releaseStage") || DEFAULT_RELEASE_STAGE;
+    var notifyReleaseStages = getSetting("notifyReleaseStages") || DEFAULT_NOTIFY_RELEASE_STAGES;
+    var shouldNotify = false;
+    for (var i = 0; i < notifyReleaseStages.length; i++) {
+      if (releaseStage === notifyReleaseStages[i]) {
+        shouldNotify = true;
+        break;
+      }
+    }
+
+    if (!shouldNotify) {
+      return;
+    }
+
+    // Merge the local and global `metaData`.
     var mergedMetaData = merge(getSetting("metaData"), metaData);
+
+    // Work out which endpoint to send to.
     var endpoint = getSetting("endpoint") || DEFAULT_ENDPOINT;
 
+    // Combine error information with other data such as
+    // user-agent and locale, `metaData` and settings.
     var location = window.location;
     var payload = {
       notifierVersion: NOTIFIER_VERSION,
@@ -209,7 +225,7 @@ window.Bugsnag = (function (window, document, navigator) {
       projectRoot: getSetting("projectRoot") || location.protocol + "//" + location.host,
       context: getSetting("context") || location.pathname,
       metaData: mergedMetaData,
-      releaseStage: getSetting("releaseStage"),
+      releaseStage: releaseStage,
 
       url: window.location.href,
       userAgent: navigator.userAgent,
@@ -222,6 +238,7 @@ window.Bugsnag = (function (window, document, navigator) {
       lineNumber: details.lineNumber
     };
 
+    // Make the HTTP request.
     request(endpoint, payload);
   }
 
@@ -237,11 +254,12 @@ window.Bugsnag = (function (window, document, navigator) {
     try {
       throw new Error("");
     } catch (exception) {
-      stacktrace = exception.stack || exception.backtrace || exception.stacktrace;
+      stacktrace = stacktraceFromException(exception);
     }
 
-    // Otherwise, build a fake stacktrace from the list of method names by looping
-    // through the list of functions that called this one (and skip whoever called us).
+    // Otherwise, build a fake stacktrace from the list of method names by
+    // looping through the list of functions that called this one (and skip
+    // whoever called us).
     if (!stacktrace) {
       var functionStack = [];
       var curr = arguments.callee.caller.caller;
@@ -255,6 +273,11 @@ window.Bugsnag = (function (window, document, navigator) {
     }
 
     return stacktrace;
+  }
+
+  // Get the stacktrace string from an exception
+  function stacktraceFromException(exception) {
+    return exception.stack || exception.backtrace || exception.stacktrace;
   }
 
   return self;
