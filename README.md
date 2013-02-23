@@ -20,7 +20,7 @@ Include `bugsnag.js` from our CDN in the `<head>` tag of your website, before
 any other `<script>` tags.
 
 ```html
-<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-1.0.4.min.js" data-apikey="YOUR-API-KEY-HERE"></script>
+<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-1.0.5.min.js" data-apikey="YOUR-API-KEY-HERE"></script>
 ```
 
 Make sure to set your Bugsnag API key in the `data-apikey` attribute on the
@@ -112,6 +112,16 @@ Bugsnag.releaseStage = "development";
 ```
 
 By default this is set to be "production".
+
+###notifyReleaseStages
+
+By default, we will only notify Bugsnag of errors that happen when your 
+`releaseStage` is set to be "production". If you would like to change which
+release stages notify Bugsnag of errors you can call `setNotifyReleaseStages`:
+
+```javascript
+Bugsnag.notifyReleaseStages = ["development", "production"];
+```
 
 
 Reporting Bugs or Feature Requests

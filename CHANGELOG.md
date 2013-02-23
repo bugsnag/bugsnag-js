@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.0.5
+-----
+-   Add support for `notifyReleaseStages`, a whitelist for which releaseStages
+    should notify Bugsnag
+
 1.0.4
 -----
 -   Allow the setting of custom error names on notifyException
