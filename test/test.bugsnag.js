@@ -56,12 +56,20 @@ describe("Bugsnag", function () {
       assert(requestData().params.stacktrace != null, "stacktrace should be in request params");
     });
 
-    it("should contain a releaseStage if set", function () {
+    it("should not notify if releaseStage isn't in notifyReleaseStages", function () {
+      Bugsnag.notifyReleaseStages = ["production"];
       Bugsnag.releaseStage = "development";
       Bugsnag.notifyException(new Error("Example error"));
 
+      assert(!Bugsnag.testRequest.called, "Bugsnag.testRequest should not have been called");
+    });
+
+    it("should notify if a custom releaseStage is in notifyReleaseStages", function () {
+      Bugsnag.notifyReleaseStages = ["production", "custom"];
+      Bugsnag.releaseStage = "custom";
+      Bugsnag.notifyException(new Error("Example error"));
+
       assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
-      assert.equal(requestData().params.releaseStage, "development");
     });
 
     it("should contain global metaData if set", function () {
