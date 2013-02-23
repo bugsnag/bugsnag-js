@@ -117,7 +117,7 @@ By default this is set to be "production".
 
 By default, we will only notify Bugsnag of errors that happen when your 
 `releaseStage` is set to be "production". If you would like to change which
-release stages notify Bugsnag of errors you can call `setNotifyReleaseStages`:
+release stages notify Bugsnag of errors you can set `notifyReleaseStages`:
 
 ```javascript
 Bugsnag.notifyReleaseStages = ["development", "production"];
