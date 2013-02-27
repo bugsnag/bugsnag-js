@@ -24,7 +24,7 @@ any other `<script>` tags.
 ```
 
 Make sure to set your Bugsnag API key in the `data-apikey` attribute on the
-script tag, or manually set [Bugsnag.apiKey](#apikey).
+script tag, or manually set [Bugsnag.apiKey](#apikey). Your Bugsnag API key is only used for sending exceptions to your project. No other data can be retrieved with it.
 
 
 Sending Caught Exceptions or Custom Errors
