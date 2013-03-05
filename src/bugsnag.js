@@ -325,7 +325,8 @@ window.Bugsnag = (function (window, document, navigator) {
 
   // Get a cookie value.
   function getCookie(name) {
-    return document.cookie.match(name + "=([^$;]+)")[1];
+    var cookie = document.cookie.match(name + "=([^$;]+)");
+    return cookie ? window.unescape(cookie[1]) : null;
   }
 
 
