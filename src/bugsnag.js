@@ -85,7 +85,9 @@ window.Bugsnag = (function (window, document, navigator) {
   var FUNCTION_REGEX = /function\s*([\w\-$]+)?\s*\(/i;
 
   // Set up default notifier settings.
-  var DEFAULT_ENDPOINT = "https://notify.bugsnag.com/js";
+  var DEFAULT_BASE_ENDPOINT = "https://notify.bugsnag.com/";
+  var DEFAULT_NOTIFIER_ENDPOINT = DEFAULT_BASE_ENDPOINT + "js";
+  var DEFAULT_METRICS_ENDPOINT = DEFAULT_BASE_ENDPOINT + "metrics";
   var NOTIFIER_VERSION = "<%= pkg.version %>";
   var DEFAULT_RELEASE_STAGE = "production";
   var DEFAULT_NOTIFY_RELEASE_STAGES = [DEFAULT_RELEASE_STAGE];
@@ -213,7 +215,7 @@ window.Bugsnag = (function (window, document, navigator) {
     var mergedMetaData = merge(getSetting("metaData"), metaData);
 
     // Work out which endpoint to send to.
-    var endpoint = getSetting("endpoint") || DEFAULT_ENDPOINT;
+    var endpoint = getSetting("endpoint") || DEFAULT_NOTIFIER_ENDPOINT;
 
     // Combine error information with other data such as
     // user-agent and locale, `metaData` and settings.
@@ -279,6 +281,58 @@ window.Bugsnag = (function (window, document, navigator) {
   function stacktraceFromException(exception) {
     return exception.stack || exception.backtrace || exception.stacktrace;
   }
+
+  // Track a page-view for MAU/DAU metrics.
+  function trackMetrics() {
+    var shouldTrack = getSetting("metrics");
+    if (shouldTrack !== true && shouldTrack !== "true") {
+      return;
+    }
+
+    var apiKey = getSetting("apiKey");
+    var cookieName = "bugsnag_" + apiKey;
+
+    // Fetch or generate a userId
+    var userId = getCookie(cookieName);
+    if (userId == null) {
+      userId = generateUUID();
+      setCookie(cookieName, userId);
+    }
+
+    // Make the HTTP request.
+    request(getSetting("metricsEndpoint") || DEFAULT_METRICS_ENDPOINT, {
+      userId: userId,
+      apiKey: apiKey
+    });
+  }
+
+  // Generate a 4-character random hex string.
+  function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+  }
+
+  // Generate a version-4 UUID.
+  function generateUUID() {
+    return s4() + s4() + "-" + s4() + "-" + s4() + "-" + s4() + "-" + s4() + s4() + s4();
+  }
+
+  // Set a cookie value.
+  function setCookie(name, value) {
+    var date = new Date();
+    date.setTime(date.getTime() + 864e8);
+    document.cookie = name + "=" + value + "; expires=" + date.toGMTString();
+  }
+
+  // Get a cookie value.
+  function getCookie(name) {
+    return document.cookie.match(name + "=([^$;]+)")[1];
+  }
+
+
+  //
+  // ### Metrics tracking (DAU/MAU)
+  //
+  trackMetrics();
 
   return self;
 
