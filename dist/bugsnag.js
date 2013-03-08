@@ -88,7 +88,7 @@ window.Bugsnag = (function (window, document, navigator) {
   var DEFAULT_BASE_ENDPOINT = "https://notify.bugsnag.com/";
   var DEFAULT_NOTIFIER_ENDPOINT = DEFAULT_BASE_ENDPOINT + "js";
   var DEFAULT_METRICS_ENDPOINT = DEFAULT_BASE_ENDPOINT + "metrics";
-  var NOTIFIER_VERSION = "1.0.6-beta";
+  var NOTIFIER_VERSION = "1.0.6";
   var DEFAULT_RELEASE_STAGE = "production";
   var DEFAULT_NOTIFY_RELEASE_STAGES = [DEFAULT_RELEASE_STAGE];
 
