@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.0.6-beta
+----------
+-   Add support for metrics tracking (MAU, DAU)
+
 1.0.5
 -----
 -   Add support for `notifyReleaseStages`, a whitelist for which releaseStages

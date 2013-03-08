@@ -85,7 +85,9 @@ window.Bugsnag = (function (window, document, navigator) {
   var FUNCTION_REGEX = /function\s*([\w\-$]+)?\s*\(/i;
 
   // Set up default notifier settings.
-  var DEFAULT_ENDPOINT = "https://notify.bugsnag.com/js";
+  var DEFAULT_BASE_ENDPOINT = "https://notify.bugsnag.com/";
+  var DEFAULT_NOTIFIER_ENDPOINT = DEFAULT_BASE_ENDPOINT + "js";
+  var DEFAULT_METRICS_ENDPOINT = DEFAULT_BASE_ENDPOINT + "metrics";
   var NOTIFIER_VERSION = "<%= pkg.version %>";
   var DEFAULT_RELEASE_STAGE = "production";
   var DEFAULT_NOTIFY_RELEASE_STAGES = [DEFAULT_RELEASE_STAGE];
@@ -110,11 +112,10 @@ window.Bugsnag = (function (window, document, navigator) {
   // objects. Similar to jQuery's `$.param` method.
   function serialize(obj, prefix) {
     var str = [];
-    var encodeForQueryString = encodeURIComponent;
     for (var p in obj) {
       if (obj.hasOwnProperty(p) && p != null && obj[p] != null) {
         var k = prefix ? prefix + "[" + p + "]" : p, v = obj[p];
-        str.push(typeof v === "object" ? serialize(v, k) : encodeForQueryString(k) + "=" + encodeForQueryString(v));
+        str.push(typeof v === "object" ? serialize(v, k) : encodeURIComponent(k) + "=" + encodeURIComponent(v));
       }
     }
     return str.join("&");
@@ -158,7 +159,7 @@ window.Bugsnag = (function (window, document, navigator) {
     }
   }
 
-  // Extrat all `data-*` attributes from a DOM element and return them as an
+  // Extract all `data-*` attributes from a DOM element and return them as an
   // object. This is used to allow Bugsnag settings to be set via attributes
   // on the `script` tag, eg. `<script data-apikey="xyz">`.
   // Similar to jQuery's `$(el).data()` method.
@@ -185,12 +186,21 @@ window.Bugsnag = (function (window, document, navigator) {
     return self[name] || data[name.toLowerCase()];
   }
 
-  // Send error details to Bugsnag:
+  // Validate a Bugsnag API key exists and is of the correct format.
+  function validateApiKey(apiKey) {
+    if (apiKey == null || !apiKey.match(API_KEY_REGEX)) {
+      log("Invalid API key '" + apiKey + "'");
+      return false;
+    }
+
+    return true;
+  }
+
+  // Send an error to Bugsnag.
   function sendToBugsnag(details, metaData) {
     // Validate the configured API key.
     var apiKey = getSetting("apiKey");
-    if (apiKey == null || !apiKey.match(API_KEY_REGEX)) {
-      log("Invalid API key '" + apiKey + "'");
+    if (!validateApiKey(apiKey)) {
       return;
     }
 
@@ -212,13 +222,14 @@ window.Bugsnag = (function (window, document, navigator) {
     // Merge the local and global `metaData`.
     var mergedMetaData = merge(getSetting("metaData"), metaData);
 
-    // Work out which endpoint to send to.
-    var endpoint = getSetting("endpoint") || DEFAULT_ENDPOINT;
-
-    // Combine error information with other data such as
-    // user-agent and locale, `metaData` and settings.
+    // Make the request:
+    //
+    // -  Work out which endpoint to send to.
+    // -  Combine error information with other data such as
+    //    user-agent and locale, `metaData` and settings.
+    // -  Make the HTTP request.
     var location = window.location;
-    var payload = {
+    request(getSetting("endpoint") || DEFAULT_NOTIFIER_ENDPOINT, {
       notifierVersion: NOTIFIER_VERSION,
 
       apiKey: apiKey,
@@ -227,7 +238,7 @@ window.Bugsnag = (function (window, document, navigator) {
       metaData: mergedMetaData,
       releaseStage: releaseStage,
 
-      url: window.location.href,
+      url: location.href,
       userAgent: navigator.userAgent,
       language: navigator.language || navigator.userLanguage,
 
@@ -236,10 +247,7 @@ window.Bugsnag = (function (window, document, navigator) {
       stacktrace: details.stacktrace,
       file: details.file,
       lineNumber: details.lineNumber
-    };
-
-    // Make the HTTP request.
-    request(endpoint, payload);
+    });
   }
 
   // Generate a browser stacktrace (or approximation) from the current stack.
@@ -279,6 +287,73 @@ window.Bugsnag = (function (window, document, navigator) {
   function stacktraceFromException(exception) {
     return exception.stack || exception.backtrace || exception.stacktrace;
   }
+
+
+  //
+  // ### Metrics tracking (DAU/MAU)
+  //
+
+  // Track a page-view for MAU/DAU metrics.
+  function trackMetrics() {
+    var shouldTrack = getSetting("metrics");
+    var apiKey = getSetting("apiKey");
+    if ((shouldTrack !== true && shouldTrack !== "true") || !validateApiKey(apiKey)) {
+      return;
+    }
+
+    // Fetch or generate a userId
+    var cookieName = "bugsnag_" + apiKey;
+    var userId = getCookie(cookieName);
+    if (userId == null) {
+      userId = generateUUID();
+      setCookie(cookieName, userId, 1000, true);
+    }
+
+    // Make the HTTP request.
+    request(getSetting("metricsEndpoint") || DEFAULT_METRICS_ENDPOINT, {
+      userId: userId,
+      apiKey: apiKey
+    });
+  }
+
+  // Generate a 4-character random hex string.
+  function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+  }
+
+  // Generate a version-4 UUID.
+  function generateUUID() {
+    return s4() + s4() + "-" + s4() + "-" + s4() + "-" + s4() + "-" + s4() + s4() + s4();
+  }
+
+  // Set a cookie value.
+  function setCookie(name, value, days, crossSubdomain) {
+    var cdomain = "";
+    var expires = "";
+
+    if (days) {
+      var date = new Date();
+      date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+      expires = "; expires=" + date.toGMTString();
+    }
+
+    if (crossSubdomain) {
+      var matches = window.location.hostname.match(/[a-z0-9][a-z0-9\-]+\.[a-z\.]{2,6}$/i);
+      var domain = matches ? matches[0] : "";
+      cdomain = (domain ? "; domain=." + domain : "");
+    }
+
+    document.cookie = name + "=" + encodeURIComponent(value) + expires + "; path=/" + cdomain;
+  }
+
+  // Get a cookie value.
+  function getCookie(name) {
+    var cookie = document.cookie.match(name + "=([^$;]+)");
+    return cookie ? decodeURIComponent(cookie[1]) : null;
+  }
+
+  // Make a metrics request to Bugsnag if enabled.
+  trackMetrics();
 
   return self;
 
