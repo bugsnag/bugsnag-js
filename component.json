@@ -1,5 +1,5 @@
 {
   "name": "bugsnag",
-  "version": "1.0.5",
+  "version": "1.0.6-beta",
   "main": "./dist/bugsnag.js"
 }
