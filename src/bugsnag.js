@@ -238,7 +238,7 @@ window.Bugsnag = (function (window, document, navigator) {
       metaData: mergedMetaData,
       releaseStage: releaseStage,
 
-      url: location.href,
+      url: window.location.href,
       userAgent: navigator.userAgent,
       language: navigator.language || navigator.userLanguage,
 
