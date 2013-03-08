@@ -112,11 +112,10 @@ window.Bugsnag = (function (window, document, navigator) {
   // objects. Similar to jQuery's `$.param` method.
   function serialize(obj, prefix) {
     var str = [];
-    var encodeForQueryString = encodeURIComponent;
     for (var p in obj) {
       if (obj.hasOwnProperty(p) && p != null && obj[p] != null) {
         var k = prefix ? prefix + "[" + p + "]" : p, v = obj[p];
-        str.push(typeof v === "object" ? serialize(v, k) : encodeForQueryString(k) + "=" + encodeForQueryString(v));
+        str.push(typeof v === "object" ? serialize(v, k) : encodeURIComponent(k) + "=" + encodeURIComponent(v));
       }
     }
     return str.join("&");
@@ -239,7 +238,7 @@ window.Bugsnag = (function (window, document, navigator) {
       metaData: mergedMetaData,
       releaseStage: releaseStage,
 
-      url: window.location.href,
+      url: location.href,
       userAgent: navigator.userAgent,
       language: navigator.language || navigator.userLanguage,
 
@@ -307,7 +306,7 @@ window.Bugsnag = (function (window, document, navigator) {
     var userId = getCookie(cookieName);
     if (userId == null) {
       userId = generateUUID();
-      setCookie(cookieName, userId);
+      setCookie(cookieName, userId, 1000, true);
     }
 
     // Make the HTTP request.
@@ -328,16 +327,29 @@ window.Bugsnag = (function (window, document, navigator) {
   }
 
   // Set a cookie value.
-  function setCookie(name, value) {
-    var date = new Date();
-    date.setTime(date.getTime() + 864e8);
-    document.cookie = name + "=" + value + "; expires=" + date.toGMTString();
+  function setCookie(name, value, days, crossSubdomain) {
+    var cdomain = "";
+    var expires = "";
+
+    if (days) {
+      var date = new Date();
+      date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+      expires = "; expires=" + date.toGMTString();
+    }
+
+    if (crossSubdomain) {
+      var matches = window.location.hostname.match(/[a-z0-9][a-z0-9\-]+\.[a-z\.]{2,6}$/i);
+      var domain = matches ? matches[0] : "";
+      cdomain = (domain ? "; domain=." + domain : "");
+    }
+
+    document.cookie = name + "=" + encodeURIComponent(value) + expires + "; path=/" + cdomain;
   }
 
   // Get a cookie value.
   function getCookie(name) {
     var cookie = document.cookie.match(name + "=([^$;]+)");
-    return cookie ? window.unescape(cookie[1]) : null;
+    return cookie ? decodeURIComponent(cookie[1]) : null;
   }
 
   // Make a metrics request to Bugsnag if enabled.
