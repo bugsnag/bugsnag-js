@@ -1,9 +1,9 @@
 Changelog
 =========
 
-1.0.6-beta
-----------
--   Add support for metrics tracking (MAU, DAU)
+1.0.6
+-----
+-   Add support for metrics tracking (optional)
 
 1.0.5
 -----
