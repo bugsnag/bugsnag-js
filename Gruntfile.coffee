@@ -48,17 +48,19 @@ module.exports = (grunt) ->
 
     # Upload to s3
     s3:
-      bucket: "bugsnagcdn"
-      access: "public-read"
-      gzip: true
+      options:
+        bucket: "bugsnagcdn"
+        access: "public-read"
+        gzip: true
 
-      upload: [
-        src: "dist/bugsnag.js",
-        dest: "bugsnag-<%= pkg.version %>.js"
-      ,
-        src: "dist/bugsnag.min.js",
-        dest: "bugsnag-<%= pkg.version %>.min.js"
-      ]
+      release:
+        upload: [
+          src: "dist/bugsnag.js",
+          dest: "bugsnag-<%= pkg.version %>.js"
+        ,
+          src: "dist/bugsnag.min.js",
+          dest: "bugsnag-<%= pkg.version %>.min.js"
+        ]
 
     # Version bumping
     bump:
