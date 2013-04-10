@@ -242,6 +242,7 @@ window.Bugsnag = (function (window, document, navigator) {
       apiKey: apiKey,
       projectRoot: getSetting("projectRoot") || location.protocol + "//" + location.host,
       context: getSetting("context") || location.pathname,
+      userId: getSetting("userId"),
       metaData: mergedMetaData,
       releaseStage: releaseStage,
 
