@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.0.7
+-----
+-   Add support for setting a custom userId
+
 1.0.6
 -----
 -   Add support for metrics tracking (optional)
