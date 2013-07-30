@@ -214,13 +214,7 @@ window.Bugsnag = (function (window, document, navigator) {
     // Check if we should notify for this release stage.
     var releaseStage = getSetting("releaseStage") || DEFAULT_RELEASE_STAGE;
     var notifyReleaseStages = getSetting("notifyReleaseStages") || DEFAULT_NOTIFY_RELEASE_STAGES;
-    var shouldNotify = false;
-    for (var i = 0; i < notifyReleaseStages.length; i++) {
-      if (releaseStage === notifyReleaseStages[i]) {
-        shouldNotify = true;
-        break;
-      }
-    }
+    var shouldNotify = notifyReleaseStages.indexOf(releaseStage) > -1;
 
     if (!shouldNotify) {
       return;
