@@ -99,6 +99,8 @@ window.Bugsnag = (function (window, document, navigator) {
   var DEFAULT_RELEASE_STAGE = "production";
   var DEFAULT_NOTIFY_RELEASE_STAGES = [DEFAULT_RELEASE_STAGE];
 
+  var DEFAULT_WHITELIST = "(.)*";
+
   // Keep a reference to the currently executing script in the DOM.
   // We'll use this later to extract settings from attributes.
   var scripts = document.getElementsByTagName("script");
@@ -214,12 +216,19 @@ window.Bugsnag = (function (window, document, navigator) {
     // Check if we should notify for this release stage.
     var releaseStage = getSetting("releaseStage") || DEFAULT_RELEASE_STAGE;
     var notifyReleaseStages = getSetting("notifyReleaseStages") || DEFAULT_NOTIFY_RELEASE_STAGES;
+    var notifyFilesWhitelist = getSetting("notifyFilesWhitelist") || DEFAULT_WHITELIST;
     var shouldNotify = false;
     for (var i = 0; i < notifyReleaseStages.length; i++) {
       if (releaseStage === notifyReleaseStages[i]) {
         shouldNotify = true;
         break;
       }
+    }
+
+    if (shouldNotify) {
+      var filename = (typeof(details.file) === "undefined") ? "undefined" : details.file;
+
+      shouldNotify = (filename.match(notifyFilesWhitelist)[0].length !== 0);
     }
 
     if (!shouldNotify) {
