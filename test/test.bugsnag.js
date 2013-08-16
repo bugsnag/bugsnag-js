@@ -56,6 +56,39 @@ describe("Bugsnag", function () {
       assert(requestData().params.stacktrace != null, "stacktrace should be in request params");
     });
 
+    it("should not notify if notifyFilesWhitelist regex doesn't match", function () {
+      Bugsnag.notifyFilesWhitelist = "(w)*";
+      var error = new Error("Example error");
+      error.fileName = "production.js";
+      Bugsnag.notifyException(error);
+
+      assert(!Bugsnag.testRequest.called, "Bugsnag.testRequest should not have been called");
+    });
+
+    it("should notify if notifyFilesWhitelist regex matches", function() {
+      Bugsnag.notifyFilesWhitelist = "production";
+      var error = new Error("Example error");
+      error.fileName = "production.js";
+      Bugsnag.notifyException(error);
+
+      assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
+    });
+
+    it("should notify if notifyFilesWhitelist is default '.*'", function() {
+      var error = new Error("Example error");
+      error.fileName = "production.js";
+      Bugsnag.notifyException(error);
+
+      assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
+    });
+
+    it("should notify if notifyFilesWhitelist regex matches 'undefined' and no file name given", function() {
+      Bugsnag.notifyFilesWhitelist = "undefined";
+      Bugsnag.notifyException(new Error("Example error"));
+
+      assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
+    });
+
     it("should not notify if releaseStage isn't in notifyReleaseStages", function () {
       Bugsnag.notifyReleaseStages = ["production"];
       Bugsnag.releaseStage = "development";
