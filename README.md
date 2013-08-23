@@ -1,11 +1,14 @@
-Bugsnag Notifier for JavaScript
-===============================
+Bugsnag Notifier for JavaScript (Beta)
+======================================
 
 The Bugsnag Notifier for JavaScript gives you instant notification of errors and
 exceptions in your website's JavaScript code.
 
 Bugsnag's JavaScript notifier is incredibly small, and has no external
 dependencies (not even jQuery!) so you can safely use it on any website.
+
+This notifier is currently in beta, we're working on improving automatic
+error capturing and grouping very soon.
 
 [Bugsnag](https://bugsnag.com) captures errors in real-time from your web,
 mobile and desktop applications, helping you to understand and resolve them
