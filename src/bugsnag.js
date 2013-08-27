@@ -62,19 +62,23 @@ window.Bugsnag = (function (window, document, navigator) {
   // These are mostly js compile/parse errors, but on some browsers all
   // "uncaught" exceptions will fire this event.
   window.onerror = function (message, url, lineNo) {
+    var shouldNotify = getSetting("autoNotify");
+
     // Warn about useless cross-domain script errors and return before notifying.
     // http://stackoverflow.com/questions/5913978/cryptic-script-error-reported-in-javascript-in-chrome-and-firefox
-    if (message === "Script error." && url === "" && lineNo === 0) {
+    if (shouldNotify && message === "Script error." && url === "" && lineNo === 0) {
       log("Error on cross-domain script, couldn't notify Bugsnag.");
-      return;
+      shouldNotify = false;
     }
 
-    sendToBugsnag({
-      name: "window.onerror",
-      message: message,
-      file: url,
-      lineNumber: lineNo
-    });
+    if (shouldNotify) {
+      sendToBugsnag({
+        name: "window.onerror",
+        message: message,
+        file: url,
+        lineNumber: lineNo
+      });
+    }
 
     // Fire the existing `window.onerror` handler, if one exists
     if (self._onerror) {
