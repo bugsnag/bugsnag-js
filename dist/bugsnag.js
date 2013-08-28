@@ -62,19 +62,23 @@ window.Bugsnag = (function (window, document, navigator) {
   // These are mostly js compile/parse errors, but on some browsers all
   // "uncaught" exceptions will fire this event.
   window.onerror = function (message, url, lineNo) {
+    var shouldNotify = getSetting("autoNotify", true);
+
     // Warn about useless cross-domain script errors and return before notifying.
     // http://stackoverflow.com/questions/5913978/cryptic-script-error-reported-in-javascript-in-chrome-and-firefox
-    if (message === "Script error." && url === "" && lineNo === 0) {
+    if (shouldNotify && message === "Script error." && url === "" && lineNo === 0) {
       log("Error on cross-domain script, couldn't notify Bugsnag.");
-      return;
+      shouldNotify = false;
     }
 
-    sendToBugsnag({
-      name: "window.onerror",
-      message: message,
-      file: url,
-      lineNumber: lineNo
-    });
+    if (shouldNotify) {
+      sendToBugsnag({
+        name: "window.onerror",
+        message: message,
+        file: url,
+        lineNumber: lineNo
+      });
+    }
 
     // Fire the existing `window.onerror` handler, if one exists
     if (self._onerror) {
@@ -95,7 +99,7 @@ window.Bugsnag = (function (window, document, navigator) {
   var DEFAULT_BASE_ENDPOINT = "https://notify.bugsnag.com/";
   var DEFAULT_NOTIFIER_ENDPOINT = DEFAULT_BASE_ENDPOINT + "js";
   var DEFAULT_METRICS_ENDPOINT = DEFAULT_BASE_ENDPOINT + "metrics";
-  var NOTIFIER_VERSION = "1.0.7";
+  var NOTIFIER_VERSION = "1.0.8";
   var DEFAULT_RELEASE_STAGE = "production";
   var DEFAULT_NOTIFY_RELEASE_STAGES = [DEFAULT_RELEASE_STAGE];
 
@@ -188,9 +192,10 @@ window.Bugsnag = (function (window, document, navigator) {
   // Get configuration settings from either `self` (the `Bugsnag` object)
   // or `data` (the `data-*` attributes).
   var data;
-  function getSetting(name) {
+  function getSetting(name, fallback) {
     data = data || getData(thisScript);
-    return self[name] || data[name.toLowerCase()];
+    var setting = self[name] !== undefined ? self[name] : data[name.toLowerCase()];
+    return setting !== undefined ? setting : fallback;
   }
 
   // Validate a Bugsnag API key exists and is of the correct format.
