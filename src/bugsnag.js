@@ -62,7 +62,7 @@ window.Bugsnag = (function (window, document, navigator) {
   // These are mostly js compile/parse errors, but on some browsers all
   // "uncaught" exceptions will fire this event.
   window.onerror = function (message, url, lineNo) {
-    var shouldNotify = getSetting("autoNotify");
+    var shouldNotify = getSetting("autoNotify", true);
 
     // Warn about useless cross-domain script errors and return before notifying.
     // http://stackoverflow.com/questions/5913978/cryptic-script-error-reported-in-javascript-in-chrome-and-firefox
@@ -192,9 +192,10 @@ window.Bugsnag = (function (window, document, navigator) {
   // Get configuration settings from either `self` (the `Bugsnag` object)
   // or `data` (the `data-*` attributes).
   var data;
-  function getSetting(name) {
+  function getSetting(name, fallback) {
     data = data || getData(thisScript);
-    return self[name] || data[name.toLowerCase()];
+    var setting = self[name] !== undefined ? self[name] : data[name.toLowerCase()];
+    return setting !== undefined ? setting : fallback;
   }
 
   // Validate a Bugsnag API key exists and is of the correct format.
