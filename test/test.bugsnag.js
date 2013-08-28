@@ -176,7 +176,7 @@ describe("window", function () {
 
       window.onerror("Something broke", "http://example.com/example.js", 123);
 
-      assert(Bugsnag.testRequest.called !== true, "Bugsnag.testRequest should not have been called");
+      assert(Bugsnag.testRequest.called === false, "Bugsnag.testRequest should not have been called");
       assert(Bugsnag._onerror.calledOnce, "Bugsnag._onerror should have been called once");
     });
 
@@ -252,4 +252,7 @@ function stub(obj, fname) {
   };
 
   obj[fname].origFunction = origFunction;
+  obj[fname].called = false;
+  obj[fname].calledOnce = false;
+  obj[fname].calledCount = 0;
 }
