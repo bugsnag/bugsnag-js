@@ -195,6 +195,9 @@ window.Bugsnag = (function (window, document, navigator) {
   function getSetting(name, fallback) {
     data = data || getData(thisScript);
     var setting = self[name] !== undefined ? self[name] : data[name.toLowerCase()];
+    if (setting === "false") {
+      setting = false;
+    }
     return setting !== undefined ? setting : fallback;
   }
 
