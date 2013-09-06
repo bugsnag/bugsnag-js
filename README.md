@@ -126,6 +126,16 @@ release stages notify Bugsnag of errors you can set `notifyReleaseStages`:
 Bugsnag.notifyReleaseStages = ["development", "production"];
 ```
 
+###autoNotify
+
+By default, we will automatically notify Bugsnag of any JavaScript errors that
+get sent to `window.onerror`. If you want to stop this from happening, you can
+set `autoNotify` to `false`:
+
+```javascript
+Bugsnag.autoNotify = false;
+```
+
 
 Reporting Bugs or Feature Requests
 ----------------------------------
