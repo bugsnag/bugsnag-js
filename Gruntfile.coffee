@@ -54,18 +54,25 @@ module.exports = (grunt) ->
         gzip: true
 
       release:
-        upload: [
-          src: "dist/bugsnag.js",
+        upload: [{
+          src: "dist/bugsnag.js"
           dest: "bugsnag-<%= pkg.version %>.js"
-        ,
-          src: "dist/bugsnag.min.js",
+        }, {
+          src: "dist/bugsnag.min.js"
           dest: "bugsnag-<%= pkg.version %>.min.js"
-        ]
+        }]
 
     # Version bumping
     bump:
       options: part: "patch"
       files: ["package.json", "component.json"]
+
+    watch:
+      test:
+        options:
+          livereload: 35729
+        files: ['test/*.js', 'src/*.js'],
+        tasks: ['jshint', 'concat']
 
     # Web server
     connect:
@@ -73,6 +80,16 @@ module.exports = (grunt) ->
         options:
           hostname: null
           port: 8888
+      test:
+        options:
+          hostname: 'localhost'
+          port: 9002
+          livereload: 35729
+          open: true
+          base: [
+            'test'
+            './'
+          ]
 
     # Tests
     mochaCloud:
@@ -103,6 +120,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks "grunt-contrib-concat"
   grunt.loadNpmTasks "grunt-contrib-uglify"
   grunt.loadNpmTasks "grunt-contrib-connect"
+  grunt.loadNpmTasks "grunt-contrib-watch"
   grunt.loadNpmTasks "grunt-bumpx"
   grunt.loadNpmTasks "grunt-s3"
   grunt.loadNpmTasks "grunt-docco"
@@ -130,7 +148,7 @@ module.exports = (grunt) ->
     # Progress hooks
     cloud.on "start", (browser) ->
       console.log "[#{browser.browserName} #{browser.version} #{browser.platform}] Starting tests"
-    
+
     cloud.on "end", (browser, res) ->
       if res.failures > 0
         console.log "[#{browser.browserName} #{browser.version} #{browser.platform}] #{res.failures} test(s) failed:".red
@@ -139,7 +157,7 @@ module.exports = (grunt) ->
           console.log "    #{f.error.message}".red
       else
         console.log "[#{browser.browserName} #{browser.version} #{browser.platform}] All tests passed".green
-    
+
     # Start tests
     cloud.start (err, res) ->
       console.log(err) if err?
@@ -152,7 +170,10 @@ module.exports = (grunt) ->
   grunt.registerTask "server", ["connect:server:keepalive"]
 
   # Run tests
-  grunt.registerTask "test", ["connect", "mocha-cloud"]
+  grunt.registerTask "test", ["connect:server", "mocha-cloud"]
+
+  # Run tests locally
+  grunt.registerTask "local-test", ["jshint", "concat", "connect:test", "watch:test"]
 
   # Default meta-task
   grunt.registerTask "default", ["jshint", "concat", "uglify", "docco"]
