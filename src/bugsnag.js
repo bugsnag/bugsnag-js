@@ -102,8 +102,7 @@ window.Bugsnag = (function (window, document, navigator) {
   var NOTIFIER_VERSION = "<%= pkg.version %>";
   var DEFAULT_RELEASE_STAGE = "production";
   var DEFAULT_NOTIFY_RELEASE_STAGES = [DEFAULT_RELEASE_STAGE];
-
-  var DEFAULT_WHITELIST = "(.)*";
+  var DEFAULT_WHITE_LIST = "(.)*";
 
   // Keep a reference to the currently executing script in the DOM.
   // We'll use this later to extract settings from attributes.
@@ -222,9 +221,9 @@ window.Bugsnag = (function (window, document, navigator) {
     }
 
     // Check if we should notify for this release stage.
-    var releaseStage = getSetting("releaseStage") || DEFAULT_RELEASE_STAGE;
-    var notifyReleaseStages = getSetting("notifyReleaseStages") || DEFAULT_NOTIFY_RELEASE_STAGES;
-    var notifyFilesWhitelist = getSetting("notifyFilesWhitelist") || DEFAULT_WHITELIST;
+    var releaseStage = getSetting("releaseStage", DEFAULT_RELEASE_STAGE);
+    var notifyReleaseStages = getSetting("notifyReleaseStages", DEFAULT_NOTIFY_RELEASE_STAGES);
+    var notifyFilesWhiteList = getSetting("notifyFilesWhiteList", DEFAULT_WHITE_LIST);
     var shouldNotify = false;
     for (var i = 0; i < notifyReleaseStages.length; i++) {
       if (releaseStage === notifyReleaseStages[i]) {
@@ -235,7 +234,7 @@ window.Bugsnag = (function (window, document, navigator) {
 
     if (shouldNotify) {
       var filename = details.file || "undefined";
-      var match = filename.match(notifyFilesWhitelist);
+      var match = filename.match(notifyFilesWhiteList);
       shouldNotify = (match && match[0].length > 0);
     }
 
