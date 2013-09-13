@@ -72,18 +72,13 @@ window.Bugsnag = (function (window, document, navigator) {
     }
 
     if (shouldNotify) {
-      var stackTrace = exception && stacktraceFromException(exception) || generateStacktrace();
-      var meta = null;
-      if(exception){
-        meta = {charNo: charNo};
-      }
       sendToBugsnag({
         name: "window.onerror",
         message: message,
         file: url,
         lineNumber: lineNo,
-        stacktrace: stackTrace
-      }, meta);
+        stacktrace: exception && stacktraceFromException(exception)
+      });
     }
 
     // Fire the existing `window.onerror` handler, if one exists

@@ -167,9 +167,7 @@ describe("window", function () {
       assert.equal(params.name, "window.onerror");
       assert.equal(params.message, "Something broke");
       assert.equal(params.lineNumber, 123);
-      assert.equal(params.metaData, undefined);
-      assert.notEqual(params.stacktrace, undefined);
-      assert(params.stacktrace.length > 0);
+      assert.equal(params.stacktrace, undefined);
     });
 
     it("should be able to process character number and stacktrace in some browsers", function () {
@@ -182,7 +180,6 @@ describe("window", function () {
       assert.equal(params.name, "window.onerror");
       assert.equal(params.message, "Something broke");
       assert.equal(params.lineNumber, 123);
-      assert.equal(params.metaData.charNo, 15);
       assert.notEqual(params.stacktrace, undefined);
       assert(params.stacktrace.length > 0);
     });
