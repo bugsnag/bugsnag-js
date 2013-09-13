@@ -118,12 +118,22 @@ By default this is set to be "production".
 
 ###notifyReleaseStages
 
-By default, we will only notify Bugsnag of errors that happen when your 
+By default, we will only notify Bugsnag of errors that happen when your
 `releaseStage` is set to be "production". If you would like to change which
 release stages notify Bugsnag of errors you can set `notifyReleaseStages`:
 
 ```javascript
 Bugsnag.notifyReleaseStages = ["development", "production"];
+```
+
+###notifyFilesWhiteList
+
+By default, we notify Bugsnag of errors that happen in any file. But you can provide a
+white list regexp expression to the variable `notifyFilesWhiteList`.
+So it will notify only if filename matches this expression.
+
+```javascript
+Bugsnag.notifyFilesWhiteList = /app\.js|vendor\.js/i;
 ```
 
 ###autoNotify
