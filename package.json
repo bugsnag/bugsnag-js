@@ -12,7 +12,6 @@
         "grunt-s3": "git://github.com/pifantastic/grunt-s3",
         "grunt-bumpx": "~0.1.0",
         "mocha": "~1.8.1",
-        "mocha-cloud": "git://github.com/visionmedia/mocha-cloud",
         "mocha-phantomjs": "~2.0.0",
         "chai": "~1.5.0",
         "sinon-chai": "~2.3.1",
