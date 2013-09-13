@@ -202,6 +202,17 @@ describe("window", function () {
       assert.equal(params.lineNumber, 123);
     });
 
+    it("should not notify bugsnag if autoNotify is false", function () {
+      Bugsnag.autoNotify = false;
+
+      stub(Bugsnag, "_onerror");
+
+      window.onerror("Something broke", "http://example.com/example.js", 123);
+
+      assert(Bugsnag.testRequest.called === false, "Bugsnag.testRequest should not have been called");
+      assert(Bugsnag._onerror.calledOnce, "Bugsnag._onerror should have been called once");
+    });
+
     it("should call the original onerror", function () {
       stub(Bugsnag, "_onerror");
 
@@ -274,4 +285,7 @@ function stub(obj, fname) {
   };
 
   obj[fname].origFunction = origFunction;
+  obj[fname].called = false;
+  obj[fname].calledOnce = false;
+  obj[fname].calledCount = 0;
 }
