@@ -234,9 +234,9 @@ window.Bugsnag = (function (window, document, navigator) {
     }
 
     if (shouldNotify) {
-      var filename = (typeof(details.file) === "undefined") ? "undefined" : details.file;
-
-      shouldNotify = (filename.match(notifyFilesWhitelist)[0].length !== 0);
+      var filename = details.file || "undefined";
+      var match = filename.match(notifyFilesWhitelist);
+      shouldNotify = (match && match[0].length > 0);
     }
 
     if (!shouldNotify) {
