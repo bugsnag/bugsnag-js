@@ -1,11 +1,14 @@
-Bugsnag Notifier for JavaScript
-===============================
+Bugsnag Notifier for JavaScript (Beta)
+======================================
 
 The Bugsnag Notifier for JavaScript gives you instant notification of errors and
 exceptions in your website's JavaScript code.
 
 Bugsnag's JavaScript notifier is incredibly small, and has no external
 dependencies (not even jQuery!) so you can safely use it on any website.
+
+This notifier is currently in beta, we're working on improving automatic
+error capturing and grouping very soon.
 
 [Bugsnag](https://bugsnag.com) captures errors in real-time from your web,
 mobile and desktop applications, helping you to understand and resolve them
@@ -20,7 +23,7 @@ Include `bugsnag.js` from our CDN in the `<head>` tag of your website, before
 any other `<script>` tags.
 
 ```html
-<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-1.0.6.min.js" data-apikey="YOUR-API-KEY-HERE"></script>
+<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-1.0.9.min.js" data-apikey="YOUR-API-KEY-HERE"></script>
 ```
 
 Make sure to set your Bugsnag API key in the `data-apikey` attribute on the
@@ -121,6 +124,16 @@ release stages notify Bugsnag of errors you can set `notifyReleaseStages`:
 
 ```javascript
 Bugsnag.notifyReleaseStages = ["development", "production"];
+```
+
+###autoNotify
+
+By default, we will automatically notify Bugsnag of any JavaScript errors that
+get sent to `window.onerror`. If you want to stop this from happening, you can
+set `autoNotify` to `false`:
+
+```javascript
+Bugsnag.autoNotify = false;
 ```
 
 

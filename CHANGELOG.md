@@ -1,6 +1,14 @@
 Changelog
 =========
 
+1.0.9
+-----
+-   Fixed bug with reading the `data-autonotify` setting
+
+1.0.8
+-----
+-   Add `autoNotify` setting to disable `window.onerror` notification
+
 1.0.7
 -----
 -   Add support for setting a custom userId
