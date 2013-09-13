@@ -1,5 +1,3 @@
-require "colors"
-
 module.exports = (grunt) ->
   # Configuration
   grunt.initConfig
