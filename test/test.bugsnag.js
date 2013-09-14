@@ -56,8 +56,8 @@ describe("Bugsnag", function () {
       assert(requestData().params.stacktrace != null, "stacktrace should be in request params");
     });
 
-    it("should not notify if notifyFilesWhitelist regex doesn't match", function () {
-      Bugsnag.notifyFilesWhitelist = "(w)*";
+    it("should not notify if notifyFilesWhiteList regex doesn't match", function () {
+      Bugsnag.notifyFilesWhiteList = "(w)*";
       var error = new Error("Example error");
       error.fileName = "production.js";
       Bugsnag.notifyException(error);
@@ -65,8 +65,8 @@ describe("Bugsnag", function () {
       assert(!Bugsnag.testRequest.called, "Bugsnag.testRequest should not have been called");
     });
 
-    it("should notify if notifyFilesWhitelist regex matches", function() {
-      Bugsnag.notifyFilesWhitelist = "production";
+    it("should notify if notifyFilesWhiteList regex matches", function() {
+      Bugsnag.notifyFilesWhiteList = "production";
       var error = new Error("Example error");
       error.fileName = "production.js";
       Bugsnag.notifyException(error);
@@ -74,7 +74,7 @@ describe("Bugsnag", function () {
       assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
     });
 
-    it("should notify if notifyFilesWhitelist is default '.*'", function() {
+    it("should notify if notifyFilesWhiteList is default '.*'", function() {
       var error = new Error("Example error");
       error.fileName = "production.js";
       Bugsnag.notifyException(error);
@@ -82,8 +82,8 @@ describe("Bugsnag", function () {
       assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
     });
 
-    it("should notify if notifyFilesWhitelist regex matches 'undefined' and no file name given", function() {
-      Bugsnag.notifyFilesWhitelist = "undefined";
+    it("should notify if notifyFilesWhiteList regex matches 'undefined' and no file name given", function() {
+      Bugsnag.notifyFilesWhiteList = "undefined";
       Bugsnag.notifyException(new Error("Example error"));
 
       assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
