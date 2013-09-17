@@ -61,7 +61,7 @@ window.Bugsnag = (function (window, document, navigator) {
   // Attach to `window.onerror` events and notify Bugsnag when they happen.
   // These are mostly js compile/parse errors, but on some browsers all
   // "uncaught" exceptions will fire this event.
-  window.onerror = function (message, url, lineNo) {
+  window.onerror = function (message, url, lineNo, charNo, exception) {
     var shouldNotify = getSetting("autoNotify", true);
 
     // Warn about useless cross-domain script errors and return before notifying.
@@ -76,7 +76,8 @@ window.Bugsnag = (function (window, document, navigator) {
         name: "window.onerror",
         message: message,
         file: url,
-        lineNumber: lineNo
+        lineNumber: lineNo,
+        stacktrace: exception && stacktraceFromException(exception)
       });
     }
 
