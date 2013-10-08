@@ -126,6 +126,16 @@ release stages notify Bugsnag of errors you can set `notifyReleaseStages`:
 Bugsnag.notifyReleaseStages = ["development", "production"];
 ```
 
+###notifyFilesWhiteList
+
+By default, we notify Bugsnag of errors that happen in any file. But you can provide a
+white list regexp expression to the variable `notifyFilesWhiteList`.
+So it will notify only if filename matches this expression.
+
+```javascript
+Bugsnag.notifyFilesWhiteList = /app\.js|vendor\.js/i;
+```
+
 ###autoNotify
 
 By default, we will automatically notify Bugsnag of any JavaScript errors that
