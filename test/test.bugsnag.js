@@ -124,7 +124,7 @@ describe("Bugsnag", function () {
     });
 
     it("should call a before notify callback", function() {
-      Bugsnag.beforeNotify = sinon.stub().returns(true);
+      stub(Bugsnag, "beforeNotify").returns(true);
 
       Bugsnag.notifyException(new Error("Example error"));
 
@@ -133,7 +133,7 @@ describe("Bugsnag", function () {
     })
 
     it("should let before bugsnag notify halt notification", function() {
-      Bugsnag.beforeNotify = sinon.stub().returns(false);
+      stub(Bugsnag, "beforeNotify").returns(false);
 
       Bugsnag.notifyException(new Error("Example error"));
 
