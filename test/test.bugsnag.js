@@ -188,7 +188,7 @@ describe("window", function () {
       assert.equal(params.stacktrace, undefined);
     });
 
-    it("should be able to process character number and stacktrace in some browsers", function () {
+    it("should be able to process column number and stacktrace in some browsers", function () {
       Bugsnag._onerror = null; // Disable mocha's onerror for this test
 
       window.onerror("Something broke", "http://example.com/example.js", 123, 15, new Error("Example error"));
