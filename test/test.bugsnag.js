@@ -185,6 +185,21 @@ describe("window", function () {
       assert.equal(params.name, "window.onerror");
       assert.equal(params.message, "Something broke");
       assert.equal(params.lineNumber, 123);
+      assert.equal(params.stacktrace, undefined);
+    });
+
+    it("should be able to process character number and stacktrace in some browsers", function () {
+      Bugsnag._onerror = null; // Disable mocha's onerror for this test
+
+      window.onerror("Something broke", "http://example.com/example.js", 123, 15, new Error("Example error"));
+
+      var params = requestData().params;
+      assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
+      assert.equal(params.name, "window.onerror");
+      assert.equal(params.message, "Something broke");
+      assert.equal(params.lineNumber, 123);
+      assert.notEqual(params.stacktrace, undefined);
+      assert(params.stacktrace.length > 0);
     });
 
     it("should not notify bugsnag if autoNotify is false", function () {
@@ -253,24 +268,4 @@ function requestData() {
     url: Bugsnag.testRequest.args[0][0],
     params: Bugsnag.testRequest.args[0][1]
   };
-}
-
-// Micro stubbing library
-function stub(obj, fname) {
-  origFunction = obj[fname];
-  obj[fname] = function () {
-    var self = obj[fname];
-    self.args = self.args || [];
-    self.args.push(arguments);
-    self.calledCount = self.calledCount ? self.calledCount + 1 : 1;
-    self.calledOnce = (self.calledCount == 1);
-    self.called = true;
-    self.restore = function () { obj[fname] = origFunction };
-    return self;
-  };
-
-  obj[fname].origFunction = origFunction;
-  obj[fname].called = false;
-  obj[fname].calledOnce = false;
-  obj[fname].calledCount = 0;
 }

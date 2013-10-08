@@ -1,6 +1,3 @@
-require "colors"
-MochaCloud = require "mocha-cloud"
-
 module.exports = (grunt) ->
   # Configuration
   grunt.initConfig
@@ -54,43 +51,38 @@ module.exports = (grunt) ->
         gzip: true
 
       release:
-        upload: [
-          src: "dist/bugsnag.js",
+        upload: [{
+          src: "dist/bugsnag.js"
           dest: "bugsnag-<%= pkg.version %>.js"
-        ,
-          src: "dist/bugsnag.min.js",
+        }, {
+          src: "dist/bugsnag.min.js"
           dest: "bugsnag-<%= pkg.version %>.min.js"
-        ]
+        }]
 
     # Version bumping
     bump:
       options: part: "patch"
       files: ["package.json", "component.json"]
 
+    watch:
+      test:
+        options:
+          livereload: 35729
+        files: ['test/*.js', 'src/*.js'],
+        tasks: ['jshint', 'concat']
+
     # Web server
     connect:
-      server:
+      test:
         options:
-          hostname: null
-          port: 8888
-
-    # Tests
-    mochaCloud:
-      username: process.env.SAUCE_USERNAME
-      accessKey: process.env.SAUCE_ACCESS_KEY
-      url: "http://localhost:8888/test/"
-      browsers: [
-        ["chrome", "", "Mac 10.8"]
-        ["chrome", "", "Windows 2003"]
-        ["firefox", "11", "Mac 10.6"]
-        ["firefox", "11", "Windows 2003"]
-        ["safari", "5", "Mac 10.6"]
-        ["safari", "6", "Mac 10.8"]
-        ["iexplore", "6", "Windows 2003"]
-        ["iexplore", "7", "Windows 2003"]
-        ["iexplore", "8", "Windows 2003"]
-        ["iexplore", "9", "Windows 2008"]
-      ]
+          hostname: 'localhost'
+          port: 9002
+          livereload: 35729
+          open: true
+          base: [
+            'test'
+            './'
+          ]
 
     # Documentation
     docco:
@@ -103,6 +95,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks "grunt-contrib-concat"
   grunt.loadNpmTasks "grunt-contrib-uglify"
   grunt.loadNpmTasks "grunt-contrib-connect"
+  grunt.loadNpmTasks "grunt-contrib-watch"
   grunt.loadNpmTasks "grunt-bumpx"
   grunt.loadNpmTasks "grunt-s3"
   grunt.loadNpmTasks "grunt-docco"
@@ -117,34 +110,6 @@ module.exports = (grunt) ->
       console.log("Error running git tag: " + error) if error?
       done(!error?)
 
-  # Testing
-  grunt.registerTask "mocha-cloud", "Run mocha browser tests using mocha-cloud and Sauce Labs", ->
-    done = this.async()
-    options = grunt.config.get("mochaCloud")
-
-    # Set up mocha-cloud
-    cloud = new MochaCloud("", options.username, options.accessKey)
-    cloud.url options.url
-    cloud.browser b... for b in options.browsers
-
-    # Progress hooks
-    cloud.on "start", (browser) ->
-      console.log "[#{browser.browserName} #{browser.version} #{browser.platform}] Starting tests"
-    
-    cloud.on "end", (browser, res) ->
-      if res.failures > 0
-        console.log "[#{browser.browserName} #{browser.version} #{browser.platform}] #{res.failures} test(s) failed:".red
-        for f in res.failed
-          console.log "-   #{f.fullTitle}".red
-          console.log "    #{f.error.message}".red
-      else
-        console.log "[#{browser.browserName} #{browser.version} #{browser.platform}] All tests passed".green
-    
-    # Start tests
-    cloud.start (err, res) ->
-      console.log(err) if err?
-      done(!err? && res[0].failures == 0)
-
   # Release meta-task
   grunt.registerTask "release", ["jshint", "concat", "uglify", "docco", "git-tag", "s3"]
 
@@ -152,7 +117,7 @@ module.exports = (grunt) ->
   grunt.registerTask "server", ["connect:server:keepalive"]
 
   # Run tests
-  grunt.registerTask "test", ["connect", "mocha-cloud"]
+  grunt.registerTask "test", ["jshint", "concat", "connect:test", "watch:test"]
 
   # Default meta-task
   grunt.registerTask "default", ["jshint", "concat", "uglify", "docco"]

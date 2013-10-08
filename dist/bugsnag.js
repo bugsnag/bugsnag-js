@@ -99,7 +99,7 @@ window.Bugsnag = (function (window, document, navigator) {
   var DEFAULT_BASE_ENDPOINT = "https://notify.bugsnag.com/";
   var DEFAULT_NOTIFIER_ENDPOINT = DEFAULT_BASE_ENDPOINT + "js";
   var DEFAULT_METRICS_ENDPOINT = DEFAULT_BASE_ENDPOINT + "metrics";
-  var NOTIFIER_VERSION = "1.0.8";
+  var NOTIFIER_VERSION = "1.0.9";
   var DEFAULT_RELEASE_STAGE = "production";
   var DEFAULT_NOTIFY_RELEASE_STAGES = [DEFAULT_RELEASE_STAGE];
 
@@ -195,6 +195,9 @@ window.Bugsnag = (function (window, document, navigator) {
   function getSetting(name, fallback) {
     data = data || getData(thisScript);
     var setting = self[name] !== undefined ? self[name] : data[name.toLowerCase()];
+    if (setting === "false") {
+      setting = false;
+    }
     return setting !== undefined ? setting : fallback;
   }
 
