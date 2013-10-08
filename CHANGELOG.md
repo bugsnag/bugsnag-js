@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.0.10
+------
+-   Add support for sending column numbers and error objects from `window.onerror` in modern browsers
+-   Add a `beforeNotify` callback to allow filtering of errors being sent to Bugsnag
+
 1.0.9
 -----
 -   Fixed bug with reading the `data-autonotify` setting
