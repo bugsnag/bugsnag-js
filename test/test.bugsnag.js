@@ -122,6 +122,24 @@ describe("Bugsnag", function () {
       assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
       assert.equal(requestData().url, "https://notify.bugsnag.com/js");
     });
+
+    it("should call a before notify callback", function() {
+      stub(Bugsnag, "beforeNotify").returns(true);
+
+      Bugsnag.notifyException(new Error("Example error"));
+
+      assert(Bugsnag.beforeNotify.calledOnce, "Bugsnag.beforeNotify should have been called once");
+      assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
+    })
+
+    it("should let before bugsnag notify halt notification", function() {
+      stub(Bugsnag, "beforeNotify").returns(false);
+
+      Bugsnag.notifyException(new Error("Example error"));
+
+      assert(Bugsnag.beforeNotify.calledOnce, "Bugsnag.beforeNotify should have been called once");
+      assert(!Bugsnag.testRequest.called, "Bugsnag.testRequest should not have been called");
+    })
   });
 
   describe("notify", function () {

@@ -238,6 +238,14 @@ window.Bugsnag = (function (window, document, navigator) {
     // Merge the local and global `metaData`.
     var mergedMetaData = merge(getSetting("metaData"), metaData);
 
+    var beforeNotify = self.beforeNotify;
+    if (beforeNotify !== undefined) {
+      var retVal = beforeNotify(details, mergedMetaData);
+      if (retVal === false) {
+        return;
+      }
+    }
+
     // Make the request:
     //
     // -  Work out which endpoint to send to.
