@@ -238,6 +238,7 @@ window.Bugsnag = (function (window, document, navigator) {
     // Merge the local and global `metaData`.
     var mergedMetaData = merge(getSetting("metaData"), metaData);
 
+    // Run any `beforeNotify` function
     var beforeNotify = self.beforeNotify;
     if (typeof(beforeNotify) === "function") {
       var retVal = beforeNotify(details, mergedMetaData);
