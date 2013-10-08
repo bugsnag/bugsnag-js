@@ -61,7 +61,7 @@ window.Bugsnag = (function (window, document, navigator) {
   // Attach to `window.onerror` events and notify Bugsnag when they happen.
   // These are mostly js compile/parse errors, but on some browsers all
   // "uncaught" exceptions will fire this event.
-  window.onerror = function (message, url, lineNo) {
+  window.onerror = function (message, url, lineNo, charNo, exception) {
     var shouldNotify = getSetting("autoNotify", true);
 
     // Warn about useless cross-domain script errors and return before notifying.
@@ -76,7 +76,9 @@ window.Bugsnag = (function (window, document, navigator) {
         name: "window.onerror",
         message: message,
         file: url,
-        lineNumber: lineNo
+        lineNumber: lineNo,
+        columnNumber: charNo,
+        stacktrace: exception && stacktraceFromException(exception)
       });
     }
 
@@ -99,7 +101,7 @@ window.Bugsnag = (function (window, document, navigator) {
   var DEFAULT_BASE_ENDPOINT = "https://notify.bugsnag.com/";
   var DEFAULT_NOTIFIER_ENDPOINT = DEFAULT_BASE_ENDPOINT + "js";
   var DEFAULT_METRICS_ENDPOINT = DEFAULT_BASE_ENDPOINT + "metrics";
-  var NOTIFIER_VERSION = "1.0.9";
+  var NOTIFIER_VERSION = "1.0.10";
   var DEFAULT_RELEASE_STAGE = "production";
   var DEFAULT_NOTIFY_RELEASE_STAGES = [DEFAULT_RELEASE_STAGE];
 
@@ -237,6 +239,15 @@ window.Bugsnag = (function (window, document, navigator) {
     // Merge the local and global `metaData`.
     var mergedMetaData = merge(getSetting("metaData"), metaData);
 
+    // Run any `beforeNotify` function
+    var beforeNotify = self.beforeNotify;
+    if (typeof(beforeNotify) === "function") {
+      var retVal = beforeNotify(details, mergedMetaData);
+      if (retVal === false) {
+        return;
+      }
+    }
+
     // Make the request:
     //
     // -  Work out which endpoint to send to.
@@ -262,7 +273,8 @@ window.Bugsnag = (function (window, document, navigator) {
       message: details.message,
       stacktrace: details.stacktrace,
       file: details.file,
-      lineNumber: details.lineNumber
+      lineNumber: details.lineNumber,
+      columnNumber: details.columnNumber
     });
   }
 
