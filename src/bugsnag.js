@@ -77,6 +77,7 @@ window.Bugsnag = (function (window, document, navigator) {
         message: message,
         file: url,
         lineNumber: lineNo,
+        columnNumber: charNo,
         stacktrace: exception && stacktraceFromException(exception)
       });
     }
@@ -272,7 +273,8 @@ window.Bugsnag = (function (window, document, navigator) {
       message: details.message,
       stacktrace: details.stacktrace,
       file: details.file,
-      lineNumber: details.lineNumber
+      lineNumber: details.lineNumber,
+      columnNumber: details.columnNumber
     });
   }
 
