@@ -136,6 +136,23 @@ set `autoNotify` to `false`:
 Bugsnag.autoNotify = false;
 ```
 
+###beforeNotify
+
+To have more fine grained control over what errors are sent to Bugsnag, you can 
+implement a beforeNotify function. If you want to halt the notification completely, 
+return false from this function. You can also add metaData by editing the metaData
+parameter.
+
+```javascript
+Bugsnag.beforeNotify = function(error, metaData) {
+  var filename = error.file || "undefined";
+  var match = filename.match(/app\.js|vendor\.js/i);
+  return (match && match[0].length > 0);
+}
+```
+
+The error parameter contains name, message, file and lineNumber fields that contain
+information about the error that is being notified.
 
 Reporting Bugs or Feature Requests
 ----------------------------------
