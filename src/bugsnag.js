@@ -239,7 +239,7 @@ window.Bugsnag = (function (window, document, navigator) {
     var mergedMetaData = merge(getSetting("metaData"), metaData);
 
     var beforeNotify = self.beforeNotify;
-    if (beforeNotify !== undefined) {
+    if (typeof(beforeNotify) === "function") {
       var retVal = beforeNotify(details, mergedMetaData);
       if (retVal === false) {
         return;
