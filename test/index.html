@@ -9,7 +9,6 @@
   <!-- Mocha -->
   <div id="mocha"></div>
   <script src="node_modules/mocha/mocha.js"></script>
-  <script src="node_modules/mocha-cloud/build/build.js"></script>
   <script src="test/assert.js"></script>
   <script src="test/stub.js"></script>
 
@@ -23,7 +22,7 @@
     if (window.mochaPhantomJS) {
       mochaPhantomJS.run();
     } else {
-      cloud(mocha.run());
+      mocha.run();
     }
   </script>
 </body>
