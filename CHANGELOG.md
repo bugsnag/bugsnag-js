@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.0.11
+------
+-   Always notify if `notifyReleaseStages` is not set
+
 1.0.10
 ------
 -   Add support for sending column numbers and error objects from `window.onerror` in modern browsers

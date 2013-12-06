@@ -101,9 +101,7 @@ window.Bugsnag = (function (window, document, navigator) {
   var DEFAULT_BASE_ENDPOINT = "https://notify.bugsnag.com/";
   var DEFAULT_NOTIFIER_ENDPOINT = DEFAULT_BASE_ENDPOINT + "js";
   var DEFAULT_METRICS_ENDPOINT = DEFAULT_BASE_ENDPOINT + "metrics";
-  var NOTIFIER_VERSION = "1.0.10";
-  var DEFAULT_RELEASE_STAGE = "production";
-  var DEFAULT_NOTIFY_RELEASE_STAGES = [DEFAULT_RELEASE_STAGE];
+  var NOTIFIER_VERSION = "1.0.11";
 
   // Keep a reference to the currently executing script in the DOM.
   // We'll use this later to extract settings from attributes.
@@ -222,14 +220,18 @@ window.Bugsnag = (function (window, document, navigator) {
     }
 
     // Check if we should notify for this release stage.
-    var releaseStage = getSetting("releaseStage") || DEFAULT_RELEASE_STAGE;
-    var notifyReleaseStages = getSetting("notifyReleaseStages") || DEFAULT_NOTIFY_RELEASE_STAGES;
+    var releaseStage = getSetting("releaseStage");
+    var notifyReleaseStages = getSetting("notifyReleaseStages");
     var shouldNotify = false;
-    for (var i = 0; i < notifyReleaseStages.length; i++) {
-      if (releaseStage === notifyReleaseStages[i]) {
-        shouldNotify = true;
-        break;
+    if (notifyReleaseStages) {
+      for (var i = 0; i < notifyReleaseStages.length; i++) {
+        if (releaseStage === notifyReleaseStages[i]) {
+          shouldNotify = true;
+          break;
+        }
       }
+    } else {
+      shouldNotify = true;
     }
 
     if (!shouldNotify) {
