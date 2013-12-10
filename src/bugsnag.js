@@ -222,20 +222,18 @@ window.Bugsnag = (function (window, document, navigator) {
     // Check if we should notify for this release stage.
     var releaseStage = getSetting("releaseStage");
     var notifyReleaseStages = getSetting("notifyReleaseStages");
-    var shouldNotify = false;
     if (notifyReleaseStages) {
+      var shouldNotify = false;
       for (var i = 0; i < notifyReleaseStages.length; i++) {
         if (releaseStage === notifyReleaseStages[i]) {
           shouldNotify = true;
           break;
         }
       }
-    } else {
-      shouldNotify = true;
-    }
 
-    if (!shouldNotify) {
-      return;
+      if (!shouldNotify) {
+        return;
+      }
     }
 
     // Merge the local and global `metaData`.
