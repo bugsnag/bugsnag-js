@@ -67,6 +67,31 @@ the last parameter, which should take the same format as [metaData](#metadata)
 described below.
 
 
+noConflict Support
+------------------
+
+Bugsnag has a `noConflict` function for removing itself from the `window` object
+and restoring the previous binding. This is intended for use in environments
+where developers can't assume that Bugsnag isn't in use already (such as 3rd
+party embedded javascript) and want to control what gets reported to their
+Bugsnag account.
+
+The object returned from `noConflict()` is the full Bugsnag object so can be
+used in the same way:
+
+```javascript
+var myBugsnag = Bugsnag.noConflict();
+// window.Bugsnag now is bound to what is was before the bugsnag script was
+added to the DOM
+myBugsnag.apiKey = "my-special-api-key";
+try {
+  // highly volatile code
+} catch (e) {
+  myBugsnag.notifyException(e, "OhNoes");
+}
+```
+
+
 Browser Support
 ---------------
 
