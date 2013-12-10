@@ -225,7 +225,30 @@ describe("window", function () {
   });
 });
 
+describe("noConflict", function() {
+  beforeEach(buildUp);
+  afterEach(tearDown);
+
+  it("should restore previous window.Bugsnag binding", function () {
+    var newBugsnag = window.Bugsnag.noConflict();
+    assert("put_me_back" in window.Bugsnag, "should have restored dummy object");
+  });
+
+  it("should remove bugsnag object from window.Bugsnag", function() {
+    var newBugsnag = window.Bugsnag.noConflict();
+    assert(!("notifyException" in window.Bugsnag), "should not have Bugsnag functions");
+  });
+
+  it("should return full bugsnag object", function () {
+    var newBugsnag = window.Bugsnag.noConflict();
+    assert("notifyException" in newBugsnag, "noConflict object should have bugsnag functions");
+  });
+});
+
 function buildUp(cb) {
+  // dummy object to override
+  window.Bugsnag = {put_me_back: 1};
+
   // Keep track of mocha's window.onerror
   window._onerror = window.onerror;
 

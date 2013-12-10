@@ -10,8 +10,16 @@
 //
 
 // The `Bugsnag` object is the only globally exported variable
-window.Bugsnag = (function (window, document, navigator) {
+(function(definition) {
+  var old = window.Bugsnag;
+  window.Bugsnag = definition(window, document, navigator, old);
+})(function (window, document, navigator, old) {
   var self = {};
+
+  self.noConflict = function() {
+    window.Bugsnag = old;
+    return self;
+  };
 
   //
   // ### Manual error notification (public methods)
@@ -385,4 +393,4 @@ window.Bugsnag = (function (window, document, navigator) {
 
   return self;
 
-}(window, document, navigator));
+});
