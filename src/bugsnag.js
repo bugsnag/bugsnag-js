@@ -14,10 +14,15 @@
   var old = window.Bugsnag;
   window.Bugsnag = definition(window, document, navigator, old);
 })(function (window, document, navigator, old) {
-  var self = {};
+  var self = {},
+      ignoreOnError = 0,
+      undo = [];
 
   self.noConflict = function() {
     window.Bugsnag = old;
+    for (var i = 0; i < undo.length; i++) {
+      undo[i]();
+    }
     return self;
   };
 
@@ -58,44 +63,144 @@
     }, metaData);
   };
 
+  // ### Bugsnag.monkeyPatch
+  //
+  // Monkey patches the given global object's function exactly once,
+  // Bugsnag.noConflict() will remove all monkey-patches.
+  //
+  self.monkeyPatch = function (obj, name, makeReplacement) {
+    var original = obj[name];
+    if (original && original.bugsnag) {
+      obj[name] = original.bugsnag;
+      return;
+    }
+
+    var replacement = makeReplacement(original);
+    obj[name] = replacement;
+
+    if (original) {
+      original.bugsnag = replacement;
+    }
+    replacement.bugsnag = replacement;
+
+    undo.push(function () {
+      if (original) {
+        delete original.bugsnag;
+      }
+      obj[name] = original;
+    });
+  };
+
+  // #### Bugsnag.wrap
+  //
+  // Return a function acts like the given function, but reports
+  // any exceptions to Bugsnag.
+  self.wrap = function (_super) {
+    if (typeof _super !== "function") {
+      return _super;
+    }
+    if (_super.bugsnag) {
+      return _super.bugsnag;
+    }
+    _super.bugsnag = function () {
+      try {
+        return _super.apply(this, arguments);
+      } catch (e) {
+        self.notifyException(e);
+
+        // Ignore this error if it hits window.onerror
+        ignoreOnError += 1;
+        setTimeout(function () {
+          ignoreOnError -= 1;
+        });
+
+        throw e;
+      }
+    };
+    _super.bugsnag.bugsnag = _super.bugsnag;
+
+    return _super.bugsnag;
+  };
 
   //
   // ### Automatic error notification
   //
 
-  // Keep a reference to any existing `window.onerror` handler
-  self._onerror = window.onerror;
-
   // Attach to `window.onerror` events and notify Bugsnag when they happen.
   // These are mostly js compile/parse errors, but on some browsers all
   // "uncaught" exceptions will fire this event.
-  window.onerror = function (message, url, lineNo, charNo, exception) {
-    var shouldNotify = getSetting("autoNotify", true);
+  self.monkeyPatch(window, "onerror", function (_super) {
+    // Keep a reference to any existing `window.onerror` handler
+    self._onerror = _super;
 
-    // Warn about useless cross-domain script errors and return before notifying.
-    // http://stackoverflow.com/questions/5913978/cryptic-script-error-reported-in-javascript-in-chrome-and-firefox
-    if (shouldNotify && message === "Script error." && url === "" && lineNo === 0) {
-      log("Error on cross-domain script, couldn't notify Bugsnag.");
-      shouldNotify = false;
+    return function (message, url, lineNo, charNo, exception) {
+      var shouldNotify = getSetting("autoNotify", true);
+
+      // Warn about useless cross-domain script errors and return before notifying.
+      // http://stackoverflow.com/questions/5913978/cryptic-script-error-reported-in-javascript-in-chrome-and-firefox
+      if (shouldNotify && message === "Script error." && url === "" && lineNo === 0) {
+        log("Error on cross-domain script, couldn't notify Bugsnag.");
+        shouldNotify = false;
+      }
+
+
+      if (shouldNotify && !ignoreOnError) {
+        sendToBugsnag({
+          name: "window.onerror",
+          message: message,
+          file: url,
+          lineNumber: lineNo,
+          columnNumber: charNo,
+          stacktrace: exception && stacktraceFromException(exception)
+        });
+      }
+
+      // Fire the existing `window.onerror` handler, if one exists
+      if (self._onerror) {
+        self._onerror(message, url, lineNo, charNo, exception);
+      }
+    };
+  });
+
+  function hijackTimeFunc(_super) {
+    return function (f, t) {
+      return _super.call(this, self.wrap(f), t);
+    };
+  }
+
+  self.monkeyPatch(window, "setTimeout", hijackTimeFunc);
+  self.monkeyPatch(window, "setInterval", hijackTimeFunc);
+  if (window.requestAnimationFrame) {
+    self.monkeyPatch(window, "requestAnimationFrame", hijackTimeFunc);
+  }
+
+  function hijackEventFunc(_super) {
+    return function (e, f, capture, secure) {
+      if (f && f.handleEvent) {
+        f.handleEvent = self.wrap(f.handleEvent);
+      }
+      return _super.call(this, e, self.wrap(f), capture, secure);
+    };
+  }
+
+  function redefineEventTarget(global) {
+    if (global && global.prototype) {
+      self.monkeyPatch(global.prototype, "addEventListener", hijackEventFunc);
+      self.monkeyPatch(global.prototype, "removeEventListener", hijackEventFunc);
     }
+  }
 
-    if (shouldNotify) {
-      sendToBugsnag({
-        name: "window.onerror",
-        message: message,
-        file: url,
-        lineNumber: lineNo,
-        columnNumber: charNo,
-        stacktrace: exception && stacktraceFromException(exception)
-      });
-    }
+  // Chrome, Opera, Firefox
+  if (window.EventTarget) {
+    redefineEventTarget(window.EventTarget);
+    redefineEventTarget(window.Window); // Firefox only
 
-    // Fire the existing `window.onerror` handler, if one exists
-    if (self._onerror) {
-      self._onerror(message, url, lineNo);
-    }
-  };
-
+  // Safari, IE 8+ — though no backtraces until IE 11 :(
+  } else {
+    redefineEventTarget(window.Window);
+    redefineEventTarget(window.Node);
+    redefineEventTarget(window.XMLHttpRequest);
+  }
 
   //
   // ### Helpers & Setup

@@ -164,6 +164,21 @@ describe("Bugsnag", function () {
       assert(requestData().params.stacktrace != null, "stacktrace should be present");
     });
   });
+
+  describe("wrap", function () {
+    it("should notify if an exception is raised", function () {
+        try{
+            Bugsnag.wrap(function () {
+                throw new RuntimeError("Mooo..");
+            })();
+        } catch (e) {
+            assert(e, "exception should have been raised");
+        }
+
+        assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
+        assert(requestData().params.stacktrace != null, "stack trace should be present");
+    });
+  });
 });
 
 describe("window", function () {
@@ -223,6 +238,105 @@ describe("window", function () {
       assert(Bugsnag._onerror.calledOnce, "Bugsnag._onerror should have been called once");
     });
   });
+
+  describe("sendMessage", function () {
+    var callback, handle;
+    function makeHandle() {
+      return function handle(e) {
+        setTimeout(function () {
+          Bugsnag._onerror.restore();
+          callback();
+        });
+        function failA() {
+          throw new Error(e.data);
+        }
+        function failB() {
+          failA();
+        }
+        failB(e);
+      };
+    }
+
+    beforeEach(function () {
+      stub(Bugsnag, '_onerror'); // disable reporting error to mocha.
+      handle = makeHandle();
+      window.addEventListener("message", handle, false);
+    });
+
+    afterEach(function () {
+      window.removeEventListener("message", handle, false);
+    });
+
+    it("should automatically call the error handler once", function (done) {
+      callback = function () {
+        assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
+        done();
+      };
+      window.postMessage("hello", "*");
+    });
+
+    it("should include multi-line backtraces", function (done) {
+      callback = function () {
+        assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
+        assert(/failA(.|\n)*failB(.|\n)*handle/.test(requestData().params.stacktrace), "Bugsnag.testRequest should have been called with a multi-line stacktrace:: " + JSON.stringify(requestData().params.stacktrace));
+        done();
+      };
+      window.postMessage("hello", "*");
+    });
+
+  });
+});
+
+describe("document.body", function () {
+  beforeEach(buildUp);
+  afterEach(tearDown);
+
+  describe("addEventListener", function () {
+    var callback, handle;
+    function makeHandle() {
+      return function handle(e) {
+        setTimeout(function () {
+          Bugsnag._onerror.restore();
+          callback();
+        });
+        function failA() {
+          throw new Error("clicked");
+        }
+        function failB() {
+          failA();
+        }
+        failB(e);
+      };
+    }
+
+    beforeEach(function () {
+      handle = makeHandle();
+      stub(Bugsnag, '_onerror'); // disable reporting error to mocha.
+      document.body.addEventListener("click", handle, false);
+    });
+
+    afterEach(function () {
+      document.body.removeEventListener("click", handle, false);
+    });
+
+    it("should automatically call the error handler once", function (done) {
+      callback = function () {
+        assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
+        done();
+      };
+      document.body.click();
+    });
+
+    it("should include multi-line backtraces", function (done) {
+      callback = function () {
+        assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
+        assert(/failA(.|\n)*failB(.|\n)*handle/.test(requestData().params.stacktrace), "Bugsnag.testRequest should have been called with a multi-line stacktrace: " + requestData().params.stacktrace);
+        done();
+      };
+      document.body.click();
+    });
+
+  });
 });
 
 describe("noConflict", function() {
@@ -248,9 +362,6 @@ describe("noConflict", function() {
 function buildUp(cb) {
   // dummy object to override
   window.Bugsnag = {put_me_back: 1};
-
-  // Keep track of mocha's window.onerror
-  window._onerror = window.onerror;
 
   // Create bugsnag.js script tag
   var bugsnag = document.createElement("script");
@@ -280,11 +391,9 @@ function tearDown() {
   bugsnag.parentNode.removeChild(bugsnag);
 
   // Remove the Bugsnag object
-  window.Bugsnag = null;
-
-  // Reset mocha's window.onerror
-  window.onerror = window._onerror;
-  window._onerror = null
+  if (window.Bugsnag && window.Bugsnag.noConflict) {
+    Bugsnag.noConflict();
+  }
 }
 
 function requestData() {
