@@ -27,21 +27,23 @@ module.exports = (grunt) ->
 
       dist:
         files:
-          src: ["src/**/*.js"]
+          src: ["src/bugsnag.js"]
 
-    # File concatenation, copying and templating
-    concat:
-      options:
-        process: true
+    "regex-replace":
       dist:
-        src: ["src/bugsnag.js"]
-        dest: "dist/bugsnag.js"
+        src:
+          ["src/bugsnag.js"]
+        actions: [
+          name: "version"
+          search: /var NOTIFIER_VERSION =[^;]*;/
+          replace: "var NOTIFIER_VERSION = \"#{require("./package.json").version}\";"
+        ]
 
     # Minification
     uglify:
       dist:
         files:
-          "dist/bugsnag.min.js": ["dist/bugsnag.js"]
+          "src/bugsnag.min.js": ["src/bugsnag.js"]
 
     # Upload to s3
     s3:
@@ -52,10 +54,10 @@ module.exports = (grunt) ->
 
       release:
         upload: [{
-          src: "dist/bugsnag.js"
+          src: "src/bugsnag.js"
           dest: "bugsnag-<%= pkg.version %>.js"
         }, {
-          src: "dist/bugsnag.min.js"
+          src: "src/bugsnag.min.js"
           dest: "bugsnag-<%= pkg.version %>.min.js"
         }]
 
@@ -92,13 +94,13 @@ module.exports = (grunt) ->
 
   # Load tasks from plugins
   grunt.loadNpmTasks "grunt-contrib-jshint"
-  grunt.loadNpmTasks "grunt-contrib-concat"
   grunt.loadNpmTasks "grunt-contrib-uglify"
   grunt.loadNpmTasks "grunt-contrib-connect"
   grunt.loadNpmTasks "grunt-contrib-watch"
   grunt.loadNpmTasks "grunt-bumpx"
   grunt.loadNpmTasks "grunt-s3"
   grunt.loadNpmTasks "grunt-docco"
+  grunt.loadNpmTasks "grunt-regex-replace"
 
   # Task to tag a version in git
   grunt.registerTask "git-tag", "Tags a release in git", ->
@@ -120,4 +122,4 @@ module.exports = (grunt) ->
   grunt.registerTask "test", ["jshint", "concat", "connect:test", "watch:test"]
 
   # Default meta-task
-  grunt.registerTask "default", ["jshint", "concat", "uglify", "docco"]
+  grunt.registerTask "default", ["jshint", "regex-replace", "uglify", "docco"]
