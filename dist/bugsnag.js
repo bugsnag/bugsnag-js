@@ -10,8 +10,16 @@
 //
 
 // The `Bugsnag` object is the only globally exported variable
-window.Bugsnag = (function (window, document, navigator) {
+(function(definition) {
+  var old = window.Bugsnag;
+  window.Bugsnag = definition(window, document, navigator, old);
+})(function (window, document, navigator, old) {
   var self = {};
+
+  self.noConflict = function() {
+    window.Bugsnag = old;
+    return self;
+  };
 
   //
   // ### Manual error notification (public methods)
@@ -102,8 +110,6 @@ window.Bugsnag = (function (window, document, navigator) {
   var DEFAULT_NOTIFIER_ENDPOINT = DEFAULT_BASE_ENDPOINT + "js";
   var DEFAULT_METRICS_ENDPOINT = DEFAULT_BASE_ENDPOINT + "metrics";
   var NOTIFIER_VERSION = "1.0.10";
-  var DEFAULT_RELEASE_STAGE = "production";
-  var DEFAULT_NOTIFY_RELEASE_STAGES = [DEFAULT_RELEASE_STAGE];
 
   // Keep a reference to the currently executing script in the DOM.
   // We'll use this later to extract settings from attributes.
@@ -222,18 +228,20 @@ window.Bugsnag = (function (window, document, navigator) {
     }
 
     // Check if we should notify for this release stage.
-    var releaseStage = getSetting("releaseStage") || DEFAULT_RELEASE_STAGE;
-    var notifyReleaseStages = getSetting("notifyReleaseStages") || DEFAULT_NOTIFY_RELEASE_STAGES;
-    var shouldNotify = false;
-    for (var i = 0; i < notifyReleaseStages.length; i++) {
-      if (releaseStage === notifyReleaseStages[i]) {
-        shouldNotify = true;
-        break;
+    var releaseStage = getSetting("releaseStage");
+    var notifyReleaseStages = getSetting("notifyReleaseStages");
+    if (notifyReleaseStages) {
+      var shouldNotify = false;
+      for (var i = 0; i < notifyReleaseStages.length; i++) {
+        if (releaseStage === notifyReleaseStages[i]) {
+          shouldNotify = true;
+          break;
+        }
       }
-    }
 
-    if (!shouldNotify) {
-      return;
+      if (!shouldNotify) {
+        return;
+      }
     }
 
     // Merge the local and global `metaData`.
@@ -385,4 +393,4 @@ window.Bugsnag = (function (window, document, navigator) {
 
   return self;
 
-}(window, document, navigator));
+});
