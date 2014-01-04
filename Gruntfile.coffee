@@ -54,10 +54,10 @@ module.exports = (grunt) ->
 
       release:
         upload: [{
-          src: "dist/bugsnag.js"
+          src: "src/bugsnag.js"
           dest: "bugsnag-<%= pkg.version %>.js"
         }, {
-          src: "dist/bugsnag.min.js"
+          src: "src/bugsnag.min.js"
           dest: "bugsnag-<%= pkg.version %>.min.js"
         }]
 
