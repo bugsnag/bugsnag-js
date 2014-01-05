@@ -15,8 +15,25 @@
   window.Bugsnag = definition(window, document, navigator, old);
 })(function (window, document, navigator, old) {
   var self = {},
-      ignoreOnError = 0,
-      undo = [];
+      undo = [],
+      currentException,
+      setTimeout = window.setTimeout;
+
+
+  function setCurrentException(e) {
+    currentException = e;
+    setTimeout(function () {
+      if (currentException === e) {
+        currentException = null;
+      }
+    });
+  }
+
+  function getCurrentException(e) {
+    var ret = currentException;
+    currentException = null;
+    return ret;
+  }
 
   self.noConflict = function() {
     window.Bugsnag = old;
@@ -106,14 +123,7 @@
       try {
         return _super.apply(this, arguments);
       } catch (e) {
-        self.notifyException(e);
-
-        // Ignore this error if it hits window.onerror
-        ignoreOnError += 1;
-        setTimeout(function () {
-          ignoreOnError -= 1;
-        });
-
+        setCurrentException(e);
         throw e;
       }
     };
@@ -125,7 +135,6 @@
   //
   // ### Automatic error notification
   //
-
   // Attach to `window.onerror` events and notify Bugsnag when they happen.
   // These are mostly js compile/parse errors, but on some browsers all
   // "uncaught" exceptions will fire this event.
@@ -143,10 +152,19 @@
         shouldNotify = false;
       }
 
+      // IE 6+ support.
+      if (!charNo) {
+        charNo = window.event.errorCharacter;
+      }
+
+      // Use the exception our hooks caught (Firefox, Safari, IE 8+)
+      if (!exception) {
+        exception = getCurrentException();
+      }
 
       if (shouldNotify && !ignoreOnError) {
         sendToBugsnag({
-          name: "window.onerror",
+          name: exception && exception.name || "window.onerror",
           message: message,
           file: url,
           lineNumber: lineNo,
