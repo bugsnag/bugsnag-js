@@ -16,25 +16,9 @@
 })(function (window, document, navigator, old) {
   var self = {},
       undo = [],
-      currentException,
       lastEvent,
-      setTimeout = window.setTimeout;
-
-
-  function setCurrentException(e) {
-    currentException = e;
-    setTimeout(function () {
-      if (currentException === e) {
-        currentException = null;
-      }
-    });
-  }
-
-  function getCurrentException(e) {
-    var ret = currentException;
-    currentException = null;
-    return ret;
-  }
+      shouldCatch = true,
+      ignoreOnError = 0;
 
   self.noConflict = function() {
     window.Bugsnag = old;
@@ -81,25 +65,10 @@
     }, metaData);
   };
 
-  // ### Bugsnag.monkeyPatch
-  //
-  // Monkey patches the given global object's function exactly once,
-  // Bugsnag.noConflict() will remove all monkey-patches.
-  //
-  self.monkeyPatch = function (obj, name, makeReplacement) {
-    var original = obj[name];
-    var replacement = makeReplacement(original);
-    obj[name] = replacement;
-
-    undo.push(function () {
-      obj[name] = original;
-    });
-  };
-
   // #### Bugsnag.wrap
   //
   // Return a function acts like the given function, but reports
-  // any exceptions to Bugsnag.
+  // any exceptions to Bugsnag before re-throwing them.
   self.wrap = function (_super, options) {
     if (typeof _super !== "function") {
       return _super;
@@ -112,11 +81,20 @@
         lastEvent = event;
       }
 
-      try {
+      if (shouldCatch) {
+        try {
+          return _super.apply(this, arguments);
+        } catch (e) {
+          // We do this rather than stashing treating the error like lastEvent
+          // because in FF 26 onerror is not called for synthesized event handlers.
+          if (getSetting("autoNotify", true)) {
+            self.notifyException(e);
+            ignoreNextOnError();
+          }
+          throw e;
+        }
+      } else {
         return _super.apply(this, arguments);
-      } catch (e) {
-        setCurrentException(e);
-        throw e;
       }
     };
     _super.bugsnag.bugsnag = _super.bugsnag;
@@ -131,7 +109,7 @@
   // These are mostly js compile/parse errors, but on some browsers all
   // "uncaught" exceptions will fire this event.
   //
-  self.monkeyPatch(window, "onerror", function (_super) {
+  polyFill(window, "onerror", function (_super) {
     // Keep a reference to any existing `window.onerror` handler
     self._onerror = _super;
 
@@ -151,16 +129,7 @@
         charNo = window.event.errorCharacter;
       }
 
-      // Use the exception our hooks caught (Firefox, Safari, IE 8+)
-      if (!exception) {
-        exception = getCurrentException();
-      }
-
-      if (lastEvent) {
-        metaData.Event = eventToMetaData(lastEvent);
-      }
-
-      if (shouldNotify) {
+      if (shouldNotify && !ignoreOnError) {
         sendToBugsnag({
           name: exception && exception.name || "window.onerror",
           message: message,
@@ -184,10 +153,10 @@
     };
   }
 
-  self.monkeyPatch(window, "setTimeout", hijackTimeFunc);
-  self.monkeyPatch(window, "setInterval", hijackTimeFunc);
+  polyFill(window, "setTimeout", hijackTimeFunc);
+  polyFill(window, "setInterval", hijackTimeFunc);
   if (window.requestAnimationFrame) {
-    self.monkeyPatch(window, "requestAnimationFrame", hijackTimeFunc);
+    polyFill(window, "requestAnimationFrame", hijackTimeFunc);
   }
 
   function hijackEventFunc(_super) {
@@ -200,9 +169,9 @@
   }
 
   function redefineEventTarget(global) {
-    if (global && global.prototype) {
-      self.monkeyPatch(global.prototype, "addEventListener", hijackEventFunc);
-      self.monkeyPatch(global.prototype, "removeEventListener", hijackEventFunc);
+    if (global && global.prototype && global.prototype.hasOwnProperty("addEventListener")) {
+      polyFill(global.prototype, "addEventListener", hijackEventFunc);
+      polyFill(global.prototype, "removeEventListener", hijackEventFunc);
     }
   }
 
@@ -211,8 +180,8 @@
     redefineEventTarget(window.EventTarget);
     redefineEventTarget(window.Window); // Firefox only
 
-  // Safari, IE 8+ — though no backtraces until IE 11 :(
-  } else {
+  // Safari, IE 9+ — though no backtraces until IE 11 :(
+  } else if (document.addEventListener) {
     redefineEventTarget(window.Window);
     redefineEventTarget(window.Node);
     redefineEventTarget(window.XMLHttpRequest);
@@ -365,6 +334,11 @@
       }
     }
 
+    if (lastEvent) {
+      metaData = metaData || {};
+      metaData.Event = eventToMetaData(lastEvent);
+    }
+
     // Merge the local and global `metaData`.
     var mergedMetaData = merge(getSetting("metaData"), metaData);
 
@@ -446,24 +420,33 @@
   }
 
   function eventToMetaData(event) {
-      var tab = {
-        millisecondsAgo: new Date() - lastEvent.timeStamp,
-        type: lastEvent.type,
-        which: lastEvent.which
-      };
+    var tab = {
+      millisecondsAgo: new Date() - event.timeStamp,
+      type: event.type,
+      which: event.which,
+      target: targetToString(event.target)
+    };
 
-      var attrs = event.target && event.target.attributes;
+    var attrs = event.target && event.target.attributes;
+
+    return tab;
+  }
+
+  function targetToString(target) {
+    if (target) {
+      var attrs = target.attributes;
 
       if (attrs) {
-        tab.target = "<" + target.nodeName.toLowerCase();
+        var ret = "<" + target.nodeName.toLowerCase();
         for (var i = 0; i < attrs.length; i++) {
-          tab.target += " " + attrs[i].name + "=\"" + attrs[i].value + "\"";
+          ret += " " + attrs[i].name + "=\"" + attrs[i].value + "\"";
         }
-        tab.target += ">";
-      } else if (event.target) {
-        tab.target = event.target.nodeName;
+        return ret + ">";
+      } else {
+         // e.g. #document
+        return target.nodeName;
       }
-      return tab;
+    }
   }
 
   //
@@ -527,6 +510,40 @@
   function getCookie(name) {
     var cookie = document.cookie.match(name + "=([^$;]+)");
     return cookie ? decodeURIComponent(cookie[1]) : null;
+  }
+
+  // Add a polyFill to an object in a way that can be
+  // undone by self.noConflict();
+  function polyFill(obj, name, makeReplacement) {
+    var original = obj[name];
+    var replacement = makeReplacement(original);
+    obj[name] = replacement;
+
+    undo.push(function () {
+      obj[name] = original;
+    });
+  }
+
+  // If we've notified 
+  function ignoreNextOnError() {
+    ignoreOnError += 1;
+    window.setTimeout(function () {
+      ignoreOnError -= 1;
+    });
+  }
+
+  // Disable catching on IE < 10 as it destroys stack-traces from generateStackTrace()
+  if (!window.atob) {
+    shouldCatch = false;
+
+  // Disable catching on browsers that support HTML5 ErrorEvents properly.
+  // This lets debug on unhandled exceptions work.
+  } else if (window.ErrorEvent) {
+    try {
+      if (new ErrorEvent('test').colno === 0) {
+        shouldCatch = false;
+      }
+    } catch(e){ }
   }
 
   // Make a metrics request to Bugsnag if enabled.

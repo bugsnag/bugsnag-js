@@ -166,17 +166,9 @@ describe("Bugsnag", function () {
   });
 
   describe("wrap", function () {
-    it("should notify if an exception is raised", function () {
-        try{
-            Bugsnag.wrap(function () {
-                throw new RuntimeError("Mooo..");
-            })();
-        } catch (e) {
-            assert(e, "exception should have been raised");
-        }
-
-        assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
-        assert(requestData().params.stacktrace != null, "stack trace should be present");
+    it("should return the same function if called twice", function () {
+      function a () {};
+      assert(Bugsnag.wrap(a) === Bugsnag.wrap(a), "wrap should return the same function twice");
     });
   });
 });
@@ -200,7 +192,6 @@ describe("window", function () {
       assert.equal(params.name, "window.onerror");
       assert.equal(params.message, "Something broke");
       assert.equal(params.lineNumber, 123);
-      assert.equal(params.stacktrace, undefined);
     });
 
     it("should be able to process column number and stacktrace in some browsers", function () {
@@ -210,7 +201,7 @@ describe("window", function () {
 
       var params = requestData().params;
       assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
-      assert.equal(params.name, "window.onerror");
+      assert(["Error", "window.onerror"].indexOf(params.name) >= 0);
       assert.equal(params.message, "Something broke");
       assert.equal(params.lineNumber, 123);
       assert.equal(params.columnNumber, 15);
@@ -277,6 +268,7 @@ describe("window", function () {
 
     it("should include multi-line backtraces", function (done) {
       callback = function () {
+        assert(Bugsnag.testRequest.calledOnce);
         assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
         assert(/failA(.|\n)*failB(.|\n)*handle/.test(requestData().params.stacktrace), "Bugsnag.testRequest should have been called with a multi-line stacktrace:: " + JSON.stringify(requestData().params.stacktrace));
         done();
@@ -327,15 +319,14 @@ describe("document.body", function () {
       document.body.click();
     });
 
-    it("should include multi-line backtraces", function (done) {
+    it("should include multi-line backtraces", function mooCow(done) {
       callback = function () {
         assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
-        assert(/failA(.|\n)*failB(.|\n)*handle/.test(requestData().params.stacktrace), "Bugsnag.testRequest should have been called with a multi-line stacktrace: " + requestData().params.stacktrace);
+        assert(/failA(.|\n)*failB(.|\n)*handle/.test(requestData().params.stacktrace), "Bugsnag.testRequest should have been called with a multi-line stacktrace:: " + JSON.stringify(requestData().params.stacktrace));
         done();
       };
       document.body.click();
     });
-
   });
 });
 
