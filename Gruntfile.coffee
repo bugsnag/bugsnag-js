@@ -71,7 +71,7 @@ module.exports = (grunt) ->
         options:
           livereload: 35729
         files: ['test/*.js', 'src/*.js'],
-        tasks: ['jshint', 'concat']
+        tasks: ['jshint']
 
     # Web server
     connect:
@@ -113,13 +113,13 @@ module.exports = (grunt) ->
       done(!error?)
 
   # Release meta-task
-  grunt.registerTask "release", ["jshint", "concat", "uglify", "docco", "git-tag", "s3"]
+  grunt.registerTask "release", ["jshint", "uglify", "docco", "git-tag", "s3"]
 
   # Run a webserver for testing
   grunt.registerTask "server", ["connect:server:keepalive"]
 
   # Run tests
-  grunt.registerTask "test", ["jshint", "concat", "connect:test", "watch:test"]
+  grunt.registerTask "test", ["jshint", "connect:test", "watch:test"]
 
   # Default meta-task
   grunt.registerTask "default", ["jshint", "regex-replace", "uglify", "docco"]
