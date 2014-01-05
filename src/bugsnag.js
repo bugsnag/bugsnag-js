@@ -102,6 +102,18 @@
     return _super.bugsnag;
   };
 
+  // Add a polyFill to an object in a way that can be
+  // undone by self.noConflict();
+  function polyFill(obj, name, makeReplacement) {
+    var original = obj[name];
+    var replacement = makeReplacement(original);
+    obj[name] = replacement;
+
+    undo.push(function () {
+      obj[name] = original;
+    });
+  }
+
   //
   // ### Automatic error notification
   //
@@ -512,18 +524,6 @@
     return cookie ? decodeURIComponent(cookie[1]) : null;
   }
 
-  // Add a polyFill to an object in a way that can be
-  // undone by self.noConflict();
-  function polyFill(obj, name, makeReplacement) {
-    var original = obj[name];
-    var replacement = makeReplacement(original);
-    obj[name] = replacement;
-
-    undo.push(function () {
-      obj[name] = original;
-    });
-  }
-
   // If we've notified 
   function ignoreNextOnError() {
     ignoreOnError += 1;
@@ -540,7 +540,7 @@
   // This lets debug on unhandled exceptions work.
   } else if (window.ErrorEvent) {
     try {
-      if (new ErrorEvent('test').colno === 0) {
+      if (new window.ErrorEvent("test").colno === 0) {
         shouldCatch = false;
       }
     } catch(e){ }
