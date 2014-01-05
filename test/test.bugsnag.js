@@ -358,7 +358,7 @@ function buildUp(cb) {
   var bugsnag = document.createElement("script");
   bugsnag.id = "bugsnag";
   bugsnag.type = "text/javascript";
-  bugsnag.src = "../dist/bugsnag.js";
+  bugsnag.src = "../src/bugsnag.js";
   bugsnag.onload = bugsnag.onreadystatechange = function () {
     if(!this.readyState || this.readyState === "loaded" || this.readyState === "complete") {
       // Set api key to use when testing
