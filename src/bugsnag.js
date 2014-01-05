@@ -17,6 +17,7 @@
   var self = {},
       undo = [],
       currentException,
+      lastEvent,
       setTimeout = window.setTimeout;
 
 
@@ -99,14 +100,18 @@
   //
   // Return a function acts like the given function, but reports
   // any exceptions to Bugsnag.
-  self.wrap = function (_super) {
+  self.wrap = function (_super, options) {
     if (typeof _super !== "function") {
       return _super;
     }
     if (_super.bugsnag) {
       return _super.bugsnag;
     }
-    _super.bugsnag = function () {
+    _super.bugsnag = function (event) {
+      if (options && options.eventHandler) {
+        lastEvent = event;
+      }
+
       try {
         return _super.apply(this, arguments);
       } catch (e) {
@@ -125,12 +130,14 @@
   // Attach to `window.onerror` events and notify Bugsnag when they happen.
   // These are mostly js compile/parse errors, but on some browsers all
   // "uncaught" exceptions will fire this event.
+  //
   self.monkeyPatch(window, "onerror", function (_super) {
     // Keep a reference to any existing `window.onerror` handler
     self._onerror = _super;
 
     return function (message, url, lineNo, charNo, exception) {
       var shouldNotify = getSetting("autoNotify", true);
+      var metaData = {};
 
       // Warn about useless cross-domain script errors and return before notifying.
       // http://stackoverflow.com/questions/5913978/cryptic-script-error-reported-in-javascript-in-chrome-and-firefox
@@ -140,7 +147,7 @@
       }
 
       // IE 6+ support.
-      if (!charNo) {
+      if (!charNo && window.event) {
         charNo = window.event.errorCharacter;
       }
 
@@ -149,15 +156,19 @@
         exception = getCurrentException();
       }
 
-      if (shouldNotify && !ignoreOnError) {
+      if (lastEvent) {
+        metaData.Event = eventToMetaData(lastEvent);
+      }
+
+      if (shouldNotify) {
         sendToBugsnag({
           name: exception && exception.name || "window.onerror",
           message: message,
           file: url,
           lineNumber: lineNo,
           columnNumber: charNo,
-          stacktrace: exception && stacktraceFromException(exception)
-        });
+          stacktrace: (exception && stacktraceFromException(exception)) || generateStacktrace()
+        }, metaData);
       }
 
       // Fire the existing `window.onerror` handler, if one exists
@@ -182,9 +193,9 @@
   function hijackEventFunc(_super) {
     return function (e, f, capture, secure) {
       if (f && f.handleEvent) {
-        f.handleEvent = self.wrap(f.handleEvent);
+        f.handleEvent = self.wrap(f.handleEvent, {eventHandler: true});
       }
-      return _super.call(this, e, self.wrap(f), capture, secure);
+      return _super.call(this, e, self.wrap(f, {eventHandler: true}), capture, secure);
     };
   }
 
@@ -434,6 +445,26 @@
     return exception.stack || exception.backtrace || exception.stacktrace;
   }
 
+  function eventToMetaData(event) {
+      var tab = {
+        millisecondsAgo: new Date() - lastEvent.timeStamp,
+        type: lastEvent.type,
+        which: lastEvent.which
+      };
+
+      var attrs = event.target && event.target.attributes;
+
+      if (attrs) {
+        tab.target = "<" + target.nodeName.toLowerCase();
+        for (var i = 0; i < attrs.length; i++) {
+          tab.target += " " + attrs[i].name + "=\"" + attrs[i].value + "\"";
+        }
+        tab.target += ">";
+      } else if (event.target) {
+        tab.target = event.target.nodeName;
+      }
+      return tab;
+  }
 
   //
   // ### Metrics tracking (DAU/MAU)
