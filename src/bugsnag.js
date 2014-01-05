@@ -87,23 +87,10 @@
   //
   self.monkeyPatch = function (obj, name, makeReplacement) {
     var original = obj[name];
-    if (original && original.bugsnag) {
-      obj[name] = original.bugsnag;
-      return;
-    }
-
     var replacement = makeReplacement(original);
     obj[name] = replacement;
 
-    if (original) {
-      original.bugsnag = replacement;
-    }
-    replacement.bugsnag = replacement;
-
     undo.push(function () {
-      if (original) {
-        delete original.bugsnag;
-      }
       obj[name] = original;
     });
   };
@@ -182,7 +169,7 @@
 
   function hijackTimeFunc(_super) {
     return function (f, t) {
-      return _super.call(this, self.wrap(f), t);
+      return _super(self.wrap(f), t);
     };
   }
 
