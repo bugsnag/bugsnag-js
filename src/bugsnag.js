@@ -275,11 +275,11 @@
   // For maximum browser compatibility and cross-domain support, requests are
   // made by creating a temporary JavaScript `Image` object.
   function request(url, params) {
-    if (!self.testRequest) {
+    if (BUGSNAG_TESTING && self.testRequest) {
+      self.testRequest(url, params);
+    } else {
       var img = new Image();
       img.src = url + "?" + serialize(params) + "&ct=img&cb=" + new Date().getTime();
-    } else {
-      self.testRequest(url, params);
     }
   }
 
