@@ -118,6 +118,19 @@ module.exports = (grunt) ->
       console.log("Error running git tag: " + error) if error?
       done(!error?)
 
+  grunt.registerTask "stats", ["uglify", "uglify-stats"]
+
+  grunt.registerTask "uglify-stats", "Outputs stats about uglification", ->
+    exec = require("child_process").exec
+    done = this.async()
+
+    exec ['echo "Size: $(cat src/bugsnag.js | wc -c)"',
+          'echo "Ugly: $(cat src/bugsnag.min.js | wc -c)"',
+          'echo "Gzip: $(cat src/bugsnag.min.js | gzip | wc -c)"'].join(" && "), (error, stdout, stderr) ->
+            grunt.log.write(stdout.toString())
+            grunt.log.write(stderr.toString())
+            done(!error?)
+
   # Release meta-task
   grunt.registerTask "release", ["jshint", "regex-replace", "uglify", "docco", "git-tag", "s3"]
 
