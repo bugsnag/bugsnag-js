@@ -9,6 +9,8 @@ module.exports = (grunt) ->
       options:
         # Predefined globals
         browser: true
+        globals:
+          BUGSNAG_TESTING: false
 
         # The Good Parts
         eqeqeq: true
@@ -44,6 +46,10 @@ module.exports = (grunt) ->
       dist:
         files:
           "src/bugsnag.min.js": ["src/bugsnag.js"]
+      options:
+        compress:
+          global_defs:
+            BUGSNAG_TESTING: false
 
     # Upload to s3
     s3:

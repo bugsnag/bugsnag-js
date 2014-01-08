@@ -15,16 +15,12 @@
   window.Bugsnag = definition(window, document, navigator, old);
 })(function (window, document, navigator, old) {
   var self = {},
-      undo = [],
       lastEvent,
       shouldCatch = true,
       ignoreOnError = 0;
 
   self.noConflict = function() {
     window.Bugsnag = old;
-    for (var i = 0; i < undo.length; i++) {
-      undo[i]();
-    }
     return self;
   };
 
@@ -102,16 +98,17 @@
     return _super.bugsnag;
   };
 
-  // Add a polyFill to an object in a way that can be
-  // undone by self.noConflict();
+  // Add a polyFill to an object
   function polyFill(obj, name, makeReplacement) {
     var original = obj[name];
     var replacement = makeReplacement(original);
     obj[name] = replacement;
 
-    undo.push(function () {
-      obj[name] = original;
-    });
+    if (BUGSNAG_TESTING) {
+      window.undo.push(function () {
+        obj[name] = original;
+      });
+    }
   }
 
   //
@@ -123,7 +120,9 @@
   //
   polyFill(window, "onerror", function (_super) {
     // Keep a reference to any existing `window.onerror` handler
-    self._onerror = _super;
+    if (BUGSNAG_TESTING) {
+      self._onerror = _super;
+    }
 
     return function (message, url, lineNo, charNo, exception) {
       var shouldNotify = getSetting("autoNotify", true);
@@ -152,9 +151,13 @@
         }, metaData);
       }
 
+      if (BUGSNAG_TESTING) {
+        _super = self._onerror;
+      }
+
       // Fire the existing `window.onerror` handler, if one exists
-      if (self._onerror) {
-        self._onerror(message, url, lineNo, charNo, exception);
+      if (_super) {
+        _super(message, url, lineNo, charNo, exception);
       }
     };
   });
@@ -438,8 +441,6 @@
       which: event.which,
       target: targetToString(event.target)
     };
-
-    var attrs = event.target && event.target.attributes;
 
     return tab;
   }

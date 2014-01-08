@@ -354,6 +354,9 @@ function buildUp(cb) {
   // dummy object to override
   window.Bugsnag = {put_me_back: 1};
 
+  window.BUGSNAG_TESTING = true;
+  window.undo = [];
+
   // Create bugsnag.js script tag
   var bugsnag = document.createElement("script");
   bugsnag.id = "bugsnag";
@@ -384,6 +387,10 @@ function tearDown() {
   // Remove the Bugsnag object
   if (window.Bugsnag && window.Bugsnag.noConflict) {
     Bugsnag.noConflict();
+  }
+
+  for (var i = 0; i < window.undo.length; i++) {
+    undo[i]();
   }
 }
 
