@@ -69,31 +69,30 @@
     if (typeof _super !== "function") {
       return _super;
     }
-    if (_super.bugsnag) {
-      return _super.bugsnag;
-    }
-    _super.bugsnag = function (event) {
-      if (options && options.eventHandler) {
-        lastEvent = event;
-      }
-
-      if (shouldCatch) {
-        try {
-          return _super.apply(this, arguments);
-        } catch (e) {
-          // We do this rather than stashing treating the error like lastEvent
-          // because in FF 26 onerror is not called for synthesized event handlers.
-          if (getSetting("autoNotify", true)) {
-            self.notifyException(e);
-            ignoreNextOnError();
-          }
-          throw e;
+    if (!_super.bugsnag) {
+      _super.bugsnag = function (event) {
+        if (options && options.eventHandler) {
+          lastEvent = event;
         }
-      } else {
-        return _super.apply(this, arguments);
-      }
-    };
-    _super.bugsnag.bugsnag = _super.bugsnag;
+
+        if (shouldCatch) {
+          try {
+            return _super.apply(this, arguments);
+          } catch (e) {
+            // We do this rather than stashing treating the error like lastEvent
+            // because in FF 26 onerror is not called for synthesized event handlers.
+            if (getSetting("autoNotify", true)) {
+              self.notifyException(e);
+              ignoreNextOnError();
+            }
+            throw e;
+          }
+        } else {
+          return _super.apply(this, arguments);
+        }
+      };
+      _super.bugsnag.bugsnag = _super.bugsnag;
+    }
 
     return _super.bugsnag;
   };
