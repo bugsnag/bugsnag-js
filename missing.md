@@ -1,60 +1,4 @@
-The current implementation is missing a few async entry points. (As of 2014-01-03)
-
-## Missing addEventListeners:
-
-### Firefox
-```
-["MozConnection","MozMobileMessageManager","ModalContentWindow"]
-```
-
-### IE 11
-```
-[object ApplicationCachePrototype]
-[object AudioTrackListPrototype]
-[object CryptoOperationPrototype]
-[object FileReaderPrototype]
-[object IDBDatabasePrototype]
-[object IDBRequestPrototype]
-[object IDBTransactionPrototype]
-[object KeyOperationPrototype]
-[object MSInputMethodContextPrototype]
-[object MSStreamReaderPrototype]
-[object MessagePortPrototype]
-[object SVGElementInstancePrototype]
-[object ScreenPrototype]
-[object TextTrackPrototype]
-[object TextTrackCuePrototype]
-[object TextTrackListPrototype]
-[object WebSocketPrototype]
-[object WorkerPrototype]
-[object XMLHttpRequestEventTargetPrototype]
-```
-
-### Safari
-
-```
-[ NodePrototype 
-NotificationPrototype 
-AudioNodePrototype 
-EventTargetPrototype 
-WindowPrototype 
-FileReaderPrototype 
-WebKitMediaKeySessionPrototype 
-XMLHttpRequestUploadPrototype 
-MessagePortPrototype 
-XMLHttpRequestPrototype 
-MediaControllerPrototype 
-TextTrackPrototype 
-AbstractWorkerPrototype 
-WebSocketPrototype 
-TextTrackCuePrototype 
-TextTrackListPrototype 
-EventSourcePrototype ]
-```
-
-### Chrome/Opera
-
-None!
+The current implementation is missing a few async entry points. (As of 2014-01-08)
 
 ## Missing DOM functions that take callbacks
 
@@ -71,9 +15,7 @@ Navigator.getUserMedia
 Notification.requestPermission
 Promise.then ?
 WebComponents
-
 ```
-
 
 ## Script to find missing event listeners
 

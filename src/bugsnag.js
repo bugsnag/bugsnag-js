@@ -97,110 +97,6 @@
     return _super.bugsnag;
   };
 
-  // Add a polyFill to an object
-  function polyFill(obj, name, makeReplacement) {
-    var original = obj[name];
-    var replacement = makeReplacement(original);
-    obj[name] = replacement;
-
-    if (BUGSNAG_TESTING) {
-      window.undo.push(function () {
-        obj[name] = original;
-      });
-    }
-  }
-
-  //
-  // ### Automatic error notification
-  //
-  // Attach to `window.onerror` events and notify Bugsnag when they happen.
-  // These are mostly js compile/parse errors, but on some browsers all
-  // "uncaught" exceptions will fire this event.
-  //
-  polyFill(window, "onerror", function (_super) {
-    // Keep a reference to any existing `window.onerror` handler
-    if (BUGSNAG_TESTING) {
-      self._onerror = _super;
-    }
-
-    return function (message, url, lineNo, charNo, exception) {
-      var shouldNotify = getSetting("autoNotify", true);
-      var metaData = {};
-
-      // Warn about useless cross-domain script errors and return before notifying.
-      // http://stackoverflow.com/questions/5913978/cryptic-script-error-reported-in-javascript-in-chrome-and-firefox
-      if (shouldNotify && message === "Script error." && url === "" && lineNo === 0) {
-        log("Error on cross-domain script, couldn't notify Bugsnag.");
-        shouldNotify = false;
-      }
-
-      // IE 6+ support.
-      if (!charNo && window.event) {
-        charNo = window.event.errorCharacter;
-      }
-
-      if (shouldNotify && !ignoreOnError) {
-        sendToBugsnag({
-          name: exception && exception.name || "window.onerror",
-          message: message,
-          file: url,
-          lineNumber: lineNo,
-          columnNumber: charNo,
-          stacktrace: (exception && stacktraceFromException(exception)) || generateStacktrace()
-        }, metaData);
-      }
-
-      if (BUGSNAG_TESTING) {
-        _super = self._onerror;
-      }
-
-      // Fire the existing `window.onerror` handler, if one exists
-      if (_super) {
-        _super(message, url, lineNo, charNo, exception);
-      }
-    };
-  });
-
-  function hijackTimeFunc(_super) {
-    return function (f, t) {
-      return _super(self.wrap(f), t);
-    };
-  }
-
-  polyFill(window, "setTimeout", hijackTimeFunc);
-  polyFill(window, "setInterval", hijackTimeFunc);
-  if (window.requestAnimationFrame) {
-    polyFill(window, "requestAnimationFrame", hijackTimeFunc);
-  }
-
-  function hijackEventFunc(_super) {
-    return function (e, f, capture, secure) {
-      if (f && f.handleEvent) {
-        f.handleEvent = self.wrap(f.handleEvent, {eventHandler: true});
-      }
-      return _super.call(this, e, self.wrap(f, {eventHandler: true}), capture, secure);
-    };
-  }
-
-  function redefineEventTarget(global) {
-    if (global && global.prototype && global.prototype.hasOwnProperty("addEventListener")) {
-      polyFill(global.prototype, "addEventListener", hijackEventFunc);
-      polyFill(global.prototype, "removeEventListener", hijackEventFunc);
-    }
-  }
-
-  // Chrome, Opera, Firefox
-  if (window.EventTarget) {
-    redefineEventTarget(window.EventTarget);
-    redefineEventTarget(window.Window); // Firefox only
-
-  // Safari, IE 9+ — though no backtraces until IE 11 :(
-  } else if (document.addEventListener) {
-    redefineEventTarget(window.Window);
-    redefineEventTarget(window.Node);
-    redefineEventTarget(window.XMLHttpRequest);
-  }
-
   //
   // ### Helpers & Setup
   //
@@ -548,6 +444,109 @@
 
   // Make a metrics request to Bugsnag if enabled.
   trackMetrics();
+
+
+  //
+  // ### Polyfilling
+  //
+
+  // Add a polyFill to an object
+  function polyFill(obj, name, makeReplacement) {
+    var original = obj[name];
+    var replacement = makeReplacement(original);
+    obj[name] = replacement;
+
+    if (BUGSNAG_TESTING && window.undo) {
+      window.undo.push(function () {
+        obj[name] = original;
+      });
+    }
+  }
+
+  if (getSetting("autoNotify", true)) {
+    //
+    // ### Automatic error notification
+    //
+    // Attach to `window.onerror` events and notify Bugsnag when they happen.
+    // These are mostly js compile/parse errors, but on some browsers all
+    // "uncaught" exceptions will fire this event.
+    //
+    polyFill(window, "onerror", function (_super) {
+      // Keep a reference to any existing `window.onerror` handler
+      if (BUGSNAG_TESTING) {
+        self._onerror = _super;
+      }
+
+      return function bugsnag(message, url, lineNo, charNo, exception) {
+        var shouldNotify = getSetting("autoNotify", true);
+        var metaData = {};
+
+        // Warn about useless cross-domain script errors and return before notifying.
+        // http://stackoverflow.com/questions/5913978/cryptic-script-error-reported-in-javascript-in-chrome-and-firefox
+        if (shouldNotify && message === "Script error." && url === "" && lineNo === 0) {
+          log("Error on cross-domain script, couldn't notify Bugsnag.");
+          shouldNotify = false;
+        }
+
+        // IE 6+ support.
+        if (!charNo && window.event) {
+          charNo = window.event.errorCharacter;
+        }
+
+        if (shouldNotify && !ignoreOnError) {
+          sendToBugsnag({
+            name: exception && exception.name || "window.onerror",
+            message: message,
+            file: url,
+            lineNumber: lineNo,
+            columnNumber: charNo,
+            stacktrace: (exception && stacktraceFromException(exception)) || generateStacktrace()
+          }, metaData);
+        }
+
+        if (BUGSNAG_TESTING) {
+          _super = self._onerror;
+        }
+
+        // Fire the existing `window.onerror` handler, if one exists
+        if (_super) {
+          _super(message, url, lineNo, charNo, exception);
+        }
+      };
+    });
+
+    var hijackTimeFunc = function (_super) {
+      return function (f, t) {
+        return _super(self.wrap(f), t);
+      };
+    };
+
+    polyFill(window, "setTimeout", hijackTimeFunc);
+    polyFill(window, "setInterval", hijackTimeFunc);
+    if (window.requestAnimationFrame) {
+      polyFill(window, "requestAnimationFrame", hijackTimeFunc);
+    }
+
+    var hijackEventFunc = function (_super) {
+      return function (e, f, capture, secure) {
+        if (f && f.handleEvent) {
+          f.handleEvent = self.wrap(f.handleEvent, {eventHandler: true});
+        }
+        return _super.call(this, e, self.wrap(f, {eventHandler: true}), capture, secure);
+      };
+    };
+
+    // EventTarget is all that's required in modern chrome/opera
+    // EventTarget + Window + ModalWindow is all that's required in modern FF (there are a few Moz prefixed ones that we're ignoring)
+    // The rest is a collection of stuff for Safari and IE 11. (Again ignoring a few MS and WebKit prefixed things)
+    "EventTarget Window Node ApplicationCache AudioTrackList ChannelMergerNode CryptoOperation EventSource FileReader HTMLUnknownElement IDBDatabase IDBRequest IDBTransaction KeyOperation MediaController MessagePort ModalWindow Notification SVGElementInstance Screen TextTrack TextTrackCue TextTrackList WebSocket WebSocketWorker Worker XMLHttpRequest XMLHttpRequestEventTarget XMLHttpRequestUpload".replace(/\w+/g, function (global) {
+      var prototype = window[global] && window[global].prototype;
+      if (prototype && prototype.hasOwnProperty && prototype.hasOwnProperty("addEventListener")) {
+        polyFill(prototype, "addEventListener", hijackEventFunc);
+        polyFill(prototype, "removeEventListener", hijackEventFunc);
+      }
+    });
+  }
 
   return self;
 
