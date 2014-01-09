@@ -23,7 +23,8 @@ Include `bugsnag.js` from our CDN in the `<head>` tag of your website, before
 any other `<script>` tags.
 
 ```html
-<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-1.1.0.min.js" data-apikey="YOUR-API-KEY-HERE"></script>
+<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-1.1.0.min.js"
+        data-apikey="YOUR-API-KEY-HERE"></script>
 ```
 
 Make sure to set your Bugsnag API key in the `data-apikey` attribute on the
@@ -107,8 +108,35 @@ Additional Configuration
 
 Set your Bugsnag API key. You can find your API key on your dashboard.
 
+```html
+<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-1.1.0.min.js"
+        data-apikey="YOUR-API-KEY-HERE"></script>
+```
+
+In situations where Bugsnag is not in its own script tag, you can set
+this with:
+
 ```javascript
 Bugsnag.apiKey = "YOUR-API-KEY-HERE";
+```
+
+###autoNotify
+
+By default, we will automatically notify Bugsnag of any JavaScript errors that
+get sent to `window.onerror`. If you want to stop this from happening, you can
+set `autoNotify` to `false`:
+
+```html
+<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-1.1.0.min.js"
+        data-apikey="YOUR-API-KEY-HERE"
+        data-autonotify="false"></script>
+```
+
+In situations where Bugsnag is not in its own script tag, you can set
+this with:
+
+```javascript
+Bugsnag.autoNotify = false;
 ```
 
 ###metaData
@@ -151,15 +179,6 @@ release stages notify Bugsnag of errors you can set `notifyReleaseStages`:
 Bugsnag.notifyReleaseStages = ["development", "production"];
 ```
 
-###autoNotify
-
-By default, we will automatically notify Bugsnag of any JavaScript errors that
-get sent to `window.onerror`. If you want to stop this from happening, you can
-set `autoNotify` to `false`:
-
-```javascript
-Bugsnag.autoNotify = false;
-```
 
 ###beforeNotify
 
