@@ -1,17 +1,17 @@
 {
-  "name": "bugsnag-js",
-  "version": "1.0.10",
-  "private": true,
-  "devDependencies": {
-    "grunt": "~0.4.2",
-    "grunt-contrib-jshint": "~0.6.3",
-    "grunt-contrib-uglify": "~0.2.0",
-    "grunt-contrib-connect": "~0.5.0",
-    "grunt-contrib-watch": "~0.5.2",
-    "grunt-s3": "git://github.com/pifantastic/grunt-s3",
-    "grunt-bumpx": "~0.1.0",
-    "mocha": "~1.15.1",
-    "grunt-docco": "git://github.com/bdougherty/grunt-docco#grunt-0.4",
-    "grunt-regex-replace": "~0.2.5"
-  }
+    "name": "bugsnag-js",
+    "version": "1.1.0",
+    "private": true,
+    "devDependencies": {
+        "grunt": "~0.4.2",
+        "grunt-contrib-jshint": "~0.6.3",
+        "grunt-contrib-uglify": "~0.2.0",
+        "grunt-contrib-connect": "~0.5.0",
+        "grunt-contrib-watch": "~0.5.2",
+        "grunt-s3": "git://github.com/pifantastic/grunt-s3",
+        "grunt-bumpx": "~0.1.0",
+        "mocha": "~1.15.1",
+        "grunt-docco": "git://github.com/bdougherty/grunt-docco#grunt-0.4",
+        "grunt-regex-replace": "~0.2.5"
+    }
 }
