@@ -34,11 +34,15 @@ module.exports = (grunt) ->
     "regex-replace":
       dist:
         src:
-          ["src/bugsnag.js"]
+          ["src/bugsnag.js", "README.md"]
         actions: [
           name: "version"
           search: /var NOTIFIER_VERSION =[^;]*;/
           replace: "var NOTIFIER_VERSION = \"#{require("./package.json").version}\";"
+        ,
+          name: "readme"
+          search: /cloudfront.net\/bugsnag-[0-9\.]+.min.js/
+          replace: "cloudfront.net/bugsnag-#{require("./package.json").version}.min.js"
         ]
 
     # Minification
@@ -69,7 +73,10 @@ module.exports = (grunt) ->
 
     # Version bumping
     bump:
-      options: part: "patch"
+      options:
+        part: "patch"
+        onBumped: ->
+          grunt.task.run("regex-replace")
       files: ["package.json", "component.json"]
 
     watch:
@@ -132,7 +139,7 @@ module.exports = (grunt) ->
             done(!error?)
 
   # Release meta-task
-  grunt.registerTask "release", ["jshint", "regex-replace", "uglify", "docco", "git-tag", "s3"]
+  grunt.registerTask "release", ["jshint", "uglify", "docco", "git-tag", "s3"]
 
   # Run a webserver for testing
   grunt.registerTask "server", ["connect:server:keepalive"]
@@ -141,4 +148,4 @@ module.exports = (grunt) ->
   grunt.registerTask "test", ["jshint", "connect:test", "watch:test"]
 
   # Default meta-task
-  grunt.registerTask "default", ["jshint", "regex-replace", "uglify", "docco"]
+  grunt.registerTask "default", ["jshint", "uglify", "docco"]
