@@ -19,6 +19,9 @@
       shouldCatch = true,
       ignoreOnError = 0;
 
+  if (typeof BUGSNAG_TESTING === "undefined") { window.BUGSNAG_TESTING = false; }
+
+
   self.noConflict = function() {
     window.Bugsnag = old;
     return self;
