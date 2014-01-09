@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.1.0
+-----
+-   Add support for stacktraces on all modern browsers.
+-   Add support for tracking most recent event fired.
+
 1.0.10
 ------
 -   Add support for sending column numbers and error objects from `window.onerror` in modern browsers

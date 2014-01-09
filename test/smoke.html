@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<body>
+<h1>Smoke test</h1>
+
+<p>To pass fully the screen must go yellow, then aqua automatically, then dark green on click.</p>
+
+<p>IE 6/7/8 should go beige, then aqua automatically, then light green on click. Because they don't support intercepting events (but they do support stacktraces).</p>
+<p>IE 9 should go beige, skip aqua, and then go bright green. Because it doesn't support multiline stack-traces</p>
+
+<p>N.B. if load times are slow on IE 9/10/11, try running it from a different directory.</p>
+
+<hr/>
+
+<script>BUGSNAG_TESTING = true;</script>
+<script src="../src/bugsnag.js" data-apikey="a60409cf3d6fa1f8ac9906fe88364aa2"></script>
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+
+<script>
+function alphabet() {
+  throw new Error("by gum");
+}
+function soup() {
+  alphabet();
+}
+function spaghetti() {
+  alphabet();
+}
+
+function ordering() {
+  alphabet();
+}
+
+function logPre(data) {
+  $('<pre>').text(data).appendTo('body');
+}
+
+Bugsnag.testRequest = function (url, data) {
+  if (window.JSON) {
+    logPre(JSON.stringify(data, null, 4));
+  } else {
+    logPre($.param(data));
+  }
+  logPre(data.stacktrace);
+
+
+  if (data.metaData && data.metaData.Event && data.stacktrace.match(/soup/)
+  ) {
+    document.body.style.backgroundColor = 'yellow';
+  } else if (data.stacktrace.match(/spaghetti/)) {
+    document.body.style.backgroundColor = 'aqua';
+  } else if (data.metaData && data.metaData.Event && data.metaData.Event.target && data.stacktrace.match(/ordering/)) {
+    document.body.style.backgroundColor = 'green';
+  } else if (data.stacktrace.match(/soup/) || (data.stacktrace.match(/alphabet/) && data.metaData && data.metaData.Event && data.metaData.Event.type  == "DOMContentLoaded")) {
+    document.body.style.backgroundColor = 'beige';
+  } else if (data.stacktrace.match(/ordering/) || (data.stacktrace.match(/alphabet/) && data.metaData && data.metaData.Event && data.metaData.Event.type == "click")) {
+    document.body.style.backgroundColor = '#0F0';
+  }
+};
+$(function () {
+
+  setTimeout(function () {
+    spaghetti();
+  }, 500);
+
+  $('body').click(function () {
+    ordering();
+  });
+
+  soup();
+});
+</script>
+</body>
