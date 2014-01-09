@@ -19,9 +19,6 @@
       shouldCatch = true,
       ignoreOnError = 0;
 
-  if (typeof BUGSNAG_TESTING === "undefined") { window.BUGSNAG_TESTING = false; }
-
-
   self.noConflict = function() {
     window.Bugsnag = old;
     return self;
@@ -173,7 +170,7 @@
   // For maximum browser compatibility and cross-domain support, requests are
   // made by creating a temporary JavaScript `Image` object.
   function request(url, params) {
-    if (BUGSNAG_TESTING && self.testRequest) {
+    if (typeof BUGSNAG_TESTING !== "undefined" && self.testRequest) {
       self.testRequest(url, params);
     } else {
       var img = new Image();
@@ -459,7 +456,7 @@
     var replacement = makeReplacement(original);
     obj[name] = replacement;
 
-    if (BUGSNAG_TESTING && window.undo) {
+    if (typeof BUGSNAG_TESTING !== "undefined" && window.undo) {
       window.undo.push(function () {
         obj[name] = original;
       });
@@ -476,7 +473,7 @@
     //
     polyFill(window, "onerror", function (_super) {
       // Keep a reference to any existing `window.onerror` handler
-      if (BUGSNAG_TESTING) {
+      if (typeof BUGSNAG_TESTING !== "undefined") {
         self._onerror = _super;
       }
 
@@ -507,7 +504,7 @@
           }, metaData);
         }
 
-        if (BUGSNAG_TESTING) {
+        if (typeof BUGSNAG_TESTING !== "undefined") {
           _super = self._onerror;
         }
 
