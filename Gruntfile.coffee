@@ -61,6 +61,9 @@ module.exports = (grunt) ->
         bucket: "bugsnagcdn"
         access: "public-read"
         gzip: true
+        headers: {
+          'Cache-Control': 'max-age: 315360000'
+        }
 
       release:
         upload: [{
