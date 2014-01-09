@@ -9,10 +9,11 @@ function stub(obj, fname) {
     self.calledCount = self.calledCount ? self.calledCount + 1 : 1;
     self.calledOnce = (self.calledCount == 1);
     self.called = true;
-    self.restore = function () { obj[fname] = origFunction };
+    self.restore = function () { obj[fname] = origFunction; };
     return returnValue === undefined ? self : returnValue;
   };
 
+  obj[fname].restore = function () { obj[fname] = origFunction; };
   obj[fname].origFunction = origFunction;
   obj[fname].called = false;
   obj[fname].calledOnce = false;
