@@ -311,11 +311,15 @@
     // whoever called us).
     if (!stacktrace) {
       var functionStack = [];
-      var curr = arguments.callee.caller.caller;
-      while (curr && functionStack.length < MAX_FAKE_STACK_SIZE) {
-        var fn = FUNCTION_REGEX.test(curr.toString()) ? RegExp.$1 || ANONYMOUS_FUNCTION_PLACEHOLDER : ANONYMOUS_FUNCTION_PLACEHOLDER;
-        functionStack.push(fn);
-        curr = curr.caller;
+      try {
+        var curr = arguments.callee.caller.caller;
+        while (curr && functionStack.length < MAX_FAKE_STACK_SIZE) {
+          var fn = FUNCTION_REGEX.test(curr.toString()) ? RegExp.$1 || ANONYMOUS_FUNCTION_PLACEHOLDER : ANONYMOUS_FUNCTION_PLACEHOLDER;
+          functionStack.push(fn);
+          curr = curr.caller;
+        }
+      } catch (e) {
+        log(e);
       }
 
       stacktrace = functionStack.join("\n");
