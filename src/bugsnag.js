@@ -45,7 +45,8 @@
       message: exception.message || exception.description,
       stacktrace: stacktraceFromException(exception) || generateStacktrace(),
       file: exception.fileName || exception.sourceURL,
-      lineNumber: exception.lineNumber || exception.line
+      lineNumber: exception.lineNumber || exception.line,
+      columnNumber: exception.columnNumber ? exception.columnNumber + 1 : undefined
     }, metaData);
   };
 
@@ -320,6 +321,7 @@
         }
       } catch (e) {
         log(e);
+
       }
 
       stacktrace = functionStack.join("\n");
