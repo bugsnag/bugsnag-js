@@ -509,13 +509,6 @@
         var shouldNotify = getSetting("autoNotify", true);
         var metaData = {};
 
-        // Warn about useless cross-domain script errors and return before notifying.
-        // http://stackoverflow.com/questions/5913978/cryptic-script-error-reported-in-javascript-in-chrome-and-firefox
-        if (shouldNotify && message === "Script error." && url === "" && lineNo === 0) {
-          log("Error on cross-domain script, couldn't notify Bugsnag.");
-          shouldNotify = false;
-        }
-
         // IE 6+ support.
         if (!charNo && window.event) {
           charNo = window.event.errorCharacter;
@@ -523,13 +516,16 @@
 
         if (shouldNotify && !ignoreOnError) {
 
-          if (inlineScriptsRunning && url === document.location.toString().replace(/#.*/, '')) {
+          if (inlineScriptsRunning) {
             var scripts = document.getElementsByTagName('script'),
               script = document.currentScript || scripts[scripts.length - 1];
 
-            metaData.script = {
-              content: script && script.innerHTML && script.innerHTML.substr(0, 1024)
-            };
+            if (script) {
+              metaData.script = {
+                tag: targetToString(script),
+                content: script.innerHTML && script.innerHTML.substr(0, 1024)
+              };
+            }
           }
 
           sendToBugsnag({
