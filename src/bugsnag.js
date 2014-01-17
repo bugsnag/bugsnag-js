@@ -327,7 +327,11 @@
       stacktrace = functionStack.join("\n");
     }
 
-    return stacktrace;
+    // Tell the backend to ignore the first two lines in the stack-trace.
+    // generateStacktrace() + window.onerror,
+    // generateStacktrace() + notify,
+    // generateStacktrace() + notifyException
+    return "<generated>\n" + stacktrace;
   }
 
   // Get the stacktrace string from an exception
