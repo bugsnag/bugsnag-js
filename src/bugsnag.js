@@ -469,6 +469,24 @@
     }
   }
 
+  var inlineScriptsRunning = document.readyState !== "complete";
+  function loadCompleted() {
+    inlineScriptsRunning = false;
+  }
+
+  // from jQuery. We don't have quite such tight bounds as they do if
+  // we end up on the window.onload event as we don't try and hack
+  // the .scrollLeft() fix in because it doesn't work in frames so
+  // we'd need these fallbacks anyway.
+  // The worst that can happen is we group an event handler that fires
+  // before us into the last script tag.
+  if (document.addEventListener) {
+    document.addEventListener("DOMContentLoaded", loadCompleted, true);
+    window.addEventListener("load", loadCompleted, true);
+  } else {
+    window.attachEvent("onload", loadCompleted);
+  }
+
   if (getSetting("autoNotify", true)) {
     //
     // ### Automatic error notification
@@ -500,6 +518,16 @@
         }
 
         if (shouldNotify && !ignoreOnError) {
+
+          if (inlineScriptsRunning && url === document.location.toString().replace(/#.*/, '')) {
+            var scripts = document.getElementsByTagName('script'),
+              script = document.currentScript || scripts[scripts.length - 1];
+
+            metaData.script = {
+              content: script && script.innerHTML && script.innerHTML.substr(0, 1024)
+            };
+          }
+
           sendToBugsnag({
             name: exception && exception.name || "window.onerror",
             message: message,
