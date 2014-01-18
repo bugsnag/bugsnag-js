@@ -357,7 +357,9 @@
       if (attrs) {
         var ret = "<" + target.nodeName.toLowerCase();
         for (var i = 0; i < attrs.length; i++) {
-          ret += " " + attrs[i].name + "=\"" + attrs[i].value + "\"";
+          if (attrs[i].value && attrs[i].value.toString() != "null") {
+            ret += " " + attrs[i].name + "=\"" + attrs[i].value + "\"";
+          }
         }
         return ret + ">";
       } else {
@@ -522,7 +524,7 @@
 
             if (script) {
               metaData.script = {
-                tag: targetToString(script),
+                src: script.src,
                 content: script.innerHTML && script.innerHTML.substr(0, 1024)
               };
             }

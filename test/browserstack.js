@@ -150,16 +150,15 @@ usingServer('http://hub.browserstack.com/wd/hub').
 withCapabilities(capabilities).
 build();
 
-driver.get('http://jelzo.com:6123/bugsnag/');
+driver.get('http://jelzo.com:6123/bugsnag-js/test/');
 var tries = 0;
 
 function check() {
   driver.getTitle().then(function(title) {
-    if (title) {
+    if (title != 'Running') {
       console.log(title);
       driver.quit();
     } else if (tries < 10) {
-      console.log(".");
       tries += 1;
       setTimeout(check, 1000);
     } else {
