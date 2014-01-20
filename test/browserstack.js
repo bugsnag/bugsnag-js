@@ -141,7 +141,7 @@ browsers = {
 
 
 // Input capabilities
-var capabilities = browsers[process.argv[2]];
+var capabilities = browsers[process.argv[3]];
 capabilities['browserstack.user'] = 'conrad10';
 capabilities['browserstack.key'] = process.env.BROWSERSTACK_KEY || process.exit(console.log('no BROWSERSTACK_KEY set'));
 
@@ -150,12 +150,12 @@ usingServer('http://hub.browserstack.com/wd/hub').
 withCapabilities(capabilities).
 build();
 
-driver.get('http://jelzo.com:6123/bugsnag-js/test/');
+driver.get(process.argv[2]);
 var tries = 0;
 
 function check() {
   driver.getTitle().then(function(title) {
-    if (title != 'Running') {
+    if (title && title != 'Running') {
       console.log(title);
       driver.quit();
     } else if (tries < 10) {
