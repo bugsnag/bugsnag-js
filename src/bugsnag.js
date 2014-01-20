@@ -369,69 +369,6 @@
     }
   }
 
-  //
-  // ### Metrics tracking (DAU/MAU)
-  //
-
-  // Track a page-view for MAU/DAU metrics.
-  function trackMetrics() {
-    var shouldTrack = getSetting("metrics");
-    var apiKey = getSetting("apiKey");
-    if ((shouldTrack !== true && shouldTrack !== "true") || !validateApiKey(apiKey)) {
-      return;
-    }
-
-    // Fetch or generate a userId
-    var cookieName = "bugsnag_" + apiKey;
-    var userId = getCookie(cookieName);
-    if (userId == null) {
-      userId = generateUUID();
-      setCookie(cookieName, userId, 1000, true);
-    }
-
-    // Make the HTTP request.
-    request(getSetting("metricsEndpoint") || DEFAULT_METRICS_ENDPOINT, {
-      userId: userId,
-      apiKey: apiKey
-    });
-  }
-
-  // Generate a 4-character random hex string.
-  function s4() {
-    return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
-  }
-
-  // Generate a version-4 UUID.
-  function generateUUID() {
-    return s4() + s4() + "-" + s4() + "-" + s4() + "-" + s4() + "-" + s4() + s4() + s4();
-  }
-
-  // Set a cookie value.
-  function setCookie(name, value, days, crossSubdomain) {
-    var cdomain = "";
-    var expires = "";
-
-    if (days) {
-      var date = new Date();
-      date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-      expires = "; expires=" + date.toGMTString();
-    }
-
-    if (crossSubdomain) {
-      var matches = window.location.hostname.match(/[a-z0-9][a-z0-9\-]+\.[a-z\.]{2,6}$/i);
-      var domain = matches ? matches[0] : "";
-      cdomain = (domain ? "; domain=." + domain : "");
-    }
-
-    document.cookie = name + "=" + encodeURIComponent(value) + expires + "; path=/" + cdomain;
-  }
-
-  // Get a cookie value.
-  function getCookie(name) {
-    var cookie = document.cookie.match(name + "=([^$;]+)");
-    return cookie ? decodeURIComponent(cookie[1]) : null;
-  }
-
   // If we've notified 
   function ignoreNextOnError() {
     ignoreOnError += 1;
@@ -453,9 +390,6 @@
       }
     } catch(e){ }
   }
-
-  // Make a metrics request to Bugsnag if enabled.
-  trackMetrics();
 
 
   //
