@@ -73,9 +73,33 @@ browsers = {
     os: 'Windows',
     os_version: '7'
   },
+  firefox6: {
+    browser: 'Firefox',
+    browser_version: '6',
+    os: 'Windows',
+    os_version: '7'
+  },
+  firefox7: {
+    browser: 'Firefox',
+    browser_version: '7',
+    os: 'Windows',
+    os_version: '7'
+  },
+  firefox8: {
+    browser: 'Firefox',
+    browser_version: '8',
+    os: 'Windows',
+    os_version: '7'
+  },
   firefox10: {
     browser: 'Firefox',
     browser_version: '10',
+    os: 'Windows',
+    os_version: '7'
+  },
+  firefox16: {
+    browser: 'Firefox',
+    browser_version: '16',
     os: 'Windows',
     os_version: '7'
   },
@@ -102,6 +126,12 @@ browsers = {
     browser_version: '26.0',
     os: 'Windows',
     os_Version: '8'
+  },
+  opera10: {
+    browser: 'Opera',
+    browser_version: '10.6',
+    os: 'Windows',
+    os_version: '7'
   },
   opera12: {
     browser: 'Opera',
@@ -136,6 +166,21 @@ browsers = {
     browserName: 'iPhone',
     platform: 'MAC',
     device: 'iPhone 5'
+  },
+  iphone4s: {
+    browserName: 'iPhone',
+    platform: 'MAC',
+    device: 'iPhone 4S'
+  },
+  android41: {
+    browserName: 'android',
+    platform: 'ANDROID',
+    device: 'Samsung Galaxy Note II'
+  },
+  android40: {
+    browserName: 'android',
+    platform: 'ANDROID',
+    device: 'HTC One X'
   }
 };
 
