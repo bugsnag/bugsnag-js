@@ -62,11 +62,9 @@
     }, metaData);
   };
 
-  // #### Bugsnag.wrap
-  //
   // Return a function acts like the given function, but reports
   // any exceptions to Bugsnag before re-throwing them.
-  self.wrap = function (_super, options) {
+  function wrap(_super, options) {
     try {
       if (typeof _super !== "function") {
         return _super;
@@ -493,7 +491,7 @@
 
     var hijackTimeFunc = function (_super) {
       return function (f, t) {
-        return _super(self.wrap(f), t);
+        return _super(wrap(f), t);
       };
     };
 
@@ -506,9 +504,9 @@
     var hijackEventFunc = function (_super) {
       return function (e, f, capture, secure) {
         if (f && f.handleEvent) {
-          f.handleEvent = self.wrap(f.handleEvent, {eventHandler: true});
+          f.handleEvent = wrap(f.handleEvent, {eventHandler: true});
         }
-        return _super.call(this, e, self.wrap(f, {eventHandler: true}), capture, secure);
+        return _super.call(this, e, wrap(f, {eventHandler: true}), capture, secure);
       };
     };
 
