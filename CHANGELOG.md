@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.0.1
+-----
+
+-   Don't crash with selenium.
+
 2.0.0
 -----
 
