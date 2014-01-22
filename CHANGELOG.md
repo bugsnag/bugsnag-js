@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.0.0
+-----
+
+-   Better grouping support.
+
 1.1.0
 -----
 -   Add support for stacktraces on all modern browsers.
