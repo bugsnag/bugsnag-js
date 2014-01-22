@@ -64,6 +64,13 @@
 
   // Return a function acts like the given function, but reports
   // any exceptions to Bugsnag before re-throwing them.
+  //
+  // This is not a public function because it can only be used if
+  // the exception is not caught after being thrown out of this function.
+  //
+  // If you call wrap twice on the same function, it'll give you back the
+  // same wrapped function. This lets removeEventListener to continue to
+  // work.
   function wrap(_super, options) {
     try {
       if (typeof _super !== "function") {
@@ -75,6 +82,9 @@
             lastEvent = event;
           }
 
+          // We set shouldCatch to false on IE < 10 because catching the error ruins the file/line as reported in window.onerror,
+          // We set shouldCatch to false on Chrome/Safari because it interferes with "break on unhandled exception"
+          // All other browsers need shouldCatch to be true, as they don't pass the exception object to window.onerror
           if (shouldCatch) {
             try {
               return _super.apply(this, arguments);
@@ -100,7 +110,7 @@
     } catch (e) {
       return _super;
     }
-  };
+  }
 
   //
   // ### Helpers & Setup
@@ -343,6 +353,7 @@
     return exception.stack || exception.backtrace || exception.stacktrace;
   }
 
+  // Populate the event tab of meta-data.
   function eventToMetaData(event) {
     var tab = {
       millisecondsAgo: new Date() - event.timeStamp,
@@ -354,6 +365,7 @@
     return tab;
   }
 
+  // Convert a DOM element into a string suitable for passing to Bugsnag.
   function targetToString(target) {
     if (target) {
       var attrs = target.attributes;
@@ -373,7 +385,8 @@
     }
   }
 
-  // If we've notified 
+  // If we've notified bugsnag of an exception in wrap, we don't want to
+  // re-notify when it hits window.onerror after we re-throw it.
   function ignoreNextOnError() {
     ignoreOnError += 1;
     window.setTimeout(function () {
@@ -413,9 +426,12 @@
     }
   }
 
-  var inlineScriptsRunning = document.readyState !== "complete";
+  // To emulate document.currentScript we use document.scripts.last.
+  // This only works while synchronous scripts are running, so we track
+  // that here.
+  var synchronousScriptsRunning = document.readyState !== "complete";
   function loadCompleted() {
-    inlineScriptsRunning = false;
+    synchronousScriptsRunning = false;
   }
 
   // from jQuery. We don't have quite such tight bounds as they do if
@@ -456,7 +472,7 @@
 
         if (shouldNotify && !ignoreOnError) {
 
-          if (inlineScriptsRunning) {
+          if (synchronousScriptsRunning) {
             var scripts = document.getElementsByTagName("script"),
               script = document.currentScript || scripts[scripts.length - 1];
 
@@ -491,6 +507,8 @@
 
     var hijackTimeFunc = function (_super) {
       return function (f, t) {
+        // Note, we don't do `_super.call` because that doesn't work on IE 8,
+        // luckily this is implicitly window so it just works everywhere.
         return _super(wrap(f), t);
       };
     };
@@ -503,6 +521,8 @@
 
     var hijackEventFunc = function (_super) {
       return function (e, f, capture, secure) {
+        // HTML lets event-handlers be objects with a handlEvent function,
+        // we need to change f.handleEvent here, as self.wrap will ignore f.
         if (f && f.handleEvent) {
           f.handleEvent = wrap(f.handleEvent, {eventHandler: true});
         }
@@ -517,11 +537,12 @@
       var prototype = window[global] && window[global].prototype;
       if (prototype && prototype.hasOwnProperty && prototype.hasOwnProperty("addEventListener")) {
         polyFill(prototype, "addEventListener", hijackEventFunc);
+        // We also need to hack removeEventListener so that you can remove any
+        // event listeners.
         polyFill(prototype, "removeEventListener", hijackEventFunc);
       }
     });
   }
 
   return self;
-
 });
