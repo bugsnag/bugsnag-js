@@ -67,35 +67,41 @@
   // Return a function acts like the given function, but reports
   // any exceptions to Bugsnag before re-throwing them.
   self.wrap = function (_super, options) {
-    if (typeof _super !== "function") {
+    try {
+      if (typeof _super !== "function") {
+        return _super;
+      }
+      if (!_super.bugsnag) {
+        _super.bugsnag = function (event) {
+          if (options && options.eventHandler) {
+            lastEvent = event;
+          }
+
+          if (shouldCatch) {
+            try {
+              return _super.apply(this, arguments);
+            } catch (e) {
+              // We do this rather than stashing treating the error like lastEvent
+              // because in FF 26 onerror is not called for synthesized event handlers.
+              if (getSetting("autoNotify", true)) {
+                self.notifyException(e);
+                ignoreNextOnError();
+              }
+              throw e;
+            }
+          } else {
+            return _super.apply(this, arguments);
+          }
+        };
+        _super.bugsnag.bugsnag = _super.bugsnag;
+      }
+      return _super.bugsnag;
+
+    // This can happen if _super is not a normal javascript function.
+    // For example, see https://github.com/bugsnag/bugsnag-js/issues/28
+    } catch (e) {
       return _super;
     }
-    if (!_super.bugsnag) {
-      _super.bugsnag = function (event) {
-        if (options && options.eventHandler) {
-          lastEvent = event;
-        }
-
-        if (shouldCatch) {
-          try {
-            return _super.apply(this, arguments);
-          } catch (e) {
-            // We do this rather than stashing treating the error like lastEvent
-            // because in FF 26 onerror is not called for synthesized event handlers.
-            if (getSetting("autoNotify", true)) {
-              self.notifyException(e);
-              ignoreNextOnError();
-            }
-            throw e;
-          }
-        } else {
-          return _super.apply(this, arguments);
-        }
-      };
-      _super.bugsnag.bugsnag = _super.bugsnag;
-    }
-
-    return _super.bugsnag;
   };
 
   //
