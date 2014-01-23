@@ -1,23 +1,23 @@
 <!doctype html>
 <html>
 <head>
-  <title>Bugsnag.js Test Suite</title>
-  <link rel="stylesheet" href="node_modules/mocha/mocha.css" />
+  <title>Running</title>
+  <link rel="stylesheet" href="../node_modules/mocha/mocha.css" />
 </head>
 
 <body>
   <!-- Mocha -->
   <div id="mocha"></div>
-  <script src="node_modules/mocha/mocha.js"></script>
-  <script src="test/assert.js"></script>
-  <script src="test/stub.js"></script>
+  <script src="../node_modules/mocha/mocha.js"></script>
+  <script src="assert.js"></script>
+  <script src="stub.js"></script>
 
   <script>
     mocha.setup({ignoreLeaks: true, ui: "bdd"});
   </script>
 
   <!-- Tests -->
-  <script src="test/test.bugsnag.js"></script>
+  <script src="test.bugsnag.js"></script>
   <script>
     if (window.mochaPhantomJS) {
       mochaPhantomJS.run();
