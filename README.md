@@ -66,33 +66,12 @@ Both of these functions can also be passed an optional `metaData` object as
 the last parameter, which should take the same format as [metaData](#metadata)
 described below.
 
-
-noConflict Support
-------------------
-
-Bugsnag has a `noConflict` function for removing itself from the `window` object
-and restoring the previous binding. This is intended for use in environments
-where developers can't assume that Bugsnag isn't in use already (such as 3rd
-party embedded javascript) and want to control what gets reported to their
-Bugsnag account.
-
-The object returned from `noConflict()` is the full Bugsnag object so can be
-used in the same way:
-
-```javascript
-var myBugsnag = Bugsnag.noConflict();
-// window.Bugsnag now is bound to what is was before the bugsnag script was
-added to the DOM
-myBugsnag.apiKey = "my-special-api-key";
-try {
-  // highly volatile code
-} catch (e) {
-  myBugsnag.notifyException(e, "OhNoes");
-}
-```
-
 Browser Support
 ---------------
+
+Bugsnag can automatically notify you of unhandled exceptions in all versions of
+all browsers (yes, even IE 6!). Some browsers let us do even more, and
+internally we have 3 tiers of higher quality support:
 
 ```
            | Tier A | Tier B | Tier C | Supported
@@ -107,30 +86,18 @@ Chrome:    | 14+    |        |        | all       |
 Opera:     | 13+    | 10-12  |        | all       |
 -----------+--------+--------+--------+-----------+
 Cumulative | 82.9%  | 91.2%  | 96.4%  | 100%
-Ignorable? |  no    |   no   |  yes   |  yes
 ```
 
-Tier A browsers (82.9% of users) let us get filename, line number and column
-number for every unhandled exception. These browsers work best because we're
-able to de-duplicate exceptions very reliably and they provide lots of debug
-information.
+Most users are on tier A or B browsers (91.2%), errors from these browsers are
+deduplicated most effectively, and there's lots of debugging information
+available.
 
-Tier B browsers (91.2% of users) let us get filename, line number and method,
-but no column number. In most cases we're able to deduplicate exceptions
-correctly, and show you plenty of debugging information.
+A number of people are still on tier C (%5.2%) or worse (3.6%) browsers (though
+those proportions will diminish over time). We can still notify you of problems
+in these browsers, though the quality is significantly lower.
 
-Tier C browsers (96.4% of users) are missing stack-traces, we still know which
-filename and line number the error happened on, but the debugging information
-is severely limited.
-
-All other browsers are supported on a best-effort basis. We catch all exceptions
-that happen, but can't guarantee that you'll be able to understand the error
-report.
-
-Due to the messiness inherent in handling errors with Tier C and older
-browsers, and the small number of users, the Bugsnag backend allows you to
-ignore all errors in these browsers. Just go to "Settings -> Error Handling"
-and check "Only report exceptions in modern browsers".
+If you're only targetting up-to-date users, you can tell Bugsnag to only report
+errors from modern browsers by going to "Settings -> Error Handling"
 
 Configuration
 -------------
@@ -228,6 +195,31 @@ Bugsnag.beforeNotify = function(error, metaData) {
 
 The error parameter contains name, message, file and lineNumber fields that contain
 information about the error that is being notified.
+
+noConflict Support
+------------------
+
+Bugsnag has a `noConflict` function for removing itself from the `window` object
+and restoring the previous binding. This is intended for use in environments
+where developers can't assume that Bugsnag isn't in use already (such as 3rd
+party embedded javascript) and want to control what gets reported to their
+Bugsnag account.
+
+The object returned from `noConflict()` is the full Bugsnag object so can be
+used in the same way:
+
+```javascript
+var myBugsnag = Bugsnag.noConflict();
+// window.Bugsnag now is bound to what is was before the bugsnag script was
+added to the DOM
+myBugsnag.apiKey = "my-special-api-key";
+try {
+  // highly volatile code
+} catch (e) {
+  myBugsnag.notifyException(e, "OhNoes");
+}
+```
+
 
 Self-hosting
 ------------
