@@ -1,5 +1,5 @@
-Bugsnag Notifier for JavaScript (Beta)
-======================================
+Bugsnag Notifier for JavaScript
+===============================
 
 The Bugsnag Notifier for JavaScript gives you instant notification of errors and
 exceptions in your website's JavaScript code.
@@ -129,7 +129,8 @@ report.
 
 Due to the messiness inherent in handling errors with Tier C and older
 browsers, and the small number of users, the Bugsnag backend allows you to
-ignore all errors in these browsers.
+ignore all errors in these browsers. Just go to "Settings -> Error Handling"
+and check "Only report exceptions in modern browsers".
 
 Configuration
 -------------
