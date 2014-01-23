@@ -62,41 +62,55 @@
     }, metaData);
   };
 
-  // #### Bugsnag.wrap
-  //
   // Return a function acts like the given function, but reports
   // any exceptions to Bugsnag before re-throwing them.
-  self.wrap = function (_super, options) {
-    if (typeof _super !== "function") {
+  //
+  // This is not a public function because it can only be used if
+  // the exception is not caught after being thrown out of this function.
+  //
+  // If you call wrap twice on the same function, it'll give you back the
+  // same wrapped function. This lets removeEventListener to continue to
+  // work.
+  function wrap(_super, options) {
+    try {
+      if (typeof _super !== "function") {
+        return _super;
+      }
+      if (!_super.bugsnag) {
+        _super.bugsnag = function (event) {
+          if (options && options.eventHandler) {
+            lastEvent = event;
+          }
+
+          // We set shouldCatch to false on IE < 10 because catching the error ruins the file/line as reported in window.onerror,
+          // We set shouldCatch to false on Chrome/Safari because it interferes with "break on unhandled exception"
+          // All other browsers need shouldCatch to be true, as they don't pass the exception object to window.onerror
+          if (shouldCatch) {
+            try {
+              return _super.apply(this, arguments);
+            } catch (e) {
+              // We do this rather than stashing treating the error like lastEvent
+              // because in FF 26 onerror is not called for synthesized event handlers.
+              if (getSetting("autoNotify", true)) {
+                self.notifyException(e);
+                ignoreNextOnError();
+              }
+              throw e;
+            }
+          } else {
+            return _super.apply(this, arguments);
+          }
+        };
+        _super.bugsnag.bugsnag = _super.bugsnag;
+      }
+      return _super.bugsnag;
+
+    // This can happen if _super is not a normal javascript function.
+    // For example, see https://github.com/bugsnag/bugsnag-js/issues/28
+    } catch (e) {
       return _super;
     }
-    if (!_super.bugsnag) {
-      _super.bugsnag = function (event) {
-        if (options && options.eventHandler) {
-          lastEvent = event;
-        }
-
-        if (shouldCatch) {
-          try {
-            return _super.apply(this, arguments);
-          } catch (e) {
-            // We do this rather than stashing treating the error like lastEvent
-            // because in FF 26 onerror is not called for synthesized event handlers.
-            if (getSetting("autoNotify", true)) {
-              self.notifyException(e);
-              ignoreNextOnError();
-            }
-            throw e;
-          }
-        } else {
-          return _super.apply(this, arguments);
-        }
-      };
-      _super.bugsnag.bugsnag = _super.bugsnag;
-    }
-
-    return _super.bugsnag;
-  };
+  }
 
   //
   // ### Helpers & Setup
@@ -110,7 +124,7 @@
   var DEFAULT_BASE_ENDPOINT = "https://notify.bugsnag.com/";
   var DEFAULT_NOTIFIER_ENDPOINT = DEFAULT_BASE_ENDPOINT + "js";
   var DEFAULT_METRICS_ENDPOINT = DEFAULT_BASE_ENDPOINT + "metrics";
-  var NOTIFIER_VERSION = "1.1.0";
+  var NOTIFIER_VERSION = "2.0.1";
 
   // Keep a reference to the currently executing script in the DOM.
   // We'll use this later to extract settings from attributes.
@@ -327,7 +341,11 @@
       stacktrace = functionStack.join("\n");
     }
 
-    return stacktrace;
+    // Tell the backend to ignore the first two lines in the stack-trace.
+    // generateStacktrace() + window.onerror,
+    // generateStacktrace() + notify,
+    // generateStacktrace() + notifyException
+    return "<generated>\n" + stacktrace;
   }
 
   // Get the stacktrace string from an exception
@@ -335,6 +353,7 @@
     return exception.stack || exception.backtrace || exception.stacktrace;
   }
 
+  // Populate the event tab of meta-data.
   function eventToMetaData(event) {
     var tab = {
       millisecondsAgo: new Date() - event.timeStamp,
@@ -346,6 +365,7 @@
     return tab;
   }
 
+  // Convert a DOM element into a string suitable for passing to Bugsnag.
   function targetToString(target) {
     if (target) {
       var attrs = target.attributes;
@@ -353,7 +373,9 @@
       if (attrs) {
         var ret = "<" + target.nodeName.toLowerCase();
         for (var i = 0; i < attrs.length; i++) {
-          ret += " " + attrs[i].name + "=\"" + attrs[i].value + "\"";
+          if (attrs[i].value && attrs[i].value.toString() != "null") {
+            ret += " " + attrs[i].name + "=\"" + attrs[i].value + "\"";
+          }
         }
         return ret + ">";
       } else {
@@ -363,70 +385,8 @@
     }
   }
 
-  //
-  // ### Metrics tracking (DAU/MAU)
-  //
-
-  // Track a page-view for MAU/DAU metrics.
-  function trackMetrics() {
-    var shouldTrack = getSetting("metrics");
-    var apiKey = getSetting("apiKey");
-    if ((shouldTrack !== true && shouldTrack !== "true") || !validateApiKey(apiKey)) {
-      return;
-    }
-
-    // Fetch or generate a userId
-    var cookieName = "bugsnag_" + apiKey;
-    var userId = getCookie(cookieName);
-    if (userId == null) {
-      userId = generateUUID();
-      setCookie(cookieName, userId, 1000, true);
-    }
-
-    // Make the HTTP request.
-    request(getSetting("metricsEndpoint") || DEFAULT_METRICS_ENDPOINT, {
-      userId: userId,
-      apiKey: apiKey
-    });
-  }
-
-  // Generate a 4-character random hex string.
-  function s4() {
-    return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
-  }
-
-  // Generate a version-4 UUID.
-  function generateUUID() {
-    return s4() + s4() + "-" + s4() + "-" + s4() + "-" + s4() + "-" + s4() + s4() + s4();
-  }
-
-  // Set a cookie value.
-  function setCookie(name, value, days, crossSubdomain) {
-    var cdomain = "";
-    var expires = "";
-
-    if (days) {
-      var date = new Date();
-      date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-      expires = "; expires=" + date.toGMTString();
-    }
-
-    if (crossSubdomain) {
-      var matches = window.location.hostname.match(/[a-z0-9][a-z0-9\-]+\.[a-z\.]{2,6}$/i);
-      var domain = matches ? matches[0] : "";
-      cdomain = (domain ? "; domain=." + domain : "");
-    }
-
-    document.cookie = name + "=" + encodeURIComponent(value) + expires + "; path=/" + cdomain;
-  }
-
-  // Get a cookie value.
-  function getCookie(name) {
-    var cookie = document.cookie.match(name + "=([^$;]+)");
-    return cookie ? decodeURIComponent(cookie[1]) : null;
-  }
-
-  // If we've notified 
+  // If we've notified bugsnag of an exception in wrap, we don't want to
+  // re-notify when it hits window.onerror after we re-throw it.
   function ignoreNextOnError() {
     ignoreOnError += 1;
     window.setTimeout(function () {
@@ -448,9 +408,6 @@
     } catch(e){ }
   }
 
-  // Make a metrics request to Bugsnag if enabled.
-  trackMetrics();
-
 
   //
   // ### Polyfilling
@@ -467,6 +424,27 @@
         obj[name] = original;
       });
     }
+  }
+
+  // To emulate document.currentScript we use document.scripts.last.
+  // This only works while synchronous scripts are running, so we track
+  // that here.
+  var synchronousScriptsRunning = document.readyState !== "complete";
+  function loadCompleted() {
+    synchronousScriptsRunning = false;
+  }
+
+  // from jQuery. We don't have quite such tight bounds as they do if
+  // we end up on the window.onload event as we don't try and hack
+  // the .scrollLeft() fix in because it doesn't work in frames so
+  // we'd need these fallbacks anyway.
+  // The worst that can happen is we group an event handler that fires
+  // before us into the last script tag.
+  if (document.addEventListener) {
+    document.addEventListener("DOMContentLoaded", loadCompleted, true);
+    window.addEventListener("load", loadCompleted, true);
+  } else {
+    window.attachEvent("onload", loadCompleted);
   }
 
   if (getSetting("autoNotify", true)) {
@@ -487,19 +465,25 @@
         var shouldNotify = getSetting("autoNotify", true);
         var metaData = {};
 
-        // Warn about useless cross-domain script errors and return before notifying.
-        // http://stackoverflow.com/questions/5913978/cryptic-script-error-reported-in-javascript-in-chrome-and-firefox
-        if (shouldNotify && message === "Script error." && url === "" && lineNo === 0) {
-          log("Error on cross-domain script, couldn't notify Bugsnag.");
-          shouldNotify = false;
-        }
-
         // IE 6+ support.
         if (!charNo && window.event) {
           charNo = window.event.errorCharacter;
         }
 
         if (shouldNotify && !ignoreOnError) {
+
+          if (synchronousScriptsRunning) {
+            var scripts = document.getElementsByTagName("script"),
+              script = document.currentScript || scripts[scripts.length - 1];
+
+            if (script) {
+              metaData.script = {
+                src: script.src,
+                content: script.innerHTML && script.innerHTML.substr(0, 1024)
+              };
+            }
+          }
+
           sendToBugsnag({
             name: exception && exception.name || "window.onerror",
             message: message,
@@ -523,7 +507,9 @@
 
     var hijackTimeFunc = function (_super) {
       return function (f, t) {
-        return _super(self.wrap(f), t);
+        // Note, we don't do `_super.call` because that doesn't work on IE 8,
+        // luckily this is implicitly window so it just works everywhere.
+        return _super(wrap(f), t);
       };
     };
 
@@ -535,10 +521,12 @@
 
     var hijackEventFunc = function (_super) {
       return function (e, f, capture, secure) {
+        // HTML lets event-handlers be objects with a handlEvent function,
+        // we need to change f.handleEvent here, as self.wrap will ignore f.
         if (f && f.handleEvent) {
-          f.handleEvent = self.wrap(f.handleEvent, {eventHandler: true});
+          f.handleEvent = wrap(f.handleEvent, {eventHandler: true});
         }
-        return _super.call(this, e, self.wrap(f, {eventHandler: true}), capture, secure);
+        return _super.call(this, e, wrap(f, {eventHandler: true}), capture, secure);
       };
     };
 
@@ -549,11 +537,12 @@
       var prototype = window[global] && window[global].prototype;
       if (prototype && prototype.hasOwnProperty && prototype.hasOwnProperty("addEventListener")) {
         polyFill(prototype, "addEventListener", hijackEventFunc);
+        // We also need to hack removeEventListener so that you can remove any
+        // event listeners.
         polyFill(prototype, "removeEventListener", hijackEventFunc);
       }
     });
   }
 
   return self;
-
 });
