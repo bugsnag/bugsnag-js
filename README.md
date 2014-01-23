@@ -5,16 +5,13 @@ The Bugsnag Notifier for JavaScript gives you instant notification of errors and
 exceptions in your website's JavaScript code.
 
 Bugsnag's JavaScript notifier is incredibly small, and has no external
-dependencies (not even jQuery!) so you can safely use it on any website.
-
-This notifier is currently in beta, we're working on improving automatic
-error capturing and grouping very soon.
+dependencies (not even jQuery!), and works in all mobile browsers, so you can
+safely use it on any website.
 
 [Bugsnag](https://bugsnag.com) captures errors in real-time from your web,
 mobile and desktop applications, helping you to understand and resolve them
 as fast as possible. [Create a free account](https://bugsnag.com) to start
 capturing errors from your applications.
-
 
 How to Install
 --------------
@@ -30,6 +27,8 @@ any other `<script>` tags.
 Make sure to set your Bugsnag API key in the `data-apikey` attribute on the
 script tag, or manually set [Bugsnag.apiKey](#apikey).
 
+Now all uncaught exceptions will be sent to Bugsnag, without any further
+work from you.
 
 Sending Caught Exceptions or Custom Errors
 ------------------------------------------
@@ -92,17 +91,48 @@ try {
 }
 ```
 
-
 Browser Support
 ---------------
 
-Some browsers, notably IE9 and below, don't support stacktraces on exceptions.
-In these situations we'll attempt to construct an approximate stacktrace,
-which will unfortunately not contain URL or line number information.
+```
+           | Tier A | Tier B | Tier C | Supported
+-----------+--------+--------+--------+-----------+
+iOS:       | 7+     | 6      | 3-5    | all       |
+Android:   | 4.0+   |        | 2.2-3  | all       |
+Blackberry |        | 10     |        | all       |
+IE:        | 8+     |        |        | all       |
+Firefox:   | 17+    | 6-16   | 3-5    | all       |
+Safari:    | 7+     | 6      | 5      | all       |
+Chrome:    | 14+    |        |        | all       |
+Opera:     | 13+    | 10-12  |        | all       |
+-----------+--------+--------+--------+-----------+
+Cumulative | 82.9%  | 91.2%  | 96.4%  | 100%
+Ignorable? |  no    |   no   |  yes   |  yes
+```
 
+Tier A browsers (82.9% of users) let us get filename, line number and column
+number for every unhandled exception. These browsers work best because we're
+able to de-duplicate exceptions very reliably and they provide lots of debug
+information.
 
-Additional Configuration
-------------------------
+Tier B browsers (91.2% of users) let us get filename, line number and method,
+but no column number. In most cases we're able to deduplicate exceptions
+correctly, and show you plenty of debugging information.
+
+Tier C browsers (96.4% of users) are missing stack-traces, we still know which
+filename and line number the error happened on, but the debugging information
+is severely limited.
+
+All other browsers are supported on a best-effort basis. We catch all exceptions
+that happen, but can't guarantee that you'll be able to understand the error
+report.
+
+Due to the messiness inherent in handling errors with Tier C and older
+browsers, and the small number of users, the Bugsnag backend allows you to
+ignore all errors in these browsers.
+
+Configuration
+-------------
 
 ###apiKey
 
@@ -197,6 +227,17 @@ Bugsnag.beforeNotify = function(error, metaData) {
 
 The error parameter contains name, message, file and lineNumber fields that contain
 information about the error that is being notified.
+
+Self-hosting
+------------
+
+If you have specific requirements for Javascript, you're welcome to host
+versions of bugsnag-js on your own site or CDN. You can either download the
+file and mirror it, or you can include it in your existing Javascript asset
+compilation.
+
+If you're doing this, please ensure that Bugsnag is included before you run
+your onload handlers. This is so that we can report stacktraces reliably.
 
 Reporting Bugs or Feature Requests
 ----------------------------------
