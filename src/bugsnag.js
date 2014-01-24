@@ -261,7 +261,7 @@
 
     if (lastEvent) {
       metaData = metaData || {};
-      metaData.Event = eventToMetaData(lastEvent);
+      metaData["Last Event"] = eventToMetaData(lastEvent);
     }
 
     // Merge the local and global `metaData`.
