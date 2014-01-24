@@ -38,11 +38,11 @@ module.exports = (grunt) ->
         actions: [
           name: "version"
           search: /var NOTIFIER_VERSION =[^;]*;/
-          replace: "var NOTIFIER_VERSION = \"#{require("./package.json").version}\";"
+          replace: -> "var NOTIFIER_VERSION = \"#{require("./package.json").version}\";"
         ,
           name: "readme"
-          search: /cloudfront.net\/bugsnag-[0-9\.]+.min.js/
-          replace: "cloudfront.net/bugsnag-#{require("./package.json").version}.min.js"
+          search: /cloudfront.net\/bugsnag-[0-9\.]+.min.js/g
+          replace: -> "cloudfront.net/bugsnag-#{require("./package.json").version}.min.js"
         ]
 
     # Minification
