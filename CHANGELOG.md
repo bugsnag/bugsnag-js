@@ -1,6 +1,12 @@
 Changelog
 =========
 
+
+2.0.2
+-----
+
+-   Remove accidentally exposed function.
+
 2.0.1
 -----
 

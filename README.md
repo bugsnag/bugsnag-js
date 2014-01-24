@@ -20,7 +20,7 @@ Include `bugsnag.js` from our CDN in the `<head>` tag of your website, before
 any other `<script>` tags.
 
 ```html
-<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-2.0.1.min.js"
+<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-2.0.2.min.js"
         data-apikey="YOUR-API-KEY-HERE"></script>
 ```
 
@@ -104,7 +104,7 @@ Configuration
 Set your Bugsnag API key. You can find your API key on your dashboard.
 
 ```html
-<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-2.0.1.min.js"
+<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-2.0.2.min.js"
         data-apikey="YOUR-API-KEY-HERE"></script>
 ```
 
@@ -122,7 +122,7 @@ get sent to `window.onerror`. If you want to stop this from happening, you can
 set `autoNotify` to `false`:
 
 ```html
-<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-2.0.1.min.js"
+<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-2.0.2.min.js"
         data-apikey="YOUR-API-KEY-HERE"
         data-autonotify="false"></script>
 ```
