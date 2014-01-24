@@ -73,6 +73,20 @@ module.exports = (grunt) ->
           src: "src/bugsnag.min.js"
           dest: "bugsnag-<%= pkg.version %>.min.js"
         }]
+      major:
+        options: {
+          headers: {
+            'Cache-Control': 'max-age: 604800'
+          }
+        }
+        upload: [{
+          src: "src/bugsnag.js"
+          dest: "bugsnag-<%= pkg.version.split('.')[0] %>.js"
+        },
+        {
+          src: "src/bugsnag.min.js"
+          dest: "bugsnag-<%= pkg.version.split('.')[0] %>.min.js"
+        }]
 
     # Version bumping
     bump:
