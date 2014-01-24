@@ -177,13 +177,6 @@ describe("Bugsnag", function () {
       assert(requestData().params.stacktrace != null, "stacktrace should be present");
     });
   });
-
-  describe("wrap", function () {
-    it("should return the same function if called twice", function () {
-      function a () {};
-      assert(Bugsnag.wrap(a) === Bugsnag.wrap(a), "wrap should return the same function twice");
-    });
-  });
 });
 
 describe("window", function () {
