@@ -54,6 +54,7 @@ module.exports = (grunt) ->
         compress:
           global_defs:
             BUGSNAG_TESTING: undefined
+        sourceMap: true
 
     # Upload to s3
     s3:
