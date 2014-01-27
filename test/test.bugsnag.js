@@ -187,6 +187,15 @@ describe("window", function () {
     assert("Bugsnag" in window, "should have Bugsnag object on window");
   });
 
+  describe("setTimeout", function () {
+    it("should allow multiple parameters to be passed", function (done) {
+      window.setTimeout(function (a, b) {
+        assert.equal(2, a);
+        done();
+      }, 1, 2, 3);
+    });
+  });
+
   describe("onerror", function() {
     it("should notify bugsnag", function () {
       Bugsnag._onerror = null; // Disable mocha's onerror for this test
