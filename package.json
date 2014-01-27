@@ -1,6 +1,6 @@
 {
     "name": "bugsnag-js",
-    "version": "2.0.2",
+    "version": "2.1.0",
     "private": true,
     "devDependencies": {
         "grunt": "~0.4.2",

@@ -136,8 +136,9 @@ module.exports = (grunt) ->
 
   grunt.registerTask "stats", ["uglify", "uglify-stats"]
 
-  grunt.registerTask "uglify", "Uglifies bugsnag.js", (done) ->
+  grunt.registerTask "uglify", "Uglifies bugsnag.js", () ->
     exec = require("child_process").exec
+    done = this.async()
     child = exec "./bin/uglify.coffee", (error, stdout, stderr) ->
       console.log("Error running uglify.coffee: " + error) if error?
       done(!error?)
