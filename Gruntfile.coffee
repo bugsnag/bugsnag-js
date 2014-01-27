@@ -41,7 +41,7 @@ module.exports = (grunt) ->
           replace: -> "var NOTIFIER_VERSION = \"#{require("./package.json").version}\";"
         ,
           name: "readme"
-          search: /cloudfront.net\/bugsnag-[0-9\.]+.min.js/g
+          search: /cloudfront.net\/bugsnag-([0-9]+\.)+[0-9]+.min.js/g
           replace: -> "cloudfront.net/bugsnag-#{require("./package.json").version}.min.js"
         ]
 
