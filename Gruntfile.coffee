@@ -45,17 +45,6 @@ module.exports = (grunt) ->
           replace: -> "cloudfront.net/bugsnag-#{require("./package.json").version}.min.js"
         ]
 
-    # Minification
-    uglify:
-      dist:
-        files:
-          "src/bugsnag.min.js": ["src/bugsnag.js"]
-      options:
-        compress:
-          global_defs:
-            BUGSNAG_TESTING: undefined
-        sourceMap: true
-
     # Upload to s3
     s3:
       options:
@@ -71,8 +60,11 @@ module.exports = (grunt) ->
           src: "src/bugsnag.js"
           dest: "bugsnag-<%= pkg.version %>.js"
         }, {
-          src: "src/bugsnag.min.js"
+          src: "dist/bugsnag.min.js"
           dest: "bugsnag-<%= pkg.version %>.min.js"
+        }, {
+          src: "dist/bugsnag.min.map",
+          dest: "bugsnag-<%= pkg.version %>.min.map"
         }]
       major:
         options: {
@@ -125,7 +117,6 @@ module.exports = (grunt) ->
 
   # Load tasks from plugins
   grunt.loadNpmTasks "grunt-contrib-jshint"
-  grunt.loadNpmTasks "grunt-contrib-uglify"
   grunt.loadNpmTasks "grunt-contrib-connect"
   grunt.loadNpmTasks "grunt-contrib-watch"
   grunt.loadNpmTasks "grunt-bumpx"
@@ -145,13 +136,20 @@ module.exports = (grunt) ->
 
   grunt.registerTask "stats", ["uglify", "uglify-stats"]
 
+  grunt.registerTask "uglify", "Uglifies bugsnag.js", (done) ->
+    exec = require("child_process").exec
+    child = exec "./bin/uglify.coffee", (error, stdout, stderr) ->
+      console.log("Error running uglify.coffee: " + error) if error?
+      done(!error?)
+
+
   grunt.registerTask "uglify-stats", "Outputs stats about uglification", ->
     exec = require("child_process").exec
     done = this.async()
 
     exec ['echo "Size: $(cat src/bugsnag.js | wc -c)"',
-          'echo "Ugly: $(cat src/bugsnag.min.js | wc -c)"',
-          'echo "Gzip: $(cat src/bugsnag.min.js | gzip | wc -c)"'].join(" && "), (error, stdout, stderr) ->
+          'echo "Ugly: $(cat dist/bugsnag.min.js | wc -c)"',
+          'echo "Gzip: $(cat dist/bugsnag.min.js | gzip | wc -c)"'].join(" && "), (error, stdout, stderr) ->
             grunt.log.write(stdout.toString())
             grunt.log.write(stderr.toString())
             done(!error?)
