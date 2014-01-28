@@ -77,7 +77,7 @@ module.exports = (grunt) ->
           dest: "bugsnag-<%= pkg.version.split('.')[0] %>.js"
         },
         {
-          src: "src/bugsnag.min.js"
+          src: "dist/bugsnag.min.js"
           dest: "bugsnag-<%= pkg.version.split('.')[0] %>.min.js"
         }]
 
