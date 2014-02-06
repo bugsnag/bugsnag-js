@@ -291,6 +291,7 @@
       userId: getSetting("userId"),
       metaData: mergedMetaData,
       releaseStage: releaseStage,
+      appVersion: getSetting("appVersion"),
 
       url: window.location.href,
       userAgent: navigator.userAgent,

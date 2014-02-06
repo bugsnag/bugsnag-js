@@ -174,6 +174,22 @@ Bugsnag of errors you can set `notifyReleaseStages`:
 Bugsnag.notifyReleaseStages = ["development", "production"];
 ```
 
+###appVersion
+
+Setting the `appVersion` lets you see at a glance when errors first and last
+happened in your code. You can do this either in the script-tag:
+
+```html
+<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-2.min.js"
+        data-apikey="YOUR-API-KEY-HERE"
+        data-appversion="2.0.14"></script>
+```
+
+Or in javascript:
+
+```javascript
+Bugsnag.appVersion = "2.0.14";
+```
 
 ###beforeNotify
 
