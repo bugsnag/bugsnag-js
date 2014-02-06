@@ -1,6 +1,15 @@
 Changelog
 =========
 
+2.1.1
+-----
+
+-  Track document.currentScript across async boundaries.
+
+2.1.0
+-----
+
+-  Fix additional parameters to window.setTimeout etc.
 
 2.0.2
 -----
