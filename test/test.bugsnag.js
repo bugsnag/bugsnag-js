@@ -303,6 +303,7 @@ describe("window", function () {
   }
 });
 
+
 if (window.addEventListener && document.body.click) {
   describe("document.body", function () {
     beforeEach(buildUp);
@@ -375,6 +376,27 @@ describe("inline script", function () {
         done();
       } catch(e) {
         console.log(JSON.stringify(params.metaData.script.content));
+        done(e);
+      }
+    };
+    document.body.appendChild(iframe);
+  });
+});
+
+describe("current script", function () {
+  beforeEach(buildUp);
+  afterEach(tearDown);
+
+  it("should track currentScript across event handlers", function (done) {
+    var iframe = document.createElement('iframe');
+    iframe.src = 'inlinescript1.html';
+    window.testResult = function (params) {
+      document.body.removeChild(iframe);
+      try {
+        assert.equal(params.metaData.script.content.replace(/\r\n/, ""),"\n    (function () {\n     setTimeout(function () {\n       atob();\n      });\n    })();\n  ");
+        done();
+      } catch(e) {
+        console.log(JSON.stringify(params.metaData));
         done(e);
       }
     };
