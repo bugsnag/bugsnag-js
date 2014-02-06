@@ -16,6 +16,7 @@
 })(function (window, document, navigator, old) {
   var self = {},
       lastEvent,
+      lastScript,
       shouldCatch = true,
       ignoreOnError = 0;
 
@@ -37,8 +38,11 @@
   // you to provide a custom error name when calling `notifyException`.
   self.notifyException = function (exception, name, metaData) {
     if (typeof name !== "string") {
-      metaData = name;
+      metaData = name || {};
+    } else if (!metaData) {
+      metaData = {};
     }
+    addScriptToMetaData(metaData);
 
     sendToBugsnag({
       name: name || exception.name,
@@ -77,10 +81,12 @@
         return _super;
       }
       if (!_super.bugsnag) {
+        var currentScript = getCurrentScript();
         _super.bugsnag = function (event) {
           if (options && options.eventHandler) {
             lastEvent = event;
           }
+          lastScript = currentScript;
 
           // We set shouldCatch to false on IE < 10 because catching the error ruins the file/line as reported in window.onerror,
           // We set shouldCatch to false on Chrome/Safari because it interferes with "break on unhandled exception"
@@ -96,9 +102,14 @@
                 ignoreNextOnError();
               }
               throw e;
+            } finally {
+              lastScript = null;
             }
           } else {
-            return _super.apply(this, arguments);
+            var ret = _super.apply(this, arguments);
+            // in case of error, this is set to null in window.onerror
+            lastScript = null;
+            return ret;
           }
         };
         _super.bugsnag.bugsnag = _super.bugsnag;
@@ -109,6 +120,53 @@
     // For example, see https://github.com/bugsnag/bugsnag-js/issues/28
     } catch (e) {
       return _super;
+    }
+  }
+
+  //
+  // ### Script tag tracking
+  //
+
+  // To emulate document.currentScript we use document.scripts.last.
+  // This only works while synchronous scripts are running, so we track
+  // that here.
+  var synchronousScriptsRunning = document.readyState !== "complete";
+  function loadCompleted() {
+    synchronousScriptsRunning = false;
+  }
+
+  // from jQuery. We don't have quite such tight bounds as they do if
+  // we end up on the window.onload event as we don't try and hack
+  // the .scrollLeft() fix in because it doesn't work in frames so
+  // we'd need these fallbacks anyway.
+  // The worst that can happen is we group an event handler that fires
+  // before us into the last script tag.
+  if (document.addEventListener) {
+    document.addEventListener("DOMContentLoaded", loadCompleted, true);
+    window.addEventListener("load", loadCompleted, true);
+  } else {
+    window.attachEvent("onload", loadCompleted);
+  }
+
+  function getCurrentScript() {
+    var script = document.currentScript || lastScript;
+
+    if (!script && synchronousScriptsRunning) {
+      var scripts = document.getElementsByTagName("script");
+      script = scripts[scripts.length - 1];
+    }
+
+    return script;
+  }
+
+  function addScriptToMetaData(metaData) {
+    var script = getCurrentScript();
+
+    if (script) {
+      metaData.script = {
+        src: script.src,
+        content: script.innerHTML && script.innerHTML.substr(0, 1024)
+      };
     }
   }
 
@@ -426,27 +484,6 @@
     }
   }
 
-  // To emulate document.currentScript we use document.scripts.last.
-  // This only works while synchronous scripts are running, so we track
-  // that here.
-  var synchronousScriptsRunning = document.readyState !== "complete";
-  function loadCompleted() {
-    synchronousScriptsRunning = false;
-  }
-
-  // from jQuery. We don't have quite such tight bounds as they do if
-  // we end up on the window.onload event as we don't try and hack
-  // the .scrollLeft() fix in because it doesn't work in frames so
-  // we'd need these fallbacks anyway.
-  // The worst that can happen is we group an event handler that fires
-  // before us into the last script tag.
-  if (document.addEventListener) {
-    document.addEventListener("DOMContentLoaded", loadCompleted, true);
-    window.addEventListener("load", loadCompleted, true);
-  } else {
-    window.attachEvent("onload", loadCompleted);
-  }
-
   if (getSetting("autoNotify", true)) {
     //
     // ### Automatic error notification
@@ -470,19 +507,10 @@
           charNo = window.event.errorCharacter;
         }
 
+        addScriptToMetaData(metaData);
+        lastScript = null;
+
         if (shouldNotify && !ignoreOnError) {
-
-          if (synchronousScriptsRunning) {
-            var scripts = document.getElementsByTagName("script"),
-              script = document.currentScript || scripts[scripts.length - 1];
-
-            if (script) {
-              metaData.script = {
-                src: script.src,
-                content: script.innerHTML && script.innerHTML.substr(0, 1024)
-              };
-            }
-          }
 
           sendToBugsnag({
             name: exception && exception.name || "window.onerror",
