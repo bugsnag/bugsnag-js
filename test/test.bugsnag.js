@@ -95,6 +95,16 @@ describe("Bugsnag", function () {
       assert.deepEqual(requestData().params.metaData, metaData, "metaData should match");
     });
 
+    it("should not change the global metaData", function () {
+      var metaData1 = {some: {data: "here"}};
+      var metaData2 = {some: {data: "here"}};
+
+      Bugsnag.metaData = metaData1;
+      Bugsnag.notifyException(new Error("hello"), {oops: "see"});
+
+      assert.deepEqual(metaData1, metaData2);
+    });
+
     it("should contain local metaData if set", function () {
       var metaData = {some: {data: "here"}};
 

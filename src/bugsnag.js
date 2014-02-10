@@ -322,7 +322,7 @@
     }
 
     // Merge the local and global `metaData`.
-    var mergedMetaData = merge(getSetting("metaData"), metaData);
+    var mergedMetaData = merge(merge({}, getSetting("metaData")), metaData);
 
     // Run any `beforeNotify` function
     var beforeNotify = self.beforeNotify;
