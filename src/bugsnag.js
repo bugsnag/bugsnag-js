@@ -34,12 +34,22 @@
   // Notify Bugsnag about a given `exception`, typically that you've caught
   // with a `try/catch` statement or that you've generated yourself.
   //
+  // It's almost always better to let an exception bubble rather than catching
+  // it, as that gives more consistent behaviour across browsers. Consider
+  // re-throwing instead of calling .notifyException.
+  //
   // Since most JavaScript exceptions use the `Error` class, we also allow
   // you to provide a custom error name when calling `notifyException`.
-  self.notifyException = function (exception, name, metaData) {
-    if (typeof name !== "string") {
-      metaData = name || {};
-    } else if (!metaData) {
+  //
+  // You should never pass severity. It's there for internal use, so we
+  // can mark uncaught exceptions as "fatal". The default value is "error"
+  // and "warning" is also supported by the backend, all other values cause
+  // the notification to be dropped; and you will not see it in your dashboard.
+  self.notifyException = function (exception, name, metaData, severity) {
+    if (name && typeof name !== "string") {
+      metaData = name;
+    }
+    if (!metaData) {
       metaData = {};
     }
     addScriptToMetaData(metaData);
@@ -50,7 +60,8 @@
       stacktrace: stacktraceFromException(exception) || generateStacktrace(),
       file: exception.fileName || exception.sourceURL,
       lineNumber: exception.lineNumber || exception.line,
-      columnNumber: exception.columnNumber ? exception.columnNumber + 1 : undefined
+      columnNumber: exception.columnNumber ? exception.columnNumber + 1 : undefined,
+      severity: severity || "error"
     }, metaData);
   };
 
@@ -62,7 +73,8 @@
     sendToBugsnag({
       name: name,
       message: message,
-      stacktrace: generateStacktrace()
+      stacktrace: generateStacktrace(),
+      severity: "error"
     }, metaData);
   };
 
@@ -98,7 +110,7 @@
               // We do this rather than stashing treating the error like lastEvent
               // because in FF 26 onerror is not called for synthesized event handlers.
               if (getSetting("autoNotify", true)) {
-                self.notifyException(e);
+                self.notifyException(e, null, null, "fatal");
                 ignoreNextOnError();
               }
               throw e;
@@ -355,6 +367,8 @@
       userAgent: navigator.userAgent,
       language: navigator.language || navigator.userLanguage,
 
+      severity: details.severity,
+
       name: details.name,
       message: details.message,
       stacktrace: details.stacktrace,
@@ -518,7 +532,8 @@
             file: url,
             lineNumber: lineNo,
             columnNumber: charNo,
-            stacktrace: (exception && stacktraceFromException(exception)) || generateStacktrace()
+            stacktrace: (exception && stacktraceFromException(exception)) || generateStacktrace(),
+            severity: "fatal"
           }, metaData);
         }
 
