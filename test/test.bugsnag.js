@@ -204,6 +204,11 @@ describe("window", function () {
         done();
       }, 1, 2, 3);
     });
+
+    it("should allow a string to be passed", function (done) {
+      window.done = done;
+      setTimeout('window.done()', 10);
+    });
   });
 
   describe("onerror", function() {

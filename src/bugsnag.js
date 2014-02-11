@@ -556,11 +556,15 @@
       // to be passed, so in order to support these without resorting to call/apply
       // we need an extra layer of wrapping.
       return function (f, t) {
-        f = wrap(f);
-        var args = Array.prototype.slice.call(arguments, 2);
-        return _super(function () {
-          f.apply(this, args);
-        }, t);
+        if (typeof f === 'function') {
+          f = wrap(f);
+          var args = Array.prototype.slice.call(arguments, 2);
+          return _super(function () {
+            f.apply(this, args);
+          }, t);
+        } else {
+          return _super(f, t);
+        }
       };
     };
 
