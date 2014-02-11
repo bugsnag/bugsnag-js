@@ -193,7 +193,7 @@
   // Set up default notifier settings.
   var DEFAULT_BASE_ENDPOINT = "https://notify.bugsnag.com/";
   var DEFAULT_NOTIFIER_ENDPOINT = DEFAULT_BASE_ENDPOINT + "js";
-  var NOTIFIER_VERSION = "2.1.1";
+  var NOTIFIER_VERSION = "2.2.0";
 
   // Keep a reference to the currently executing script in the DOM.
   // We'll use this later to extract settings from attributes.
@@ -556,7 +556,7 @@
       // to be passed, so in order to support these without resorting to call/apply
       // we need an extra layer of wrapping.
       return function (f, t) {
-        if (typeof f === 'function') {
+        if (typeof f === "function") {
           f = wrap(f);
           var args = Array.prototype.slice.call(arguments, 2);
           return _super(function () {

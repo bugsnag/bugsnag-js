@@ -1,6 +1,13 @@
 Changelog
 =========
 
+2.2.0
+-----
+
+- Fix window.setTimeout with a string (broken by 2.1.0)
+- Use the first parameter of .notify() for grouping
+- Fix persistent metaData merging
+
 2.1.1
 -----
 
