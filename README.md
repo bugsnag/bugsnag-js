@@ -233,6 +233,18 @@ try {
 }
 ```
 
+Sourcemaps
+----------
+
+Bugsnag supports [source
+maps](http://www.html5rocks.com/en/tutorials/developertools/sourcemaps/) to
+reverse javascript minification. If you include a magic comment at the end of
+your javascript file that points to the location of a source map, we will
+expand the lines in your stacktrace.
+
+For an example of how this should look, you can see the comment at the bottom
+of [bugsnag.js](http://d2wy8f7a9ursnm.cloudfront.net/bugsnag-2.min.js) itself.
+Most modern minifiers support source maps, we use [UglifyJS2](https://github.com/mishoo/UglifyJS2).
 
 Advanced hosting
 ----------------
