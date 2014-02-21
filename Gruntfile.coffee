@@ -81,7 +81,19 @@ module.exports = (grunt) ->
           dest: "bugsnag-<%= pkg.version.split('.')[0] %>.min.js"
         }]
 
-    # Version bumping
+    invalidate_cloudfront:
+      options:
+        key: process.env.AWS_ACCESS_KEY_ID
+        secret: process.env.AWS_SECRET_ACCESS_KEY
+        distribution: 'E205JDPNKONLN7'
+
+      production:
+        files: [
+          '/bugsnag-2.min.js',
+          '/bugsnag-2.js'
+        ]
+
+        # Version bumping
     bump:
       options:
         part: "patch"
@@ -123,6 +135,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks "grunt-s3"
   grunt.loadNpmTasks "grunt-docco"
   grunt.loadNpmTasks "grunt-regex-replace"
+  grunt.loadNpmTasks "grunt-invalidate-cloudfront"
 
   # Task to tag a version in git
   grunt.registerTask "git-tag", "Tags a release in git", ->
