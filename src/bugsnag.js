@@ -17,6 +17,7 @@
   var self = {},
       lastEvent,
       lastScript,
+      previousNotification,
       shouldCatch = true,
       ignoreOnError = 0;
 
@@ -326,6 +327,16 @@
       if (!shouldNotify) {
         return;
       }
+    }
+
+    // Don't send multiple copies of the same error.
+    // This fixes a problem when a client goes into an infinite loop,
+    // and starts wasting all their bandwidth sending messages to bugsnag.
+    var deduplicate = [details.name, details.message, details.stacktrace].join("|");
+    if (deduplicate === previousNotification) {
+      return;
+    } else {
+      previousNotification = deduplicate;
     }
 
     if (lastEvent) {

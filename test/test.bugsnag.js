@@ -58,6 +58,23 @@ describe("Bugsnag", function () {
       assert.equal(requestData().params.message, "Example error");
     });
 
+    it("should not repeat duplicate exceptions", function () {
+      for (var i = 0; i < 2; i++) {
+        Bugsnag.notifyException(new Error("Hello wold"));
+      }
+
+      assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest was called" + Bugsnag.testRequest.calledCount + "/1");
+      assert.equal(requestData().params.message, "Hello wold");
+    });
+
+    it("should send multiple exceptions", function () {
+      Bugsnag.notifyException(new Error("Hello wold"));
+      Bugsnag.notifyException(new Error("Hello owld"));
+
+      assert.equal(Bugsnag.testRequest.calledCount, 2);
+      assert.equal(requestData().params.message, "Hello wold");
+    });
+
     it("should contain a stacktrace", function () {
       try {
         throw new Error("Example error");
