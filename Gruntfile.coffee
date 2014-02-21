@@ -89,8 +89,8 @@ module.exports = (grunt) ->
 
       production:
         files: [
-          '/bugsnag-2.min.js',
-          '/bugsnag-2.js'
+          {dest: 'bugsnag-2.min.js'},
+          {dest: 'bugsnag-2.js'}
         ]
 
         # Version bumping
