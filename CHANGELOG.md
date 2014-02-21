@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.2.1
+-----
+
+- Don't send duplicate exceptions from the client
+
 2.2.0
 -----
 
