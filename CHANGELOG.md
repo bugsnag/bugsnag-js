@@ -1,6 +1,12 @@
 Changelog
 =========
 
+2.3.0
+-----
+
+- Allow setting `Bugsnag.user`
+- Remove sourcemaps comment for now (it breaks Safari developer console)
+
 2.2.1
 -----
 
