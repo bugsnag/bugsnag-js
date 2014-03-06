@@ -369,7 +369,8 @@
       apiKey: apiKey,
       projectRoot: getSetting("projectRoot") || location.protocol + "//" + location.host,
       context: getSetting("context") || location.pathname,
-      userId: getSetting("userId"),
+      userId: getSetting("userId"), // Deprecated, remove in v3
+      user: getSetting("user"),
       metaData: mergedMetaData,
       releaseStage: releaseStage,
       appVersion: getSetting("appVersion"),

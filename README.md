@@ -134,20 +134,36 @@ this with:
 Bugsnag.autoNotify = false;
 ```
 
+###user
+
+Information about the current user. This data will be sent to Bugsnag with
+exception reports so that you can see who was affected by a particular error
+and search for problems seen by a given user.
+
+```javascript
+Bugsnag.user = {
+  id: 7,
+  name: "Conrad Irwin",
+  email: "conrad@bugsnag.com"
+};
+```
+
 ###metaData
 
 Set additional meta-data to send to Bugsnag with every error. You can use this
-to add custom tabs of data to each error on your Bugsnag dashboard.
+to add custom tabs of data to each error on your Bugsnag dashboard to help you
+debug.
 
-This function should return an object of objects, the outer object should
+This should be an object of objects, the outer object should
 represent the "tabs" to display on your Bugsnag dashboard, and the inner
 objects should be the values to display on each tab, for example:
 
 ```javascript
 Bugsnag.metaData = {
-  user: {
-    name: "James",
-    email: "james@example.com"
+  account: {
+    name: "Bugsnag",
+    plan: "premium",
+    beta_access: true
   }
 };
 ```
