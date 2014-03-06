@@ -178,7 +178,7 @@
     if (script) {
       metaData.script = {
         src: script.src,
-        content: script.innerHTML && script.innerHTML.substr(0, 1024)
+        content: script.innerHTML
       };
     }
   }
