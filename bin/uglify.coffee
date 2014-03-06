@@ -34,7 +34,7 @@ ast.print(stream)
 
 comment = "\n//# sourceMappingURL=//d2wy8f7a9ursnm.cloudfront.net/bugsnag-#{version}.min.map"
 
-fs.writeFileSync('dist/bugsnag.min.js', stream.toString() + comment)
+fs.writeFileSync('dist/bugsnag.min.js', stream.toString())
 console.log "dist/bugsnag.min.js (v#{version})"
 fs.writeFileSync('dist/bugsnag.min.map', source_map.toString())
 console.log "dist/bugsnag.min.map (v#{version})"
