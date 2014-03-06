@@ -169,7 +169,7 @@ module.exports = (grunt) ->
             done(!error?)
 
   # Release meta-task
-  grunt.registerTask "release", ["jshint", "uglify", "docco", "git-tag", "s3"]
+  grunt.registerTask "release", ["jshint", "uglify", "docco", "git-tag", "s3", "invalidate_cloudfront"]
 
   # Run a webserver for testing
   grunt.registerTask "server", ["connect:server:keepalive"]
