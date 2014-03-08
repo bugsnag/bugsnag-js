@@ -254,11 +254,11 @@ Script tag support
 
 By default Bugsnag sends the contents of inline script tags on the page to our
 servers to help with analysis and debugging. If you don't want this to happen,
-set `scriptcontent` to false.
+set `inlinescript` to false.
 
 ```html
 <script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-2.min.js"
-  data-scriptcontent="false"/>
+  data-inlinescript="false"/>
 ```
 
 Sourcemaps
@@ -283,7 +283,7 @@ that the javascript will never change, feel free to include the specific version
 directly.
 
 ```html
-<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-2.3.0.min.js"
+<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-2.3.1.min.js"
         data-apikey="YOUR-API-KEY-HERE"></script>
 ```
 

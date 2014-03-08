@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.3.1
+-----
+
+- Allow redacting script contents
+
 2.3.0
 -----
 
