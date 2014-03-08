@@ -413,6 +413,22 @@ describe("inline script", function () {
     };
     document.body.appendChild(iframe);
   });
+
+  it("should not include the content if inlineScript is false", function (done) {
+    var iframe = document.createElement('iframe');
+    iframe.src = 'inlinescript2.html';
+    window.testResult = function (params) {
+      document.body.removeChild(iframe);
+      try {
+        assert.equal(params.metaData.script.content, '');
+        done();
+      } catch(e) {
+        console.log(JSON.stringify(params.metaData.script.content));
+        done(e);
+      }
+    };
+    document.body.appendChild(iframe);
+  });
 });
 
 describe("current script", function () {

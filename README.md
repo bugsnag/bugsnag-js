@@ -249,6 +249,18 @@ try {
 }
 ```
 
+Script tag support
+------------------
+
+By default Bugsnag sends the contents of inline script tags on the page to our
+servers to help with analysis and debugging. If you don't want this to happen,
+set `scriptcontent` to false.
+
+```html
+<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-2.min.js"
+  data-scriptcontent="false"/>
+```
+
 Sourcemaps
 ----------
 

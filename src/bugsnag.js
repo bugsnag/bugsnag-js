@@ -178,7 +178,7 @@
     if (script) {
       metaData.script = {
         src: script.src,
-        content: script.innerHTML
+        content: getSetting("inlineScript", true) ? script.innerHTML : ""
       };
     }
   }
