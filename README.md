@@ -288,12 +288,12 @@ directly.
 ```
 
 If you have specific requirements for Javascript, you're welcome to host
-versions of bugsnag-js on your own site or CDN. You can either download the
-file and mirror it, or you can include it in your existing Javascript asset
-compilation.
+versions of bugsnag-js on your own site or CDN.
 
-If you're doing this, please ensure that Bugsnag is included before you run
-your onload handlers. This is so that we can report stacktraces reliably.
+If you'd like to avoid an extra blocking request, you can include the javascript
+in your asset compilation process so that it is inlined into your existing script
+files. The only thing to be sure of is that Bugsnag is included before your
+onload handlers run.  This is so that we can report stacktraces reliably.
 
 Reporting Bugs or Feature Requests
 ----------------------------------
