@@ -75,6 +75,23 @@ describe("Bugsnag", function () {
       assert.equal(requestData().params.message, "Hello wold");
     });
 
+    it("should not send more than 10 exceptions", function () {
+      Bugsnag.notifyException(new Error("Hello 1"));
+      Bugsnag.notifyException(new Error("Hello 2"));
+      Bugsnag.notifyException(new Error("Hello 3"));
+      Bugsnag.notifyException(new Error("Hello 4"));
+      Bugsnag.notifyException(new Error("Hello 5"));
+      Bugsnag.notifyException(new Error("Hello 6"));
+      Bugsnag.notifyException(new Error("Hello 7"));
+      Bugsnag.notifyException(new Error("Hello 8"));
+      Bugsnag.notifyException(new Error("Hello 9"));
+      Bugsnag.notifyException(new Error("Hello 10"));
+      Bugsnag.notifyException(new Error("Hello 11"));
+      Bugsnag.notifyException(new Error("Hello 12"));
+
+      assert.equal(Bugsnag.testRequest.calledCount, 10);
+    });
+
     it("should contain a stacktrace", function () {
       try {
         throw new Error("Example error");

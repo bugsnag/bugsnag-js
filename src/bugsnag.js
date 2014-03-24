@@ -19,7 +19,13 @@
       lastScript,
       previousNotification,
       shouldCatch = true,
-      ignoreOnError = 0;
+      ignoreOnError = 0,
+
+      // We've seen cases where individual clients can infinite loop sending us errors
+      // (in some cases 10,000+ errors per page). This limit is at the point where
+      // you've probably learned everything useful there is to debug the problem,
+      // and we're happy to under-estimate the count to save the client (and Bugsnag's) resources.
+      eventsRemaining = 10;
 
   self.noConflict = function() {
     window.Bugsnag = old;
@@ -308,9 +314,10 @@
   function sendToBugsnag(details, metaData) {
     // Validate the configured API key.
     var apiKey = getSetting("apiKey");
-    if (!validateApiKey(apiKey)) {
+    if (!validateApiKey(apiKey) || !eventsRemaining) {
       return;
     }
+    eventsRemaining -= 1;
 
     // Check if we should notify for this release stage.
     var releaseStage = getSetting("releaseStage");
