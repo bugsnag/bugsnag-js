@@ -121,9 +121,9 @@ assert.AssertionError.prototype.toString = function() {
   } else {
     return [
       this.name + ':',
-      truncate(JSON.stringify(this.actual, replacer), 128),
+      (window.JSON ? JSON.stringify(this.actual, replacer) : this.actual),
       this.operator,
-      truncate(JSON.stringify(this.expected, replacer), 128)
+      (window.JSON ? JSON.stringify(this.expected, replacer) : this.expected),
     ].join(' ');
   }
 };
