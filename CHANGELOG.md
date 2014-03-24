@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.3.2
+-----
+
+- Limit the number of exceptions per page load
+
 2.3.1
 -----
 

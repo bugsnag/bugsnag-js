@@ -271,7 +271,7 @@ your javascript file that points to the location of a source map, we will
 expand the lines in your stacktrace.
 
 For an example of how this should look, you can see the comment at the bottom
-of [bugsnag.js](http://d2wy8f7a9ursnm.cloudfront.net/bugsnag-2.1.1.min.js) itself.
+of [bugsnag.js](http://d2wy8f7a9ursnm.cloudfront.net/bugsnag-2.3.2.min.js) itself.
 Most modern minifiers support source maps, we use [UglifyJS2](https://github.com/mishoo/UglifyJS2).
 
 Advanced hosting
@@ -283,7 +283,7 @@ that the javascript will never change, feel free to include the specific version
 directly.
 
 ```html
-<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-2.3.1.min.js"
+<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-2.3.2.min.js"
         data-apikey="YOUR-API-KEY-HERE"></script>
 ```
 
