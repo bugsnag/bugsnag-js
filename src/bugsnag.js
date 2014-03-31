@@ -388,6 +388,8 @@
 
       severity: details.severity,
 
+      groupingHash: (getSetting("groupingHash") || function(){})(details),
+
       name: details.name,
       message: details.message,
       stacktrace: details.stacktrace,
