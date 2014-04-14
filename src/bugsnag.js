@@ -81,7 +81,7 @@
       name: name,
       message: message,
       stacktrace: generateStacktrace(),
-      severity: "error"
+      severity: "warning"
     }, metaData);
   };
 
@@ -117,7 +117,7 @@
               // We do this rather than stashing treating the error like lastEvent
               // because in FF 26 onerror is not called for synthesized event handlers.
               if (getSetting("autoNotify", true)) {
-                self.notifyException(e, null, null, "fatal");
+                self.notifyException(e, null, null, "error");
                 ignoreNextOnError();
               }
               throw e;
@@ -552,7 +552,7 @@
             lineNumber: lineNo,
             columnNumber: charNo,
             stacktrace: (exception && stacktraceFromException(exception)) || generateStacktrace(),
-            severity: "fatal"
+            severity: "error"
           }, metaData);
         }
 
