@@ -1,7 +1,7 @@
 #!/usr/bin/env coffee
 #
 fs = require 'fs'
-UglifyJS = require 'uglify-js'
+UglifyJS = require 'uglifyjs'
 version = require('../package.json').version
 
 ast = UglifyJS.parse(fs.readFileSync('src/bugsnag.js').toString('utf8'),
