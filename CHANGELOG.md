@@ -1,57 +1,51 @@
 Changelog
 =========
 
+2.3.3
+-----
+-   Prepare 'severity' feature for release
+
 2.3.2
 -----
-
-- Limit the number of exceptions per page load
+-   Limit the number of exceptions per page load
 
 2.3.1
 -----
-
-- Allow redacting script contents
+-   Allow redacting script contents
 
 2.3.0
 -----
-
-- Allow setting `Bugsnag.user`
-- Remove sourcemaps comment for now (it breaks Safari developer console)
+-   Allow setting `Bugsnag.user`
+-   Remove sourcemaps comment for now (it breaks Safari developer console)
 
 2.2.1
 -----
-
-- Don't send duplicate exceptions from the client
+-   Don't send duplicate exceptions from the client
 
 2.2.0
 -----
-
-- Fix window.setTimeout with a string (broken by 2.1.0)
-- Use the first parameter of .notify() for grouping
-- Fix persistent metaData merging
+-   Fix window.setTimeout with a string (broken by 2.1.0)
+-   Use the first parameter of .notify() for grouping
+-   Fix persistent metaData merging
 
 2.1.1
 -----
-
--  Track document.currentScript across async boundaries.
+-   Track document.currentScript across async boundaries.
 
 2.1.0
 -----
-
--  Fix additional parameters to window.setTimeout etc.
+-   Fix additional parameters to window.setTimeout etc.
 
 2.0.2
 -----
-
 -   Remove accidentally exposed function.
 
 2.0.1
 -----
-
 -   Don't crash with selenium.
 
 2.0.0
 -----
-
 -   Better grouping support.
 
 1.1.0
@@ -96,7 +90,7 @@ Changelog
 
 1.0.2
 -----
--   Use image tag instead of script tag to make requests, for better 
+-   Use image tag instead of script tag to make requests, for better
     cross-browser support
 
 1.0.1

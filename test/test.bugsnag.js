@@ -207,6 +207,21 @@ describe("Bugsnag", function () {
       assert.equal(requestData().params.name, "CustomError");
     });
 
+    it("should contain 'warning' as the default severity", function () {
+      Bugsnag.notify("CustomError", "Something broke");
+
+      assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
+      assert.equal(requestData().params.severity, "warning");
+    });
+
+    it("should contain the correct payloadVersion", function () {
+      Bugsnag.notify("CustomError", "Something broke");
+
+      assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
+      assert.equal(requestData().params.payloadVersion, "2");
+    });
+
+
     it("should contain the correct error message", function () {
       Bugsnag.notify("CustomError", "Something broke");
 

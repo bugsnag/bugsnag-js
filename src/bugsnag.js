@@ -81,7 +81,7 @@
       name: name,
       message: message,
       stacktrace: generateStacktrace(),
-      severity: "error"
+      severity: "warning"
     }, metaData);
   };
 
@@ -117,7 +117,7 @@
               // We do this rather than stashing treating the error like lastEvent
               // because in FF 26 onerror is not called for synthesized event handlers.
               if (getSetting("autoNotify", true)) {
-                self.notifyException(e, null, null, "fatal");
+                self.notifyException(e, null, null, "error");
                 ignoreNextOnError();
               }
               throw e;
@@ -200,7 +200,7 @@
   // Set up default notifier settings.
   var DEFAULT_BASE_ENDPOINT = "https://notify.bugsnag.com/";
   var DEFAULT_NOTIFIER_ENDPOINT = DEFAULT_BASE_ENDPOINT + "js";
-  var NOTIFIER_VERSION = "2.3.2";
+  var NOTIFIER_VERSION = "2.3.3";
 
   // Keep a reference to the currently executing script in the DOM.
   // We'll use this later to extract settings from attributes.
@@ -393,7 +393,8 @@
       stacktrace: details.stacktrace,
       file: details.file,
       lineNumber: details.lineNumber,
-      columnNumber: details.columnNumber
+      columnNumber: details.columnNumber,
+      payloadVersion: "2"
     });
   }
 
@@ -552,7 +553,7 @@
             lineNumber: lineNo,
             columnNumber: charNo,
             stacktrace: (exception && stacktraceFromException(exception)) || generateStacktrace(),
-            severity: "fatal"
+            severity: "error"
           }, metaData);
         }
 
