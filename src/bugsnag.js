@@ -393,7 +393,8 @@
       stacktrace: details.stacktrace,
       file: details.file,
       lineNumber: details.lineNumber,
-      columnNumber: details.columnNumber
+      columnNumber: details.columnNumber,
+      payloadVersion: "2"
     });
   }
 
