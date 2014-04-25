@@ -48,10 +48,9 @@
   // Since most JavaScript exceptions use the `Error` class, we also allow
   // you to provide a custom error name when calling `notifyException`.
   //
-  // You should never pass severity. It's there for internal use, so we
-  // can mark uncaught exceptions as "fatal". The default value is "error"
-  // and "warning" is also supported by the backend, all other values cause
-  // the notification to be dropped; and you will not see it in your dashboard.
+  // The default value is "warning" and "error" and "info" are also supported by the 
+  // backend, all other values cause the notification to be dropped; and you
+  // will not see it in your dashboard.
   self.notifyException = function (exception, name, metaData, severity) {
     if (name && typeof name !== "string") {
       metaData = name;
@@ -68,7 +67,7 @@
       file: exception.fileName || exception.sourceURL,
       lineNumber: exception.lineNumber || exception.line,
       columnNumber: exception.columnNumber ? exception.columnNumber + 1 : undefined,
-      severity: severity || "error"
+      severity: severity || "warning"
     }, metaData);
   };
 
@@ -76,12 +75,12 @@
   //
   // Notify Bugsnag about an error by passing in a `name` and `message`,
   // without requiring an exception.
-  self.notify = function (name, message, metaData) {
+  self.notify = function (name, message, metaData, severity) {
     sendToBugsnag({
       name: name,
       message: message,
       stacktrace: generateStacktrace(),
-      severity: "warning"
+      severity: severity || "warning"
     }, metaData);
   };
 

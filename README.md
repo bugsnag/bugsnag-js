@@ -66,6 +66,21 @@ Both of these functions can also be passed an optional `metaData` object as
 the last parameter, which should take the same format as [metaData](#metadata)
 described below.
 
+### Severity
+
+You can set the severity of an error in Bugsnag by including the severity option when
+notifying bugsnag of the error,
+
+```javascript
+Bugsnag.notify("ErrorName", "Something bad happened here", {}, "error")
+```
+
+Valid severities are `error`, `warning` and `info`.
+
+Severity is displayed in the dashboard and can be used to filter the error list.
+By default all crashes (or unhandled exceptions) are set to `error` and all
+`Bugsnag.notify` calls default to `warning`.
+
 Browser Support
 ---------------
 

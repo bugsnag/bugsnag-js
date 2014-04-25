@@ -197,6 +197,13 @@ describe("Bugsnag", function () {
       assert(Bugsnag.beforeNotify.calledOnce, "Bugsnag.beforeNotify should have been called once");
       assert(!Bugsnag.testRequest.called, "Bugsnag.testRequest should not have been called");
     })
+
+    it("should contain 'warning' as the default severity", function () {
+      Bugsnag.notifyException(new Error("Example error"));
+
+      assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
+      assert.equal(requestData().params.severity, "warning");
+    });
   });
 
   describe("notify", function () {
