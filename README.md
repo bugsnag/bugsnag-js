@@ -72,7 +72,7 @@ You can set the severity of an error in Bugsnag by including the severity option
 notifying bugsnag of the error,
 
 ```javascript
-Bugsnag.notify("ErrorName", "Something bad happened here", {}, "error")
+Bugsnag.notify("ErrorName", "Something bad happened here", {}, "error");
 ```
 
 Valid severities are `error`, `warning` and `info`.
