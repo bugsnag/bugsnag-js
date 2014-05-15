@@ -92,6 +92,13 @@ describe("Bugsnag", function () {
       assert.equal(Bugsnag.testRequest.calledCount, 10);
     });
 
+    it("should allow exception and metadata", function() {
+      Bugsnag.notifyException(new Error("Hello"), {a:"b"})
+
+      assert(requestData().params.name == "Error", "name should be correct");
+      assert(requestData().params.metaData.a == "b", "metadata should be correct");
+    });
+
     it("should contain a stacktrace", function () {
       try {
         throw new Error("Example error");

@@ -48,12 +48,13 @@
   // Since most JavaScript exceptions use the `Error` class, we also allow
   // you to provide a custom error name when calling `notifyException`.
   //
-  // The default value is "warning" and "error" and "info" are also supported by the 
+  // The default value is "warning" and "error" and "info" are also supported by the
   // backend, all other values cause the notification to be dropped; and you
   // will not see it in your dashboard.
   self.notifyException = function (exception, name, metaData, severity) {
     if (name && typeof name !== "string") {
       metaData = name;
+      name = undefined;
     }
     if (!metaData) {
       metaData = {};
