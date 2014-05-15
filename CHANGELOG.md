@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.3.4
+-----
+-  Fix issue with passing name and metadata to notifyException
+
 2.3.3
 -----
 -   Prepare 'severity' feature for release
