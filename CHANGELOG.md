@@ -3,7 +3,7 @@ Changelog
 
 2.3.4
 -----
--  Fix issue with passing name and metadata to notifyException using metadata as name
+-  Fix issue with passing metadata to notifyException using metadata as name
 
 2.3.3
 -----
