@@ -48,13 +48,13 @@
   // Since most JavaScript exceptions use the `Error` class, we also allow
   // you to provide a custom error name when calling `notifyException`.
   //
-  // You should never pass severity. It's there for internal use, so we
-  // can mark uncaught exceptions as "fatal". The default value is "error"
-  // and "warning" is also supported by the backend, all other values cause
-  // the notification to be dropped; and you will not see it in your dashboard.
+  // The default value is "warning" and "error" and "info" are also supported by the
+  // backend, all other values cause the notification to be dropped; and you
+  // will not see it in your dashboard.
   self.notifyException = function (exception, name, metaData, severity) {
     if (name && typeof name !== "string") {
       metaData = name;
+      name = undefined;
     }
     if (!metaData) {
       metaData = {};
@@ -68,7 +68,7 @@
       file: exception.fileName || exception.sourceURL,
       lineNumber: exception.lineNumber || exception.line,
       columnNumber: exception.columnNumber ? exception.columnNumber + 1 : undefined,
-      severity: severity || "error"
+      severity: severity || "warning"
     }, metaData);
   };
 
@@ -76,12 +76,12 @@
   //
   // Notify Bugsnag about an error by passing in a `name` and `message`,
   // without requiring an exception.
-  self.notify = function (name, message, metaData) {
+  self.notify = function (name, message, metaData, severity) {
     sendToBugsnag({
       name: name,
       message: message,
       stacktrace: generateStacktrace(),
-      severity: "error"
+      severity: severity || "warning"
     }, metaData);
   };
 
@@ -117,7 +117,7 @@
               // We do this rather than stashing treating the error like lastEvent
               // because in FF 26 onerror is not called for synthesized event handlers.
               if (getSetting("autoNotify", true)) {
-                self.notifyException(e, null, null, "fatal");
+                self.notifyException(e, null, null, "error");
                 ignoreNextOnError();
               }
               throw e;
@@ -200,7 +200,7 @@
   // Set up default notifier settings.
   var DEFAULT_BASE_ENDPOINT = "https://notify.bugsnag.com/";
   var DEFAULT_NOTIFIER_ENDPOINT = DEFAULT_BASE_ENDPOINT + "js";
-  var NOTIFIER_VERSION = "2.3.3";
+  var NOTIFIER_VERSION = "2.3.4";
 
   // Keep a reference to the currently executing script in the DOM.
   // We'll use this later to extract settings from attributes.
@@ -388,14 +388,13 @@
 
       severity: details.severity,
 
-      groupingHash: (getSetting("groupingHash") || function(){})(details),
-
       name: details.name,
       message: details.message,
       stacktrace: details.stacktrace,
       file: details.file,
       lineNumber: details.lineNumber,
-      columnNumber: details.columnNumber
+      columnNumber: details.columnNumber,
+      payloadVersion: "2"
     });
   }
 
@@ -554,7 +553,7 @@
             lineNumber: lineNo,
             columnNumber: charNo,
             stacktrace: (exception && stacktraceFromException(exception)) || generateStacktrace(),
-            severity: "fatal"
+            severity: "error"
           }, metaData);
         }
 

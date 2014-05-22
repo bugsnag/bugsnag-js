@@ -66,6 +66,21 @@ Both of these functions can also be passed an optional `metaData` object as
 the last parameter, which should take the same format as [metaData](#metadata)
 described below.
 
+### Severity
+
+You can set the severity of an error in Bugsnag by including the severity option when
+notifying bugsnag of the error,
+
+```javascript
+Bugsnag.notify("ErrorName", "Something bad happened here", {}, "error");
+```
+
+Valid severities are `error`, `warning` and `info`.
+
+Severity is displayed in the dashboard and can be used to filter the error list.
+By default all crashes (or unhandled exceptions) are set to `error` and all
+`Bugsnag.notify` calls default to `warning`.
+
 Browser Support
 ---------------
 
@@ -209,7 +224,7 @@ Bugsnag.appVersion = "2.0.14";
 
 ###beforeNotify
 
-To have more fine grained control over what errors are sent to Bugsnag, you can 
+To have more fine grained control over what errors are sent to Bugsnag, you can
 implement a `beforeNotify` function. If you want to halt the notification completely,
 return `false` from this function. You can also add metaData by editing the `metaData`
 parameter.
@@ -271,7 +286,7 @@ your javascript file that points to the location of a source map, we will
 expand the lines in your stacktrace.
 
 For an example of how this should look, you can see the comment at the bottom
-of [bugsnag.js](http://d2wy8f7a9ursnm.cloudfront.net/bugsnag-2.3.3.min.js) itself.
+of [bugsnag.js](https://gist.githubusercontent.com/jessicard/10924962/raw/6826aa6d934d95d9e39cdef1bb6a1991c3d4fd7e/bugsnag-2.1.0.min.js) itself.
 Most modern minifiers support source maps, we use [UglifyJS2](https://github.com/mishoo/UglifyJS2).
 
 Advanced hosting
@@ -283,7 +298,7 @@ that the javascript will never change, feel free to include the specific version
 directly.
 
 ```html
-<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-2.3.3.min.js"
+<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-2.3.4.min.js"
         data-apikey="YOUR-API-KEY-HERE"></script>
 ```
 

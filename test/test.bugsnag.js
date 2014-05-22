@@ -92,6 +92,13 @@ describe("Bugsnag", function () {
       assert.equal(Bugsnag.testRequest.calledCount, 10);
     });
 
+    it("should allow exception and metadata", function() {
+      Bugsnag.notifyException(new Error("Hello"), {a:"b"})
+
+      assert(requestData().params.name == "Error", "name should be correct");
+      assert(requestData().params.metaData.a == "b", "metadata should be correct");
+    });
+
     it("should contain a stacktrace", function () {
       try {
         throw new Error("Example error");
@@ -197,6 +204,13 @@ describe("Bugsnag", function () {
       assert(Bugsnag.beforeNotify.calledOnce, "Bugsnag.beforeNotify should have been called once");
       assert(!Bugsnag.testRequest.called, "Bugsnag.testRequest should not have been called");
     })
+
+    it("should contain 'warning' as the default severity", function () {
+      Bugsnag.notifyException(new Error("Example error"));
+
+      assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
+      assert.equal(requestData().params.severity, "warning");
+    });
   });
 
   describe("notify", function () {
@@ -206,6 +220,21 @@ describe("Bugsnag", function () {
       assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
       assert.equal(requestData().params.name, "CustomError");
     });
+
+    it("should contain 'warning' as the default severity", function () {
+      Bugsnag.notify("CustomError", "Something broke");
+
+      assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
+      assert.equal(requestData().params.severity, "warning");
+    });
+
+    it("should contain the correct payloadVersion", function () {
+      Bugsnag.notify("CustomError", "Something broke");
+
+      assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
+      assert.equal(requestData().params.payloadVersion, "2");
+    });
+
 
     it("should contain the correct error message", function () {
       Bugsnag.notify("CustomError", "Something broke");
