@@ -388,10 +388,45 @@ describe("window", function () {
         it("should pass once", function () { });
       }
     });
+
+    describe("addEventListener with object", function () {
+      var callback, handle;
+      function makeHandle() {
+        var o = {};
+        o.handleEvent = function handle(e) {
+          setTimeout(function () {
+            Bugsnag._onerror.restore();
+            callback();
+          });
+          throw new Error("clicked");
+        };
+        return o;
+      }
+
+      beforeEach(function () {
+        handle = makeHandle();
+        stub(Bugsnag, '_onerror'); // disable reporting error to mocha.
+        document.body.addEventListener("click", handle, false);
+      });
+
+      afterEach(function () {
+        document.body.removeEventListener("click", handle, false);
+      });
+      it("should automatically call the error handler once", function (done) {
+        callback = function () {
+          assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
+          done();
+        };
+
+        document.body.click();
+      });
+
+    });
   } else {
     // TODO make better tests here for IE6/7/8
     it("should pass once", function () { });
     it("should pass twice", function () { });
+    it("should pass thrice", function () { });
   }
 });
 

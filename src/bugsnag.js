@@ -603,27 +603,31 @@
       });
     }
 
-    var hijackEventFunc = function (_super) {
-      return function (e, f, capture, secure) {
-        // HTML lets event-handlers be objects with a handlEvent function,
-        // we need to change f.handleEvent here, as self.wrap will ignore f.
-        if (f && f.handleEvent) {
-          f.handleEvent = wrap(f.handleEvent, {eventHandler: true});
-        }
-        return _super.call(this, e, wrap(f, {eventHandler: true}), capture, secure);
-      };
-    };
-
     // EventTarget is all that's required in modern chrome/opera
     // EventTarget + Window + ModalWindow is all that's required in modern FF (there are a few Moz prefixed ones that we're ignoring)
     // The rest is a collection of stuff for Safari and IE 11. (Again ignoring a few MS and WebKit prefixed things)
     "EventTarget Window Node ApplicationCache AudioTrackList ChannelMergerNode CryptoOperation EventSource FileReader HTMLUnknownElement IDBDatabase IDBRequest IDBTransaction KeyOperation MediaController MessagePort ModalWindow Notification SVGElementInstance Screen TextTrack TextTrackCue TextTrackList WebSocket WebSocketWorker Worker XMLHttpRequest XMLHttpRequestEventTarget XMLHttpRequestUpload".replace(/\w+/g, function (global) {
       var prototype = window[global] && window[global].prototype;
       if (prototype && prototype.hasOwnProperty && prototype.hasOwnProperty("addEventListener")) {
-        polyFill(prototype, "addEventListener", hijackEventFunc);
+        polyFill(prototype, "addEventListener", function (_super) {
+          return function (e, f, capture, secure) {
+            // HTML lets event-handlers be objects with a handlEvent function,
+            // we need to change f.handleEvent here, as self.wrap will ignore f.
+            if (f && f.handleEvent) {
+              f.handleEvent = wrap(f.handleEvent, {eventHandler: true});
+            }
+            return _super.call(this, e, wrap(f, {eventHandler: true}), capture, secure);
+          };
+        });
+
         // We also need to hack removeEventListener so that you can remove any
         // event listeners.
-        polyFill(prototype, "removeEventListener", hijackEventFunc);
+        polyFill(prototype, "removeEventListener", function (_super) {
+          return function (e, f, capture, secure) {
+            _super.call(this, e, f, capture, secure);
+            return _super.call(this, e, wrap(f), capture, secure);
+          };
+        });
       }
     });
   }
