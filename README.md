@@ -242,9 +242,9 @@ information about the error that is being notified.
 
 ###groupingHash
 
-If the metaData hash has a key `groupingHash` it will be used to group exceptions
-together: exceptions with the same grouping hash will be grouped together into one
-error on Bugsnag.com.
+If the metaData hash has a key `groupingHash` it will be used to override the
+default grouping on Bugsnag.com. Exceptions with the same grouping hash will be
+grouped together into one error. You should not normally need to change this.
 
 ```javascript
 Bugsnag.notifyException(e, {groupingHash: e.message});
