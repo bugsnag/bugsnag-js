@@ -240,6 +240,21 @@ Bugsnag.beforeNotify = function(error, metaData) {
 The error parameter contains name, message, file and lineNumber fields that contain
 information about the error that is being notified.
 
+###groupingHash
+
+If the metaData hash has a key `groupingHash` it will be used to group exceptions
+together: exceptions with the same grouping hash will be grouped together into one
+error on Bugsnag.com.
+
+```javascript
+Bugsnag.notifyException(e, {groupingHash: e.message});
+```
+
+By default errors will be grouped by the statement in your code that raised the
+error.  We try to fetch the javascript and use the surrounding code to identify
+the statement, but if that's not possible we fall back to using line number and
+filename as an approximation.
+
 noConflict Support
 ------------------
 
