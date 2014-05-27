@@ -99,7 +99,7 @@ module.exports = (grunt) ->
         part: "patch"
         onBumped: ->
           grunt.task.run("regex-replace")
-      files: ["package.json", "component.json"]
+      files: ["package.json", "component.json", "bower.json"]
 
     watch:
       test:
