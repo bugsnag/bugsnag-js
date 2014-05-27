@@ -1,6 +1,12 @@
 Changelog
 =========
 
+2.3.5
+-----
+-  Support for bower.json
+-  Fix issue caused by loading bugsnag asyncily
+-  Support for full backtraces in setImmediate functions
+
 2.3.4
 -----
 -  Fix issue with passing metadata to notifyException using metadata as name
