@@ -274,6 +274,20 @@ describe("window", function () {
     });
   });
 
+  if (window.setImmediate) {
+    describe("setImmediate", function () {
+      it("should allow multiple parameters", function (done) {
+        window.setImmediate(function (a, b) {
+          assert.equal(2, b);
+          done();
+        }, 1, 2);
+      });
+    });
+  } else {
+    it("should pass", function () {});
+  }
+
+
   describe("onerror", function() {
     it("should notify bugsnag", function () {
       Bugsnag._onerror = null; // Disable mocha's onerror for this test

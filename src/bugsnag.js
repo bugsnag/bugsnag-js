@@ -593,6 +593,15 @@
     if (window.requestAnimationFrame) {
       polyFill(window, "requestAnimationFrame", hijackTimeFunc);
     }
+    if (window.setImmediate) {
+      polyFill(window, "setImmediate", function (_super) {
+        return function (f) {
+          var args = Array.prototype.slice.call(arguments);
+          args[0] = wrap(args[0]);
+          return _super.apply(this, args);
+        };
+      });
+    }
 
     var hijackEventFunc = function (_super) {
       return function (e, f, capture, secure) {
