@@ -4,9 +4,9 @@ fs = require 'fs'
 UglifyJS = require 'uglifyjs'
 version = require('../package.json').version
 
-ast = UglifyJS.parse(fs.readFileSync('src/bugsnag.js').toString('utf8'),
-  filename: "bugsnag-#{version}.js"
-)
+filesToString = fs.readFileSync('src/bugsnag.core.js').toString('utf8') + fs.readFileSync('src/bugsnag.notify.js').toString('utf8')
+
+ast = UglifyJS.parse(filesToString, filename: "bugsnag-#{version}.js")
 
 compressor = UglifyJS.Compressor(
   warnings: false # A bucket-load of 'Boolean && always false'
