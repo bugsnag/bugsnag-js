@@ -268,7 +268,7 @@ Bugsnag.endpoint = "https://bugsnag.local:49000/js";
 ###projectRoot
 
 By default, Bugsnag sets the projectRoot to the current host address (protocol
-+ the domain). For example, `https://example.com` is the projectRoot for all
+& the domain). For example, `https://example.com` is the projectRoot for all
 errors that occur within the `example.com` domain.
 
 ```javascript
