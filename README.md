@@ -257,15 +257,19 @@ filename as an approximation.
 
 ###endpoint
 
-The endpoint option causes the Bugsnag notifier to send errors to a different web address. By default the address is set to `https://notify.bugsnag.com/js`. The endpoint option is useful if you wish to capture error data, without it ever touching the Bugsnag.com servers.
+The endpoint option causes the Bugsnag notifier to send errors to a different
+web address. By default the address is set to `https://notify.bugsnag.com/js`,
+but you can change it to point to an on-premise installation of Bugsnag:
 
 ```javascript
-Bugsnag.endpoint = "https://example.com/notify";
+Bugsnag.endpoint = "https://bugsnag.local:49000/js";
 ```
 
 ###projectRoot
 
-By default, Bugsnag sets the projectRoot to the current host address (protocol + the domain). For example, `https://example.com` is the projectRoot for all errors that occur within the `example.com` domain.
+By default, Bugsnag sets the projectRoot to the current host address (protocol
++ the domain). For example, `https://example.com` is the projectRoot for all
+errors that occur within the `example.com` domain.
 
 ```javascript
 Bugsnag.projectRoot = "http://example.com";
@@ -273,7 +277,9 @@ Bugsnag.projectRoot = "http://example.com";
 
 ###context
 
-By default, Bugsnag sets the context to the current page's pathname, otherwise referred to as `location.pathname`. Note: `location.pathname` does not include any search parameters or the page's fragment identifier.
+By default, Bugsnag sets the context to the current page's pathname, otherwise
+referred to as `location.pathname`. Note: `location.pathname` does not include
+any search parameters or the page's fragment identifier.
 
 ```javascript
 Bugsnag.context = "/path/to/my/page.php";
