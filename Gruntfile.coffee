@@ -29,12 +29,12 @@ module.exports = (grunt) ->
 
       dist:
         files:
-          src: ["src/bugsnag.js"]
+          src: ["src/bugsnag.core.js", "src/bugsnag.notify.js"]
 
     "regex-replace":
       dist:
         src:
-          ["src/bugsnag.js", "README.md"]
+          ["src/bugsnag.notify.js", "README.md"]
         actions: [
           name: "version"
           search: /var NOTIFIER_VERSION =[^;]*;/
@@ -170,7 +170,8 @@ module.exports = (grunt) ->
     exec = require("child_process").exec
     done = this.async()
 
-    exec ['echo "Size: $(cat src/bugsnag.js | wc -c)"',
+    exec ['echo "Size: $(cat src/bugsnag.core.js | wc -c)"',
+          'echo "Size: $(cat src/bugsnag.notify.js | wc -c)"',
           'echo "Ugly: $(cat dist/bugsnag.min.js | wc -c)"',
           'echo "Gzip: $(cat dist/bugsnag.min.js | gzip | wc -c)"'].join(" && "), (error, stdout, stderr) ->
             grunt.log.write(stdout.toString())

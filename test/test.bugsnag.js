@@ -567,6 +567,18 @@ describe("noConflict", function() {
   });
 });
 
+function createScriptTag(id, src, onload) {
+  // Create bugsnag.js script tag
+  var bugsnag = document.createElement("script");
+  bugsnag.id = id;
+  bugsnag.type = "text/javascript";
+  bugsnag.src = src;
+  bugsnag.onload = bugsnag.onreadystatechange = onload;
+
+  // Add bugsnag.js script tag to dom
+  document.getElementsByTagName("body")[0].appendChild(bugsnag);
+}
+
 function buildUp(cb) {
   // dummy object to override
   window.Bugsnag = {put_me_back: 1};
@@ -574,26 +586,20 @@ function buildUp(cb) {
   window.BUGSNAG_TESTING = true;
   window.undo = [];
 
-  // Create bugsnag.js script tag
-  var bugsnag = document.createElement("script");
-  bugsnag.id = "bugsnag";
-  bugsnag.type = "text/javascript";
-  bugsnag.src = "../src/bugsnag.js";
-  bugsnag.onload = bugsnag.onreadystatechange = function () {
-    if(!this.readyState || this.readyState === "loaded" || this.readyState === "complete") {
-      // Set api key to use when testing
-      Bugsnag.apiKey = "9e68f5104323042c09d8809674e8d05c";
+  createScriptTag("bugsnag_core", "../src/bugsnag.core.js", function () {
+    createScriptTag("bugsnag", "../src/bugsnag.notify.js", function () {
+      if(!this.readyState || this.readyState === "loaded" || this.readyState === "complete") {
+        // Set api key to use when testing
+        Bugsnag.apiKey = "9e68f5104323042c09d8809674e8d05c";
 
-      // Stub out requests
-      stub(Bugsnag, "testRequest");
+        // Stub out requests
+        stub(Bugsnag, "testRequest");
 
-      // Setup is done
-      cb();
-    }
-  };
-
-  // Add bugsnag.js script tag to dom
-  document.getElementsByTagName("body")[0].appendChild(bugsnag);
+        // Setup is done
+        cb();
+      }
+    });
+  });
 }
 
 function tearDown() {

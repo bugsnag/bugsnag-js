@@ -1,7 +1,8 @@
 <html>
 <head>
   <script>var BUGSNAG_TESTING = true;</script>
-  <script src="../src/bugsnag.js" data-apikey="9e68f5104323042c09d8809674e8d05c"></script>
+  <script src="../src/bugsnag.core.js"></script>
+  <script src="../src/bugsnag.notify.js" data-apikey="9e68f5104323042c09d8809674e8d05c"></script>
   <script>
     Bugsnag.testRequest = function (url, params) {
       window.top.testResult(params);
