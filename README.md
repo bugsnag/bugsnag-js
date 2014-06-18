@@ -255,6 +255,30 @@ error.  We try to fetch the javascript and use the surrounding code to identify
 the statement, but if that's not possible we fall back to using line number and
 filename as an approximation.
 
+###endpoint
+
+The endpoint option causes the Bugsnag notifier to send errors to a different web address. By default the address is set to `https://notify.bugsnag.com/js`. The endpoint option is useful if you wish to capture error data, without it ever touching the Bugsnag.com servers.
+
+```javascript
+Bugsnag.endpoint = "https://example.com/notify";
+```
+
+###projectRoot
+
+By default, Bugsnag sets the projectRoot to the current host address (protocol + the domain). For example, `https://example.com` is the projectRoot for all errors that occur within the `example.com` domain.
+
+```javascript
+Bugsnag.projectRoot = "http://example.com";
+```
+
+###context
+
+By default, Bugsnag sets the context to the current page's pathname, otherwise referred to as `location.pathname`. Note: `location.pathname` does not include any search parameters or the page's fragment identifier.
+
+```javascript
+Bugsnag.context = "/path/to/my/page.php";
+```
+
 noConflict Support
 ------------------
 
