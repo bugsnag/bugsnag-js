@@ -14,6 +14,9 @@ module.exports = (grunt) ->
           global: true
           module: true
 
+        # Evil Parts
+        evil: true
+
         # The Good Parts
         eqeqeq: true
         eqnull: true
