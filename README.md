@@ -300,7 +300,6 @@ used in the same way:
 ```javascript
 var myBugsnag = Bugsnag.noConflict();
 // window.Bugsnag is now bound to what it was before the bugsnag script was loaded.
-added to the DOM
 myBugsnag.apiKey = "my-special-api-key";
 try {
   // highly volatile code
