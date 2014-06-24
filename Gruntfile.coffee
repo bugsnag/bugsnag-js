@@ -11,6 +11,12 @@ module.exports = (grunt) ->
         browser: true
         globals:
           BUGSNAG_TESTING: false
+          global: true
+          module: true
+          define: true
+
+        # Evil Parts
+        evil: true
 
         # The Good Parts
         eqeqeq: true

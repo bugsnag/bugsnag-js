@@ -11,9 +11,20 @@
 
 // The `Bugsnag` object is the only globally exported variable
 (function(definition) {
-  var old = window.Bugsnag;
-  window.Bugsnag = definition(window, document, navigator, old);
-})(function (window, document, navigator, old) {
+  if (typeof define === "function" && define.amd) {
+    // AMD/Require.js
+    define([], function () {
+      return definition(window);
+    });
+  } else if (typeof exports === "object") {
+    // CommonJS/Browserify
+    module.exports = definition(global);
+  } else {
+    // Global
+    var old = window.Bugsnag;
+    window.Bugsnag = definition(window, old);
+  }
+})(function (window, old) {
   var self = {},
       lastEvent,
       lastScript,
@@ -27,6 +38,13 @@
       // and we're happy to under-estimate the count to save the client (and Bugsnag's) resources.
       eventsRemaining = 10;
 
+  // #### Bugsnag.noConflict
+  //
+  // This is obsolete with UMD, as we cannot assume the global scope is polluted with
+  // the Bugsnag object anyway. In this case, it's up to the host Javascript file to
+  // correctly utilise this functionality.
+  //
+  // Maybe it's worth removing all together, if we're loading via any UMD method.
   self.noConflict = function() {
     window.Bugsnag = old;
     return self;
@@ -231,6 +249,32 @@
     return str.join("&");
   }
 
+  // A small shim to allow for stringified JSON to be parsed into a Javascript
+  // object. Useful for data-* attributes that specify a JSON object that should
+  // be interpreted as an object - ready for sending to Bugsnag.
+  function parseJson(str) {
+    try {
+      // If we have the JSON parser available to us...
+      // Note: IE 8+, FF 3.5+, Safari 4+, Opera 10.5+, Chrome
+      if (window.JSON && typeof JSON.parse === "function") {
+        return JSON.parse(str);
+      }
+      // If we're an evil browser, use an evil method to parse it.
+      else {
+        var obj = eval("(" + str + ")");
+        // Check that the evaluation resulted in an object being returned, otherwise
+        // we can chuck away anything potentially invalid.
+        if (typeof obj === "object") {
+          return obj;
+        }
+      }
+    } catch (e) {}
+
+    // If invalid data was passed, we should return null
+    // Throwing an exception here is probably not a good idea ;)
+    return null;
+  }
+
   // Deep-merge the `source` object into the `target` object and return
   // the `target`. Properties in source that will overwrite those in target.
   // Similar to jQuery's `$.extend` method.
@@ -293,9 +337,15 @@
   var data;
   function getSetting(name, fallback) {
     data = data || getData(thisScript);
+    var obj;
     var setting = self[name] !== undefined ? self[name] : data[name.toLowerCase()];
     if (setting === "false") {
       setting = false;
+    }
+    // If the setting parsed as valid JSON then use the object instead of
+    // the string version. Allows data-* attributes to hold more advanced data.
+    else if (typeof setting === "string" && (obj = parseJson(setting)) != null) {
+      setting = obj;
     }
     return setting !== undefined ? setting : fallback;
   }
