@@ -205,6 +205,16 @@ describe("Bugsnag", function () {
       assert(!Bugsnag.testRequest.called, "Bugsnag.testRequest should not have been called");
     })
 
+    it("should let beforeNotify modify the payload", function() {
+      Bugsnag.beforeNotify = function(payload, metaData) {
+        payload.url = "http://redacted.com";
+      };
+
+      Bugsnag.notifyException(new Error("Example error"));
+
+      assert.equal(requestData().params.url, "http://redacted.com");
+    });
+
     it("should contain 'warning' as the default severity", function () {
       Bugsnag.notifyException(new Error("Example error"));
 

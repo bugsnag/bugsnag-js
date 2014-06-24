@@ -89,15 +89,15 @@ all browsers (yes, even IE 6!). Some browsers let us do even more, and
 internally we have 3 tiers of higher quality support:
 
            | Tier A | Tier B | Tier C | Supported
------------|--------|--------|--------|------------
-iOS:       | 7+     | 6      | 3-5    | all
-Android:   | 4.0+   |        | 2.2-3  | all
+-----------|:------:|:------:|:------:|:---------:
+iOS        | 7+     | 6      | 3-5    | all
+Android    | 4.0+   |        | 2.2-3  | all
 Blackberry |        | 10     |        | all
-IE:        | 8+     |        |        | all
-Firefox:   | 17+    | 6-16   | 3-5    | all
-Safari:    | 7+     | 6      | 5      | all
-Chrome:    | 14+    |        |        | all
-Opera:     | 13+    | 10-12  |        | all
+IE         | 8+     |        |        | all
+Firefox    | 17+    | 6-16   | 3-5    | all
+Safari     | 7+     | 6      | 5      | all
+Chrome     | 14+    |        |        | all
+Opera      | 13+    | 10-12  |        | all
 Cumulative | 82.9%  | 91.2%  | 96.4%  | 100%
 
 Most users are on tier A or B browsers (91.2%), errors from these browsers are
@@ -230,15 +230,16 @@ return `false` from this function. You can also add metaData by editing the `met
 parameter.
 
 ```javascript
-Bugsnag.beforeNotify = function(error, metaData) {
+Bugsnag.beforeNotify = function(payload) {
   // Example: Only notify Bugsnag of errors in `app.js` or `vendor.js` files
-  var match = error.file.match(/app\.js|vendor\.js/i);
+  var match = payload.file.match(/app\.js|vendor\.js/i);
   return !!(match && match[0].length > 0);
 }
 ```
 
-The error parameter contains name, message, file and lineNumber fields that contain
-information about the error that is being notified.
+The `payload` parameter contains the error's `name`, `message`, `file` and
+`lineNumber` where available, as well as some additional fields that we either
+show on your Bugsnag dashboard, or use for grouping.
 
 ###groupingHash
 
@@ -300,7 +301,6 @@ used in the same way:
 ```javascript
 var myBugsnag = Bugsnag.noConflict();
 // window.Bugsnag is now bound to what it was before the bugsnag script was loaded.
-added to the DOM
 myBugsnag.apiKey = "my-special-api-key";
 try {
   // highly volatile code
@@ -343,7 +343,7 @@ that the javascript will never change, feel free to include the specific version
 directly.
 
 ```html
-<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-2.3.5.min.js"
+<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-2.3.6.min.js"
         data-apikey="YOUR-API-KEY-HERE"></script>
 ```
 
