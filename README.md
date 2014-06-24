@@ -230,15 +230,16 @@ return `false` from this function. You can also add metaData by editing the `met
 parameter.
 
 ```javascript
-Bugsnag.beforeNotify = function(error, metaData) {
+Bugsnag.beforeNotify = function(payload) {
   // Example: Only notify Bugsnag of errors in `app.js` or `vendor.js` files
-  var match = error.file.match(/app\.js|vendor\.js/i);
+  var match = payload.file.match(/app\.js|vendor\.js/i);
   return !!(match && match[0].length > 0);
 }
 ```
 
-The error parameter contains name, message, file and lineNumber fields that contain
-information about the error that is being notified.
+The `payload` parameter contains the error's `name`, `message`, `file` and
+`lineNumber` where available, as well as some additional fields that we either
+show on your Bugsnag dashboard, or use for grouping.
 
 ###groupingHash
 
