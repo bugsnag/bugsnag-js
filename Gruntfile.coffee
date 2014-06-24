@@ -20,6 +20,9 @@ module.exports = (grunt) ->
         undef: true
         forin: true
 
+        # Evil Parts
+        evil: true
+
         # Style preferences
         indent: 2
         camelcase: true
