@@ -249,32 +249,6 @@
     return str.join("&");
   }
 
-  // A small shim to allow for stringified JSON to be parsed into a Javascript
-  // object. Useful for data-* attributes that specify a JSON object that should
-  // be interpreted as an object - ready for sending to Bugsnag.
-  function parseJson(str) {
-    try {
-      // If we have the JSON parser available to us...
-      // Note: IE 8+, FF 3.5+, Safari 4+, Opera 10.5+, Chrome
-      if (window.JSON && typeof JSON.parse === "function") {
-        return JSON.parse(str);
-      }
-      // If we're an evil browser, use an evil method to parse it.
-      else {
-        var obj = eval("(" + str + ")");
-        // Check that the evaluation resulted in an object being returned, otherwise
-        // we can chuck away anything potentially invalid.
-        if (typeof obj === "object") {
-          return obj;
-        }
-      }
-    } catch (e) {}
-
-    // If invalid data was passed, we should return null
-    // Throwing an exception here is probably not a good idea ;)
-    return null;
-  }
-
   // Deep-merge the `source` object into the `target` object and return
   // the `target`. Properties in source that will overwrite those in target.
   // Similar to jQuery's `$.extend` method.
@@ -337,15 +311,9 @@
   var data;
   function getSetting(name, fallback) {
     data = data || getData(thisScript);
-    var obj;
     var setting = self[name] !== undefined ? self[name] : data[name.toLowerCase()];
     if (setting === "false") {
       setting = false;
-    }
-    // If the setting parsed as valid JSON then use the object instead of
-    // the string version. Allows data-* attributes to hold more advanced data.
-    else if (typeof setting === "string" && (obj = parseJson(setting)) != null) {
-      setting = obj;
     }
     return setting !== undefined ? setting : fallback;
   }
