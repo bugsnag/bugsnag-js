@@ -351,9 +351,6 @@
       metaData["Last Event"] = eventToMetaData(lastEvent);
     }
 
-    // Merge the local and global `metaData`.
-    var mergedMetaData = merge(merge({}, getSetting("metaData")), metaData);
-
     // Build the request payload by combining error information with other data
     // such as user-agent and locale, `metaData` and settings.
     var payload = {
@@ -364,7 +361,7 @@
       context: getSetting("context") || window.location.pathname,
       userId: getSetting("userId"), // Deprecated, remove in v3
       user: getSetting("user"),
-      metaData: mergedMetaData,
+      metaData: merge(merge({}, getSetting("metaData")), metaData),
       releaseStage: releaseStage,
       appVersion: getSetting("appVersion"),
 
@@ -386,7 +383,7 @@
     // Run any `beforeNotify` function
     var beforeNotify = self.beforeNotify;
     if (typeof(beforeNotify) === "function") {
-      var retVal = beforeNotify(payload, mergedMetaData);
+      var retVal = beforeNotify(payload, payload.metaData);
       if (retVal === false) {
         return;
       }
