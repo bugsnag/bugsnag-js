@@ -12,6 +12,9 @@ module.exports = (grunt) ->
         globals:
           BUGSNAG_TESTING: false
 
+        # Evil Parts
+        evil: true
+
         # The Good Parts
         eqeqeq: true
         eqnull: true
