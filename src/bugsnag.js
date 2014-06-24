@@ -11,16 +11,9 @@
 
 // The `Bugsnag` object is the only globally exported variable
 (function(definition) {
-  if (typeof define === "function" && define.amd) {
-    // AMD/Require.js
-    define([], function () {
-      return definition(window);
-    });
-  } else if (typeof exports === "object") {
-    // CommonJS/Browserify
+  if (typeof exports === "object") {
     module.exports = definition(global);
   } else {
-    // Global
     var old = window.Bugsnag;
     window.Bugsnag = definition(window, old);
   }
@@ -38,13 +31,11 @@
       // and we're happy to under-estimate the count to save the client (and Bugsnag's) resources.
       eventsRemaining = 10;
 
-  // #### Bugsnag.noConflict
+  // This is obsolete with CommonJS module loading, as we cannot assume the global
+  // scope is polluted with the Bugsnag object anyway. In this case, it's up to the
+  // host Javascript file to correctly utilise this functionality.
   //
-  // This is obsolete with UMD, as we cannot assume the global scope is polluted with
-  // the Bugsnag object anyway. In this case, it's up to the host Javascript file to
-  // correctly utilise this functionality.
-  //
-  // Maybe it's worth removing all together, if we're loading via any UMD method.
+  // Maybe it's worth removing all together, if the we're being loaded via CommonJS.
   self.noConflict = function() {
     window.Bugsnag = old;
     return self;
