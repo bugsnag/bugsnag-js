@@ -351,34 +351,17 @@
       metaData["Last Event"] = eventToMetaData(lastEvent);
     }
 
-    // Merge the local and global `metaData`.
-    var mergedMetaData = merge(merge({}, getSetting("metaData")), metaData);
-
-    // Run any `beforeNotify` function
-    var beforeNotify = self.beforeNotify;
-    if (typeof(beforeNotify) === "function") {
-      var retVal = beforeNotify(details, mergedMetaData);
-      if (retVal === false) {
-        return;
-      }
-    }
-
-    // Make the request:
-    //
-    // -  Work out which endpoint to send to.
-    // -  Combine error information with other data such as
-    //    user-agent and locale, `metaData` and settings.
-    // -  Make the HTTP request.
-    var location = window.location;
-    request(getSetting("endpoint") || DEFAULT_NOTIFIER_ENDPOINT, {
+    // Build the request payload by combining error information with other data
+    // such as user-agent and locale, `metaData` and settings.
+    var payload = {
       notifierVersion: NOTIFIER_VERSION,
 
       apiKey: apiKey,
-      projectRoot: getSetting("projectRoot") || location.protocol + "//" + location.host,
-      context: getSetting("context") || location.pathname,
+      projectRoot: getSetting("projectRoot") || window.location.protocol + "//" + window.location.host,
+      context: getSetting("context") || window.location.pathname,
       userId: getSetting("userId"), // Deprecated, remove in v3
       user: getSetting("user"),
-      metaData: mergedMetaData,
+      metaData: merge(merge({}, getSetting("metaData")), metaData),
       releaseStage: releaseStage,
       appVersion: getSetting("appVersion"),
 
@@ -395,7 +378,19 @@
       lineNumber: details.lineNumber,
       columnNumber: details.columnNumber,
       payloadVersion: "2"
-    });
+    };
+
+    // Run any `beforeNotify` function
+    var beforeNotify = self.beforeNotify;
+    if (typeof(beforeNotify) === "function") {
+      var retVal = beforeNotify(payload, payload.metaData);
+      if (retVal === false) {
+        return;
+      }
+    }
+
+    // Make the HTTP request
+    request(getSetting("endpoint") || DEFAULT_NOTIFIER_ENDPOINT, payload);
   }
 
   // Generate a browser stacktrace (or approximation) from the current stack.
