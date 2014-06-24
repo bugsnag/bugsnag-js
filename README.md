@@ -89,7 +89,7 @@ all browsers (yes, even IE 6!). Some browsers let us do even more, and
 internally we have 3 tiers of higher quality support:
 
            | Tier A | Tier B | Tier C | Supported
------------|--------|--------|--------|-----------
+-----------|:------:|:------:|:------:|:---------:
 iOS        | 7+     | 6      | 3-5    | all
 Android    | 4.0+   |        | 2.2-3  | all
 Blackberry |        | 10     |        | all
