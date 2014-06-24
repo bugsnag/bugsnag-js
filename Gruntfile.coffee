@@ -12,7 +12,7 @@ module.exports = (grunt) ->
         globals:
           BUGSNAG_TESTING: false
           global: true
-          module: true
+          modules: true
 
         # Evil Parts
         evil: true

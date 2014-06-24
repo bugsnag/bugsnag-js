@@ -12,7 +12,7 @@
 // The `Bugsnag` object is the only globally exported variable
 (function(definition) {
   if (typeof exports === "object") {
-    module.exports = definition(global);
+    modules.exports = definition(global);
   } else {
     var old = window.Bugsnag;
     window.Bugsnag = definition(window, old);
