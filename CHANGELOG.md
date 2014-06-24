@@ -1,15 +1,20 @@
 Changelog
 =========
 
+2.3.6
+-----
+-   Ensure `beforeNotify` can access/modify the entire payload, allows for full
+    control of what data is sent to Bugsnag
+
 2.3.5
 -----
--  Support for bower.json
--  Fix issue caused by loading bugsnag asyncily
--  Support for full backtraces in setImmediate functions
+-   Support for bower.json
+-   Fix issue caused by loading bugsnag asyncily
+-   Support for full backtraces in setImmediate functions
 
 2.3.4
 -----
--  Fix issue with passing metadata to notifyException using metadata as name
+-   Fix issue with passing metadata to notifyException using metadata as name
 
 2.3.3
 -----
