@@ -11,13 +11,9 @@
 
 // The `Bugsnag` object is the only globally exported variable
 (function(definition) {
-  if (typeof exports === "object") {
-    modules.exports = definition(global);
-  } else {
-    var old = window.Bugsnag;
-    window.Bugsnag = definition(window, old);
-  }
-})(function (window, old) {
+  var old = window.Bugsnag;
+  window.Bugsnag = definition(window, document, navigator, old);
+})(function (window, document, navigator, old) {
   var self = {},
       lastEvent,
       lastScript,
@@ -31,11 +27,6 @@
       // and we're happy to under-estimate the count to save the client (and Bugsnag's) resources.
       eventsRemaining = 10;
 
-  // This is obsolete with CommonJS module loading, as we cannot assume the global
-  // scope is polluted with the Bugsnag object anyway. In this case, it's up to the
-  // host Javascript file to correctly utilise this functionality.
-  //
-  // Maybe it's worth removing all together, if the we're being loaded via CommonJS.
   self.noConflict = function() {
     window.Bugsnag = old;
     return self;
