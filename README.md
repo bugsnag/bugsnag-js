@@ -89,15 +89,15 @@ all browsers (yes, even IE 6!). Some browsers let us do even more, and
 internally we have 3 tiers of higher quality support:
 
            | Tier A | Tier B | Tier C | Supported
------------|--------|--------|--------|------------
-iOS:       | 7+     | 6      | 3-5    | all
-Android:   | 4.0+   |        | 2.2-3  | all
+-----------|--------|--------|--------|-----------
+iOS        | 7+     | 6      | 3-5    | all
+Android    | 4.0+   |        | 2.2-3  | all
 Blackberry |        | 10     |        | all
-IE:        | 8+     |        |        | all
-Firefox:   | 17+    | 6-16   | 3-5    | all
-Safari:    | 7+     | 6      | 5      | all
-Chrome:    | 14+    |        |        | all
-Opera:     | 13+    | 10-12  |        | all
+IE         | 8+     |        |        | all
+Firefox    | 17+    | 6-16   | 3-5    | all
+Safari     | 7+     | 6      | 5      | all
+Chrome     | 14+    |        |        | all
+Opera      | 13+    | 10-12  |        | all
 Cumulative | 82.9%  | 91.2%  | 96.4%  | 100%
 
 Most users are on tier A or B browsers (91.2%), errors from these browsers are
