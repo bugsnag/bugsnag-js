@@ -13,7 +13,7 @@
 (function(definition) {
   if (typeof define === "function" && define.amd) {
     // AMD/Require.js
-    define([], function () {
+    define(function () {
       return definition(window);
     });
   } else if (typeof exports === "object") {
