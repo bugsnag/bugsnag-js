@@ -318,7 +318,7 @@ set `inlinescript` to false.
 
 ```html
 <script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-2.min.js"
-  data-inlinescript="false"/>
+        data-inlinescript="false"></script>
 ```
 
 Sourcemaps
