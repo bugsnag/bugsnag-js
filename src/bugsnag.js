@@ -281,7 +281,7 @@
       var attr = attrs[i];
       if (dataRegex.test(attr.nodeName)) {
         var key = attr.nodeName.match(dataRegex)[1];
-        dataAttrs[key] = attr.nodeValue;
+        dataAttrs[key] = attr.value || attr.nodeValue;
       }
     }
 
