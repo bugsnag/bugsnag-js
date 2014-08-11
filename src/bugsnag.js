@@ -99,6 +99,10 @@
       name: name,
       message: message,
       stacktrace: generateStacktrace(),
+      // These are defaults so that 'bugsnag.notify()' calls show up in old IE,
+      // newer browsers get a legit stacktrace from generateStacktrace().
+      file: window.location.toString(),
+      lineNumber: 1,
       severity: severity || "warning"
     }, metaData);
   };
