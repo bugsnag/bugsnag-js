@@ -50,6 +50,19 @@
     return self;
   };
 
+  // ### Bugsnag.refresh
+  //
+  // Resets the Bugsnag rate limit. If you have a large single-page app, you may
+  // wish to call this in your router to avoid exception reports being thrown
+  // away.
+  //
+  // By default Bugsnag aggressively limits the number of exception reports from
+  // one page load. This protects both the client's browser and our servers in
+  // cases where exceptions are thrown in tight loops or scroll handlers.
+  self.refresh = function() {
+    eventsRemaining = 10;
+  };
+
   //
   // ### Manual error notification (public methods)
   //
