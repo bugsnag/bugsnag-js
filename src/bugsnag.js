@@ -424,6 +424,10 @@
       }
     }
 
+    if (payload.lineNumber === 0 && (/Script error\.?/).test(payload.message)) {
+      return log("Ignoring cross-domain script error. See https://bugsnag.com/docs/notifiers/js/cors");
+    }
+
     // Make the HTTP request
     request(getSetting("endpoint") || DEFAULT_NOTIFIER_ENDPOINT, payload);
   }
