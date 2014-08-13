@@ -1,6 +1,12 @@
 Changelog
 =========
 
+2.4.0
+-----
+-   Add support for UMD/common-js loaders.
+-   Add support for refreshing client-side rate-limit.
+-   Add a warning about cross domain script errors.
+
 2.3.6
 -----
 -   Ensure `beforeNotify` can access/modify the entire payload, allows for full

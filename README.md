@@ -81,6 +81,20 @@ Severity is displayed in the dashboard and can be used to filter the error list.
 By default all crashes (or unhandled exceptions) are set to `error` and all
 `Bugsnag.notify` calls default to `warning`.
 
+Cross-domain errors
+-------------------
+
+Browsers obscure some error messages that happen when scripts are loaded
+cross-domain. This is for security, but is annoying when hosting javascript on
+a CDN. You can tell if this happens because Bugsnag will log to your console:
+
+```
+[Bugsnag] Ignoring cross-domain script error.
+```
+
+You can fix this by loading your javascript using CORS. We have [detailed
+instructions](https://bugsnag.com/docs/notifiers/js/cors) for setting this up.
+
 Browser Support
 ---------------
 
@@ -343,7 +357,7 @@ that the javascript will never change, feel free to include the specific version
 directly.
 
 ```html
-<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-2.3.6.min.js"
+<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-2.4.0.min.js"
         data-apikey="YOUR-API-KEY-HERE"></script>
 ```
 
@@ -354,6 +368,17 @@ If you'd like to avoid an extra blocking request, you can include the javascript
 in your asset compilation process so that it is inlined into your existing script
 files. The only thing to be sure of is that Bugsnag is included before your
 onload handlers run.  This is so that we can report stacktraces reliably.
+
+Rate limiting
+-------------
+
+By default only 10 errors are allowed per page load. This is to prevent wasting
+a user's bandwidth sending thousands of exceptions to Bugsnag. If you have a long-running
+single page app, you can reset this rate-limit from your router by using:
+
+```
+Bugsnag.refresh()
+```
 
 Reporting Bugs or Feature Requests
 ----------------------------------
