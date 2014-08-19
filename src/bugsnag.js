@@ -16,7 +16,7 @@
     define(function () {
       return definition(window);
     });
-  } else if (typeof exports === "object") {
+  } else if (typeof module === "object" && typeof module.exports === "object") {
     // CommonJS/Browserify
     module.exports = definition(global);
   } else {
