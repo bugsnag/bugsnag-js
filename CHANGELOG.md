@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.4.1
+-----
+-   Make common-js loading less eager
+
 2.4.0
 -----
 -   Add support for UMD/common-js loaders.
