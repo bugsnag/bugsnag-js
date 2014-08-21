@@ -436,7 +436,7 @@
   // This is used to add a stacktrace to `Bugsnag.notify` calls, and to add a
   // stacktrace approximation where we can't get one from an exception.
   function generateStacktrace() {
-    var stacktrace;
+    var generated, stacktrace;
     var MAX_FAKE_STACK_SIZE = 10;
     var ANONYMOUS_FUNCTION_PLACEHOLDER = "[anonymous]";
 
@@ -444,6 +444,7 @@
     try {
       throw new Error("");
     } catch (exception) {
+      generated = "<generated>\n";
       stacktrace = stacktraceFromException(exception);
     }
 
@@ -451,6 +452,7 @@
     // looping through the list of functions that called this one (and skip
     // whoever called us).
     if (!stacktrace) {
+      generated = "<generated-ie>\n";
       var functionStack = [];
       try {
         var curr = arguments.callee.caller.caller;
@@ -459,9 +461,6 @@
           functionStack.push(fn);
           curr = curr.caller;
         }
-        // Manually add two fake frames for consistency with browsers that
-        // generate real stack traces.
-        functionStack.unshift('<ie9lte-frame1>', '<ie9lte-frame2>');
       } catch (e) {
         log(e);
       }
@@ -472,7 +471,7 @@
     // generateStacktrace() + window.onerror,
     // generateStacktrace() + notify,
     // generateStacktrace() + notifyException
-    return "<generated>\n" + stacktrace;
+    return generated + stacktrace;
   }
 
   // Get the stacktrace string from an exception

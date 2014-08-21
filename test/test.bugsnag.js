@@ -221,6 +221,18 @@ describe("Bugsnag", function () {
       assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
       assert.equal(requestData().params.severity, "warning");
     });
+
+    if (navigator.appVersion.indexOf("MSIE 9") > -1) {
+      it("should tell that the stacktrace is from IE", function () {
+        Bugsnag.notifyException(new Error("Example error"));
+
+        assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
+        match = /^<generated-ie>\n/.test(requestData().params.stacktrace);
+        assert(match, "No metaframes included");
+      });
+    } else {
+      it("should pass once", function() {});
+    }
   });
 
   describe("notify", function () {
@@ -259,6 +271,18 @@ describe("Bugsnag", function () {
       assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
       assert(requestData().params.stacktrace != null, "stacktrace should be present");
     });
+
+    if (navigator.appVersion.indexOf("MSIE 9") > -1) {
+      it("should tell that the stacktrace is from IE", function () {
+        Bugsnag.notify("CustomError", "Something broke");
+
+        assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
+        match = /^<generated-ie>\n/.test(requestData().params.stacktrace);
+        assert(match, "No metaframes included");
+      });
+    } else {
+      it("should pass once", function() {});
+    }
   });
 });
 
@@ -346,13 +370,13 @@ describe("window", function () {
       assert(Bugsnag._onerror.calledOnce, "Bugsnag._onerror should have been called once");
     });
 
-    if (navigator.appVersion.indexOf("MSIE 9") > -1 || nagivator.appVersion.indexOf("Safari/5") > -1) {
-      it("should append two metaframes to the stacktrace", function () {
+    if (navigator.appVersion.indexOf("MSIE 9") > -1) {
+      it("should tell that the stacktrace is from IE", function () {
         Bugsnag._onerror = null; // Disable mocha's onerror for this test
         window.onerror("Something broke", "http://example.com/example.js", 123, 15, new Error("Example error"));
 
         assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
-        match = /^<generated>(.|\n)*<ie9lte-frame1>(.|\n)*<ie9lte-frame2>/.test(requestData().params.stacktrace);
+        match = /^<generated-ie>\n/.test(requestData().params.stacktrace);
         assert(match, "No metaframes included");
       });
     } else {
