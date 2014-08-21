@@ -459,11 +459,12 @@
           functionStack.push(fn);
           curr = curr.caller;
         }
+        // Manually add two fake frames for consistency with browsers that
+        // generate real stack traces.
+        functionStack.unshift('Error()', 'generateStacktrace()');
       } catch (e) {
         log(e);
-
       }
-
       stacktrace = functionStack.join("\n");
     }
 

@@ -384,6 +384,17 @@ describe("window", function () {
         window.postMessage("hello", "*");
       });
 
+      if (navigator.appVersion.indexOf("MSIE 9") > -1 || nagivator.appVersion.indexOf("Safari/5") > -1) {
+        it("should append two metaframes to the stacktrace", function (done) {
+          callback = function() {
+            match = /^<generated>(.|\n)*Error\((.|\n)*generateStacktrace/.test(requestData().params.stacktrace);
+            assert(match, "No metaframes included");
+            done();
+          };
+          window.postMessage("hello", "*");
+        });
+      }
+
       if (navigator.appVersion.indexOf("MSIE 9") == -1 && navigator.appVersion.indexOf("Safari/5") == -1) {
         it("should include multi-line backtraces", function (done) {
           callback = function () {
