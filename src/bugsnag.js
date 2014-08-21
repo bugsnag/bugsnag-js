@@ -461,7 +461,7 @@
         }
         // Manually add two fake frames for consistency with browsers that
         // generate real stack traces.
-        functionStack.unshift('Error()', 'generateStacktrace()');
+        functionStack.unshift('<ie9lte-frame1>', '<ie9lte-frame2>');
       } catch (e) {
         log(e);
       }

@@ -352,7 +352,7 @@ describe("window", function () {
         window.onerror("Something broke", "http://example.com/example.js", 123, 15, new Error("Example error"));
 
         assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
-        match = /^<generated>(.|\n)*Error\((.|\n)*generateStacktrace/.test(requestData().params.stacktrace);
+        match = /^<generated>(.|\n)*<ie9lte-frame1>(.|\n)*<ie9lte-frame2>/.test(requestData().params.stacktrace);
         assert(match, "No metaframes included");
       });
     } else {
