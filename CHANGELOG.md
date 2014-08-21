@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.4.2
+-----
+-   Better support for method names on old IEs
+
 2.4.1
 -----
 -   Make common-js loading less eager
