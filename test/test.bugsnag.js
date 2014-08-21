@@ -345,6 +345,19 @@ describe("window", function () {
       assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
       assert(Bugsnag._onerror.calledOnce, "Bugsnag._onerror should have been called once");
     });
+
+    if (navigator.appVersion.indexOf("MSIE 9") > -1 || nagivator.appVersion.indexOf("Safari/5") > -1) {
+      it("should append two metaframes to the stacktrace", function () {
+        Bugsnag._onerror = null; // Disable mocha's onerror for this test
+        window.onerror("Something broke", "http://example.com/example.js", 123, 15, new Error("Example error"));
+
+        assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
+        match = /^<generated>(.|\n)*Error\((.|\n)*generateStacktrace/.test(requestData().params.stacktrace);
+        assert(match, "No metaframes included");
+      });
+    } else {
+      it("should pass once", function() {});
+    }
   });
 
   if (window.addEventListener) {
@@ -383,17 +396,6 @@ describe("window", function () {
         };
         window.postMessage("hello", "*");
       });
-
-      if (navigator.appVersion.indexOf("MSIE 9") > -1 || nagivator.appVersion.indexOf("Safari/5") > -1) {
-        it("should append two metaframes to the stacktrace", function (done) {
-          callback = function() {
-            match = /^<generated>(.|\n)*Error\((.|\n)*generateStacktrace/.test(requestData().params.stacktrace);
-            assert(match, "No metaframes included");
-            done();
-          };
-          window.postMessage("hello", "*");
-        });
-      }
 
       if (navigator.appVersion.indexOf("MSIE 9") == -1 && navigator.appVersion.indexOf("Safari/5") == -1) {
         it("should include multi-line backtraces", function (done) {
