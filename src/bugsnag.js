@@ -206,7 +206,7 @@
     var script = document.currentScript || lastScript;
 
     if (!script && synchronousScriptsRunning) {
-      var scripts = document.getElementsByTagName("script");
+      var scripts = document.scripts || document.getElementsByTagName("script");
       script = scripts[scripts.length - 1];
     }
 
