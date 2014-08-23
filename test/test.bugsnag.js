@@ -478,7 +478,7 @@ describe("window", function () {
 });
 
 
-if (window.addEventListener && document.body.click) {
+if (window.addEventListener) {
   describe("document.body", function () {
     beforeEach(buildUp);
     afterEach(tearDown);
@@ -516,16 +516,20 @@ if (window.addEventListener && document.body.click) {
           assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
           done();
         };
-        document.body.click();
+        clickOn(document.body);
       });
 
-      if (navigator.appVersion.indexOf("MSIE 9") == -1) {
+      if (navigator.appVersion.indexOf("MSIE 9") === -1 && document.body.click) {
         it("should include multi-line backtraces", function mooCow(done) {
           callback = function () {
+            var trace = JSON.stringify(requestData().params.stacktrace);
             assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
-            assert(/failA(.|\n)*failB(.|\n)*handle/.test(requestData().params.stacktrace), "Bugsnag.testRequest should have been called with a multi-line stacktrace:: " + JSON.stringify(requestData().params.stacktrace));
-            done();
-          };
+            assert(
+              /failA(.|\n)*failB(.|\n)*handle/.test(requestData().params.stacktrace),
+              "Bugsnag.testRequest should have been called with a multi-line stacktrace:: " + trace
+            );
+           done();
+         };
           document.body.click();
         });
       } else {
