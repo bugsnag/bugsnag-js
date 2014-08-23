@@ -465,7 +465,7 @@ describe("window", function () {
           done();
         };
 
-        document.body.click();
+        clickOn(document.body);
       });
 
     });
@@ -478,7 +478,7 @@ describe("window", function () {
 });
 
 
-if (window.addEventListener && document.body.click) {
+if (window.addEventListener) {
   describe("document.body", function () {
     beforeEach(buildUp);
     afterEach(tearDown);
@@ -516,16 +516,20 @@ if (window.addEventListener && document.body.click) {
           assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
           done();
         };
-        document.body.click();
+        clickOn(document.body);
       });
 
-      if (navigator.appVersion.indexOf("MSIE 9") == -1) {
+      if (navigator.appVersion.indexOf("MSIE 9") === -1 && document.body.click) {
         it("should include multi-line backtraces", function mooCow(done) {
           callback = function () {
+            var trace = JSON.stringify(requestData().params.stacktrace);
             assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
-            assert(/failA(.|\n)*failB(.|\n)*handle/.test(requestData().params.stacktrace), "Bugsnag.testRequest should have been called with a multi-line stacktrace:: " + JSON.stringify(requestData().params.stacktrace));
-            done();
-          };
+            assert(
+              /failA(.|\n)*failB(.|\n)*handle/.test(requestData().params.stacktrace),
+              "Bugsnag.testRequest should have been called with a multi-line stacktrace:: " + trace
+            );
+           done();
+         };
           document.body.click();
         });
       } else {
@@ -663,4 +667,13 @@ function requestData() {
     url: Bugsnag.testRequest.args[0][0],
     params: Bugsnag.testRequest.args[0][1]
   };
+}
+
+/* Fakes clicking on runtimes that do not have "HTMLElement.click()" (for
+ * example, Android 3).
+ */
+function clickOn(element) {
+  var event = document.createEvent('HTMLEvents');
+  event.initEvent('click', true, true);
+  element.dispatchEvent(event);
 }
