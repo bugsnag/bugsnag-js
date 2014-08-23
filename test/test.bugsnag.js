@@ -465,7 +465,7 @@ describe("window", function () {
           done();
         };
 
-        document.body.click();
+        clickOn(document.body);
       });
 
     });
@@ -663,4 +663,13 @@ function requestData() {
     url: Bugsnag.testRequest.args[0][0],
     params: Bugsnag.testRequest.args[0][1]
   };
+}
+
+/* Fakes clicking on runtimes that do not have "HTMLElement.click()" (for
+ * example, Android 3).
+ */
+function clickOn(element) {
+  var event = document.createEvent('HTMLEvents');
+  event.initEvent('click', true, true);
+  element.dispatchEvent(event);
 }
