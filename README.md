@@ -348,6 +348,11 @@ For an example of how this should look, you can see the comment at the bottom
 of [bugsnag.js](https://gist.githubusercontent.com/jessicard/10924962/raw/6826aa6d934d95d9e39cdef1bb6a1991c3d4fd7e/bugsnag-2.1.0.min.js) itself.
 Most modern minifiers support source maps, we use [UglifyJS2](https://github.com/mishoo/UglifyJS2).
 
+To support source maps Bugsnag needs to download both your minified code and
+your source maps. It doesn't need to fetch your original source files.
+Legitimate Bugsnag requests originate from the IP address `107.22.198.224` if
+you need to open up your firewall to allow access.
+
 Advanced hosting
 ----------------
 
