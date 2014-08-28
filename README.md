@@ -5,7 +5,7 @@ The Bugsnag Notifier for JavaScript gives you instant notification of errors and
 exceptions in your website's JavaScript code.
 
 Bugsnag's JavaScript notifier is incredibly small, and has no external
-dependencies (not even jQuery!), and works in all mobile browsers, so you can
+dependencies (not even jQuery!), and works in all browsers (even mobile browsers!), so you can
 safely use it on any website.
 
 [Bugsnag](https://bugsnag.com) captures errors in real-time from your web,
