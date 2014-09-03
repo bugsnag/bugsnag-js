@@ -602,22 +602,19 @@
       };
     });
 
-    var hijackTimeFunc = function (_super) {
-      // Note, we don't do `_super.call` because that doesn't work on IE 8,
-      // luckily this is implicitly window so it just works everywhere.
-      //
-      // setTimout in all browsers except IE <9 allows additional parameters
-      // to be passed, so in order to support these without resorting to call/apply
-      // we need an extra layer of wrapping.
-      return function (f, t) {
-        if (typeof f === "function") {
-          f = wrap(f);
-          var args = Array.prototype.slice.call(arguments, 2);
-          return _super(function () {
-            f.apply(this, args);
-          }, t);
+    var hijackTimeFunc = function (originalFunc) {
+      // We don't do `originalFunc.call` because that doesn't work on IE 8.
+      // Luckily this is implicitly `window` so it just works everywhere.
+      return function (callback, delay) {
+        if (typeof callback === "function") {
+          // `setTimeout` in all browsers except IE =< 9 allows additional
+          // parameters to be passed, so in order to support these without
+          // resorting to call/apply we need an extra layer of wrapping.
+          return originalFunc(function () {
+            wrap(callback).apply(this, Array.prototype.slice.call(arguments, 2));
+          }, delay);
         } else {
-          return _super(f, t);
+          return originalFunc(callback, delay);
         }
       };
     };
