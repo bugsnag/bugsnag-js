@@ -606,16 +606,15 @@
       // We don't do `originalFunc.call` because that doesn't work on IE 8.
       // Luckily this is implicitly `window` so it just works everywhere.
       return function (callback, delay) {
+        // `setTimeout` in all browsers except IE =< 9 allows additional
+        // parameters to be passed, so in order to support these without
+        // resorting to call/apply we need an extra layer of wrapping.
         if (typeof callback === "function") {
-          // `setTimeout` in all browsers except IE =< 9 allows additional
-          // parameters to be passed, so in order to support these without
-          // resorting to call/apply we need an extra layer of wrapping.
-          return originalFunc(function () {
-            wrap(callback).apply(this, Array.prototype.slice.call(arguments, 2));
-          }, delay);
-        } else {
-          return originalFunc(callback, delay);
+			callback = function () {
+              wrap(callback).apply(this, Array.prototype.slice.call(arguments, 2));
+            };
         }
+        return originalFunc(callback, delay);
       };
     };
 
