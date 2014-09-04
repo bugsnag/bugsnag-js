@@ -610,7 +610,7 @@
         // parameters to be passed, so in order to support these without
         // resorting to call/apply we need an extra layer of wrapping.
         if (typeof callback === "function") {
-			callback = function () {
+            callback = function () {
               wrap(callback).apply(this, Array.prototype.slice.call(arguments, 2));
             };
         }
