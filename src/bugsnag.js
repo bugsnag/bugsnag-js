@@ -624,9 +624,7 @@
 
     polyFill(window, "setTimeout", hijackTimeFunc);
     polyFill(window, "setInterval", hijackTimeFunc);
-    if (window.requestAnimationFrame) {
-      polyFill(window, "requestAnimationFrame", hijackTimeFunc);
-    }
+
     if (window.setImmediate) {
       polyFill(window, "setImmediate", function (_super) {
         return function (f) {
