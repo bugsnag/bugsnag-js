@@ -627,14 +627,7 @@
 
     polyFill(window, "requestAnimationFrame", function (_super) {
       return function (callback) {
-        if (typeof callback === "function") {
-          callback = wrap(callback);
-          return _super(function (timestamp) {
-            callback.call(this, timestamp);
-          });
-        } else {
-          return _super(callback);
-        }
+        return _super(wrap(callback));
       };
     });
 
