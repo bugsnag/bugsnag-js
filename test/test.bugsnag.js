@@ -321,6 +321,20 @@ describe("window", function () {
     it("should pass", function () {});
   }
 
+  if (window.requestAnimationFrame) {
+    describe("requestAnimationFrame", function () {
+      it("doesn't swallow timestamp", function (done) {
+        window.requestAnimationFrame(function (timestamp) {
+          assert.notEqual(undefined, timestamp);
+          assert.equal("number", typeof timestamp);
+          done();
+        });
+      });
+    });
+  } else {
+    it("should pass", function () {});
+  }
+
 
   describe("onerror", function() {
     it("should notify bugsnag", function () {
