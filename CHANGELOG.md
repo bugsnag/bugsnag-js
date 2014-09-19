@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.4.3
+-----
+-  Fix requestAnimationFrame polyfill.
+
 2.4.2
 -----
 -   Better support for method names on old IEs
