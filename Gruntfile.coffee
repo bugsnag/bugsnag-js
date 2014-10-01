@@ -14,6 +14,7 @@ module.exports = (grunt) ->
           global: true
           module: true
           define: true
+          require: true
 
         # The Good Parts
         eqeqeq: true
