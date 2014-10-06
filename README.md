@@ -240,14 +240,22 @@ Bugsnag.appVersion = "2.0.14";
 
 To have more fine grained control over what errors are sent to Bugsnag, you can
 implement a `beforeNotify` function. If you want to halt the notification completely,
-return `false` from this function. You can also add metaData by editing the `metaData`
-parameter.
+return `false` from this function.
 
 ```javascript
 Bugsnag.beforeNotify = function(payload) {
   // Example: Only notify Bugsnag of errors in `app.js` or `vendor.js` files
   var match = payload.file.match(/app\.js|vendor\.js/i);
   return !!(match && match[0].length > 0);
+}
+```
+
+You can modify the `payload` or `metaData` by editing the parameters.
+
+```javascript
+Bugsnag.beforeNotify = function(payload, metaData) {
+  // Filter out sensitive information
+  payload.url = "http://redacted.com";
 }
 ```
 

@@ -213,6 +213,7 @@ describe("Bugsnag", function () {
       Bugsnag.notifyException(new Error("Example error"));
 
       assert.equal(requestData().params.url, "http://redacted.com");
+      assert(Bugsnag.testRequest.called, "Bugsnag.testRequest should have been called");
     });
 
     it("should contain 'warning' as the default severity", function () {
