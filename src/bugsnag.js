@@ -255,12 +255,17 @@
   // Deeply serialize an object into a query string. We use the PHP-style
   // nested object syntax, `nested[keys]=val`, to support heirachical
   // objects. Similar to jQuery's `$.param` method.
-  function serialize(obj, prefix) {
+  function serialize(obj, prefix, depth) {
+    if (depth >= 5) {
+      return encodeURIComponent(prefix) + '=[RECURSIVE]';
+    }
+    depth = depth + 1 || 1;
+
     var str = [];
     for (var p in obj) {
       if (obj.hasOwnProperty(p) && p != null && obj[p] != null) {
         var k = prefix ? prefix + "[" + p + "]" : p, v = obj[p];
-        str.push(typeof v === "object" ? serialize(v, k) : encodeURIComponent(k) + "=" + encodeURIComponent(v));
+        str.push(typeof v === "object" ? serialize(v, k, depth) : encodeURIComponent(k) + "=" + encodeURIComponent(v));
       }
     }
     return str.join("&");
@@ -296,11 +301,12 @@
   // For maximum browser compatibility and cross-domain support, requests are
   // made by creating a temporary JavaScript `Image` object.
   function request(url, params) {
+    url += "?" + serialize(params) + "&ct=img&cb=" + new Date().getTime();
     if (typeof BUGSNAG_TESTING !== "undefined" && self.testRequest) {
       self.testRequest(url, params);
     } else {
       var img = new Image();
-      img.src = url + "?" + serialize(params) + "&ct=img&cb=" + new Date().getTime();
+      img.src = url;
     }
   }
 

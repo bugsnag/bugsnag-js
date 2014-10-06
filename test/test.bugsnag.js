@@ -184,7 +184,17 @@ describe("Bugsnag", function () {
       Bugsnag.notifyException(new Error("Example error"));
 
       assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
-      assert.equal(requestData().url, "https://notify.bugsnag.com/js");
+      assert.equal(requestData().url.substr(0, "https://notify.bugsnag.com/js".length), "https://notify.bugsnag.com/js");
+    });
+
+
+    it('should redact recursive metadata', function () {
+      var a = {a : 5};
+      a.b = a;
+      Bugsnag.notifyException(new Error("Example error"), "Error", a);
+
+      assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
+      assert(/RECURSIVE/.test(requestData().url));
     });
 
     it("should call a before notify callback", function() {
