@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.4.4
+-----
+-  Fix an infinite loop in some cases.
+
 2.4.3
 -----
 -  Fix requestAnimationFrame polyfill.

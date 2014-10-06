@@ -362,7 +362,7 @@ that the javascript will never change, feel free to include the specific version
 directly.
 
 ```html
-<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-2.4.3.min.js"
+<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-2.4.4.min.js"
         data-apikey="YOUR-API-KEY-HERE"></script>
 ```
 
