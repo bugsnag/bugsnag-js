@@ -2,6 +2,9 @@
     "name": "bugsnag-js",
     "version": "2.4.3",
     "private": true,
+    "scripts": {
+      "test": "grunt test"
+    },
     "main": "src/bugsnag.js",
     "devDependencies": {
         "grunt": "~0.4.2",
