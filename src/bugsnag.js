@@ -12,10 +12,18 @@
 // The `Bugsnag` object is the only globally exported variable
 (function(definition) {
   if (typeof define === "function" && define.amd) {
-    // AMD/Require.js
-    define(function () {
-      return definition(window);
-    });
+    // AMD
+    if (typeof require === "object" && require.load) {
+      // Require.js
+      define(function () {
+        return definition(window);
+      });
+    } else {
+      // Almond.js
+      define("Bugsnag", function () {
+        return definition(window);
+      });
+    }
   } else if (typeof module === "object" && typeof module.exports === "object") {
     // CommonJS/Browserify
     module.exports = definition(global);
