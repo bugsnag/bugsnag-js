@@ -55,7 +55,7 @@ module.exports = (grunt) ->
         access: "public-read"
         gzip: true
         headers: {
-          'Cache-Control': 'max-age: 315360000'
+          'Cache-Control': 'public, max-age=315360000'
         }
 
       release:
@@ -72,7 +72,7 @@ module.exports = (grunt) ->
       major:
         options: {
           headers: {
-            'Cache-Control': 'max-age: 604800'
+            'Cache-Control': 'public, max-age=604800'
           }
         }
         upload: [{
