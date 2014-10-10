@@ -323,6 +323,19 @@ try {
 }
 ```
 
+AMD/CommonJS support
+--------------------
+
+Bugsnag can be loaded as-is using an AMD or CommonJS compatible loader. This means
+you can use it with tools like RequireJS and Browserify directly. If you want to
+load Bugsnag from the CDN but load the rest of your code using AMD, then
+you should ensure Bugsnag is required before the rest of your code.
+
+If you load Bugsnag after the rest of your code, and your AMD loader leaks the global
+`define` function then you may see the (harmless) error message:
+"Mismatched anonymous define() module".  To fix this, load Bugsnag before the
+rest of your code.
+
 Script tag support
 ------------------
 

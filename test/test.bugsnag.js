@@ -622,6 +622,35 @@ describe("current script", function () {
   });
 });
 
+describe("UMD", function () {
+  beforeEach(buildUp);
+  afterEach(tearDown);
+
+  it("should work when required via require.js", function (done) {
+    testIframe('requirejs.html', function (params) {
+      assert(params.message.match(/requirejs error/));
+    }, done);
+  });
+
+  it("should work when required after almond.js #81", function (done) {
+    testIframe('afteralmond.html', function (params) {
+      assert(params.message.match(/afteralmond error/));
+    }, done);
+  });
+
+  it('should work after requiring require.js', function (done) {
+    testIframe('afterrequire.html', function (params) {
+      assert(params.message.match(/afterrequire error/));
+    }, done);
+  });
+
+  it("should work with the r.js optimizer", function (done) {
+    testIframe('requirejsoptimized.html', function (params) {
+      assert(params.message.match(/requirejs error/));
+    }, done);
+  });
+});
+
 describe("noConflict", function() {
   beforeEach(buildUp);
   afterEach(tearDown);
@@ -700,4 +729,20 @@ function clickOn(element) {
   var event = document.createEvent('HTMLEvents');
   event.initEvent('click', true, true);
   element.dispatchEvent(event);
+}
+
+function testIframe(name, callback, done) {
+    var iframe = document.createElement('iframe');
+    iframe.src = name;
+    window.testResult = function (params) {
+      document.body.removeChild(iframe);
+      try {
+        callback(params);
+        done();
+      } catch (e) {
+        console.log(params);
+        done(e);
+      }
+    };
+    document.body.appendChild(iframe);
 }

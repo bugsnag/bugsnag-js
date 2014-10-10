@@ -10,21 +10,7 @@
 //
 
 // The `Bugsnag` object is the only globally exported variable
-(function(definition) {
-  if (typeof define === "function" && define.amd) {
-    // AMD/Require.js
-    define(function () {
-      return definition(window);
-    });
-  } else if (typeof module === "object" && typeof module.exports === "object") {
-    // CommonJS/Browserify
-    module.exports = definition(global);
-  } else {
-    // Global
-    var old = window.Bugsnag;
-    window.Bugsnag = definition(window, old);
-  }
-})(function (window, old) {
+(function (window, old) {
   var self = {},
       lastEvent,
       lastScript,
@@ -37,7 +23,6 @@
       // you've probably learned everything useful there is to debug the problem,
       // and we're happy to under-estimate the count to save the client (and Bugsnag's) resources.
       eventsRemaining = 10;
-
   // #### Bugsnag.noConflict
   //
   // This is obsolete with UMD, as we cannot assume the global scope is polluted with
@@ -678,5 +663,23 @@
     });
   }
 
-  return self;
-});
+  window.Bugsnag = self;
+  // If people are using a javascript loader, we should integrate with it.
+  // We don't want to defer instrumenting their code with callbacks however,
+  // so we slightly abuse the intent and continue with our plan of polyfilling
+  // the browser whether or not they ever actually require the module.
+  // This has the nice side-effect of continuing to work when people are using
+  // AMD but loading Bugsnag via a CDN.
+  // It has the not-so-nice side-effect of polluting the global namespace, but
+  // you can easily call Bugsnag.noConflict() to fix that.
+  if (typeof define === "function" && define.amd) {
+    // AMD
+    define([], function () {
+      return self;
+    });
+  } else if (typeof module === "object" && typeof module.exports === "object") {
+    // CommonJS/Browserify
+    module.exports = self;
+  }
+
+})(window, window.Bugsnag);
