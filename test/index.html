@@ -9,11 +9,12 @@
   <!-- Mocha -->
   <div id="mocha"></div>
   <script src="../node_modules/mocha/mocha.js"></script>
+  <script src="../node_modules/mocha-browserstack/lib/mocha-browserstack.js"></script>
   <script src="assert.js"></script>
   <script src="stub.js"></script>
 
   <script>
-    mocha.setup({ignoreLeaks: true, ui: "bdd"});
+    mocha.setup({ignoreLeaks: true, ui: "bdd", reporter: Mocha.BrowserStack});
   </script>
 
   <!-- Tests -->

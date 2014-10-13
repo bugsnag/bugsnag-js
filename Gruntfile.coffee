@@ -181,6 +181,16 @@ module.exports = (grunt) ->
             grunt.log.write(stderr.toString())
             done(!error?)
 
+  grunt.registerTask "browserstack", "Run tests on browser stack", ->
+    exec = require("child_process").exec
+    done = this.async()
+
+    child = exec "./node_modules/browserstack-test/bin/browserstack-test -t 90 -b browsers.json -u #{process.env.BROWSERSTACK_USERNAME} -p #{process.env.BROWSERSTACK_PASSWORD} -k #{process.env.BROWSERSTACK_ACCESS_KEY} http://localhost:80/bugsnag-js/test/", (error, stdout, stderr) ->
+      console.log stdout
+      console.log stderr
+      done(!error?)
+
+
   # Release meta-task
   grunt.registerTask "release", ["jshint", "uglify", "docco", "git-tag", "s3", "invalidate_cloudfront", "git-push"]
 
