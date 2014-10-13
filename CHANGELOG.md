@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.4.5
+-----
+-  Fix a conflict with some AMD loaders
+
 2.4.4
 -----
 -  Fix an infinite loop in some cases.
