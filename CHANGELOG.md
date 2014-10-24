@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.4.6
+-----
+-  Don't crash while serializing DOM nodes
+
 2.4.5
 -----
 -  Fix a conflict with some AMD loaders
