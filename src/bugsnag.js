@@ -23,6 +23,7 @@
       // you've probably learned everything useful there is to debug the problem,
       // and we're happy to under-estimate the count to save the client (and Bugsnag's) resources.
       eventsRemaining = 10;
+
   // #### Bugsnag.noConflict
   //
   // This is obsolete with UMD, as we cannot assume the global scope is polluted with
@@ -246,14 +247,22 @@
     }
     depth = depth + 1 || 1;
 
-    var str = [];
-    for (var p in obj) {
-      if (obj.hasOwnProperty(p) && p != null && obj[p] != null) {
-        var k = prefix ? prefix + "[" + p + "]" : p, v = obj[p];
-        str.push(typeof v === "object" ? serialize(v, k, depth) : encodeURIComponent(k) + "=" + encodeURIComponent(v));
+    try {
+      if (window.Node && obj instanceof window.Node) {
+        return encodeURIComponent(prefix) + "=" + encodeURIComponent(targetToString(obj));
       }
+
+      var str = [];
+      for (var p in obj) {
+        if (obj.hasOwnProperty(p) && p != null && obj[p] != null) {
+          var k = prefix ? prefix + "[" + p + "]" : p, v = obj[p];
+          str.push(typeof v === "object" ? serialize(v, k, depth) : encodeURIComponent(k) + "=" + encodeURIComponent(v));
+        }
+      }
+      return str.join("&");
+    } catch (e) {
+      return encodeURIComponent(prefix) + '=' + encodeURIComponent('' + e);
     }
-    return str.join("&");
   }
 
   // Deep-merge the `source` object into the `target` object and return
