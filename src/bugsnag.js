@@ -261,7 +261,7 @@
       }
       return str.join("&");
     } catch (e) {
-      return encodeURIComponent(prefix) + '=' + encodeURIComponent('' + e);
+      return encodeURIComponent(prefix) + "=" + encodeURIComponent("" + e);
     }
   }
 
