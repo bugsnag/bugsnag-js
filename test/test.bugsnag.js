@@ -99,6 +99,29 @@ describe("Bugsnag", function () {
       assert(requestData().params.metaData.a == "b", "metadata should be correct");
     });
 
+    it("should handle crashy inputs in metadata", function() {
+      var div = document.createElement('div');
+      div.innerHTML = '<input id="myInput" type="date"/>';
+      document.body.appendChild(div);
+
+      Bugsnag.notifyException(new Error("Oahi"), {input: myInput, working: "working"});
+
+      var metaData = requestData().params.metaData;
+
+      assert.equal(metaData.working, 'working');
+
+      if (window.Node) {
+        assert({
+          '<input id="myInput" type="date">': true,
+          '<input type="date" id="myInput">': true
+        }[metaData.input]);
+      } else {
+        assert(/Error/.test(metaData.input))
+      }
+
+      document.body.removeChild(myInput.parentElement);
+    });
+
     it("should contain a stacktrace", function () {
       try {
         throw new Error("Example error");
@@ -578,7 +601,7 @@ describe("inline script", function () {
         assert.equal(params.metaData.script.content.replace(/\r\n/, ""), "\n    (function () {\n      atob();\n    })();\n  ");
         done();
       } catch(e) {
-        console.log(JSON.stringify(params.metaData.script.content));
+        (console && console.log(JSON.stringify(params.metaData.script.content)));
         done(e);
       }
     };
@@ -594,7 +617,7 @@ describe("inline script", function () {
         assert.equal(params.metaData.script.content, '');
         done();
       } catch(e) {
-        console.log(JSON.stringify(params.metaData.script.content));
+        (console && console.log(JSON.stringify(params.metaData.script.content)));
         done(e);
       }
     };
@@ -717,9 +740,29 @@ function tearDown() {
 }
 
 function requestData() {
+  var url = Bugsnag.testRequest.args[0][0];
+
+  var query = url.split("?")[1];
+
+  // Simple query decoder for use in testing.
+  var params = {};
+  ("&" + query).replace(/&([^&=]*)=([^&=]*)/g, function (_, key, value) {
+
+    var obj = params;
+    var path = decodeURIComponent(key).replace(/\]/g, '').split('[');
+    for (var i = 0; i < path.length - 1; i++) {
+      if (!obj[path[i]]) {
+        obj[path[i]] = {};
+      }
+      obj = obj[path[i]];
+    }
+
+    obj[path[path.length - 1]] = decodeURIComponent(value);
+  });
+
   return {
-    url: Bugsnag.testRequest.args[0][0],
-    params: Bugsnag.testRequest.args[0][1]
+    url: url,
+    params: params
   };
 }
 
