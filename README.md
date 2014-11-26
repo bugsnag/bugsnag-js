@@ -356,6 +356,17 @@ set `inlinescript` to false.
         data-inlinescript="false"></script>
 ```
 
+Notifying Bugsnag about jQuery Ajax errors
+------------------------------------------
+
+If you're [using jQuery to send Ajax requests](http://api.jquery.com/ajaxerror/), we recommend hooking Bugsnag up to notify about `ajaxError`'s.
+
+```
+$( document ).ajaxError(function(event, jqxhr, settings, thrownError) {
+  Bugsnag.notify("AjaxError", thrownError);
+});
+```
+
 Sourcemaps
 ----------
 
