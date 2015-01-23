@@ -232,6 +232,12 @@
   // This is useful for warning about configuration issues
   // eg. forgetting to set an API key.
   function log(msg) {
+    var disableLog = getSetting("disableLog");
+
+    if(disableLog) {
+      return;
+    }
+
     var console = window.console;
     if (console !== undefined && console.log !== undefined) {
       console.log("[Bugsnag] " + msg);

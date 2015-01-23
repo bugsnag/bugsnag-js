@@ -30,6 +30,42 @@ describe("Bugsnag", function () {
       assert(!Bugsnag.testRequest.called, "Bugsnag.testRequest should not have been called");
     });
 
+    describe("disableLog", function () {
+      var oldConsoleLog = console && console.log;
+      var ifConsoleLogExistsIt = oldConsoleLog ? it : it.skip;
+
+      beforeEach(function () {
+        oldConsoleLog && stub(console, "log");
+      });
+
+      afterEach(function () {
+        oldConsoleLog && (console.log = oldConsoleLog);
+      });
+
+      ifConsoleLogExistsIt("should log to the console if disableLog is not set", function () {
+        Bugsnag.apiKey = null;
+        Bugsnag.notifyException(new Error("Example error"));
+
+        assert(console.log.called, "console.log should have been called");
+      });
+
+      ifConsoleLogExistsIt("should log to the console if disableLog is false", function () {
+        Bugsnag.apiKey = null;
+        Bugsnag.disableLog = false;
+        Bugsnag.notifyException(new Error("Example error"));
+
+        assert(console.log.called, "console.log should have been called");
+      });
+
+      ifConsoleLogExistsIt("should not log to the console if disableLog is true", function () {
+        Bugsnag.apiKey = null;
+        Bugsnag.disableLog = true;
+        Bugsnag.notifyException(new Error("Example error"));
+
+        assert(!console.log.called, "console.log should not have been called");
+      });
+    });
+
     it("should contain an apiKey", function () {
       Bugsnag.notifyException(new Error("Example error"));
 
