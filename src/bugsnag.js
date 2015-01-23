@@ -234,12 +234,8 @@
   function log(msg) {
     var disableLog = getSetting("disableLog");
 
-    if(disableLog) {
-      return;
-    }
-
     var console = window.console;
-    if (console !== undefined && console.log !== undefined) {
+    if (console !== undefined && console.log !== undefined && !disableLog) {
       console.log("[Bugsnag] " + msg);
     }
   }
