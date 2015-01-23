@@ -343,7 +343,7 @@
 
   // Validate a Bugsnag API key exists and is of the correct format.
   function validateApiKey(apiKey) {
-    if (apiKey == null || !apiKey.match(API_KEY_REGEX)) {
+    if (!apiKey || !apiKey.match(API_KEY_REGEX)) {
       log("Invalid API key '" + apiKey + "'");
       return false;
     }

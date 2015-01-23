@@ -16,6 +16,13 @@ describe("Bugsnag", function () {
   afterEach(tearDown);
 
   describe("notifyException", function () {
+    it("should not notify if apiKey is false", function () {
+      Bugsnag.apiKey = false;
+      Bugsnag.notifyException(new Error("Example error"));
+
+      assert(!Bugsnag.testRequest.called, "Bugsnag.testRequest should not have been called");
+    });
+
     it("should not notify if apiKey is not set", function () {
       Bugsnag.apiKey = null;
       Bugsnag.notifyException(new Error("Example error"));
