@@ -160,6 +160,14 @@ module.exports = (grunt) ->
       console.log("Error running git push: " + error) if error?
       done(!error?)
 
+  grunt.registerTask "npm_publish", "Publish a release to npm", ->
+    exec = require("child_process").exec
+    done = this.async()
+
+    exec "npm publish", (error, stdout, stderr) ->
+      console.log("Error running npm publish: " + error) if error?
+      done(!error?)
+
   grunt.registerTask "stats", ["uglify", "uglify-stats"]
 
   grunt.registerTask "uglify", "Uglifies bugsnag.js", () ->
@@ -192,7 +200,7 @@ module.exports = (grunt) ->
 
 
   # Release meta-task
-  grunt.registerTask "release", ["jshint", "uglify", "docco", "git-tag", "git-push", "s3", "invalidate_cloudfront"]
+  grunt.registerTask "release", ["jshint", "uglify", "docco", "git-tag", "git-push", "s3", "npm_publish", "invalidate_cloudfront"]
 
   # Run a webserver for testing
   grunt.registerTask "server", ["connect:server:keepalive"]
