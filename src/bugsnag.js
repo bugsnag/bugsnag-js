@@ -313,6 +313,11 @@
   function getData(node) {
     var dataAttrs = {};
     var dataRegex = /^data\-([\w\-]+)$/;
+
+    // If the node doesn't exist due to being loaded as a commonjs module,
+    // then return an empty object and fallback to self[].
+    if (!node) { return dataAttrs; }
+
     var attrs = node.attributes;
     for (var i = 0; i < attrs.length; i++) {
       var attr = attrs[i];
