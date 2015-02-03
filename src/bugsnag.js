@@ -316,14 +316,14 @@
 
     // If the node doesn't exist due to being loaded as a commonjs module,
     // then return an empty object and fallback to self[].
-    if (!node) { return dataAttrs; }
-
-    var attrs = node.attributes;
-    for (var i = 0; i < attrs.length; i++) {
-      var attr = attrs[i];
-      if (dataRegex.test(attr.nodeName)) {
-        var key = attr.nodeName.match(dataRegex)[1];
-        dataAttrs[key] = attr.value || attr.nodeValue;
+    if (node) {
+      var attrs = node.attributes;
+      for (var i = 0; i < attrs.length; i++) {
+        var attr = attrs[i];
+        if (dataRegex.test(attr.nodeName)) {
+          var key = attr.nodeName.match(dataRegex)[1];
+          dataAttrs[key] = attr.value || attr.nodeValue;
+        }
       }
     }
 
