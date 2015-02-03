@@ -12,6 +12,10 @@ Testing
 
 The tests need to be run from a browser running on localhost (not directly from the filesystem).
 
+- Install coffeescript globally
+
+    npm install -g coffee-script
+
 - Install the [serve](https://github.com/jlong/serve) gem
 
     gem install serve
