@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.4.7
+-----
+-  Fix a bug when Bugsnag is loaded with no script tags
+-  First version available on npm as bugsnag-js
+
 2.4.6
 -----
 -  Don't crash while serializing DOM nodes
