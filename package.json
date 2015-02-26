@@ -2,6 +2,10 @@
     "name": "bugsnag-js",
     "version": "2.4.7",
     "main": "src/bugsnag.js",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/bugsnag/bugsnag-js"
+    },
     "devDependencies": {
         "grunt": "~0.4.2",
         "grunt-contrib-jshint": "~0.6.3",
