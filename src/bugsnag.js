@@ -244,7 +244,7 @@
   // nested object syntax, `nested[keys]=val`, to support heirachical
   // objects. Similar to jQuery's `$.param` method.
   function serialize(obj, prefix, depth) {
-    if (depth >= 5) {
+    if (depth >= getSetting("serializeMaxDepth", 5)) {
       return encodeURIComponent(prefix) + "=[RECURSIVE]";
     }
     depth = depth + 1 || 1;
