@@ -184,12 +184,27 @@ describe("Bugsnag", function () {
       assert(!Bugsnag.testRequest.called, "Bugsnag.testRequest should not have been called");
     });
 
-    it("should notify if a custom releaseStage is in notifyReleaseStages", function () {
+    it("should not notify if releaseStage isn't in notifyReleaseStages", function () {
+      Bugsnag.notifyReleaseStages = ["production"];
+      Bugsnag.releaseStage = "development";
+      Bugsnag.notifyException(new Error("Example error"));
+
+      assert(!Bugsnag.testRequest.called, "Bugsnag.testRequest should not have been called");
+    });
+
+    it("should notify if the default releaseStage is in notifyReleaseStages", function () {
+      console.log(Bugsnag.releaseStage);
       Bugsnag.notifyReleaseStages = ["production", "custom"];
-      Bugsnag.releaseStage = "custom";
       Bugsnag.notifyException(new Error("Example error"));
 
       assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
+    });
+
+    it("should not notify if the default releaseStage is not in notifyReleaseStages", function () {
+      Bugsnag.notifyReleaseStages = ["custom"];
+      Bugsnag.notifyException(new Error("Example error"));
+
+      assert(!Bugsnag.testRequest.called, "Bugsnag.testRequest should not have been called");
     });
 
     it("should contain global metaData if set", function () {

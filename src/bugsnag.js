@@ -362,7 +362,7 @@
     eventsRemaining -= 1;
 
     // Check if we should notify for this release stage.
-    var releaseStage = getSetting("releaseStage");
+    var releaseStage = getSetting("releaseStage", "production");
     var notifyReleaseStages = getSetting("notifyReleaseStages");
     if (notifyReleaseStages) {
       var shouldNotify = false;
