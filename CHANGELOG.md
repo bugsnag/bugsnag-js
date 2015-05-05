@@ -1,6 +1,12 @@
 Changelog
 =========
 
+2.4.8
+-----
+
+-  Fix a permissions bug in Firefox extensions like Selenium
+   that trigger page events from native code.
+
 2.4.7
 -----
 -  Fix a bug when Bugsnag is loaded with no script tags
