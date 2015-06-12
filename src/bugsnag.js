@@ -69,6 +69,9 @@
   // backend, all other values cause the notification to be dropped; and you
   // will not see it in your dashboard.
   self.notifyException = function (exception, name, metaData, severity) {
+    if (!exception) {
+      return;
+    }
     if (name && typeof name !== "string") {
       metaData = name;
       name = undefined;
