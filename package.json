@@ -18,7 +18,7 @@
         "grunt-s3": "git://github.com/pifantastic/grunt-s3",
         "grunt-bumpx": "~0.1.0",
         "mocha": "~1.15.1",
-        "grunt-docco": "git://github.com/bdougherty/grunt-docco#grunt-0.4",
+        "grunt-docco": "~0.4.0",
         "grunt-regex-replace": "~0.2.5",
         "grunt-invalidate-cloudfront": "~0.1.4",
         "mocha-browserstack": "~0.2.2",
