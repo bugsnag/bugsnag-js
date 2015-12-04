@@ -123,6 +123,11 @@ module.exports = (grunt) ->
             'test'
             './'
           ]
+    # Headless tests
+    mocha_phantomjs:
+      options:
+        reporter: 'spec'
+      all: ['test/index.html'],
 
     # Documentation
     docco:
@@ -131,6 +136,7 @@ module.exports = (grunt) ->
         dest: "docs/"
 
   # Load tasks from plugins
+  grunt.loadNpmTasks "grunt-mocha-phantomjs"
   grunt.loadNpmTasks "grunt-contrib-jshint"
   grunt.loadNpmTasks "grunt-contrib-connect"
   grunt.loadNpmTasks "grunt-contrib-watch"
@@ -206,7 +212,7 @@ module.exports = (grunt) ->
   grunt.registerTask "server", ["connect:server:keepalive"]
 
   # Run tests
-  grunt.registerTask "test", ["jshint", "connect:test", "watch:test"]
+  grunt.registerTask "test", ["jshint", "mocha_phantomjs"]
 
   # Default meta-task
   grunt.registerTask "default", ["jshint", "uglify", "docco"]
