@@ -211,7 +211,10 @@ module.exports = (grunt) ->
   # Run a webserver for testing
   grunt.registerTask "server", ["connect:server:keepalive"]
 
-  # Run tests
+  # Run tests in browser
+  grunt.registerTask "browsertest", ["jshint", "connect:test", "watch:test"]
+
+  # Run tests headless
   grunt.registerTask "test", ["jshint", "mocha_phantomjs"]
 
   # Default meta-task
