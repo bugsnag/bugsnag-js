@@ -1,4 +1,4 @@
-Bugsnag Notifier for JavaScript
+Bugsnag Notifier for JavaScript <img src="https://travis-ci.org/bugsnag/bugsnag-js.svg?branch=master" alt="build status" class="build-status">
 ===============================
 
 The Bugsnag Notifier for JavaScript gives you instant notification of errors and
