@@ -22,7 +22,10 @@
       // (in some cases 10,000+ errors per page). This limit is at the point where
       // you've probably learned everything useful there is to debug the problem,
       // and we're happy to under-estimate the count to save the client (and Bugsnag's) resources.
-      eventsRemaining = 10;
+      eventsRemaining = 10,
+      // The default depth of attached metadata which is parsed before truncation. It
+      // is configurable via the `maxDepth` setting.
+      maxPayloadDepth = 5;
 
   // #### Bugsnag.noConflict
   //
@@ -224,7 +227,7 @@
   // Set up default notifier settings.
   var DEFAULT_BASE_ENDPOINT = "https://notify.bugsnag.com/";
   var DEFAULT_NOTIFIER_ENDPOINT = DEFAULT_BASE_ENDPOINT + "js";
-  var NOTIFIER_VERSION = "2.4.8";
+  var NOTIFIER_VERSION = "2.4.9";
 
   // Keep a reference to the currently executing script in the DOM.
   // We'll use this later to extract settings from attributes.
@@ -247,7 +250,7 @@
   // nested object syntax, `nested[keys]=val`, to support heirachical
   // objects. Similar to jQuery's `$.param` method.
   function serialize(obj, prefix, depth) {
-    var maxDepth = getSetting('maxDepth', 5);
+    var maxDepth = getSetting("maxDepth", maxPayloadDepth);
 
     if (depth >= maxDepth) {
       return encodeURIComponent(prefix) + "=[RECURSIVE]";
@@ -275,9 +278,11 @@
   // Deep-merge the `source` object into the `target` object and return
   // the `target`. Properties in source that will overwrite those in target.
   // Similar to jQuery's `$.extend` method.
-  function merge(target, source) {
+  function merge(target, source, depth) {
     if (source == null) {
       return target;
+    } else if (depth >= getSetting("maxDepth", maxPayloadDepth)) {
+      return "[RECURSIVE]";
     }
 
     target = target || {};
@@ -285,7 +290,7 @@
       if (source.hasOwnProperty(key)) {
         try {
           if (source[key].constructor === Object) {
-            target[key] = merge(target[key], source[key]);
+            target[key] = merge(target[key], source[key], depth + 1 || 1);
           } else {
             target[key] = source[key];
           }

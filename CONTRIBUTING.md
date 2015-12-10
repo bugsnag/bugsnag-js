@@ -10,31 +10,40 @@ Contributing
 Testing
 =======
 
-The tests need to be run from a browser running on localhost (not directly from the filesystem).
+Running the tests requires [Grunt CLI](https://github.com/gruntjs/grunt-cli). It
+is available via [npm](https://npmjs.org):
 
-- Install coffeescript globally
+```
+npm install grunt-cli
+```
 
-    npm install -g coffee-script
+Also install the dependencies for the project:
 
-- Install the [serve](https://github.com/jlong/serve) gem
+```
+npm install
+```
 
-    gem install serve
+### In browser
 
-- Boot a webserver in the current directory
+```
+grunt browsertest
+```
 
-    serve
-
-- Navigate to the tests
-
-    open http://localhost:4000/test/
-
-Any large changes should be tested in old IEs (we support IE 6!), and any other browsers you can get your hands on. The easiest way
+Any large changes should be tested in old IEs (we support IE 6!), and any other
+browsers you can get your hands on. The easiest way
 to get these is from [modern.ie](https://www.modern.ie/en-gb/virtualization-tools#downloads).
+
+### Headless (Using PhantomJS)
+
+```
+grunt test
+```
 
 Releasing
 =========
 
-- Ensure you have the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables set.
+- Ensure you have the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`
+  environment variables set.
 - Bump the version number
 
     grunt bump::{major,minor,patch}

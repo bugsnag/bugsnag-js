@@ -1,4 +1,4 @@
-Bugsnag Notifier for JavaScript
+Bugsnag Notifier for JavaScript <img src="https://travis-ci.org/bugsnag/bugsnag-js.svg?branch=master" alt="build status" class="build-status">
 ===============================
 
 The Bugsnag Notifier for JavaScript gives you instant notification of errors and
@@ -394,7 +394,7 @@ that the javascript will never change, feel free to include the specific version
 directly.
 
 ```html
-<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-2.4.8.min.js"
+<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-2.4.9.min.js"
         data-apikey="YOUR-API-KEY-HERE"></script>
 ```
 
