@@ -36,7 +36,7 @@
   // Maybe it's worth removing all together, if we're loading via any UMD method.
   self.noConflict = function() {
     window.Bugsnag = old;
-    if (typeof old === 'undefined') {
+    if (typeof old === "undefined") {
       delete window.Bugsnag;
     }
     return self;
