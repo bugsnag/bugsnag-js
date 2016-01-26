@@ -318,9 +318,9 @@
       self.testRequest(url, params);
     } else {
       var notifyHandler = getSetting("notifyHandler");
-      if (notifyHandler === 'xhr') {
+      if (notifyHandler === "xhr") {
         var xhr = new XMLHttpRequest();
-        xhr.open('GET', url, true);
+        xhr.open("GET", url, true);
         xhr.send();
       } else {
         var img = new Image();
