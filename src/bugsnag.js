@@ -309,13 +309,23 @@
   // Make a HTTP request with given `url` and `params` object.
   // For maximum browser compatibility and cross-domain support, requests are
   // made by creating a temporary JavaScript `Image` object.
+  // Additionally the request can be done via XHR (needed for Chrome apps and extensions)
+  // To set the script to use XHR, you can specify data-notifyhandler attribute in the script tag
+  // Eg. `<script data-notifyhandler="xhr">` - the request defaults to image if attribute is not set
   function request(url, params) {
     url += "?" + serialize(params) + "&ct=img&cb=" + new Date().getTime();
     if (typeof BUGSNAG_TESTING !== "undefined" && self.testRequest) {
       self.testRequest(url, params);
     } else {
-      var img = new Image();
-      img.src = url;
+      var notifyHandler = getSetting("notifyHandler");
+      if (notifyHandler === 'xhr') {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.send();
+      } else {
+        var img = new Image();
+        img.src = url;
+      }
     }
   }
 

@@ -163,6 +163,25 @@ this with:
 Bugsnag.autoNotify = false;
 ```
 
+###notifyHandler
+
+By default, the notify request will be made via temporary javascript image object.
+This does not work in Chrome apps and extensions where XHR needs to be used.
+If you want to use Bugsnag with XHR, just set `notifyHandler` to `xhr`:
+
+```html
+<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-2.min.js"
+        data-apikey="YOUR-API-KEY-HERE"
+        data-notifyhandler="xhr"></script>
+```
+
+In situations where Bugsnag is not in its own script tag, you can set
+this with:
+
+```javascript
+Bugsnag.notifyHandler = "xhr";
+```
+
 ###user
 
 Information about the current user. This data will be sent to Bugsnag with
