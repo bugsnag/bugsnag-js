@@ -436,6 +436,31 @@ single page app, you can reset this rate-limit from your router by using:
 Bugsnag.refresh()
 ```
 
+Browser Extensions
+------------------
+
+Bugsnag's backend automatically ignores errors if they appear to come from
+browser extensions, since these errors usually aren't actionable for site owners and often
+aren't related the current page's code at all.
+
+If you have a special case where you want to know about errors that come from 
+extensions — for example, if you are attempting to monitor a browser extension
+itself — you may need to modify the error stacktrace you send to Bugsnag to work
+around this feature. For example, for a Chrome extension, you might add something
+like this to your beforeNotify function:
+
+```javascript
+Bugsnag.beforeNotify = function (error, metaData) {
+    error.stacktrace = error.stacktrace.replace(/chrome-extension:/g, "chromeextension:");
+}
+```
+
+To monitor an extension, you may also need to
+[use XHR](#notifyhandler)
+to notify Bugsnag of errors to work around content security policy restrictions
+for images loaded by extensions.
+
+
 Reporting Bugs or Feature Requests
 ----------------------------------
 
