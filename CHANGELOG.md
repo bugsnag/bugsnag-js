@@ -1,6 +1,24 @@
 Changelog
 =========
 
+2.5.0 (2016-01-29)
+-----
+
+### Bug Fixes
+
+- Clean up undefined property in window object when using `Bugsnag.noConflict()`
+  [Jacob Marshall](https://github.com/jacobmarshall)
+  [#115](https://github.com/bugsnag/bugsnag-js/issues/115)
+  [#116](https://github.com/bugsnag/bugsnag-js/pull/116)
+
+### Enhancements
+
+- Support XHR notify handlers
+  [Dimitar Tnokovski](https://github.com/tnokovski)
+  [#123](https://github.com/bugsnag/bugsnag-js/issues/123)
+  [#124](https://github.com/bugsnag/bugsnag-js/pull/124)
+
+
 2.4.9 (2015-12-10)
 -----
 
