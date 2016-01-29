@@ -1,20 +1,20 @@
 Changelog
 =========
 
-2.4.9
+2.4.9 (2015-12-10)
 -----
 
 ### Bug Fixes
 
 - Fix an issue where null exceptions throw an error
-  | [Rick Harrison](https://github.com/rickharrison)
-  | [#110](https://github.com/bugsnag/bugsnag-js/pull/110)
+  [Rick Harrison](https://github.com/rickharrison)
+  [#110](https://github.com/bugsnag/bugsnag-js/pull/110)
 
 ### Enhancements
 
 - Add configuration option for `maxDepth`
-  | [Jacob Marshall](https://github.com/jacobmarshall)
-  | [#114](https://github.com/bugsnag/bugsnag-js/pull/114)
+  [Jacob Marshall](https://github.com/jacobmarshall)
+  [#114](https://github.com/bugsnag/bugsnag-js/pull/114)
 
 2.4.8
 -----
