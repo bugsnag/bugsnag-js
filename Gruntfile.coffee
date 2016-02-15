@@ -3,36 +3,8 @@ module.exports = (grunt) ->
   grunt.initConfig
     # Package information
     pkg: grunt.file.readJSON "package.json"
-
-    # JSHint (see http://www.jshint.com/docs/)
-    jshint:
-      options:
-        # Predefined globals
-        browser: true
-        globals:
-          BUGSNAG_TESTING: false
-          global: true
-          module: true
-          define: true
-
-        # The Good Parts
-        eqeqeq: true
-        eqnull: true
-        curly: true
-        latedef: true
-        undef: true
-        forin: true
-
-        # Style preferences
-        indent: 2
-        camelcase: true
-        trailing: true
-        quotmark: "double"
-        newcap: true
-
-      dist:
-        files:
-          src: ["src/bugsnag.js"]
+    eslint:
+      src: ["src/bugsnag.js"]
 
     "regex-replace":
       dist:
@@ -109,7 +81,7 @@ module.exports = (grunt) ->
         options:
           livereload: 35729
         files: ['test/*.js', 'src/*.js'],
-        tasks: ['jshint']
+        tasks: ['eslint']
 
     # Web server
     connect:
@@ -137,7 +109,6 @@ module.exports = (grunt) ->
 
   # Load tasks from plugins
   grunt.loadNpmTasks "grunt-mocha-phantomjs"
-  grunt.loadNpmTasks "grunt-contrib-jshint"
   grunt.loadNpmTasks "grunt-contrib-connect"
   grunt.loadNpmTasks "grunt-contrib-watch"
   grunt.loadNpmTasks "grunt-bumpx"
@@ -145,6 +116,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks "grunt-docco"
   grunt.loadNpmTasks "grunt-regex-replace"
   grunt.loadNpmTasks "grunt-invalidate-cloudfront"
+  grunt.loadNpmTasks "gruntify-eslint"
 
   # Task to tag a version in git
   grunt.registerTask "git-tag", "Tags a release in git", ->
@@ -183,7 +155,6 @@ module.exports = (grunt) ->
       console.log("Error running uglify.coffee: " + error) if error?
       done(!error?)
 
-
   grunt.registerTask "uglify-stats", "Outputs stats about uglification", ->
     exec = require("child_process").exec
     done = this.async()
@@ -206,16 +177,16 @@ module.exports = (grunt) ->
 
 
   # Release meta-task
-  grunt.registerTask "release", ["jshint", "uglify", "docco", "git-tag", "git-push", "s3", "npm_publish", "invalidate_cloudfront"]
+  grunt.registerTask "release", ["eslint", "uglify", "docco", "git-tag", "git-push", "s3", "npm_publish", "invalidate_cloudfront"]
 
   # Run a webserver for testing
   grunt.registerTask "server", ["connect:server:keepalive"]
 
   # Run tests in browser
-  grunt.registerTask "browsertest", ["jshint", "connect:test", "watch:test"]
+  grunt.registerTask "browsertest", ["eslint", "connect:test", "watch:test"]
 
   # Run tests headless
-  grunt.registerTask "test", ["jshint", "mocha_phantomjs"]
+  grunt.registerTask "test", ["eslint", "mocha_phantomjs"]
 
   # Default meta-task
-  grunt.registerTask "default", ["jshint", "uglify", "docco"]
+  grunt.registerTask "default", ["eslint", "uglify", "docco"]
