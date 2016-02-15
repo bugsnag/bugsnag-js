@@ -12,20 +12,20 @@
 // The `Bugsnag` object is the only globally exported variable
 (function (window, old) {
   var self = {},
-      lastEvent,
-      lastScript,
-      previousNotification,
-      shouldCatch = true,
-      ignoreOnError = 0,
+    lastEvent,
+    lastScript,
+    previousNotification,
+    shouldCatch = true,
+    ignoreOnError = 0,
 
-      // We've seen cases where individual clients can infinite loop sending us errors
-      // (in some cases 10,000+ errors per page). This limit is at the point where
-      // you've probably learned everything useful there is to debug the problem,
-      // and we're happy to under-estimate the count to save the client (and Bugsnag's) resources.
-      eventsRemaining = 10,
-      // The default depth of attached metadata which is parsed before truncation. It
-      // is configurable via the `maxDepth` setting.
-      maxPayloadDepth = 5;
+    // We've seen cases where individual clients can infinite loop sending us errors
+    // (in some cases 10,000+ errors per page). This limit is at the point where
+    // you've probably learned everything useful there is to debug the problem,
+    // and we're happy to under-estimate the count to save the client (and Bugsnag's) resources.
+    eventsRemaining = 10,
+    // The default depth of attached metadata which is parsed before truncation. It
+    // is configurable via the `maxDepth` setting.
+    maxPayloadDepth = 5;
 
   // #### Bugsnag.noConflict
   //
@@ -529,7 +529,7 @@
       if (attrs) {
         var ret = "<" + target.nodeName.toLowerCase();
         for (var i = 0; i < attrs.length; i++) {
-          if (attrs[i].value && attrs[i].value.toString() != "null") {
+          if (attrs[i].value && attrs[i].value.toString() !== "null") {
             ret += " " + attrs[i].name + "=\"" + attrs[i].value + "\"";
           }
         }
@@ -561,7 +561,7 @@
       if (new window.ErrorEvent("test").colno === 0) {
         shouldCatch = false;
       }
-    } catch(e){ }
+    } catch(e){ /* No action needed */ }
   }
 
 
@@ -665,7 +665,7 @@
 
     if (window.setImmediate) {
       polyFill(window, "setImmediate", function (_super) {
-        return function (f) {
+        return function () {
           var args = Array.prototype.slice.call(arguments);
           args[0] = wrap(args[0]);
           return _super.apply(this, args);
