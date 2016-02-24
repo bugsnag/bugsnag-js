@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+<head>
+  <script src="../../src/bugsnag.js" data-apikey="API-KEY"></script>
+  <script type="text/javascript">
+    Bugsnag.metaData = {
+      "User Details": {
+        name: "James Smith",
+        email: "james@example.com"
+      }
+    };
+  </script>
+  <script src="./monitor.js"></script>
+</head>
+<body>
+  <h1>Bugsnag TypeScript Example</h1>
+  <a href="#" onclick="javascript:parentOfCrashyFunction('test', 456); return false;">
+      Click to call crashyFunction
+  </a>
+</body>
+</html>
