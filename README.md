@@ -8,7 +8,7 @@ Bugsnag's JavaScript notifier is incredibly small, and has no external
 dependencies (not even jQuery!), and works in all browsers (even mobile browsers!), so you can
 safely use it on any website.
 
-[Bugsnag](https://bugsnag.com) captures errors in real-time from your web,
+Learn more about Bugsnag's [JavaScript error monitoring](https://bugsnag.com/platforms/javascript) solution. [Bugsnag](https://bugsnag.com) captures errors in real-time from your web,
 mobile and desktop applications, helping you to understand and resolve them
 as fast as possible. [Create a free account](https://bugsnag.com) to start
 capturing errors from your applications.
