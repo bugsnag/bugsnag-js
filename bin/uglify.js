@@ -31,10 +31,10 @@ var stream = UglifyJS.OutputStream({
 
 ast.print(stream);
 
-fs.writeFileSync("dist/bugsnag.min.js", stream.toString());
+fs.mkdir("dist", function() {
+  fs.writeFileSync("dist/bugsnag.min.js", stream.toString());
+  console.log("dist/bugsnag.min.js (v" + version + ")");
 
-console.log("dist/bugsnag.min.js (v" + version + ")");
-
-fs.writeFileSync("dist/bugsnag.min.map", sourceMap.toString());
-
-console.log("dist/bugsnag.min.map (v" + version + ")");
+  fs.writeFileSync("dist/bugsnag.min.map", sourceMap.toString());
+  console.log("dist/bugsnag.min.map (v" + version + ")");
+});
