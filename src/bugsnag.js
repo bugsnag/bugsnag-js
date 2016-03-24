@@ -131,7 +131,7 @@
       }
       if (!_super.bugsnag) {
         var currentScript = getCurrentScript();
-        var callback = Bugsnag.wrapCallbacks ? Bugsnag.wrapCallbacks(_super) : _super;
+        var callback = self.wrapCallbacks ? self.wrapCallbacks(_super) : _super;
 
         _super.bugsnag = function (event) {
           if (options && options.eventHandler) {
