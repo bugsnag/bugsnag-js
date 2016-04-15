@@ -55,4 +55,5 @@ Releasing
 
 - Wait for cloudfront to invalidate the symlink
 - Test that exception reporting still works on [Bugsnag](https://bugsnag.com)
-
+- Update the setup guides for JavaScript (browsers), CoffeeScript (browsers),
+  and TypeScript on docs.bugsnag.com
