@@ -25,7 +25,10 @@
     eventsRemaining = 10,
     // The default depth of attached metadata which is parsed before truncation. It
     // is configurable via the `maxDepth` setting.
-    maxPayloadDepth = 5;
+    maxPayloadDepth = 5,
+
+    // helper function for relative times
+    millisecondsAgo = makeMillisecondsAgo();
 
   // #### Bugsnag.noConflict
   //
@@ -512,7 +515,7 @@
   // Populate the event tab of meta-data.
   function eventToMetaData(event) {
     var tab = {
-      millisecondsAgo: new Date() - event.timeStamp,
+      millisecondsAgo: millisecondsAgo(event.timeStamp),
       type: event.type,
       which: event.which,
       target: targetToString(event.target)
@@ -706,6 +709,29 @@
         });
       }
     });
+  }
+
+  // creates a function that takes a timeStamp and returns the number of milliseconds it happened in
+  // the past.
+  //
+  // This is necessary because depending on the browser the an event.timeStamp could be a
+  // DOMTimeStamp or a DOMHighResTimeStamp
+  function makeMillisecondsAgo() {
+    function timeNear(a, b) {
+      var d = 1000 * 60 * 5;
+      return a > b - d && a < b + d;
+    }
+
+    var testTimeStamp = (document.createEvent("CustomEvent")).timeStamp;
+
+    // if the testTimeStamp is close to performance.now() then it is a DOMHighResTimeStamp
+    var isHighPerf = window.hasOwnProperty("performance")
+                     && timeNear(testTimeStamp, window.performance.now());
+
+    return (isHighPerf)
+           ? function(timeStamp) { return performance.now() - timeStamp; }
+           : function(timeStamp) { return Date.now() - timeStamp; }
+           ;
   }
 
   window.Bugsnag = self;
