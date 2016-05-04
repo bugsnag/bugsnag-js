@@ -714,7 +714,7 @@
   // creates a function that takes a timeStamp and returns the number of milliseconds it happened in
   // the past.
   //
-  // This is necessary because depending on the browser the an event.timeStamp could be a
+  // This is necessary because depending on the browser the event.timeStamp could be a
   // DOMTimeStamp or a DOMHighResTimeStamp
   function makeMillisecondsAgo() {
     function timeNear(a, b) {
