@@ -386,23 +386,14 @@ $( document ).ajaxError(function(event, jqxhr, settings, thrownError) {
 });
 ```
 
-Sourcemaps
-----------
+Source Maps
+-----------
 
 Bugsnag supports [source
 maps](http://www.html5rocks.com/en/tutorials/developertools/sourcemaps/) to
-reverse javascript minification. If you include a magic comment at the end of
-your javascript file that points to the location of a source map, we will
-expand the lines in your stacktrace.
-
-For an example of how this should look, you can see the comment at the bottom
-of [bugsnag.js](https://gist.githubusercontent.com/jessicard/10924962/raw/6826aa6d934d95d9e39cdef1bb6a1991c3d4fd7e/bugsnag-2.1.0.min.js) itself.
-Most modern minifiers support source maps, we use [UglifyJS2](https://github.com/mishoo/UglifyJS2).
-
-To support source maps Bugsnag needs to download both your minified code and
-your source maps. It doesn't need to fetch your original source files.
-Legitimate Bugsnag requests originate from the IP address `107.22.198.224` if
-you need to open up your firewall to allow access.
+reverse JavaScript minification. These can either be fetched automatically
+or manually uploaded using the Bugsnag Source Map API.
+See the [Bugsnag source map documentation](https://bugsnag.com/docs/notifiers/js/source-map) for details.
 
 Advanced hosting
 ----------------
