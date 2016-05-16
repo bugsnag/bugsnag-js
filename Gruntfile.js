@@ -42,6 +42,12 @@ module.exports = function(grunt) {
             src: "dist/bugsnag.min.js",
             dest: "bugsnag-<%= pkg.version %>.min.js"
           }, {
+            src: "src/bugsnag.js",
+            dest: "bugsnag-<%= pkg.version.split('.')[0] %>.js"
+          }, {
+            src: "dist/bugsnag.min.js",
+            dest: "bugsnag-<%= pkg.version.split('.')[0] %>.min.js"
+          }, {
             src: "dist/bugsnag.min.map",
             dest: "bugsnag-<%= pkg.version %>.min.map"
           }
