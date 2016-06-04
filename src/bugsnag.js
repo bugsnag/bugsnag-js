@@ -717,21 +717,32 @@
   // This is necessary because depending on the browser the event.timeStamp could be a
   // DOMTimeStamp or a DOMHighResTimeStamp
   function makeMillisecondsAgo() {
+    function highPerf(timeStamp) {
+      return performance.now() - timeStamp;
+    }
+
+    function legacy(timeStamp) {
+      return new Date() - timeStamp;
+    }
+
     function timeNear(a, b) {
       var d = 1000 * 60 * 5;
       return a > b - d && a < b + d;
     }
 
-    var testTimeStamp = (document.createEvent("CustomEvent")).timeStamp;
+    // Old browsers don't support document.createEvent
+    var testEvent;
+    try {
+      testEvent = document.createEvent('CustomEvent');
+    } catch(e) {
+      return legacy;
+    }
 
     // if the testTimeStamp is close to performance.now() then it is a DOMHighResTimeStamp
     var isHighPerf = window.hasOwnProperty("performance")
-                     && timeNear(testTimeStamp, window.performance.now());
+                     && timeNear(testEvent.timeStamp, window.performance.now());
 
-    return (isHighPerf)
-           ? function(timeStamp) { return performance.now() - timeStamp; }
-           : function(timeStamp) { return Date.now() - timeStamp; }
-           ;
+    return isHighPerf ? highPerf : legacy;
   }
 
   window.Bugsnag = self;
