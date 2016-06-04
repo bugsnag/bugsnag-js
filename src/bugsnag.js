@@ -733,7 +733,7 @@
     // Old browsers don't support document.createEvent
     var testEvent;
     try {
-      testEvent = document.createEvent('CustomEvent');
+      testEvent = document.createEvent("CustomEvent");
     } catch(e) {
       return legacy;
     }
