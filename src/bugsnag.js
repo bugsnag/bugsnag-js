@@ -17,6 +17,7 @@
     previousNotification,
     shouldCatch = true,
     ignoreOnError = 0,
+    breadcrumbs = [],
 
     // We've seen cases where individual clients can infinite loop sending us errors
     // (in some cases 10,000+ errors per page). This limit is at the point where
@@ -118,6 +119,40 @@
     }, metaData);
   };
 
+  // #### Bugsnag.leaveBreadcrumb(value)
+  //
+  // TODO document this function
+  self.leaveBreadcrumb = function(value) {
+    var valueType = typeof value;
+
+    // default crumb
+    var crumb = {
+      type: "manual",
+      timestamp: Date.now(),
+      data: {}
+    };
+
+    switch (valueType) {
+    case "string":
+      crumb.data = value;
+      break;
+    case "object":
+      // merge provided data into default crumb
+      merge(crumb, value);
+      break;
+    default:
+      log("expecting breadcrumb to be of type 'string' or 'object', got " + valueType);
+    }
+
+    var lastCrumb = breadcrumbs.slice(-1)[0];
+    if (isEqual(crumb, lastCrumb)) {
+      lastCrumb.count = lastCrumb.count || 1;
+      lastCrumb.count++;
+    } else {
+      breadcrumbs.push(crumb);
+    }
+  };
+
   // Return a function acts like the given function, but reports
   // any exceptions to Bugsnag before re-throwing them.
   //
@@ -174,6 +209,44 @@
       return _super;
     }
   }
+
+  // Setup breadcrumbs for click events
+  function trackClicks() {
+    window.onmouseup = function(event) {
+      self.leaveBreadcrumb({
+        type: "user",
+        name: "UI click",
+        meta: {
+          targetText: nodeText(event.target),
+          targetSelector: nodeLabel(event.target)
+        }
+      });
+    };
+  }
+
+  // Setup breadcrumbs for history navigation events
+  function trackNavigation() {
+    // TODO trackNavigation
+  }
+
+  // Setup breacrubms for keystroke events
+  function trackKeystrokes() {
+    // TODO track keystrokes
+  }
+
+  (function setupAutoBreadcrumbs() {
+    if (getSetting("trackClicks", true)) {
+      trackClicks();
+    }
+
+    if (getSetting("trackKeystrokes", true)) {
+      trackKeystrokes();
+    }
+
+    if(getSetting("trackNavigation", true) && history && history.pushState && history.popState) {
+      trackNavigation();
+    }
+  })();
 
   //
   // ### Script tag tracking
@@ -249,6 +322,46 @@
     var console = window.console;
     if (console !== undefined && console.log !== undefined && !disableLog) {
       console.log("[Bugsnag] " + msg);
+    }
+  }
+
+  // Compare if two objects are equal.
+  // TODO check if this would fail if the properties are traveresed in different orders
+  function isEqual(obj1, obj2) {
+    serialize(obj1) === serialize(obj2);
+  }
+
+  // extract text content from a element
+  function nodeText(el) {
+    // TODO check browser compatibility of this function
+    return truncate(el.textContent.trim(), 40);
+  }
+
+  // Create a label from tagname, id and css class of the element
+  function nodeLabel(el) {
+    // TODO check browser compatibility of this function
+    var parts = [el.tagName];
+
+    if (el.id) {
+      parts.push("#" + el.id);
+    }
+
+    if (el.className && el.className.length) {
+      var classString = "." + el.className.split(" ").join(".");
+      classString = truncate(classString, 40);
+      parts.push(classString);
+    }
+
+    return parts.join("");
+  }
+
+  function truncate(value, length) {
+    var OMISSION = "(...)";
+
+    if (value.length > length) {
+      return value.slice(0, length - OMISSION.length) + OMISSION;
+    } else {
+      return value;
     }
   }
 
@@ -445,6 +558,7 @@
       file: details.file,
       lineNumber: details.lineNumber,
       columnNumber: details.columnNumber,
+      breadcrumbs: breadcrumbs,
       payloadVersion: "2"
     };
 
@@ -744,6 +858,7 @@
 
     return isHighRes ? highRes : legacy;
   }
+
 
   window.Bugsnag = self;
   // If people are using a javascript loader, we should integrate with it.
