@@ -751,18 +751,6 @@
 
     // Make the HTTP request
     request(getSetting("endpoint") || DEFAULT_NOTIFIER_ENDPOINT, payload);
-
-    // add the error to the breadcrumbs
-    if (getBreadcrumbSetting("autoBreadcrumbErrors")) {
-      self.leaveBreadcrumb({
-        type: "error",
-        name: "Error",
-        metaData: {
-          name: details.name,
-          message: details.message
-        }
-      });
-    }
   }
 
   // Generate a browser stacktrace (or approximation) from the current stack.
@@ -912,9 +900,9 @@
         lastScript = null;
 
         if (shouldNotify && !ignoreOnError) {
-
+          var name = exception && exception.name || "window.onerror";
           sendToBugsnag({
-            name: exception && exception.name || "window.onerror",
+            name: name,
             message: message,
             file: url,
             lineNumber: lineNo,
@@ -922,6 +910,18 @@
             stacktrace: (exception && stacktraceFromException(exception)) || generateStacktrace(),
             severity: "error"
           }, metaData);
+
+          // add the error to the breadcrumbs
+          if (getBreadcrumbSetting("autoBreadcrumbErrors")) {
+            self.leaveBreadcrumb({
+              type: "error",
+              name: "Error",
+              metaData: {
+                name: name,
+                message: message
+              }
+            });
+          }
         }
 
         if (typeof BUGSNAG_TESTING !== "undefined") {
