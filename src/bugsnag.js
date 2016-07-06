@@ -277,7 +277,7 @@
 
       return {
         type: "navigation",
-        name: "location.hash navigation",
+        name: "Hash navigation",
         metaData: metaData
       };
     }
@@ -285,28 +285,28 @@
     function buildPopState() {
       return {
         type: "navigation",
-        name: "navigated back"
+        name: "Navigated back"
       };
     }
 
     function buildPageHide() {
       return {
         type: "navigation",
-        name: "page hidden"
+        name: "Page hidden"
       };
     }
 
     function buildPageShow() {
       return {
         type: "navigation",
-        name: "page shown"
+        name: "Page shown"
       };
     }
 
     function buildLoad() {
       return {
         type: "navigation",
-        name: "Page load"
+        name: "Page loaded"
       };
     }
 
@@ -321,7 +321,7 @@
       return {
         type: "navigation",
         // TODO when we have structured data add diff between oldState and newState here
-        name: "history.pushState()",
+        name: "History pushState",
         metaData: {
           from: location.href,
           to: url
@@ -333,7 +333,7 @@
       return {
         type: "navigation",
         // TODO when we have structured data add diff between oldState and newState here
-        name: "history.replaceState()",
+        name: "History replaceState",
         metaData: {
           from: location.href,
           to: url
