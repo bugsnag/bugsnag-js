@@ -374,7 +374,7 @@
     // functional fu to make it easier to setup event listeners
     function wrapBuilder(builder) {
       return function(event) {
-        self.leaveBreadcumb(builder(event));
+        self.leaveBreadcrumb(builder(event));
       };
     }
 
@@ -387,13 +387,13 @@
 
     // create hooks for pushstate and replaceState
     history.pushState = function(state, title, url) {
-      self.leaveBreadcumb(buildPushState(state, title, url));
+      self.leaveBreadcrumb(buildPushState(state, title, url));
       // call the original
       pushState(state, title, url);
     };
 
     history.replaceState = function(state, title, url) {
-      self.leaveBreadcumb(buildReplaceState(state, title, url));
+      self.leaveBreadcrumb(buildReplaceState(state, title, url));
       // call the original
       replaceState(state, title, url);
     };
@@ -754,7 +754,7 @@
 
     // add the error to the breadcrumbs
     if (getBreadcrumbSetting("autoBreadcrumbErrors")) {
-      self.leaveBreadcumb({
+      self.leaveBreadcrumb({
         type: "error",
         name: "Error",
         metaData: {
