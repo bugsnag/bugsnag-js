@@ -226,7 +226,7 @@
   }
 
   // Setup breadcrumbs for click events
-  (function trackClicks() {
+  function trackClicks() {
     if(!getBreadcrumbSetting("autoBreadcrumbClicks", true)) {
       return;
     }
@@ -241,10 +241,10 @@
         }
       });
     });
-  })();
+  }
 
   // Setup breadcrumbs for console.log, console.warn, console.error
-  (function trackConsoleLog(){
+  function trackConsoleLog(){
     if(!getBreadcrumbSetting("autoBreadcrumbConsole")) {
       return;
     }
@@ -271,10 +271,10 @@
     enhance(console, "error", function() {
       trackLog("error", arguments);
     });
-  })();
+  }
 
   // Setup breadcrumbs for history navigation events
-  (function trackNavigation() {
+  function trackNavigation() {
     if(!getBreadcrumbSetting("autoBreadcrumbNavigation")) {
       return;
     }
@@ -397,7 +397,7 @@
       // call the original
       replaceState(state, title, url);
     };
-  })();
+  }
 
   //
   // ### Script tag tracking
@@ -1045,6 +1045,10 @@
     return isHighRes ? highRes : legacy;
   }
 
+  // setup auto breadcrumb tracking
+  trackClicks();
+  trackConsoleLog();
+  trackNavigation();
 
   window.Bugsnag = self;
   // If people are using a javascript loader, we should integrate with it.
