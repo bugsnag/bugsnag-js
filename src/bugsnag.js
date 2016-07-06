@@ -700,6 +700,18 @@
 
     // Make the HTTP request
     request(getSetting("endpoint") || DEFAULT_NOTIFIER_ENDPOINT, payload);
+
+    // add the error to the breadcrumbs
+    if (getSetting("autobreadcrumb", true) && getSetting("autobreadcrumbErrors", true)) {
+      self.leaveBreadcumb({
+        type: "error",
+        name: "Error",
+        metaData: {
+          name: details.name,
+          message: details.message
+        }
+      });
+    }
   }
 
   // Generate a browser stacktrace (or approximation) from the current stack.
