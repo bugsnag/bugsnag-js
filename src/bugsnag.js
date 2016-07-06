@@ -243,9 +243,39 @@
     });
   })();
 
+  // Setup breadcrumbs for console.log, console.warn, console.error
+  (function trackConsoleLog(){
+    if(!getBreadcrumbSetting("autoBreadcrumbConsole")) {
+      return;
+    }
+
+    function trackLog(level, args) {
+      self.leaveBreadcrumb({
+        type: "log",
+        name: "Console output",
+        metaData: {
+          level: level,
+          values: Array.prototype.slice.call(args)
+        }
+      });
+    }
+
+    enhance(console, "log", function() {
+      trackLog("log", arguments);
+    });
+
+    enhance(console, "warn", function() {
+      trackLog("warn", arguments);
+    });
+
+    enhance(console, "error", function() {
+      trackLog("error", arguments);
+    });
+  })();
+
   // Setup breadcrumbs for history navigation events
   (function trackNavigation() {
-    if(!getBreadcrumbSetting("autoBreadcrumbNavigation", true)) {
+    if(!getBreadcrumbSetting("autoBreadcrumbNavigation")) {
       return;
     }
 
@@ -433,6 +463,21 @@
   // We'll use this later to extract settings from attributes.
   var scripts = document.getElementsByTagName("script");
   var thisScript = scripts[scripts.length - 1];
+
+  // Replace existing function on object with custom one, but still call the original afterwards
+  // example:
+  //  enhance(console, 'log', function() {
+  //    /* custom behavior */
+  //  })
+  function enhance(object, property, newFunction) {
+    var oldFunction = object[property];
+    object[property] = function() {
+      newFunction.apply(this, arguments);
+      if (oldFunction) {
+        oldFunction.apply(this, arguments);
+      }
+    };
+  }
 
   // Simple logging function that wraps `console.log` if available.
   // This is useful for warning about configuration issues
@@ -1019,5 +1064,4 @@
     // CommonJS/Browserify
     module.exports = self;
   }
-
 })(window, window.Bugsnag);
