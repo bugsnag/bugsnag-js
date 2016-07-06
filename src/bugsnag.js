@@ -226,7 +226,11 @@
   }
 
   // Setup breadcrumbs for click events
-  function trackClicks() {
+  (function trackClicks() {
+    if(!getBreadcrumbSetting("autoBreadcrumbClicks", true)) {
+      return;
+    }
+
     window.addEventListener("click", function(event) {
       self.leaveBreadcrumb({
         type: "user",
@@ -237,10 +241,14 @@
         }
       });
     });
-  }
+  })();
 
   // Setup breadcrumbs for history navigation events
-  function trackNavigation() {
+  (function trackNavigation() {
+    if(!getBreadcrumbSetting("autoBreadcrumbNavigation", true)) {
+      return;
+    }
+
     // check for browser support
     if (!window.history || !window.history.pushState || !window.history.pushState.bind) {
       return;
@@ -359,16 +367,6 @@
       // call the original
       replaceState(state, title, url);
     };
-  }
-
-  (function setupAutoBreadcrumbs() {
-    if (getSetting("trackClicks", true)) {
-      trackClicks();
-    }
-
-    if(getSetting("trackNavigation", true) && history && history.pushState && history.popState) {
-      trackNavigation();
-    }
   })();
 
   //
@@ -614,6 +612,14 @@
     return true;
   }
 
+  // get breadcrumb specific setting. When autoBreadcrumbs is true, all individual events are defaulted
+  // to true. Otherwise they will all defaul to false. You can set any event specicically and it will override
+  // the default.
+  function getBreadcrumbSetting(name) {
+    var fallback = getSetting("autoBreadcrumbs", true);
+    return getSetting(name, fallback);
+  }
+
   // Send an error to Bugsnag.
   function sendToBugsnag(details, metaData) {
     // Validate the configured API key.
@@ -702,7 +708,7 @@
     request(getSetting("endpoint") || DEFAULT_NOTIFIER_ENDPOINT, payload);
 
     // add the error to the breadcrumbs
-    if (getSetting("autobreadcrumb", true) && getSetting("autobreadcrumbErrors", true)) {
+    if (getBreadcrumbSetting("autoBreadcrumbErrors")) {
       self.leaveBreadcumb({
         type: "error",
         name: "Error",
