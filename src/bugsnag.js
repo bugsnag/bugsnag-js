@@ -121,20 +121,35 @@
 
   // #### Bugsnag.leaveBreadcrumb(value)
   //
-  // TODO document this function
+  // Add a breadcrumb to the array of breadcrumbs to be sent to Bugsnag when the next exception occurs
+  // `value` can be a string or an object with the following structure:
+  //
+  // * `timestamp` (optional, Date) - The time at which the event was recorded, in ISO 8601 format (`yyyy-mm-ddTHH:mm:ssZ`)
+  // * `name` (optional, string) [default: "Custom"] - The name of the breadcrumb, limited to 30 characters
+  // * `type`  (optional, enum) [default: "custom"] - The type of breadcrumb, from a list of options explained below
+  //     + `navigation`
+  //     + `request`
+  //     + `process`
+  //     + `log`
+  //     + `user`
+  //     + `state`
+  //     + `error`
+  //     + `custom`
+  // * `metadata` (optional, object) - Additional information about the breadcrumb. Values limited to 140 characters.
   self.leaveBreadcrumb = function(value) {
     var valueType = typeof value;
 
     // default crumb
     var crumb = {
-      type: "manual",
+      type: "custom",
+      name: "Custom",
       timestamp: Date.now(),
-      data: {}
+      metaData: {}
     };
 
     switch (valueType) {
     case "string":
-      crumb.data = value;
+      crumb.metaData.message = value;
       break;
     case "object":
       // merge provided data into default crumb
@@ -212,35 +227,143 @@
 
   // Setup breadcrumbs for click events
   function trackClicks() {
-    window.onmouseup = function(event) {
+    window.addEventListener("click", function(event) {
       self.leaveBreadcrumb({
         type: "user",
         name: "UI click",
-        meta: {
+        metaData: {
           targetText: nodeText(event.target),
           targetSelector: nodeLabel(event.target)
         }
       });
-    };
+    });
   }
 
   // Setup breadcrumbs for history navigation events
   function trackNavigation() {
-    // TODO trackNavigation
-  }
+    // check for browser support
+    if (!window.history || !window.history.pushState || !window.history.pushState.bind) {
+      return;
+    }
 
-  // Setup breacrubms for keystroke events
-  function trackKeystrokes() {
-    // TODO track keystrokes
+    function parseHash(url) {
+      return url.split("#")[1] || "";
+    }
+
+    // we're going to enhance these later, so we want to hold on to the originals
+    var pushState = history.pushState.bind(history);
+    var replaceState = history.replaceState.bind(history);
+
+    function buildHashChange(event) {
+      var oldURL = event.oldURL,
+        newURL = event.newURL,
+        metaData = {};
+
+      // not supported in old browsers
+      if (oldURL && newURL) {
+        metaData.from = parseHash(oldURL);
+        metaData.to = parseHash(newURL);
+      } else {
+        metaData.to = location.hash;
+      }
+
+      return {
+        type: "navigation",
+        name: "location.hash navigation",
+        metaData: metaData
+      };
+    }
+
+    function buildPopState() {
+      return {
+        type: "navigation",
+        name: "navigated back"
+      };
+    }
+
+    function buildPageHide() {
+      return {
+        type: "navigation",
+        name: "page hidden"
+      };
+    }
+
+    function buildPageShow() {
+      return {
+        type: "navigation",
+        name: "page shown"
+      };
+    }
+
+    function buildLoad() {
+      return {
+        type: "navigation",
+        name: "Page load"
+      };
+    }
+
+    function buildDOMContentLoaded() {
+      return {
+        type: "navigation",
+        name: "DOMContentLoaded"
+      };
+    }
+
+    function buildPushState(state, title, url) {
+      return {
+        type: "navigation",
+        // TODO when we have structured data add diff between oldState and newState here
+        name: "history.pushState()",
+        metaData: {
+          from: location.href,
+          to: url
+        }
+      };
+    }
+
+    function buildReplaceState(state, title, url) {
+      return {
+        type: "navigation",
+        // TODO when we have structured data add diff between oldState and newState here
+        name: "history.replaceState()",
+        metaData: {
+          from: location.href,
+          to: url
+        }
+      };
+    }
+
+    // functional fu to make it easier to setup event listeners
+    function wrapBuilder(builder) {
+      return function(event) {
+        self.leaveBreadcumb(builder(event));
+      };
+    }
+
+    window.addEventListener("hashchange", wrapBuilder(buildHashChange), true);
+    window.addEventListener("popstate", wrapBuilder(buildPopState), true);
+    window.addEventListener("pagehide", wrapBuilder(buildPageHide), true);
+    window.addEventListener("pageshow", wrapBuilder(buildPageShow), true);
+    window.addEventListener("load", wrapBuilder(buildLoad), true);
+    window.addEventListener("DOMContentLoaded", wrapBuilder(buildDOMContentLoaded), true);
+
+    // create hooks for pushstate and replaceState
+    history.pushState = function(state, title, url) {
+      self.leaveBreadcumb(buildPushState(state, title, url));
+      // call the original
+      pushState(state, title, url);
+    };
+
+    history.replaceState = function(state, title, url) {
+      self.leaveBreadcumb(buildReplaceState(state, title, url));
+      // call the original
+      replaceState(state, title, url);
+    };
   }
 
   (function setupAutoBreadcrumbs() {
     if (getSetting("trackClicks", true)) {
       trackClicks();
-    }
-
-    if (getSetting("trackKeystrokes", true)) {
-      trackKeystrokes();
     }
 
     if(getSetting("trackNavigation", true) && history && history.pushState && history.popState) {
