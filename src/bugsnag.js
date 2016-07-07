@@ -227,7 +227,7 @@
 
   // Setup breadcrumbs for click events
   function trackClicks() {
-    if(!getBreadcrumbSetting("autoBreadcrumbClicks", true)) {
+    if(!getBreadcrumbSetting("autoBreadcrumbsClicks", true)) {
       return;
     }
 
@@ -245,7 +245,7 @@
 
   // Setup breadcrumbs for console.log, console.warn, console.error
   function trackConsoleLog(){
-    if(!getBreadcrumbSetting("autoBreadcrumbConsole")) {
+    if(!getBreadcrumbSetting("autoBreadcrumbsConsole")) {
       return;
     }
 
@@ -275,7 +275,7 @@
 
   // Setup breadcrumbs for history navigation events
   function trackNavigation() {
-    if(!getBreadcrumbSetting("autoBreadcrumbNavigation")) {
+    if(!getBreadcrumbSetting("autoBreadcrumbsNavigation")) {
       return;
     }
 
@@ -912,7 +912,7 @@
           }, metaData);
 
           // add the error to the breadcrumbs
-          if (getBreadcrumbSetting("autoBreadcrumbErrors")) {
+          if (getBreadcrumbSetting("autoBreadcrumbsErrors")) {
             self.leaveBreadcrumb({
               type: "error",
               name: "Error",
