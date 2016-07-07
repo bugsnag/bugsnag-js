@@ -1,3 +1,10 @@
+/*eslint-env browser, mocha */
+/*global
+    Bugsnag: true
+    assert: true
+    stub: true
+*/
+
 after(function () {
   var passes, fails;
 
@@ -375,6 +382,66 @@ describe("Bugsnag", function () {
     } else {
       it("should pass once", function() {});
     }
+  });
+
+  describe("Breadcrumbs", function() {
+    beforeEach(buildUp);
+    afterEach(tearDown);
+
+    describe("leaveBreadcrumb", function () {
+      it("adds a breadcrumb", function () {
+        Bugsnag.leaveBreadcrumb("Test crumb");
+        Bugsnag.notify("Something");
+
+
+        var expected = {
+          type: "custom",
+          name: "Custom",
+          timestamp: Date.now(),
+          metaData: {
+            message: "Test crumb"
+          }
+        };
+
+        var actual = requestData().params.breadcrumbs[0];
+
+        assert(actual, "no breadcrumbs present");
+        assert.equal(actual.type, expected.type);
+        assert.deepEqual(actual.metaData, expected.metaData);
+      });
+
+      it("lets me create custom breadcrumb fields", function () {
+
+        var expected = {
+          type: "custom",
+          name: "Custom",
+          timestamp: Date.now(),
+          metaData: {
+            message: "Test crumb"
+          }
+        };
+
+        Bugsnag.leaveBreadcrumb(expected);
+        Bugsnag.notify("Something");
+
+        var actual = requestData().params.breadcrumbs[0];
+
+        assert.deepEqual(actual, expected);
+      });
+
+      it("truncates values to 140 characters", function () {
+        var longValue = "This is the story all about how my life got flipped turned upside down " +
+                        "I'd like to take a minute just sit right there" +
+                        "I'll tell you how a 'came the prince of a town called bel-air";
+
+        Bugsnag.leaveBreadcrumb(longValue);
+        Bugsnag.notify("Something");
+
+        var crumb = requestData().params.breadcrumbs[0];
+
+        assert.equal(crumb.metaData.message.length, 140);
+      });
+    });
   });
 });
 

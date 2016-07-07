@@ -164,7 +164,7 @@
       lastCrumb.count = lastCrumb.count || 1;
       lastCrumb.count++;
     } else {
-      breadcrumbs.push(crumb);
+      breadcrumbs.push(truncateDeep(crumb, 140));
     }
   };
 
@@ -531,6 +531,26 @@
     }
   }
 
+  // truncate all string values in nested object
+  function truncateDeep(object, length) {
+    if (typeof object === "object") {
+      var newObject = {};
+      each(object, function(value, key){
+        if (value != null && value !== undefined) {
+          newObject[key] = truncateDeep(value, length);
+        }
+      });
+
+      return newObject;
+    } else if (typeof object === "string") {
+      return truncate(object, length);
+    } else if (object && Array === object.constructor) {
+      return map(object, function(value) { return truncateDeep(value, length); });
+    } else {
+      return object;
+    }
+  }
+
   // Deeply serialize an object into a query string. We use the PHP-style
   // nested object syntax, `nested[keys]=val`, to support heirachical
   // objects. Similar to jQuery's `$.param` method.
@@ -557,6 +577,37 @@
       return str.join("&");
     } catch (e) {
       return encodeURIComponent(prefix) + "=" + encodeURIComponent("" + e);
+    }
+  }
+
+
+  // Map over an array or object
+  // re-implementation of lodash map
+  function map(source, iteratee) {
+    if (typeof iteratee === "undefined") {
+      return source;
+    }
+
+    var newArray = [];
+
+    each(source, newArray.push);
+
+    return newArray;
+  }
+
+  // Iterate over an array or object
+  // re-implementation of lodash each
+  function each(source, iteratee) {
+    if (typeof source === "object") {
+      for (var key in source) {
+        if (source.hasOwnProperty(key)) {
+          iteratee(source[key], key, source);
+        }
+      }
+    } else {
+      for (var index = 0; index < source.length; index++) {
+        iteratee(source[index], index, source);
+      }
     }
   }
 
