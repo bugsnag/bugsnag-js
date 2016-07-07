@@ -280,7 +280,7 @@
     }
 
     // check for browser support
-    if (!window.history || !window.history.pushState || !window.history.pushState.bind) {
+    if (!history || !history.state || !history.pushState || !window.history.pushState.bind) {
       return;
     }
 
@@ -307,7 +307,7 @@
 
       return {
         type: "navigation",
-        name: "Hash navigation",
+        name: "Hash changed",
         metaData: metaData
       };
     }
@@ -350,11 +350,11 @@
     function buildPushState(state, title, url) {
       return {
         type: "navigation",
-        // TODO when we have structured data add diff between oldState and newState here
         name: "History pushState",
         metaData: {
+          state: state,
           from: location.href,
-          to: url
+          to: url || location.href
         }
       };
     }
@@ -365,8 +365,9 @@
         // TODO when we have structured data add diff between oldState and newState here
         name: "History replaceState",
         metaData: {
+          state: state,
           from: location.href,
-          to: url
+          to: url || location.href
         }
       };
     }
