@@ -225,9 +225,15 @@
     }
   }
 
+  var _hasAddEventListener = (typeof window.addEventListener !== "undefined");
+
   // Setup breadcrumbs for click events
   function trackClicks() {
     if(!getBreadcrumbSetting("autoBreadcrumbsClicks", true)) {
+      return;
+    }
+
+    if (!_hasAddEventListener) {
       return;
     }
 
@@ -280,7 +286,8 @@
     }
 
     // check for browser support
-    if (!window.history ||
+    if (!_hasAddEventListener ||
+        !window.history ||
         !window.history.state ||
         !window.history.pushState ||
         !window.history.pushState.bind
