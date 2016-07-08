@@ -280,7 +280,11 @@
     }
 
     // check for browser support
-    if (!history || !history.state || !history.pushState || !window.history.pushState.bind) {
+    if (!window.history ||
+        !window.history.state ||
+        !window.history.pushState ||
+        !window.history.pushState.bind
+    ) {
       return;
     }
 
