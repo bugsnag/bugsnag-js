@@ -673,7 +673,10 @@
   // For browsers without support for the `navigator.onLine` spec, we default to true, and attempt
   // to send the error event anyway.
   function isOnline() {
-    return typeof navigator.onLine === "boolean" ? navigator.onLine : true;
+    return (
+      typeof BUGSNAG_TESTING !== "undefined" ||
+      (typeof navigator.onLine === "boolean" ? navigator.onLine : true)
+    );
   }
 
   // Invokes a callback when the target has completed a request. Supports images and xhr objects.
