@@ -28,6 +28,10 @@
     // is configurable via the `maxDepth` setting.
     maxPayloadDepth = 5,
 
+    // If the user loses connectivity with the internet, events are stored here so we can
+    // attempt to re-send them when/if they regain connectivity.
+    requestQueue = [],
+
     // helper function for relative times
     millisecondsAgo = makeMillisecondsAgo();
 
@@ -403,6 +407,30 @@
     enhance(history, "replaceState", wrapBuilder(buildReplaceState));
   }
 
+  // Prevents a function from being invoked more than once.
+  function once(callback) {
+    var called = false;
+    return function () {
+      if (!called) {
+        called = true;
+        return callback.apply(this, arguments);
+      }
+    };
+  }
+
+  // Ponyfill for registering event listeners.
+  var addEvent = (function () {
+    if (window.addEventListener) {
+      return function (el, event, callback, capture) {
+        el.addEventListener(event, callback, capture);
+      };
+    } else if (window.attachEvent) {
+      return function (el, event, callback) {
+        el.attachEvent("on" + event, callback);
+      };
+    }
+  })();
+
   //
   // ### Script tag tracking
   //
@@ -411,9 +439,12 @@
   // This only works while synchronous scripts are running, so we track
   // that here.
   var synchronousScriptsRunning = document.readyState !== "complete";
-  function loadCompleted() {
+  var loadCompleted = once(function loadCompleted() {
     synchronousScriptsRunning = false;
-  }
+
+    // Trigger retrying any in-memory request payloads
+    addEvent(window, "online", processQueuedRequests);
+  });
 
   // from jQuery. We don't have quite such tight bounds as they do if
   // we end up on the window.onload event as we don't try and hack
@@ -421,12 +452,8 @@
   // we'd need these fallbacks anyway.
   // The worst that can happen is we group an event handler that fires
   // before us into the last script tag.
-  if (document.addEventListener) {
-    document.addEventListener("DOMContentLoaded", loadCompleted, true);
-    window.addEventListener("load", loadCompleted, true);
-  } else {
-    window.attachEvent("onload", loadCompleted);
-  }
+  addEvent(document, "DOMContentLoaded", loadCompleted, true);
+  addEvent(window, "load", loadCompleted, true);
 
   function getCurrentScript() {
     var script = document.currentScript || lastScript;
@@ -641,26 +668,87 @@
     return target;
   }
 
+  // Returns whether the browser's online connectivity is active.
+  //
+  // For browsers without support for the `navigator.onLine` spec, we default to true, and attempt
+  // to send the error event anyway.
+  function isOnline() {
+    return typeof navigator.onLine === "boolean" ? navigator.onLine : true;
+  }
+
+  // Invokes a callback when the target has completed a request. Supports images and xhr objects.
+  // The callback is invoked with a single argument (of type boolean), which is `true` when there
+  // is some form of error with the request.
+  function onRequestEnd(target, callback) {
+    callback = once(callback);
+    function handleOnRequestEndEvent(event) {
+      if (event.type === "readystatechange" && target.readyState === 4) {
+        callback(target.status !== 200);
+      } else {
+        callback(target.type === "error");
+      }
+    }
+    target.onreadystatechange = target.onload = target.onerror = handleOnRequestEndEvent;
+  }
+
   // Make a HTTP request with given `url` and `params` object.
   // For maximum browser compatibility and cross-domain support, requests are
   // made by creating a temporary JavaScript `Image` object.
   // Additionally the request can be done via XHR (needed for Chrome apps and extensions)
   // To set the script to use XHR, you can specify data-notifyhandler attribute in the script tag
   // Eg. `<script data-notifyhandler="xhr">` - the request defaults to image if attribute is not set
-  function request(url, params) {
+  function request(params, callback, isRetry) {
+    if (!isOnline()) {
+      if (!isRetry) {
+        log("Queuing error event due to lack of network connectivity.");
+        requestQueue.push(params);
+      }
+      return;
+    }
+    var url = getSetting("endpoint") || DEFAULT_NOTIFIER_ENDPOINT;
     url += "?" + serialize(params) + "&ct=img&cb=" + new Date().getTime();
     if (typeof BUGSNAG_TESTING !== "undefined" && self.testRequest) {
       self.testRequest(url, params);
     } else {
       var notifyHandler = getSetting("notifyHandler");
+      var handler;
       if (notifyHandler === "xhr") {
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", url, true);
-        xhr.send();
+        handler = new XMLHttpRequest();
+        handler.open("GET", url, true);
+        handler.send();
       } else {
-        var img = new Image();
-        img.src = url;
+        handler = new Image();
+        handler.src = url;
       }
+      onRequestEnd(handler, function (err) {
+        if (err && !isRetry) {
+          requestQueue.push(params);
+          log("Queuing error event due to lack of network connectivity.");
+        }
+        if (callback) {
+          callback(err);
+        }
+      });
+    }
+  }
+
+  function processQueuedRequests() {
+    function next() {
+      if (isOnline() && requestQueue.length) {
+        var payload = requestQueue[0];
+        request(payload, function (err) {
+          if (!err) {
+            requestQueue.shift();
+            next();
+          } else {
+            console.log(1);
+          }
+        }, true);
+      }
+    }
+    if (requestQueue.length) {
+      log("Attempting to retry previously failed/queued error event(s).");
+      next();
     }
   }
 
@@ -804,7 +892,7 @@
     }
 
     // Make the HTTP request
-    request(getSetting("endpoint") || DEFAULT_NOTIFIER_ENDPOINT, payload);
+    request(payload);
   }
 
   // Generate a browser stacktrace (or approximation) from the current stack.
