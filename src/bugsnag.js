@@ -510,13 +510,12 @@
 
   // extract text content from a element
   function nodeText(el) {
-    // TODO check browser compatibility of this function
-    return truncate(el.textContent.trim(), 40);
+    var text = el.textContent || el.innerText;
+    return truncate(text, 40);
   }
 
   // Create a label from tagname, id and css class of the element
   function nodeLabel(el) {
-    // TODO check browser compatibility of this function
     var parts = [el.tagName];
 
     if (el.id) {
