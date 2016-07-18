@@ -363,9 +363,10 @@
         type: "navigation",
         name: "History pushState",
         metaData: {
-          state: state,
           from: location.href,
-          to: url || location.href
+          to: url || location.href,
+          prevState: history.state,
+          nextState: state
         }
       };
     }
@@ -373,20 +374,20 @@
     function buildReplaceState(state, title, url) {
       return {
         type: "navigation",
-        // TODO when we have structured data add diff between oldState and newState here
         name: "History replaceState",
         metaData: {
-          state: state,
           from: location.href,
-          to: url || location.href
+          to: url || location.href,
+          prevState: history.state,
+          nextState: state
         }
       };
     }
 
     // functional fu to make it easier to setup event listeners
     function wrapBuilder(builder) {
-      return function(event) {
-        self.leaveBreadcrumb(builder(event));
+      return function() {
+        self.leaveBreadcrumb(builder.apply(null, arguments));
       };
     }
 
@@ -398,17 +399,8 @@
     window.addEventListener("DOMContentLoaded", wrapBuilder(buildDOMContentLoaded), true);
 
     // create hooks for pushstate and replaceState
-    history.pushState = function(state, title, url) {
-      self.leaveBreadcrumb(buildPushState(state, title, url));
-      // call the original
-      pushState(state, title, url);
-    };
-
-    history.replaceState = function(state, title, url) {
-      self.leaveBreadcrumb(buildReplaceState(state, title, url));
-      // call the original
-      replaceState(state, title, url);
-    };
+    enhance(history, "pushState", wrapBuilder(buildPushState));
+    enhance(history, "replaceState", wrapBuilder(buildReplaceState));
   }
 
   //
