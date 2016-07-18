@@ -251,7 +251,7 @@
 
   // Setup breadcrumbs for console.log, console.warn, console.error
   function trackConsoleLog(){
-    if(!window.console || !getBreadcrumbSetting("autoBreadcrumbsConsole")) {
+    if(!window.console || typeof window.console.log !== "function" || !getBreadcrumbSetting("autoBreadcrumbsConsole")) {
       return;
     }
 
@@ -483,12 +483,12 @@
   //  })
   function enhance(object, property, newFunction) {
     var oldFunction = object[property];
-    object[property] = function() {
-      newFunction.apply(this, arguments);
-      if (oldFunction) {
+    if (typeof oldFunction === "function") {
+      object[property] = function() {
+        newFunction.apply(this, arguments);
         oldFunction.apply(this, arguments);
-      }
-    };
+      };
+    }
   }
 
   // Simple logging function that wraps `console.log` if available.
@@ -499,13 +499,7 @@
 
     var console = window.console;
     if (console !== undefined && console.log !== undefined && !disableLog) {
-      // IE8 has a "fun" quirk, it will say console.log is defined but throw an error if you try
-      // to use it when the console isn't open.
-      try {
-        console.log("[Bugsnag] " + msg);
-      } catch (e) {
-        /* handle error */
-      }
+      console.log("[Bugsnag] " + msg);
     }
   }
 
