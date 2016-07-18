@@ -504,7 +504,6 @@
   }
 
   // Compare if two objects are equal.
-  // TODO check if this would fail if the properties are traveresed in different orders
   function isEqual(obj1, obj2) {
     serialize(obj1) === serialize(obj2);
   }
@@ -586,7 +585,7 @@
           str.push(typeof v === "object" ? serialize(v, k, depth) : encodeURIComponent(k) + "=" + encodeURIComponent(v));
         }
       }
-      return str.join("&");
+      return str.sort().join("&");
     } catch (e) {
       return encodeURIComponent(prefix) + "=" + encodeURIComponent("" + e);
     }
