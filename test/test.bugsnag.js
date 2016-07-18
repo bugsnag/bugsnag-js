@@ -45,7 +45,7 @@ describe("Bugsnag", function () {
     });
 
     describe("disableLog", function () {
-      var oldConsoleLog = console && console.log;
+      var oldConsoleLog = window.console && window.console.log;
       var ifConsoleLogExistsIt = oldConsoleLog ? it : it.skip;
 
       beforeEach(function () {
@@ -200,7 +200,6 @@ describe("Bugsnag", function () {
     });
 
     it("should notify if the default releaseStage is in notifyReleaseStages", function () {
-      console.log(Bugsnag.releaseStage);
       Bugsnag.notifyReleaseStages = ["production", "custom"];
       Bugsnag.notifyException(new Error("Example error"));
 
@@ -397,7 +396,7 @@ describe("Bugsnag", function () {
         var expected = {
           type: "custom",
           name: "Custom",
-          timestamp: Date.now(),
+          timestamp: new Date().getTime(),
           metaData: {
             message: "Test crumb"
           }
@@ -415,7 +414,7 @@ describe("Bugsnag", function () {
         var expected = {
           type: "custom",
           name: "Custom",
-          timestamp: Date.now(),
+          timestamp: new Date().getTime(),
           metaData: {
             message: "Test crumb"
           }

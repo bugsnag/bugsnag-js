@@ -143,7 +143,7 @@
     var crumb = {
       type: "custom",
       name: "Custom",
-      timestamp: Date.now(),
+      timestamp: new Date().getTime(),
       metaData: {}
     };
 
@@ -251,7 +251,7 @@
 
   // Setup breadcrumbs for console.log, console.warn, console.error
   function trackConsoleLog(){
-    if(!getBreadcrumbSetting("autoBreadcrumbsConsole")) {
+    if(!window.console || !getBreadcrumbSetting("autoBreadcrumbsConsole")) {
       return;
     }
 
@@ -499,7 +499,13 @@
 
     var console = window.console;
     if (console !== undefined && console.log !== undefined && !disableLog) {
-      console.log("[Bugsnag] " + msg);
+      // IE8 has a "fun" quirk, it will say console.log is defined but throw an error if you try
+      // to use it when the console isn't open.
+      try {
+        console.log("[Bugsnag] " + msg);
+      } catch (e) {
+        /* handle error */
+      }
     }
   }
 
@@ -735,6 +741,7 @@
     if (!validateApiKey(apiKey) || !eventsRemaining) {
       return;
     }
+
     eventsRemaining -= 1;
 
     // Check if we should notify for this release stage.
