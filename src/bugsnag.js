@@ -789,7 +789,7 @@
       lineNumber: details.lineNumber,
       columnNumber: details.columnNumber,
       breadcrumbs: breadcrumbs,
-      payloadVersion: "2"
+      payloadVersion: "3"
     };
 
     // Run any `beforeNotify` function
