@@ -394,8 +394,8 @@ describe("Bugsnag", function () {
 
 
         var expected = {
-          type: "custom",
-          name: "Custom",
+          type: "manual",
+          name: "Manual",
           timestamp: new Date().getTime(),
           metaData: {
             message: "Test crumb"
@@ -430,8 +430,8 @@ describe("Bugsnag", function () {
       it("lets me create custom breadcrumb fields", function () {
 
         var expected = {
-          type: "custom",
-          name: "Custom",
+          type: "manual",
+          name: "Manual",
           timestamp: new Date().getTime(),
           metaData: {
             message: "Test crumb"
