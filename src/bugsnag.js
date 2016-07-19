@@ -262,13 +262,13 @@
       return;
     }
 
-    function trackLog(level, args) {
+    function trackLog(severity, args) {
       self.leaveBreadcrumb({
         type: "log",
         name: "Console output",
         metaData: {
-          level: level,
-          values: Array.prototype.slice.call(args)
+          severity: severity,
+          message: Array.prototype.slice.call(args).join(", ")
         }
       });
     }
