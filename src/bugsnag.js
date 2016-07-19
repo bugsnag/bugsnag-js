@@ -306,10 +306,6 @@
       return url.split("#")[1] || "";
     }
 
-    // we're going to enhance these later, so we want to hold on to the originals
-    var pushState = history.pushState.bind(history);
-    var replaceState = history.replaceState.bind(history);
-
     function buildHashChange(event) {
       var oldURL = event.oldURL,
         newURL = event.newURL,
