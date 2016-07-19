@@ -409,6 +409,24 @@ describe("Bugsnag", function () {
         assert.deepEqual(actual.metaData, expected.metaData);
       });
 
+      it("lets me set the metaData", function () {
+        Bugsnag.leaveBreadcrumb("Test crumb", {one: "test"});
+        Bugsnag.notify("Something");
+
+
+        var expected = {
+          name: "Test crumb",
+          metaData: {
+            one: "test"
+          }
+        };
+
+        var actual = requestData().params.breadcrumbs[0];
+
+        assert.equal(actual.name, expected.name);
+        assert.deepEqual(actual.metaData, expected.metaData);
+      });
+
       it("lets me create custom breadcrumb fields", function () {
 
         var expected = {

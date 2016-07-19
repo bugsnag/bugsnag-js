@@ -92,29 +92,17 @@ automatically, but you can also leave manual breadcrumbs at any time.
 Bugsnag.leaveBreadcrumb("Increased Volume")
 ```
 
-You can also specify the type of the breadcrumb as well as adding additional metaData.
+Each breadcrumb can also have additional diagnostic metadata added.
 
 ```javascript
-Bugsnag.leaveBreadcrumb({
-  type: 'user',
-  name: 'Increased Volume',
-  metaData: {
-    from: 5,
-    to: 11
-  }
+Bugsnag.leaveBreadcrumb('Increased Volume', {
+  from: 5,
+  to: 11
 })
 ```
 
-Valid breadcrumb types are:
-
- - `navigation`
- - `request`
- - `process`
- - `log`
- - `user`
- - `state`
- - `error`
- - `custom`
+Note that metadata object should only be one level deep and that the object's values
+are limited to 140 characters each.
 
 Cross-domain errors
 -------------------

@@ -119,44 +119,42 @@
     }, metaData);
   };
 
-  // #### Bugsnag.leaveBreadcrumb(value)
+  // #### Bugsnag.leaveBreadcrumb(value, [metaData])
   //
   // Add a breadcrumb to the array of breadcrumbs to be sent to Bugsnag when the next exception occurs
-  // `value` can be a string or an object with the following structure:
+  // - `value` (string|object) If this is an object, it will be used as the entire breadcrumb object
+  //   and any missing `type`, `name` or `timestamp` fields will get default values.
+  //   if this is a string and metaData is provided, then `value` will be used as the `name` of the
+  //   breadcrumb.
+  //   if `value` is a string and is the only argument the breadcrumb will have `custom` type and
+  //   the value will be used as the `message` field of `metaData`.
   //
-  // * `timestamp` (optional, Date) - The time at which the event was recorded, in ISO 8601 format (`yyyy-mm-ddTHH:mm:ssZ`)
-  // * `name` (optional, string) [default: "Custom"] - The name of the breadcrumb, limited to 30 characters
-  // * `type`  (optional, enum) [default: "custom"] - The type of breadcrumb, from a list of options explained below
-  //     + `navigation`
-  //     + `request`
-  //     + `process`
-  //     + `log`
-  //     + `user`
-  //     + `state`
-  //     + `error`
-  //     + `custom`
-  // * `metadata` (optional, object) - Additional information about the breadcrumb. Values limited to 140 characters.
-  self.leaveBreadcrumb = function(value) {
-    var valueType = typeof value;
-
+  // - `metadata` (optional, object) - Additional information about the breadcrumb. Values limited to 140 characters.
+  self.leaveBreadcrumb = function(value, metaData) {
     // default crumb
     var crumb = {
       type: "custom",
       name: "Custom",
-      timestamp: new Date().getTime(),
-      metaData: {}
+      timestamp: new Date().getTime()
     };
 
-    switch (valueType) {
-    case "string":
-      crumb.metaData.message = value;
-      break;
+    switch (typeof value) {
     case "object":
-      // merge provided data into default crumb
-      merge(crumb, value);
+      crumb = merge(crumb, value);
+      break;
+    case "string":
+      if (metaData && typeof metaData === "object") {
+        crumb = merge(crumb, {
+          name: value,
+          metaData: metaData
+        });
+      } else {
+        crumb.metaData = { message: value };
+      }
       break;
     default:
-      log("expecting breadcrumb to be of type 'string' or 'object', got " + valueType);
+      log("expecting 1st argument to leaveBreadcrumb to be a 'string' or 'object', got " + typeof value);
+      return;
     }
 
     var lastCrumb = breadcrumbs.slice(-1)[0];
