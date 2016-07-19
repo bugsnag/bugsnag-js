@@ -970,10 +970,12 @@
           if (getBreadcrumbSetting("autoBreadcrumbsErrors")) {
             self.leaveBreadcrumb({
               type: "error",
-              name: "Error",
+              name: name,
               metaData: {
-                name: name,
-                message: message
+                severity: "error",
+                file: url,
+                message: message,
+                line: lineNo
               }
             });
           }
