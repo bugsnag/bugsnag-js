@@ -162,6 +162,7 @@
       lastCrumb.count = lastCrumb.count || 1;
       lastCrumb.count++;
     } else {
+      crumb.name = truncate(crumb.name, 32);
       breadcrumbs.push(truncateDeep(crumb, 140));
     }
   };
