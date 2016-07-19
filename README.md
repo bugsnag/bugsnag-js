@@ -98,7 +98,7 @@ You can also specify the type of the breadcrumb as well as adding additional met
 Bugsnag.leaveBreadcrumb({
   type: 'user',
   name: 'Increased Volume',
-  metaData {
+  metaData: {
     from: 5,
     to: 11
   }
