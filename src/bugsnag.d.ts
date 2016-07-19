@@ -1,4 +1,4 @@
-// Type definitions for Bugsnag 2.5.0
+// Type definitions for Bugsnag 3.0.0-rc.1
 // Project: https://github.com/bugsnag/bugsnag-js
 // Definitions by: Delisa Mason <https://github.com/kattrali>
 
