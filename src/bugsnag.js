@@ -160,13 +160,20 @@
     }
 
     var lastCrumb = breadcrumbs.slice(-1)[0];
-    if (isEqual(crumb, lastCrumb)) {
+    if (breadcrumbsAreEqual(crumb, lastCrumb)) {
       lastCrumb.count = lastCrumb.count || 1;
       lastCrumb.count++;
     } else {
       breadcrumbs.push(truncateDeep(crumb, 140));
     }
   };
+
+  function breadcrumbsAreEqual(crumb1, crumb2) {
+    return crumb1 && crumb2 &&
+      crumb1.type === crumb2.type &&
+      crumb1.name === crumb2.name &&
+      isEqual(crumb1.metaData, crumb2.metaData);
+  }
 
   // Return a function acts like the given function, but reports
   // any exceptions to Bugsnag before re-throwing them.
@@ -497,7 +504,7 @@
 
   // Compare if two objects are equal.
   function isEqual(obj1, obj2) {
-    serialize(obj1) === serialize(obj2);
+    return serialize(obj1) === serialize(obj2);
   }
 
   // extract text content from a element
