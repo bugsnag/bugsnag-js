@@ -133,8 +133,8 @@
   self.leaveBreadcrumb = function(value, metaData) {
     // default crumb
     var crumb = {
-      type: "custom",
-      name: "Custom",
+      type: "manual",
+      name: "Manual",
       timestamp: new Date().getTime()
     };
 
