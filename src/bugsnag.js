@@ -526,7 +526,7 @@
   function truncate(value, length) {
     var OMISSION = "(...)";
 
-    if (value.length > length) {
+    if (value && value.length > length) {
       return value.slice(0, length - OMISSION.length) + OMISSION;
     } else {
       return value;
