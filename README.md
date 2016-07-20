@@ -190,12 +190,9 @@ Bugsnag.autoNotify = false;
 
 By default, we automatically create breadcrumbs for the following types of events:
 
-- **Clicks**
-- **Errors**
-- **Console**
-  - log
-  - warn
-  - error
+- **Clicks** (User clicks)
+- **Errors** (Uncaught Exceptions)
+- **Console** (console.log, console.warn, console.error)
 - **Navigation**
   - Page load
   - DOMContentLoaded
@@ -205,6 +202,7 @@ By default, we automatically create breadcrumbs for the following types of event
   - history.pushState
   - history.replaceState
 
+### Disabling breadcrumbs
 
 ```html
 <script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-2.min.js"

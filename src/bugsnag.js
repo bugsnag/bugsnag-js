@@ -126,7 +126,7 @@
   //   and any missing `type`, `name` or `timestamp` fields will get default values.
   //   if this is a string and metaData is provided, then `value` will be used as the `name` of the
   //   breadcrumb.
-  //   if `value` is a string and is the only argument the breadcrumb will have `custom` type and
+  //   if `value` is a string and is the only argument the breadcrumb will have `manual` type and
   //   the value will be used as the `message` field of `metaData`.
   //
   // - `metadata` (optional, object) - Additional information about the breadcrumb. Values limited to 140 characters.
