@@ -362,30 +362,26 @@
       };
     }
 
-    function buildPushState(state, title, url) {
+    function buildStateChange(name, state, title, url) {
+      var currentPath = location.pathname + location.search + location.hash;
       return {
         type: "navigation",
-        name: "History pushState",
+        name: "History " + name,
         metaData: {
-          from: location.href,
-          to: url || location.href,
+          from: currentPath,
+          to: url || currentPath,
           prevState: history.state,
           nextState: state
         }
       };
     }
 
+    function buildPushState(state, title, url) {
+      return buildStateChange("pushState", state, title, url);
+    }
+
     function buildReplaceState(state, title, url) {
-      return {
-        type: "navigation",
-        name: "History replaceState",
-        metaData: {
-          from: location.href,
-          to: url || location.href,
-          prevState: history.state,
-          nextState: state
-        }
-      };
+      return buildStateChange("replaceState", state, title, url);
     }
 
     // functional fu to make it easier to setup event listeners
