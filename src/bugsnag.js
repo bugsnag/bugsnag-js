@@ -243,7 +243,7 @@
       return;
     }
 
-    window.addEventListener("click", function(event) {
+    var callback = function(event) {
       self.leaveBreadcrumb({
         type: "user",
         name: "UI click",
@@ -252,7 +252,9 @@
           targetSelector: nodeLabel(event.target)
         }
       });
-    });
+    };
+
+    window.addEventListener("click", callback, true);
   }
 
   // Setup breadcrumbs for console.log, console.warn, console.error
