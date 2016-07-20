@@ -516,11 +516,36 @@
 
     if (el.className && el.className.length) {
       var classString = "." + el.className.split(" ").join(".");
-      classString = truncate(classString, 40);
       parts.push(classString);
     }
 
-    return parts.join("");
+    var label = parts.join("");
+
+    if (!document.querySelectorAll || !Array.prototype.indexOf) {
+      // can't get much more advanced with the current browser
+      return label;
+    }
+
+    if (document.querySelectorAll(label).length === 1) {
+      return label;
+    }
+
+    // try to get a more specific selector if this one matches more than one element
+    if (el.parentNode.childNodes.length > 1) {
+      var index = Array.prototype.indexOf.call(el.parentNode.childNodes, el) + 1;
+      label = label + ":nth-child(" + index + ")";
+    }
+
+    if (document.querySelectorAll(label).length === 1) {
+      return label;
+    }
+
+    // try prepending the parent node selector
+    if (el.parentNode) {
+      return nodeLabel(el.parentNode) + " > " + label;
+    }
+
+    return label;
   }
 
   function truncate(value, length) {
