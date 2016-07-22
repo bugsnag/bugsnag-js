@@ -53,7 +53,15 @@ Releasing
 
     grunt release
 
+### Prerelease version
+
+- Update the [release on GitHub](https://github.com/bugsnag/bugsnag-js/releases)
+  to include the release notes and check the "pre-release" checkbox
+- Draft the integration guide changes for docs.bugsnag.com
+- Update and test bugsnag.com with the new version
+
+### Standard release
+
 - Wait for cloudfront to invalidate the symlink
 - Test that exception reporting still works on [Bugsnag](https://bugsnag.com)
-- Update the setup guides for JavaScript (browsers), CoffeeScript (browsers),
-  and TypeScript on docs.bugsnag.com
+- Release the new integration guides for JavaScript on docs.bugsnag.com
