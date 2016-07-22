@@ -81,6 +81,29 @@ Severity is displayed in the dashboard and can be used to filter the error list.
 By default all crashes (or unhandled exceptions) are set to `error` and all
 `Bugsnag.notify` calls default to `warning`.
 
+Leaving Breadcrumbs
+-------------------
+
+Breadcrumbs allow you to see a log of actions that led up to an error. Whenever a notification is sent
+to Bugsnag, the last 25 breadcrumbs will be sent along with it. Many events will get tracked
+automatically, but you can also leave manual breadcrumbs at any time.
+
+```javascript
+Bugsnag.leaveBreadcrumb("Increased Volume")
+```
+
+Each breadcrumb can also have additional diagnostic metadata added.
+
+```javascript
+Bugsnag.leaveBreadcrumb('Increased Volume', {
+  from: 5,
+  to: 11
+})
+```
+
+Note that metadata object should only be one level deep and that the object's values
+are limited to 140 characters each.
+
 Cross-domain errors
 -------------------
 
@@ -161,6 +184,55 @@ this with:
 
 ```javascript
 Bugsnag.autoNotify = false;
+```
+
+###autoBreadcrumbs
+
+By default, we automatically create breadcrumbs for the following types of events:
+
+- **Clicks** (User clicks)
+- **Errors** (Uncaught Exceptions)
+- **Console** (console.log, console.warn, console.error)
+- **Navigation**
+  - Page load
+  - DOMContentLoaded
+  - Page hide
+  - Page show
+  - popstate
+  - history.pushState
+  - history.replaceState
+
+### Disabling breadcrumbs
+
+```html
+<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-2.min.js"
+        data-apikey="YOUR-API-KEY-HERE"
+        data-autobreadcrumbs="false"></script>
+```
+
+In situations where Bugsnag is not in its own script tag, you can set
+this with:
+
+```javascript
+Bugsnag.autoBreadcrumbs = false;
+```
+
+You can also disable any individual automatic breadcrumb groups:
+
+```javascript
+Bugsnag.autoBreadcrumbsClicks = false;
+Bugsnag.autoBreadcrumbsErrors = false;
+Bugsnag.autoBreadcrumbsConsole = false;
+Bugsnag.autoBreadcrumbsNavigation = false;
+```
+
+If you only want to enable a single type of automatic breadcrumb you can disable all of them and then
+enable the individual group you want:
+
+```javascript
+// disable all automatic breadcrumbs except click events
+Bugsnag.autoBreadcrumbs = false;
+Bugsnag.autoBreadcrumbsClicks = true;
 ```
 
 ###notifyHandler
@@ -404,7 +476,7 @@ that the javascript will never change, feel free to include the specific version
 directly.
 
 ```html
-<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-2.5.0.min.js"
+<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-3.0.0-rc.1.min.js"
         data-apikey="YOUR-API-KEY-HERE"></script>
 ```
 
@@ -434,7 +506,7 @@ Bugsnag's backend automatically ignores errors if they appear to come from
 browser extensions, since these errors usually aren't actionable for site owners and often
 aren't related the current page's code at all.
 
-If you have a special case where you want to know about errors that come from 
+If you have a special case where you want to know about errors that come from
 extensions — for example, if you are attempting to monitor a browser extension
 itself — you may need to modify the error stacktrace you send to Bugsnag to work
 around this feature. For example, for a Chrome extension, you might add something

@@ -1,4 +1,4 @@
-// Type definitions for Bugsnag 2.5.0
+// Type definitions for Bugsnag 3.0.0-rc.1
 // Project: https://github.com/bugsnag/bugsnag-js
 // Definitions by: Delisa Mason <https://github.com/kattrali>
 
@@ -17,6 +17,16 @@ interface BugsnagStatic {
      *  sent to `window.onerror`
      */
     autoNotify: boolean;
+    /**  true if Bugsnag should automatically create breadcrumbs for certain browser events  **/
+    autoBreadcrumbs: boolean;
+    /**  true if Bugsnag should automatically create breadcrumbs for click events  **/
+    autoBreadcrumbsClicks: boolean;
+    /**  true if Bugsnag should automatically create breadcrumbs for uncaught exceptions events  **/
+    autoBreadcrumbsErrors: boolean;
+    /**  true if Bugsnag should automatically create breadcrumbs for console.log  **/
+    autoBreadcrumbsConsole: boolean;
+    /**  true if Bugsnag should automatically create breadcrumbs for browser navigation events  **/
+    autoBreadcrumbsNavigation: boolean;
     /** Callback run before error reports are sent to Bugsnag.
      *  Payload and metadata information can be altered or removed altogether.
      *  To cancel sending the report, return false from this function.
@@ -79,6 +89,9 @@ interface BugsnagStatic {
     /** Send custom errors to Bugsnag */
     notify(name: string, message: string, metaData?: any,
            severity?: string): void;
+
+    /** Add a breadcrumb to be sent with next notify payload to Bugsnag **/
+    leaveBreadcrumb(value?: string|Object)
 }
 
 declare var Bugsnag: BugsnagStatic;
@@ -86,4 +99,3 @@ declare var Bugsnag: BugsnagStatic;
 declare module "Bugsnag" {
     export = Bugsnag;
 }
-

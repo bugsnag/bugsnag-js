@@ -1,3 +1,10 @@
+/*eslint-env browser, mocha */
+/*global
+    Bugsnag: true
+    assert: true
+    stub: true
+*/
+
 after(function () {
   var passes, fails;
 
@@ -38,7 +45,7 @@ describe("Bugsnag", function () {
     });
 
     describe("disableLog", function () {
-      var oldConsoleLog = console && console.log;
+      var oldConsoleLog = window.console && window.console.log;
       var ifConsoleLogExistsIt = oldConsoleLog ? it : it.skip;
 
       beforeEach(function () {
@@ -193,7 +200,6 @@ describe("Bugsnag", function () {
     });
 
     it("should notify if the default releaseStage is in notifyReleaseStages", function () {
-      console.log(Bugsnag.releaseStage);
       Bugsnag.notifyReleaseStages = ["production", "custom"];
       Bugsnag.notifyException(new Error("Example error"));
 
@@ -346,7 +352,7 @@ describe("Bugsnag", function () {
       Bugsnag.notify("CustomError", "Something broke");
 
       assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
-      assert.equal(requestData().params.payloadVersion, "2");
+      assert.equal(requestData().params.payloadVersion, "3");
     });
 
 
@@ -375,6 +381,84 @@ describe("Bugsnag", function () {
     } else {
       it("should pass once", function() {});
     }
+  });
+
+  describe("Breadcrumbs", function() {
+    beforeEach(buildUp);
+    afterEach(tearDown);
+
+    describe("leaveBreadcrumb", function () {
+      it("adds a breadcrumb", function () {
+        Bugsnag.leaveBreadcrumb("Test crumb");
+        Bugsnag.notify("Something");
+
+
+        var expected = {
+          type: "manual",
+          name: "Manual",
+          timestamp: new Date().getTime(),
+          metaData: {
+            message: "Test crumb"
+          }
+        };
+
+        var actual = requestData().params.breadcrumbs[0];
+
+        assert(actual, "no breadcrumbs present");
+        assert.equal(actual.type, expected.type);
+        assert.deepEqual(actual.metaData, expected.metaData);
+      });
+
+      it("lets me set the metaData", function () {
+        Bugsnag.leaveBreadcrumb("Test crumb", {one: "test"});
+        Bugsnag.notify("Something");
+
+
+        var expected = {
+          name: "Test crumb",
+          metaData: {
+            one: "test"
+          }
+        };
+
+        var actual = requestData().params.breadcrumbs[0];
+
+        assert.equal(actual.name, expected.name);
+        assert.deepEqual(actual.metaData, expected.metaData);
+      });
+
+      it("lets me create custom breadcrumb fields", function () {
+
+        var expected = {
+          type: "manual",
+          name: "Manual",
+          timestamp: new Date().getTime(),
+          metaData: {
+            message: "Test crumb"
+          }
+        };
+
+        Bugsnag.leaveBreadcrumb(expected);
+        Bugsnag.notify("Something");
+
+        var actual = requestData().params.breadcrumbs[0];
+
+        assert.deepEqual(actual, expected);
+      });
+
+      it("truncates values to 140 characters", function () {
+        var longValue = "This is the story all about how my life got flipped turned upside down " +
+                        "I'd like to take a minute just sit right there" +
+                        "I'll tell you how a 'came the prince of a town called bel-air";
+
+        Bugsnag.leaveBreadcrumb(longValue);
+        Bugsnag.notify("Something");
+
+        var crumb = requestData().params.breadcrumbs[0];
+
+        assert.equal(crumb.metaData.message.length, 140);
+      });
+    });
   });
 });
 
