@@ -235,15 +235,33 @@
     }
   }
 
-  var _hasAddEventListener = (typeof window.addEventListener !== "undefined");
+  // Prevents a function from being invoked more than once.
+  function once(callback) {
+    var called = false;
+    return function () {
+      if (!called) {
+        called = true;
+        return callback.apply(this, arguments);
+      }
+    };
+  }
+
+  // Ponyfill for registering event listeners.
+  var addEvent = (function () {
+    if (window.addEventListener) {
+      return function (el, event, callback, capture) {
+        el.addEventListener(event, callback, capture);
+      };
+    } else if (window.attachEvent) {
+      return function (el, event, callback) {
+        el.attachEvent("on" + event, callback);
+      };
+    }
+  })();
 
   // Setup breadcrumbs for click events
   function trackClicks() {
     if(!getBreadcrumbSetting("autoBreadcrumbsClicks", true)) {
-      return;
-    }
-
-    if (!_hasAddEventListener) {
       return;
     }
 
@@ -258,7 +276,7 @@
       });
     };
 
-    window.addEventListener("click", callback, true);
+    addEvent(window, "click", callback, true);
   }
 
   // Setup breadcrumbs for console.log, console.warn, console.error
@@ -298,8 +316,7 @@
     }
 
     // check for browser support
-    if (!_hasAddEventListener ||
-        !window.history ||
+    if (!window.history ||
         !window.history.state ||
         !window.history.pushState ||
         !window.history.pushState.bind
@@ -395,41 +412,17 @@
       };
     }
 
-    window.addEventListener("hashchange", wrapBuilder(buildHashChange), true);
-    window.addEventListener("popstate", wrapBuilder(buildPopState), true);
-    window.addEventListener("pagehide", wrapBuilder(buildPageHide), true);
-    window.addEventListener("pageshow", wrapBuilder(buildPageShow), true);
-    window.addEventListener("load", wrapBuilder(buildLoad), true);
-    window.addEventListener("DOMContentLoaded", wrapBuilder(buildDOMContentLoaded), true);
+    addEvent(window, "hashchange", wrapBuilder(buildHashChange), true);
+    addEvent(window, "popstate", wrapBuilder(buildPopState), true);
+    addEvent(window, "pagehide", wrapBuilder(buildPageHide), true);
+    addEvent(window, "pageshow", wrapBuilder(buildPageShow), true);
+    addEvent(window, "load", wrapBuilder(buildLoad), true);
+    addEvent(window, "DOMContentLoaded", wrapBuilder(buildDOMContentLoaded), true);
 
     // create hooks for pushstate and replaceState
     enhance(history, "pushState", wrapBuilder(buildPushState));
     enhance(history, "replaceState", wrapBuilder(buildReplaceState));
   }
-
-  // Prevents a function from being invoked more than once.
-  function once(callback) {
-    var called = false;
-    return function () {
-      if (!called) {
-        called = true;
-        return callback.apply(this, arguments);
-      }
-    };
-  }
-
-  // Ponyfill for registering event listeners.
-  var addEvent = (function () {
-    if (window.addEventListener) {
-      return function (el, event, callback, capture) {
-        el.addEventListener(event, callback, capture);
-      };
-    } else if (window.attachEvent) {
-      return function (el, event, callback) {
-        el.attachEvent("on" + event, callback);
-      };
-    }
-  })();
 
   //
   // ### Script tag tracking
