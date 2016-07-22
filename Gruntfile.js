@@ -79,9 +79,9 @@ module.exports = function(grunt) {
       production: {
         files: [
           {
-            dest: "bugsnag-2.min.js"
+            dest: "bugsnag-3.min.js"
           }, {
-            dest: "bugsnag-2.js"
+            dest: "bugsnag-3.js"
           }
         ]
       }
