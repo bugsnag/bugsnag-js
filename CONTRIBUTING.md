@@ -46,7 +46,7 @@ Releasing
   environment variables set.
 - Bump the version number
 
-    grunt bump::{major,minor,patch}
+    grunt bump::{major,minor,patch,build}
 
 - Update the CHANGELOG, and README if necessary
 - Commit, tag, build, upload to S3, invalidate cloudfront, push to github:
