@@ -281,6 +281,30 @@
     addEvent(window, "click", callback, true);
   }
 
+  // Setup breadcrumbs for connectivity events
+  function trackConnectivity() {
+    if(!getBreadcrumbSetting("autoBreadcrumbsConnectivity", true)) {
+      return;
+    }
+
+    function trackOffline() {
+      self.leaveBreadcrumb({
+        type: "network",
+        name: "Lost connectivity"
+      });
+    }
+
+    function trackOnline() {
+      self.leaveBreadcrumb({
+        type: "network",
+        name: "Regained connectivity"
+      });
+    }
+
+    addEvent(window, "offline", trackOffline, true);
+    addEvent(window, "online", trackOnline, true);
+  }
+
   // Setup breadcrumbs for console.log, console.warn, console.error
   function trackConsoleLog(){
     if(!window.console || typeof window.console.log !== "function" || !getBreadcrumbSetting("autoBreadcrumbsConsole")) {
@@ -1243,6 +1267,7 @@
 
   // setup auto breadcrumb tracking
   trackClicks();
+  trackConnectivity();
   trackConsoleLog();
   trackNavigation();
 
