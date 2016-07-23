@@ -747,7 +747,7 @@
     if (!isOnline()) {
       if (!isRetry) {
         log("Queuing error event due to lack of network connectivity.");
-        params.queuedCause = 'offline';
+        params.queuedCause = "offline";
         pushRequestToQueue(params);
       }
       return;
@@ -769,7 +769,7 @@
       }
       onRequestEnd(handler, function (err) {
         if (err && !isRetry) {
-          params.queuedCause = 'failed';
+          params.queuedCause = "failed";
           pushRequestToQueue(params);
           log("Queuing error event due to lack of network connectivity.");
         }
