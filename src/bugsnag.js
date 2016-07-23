@@ -640,6 +640,15 @@
     }
   }
 
+  function shallowMerge(target, source) {
+    for (var key in source) {
+      if (Object.prototype.hasOwnProperty.call(source, key)) {
+        target[key] = source[key];
+      }
+    }
+    return target;
+  }
+
   // Deep-merge the `source` object into the `target` object and return
   // the `target`. Properties in source that will overwrite those in target.
   // Similar to jQuery's `$.extend` method.
@@ -714,6 +723,7 @@
   }
 
   function pushRequestToQueue(request) {
+    delete request.apiKey;
     requestQueue.push(request);
     updateLocalStorageRequestQueue();
   }
@@ -769,9 +779,14 @@
   }
 
   function processQueuedRequests() {
+    var apiKey = getSetting("apiKey");
+    if (!validateApiKey(apiKey)) {
+      log("Unable to retry previously failed/queued error event(s) due to invalid apiKey.");
+      return;
+    }
     function next() {
       if (isOnline() && requestQueue.length) {
-        var payload = requestQueue[0];
+        var payload = shallowMerge({apiKey: apiKey}, requestQueue[0]);
         request(payload, function (err) {
           if (!err) {
             requestQueue.shift();
