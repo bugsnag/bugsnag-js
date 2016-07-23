@@ -11,6 +11,8 @@
 
 // The `Bugsnag` object is the only globally exported variable
 (function (window, old) {
+  var QUEUE_STORAGE_KEY = "bugsnag.queue";
+
   var self = {},
     lastEvent,
     lastScript,
@@ -435,6 +437,11 @@
   var loadCompleted = once(function loadCompleted() {
     synchronousScriptsRunning = false;
 
+    // At this point we can load any previously queued requests from storage
+    // and attempt to send them again.
+    loadRequestQueueFromStorage();
+    processQueuedRequests();
+
     // Trigger retrying any in-memory request payloads
     addEvent(window, "online", processQueuedRequests);
   });
@@ -687,6 +694,39 @@
     target.onreadystatechange = target.onload = target.onerror = handleOnRequestEndEvent;
   }
 
+  // Safely grabs a hold of localStorage (if possible) or returns an empty object if the browser
+  // has explicitly disabled it - (Safari errors when local storage is disabled and `localStorage`
+  // is accessed.
+  function getLocalStorage() {
+    var storageType = getSetting("storage", "session") + "Storage";
+    try {
+      return window[storageType];
+    } catch (err) {
+      return {};
+    }
+  }
+
+  function loadRequestQueueFromStorage() {
+    var localRequestQueue = getLocalStorage()[QUEUE_STORAGE_KEY];
+    if (localRequestQueue) {
+      requestQueue = JSON.parse(localRequestQueue);
+    }
+  }
+
+  function pushRequestToQueue(request) {
+    requestQueue.push(request);
+    updateLocalStorageRequestQueue();
+  }
+
+  function updateLocalStorageRequestQueue() {
+    var localStorage = getLocalStorage();
+    if (requestQueue.length) {
+      localStorage[QUEUE_STORAGE_KEY] = JSON.stringify(requestQueue);
+    } else {
+      delete localStorage[QUEUE_STORAGE_KEY];
+    }
+  }
+
   // Make a HTTP request with given `url` and `params` object.
   // For maximum browser compatibility and cross-domain support, requests are
   // made by creating a temporary JavaScript `Image` object.
@@ -697,7 +737,7 @@
     if (!isOnline()) {
       if (!isRetry) {
         log("Queuing error event due to lack of network connectivity.");
-        requestQueue.push(params);
+        pushRequestToQueue(params);
       }
       return;
     }
@@ -718,7 +758,7 @@
       }
       onRequestEnd(handler, function (err) {
         if (err && !isRetry) {
-          requestQueue.push(params);
+          pushRequestToQueue(params);
           log("Queuing error event due to lack of network connectivity.");
         }
         if (callback) {
@@ -735,6 +775,7 @@
         request(payload, function (err) {
           if (!err) {
             requestQueue.shift();
+            updateLocalStorageRequestQueue();
             next();
           }
         }, true);
