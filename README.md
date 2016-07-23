@@ -399,6 +399,19 @@ any search parameters or the page's fragment identifier.
 Bugsnag.context = "/path/to/my/page.php";
 ```
 
+###storage
+
+By default, Bugsnag stores any errors which were unable to be reported in the
+browser's [session storage](https://developer.mozilla.org/en/docs/Web/API/Window/sessionStorage).
+If you want to keep the errors around for longer, to improve the likelihood of
+them being sent to Bugsnag when the user regains internet connectivity, you
+can switch it to use [local storage](https://developer.mozilla.org/en/docs/Web/API/Window/localStorage)
+like so;
+
+```javascript
+Bugsnag.storage = "local";
+```
+
 noConflict Support
 ------------------
 
