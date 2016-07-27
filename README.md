@@ -13,6 +13,11 @@ mobile and desktop applications, helping you to understand and resolve them
 as fast as possible. [Create a free account](https://bugsnag.com) to start
 capturing errors from your applications.
 
+NOTE: Bugsnag 3 Release Candidate is out
+--------------------
+This encompeses all [breadcrumb features](https://github.com/bugsnag/bugsnag-js/pull/149). If you want to try it out be sure to reference `//d2wy8f7a9ursnm.cloudfront.net/bugsnag-3.min.js` when you use the script tag, or for npm and bower use version `3.0.0-rc.1`.
+
+
 How to Install
 --------------
 
@@ -81,8 +86,8 @@ Severity is displayed in the dashboard and can be used to filter the error list.
 By default all crashes (or unhandled exceptions) are set to `error` and all
 `Bugsnag.notify` calls default to `warning`.
 
-Leaving Breadcrumbs
--------------------
+Leaving Breadcrumbs (Version 3 only)
+------------------------------------
 
 Breadcrumbs allow you to see a log of actions that led up to an error. Whenever a notification is sent
 to Bugsnag, the last 25 breadcrumbs will be sent along with it. Many events will get tracked
@@ -202,7 +207,7 @@ By default, we automatically create breadcrumbs for the following types of event
   - history.pushState
   - history.replaceState
 
-### Disabling breadcrumbs
+### Disabling breadcrumbs (Version 3 only)
 
 ```html
 <script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-2.min.js"
