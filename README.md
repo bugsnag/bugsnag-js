@@ -15,7 +15,7 @@ capturing errors from your applications.
 
 NOTE: Bugsnag 3 Release Candidate is out
 --------------------
-This encompeses all [breadcrumb features](https://github.com/bugsnag/bugsnag-js/pull/149). If you want to try it out be sure to reference `//d2wy8f7a9ursnm.cloudfront.net/bugsnag-3.min.js` when you use the script tag, or for npm and bower use version `3.0.0-rc.1`.
+This encompasses all [breadcrumb features](https://github.com/bugsnag/bugsnag-js/pull/149). If you want to try it out be sure to reference `//d2wy8f7a9ursnm.cloudfront.net/bugsnag-3.min.js` when you use the script tag, or for npm and bower use version `3.0.0-rc.1`.
 
 
 How to Install
