@@ -404,6 +404,29 @@ any search parameters or the page's fragment identifier.
 Bugsnag.context = "/path/to/my/page.php";
 ```
 
+###wrapCallbacks
+
+Bugsnag wraps all callbacks passed to browser APIs (such as setTimeout or
+addEventListener) in order to catch exceptions and provide diagnostics. If you'd like to hook into this functionality, you can set a `wrapCallbacks` method.
+
+This will be called once at the time the callback is registered (e.g. when you call `setTimeout`) and the returned function will be called every time instead of the original.
+
+```
+Bugsnag.wrapCallbacks = function (callback) {
+    return function () {
+        var start = performance.now()
+
+        try {
+            return callback.call(this, arguments);
+        } finally {
+            if (performance.now() - start > 16.6) {
+                alert("missed 60fps goal!");
+            }
+        }
+    }
+});
+```
+
 noConflict Support
 ------------------
 

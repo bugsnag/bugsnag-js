@@ -190,18 +190,21 @@
       }
       if (!_super.bugsnag) {
         var currentScript = getCurrentScript();
+        var callback = self.wrapCallbacks ? self.wrapCallbacks(_super) : _super;
+
         _super.bugsnag = function (event) {
           if (options && options.eventHandler) {
             lastEvent = event;
           }
           lastScript = currentScript;
 
+
           // We set shouldCatch to false on IE < 10 because catching the error ruins the file/line as reported in window.onerror,
           // We set shouldCatch to false on Chrome/Safari because it interferes with "break on unhandled exception"
           // All other browsers need shouldCatch to be true, as they don't pass the exception object to window.onerror
           if (shouldCatch) {
             try {
-              return _super.apply(this, arguments);
+              return callback.apply(this, arguments);
             } catch (e) {
               // We do this rather than stashing treating the error like lastEvent
               // because in FF 26 onerror is not called for synthesized event handlers.
@@ -214,7 +217,7 @@
               lastScript = null;
             }
           } else {
-            var ret = _super.apply(this, arguments);
+            var ret = callback.apply(this, arguments);
             // in case of error, this is set to null in window.onerror
             lastScript = null;
             return ret;

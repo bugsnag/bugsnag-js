@@ -32,6 +32,8 @@ interface BugsnagStatic {
      *  To cancel sending the report, return false from this function.
      */
     beforeNotify: (payload: any, metaData: any) => boolean;
+    /** Callback used to hook into Bugsnag's automatic wrapping. */
+    wrapCallbacks: (callback: Function) => Function;
     /** The pathname of the current page, not including the fragment identifier
      *  nor search parameters
      */
