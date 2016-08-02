@@ -785,7 +785,6 @@
       apiKey: apiKey,
       projectRoot: getSetting("projectRoot") || window.location.protocol + "//" + window.location.host,
       context: getSetting("context") || window.location.pathname,
-      userId: getSetting("userId"), // Deprecated, remove in v3
       user: getSetting("user"),
       metaData: merge(merge({}, getSetting("metaData")), metaData),
       releaseStage: releaseStage,

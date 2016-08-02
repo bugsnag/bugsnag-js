@@ -5,12 +5,16 @@ Changelog
 -----
 
 ### Enhancements
-  
+
 - Add support for sending "breadcrumbs" - notable events leading up to an error
   [Christian Schlensker](https://github.com/wordofchristian)
   [#149](https://github.com/bugsnag/bugsnag-js/pull/149)
 
-  
+### Deprecations/Breakages
+
+- Remove support for deprecated `userId` in favor of the `user` object.
+
+
 2.5.0 (2016-01-29)
 -----
 
