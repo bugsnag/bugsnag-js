@@ -471,6 +471,7 @@ describe("Bugsnag", function () {
       });
 
       it("tracks click events", function() {
+        container.className = "myContainer";
         clickOn(container);
 
         Bugsnag.notify("Something");
@@ -479,7 +480,7 @@ describe("Bugsnag", function () {
         var expected = {
           type: "user",
           metaData: {
-            targetSelector: "DIV",
+            targetSelector: "DIV.myContainer",
             targetText: ""
           }
         };
