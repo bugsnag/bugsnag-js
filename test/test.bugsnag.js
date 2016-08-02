@@ -459,6 +459,54 @@ describe("Bugsnag", function () {
         assert.equal(crumb.metaData.message.length, 140);
       });
     });
+
+    describe("click tracking", function () {
+      var container;
+      beforeEach(function(){
+        container = document.createElement("div");
+        document.body.appendChild(container);
+      });
+      afterEach(function(){
+        document.body.removeChild(container);
+      });
+
+      it("tracks click events", function() {
+        clickOn(container);
+
+        Bugsnag.notify("Something");
+
+
+        var expected = {
+          type: "user",
+          metaData: {
+            targetSelector: "DIV",
+            targetText: ""
+          }
+        };
+
+        var actual = requestData().params.breadcrumbs[0];
+
+        assert(actual, "no breadcrumbs present");
+        assert.equal(actual.type, expected.type);
+        assert.deepEqual(actual.metaData, expected.metaData);
+      });
+
+      it("builds a css selector from the target", function() {
+        container.id = "container";
+        container.className = "blue steel";
+        clickOn(container);
+        Bugsnag.notify("Something");
+        var selector = requestData().params.breadcrumbs[0].metaData.targetSelector;
+        assert.equal(selector, "DIV#container.blue.steel");
+      });
+
+      it("trims target text", function() {
+        container.textContent = "\n Hello \n\n";
+        clickOn(container);
+        Bugsnag.notify("Something");
+        assert.equal(requestData().params.breadcrumbs[0].metaData.targetText, "Hello");
+      });
+    });
   });
 });
 
