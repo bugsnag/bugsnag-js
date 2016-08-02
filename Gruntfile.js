@@ -2,7 +2,7 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON("package.json"),
     eslint: {
-      src: ["src/bugsnag.js"]
+      src: ["src/bugsnag.js", "test/test.bugsnag.js"]
     },
     "regex-replace": {
       dist: {
