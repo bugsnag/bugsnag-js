@@ -12,7 +12,6 @@
 // The `Bugsnag` object is the only globally exported variable
 (function (window, old) {
   var self = {},
-    lastEvent,
     lastScript,
     previousNotification,
     shouldCatch = true,
@@ -26,10 +25,7 @@
     eventsRemaining = 10,
     // The default depth of attached metadata which is parsed before truncation. It
     // is configurable via the `maxDepth` setting.
-    maxPayloadDepth = 5,
-
-    // helper function for relative times
-    millisecondsAgo = makeMillisecondsAgo();
+    maxPayloadDepth = 5;
 
   // #### Bugsnag.noConflict
   //
@@ -183,17 +179,14 @@
   // If you call wrap twice on the same function, it'll give you back the
   // same wrapped function. This lets removeEventListener to continue to
   // work.
-  function wrap(_super, options) {
+  function wrap(_super) {
     try {
       if (typeof _super !== "function") {
         return _super;
       }
       if (!_super.bugsnag) {
         var currentScript = getCurrentScript();
-        _super.bugsnag = function (event) {
-          if (options && options.eventHandler) {
-            lastEvent = event;
-          }
+        _super.bugsnag = function () {
           lastScript = currentScript;
 
           // We set shouldCatch to false on IE < 10 because catching the error ruins the file/line as reported in window.onerror,
@@ -203,8 +196,6 @@
             try {
               return _super.apply(this, arguments);
             } catch (e) {
-              // We do this rather than stashing treating the error like lastEvent
-              // because in FF 26 onerror is not called for synthesized event handlers.
               if (getSetting("autoNotify", true)) {
                 self.notifyException(e, null, null, "error");
                 ignoreNextOnError();
@@ -755,11 +746,6 @@
       previousNotification = deduplicate;
     }
 
-    if (lastEvent) {
-      metaData = metaData || {};
-      metaData["Last Event"] = eventToMetaData(lastEvent);
-    }
-
     // Build the request payload by combining error information with other data
     // such as user-agent and locale, `metaData` and settings.
     var payload = {
@@ -852,18 +838,6 @@
   // Get the stacktrace string from an exception
   function stacktraceFromException(exception) {
     return exception.stack || exception.backtrace || exception.stacktrace;
-  }
-
-  // Populate the event tab of meta-data.
-  function eventToMetaData(event) {
-    var tab = {
-      millisecondsAgo: millisecondsAgo(event.timeStamp),
-      type: event.type,
-      which: event.which,
-      target: targetToString(event.target)
-    };
-
-    return tab;
   }
 
   // Convert a DOM element into a string suitable for passing to Bugsnag.
@@ -1065,40 +1039,6 @@
         });
       }
     });
-  }
-
-  // creates a function that takes a timeStamp and returns the number of milliseconds it happened in
-  // the past.
-  //
-  // This is necessary because depending on the browser the event.timeStamp could be a
-  // DOMTimeStamp or a DOMHighResTimeStamp
-  function makeMillisecondsAgo() {
-    function highRes(timeStamp) {
-      return performance.now() - timeStamp;
-    }
-
-    function legacy(timeStamp) {
-      return new Date() - timeStamp;
-    }
-
-    function timeNear(a, b) {
-      var d = 1000 * 60 * 5;
-      return a > b - d && a < b + d;
-    }
-
-    // Old browsers don't support document.createEvent
-    var testEvent;
-    try {
-      testEvent = document.createEvent("CustomEvent");
-    } catch(e) {
-      return legacy;
-    }
-
-    // if the testTimeStamp is close to performance.now() then it is a DOMHighResTimeStamp
-    var isHighRes = window.hasOwnProperty("performance")
-                     && timeNear(testEvent.timeStamp, window.performance.now());
-
-    return isHighRes ? highRes : legacy;
   }
 
   // setup auto breadcrumb tracking
