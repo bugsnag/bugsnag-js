@@ -517,7 +517,13 @@
       return label;
     }
 
-    if (document.querySelectorAll(label).length === 1) {
+    try {
+      if (document.querySelectorAll(label).length === 1) {
+        return label;
+      }
+    } catch (e) {
+      // sometime the query selector can be invalid, for example, if the id attribute is anumber.
+      // in these cases, just return the label as is.
       return label;
     }
 
