@@ -507,6 +507,14 @@ describe("Bugsnag", function () {
         Bugsnag.notify("Something");
         assert.equal(requestData().params.breadcrumbs[0].metaData.targetText, "Hello");
       });
+
+      it("handles invalid id attributes", function() {
+        container.id = "12345";
+        clickOn(container);
+        Bugsnag.notify("Something");
+        var selector = requestData().params.breadcrumbs[0].metaData.targetSelector;
+        assert.equal(selector, "DIV#12345");
+      });
     });
   });
 });
