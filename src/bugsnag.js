@@ -493,7 +493,7 @@
 
   // extract text content from a element
   function nodeText(el) {
-    var text = el.textContent || el.innerText;
+    var text = el.textContent || el.innerText || "";
     return truncate(text.trim(), 40);
   }
 
