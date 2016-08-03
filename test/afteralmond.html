@@ -12,7 +12,7 @@ var requirejs,require,define;(function(e){function h(e,t){return f.call(e,t)}fun
   <script src="../src/bugsnag.js" data-apikey="9e68f5104323042c09d8809674e8d05c"></script>
   <script>
     Bugsnag.testRequest = function (url, params) {
-      window.top.testResult(params);
+      window.parent.testResult(params);
     };
   </script>
 

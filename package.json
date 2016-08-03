@@ -21,6 +21,10 @@
     "grunt-regex-replace": "~0.2.5",
     "grunt-s3": "git://github.com/pifantastic/grunt-s3",
     "gruntify-eslint": "^1.3.0",
+    "karma": "^1.1.2",
+    "karma-chrome-launcher": "^1.0.1",
+    "karma-mocha": "^1.1.1",
+    "karma-sauce-launcher": "^1.0.0",
     "mocha": "~1.15.1",
     "mocha-browserstack": "~0.2.2",
     "uglifyjs": "latest"
