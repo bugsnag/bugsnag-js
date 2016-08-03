@@ -210,7 +210,7 @@ By default, we automatically create breadcrumbs for the following types of event
 ### Disabling breadcrumbs (Version 3 only)
 
 ```html
-<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-2.min.js"
+<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-3.min.js"
         data-apikey="YOUR-API-KEY-HERE"
         data-autobreadcrumbs="false"></script>
 ```
