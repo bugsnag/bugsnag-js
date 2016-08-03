@@ -949,7 +949,7 @@
       return function bugsnag(message, url, lineNo, charNo, exception) {
         var shouldNotify = getSetting("autoNotify", true);
         var metaData = {
-          Device: {
+          device: {
             time: new Date().getTime()
           }
         };
