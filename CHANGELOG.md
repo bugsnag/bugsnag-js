@@ -14,6 +14,8 @@ replaced by the `user` object.
 - Add support for sending "breadcrumbs" - notable events leading up to an error
   [Christian Schlensker](https://github.com/wordofchristian)
   [#149](https://github.com/bugsnag/bugsnag-js/pull/149)
+- Send device time in error payload
+  [#165](https://github.com/bugsnag/bugsnag-js/pull/165)
 
 
 2.5.0 (2016-01-29)
