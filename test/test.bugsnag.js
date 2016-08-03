@@ -461,13 +461,20 @@ describe("Bugsnag", function () {
     });
 
     describe("click tracking", function () {
+      // modern browsers only
+      if (!window.addEventListener) {
+        return;
+      }
+
       var container;
-      beforeEach(function(){
+      beforeEach(function(cb){
+        buildUp(cb);
         container = document.createElement("div");
         document.body.appendChild(container);
       });
       afterEach(function(){
-        document.body.removeChild(container);
+        // document.body.removeChild(container);
+        tearDown();
       });
 
       it("tracks click events", function() {
@@ -969,9 +976,15 @@ function requestData() {
  * example, Android 3).
  */
 function clickOn(element) {
-  var event = document.createEvent('HTMLEvents');
-  event.initEvent('click', true, true);
-  element.dispatchEvent(event);
+  if ( document.createEvent ) {
+    var event = document.createEvent("MouseEvents");
+    event.initEvent("click", true, false);
+    element.dispatchEvent(event);
+  } else if( document.createEventObject ) {
+    element.fireEvent("onclick");
+  } else if (typeof element.onclick == "function" ) {
+    element.onclick();
+  }
 }
 
 function testIframe(name, callback, done) {

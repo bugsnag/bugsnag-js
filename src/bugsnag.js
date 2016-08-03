@@ -494,7 +494,8 @@
   // extract text content from a element
   function nodeText(el) {
     var text = el.textContent || el.innerText || "";
-    return truncate(text.trim(), 40);
+    text = text.replace(/^\s+|\s+$/g, ""); // trim whitespace
+    return truncate(text, 140);
   }
 
   // Create a label from tagname, id and css class of the element
