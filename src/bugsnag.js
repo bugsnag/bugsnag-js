@@ -948,7 +948,11 @@
 
       return function bugsnag(message, url, lineNo, charNo, exception) {
         var shouldNotify = getSetting("autoNotify", true);
-        var metaData = {};
+        var metaData = {
+          Device: {
+            time: new Date().getTime()
+          }
+        };
 
         // IE 6+ support.
         if (!charNo && window.event) {
