@@ -446,6 +446,30 @@ describe("Bugsnag", function () {
         assert.deepEqual(actual, expected);
       });
 
+      it("replaces invalid breadcrumb type with a default type and logs a message", function() {
+        var crumb = {
+          type: "fanciful",
+          metaData: {
+            targetSelector: "DIV.myContainer",
+            targetText: ""
+          }
+        };
+
+        Bugsnag.leaveBreadcrumb(crumb);
+        Bugsnag.notify("Something");
+
+        // Replacing an invalid breadcrumb also triggers a console log breadcrumb
+        var logCrumb = requestData().params.breadcrumbs[0];
+        assert.equal(logCrumb.type, "log");
+        assert.equal(
+          logCrumb.metaData.message,
+          "[Bugsnag] Converted invalid breadcrumb type 'fanciful' to 'manual'"
+        );
+
+        var actualCrumb = requestData().params.breadcrumbs[1];
+        assert.equal(actualCrumb.type, "manual");
+      });
+
       it("truncates values to 140 characters", function () {
         var longValue = "This is the story all about how my life got flipped turned upside down " +
                         "I'd like to take a minute just sit right there" +
