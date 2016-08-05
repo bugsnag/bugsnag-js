@@ -1,7 +1,7 @@
 Changelog
 =========
 
-3.0.0-rc.1 (2016-07-22)
+3.0.0 (2016-08-05)
 -----
 
 This release adds support for automatic and custom breadcrumb tracking.

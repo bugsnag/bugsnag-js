@@ -13,10 +13,6 @@ mobile and desktop applications, helping you to understand and resolve them
 as fast as possible. [Create a free account](https://bugsnag.com) to start
 capturing errors from your applications.
 
-NOTE: Bugsnag 3 Release Candidate is out
---------------------
-This encompasses all [breadcrumb features](https://github.com/bugsnag/bugsnag-js/pull/149). If you want to try it out be sure to reference `//d2wy8f7a9ursnm.cloudfront.net/bugsnag-3.min.js` when you use the script tag, or for npm and bower use version `3.0.0-rc.1`.
-
 
 How to Install
 --------------
@@ -25,7 +21,7 @@ Include `bugsnag.js` from our CDN in the `<head>` tag of your website, before
 any other `<script>` tags.
 
 ```html
-<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-2.min.js"
+<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-3.min.js"
         data-apikey="YOUR-API-KEY-HERE"></script>
 ```
 
@@ -161,7 +157,7 @@ Configuration
 Set your Bugsnag API key. You can find your API key on your dashboard.
 
 ```html
-<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-2.min.js"
+<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-3.min.js"
         data-apikey="YOUR-API-KEY-HERE"></script>
 ```
 
@@ -179,7 +175,7 @@ get sent to `window.onerror`. If you want to stop this from happening, you can
 set `autoNotify` to `false`:
 
 ```html
-<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-2.min.js"
+<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-3.min.js"
         data-apikey="YOUR-API-KEY-HERE"
         data-autonotify="false"></script>
 ```
@@ -247,7 +243,7 @@ This does not work in Chrome apps and extensions where XHR needs to be used.
 If you want to use Bugsnag with XHR, just set `notifyHandler` to `xhr`:
 
 ```html
-<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-2.min.js"
+<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-3.min.js"
         data-apikey="YOUR-API-KEY-HERE"
         data-notifyhandler="xhr"></script>
 ```
@@ -321,7 +317,7 @@ Setting the `appVersion` lets you see at a glance when errors first and last
 happened in your code. You can do this either in the script-tag:
 
 ```html
-<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-2.min.js"
+<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-3.min.js"
         data-apikey="YOUR-API-KEY-HERE"
         data-appversion="2.0.14"></script>
 ```
@@ -448,7 +444,7 @@ servers to help with analysis and debugging. If you don't want this to happen,
 set `inlinescript` to false.
 
 ```html
-<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-2.min.js"
+<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-3.min.js"
         data-inlinescript="false"></script>
 ```
 
@@ -475,13 +471,13 @@ See the [Bugsnag source map documentation](https://bugsnag.com/docs/notifiers/js
 Advanced hosting
 ----------------
 
-We will occasionally update bugsnag-2.js on the CDN to improve the quality of
+We will occasionally update bugsnag-3.js on the CDN to improve the quality of
 our notifier without breaking backward compatibility. If you need assurance
 that the javascript will never change, feel free to include the specific version
 directly.
 
 ```html
-<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-3.0.0-rc.1.min.js"
+<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-3.0.0.min.js"
         data-apikey="YOUR-API-KEY-HERE"></script>
 ```
 
