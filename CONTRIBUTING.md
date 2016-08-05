@@ -45,14 +45,14 @@ Releasing
 - Ensure you have the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`
   environment variables set.
 - Bump the version number
-
-    grunt bump::{major,minor,patch,build}
-
+```
+  grunt bump::{major,minor,patch,build}
+```
 - Update the CHANGELOG, and README if necessary
 - Commit, tag, build, upload to S3, invalidate cloudfront, push to github:
-
-    grunt release
-
+```
+  grunt release
+```
 ### Prerelease version
 
 - Update the [release on GitHub](https://github.com/bugsnag/bugsnag-js/releases)
