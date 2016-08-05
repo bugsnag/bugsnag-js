@@ -127,9 +127,11 @@
   //
   // - `metadata` (optional, object) - Additional information about the breadcrumb. Values limited to 140 characters.
   self.leaveBreadcrumb = function(value, metaData) {
+    var DEFAULT_TYPE = "manual";
+
     // default crumb
     var crumb = {
-      type: "manual",
+      type: DEFAULT_TYPE,
       name: "Manual",
       timestamp: new Date().getTime()
     };
@@ -151,6 +153,20 @@
     default:
       log("expecting 1st argument to leaveBreadcrumb to be a 'string' or 'object', got " + typeof value);
       return;
+    }
+
+    // Validate breadcrumb type and replace invalid type with default.
+    var VALID_TYPES = [DEFAULT_TYPE, "error", "log", "navigation", "process", "request", "state", "user"];
+    var validType = false;
+    for (var i = 0; i < VALID_TYPES.length; i++) {
+      if (VALID_TYPES[i] === crumb.type) {
+        validType = true;
+        break;
+      }
+    }
+    if (!validType) {
+      log("Converted invalid breadcrumb type '" + crumb.type + "' to '" + DEFAULT_TYPE + "'");
+      crumb.type = DEFAULT_TYPE;
     }
 
     var lastCrumb = breadcrumbs.slice(-1)[0];
