@@ -498,7 +498,7 @@ describe("Bugsnag", function () {
         document.body.appendChild(container);
       });
       afterEach(function(){
-        // document.body.removeChild(container);
+        document.body.removeChild(container);
         tearDown();
       });
 
@@ -700,7 +700,7 @@ describe("window", function () {
         window.postMessage("hello", "*");
       });
 
-      if (navigator.appVersion.indexOf("MSIE 9") == -1 && navigator.appVersion.indexOf("Safari/5") == -1) {
+      if (!/(MSIE 9|Safari)/.test(navigator.appVersion)) {
         it("should include multi-line backtraces", function (done) {
           callback = function () {
             assert(Bugsnag.testRequest.calledOnce);
@@ -798,7 +798,7 @@ if (window.addEventListener) {
         clickOn(document.body);
       });
 
-      if (navigator.appVersion.indexOf("MSIE 9") === -1 && document.body.click) {
+      if (!/(MSIE 9|Safari)/.test(navigator.appVersion) && document.body.click) {
         it("should include multi-line backtraces", function mooCow(done) {
           callback = function () {
             var trace = JSON.stringify(requestData().params.stacktrace);
