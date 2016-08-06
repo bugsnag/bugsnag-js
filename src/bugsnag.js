@@ -410,6 +410,63 @@
     enhance(history, "replaceState", wrapBuilder(buildReplaceState));
   }
 
+  function trackWorkers() {
+    if(!getBreadcrumbSetting("autoBreadcrumbsWorkers", true)) {
+      return;
+    }
+
+    var workers = 0;
+
+    window.Worker = hijackConstructor(window.Worker, function(url) {
+      var id = ++workers;
+      var startTime = Date.now();
+
+      // Bound helper function for sending worker breadcrumbs
+      //
+      // If IE10 supported WeakMap this could be done by enhancing the prototype, not
+      // the instance's methods directly.
+      function trackWorkerBreadcrumb(name, metaData) {
+        if (metaData.message) {
+          metaData.message = serialiseGenericObject(metaData.message);
+        }
+        self.leaveBreadcrumb({
+          type: "process",
+          name: name,
+          metaData: merge({
+            id: id
+          }, metaData)
+        });
+      }
+
+      trackWorkerBreadcrumb("Created worker", {
+        url: url
+      });
+
+      this.addEventListener("message", function(event) {
+        // TODO Handle automatic error catching from workers
+
+        trackWorkerBreadcrumb("Message from worker", {
+          message: event.data
+        });
+      });
+
+      // Warning: Calling the `postMessage` or `terminate` prototype methods directly
+      // against the worker object will bypass these breadcrumbs.
+
+      enhance(this, "postMessage", function(message) {
+        trackWorkerBreadcrumb("Message to worker", {
+          message: message
+        });
+      });
+
+      enhance(this, "terminate", function() {
+        trackWorkerBreadcrumb("Terminated worker", {
+          uptime: (Date.now() - startTime) + "ms"
+        });
+      });
+    });
+  }
+
   //
   // ### Script tag tracking
   //
@@ -485,7 +542,7 @@
     if (typeof oldFunction === "function") {
       object[property] = function() {
         newFunction.apply(this, arguments);
-        oldFunction.apply(this, arguments);
+        return oldFunction.apply(this, arguments);
       };
     }
   }
@@ -930,6 +987,29 @@
     } catch(e){ /* No action needed */ }
   }
 
+  // Hijacks a constructor call to call another function as well as the original constructor
+  // to embed additional functionality to built-in classes.
+  function hijackConstructor(Constructor, fn) {
+    var NewConstructor = function() {
+      var instance = new (Function.prototype.bind.apply(Constructor, [this].concat([].slice.apply(arguments))))();
+      fn.apply(instance, arguments);
+      return instance;
+    };
+    NewConstructor.prototype = Constructor.prototype;
+    NewConstructor.prototype.constructor = NewConstructor.constructor = NewConstructor;
+    return NewConstructor;
+  }
+
+  function serialiseGenericObject(obj) {
+    var str;
+    str = JSON.stringify(obj, null, "  ");
+    if (str === "{}") {
+      // Handle types like `Blob` or other built-in objects
+      // Serialise them as [object Blob] instead, to add a bit of clarity
+      str = Object.prototype.toString.call(obj);
+    }
+    return str;
+  }
 
   //
   // ### Polyfilling
@@ -1096,6 +1176,7 @@
   trackClicks();
   trackConsoleLog();
   trackNavigation();
+  trackWorkers();
 
   window.Bugsnag = self;
   // If people are using a javascript loader, we should integrate with it.
