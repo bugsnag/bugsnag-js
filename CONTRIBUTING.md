@@ -25,13 +25,30 @@ npm install
 
 ### In browser
 
+Any large changes should be tested in old IEs (we support IE 6!), and any other
+browsers you can get your hands on.
+
+#### Sauce Labs automated browser testing
+
+To do automated browser testing with sauce labs first install sauce-connect
+
 ```
-grunt browsertest
+brew cask install sauce-connect
 ```
 
-Any large changes should be tested in old IEs (we support IE 6!), and any other
-browsers you can get your hands on. The easiest way
-to get these is from [modern.ie](https://www.modern.ie/en-gb/virtualization-tools#downloads).
+Then insure that you have `SAUCE_USERNAME` and `SAUCE_ACCESS_KEY` environment
+variables set.
+
+Finally run:
+
+```
+karma start --single-run
+```
+
+#### Manual browser testing
+
+If you don't have sauce labs you can do some basic IE testing by using
+[modern.ie](https://www.modern.ie/en-gb/virtualization-tools#downloads).
 
 ### Headless (Using PhantomJS)
 
