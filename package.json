@@ -3,7 +3,8 @@
   "version": "3.0.0",
   "main": "src/bugsnag.js",
   "scripts": {
-    "test": "grunt test"
+    "test": "karma start --single-run",
+    "test:phantom": "grunt test"
   },
   "repository": {
     "type": "git",

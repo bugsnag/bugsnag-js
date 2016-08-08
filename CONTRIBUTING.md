@@ -45,6 +45,15 @@ Finally run:
 karma start --single-run
 ```
 
+This will run automated tests with all browsers in the `browsers.json` file.
+
+To run a subset of browsers, select the ones you want and add them to the
+`--browsers` flag of the karma command.
+
+```
+karma start --single-run --browsers sl_ie_6, sl_ie_7
+```
+
 #### Manual browser testing
 
 If you don't have sauce labs you can do some basic IE testing by using
