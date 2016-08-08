@@ -190,18 +190,8 @@ module.exports = function(grunt) {
       done(error == null);
     });
   });
-  grunt.registerTask("browserstack", "Run tests on browser stack", function() {
-    var exec = require("child_process").exec;
-    var done = this.async();
-    exec("./node_modules/browserstack-test/bin/browserstack-test -t 90 -b browsers.json -u " + process.env.BROWSERSTACK_USERNAME + " -p " + process.env.BROWSERSTACK_PASSWORD + " -k " + process.env.BROWSERSTACK_ACCESS_KEY + " http://localhost:80/bugsnag-js/test/", function(error, stdout, stderr) {
-      console.log(stdout);
-      console.log(stderr);
-      done(error == null);
-    });
-  });
   grunt.registerTask("release", ["eslint", "uglify", "docco", "git-tag", "git-push", "s3", "npm_publish", "invalidate_cloudfront"]);
   grunt.registerTask("server", ["connect:server:keepalive"]);
-  grunt.registerTask("browsertest", ["eslint", "connect:test", "watch:test"]);
   grunt.registerTask("test", ["eslint", "mocha_phantomjs"]);
   grunt.registerTask("default", ["eslint", "uglify", "docco"]);
 };
