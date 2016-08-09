@@ -30,7 +30,9 @@ module.exports = function(grunt) {
         access: "public-read",
         gzip: true,
         headers: {
-          "Cache-Control": "public, max-age=315360000"
+          "Cache-Control": "public, max-age=315360000",
+          "Access-Control-Allow-Origin": "*",
+          "Timing-Allow-Origin": "*"
         }
       },
       release: {
