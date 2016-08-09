@@ -215,12 +215,18 @@ describe("Bugsnag", function () {
 
     it("should contain global metaData if set", function () {
       var metaData = {some: {data: "here"}};
+      var expected = metaData
 
       Bugsnag.metaData = metaData;
       Bugsnag.notifyException(new Error("Example error"));
 
       assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
-      assert.deepEqual(requestData().params.metaData, metaData, "metaData should match");
+
+      // Device time won't match, so just remove it before we compare metaData
+      var result = requestData().params.metaData;
+      delete result.device
+
+      assert.deepEqual(result, metaData, "metaData should match");
     });
 
     it("should not change the global metaData", function () {
@@ -238,8 +244,12 @@ describe("Bugsnag", function () {
 
       Bugsnag.notifyException(new Error("Example error"), metaData);
 
+      // Device time won't match, so just remove it before we compare metaData
+      var result = requestData().params.metaData;
+      delete result.device
+
       assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
-      assert.deepEqual(requestData().params.metaData, metaData, "metaData should match");
+      assert.deepEqual(result, metaData, "metaData should match");
     });
 
     it("should accept local metaData as a third parameter", function () {
@@ -247,8 +257,12 @@ describe("Bugsnag", function () {
 
       Bugsnag.notifyException(new Error("Example error"), "CustomError", metaData);
 
+      // Device time won't match, so just remove it before we compare metaData
+      var result = requestData().params.metaData;
+      delete result.device
+
       assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
-      assert.deepEqual(requestData().params.metaData, metaData, "metaData should match");
+      assert.deepEqual(result, metaData, "metaData should match");
     });
 
     it("should contain merged metaData if both local and global metaData are set", function () {
@@ -258,8 +272,12 @@ describe("Bugsnag", function () {
       Bugsnag.metaData = globalMetaData;
       Bugsnag.notifyException(new Error("Example error"), localMetaData);
 
+      // Device time won't match, so just remove it before we compare metaData
+      var result = requestData().params.metaData;
+      delete result.device
+
       assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
-      assert.deepEqual(requestData().params.metaData, {
+      assert.deepEqual(result, {
         some: {
           data: "here",
           extra: { data: "here" }
@@ -274,6 +292,14 @@ describe("Bugsnag", function () {
       assert.equal(requestData().url.substr(0, "https://notify.bugsnag.com/js".length), "https://notify.bugsnag.com/js");
     });
 
+    it("should send device time in metadata", function () {
+      Bugsnag.notifyException(new Error("Example error"));
+      var metaData = requestData().params.metaData;
+      var device = metaData && metaData.device;
+
+      assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
+      assert(device && device.time, "metaData should include device time");
+    });
 
     it('should redact recursive metadata', function () {
       var a = {a : 5};

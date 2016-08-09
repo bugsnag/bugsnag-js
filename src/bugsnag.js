@@ -794,6 +794,10 @@
       previousNotification = deduplicate;
     }
 
+    var defaultEventMetaData = {
+      device: { time: (new Date()).getTime() }
+    };
+
     // Build the request payload by combining error information with other data
     // such as user-agent and locale, `metaData` and settings.
     var payload = {
@@ -803,7 +807,7 @@
       projectRoot: getSetting("projectRoot") || window.location.protocol + "//" + window.location.host,
       context: getSetting("context") || window.location.pathname,
       user: getSetting("user"),
-      metaData: merge(merge({}, getSetting("metaData")), metaData),
+      metaData: merge(merge(defaultEventMetaData, getSetting("metaData")), metaData),
       releaseStage: releaseStage,
       appVersion: getSetting("appVersion"),
 
@@ -964,11 +968,7 @@
 
       return function bugsnag(message, url, lineNo, charNo, exception) {
         var shouldNotify = getSetting("autoNotify", true);
-        var metaData = {
-          device: {
-            time: new Date().getTime()
-          }
-        };
+        var metaData = {};
 
         // IE 6+ support.
         if (!charNo && window.event) {
