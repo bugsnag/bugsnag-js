@@ -16,7 +16,7 @@ monitoring](https://bugsnag.com/platforms/javascript) solution.
 ## Getting started
 
 1. [Create a Bugsnag account](https://bugsnag.com)
-2. Complete the instructions in the [integration guide](https://docs.bugsnag.com/platform/browsers)
+2. Complete the instructions in the [integration guide](https://docs.bugsnag.com/platforms/browsers)
 3. Report handled exceptions using
    [`Bugsnag.notifyException()`](https://docs.bugsnag.com/platforms/browsers/#reporting-handled-exceptions)
 4. Customize your integration using the
