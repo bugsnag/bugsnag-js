@@ -80,11 +80,28 @@ interface BugsnagStatic {
      */
     noConflict(): BugsnagStatic;
 
-    /** Send caught exceptions to Bugsnag. Valid severity values are `info`,
-     *  `warning`, and `error`, in order of increasing severity.
-    */
-    notifyException(exception: Error, name?: string, metaData?: any,
-                    severity?: string): void;
+    /** Send caught exceptions to Bugsnag.
+     *
+     *  @param exception        The exception to send to Bugsnag
+     *
+     *  @param name             The name to assign to the error
+     *  @param metaData         Key/value pairs of additional information
+     *
+     *  @param severity         The severity of the error. Valid values are
+     *                          `info`, `warning`, and `error`, in order of
+     *                          increasing severity.
+     *
+     */
+    notifyException(exception: Error, name?: string,
+                    metaData?: any, severity?: string): void;
+
+    /** Send caught exceptions to Bugsnag.
+     *
+     *  @param exception        The exception to send to Bugsnag
+     *
+     *  @param metaData         Key/value pairs of additional information
+     */
+    notifyException(exception: Error, metaData: Object): void;
 
     /** Send custom errors to Bugsnag */
     notify(name: string, message: string, metaData?: any,
