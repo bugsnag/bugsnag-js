@@ -837,7 +837,7 @@
     }
 
     if (payload.lineNumber === 0 && (/Script error\.?/).test(payload.message)) {
-      return log("Ignoring cross-domain script error. See https://bugsnag.com/docs/notifiers/js/cors");
+      return log("Ignoring cross-domain or eval script error. See https://docs.bugsnag.com/platforms/browsers/faq/#3-cross-origin-script-errors");
     }
 
     // Make the HTTP request
