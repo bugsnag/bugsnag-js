@@ -81,7 +81,6 @@ describe("Bugsnag", function () {
 
         it("should log warning if called with a string instead of an Error", function () {
           Bugsnag.notifyException("Using it wrong");
-          assert(!Bugsnag.testRequest.called, "Bugsnag.testRequest should not have been called");
           assert(console.log.called, "console.log should have been called");
         });
       }
