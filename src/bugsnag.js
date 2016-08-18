@@ -78,6 +78,16 @@
     if (!exception) {
       return;
     }
+
+    if (typeof exception === "string") {
+      log(
+        "Bugsnag.notifyException() was called with a string. Expected instance of Error. " +
+        "To send a custom message instantiate a new Error or use Bugsnag.notify('<string>')." +
+        " see https://docs.bugsnag.com/platforms/browsers/#reporting-handled-exceptions"
+      );
+      return;
+    }
+
     if (name && typeof name !== "string") {
       metaData = name;
       name = undefined;
