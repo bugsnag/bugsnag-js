@@ -468,7 +468,7 @@
   // Set up default notifier settings.
   var DEFAULT_BASE_ENDPOINT = "https://notify.bugsnag.com/";
   var DEFAULT_NOTIFIER_ENDPOINT = DEFAULT_BASE_ENDPOINT + "js";
-  var NOTIFIER_VERSION = "3.0.0";
+  var NOTIFIER_VERSION = "3.0.2";
 
   // Keep a reference to the currently executing script in the DOM.
   // We'll use this later to extract settings from attributes.
@@ -794,6 +794,10 @@
       previousNotification = deduplicate;
     }
 
+    var defaultEventMetaData = {
+      device: { time: (new Date()).getTime() }
+    };
+
     // Build the request payload by combining error information with other data
     // such as user-agent and locale, `metaData` and settings.
     var payload = {
@@ -803,7 +807,7 @@
       projectRoot: getSetting("projectRoot") || window.location.protocol + "//" + window.location.host,
       context: getSetting("context") || window.location.pathname,
       user: getSetting("user"),
-      metaData: merge(merge({}, getSetting("metaData")), metaData),
+      metaData: merge(merge(defaultEventMetaData, getSetting("metaData")), metaData),
       releaseStage: releaseStage,
       appVersion: getSetting("appVersion"),
 
@@ -833,7 +837,7 @@
     }
 
     if (payload.lineNumber === 0 && (/Script error\.?/).test(payload.message)) {
-      return log("Ignoring cross-domain script error. See https://bugsnag.com/docs/notifiers/js/cors");
+      return log("Ignoring cross-domain or eval script error. See https://docs.bugsnag.com/platforms/browsers/faq/#3-cross-origin-script-errors");
     }
 
     // Make the HTTP request
@@ -964,11 +968,7 @@
 
       return function bugsnag(message, url, lineNo, charNo, exception) {
         var shouldNotify = getSetting("autoNotify", true);
-        var metaData = {
-          device: {
-            time: new Date().getTime()
-          }
-        };
+        var metaData = {};
 
         // IE 6+ support.
         if (!charNo && window.event) {

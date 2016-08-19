@@ -68,18 +68,22 @@ grunt test
 Releasing
 =========
 
-- Ensure you have the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`
-  environment variables set.
-- Bump the version number
-```
-  grunt bump::{major,minor,patch,build}
-```
-- Update the CHANGELOG, and README if necessary
-- Commit, tag, build, upload to S3, invalidate cloudfront, push to github:
-```
-  grunt release
-```
-### Prerelease version
+1.  Ensure you have the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`
+    environment variables set.
+2.  Bump the version number
+
+    ```
+    grunt bump::{major,minor,patch,build}
+    ```
+
+3.  Update the CHANGELOG, and README if necessary
+4.  Commit, tag, build, upload to S3, invalidate cloudfront, push to github:
+
+    ```
+    grunt release
+    ```
+
+### Pre-release version
 
 - Update the [release on GitHub](https://github.com/bugsnag/bugsnag-js/releases)
   to include the release notes and check the "pre-release" checkbox
@@ -90,4 +94,5 @@ Releasing
 
 - Wait for cloudfront to invalidate the symlink
 - Test that exception reporting still works on [Bugsnag](https://bugsnag.com)
-- Release the new integration guides for JavaScript on docs.bugsnag.com
+- Release the new integration guides for JavaScript on docs.bugsnag.com, and
+  find and update all references to `bugsnag-[major version].js`
