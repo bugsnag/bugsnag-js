@@ -85,7 +85,8 @@
         "To send a custom message instantiate a new Error or use Bugsnag.notify('<string>')." +
         " see https://docs.bugsnag.com/platforms/browsers/#reporting-handled-exceptions"
       );
-      self.notify(exception);
+      // pass through to notify()
+      self.notify.apply(null, arguments);
       return;
     }
 
