@@ -35,7 +35,7 @@ To do automated browser testing with sauce labs first install sauce-connect
 brew cask install sauce-connect
 ```
 
-Then insure that you have `SAUCE_USERNAME` and `SAUCE_ACCESS_KEY` environment
+Then ensure that you have `SAUCE_USERNAME` and `SAUCE_ACCESS_KEY` environment
 variables set.
 
 Finally run:
