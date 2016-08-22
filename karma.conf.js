@@ -33,13 +33,9 @@ module.exports = function(config) {
       "/src": "/base/src",
       "/amd": "/base/test/amd"
     },
-    concurrency: 1,
-    captureTimeout: 120000,
+    concurrency: 4,
+    captureTimeout: 10000,
     customLaunchers: browsers,
-    browserConsoleLogOptions: {
-      terminal: false
-    },
-    logLevel: config.LOG_WARN,
     browsers: ["PhantomJS"].concat(Object.keys(browsers)),
     reporters: ["dots", "saucelabs"],
     sauceLabs: process.env.TRAVIS ? travisSauceLabsOptions : {},
