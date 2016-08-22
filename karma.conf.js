@@ -4,8 +4,13 @@ module.exports = function(config) {
 
   var travisSauceLabsOptions =  {
     build: process.env.TRAVIS_BUILD_NUMBER,
-    tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER
+    tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER,
+    connectOptions: {
+      tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER
+    }
   };
+
+  console.log(travisSauceLabsOptions);
 
   config.set({
     basePath: "",
