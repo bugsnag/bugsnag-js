@@ -6,14 +6,14 @@ module.exports = function(config) {
     build: process.env.TRAVIS_BUILD_NUMBER,
     tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER,
     connectOptions: {
+      port: 5757,
       tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER
     }
   };
 
-  console.log(travisSauceLabsOptions);
-
   config.set({
     basePath: "",
+    port: 9876,
     frameworks: [
       "mocha-ie-legacy"
     ],
@@ -29,12 +29,13 @@ module.exports = function(config) {
       "/src": "/base/src",
       "/amd": "/base/test/amd"
     },
-    concurrency: 4,
+    concurrency: 1,
+    captureTimeout: 120000,
     customLaunchers: browsers,
     browserConsoleLogOptions: {
       terminal: false
     },
-    logLevel: config.LOG_WARN,
+    logLevel: config.LOG_DEBUG,
     browsers: ["PhantomJS"].concat(Object.keys(browsers)),
     reporters: ["dots", "saucelabs"],
     sauceLabs: process.env.TRAVIS ? travisSauceLabsOptions : {},
