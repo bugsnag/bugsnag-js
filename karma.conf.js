@@ -4,12 +4,18 @@ module.exports = function(config) {
 
   var travisSauceLabsOptions =  {
     build: process.env.TRAVIS_BUILD_NUMBER,
+    testName: "Bugsnag.js Browser Tests",
     tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER,
+    username: process.env.SAUCE_USERNAME,
+    accessKey: process.env.SAUCE_ACCESS_KEY,
+    startConnect: false,
     connectOptions: {
       port: 5757,
-      tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER
+      logfile: "sauce_connect.log"
     }
   };
+
+  console.log("Travis:" + process.env.TRAVIS);
 
   config.set({
     basePath: "",
