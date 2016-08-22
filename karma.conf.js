@@ -4,7 +4,9 @@ module.exports = function(config) {
 
   config.set({
     basePath: "",
-    frameworks: ["mocha"],
+    frameworks: [
+      "mocha-ie-legacy"
+    ],
     files: [
       { pattern: "src/bugsnag.js", watched: true, included: false, served: true },
       { pattern: "test/**/*", watched: true, included: false, served: true },
