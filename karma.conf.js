@@ -15,8 +15,6 @@ module.exports = function(config) {
     }
   };
 
-  console.log("Travis:" + process.env.TRAVIS);
-
   config.set({
     basePath: "",
     port: 9876,
@@ -41,7 +39,7 @@ module.exports = function(config) {
     browserConsoleLogOptions: {
       terminal: false
     },
-    logLevel: config.LOG_DEBUG,
+    logLevel: config.LOG_WARN,
     browsers: ["PhantomJS"].concat(Object.keys(browsers)),
     reporters: ["dots", "saucelabs"],
     sauceLabs: process.env.TRAVIS ? travisSauceLabsOptions : {},
