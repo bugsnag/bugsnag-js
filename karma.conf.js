@@ -41,6 +41,7 @@ module.exports = function(config) {
     sauceLabs: process.env.TRAVIS ? travisSauceLabsOptions : {},
     client: {
       mocha: {
+        timeout: 100000,
         ui: "bdd"
       }
     }
