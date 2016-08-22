@@ -33,8 +33,10 @@ module.exports = function(config) {
       "/src": "/base/src",
       "/amd": "/base/test/amd"
     },
-    concurrency: 4,
+    concurrency: 1,
     captureTimeout: 100000,
+    browserDisconnectTimeout: 100000,
+    browserNoActivityTimeout: 100000,
     customLaunchers: browsers,
     browsers: ["PhantomJS"].concat(Object.keys(browsers)),
     reporters: ["dots", "saucelabs"],
