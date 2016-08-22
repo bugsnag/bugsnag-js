@@ -34,7 +34,7 @@ module.exports = function(config) {
       "/amd": "/base/test/amd"
     },
     concurrency: 4,
-    captureTimeout: 10000,
+    captureTimeout: 100000,
     customLaunchers: browsers,
     browsers: ["PhantomJS"].concat(Object.keys(browsers)),
     reporters: ["dots", "saucelabs"],
