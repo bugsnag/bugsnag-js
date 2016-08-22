@@ -10,17 +10,16 @@ Contributing
 Testing
 =======
 
-Running the tests requires [Grunt CLI](https://github.com/gruntjs/grunt-cli). It
-is available via [npm](https://npmjs.org):
-
-```
-npm install grunt-cli
-```
-
-Also install the dependencies for the project:
+Install the dependencies for the project:
 
 ```
 npm install
+```
+
+### Headless (Using PhantomJS)
+
+```
+npm run test:quick
 ```
 
 ### In browser
@@ -58,12 +57,6 @@ karma start --single-run --browsers sl_ie_6, sl_ie_7
 
 If you don't have sauce labs you can do some basic IE testing by using
 [modern.ie](https://www.modern.ie/en-gb/virtualization-tools#downloads).
-
-### Headless (Using PhantomJS)
-
-```
-grunt test
-```
 
 Releasing
 =========

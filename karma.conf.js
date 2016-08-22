@@ -19,12 +19,10 @@ module.exports = function(config) {
       "/src": "/base/src",
       "/amd": "/base/test/amd"
     },
-
     concurrency: 4,
     customLaunchers: browsers,
-    browsers: Object.keys(browsers),
+    browsers: ["PhantomJS"].concat(Object.keys(browsers)),
     reporters: ["dots", "saucelabs"],
-
     client: {
       mocha: {
         ui: "bdd"
