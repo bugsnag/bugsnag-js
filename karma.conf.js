@@ -15,12 +15,16 @@ module.exports = function(config) {
       "test/test.bugsnag.js"
     ],
     proxies: {
-      "/": "/base/test",
+      "/": "/base/test/",
       "/src": "/base/src",
       "/amd": "/base/test/amd"
     },
     concurrency: 4,
     customLaunchers: browsers,
+    browserConsoleLogOptions: {
+      terminal: false
+    },
+    logLevel: config.LOG_WARN,
     browsers: ["PhantomJS"].concat(Object.keys(browsers)),
     reporters: ["dots", "saucelabs"],
     client: {
