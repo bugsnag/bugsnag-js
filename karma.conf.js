@@ -2,6 +2,11 @@ var browsers = require("./browsers.json");
 
 module.exports = function(config) {
 
+  var travisSauceLabsOptions =  {
+    build: process.env.TRAVIS_BUILD_NUMBER,
+    tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER
+  };
+
   config.set({
     basePath: "",
     frameworks: [
@@ -27,6 +32,7 @@ module.exports = function(config) {
     logLevel: config.LOG_WARN,
     browsers: ["PhantomJS"].concat(Object.keys(browsers)),
     reporters: ["dots", "saucelabs"],
+    sauceLabs: process.env.TRAVIS ? travisSauceLabsOptions : {},
     client: {
       mocha: {
         ui: "bdd"
