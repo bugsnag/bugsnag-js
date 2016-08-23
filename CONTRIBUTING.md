@@ -10,7 +10,7 @@ Contributing
 Testing
 =======
 
-Install karam-cli
+Install karma-cli
 
 ```
 npm install -g karma-cli
