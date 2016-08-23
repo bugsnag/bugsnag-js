@@ -10,6 +10,12 @@ Contributing
 Testing
 =======
 
+Install karam-cli
+
+```
+npm install -g karma-cli
+```
+
 Install the dependencies for the project:
 
 ```
