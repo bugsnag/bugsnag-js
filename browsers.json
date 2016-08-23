@@ -1,138 +1,81 @@
-[
-    {
-        "browser": "ie",
-        "browser_version": "6.0",
-        "device": null,
-        "os": "Windows",
-        "os_version": "XP",
-        "timeout": 90
-    },
-    {
-        "browser": "ie",
-        "browser_version": "7.0",
-        "device": null,
-        "os": "Windows",
-        "os_version": "XP",
-        "timeout": 90
-    },
-    {
-        "browser": "ie",
-        "browser_version": "8.0",
-        "device": null,
-        "os": "Windows",
-        "os_version": "7",
-        "timeout": 90
-    },
-    {
-        "browser": "ie",
-        "browser_version": "9.0",
-        "device": null,
-        "os": "Windows",
-        "os_version": "7",
-        "timeout": 90
-    },
-    {
-        "browser": "ie",
-        "browser_version": "10.0",
-        "device": null,
-        "os": "Windows",
-        "os_version": "8",
-        "timeout": 90
-    },
-    {
-        "browser": "ie",
-        "browser_version": "11.0",
-        "device": null,
-        "os": "Windows",
-        "os_version": "8.1",
-        "timeout": 90
-    },
-    {
-        "timeout": 90,
-        "browser": "safari",
-        "browser_version": "5.1",
-        "device": null,
-        "os": "OS X",
-        "os_version": "Snow Leopard"
-    },
-    {
-        "timeout": 90,
-        "browser": "safari",
-        "browser_version": "6.0",
-        "device": null,
-        "os": "OS X",
-        "os_version": "Lion"
-    },
-    {
-        "timeout": 90,
-        "browser": "safari",
-        "browser_version": "6.1",
-        "device": null,
-        "os": "OS X",
-        "os_version": "Mountain Lion"
-    },
-    {
-        "timeout": 90,
-        "browser": "safari",
-        "browser_version": "7.0",
-        "device": null,
-        "os": "OS X",
-        "os_version": "Mavericks"
-    },
-    {
-        "timeout": 90,
-        "browser": "iphone",
-        "browser_version": null,
-        "device": "iPhone 5S",
-        "os": "ios",
-        "os_version": "7.0"
-    },
-    {
-        "timeout": 90,
-        "browser": "firefox",
-        "browser_version": "3.6",
-        "device": null,
-        "os": "Windows",
-        "os_version": "XP"
-    },
-    {
-        "timeout": 90,
-        "browser": "firefox",
-        "browser_version": "31.0",
-        "device": null,
-        "os": "Windows",
-        "os_version": "7"
-    },
-    {
-        "browser": "chrome",
-        "browser_version": "36.0",
-        "device": null,
-        "os": "Windows",
-        "os_version": "7",
-        "timeout": 90
-    },
-    {
-        "timeout": 90,
-        "browser": "android",
-        "browser_version": null,
-        "device": "Amazon Kindle Fire HD 8.9",
-        "os": "android",
-        "os_version": "4.0"
-    },
-    {
-        "timeout": 90,
-        "browser": "android",
-        "browser_version": null,
-        "device": "Google Nexus 7",
-        "os": "android",
-        "os_version": "4.1"
-    },
-    {
-        "timeout": 90,
-        "browser": "android",
-        "browser_version": null,
-        "device": "Google Nexus 4",
-        "os": "android",
-        "os_version": "4.2"
-    }
-]
+{
+  "sl_ie_6": {
+    "base": "SauceLabs",
+    "browserName": "internet explorer",
+    "version": "6.0",
+    "platform": "Windows XP"
+  },
+  "sl_ie_7": {
+    "base": "SauceLabs",
+    "browserName": "internet explorer",
+    "version": "7.0",
+    "platform": "Windows XP"
+  },
+  "sl_ie_8": {
+    "base": "SauceLabs",
+    "browserName": "internet explorer",
+    "version": "8.0",
+    "platform": "Windows 7"
+  },
+  "sl_ie_9": {
+    "base": "SauceLabs",
+    "browserName": "internet explorer",
+    "version": "9.0",
+    "platform": "Windows 7"
+  },
+  "sl_ie_10": {
+    "base": "SauceLabs",
+    "browserName": "internet explorer",
+    "version": "10.0",
+    "platform": "Windows 8"
+  },
+  "sl_ie_11": {
+    "base": "SauceLabs",
+    "browserName": "internet explorer",
+    "version": "11.0",
+    "platform": "Windows 8.1"
+  },
+  "sl_ie_edge": {
+    "base": "SauceLabs",
+    "browserName": "MicrosoftEdge",
+    "version": "13",
+    "platform": "Windows 10"
+  },
+  "sl_safari_8": {
+    "base": "SauceLabs",
+    "browserName": "safari",
+    "version": "8.0",
+    "platform": "OS X 10.10"
+  },
+  "sl_safari_9": {
+    "base": "SauceLabs",
+    "browserName": "safari",
+    "version": "9.0",
+    "platform": "OS X 10.11"
+  },
+  "sl_iphone": {
+    "base": "SauceLabs",
+    "browserName": "iphone",
+    "deviceOrientation": "portrait"
+  },
+  "sl_firefox_31": {
+    "base": "SauceLabs",
+    "browserName": "firefox",
+    "version": "31",
+    "platform": "Windows 7"
+  },
+  "sl_chrome_36": {
+    "base": "SauceLabs",
+    "browserName": "chrome",
+    "version": "36.0",
+    "platform": "Windows 7"
+  },
+  "sl_android_4_3": {
+    "base": "SauceLabs",
+    "browserName": "android",
+    "version": "4.3",
+    "deviceName": "Android Emulator",
+    "deviceType": "phone",
+    "deviceOrientation": "portrait"
+  }
+}
