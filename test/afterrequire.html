@@ -6,7 +6,7 @@
 
   <script>
     Bugsnag.testRequest = function (url, params) {
-      window.top.testResult(params);
+      window.parent.testResult(params);
     };
   </script>
 
