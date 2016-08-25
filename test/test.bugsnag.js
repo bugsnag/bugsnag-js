@@ -47,7 +47,6 @@ describe("Bugsnag", function () {
 
     describe("disableLog", function () {
       var oldConsoleLog = window.console && window.console.log;
-      var ifConsoleLogExistsIt = oldConsoleLog ? it : it.skip;
 
       beforeEach(function () {
         oldConsoleLog && stub(console, "log");
@@ -57,28 +56,36 @@ describe("Bugsnag", function () {
         oldConsoleLog && (console.log = oldConsoleLog);
       });
 
-      ifConsoleLogExistsIt("should log to the console if disableLog is not set", function () {
-        Bugsnag.apiKey = null;
-        Bugsnag.notifyException(new Error("Example error"));
+      if (oldConsoleLog) {
+        it("should log to the console if disableLog is not set", function () {
+          Bugsnag.apiKey = null;
+          Bugsnag.notifyException(new Error("Example error"));
 
-        assert(console.log.called, "console.log should have been called");
-      });
+          assert(console.log.called, "console.log should have been called");
+        });
 
-      ifConsoleLogExistsIt("should log to the console if disableLog is false", function () {
-        Bugsnag.apiKey = null;
-        Bugsnag.disableLog = false;
-        Bugsnag.notifyException(new Error("Example error"));
+        it("should log to the console if disableLog is false", function () {
+          Bugsnag.apiKey = null;
+          Bugsnag.disableLog = false;
+          Bugsnag.notifyException(new Error("Example error"));
 
-        assert(console.log.called, "console.log should have been called");
-      });
+          assert(console.log.called, "console.log should have been called");
+        });
 
-      ifConsoleLogExistsIt("should not log to the console if disableLog is true", function () {
-        Bugsnag.apiKey = null;
-        Bugsnag.disableLog = true;
-        Bugsnag.notifyException(new Error("Example error"));
+        it("should not log to the console if disableLog is true", function () {
+          Bugsnag.apiKey = null;
+          Bugsnag.disableLog = true;
+          Bugsnag.notifyException(new Error("Example error"));
 
-        assert(!console.log.called, "console.log should not have been called");
-      });
+          assert(!console.log.called, "console.log should not have been called");
+        });
+
+        it("should log warning if called with a string instead of an Error", function () {
+          Bugsnag.notifyException("Using it wrong");
+          assert(console.log.called, "console.log should have been called");
+        });
+      }
+
     });
 
     it("should contain an apiKey", function () {
