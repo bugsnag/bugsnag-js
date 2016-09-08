@@ -436,7 +436,7 @@ describe("Bugsnag", function () {
           }
         };
 
-        var actual = requestData().params.breadcrumbs[0];
+        var actual = requestData().params.breadcrumbs[1];
 
         assert(actual, "no breadcrumbs present");
         assert.equal(actual.type, expected.type);
@@ -455,7 +455,7 @@ describe("Bugsnag", function () {
           }
         };
 
-        var actual = requestData().params.breadcrumbs[0];
+        var actual = requestData().params.breadcrumbs[1];
 
         assert.equal(actual.name, expected.name);
         assert.deepEqual(actual.metaData, expected.metaData);
@@ -475,7 +475,7 @@ describe("Bugsnag", function () {
         Bugsnag.leaveBreadcrumb(expected);
         Bugsnag.notify("Something");
 
-        var actual = requestData().params.breadcrumbs[0];
+        var actual = requestData().params.breadcrumbs[1];
 
         assert.deepEqual(actual, expected);
       });
@@ -493,14 +493,14 @@ describe("Bugsnag", function () {
         Bugsnag.notify("Something");
 
         // Replacing an invalid breadcrumb also triggers a console log breadcrumb
-        var logCrumb = requestData().params.breadcrumbs[0];
+        var logCrumb = requestData().params.breadcrumbs[1];
         assert.equal(logCrumb.type, "log");
         assert.equal(
           logCrumb.metaData.message,
           "[Bugsnag] Converted invalid breadcrumb type 'fanciful' to 'manual'"
         );
 
-        var actualCrumb = requestData().params.breadcrumbs[1];
+        var actualCrumb = requestData().params.breadcrumbs[2];
         assert.equal(actualCrumb.type, "manual");
       });
 
@@ -512,7 +512,7 @@ describe("Bugsnag", function () {
         Bugsnag.leaveBreadcrumb(longValue);
         Bugsnag.notify("Something");
 
-        var crumb = requestData().params.breadcrumbs[0];
+        var crumb = requestData().params.breadcrumbs[1];
 
         assert.equal(crumb.metaData.message.length, 140);
       });
@@ -550,7 +550,7 @@ describe("Bugsnag", function () {
           }
         };
 
-        var actual = requestData().params.breadcrumbs[0];
+        var actual = requestData().params.breadcrumbs[1];
 
         assert(actual, "no breadcrumbs present");
         assert.equal(actual.type, expected.type);
@@ -562,7 +562,7 @@ describe("Bugsnag", function () {
         container.className = "blue steel";
         clickOn(container);
         Bugsnag.notify("Something");
-        var selector = requestData().params.breadcrumbs[0].metaData.targetSelector;
+        var selector = requestData().params.breadcrumbs[1].metaData.targetSelector;
         assert.equal(selector, "DIV#container.blue.steel");
       });
 
@@ -570,14 +570,14 @@ describe("Bugsnag", function () {
         container.textContent = "\n Hello \n\n";
         clickOn(container);
         Bugsnag.notify("Something");
-        assert.equal(requestData().params.breadcrumbs[0].metaData.targetText, "Hello");
+        assert.equal(requestData().params.breadcrumbs[1].metaData.targetText, "Hello");
       });
 
       it("handles invalid id attributes", function() {
         container.id = "12345";
         clickOn(container);
         Bugsnag.notify("Something");
-        var selector = requestData().params.breadcrumbs[0].metaData.targetSelector;
+        var selector = requestData().params.breadcrumbs[1].metaData.targetSelector;
         assert.equal(selector, "DIV#12345");
       });
     });
