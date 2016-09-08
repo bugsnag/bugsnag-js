@@ -70,7 +70,7 @@ module.exports = function(grunt) {
         ]
       }
     },
-    invalidate_cloudfront: {
+    "invalidate_cloudfront": {
       options: {
         key: process.env.AWS_ACCESS_KEY_ID,
         secret: process.env.AWS_SECRET_ACCESS_KEY,
@@ -178,7 +178,7 @@ module.exports = function(grunt) {
   grunt.registerTask("uglify-stats", "Outputs stats about uglification", function() {
     var exec = require("child_process").exec;
     var done = this.async();
-    exec(['echo "Size: $(cat src/bugsnag.js | wc -c)"', 'echo "Ugly: $(cat dist/bugsnag.min.js | wc -c)"', 'echo "Gzip: $(cat dist/bugsnag.min.js | gzip | wc -c)"'].join(" && "), function(error, stdout, stderr) {
+    exec(["echo \"Size: $(cat src/bugsnag.js | wc -c)\"", "echo \"Ugly: $(cat dist/bugsnag.min.js | wc -c)\"", "echo \"Gzip: $(cat dist/bugsnag.min.js | gzip | wc -c)\""].join(" && "), function(error, stdout, stderr) {
       grunt.log.write(stdout.toString());
       grunt.log.write(stderr.toString());
       done(error == null);
