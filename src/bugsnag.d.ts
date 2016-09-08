@@ -108,7 +108,7 @@ interface BugsnagStatic {
            severity?: string): void;
 
     /** Add a breadcrumb to be sent with next notify payload to Bugsnag **/
-    leaveBreadcrumb(value?: string|Object)
+    leaveBreadcrumb(value?: string|Object): void;
 }
 
 declare var Bugsnag: BugsnagStatic;
