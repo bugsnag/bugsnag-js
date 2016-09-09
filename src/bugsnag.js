@@ -1109,6 +1109,11 @@
   trackConsoleLog();
   trackNavigation();
 
+  // Leave the initial breadcrumb
+  if (getSetting("autoBreadcrumbs", true)) {
+    self.leaveBreadcrumb({ type: "navigation", name: "Bugsnag Loaded" });
+  }
+
   window.Bugsnag = self;
   // If people are using a javascript loader, we should integrate with it.
   // We don't want to defer instrumenting their code with callbacks however,
