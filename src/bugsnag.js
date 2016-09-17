@@ -521,7 +521,7 @@
 
   // extract text content from a element
   function nodeText(el) {
-    var text = el.textContent || el.innerText || "";
+    var text = el.textContent || el.innerText || el.value || "";
     text = text.replace(/^\s+|\s+$/g, ""); // trim whitespace
     return truncate(text, 140);
   }
