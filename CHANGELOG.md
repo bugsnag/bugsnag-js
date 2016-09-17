@@ -1,6 +1,11 @@
 Changelog
 =========
 
+3.0.4 (2016-09-09)
+-----
+
+- Create "Bugsnag loaded" breadcrumb [#179](https://github.com/bugsnag/bugsnag-js/pull/179)
+
 3.0.3 (2016-09-08)
 -----
 

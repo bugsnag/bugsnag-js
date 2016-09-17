@@ -480,7 +480,7 @@
   // Set up default notifier settings.
   var DEFAULT_BASE_ENDPOINT = "https://notify.bugsnag.com/";
   var DEFAULT_NOTIFIER_ENDPOINT = DEFAULT_BASE_ENDPOINT + "js";
-  var NOTIFIER_VERSION = "3.0.3";
+  var NOTIFIER_VERSION = "3.0.4";
 
   // Keep a reference to the currently executing script in the DOM.
   // We'll use this later to extract settings from attributes.
@@ -1108,6 +1108,11 @@
   trackClicks();
   trackConsoleLog();
   trackNavigation();
+
+  // Leave the initial breadcrumb
+  if (getSetting("autoBreadcrumbs", true)) {
+    self.leaveBreadcrumb({ type: "navigation", name: "Bugsnag Loaded" });
+  }
 
   window.Bugsnag = self;
   // If people are using a javascript loader, we should integrate with it.
