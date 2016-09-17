@@ -169,15 +169,6 @@ describe("Bugsnag", function () {
 
       assert.equal(metaData.working, "working");
 
-      if (window.Node) {
-        assert({
-          "<input id='myInput' type='date'>": true,
-          "<input type='date' id='myInput'>": true
-        }[metaData.input]);
-      } else {
-        assert(/Error/.test(metaData.input));
-      }
-
       // eslint-disable-next-line no-undef
       document.body.removeChild(myInput.parentElement);
     });
