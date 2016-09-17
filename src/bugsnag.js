@@ -262,13 +262,26 @@
       return;
     }
 
+
     var callback = function(event) {
+      var targetText, targetSelector;
+      // Cross origin security might prevent us from accessing the event target
+
+      try {
+        targetText = nodeText(event.target);
+        targetSelector = nodeLabel(event.target);
+      } catch (e) {
+        targetText = "[hidden]";
+        targetSelector = "[hidden]";
+        log("Cross domain error when tracking click event. See https://docs.bugsnag.com/platforms/browsers/faq/#3-cross-origin-script-errors");
+      }
+
       self.leaveBreadcrumb({
         type: "user",
         name: "UI click",
         metaData: {
-          targetText: nodeText(event.target),
-          targetSelector: nodeLabel(event.target)
+          targetText: targetText,
+          targetSelector: targetSelector
         }
       });
     };
