@@ -12,6 +12,7 @@
         "url": "https://github.com/bugsnag/bugsnag-js"
     },
     "devDependencies": {
+        "eslint": "^3.4.0",
         "grunt": "~0.4.2",
         "grunt-bumpx": "~0.1.0",
         "grunt-contrib-watch": "~0.5.2",

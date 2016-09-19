@@ -8,15 +8,15 @@
 after(function () {
   var passes, fails;
 
-  var ems = document.getElementsByTagName('em');
+  var ems = document.getElementsByTagName("em");
   for (var i = 0; i < ems.length; i++) {
-    if (ems[i].parentNode.className == 'passes') {
+    if (ems[i].parentNode.className === "passes") {
       passes = parseInt(ems[i].innerHTML);
-    } else if (ems[i].parentNode.className == 'failures') {
+    } else if (ems[i].parentNode.className === "failures") {
       fails = parseInt(ems[i].innerHTML, 10);
     }
   }
-  document.title =  passes + '/' + (passes + fails);
+  document.title =  passes + "/" + (passes + fails);
 });
 describe("Bugsnag", function () {
   this.timeout(4000);
@@ -151,32 +151,25 @@ describe("Bugsnag", function () {
     });
 
     it("should allow exception and metadata", function() {
-      Bugsnag.notifyException(new Error("Hello"), {a:"b"})
+      Bugsnag.notifyException(new Error("Hello"), {a:"b"});
 
-      assert(requestData().params.name == "Error", "name should be correct");
-      assert(requestData().params.metaData.a == "b", "metadata should be correct");
+      assert(requestData().params.name === "Error", "name should be correct");
+      assert(requestData().params.metaData.a === "b", "metadata should be correct");
     });
 
     it("should handle crashy inputs in metadata", function() {
-      var div = document.createElement('div');
-      div.innerHTML = '<input id="myInput" type="date"/>';
+      var div = document.createElement("div");
+      div.innerHTML = "<input id='myInput' type='date'/>";
       document.body.appendChild(div);
 
+      // eslint-disable-next-line
       Bugsnag.notifyException(new Error("Oahi"), {input: myInput, working: "working"});
 
       var metaData = requestData().params.metaData;
 
-      assert.equal(metaData.working, 'working');
+      assert.equal(metaData.working, "working");
 
-      if (window.Node) {
-        assert({
-          '<input id="myInput" type="date">': true,
-          '<input type="date" id="myInput">': true
-        }[metaData.input]);
-      } else {
-        assert(/Error/.test(metaData.input))
-      }
-
+      // eslint-disable-next-line no-undef
       document.body.removeChild(myInput.parentElement);
     });
 
@@ -223,7 +216,6 @@ describe("Bugsnag", function () {
 
     it("should contain global metaData if set", function () {
       var metaData = {some: {data: "here"}};
-      var expected = metaData
 
       Bugsnag.metaData = metaData;
       Bugsnag.notifyException(new Error("Example error"));
@@ -232,7 +224,7 @@ describe("Bugsnag", function () {
 
       // Device time won't match, so just remove it before we compare metaData
       var result = requestData().params.metaData;
-      delete result.device
+      delete result.device;
 
       assert.deepEqual(result, metaData, "metaData should match");
     });
@@ -254,7 +246,7 @@ describe("Bugsnag", function () {
 
       // Device time won't match, so just remove it before we compare metaData
       var result = requestData().params.metaData;
-      delete result.device
+      delete result.device;
 
       assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
       assert.deepEqual(result, metaData, "metaData should match");
@@ -267,7 +259,7 @@ describe("Bugsnag", function () {
 
       // Device time won't match, so just remove it before we compare metaData
       var result = requestData().params.metaData;
-      delete result.device
+      delete result.device;
 
       assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
       assert.deepEqual(result, metaData, "metaData should match");
@@ -282,7 +274,7 @@ describe("Bugsnag", function () {
 
       // Device time won't match, so just remove it before we compare metaData
       var result = requestData().params.metaData;
-      delete result.device
+      delete result.device;
 
       assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
       assert.deepEqual(result, {
@@ -309,7 +301,7 @@ describe("Bugsnag", function () {
       assert(device && device.time, "metaData should include device time");
     });
 
-    it('should redact recursive metadata', function () {
+    it("should redact recursive metadata", function () {
       var a = {a : 5};
       a.b = a;
       Bugsnag.notifyException(new Error("Example error"), "Error", a);
@@ -325,7 +317,7 @@ describe("Bugsnag", function () {
 
       assert(Bugsnag.beforeNotify.calledOnce, "Bugsnag.beforeNotify should have been called once");
       assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
-    })
+    });
 
     it("should let before bugsnag notify halt notification", function() {
       stub(Bugsnag, "beforeNotify").returns(false);
@@ -334,10 +326,10 @@ describe("Bugsnag", function () {
 
       assert(Bugsnag.beforeNotify.calledOnce, "Bugsnag.beforeNotify should have been called once");
       assert(!Bugsnag.testRequest.called, "Bugsnag.testRequest should not have been called");
-    })
+    });
 
     it("should let beforeNotify modify the payload", function() {
-      Bugsnag.beforeNotify = function(payload, metaData) {
+      Bugsnag.beforeNotify = function(payload) {
         payload.url = "http://redacted.com";
       };
 
@@ -359,7 +351,7 @@ describe("Bugsnag", function () {
         Bugsnag.notifyException(new Error("Example error"));
 
         assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
-        match = /^<generated-ie>\n/.test(requestData().params.stacktrace);
+        var match = /^<generated-ie>\n/.test(requestData().params.stacktrace);
         assert(match, "No metaframes included");
       });
     } else {
@@ -409,7 +401,7 @@ describe("Bugsnag", function () {
         Bugsnag.notify("CustomError", "Something broke");
 
         assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
-        match = /^<generated-ie>\n/.test(requestData().params.stacktrace);
+        var match = /^<generated-ie>\n/.test(requestData().params.stacktrace);
         assert(match, "No metaframes included");
       });
     } else {
@@ -594,7 +586,7 @@ describe("window", function () {
 
   describe("setTimeout", function () {
     it("should allow multiple parameters to be passed", function (done) {
-      window.setTimeout(function (a, b) {
+      window.setTimeout(function (a) {
         assert.equal(2, a);
         done();
       }, 1, 2, 3);
@@ -602,7 +594,7 @@ describe("window", function () {
 
     it("should allow a string to be passed", function (done) {
       window.done = done;
-      setTimeout('window.done()', 10);
+      setTimeout("window.done()", 10);
     });
   });
 
@@ -688,7 +680,7 @@ describe("window", function () {
         window.onerror("Something broke", "http://example.com/example.js", 123, 15, new Error("Example error"));
 
         assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
-        match = /^<generated-ie>\n/.test(requestData().params.stacktrace);
+        var match = /^<generated-ie>\n/.test(requestData().params.stacktrace);
         assert(match, "No metaframes included");
       });
     } else {
@@ -716,7 +708,7 @@ describe("window", function () {
       }
 
       beforeEach(function () {
-        stub(Bugsnag, '_onerror'); // disable reporting error to mocha.
+        stub(Bugsnag, "_onerror"); // disable reporting error to mocha.
         handle = makeHandle();
         window.addEventListener("message", handle, false);
       });
@@ -752,7 +744,7 @@ describe("window", function () {
       var callback, handle;
       function makeHandle() {
         var o = {};
-        o.handleEvent = function handle(e) {
+        o.handleEvent = function handle() {
           setTimeout(function () {
             Bugsnag._onerror.restore();
             callback();
@@ -764,7 +756,7 @@ describe("window", function () {
 
       beforeEach(function () {
         handle = makeHandle();
-        stub(Bugsnag, '_onerror'); // disable reporting error to mocha.
+        stub(Bugsnag, "_onerror"); // disable reporting error to mocha.
         document.body.addEventListener("click", handle, false);
       });
 
@@ -815,7 +807,7 @@ if (window.addEventListener) {
 
       beforeEach(function () {
         handle = makeHandle();
-        stub(Bugsnag, '_onerror'); // disable reporting error to mocha.
+        stub(Bugsnag, "_onerror"); // disable reporting error to mocha.
         document.body.addEventListener("click", handle, false);
       });
 
@@ -840,8 +832,8 @@ if (window.addEventListener) {
               /failA(.|\n)*failB(.|\n)*handle/.test(requestData().params.stacktrace),
               "Bugsnag.testRequest should have been called with a multi-line stacktrace:: " + trace
             );
-           done();
-         };
+            done();
+          };
           document.body.click();
         });
       } else {
@@ -857,8 +849,8 @@ if (window.addEventListener) {
 
 describe("inline script", function () {
   it("should include the content", function (done) {
-    var iframe = document.createElement('iframe');
-    iframe.src = 'inlinescript.html';
+    var iframe = document.createElement("iframe");
+    iframe.src = "inlinescript.html";
     window.testResult = function (params) {
       document.body.removeChild(iframe);
       try {
@@ -873,12 +865,12 @@ describe("inline script", function () {
   });
 
   it("should not include the content if inlineScript is false", function (done) {
-    var iframe = document.createElement('iframe');
-    iframe.src = 'inlinescript2.html';
+    var iframe = document.createElement("iframe");
+    iframe.src = "inlinescript2.html";
     window.testResult = function (params) {
       document.body.removeChild(iframe);
       try {
-        assert.equal(params.metaData.script.content, '');
+        assert.equal(params.metaData.script.content, "");
         done();
       } catch(e) {
         (console && console.log(JSON.stringify(params.metaData.script.content)));
@@ -894,8 +886,8 @@ describe("current script", function () {
   afterEach(tearDown);
 
   it("should track currentScript across event handlers", function (done) {
-    var iframe = document.createElement('iframe');
-    iframe.src = 'inlinescript1.html';
+    var iframe = document.createElement("iframe");
+    iframe.src = "inlinescript1.html";
     window.testResult = function (params) {
       document.body.removeChild(iframe);
       try {
@@ -915,25 +907,25 @@ describe("UMD", function () {
   afterEach(tearDown);
 
   it("should work when required via require.js", function (done) {
-    testIframe('requirejs.html', function (params) {
+    testIframe("requirejs.html", function (params) {
       assert(params.message.match(/requirejs error/));
     }, done);
   });
 
   it("should work when required after almond.js #81", function (done) {
-    testIframe('afteralmond.html', function (params) {
+    testIframe("afteralmond.html", function (params) {
       assert(params.message.match(/afteralmond error/));
     }, done);
   });
 
-  it('should work after requiring require.js', function (done) {
-    testIframe('afterrequire.html', function (params) {
+  it("should work after requiring require.js", function (done) {
+    testIframe("afterrequire.html", function (params) {
       assert(params.message.match(/afterrequire error/));
     }, done);
   });
 
   it("should work with the r.js optimizer", function (done) {
-    testIframe('requirejsoptimized.html', function (params) {
+    testIframe("requirejsoptimized.html", function (params) {
       assert(params.message.match(/requirejs error/));
     }, done);
   });
@@ -944,12 +936,12 @@ describe("noConflict", function() {
   afterEach(tearDown);
 
   it("should restore previous window.Bugsnag binding", function () {
-    var newBugsnag = window.Bugsnag.noConflict();
-    assert("put_me_back" in window.Bugsnag, "should have restored dummy object");
+    window.Bugsnag.noConflict();
+    assert("putMeBack" in window.Bugsnag, "should have restored dummy object");
   });
 
   it("should remove bugsnag object from window.Bugsnag", function() {
-    var newBugsnag = window.Bugsnag.noConflict();
+    window.Bugsnag.noConflict();
     assert(!("notifyException" in window.Bugsnag), "should not have Bugsnag functions");
   });
 
@@ -961,7 +953,7 @@ describe("noConflict", function() {
 
 function buildUp(cb) {
   // dummy object to override
-  window.Bugsnag = {put_me_back: 1};
+  window.Bugsnag = {putMeBack: 1};
 
   window.BUGSNAG_TESTING = true;
   window.undo = [];
@@ -999,7 +991,7 @@ function tearDown() {
   }
 
   for (var i = 0; i < window.undo.length; i++) {
-    undo[i]();
+    window.undo[i]();
   }
 }
 
@@ -1013,7 +1005,7 @@ function requestData() {
   ("&" + query).replace(/&([^&=]*)=([^&=]*)/g, function (_, key, value) {
 
     var obj = params;
-    var path = decodeURIComponent(key).replace(/\]/g, '').split('[');
+    var path = decodeURIComponent(key).replace(/\]/g, "").split("[");
     for (var i = 0; i < path.length - 1; i++) {
       if (!obj[path[i]]) {
         obj[path[i]] = {};
@@ -1046,17 +1038,17 @@ function clickOn(element) {
 }
 
 function testIframe(name, callback, done) {
-    var iframe = document.createElement('iframe');
-    iframe.src = name;
-    window.testResult = function (params) {
-      document.body.removeChild(iframe);
-      try {
-        callback(params);
-        done();
-      } catch (e) {
-        console.log(params);
-        done(e);
-      }
-    };
-    document.body.appendChild(iframe);
+  var iframe = document.createElement("iframe");
+  iframe.src = name;
+  window.testResult = function (params) {
+    document.body.removeChild(iframe);
+    try {
+      callback(params);
+      done();
+    } catch (e) {
+      console.log(params);
+      done(e);
+    }
+  };
+  document.body.appendChild(iframe);
 }
