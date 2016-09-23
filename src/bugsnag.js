@@ -521,7 +521,10 @@
 
   // extract text content from a element
   function nodeText(el) {
-    var text = el.textContent || el.innerText || "";
+    if (el.getAttribute('type') === 'password') {
+      return 'Password value can not be shown or it is empty';
+    }
+    var text = el.textContent || el.innerText || el.value || "";
     text = text.replace(/^\s+|\s+$/g, ""); // trim whitespace
     return truncate(text, 140);
   }
