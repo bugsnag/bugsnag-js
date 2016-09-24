@@ -565,6 +565,30 @@ describe("Bugsnag", function () {
         assert.equal(requestData().params.breadcrumbs[1].metaData.targetText, "Hello");
       });
 
+      it("reports the value, if the target is a submit button", function() {
+        var input = document.createElement("input");
+        input.type = "submit";
+        input.value = "Submit";
+        document.body.appendChild(input);
+
+        clickOn(input);
+        Bugsnag.notify("Something");
+        document.body.removeChild(input);
+        assert.equal(requestData().params.breadcrumbs[1].metaData.targetText, "Submit");
+      });
+
+      it("does not collect value from password elements", function() {
+        var input = document.createElement("input");
+        input.type = "password";
+        input.value = "s0s3cret";
+        document.body.appendChild(input);
+
+        clickOn(input);
+        Bugsnag.notify("Something");
+        document.body.removeChild(input);
+        assert.equal(requestData().params.breadcrumbs[1].metaData.targetText, "");
+      });
+
       it("handles invalid id attributes", function() {
         container.id = "12345";
         clickOn(container);
