@@ -291,7 +291,7 @@
 
   // Setup breadcrumbs for console.log, console.warn, console.error
   function trackConsoleLog(){
-    if(!window.console || typeof window.console.log !== "function" || !getBreadcrumbSetting("autoBreadcrumbsConsole")) {
+    if(!getBreadcrumbSetting("autoBreadcrumbsConsole")) {
       return;
     }
 
@@ -304,6 +304,11 @@
           message: Array.prototype.slice.call(args).join(", ")
         }
       });
+    }
+
+    // make an empty object onto which we attach our fake logging functions
+    if (typeof window.console === "undefined") {
+      window.console = {};
     }
 
     enhance(console, "log", function() {
@@ -507,12 +512,12 @@
   //  })
   function enhance(object, property, newFunction) {
     var oldFunction = object[property];
-    if (typeof oldFunction === "function") {
-      object[property] = function() {
-        newFunction.apply(this, arguments);
+    object[property] = function() {
+      newFunction.apply(this, arguments);
+      if (typeof oldFunction === "function") {
         oldFunction.apply(this, arguments);
-      };
-    }
+      }
+    };
   }
 
   // Simple logging function that wraps `console.log` if available.
