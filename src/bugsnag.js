@@ -18,6 +18,9 @@
     ignoreOnError = 0,
     breadcrumbs = [],
 
+    // Cap total breadcrumbs at 20, so we don't send a giant payload.
+    breadcrumbLimit = 20,
+
     // We've seen cases where individual clients can infinite loop sending us errors
     // (in some cases 10,000+ errors per page). This limit is at the point where
     // you've probably learned everything useful there is to debug the problem,
@@ -188,6 +191,11 @@
     } else {
       crumb.name = truncate(crumb.name, 32);
       breadcrumbs.push(truncateDeep(crumb, 140));
+
+      // limit breadcrumb trail length, so the payload doesn't get too large
+      if (breadcrumbs.length > breadcrumbLimit) {
+        breadcrumbs = breadcrumbs.slice(-breadcrumbLimit);
+      }
     }
   };
 

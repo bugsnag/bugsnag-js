@@ -508,6 +508,24 @@ describe("Bugsnag", function () {
 
         assert.equal(crumb.metaData.message.length, 140);
       });
+
+      it("limits total breadcrumbs to 20", function () {
+        var i, key, breadcrumbs, breadcrumbCount = 0;
+        for (i=0; i < 21; i++) {
+          Bugsnag.leaveBreadcrumb("I am breadcrumb " + i);
+        }
+        Bugsnag.notify("Something");
+
+        // Do shenanigans to get around IE<9 not supporting Object.keys
+        breadcrumbs = requestData().params.breadcrumbs;
+        for (key in breadcrumbs) {
+          if (breadcrumbs.hasOwnProperty(key)) breadcrumbCount++;
+        }
+
+        assert.equal(breadcrumbCount, 20);
+        // Confirm we kept the most recent 20 breadcrumbs instead of the first 20
+        assert.equal(requestData().params.breadcrumbs[19].metaData.message, "I am breadcrumb 20");
+      });
     });
 
     describe("click tracking", function () {
