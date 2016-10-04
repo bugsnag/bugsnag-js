@@ -299,7 +299,9 @@
 
   // Setup breadcrumbs for console.log, console.warn, console.error
   function trackConsoleLog(){
-    if(!getBreadcrumbSetting("autoBreadcrumbsConsole")) {
+    // by default, only enable automatic console logging in production.
+    var defaultEnabled = getSetting("releaseStage") === "production";
+    if(!getBreadcrumbSetting("autoBreadcrumbsConsole", defaultEnabled)) {
       return;
     }
 
@@ -795,8 +797,11 @@
   // get breadcrumb specific setting. When autoBreadcrumbs is true, all individual events are defaulted
   // to true. Otherwise they will all defaul to false. You can set any event specicically and it will override
   // the default.
-  function getBreadcrumbSetting(name) {
-    var fallback = getSetting("autoBreadcrumbs", true);
+  function getBreadcrumbSetting(name, fallback) {
+    if (typeof fallback === "undefined") {
+      fallback = getSetting("autoBreadcrumbs", true);
+    }
+
     return getSetting(name, fallback);
   }
 
