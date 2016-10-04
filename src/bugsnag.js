@@ -194,7 +194,7 @@
 
       // limit breadcrumb trail length, so the payload doesn't get too large
       if (breadcrumbs.length > breadcrumbLimit) {
-        breadcrumbs = breadcrumbs.slice(0, breadcrumbLimit);
+        breadcrumbs = breadcrumbs.slice(-breadcrumbLimit);
       }
     }
   };

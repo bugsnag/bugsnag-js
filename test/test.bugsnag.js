@@ -521,7 +521,10 @@ describe("Bugsnag", function () {
         for (key in breadcrumbs) {
           if (breadcrumbs.hasOwnProperty(key)) breadcrumbCount++;
         }
+
         assert.equal(breadcrumbCount, 20);
+        // Confirm we kept the most recent 20 breadcrumbs instead of the first 20
+        assert.equal(requestData().params.breadcrumbs[19].metaData.message, "I am breadcrumb 20");
       });
     });
 
