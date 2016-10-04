@@ -509,7 +509,7 @@ describe("Bugsnag", function () {
         assert.equal(crumb.metaData.message.length, 140);
       });
 
-      it("limits total breadcumbs to 20", function () {
+      it("limits total breadcrumbs to 20", function () {
         var i, key, breadcrumbs, breadcrumbCount = 0;
         for (i=0; i < 21; i++) {
           Bugsnag.leaveBreadcrumb("I am breadcrumb " + i);
