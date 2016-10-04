@@ -510,14 +510,17 @@ describe("Bugsnag", function () {
       });
 
       it("limits total breadcumbs to 20", function () {
-        var i;
+        var i, key, breadcrumbs, breadcrumbCount = 0;
         for (i=0; i < 21; i++) {
           Bugsnag.leaveBreadcrumb("I am breadcrumb " + i);
         }
         Bugsnag.notify("Something");
 
-        var breadcrumbCount = Object.keys(requestData().params.breadcrumbs).length;
-
+        // Do shenanigans to get around IE<9 not supporting Object.keys
+        breadcrumbs = requestData().params.breadcrumbs;
+        for (key in breadcrumbs) {
+          if (breadcrumbs.hasOwnProperty(key)) breadcrumbCount++;
+        }
         assert.equal(breadcrumbCount, 20);
       });
     });
