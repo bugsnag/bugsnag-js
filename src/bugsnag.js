@@ -291,7 +291,7 @@
 
   // Setup breadcrumbs for console.log, console.warn, console.error
   function trackConsoleLog(){
-    if(!getBreadcrumbSetting("autoBreadcrumbsConsole")) {
+    if(!getBreadcrumbSetting("autoBreadcrumbsConsole") || typeof window.console === "undefined") {
       return;
     }
 
@@ -304,11 +304,6 @@
           message: Array.prototype.slice.call(args).join(", ")
         }
       });
-    }
-
-    // make an empty object onto which we attach our fake logging functions
-    if (typeof window.console === "undefined") {
-      window.console = {};
     }
 
     enhance(console, "log", function() {
