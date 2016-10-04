@@ -508,6 +508,18 @@ describe("Bugsnag", function () {
 
         assert.equal(crumb.metaData.message.length, 140);
       });
+
+      it("limits total breadcumbs to 20", function () {
+        var i;
+        for (i=0; i < 21; i++) {
+          Bugsnag.leaveBreadcrumb("I am breadcrumb " + i);
+        }
+        Bugsnag.notify("Something");
+
+        var breadcrumbCount = Object.keys(requestData().params.breadcrumbs).length;
+
+        assert.equal(breadcrumbCount, 20);
+      });
     });
 
     describe("click tracking", function () {
