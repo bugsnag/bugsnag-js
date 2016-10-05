@@ -184,7 +184,7 @@ module.exports = function(grunt) {
       done(error == null);
     });
   });
-  grunt.registerTask("release", ["eslint", "uglify", "docco", "git-tag", "git-push", "s3", "npm_publish", "invalidate_cloudfront"]);
+  grunt.registerTask("release", ["uglify", "docco", "git-tag", "git-push", "s3", "npm_publish", "invalidate_cloudfront"]);
   grunt.registerTask("server", ["connect:server:keepalive"]);
   grunt.registerTask("default", ["eslint", "uglify", "docco"]);
 };
