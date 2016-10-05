@@ -76,6 +76,7 @@
   // will not see it in your dashboard.
   self.notifyException = function (exception, name, metaData, severity) {
     if (!exception) {
+      log("Bugsnag.notifyException() called with no arguments");
       return;
     }
 
@@ -115,6 +116,11 @@
   // Notify Bugsnag about an error by passing in a `name` and `message`,
   // without requiring an exception.
   self.notify = function (name, message, metaData, severity) {
+    if (!name) {
+      log("Bugsnag.notify() called with no arguments");
+      return;
+    }
+
     sendToBugsnag({
       name: name,
       message: message,
