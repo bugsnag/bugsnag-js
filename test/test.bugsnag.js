@@ -567,6 +567,13 @@ describe("Bugsnag", function () {
         assert.deepEqual(actual.metaData, expected.metaData);
       });
 
+      it("can be disabled", function() {
+        Bugsnag.disableAutoBreadcrumbsClicks();
+        clickOn(container);
+        Bugsnag.notify("Something");
+        assert.equal(requestData().params.breadcrumbs.length, 1);
+      });
+
       it("builds a css selector from the target", function() {
         container.id = "container";
         container.className = "blue steel";
