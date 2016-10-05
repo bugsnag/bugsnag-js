@@ -1,6 +1,16 @@
 Changelog
 =========
 
+3.0.5 (2016-10-05)
+-----
+
+- Limit maximum number of breadcrumbs to 20 (#194)
+- Show value of submit inputs & buttons in breadcrumbs (#184, #187)
+  [Anton Pawlik](https://github.com/antpaw)
+  [#184](https://github.com/bugsnag/bugsnag-js/pull/184)
+  [#187](https://github.com/bugsnag/bugsnag-js/pull/187)
+- Linter improvements (#180)
+
 3.0.4 (2016-09-09)
 -----
 
