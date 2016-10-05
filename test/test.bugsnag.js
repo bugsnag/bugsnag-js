@@ -109,6 +109,12 @@ describe("Bugsnag", function () {
       assert.equal(requestData().params.name, "CustomError");
     });
 
+    it("should add custom class when no exception is given", function () {
+      Bugsnag.notifyException();
+
+      assert.equal(requestData().params.name, "UnspecifiedBugsnagError");
+    });
+
     it("should contain the correct exception message", function () {
       Bugsnag.notifyException(new Error("Example error"));
 
@@ -366,6 +372,14 @@ describe("Bugsnag", function () {
       assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
       assert.equal(requestData().params.name, "CustomError");
     });
+
+
+    it("should create an error name when none is provided", function () {
+      Bugsnag.notify();
+
+      assert.equal(requestData().params.name, "UnspecifiedBugsnagError");
+    });
+
 
     it("should contain 'warning' as the default severity", function () {
       Bugsnag.notify("CustomError", "Something broke");
