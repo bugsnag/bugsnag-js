@@ -17,6 +17,7 @@
     shouldCatch = true,
     ignoreOnError = 0,
     breadcrumbs = [],
+    placeholderErrorName = "BugsnagNotify",
 
     // Cap total breadcrumbs at 20, so we don't send a giant payload.
     breadcrumbLimit = 20,
@@ -79,6 +80,9 @@
   // will not see it in your dashboard.
   self.notifyException = function (exception, name, metaData, severity) {
     if (!exception) {
+      var message = "Bugsnag.notifyException() was called with no arguments";
+      log(message);
+      self.notify(placeholderErrorName, message);
       return;
     }
 
@@ -118,6 +122,12 @@
   // Notify Bugsnag about an error by passing in a `name` and `message`,
   // without requiring an exception.
   self.notify = function (name, message, metaData, severity) {
+    if (!name) {
+      name = placeholderErrorName;
+      message = "Bugsnag.notify() was called with no arguments";
+      log(message);
+    }
+
     sendToBugsnag({
       name: name,
       message: message,
