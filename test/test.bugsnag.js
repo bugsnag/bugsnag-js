@@ -528,6 +528,25 @@ describe("Bugsnag", function () {
       });
     });
 
+    if (typeof window["console"] !== "undefined") {
+      describe("console.log breadcrumbs", function() {
+        it("captures console output", function() {
+          Bugsnag.enableAutoBreadcrumbsConsole();
+          console.log("HELLO");
+          Bugsnag.notify("Something");
+          var crumb = requestData().params.breadcrumbs[1];
+          assert.equal(crumb.metaData.message, "HELLO");
+        });
+
+        it("can be disabled", function() {
+          Bugsnag.disableAutoBreadcrumbsConsole();
+          console.log("HELLO");
+          Bugsnag.notify("Something");
+          assert.equal(requestData().params.breadcrumbs[1], undefined);
+        });
+      });
+    }
+
     describe("click tracking", function () {
       // modern browsers only
       if (!window.addEventListener) {
@@ -571,7 +590,7 @@ describe("Bugsnag", function () {
         Bugsnag.disableAutoBreadcrumbsClicks();
         clickOn(container);
         Bugsnag.notify("Something");
-        assert.equal(requestData().params.breadcrumbs.length, 1);
+        assert.equal(requestData().params.breadcrumbs[1], undefined);
       });
 
       it("builds a css selector from the target", function() {
