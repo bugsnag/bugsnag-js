@@ -324,14 +324,12 @@
     }
 
     // keep track of functions that we will need to hijack
-    var originalLog, originalWarn, originalError;
+    var nativeLog = console.log,
+      nativeWarn = console.warn,
+      nativeError = console.error;
 
     self.enableAutoBreadcrumbsConsole = function() {
       self.autoBreadcrumbsConsole = true;
-
-      originalLog = console.log;
-      originalWarn = console.warn;
-      originalError = console.error;
 
       enhance(console, "log", function() {
         trackLog("log", arguments);
@@ -349,9 +347,9 @@
     self.disableAutoBreadcrumbsConsole = function() {
       self.autoBreadcrumbsConsole = false;
 
-      console.log = originalLog;
-      console.warn = originalWarn;
-      console.error = originalError;
+      console.log = nativeLog;
+      console.warn = nativeWarn;
+      console.error = nativeError;
     };
 
     if(getBreadcrumbSetting("autoBreadcrumbsConsole", true)) {
@@ -365,9 +363,6 @@
 
   // Setup breadcrumbs for history navigation events
   function setupNavigationBreadcrumbs() {
-    // setup variables of functions that we will need to hijack.
-    var nativePushState, nativeReplaceState;
-
 
     function parseHash(url) {
       return url.split("#")[1] || "";
@@ -471,12 +466,13 @@
       return;
     }
 
+    // keep track of native functions
+    var nativePushState = history.pushState,
+      nativeReplaceState = history.replaceState;
+
     // create enable function
     self.enableAutoBreadcrumbsNavigation = function() {
       self.autoBreadcrumbsNavigation = true;
-      // keep track of native functions
-      nativePushState = history.pushState;
-      nativeReplaceState = history.replaceState;
       // create hooks for pushstate and replaceState
       enhance(history, "pushState", wrapBuilder(buildPushState));
       enhance(history, "replaceState", wrapBuilder(buildReplaceState));
