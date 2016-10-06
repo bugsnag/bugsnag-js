@@ -112,7 +112,7 @@ describe("Bugsnag", function () {
     it("should add custom class when no exception is given", function () {
       Bugsnag.notifyException();
 
-      assert.equal(requestData().params.name, "UnspecifiedBugsnagError");
+      assert.equal(requestData().params.name, "BugsnagNotify");
     });
 
     it("should contain the correct exception message", function () {
@@ -377,7 +377,7 @@ describe("Bugsnag", function () {
     it("should create an error name when none is provided", function () {
       Bugsnag.notify();
 
-      assert.equal(requestData().params.name, "UnspecifiedBugsnagError");
+      assert.equal(requestData().params.name, "BugsnagNotify");
     });
 
 

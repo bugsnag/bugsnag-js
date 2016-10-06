@@ -17,6 +17,7 @@
     shouldCatch = true,
     ignoreOnError = 0,
     breadcrumbs = [],
+    placeholderErrorName = "BugsnagNotify",
 
     // We've seen cases where individual clients can infinite loop sending us errors
     // (in some cases 10,000+ errors per page). This limit is at the point where
@@ -78,7 +79,7 @@
     if (!exception) {
       var message = "Bugsnag.notifyException() was called with no arguments";
       log(message);
-      self.notify("UnspecifiedBugsnagError", message);
+      self.notify(placeholderErrorName, message);
       return;
     }
 
@@ -119,7 +120,7 @@
   // without requiring an exception.
   self.notify = function (name, message, metaData, severity) {
     if (!name) {
-      name = "UnspecifiedBugsnagError";
+      name = placeholderErrorName;
       message = "Bugsnag.notify() was called with no arguments";
       log(message);
     }
