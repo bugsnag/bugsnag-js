@@ -22,11 +22,11 @@ module.exports = function(config) {
       "mocha-ie-legacy"
     ],
     files: [
-      { pattern: "src/bugsnag.js", watched: true, included: false, served: true },
-      { pattern: "test/**/*", watched: true, included: false, served: true },
       "test/assert.js",
       "test/stub.js",
-      "test/test.bugsnag.js"
+      "test/test.bugsnag.js",
+      { pattern: "src/bugsnag.js", watched: true, included: false, served: true },
+      { pattern: "test/**/*", watched: true, included: false, served: true }
     ],
     proxies: {
       "/": "/base/test/",
