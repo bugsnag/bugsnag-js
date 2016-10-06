@@ -517,12 +517,14 @@
   self.enableAutoBreadcrumbs = function() {
     self.enableAutoBreadcrumbsClicks();
     self.enableAutoBreadcrumbsConsole();
+    self.enableAutoBreadcrumbsErrors();
     self.enableAutoBreadcrumbsNavigation();
   };
 
   self.disableAutoBreadcrumbs = function() {
     self.disableAutoBreadcrumbsClicks();
     self.disableAutoBreadcrumbsConsole();
+    self.disableAutoBreadcrumbsErrors();
     self.disableAutoBreadcrumbsNavigation();
   };
 
