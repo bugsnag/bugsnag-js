@@ -21,7 +21,6 @@
 
     // Cap total breadcrumbs at 20, so we don't send a giant payload.
     breadcrumbLimit = 20,
-    
 
     // We've seen cases where individual clients can infinite loop sending us errors
     // (in some cases 10,000+ errors per page). This limit is at the point where
