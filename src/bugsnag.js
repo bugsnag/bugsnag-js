@@ -707,22 +707,30 @@
 
   // truncate all string values in nested object
   function truncateDeep(object, length) {
-    if (typeof object === "object") {
-      var newObject = {};
-      each(object, function(value, key){
-        if (value != null && value !== undefined) {
-          newObject[key] = truncateDeep(value, length);
-        }
-      });
+    var traversed = [], index;
+    function _truncateDeep(object, length) {
+      index = traversed.indexOf(object);
+      if (index !== -1) {
+        return traversed[index];
+      } else if (typeof object === "object") {
+        var newObject = {};
+        traversed.push(newObject);
+        each(object, function(value, key){
+          if (value != null && value !== undefined) {
+            newObject[key] = _truncateDeep(value, length);
+          }
+        });
 
-      return newObject;
-    } else if (typeof object === "string") {
-      return truncate(object, length);
-    } else if (object && Array === object.constructor) {
-      return map(object, function(value) { return truncateDeep(value, length); });
-    } else {
-      return object;
+        return newObject;
+      } else if (typeof object === "string") {
+        return truncate(object, length);
+      } else if (object && Array === object.constructor) {
+        return map(object, function(value) { return _truncateDeep(value, length); });
+      } else {
+        return object;
+      }
     }
+    return _truncateDeep(object, length);
   }
 
   // Deeply serialize an object into a query string. We use the PHP-style
