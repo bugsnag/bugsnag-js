@@ -533,7 +533,7 @@ describe("Bugsnag", function () {
         // Do shenanigans to get around IE<9 not supporting Object.keys
         breadcrumbs = requestData().params.breadcrumbs;
         for (key in breadcrumbs) {
-          if (breadcrumbs.hasOwnProperty(key)) breadcrumbCount++;
+          if (breadcrumbs.hasOwnProperty(key)) { breadcrumbCount++; }
         }
 
         assert.equal(breadcrumbCount, 20);
