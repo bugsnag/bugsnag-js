@@ -271,17 +271,16 @@
   var _hasAddEventListener = (typeof window.addEventListener !== "undefined");
 
   // Setup breadcrumbs for click events
-  function trackClicks() {
-    if(!getBreadcrumbSetting("autoBreadcrumbsClicks", true)) {
-      return;
-    }
-
+  function setupClickBreadcrumbs() {
     if (!_hasAddEventListener) {
       return;
     }
 
-
     var callback = function(event) {
+      if(!getBreadcrumbSetting("autoBreadcrumbsClicks")) {
+        return;
+      }
+
       var targetText, targetSelector;
       // Cross origin security might prevent us from accessing the event target
 
@@ -307,13 +306,18 @@
     window.addEventListener("click", callback, true);
   }
 
+  // stub functions for old browsers
+  self.enableAutoBreadcrumbsConsole = function() {};
+  self.disableAutoBreadcrumbsConsole = function() {};
+
   // Setup breadcrumbs for console.log, console.warn, console.error
-  function trackConsoleLog(){
-    if(!getBreadcrumbSetting("autoBreadcrumbsConsole") || typeof window.console === "undefined") {
-      return;
-    }
+  function setupConsoleBreadcrumbs(){
 
     function trackLog(severity, args) {
+      if(!getBreadcrumbSetting("autoBreadcrumbsConsole")) {
+        return;
+      }
+
       self.leaveBreadcrumb({
         type: "log",
         name: "Console output",
@@ -324,34 +328,51 @@
       });
     }
 
-    enhance(console, "log", function() {
-      trackLog("log", arguments);
-    });
+    // feature detection for console.log
+    if(typeof window.console === "undefined") {
+      return;
+    }
 
-    enhance(console, "warn", function() {
-      trackLog("warn", arguments);
-    });
+    // keep track of functions that we will need to hijack
+    var nativeLog = console.log,
+      nativeWarn = console.warn,
+      nativeError = console.error;
 
-    enhance(console, "error", function() {
-      trackLog("error", arguments);
-    });
+    self.enableAutoBreadcrumbsConsole = function() {
+      self.autoBreadcrumbsConsole = true;
+
+      enhance(console, "log", function() {
+        trackLog("log", arguments);
+      });
+
+      enhance(console, "warn", function() {
+        trackLog("warn", arguments);
+      });
+
+      enhance(console, "error", function() {
+        trackLog("error", arguments);
+      });
+    };
+
+    self.disableAutoBreadcrumbsConsole = function() {
+      self.autoBreadcrumbsConsole = false;
+
+      console.log = nativeLog;
+      console.warn = nativeWarn;
+      console.error = nativeError;
+    };
+
+    if(getBreadcrumbSetting("autoBreadcrumbsConsole")) {
+      self.enableAutoBreadcrumbsConsole();
+    }
   }
 
-  // Setup breadcrumbs for history navigation events
-  function trackNavigation() {
-    if(!getBreadcrumbSetting("autoBreadcrumbsNavigation")) {
-      return;
-    }
+  // stub functions for old browsers
+  self.enableAutoBreadcrumbsNavigation = function() {};
+  self.disableAutoBreadcrumbsNavigation = function() {};
 
-    // check for browser support
-    if (!_hasAddEventListener ||
-        !window.history ||
-        !window.history.state ||
-        !window.history.pushState ||
-        !window.history.pushState.bind
-    ) {
-      return;
-    }
+  // Setup breadcrumbs for history navigation events
+  function setupNavigationBreadcrumbs() {
 
     function parseHash(url) {
       return url.split("#")[1] || "";
@@ -437,9 +458,43 @@
     // functional fu to make it easier to setup event listeners
     function wrapBuilder(builder) {
       return function() {
+        if(!getBreadcrumbSetting("autoBreadcrumbsNavigation")) {
+          return;
+        }
+
         self.leaveBreadcrumb(builder.apply(null, arguments));
       };
     }
+
+    // check for browser support
+    if (!_hasAddEventListener ||
+        !window.history ||
+        !window.history.state ||
+        !window.history.pushState ||
+        !window.history.pushState.bind
+    ) {
+      return;
+    }
+
+    // keep track of native functions
+    var nativePushState = history.pushState,
+      nativeReplaceState = history.replaceState;
+
+    // create enable function
+    self.enableAutoBreadcrumbsNavigation = function() {
+      self.autoBreadcrumbsNavigation = true;
+      // create hooks for pushstate and replaceState
+      enhance(history, "pushState", wrapBuilder(buildPushState));
+      enhance(history, "replaceState", wrapBuilder(buildReplaceState));
+    };
+
+    // create disable function
+    self.disableAutoBreadcrumbsNavigation = function() {
+      self.autoBreadcrumbsNavigation = false;
+      // restore native functions
+      history.pushState = nativePushState;
+      history.replaceState = nativeReplaceState;
+    };
 
     window.addEventListener("hashchange", wrapBuilder(buildHashChange), true);
     window.addEventListener("popstate", wrapBuilder(buildPopState), true);
@@ -448,10 +503,40 @@
     window.addEventListener("load", wrapBuilder(buildLoad), true);
     window.addEventListener("DOMContentLoaded", wrapBuilder(buildDOMContentLoaded), true);
 
-    // create hooks for pushstate and replaceState
-    enhance(history, "pushState", wrapBuilder(buildPushState));
-    enhance(history, "replaceState", wrapBuilder(buildReplaceState));
+    if(getBreadcrumbSetting("autoBreadcrumbsNavigation")) {
+      self.enableAutoBreadcrumbsNavigation();
+    }
   }
+
+  self.enableAutoBreadcrumbsErrors = function() {
+    self.autoBreadcrumbsErrors = true;
+  };
+
+  self.disableAutoBreadcrumbsErrors = function() {
+    self.autoBreadcrumbsErrors = false;
+  };
+
+  self.enableAutoBreadcrumbsClicks = function() {
+    self.autoBreadcrumbsClicks = true;
+  };
+
+  self.disableAutoBreadcrumbsClicks = function() {
+    self.autoBreadcrumbsClicks = false;
+  };
+
+  self.enableAutoBreadcrumbs = function() {
+    self.enableAutoBreadcrumbsClicks();
+    self.enableAutoBreadcrumbsConsole();
+    self.enableAutoBreadcrumbsErrors();
+    self.enableAutoBreadcrumbsNavigation();
+  };
+
+  self.disableAutoBreadcrumbs = function() {
+    self.disableAutoBreadcrumbsClicks();
+    self.disableAutoBreadcrumbsConsole();
+    self.disableAutoBreadcrumbsErrors();
+    self.disableAutoBreadcrumbsNavigation();
+  };
 
   //
   // ### Script tag tracking
@@ -798,7 +883,7 @@
   }
 
   // get breadcrumb specific setting. When autoBreadcrumbs is true, all individual events are defaulted
-  // to true. Otherwise they will all defaul to false. You can set any event specicically and it will override
+  // to true. Otherwise they will all default to false. You can set any event specifically and it will override
   // the default.
   function getBreadcrumbSetting(name) {
     var fallback = getSetting("autoBreadcrumbs", true);
@@ -1141,9 +1226,9 @@
   }
 
   // setup auto breadcrumb tracking
-  trackClicks();
-  trackConsoleLog();
-  trackNavigation();
+  setupClickBreadcrumbs();
+  setupConsoleBreadcrumbs();
+  setupNavigationBreadcrumbs();
 
   // Leave the initial breadcrumb
   if (getSetting("autoBreadcrumbs", true)) {
