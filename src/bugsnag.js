@@ -627,13 +627,11 @@
       index = traversed.length - 1;
       while (index > 0) {
         if (traversed[index] === object) {
-          break;
+          return traversed[index];
         }
         index -= 1;
       }
-      if (index !== -1) {
-        return traversed[index];
-      } else if (typeof object === "object") {
+      if (typeof object === "object") {
         var newObject = {};
         traversed.push(newObject);
         each(object, function(value, key){
