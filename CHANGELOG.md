@@ -1,6 +1,25 @@
 Changelog
 =========
 
+3.0.6 (2016-10-11)
+-----
+
+### Enhancements
+
+- You can now call `Bugsnag.notify()` and `Bugsnag.notifyException()` with no
+  arguments. This will show up in the dashboard as "BugsnagNotify". (#197)
+
+### Changes
+
+- New methods enabling disabling automatic breadcrumbs (#199). The old
+  configuration options (e.g. `Bugsnag.autoBreadcrumbsConsole = false`) were
+  broken. They should no longer be used and are now deprecated. Use instead the
+  new methods (e.g. `Bugsnag.enableAutoBreadcrumbsConsole(); Bugsnag.disableAutoBreadcrumbsConsole();`)
+
+### Bug fixes
+
+- `npm run test:watch` now correctly reloads changes in the test file. (#198)
+
 3.0.5 (2016-10-05)
 -----
 
