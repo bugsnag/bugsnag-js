@@ -267,7 +267,7 @@
     }
 
     var callback = function(event) {
-      if(!getBreadcrumbSetting("autoBreadcrumbsClicks", true)) {
+      if(!getBreadcrumbSetting("autoBreadcrumbsClicks")) {
         return;
       }
 
@@ -352,7 +352,7 @@
       console.error = nativeError;
     };
 
-    if(getBreadcrumbSetting("autoBreadcrumbsConsole", true)) {
+    if(getBreadcrumbSetting("autoBreadcrumbsConsole")) {
       self.enableAutoBreadcrumbsConsole();
     }
   }
@@ -448,7 +448,7 @@
     // functional fu to make it easier to setup event listeners
     function wrapBuilder(builder) {
       return function() {
-        if(!getBreadcrumbSetting("autoBreadcrumbsNavigation", true)) {
+        if(!getBreadcrumbSetting("autoBreadcrumbsNavigation")) {
           return;
         }
 
@@ -493,7 +493,7 @@
     window.addEventListener("load", wrapBuilder(buildLoad), true);
     window.addEventListener("DOMContentLoaded", wrapBuilder(buildDOMContentLoaded), true);
 
-    if(getBreadcrumbSetting("autoBreadcrumbsNavigation", true)) {
+    if(getBreadcrumbSetting("autoBreadcrumbsNavigation")) {
       self.enableAutoBreadcrumbsNavigation();
     }
   }
@@ -873,12 +873,10 @@
   }
 
   // get breadcrumb specific setting. When autoBreadcrumbs is true, all individual events are defaulted
-  // to true. Otherwise they will all defaul to false. You can set any event specicically and it will override
+  // to true. Otherwise they will all default to false. You can set any event specifically and it will override
   // the default.
-  function getBreadcrumbSetting(name, fallback) {
-    if (typeof fallback === "undefined") {
-      fallback = getSetting("autoBreadcrumbs", true);
-    }
+  function getBreadcrumbSetting(name) {
+    var fallback = getSetting("autoBreadcrumbs", true);
     return getSetting(name, fallback);
   }
 
