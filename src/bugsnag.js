@@ -709,7 +709,13 @@
   function truncateDeep(object, length) {
     var traversed = [], index;
     function _truncateDeep(object, length) {
-      index = traversed.indexOf(object);
+      index = traversed.length - 1;
+      while (index > 0) {
+        if (traversed[index] === object) {
+          break;
+        }
+        index -= 1;
+      }
       if (index !== -1) {
         return traversed[index];
       } else if (typeof object === "object") {
