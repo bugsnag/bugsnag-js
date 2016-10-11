@@ -622,14 +622,12 @@
 
   // truncate all string values in nested object
   function truncateDeep(object, length) {
-    var traversed = [], index;
+    var traversed = [];
     function _truncateDeep(object, length) {
-      index = traversed.length - 1;
-      while (index > 0) {
+      for (var index = 0; index < traversed.length; index++) {
         if (traversed[index] === object) {
           return traversed[index];
         }
-        index -= 1;
       }
       if (typeof object === "object") {
         var newObject = {};
