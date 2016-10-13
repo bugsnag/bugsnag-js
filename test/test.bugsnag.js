@@ -540,6 +540,17 @@ describe("Bugsnag", function () {
         // Confirm we kept the most recent 20 breadcrumbs instead of the first 20
         assert.equal(requestData().params.breadcrumbs[19].metaData.message, "I am breadcrumb 20");
       });
+
+      it("lets me set metaData with self nesting", function() {
+        var metaData = {a: metaData, b: "text"};
+        Bugsnag.leaveBreadcrumb("deepCrumb", metaData);
+        Bugsnag.notify("Something");
+
+        var crumb = requestData().params.breadcrumbs[1];
+
+        assert.equal(crumb.name, "deepCrumb");
+        assert.equal(crumb.metaData.b, "text");
+      });
     });
 
     if (typeof window["console"] !== "undefined") {
