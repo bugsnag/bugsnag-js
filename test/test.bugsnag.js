@@ -542,14 +542,27 @@ describe("Bugsnag", function () {
       });
 
       it("lets me set metaData with self nesting", function() {
-        var metaData = {a: metaData, b: "text"};
+        var metaData = {a: "text"};
+        metaData.b = metaData; // recursive
+
         Bugsnag.leaveBreadcrumb("deepCrumb", metaData);
         Bugsnag.notify("Something");
 
         var crumb = requestData().params.breadcrumbs[1];
 
         assert.equal(crumb.name, "deepCrumb");
-        assert.equal(crumb.metaData.b, "text");
+        assert.equal(crumb.metaData.a, "text");
+      });
+
+      it("marks recursive breadcrumb as [RECURSIVE]", function() {
+        var metaData = {};
+        metaData.a = metaData;
+
+        Bugsnag.leaveBreadcrumb("deepCrumb", metaData);
+        Bugsnag.notify("Something");
+
+        var crumb = requestData().params.breadcrumbs[1];
+        assert.equal(crumb.metaData.a, "[RECURSIVE]");
       });
     });
 

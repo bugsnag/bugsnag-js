@@ -711,18 +711,17 @@
     function _truncateDeep(object, length) {
       for (var index = 0; index < traversed.length; index++) {
         if (traversed[index] === object) {
-          return traversed[index];
+          return "[RECURSIVE]";
         }
       }
       if (typeof object === "object") {
         var newObject = {};
-        traversed.push(newObject);
+        traversed.push(object);
         each(object, function(value, key){
           if (value != null && value !== undefined) {
             newObject[key] = _truncateDeep(value, length);
           }
         });
-
         return newObject;
       } else if (typeof object === "string") {
         return truncate(object, length);
