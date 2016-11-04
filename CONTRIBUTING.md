@@ -39,6 +39,8 @@ from the command line, the easiest way is typically to open the
 
 ![browser test output](https://cloud.githubusercontent.com/assets/187987/20023457/469fa1f0-a29d-11e6-861c-1c8a5fd9688d.png)
 
+Note that in certain browsers (e.g. Chrome) some tests that fetch local files or
+iframes may fail for security reasons when run directly from the file system.
 
 #### Sauce Labs automated browser testing
 
