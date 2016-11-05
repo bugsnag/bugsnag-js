@@ -771,57 +771,6 @@ describe("window", function () {
   });
 
   if (window.addEventListener) {
-    describe("sendMessage", function () {
-      var callback, handle;
-      function makeHandle() {
-        return function handle(e) {
-          setTimeout(function () {
-            Bugsnag._onerror.restore();
-            callback();
-          });
-          function failA() {
-            throw new Error(e.data);
-          }
-          function failB() {
-            failA();
-          }
-          failB(e);
-        };
-      }
-
-      beforeEach(function () {
-        stub(Bugsnag, "_onerror"); // disable reporting error to mocha.
-        handle = makeHandle();
-        window.addEventListener("message", handle, false);
-      });
-
-      afterEach(function () {
-        window.removeEventListener("message", handle, false);
-      });
-
-      it("should automatically call the error handler once", function (done) {
-        callback = function () {
-          assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
-          done();
-        };
-        window.postMessage("hello", "*");
-      });
-
-      if (!/(MSIE 9|Safari)/.test(navigator.appVersion)) {
-        it("should include multi-line backtraces", function (done) {
-          callback = function () {
-            assert(Bugsnag.testRequest.calledOnce);
-            assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
-            assert(/failA(.|\n)*failB(.|\n)*handle/.test(requestData().params.stacktrace), "Bugsnag.testRequest should have been called with a multi-line stacktrace:: " + JSON.stringify(requestData().params.stacktrace));
-            done();
-          };
-          window.postMessage("hello", "*");
-        });
-      } else {
-        it("should pass once", function () { });
-      }
-    });
-
     describe("addEventListener with object", function () {
       var callback, handle;
       function makeHandle() {
