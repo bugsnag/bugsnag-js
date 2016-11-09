@@ -19,9 +19,6 @@
     breadcrumbs = [],
     placeholderErrorName = "BugsnagNotify",
 
-    // Cap total breadcrumbs at 20, so we don't send a giant payload.
-    breadcrumbLimit = 20,
-
     // We've seen cases where individual clients can infinite loop sending us errors
     // (in some cases 10,000+ errors per page). This limit is at the point where
     // you've probably learned everything useful there is to debug the problem,
@@ -30,6 +27,10 @@
     // The default depth of attached metadata which is parsed before truncation. It
     // is configurable via the `maxDepth` setting.
     maxPayloadDepth = 5;
+
+    // Cap total breadcrumbs at 20, so we don't send a giant payload.
+    // Allow this to be overridden for special use cases.
+  self.breadcrumbLimit = 20;
 
   // #### Bugsnag.noConflict
   //
@@ -203,8 +204,8 @@
       breadcrumbs.push(truncateDeep(crumb, 140));
 
       // limit breadcrumb trail length, so the payload doesn't get too large
-      if (breadcrumbs.length > breadcrumbLimit) {
-        breadcrumbs = breadcrumbs.slice(-breadcrumbLimit);
+      if (breadcrumbs.length > self.breadcrumbLimit) {
+        breadcrumbs = breadcrumbs.slice(-self.breadcrumbLimit);
       }
     }
   };
