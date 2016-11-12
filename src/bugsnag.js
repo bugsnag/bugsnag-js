@@ -17,6 +17,7 @@
     shouldCatch = true,
     ignoreOnError = 0,
     breadcrumbs = [],
+    breadcrumbHardLimit = 40,
     placeholderErrorName = "BugsnagNotify",
 
     // We've seen cases where individual clients can infinite loop sending us errors
@@ -28,8 +29,9 @@
     // is configurable via the `maxDepth` setting.
     maxPayloadDepth = 5;
 
-    // Cap total breadcrumbs at 20, so we don't send a giant payload.
-    // Allow this to be overridden for special use cases.
+
+  // Set default breadcrumbLimit to 20, so we don't send a giant payload.
+  // This can be overridden up to the breadcrumbHardLimit
   self.breadcrumbLimit = 20;
 
   // #### Bugsnag.noConflict
@@ -200,12 +202,13 @@
       lastCrumb.count = lastCrumb.count || 1;
       lastCrumb.count++;
     } else {
+      var breadcrumbLimit = Math.min(self.breadcrumbLimit, breadcrumbHardLimit);
       crumb.name = truncate(crumb.name, 32);
       breadcrumbs.push(truncateDeep(crumb, 140));
 
       // limit breadcrumb trail length, so the payload doesn't get too large
-      if (breadcrumbs.length > self.breadcrumbLimit) {
-        breadcrumbs = breadcrumbs.slice(-self.breadcrumbLimit);
+      if (breadcrumbs.length > breadcrumbLimit) {
+        breadcrumbs = breadcrumbs.slice(-breadcrumbLimit);
       }
     }
   };
