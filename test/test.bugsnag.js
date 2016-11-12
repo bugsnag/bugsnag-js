@@ -540,6 +540,23 @@ describe("Bugsnag", function () {
         // Confirm we kept the most recent 20 breadcrumbs instead of the first 20
         assert.equal(requestData().params.breadcrumbs[19].metaData.message, "I am breadcrumb 20");
       });
+
+      it("allows configuring the breadcrumbLimit", function () {
+        var i, key, breadcrumbs, breadcrumbCount = 0;
+
+        Bugsnag.breadcrumbLimit = 3;
+
+        for (i=0; i < 4; i++) {
+          Bugsnag.leaveBreadcrumb("I am breadcrumb " + i);
+        }
+        Bugsnag.notify("Something");
+
+        breadcrumbs = requestData().params.breadcrumbs;
+        for (key in breadcrumbs) {
+          if (breadcrumbs.hasOwnProperty(key)) { breadcrumbCount++; }
+        }
+        assert.equal(breadcrumbCount, 3);
+      });
     });
 
     if (typeof window["console"] !== "undefined") {
