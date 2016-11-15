@@ -424,9 +424,6 @@ describe("Bugsnag", function () {
   });
 
   describe("Breadcrumbs", function() {
-    beforeEach(buildUp);
-    afterEach(tearDown);
-
     describe("leaveBreadcrumb", function () {
       it("adds a breadcrumb", function () {
         Bugsnag.leaveBreadcrumb("Test crumb");
