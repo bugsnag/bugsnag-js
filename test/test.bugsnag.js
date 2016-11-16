@@ -540,7 +540,6 @@ describe("Bugsnag", function () {
 
       it("allows configuring the breadcrumbLimit", function () {
         var i, key, breadcrumbs, breadcrumbCount = 0;
-
         Bugsnag.breadcrumbLimit = 3;
 
         for (i=0; i < 4; i++) {
@@ -553,6 +552,22 @@ describe("Bugsnag", function () {
           if (breadcrumbs.hasOwnProperty(key)) { breadcrumbCount++; }
         }
         assert.equal(breadcrumbCount, 3);
+      });
+
+      it("enforces a hard limit on number of breadcrumbs", function () {
+        var i, key, breadcrumbs, breadcrumbCount = 0;
+        Bugsnag.breadcrumbLimit = 41;
+
+        for (i=0; i < 41; i++) {
+          Bugsnag.leaveBreadcrumb("I am breadcrumb " + i);
+        }
+        Bugsnag.notify("Something");
+
+        breadcrumbs = requestData().params.breadcrumbs;
+        for (key in breadcrumbs) {
+          if (breadcrumbs.hasOwnProperty(key)) { breadcrumbCount++; }
+        }
+        assert.equal(breadcrumbCount, 40);
       });
     });
 
