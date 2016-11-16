@@ -424,9 +424,6 @@ describe("Bugsnag", function () {
   });
 
   describe("Breadcrumbs", function() {
-    beforeEach(buildUp);
-    afterEach(tearDown);
-
     describe("leaveBreadcrumb", function () {
       it("adds a breadcrumb", function () {
         Bugsnag.leaveBreadcrumb("Test crumb");
@@ -539,6 +536,38 @@ describe("Bugsnag", function () {
         assert.equal(breadcrumbCount, 20);
         // Confirm we kept the most recent 20 breadcrumbs instead of the first 20
         assert.equal(requestData().params.breadcrumbs[19].metaData.message, "I am breadcrumb 20");
+      });
+
+      it("allows configuring the breadcrumbLimit", function () {
+        var i, key, breadcrumbs, breadcrumbCount = 0;
+        Bugsnag.breadcrumbLimit = 3;
+
+        for (i=0; i < 4; i++) {
+          Bugsnag.leaveBreadcrumb("I am breadcrumb " + i);
+        }
+        Bugsnag.notify("Something");
+
+        breadcrumbs = requestData().params.breadcrumbs;
+        for (key in breadcrumbs) {
+          if (breadcrumbs.hasOwnProperty(key)) { breadcrumbCount++; }
+        }
+        assert.equal(breadcrumbCount, 3);
+      });
+
+      it("enforces a hard limit on number of breadcrumbs", function () {
+        var i, key, breadcrumbs, breadcrumbCount = 0;
+        Bugsnag.breadcrumbLimit = 41;
+
+        for (i=0; i < 41; i++) {
+          Bugsnag.leaveBreadcrumb("I am breadcrumb " + i);
+        }
+        Bugsnag.notify("Something");
+
+        breadcrumbs = requestData().params.breadcrumbs;
+        for (key in breadcrumbs) {
+          if (breadcrumbs.hasOwnProperty(key)) { breadcrumbCount++; }
+        }
+        assert.equal(breadcrumbCount, 40);
       });
     });
 
