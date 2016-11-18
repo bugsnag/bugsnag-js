@@ -64,10 +64,10 @@
     "version": "31",
     "platform": "Windows 7"
   },
-  "sl_chrome_36": {
+  "sl_chrome_54": {
     "base": "SauceLabs",
     "browserName": "chrome",
-    "version": "36.0",
+    "version": "54.0",
     "platform": "Windows 7"
   },
   "sl_android_4_3": {

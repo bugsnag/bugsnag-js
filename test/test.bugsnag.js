@@ -424,9 +424,6 @@ describe("Bugsnag", function () {
   });
 
   describe("Breadcrumbs", function() {
-    beforeEach(buildUp);
-    afterEach(tearDown);
-
     describe("leaveBreadcrumb", function () {
       it("adds a breadcrumb", function () {
         Bugsnag.leaveBreadcrumb("Test crumb");
@@ -541,7 +538,7 @@ describe("Bugsnag", function () {
         assert.equal(requestData().params.breadcrumbs[19].metaData.message, "I am breadcrumb 20");
       });
 
-      it("lets me set metaData with self nesting", function() {
+      it("allows metaData with self nesting", function() {
         var metaData = {a: "text"};
         metaData.b = metaData; // recursive
 
@@ -563,6 +560,38 @@ describe("Bugsnag", function () {
 
         var crumb = requestData().params.breadcrumbs[1];
         assert.equal(crumb.metaData.a, "[RECURSIVE]");
+      });
+
+      it("allows configuring the breadcrumbLimit", function () {
+        var i, key, breadcrumbs, breadcrumbCount = 0;
+        Bugsnag.breadcrumbLimit = 3;
+
+        for (i=0; i < 4; i++) {
+          Bugsnag.leaveBreadcrumb("I am breadcrumb " + i);
+        }
+        Bugsnag.notify("Something");
+
+        breadcrumbs = requestData().params.breadcrumbs;
+        for (key in breadcrumbs) {
+          if (breadcrumbs.hasOwnProperty(key)) { breadcrumbCount++; }
+        }
+        assert.equal(breadcrumbCount, 3);
+      });
+
+      it("enforces a hard limit on number of breadcrumbs", function () {
+        var i, key, breadcrumbs, breadcrumbCount = 0;
+        Bugsnag.breadcrumbLimit = 41;
+
+        for (i=0; i < 41; i++) {
+          Bugsnag.leaveBreadcrumb("I am breadcrumb " + i);
+        }
+        Bugsnag.notify("Something");
+
+        breadcrumbs = requestData().params.breadcrumbs;
+        for (key in breadcrumbs) {
+          if (breadcrumbs.hasOwnProperty(key)) { breadcrumbCount++; }
+        }
+        assert.equal(breadcrumbCount, 40);
       });
     });
 
@@ -795,57 +824,6 @@ describe("window", function () {
   });
 
   if (window.addEventListener) {
-    describe("sendMessage", function () {
-      var callback, handle;
-      function makeHandle() {
-        return function handle(e) {
-          setTimeout(function () {
-            Bugsnag._onerror.restore();
-            callback();
-          });
-          function failA() {
-            throw new Error(e.data);
-          }
-          function failB() {
-            failA();
-          }
-          failB(e);
-        };
-      }
-
-      beforeEach(function () {
-        stub(Bugsnag, "_onerror"); // disable reporting error to mocha.
-        handle = makeHandle();
-        window.addEventListener("message", handle, false);
-      });
-
-      afterEach(function () {
-        window.removeEventListener("message", handle, false);
-      });
-
-      it("should automatically call the error handler once", function (done) {
-        callback = function () {
-          assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
-          done();
-        };
-        window.postMessage("hello", "*");
-      });
-
-      if (!/(MSIE 9|Safari)/.test(navigator.appVersion)) {
-        it("should include multi-line backtraces", function (done) {
-          callback = function () {
-            assert(Bugsnag.testRequest.calledOnce);
-            assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
-            assert(/failA(.|\n)*failB(.|\n)*handle/.test(requestData().params.stacktrace), "Bugsnag.testRequest should have been called with a multi-line stacktrace:: " + JSON.stringify(requestData().params.stacktrace));
-            done();
-          };
-          window.postMessage("hello", "*");
-        });
-      } else {
-        it("should pass once", function () { });
-      }
-    });
-
     describe("addEventListener with object", function () {
       var callback, handle;
       function makeHandle() {

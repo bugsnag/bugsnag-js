@@ -33,6 +33,15 @@ npm run test:quick
 Any large changes should be tested in old IEs (we support IE 6!), and any other
 browsers you can get your hands on.
 
+While it's possible to use npm and karma to run the tests in various browsers
+from the command line, the easiest way is typically to open the
+`bugsnag-js/test/index.html` file directly from your local file system:
+
+![browser test output](https://cloud.githubusercontent.com/assets/187987/20023457/469fa1f0-a29d-11e6-861c-1c8a5fd9688d.png)
+
+Note that in certain browsers (e.g. Chrome) some tests that fetch local files or
+iframes may fail for security reasons when run directly from the file system.
+
 #### Sauce Labs automated browser testing
 
 To do automated browser testing with sauce labs first install sauce-connect
