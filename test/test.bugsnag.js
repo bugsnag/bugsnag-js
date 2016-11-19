@@ -538,28 +538,30 @@ describe("Bugsnag", function () {
         assert.equal(requestData().params.breadcrumbs[19].metaData.message, "I am breadcrumb 20");
       });
 
-      it("allows metaData with self nesting", function() {
-        var metaData = {a: "text"};
-        metaData.b = metaData; // recursive
+      it("marks recursive breadcrumbs as [RECURSIVE]", function() {
+        var metaData = {
+          a: null,
+          b: "test",
+          c: "test",
+          d: null
+        };
 
-        Bugsnag.leaveBreadcrumb("deepCrumb", metaData);
-        Bugsnag.notify("Something");
-
-        var crumb = requestData().params.breadcrumbs[1];
-
-        assert.equal(crumb.name, "deepCrumb");
-        assert.equal(crumb.metaData.a, "text");
-      });
-
-      it("marks recursive breadcrumb as [RECURSIVE]", function() {
-        var metaData = {};
+        // Add recursive bits
         metaData.a = metaData;
+        metaData.d = [metaData, "test"];
 
         Bugsnag.leaveBreadcrumb("deepCrumb", metaData);
         Bugsnag.notify("Something");
 
-        var crumb = requestData().params.breadcrumbs[1];
-        assert.equal(crumb.metaData.a, "[RECURSIVE]");
+        var actual = requestData().params.breadcrumbs[1].metaData;
+        var expected = {
+          a: { a: "[RECURSIVE]", b: "test", c: "test", d: "[RECURSIVE]" },
+          b: "test",
+          c: "test",
+          d: ["[RECURSIVE]", "test"]
+        };
+
+        assert.deepEqual(actual, expected);
       });
 
       it("allows configuring the breadcrumbLimit", function () {
