@@ -709,33 +709,45 @@
     }
   }
 
+  function isArray(arg) {
+    return Object.prototype.toString.call(arg) === "[object Array]";
+  }
+
   // truncate all string values in nested object
-  function truncateDeep(object, length) {
-    var traversed = [];
-    function _truncateDeep(object, length) {
-      for (var index = 0; index < traversed.length; index++) {
-        if (traversed[index] === object) {
-          return "[RECURSIVE]";
+  function truncateDeep(object, length, depth) {
+    var newDepth = (depth || 0) + 1;
+    var setting = getSetting("maxDepth", maxPayloadDepth);
+
+    if (depth > setting) {
+      return "[RECURSIVE]";
+    }
+
+    // Handle truncating strings
+    if (typeof object === "string") {
+      return truncate(object, length);
+
+    // Handle truncating array contents
+    } else if (isArray(object)) {
+      var newArray = [];
+      for (var i = 0; i < object.length; i++) {
+        newArray[i] = truncateDeep(object[i], length, newDepth);
+      }
+      return newArray;
+
+    // Handle truncating object keys
+    } if (typeof object === "object" && object != null) {
+      var newObject = {};
+      for (var key in object) {
+        if (object.hasOwnProperty(key)) {
+          newObject[key] = truncateDeep(object[key], length, newDepth);
         }
       }
-      if (typeof object === "object") {
-        var newObject = {};
-        traversed.push(object);
-        each(object, function(value, key){
-          if (value != null && value !== undefined) {
-            newObject[key] = _truncateDeep(value, length);
-          }
-        });
-        return newObject;
-      } else if (typeof object === "string") {
-        return truncate(object, length);
-      } else if (object && Array === object.constructor) {
-        return map(object, function(value) { return _truncateDeep(value, length); });
-      } else {
-        return object;
-      }
+      return newObject;
+
+    // Just return everything else (numbers, booleans, functions, etc.)
+    } else {
+      return object;
     }
-    return _truncateDeep(object, length);
   }
 
   // Deeply serialize an object into a query string. We use the PHP-style
@@ -767,36 +779,6 @@
     }
   }
 
-
-  // Map over an array or object
-  // re-implementation of lodash map
-  function map(source, iteratee) {
-    if (typeof iteratee === "undefined") {
-      return source;
-    }
-
-    var newArray = [];
-
-    each(source, newArray.push);
-
-    return newArray;
-  }
-
-  // Iterate over an array or object
-  // re-implementation of lodash each
-  function each(source, iteratee) {
-    if (typeof source === "object") {
-      for (var key in source) {
-        if (source.hasOwnProperty(key)) {
-          iteratee(source[key], key, source);
-        }
-      }
-    } else {
-      for (var index = 0; index < source.length; index++) {
-        iteratee(source[index], index, source);
-      }
-    }
-  }
 
   // Deep-merge the `source` object into the `target` object and return
   // the `target`. Properties in source that will overwrite those in target.
