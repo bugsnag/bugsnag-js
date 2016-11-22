@@ -90,6 +90,7 @@ Releasing
     ```
     grunt release
     ```
+5.  Create a release on github
 
 ### Pre-release version
 
