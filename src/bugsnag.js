@@ -709,21 +709,42 @@
     }
   }
 
-  // truncate all string values in nested object
-  function truncateDeep(object, length) {
-    if (typeof object === "object") {
-      var newObject = {};
-      each(object, function(value, key){
-        if (value != null && value !== undefined) {
-          newObject[key] = truncateDeep(value, length);
-        }
-      });
+  function isArray(arg) {
+    return Object.prototype.toString.call(arg) === "[object Array]";
+  }
 
-      return newObject;
-    } else if (typeof object === "string") {
+  // truncate all string values in nested object
+  function truncateDeep(object, length, depth) {
+    var newDepth = (depth || 0) + 1;
+    var setting = getSetting("maxDepth", maxPayloadDepth);
+
+    if (depth > setting) {
+      return "[RECURSIVE]";
+    }
+
+    // Handle truncating strings
+    if (typeof object === "string") {
       return truncate(object, length);
-    } else if (object && Array === object.constructor) {
-      return map(object, function(value) { return truncateDeep(value, length); });
+
+    // Handle truncating array contents
+    } else if (isArray(object)) {
+      var newArray = [];
+      for (var i = 0; i < object.length; i++) {
+        newArray[i] = truncateDeep(object[i], length, newDepth);
+      }
+      return newArray;
+
+    // Handle truncating object keys
+    } if (typeof object === "object" && object != null) {
+      var newObject = {};
+      for (var key in object) {
+        if (object.hasOwnProperty(key)) {
+          newObject[key] = truncateDeep(object[key], length, newDepth);
+        }
+      }
+      return newObject;
+
+    // Just return everything else (numbers, booleans, functions, etc.)
     } else {
       return object;
     }
@@ -758,36 +779,6 @@
     }
   }
 
-
-  // Map over an array or object
-  // re-implementation of lodash map
-  function map(source, iteratee) {
-    if (typeof iteratee === "undefined") {
-      return source;
-    }
-
-    var newArray = [];
-
-    each(source, newArray.push);
-
-    return newArray;
-  }
-
-  // Iterate over an array or object
-  // re-implementation of lodash each
-  function each(source, iteratee) {
-    if (typeof source === "object") {
-      for (var key in source) {
-        if (source.hasOwnProperty(key)) {
-          iteratee(source[key], key, source);
-        }
-      }
-    } else {
-      for (var index = 0; index < source.length; index++) {
-        iteratee(source[index], index, source);
-      }
-    }
-  }
 
   // Deep-merge the `source` object into the `target` object and return
   // the `target`. Properties in source that will overwrite those in target.
