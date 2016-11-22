@@ -122,8 +122,6 @@ module.exports = function(grunt) {
       }
     }
   });
-  grunt.loadNpmTasks("grunt-mocha-phantomjs");
-  grunt.loadNpmTasks("grunt-contrib-connect");
   grunt.loadNpmTasks("grunt-contrib-watch");
   grunt.loadNpmTasks("grunt-bumpx");
   grunt.loadNpmTasks("grunt-s3");
