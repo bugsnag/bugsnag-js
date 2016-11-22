@@ -1,6 +1,17 @@
 Changelog
 =========
 
+3.0.7 (2016-11-22)
+-----
+
+### Enhancements
+
+- Added support for infinitely recursive metadata objects. (#200)
+  Recursive metadata will be serialized up to a maximum depth, configurable by
+  the `Bugnsnag.maxDepth` setting (default is `5`).
+  Credit: @omniroot, @jacobmarshall, @eanakashima
+
+
 3.0.6 (2016-10-11)
 -----
 
