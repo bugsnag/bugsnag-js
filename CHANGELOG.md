@@ -11,6 +11,8 @@ Changelog
   the `Bugnsnag.maxDepth` setting (default is `5`).
   Credit: @omniroot, @jacobmarshall, @eanakashima
 
+- The breadcrumb limit of 20 is now configurable up to a hard limit of 40.
+  Credit: @omniroot and @eanakashima (#212)
 
 3.0.6 (2016-10-11)
 -----
