@@ -168,7 +168,7 @@ describe("Bugsnag", function () {
       div.innerHTML = "<input id='myInput' type='date'/>";
       document.body.appendChild(div);
 
-      // eslint-disable-next-line
+      // eslint-disable-next-line no-undef
       Bugsnag.notifyException(new Error("Oahi"), {input: myInput, working: "working"});
 
       var metaData = requestData().params.metaData;
