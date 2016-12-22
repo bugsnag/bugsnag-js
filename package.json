@@ -1,6 +1,7 @@
 {
     "name": "bugsnag-js",
     "version": "3.0.7",
+    "license": "MIT",
     "main": "src/bugsnag.js",
     "scripts": {
         "test": "karma start --single-run",
