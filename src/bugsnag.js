@@ -1197,14 +1197,14 @@
             // we need to change f.handleEvent here, as self.wrap will ignore f.
             try {
               if (f && f.handleEvent) {
-                f.handleEvent = wrap(f.handleEvent, {eventHandler: true});
+                f.handleEvent = wrap(f.handleEvent);
               }
             } catch (err) {
               // When selenium is installed, we sometimes get 'Permission denied to access property "handleEvent"'
               // Because this catch is around Bugsnag library code, it won't catch any user errors
               log(err);
             }
-            return _super.call(this, e, wrap(f, {eventHandler: true}), capture, secure);
+            return _super.call(this, e, wrap(f), capture, secure);
           };
         });
 
