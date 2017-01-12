@@ -815,6 +815,7 @@
   // To set the script to use XHR, you can specify data-notifyhandler attribute in the script tag
   // Eg. `<script data-notifyhandler="xhr">` - the request defaults to image if attribute is not set
   function request(url, params) {
+    var endpointUrl = url;
     url += "?" + serialize(params) + "&ct=img&cb=" + new Date().getTime();
     if (typeof BUGSNAG_TESTING !== "undefined" && self.testRequest) {
       self.testRequest(url, params);
@@ -824,6 +825,8 @@
         var xhr = new XMLHttpRequest();
         xhr.open("GET", url, true);
         xhr.send();
+      } else if (typeof notifyHandler === "function") {
+        notifyHandler(url, params, endpointUrl);
       } else {
         var img = new Image();
         img.src = url;
