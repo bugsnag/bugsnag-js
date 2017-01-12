@@ -826,7 +826,7 @@
         xhr.open("GET", url, true);
         xhr.send();
       } else if (typeof notifyHandler === "function") {
-        notifyHandler(url, params, endpointUrl);
+        notifyHandler(endpointUrl, params, url);
       } else {
         var img = new Image();
         img.src = url;
