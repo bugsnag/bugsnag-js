@@ -1185,6 +1185,19 @@
       });
     }
 
+    if ("onunhandledrejection" in window) {
+      // browsers with promise support have `addEventListener`
+      window.addEventListener("unhandledrejection", function (event) {
+        var err = event.reason;
+        if (err && (err instanceof Error || err.message)) {
+          self.notifyException(err);
+        } else {
+          // Hopefully the reason is a serializable value (this may yield less than useful results if reject() is abused)
+          self.notify("UnhandledRejection", err);
+        }
+      });
+    }
+
     // EventTarget is all that's required in modern chrome/opera
     // EventTarget + Window + ModalWindow is all that's required in modern FF (there are a few Moz prefixed ones that we're ignoring)
     // The rest is a collection of stuff for Safari and IE 11. (Again ignoring a few MS and WebKit prefixed things)
