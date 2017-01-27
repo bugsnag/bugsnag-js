@@ -1,6 +1,6 @@
 {
     "name": "bugsnag-js",
-	"description":"The Bugsnag is an error reporter for JavaScript that automatically detects and reports errors and exceptions in your client-side JavaScript code.",
+	"description": "The Bugsnag is an error reporter for JavaScript that automatically detects and reports errors and exceptions in your client-side JavaScript code.",
 	"keywords":[
 		"exception",
 		"bugsnag",
