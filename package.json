@@ -5,7 +5,8 @@
 		"exception",
 		"bugsnag",
 		"error",
-		"JavaScript"		
+		"JavaScript",
+		"client-side"		
 	],
     "version": "3.0.7",
     "license": "MIT",
