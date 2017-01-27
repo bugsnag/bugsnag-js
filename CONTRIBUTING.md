@@ -22,6 +22,14 @@ Install the dependencies for the project:
 npm install
 ```
 
+### Linting
+
+We have some basic lint rules set up to catch style issues. Run with:
+
+```
+npm run lint
+```
+
 ### Headless (Using PhantomJS)
 
 ```

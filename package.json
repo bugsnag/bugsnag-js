@@ -4,6 +4,7 @@
     "license": "MIT",
     "main": "src/bugsnag.js",
     "scripts": {
+        "lint": "grunt eslint",
         "test": "karma start --single-run",
         "test:watch": "karma start --browsers PhantomJS",
         "test:quick": "karma start --single-run --browsers PhantomJS"
