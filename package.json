@@ -1,5 +1,16 @@
 {
     "name": "bugsnag-js",
+    "description": "Automatically detect JavaScript errors on your websites, collect detailed diagnostic information, and get notified about errors in real-time.",
+    "keywords":[
+        "exception",
+        "bugsnag",
+        "error",
+        "JavaScript",
+        "browsers",
+        "monitoring",
+        "reporting",
+        "client-side"
+    ],
     "version": "3.1.0",
     "license": "MIT",
     "main": "src/bugsnag.js",
