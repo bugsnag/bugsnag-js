@@ -542,6 +542,14 @@
     self.disableAutoBreadcrumbsNavigation();
   };
 
+  self.enableNotifyUnhandledRejections = function() {
+    self.notifyUnhandledRejections = true;
+  };
+
+  self.disableNotifyUnhandledRejections = function() {
+    self.notifyUnhandledRejections = false;
+  };
+
   //
   // ### Script tag tracking
   //
@@ -1182,6 +1190,21 @@
           args[0] = wrap(args[0]);
           return _super.apply(this, args);
         };
+      });
+    }
+
+    if ("onunhandledrejection" in window) {
+      // browsers with promise support have `addEventListener`
+      window.addEventListener("unhandledrejection", function (event) {
+        if (getSetting("notifyUnhandledRejections", false)) {
+          var err = event.reason;
+          if (err && (err instanceof Error || err.message)) {
+            self.notifyException(err);
+          } else {
+            // Hopefully the reason is a serializable value (this may yield less than useful results if reject() is abused)
+            self.notify("UnhandledRejection", err);
+          }
+        }
       });
     }
 
