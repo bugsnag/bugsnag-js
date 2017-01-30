@@ -168,15 +168,15 @@ describe("Bugsnag", function () {
       div.innerHTML = "<input id='myInput' type='date'/>";
       document.body.appendChild(div);
 
-      // eslint-disable-next-line no-undef
+      /* eslint-disable no-undef */
       Bugsnag.notifyException(new Error("Oahi"), {input: myInput, working: "working"});
 
       var metaData = requestData().params.metaData;
 
       assert.equal(metaData.working, "working");
 
-      // eslint-disable-next-line no-undef
       document.body.removeChild(myInput.parentElement);
+      /* eslint-enable no-undef */
     });
 
     it("should contain a stacktrace", function () {
