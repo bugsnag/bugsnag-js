@@ -3,6 +3,7 @@
     "version": "3.0.7",
     "license": "MIT",
     "main": "src/bugsnag.js",
+    "types": "src/bugsnag.d.ts",
     "scripts": {
         "lint": "grunt eslint",
         "test": "karma start --single-run",
