@@ -1,18 +1,11 @@
 var browsers = require("./browsers.json");
 
 module.exports = function(config) {
-
   var travisSauceLabsOptions =  {
     build: process.env.TRAVIS_BUILD_NUMBER,
     testName: "Bugsnag.js Browser Tests",
     tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER,
-    username: process.env.SAUCE_USERNAME,
-    accessKey: process.env.SAUCE_ACCESS_KEY,
     startConnect: false,
-    connectOptions: {
-      port: 5757,
-      logfile: "sauce_connect.log"
-    }
   };
 
   config.set({

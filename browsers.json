@@ -69,13 +69,5 @@
     "browserName": "chrome",
     "version": "54.0",
     "platform": "Windows 7"
-  },
-  "sl_android_4_3": {
-    "base": "SauceLabs",
-    "browserName": "android",
-    "version": "4.3",
-    "deviceName": "Android Emulator",
-    "deviceType": "phone",
-    "deviceOrientation": "portrait"
   }
 }

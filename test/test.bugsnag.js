@@ -19,7 +19,6 @@ after(function () {
   document.title =  passes + "/" + (passes + fails);
 });
 describe("Bugsnag", function () {
-  this.timeout(4000);
   beforeEach(buildUp);
   afterEach(tearDown);
 
