@@ -31,7 +31,7 @@ module.exports = function(config) {
     browserDisconnectTimeout: 100000,
     browserNoActivityTimeout: 100000,
     customLaunchers: browsers,
-    browsers: Object.keys(browsers),
+    browsers: ["PhantomJS"].concat(Object.keys(browsers)),
     reporters: ["dots", "saucelabs"],
     sauceLabs: process.env.TRAVIS ? travisSauceLabsOptions : {},
     client: {
