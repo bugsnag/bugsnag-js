@@ -1,9 +1,6 @@
 var browsers = require("./browsers.json");
 
 module.exports = function(config) {
-  console.log("SAUCE_USERNAME", process.env.SAUCE_USERNAME);
-  console.log("SAUCE_ACCESS_KEY", process.env.SAUCE_ACCESS_KEY);
-
   var travisSauceLabsOptions =  {
     build: process.env.TRAVIS_BUILD_NUMBER,
     testName: "Bugsnag.js Browser Tests",
@@ -34,7 +31,7 @@ module.exports = function(config) {
     browserDisconnectTimeout: 100000,
     browserNoActivityTimeout: 100000,
     customLaunchers: browsers,
-    browsers: ["PhantomJS"].concat(Object.keys(browsers)),
+    browsers: Object.keys(browsers),
     reporters: ["dots", "saucelabs"],
     sauceLabs: process.env.TRAVIS ? travisSauceLabsOptions : {},
     client: {
