@@ -1,6 +1,17 @@
 Changelog
 =========
 
+3.0.8 (2017-2-20)
+-----
+
+### Enhancements
+
+- Added ability to notify on unhandled promise rejection in browsers that
+  support the `unhandledrejection` event.
+  Credit: @jacobmarshall (#221)
+- Added license field to package.json
+  Credit: @pzrq (#214)
+
 3.0.7 (2016-11-22)
 -----
 
