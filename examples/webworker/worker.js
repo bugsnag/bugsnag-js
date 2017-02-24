@@ -1,5 +1,4 @@
-// Simple global error handler within the worker which posts the error details back to the
-// main window.
+// Simple global error handler which posts worker error details back to the main window.
 self.addEventListener("error", event => {
   // This line is really important, it prevents the Worker object in the main window from
   // receiving the `onerror` event. Sounds crazy, but the `error` event doesn't contain some
