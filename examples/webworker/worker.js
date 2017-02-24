@@ -23,12 +23,14 @@ self.addEventListener("error", event => {
 // containing the "start" signal to the `startLongRunningTask` function (below).
 self.addEventListener("message", function messageHandler(event) {
   switch(event.data.type) {
-    case "start":
+    case "start": {
       startLongRunningTask();
       break;
-    default:
+    }
+    default: {
       console.warn("Unknown message:", event.data);
       break;
+    }
   }
 });
 
@@ -46,6 +48,6 @@ function startLongRunningTask() {
     }
   })(0);
 
-  // This never runs (because the code above is synchronous)
+  // This never runs (because the code above throws synchronously).
   self.postMessage({ type: "complete" });
 }
