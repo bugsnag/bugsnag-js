@@ -53,6 +53,10 @@ class WrappedWorker {
 
     this.worker.addEventListener("message", handleMessage);
     this.worker.addEventListener("error", handleError);
+
+    this.leaveBreadcrumb_("Started worker", {
+      url: this.url,
+    });
   }
 
   // By default these errors will have the name of "Error", but to help differenciate them from errors
