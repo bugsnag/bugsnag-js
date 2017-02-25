@@ -1,19 +1,19 @@
 // Simple global error handler which posts worker error details back to the main window.
 self.addEventListener("error", event => {
-  // This line is really important, it prevents the Worker object in the main window from
-  // receiving the `onerror` event. Sounds crazy, but the `error` event doesn't contain some
-  // critical information about the error - like the stack trace.
+  // This line is really important, it prevents the Worker object (in the main window) from
+  // receiving an `error` event. Sounds crazy, but the `error` event doesn't contain the
+  // stacktrace. By sending the event ourselves, we get the chance to send everything.
   event.preventDefault();
   console.error(event.error);
 
   self.postMessage({
     type: "error",
 
-    // Because `Error`s are not clonable, we can construct an Error-like object and pass
-    // through the error message & stack (the notifier doesn't know the difference).
+    // Because the error object is not clonable, we must construct an error-like object and
+    // pass through the error message & stack (the notifier doesn't know the difference).
     error: {
       message: event.error.message,
-      stack: event.error.stack, // TODO confirm whether any older browsers which support Worker use a different property name (probably FF)
+      stack: event.error.stack,
     },
   });
 });

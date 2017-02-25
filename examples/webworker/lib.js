@@ -2,8 +2,8 @@ let workerId = 0;
 
 class WrappedWorker {
   constructor(url) {
-    // If we allocate each worker it's own id we can track which messages were sent to & from each worker
-    // (if we have multiple workers on the page).
+    // If we allocate each worker a unique id we can track which messages were sent to & from each
+    // worker (if we have multiple workers on the page). This id is included with all worker breadcrumbs.
     this.id = ++workerId;
     this.url = url;
     this.worker = new Worker(url);
@@ -19,16 +19,16 @@ class WrappedWorker {
           break;
         }
         case "terminate": {
-          // If your worker sends a "terminate" command then we get a breadcrumb entry. If not and the
-          // worker calls `close` on itself, we don't, and it may be hard to figure out whether it was
-          // still running later.
+          // If your worker sends the custom "terminate" message we are able to add a breadcrumb. If the
+          // worker terminates itself (`self.close()`), the main window does not receive any indication
+          // that the worker has terminated + we get no "Terminated worker" breadcrumb.
           this.terminate();
           break;
         }
         default: {
           // Here we're adding a breadcrumb whenever we receive a message *from* the worker - this could
-          // help diagnose how far your worker got through it's allocated task (if your worker posts
-          // progress events).
+          // help diagnose how far your worker got through a specific task, as it's common for workers to
+          // send progress events to the main window.
           this.leaveBreadcrumb_("Message from worker", event.data);
           break;
         }
@@ -36,15 +36,15 @@ class WrappedWorker {
     };
 
     const handleError = event => {
-      // Some errors will pass an error message, line/col number, and the filename where the error
-      // occured. In some cases this is enough to put together a relatively useful stacktrace.
+      // Some errors events will pass a message, line/col number, and the filename where the error occurred.
+      // In these cases we are able to piece together a relatively simple stacktrace for Bugsnag.
       function fakeStacktrace() {
         return "Error: " + event.message + "\n" +
           "    at " + event.filename + ":" + event.lineno + ":" + (event.colno || 0);
       }
 
-      // Handle any errors which occur out of our control. For instance; a syntax error.
-      // The only downside to this error handler is that the error doesn't contain the stack trace.
+      // Handle any errors which occur out of our control. For instance; a syntax error. If we detect that
+      // the event contains specific error details, we also have to build a stacktrace.
       this.notifyException_({
         message: event.message,
         stack: event.lineno ? fakeStacktrace() : undefined,
@@ -59,13 +59,13 @@ class WrappedWorker {
     });
   }
 
-  // By default these errors will have the name of "Error", but to help differenciate them from errors
-  // which have occured within the main window, we can give it a special name. This also helps when finding
+  // By default these errors will have the name of "Error", but to help differentiate them from errors
+  // which have occurred within the main window, we can give it a special name. This also helps when finding
   // it later in your Bugsnag dashboard.
   notifyException_(error) {
     Bugsnag.notifyException(error, "WorkerError", {
       // Let's also pass some information about this worker along with the error report.
-      // This information will show up under a tab labelled "worker" in your Bugsnag dashboard!
+      // This information will show up under a tab labelled "worker" on the error page in Bugsnag!
       worker: {
         id: this.id,
         url: this.url,
