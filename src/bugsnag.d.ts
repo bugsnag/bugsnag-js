@@ -109,6 +109,42 @@ interface BugsnagStatic {
 
     /** Add a breadcrumb to be sent with next notify payload to Bugsnag **/
     leaveBreadcrumb(value?: string|Object): void;
+
+    /** Disable all automatic breadcrumbs */
+    disableAutoBreadcrumbs(): void;
+
+    /** Disable automatic click event breadcrumbs */
+    disableAutoBreadcrumbsClicks(): void;
+
+    /** Disable automatic console breadcrumbs */
+    disableAutoBreadcrumbsConsole(): void;
+
+    /** Disable automatic past error breadcrumbs */
+    disableAutoBreadcrumbsErrors(): void;
+
+    /** Disable automatic navigation breadcrumbs */
+    disableAutoBreadcrumbsNavigation(): void;
+
+    /** Disable automatic unhandled rejection breadcrumbs */
+    disableNotifyUnhandledRejections(): void;
+
+    /** Enable all automatic breadcrumbs */
+    enableAutoBreadcrumbs(): void;
+
+    /** Enable automatic click event breadcrumbs */
+    enableAutoBreadcrumbsClicks(): void;
+
+    /** Enable automatic console breadcrumbs */
+    enableAutoBreadcrumbsConsole(): void;
+
+    /** Enable automatic past error breadcrumbs */
+    enableAutoBreadcrumbsErrors(): void;
+
+    /** Enable automatic navigation breadcrumbs */
+    enableAutoBreadcrumbsNavigation(): void;
+
+    /** Enable automatic unhandled rejection breadcrumbs */
+    enableNotifyUnhandledRejections(): void;
 }
 
 declare var Bugsnag: BugsnagStatic;
