@@ -1,6 +1,13 @@
 Changelog
 =========
 
+3.2.0 (2017-04-05)
+-----
+
+### Enhancements
+
+- Add typescript definitions to the package manifest
+
 3.1.0 (2017-2-20)
 -----
 
