@@ -149,6 +149,6 @@ interface BugsnagStatic {
 
 declare var Bugsnag: BugsnagStatic;
 
-declare module "Bugsnag" {
+declare module "bugsnag-js" {
     export = Bugsnag;
 }
