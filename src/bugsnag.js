@@ -1253,6 +1253,9 @@
     self.leaveBreadcrumb({ type: "navigation", name: "Bugsnag Loaded" });
   }
 
+  // Log that we've successfully loaded
+  log("JavaScript error reporting initialized (https://bugsnag.com)");
+
   window.Bugsnag = self;
   // If people are using a javascript loader, we should integrate with it.
   // We don't want to defer instrumenting their code with callbacks however,
