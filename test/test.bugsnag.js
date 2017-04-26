@@ -1051,7 +1051,7 @@ function buildUp(cb) {
   bugsnag.onload = bugsnag.onreadystatechange = function () {
     if(!this.readyState || this.readyState === "loaded" || this.readyState === "complete") {
       // Set api key to use when testing
-      Bugsnag.apiKey = "9e68f5104323042c09d8809674e8d05c";
+      Bugsnag.apiKey = "066f5ad3590596f9aa8d601ea89af845";
 
       // Stub out requests
       stub(Bugsnag, "testRequest");
