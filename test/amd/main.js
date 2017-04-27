@@ -1,5 +1,5 @@
 define('main', ["../../src/bugsnag"], function (bugsnag) {
-    bugsnag.apiKey = "9e68f5104323042c09d8809674e8d05c";
+    bugsnag.apiKey = "066f5ad3590596f9aa8d601ea89af845";
     bugsnag.testRequest = function (url, params) {
         window.parent.testResult(params);
     };
