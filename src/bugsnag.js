@@ -888,15 +888,17 @@
   // The callback is invoked with a single argument (of type boolean), which is `true` when there
   // is some form of error with the request.
   function onRequestEnd(target, callback) {
-    callback = once(callback);
-    function handleOnRequestEndEvent(event) {
-      if (event.type === "readystatechange" && target.readyState === 4) {
-        callback(target.status !== 200);
-      } else {
-        callback(target.type === "error");
-      }
+    if (target instanceof XMLHttpRequest) {
+      target.onreadystatechange = function(event) {
+        if (target.readyState === 4) {
+          callback(target.status !== 200);
+        }
+      };
+    } else {
+      target.onload = target.onerror = function(event) {
+        callback(event.type === "error");
+      };
     }
-    target.onreadystatechange = target.onload = target.onerror = handleOnRequestEndEvent;
   }
 
   // Safely grabs a hold of localStorage (if possible) or returns an empty object if the browser
