@@ -1,16 +1,103 @@
 Changelog
 =========
 
-3.0.0-rc.1 (2016-07-22)
+3.2.0 (2017-04-05)
 -----
 
 ### Enhancements
-  
+
+- Add typescript definitions to the package manifest
+
+3.1.0 (2017-2-20)
+-----
+
+### Enhancements
+
+- Added ability to notify on unhandled promise rejection in browsers that
+  support the `unhandledrejection` event.
+  Credit: @jacobmarshall (#221)
+- Added license field to package.json
+  Credit: @pzrq (#214)
+
+3.0.7 (2016-11-22)
+-----
+
+### Enhancements
+
+- Added support for infinitely recursive metadata objects. (#200)
+  Recursive metadata will be serialized up to a maximum depth, configurable by
+  the `Bugnsnag.maxDepth` setting (default is `5`).
+  Credit: @omniroot, @jacobmarshall, @eanakashima
+
+- The breadcrumb limit of 20 is now configurable up to a hard limit of 40.
+  Credit: @omniroot and @eanakashima (#212)
+
+3.0.6 (2016-10-11)
+-----
+
+### Enhancements
+
+- You can now call `Bugsnag.notify()` and `Bugsnag.notifyException()` with no
+  arguments. This will show up in the dashboard as "BugsnagNotify". (#197)
+
+### Changes
+
+- New methods enabling disabling automatic breadcrumbs (#199). The old
+  configuration options (e.g. `Bugsnag.autoBreadcrumbsConsole = false`) were
+  broken. They should no longer be used and are now deprecated. Use instead the
+  new methods (e.g. `Bugsnag.enableAutoBreadcrumbsConsole(); Bugsnag.disableAutoBreadcrumbsConsole();`)
+
+### Bug fixes
+
+- `npm run test:watch` now correctly reloads changes in the test file. (#198)
+
+3.0.5 (2016-10-05)
+-----
+
+- Limit maximum number of breadcrumbs to 20 (#194)
+- Show value of submit inputs & buttons in breadcrumbs (#184, #187)
+  [Anton Pawlik](https://github.com/antpaw)
+  [#184](https://github.com/bugsnag/bugsnag-js/pull/184)
+  [#187](https://github.com/bugsnag/bugsnag-js/pull/187)
+- Linter improvements (#180)
+
+3.0.4 (2016-09-09)
+-----
+
+- Create "Bugsnag loaded" breadcrumb [#179](https://github.com/bugsnag/bugsnag-js/pull/179)
+
+3.0.3 (2016-09-08)
+-----
+
+- Added void return type (#178)
+  [Ole Martin Handeland](https://github.com/olemartinorg)
+  [#178](https://github.com/bugsnag/bugsnag-js/pull/178)
+- Improve notifyException definition (#175)
+  [Delisa Mason](https://github.com/kattrali)
+  [#175](https://github.com/bugsnag/bugsnag-js/pull/175)
+
+3.0.1 (2016-08-08)
+-----
+
+Minor README changes.
+
+3.0.0 (2016-08-05)
+-----
+
+This release adds support for automatic and custom breadcrumb tracking.
+Breadcrumbs replace the private implementation of "last event" tracking.
+It also removes support for the deprecated `userId` setting, which has been
+replaced by the `user` object.
+
+### Enhancements
+
 - Add support for sending "breadcrumbs" - notable events leading up to an error
   [Christian Schlensker](https://github.com/wordofchristian)
   [#149](https://github.com/bugsnag/bugsnag-js/pull/149)
+- Send device time in error payload
+  [#165](https://github.com/bugsnag/bugsnag-js/pull/165)
 
-  
+
 2.5.0 (2016-01-29)
 -----
 

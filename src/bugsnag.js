@@ -14,12 +14,13 @@
   var QUEUE_STORAGE_KEY = "bugsnag.queue";
 
   var self = {},
-    lastEvent,
     lastScript,
     previousNotification,
     shouldCatch = true,
     ignoreOnError = 0,
     breadcrumbs = [],
+    breadcrumbHardLimit = 40,
+    placeholderErrorName = "BugsnagNotify",
 
     // We've seen cases where individual clients can infinite loop sending us errors
     // (in some cases 10,000+ errors per page). This limit is at the point where
@@ -29,13 +30,13 @@
     // The default depth of attached metadata which is parsed before truncation. It
     // is configurable via the `maxDepth` setting.
     maxPayloadDepth = 5,
-
     // If the user loses connectivity with the internet, events are stored here so we can
     // attempt to re-send them when/if they regain connectivity.
-    requestQueue = [],
+    requestQueue = [];
 
-    // helper function for relative times
-    millisecondsAgo = makeMillisecondsAgo();
+  // Set default breadcrumbLimit to 20, so we don't send a giant payload.
+  // This can be overridden up to the breadcrumbHardLimit
+  self.breadcrumbLimit = 20;
 
   // #### Bugsnag.noConflict
   //
@@ -86,8 +87,23 @@
   // will not see it in your dashboard.
   self.notifyException = function (exception, name, metaData, severity) {
     if (!exception) {
+      var message = "Bugsnag.notifyException() was called with no arguments";
+      log(message);
+      self.notify(placeholderErrorName, message);
       return;
     }
+
+    if (typeof exception === "string") {
+      log(
+        "Bugsnag.notifyException() was called with a string. Expected instance of Error. " +
+        "To send a custom message instantiate a new Error or use Bugsnag.notify('<string>')." +
+        " see https://docs.bugsnag.com/platforms/browsers/#reporting-handled-exceptions"
+      );
+      // pass through to notify()
+      self.notify.apply(null, arguments);
+      return;
+    }
+
     if (name && typeof name !== "string") {
       metaData = name;
       name = undefined;
@@ -113,6 +129,12 @@
   // Notify Bugsnag about an error by passing in a `name` and `message`,
   // without requiring an exception.
   self.notify = function (name, message, metaData, severity) {
+    if (!name) {
+      name = placeholderErrorName;
+      message = "Bugsnag.notify() was called with no arguments";
+      log(message);
+    }
+
     sendToBugsnag({
       name: name,
       message: message,
@@ -137,9 +159,11 @@
   //
   // - `metadata` (optional, object) - Additional information about the breadcrumb. Values limited to 140 characters.
   self.leaveBreadcrumb = function(value, metaData) {
+    var DEFAULT_TYPE = "manual";
+
     // default crumb
     var crumb = {
-      type: "manual",
+      type: DEFAULT_TYPE,
       name: "Manual",
       timestamp: new Date().getTime()
     };
@@ -163,13 +187,33 @@
       return;
     }
 
+    // Validate breadcrumb type and replace invalid type with default.
+    var VALID_TYPES = [DEFAULT_TYPE, "error", "log", "navigation", "process", "request", "state", "user"];
+    var validType = false;
+    for (var i = 0; i < VALID_TYPES.length; i++) {
+      if (VALID_TYPES[i] === crumb.type) {
+        validType = true;
+        break;
+      }
+    }
+    if (!validType) {
+      log("Converted invalid breadcrumb type '" + crumb.type + "' to '" + DEFAULT_TYPE + "'");
+      crumb.type = DEFAULT_TYPE;
+    }
+
     var lastCrumb = breadcrumbs.slice(-1)[0];
     if (breadcrumbsAreEqual(crumb, lastCrumb)) {
       lastCrumb.count = lastCrumb.count || 1;
       lastCrumb.count++;
     } else {
+      var breadcrumbLimit = Math.min(self.breadcrumbLimit, breadcrumbHardLimit);
       crumb.name = truncate(crumb.name, 32);
       breadcrumbs.push(truncateDeep(crumb, 140));
+
+      // limit breadcrumb trail length, so the payload doesn't get too large
+      if (breadcrumbs.length > breadcrumbLimit) {
+        breadcrumbs = breadcrumbs.slice(-breadcrumbLimit);
+      }
     }
   };
 
@@ -189,17 +233,14 @@
   // If you call wrap twice on the same function, it'll give you back the
   // same wrapped function. This lets removeEventListener to continue to
   // work.
-  function wrap(_super, options) {
+  function wrap(_super) {
     try {
       if (typeof _super !== "function") {
         return _super;
       }
       if (!_super.bugsnag) {
         var currentScript = getCurrentScript();
-        _super.bugsnag = function (event) {
-          if (options && options.eventHandler) {
-            lastEvent = event;
-          }
+        _super.bugsnag = function () {
           lastScript = currentScript;
 
           // We set shouldCatch to false on IE < 10 because catching the error ruins the file/line as reported in window.onerror,
@@ -209,8 +250,6 @@
             try {
               return _super.apply(this, arguments);
             } catch (e) {
-              // We do this rather than stashing treating the error like lastEvent
-              // because in FF 26 onerror is not called for synthesized event handlers.
               if (getSetting("autoNotify", true)) {
                 self.notifyException(e, null, null, "error");
                 ignoreNextOnError();
@@ -262,18 +301,30 @@
   })();
 
   // Setup breadcrumbs for click events
-  function trackClicks() {
-    if(!getBreadcrumbSetting("autoBreadcrumbsClicks", true)) {
-      return;
-    }
-
+  function setupClickBreadcrumbs() {
     var callback = function(event) {
+      if(!getBreadcrumbSetting("autoBreadcrumbsClicks")) {
+        return;
+      }
+
+      var targetText, targetSelector;
+      // Cross origin security might prevent us from accessing the event target
+
+      try {
+        targetText = nodeText(event.target);
+        targetSelector = nodeLabel(event.target);
+      } catch (e) {
+        targetText = "[hidden]";
+        targetSelector = "[hidden]";
+        log("Cross domain error when tracking click event. See https://docs.bugsnag.com/platforms/browsers/faq/#3-cross-origin-script-errors");
+      }
+
       self.leaveBreadcrumb({
         type: "user",
         name: "UI click",
         metaData: {
-          targetText: nodeText(event.target),
-          targetSelector: nodeLabel(event.target)
+          targetText: targetText,
+          targetSelector: targetSelector
         }
       });
     };
@@ -305,13 +356,18 @@
     addEvent(window, "online", trackOnline, true);
   }
 
+  // stub functions for old browsers
+  self.enableAutoBreadcrumbsConsole = function() {};
+  self.disableAutoBreadcrumbsConsole = function() {};
+
   // Setup breadcrumbs for console.log, console.warn, console.error
-  function trackConsoleLog(){
-    if(!window.console || typeof window.console.log !== "function" || !getBreadcrumbSetting("autoBreadcrumbsConsole")) {
-      return;
-    }
+  function setupConsoleBreadcrumbs(){
 
     function trackLog(severity, args) {
+      if(!getBreadcrumbSetting("autoBreadcrumbsConsole")) {
+        return;
+      }
+
       self.leaveBreadcrumb({
         type: "log",
         name: "Console output",
@@ -322,33 +378,51 @@
       });
     }
 
-    enhance(console, "log", function() {
-      trackLog("log", arguments);
-    });
+    // feature detection for console.log
+    if(typeof window.console === "undefined") {
+      return;
+    }
 
-    enhance(console, "warn", function() {
-      trackLog("warn", arguments);
-    });
+    // keep track of functions that we will need to hijack
+    var nativeLog = console.log,
+      nativeWarn = console.warn,
+      nativeError = console.error;
 
-    enhance(console, "error", function() {
-      trackLog("error", arguments);
-    });
+    self.enableAutoBreadcrumbsConsole = function() {
+      self.autoBreadcrumbsConsole = true;
+
+      enhance(console, "log", function() {
+        trackLog("log", arguments);
+      });
+
+      enhance(console, "warn", function() {
+        trackLog("warn", arguments);
+      });
+
+      enhance(console, "error", function() {
+        trackLog("error", arguments);
+      });
+    };
+
+    self.disableAutoBreadcrumbsConsole = function() {
+      self.autoBreadcrumbsConsole = false;
+
+      console.log = nativeLog;
+      console.warn = nativeWarn;
+      console.error = nativeError;
+    };
+
+    if(getBreadcrumbSetting("autoBreadcrumbsConsole")) {
+      self.enableAutoBreadcrumbsConsole();
+    }
   }
 
-  // Setup breadcrumbs for history navigation events
-  function trackNavigation() {
-    if(!getBreadcrumbSetting("autoBreadcrumbsNavigation")) {
-      return;
-    }
+  // stub functions for old browsers
+  self.enableAutoBreadcrumbsNavigation = function() {};
+  self.disableAutoBreadcrumbsNavigation = function() {};
 
-    // check for browser support
-    if (!window.history ||
-        !window.history.state ||
-        !window.history.pushState ||
-        !window.history.pushState.bind
-    ) {
-      return;
-    }
+  // Setup breadcrumbs for history navigation events
+  function setupNavigationBreadcrumbs() {
 
     function parseHash(url) {
       return url.split("#")[1] || "";
@@ -434,9 +508,42 @@
     // functional fu to make it easier to setup event listeners
     function wrapBuilder(builder) {
       return function() {
+        if(!getBreadcrumbSetting("autoBreadcrumbsNavigation")) {
+          return;
+        }
+
         self.leaveBreadcrumb(builder.apply(null, arguments));
       };
     }
+
+    // check for browser support
+    if (!window.history ||
+        !window.history.state ||
+        !window.history.pushState ||
+        !window.history.pushState.bind
+    ) {
+      return;
+    }
+
+    // keep track of native functions
+    var nativePushState = history.pushState,
+      nativeReplaceState = history.replaceState;
+
+    // create enable function
+    self.enableAutoBreadcrumbsNavigation = function() {
+      self.autoBreadcrumbsNavigation = true;
+      // create hooks for pushstate and replaceState
+      enhance(history, "pushState", wrapBuilder(buildPushState));
+      enhance(history, "replaceState", wrapBuilder(buildReplaceState));
+    };
+
+    // create disable function
+    self.disableAutoBreadcrumbsNavigation = function() {
+      self.autoBreadcrumbsNavigation = false;
+      // restore native functions
+      history.pushState = nativePushState;
+      history.replaceState = nativeReplaceState;
+    };
 
     addEvent(window, "hashchange", wrapBuilder(buildHashChange), true);
     addEvent(window, "popstate", wrapBuilder(buildPopState), true);
@@ -445,10 +552,48 @@
     addEvent(window, "load", wrapBuilder(buildLoad), true);
     addEvent(window, "DOMContentLoaded", wrapBuilder(buildDOMContentLoaded), true);
 
-    // create hooks for pushstate and replaceState
-    enhance(history, "pushState", wrapBuilder(buildPushState));
-    enhance(history, "replaceState", wrapBuilder(buildReplaceState));
+    if(getBreadcrumbSetting("autoBreadcrumbsNavigation")) {
+      self.enableAutoBreadcrumbsNavigation();
+    }
   }
+
+  self.enableAutoBreadcrumbsErrors = function() {
+    self.autoBreadcrumbsErrors = true;
+  };
+
+  self.disableAutoBreadcrumbsErrors = function() {
+    self.autoBreadcrumbsErrors = false;
+  };
+
+  self.enableAutoBreadcrumbsClicks = function() {
+    self.autoBreadcrumbsClicks = true;
+  };
+
+  self.disableAutoBreadcrumbsClicks = function() {
+    self.autoBreadcrumbsClicks = false;
+  };
+
+  self.enableAutoBreadcrumbs = function() {
+    self.enableAutoBreadcrumbsClicks();
+    self.enableAutoBreadcrumbsConsole();
+    self.enableAutoBreadcrumbsErrors();
+    self.enableAutoBreadcrumbsNavigation();
+  };
+
+  self.disableAutoBreadcrumbs = function() {
+    self.disableAutoBreadcrumbsClicks();
+    self.disableAutoBreadcrumbsConsole();
+    self.disableAutoBreadcrumbsErrors();
+    self.disableAutoBreadcrumbsNavigation();
+  };
+
+  self.enableNotifyUnhandledRejections = function() {
+    self.notifyUnhandledRejections = true;
+  };
+
+  self.disableNotifyUnhandledRejections = function() {
+    self.notifyUnhandledRejections = false;
+  };
 
   //
   // ### Script tag tracking
@@ -512,7 +657,7 @@
   // Set up default notifier settings.
   var DEFAULT_BASE_ENDPOINT = "https://notify.bugsnag.com/";
   var DEFAULT_NOTIFIER_ENDPOINT = DEFAULT_BASE_ENDPOINT + "js";
-  var NOTIFIER_VERSION = "3.0.0-rc.1";
+  var NOTIFIER_VERSION = "3.2.0";
 
   // Keep a reference to the currently executing script in the DOM.
   // We'll use this later to extract settings from attributes.
@@ -526,12 +671,12 @@
   //  })
   function enhance(object, property, newFunction) {
     var oldFunction = object[property];
-    if (typeof oldFunction === "function") {
-      object[property] = function() {
-        newFunction.apply(this, arguments);
+    object[property] = function() {
+      newFunction.apply(this, arguments);
+      if (typeof oldFunction === "function") {
         oldFunction.apply(this, arguments);
-      };
-    }
+      }
+    };
   }
 
   // Simple logging function that wraps `console.log` if available.
@@ -553,8 +698,14 @@
 
   // extract text content from a element
   function nodeText(el) {
-    var text = el.textContent || el.innerText;
-    return truncate(text, 40);
+    var text = el.textContent || el.innerText || "";
+
+    if (el.type === "submit" || el.type === "button") {
+      text = el.value;
+    }
+
+    text = text.replace(/^\s+|\s+$/g, ""); // trim whitespace
+    return truncate(text, 140);
   }
 
   // Create a label from tagname, id and css class of the element
@@ -567,11 +718,42 @@
 
     if (el.className && el.className.length) {
       var classString = "." + el.className.split(" ").join(".");
-      classString = truncate(classString, 40);
       parts.push(classString);
     }
 
-    return parts.join("");
+    var label = parts.join("");
+
+    if (!document.querySelectorAll || !Array.prototype.indexOf) {
+      // can't get much more advanced with the current browser
+      return label;
+    }
+
+    try {
+      if (document.querySelectorAll(label).length === 1) {
+        return label;
+      }
+    } catch (e) {
+      // sometime the query selector can be invalid, for example, if the id attribute is anumber.
+      // in these cases, just return the label as is.
+      return label;
+    }
+
+    // try to get a more specific selector if this one matches more than one element
+    if (el.parentNode.childNodes.length > 1) {
+      var index = Array.prototype.indexOf.call(el.parentNode.childNodes, el) + 1;
+      label = label + ":nth-child(" + index + ")";
+    }
+
+    if (document.querySelectorAll(label).length === 1) {
+      return label;
+    }
+
+    // try prepending the parent node selector
+    if (el.parentNode) {
+      return nodeLabel(el.parentNode) + " > " + label;
+    }
+
+    return label;
   }
 
   function truncate(value, length) {
@@ -584,21 +766,42 @@
     }
   }
 
-  // truncate all string values in nested object
-  function truncateDeep(object, length) {
-    if (typeof object === "object") {
-      var newObject = {};
-      each(object, function(value, key){
-        if (value != null && value !== undefined) {
-          newObject[key] = truncateDeep(value, length);
-        }
-      });
+  function isArray(arg) {
+    return Object.prototype.toString.call(arg) === "[object Array]";
+  }
 
-      return newObject;
-    } else if (typeof object === "string") {
+  // truncate all string values in nested object
+  function truncateDeep(object, length, depth) {
+    var newDepth = (depth || 0) + 1;
+    var setting = getSetting("maxDepth", maxPayloadDepth);
+
+    if (depth > setting) {
+      return "[RECURSIVE]";
+    }
+
+    // Handle truncating strings
+    if (typeof object === "string") {
       return truncate(object, length);
-    } else if (object && Array === object.constructor) {
-      return map(object, function(value) { return truncateDeep(value, length); });
+
+    // Handle truncating array contents
+    } else if (isArray(object)) {
+      var newArray = [];
+      for (var i = 0; i < object.length; i++) {
+        newArray[i] = truncateDeep(object[i], length, newDepth);
+      }
+      return newArray;
+
+    // Handle truncating object keys
+    } if (typeof object === "object" && object != null) {
+      var newObject = {};
+      for (var key in object) {
+        if (object.hasOwnProperty(key)) {
+          newObject[key] = truncateDeep(object[key], length, newDepth);
+        }
+      }
+      return newObject;
+
+    // Just return everything else (numbers, booleans, functions, etc.)
     } else {
       return object;
     }
@@ -630,37 +833,6 @@
       return str.sort().join("&");
     } catch (e) {
       return encodeURIComponent(prefix) + "=" + encodeURIComponent("" + e);
-    }
-  }
-
-
-  // Map over an array or object
-  // re-implementation of lodash map
-  function map(source, iteratee) {
-    if (typeof iteratee === "undefined") {
-      return source;
-    }
-
-    var newArray = [];
-
-    each(source, newArray.push);
-
-    return newArray;
-  }
-
-  // Iterate over an array or object
-  // re-implementation of lodash each
-  function each(source, iteratee) {
-    if (typeof source === "object") {
-      for (var key in source) {
-        if (source.hasOwnProperty(key)) {
-          iteratee(source[key], key, source);
-        }
-      }
-    } else {
-      for (var index = 0; index < source.length; index++) {
-        iteratee(source[index], index, source);
-      }
     }
   }
 
@@ -875,7 +1047,7 @@
   }
 
   // get breadcrumb specific setting. When autoBreadcrumbs is true, all individual events are defaulted
-  // to true. Otherwise they will all defaul to false. You can set any event specicically and it will override
+  // to true. Otherwise they will all default to false. You can set any event specifically and it will override
   // the default.
   function getBreadcrumbSetting(name) {
     var fallback = getSetting("autoBreadcrumbs", true);
@@ -919,10 +1091,9 @@
       previousNotification = deduplicate;
     }
 
-    if (lastEvent) {
-      metaData = metaData || {};
-      metaData["Last Event"] = eventToMetaData(lastEvent);
-    }
+    var defaultEventMetaData = {
+      device: { time: (new Date()).getTime() }
+    };
 
     // Build the request payload by combining error information with other data
     // such as user-agent and locale, `metaData` and settings.
@@ -932,9 +1103,8 @@
       apiKey: apiKey,
       projectRoot: getSetting("projectRoot") || window.location.protocol + "//" + window.location.host,
       context: getSetting("context") || window.location.pathname,
-      userId: getSetting("userId"), // Deprecated, remove in v3
       user: getSetting("user"),
-      metaData: merge(merge({}, getSetting("metaData")), metaData),
+      metaData: merge(merge(defaultEventMetaData, getSetting("metaData")), metaData),
       releaseStage: releaseStage,
       appVersion: getSetting("appVersion"),
 
@@ -964,7 +1134,7 @@
     }
 
     if (payload.lineNumber === 0 && (/Script error\.?/).test(payload.message)) {
-      return log("Ignoring cross-domain script error. See https://bugsnag.com/docs/notifiers/js/cors");
+      return log("Ignoring cross-domain or eval script error. See https://docs.bugsnag.com/platforms/browsers/faq/#3-cross-origin-script-errors");
     }
 
     // Make the HTTP request
@@ -1016,18 +1186,6 @@
   // Get the stacktrace string from an exception
   function stacktraceFromException(exception) {
     return exception.stack || exception.backtrace || exception.stacktrace;
-  }
-
-  // Populate the event tab of meta-data.
-  function eventToMetaData(event) {
-    var tab = {
-      millisecondsAgo: millisecondsAgo(event.timeStamp),
-      type: event.type,
-      which: event.which,
-      target: targetToString(event.target)
-    };
-
-    return tab;
   }
 
   // Convert a DOM element into a string suitable for passing to Bugsnag.
@@ -1196,6 +1354,21 @@
       });
     }
 
+    if ("onunhandledrejection" in window) {
+      // browsers with promise support have `addEventListener`
+      window.addEventListener("unhandledrejection", function (event) {
+        if (getSetting("notifyUnhandledRejections", false)) {
+          var err = event.reason;
+          if (err && (err instanceof Error || err.message)) {
+            self.notifyException(err);
+          } else {
+            // Hopefully the reason is a serializable value (this may yield less than useful results if reject() is abused)
+            self.notify("UnhandledRejection", err);
+          }
+        }
+      });
+    }
+
     // EventTarget is all that's required in modern chrome/opera
     // EventTarget + Window + ModalWindow is all that's required in modern FF (there are a few Moz prefixed ones that we're ignoring)
     // The rest is a collection of stuff for Safari and IE 11. (Again ignoring a few MS and WebKit prefixed things)
@@ -1208,14 +1381,14 @@
             // we need to change f.handleEvent here, as self.wrap will ignore f.
             try {
               if (f && f.handleEvent) {
-                f.handleEvent = wrap(f.handleEvent, {eventHandler: true});
+                f.handleEvent = wrap(f.handleEvent);
               }
             } catch (err) {
               // When selenium is installed, we sometimes get 'Permission denied to access property "handleEvent"'
               // Because this catch is around Bugsnag library code, it won't catch any user errors
               log(err);
             }
-            return _super.call(this, e, wrap(f, {eventHandler: true}), capture, secure);
+            return _super.call(this, e, wrap(f), capture, secure);
           };
         });
 
@@ -1231,45 +1404,15 @@
     });
   }
 
-  // creates a function that takes a timeStamp and returns the number of milliseconds it happened in
-  // the past.
-  //
-  // This is necessary because depending on the browser the event.timeStamp could be a
-  // DOMTimeStamp or a DOMHighResTimeStamp
-  function makeMillisecondsAgo() {
-    function highRes(timeStamp) {
-      return performance.now() - timeStamp;
-    }
-
-    function legacy(timeStamp) {
-      return new Date() - timeStamp;
-    }
-
-    function timeNear(a, b) {
-      var d = 1000 * 60 * 5;
-      return a > b - d && a < b + d;
-    }
-
-    // Old browsers don't support document.createEvent
-    var testEvent;
-    try {
-      testEvent = document.createEvent("CustomEvent");
-    } catch(e) {
-      return legacy;
-    }
-
-    // if the testTimeStamp is close to performance.now() then it is a DOMHighResTimeStamp
-    var isHighRes = window.hasOwnProperty("performance")
-                     && timeNear(testEvent.timeStamp, window.performance.now());
-
-    return isHighRes ? highRes : legacy;
-  }
-
   // setup auto breadcrumb tracking
-  trackClicks();
-  trackConnectivity();
-  trackConsoleLog();
-  trackNavigation();
+  setupClickBreadcrumbs();
+  setupConsoleBreadcrumbs();
+  setupNavigationBreadcrumbs();
+
+  // Leave the initial breadcrumb
+  if (getSetting("autoBreadcrumbs", true)) {
+    self.leaveBreadcrumb({ type: "navigation", name: "Bugsnag Loaded" });
+  }
 
   window.Bugsnag = self;
   // If people are using a javascript loader, we should integrate with it.

@@ -1,19 +1,19 @@
 sudo: false
 language: node_js
 node_js:
-- '5'
-- '4'
-- '3'
-- '2'
-- '0.12'
-- '0.10'
+- '6'
 env:
 - CXX=g++-4.8
 addons:
+  sauce_connect:
+    username: bugsnag-bot
   apt:
     sources:
-      - ubuntu-toolchain-r-test
+    - ubuntu-toolchain-r-test
     packages:
-      - g++-4.8
+    - g++-4.8
+  jwt:
+    secure: KFF5h2Gg6oIl+tyX/jpGQ/8JEoPmFzNc+SUaQimBXHjaivsm/lQ/wVU+VP5Y1qvCtEt65vzG27M3renHuyn3AIq4J4OUciLf4rf7OxO0rPAs+hets+A1OzrCsgTLd15Fuk+dtAXvIPKARqLmAl9G2zc4NicBgzT+lDNT09/CNBk=
 before_install:
 - npm install -g grunt-cli
+script: karma start --single-run

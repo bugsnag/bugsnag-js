@@ -2,7 +2,7 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON("package.json"),
     eslint: {
-      src: ["src/bugsnag.js"]
+      src: ["src/bugsnag.js", "test/test.bugsnag.js"]
     },
     "regex-replace": {
       dist: {
@@ -70,7 +70,7 @@ module.exports = function(grunt) {
         ]
       }
     },
-    invalidate_cloudfront: {
+    "invalidate_cloudfront": {
       options: {
         key: process.env.AWS_ACCESS_KEY_ID,
         secret: process.env.AWS_SECRET_ACCESS_KEY,
@@ -115,12 +115,6 @@ module.exports = function(grunt) {
         }
       }
     },
-    mocha_phantomjs: {
-      options: {
-        reporter: "spec"
-      },
-      all: ["test/index.html"]
-    },
     docco: {
       dist: {
         src: ["src/**/*.js"],
@@ -128,8 +122,6 @@ module.exports = function(grunt) {
       }
     }
   });
-  grunt.loadNpmTasks("grunt-mocha-phantomjs");
-  grunt.loadNpmTasks("grunt-contrib-connect");
   grunt.loadNpmTasks("grunt-contrib-watch");
   grunt.loadNpmTasks("grunt-bumpx");
   grunt.loadNpmTasks("grunt-s3");
@@ -184,24 +176,13 @@ module.exports = function(grunt) {
   grunt.registerTask("uglify-stats", "Outputs stats about uglification", function() {
     var exec = require("child_process").exec;
     var done = this.async();
-    exec(['echo "Size: $(cat src/bugsnag.js | wc -c)"', 'echo "Ugly: $(cat dist/bugsnag.min.js | wc -c)"', 'echo "Gzip: $(cat dist/bugsnag.min.js | gzip | wc -c)"'].join(" && "), function(error, stdout, stderr) {
+    exec(["echo \"Size: $(cat src/bugsnag.js | wc -c)\"", "echo \"Ugly: $(cat dist/bugsnag.min.js | wc -c)\"", "echo \"Gzip: $(cat dist/bugsnag.min.js | gzip | wc -c)\""].join(" && "), function(error, stdout, stderr) {
       grunt.log.write(stdout.toString());
       grunt.log.write(stderr.toString());
       done(error == null);
     });
   });
-  grunt.registerTask("browserstack", "Run tests on browser stack", function() {
-    var exec = require("child_process").exec;
-    var done = this.async();
-    exec("./node_modules/browserstack-test/bin/browserstack-test -t 90 -b browsers.json -u " + process.env.BROWSERSTACK_USERNAME + " -p " + process.env.BROWSERSTACK_PASSWORD + " -k " + process.env.BROWSERSTACK_ACCESS_KEY + " http://localhost:80/bugsnag-js/test/", function(error, stdout, stderr) {
-      console.log(stdout);
-      console.log(stderr);
-      done(error == null);
-    });
-  });
   grunt.registerTask("release", ["eslint", "uglify", "docco", "git-tag", "git-push", "s3", "npm_publish", "invalidate_cloudfront"]);
   grunt.registerTask("server", ["connect:server:keepalive"]);
-  grunt.registerTask("browsertest", ["eslint", "connect:test", "watch:test"]);
-  grunt.registerTask("test", ["eslint", "mocha_phantomjs"]);
   grunt.registerTask("default", ["eslint", "uglify", "docco"]);
 };

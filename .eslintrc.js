@@ -21,6 +21,7 @@ module.exports = {
         "no-console":         [0],
         "no-trailing-spaces": [2],
         "quotes":             [2, "double"],
-        "semi":               [2, "always"]
+        "semi":               [2, "always"],
+        "no-unused-vars":     [2, {"args": "none"}]
     }
 };
