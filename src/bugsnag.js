@@ -1211,7 +1211,9 @@
     // EventTarget is all that's required in modern chrome/opera
     // EventTarget + Window + ModalWindow is all that's required in modern FF (there are a few Moz prefixed ones that we're ignoring)
     // The rest is a collection of stuff for Safari and IE 11. (Again ignoring a few MS and WebKit prefixed things)
-    "EventTarget Window Node ApplicationCache AudioTrackList ChannelMergerNode CryptoOperation EventSource FileReader HTMLUnknownElement IDBDatabase IDBRequest IDBTransaction KeyOperation MediaController MessagePort ModalWindow Notification SVGElementInstance Screen TextTrack TextTrackCue TextTrackList WebSocket WebSocketWorker Worker XMLHttpRequest XMLHttpRequestEventTarget XMLHttpRequestUpload".replace(/\w+/g, function (global) {
+    var list = Object.getOwnPropertyNames( window );
+    for( var i in list ) {
+      var global = list[i];
       var prototype = window[global] && window[global].prototype;
       if (prototype && prototype.hasOwnProperty && prototype.hasOwnProperty("addEventListener")) {
         polyFill(prototype, "addEventListener", function (_super) {
@@ -1240,7 +1242,7 @@
           };
         });
       }
-    });
+    }
   }
 
   // setup auto breadcrumb tracking
