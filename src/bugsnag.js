@@ -94,12 +94,14 @@
   // In the example above, whatever code ends up calling `badFunction` will also be
   // included in the stacktrace when the `fetch` Promise chain rejects.
   self.asyncNotifyException = function () {
-    // line 1: <generated>
-    // line 2: Error
-    // line 3: generateStacktrace()
-    // line 4: asyncNotifyException()
-    var beforeStacktrace = generateStacktrace()
-      .split('\n').slice(4).join('\n');
+    var beforeStacktrace;
+    try {
+      throw new Error('');
+    } catch(err) {
+      beforeStacktrace = stacktraceFromException(err)
+        .replace('Error\n', '') // Remove Chrome's empty "Error" line
+        .split('\n').slice(1).join('\n');
+    }
     return function (err) {
       err[stacktraceName] += '\n' + beforeStacktrace;
       return self.notifyException.apply(self, arguments);
