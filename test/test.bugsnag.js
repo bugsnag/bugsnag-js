@@ -701,6 +701,68 @@ describe("Bugsnag", function () {
         assert.equal(requestData().params.breadcrumbs[1].metaData.targetText, "");
       });
 
+      it("does not collect value if anonymized element is clicked", function() {
+        Bugsnag.enableautoBreadcrumbsAnonymization();
+        var div = document.createElement("div");
+        div.setAttribute("data-pii", "secret");
+        div.innerHTML = "Secret things<span>More secret things</span>";
+        document.body.appendChild(div);
+
+        clickOn(div);
+        Bugsnag.notify("Something");
+        document.body.removeChild(div);
+        assert.equal(requestData().params.breadcrumbs[1].metaData.targetText, "[secret]");
+      });
+
+      it("does not collect value if clicked element has anonymized parent", function() {
+        Bugsnag.enableautoBreadcrumbsAnonymization();
+        var parent = document.createElement("div");
+        var div = document.createElement("div");
+        parent.setAttribute("data-pii", "true");
+        div.innerHTML = "Secret things<span>More secret things</span>";
+        parent.appendChild(div);
+        document.body.appendChild(parent);
+
+        clickOn(div);
+        Bugsnag.notify("Something");
+        document.body.removeChild(parent);
+        assert.equal(requestData().params.breadcrumbs[1].metaData.targetText, "[PII]");
+      });
+
+      it("filters values of anonymized descendants of clicked element", function() {
+        Bugsnag.enableautoBreadcrumbsAnonymization();
+        var div = document.createElement("div");
+        div.innerHTML = ""
+          + "Not secret"
+          + "<!-- Ignore comments -->"
+          + "<span data-pii='true' id='1'>"
+          + "  Secret"
+          + "</span>"
+          + "<span id='2'>"
+          + "  <span id='3'>"
+          + "    Not Secret"
+          + "  </span>"
+          + "  <span data-pii='true' id='4'>"
+          + "    Nested secret"
+          + "  </span>"
+          + "  <span data-pii='true' id='5'>"
+          + "    Nested secret that should combined with former one"
+          + "  </span>"
+          + "  <span data-pii='username' id='5'>"
+          + "    Should be replaced with [username] instead of [PII]"
+          + "  </span>"
+          + "  <span data-pii='username' id='5'>"
+          + "    Subsequent custom placeholders should be combined as well"
+          + "  </span>"
+          + "</span>";
+
+        document.body.appendChild(div);
+        clickOn(div);
+        Bugsnag.notify("Something");
+        document.body.removeChild(div);
+        assert.equal(requestData().params.breadcrumbs[1].metaData.targetText, "Not secret[PII]Not Secret[PII][username]");
+      });
+
       it("handles invalid id attributes", function() {
         container.id = "12345";
         clickOn(container);

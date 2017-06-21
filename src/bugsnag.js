@@ -528,7 +528,16 @@
     self.autoBreadcrumbsClicks = false;
   };
 
+  self.enableautoBreadcrumbsAnonymization = function() {
+    self.autoBreadcrumbsAnonymization = true;
+  };
+
+  self.disableautoBreadcrumbsAnonymization = function() {
+    self.autoBreadcrumbsAnonymization = false;
+  };
+
   self.enableAutoBreadcrumbs = function() {
+    self.disableautoBreadcrumbsAnonymization();
     self.enableAutoBreadcrumbsClicks();
     self.enableAutoBreadcrumbsConsole();
     self.enableAutoBreadcrumbsErrors();
@@ -536,6 +545,7 @@
   };
 
   self.disableAutoBreadcrumbs = function() {
+    self.disableautoBreadcrumbsAnonymization();
     self.disableAutoBreadcrumbsClicks();
     self.disableAutoBreadcrumbsConsole();
     self.disableAutoBreadcrumbsErrors();
@@ -647,15 +657,75 @@
     return serialize(obj1) === serialize(obj2);
   }
 
-  // extract text content from a element
-  function nodeText(el) {
-    var text = el.textContent || el.innerText || "";
-
+  function singleNodeText(el) {
+    var text;
     if (el.type === "submit" || el.type === "button") {
       text = el.value;
+    } else if (el instanceof CharacterData) {
+      text = (el instanceof Text ? el.data : "");
+    } else {
+      text = el.textContent || el.innerText || "";
+    }
+    return text.replace(/^\s+|\s+$/g, ""); // trim whitespace
+  }
+
+  function piiPlaceholder(dataPiiContent) {
+    if(dataPiiContent === "true") {
+      return "[PII]";
+    }
+    return "[" + dataPiiContent + "]";
+  }
+
+  // Extract text contents from element, hide contents of elements with attribute data-pii
+  function anonymizedNodeText(el) {
+    var text = "", stack = [el], iterEl = event.target, children, i, prevPiiPlaceholder, tmpText;
+
+    // Walk up to root. Anonymize whole element, if an ancestor has attribute data-pii.
+    while(iterEl && iterEl.getAttribute) {
+      if((tmpText = iterEl.getAttribute("data-pii"))) {
+        return piiPlaceholder(tmpText);
+      }
+      iterEl = iterEl.parentNode;
     }
 
-    text = text.replace(/^\s+|\s+$/g, ""); // trim whitespace
+    // Concatenates texts of all leaf nodes descended from el.
+    // Replaces contents of elements with attribute data-pii with a placeholder
+    while(stack.length && text.length < 140) {
+      iterEl = stack.pop();
+      children = iterEl.childNodes;
+
+      if(iterEl.getAttribute && (tmpText = iterEl.getAttribute("data-pii"))) {
+        tmpText = piiPlaceholder(tmpText);
+        // Combine subsequent identical placeholders
+        if(prevPiiPlaceholder !== tmpText) {
+          prevPiiPlaceholder = tmpText;
+          text += tmpText;
+        }
+      } else if(children.length === 0) {
+        tmpText = singleNodeText(iterEl);
+        text += tmpText;
+        if(tmpText.length) {
+          prevPiiPlaceholder = null;
+        }
+      } else {
+        for(i = children.length; i; i--) {
+          stack.push(children[i - 1]);
+        }
+      }
+    }
+    return text;
+  }
+
+  // extract text content from a element
+  function nodeText(el) {
+    var text;
+
+    if(getBreadcrumbSetting("autoBreadcrumbsAnonymization")) {
+      text = anonymizedNodeText(el);
+    } else {
+      text = singleNodeText(el);
+    }
+
     return truncate(text, 140);
   }
 
