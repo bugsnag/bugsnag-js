@@ -356,6 +356,14 @@
       enhance(console, "error", function() {
         trackLog("error", arguments);
       });
+
+      enhance(console, "group", function() {
+        trackLog("group", arguments);
+      });
+
+      enhance(console, "groupCollapsed", function() {
+        trackLog("groupCollapsed", arguments);
+      });
     };
 
     self.disableAutoBreadcrumbsConsole = function() {
