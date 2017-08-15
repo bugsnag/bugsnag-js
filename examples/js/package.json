@@ -3,7 +3,6 @@
   "private": true,
   "version": "1.0.0",
   "description": "An example of how you can use Bugsnag on a plain js project",
-  "main": "index.js",
   "scripts": {
     "start": "serve ../.."
   },
