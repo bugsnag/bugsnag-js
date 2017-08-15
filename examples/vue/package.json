@@ -1,0 +1,15 @@
+{
+  "name": "bugsnag-vue-example",
+  "private": true,
+  "version": "1.0.0",
+  "description": "An example of how you can use Bugsnag on a Vue.js project",
+  "scripts": {
+    "start": "serve ../.."
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "serve": "^6.0.6",
+    "vue": "^2.4.2"
+  }
+}

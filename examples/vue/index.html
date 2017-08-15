@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Bugsnag: Plain JS Example</title>
+    <script src="../../src/bugsnag.js" data-apikey="API-KEY-GOES-HERE"></script>
+    <script src="./node_modules/vue/dist/vue.js"></script>
+  </head>
+  <style>
+    body {
+      font-family: 'Menlo', monospace; line-height: 1.7;
+      color: #444; background-color: #fafafa;
+      max-width: 600px; margin: 0 auto; padding: 20px;
+    }
+  </style>
+  <body>
+    <h1>Bugsnag: Vue.js Example</h1>
+
+    <!-- The HTML structure for this very basic Vue.js app -->
+    <div id="app">
+      <p>
+        <button v-on:click="triggerRenderError">Throw an error during component render()</button>
+        <span v-if="doARenderError">{{ doARenderError.non.existent.property }}</span>
+      </p>
+      <bad-button></bad-button>
+      <p>
+        <button v-on:click="triggerNextTickError">Throw an error during Vue.nextTick()</button>
+      </p>
+      <p>
+        <button v-on:click="triggerWatchError">Trigger a watch error</button>
+      </p>
+    </div>
+
+    <!-- A component that will trigger a render() error when clicked -->
+    <script type="text/x-template" id="bad-button-template">
+      <p>
+        <button v-on:click="triggerRenderError">Throw an error during component render() (child component)</button>
+        <span v-if="doARenderError">{{ doARenderError.non.existent.property }}</span>
+      </p>
+    </script>
+
+    <script>
+
+      // Provide an error handler to Vue.js. Any lifecycle errors that previously would have
+      // been caught and logged by Vue.js can be sent on to Bugsnag here. This error handler
+      // completely replaces the default behaviour, which means if you want to see the error
+      // in the console it'll need to be logged.
+      Vue.config.errorHandler = function (err, vm, info) {
+        Bugsnag.notifyException(err, {
+          vueErrorInfo: info,
+          component: vm ? vm.$options.name || vm.$options._componentTag || 'app root' : undefined,
+          props: vm ? vm.$options.propsData : undefined
+        })
+        console.error(err)
+      }
+
+      // Define the <bad-button/> component
+      Vue.component('bad-button', {
+        template: '#bad-button-template',
+        data: function () {
+          return { doARenderError: false }
+        },
+        methods: {
+          triggerRenderError: function () {
+            this.doARenderError = true
+            setTimeout(function () {
+              this.doARenderError = false
+            }.bind(this), 100)
+          }
+        }
+      })
+
+      // Define the top-level Vue.js app
+      var app = new Vue({
+        // Hooks into the div#app that exists in the DOM
+        el: '#app',
+        data: {
+          // Just enough data to trigger the errors we need
+          doARenderError: false,
+          doAWatchError: false
+        },
+        watch: {
+          // A watch function that will throw an error when the
+          // value it is watching is set to `true`
+          doAWatchError: function (val, oldVal) {
+            if (val) throw new Error('Doh!')
+          }
+        },
+        methods: {
+          // Sets the data in a way that cause the next render() of this
+          // component to throw an error (due to referencing a property
+          // of an object that doesn't exist)
+          triggerRenderError: function () {
+            this.doARenderError = true
+            setTimeout(function () {
+              this.doARenderError = false
+            }.bind(this), 100)
+          },
+          // Throws an error using Vue.js's nextTick() function
+          triggerNextTickError: function () {
+            Vue.nextTick(function () {
+              JSON.parse('definitely not json')
+            })
+          },
+          // Changes the value being watched so that it throws an error
+          triggerWatchError: function () {
+            this.doAWatchError = true
+            setTimeout(function () {
+              this.doAWatchError = false
+            }.bind(this), 100)
+          }
+        }
+      })
+    </script>
+  </body>
+</html>
