@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    <title>Bugsnag: Plain JS Example</title>
+    <title>Bugsnag: Vue.js Example</title>
     <script src="../../src/bugsnag.js" data-apikey="API-KEY-GOES-HERE"></script>
     <script src="./node_modules/vue/dist/vue.js"></script>
   </head>
@@ -46,9 +46,11 @@
       // in the console it'll need to be logged.
       Vue.config.errorHandler = function (err, vm, info) {
         Bugsnag.notifyException(err, {
-          vueErrorInfo: info,
-          component: vm ? vm.$options.name || vm.$options._componentTag || 'app root' : undefined,
-          props: vm ? vm.$options.propsData : undefined
+          vue: {
+            errorInfo: info,
+            component: vm ? vm.$options.name || vm.$options._componentTag || 'app root' : undefined,
+            props: vm ? vm.$options.propsData : undefined
+          }
         })
         console.error(err)
       }
@@ -86,7 +88,7 @@
           }
         },
         methods: {
-          // Sets the data in a way that cause the next render() of this
+          // Sets the data in a way that causes the next render() of this
           // component to throw an error (due to referencing a property
           // of an object that doesn't exist)
           triggerRenderError: function () {
@@ -101,7 +103,7 @@
               JSON.parse('definitely not json')
             })
           },
-          // Changes the value being watched so that it throws an error
+          // Changes the value being watched such that it throws an error
           triggerWatchError: function () {
             this.doAWatchError = true
             setTimeout(function () {

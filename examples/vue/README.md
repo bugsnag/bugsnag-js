@@ -24,7 +24,7 @@ such as the lifecycle phase and component name that caused the error.
 
 ## In this example
 
-- [Setting up the error handler](index.html#L43-L54)
+- [Setting up the error handler](index.html#L43-L56)
 
   The most basic implementation (above) can be supplemented by providing some other
   information which may come in handy when tracking down the source of the error.
@@ -43,19 +43,19 @@ such as the lifecycle phase and component name that caused the error.
 
   Errors thrown during the render() of the root node are caught and reported.
 
-- [Handling render errors](index.html#L20-L23)
+- [Handling render errors (child components)](index.html#L33-39)
 
   Errors thrown during the render() of any child components caught and reported,
   with the name of the component and any `propsData`.
 
-- [Handling digest errors, e.g. `Vue.nextTick(fn)`](index.html#L98-L103)
+- [Handling digest errors, e.g. `Vue.nextTick(fn)`](index.html#L100-L105)
 
   Errors thrown from the global [async update queue](https://vuejs.org/v2/guide/reactivity.html#Async-Update-Queue)
   are caught via the same error handler. If the error originates from a global
   callback and not a component (such as in the example provided), you don't get
   any component info.
 
-- [Handling watch/computed property errors](index.html#L82-L86)
+- [Handling watch/computed property errors](index.html#L83-L89)
 
   Errors thrown during `watch`/`computed` methods are caught and reported.
 
