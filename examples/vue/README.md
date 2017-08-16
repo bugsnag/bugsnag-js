@@ -37,7 +37,7 @@ such as the lifecycle phase and component name that caused the error.
 
   There may be other properties of the `vm` object passed to the error handler that
   you are interested in – you can tweak the example to your needs and it will show
-  in the "custom" tab when viewing event details in your dashboard.
+  in the "Vue" tab when viewing event details in your dashboard.
 
 - [Handling render errors](index.html#L20-L23)
 
