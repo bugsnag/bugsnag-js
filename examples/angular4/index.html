@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Bugsnag: Angular 4 Example</title>
+    <style>
+      body {
+        font-family: 'Menlo', monospace; line-height: 1.7;
+        color: #444; background-color: #fafafa;
+        max-width: 600px; margin: 0 auto; padding: 20px;
+      }
+    </style>
+
+    <script src="../../src/bugsnag.js" data-apikey="818a80658b023cdc7261ebe0bbd1a45e"></script>
+
+    <script src="./node_modules/core-js/client/shim.min.js"></script>
+    <script src="./node_modules/zone.js/dist/zone.js"></script>
+    <script src="./node_modules/systemjs/dist/system.src.js"></script>
+    <script src="./src/systemjs.config.js"></script>
+    <script>
+      System.import('./src/main.js').catch(function(err){ console.error(err); });
+    </script>
+  </head>
+
+  <body>
+    <h1>Bugsnag: Angular 4 Example</h1>
+    <app></app>
+  </body>
+</html>

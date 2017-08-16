@@ -1,0 +1,31 @@
+{
+  "name": "bugsnag-angular4-example",
+  "private": true,
+  "version": "1.0.0",
+  "description": "An example of how you can use Bugsnag on an Angular 4 project",
+  "scripts": {
+    "watch": "tsc -p src/ -w",
+    "serve": "serve ../..",
+    "start": "npm run watch & npm run serve"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@angular/common": "~4.3.4",
+    "@angular/compiler": "~4.3.4",
+    "@angular/core": "~4.3.4",
+    "@angular/forms": "~4.3.4",
+    "@angular/http": "~4.3.4",
+    "@angular/platform-browser": "~4.3.4",
+    "@angular/platform-browser-dynamic": "~4.3.4",
+    "@angular/router": "~4.3.4",
+    "@types/node": "^6.0.46",
+    "angular-in-memory-web-api": "~0.3.0",
+    "core-js": "^2.4.1",
+    "rxjs": "5.0.1",
+    "serve": "^6.0.6",
+    "systemjs": "0.19.40",
+    "typescript": "~2.1.0",
+    "zone.js": "^0.8.4"
+  }
+}
