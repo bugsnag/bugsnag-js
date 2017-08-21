@@ -1,0 +1,17 @@
+{
+  "name": "bugsnag-react-example",
+  "private": true,
+  "version": "1.0.0",
+  "description": "An example of how you can use Bugsnag on a React project",
+  "scripts": {
+    "start": "serve ../.."
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "babel-standalone": "^6.26.0",
+    "react": "^16.0.0-beta.5",
+    "react-dom": "^16.0.0-beta.5",
+    "serve": "^6.0.6"
+  }
+}
