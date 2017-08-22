@@ -26,13 +26,22 @@ module.exports = function(config) {
       "/src": "/base/src",
       "/amd": "/base/test/amd"
     },
+    preprocessors: {
+      'src/bugsnag.js': ["coverage"]
+    },
+    coverageReporter: {
+      reporters: [
+        { type: 'text-summary' },
+        { type: 'html' }
+      ]
+    },
     concurrency: 1,
     captureTimeout: 100000,
     browserDisconnectTimeout: 100000,
     browserNoActivityTimeout: 100000,
     customLaunchers: browsers,
     browsers: ["PhantomJS"].concat(Object.keys(browsers)),
-    reporters: ["dots", "saucelabs"],
+    reporters: ["coverage", "dots", "saucelabs"],
     sauceLabs: process.env.TRAVIS ? travisSauceLabsOptions : {},
     client: {
       mocha: {
@@ -42,4 +51,3 @@ module.exports = function(config) {
     }
   });
 };
-
