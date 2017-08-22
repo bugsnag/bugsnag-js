@@ -1,43 +1,60 @@
 <!doctype html>
 <html>
-<head>
-  <script src="../../src/bugsnag.js" data-apikey="328dabd9a66ffd44465aa74e0d80ba80"></script>
-  <script>
-    Bugsnag.metaData = {
-      "User Details": {
-        name: "James Smith",
-        email: "james@example.com"
+  <head>
+    <title>Bugsnag: Plain JS Example</title>
+    <script src="../../src/bugsnag.js" data-apikey="API-KEY-GOES-HERE"></script>
+  </head>
+  <style>
+    body {
+      font-family: 'Menlo', monospace; line-height: 1.7;
+      color: #444; background-color: #fafafa;
+      max-width: 600px; margin: 0 auto; padding: 20px;
+    }
+  </style>
+  <body>
+    <h1>Bugsnag: Plain JS Example</h1>
+
+    <p><button onclick="javascript:crashSync()">Throw unhandled exception (sync)</button></p>
+    <p><button onclick="javascript:crashAsync()">Throw unhandled exception (async)</button></p>
+    <p><button onclick="javascript:notifyException()">Catch and call `notifyException(err)`</button></p>
+
+    <p>
+      In addition to the buttons above, this page will notify Bugsnag of an uncaught exception on
+      page load (due to a syntax error). See the page source for more detail.
+    </p>
+
+    <script>
+      function crashSync() {
+        // Arrays don't have a `.crashSync()` method so
+        // this throws an uncaught exception
+        [].crashSync()
       }
-    };
-  </script>
-</head>
 
-<body>
-  <h1>Bugsnag JS Example</h1>
-
-  <script>
-  function parentOfCrashyFunction (arg1, arg2) {
-    crashyFunction();
-  }
-
-  function crashyFunction () {
-    // Anonymous function
-    (function () {
-      try {
-        throw new Error("Something broke");
-      } catch (exception) {
-        Bugsnag.notifyException(exception);
+      function crashAsync() {
+        setTimeout(function() {
+          // Arrays don't have a `.crashAsync()` method so
+          // this also throws an uncaught exception
+          [].crashAsync()
+        }, 1000)
       }
-    })();
-  }
 
-  // Top-level function call
-  parentOfCrashyFunction("random", 123);
+      function notifyException() {
+        try {
+          JSON.parse('definitely not json')
+        } catch (e) {
+          // The above string won't parse as JSON but the caught error
+          // won't automatically go to Bugsnag. `notifyException(err)`
+          // provides a way to manually notify Bugasnag of errors you
+          // caught but want to track
+          Bugsnag.notifyException(e)
+        }
+      }
+    </script>
 
-  // Parse error (triggers window.onerror and stops script execution)
-  // parseError("
-  </script>
-
-  <a href="#" onclick="javascript:parentOfCrashyFunction('test', 456); return false;">Click to call crashyFunction</a>
-</body>
+    <script>
+      // Syntax errors like this trigger a `window.onerror` event which get caught
+      // by the Bugsnag notifier, provided the notifier was loaded first
+      console.log('this invalid syntax triggers a ParseError'
+    </script>
+  </body>
 </html>

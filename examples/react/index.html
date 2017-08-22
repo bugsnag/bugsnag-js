@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Bugsnag: React Example</title>
+    <script src="../../src/bugsnag.js" data-apikey="API-KEY-GOES-HERE"></script>
+    <script src="./node_modules/babel-standalone/babel.js"></script>
+    <script src="./node_modules/react/umd/react.development.js"></script>
+    <script src="./node_modules/react-dom/umd/react-dom.development.js"></script>
+  </head>
+  <style>
+    body {
+      font-family: 'Menlo', monospace; line-height: 1.7;
+      color: #444; background-color: #fafafa;
+      max-width: 600px; margin: 0 auto; padding: 20px;
+    }
+  </style>
+  <body>
+    <h1>Bugsnag: React Example</h1>
+    <div id="root"></div>
+    <p>
+      Note that the version of React and ReactDOM used in this example are 16.0.0-beta.
+    </p>
+    <script type="text/babel">
+      class BadButton extends React.Component {
+        constructor(props) {
+          super(props)
+          this.state = { doARenderError: false }
+        }
+
+        throwError = () => {
+          throw new Error('doh!')
+        }
+
+        triggerRenderError = () => {
+          this.setState({ doARenderError: true })
+        }
+
+        render() {
+          return (
+            <div>
+              <p>
+                <button onClick={this.throwError}>Throw an error</button>
+              </p>
+              <p>
+                <button onClick={this.triggerRenderError}>Trigger a render error</button>
+                {this.state.doARenderError
+                  ? <span>{ this.state.doARenderError.non.existent.property }</span>
+                  : null
+                }
+              </p>
+            </div>
+          )
+        }
+      }
+
+      class ErrorBoundary extends React.Component {
+        componentDidCatch (error, info) {
+          Bugsnag.notifyException(error, { react: info })
+          this.setState({})
+        }
+        render () {
+          return this.props.children
+        }
+      }
+
+      ReactDOM.render(
+        <ErrorBoundary>
+          <BadButton />
+        </ErrorBoundary>,
+        document.getElementById('root')
+      )
+    </script>
+  </body>
+</html>
