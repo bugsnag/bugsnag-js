@@ -17,7 +17,7 @@
     "types": "src/bugsnag.d.ts",
     "scripts": {
         "lint": "grunt eslint",
-        "test": "karma start --single-run",
+        "test": "karma start --single-run && karma start karma-legacy.conf.js --single-run",
         "test:watch": "karma start --browsers PhantomJS",
         "test:quick": "karma start --single-run --browsers PhantomJS"
     },
@@ -29,6 +29,7 @@
         "eslint": "^3.4.0",
         "grunt": "~0.4.2",
         "grunt-bumpx": "~0.1.0",
+        "grunt-cli": "^1.2.0",
         "grunt-contrib-watch": "~0.5.2",
         "grunt-docco": "~0.4.0",
         "grunt-invalidate-cloudfront": "~0.1.4",
