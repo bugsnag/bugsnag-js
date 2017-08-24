@@ -3,3 +3,4 @@ test.html
 *.min.js
 docs
 dist
+coverage
