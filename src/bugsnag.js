@@ -11,6 +11,8 @@
 
 // The `Bugsnag` object is the only globally exported variable
 (function (window, old) {
+  var QUEUE_STORAGE_KEY = "bugsnag.queue";
+
   var self = {},
     lastScript,
     previousNotification,
@@ -27,8 +29,10 @@
     eventsRemaining = 10,
     // The default depth of attached metadata which is parsed before truncation. It
     // is configurable via the `maxDepth` setting.
-    maxPayloadDepth = 5;
-
+    maxPayloadDepth = 5,
+    // If the user loses connectivity with the internet, events are stored here so we can
+    // attempt to re-send them when/if they regain connectivity.
+    requestQueue = [];
 
   // Set default breadcrumbLimit to 20, so we don't send a giant payload.
   // This can be overridden up to the breadcrumbHardLimit
@@ -272,14 +276,32 @@
     }
   }
 
-  var _hasAddEventListener = (typeof window.addEventListener !== "undefined");
+  // Prevents a function from being invoked more than once.
+  function once(callback) {
+    var called = false;
+    return function () {
+      if (!called) {
+        called = true;
+        return callback.apply(this, arguments);
+      }
+    };
+  }
+
+  // Ponyfill for registering event listeners.
+  var addEvent = (function () {
+    if (window.addEventListener) {
+      return function (el, event, callback, capture) {
+        el.addEventListener(event, callback, capture);
+      };
+    } else if (window.attachEvent) {
+      return function (el, event, callback) {
+        el.attachEvent("on" + event, callback);
+      };
+    }
+  })();
 
   // Setup breadcrumbs for click events
   function setupClickBreadcrumbs() {
-    if (!_hasAddEventListener) {
-      return;
-    }
-
     var callback = function(event) {
       if(!getBreadcrumbSetting("autoBreadcrumbsClicks")) {
         return;
@@ -307,7 +329,31 @@
       });
     };
 
-    window.addEventListener("click", callback, true);
+    addEvent(window, "click", callback, true);
+  }
+
+  // Setup breadcrumbs for connectivity events
+  function trackConnectivity() {
+    if(!getBreadcrumbSetting("autoBreadcrumbsConnectivity", true)) {
+      return;
+    }
+
+    function trackOffline() {
+      self.leaveBreadcrumb({
+        type: "network",
+        name: "Lost connectivity"
+      });
+    }
+
+    function trackOnline() {
+      self.leaveBreadcrumb({
+        type: "network",
+        name: "Regained connectivity"
+      });
+    }
+
+    addEvent(window, "offline", trackOffline, true);
+    addEvent(window, "online", trackOnline, true);
   }
 
   // stub functions for old browsers
@@ -471,8 +517,7 @@
     }
 
     // check for browser support
-    if (!_hasAddEventListener ||
-        !window.history ||
+    if (!window.history ||
         !window.history.state ||
         !window.history.pushState ||
         !window.history.pushState.bind
@@ -500,12 +545,12 @@
       history.replaceState = nativeReplaceState;
     };
 
-    window.addEventListener("hashchange", wrapBuilder(buildHashChange), true);
-    window.addEventListener("popstate", wrapBuilder(buildPopState), true);
-    window.addEventListener("pagehide", wrapBuilder(buildPageHide), true);
-    window.addEventListener("pageshow", wrapBuilder(buildPageShow), true);
-    window.addEventListener("load", wrapBuilder(buildLoad), true);
-    window.addEventListener("DOMContentLoaded", wrapBuilder(buildDOMContentLoaded), true);
+    addEvent(window, "hashchange", wrapBuilder(buildHashChange), true);
+    addEvent(window, "popstate", wrapBuilder(buildPopState), true);
+    addEvent(window, "pagehide", wrapBuilder(buildPageHide), true);
+    addEvent(window, "pageshow", wrapBuilder(buildPageShow), true);
+    addEvent(window, "load", wrapBuilder(buildLoad), true);
+    addEvent(window, "DOMContentLoaded", wrapBuilder(buildDOMContentLoaded), true);
 
     if(getBreadcrumbSetting("autoBreadcrumbsNavigation")) {
       self.enableAutoBreadcrumbsNavigation();
@@ -558,9 +603,17 @@
   // This only works while synchronous scripts are running, so we track
   // that here.
   var synchronousScriptsRunning = document.readyState !== "complete";
-  function loadCompleted() {
+  var loadCompleted = once(function loadCompleted() {
     synchronousScriptsRunning = false;
-  }
+
+    // At this point we can load any previously queued requests from storage
+    // and attempt to send them again.
+    loadRequestQueueFromStorage();
+    processQueuedRequests();
+
+    // Trigger retrying any in-memory request payloads
+    addEvent(window, "online", processQueuedRequests);
+  });
 
   // from jQuery. We don't have quite such tight bounds as they do if
   // we end up on the window.onload event as we don't try and hack
@@ -568,12 +621,8 @@
   // we'd need these fallbacks anyway.
   // The worst that can happen is we group an event handler that fires
   // before us into the last script tag.
-  if (document.addEventListener) {
-    document.addEventListener("DOMContentLoaded", loadCompleted, true);
-    window.addEventListener("load", loadCompleted, true);
-  } else {
-    window.attachEvent("onload", loadCompleted);
-  }
+  addEvent(document, "DOMContentLoaded", loadCompleted, true);
+  addEvent(window, "load", loadCompleted, true);
 
   function getCurrentScript() {
     var script = document.currentScript || lastScript;
@@ -787,6 +836,14 @@
     }
   }
 
+  function shallowMerge(target, source) {
+    for (var key in source) {
+      if (Object.prototype.hasOwnProperty.call(source, key)) {
+        target[key] = source[key];
+      }
+    }
+    return target;
+  }
 
   // Deep-merge the `source` object into the `target` object and return
   // the `target`. Properties in source that will overwrite those in target.
@@ -816,26 +873,132 @@
     return target;
   }
 
+  // Returns whether the browser's online connectivity is active.
+  //
+  // For browsers without support for the `navigator.onLine` spec, we default to true, and attempt
+  // to send the error event anyway.
+  function isOnline() {
+    return (
+      typeof BUGSNAG_TESTING !== "undefined" ||
+      (typeof navigator.onLine === "boolean" ? navigator.onLine : true)
+    );
+  }
+
+  // Invokes a callback when the target has completed a request. Supports images and xhr objects.
+  // The callback is invoked with a single argument (of type boolean), which is `true` when there
+  // is some form of error with the request.
+  function onRequestEnd(target, callback) {
+    if (target instanceof XMLHttpRequest) {
+      target.onreadystatechange = function(event) {
+        if (target.readyState === 4) {
+          callback(target.status !== 200);
+        }
+      };
+    } else {
+      target.onload = target.onerror = function(event) {
+        callback(event.type === "error");
+      };
+    }
+  }
+
+  // Safely grabs a hold of localStorage (if possible) or returns an empty object if the browser
+  // has explicitly disabled it - (Safari errors when local storage is disabled and `localStorage`
+  // is accessed.
+  function getLocalStorage() {
+    var storageType = getSetting("storage", "session") + "Storage";
+    try {
+      return window[storageType];
+    } catch (err) {
+      return {};
+    }
+  }
+
+  function loadRequestQueueFromStorage() {
+    var localRequestQueue = getLocalStorage()[QUEUE_STORAGE_KEY];
+    if (localRequestQueue) {
+      requestQueue = JSON.parse(localRequestQueue);
+    }
+  }
+
+  function pushRequestToQueue(request) {
+    delete request.apiKey;
+    requestQueue.push(request);
+    updateLocalStorageRequestQueue();
+  }
+
+  function updateLocalStorageRequestQueue() {
+    var localStorage = getLocalStorage();
+    if (requestQueue.length) {
+      localStorage[QUEUE_STORAGE_KEY] = JSON.stringify(requestQueue);
+    } else {
+      delete localStorage[QUEUE_STORAGE_KEY];
+    }
+  }
+
   // Make a HTTP request with given `url` and `params` object.
   // For maximum browser compatibility and cross-domain support, requests are
   // made by creating a temporary JavaScript `Image` object.
   // Additionally the request can be done via XHR (needed for Chrome apps and extensions)
   // To set the script to use XHR, you can specify data-notifyhandler attribute in the script tag
   // Eg. `<script data-notifyhandler="xhr">` - the request defaults to image if attribute is not set
-  function request(url, params) {
+  function request(params, callback, isRetry) {
+    if (!isOnline()) {
+      if (!isRetry) {
+        log("Queuing error event due to lack of network connectivity.");
+        params.queuedCause = "offline";
+        pushRequestToQueue(params);
+      }
+      return;
+    }
+    var url = getSetting("endpoint") || DEFAULT_NOTIFIER_ENDPOINT;
     url += "?" + serialize(params) + "&ct=img&cb=" + new Date().getTime();
     if (typeof BUGSNAG_TESTING !== "undefined" && self.testRequest) {
       self.testRequest(url, params);
     } else {
       var notifyHandler = getSetting("notifyHandler");
+      var handler;
       if (notifyHandler === "xhr") {
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", url, true);
-        xhr.send();
+        handler = new XMLHttpRequest();
+        handler.open("GET", url, true);
+        handler.send();
       } else {
-        var img = new Image();
-        img.src = url;
+        handler = new Image();
+        handler.src = url;
       }
+      onRequestEnd(handler, function (err) {
+        if (err && !isRetry) {
+          params.queuedCause = "failed";
+          pushRequestToQueue(params);
+          log("Queuing error event due to lack of network connectivity.");
+        }
+        if (callback) {
+          callback(err);
+        }
+      });
+    }
+  }
+
+  function processQueuedRequests() {
+    var apiKey = getSetting("apiKey");
+    if (!validateApiKey(apiKey)) {
+      log("Unable to retry previously failed/queued error event(s) due to invalid apiKey.");
+      return;
+    }
+    function next() {
+      if (isOnline() && requestQueue.length) {
+        var payload = shallowMerge({apiKey: apiKey}, requestQueue[0]);
+        request(payload, function (err) {
+          if (!err) {
+            requestQueue.shift();
+            updateLocalStorageRequestQueue();
+            next();
+          }
+        }, true);
+      }
+    }
+    if (requestQueue.length) {
+      log("Attempting to retry previously failed/queued error event(s).");
+      next();
     }
   }
 
@@ -977,7 +1140,7 @@
     }
 
     // Make the HTTP request
-    request(getSetting("endpoint") || DEFAULT_NOTIFIER_ENDPOINT, payload);
+    request(payload);
   }
 
   // Generate a browser stacktrace (or approximation) from the current stack.
