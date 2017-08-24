@@ -62,10 +62,10 @@
     "browserName": "iphone",
     "deviceOrientation": "portrait"
   },
-  "sl_firefox_32": {
+  "sl_firefox_31": {
     "base": "SauceLabs",
     "browserName": "firefox",
-    "version": "32",
+    "version": "31",
     "platform": "Windows 7"
   },
   "sl_chrome_54": {
