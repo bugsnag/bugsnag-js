@@ -3,7 +3,10 @@ language: node_js
 node_js:
 - '6'
 env:
-- CXX=g++-4.8
+  matrix:
+  - CXX=g++-4.8
+  global:
+    secure: AokyYHpBCiCGbfI/gzeOrflvO41MgsOnQhcvavATDrKQQ9DSXkUN4+owBpcP41+zs1jtcTRW2Q51J3BO96BQZLAKGZOPTpxsWTVh0cU30DemrjKxT37f4chzwJp1gRCbiYrPzVxc0RADDbNGmfvpYeJXDCaHD+xuQh/8RE3dHBA=
 addons:
   sauce_connect:
     username: bugsnag-bot
@@ -14,6 +17,4 @@ addons:
     - g++-4.8
   jwt:
     secure: KFF5h2Gg6oIl+tyX/jpGQ/8JEoPmFzNc+SUaQimBXHjaivsm/lQ/wVU+VP5Y1qvCtEt65vzG27M3renHuyn3AIq4J4OUciLf4rf7OxO0rPAs+hets+A1OzrCsgTLd15Fuk+dtAXvIPKARqLmAl9G2zc4NicBgzT+lDNT09/CNBk=
-before_install:
-- npm install -g grunt-cli
 script: karma start --single-run
