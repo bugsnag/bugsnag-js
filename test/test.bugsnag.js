@@ -853,6 +853,52 @@ describe("window", function () {
     it("should pass twice", function () { });
     it("should pass thrice", function () { });
   }
+
+  it('should handle single argument usage (DOM event)', function () {
+    stub(Bugsnag, "_onerror");
+    var event = document.createEvent ? document.createEvent('Event') : document.createEventObject('Event');
+    event.initEvent ? event.initEvent('error', true, true) : event.type = 'error';
+    event.detail = 'something bad happened';
+    window.onerror(event);
+    var params = requestData().params;
+    assert.equal(params.name, 'Event: error', 'name should show the type of event');
+    assert.equal(params.message, 'something bad happened', 'message should use event.detail if available');
+    assert.deepEqual(params.metaData.event, decode(Bugsnag._serialize(event)), 'the entire event should be serialized in the payload metadata');
+  });
+
+  if (navigator.appVersion.indexOf("MSIE") > -1) {
+    it('should handle single argument usage (jQuery event)', function (done) {
+      stub(Bugsnag, "_onerror");
+      loadJQuery(function () {
+        window.$('body').append('<div id="jq-event-test"></div>');
+        $('#jq-event-test').trigger(new $.Event({ type: 'error' }));
+        setTimeout(function () {
+          try {
+            var params = requestData().params;
+            assert.equal(params.name, 'Event: error', 'name should show the type of event');
+            assert.equal(params.message, undefined, 'message should be undefined if event.detail is not available');
+            assert(params.metaData.event.isDefaultPrevented, 'the event property "isDefaultPrevented" should be serialized in the payload metadata');
+            assert(params.metaData.event.originalEvent, 'the event property "originalEvent" should be serialized in the payload metadata');
+            assert(params.metaData.event.target, 'the event property "target" should be serialized in the payload metadata');
+            assert(params.metaData.event.timeStamp, 'the event property "timeStamp" should be serialized in the payload metadata');
+            assert(params.metaData.event.type, 'the event property "type" should be serialized in the payload metadata');
+            done();
+          } catch (e) {
+            done(e);
+          }
+        }, 10);
+      });
+    });
+  }
+
+  it('should handle single argument usage (non-event)', function () {
+    stub(Bugsnag, "_onerror");
+    window.onerror({ a: 1 });
+    var params = requestData().params;
+    assert.equal(params.name, 'window.onerror', 'name should be the default value of window.onerror');
+    assert.equal(params.message, undefined, 'message should not exist');
+    assert.deepEqual(params.metaData.event, decode(Bugsnag._serialize({ a: 1 })), 'whatever object was provided should be serialized in the payload metadata');
+  });
 });
 
 
@@ -1025,6 +1071,25 @@ describe("noConflict", function() {
   });
 });
 
+function loadJQuery(cb) {
+  var jq = document.createElement("script");
+  jq.id = "jquery";
+  jq.type = "text/javascript";
+  jq.src = "/jquery/jquery-1.9.1.js?" + Math.random();
+  jq.onload = jq.onreadystatechange = function () {
+    if(!this.readyState || this.readyState === "loaded" || this.readyState === "complete") cb();
+  };
+  document.getElementsByTagName("body")[0].appendChild(jq);
+}
+
+function unloadJQuery () {
+  if (!window.$) return;
+  window.jQuery.noConflict();
+  var jq = document.getElementById("jquery");
+  if (!jq) return;
+  jq.parentNode.removeChild(jq);
+}
+
 function buildUp(cb) {
   // dummy object to override
   window.Bugsnag = {putMeBack: 1};
@@ -1067,17 +1132,15 @@ function tearDown() {
   for (var i = 0; i < window.undo.length; i++) {
     window.undo[i]();
   }
+
+  // unload jQuery, in case the test loaded it
+  unloadJQuery();
 }
 
-function requestData() {
-  var url = Bugsnag.testRequest.args[0][0];
-
-  var query = url.split("?")[1];
-
-  // Simple query decoder for use in testing.
+// Simple query decoder for use in testing.
+function decode(qs) {
   var params = {};
-  ("&" + query).replace(/&([^&=]*)=([^&=]*)/g, function (_, key, value) {
-
+  ("&" + qs).replace(/&([^&=]*)=([^&=]*)/g, function (_, key, value) {
     var obj = params;
     var path = decodeURIComponent(key).replace(/\]/g, "").split("[");
     for (var i = 0; i < path.length - 1; i++) {
@@ -1086,14 +1149,15 @@ function requestData() {
       }
       obj = obj[path[i]];
     }
-
     obj[path[path.length - 1]] = decodeURIComponent(value);
   });
+  return params;
+}
 
-  return {
-    url: url,
-    params: params
-  };
+function requestData() {
+  var url = Bugsnag.testRequest.args[0][0];
+  var query = url.split("?")[1];
+  return { url: url, params: decode(query) };
 }
 
 /* Fakes clicking on runtimes that do not have "HTMLElement.click()" (for
