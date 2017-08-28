@@ -14,7 +14,8 @@ module.exports = {
   proxies: {
     "/": "/base/test/",
     "/src": "/base/src",
-    "/amd": "/base/test/amd"
+    "/amd": "/base/test/amd",
+    "/jquery": "/base/test/jquery"
   },
   concurrency: 1,
   captureTimeout: 100000,

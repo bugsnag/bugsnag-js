@@ -776,7 +776,7 @@
 
       var str = [];
       for (var p in obj) {
-        if (obj.hasOwnProperty(p) && p != null && obj[p] != null) {
+        if ((!obj.hasOwnProperty || obj.hasOwnProperty(p)) && p != null && obj[p] != null) {
           var k = prefix ? prefix + "[" + p + "]" : p, v = obj[p];
           str.push(typeof v === "object" ? serialize(v, k, depth) : encodeURIComponent(k) + "=" + encodeURIComponent(v));
         }
@@ -786,6 +786,9 @@
       return encodeURIComponent(prefix) + "=" + encodeURIComponent("" + e);
     }
   }
+
+  // export this as a method for use in tests
+  self._serialize = serialize;
 
 
   // Deep-merge the `source` object into the `target` object and return
@@ -1115,10 +1118,20 @@
         lastScript = null;
 
         if (shouldNotify && !ignoreOnError) {
-          var name = exception && exception.name || "window.onerror";
+          var name, msg;
+          if (arguments.length === 1) {
+            // if called with a single argument, "message" is likely an Event object
+            // as documented here: https://developer.mozilla.org/en/docs/Web/API/GlobalEventHandlers/onerror#Syntax
+            name = message && message.type ? ("Event: " + message.type) : "window.onerror";
+            msg = message && message.detail ? message.detail : undefined;
+            metaData.event = message;
+          } else {
+            name = exception && exception.name || "window.onerror";
+            msg = message;
+          }
           sendToBugsnag({
             name: name,
-            message: message,
+            message: msg,
             file: url,
             lineNumber: lineNo,
             columnNumber: charNo,
@@ -1134,7 +1147,7 @@
               metaData: {
                 severity: "error",
                 file: url,
-                message: message,
+                message: msg,
                 line: lineNo
               }
             });
