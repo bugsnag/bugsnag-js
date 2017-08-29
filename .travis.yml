@@ -17,4 +17,4 @@ addons:
     - g++-4.8
   jwt:
     secure: KFF5h2Gg6oIl+tyX/jpGQ/8JEoPmFzNc+SUaQimBXHjaivsm/lQ/wVU+VP5Y1qvCtEt65vzG27M3renHuyn3AIq4J4OUciLf4rf7OxO0rPAs+hets+A1OzrCsgTLd15Fuk+dtAXvIPKARqLmAl9G2zc4NicBgzT+lDNT09/CNBk=
-script: karma start --single-run
+script: npm test
