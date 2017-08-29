@@ -29,6 +29,18 @@
     // is configurable via the `maxDepth` setting.
     maxPayloadDepth = 5;
 
+  var stacktraceName;
+  try {
+    throw Error('');
+  } catch(err) {
+    stacktraceName = (
+      err.backtrace
+        ? 'backtrace'
+        : err.stacktrace
+          ? 'stacktrace'
+          : 'stack'
+    );
+  }
 
   // Set default breadcrumbLimit to 20, so we don't send a giant payload.
   // This can be overridden up to the breadcrumbHardLimit
@@ -65,6 +77,36 @@
   //
   // ### Manual error notification (public methods)
   //
+
+  // #### Bugsnag.autoNotifyException
+  //
+  // Creates a closure which, when called, modifies the Error object to contain the
+  // stacktrace of the caller. This allows for one-level deep async stacktraces from
+  // within Promise chains.
+  //
+  // Example:
+  //   function badFunction() {
+  //     fetch(...)
+  //       .then(() => throw new Error('Something bad happened...'))
+  //       .catch(Bugsnag.asyncNotifyException());
+  //   }
+  //
+  // In the example above, whatever code ends up calling `badFunction` will also be
+  // included in the stacktrace when the `fetch` Promise chain rejects.
+  self.asyncNotifyException = function () {
+    var beforeStacktrace;
+    try {
+      throw new Error('');
+    } catch(err) {
+      beforeStacktrace = stacktraceFromException(err)
+        .replace('Error\n', '') // Remove Chrome's empty "Error" line
+        .split('\n').slice(1).join('\n');
+    }
+    return function (err) {
+      err[stacktraceName] += '\n' + beforeStacktrace;
+      return self.notifyException.apply(self, arguments);
+    };
+  };
 
   // #### Bugsnag.notifyException
   //
