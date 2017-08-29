@@ -866,7 +866,7 @@ describe("window", function () {
     assert.deepEqual(params.metaData.event, decode(Bugsnag._serialize(event)), 'the entire event should be serialized in the payload metadata');
   });
 
-  if (navigator.appVersion.indexOf("MSIE") > -1) {
+  if (navigator.userAgent.indexOf("MSIE") === -1) {
     it('should handle single argument usage (jQuery event)', function (done) {
       stub(Bugsnag, "_onerror");
       loadJQuery(function () {
