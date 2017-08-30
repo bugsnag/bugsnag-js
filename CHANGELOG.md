@@ -1,6 +1,13 @@
 Changelog
 =========
 
+3.2.1 (2017-08-30)
+-----
+
+### Bug Fixes
+
+- Fix issue when `window.onerror` is called with a single argument (#254)
+
 3.2.0 (2017-04-05)
 -----
 
