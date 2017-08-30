@@ -1,5 +1,8 @@
 var browsers = require('./browsers.json');
 
+var MINUTE_IN_MS = 1000 * 60
+var MAX_TIMEOUT = 2 * MINUTE_IN_MS
+
 module.exports = {
   basePath: "",
   port: 9876,
@@ -18,9 +21,9 @@ module.exports = {
     "/jquery": "/base/test/jquery"
   },
   concurrency: 1,
-  captureTimeout: 100000,
-  browserDisconnectTimeout: 100000,
-  browserNoActivityTimeout: 100000,
+  captureTimeout: MAX_TIMEOUT,
+  browserDisconnectTimeout: MAX_TIMEOUT,
+  browserNoActivityTimeout: MAX_TIMEOUT,
   customLaunchers: browsers,
   browsers: [],
   reporters: [ "progress", "saucelabs" ],
