@@ -11,7 +11,7 @@
         "reporting",
         "client-side"
     ],
-    "version": "3.2.0",
+    "version": "3.2.1",
     "license": "MIT",
     "main": "src/bugsnag.js",
     "types": "src/bugsnag.d.ts",
@@ -43,6 +43,6 @@
         "karma-phantomjs-launcher": "^1.0.1",
         "karma-sauce-launcher": "^1.0.0",
         "mocha": "~1.15.1",
-        "uglifyjs": "latest"
+        "uglifyjs": "^2.4.10"
     }
 }
