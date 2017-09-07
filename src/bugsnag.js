@@ -340,7 +340,9 @@
     // keep track of functions that we will need to hijack
     var nativeLog = console.log,
       nativeWarn = console.warn,
-      nativeError = console.error;
+      nativeError = console.error,
+      nativeGroup = console.group,
+      nativeGroupCollapsed = console.groupCollapsed;
 
     self.enableAutoBreadcrumbsConsole = function() {
       self.autoBreadcrumbsConsole = true;
@@ -358,11 +360,11 @@
       });
 
       enhance(console, "group", function() {
-        trackLog("group", arguments);
+        trackLog("log", [ "[group]" ].concat(Array.prototype.slice.call(arguments)));
       });
 
       enhance(console, "groupCollapsed", function() {
-        trackLog("groupCollapsed", arguments);
+        trackLog("log", [ "[group]" ].concat(Array.prototype.slice.call(arguments)));
       });
     };
 
@@ -372,6 +374,8 @@
       console.log = nativeLog;
       console.warn = nativeWarn;
       console.error = nativeError;
+      console.group = nativeGroup;
+      console.groupCollapsed = nativeGroupCollapsed;
     };
 
     if(getBreadcrumbSetting("autoBreadcrumbsConsole")) {
