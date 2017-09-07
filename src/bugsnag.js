@@ -887,6 +887,10 @@
     if (setting === "false") {
       setting = false;
     }
+    // some settings may need extracting from comma separated strings -> arrays
+    if (name === "notifyReleaseStages" && typeof setting === "string") {
+      setting = setting.split(/\s*,\s*/);
+    }
     return setting !== undefined ? setting : fallback;
   }
 
@@ -921,6 +925,8 @@
     // Check if we should notify for this release stage.
     var releaseStage = getSetting("releaseStage", "production");
     var notifyReleaseStages = getSetting("notifyReleaseStages");
+    // console.log(releaseStage)
+    // console.log(notifyReleaseStages)
     if (notifyReleaseStages) {
       var shouldNotify = false;
       for (var i = 0; i < notifyReleaseStages.length; i++) {
