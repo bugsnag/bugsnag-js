@@ -1071,6 +1071,45 @@ describe("noConflict", function() {
   });
 });
 
+describe("data-* settings", function () {
+  it("should correctly coerce notifyReleaseStages setting to an array when set via data-* attributes (1 value)", function (done) {
+    buildUp(function () {
+      try {
+        Bugsnag.notifyException(new Error("Example error"));
+        assert(Bugsnag.testRequest.called, "Bugsnag.testRequest should have been called");
+        done();
+      } catch (e) {
+        done(e);
+      }
+    }, { "data-notifyreleasestages": "production" });
+  });
+
+  it("should correctly coerce notifyReleaseStages setting to an array when set via data-* attributes (2 values)", function (done) {
+    buildUp(function () {
+      try {
+        Bugsnag.notifyException(new Error("Example error"));
+        assert(Bugsnag.testRequest.called, "Bugsnag.testRequest should have been called");
+        done();
+      } catch (e) {
+        done(e);
+      }
+    }, { "data-notifyreleasestages": "development,production" });
+  });
+
+  it("should correctly coerce notifyReleaseStages setting to an array when set via data-* attributes (2 values, not containing releaseStage)", function (done) {
+    buildUp(function () {
+      try {
+        Bugsnag.notifyException(new Error("Example error"));
+        assert(!Bugsnag.testRequest.called, "Bugsnag.testRequest should not have been called");
+        done();
+      } catch (e) {
+        done(e);
+      }
+    }, { "data-notifyreleasestages": "development,production", "data-releasestage": "other" });
+  });
+})
+
+
 function loadJQuery(cb) {
   var jq = document.createElement("script");
   jq.id = "jquery";
@@ -1090,7 +1129,7 @@ function unloadJQuery () {
   jq.parentNode.removeChild(jq);
 }
 
-function buildUp(cb) {
+function buildUp(cb, attributes) {
   // dummy object to override
   window.Bugsnag = {putMeBack: 1};
 
@@ -1102,6 +1141,11 @@ function buildUp(cb) {
   bugsnag.id = "bugsnag";
   bugsnag.type = "text/javascript";
   bugsnag.src = "../src/bugsnag.js?" + Math.random();
+  if (typeof attributes === 'object') {
+    for (attribute in attributes) {
+      bugsnag.setAttribute(attribute, attributes[attribute]);
+    }
+  }
   bugsnag.onload = bugsnag.onreadystatechange = function () {
     if(!this.readyState || this.readyState === "loaded" || this.readyState === "complete") {
       // Set api key to use when testing

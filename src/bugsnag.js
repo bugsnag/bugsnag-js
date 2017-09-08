@@ -887,6 +887,10 @@
     if (setting === "false") {
       setting = false;
     }
+    // some settings may need extracting from comma separated strings -> arrays
+    if (name === "notifyReleaseStages" && typeof setting === "string") {
+      setting = setting.split(/\s*,\s*/);
+    }
     return setting !== undefined ? setting : fallback;
   }
 
