@@ -1,6 +1,14 @@
 Changelog
 =========
 
+3.2.2 (2017-09-13)
+-----
+
+### Bug Fixes
+
+- Parse array-typed options from `data-*` attrs. Fixes 249. (#258)
+- Log `console.group` and `console.groupCollapsed` calls as breadcrumbs. Credit @TobiasBales (#252).
+
 3.2.1 (2017-08-30)
 -----
 
