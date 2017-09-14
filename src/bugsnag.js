@@ -116,8 +116,12 @@
       file: exception.fileName || exception.sourceURL,
       lineNumber: exception.lineNumber || exception.line,
       columnNumber: exception.columnNumber ? exception.columnNumber + 1 : undefined,
-      severity: severity || "warning"
-    }, metaData);
+      severity: severity
+    }, metaData, {
+      severity: "warning",
+      unhandled: false,
+      severityReason: undefined
+    });
   };
 
   // #### Bugsnag.notify
@@ -139,8 +143,12 @@
       // newer browsers get a legit stacktrace from generateStacktrace().
       file: window.location.toString(),
       lineNumber: 1,
-      severity: severity || "warning"
-    }, metaData);
+      severity: severity
+    }, metaData, {
+      severity: "warning",
+      unhandled: false,
+      severityReason: undefined
+    });
   };
 
   // #### Bugsnag.leaveBreadcrumb(value, [metaData])
@@ -913,7 +921,7 @@
   }
 
   // Send an error to Bugsnag.
-  function sendToBugsnag(details, metaData) {
+  function sendToBugsnag(details, metaData, handledState) {
     // Validate the configured API key.
     var apiKey = getSetting("apiKey");
     if (!validateApiKey(apiKey) || !eventsRemaining) {
@@ -970,7 +978,7 @@
       userAgent: navigator.userAgent,
       language: navigator.language || navigator.userLanguage,
 
-      severity: details.severity,
+      severity: details.severity || handledState.severity,
 
       name: details.name,
       message: details.message,
@@ -994,6 +1002,10 @@
     if (payload.lineNumber === 0 && (/Script error\.?/).test(payload.message)) {
       return log("Ignoring cross-domain or eval script error. See https://docs.bugsnag.com/platforms/browsers/faq/#3-cross-origin-script-errors");
     }
+
+    payload.unhandled = handledState.unhandled;
+    payload.defaultSeverity = handledState.severity === payload.severity;
+    payload.severityReason = handledState.severityReason;
 
     // Make the HTTP request
     request(getSetting("endpoint") || DEFAULT_NOTIFIER_ENDPOINT, payload);
@@ -1151,9 +1163,12 @@
             file: url,
             lineNumber: lineNo,
             columnNumber: charNo,
-            stacktrace: (exception && stacktraceFromException(exception)) || generateStacktrace(),
-            severity: "error"
-          }, metaData);
+            stacktrace: (exception && stacktraceFromException(exception)) || generateStacktrace()
+          }, metaData, {
+            severity: "error",
+            unhandled: true,
+            severityReason: { type: "window_onerror" }
+          });
 
           // add the error to the breadcrumbs
           if (getBreadcrumbSetting("autoBreadcrumbsErrors")) {
