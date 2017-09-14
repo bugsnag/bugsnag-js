@@ -338,7 +338,7 @@
     }
 
     // keep track of functions that we will need to hijack
-    var nativeLog = console.log,
+    var nativeLog = self.nativeLog = console.log,
       nativeWarn = console.warn,
       nativeError = console.error,
       nativeGroup = console.group,
@@ -645,12 +645,17 @@
   // Simple logging function that wraps `console.log` if available.
   // This is useful for warning about configuration issues
   // eg. forgetting to set an API key.
-  function log(msg) {
+  function log(msg, includeInBreadcrumbs) {
     var disableLog = getSetting("disableLog");
+
+    if (includeInBreadcrumbs === undefined) {
+      includeInBreadcrumbs = true;
+    }
 
     var console = window.console;
     if (console !== undefined && console.log !== undefined && !disableLog) {
-      console.log("[Bugsnag] " + msg);
+      var logFunction = includeInBreadcrumbs ? console.log : self.nativeLog;
+      logFunction("[Bugsnag] " + msg);
     }
   }
 
@@ -1281,6 +1286,9 @@
   if (getSetting("autoBreadcrumbs", true)) {
     self.leaveBreadcrumb({ type: "navigation", name: "Bugsnag Loaded" });
   }
+
+  // Log that we've successfully loaded
+  log("JavaScript error reporting initialized (https://bugsnag.com)", false);
 
   window.Bugsnag = self;
   // If people are using a javascript loader, we should integrate with it.
