@@ -1242,12 +1242,22 @@
       window.addEventListener("unhandledrejection", function (event) {
         if (getSetting("notifyUnhandledRejections", false)) {
           var err = event.reason;
-          if (err && (err instanceof Error || err.message)) {
-            self.notifyException(err);
-          } else {
-            // Hopefully the reason is a serializable value (this may yield less than useful results if reject() is abused)
-            self.notify("UnhandledRejection", err);
+          var metaData = {}
+          if (err && !err.message) {
+            metaData.promiseRejectionValue = err;
           }
+          sendToBugsnag({
+            name: (err && err.name) ? err.name : "UnhandledRejection",
+            message: (err && err.message) ? err.message : "",
+            stacktrace: stacktraceFromException(err) || generateStacktrace(),
+            file: err.fileName || err.sourceURL,
+            lineNumber: err.lineNumber || err.line,
+            columnNumber: err.columnNumber ? err.columnNumber + 1 : undefined
+          }, metaData, {
+            severity: "error",
+            unhandled: true,
+            severityReason: { type: "promise_rejection" }
+          });
         }
       });
     }

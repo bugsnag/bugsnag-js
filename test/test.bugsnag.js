@@ -1127,6 +1127,30 @@ describe("data-* settings", function () {
   });
 })
 
+if ("onunhandledrejection" in window) {
+  describe("unhandled promise rejections", function () {
+    beforeEach(buildUp);
+    afterEach(tearDown);
+
+    it("should catch uncaught rejections after enableNotifyUnhandledRejections() is called", function (done) {
+      Bugsnag.enableNotifyUnhandledRejections()
+      Promise.reject(new Error("boom"))
+      setTimeout(function () {
+        try {
+          assert(Bugsnag.testRequest.called, "Bugsnag.testRequest should have been called");
+          var params = requestData().params;
+          assert.equal(params.defaultSeverity, "true");
+          assert.equal(params.severity, "error");
+          assert.equal(params.unhandled, "true");
+          assert.deepEqual(params.severityReason, { type: "promise_rejection" });
+          done();
+        } catch (e) {
+          done(e);
+        }
+      }, 0);
+    })
+  });
+}
 
 function loadJQuery(cb) {
   var jq = document.createElement("script");
