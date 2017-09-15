@@ -255,7 +255,20 @@
               return _super.apply(this, arguments);
             } catch (e) {
               if (getSetting("autoNotify", true)) {
-                self.notifyException(e, null, null, "error");
+                var metaData = {};
+                addScriptToMetaData(metaData);
+                sendToBugsnag({
+                  name: e.name,
+                  message: e.message,
+                  stacktrace: stacktraceFromException(e) || generateStacktrace(),
+                  file: e.fileName || e.sourceURL,
+                  lineNumber: e.lineNumber || e.line,
+                  columnNumber: e.columnNumber ? e.columnNumber + 1 : undefined
+                }, metaData, {
+                  severity: "error",
+                  unhandled: true,
+                  severityReason: { type: "exception_handler" }
+                });
                 ignoreNextOnError();
               }
               throw e;
