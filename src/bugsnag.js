@@ -1255,7 +1255,8 @@
       window.addEventListener("unhandledrejection", function (event) {
         if (getSetting("notifyUnhandledRejections", false)) {
           var err = event.reason;
-          var metaData = {}
+          var metaData = {};
+          addScriptToMetaData(metaData);
           if (err && !err.message) {
             metaData.promiseRejectionValue = err;
           }
