@@ -118,9 +118,9 @@
       columnNumber: exception.columnNumber ? exception.columnNumber + 1 : undefined,
       severity: severity
     }, metaData, {
-      severity: "warning",
+      originalSeverity: "warning",
       unhandled: false,
-      severityReason: undefined
+      severityReason: { type: "handledException" }
     });
   };
 
@@ -145,9 +145,9 @@
       lineNumber: 1,
       severity: severity
     }, metaData, {
-      severity: "warning",
+      originalSeverity: "warning",
       unhandled: false,
-      severityReason: undefined
+      severityReason: { type: "handledError" }
     });
   };
 
@@ -265,9 +265,9 @@
                   lineNumber: e.lineNumber || e.line,
                   columnNumber: e.columnNumber ? e.columnNumber + 1 : undefined
                 }, metaData, {
-                  severity: "error",
+                  originalSeverity: "error",
                   unhandled: true,
-                  severityReason: { type: "exception_handler" }
+                  severityReason: { type: "unhandledException" }
                 });
                 ignoreNextOnError();
               }
@@ -991,7 +991,7 @@
       userAgent: navigator.userAgent,
       language: navigator.language || navigator.userLanguage,
 
-      severity: details.severity || handledState.severity,
+      severity: details.severity,
 
       name: details.name,
       message: details.message,
@@ -1003,6 +1003,17 @@
       payloadVersion: "3"
     };
 
+    // did the user set severity?
+    var userSeverity = details.severity;
+    var userSpecifiedSeverity = userSeverity && userSeverity !== handledState.originalSeverity;
+
+    // annotate this property so that we can check if the "beforeNotify" callbacks changed it
+    // can't annotate a string literal ""/'', so create a String() object, woo!
+    if (userSpecifiedSeverity) {
+      payload.severity = new String(userSpecifiedSeverity);
+      payload.severity.__userSpecifiedSeverity = true;
+    }
+
     // Run any `beforeNotify` function
     var beforeNotify = self.beforeNotify;
     if (typeof(beforeNotify) === "function") {
@@ -1012,13 +1023,30 @@
       }
     }
 
+    // did any of the the callbacks set the severity?
+    var callbackSeverity = payload.severity;
+    var callbackSetSeverity = callbackSeverity && !callbackSeverity.__userSpecifiedSeverity && callbackSeverity !== handledState.originalSeverity;
+
+    if (callbackSetSeverity) {
+        // callbacks set a valid severity value
+        payload.severity = callbackSeverity;
+        payload.severityReason = { type: "userCallbackSetSeverity" };
+    } else if (userSpecifiedSeverity) {
+        // user specified a valid severity value
+        payload.severity = userSeverity;
+        payload.severityReason = { type: "userSpecifiedSeverity" };
+    } else {
+        // user did not specify severity, or specified and invalid value
+        payload.severity = handledState.originalSeverity;
+        payload.severityReason = handledState.severityReason;
+    }
+
+    // finally, add whether the error was unhandled so that callbacks can't fiddle with it
+    payload.unhandled = handledState.unhandled;
+
     if (payload.lineNumber === 0 && (/Script error\.?/).test(payload.message)) {
       return log("Ignoring cross-domain or eval script error. See https://docs.bugsnag.com/platforms/browsers/faq/#3-cross-origin-script-errors");
     }
-
-    payload.unhandled = handledState.unhandled;
-    payload.defaultSeverity = handledState.severity === payload.severity;
-    payload.severityReason = handledState.severityReason;
 
     // Make the HTTP request
     request(getSetting("endpoint") || DEFAULT_NOTIFIER_ENDPOINT, payload);
@@ -1178,9 +1206,9 @@
             columnNumber: charNo,
             stacktrace: (exception && stacktraceFromException(exception)) || generateStacktrace()
           }, metaData, {
-            severity: "error",
+            originalSeverity: "error",
             unhandled: true,
-            severityReason: { type: "window_onerror" }
+            severityReason: { type: "unhandledException" }
           });
 
           // add the error to the breadcrumbs
@@ -1270,7 +1298,7 @@
           }, metaData, {
             severity: "error",
             unhandled: true,
-            severityReason: { type: "promise_rejection" }
+            severityReason: { type: "unhandledPromiseRejection" }
           });
         }
       });

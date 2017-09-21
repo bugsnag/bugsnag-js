@@ -339,9 +339,8 @@ describe("Bugsnag", function () {
       assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
       var params = requestData().params;
       assert.equal(params.severity, "warning");
-      assert.equal(params.defaultSeverity, decode(Bugsnag._serialize({ defaultSeverity: true })).defaultSeverity);
       assert.equal(params.unhandled, decode(Bugsnag._serialize({ unhandled: false })).unhandled);
-      assert.equal(params.severityReason, undefined);
+      assert.deepEqual(params.severityReason, decode(Bugsnag._serialize({ severityReason: { type: 'handledException' } })).severityReason);
     });
 
     it("should set correct handled-state properties when user changes severity", function () {
@@ -350,7 +349,7 @@ describe("Bugsnag", function () {
       assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
       var params = requestData().params;
       assert.equal(params.severity, "info");
-      assert.equal(params.defaultSeverity, decode(Bugsnag._serialize({ defaultSeverity: false })).defaultSeverity);
+      assert.deepEqual(params.severityReason, decode(Bugsnag._serialize({ severityReason: { type: 'userSpecifiedSeverity' } })).severityReason);
     });
 
     if (navigator.appVersion.indexOf("MSIE 9") > -1) {
@@ -777,9 +776,8 @@ describe("window", function () {
       assert.equal(params.lineNumber, 123);
       assert.equal(params.severity, "error");
       // the next assertions are all crazy because of the fudged deserialization (true => "true" etc.)
-      assert.equal(params.defaultSeverity, decode(Bugsnag._serialize({ defaultSeverity: true })).defaultSeverity);
       assert.equal(params.unhandled, decode(Bugsnag._serialize({ unhandled: true })).unhandled);
-      assert.deepEqual(params.severityReason, decode(Bugsnag._serialize({ type: "window_onerror" })));
+      assert.deepEqual(params.severityReason, decode(Bugsnag._serialize({ type: "unhandledException" })));
     });
 
     it("should be able to process column number and stacktrace in some browsers", function () {
