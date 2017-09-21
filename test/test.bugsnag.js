@@ -1137,10 +1137,9 @@ if ("onunhandledrejection" in window) {
         try {
           assert(Bugsnag.testRequest.called, "Bugsnag.testRequest should have been called");
           var params = requestData().params;
-          assert.equal(params.defaultSeverity, "true");
           assert.equal(params.severity, "error");
           assert.equal(params.unhandled, "true");
-          assert.deepEqual(params.severityReason, { type: "promise_rejection" });
+          assert.deepEqual(params.severityReason, { type: "unhandledPromiseRejection" });
           done();
         } catch (e) {
           done(e);

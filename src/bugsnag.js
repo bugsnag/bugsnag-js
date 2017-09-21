@@ -1296,7 +1296,7 @@
             lineNumber: err.lineNumber || err.line,
             columnNumber: err.columnNumber ? err.columnNumber + 1 : undefined
           }, metaData, {
-            severity: "error",
+            originalSeverity: "error",
             unhandled: true,
             severityReason: { type: "unhandledPromiseRejection" }
           });
