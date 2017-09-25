@@ -1028,17 +1028,17 @@
     var callbackSetSeverity = callbackSeverity && !callbackSeverity.__userSpecifiedSeverity && callbackSeverity !== handledState.originalSeverity;
 
     if (callbackSetSeverity) {
-        // callbacks set a valid severity value
-        payload.severity = callbackSeverity;
-        payload.severityReason = { type: "userCallbackSetSeverity" };
+      // callbacks set a valid severity value
+      payload.severity = callbackSeverity;
+      payload.severityReason = { type: "userCallbackSetSeverity" };
     } else if (userSpecifiedSeverity) {
-        // user specified a valid severity value
-        payload.severity = userSeverity;
-        payload.severityReason = { type: "userSpecifiedSeverity" };
+      // user specified a valid severity value
+      payload.severity = userSeverity;
+      payload.severityReason = { type: "userSpecifiedSeverity" };
     } else {
-        // user did not specify severity, or specified and invalid value
-        payload.severity = handledState.originalSeverity;
-        payload.severityReason = handledState.severityReason;
+      // user did not specify severity, or specified and invalid value
+      payload.severity = handledState.originalSeverity;
+      payload.severityReason = handledState.severityReason;
     }
 
     // finally, add whether the error was unhandled so that callbacks can't fiddle with it
