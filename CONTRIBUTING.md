@@ -89,8 +89,8 @@ summary is output to the terminal and detailed html reports will be located in `
 Releasing
 =========
 
-1.  Ensure you have the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`
-    environment variables set.
+1.  Ensure you have the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment
+    variables set. Also __ensure 2FA is enabled__ on your AWS account.
 2.  Bump the version number
 
     ```
