@@ -111,9 +111,10 @@
 
     var state;
 
-    if (handledState) {
+    if (handledState && handledState.originalSeverity && handledState.severityReason &&
+      handledState.severityReason.type && handledState.unhandled != undefined) {
       state = handledState;
-    } else {
+    } else { // revert to default
       state = {
         originalSeverity: "warning",
         unhandled: false,
