@@ -1,6 +1,13 @@
 Changelog
 =========
 
+3.3.0 (2017-10-02)
+-----
+
+### Enhancements
+
+- Added support for detecting whether an error report was handled or unhandled. (#259)
+
 3.2.2 (2017-09-13)
 -----
 

@@ -11,7 +11,7 @@
         "reporting",
         "client-side"
     ],
-    "version": "3.2.2",
+    "version": "3.3.0",
     "license": "MIT",
     "main": "src/bugsnag.js",
     "types": "src/bugsnag.d.ts",
