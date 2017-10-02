@@ -81,7 +81,7 @@
   // The default value is "warning" and "error" and "info" are also supported by the
   // backend, all other values cause the notification to be dropped; and you
   // will not see it in your dashboard.
-  self.notifyException = function (exception, name, metaData, severity) {
+  self.notifyException = function (exception, name, metaData, severity, handledState) {
     if (!exception) {
       var message = "Bugsnag.notifyException() was called with no arguments";
       log(message);
@@ -109,6 +109,19 @@
     }
     addScriptToMetaData(metaData);
 
+    var state;
+
+    if (handledState && handledState.originalSeverity && handledState.severityReason &&
+      handledState.severityReason.type && handledState.unhandled != undefined) {
+      state = handledState;
+    } else { // revert to default
+      state = {
+        originalSeverity: "warning",
+        unhandled: false,
+        severityReason: { type: "handledException" }
+      };
+    }
+
     sendToBugsnag({
       name: name || exception.name,
       message: exception.message || exception.description,
@@ -117,11 +130,7 @@
       lineNumber: exception.lineNumber || exception.line,
       columnNumber: exception.columnNumber ? exception.columnNumber + 1 : undefined,
       severity: severity
-    }, metaData, {
-      originalSeverity: "warning",
-      unhandled: false,
-      severityReason: { type: "handledException" }
-    });
+    }, metaData, state);
   };
 
   // #### Bugsnag.notify
