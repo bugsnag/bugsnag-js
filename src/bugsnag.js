@@ -779,7 +779,7 @@
     } if (typeof object === "object" && object != null) {
       var newObject = {};
       for (var key in object) {
-        if (object.hasOwnProperty(key)) {
+        if (Object.prototype.hasOwnProperty.call(object, key)) {
           newObject[key] = truncateDeep(object[key], length, newDepth);
         }
       }
