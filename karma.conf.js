@@ -15,7 +15,7 @@ module.exports = function(config) {
     browsers: []
     .concat("PhantomJS")
     .concat(
-      Object.keys(browsers).filter(function (key) { return !browsers[key].legacy })
+      Object.keys(browsers).filter(function (key) { return !/^bs_ie_/.test(key) })
     )
   }));
 };
