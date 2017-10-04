@@ -27,11 +27,13 @@ module.exports = {
   customLaunchers: browsers,
   browsers: [],
   reporters: [ "progress", "BrowserStack" ],
-  browserStack: {
-    startTunnel: !process.env.TRAVIS,
-    tunnelIdentifier: process.env.BROWSERSTACK_LOCAL_IDENTIFIER,
-    project: process.env.TRAVIS_REPO_SLUG
-  },
+  browserStack: process.env.TRAVIS
+    ? {
+        startTunnel: false,
+        tunnelIdentifier: process.env.BROWSERSTACK_LOCAL_IDENTIFIER,
+        project: process.env.TRAVIS_REPO_SLUG + '/' + process.env.TRAVIS_BRANCH
+      }
+    : { startTunnel: true },
   client: {
     mocha: {
       timeout: 100000,
