@@ -11,7 +11,7 @@ module.exports = function(config) {
         { type: "lcov" }
       ]
     },
-    reporters: [ "coverage", "progress", "saucelabs" ].concat(process.env.TRAVIS ? [ "coveralls" ] : []),
+    reporters: [ "coverage", "progress", "BrowserStack" ].concat(process.env.TRAVIS ? [ "coveralls" ] : []),
     browsers: []
     .concat("PhantomJS")
     .concat(

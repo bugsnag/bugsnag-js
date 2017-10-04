@@ -26,15 +26,10 @@ module.exports = {
   browserNoActivityTimeout: MAX_TIMEOUT,
   customLaunchers: browsers,
   browsers: [],
-  reporters: [ "progress", "saucelabs" ],
-  sauceLabs: process.env.TRAVIS
-    ? {
-        build: process.env.TRAVIS_BUILD_NUMBER,
-        testName: "Bugsnag.js Browser Tests",
-        tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER,
-        startConnect: false
-      }
-    : {},
+  reporters: [ "progress", "BrowserStack" ],
+  browserStack: {
+    startTunnel: !process.env.TRAVIS
+  },
   client: {
     mocha: {
       timeout: 100000,

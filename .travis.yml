@@ -6,15 +6,11 @@ env:
   matrix:
   - CXX=g++-4.8
   global:
-    secure: AokyYHpBCiCGbfI/gzeOrflvO41MgsOnQhcvavATDrKQQ9DSXkUN4+owBpcP41+zs1jtcTRW2Q51J3BO96BQZLAKGZOPTpxsWTVh0cU30DemrjKxT37f4chzwJp1gRCbiYrPzVxc0RADDbNGmfvpYeJXDCaHD+xuQh/8RE3dHBA=
+    COVERALLS_REPO_TOKEN:
+      secure: "BZcofVigXyZZs9mtOce6WoAZcpZRHjgpiboh6st477ZLCuK85Inmh8A0Va3E7nmL5YnzBh1OP66pc9vuZ6WFwphVTVo9FmE4MKMT9c8kS3WG6Tu8CvC04AJab2MuoiJWeGgOGGgLElMwjdHsiy/RCdZtEupT9l0hMhdShwzwWAU="
 addons:
-  sauce_connect:
-    username: bugsnag-bot
-  apt:
-    sources:
-    - ubuntu-toolchain-r-test
-    packages:
-    - g++-4.8
-  jwt:
-    secure: KFF5h2Gg6oIl+tyX/jpGQ/8JEoPmFzNc+SUaQimBXHjaivsm/lQ/wVU+VP5Y1qvCtEt65vzG27M3renHuyn3AIq4J4OUciLf4rf7OxO0rPAs+hets+A1OzrCsgTLd15Fuk+dtAXvIPKARqLmAl9G2zc4NicBgzT+lDNT09/CNBk=
+  browserstack:
+    username: "bengourley1"
+    access_key:
+      secure: "C/1HcFfUO0tBmKF9hsniqcsE21tbGnidGz0WM3UfUNI7YUtzopf2l2DNFwuzN7X91HxLaYspElS6EjPuVcUU1PP7JnpK/2eKOpS4CrhnurdMV+1CoVaBEvCaIhwaIIlfnvDQ/itZOjY/sRWtwpdhuR39bo3D+qvnwq4ivYKlk58="
 script: npm test
