@@ -1,6 +1,13 @@
 Changelog
 =========
 
+3.3.1 (2017-10-04)
+-----
+
+### Bug fixes
+
+- Fix truncation of object that don't inherit from `Object.prototype`, e.g. `Object.create(null)`. (#263/#261)
+
 3.3.0 (2017-10-02)
 -----
 
