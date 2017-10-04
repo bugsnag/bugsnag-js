@@ -29,7 +29,8 @@ module.exports = {
   reporters: [ "progress", "BrowserStack" ],
   browserStack: {
     startTunnel: !process.env.TRAVIS,
-    tunnelIdentifier: process.env.BROWSERSTACK_LOCAL_IDENTIFIER
+    tunnelIdentifier: process.env.BROWSERSTACK_LOCAL_IDENTIFIER,
+    project: process.env.TRAVIS_REPO_SLUG
   },
   client: {
     mocha: {
