@@ -6,7 +6,9 @@ env:
   matrix:
   - CXX=g++-4.8
   global:
-    secure: qDbEJFSgG0JExIT8aJ2f4DyubQhqaJX39iVbueZCPc9GAqhPc/6n+gLXxweDZo1wD8hG2nZKjmisIck2mjzRV/qLJjO1hZnZxdj8f7J1DbexB6LgTAXe/etb7aiMsc6dZ52NV7sqfaFuxmLUhAJScj49ivJBovrbD/DOa8hmBoY=
+  - secure: qDbEJFSgG0JExIT8aJ2f4DyubQhqaJX39iVbueZCPc9GAqhPc/6n+gLXxweDZo1wD8hG2nZKjmisIck2mjzRV/qLJjO1hZnZxdj8f7J1DbexB6LgTAXe/etb7aiMsc6dZ52NV7sqfaFuxmLUhAJScj49ivJBovrbD/DOa8hmBoY=
+  - secure: LcWMDr1sSo+o1ek+xtNl2AeXx6KQjl+SJs1yrVkwEM1FLv1aNZDDB26XYRCMTKGiB1P/I2h4w6HNOJmVK/sv+/zvDDC+DIAvk+aHoRBWhNZWfUIfKMc91ihPj5JoFXSiUg3L/4DpfVWJm4mpQPEOuWPGjdGO46AG6aUSiTOzQBo=
+  - secure: bAgrtoybH+UbC2aFOTYmXfTOQsLBp8wX5m0eXfTw8zNvOCh6U70aq3v43IH3VwJxoWbNtgl1HXodEKPZMkzfRxciU3G0RTgXTPC7KMeHodPSw1I5DXxry0g73eefna7v4OirMYNIiZ6iZfz4eAzZv957AKzZLRt4WvTWiSPWO0Y=
 addons:
   browserstack:
     username: bengourley1
