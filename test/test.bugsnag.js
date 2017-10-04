@@ -520,14 +520,16 @@ describe("Bugsnag", function () {
         assert.equal(crumb.metaData.message.length, 140);
       });
 
-      it("truncates values for objects that don't inherit from Object.prototype", function () {
-        var plainObject = Object.create(null);
-        plainObject.dummyProperty = true;
-        Bugsnag.leaveBreadcrumb({ metaData: plainObject })
-        Bugsnag.notify("Something");
-        assert.equal(requestData().params.breadcrumbs[1].type, "manual");
-        assert.ok(requestData().params.breadcrumbs[1].metaData.dummyProperty);
-      });
+      if (Object.create) {
+        it("truncates values for objects that don't inherit from Object.prototype", function () {
+          var plainObject = Object.create(null);
+          plainObject.dummyProperty = true;
+          Bugsnag.leaveBreadcrumb({ metaData: plainObject })
+          Bugsnag.notify("Something");
+          assert.equal(requestData().params.breadcrumbs[1].type, "manual");
+          assert.ok(requestData().params.breadcrumbs[1].metaData.dummyProperty);
+        });
+      }
 
       it("limits total breadcrumbs to 20", function () {
         var i, key, breadcrumbs, breadcrumbCount = 0;
