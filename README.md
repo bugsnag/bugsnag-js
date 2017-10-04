@@ -39,3 +39,8 @@ All contributors are welcome! For information on how to build, test, and release
 The Bugsnag JS library is free software released under the MIT License. See
 [LICENSE.txt](https://github.com/bugsnag/bugsnag-js/blob/master/LICENSE.txt) for
 details.
+
+---
+
+Browser testing provided
+<a href="https://www.browserstack.com/"><img src="https://bstacksupport.zendesk.com/attachments/token/PXt59K0Z9tyvNxlueuTyR3AUQ/?name=Logo-01.svg" width=120 alt="BrowserStack" /></a>
