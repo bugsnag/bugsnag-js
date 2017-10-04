@@ -31,7 +31,7 @@ module.exports = {
     ? {
         startTunnel: false,
         tunnelIdentifier: process.env.BROWSERSTACK_LOCAL_IDENTIFIER,
-        project: process.env.TRAVIS_REPO_SLUG + '/' + process.env.TRAVIS_BRANCH
+        project: process.env.TRAVIS_REPO_SLUG + '#' + process.env.TRAVIS_BRANCH
       }
     : { startTunnel: true },
   client: {
