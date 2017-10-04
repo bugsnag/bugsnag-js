@@ -1,7 +1,7 @@
 var browsers = require('./browsers.json');
 
 var MINUTE_IN_MS = 1000 * 60
-var MAX_TIMEOUT = 2 * MINUTE_IN_MS
+var MAX_TIMEOUT = 1 * MINUTE_IN_MS
 
 module.exports = {
   basePath: "",
@@ -26,15 +26,11 @@ module.exports = {
   browserNoActivityTimeout: MAX_TIMEOUT,
   customLaunchers: browsers,
   browsers: [],
-  reporters: [ "progress", "saucelabs" ],
-  sauceLabs: process.env.TRAVIS
-    ? {
-        build: process.env.TRAVIS_BUILD_NUMBER,
-        testName: "Bugsnag.js Browser Tests",
-        tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER,
-        startConnect: false
-      }
-    : {},
+  reporters: [ "progress", "BrowserStack" ],
+  browserStack: {
+    startTunnel: !process.env.TRAVIS,
+    tunnelIdentifier: process.env.BROWSERSTACK_LOCAL_IDENTIFIER
+  },
   client: {
     mocha: {
       timeout: 100000,
