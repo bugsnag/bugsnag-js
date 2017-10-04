@@ -1,6 +1,7 @@
 # Bugsnag error reporter for JavaScript
 [![Documentation](https://img.shields.io/badge/docs-latest-blue.svg)](https://docs.bugsnag.com/platforms/browsers)
 [![Build status](https://travis-ci.org/bugsnag/bugsnag-js.svg?branch=master)](https://travis-ci.org/bugsnag/bugsnag-js)
+[![BrowserStack Status](https://www.browserstack.com/automate/badge.svg?badge_key=Mkgxb2ExeTJLSDEzckFYMklGcVFFejJoUXlvcU1UZXFzYnZNdXFUYzR3VT0tLTNDZFg4SytjbkRGRWM3RE5RQWVVcGc9PQ==--eeac5ff85b18213ef9abb66686d3d94a83a3aa25)](https://www.browserstack.com/automate/public-build/Mkgxb2ExeTJLSDEzckFYMklGcVFFejJoUXlvcU1UZXFzYnZNdXFUYzR3VT0tLTNDZFg4SytjbkRGRWM3RE5RQWVVcGc9PQ==--eeac5ff85b18213ef9abb66686d3d94a83a3aa25)
 
 The Bugsnag error reporter for JavaScript automatically detects and reports
 errors and exceptions in your client-side JavaScript code.
@@ -39,8 +40,3 @@ All contributors are welcome! For information on how to build, test, and release
 The Bugsnag JS library is free software released under the MIT License. See
 [LICENSE.txt](https://github.com/bugsnag/bugsnag-js/blob/master/LICENSE.txt) for
 details.
-
----
-
-Browser testing provided
-<a href="https://www.browserstack.com/"><img src="https://bstacksupport.zendesk.com/attachments/token/PXt59K0Z9tyvNxlueuTyR3AUQ/?name=Logo-01.svg" width=120 alt="BrowserStack" /></a>
