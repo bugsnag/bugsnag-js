@@ -6,11 +6,10 @@ env:
   matrix:
   - CXX=g++-4.8
   global:
-    COVERALLS_REPO_TOKEN:
-      secure: "BZcofVigXyZZs9mtOce6WoAZcpZRHjgpiboh6st477ZLCuK85Inmh8A0Va3E7nmL5YnzBh1OP66pc9vuZ6WFwphVTVo9FmE4MKMT9c8kS3WG6Tu8CvC04AJab2MuoiJWeGgOGGgLElMwjdHsiy/RCdZtEupT9l0hMhdShwzwWAU="
+    secure: qDbEJFSgG0JExIT8aJ2f4DyubQhqaJX39iVbueZCPc9GAqhPc/6n+gLXxweDZo1wD8hG2nZKjmisIck2mjzRV/qLJjO1hZnZxdj8f7J1DbexB6LgTAXe/etb7aiMsc6dZ52NV7sqfaFuxmLUhAJScj49ivJBovrbD/DOa8hmBoY=
 addons:
   browserstack:
-    username: "bengourley1"
+    username: bengourley1
     access_key:
-      secure: "C/1HcFfUO0tBmKF9hsniqcsE21tbGnidGz0WM3UfUNI7YUtzopf2l2DNFwuzN7X91HxLaYspElS6EjPuVcUU1PP7JnpK/2eKOpS4CrhnurdMV+1CoVaBEvCaIhwaIIlfnvDQ/itZOjY/sRWtwpdhuR39bo3D+qvnwq4ivYKlk58="
+      secure: C/1HcFfUO0tBmKF9hsniqcsE21tbGnidGz0WM3UfUNI7YUtzopf2l2DNFwuzN7X91HxLaYspElS6EjPuVcUU1PP7JnpK/2eKOpS4CrhnurdMV+1CoVaBEvCaIhwaIIlfnvDQ/itZOjY/sRWtwpdhuR39bo3D+qvnwq4ivYKlk58=
 script: npm test

@@ -1,7 +1,7 @@
 var browsers = require('./browsers.json');
 
 var MINUTE_IN_MS = 1000 * 60
-var MAX_TIMEOUT = 2 * MINUTE_IN_MS
+var MAX_TIMEOUT = 1 * MINUTE_IN_MS
 
 module.exports = {
   basePath: "",
@@ -28,7 +28,8 @@ module.exports = {
   browsers: [],
   reporters: [ "progress", "BrowserStack" ],
   browserStack: {
-    startTunnel: !process.env.TRAVIS
+    startTunnel: !process.env.TRAVIS,
+    tunnelIdentifier: process.env.TRAVIS_BUILD_NUMBER
   },
   client: {
     mocha: {
