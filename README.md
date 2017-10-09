@@ -1,7 +1,8 @@
 # Bugsnag error reporter for JavaScript
-[![Documentation](https://img.shields.io/badge/docs-latest-blue.svg)](https://docs.bugsnag.com/platforms/browsers)
-[![Build status](https://travis-ci.org/bugsnag/bugsnag-js.svg?branch=master)](https://travis-ci.org/bugsnag/bugsnag-js)
-[![BrowserStack Status](https://www.browserstack.com/automate/badge.svg?badge_key=Mkgxb2ExeTJLSDEzckFYMklGcVFFejJoUXlvcU1UZXFzYnZNdXFUYzR3VT0tLTNDZFg4SytjbkRGRWM3RE5RQWVVcGc9PQ==--eeac5ff85b18213ef9abb66686d3d94a83a3aa25)](https://www.browserstack.com/automate/public-build/Mkgxb2ExeTJLSDEzckFYMklGcVFFejJoUXlvcU1UZXFzYnZNdXFUYzR3VT0tLTNDZFg4SytjbkRGRWM3RE5RQWVVcGc9PQ==--eeac5ff85b18213ef9abb66686d3d94a83a3aa25)
+![API status](https://img.shields.io/badge/api-unstable-yellow.svg)
+[![Documentation](https://img.shields.io/badge/docs-outdated-red.svg)](https://docs.bugsnag.com/platforms/browsers)
+[![Build status](https://travis-ci.org/bugsnag/bugsnag-js.svg?branch=v4)](https://travis-ci.org/bugsnag/bugsnag-js)
+[![BrowserStack Status](https://www.browserstack.com/automate/badge.svg?badge_key=VkNhNGlWRTV6c1Z1VXByYmxFTCtwbUd4M1p5cUI3KzFWRTJvaWk3WFZBTT0tLTBNZjFuM2ZJbW0vUDBPZ1pMQ3ZCd2c9PQ==--003c472323b43561f74fdbca9f732de0f609c74c)](https://www.browserstack.com/automate/public-build/VkNhNGlWRTV6c1Z1VXByYmxFTCtwbUd4M1p5cUI3KzFWRTJvaWk3WFZBTT0tLTBNZjFuM2ZJbW0vUDBPZ1pMQ3ZCd2c9PQ==--003c472323b43561f74fdbca9f732de0f609c74c)
 
 The Bugsnag error reporter for JavaScript automatically detects and reports errors.
 
