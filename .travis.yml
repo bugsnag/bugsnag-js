@@ -1,0 +1,10 @@
+sudo: false
+language: node_js
+node_js:
+- '8'
+addons:
+  browserstack:
+    username: bugsnagplatforms1
+    access_key:
+      secure: "U/Lud43nEAK6Yhjte8TqV2LyjSnPhFrlRhJ1CRFKKYuryt0YoD1qNwq9Mo/YpEeFO2byFXoAvyDCY/Fehwn6DvG9B3szDehsXnLauxbtNt/OGnyIG0w+O6cukopsC4Yn6YtQJtnNi1qdAoRUO68h6qtrvc0xSV2TbAm9GcehaSM="
+script: npm test

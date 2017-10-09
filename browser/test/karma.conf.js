@@ -1,6 +1,11 @@
 const browsers = require('./browsers.json')
 const MINUTE_IN_MS = 1000 * 60
 const MAX_TIMEOUT = 2 * MINUTE_IN_MS
+const CI_BS_CONF = {
+  startTunnel: false,
+  tunnelIdentifier: process.env.BROWSERSTACK_LOCAL_IDENTIFIER,
+  project: process.env.TRAVIS_REPO_SLUG + '#' + process.env.TRAVIS_BRANCH
+}
 
 require('./lib/echo-server')
 
@@ -39,7 +44,7 @@ module.exports = function (config) {
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: [ 'progress', 'saucelabs', 'coverage' ],
+    reporters: [ 'progress', 'BrowserStack', 'coverage' ],
 
     // web server port
     port: 9876,
@@ -54,11 +59,13 @@ module.exports = function (config) {
     // enable / disable watching file and executing tests whenever any file changes
     autoWatch: true,
 
-    // browser/sauce settings
+    // browser settings
     customLaunchers: browsers,
     captureTimeout: MAX_TIMEOUT,
     browserDisconnectTimeout: MAX_TIMEOUT,
     browserNoActivityTimeout: MAX_TIMEOUT,
+
+    browserStack: process.env.TRAVIS ? CI_BS_CONF : { startTunnel: true },
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
