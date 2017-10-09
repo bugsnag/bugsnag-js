@@ -2,9 +2,13 @@ sudo: false
 language: node_js
 node_js:
 - '8'
+env:
+  global:
+  - BROWSER_STACK_USERNAME: bugsnagplatforms1
+  - secure: HkG2v1wI77zdqNLNHP1OQn50pBOLAE1eQTBGoXNN+mWnZTQs0NM5gy/08d/nZHUSnnpsaM+cRltw7g1tnb9gFp+0uT2bJ9sDqwdG3GBnhwLKrWTYq8/FsDk0+zNO2ITrYhSJdMysdRO0kdubO2ev27lIFSlnFqZNHHgyYG5GFQI=
 addons:
   browserstack:
     username: bugsnagplatforms1
     access_key:
-      secure: "U/Lud43nEAK6Yhjte8TqV2LyjSnPhFrlRhJ1CRFKKYuryt0YoD1qNwq9Mo/YpEeFO2byFXoAvyDCY/Fehwn6DvG9B3szDehsXnLauxbtNt/OGnyIG0w+O6cukopsC4Yn6YtQJtnNi1qdAoRUO68h6qtrvc0xSV2TbAm9GcehaSM="
+      secure: U/Lud43nEAK6Yhjte8TqV2LyjSnPhFrlRhJ1CRFKKYuryt0YoD1qNwq9Mo/YpEeFO2byFXoAvyDCY/Fehwn6DvG9B3szDehsXnLauxbtNt/OGnyIG0w+O6cukopsC4Yn6YtQJtnNi1qdAoRUO68h6qtrvc0xSV2TbAm9GcehaSM=
 script: npm test
