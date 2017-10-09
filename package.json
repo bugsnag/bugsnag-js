@@ -1,0 +1,83 @@
+{
+  "name": "bugsnag-js",
+  "version": "0.0.0",
+  "description": "Automatically detect JavaScript errors, collect detailed diagnostic information, and get notified about errors in real-time.",
+  "keywords": [
+    "exception",
+    "bugsnag",
+    "error",
+    "JavaScript",
+    "browsers",
+    "monitoring",
+    "reporting",
+    "client-side"
+  ],
+  "main": "node/index.js",
+  "browser": "browser/index.js",
+  "scripts": {
+    "test": "npm run test:lint && npm run test:unit && npm run test:integration && npm run test:e2e && npm run test:check-coverage",
+    "test:unit": "nyc --reporter=html --reporter=lcov -- jasmine '!(node_modules)/**/*.test.js'",
+    "test:integration": "npm run test:integration:browser && npm run test:integration:node",
+    "test:integration:browser": "karma start browser/test/karma.conf.js --single-run",
+    "test:integration:node": "echo TODO",
+    "test:e2e": "echo TODO",
+    "test:lint": "standard",
+    "test:check-coverage": "nyc check-coverage",
+    "build": "browserify -d --standalone bugsnag browser/index.js > dist/bugsnag.dist.js",
+    "build:dist": "browserify -d -p bundle-collapser/plugin --standalone bugsnag browser/index.js | uglifyjs --compress --mangle --source-map \"content=inline\" --source-map --output dist/bugsnag.dist.js",
+    "chore:contibuting-toc": "markdown-toc -i CONTRIBUTING.md"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bugsnag/bugsnag-js"
+  },
+  "devDependencies": {
+    "browserify": "^14.4.0",
+    "browserify-istanbul": "^2.0.0",
+    "browserify-versionify": "^1.0.6",
+    "bubleify": "^0.7.0",
+    "bundle-collapser": "^1.3.0",
+    "core-js": "^2.5.1",
+    "es3ify": "^0.2.2",
+    "exorcist": "^0.4.0",
+    "jasmine": "^2.8.0",
+    "jasmine-core": "^2.8.0",
+    "karma": "github:kevinsalter/karma#bc53a9ff5688910d306132eda1ef54905c54caf8",
+    "karma-browserify": "^5.1.1",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-coverage": "^1.1.1",
+    "karma-jasmine": "^1.1.0",
+    "karma-sauce-launcher": "^1.2.0",
+    "markdown-toc": "^1.2.0",
+    "nyc": "^11.2.1",
+    "proxyquire": "^1.8.0",
+    "standard": "^10.0.3",
+    "uglify-js": "^3.0.28",
+    "watchify": "^3.9.0"
+  },
+  "dependencies": {
+    "cuid": "^1.3.8",
+    "error-stack-parser": "^2.0.1",
+    "fast-safe-stringify": "^1.2.0",
+    "stack-generator": "^2.0.2"
+  },
+  "browserify": {
+    "transform": [
+      [
+        "es3ify",
+        {
+          "global": true
+        }
+      ],
+      [
+        "bubleify",
+        {
+          "global": true,
+          "namedFunctionExpressions": false
+        }
+      ],
+      "browserify-versionify"
+    ]
+  }
+}
