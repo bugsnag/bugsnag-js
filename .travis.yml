@@ -13,9 +13,8 @@ addons:
     access_key:
       secure: U/Lud43nEAK6Yhjte8TqV2LyjSnPhFrlRhJ1CRFKKYuryt0YoD1qNwq9Mo/YpEeFO2byFXoAvyDCY/Fehwn6DvG9B3szDehsXnLauxbtNt/OGnyIG0w+O6cukopsC4Yn6YtQJtnNi1qdAoRUO68h6qtrvc0xSV2TbAm9GcehaSM=
 before_script:
-  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-  - chmod +x ./cc-test-reporter
-  - ./cc-test-reporter before-build
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./bin/cc-test-reporter
+  - chmod +x ./bin/cc-test-reporter
 script: npm test
 after_script:
-  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+  - test $TRAVIS_TEST_RESULT = 0 && ./bin/report-coverage

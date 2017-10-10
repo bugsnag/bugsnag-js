@@ -1,0 +1,31 @@
+#!/usr/bin/env node
+
+const glob = require('glob')
+const { dirname } = require('path')
+const { execSync } = require('child_process')
+const reports = glob.sync(`${__dirname}/../coverage/*/lcov.info`)
+
+const format = () => {
+  return reports.forEach((file, i) => {
+    return execSync(`../../bin/cc-test-reporter format-coverage -t lcov -o "../../coverage/codeclimate.${i}.json" lcov.info`, {
+      cwd: dirname(file)
+    })
+  })
+}
+
+const sum = () => {
+  return execSync(`./bin/cc-test-reporter sum-coverage -p ${reports.length} -o coverage/codeclimate.json coverage/codeclimate.*.json`)
+}
+
+const upload = () => {
+  return execSync(`./bin/cc-test-reporter upload-coverage`)
+}
+
+try {
+  format()
+  sum()
+  upload()
+} catch (e) {
+  console.log(e)
+  process.exit(1)
+}

@@ -1,5 +1,5 @@
 node_modules
 dist
-!dist/index.html
 .nyc_output
 coverage
+./bin/cc-test-reporter
