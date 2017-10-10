@@ -32,11 +32,11 @@ class BugsnagClient {
     this.breadcrumbs = []
 
     // setable props
-    this.app = undefined
+    this.app = {}
     this.context = undefined
     this.device = undefined
     this.metaData = undefined
-    this.user = undefined
+    this.user = {}
   }
 
   configure (opts = {}) {
