@@ -12,6 +12,6 @@ ratings:
   paths:
   - "**.js"
 exclude_paths:
-- test/
-- browser/test
-- **/*.test.js
+- "test/"
+- "browser/test"
+- "**/*.test.js"
