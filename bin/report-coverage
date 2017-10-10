@@ -22,8 +22,11 @@ const upload = () => {
 }
 
 try {
+  console.log('running: cc-test-reporter format-coverage…')
   format()
+  console.log('running: cc-test-reporter sum-coverage…')
   sum()
+  console.log('running: cc-test-reporter upload-coverage…')
   upload()
 } catch (e) {
   console.log(e)

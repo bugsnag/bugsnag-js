@@ -15,6 +15,13 @@ addons:
 before_script:
 - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./bin/cc-test-reporter
 - chmod +x ./bin/cc-test-reporter
-script: npm test
+script:
+- if [[ $BROWSER_STACK_KEY_ACCESS_KEY ]]; then
+    npm run test;
+  else
+    npm run test-third-party-pr;
+  fi
 after_script:
-- test $TRAVIS_TEST_RESULT = 0 && ./bin/report-coverage
+- if [ $TRAVIS_TEST_RESULT == 0 ]; then
+    ./bin/report-coverage;
+  fi
