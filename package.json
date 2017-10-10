@@ -15,14 +15,14 @@
   "main": "node/index.js",
   "browser": "browser/index.js",
   "scripts": {
-    "test": "npm run test:lint && npm run test:unit && npm run test:integration && npm run test:e2e && npm run test:check-coverage",
+    "test": "npm run test:lint && npm run test:unit && npm run test:integration && npm run test:e2e",
+    "test-third-party-pr": "npm run test:lint && npm run test:unit",
     "test:unit": "nyc --reporter=lcov --report-dir coverage/node -- jasmine '!(node_modules|browser)/**/*.test.js'",
     "test:integration": "npm run test:integration:browser && npm run test:integration:node",
     "test:integration:browser": "karma start browser/test/lib/karma.conf.js --single-run",
     "test:integration:node": "echo TODO",
     "test:e2e": "echo TODO",
     "test:lint": "standard",
-    "test:check-coverage": "nyc check-coverage",
     "build": "browserify -d --standalone bugsnag browser/index.js > dist/bugsnag.dist.js",
     "build:dist": "browserify -d -p bundle-collapser/plugin --standalone bugsnag browser/index.js | uglifyjs --compress --mangle --source-map \"content=inline\" --source-map --output dist/bugsnag.dist.js",
     "chore:contibuting-toc": "markdown-toc -i CONTRIBUTING.md"
@@ -74,11 +74,12 @@
       [
         "bubleify",
         {
-          "global": true,
           "namedFunctionExpressions": false
         }
       ],
-      "browserify-versionify"
+      [
+        "browserify-versionify"
+      ]
     ]
   }
 }
