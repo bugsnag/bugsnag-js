@@ -50,6 +50,10 @@ class BugsnagClient {
     }
     if (typeof this.config.beforeSend === 'function') this.config.beforeSend = [ this.config.beforeSend ]
     this._configured = true
+
+    // releaseStage can be set via opts or client.app property
+    this.app.releaseStage = this.config.releaseStage
+
     return this
   }
 

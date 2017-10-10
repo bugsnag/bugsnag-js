@@ -27,7 +27,7 @@ describe('client()', () => {
     client.transport({ sendReport: (config, payload) => payloads.push(payload) })
     client.notify(new Error('noooo'))
     expect(payloads.length).toEqual(1)
-    expect(payloads[0].events[0].app).toEqual({ version: '1.2.3' })
+    expect(payloads[0].events[0].app).toEqual({ version: '1.2.3', releaseStage: 'production' })
   })
 
   it('allows app.releaseStage to be set', () => {
@@ -35,6 +35,16 @@ describe('client()', () => {
     const payloads = []
     client.configure({ apiKey: 'API_KEY_YEAH' })
     client.app.releaseStage = 'staging'
+    client.transport({ sendReport: (config, payload) => payloads.push(payload) })
+    client.notify(new Error('noooo'))
+    expect(payloads.length).toEqual(1)
+    expect(payloads[0].events[0].app).toEqual({ releaseStage: 'staging' })
+  })
+
+  it('allows app.releaseStage to be set via config', () => {
+    const client = new Client(VALID_NOTIFIER)
+    const payloads = []
+    client.configure({ apiKey: 'API_KEY_YEAH', releaseStage: 'staging', notifyReleaseStages: [ 'staging' ] })
     client.transport({ sendReport: (config, payload) => payloads.push(payload) })
     client.notify(new Error('noooo'))
     expect(payloads.length).toEqual(1)
