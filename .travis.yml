@@ -16,7 +16,7 @@ before_script:
 - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./bin/cc-test-reporter
 - chmod +x ./bin/cc-test-reporter
 script:
-- if [[ $BROWSER_STACK_KEY_ACCESS_KEY ]]; then
+- if [[ $BROWSER_STACK_ACCESS_KEY ]]; then
     npm run test;
   else
     npm run test-third-party-pr;
