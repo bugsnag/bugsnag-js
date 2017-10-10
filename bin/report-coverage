@@ -5,6 +5,11 @@ const { dirname } = require('path')
 const { execSync } = require('child_process')
 const reports = glob.sync(`${__dirname}/../coverage/*/lcov.info`)
 
+console.log(`
+found ${reports.length} lcov.info file(s)
+${reports.map(path => `  ${path}`).join('\n')}
+`)
+
 const format = () => {
   return reports.forEach((file, i) => {
     return execSync(`../../bin/cc-test-reporter format-coverage -t lcov -o "../../coverage/codeclimate.${i}.json" lcov.info`, {
