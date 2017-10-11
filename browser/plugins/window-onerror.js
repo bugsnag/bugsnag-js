@@ -37,6 +37,6 @@ const generateStack = (url, lineNo, charNo) => {
     return stack
   } catch (e) {
     // got an error attempting to create stack for error
-    window.alert(e)
+    return []
   }
 }

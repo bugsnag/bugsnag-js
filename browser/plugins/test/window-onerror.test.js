@@ -56,8 +56,8 @@ describe('plugin: window onerror', () => {
       client.use(plugin)
       client.transport({ sendReport: (config, payload) => payloads.push(payload) })
 
-      const el = document.createElement('DIV')
-      el.onclick = () => { throw new Error('doh') }
+      const el = document.createElement('BUTTON')
+      el.onclick = () => { throw new Error('bad button l2') }
       window.document.body.appendChild(el)
 
       setTimeout(() => el.click(), 0)
@@ -83,8 +83,9 @@ describe('plugin: window onerror', () => {
         client.use(plugin)
         client.transport({ sendReport: (config, payload) => payloads.push(payload) })
 
-        const el = document.createElement('DIV')
-        el.addEventListener('click', () => { throw new Error('doh') })
+        const el = document.createElement('BUTTON')
+        el.addEventListener('click', () => { throw new Error('bad button l3') })
+        window.document.body.appendChild(el)
 
         setTimeout(() => el.click(), 0)
         setTimeout(() => {
@@ -98,7 +99,7 @@ describe('plugin: window onerror', () => {
           } catch (e) {
             done(e)
           }
-        }, 1)
+        }, 100)
       })
     }
 
@@ -114,7 +115,7 @@ describe('plugin: window onerror', () => {
           throw new Error('ERR_RAF')
         })
 
-        setTimeout(() => {
+        window.requestAnimationFrame(() => {
           try {
             expect(payloads.length).toBe(1)
             const report = payloads[0].events[0].toJSON()
@@ -125,7 +126,7 @@ describe('plugin: window onerror', () => {
           } catch (e) {
             done(e)
           }
-        }, 1)
+        })
       })
     }
   })
