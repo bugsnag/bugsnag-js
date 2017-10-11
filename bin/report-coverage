@@ -3,6 +3,7 @@
 const glob = require('glob')
 const { dirname } = require('path')
 const { execSync } = require('child_process')
+const { readFileSync } = require('fs')
 const reports = glob.sync(`${__dirname}/../coverage/*/lcov.info`)
 
 console.log(`
@@ -32,6 +33,7 @@ try {
   console.log('running: cc-test-reporter sum-coverage…')
   sum()
   console.log('running: cc-test-reporter upload-coverage…')
+  console.log(readFileSync('./coverage/codeclimate.json', 'utf8'))
   upload()
 } catch (e) {
   console.log(e)
