@@ -72,9 +72,9 @@
   "bs_android": {
     "base": "BrowserStack",
     "browser": "android",
-    "device": "pixel",
+    "device": "Google Nexus 4",
     "os": "android",
-    "os_version": "8.0"
+    "os_version": "4.2"
   },
   "bs_firefox_30": {
     "base": "BrowserStack",
