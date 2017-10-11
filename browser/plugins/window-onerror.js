@@ -6,7 +6,7 @@ module.exports = {
   description: 'Automatically notifies Bugsnag when window.onerror is called',
   init: (client, BugsnagReport) => {
     const onerror = (messageOrEvent, url, lineNo, charNo, error) => {
-      const handledState = { severity: 'error', handled: false, severityReason: { type: 'unhandledException' } }
+      const handledState = { severity: 'error', unhandled: true, severityReason: { type: 'unhandledException' } }
       const report = (error && hasStacktrace(error))
         ? new BugsnagReport(error.name, error.message, ErrorStackParser.parse(error), handledState)
         : new BugsnagReport('window.onerror', messageOrEvent, generateStack(url, lineNo, charNo), handledState)

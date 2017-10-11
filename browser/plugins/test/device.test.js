@@ -9,10 +9,13 @@ const plugin = require('../device')
 const Client = require('../../../base/client')
 const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
-describe('plugin:device', () => {
-  it('should add a beforeSend callback which captures device information', () => {
+describe('plugin: device', () => {
+  it('should have a name and description', () => {
     expect(plugin.name).toBe('device')
+    expect(plugin.description).toBeDefined()
+  })
 
+  it('should add a beforeSend callback which captures device information', () => {
     const client = new Client(VALID_NOTIFIER)
     const payloads = []
     client.configure({ apiKey: 'API_KEY_YEAH' })

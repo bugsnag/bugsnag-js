@@ -9,10 +9,13 @@ const plugin = require('../context')
 const Client = require('../../../base/client')
 const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
-describe('plugin:context', () => {
-  it('sets client.context (and report.context) to window.location.pathname', () => {
+describe('plugin: context', () => {
+  it('should have a name and description', () => {
     expect(plugin.name).toBe('context')
+    expect(plugin.description).toBeDefined()
+  })
 
+  it('sets client.context (and report.context) to window.location.pathname', () => {
     const client = new Client(VALID_NOTIFIER)
     const payloads = []
     client.configure({ apiKey: 'API_KEY_YEAH' })
