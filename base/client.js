@@ -50,10 +50,6 @@ class BugsnagClient {
     }
     if (typeof this.config.beforeSend === 'function') this.config.beforeSend = [ this.config.beforeSend ]
     this._configured = true
-
-    // releaseStage can be set via opts or client.app property
-    this.app.releaseStage = this.config.releaseStage
-
     return this
   }
 
@@ -100,8 +96,11 @@ class BugsnagClient {
   notify (error, opts = {}) {
     if (!this._configured) throw new Error('configure() must be called before report()')
 
+    // releaseStage can be set via config.releaseStage or client.app.releaseStage
+    const releaseStage = this.app && typeof this.app.releaseStage === 'string' ? this.app.releaseStage : this.config.releaseStage
+
     // exit early if the reports should not be sent on the current releaseStage
-    if (!this.config.notifyReleaseStages.includes(this.config.releaseStage)) return false
+    if (!this.config.notifyReleaseStages.includes(releaseStage)) return false
 
     // ensure we have an error (or a reasonable object representation of an error)
     let err
@@ -124,7 +123,7 @@ class BugsnagClient {
     // create a report from the error, if it isn't one already
     const report = BugsnagReport.ensureReport(err, 1)
 
-    report.app = Object.assign({}, report.app, this.app)
+    report.app = Object.assign({ releaseStage }, report.app, this.app)
     report.context = report.context || opts.context || this.context || undefined
     report.device = Object.assign({}, report.advice, this.device, opts.device)
     report.user = Object.assign({}, report.user, this.user, opts.user)

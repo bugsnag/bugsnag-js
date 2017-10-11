@@ -145,11 +145,82 @@ describe('base/client', () => {
       })
       client.configure({ apiKey: 'API_KEY_YEAH', notifyReleaseStages: [] })
 
-      const sent = client.notify(new Error('oh em eff gee'), { beforeSend: report => false })
+      const sent = client.notify(new Error('oh em eff gee'))
       expect(sent).toBe(false)
 
       // give the event loop a tick to see if the reports get send
       process.nextTick(() => done())
+    })
+
+    it('supports setting releaseStage via config.releaseStage', done => {
+      const client = new Client(VALID_NOTIFIER)
+      client.transport({
+        sendReport: (config, payload) => {
+          fail('sendReport() should not be called')
+        }
+      })
+      client.configure({ apiKey: 'API_KEY_YEAH', releaseStage: 'staging' })
+
+      const sent = client.notify(new Error('oh em eff gee'))
+      expect(sent).toBe(false)
+
+      // give the event loop a tick to see if the reports get send
+      process.nextTick(() => done())
+    })
+
+    it('supports setting releaseStage via client.app.releaseStage', done => {
+      const client = new Client(VALID_NOTIFIER)
+      client.transport({
+        sendReport: (config, payload) => {
+          fail('sendReport() should not be called')
+        }
+      })
+      client.configure({ apiKey: 'API_KEY_YEAH' })
+      client.app.releaseStage = 'staging'
+
+      const sent = client.notify(new Error('oh em eff gee'))
+      expect(sent).toBe(false)
+
+      // give the event loop a tick to see if the reports get send
+      process.nextTick(() => done())
+    })
+
+    it('includes releaseStage in report.app', done => {
+      const client = new Client(VALID_NOTIFIER)
+      client.transport({
+        sendReport: (config, payload) => {
+          expect(payload.events[0].app.releaseStage).toBe('staging')
+          done()
+        }
+      })
+      client.configure({ apiKey: 'API_KEY_YEAH', notifyReleaseStages: [ 'staging' ] })
+      client.app.releaseStage = 'staging'
+      client.notify(new Error('oh em eff gee'))
+    })
+
+    it('includes releaseStage in report.app when set via config', done => {
+      const client = new Client(VALID_NOTIFIER)
+      client.transport({
+        sendReport: (config, payload) => {
+          expect(payload.events[0].app.releaseStage).toBe('staging')
+          done()
+        }
+      })
+      client.configure({ apiKey: 'API_KEY_YEAH', notifyReleaseStages: [ 'staging' ], releaseStage: 'staging' })
+      client.notify(new Error('oh em eff gee'))
+    })
+
+    it('prefers client.app.releaseStage over config.releaseStage', done => {
+      const client = new Client(VALID_NOTIFIER)
+      client.transport({
+        sendReport: (config, payload) => {
+          expect(payload.events[0].app.releaseStage).toBe('testing')
+          done()
+        }
+      })
+      client.configure({ apiKey: 'API_KEY_YEAH', notifyReleaseStages: [ 'testing' ], releaseStage: 'staging' })
+      client.app.releaseStage = 'testing'
+      client.notify(new Error('oh em eff gee'))
     })
 
     it('can handle all kinds of bad input', () => {
