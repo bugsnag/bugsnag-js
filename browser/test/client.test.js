@@ -12,7 +12,7 @@ const onerror = require('../plugins/window-onerror')
 
 describe('client()', () => {
   describe('caught errors', () => {
-    it('should contain some information resembling the source of the error', done => {
+    it('should contain the name of the function that caused the error', done => {
       const client = new Client(VALID_NOTIFIER)
       client.configure({ apiKey: 'API_KEY_YEAH' })
       client.transport({
@@ -35,7 +35,7 @@ describe('client()', () => {
   })
 
   describe('uncaught errors', () => {
-    it('should contain some information resembling the source of the error', done => {
+    it('should contain the file name of the <script> tag that caused the error', done => {
       const client = new Client(VALID_NOTIFIER)
       client.configure({ apiKey: 'API_KEY_YEAH' })
       client.use(onerror)
