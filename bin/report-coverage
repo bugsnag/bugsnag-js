@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 const glob = require('glob')
-const { dirname, resolve, join } = require('path')
+const { dirname, join } = require('path')
 const { execSync } = require('child_process')
 const { readFileSync } = require('fs')
 const reports = glob.sync(`${__dirname}/../coverage/*/lcov.info`)

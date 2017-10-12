@@ -24,8 +24,9 @@
     "test:e2e": "echo TODO",
     "test:lint": "standard",
     "build": "browserify -d --standalone bugsnag browser/index.js > dist/bugsnag.dist.js",
-    "build:dist": "browserify -d -p bundle-collapser/plugin --standalone bugsnag browser/index.js | uglifyjs --compress --mangle --source-map \"content=inline\" --source-map --output dist/bugsnag.dist.js",
-    "chore:contibuting-toc": "markdown-toc -i CONTRIBUTING.md"
+    "build:dist": "browserify -d -p bundle-collapser/plugin --standalone bugsnag browser/index.js | uglifyjs --compress --mangle --ie8 --source-map \"content=inline\" --source-map --output dist/bugsnag.dist.js",
+    "chore:contibuting-toc": "markdown-toc -i CONTRIBUTING.md",
+    "chore:readme-size-badge": "./bin/readme-size-badge"
   },
   "license": "MIT",
   "repository": {
@@ -74,7 +75,8 @@
       [
         "bubleify",
         {
-          "namedFunctionExpressions": false
+          "namedFunctionExpressions": false,
+          "global": true
         }
       ],
       [

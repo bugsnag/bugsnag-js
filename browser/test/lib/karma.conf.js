@@ -22,9 +22,9 @@ module.exports = function (config) {
     browserify: {
       debug: true,
       transform: [
-        [ 'browserify-istanbul' ],
+        [ 'browserify-istanbul', { global: true } ],
         [ 'es3ify', { global: true } ],
-        [ 'bubleify', { 'namedFunctionExpressions': false, objectAssign: 'foo' } ]
+        [ 'bubleify', { global: true, namedFunctionExpressions: false } ]
       ],
       plugin: []
     },
