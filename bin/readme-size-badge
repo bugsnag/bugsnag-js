@@ -36,4 +36,5 @@ const insert = kb => {
 getSize((err, kb) => {
   if (err) throw err
   insert(kb)
+  console.log(`inserted compressed/gzipped size (${kb}kB) into readme`)
 })
