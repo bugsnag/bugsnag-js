@@ -23,19 +23,23 @@ const generateStack = (url, lineNo, charNo) => {
   try {
     const stack = StackGenerator.backtrace()
       .filter(frame => (frame.functionName || '').indexOf('StackGenerator$$') === -1)
-      .slice(2) // remove this function and the onerror handler from the stack frames
+      .slice(1) // remove this function and the onerror handler stack frames
 
     // attach some information that we do know from onerror to the first frame in the stack
     const culprit = stack[0]
     if (culprit) {
       culprit.setFileName(url)
       culprit.setLineNumber(lineNo)
-      if (charNo !== undefined) culprit.setColumnNumber(charNo)
+      if (charNo !== undefined) {
+        culprit.setColumnNumber(charNo)
+      } else if (window.event && window.event.errorCharacter) {
+        culprit.setColumnNumber(window.event && window.event.errorCharacter)
+      }
     }
-
     return stack
   } catch (e) {
     // got an error attempting to create stack for error
+    // console.log(e.name, e.message, e.stack)
     return []
   }
 }

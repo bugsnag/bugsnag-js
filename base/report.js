@@ -139,17 +139,11 @@ const defaultHandledState = () => ({
 BugsnagReport.ensureReport = function (reportOrError, framesToSkip = 1) {
   // notify() can be called with a Report object. In this case no action is required
   if (reportOrError.__isBugsnagReport) return reportOrError
-  let thrown
-  if (!hasStacktrace(reportOrError)) {
-    try { throw reportOrError } catch (e) { thrown = e }
-  } else {
-    thrown = reportOrError
-  }
   try {
-    const stacktrace = hasStacktrace(thrown) ? ErrorStackParser.parse(thrown) : generateStack(framesToSkip)
-    return new BugsnagReport(thrown.name, thrown.message, stacktrace)
+    const stacktrace = hasStack(reportOrError) ? ErrorStackParser.parse(reportOrError) : generateStack(framesToSkip)
+    return new BugsnagReport(reportOrError.name, reportOrError.message, stacktrace)
   } catch (e) {
-    return new BugsnagReport(thrown.name, thrown.message, [])
+    return new BugsnagReport(reportOrError.name, reportOrError.message, [])
   }
 }
 

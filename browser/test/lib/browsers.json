@@ -25,7 +25,7 @@
     "browser": "ie",
     "browser_version": "11",
     "os": "windows",
-    "os_version": "8.1"
+    "os_version": "10"
   },
   "bs_edge_14": {
     "base": "BrowserStack",
