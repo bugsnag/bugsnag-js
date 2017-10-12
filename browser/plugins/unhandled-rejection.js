@@ -1,18 +1,19 @@
 const ErrorStackParser = require('error-stack-parser')
+const hasStack = require('../../base/lib/has-stack')
 
 module.exports = {
   name: 'unhandled rejection',
   description: 'Automatically notifies Bugsnag when window.onunhandledrejection is called',
   init: (client, BugsnagReport) => {
     // only attach for browsers that suppport promises
-    if (!window.hasOwnProperty('onunhandledrejection')) return
+    if (!('onunhandledrejection' in window)) return
 
     window.addEventListener('unhandledrejection', (event) => {
       const error = event.reason
-      const handledState = { severity: 'error', handled: false, severityReason: { type: 'unhandledPromiseRejection' } }
+      const handledState = { severity: 'error', unhandled: true, severityReason: { type: 'unhandledPromiseRejection' } }
 
       let report
-      if (error && hasStacktrace(error)) {
+      if (error && hasStack(error)) {
         // if it quacks like an Error…
         report = new BugsnagReport(error.name, error.message, ErrorStackParser.parse(error), handledState)
       } else {
@@ -27,5 +28,3 @@ module.exports = {
     })
   }
 }
-
-const hasStacktrace = err => err.stack || err.stacktrace || err['opera#sourceloc']
