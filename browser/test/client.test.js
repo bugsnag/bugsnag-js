@@ -2,7 +2,7 @@
 require('core-js')
 
 // magical jasmine globals
-const { describe, it, expect, fit } = global
+const { describe, it, expect } = global
 
 const Client = require('../../base/client')
 const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
@@ -35,7 +35,7 @@ describe('client()', () => {
   })
 
   describe('uncaught errors', () => {
-    fit('should contain some information resembling the source of the error', done => {
+    it('should contain some information resembling the source of the error', done => {
       const client = new Client(VALID_NOTIFIER)
       client.configure({ apiKey: 'API_KEY_YEAH' })
       client.use(onerror)
