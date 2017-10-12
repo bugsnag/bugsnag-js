@@ -1,5 +1,6 @@
 const StackGenerator = require('stack-generator')
 const ErrorStackParser = require('error-stack-parser')
+const hasStack = require('../../base/lib/has-stack')
 
 module.exports = {
   name: 'window onerror',
@@ -7,7 +8,7 @@ module.exports = {
   init: (client, BugsnagReport) => {
     const onerror = (messageOrEvent, url, lineNo, charNo, error) => {
       const handledState = { severity: 'error', unhandled: true, severityReason: { type: 'unhandledException' } }
-      const report = (error && hasStacktrace(error))
+      const report = hasStack(error)
         ? new BugsnagReport(error.name, error.message, ErrorStackParser.parse(error), handledState)
         : new BugsnagReport('window.onerror', messageOrEvent, generateStack(url, lineNo, charNo), handledState)
       client.notify(report)
@@ -16,8 +17,6 @@ module.exports = {
     window.onerror = onerror
   }
 }
-
-const hasStacktrace = err => err.stack || err.stacktrace || err['opera#sourceloc']
 
 const generateStack = (url, lineNo, charNo) => {
   // no error was provided so try to figure out the stack by building a stacktrace

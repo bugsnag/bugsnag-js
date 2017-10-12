@@ -34,6 +34,13 @@
     "os": "windows",
     "os_version": "10"
   },
+  "bs_edge_15": {
+    "base": "BrowserStack",
+    "browser": "edge",
+    "browser_version": "15",
+    "os": "windows",
+    "os_version": "10"
+  },
   "bs_safari_5": {
     "base": "BrowserStack",
     "browser": "safari",

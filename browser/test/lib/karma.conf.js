@@ -22,7 +22,7 @@ module.exports = function (config) {
     browserify: {
       debug: true,
       transform: [
-        [ 'browserify-istanbul', { global: true } ],
+        [ 'browserify-istanbul' ],
         [ 'es3ify', { global: true } ],
         [ 'bubleify', { global: true, namedFunctionExpressions: false } ]
       ],
@@ -31,18 +31,19 @@ module.exports = function (config) {
 
     // list of files / patterns to load in the browser
     files: [
-      '**/*.test.js'
+      '**/*.test.js',
+      { pattern: 'test/fixtures/**', included: false }
     ],
 
     // list of files to exclude
     exclude: [
-      'karma.conf.js'
+      'test/lib/**'
     ],
 
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      './**/*.js': [ 'browserify' ]
+      '**/*.test.js': [ 'browserify' ]
     },
 
     // test results reporter to use
@@ -89,7 +90,8 @@ module.exports = function (config) {
     concurrency: 1,
 
     proxies: {
-      '/echo': 'http://localhost:55854'
+      '/echo': 'http://localhost:55854',
+      '/fixtures/': '/base/test/fixtures/'
     }
   })
 }

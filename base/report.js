@@ -1,5 +1,6 @@
 const ErrorStackParser = require('error-stack-parser')
 const StackGenerator = require('stack-generator')
+const hasStack = require('./lib/has-stack')
 
 class BugsnagReport {
   constructor (errorClass, errorMessage, stacktrace = [], handledState = defaultHandledState()) {
@@ -22,7 +23,7 @@ class BugsnagReport {
     this.groupingHash = undefined
     this.metaData = {}
     this.severity = this._handledState.severity
-    this.stacktrace = stacktrace.map(formatStackframe)
+    this.stacktrace = stacktrace.map(formatStackframe).filter(o => o && Object.keys(o).some(k => !!o[k]))
     this.user = undefined
   }
 
@@ -111,14 +112,14 @@ BugsnagReport.prototype.toJSON.forceDecirc = true
 // and returns a Bugsnag compatible stackframe (https://docs.bugsnag.com/api/error-reporting/#json-payload)
 const formatStackframe = frame => ({
   file: frame.fileName,
-  method: frame.functionName,
+  method: normaliseFunctionName(frame.functionName),
   lineNumber: frame.lineNumber,
   columnNumber: frame.columnNumber,
   code: undefined, // TODO
   inProject: undefined // TODO
 })
 
-const hasStacktrace = err => err.stack || err.stacktrace || err['opera#sourceloc']
+const normaliseFunctionName = name => /^global code$/i.test(name) ? 'global code' : name
 
 // stacktrace wasn't provided so we need to attempt to generate one
 const generateStack = (framesToSkip) => {
