@@ -27,8 +27,8 @@ const getSize = cb => {
 const insert = kb => {
   const readme = readFileSync(resolve(__dirname, '../README.md'), 'utf8')
   const replaced = readme.replace(
-    /(<!-- size_start -->)[\s\S]*(<!-- size_end -->)/,
-    `$1\n![${kb}kB](https://img.shields.io/badge/size-${kb}kB-green.svg)\n$2`
+    /(!\[).+(kB\]\(https:\/\/img.shields.io\/badge\/size-).*(kB-green.svg\))/,
+    `$1${kb}$2${kb}$3`
   )
   writeFileSync(resolve(__dirname, '../README.md'), replaced, 'utf8')
 }
