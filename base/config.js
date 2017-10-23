@@ -28,6 +28,21 @@ module.exports.schema = {
     defaultValue: () => 'production',
     message: '(String) releaseStage should be set',
     validate: value => typeof value === 'string' && value.length
+  },
+  eventWindowSize: {
+    defaultValue: () => 60 * 1000, // one minute
+    message: '(Number) eventWindowSize must be a number if specified',
+    validate: value => [ 'undefined', 'number' ].includes(typeof value)
+  },
+  maxEventsPerWindow: {
+    defaultValue: () => 100,
+    message: '(Number) maxEventsPerWindow must be a number if specified',
+    validate: value => [ 'undefined', 'number' ].includes(typeof value)
+  },
+  maxDuplicateEventsPerWindow: {
+    defaultValue: () => 10,
+    message: '(Number) maxDuplicateEventsPerWindow must be a number if specified',
+    validate: value => [ 'undefined', 'number' ].includes(typeof value)
   }
 }
 

@@ -141,7 +141,7 @@ class BugsnagClient {
 
     const originalSeverity = report.severity
 
-    const beforeSend = [].concat(this.config.beforeSend).concat(opts.beforeSend).filter(Boolean)
+    const beforeSend = [].concat(opts.beforeSend).concat(this.config.beforeSend).filter(Boolean)
     const preventSend = beforeSend.some(fn => fn(report) === false || report.isIgnored())
 
     if (preventSend) return false

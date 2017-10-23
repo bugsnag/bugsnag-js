@@ -5,19 +5,14 @@ const url = 'https://github.com/bugsnag/REPLACE_ME'
 const Client = require('../base/client')
 
 // extend the base config schema with some browser-specific options
-const schema = Object.assign({}, require('../base/config').schema, {
-  projectRoot: {
-    defaultValue: () => `${window.location.protocol}//${window.location.host}`,
-    message: '(String) projectRoot must be set',
-    validate: value => typeof value === 'string' && value.length
-  }
-})
+const schema = Object.assign({}, require('../base/config').schema, require('./config'))
 
 const plugins = {
   'window onerror': require('./plugins/window-onerror'),
   'unhandled rejection': require('./plugins/unhandled-rejection'),
   'device': require('./plugins/device'),
-  'context': require('./plugins/context')
+  'context': require('./plugins/context'),
+  'throttle': require('../base/plugins/throttle')
 }
 
 const transports = {
@@ -56,6 +51,8 @@ module.exports = (opts) => {
     bugsnag.use(plugins['window onerror'])
     bugsnag.use(plugins['unhandled rejection'])
   }
+
+  bugsnag.use(plugins['throttle'])
 
   return bugsnag
 }
