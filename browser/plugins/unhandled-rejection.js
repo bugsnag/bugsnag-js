@@ -1,9 +1,12 @@
 const ErrorStackParser = require('error-stack-parser')
 const hasStack = require('../../base/lib/has-stack')
 
+/*
+ * Automatically notifies Bugsnag when window.onunhandledrejection is called
+ */
+
 module.exports = {
   name: 'unhandled rejection',
-  description: 'Automatically notifies Bugsnag when window.onunhandledrejection is called',
   init: (client, BugsnagReport) => {
     // only attach for browsers that suppport promises
     if (!('onunhandledrejection' in window)) return

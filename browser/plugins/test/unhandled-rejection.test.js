@@ -12,7 +12,6 @@ const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 describe('plugin: unhandled rejection', () => {
   it('should have a name and description', () => {
     expect(plugin.name).toBe('unhandled rejection')
-    expect(plugin.description).toBeDefined()
   })
 
   if ('onunhandledrejection' in window) {

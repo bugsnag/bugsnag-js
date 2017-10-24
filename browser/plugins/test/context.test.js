@@ -12,7 +12,6 @@ const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 describe('plugin: context', () => {
   it('should have a name and description', () => {
     expect(plugin.name).toBe('context')
-    expect(plugin.description).toBeDefined()
   })
 
   it('sets client.context (and report.context) to window.location.pathname', () => {

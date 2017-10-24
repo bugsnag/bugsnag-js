@@ -12,7 +12,6 @@ const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 describe('plugin: device', () => {
   it('should have a name and description', () => {
     expect(plugin.name).toBe('device')
-    expect(plugin.description).toBeDefined()
   })
 
   it('should add a beforeSend callback which captures device information', () => {

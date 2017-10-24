@@ -2,9 +2,12 @@ const StackGenerator = require('stack-generator')
 const ErrorStackParser = require('error-stack-parser')
 const hasStack = require('../../base/lib/has-stack')
 
+/*
+ * Automatically notifies Bugsnag when window.onerror is called
+ */
+
 module.exports = {
   name: 'window onerror',
-  description: 'Automatically notifies Bugsnag when window.onerror is called',
   init: (client, BugsnagReport) => {
     const onerror = (messageOrEvent, url, lineNo, charNo, error) => {
       const handledState = { severity: 'error', unhandled: true, severityReason: { type: 'unhandledException' } }

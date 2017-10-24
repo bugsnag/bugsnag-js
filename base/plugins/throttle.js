@@ -1,8 +1,11 @@
 const jsonStringify = require('fast-safe-stringify')
 
+/*
+ * Throttles and dedupes error reports
+ */
+
 module.exports = {
   name: 'throttle',
-  description: 'Throttles and dedupes reports',
   init: (client) => {
     // track history of sent events for each init of the plugin
     let history = []

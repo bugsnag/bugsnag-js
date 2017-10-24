@@ -9,7 +9,6 @@ const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 describe('plugin: throttle', () => {
   it('should have a name and description', () => {
     expect(plugin.name).toBe('throttle')
-    expect(plugin.description).toBeDefined()
   })
 
   it('serialises comparable properties of a report', () => {
