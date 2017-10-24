@@ -71,7 +71,11 @@ class BugsnagClient {
   }
 
   leaveBreadcrumb (...args) {
+    if (!this._configured) throw new Error('Bugsnag must be configured before calling leaveBreadcrumb()')
     this.breadcrumbs.push(BugsnagBreadcrumb.ensureBreadcrumb(...args))
+    if (this.breadcrumbs.length > this.config.maxBreadcrumbs) {
+      this.breadcrumbs = this.breadcrumbs.slice(this.breadcrumbs.length - this.config.maxBreadcrumbs)
+    }
   }
 
   // startSession (s) {
@@ -94,7 +98,7 @@ class BugsnagClient {
   // }
 
   notify (error, opts = {}) {
-    if (!this._configured) throw new Error('configure() must be called before report()')
+    if (!this._configured) throw new Error('Bugsnag must be configured before calling report()')
 
     // releaseStage can be set via config.releaseStage or client.app.releaseStage
     const releaseStage = this.app && typeof this.app.releaseStage === 'string' ? this.app.releaseStage : this.config.releaseStage

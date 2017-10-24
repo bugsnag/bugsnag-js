@@ -1,5 +1,5 @@
 class BugsnagBreadcrumb {
-  constructor (type, name, metaData, timestamp = (new Date()).toISOString()) {
+  constructor (type, name, metaData = {}, timestamp = (new Date()).toISOString()) {
     // duck-typing ftw >_<
     this.__isBugsnagBreadcrumb = true
 

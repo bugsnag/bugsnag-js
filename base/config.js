@@ -48,6 +48,11 @@ module.exports.schema = {
     defaultValue: () => 10,
     message: '(Number) maxDuplicateEventsPerWindow must be a number if specified',
     validate: positiveIntIfDefined
+  },
+  maxBreadcrumbs: {
+    defaultValue: () => 20,
+    message: '(Number) maxBreadcrumbs must be a number (≤40) if specified',
+    validate: value => positiveIntIfDefined(value) && (value === undefined || value <= 40)
   }
 }
 

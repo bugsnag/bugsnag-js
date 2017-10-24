@@ -2,6 +2,7 @@ const { describe, it, expect, fail } = global
 
 const Client = require('../client')
 const Report = require('../report')
+const Breadcrumb = require('../breadcrumb')
 
 const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
@@ -242,6 +243,46 @@ describe('base/client', () => {
 
       expect(payloads[3].events[0].toJSON().exceptions[0].message).toBe('1')
       expect(payloads[4].events[0].toJSON().exceptions[0].message).toBe('errrororor')
+    })
+  })
+
+  describe('leaveBreadcrumb()', () => {
+    it('creates a manual breadcrumb when a list of arguments are supplied', () => {
+      const client = new Client(VALID_NOTIFIER)
+      client.configure({ apiKey: 'API_KEY_YEAH' })
+      client.leaveBreadcrumb('french stick')
+      expect(client.breadcrumbs.length).toBe(1)
+      expect(client.breadcrumbs[0].__isBugsnagBreadcrumb).toBe(true)
+      expect(client.breadcrumbs[0].type).toBe('manual')
+      expect(client.breadcrumbs[0].name).toBe('french stick')
+      expect(client.breadcrumbs[0].metaData).toEqual({})
+    })
+
+    it('uses a provided breadcrumb', () => {
+      const b = new Breadcrumb('log', 'bread slicing initiated', { slices: 20, width: 10 })
+      const client = new Client(VALID_NOTIFIER)
+      client.configure({ apiKey: 'API_KEY_YEAH' })
+      client.leaveBreadcrumb(b)
+      expect(client.breadcrumbs.length).toBe(1)
+      expect(client.breadcrumbs[0]).toBe(b)
+    })
+
+    it('caps the length of breadcrumbs at the configured limit', () => {
+      const client = new Client(VALID_NOTIFIER)
+      client.configure({ apiKey: 'API_KEY_YEAH', maxBreadcrumbs: 3 })
+      client.leaveBreadcrumb('malted rye')
+      expect(client.breadcrumbs.length).toBe(1)
+      client.leaveBreadcrumb('medium sliced white hovis')
+      expect(client.breadcrumbs.length).toBe(2)
+      client.leaveBreadcrumb('pumperninkel')
+      expect(client.breadcrumbs.length).toBe(3)
+      client.leaveBreadcrumb('seedy farmhouse')
+      expect(client.breadcrumbs.length).toBe(3)
+      expect(client.breadcrumbs.map(b => b.name)).toEqual([
+        'medium sliced white hovis',
+        'pumperninkel',
+        'seedy farmhouse'
+      ])
     })
   })
 })
