@@ -1,6 +1,6 @@
 const positiveIntIfDefined = value =>
   [ 'undefined', 'number' ].includes(typeof value) &&
-  parseInt(value.toString(), 10) === value &&
+  parseInt('' + value, 10) === value &&
   value > 0
 
 module.exports.schema = {
