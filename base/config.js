@@ -25,9 +25,9 @@ module.exports.schema = {
     validate: () => true
   },
   notifyReleaseStages: {
-    defaultValue: () => [ 'production' ],
+    defaultValue: () => null,
     message: '(Array[String]) notifyReleaseStages should only contain strings',
-    validate: value => Array.isArray(value) && value.every(f => typeof f === 'string')
+    validate: value => value === null || (Array.isArray(value) && value.every(f => typeof f === 'string'))
   },
   releaseStage: {
     defaultValue: () => 'production',

@@ -140,7 +140,7 @@ class BugsnagClient {
     this.leaveBreadcrumb(new BugsnagBreadcrumb('error', report.errorClass, { report }))
 
     // exit early if the reports should not be sent on the current releaseStage
-    if (!this.config.notifyReleaseStages.includes(releaseStage)) return false
+    if (Array.isArray(this.config.notifyReleaseStages) && !this.config.notifyReleaseStages.includes(releaseStage)) return false
 
     // // set session if in use
     // if (this.session) report.session = this.session
