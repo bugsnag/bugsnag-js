@@ -244,6 +244,19 @@ describe('base/client', () => {
       expect(payloads[3].events[0].toJSON().exceptions[0].message).toBe('1')
       expect(payloads[4].events[0].toJSON().exceptions[0].message).toBe('errrororor')
     })
+
+    it('leaves a breadcrumb of the error', () => {
+      const payloads = []
+      const client = new Client(VALID_NOTIFIER)
+      client.configure({ apiKey: 'API_KEY_YEAH' })
+      client.transport({ sendReport: (config, payload) => payloads.push(payload) })
+      client.notify(new Error('foobar'))
+      expect(client.breadcrumbs.length).toBe(1)
+      expect(client.breadcrumbs[0].type).toBe('error')
+      expect(client.breadcrumbs[0].name).toBe('Error')
+      // the error shouldn't appear as a breadcrumb for itself
+      expect(payloads[0].events[0].breadcrumbs.length).toBe(0)
+    })
   })
 
   describe('leaveBreadcrumb()', () => {

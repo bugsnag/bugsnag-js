@@ -103,9 +103,6 @@ class BugsnagClient {
     // releaseStage can be set via config.releaseStage or client.app.releaseStage
     const releaseStage = this.app && typeof this.app.releaseStage === 'string' ? this.app.releaseStage : this.config.releaseStage
 
-    // exit early if the reports should not be sent on the current releaseStage
-    if (!this.config.notifyReleaseStages.includes(releaseStage)) return false
-
     // ensure we have an error (or a reasonable object representation of an error)
     let err
     switch (typeof error) {
@@ -139,6 +136,11 @@ class BugsnagClient {
       report.severity = opts.severity
       report._handledState.severityReason = { type: 'userSpecifiedSeverity' }
     }
+
+    this.leaveBreadcrumb(new BugsnagBreadcrumb('error', report.errorClass, { report }))
+
+    // exit early if the reports should not be sent on the current releaseStage
+    if (!this.config.notifyReleaseStages.includes(releaseStage)) return false
 
     // // set session if in use
     // if (this.session) report.session = this.session

@@ -3,6 +3,7 @@ const version = '__VERSION__'
 const url = 'https://github.com/bugsnag/REPLACE_ME'
 
 const Client = require('../base/client')
+const Breadcrumb = require('../base/breadcrumb')
 
 // extend the base config schema with some browser-specific options
 const schema = Object.assign({}, require('../base/config').schema, require('./config'))
@@ -53,6 +54,8 @@ module.exports = (opts) => {
   }
 
   bugsnag.use(plugins['throttle'])
+
+  bugsnag.leaveBreadcrumb(new Breadcrumb('navigation', 'Bugsnag loaded'))
 
   return bugsnag
 }
