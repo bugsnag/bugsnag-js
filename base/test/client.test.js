@@ -160,7 +160,7 @@ describe('base/client', () => {
           fail('sendReport() should not be called')
         }
       })
-      client.configure({ apiKey: 'API_KEY_YEAH', releaseStage: 'staging' })
+      client.configure({ apiKey: 'API_KEY_YEAH', releaseStage: 'staging', notifyReleaseStages: [ 'production' ] })
 
       const sent = client.notify(new Error('oh em eff gee'))
       expect(sent).toBe(false)
@@ -176,7 +176,7 @@ describe('base/client', () => {
           fail('sendReport() should not be called')
         }
       })
-      client.configure({ apiKey: 'API_KEY_YEAH' })
+      client.configure({ apiKey: 'API_KEY_YEAH', notifyReleaseStages: [ 'production' ] })
       client.app.releaseStage = 'staging'
 
       const sent = client.notify(new Error('oh em eff gee'))

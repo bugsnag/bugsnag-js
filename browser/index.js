@@ -13,7 +13,8 @@ const plugins = {
   'unhandled rejection': require('./plugins/unhandled-rejection'),
   'device': require('./plugins/device'),
   'context': require('./plugins/context'),
-  'throttle': require('../base/plugins/throttle')
+  'throttle': require('../base/plugins/throttle'),
+  'console breadcrumbs': require('./plugins/console-breadcrumbs')
 }
 
 const transports = {
@@ -51,6 +52,11 @@ module.exports = (opts) => {
   if (bugsnag.config.autoNotify !== false) {
     bugsnag.use(plugins['window onerror'])
     bugsnag.use(plugins['unhandled rejection'])
+  }
+
+  // set up auto breadcrumbs if explicitely enabled, otherwise setup unless releaseStage is dev(elopment)
+  if (bugsnag.config.autoConsoleBreadcumbsEnabled || !/^dev(elopment)?$/.test(bugsnag.config.releaseStage)) {
+    bugsnag.use(plugins['console breadcrumbs'])
   }
 
   bugsnag.use(plugins['throttle'])
