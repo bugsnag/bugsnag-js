@@ -1,3 +1,8 @@
+const positiveIntIfDefined = value =>
+  [ 'undefined', 'number' ].includes(typeof value) &&
+  parseInt(value.toString(), 10) === value &&
+  value > 0
+
 module.exports.schema = {
   apiKey: {
     defaultValue: () => null,
@@ -32,17 +37,17 @@ module.exports.schema = {
   eventWindowSize: {
     defaultValue: () => 60 * 1000, // one minute
     message: '(Number) eventWindowSize must be a number if specified',
-    validate: value => [ 'undefined', 'number' ].includes(typeof value)
+    validate: positiveIntIfDefined
   },
   maxEventsPerWindow: {
     defaultValue: () => 100,
     message: '(Number) maxEventsPerWindow must be a number if specified',
-    validate: value => [ 'undefined', 'number' ].includes(typeof value)
+    validate: positiveIntIfDefined
   },
   maxDuplicateEventsPerWindow: {
     defaultValue: () => 10,
     message: '(Number) maxDuplicateEventsPerWindow must be a number if specified',
-    validate: value => [ 'undefined', 'number' ].includes(typeof value)
+    validate: positiveIntIfDefined
   }
 }
 
