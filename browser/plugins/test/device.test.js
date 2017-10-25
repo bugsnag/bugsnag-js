@@ -1,6 +1,3 @@
-// shim the env for ye olde browsers
-require('core-js')
-
 // magical jasmine globals
 const { describe, it, expect } = global
 

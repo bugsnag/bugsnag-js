@@ -3,7 +3,6 @@ const version = '__VERSION__'
 const url = 'https://github.com/bugsnag/REPLACE_ME'
 
 const Client = require('../base/client')
-const Breadcrumb = require('../base/breadcrumb')
 
 // extend the base config schema with some browser-specific options
 const schema = Object.assign({}, require('../base/config').schema, require('./config'))
@@ -14,7 +13,9 @@ const plugins = {
   'device': require('./plugins/device'),
   'context': require('./plugins/context'),
   'throttle': require('../base/plugins/throttle'),
-  'console breadcrumbs': require('./plugins/console-breadcrumbs')
+  'console breadcrumbs': require('./plugins/console-breadcrumbs'),
+  'navigation breadcrumbs': require('./plugins/navigation-breadcrumbs'),
+  'interaction breadcrumbs': require('./plugins/interaction-breadcrumbs')
 }
 
 const transports = {
@@ -52,6 +53,8 @@ module.exports = (opts) => {
   if (bugsnag.config.autoNotify !== false) {
     bugsnag.use(plugins['window onerror'])
     bugsnag.use(plugins['unhandled rejection'])
+    bugsnag.use(plugins['navigation breadcrumbs'])
+    bugsnag.use(plugins['interaction breadcrumbs'])
   }
 
   // set up auto breadcrumbs if explicitely enabled, otherwise setup unless releaseStage is dev(elopment)
@@ -60,8 +63,6 @@ module.exports = (opts) => {
   }
 
   bugsnag.use(plugins['throttle'])
-
-  bugsnag.leaveBreadcrumb(new Breadcrumb('navigation', 'Bugsnag loaded'))
 
   return bugsnag
 }
