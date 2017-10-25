@@ -6,7 +6,6 @@ const hasStack = require('../../base/lib/has-stack')
  */
 
 module.exports = {
-  name: 'unhandled rejection',
   init: (client, BugsnagReport) => {
     // only attach for browsers that suppport promises
     if (!('onunhandledrejection' in window)) return

@@ -10,10 +10,6 @@ const Client = require('../../../base/client')
 const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
 describe('plugin: context', () => {
-  it('should have a name and description', () => {
-    expect(plugin.name).toBe('context')
-  })
-
   it('sets client.context (and report.context) to window.location.pathname', () => {
     const client = new Client(VALID_NOTIFIER)
     const payloads = []

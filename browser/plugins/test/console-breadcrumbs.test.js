@@ -10,10 +10,6 @@ const Client = require('../../../base/client')
 const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
 describe('plugin: console breadcrumbs', () => {
-  it('should have a name and description', () => {
-    expect(plugin.name).toBe('console breadcrumbs')
-  })
-
   it('should leave a breadcrumb when console.log() is called', () => {
     const c = new Client(VALID_NOTIFIER)
     c.configure({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })

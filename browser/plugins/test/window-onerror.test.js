@@ -10,10 +10,6 @@ const Client = require('../../../base/client')
 const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
 describe('plugin: window onerror', () => {
-  it('should have a name and description', () => {
-    expect(plugin.name).toBe('window onerror')
-  })
-
   it('should set a window.onerror event handler', () => {
     const client = new Client(VALID_NOTIFIER)
     client.configure({ apiKey: 'API_KEY_YEAH' })

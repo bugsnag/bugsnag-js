@@ -7,7 +7,6 @@ const hasStack = require('../../base/lib/has-stack')
  */
 
 module.exports = {
-  name: 'window onerror',
   init: (client, BugsnagReport) => {
     const onerror = (messageOrEvent, url, lineNo, charNo, error) => {
       const handledState = { severity: 'error', unhandled: true, severityReason: { type: 'unhandledException' } }

@@ -10,10 +10,6 @@ const Client = require('../../../base/client')
 const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
 describe('plugin: unhandled rejection', () => {
-  it('should have a name and description', () => {
-    expect(plugin.name).toBe('unhandled rejection')
-  })
-
   if ('onunhandledrejection' in window) {
     describe('window.onunhandledrejection function', () => {
       it('captures unhandled promise rejections', done => {

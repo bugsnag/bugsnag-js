@@ -2,7 +2,6 @@
  * Leaves breadcrumbs when console log methods are called
  */
 module.exports = {
-  name: 'console breadcrumbs',
   init: (client, BugsnagReport, BugsnagBreadcrumb) => {
     CONSOLE_LOG_METHODS.forEach(method => {
       const original = console[method]
