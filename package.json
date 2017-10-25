@@ -23,8 +23,8 @@
     "test:integration:node": "echo TODO",
     "test:e2e": "echo TODO",
     "test:lint": "standard",
-    "build": "browserify -d --standalone bugsnag browser/index.js > dist/bugsnag.dist.js",
-    "build:dist": "browserify -d -p bundle-collapser/plugin --standalone bugsnag browser/index.js | uglifyjs --compress --mangle --ie8 --source-map \"content=inline\" --source-map --output dist/bugsnag.dist.js",
+    "build": "bin/bundle > dist/bugsnag.dist.js",
+    "build:dist": "bin/bundle | uglifyjs --compress --mangle --ie8 --source-map \"content=inline\" --source-map --output dist/bugsnag.dist.js",
     "chore:contibuting-toc": "markdown-toc -i CONTRIBUTING.md",
     "chore:readme-size-badge": "./bin/readme-size-badge"
   },
@@ -34,10 +34,12 @@
     "url": "https://github.com/bugsnag/bugsnag-js"
   },
   "devDependencies": {
-    "browserify": "^14.4.0",
-    "browserify-istanbul": "^2.0.0",
+    "babel-core": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babelify": "^8.0.0",
+    "browserify": "^14.5.0",
+    "browserify-istanbul": "^3.0.1",
     "browserify-versionify": "^1.0.6",
-    "bubleify": "^0.7.0",
     "bundle-collapser": "^1.3.0",
     "core-js": "^2.5.1",
     "es3ify": "^0.2.2",
@@ -63,25 +65,5 @@
     "error-stack-parser": "^2.0.1",
     "fast-safe-stringify": "^1.2.0",
     "stack-generator": "github:bengourley/stack-generator#190a6f500cfc4a9ef77db204b4f571964e39c3d8"
-  },
-  "browserify": {
-    "transform": [
-      [
-        "es3ify",
-        {
-          "global": true
-        }
-      ],
-      [
-        "bubleify",
-        {
-          "namedFunctionExpressions": false,
-          "global": true
-        }
-      ],
-      [
-        "browserify-versionify"
-      ]
-    ]
   }
 }

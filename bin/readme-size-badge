@@ -1,27 +1,17 @@
 #!/usr/bin/env node
 
-const browserify = require('browserify')
 const uglify = require('uglify-js')
 const { gzipSync } = require('zlib')
 const { readFileSync, writeFileSync } = require('fs')
 const { resolve } = require('path')
+const { execSync } = require('child_process')
 
-const getSize = cb => {
-  browserify('browser/index.js', {
-    plugin: [ 'bundle-collapser/plugin' ],
-    standalone: 'bugsnag'
-  }).bundle((err, buf) => {
-    if (err) return cb(err)
-    try {
-      const compressed = uglify.minify(buf.toString(), { ie8: true })
-      if (compressed.error) throw compressed.error
-      const gzipped = gzipSync(compressed.code)
-      const kb = (gzipped.length / 1000).toFixed(2)
-      cb(null, kb)
-    } catch (e) {
-      cb(e)
-    }
-  })
+const getSize = bundle => {
+  const compressed = uglify.minify(bundle.toString(), { ie8: true })
+  if (compressed.error) throw compressed.error
+  const gzipped = gzipSync(compressed.code)
+  const kb = (gzipped.length / 1000).toFixed(2)
+  return kb
 }
 
 const insert = kb => {
@@ -33,8 +23,6 @@ const insert = kb => {
   writeFileSync(resolve(__dirname, '../README.md'), replaced, 'utf8')
 }
 
-getSize((err, kb) => {
-  if (err) throw err
-  insert(kb)
-  console.log(`inserted compressed/gzipped size (${kb}kB) into readme`)
-})
+const kb = getSize(execSync('./bin/bundle'))
+insert(kb)
+console.log(`inserted compressed/gzipped size (${kb}kB) into readme`)

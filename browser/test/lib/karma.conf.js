@@ -23,14 +23,16 @@ module.exports = function (config) {
       debug: true,
       transform: [
         [ 'browserify-istanbul' ],
+        [ 'babelify', { global: true } ],
         [ 'es3ify', { global: true } ],
-        [ 'bubleify', { global: true, namedFunctionExpressions: false } ]
+        [ 'browserify-versionify' ]
       ],
       plugin: []
     },
 
     // list of files / patterns to load in the browser
     files: [
+      '../node_modules/core-js/client/core.js',
       '**/*.test.js',
       { pattern: 'test/fixtures/**', included: false }
     ],
