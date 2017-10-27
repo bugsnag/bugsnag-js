@@ -5,7 +5,7 @@ const url = 'https://github.com/bugsnag/REPLACE_ME'
 const Client = require('../base/client')
 
 // extend the base config schema with some browser-specific options
-const schema = Object.assign({}, require('../base/config').schema, require('./config'))
+const schema = { ...require('../base/config').schema, ...require('./config') }
 
 const plugins = {
   'window onerror': require('./plugins/window-onerror'),

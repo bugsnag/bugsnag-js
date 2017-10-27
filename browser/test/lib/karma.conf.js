@@ -24,7 +24,6 @@ module.exports = function (config) {
       transform: [
         [ 'browserify-istanbul' ],
         [ 'babelify', { global: true } ],
-        [ 'es3ify', { global: true } ],
         [ 'browserify-versionify' ]
       ],
       plugin: []

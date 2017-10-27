@@ -56,7 +56,7 @@ class BugsnagReport {
     if (!this.metaData[section]) this.metaData[section] = {}
 
     // merge the updates with the existing section
-    this.metaData[section] = Object.assign(this.metaData[section], updates)
+    this.metaData[section] = { ...this.metaData[section], ...updates }
 
     return this
   }

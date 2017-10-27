@@ -41,7 +41,7 @@ class BugsnagClient {
 
   configure (opts = {}) {
     this._logger.debug(`configuring`)
-    this.config = config.mergeDefaults(Object.assign({}, this.config, opts), this.configSchema)
+    this.config = config.mergeDefaults({ ...this.config, ...opts }, this.configSchema)
     const validity = config.validate(this.config, this.configSchema)
     if (!validity.valid === true) {
       const err = new Error('Bugsnag configuration error')
@@ -124,11 +124,11 @@ class BugsnagClient {
     // create a report from the error, if it isn't one already
     const report = BugsnagReport.ensureReport(err, 1)
 
-    report.app = Object.assign({ releaseStage }, report.app, this.app)
+    report.app = { ...{ releaseStage }, ...report.app, ...this.app }
     report.context = report.context || opts.context || this.context || undefined
-    report.device = Object.assign({}, report.advice, this.device, opts.device)
-    report.user = Object.assign({}, report.user, this.user, opts.user)
-    report.metaData = Object.assign({}, report.metaData, this.metaData, opts.metaData)
+    report.device = { ...report.device, ...this.device, ...opts.device }
+    report.user = { ...report.user, ...this.user, ...opts.user }
+    report.metaData = { ...report.metaData, ...this.metaData, ...opts.metaData }
     report.breadcrumbs = this.breadcrumbs.slice(0)
 
     // set severity if supplied
