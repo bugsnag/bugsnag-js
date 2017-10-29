@@ -35,15 +35,15 @@ module.exports = (opts) => {
   // set logger based on browser capability
   if (typeof console !== 'undefined' && typeof console.debug !== 'undefined') bugsnag.logger(console)
 
-  // try {
+  try {
     // configure with user supplied options
     // errors can be thrown here that prevent the lib from being in a useable state
     bugsnag.configure(opts)
-  // } catch (e) {
-  //   bugsnag._logger.warn(e)
-  //   if (e.errors) map(e.errors, bugsnag._logger.warn)
-  //   return bugsnag
-  // }
+  } catch (e) {
+    bugsnag._logger.warn(e)
+    if (e.errors) map(e.errors, bugsnag._logger.warn)
+    return bugsnag
+  }
 
   // browser-specific plugins
   bugsnag.use(plugins['device'])
