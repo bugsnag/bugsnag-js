@@ -1,6 +1,7 @@
 const StackGenerator = require('stack-generator')
 const ErrorStackParser = require('error-stack-parser')
 const hasStack = require('../../base/lib/has-stack')
+const { filter } = require('../../base/lib/es-utils')
 
 /*
  * Automatically notifies Bugsnag when window.onerror is called
@@ -23,8 +24,7 @@ module.exports = {
 const generateStack = (url, lineNo, charNo) => {
   // no error was provided so try to figure out the stack by building a stacktrace
   try {
-    const stack = StackGenerator.backtrace()
-      .filter(frame => (frame.functionName || '').indexOf('StackGenerator$$') === -1)
+    const stack = filter(StackGenerator.backtrace(), frame => (frame.functionName || '').indexOf('StackGenerator$$') === -1)
       .slice(1) // remove this function and the onerror handler stack frames
 
     // attach some information that we do know from onerror to the first frame in the stack

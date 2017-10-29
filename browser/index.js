@@ -3,6 +3,7 @@ const version = '__VERSION__'
 const url = 'https://github.com/bugsnag/REPLACE_ME'
 
 const Client = require('../base/client')
+const { map } = require('../base/lib/es-utils')
 
 // extend the base config schema with some browser-specific options
 const schema = { ...require('../base/config').schema, ...require('./config') }
@@ -31,19 +32,18 @@ module.exports = (opts) => {
 
   // set transport based on browser capability (IE 8+9 have an XDomainRequest object)
   bugsnag.transport(window.XDomainRequest ? transports.XDomainRequest : transports.XMLHttpRequest)
-  bugsnag.logger(console)
+  // set logger based on browser capability
+  if (typeof console !== 'undefined' && typeof console.debug !== 'undefined') bugsnag.logger(console)
 
-  try {
+  // try {
     // configure with user supplied options
     // errors can be thrown here that prevent the lib from being in a useable state
     bugsnag.configure(opts)
-  } catch (e) {
-    bugsnag._logger.warn(e)
-    if (e.errors) {
-      e.errors.map(bugsnag._logger.warn)
-    }
-    return bugsnag
-  }
+  // } catch (e) {
+  //   bugsnag._logger.warn(e)
+  //   if (e.errors) map(e.errors, bugsnag._logger.warn)
+  //   return bugsnag
+  // }
 
   // browser-specific plugins
   bugsnag.use(plugins['device'])

@@ -4,6 +4,7 @@
 module.exports = {
   init: (client, BugsnagReport, BugsnagBreadcrumb) => {
     if (!('addEventListener' in window)) return
+
     window.addEventListener('click', (event) => {
       let targetText, targetSelector
       try {

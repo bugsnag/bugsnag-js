@@ -3,6 +3,8 @@
  */
 module.exports = {
   init: (client, BugsnagReport, BugsnagBreadcrumb) => {
+    if (!('addEventListener' in window)) return
+
     // returns a function that will drop a breadcrumb with a given name
     const drop = name => () => client.leaveBreadcrumb(new BugsnagBreadcrumb('navigation', name))
 

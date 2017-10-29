@@ -1,6 +1,7 @@
 const config = require('./config')
 const BugsnagReport = require('./report')
 const BugsnagBreadcrumb = require('./breadcrumb')
+const { map, reduce } = require('./lib/es-utils')
 // const uid = require('cuid')
 
 const noop = () => {}
@@ -45,7 +46,7 @@ class BugsnagClient {
     const validity = config.validate(this.config, this.configSchema)
     if (!validity.valid === true) {
       const err = new Error('Bugsnag configuration error')
-      err.errors = validity.errors.map(err => `${err.key} ${err.message} \n  ${err.value}`)
+      err.errors = map(validity.errors, (err) => `${err.key} ${err.message} \n  ${err.value}`)
       throw err
     }
     if (typeof this.config.beforeSend === 'function') this.config.beforeSend = [ this.config.beforeSend ]
@@ -147,8 +148,13 @@ class BugsnagClient {
 
     const originalSeverity = report.severity
 
-    const beforeSend = [].concat(opts.beforeSend).concat(this.config.beforeSend).filter(Boolean)
-    const preventSend = beforeSend.some(fn => fn(report) === false || report.isIgnored())
+    const beforeSend = [].concat(opts.beforeSend).concat(this.config.beforeSend)
+    const preventSend = reduce(beforeSend, (accum, fn) => {
+      if (accum === true) return true
+      if (typeof fn === 'function' && fn(report) === false) return true
+      if (report.isIgnored()) return true
+      return false
+    }, false)
 
     if (preventSend) return false
 

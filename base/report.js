@@ -1,6 +1,7 @@
 const ErrorStackParser = require('error-stack-parser')
 const StackGenerator = require('stack-generator')
 const hasStack = require('./lib/has-stack')
+const { filter, map } = require('./lib/es-utils')
 
 class BugsnagReport {
   constructor (errorClass, errorMessage, stacktrace = [], handledState = defaultHandledState()) {
@@ -23,7 +24,10 @@ class BugsnagReport {
     this.groupingHash = undefined
     this.metaData = {}
     this.severity = this._handledState.severity
-    this.stacktrace = stacktrace.map(formatStackframe).filter(o => o && Object.keys(o).some(k => !!o[k]))
+    this.stacktrace = map(stacktrace, frame => formatStackframe(frame))
+    // @TODO
+    // don't include a stackframe if none of its properties are defined
+    // if (f && filter(values(f)).length) return accum.concat(f)
     this.user = undefined
   }
 
@@ -123,8 +127,7 @@ const normaliseFunctionName = name => /^global code$/i.test(name) ? 'global code
 
 // stacktrace wasn't provided so we need to attempt to generate one
 const generateStack = (framesToSkip) => {
-  return StackGenerator.backtrace()
-    .filter(frame => (frame.functionName || '').indexOf('StackGenerator$$') === -1)
+  return filter(StackGenerator.backtrace(), frame => (frame.functionName || '').indexOf('StackGenerator$$') === -1)
     .slice(1 + framesToSkip) // remove this function and n others from the stack frames
 }
 

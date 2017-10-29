@@ -1,3 +1,5 @@
+const { filter, reduce, keys, isArray } = require('./lib/es-utils')
+
 const positiveIntIfDefined = value =>
   [ 'undefined', 'number' ].includes(typeof value) &&
   parseInt('' + value, 10) === value &&
@@ -17,7 +19,7 @@ module.exports.schema = {
   beforeSend: {
     defaultValue: () => [],
     message: '(Array[Function]) beforeSend should only contain functions',
-    validate: value => typeof value === 'function' || (Array.isArray(value) && value.every(f => typeof f === 'function'))
+    validate: value => typeof value === 'function' || (isArray(value) && filter(value, f => typeof f === 'function').length === value.length)
   },
   endpoint: {
     defaultValue: () => '//notify.bugsnag.com',
@@ -27,7 +29,7 @@ module.exports.schema = {
   notifyReleaseStages: {
     defaultValue: () => null,
     message: '(Array[String]) notifyReleaseStages should only contain strings',
-    validate: value => value === null || (Array.isArray(value) && value.every(f => typeof f === 'string'))
+    validate: value => value === null || (isArray(value) && filter(value, f => typeof f === 'string').length === value.length)
   },
   releaseStage: {
     defaultValue: () => 'production',
@@ -58,7 +60,7 @@ module.exports.schema = {
 
 module.exports.mergeDefaults = (opts, schema) => {
   if (!opts || !schema) throw new Error('schema.mergeDefaults(opts, schema): opts and schema objects are required')
-  return Object.keys(schema).reduce((accum, key) => {
+  return reduce(keys(schema), (accum, key) => {
     accum[key] = opts[key] !== undefined ? opts[key] : schema[key].defaultValue()
     return accum
   }, {})
@@ -66,7 +68,7 @@ module.exports.mergeDefaults = (opts, schema) => {
 
 module.exports.validate = (opts, schema) => {
   if (!opts || !schema) throw new Error('schema.mergeDefaults(opts, schema): opts and schema objects are required')
-  const errors = Object.keys(schema).reduce((accum, key) => {
+  const errors = reduce(keys(schema), (accum, key) => {
     if (schema[key].validate(opts[key])) return accum
     return accum.concat({ key, message: schema[key].message, value: opts[key] })
   }, [])

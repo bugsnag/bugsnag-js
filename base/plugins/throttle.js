@@ -1,4 +1,5 @@
 const jsonStringify = require('fast-safe-stringify')
+const { filter, reduce } = require('../lib/es-utils')
 
 /*
  * Throttles and dedupes error reports
@@ -14,7 +15,7 @@ module.exports = {
     client.config.beforeSend.push((report) => {
       // maintain the history (remove events that have fallen beyond the window)
       const now = Date.now()
-      history = history.filter(event => event.time > now - client.config.eventWindowSize)
+      history = filter(history, event => event.time > now - client.config.eventWindowSize)
 
       // is this is a duplicate?
       const dupes = seen(history, report)
@@ -32,7 +33,7 @@ module.exports = {
 
 // returns the number of times an identical report
 // occurs in the array of `history`
-const seen = module.exports._seen = (history, report) => history.reduce((accum, event) => {
+const seen = module.exports._seen = (history, report) => reduce(history, (accum, event) => {
   return event.report === serialise(report) ? accum + 1 : accum
 }, 0)
 
