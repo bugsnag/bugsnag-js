@@ -23,7 +23,7 @@ describe('plugin: navigation breadcrumbs', () => {
       domLoad.initEvent('DOMContentLoaded', true, true)
       window.document.dispatchEvent(domLoad)
 
-      console.log(c.breadcrumbs)
+      // console.log(c.breadcrumbs)
       expect(c.breadcrumbs.length).toBe(3)
       done()
     })
