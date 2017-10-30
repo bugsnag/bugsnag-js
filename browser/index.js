@@ -16,7 +16,8 @@ const plugins = {
   'throttle': require('../base/plugins/throttle'),
   'console breadcrumbs': require('./plugins/console-breadcrumbs'),
   'navigation breadcrumbs': require('./plugins/navigation-breadcrumbs'),
-  'interaction breadcrumbs': require('./plugins/interaction-breadcrumbs')
+  'interaction breadcrumbs': require('./plugins/interaction-breadcrumbs'),
+  'inline script content': require('./plugins/inline-script-content')
 }
 
 const transports = {
@@ -62,6 +63,7 @@ module.exports = (opts) => {
     bugsnag.use(plugins['console breadcrumbs'])
   }
 
+  bugsnag.use(plugins['inline script content'])
   bugsnag.use(plugins['throttle'])
 
   return bugsnag
