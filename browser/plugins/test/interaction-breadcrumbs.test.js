@@ -12,8 +12,8 @@ describe('plugin: interaction breadcrumbs', () => {
       const c = new Client(VALID_NOTIFIER)
       c.configure({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
       c.use(plugin)
-      const el = document.createElement('P')
-      el.textContent = 'paragraph of wonders!'
+      const el = document.createElement('button')
+      el.textContent = 'button of wonders!'
       document.body.appendChild(el)
       el.click()
       expect(c.breadcrumbs.length).toBe(1)
