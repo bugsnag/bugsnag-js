@@ -9,11 +9,12 @@ module.exports = {
     const drop = name => () => client.leaveBreadcrumb(new BugsnagBreadcrumb('navigation', name))
 
     // simple drops – just names, no meta
-    window.addEventListener('popstate', drop('Navigated back'), true)
     window.addEventListener('pagehide', drop('Page hidden'), true)
     window.addEventListener('pageshow', drop('Page shown'), true)
     window.addEventListener('load', drop('Page loaded'), true)
-    window.addEventListener('DOMContentLoaded', drop('DOMContentLoaded'), true)
+    window.document.addEventListener('DOMContentLoaded', drop('DOMContentLoaded'), true)
+    // some browsers like to emit popstate when the page loads, so only add the postate listener after that
+    window.addEventListener('load', () => window.addEventListener('popstate', drop('Navigated back'), true))
 
     // hashchange has some metaData that we care about
     window.addEventListener('hashchange', event => {
