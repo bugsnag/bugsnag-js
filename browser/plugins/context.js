@@ -3,8 +3,9 @@
  */
 module.exports = {
   init: (client, BugsnagReport) => {
-    // @TODO the pathname can change after the page has loaded, so potentially
-    // implement this as a beforeSend() hook instead?
-    client.context = window.location.pathname
+    client.config.beforeSend.push(report => {
+      if (report.context) return
+      report.context = window.location.pathname
+    })
   }
 }
