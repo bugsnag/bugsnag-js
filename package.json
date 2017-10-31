@@ -17,14 +17,14 @@
   "scripts": {
     "test": "npm run test:lint && npm run test:unit && npm run test:integration && npm run test:e2e",
     "test-third-party-pr": "npm run test:lint && npm run test:unit",
-    "test:unit": "nyc --reporter=lcov --report-dir coverage/node -- jasmine '!(node_modules|browser)/**/*.test.js'",
+    "test:unit": "nyc --reporter=lcov --report-dir coverage/node -- jasmine '!(node_modules|browser|e2e)/**/*.test.js'",
     "test:integration": "npm run test:integration:browser && npm run test:integration:node",
     "test:integration:browser": "karma start browser/test/lib/karma.conf.js --single-run",
     "test:integration:node": "echo TODO",
-    "test:e2e": "echo TODO",
+    "test:e2e": "karma start e2e/lib/karma.conf.js --single-run",
     "test:lint": "standard",
     "build": "bin/bundle > dist/bugsnag.dist.js",
-    "build:dist": "bin/bundle | uglifyjs --compress --mangle --ie8 --source-map \"content=inline\" --source-map --output dist/bugsnag.dist.js",
+    "build:dist": "bin/bundle | bin/minify dist/bugsnag.dist.js",
     "chore:contibuting-toc": "markdown-toc -i CONTRIBUTING.md",
     "chore:readme-size-badge": "./bin/readme-size-badge"
   },
@@ -74,7 +74,7 @@
     "babel-plugin-transform-es2015-arrow-functions": "^6.22.0",
     "cuid": "^1.3.8",
     "error-stack-parser": "^2.0.1",
-    "fast-safe-stringify": "^1.2.0",
+    "fast-safe-stringify": "github:bengourley/fast-safe-stringify#ie8ify",
     "stack-generator": "github:bengourley/stack-generator#190a6f500cfc4a9ef77db204b4f571964e39c3d8"
   }
 }

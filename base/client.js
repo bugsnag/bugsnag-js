@@ -1,7 +1,7 @@
 const config = require('./config')
 const BugsnagReport = require('./report')
 const BugsnagBreadcrumb = require('./breadcrumb')
-const { map, reduce } = require('./lib/es-utils')
+const { map, reduce, includes, isArray } = require('./lib/es-utils')
 // const uid = require('cuid')
 
 const noop = () => {}
@@ -141,7 +141,7 @@ class BugsnagClient {
     this.leaveBreadcrumb(new BugsnagBreadcrumb('error', report.errorClass, { report }))
 
     // exit early if the reports should not be sent on the current releaseStage
-    if (Array.isArray(this.config.notifyReleaseStages) && !this.config.notifyReleaseStages.includes(releaseStage)) return false
+    if (isArray(this.config.notifyReleaseStages) && !includes(this.config.notifyReleaseStages, releaseStage)) return false
 
     // // set session if in use
     // if (this.session) report.session = this.session

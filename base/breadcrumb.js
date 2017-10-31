@@ -1,5 +1,7 @@
+const { isoDate } = require('./lib/es-utils')
+
 class BugsnagBreadcrumb {
-  constructor (type, name, metaData = {}, timestamp = (new Date()).toISOString()) {
+  constructor (type, name, metaData = {}, timestamp = isoDate()) {
     // duck-typing ftw >_<
     this.__isBugsnagBreadcrumb = true
 

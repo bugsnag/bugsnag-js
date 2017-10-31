@@ -14,7 +14,7 @@ module.exports = {
     // add beforeSend hook
     client.config.beforeSend.push((report) => {
       // maintain the history (remove events that have fallen beyond the window)
-      const now = Date.now()
+      const now = (new Date()).getTime()
       history = filter(history, event => event.time > now - client.config.eventWindowSize)
 
       // is this is a duplicate?

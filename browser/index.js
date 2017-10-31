@@ -42,7 +42,9 @@ module.exports = (opts) => {
   } catch (e) {
     bugsnag._logger.warn(e)
     if (e.errors) map(e.errors, bugsnag._logger.warn)
-    return bugsnag
+    // rethrow. if there was an error with configuration
+    // the library is not going to work
+    throw e
   }
 
   // browser-specific plugins

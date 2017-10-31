@@ -1,4 +1,4 @@
-const browsers = require('../../../browsers.json')
+const browsers = require('../../browsers.json')
 const MINUTE_IN_MS = 1000 * 60
 const MAX_TIMEOUT = 2 * MINUTE_IN_MS
 const CI_BS_CONF = {
@@ -7,55 +7,38 @@ const CI_BS_CONF = {
   project: process.env.TRAVIS_REPO_SLUG + '#' + process.env.TRAVIS_BRANCH
 }
 
-require('./echo-server')
+require('./prepare')
+// require('./echo-server')
 
 module.exports = function (config) {
   config.set({
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
-    basePath: '../..',
+    basePath: '..',
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: [ 'browserify', 'jasmine' ],
-
-    browserify: {
-      debug: true,
-      transform: [
-        [ 'browserify-istanbul' ],
-        [ 'babelify', { global: true } ],
-        [ 'browserify-versionify' ]
-      ],
-      plugin: []
-    },
+    frameworks: [ 'jasmine' ],
 
     // list of files / patterns to load in the browser
     files: [
-      '../node_modules/core-js/client/core.js',
-      '**/*.test.js',
-      { pattern: 'test/fixtures/**', included: false }
+      '**/*/assertions.test.js',
+      { pattern: '**/serve/**', included: false }
     ],
 
     // list of files to exclude
     exclude: [
-      'test/lib/**'
     ],
 
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      '**/*.test.js': [ 'browserify' ]
     },
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: [ 'progress', 'BrowserStack', 'coverage' ],
-
-    coverageReporter: {
-      dir: '../coverage',
-      type: 'lcov'
-    },
+    reporters: [ 'progress', 'BrowserStack' ],
 
     // web server port
     port: 9876,

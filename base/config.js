@@ -1,7 +1,7 @@
-const { filter, reduce, keys, isArray } = require('./lib/es-utils')
+const { filter, reduce, keys, isArray, includes } = require('./lib/es-utils')
 
 const positiveIntIfDefined = value =>
-  [ 'undefined', 'number' ].includes(typeof value) &&
+  includes([ 'undefined', 'number' ], typeof value) &&
   parseInt('' + value, 10) === value &&
   value > 0
 
