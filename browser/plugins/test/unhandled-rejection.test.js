@@ -31,7 +31,7 @@ describe('plugin: unhandled rejection', () => {
           } catch (e) {
             done(e)
           }
-        }, 10)
+        }, 50)
       })
     })
   }
