@@ -8,7 +8,7 @@ describe('loading bugsnag via browserify bundle', function () {
     var onmessage = function (event) {
       if (!event) return
       var data = JSON.parse(event.data)
-      console.log(data)
+      // console.log(data)
       expect(data.type === 'error').toBe(false)
       expect(data.error).toBeUndefined()
       expect(data.reports).toBeDefined()
