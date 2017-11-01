@@ -1,9 +1,9 @@
 /* global describe, it, expect */
 
-describe('loading bugsnag via bundled <script> tag', function () {
+describe('loading bugsnag via browserify bundle', function () {
   it('should work', function (done) {
     var el = document.createElement('iframe')
-    el.src = '/base/script/serve/index.html'
+    el.src = '/base/browserify/serve/index.html'
 
     var onmessage = function (event) {
       if (!event) return
