@@ -11,6 +11,5 @@ module.exports = {
     req.open('POST', url)
     req.setRequestHeader('content-type', 'application/json')
     req.send(jsonStringify(report))
-  },
-  sendSession: (config, cb) => {}
+  }
 }

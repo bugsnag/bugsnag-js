@@ -10,6 +10,5 @@ module.exports = {
     }
     req.open('POST', url)
     req.send(jsonStringify(report))
-  },
-  sendSession: (config, cb) => {}
+  }
 }

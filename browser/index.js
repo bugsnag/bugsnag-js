@@ -68,3 +68,5 @@ module.exports = (opts) => {
 
   return bugsnag
 }
+
+module.exports['default'] = module.exports

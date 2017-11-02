@@ -14,6 +14,7 @@
   ],
   "main": "node/index.js",
   "browser": "browser/index.js",
+  "types": "types/bugsnag.d.ts",
   "browserify": {
     "transform": "browserify-versionify"
   },
@@ -25,7 +26,7 @@
     "test:integration:browser": "karma start browser/test/lib/karma.conf.js --single-run",
     "test:integration:node": "echo TODO",
     "test:e2e": "karma start e2e/lib/karma.conf.js --single-run",
-    "test:lint": "standard",
+    "test:lint": "standard && tslint -c types/tslint.json types/*.d.ts",
     "build": "bin/bundle > dist/bugsnag.dist.js",
     "build:dist": "bin/bundle | bin/minify dist/bugsnag.dist.js",
     "chore:contibuting-toc": "markdown-toc -i CONTRIBUTING.md",
@@ -35,6 +36,13 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/bugsnag/bugsnag-js"
+  },
+  "standard": {
+    "ignore": [
+      "dist",
+      "examples",
+      "e2e/**/serve/**"
+    ]
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
@@ -70,6 +78,9 @@
     "nyc": "^11.2.1",
     "proxyquire": "^1.8.0",
     "standard": "^10.0.3",
+    "tsify": "^3.0.3",
+    "tslint": "^5.8.0",
+    "typescript": "^2.6.1",
     "uglify-js": "^3.0.28",
     "watchify": "^3.9.0"
   },

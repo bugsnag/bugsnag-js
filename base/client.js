@@ -77,6 +77,7 @@ class BugsnagClient {
     if (this.breadcrumbs.length > this.config.maxBreadcrumbs) {
       this.breadcrumbs = this.breadcrumbs.slice(this.breadcrumbs.length - this.config.maxBreadcrumbs)
     }
+    return this
   }
 
   // startSession (s) {
