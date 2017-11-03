@@ -1,6 +1,6 @@
-const name = 'Bugsnag Browser JS Notifier'
+const name = 'Bugsnag JavaScript'
 const version = '__VERSION__'
-const url = 'https://github.com/bugsnag/REPLACE_ME'
+const url = 'https://github.com/bugsnag/bugsnag-js'
 
 const Client = require('../base/client')
 const { map } = require('../base/lib/es-utils')
