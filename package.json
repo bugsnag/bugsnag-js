@@ -31,7 +31,8 @@
     "build:dist": "bin/bundle > dist/bugsnag.js",
     "build:dist:min": "bin/bundle | bin/minify dist/bugsnag.min.js",
     "chore:contibuting-toc": "markdown-toc -i CONTRIBUTING.md",
-    "chore:readme-size-badge": "./bin/readme-size-badge"
+    "chore:readme-size-badge": "./bin/readme-size-badge",
+    "prepublish": "npm run build"
   },
   "license": "MIT",
   "repository": {
