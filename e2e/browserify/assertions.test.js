@@ -12,6 +12,7 @@ describe('loading bugsnag via browserify bundle', function () {
       expect(data.type === 'error').toBe(false)
       expect(data.error).toBeUndefined()
       expect(data.reports).toBeDefined()
+      expect(data.reports[0].notifier.version).toMatch(/\d\.\d\.\d/)
       done()
     }
 
