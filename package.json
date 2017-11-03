@@ -25,14 +25,14 @@
     "test:integration": "npm run test:integration:browser && npm run test:integration:node",
     "test:integration:browser": "karma start browser/test/lib/karma.conf.js --single-run",
     "test:integration:node": "echo TODO",
-    "test:e2e": "npm run build && karma start e2e/lib/karma.conf.js --single-run",
+    "test:e2e": "karma start e2e/lib/karma.conf.js --single-run",
     "test:lint": "standard && tslint -c types/tslint.json types/*.d.ts",
     "build": "npm run build:dist && npm run build:dist:min",
     "build:dist": "bin/bundle > dist/bugsnag.js",
     "build:dist:min": "bin/bundle | bin/minify dist/bugsnag.min.js",
     "chore:contibuting-toc": "markdown-toc -i CONTRIBUTING.md",
     "chore:readme-size-badge": "./bin/readme-size-badge",
-    "prepublish": "npm run build"
+    "prepare": "npm run build"
   },
   "license": "MIT",
   "repository": {
