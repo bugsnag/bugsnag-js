@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Bugsnag JS: Plain JS example with sourcemaps</title>
+    <script src="node_modules/bugsnag-js/dist/bugsnag.js"></script>
+    <script>
+      var client = bugsnag({ apiKey: 'API_KEY' }
+    </script>
+  </head>
+  <body>
+    <h1>Bugsnag JS: Plain JS example with sourcemaps</h1>
+    <p>
+      This page is a basic example of how to include bugsnag-js on a page via a
+      <code>&lt;script&gt;</code> tag.
+      The "app.js" is minified with uglify-js and served with a link to the sourcemap
+      so that Bugsnag can fetch the sources/maps when an error is received.
+    </p>
+    <script src="app.min.js"></script>
+  </body>
+</html>
