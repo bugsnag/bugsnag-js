@@ -1,6 +1,6 @@
 {
   "name": "bugsnag-js",
-  "version": "0.0.0",
+  "version": "4.0.0",
   "description": "Automatically detect JavaScript errors, collect detailed diagnostic information, and get notified about errors in real-time.",
   "keywords": [
     "exception",
@@ -25,7 +25,7 @@
     "test:integration": "npm run test:integration:browser && npm run test:integration:node",
     "test:integration:browser": "karma start browser/test/lib/karma.conf.js --single-run",
     "test:integration:node": "echo TODO",
-    "test:e2e": "karma start e2e/lib/karma.conf.js --single-run",
+    "test:e2e": "npm run build && karma start e2e/lib/karma.conf.js --single-run",
     "test:lint": "standard && tslint -c types/tslint.json types/*.d.ts",
     "build": "npm run build:dist && npm run build:dist:min",
     "build:dist": "bin/bundle > dist/bugsnag.js",
