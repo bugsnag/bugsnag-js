@@ -13,7 +13,7 @@
     "client-side"
   ],
   "main": "node/index.js",
-  "browser": "browser/index.js",
+  "browser": "dist/bugsnag.js",
   "types": "types/bugsnag.d.ts",
   "browserify": {
     "transform": "browserify-versionify"
@@ -27,8 +27,9 @@
     "test:integration:node": "echo TODO",
     "test:e2e": "karma start e2e/lib/karma.conf.js --single-run",
     "test:lint": "standard && tslint -c types/tslint.json types/*.d.ts",
-    "build": "bin/bundle > dist/bugsnag.dist.js",
-    "build:dist": "bin/bundle | bin/minify dist/bugsnag.dist.js",
+    "build": "npm run build:dist && npm run build:dist:min",
+    "build:dist": "bin/bundle > dist/bugsnag.js",
+    "build:dist:min": "bin/bundle | bin/minify dist/bugsnag.min.js",
     "chore:contibuting-toc": "markdown-toc -i CONTRIBUTING.md",
     "chore:readme-size-badge": "./bin/readme-size-badge"
   },
@@ -60,9 +61,9 @@
     "babel-plugin-transform-es3-property-literals": "^6.22.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babelify": "^8.0.0",
+    "browser-pack-flat": "^3.0.3",
     "browserify": "^14.5.0",
     "browserify-istanbul": "^3.0.1",
-    "bundle-collapser": "^1.3.0",
     "core-js": "^2.5.1",
     "exorcist": "^0.4.0",
     "glob": "^7.1.2",
@@ -82,7 +83,8 @@
     "tslint": "^5.8.0",
     "typescript": "^2.6.1",
     "uglify-js": "^3.0.28",
-    "watchify": "^3.9.0"
+    "watchify": "^3.9.0",
+    "webpack": "^3.8.1"
   },
   "dependencies": {
     "browserify-versionify": "^1.0.6",
