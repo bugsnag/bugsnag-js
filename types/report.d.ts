@@ -17,11 +17,21 @@ declare class Report {
   public stacktrace: IStackframe[];
   public user: object;
 
+  constructor(errorClass: string, errorMessage: string, stacktrace?: any[], handledState?: IHandledState);
   public isIgnored(): boolean;
   public ignore(): void;
   public updateMetaData(section: string, value: object): Report;
   public updateMetaData(section: string, property: string, value: object): Report;
   public removeMetaData(section: string, property: string): Report;
+}
+
+interface IHandledState {
+  severity: string;
+  unhandled: boolean;
+  severityReason: {
+    type: string;
+    [key: string]: any;
+  };
 }
 
 interface IStackframe {
