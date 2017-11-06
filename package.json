@@ -20,7 +20,6 @@
   },
   "scripts": {
     "preversion": "npm run test:basic",
-    "version": "npm run build",
     "postversion": "git push && git push --tags && npm publish --tag $(./bin/dist-tag-value)",
     "test": "npm run test:lint && npm run test:unit && npm run test:integration && npm run test:e2e",
     "test:basic": "npm run test:lint && npm run test:unit",
