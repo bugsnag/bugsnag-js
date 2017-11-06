@@ -1,5 +1,5 @@
 {
     "name": "bugsnag",
-    "version": "3.3.1",
+    "version": "3.3.2",
     "main": "./src/bugsnag.js"
 }

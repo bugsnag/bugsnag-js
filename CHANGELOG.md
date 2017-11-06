@@ -1,6 +1,13 @@
 Changelog
 =========
 
+3.3.2 (2017-11-06)
+-----
+
+### Bug fixes
+
+- Prevent crash when promise rejection reason is `null`. Credit @kchodorow (#252).
+
 3.3.1 (2017-10-04)
 -----
 
