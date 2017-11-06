@@ -20,7 +20,9 @@
   },
   "scripts": {
     "preversion": "npm run test:basic",
-    "postversion": "git push && git push --tags && npm publish --tag $(./bin/dist-tag-value)",
+    "version": "npm run chore",
+    "postversion": "echo 'TODO changelog' && git push && git push --tags && npm publish --tag $(./bin/dist-tag-value)",
+    "postpublish": "./bin/cdn-upload",
     "test": "npm run test:lint && npm run test:unit && npm run test:integration && npm run test:e2e",
     "test:basic": "npm run test:lint && npm run test:unit",
     "test:unit": "nyc --reporter=lcov --report-dir coverage/node -- jasmine '!(node_modules|browser|e2e|examples)/**/*.test.js'",
@@ -32,6 +34,7 @@
     "build": "npm run build:dist && npm run build:dist:min",
     "build:dist": "bin/bundle > dist/bugsnag.js",
     "build:dist:min": "bin/bundle | bin/minify dist/bugsnag.min.js",
+    "chore": "npm run chore:contibuting-toc && npm run chore:readme-size-badge",
     "chore:contibuting-toc": "markdown-toc -i CONTRIBUTING.md",
     "chore:readme-size-badge": "./bin/readme-size-badge",
     "prepare": "npm run build"
@@ -78,6 +81,7 @@
     "karma-chrome-launcher": "^2.2.0",
     "karma-coverage": "^1.1.1",
     "karma-jasmine": "^1.1.0",
+    "knox": "^0.9.2",
     "markdown-toc": "^1.2.0",
     "nyc": "^11.2.1",
     "proxyquire": "^1.8.0",

@@ -1,0 +1,30 @@
+#!/usr/bin/env node
+
+const knox = require('knox')
+const version = require('../package.json').version
+const { promisify } = require('util')
+const { relative } = require('path')
+
+const s3Client = knox.createClient({
+  key: process.env.AWS_ACCESS_KEY_ID,
+  secret: process.env.AWS_SECRET_ACCESS_KEY,
+  bucket: 'bugsnagcdn'
+})
+
+const headers = {
+  'Cache-Control': 'public, max-age=315360000',
+  'x-amz-acl': 'public-read'
+}
+
+const upload = (localPath, remotePath) => {
+  console.log(`uploading ${relative('..', localPath)} -> ${remotePath}`)
+  return promisify(s3Client.putFile.bind(s3Client))(localPath, remotePath, headers)
+}
+
+const run = async () => {
+  await upload(`${__dirname}/../dist/bugsnag.js`, `/${version}/bugsnag.js`)
+  await upload(`${__dirname}/../dist/bugsnag.min.js`, `/${version}/bugsnag.min.js`)
+  await upload(`${__dirname}/../dist/bugsnag.min.js.map`, `/${version}/bugsnag.min.js.map`)
+}
+
+run()
