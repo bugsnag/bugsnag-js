@@ -6,12 +6,12 @@ env:
   matrix:
   - CXX=g++-4.8
   global:
-  - secure: qDbEJFSgG0JExIT8aJ2f4DyubQhqaJX39iVbueZCPc9GAqhPc/6n+gLXxweDZo1wD8hG2nZKjmisIck2mjzRV/qLJjO1hZnZxdj8f7J1DbexB6LgTAXe/etb7aiMsc6dZ52NV7sqfaFuxmLUhAJScj49ivJBovrbD/DOa8hmBoY=
-  - secure: LcWMDr1sSo+o1ek+xtNl2AeXx6KQjl+SJs1yrVkwEM1FLv1aNZDDB26XYRCMTKGiB1P/I2h4w6HNOJmVK/sv+/zvDDC+DIAvk+aHoRBWhNZWfUIfKMc91ihPj5JoFXSiUg3L/4DpfVWJm4mpQPEOuWPGjdGO46AG6aUSiTOzQBo=
-  - secure: bAgrtoybH+UbC2aFOTYmXfTOQsLBp8wX5m0eXfTw8zNvOCh6U70aq3v43IH3VwJxoWbNtgl1HXodEKPZMkzfRxciU3G0RTgXTPC7KMeHodPSw1I5DXxry0g73eefna7v4OirMYNIiZ6iZfz4eAzZv957AKzZLRt4WvTWiSPWO0Y=
+  - BROWSER_STACK_USERNAME: bugsnagplatforms1
+  - secure: vSVdgKgRrRenuXQ89QzvI68eYbaGGgvr3A+YoiCBB551dxT+HeRd+dvAB6YAjP7eL+aeUj5Ed0Uw+jzEnE/VA7x2kYczb5MLeZk+vfol5WB/t6p2YBMdKvgrTUhttedeAX8mxTWMWcVqpePaoV0gnax41HWqYtbtEsnuvXQEzS4=
+  - secure: YbhIRY6QlqylDd7/i8mL6xeWpHCwxKZyIizDiqJ2R50yANIACUJy7my7lG/riZfKGrQNiNzektHspdHAySQJE1a7UOtvw6oR39W88l9oeRwq6uwsb8bxq0soeNuRIxjtDpFa1KpdXYOdDkbTLHc30bk2+is+0yevIdRoYebAz98=
 addons:
   browserstack:
-    username: bengourley1
+    username: bugsnagplatforms1
     access_key:
-      secure: C/1HcFfUO0tBmKF9hsniqcsE21tbGnidGz0WM3UfUNI7YUtzopf2l2DNFwuzN7X91HxLaYspElS6EjPuVcUU1PP7JnpK/2eKOpS4CrhnurdMV+1CoVaBEvCaIhwaIIlfnvDQ/itZOjY/sRWtwpdhuR39bo3D+qvnwq4ivYKlk58=
+      secure: U/Lud43nEAK6Yhjte8TqV2LyjSnPhFrlRhJ1CRFKKYuryt0YoD1qNwq9Mo/YpEeFO2byFXoAvyDCY/Fehwn6DvG9B3szDehsXnLauxbtNt/OGnyIG0w+O6cukopsC4Yn6YtQJtnNi1qdAoRUO68h6qtrvc0xSV2TbAm9GcehaSM=
 script: npm test
