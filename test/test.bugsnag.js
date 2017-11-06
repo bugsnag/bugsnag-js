@@ -1156,7 +1156,24 @@ if ("onunhandledrejection" in window) {
           done(e);
         }
       }, 0);
-    })
+    });
+
+    it("should be ok with reason=null in uncaught rejection handler", function (done) {
+      Bugsnag.enableNotifyUnhandledRejections()
+      Promise.reject(null)
+      setTimeout(function () {
+        try {
+          assert(Bugsnag.testRequest.called, "Bugsnag.testRequest should have been called");
+          var params = requestData().params;
+          assert.equal(params.severity, "error");
+          assert.equal(params.unhandled, "true");
+          assert.deepEqual(params.severityReason, { type: "unhandledPromiseRejection" });
+          done();
+        } catch (e) {
+          done(e);
+        }
+      }, 0);
+    });
   });
 }
 

@@ -1283,14 +1283,17 @@
       window.addEventListener("unhandledrejection", function (event) {
         if (getSetting("notifyUnhandledRejections", false)) {
           var err = event.reason;
+          if (!err) {
+            err = {};
+          }
           var metaData = {};
           addScriptToMetaData(metaData);
-          if (err && !err.message) {
+          if (!err.message) {
             metaData.promiseRejectionValue = err;
           }
           sendToBugsnag({
-            name: (err && err.name) ? err.name : "UnhandledRejection",
-            message: (err && err.message) ? err.message : "",
+            name: err.name ? err.name : "UnhandledRejection",
+            message: err.message ? err.message : "",
             stacktrace: stacktraceFromException(err) || generateStacktrace(),
             file: err.fileName || err.sourceURL,
             lineNumber: err.lineNumber || err.line,
