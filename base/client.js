@@ -55,7 +55,6 @@ class BugsnagClient {
   }
 
   use (plugin) {
-    this._logger.debug(`running plugin: "${plugin.name}" (${plugin.description})`)
     this.plugins.push(plugin)
     plugin.init(this, BugsnagReport, BugsnagBreadcrumb)
     return this

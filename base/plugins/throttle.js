@@ -6,7 +6,6 @@ const { filter, reduce } = require('../lib/es-utils')
  */
 
 module.exports = {
-  name: 'throttle',
   init: (client) => {
     // track history of sent events for each init of the plugin
     let history = []
