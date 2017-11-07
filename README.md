@@ -14,7 +14,7 @@ __`v4` is a work in progress.__ The current version `v3.x` lives on `master`.
 1. [Create a Bugsnag account](https://bugsnag.com)
 2. Complete the instructions in the [integration guide](https://docs.bugsnag.com/platforms/browsers)
 3. Report handled exceptions using
-   [`Bugsnag.notify()`](https://docs.bugsnag.com/platforms/browsers/#reporting-handled-exceptions)
+   [`client.notify()`](https://docs.bugsnag.com/platforms/browsers/#reporting-handled-exceptions)
 4. Customize your integration using the
    [configuration options](https://docs.bugsnag.com/platforms/browsers/configuration-options/)
 
