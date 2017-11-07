@@ -1,9 +1,12 @@
 #!/usr/bin/env node
 
+const version = require('../package.json').version
+const semver = require('semver')
+
 // Detects whether the current version is semver prerelease and
 // outputs the appropriate value for `npm publish --tags "<tag>"`
 console.log(
-  /-\d+$/.test(require('../package.json').version)
+  semver.prerelease(version).length > 0
     ? 'unstable'
     : 'latest'
 )
