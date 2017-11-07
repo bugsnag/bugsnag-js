@@ -4,6 +4,7 @@ const knox = require('knox')
 const version = require('../package.json').version
 const { promisify } = require('util')
 const { relative } = require('path')
+const semver = require('semver')
 
 const s3Client = knox.createClient({
   key: process.env.AWS_ACCESS_KEY_ID,
@@ -22,9 +23,24 @@ const upload = (localPath, remotePath) => {
 }
 
 const run = async () => {
+  // always upload canonical versions
   await upload(`${__dirname}/../dist/bugsnag.js`, `/${version}/bugsnag.js`)
   await upload(`${__dirname}/../dist/bugsnag.min.js`, `/${version}/bugsnag.min.js`)
   await upload(`${__dirname}/../dist/bugsnag.min.js.map`, `/${version}/bugsnag.min.js.map`)
+
+  const isUnstable = semver.prerelease(version).length > 0
+  if (isUnstable) return
+
+  // if this is a release (as opposed to a prerelease), update the major/minor aliases
+  const major = `${semver.major(version)}.x.x`
+  await upload(`${__dirname}/../dist/bugsnag.js`, `/${major}/bugsnag.js`)
+  await upload(`${__dirname}/../dist/bugsnag.min.js`, `/${major}/bugsnag.min.js`)
+  await upload(`${__dirname}/../dist/bugsnag.min.js.map`, `/${major}/bugsnag.min.js.map`)
+
+  const minor = `${semver.major(version)}.${semver.minor(version)}.x`
+  await upload(`${__dirname}/../dist/bugsnag.js`, `/${minor}/bugsnag.js`)
+  await upload(`${__dirname}/../dist/bugsnag.min.js`, `/${minor}/bugsnag.min.js`)
+  await upload(`${__dirname}/../dist/bugsnag.min.js.map`, `/${minor}/bugsnag.min.js.map`)
 }
 
 run()

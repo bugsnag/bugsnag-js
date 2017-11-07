@@ -85,6 +85,7 @@
     "markdown-toc": "^1.2.0",
     "nyc": "^11.2.1",
     "proxyquire": "^1.8.0",
+    "semver": "^5.4.1",
     "standard": "^10.0.3",
     "tsify": "^3.0.3",
     "tslint": "^5.8.0",
