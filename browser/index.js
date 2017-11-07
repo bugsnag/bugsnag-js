@@ -13,6 +13,7 @@ const plugins = {
   'unhandled rejection': require('./plugins/unhandled-rejection'),
   'device': require('./plugins/device'),
   'context': require('./plugins/context'),
+  'request': require('./plugins/request'),
   'throttle': require('../base/plugins/throttle'),
   'console breadcrumbs': require('./plugins/console-breadcrumbs'),
   'navigation breadcrumbs': require('./plugins/navigation-breadcrumbs'),
@@ -50,6 +51,7 @@ module.exports = (opts) => {
   // browser-specific plugins
   bugsnag.use(plugins['device'])
   bugsnag.use(plugins['context'])
+  bugsnag.use(plugins['request'])
 
   // optional browser-specific plugins
   if (bugsnag.config.autoNotify !== false) {

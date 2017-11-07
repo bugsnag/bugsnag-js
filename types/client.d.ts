@@ -47,6 +47,7 @@ interface IReportPayload {
 interface INotifyOpts {
   context?: string;
   device?: object;
+  request?: object;
   user?: object;
   metaData?: object;
   severity?: "info" | "warning" | "error";

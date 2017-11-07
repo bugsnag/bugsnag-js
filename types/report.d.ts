@@ -16,6 +16,9 @@ declare class Report {
   public severity: "info" | "warning" | "error";
   public stacktrace: IStackframe[];
   public user: object;
+  public request: {
+    url: string;
+  };
 
   constructor(errorClass: string, errorMessage: string, stacktrace?: any[], handledState?: IHandledState);
   public isIgnored(): boolean;

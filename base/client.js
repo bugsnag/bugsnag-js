@@ -37,6 +37,7 @@ class BugsnagClient {
     this.context = undefined
     this.device = undefined
     this.metaData = undefined
+    this.request = undefined
     this.user = {}
   }
 
@@ -128,6 +129,7 @@ class BugsnagClient {
     report.app = { ...{ releaseStage }, ...report.app, ...this.app }
     report.context = report.context || opts.context || this.context || undefined
     report.device = { ...report.device, ...this.device, ...opts.device }
+    report.request = { ...report.request, ...this.request, ...opts.request }
     report.user = { ...report.user, ...this.user, ...opts.user }
     report.metaData = { ...report.metaData, ...this.metaData, ...opts.metaData }
     report.breadcrumbs = this.breadcrumbs.slice(0)

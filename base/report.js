@@ -23,6 +23,7 @@ class BugsnagReport {
     this.errorMessage = errorMessage
     this.groupingHash = undefined
     this.metaData = {}
+    this.request = undefined
     this.severity = this._handledState.severity
     this.stacktrace = map(stacktrace, frame => formatStackframe(frame))
     // @TODO
@@ -103,7 +104,8 @@ class BugsnagReport {
       context: this.context,
       user: this.user,
       metaData: this.metaData,
-      groupingHash: this.groupingHash
+      groupingHash: this.groupingHash,
+      request: this.request
     }
   }
 }
