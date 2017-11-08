@@ -11,7 +11,6 @@ interface IConfig {
   maxEventsPerWindow?: number;
   maxDuplicateEventsPerWindow?: number;
   maxBreadcrumbs?: number;
-  projectRoot?: string;
 }
 
 interface IFinalConfig extends IConfig {
@@ -24,7 +23,6 @@ interface IFinalConfig extends IConfig {
   maxEventsPerWindow: number;
   maxDuplicateEventsPerWindow: number;
   maxBreadcrumbs: number;
-  projectRoot: string;
 }
 
 type BeforeSend = (report: Report) => boolean | void;

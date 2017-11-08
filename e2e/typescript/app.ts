@@ -12,8 +12,7 @@ try {
     eventWindowSize: 100,
     maxEventsPerWindow: 100,
     maxDuplicateEventsPerWindow: 10,
-    maxBreadcrumbs: 30,
-    projectRoot: '/foo/bar'
+    maxBreadcrumbs: 30
   })
   const noop = () => {}
 
