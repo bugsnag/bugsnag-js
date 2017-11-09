@@ -36,7 +36,7 @@ of things you should check before doing so:
 version fix your issue?
 - Has somebody else [already reported](https://github.com/bugsnag/bugsnag-js/issues?utf8=%E2%9C%93&q=is%3Aissue%20is%3Aopen) your issue? Feel free to comment or check-in on an existing issue that matches your own.
 - Is your problem definitely to do with this module? Only things related to the JavaScript
-notifier should be reported here. For anything else, head to https://www.bugsnag.com/ and hit "Contact us".
+notifier should be reported here. For anything else, email [support@bugsnag.com](mailto:support@bugsnag.com).
 
 ### Fixing issues
 
