@@ -66,7 +66,7 @@ describe('base/client', () => {
     it('delivers an error report', done => {
       const client = new Client(VALID_NOTIFIER)
       client.transport({
-        sendReport: (config, payload) => {
+        sendReport: (logger, config, payload) => {
           expect(payload).toBeTruthy()
           expect(Array.isArray(payload.events)).toBe(true)
           const report = payload.events[0].toJSON()
@@ -83,7 +83,7 @@ describe('base/client', () => {
     it('supports manually setting severity', done => {
       const client = new Client(VALID_NOTIFIER)
       client.transport({
-        sendReport: (config, payload) => {
+        sendReport: (logger, config, payload) => {
           expect(payload).toBeTruthy()
           expect(Array.isArray(payload.events)).toBe(true)
           const report = payload.events[0].toJSON()
@@ -99,7 +99,7 @@ describe('base/client', () => {
     it('supports setting severity via callback', done => {
       const client = new Client(VALID_NOTIFIER)
       client.transport({
-        sendReport: (config, payload) => {
+        sendReport: (logger, config, payload) => {
           expect(payload).toBeTruthy()
           expect(Array.isArray(payload.events)).toBe(true)
           const report = payload.events[0].toJSON()
@@ -119,7 +119,7 @@ describe('base/client', () => {
     it('supports preventing send with report.ignore() / return false', done => {
       const client = new Client(VALID_NOTIFIER)
       client.transport({
-        sendReport: (config, payload) => {
+        sendReport: (logger, config, payload) => {
           fail('sendReport() should not be called')
         }
       })
@@ -139,7 +139,7 @@ describe('base/client', () => {
     it('supports preventing send with notifyReleaseStages', done => {
       const client = new Client(VALID_NOTIFIER)
       client.transport({
-        sendReport: (config, payload) => {
+        sendReport: (logger, config, payload) => {
           fail('sendReport() should not be called')
         }
       })
@@ -155,7 +155,7 @@ describe('base/client', () => {
     it('supports setting releaseStage via config.releaseStage', done => {
       const client = new Client(VALID_NOTIFIER)
       client.transport({
-        sendReport: (config, payload) => {
+        sendReport: (logger, config, payload) => {
           fail('sendReport() should not be called')
         }
       })
@@ -171,7 +171,7 @@ describe('base/client', () => {
     it('supports setting releaseStage via client.app.releaseStage', done => {
       const client = new Client(VALID_NOTIFIER)
       client.transport({
-        sendReport: (config, payload) => {
+        sendReport: (logger, config, payload) => {
           fail('sendReport() should not be called')
         }
       })
@@ -188,7 +188,7 @@ describe('base/client', () => {
     it('includes releaseStage in report.app', done => {
       const client = new Client(VALID_NOTIFIER)
       client.transport({
-        sendReport: (config, payload) => {
+        sendReport: (logger, config, payload) => {
           expect(payload.events[0].app.releaseStage).toBe('staging')
           done()
         }
@@ -201,7 +201,7 @@ describe('base/client', () => {
     it('includes releaseStage in report.app when set via config', done => {
       const client = new Client(VALID_NOTIFIER)
       client.transport({
-        sendReport: (config, payload) => {
+        sendReport: (logger, config, payload) => {
           expect(payload.events[0].app.releaseStage).toBe('staging')
           done()
         }
@@ -213,7 +213,7 @@ describe('base/client', () => {
     it('prefers client.app.releaseStage over config.releaseStage', done => {
       const client = new Client(VALID_NOTIFIER)
       client.transport({
-        sendReport: (config, payload) => {
+        sendReport: (logger, config, payload) => {
           expect(payload.events[0].app.releaseStage).toBe('testing')
           done()
         }
@@ -227,7 +227,7 @@ describe('base/client', () => {
       const payloads = []
       const client = new Client(VALID_NOTIFIER)
       client.configure({ apiKey: 'API_KEY_YEAH' })
-      client.transport({ sendReport: (config, payload) => payloads.push(payload) })
+      client.transport({ sendReport: (logger, config, payload) => payloads.push(payload) })
 
       client.notify(undefined)
       client.notify(null)
@@ -248,7 +248,7 @@ describe('base/client', () => {
       const payloads = []
       const client = new Client(VALID_NOTIFIER)
       client.configure({ apiKey: 'API_KEY_YEAH' })
-      client.transport({ sendReport: (config, payload) => payloads.push(payload) })
+      client.transport({ sendReport: (logger, config, payload) => payloads.push(payload) })
       client.notify(new Error('foobar'))
       expect(client.breadcrumbs.length).toBe(1)
       expect(client.breadcrumbs[0].type).toBe('error')

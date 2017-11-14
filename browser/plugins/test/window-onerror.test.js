@@ -20,7 +20,7 @@ describe('plugin: window onerror', () => {
       const payloads = []
       client.configure({ apiKey: 'API_KEY_YEAH' })
       client.use(plugin)
-      client.transport({ sendReport: (config, payload) => payloads.push(payload) })
+      client.transport({ sendReport: (logger, config, payload) => payloads.push(payload) })
 
       setTimeout(() => {
         // this should throw an uncaught error
@@ -46,7 +46,7 @@ describe('plugin: window onerror', () => {
       const payloads = []
       client.configure({ apiKey: 'API_KEY_YEAH' })
       client.use(plugin)
-      client.transport({ sendReport: (config, payload) => payloads.push(payload) })
+      client.transport({ sendReport: (logger, config, payload) => payloads.push(payload) })
 
       const el = document.createElement('BUTTON')
       el.onclick = () => { throw new Error('bad button l2') }
@@ -73,7 +73,7 @@ describe('plugin: window onerror', () => {
         const payloads = []
         client.configure({ apiKey: 'API_KEY_YEAH' })
         client.use(plugin)
-        client.transport({ sendReport: (config, payload) => payloads.push(payload) })
+        client.transport({ sendReport: (logger, config, payload) => payloads.push(payload) })
 
         const el = document.createElement('BUTTON')
         el.addEventListener('click', () => { throw new Error('bad button l3') })
@@ -101,7 +101,7 @@ describe('plugin: window onerror', () => {
         const payloads = []
         client.configure({ apiKey: 'API_KEY_YEAH' })
         client.use(plugin)
-        client.transport({ sendReport: (config, payload) => payloads.push(payload) })
+        client.transport({ sendReport: (logger, config, payload) => payloads.push(payload) })
 
         window.requestAnimationFrame(() => {
           throw new Error('ERR_RAF')

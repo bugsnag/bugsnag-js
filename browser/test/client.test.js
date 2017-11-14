@@ -13,7 +13,7 @@ describe('client()', () => {
       const client = new Client(VALID_NOTIFIER)
       client.configure({ apiKey: 'API_KEY_YEAH' })
       client.transport({
-        sendReport: (config, payload) => {
+        sendReport: (logger, config, payload) => {
           try {
             // console.log(JSON.stringify(payload.events[0].stacktrace, null, 2))
             expect(payload.events[0].stacktrace).toBeDefined()
@@ -37,7 +37,7 @@ describe('client()', () => {
       client.configure({ apiKey: 'API_KEY_YEAH' })
       client.use(onerror)
       client.transport({
-        sendReport: (config, payload) => {
+        sendReport: (logger, config, payload) => {
           // console.log(JSON.stringify(payload.events[0].stacktrace, null, 2))
           try {
             expect(payload.events[0].stacktrace).toBeDefined()

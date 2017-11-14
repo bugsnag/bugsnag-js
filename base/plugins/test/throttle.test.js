@@ -38,7 +38,7 @@ describe('plugin: throttle', () => {
       eventWindowSize: 1000
     })
     c.use(plugin)
-    c.transport({ sendReport: (config, payload) => payloads.push(payload) })
+    c.transport({ sendReport: (logger, config, payload) => payloads.push(payload) })
     for (let i = 0; i < 10; i++) c.notify(new Error('This is fail'))
     expect(payloads.length).toBe(5)
   })
@@ -53,7 +53,7 @@ describe('plugin: throttle', () => {
       eventWindowSize: 10
     })
     c.use(plugin)
-    c.transport({ sendReport: (config, payload) => payloads.push(payload) })
+    c.transport({ sendReport: (logger, config, payload) => payloads.push(payload) })
     for (let i = 0; i < 10; i++) c.notify(new Error('This is fail'))
     expect(payloads.length).toBe(5)
     setTimeout(() => {
@@ -77,7 +77,7 @@ describe('plugin: throttle', () => {
       eventWindowSize: 1000
     })
     c.use(plugin)
-    c.transport({ sendReport: (config, payload) => payloads.push(payload) })
+    c.transport({ sendReport: (logger, config, payload) => payloads.push(payload) })
     for (let i = 0; i < 10; i++) c.notify(new Error('This is fail'))
     expect(payloads.length).toBe(2)
   })

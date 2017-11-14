@@ -14,7 +14,7 @@ describe('plugin: unhandled rejection', () => {
         const payloads = []
         client.configure({ apiKey: 'API_KEY_YEAH' })
         client.use(plugin)
-        client.transport({ sendReport: (config, payload) => payloads.push(payload) })
+        client.transport({ sendReport: (logger, config, payload) => payloads.push(payload) })
 
         setTimeout(() => {
           Promise.reject(new Error('BAD_PROMISE'))

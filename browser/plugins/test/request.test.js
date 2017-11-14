@@ -13,7 +13,7 @@ describe('plugin: request', () => {
     client.configure({ apiKey: 'API_KEY_YEAH' })
     client.use(plugin)
 
-    client.transport({ sendReport: (config, payload) => payloads.push(payload) })
+    client.transport({ sendReport: (logger, config, payload) => payloads.push(payload) })
     client.notify(new Error('noooo'))
 
     expect(payloads.length).toEqual(1)
@@ -28,7 +28,7 @@ describe('plugin: request', () => {
 
     client.request = { url: 'foobar' }
 
-    client.transport({ sendReport: (config, payload) => payloads.push(payload) })
+    client.transport({ sendReport: (logger, config, payload) => payloads.push(payload) })
     client.notify(new Error('noooo'))
 
     expect(payloads.length).toEqual(1)

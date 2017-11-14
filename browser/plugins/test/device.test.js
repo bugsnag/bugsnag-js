@@ -15,7 +15,7 @@ describe('plugin: device', () => {
 
     expect(client.config.beforeSend.length).toBe(1)
 
-    client.transport({ sendReport: (config, payload) => payloads.push(payload) })
+    client.transport({ sendReport: (logger, config, payload) => payloads.push(payload) })
     client.notify(new Error('noooo'))
 
     const ISO_8601 = /^\d{4}(-\d\d(-\d\d(T\d\d:\d\d(:\d\d)?(\.\d+)?(([+-]\d\d:\d\d)|Z)?)?)?)?$/i

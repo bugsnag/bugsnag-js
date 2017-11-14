@@ -7,7 +7,7 @@ if (!('XDomainRequest' in window)) {
   describe('transport:XMLHttpRequest', () => {
     it('sends successfully', done => {
       const payload = { sample: 'payload' }
-      transport.sendReport({ endpoint: '/echo' }, payload, (err, responseText) => {
+      transport.sendReport({}, { endpoint: '/echo' }, payload, (err, responseText) => {
         expect(err).toBe(null)
         expect(responseText).toBe(JSON.stringify(payload))
         done()
