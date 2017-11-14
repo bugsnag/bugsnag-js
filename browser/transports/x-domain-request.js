@@ -1,15 +1,18 @@
-const jsonStringify = require('fast-safe-stringify')
+const makePayload = require('./lib/payload')
 
 module.exports = {
   name: 'XDomainRequest',
-  sendReport: (config, report, cb = () => {}) => {
+  sendReport: (logger, config, report, cb = () => {}) => {
     const url = config.endpoint
     const req = new window.XDomainRequest()
     req.onload = function () {
       cb(null, req.responseText)
     }
     req.open('POST', url)
-    req.send(jsonStringify(report))
-  },
-  sendSession: (config, cb) => {}
+    try {
+      req.send(makePayload(report))
+    } catch (e) {
+      logger.error(e)
+    }
+  }
 }

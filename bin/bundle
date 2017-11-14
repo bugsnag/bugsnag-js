@@ -3,8 +3,8 @@
 const browserify = require('browserify')
 
 browserify('browser/index.js', { debug: true, standalone: 'bugsnag' })
-  .plugin('bundle-collapser/plugin')
-  .transform('babelify', { global: true })
   .transform('browserify-versionify')
+  .plugin('browser-pack-flat/plugin')
+  .transform('babelify', { global: true })
   .bundle()
   .pipe(process.stdout)

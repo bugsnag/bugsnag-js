@@ -1,0 +1,17 @@
+{
+  "name": "bugsnag-typescript-example",
+  "private": true,
+  "version": "1.0.0",
+  "description": "An example of how you can use Bugsnag on a TS project",
+  "scripts": {
+    "build": "tsc app.ts --strict --inlineSourceMap --inlineSources",
+    "start": "npm run build && serve ."
+  },
+  "author": "Bugsnag Inc.",
+  "license": "MIT",
+  "dependencies": {
+    "bugsnag-js": "file:../../",
+    "serve": "^6.0.6",
+    "typescript": "^2.6.1"
+  }
+}

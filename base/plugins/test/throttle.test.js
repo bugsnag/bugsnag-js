@@ -7,10 +7,6 @@ const Report = require('../../report')
 const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
 describe('plugin: throttle', () => {
-  it('should have a name and description', () => {
-    expect(plugin.name).toBe('throttle')
-  })
-
   it('serialises comparable properties of a report', () => {
     const r = new Report('FloopError', 'hypermix is not conflatable')
     r.device = { time: (new Date()).toISOString() }

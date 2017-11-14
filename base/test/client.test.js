@@ -2,7 +2,6 @@ const { describe, it, expect, fail } = global
 
 const Client = require('../client')
 const Report = require('../report')
-const Breadcrumb = require('../breadcrumb')
 
 const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
@@ -265,19 +264,9 @@ describe('base/client', () => {
       client.configure({ apiKey: 'API_KEY_YEAH' })
       client.leaveBreadcrumb('french stick')
       expect(client.breadcrumbs.length).toBe(1)
-      expect(client.breadcrumbs[0].__isBugsnagBreadcrumb).toBe(true)
       expect(client.breadcrumbs[0].type).toBe('manual')
       expect(client.breadcrumbs[0].name).toBe('french stick')
       expect(client.breadcrumbs[0].metaData).toEqual({})
-    })
-
-    it('uses a provided breadcrumb', () => {
-      const b = new Breadcrumb('log', 'bread slicing initiated', { slices: 20, width: 10 })
-      const client = new Client(VALID_NOTIFIER)
-      client.configure({ apiKey: 'API_KEY_YEAH' })
-      client.leaveBreadcrumb(b)
-      expect(client.breadcrumbs.length).toBe(1)
-      expect(client.breadcrumbs[0]).toBe(b)
     })
 
     it('caps the length of breadcrumbs at the configured limit', () => {
@@ -296,6 +285,44 @@ describe('base/client', () => {
         'pumperninkel',
         'seedy farmhouse'
       ])
+    })
+
+    it('doesn’t add the breadcrumb if it didn’t contain anything useful', () => {
+      const client = new Client(VALID_NOTIFIER)
+      client.configure({ apiKey: 'API_KEY_YEAH' })
+      client.leaveBreadcrumb(undefined)
+      client.leaveBreadcrumb(null, { data: 'is useful' })
+      client.leaveBreadcrumb(null, {}, null)
+      client.leaveBreadcrumb(null, { t: 10 }, null, 4)
+      expect(client.breadcrumbs.length).toBe(3)
+      expect(client.breadcrumbs[0].type).toBe('manual')
+      expect(client.breadcrumbs[0].name).toBe('[anonymous]')
+      expect(client.breadcrumbs[0].metaData).toEqual({ data: 'is useful' })
+      expect(client.breadcrumbs[1].type).toBe('manual')
+      expect(typeof client.breadcrumbs[2].timestamp).toBe('string')
+    })
+
+    it('doesn’t add duplicates', () => {
+      const client = new Client(VALID_NOTIFIER)
+      const now = new Date().toISOString()
+      client.configure({ apiKey: 'API_KEY_YEAH' })
+      client.leaveBreadcrumb('toast', {}, 'baked_goods', now)
+      client.leaveBreadcrumb('toast', {}, 'baked_goods', now)
+      client.leaveBreadcrumb('toast', {}, 'baked_goods', now)
+      client.leaveBreadcrumb('toast', {}, 'baked_goods', now)
+      expect(client.breadcrumbs.length).toBe(1)
+    })
+
+    it('allows maxBreadcrumbs to be set to 0', () => {
+      const client = new Client(VALID_NOTIFIER)
+      client.configure({ apiKey: 'API_KEY_YEAH', maxBreadcrumbs: 0 })
+      client.leaveBreadcrumb('toast')
+      expect(client.breadcrumbs.length).toBe(0)
+      client.leaveBreadcrumb('toast')
+      client.leaveBreadcrumb('toast')
+      client.leaveBreadcrumb('toast')
+      client.leaveBreadcrumb('toast')
+      expect(client.breadcrumbs.length).toBe(0)
     })
   })
 })

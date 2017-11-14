@@ -1,7 +1,7 @@
-const { filter, reduce, keys, isArray } = require('./lib/es-utils')
+const { filter, reduce, keys, isArray, includes } = require('./lib/es-utils')
 
 const positiveIntIfDefined = value =>
-  [ 'undefined', 'number' ].includes(typeof value) &&
+  includes([ 'undefined', 'number' ], typeof value) &&
   parseInt('' + value, 10) === value &&
   value > 0
 
@@ -54,7 +54,7 @@ module.exports.schema = {
   maxBreadcrumbs: {
     defaultValue: () => 20,
     message: '(Number) maxBreadcrumbs must be a number (≤40) if specified',
-    validate: value => positiveIntIfDefined(value) && (value === undefined || value <= 40)
+    validate: value => value === 0 || (positiveIntIfDefined(value) && (value === undefined || value <= 40))
   }
 }
 

@@ -1,6 +1,6 @@
-const name = 'Bugsnag Browser JS Notifier'
+const name = 'Bugsnag JavaScript'
 const version = '__VERSION__'
-const url = 'https://github.com/bugsnag/REPLACE_ME'
+const url = 'https://github.com/bugsnag/bugsnag-js'
 
 const Client = require('../base/client')
 const { map } = require('../base/lib/es-utils')
@@ -13,6 +13,7 @@ const plugins = {
   'unhandled rejection': require('./plugins/unhandled-rejection'),
   'device': require('./plugins/device'),
   'context': require('./plugins/context'),
+  'request': require('./plugins/request'),
   'throttle': require('../base/plugins/throttle'),
   'console breadcrumbs': require('./plugins/console-breadcrumbs'),
   'navigation breadcrumbs': require('./plugins/navigation-breadcrumbs'),
@@ -43,12 +44,15 @@ module.exports = (opts) => {
   } catch (e) {
     bugsnag._logger.warn(e)
     if (e.errors) map(e.errors, bugsnag._logger.warn)
-    return bugsnag
+    // rethrow. if there was an error with configuration
+    // the library is not going to work
+    throw e
   }
 
   // browser-specific plugins
   bugsnag.use(plugins['device'])
   bugsnag.use(plugins['context'])
+  bugsnag.use(plugins['request'])
 
   // optional browser-specific plugins
   if (bugsnag.config.autoNotify !== false) {
@@ -68,3 +72,5 @@ module.exports = (opts) => {
 
   return bugsnag
 }
+
+module.exports['default'] = module.exports

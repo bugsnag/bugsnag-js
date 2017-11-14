@@ -1,8 +1,8 @@
-const jsonStringify = require('fast-safe-stringify')
+const makePayload = require('./lib/payload')
 
 module.exports = {
   name: 'XMLHttpRequest',
-  sendReport: (config, report, cb = () => {}) => {
+  sendReport: (logger, config, report, cb = () => {}) => {
     const url = config.endpoint
     const req = new window.XMLHttpRequest()
     req.onreadystatechange = function () {
@@ -10,7 +10,10 @@ module.exports = {
     }
     req.open('POST', url)
     req.setRequestHeader('content-type', 'application/json')
-    req.send(jsonStringify(report))
-  },
-  sendSession: (config, cb) => {}
+    try {
+      req.send(makePayload(report))
+    } catch (e) {
+      logger.error(e)
+    }
+  }
 }

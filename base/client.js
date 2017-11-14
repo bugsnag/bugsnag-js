@@ -1,7 +1,8 @@
 const config = require('./config')
 const BugsnagReport = require('./report')
 const BugsnagBreadcrumb = require('./breadcrumb')
-const { map, reduce } = require('./lib/es-utils')
+const { map, reduce, includes, isArray } = require('./lib/es-utils')
+const jsonStringify = require('fast-safe-stringify')
 // const uid = require('cuid')
 
 const noop = () => {}
@@ -37,6 +38,7 @@ class BugsnagClient {
     this.context = undefined
     this.device = undefined
     this.metaData = undefined
+    this.request = undefined
     this.user = {}
   }
 
@@ -55,9 +57,8 @@ class BugsnagClient {
   }
 
   use (plugin) {
-    this._logger.debug(`running plugin: "${plugin.name}" (${plugin.description})`)
     this.plugins.push(plugin)
-    plugin.init(this, BugsnagReport, BugsnagBreadcrumb)
+    plugin.init(this, BugsnagReport)
     return this
   }
 
@@ -71,32 +72,36 @@ class BugsnagClient {
     return this
   }
 
-  leaveBreadcrumb (...args) {
+  leaveBreadcrumb (name, metaData, type, timestamp) {
     if (!this._configured) throw new Error('Bugsnag must be configured before calling leaveBreadcrumb()')
-    this.breadcrumbs.push(BugsnagBreadcrumb.ensureBreadcrumb(...args))
+
+    // coerce bad values so that the defaults get set
+    name = name || undefined
+    type = typeof type === 'string' ? type : undefined
+    timestamp = typeof timestamp === 'string' ? timestamp : undefined
+    metaData = typeof metaData === 'object' && metaData !== null ? metaData : undefined
+
+    // if no name and no metaData, usefulness of this crumb is questionable at best so discard
+    if (typeof name !== 'string' && !metaData) return
+
+    const crumb = new BugsnagBreadcrumb(name, metaData, type, timestamp)
+    const c = jsonStringify(crumb)
+    const isDupe = reduce(this.breadcrumbs, (accum, crumb) => {
+      if (accum) return accum
+      return c === jsonStringify(crumb)
+    }, false)
+
+    // no duplicates
+    if (isDupe) return
+
+    // push the valid crumb onto the queue and maintain the length
+    this.breadcrumbs.push(crumb)
     if (this.breadcrumbs.length > this.config.maxBreadcrumbs) {
       this.breadcrumbs = this.breadcrumbs.slice(this.breadcrumbs.length - this.config.maxBreadcrumbs)
     }
-  }
 
-  // startSession (s) {
-  //   const session = Object.assign({}, s, {
-  //     id: uid(), startedAt: (new Date()).toISOString()
-  //   })
-  //
-  //   const sessionClient = new BugsnagClient(this.notifier, this.configSchema, session)
-  //
-  //   sessionClient.configure(this.config)
-  //
-  //   // inherit all of the original clients props
-  //   sessionClient.app = this.app
-  //   sessionClient.context = this.context
-  //   sessionClient.device = this.device
-  //   sessionClient.metaData = this.metaData
-  //   sessionClient.user = this.user
-  //
-  //   return sessionClient
-  // }
+    return this
+  }
 
   notify (error, opts = {}) {
     if (!this._configured) throw new Error('Bugsnag must be configured before calling report()')
@@ -128,6 +133,7 @@ class BugsnagClient {
     report.app = { ...{ releaseStage }, ...report.app, ...this.app }
     report.context = report.context || opts.context || this.context || undefined
     report.device = { ...report.device, ...this.device, ...opts.device }
+    report.request = { ...report.request, ...this.request, ...opts.request }
     report.user = { ...report.user, ...this.user, ...opts.user }
     report.metaData = { ...report.metaData, ...this.metaData, ...opts.metaData }
     report.breadcrumbs = this.breadcrumbs.slice(0)
@@ -138,13 +144,8 @@ class BugsnagClient {
       report._handledState.severityReason = { type: 'userSpecifiedSeverity' }
     }
 
-    this.leaveBreadcrumb(new BugsnagBreadcrumb('error', report.errorClass, { report }))
-
     // exit early if the reports should not be sent on the current releaseStage
-    if (Array.isArray(this.config.notifyReleaseStages) && !this.config.notifyReleaseStages.includes(releaseStage)) return false
-
-    // // set session if in use
-    // if (this.session) report.session = this.session
+    if (isArray(this.config.notifyReleaseStages) && !includes(this.config.notifyReleaseStages, releaseStage)) return false
 
     const originalSeverity = report.severity
 
@@ -158,11 +159,19 @@ class BugsnagClient {
 
     if (preventSend) return false
 
+    // only leave a crumb for the error if actually got sent
+    this.leaveBreadcrumb(report.errorClass, {
+      errorClass: report.errorClass,
+      errorMessage: report.errorMessage,
+      severity: report.severity,
+      stacktrace: report.stacktrace
+    }, 'error')
+
     if (originalSeverity !== report.severity) {
       report._handledState.severityReason = { type: 'userCallbackSetSeverity' }
     }
 
-    this._transport.sendReport(this.config, {
+    this._transport.sendReport(this._logger, this.config, {
       apiKey: report.apiKey || this.config.apiKey,
       notifier: this.notifier,
       events: [ report ]

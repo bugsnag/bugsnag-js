@@ -1,1 +1,3 @@
 dist
+examples
+e2e/**/serve/**

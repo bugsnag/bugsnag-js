@@ -21,7 +21,6 @@ const map = (arr, fn) =>
 const includes = (arr, x) =>
   reduce(arr, (accum, item, i, arr) => accum === true || item === x, false)
 
-const _hasOwnProperty = Object.prototype.hasOwnProperty
 const _hasDontEnumBug = !({ toString: null }).propertyIsEnumerable('toString')
 const _dontEnums = [
   'toString', 'toLocaleString', 'valueOf', 'hasOwnProperty',
@@ -35,11 +34,11 @@ const keys = obj => {
   const result = []
   let prop
   for (prop in obj) {
-    if (_hasOwnProperty.call(obj, prop)) result.push(prop)
+    if (Object.prototype.hasOwnProperty.call(obj, prop)) result.push(prop)
   }
   if (!_hasDontEnumBug) return result
   for (let i = 0, len = _dontEnums.length; i < len; i++) {
-    if (_hasOwnProperty.call(obj, _dontEnums[i])) result.push(_dontEnums[i])
+    if (Object.prototype.hasOwnProperty.call(obj, _dontEnums[i])) result.push(_dontEnums[i])
   }
   return result
 }
@@ -47,4 +46,20 @@ const keys = obj => {
 // Array#isArray
 const isArray = obj => Object.prototype.toString.call(obj) === '[object Array]'
 
-module.exports = { map, reduce, filter, includes, keys, isArray }
+const _pad = n => n < 10 ? `0${n}` : n
+
+// Date#toISOString
+const isoDate = () => {
+  // from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString
+  const d = new Date()
+  return d.getUTCFullYear() +
+    '-' + _pad(d.getUTCMonth() + 1) +
+    '-' + _pad(d.getUTCDate()) +
+    'T' + _pad(d.getUTCHours()) +
+    ':' + _pad(d.getUTCMinutes()) +
+    ':' + _pad(d.getUTCSeconds()) +
+    '.' + (d.getUTCMilliseconds() / 1000).toFixed(3).slice(2, 5) +
+    'Z'
+}
+
+module.exports = { map, reduce, filter, includes, keys, isArray, isoDate }

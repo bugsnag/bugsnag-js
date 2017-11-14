@@ -1,5 +1,5 @@
 # Bugsnag error reporter for JavaScript
-![8.41kB](https://img.shields.io/badge/size-8.41kB-green.svg)
+![8.22kB](https://img.shields.io/badge/size-8.22kB-green.svg)
 ![API status](https://img.shields.io/badge/api-unstable-yellow.svg)
 [![Documentation](https://img.shields.io/badge/docs-outdated-red.svg)](https://docs.bugsnag.com/platforms/browsers)
 [![Build status](https://travis-ci.org/bugsnag/bugsnag-js.svg?branch=v4)](https://travis-ci.org/bugsnag/bugsnag-js)
@@ -14,7 +14,7 @@ __`v4` is a work in progress.__ The current version `v3.x` lives on `master`.
 1. [Create a Bugsnag account](https://bugsnag.com)
 2. Complete the instructions in the [integration guide](https://docs.bugsnag.com/platforms/browsers)
 3. Report handled exceptions using
-   [`Bugsnag.notify()`](https://docs.bugsnag.com/platforms/browsers/#reporting-handled-exceptions)
+   [`client.notify()`](https://docs.bugsnag.com/platforms/browsers/#reporting-handled-exceptions)
 4. Customize your integration using the
    [configuration options](https://docs.bugsnag.com/platforms/browsers/configuration-options/)
 

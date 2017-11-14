@@ -19,7 +19,7 @@ script:
 - if [[ $BROWSER_STACK_ACCESS_KEY ]]; then
     npm run test;
   else
-    npm run test-third-party-pr;
+    npm run test:basic;
   fi
 after_script:
 - if [ $TRAVIS_TEST_RESULT == 0 ]; then

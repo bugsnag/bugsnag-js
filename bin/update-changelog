@@ -1,0 +1,56 @@
+#!/usr/bin/env node
+
+const version = require('../package.json').version
+const semver = require('semver')
+const editor = require('editor')
+const { readFileSync, writeFileSync, unlinkSync } = require('fs')
+const { resolve } = require('path')
+
+const template = (summary) => `
+## ${version} (${datestamp()})
+
+<!-- optional: if this is a significant release, describe it in a sentence or two -->
+
+### Added
+- Modify or remove as appropriate
+
+### Changed
+- Modify or remove as appropriate
+
+### Deprecated
+- Modify or remove as appropriate
+
+### Removed
+- Modify or remove as appropriate
+
+### Fixed
+- Modify or remove as appropriate
+
+### Security
+- Modify or remove as appropriate
+
+`.trim()
+
+const datestamp = () => (new Date().toISOString()).replace(/T.*$/, '')
+
+const insert = (entry) => {
+  const changelog = readFileSync(resolve(__dirname, '../CHANGELOG.md'), 'utf8')
+  const replaced = changelog.replace(
+    /(<!-- \{entry_placeholder\} -->)/,
+    `$1\n\n${entry}`
+  )
+  writeFileSync(resolve(__dirname, '../CHANGELOG.md'), replaced, 'utf8')
+}
+
+const isUnstable = semver.prerelease(version).length > 0
+if (isUnstable) {
+  console.log('skipping changelog update (prerelease versions don’t need changelogs)')
+} else {
+  const tmp = resolve(__dirname, '..', '.CHANGELOG_CURRENT_ENTRY.md')
+  writeFileSync(tmp, template())
+  editor(tmp, (code, sig) => {
+    if (code !== 0) throw new Error('non-zero exit code from editor')
+    insert(readFileSync(tmp))
+    unlinkSync(tmp)
+  })
+}

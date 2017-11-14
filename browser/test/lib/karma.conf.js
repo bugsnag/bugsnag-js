@@ -1,4 +1,4 @@
-const browsers = require('./browsers.json')
+const browsers = require('../../../browsers.json')
 const MINUTE_IN_MS = 1000 * 60
 const MAX_TIMEOUT = 2 * MINUTE_IN_MS
 const CI_BS_CONF = {

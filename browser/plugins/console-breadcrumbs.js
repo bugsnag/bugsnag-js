@@ -4,11 +4,11 @@ const { map, filter } = require('../../base/lib/es-utils')
  * Leaves breadcrumbs when console log methods are called
  */
 module.exports = {
-  init: (client, BugsnagReport, BugsnagBreadcrumb) => {
+  init: (client, BugsnagReport) => {
     map(CONSOLE_LOG_METHODS, method => {
       const original = console[method]
       console[method] = (...args) => {
-        client.leaveBreadcrumb(new BugsnagBreadcrumb('log', 'Console output', {
+        client.leaveBreadcrumb('Console output', {
           severity: /^group/.test(method) ? 'log' : method,
           message: map(args, arg => {
             // do the best/simplest stringification of each argument
@@ -20,7 +20,7 @@ module.exports = {
             // any errors, fallback to [object Object]
             return stringified
           }).join('\n')
-        }))
+        }, 'log')
         console[method]._restore = () => { console[method] = original }
         original.apply(console, args)
       }

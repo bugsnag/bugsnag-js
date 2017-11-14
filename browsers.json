@@ -48,12 +48,12 @@
     "os": "OS X",
     "os_version": "lion"
   },
-  "bs_safari_11": {
+  "bs_safari_10": {
     "base": "BrowserStack",
     "browser": "safari",
-    "browser_version": "11.0",
+    "browser_version": "10.0",
     "os": "OS X",
-    "os_version": "high sierra"
+    "os_version": "sierra"
   },
   "bs_opera_47": {
     "base": "BrowserStack",

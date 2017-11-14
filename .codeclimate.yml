@@ -15,3 +15,5 @@ exclude_paths:
 - "test/"
 - "browser/test"
 - "**/*.test.js"
+- "e2e/"
+- "examples/"

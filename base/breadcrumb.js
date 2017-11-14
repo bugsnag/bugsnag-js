@@ -1,8 +1,7 @@
-class BugsnagBreadcrumb {
-  constructor (type, name, metaData = {}, timestamp = (new Date()).toISOString()) {
-    // duck-typing ftw >_<
-    this.__isBugsnagBreadcrumb = true
+const { isoDate } = require('./lib/es-utils')
 
+class BugsnagBreadcrumb {
+  constructor (name = '[anonymous]', metaData = {}, type = 'manual', timestamp = isoDate()) {
     this.type = type
     this.name = name
     this.metaData = metaData
@@ -22,11 +21,5 @@ class BugsnagBreadcrumb {
 // force `fast-safe-stringify` to do its thing
 // https://github.com/davidmarkclements/fast-safe-stringify#tojson-support
 BugsnagBreadcrumb.prototype.toJSON.forceDecirc = true
-
-BugsnagBreadcrumb.ensureBreadcrumb = (...args) => {
-  if (args.length === 1 && args[0] && args[0].__isBugsnagBreadcrumb) return args[0]
-  const [ name, metaData, timestamp ] = args
-  return new BugsnagBreadcrumb('manual', name, metaData, timestamp)
-}
 
 module.exports = BugsnagBreadcrumb
