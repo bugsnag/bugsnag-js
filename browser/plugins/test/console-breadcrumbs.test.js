@@ -16,7 +16,9 @@ describe('plugin: console breadcrumbs', () => {
       c.configure({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
       c.use(plugin)
       console.log('check 1, 2')
-      expect(c.breadcrumbs.length).toBe(1)
+      // make sure it's null-safe
+      console.log(null)
+      expect(c.breadcrumbs.length).toBe(2)
       // undo the global side effects of wrapping console.* for the rest of the tests
       plugin.destroy()
     })

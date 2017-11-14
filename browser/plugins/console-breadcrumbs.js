@@ -12,7 +12,7 @@ module.exports = {
           severity: /^group/.test(method) ? 'log' : method,
           message: map(args, arg => {
             // do the best/simplest stringification of each argument
-            let stringified = arg.toString()
+            let stringified = String(arg)
             // unless it stringifies to [object Object], use the toString() value
             if (stringified !== '[object Object]') return stringified
             // otherwise attempt to JSON stringify (with indents/spaces)
@@ -21,9 +21,9 @@ module.exports = {
             return stringified
           }).join('\n')
         }, 'log')
-        console[method]._restore = () => { console[method] = original }
         original.apply(console, args)
       }
+      console[method]._restore = () => { console[method] = original }
     })
   },
   destroy: () => CONSOLE_LOG_METHODS.forEach(method => {

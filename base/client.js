@@ -119,12 +119,12 @@ class BugsnagClient {
           err = new Error('Bugsnag usage error. notify() called with (string, string) but expected (error, object)')
           opts = { metaData: { notifier: { notifyArgs: [ error, opts ] } } }
         } else {
-          err = new Error(error.toString())
+          err = new Error(String(error))
         }
         break
       case 'number':
       case 'boolean':
-        err = new Error(error.toString())
+        err = new Error(String(error))
         break
       case 'function':
         err = new Error('Bugsnag usage error. notify() called with a function as "error" parameter')
