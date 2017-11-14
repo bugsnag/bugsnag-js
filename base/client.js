@@ -125,7 +125,7 @@ class BugsnagClient {
     }
 
     // if we have something falsey at this point, report usage error
-    if (!error) err = new Error('Bugsnag usage error. notify() called with no "error" parameter')
+    if (!err) err = new Error('Bugsnag usage error. notify() called with no "error" parameter')
 
     // create a report from the error, if it isn't one already
     const report = BugsnagReport.ensureReport(err, 1)
