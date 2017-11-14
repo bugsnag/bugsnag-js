@@ -54,7 +54,7 @@ module.exports.schema = {
   maxBreadcrumbs: {
     defaultValue: () => 20,
     message: '(Number) maxBreadcrumbs must be a number (≤40) if specified',
-    validate: value => positiveIntIfDefined(value) && (value === undefined || value <= 40)
+    validate: value => value === 0 || (positiveIntIfDefined(value) && (value === undefined || value <= 40))
   }
 }
 
