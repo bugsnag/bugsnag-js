@@ -80,25 +80,6 @@ class BugsnagClient {
     return this
   }
 
-  // startSession (s) {
-  //   const session = Object.assign({}, s, {
-  //     id: uid(), startedAt: (new Date()).toISOString()
-  //   })
-  //
-  //   const sessionClient = new BugsnagClient(this.notifier, this.configSchema, session)
-  //
-  //   sessionClient.configure(this.config)
-  //
-  //   // inherit all of the original clients props
-  //   sessionClient.app = this.app
-  //   sessionClient.context = this.context
-  //   sessionClient.device = this.device
-  //   sessionClient.metaData = this.metaData
-  //   sessionClient.user = this.user
-  //
-  //   return sessionClient
-  // }
-
   notify (error, opts = {}) {
     if (!this._configured) throw new Error('Bugsnag must be configured before calling report()')
 
@@ -144,9 +125,6 @@ class BugsnagClient {
 
     // exit early if the reports should not be sent on the current releaseStage
     if (isArray(this.config.notifyReleaseStages) && !includes(this.config.notifyReleaseStages, releaseStage)) return false
-
-    // // set session if in use
-    // if (this.session) report.session = this.session
 
     const originalSeverity = report.severity
 
