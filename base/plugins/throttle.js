@@ -18,6 +18,7 @@ module.exports = {
 
       // is this is a duplicate?
       const dupes = seen(history, report)
+
       // has the duplicate quota has been exceeded?
       if (dupes > client.config.maxDuplicateEventsPerWindow) return report.ignore()
 

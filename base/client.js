@@ -2,6 +2,7 @@ const config = require('./config')
 const BugsnagReport = require('./report')
 const BugsnagBreadcrumb = require('./breadcrumb')
 const { map, reduce, includes, isArray } = require('./lib/es-utils')
+const jsonStringify = require('fast-safe-stringify')
 // const uid = require('cuid')
 
 const noop = () => {}
@@ -83,8 +84,18 @@ class BugsnagClient {
     // if no name and no metaData, usefulness of this crumb is questionable at best so discard
     if (typeof name !== 'string' && !metaData) return
 
+    const crumb = new BugsnagBreadcrumb(name, metaData, type, timestamp)
+    const c = jsonStringify(crumb)
+    const isDupe = reduce(this.breadcrumbs, (accum, crumb) => {
+      if (accum) return accum
+      return c === jsonStringify(crumb)
+    }, false)
+
+    // no duplicates
+    if (isDupe) return
+
     // push the valid crumb onto the queue and maintain the length
-    this.breadcrumbs.push(new BugsnagBreadcrumb(name, metaData, type, timestamp))
+    this.breadcrumbs.push(crumb)
     if (this.breadcrumbs.length > this.config.maxBreadcrumbs) {
       this.breadcrumbs = this.breadcrumbs.slice(this.breadcrumbs.length - this.config.maxBreadcrumbs)
     }
@@ -133,8 +144,6 @@ class BugsnagClient {
       report._handledState.severityReason = { type: 'userSpecifiedSeverity' }
     }
 
-    this.leaveBreadcrumb(report.errorClass, { report }, 'error')
-
     // exit early if the reports should not be sent on the current releaseStage
     if (isArray(this.config.notifyReleaseStages) && !includes(this.config.notifyReleaseStages, releaseStage)) return false
 
@@ -149,6 +158,14 @@ class BugsnagClient {
     }, false)
 
     if (preventSend) return false
+
+    // only leave a crumb for the error if actually got sent
+    this.leaveBreadcrumb(report.errorClass, {
+      errorClass: report.errorClass,
+      errorMessage: report.errorMessage,
+      severity: report.severity,
+      stacktrace: report.stacktrace
+    }, 'error')
 
     if (originalSeverity !== report.severity) {
       report._handledState.severityReason = { type: 'userCallbackSetSeverity' }
