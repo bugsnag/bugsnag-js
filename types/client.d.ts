@@ -23,7 +23,12 @@ interface IPlugin {
 
 interface ITransport {
   name: string;
-  sendReport: (config: any, report: IReportPayload, cb?: (e: Error | null, resText: string) => void) => void;
+  sendReport: (
+    logger: ILogger,
+    config: any,
+    report: IReportPayload,
+    cb?: (e: Error | null, resText: string) => void,
+  ) => void;
 }
 
 interface ILogger {

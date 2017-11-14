@@ -171,7 +171,7 @@ class BugsnagClient {
       report._handledState.severityReason = { type: 'userCallbackSetSeverity' }
     }
 
-    this._transport.sendReport(this.config, {
+    this._transport.sendReport(this._logger, this.config, {
       apiKey: report.apiKey || this.config.apiKey,
       notifier: this.notifier,
       events: [ report ]
