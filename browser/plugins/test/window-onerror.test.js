@@ -84,6 +84,33 @@ describe('plugin: window onerror', () => {
       }, 0)
     })
 
+    it('handles single argument usage of window.onerror', () => {
+      const client = new Client(VALID_NOTIFIER)
+      const payloads = []
+      client.configure({ apiKey: 'API_KEY_YEAH' })
+      client.use(plugin)
+      client.transport({ sendReport: (logger, config, payload) => payloads.push(payload) })
+
+      const event = document.createEvent
+        ? document.createEvent('Event')
+        : document.createEventObject('Event')
+
+      event.initEvent
+        ? event.initEvent('error', true, true)
+        : event.type = 'error'
+
+      event.detail = 'something bad happened'
+      window.onerror(event)
+
+      expect(payloads.length).toBe(1)
+      const report = payloads[0].events[0].toJSON()
+      expect(report.severity).toBe('error')
+      expect(report.unhandled).toBe(true)
+      expect(report.exceptions[0].errorClass).toBe('Event: error')
+      expect(report.exceptions[0].message).toBe('something bad happened')
+      expect(report.severityReason).toEqual({ type: 'unhandledException' })
+    })
+
     if ('addEventListener' in window) {
       it('captures uncaught errors in DOM (level 3) event handlers', done => {
         const client = new Client(VALID_NOTIFIER)
