@@ -112,8 +112,17 @@ class BugsnagClient {
     // ensure we have an error (or a reasonable object representation of an error)
     let err
     switch (typeof error) {
-      case 'number':
       case 'string':
+        if (typeof opts === 'string') {
+          // ≤v3 used to have a notify('ErrorName', 'Error message') interface
+          // report usage/deprecation errors if this function is called like that
+          err = new Error('Bugsnag usage error. notify() called with (string, string) but expected (error, object)')
+          opts = { metaData: { notifier: { notifyArgs: [ error, opts ] } } }
+        } else {
+          err = new Error(error.toString())
+        }
+        break
+      case 'number':
       case 'boolean':
         err = new Error(error.toString())
         break
@@ -126,6 +135,9 @@ class BugsnagClient {
 
     // if we have something falsey at this point, report usage error
     if (!err) err = new Error('Bugsnag usage error. notify() called with no "error" parameter')
+
+    // ensure opts is an object
+    if (typeof opts !== 'object' || opts === null) opts = {}
 
     // create a report from the error, if it isn't one already
     const report = BugsnagReport.ensureReport(err, 1)

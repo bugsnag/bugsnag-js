@@ -234,6 +234,7 @@ describe('base/client', () => {
       client.notify(() => {})
       client.notify(1)
       client.notify('errrororor')
+      client.notify('str1', 'str2')
 
       payloads
         .filter((p, i) => i < 3)
@@ -242,6 +243,7 @@ describe('base/client', () => {
 
       expect(payloads[3].events[0].toJSON().exceptions[0].message).toBe('1')
       expect(payloads[4].events[0].toJSON().exceptions[0].message).toBe('errrororor')
+      expect(payloads[5].events[0].toJSON().metaData).toEqual({ notifier: { notifyArgs: [ 'str1', 'str2' ] } })
     })
 
     it('leaves a breadcrumb of the error', () => {
