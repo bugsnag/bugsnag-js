@@ -33,6 +33,33 @@ describe('plugin: unhandled rejection', () => {
           }
         }, 50)
       })
+
+      it('handles bad user input', done => {
+        const client = new Client(VALID_NOTIFIER)
+        const payloads = []
+        client.configure({ apiKey: 'API_KEY_YEAH' })
+        client.use(plugin)
+        client.transport({ sendReport: (logger, config, payload) => payloads.push(payload) })
+
+        setTimeout(() => {
+          Promise.reject(null) // eslint-disable-line
+        }, 0)
+
+        setTimeout(() => {
+          try {
+            expect(payloads.length).toBe(1)
+            const report = payloads[0].events[0].toJSON()
+            expect(report.severity).toBe('error')
+            expect(report.unhandled).toBe(true)
+            expect(report.exceptions[0].errorClass).toBe('UnhandledRejection')
+            expect(report.exceptions[0].message).toBe('Unhandled promise rejection')
+            expect(report.severityReason).toEqual({ type: 'unhandledPromiseRejection' })
+            done()
+          } catch (e) {
+            done(e)
+          }
+        }, 50)
+      })
     })
   }
 })
