@@ -13,17 +13,20 @@ module.exports = {
       const handledState = { severity: 'error', unhandled: true, severityReason: { type: 'unhandledException' } }
 
       let name, message
-      if (messageOrEvent && !url && !lineNo && !charNo && !error) {
+      if ((typeof messageOrEvent === 'object' && messageOrEvent !== null) && !url && !lineNo && !charNo && !error) {
         name = 'Event: error'
-        message = (typeof messageOrEvent === 'object' && messageOrEvent !== null)
-          ? (messageOrEvent.message || messageOrEvent.detail)
-          : ('' + messageOrEvent)
+        message = messageOrEvent.message || messageOrEvent.detail
       } else if (error) {
         name = error.name
         message = error.message
       } else {
         name = 'window.onerror'
         message = messageOrEvent
+      }
+
+      if (lineNo === 0 && /Script error\.?/.test(message)) {
+        client._logger.warn('Ignoring cross-domain or eval script error. See https://docs.bugsnag.com/platforms/browsers/faq/#3-cross-origin-script-errors')
+        return
       }
 
       const report = hasStack(error)
