@@ -235,6 +235,7 @@ describe('base/client', () => {
       client.notify(1)
       client.notify('errrororor')
       client.notify('str1', 'str2')
+      client.notify('str1', null)
 
       payloads
         .filter((p, i) => i < 3)
