@@ -1,5 +1,5 @@
 // magical jasmine globals
-const { describe, it, expect } = global
+const { describe, it, expect, beforeEach } = global
 
 const plugin = require('../window-onerror')
 
@@ -15,6 +15,8 @@ describe('plugin: window onerror', () => {
   })
 
   describe('window.onerror function', () => {
+    beforeEach(() => { window.onerror = null })
+
     it('captures uncaught errors in timer callbacks', done => {
       const client = new Client(VALID_NOTIFIER)
       const payloads = []
@@ -65,6 +67,21 @@ describe('plugin: window onerror', () => {
           done(e)
         }
       }, 1)
+    })
+
+    it('calls any previously registered window.onerror callback', done => {
+      window.onerror = () => done()
+
+      const client = new Client(VALID_NOTIFIER)
+      const payloads = []
+      client.configure({ apiKey: 'API_KEY_YEAH' })
+      client.use(plugin)
+      client.transport({ sendReport: (logger, config, payload) => payloads.push(payload) })
+
+      setTimeout(() => {
+        // this should throw an uncaught error
+        global.wat.is_undefined()
+      }, 0)
     })
 
     if ('addEventListener' in window) {

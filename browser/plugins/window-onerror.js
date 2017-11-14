@@ -9,12 +9,14 @@ const { filter } = require('../../base/lib/es-utils')
 
 module.exports = {
   init: (client, BugsnagReport) => {
+    const prevOnError = window.onerror
     const onerror = (messageOrEvent, url, lineNo, charNo, error) => {
       const handledState = { severity: 'error', unhandled: true, severityReason: { type: 'unhandledException' } }
       const report = hasStack(error)
         ? new BugsnagReport(error.name, error.message, ErrorStackParser.parse(error), handledState)
         : new BugsnagReport('window.onerror', messageOrEvent, generateStack(url, lineNo, charNo), handledState)
       client.notify(report)
+      if (typeof prevOnError === 'function') prevOnError(messageOrEvent, url, lineNo, charNo, error)
     }
 
     window.onerror = onerror
