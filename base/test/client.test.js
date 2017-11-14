@@ -2,7 +2,6 @@ const { describe, it, expect, fail } = global
 
 const Client = require('../client')
 const Report = require('../report')
-const Breadcrumb = require('../breadcrumb')
 
 const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
@@ -286,6 +285,21 @@ describe('base/client', () => {
         'pumperninkel',
         'seedy farmhouse'
       ])
+    })
+
+    it('doesn’t add the breadcrumb if it didn’t contain anything useful', () => {
+      const client = new Client(VALID_NOTIFIER)
+      client.configure({ apiKey: 'API_KEY_YEAH' })
+      client.leaveBreadcrumb(undefined)
+      client.leaveBreadcrumb(null, { data: 'is useful' })
+      client.leaveBreadcrumb(null, {}, null)
+      client.leaveBreadcrumb(null, {}, null, 4)
+      expect(client.breadcrumbs.length).toBe(3)
+      expect(client.breadcrumbs[0].type).toBe('manual')
+      expect(client.breadcrumbs[0].name).toBe('[anonymous]')
+      expect(client.breadcrumbs[0].metaData).toEqual({ data: 'is useful' })
+      expect(client.breadcrumbs[1].type).toBe('manual')
+      expect(typeof client.breadcrumbs[2].timestamp).toBe('string')
     })
   })
 })

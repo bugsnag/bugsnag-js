@@ -73,10 +73,22 @@ class BugsnagClient {
 
   leaveBreadcrumb (name, metaData, type, timestamp) {
     if (!this._configured) throw new Error('Bugsnag must be configured before calling leaveBreadcrumb()')
+
+    // coerce bad values so that the defaults get set
+    name = name || undefined
+    type = typeof type === 'string' ? type : undefined
+    timestamp = typeof timestamp === 'string' ? timestamp : undefined
+    metaData = typeof metaData === 'object' && metaData !== null ? metaData : undefined
+
+    // if no name and no metaData, usefulness of this crumb is questionable at best so discard
+    if (typeof name !== 'string' && !metaData) return
+
+    // push the valid crumb onto the queue and maintain the length
     this.breadcrumbs.push(new BugsnagBreadcrumb(name, metaData, type, timestamp))
     if (this.breadcrumbs.length > this.config.maxBreadcrumbs) {
       this.breadcrumbs = this.breadcrumbs.slice(this.breadcrumbs.length - this.config.maxBreadcrumbs)
     }
+
     return this
   }
 

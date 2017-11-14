@@ -1,7 +1,7 @@
 const { isoDate } = require('./lib/es-utils')
 
 class BugsnagBreadcrumb {
-  constructor (name, metaData = {}, type = 'manual', timestamp = isoDate()) {
+  constructor (name = '[anonymous]', metaData = {}, type = 'manual', timestamp = isoDate()) {
     this.type = type
     this.name = name
     this.metaData = metaData
