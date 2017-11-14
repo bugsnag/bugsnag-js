@@ -57,7 +57,7 @@ class BugsnagClient {
 
   use (plugin) {
     this.plugins.push(plugin)
-    plugin.init(this, BugsnagReport, BugsnagBreadcrumb)
+    plugin.init(this, BugsnagReport)
     return this
   }
 
@@ -71,9 +71,9 @@ class BugsnagClient {
     return this
   }
 
-  leaveBreadcrumb (...args) {
+  leaveBreadcrumb (name, metaData, type, timestamp) {
     if (!this._configured) throw new Error('Bugsnag must be configured before calling leaveBreadcrumb()')
-    this.breadcrumbs.push(BugsnagBreadcrumb.ensureBreadcrumb(...args))
+    this.breadcrumbs.push(new BugsnagBreadcrumb(name, metaData, type, timestamp))
     if (this.breadcrumbs.length > this.config.maxBreadcrumbs) {
       this.breadcrumbs = this.breadcrumbs.slice(this.breadcrumbs.length - this.config.maxBreadcrumbs)
     }
@@ -140,7 +140,7 @@ class BugsnagClient {
       report._handledState.severityReason = { type: 'userSpecifiedSeverity' }
     }
 
-    this.leaveBreadcrumb(new BugsnagBreadcrumb('error', report.errorClass, { report }))
+    this.leaveBreadcrumb(report.errorClass, { report }, 'error')
 
     // exit early if the reports should not be sent on the current releaseStage
     if (isArray(this.config.notifyReleaseStages) && !includes(this.config.notifyReleaseStages, releaseStage)) return false

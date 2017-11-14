@@ -1,5 +1,5 @@
 declare class Breadcrumb {
-  constructor(type: string, name: string, metaData?: object, timestamp?: string);
+  constructor(name: string, metaData?: object, type?: string, timestamp?: string);
 }
 
 export default Breadcrumb;

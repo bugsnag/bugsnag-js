@@ -31,7 +31,7 @@ try {
   client.notify({ message: 'hi' }, { beforeSend: report => report.ignore() })
   client.use({
     init: (client, Report, Breadcrumb) => {
-      client.leaveBreadcrumb(new Breadcrumb('custom type', 'nnnname'))
+      client.leaveBreadcrumb('foo', {}, 'new_type')
       client.notify(
         new Report('Errrr', 'sad', [], {
           severity: 'warning',

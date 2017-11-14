@@ -2,7 +2,7 @@
  * Leaves breadcrumbs when the user interacts with the DOM
  */
 module.exports = {
-  init: (client, BugsnagReport, BugsnagBreadcrumb) => {
+  init: (client, BugsnagReport) => {
     if (!('addEventListener' in window)) return
 
     window.addEventListener('click', (event) => {
@@ -15,7 +15,7 @@ module.exports = {
         targetSelector = '[hidden]'
         client._logger.log('Cross domain error when tracking click event. See https://docs.bugsnag.com/platforms/browsers/faq/#3-cross-origin-script-errors')
       }
-      client.leaveBreadcrumb(new BugsnagBreadcrumb('user', 'UI click', { targetText, targetSelector }))
+      client.leaveBreadcrumb('UI click', { targetText, targetSelector }, 'user')
     }, true)
   }
 }

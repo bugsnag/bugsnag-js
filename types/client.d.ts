@@ -13,8 +13,7 @@ declare class Client {
   public transport(transport: ITransport): Client;
   public logger(logger: ILogger): Client;
   public notify(error: any, opts?: INotifyOpts): boolean;
-  public leaveBreadcrumb(breadcrumb: Breadcrumb): Client;
-  public leaveBreadcrumb(name: string, metaData?: any, timestamp?: string): Client;
+  public leaveBreadcrumb(name: string, metaData?: any, type?: string, timestamp?: string): Client;
 }
 
 interface IPlugin {

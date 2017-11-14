@@ -265,19 +265,9 @@ describe('base/client', () => {
       client.configure({ apiKey: 'API_KEY_YEAH' })
       client.leaveBreadcrumb('french stick')
       expect(client.breadcrumbs.length).toBe(1)
-      expect(client.breadcrumbs[0].__isBugsnagBreadcrumb).toBe(true)
       expect(client.breadcrumbs[0].type).toBe('manual')
       expect(client.breadcrumbs[0].name).toBe('french stick')
       expect(client.breadcrumbs[0].metaData).toEqual({})
-    })
-
-    it('uses a provided breadcrumb', () => {
-      const b = new Breadcrumb('log', 'bread slicing initiated', { slices: 20, width: 10 })
-      const client = new Client(VALID_NOTIFIER)
-      client.configure({ apiKey: 'API_KEY_YEAH' })
-      client.leaveBreadcrumb(b)
-      expect(client.breadcrumbs.length).toBe(1)
-      expect(client.breadcrumbs[0]).toBe(b)
     })
 
     it('caps the length of breadcrumbs at the configured limit', () => {
