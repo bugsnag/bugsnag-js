@@ -6,7 +6,7 @@ try {
     endpoint: 'http://localhost:55854'
   })
   client.transport({
-    sendReport: function (config, report) {
+    sendReport: function (logger, config, report) {
       reports.push(report)
     }
   })
