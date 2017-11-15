@@ -1,6 +1,6 @@
 /* global describe, it, expect */
 
-describe('loading bugsnag via bundled <script> tag', function () {
+describe('loading bugsnag with Typescript app via <script> tag', function () {
   it('should work', function (done) {
     var el = document.createElement('iframe')
     el.src = '/base/typescript/serve/index.html'

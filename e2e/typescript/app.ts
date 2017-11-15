@@ -18,7 +18,7 @@ try {
 
   client.transport({
     name: 'test transport',
-    sendReport: (config, report) => {
+    sendReport: (logger, config, report) => {
       reports.push(report)
     }
   })
