@@ -80,6 +80,9 @@ module.exports = (opts, userPlugins = []) => {
   bugsnag.use(plugins['inline script content'])
   bugsnag.use(plugins['throttle'])
 
+  // init user supplied plugins
+  map(userPlugins, (plugin) => bugsnag.use(plugin))
+
   return bugsnag
 }
 
