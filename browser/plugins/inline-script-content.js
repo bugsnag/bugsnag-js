@@ -5,8 +5,8 @@ module.exports = {
     const html = document.all[0].outerHTML
     const addInlineContent = report => {
       report.stacktrace = map(report.stacktrace, frame => {
-        if (frame.file.replace(/#.*$/) !== window.location.href.replace(/#.*$/)) return frame
         if (!frame.file || !frame.lineNumber) return frame
+        if (frame.file.replace(/#.*$/) !== window.location.href.replace(/#.*$/)) return frame
         const start = Math.max(0, frame.lineNumber - 5 - 1)
         const end = frame.lineNumber + 5 - 1
         const code = {}
