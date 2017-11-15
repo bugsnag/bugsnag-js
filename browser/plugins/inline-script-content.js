@@ -2,7 +2,7 @@ const { map } = require('../../base/lib/es-utils')
 
 module.exports = {
   init: (client) => {
-    const html = document.all[0].outerHTML
+    const html = document.documentElement.outerHTML
     const addInlineContent = report => {
       report.stacktrace = map(report.stacktrace, frame => {
         if (!frame.file || !frame.lineNumber) return frame
