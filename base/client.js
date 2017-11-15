@@ -43,7 +43,6 @@ class BugsnagClient {
   }
 
   configure (opts = {}) {
-    this._logger.debug(`configuring`)
     this.config = config.mergeDefaults({ ...this.config, ...opts }, this.configSchema)
     const validity = config.validate(this.config, this.configSchema)
     if (!validity.valid === true) {
@@ -53,6 +52,7 @@ class BugsnagClient {
     }
     if (typeof this.config.beforeSend === 'function') this.config.beforeSend = [ this.config.beforeSend ]
     this._configured = true
+    this._logger.debug(`Loaded!`)
     return this
   }
 
@@ -116,6 +116,7 @@ class BugsnagClient {
         if (typeof opts === 'string') {
           // ≤v3 used to have a notify('ErrorName', 'Error message') interface
           // report usage/deprecation errors if this function is called like that
+          this._logger.warn(`Usage error. notify() called with (string, string) but expected (error, object)`)
           err = new Error('Bugsnag usage error. notify() called with (string, string) but expected (error, object)')
           opts = { metaData: { notifier: { notifyArgs: [ error, opts ] } } }
         } else {
@@ -127,6 +128,7 @@ class BugsnagClient {
         err = new Error(String(error))
         break
       case 'function':
+        this._logger.warn(`Usage error. notify() called with a function as "error" parameter`)
         err = new Error('Bugsnag usage error. notify() called with a function as "error" parameter')
         break
       case 'object':
@@ -134,7 +136,10 @@ class BugsnagClient {
     }
 
     // if we have something falsey at this point, report usage error
-    if (!err) err = new Error('Bugsnag usage error. notify() called with no "error" parameter')
+    if (!err) {
+      this._logger.warn(`Usage error. notify() called with no "error" parameter`)
+      err = new Error('Bugsnag usage error. notify() called with no "error" parameter')
+    }
 
     // ensure opts is an object
     if (typeof opts !== 'object' || opts === null) opts = {}
@@ -157,7 +162,10 @@ class BugsnagClient {
     }
 
     // exit early if the reports should not be sent on the current releaseStage
-    if (isArray(this.config.notifyReleaseStages) && !includes(this.config.notifyReleaseStages, releaseStage)) return false
+    if (isArray(this.config.notifyReleaseStages) && !includes(this.config.notifyReleaseStages, releaseStage)) {
+      this._logger.warn(`Report not sent due to releaseStage/notifyReleaseStages configuration`)
+      return false
+    }
 
     const originalSeverity = report.severity
 
@@ -169,7 +177,10 @@ class BugsnagClient {
       return false
     }, false)
 
-    if (preventSend) return false
+    if (preventSend) {
+      this._logger.debug(`Report not sent due to beforeSend callback`)
+      return false
+    }
 
     // only leave a crumb for the error if actually got sent
     this.leaveBreadcrumb(report.errorClass, {

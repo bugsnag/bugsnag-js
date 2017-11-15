@@ -40,8 +40,12 @@ module.exports = (opts, userPlugins = []) => {
 
   // set transport based on browser capability (IE 8+9 have an XDomainRequest object)
   bugsnag.transport(window.XDomainRequest ? transports.XDomainRequest : transports.XMLHttpRequest)
+
   // set logger based on browser capability
-  if (typeof console !== 'undefined' && typeof console.debug !== 'undefined') bugsnag.logger(console)
+  if (typeof console !== 'undefined' && typeof console.debug === 'function') {
+    const logger = getPrefixedConsole()
+    bugsnag.logger(logger)
+  }
 
   try {
     // configure with user supplied options
@@ -77,6 +81,16 @@ module.exports = (opts, userPlugins = []) => {
   bugsnag.use(plugins['throttle'])
 
   return bugsnag
+}
+
+const getPrefixedConsole = () => {
+  const logger = {}
+  map([ 'debug', 'info', 'warn', 'error' ], (method) => {
+    logger[method] = typeof console[method] === 'function'
+      ? console[method].bind(console, '[bugsnag]')
+      : console.log.bind(console, '[bugsnag]')
+  })
+  return logger
 }
 
 module.exports['default'] = module.exports
