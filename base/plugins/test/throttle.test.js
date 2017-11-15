@@ -4,6 +4,7 @@ const plugin = require('../throttle')
 
 const Client = require('../../client')
 const Report = require('../../report')
+const config = { ...require('../../config').schema, ...plugin.configSchema }
 const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
 describe('plugin: throttle', () => {
@@ -30,7 +31,7 @@ describe('plugin: throttle', () => {
 
   it('prevents more than maxEventsPerWindow being sent', () => {
     const payloads = []
-    const c = new Client(VALID_NOTIFIER)
+    const c = new Client(VALID_NOTIFIER, config)
     c.configure({
       apiKey: 'aaaa-aaaa-aaaa-aaaa',
       maxEventsPerWindow: 5,
@@ -45,7 +46,7 @@ describe('plugin: throttle', () => {
 
   it('updates maxEventsPerWindow quota as time progresses', done => {
     const payloads = []
-    const c = new Client(VALID_NOTIFIER)
+    const c = new Client(VALID_NOTIFIER, config)
     c.configure({
       apiKey: 'aaaa-aaaa-aaaa-aaaa',
       maxEventsPerWindow: 5,
@@ -69,7 +70,7 @@ describe('plugin: throttle', () => {
 
   it('prevents more than maxDuplicateEventsPerWindow being sent', () => {
     const payloads = []
-    const c = new Client(VALID_NOTIFIER)
+    const c = new Client(VALID_NOTIFIER, config)
     c.configure({
       apiKey: 'aaaa-aaaa-aaaa-aaaa',
       maxEventsPerWindow: 10,

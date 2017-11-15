@@ -3,7 +3,7 @@ const version = '__VERSION__'
 const url = 'https://github.com/bugsnag/bugsnag-js'
 
 const Client = require('../base/client')
-const { map } = require('../base/lib/es-utils')
+const { map, reduce } = require('../base/lib/es-utils')
 
 // extend the base config schema with some browser-specific options
 const schema = { ...require('../base/config').schema, ...require('./config') }
@@ -26,11 +26,17 @@ const transports = {
   'XMLHttpRequest': require('./transports/xml-http-request')
 }
 
-module.exports = (opts) => {
+module.exports = (opts, userPlugins = []) => {
   // handle very simple use case where user supplies just the api key as a string
   if (typeof opts === 'string') opts = { apiKey: opts }
 
-  const bugsnag = new Client({ name, version, url }, schema)
+  // allow plugins to augment the schema with their own options
+  const finalSchema = reduce([].concat(plugins).concat(userPlugins), (accum, plugin) => {
+    if (!plugin.configSchema) return accum
+    return { ...accum, ...plugin.configSchema }
+  }, schema)
+
+  const bugsnag = new Client({ name, version, url }, finalSchema)
 
   // set transport based on browser capability (IE 8+9 have an XDomainRequest object)
   bugsnag.transport(window.XDomainRequest ? transports.XDomainRequest : transports.XMLHttpRequest)

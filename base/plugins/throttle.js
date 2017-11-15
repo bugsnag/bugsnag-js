@@ -1,5 +1,6 @@
 const jsonStringify = require('fast-safe-stringify')
 const { filter, reduce } = require('../lib/es-utils')
+const positiveIntIfDefined = require('../lib/positive-int-check')
 
 /*
  * Throttles and dedupes error reports
@@ -28,6 +29,23 @@ module.exports = {
       // this event got through, so track it
       history.push({ time: now, report: serialise(report) })
     })
+  },
+  configSchema: {
+    eventWindowSize: {
+      defaultValue: () => 60 * 1000, // one minute
+      message: '(Number) eventWindowSize must be a number if specified',
+      validate: positiveIntIfDefined
+    },
+    maxEventsPerWindow: {
+      defaultValue: () => 100,
+      message: '(Number) maxEventsPerWindow must be a number if specified',
+      validate: positiveIntIfDefined
+    },
+    maxDuplicateEventsPerWindow: {
+      defaultValue: () => 10,
+      message: '(Number) maxDuplicateEventsPerWindow must be a number if specified',
+      validate: positiveIntIfDefined
+    }
   }
 }
 

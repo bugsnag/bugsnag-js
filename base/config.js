@@ -1,9 +1,5 @@
-const { filter, reduce, keys, isArray, includes } = require('./lib/es-utils')
-
-const positiveIntIfDefined = value =>
-  includes([ 'undefined', 'number' ], typeof value) &&
-  parseInt('' + value, 10) === value &&
-  value > 0
+const { filter, reduce, keys, isArray } = require('./lib/es-utils')
+const positiveIntIfDefined = require('./lib/positive-int-check')
 
 module.exports.schema = {
   apiKey: {
@@ -35,21 +31,6 @@ module.exports.schema = {
     defaultValue: () => 'production',
     message: '(String) releaseStage should be set',
     validate: value => typeof value === 'string' && value.length
-  },
-  eventWindowSize: {
-    defaultValue: () => 60 * 1000, // one minute
-    message: '(Number) eventWindowSize must be a number if specified',
-    validate: positiveIntIfDefined
-  },
-  maxEventsPerWindow: {
-    defaultValue: () => 100,
-    message: '(Number) maxEventsPerWindow must be a number if specified',
-    validate: positiveIntIfDefined
-  },
-  maxDuplicateEventsPerWindow: {
-    defaultValue: () => 10,
-    message: '(Number) maxDuplicateEventsPerWindow must be a number if specified',
-    validate: positiveIntIfDefined
   },
   maxBreadcrumbs: {
     defaultValue: () => 20,
