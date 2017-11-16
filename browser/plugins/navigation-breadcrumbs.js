@@ -49,6 +49,13 @@ module.exports = {
   destroy: () => {
     window.history.replaceState._restore()
     window.history.pushState._restore()
+  },
+  configSchema: {
+    navigationBreadcumbsEnabled: {
+      defaultValue: () => undefined,
+      validate: (value) => value === true || value === false || value === undefined,
+      message: '(boolean) navigationBreadcumbsEnabled should be true or false'
+    }
   }
 }
 

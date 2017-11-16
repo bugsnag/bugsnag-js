@@ -59,26 +59,33 @@ module.exports = (opts, userPlugins = []) => {
     throw e
   }
 
-  // browser-specific plugins
+  // always-on browser-specific plugins
   bugsnag.use(plugins['device'])
   bugsnag.use(plugins['context'])
   bugsnag.use(plugins['request'])
+  bugsnag.use(plugins['inline script content'])
+  bugsnag.use(plugins['throttle'])
 
   // optional browser-specific plugins
+
   if (bugsnag.config.autoNotify !== false) {
     bugsnag.use(plugins['window onerror'])
     bugsnag.use(plugins['unhandled rejection'])
+  }
+
+  if (bugsnag.config.navigationBreadcumbsEnabled === true || bugsnag.config.autoBreadcrumbs) {
     bugsnag.use(plugins['navigation breadcrumbs'])
+  }
+
+  if (bugsnag.config.interactionBreadcumbsEnabled === true || bugsnag.config.autoBreadcrumbs) {
     bugsnag.use(plugins['interaction breadcrumbs'])
   }
 
-  // set up auto breadcrumbs if explicitely enabled, otherwise setup unless releaseStage is dev(elopment)
-  if (bugsnag.config.autoConsoleBreadcumbsEnabled || !/^dev(elopment)?$/.test(bugsnag.config.releaseStage)) {
+  // because console breadcrumbs play havoc with line numbers,
+  // if not explicitly enabled only setup on non-development evironments
+  if (bugsnag.config.consoleBreadcumbsEnabled === true || (bugsnag.config.autoBreadcrumbs && !/^dev(elopment)?$/.test(bugsnag.config.releaseStage))) {
     bugsnag.use(plugins['console breadcrumbs'])
   }
-
-  bugsnag.use(plugins['inline script content'])
-  bugsnag.use(plugins['throttle'])
 
   // init user supplied plugins
   map(userPlugins, (plugin) => bugsnag.use(plugin))

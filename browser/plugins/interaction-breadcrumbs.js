@@ -17,6 +17,13 @@ module.exports = {
       }
       client.leaveBreadcrumb('UI click', { targetText, targetSelector }, 'user')
     }, true)
+  },
+  configSchema: {
+    interactionBreadcumbsEnabled: {
+      defaultValue: () => undefined,
+      validate: (value) => value === true || value === false || value === undefined,
+      message: '(boolean) interactionBreadcumbsEnabled should be true or false'
+    }
   }
 }
 

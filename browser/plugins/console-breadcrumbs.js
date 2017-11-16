@@ -28,7 +28,14 @@ module.exports = {
   },
   destroy: () => CONSOLE_LOG_METHODS.forEach(method => {
     if (typeof console[method]._restore === 'function') console[method]._restore()
-  })
+  }),
+  configSchema: {
+    consoleBreadcumbsEnabled: {
+      defaultValue: () => undefined,
+      validate: (value) => value === true || value === false || value === undefined,
+      message: '(boolean) consoleBreadcumbsEnabled should be true or false'
+    }
+  }
 }
 
 const CONSOLE_LOG_METHODS = filter([ 'log', 'debug', 'info', 'warn', 'error' ], method =>

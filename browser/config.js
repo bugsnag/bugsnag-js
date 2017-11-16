@@ -5,7 +5,7 @@ module.exports = {
       if (process.env.NODE_ENV) return process.env.NODE_ENV
       return 'production'
     },
-    message: '(String) releaseStage should be set',
+    message: '(string) releaseStage should be set',
     validate: value => typeof value === 'string' && value.length
   }
 }

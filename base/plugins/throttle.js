@@ -33,17 +33,17 @@ module.exports = {
   configSchema: {
     eventWindowSize: {
       defaultValue: () => 60 * 1000, // one minute
-      message: '(Number) eventWindowSize must be a number if specified',
+      message: '(number) eventWindowSize must be a number if specified',
       validate: positiveIntIfDefined
     },
     maxEventsPerWindow: {
       defaultValue: () => 100,
-      message: '(Number) maxEventsPerWindow must be a number if specified',
+      message: '(number) maxEventsPerWindow must be a number if specified',
       validate: positiveIntIfDefined
     },
     maxDuplicateEventsPerWindow: {
       defaultValue: () => 10,
-      message: '(Number) maxDuplicateEventsPerWindow must be a number if specified',
+      message: '(number) maxDuplicateEventsPerWindow must be a number if specified',
       validate: positiveIntIfDefined
     }
   }

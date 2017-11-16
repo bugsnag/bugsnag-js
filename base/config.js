@@ -4,38 +4,43 @@ const positiveIntIfDefined = require('./lib/positive-int-check')
 module.exports.schema = {
   apiKey: {
     defaultValue: () => null,
-    message: '(String) apiKey is required',
+    message: '(string) apiKey is required',
     validate: value => typeof value === 'string' && value.length
   },
   autoNotify: {
     defaultValue: () => true,
-    message: '(Boolean) autoNotify should be true or false',
+    message: '(boolean) autoNotify should be true or false',
     validate: value => value === true || value === false
   },
   beforeSend: {
     defaultValue: () => [],
-    message: '(Array[Function]) beforeSend should only contain functions',
+    message: '(array[Function]) beforeSend should only contain functions',
     validate: value => typeof value === 'function' || (isArray(value) && filter(value, f => typeof f === 'function').length === value.length)
   },
   endpoint: {
     defaultValue: () => '//notify.bugsnag.com',
-    message: '(String) endpoint should be set',
+    message: '(string) endpoint should be set',
     validate: () => true
   },
   notifyReleaseStages: {
     defaultValue: () => null,
-    message: '(Array[String]) notifyReleaseStages should only contain strings',
+    message: '(array[string]) notifyReleaseStages should only contain strings',
     validate: value => value === null || (isArray(value) && filter(value, f => typeof f === 'string').length === value.length)
   },
   releaseStage: {
     defaultValue: () => 'production',
-    message: '(String) releaseStage should be set',
+    message: '(string) releaseStage should be set',
     validate: value => typeof value === 'string' && value.length
   },
   maxBreadcrumbs: {
     defaultValue: () => 20,
-    message: '(Number) maxBreadcrumbs must be a number (≤40) if specified',
+    message: '(number) maxBreadcrumbs must be a number (≤40) if specified',
     validate: value => value === 0 || (positiveIntIfDefined(value) && (value === undefined || value <= 40))
+  },
+  autoBreadcrumbs: {
+    defaultValue: () => true,
+    message: '(boolean) autoBreadcrumbs should be true or false',
+    validate: (value) => typeof value === 'boolean'
   }
 }
 
