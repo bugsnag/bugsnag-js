@@ -20,7 +20,7 @@ If you're loading Bugsnag from the CDN you may have got used to transparent roll
 <script src="//d2wy8f7a9ursnm.cloudfront.net/4.x.x/bugsnag.js"></script>
 ```
 
-#### npm/yarn
+##### npm/yarn
 
 If you're using a package manager, you should run something like
 
@@ -51,8 +51,8 @@ This might seem like a little more work, but it gives you more granular control:
 ```html
 <script src="//d2wy8f7a9ursnm.cloudfront.net/4.x.x/bugsnag.js"></script>
 <script>
-  const client = bugsnag('API_KEY')
-  client.notify(err)
+  var bugsnagClient = bugsnag('API_KEY')
+  bugsnagClient.notify(err)
 </script>
 ```
 
@@ -62,8 +62,58 @@ We've changed how our configuration system works.
 
 As mentioned, we've removed the ability to configure the library with HTML attributes. Additionally many of the configuration options have been updated or changed.
 
+All options are now provided by a single configuration object passed to the client.
+
+Here's an example of how to configure the library with the most common options:
+
+```js
+window.bugsnagClient = bugsnag({
+  apiKey: 'API_KEY'
+  releaseStage: 'staging',
+  notifyReleaseStages: [ 'staging', 'production' ],
+  metaData: { /* some metaData to attach to every report */ },
+  user: { id: '123', name: 'B. Nag', email: 'bugs.nag@bugsnag.com' },
+  beforeSend: function (report) { /* amend or ignore the report */ }
+})
+bugsnagClient.app.version = '1.2.3'
+```
+
+See the full [configuration options](TODO) documentation for more information.
+
+#### Usage
+
+The only methods supported to report errors and leave breadcrumbs now are:
+
+```js
+bugsnagClient.notifier(err, opts)
+bugsnagClient.leaveBreadcrumb('name', { /* metaData */ })
+```
+
+That means the following usage is __DEPRECATED__:
+
+```js
+Bugsnag.notifyException(err)
+Bugsnag.notify(name, message)
+```
+
+To convert examples of this usage, do the following:
+
+```js
+Bugsnag.notifyException(err)
+// becomes
+bugsnagClient.notify(err)
+
+Bugsnag.notify('NetworkError', 'max retries exceeded')
+// becomes either
+bugsnagClient.notify({ name: 'NetworkError', message: 'max retries exceeded'})
+// or
+var err = new Error('max retries exceeded')
+err.name = 'NetworkError'
+bugsnagClient.notify(err)
+```
+
 #### Dropping support for IE6/7
 
 v1 to 3 of the notifier valiantly supported IE 6 and 7. However, supporting these ~old~ ancient browsers came with some pretty serious caveats. Now that we’ve dropped support, we're able to move the library forward and make our reporting delivery mechanism more robust.
 
-If you’re still supporting users on IE6/7, you can still use v3. We will continue to maintain v2 along side v3. For more information, see the [v3 integration guide](TODOTODOTOD).
+If you’re still supporting users on IE6/7, you can still use v3. We will continue to support v3 along side v4, however it will enter "maintenance" mode where no new features will be added. For more information, see the [v3 integration guide](TODOTODOTOD).
