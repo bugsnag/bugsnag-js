@@ -17,7 +17,7 @@ describe('client()', () => {
           try {
             // console.log(JSON.stringify(payload.events[0].stacktrace, null, 2))
             expect(payload.events[0].stacktrace).toBeDefined()
-            expect(payload.events[0].stacktrace.map(f => f.method)).toContain('go')
+            expect(payload.events[0].stacktrace.map(f => f.method)[0]).toBe('go')
             done()
           } catch (e) {
             done(e)
@@ -27,6 +27,27 @@ describe('client()', () => {
       window.bugsnag = client
       const script = document.createElement('script')
       script.src = '/fixtures/handled-error.js'
+      window.document.body.appendChild(script)
+    })
+
+    it('should create a stacktrace when notify({ name, message }) interface is used', done => {
+      const client = new Client(VALID_NOTIFIER)
+      client.configure({ apiKey: 'API_KEY_YEAH' })
+      client.transport({
+        sendReport: (logger, config, payload) => {
+          try {
+            // console.log(JSON.stringify(payload.events[0].stacktrace, null, 2))
+            expect(payload.events[0].stacktrace).toBeDefined()
+            expect(payload.events[0].stacktrace.map(f => f.method)[0]).toBe('go')
+            done()
+          } catch (e) {
+            done(e)
+          }
+        }
+      })
+      window.bugsnag = client
+      const script = document.createElement('script')
+      script.src = '/fixtures/handled-error-object.js'
       window.document.body.appendChild(script)
     })
   })

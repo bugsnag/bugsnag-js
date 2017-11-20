@@ -111,6 +111,7 @@ class BugsnagClient {
 
     // ensure we have an error (or a reasonable object representation of an error)
     let err
+    let framesToSkip = 0
     switch (typeof error) {
       case 'string':
         if (typeof opts === 'string') {
@@ -132,7 +133,17 @@ class BugsnagClient {
         err = new Error('Bugsnag usage error. notify() called with a function as "error" parameter')
         break
       case 'object':
-        err = error
+        if (error !== null && typeof error.name === 'string' && typeof error.message === 'string') {
+          err = new Error(error.message)
+          err.name = error.name
+          framesToSkip += 1
+        } else if (error !== null && error.__isBugsnagReport) {
+          err = error
+        } else {
+          this._logger.warn(`Usage error. notify() called with an unsupported object as "error" parameter. Supply an Error or { name, message } object.`)
+          err = new Error('Bugsnag usage error. notify() called with an unsupported object as "error" parameter. Supply an Error or { name, message } object.')
+        }
+        break
     }
 
     // if we have something falsey at this point, report usage error
@@ -145,7 +156,7 @@ class BugsnagClient {
     if (typeof opts !== 'object' || opts === null) opts = {}
 
     // create a report from the error, if it isn't one already
-    const report = BugsnagReport.ensureReport(err, 1)
+    const report = BugsnagReport.ensureReport(err, framesToSkip)
 
     report.app = { ...{ releaseStage }, ...report.app, ...this.app }
     report.context = report.context || opts.context || this.context || undefined

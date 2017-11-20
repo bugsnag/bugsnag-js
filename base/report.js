@@ -141,11 +141,11 @@ const defaultHandledState = () => ({
 
 // Helpers
 
-BugsnagReport.ensureReport = function (reportOrError, framesToSkip = 1) {
+BugsnagReport.ensureReport = function (reportOrError, framesToSkip = 0) {
   // notify() can be called with a Report object. In this case no action is required
   if (reportOrError.__isBugsnagReport) return reportOrError
   try {
-    const stacktrace = hasStack(reportOrError) ? ErrorStackParser.parse(reportOrError) : generateStack(framesToSkip)
+    const stacktrace = hasStack(reportOrError) ? ErrorStackParser.parse(reportOrError).slice(framesToSkip) : generateStack(1 + framesToSkip)
     return new BugsnagReport(reportOrError.name, reportOrError.message, stacktrace)
   } catch (e) {
     return new BugsnagReport(reportOrError.name, reportOrError.message, [])

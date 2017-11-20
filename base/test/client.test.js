@@ -247,6 +247,18 @@ describe('base/client', () => {
       expect(payloads[5].events[0].toJSON().metaData).toEqual({ notifier: { notifyArgs: [ 'str1', 'str2' ] } })
     })
 
+    it('supports { name, message } usage', () => {
+      const payloads = []
+      const client = new Client(VALID_NOTIFIER)
+      client.configure({ apiKey: 'API_KEY_YEAH' })
+      client.transport({ sendReport: (logger, config, payload) => payloads.push(payload) })
+      client.notify({ name: 'UnknownThing', message: 'found a thing that couldn’t be dealt with' })
+
+      expect(payloads.length).toBe(1)
+      expect(payloads[0].events[0].toJSON().exceptions[0].errorClass).toBe('UnknownThing')
+      expect(payloads[0].events[0].toJSON().exceptions[0].message).toBe('found a thing that couldn’t be dealt with')
+    })
+
     it('leaves a breadcrumb of the error', () => {
       const payloads = []
       const client = new Client(VALID_NOTIFIER)
