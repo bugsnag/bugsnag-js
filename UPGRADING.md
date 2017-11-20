@@ -85,7 +85,7 @@ See the full [configuration options](TODO) documentation for more information.
 The only methods supported to report errors and leave breadcrumbs now are:
 
 ```js
-bugsnagClient.notifier(err, opts)
+bugsnagClient.notify(err, opts)
 bugsnagClient.leaveBreadcrumb('name', { /* metaData */ })
 ```
 
@@ -117,3 +117,9 @@ bugsnagClient.notify(err)
 v1 to 3 of the notifier valiantly supported IE 6 and 7. However, supporting these ~old~ ancient browsers came with some pretty serious caveats. Now that we’ve dropped support, we're able to move the library forward and make our reporting delivery mechanism more robust.
 
 If you’re still supporting users on IE6/7, you can still use v3. We will continue to support v3 along side v4, however it will enter "maintenance" mode where no new features will be added. For more information, see the [v3 integration guide](TODOTODOTOD).
+
+#### Endpoint
+
+Before, due to the esoteric payload format the JS notifier would post to a JS-specific route (`/js`) on the notify server. Now, payload has been homogenized, so requests go to the root (`/`) of the notify host like reports from other platforms.
+
+For hosted Bugsnag, the default URL is now `//notify.bugsnag.com`. If you didn't configure this, you shouldn't need to make a change. For On-Premise, after updating the latest version make sure you configure `endpoint` _without_ `/js` in the URL.
