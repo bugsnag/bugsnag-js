@@ -13,13 +13,6 @@ describe('loading bugsnag via bundled <script> tag', function () {
       expect(data.error).toBeUndefined()
       expect(data.reports).toBeDefined()
       expect(data.reports[0].notifier.version).toMatch(/\d\.\d\.\d/)
-
-      if ('addEventListener' in window) {
-        window.removeEventListener('message', onmessage)
-      } else {
-        window.detachEvent('onmessage', onmessage)
-      }
-
       done()
     }
 

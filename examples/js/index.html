@@ -2,7 +2,10 @@
 <html>
   <head>
     <title>Bugsnag JS: Plain JS example</title>
-    <script src="node_modules/bugsnag-js/dist/bugsnag.js" data-autostart data-apikey="API_KEY"></script>
+    <script src="node_modules/bugsnag-js/dist/bugsnag.js"></script>
+    <script>
+      var client = bugsnag({ apiKey: 'API_KEY' })
+    </script>
   </head>
   <body>
     <h1>Bugsnag JS: Plain JS example</h1>
