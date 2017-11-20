@@ -7,6 +7,11 @@ module.exports.schema = {
     message: '(string) apiKey is required',
     validate: value => typeof value === 'string' && value.length
   },
+  appVersion: {
+    defaultValue: () => null,
+    message: '(string) appVersion should have a value if supplied',
+    validate: value => value === null || (typeof value === 'string' && value.length)
+  },
   autoNotify: {
     defaultValue: () => true,
     message: '(boolean) autoNotify should be true or false',

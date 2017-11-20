@@ -223,6 +223,18 @@ describe('base/client', () => {
       client.notify(new Error('oh em eff gee'))
     })
 
+    it('populates client.app.version if config.appVersion is supplied', done => {
+      const client = new Client(VALID_NOTIFIER)
+      client.transport({
+        sendReport: (logger, config, payload) => {
+          expect(payload.events[0].app.version).toBe('1.2.3')
+          done()
+        }
+      })
+      client.configure({ apiKey: 'API_KEY_YEAH', appVersion: '1.2.3' })
+      client.notify(new Error('oh em eff gee'))
+    })
+
     it('can handle all kinds of bad input', () => {
       const payloads = []
       const client = new Client(VALID_NOTIFIER)
