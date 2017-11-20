@@ -10,14 +10,9 @@ Upgrading
 
 If you're loading Bugsnag from the CDN you may have got used to transparent rolling updates. Since this is a major update with breaking changes, you'll need to update the URL your script tag is pointing to. Be sure to also make changes to your application where it configures and uses the Bugsnag client!
 
-##### Before
-```html
-<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-3.min.js" data-apikey="API_KEY"></script>
-```
-
-##### After
-```html
-<script src="//d2wy8f7a9ursnm.cloudfront.net/4.x.x/bugsnag.js"></script>
+```diff
+- <script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-3.min.js" data-apikey="API_KEY"></script>
++ <script src="//d2wy8f7a9ursnm.cloudfront.net/4.x.x/bugsnag.js"></script>
 ```
 
 ##### npm/yarn
@@ -39,20 +34,13 @@ This might seem like a little more work, but it gives you more granular control:
 - It will do exactly as its told based on the config provided. Previously, it would start doing all the default behavior and you'd have to go and switch it all off, which was rather messy.
 - There's now no lost-in-translation in the options. The options are declared as JS values rather than being extracted from strings, which should mean fewer surprises.
 
-##### Before
-```html
-<script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-3.min.js" data-apikey="API_KEY"></script>
+```diff
+- <script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-3.min.js" data-apikey="API_KEY"></script>
++ <script src="//d2wy8f7a9ursnm.cloudfront.net/4.x.x/bugsnag.js"></script>
 <script>
-  Bugsnag.notify(err)
-</script>
-```
-
-##### After
-```html
-<script src="//d2wy8f7a9ursnm.cloudfront.net/4.x.x/bugsnag.js"></script>
-<script>
-  var bugsnagClient = bugsnag('API_KEY')
-  bugsnagClient.notify(err)
+-  Bugsnag.notify(err)
++  var bugsnagClient = bugsnag('API_KEY')
++  bugsnagClient.notify(err)
 </script>
 ```
 
@@ -98,18 +86,14 @@ Bugsnag.notify(name, message)
 
 To convert examples of this usage, do the following:
 
-```js
-Bugsnag.notifyException(err)
-// becomes
-bugsnagClient.notify(err)
+```diff
+- Bugsnag.notifyException(err)
++ bugsnagClient.notify(err)
+```
 
-Bugsnag.notify('NetworkError', 'max retries exceeded')
-// becomes either
-bugsnagClient.notify({ name: 'NetworkError', message: 'max retries exceeded'})
-// or
-var err = new Error('max retries exceeded')
-err.name = 'NetworkError'
-bugsnagClient.notify(err)
+```diff
+- Bugsnag.notify('NetworkError', 'max retries exceeded')
++ bugsnagClient.notify({ name: 'NetworkError', message: 'max retries exceeded'})
 ```
 
 #### Dropping support for IE6/7
@@ -123,3 +107,9 @@ If you’re still supporting users on IE6/7, you can still use v3. We will conti
 Before, due to the esoteric payload format the JS notifier would post to a JS-specific route (`/js`) on the notify server. Now, payload has been homogenized, so requests go to the root (`/`) of the notify host like reports from other platforms.
 
 For hosted Bugsnag, the default URL is now `//notify.bugsnag.com`. If you didn't configure this, you shouldn't need to make a change. For On-Premise, after updating the latest version make sure you configure `endpoint` _without_ `/js` in the URL.
+
+
+```diff
+- endpoint: '//notify-bugsnag.example.com/js'
++ endpoint: '//notify-bugsnag.example.com'
+```
