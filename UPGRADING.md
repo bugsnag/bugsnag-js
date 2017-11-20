@@ -27,7 +27,7 @@ yarn add bugsnag-js@4
 
 #### Manual startup
 
-Before, the client would simply "exist" already on the page – like a singleton. Now there are two options. When loaded from the CDN via a `<script/>` tag, you can either ask the client to "autostart", where it will be configured with the default options. If you want to configure the client you will need to manually create the client by calling `bugsnag()`.
+Before, the client would simply "exist" already on the page – like a singleton. Now there are two options. When loaded from the CDN via a `<script/>` tag, you can either ask the client to "autostart", where it will be configured with the default options, or if you want to configure the client you will need to manually create the client by calling `bugsnag()`.
 
 This might seem like a little more work, but it gives you more granular control:
 - Bugsnag won't start until you tell it to.
