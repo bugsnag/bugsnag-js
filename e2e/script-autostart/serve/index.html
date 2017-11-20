@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>test</title>
+    <script src="bugsnag.dist.js" data-autostart data-apikey="FOO_BAR"></script>
+    <script>
+      try {
+        var reports = []
+        bugsnagClient.transport({
+          sendReport: function (logger, config, report) {
+            reports.push(report)
+          }
+        })
+      } catch (e) {
+        window.parent.postMessage(JSON.stringify({ type: 'error', error: e }), '*')
+      }
+    </script>
+  </head>
+  <body>
+    <script>
+      try {
+        bugsnagClient.notify(new Error('badness'))
+        window.parent.postMessage(JSON.stringify({ type: 'data', reports: reports }), '*')
+      } catch (e) {
+        window.parent.postMessage(JSON.stringify({ type: 'error', error: e }), '*')
+      }
+    </script>
+  </body>
+</html>

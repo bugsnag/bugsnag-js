@@ -104,3 +104,16 @@ const getPrefixedConsole = () => {
 }
 
 module.exports['default'] = module.exports
+
+// auto start mode! If the currently executing script tag has data-autostart and
+// data-apikey attributes, start and export a client object with the provided key
+const currentScript = document.currentScript || (() => {
+  const scripts = document.getElementsByTagName('script')
+  return scripts[scripts.length - 1]
+})()
+
+if (currentScript.hasAttribute('data-autostart')) {
+  const apiKey = currentScript.getAttribute('data-apikey')
+  if (!apiKey) throw new Error('Bugsnag was configured with `autostart` but an API key was not provided. Use the `data-apikey="API_KEY"` attribute.')
+  window.bugsnagClient = module.exports(apiKey)
+}
