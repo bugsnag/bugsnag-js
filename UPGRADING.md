@@ -57,13 +57,13 @@ Here's an example of how to configure the library with the most common options:
 ```js
 window.bugsnagClient = bugsnag({
   apiKey: 'API_KEY'
+  appVersion: '1.2.3',
   releaseStage: 'staging',
   notifyReleaseStages: [ 'staging', 'production' ],
   metaData: { /* some metaData to attach to every report */ },
   user: { id: '123', name: 'B. Nag', email: 'bugs.nag@bugsnag.com' },
   beforeSend: function (report) { /* amend or ignore the report */ }
 })
-bugsnagClient.app.version = '1.2.3'
 ```
 
 See the full [configuration options](TODO) documentation for more information.
