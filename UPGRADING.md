@@ -12,7 +12,7 @@ If you're loading Bugsnag from the CDN you may have got used to transparent roll
 
 ```diff
 - <script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-3.min.js" data-apikey="API_KEY"></script>
-+ <script src="//d2wy8f7a9ursnm.cloudfront.net/4.x.x/bugsnag.js" data-autostart data-apikey="API_KEY"></script>
++ <script src="//d2wy8f7a9ursnm.cloudfront.net/4.x.x/bugsnag.js"></script>
 ```
 
 ##### npm/yarn
@@ -27,40 +27,19 @@ yarn add bugsnag-js@4
 
 #### Manual startup
 
-Before, the client would simply "exist" already on the page – like a singleton. Now there are two options. When loaded from the CDN via a `<script/>` tag, you can either ask the client to "autostart", where it will be configured with the default options. If you want to configure the client you will need to manually create the client by calling `bugsnag()`.
+Before, the client would simply "exist" already on the page – like a singleton. Now you have to explicitly create your client with some configuration options (or simply an API key).
 
 This might seem like a little more work, but it gives you more granular control:
 - Bugsnag won't start until you tell it to.
 - It will do exactly as its told based on the config provided. Previously, it would start doing all the default behavior and you'd have to go and switch it all off, which was rather messy.
 - There's now no lost-in-translation in the options. The options are declared as JS values rather than being extracted from strings, which should mean fewer surprises.
 
-##### Autostart
-
-```diff
-- <script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-3.min.js" data-apikey="API_KEY"></script>
-+ <script src="//d2wy8f7a9ursnm.cloudfront.net/4.x.x/bugsnag.js" data-autostart data-apikey="API_KEY"></script>
-<script>
--  Bugsnag.notify(err)
-+  bugsnagClient.notify(err)
-</script>
-```
-
-##### Manual config
 ```diff
 - <script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-3.min.js" data-apikey="API_KEY"></script>
 + <script src="//d2wy8f7a9ursnm.cloudfront.net/4.x.x/bugsnag.js"></script>
 <script>
--  Bugsnag.releaseStage = 'staging'
--  Bugsnag.notifyReleaseStages = [ 'staging', 'production' ]
--  Bugsnag.disableAutoBreadcrumbsNavigation()
 -  Bugsnag.notify(err)
-+  window.bugsnagClient = bugsnag({
-+    apiKey: 'API_KEY',
-+    releaseStage: 'staging',
-+    notifyReleaseStages: [ 'staging', 'production' ],
-+    navigationBreadcumbsEnabled: false
-+    /* etc. */
-+  })
++  var bugsnagClient = bugsnag('API_KEY')
 +  bugsnagClient.notify(err)
 </script>
 ```
