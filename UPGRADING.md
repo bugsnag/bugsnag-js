@@ -67,7 +67,7 @@ window.bugsnagClient = bugsnag({
 })
 ```
 
-See the full [configuration options](TODO) documentation for more information.
+See the full [configuration options](https://deploy-preview-509--docs-bugsnag.netlify.com/platforms/browsers/v4/configuration-options/) documentation for more information.
 
 #### Usage
 
@@ -96,12 +96,35 @@ To convert examples of this usage, do the following:
 - Bugsnag.notify('NetworkError', 'max retries exceeded')
 + bugsnagClient.notify({ name: 'NetworkError', message: 'max retries exceeded'})
 ```
+##### Customizing errors
+
+Previously, `notify`/`notifyException` could be called in different ways to set `severity` and `metaData`. Now there is one consistent `opts` object structure to customize reports:
+
+```diff
+- Bugsnag.notifyException(err, {
+-   'special info': {
+-     request_id: 12345,
+-     message_id: 854
+-   }
+- }, 'warning')
++ bugsnagClient.notify(err, {
++   severity: 'warning',
++   metaData: {
++     'special info': {
++       request_id: 12345,
++       message_id: 854
++     }
++   }
++ })
+```
+
+Refer to the [exact spec of the `opts` object](https://deploy-preview-509--docs-bugsnag.netlify.com/platforms/browsers/v4/reporting-handled-errors/#sending-javascript-errors) for more information.
 
 #### Dropping support for IE6/7
 
 v1 to 3 of the notifier valiantly supported IE 6 and 7. However, supporting these ~old~ ancient browsers came with some pretty serious caveats. Now that we’ve dropped support, we're able to move the library forward and make our reporting delivery mechanism more robust.
 
-If you’re still supporting users on IE6/7, you can still use v3. We will continue to support v3 along side v4, however it will enter "maintenance" mode where no new features will be added. For more information, see the [v3 integration guide](TODOTODOTOD).
+If you’re still supporting users on IE6/7, you can still use v3. We will continue to support v3 along side v4, however it will enter "maintenance" mode where no new features will be added. For more information, see the [v3 integration guide](https://deploy-preview-509--docs-bugsnag.netlify.com/platforms/browsers/v3/).
 
 #### Endpoint
 
