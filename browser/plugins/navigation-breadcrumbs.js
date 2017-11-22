@@ -26,22 +26,26 @@ module.exports = {
 
     // the only way to know about replaceState/pushState is to wrap them… >_<
 
-    const _replaceState = window.history.replaceState
-    window.history.replaceState = (state, title, url) => {
-      client.leaveBreadcrumb('History replaceState', stateChangeToMetaData(state, title, url), 'navigation')
-      _replaceState.call(window.history, state, title, url)
-    }
-    window.history.replaceState._restore = () => {
-      window.history.replaceState = _replaceState
+    if (window.history.replaceState) {
+      const _replaceState = window.history.replaceState
+      window.history.replaceState = (state, title, url) => {
+        client.leaveBreadcrumb('History replaceState', stateChangeToMetaData(state, title, url), 'navigation')
+        _replaceState.call(window.history, state, title, url)
+      }
+      window.history.replaceState._restore = () => {
+        window.history.replaceState = _replaceState
+      }
     }
 
-    const _pushState = window.history.pushState
-    window.history.pushState = (state, title, url) => {
-      client.leaveBreadcrumb('History replaceState', stateChangeToMetaData(state, title, url), 'navigation')
-      _pushState.call(window.history, state, title, url)
-    }
-    window.history.pushState._restore = () => {
-      window.history.pushState = _pushState
+    if (window.history.pushState) {
+      const _pushState = window.history.pushState
+      window.history.pushState = (state, title, url) => {
+        client.leaveBreadcrumb('History replaceState', stateChangeToMetaData(state, title, url), 'navigation')
+        _pushState.call(window.history, state, title, url)
+      }
+      window.history.pushState._restore = () => {
+        window.history.pushState = _pushState
+      }
     }
 
     client.leaveBreadcrumb('Bugsnag loaded', {}, 'navigation')

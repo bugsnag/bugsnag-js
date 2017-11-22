@@ -8,7 +8,7 @@ const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
 describe('plugin: navigation breadcrumbs', () => {
   if ('addEventListener' in window) {
-    it('should', done => {
+    it('should drop breadcrumb for navigational activity', done => {
       const c = new Client(VALID_NOTIFIER)
       c.configure({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
       c.use(plugin)
@@ -23,9 +23,18 @@ describe('plugin: navigation breadcrumbs', () => {
       domLoad.initEvent('DOMContentLoaded', true, true)
       window.document.dispatchEvent(domLoad)
 
-      // console.log(c.breadcrumbs)
-      expect(c.breadcrumbs.length).toBe(3)
-      done()
+      if (typeof Object.create === 'function' && window.history.replaceState) {
+        var plainObject = Object.create(null)
+        plainObject.dummyProperty = true
+        var state = { myObject: plainObject }
+        window.history.replaceState(state, 'foo', 'bar.html')
+        expect(c.breadcrumbs.length).toBe(4)
+        done()
+      } else {
+        // console.log(c.breadcrumbs)
+        expect(c.breadcrumbs.length).toBe(3)
+        done()
+      }
     })
   }
 })
