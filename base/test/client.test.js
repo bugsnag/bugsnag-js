@@ -283,6 +283,18 @@ describe('base/client', () => {
       // the error shouldn't appear as a breadcrumb for itself
       expect(payloads[0].events[0].breadcrumbs.length).toBe(0)
     })
+
+    it('doesn’t modify global client.metaData when using updateMetaData() method', () => {
+      const client = new Client(VALID_NOTIFIER)
+      client.configure({ apiKey: 'API_KEY_YEAH' })
+      client.metaData = { foo: [ 1, 2, 3 ] }
+      client.notify(new Error('changes afoot'), {
+        beforeSend: (report) => {
+          report.updateMetaData('foo', '3', 1)
+        }
+      })
+      expect(client.metaData.foo['3']).toBe(undefined)
+    })
   })
 
   describe('leaveBreadcrumb()', () => {
