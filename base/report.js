@@ -19,8 +19,8 @@ class BugsnagReport {
     this.breadcrumbs = []
     this.context = undefined
     this.device = undefined
-    this.errorClass = errorClass
-    this.errorMessage = errorMessage
+    this.errorClass = typeof errorClass === 'string' && errorClass ? errorClass : '[no error class]'
+    this.errorMessage = typeof errorMessage === 'string' && errorMessage ? errorMessage : '[no error message]'
     this.groupingHash = undefined
     this.metaData = {}
     this.request = undefined
