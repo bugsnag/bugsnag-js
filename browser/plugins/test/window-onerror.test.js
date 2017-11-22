@@ -102,6 +102,7 @@ describe('plugin: window onerror', () => {
       event.detail = 'something bad happened'
       window.onerror(event)
 
+      // console.log(JSON.stringify(payloads[0].events[0].stacktrace, null, 2))
       expect(payloads.length).toBe(1)
       const report = payloads[0].events[0].toJSON()
       expect(report.severity).toBe('error')

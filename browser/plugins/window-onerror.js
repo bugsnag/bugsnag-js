@@ -10,28 +10,27 @@ const { filter } = require('../../base/lib/es-utils')
 module.exports = {
   init: (client, BugsnagReport) => {
     const onerror = (messageOrEvent, url, lineNo, charNo, error) => {
-      const handledState = { severity: 'error', unhandled: true, severityReason: { type: 'unhandledException' } }
-
-      let name, message
-      if ((typeof messageOrEvent === 'object' && messageOrEvent !== null) && !url && !lineNo && !charNo && !error) {
-        name = 'Event: error'
-        message = messageOrEvent.message || messageOrEvent.detail
-      } else if (error) {
-        name = error.name
-        message = error.message
-      } else {
-        name = 'window.onerror'
-        message = messageOrEvent
-      }
-
-      if (lineNo === 0 && /Script error\.?/.test(message)) {
+      // Ignore errors with no info due to CORS settings
+      if (lineNo === 0 && /Script error\.?/.test(messageOrEvent)) {
         client._logger.warn('Ignoring cross-domain or eval script error. See https://docs.bugsnag.com/platforms/browsers/faq/#3-cross-origin-script-errors')
         return
       }
 
-      const report = hasStack(error)
-        ? new BugsnagReport(name, message, ErrorStackParser.parse(error), handledState)
-        : new BugsnagReport(name, message, generateStack(url, lineNo, charNo), handledState)
+      // any error sent to window.onerror is unhandled and has severity=error
+      const handledState = { severity: 'error', unhandled: true, severityReason: { type: 'unhandledException' } }
+
+      let report
+      if (error) {
+        report = new BugsnagReport(error.name, error.message, getStack(error, url, lineNo, charNo), handledState)
+      } else if ((typeof messageOrEvent === 'object' && messageOrEvent !== null) && !url && !lineNo && !charNo && !error) {
+        const name = messageOrEvent.type ? `Event: ${messageOrEvent.type}` : 'window.onerror'
+        const message = messageOrEvent.message || messageOrEvent.detail || ''
+        report = new BugsnagReport(name, message, getStack(new Error()).slice(1), handledState)
+        report.updateMetaData('window onerror', { event: messageOrEvent })
+      } else {
+        report = new BugsnagReport('window.onerror', messageOrEvent, getStack(error, url, lineNo, charNo), handledState)
+        report.updateMetaData('window onerror', { event: messageOrEvent })
+      }
 
       client.notify(report)
 
@@ -43,8 +42,11 @@ module.exports = {
   }
 }
 
-const generateStack = (url, lineNo, charNo) => {
-  // no error was provided so try to figure out the stack by building a stacktrace
+const getStack = (error, url, lineNo, charNo) => {
+  if (hasStack(error)) return ErrorStackParser.parse(error)
+
+  // no error was provided, or couldn't get a stack from an error
+  // so try to figure out the stack by building a stacktrace
   try {
     const stack = filter(StackGenerator.backtrace(), frame => (frame.functionName || '').indexOf('StackGenerator$$') === -1)
       .slice(1) // remove this function and the onerror handler stack frames
