@@ -1,12 +1,10 @@
-const { describe, it, expect, fail, xit } = global
+const { describe, it, expect } = global
 
 const proxyquire = require('proxyquire').noPreserveCache()
 const ErrorStackParser = require('error-stack-parser')
 
 describe('base/report', () => {
   describe('constructor', () => {
-    xit('can handle bad input', () => fail('TODO'))
-
     it('sets default handledState', () => {
       const Report = require('../report')
       const err = new Error('noooooo')
