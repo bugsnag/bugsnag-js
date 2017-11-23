@@ -112,7 +112,7 @@ class BugsnagClient {
 
     // ensure we have an error (or a reasonable object representation of an error)
     let err
-    let framesToSkip = 0
+    let errorFramesToSkip = 0
     switch (typeof error) {
       case 'string':
         if (typeof opts === 'string') {
@@ -123,6 +123,7 @@ class BugsnagClient {
           opts = { metaData: { notifier: { notifyArgs: [ error, opts ] } } }
         } else {
           err = new Error(String(error))
+          errorFramesToSkip += 1
         }
         break
       case 'number':
@@ -137,7 +138,7 @@ class BugsnagClient {
         if (error !== null && typeof error.name === 'string' && typeof error.message === 'string') {
           err = new Error(error.message)
           err.name = error.name
-          framesToSkip += 1
+          errorFramesToSkip += 1
         } else if (error !== null && error.__isBugsnagReport) {
           err = error
         } else {
@@ -157,7 +158,7 @@ class BugsnagClient {
     if (typeof opts !== 'object' || opts === null) opts = {}
 
     // create a report from the error, if it isn't one already
-    const report = BugsnagReport.ensureReport(err, framesToSkip)
+    const report = BugsnagReport.ensureReport(err, errorFramesToSkip, 1)
 
     report.app = { ...{ releaseStage }, ...report.app, ...this.app }
     report.context = report.context || opts.context || this.context || undefined

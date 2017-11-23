@@ -127,12 +127,6 @@ const formatStackframe = frame => ({
 
 const normaliseFunctionName = name => /^global code$/i.test(name) ? 'global code' : name
 
-// stacktrace wasn't provided so we need to attempt to generate one
-const generateStack = (framesToSkip) => {
-  return filter(StackGenerator.backtrace(), frame => (frame.functionName || '').indexOf('StackGenerator$$') === -1)
-    .slice(1 + framesToSkip) // remove this function and n others from the stack frames
-}
-
 const defaultHandledState = () => ({
   unhandled: false,
   severity: 'warning',
@@ -141,11 +135,19 @@ const defaultHandledState = () => ({
 
 // Helpers
 
-BugsnagReport.ensureReport = function (reportOrError, framesToSkip = 0) {
+BugsnagReport.getStacktrace = (error, errorFramesToSkip = 0, generatedFramesToSkip = 0) => {
+  if (hasStack(error)) return ErrorStackParser.parse(error).slice(errorFramesToSkip)
+  // error wasn't provided or didn't have a stacktrace so try to walk the callstack
+  return filter(StackGenerator.backtrace(), frame =>
+    (frame.functionName || '').indexOf('StackGenerator$$') === -1
+  ).slice(1 + generatedFramesToSkip)
+}
+
+BugsnagReport.ensureReport = function (reportOrError, errorFramesToSkip = 0, generatedFramesToSkip = 0) {
   // notify() can be called with a Report object. In this case no action is required
   if (reportOrError.__isBugsnagReport) return reportOrError
   try {
-    const stacktrace = hasStack(reportOrError) ? ErrorStackParser.parse(reportOrError).slice(framesToSkip) : generateStack(1 + framesToSkip)
+    const stacktrace = BugsnagReport.getStacktrace(reportOrError, errorFramesToSkip, 1 + generatedFramesToSkip)
     return new BugsnagReport(reportOrError.name, reportOrError.message, stacktrace)
   } catch (e) {
     return new BugsnagReport(reportOrError.name, reportOrError.message, [])
