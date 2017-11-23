@@ -1,7 +1,7 @@
 const ErrorStackParser = require('error-stack-parser')
 const StackGenerator = require('stack-generator')
 const hasStack = require('./lib/has-stack')
-const { filter, map } = require('./lib/es-utils')
+const { reduce, filter, map, keys } = require('./lib/es-utils')
 
 class BugsnagReport {
   constructor (errorClass, errorMessage, stacktrace = [], handledState = defaultHandledState()) {
@@ -26,9 +26,11 @@ class BugsnagReport {
     this.request = undefined
     this.severity = this._handledState.severity
     this.stacktrace = map(stacktrace, frame => formatStackframe(frame))
-    // @TODO
     // don't include a stackframe if none of its properties are defined
-    // if (f && filter(values(f)).length) return accum.concat(f)
+    reduce(stacktrace, (accum, frame) => {
+      if (filter(keys(frame), k => frame[k] !== undefined).length === 0) return accum
+      return accum.concat(frame)
+    }, [])
     this.user = undefined
   }
 
