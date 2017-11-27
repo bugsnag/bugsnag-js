@@ -102,6 +102,7 @@
     "browserify-versionify": "^1.0.6",
     "error-stack-parser": "^2.0.1",
     "fast-safe-stringify": "github:bengourley/fast-safe-stringify",
+    "iserror": "0.0.2",
     "stack-generator": "github:bengourley/stack-generator#190a6f500cfc4a9ef77db204b4f571964e39c3d8"
   }
 }

@@ -3,6 +3,7 @@ const BugsnagReport = require('./report')
 const BugsnagBreadcrumb = require('./breadcrumb')
 const { map, reduce, includes, isArray } = require('./lib/es-utils')
 const jsonStringify = require('fast-safe-stringify')
+const isError = require('iserror')
 // const uid = require('cuid')
 
 const noop = () => {}
@@ -135,12 +136,12 @@ class BugsnagClient {
         err = new Error('Bugsnag usage error. notify() called with a function as "error" parameter')
         break
       case 'object':
-        if (error !== null && typeof error.name === 'string' && typeof error.message === 'string') {
+        if (error !== null && (isError(error) || error.__isBugsnagReport)) {
+          err = error
+        } else if (error !== null && typeof error.name === 'string' && typeof error.message === 'string') {
           err = new Error(error.message)
           err.name = error.name
           errorFramesToSkip += 1
-        } else if (error !== null && error.__isBugsnagReport) {
-          err = error
         } else {
           this._logger.warn(`Usage error. notify() called with an unsupported object as "error" parameter. Supply an Error or { name, message } object.`)
           err = new Error('Bugsnag usage error. notify() called with an unsupported object as "error" parameter. Supply an Error or { name, message } object.')
@@ -196,12 +197,14 @@ class BugsnagClient {
     }
 
     // only leave a crumb for the error if actually got sent
-    this.leaveBreadcrumb(report.errorClass, {
-      errorClass: report.errorClass,
-      errorMessage: report.errorMessage,
-      severity: report.severity,
-      stacktrace: report.stacktrace
-    }, 'error')
+    if (this.config.autoBreadcrumbs) {
+      this.leaveBreadcrumb(report.errorClass, {
+        errorClass: report.errorClass,
+        errorMessage: report.errorMessage,
+        severity: report.severity,
+        stacktrace: report.stacktrace
+      }, 'error')
+    }
 
     if (originalSeverity !== report.severity) {
       report._handledState.severityReason = { type: 'userCallbackSetSeverity' }

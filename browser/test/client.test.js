@@ -17,7 +17,7 @@ describe('client()', () => {
           try {
             // console.log(JSON.stringify(payload.events[0].stacktrace, null, 2))
             expect(payload.events[0].stacktrace).toBeDefined()
-            expect(payload.events[0].stacktrace.map(f => f.method)[0]).toBe('go')
+            expect(payload.events[0].stacktrace.map(f => f.method)[0]).toMatch(/go|c/)
             done()
           } catch (e) {
             done(e)
