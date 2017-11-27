@@ -25,7 +25,7 @@
     "postpublish": "./bin/cdn-upload",
     "test": "npm run test:lint && npm run test:unit && npm run test:integration && npm run test:e2e",
     "test:basic": "npm run test:lint && npm run test:unit",
-    "test:unit": "nyc --reporter=lcov --report-dir coverage/node -- jasmine '!(node_modules|browser|e2e|examples)/**/*.test.js'",
+    "test:unit": "nyc --reporter=lcov --report-dir coverage/node -- jasmine '!(node_modules|browser|e2e|examples|bench)/**/*.test.js'",
     "test:integration": "npm run test:integration:browser && npm run test:integration:node",
     "test:integration:browser": "karma start browser/test/lib/karma.conf.js --single-run",
     "test:integration:quick": "karma start browser/test/lib/karma.conf.js --single-run --browsers ChromeHeadless",

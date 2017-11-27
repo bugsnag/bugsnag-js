@@ -1,0 +1,26 @@
+<script>
+  console.log('baseline: 1000x reports sent with XHR POST delivery')
+  let s0 = new Date()
+  for (var i = 0; i < 1000; i++) {
+    const req = new window.XMLHttpRequest()
+    req.open('POST', `//localhost:8000?q=${i}`)
+    req.setRequestHeader('content-type', 'application/json')
+    req.send(JSON.stringify({ n: 1 }))
+  }
+  console.log(new Date() - s0)
+</script>
+
+<script src="node_modules/bugsnag-js/dist/bugsnag.js"></script>
+<script>
+  window.bugsnagClient = bugsnag({
+    apiKey: '9e68f5104323042c09d8809674e8d0bb',
+    endpoint: '//localhost:8000',
+    maxEventsPerWindow: 10000
+  })
+</script>
+<script>
+  console.log('comparison: 1000x reports sent with notifyException()')
+  let s1 = new Date()
+  for (var i = 0; i < 1000; i++) bugsnagClient.notify(new Error(i + ''))
+  console.log(new Date() - s1)
+</script>

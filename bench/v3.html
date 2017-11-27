@@ -1,0 +1,23 @@
+<script>
+  console.log('baseline: 1000x reports sent with new Image() delivery')
+  let s0 = new Date()
+  for (var i = 0; i < 1000; i++) {
+    const img = new Image()
+    img.src = `//localhost:8000?q=${i}`
+  }
+  console.log(new Date() - s0)
+</script>
+
+<script
+  src="https://d2wy8f7a9ursnm.cloudfront.net/bugsnag-3.min.js"
+  data-apikey="9e68f5104323042c09d8809674e8d0bb"
+  data-endpoint="//localhost:8000"></script>
+<script>
+  console.log('comparison: 1000x reports sent with notifyException()')
+  let s1 = new Date()
+  for (var i = 0; i < 1000; i++) {
+    Bugsnag.notifyException(new Error(i + ''))
+    Bugsnag.refresh()
+  }
+  console.log(new Date() - s1)
+</script>
