@@ -1,5 +1,5 @@
+import bugsnag from '../../'
 try {
-  var bugsnag = require('../../')
   var reports = []
   var client = bugsnag({
     apiKey: 'aaaa-aaaa-aaaa-aaaa',
