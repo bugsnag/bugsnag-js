@@ -3,7 +3,7 @@ const version = '__VERSION__'
 const url = 'https://github.com/bugsnag/bugsnag-js'
 
 const Client = require('../base/client')
-const { map, reduce } = require('../base/lib/es-utils')
+const { map, reduce, keys } = require('../base/lib/es-utils')
 
 // extend the base config schema with some browser-specific options
 const schema = { ...require('../base/config').schema, ...require('./config') }
@@ -31,7 +31,7 @@ module.exports = (opts, userPlugins = []) => {
   if (typeof opts === 'string') opts = { apiKey: opts }
 
   // allow plugins to augment the schema with their own options
-  const finalSchema = reduce([].concat(plugins).concat(userPlugins), (accum, plugin) => {
+  const finalSchema = reduce([].concat(map(keys(plugins), k => plugins[k])).concat(userPlugins), (accum, plugin) => {
     if (!plugin.configSchema) return accum
     return { ...accum, ...plugin.configSchema }
   }, schema)
