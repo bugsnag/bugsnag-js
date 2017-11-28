@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+process.on('unhandledRejection', err => console.error(err))
 
 const knox = require('knox')
 const cf = require('cloudfront')
@@ -42,19 +43,19 @@ const run = async () => {
   }
 
   // always upload canonical versions
-  await upload(`${__dirname}/../dist/bugsnag.js`, track(`/${version}/bugsnag.js`))
-  await upload(`${__dirname}/../dist/bugsnag.min.js`, track(`/${version}/bugsnag.min.js`))
-  await upload(`${__dirname}/../dist/bugsnag.min.js.map`, track(`/${version}/bugsnag.min.js.map`))
+  await upload(`${__dirname}/../dist/bugsnag.js`, track(`/v${version}/bugsnag.js`))
+  await upload(`${__dirname}/../dist/bugsnag.min.js`, track(`/v${version}/bugsnag.min.js`))
+  await upload(`${__dirname}/../dist/bugsnag.min.js.map`, track(`/v${version}/bugsnag.min.js.map`))
 
-  const isUnstable = semver.prerelease(version).length > 0
+  const isUnstable = semver.prerelease(version)
   if (!isUnstable) {
     // if this is a release (as opposed to a prerelease), update the major/minor aliases
-    const major = `${semver.major(version)}.x.x`
+    const major = `v${semver.major(version)}`
     await upload(`${__dirname}/../dist/bugsnag.js`, track(`/${major}/bugsnag.js`))
     await upload(`${__dirname}/../dist/bugsnag.min.js`, track(`/${major}/bugsnag.min.js`))
     await upload(`${__dirname}/../dist/bugsnag.min.js.map`, track(`/${major}/bugsnag.min.js.map`))
 
-    const minor = `${semver.major(version)}.${semver.minor(version)}.x`
+    const minor = `v${semver.major(version)}.${semver.minor(version)}`
     await upload(`${__dirname}/../dist/bugsnag.js`, track(`/${minor}/bugsnag.js`))
     await upload(`${__dirname}/../dist/bugsnag.min.js`, track(`/${minor}/bugsnag.min.js`))
     await upload(`${__dirname}/../dist/bugsnag.min.js.map`, track(`/${minor}/bugsnag.min.js.map`))
