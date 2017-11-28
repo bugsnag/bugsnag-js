@@ -200,7 +200,7 @@ const normaliseError = (error, opts, logger) => {
         _opts = { metaData: { notifier: { notifyArgs: [ error, opts ] } } }
       } else {
         err = new Error(String(error))
-        errorFramesToSkip += 1
+        errorFramesToSkip += 2
       }
       break
     case 'number':
@@ -217,7 +217,7 @@ const normaliseError = (error, opts, logger) => {
       } else if (error !== null && hasNecessaryFields(error)) {
         err = new Error(error.message || error.errorMessage)
         err.name = error.name || error.errorClass
-        errorFramesToSkip += 1
+        errorFramesToSkip += 2
       } else {
         logger.warn(`Usage error. notify() called with an unsupported object as "error" parameter. Supply an Error or { name, message } object.`)
         err = new Error('Bugsnag usage error. notify() called with an unsupported object as "error" parameter. Supply an Error or { name, message } object.')
