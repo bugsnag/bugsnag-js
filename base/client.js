@@ -215,7 +215,7 @@ const normaliseError = (error, opts, logger) => {
       if (error !== null && (isError(error) || error.__isBugsnagReport)) {
         err = error
       } else if (error !== null && hasNecessaryFields(error)) {
-        err = new Error(error.message || error.errorName)
+        err = new Error(error.message || error.errorMessage)
         err.name = error.name || error.errorClass
         errorFramesToSkip += 1
       } else {
