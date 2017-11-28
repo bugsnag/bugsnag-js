@@ -1,6 +1,6 @@
 {
   "name": "bugsnag-js",
-  "version": "4.0.0-11",
+  "version": "4.0.0-12",
   "description": "Automatically detect JavaScript errors, collect detailed diagnostic information, and get notified about errors in real-time.",
   "keywords": [
     "exception",
