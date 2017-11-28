@@ -9,9 +9,7 @@ interface IConfig {
   endpoint?: string;
   notifyReleaseStages?: string[];
   releaseStage?: string;
-  eventWindowSize?: number;
-  maxEventsPerWindow?: number;
-  maxDuplicateEventsPerWindow?: number;
+  maxEvents?: number;
   maxBreadcrumbs?: number;
   consoleBreadcumbsEnabled?: boolean;
   navigationBreadcumbsEnabled?: boolean;
@@ -25,9 +23,7 @@ interface IFinalConfig extends IConfig {
   endpoint: string;
   notifyReleaseStages: string[];
   releaseStage: string;
-  eventWindowSize: number;
-  maxEventsPerWindow: number;
-  maxDuplicateEventsPerWindow: number;
+  maxEvents: number;
   maxBreadcrumbs: number;
   consoleBreadcumbsEnabled: boolean;
   navigationBreadcumbsEnabled: boolean;

@@ -26,27 +26,19 @@ module.exports = {
 
     // the only way to know about replaceState/pushState is to wrap them… >_<
 
-    if (window.history.replaceState) {
-      const _replaceState = window.history.replaceState
-      window.history.replaceState = (state, title, url) => {
-        client.leaveBreadcrumb('History replaceState', stateChangeToMetaData(state, title, url), 'navigation')
-        _replaceState.call(window.history, state, title, url)
+    const wrap = (target, fn) => {
+      const orig = target[fn]
+      target[fn] = (state, title, url) => {
+        client.leaveBreadcrumb(`History ${fn}`, stateChangeToMetaData(state, title, url), 'navigation')
+        // if throttle plugin is in use, refresh the event sent count
+        if (typeof client.refresh === 'function') client.refresh()
+        orig.call(target, state, title, url)
       }
-      window.history.replaceState._restore = () => {
-        window.history.replaceState = _replaceState
-      }
+      target[fn]._restore = () => { target[fn] = orig }
     }
 
-    if (window.history.pushState) {
-      const _pushState = window.history.pushState
-      window.history.pushState = (state, title, url) => {
-        client.leaveBreadcrumb('History replaceState', stateChangeToMetaData(state, title, url), 'navigation')
-        _pushState.call(window.history, state, title, url)
-      }
-      window.history.pushState._restore = () => {
-        window.history.pushState = _pushState
-      }
-    }
+    if (window.history.replaceState) wrap(window.history, 'replaceState')
+    if (window.history.pushState) wrap(window.history, 'pushState')
 
     client.leaveBreadcrumb('Bugsnag loaded', {}, 'navigation')
   },
