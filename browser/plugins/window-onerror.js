@@ -16,7 +16,7 @@ module.exports = {
 
       let report
       if (error) {
-        report = new BugsnagReport(error.name, error.message, decorateStack(BugsnagReport.getStacktrace(error, 1), url, lineNo, charNo), handledState)
+        report = new BugsnagReport(error.name, error.message, decorateStack(BugsnagReport.getStacktrace(error), url, lineNo, charNo), handledState)
       } else if ((typeof messageOrEvent === 'object' && messageOrEvent !== null) && !url && !lineNo && !charNo && !error) {
         const name = messageOrEvent.type ? `Event: ${messageOrEvent.type}` : 'window.onerror'
         const message = messageOrEvent.message || messageOrEvent.detail || ''

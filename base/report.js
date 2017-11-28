@@ -123,8 +123,8 @@ const formatStackframe = frame => ({
   method: normaliseFunctionName(frame.functionName),
   lineNumber: frame.lineNumber,
   columnNumber: frame.columnNumber,
-  code: undefined, // TODO
-  inProject: undefined // TODO
+  code: undefined,
+  inProject: undefined
 })
 
 const normaliseFunctionName = name => /^global code$/i.test(name) ? 'global code' : name

@@ -1,5 +1,5 @@
 // magical jasmine globals
-const { describe, it, expect } = global
+const { describe, it, expect, beforeEach } = global
 
 const Client = require('../../base/client')
 const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
@@ -8,6 +8,8 @@ const url = require('url')
 const onerror = require('../plugins/window-onerror')
 
 describe('client()', () => {
+  beforeEach(() => { window.onerror = null })
+
   describe('caught errors', () => {
     it('should contain the name of the function that caused the error', done => {
       const client = new Client(VALID_NOTIFIER)
@@ -77,6 +79,33 @@ describe('client()', () => {
       window.bugsnag = client
       const script = document.createElement('script')
       script.src = '/fixtures/unhandled-error.js'
+      window.document.body.appendChild(script)
+    })
+
+    it('should have all of the stackframes', done => {
+      const client = new Client(VALID_NOTIFIER)
+      client.configure({ apiKey: 'API_KEY_YEAH' })
+      client.use(onerror)
+      client.transport({
+        sendReport: (logger, config, payload) => {
+          // console.log(JSON.stringify(payload.events[0].stacktrace, null, 2))
+          try {
+            expect(payload.events[0].stacktrace).toBeDefined()
+            expect(
+              payload.events[0].stacktrace
+                .map(f => f.file)
+                .filter(Boolean)
+                .map(file => url.parse(file).pathname)
+            ).toContain('/fixtures/unhandled-error-global.js')
+            done()
+          } catch (e) {
+            done(e)
+          }
+        }
+      })
+      window.bugsnag = client
+      const script = document.createElement('script')
+      script.src = '/fixtures/unhandled-error-global.js'
       window.document.body.appendChild(script)
     })
   })
