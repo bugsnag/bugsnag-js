@@ -112,42 +112,8 @@ class BugsnagClient {
     const releaseStage = this.app && typeof this.app.releaseStage === 'string' ? this.app.releaseStage : this.config.releaseStage
 
     // ensure we have an error (or a reasonable object representation of an error)
-    let err
-    let errorFramesToSkip = 0
-    switch (typeof error) {
-      case 'string':
-        if (typeof opts === 'string') {
-          // ≤v3 used to have a notify('ErrorName', 'Error message') interface
-          // report usage/deprecation errors if this function is called like that
-          this._logger.warn(`Usage error. notify() called with (string, string) but expected (error, object)`)
-          err = new Error('Bugsnag usage error. notify() called with (string, string) but expected (error, object)')
-          opts = { metaData: { notifier: { notifyArgs: [ error, opts ] } } }
-        } else {
-          err = new Error(String(error))
-          errorFramesToSkip += 1
-        }
-        break
-      case 'number':
-      case 'boolean':
-        err = new Error(String(error))
-        break
-      case 'function':
-        this._logger.warn(`Usage error. notify() called with a function as "error" parameter`)
-        err = new Error('Bugsnag usage error. notify() called with a function as "error" parameter')
-        break
-      case 'object':
-        if (error !== null && (isError(error) || error.__isBugsnagReport)) {
-          err = error
-        } else if (error !== null && typeof error.name === 'string' && typeof error.message === 'string') {
-          err = new Error(error.message)
-          err.name = error.name
-          errorFramesToSkip += 1
-        } else {
-          this._logger.warn(`Usage error. notify() called with an unsupported object as "error" parameter. Supply an Error or { name, message } object.`)
-          err = new Error('Bugsnag usage error. notify() called with an unsupported object as "error" parameter. Supply an Error or { name, message } object.')
-        }
-        break
-    }
+    let { err, errorFramesToSkip, _opts } = normaliseError(error, opts, this._logger)
+    if (_opts) opts = _opts
 
     // if we have something falsey at this point, report usage error
     if (!err) {
@@ -219,5 +185,50 @@ class BugsnagClient {
     return true
   }
 }
+
+const normaliseError = (error, opts, logger) => {
+  let err
+  let errorFramesToSkip = 0
+  let _opts
+  switch (typeof error) {
+    case 'string':
+      if (typeof opts === 'string') {
+        // ≤v3 used to have a notify('ErrorName', 'Error message') interface
+        // report usage/deprecation errors if this function is called like that
+        logger.warn(`Usage error. notify() called with (string, string) but expected (error, object)`)
+        err = new Error('Bugsnag usage error. notify() called with (string, string) but expected (error, object)')
+        _opts = { metaData: { notifier: { notifyArgs: [ error, opts ] } } }
+      } else {
+        err = new Error(String(error))
+        errorFramesToSkip += 1
+      }
+      break
+    case 'number':
+    case 'boolean':
+      err = new Error(String(error))
+      break
+    case 'function':
+      logger.warn(`Usage error. notify() called with a function as "error" parameter`)
+      err = new Error('Bugsnag usage error. notify() called with a function as "error" parameter')
+      break
+    case 'object':
+      if (error !== null && (isError(error) || error.__isBugsnagReport)) {
+        err = error
+      } else if (error !== null && hasNecessaryFields(error)) {
+        err = new Error(error.message || error.errorName)
+        err.name = error.name || error.errorClass
+        errorFramesToSkip += 1
+      } else {
+        logger.warn(`Usage error. notify() called with an unsupported object as "error" parameter. Supply an Error or { name, message } object.`)
+        err = new Error('Bugsnag usage error. notify() called with an unsupported object as "error" parameter. Supply an Error or { name, message } object.')
+      }
+      break
+  }
+  return { err, errorFramesToSkip, _opts }
+}
+
+const hasNecessaryFields = error =>
+  (typeof error.name === 'string' || typeof error.errorClass === 'string') &&
+  (typeof error.message === 'string' || typeof error.errorMessage === 'string')
 
 module.exports = BugsnagClient
