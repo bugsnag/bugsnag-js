@@ -118,14 +118,21 @@ BugsnagReport.prototype.toJSON.forceDecirc = true
 
 // takes a stacktrace.js style stackframe (https://github.com/stacktracejs/stackframe)
 // and returns a Bugsnag compatible stackframe (https://docs.bugsnag.com/api/error-reporting/#json-payload)
-const formatStackframe = frame => ({
-  file: frame.fileName,
-  method: normaliseFunctionName(frame.functionName),
-  lineNumber: frame.lineNumber,
-  columnNumber: frame.columnNumber,
-  code: undefined,
-  inProject: undefined
-})
+const formatStackframe = frame => {
+  const f = {
+    file: frame.fileName,
+    method: normaliseFunctionName(frame.functionName),
+    lineNumber: frame.lineNumber,
+    columnNumber: frame.columnNumber,
+    code: undefined,
+    inProject: undefined
+  }
+  // calling notify() from chrome's terminal results in no file/method. This adds one.
+  if (f.lineNumber && !f.file && !f.method) {
+    f.file = 'global code'
+  }
+  return f
+}
 
 const normaliseFunctionName = name => /^global code$/i.test(name) ? 'global code' : name
 
