@@ -9,10 +9,7 @@ try {
     endpoint: 'http://localhost:55854',
     notifyReleaseStages: [ 'staging', 'production' ],
     releaseStage: 'production',
-    eventWindowSize: 100,
-    maxEventsPerWindow: 100,
-    maxDuplicateEventsPerWindow: 10,
-    maxBreadcrumbs: 30
+    maxEvents: 10
   })
   const noop = () => {}
 
