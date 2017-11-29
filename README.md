@@ -1,5 +1,5 @@
 # Bugsnag error reporter for JavaScript
-![9.42kB](https://img.shields.io/badge/size-9.42kB-green.svg)
+![9.31kB](https://img.shields.io/badge/size-9.31kB-green.svg)
 ![API status](https://img.shields.io/badge/api-unstable-yellow.svg)
 [![Documentation](https://img.shields.io/badge/docs-v4-green.svg)](https://deploy-preview-509--docs-bugsnag.netlify.com/platforms/browsers/v4/)
 [![Build status](https://travis-ci.org/bugsnag/bugsnag-js.svg?branch=v4)](https://travis-ci.org/bugsnag/bugsnag-js)
