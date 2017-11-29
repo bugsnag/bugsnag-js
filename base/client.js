@@ -88,10 +88,8 @@ class BugsnagClient {
 
     const crumb = new BugsnagBreadcrumb(name, metaData, type, timestamp)
     const c = jsonStringify(crumb)
-    const isDupe = reduce(this.breadcrumbs, (accum, crumb) => {
-      if (accum) return accum
-      return c === jsonStringify(crumb)
-    }, false)
+    const lastCrumb = this.breadcrumbs[this.breadcrumbs.length - 1]
+    const isDupe = lastCrumb ? c === jsonStringify(lastCrumb) : false
 
     // no duplicates
     if (isDupe) return
