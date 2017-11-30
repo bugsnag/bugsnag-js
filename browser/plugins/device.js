@@ -3,7 +3,7 @@ const { isoDate } = require('../../base/lib/es-utils')
  * Automatically detects browser device details
  */
 module.exports = {
-  init: (client, BugsnagReport) => {
+  init: (client) => {
     client.config.beforeSend.push((report) => {
       report.device = {
         ...{

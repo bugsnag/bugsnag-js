@@ -41,6 +41,10 @@ class BugsnagClient {
     this.metaData = undefined
     this.request = undefined
     this.user = {}
+
+    // expose internal constructors
+    this.BugsnagReport = BugsnagReport
+    this.BugsnagBreadcrumb = BugsnagBreadcrumb
   }
 
   configure (opts = {}) {
@@ -60,8 +64,7 @@ class BugsnagClient {
 
   use (plugin) {
     this.plugins.push(plugin)
-    plugin.init(this, BugsnagReport)
-    return this
+    return plugin.init(this)
   }
 
   transport (t) {

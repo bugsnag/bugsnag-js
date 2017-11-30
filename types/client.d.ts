@@ -2,13 +2,13 @@ import Breadcrumb from "./breadcrumb";
 import { BeforeSend, IConfig, IFinalConfig } from "./common";
 import Report from "./report";
 
-declare class Client {
+export class Client {
   public app: object;
   public device: object;
   public context: string | void;
   public config: IFinalConfig;
 
-  public use(plugin: IPlugin): Client;
+  public use(plugin: IPlugin): any;
   public configure(opts: IConfig): Client;
   public transport(transport: ITransport): Client;
   public logger(logger: ILogger): Client;
@@ -16,9 +16,12 @@ declare class Client {
   public leaveBreadcrumb(name: string, metaData?: any, type?: string, timestamp?: string): Client;
 }
 
-interface IPlugin {
-  init: (client: Client, ReportClass: typeof Report, BreadcrumbClass: typeof Breadcrumb) => void;
+export interface IPlugin {
+  init: (client: Client) => any;
   destroy?(): void;
+  configSchema?: {
+    [key: string]: any;
+  };
 }
 
 interface ITransport {

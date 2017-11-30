@@ -1,7 +1,6 @@
 const { describe, it, expect, fail } = global
 
 const Client = require('../client')
-const Report = require('../report')
 
 const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
@@ -36,9 +35,8 @@ describe('base/client', () => {
       client.use({
         name: 'test plugin',
         description: 'nothing much to see here',
-        init: (c, r) => {
+        init: (c) => {
           expect(c).toEqual(client)
-          expect(r).toEqual(Report)
           done()
         }
       })

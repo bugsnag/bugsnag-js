@@ -6,7 +6,7 @@ const hasStack = require('../../base/lib/has-stack')
  */
 
 module.exports = {
-  init: (client, BugsnagReport) => {
+  init: (client) => {
     // only attach for browsers that suppport promises
     if (!('onunhandledrejection' in window)) return
 
@@ -17,11 +17,11 @@ module.exports = {
       let report
       if (error && hasStack(error)) {
         // if it quacks like an Error…
-        report = new BugsnagReport(error.name, error.message, ErrorStackParser.parse(error), handledState)
+        report = new client.BugsnagReport(error.name, error.message, ErrorStackParser.parse(error), handledState)
       } else {
         // if it doesn't…
         const msg = typeof error === 'string' ? error : 'Unhandled promise rejection'
-        report = new BugsnagReport('UnhandledRejection', msg, [], handledState)
+        report = new client.BugsnagReport('UnhandledRejection', msg, [], handledState)
         // stuff the rejection reason into metaData, it could be useful
         report.updateMetaData('promise', 'rejection reason', error)
       }

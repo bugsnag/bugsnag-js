@@ -2,7 +2,7 @@
  * Leaves breadcrumbs when the user interacts with the DOM
  */
 module.exports = {
-  init: (client, BugsnagReport) => {
+  init: (client) => {
     if (!('addEventListener' in window)) return
 
     window.addEventListener('click', (event) => {

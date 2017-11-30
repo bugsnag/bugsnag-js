@@ -2,7 +2,7 @@
  * Leaves breadcrumbs when navigation methods are called or events are emitted
  */
 module.exports = {
-  init: (client, BugsnagReport) => {
+  init: (client) => {
     if (!('addEventListener' in window)) return
 
     // returns a function that will drop a breadcrumb with a given name

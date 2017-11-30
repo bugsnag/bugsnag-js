@@ -4,7 +4,7 @@ const { map, filter } = require('../../base/lib/es-utils')
  * Leaves breadcrumbs when console log methods are called
  */
 module.exports = {
-  init: (client, BugsnagReport) => {
+  init: (client) => {
     map(CONSOLE_LOG_METHODS, method => {
       const original = console[method]
       console[method] = (...args) => {

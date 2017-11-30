@@ -25,7 +25,7 @@ const program = `
 import bugsnag from "../../.."
 bugsnag({
   ${Object.keys(schema).map((k, i) => `${k}: ${JSON.stringify(exampleValue(k))}`).join(',\n  ')}
-})
+}, [ { init: () => {} }])
 `.trim()
 
 describe('types', () => {
