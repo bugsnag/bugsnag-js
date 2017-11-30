@@ -352,6 +352,18 @@ describe("Bugsnag", function () {
       assert.deepEqual(params.severityReason, decode(Bugsnag._serialize({ severityReason: { type: 'userSpecifiedSeverity' } })).severityReason);
     });
 
+    it("should persist severity in beforeNotify", function () {
+      var callFlag = false;
+      Bugsnag.beforeNotify = function beforeNotify(payload, metadata) {
+        assert.equal(payload.severity, "info")
+        callFlag = true;
+      }
+      Bugsnag.notifyException(new Error("Example error"), null, null, "info");
+
+      assert(Bugsnag.testRequest.calledOnce, "Bugsnag.testRequest should have been called once");
+      assert(callFlag);
+    });
+
     if (navigator.appVersion.indexOf("MSIE 9") > -1) {
       it("should tell that the stacktrace is from IE", function () {
         Bugsnag.notifyException(new Error("Example error"));
