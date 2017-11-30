@@ -11,9 +11,9 @@ interface IConfig {
   releaseStage?: string;
   maxEvents?: number;
   maxBreadcrumbs?: number;
-  consoleBreadcumbsEnabled?: boolean;
-  navigationBreadcumbsEnabled?: boolean;
-  interactionBreadcumbsEnabled?: boolean;
+  consoleBreadcrumbsEnabled?: boolean;
+  navigationBreadcrumbsEnabled?: boolean;
+  interactionBreadcrumbsEnabled?: boolean;
 }
 
 interface IFinalConfig extends IConfig {
@@ -25,9 +25,9 @@ interface IFinalConfig extends IConfig {
   releaseStage: string;
   maxEvents: number;
   maxBreadcrumbs: number;
-  consoleBreadcumbsEnabled: boolean;
-  navigationBreadcumbsEnabled: boolean;
-  interactionBreadcumbsEnabled: boolean;
+  consoleBreadcrumbsEnabled: boolean;
+  navigationBreadcrumbsEnabled: boolean;
+  interactionBreadcrumbsEnabled: boolean;
 }
 
 type BeforeSend = (report: Report) => boolean | void;

@@ -19,10 +19,10 @@ module.exports = {
     }, true)
   },
   configSchema: {
-    interactionBreadcumbsEnabled: {
+    interactionBreadcrumbsEnabled: {
       defaultValue: () => undefined,
       validate: (value) => value === true || value === false || value === undefined,
-      message: '(boolean) interactionBreadcumbsEnabled should be true or false'
+      message: '(boolean) interactionBreadcrumbsEnabled should be true or false'
     }
   }
 }

@@ -30,10 +30,10 @@ module.exports = {
     if (typeof console[method]._restore === 'function') console[method]._restore()
   }),
   configSchema: {
-    consoleBreadcumbsEnabled: {
+    consoleBreadcrumbsEnabled: {
       defaultValue: () => undefined,
       validate: (value) => value === true || value === false || value === undefined,
-      message: '(boolean) consoleBreadcumbsEnabled should be true or false'
+      message: '(boolean) consoleBreadcrumbsEnabled should be true or false'
     }
   }
 }

@@ -73,17 +73,17 @@ module.exports = (opts, userPlugins = []) => {
     bugsnag.use(plugins['unhandled rejection'])
   }
 
-  if (bugsnag.config.navigationBreadcumbsEnabled === true || bugsnag.config.autoBreadcrumbs) {
+  if (inferBreadcrumbSetting(bugsnag.config, 'navigationBreadcrumbsEnabled')) {
     bugsnag.use(plugins['navigation breadcrumbs'])
   }
 
-  if (bugsnag.config.interactionBreadcumbsEnabled === true || bugsnag.config.autoBreadcrumbs) {
+  if (inferBreadcrumbSetting(bugsnag.config, 'interactionBreadcrumbsEnabled')) {
     bugsnag.use(plugins['interaction breadcrumbs'])
   }
 
   // because console breadcrumbs play havoc with line numbers,
-  // if not explicitly enabled only setup on non-development evironments
-  if (bugsnag.config.consoleBreadcumbsEnabled === true || (bugsnag.config.autoBreadcrumbs && !/^dev(elopment)?$/.test(bugsnag.config.releaseStage))) {
+  // if not explicitly enabled, only setup on non-development evironments
+  if (inferBreadcrumbSetting(bugsnag.config, 'consoleBreadcrumbsEnabled', false)) {
     bugsnag.use(plugins['console breadcrumbs'])
   }
 
@@ -102,5 +102,12 @@ const getPrefixedConsole = () => {
   })
   return logger
 }
+
+const inferBreadcrumbSetting = (config, val, defaultInDev = true) =>
+  typeof config[val] === 'boolean'
+    ? config[val]
+    : (config.autoBreadcrumbs &&
+        (defaultInDev || !/^dev(elopment)?$/.test(config.releaseStage))
+      )
 
 module.exports['default'] = module.exports

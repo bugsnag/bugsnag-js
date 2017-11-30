@@ -36,10 +36,10 @@ module.exports = {
     window.history.pushState._restore()
   },
   configSchema: {
-    navigationBreadcumbsEnabled: {
+    navigationBreadcrumbsEnabled: {
       defaultValue: () => undefined,
       validate: (value) => value === true || value === false || value === undefined,
-      message: '(boolean) navigationBreadcumbsEnabled should be true or false'
+      message: '(boolean) navigationBreadcrumbsEnabled should be true or false'
     }
   }
 }
