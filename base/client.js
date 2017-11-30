@@ -4,7 +4,6 @@ const BugsnagBreadcrumb = require('./breadcrumb')
 const { map, reduce, includes, isArray } = require('./lib/es-utils')
 const jsonStringify = require('fast-safe-stringify')
 const isError = require('iserror')
-// const uid = require('cuid')
 
 const noop = () => {}
 
