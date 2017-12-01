@@ -1,6 +1,13 @@
 Changelog
 =========
 
+3.3.3 (2017-12-01)
+-----
+
+### Bug fixes
+
+- Ensure user-supplied severity in a callback is retained. Credit @apexskier (#276).
+
 3.3.2 (2017-11-06)
 -----
 
