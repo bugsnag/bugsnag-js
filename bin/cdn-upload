@@ -31,7 +31,7 @@ const upload = (localPath, remotePath) => {
 
 const invalidate = (paths) => {
   console.log(`invaliding CloudFront cache for the following objects:\n${paths.join('\n')}`)
-  return promisify(cfClient.createInvalidation.bind(cfClient))('E205JDPNKONLN7', version, paths)
+  return promisify(cfClient.createInvalidation.bind(cfClient))('E205JDPNKONLN7', `bugsnag-js@${version}`, paths)
 }
 
 const run = async () => {

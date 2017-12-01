@@ -20,6 +20,7 @@
   },
   "scripts": {
     "preversion": "./bin/env-check && npm run test:basic",
+    "prepare": "npm run build",
     "version": "npm run chore && ./bin/update-changelog && git add README.md CHANGELOG.md",
     "postversion": "git push && git push --tags && npm publish --tag $(./bin/dist-tag-value)",
     "postpublish": "./bin/cdn-upload",
@@ -38,8 +39,7 @@
     "build:dist:min": "bin/bundle | bin/minify dist/bugsnag.min.js",
     "chore": "npm run chore:contibuting-toc && npm run chore:readme-size-badge",
     "chore:contibuting-toc": "markdown-toc -i CONTRIBUTING.md",
-    "chore:readme-size-badge": "./bin/readme-size-badge",
-    "prepare": "npm run build"
+    "chore:readme-size-badge": "./bin/readme-size-badge"
   },
   "license": "MIT",
   "repository": {
