@@ -1010,7 +1010,7 @@
     // annotate this property so that we can check if the "beforeNotify" callbacks changed it
     // can't annotate a string literal ""/'', so create a String() object, woo!
     if (userSpecifiedSeverity) {
-      payload.severity = new String(userSpecifiedSeverity);
+      payload.severity = new String(userSeverity);
       payload.severity.__userSpecifiedSeverity = true;
     }
 
