@@ -10,3 +10,4 @@ declare function createBugsnagClient(
 
 // commonjs/requirejs export
 export default createBugsnagClient;
+export { Client, IPlugin };

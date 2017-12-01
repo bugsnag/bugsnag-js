@@ -1,6 +1,18 @@
 import Breadcrumb from "./breadcrumb";
 
 declare class Report {
+  public static getStacktrace(
+    error: any,
+    errorFramesToSkip?: number,
+    generatedFramesToSkip?: number,
+  ): IStackframe[];
+
+  public static ensureReport(
+    reportOrError: any,
+    errorFramesToSkip?: number,
+    generatedFramesToSkip?: number,
+  ): Report;
+
   public app: {
     releaseStage: string;
     [key: string]: string;

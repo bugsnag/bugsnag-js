@@ -8,6 +8,9 @@ export class Client {
   public context: string | void;
   public config: IFinalConfig;
 
+  public BugsnagReport: typeof Report;
+  public BugsnagBreadcrumb: typeof Breadcrumb;
+
   public use(plugin: IPlugin): any;
   public configure(opts: IConfig): Client;
   public transport(transport: ITransport): Client;
@@ -17,11 +20,15 @@ export class Client {
 }
 
 export interface IPlugin {
+  configSchema?: { [key: string]: IConfigSchemaEntry; };
   init: (client: Client) => any;
   destroy?(): void;
-  configSchema?: {
-    [key: string]: any;
-  };
+}
+
+interface IConfigSchemaEntry {
+  message: string;
+  validate: (val: any) => boolean;
+  defaultValue: () => any;
 }
 
 interface ITransport {
