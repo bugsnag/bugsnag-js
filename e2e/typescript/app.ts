@@ -27,16 +27,17 @@ try {
   client.notify('123', { beforeSend: () => false })
   client.notify({ message: 'hi' }, { beforeSend: report => report.ignore() })
   client.use({
-    init: (client, Report, Breadcrumb) => {
+    init: (client) => {
       client.leaveBreadcrumb('foo', {}, 'new_type')
       client.notify(
-        new Report('Errrr', 'sad', [], {
+        new client.BugsnagReport('Errrr', 'sad', [], {
           severity: 'warning',
           severityReason: { type: 'somethingSpecial' },
           unhandled: false
         })
       )
       client.config.beforeSend.push(() => false)
+      return null
     }
   })
 } catch (e) {
