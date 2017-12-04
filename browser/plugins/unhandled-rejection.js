@@ -21,7 +21,9 @@ module.exports = {
       } else {
         // if it doesn't…
         const msg = typeof error === 'string' ? error : 'Unhandled promise rejection'
-        report = new client.BugsnagReport('UnhandledRejection', msg, [], handledState)
+        const err = new Error(msg)
+        err.type = 'UnhandledRejection'
+        report = new client.BugsnagReport(err.type, err.message, ErrorStackParser.parse(err), handledState)
         // stuff the rejection reason into metaData, it could be useful
         report.updateMetaData('promise', 'rejection reason', error)
       }
