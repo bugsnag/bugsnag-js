@@ -12,7 +12,7 @@ The Bugsnag error reporter for JavaScript automatically detects and reports erro
 ## Getting started
 
 1. [Create a Bugsnag account](https://bugsnag.com)
-2. Complete the instructions in the [integration guide](https://docs.bugsnag.com/platforms/browsers/v4/)
+2. Complete the instructions in the [integration guide](https://docs.bugsnag.com/platforms/browsers/)
 3. Report handled exceptions using
    [`client.notify()`](https://docs.bugsnag.com/platforms/browsers/#reporting-handled-exceptions)
 4. Customize your integration using the
