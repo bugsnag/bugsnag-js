@@ -47,7 +47,7 @@ const run = async () => {
   await upload(`${__dirname}/../dist/bugsnag.min.js`, track(`/v${version}/bugsnag.min.js`))
   await upload(`${__dirname}/../dist/bugsnag.min.js.map`, track(`/v${version}/bugsnag.min.js.map`))
 
-  const isUnstable = semver.prerelease(version)
+  const isUnstable = semver.prerelease(version) !== null
   if (!isUnstable) {
     // if this is a release (as opposed to a prerelease), update the major/minor aliases
     const major = `v${semver.major(version)}`

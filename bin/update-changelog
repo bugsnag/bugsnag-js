@@ -42,7 +42,7 @@ const insert = (entry) => {
   writeFileSync(resolve(__dirname, '../CHANGELOG.md'), replaced, 'utf8')
 }
 
-const isUnstable = semver.prerelease(version).length > 0
+const isUnstable = semver.prerelease(version) !== null
 if (isUnstable) {
   console.log('skipping changelog update (prerelease versions don’t need changelogs)')
 } else {
