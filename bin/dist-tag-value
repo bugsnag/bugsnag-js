@@ -6,7 +6,7 @@ const semver = require('semver')
 // Detects whether the current version is semver prerelease and
 // outputs the appropriate value for `npm publish --tags "<tag>"`
 console.log(
-  semver.prerelease(version).length > 0
+  semver.prerelease(version) !== null
     ? 'unstable'
     : 'latest'
 )
