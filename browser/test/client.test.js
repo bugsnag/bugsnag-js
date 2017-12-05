@@ -109,4 +109,28 @@ describe('client()', () => {
       window.document.body.appendChild(script)
     })
   })
+
+  describe('sessions', () => {
+    it('should track sessions', () => {
+      const client = new Client(VALID_NOTIFIER)
+      client.configure({ apiKey: 'API_KEY_YEAH' })
+      let sessionSent = false
+      let reportSent = false
+      client.transport({
+        sendReport: (logger, config, payload) => {
+          expect(payload.events[0].session).toBeDefined()
+          reportSent = true
+        },
+        sendSession: (logger, config, payload) => {
+          expect(payload.sessions[0].startedAt).toBeDefined()
+          expect(payload.sessions[0].id).toBeDefined()
+          sessionSent = true
+        }
+      })
+      client.startSession()
+      expect(sessionSent).toBe(true)
+      client.notify(new Error('blah'))
+      expect(reportSent).toBe(true)
+    })
+  })
 })

@@ -1,5 +1,5 @@
 import Breadcrumb from "./breadcrumb";
-import { BeforeSend, IConfig, IFinalConfig } from "./common";
+import { BeforeSend, BeforeSession, IConfig, IFinalConfig } from "./common";
 import Report from "./report";
 
 export class Client {
@@ -7,6 +7,7 @@ export class Client {
   public device: object;
   public context: string | void;
   public config: IFinalConfig;
+  public beforeSession: BeforeSession[];
 
   public BugsnagReport: typeof Report;
   public BugsnagBreadcrumb: typeof Breadcrumb;
@@ -17,6 +18,7 @@ export class Client {
   public logger(logger: ILogger): Client;
   public notify(error: NotifiableError, opts?: INotifyOpts): boolean;
   public leaveBreadcrumb(name: string, metaData?: any, type?: string, timestamp?: string): Client;
+  public startSession(): Client;
 }
 
 export interface IPlugin {
@@ -39,6 +41,12 @@ interface ITransport {
     report: IReportPayload,
     cb?: (e: Error | null, resText: string) => void,
   ) => void;
+  sendSession: (
+    logger: ILogger,
+    config: any,
+    report: ISessionPayload,
+    cb?: (e: Error | null, resText: string) => void,
+  ) => void;
 }
 
 interface ILogger {
@@ -56,6 +64,24 @@ interface IReportPayload {
     url: string;
   };
   events: Report[];
+}
+
+interface ISessionPayload {
+  notifier: {
+    name: string;
+    version: string;
+    url: string;
+  };
+  device?: object;
+  user?: object;
+  app?: object;
+  sessions: ISession[];
+}
+
+interface ISession {
+  id: string;
+  startedAt: string;
+  user?: object;
 }
 
 interface INotifyOpts {

@@ -28,6 +28,7 @@ declare class Report {
   public severity: "info" | "warning" | "error";
   public stacktrace: IStackframe[];
   public user: object;
+  public session: object;
   public request: {
     url: string;
   };

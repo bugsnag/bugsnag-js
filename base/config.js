@@ -27,6 +27,11 @@ module.exports.schema = {
     message: '(string) endpoint should be set',
     validate: () => true
   },
+  sessionEndpoint: {
+    defaultValue: () => '//sessions.bugsnag.com',
+    message: '(string) sessionEndpoint should be set',
+    validate: () => true
+  },
   notifyReleaseStages: {
     defaultValue: () => null,
     message: '(array[string]) notifyReleaseStages should only contain strings',

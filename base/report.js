@@ -32,6 +32,7 @@ class BugsnagReport {
       return accum.concat(frame)
     }, [])
     this.user = undefined
+    this.session = undefined
   }
 
   ignore () {
@@ -107,7 +108,8 @@ class BugsnagReport {
       user: this.user,
       metaData: this.metaData,
       groupingHash: this.groupingHash,
-      request: this.request
+      request: this.request,
+      session: this.session
     }
   }
 }

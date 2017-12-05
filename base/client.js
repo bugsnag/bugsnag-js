@@ -1,6 +1,7 @@
 const config = require('./config')
 const BugsnagReport = require('./report')
 const BugsnagBreadcrumb = require('./breadcrumb')
+const Session = require('./session')
 const { map, reduce, includes, isArray } = require('./lib/es-utils')
 const jsonStringify = require('fast-safe-stringify')
 const isError = require('iserror')
@@ -31,6 +32,8 @@ class BugsnagClient {
     this.plugins = []
 
     this.session = session
+    this.beforeSession = []
+
     this.breadcrumbs = []
 
     // setable props
@@ -74,6 +77,49 @@ class BugsnagClient {
   logger (l, sid) {
     this._logger = l
     return this
+  }
+
+  startSession () {
+    let sessionClient
+    if (typeof window !== 'undefined') {
+      sessionClient = this
+      this.session = new Session()
+    } else {
+      sessionClient = new BugsnagClient(this.notifier, this.configSchema, new Session())
+      sessionClient.config = this.config
+      sessionClient._configured = true
+
+      sessionClient._transport = this._transport
+      sessionClient._logger = this._logger
+
+      sessionClient.app = this.app
+      sessionClient.context = this.context
+      sessionClient.device = this.device
+      sessionClient.metaData = this.metaData
+      sessionClient.request = this.request
+      sessionClient.user = this.user
+    }
+
+    map(this.beforeSession, (fn) => fn(sessionClient))
+
+    sessionClient._transport.sendSession(
+      sessionClient._logger,
+      sessionClient.config,
+      {
+        notifier: sessionClient.notifier,
+        device: sessionClient.device,
+        app: sessionClient.app,
+        sessions: [
+          {
+            id: sessionClient.session.id,
+            startedAt: sessionClient.session.startedAt,
+            user: sessionClient.user
+          }
+        ]
+      }
+    )
+
+    return sessionClient
   }
 
   leaveBreadcrumb (name, metaData, type, timestamp) {
@@ -134,6 +180,11 @@ class BugsnagClient {
     report.user = { ...report.user, ...this.user, ...opts.user }
     report.metaData = { ...report.metaData, ...this.metaData, ...opts.metaData }
     report.breadcrumbs = this.breadcrumbs.slice(0)
+
+    if (this.session) {
+      this.session.trackError(report)
+      report.session = this.session
+    }
 
     // set severity if supplied
     if (opts.severity !== undefined) {
