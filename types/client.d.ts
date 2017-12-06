@@ -15,7 +15,7 @@ export class Client {
   public configure(opts: IConfig): Client;
   public transport(transport: ITransport): Client;
   public logger(logger: ILogger): Client;
-  public notify(error: any, opts?: INotifyOpts): boolean;
+  public notify(error: NotifiableError, opts?: INotifyOpts): boolean;
   public leaveBreadcrumb(name: string, metaData?: any, type?: string, timestamp?: string): Client;
 }
 
@@ -67,5 +67,7 @@ interface INotifyOpts {
   severity?: "info" | "warning" | "error";
   beforeSend?: BeforeSend;
 }
+
+type NotifiableError = Error | { errorClass: string; errorMessage: string; } | { name: string; message: string; } | any;
 
 export default Client;
