@@ -95,10 +95,12 @@ module.exports = (opts, userPlugins = []) => {
 
 const getPrefixedConsole = () => {
   const logger = {}
+  const consoleLog = console['log']
   map([ 'debug', 'info', 'warn', 'error' ], (method) => {
-    logger[method] = typeof console[method] === 'function'
-      ? console[method].bind(console, '[bugsnag]')
-      : console.log.bind(console, '[bugsnag]')
+    const consoleMethod = console[method]
+    logger[method] = typeof consoleMethod === 'function'
+      ? consoleMethod.bind(console, '[bugsnag]')
+      : consoleLog.bind(console, '[bugsnag]')
   })
   return logger
 }
