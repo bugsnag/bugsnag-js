@@ -32,6 +32,11 @@ module.exports.schema = {
     message: '(string) sessionEndpoint should be set',
     validate: () => true
   },
+  sessionTrackingEnabled: {
+    defaultValue: () => false,
+    message: '(boolean) sessionTrackingEnabled should be true/false',
+    validate: val => val === true || val === false
+  },
   notifyReleaseStages: {
     defaultValue: () => null,
     message: '(array[string]) notifyReleaseStages should only contain strings',

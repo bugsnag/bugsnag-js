@@ -90,7 +90,9 @@ module.exports = (opts, userPlugins = []) => {
   // init user supplied plugins
   map(userPlugins, (plugin) => bugsnag.use(plugin))
 
-  return bugsnag
+  return bugsnag.config.sessionTrackingEnabled
+    ? bugsnag.startSession()
+    : bugsnag
 }
 
 const getPrefixedConsole = () => {
