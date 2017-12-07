@@ -17,7 +17,8 @@ try {
     name: 'test transport',
     sendReport: (logger, config, report) => {
       reports.push(report)
-    }
+    },
+    sendSession: (logger, config, report) => {}
   })
   client.logger({ debug: noop, info: noop, warn: noop, error: noop })
   client.notify(new Error('badness'))
