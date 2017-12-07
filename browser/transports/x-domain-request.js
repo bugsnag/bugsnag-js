@@ -11,11 +11,13 @@ module.exports = {
       cb(null, req.responseText)
     }
     req.open('POST', url)
-    try {
-      req.send(makePayload(report))
-    } catch (e) {
-      logger.error(e)
-    }
+    setTimeout(() => {
+      try {
+        req.send(makePayload(report))
+      } catch (e) {
+        logger.error(e)
+      }
+    }, 0)
   },
   sendSession: (logger, config, session, cb = () => {}) => {
     const url = `${config.sessionEndpoint}?apiKey=${encodeURIComponent(config.apiKey)}&payloadVersion=1&sentAt=${encodeURIComponent(isoDate())}`
@@ -24,10 +26,12 @@ module.exports = {
       cb(null, req.responseText)
     }
     req.open('POST', url)
-    try {
-      req.send(jsonStringify(session))
-    } catch (e) {
-      logger.error(e)
-    }
+    setTimeout(() => {
+      try {
+        req.send(jsonStringify(session))
+      } catch (e) {
+        logger.error(e)
+      }
+    }, 0)
   }
 }
