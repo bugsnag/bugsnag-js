@@ -18,6 +18,18 @@ The Bugsnag error reporter for JavaScript automatically detects and reports erro
 4. Customize your integration using the
    [configuration options](https://docs.bugsnag.com/platforms/browsers/js/configuration-options/)
 
+## Integrating with frameworks
+
+Use the following plugins and guides to integrate Bugsnag with various frameworks.
+
+| Framework  | Bugsnag plugin | Documentation |
+| ---------- | -------------- | --------------|
+| React | [bugsnag-react](https://github.com/bugsnag/bugsnag-react)  | [React docs](https://docs.bugsnag.com/platforms/browsers/react/) |
+| Vue | [bugsnag-vue](https://github.com/bugsnag/bugsnag-vue)  | [Vue docs](https://docs.bugsnag.com/platforms/browsers/vue/) |
+| Angular | [bugsnag-angular](https://github.com/bugsnag/bugsnag-angular)  | [Angular docs](https://docs.bugsnag.com/platforms/browsers/angular/) |
+| Backbone | - | [Backbone docs](https://docs.bugsnag.com/platforms/browsers/backbone/) |
+| Ember | - | [Ember docs](https://docs.bugsnag.com/platforms/browsers/ember/) |
+
 ## Support
 
 * Check out the [FAQ](https://docs.bugsnag.com/platforms/browsers/js/faq/) and [configuration options](https://docs.bugsnag.com/platforms/browsers/js/configuration-options/)
