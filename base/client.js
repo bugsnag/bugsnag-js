@@ -1,8 +1,9 @@
 const config = require('./config')
 const BugsnagReport = require('./report')
 const BugsnagBreadcrumb = require('./breadcrumb')
-const Session = require('./session')
+const BugsnagSession = require('./session')
 const { map, reduce, includes, isArray } = require('./lib/es-utils')
+const inferReleaseStage = require('./lib/infer-release-stage')
 const jsonStringify = require('fast-safe-stringify')
 const isError = require('iserror')
 
@@ -47,6 +48,7 @@ class BugsnagClient {
     // expose internal constructors
     this.BugsnagReport = BugsnagReport
     this.BugsnagBreadcrumb = BugsnagBreadcrumb
+    this.BugsnagSession = BugsnagSession
   }
 
   configure (opts = {}) {
@@ -79,47 +81,17 @@ class BugsnagClient {
     return this
   }
 
+  sessionDelegate (s) {
+    this._sessionDelegate = s
+    return this
+  }
+
   startSession () {
-    let sessionClient
-    if (typeof window !== 'undefined') {
-      sessionClient = this
-      this.session = new Session()
-    } else {
-      sessionClient = new BugsnagClient(this.notifier, this.configSchema, new Session())
-      sessionClient.config = this.config
-      sessionClient._configured = true
-
-      sessionClient._transport = this._transport
-      sessionClient._logger = this._logger
-
-      sessionClient.app = this.app
-      sessionClient.context = this.context
-      sessionClient.device = this.device
-      sessionClient.metaData = this.metaData
-      sessionClient.request = this.request
-      sessionClient.user = this.user
+    if (!this._sessionDelegate) {
+      this._logger.warn('No session implementation is installed')
+      return this
     }
-
-    map(this.beforeSession, (fn) => fn(sessionClient))
-
-    sessionClient._transport.sendSession(
-      sessionClient._logger,
-      sessionClient.config,
-      {
-        notifier: sessionClient.notifier,
-        device: sessionClient.device,
-        app: sessionClient.app,
-        sessions: [
-          {
-            id: sessionClient.session.id,
-            startedAt: sessionClient.session.startedAt,
-            user: sessionClient.user
-          }
-        ]
-      }
-    )
-
-    return sessionClient
+    return this._sessionDelegate.startSession(this)
   }
 
   leaveBreadcrumb (name, metaData, type, timestamp) {
@@ -155,7 +127,7 @@ class BugsnagClient {
     if (!this._configured) throw new Error('Bugsnag must be configured before calling report()')
 
     // releaseStage can be set via config.releaseStage or client.app.releaseStage
-    const releaseStage = this.app && typeof this.app.releaseStage === 'string' ? this.app.releaseStage : this.config.releaseStage
+    const releaseStage = inferReleaseStage(this)
 
     // ensure we have an error (or a reasonable object representation of an error)
     let { err, errorFramesToSkip, _opts } = normaliseError(error, opts, this._logger)

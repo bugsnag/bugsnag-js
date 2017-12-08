@@ -7,6 +7,7 @@ describe('loading bugsnag with Typescript app via <script> tag', function () {
 
     var onmessage = function (event) {
       if (!event) return
+      console.log(event.data)
       var data = JSON.parse(event.data)
       expect(data.type === 'error').toBe(false)
       expect(data.error).toBeUndefined()

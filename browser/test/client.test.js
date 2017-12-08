@@ -6,6 +6,7 @@ const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 const url = require('url')
 
 const onerror = require('../plugins/window-onerror')
+const sessions = require('../plugins/sessions')
 
 describe('client()', () => {
   beforeEach(() => { window.onerror = null })
@@ -114,6 +115,7 @@ describe('client()', () => {
     it('should track sessions', () => {
       const client = new Client(VALID_NOTIFIER)
       client.configure({ apiKey: 'API_KEY_YEAH' })
+      client.use(sessions)
       let sessionSent = false
       let reportSent = false
       client.transport({

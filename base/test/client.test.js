@@ -2,6 +2,7 @@ const { describe, it, expect, fail } = global
 
 const Client = require('../client')
 const Report = require('../report')
+const Session = require('../session')
 
 const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
@@ -365,36 +366,45 @@ describe('base/client', () => {
   })
 
   describe('startSession()', () => {
-    it('notifies the session endpoint', (done) => {
+    it('calls the provided the session delegate and return delegate’s return value', () => {
       const client = new Client(VALID_NOTIFIER)
+      let ret
       client.configure({ apiKey: 'API_KEY' })
-      client.transport({
-        sendSession: (logger, config, session, cb) => {
-          expect(typeof session).toBe('object')
-          expect(session.notifier).toEqual(VALID_NOTIFIER)
-          expect(session.sessions.length).toBe(1)
-          expect(session.sessions[0].id).toBeTruthy()
-          expect(session.sessions[0].startedAt).toBeTruthy()
-          done()
+      client.sessionDelegate({
+        startSession: c => {
+          expect(c).toBe(client)
+          ret = {}
+          return ret
         }
       })
-      client.startSession()
+      expect(client.startSession()).toBe(ret)
     })
 
-    it('runs client.beforeSession[] callbacks', (done) => {
+    it('calls warns if a session delegate is not provided', (done) => {
       const client = new Client(VALID_NOTIFIER)
       client.configure({ apiKey: 'API_KEY' })
-      client.beforeSession.push(client => {
-        expect(client.session).toBeTruthy()
-        done()
+      client.logger({
+        debug: () => {},
+        info: () => {},
+        warn: (...args) => {
+          expect(args[0]).toMatch(/^No session/)
+          done()
+        },
+        error: () => {}
       })
       client.startSession()
     })
 
-    it('tracks handled/unhandled error counts and sends them in error payloads', (done) => {
+    it('tracks error counts using the session delegate and sends them in error payloads', (done) => {
       const client = new Client(VALID_NOTIFIER)
       client.configure({ apiKey: 'API_KEY' })
       let i = 0
+      client.sessionDelegate({
+        startSession: (client) => {
+          client.session = new Session()
+          return client
+        }
+      })
       client.transport({
         sendSession: () => {},
         sendReport: (logger, config, report, cb) => {

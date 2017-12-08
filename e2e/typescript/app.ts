@@ -9,7 +9,8 @@ try {
     endpoint: 'http://localhost:55854',
     notifyReleaseStages: [ 'staging', 'production' ],
     releaseStage: 'production',
-    maxEvents: 10
+    maxEvents: 10,
+    sessionTrackingEnabled: false
   })
   const noop = () => {}
 
@@ -20,6 +21,7 @@ try {
     },
     sendSession: (logger, config, report) => {}
   })
+  client.sessionDelegate({ startSession: client => client })
   client.logger({ debug: noop, info: noop, warn: noop, error: noop })
   client.notify(new Error('badness'))
   window.parent.postMessage(JSON.stringify({ type: 'data', reports: reports }), '*')
@@ -41,6 +43,7 @@ try {
       return null
     }
   })
+  client.startSession()
 } catch (e) {
   window.parent.postMessage(JSON.stringify({ type: 'error', error: e }), '*')
 }
