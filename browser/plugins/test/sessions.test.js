@@ -63,4 +63,18 @@ describe('plugin: sessions', () => {
     sessionClient.notify(new c.BugsnagReport('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
     sessionClient.notify(new c.BugsnagReport('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
   })
+
+  it('correctly infers releaseStage', (done) => {
+    const c = new Client(VALID_NOTIFIER)
+    c.configure({ apiKey: 'API_KEY', releaseStage: 'foo' })
+    c.use(plugin)
+    c.transport({
+      sendSession: (logger, config, session, cb) => {
+        expect(typeof session).toBe('object')
+        expect(session.app.releaseStage).toBe('foo')
+        done()
+      }
+    })
+    c.startSession()
+  })
 })
