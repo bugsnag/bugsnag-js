@@ -6,7 +6,7 @@ module.exports = {
     if (!('addEventListener' in window)) return
 
     // returns a function that will drop a breadcrumb with a given name
-    const drop = name => () => client.leaveBreadcrumb(name, 'navigation')
+    const drop = name => () => client.leaveBreadcrumb(name, {}, 'navigation')
 
     // simple drops – just names, no meta
     window.addEventListener('pagehide', drop('Page hidden'), true)
