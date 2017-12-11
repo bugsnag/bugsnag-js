@@ -13,6 +13,16 @@ describe('base/report', () => {
       expect(r._handledState.unhandled).toBe(false)
       expect(r._handledState.severityReason).toEqual({ type: 'handledException' })
     })
+
+    it('doesn’t create empty stackframes', () => {
+      const Report = require('../report')
+      const err = new Error('noooooo')
+      const r = new Report(err.name, err.message, [
+        { foo: 10 },
+        { toJSON: () => { throw new Error('do not serialise me, srsly') } }
+      ])
+      expect(r.stacktrace.length).toBe(0)
+    })
   })
 
   describe('BugsnagReport.ensureReport()', () => {

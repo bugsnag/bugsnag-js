@@ -1,7 +1,7 @@
 const ErrorStackParser = require('error-stack-parser')
 const StackGenerator = require('stack-generator')
 const hasStack = require('./lib/has-stack')
-const { reduce, filter, map, keys } = require('./lib/es-utils')
+const { reduce, filter } = require('./lib/es-utils')
 
 class BugsnagReport {
   constructor (errorClass, errorMessage, stacktrace = [], handledState = defaultHandledState()) {
@@ -19,17 +19,21 @@ class BugsnagReport {
     this.breadcrumbs = []
     this.context = undefined
     this.device = undefined
-    this.errorClass = typeof errorClass === 'string' && errorClass ? errorClass : '[no error class]'
-    this.errorMessage = typeof errorMessage === 'string' && errorMessage ? errorMessage : '[no error message]'
+    this.errorClass = stringOrFallback(errorClass, '[no error class]')
+    this.errorMessage = stringOrFallback(errorMessage, '[no error message]')
     this.groupingHash = undefined
     this.metaData = {}
     this.request = undefined
     this.severity = this._handledState.severity
-    this.stacktrace = map(stacktrace, frame => formatStackframe(frame))
-    // don't include a stackframe if none of its properties are defined
-    reduce(stacktrace, (accum, frame) => {
-      if (filter(keys(frame), k => frame[k] !== undefined).length === 0) return accum
-      return accum.concat(frame)
+    this.stacktrace = reduce(stacktrace, (accum, frame) => {
+      const f = formatStackframe(frame)
+      // don't include a stackframe if none of its properties are defined
+      try {
+        if (JSON.stringify(f) === '{}') return accum
+        return accum.concat(f)
+      } catch (e) {
+        return accum
+      }
     }, [])
     this.user = undefined
   }
@@ -141,6 +145,8 @@ const defaultHandledState = () => ({
   severity: 'warning',
   severityReason: { type: 'handledException' }
 })
+
+const stringOrFallback = (str, fallback) => typeof str === 'string' && str ? str : fallback
 
 // Helpers
 
