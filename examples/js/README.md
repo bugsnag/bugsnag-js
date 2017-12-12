@@ -27,3 +27,6 @@ API token with your own!
     npm start
     ```
 1. View the example page which will (most likely) be served at: http://localhost:5000
+
+For more information, see our documentation:
+https://docs.bugsnag.com/platforms/browsers/js/
