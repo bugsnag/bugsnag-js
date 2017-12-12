@@ -17,10 +17,7 @@ API token with your own!
     git clone git@github.com:bugsnag/bugsnag-js.git
     cd bugsnag-js/examples/js
     ```
-1. Install the dependencies (with either npm or yarn):
-    ```sh
-    npm i
-    ```
+1. Install the dependencies:
     ```sh
     yarn
     ```
