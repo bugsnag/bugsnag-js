@@ -3,8 +3,19 @@
   <head>
     <title>Bugsnag JS: Plain JS example</title>
     <script src="node_modules/bugsnag-js/dist/bugsnag.js"></script>
-    <script>
-      var client = bugsnag({ apiKey: 'API_KEY' })
+    <script>window.bugsnagClient = bugsnag({
+       apiKey: 'API_KEY',
+       // appVersion: '1.2.3',
+       // releaseStage: 'development',
+       // notifyReleaseStages: [ 'development', 'production'],
+       // beforeSend: function (report) {
+       //  report.user = {
+       //    name: "Grace Hopper",
+       //    email: "ghopper@code.com",
+       //    id: "123456789"
+       //  }
+       // }
+      })
     </script>
   </head>
   <body>
