@@ -7,7 +7,7 @@
 // ***********************************************************
 
 document.getElementById("jsHandled").addEventListener("click", send_handled); 
-document.getElementById("jsMetadata").addEventListener("click", send_metadata); 
+document.getElementById("jsUnhandled").addEventListener("click", send_unhandled); 
 
 
 // Below function will catch an error, and shows how 
@@ -23,42 +23,26 @@ function send_handled() {
     } 
     catch (e) {
         bugsnagClient.notify(e, { 
-          // most errors will have a default context, but you can override.
-            context: "a handled ReferenceError",
-          // default: unhandlesd = error, handled = warning, but you can override.
-            severity: "info"
-          });            
-    }
-}
-
-
-// Below function is a second example of reporting an handled error
-// to bgusnag, this time including some metadata. Note that metadata
-// can be declared globally, in the noticification (as below) or 
-// in a beforeSend.
-function send_metadata() {
-  console.log("metadata sent")
-    try {
-      // deliberate Reference Error
-        console.log(doesntExist);
-    } 
-    catch (e) {
-        bugsnagClient.notify(e, { 
             context: "a handled ReferenceError with metadata",
-            severity: "error",
+            // unhandled errors default to 'warning', but you can override
+            severity: "info",
+            // Note that metadata can be declared globally, 
+            // in the noticification (as below) or in a beforeSend.
             metaData: {
               company: {
                   name: "Xavier's School for Gifted Youngsters"
                 }
             }
-          });            
+          });           
     }
 }
 
-// Below function will, on every pagesload, trigger an unhandled error,
+
+// Below function will trigger an unhandled error
 // which will report to bugsnag, along with all the info configured
 // in the initialization of bugsnag in the html.
 function send_unhandled() {
+    console.log("unhandled sent")
     var num = 1;
     // deliberate Type Error
     num.toUpperCase(); 
@@ -67,8 +51,7 @@ function send_unhandled() {
 // below is the simplest notification syntax, akin to logging.
 bugsnagClient.notify("End of file");
 
-send_unhandled();
-// Note that bugsang sets a limit of 10 notifications per page load,
+
 
 
 

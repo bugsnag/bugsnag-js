@@ -9,7 +9,7 @@
     <!-- Initialize bugsnag to begin tracking errors. Only an api key is required, but here are some other helpful configuration details: -->
     <script>window.bugsnagClient = bugsnag({ 
       // get your own api key at bugsnag.com
-       apiKey: 'YOU_API_KEY',
+       apiKey: 'YOUR_API_KEY',
 
        // if you track deploys or use source maps, make sure to set the correct version.
        appVersion: '1.2.3',
@@ -17,12 +17,12 @@
        // defines the release stage for all events that occurr in this app.
        releaseStage: 'development',
 
-       //  defines which release stages bgusnafg shoudl report. e.g. ignore staing errors.
+       //  defines which release stages bugsnag should report. e.g. ignore staging errors.
        notifyReleaseStages: [ 'development', 'production'],
 
        // one of the most powerful tools in our library, beforeSend lets you
-       // evalaute, modify and remove data before sending to bugsnag. The actions 
-       // here will be applied to *all* errors, handled and unhandled.
+       // evaluate, modify, add and remove data before sending to bugsnag. 
+       // The actions here will be applied to *all* errors, handled and unhandled.
        beforeSend: function (report) {
           report.user = {
             name: "Grace Hopper",
@@ -48,7 +48,7 @@
         </h3>
           <button type="button" id="jsHandled">SEND HANDLED</button>
           <br>
-          <button type="button" id="jsMetadata">SEND WITH METADATA</button>
+          <button type="button" id="jsUnhandled">SEND UNHANDLED</button>
     </div>
     <!-- in app.js you'll find further syntax and configuration examples. -->
     <script src="app.js"></script>
