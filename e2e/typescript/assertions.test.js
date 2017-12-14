@@ -6,18 +6,19 @@ describe('loading bugsnag with Typescript app via <script> tag', function () {
     el.src = '/base/typescript/serve/index.html'
 
     var onmessage = function (event) {
-      if (!event) return
-      var data = JSON.parse(event.data)
-      expect(data.type === 'error').toBe(false)
-      expect(data.error).toBeUndefined()
-      expect(data.reports).toBeDefined()
-      expect(data.reports[0].notifier.version).toMatch(/\d\.\d\.\d/)
-
       if ('addEventListener' in window) {
         window.removeEventListener('message', onmessage)
       } else {
         window.detachEvent('onmessage', onmessage)
       }
+
+      if (!event) return
+      var data = JSON.parse(event.data)
+      // console.log(data)
+      expect(data.type === 'error').toBe(false)
+      expect(data.error).toBeUndefined()
+      expect(data.reports).toBeDefined()
+      expect(data.reports[0].notifier.version).toMatch(/\d\.\d\.\d/)
 
       done()
     }
