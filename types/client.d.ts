@@ -7,6 +7,8 @@ export class Client {
   public device: object;
   public context: string | void;
   public config: IFinalConfig;
+  public user: object;
+  public metaData: object;
 
   public BugsnagReport: typeof Report;
   public BugsnagBreadcrumb: typeof Breadcrumb;
