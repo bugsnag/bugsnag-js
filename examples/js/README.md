@@ -8,7 +8,7 @@ Try this out with [your own Bugsnag account](https://app.bugsnag.com/user/new)! 
 
 To get set up, follow the instructions below. Don't forget to replace the placeholder API token with your own!
 
-1. Clone the repo and `cd` this this directory:
+1. Clone the repo and `cd` into this directory:
     ```sh
     git clone git@github.com:bugsnag/bugsnag-js.git
     cd bugsnag-js/examples/js
