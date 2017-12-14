@@ -13,8 +13,8 @@ module.exports = {
     req.open('POST', url)
     req.setRequestHeader('Content-Type', 'application/json')
     req.setRequestHeader('Bugsnag-Api-Key', report.apiKey || config.apiKey)
-    req.setRequestHeader('Bugsnag-payload-version', '4.0')
-    req.setRequestHeader('Bugsnag-sent-at', isoDate())
+    req.setRequestHeader('Bugsnag-Payload-Version', '4.0')
+    req.setRequestHeader('Bugsnag-Sent-At', isoDate())
     try {
       req.send(makePayload(report))
     } catch (e) {
@@ -30,8 +30,8 @@ module.exports = {
     req.open('POST', url)
     req.setRequestHeader('Content-Type', 'application/json')
     req.setRequestHeader('Bugsnag-Api-Key', config.apiKey)
-    req.setRequestHeader('Bugsnag-payload-version', '1')
-    req.setRequestHeader('Bugsnag-sent-at', isoDate())
+    req.setRequestHeader('Bugsnag-Payload-Version', '1.0')
+    req.setRequestHeader('Bugsnag-Sent-At', isoDate())
     try {
       req.send(jsonStringify(session))
     } catch (e) {

@@ -20,7 +20,7 @@ module.exports = {
     }, 0)
   },
   sendSession: (logger, config, session, cb = () => {}) => {
-    const url = `${config.sessionEndpoint}?apiKey=${encodeURIComponent(config.apiKey)}&payloadVersion=1&sentAt=${encodeURIComponent(isoDate())}`
+    const url = `${config.sessionEndpoint}?apiKey=${encodeURIComponent(config.apiKey)}&payloadVersion=1.0&sentAt=${encodeURIComponent(isoDate())}`
     const req = new window.XDomainRequest()
     req.onload = function () {
       cb(null, req.responseText)
