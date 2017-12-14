@@ -25,13 +25,13 @@ export interface IPlugin {
   destroy?(): void;
 }
 
-interface IConfigSchemaEntry {
+export interface IConfigSchemaEntry {
   message: string;
   validate: (val: any) => boolean;
   defaultValue: () => any;
 }
 
-interface ITransport {
+export interface ITransport {
   name: string;
   sendReport: (
     logger: ILogger,
@@ -41,14 +41,14 @@ interface ITransport {
   ) => void;
 }
 
-interface ILogger {
+export interface ILogger {
   debug: (...args: any[]) => void;
   info: (...args: any[]) => void;
   warn: (...args: any[]) => void;
   error: (...args: any[]) => void;
 }
 
-interface IReportPayload {
+export interface IReportPayload {
   apiKey: string;
   notifier: {
     name: string;
@@ -58,7 +58,7 @@ interface IReportPayload {
   events: Report[];
 }
 
-interface INotifyOpts {
+export interface INotifyOpts {
   context?: string;
   device?: object;
   request?: object;
@@ -68,6 +68,9 @@ interface INotifyOpts {
   beforeSend?: BeforeSend;
 }
 
-type NotifiableError = Error | { errorClass: string; errorMessage: string; } | { name: string; message: string; } | any;
+export type NotifiableError = Error
+  | { errorClass: string; errorMessage: string; }
+  | { name: string; message: string; }
+  | any;
 
 export default Client;
