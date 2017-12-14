@@ -49,8 +49,8 @@
   "standard": {
     "ignore": [
       "dist",
-      "examples",
-      "e2e/**/serve/**"
+      "e2e/**/serve/**",
+      "examples/typescript/app.js"
     ]
   },
   "devDependencies": {
