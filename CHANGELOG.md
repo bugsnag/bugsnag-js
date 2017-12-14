@@ -2,6 +2,23 @@
 
 <!-- {entry_placeholder} -->
 
+## 4.0.2 (2017-12-14)
+
+### Added
+- Add more type exports (#286)
+- Add frameworks section to README.md
+- Add READMEs to examples
+
+### Changed
+- Add more detail to JS example (credit @tremlab, #284)
+- Ensure empty/useless stackframes are removed
+- Removed arbitrary timeouts from tests to alleviate CI flakiness
+
+### Fixed
+- Expose `metaData` and `user` types on `Client` class (#287)
+- Give navigation details the correct type (some were marked as "manual")
+
+
 ## 4.0.1 (2017-12-07)
 
 ### Changed
