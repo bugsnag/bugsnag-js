@@ -19,9 +19,9 @@ for (var i = 0, secs; i <= tracks.length; i++) {
   secs = toSecs(tracks[i].length)
   if (secs > longest) longest = secs
 }
-alert(longest)
+window.alert(longest)
 
-function toSecs(str) {
+function toSecs (str) {
   var parts = str.split(':')
   return parts[0] * 60 + parts[1]
 }
