@@ -20,6 +20,8 @@ describe('plugin: inline script content', () => {
       { fileName: window.location.href.replace(/#.*$/), lineNumber: 10 }
     ]))
     expect(payloads.length).toEqual(1)
-    expect(Object.keys(payloads[0].events[0].stacktrace[0].code).length).toBe(10)
+    expect(payloads[0].events[0].stacktrace[0].code).toBeDefined()
+    expect(payloads[0].events[0].metaData.script).toBeDefined()
+    expect(payloads[0].events[0].metaData.script.content).toBeDefined()
   })
 })
