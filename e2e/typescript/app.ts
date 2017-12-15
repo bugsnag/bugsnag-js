@@ -24,6 +24,8 @@ try {
   client.sessionDelegate({ startSession: client => client })
   client.logger({ debug: noop, info: noop, warn: noop, error: noop })
   client.notify(new Error('badness'))
+  client.user = { name: 'ben' }
+  client.metaData = { 'info': { a: 10 } }
   window.parent.postMessage(JSON.stringify({ type: 'data', reports: reports }), '*')
 
   // test some more public facing aspects of the library to verify types
@@ -45,5 +47,5 @@ try {
   })
   client.startSession()
 } catch (e) {
-  window.parent.postMessage(JSON.stringify({ type: 'error', error: e }), '*')
+  window.parent.postMessage(JSON.stringify({ type: 'error', error: e.message }), '*')
 }

@@ -9,6 +9,8 @@ export class Client {
   public context: string | void;
   public config: IFinalConfig;
   public beforeSession: BeforeSession[];
+  public user: object;
+  public metaData: object;
 
   public BugsnagReport: typeof Report;
   public BugsnagBreadcrumb: typeof Breadcrumb;
@@ -30,13 +32,13 @@ export interface IPlugin {
   destroy?(): void;
 }
 
-interface IConfigSchemaEntry {
+export interface IConfigSchemaEntry {
   message: string;
   validate: (val: any) => boolean;
   defaultValue: () => any;
 }
 
-interface ITransport {
+export interface ITransport {
   name: string;
   sendReport: (
     logger: ILogger,
@@ -52,19 +54,18 @@ interface ITransport {
   ) => void;
 }
 
-interface ILogger {
+export interface ILogger {
   debug: (...args: any[]) => void;
   info: (...args: any[]) => void;
   warn: (...args: any[]) => void;
   error: (...args: any[]) => void;
 }
 
-interface ISessionDelegate {
+export interface ISessionDelegate {
   startSession: (client: Client) => Client;
 }
 
-interface IReportPayload {
-  apiKey: string;
+export interface IReportPayload {  apiKey: string;
   notifier: {
     name: string;
     version: string;
@@ -73,7 +74,7 @@ interface IReportPayload {
   events: Report[];
 }
 
-interface ISessionPayload {
+export interface ISessionPayload {
   notifier: {
     name: string;
     version: string;
@@ -85,13 +86,13 @@ interface ISessionPayload {
   sessions: ISession[];
 }
 
-interface ISession {
+export interface ISession {
   id: string;
   startedAt: string;
   user?: object;
 }
 
-interface INotifyOpts {
+export interface INotifyOpts {
   context?: string;
   device?: object;
   request?: object;
@@ -101,6 +102,9 @@ interface INotifyOpts {
   beforeSend?: BeforeSend;
 }
 
-type NotifiableError = Error | { errorClass: string; errorMessage: string; } | { name: string; message: string; } | any;
+export type NotifiableError = Error
+  | { errorClass: string; errorMessage: string; }
+  | { name: string; message: string; }
+  | any;
 
 export default Client;

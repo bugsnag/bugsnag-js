@@ -21,15 +21,33 @@ const exampleValue = (k) => {
   }
 }
 
-const program = `
+describe('types', () => {
+  it('should compile a typescript program successfully', () => {
+    const program = `
 import bugsnag from "../../.."
 bugsnag({
   ${Object.keys(schema).map((k, i) => `${k}: ${JSON.stringify(exampleValue(k))}`).join(',\n  ')}
 }, [ { init: () => {} }])
 `.trim()
+    writeFileSync(`${__dirname}/fixtures/app.ts`, program)
+    const { stdout } = spawnSync('./node_modules/.bin/tsc', [
+      '--strict',
+      `${__dirname}/fixtures/app.ts`
+    ])
+    expect(stdout.toString()).toBe('')
+  })
 
-describe('types', () => {
-  it('should compile a typescript program successfully', () => {
+  it('should have access to all public types', () => {
+    const program = `
+import { Bugsnag } from "../../..";
+let bugsnagInstance: Bugsnag.Client | undefined = undefined;
+export function notify(error: Bugsnag.NotifiableError, opts?: Bugsnag.INotifyOpts): boolean {
+  if (bugsnagInstance === undefined) {
+    return false
+  }
+  return bugsnagInstance.notify(error, opts)
+}
+`.trim()
     writeFileSync(`${__dirname}/fixtures/app.ts`, program)
     const { stdout } = spawnSync('./node_modules/.bin/tsc', [
       '--strict',
