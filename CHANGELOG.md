@@ -2,6 +2,15 @@
 
 <!-- {entry_placeholder} -->
 
+## 4.0.3 (2017-12-15)
+
+### Changed
+- Handle inline script content per older notifiers for consistent grouping (#289)
+
+### Fixed
+- Correctly capture the page contents when an inline script error happens (#289) 
+
+
 ## 4.0.2 (2017-12-14)
 
 ### Added
