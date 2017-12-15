@@ -9,7 +9,7 @@
 
 var bugsnagClient = bugsnag({ 
         // get your own api key at bugsnag.com
-        apiKey: '8b1f5fc2a44d5f6cdbaff524d74c33b1',
+        apiKey: 'API_KEY',
 
         // if you track deploys or use source maps, make sure to set the correct version.
         appVersion: '1.2.3',
@@ -27,7 +27,13 @@ var bugsnagClient = bugsnag({
             email: "ghopper@code.com",
             id: "123456789"
           };
+          report.metaData = {
+            company: {
+              name: "Xavier's School for Gifted Youngsters"
+            }
+          };
         },
+
         // because this is a demo app, below extends the default of 10 notifications per pageload. click away!
         maxEvents: 50
       });
