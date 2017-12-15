@@ -7,7 +7,7 @@
 // this example app demonstrates some of the basic syntax to get Bugsnag error reporting configured in your Javascript code.
 // ***********************************************************
 
-var bugsnagClient = bugsnag({ 
+var bugsnagClient = bugsnag({
         // get your own api key at bugsnag.com
         apiKey: 'API_KEY',
 
@@ -21,7 +21,7 @@ var bugsnagClient = bugsnag({
         notifyReleaseStages: [ 'development', 'production'],
 
         // one of the most powerful tools in our library, beforeSend lets you evaluate, modify, add and remove data before sending to bugsnag. The actions here will be applied to *all* errors, handled and unhandled.
-        
+
         beforeSend: function (report) {
           report.user = {
             name: "Grace Hopper",
@@ -48,9 +48,9 @@ try {
   JSON.parse(rawjson)
 } catch (e) {
   console.log('a handled error with 2 sets of metadata has been reported to your Bugsnag dashboard')
-  bugsnagClient.notify(e, { 
+  bugsnagClient.notify(e, {
     metaData: {
-      content:  { rawjson: rawjson } 
+      content:  { rawjson: rawjson }
     }
   })
 }
