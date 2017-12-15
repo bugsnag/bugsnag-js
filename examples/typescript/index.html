@@ -1,19 +1,21 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Bugsnag JS: Plain TypeScript example with sourcemaps</title>
-    <script src="node_modules/bugsnag-js/dist/bugsnag.js"></script>
+    <title>Bugsnag JS: Plain JS example with sourcemaps</title>
+
+    <!-- load bugsnag with a simple script tag -->
+    <script src="//d2wy8f7a9ursnm.cloudfront.net/v4/bugsnag.min.js"></script>
   </head>
   <body>
-    <h1>Bugsnag JS: Plain TypeScript example with sourcemaps</h1>
-    <input type="hidden" value="{ 'some not quite': 'valid json' }" id="jsondata"/>
-    <p>
+    <h1>Bugsnag JS: Plain JS example</h1>
+      <p>
       This page is a basic example of how to include bugsnag-js on a page via a
       <code>&lt;script&gt;</code> tag.
-      The "app.ts" is compiled with <code>tsc --inlineSourceMap --inlineSources</code>
-      and served with a link to the sourcemap so that Bugsnag can fetch the sources/maps
-      when an error is received.
+      The "app.js" is minified with uglify-js and served with a link to the sourcemap
+      so that Bugsnag can fetch the sources/maps when an error is received.
     </p>
+    <input type="hidden" value="{ 'some not quite': 'valid json' }" id="jsondata"/>
+    <!-- in app.js you'll find further syntax and configuration examples. -->
     <script src="app.js"></script>
   </body>
 </html>
