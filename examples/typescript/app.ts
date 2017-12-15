@@ -2,7 +2,7 @@
 
 // ***********************************************************
 // www.bugsnag.com
-// https://github.com/bugsnag/bugsnag-js/tree/master/examples/js
+// https://github.com/bugsnag/bugsnag-js/tree/master/examples/typescript
 //
 // this example app demonstrates some of the basic syntax to get Bugsnag error reporting configured in your Javascript code.
 // ***********************************************************
