@@ -34,7 +34,7 @@ API token with your own!
 1. Replace the `API_KEY` placeholder in [index.html](index.html) with your own Bugsnag API key.
 
 1. Install the example app:
- ```sh
+    ```sh
     npm i
     ```
 
