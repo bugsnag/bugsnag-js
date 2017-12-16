@@ -15,18 +15,35 @@ API token with your own!
 1. Clone the repo and `cd` into this directory:
     ```sh
     git clone git@github.com:bugsnag/bugsnag-js.git
-    cd bugsnag-js/examples/sourcemaps
+    cd bugsnag-js
     ```
-1. Install the dependencies:
+1. Install the notifier dependencies:
     ```sh
-    yarn
+    npm i
     ```
-1. Replace the `API_KEY` placeholder in [index.html](index.html) with your actual bugsnag API key.
+1. Build the notifier:
+    ```sh
+    npm run build
+    ```
+
+1. cd into the example directory:
+    ```sh
+    cd bugsnag-js/examples/js
+    ```
+
+1. Replace the `API_KEY` placeholder in [index.html](index.html) with your own Bugsnag API key.
+
+1. Install the example app:
+ ```sh
+    npm i
+    ```
+
 1. Minify the JavaScript and start a web server:
     ```sh
     npm start
     ```
 1. The example page will (most likely) be served at: http://localhost:5000 _BUT!_ see the next step…
+
 1. Bugsnag will need to be able to fetch the sourcemaps by accessing the URL from the outside world so "localhost" won't cut it!  You have the options of uploading your source maps to Bugsnag, or self-hosting.
 
 * Upload to Bugsnag
@@ -39,8 +56,8 @@ Add your details to the curl request below and send to Bugsnag:
         -F apiKey=YOUR_API_KEY \
         -F appVersion=1.2.3 \
         -F minifiedUrl=http://localhost:5000/app.min.js \
-        -F sourceMap=@YOUR_PATH/to/app.min.js.map \
-        -F minifiedFile=@YOUR_PATH/to/app.min.js \
+        -F sourceMap=@/YOUR_PATH/to/app.min.js.map \
+        -F minifiedFile=@/YOUR_PATH/to/app.min.js \
         -F overwrite=true \
     ```
 

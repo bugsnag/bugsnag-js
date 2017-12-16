@@ -4,8 +4,8 @@
 // this example app demonstrates some of the basic syntax to get Bugsnag error reporting configured in your Javascript code, with source map suport.
 // ***********************************************************
 
-document.getElementById("jsHandled").addEventListener("click", send_handled); 
-document.getElementById("jsUnhandled").addEventListener("click", send_unhandled); 
+document.getElementById("jsHandled").addEventListener("click", send_handled) 
+document.getElementById("jsUnhandled").addEventListener("click", send_unhandled)
 
 
 // Below function will catch an error, and shows how you can add/modify information to the report right before sending.
@@ -14,7 +14,7 @@ function send_handled() {
     console.log("a handled error with metadata has been reported to your Bugsnag dashboard");
     try {
         // deliberate Reference Error
-        console.log(doesntExist);
+        console.log(doesntExist)
     } 
     catch (e) {
         bugsnagClient.notify(e, { 
@@ -36,10 +36,10 @@ function send_handled() {
 // Below function will trigger an unhandled error which will report to bugsnag, along with all the info configured in the initialization of bugsnag in the html.
 function send_unhandled() {
     console.log("an unhandled error has been reported to your Bugsnag dashboard");
-    var num = 1;
+    var num = 1
     // deliberate Type Error
-    num.toUpperCase(); 
+    num.toUpperCase() 
 }
 
 // below is the simplest notification syntax, akin to logging.
-bugsnagClient.notify("End of file");
+bugsnagClient.notify("End of file")
