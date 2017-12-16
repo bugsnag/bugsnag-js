@@ -11,13 +11,29 @@ To get set up, follow the instructions below. Don't forget to replace the placeh
 1. Clone the repo and `cd` into this directory:
     ```sh
     git clone git@github.com:bugsnag/bugsnag-js.git
+    cd bugsnag-js
+    ```
+1. Install the notifier dependencies:
+    ```sh
+    npm i
+    ```
+1. Build the notifier:
+    ```sh
+    npm run build
+    ```
+
+1. cd into the example directory:
+    ```sh
     cd bugsnag-js/examples/js
     ```
-1. Install the dependencies:
+
+1. Replace the `API_KEY` placeholder in [index.html](index.html) with your own Bugsnag API key.
+
+1. Install the example app:
     ```sh
-    yarn
+    npm i
     ```
-1. Replace the `API_KEY` placeholder in [index.html](index.html) with your actual API key.
+
 1. Start a web server:
     ```sh
     npm start
