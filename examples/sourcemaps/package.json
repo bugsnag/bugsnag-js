@@ -10,7 +10,6 @@
   "author": "Bugsnag Inc.",
   "license": "MIT",
   "dependencies": {
-    "bugsnag-js": "file:../../",
     "serve": "^6.0.6",
     "uglify-js": "^3.1.6"
   }

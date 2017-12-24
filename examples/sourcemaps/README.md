@@ -15,20 +15,7 @@ API token with your own!
 1. Clone the repo and `cd` into this directory:
     ```sh
     git clone git@github.com:bugsnag/bugsnag-js.git
-    cd bugsnag-js
-    ```
-1. Install the notifier dependencies:
-    ```sh
-    npm i
-    ```
-1. Build the notifier:
-    ```sh
-    npm run build
-    ```
-
-1. cd into the example directory:
-    ```sh
-    cd bugsnag-js/examples/js
+    cd bugsnag-js/examples/sourcemaps
     ```
 
 1. Replace the `API_KEY` placeholder in [index.html](index.html) with your own Bugsnag API key.
@@ -48,13 +35,13 @@ API token with your own!
 
 * Upload to Bugsnag
 
-Read [our docs](https://docs.bugsnag.com/api/js-source-map-upload/) for full details, but this will get you started for your example app's source maps.
+Read [our docs](https://docs.bugsnag.com/api/js-source-map-upload/) for full details, but the below will get you started for your example app's source maps.
 
 Add your details to the curl request below and send to Bugsnag:
     ```sh
     curl https://upload.bugsnag.com/ \  
         -F apiKey=YOUR_API_KEY \  
-        -F appVersion=1.2.3 \ 
+        -F appVersion=1.2.3 \
         -F minifiedUrl=http://localhost:5000/app.min.js \  
         -F sourceMap=@/YOUR_PATH/to/app.min.js.map \  
         -F minifiedFile=@/YOUR_PATH/to/app.min.js \  
