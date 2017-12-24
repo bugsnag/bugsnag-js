@@ -5,20 +5,12 @@
 
 
     <!-- load bugsnag with a simple script tag -->
-    <script src="node_modules/bugsnag-js/dist/bugsnag.js"></script>
-
-    <!-- For this example app, the above url refers to your local instance of bugsnag, so you can control the version and any customization you wish to make to our open source notifier.
-
-    In your live app, you can simply link to our public url to always get the most recent verison of the JS notifer:
-    <script src="//d2wy8f7a9ursnm.cloudfront.net/v4/bugsnag.min.js"></script> 
-    -->
-
-
+    <script src="//d2wy8f7a9ursnm.cloudfront.net/v4/bugsnag.min.js"></script>
 
     <!-- Initialize bugsnag to begin tracking errors. Only an api key is required, but here are some other helpful configuration details: -->
-    <script>window.bugsnagClient = bugsnag({ 
+    <script>window.bugsnagClient = bugsnag({
         // get your own api key at bugsnag.com
-        apiKey: 'API_KEY',
+        apiKey: '8b1f5fc2a44d5f6cdbaff524d74c33b1',
 
         // if you track deploys or use source maps, make sure to set the correct version.
         appVersion: '1.2.3',
