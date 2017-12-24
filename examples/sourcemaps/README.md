@@ -20,9 +20,12 @@ API token with your own!
 
 1. Replace the `API_KEY` placeholder in [index.html](index.html) with your own Bugsnag API key.
 
-1. Install the example app:
+1. Install the dependencies (with either npm or yarn):
     ```sh
     npm i
+    ```
+    ```sh
+     yarn
     ```
 
 1. Minify the JavaScript and start a web server:
