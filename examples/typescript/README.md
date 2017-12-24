@@ -26,7 +26,7 @@ API token with your own!
     ```
 1. cd into the example directory:
     ```sh
-    cd bugsnag-js/examples/js
+    cd examples/js
     ```
 1. Replace the `API_KEY` placeholder in [app.ts](app.ts) with your actual API key.
 1. Install the app dependencies:
