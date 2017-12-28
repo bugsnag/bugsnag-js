@@ -11,7 +11,7 @@ module.exports = {
     if (!('onunhandledrejection' in window)) return
 
     window.addEventListener('unhandledrejection', (event) => {
-      const error = event.reason
+      const error = event.detail ? event.detail.reason : event.reason
       const handledState = { severity: 'error', unhandled: true, severityReason: { type: 'unhandledPromiseRejection' } }
 
       let report
