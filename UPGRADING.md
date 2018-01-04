@@ -12,7 +12,7 @@ If you're loading Bugsnag from the CDN you may have got used to transparent roll
 
 ```diff
 - <script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-3.min.js" data-apikey="API_KEY"></script>
-+ <script src="//d2wy8f7a9ursnm.cloudfront.net/v4/bugsnag.js"></script>
++ <script src="//d2wy8f7a9ursnm.cloudfront.net/v4/bugsnag.min.js"></script>
 + <script>window.bugsnagClient = bugsnag('API_KEY')</script>
 ```
 
@@ -37,7 +37,7 @@ This might seem like a little more work, but it gives you more granular control:
 
 ```diff
 - <script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-3.min.js" data-apikey="API_KEY"></script>
-+ <script src="//d2wy8f7a9ursnm.cloudfront.net/4.x.x/bugsnag.js"></script>
++ <script src="//d2wy8f7a9ursnm.cloudfront.net/v4/bugsnag.min.js"></script>
 <script>
 -  Bugsnag.notify(err)
 +  window.bugsnagClient = bugsnag('API_KEY')
