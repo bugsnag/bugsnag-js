@@ -1,5 +1,4 @@
 node_modules
-dist/*
 .nyc_output
 coverage
 bin/cc-test-reporter
