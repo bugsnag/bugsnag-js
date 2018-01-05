@@ -47,7 +47,9 @@
     "url": "https://github.com/bugsnag/bugsnag-js"
   },
   "jspm": {
-    "main": "browser/index.js"
+    "jspmNodeConversion": false,
+    "main": "dist/bugsnag.js",
+    "dependencies": {}
   },
   "standard": {
     "ignore": [
