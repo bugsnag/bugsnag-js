@@ -3,7 +3,7 @@
  */
 module.exports = {
   init: (client) => {
-    client.config.beforeSend.push(report => {
+    client.config.beforeSend.unshift(report => {
       if (report.context) return
       report.context = window.location.pathname
     })
