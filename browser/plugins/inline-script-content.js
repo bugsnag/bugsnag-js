@@ -34,7 +34,7 @@ module.exports = {
       }
     }
 
-    client.config.beforeSend.push(addInlineContent)
+    client.config.beforeSend.unshift(addInlineContent)
   }
 }
 
