@@ -6,6 +6,7 @@ const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 const url = require('url')
 
 const onerror = require('../plugins/window-onerror')
+const sessions = require('../plugins/sessions')
 
 describe('client()', () => {
   beforeEach(() => { window.onerror = null })
@@ -107,6 +108,31 @@ describe('client()', () => {
       const script = document.createElement('script')
       script.src = '/fixtures/unhandled-error-global.js'
       window.document.body.appendChild(script)
+    })
+  })
+
+  describe('sessions', () => {
+    it('should track sessions', () => {
+      const client = new Client(VALID_NOTIFIER)
+      client.configure({ apiKey: 'API_KEY_YEAH' })
+      client.use(sessions)
+      let sessionSent = false
+      let reportSent = false
+      client.transport({
+        sendReport: (logger, config, payload) => {
+          expect(payload.events[0].session).toBeDefined()
+          reportSent = true
+        },
+        sendSession: (logger, config, payload) => {
+          expect(payload.sessions[0].startedAt).toBeDefined()
+          expect(payload.sessions[0].id).toBeDefined()
+          sessionSent = true
+        }
+      })
+      client.startSession()
+      expect(sessionSent).toBe(true)
+      client.notify(new Error('blah'))
+      expect(reportSent).toBe(true)
     })
   })
 })

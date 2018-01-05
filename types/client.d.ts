@@ -1,24 +1,29 @@
 import Breadcrumb from "./breadcrumb";
-import { BeforeSend, IConfig, IFinalConfig } from "./common";
+import { BeforeSend, BeforeSession, IConfig, IFinalConfig } from "./common";
 import Report from "./report";
+import Session from "./session";
 
 export class Client {
   public app: object;
   public device: object;
   public context: string | void;
   public config: IFinalConfig;
+  public beforeSession: BeforeSession[];
   public user: object;
   public metaData: object;
 
   public BugsnagReport: typeof Report;
   public BugsnagBreadcrumb: typeof Breadcrumb;
+  public BugsnagSession: typeof Session;
 
   public use(plugin: IPlugin): any;
   public configure(opts: IConfig): Client;
   public transport(transport: ITransport): Client;
   public logger(logger: ILogger): Client;
+  public sessionDelegate(sessionDelegate: ISessionDelegate): Client;
   public notify(error: NotifiableError, opts?: INotifyOpts): boolean;
   public leaveBreadcrumb(name: string, metaData?: any, type?: string, timestamp?: string): Client;
+  public startSession(): Client;
 }
 
 export interface IPlugin {
@@ -41,6 +46,12 @@ export interface ITransport {
     report: IReportPayload,
     cb?: (e: Error | null, resText: string) => void,
   ) => void;
+  sendSession: (
+    logger: ILogger,
+    config: any,
+    report: ISessionPayload,
+    cb?: (e: Error | null, resText: string) => void,
+  ) => void;
 }
 
 export interface ILogger {
@@ -50,14 +61,35 @@ export interface ILogger {
   error: (...args: any[]) => void;
 }
 
-export interface IReportPayload {
-  apiKey: string;
+export interface ISessionDelegate {
+  startSession: (client: Client) => Client;
+}
+
+export interface IReportPayload {  apiKey: string;
   notifier: {
     name: string;
     version: string;
     url: string;
   };
   events: Report[];
+}
+
+export interface ISessionPayload {
+  notifier: {
+    name: string;
+    version: string;
+    url: string;
+  };
+  device?: object;
+  user?: object;
+  app?: object;
+  sessions: ISession[];
+}
+
+export interface ISession {
+  id: string;
+  startedAt: string;
+  user?: object;
 }
 
 export interface INotifyOpts {

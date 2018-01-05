@@ -13,6 +13,7 @@ describe('loading bugsnag with Typescript app via <script> tag', function () {
       }
 
       if (!event) return
+      // console.log(event.data)
       var data = JSON.parse(event.data)
       // console.log(data)
       expect(data.type === 'error').toBe(false)

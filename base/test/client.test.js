@@ -1,6 +1,8 @@
 const { describe, it, expect, fail } = global
 
 const Client = require('../client')
+const Report = require('../report')
+const Session = require('../session')
 
 const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
@@ -360,6 +362,71 @@ describe('base/client', () => {
       client.leaveBreadcrumb('toast')
       client.leaveBreadcrumb('toast')
       expect(client.breadcrumbs.length).toBe(0)
+    })
+  })
+
+  describe('startSession()', () => {
+    it('calls the provided the session delegate and return delegate’s return value', () => {
+      const client = new Client(VALID_NOTIFIER)
+      let ret
+      client.configure({ apiKey: 'API_KEY' })
+      client.sessionDelegate({
+        startSession: c => {
+          expect(c).toBe(client)
+          ret = {}
+          return ret
+        }
+      })
+      expect(client.startSession()).toBe(ret)
+    })
+
+    it('calls warns if a session delegate is not provided', (done) => {
+      const client = new Client(VALID_NOTIFIER)
+      client.configure({ apiKey: 'API_KEY' })
+      client.logger({
+        debug: () => {},
+        info: () => {},
+        warn: (...args) => {
+          expect(args[0]).toMatch(/^No session/)
+          done()
+        },
+        error: () => {}
+      })
+      client.startSession()
+    })
+
+    it('tracks error counts using the session delegate and sends them in error payloads', (done) => {
+      const client = new Client(VALID_NOTIFIER)
+      client.configure({ apiKey: 'API_KEY' })
+      let i = 0
+      client.sessionDelegate({
+        startSession: (client) => {
+          client.session = new Session()
+          return client
+        }
+      })
+      client.transport({
+        sendSession: () => {},
+        sendReport: (logger, config, report, cb) => {
+          if (++i < 10) return
+          const r = JSON.parse(JSON.stringify(report.events[0]))
+          expect(r.session).toBeDefined()
+          expect(r.session.events.handled).toBe(6)
+          expect(r.session.events.unhandled).toBe(4)
+          done()
+        }
+      })
+      const sessionClient = client.startSession()
+      sessionClient.notify(new Error('broke'))
+      sessionClient.notify(new Report('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
+      sessionClient.notify(new Error('broke'))
+      sessionClient.notify(new Error('broke'))
+      sessionClient.notify(new Report('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
+      sessionClient.notify(new Error('broke'))
+      sessionClient.notify(new Error('broke'))
+      sessionClient.notify(new Error('broke'))
+      sessionClient.notify(new Report('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
+      sessionClient.notify(new Report('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
     })
   })
 })

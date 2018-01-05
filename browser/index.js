@@ -18,7 +18,8 @@ const plugins = {
   'console breadcrumbs': require('./plugins/console-breadcrumbs'),
   'navigation breadcrumbs': require('./plugins/navigation-breadcrumbs'),
   'interaction breadcrumbs': require('./plugins/interaction-breadcrumbs'),
-  'inline script content': require('./plugins/inline-script-content')
+  'inline script content': require('./plugins/inline-script-content'),
+  'sessions': require('./plugins/sessions')
 }
 
 const transports = {
@@ -65,6 +66,7 @@ module.exports = (opts, userPlugins = []) => {
   bugsnag.use(plugins['request'])
   bugsnag.use(plugins['inline script content'])
   bugsnag.use(plugins['throttle'])
+  bugsnag.use(plugins['sessions'])
 
   // optional browser-specific plugins
 
@@ -90,7 +92,9 @@ module.exports = (opts, userPlugins = []) => {
   // init user supplied plugins
   map(userPlugins, (plugin) => bugsnag.use(plugin))
 
-  return bugsnag
+  return bugsnag.config.sessionTrackingEnabled
+    ? bugsnag.startSession()
+    : bugsnag
 }
 
 const getPrefixedConsole = () => {

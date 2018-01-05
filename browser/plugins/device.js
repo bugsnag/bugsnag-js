@@ -14,5 +14,7 @@ module.exports = {
         ...report.device
       }
     })
+
+    client.beforeSession.push(session => { session.device = { userAgent: navigator.userAgent } })
   }
 }
