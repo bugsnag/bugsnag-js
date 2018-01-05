@@ -3,11 +3,12 @@
   <head>
     <title>Bugsnag JS: Plain JS example</title>
 
+
     <!-- load bugsnag with a simple script tag -->
     <script src="//d2wy8f7a9ursnm.cloudfront.net/v4/bugsnag.min.js"></script>
 
     <!-- Initialize bugsnag to begin tracking errors. Only an api key is required, but here are some other helpful configuration details: -->
-    <script>window.bugsnagClient = bugsnag({ 
+    <script>window.bugsnagClient = bugsnag({
         // get your own api key at bugsnag.com
         apiKey: 'API_KEY',
 
@@ -26,11 +27,11 @@
             name: "Grace Hopper",
             email: "ghopper@code.com",
             id: "123456789"
-          };
+          }
         },
         // because this is a demo app, below extends the default of 10 notifications per pageload. click away!
         maxEvents: 50
-      });
+      })
     </script>
   </head>
   <body>
