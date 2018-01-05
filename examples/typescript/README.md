@@ -14,19 +14,7 @@ API token with your own!
 1. Clone the repo and `cd` into this directory:
     ```sh
     git clone git@github.com:bugsnag/bugsnag-js.git
-    cd bugsnag-js
-    ```
-1. Install the notifier dependencies:
-    ```sh
-    npm i
-    ```
-1. Build the notifier:
-    ```sh
-    npm run build
-    ```
-1. cd into the example directory:
-    ```sh
-    cd examples/js
+    cd examples/typescript
     ```
 1. Replace the `API_KEY` placeholder in [app.ts](app.ts) with your actual API key.
 1. Install the app dependencies:
