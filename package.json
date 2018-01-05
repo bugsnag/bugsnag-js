@@ -1,6 +1,6 @@
 {
   "name": "bugsnag-js",
-  "version": "4.1.0-3",
+  "version": "4.1.0-7",
   "description": "Automatically detect JavaScript errors, collect detailed diagnostic information, and get notified about errors in real-time.",
   "keywords": [
     "exception",
@@ -20,11 +20,10 @@
   },
   "scripts": {
     "preversion": "./bin/env-check && npm run test:basic",
-    "prepare": "npm run build",
-    "version": "npm run chore && ./bin/update-changelog && git add README.md CHANGELOG.md",
+    "version": "npm run build && npm run chore && ./bin/update-changelog && git add README.md CHANGELOG.md dist",
     "postversion": "git push && git push --tags && npm publish --tag $(./bin/dist-tag-value)",
     "postpublish": "./bin/cdn-upload",
-    "test": "npm run test:lint && npm run test:unit && npm run test:types && npm run test:integration && npm run test:e2e",
+    "test": "npm run build && npm run test:lint && npm run test:unit && npm run test:types && npm run test:integration && npm run test:e2e",
     "test:basic": "npm run test:lint && npm run test:unit && npm run test:types",
     "test:unit": "nyc --reporter=lcov --report-dir coverage/node -- jasmine '!(node_modules|browser|e2e|examples|types)/**/*.test.js' && nyc check-coverage --report-dir coverage/node",
     "test:types": "jasmine 'types/**/*.test.js'",
@@ -46,6 +45,11 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/bugsnag/bugsnag-js"
+  },
+  "jspm": {
+    "jspmNodeConversion": false,
+    "main": "dist/bugsnag.js",
+    "dependencies": {}
   },
   "standard": {
     "ignore": [
