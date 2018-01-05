@@ -82,7 +82,7 @@
     "glob": "^7.1.2",
     "jasmine": "^2.8.0",
     "jasmine-core": "^2.8.0",
-    "karma": "github:kevinsalter/karma#bc53a9ff5688910d306132eda1ef54905c54caf8",
+    "karma": "git+ssh://git@github.com:kevinsalter/karma#bc53a9ff5688910d306132eda1ef54905c54caf8",
     "karma-browserify": "^5.1.1",
     "karma-browserstack-launcher": "^1.3.0",
     "karma-chrome-launcher": "^2.2.0",
@@ -105,8 +105,8 @@
     "browserify-versionify": "^1.0.6",
     "cuid": "^1.3.8",
     "error-stack-parser": "^2.0.1",
-    "fast-safe-stringify": "github:bengourley/fast-safe-stringify",
+    "fast-safe-stringify": "git+ssh://git@github.com:bengourley/fast-safe-stringify#87077fdc7b793a586319ac1ddfecf7631f31f3e2",
     "iserror": "0.0.2",
-    "stack-generator": "github:bengourley/stack-generator#190a6f500cfc4a9ef77db204b4f571964e39c3d8"
+    "stack-generator": "git+ssh://git@github.com:bengourley/stack-generator#190a6f500cfc4a9ef77db204b4f571964e39c3d8"
   }
 }
