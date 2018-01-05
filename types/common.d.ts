@@ -17,6 +17,8 @@ interface IConfig {
   consoleBreadcrumbsEnabled?: boolean;
   navigationBreadcrumbsEnabled?: boolean;
   interactionBreadcrumbsEnabled?: boolean;
+  user?: object;
+  metaData?: object;
 }
 
 interface IFinalConfig extends IConfig {
@@ -33,6 +35,8 @@ interface IFinalConfig extends IConfig {
   consoleBreadcrumbsEnabled: boolean;
   navigationBreadcrumbsEnabled: boolean;
   interactionBreadcrumbsEnabled: boolean;
+  user: object;
+  metaData: object;
 }
 
 type BeforeSend = (report: Report) => boolean | void;

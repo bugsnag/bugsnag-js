@@ -56,6 +56,16 @@ module.exports.schema = {
     defaultValue: () => true,
     message: '(boolean) autoBreadcrumbs should be true or false',
     validate: (value) => typeof value === 'boolean'
+  },
+  user: {
+    defaultValue: () => null,
+    message: '(object) user should be an object',
+    validate: (value) => typeof value === 'object'
+  },
+  metaData: {
+    defaultValue: () => null,
+    message: '(object) metaData should be an object',
+    validate: (value) => typeof value === 'object'
   }
 }
 
