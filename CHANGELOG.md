@@ -2,6 +2,18 @@
 
 <!-- {entry_placeholder} -->
 
+## 4.1.0 (2018-01-05)
+
+### Added
+- Support for tracking sessions and overall crash rate by setting `sessionTrackingEnabled` to `true`.
+In addition, sessions can be indicated manually using `bugsnagClient.startSession()` (#296)
+- `user` and `metaData` can now be supplied in configuration object (#299)
+- Bower and jspm support has been added as a result of #297 and some additional configuration
+
+### Changed
+- `dist` directory (built assets) are now stored in git (#297)
+
+
 ## 4.0.3 (2017-12-15)
 
 ### Changed
