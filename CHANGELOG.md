@@ -2,6 +2,12 @@
 
 <!-- {entry_placeholder} -->
 
+## 4.1.1 (2018-01-06)
+
+### Fixed
+- metaData and user were incorrectly attached to `report.app` (credit @tremlab #300)
+
+
 ## 4.1.0 (2018-01-05)
 
 ### Added
