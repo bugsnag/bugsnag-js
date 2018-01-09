@@ -5,11 +5,6 @@
 
     <!-- load bugsnag with a simple script tag -->
     <script src="node_modules/bugsnag-js/dist/bugsnag.js"></script>
-
-    <!-- For this example app, the above url refers to your local instance of bugsnag, so you can control the version and any customization you wish to make to our open source notifier.
-    In your live app, you can simply link to our public url to always get the most recent verison of the JS notifer:
-    <script src="//d2wy8f7a9ursnm.cloudfront.net/v4/bugsnag.min.js"></script> 
-    -->
   </head>
   <body>
     <h1>Bugsnag JS: Plain JS example</h1>
@@ -23,7 +18,14 @@
       when an error is received.
     </p>
     <input type="hidden" value="{ 'some not quite': 'valid json' }" id="jsondata"/>
-    <!-- in app.js you'll find further syntax and configuration examples. -->
+    <div id="buttons">
+      <h3>Send some errors by clicking below:
+      </h3>
+      <button type="button" id="jsHandled">SEND HANDLED</button>
+        <br>
+      <button type="button" id="jsUnhandled">SEND UNHANDLED</button>
+    </div>
+    <!-- in app.ts you'll find further syntax and configuration examples. -->
     <script src="app.js"></script>
   </body>
 </html>
