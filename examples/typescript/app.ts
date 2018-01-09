@@ -22,22 +22,23 @@ var bugsnagClient = bugsnag({
 
         // one of the most powerful tools in our library, beforeSend lets you evaluate, modify, add and remove data before sending the error to bugsnag. The actions here will be applied to *all* errors, handled and unhandled.
         beforeSend: function (report) {
+          // the below downgrades exceptions sent with the generic "Error" class to info.
           if (report.errorClass === "Error") {
             report.severity = "info"
           }
         },
 
-        // user: {
-        //   name: "Grace Hopper",
-        //   email: "ghopper@code.com",
-        //   id: "123456789"
-        // },
+        user: {
+          name: "Grace Hopper",
+          email: "ghopper@code.com",
+          id: "123456789"
+        },
 
-        // // add any custom attributes relevant to your app. Note that metadata can be added here, in a specific notify or in a beforeSend.
-        // metaData: { company: {
-        //   name: "Xavier's School for Gifted Youngsters"
-        //   }
-        // },
+        // add any custom attributes relevant to your app. Note that metadata can be added here, in a specific notify or in a beforeSend.
+        metaData: { company: {
+          name: "Xavier's School for Gifted Youngsters"
+          }
+        },
 
         // because this is a demo app, below extends the default of 10 notifications per pageload. click away!
         maxEvents: 50
