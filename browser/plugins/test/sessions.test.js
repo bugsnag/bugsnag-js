@@ -77,4 +77,17 @@ describe('plugin: sessions', () => {
     })
     c.startSession()
   })
+
+  it('doesnt’t send when releaseStage is not in notifyReleaseStages', (done) => {
+    const c = new Client(VALID_NOTIFIER)
+    c.configure({ apiKey: 'API_KEY', releaseStage: 'foo', notifyReleaseStages: [ 'baz' ] })
+    c.use(plugin)
+    c.transport({
+      sendSession: (logger, config, session, cb) => {
+        expect(true).toBe(false)
+      }
+    })
+    c.startSession()
+    setTimeout(done, 150)
+  })
 })
