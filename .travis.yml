@@ -1,4 +1,5 @@
 sudo: false
+dist: trusty
 language: node_js
 node_js:
 - '8'
@@ -8,6 +9,7 @@ env:
   - BROWSER_STACK_USERNAME: bugsnagplatforms1
   - secure: HkG2v1wI77zdqNLNHP1OQn50pBOLAE1eQTBGoXNN+mWnZTQs0NM5gy/08d/nZHUSnnpsaM+cRltw7g1tnb9gFp+0uT2bJ9sDqwdG3GBnhwLKrWTYq8/FsDk0+zNO2ITrYhSJdMysdRO0kdubO2ev27lIFSlnFqZNHHgyYG5GFQI=
 addons:
+  chrome: stable
   browserstack:
     username: bugsnagplatforms1
     access_key:
