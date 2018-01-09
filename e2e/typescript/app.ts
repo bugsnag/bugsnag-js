@@ -10,7 +10,7 @@ try {
     notifyReleaseStages: [ 'staging', 'production' ],
     releaseStage: 'production',
     maxEvents: 10,
-    sessionTrackingEnabled: false
+    autoCaptureSessions: false
   })
   const noop = () => {}
 

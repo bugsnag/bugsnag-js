@@ -32,9 +32,9 @@ module.exports.schema = {
     message: '(string) sessionEndpoint should be set',
     validate: () => true
   },
-  sessionTrackingEnabled: {
+  autoCaptureSessions: {
     defaultValue: () => false,
-    message: '(boolean) sessionTrackingEnabled should be true/false',
+    message: '(boolean) autoCaptureSessions should be true/false',
     validate: val => val === true || val === false
   },
   notifyReleaseStages: {

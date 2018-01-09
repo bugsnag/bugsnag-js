@@ -31,6 +31,11 @@ module.exports = (opts, userPlugins = []) => {
   // handle very simple use case where user supplies just the api key as a string
   if (typeof opts === 'string') opts = { apiKey: opts }
 
+  // support renamed option
+  if (opts.sessionTrackingEnabled) {
+    opts.autoCaptureSessions = opts.sessionTrackingEnabled
+  }
+
   // allow plugins to augment the schema with their own options
   const finalSchema = reduce([].concat(map(keys(plugins), k => plugins[k])).concat(userPlugins), (accum, plugin) => {
     if (!plugin.configSchema) return accum
@@ -92,7 +97,7 @@ module.exports = (opts, userPlugins = []) => {
   // init user supplied plugins
   map(userPlugins, (plugin) => bugsnag.use(plugin))
 
-  return bugsnag.config.sessionTrackingEnabled
+  return bugsnag.config.autoCaptureSessions
     ? bugsnag.startSession()
     : bugsnag
 }

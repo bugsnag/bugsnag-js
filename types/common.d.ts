@@ -9,7 +9,7 @@ interface IConfig {
   appVersion?: string;
   endpoint?: string;
   sessionEndpoint?: string;
-  sessionTrackingEnabled?: boolean;
+  autoCaptureSessions?: boolean;
   notifyReleaseStages?: string[];
   releaseStage?: string;
   maxEvents?: number;
@@ -27,7 +27,7 @@ interface IFinalConfig extends IConfig {
   autoBreadcrumbs: boolean;
   endpoint: string;
   sessionEndpoint: string;
-  sessionTrackingEnabled: boolean;
+  autoCaptureSessions: boolean;
   notifyReleaseStages: string[];
   releaseStage: string;
   maxEvents: number;
