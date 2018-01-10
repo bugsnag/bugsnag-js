@@ -14,20 +14,20 @@ function sendHandled () {
   console.log('a handled error with metadata has been reported to your Bugsnag dashboard')
   try {
     // deliberate Reference Error
-    console.log(doesntExist) // eslint-disable-line
+    console.log(doesntExist)
   } catch (e) {
+
     window.bugsnagClient.notify(e, {
       context: 'a handled ReferenceError with metadata',
-      // unhandled errors default to 'warning', but you can override
-      severity: 'info',
       // Note that metadata can be declared globally,
       // in the noticification (as below) or in a beforeSend.
       metaData: {
-        company: {
+        details: {
           name: "Xavier's School for Gifted Youngsters"
         }
       }
     })
+
   }
 }
 
