@@ -20,7 +20,7 @@ To get set up, follow the instructions below. Don't forget to replace the placeh
     ```sh
     yarn
     ```
-1. Replace the `API_KEY` placeholder in [index.html](index.html) with your actual API key.
+1. Replace the `API_KEY` placeholder in [app.js](app.js) with your actual API key.
 1. Start a web server:
     ```sh
     npm start
