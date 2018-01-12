@@ -2,6 +2,15 @@
 
 <!-- {entry_placeholder} -->
 
+## 4.1.2 (2018-01-09)
+
+### Added
+- Session sending now respects `notifyReleaseStages` option
+
+### Changed
+- Rename option `enableSessionTracking` -> `autoCaptureSessions` for consistency with other platforms
+
+
 ## 4.1.1 (2018-01-06)
 
 ### Fixed
