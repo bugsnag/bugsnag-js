@@ -13,7 +13,7 @@ module.exports = {
       } catch (e) {
         targetText = '[hidden]'
         targetSelector = '[hidden]'
-        client._logger.log('Cross domain error when tracking click event. See https://docs.bugsnag.com/platforms/browsers/faq/#3-cross-origin-script-errors')
+        client._logger.error('Cross domain error when tracking click event. See https://docs.bugsnag.com/platforms/browsers/faq/#3-cross-origin-script-errors')
       }
       client.leaveBreadcrumb('UI click', { targetText, targetSelector }, 'user')
     }, true)
