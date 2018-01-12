@@ -7,6 +7,7 @@ interface IConfig {
   autoBreadcrumbs?: boolean;
   autoNotify?: boolean;
   appVersion?: string;
+  autoCaptureSessions?: boolean;
   endpoint?: string;
   sessionEndpoint?: string;
   autoCaptureSessions?: boolean;
