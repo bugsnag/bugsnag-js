@@ -2,6 +2,12 @@
 
 <!-- {entry_placeholder} -->
 
+## 4.1.3 (2018-01-15)
+
+### Fixed
+- Fix call to non-existent `logger.log()` (credit @alexstrat #304)
+
+
 ## 4.1.2 (2018-01-09)
 
 ### Added
