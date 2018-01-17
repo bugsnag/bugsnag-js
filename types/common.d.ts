@@ -1,3 +1,4 @@
+import Client from "./client";
 import Report from "./report";
 
 interface IConfig {
@@ -7,6 +8,8 @@ interface IConfig {
   autoNotify?: boolean;
   appVersion?: string;
   endpoint?: string;
+  sessionEndpoint?: string;
+  autoCaptureSessions?: boolean;
   notifyReleaseStages?: string[];
   releaseStage?: string;
   maxEvents?: number;
@@ -14,6 +17,8 @@ interface IConfig {
   consoleBreadcrumbsEnabled?: boolean;
   navigationBreadcrumbsEnabled?: boolean;
   interactionBreadcrumbsEnabled?: boolean;
+  user?: object | null;
+  metaData?: object | null;
 }
 
 interface IFinalConfig extends IConfig {
@@ -21,6 +26,8 @@ interface IFinalConfig extends IConfig {
   autoNotify: boolean;
   autoBreadcrumbs: boolean;
   endpoint: string;
+  sessionEndpoint: string;
+  autoCaptureSessions: boolean;
   notifyReleaseStages: string[];
   releaseStage: string;
   maxEvents: number;
@@ -28,8 +35,11 @@ interface IFinalConfig extends IConfig {
   consoleBreadcrumbsEnabled: boolean;
   navigationBreadcrumbsEnabled: boolean;
   interactionBreadcrumbsEnabled: boolean;
+  user: object | null;
+  metaData: object | null;
 }
 
 type BeforeSend = (report: Report) => boolean | void;
+type BeforeSession = (client: Client) => void;
 
-export { BeforeSend, IConfig, IFinalConfig };
+export { BeforeSend, BeforeSession, IConfig, IFinalConfig };

@@ -1,7 +1,9 @@
 const config = require('./config')
 const BugsnagReport = require('./report')
 const BugsnagBreadcrumb = require('./breadcrumb')
+const BugsnagSession = require('./session')
 const { map, reduce, includes, isArray } = require('./lib/es-utils')
+const inferReleaseStage = require('./lib/infer-release-stage')
 const jsonStringify = require('fast-safe-stringify')
 const isError = require('iserror')
 
@@ -31,6 +33,8 @@ class BugsnagClient {
     this.plugins = []
 
     this.session = session
+    this.beforeSession = []
+
     this.breadcrumbs = []
 
     // setable props
@@ -44,6 +48,7 @@ class BugsnagClient {
     // expose internal constructors
     this.BugsnagReport = BugsnagReport
     this.BugsnagBreadcrumb = BugsnagBreadcrumb
+    this.BugsnagSession = BugsnagSession
   }
 
   configure (opts = {}) {
@@ -56,6 +61,8 @@ class BugsnagClient {
     }
     if (typeof this.config.beforeSend === 'function') this.config.beforeSend = [ this.config.beforeSend ]
     if (this.config.appVersion !== null) this.app.version = this.config.appVersion
+    if (this.config.metaData) this.metaData = this.config.metaData
+    if (this.config.user) this.user = this.config.user
     this._configured = true
     this._logger.debug(`Loaded!`)
     return this
@@ -74,6 +81,19 @@ class BugsnagClient {
   logger (l, sid) {
     this._logger = l
     return this
+  }
+
+  sessionDelegate (s) {
+    this._sessionDelegate = s
+    return this
+  }
+
+  startSession () {
+    if (!this._sessionDelegate) {
+      this._logger.warn('No session implementation is installed')
+      return this
+    }
+    return this._sessionDelegate.startSession(this)
   }
 
   leaveBreadcrumb (name, metaData, type, timestamp) {
@@ -109,7 +129,7 @@ class BugsnagClient {
     if (!this._configured) throw new Error('Bugsnag must be configured before calling report()')
 
     // releaseStage can be set via config.releaseStage or client.app.releaseStage
-    const releaseStage = this.app && typeof this.app.releaseStage === 'string' ? this.app.releaseStage : this.config.releaseStage
+    const releaseStage = inferReleaseStage(this)
 
     // ensure we have an error (or a reasonable object representation of an error)
     let { err, errorFramesToSkip, _opts } = normaliseError(error, opts, this._logger)
@@ -134,6 +154,11 @@ class BugsnagClient {
     report.user = { ...report.user, ...this.user, ...opts.user }
     report.metaData = { ...report.metaData, ...this.metaData, ...opts.metaData }
     report.breadcrumbs = this.breadcrumbs.slice(0)
+
+    if (this.session) {
+      this.session.trackError(report)
+      report.session = this.session
+    }
 
     // set severity if supplied
     if (opts.severity !== undefined) {

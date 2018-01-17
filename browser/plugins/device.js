@@ -4,7 +4,7 @@ const { isoDate } = require('../../base/lib/es-utils')
  */
 module.exports = {
   init: (client) => {
-    client.config.beforeSend.push((report) => {
+    client.config.beforeSend.unshift((report) => {
       report.device = {
         ...{
           time: isoDate(),
@@ -14,5 +14,7 @@ module.exports = {
         ...report.device
       }
     })
+
+    client.beforeSession.push(session => { session.device = { userAgent: navigator.userAgent } })
   }
 }

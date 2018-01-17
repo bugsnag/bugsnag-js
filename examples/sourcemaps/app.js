@@ -1,27 +1,42 @@
-var tracks = [
-  { name: 'Quicksand', length: '2:13' },
-  { name: 'A Kiss to Send Us Off', length: '4:16' },
-  { name: 'Dig', length: '4:17' },
-  { name: 'Anna Molly', length: '3:46' },
-  { name: 'Love Hurts', length: '3:57' },
-  { name: 'Light Grenades', length: '2:20' },
-  { name: 'Earth to Bella (Part I)', length: '2:28' },
-  { name: 'Oil and Water', length: '3:50' },
-  { name: 'Diamonds and Coal', length: '3:47' },
-  { name: 'Rogues', length: '3:56' },
-  { name: 'Paper Shoes', length: '4:17' },
-  { name: 'Pendulous Threads', length: '5:35' },
-  { name: 'Earth to Bella (Part II)', length: '2:56' }
-]
+// www.bugsnag.com
+// https://github.com/bugsnag/bugsnag-js/tree/master/examples/js
+//
+// this example app demonstrates some of the basic syntax to get Bugsnag error reporting configured in your Javascript code, with source map suport.
+// ***********************************************************
 
-var longest = 0
-for (var i = 0, secs; i <= tracks.length; i++) {
-  secs = toSecs(tracks[i].length)
-  if (secs > longest) longest = secs
-}
-window.alert(longest)
+document.getElementById('jsHandled').addEventListener('click', sendHandled)
+document.getElementById('jsUnhandled').addEventListener('click', sendUnhandled)
 
-function toSecs (str) {
-  var parts = str.split(':')
-  return parts[0] * 60 + parts[1]
+// Below function will catch an error, and shows how you can add/modify information to the report right before sending.
+// Note that the configuration and beforeSend defined in the earlier initialization of bugsnag (in the html) will be applied *after* the statements executed here in notify().
+function sendHandled () {
+  console.log('a handled error with metadata has been reported to your Bugsnag dashboard')
+  try {
+        // deliberate Reference Error
+    console.log(doesntExist)
+  } catch (e) {
+    window.bugsnagClient.notify(e, {
+      context: 'a handled ReferenceError with metadata',
+            // unhandled errors default to 'warning', but you can override
+      severity: 'info',
+            // Note that metadata can be declared globally,
+            // in the notification (as below) or in a beforeSend.
+      metaData: {
+        company: {
+          name: "Xavier's School for Gifted Youngsters"
+        }
+      }
+    })
+  }
 }
+
+// Below function will trigger an unhandled error which will report to bugsnag, along with all the info configured in the initialization of bugsnag in the html.
+function sendUnhandled () {
+  console.log('an unhandled error has been reported to your Bugsnag dashboard')
+  var num = 1
+    // deliberate Type Error
+  num.toUpperCase()
+}
+
+// below is the simplest notification syntax, akin to logging.
+window.bugsnagClient.notify('End of file')

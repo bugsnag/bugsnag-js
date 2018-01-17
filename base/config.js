@@ -27,6 +27,16 @@ module.exports.schema = {
     message: '(string) endpoint should be set',
     validate: () => true
   },
+  sessionEndpoint: {
+    defaultValue: () => '//sessions.bugsnag.com',
+    message: '(string) sessionEndpoint should be set',
+    validate: () => true
+  },
+  autoCaptureSessions: {
+    defaultValue: () => false,
+    message: '(boolean) autoCaptureSessions should be true/false',
+    validate: val => val === true || val === false
+  },
   notifyReleaseStages: {
     defaultValue: () => null,
     message: '(array[string]) notifyReleaseStages should only contain strings',
@@ -46,6 +56,16 @@ module.exports.schema = {
     defaultValue: () => true,
     message: '(boolean) autoBreadcrumbs should be true or false',
     validate: (value) => typeof value === 'boolean'
+  },
+  user: {
+    defaultValue: () => null,
+    message: '(object) user should be an object',
+    validate: (value) => typeof value === 'object'
+  },
+  metaData: {
+    defaultValue: () => null,
+    message: '(object) metaData should be an object',
+    validate: (value) => typeof value === 'object'
   }
 }
 
