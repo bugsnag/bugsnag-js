@@ -39,7 +39,7 @@ var bugsnagClient = bugsnag({
 
         // add any custom attributes relevant to your app. Note that metadata can be added here, in a specific notify or in a beforeSend.
         metaData: { company: {
-          name: 'Xavier's School for Gifted Youngsters'
+          name: 'Xavier\'s School for Gifted Youngsters'
           }
         },
 
