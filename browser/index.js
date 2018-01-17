@@ -19,7 +19,8 @@ const plugins = {
   'navigation breadcrumbs': require('./plugins/navigation-breadcrumbs'),
   'interaction breadcrumbs': require('./plugins/interaction-breadcrumbs'),
   'inline script content': require('./plugins/inline-script-content'),
-  'sessions': require('./plugins/sessions')
+  'sessions': require('./plugins/sessions'),
+  'ip': require('./plugins/ip')
 }
 
 const transports = {
@@ -72,6 +73,7 @@ module.exports = (opts, userPlugins = []) => {
   bugsnag.use(plugins['inline script content'])
   bugsnag.use(plugins['throttle'])
   bugsnag.use(plugins['sessions'])
+  bugsnag.use(plugins['ip'])
 
   // optional browser-specific plugins
 
