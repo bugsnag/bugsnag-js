@@ -39,7 +39,11 @@ interface IFinalConfig extends IConfig {
   metaData: object | null;
 }
 
-type BeforeSend = (report: Report) => boolean | void;
+type BeforeSend = (
+  report: Report,
+  cb?: (err: any, send: boolean | void) => void,
+) => boolean | void;
+
 type BeforeSession = (client: Client) => void;
 
 export { BeforeSend, BeforeSession, IConfig, IFinalConfig };

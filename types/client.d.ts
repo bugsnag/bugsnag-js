@@ -21,7 +21,7 @@ export class Client {
   public transport(transport: ITransport): Client;
   public logger(logger: ILogger): Client;
   public sessionDelegate(sessionDelegate: ISessionDelegate): Client;
-  public notify(error: NotifiableError, opts?: INotifyOpts): boolean;
+  public notify(error: NotifiableError, opts?: INotifyOpts): void;
   public leaveBreadcrumb(name: string, metaData?: any, type?: string, timestamp?: string): Client;
   public startSession(): Client;
 }

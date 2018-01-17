@@ -41,9 +41,9 @@ bugsnag({
     const program = `
 import { Bugsnag } from "../../..";
 let bugsnagInstance: Bugsnag.Client | undefined = undefined;
-export function notify(error: Bugsnag.NotifiableError, opts?: Bugsnag.INotifyOpts): boolean {
+export function notify(error: Bugsnag.NotifiableError, opts?: Bugsnag.INotifyOpts): void {
   if (bugsnagInstance === undefined) {
-    return false
+    return
   }
   return bugsnagInstance.notify(error, opts)
 }
