@@ -41,6 +41,7 @@ API token with your own!
 Read [our docs](https://docs.bugsnag.com/api/js-source-map-upload/) for full details, but the below will get you started for your example app's source maps.
 
 Add your details to the curl request below and send to Bugsnag:
+
 ```sh
 curl https://upload.bugsnag.com/ \
     -F apiKey=YOUR_API_KEY \
