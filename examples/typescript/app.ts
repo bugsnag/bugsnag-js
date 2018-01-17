@@ -26,20 +26,20 @@ var bugsnagClient = bugsnag({
         // one of the most powerful tools in our library, beforeSend lets you evaluate, modify, add and remove data before sending the error to bugsnag. The actions here will be applied to *all* errors, handled and unhandled.
         // the below downgrades handled exceptions sent with the generic "Error" class to info. In this example, it only affects the notification called at the very end of this app.ts.
         beforeSend: function (report) {
-          if (report.errorClass === "Error" && report.severity === "warning")  {
-            report.severity = "info"
+          if (report.errorClass === 'Error' && report.severity === 'warning')  {
+            report.severity = 'info'
           }
         },
 
         user: {
-          name: "Grace Hopper",
-          email: "ghopper@code.com",
-          id: "123456789"
+          name: 'Grace Hopper',
+          email: 'ghopper@code.com',
+          id: '123456789'
         },
 
         // add any custom attributes relevant to your app. Note that metadata can be added here, in a specific notify or in a beforeSend.
         metaData: { company: {
-          name: "Xavier's School for Gifted Youngsters"
+          name: 'Xavier's School for Gifted Youngsters'
           }
         },
 
@@ -85,4 +85,4 @@ function sendUnhandled() {
 
 // below is the simplest notification syntax, akin to logging.
 console.log('a notification with 1 set of metadata has been reported to your Bugsnag dashboard')
-bugsnagClient.notify("End of file")
+bugsnagClient.notify('End of file')
