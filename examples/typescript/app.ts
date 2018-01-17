@@ -9,7 +9,7 @@
 
 var bugsnagClient = bugsnag({
         // get your own api key at bugsnag.com
-        apiKey: 'API_KEY',
+        apiKey: 'API_KEU',
 
         // if you track deploys or use source maps, make sure to set the correct version.
         appVersion: '1.2.3',
@@ -24,10 +24,10 @@ var bugsnagClient = bugsnag({
         notifyReleaseStages: [ 'development', 'production'],
 
         // one of the most powerful tools in our library, beforeSend lets you evaluate, modify, add and remove data before sending the error to bugsnag. The actions here will be applied to *all* errors, handled and unhandled.
-        // the below downgrades handled exceptions sent with the generic "Error" class to info. In this example, it only affects the notification called at the very end of this app.ts.
         beforeSend: function (report) {
           if (report.errorClass === 'Error' && report.severity === 'warning')  {
-            report.severity = 'info'
+            //note that this overwrites the company metadata definted below.  beforeSend is the last code applied before an exception is sent.
+            report.metaData = {example: {thing: "one"}}
           }
         },
 
@@ -63,26 +63,26 @@ var rawjson: string = el.value || ''
 // Below function will catch an error, and shows how you can add/modify information to the report right before sending.
 // Note that the beforeSend defined in the earlier initialization of bugsnag above will be applied *after* the statements executed here in notify().
 function sendHandled() {
+
   try {
     // potentially buggy code goes here
-    JSON.parse(rawjson)
+    //for this example, we're just throwing an error explicitly, but you do not need this syntax in your try clause.
+    throw("Bad thing!");
   } catch (e) {
-    console.log('a handled error with 2 sets of metadata has been reported to your Bugsnag dashboard')
+    console.log('a handled error has been reported to your Bugsnag dashboard')
+    // below modifies the handled error, and then sends it to your dashboard.
     bugsnagClient.notify(e, {
-      metaData: {
-        content:  { rawjson: rawjson }
-      }
-    })
+      context: 'Don\'t worry - I handled it.'
+    });
   }
 }
 
 // Below function will trigger an unhandled error which will report to bugsnag, without any explcit reference to the client here.
 function sendUnhandled() {
   console.log('an unhandled error has been reported to your Bugsnag dashboard')
-  // below is throwing an exception, but all data is missing. :(
-  throw('Bad thing!')
+  JSON.parse(rawjson)
 }
 
 // below is the simplest notification syntax, akin to logging.
-console.log('a notification with 1 set of metadata has been reported to your Bugsnag dashboard')
+console.log('a notification has been reported to your Bugsnag dashboard')
 bugsnagClient.notify('End of file')
