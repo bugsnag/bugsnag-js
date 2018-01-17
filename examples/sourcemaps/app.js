@@ -4,8 +4,8 @@
 // this example app demonstrates some of the basic syntax to get Bugsnag error reporting configured in your Javascript code, with source map support.
 // ***********************************************************
 
-document.getElementById("jsHandled").addEventListener("click", sendHandled)
-document.getElementById("jsUnhandled").addEventListener("click", sendUnhandled)
+document.getElementById("jsHandled").addEventListener('click', sendHandled)
+document.getElementById("jsUnhandled").addEventListener('click', sendUnhandled)
 
 // Note that Bugsnag was loaded with a CDN link in index.html, but it will not be active until initialized, either in the html or here in the JavaScript.
 
