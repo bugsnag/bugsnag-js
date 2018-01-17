@@ -36,25 +36,24 @@ API token with your own!
 
 1. Bugsnag will need to be able to fetch the sourcemaps by accessing the URL from the outside world so "localhost" won't cut it!  You have the options of uploading your source maps to Bugsnag, or self-hosting.
 
-#### Upload to Bugsnag
+* Upload to Bugsnag
 
 Read [our docs](https://docs.bugsnag.com/api/js-source-map-upload/) for full details, but the below will get you started for your example app's source maps.
 
 Add your details to the curl request below and send to Bugsnag:
-
-```sh
-curl https://upload.bugsnag.com/ \
-    -F apiKey=YOUR_API_KEY \
-    -F appVersion=1.2.3 \
-    -F minifiedUrl=http://localhost:5000/app.min.js \
-    -F sourceMap=@/YOUR_PATH/to/app.min.js.map \
-    -F minifiedFile=@/YOUR_PATH/to/app.min.js \
-    -F overwrite=true
-```
+    ```sh
+    curl https://upload.bugsnag.com/ \  
+        -F apiKey=YOUR_API_KEY \  
+        -F appVersion=1.2.3 \
+        -F minifiedUrl=http://localhost:5000/app.min.js \  
+        -F sourceMap=@/YOUR_PATH/to/app.min.js.map \  
+        -F minifiedFile=@/YOUR_PATH/to/app.min.js \  
+        -F overwrite=true  
+    ```
 
 *Note that we also have an [upload tool](https://docs.bugsnag.com/platforms/browsers/js/source-maps/#upload-tool) to make frequent uploading easier.*
 
-#### Self-host
+* Self-host
 
 Use something like [localtunnel](https://localtunnel.github.io/www/) or [ngrok](https://ngrok.com/) to expose your local port to the world, then be sure to host the example app on that URL (e.g. if you used localtunnel it would be something like https://zriinngpfy.localtunnel.me)
 
