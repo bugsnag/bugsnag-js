@@ -9,7 +9,7 @@
 
 var bugsnagClient = bugsnag({
         // get your own api key at bugsnag.com
-        apiKey: '363658de4c5abbb27df673397aae3fdb',
+        apiKey: 'API_KEY',
 
         // if you track deploys or use source maps, make sure to set the correct version.
         appVersion: '1.2.3',
