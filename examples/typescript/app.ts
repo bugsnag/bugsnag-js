@@ -14,8 +14,8 @@ var bugsnagClient = bugsnag({
         // if you track deploys or use source maps, make sure to set the correct version.
         appVersion: '1.2.3',
 
-        // // Bugsnag can track the number of “sessions” that happen in your application, and calculate a crash rate for each release. This defaults to false.
-        // autoCaptureSessions: true,
+        // Bugsnag can track the number of “sessions” that happen in your application, and calculate a crash rate for each release. This defaults to false.
+        autoCaptureSessions: true,
 
         // defines the release stage for all events that occur in this app.
         releaseStage: 'development',
