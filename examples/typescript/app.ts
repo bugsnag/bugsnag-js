@@ -9,7 +9,7 @@
 
 var bugsnagClient = bugsnag({
         // get your own api key at bugsnag.com
-        apiKey: 'API_KEU',
+        apiKey: '363658de4c5abbb27df673397aae3fdb',
 
         // if you track deploys or use source maps, make sure to set the correct version.
         appVersion: '1.2.3',
@@ -27,7 +27,7 @@ var bugsnagClient = bugsnag({
         beforeSend: function (report) {
           if (report.errorClass === 'Error' && report.severity === 'warning')  {
             //note that this overwrites the company metadata definted below.  beforeSend is the last code applied before an exception is sent.
-            report.metaData = {example: {thing: "one"}}
+            report.updateMetaData('example', {thing: "one"})
           }
         },
 
