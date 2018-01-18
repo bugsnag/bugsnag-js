@@ -27,7 +27,7 @@
         Promise.reject(new Error('derp'))
         setTimeout(function () {
           window.parent.postMessage(JSON.stringify({ type: 'data', reports: reports }), '*')
-        }, 300)
+        }, 500)
       } catch (e) {
         window.parent.postMessage(JSON.stringify({ type: 'error', error: e }), '*')
       }

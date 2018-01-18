@@ -8,7 +8,6 @@ const { reduce } = require('../../base/lib/es-utils')
 let _listener
 module.exports = {
   init: (client) => {
-    if (!('addEventListener' in window)) return
     const listener = event => {
       let error = event.reason
       let isBluebird = false
@@ -43,11 +42,23 @@ module.exports = {
 
       client.notify(report)
     }
-    window.addEventListener('unhandledrejection', listener)
+    if ('addEventListener' in window) {
+      window.addEventListener('unhandledrejection', listener)
+    } else {
+      window.onunhandledrejection = (reason, promise) => {
+        listener({ detail: { reason, promise } })
+      }
+    }
     _listener = listener
   },
   destroy: () => {
-    if (_listener) window.removeEventListener('unhandledrejection', _listener)
+    if (_listener) {
+      if ('addEventListener' in window) {
+        window.removeEventListener('unhandledrejection', _listener)
+      } else {
+        window.onunhandledrejection = null
+      }
+    }
     _listener = null
   }
 }
