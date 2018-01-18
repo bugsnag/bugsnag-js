@@ -78,10 +78,11 @@
   },
   "bs_android": {
     "base": "BrowserStack",
-    "browser": "android",
-    "device": "Google Nexus 4",
+    "browser": "Android Browser",
+    "device": "Samsung Galaxy S8 Plus",
     "os": "android",
-    "os_version": "4.2"
+    "os_version": "7.0",
+    "real_mobile": true
   },
   "bs_firefox_30": {
     "base": "BrowserStack",
