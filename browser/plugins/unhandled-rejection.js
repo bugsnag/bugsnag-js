@@ -32,10 +32,13 @@ module.exports = {
         }
       } else {
         // if it doesn't…
-        const msg = typeof error === 'string'
-          ? error
-          : 'Rejection reason was not an Error. See "Promise" tab for more detail.'
-        report = new client.BugsnagReport('UnhandledRejection', msg, [], handledState)
+        const msg = 'Rejection reason was not an Error. See "Promise" tab for more detail.'
+        report = new client.BugsnagReport(
+          error && error.name ? error.name : 'UnhandledRejection',
+          error && error.message ? error.message : msg,
+          [],
+          handledState
+        )
         // stuff the rejection reason into metaData, it could be useful
         report.updateMetaData('promise', 'rejection reason', serializableReason(error))
       }

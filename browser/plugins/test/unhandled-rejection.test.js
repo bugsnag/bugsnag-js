@@ -57,8 +57,8 @@ describe('plugin: unhandled rejection', () => {
             const report = payload.events[0].toJSON()
             expect(report.severity).toBe('error')
             expect(report.unhandled).toBe(true)
-            expect(report.exceptions[0].errorClass).toBe('UnhandledRejection')
-            expect(report.exceptions[0].message).toBe('Rejection reason was not an Error. See "Promise" tab for more detail.')
+            expect(report.exceptions[0].errorClass).toBe('AbortError')
+            expect(report.exceptions[0].message).toBe('Subscription failed - no active Service Worker')
             expect(report.severityReason).toEqual({ type: 'unhandledPromiseRejection' })
             expect(report.metaData.promise['rejection reason']).toEqual({
               DOMException: {
