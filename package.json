@@ -56,6 +56,7 @@
       "dist",
       "e2e/**/serve/**",
       "examples/typescript/app.js",
+      "examples/js/app.js",
       "examples/sourcemaps/app.js"
     ]
   },
