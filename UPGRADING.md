@@ -57,7 +57,7 @@ Here's an example of how to configure the library with the most common options:
 
 ```js
 window.bugsnagClient = bugsnag({
-  apiKey: 'API_KEY'
+  apiKey: 'API_KEY',
   appVersion: '1.2.3',
   releaseStage: 'staging',
   notifyReleaseStages: [ 'staging', 'production' ],
