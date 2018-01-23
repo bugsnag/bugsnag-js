@@ -19,6 +19,7 @@ interface IConfig {
   interactionBreadcrumbsEnabled?: boolean;
   user?: object | null;
   metaData?: object | null;
+  collectUserIp?: boolean;
 }
 
 interface IFinalConfig extends IConfig {
@@ -37,6 +38,7 @@ interface IFinalConfig extends IConfig {
   interactionBreadcrumbsEnabled: boolean;
   user: object | null;
   metaData: object | null;
+  collectUserIp: boolean;
 }
 
 type BeforeSend = (

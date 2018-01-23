@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>test</title>
+    <script src="bluebird.js"></script>
+    <script src="bugsnag.dist.js"></script>
+    <script>
+      try {
+        var reports = []
+        var client = bugsnag({
+          apiKey: 'aaaa-aaaa-aaaa-aaaa',
+          endpoint: 'http://localhost:55854'
+        })
+        client.transport({
+          sendReport: function (logger, config, report) {
+            reports.push(report)
+          }
+        })
+      } catch (e) {
+        window.parent.postMessage(JSON.stringify({ type: 'error', error: e }), '*')
+      }
+    </script>
+  </head>
+  <body>
+    <script>
+      try {
+        Promise.reject(new Error('derp'))
+        setTimeout(function () {
+          window.parent.postMessage(JSON.stringify({ type: 'data', reports: reports }), '*')
+        }, 500)
+      } catch (e) {
+        window.parent.postMessage(JSON.stringify({ type: 'error', error: e }), '*')
+      }
+    </script>
+  </body>
+</html>
