@@ -1,7 +1,7 @@
 const { spawnSync } = require('child_process')
 
 const { stderr } = spawnSync('./node_modules/.bin/browserify', [
-  './e2e/typescript/app.ts',
+  `${__dirname}/app.ts`,
   '-g',
   'babelify',
   '-p',
@@ -10,7 +10,7 @@ const { stderr } = spawnSync('./node_modules/.bin/browserify', [
   '--strict',
   ']',
   '-o',
-  './e2e/typescript/serve/bundle.js'
+  `${__dirname}/serve/bundle.js`
 ], { encoding: 'utf8' })
 
 if (stderr.length) throw new Error(stderr)
