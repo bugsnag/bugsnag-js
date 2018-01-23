@@ -183,7 +183,9 @@ describe('plugin: window onerror', () => {
           expect(payloads.length).toBe(1)
           const report = payloads[0].events[0].toJSON()
           expect(report.exceptions[0].errorClass).toBe('window.onerror')
-          expect(report.exceptions[0].message).toBe('Uncaught hello')
+          expect(report.exceptions[0].message).toMatch(
+            /^hello|uncaught hello|exception thrown and not caught$/i
+          )
           expect(report.severity).toBe('error')
           expect(report.unhandled).toBe(true)
           expect(report.severityReason).toEqual({ type: 'unhandledException' })
