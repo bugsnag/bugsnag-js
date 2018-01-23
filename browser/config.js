@@ -6,5 +6,10 @@ module.exports = {
     },
     message: '(string) releaseStage should be set',
     validate: value => typeof value === 'string' && value.length
+  },
+  collectUserIp: {
+    defaultValue: () => true,
+    message: '(boolean) collectUserIp should true/false',
+    validate: value => value === true || value === false
   }
 }
