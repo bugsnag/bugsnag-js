@@ -41,7 +41,11 @@ interface IFinalConfig extends IConfig {
   collectUserIp: boolean;
 }
 
-type BeforeSend = (report: Report) => boolean | void;
+type BeforeSend = (
+  report: Report,
+  cb?: (err: any, send: boolean | void) => void,
+) => boolean | void;
+
 type BeforeSession = (client: Client) => void;
 
 export { BeforeSend, BeforeSession, IConfig, IFinalConfig };
