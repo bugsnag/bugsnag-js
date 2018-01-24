@@ -22,6 +22,7 @@ describe('inline script content when location changes', function () {
         expect(data.reports[0].notifier.version).toMatch(/\d\.\d\.\d/)
         expect(data.reports[0].events[0].metaData.script).toBeDefined()
         expect(data.reports[0].events[0].metaData.script.content.length).toBeGreaterThan(0)
+        expect(data.reports[0].events[0].metaData.script.content).toBe(scriptContent)
 
         done()
       }
@@ -36,3 +37,17 @@ describe('inline script content when location changes', function () {
     })
   }
 })
+
+var scriptContent = [
+  '',
+  '      setTimeout(function () {',
+  '        try {',
+  '          window.parent.postMessage(JSON.stringify({ type: \'data\', reports: reports }), \'*\')',
+  '        } catch (e) {',
+  '          window.parent.postMessage(JSON.stringify({ type: \'error\', error: e }), \'*\')',
+  '        }',
+  '      })',
+  '      window.history.pushState({}, \'\', \'/234235\')',
+  '      throw new Error(\'floop\')',
+  '    '
+].join('\n')
