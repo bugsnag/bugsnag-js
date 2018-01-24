@@ -2,6 +2,28 @@
 
 <!-- {entry_placeholder} -->
 
+## 4.2.0 (2018-01-24)
+
+This release fixes a few issues with the fetching of inline
+script content, particularly after the location has changed
+due to window.history methods.
+
+Unhandled promise rejection should also contain more actionable
+information (when the rejection reason is a DOMException, null,
+or undefined). Support for Bluebird promises was also added.
+
+### Added
+- Support for unhandled bluebird promise rejections (#317)
+- Option to prevent IP collection (#313)
+
+### Changed
+- Improved serialization of promise rejection reasons (#317)
+- If a string was thrown and not caught, use it as the error message (#319)
+
+### Fixed
+- Collection of inline script content improved (#320, #318)
+
+
 ## 4.1.3 (2018-01-15)
 
 ### Fixed
