@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>test</title>
+    <script src="bugsnag.dist.js"></script>
+    <script>
+      try {
+        var reports = []
+        var client = bugsnag({
+          apiKey: 'aaaa-aaaa-aaaa-aaaa',
+          endpoint: 'http://localhost:55854'
+        })
+        client.transport({
+          sendReport: function (logger, config, report) {
+            reports.push(report)
+          }
+        })
+      } catch (e) {
+        window.parent.postMessage(JSON.stringify({ type: 'error', error: e }), '*')
+      }
+    </script>
+  </head>
+  <body>
+    <script>
+      setTimeout(function () {
+        try {
+          window.parent.postMessage(JSON.stringify({ type: 'data', reports: reports }), '*')
+        } catch (e) {
+          window.parent.postMessage(JSON.stringify({ type: 'error', error: e }), '*')
+        }
+      })
+      window.history.pushState({}, '', '/234235')
+      throw new Error('floop')
+    </script>
+  </body>
+</html>

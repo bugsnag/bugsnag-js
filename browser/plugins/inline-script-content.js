@@ -5,11 +5,12 @@ module.exports = {
     let html = ''
     let DOMContentLoaded = false
     const getHtml = () => document.documentElement.outerHTML
+    const originalLocation = window.location.href
 
     const addInlineContent = report => {
       const frame = report.stacktrace[0]
       if (!frame || !frame.file || !frame.lineNumber) return frame
-      if (frame.file.replace(/#.*$/) !== window.location.href.replace(/#.*$/)) return frame
+      if (frame.file.replace(/#.*$/, '') !== originalLocation.replace(/#.*$/, '')) return frame
       if (!DOMContentLoaded || !html) html = getHtml()
       const htmlLines = [ '<!-- DOCUMENT START -->' ].concat(html.split('\n'))
       const { script, start } = extractScriptContent(htmlLines, frame.lineNumber - 1)
