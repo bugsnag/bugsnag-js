@@ -133,8 +133,11 @@ const formatStackframe = frame => {
     code: undefined,
     inProject: undefined
   }
-  // calling notify() from chrome's terminal results in no file/method. This adds one.
-  if (f.lineNumber && !f.file && !f.method) {
+  // Some instances result in no file:
+  // - calling notify() from chrome's terminal results in no file/method.
+  // - non-error exception thrown from global code in FF
+  // This adds one.
+  if (f.lineNumber > -1 && !f.file && !f.method) {
     f.file = 'global code'
   }
   return f
