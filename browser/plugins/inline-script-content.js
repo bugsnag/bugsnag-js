@@ -38,20 +38,22 @@ module.exports = {
   }
 }
 
-const extractScriptContent = (lines, startLine) => {
+const scriptStartRe = /^.*<script.*?>/
+const scriptEndRe = /<\/script>.*$/
+const extractScriptContent = module.exports.extractScriptContent = (lines, startLine) => {
   // search down for </script>
   let line = startLine
-  while (line < lines.length && !/<\/script>/.test(lines[line])) line++
+  while (line < lines.length && !scriptEndRe.test(lines[line])) line++
 
   // search up for <script>
   const end = line
-  while (line > 0 && !/<script.*>/.test(lines[line])) line--
+  while (line > 0 && !scriptStartRe.test(lines[line])) line--
   const start = line
 
   // strip <script> tags so that lines just contain js content
   const script = lines.slice(start, end + 1)
-  script[0] = script[0].replace(/^.*<script.*>/, '')
-  script[script.length - 1] = script[script.length - 1].replace(/<\/script>.*$/, '')
+  script[0] = script[0].replace(scriptStartRe, '')
+  script[script.length - 1] = script[script.length - 1].replace(scriptEndRe, '')
 
   // return the array of lines, and the line number the script started at
   return { script, start }
