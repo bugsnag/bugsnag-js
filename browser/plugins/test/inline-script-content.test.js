@@ -24,4 +24,48 @@ describe('plugin: inline script content', () => {
     expect(payloads[0].events[0].metaData.script).toBeDefined()
     expect(payloads[0].events[0].metaData.script.content).toBeDefined()
   })
+
+  it('should find scripts content successfully', () => {
+    const a = plugin.extractScriptContent([
+      'some stuff before script',
+      '<script>',
+      '',
+      '// hello just',
+      '// some js here',
+      '1 + 2 + 3',
+      '',
+      '</script>'
+    ], 4)
+    expect(a.script.length).toBe(7)
+    expect(a.start).toBe(1)
+
+    const b = plugin.extractScriptContent([
+      'some stuff before script',
+      '<script>',
+      '1+1+1+1',
+      'what(function () {',
+      '  1>2',
+      '  func()',
+      '})',
+      '</script>',
+      'some stuff after script'
+    ], 4)
+    expect(b.script.length).toBe(7)
+    expect(b.start).toBe(1)
+
+    const c = plugin.extractScriptContent([
+      'some stuff before script',
+      '<script nonce="1cd2dsf312gfd31dfg23">',
+      '1+1+1+1',
+      'what(function () {',
+      '  1>2',
+      '  func()',
+      '})',
+      '</script>',
+      'some stuff after script'
+    ], 4)
+    console.log(c.script)
+    expect(c.script.length).toBe(7)
+    expect(c.start).toBe(1)
+  })
 })
