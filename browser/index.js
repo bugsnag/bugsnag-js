@@ -123,4 +123,11 @@ const inferBreadcrumbSetting = (config, val, defaultInDev = true) =>
         (defaultInDev || !/^dev(elopment)?$/.test(config.releaseStage))
       )
 
+// Stub this value because this is what the type interface looks like
+// (types/bugsnag.d.ts). This is only an issue in Angular's development
+// mode as its TS/DI thingy attempts to use this value at runtime.
+// In most other situations, TS only uses the types at compile time.
+module.exports.Bugsnag = {}
+
+// Export a "default" property for compatibility with ESM imports
 module.exports['default'] = module.exports
