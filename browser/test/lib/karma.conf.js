@@ -77,7 +77,7 @@ module.exports = function (config) {
     browserDisconnectTimeout: MAX_TIMEOUT,
     browserNoActivityTimeout: MAX_TIMEOUT,
 
-    browserStack: process.env.TRAVIS ? CI_BS_CONF : { startTunnel: true },
+    browserStack: process.env.TRAVIS ? CI_BS_CONF : { startTunnel: true, video: false },
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher

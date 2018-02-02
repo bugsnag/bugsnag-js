@@ -81,6 +81,28 @@ describe('plugin: unhandled rejection', () => {
           })
         , 0)
       })
+
+      it('handles errors with non-string stacks', done => {
+        const client = new Client(VALID_NOTIFIER)
+        client.configure({ apiKey: 'API_KEY_YEAH' })
+        client.use(plugin)
+        client.transport({
+          sendReport: (logger, config, payload) => {
+            const report = payload.events[0].toJSON()
+            expect(report.severity).toBe('error')
+            expect(report.unhandled).toBe(true)
+            expect(report.exceptions[0].errorClass).toBe('Error')
+            expect(report.exceptions[0].message).toBe('blah')
+            expect(report.severityReason).toEqual({ type: 'unhandledPromiseRejection' })
+            plugin.destroy()
+            done()
+          }
+        })
+
+        const err = new Error('blah')
+        err.stack = true
+        setTimeout(() => Promise.reject(err), 0) // eslint-disable-line
+      })
     })
   }
 })
