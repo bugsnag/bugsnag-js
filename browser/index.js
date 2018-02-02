@@ -3,6 +3,9 @@ const version = '__VERSION__'
 const url = 'https://github.com/bugsnag/bugsnag-js'
 
 const Client = require('../base/client')
+const Report = require('../base/report')
+const Session = require('../base/session')
+const Breadcrumb = require('../base/breadcrumb')
 const { map, reduce, keys } = require('../base/lib/es-utils')
 
 // extend the base config schema with some browser-specific options
@@ -127,7 +130,12 @@ const inferBreadcrumbSetting = (config, val, defaultInDev = true) =>
 // (types/bugsnag.d.ts). This is only an issue in Angular's development
 // mode as its TS/DI thingy attempts to use this value at runtime.
 // In most other situations, TS only uses the types at compile time.
-module.exports.Bugsnag = {}
+module.exports.Bugsnag = {
+  Client,
+  Report,
+  Session,
+  Breadcrumb
+}
 
 // Export a "default" property for compatibility with ESM imports
 module.exports['default'] = module.exports
