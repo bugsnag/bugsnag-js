@@ -20,7 +20,8 @@ const plugins = {
   'interaction breadcrumbs': require('./plugins/interaction-breadcrumbs'),
   'inline script content': require('./plugins/inline-script-content'),
   'sessions': require('./plugins/sessions'),
-  'ip': require('./plugins/ip')
+  'ip': require('./plugins/ip'),
+  'strip query string': require('./plugins/strip-query-string')
 }
 
 const transports = {
@@ -74,6 +75,7 @@ module.exports = (opts, userPlugins = []) => {
   bugsnag.use(plugins['throttle'])
   bugsnag.use(plugins['sessions'])
   bugsnag.use(plugins['ip'])
+  bugsnag.use(plugins['strip query string'])
 
   // optional browser-specific plugins
 
