@@ -7,7 +7,7 @@ const Client = require('../../../base/client')
 const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
 describe('plugin: strip query string', () => {
-  it('should strip querystrings from urls', () => {
+  it('should strip querystrings and fragments from urls', () => {
     expect(
       plugin._strip('https://bath.tub.xyz/assets/js/app.js?id=49c3ad475f69072745e3')
     ).toBe('https://bath.tub.xyz/assets/js/app.js')
@@ -16,6 +16,9 @@ describe('plugin: strip query string', () => {
     ).toBe('http://bath.tub.xyz/assets/js/app.js')
     expect(
       plugin._strip('http://bath.tub.xyz:8808/assets/js/app.js#nmfrz')
+    ).toBe('http://bath.tub.xyz:8808/assets/js/app.js')
+    expect(
+      plugin._strip('http://bath.tub.xyz:8808/assets/js/app.js?id=49c3ad475f69072745e3&name=bob#nmfrz')
     ).toBe('http://bath.tub.xyz:8808/assets/js/app.js')
   })
 
