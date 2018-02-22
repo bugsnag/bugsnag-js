@@ -7,11 +7,11 @@
 
 [![NPM](https://nodei.co/npm/bugsnag-js.png?compact=true)](https://npmjs.org/package/bugsnag-js)
 
-The Bugsnag error reporter for JavaScript automatically detects and reports errors.
+Automatically detect JavaScript errors on your website, get real-time error alerts and detailed diagnostic reports. Get cross-browser error detection and see errors grouped by browser, browser version, OS, and more. Learn more about [JavaScript error reporting](https://www.bugsnag.com/platforms/javascript/) from Bugsnag.
 
 ## Getting started
 
-1. [Create a Bugsnag account](https://bugsnag.com)
+1. [Create a Bugsnag account](https://www.bugsnag.com)
 2. Complete the instructions in the [integration guide](https://docs.bugsnag.com/platforms/browsers/)
 3. Report handled exceptions using
    [`client.notify()`](https://docs.bugsnag.com/platforms/browsers/js/#reporting-handled-exceptions)
