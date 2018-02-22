@@ -11,8 +11,7 @@ module.exports = {
   }
 }
 
-const strip = module.exports._strip = maybeUrl => {
-  const a = document.createElement('A')
-  a.href = maybeUrl
-  return (a.search || a.hash) ? `${a.protocol}//${a.host}${a.pathname}` : maybeUrl
-}
+const strip = module.exports._strip = str =>
+  typeof str === 'string'
+    ? str.replace(/\?.*$/, '').replace(/#.*$/, '')
+    : str
