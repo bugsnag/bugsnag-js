@@ -64,7 +64,6 @@ describe('plugin: inline script content', () => {
       '</script>',
       'some stuff after script'
     ], 4)
-    console.log(c.script)
     expect(c.script.length).toBe(7)
     expect(c.start).toBe(1)
   })
