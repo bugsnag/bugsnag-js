@@ -3,7 +3,7 @@ import { BeforeSend, BeforeSession, IConfig, IFinalConfig } from "./common";
 import Report from "./report";
 import Session from "./session";
 
-export class Client {
+declare class Client {
   public app: object;
   public device: object;
   public context: string | void;
@@ -107,4 +107,5 @@ export type NotifiableError = Error
   | { name: string; message: string; }
   | any;
 
+export { Client };
 export default Client;
