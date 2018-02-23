@@ -2,6 +2,19 @@
 
 <!-- {entry_placeholder} -->
 
+## 4.3.0 (2018-02-23)
+
+<!-- optional: if this is a significant release, describe it in a sentence or two -->
+
+### Added
+- Stub exported types to appease Angular's JIT compiler in dev mode (#323)
+- Make hasStack(err) check more strict, making the unhandled rejection handler more robust and useful (#322)
+
+### Changed
+- Strip query strings and fragments from stackframe files (#328)
+- Switch to upstream version of `fast-safe-stringify`
+
+
 ## 4.2.0 (2018-01-24)
 
 This release fixes a few issues with the fetching of inline
