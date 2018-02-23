@@ -3,25 +3,43 @@ const version = '__VERSION__'
 const url = 'https://github.com/bugsnag/bugsnag-js'
 
 const Client = require('../base/client')
-const { map, reduce, keys } = require('../base/lib/es-utils')
+const Report = require('../base/report')
+const Session = require('../base/session')
+const Breadcrumb = require('../base/breadcrumb')
+const { map, reduce } = require('../base/lib/es-utils')
 
 // extend the base config schema with some browser-specific options
 const schema = { ...require('../base/config').schema, ...require('./config') }
 
-const plugins = {
-  'window onerror': require('./plugins/window-onerror'),
-  'unhandled rejection': require('./plugins/unhandled-rejection'),
-  'device': require('./plugins/device'),
-  'context': require('./plugins/context'),
-  'request': require('./plugins/request'),
-  'throttle': require('../base/plugins/throttle'),
-  'console breadcrumbs': require('./plugins/console-breadcrumbs'),
-  'navigation breadcrumbs': require('./plugins/navigation-breadcrumbs'),
-  'interaction breadcrumbs': require('./plugins/interaction-breadcrumbs'),
-  'inline script content': require('./plugins/inline-script-content'),
-  'sessions': require('./plugins/sessions'),
-  'ip': require('./plugins/ip')
-}
+const pluginWindowOnerror = require('./plugins/window-onerror')
+const pluginUnhandledRejection = require('./plugins/unhandled-rejection')
+const pluginDevice = require('./plugins/device')
+const pluginContext = require('./plugins/context')
+const pluginRequest = require('./plugins/request')
+const pluginThrottle = require('../base/plugins/throttle')
+const pluginConsoleBreadcrumbs = require('./plugins/console-breadcrumbs')
+const pluginNavigationBreadcrumbs = require('./plugins/navigation-breadcrumbs')
+const pluginInteractionBreadcrumbs = require('./plugins/interaction-breadcrumbs')
+const pluginInlineScriptContent = require('./plugins/inline-script-content')
+const pluginSessions = require('./plugins/sessions')
+const pluginIp = require('./plugins/ip')
+const pluginStripQueryString = require('./plugins/strip-query-string')
+
+const plugins = [
+  pluginWindowOnerror,
+  pluginUnhandledRejection,
+  pluginDevice,
+  pluginContext,
+  pluginRequest,
+  pluginThrottle,
+  pluginConsoleBreadcrumbs,
+  pluginNavigationBreadcrumbs,
+  pluginInteractionBreadcrumbs,
+  pluginInlineScriptContent,
+  pluginSessions,
+  pluginIp,
+  pluginStripQueryString
+]
 
 const transports = {
   'XDomainRequest': require('./transports/x-domain-request'),
@@ -38,7 +56,7 @@ module.exports = (opts, userPlugins = []) => {
   }
 
   // allow plugins to augment the schema with their own options
-  const finalSchema = reduce([].concat(map(keys(plugins), k => plugins[k])).concat(userPlugins), (accum, plugin) => {
+  const finalSchema = reduce([].concat(plugins).concat(userPlugins), (accum, plugin) => {
     if (!plugin.configSchema) return accum
     return { ...accum, ...plugin.configSchema }
   }, schema)
@@ -67,33 +85,34 @@ module.exports = (opts, userPlugins = []) => {
   }
 
   // always-on browser-specific plugins
-  bugsnag.use(plugins['device'])
-  bugsnag.use(plugins['context'])
-  bugsnag.use(plugins['request'])
-  bugsnag.use(plugins['inline script content'])
-  bugsnag.use(plugins['throttle'])
-  bugsnag.use(plugins['sessions'])
-  bugsnag.use(plugins['ip'])
+  bugsnag.use(pluginDevice)
+  bugsnag.use(pluginContext)
+  bugsnag.use(pluginRequest)
+  bugsnag.use(pluginInlineScriptContent)
+  bugsnag.use(pluginThrottle)
+  bugsnag.use(pluginSessions)
+  bugsnag.use(pluginIp)
+  bugsnag.use(pluginStripQueryString)
 
   // optional browser-specific plugins
 
   if (bugsnag.config.autoNotify !== false) {
-    bugsnag.use(plugins['window onerror'])
-    bugsnag.use(plugins['unhandled rejection'])
+    bugsnag.use(pluginWindowOnerror)
+    bugsnag.use(pluginUnhandledRejection)
   }
 
   if (inferBreadcrumbSetting(bugsnag.config, 'navigationBreadcrumbsEnabled')) {
-    bugsnag.use(plugins['navigation breadcrumbs'])
+    bugsnag.use(pluginNavigationBreadcrumbs)
   }
 
   if (inferBreadcrumbSetting(bugsnag.config, 'interactionBreadcrumbsEnabled')) {
-    bugsnag.use(plugins['interaction breadcrumbs'])
+    bugsnag.use(pluginInteractionBreadcrumbs)
   }
 
   // because console breadcrumbs play havoc with line numbers,
   // if not explicitly enabled, only setup on non-development evironments
   if (inferBreadcrumbSetting(bugsnag.config, 'consoleBreadcrumbsEnabled', false)) {
-    bugsnag.use(plugins['console breadcrumbs'])
+    bugsnag.use(pluginConsoleBreadcrumbs)
   }
 
   // init user supplied plugins
@@ -123,4 +142,16 @@ const inferBreadcrumbSetting = (config, val, defaultInDev = true) =>
         (defaultInDev || !/^dev(elopment)?$/.test(config.releaseStage))
       )
 
+// Stub this value because this is what the type interface looks like
+// (types/bugsnag.d.ts). This is only an issue in Angular's development
+// mode as its TS/DI thingy attempts to use this value at runtime.
+// In most other situations, TS only uses the types at compile time.
+module.exports.Bugsnag = {
+  Client,
+  Report,
+  Session,
+  Breadcrumb
+}
+
+// Export a "default" property for compatibility with ESM imports
 module.exports['default'] = module.exports
