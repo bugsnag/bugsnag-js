@@ -69,7 +69,7 @@ module.exports = {
 const serializableReason = (err) => {
   if (err === null || err === undefined) {
     return 'undefined (or null)'
-  } else if (err.name && err.message) {
+  } else if (Object.prototype.toString.call(err) === '[object DOMException]') {
     return {
       'DOMException': {
         name: err.name,
