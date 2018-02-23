@@ -61,10 +61,11 @@ describe('plugin: unhandled rejection', () => {
             expect(report.exceptions[0].message).toBe('Subscription failed - no active Service Worker')
             expect(report.severityReason).toEqual({ type: 'unhandledPromiseRejection' })
             expect(report.metaData.promise['rejection reason']).toEqual({
-              DOMException: {
+              '[object DOMException]': {
                 name: 'AbortError',
                 message: 'Subscription failed - no active Service Worker',
-                code: 20
+                code: 20,
+                stack: undefined
               }
             })
             plugin.destroy()

@@ -1,6 +1,7 @@
 const ErrorStackParser = require('error-stack-parser')
 const hasStack = require('../../base/lib/has-stack')
 const { reduce } = require('../../base/lib/es-utils')
+const isError = require('iserror')
 
 /*
  * Automatically notifies Bugsnag when window.onunhandledrejection is called
@@ -69,12 +70,13 @@ module.exports = {
 const serializableReason = (err) => {
   if (err === null || err === undefined) {
     return 'undefined (or null)'
-  } else if (Object.prototype.toString.call(err) === '[object DOMException]') {
+  } else if (isError(err)) {
     return {
-      'DOMException': {
+      [Object.prototype.toString.call(err)]: {
         name: err.name,
         message: err.message,
-        code: err.code
+        code: err.code,
+        stack: err.stack
       }
     }
   } else {
