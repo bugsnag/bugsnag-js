@@ -18,7 +18,20 @@ describe('plugin: console breadcrumbs', () => {
       console.log('check 1, 2')
       // make sure it's null-safe
       console.log(null)
-      expect(c.breadcrumbs.length).toBe(2)
+      console.log({
+        foo: [ 1, 2, 3, 'four' ]
+      }, {
+        pets: {
+          cat: 'scratcher',
+          dog: 'pupper',
+          rabbit: 'sniffer'
+        }
+      })
+      expect(c.breadcrumbs.length).toBe(3)
+      expect(c.breadcrumbs[0].metaData['[0]']).toBe('check 1, 2')
+      expect(c.breadcrumbs[1].metaData['[0]']).toBe('null')
+      expect(c.breadcrumbs[2].metaData['[0]']).toBe('{"foo":[1,2,3,"four"]}')
+      expect(c.breadcrumbs[2].metaData['[1]']).toBe('{"pets":{"cat":"scratcher","dog":"pupper","rabbit":"sniffer"}}')
       // undo the global side effects of wrapping console.* for the rest of the tests
       plugin.destroy()
     })
