@@ -341,17 +341,6 @@ describe('base/client', () => {
       expect(typeof client.breadcrumbs[2].timestamp).toBe('string')
     })
 
-    it('doesn’t add duplicates', () => {
-      const client = new Client(VALID_NOTIFIER)
-      const now = new Date().toISOString()
-      client.configure({ apiKey: 'API_KEY_YEAH' })
-      client.leaveBreadcrumb('toast', {}, 'baked_goods', now)
-      client.leaveBreadcrumb('toast', {}, 'baked_goods', now)
-      client.leaveBreadcrumb('toast', {}, 'baked_goods', now)
-      client.leaveBreadcrumb('toast', {}, 'baked_goods', now)
-      expect(client.breadcrumbs.length).toBe(1)
-    })
-
     it('allows maxBreadcrumbs to be set to 0', () => {
       const client = new Client(VALID_NOTIFIER)
       client.configure({ apiKey: 'API_KEY_YEAH', maxBreadcrumbs: 0 })

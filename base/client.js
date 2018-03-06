@@ -109,12 +109,6 @@ class BugsnagClient {
     if (typeof name !== 'string' && !metaData) return
 
     const crumb = new BugsnagBreadcrumb(name, metaData, type, timestamp)
-    const c = jsonStringify(crumb)
-    const lastCrumb = this.breadcrumbs[this.breadcrumbs.length - 1]
-    const isDupe = lastCrumb ? c === jsonStringify(lastCrumb) : false
-
-    // no duplicates
-    if (isDupe) return
 
     // push the valid crumb onto the queue and maintain the length
     this.breadcrumbs.push(crumb)
