@@ -4,7 +4,6 @@ const BugsnagBreadcrumb = require('./breadcrumb')
 const BugsnagSession = require('./session')
 const { map, reduce, includes, isArray } = require('./lib/es-utils')
 const inferReleaseStage = require('./lib/infer-release-stage')
-const jsonStringify = require('fast-safe-stringify')
 const isError = require('iserror')
 
 const noop = () => {}
