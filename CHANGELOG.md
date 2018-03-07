@@ -2,6 +2,12 @@
 
 <!-- {entry_placeholder} -->
 
+## 4.3.1 (2018-03-07)
+
+### Changed
+- Perf improvements for breadcrumbs, most notably console log methods with lots of data (#329)
+
+
 ## 4.3.0 (2018-02-23)
 
 <!-- optional: if this is a significant release, describe it in a sentence or two -->
