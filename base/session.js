@@ -1,9 +1,9 @@
 const { isoDate } = require('./lib/es-utils')
-const cuid = require('cuid')
+const uid = require('./lib/uid')
 
 class Session {
   constructor () {
-    this.id = cuid()
+    this.id = uid()
     this.startedAt = isoDate()
     this._handled = 0
     this._unhandled = 0
