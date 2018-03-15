@@ -17,6 +17,7 @@ describe('plugin: sessions', () => {
         expect(session.notifier).toEqual(VALID_NOTIFIER)
         expect(session.sessions.length).toBe(1)
         expect(session.sessions[0].id).toBeTruthy()
+        expect(session.sessions[0].id.length).toBeGreaterThan(10)
         expect(session.sessions[0].startedAt).toBeTruthy()
         done()
       }
