@@ -18,6 +18,7 @@ const pluginContext = require('./plugins/context')
 const pluginRequest = require('./plugins/request')
 const pluginThrottle = require('../base/plugins/throttle')
 const pluginConsoleBreadcrumbs = require('./plugins/console-breadcrumbs')
+const pluginNetworkBreadcrumbs = require('./plugins/network-breadcrumbs')
 const pluginNavigationBreadcrumbs = require('./plugins/navigation-breadcrumbs')
 const pluginInteractionBreadcrumbs = require('./plugins/interaction-breadcrumbs')
 const pluginInlineScriptContent = require('./plugins/inline-script-content')
@@ -33,6 +34,7 @@ const plugins = [
   pluginRequest,
   pluginThrottle,
   pluginConsoleBreadcrumbs,
+  pluginNetworkBreadcrumbs,
   pluginNavigationBreadcrumbs,
   pluginInteractionBreadcrumbs,
   pluginInlineScriptContent,
@@ -107,6 +109,10 @@ module.exports = (opts, userPlugins = []) => {
 
   if (inferBreadcrumbSetting(bugsnag.config, 'interactionBreadcrumbsEnabled')) {
     bugsnag.use(pluginInteractionBreadcrumbs)
+  }
+
+  if (inferBreadcrumbSetting(bugsnag.config, 'networkBreadcrumbsEnabled')) {
+    bugsnag.use(pluginNetworkBreadcrumbs)
   }
 
   // because console breadcrumbs play havoc with line numbers,
