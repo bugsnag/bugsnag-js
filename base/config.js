@@ -23,12 +23,12 @@ module.exports.schema = {
     validate: value => typeof value === 'function' || (isArray(value) && filter(value, f => typeof f === 'function').length === value.length)
   },
   endpoint: {
-    defaultValue: () => '//notify.bugsnag.com',
+    defaultValue: () => 'https://notify.bugsnag.com',
     message: '(string) endpoint should be set',
     validate: () => true
   },
   sessionEndpoint: {
-    defaultValue: () => '//sessions.bugsnag.com',
+    defaultValue: () => 'https://sessions.bugsnag.com',
     message: '(string) sessionEndpoint should be set',
     validate: () => true
   },
