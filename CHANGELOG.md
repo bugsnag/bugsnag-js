@@ -2,6 +2,15 @@
 
 <!-- {entry_placeholder} -->
 
+## 4.4.0 (2018-03-15)
+
+### Changed
+- Switch from a protocol-relative default for endpoint and sessionEndpoint to "https://". IE8/9 will attempt to send via http if the protocol of the current page is http. Otherwise all requests will now go via https unless configured otherwise (#333).
+
+### Fixed
+- Fix rollup bundling issue (switching to a forked version of cuid) (#331)
+
+
 ## 4.3.1 (2018-03-07)
 
 ### Changed
