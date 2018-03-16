@@ -15,6 +15,7 @@ interface IConfig {
   maxEvents?: number;
   maxBreadcrumbs?: number;
   consoleBreadcrumbsEnabled?: boolean;
+  networkBreadcrumbsEnabled?: boolean;
   navigationBreadcrumbsEnabled?: boolean;
   interactionBreadcrumbsEnabled?: boolean;
   user?: object | null;
@@ -34,6 +35,7 @@ interface IFinalConfig extends IConfig {
   maxEvents: number;
   maxBreadcrumbs: number;
   consoleBreadcrumbsEnabled: boolean;
+  networkBreadcrumbsEnabled?: boolean;
   navigationBreadcrumbsEnabled: boolean;
   interactionBreadcrumbsEnabled: boolean;
   user: object | null;
