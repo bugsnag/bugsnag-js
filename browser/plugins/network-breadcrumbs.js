@@ -1,14 +1,16 @@
 const { XMLHttpRequest } = window
 const breadcrumbType = 'network'
 let restoreFunctions = []
+let client
 
 /*
  * Leaves breadcrumbs when console log methods are called
  */
 module.exports = {
-  init: (client) => {
-    monkeyPatchXHR(client)
-    monkeyPatchFetch(client)
+  init: (_client) => {
+    client = _client
+    monkeyPatchXHR()
+    monkeyPatchFetch()
   },
   destroy: () => {
     restoreFunctions.forEach(restore => restore())
@@ -26,14 +28,13 @@ module.exports = {
 // ---------------------------
 // XMLHttpRequest monkey patch
 // ---------------------------
-function monkeyPatchXHR (client) {
-  // create keys to safely store metadata on the request object
-  const setupKey = 'BUGSNAG:SETUP'
-  const requestUrlKey = 'BUGSNAG:REQUEST_URL'
-  const requestMethodKey = 'BUGSNAG:REQUEST_METHOD'
+// create keys to safely store metadata on the request object
+const setupKey = 'BUGSNAG:SETUP'
+const requestUrlKey = 'BUGSNAG:REQUEST_URL'
+const requestMethodKey = 'BUGSNAG:REQUEST_METHOD'
+function monkeyPatchXHR () {
   // copy native request method so we can monkey patch it
   const nativeOpen = XMLHttpRequest.prototype.open
-
   // override native open()
   XMLHttpRequest.prototype.open = function (method, url) {
     // store url and HTTP method for later
@@ -42,26 +43,10 @@ function monkeyPatchXHR (client) {
     // if we haven't setup listeners already, set them up now
     if (!this[setupKey]) {
       // attach load event listener
-      this.addEventListener('load', function onLoad () {
-        const metaData = {
-          status: this.status,
-          request: `${this[requestMethodKey]} ${this[requestUrlKey]}`
-        }
-        if (this.status >= 400) {
-          // contacted server but got an error response
-          client.leaveBreadcrumb('XMLHttpRequest failed', metaData, breadcrumbType)
-        } else {
-          client.leaveBreadcrumb('XMLHttpRequest succeeded', metaData, breadcrumbType)
-        }
-      })
+      this.addEventListener('load', handleXHRLoad)
 
       // attach error event listener
-      this.addEventListener('error', function onLoad () {
-        // failed to contact server
-        client.leaveBreadcrumb('XMLHttpRequest error', {
-          request: `${this[requestMethodKey]} ${this[requestUrlKey]}`
-        }, breadcrumbType)
-      })
+      this.addEventListener('error', handleXHRError)
 
       this[setupKey] = true
     }
@@ -75,10 +60,30 @@ function monkeyPatchXHR (client) {
   })
 }
 
+function handleXHRLoad () {
+  const metaData = {
+    status: this.status,
+    request: `${this[requestMethodKey]} ${this[requestUrlKey]}`
+  }
+  if (this.status >= 400) {
+    // contacted server but got an error response
+    client.leaveBreadcrumb('XMLHttpRequest failed', metaData, breadcrumbType)
+  } else {
+    client.leaveBreadcrumb('XMLHttpRequest succeeded', metaData, breadcrumbType)
+  }
+}
+
+function handleXHRError () {
+  // failed to contact server
+  client.leaveBreadcrumb('XMLHttpRequest error', {
+    request: `${this[requestMethodKey]} ${this[requestUrlKey]}`
+  }, breadcrumbType)
+}
+
 // ---------------------------
 // window.fetch monkey patch
 // ---------------------------
-function monkeyPatchFetch (client) {
+function monkeyPatchFetch () {
   if (!window.fetch) {
     return
   }
@@ -94,22 +99,11 @@ function monkeyPatchFetch (client) {
       // pass through to native fetch
       oldFetch(...args)
         .then(response => {
-          let metaData = {
-            status: response.status,
-            request: `${method} ${url}`
-          }
-          if (response.status >= 400) {
-            // when the request comes back with a 4xx or 5xx status it does not reject the fetch promise,
-            client.leaveBreadcrumb('fetch() failed', metaData, breadcrumbType)
-          } else {
-            client.leaveBreadcrumb('fetch() succeeded', metaData, breadcrumbType)
-          }
+          handleFetchSuccess(response, method, url)
           resolve(response)
         })
         .catch(error => {
-          client.leaveBreadcrumb('fetch() error', {
-            request: `${method} ${url}`
-          }, breadcrumbType)
+          handleFetchError(method, url)
           reject(error)
         })
     })
@@ -118,4 +112,21 @@ function monkeyPatchFetch (client) {
   restoreFunctions.push(() => {
     window.fetch = oldFetch
   })
+}
+
+function handleFetchSuccess (response, method, url) {
+  let metaData = {
+    status: response.status,
+    request: `${method} ${url}`
+  }
+  if (response.status >= 400) {
+    // when the request comes back with a 4xx or 5xx status it does not reject the fetch promise,
+    client.leaveBreadcrumb('fetch() failed', metaData, breadcrumbType)
+  } else {
+    client.leaveBreadcrumb('fetch() succeeded', metaData, breadcrumbType)
+  }
+}
+
+function handleFetchError (method, url) {
+  client.leaveBreadcrumb('fetch() error', { request: `${method} ${url}` }, breadcrumbType)
 }
