@@ -87,7 +87,6 @@ function monkeyPatchFetch (client) {
   window.fetch = function fetch (...args) {
     let [url, options] = args
     let method = 'GET'
-    let responseStatus
     if (options && options.method) {
       method = options.method
     }
@@ -99,7 +98,7 @@ function monkeyPatchFetch (client) {
             status: response.status,
             request: `${method} ${url}`
           }
-          if (responseStatus >= 400) {
+          if (response.status >= 400) {
             // when the request comes back with a 4xx or 5xx status it does not reject the fetch promise,
             client.leaveBreadcrumb('fetch() failed', metaData, breadcrumbType)
           } else {
