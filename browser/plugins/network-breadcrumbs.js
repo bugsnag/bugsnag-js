@@ -84,9 +84,7 @@ function handleXHRError () {
 // window.fetch monkey patch
 // ---------------------------
 function monkeyPatchFetch () {
-  if (typeof window === 'undefined' || typeof window.fetch === 'undefined') {
-    return
-  }
+  if (!('fetch' in window)) return
 
   let oldFetch = window.fetch
   window.fetch = function fetch (...args) {
