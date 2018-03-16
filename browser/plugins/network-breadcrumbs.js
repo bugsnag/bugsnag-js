@@ -1,4 +1,4 @@
-const { XMLHttpRequest } = window
+/* global XMLHttpRequest */
 const breadcrumbType = 'network'
 let restoreFunctions = []
 let client
