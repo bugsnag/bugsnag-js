@@ -1,6 +1,5 @@
 // magical jasmine globals
-const { XMLHttpRequest } = window
-const { describe, it, expect, jasmine } = global
+const { describe, it, expect, jasmine, XMLHttpRequest } = global
 
 const plugin = require('../network-breadcrumbs')
 
@@ -73,10 +72,10 @@ describe('plugin: network breadcrumbs', () => {
     })
   })
 
-  if (window.fetch) {
+  if (global.fetch) {
     it('should leave a breadcrumb when a fetch() resolves', (done) => {
       setup((client) => {
-        window.fetch('/').then(() => {
+        global.fetch('/').then(() => {
           expect(client.breadcrumbs.length).toBe(1)
           expect(client.breadcrumbs[0]).toEqual(jasmine.objectContaining({
             type: 'network',
@@ -92,7 +91,7 @@ describe('plugin: network breadcrumbs', () => {
     })
     it('should leave a breadcrumb when a fetch() has a failed response', (done) => {
       setup((client) => {
-        window.fetch('http://jsonplaceholder.typicode.com/posts/asdf').then(() => {
+        global.fetch('http://jsonplaceholder.typicode.com/posts/asdf').then(() => {
           expect(client.breadcrumbs.length).toBe(1)
           expect(client.breadcrumbs[0]).toEqual(jasmine.objectContaining({
             type: 'network',
@@ -109,7 +108,7 @@ describe('plugin: network breadcrumbs', () => {
 
     it('should leave a breadcrumb when a fetch() has a network error', (done) => {
       setup((client) => {
-        window.fetch('https://api.bugsnag.com').catch(() => {
+        global.fetch('https://api.bugsnag.com').catch(() => {
           expect(client.breadcrumbs.length).toBe(1)
           expect(client.breadcrumbs[0]).toEqual(jasmine.objectContaining({
             type: 'network',
