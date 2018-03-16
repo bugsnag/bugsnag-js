@@ -84,7 +84,7 @@ function handleXHRError () {
 // window.fetch monkey patch
 // ---------------------------
 function monkeyPatchFetch () {
-  if (!window || !window.fetch) {
+  if (typeof window === 'undefined' || typeof window.fetch === 'undefined') {
     return
   }
 
