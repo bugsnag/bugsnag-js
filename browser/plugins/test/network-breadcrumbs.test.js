@@ -1,4 +1,5 @@
 // magical jasmine globals
+const { XMLHttpRequest } = window
 const { describe, it, expect } = global
 
 const plugin = require('../network-breadcrumbs')
@@ -11,11 +12,12 @@ describe('plugin: network breadcrumbs', () => {
     const c = new Client(VALID_NOTIFIER)
     c.configure({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
     c.use(plugin)
-    const request = new XMLHttpRequest();
-    request.open('GET', '/');
+    const request = new XMLHttpRequest()
+    request.open('GET', '/')
 
     request.addEventListener('load', () => {
       expect(c.breadcrumbs.length).toBe(1)
+      done()
     })
 
     request.send()
