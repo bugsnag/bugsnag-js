@@ -33,6 +33,7 @@ const setupKey = 'BUGSNAG:SETUP'
 const requestUrlKey = 'BUGSNAG:REQUEST_URL'
 const requestMethodKey = 'BUGSNAG:REQUEST_METHOD'
 function monkeyPatchXHR () {
+  if (!('addEventListener' in window)) return
   // copy native request method so we can monkey patch it
   const nativeOpen = XMLHttpRequest.prototype.open
   // override native open()
