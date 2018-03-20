@@ -33,7 +33,7 @@ describe('plugin: network breadcrumbs', () => {
     it('should leave a breadcrumb when an XMLHTTPRequest has a failed response', (done) => {
       setup((client) => {
         const request = new XMLHttpRequest()
-        request.open('GET', 'http://jsonplaceholder.typicode.com/posts/asdf')
+        request.open('GET', '/this-does-not-exist')
 
         request.addEventListener('load', () => {
           expect(client.breadcrumbs.length).toBe(1)
@@ -42,7 +42,7 @@ describe('plugin: network breadcrumbs', () => {
             name: 'XMLHttpRequest failed',
             metaData: {
               status: 404,
-              request: 'GET http://jsonplaceholder.typicode.com/posts/asdf'
+              request: 'GET /this-does-not-exist'
             }
           }))
           done()
@@ -52,26 +52,31 @@ describe('plugin: network breadcrumbs', () => {
       })
     })
 
-    it('should leave a breadcrumb when an XMLHTTPRequest has a network error', (done) => {
-      setup((client) => {
-        const request = new XMLHttpRequest()
-        request.open('GET', 'https://api.bugsnag.com')
+    // cross domain requests don't work in environments that support XDomainRequest
+    // in that environment request.open will crash and throw a real error, so we shouldn't need
+    // a breadcrumb
+    if (!('XDomainRequest' in window)) {
+      it('should leave a breadcrumb when an XMLHTTPRequest has a network error', (done) => {
+        setup((client) => {
+          const request = new XMLHttpRequest()
+          request.open('GET', 'https://api.bugsnag.com')
 
-        request.addEventListener('error', () => {
-          expect(client.breadcrumbs.length).toBe(1)
-          expect(client.breadcrumbs[0]).toEqual(jasmine.objectContaining({
-            type: 'network',
-            name: 'XMLHttpRequest error',
-            metaData: {
-              request: 'GET https://api.bugsnag.com'
-            }
-          }))
-          done()
+          request.addEventListener('error', () => {
+            expect(client.breadcrumbs.length).toBe(1)
+            expect(client.breadcrumbs[0]).toEqual(jasmine.objectContaining({
+              type: 'network',
+              name: 'XMLHttpRequest error',
+              metaData: {
+                request: 'GET https://api.bugsnag.com'
+              }
+            }))
+            done()
+          })
+
+          request.send()
         })
-
-        request.send()
       })
-    })
+    }
   }
 
   if (global.fetch) {
