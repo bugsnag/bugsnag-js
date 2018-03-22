@@ -1,15 +1,17 @@
-/* global XMLHttpRequest */
+/* global XMLHttpRequest, XDomainRequest */
+const patch = require('../../base/lib/patch')
 const breadcrumbType = 'network'
 let restoreFunctions = []
 let client
 
 /*
- * Leaves breadcrumbs when console log methods are called
+ * Leaves breadcrumbs when network requests occur
  */
 module.exports = {
   init: (_client) => {
     client = _client
-    monkeyPatchXHR()
+    monkeyPatchXMLHttpRequest()
+    monkeyPatchXDomainRequest()
     monkeyPatchFetch()
   },
   destroy: () => {
@@ -25,65 +27,90 @@ module.exports = {
   }
 }
 
-// ---------------------------
-// XMLHttpRequest monkey patch
-// ---------------------------
+// ------------------------------------------------------------------------------------------------
+// XMLHttpRequest and XDomainRequest monkey patch
+// ------------------------------------------------------------------------------------------------
 // create keys to safely store metadata on the request object
 const setupKey = 'BUGSNAG:SETUP'
 const requestUrlKey = 'BUGSNAG:REQUEST_URL'
 const requestMethodKey = 'BUGSNAG:REQUEST_METHOD'
-function monkeyPatchXHR () {
-  if (!('addEventListener' in window)) return
-  // copy native request method so we can monkey patch it
-  const nativeOpen = XMLHttpRequest.prototype.open
+
+function monkeyPatchXMLHttpRequest () {
+  monkeyPatchXish(XMLHttpRequest)
+}
+
+function monkeyPatchXDomainRequest () {
+  if (!('XDomainRequest' in window)) return
+  monkeyPatchXish(XDomainRequest)
+}
+
+// generic function for monkey patching both XMLHttpRequest and XDomainRequest
+function monkeyPatchXish (NetworkApi) {
+  // NetworkApi can be either XMLHttpRequest or XDomainRequest
+
   // override native open()
-  XMLHttpRequest.prototype.open = function (method, url) {
+  let nativeOpen = NetworkApi.prototype.open
+  NetworkApi.prototype.open = function open (method, url) {
+    if (url === client.notifier.url) {
+      // don't leave a network breadcrumb from bugsnag notify calls
+      nativeOpen.apply(this, arguments)
+      return
+    }
     // store url and HTTP method for later
     this[requestUrlKey] = url
     this[requestMethodKey] = method
     // if we haven't setup listeners already, set them up now
     if (!this[setupKey]) {
-      // attach load event listener
-      this.addEventListener('load', handleXHRLoad)
-
-      // attach error event listener
-      this.addEventListener('error', handleXHRError)
+      const onLoad = handleXIshLoad(NetworkApi.prototype.constructor.name)
+      const onError = handleXIshError(NetworkApi.prototype.constructor.name)
+      if ('addEventListener' in this) {
+        // attach load event listener
+        this.addEventListener('load', onLoad)
+        // attach error event listener
+        this.addEventListener('error', onError)
+      } else {
+        patch(this, 'onload', onLoad)
+        patch(this, 'onerror', onError)
+      }
 
       this[setupKey] = true
     }
 
-    // call the  native open()
     nativeOpen.apply(this, arguments)
   }
 
   restoreFunctions.push(() => {
-    XMLHttpRequest.prototype.open = nativeOpen
+    NetworkApi.prototype.open = nativeOpen
   })
 }
 
-function handleXHRLoad () {
+// generic function for handling "load" event from XMLHttpRequest and XDomainRequest
+// @param name - "XMLHttpRequest" | "XDomainRequest"
+const handleXIshLoad = name => function onLoad () {
   const metaData = {
     status: this.status,
     request: `${this[requestMethodKey]} ${this[requestUrlKey]}`
   }
   if (this.status >= 400) {
     // contacted server but got an error response
-    client.leaveBreadcrumb('XMLHttpRequest failed', metaData, breadcrumbType)
+    client.leaveBreadcrumb(`${name} failed`, metaData, breadcrumbType)
   } else {
-    client.leaveBreadcrumb('XMLHttpRequest succeeded', metaData, breadcrumbType)
+    client.leaveBreadcrumb(`${name} succeeded`, metaData, breadcrumbType)
   }
 }
 
-function handleXHRError () {
+// generic function for handling "error" event from XMLHttpRequest and XDomainRequest
+// @param name - "XMLHttpRequest" | "XDomainRequest"
+const handleXIshError = name => function onError () {
   // failed to contact server
-  client.leaveBreadcrumb('XMLHttpRequest error', {
+  client.leaveBreadcrumb(`${name} error`, {
     request: `${this[requestMethodKey]} ${this[requestUrlKey]}`
   }, breadcrumbType)
 }
 
-// ---------------------------
+// ------------------------------------------------------------------------------------------------
 // window.fetch monkey patch
-// ---------------------------
+// ------------------------------------------------------------------------------------------------
 function monkeyPatchFetch () {
   if (!('fetch' in window)) return
 
