@@ -30,6 +30,21 @@ describe('plugin: network breadcrumbs', () => {
       })
     })
 
+    it('should not leave duplicate breadcrumbs if open() is called twice', (done) => {
+      setup((client) => {
+        const request = new XMLHttpRequest()
+        request.open('GET', '/')
+        request.open('GET', '/')
+
+        request.addEventListener('load', () => {
+          expect(client.breadcrumbs.length).toBe(1)
+          done()
+        })
+
+        request.send()
+      })
+    })
+
     it('should leave a breadcrumb when an XMLHTTPRequest has a failed response', (done) => {
       setup((client) => {
         const request = new XMLHttpRequest()
