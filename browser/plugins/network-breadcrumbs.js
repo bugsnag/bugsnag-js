@@ -1,5 +1,4 @@
-/* global XMLHttpRequest, XDomainRequest */
-const patch = require('../../base/lib/patch')
+/* global XMLHttpRequest */
 const breadcrumbType = 'network'
 let restoreFunctions = []
 let client
@@ -11,7 +10,6 @@ module.exports = {
   init: (_client) => {
     client = _client
     monkeyPatchXMLHttpRequest()
-    monkeyPatchXDomainRequest()
     monkeyPatchFetch()
   },
   destroy: () => {
@@ -31,79 +29,67 @@ module.exports = {
 // XMLHttpRequest and XDomainRequest monkey patch
 // ------------------------------------------------------------------------------------------------
 // create keys to safely store metadata on the request object
-const setupKey = 'BUGSNAG:SETUP'
+const requestSetupKey = 'BUGSNAG:SETUP'
 const requestUrlKey = 'BUGSNAG:REQUEST_URL'
 const requestMethodKey = 'BUGSNAG:REQUEST_METHOD'
 
-function monkeyPatchXMLHttpRequest () {
-  monkeyPatchXish(XMLHttpRequest)
-}
-
-function monkeyPatchXDomainRequest () {
-  if (!('XDomainRequest' in window)) return
-  monkeyPatchXish(XDomainRequest)
-}
-
 // generic function for monkey patching both XMLHttpRequest and XDomainRequest
-function monkeyPatchXish (NetworkApi) {
-  // NetworkApi can be either XMLHttpRequest or XDomainRequest
+function monkeyPatchXMLHttpRequest () {
+  if (!('addEventListener' in XMLHttpRequest.prototype)) return
+  let nativeOpen = XMLHttpRequest.prototype.open
 
   // override native open()
-  let nativeOpen = NetworkApi.prototype.open
-  NetworkApi.prototype.open = function open (method, url) {
-    if (url === client.notifier.url) {
-      // don't leave a network breadcrumb from bugsnag notify calls
-      nativeOpen.apply(this, arguments)
-      return
-    }
+  XMLHttpRequest.prototype.open = function open (method, url) {
     // store url and HTTP method for later
     this[requestUrlKey] = url
     this[requestMethodKey] = method
-    // if we haven't setup listeners already, set them up now
-    if (!this[setupKey]) {
-      const onLoad = handleXIshLoad(NetworkApi.prototype.constructor.name)
-      const onError = handleXIshError(NetworkApi.prototype.constructor.name)
-      if ('addEventListener' in this) {
-        // attach load event listener
-        this.addEventListener('load', onLoad)
-        // attach error event listener
-        this.addEventListener('error', onError)
-      } else {
-        patch(this, 'onload', onLoad)
-        patch(this, 'onerror', onError)
-      }
 
-      this[setupKey] = true
+    // if we have already setup listeners, it means open() was called twice, we need to remove
+    // the listeners and recreate them
+    if (this[requestSetupKey]) {
+      this.removeEventListener('load', handleXHRLoad)
+      this.removeEventListener('error', handleXHRError)
     }
+
+    // attach load event listener
+    this.addEventListener('load', handleXHRLoad)
+    // attach error event listener
+    this.addEventListener('error', handleXHRError)
+
+    this[requestSetupKey] = true
 
     nativeOpen.apply(this, arguments)
   }
 
   restoreFunctions.push(() => {
-    NetworkApi.prototype.open = nativeOpen
+    XMLHttpRequest.prototype.open = nativeOpen
   })
 }
 
-// generic function for handling "load" event from XMLHttpRequest and XDomainRequest
-// @param name - "XMLHttpRequest" | "XDomainRequest"
-const handleXIshLoad = name => function onLoad () {
-  const metaData = {
+function handleXHRLoad () {
+  if (this[requestUrlKey] === client.notifier.url) {
+    // don't leave a network breadcrumb from bugsnag notify calls
+    return
+  }
+  let metaData = {
     status: this.status,
     request: `${this[requestMethodKey]} ${this[requestUrlKey]}`
   }
   if (this.status >= 400) {
     // contacted server but got an error response
-    client.leaveBreadcrumb(`${name} failed`, metaData, breadcrumbType)
+    client.leaveBreadcrumb('XMLHttpRequest failed', metaData, breadcrumbType)
   } else {
-    client.leaveBreadcrumb(`${name} succeeded`, metaData, breadcrumbType)
+    client.leaveBreadcrumb('XMLHttpRequest succeeded', metaData, breadcrumbType)
   }
 }
 
-// generic function for handling "error" event from XMLHttpRequest and XDomainRequest
-// @param name - "XMLHttpRequest" | "XDomainRequest"
-const handleXIshError = name => function onError () {
+function handleXHRError () {
+  if (this[requestUrlKey] === client.notifier.url) {
+    // don't leave a network breadcrumb from bugsnag notify calls
+    return
+  }
   // failed to contact server
-  client.leaveBreadcrumb(`${name} error`, {
+  client.leaveBreadcrumb('XMLHttpRequest error', {
     request: `${this[requestMethodKey]} ${this[requestUrlKey]}`
   }, breadcrumbType)
 }
