@@ -22,4 +22,16 @@ if ('XDomainRequest' in window) {
       })
     })
   })
+  describe('transport:XDomainRequest matchPageProtocol()', () => {
+    it('should swap https: -> http: when the current protocol is http', () => {
+      expect(
+        transport._matchPageProtocol('https://notify.bugsnag.com/', 'http:')
+      ).toBe('http://notify.bugsnag.com/')
+    })
+    it('should not swap https: -> http: when the current protocol is https', () => {
+      expect(
+        transport._matchPageProtocol('https://notify.bugsnag.com/', 'https:')
+      ).toBe('https://notify.bugsnag.com/')
+    })
+  })
 }

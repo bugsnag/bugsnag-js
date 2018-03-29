@@ -1,5 +1,5 @@
 const { isoDate } = require('./lib/es-utils')
-const cuid = require('cuid')
+const cuid = require('@bugsnag/cuid')
 
 class Session {
   constructor () {
