@@ -4,7 +4,7 @@ const { describe, it, expect, jasmine, XMLHttpRequest, XDomainRequest } = global
 const plugin = require('../network-breadcrumbs')
 
 const Client = require('../../../base/client')
-const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://notify.endpoint' }
+const VALID_NOTIFIER = { name: 't', version: '0', url: '' }
 
 describe('plugin: network breadcrumbs', () => {
   if ('addEventListener' in XMLHttpRequest.prototype) {
@@ -94,7 +94,21 @@ describe('plugin: network breadcrumbs', () => {
       it('should not leave a breadcrumb for request to bugsnag notify endpoint', (done) => {
         setup((client) => {
           const request = new XMLHttpRequest()
-          request.open('GET', VALID_NOTIFIER.url)
+          request.open('GET', client.config.endpoint)
+
+          request.addEventListener('error', () => {
+            expect(client.breadcrumbs.length).toBe(0)
+            done()
+          })
+
+          request.send()
+        })
+      })
+
+      it('should not leave a breadcrumb for session tracking requests', (done) => {
+        setup((client) => {
+          const request = new XMLHttpRequest()
+          request.open('GET', client.config.sessionEndpoint)
 
           request.addEventListener('error', () => {
             expect(client.breadcrumbs.length).toBe(0)

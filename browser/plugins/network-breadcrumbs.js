@@ -1,6 +1,6 @@
 /* global XMLHttpRequest */
 const breadcrumbType = 'network'
-let restoreFunctions = []
+const restoreFunctions = []
 let client
 
 /*
@@ -13,8 +13,8 @@ module.exports = {
     monkeyPatchFetch()
   },
   destroy: () => {
-    restoreFunctions.forEach(restore => restore())
-    restoreFunctions = []
+    restoreFunctions.forEach(Function.prototype.call)
+    restoreFunctions.length = 0 // empty the array
   },
   configSchema: {
     networkBreadcrumbsEnabled: {
@@ -34,9 +34,9 @@ const requestUrlKey = 'BUGSNAG:REQUEST_URL'
 const requestMethodKey = 'BUGSNAG:REQUEST_METHOD'
 
 // generic function for monkey patching both XMLHttpRequest and XDomainRequest
-function monkeyPatchXMLHttpRequest () {
+const monkeyPatchXMLHttpRequest = () => {
   if (!('addEventListener' in XMLHttpRequest.prototype)) return
-  let nativeOpen = XMLHttpRequest.prototype.open
+  const nativeOpen = XMLHttpRequest.prototype.open
 
   // override native open()
   XMLHttpRequest.prototype.open = function open (method, url) {
@@ -67,11 +67,14 @@ function monkeyPatchXMLHttpRequest () {
 }
 
 function handleXHRLoad () {
-  if (this[requestUrlKey] === client.notifier.url) {
+  if (
+    this[requestUrlKey] === client.config.endpoint ||
+    this[requestUrlKey] === client.config.sessionEndpoint
+  ) {
     // don't leave a network breadcrumb from bugsnag notify calls
     return
   }
-  let metaData = {
+  const metaData = {
     status: this.status,
     request: `${this[requestMethodKey]} ${this[requestUrlKey]}`
   }
@@ -97,10 +100,10 @@ function handleXHRError () {
 // ------------------------------------------------------------------------------------------------
 // window.fetch monkey patch
 // ------------------------------------------------------------------------------------------------
-function monkeyPatchFetch () {
+const monkeyPatchFetch = () => {
   if (!('fetch' in window)) return
 
-  let oldFetch = window.fetch
+  const oldFetch = window.fetch
   window.fetch = function fetch (...args) {
     let [url, options] = args
     let method = 'GET'
@@ -126,8 +129,8 @@ function monkeyPatchFetch () {
   })
 }
 
-function handleFetchSuccess (response, method, url) {
-  let metaData = {
+const handleFetchSuccess = (response, method, url) => {
+  const metaData = {
     status: response.status,
     request: `${method} ${url}`
   }
@@ -139,6 +142,6 @@ function handleFetchSuccess (response, method, url) {
   }
 }
 
-function handleFetchError (method, url) {
+const handleFetchError = (method, url) => {
   client.leaveBreadcrumb('fetch() error', { request: `${method} ${url}` }, breadcrumbType)
 }
