@@ -8,6 +8,7 @@ env:
   - CC_TEST_REPORTER_ID: 6f5024bb1ebb518893991cf5d77e75e4819eaa6128fe21bf85ef3bf135cd49d2
   - BROWSER_STACK_USERNAME: bugsnagplatforms1
   - secure: HkG2v1wI77zdqNLNHP1OQn50pBOLAE1eQTBGoXNN+mWnZTQs0NM5gy/08d/nZHUSnnpsaM+cRltw7g1tnb9gFp+0uT2bJ9sDqwdG3GBnhwLKrWTYq8/FsDk0+zNO2ITrYhSJdMysdRO0kdubO2ev27lIFSlnFqZNHHgyYG5GFQI=
+  - secure: YttU/DhE6GDXaoQ0fUuDUAUGNACPld63oEkZ+SNftEXbzFvqvI0+28UeNIoDvnHJOQ5hUnsSA1buv3LsbscHkvJ1xkv6F357OzHb21ydv6tJDDe6kVolYFy4OLM57Ixq5HtrEkc52ZeUWiga0j1zFeE5zq5eEtdf2E3T+PKTonE=
 addons:
   chrome: stable
   browserstack:
@@ -15,15 +16,11 @@ addons:
     access_key:
       secure: U/Lud43nEAK6Yhjte8TqV2LyjSnPhFrlRhJ1CRFKKYuryt0YoD1qNwq9Mo/YpEeFO2byFXoAvyDCY/Fehwn6DvG9B3szDehsXnLauxbtNt/OGnyIG0w+O6cukopsC4Yn6YtQJtnNi1qdAoRUO68h6qtrvc0xSV2TbAm9GcehaSM=
 before_script:
-- curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./bin/cc-test-reporter
+- curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64
+  > ./bin/cc-test-reporter
 - chmod +x ./bin/cc-test-reporter
 script:
-- if [[ $BROWSER_STACK_ACCESS_KEY ]]; then
-    npm run test;
-  else
-    npm run test:basic;
+- if [[ $BROWSER_STACK_ACCESS_KEY ]]; then npm run test; else npm run test:basic;
   fi
 after_script:
-- if [ $TRAVIS_TEST_RESULT == 0 ]; then
-    ./bin/report-coverage;
-  fi
+- if [ $TRAVIS_TEST_RESULT == 0 ]; then ./bin/report-coverage; fi
