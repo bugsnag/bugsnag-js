@@ -1,52 +1,51 @@
-/* global XMLHttpRequest */
-const breadcrumbType = 'network'
-const restoreFunctions = []
+const BREADCRUMB_TYPE = 'network'
+
+// keys to safely store metadata on the request object
+const REQUEST_SETUP_KEY = 'BUGSNAG:SETUP'
+const REQUEST_URL_KEY = 'BUGSNAG:REQUEST_URL'
+const REQUEST_METHOD_KEY = 'BUGSNAG:REQUEST_METHOD'
+
+let restoreFunctions = []
 let client
 
 /*
  * Leaves breadcrumbs when network requests occur
  */
-module.exports = {
-  init: (_client) => {
-    client = _client
-    monkeyPatchXMLHttpRequest()
-    monkeyPatchFetch()
-  },
-  destroy: () => {
-    restoreFunctions.forEach(Function.prototype.call)
-    restoreFunctions.length = 0 // empty the array
-  },
-  configSchema: {
-    networkBreadcrumbsEnabled: {
-      defaultValue: () => undefined,
-      validate: (value) => value === true || value === false || value === undefined,
-      message: '(boolean) networkBreadcrumbsEnabled should be true or false'
-    }
+exports.init = (_client) => {
+  client = _client
+  monkeyPatchXMLHttpRequest()
+  monkeyPatchFetch()
+}
+
+exports.configSchema = {
+  networkBreadcrumbsEnabled: {
+    defaultValue: () => undefined,
+    validate: (value) => value === true || value === false || value === undefined,
+    message: '(boolean) networkBreadcrumbsEnabled should be true or false'
   }
 }
 
-// ------------------------------------------------------------------------------------------------
-// XMLHttpRequest and XDomainRequest monkey patch
-// ------------------------------------------------------------------------------------------------
-// create keys to safely store metadata on the request object
-const requestSetupKey = 'BUGSNAG:SETUP'
-const requestUrlKey = 'BUGSNAG:REQUEST_URL'
-const requestMethodKey = 'BUGSNAG:REQUEST_METHOD'
+if (process.env.NODE_ENV !== 'production') {
+  exports.destroy = () => {
+    restoreFunctions.forEach(fn => fn())
+    restoreFunctions = []
+  }
+}
 
-// generic function for monkey patching both XMLHttpRequest and XDomainRequest
+// XMLHttpRequest monkey patch
 const monkeyPatchXMLHttpRequest = () => {
-  if (!('addEventListener' in XMLHttpRequest.prototype)) return
-  const nativeOpen = XMLHttpRequest.prototype.open
+  if (!('addEventListener' in window.XMLHttpRequest.prototype)) return
+  const nativeOpen = window.XMLHttpRequest.prototype.open
 
   // override native open()
-  XMLHttpRequest.prototype.open = function open (method, url) {
+  window.XMLHttpRequest.prototype.open = function open (method, url) {
     // store url and HTTP method for later
-    this[requestUrlKey] = url
-    this[requestMethodKey] = method
+    this[REQUEST_URL_KEY] = url
+    this[REQUEST_METHOD_KEY] = method
 
     // if we have already setup listeners, it means open() was called twice, we need to remove
     // the listeners and recreate them
-    if (this[requestSetupKey]) {
+    if (this[REQUEST_SETUP_KEY]) {
       this.removeEventListener('load', handleXHRLoad)
       this.removeEventListener('error', handleXHRError)
     }
@@ -56,50 +55,53 @@ const monkeyPatchXMLHttpRequest = () => {
     // attach error event listener
     this.addEventListener('error', handleXHRError)
 
-    this[requestSetupKey] = true
+    this[REQUEST_SETUP_KEY] = true
 
     nativeOpen.apply(this, arguments)
   }
 
-  restoreFunctions.push(() => {
-    XMLHttpRequest.prototype.open = nativeOpen
-  })
+  if (process.env.NODE_ENV !== 'production') {
+    restoreFunctions.push(() => {
+      window.XMLHttpRequest.prototype.open = nativeOpen
+    })
+  }
 }
 
 function handleXHRLoad () {
   if (
-    this[requestUrlKey] === client.config.endpoint ||
-    this[requestUrlKey] === client.config.sessionEndpoint
+    this[REQUEST_URL_KEY] === client.config.endpoint ||
+    this[REQUEST_URL_KEY] === client.config.sessionEndpoint
   ) {
     // don't leave a network breadcrumb from bugsnag notify calls
     return
   }
   const metaData = {
     status: this.status,
-    request: `${this[requestMethodKey]} ${this[requestUrlKey]}`
+    request: `${this[REQUEST_METHOD_KEY]} ${this[REQUEST_URL_KEY]}`
   }
   if (this.status >= 400) {
     // contacted server but got an error response
-    client.leaveBreadcrumb('XMLHttpRequest failed', metaData, breadcrumbType)
+    client.leaveBreadcrumb('XMLHttpRequest failed', metaData, BREADCRUMB_TYPE)
   } else {
-    client.leaveBreadcrumb('XMLHttpRequest succeeded', metaData, breadcrumbType)
+    client.leaveBreadcrumb('XMLHttpRequest succeeded', metaData, BREADCRUMB_TYPE)
   }
 }
 
 function handleXHRError () {
-  if (this[requestUrlKey] === client.notifier.url) {
+  if (
+    this[REQUEST_URL_KEY] === client.config.endpoint ||
+    this[REQUEST_URL_KEY] === client.config.sessionEndpoint
+  ) {
     // don't leave a network breadcrumb from bugsnag notify calls
     return
   }
   // failed to contact server
   client.leaveBreadcrumb('XMLHttpRequest error', {
-    request: `${this[requestMethodKey]} ${this[requestUrlKey]}`
-  }, breadcrumbType)
+    request: `${this[REQUEST_METHOD_KEY]} ${this[REQUEST_URL_KEY]}`
+  }, BREADCRUMB_TYPE)
 }
 
-// ------------------------------------------------------------------------------------------------
 // window.fetch monkey patch
-// ------------------------------------------------------------------------------------------------
 const monkeyPatchFetch = () => {
   if (!('fetch' in window)) return
 
@@ -124,9 +126,11 @@ const monkeyPatchFetch = () => {
     })
   }
 
-  restoreFunctions.push(() => {
-    window.fetch = oldFetch
-  })
+  if (process.env.NODE_ENV !== 'production') {
+    restoreFunctions.push(() => {
+      window.fetch = oldFetch
+    })
+  }
 }
 
 const handleFetchSuccess = (response, method, url) => {
@@ -136,12 +140,12 @@ const handleFetchSuccess = (response, method, url) => {
   }
   if (response.status >= 400) {
     // when the request comes back with a 4xx or 5xx status it does not reject the fetch promise,
-    client.leaveBreadcrumb('fetch() failed', metaData, breadcrumbType)
+    client.leaveBreadcrumb('fetch() failed', metaData, BREADCRUMB_TYPE)
   } else {
-    client.leaveBreadcrumb('fetch() succeeded', metaData, breadcrumbType)
+    client.leaveBreadcrumb('fetch() succeeded', metaData, BREADCRUMB_TYPE)
   }
 }
 
 const handleFetchError = (method, url) => {
-  client.leaveBreadcrumb('fetch() error', { request: `${method} ${url}` }, breadcrumbType)
+  client.leaveBreadcrumb('fetch() error', { request: `${method} ${url}` }, BREADCRUMB_TYPE)
 }
