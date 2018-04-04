@@ -6,6 +6,10 @@ const plugin = require('../network-breadcrumbs')
 const Client = require('../../../base/client')
 const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
+// safari doesn't like localhost for some reason …and others don't like 0.0.0.0 :(
+const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
+const CROSS_ORIGIN_ENDPOINT_WITHOUT_CORS_HEADERS = `http://${isSafari ? '0.0.0.0' : 'localhost'}:55854/?nocors`
+
 let client
 
 beforeEach(() => {
@@ -13,8 +17,8 @@ beforeEach(() => {
   client = new Client(VALID_NOTIFIER)
   client.configure({
     apiKey: 'aaaa-aaaa-aaaa-aaaa',
-    endpoint: 'http://localhost:55854/reports',
-    sessionEndpoint: 'http://localhost:55854/sessions'
+    endpoint: '/echo/reports',
+    sessionEndpoint: '/echo/sessions'
   })
   client.use(plugin)
 })
@@ -84,7 +88,8 @@ describe('plugin: network breadcrumbs', () => {
     if (!window.XDomainRequest) {
       it('should leave a breadcrumb when an XMLHTTPRequest has a network error', (done) => {
         const request = new window.XMLHttpRequest()
-        request.open('GET', 'http://localhost:55854/?nocors')
+
+        request.open('GET', CROSS_ORIGIN_ENDPOINT_WITHOUT_CORS_HEADERS)
 
         request.addEventListener('error', () => {
           expect(client.breadcrumbs.length).toBe(1)
@@ -92,7 +97,7 @@ describe('plugin: network breadcrumbs', () => {
             type: 'network',
             name: 'XMLHttpRequest error',
             metaData: {
-              request: 'GET http://localhost:55854/?nocors'
+              request: `GET ${CROSS_ORIGIN_ENDPOINT_WITHOUT_CORS_HEADERS}`
             }
           }))
           done()
@@ -164,13 +169,14 @@ describe('plugin: network breadcrumbs', () => {
     })
 
     it('should leave a breadcrumb when a fetch() has a network error', (done) => {
-      global.fetch('http://localhost:55854/?nocors').catch(() => {
+      // [::] === ipv6 equivalent of 0.0.0.0
+      global.fetch(CROSS_ORIGIN_ENDPOINT_WITHOUT_CORS_HEADERS).catch(() => {
         expect(client.breadcrumbs.length).toBe(1)
         expect(client.breadcrumbs[0]).toEqual(jasmine.objectContaining({
           type: 'network',
           name: 'fetch() error',
           metaData: {
-            request: 'GET http://localhost:55854/?nocors'
+            request: `GET ${CROSS_ORIGIN_ENDPOINT_WITHOUT_CORS_HEADERS}`
           }
         }))
         done()
