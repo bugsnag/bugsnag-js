@@ -1,46 +1,48 @@
 /*
  * Leaves breadcrumbs when navigation methods are called or events are emitted
  */
-module.exports = {
-  init: (client) => {
-    if (!('addEventListener' in window)) return
+exports.init = (client) => {
+  if (!('addEventListener' in window)) return
 
-    // returns a function that will drop a breadcrumb with a given name
-    const drop = name => () => client.leaveBreadcrumb(name, {}, 'navigation')
+  // returns a function that will drop a breadcrumb with a given name
+  const drop = name => () => client.leaveBreadcrumb(name, {}, 'navigation')
 
-    // simple drops – just names, no meta
-    window.addEventListener('pagehide', drop('Page hidden'), true)
-    window.addEventListener('pageshow', drop('Page shown'), true)
-    window.addEventListener('load', drop('Page loaded'), true)
-    window.document.addEventListener('DOMContentLoaded', drop('DOMContentLoaded'), true)
-    // some browsers like to emit popstate when the page loads, so only add the postate listener after that
-    window.addEventListener('load', () => window.addEventListener('popstate', drop('Navigated back'), true))
+  // simple drops – just names, no meta
+  window.addEventListener('pagehide', drop('Page hidden'), true)
+  window.addEventListener('pageshow', drop('Page shown'), true)
+  window.addEventListener('load', drop('Page loaded'), true)
+  window.document.addEventListener('DOMContentLoaded', drop('DOMContentLoaded'), true)
+  // some browsers like to emit popstate when the page loads, so only add the postate listener after that
+  window.addEventListener('load', () => window.addEventListener('popstate', drop('Navigated back'), true))
 
-    // hashchange has some metaData that we care about
-    window.addEventListener('hashchange', event => {
-      const metaData = event.oldURL
-        ? { from: relativeLocation(event.oldURL), to: relativeLocation(event.newURL), state: window.history.state }
-        : { to: relativeLocation(window.location.href) }
-      client.leaveBreadcrumb('Hash changed', metaData, 'navigation')
-    }, true)
+  // hashchange has some metaData that we care about
+  window.addEventListener('hashchange', event => {
+    const metaData = event.oldURL
+      ? { from: relativeLocation(event.oldURL), to: relativeLocation(event.newURL), state: window.history.state }
+      : { to: relativeLocation(window.location.href) }
+    client.leaveBreadcrumb('Hash changed', metaData, 'navigation')
+  }, true)
 
-    // the only way to know about replaceState/pushState is to wrap them… >_<
+  // the only way to know about replaceState/pushState is to wrap them… >_<
 
-    if (window.history.replaceState) wrapHistoryFn(client, window.history, 'replaceState')
-    if (window.history.pushState) wrapHistoryFn(client, window.history, 'pushState')
+  if (window.history.replaceState) wrapHistoryFn(client, window.history, 'replaceState')
+  if (window.history.pushState) wrapHistoryFn(client, window.history, 'pushState')
 
-    client.leaveBreadcrumb('Bugsnag loaded', {}, 'navigation')
-  },
-  destroy: () => {
+  client.leaveBreadcrumb('Bugsnag loaded', {}, 'navigation')
+}
+
+exports.configSchema = {
+  navigationBreadcrumbsEnabled: {
+    defaultValue: () => undefined,
+    validate: (value) => value === true || value === false || value === undefined,
+    message: '(boolean) navigationBreadcrumbsEnabled should be true or false'
+  }
+}
+
+if (process.env.NODE_ENV !== 'production') {
+  exports.destroy = () => {
     window.history.replaceState._restore()
     window.history.pushState._restore()
-  },
-  configSchema: {
-    navigationBreadcrumbsEnabled: {
-      defaultValue: () => undefined,
-      validate: (value) => value === true || value === false || value === undefined,
-      message: '(boolean) navigationBreadcrumbsEnabled should be true or false'
-    }
   }
 }
 
