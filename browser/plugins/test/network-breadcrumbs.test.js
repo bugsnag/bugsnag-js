@@ -98,6 +98,11 @@ describe('plugin: network breadcrumbs', () => {
           done()
         })
 
+        request.addEventListener('load', () => {
+          console.warn(`This browser didn’t care about the lack of CORS headers on the response (${window.navigator.userAgent})`)
+          done()
+        })
+
         request.send()
       })
 
