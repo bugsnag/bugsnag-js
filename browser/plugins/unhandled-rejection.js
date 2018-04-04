@@ -7,55 +7,56 @@ const isError = require('iserror')
  * Automatically notifies Bugsnag when window.onunhandledrejection is called
  */
 let _listener
-module.exports = {
-  init: (client) => {
-    const listener = event => {
-      let error = event.reason
-      let isBluebird = false
+exports.init = (client) => {
+  const listener = event => {
+    let error = event.reason
+    let isBluebird = false
 
-      if (event.detail && event.detail.reason) {
-        error = event.detail.reason
-        isBluebird = true
-      }
-
-      const handledState = {
-        severity: 'error',
-        unhandled: true,
-        severityReason: { type: 'unhandledPromiseRejection' }
-      }
-
-      let report
-      if (error && hasStack(error)) {
-        // if it quacks like an Error…
-        report = new client.BugsnagReport(error.name, error.message, ErrorStackParser.parse(error), handledState)
-        if (isBluebird) {
-          report.stacktrace = reduce(report.stacktrace, fixBluebirdStacktrace(error), [])
-        }
-      } else {
-        // if it doesn't…
-        const msg = 'Rejection reason was not an Error. See "Promise" tab for more detail.'
-        report = new client.BugsnagReport(
-          error && error.name ? error.name : 'UnhandledRejection',
-          error && error.message ? error.message : msg,
-          [],
-          handledState
-        )
-        // stuff the rejection reason into metaData, it could be useful
-        report.updateMetaData('promise', 'rejection reason', serializableReason(error))
-      }
-
-      client.notify(report)
+    if (event.detail && event.detail.reason) {
+      error = event.detail.reason
+      isBluebird = true
     }
-    if ('addEventListener' in window) {
-      window.addEventListener('unhandledrejection', listener)
+
+    const handledState = {
+      severity: 'error',
+      unhandled: true,
+      severityReason: { type: 'unhandledPromiseRejection' }
+    }
+
+    let report
+    if (error && hasStack(error)) {
+      // if it quacks like an Error…
+      report = new client.BugsnagReport(error.name, error.message, ErrorStackParser.parse(error), handledState)
+      if (isBluebird) {
+        report.stacktrace = reduce(report.stacktrace, fixBluebirdStacktrace(error), [])
+      }
     } else {
-      window.onunhandledrejection = (reason, promise) => {
-        listener({ detail: { reason, promise } })
-      }
+      // if it doesn't…
+      const msg = 'Rejection reason was not an Error. See "Promise" tab for more detail.'
+      report = new client.BugsnagReport(
+        error && error.name ? error.name : 'UnhandledRejection',
+        error && error.message ? error.message : msg,
+        [],
+        handledState
+      )
+      // stuff the rejection reason into metaData, it could be useful
+      report.updateMetaData('promise', 'rejection reason', serializableReason(error))
     }
-    _listener = listener
-  },
-  destroy: () => {
+
+    client.notify(report)
+  }
+  if ('addEventListener' in window) {
+    window.addEventListener('unhandledrejection', listener)
+  } else {
+    window.onunhandledrejection = (reason, promise) => {
+      listener({ detail: { reason, promise } })
+    }
+  }
+  _listener = listener
+}
+
+if (process.env.NODE_ENV !== 'production') {
+  exports.destroy = () => {
     if (_listener) {
       if ('addEventListener' in window) {
         window.removeEventListener('unhandledrejection', _listener)
