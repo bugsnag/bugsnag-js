@@ -2,6 +2,15 @@
 
 <!-- {entry_placeholder} -->
 
+## 4.5.0 (2018-04-06)
+
+### Added
+- New breadcrumbs! Breadcrumbs are now left when requests are made using XMLHttpRequest (ajax) or fetch(). This works with all request libraries out of the box: jQuery, axios, superagent etc. Metadata includes HTTP method, request url and the status code (if available). By default network breadcrumbs are collected all with other autoBreadcrumb types. If you don't want to collect network breadcrumbs, set `networkBreadcrumbsEnabled: false`. (#334)
+
+### Changed
+- As part of #334 [envify](https://github.com/hughsk/envify) was added to compile out plugin "destroy" logic that was only required for tests.
+
+
 ## 4.4.0 (2018-03-15)
 
 ### Changed
