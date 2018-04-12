@@ -18,8 +18,4 @@ class BugsnagBreadcrumb {
   }
 }
 
-// force `fast-safe-stringify` to do its thing
-// https://github.com/davidmarkclements/fast-safe-stringify#tojson-support
-BugsnagBreadcrumb.prototype.toJSON.forceDecirc = true
-
 module.exports = BugsnagBreadcrumb

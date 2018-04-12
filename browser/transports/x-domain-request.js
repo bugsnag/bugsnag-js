@@ -1,5 +1,5 @@
 const makePayload = require('./lib/payload')
-const jsonStringify = require('fast-safe-stringify')
+const jsonStringify = require('@bugsnag/safe-json-stringify')
 const { isoDate } = require('../../base/lib/es-utils')
 
 module.exports = {

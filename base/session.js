@@ -20,8 +20,4 @@ class Session {
   }
 }
 
-// force `fast-safe-stringify` to do its thing
-// https://github.com/davidmarkclements/fast-safe-stringify#tojson-support
-Session.prototype.toJSON.forceDecirc = true
-
 module.exports = Session

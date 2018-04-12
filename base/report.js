@@ -118,10 +118,6 @@ class BugsnagReport {
   }
 }
 
-// force `fast-safe-stringify` to do its thing
-// https://github.com/davidmarkclements/fast-safe-stringify#tojson-support
-BugsnagReport.prototype.toJSON.forceDecirc = true
-
 // takes a stacktrace.js style stackframe (https://github.com/stacktracejs/stackframe)
 // and returns a Bugsnag compatible stackframe (https://docs.bugsnag.com/api/error-reporting/#json-payload)
 const formatStackframe = frame => {
