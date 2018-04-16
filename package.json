@@ -109,7 +109,7 @@
   },
   "dependencies": {
     "@bugsnag/cuid": "^3.0.0",
-    "@bugsnag/safe-json-stringify": "^2.0.1",
+    "@bugsnag/safe-json-stringify": "^2.1.0",
     "browserify-versionify": "^1.0.6",
     "error-stack-parser": "^2.0.1",
     "iserror": "0.0.2",
