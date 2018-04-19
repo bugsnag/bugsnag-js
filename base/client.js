@@ -62,6 +62,7 @@ class BugsnagClient {
     if (this.config.appVersion !== null) this.app.version = this.config.appVersion
     if (this.config.metaData) this.metaData = this.config.metaData
     if (this.config.user) this.user = this.config.user
+    if (this.config.logger) this.logger(this.config.logger)
     this._configured = true
     this._logger.debug(`Loaded!`)
     return this

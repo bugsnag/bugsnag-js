@@ -66,6 +66,17 @@ module.exports.schema = {
     defaultValue: () => null,
     message: '(object) metaData should be an object',
     validate: (value) => typeof value === 'object'
+  },
+  logger: {
+    defaultValue: () => undefined,
+    message: '(object) logger should be an object with { debug, info, warn, error methods } or null',
+    validate: value =>
+      (!value) ||
+      (value && reduce(
+        [ 'debug', 'info', 'warn', 'error' ],
+        (accum, method) => accum && typeof value[method] === 'function',
+        true
+      ))
   }
 }
 

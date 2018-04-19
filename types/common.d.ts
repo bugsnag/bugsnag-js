@@ -1,4 +1,4 @@
-import Client from "./client";
+import { Client, ILogger } from "./client";
 import Report from "./report";
 
 interface IConfig {
@@ -21,6 +21,7 @@ interface IConfig {
   user?: object | null;
   metaData?: object | null;
   collectUserIp?: boolean;
+  logger?: ILogger | null;
 }
 
 interface IFinalConfig extends IConfig {
@@ -41,6 +42,7 @@ interface IFinalConfig extends IConfig {
   user: object | null;
   metaData: object | null;
   collectUserIp: boolean;
+  logger?: ILogger | null;
 }
 
 type BeforeSend = (report: Report) => boolean | void;
