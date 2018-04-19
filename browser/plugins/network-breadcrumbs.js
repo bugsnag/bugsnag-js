@@ -21,7 +21,7 @@ exports.configSchema = {
   networkBreadcrumbsEnabled: {
     defaultValue: () => undefined,
     validate: (value) => value === true || value === false || value === undefined,
-    message: '(boolean) networkBreadcrumbsEnabled should be true or false'
+    message: 'should be true|false'
   }
 }
 

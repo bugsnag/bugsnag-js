@@ -21,7 +21,7 @@ module.exports = {
   configSchema: {
     maxEvents: {
       defaultValue: () => 10,
-      message: '(number) maxEvents must be a positive integer ≤100',
+      message: 'should be a positive integer ≤100',
       validate: val => positiveIntIfDefined(val) && val < 100
     }
   }

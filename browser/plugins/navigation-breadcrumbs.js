@@ -35,7 +35,7 @@ exports.configSchema = {
   navigationBreadcrumbsEnabled: {
     defaultValue: () => undefined,
     validate: (value) => value === true || value === false || value === undefined,
-    message: '(boolean) navigationBreadcrumbsEnabled should be true or false'
+    message: 'should be true|false'
   }
 }
 
