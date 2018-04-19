@@ -4,57 +4,57 @@ const positiveIntIfDefined = require('./lib/positive-int-check')
 module.exports.schema = {
   apiKey: {
     defaultValue: () => null,
-    message: '(string) apiKey is required',
+    message: 'is required',
     validate: value => typeof value === 'string' && value.length
   },
   appVersion: {
     defaultValue: () => null,
-    message: '(string) appVersion should have a value if supplied',
+    message: 'should be a string',
     validate: value => value === null || (typeof value === 'string' && value.length)
   },
   autoNotify: {
     defaultValue: () => true,
-    message: '(boolean) autoNotify should be true or false',
+    message: 'should be true|false',
     validate: value => value === true || value === false
   },
   beforeSend: {
     defaultValue: () => [],
-    message: '(array[Function]) beforeSend should only contain functions',
+    message: 'should be a function or array of functions',
     validate: value => typeof value === 'function' || (isArray(value) && filter(value, f => typeof f === 'function').length === value.length)
   },
   endpoint: {
     defaultValue: () => 'https://notify.bugsnag.com',
-    message: '(string) endpoint should be set',
+    message: 'should be a URL',
     validate: () => true
   },
   sessionEndpoint: {
     defaultValue: () => 'https://sessions.bugsnag.com',
-    message: '(string) sessionEndpoint should be set',
+    message: 'should be a URL',
     validate: () => true
   },
   autoCaptureSessions: {
     defaultValue: () => false,
-    message: '(boolean) autoCaptureSessions should be true/false',
+    message: 'should be true|false',
     validate: val => val === true || val === false
   },
   notifyReleaseStages: {
     defaultValue: () => null,
-    message: '(array[string]) notifyReleaseStages should only contain strings',
+    message: 'should be an array of strings',
     validate: value => value === null || (isArray(value) && filter(value, f => typeof f === 'string').length === value.length)
   },
   releaseStage: {
     defaultValue: () => 'production',
-    message: '(string) releaseStage should be set',
+    message: 'should be a string',
     validate: value => typeof value === 'string' && value.length
   },
   maxBreadcrumbs: {
     defaultValue: () => 20,
-    message: '(number) maxBreadcrumbs must be a number (≤40) if specified',
+    message: 'should be a number ≤40',
     validate: value => value === 0 || (positiveIntIfDefined(value) && (value === undefined || value <= 40))
   },
   autoBreadcrumbs: {
     defaultValue: () => true,
-    message: '(boolean) autoBreadcrumbs should be true or false',
+    message: 'should be true|false',
     validate: (value) => typeof value === 'boolean'
   },
   user: {
@@ -64,8 +64,19 @@ module.exports.schema = {
   },
   metaData: {
     defaultValue: () => null,
-    message: '(object) metaData should be an object',
+    message: 'should be an object',
     validate: (value) => typeof value === 'object'
+  },
+  logger: {
+    defaultValue: () => undefined,
+    message: 'should be null or an object with methods { debug, info, warn, error }',
+    validate: value =>
+      (!value) ||
+      (value && reduce(
+        [ 'debug', 'info', 'warn', 'error' ],
+        (accum, method) => accum && typeof value[method] === 'function',
+        true
+      ))
   }
 }
 

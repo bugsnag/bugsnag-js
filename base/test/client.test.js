@@ -55,6 +55,29 @@ describe('base/client', () => {
       client.logger({ debug: log, info: log, warn: log, error: log })
       client.configure({ apiKey: 'API_KEY_YEAH' })
     })
+    it('can supply a different logger via config', done => {
+      const client = new Client(VALID_NOTIFIER)
+      const log = (msg) => {
+        expect(msg).toBeTruthy()
+        done()
+      }
+      client.configure({
+        apiKey: 'API_KEY_YEAH',
+        logger: {
+          debug: log,
+          info: log,
+          warn: log,
+          error: log
+        }
+      })
+    })
+    it('is ok with a null logger', () => {
+      const client = new Client(VALID_NOTIFIER)
+      client.configure({
+        apiKey: 'API_KEY_YEAH',
+        logger: null
+      })
+    })
   })
 
   describe('notify()', () => {

@@ -22,7 +22,7 @@ module.exports = {
     interactionBreadcrumbsEnabled: {
       defaultValue: () => undefined,
       validate: (value) => value === true || value === false || value === undefined,
-      message: '(boolean) interactionBreadcrumbsEnabled should be true or false'
+      message: 'should be true|false'
     }
   }
 }

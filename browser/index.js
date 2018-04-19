@@ -68,12 +68,6 @@ module.exports = (opts, userPlugins = []) => {
   // set transport based on browser capability (IE 8+9 have an XDomainRequest object)
   bugsnag.transport(window.XDomainRequest ? transports.XDomainRequest : transports.XMLHttpRequest)
 
-  // set logger based on browser capability
-  if (typeof console !== 'undefined' && typeof console.debug === 'function') {
-    const logger = getPrefixedConsole()
-    bugsnag.logger(logger)
-  }
-
   try {
     // configure with user supplied options
     // errors can be thrown here that prevent the lib from being in a useable state
@@ -127,18 +121,6 @@ module.exports = (opts, userPlugins = []) => {
   return bugsnag.config.autoCaptureSessions
     ? bugsnag.startSession()
     : bugsnag
-}
-
-const getPrefixedConsole = () => {
-  const logger = {}
-  const consoleLog = console['log']
-  map([ 'debug', 'info', 'warn', 'error' ], (method) => {
-    const consoleMethod = console[method]
-    logger[method] = typeof consoleMethod === 'function'
-      ? consoleMethod.bind(console, '[bugsnag]')
-      : consoleLog.bind(console, '[bugsnag]')
-  })
-  return logger
 }
 
 const inferBreadcrumbSetting = (config, val, defaultInDev = true) =>
