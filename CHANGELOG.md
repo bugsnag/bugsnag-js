@@ -2,6 +2,15 @@
 
 <!-- {entry_placeholder} -->
 
+## 4.6.0 (2018-04-20)
+
+### Added
+- It is now possible to customize the logger by setting the `logger` option of the configuration object. A custom logger must have the methods `debug`, `info`, `warn` and `error`. To completely disable logging, set `logger: null`. (#340)
+
+### Fixed
+- A custom version of [safe-json-stringify](https://github.com/bugsnag/safe-json-stringify) now fully protects against circular structures returned from toJSON() and arbitrarily wide/deep structures (#338)
+
+
 ## 4.5.0 (2018-04-06)
 
 ### Added
