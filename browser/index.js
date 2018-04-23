@@ -43,10 +43,9 @@ const plugins = [
   pluginStripQueryString
 ]
 
-const transports = {
-  'XDomainRequest': require('./transports/x-domain-request'),
-  'XMLHttpRequest': require('./transports/xml-http-request')
-}
+// transports
+const tXDomainRequest = require('./transports/x-domain-request')
+const tXMLHttpRequest = require('./transports/xml-http-request')
 
 module.exports = (opts, userPlugins = []) => {
   // handle very simple use case where user supplies just the api key as a string

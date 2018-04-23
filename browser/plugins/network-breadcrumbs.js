@@ -1,9 +1,9 @@
 const BREADCRUMB_TYPE = 'network'
 
 // keys to safely store metadata on the request object
-const REQUEST_SETUP_KEY = 'BUGSNAG:SETUP'
-const REQUEST_URL_KEY = 'BUGSNAG:REQUEST_URL'
-const REQUEST_METHOD_KEY = 'BUGSNAG:REQUEST_METHOD'
+const REQUEST_SETUP_KEY = 'BS~~S'
+const REQUEST_URL_KEY = 'BS~~U'
+const REQUEST_METHOD_KEY = 'BS~~M'
 
 let restoreFunctions = []
 let client
@@ -69,8 +69,8 @@ const monkeyPatchXMLHttpRequest = () => {
 
 function handleXHRLoad () {
   if (
-    this[REQUEST_URL_KEY] === client.config.endpoint ||
-    this[REQUEST_URL_KEY] === client.config.sessionEndpoint
+    this[REQUEST_URL_KEY] === client.config.endpoints.notify ||
+    this[REQUEST_URL_KEY] === client.config.endpoints.sessions
   ) {
     // don't leave a network breadcrumb from bugsnag notify calls
     return
@@ -89,8 +89,8 @@ function handleXHRLoad () {
 
 function handleXHRError () {
   if (
-    this[REQUEST_URL_KEY] === client.config.endpoint ||
-    this[REQUEST_URL_KEY] === client.config.sessionEndpoint
+    this[REQUEST_URL_KEY] === client.config.endpoints.notify ||
+    this[REQUEST_URL_KEY] === client.config.endpoints.sessions
   ) {
     // don't leave a network breadcrumb from bugsnag notify calls
     return

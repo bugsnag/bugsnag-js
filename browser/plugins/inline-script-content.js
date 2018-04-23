@@ -12,7 +12,7 @@ module.exports = {
       if (!frame || !frame.file || !frame.lineNumber) return frame
       if (frame.file.replace(/#.*$/, '') !== originalLocation.replace(/#.*$/, '')) return frame
       if (!DOMContentLoaded || !html) html = getHtml()
-      const htmlLines = [ '<!-- DOCUMENT START -->' ].concat(html.split('\n'))
+      const htmlLines = [ '<!-- DOC START -->' ].concat(html.split('\n'))
       const { script, start } = extractScriptContent(htmlLines, frame.lineNumber - 1)
       const code = reduce(script, (accum, line, i) => {
         if (Math.abs((start + i + 1) - frame.lineNumber) > 10) return accum

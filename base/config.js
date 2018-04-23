@@ -89,7 +89,7 @@ module.exports.schema = {
 }
 
 module.exports.mergeDefaults = (opts, schema) => {
-  if (!opts || !schema) throw new Error('schema.mergeDefaults(opts, schema): opts and schema objects are required')
+  if (!opts || !schema) throw new Error('opts and schema objects are required')
   return reduce(keys(schema), (accum, key) => {
     accum[key] = opts[key] !== undefined ? opts[key] : schema[key].defaultValue(opts[key], opts)
     return accum
@@ -97,7 +97,7 @@ module.exports.mergeDefaults = (opts, schema) => {
 }
 
 module.exports.validate = (opts, schema) => {
-  if (!opts || !schema) throw new Error('schema.mergeDefaults(opts, schema): opts and schema objects are required')
+  if (!opts || !schema) throw new Error('opts and schema objects are required')
   const errors = reduce(keys(schema), (accum, key) => {
     if (schema[key].validate(opts[key], opts)) return accum
     return accum.concat({ key, message: schema[key].message, value: opts[key] })

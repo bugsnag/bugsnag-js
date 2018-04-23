@@ -6,13 +6,15 @@ const { map, reduce, includes, isArray } = require('./lib/es-utils')
 const inferReleaseStage = require('./lib/infer-release-stage')
 const isError = require('iserror')
 
+const LOG_USAGE_ERR_PREFIX = `Usage error.`
+const REPORT_USAGE_ERR_PREFIX = `Bugsnag usage error.`
+
 const noop = () => {}
 
 class BugsnagClient {
   constructor (notifier, configSchema = config.schema, session = null) {
-    if (!notifier) throw new Error('new BugsnagClient(notifier, configSchema) requires `notifier` argument')
-    if (!notifier.name || !notifier.version || !notifier.url) {
-      throw new Error('new BugsnagClient(notifier, configSchema) - `notifier` requires: `{ name, version, url }`')
+    if (!notifier || !notifier.name || !notifier.version || !notifier.url) {
+      throw new Error('`notifier` argument is required')
     }
 
     // notifier id
@@ -25,7 +27,7 @@ class BugsnagClient {
     this._configured = false
 
     // i/o
-    this._transport = { name: 'NULL_TRANSPORT', sendSession: noop, sendReport: noop }
+    this._transport = { sendSession: noop, sendReport: noop }
     this._logger = { debug: noop, info: noop, warn: noop, error: noop }
 
     // plugins
@@ -93,7 +95,7 @@ class BugsnagClient {
   }
 
   leaveBreadcrumb (name, metaData, type, timestamp) {
-    if (!this._configured) throw new Error('Bugsnag must be configured before calling leaveBreadcrumb()')
+    if (!this._configured) throw new Error('client not configured')
 
     // coerce bad values so that the defaults get set
     name = name || undefined
@@ -116,7 +118,7 @@ class BugsnagClient {
   }
 
   notify (error, opts = {}) {
-    if (!this._configured) throw new Error('Bugsnag must be configured before calling report()')
+    if (!this._configured) throw new Error('client not configured')
 
     // releaseStage can be set via config.releaseStage or client.app.releaseStage
     const releaseStage = inferReleaseStage(this)
@@ -127,8 +129,9 @@ class BugsnagClient {
 
     // if we have something falsey at this point, report usage error
     if (!err) {
-      this._logger.warn(`Usage error. notify() called with no "error" parameter`)
-      err = new Error('Bugsnag usage error. notify() called with no "error" parameter')
+      const msg = 'notify() called with no "error" parameter'
+      this._logger.warn(`${LOG_USAGE_ERR_PREFIX} ${msg}`)
+      err = new Error(`${REPORT_USAGE_ERR_PREFIX} ${msg}`)
     }
 
     // ensure opts is an object
@@ -210,8 +213,9 @@ const normaliseError = (error, opts, logger) => {
       if (typeof opts === 'string') {
         // ≤v3 used to have a notify('ErrorName', 'Error message') interface
         // report usage/deprecation errors if this function is called like that
-        logger.warn(`Usage error. notify() called with (string, string) but expected (error, object)`)
-        err = new Error('Bugsnag usage error. notify() called with (string, string) but expected (error, object)')
+        const msg = 'notify() called with (string, string)'
+        logger.warn(`${LOG_USAGE_ERR_PREFIX} ${msg}`)
+        err = new Error(`${REPORT_USAGE_ERR_PREFIX} ${msg}`)
         _opts = { metaData: { notifier: { notifyArgs: [ error, opts ] } } }
       } else {
         err = new Error(String(error))
@@ -223,8 +227,9 @@ const normaliseError = (error, opts, logger) => {
       err = new Error(String(error))
       break
     case 'function':
-      logger.warn(`Usage error. notify() called with a function as "error" parameter`)
-      err = new Error('Bugsnag usage error. notify() called with a function as "error" parameter')
+      const msg = 'notify() called with a function'
+      logger.warn(`${LOG_USAGE_ERR_PREFIX} ${msg}`)
+      err = new Error(`${REPORT_USAGE_ERR_PREFIX} ${msg}`)
       break
     case 'object':
       if (error !== null && (isError(error) || error.__isBugsnagReport)) {
@@ -234,8 +239,9 @@ const normaliseError = (error, opts, logger) => {
         err.name = error.name || error.errorClass
         errorFramesToSkip += 2
       } else {
-        logger.warn(`Usage error. notify() called with an unsupported object as "error" parameter. Supply an Error or { name, message } object.`)
-        err = new Error('Bugsnag usage error. notify() called with an unsupported object as "error" parameter. Supply an Error or { name, message } object.')
+        const msg = 'notify() called with an unsupported object. Supply an Error or { name, message } object.'
+        logger.warn(`${LOG_USAGE_ERR_PREFIX} ${msg}`)
+        err = new Error(`${REPORT_USAGE_ERR_PREFIX} ${msg}`)
       }
       break
   }
@@ -245,5 +251,10 @@ const normaliseError = (error, opts, logger) => {
 const hasNecessaryFields = error =>
   (typeof error.name === 'string' || typeof error.errorClass === 'string') &&
   (typeof error.message === 'string' || typeof error.errorMessage === 'string')
+
+const generateConfigErrorMessage = errors =>
+`Bugsnag configuration error\n${map(errors, (err) => `"${err.key}" ${err.message} \n    got ${stringify(err.value)}`).join('\n\n')}`
+
+const stringify = val => typeof val === 'object' ? JSON.stringify(val) : String(val)
 
 module.exports = BugsnagClient
