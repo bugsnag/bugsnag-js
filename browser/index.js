@@ -79,19 +79,13 @@ module.exports = (opts, userPlugins = []) => {
   const bugsnag = new Client({ name, version, url }, finalSchema)
 
   // set transport based on browser capability (IE 8+9 have an XDomainRequest object)
-  bugsnag.transport(window.XDomainRequest ? transports.XDomainRequest : transports.XMLHttpRequest)
+  bugsnag.transport(window.XDomainRequest ? tXDomainRequest : tXMLHttpRequest)
 
-  try {
-    // configure with user supplied options
-    // errors can be thrown here that prevent the lib from being in a useable state
-    bugsnag.configure(opts)
-  } catch (e) {
-    bugsnag._logger.warn(e)
-    if (e.errors) map(e.errors, bugsnag._logger.warn)
-    // rethrow. if there was an error with configuration
-    // the library is not going to work
-    throw e
-  }
+  // configure with user supplied options
+  // errors can be thrown here that prevent the lib from being in a useable state
+  bugsnag.configure(opts)
+
+  map(warnings, w => bugsnag._logger.warn(w))
 
   // always-on browser-specific plugins
   bugsnag.use(pluginDevice)

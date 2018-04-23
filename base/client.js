@@ -53,11 +53,7 @@ class BugsnagClient {
   configure (opts = {}) {
     this.config = config.mergeDefaults({ ...this.config, ...opts }, this.configSchema)
     const validity = config.validate(this.config, this.configSchema)
-    if (!validity.valid === true) {
-      const err = new Error('Bugsnag configuration error')
-      err.errors = map(validity.errors, (err) => `${err.key} ${err.message} \n  ${err.value}`)
-      throw err
-    }
+    if (!validity.valid === true) throw new Error(generateConfigErrorMessage(validity.errors))
     if (typeof this.config.beforeSend === 'function') this.config.beforeSend = [ this.config.beforeSend ]
     if (this.config.appVersion !== null) this.app.version = this.config.appVersion
     if (this.config.metaData) this.metaData = this.config.metaData
