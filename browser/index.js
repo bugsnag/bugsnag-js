@@ -52,9 +52,22 @@ module.exports = (opts, userPlugins = []) => {
   // handle very simple use case where user supplies just the api key as a string
   if (typeof opts === 'string') opts = { apiKey: opts }
 
-  // support renamed option
+  // support renamed/deprecated options
+
+  const warnings = []
+
   if (opts.sessionTrackingEnabled) {
+    warnings.push('deprecated option "sessionTrackingEnabled" is now called "autoCaptureSessions"')
     opts.autoCaptureSessions = opts.sessionTrackingEnabled
+  }
+
+  if ((opts.endpoint || opts.sessionEndpoint) && !opts.endpoints) {
+    warnings.push('deprecated options "endpoint"/"sessionEndpoint" are now configured in the "endpoints" object')
+    opts.endpoints = { notify: opts.endpoint, sessions: opts.sessionEndpoint }
+  }
+
+  if (opts.endpoints && opts.endpoints.notify && !opts.endpoints.sessions) {
+    warnings.push('"notify" endpoint is set but "sessions" endpoint is not. No sessions will be sent.')
   }
 
   // allow plugins to augment the schema with their own options

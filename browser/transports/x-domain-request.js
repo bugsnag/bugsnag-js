@@ -3,9 +3,8 @@ const jsonStringify = require('@bugsnag/safe-json-stringify')
 const { isoDate } = require('../../base/lib/es-utils')
 
 module.exports = {
-  name: 'XDomainRequest',
   sendReport: (logger, config, report, cb = () => {}) => {
-    const url = `${matchPageProtocol(config.endpoint, window.location.protocol)}?apiKey=${encodeURIComponent(config.apiKey)}&payloadVersion=4.0&sentAt=${encodeURIComponent(isoDate())}`
+    const url = `${matchPageProtocol(config.endpoints.notify, window.location.protocol)}?apiKey=${encodeURIComponent(config.apiKey)}&payloadVersion=4.0&sentAt=${encodeURIComponent(isoDate())}`
     const req = new window.XDomainRequest()
     req.onload = function () {
       cb(null, req.responseText)
@@ -20,7 +19,7 @@ module.exports = {
     }, 0)
   },
   sendSession: (logger, config, session, cb = () => {}) => {
-    const url = `${matchPageProtocol(config.sessionEndpoint, window.location.protocol)}?apiKey=${encodeURIComponent(config.apiKey)}&payloadVersion=1.0&sentAt=${encodeURIComponent(isoDate())}`
+    const url = `${matchPageProtocol(config.endpoints.sessions, window.location.protocol)}?apiKey=${encodeURIComponent(config.apiKey)}&payloadVersion=1.0&sentAt=${encodeURIComponent(isoDate())}`
     const req = new window.XDomainRequest()
     req.onload = function () {
       cb(null, req.responseText)

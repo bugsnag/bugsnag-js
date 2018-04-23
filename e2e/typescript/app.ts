@@ -6,7 +6,7 @@ try {
     apiKey: '123',
     beforeSend: [],
     autoNotify: true,
-    endpoint: 'http://localhost:55854',
+    endpoints: { notify: 'http://localhost:55854', sessions: 'http://localhost:55854/sessions' },
     notifyReleaseStages: [ 'staging', 'production' ],
     releaseStage: 'production',
     maxEvents: 10,

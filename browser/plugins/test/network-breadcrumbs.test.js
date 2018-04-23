@@ -113,7 +113,7 @@ describe('plugin: network breadcrumbs', () => {
 
       it('should not leave a breadcrumb for request to bugsnag notify endpoint', (done) => {
         const request = new window.XMLHttpRequest()
-        request.open('GET', client.config.endpoint)
+        request.open('GET', client.config.endpoints.notify)
 
         request.addEventListener('load', () => {
           expect(client.breadcrumbs.length).toBe(0)
@@ -125,7 +125,7 @@ describe('plugin: network breadcrumbs', () => {
 
       it('should not leave a breadcrumb for session tracking requests', (done) => {
         const request = new window.XMLHttpRequest()
-        request.open('GET', client.config.sessionEndpoint)
+        request.open('GET', client.config.endpoints.sessions)
 
         request.addEventListener('load', () => {
           expect(client.breadcrumbs.length).toBe(0)

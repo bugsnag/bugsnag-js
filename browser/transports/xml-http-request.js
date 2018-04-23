@@ -3,9 +3,8 @@ const jsonStringify = require('@bugsnag/safe-json-stringify')
 const { isoDate } = require('../../base/lib/es-utils')
 
 module.exports = {
-  name: 'XMLHttpRequest',
   sendReport: (logger, config, report, cb = () => {}) => {
-    const url = config.endpoint
+    const url = config.endpoints.notify
     const req = new window.XMLHttpRequest()
     req.onreadystatechange = function () {
       if (req.readyState === window.XMLHttpRequest.DONE) cb(null, req.responseText)
@@ -22,7 +21,7 @@ module.exports = {
     }
   },
   sendSession: (logger, config, session, cb = () => {}) => {
-    const url = config.sessionEndpoint
+    const url = config.endpoints.sessions
     const req = new window.XMLHttpRequest()
     req.onreadystatechange = function () {
       if (req.readyState === window.XMLHttpRequest.DONE) cb(null, req.responseText)
