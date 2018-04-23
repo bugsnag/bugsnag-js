@@ -10,25 +10,32 @@ const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
 const CROSS_ORIGIN_ENDPOINT_WITHOUT_CORS_HEADERS = `http://${isSafari ? '0.0.0.0' : 'localhost'}:55854/?nocors`
 
-let client
-
-beforeEach(() => {
-  // setup client and plugin
-  client = new Client(VALID_NOTIFIER)
-  client.configure({
-    apiKey: 'aaaa-aaaa-aaaa-aaaa',
-    endpoint: '/echo/reports',
-    sessionEndpoint: '/echo/sessions'
-  })
-  client.use(plugin)
-})
-
-afterEach(() => {
-  // undo the global side effects
-  plugin.destroy()
-})
-
 describe('plugin: network breadcrumbs', () => {
+  let client
+
+  beforeEach(() => {
+    // setup client and plugin
+    client = new Client(VALID_NOTIFIER)
+    try {
+      client.configure({
+        apiKey: 'aaaa-aaaa-aaaa-aaaa',
+        endpoints: {
+          notify: '/echo/reports',
+          sessions: '/echo/sessions'
+        }
+      })
+      client.use(plugin)
+    } catch (e) {
+      console.log(e.errors)
+      throw e
+    }
+  })
+
+  afterEach(() => {
+    // undo the global side effects
+    plugin.destroy()
+  })
+
   if ('addEventListener' in window.XMLHttpRequest.prototype) {
     it('should leave a breadcrumb when an XMLHTTPRequest resolves', (done) => {
       const request = new window.XMLHttpRequest()
