@@ -5,7 +5,7 @@ module.exports.schema = {
   apiKey: {
     defaultValue: () => null,
     message: 'is required',
-    validate: value => stringWithLength
+    validate: stringWithLength
   },
   appVersion: {
     defaultValue: () => null,

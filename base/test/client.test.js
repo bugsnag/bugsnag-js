@@ -23,7 +23,7 @@ describe('base/client', () => {
       try {
         client.configure()
       } catch (e) {
-        expect(Array.isArray(e.errors)).toBe(true)
+        expect(e.message).toMatch(/^Bugsnag configuration error/)
       }
 
       // bare minimum opts supplied
