@@ -5,8 +5,13 @@ const REQUEST_SETUP_KEY = 'BS~~S'
 const REQUEST_URL_KEY = 'BS~~U'
 const REQUEST_METHOD_KEY = 'BS~~M'
 
+const { includes } = require('../../base/lib/es-utils')
+
 let restoreFunctions = []
 let client
+
+const getEndpoints = () =>
+  [ client.config.endpoints.notify, client.config.endpoints.sessions ]
 
 /*
  * Leaves breadcrumbs when network requests occur
@@ -68,10 +73,7 @@ const monkeyPatchXMLHttpRequest = () => {
 }
 
 function handleXHRLoad () {
-  if (
-    this[REQUEST_URL_KEY] === client.config.endpoints.notify ||
-    this[REQUEST_URL_KEY] === client.config.endpoints.sessions
-  ) {
+  if (includes(getEndpoints(), this[REQUEST_URL_KEY])) {
     // don't leave a network breadcrumb from bugsnag notify calls
     return
   }
@@ -88,10 +90,7 @@ function handleXHRLoad () {
 }
 
 function handleXHRError () {
-  if (
-    this[REQUEST_URL_KEY] === client.config.endpoints.notify ||
-    this[REQUEST_URL_KEY] === client.config.endpoints.sessions
-  ) {
+  if (includes(getEndpoints(), this[REQUEST_URL_KEY])) {
     // don't leave a network breadcrumb from bugsnag notify calls
     return
   }
