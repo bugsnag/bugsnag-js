@@ -5,6 +5,9 @@ checks:
       threshold: 7
   return-statements:
     enabled: false
+  method-lines:
+    config:
+      threshold: 30
 engines:
   duplication:
     enabled: true
