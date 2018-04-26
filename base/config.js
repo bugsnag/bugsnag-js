@@ -27,7 +27,7 @@ module.exports.schema = {
       notify: 'https://notify.bugsnag.com',
       sessions: 'https://sessions.bugsnag.com'
     }),
-    message: 'should be an object containing endpoint URLs { endpoint, sessions* } *optional if autoCaptureSessions=false',
+    message: 'should be an object containing endpoint URLs { notify, sessions }. sessions is optional if autoCaptureSessions=false',
     validate: (val, obj) =>
       // first, ensure it's an object
       (val && typeof val === 'object') &&
