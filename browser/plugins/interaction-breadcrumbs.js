@@ -13,7 +13,7 @@ module.exports = {
       } catch (e) {
         targetText = '[hidden]'
         targetSelector = '[hidden]'
-        client._logger.error('Cross domain error when tracking click event. See https://tinyurl.com/y94fq5zm')
+        client._logger.error('Cross domain error when tracking click event. See docs: https://tinyurl.com/y94fq5zm')
       }
       client.leaveBreadcrumb('UI click', { targetText, targetSelector }, 'user')
     }, true)

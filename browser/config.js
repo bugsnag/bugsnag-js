@@ -13,7 +13,7 @@ module.exports = {
   },
   collectUserIp: {
     defaultValue: () => true,
-    message: 'should true|false',
+    message: 'should be true|false',
     validate: value => value === true || value === false
   },
   logger: {

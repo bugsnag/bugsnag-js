@@ -129,7 +129,7 @@ class BugsnagClient {
 
     // if we have something falsey at this point, report usage error
     if (!err) {
-      const msg = 'notify() called with no "error" parameter'
+      const msg = generateNotifyUsageMessage('nothing')
       this._logger.warn(`${LOG_USAGE_ERR_PREFIX} ${msg}`)
       err = new Error(`${REPORT_USAGE_ERR_PREFIX} ${msg}`)
     }
@@ -213,7 +213,7 @@ const normaliseError = (error, opts, logger) => {
       if (typeof opts === 'string') {
         // ≤v3 used to have a notify('ErrorName', 'Error message') interface
         // report usage/deprecation errors if this function is called like that
-        const msg = 'notify() called with (string, string)'
+        const msg = generateNotifyUsageMessage('string/string')
         logger.warn(`${LOG_USAGE_ERR_PREFIX} ${msg}`)
         err = new Error(`${REPORT_USAGE_ERR_PREFIX} ${msg}`)
         _opts = { metaData: { notifier: { notifyArgs: [ error, opts ] } } }
@@ -227,7 +227,7 @@ const normaliseError = (error, opts, logger) => {
       err = new Error(String(error))
       break
     case 'function':
-      const msg = 'notify() called with a function'
+      const msg = generateNotifyUsageMessage('function')
       logger.warn(`${LOG_USAGE_ERR_PREFIX} ${msg}`)
       err = new Error(`${REPORT_USAGE_ERR_PREFIX} ${msg}`)
       break
@@ -239,7 +239,7 @@ const normaliseError = (error, opts, logger) => {
         err.name = error.name || error.errorClass
         errorFramesToSkip += 2
       } else {
-        const msg = 'notify() called with an unsupported object. Supply an Error or { name, message } object.'
+        const msg = generateNotifyUsageMessage('unsupported object')
         logger.warn(`${LOG_USAGE_ERR_PREFIX} ${msg}`)
         err = new Error(`${REPORT_USAGE_ERR_PREFIX} ${msg}`)
       }
@@ -254,6 +254,9 @@ const hasNecessaryFields = error =>
 
 const generateConfigErrorMessage = errors =>
 `Bugsnag configuration error\n${map(errors, (err) => `"${err.key}" ${err.message} \n    got ${stringify(err.value)}`).join('\n\n')}`
+
+const generateNotifyUsageMessage = actual =>
+  `notify() expected error/opts parameters, got ${actual}`
 
 const stringify = val => typeof val === 'object' ? JSON.stringify(val) : String(val)
 
