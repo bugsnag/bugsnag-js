@@ -67,7 +67,9 @@ const wrapHistoryFn = (client, target, fn) => {
     if (typeof client.refresh === 'function') client.refresh()
     // if the client is operating in session-mode, a new route should trigger a new session
     if (client.session) client.startSession()
-    orig.call(target, state, title, url)
+    // Internet Explorer will convert `undefined` to a string when passed, causing an unintended redirect
+    // to '/undefined'. therefore we only pass the url if it's not undefined.
+    orig.apply([target, state, title].concat(typeof url !== 'undefined' ? url : []))
   }
   target[fn]._restore = () => { target[fn] = orig }
 }
