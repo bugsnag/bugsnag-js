@@ -18,7 +18,7 @@ exports.init = (client) => {
   // hashchange has some metaData that we care about
   window.addEventListener('hashchange', event => {
     const metaData = event.oldURL
-      ? { from: relativeLocation(event.oldURL), to: relativeLocation(event.newURL), state: window.history.state }
+      ? { from: relativeLocation(event.oldURL), to: relativeLocation(event.newURL), state: getCurrentState() }
       : { to: relativeLocation(window.location.href) }
     client.leaveBreadcrumb('Hash changed', metaData, 'navigation')
   }, true)
@@ -56,7 +56,7 @@ const relativeLocation = url => {
 
 const stateChangeToMetaData = (state, title, url) => {
   const currentPath = relativeLocation(window.location.href)
-  return { title, state, prevState: window.history.state, to: url || currentPath, from: currentPath }
+  return { title, state, prevState: getCurrentState(), to: url || currentPath, from: currentPath }
 }
 
 const wrapHistoryFn = (client, target, fn) => {
@@ -72,4 +72,10 @@ const wrapHistoryFn = (client, target, fn) => {
     orig.apply(target, [ state, title ].concat(url === undefined ? url : []))
   }
   target[fn]._restore = () => { target[fn] = orig }
+}
+
+const getCurrentState = () => {
+  try {
+    return window.history.state
+  } catch (e) {}
 }
