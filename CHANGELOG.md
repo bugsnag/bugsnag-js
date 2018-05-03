@@ -2,6 +2,15 @@
 
 <!-- {entry_placeholder} -->
 
+## 4.6.1 (2018-05-03)
+
+A couple of fixes for IE10/11 relating to quirks in their implementation of the history APIs.
+
+### Fixed
+- Only pass in `url` parameter to history methods when it is not `undefined`. Fixes a bug in IE11 where it converts `undefined` to a string, causing a redirect to `/undefined`. (#342)
+- Prevent a crash in IE10 when accessing `history.state`. (#345)
+
+
 ## 4.6.0 (2018-04-20)
 
 ### Added
