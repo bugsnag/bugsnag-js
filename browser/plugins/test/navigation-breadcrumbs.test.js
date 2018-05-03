@@ -35,9 +35,15 @@ describe('plugin: navigation breadcrumbs', () => {
       }
 
       if (window.history.pushState) {
+        // first ensure that the pushState command works to change the url of the page
+        window.history.replaceState(state, 'bar', 'network-breadcrumb-test.html')
+        expect(c.breadcrumbs[c.breadcrumbs.length - 1].metaData.to).toMatch(/^\/?network-breadcrumb-test\.html$/)
+        expect(window.location.href).toMatch(/\/?network-breadcrumb-test\.html$/)
+        n++
+
         window.history.replaceState(state, 'bar')
-        // ensure it works with `undefined` as the url parameter (IE11-specific issue)
-        expect(c.breadcrumbs[c.breadcrumbs.length - 1].metaData.to).toMatch(/^\/?context\.html$/)
+        // then ensure that it works with `undefined` as the url parameter (IE11-specific issue)
+        expect(c.breadcrumbs[c.breadcrumbs.length - 1].metaData.to).toMatch(/^\/?network-breadcrumb-test\.html$/)
         n++
       }
 
