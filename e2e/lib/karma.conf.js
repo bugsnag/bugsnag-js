@@ -24,6 +24,7 @@ module.exports = function (config) {
     // list of files / patterns to load in the browser
     files: [
       '**/*/assertions.test.js',
+      'lib/jasmine-config.js',
       { pattern: '**/serve/**', included: false }
     ],
 
