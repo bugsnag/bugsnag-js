@@ -37,7 +37,7 @@ describe('plugin: network breadcrumbs', () => {
       request.addEventListener('load', () => {
         expect(client.breadcrumbs.length).toBe(1)
         expect(client.breadcrumbs[0]).toEqual(jasmine.objectContaining({
-          type: 'network',
+          type: 'request',
           name: 'XMLHttpRequest succeeded',
           metaData: {
             status: 200,
@@ -70,7 +70,7 @@ describe('plugin: network breadcrumbs', () => {
       request.addEventListener('load', () => {
         expect(client.breadcrumbs.length).toBe(1)
         expect(client.breadcrumbs[0]).toEqual(jasmine.objectContaining({
-          type: 'network',
+          type: 'request',
           name: 'XMLHttpRequest failed',
           metaData: {
             status: 404,
@@ -94,7 +94,7 @@ describe('plugin: network breadcrumbs', () => {
         request.addEventListener('error', () => {
           expect(client.breadcrumbs.length).toBe(1)
           expect(client.breadcrumbs[0]).toEqual(jasmine.objectContaining({
-            type: 'network',
+            type: 'request',
             name: 'XMLHttpRequest error',
             metaData: {
               request: `GET ${CROSS_ORIGIN_ENDPOINT_WITHOUT_CORS_HEADERS}`
@@ -142,7 +142,7 @@ describe('plugin: network breadcrumbs', () => {
       global.fetch('/').then(() => {
         expect(client.breadcrumbs.length).toBe(1)
         expect(client.breadcrumbs[0]).toEqual(jasmine.objectContaining({
-          type: 'network',
+          type: 'request',
           name: 'fetch() succeeded',
           metaData: {
             status: 200,
@@ -157,7 +157,7 @@ describe('plugin: network breadcrumbs', () => {
       global.fetch('/does-not-exist').then(() => {
         expect(client.breadcrumbs.length).toBe(1)
         expect(client.breadcrumbs[0]).toEqual(jasmine.objectContaining({
-          type: 'network',
+          type: 'request',
           name: 'fetch() failed',
           metaData: {
             status: 404,
@@ -173,7 +173,7 @@ describe('plugin: network breadcrumbs', () => {
       global.fetch(CROSS_ORIGIN_ENDPOINT_WITHOUT_CORS_HEADERS).catch(() => {
         expect(client.breadcrumbs.length).toBe(1)
         expect(client.breadcrumbs[0]).toEqual(jasmine.objectContaining({
-          type: 'network',
+          type: 'request',
           name: 'fetch() error',
           metaData: {
             request: `GET ${CROSS_ORIGIN_ENDPOINT_WITHOUT_CORS_HEADERS}`

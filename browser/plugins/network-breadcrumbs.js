@@ -1,4 +1,4 @@
-const BREADCRUMB_TYPE = 'network'
+const BREADCRUMB_TYPE = 'request'
 
 // keys to safely store metadata on the request object
 const REQUEST_SETUP_KEY = 'BUGSNAG:SETUP'
