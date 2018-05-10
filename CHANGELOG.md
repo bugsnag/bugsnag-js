@@ -2,6 +2,12 @@
 
 <!-- {entry_placeholder} -->
 
+## 4.6.3 (2018-05-10)
+
+### Fixed
+- Use the correct network breadcrumb type (`network` -> `request`). Fixes network breadcrumbs not displaying in the dashboard. (#348)
+
+
 ## 4.6.2 (2018-05-08)
 
 The previous version (v4.6.1) was removed from the npm registry and the CDN because of critical issue surrounding history state methods. This release resolves that issue. The release notes for v4.6.1 are included here too for completeness.
