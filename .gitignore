@@ -3,3 +3,6 @@ node_modules
 coverage
 bin/cc-test-reporter
 types/test/fixtures/app.*
+maze_output
+local.log
+bugsnag-js-*.tgz

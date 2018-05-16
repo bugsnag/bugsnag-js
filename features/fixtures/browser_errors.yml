@@ -1,0 +1,75 @@
+---
+ie_8:
+  handled:
+    errorClass: 'TypeError'
+    errorMessage: "'foo' is undefined"
+
+ie_9:
+  handled:
+    errorClass: 'ReferenceError'
+    errorMessage: "'foo' is undefined"
+
+ie_10:
+  handled:
+    errorClass: 'ReferenceError'
+    errorMessage: "'foo' is undefined"
+
+ie_11:
+  handled:
+    errorClass: 'ReferenceError'
+    errorMessage: "'foo' is undefined"
+
+edge_14:
+  handled:
+    errorClass: 'ReferenceError'
+    errorMessage: "'foo' is undefined"
+
+edge_15:
+  handled:
+    errorClass: 'ReferenceError'
+    errorMessage: "'foo' is undefined"
+
+safari_6:
+  handled:
+    errorClass: 'ReferenceError'
+    errorMessage: "Can't find variable: foo"
+
+safari_10:
+  handled:
+    errorClass: 'ReferenceError'
+    errorMessage: "Can't find variable: foo"
+
+opera_12:
+  handled:
+    errorClass: 'ReferenceError'
+    errorMessage: 'Undefined variable: foo'
+
+iphone_7:
+  handled:
+    errorClass: 'ReferenceError'
+    errorMessage: "Can't find variable: foo"
+
+android_s8:
+  handled:
+    errorClass: 'ReferenceError'
+    errorMessage: 'foo is not defined'
+
+firefox_30:
+  handled:
+    errorClass: 'ReferenceError'
+    errorMessage: 'foo is not defined'
+
+firefox_56:
+  handled:
+    errorClass: 'ReferenceError'
+    errorMessage: 'foo is not defined'
+
+chrome_43:
+  handled:
+    errorClass: 'ReferenceError'
+    errorMessage: 'foo is not defined'
+
+chrome_61:
+  handled:
+    errorClass: 'ReferenceError'
+    errorMessage: 'foo is not defined'
