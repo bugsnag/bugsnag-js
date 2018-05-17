@@ -25,6 +25,12 @@ When("the exception matches the {string} values for the current browser") do |fi
     And the exception "errorClass" equals "#{err['errorClass']}"
     And the exception "message" equals "#{err['errorMessage']}"
   }
+  if err['lineNumber']
+    step("the \"lineNumber\" of stack frame 0 equals #{err['lineNumber']}")
+  end
+  if err['columnNumber']
+    step("the \"columnNumber\" of stack frame 0 equals #{err['columnNumber']}")
+  end
 end
 
 Then(/^the request is a valid browser payload for the error reporting API$/) do

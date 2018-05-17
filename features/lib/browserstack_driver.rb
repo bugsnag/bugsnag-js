@@ -1,4 +1,5 @@
 require 'selenium-webdriver'
+require_relative './fast-selenium'
 require 'browserstack/local'
 require 'yaml'
 

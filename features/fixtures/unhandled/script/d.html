@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="/node_modules/bugsnag-js/dist/bugsnag.min.js"></script>
+    <script type="text/javascript">
+      var ENDPOINT = decodeURIComponent(window.location.search.match(/ENDPOINT=(.+)/)[1])
+      var bugsnagClient = bugsnag({
+        apiKey: 'ABC',
+        endpoint: ENDPOINT
+      })
+    </script>
+  </head>
+  <body>
+    <pre id="bugsnag-test-should-run">YES</pre>
+    <pre id="bugsnag-test-state">PENDING</pre>
+    <script>
+      nevergoingtoexist_notinamillionyears()
+    </script>
+    <script>
+      setTimeout(function () {
+        var el = document.getElementById('bugsnag-test-state')
+        el.textContent = el.innerText = 'DONE'
+      }, 5000)
+    </script>
+  </body>
+</html>

@@ -34,6 +34,7 @@ GEM
     cucumber-expressions (5.0.15)
     cucumber-tag_expressions (1.1.1)
     cucumber-wire (0.0.1)
+    curb (0.9.4)
     diff-lcs (1.3)
     ffi (1.9.23)
     gherkin (5.0.0)
@@ -56,6 +57,7 @@ PLATFORMS
 DEPENDENCIES
   browserstack-local
   bugsnag-maze-runner!
+  curb
   selenium-webdriver (~> 3.11)
 
 BUNDLED WITH
