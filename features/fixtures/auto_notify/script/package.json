@@ -1,0 +1,8 @@
+{
+  "name": "bugsnag-js-fixtures-auto-notify-script",
+  "private": true,
+  "scripts": {
+    "build": "echo 'Done'"
+  },
+  "dependencies": {}
+}

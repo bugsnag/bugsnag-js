@@ -7,8 +7,7 @@
       var bugsnagClient = bugsnag({
         apiKey: 'ABC',
         endpoint: ENDPOINT,
-        collectUserIp: false,
-        user: { id: 'cjhc3k8wg0000zdojufo6nw6c' }
+        autoNotify: false
       })
     </script>
   </head>
@@ -16,7 +15,10 @@
     <pre id="bugsnag-test-should-run">YES</pre>
     <pre id="bugsnag-test-state">PENDING</pre>
     <script>
-      bugsnagClient.notify(new Error('ip redaction does work'))
+      throw new Error('this shoud not get through')
+    </script>
+    <script>
+      bugsnagClient.notify(new Error('auto notify does work'))
     </script>
     <script>
       setTimeout(function () {
