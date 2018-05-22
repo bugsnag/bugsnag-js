@@ -9,7 +9,6 @@ Scenario Outline: syntax errors
   Then I should receive 1 request
   And the request is a valid browser payload for the error reporting API
   And the exception matches the "unhandled_syntax" values for the current browser
-  # TODO: add stacktrace assertions to this type of error
     Examples:
       | type       |
       | script     |
