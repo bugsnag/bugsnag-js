@@ -4,5 +4,7 @@
   "scripts": {
     "build": "echo 'Done'"
   },
-  "dependencies": {}
+  "dependencies": {
+    "bluebird": "^3.5.1"
+  }
 }
