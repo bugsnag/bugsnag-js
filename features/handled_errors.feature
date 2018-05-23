@@ -18,6 +18,7 @@ Scenario Outline: calling notify() with Error
     | webpack4   |
     | browserify |
     | rollup     |
+    | typescript |
 
 Scenario Outline: calling notify() with Error within try/catch
   When I navigate to the URL "/handled/<type>/b.html"
@@ -35,6 +36,7 @@ Scenario Outline: calling notify() with Error within try/catch
     | webpack4   |
     | browserify |
     | rollup     |
+    | typescript |
 
 Scenario Outline: calling notify() with Error within Promise catch
   When I navigate to the URL "/handled/<type>/c.html"
@@ -53,3 +55,4 @@ Scenario Outline: calling notify() with Error within Promise catch
     | webpack4   |
     | browserify |
     | rollup     |
+    | typescript |
