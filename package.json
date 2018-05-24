@@ -25,7 +25,7 @@
     "postpublish": "./bin/cdn-upload",
     "test": "npm run build && npm run test:lint && npm run test:unit && npm run test:types && npm run test:integration && npm run test:e2e",
     "test:basic": "npm run test:lint && npm run test:unit && npm run test:types",
-    "test:unit": "nyc --reporter=lcov --report-dir coverage/node -- jasmine '!(node_modules|browser|e2e|examples|types|features)/**/*.test.js' && nyc check-coverage --report-dir coverage/node",
+    "test:unit": "nyc --reporter=lcov --report-dir coverage/node -- jasmine '!(node_modules|browser|examples|types|features)/**/*.test.js' && nyc check-coverage --report-dir coverage/node",
     "test:types": "jasmine 'types/**/*.test.js'",
     "test:integration": "npm run test:integration:browser && npm run test:integration:node",
     "test:integration:browser": "karma start browser/test/lib/karma.conf.js --single-run",
@@ -54,7 +54,6 @@
   "standard": {
     "ignore": [
       "dist",
-      "e2e/**/serve/**",
       "examples/typescript/app.js",
       "examples/js/app.js",
       "examples/sourcemaps/app.js",
@@ -77,7 +76,6 @@
     "babel-plugin-transform-es3-property-literals": "^6.22.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babelify": "^8.0.0",
-    "bluebird": "^3.5.1",
     "browser-pack-flat": "^3.0.3",
     "browserify": "^14.5.0",
     "browserify-istanbul": "^3.0.1",
@@ -101,7 +99,6 @@
     "proxyquire": "^1.8.0",
     "semver": "^5.4.1",
     "standard": "^10.0.3",
-    "tsify": "^3.0.3",
     "tslint": "^5.8.0",
     "typescript": "^2.6.1",
     "uglify-js": "^3.0.28",
