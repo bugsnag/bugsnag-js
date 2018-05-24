@@ -27,7 +27,7 @@ def driver_start
   caps['browserstack.console'] = 'errors'
   caps.merge! browsers[ENV['BROWSER']]
   Selenium::WebDriver.for :remote,
-    url: "http://#{ENV['BROWSERSTACK_USERNAME']}:#{ENV['BROWSERSTACK_ACCESS_KEY']}@hub.browserstack.com/wd/hub",
+    url: "http://#{ENV['BROWSER_STACK_USERNAME']}:#{ENV['BROWSER_STACK_ACCESS_KEY']}@hub.browserstack.com/wd/hub",
     desired_capabilities: caps
 end
 

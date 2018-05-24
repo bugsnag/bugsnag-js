@@ -15,8 +15,9 @@ script:
   - npm run test:e2e
 env:
   global:
-    - BROWSERSTACK_USERNAME: bugsnagplatforms1
-    - secure: "tt/Rk4trBHP2+776EQPmpInHXGWojZYGLpvm2KPjw6Wb+PzK+bJiVoox2PZ1tfKl834CxpPa8yJK26Bh1/qgxf0cNOC9cY2QyLJCIOCVAMPQ0jhNj4l9ouOe+MfA0cHpOLb91rKtRcwF6YSZ5sHVG3bF1Jk51Q8drMmTqj/GHYk="
+    - CC_TEST_REPORTER_ID: 6f5024bb1ebb518893991cf5d77e75e4819eaa6128fe21bf85ef3bf135cd49d2
+    - BROWSER_STACK_USERNAME: bugsnagplatforms1
+    - secure: "X29QA8LjTZL9RHnoiYlprpIbv264e//KjL3Q4A/vWZ8QbIRD2MY8w9wuIfQEYHLGa7kf1EAGPoH/Ka3raj7s5+J4hOeCeMC0ZWUWdAem35FE7zGm8wJrCKFK5GD9LF+1LRxK+gBfKfeaJkwcbjv7tl0DEW1JNC9PS4cpI0DRJzM="
   matrix:
     - BROWSER=ie_8
     - BROWSER=ie_9
@@ -38,3 +39,31 @@ addons:
     username: bugsnagplatforms1
     access_key:
      secure: "lB2aZc0HzuinyhSJyP98lzDJTbZsroEOJTrS/flnLLsHb/C096zjhwkWexHnfmNIPaY5SB2FF0G6zcnknlmsXg5TgxQiK7bdyJmkcAetGi+cSKnGaBq7GZXVhbWh++MRnddQDGV6jrSr7aqrWf85ncq3L4//9BTV6uAhDBWu2bo="
+
+stage: end to end tests
+
+jobs:
+  include:
+    - stage: linting and type validation
+      before_install:
+      install: npm install
+      script: npm run test:lint && npm run test:types
+      env: BROWSER=na
+    - stage: unit and integration tests
+      before_install:
+      before_script:
+        - npm run build
+        - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64   > ./bin/cc-test-reporter
+        - chmod +x ./bin/cc-test-reporter
+      install: npm install
+      script:
+        - npm run test:unit
+        - if [[ $BROWSER_STACK_ACCESS_KEY ]]; then npm run test:integration; fi
+      after_script:
+        - if [ $TRAVIS_TEST_RESULT == 0 ]; then ./bin/report-coverage; fi
+      env: BROWSER=na
+
+stages:
+  - linting and type validation
+  - unit and integration tests
+  - end to end tests
