@@ -1,0 +1,8 @@
+{
+  "name": "bugsnag-js-fixtures-release-stage-script",
+  "private": true,
+  "scripts": {
+    "build": "echo 'Done'"
+  },
+  "dependencies": {}
+}
