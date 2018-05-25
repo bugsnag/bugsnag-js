@@ -58,12 +58,12 @@ describe('plugin: unhandled rejection', () => {
             expect(report.severity).toBe('error')
             expect(report.unhandled).toBe(true)
             expect(report.exceptions[0].errorClass).toBe('AbortError')
-            expect(report.exceptions[0].message).toBe('Subscription failed - no active Service Worker')
+            expect(report.exceptions[0].message).toBe('Registration failed - missing applicationServerKey, and manifest empty or missing')
             expect(report.severityReason).toEqual({ type: 'unhandledPromiseRejection' })
             expect(report.metaData.promise['rejection reason']).toEqual({
               '[object DOMException]': {
                 name: 'AbortError',
-                message: 'Subscription failed - no active Service Worker',
+                message: 'Registration failed - missing applicationServerKey, and manifest empty or missing',
                 code: 20,
                 stack: undefined
               }

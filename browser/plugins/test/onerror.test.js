@@ -1,21 +1,24 @@
 // magical jasmine globals
 const { describe, it, expect, beforeEach } = global
 
-const plugin = require('../window-onerror')
+const plugin = require('../onerror')
+const getScope = require('../../scope')
 
 const Client = require('../../../base/client')
 const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
-describe('plugin: window onerror', () => {
-  it('should set a window.onerror event handler', () => {
+describe('plugin: scope onerror', () => {
+  const scope = getScope()
+
+  it('should set a scope.onerror event handler', () => {
     const client = new Client(VALID_NOTIFIER)
     client.configure({ apiKey: 'API_KEY_YEAH' })
     client.use(plugin)
-    expect(typeof window.onerror).toBe('function')
+    expect(typeof scope.onerror).toBe('function')
   })
 
-  describe('window.onerror function', () => {
-    beforeEach(() => { window.onerror = null })
+  describe('scope.onerror function', () => {
+    beforeEach(() => { scope.onerror = null })
 
     it('captures uncaught errors in timer callbacks', done => {
       const client = new Client(VALID_NOTIFIER)
@@ -52,7 +55,7 @@ describe('plugin: window onerror', () => {
 
       const el = document.createElement('BUTTON')
       el.onclick = () => { throw new Error('bad button l2') }
-      window.document.body.appendChild(el)
+      scope.document.body.appendChild(el)
 
       setTimeout(() => el.click(), 0)
       setTimeout(() => {
@@ -69,8 +72,8 @@ describe('plugin: window onerror', () => {
       }, 1)
     })
 
-    it('calls any previously registered window.onerror callback', done => {
-      window.onerror = () => done()
+    it('calls any previously registered scope.onerror callback', done => {
+      scope.onerror = () => done()
 
       const client = new Client(VALID_NOTIFIER)
       const payloads = []
@@ -84,7 +87,7 @@ describe('plugin: window onerror', () => {
       }, 0)
     })
 
-    it('handles single argument usage of window.onerror', () => {
+    it('handles single argument usage of scope.onerror', () => {
       const client = new Client(VALID_NOTIFIER)
       const payloads = []
       client.configure({ apiKey: 'API_KEY_YEAH' })
@@ -100,7 +103,7 @@ describe('plugin: window onerror', () => {
         : event.type = 'error'
 
       event.detail = 'something bad happened'
-      window.onerror(event)
+      scope.onerror(event)
 
       // console.log(JSON.stringify(payloads[0].events[0].stacktrace, null, 2))
       expect(payloads.length).toBe(1)
@@ -112,7 +115,7 @@ describe('plugin: window onerror', () => {
       expect(report.severityReason).toEqual({ type: 'unhandledException' })
     })
 
-    if ('addEventListener' in window) {
+    if ('addEventListener' in scope) {
       it('captures uncaught errors in DOM (level 3) event handlers', done => {
         const client = new Client(VALID_NOTIFIER)
         const payloads = []
@@ -122,7 +125,7 @@ describe('plugin: window onerror', () => {
 
         const el = document.createElement('BUTTON')
         el.addEventListener('click', () => { throw new Error('bad button l3') })
-        window.document.body.appendChild(el)
+        scope.document.body.appendChild(el)
 
         setTimeout(() => el.click(), 0)
         setTimeout(() => {
@@ -140,7 +143,7 @@ describe('plugin: window onerror', () => {
       })
     }
 
-    if ('requestAnimationFrame' in window) {
+    if ('requestAnimationFrame' in scope) {
       it('captures uncaught errors in requestAnimationFrame callbacks', done => {
         const client = new Client(VALID_NOTIFIER)
         const payloads = []
@@ -148,11 +151,11 @@ describe('plugin: window onerror', () => {
         client.use(plugin)
         client.transport({ sendReport: (logger, config, payload) => payloads.push(payload) })
 
-        window.requestAnimationFrame(() => {
+        scope.requestAnimationFrame(() => {
           throw new Error('ERR_RAF')
         })
 
-        window.requestAnimationFrame(() => {
+        scope.requestAnimationFrame(() => {
           try {
             expect(payloads.length).toBe(1)
             const report = payloads[0].events[0].toJSON()
@@ -182,7 +185,7 @@ describe('plugin: window onerror', () => {
         try {
           expect(payloads.length).toBe(1)
           const report = payloads[0].events[0].toJSON()
-          expect(report.exceptions[0].errorClass).toBe('window.onerror')
+          expect(report.exceptions[0].errorClass).toBe('scope.onerror')
           expect(report.exceptions[0].message).toMatch(
             /^hello|uncaught hello|exception thrown and not caught|uncaught exception: hello$/i
           )
