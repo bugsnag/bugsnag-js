@@ -1,3 +1,4 @@
+const getScope = require('../scope')
 const makePayload = require('./lib/payload')
 const jsonStringify = require('@bugsnag/safe-json-stringify')
 const { isoDate } = require('../../base/lib/es-utils')
@@ -5,10 +6,11 @@ const { isoDate } = require('../../base/lib/es-utils')
 module.exports = {
   name: 'XMLHttpRequest',
   sendReport: (logger, config, report, cb = () => {}) => {
+    const scope = getScope()
     const url = config.endpoint
-    const req = new window.XMLHttpRequest()
+    const req = new scope.XMLHttpRequest()
     req.onreadystatechange = function () {
-      if (req.readyState === window.XMLHttpRequest.DONE) cb(null, req.responseText)
+      if (req.readyState === scope.XMLHttpRequest.DONE) cb(null, req.responseText)
     }
     req.open('POST', url)
     req.setRequestHeader('Content-Type', 'application/json')
@@ -22,10 +24,11 @@ module.exports = {
     }
   },
   sendSession: (logger, config, session, cb = () => {}) => {
+    const scope = getScope()
     const url = config.sessionEndpoint
-    const req = new window.XMLHttpRequest()
+    const req = new scope.XMLHttpRequest()
     req.onreadystatechange = function () {
-      if (req.readyState === window.XMLHttpRequest.DONE) cb(null, req.responseText)
+      if (req.readyState === scope.XMLHttpRequest.DONE) cb(null, req.responseText)
     }
     req.open('POST', url)
     req.setRequestHeader('Content-Type', 'application/json')

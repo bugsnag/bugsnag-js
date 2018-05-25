@@ -1,10 +1,12 @@
 const { schema } = require('../base/config')
 const { map } = require('../base/lib/es-utils')
+const getScope = require('./scope')
 
 module.exports = {
   releaseStage: {
     defaultValue: () => {
-      if (/^localhost(:\d+)?$/.test(window.location.host)) return 'development'
+      const scope = getScope()
+      if (/^localhost(:\d+)?$/.test(scope.location.host)) return 'development'
       return 'production'
     },
     message: '(string) releaseStage should be set',

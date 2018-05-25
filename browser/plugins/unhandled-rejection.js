@@ -1,13 +1,15 @@
+const getScope = require('../scope')
 const ErrorStackParser = require('error-stack-parser')
 const hasStack = require('../../base/lib/has-stack')
 const { reduce } = require('../../base/lib/es-utils')
 const isError = require('iserror')
 
 /*
- * Automatically notifies Bugsnag when window.onunhandledrejection is called
+ * Automatically notifies Bugsnag when scope.onunhandledrejection is called
  */
 let _listener
 exports.init = (client) => {
+  const scope = getScope()
   const listener = event => {
     let error = event.reason
     let isBluebird = false
@@ -45,10 +47,10 @@ exports.init = (client) => {
 
     client.notify(report)
   }
-  if ('addEventListener' in window) {
-    window.addEventListener('unhandledrejection', listener)
+  if ('addEventListener' in scope) {
+    scope.addEventListener('unhandledrejection', listener)
   } else {
-    window.onunhandledrejection = (reason, promise) => {
+    scope.onunhandledrejection = (reason, promise) => {
       listener({ detail: { reason, promise } })
     }
   }
@@ -58,10 +60,11 @@ exports.init = (client) => {
 if (process.env.NODE_ENV !== 'production') {
   exports.destroy = () => {
     if (_listener) {
-      if ('addEventListener' in window) {
-        window.removeEventListener('unhandledrejection', _listener)
+      const scope = getScope()
+      if ('addEventListener' in scope) {
+        scope.removeEventListener('unhandledrejection', _listener)
       } else {
-        window.onunhandledrejection = null
+        scope.onunhandledrejection = null
       }
     }
     _listener = null

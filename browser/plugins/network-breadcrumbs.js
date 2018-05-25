@@ -1,3 +1,4 @@
+const getScope = require('../scope')
 const BREADCRUMB_TYPE = 'request'
 
 // keys to safely store metadata on the request object
@@ -34,11 +35,12 @@ if (process.env.NODE_ENV !== 'production') {
 
 // XMLHttpRequest monkey patch
 const monkeyPatchXMLHttpRequest = () => {
-  if (!('addEventListener' in window.XMLHttpRequest.prototype)) return
-  const nativeOpen = window.XMLHttpRequest.prototype.open
+  const scope = getScope()
+  if (!('XMLHttpRequest' in scope) || !('addEventListener' in scope.XMLHttpRequest.prototype)) return
+  const nativeOpen = scope.XMLHttpRequest.prototype.open
 
   // override native open()
-  window.XMLHttpRequest.prototype.open = function open (method, url) {
+  scope.XMLHttpRequest.prototype.open = function open (method, url) {
     // store url and HTTP method for later
     this[REQUEST_URL_KEY] = url
     this[REQUEST_METHOD_KEY] = method
@@ -62,7 +64,7 @@ const monkeyPatchXMLHttpRequest = () => {
 
   if (process.env.NODE_ENV !== 'production') {
     restoreFunctions.push(() => {
-      window.XMLHttpRequest.prototype.open = nativeOpen
+      scope.XMLHttpRequest.prototype.open = nativeOpen
     })
   }
 }
@@ -101,12 +103,13 @@ function handleXHRError () {
   }, BREADCRUMB_TYPE)
 }
 
-// window.fetch monkey patch
+// scope.fetch monkey patch
 const monkeyPatchFetch = () => {
-  if (!('fetch' in window)) return
+  const scope = getScope()
+  if (!('fetch' in scope)) return
 
-  const oldFetch = window.fetch
-  window.fetch = function fetch (...args) {
+  const oldFetch = scope.fetch
+  scope.fetch = function fetch (...args) {
     let [url, options] = args
     let method = 'GET'
     if (options && options.method) {
@@ -128,7 +131,7 @@ const monkeyPatchFetch = () => {
 
   if (process.env.NODE_ENV !== 'production') {
     restoreFunctions.push(() => {
-      window.fetch = oldFetch
+      scope.fetch = oldFetch
     })
   }
 }

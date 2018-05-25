@@ -7,11 +7,13 @@ const Report = require('../base/report')
 const Session = require('../base/session')
 const Breadcrumb = require('../base/breadcrumb')
 const { map, reduce } = require('../base/lib/es-utils')
+const getScope = require('./scope')
+const scope = getScope()
 
 // extend the base config schema with some browser-specific options
 const schema = { ...require('../base/config').schema, ...require('./config') }
 
-const pluginWindowOnerror = require('./plugins/window-onerror')
+const pluginOnerror = require('./plugins/onerror')
 const pluginUnhandledRejection = require('./plugins/unhandled-rejection')
 const pluginDevice = require('./plugins/device')
 const pluginContext = require('./plugins/context')
@@ -27,7 +29,7 @@ const pluginIp = require('./plugins/ip')
 const pluginStripQueryString = require('./plugins/strip-query-string')
 
 const plugins = [
-  pluginWindowOnerror,
+  pluginOnerror,
   pluginUnhandledRejection,
   pluginDevice,
   pluginContext,
@@ -44,6 +46,7 @@ const plugins = [
 ]
 
 const transports = {
+  'fetch': require('./transports/fetch-request'),
   'XDomainRequest': require('./transports/x-domain-request'),
   'XMLHttpRequest': require('./transports/xml-http-request')
 }
@@ -66,7 +69,15 @@ module.exports = (opts, userPlugins = []) => {
   const bugsnag = new Client({ name, version, url }, finalSchema)
 
   // set transport based on browser capability (IE 8+9 have an XDomainRequest object)
-  bugsnag.transport(window.XDomainRequest ? transports.XDomainRequest : transports.XMLHttpRequest)
+  let transport = 'XMLHttpRequest'
+
+  if (scope.fetch) {
+    transport = 'fetch'
+  } else if (scope.XDomainRequest) {
+    transport = 'XDomainRequest'
+  }
+
+  bugsnag.transport(transports[transport])
 
   try {
     // configure with user supplied options
@@ -84,7 +95,9 @@ module.exports = (opts, userPlugins = []) => {
   bugsnag.use(pluginDevice)
   bugsnag.use(pluginContext)
   bugsnag.use(pluginRequest)
-  bugsnag.use(pluginInlineScriptContent)
+  if (scope.document) {
+    bugsnag.use(pluginInlineScriptContent)
+  }
   bugsnag.use(pluginThrottle)
   bugsnag.use(pluginSessions)
   bugsnag.use(pluginIp)
@@ -93,15 +106,15 @@ module.exports = (opts, userPlugins = []) => {
   // optional browser-specific plugins
 
   if (bugsnag.config.autoNotify !== false) {
-    bugsnag.use(pluginWindowOnerror)
+    bugsnag.use(pluginOnerror)
     bugsnag.use(pluginUnhandledRejection)
   }
 
-  if (inferBreadcrumbSetting(bugsnag.config, 'navigationBreadcrumbsEnabled')) {
+  if (scope.document && inferBreadcrumbSetting(bugsnag.config, 'navigationBreadcrumbsEnabled')) {
     bugsnag.use(pluginNavigationBreadcrumbs)
   }
 
-  if (inferBreadcrumbSetting(bugsnag.config, 'interactionBreadcrumbsEnabled')) {
+  if (scope.document && inferBreadcrumbSetting(bugsnag.config, 'interactionBreadcrumbsEnabled')) {
     bugsnag.use(pluginInteractionBreadcrumbs)
   }
 
