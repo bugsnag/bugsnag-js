@@ -8,7 +8,6 @@ const Session = require('../base/session')
 const Breadcrumb = require('../base/breadcrumb')
 const { map, reduce } = require('../base/lib/es-utils')
 const getScope = require('./scope')
-const scope = getScope()
 
 // extend the base config schema with some browser-specific options
 const schema = { ...require('../base/config').schema, ...require('./config') }
@@ -52,6 +51,7 @@ const transports = {
 }
 
 module.exports = (opts, userPlugins = []) => {
+  const scope = getScope()
   // handle very simple use case where user supplies just the api key as a string
   if (typeof opts === 'string') opts = { apiKey: opts }
 
