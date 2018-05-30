@@ -62,3 +62,30 @@ Then(/^the request is a valid browser payload for the error reporting API$/) do
     And each element in payload field "events" has "exceptions"
   }
 end
+
+Then(/^the request is a valid browser payload for the session tracking API$/) do
+  if !/^ie_(8|9|10)$/.match(ENV['BROWSER'])
+    steps %Q{
+      Then the "Bugsnag-API-Key" header is not null
+      And the "Content-Type" header equals one of:
+        | application/json |
+        | application/json; charset=UTF-8 |
+      And the "Bugsnag-Payload-Version" header equals "1.0"
+      And the "Bugsnag-Sent-At" header is a timestamp
+    }
+  else
+    steps %Q{
+      Then the "apiKey" query parameter is not null
+      And the "payloadVersion" query parameter equals "1.0"
+      And the "sentAt" query parameter is a timestamp
+    }
+  end
+  steps %Q{
+    And the payload field "app" is not null
+    And the payload field "device" is not null
+    And the payload field "notifier.name" is not null
+    And the payload field "notifier.url" is not null
+    And the payload field "notifier.version" is not null
+    And the payload has a valid sessions array
+  }
+end
