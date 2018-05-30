@@ -12,13 +12,13 @@ exports.init = (client) => {
   window.addEventListener('pageshow', drop('Page shown'), true)
   window.addEventListener('load', drop('Page loaded'), true)
   window.document.addEventListener('DOMContentLoaded', drop('DOMContentLoaded'), true)
-  // some browsers like to emit popstate when the page loads, so only add the postate listener after that
+  // some browsers like to emit popstate when the page loads, so only add the popstate listener after that
   window.addEventListener('load', () => window.addEventListener('popstate', drop('Navigated back'), true))
 
   // hashchange has some metaData that we care about
   window.addEventListener('hashchange', event => {
     const metaData = event.oldURL
-      ? { from: relativeLocation(event.oldURL), to: relativeLocation(event.newURL), state: window.history.state }
+      ? { from: relativeLocation(event.oldURL), to: relativeLocation(event.newURL), state: getCurrentState() }
       : { to: relativeLocation(window.location.href) }
     client.leaveBreadcrumb('Hash changed', metaData, 'navigation')
   }, true)
@@ -56,7 +56,7 @@ const relativeLocation = url => {
 
 const stateChangeToMetaData = (state, title, url) => {
   const currentPath = relativeLocation(window.location.href)
-  return { title, state, prevState: window.history.state, to: url || currentPath, from: currentPath }
+  return { title, state, prevState: getCurrentState(), to: url || currentPath, from: currentPath }
 }
 
 const wrapHistoryFn = (client, target, fn) => {
@@ -67,7 +67,15 @@ const wrapHistoryFn = (client, target, fn) => {
     if (typeof client.refresh === 'function') client.refresh()
     // if the client is operating in session-mode, a new route should trigger a new session
     if (client.session) client.startSession()
-    orig.call(target, state, title, url)
+    // Internet Explorer will convert `undefined` to a string when passed, causing an unintended redirect
+    // to '/undefined'. therefore we only pass the url if it's not undefined.
+    orig.apply(target, [ state, title ].concat(url !== undefined ? url : []))
   }
   target[fn]._restore = () => { target[fn] = orig }
+}
+
+const getCurrentState = () => {
+  try {
+    return window.history.state
+  } catch (e) {}
 }

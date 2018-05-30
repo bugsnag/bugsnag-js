@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="/node_modules/bugsnag-js/dist/bugsnag.min.js"></script>
+    <script type="text/javascript">
+      var ENDPOINT = decodeURIComponent(window.location.search.match(/ENDPOINT=(.+)/)[1])
+      var bugsnagClient = bugsnag({
+        apiKey: 'ABC',
+        endpoint: ENDPOINT
+      })
+    </script>
+  </head>
+  <body>
+    <pre id="bugsnag-test-should-run">PENDING</pre>
+    <script>
+      var el = document.getElementById('bugsnag-test-should-run')
+      el.textContent = el.innerText = typeof Promise !== 'undefined'
+        ? 'YES'
+        : 'NO'
+    </script>
+    <pre id="bugsnag-test-state">PENDING</pre>
+    <script>
+      go()
+        .then(function () {})
+        .catch(function (e) {
+          bugsnagClient.notify(e, {
+            beforeSend: function () {
+              setTimeout(function () {
+                var el = document.getElementById('bugsnag-test-state')
+                el.textContent = el.innerText = 'DONE'
+              }, 5000)
+            }
+          })
+        })
+
+      function go() {
+        return Promise.reject(new Error('bad things'))
+      }
+    </script>
+  </body>
+</html>

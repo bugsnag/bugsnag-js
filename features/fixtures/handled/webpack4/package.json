@@ -1,0 +1,12 @@
+{
+  "name": "bugsnag-js-fixtures-handled-webpack4",
+  "private": true,
+  "scripts": {
+    "build": "webpack"
+  },
+  "dependencies": {
+    "es3ify-webpack-plugin": "0.0.1",
+    "webpack": "^4.8.1",
+    "webpack-cli": "^2.1.3"
+  }
+}

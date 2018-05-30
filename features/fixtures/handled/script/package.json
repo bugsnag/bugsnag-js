@@ -1,0 +1,8 @@
+{
+  "name": "bugsnag-js-fixtures-handled-script",
+  "private": true,
+  "scripts": {
+    "build": "echo 'Done'"
+  },
+  "dependencies": {}
+}
