@@ -4,7 +4,7 @@ const { isoDate } = require('../../base/lib/es-utils')
 
 module.exports = {
   sendReport: (logger, config, report, cb = () => {}) => {
-    const url = getApiUrl(config, 'notify')
+    const url = getApiUrl(config, 'notify', '4.0')
     const req = new window.XDomainRequest()
     req.onload = function () {
       cb(null, req.responseText)
@@ -19,7 +19,7 @@ module.exports = {
     }, 0)
   },
   sendSession: (logger, config, session, cb = () => {}) => {
-    const url = getApiUrl(config, 'sessions')
+    const url = getApiUrl(config, 'sessions', '1.0')
     const req = new window.XDomainRequest()
     req.onload = function () {
       cb(null, req.responseText)
@@ -35,8 +35,8 @@ module.exports = {
   }
 }
 
-const getApiUrl = (config, endpoint) =>
-  `${matchPageProtocol(config.endpoints[endpoint], window.location.protocol)}?apiKey=${encodeURIComponent(config.apiKey)}&payloadVersion=1.0&sentAt=${encodeURIComponent(isoDate())}`
+const getApiUrl = (config, endpoint, version) =>
+  `${matchPageProtocol(config.endpoints[endpoint], window.location.protocol)}?apiKey=${encodeURIComponent(config.apiKey)}&payloadVersion=${version}&sentAt=${encodeURIComponent(isoDate())}`
 
 const matchPageProtocol = module.exports._matchPageProtocol = (endpoint, pageProtocol) =>
   pageProtocol === 'http:'
