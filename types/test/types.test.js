@@ -17,7 +17,7 @@ const exampleValue = (k) => {
     case 'appVersion': return '1.2.3'
     case 'notifyReleaseStages': return []
     default:
-      return schema[k].defaultValue()
+      return schema[k].defaultValue(null, {})
   }
 }
 

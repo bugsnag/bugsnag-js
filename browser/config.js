@@ -1,5 +1,6 @@
 const { schema } = require('../base/config')
 const { map } = require('../base/lib/es-utils')
+const { stringWithLength } = require('../base/lib/validators')
 
 module.exports = {
   releaseStage: {
@@ -7,12 +8,12 @@ module.exports = {
       if (/^localhost(:\d+)?$/.test(window.location.host)) return 'development'
       return 'production'
     },
-    message: '(string) releaseStage should be set',
-    validate: value => typeof value === 'string' && value.length
+    message: 'should be set',
+    validate: stringWithLength
   },
   collectUserIp: {
     defaultValue: () => true,
-    message: '(boolean) collectUserIp should true/false',
+    message: 'should be true|false',
     validate: value => value === true || value === false
   },
   logger: {

@@ -1,16 +1,16 @@
-const { filter, reduce, keys, isArray } = require('./lib/es-utils')
-const positiveIntIfDefined = require('./lib/positive-int-check')
+const { filter, reduce, keys, isArray, includes } = require('./lib/es-utils')
+const { positiveIntIfDefined, stringWithLength } = require('./lib/validators')
 
 module.exports.schema = {
   apiKey: {
     defaultValue: () => null,
     message: 'is required',
-    validate: value => typeof value === 'string' && value.length
+    validate: stringWithLength
   },
   appVersion: {
     defaultValue: () => null,
     message: 'should be a string',
-    validate: value => value === null || (typeof value === 'string' && value.length)
+    validate: value => value === null || stringWithLength(value)
   },
   autoNotify: {
     defaultValue: () => true,
@@ -22,18 +22,26 @@ module.exports.schema = {
     message: 'should be a function or array of functions',
     validate: value => typeof value === 'function' || (isArray(value) && filter(value, f => typeof f === 'function').length === value.length)
   },
-  endpoint: {
-    defaultValue: () => 'https://notify.bugsnag.com',
-    message: 'should be a URL',
-    validate: () => true
-  },
-  sessionEndpoint: {
-    defaultValue: () => 'https://sessions.bugsnag.com',
-    message: 'should be a URL',
-    validate: () => true
+  endpoints: {
+    defaultValue: () => ({
+      notify: 'https://notify.bugsnag.com',
+      sessions: 'https://sessions.bugsnag.com'
+    }),
+    message: 'should be an object containing endpoint URLs { notify, sessions }. sessions is optional if autoCaptureSessions=false',
+    validate: (val, obj) =>
+      // first, ensure it's an object
+      (val && typeof val === 'object') &&
+      (
+        // endpoints.notify must always be set
+        stringWithLength(val.notify) &&
+        // endpoints.sessions must be set unless session tracking is explicitly off
+        (obj.autoCaptureSessions === false || stringWithLength(val.sessions))
+      ) &&
+      // ensure no keys other than notify/session are set on endpoints object
+      filter(keys(val), k => !includes([ 'notify', 'sessions' ], k)).length === 0
   },
   autoCaptureSessions: {
-    defaultValue: () => false,
+    defaultValue: (val, opts) => opts.endpoints === undefined || (!!opts.endpoints && !!opts.endpoints.sessions),
     message: 'should be true|false',
     validate: val => val === true || val === false
   },
@@ -81,17 +89,17 @@ module.exports.schema = {
 }
 
 module.exports.mergeDefaults = (opts, schema) => {
-  if (!opts || !schema) throw new Error('schema.mergeDefaults(opts, schema): opts and schema objects are required')
+  if (!opts || !schema) throw new Error('opts and schema objects are required')
   return reduce(keys(schema), (accum, key) => {
-    accum[key] = opts[key] !== undefined ? opts[key] : schema[key].defaultValue()
+    accum[key] = opts[key] !== undefined ? opts[key] : schema[key].defaultValue(opts[key], opts)
     return accum
   }, {})
 }
 
 module.exports.validate = (opts, schema) => {
-  if (!opts || !schema) throw new Error('schema.mergeDefaults(opts, schema): opts and schema objects are required')
+  if (!opts || !schema) throw new Error('opts and schema objects are required')
   const errors = reduce(keys(schema), (accum, key) => {
-    if (schema[key].validate(opts[key])) return accum
+    if (schema[key].validate(opts[key], opts)) return accum
     return accum.concat({ key, message: schema[key].message, value: opts[key] })
   }, [])
   return { valid: !errors.length, errors }

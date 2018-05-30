@@ -1,4 +1,4 @@
-const positiveIntIfDefined = require('../lib/positive-int-check')
+const { positiveIntIfDefined } = require('../lib/validators')
 
 /*
  * Throttles and dedupes error reports

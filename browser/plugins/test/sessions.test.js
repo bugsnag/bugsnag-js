@@ -79,7 +79,7 @@ describe('plugin: sessions', () => {
     c.startSession()
   })
 
-  it('doesnt’t send when releaseStage is not in notifyReleaseStages', (done) => {
+  it('doesn’t send when releaseStage is not in notifyReleaseStages', (done) => {
     const c = new Client(VALID_NOTIFIER)
     c.configure({ apiKey: 'API_KEY', releaseStage: 'foo', notifyReleaseStages: [ 'baz' ] })
     c.use(plugin)
@@ -90,5 +90,28 @@ describe('plugin: sessions', () => {
     })
     c.startSession()
     setTimeout(done, 150)
+  })
+
+  it('logs a warning when no session endpoint is set', (done) => {
+    const c = new Client(VALID_NOTIFIER)
+    c.configure({
+      apiKey: 'API_KEY',
+      releaseStage: 'foo',
+      endpoints: { notify: '/foo' },
+      autoCaptureSessions: false
+    })
+    c.use(plugin)
+    c.logger({
+      warn: msg => {
+        expect(msg).toMatch(/session not sent/i)
+        done()
+      }
+    })
+    c.transport({
+      sendSession: (logger, config, session, cb) => {
+        expect(true).toBe(false)
+      }
+    })
+    c.startSession()
   })
 })

@@ -9,6 +9,7 @@ interface IConfig {
   appVersion?: string;
   endpoint?: string;
   sessionEndpoint?: string;
+  endpoints?: { notify: string, sessions: string };
   autoCaptureSessions?: boolean;
   notifyReleaseStages?: string[];
   releaseStage?: string;
@@ -28,8 +29,7 @@ interface IFinalConfig extends IConfig {
   beforeSend: BeforeSend[];
   autoNotify: boolean;
   autoBreadcrumbs: boolean;
-  endpoint: string;
-  sessionEndpoint: string;
+  endpoints: { notify: string, sessions: string };
   autoCaptureSessions: boolean;
   notifyReleaseStages: string[];
   releaseStage: string;

@@ -53,7 +53,7 @@ describe('base/config', () => {
   describe('schema', () => {
     it('has the required properties { validate(), defaultValue(), message }', () => {
       Object.keys(config.schema).forEach(k => {
-        config.schema[k].defaultValue()
+        config.schema[k].defaultValue(undefined, {})
         config.schema[k].validate()
         config.schema[k].validate(-1)
         config.schema[k].validate('stringy stringerson')

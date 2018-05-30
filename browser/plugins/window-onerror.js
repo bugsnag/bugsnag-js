@@ -7,7 +7,7 @@ module.exports = {
     const onerror = (messageOrEvent, url, lineNo, charNo, error) => {
       // Ignore errors with no info due to CORS settings
       if (lineNo === 0 && /Script error\.?/.test(messageOrEvent)) {
-        client._logger.warn('Ignoring cross-domain or eval script error. See https://docs.bugsnag.com/platforms/browsers/faq/#3-cross-origin-script-errors')
+        client._logger.warn('Ignoring cross-domain or eval script error. See docs: https://tinyurl.com/y94fq5zm')
         return
       }
 
