@@ -2,6 +2,39 @@
 
 <!-- {entry_placeholder} -->
 
+## 4.7.0 (2018-05-31)
+
+**Note**: this release alters the behaviour of the notifier to track sessions automatically.
+
+As part of this change, the way in which URLs are configured has been updated:
+
+```diff
+- endpoint: 'https://bugsnag-notify.example.com',
+- sessionEndpoint: 'https://bugsnag-sessions.example.com',
++ endpoints: {
++  notify: 'https://bugsnag-notify.example.com',
++  sessions: 'https://bugsnag-sessions.example.com'
++ }
+```
+
+`endpoints` and `sessionEndpoints` are now deprecated but still supported. Note that session tracking
+will be disabled if the notify endpoint is configured but the sessions endpoint is not – this is to
+avoid inadvertently sending session payloads to the wrong server.
+
+### Added
+- A new end-to-end/black box test suite has been added (#351)
+
+### Changed
+- `autoCaptureSessions` default value was `false` and is now true (#341)
+
+### Deprecated
+- `endpoint` and `sessionEndpoints` have been deprecated and combined into a single new option: `endpoints` (#341)
+
+### Removed
+- The old `e2e` test suite has been removed (#351)
+
+
+
 ## 4.6.3 (2018-05-10)
 
 ### Fixed
