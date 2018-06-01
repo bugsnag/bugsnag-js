@@ -82,7 +82,6 @@ Scenario Outline: parsing stacks correctly with "@" in filename
   And I wait for 5 seconds
   Then I should receive 1 request
   And the request is a valid browser payload for the error reporting API
-  And the exception "errorClass" equals "Error"
   And the exception "message" equals "at in filename"
   And the "file" of stack frame 0 ends with "unhandled/script/@dist/g.js"
     Examples:
