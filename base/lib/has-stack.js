@@ -2,4 +2,5 @@
 module.exports = err =>
   !!err &&
   (!!err.stack || !!err.stacktrace || !!err['opera#sourceloc']) &&
-  typeof (err.stack || err.stacktrace || err['opera#sourceloc']) === 'string'
+  typeof (err.stack || err.stacktrace || err['opera#sourceloc']) === 'string' &&
+  err.stack !== `${err.name}: ${err.message}`
