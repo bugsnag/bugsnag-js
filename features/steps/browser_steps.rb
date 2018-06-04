@@ -31,6 +31,9 @@ When("the exception matches the {string} values for the current browser") do |fi
   if err['columnNumber']
     step("the \"columnNumber\" of stack frame 0 equals #{err['columnNumber']}")
   end
+  if err['file']
+    step("the \"file\" of stack frame 0 ends with \"#{err['file']}\"")
+  end
 end
 
 Then(/^the request is a valid browser payload for the error reporting API$/) do
