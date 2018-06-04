@@ -2,6 +2,15 @@
 
 <!-- {entry_placeholder} -->
 
+## 4.7.1 (2018-06-04)
+
+This release fixes a couple of bugs with stacktrace parsing.
+
+### Fixed
+- Incorrect parsing of stacktraces for errors in Chrome that have no stackframes (#355)
+- Incorrect parsing of stacktraces for errors in Firefox/Safari that have "@" in the URL path (#354) 
+
+
 ## 4.7.0 (2018-05-31)
 
 **Note**: this release alters the behaviour of the notifier to track sessions automatically.
