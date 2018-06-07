@@ -1,0 +1,8 @@
+{
+  "name": "bugsnag-js-fixtures-csp-script",
+  "private": true,
+  "scripts": {
+    "build": "echo 'Done'"
+  },
+  "dependencies": {}
+}
