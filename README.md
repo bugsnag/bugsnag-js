@@ -2,7 +2,6 @@
 ![11.03kB](https://img.shields.io/badge/size-11.03kB-green.svg)
 [![Documentation](https://img.shields.io/badge/docs-v4-green.svg)](https://docs.bugsnag.com/platforms/browsers/js)
 [![Build status](https://travis-ci.org/bugsnag/bugsnag-js.svg?branch=master)](https://travis-ci.org/bugsnag/bugsnag-js)
-[![BrowserStack Status](https://www.browserstack.com/automate/badge.svg?badge_key=VkNhNGlWRTV6c1Z1VXByYmxFTCtwbUd4M1p5cUI3KzFWRTJvaWk3WFZBTT0tLTBNZjFuM2ZJbW0vUDBPZ1pMQ3ZCd2c9PQ==--003c472323b43561f74fdbca9f732de0f609c74c)](https://www.browserstack.com/automate/public-build/VkNhNGlWRTV6c1Z1VXByYmxFTCtwbUd4M1p5cUI3KzFWRTJvaWk3WFZBTT0tLTBNZjFuM2ZJbW0vUDBPZ1pMQ3ZCd2c9PQ==--003c472323b43561f74fdbca9f732de0f609c74c)
 [![NPM](https://img.shields.io/npm/v/bugsnag-js.svg)](https://npmjs.org/package/bugsnag-js)
 
 [![NPM](https://nodei.co/npm/bugsnag-js.png?compact=true)](https://npmjs.org/package/bugsnag-js)
