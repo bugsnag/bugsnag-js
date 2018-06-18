@@ -1,3 +1,5 @@
+include Test::Unit::Assertions
+
 When("I navigate to the URL {string}") do |path|
   $driver.navigate.to get_test_url path
 end
@@ -15,8 +17,13 @@ When("I let the test page run for up to {int} seconds") do |n|
   wait = Selenium::WebDriver::Wait.new(timeout: n)
   wait.until {
     $driver.find_element(id: 'bugsnag-test-state') &&
-    $driver.find_element(id: 'bugsnag-test-state').text == 'DONE'
+    (
+      $driver.find_element(id: 'bugsnag-test-state').text == 'DONE' ||
+      $driver.find_element(id: 'bugsnag-test-state').text == 'ERROR'
+    )
   }
+  txt = $driver.find_element(id: 'bugsnag-test-state').text
+  assert_equal('DONE', txt, "Expected #bugsnag-test-state text to be 'DONE'. It was '#{txt}'.")
 end
 
 When("the exception matches the {string} values for the current browser") do |fixture|
