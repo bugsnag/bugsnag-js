@@ -2,6 +2,12 @@
 
 <!-- {entry_placeholder} -->
 
+## 4.7.2 (2018-06-18)
+
+### Fixed
+- Workaround for iOS9 Safari CSP issue which caused bugsnag-js to throw an error (#358, #357)
+
+
 ## 4.7.1 (2018-06-04)
 
 This release fixes a couple of bugs with stacktrace parsing.
