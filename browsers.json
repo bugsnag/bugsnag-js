@@ -69,13 +69,6 @@
     "os": "OS X",
     "os_version": "high sierra"
   },
-  "bs_iphone": {
-    "base": "BrowserStack",
-    "browser": "iphone",
-    "device": "iPhone 4S (6.0)",
-    "os": "ios",
-    "os_version": "6.0"
-  },
   "bs_android": {
     "base": "BrowserStack",
     "browser": "Android Browser",
