@@ -185,8 +185,7 @@ class BugsnagClient {
       this.leaveBreadcrumb(report.errorClass, {
         errorClass: report.errorClass,
         errorMessage: report.errorMessage,
-        severity: report.severity,
-        stacktrace: report.stacktrace
+        severity: report.severity
       }, 'error')
     }
 
