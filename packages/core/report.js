@@ -99,7 +99,7 @@ class BugsnagReport {
           errorClass: this.errorClass,
           message: this.errorMessage,
           stacktrace: this.stacktrace,
-          type: 'browserjs'
+          type: process.env.IS_BROWSER ? 'browserjs' : 'nodejs'
         }
       ],
       severity: this.severity,
