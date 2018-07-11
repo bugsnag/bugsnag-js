@@ -1,0 +1,6 @@
+node_modules
+lerna-debug.log
+coverage
+.nyc_output
+dist
+.DS_Store

@@ -1,0 +1,29 @@
+import Breadcrumb from "./breadcrumb";
+import * as common from "./common";
+import Report from "./report";
+import Session from "./session";
+
+declare class Client {
+  public app: object;
+  public device: object;
+  public context: string | void;
+  public config: common.IFinalConfig;
+  public beforeSession: common.BeforeSession[];
+  public user: object;
+  public metaData: object;
+
+  public BugsnagReport: typeof Report;
+  public BugsnagBreadcrumb: typeof Breadcrumb;
+  public BugsnagSession: typeof Session;
+
+  public use(plugin: common.IPlugin): any;
+  public configure(opts: common.IConfig): Client;
+  public delivery(delivery: common.IDelivery): Client;
+  public logger(logger: common.ILogger): Client;
+  public sessionDelegate(sessionDelegate: common.ISessionDelegate): Client;
+  public notify(error: common.NotifiableError, opts?: common.INotifyOpts): boolean;
+  public leaveBreadcrumb(name: string, metaData?: any, type?: string, timestamp?: string): Client;
+  public startSession(): Client;
+}
+
+export default Client;

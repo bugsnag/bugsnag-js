@@ -1,0 +1,5 @@
+bugsnag-browser-*.tgz
+browserstack.err
+local.log
+maze_output
+types/fixtures/*

@@ -1,0 +1,11 @@
+#!/usr/bin/env node
+
+const browserify = require('browserify')
+const babelConfig = require('../../../babel.config.js')({ cache: () => {} })
+browserify('src/notifier.js', { debug: true, standalone: 'bugsnag' })
+  .transform('babelify', { global: true, ...babelConfig })
+  .transform('browserify-versionify')
+  .transform('envify', { global: true })
+  .plugin('browser-pack-flat/plugin')
+  .bundle()
+  .pipe(process.stdout)

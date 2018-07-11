@@ -1,0 +1,378 @@
+---
+ie_8:
+  handled:
+    errorClass: 'TypeError'
+    errorMessage: "'foo' is undefined"
+  unhandled_syntax:
+    errorClass: 'window.onerror'
+    errorMessage: "Expected ';'"
+    lineNumber: 17
+    columnNumber: 13
+    file: '/unhandled/script/a.html'
+  unhandled_thrown:
+    errorClass: 'window.onerror'
+    errorMessage: "bad things"
+    lineNumber: 17
+    columnNumber: 7
+  unhandled_undefined_function:
+    errorClass: 'window.onerror'
+    errorMessage: "Object expected"
+    lineNumber: 17
+    columnNumber: 7
+  unhandled_malformed_uri:
+    errorClass: 'window.onerror'
+    errorMessage: "The URI to be decoded is not a valid encoding"
+    lineNumber: 17
+    columnNumber: 7
+
+ie_9:
+  handled:
+    errorClass: 'ReferenceError'
+    errorMessage: "'foo' is undefined"
+  unhandled_syntax:
+    errorClass: 'window.onerror'
+    errorMessage: "Expected ';'"
+    lineNumber: 17
+    columnNumber: 13
+    file: '/unhandled/script/a.html'
+  unhandled_thrown:
+    errorClass: 'window.onerror'
+    errorMessage: "bad things"
+    lineNumber: 17
+    columnNumber: 7
+  unhandled_undefined_function:
+    errorClass: 'window.onerror'
+    errorMessage: "'nevergoingtoexist_notinamillionyears' is undefined"
+    lineNumber: 17
+    columnNumber: 7
+  unhandled_malformed_uri:
+    errorClass: 'window.onerror'
+    errorMessage: "The URI to be decoded is not a valid encoding"
+    lineNumber: 17
+    columnNumber: 7
+
+ie_10:
+  handled:
+    errorClass: 'ReferenceError'
+    errorMessage: "'foo' is undefined"
+  unhandled_syntax:
+    errorClass: 'window.onerror'
+    errorMessage: "Expected ';'"
+    lineNumber: 17
+    columnNumber: 13
+    file: '/unhandled/script/a.html'
+  unhandled_thrown:
+    errorClass: 'window.onerror'
+    errorMessage: "bad things"
+    lineNumber: 17
+    columnNumber: 7
+  unhandled_undefined_function:
+    errorClass: 'window.onerror'
+    errorMessage: "'nevergoingtoexist_notinamillionyears' is undefined"
+    lineNumber: 17
+    columnNumber: 7
+  unhandled_malformed_uri:
+    errorClass: 'window.onerror'
+    errorMessage: "The URI to be decoded is not a valid encoding"
+    lineNumber: 17
+    columnNumber: 7
+
+ie_11:
+  handled:
+    errorClass: 'ReferenceError'
+    errorMessage: "'foo' is undefined"
+  unhandled_syntax:
+    errorClass: 'window.onerror'
+    errorMessage: "Expected ';'"
+    lineNumber: 17
+    columnNumber: 13
+    file: '/unhandled/script/a.html'
+  unhandled_thrown:
+    errorClass: 'Error'
+    errorMessage: "bad things"
+    lineNumber: 17
+    columnNumber: 7
+  unhandled_undefined_function:
+    errorClass: 'ReferenceError'
+    errorMessage: "'nevergoingtoexist_notinamillionyears' is undefined"
+    lineNumber: 17
+    columnNumber: 7
+  unhandled_malformed_uri:
+    errorClass: 'URIError'
+    errorMessage: "The URI to be decoded is not a valid encoding"
+    lineNumber: 17
+    columnNumber: 7
+
+edge_14:
+  handled:
+    errorClass: 'ReferenceError'
+    errorMessage: "'foo' is undefined"
+  unhandled_syntax:
+    errorClass: 'window.onerror'
+    errorMessage: "Expected ';'"
+    lineNumber: 17
+    columnNumber: 13
+    file: '/unhandled/script/a.html'
+  unhandled_thrown:
+    errorClass: 'Error'
+    errorMessage: "bad things"
+    lineNumber: 17
+    columnNumber: 7
+  unhandled_undefined_function:
+    errorClass: 'ReferenceError'
+    errorMessage: "'nevergoingtoexist_notinamillionyears' is undefined"
+    lineNumber: 17
+    columnNumber: 7
+  unhandled_malformed_uri:
+    errorClass: 'URIError'
+    errorMessage: "The URI to be decoded is not a valid encoding"
+    lineNumber: 17
+    columnNumber: 7
+
+edge_15:
+  handled:
+    errorClass: 'ReferenceError'
+    errorMessage: "'foo' is undefined"
+  unhandled_syntax:
+    errorClass: 'window.onerror'
+    errorMessage: "Expected ';'"
+    lineNumber: 17
+    columnNumber: 13
+    file: '/unhandled/script/a.html'
+  unhandled_thrown:
+    errorClass: 'Error'
+    errorMessage: "bad things"
+    lineNumber: 17
+    columnNumber: 7
+  unhandled_undefined_function:
+    errorClass: 'ReferenceError'
+    errorMessage: "'nevergoingtoexist_notinamillionyears' is undefined"
+    lineNumber: 17
+    columnNumber: 7
+  unhandled_malformed_uri:
+    errorClass: 'URIError'
+    errorMessage: "The URI to be decoded is not a valid encoding"
+    lineNumber: 17
+    columnNumber: 7
+
+safari_6:
+  handled:
+    errorClass: 'ReferenceError'
+    errorMessage: "Can't find variable: foo"
+  unhandled_syntax:
+    errorClass: 'window.onerror'
+    errorMessage: "SyntaxError: Unexpected token '!'"
+    lineNumber: 17
+    file: '/unhandled/script/a.html'
+  unhandled_thrown:
+    errorClass: 'window.onerror'
+    errorMessage: "Error: bad things"
+    lineNumber: 17
+  unhandled_undefined_function:
+    errorClass: 'window.onerror'
+    errorMessage: "ReferenceError: Can't find variable: nevergoingtoexist_notinamillionyears"
+    lineNumber: 17
+  unhandled_malformed_uri:
+    errorClass: 'window.onerror'
+    errorMessage: "URIError: URI error"
+    lineNumber: 17
+
+safari_10:
+  handled:
+    errorClass: 'ReferenceError'
+    errorMessage: "Can't find variable: foo"
+  unhandled_syntax:
+    errorClass: 'SyntaxError'
+    errorMessage: "Unexpected token '!'. Parse error."
+    lineNumber: 17
+    columnNumber: 0
+    file: '/unhandled/script/a.html'
+  unhandled_thrown:
+    errorClass: 'Error'
+    errorMessage: "bad things"
+    lineNumber: 17
+    columnNumber: 22
+  unhandled_undefined_function:
+    errorClass: 'ReferenceError'
+    errorMessage: "Can't find variable: nevergoingtoexist_notinamillionyears"
+    lineNumber: 17
+    columnNumber: 43
+  unhandled_malformed_uri:
+    errorClass: 'URIError'
+    errorMessage: URI error
+    lineNumber: 17
+    columnNumber: 25
+
+opera_12:
+  handled:
+    errorClass: 'ReferenceError'
+    errorMessage: 'Undefined variable: foo'
+  unhandled_syntax:
+    errorClass: 'window.onerror'
+    errorMessage: "Syntax error at line 17 while loading: expected ';', got '!'"
+    lineNumber: 17
+    file: '/unhandled/script/a.html'
+  unhandled_thrown:
+    errorClass: 'window.onerror'
+    errorMessage: "Uncaught exception: Error: bad things"
+    lineNumber: 17
+  unhandled_undefined_function:
+    errorClass: 'window.onerror'
+    errorMessage: "Uncaught exception: ReferenceError: Undefined variable: nevergoingtoexist_notinamillionyears"
+    lineNumber: 17
+  unhandled_malformed_uri:
+    errorClass: 'window.onerror'
+    errorMessage: "Uncaught exception: URIError: Malformed URI"
+    lineNumber: 17
+
+iphone_7:
+  handled:
+    errorClass: 'ReferenceError'
+    errorMessage: "Can't find variable: foo"
+  unhandled_syntax:
+    errorClass: 'SyntaxError'
+    errorMessage: "Unexpected token '!'. Parse error."
+    lineNumber: 17
+    columnNumber: 0
+    file: '/unhandled/script/a.html'
+  unhandled_thrown:
+    errorClass: 'Error'
+    errorMessage: "bad things"
+    lineNumber: 17
+    columnNumber: 22
+  unhandled_undefined_function:
+    errorClass: 'ReferenceError'
+    errorMessage: "Can't find variable: nevergoingtoexist_notinamillionyears"
+    lineNumber: 17
+    columnNumber: 43
+  unhandled_malformed_uri:
+    errorClass: 'URIError'
+    errorMessage: URI error
+    lineNumber: 17
+    columnNumber: 25
+
+android_s8:
+  handled:
+    errorClass: 'ReferenceError'
+    errorMessage: 'foo is not defined'
+  unhandled_syntax:
+    errorClass: 'SyntaxError'
+    errorMessage: "Unexpected token !"
+    lineNumber: 17
+    columnNumber: 13
+    file: '/unhandled/script/a.html'
+  unhandled_thrown:
+    errorClass: 'Error'
+    errorMessage: "bad things"
+    lineNumber: 17
+    columnNumber: 13
+  unhandled_undefined_function:
+    errorClass: 'ReferenceError'
+    errorMessage: nevergoingtoexist_notinamillionyears is not defined
+    lineNumber: 17
+    columnNumber: 7
+  unhandled_malformed_uri:
+    errorClass: 'URIError'
+    errorMessage: URI malformed
+    lineNumber: 17
+    columnNumber: 7
+
+firefox_30:
+  handled:
+    errorClass: 'ReferenceError'
+    errorMessage: 'foo is not defined'
+  unhandled_syntax:
+    errorClass: 'window.onerror'
+    errorMessage: "SyntaxError: missing ; before statement"
+    lineNumber: 17
+    file: '/unhandled/script/a.html'
+  unhandled_thrown:
+    errorClass: 'window.onerror'
+    errorMessage: "Error: bad things"
+    lineNumber: 17
+  unhandled_undefined_function:
+    errorClass: 'window.onerror'
+    errorMessage: "ReferenceError: nevergoingtoexist_notinamillionyears is not defined"
+    lineNumber: 17
+  unhandled_malformed_uri:
+    errorClass: 'window.onerror'
+    errorMessage: "URIError: malformed URI sequence"
+    lineNumber: 17
+
+firefox_56:
+  handled:
+    errorClass: 'ReferenceError'
+    errorMessage: 'foo is not defined'
+  unhandled_syntax:
+    errorClass: 'SyntaxError'
+    errorMessage: "missing ; before statement"
+    lineNumber: 17
+    columnNumber: 12
+    file: '/unhandled/script/a.html'
+  unhandled_thrown:
+    errorClass: 'Error'
+    errorMessage: "bad things"
+    lineNumber: 17
+    columnNumber: 13
+  unhandled_undefined_function:
+    errorClass: 'ReferenceError'
+    errorMessage: nevergoingtoexist_notinamillionyears is not defined
+    lineNumber: 17
+    columnNumber: 7
+  unhandled_malformed_uri:
+    errorClass: 'URIError'
+    errorMessage: malformed URI sequence
+    lineNumber: 17
+    columnNumber: 7
+
+chrome_43:
+  handled:
+    errorClass: 'ReferenceError'
+    errorMessage: 'foo is not defined'
+  unhandled_syntax:
+    errorClass: 'SyntaxError'
+    errorMessage: "Unexpected token !"
+    lineNumber: 17
+    columnNumber: 13
+    file: '/unhandled/script/a.html'
+  unhandled_thrown:
+    errorClass: 'Error'
+    errorMessage: "bad things"
+    lineNumber: 17
+    columnNumber: 13
+  unhandled_undefined_function:
+    errorClass: 'ReferenceError'
+    errorMessage: nevergoingtoexist_notinamillionyears is not defined
+    lineNumber: 17
+    columnNumber: 7
+  unhandled_malformed_uri:
+    errorClass: 'URIError'
+    errorMessage: URI malformed
+    lineNumber: 17
+    columnNumber: 7
+
+chrome_61:
+  handled:
+    errorClass: 'ReferenceError'
+    errorMessage: 'foo is not defined'
+  unhandled_syntax:
+    errorClass: 'SyntaxError'
+    errorMessage: "Unexpected token !"
+    lineNumber: 17
+    columnNumber: 13
+    file: '/unhandled/script/a.html'
+  unhandled_thrown:
+    errorClass: 'Error'
+    errorMessage: "bad things"
+    lineNumber: 17
+    columnNumber: 13
+  unhandled_undefined_function:
+    errorClass: 'ReferenceError'
+    errorMessage: nevergoingtoexist_notinamillionyears is not defined
+    lineNumber: 17
+    columnNumber: 7
+  unhandled_malformed_uri:
+    errorClass: 'URIError'
+    errorMessage: URI malformed
+    lineNumber: 17
+    columnNumber: 7

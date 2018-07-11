@@ -1,0 +1,20 @@
+#!/usr/bin/env node
+
+const browserify = require('browserify')
+const babelConfig = require('../../../babel.config.js')()
+browserify('src/notifier.js', {
+    debug: true,
+    standalone: 'bugsnag',
+    node: true
+  })
+  .transform('babelify', { global: true, ...babelConfig })
+  .transform('browserify-versionify')
+  .exclude([
+    // if a module is excluded here it needs to
+    // be added to package.json as a dependency
+    'iserror',
+    'stack-generator',
+    'error-stack-parser'
+  ])
+  .bundle()
+  .pipe(process.stdout)

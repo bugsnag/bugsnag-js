@@ -1,0 +1,12 @@
+{
+  "name": "bugsnag-js-fixtures-handled-typescript",
+  "private": true,
+  "scripts": {
+    "build": "browserify src/a.ts -p [ tsify ] -o dist/a.js && browserify src/b.ts -p [ tsify ] -o dist/b.js && browserify src/c.ts -p [ tsify ] -o dist/c.js"
+  },
+  "dependencies": {
+    "browserify": "^16.2.2",
+    "tsify": "^4.0.0",
+    "typescript": "^2.8.3"
+  }
+}

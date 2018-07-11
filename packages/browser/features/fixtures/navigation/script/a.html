@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="/node_modules/@bugsnag/browser/dist/bugsnag.min.js"></script>
+    <script type="text/javascript">
+      var ENDPOINT = decodeURIComponent(window.location.search.match(/ENDPOINT=(.+)/)[1])
+      var bugsnagClient = bugsnag({
+        apiKey: 'ABC',
+        endpoint: ENDPOINT
+      })
+    </script>
+  </head>
+  <body>
+    <pre id="bugsnag-test-should-run">PENDING</pre>
+    <script>
+      var el = document.getElementById('bugsnag-test-should-run')
+      el.textContent = el.innerText = typeof history.pushState === 'function'
+        ? 'YES'
+        : 'NO'
+    </script>
+    <pre id="bugsnag-test-state">PENDING</pre>
+    <script>
+      window.history.pushState({}, '', '/234235')
+      throw new Error('history')
+    </script>
+    <script>
+      setTimeout(function () {
+        var el = document.getElementById('bugsnag-test-state')
+        el.textContent = el.innerText = 'DONE'
+      }, 5000)
+    </script>
+  </body>
+</html>

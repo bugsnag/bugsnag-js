@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="/node_modules/@bugsnag/browser/dist/bugsnag.min.js"></script>
+    <script type="text/javascript">
+      var ENDPOINT = decodeURIComponent(window.location.search.match(/ENDPOINT=(.+)/)[1])
+      var bugsnagClient = bugsnag({
+        apiKey: 'ABC',
+        endpoint: ENDPOINT,
+        collectUserIp: false,
+        user: { id: 'cjhc3k8wg0000zdojufo6nw6c' }
+      })
+    </script>
+  </head>
+  <body>
+    <pre id="bugsnag-test-should-run">YES</pre>
+    <pre id="bugsnag-test-state">PENDING</pre>
+    <script>
+      bugsnagClient.notify(new Error('ip redaction does work'))
+    </script>
+    <script>
+      setTimeout(function () {
+        var el = document.getElementById('bugsnag-test-state')
+        el.textContent = el.innerText = 'DONE'
+      }, 5000)
+    </script>
+  </body>
+</html>
