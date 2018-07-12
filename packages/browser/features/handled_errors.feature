@@ -10,6 +10,7 @@ Scenario Outline: calling notify() with Error
   And the request is a valid browser payload for the error reporting API
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "bad things"
+  And the exception "type" equals "browserjs"
 
   Examples:
     | type       |
@@ -28,6 +29,7 @@ Scenario Outline: calling notify() with Error within try/catch
   Then I should receive 1 request
   And the request is a valid browser payload for the error reporting API
   And the exception matches the "handled" values for the current browser
+  And the exception "type" equals "browserjs"
 
   Examples:
     | type       |
@@ -47,6 +49,7 @@ Scenario Outline: calling notify() with Error within Promise catch
   And the request is a valid browser payload for the error reporting API
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "bad things"
+  And the exception "type" equals "browserjs"
 
   Examples:
     | type       |

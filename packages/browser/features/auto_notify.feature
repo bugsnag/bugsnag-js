@@ -11,6 +11,7 @@ Scenario Outline: setting autoNotify option to false
   And the event "unhandled" is false
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "auto notify does work"
+  And the exception "type" equals "browserjs"
     Examples:
       | type       |
       | script     |

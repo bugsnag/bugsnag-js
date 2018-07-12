@@ -9,6 +9,7 @@ Scenario Outline: syntax errors
   Then I should receive 1 request
   And the request is a valid browser payload for the error reporting API
   And the exception matches the "unhandled_syntax" values for the current browser
+  And the exception "type" equals "browserjs"
     Examples:
       | type       |
       | script     |
@@ -21,6 +22,7 @@ Scenario Outline: thrown errors
   Then I should receive 1 request
   And the request is a valid browser payload for the error reporting API
   And the exception matches the "unhandled_thrown" values for the current browser
+  And the exception "type" equals "browserjs"
     Examples:
       | type       |
       | script     |
@@ -34,6 +36,7 @@ Scenario Outline: unhandled promise rejections
   And the request is a valid browser payload for the error reporting API
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "broken promises"
+  And the exception "type" equals "browserjs"
     Examples:
       | type       |
       | script     |
@@ -46,6 +49,7 @@ Scenario Outline: undefined function invocation
   Then I should receive 1 request
   And the request is a valid browser payload for the error reporting API
   And the exception matches the "unhandled_undefined_function" values for the current browser
+  And the exception "type" equals "browserjs"
     Examples:
       | type       |
       | script     |
@@ -58,6 +62,7 @@ Scenario Outline: decoding malformed URI component
   Then I should receive 1 request
   And the request is a valid browser payload for the error reporting API
   And the exception matches the "unhandled_malformed_uri" values for the current browser
+  And the exception "type" equals "browserjs"
     Examples:
       | type       |
       | script     |
@@ -71,6 +76,7 @@ Scenario Outline: detecting unhandled promise rejections with bluebird
   And the request is a valid browser payload for the error reporting API
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "broken bluebird promises"
+  And the exception "type" equals "browserjs"
     Examples:
       | type       |
       | script     |
@@ -84,6 +90,7 @@ Scenario Outline: parsing stacks correctly with "@" in filename
   And the request is a valid browser payload for the error reporting API
   And the exception "message" ends with "at in filename"
   And the "file" of stack frame 0 ends with "unhandled/script/@dist/g.js"
+  And the exception "type" equals "browserjs"
     Examples:
       | type       |
       | script     |
