@@ -3,7 +3,7 @@ const { describe, it, expect } = global
 const proxyquire = require('proxyquire').noPreserveCache()
 const ErrorStackParser = require('error-stack-parser')
 
-describe('base/report', () => {
+describe('@bugsnag/core/report', () => {
   describe('constructor', () => {
     it('sets default handledState', () => {
       const Report = require('../report')

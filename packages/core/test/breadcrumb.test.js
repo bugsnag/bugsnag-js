@@ -2,7 +2,7 @@ const { describe, it, expect } = global
 
 const Breadcrumb = require('../breadcrumb')
 
-describe('base/breadcrumb', () => {
+describe('@bugsnag/core/breadcrumb', () => {
   describe('toJSON()', () => {
     it('returns the correct data structure', () => {
       const d = (new Date()).toISOString()

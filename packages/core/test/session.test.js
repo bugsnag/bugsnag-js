@@ -2,7 +2,7 @@ const { describe, it, expect } = global
 
 const Session = require('../session')
 
-describe('base/session', () => {
+describe('@bugsnag/core/session', () => {
   describe('toJSON()', () => {
     it('returns the correct data structure', () => {
       const s = new Session().toJSON()

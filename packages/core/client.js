@@ -2,9 +2,11 @@ const config = require('./config')
 const BugsnagReport = require('./report')
 const BugsnagBreadcrumb = require('./breadcrumb')
 const BugsnagSession = require('./session')
-const { map, reduce, includes, isArray } = require('./lib/es-utils')
+const { map, includes, isArray } = require('./lib/es-utils')
 const inferReleaseStage = require('./lib/infer-release-stage')
 const isError = require('iserror')
+const some = require('./lib/async-some')
+const runBeforeSend = require('./lib/run-before-send')
 
 const LOG_USAGE_ERR_PREFIX = `Usage error.`
 const REPORT_USAGE_ERR_PREFIX = `Bugsnag usage error.`
@@ -168,38 +170,39 @@ class BugsnagClient {
     const originalSeverity = report.severity
 
     const beforeSend = [].concat(opts.beforeSend).concat(this.config.beforeSend)
-    const preventSend = reduce(beforeSend, (accum, fn) => {
-      if (accum === true) return true
-      if (typeof fn === 'function' && fn(report) === false) return true
-      if (report.isIgnored()) return true
-      return false
-    }, false)
-
-    if (preventSend) {
-      this._logger.debug(`Report not sent due to beforeSend callback`)
-      return false
+    const onBeforeSendErr = err => {
+      this._logger.error(`Error occurred in beforeSend callback, continuing anyway…`)
+      this._logger.error(err)
     }
 
-    // only leave a crumb for the error if actually got sent
-    if (this.config.autoBreadcrumbs) {
-      this.leaveBreadcrumb(report.errorClass, {
-        errorClass: report.errorClass,
-        errorMessage: report.errorMessage,
-        severity: report.severity
-      }, 'error')
-    }
+    some(beforeSend, runBeforeSend(report, onBeforeSendErr), (err, preventSend) => {
+      if (err) onBeforeSendErr(err)
 
-    if (originalSeverity !== report.severity) {
-      report._handledState.severityReason = { type: 'userCallbackSetSeverity' }
-    }
+      if (preventSend) {
+        this._logger.debug(`Report not sent due to beforeSend callback`)
+        return false
+      }
 
-    this._delivery.sendReport(this._logger, this.config, {
-      apiKey: report.apiKey || this.config.apiKey,
-      notifier: this.notifier,
-      events: [ report ]
+      // only leave a crumb for the error if actually got sent
+      if (this.config.autoBreadcrumbs) {
+        this.leaveBreadcrumb(report.errorClass, {
+          errorClass: report.errorClass,
+          errorMessage: report.errorMessage,
+          severity: report.severity,
+          stacktrace: report.stacktrace
+        }, 'error')
+      }
+
+      if (originalSeverity !== report.severity) {
+        report._handledState.severityReason = { type: 'userCallbackSetSeverity' }
+      }
+
+      this._delivery.sendReport(this._logger, this.config, {
+        apiKey: report.apiKey || this.config.apiKey,
+        notifier: this.notifier,
+        events: [ report ]
+      })
     })
-
-    return true
   }
 }
 
