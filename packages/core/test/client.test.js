@@ -147,7 +147,7 @@ describe('@bugsnag/core/client', () => {
       })
       client.configure({ apiKey: 'API_KEY_YEAH' })
 
-      client.notify(new Error('oh em gee'), { beforeSend: report => report.ignore() }),
+      client.notify(new Error('oh em gee'), { beforeSend: report => report.ignore() })
       client.notify(new Error('oh em eff gee'), { beforeSend: report => false })
 
       // give the event loop a tick to see if the reports get send

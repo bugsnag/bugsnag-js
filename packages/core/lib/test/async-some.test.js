@@ -15,7 +15,7 @@ describe('async-some', () => {
           resolve()
         })
       ]
-      some(beforeSendFns, runBeforeSend(report, err => {}), (err, result) => {
+      some(beforeSendFns, runBeforeSend(report, () => {}), (err, result) => {
         expect(!err)
         expect(result).toBe(false)
         expect(report.name).toBe('ben')
@@ -41,7 +41,7 @@ describe('async-some', () => {
         (report) => { throw new Error('derp') },
         (report) => { called = true }
       ]
-      some(beforeSendFns, runBeforeSend(report, err => {}), (err, result) => {
+      some(beforeSendFns, runBeforeSend(report, () => {}), (err, result) => {
         expect(!err)
         expect(called).toBe(true)
         done()
@@ -59,7 +59,7 @@ describe('async-some', () => {
           resolve()
         })
       ]
-      some(beforeSendFns, runBeforeSend(report, err => {}), (err, result) => {
+      some(beforeSendFns, runBeforeSend(report, () => {}), (err, result) => {
         expect(!err)
         expect(called).toBe(true)
         done()
@@ -77,7 +77,7 @@ describe('async-some', () => {
           cb(null)
         }
       ]
-      some(beforeSendFns, runBeforeSend(report, err => {}), (err, result) => {
+      some(beforeSendFns, runBeforeSend(report, () => {}), (err, result) => {
         expect(!err)
         expect(called).toBe(true)
         done()
