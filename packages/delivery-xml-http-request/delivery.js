@@ -17,7 +17,6 @@ module.exports = (win = window) => ({
       req.setRequestHeader('Bugsnag-Sent-At', isoDate())
       req.send(makePayload(report))
     } catch (e) {
-      console.log(e)
       logger.error(e)
     }
   },
