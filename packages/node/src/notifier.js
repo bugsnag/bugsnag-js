@@ -12,7 +12,8 @@ const { parse } = require('url')
 const fs = require('fs')
 const process = require('process')
 
-const schema = Object.assign({}, require('@bugsnag/core/config').schema)
+// extend the base config schema with some node-specific options
+const schema = { ...require('@bugsnag/core/config').schema, ...require('./config') }
 
 const plugins = [
   {

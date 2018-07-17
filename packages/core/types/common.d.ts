@@ -7,6 +7,7 @@ export interface IConfig {
   autoBreadcrumbs?: boolean;
   autoNotify?: boolean;
   appVersion?: string;
+  appType?: string;
   endpoint?: string;
   sessionEndpoint?: string;
   endpoints?: { notify: string, sessions: string };
