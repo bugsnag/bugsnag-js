@@ -2,7 +2,7 @@ const { describe, it, expect } = global
 
 const config = require('../config')
 
-describe('base/config', () => {
+describe('@bugsnag/core/config', () => {
   describe('validate()', () => {
     it('needs opts/schema', () => {
       expect(() => config.validate()).toThrow()

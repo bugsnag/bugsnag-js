@@ -56,7 +56,7 @@ jobs:
         - npm install
         - lerna bootstrap
       script:
-        - npm run test:unit
+        - npm run test:unit && npm run test:types
       env: BROWSER=na
 
 stages:

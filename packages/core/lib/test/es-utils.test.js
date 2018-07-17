@@ -2,7 +2,7 @@ const { describe, it, expect } = global
 
 const { map, reduce, filter, keys, isArray, includes } = require('../es-utils')
 
-describe('us-utils', () => {
+describe('es-utils', () => {
   describe('reduce(arr, fn, accum)', () => {
     it('works with a variety of examples', () => {
       expect(reduce([ 1, 2, 3, 4, 5 ], (accum, x) => accum + x, 0)).toBe(15)

@@ -6,7 +6,7 @@ const Session = require('../session')
 
 const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
-describe('base/client', () => {
+describe('@bugsnag/core/client', () => {
   describe('constructor', () => {
     it('can handle bad input', () => {
       expect(() => new Client()).toThrow()
@@ -99,8 +99,7 @@ describe('base/client', () => {
         }
       })
       client.configure({ apiKey: 'API_KEY_YEAH' })
-      const sent = client.notify(new Error('oh em gee'))
-      expect(sent).toBe(true)
+      client.notify(new Error('oh em gee'))
     })
 
     it('supports manually setting severity', done => {
@@ -148,12 +147,8 @@ describe('base/client', () => {
       })
       client.configure({ apiKey: 'API_KEY_YEAH' })
 
-      const sent = [
-        client.notify(new Error('oh em gee'), { beforeSend: report => report.ignore() }),
-        client.notify(new Error('oh em eff gee'), { beforeSend: report => false })
-      ]
-
-      expect(sent).toEqual([ false, false ])
+      client.notify(new Error('oh em gee'), { beforeSend: report => report.ignore() })
+      client.notify(new Error('oh em eff gee'), { beforeSend: report => false })
 
       // give the event loop a tick to see if the reports get send
       process.nextTick(() => done())

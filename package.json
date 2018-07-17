@@ -20,7 +20,8 @@
   "scripts": {
     "test:lint": "standard",
     "test:unit": "lerna run test --ignore '@bugsnag/browser' '@bugsnag/node'",
-    "test:browser": "lerna run test --scope '@bugsnag/browser' --stream"
+    "test:browser": "lerna run test --scope '@bugsnag/browser' --stream",
+    "test:types": "lerna run test:types"
   },
   "standard": {
     "ignore": [

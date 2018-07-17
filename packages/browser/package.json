@@ -18,6 +18,7 @@
     "build": "npm run clean && npm run build:dist && npm run build:dist:min",
     "build:dist": "NODE_ENV=production IS_BROWSER=yes bin/bundle | exorcist dist/bugsnag.js.map > dist/bugsnag.js",
     "build:dist:min": "NODE_ENV=production IS_BROWSER=yes bin/bundle | bin/minify dist/bugsnag.min.js",
+    "test:types": "jasmine 'types/**/*.test.js'",
     "test": "bundle exec maze-runner"
   },
   "author": "Bugsnag",
