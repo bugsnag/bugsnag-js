@@ -7,6 +7,7 @@ export interface IConfig {
   autoBreadcrumbs?: boolean;
   autoNotify?: boolean;
   appVersion?: string;
+  appType?: string;
   endpoint?: string;
   sessionEndpoint?: string;
   endpoints?: { notify: string, sessions: string };
@@ -50,7 +51,6 @@ type AsyncBeforeSend = (report: Report, cb: (err: null | Error) => void) => void
 type PromiseBeforeSend = (report: Report) => Promise<void>;
 
 export type BeforeSend = SyncBeforeSend | AsyncBeforeSend | PromiseBeforeSend;
-export type BeforeSession = (client: Client) => void;
 
 export interface IPlugin {
   configSchema?: { [key: string]: IConfigSchemaEntry; };

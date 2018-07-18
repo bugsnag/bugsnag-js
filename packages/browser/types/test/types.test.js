@@ -15,6 +15,7 @@ const exampleValue = (k) => {
   switch (k) {
     case 'apiKey': return 'abc'
     case 'appVersion': return '1.2.3'
+    case 'appType': return 'worker'
     case 'notifyReleaseStages': return []
     default:
       return schema[k].defaultValue(null, {})

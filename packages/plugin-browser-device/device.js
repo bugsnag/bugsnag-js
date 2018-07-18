@@ -5,17 +5,17 @@ const { isoDate } = require('@bugsnag/core/lib/es-utils')
  */
 module.exports = {
   init: (client, nav = navigator) => {
-    client.config.beforeSend.unshift((report) => {
-      report.device = {
-        ...{
-          time: isoDate(),
-          locale: nav.browserLanguage || nav.systemLanguage || nav.userLanguage || nav.language,
-          userAgent: nav.userAgent
-        },
-        ...report.device
-      }
-    })
+    const device = {
+      locale: nav.browserLanguage || nav.systemLanguage || nav.userLanguage || nav.language,
+      userAgent: nav.userAgent
+    }
 
-    client.beforeSession.push(session => { session.device = { userAgent: nav.userAgent } })
+    // merge with anything already set on the client
+    client.device = { ...device, ...client.device }
+
+    // add time just as the report is sent
+    client.config.beforeSend.unshift((report) => {
+      report.device = { ...report.device, time: isoDate() }
+    })
   }
 }

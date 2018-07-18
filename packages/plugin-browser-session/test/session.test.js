@@ -24,17 +24,6 @@ describe('plugin: sessions', () => {
     c.startSession()
   })
 
-  it('runs client.beforeSession[] callbacks', (done) => {
-    const c = new Client(VALID_NOTIFIER)
-    c.configure({ apiKey: 'API_KEY' })
-    c.use(plugin)
-    c.beforeSession.push(client => {
-      expect(client.session).toBeTruthy()
-      done()
-    })
-    c.startSession()
-  })
-
   it('tracks handled/unhandled error counts and sends them in error payloads', (done) => {
     const c = new Client(VALID_NOTIFIER)
     c.configure({ apiKey: 'API_KEY' })

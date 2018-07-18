@@ -15,7 +15,6 @@ describe('plugin: device', () => {
     plugin.init(client, navigator)
 
     expect(client.config.beforeSend.length).toBe(1)
-    expect(client.beforeSession.length).toBe(1)
 
     client.delivery({ sendReport: (logger, config, payload) => payloads.push(payload) })
     client.notify(new Error('noooo'))

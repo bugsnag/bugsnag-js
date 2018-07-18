@@ -1,4 +1,4 @@
-const { map, isArray, includes } = require('@bugsnag/core/lib/es-utils')
+const { isArray, includes } = require('@bugsnag/core/lib/es-utils')
 const inferReleaseStage = require('@bugsnag/core/lib/infer-release-stage')
 
 module.exports = {
@@ -9,8 +9,6 @@ const sessionDelegate = {
   startSession: client => {
     const sessionClient = client
     sessionClient.session = new client.BugsnagSession()
-
-    map(sessionClient.beforeSession, (fn) => fn(sessionClient))
 
     const releaseStage = inferReleaseStage(sessionClient)
 

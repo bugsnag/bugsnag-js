@@ -36,7 +36,6 @@ class BugsnagClient {
     this.plugins = []
 
     this.session = session
-    this.beforeSession = []
 
     this.breadcrumbs = []
 
@@ -49,6 +48,7 @@ class BugsnagClient {
     this.user = {}
 
     // expose internal constructors
+    this.BugsnagClient = BugsnagClient
     this.BugsnagReport = BugsnagReport
     this.BugsnagBreadcrumb = BugsnagBreadcrumb
     this.BugsnagSession = BugsnagSession
@@ -60,6 +60,7 @@ class BugsnagClient {
     if (!validity.valid === true) throw new Error(generateConfigErrorMessage(validity.errors))
     if (typeof this.config.beforeSend === 'function') this.config.beforeSend = [ this.config.beforeSend ]
     if (this.config.appVersion !== null) this.app.version = this.config.appVersion
+    if (this.config.appType !== null) this.app.type = this.config.appType
     if (this.config.metaData) this.metaData = this.config.metaData
     if (this.config.user) this.user = this.config.user
     if (this.config.logger) this.logger(this.config.logger)

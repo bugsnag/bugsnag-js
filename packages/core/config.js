@@ -12,6 +12,11 @@ module.exports.schema = {
     message: 'should be a string',
     validate: value => value === null || stringWithLength(value)
   },
+  appType: {
+    defaultValue: () => null,
+    message: 'should be a string',
+    validate: value => value === null || stringWithLength(value)
+  },
   autoNotify: {
     defaultValue: () => true,
     message: 'should be true|false',

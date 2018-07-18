@@ -8,7 +8,6 @@ declare class Client {
   public device: object;
   public context: string | void;
   public config: common.IFinalConfig;
-  public beforeSession: common.BeforeSession[];
   public user: object;
   public metaData: object;
 
