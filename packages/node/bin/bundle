@@ -2,11 +2,7 @@
 
 const browserify = require('browserify')
 const babelConfig = require('../../../babel.config.js')()
-browserify('src/notifier.js', {
-    debug: true,
-    standalone: 'bugsnag',
-    node: true
-  })
+browserify('src/notifier.js', { debug: true, standalone: 'bugsnag', node: true })
   .transform('babelify', { global: true, ...babelConfig })
   .transform('browserify-versionify')
   .exclude([
@@ -14,7 +10,8 @@ browserify('src/notifier.js', {
     // be added to package.json as a dependency
     'iserror',
     'stack-generator',
-    'error-stack-parser'
+    'error-stack-parser',
+    'request'
   ])
   .bundle()
   .pipe(process.stdout)

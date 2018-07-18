@@ -21,6 +21,8 @@
   "devDependencies": {
     "@babel/cli": "^7.0.0-beta.51",
     "@bugsnag/core": "^1.0.0",
+    "@bugsnag/delivery-node": "^1.0.0",
+    "@bugsnag/plugin-server-session": "^1.0.0",
     "babelify": "9.0.0",
     "browserify": "^16.2.2",
     "browserify-versionify": "^1.0.6",
@@ -31,6 +33,7 @@
   "dependencies": {
     "error-stack-parser": "^2.0.2",
     "iserror": "^0.0.2",
+    "request": "^2.87.0",
     "stack-generator": "^2.0.3"
   }
 }

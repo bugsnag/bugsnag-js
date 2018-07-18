@@ -11,19 +11,14 @@ module.exports = {
   },
   logger: {
     ...schema.logger,
-    defaultValue: () =>
-      // set logger based on browser capability
-      (typeof console !== 'undefined' && typeof console.debug === 'function')
-        ? getPrefixedConsole()
-        : undefined
+    defaultValue: () => getPrefixedConsole()
   }
 }
 
 const getPrefixedConsole = () => {
-  const logger = {}
   return reduce([ 'debug', 'info', 'warn', 'error' ], (accum, method) => {
     const consoleMethod = console[method]
-    logger[method] = consoleMethod.bind(console, '[bugsnag]')
+    accum[method] = consoleMethod.bind(console, '[bugsnag]')
     return accum
   }, {})
 }
