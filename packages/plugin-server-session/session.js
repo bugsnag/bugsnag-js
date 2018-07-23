@@ -12,7 +12,8 @@ module.exports = {
     client.sessionDelegate({
       startSession: client => {
         const sessionClient = new client.BugsnagClient(client.notifier, {}, new client.BugsnagSession())
-        sessionClient.configure(client.config)
+        sessionClient.configure({})
+        sessionClient.config = client.config
         sessionClient.breadcrumbs = client.breadcrumbs
         sessionClient.app = client.app
         sessionClient.context = client.context
@@ -20,7 +21,6 @@ module.exports = {
         sessionClient.metaData = client.metaData
         sessionClient.request = client.request
         sessionClient.user = client.user
-        sessionClient.beforeSend = sessionClient.beforeSend
         sessionClient.logger(client._logger)
         sessionClient.delivery(client._delivery)
         sessionTracker.track(sessionClient.session)
@@ -51,12 +51,12 @@ const sendSessionSummary = client => sessionCounts => {
   req(handleRes)
 
   function handleRes (err) {
-    if (!err) return client.logger.info('Session delivered')
+    if (!err) return client._logger.info('Session delivered')
     if (backoff.attempts === 10) {
-      client.logger.error('Session delivery failed, max retries exceeded', err)
+      client._logger.error('Session delivery failed, max retries exceeded', err)
       return
     }
-    client.logger.info('Session delivery failed, retry #' + (backoff.attempts + 1) + '/' + maxAttempts, err)
+    client._logger.info('Session delivery failed, retry #' + (backoff.attempts + 1) + '/' + maxAttempts, err)
     setTimeout(() => req(handleRes), backoff.duration())
   }
 

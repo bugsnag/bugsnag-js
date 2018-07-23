@@ -7,10 +7,10 @@ const Client = require('@bugsnag/core/client')
 // const Session = require('@bugsnag/core/session')
 // const Breadcrumb = require('@bugsnag/core/breadcrumb')
 const { reduce } = require('@bugsnag/core/lib/es-utils')
-const https = require('https')
-const { parse } = require('url')
 const fs = require('fs')
 const process = require('process')
+
+const delivery = require('@bugsnag/delivery-node')
 
 // extend the base config schema with some node-specific options
 const schema = { ...require('@bugsnag/core/config').schema, ...require('./config') }
@@ -51,7 +51,8 @@ const plugins = [
         message: 'should be string'
       }
     }
-  }
+  },
+  require('@bugsnag/plugin-server-session')
 ]
 
 module.exports = (opts, userPlugins = []) => {
@@ -73,28 +74,4 @@ module.exports = (opts, userPlugins = []) => {
   pls.forEach(pl => bugsnag.use(pl))
 
   return bugsnag
-}
-
-const delivery = () => {
-  return {
-    sendReport: (logger, config, report) => {
-      const req = https.request({
-        method: 'POST',
-        ...parse(config.endpoints.notify)
-      })
-      req.setHeader('Content-Type', 'application/json')
-      req.setHeader('Bugsnag-Api-Key', report.apiKey || config.apiKey)
-      req.setHeader('Bugsnag-Payload-Version', '4.0')
-      req.setHeader('Bugsnag-Sent-At', (new Date()).toISOString())
-      req.end(JSON.stringify(report))
-      console.log(JSON.stringify(report, null, 2))
-      req.on('response', r => {
-        r.on('data', () => {})
-        r.on('finish', () => console.log('done'))
-      })
-    },
-    sendSession: (logger, config, session) => {
-      console.log('noop')
-    }
-  }
 }
