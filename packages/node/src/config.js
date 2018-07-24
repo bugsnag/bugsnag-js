@@ -2,8 +2,14 @@ const { schema } = require('@bugsnag/core/config')
 const { reduce } = require('@bugsnag/core/lib/es-utils')
 const { stringWithLength } = require('@bugsnag/core/lib/validators')
 const os = require('os')
+const process = require('process')
 
 module.exports = {
+  projectRoot: {
+    defaultValue: () => process.cwd(),
+    validate: value => stringWithLength(value),
+    message: 'should be string'
+  },
   hostname: {
     defaultValue: () => os.hostname(),
     message: 'should be a string',
