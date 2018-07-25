@@ -1,3 +1,4 @@
+const SURROUNDING_LINES = 3
 const { readFile } = require('fs')
 
 module.exports = {
@@ -30,8 +31,8 @@ const getSurroundingCode = (file, lineNumber, cb) => {
   readFile(file, 'utf8', (err, data) => {
     if (err) return cb(err)
     const lines = data.split('\n')
-    const start = Math.max(0, lineNumber - 4)
-    const end = Math.min(lines.length, lineNumber + 3)
+    const start = Math.max(0, lineNumber - SURROUNDING_LINES - 1)
+    const end = Math.min(lines.length, lineNumber + SURROUNDING_LINES)
     cb(null, lines
       .slice(start, end)
       .reduce((accum, line, i) => {
