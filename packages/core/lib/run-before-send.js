@@ -8,11 +8,13 @@ module.exports = (report, onError) => (fn, cb) => {
       if (ret && typeof ret.then === 'function') {
         return ret.then(
           // resolve
-          val => cb(null, shouldPreventSend(report, val)),
+          val => setTimeout(() => cb(null, shouldPreventSend(report, val)), 0),
           // reject
           err => {
-            onError(err)
-            return cb(null, false)
+            setTimeout(() => {
+              onError(err)
+              return cb(null, false)
+            })
           }
         )
       }

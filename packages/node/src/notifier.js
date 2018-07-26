@@ -7,8 +7,6 @@ const Client = require('@bugsnag/core/client')
 // const Session = require('@bugsnag/core/session')
 // const Breadcrumb = require('@bugsnag/core/breadcrumb')
 const { reduce } = require('@bugsnag/core/lib/es-utils')
-const fs = require('fs')
-const process = require('process')
 
 const delivery = require('@bugsnag/delivery-node')
 
@@ -16,41 +14,14 @@ const delivery = require('@bugsnag/delivery-node')
 const schema = { ...require('@bugsnag/core/config').schema, ...require('./config') }
 
 const plugins = [
-  {
-    init: client => client.config.beforeSend.push(report => {
-      report.stacktrace = report.stacktrace.map(stackframe => {
-        if (!stackframe.lineNumber || !stackframe.file) return stackframe
-        const start = stackframe.lineNumber - 4
-        const end = stackframe.lineNumber + 4
-        try {
-          stackframe.code = fs.readFileSync(stackframe.file, 'utf8')
-            .split('\n')
-            .slice(start, end)
-            .reduce((accum, line, i) => {
-              accum[start + (i + 1)] = line
-              return accum
-            }, {})
-          return stackframe
-        } catch (e) {
-          return stackframe
-        }
-      })
-    })
-  },
+  require('@bugsnag/plugin-node-surrounding-code'),
   {
     init: client => client.config.beforeSend.push(report => {
       report.stacktrace = report.stacktrace.map(stackframe => {
         stackframe.file = stackframe.file.replace(client.config.projectRoot, '')
         return stackframe
       })
-    }),
-    configSchema: {
-      projectRoot: {
-        defaultValue: () => process.cwd(),
-        validate: value => typeof value === 'string' && value.length,
-        message: 'should be string'
-      }
-    }
+    })
   },
   require('@bugsnag/plugin-server-session')
 ]
