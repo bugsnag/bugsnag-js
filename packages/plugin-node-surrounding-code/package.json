@@ -18,6 +18,8 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "byline": "^5.0.0",
+    "pump": "^3.0.0"
   },
   "devDependencies": {
     "@bugsnag/core": "^1.0.0",
