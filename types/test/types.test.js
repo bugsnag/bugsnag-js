@@ -55,4 +55,27 @@ export function notify(error: Bugsnag.NotifiableError, opts?: Bugsnag.INotifyOpt
     ])
     expect(stdout.toString()).toBe('')
   })
+
+  it('should work with breadcrumbs', () => {
+    const program = `
+import bugsnag from "../../..";
+const bugsnagClient = bugsnag({
+  apiKey: 'api_key',
+  beforeSend: report => {
+    report.breadcrumbs.map(breadcrumb => {
+      console.log(breadcrumb.type)
+      console.log(breadcrumb.name)
+      console.log(breadcrumb.metaData)
+      console.log(breadcrumb.timestamp)
+    })
+  }
+});
+`.trim()
+    writeFileSync(`${__dirname}/fixtures/app.ts`, program)
+    const { stdout } = spawnSync('./node_modules/.bin/tsc', [
+      '--strict',
+      `${__dirname}/fixtures/app.ts`
+    ])
+    expect(stdout.toString()).toBe('')
+  })
 })
