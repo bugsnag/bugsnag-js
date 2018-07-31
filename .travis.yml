@@ -58,8 +58,18 @@ jobs:
       script:
         - npm run test:unit && npm run test:types
       env: BROWSER=na
+    - stage: node end to end tests
+      install:
+        - BUNDLE_GEMFILE="packages/node/Gemfile" bundle install
+        - npm install
+        - lerna bootstrap
+        - lerna run build --scope='@bugsnag/node'
+      script:
+        - npm run test:node
+      env: BROWSER=na
 
 stages:
   - linting
   - unit tests
+  - node end to end tests
   - browser end to end tests

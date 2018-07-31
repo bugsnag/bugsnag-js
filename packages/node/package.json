@@ -14,7 +14,8 @@
   "scripts": {
     "clean": "rm -fr dist && mkdir dist",
     "build": "npm run clean && npm run build:dist",
-    "build:dist": "bin/bundle | exorcist dist/bugsnag.js.map > dist/bugsnag.js"
+    "build:dist": "bin/bundle | exorcist dist/bugsnag.js.map > dist/bugsnag.js",
+    "test": "bundle exec maze-runner"
   },
   "author": "Bugsnag",
   "license": "MIT",
