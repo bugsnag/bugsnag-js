@@ -23,7 +23,7 @@ module.exports = {
 
 const getPrefixedConsole = () => {
   return reduce([ 'debug', 'info', 'warn', 'error' ], (accum, method) => {
-    const consoleMethod = console[method]
+    const consoleMethod = console[method] || console.log
     accum[method] = consoleMethod.bind(console, '[bugsnag]')
     return accum
   }, {})

@@ -1,6 +1,6 @@
 const name = 'Bugsnag Node'
 const version = '__VERSION__'
-const url = 'prototypeeeee'
+const url = 'https://github.com/bugsnag/bugsnag-js'
 
 const Client = require('@bugsnag/core/client')
 // const Report = require('@bugsnag/core/report')

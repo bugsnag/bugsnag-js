@@ -1,0 +1,6 @@
+{
+  "name": "bugsnag-node-handled-test",
+  "scripts": {
+    "start": "node app.js"
+  }
+}
