@@ -18,7 +18,7 @@
     "build": "npm run clean && npm run build:dist && npm run build:dist:min",
     "build:dist": "NODE_ENV=production IS_BROWSER=yes bin/bundle | exorcist dist/bugsnag.js.map > dist/bugsnag.js",
     "build:dist:min": "NODE_ENV=production IS_BROWSER=yes bin/bundle | bin/minify dist/bugsnag.min.js",
-    "test:types": "jasmine 'types/**/*.test.js'",
+    "test:types": "tslint -c ../../tslint.json types/*.d.ts && jasmine 'types/**/*.test.js'",
     "test": "bundle exec maze-runner"
   },
   "author": "Bugsnag",
@@ -26,6 +26,8 @@
   "devDependencies": {
     "@babel/cli": "^7.0.0-beta.51",
     "@bugsnag/core": "^1.0.0",
+    "@bugsnag/delivery-x-domain-request": "^1.0.0",
+    "@bugsnag/delivery-xml-http-request": "^1.0.0",
     "@bugsnag/plugin-browser-context": "^1.0.0",
     "@bugsnag/plugin-browser-device": "^1.0.0",
     "@bugsnag/plugin-browser-request": "^1.0.0",
@@ -40,8 +42,6 @@
     "@bugsnag/plugin-strip-query-string": "^1.0.0",
     "@bugsnag/plugin-window-onerror": "^1.0.0",
     "@bugsnag/plugin-window-unhandled-rejection": "^1.0.0",
-    "@bugsnag/delivery-x-domain-request": "^1.0.0",
-    "@bugsnag/delivery-xml-http-request": "^1.0.0",
     "babelify": "^9.0.0",
     "browser-pack-flat": "^3.1.0",
     "browserify": "^16.2.2",
@@ -50,6 +50,7 @@
     "exorcist": "^1.0.1",
     "jasmine": "^3.1.0",
     "nyc": "^12.0.2",
+    "tslint": "^5.11.0",
     "typescript": "^2.9.2",
     "uglify-js": "^3.4.3"
   }

@@ -46,11 +46,7 @@ export interface IFinalConfig extends IConfig {
   logger?: ILogger | null;
 }
 
-type SyncBeforeSend = (report: Report) => void;
-type AsyncBeforeSend = (report: Report, cb: (err: null | Error) => void) => void;
-type PromiseBeforeSend = (report: Report) => Promise<void>;
-
-export type BeforeSend = SyncBeforeSend | AsyncBeforeSend | PromiseBeforeSend;
+export type BeforeSend = (report: Report, cb?: (err: null | Error) => void) => void | Promise<void>;
 
 export interface IPlugin {
   configSchema?: { [key: string]: IConfigSchemaEntry; };
