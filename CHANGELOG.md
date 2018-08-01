@@ -2,6 +2,16 @@
 
 <!-- {entry_placeholder} -->
 
+## 4.7.3 (2018-08-01)
+
+### Removed
+- Stop sending stacktrace with breadcrumb metadata
+
+### Fixed
+- Added missing instance properties to `Breadcrumb` TypeScript definition
+
+
+
 ## 4.7.2 (2018-06-18)
 
 ### Fixed
