@@ -7,8 +7,12 @@ var bugsnagClient = bugsnag({
   }
 })
 
-try {
-  foo_bar() // eslint-disable-line
-} catch (e) {
-  bugsnagClient.notify(e)
+go()
+  .then(function () {})
+  .catch(function (e) {
+    bugsnagClient.notify(e)
+  })
+
+function go () {
+  return Promise.reject(new Error('bad things'))
 }

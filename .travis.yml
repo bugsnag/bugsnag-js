@@ -12,7 +12,7 @@ install:
   - npm install
   - lerna bootstrap
 before_script:
-  - lerna run build
+  - lerna run build  --scope='@bugsnag/browser'
 script:
   - npm run test:browser
 env:
