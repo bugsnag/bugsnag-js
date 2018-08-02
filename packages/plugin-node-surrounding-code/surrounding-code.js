@@ -6,6 +6,8 @@ const byline = require('byline')
 
 module.exports = {
   init: client => {
+    if (!client.config.sendCode) return
+
     const loadSurroundingCode = stackframe => new Promise((resolve, reject) => {
       try {
         if (!stackframe.lineNumber || !stackframe.file) return resolve(stackframe)
@@ -27,6 +29,13 @@ module.exports = {
         })
         .catch(reject)
     }))
+  },
+  configSchema: {
+    sendCode: {
+      defaultValue: () => true,
+      validate: value => value === true || value === false,
+      message: 'should be true or false'
+    }
   }
 }
 

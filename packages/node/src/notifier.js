@@ -38,9 +38,7 @@ module.exports = (opts, userPlugins = []) => {
   bugsnag.delivery(delivery())
   bugsnag.configure(opts)
 
-  if (bugsnag.config.sendCode) {
-    bugsnag.use(pluginSurroundingCode)
-  }
+  plugins.forEach(pl => bugsnag.use(pl))
 
   return bugsnag
 }
