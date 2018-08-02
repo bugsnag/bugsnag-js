@@ -11,5 +11,3 @@ COPY . /usr/src/app/
 
 RUN npm install --no-package-lock --no-save /tmp/bugsnag-node.tgz
 RUN node --version
-
-CMD [ "npm", "start" ]
