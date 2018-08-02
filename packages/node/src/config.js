@@ -10,6 +10,11 @@ module.exports = {
     validate: value => stringWithLength(value),
     message: 'should be string'
   },
+  sendCode: {
+    defaultValue: () => true,
+    validate: value => value === true || value === false,
+    message: 'should be true or false'
+  },
   hostname: {
     defaultValue: () => os.hostname(),
     message: 'should be a string',

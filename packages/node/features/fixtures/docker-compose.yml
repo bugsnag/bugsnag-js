@@ -1,8 +1,20 @@
 version: '3.4'
 services:
+
   handled:
     build:
       context: handled
+      args:
+        - NODE_VERSION
+    environment:
+      - BUGSNAG_API_KEY
+      - BUGSNAG_NOTIFY_ENDPOINT
+      - BUGSNAG_SESSIONS_ENDPOINT
+    restart: "no"
+
+  surrounding_code:
+    build:
+      context: surrounding_code
       args:
         - NODE_VERSION
     environment:

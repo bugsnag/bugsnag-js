@@ -10,11 +10,16 @@ const delivery = require('@bugsnag/delivery-node')
 // extend the base config schema with some node-specific options
 const schema = { ...require('@bugsnag/core/config').schema, ...require('./config') }
 
+const pluginSurroundingCode = require('@bugsnag/plugin-node-surrounding-code')
+const pluginInProject = require('@bugsnag/plugin-node-in-project')
+const pluginStripProjectRoot = require('@bugsnag/plugin-strip-project-root')
+const pluginServerSession = require('@bugsnag/plugin-server-session')
+
 const plugins = [
-  require('@bugsnag/plugin-node-surrounding-code'),
-  require('@bugsnag/plugin-node-in-project'),
-  require('@bugsnag/plugin-strip-project-root'),
-  require('@bugsnag/plugin-server-session')
+  pluginSurroundingCode,
+  pluginInProject,
+  pluginStripProjectRoot,
+  pluginServerSession
 ]
 
 module.exports = (opts, userPlugins = []) => {
@@ -33,7 +38,9 @@ module.exports = (opts, userPlugins = []) => {
   bugsnag.delivery(delivery())
   bugsnag.configure(opts)
 
-  pls.forEach(pl => bugsnag.use(pl))
+  if (bugsnag.config.sendCode) {
+    bugsnag.use(pluginSurroundingCode)
+  }
 
   return bugsnag
 }
