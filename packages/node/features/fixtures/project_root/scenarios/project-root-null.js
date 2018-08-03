@@ -1,4 +1,6 @@
 var bugsnag = require('@bugsnag/node')
+var lodash = require('lodash')
+
 var bugsnagClient = bugsnag({
   apiKey: process.env.BUGSNAG_API_KEY,
   endpoints: {
@@ -8,4 +10,8 @@ var bugsnagClient = bugsnag({
   projectRoot: null
 })
 
-bugsnagClient.notify(new Error('project root'))
+// the purpose of this seemingly pointless throttle call is just to make sure the
+// error has a stackframe from inside node_modules
+lodash.throttle(function () {
+  bugsnagClient.notify(new Error('project root'))
+})()

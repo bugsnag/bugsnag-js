@@ -14,6 +14,9 @@ Scenario Outline: project root should default to the current working directory
   And the request used payload v4 headers
   And the "bugsnag-api-key" header equals "9c2151b65d615a3a95ba408142c8698f"
   And the "file" of stack frame 0 equals "scenarios/project-root-default.js"
+  And the "inProject" of stack frame 0 is true
+  And the "file" of stack frame 1 equals "node_modules/lodash/lodash.js"
+  And the "inProject" of stack frame 1 is false
 
   Examples:
   | node version |
@@ -31,6 +34,12 @@ And the request used the Node notifier
 And the request used payload v4 headers
 And the "bugsnag-api-key" header equals "9c2151b65d615a3a95ba408142c8698f"
 And the "file" of stack frame 0 equals "project-root-custom.js"
+And the "inProject" of stack frame 0 is true
+And the "file" of stack frame 1 equals "/usr/src/app/node_modules/lodash/lodash.js"
+And the "inProject" of stack frame 1 is false
+And the "file" of stack frame 5 equals "/usr/src/app/out.js"
+And the "inProject" of stack frame 5 is false
+
 
   Examples:
   | node version |
@@ -48,6 +57,9 @@ Scenario Outline: the project root can be switched off
   And the request used payload v4 headers
   And the "bugsnag-api-key" header equals "9c2151b65d615a3a95ba408142c8698f"
   And the "file" of stack frame 0 equals "/usr/src/app/scenarios/project-root-null.js"
+  And the "inProject" of stack frame 0 is null
+  And the "file" of stack frame 1 equals "/usr/src/app/node_modules/lodash/lodash.js"
+  And the "inProject" of stack frame 1 is null
 
   Examples:
   | node version |
