@@ -7,7 +7,7 @@ const process = require('process')
 module.exports = {
   projectRoot: {
     defaultValue: () => process.cwd(),
-    validate: value => stringWithLength(value),
+    validate: value => value === null || stringWithLength(value),
     message: 'should be string'
   },
   hostname: {
