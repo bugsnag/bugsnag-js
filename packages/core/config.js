@@ -1,5 +1,5 @@
 const { filter, reduce, keys, isArray, includes } = require('./lib/es-utils')
-const { positiveIntIfDefined, stringWithLength } = require('./lib/validators')
+const { intRange, stringWithLength } = require('./lib/validators')
 
 module.exports.schema = {
   apiKey: {
@@ -63,7 +63,7 @@ module.exports.schema = {
   maxBreadcrumbs: {
     defaultValue: () => 20,
     message: 'should be a number ≤40',
-    validate: value => value === 0 || (positiveIntIfDefined(value) && (value === undefined || value <= 40))
+    validate: value => intRange(0, 40)(value)
   },
   autoBreadcrumbs: {
     defaultValue: () => true,

@@ -1,17 +1,24 @@
 const { describe, it, expect } = global
 
-const { positiveIntIfDefined, stringWithLength } = require('../validators')
+const { intRange, stringWithLength } = require('../validators')
 
-describe('positiveIntIfDefined(val)', () => {
+describe('intRange(min, max)(val)', () => {
   it('work with various values', () => {
-    expect(positiveIntIfDefined(10)).toBe(true)
-    expect(positiveIntIfDefined(1e5)).toBe(true)
-    for (let i = 1; i <= 1000; i++) expect(positiveIntIfDefined(i)).toBe(true)
-    expect(positiveIntIfDefined(-10)).toBe(false)
-    expect(positiveIntIfDefined(0)).toBe(false)
-    expect(positiveIntIfDefined(1.123)).toBe(false)
-    expect(positiveIntIfDefined('')).toBe(false)
-    expect(positiveIntIfDefined('100')).toBe(false)
+    // default min/max: 1 to Infinity
+    expect(intRange()(10)).toBe(true)
+    expect(intRange()(1e5)).toBe(true)
+    for (let i = 1; i <= 1000; i++) expect(intRange()(i)).toBe(true)
+    expect(intRange()(-10)).toBe(false)
+    expect(intRange()(0)).toBe(false)
+    expect(intRange()(1.123)).toBe(false)
+    expect(intRange()('')).toBe(false)
+    expect(intRange()('100')).toBe(false)
+
+    // custom min/max
+    expect(intRange(-10, 20)(11)).toBe(true)
+    expect(intRange(-10, 20)(-13)).toBe(false)
+    expect(intRange(-10, 20)(20)).toBe(true)
+    expect(intRange(-10, 20)(21)).toBe(false)
   })
 })
 

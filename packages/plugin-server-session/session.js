@@ -1,6 +1,6 @@
 const { isArray, includes } = require('@bugsnag/core/lib/es-utils')
 const inferReleaseStage = require('@bugsnag/core/lib/infer-release-stage')
-const { positiveIntIfDefined } = require('@bugsnag/core/lib/validators')
+const { intRange } = require('@bugsnag/core/lib/validators')
 const SessionTracker = require('./tracker')
 const Backoff = require('backo')
 
@@ -32,7 +32,7 @@ module.exports = {
   configSchema: {
     sessionSummaryInterval: {
       defaultValue: () => undefined,
-      validate: value => positiveIntIfDefined(value),
+      validate: value => value === undefined || intRange()(value),
       message: 'should be a positive integer'
     }
   }
