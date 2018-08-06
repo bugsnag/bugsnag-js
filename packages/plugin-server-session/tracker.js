@@ -30,13 +30,10 @@ module.exports = class SessionTracker extends Emitter {
   }
 
   _summarize () {
-    const thisMin = dateToMsKey(new Date())
     const summary = []
     this._sessions.forEach((val, key) => {
-      if (key !== thisMin) {
-        summary.push({ startedAt: key, sessionsStarted: val })
-        this._sessions.delete(key)
-      }
+      summary.push({ startedAt: key, sessionsStarted: val })
+      this._sessions.delete(key)
     })
     if (!summary.length) return
     this.emit('summary', summary)

@@ -14,12 +14,14 @@ const pluginSurroundingCode = require('@bugsnag/plugin-node-surrounding-code')
 const pluginInProject = require('@bugsnag/plugin-node-in-project')
 const pluginStripProjectRoot = require('@bugsnag/plugin-strip-project-root')
 const pluginServerSession = require('@bugsnag/plugin-server-session')
+const pluginNodeDevice = require('@bugsnag/plugin-node-device')
 
 const plugins = [
   pluginSurroundingCode,
   pluginInProject,
   pluginStripProjectRoot,
-  pluginServerSession
+  pluginServerSession,
+  pluginNodeDevice
 ]
 
 module.exports = (opts, userPlugins = []) => {

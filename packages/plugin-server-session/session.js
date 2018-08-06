@@ -1,11 +1,12 @@
 const { isArray, includes } = require('@bugsnag/core/lib/es-utils')
 const inferReleaseStage = require('@bugsnag/core/lib/infer-release-stage')
+const { positiveIntIfDefined } = require('@bugsnag/core/lib/validators')
 const SessionTracker = require('./tracker')
 const Backoff = require('backo')
 
 module.exports = {
   init: client => {
-    const sessionTracker = new SessionTracker()
+    const sessionTracker = new SessionTracker(client.config.sessionSummaryInterval)
     sessionTracker.on('summary', sendSessionSummary(client))
     sessionTracker.start()
 
@@ -27,6 +28,13 @@ module.exports = {
         return sessionClient
       }
     })
+  },
+  configSchema: {
+    sessionSummaryInterval: {
+      defaultValue: () => undefined,
+      validate: value => positiveIntIfDefined(value),
+      message: 'should be a positive integer'
+    }
   }
 }
 
@@ -61,6 +69,7 @@ const sendSessionSummary = client => sessionCounts => {
   }
 
   function req (cb) {
+    console.log('sending session')
     client._delivery.sendSession(
       client._logger,
       client.config,
