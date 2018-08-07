@@ -17,7 +17,10 @@ module.exports = () => ({
         },
         body: makePayload(report),
         proxy: config.proxy
-      }, cb)
+      }, (err, res, body) => {
+        if (err) logger.error(err)
+        cb(err)
+      })
     } catch (e) {
       logger.error(e)
     }
@@ -35,7 +38,10 @@ module.exports = () => ({
         },
         body: jsonStringify(session),
         proxy: config.proxy
-      }, cb)
+      }, err => {
+        if (err) logger.error(err)
+        cb(err)
+      })
     } catch (e) {
       logger.error(e)
     }

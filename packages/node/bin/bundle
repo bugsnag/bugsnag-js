@@ -11,7 +11,9 @@ browserify('src/notifier.js', { debug: true, standalone: 'bugsnag', node: true }
     'iserror',
     'stack-generator',
     'error-stack-parser',
-    'request'
+    'request',
+    'pump',
+    'byline'
   ])
   .bundle()
   .pipe(process.stdout)

@@ -14,7 +14,8 @@
   "scripts": {
     "clean": "rm -fr dist && mkdir dist",
     "build": "npm run clean && npm run build:dist",
-    "build:dist": "bin/bundle | exorcist dist/bugsnag.js.map > dist/bugsnag.js"
+    "build:dist": "bin/bundle | exorcist dist/bugsnag.js.map > dist/bugsnag.js",
+    "test": "bundle exec maze-runner"
   },
   "author": "Bugsnag",
   "license": "MIT",
@@ -34,8 +35,10 @@
     "nyc": "^12.0.2"
   },
   "dependencies": {
+    "byline": "^5.0.0",
     "error-stack-parser": "^2.0.2",
     "iserror": "^0.0.2",
+    "pump": "^3.0.0",
     "request": "^2.87.0",
     "stack-generator": "^2.0.3"
   }
