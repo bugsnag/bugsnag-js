@@ -3,6 +3,7 @@
  */
 
 module.exports = {
+  name: 'windowOnerror',
   init: (client, win = window) => {
     function onerror (messageOrEvent, url, lineNo, charNo, error) {
       // Ignore errors with no info due to CORS settings

@@ -35,12 +35,13 @@ describe('plugin: strip query string', () => {
     const client = new Client(VALID_NOTIFIER)
     const payloads = []
     let originalStacktrace
-    client.configure({
+    client.setOptions({
       apiKey: 'API_KEY_YEAH',
       beforeSend: report => {
         originalStacktrace = report.stacktrace.map(f => f)
       }
     })
+    client.configure()
     client.use(plugin)
 
     client.delivery({ sendReport: (logger, config, payload) => payloads.push(payload) })

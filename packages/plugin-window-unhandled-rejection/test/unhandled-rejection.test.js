@@ -19,8 +19,9 @@ describe('plugin: unhandled rejection', () => {
   describe('window.onunhandledrejection function', () => {
     it('captures unhandled promise rejections', done => {
       const client = new Client(VALID_NOTIFIER)
-      client.configure({ apiKey: 'API_KEY_YEAH' })
-      plugin.init(client, window)
+      client.setOptions({ apiKey: 'API_KEY_YEAH' })
+      client.configure()
+      client.use(plugin, window)
       client.delivery({
         sendReport: (logger, config, payload) => {
           const report = payload.events[0].toJSON()
@@ -38,8 +39,9 @@ describe('plugin: unhandled rejection', () => {
 
     it('handles bad user input', done => {
       const client = new Client(VALID_NOTIFIER)
-      client.configure({ apiKey: 'API_KEY_YEAH' })
-      plugin.init(client, window)
+      client.setOptions({ apiKey: 'API_KEY_YEAH' })
+      client.configure()
+      client.use(plugin, window)
       client.delivery({
         sendReport: (logger, config, payload) => {
           const report = payload.events[0].toJSON()
@@ -61,8 +63,9 @@ describe('plugin: unhandled rejection', () => {
     //
     // it('works with DOMExceptions', done => {
     //   const client = new Client(VALID_NOTIFIER)
-    //   client.configure({ apiKey: 'API_KEY_YEAH' })
-    //   plugin.init(client, window)
+    // setOptions({ apiKey: 'API_KEY_YEAH' })
+    //   client.configure()
+    //   client.use(plugin, window)
     //   client.delivery({
     //     sendReport: (logger, config, payload) => {
     //       const report = payload.events[0].toJSON()
@@ -101,8 +104,9 @@ describe('plugin: unhandled rejection', () => {
 
     it('handles errors with non-string stacks', done => {
       const client = new Client(VALID_NOTIFIER)
-      client.configure({ apiKey: 'API_KEY_YEAH' })
-      plugin.init(client, window)
+      client.setOptions({ apiKey: 'API_KEY_YEAH' })
+      client.configure()
+      client.use(plugin, window)
       client.delivery({
         sendReport: (logger, config, payload) => {
           const report = payload.events[0].toJSON()

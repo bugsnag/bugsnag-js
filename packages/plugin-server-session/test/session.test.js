@@ -21,7 +21,7 @@ describe('plugin: server sessions', () => {
       './tracker': TrackerMock
     })
     const c = new Client(VALID_NOTIFIER, config)
-    c.configure({
+    c.setOptions({
       apiKey: 'aaaa-aaaa-aaaa-aaaa'
     })
     c.delivery({
@@ -32,7 +32,9 @@ describe('plugin: server sessions', () => {
         done()
       }
     })
-    plugin.init(c)
+
+    c.configure()
+    c.use(plugin)
     c.startSession()
   })
 
@@ -51,7 +53,7 @@ describe('plugin: server sessions', () => {
     })
 
     const c = new Client(VALID_NOTIFIER, config)
-    c.configure({
+    c.setOptions({
       apiKey: 'aaaa-aaaa-aaaa-aaaa',
       logger: {
         debug: () => {},
@@ -73,7 +75,9 @@ describe('plugin: server sessions', () => {
         expect(true).toBe(false)
       }
     })
-    plugin.init(c)
+
+    c.configure()
+    c.use(plugin)
     c.startSession()
   })
 
@@ -90,7 +94,7 @@ describe('plugin: server sessions', () => {
     const plugin = proxyquire('../session', { './tracker': TrackerMock })
 
     const c = new Client(VALID_NOTIFIER, config)
-    c.configure({
+    c.setOptions({
       apiKey: 'aaaa-aaaa-aaaa-aaaa',
       endpoints: { notify: 'bloo', sessions: 'blah' },
       notifyReleaseStages: null,
@@ -113,7 +117,8 @@ describe('plugin: server sessions', () => {
       }
     })
 
-    plugin.init(c)
+    c.configure()
+    c.use(plugin)
     c.startSession()
   })
 })

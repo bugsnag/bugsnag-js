@@ -57,8 +57,9 @@ const window = {
 describe('plugin: navigation breadcrumbs', () => {
   it('should drop breadcrumb for navigational activity', done => {
     const c = new Client(VALID_NOTIFIER)
-    c.configure({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
-    plugin.init(c, window)
+    c.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
+    c.configure()
+    c.use(plugin, window)
 
     winHandlers['load'].forEach((h) => h.call(window))
     docHandlers['DOMContentLoaded'].forEach((h) => h.call(window.document))

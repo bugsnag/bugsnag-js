@@ -7,7 +7,7 @@ declare class Client {
   public app: object;
   public device: object;
   public context: string | void;
-  public config: common.IFinalConfig;
+  public config: common.IConfig;
   public user: object;
   public metaData: object;
 
@@ -15,8 +15,10 @@ declare class Client {
   public BugsnagBreadcrumb: typeof Breadcrumb;
   public BugsnagSession: typeof Session;
 
-  public use(plugin: common.IPlugin): any;
-  public configure(opts: common.IConfig): Client;
+  public use(plugin: common.IPlugin): Client;
+  public getPlugin(name: string): any;
+  public setOptions(opts: common.IConfig): Client;
+  public configure(schema?: common.IConfigSchema): Client;
   public delivery(delivery: common.IDelivery): Client;
   public logger(logger: common.ILogger): Client;
   public sessionDelegate(sessionDelegate: common.ISessionDelegate): Client;

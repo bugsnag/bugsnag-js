@@ -2,13 +2,14 @@ const { isArray, includes } = require('@bugsnag/core/lib/es-utils')
 const inferReleaseStage = require('@bugsnag/core/lib/infer-release-stage')
 
 module.exports = {
+  name: 'browserSession',
   init: client => client.sessionDelegate(sessionDelegate)
 }
 
 const sessionDelegate = {
   startSession: client => {
     const sessionClient = client
-    sessionClient.session = new client.BugsnagSession()
+    sessionClient._session = new client.BugsnagSession()
 
     const releaseStage = inferReleaseStage(sessionClient)
 
@@ -32,8 +33,8 @@ const sessionDelegate = {
         app: { ...{ releaseStage }, ...sessionClient.app },
         sessions: [
           {
-            id: sessionClient.session.id,
-            startedAt: sessionClient.session.startedAt,
+            id: sessionClient._session.id,
+            startedAt: sessionClient._session.startedAt,
             user: sessionClient.user
           }
         ]

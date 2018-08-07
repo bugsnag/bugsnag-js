@@ -8,49 +8,23 @@ export interface IConfig {
   autoNotify?: boolean;
   appVersion?: string;
   appType?: string;
-  endpoint?: string;
-  sessionEndpoint?: string;
   endpoints?: { notify: string, sessions: string };
   autoCaptureSessions?: boolean;
   notifyReleaseStages?: string[];
   releaseStage?: string;
-  maxEvents?: number;
   maxBreadcrumbs?: number;
-  consoleBreadcrumbsEnabled?: boolean;
-  networkBreadcrumbsEnabled?: boolean;
-  navigationBreadcrumbsEnabled?: boolean;
-  interactionBreadcrumbsEnabled?: boolean;
   user?: object | null;
   metaData?: object | null;
-  collectUserIp?: boolean;
   logger?: ILogger | null;
-}
-
-export interface IFinalConfig extends IConfig {
-  beforeSend: BeforeSend[];
-  autoNotify: boolean;
-  autoBreadcrumbs: boolean;
-  endpoints: { notify: string, sessions: string };
-  autoCaptureSessions: boolean;
-  notifyReleaseStages: string[];
-  releaseStage: string;
-  maxEvents: number;
-  maxBreadcrumbs: number;
-  consoleBreadcrumbsEnabled: boolean;
-  networkBreadcrumbsEnabled?: boolean;
-  navigationBreadcrumbsEnabled: boolean;
-  interactionBreadcrumbsEnabled: boolean;
-  user: object | null;
-  metaData: object | null;
-  collectUserIp: boolean;
-  logger?: ILogger | null;
+  [key: string]: any;
 }
 
 export type BeforeSend = (report: Report, cb?: (err: null | Error) => void) => void | Promise<void>;
 
 export interface IPlugin {
-  configSchema?: { [key: string]: IConfigSchemaEntry; };
+  name: string;
   init: (client: Client) => any;
+  configSchema?: IConfigSchema;
   destroy?(): void;
 }
 
@@ -58,6 +32,10 @@ export interface IConfigSchemaEntry {
   message: string;
   validate: (val: any) => boolean;
   defaultValue: () => any;
+}
+
+export interface IConfigSchema {
+  [key: string]: IConfigSchemaEntry;
 }
 
 export interface IDelivery {

@@ -27,13 +27,16 @@ describe('@bugsnag/core/client', () => {
       }
 
       // bare minimum opts supplied
-      expect(() => client.configure({ apiKey: 'API_KEY_YEAH' })).toBeDefined()
+      client.setOptions({ apiKey: 'API_KEY_YEAH' })
+      expect(() => client.configure()).toBeDefined()
     })
   })
 
   describe('use()', () => {
     it('supports plugins', done => {
       const client = new Client(VALID_NOTIFIER)
+      client.setOptions({ apiKey: '123' })
+      client.configure()
       client.use({
         name: 'test plugin',
         description: 'nothing much to see here',
@@ -53,7 +56,8 @@ describe('@bugsnag/core/client', () => {
         done()
       }
       client.logger({ debug: log, info: log, warn: log, error: log })
-      client.configure({ apiKey: 'API_KEY_YEAH' })
+      client.setOptions({ apiKey: 'API_KEY_YEAH' })
+      client.configure()
     })
     it('can supply a different logger via config', done => {
       const client = new Client(VALID_NOTIFIER)
@@ -61,7 +65,7 @@ describe('@bugsnag/core/client', () => {
         expect(msg).toBeTruthy()
         done()
       }
-      client.configure({
+      client.setOptions({
         apiKey: 'API_KEY_YEAH',
         logger: {
           debug: log,
@@ -70,13 +74,15 @@ describe('@bugsnag/core/client', () => {
           error: log
         }
       })
+      client.configure()
     })
     it('is ok with a null logger', () => {
       const client = new Client(VALID_NOTIFIER)
-      client.configure({
+      client.setOptions({
         apiKey: 'API_KEY_YEAH',
         logger: null
       })
+      client.configure()
     })
   })
 
@@ -98,7 +104,8 @@ describe('@bugsnag/core/client', () => {
           process.nextTick(() => done())
         }
       })
-      client.configure({ apiKey: 'API_KEY_YEAH' })
+      client.setOptions({ apiKey: 'API_KEY_YEAH' })
+      client.configure()
       client.notify(new Error('oh em gee'))
     })
 
@@ -114,7 +121,8 @@ describe('@bugsnag/core/client', () => {
           done()
         }
       })
-      client.configure({ apiKey: 'API_KEY_YEAH' })
+      client.setOptions({ apiKey: 'API_KEY_YEAH' })
+      client.configure()
       client.notify(new Error('oh em gee'), { severity: 'error' })
     })
 
@@ -130,7 +138,8 @@ describe('@bugsnag/core/client', () => {
           done()
         }
       })
-      client.configure({ apiKey: 'API_KEY_YEAH' })
+      client.setOptions({ apiKey: 'API_KEY_YEAH' })
+      client.configure()
       client.notify(new Error('oh em gee'), {
         beforeSend: report => {
           report.severity = 'info'
@@ -145,7 +154,8 @@ describe('@bugsnag/core/client', () => {
           fail('sendReport() should not be called')
         }
       })
-      client.configure({ apiKey: 'API_KEY_YEAH' })
+      client.setOptions({ apiKey: 'API_KEY_YEAH' })
+      client.configure()
 
       client.notify(new Error('oh em gee'), { beforeSend: report => report.ignore() })
       client.notify(new Error('oh em eff gee'), { beforeSend: report => false })
@@ -161,7 +171,8 @@ describe('@bugsnag/core/client', () => {
           fail('sendReport() should not be called')
         }
       })
-      client.configure({ apiKey: 'API_KEY_YEAH', notifyReleaseStages: [] })
+      client.setOptions({ apiKey: 'API_KEY_YEAH', notifyReleaseStages: [] })
+      client.configure()
 
       const sent = client.notify(new Error('oh em eff gee'))
       expect(sent).toBe(false)
@@ -177,7 +188,8 @@ describe('@bugsnag/core/client', () => {
           fail('sendReport() should not be called')
         }
       })
-      client.configure({ apiKey: 'API_KEY_YEAH', releaseStage: 'staging', notifyReleaseStages: [ 'production' ] })
+      client.setOptions({ apiKey: 'API_KEY_YEAH', releaseStage: 'staging', notifyReleaseStages: [ 'production' ] })
+      client.configure()
 
       const sent = client.notify(new Error('oh em eff gee'))
       expect(sent).toBe(false)
@@ -193,7 +205,8 @@ describe('@bugsnag/core/client', () => {
           fail('sendReport() should not be called')
         }
       })
-      client.configure({ apiKey: 'API_KEY_YEAH', notifyReleaseStages: [ 'production' ] })
+      client.setOptions({ apiKey: 'API_KEY_YEAH', notifyReleaseStages: [ 'production' ] })
+      client.configure()
       client.app.releaseStage = 'staging'
 
       const sent = client.notify(new Error('oh em eff gee'))
@@ -211,7 +224,8 @@ describe('@bugsnag/core/client', () => {
           done()
         }
       })
-      client.configure({ apiKey: 'API_KEY_YEAH', notifyReleaseStages: [ 'staging' ] })
+      client.setOptions({ apiKey: 'API_KEY_YEAH', notifyReleaseStages: [ 'staging' ] })
+      client.configure()
       client.app.releaseStage = 'staging'
       client.notify(new Error('oh em eff gee'))
     })
@@ -224,7 +238,8 @@ describe('@bugsnag/core/client', () => {
           done()
         }
       })
-      client.configure({ apiKey: 'API_KEY_YEAH', notifyReleaseStages: [ 'staging' ], releaseStage: 'staging' })
+      client.setOptions({ apiKey: 'API_KEY_YEAH', notifyReleaseStages: [ 'staging' ], releaseStage: 'staging' })
+      client.configure()
       client.notify(new Error('oh em eff gee'))
     })
 
@@ -236,7 +251,8 @@ describe('@bugsnag/core/client', () => {
           done()
         }
       })
-      client.configure({ apiKey: 'API_KEY_YEAH', notifyReleaseStages: [ 'testing' ], releaseStage: 'staging' })
+      client.setOptions({ apiKey: 'API_KEY_YEAH', notifyReleaseStages: [ 'testing' ], releaseStage: 'staging' })
+      client.configure()
       client.app.releaseStage = 'testing'
       client.notify(new Error('oh em eff gee'))
     })
@@ -249,14 +265,16 @@ describe('@bugsnag/core/client', () => {
           done()
         }
       })
-      client.configure({ apiKey: 'API_KEY_YEAH', appVersion: '1.2.3' })
+      client.setOptions({ apiKey: 'API_KEY_YEAH', appVersion: '1.2.3' })
+      client.configure()
       client.notify(new Error('oh em eff gee'))
     })
 
     it('can handle all kinds of bad input', () => {
       const payloads = []
       const client = new Client(VALID_NOTIFIER)
-      client.configure({ apiKey: 'API_KEY_YEAH' })
+      client.setOptions({ apiKey: 'API_KEY_YEAH' })
+      client.configure()
       client.delivery({ sendReport: (logger, config, payload) => payloads.push(payload) })
 
       client.notify(undefined)
@@ -280,7 +298,8 @@ describe('@bugsnag/core/client', () => {
     it('supports { name, message } usage', () => {
       const payloads = []
       const client = new Client(VALID_NOTIFIER)
-      client.configure({ apiKey: 'API_KEY_YEAH' })
+      client.setOptions({ apiKey: 'API_KEY_YEAH' })
+      client.configure()
       client.delivery({ sendReport: (logger, config, payload) => payloads.push(payload) })
       client.notify({ name: 'UnknownThing', message: 'found a thing that couldn’t be dealt with' })
 
@@ -292,7 +311,8 @@ describe('@bugsnag/core/client', () => {
     it('leaves a breadcrumb of the error', () => {
       const payloads = []
       const client = new Client(VALID_NOTIFIER)
-      client.configure({ apiKey: 'API_KEY_YEAH' })
+      client.setOptions({ apiKey: 'API_KEY_YEAH' })
+      client.configure()
       client.delivery({ sendReport: (logger, config, payload) => payloads.push(payload) })
       client.notify(new Error('foobar'))
       expect(client.breadcrumbs.length).toBe(1)
@@ -304,7 +324,8 @@ describe('@bugsnag/core/client', () => {
 
     it('doesn’t modify global client.metaData when using updateMetaData() method', () => {
       const client = new Client(VALID_NOTIFIER)
-      client.configure({ apiKey: 'API_KEY_YEAH' })
+      client.setOptions({ apiKey: 'API_KEY_YEAH' })
+      client.configure()
       client.metaData = { foo: [ 1, 2, 3 ] }
       client.notify(new Error('changes afoot'), {
         beforeSend: (report) => {
@@ -318,7 +339,8 @@ describe('@bugsnag/core/client', () => {
   describe('leaveBreadcrumb()', () => {
     it('creates a manual breadcrumb when a list of arguments are supplied', () => {
       const client = new Client(VALID_NOTIFIER)
-      client.configure({ apiKey: 'API_KEY_YEAH' })
+      client.setOptions({ apiKey: 'API_KEY_YEAH' })
+      client.configure()
       client.leaveBreadcrumb('french stick')
       expect(client.breadcrumbs.length).toBe(1)
       expect(client.breadcrumbs[0].type).toBe('manual')
@@ -328,7 +350,8 @@ describe('@bugsnag/core/client', () => {
 
     it('caps the length of breadcrumbs at the configured limit', () => {
       const client = new Client(VALID_NOTIFIER)
-      client.configure({ apiKey: 'API_KEY_YEAH', maxBreadcrumbs: 3 })
+      client.setOptions({ apiKey: 'API_KEY_YEAH', maxBreadcrumbs: 3 })
+      client.configure()
       client.leaveBreadcrumb('malted rye')
       expect(client.breadcrumbs.length).toBe(1)
       client.leaveBreadcrumb('medium sliced white hovis')
@@ -346,7 +369,8 @@ describe('@bugsnag/core/client', () => {
 
     it('doesn’t add the breadcrumb if it didn’t contain anything useful', () => {
       const client = new Client(VALID_NOTIFIER)
-      client.configure({ apiKey: 'API_KEY_YEAH' })
+      client.setOptions({ apiKey: 'API_KEY_YEAH' })
+      client.configure()
       client.leaveBreadcrumb(undefined)
       client.leaveBreadcrumb(null, { data: 'is useful' })
       client.leaveBreadcrumb(null, {}, null)
@@ -361,7 +385,8 @@ describe('@bugsnag/core/client', () => {
 
     it('allows maxBreadcrumbs to be set to 0', () => {
       const client = new Client(VALID_NOTIFIER)
-      client.configure({ apiKey: 'API_KEY_YEAH', maxBreadcrumbs: 0 })
+      client.setOptions({ apiKey: 'API_KEY_YEAH', maxBreadcrumbs: 0 })
+      client.configure()
       client.leaveBreadcrumb('toast')
       expect(client.breadcrumbs.length).toBe(0)
       client.leaveBreadcrumb('toast')
@@ -375,8 +400,9 @@ describe('@bugsnag/core/client', () => {
   describe('startSession()', () => {
     it('calls the provided the session delegate and return delegate’s return value', () => {
       const client = new Client(VALID_NOTIFIER)
+      client.setOptions({ apiKey: 'API_KEY' })
       let ret
-      client.configure({ apiKey: 'API_KEY' })
+      client.configure()
       client.sessionDelegate({
         startSession: c => {
           expect(c).toBe(client)
@@ -389,7 +415,8 @@ describe('@bugsnag/core/client', () => {
 
     it('calls warns if a session delegate is not provided', (done) => {
       const client = new Client(VALID_NOTIFIER)
-      client.configure({ apiKey: 'API_KEY' })
+      client.setOptions({ apiKey: 'API_KEY' })
+      client.configure()
       client.logger({
         debug: () => {},
         info: () => {},
@@ -404,11 +431,12 @@ describe('@bugsnag/core/client', () => {
 
     it('tracks error counts using the session delegate and sends them in error payloads', (done) => {
       const client = new Client(VALID_NOTIFIER)
-      client.configure({ apiKey: 'API_KEY' })
+      client.setOptions({ apiKey: 'API_KEY' })
+      client.configure()
       let i = 0
       client.sessionDelegate({
         startSession: (client) => {
-          client.session = new Session()
+          client._session = new Session()
           return client
         }
       })

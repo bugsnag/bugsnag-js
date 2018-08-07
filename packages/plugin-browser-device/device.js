@@ -4,6 +4,7 @@ const { isoDate } = require('@bugsnag/core/lib/es-utils')
  * Automatically detects browser device details
  */
 module.exports = {
+  name: 'browserDevice',
   init: (client, nav = navigator) => {
     const device = {
       locale: nav.browserLanguage || nav.systemLanguage || nav.userLanguage || nav.language,

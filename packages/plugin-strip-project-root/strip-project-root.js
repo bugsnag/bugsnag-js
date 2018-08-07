@@ -2,6 +2,7 @@ const { map } = require('@bugsnag/core/lib/es-utils')
 const normalizePath = require('@bugsnag/core/lib/path-normalizer')
 
 module.exports = {
+  name: 'stripProjectRoot',
   init: client => client.config.beforeSend.push(report => {
     if (!client.config.projectRoot) return
     const projectRoot = normalizePath(client.config.projectRoot)

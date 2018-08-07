@@ -15,10 +15,11 @@ const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 const ISO_8601 = /^\d{4}(-\d\d(-\d\d(T\d\d:\d\d(:\d\d)?(\.\d+)?(([+-]\d\d:\d\d)|Z)?)?)?)?$/i
 
 describe('plugin: node device', () => {
-  it('should set device = { hostname} and add a beforeSend callback which adds device time', done => {
-    const client = new Client(VALID_NOTIFIER, schema)
-    client.configure({ apiKey: 'API_KEY_YEAH' })
-    plugin.init(client)
+  it('should set device = { hostname } and add a beforeSend callback which adds device time', done => {
+    const client = new Client(VALID_NOTIFIER)
+    client.setOptions({ apiKey: 'API_KEY_YEAH' })
+    client.configure(schema)
+    client.use(plugin)
 
     expect(client.config.beforeSend.length).toBe(1)
     expect(client.device.hostname).toBe('test-machine.local')

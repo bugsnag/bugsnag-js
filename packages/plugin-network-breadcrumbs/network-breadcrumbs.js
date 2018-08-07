@@ -17,6 +17,8 @@ const getEndpoints = () =>
 /*
  * Leaves breadcrumbs when network requests occur
  */
+exports.name = 'networkBreadcrumbs'
+
 exports.init = (_client, _win = window) => {
   client = _client
   win = _win

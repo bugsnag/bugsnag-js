@@ -4,6 +4,7 @@
 const { map } = require('@bugsnag/core/lib/es-utils')
 
 module.exports = {
+  name: 'stripQueryString',
   init: (client) => {
     client.config.beforeSend.push(report => {
       report.stacktrace = map(report.stacktrace, frame => ({ ...frame, file: strip(frame.file) }))

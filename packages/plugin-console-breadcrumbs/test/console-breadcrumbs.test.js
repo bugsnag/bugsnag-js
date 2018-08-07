@@ -8,7 +8,8 @@ const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 describe('plugin: console breadcrumbs', () => {
   it('should leave a breadcrumb when console.log() is called', () => {
     const c = new Client(VALID_NOTIFIER)
-    c.configure({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
+    c.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
+    c.configure()
     c.use(plugin)
     console.log('check 1, 2')
     // make sure it's null-safe

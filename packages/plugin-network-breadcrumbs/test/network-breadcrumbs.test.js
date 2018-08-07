@@ -47,8 +47,9 @@ describe('plugin: network breadcrumbs', () => {
     const window = { XMLHttpRequest }
 
     const client = new Client(VALID_NOTIFIER)
-    client.configure({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
-    plugin.init(client, window)
+    client.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
+    client.configure()
+    client.use(plugin, window)
 
     const request = new window.XMLHttpRequest()
     request.open('GET', '/')
@@ -70,8 +71,9 @@ describe('plugin: network breadcrumbs', () => {
     const window = { XMLHttpRequest }
 
     const client = new Client(VALID_NOTIFIER)
-    client.configure({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
-    plugin.init(client, window)
+    client.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
+    client.configure()
+    client.use(plugin, window)
 
     const request = new window.XMLHttpRequest()
     request.open('GET', '/')
@@ -84,8 +86,9 @@ describe('plugin: network breadcrumbs', () => {
     const window = { XMLHttpRequest }
 
     const client = new Client(VALID_NOTIFIER)
-    client.configure({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
-    plugin.init(client, window)
+    client.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
+    client.configure()
+    client.use(plugin, window)
 
     const request = new window.XMLHttpRequest()
     request.open('GET', '/this-does-not-exist')
@@ -106,8 +109,9 @@ describe('plugin: network breadcrumbs', () => {
     const window = { XMLHttpRequest }
 
     const client = new Client(VALID_NOTIFIER)
-    client.configure({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
-    plugin.init(client, window)
+    client.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
+    client.configure()
+    client.use(plugin, window)
 
     const request = new window.XMLHttpRequest()
 
@@ -128,8 +132,9 @@ describe('plugin: network breadcrumbs', () => {
     const window = { XMLHttpRequest }
 
     const client = new Client(VALID_NOTIFIER)
-    client.configure({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
-    plugin.init(client, window)
+    client.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
+    client.configure()
+    client.use(plugin, window)
 
     const request = new window.XMLHttpRequest()
     request.open('GET', client.config.endpoints.notify)
@@ -142,8 +147,9 @@ describe('plugin: network breadcrumbs', () => {
     const window = { XMLHttpRequest }
 
     const client = new Client(VALID_NOTIFIER)
-    client.configure({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
-    plugin.init(client, window)
+    client.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
+    client.configure()
+    client.use(plugin, window)
 
     const request = new window.XMLHttpRequest()
     request.open('GET', client.config.endpoints.sessions)
@@ -155,8 +161,9 @@ describe('plugin: network breadcrumbs', () => {
     const window = { XMLHttpRequest, fetch }
 
     const client = new Client(VALID_NOTIFIER)
-    client.configure({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
-    plugin.init(client, window)
+    client.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
+    client.configure()
+    client.use(plugin, window)
 
     window.fetch('/', {}, false, 200).then(() => {
       expect(client.breadcrumbs.length).toBe(1)
@@ -176,8 +183,9 @@ describe('plugin: network breadcrumbs', () => {
     const window = { XMLHttpRequest, fetch }
 
     const client = new Client(VALID_NOTIFIER)
-    client.configure({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
-    plugin.init(client, window)
+    client.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
+    client.configure()
+    client.use(plugin, window)
 
     window.fetch('/does-not-exist', {}, false, 404).then(() => {
       expect(client.breadcrumbs.length).toBe(1)
@@ -197,8 +205,9 @@ describe('plugin: network breadcrumbs', () => {
     const window = { XMLHttpRequest, fetch }
 
     const client = new Client(VALID_NOTIFIER)
-    client.configure({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
-    plugin.init(client, window)
+    client.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
+    client.configure()
+    client.use(plugin, window)
 
     window.fetch('https://another-domain.xyz/foo/bar', {}, true).catch(() => {
       expect(client.breadcrumbs.length).toBe(1)

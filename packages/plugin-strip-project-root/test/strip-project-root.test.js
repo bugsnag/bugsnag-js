@@ -9,14 +9,7 @@ const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
 describe('plugin: strip project root', () => {
   it('should remove the project root if it matches the start of the stackframe’s file', done => {
-    const client = new Client(VALID_NOTIFIER, {
-      ...schema,
-      projectRoot: {
-        validate: () => true,
-        defaultValue: () => '',
-        message: ''
-      }
-    })
+    const client = new Client(VALID_NOTIFIER)
 
     client.delivery({
       sendReport: (logger, config, report) => {
@@ -29,8 +22,16 @@ describe('plugin: strip project root', () => {
       sendSession: () => {}
     })
 
-    client.configure({ apiKey: 'api_key', projectRoot: '/app' })
-    plugin.init(client)
+    client.setOptions({ apiKey: 'api_key', projectRoot: '/app' })
+    client.configure({
+      ...schema,
+      projectRoot: {
+        validate: () => true,
+        defaultValue: () => '',
+        message: ''
+      }
+    })
+    client.use(plugin)
 
     client.notify(new Report('Error', 'strip project root test', [
       {
@@ -50,14 +51,7 @@ describe('plugin: strip project root', () => {
   })
 
   it('should not remove a matching substring if it is not at the start', done => {
-    const client = new Client(VALID_NOTIFIER, {
-      ...schema,
-      projectRoot: {
-        validate: () => true,
-        defaultValue: () => '',
-        message: ''
-      }
-    })
+    const client = new Client(VALID_NOTIFIER)
 
     client.delivery({
       sendReport: (logger, config, report) => {
@@ -70,8 +64,16 @@ describe('plugin: strip project root', () => {
       sendSession: () => {}
     })
 
-    client.configure({ apiKey: 'api_key', projectRoot: '/app' })
-    plugin.init(client)
+    client.setOptions({ apiKey: 'api_key', projectRoot: '/app' })
+    client.configure({
+      ...schema,
+      projectRoot: {
+        validate: () => true,
+        defaultValue: () => '',
+        message: ''
+      }
+    })
+    client.use(plugin)
 
     client.notify(new Report('Error', 'strip project root test', [
       {
@@ -91,14 +93,7 @@ describe('plugin: strip project root', () => {
   })
 
   it('should work with node_modules and node internals', done => {
-    const client = new Client(VALID_NOTIFIER, {
-      ...schema,
-      projectRoot: {
-        validate: () => true,
-        defaultValue: () => '',
-        message: ''
-      }
-    })
+    const client = new Client(VALID_NOTIFIER)
 
     client.delivery({
       sendReport: (logger, config, report) => {
@@ -110,8 +105,16 @@ describe('plugin: strip project root', () => {
       sendSession: () => {}
     })
 
-    client.configure({ apiKey: 'api_key', projectRoot: '/app' })
-    plugin.init(client)
+    client.setOptions({ apiKey: 'api_key', projectRoot: '/app' })
+    client.configure({
+      ...schema,
+      projectRoot: {
+        validate: () => true,
+        defaultValue: () => '',
+        message: ''
+      }
+    })
+    client.use(plugin)
 
     client.notify(new Report('Error', 'strip project root test', [
       {
@@ -127,14 +130,7 @@ describe('plugin: strip project root', () => {
   })
 
   it('should tolerate stackframe.file not being a string', done => {
-    const client = new Client(VALID_NOTIFIER, {
-      ...schema,
-      projectRoot: {
-        validate: () => true,
-        defaultValue: () => '',
-        message: ''
-      }
-    })
+    const client = new Client(VALID_NOTIFIER)
 
     client.delivery({
       sendReport: (logger, config, report) => {
@@ -147,8 +143,16 @@ describe('plugin: strip project root', () => {
       sendSession: () => {}
     })
 
-    client.configure({ apiKey: 'api_key', projectRoot: '/app' })
-    plugin.init(client)
+    client.setOptions({ apiKey: 'api_key', projectRoot: '/app' })
+    client.configure({
+      ...schema,
+      projectRoot: {
+        validate: () => true,
+        defaultValue: () => '',
+        message: ''
+      }
+    })
+    client.use(plugin)
 
     client.notify(new Report('Error', 'strip project root test', [
       {

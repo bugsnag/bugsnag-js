@@ -3,14 +3,14 @@ const { describe, it, expect } = global
 const plugin = require('../')
 
 const Client = require('@bugsnag/core/client')
-const schema = { ...require('@bugsnag/core/config').schema, ...plugin.configSchema }
 const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
 describe('plugin: ip', () => {
   it('does nothing when collectUserIp=true', () => {
-    const client = new Client(VALID_NOTIFIER, schema)
+    const client = new Client(VALID_NOTIFIER)
     const payloads = []
-    client.configure({ apiKey: 'API_KEY_YEAH' })
+    client.setOptions({ apiKey: 'API_KEY_YEAH' })
+    client.configure()
     client.use(plugin)
 
     client.delivery({ sendReport: (logger, config, payload) => payloads.push(payload) })
@@ -23,9 +23,10 @@ describe('plugin: ip', () => {
   })
 
   it('doesn’t overwrite an existing user id', () => {
-    const client = new Client(VALID_NOTIFIER, schema)
+    const client = new Client(VALID_NOTIFIER)
     const payloads = []
-    client.configure({ apiKey: 'API_KEY_YEAH', collectUserIp: false })
+    client.setOptions({ apiKey: 'API_KEY_YEAH', collectUserIp: false })
+    client.configure()
     client.use(plugin)
 
     client.user = { id: 'foobar' }
@@ -39,9 +40,10 @@ describe('plugin: ip', () => {
   })
 
   it('redacts user IP if none is provided', () => {
-    const client = new Client(VALID_NOTIFIER, schema)
+    const client = new Client(VALID_NOTIFIER)
     const payloads = []
-    client.configure({ apiKey: 'API_KEY_YEAH', collectUserIp: false })
+    client.setOptions({ apiKey: 'API_KEY_YEAH', collectUserIp: false })
+    client.configure()
     client.use(plugin)
 
     client.delivery({ sendReport: (logger, config, payload) => payloads.push(payload) })

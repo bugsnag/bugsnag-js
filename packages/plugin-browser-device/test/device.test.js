@@ -11,8 +11,9 @@ describe('plugin: device', () => {
   it('should add a beforeSend callback which captures device information', () => {
     const client = new Client(VALID_NOTIFIER)
     const payloads = []
-    client.configure({ apiKey: 'API_KEY_YEAH' })
-    plugin.init(client, navigator)
+    client.setOptions({ apiKey: 'API_KEY_YEAH' })
+    client.configure()
+    client.use(plugin, navigator)
 
     expect(client.config.beforeSend.length).toBe(1)
 

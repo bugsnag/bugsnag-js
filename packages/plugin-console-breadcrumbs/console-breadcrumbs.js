@@ -3,6 +3,8 @@ const { map, reduce, filter } = require('@bugsnag/core/lib/es-utils')
 /*
  * Leaves breadcrumbs when console log methods are called
  */
+exports.name = 'consoleBreadcrumbs'
+
 exports.init = (client) => {
   map(CONSOLE_LOG_METHODS, method => {
     const original = console[method]

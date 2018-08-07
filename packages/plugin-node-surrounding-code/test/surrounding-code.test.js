@@ -5,11 +5,10 @@ const { join } = require('path')
 const Report = require('@bugsnag/core/report')
 const Client = require('@bugsnag/core/client')
 const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
-const schema = { ...require('@bugsnag/core/config').schema, ...plugin.configSchema }
 
 describe('plugin: node surrounding code', () => {
   it('should load code successfully for stackframes whose files exist', done => {
-    const client = new Client(VALID_NOTIFIER, schema)
+    const client = new Client(VALID_NOTIFIER)
 
     client.delivery({
       sendReport: (logger, config, report) => {
@@ -34,8 +33,9 @@ describe('plugin: node surrounding code', () => {
       sendSession: () => {}
     })
 
-    client.configure({ apiKey: 'api_key' })
-    plugin.init(client)
+    client.setOptions({ apiKey: 'api_key' })
+    client.configure()
+    client.use(plugin)
 
     client.notify(new Report('Error', 'surrounding code loading test', [
       {
@@ -55,7 +55,7 @@ describe('plugin: node surrounding code', () => {
   })
 
   it('should tolerate missing files for some stackframes', done => {
-    const client = new Client(VALID_NOTIFIER, schema)
+    const client = new Client(VALID_NOTIFIER)
 
     client.delivery({
       sendReport: (logger, config, report) => {
@@ -68,8 +68,9 @@ describe('plugin: node surrounding code', () => {
       sendSession: () => {}
     })
 
-    client.configure({ apiKey: 'api_key' })
-    plugin.init(client)
+    client.setOptions({ apiKey: 'api_key' })
+    client.configure()
+    client.use(plugin)
 
     client.notify(new Report('Error', 'surrounding code loading test', [
       {
@@ -89,7 +90,7 @@ describe('plugin: node surrounding code', () => {
   })
 
   it('behaves sensibly for code at the beginning and end of a file', done => {
-    const client = new Client(VALID_NOTIFIER, schema)
+    const client = new Client(VALID_NOTIFIER)
 
     client.delivery({
       sendReport: (logger, config, report) => {
@@ -111,8 +112,9 @@ describe('plugin: node surrounding code', () => {
       sendSession: () => {}
     })
 
-    client.configure({ apiKey: 'api_key' })
-    plugin.init(client)
+    client.setOptions({ apiKey: 'api_key' })
+    client.configure()
+    client.use(plugin)
 
     client.notify(new Report('Error', 'surrounding code loading test', [
       {
