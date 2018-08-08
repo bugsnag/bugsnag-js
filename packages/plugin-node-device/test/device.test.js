@@ -6,7 +6,7 @@ const Client = require('@bugsnag/core/client')
 const schema = {
   ...require('@bugsnag/core/config').schema,
   hostname: {
-    defaultValue: () => 'foo',
+    defaultValue: () => 'test-machine.local',
     validate: () => true,
     message: 'should be a string'
   }
@@ -21,7 +21,7 @@ describe('plugin: node device', () => {
     plugin.init(client)
 
     expect(client.config.beforeSend.length).toBe(1)
-    expect(client.device.hostname).toBeDefined()
+    expect(client.device.hostname).toBe('test-machine.local')
 
     client.delivery({
       sendReport: (logger, config, payload) => {
