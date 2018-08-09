@@ -1,6 +1,12 @@
-When("I configure the bugsnag endpoint") do
+When("I configure the bugsnag notify endpoint") do
   steps %Q{
     When I set environment variable "BUGSNAG_NOTIFY_ENDPOINT" to "http://#{current_ip}:#{MOCK_API_PORT}"
+  }
+end
+
+When("I configure the bugsnag sessions endpoint") do
+  steps %Q{
+    When I set environment variable "BUGSNAG_SESSIONS_ENDPOINT" to "http://#{current_ip}:#{MOCK_API_PORT}"
   }
 end
 

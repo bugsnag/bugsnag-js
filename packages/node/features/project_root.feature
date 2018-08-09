@@ -2,7 +2,7 @@ Feature: Setting project root
 
 Background:
   Given I set environment variable "BUGSNAG_API_KEY" to "9c2151b65d615a3a95ba408142c8698f"
-  And I configure the bugsnag endpoint
+  And I configure the bugsnag notify endpoint
 
 Scenario Outline: project root should default to the current working directory
   And I set environment variable "NODE_VERSION" to "<node version>"

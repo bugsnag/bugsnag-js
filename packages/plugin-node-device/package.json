@@ -1,0 +1,26 @@
+{
+  "name": "@bugsnag/plugin-node-device",
+  "version": "1.0.0",
+  "main": "device.js",
+  "description": "@bugsnag/js plugin to set device info in node",
+  "homepage": "https://www.bugsnag.com/",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:bugsnag/bugsnag-js.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "nyc --reporter=lcov -- jasmine '!(node_modules)/**/*.test.js'"
+  },
+  "author": "Bugsnag",
+  "license": "MIT",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "@bugsnag/core": "^1.0.0",
+    "jasmine": "^3.1.0",
+    "nyc": "^12.0.2"
+  }
+}

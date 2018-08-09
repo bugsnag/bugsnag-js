@@ -1,8 +1,6 @@
-const { includes } = require('./es-utils')
-
-exports.positiveIntIfDefined = value =>
-  includes([ 'undefined', 'number' ], typeof value) &&
+exports.intRange = (min = 1, max = Infinity) => value =>
+  typeof value === 'number' &&
   parseInt('' + value, 10) === value &&
-  value > 0
+  value >= min && value <= max
 
 exports.stringWithLength = value => typeof value === 'string' && !!value.length

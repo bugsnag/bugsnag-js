@@ -1,4 +1,4 @@
-const { positiveIntIfDefined } = require('@bugsnag/core/lib/validators')
+const { intRange } = require('@bugsnag/core/lib/validators')
 
 /*
  * Throttles and dedupes error reports
@@ -22,7 +22,7 @@ module.exports = {
     maxEvents: {
       defaultValue: () => 10,
       message: 'should be a positive integer ≤100',
-      validate: val => positiveIntIfDefined(val) && val < 100
+      validate: val => intRange(1, 100)(val)
     }
   }
 }
