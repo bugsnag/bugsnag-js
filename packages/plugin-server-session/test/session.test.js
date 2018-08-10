@@ -3,7 +3,6 @@ const { describe, it, expect } = global
 const proxyquire = require('proxyquire').noCallThru().noPreserveCache()
 const Emitter = require('events')
 const Client = require('@bugsnag/core/client')
-const config = { ...require('@bugsnag/core/config').schema }
 const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
 describe('plugin: server sessions', () => {
@@ -20,7 +19,7 @@ describe('plugin: server sessions', () => {
     const plugin = proxyquire('../session', {
       './tracker': TrackerMock
     })
-    const c = new Client(VALID_NOTIFIER, config)
+    const c = new Client(VALID_NOTIFIER)
     c.setOptions({
       apiKey: 'aaaa-aaaa-aaaa-aaaa'
     })
@@ -52,7 +51,7 @@ describe('plugin: server sessions', () => {
       './tracker': TrackerMock
     })
 
-    const c = new Client(VALID_NOTIFIER, config)
+    const c = new Client(VALID_NOTIFIER)
     c.setOptions({
       apiKey: 'aaaa-aaaa-aaaa-aaaa',
       logger: {
@@ -93,7 +92,7 @@ describe('plugin: server sessions', () => {
     }
     const plugin = proxyquire('../session', { './tracker': TrackerMock })
 
-    const c = new Client(VALID_NOTIFIER, config)
+    const c = new Client(VALID_NOTIFIER)
     c.setOptions({
       apiKey: 'aaaa-aaaa-aaaa-aaaa',
       endpoints: { notify: 'bloo', sessions: 'blah' },
