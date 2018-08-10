@@ -35,5 +35,7 @@ module.exports = (opts, userPlugins = []) => {
 
   plugins.forEach(pl => bugsnag.use(pl))
 
+  bugsnag._logger.debug(`Loaded!`)
+
   return bugsnag
 }

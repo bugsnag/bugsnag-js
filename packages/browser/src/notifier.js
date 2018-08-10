@@ -100,6 +100,8 @@ module.exports = (opts) => {
     bugsnag.use(pluginConsoleBreadcrumbs)
   }
 
+  bugsnag._logger.debug(`Loaded!`)
+
   return bugsnag.config.autoCaptureSessions
     ? bugsnag.startSession()
     : bugsnag

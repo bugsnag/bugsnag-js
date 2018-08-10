@@ -78,7 +78,6 @@ class BugsnagClient {
 
     this._configured = true
 
-    this._logger.debug(`Loaded!`)
     return this
   }
 
