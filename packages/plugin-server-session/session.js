@@ -9,7 +9,6 @@ module.exports = {
     const sessionTracker = new SessionTracker(client.config.sessionSummaryInterval)
     sessionTracker.on('summary', sendSessionSummary(client))
     sessionTracker.start()
-
     client.sessionDelegate({
       startSession: client => {
         const sessionClient = new client.BugsnagClient(client.notifier)
@@ -42,6 +41,8 @@ module.exports = {
 const sendSessionSummary = client => sessionCounts => {
   const releaseStage = inferReleaseStage(client)
 
+  if (!client.config.autoCaptureSessions) return
+
   // exit early if the reports should not be sent on the current releaseStage
   if (isArray(client.config.notifyReleaseStages) && !includes(client.config.notifyReleaseStages, releaseStage)) {
     client._logger.warn(`Session not sent due to releaseStage/notifyReleaseStages configuration`)
@@ -60,12 +61,12 @@ const sendSessionSummary = client => sessionCounts => {
   req(handleRes)
 
   function handleRes (err) {
-    if (!err) return client._logger.info('Session delivered')
+    if (!err) return client._logger.debug(`${sessionCounts.length} sessions reported`)
     if (backoff.attempts === 10) {
       client._logger.error('Session delivery failed, max retries exceeded', err)
       return
     }
-    client._logger.info('Session delivery failed, retry #' + (backoff.attempts + 1) + '/' + maxAttempts, err)
+    client._logger.debug('Session delivery failed, retry #' + (backoff.attempts + 1) + '/' + maxAttempts, err)
     setTimeout(() => req(handleRes), backoff.duration())
   }
 

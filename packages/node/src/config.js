@@ -18,6 +18,17 @@ module.exports = {
   logger: {
     ...schema.logger,
     defaultValue: () => getPrefixedConsole()
+  },
+  onUnhandledError: {
+    defaultValue: () => (err, report, logger) => {
+      const context = report.request
+        ? ` at ${report.request.httpMethod} ${report.request.path || report.request.url}`
+        : ``
+      logger.error(`Encountered an unhandled error${context}, terminating…\n${err ? err.stack : err}`)
+      process.exit(1)
+    },
+    message: 'should be a function',
+    validate: value => typeof value === 'function'
   }
 }
 

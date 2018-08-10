@@ -44,3 +44,16 @@ services:
       - BUGSNAG_NOTIFY_ENDPOINT
       - BUGSNAG_SESSIONS_ENDPOINT
     restart: "no"
+
+  express:
+    build:
+      context: express
+      args:
+        - NODE_VERSION
+    ports:
+      - "4312:4312"
+    environment:
+      - BUGSNAG_API_KEY
+      - BUGSNAG_NOTIFY_ENDPOINT
+      - BUGSNAG_SESSIONS_ENDPOINT
+    restart: "no"

@@ -1,0 +1,37 @@
+{
+  "name": "@bugsnag/plugin-express",
+  "version": "1.0.0",
+  "main": "dist/bugsnag-express.js",
+  "types": "types/bugsnag-express.d.ts",
+  "description": "@bugsnag/js error handling middleware for Express (and Connect) web servers",
+  "homepage": "https://www.bugsnag.com/",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:bugsnag/bugsnag-js.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "clean": "rm -fr dist && mkdir dist",
+    "build": "npm run clean && npm run build:dist",
+    "build:dist": "bin/bundle | exorcist dist/bugsnag-express.js.map > dist/bugsnag-express.js",
+    "test": "nyc --reporter=lcov -- jasmine '!(node_modules)/**/*.test.js'"
+  },
+  "author": "Bugsnag",
+  "license": "MIT",
+  "peerDependencies": {
+    "@bugsnag/node": "^1.0.0"
+  },
+  "devDependencies": {
+    "@bugsnag/core": "^1.0.0",
+    "babelify": "9.0.0",
+    "browserify": "^16.2.2",
+    "exorcist": "^1.0.1",
+    "jasmine": "^3.1.0",
+    "nyc": "^12.0.2"
+  },
+  "dependencies": {
+    "iserror": "^0.0.2"
+  }
+}
