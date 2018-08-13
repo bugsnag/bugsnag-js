@@ -55,9 +55,10 @@ describe('@bugsnag/core/client', () => {
         expect(msg).toBeTruthy()
         done()
       }
-      client.logger({ debug: log, info: log, warn: log, error: log })
       client.setOptions({ apiKey: 'API_KEY_YEAH' })
       client.configure()
+      client.logger({ debug: log, info: log, warn: log, error: log })
+      client._logger.debug('hey')
     })
     it('can supply a different logger via config', done => {
       const client = new Client(VALID_NOTIFIER)
@@ -75,6 +76,7 @@ describe('@bugsnag/core/client', () => {
         }
       })
       client.configure()
+      client._logger.debug('hey')
     })
     it('is ok with a null logger', () => {
       const client = new Client(VALID_NOTIFIER)
@@ -83,6 +85,7 @@ describe('@bugsnag/core/client', () => {
         logger: null
       })
       client.configure()
+      client._logger.debug('hey')
     })
   })
 
