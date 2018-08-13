@@ -5,7 +5,6 @@ const pump = require('pump')
 const byline = require('byline')
 
 module.exports = {
-  name: 'nodeSurroundingCode',
   init: client => {
     if (!client.config.sendCode) return
 

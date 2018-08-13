@@ -6,8 +6,6 @@ const isError = require('iserror')
 /*
  * Automatically notifies Bugsnag when window.onunhandledrejection is called
  */
-exports.name = 'windowUnhandledRejection'
-
 let _listener
 exports.init = (client, win = window) => {
   const listener = event => {

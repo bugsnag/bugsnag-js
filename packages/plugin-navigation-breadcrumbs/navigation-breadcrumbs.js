@@ -1,8 +1,6 @@
 /*
  * Leaves breadcrumbs when navigation methods are called or events are emitted
  */
-exports.name = 'navigationBreadcrumbs'
-
 exports.init = (client, win = window) => {
   if (!('addEventListener' in win)) return
 

@@ -5,7 +5,6 @@ const { intRange } = require('@bugsnag/core/lib/validators')
  */
 
 module.exports = {
-  name: 'simpleThrottle',
   init: (client) => {
     // track sent events for each init of the plugin
     let n = 0

@@ -22,7 +22,7 @@ export interface IConfig {
 export type BeforeSend = (report: Report, cb?: (err: null | Error) => void) => void | Promise<void>;
 
 export interface IPlugin {
-  name: string;
+  name?: string;
   init: (client: Client) => any;
   configSchema?: IConfigSchema;
   destroy?(): void;

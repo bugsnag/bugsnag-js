@@ -1,7 +1,6 @@
 const { reduce } = require('@bugsnag/core/lib/es-utils')
 
 module.exports = {
-  name: 'inlineScriptContent',
   init: (client, doc = document, win = window) => {
     let html = ''
     let DOMContentLoaded = false

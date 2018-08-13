@@ -2,7 +2,6 @@
  * Leaves breadcrumbs when the user interacts with the DOM
  */
 module.exports = {
-  name: 'interactionBreadcrumbs',
   init: (client, win = window) => {
     if (!('addEventListener' in win)) return
 

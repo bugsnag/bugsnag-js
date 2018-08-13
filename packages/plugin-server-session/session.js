@@ -5,7 +5,6 @@ const SessionTracker = require('./tracker')
 const Backoff = require('backo')
 
 module.exports = {
-  name: 'serverSession',
   init: client => {
     const sessionTracker = new SessionTracker(client.config.sessionSummaryInterval)
     sessionTracker.on('summary', sendSessionSummary(client))

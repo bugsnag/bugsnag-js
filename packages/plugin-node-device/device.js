@@ -4,7 +4,6 @@ const { isoDate } = require('@bugsnag/core/lib/es-utils')
  * Automatically detects browser device details
  */
 module.exports = {
-  name: 'nodeDevice',
   init: (client) => {
     const device = { hostname: client.config.hostname }
 

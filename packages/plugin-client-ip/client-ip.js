@@ -2,7 +2,6 @@
  * Prevent collection of user IPs
  */
 module.exports = {
-  name: 'clientIp',
   init: (client) => {
     if (client.config.collectUserIp) return
 
