@@ -53,7 +53,73 @@ In order to develop on the project you’ll need to be on Mac/Linux٭. You’ll 
 
 ## Testing
 
-TODO
+### Initial setup
+
+Clone and navigate to this repo:
+
+```sh
+git clone git@github.com:bugsnag/bugsnag-js.git
+cd bugsnag-js
+```
+Install top level dependencies:
+```js
+npm i
+cd packages/browser && bundle
+cd ../node && bundle
+cd ../..
+```
+
+Install dependencies of each package:
+```sh
+npx lerna bootstrap
+```
+
+Build any package that requires building:
+```sh
+npx lerna build
+```
+
+### Unit tests
+
+Runs the unit tests for each package.
+
+```sh
+npm run test:unit
+```
+
+### Type tests
+
+This tests the validity of TypeScript typing files, and lints them using tslint.
+
+```sh
+npm run test:types
+```
+
+### Linting
+
+Lints the entire repo using standardjs rules.
+
+```sh
+npm run test:lint
+```
+
+### End to end
+
+#### Browser
+
+These tests require the `BROWSER` environment variable to be set (choose a value from [`packages/browser/features/browsers.yml`](/packages/browser/features/browsers.yml)). It also requires some browserstack credentials to be set in your environment.
+
+```sh
+BROWSER=chrome_61 npm run test:browser
+```
+
+#### Node
+
+These tests require docker to be running.
+
+```sh
+npm run test:node
+```
 
 ## Releases
 

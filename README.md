@@ -57,6 +57,20 @@ Use the following plugins and guides to integrate Bugsnag with various framework
 
 Most updates to this repo will be made by Bugsnag employees. We are unable to accommodate significant external PRs such as features additions or any large refactoring, however minor fixes are welcome. See [contributing](CONTRIBUTING.md) for more information.
 
+## Development quick start
+
+```sh
+git clone git@github.com:bugsnag/bugsnag-js.git
+cd bugsnag-js
+npm i
+npx lerna run bootstrap
+npx lerna run build
+cd packages/browser && bundle
+cd ../node && bundle
+```
+
+See [contributing](CONTRIBUTING.md) for more information.
+
 ## License
 
 All packages in this repository are released under the MIT License.
