@@ -21,7 +21,7 @@ module.exports = {
   },
   onUnhandledError: {
     defaultValue: () => (err, report, logger) => {
-      const context = report.request
+      const context = report.request && Object.keys(report.request).length
         ? ` at ${report.request.httpMethod} ${report.request.path || report.request.url}`
         : ``
       logger.error(`Encountered an unhandled error${context}, terminating…\n${err ? err.stack : err}`)

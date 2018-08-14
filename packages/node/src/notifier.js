@@ -14,13 +14,17 @@ const pluginInProject = require('@bugsnag/plugin-node-in-project')
 const pluginStripProjectRoot = require('@bugsnag/plugin-strip-project-root')
 const pluginServerSession = require('@bugsnag/plugin-server-session')
 const pluginNodeDevice = require('@bugsnag/plugin-node-device')
+const pluginNodeUncaughtException = require('@bugsnag/plugin-node-uncaught-exception')
+const pluginNodeUnhandledRejection = require('@bugsnag/plugin-node-unhandled-rejection')
 
 const plugins = [
   pluginSurroundingCode,
   pluginInProject,
   pluginStripProjectRoot,
   pluginServerSession,
-  pluginNodeDevice
+  pluginNodeDevice,
+  pluginNodeUncaughtException,
+  pluginNodeUnhandledRejection
 ]
 
 module.exports = (opts, userPlugins = []) => {

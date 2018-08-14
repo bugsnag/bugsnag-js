@@ -1,6 +1,14 @@
 const domain = require('domain') // eslint-disable-line
 const extractRequestInfo = require('./request-info')
-const iserror = require('iserror')
+const createReportFromErr = require('@bugsnag/core/lib/report-from-error')
+const handledState = {
+  severity: 'error',
+  unhandled: true,
+  severityReason: {
+    type: 'unhandledErrorMiddleware',
+    attributes: { framework: 'Express/Connect' }
+  }
+}
 
 module.exports = {
   name: 'express',
@@ -28,7 +36,7 @@ module.exports = {
 
       // unhandled errors caused by this request
       dom.on('error', (err) => {
-        req.bugsnag.notify(createReportFromErr(err), {}, (e, report) => {
+        req.bugsnag.notify(createReportFromErr(err, handledState), {}, (e, report) => {
           if (e) return client._logger('Failed to send report to Bugsnag')
           req.bugsnag.config.onUnhandledError(err, report, client._logger)
         })
@@ -47,30 +55,8 @@ module.exports = {
         )
         c = client
       }
-      c.notify(createReportFromErr(err))
+      c.notify(createReportFromErr(err, handledState))
       next(err)
-    }
-
-    const createReportFromErr = err => {
-      const handledState = {
-        severity: 'error',
-        unhandled: true,
-        severityReason: {
-          type: 'unhandledErrorMiddleware',
-          attributes: { framework: 'Express/Connect' }
-        }
-      }
-      const actualError = iserror(err)
-        ? err
-        : new Error('Handled a non-error. See "error" tab for more detail.')
-      const report = new client.BugsnagReport(
-        actualError.name,
-        actualError.message,
-        client.BugsnagReport.getStacktrace(actualError),
-        handledState
-      )
-      if (err !== actualError) report.updateMetaData('error', 'non-error value', err)
-      return report
     }
 
     return { requestHandler, errorHandler }
