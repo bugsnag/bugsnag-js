@@ -19,13 +19,17 @@ module.exports = {
     ...schema.logger,
     defaultValue: () => getPrefixedConsole()
   },
-  onUnhandledError: {
+  onUncaughtException: {
     defaultValue: () => (err, report, logger) => {
-      const context = report.request && Object.keys(report.request).length
-        ? ` at ${report.request.httpMethod} ${report.request.path || report.request.url}`
-        : ``
-      logger.error(`Encountered an unhandled error${context}, terminating…\n${err ? err.stack : err}`)
+      logger.error(`Reported an uncaught exception${getContext(report)}, the process will now terminate…\n${err ? err.stack : err}`)
       process.exit(1)
+    },
+    message: 'should be a function',
+    validate: value => typeof value === 'function'
+  },
+  onUnhandledRejection: {
+    defaultValue: () => (err, report, logger) => {
+      logger.error(`Reported an unhandled rejection${getContext(report)}…\n${err ? err.stack : err}`)
     },
     message: 'should be a function',
     validate: value => typeof value === 'function'
@@ -39,3 +43,8 @@ const getPrefixedConsole = () => {
     return accum
   }, {})
 }
+
+const getContext = report =>
+  report.request && Object.keys(report.request).length
+    ? ` at ${report.request.httpMethod} ${report.request.path || report.request.url}`
+    : ``

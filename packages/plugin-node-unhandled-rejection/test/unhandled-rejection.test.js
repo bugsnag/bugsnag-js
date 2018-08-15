@@ -27,7 +27,7 @@ describe('plugin: node unhandled rejection handler', () => {
     expect(after).toBe(before)
   })
 
-  it('should call the configured onUnhandledError callback', done => {
+  it('should call the configured onUnhandledRejection callback', done => {
     const c = new Client(VALID_NOTIFIER)
     c.delivery({
       sendReport: (...args) => args[args.length - 1](),
@@ -35,7 +35,7 @@ describe('plugin: node unhandled rejection handler', () => {
     })
     c.setOptions({
       apiKey: 'api_key',
-      onUnhandledError: (err, report) => {
+      onUnhandledRejection: (err, report) => {
         expect(err.message).toBe('never gonna catch me')
         expect(report.errorMessage).toBe('never gonna catch me')
         expect(report._handledState.unhandled).toBe(true)
@@ -47,7 +47,7 @@ describe('plugin: node unhandled rejection handler', () => {
     })
     c.configure({
       ...schema,
-      onUnhandledError: {
+      onUnhandledRejection: {
         validate: val => typeof val === 'function',
         message: 'should be a function',
         defaultValue: () => {}
@@ -55,41 +55,5 @@ describe('plugin: node unhandled rejection handler', () => {
     })
     c.use(plugin)
     process.listeners('unhandledRejection')[1](new Error('never gonna catch me'))
-  })
-
-  it('does not call config.onUnhandledError when terminateOnUnhandledRejection=false', done => {
-    const c = new Client(VALID_NOTIFIER)
-    c.delivery({
-      sendReport: (...args) => {
-        expect(args[2].events[0].errorMessage).toBe('floop')
-        args[args.length - 1]()
-        // allow a moment for the onUnhandledError callback to be called
-        setTimeout(() => {
-          plugin.destroy()
-          done()
-        }, 1)
-      },
-      sendSession: (...args) => args[args.length - 1]()
-    })
-    c.setOptions({
-      apiKey: 'api_key',
-      terminateOnUnhandledRejection: false,
-      onUnhandledError: () => expect(true).toBe(false)
-    })
-    c.configure({
-      ...schema,
-      terminateOnUnhandledRejection: {
-        defaultValue: () => true,
-        message: 'should be true|false',
-        validate: value => value === true || value === false
-      },
-      onUnhandledError: {
-        validate: val => typeof val === 'function',
-        message: 'should be a function',
-        defaultValue: () => {}
-      }
-    })
-    c.use(plugin)
-    process.listeners('unhandledRejection')[1](new Error('floop'))
   })
 })

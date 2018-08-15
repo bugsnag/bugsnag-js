@@ -38,7 +38,7 @@ module.exports = {
       dom.on('error', (err) => {
         req.bugsnag.notify(createReportFromErr(err, handledState), {}, (e, report) => {
           if (e) return client._logger('Failed to send report to Bugsnag')
-          req.bugsnag.config.onUnhandledError(err, report, client._logger)
+          req.bugsnag.config.onUncaughtException(err, report, client._logger)
         })
         if (!res.headerSent) res.sendStatus(500)
       })

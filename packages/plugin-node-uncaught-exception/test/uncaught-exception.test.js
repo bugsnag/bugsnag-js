@@ -27,7 +27,7 @@ describe('plugin: node uncaught exception handler', () => {
     expect(after).toBe(before)
   })
 
-  it('should call the configured onUnhandledError callback', done => {
+  it('should call the configured onUncaughtException callback', done => {
     const c = new Client(VALID_NOTIFIER)
     c.delivery({
       sendReport: (...args) => args[args.length - 1](),
@@ -35,7 +35,7 @@ describe('plugin: node uncaught exception handler', () => {
     })
     c.setOptions({
       apiKey: 'api_key',
-      onUnhandledError: (err, report) => {
+      onUncaughtException: (err, report) => {
         expect(err.message).toBe('never gonna catch me')
         expect(report.errorMessage).toBe('never gonna catch me')
         expect(report._handledState.unhandled).toBe(true)
@@ -47,7 +47,7 @@ describe('plugin: node uncaught exception handler', () => {
     })
     c.configure({
       ...schema,
-      onUnhandledError: {
+      onUncaughtException: {
         validate: val => typeof val === 'function',
         message: 'should be a function',
         defaultValue: () => {}
