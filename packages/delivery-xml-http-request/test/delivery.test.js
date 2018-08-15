@@ -32,7 +32,8 @@ describe('delivery:XMLHttpRequest', () => {
     const payload = { sample: 'payload' }
     const config = {
       apiKey: 'aaaaaaaa',
-      endpoints: { notify: '/echo/' }
+      endpoints: { notify: '/echo/' },
+      filters: []
     }
     delivery({ XMLHttpRequest }).sendReport({}, config, payload, (err) => {
       expect(err).toBe(null)
@@ -77,7 +78,8 @@ describe('delivery:XMLHttpRequest', () => {
     const payload = { sample: 'payload' }
     const config = {
       apiKey: 'aaaaaaaa',
-      endpoints: { notify: '/', sessions: '/echo/' }
+      endpoints: { notify: '/', sessions: '/echo/' },
+      filters: []
     }
     delivery({ XMLHttpRequest }).sendSession({}, config, payload, (err) => {
       expect(err).toBe(null)

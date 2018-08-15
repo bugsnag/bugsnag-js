@@ -90,6 +90,11 @@ module.exports.schema = {
         (accum, method) => accum && typeof value[method] === 'function',
         true
       ))
+  },
+  filters: {
+    defaultValue: () => [ 'password' ],
+    message: 'should be an array of strings',
+    validate: value => isArray(value) && value.length === filter(value, s => typeof s === 'string').length
   }
 }
 
