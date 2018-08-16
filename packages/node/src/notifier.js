@@ -16,6 +16,8 @@ const pluginServerSession = require('@bugsnag/plugin-server-session')
 const pluginNodeDevice = require('@bugsnag/plugin-node-device')
 const pluginNodeUncaughtException = require('@bugsnag/plugin-node-uncaught-exception')
 const pluginNodeUnhandledRejection = require('@bugsnag/plugin-node-unhandled-rejection')
+const pluginIntercept = require('@bugsnag/plugin-intercept')
+const pluginContextualize = require('@bugsnag/plugin-contextualize')
 
 const plugins = [
   pluginSurroundingCode,
@@ -24,7 +26,9 @@ const plugins = [
   pluginServerSession,
   pluginNodeDevice,
   pluginNodeUncaughtException,
-  pluginNodeUnhandledRejection
+  pluginNodeUnhandledRejection,
+  pluginIntercept,
+  pluginContextualize
 ]
 
 module.exports = (opts, userPlugins = []) => {
