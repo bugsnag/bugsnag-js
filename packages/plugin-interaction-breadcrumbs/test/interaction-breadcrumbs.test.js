@@ -51,8 +51,9 @@ describe('plugin: interaction breadcrumbs', () => {
     }
 
     const c = new Client(VALID_NOTIFIER)
-    c.configure({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
-    plugin.init(c, window)
+    c.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
+    c.configure()
+    c.use(plugin, window)
     winHandlers['click'].forEach(fn => fn.call(window, { target: els[0] }))
     expect(c.breadcrumbs.length).toBe(1)
   })

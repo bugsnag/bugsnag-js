@@ -12,7 +12,7 @@ module.exports = {
 
     client.sessionDelegate({
       startSession: client => {
-        const sessionClient = new client.BugsnagClient(client.notifier, {}, new client.BugsnagSession())
+        const sessionClient = new client.BugsnagClient(client.notifier)
         sessionClient.configure({})
         sessionClient.config = client.config
         sessionClient.breadcrumbs = client.breadcrumbs
@@ -24,7 +24,8 @@ module.exports = {
         sessionClient.user = client.user
         sessionClient.logger(client._logger)
         sessionClient.delivery(client._delivery)
-        sessionTracker.track(sessionClient.session)
+        sessionClient._session = new client.BugsnagSession()
+        sessionTracker.track(sessionClient._session)
         return sessionClient
       }
     })
@@ -69,7 +70,6 @@ const sendSessionSummary = client => sessionCounts => {
   }
 
   function req (cb) {
-    console.log('sending session')
     client._delivery.sendSession(
       client._logger,
       client.config,

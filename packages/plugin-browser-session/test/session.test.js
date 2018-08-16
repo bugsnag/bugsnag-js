@@ -8,7 +8,8 @@ const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 describe('plugin: sessions', () => {
   it('notifies the session endpoint', (done) => {
     const c = new Client(VALID_NOTIFIER)
-    c.configure({ apiKey: 'API_KEY' })
+    c.setOptions({ apiKey: 'API_KEY' })
+    c.configure()
     c.use(plugin)
     c.delivery({
       sendSession: (logger, config, session, cb) => {
@@ -26,7 +27,8 @@ describe('plugin: sessions', () => {
 
   it('tracks handled/unhandled error counts and sends them in error payloads', (done) => {
     const c = new Client(VALID_NOTIFIER)
-    c.configure({ apiKey: 'API_KEY' })
+    c.setOptions({ apiKey: 'API_KEY' })
+    c.configure()
     let i = 0
     c.use(plugin)
     c.delivery({
@@ -55,7 +57,8 @@ describe('plugin: sessions', () => {
 
   it('correctly infers releaseStage', (done) => {
     const c = new Client(VALID_NOTIFIER)
-    c.configure({ apiKey: 'API_KEY', releaseStage: 'foo' })
+    c.setOptions({ apiKey: 'API_KEY', releaseStage: 'foo' })
+    c.configure()
     c.use(plugin)
     c.delivery({
       sendSession: (logger, config, session, cb) => {
@@ -69,7 +72,8 @@ describe('plugin: sessions', () => {
 
   it('doesn’t send when releaseStage is not in notifyReleaseStages', (done) => {
     const c = new Client(VALID_NOTIFIER)
-    c.configure({ apiKey: 'API_KEY', releaseStage: 'foo', notifyReleaseStages: [ 'baz' ] })
+    c.setOptions({ apiKey: 'API_KEY', releaseStage: 'foo', notifyReleaseStages: [ 'baz' ] })
+    c.configure()
     c.use(plugin)
     c.delivery({
       sendSession: (logger, config, session, cb) => {
@@ -82,12 +86,13 @@ describe('plugin: sessions', () => {
 
   it('logs a warning when no session endpoint is set', (done) => {
     const c = new Client(VALID_NOTIFIER)
-    c.configure({
+    c.setOptions({
       apiKey: 'API_KEY',
       releaseStage: 'foo',
       endpoints: { notify: '/foo' },
       autoCaptureSessions: false
     })
+    c.configure()
     c.use(plugin)
     c.logger({
       warn: msg => {

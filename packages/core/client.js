@@ -14,7 +14,7 @@ const REPORT_USAGE_ERR_PREFIX = `Bugsnag usage error.`
 const noop = () => {}
 
 class BugsnagClient {
-  constructor (notifier, configSchema = config.schema, session = null) {
+  constructor (notifier) {
     if (!notifier || !notifier.name || !notifier.version || !notifier.url) {
       throw new Error('`notifier` argument is required')
     }
@@ -22,20 +22,21 @@ class BugsnagClient {
     // notifier id
     this.notifier = notifier
 
-    // config
-    this.configSchema = configSchema
-
     // configure() should be called before notify()
     this._configured = false
 
-    // i/o
+    // intialise opts and config
+    this._opts = {}
+    this.config = {}
+
+    // // i/o
     this._delivery = { sendSession: noop, sendReport: noop }
     this._logger = { debug: noop, info: noop, warn: noop, error: noop }
 
     // plugins
-    this.plugins = []
+    this._plugins = {}
 
-    this.session = session
+    this._session = null
 
     this.breadcrumbs = []
 
@@ -54,24 +55,46 @@ class BugsnagClient {
     this.BugsnagSession = BugsnagSession
   }
 
-  configure (opts = {}) {
-    this.config = config.mergeDefaults({ ...this.config, ...opts }, this.configSchema)
-    const validity = config.validate(this.config, this.configSchema)
+  setOptions (opts) {
+    this._opts = { ...this._opts, ...opts }
+  }
+
+  configure (partialSchema = config.schema) {
+    const conf = config.mergeDefaults(this._opts, partialSchema)
+    const validity = config.validate(conf, partialSchema)
+
     if (!validity.valid === true) throw new Error(generateConfigErrorMessage(validity.errors))
-    if (typeof this.config.beforeSend === 'function') this.config.beforeSend = [ this.config.beforeSend ]
-    if (this.config.appVersion !== null) this.app.version = this.config.appVersion
-    if (this.config.appType !== null) this.app.type = this.config.appType
-    if (this.config.metaData) this.metaData = this.config.metaData
-    if (this.config.user) this.user = this.config.user
-    if (this.config.logger) this.logger(this.config.logger)
+
+    // update and elevate some special options if they were passed in at this point
+    if (typeof conf.beforeSend === 'function') conf.beforeSend = [ conf.beforeSend ]
+    if (conf.appVersion) this.app.version = conf.appVersion
+    if (conf.appType) this.app.type = conf.appType
+    if (conf.metaData) this.metaData = conf.metaData
+    if (conf.user) this.user = conf.user
+    if (conf.logger) this.logger(conf.logger)
+
+    // merge with existing config
+    this.config = { ...this.config, ...conf }
+
     this._configured = true
-    this._logger.debug(`Loaded!`)
+
     return this
   }
 
-  use (plugin) {
-    this.plugins.push(plugin)
-    return plugin.init(this)
+  use (plugin, ...args) {
+    if (!this._configured) throw new Error('client not configured')
+    if (plugin.configSchema) this.configure(plugin.configSchema)
+    const result = plugin.init(this, ...args)
+    // JS objects are not the safest way to store arbitrarily keyed values,
+    // so bookend the key with some characters that prevent tampering with
+    // stuff like __proto__ etc. (only store the result if the plugin had a
+    // name)
+    if (plugin.name) this._plugins[`~${plugin.name}~`] = result
+    return this
+  }
+
+  getPlugin (name) {
+    return this._plugins[`~${name}~`]
   }
 
   delivery (d) {
@@ -151,9 +174,9 @@ class BugsnagClient {
     report.metaData = { ...report.metaData, ...this.metaData, ...opts.metaData }
     report.breadcrumbs = this.breadcrumbs.slice(0)
 
-    if (this.session) {
-      this.session.trackError(report)
-      report.session = this.session
+    if (this._session) {
+      this._session.trackError(report)
+      report.session = this._session
     }
 
     // set severity if supplied

@@ -10,8 +10,9 @@ let window = {}
 describe('plugin: window onerror', () => {
   it('should set a window.onerror event handler', () => {
     const client = new Client(VALID_NOTIFIER)
-    client.configure({ apiKey: 'API_KEY_YEAH' })
-    plugin.init(client, window)
+    client.setOptions({ apiKey: 'API_KEY_YEAH' })
+    client.configure()
+    client.use(plugin, window)
     expect(typeof window.onerror).toBe('function')
   })
 
@@ -21,8 +22,9 @@ describe('plugin: window onerror', () => {
     it('captures uncaught errors in timer callbacks', done => {
       const client = new Client(VALID_NOTIFIER)
       const payloads = []
-      client.configure({ apiKey: 'API_KEY_YEAH' })
-      plugin.init(client, window)
+      client.setOptions({ apiKey: 'API_KEY_YEAH' })
+      client.configure()
+      client.use(plugin, window)
       client.delivery({ sendReport: (logger, config, payload) => payloads.push(payload) })
 
       window.onerror('Uncaught Error: Bad things', 'foo.js', 10, 20, new Error('Bad things'))
@@ -42,8 +44,9 @@ describe('plugin: window onerror', () => {
     // it('captures uncaught errors in DOM (level 2) event handlers', done => {
     //   const client = new Client(VALID_NOTIFIER)
     //   const payloads = []
-    //   client.configure({ apiKey: 'API_KEY_YEAH' })
-    //   plugin.init(client, window)
+    //   client.setOptions({ apiKey: 'API_KEY_YEAH' })
+    //   client.configure()
+    //   client.use(plugin, window)
     //   client.delivery({ sendReport: (logger, config, payload) => payloads.push(payload) })
     //
     //   window.eval(`
@@ -70,8 +73,9 @@ describe('plugin: window onerror', () => {
 
       const client = new Client(VALID_NOTIFIER)
       const payloads = []
-      client.configure({ apiKey: 'API_KEY_YEAH' })
-      plugin.init(client, window)
+      client.setOptions({ apiKey: 'API_KEY_YEAH' })
+      client.configure()
+      client.use(plugin, window)
       client.delivery({ sendReport: (logger, config, payload) => payloads.push(payload) })
 
       window.onerror('Uncaught Error: Bad things', 'foo.js', 10, 20, new Error('Bad things'))
@@ -80,8 +84,9 @@ describe('plugin: window onerror', () => {
     it('handles single argument usage of window.onerror', () => {
       const client = new Client(VALID_NOTIFIER)
       const payloads = []
-      client.configure({ apiKey: 'API_KEY_YEAH' })
-      plugin.init(client, window)
+      client.setOptions({ apiKey: 'API_KEY_YEAH' })
+      client.configure()
+      client.use(plugin, window)
       client.delivery({ sendReport: (logger, config, payload) => payloads.push(payload) })
 
       const event = { type: 'error', detail: 'something bad happened' }
@@ -100,7 +105,8 @@ describe('plugin: window onerror', () => {
     //   it('captures uncaught errors in DOM (level 3) event handlers', done => {
     //     const client = new Client(VALID_NOTIFIER)
     //     const payloads = []
-    //     client.configure({ apiKey: 'API_KEY_YEAH' })
+    //     client.setOptions({ apiKey: 'API_KEY_YEAH' })
+    //     client.configure()
     //     client.use(plugin)
     //     client.delivery({ sendReport: (logger, config, payload) => payloads.push(payload) })
     //
@@ -128,7 +134,8 @@ describe('plugin: window onerror', () => {
     //   it('captures uncaught errors in requestAnimationFrame callbacks', done => {
     //     const client = new Client(VALID_NOTIFIER)
     //     const payloads = []
-    //     client.configure({ apiKey: 'API_KEY_YEAH' })
+    //     client.setOptions({ apiKey: 'API_KEY_YEAH' })
+    //     client.configure()
     //     client.use(plugin)
     //     client.delivery({ sendReport: (logger, config, payload) => payloads.push(payload) })
     //
@@ -154,8 +161,9 @@ describe('plugin: window onerror', () => {
     it('extracts meaning from non-error values as error messages', function (done) {
       const client = new Client(VALID_NOTIFIER)
       const payloads = []
-      client.configure({ apiKey: 'API_KEY_YEAH' })
-      plugin.init(client, window)
+      client.setOptions({ apiKey: 'API_KEY_YEAH' })
+      client.configure()
+      client.use(plugin, window)
       client.delivery({ sendReport: (logger, config, payload) => payloads.push(payload) })
 
       // call onerror as it would be when `throw 'hello' is run`

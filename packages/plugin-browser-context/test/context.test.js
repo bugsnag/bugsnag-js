@@ -15,8 +15,9 @@ describe('plugin: context', () => {
   it('sets client.context (and report.context) to window.location.pathname', () => {
     const client = new Client(VALID_NOTIFIER)
     const payloads = []
-    client.configure({ apiKey: 'API_KEY_YEAH' })
-    plugin.init(client, window)
+    client.setOptions({ apiKey: 'API_KEY_YEAH' })
+    client.configure()
+    client.use(plugin, window)
 
     client.delivery({ sendReport: (logger, config, payload) => payloads.push(payload) })
     client.notify(new Error('noooo'))
@@ -28,8 +29,9 @@ describe('plugin: context', () => {
   it('sets doesn’t overwrite an existing context', () => {
     const client = new Client(VALID_NOTIFIER)
     const payloads = []
-    client.configure({ apiKey: 'API_KEY_YEAH' })
-    plugin.init(client, window)
+    client.setOptions({ apiKey: 'API_KEY_YEAH' })
+    client.configure()
+    client.use(plugin, window)
 
     client.context = 'something else'
 

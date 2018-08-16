@@ -11,8 +11,9 @@ describe('plugin: request', () => {
   it('sets report.request to window.location.href', () => {
     const client = new Client(VALID_NOTIFIER)
     const payloads = []
-    client.configure({ apiKey: 'API_KEY_YEAH' })
-    plugin.init(client, window)
+    client.setOptions({ apiKey: 'API_KEY_YEAH' })
+    client.configure()
+    client.use(plugin, window)
 
     client.delivery({ sendReport: (logger, config, payload) => payloads.push(payload) })
     client.notify(new Error('noooo'))
@@ -24,8 +25,9 @@ describe('plugin: request', () => {
   it('sets doesn’t overwrite an existing request', () => {
     const client = new Client(VALID_NOTIFIER)
     const payloads = []
-    client.configure({ apiKey: 'API_KEY_YEAH' })
-    plugin.init(client, window)
+    client.setOptions({ apiKey: 'API_KEY_YEAH' })
+    client.configure()
+    client.use(plugin, window)
 
     client.request = { url: 'foobar' }
 

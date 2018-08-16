@@ -9,14 +9,7 @@ const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
 describe('plugin: node in project', () => {
   it('should mark stackframes as "inProject" if it is a descendent of the "projectRoot"', done => {
-    const client = new Client(VALID_NOTIFIER, {
-      ...schema,
-      projectRoot: {
-        validate: () => true,
-        defaultValue: () => '',
-        message: ''
-      }
-    })
+    const client = new Client(VALID_NOTIFIER)
 
     client.delivery({
       sendReport: (logger, config, report) => {
@@ -29,8 +22,16 @@ describe('plugin: node in project', () => {
       sendSession: () => {}
     })
 
-    client.configure({ apiKey: 'api_key', projectRoot: '/app' })
-    plugin.init(client)
+    client.setOptions({ apiKey: 'api_key', projectRoot: '/app' })
+    client.configure({
+      ...schema,
+      projectRoot: {
+        validate: () => true,
+        defaultValue: () => '',
+        message: ''
+      }
+    })
+    client.use(plugin)
 
     client.notify(new Report('Error', 'in project test', [
       {
@@ -50,14 +51,7 @@ describe('plugin: node in project', () => {
   })
 
   it('should mark stackframes as "out of project" if it is not a descendent of "projectRoot"', done => {
-    const client = new Client(VALID_NOTIFIER, {
-      ...schema,
-      projectRoot: {
-        validate: () => true,
-        defaultValue: () => '',
-        message: ''
-      }
-    })
+    const client = new Client(VALID_NOTIFIER)
 
     client.delivery({
       sendReport: (logger, config, report) => {
@@ -70,8 +64,16 @@ describe('plugin: node in project', () => {
       sendSession: () => {}
     })
 
-    client.configure({ apiKey: 'api_key', projectRoot: '/app' })
-    plugin.init(client)
+    client.setOptions({ apiKey: 'api_key', projectRoot: '/app' })
+    client.configure({
+      ...schema,
+      projectRoot: {
+        validate: () => true,
+        defaultValue: () => '',
+        message: ''
+      }
+    })
+    client.use(plugin)
 
     client.notify(new Report('Error', 'in project test', [
       {
@@ -91,14 +93,7 @@ describe('plugin: node in project', () => {
   })
 
   it('should work with node_modules and node internals', done => {
-    const client = new Client(VALID_NOTIFIER, {
-      ...schema,
-      projectRoot: {
-        validate: () => true,
-        defaultValue: () => '',
-        message: ''
-      }
-    })
+    const client = new Client(VALID_NOTIFIER)
 
     client.delivery({
       sendReport: (logger, config, report) => {
@@ -110,8 +105,16 @@ describe('plugin: node in project', () => {
       sendSession: () => {}
     })
 
-    client.configure({ apiKey: 'api_key', projectRoot: '/app' })
-    plugin.init(client)
+    client.setOptions({ apiKey: 'api_key', projectRoot: '/app' })
+    client.configure({
+      ...schema,
+      projectRoot: {
+        validate: () => true,
+        defaultValue: () => '',
+        message: ''
+      }
+    })
+    client.use(plugin)
 
     client.notify(new Report('Error', 'in project test', [
       {
@@ -127,14 +130,7 @@ describe('plugin: node in project', () => {
   })
 
   it('should tolerate stackframe.file not being a string', done => {
-    const client = new Client(VALID_NOTIFIER, {
-      ...schema,
-      projectRoot: {
-        validate: () => true,
-        defaultValue: () => '',
-        message: ''
-      }
-    })
+    const client = new Client(VALID_NOTIFIER)
 
     client.delivery({
       sendReport: (logger, config, report) => {
@@ -147,8 +143,16 @@ describe('plugin: node in project', () => {
       sendSession: () => {}
     })
 
-    client.configure({ apiKey: 'api_key', projectRoot: '/app' })
-    plugin.init(client)
+    client.setOptions({ apiKey: 'api_key', projectRoot: '/app' })
+    client.configure({
+      ...schema,
+      projectRoot: {
+        validate: () => true,
+        defaultValue: () => '',
+        message: ''
+      }
+    })
+    client.use(plugin)
 
     client.notify(new Report('Error', 'in project test', [
       {

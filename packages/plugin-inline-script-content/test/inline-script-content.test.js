@@ -29,8 +29,9 @@ Lorem ipsum dolor sit amet.
 
     const client = new Client(VALID_NOTIFIER)
     const payloads = []
-    client.configure({ apiKey: 'API_KEY_YEAH' })
-    plugin.init(client, document, window)
+    client.setOptions({ apiKey: 'API_KEY_YEAH' })
+    client.configure()
+    client.use(plugin, document, window)
 
     expect(client.config.beforeSend.length).toBe(1)
     client.delivery({ sendReport: (logger, config, payload) => payloads.push(payload) })
