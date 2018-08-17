@@ -22,6 +22,8 @@ Scenario Outline: a synchronous thrown error in a route
   And the exception "message" equals "sync"
   And the exception "type" equals "nodejs"
   And the "file" of stack frame 0 equals "scenarios/app.js"
+  And the event "request.url" equals "http://localhost:4312/sync"
+  And the event "request.httpMethod" equals "GET"
 
   Examples:
   | node version |
