@@ -93,8 +93,11 @@ module.exports.schema = {
   },
   filters: {
     defaultValue: () => [ 'password' ],
-    message: 'should be an array of strings',
-    validate: value => isArray(value) && value.length === filter(value, s => typeof s === 'string').length
+    message: 'should be an array of strings|regexes',
+    validate: value =>
+      isArray(value) && value.length === filter(value, s =>
+        (typeof s === 'string' || (s && typeof s.test === 'function'))
+      ).length
   }
 }
 
