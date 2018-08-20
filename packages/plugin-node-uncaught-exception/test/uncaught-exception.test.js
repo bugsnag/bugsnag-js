@@ -13,7 +13,7 @@ describe('plugin: node uncaught exception handler', () => {
     c.configure()
     c.use(plugin)
     const after = process.listeners('uncaughtException').length
-    expect(before < after).toBe(true)
+    expect(after - before).toBe(1)
     plugin.destroy()
   })
 

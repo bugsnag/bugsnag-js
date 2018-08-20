@@ -21,7 +21,7 @@ module.exports = {
   },
   onUncaughtException: {
     defaultValue: () => (err, report, logger) => {
-      logger.error(`Reported an uncaught exception${getContext(report)}, the process will now terminate…\n${err ? err.stack : err}`)
+      logger.error(`Reported an uncaught exception${getContext(report)}, the process will now terminate…\n${(err && err.stack) ? err.stack : err}`)
       process.exit(1)
     },
     message: 'should be a function',
@@ -29,7 +29,7 @@ module.exports = {
   },
   onUnhandledRejection: {
     defaultValue: () => (err, report, logger) => {
-      logger.error(`Reported an unhandled rejection${getContext(report)}…\n${err ? err.stack : err}`)
+      logger.error(`Reported an unhandled rejection${getContext(report)}…\n${(err && err.stack) ? err.stack : err}`)
     },
     message: 'should be a function',
     validate: value => typeof value === 'function'
