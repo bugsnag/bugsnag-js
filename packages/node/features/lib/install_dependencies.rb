@@ -8,6 +8,7 @@ unless ENV['MAZE_SKIP_INSTALL']
       # package up local @bugsnag/plugin-express so it can be loaded into the Docker images
       'npm pack --verbose ../../../plugin-express'
     )
+    run_command('npm pack --verbose ../../../plugin-restify')
   end
 
   Dir.chdir('features/fixtures') do

@@ -1,0 +1,6 @@
+{
+  "name": "bugsnag-test",
+  "dependencies": {
+    "restify": "^7.2.1"
+  }
+}
