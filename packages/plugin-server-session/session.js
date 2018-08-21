@@ -68,7 +68,10 @@ const sendSessionSummary = client => sessionCounts => {
   req(handleRes)
 
   function handleRes (err) {
-    if (!err) return client._logger.debug(`${sessionCounts.length} sessions reported`)
+    if (!err) {
+      const sessionCount = sessionCounts.reduce((accum, s) => accum + s.sessionsStarted, 0)
+      return client._logger.debug(`${sessionCount} session(s) reported`)
+    }
     if (backoff.attempts === 10) {
       client._logger.error('Session delivery failed, max retries exceeded', err)
       return
