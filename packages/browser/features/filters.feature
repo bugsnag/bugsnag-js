@@ -40,7 +40,7 @@ Scenario Outline: it only removes properties from specific payload subtrees
   And the event "user.password" equals "123456"
   And the event "user.secret" equals "[FILTERED]"
   And the event "metaData.details.stacktrace" equals "[FILTERED]"
-  And the "file" of stack frame 0 ends with "c.html"
+  And the "method" of stack frame 0 equals "handle"
     Examples:
       | type       |
       | script     |
