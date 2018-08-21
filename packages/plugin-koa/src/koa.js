@@ -40,23 +40,20 @@ module.exports = {
     }
 
     const errorHandler = (err, ctx) => {
-      let metaData
-      let request
-      const requestInfo = extractRequestInfo(ctx)
-      metaData = { request: requestInfo }
-      request = {
-        clientIp: requestInfo.clientIp,
-        headers: requestInfo.headers,
-        httpMethod: requestInfo.httpMethod,
-        url: requestInfo.url,
-        referer: requestInfo.referer
+      if (ctx.bugsnag) {
+        ctx.bugsnag.notify(createReportFromErr(err, handledState))
+      } else {
+        const requestInfo = extractRequestInfo(ctx)
+        const metaData = { request: requestInfo }
+        const request = {
+          clientIp: requestInfo.clientIp,
+          headers: requestInfo.headers,
+          httpMethod: requestInfo.httpMethod,
+          url: requestInfo.url,
+          referer: requestInfo.referer
+        }
+        client.notify(createReportFromErr(err, handledState), { metaData, request })
       }
-
-      let c = ctx.bugsnag
-      if (!c) {
-        c = client
-      }
-      c.notify(createReportFromErr(err, handledState), { metaData, request })
     }
 
     return { requestHandler, errorHandler }
