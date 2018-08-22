@@ -64,7 +64,7 @@ jobs:
         - BUNDLE_GEMFILE="packages/node/Gemfile" bundle install
         - npm install
         - lerna bootstrap
-        - lerna run build --scope='@bugsnag/node' --scope='@bugsnag/plugin-express'
+        - lerna run build --scope='@bugsnag/node' --scope='@bugsnag/plugin-express' --scope='@bugsnag/plugin-restify'
       script:
         - npm run test:node
       env: BROWSER=na
