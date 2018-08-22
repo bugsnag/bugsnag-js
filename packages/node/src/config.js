@@ -19,6 +19,11 @@ module.exports = {
     ...schema.logger,
     defaultValue: () => getPrefixedConsole()
   },
+  proxy: {
+    defaultValue: () => undefined,
+    message: 'should be a string',
+    validate: value => value === undefined || stringWithLength(value)
+  },
   onUncaughtException: {
     defaultValue: () => (err, report, logger) => {
       logger.error(`Reported an uncaught exception${getContext(report)}, the process will now terminate…\n${err ? err.stack : err}`)
