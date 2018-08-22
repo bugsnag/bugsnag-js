@@ -64,7 +64,7 @@ module.exports = {
         c = client
       }
       c.notify(createReportFromErr(err, handledState))
-      cb(err)
+      cb()
     }
 
     return { requestHandler, errorHandler }
