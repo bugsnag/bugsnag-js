@@ -9,7 +9,7 @@ Scenario Outline: "password" is filtered by default
   Then I should receive 1 request
   And the request is a valid browser payload for the error reporting API
   And the event "user.id" equals "21"
-  And the event "user.password" equals "[FILTERED]"
+  And the event "user.password" equals "[Filtered]"
     Examples:
       | type       |
       | script     |
@@ -23,8 +23,8 @@ Scenario Outline: User setting can override defaults
   And the request is a valid browser payload for the error reporting API
   And the event "user.id" equals "21"
   And the event "user.password" equals "123456"
-  And the event "user.secret" equals "[FILTERED]"
-  And the event "metaData.details.api_key" equals "[FILTERED]"
+  And the event "user.secret" equals "[Filtered]"
+  And the event "metaData.details.api_key" equals "[Filtered]"
     Examples:
       | type       |
       | script     |
@@ -38,8 +38,8 @@ Scenario Outline: it only removes properties from specific payload subtrees
   And the request is a valid browser payload for the error reporting API
   And the event "user.id" equals "21"
   And the event "user.password" equals "123456"
-  And the event "user.secret" equals "[FILTERED]"
-  And the event "metaData.details.stacktrace" equals "[FILTERED]"
+  And the event "user.secret" equals "[Filtered]"
+  And the event "metaData.details.stacktrace" equals "[Filtered]"
   And the "method" of stack frame 0 equals "handle"
     Examples:
       | type       |
@@ -52,9 +52,9 @@ Scenario Outline: it works with regexes
   And I wait for 5 seconds
   Then I should receive 1 request
   And the request is a valid browser payload for the error reporting API
-  And the event "metaData.details0" equals "[FILTERED]"
-  And the event "metaData.details1" equals "[FILTERED]"
-  And the event "metaData.details2" equals "[FILTERED]"
+  And the event "metaData.details0" equals "[Filtered]"
+  And the event "metaData.details1" equals "[Filtered]"
+  And the event "metaData.details2" equals "[Filtered]"
   And the event "metaData.detailsA" equals "aaaa"
     Examples:
       | type       |
