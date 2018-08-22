@@ -12,6 +12,17 @@ services:
       - BUGSNAG_SESSIONS_ENDPOINT
     restart: "no"
 
+  unhandled:
+    build:
+      context: unhandled
+      args:
+        - NODE_VERSION
+    environment:
+      - BUGSNAG_API_KEY
+      - BUGSNAG_NOTIFY_ENDPOINT
+      - BUGSNAG_SESSIONS_ENDPOINT
+    restart: "no"
+
   surrounding_code:
     build:
       context: surrounding_code
@@ -52,6 +63,19 @@ services:
         - NODE_VERSION
     ports:
       - "4312:4312"
+    environment:
+      - BUGSNAG_API_KEY
+      - BUGSNAG_NOTIFY_ENDPOINT
+      - BUGSNAG_SESSIONS_ENDPOINT
+    restart: "no"
+
+  koa:
+    build:
+      context: koa
+      args:
+        - NODE_VERSION
+    ports:
+      - "4313:4313"
     environment:
       - BUGSNAG_API_KEY
       - BUGSNAG_NOTIFY_ENDPOINT

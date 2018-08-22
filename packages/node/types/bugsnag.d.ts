@@ -8,6 +8,7 @@ declare module "@bugsnag/core" {
       projectRoot?: string;
       hostname?: string;
       onUnhandledError?: (err: any, report: Bugsnag.Report, logger: Bugsnag.ILogger) => void;
+      terminateOnUnhandledRejection?: boolean;
     }
   }
 }

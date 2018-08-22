@@ -2,6 +2,7 @@
   "name": "@bugsnag/node",
   "version": "1.0.0",
   "main": "dist/bugsnag.js",
+  "types": "types/bugsnag.d.ts",
   "description": "Bugsnag error reporter for Node.js",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
@@ -26,6 +27,8 @@
     "@bugsnag/plugin-node-device": "^1.0.0",
     "@bugsnag/plugin-node-in-project": "^1.0.0",
     "@bugsnag/plugin-node-surrounding-code": "^1.0.0",
+    "@bugsnag/plugin-node-uncaught-exception": "^1.0.0",
+    "@bugsnag/plugin-node-unhandled-rejection": "^1.0.0",
     "@bugsnag/plugin-server-session": "^1.0.0",
     "@bugsnag/plugin-strip-project-root": "^1.0.0",
     "babelify": "9.0.0",
