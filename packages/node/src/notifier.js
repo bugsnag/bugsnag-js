@@ -39,3 +39,5 @@ module.exports = (opts, userPlugins = []) => {
 
   return bugsnag
 }
+
+module.exports['default'] = module.exports

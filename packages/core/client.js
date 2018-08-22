@@ -143,7 +143,7 @@ class BugsnagClient {
     return this
   }
 
-  notify (error, opts = {}) {
+  notify (error, opts = {}, cb = noop) {
     if (!this._configured) throw new Error('client not configured')
 
     // releaseStage can be set via config.releaseStage or client.app.releaseStage
@@ -225,7 +225,7 @@ class BugsnagClient {
         apiKey: report.apiKey || this.config.apiKey,
         notifier: this.notifier,
         events: [ report ]
-      })
+      }, (err) => cb(err, report))
     })
   }
 }

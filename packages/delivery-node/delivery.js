@@ -23,6 +23,7 @@ module.exports = () => ({
       })
     } catch (e) {
       logger.error(e)
+      cb(e)
     }
   },
   sendSession: (logger, config, session, cb = () => {}) => {
@@ -44,6 +45,7 @@ module.exports = () => ({
       })
     } catch (e) {
       logger.error(e)
+      cb(e)
     }
   }
 })
