@@ -42,7 +42,7 @@ module.exports = {
         })
         if (!res.headersSent) {
           const body = 'Internal server error'
-          res.writeHead(200, {
+          res.writeHead(500, {
             'Content-Length': Buffer.byteLength(body),
             'Content-Type': 'text/plain'
           })
