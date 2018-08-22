@@ -12,17 +12,9 @@ module.exports = req => {
     httpVersion: req.httpVersion
   }
 
-  if (req.params && typeof req.params === 'object' && Object.keys(req.params).length > 0) {
-    request.params = req.params
-  }
-
-  if (req.query && typeof req.query === 'object' && Object.keys(req.query).length > 0) {
-    request.query = req.query
-  }
-
-  if (req.body && typeof req.body === 'object' && Object.keys(req.body).length > 0) {
-    request.body = req.body
-  }
+  request.params = extractObject(req, 'params')
+  request.query = extractObject(req, 'query')
+  request.body = extractObject(req, 'body')
 
   if (connection) {
     request.connection = {
@@ -36,4 +28,12 @@ module.exports = req => {
     }
   }
   return request
+}
+
+const extractObject = (host, key) => {
+  if (host[key] && typeof host[key] === 'object' && Object.keys(host[key]).length > 0) {
+    return host[key]
+  } else {
+    return undefined
+  }
 }
