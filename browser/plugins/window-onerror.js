@@ -45,8 +45,8 @@ module.exports = {
 const decorateStack = (stack, url, lineNo, charNo) => {
   const culprit = stack[0]
   if (!culprit) return stack
-  if (!culprit.fileName) culprit.setFileName(url)
-  if (!culprit.lineNumber) culprit.setLineNumber(lineNo)
+  if (!culprit.fileName) culprit.setFileName(String(url))
+  if (!culprit.lineNumber) culprit.setLineNumber(parseInt(lineNo, 10))
   if (!culprit.columnNumber) {
     if (charNo !== undefined) {
       culprit.setColumnNumber(charNo)
