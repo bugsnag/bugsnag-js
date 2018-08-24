@@ -15,17 +15,28 @@ const exampleValue = (k) => {
     case 'appVersion': return '1.2.3'
     case 'appType': return 'worker'
     case 'notifyReleaseStages': return []
+    case 'filters': return [ 'foo', new RegExp('bar') ]
     default:
       return schema[k].defaultValue(null, {})
   }
 }
 
+const replacer = (key, value) => {
+  if (value instanceof RegExp) return `__REGEX_${value.toString()}_REGEX__`
+  return value
+}
+
+const regexRehydrator = json => json ? json.replace(/"__REGEX_(.*)_REGEX__"/, '$1') : json
+
 describe('types', () => {
   it('should compile a typescript program successfully', () => {
+    const opts = Object.keys(schema).map((k, i) =>
+      `${k}: ${regexRehydrator(JSON.stringify(exampleValue(k), replacer))}`
+    )
     const program = `
 import bugsnag from "../../.."
 bugsnag({
-  ${Object.keys(schema).map((k, i) => `${k}: ${JSON.stringify(exampleValue(k))}`).join(',\n  ')}
+  ${opts.join(',\n  ')}
 })
 `.trim()
     writeFileSync(`${__dirname}/fixtures/app.ts`, program)
