@@ -24,15 +24,9 @@ module.exports = {
       req.bugsnag = sessionClient
 
       // extract request info and pass it to the relevant bugsnag properties
-      const requestInfo = extractRequestInfo(req)
-      sessionClient.metaData = { ...sessionClient.metaData, request: requestInfo }
-      sessionClient.request = {
-        clientIp: requestInfo.clientIp,
-        headers: requestInfo.headers,
-        httpMethod: requestInfo.httpMethod,
-        url: requestInfo.url,
-        referer: requestInfo.referer
-      }
+      const { request, metaData } = getRequestAndMetaDataFromReq(req)
+      sessionClient.metaData = { ...sessionClient.metaData, request: metaData }
+      sessionClient.request = request
 
       // unhandled errors caused by this request
       dom.on('error', (err) => {
@@ -55,19 +49,32 @@ module.exports = {
 
     const errorHandler = (req, res, err, cb) => {
       if (err.statusCode && err.statusCode < 500) return cb()
-      let c = req.bugsnag
-      if (!c) {
+      if (req.bugsnag) {
+        req.bugsnag.notify(createReportFromErr(err, handledState))
+      } else {
         client._logger.warn(
-          'req.bugsnag is not defined. Make sure the @bugsnag/plugin-restify requestHandler middleware is added first.',
-          'Some request information will be missing.'
+          'req.bugsnag is not defined. Make sure the @bugsnag/plugin-restify requestHandler middleware is added first.'
         )
-        c = client
+        client.notify(createReportFromErr(err, handledState, getRequestAndMetaDataFromReq(req)))
       }
-      c.notify(createReportFromErr(err, handledState))
       cb()
     }
 
     return { requestHandler, errorHandler }
+  }
+}
+
+const getRequestAndMetaDataFromReq = req => {
+  const requestInfo = extractRequestInfo(req)
+  return {
+    metaData: requestInfo,
+    request: {
+      clientIp: requestInfo.clientIp,
+      headers: requestInfo.headers,
+      httpMethod: requestInfo.httpMethod,
+      url: requestInfo.url,
+      referer: requestInfo.referer
+    }
   }
 }
 
