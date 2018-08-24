@@ -21,15 +21,9 @@ module.exports = {
       ctx.bugsnag = sessionClient
 
       // extract request info and pass it to the relevant bugsnag properties
-      const requestInfo = extractRequestInfo(ctx)
-      sessionClient.metaData = { ...sessionClient.metaData, request: requestInfo }
-      sessionClient.request = {
-        clientIp: requestInfo.clientIp,
-        headers: requestInfo.headers,
-        httpMethod: requestInfo.httpMethod,
-        url: requestInfo.url,
-        referer: requestInfo.referer
-      }
+      const { request, metaData } = getRequestAndMetaDataFromCtx(ctx)
+      sessionClient.metaData = { ...sessionClient.metaData, request: metaData }
+      sessionClient.request = request
 
       try {
         await next()
@@ -43,19 +37,27 @@ module.exports = {
       if (ctx.bugsnag) {
         ctx.bugsnag.notify(createReportFromErr(err, handledState))
       } else {
-        const requestInfo = extractRequestInfo(ctx)
-        const metaData = { request: requestInfo }
-        const request = {
-          clientIp: requestInfo.clientIp,
-          headers: requestInfo.headers,
-          httpMethod: requestInfo.httpMethod,
-          url: requestInfo.url,
-          referer: requestInfo.referer
-        }
-        client.notify(createReportFromErr(err, handledState), { metaData, request })
+        client._logger.warn('ctx.bugsnag is not defined. Make sure the @bugsnag/plugin-koa requestHandler middleware is added first.')
+        client.notify(createReportFromErr(err, handledState), getRequestAndMetaDataFromCtx(ctx))
       }
     }
 
     return { requestHandler, errorHandler }
   }
 }
+
+const getRequestAndMetaDataFromCtx = ctx => {
+  const requestInfo = extractRequestInfo(ctx)
+  return {
+    metaData: requestInfo,
+    request: {
+      clientIp: requestInfo.clientIp,
+      headers: requestInfo.headers,
+      httpMethod: requestInfo.httpMethod,
+      url: requestInfo.url,
+      referer: requestInfo.referer
+    }
+  }
+}
+
+module.exports['default'] = module.exports
