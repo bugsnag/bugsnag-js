@@ -81,3 +81,21 @@ services:
       - BUGSNAG_NOTIFY_ENDPOINT
       - BUGSNAG_SESSIONS_ENDPOINT
     restart: "no"
+
+  proxy:
+    build:
+      context: proxy
+      args:
+        - NODE_VERSION
+    environment:
+      - BUGSNAG_API_KEY
+      - BUGSNAG_NOTIFY_ENDPOINT
+      - BUGSNAG_SESSIONS_ENDPOINT
+      - HTTP_PROXY
+    restart: "no"
+    depends_on:
+      - corporate-proxy
+
+  corporate-proxy:
+    image: minimum2scp/squid
+    restart: "no"
