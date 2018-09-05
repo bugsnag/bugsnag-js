@@ -5,9 +5,11 @@ declare module "@bugsnag/core" {
   namespace Bugnsag {
     interface IConfig {
       // options for node-specific built-ins
-      projectRoot?: string;
       hostname?: string;
-      onUnhandledError?: (err: any, report: Bugsnag.Report, logger: Bugsnag.ILogger) => void;
+      onUncaughtException?: (err: any, report: Bugsnag.Report, logger: Bugsnag.ILogger) => void;
+      onUnhandledRejection?: (err: any, report: Bugsnag.Report, logger: Bugsnag.ILogger) => void;
+      proxy?: string;
+      projectRoot?: string;
       terminateOnUnhandledRejection?: boolean;
     }
   }
