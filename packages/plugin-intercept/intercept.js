@@ -1,4 +1,3 @@
-const domain = require('domain') // eslint-disable-line
 const createReportFromErr = require('@bugsnag/core/lib/report-from-error')
 
 module.exports = {

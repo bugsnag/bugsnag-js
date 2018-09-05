@@ -1,4 +1,5 @@
-const domain = require('domain') // eslint-disable-line
+/* eslint node/no-deprecated-api: [error, {ignoreModuleItems: ["domain"]}] */
+const domain = require('domain')
 const extractRequestInfo = require('./request-info')
 const createReportFromErr = require('@bugsnag/core/lib/report-from-error')
 const handledState = {
