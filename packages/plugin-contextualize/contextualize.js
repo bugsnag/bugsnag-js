@@ -1,23 +1,19 @@
 /* eslint node/no-deprecated-api: [error, {ignoreModuleItems: ["domain"]}] */
 const domain = require('domain')
 const createReportFromErr = require('@bugsnag/core/lib/report-from-error')
+const { getStack, maybeUseFallbackStack } = require('@bugsnag/core/lib/node-fallback-stack')
 
 module.exports = {
   name: 'contextualize',
   init: client => {
     const contextualize = (fn, opts) => {
-      // capture a stacktrace in case resulting errors have nothing
-      // see @bugsnag/plugin-intercept/intercept.js for detailed explanation
-      const stack = (new Error()).stack.split('\n').slice(2).join('\n')
+      // capture a stacktrace in case a resulting error has nothing
+      const fallbackStack = getStack()
 
       const dom = domain.create()
       dom.on('error', err => {
-        if (err.stack) {
-          const lines = err.stack.split('\n')
-          if (lines.length === 1 || (lines.length === 2 && /at Error \(native\)/.test(lines[1]))) {
-            err.stack = `${lines[0]}\n${stack}`
-          }
-        }
+        // check if the stacktrace has no context, if so, if so append the frames we created earlier
+        if (err.stack) maybeUseFallbackStack(err, fallbackStack)
         const report = createReportFromErr(err, {
           severity: 'error',
           unhandled: true,
