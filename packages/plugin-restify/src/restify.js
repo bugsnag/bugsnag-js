@@ -6,12 +6,12 @@ const handledState = {
   unhandled: true,
   severityReason: {
     type: 'unhandledErrorMiddleware',
-    attributes: { framework: 'Express/Connect' }
+    attributes: { framework: 'Restify' }
   }
 }
 
 module.exports = {
-  name: 'express',
+  name: 'restify',
   init: client => {
     const requestHandler = (req, res, next) => {
       const dom = domain.create()
@@ -34,22 +34,30 @@ module.exports = {
           if (e) return client._logger('Failed to send report to Bugsnag')
           req.bugsnag.config.onUncaughtException(err, report, client._logger)
         })
-        if (!res.headerSent) res.sendStatus(500)
+        if (!res.headersSent) {
+          const body = 'Internal server error'
+          res.writeHead(500, {
+            'Content-Length': Buffer.byteLength(body),
+            'Content-Type': 'text/plain'
+          })
+          res.end(body)
+        }
       })
 
       return dom.run(next)
     }
 
-    const errorHandler = (err, req, res, next) => {
+    const errorHandler = (req, res, err, cb) => {
+      if (err.statusCode && err.statusCode < 500) return cb()
       if (req.bugsnag) {
         req.bugsnag.notify(createReportFromErr(err, handledState))
       } else {
         client._logger.warn(
-          'req.bugsnag is not defined. Make sure the @bugsnag/plugin-express requestHandler middleware is added first.'
+          'req.bugsnag is not defined. Make sure the @bugsnag/plugin-restify requestHandler middleware is added first.'
         )
         client.notify(createReportFromErr(err, handledState, getRequestAndMetaDataFromReq(req)))
       }
-      next(err)
+      cb()
     }
 
     return { requestHandler, errorHandler }
