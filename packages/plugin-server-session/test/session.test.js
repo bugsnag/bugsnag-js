@@ -120,4 +120,31 @@ describe('plugin: server sessions', () => {
     c.use(plugin)
     c.startSession()
   })
+
+  it('should clone properties that shouldn’t be mutated on the original client', () => {
+    class TrackerMock extends Emitter {
+      start () {}
+      stop () {}
+      track () {}
+    }
+    const plugin = proxyquire('../session', { './tracker': TrackerMock })
+
+    const c = new Client(VALID_NOTIFIER)
+    c.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
+    c.configure()
+    c.use(plugin)
+
+    c.leaveBreadcrumb('tick')
+    c.metaData = { datetime: { tz: 'GMT+1' } }
+
+    const sessionClient = c.startSession()
+
+    sessionClient.leaveBreadcrumb('tock')
+    sessionClient.metaData = { ...sessionClient.metaData, other: { widgetsAdded: 'cat,dog,mouse' } }
+
+    expect(c.breadcrumbs.length).toBe(1)
+    expect(Object.keys(c.metaData).length).toBe(1)
+    expect(sessionClient.breadcrumbs.length).toBe(2)
+    expect(Object.keys(sessionClient.metaData).length).toBe(2)
+  })
 })

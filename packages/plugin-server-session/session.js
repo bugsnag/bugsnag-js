@@ -13,18 +13,25 @@ module.exports = {
       startSession: client => {
         const sessionClient = new client.BugsnagClient(client.notifier)
         sessionClient.configure({})
+
+        // changes to these properties should be reflected in the original client
         sessionClient.config = client.config
-        sessionClient.breadcrumbs = client.breadcrumbs
         sessionClient.app = client.app
         sessionClient.context = client.context
         sessionClient.device = client.device
-        sessionClient.metaData = client.metaData
-        sessionClient.request = client.request
-        sessionClient.user = client.user
+
+        // changes to these properties should not be reflected in the original client,
+        // so ensure they are are (shallow) cloned
+        sessionClient.breadcrumbs = client.breadcrumbs.slice()
+        sessionClient.metaData = { ...client.metaData }
+        sessionClient.request = { ...client.request }
+        sessionClient.user = { ...client.user }
+
         sessionClient.logger(client._logger)
         sessionClient.delivery(client._delivery)
         sessionClient._session = new client.BugsnagSession()
         sessionTracker.track(sessionClient._session)
+
         return sessionClient
       }
     })
@@ -61,7 +68,10 @@ const sendSessionSummary = client => sessionCounts => {
   req(handleRes)
 
   function handleRes (err) {
-    if (!err) return client._logger.debug(`${sessionCounts.length} sessions reported`)
+    if (!err) {
+      const sessionCount = sessionCounts.reduce((accum, s) => accum + s.sessionsStarted, 0)
+      return client._logger.debug(`${sessionCount} session(s) reported`)
+    }
     if (backoff.attempts === 10) {
       client._logger.error('Session delivery failed, max retries exceeded', err)
       return

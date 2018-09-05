@@ -1,0 +1,6 @@
+{
+  "name": "bugsnag-test",
+  "dependencies": {
+    "koa": "^2.5.2"
+  }
+}
