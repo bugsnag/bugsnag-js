@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="/node_modules/@bugsnag/browser/dist/bugsnag.min.js"></script>
+    <script type="text/javascript">
+      var ENDPOINT = decodeURIComponent(window.location.search.match(/ENDPOINT=(.+)/)[1])
+      var bugsnagClient = bugsnag({
+        apiKey: 'ABC',
+        endpoints: {
+          notify: ENDPOINT,
+          sessions: ENDPOINT
+        },
+        autoCaptureSessions: false,
+        filters: [ 'stacktrace', 'secret' ]
+      })
+    </script>
+  </head>
+  <body>
+    <pre id="bugsnag-test-should-run">YES</pre>
+    <pre id="bugsnag-test-state">PENDING</pre>
+    <script>
+      bugsnagClient.metaData = {
+        details: {
+          stacktrace: [ 'a', 'b' ]
+        }
+      }
+      function handle () {
+        bugsnagClient.notify(new Error('sensitive?'), {
+          user: { id: '21', password: '123456', secret: 'don’t tell anyone' }
+        })
+      }
+
+      handle()
+    </script>
+    <script>
+      setTimeout(function () {
+        var el = document.getElementById('bugsnag-test-state')
+        el.textContent = el.innerText = 'DONE'
+      }, 5000)
+    </script>
+  </body>
+</html>

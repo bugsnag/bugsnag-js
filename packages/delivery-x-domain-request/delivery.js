@@ -1,5 +1,4 @@
-const jsonStringify = require('@bugsnag/safe-json-stringify')
-const makePayload = require('@bugsnag/core/lib/json-payload')
+const payload = require('@bugsnag/core/lib/json-payload')
 const { isoDate } = require('@bugsnag/core/lib/es-utils')
 
 module.exports = (win = window) => ({
@@ -12,7 +11,7 @@ module.exports = (win = window) => ({
     req.open('POST', url)
     setTimeout(() => {
       try {
-        req.send(makePayload(report))
+        req.send(payload.report(report, config.filters))
       } catch (e) {
         logger.error(e)
         cb(e)
@@ -28,7 +27,7 @@ module.exports = (win = window) => ({
     req.open('POST', url)
     setTimeout(() => {
       try {
-        req.send(jsonStringify(session))
+        req.send(payload.session(session, config.filters))
       } catch (e) {
         logger.error(e)
         cb(e)

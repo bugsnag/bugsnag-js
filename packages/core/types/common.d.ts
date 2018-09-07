@@ -16,6 +16,7 @@ export interface IConfig {
   user?: object | null;
   metaData?: object | null;
   logger?: ILogger | null;
+  filters?: Array<string | RegExp>;
   [key: string]: any;
 }
 

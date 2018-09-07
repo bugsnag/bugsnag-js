@@ -27,7 +27,8 @@ describe('delivery:XDomainRequest', () => {
     const payload = { sample: 'payload' }
     const config = {
       apiKey: 'aaaaaaaa',
-      endpoints: { notify: '/echo/' }
+      endpoints: { notify: '/echo/' },
+      filters: []
     }
     delivery(window).sendReport({}, config, payload, (err) => {
       expect(err).toBe(null)
@@ -65,7 +66,8 @@ describe('delivery:XDomainRequest', () => {
     const payload = { sample: 'payload' }
     const config = {
       apiKey: 'aaaaaaaa',
-      endpoints: { notify: '/echo/', sessions: '/sessions/' }
+      endpoints: { notify: '/echo/', sessions: '/sessions/' },
+      filters: []
     }
     delivery(window).sendSession({}, config, payload, (err) => {
       expect(err).toBe(null)

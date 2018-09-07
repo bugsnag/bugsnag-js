@@ -4,5 +4,5 @@ cat - | ./node_modules/.bin/uglifyjs \
   --compress \
   --mangle \
   --ie8 \
-  --source-map "content=inline,url=$(basename $1).map" \
+  --source-map "includeSources,content=inline,url=$(basename $1).map" \
 --output $1

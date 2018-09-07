@@ -18,7 +18,6 @@
   "license": "MIT",
   "dependencies": {
     "@bugsnag/core": "^1.0.0",
-    "@bugsnag/safe-json-stringify": "^2.1.0",
     "request": "^2.87.0"
   },
   "devDependencies": {

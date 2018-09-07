@@ -32,7 +32,8 @@ describe('delivery:node', () => {
       const payload = { sample: 'payload' }
       const config = {
         apiKey: 'aaaaaaaa',
-        endpoints: { notify: `http://0.0.0.0:${server.address().port}/notify/` }
+        endpoints: { notify: `http://0.0.0.0:${server.address().port}/notify/` },
+        filters: []
       }
       delivery().sendReport({}, config, payload, (err) => {
         expect(err).toBe(null)
@@ -59,7 +60,8 @@ describe('delivery:node', () => {
       const payload = { sample: 'payload' }
       const config = {
         apiKey: 'aaaaaaaa',
-        endpoints: { notify: 'blah', sessions: `http://0.0.0.0:${server.address().port}/sessions/` }
+        endpoints: { notify: 'blah', sessions: `http://0.0.0.0:${server.address().port}/sessions/` },
+        filters: []
       }
       delivery().sendSession({}, config, payload, (err) => {
         expect(err).toBe(null)
