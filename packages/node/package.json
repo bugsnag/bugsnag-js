@@ -24,6 +24,8 @@
     "@babel/cli": "^7.0.0-beta.51",
     "@bugsnag/core": "^1.0.0",
     "@bugsnag/delivery-node": "^1.0.0",
+    "@bugsnag/plugin-contextualize": "^1.0.0",
+    "@bugsnag/plugin-intercept": "^1.0.0",
     "@bugsnag/plugin-node-device": "^1.0.0",
     "@bugsnag/plugin-node-in-project": "^1.0.0",
     "@bugsnag/plugin-node-surrounding-code": "^1.0.0",
