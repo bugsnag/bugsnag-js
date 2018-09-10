@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-koa",
-  "version": "1.0.0",
+  "version": "5.0.0-alpha.0",
   "main": "dist/bugsnag-koa.js",
   "types": "types/bugsnag-koa.d.ts",
   "description": "@bugsnag/js error handling middleware for Koa web servers",
@@ -24,7 +24,7 @@
     "@bugsnag/node": "^1.0.0"
   },
   "devDependencies": {
-    "@bugsnag/core": "^1.0.0",
+    "@bugsnag/core": "^5.0.0-alpha.0",
     "babelify": "9.0.0",
     "browserify": "^16.2.2",
     "exorcist": "^1.0.1",
