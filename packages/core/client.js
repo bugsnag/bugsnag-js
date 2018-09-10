@@ -11,8 +11,6 @@ const runBeforeSend = require('./lib/run-before-send')
 const LOG_USAGE_ERR_PREFIX = `Usage error.`
 const REPORT_USAGE_ERR_PREFIX = `Bugsnag usage error.`
 
-const noop = () => {}
-
 class BugsnagClient {
   constructor (notifier) {
     if (!notifier || !notifier.name || !notifier.version || !notifier.url) {
@@ -30,8 +28,8 @@ class BugsnagClient {
     this.config = {}
 
     // // i/o
-    this._delivery = { sendSession: noop, sendReport: noop }
-    this._logger = { debug: noop, info: noop, warn: noop, error: noop }
+    this._delivery = { sendSession: () => {}, sendReport: () => {} }
+    this._logger = { debug: () => {}, info: () => {}, warn: () => {}, error: () => {} }
 
     // plugins
     this._plugins = {}
@@ -143,7 +141,7 @@ class BugsnagClient {
     return this
   }
 
-  notify (error, opts = {}, cb = noop) {
+  notify (error, opts = {}, cb = () => {}) {
     if (!this._configured) throw new Error('client not configured')
 
     // releaseStage can be set via config.releaseStage or client.app.releaseStage
