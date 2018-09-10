@@ -18,7 +18,7 @@ script:
 env:
   global:
     - BROWSER_STACK_USERNAME: bugsnagplatforms1
-    - secure: "X29QA8LjTZL9RHnoiYlprpIbv264e//KjL3Q4A/vWZ8QbIRD2MY8w9wuIfQEYHLGa7kf1EAGPoH/Ka3raj7s5+J4hOeCeMC0ZWUWdAem35FE7zGm8wJrCKFK5GD9LF+1LRxK+gBfKfeaJkwcbjv7tl0DEW1JNC9PS4cpI0DRJzM="
+    - secure: "ft2MvNmJ3U2frZEf6x3isWBg46cS1ofZ3np+ABE+5ehF1GztMk44DFasdQSwp5FQGbpJkHWmr0q9l90mCT579yDYA3ZzeUaMykz8Y5dmfFM1bbn6Qe8atOs1MG0AZUDIK+lZmgdwhXhZ4URU3fYt6bguHeK2thYkpp0dnOECrhM="
   matrix:
     - BROWSER=ie_8
     - BROWSER=ie_9
@@ -39,7 +39,7 @@ addons:
   browserstack:
     username: bugsnagplatforms1
     access_key:
-      secure: "lB2aZc0HzuinyhSJyP98lzDJTbZsroEOJTrS/flnLLsHb/C096zjhwkWexHnfmNIPaY5SB2FF0G6zcnknlmsXg5TgxQiK7bdyJmkcAetGi+cSKnGaBq7GZXVhbWh++MRnddQDGV6jrSr7aqrWf85ncq3L4//9BTV6uAhDBWu2bo="
+      secure: "ePNnHg5KPmMsyHa98Wy70Pkariv+b8qCh6UXEz2sFLXVNh2J0FYiqDgkfnp9j+IYYHy1Il4JCsK7+ZaCAbr1qQr5pkLepTMJlIiecA7DVrcwl4Ho4Lk/rjU1umpECcxqh4COd62KGg1JirQDXR+TtmdcQZgNhlg4VUXKEvfDOmo="
 
 stage: browser end to end tests
 
