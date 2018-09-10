@@ -1,7 +1,6 @@
 ARG NODE_VERSION=8
 FROM bugsnag_node_test:$NODE_VERSION
 
-RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 COPY package* /usr/src/app/
