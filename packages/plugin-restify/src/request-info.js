@@ -1,3 +1,5 @@
+const extractObject = require('@bugsnag/core/lib/extract-object')
+
 module.exports = req => {
   const connection = req.connection
   const address = connection && connection.address && connection.address()
@@ -28,12 +30,4 @@ module.exports = req => {
     }
   }
   return request
-}
-
-const extractObject = (host, key) => {
-  if (host[key] && typeof host[key] === 'object' && Object.keys(host[key]).length > 0) {
-    return host[key]
-  } else {
-    return undefined
-  }
 }
