@@ -1,11 +1,9 @@
-#!/usr/bin/env node
+#!/usr/bin/env bash
 
-const browserify = require('browserify')
-const babelConfig = require('../../../babel.config.js')()
-browserify('src/restify.js', { debug: true, node: true, standalone: 'bugsnag-express' })
-  .transform('babelify', { global: true, ...babelConfig })
-  .external([
-    'iserror'
-  ])
-  .bundle()
-  .pipe(process.stdout)
+set -e
+
+../../bin/bundle \
+  src/restify.js \
+  --node \
+  --exclude=iserror \
+  --standalone=bugsnag-restify
