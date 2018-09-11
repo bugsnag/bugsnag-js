@@ -24,7 +24,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@babel/cli": "^7.0.0-beta.51",
+    "@babel/cli": "^7.0.0",
     "@bugsnag/core": "^5.0.0-alpha.0",
     "@bugsnag/delivery-x-domain-request": "^5.0.0-alpha.0",
     "@bugsnag/delivery-xml-http-request": "^5.0.0-alpha.0",
