@@ -11,6 +11,9 @@
   "publishConfig": {
     "access": "public"
   },
+  "files": [
+    "*.js"
+  ],
   "scripts": {
     "test": "nyc --reporter=lcov -- jasmine '!(node_modules)/**/*.test.js'"
   },

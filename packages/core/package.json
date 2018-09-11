@@ -11,6 +11,11 @@
   "publishConfig": {
     "access": "public"
   },
+  "files": [
+    "lib",
+    "types",
+    "*.js"
+  ],
   "scripts": {
     "test": "nyc --reporter=lcov -- jasmine '!(node_modules)/**/*.test.js'",
     "test:types": "tslint -c ../../tslint.json types/*.d.ts"

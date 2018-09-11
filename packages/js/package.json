@@ -24,6 +24,10 @@
   "publishConfig": {
     "access": "public"
   },
+  "files": [
+    "browser",
+    "node"
+  ],
   "author": "Bugsnag",
   "license": "MIT",
   "dependencies": {

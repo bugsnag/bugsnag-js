@@ -12,6 +12,10 @@
   "publishConfig": {
     "access": "public"
   },
+  "files": [
+    "dist",
+    "types"
+  ],
   "scripts": {
     "size": "./bin/size",
     "clean": "rm -fr dist && mkdir dist",
