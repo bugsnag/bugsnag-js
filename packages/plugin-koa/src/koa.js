@@ -1,4 +1,5 @@
 const createReportFromErr = require('@bugsnag/core/lib/report-from-error')
+const clone = require('@bugsnag/core/lib/clone-client')
 const extractRequestInfo = require('./request-info')
 
 const handledState = {
@@ -14,16 +15,16 @@ module.exports = {
   name: 'koa',
   init: client => {
     const requestHandler = async (ctx, next) => {
-      // Start a session whether sessions are used or not. We use this
-      // to store request-specific info, in case of any errors.
-      const sessionClient = client.startSession()
+      // Get a client to be scoped to this request. If sessions are enabled, use the
+      // startSession() call to get a session client, otherwise, clone the existing client.
+      const requestClient = client.config.autoCaptureSessions ? client.startSession() : clone(client)
 
-      ctx.bugsnag = sessionClient
+      ctx.bugsnag = requestClient
 
       // extract request info and pass it to the relevant bugsnag properties
       const { request, metaData } = getRequestAndMetaDataFromCtx(ctx)
-      sessionClient.metaData = { ...sessionClient.metaData, request: metaData }
-      sessionClient.request = request
+      requestClient.metaData = { ...requestClient.metaData, request: metaData }
+      requestClient.request = request
 
       try {
         await next()

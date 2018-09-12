@@ -23,6 +23,24 @@ Scenario Outline: calling startSession() manually
   | 6            |
   | 8            |
 
+Scenario Outline: calling startSession() when autoCaptureSessions=false
+  And I set environment variable "NODE_VERSION" to "<node version>"
+  And I have built the service "sessions"
+  And I run the service "sessions" with the command "node scenarios/start-session-auto-off"
+  And I wait for 2 seconds
+  Then I should receive a request
+  And the request used the Node notifier
+  And the "bugsnag-api-key" header equals "9c2151b65d615a3a95ba408142c8698f"
+  And the request is a valid for the session tracking API
+  And the payload has a valid sessions array
+  And the sessionCount "sessionsStarted" equals 1
+
+  Examples:
+  | node version |
+  | 4            |
+  | 6            |
+  | 8            |
+
 Scenario Outline: calling startSession() manually 100x
   And I set environment variable "NODE_VERSION" to "<node version>"
   And I have built the service "sessions"

@@ -2,6 +2,7 @@
 const domain = require('domain')
 const extractRequestInfo = require('./request-info')
 const createReportFromErr = require('@bugsnag/core/lib/report-from-error')
+const clone = require('@bugsnag/core/lib/clone-client')
 const handledState = {
   severity: 'error',
   unhandled: true,
@@ -17,17 +18,17 @@ module.exports = {
     const requestHandler = (req, res, next) => {
       const dom = domain.create()
 
-      // Start a session whether sessions are used or not. We use this
-      // to store request-specific info, in case of any errors.
-      const sessionClient = client.startSession()
+      // Get a client to be scoped to this request. If sessions are enabled, use the
+      // startSession() call to get a session client, otherwise, clone the existing client.
+      const requestClient = client.config.autoCaptureSessions ? client.startSession() : clone(client)
 
       // attach it to the request
-      req.bugsnag = sessionClient
+      req.bugsnag = requestClient
 
       // extract request info and pass it to the relevant bugsnag properties
       const { request, metaData } = getRequestAndMetaDataFromReq(req)
-      sessionClient.metaData = { ...sessionClient.metaData, request: metaData }
-      sessionClient.request = request
+      requestClient.metaData = { ...requestClient.metaData, request: metaData }
+      requestClient.request = request
 
       // unhandled errors caused by this request
       dom.on('error', (err) => {

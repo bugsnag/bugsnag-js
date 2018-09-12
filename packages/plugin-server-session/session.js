@@ -1,6 +1,7 @@
 const { isArray, includes } = require('@bugsnag/core/lib/es-utils')
 const inferReleaseStage = require('@bugsnag/core/lib/infer-release-stage')
 const { intRange } = require('@bugsnag/core/lib/validators')
+const clone = require('@bugsnag/core/lib/clone-client')
 const SessionTracker = require('./tracker')
 const Backoff = require('backo')
 
@@ -11,27 +12,9 @@ module.exports = {
     sessionTracker.start()
     client.sessionDelegate({
       startSession: client => {
-        const sessionClient = new client.BugsnagClient(client.notifier)
-        sessionClient.configure({})
-
-        // changes to these properties should be reflected in the original client
-        sessionClient.config = client.config
-        sessionClient.app = client.app
-        sessionClient.context = client.context
-        sessionClient.device = client.device
-
-        // changes to these properties should not be reflected in the original client,
-        // so ensure they are are (shallow) cloned
-        sessionClient.breadcrumbs = client.breadcrumbs.slice()
-        sessionClient.metaData = { ...client.metaData }
-        sessionClient.request = { ...client.request }
-        sessionClient.user = { ...client.user }
-
-        sessionClient.logger(client._logger)
-        sessionClient.delivery(client._delivery)
+        const sessionClient = clone(client)
         sessionClient._session = new client.BugsnagSession()
         sessionTracker.track(sessionClient._session)
-
         return sessionClient
       }
     })
@@ -47,8 +30,6 @@ module.exports = {
 
 const sendSessionSummary = client => sessionCounts => {
   const releaseStage = inferReleaseStage(client)
-
-  if (!client.config.autoCaptureSessions) return
 
   // exit early if the reports should not be sent on the current releaseStage
   if (isArray(client.config.notifyReleaseStages) && !includes(client.config.notifyReleaseStages, releaseStage)) {
