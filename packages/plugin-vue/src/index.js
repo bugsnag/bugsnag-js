@@ -15,7 +15,7 @@ module.exports = {
       })
 
       client.notify(report)
-      console.error(err)
+      if (typeof console !== 'undefined' && typeof console.error === 'function') console.error(err)
 
       if (typeof prev === 'function') prev.call(this, err, vm, info)
     }

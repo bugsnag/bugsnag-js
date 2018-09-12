@@ -3,9 +3,15 @@
   <head>
   </head>
   <body>
-    <pre id="bugsnag-test-should-run">YES</pre>
+    <pre id="bugsnag-test-should-run">PENDING</pre>
     <pre id="bugsnag-test-state">PENDING</pre>
     <div id="root"></div>
+    <script>
+      var el = document.getElementById('bugsnag-test-should-run')
+      el.textContent = el.innerText = typeof Set !== 'undefined'
+        ? 'YES'
+        : 'NO'
+    </script>
     <script src="dist/app.js"></script>
   </body>
 </html>
