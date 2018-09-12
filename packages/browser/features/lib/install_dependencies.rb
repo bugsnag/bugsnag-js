@@ -6,8 +6,13 @@ unless ENV['MAZE_SKIP_INSTALL']
   # package up local @bugsnag/js so it can be installed in the fixtures
   run_command('npm pack --verbose')
 
-  # package up @bugsnag/plugin-react
+  # package up frontend plugins
+
   Dir.chdir('../plugin-react') do
+    run_command('npm pack --verbose')
+  end
+
+  Dir.chdir('../plugin-vue') do
     run_command('npm pack --verbose')
   end
 
@@ -18,6 +23,9 @@ unless ENV['MAZE_SKIP_INSTALL']
     )
     run_command(
       "npm install --no-package-lock --no-save --verbose ../../../plugin-react/bugsnag-plugin-react-#{version}.tgz"
+    )
+    run_command(
+      "npm install --no-package-lock --no-save --verbose ../../../plugin-vue/bugsnag-plugin-vue-#{version}.tgz"
     )
   end
 
