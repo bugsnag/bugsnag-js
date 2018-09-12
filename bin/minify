@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-cat - | npx uglifyjs \
+cat - | ../../node_modules/.bin/uglifyjs \
   --compress \
   --mangle \
   --ie8 \

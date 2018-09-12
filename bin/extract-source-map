@@ -1,1 +1,1 @@
-npx exorcist "$1.map" > $1
+../../node_modules/.bin/exorcist "$1.map" > $1
