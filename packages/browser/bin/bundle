@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-
-set -e
-
-../../bin/bundle \
-  src/notifier.js \
-  --standalone=bugsnag

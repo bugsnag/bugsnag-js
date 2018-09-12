@@ -1,0 +1,1 @@
+npx exorcist "$1.map" > $1

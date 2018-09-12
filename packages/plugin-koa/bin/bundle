@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-
-set -e
-
-../../bin/bundle \
-  src/koa.js \
-  --node \
-  --exclude=iserror \
-  --standalone=bugsnag-koa

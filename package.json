@@ -19,8 +19,10 @@
     "browserify": "^16.2.2",
     "browserify-versionify": "^1.0.6",
     "envify": "^4.1.0",
+    "exorcist": "^1.0.1",
     "lerna": "^2.11.0",
-    "standard": "^11.0.1"
+    "standard": "^11.0.1",
+    "uglify-js": "^3.4.9"
   },
   "scripts": {
     "test:lint": "standard",
