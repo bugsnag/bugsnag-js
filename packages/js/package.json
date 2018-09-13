@@ -3,6 +3,7 @@
   "version": "5.0.0-alpha.0",
   "main": "node/notifier.js",
   "browser": "browser/notifier.js",
+  "types": "types.d.ts",
   "description": "Universal Javascript error reporting. Automatically detect JavaScript errors in the browser and Node.js, with plugins for React, Vue, Angular, Express, Restify and Koa.",
   "keywords": [
     "exception",

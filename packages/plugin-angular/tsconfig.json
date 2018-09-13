@@ -1,0 +1,21 @@
+{
+  "files": [ "./src/index.ts" ],
+  "compilerOptions": {
+    "module": "ES6",
+    "lib": [ "ES5", "ES6", "DOM" ],
+    "allowJs": false,
+    "declaration": true,
+    "inlineSourceMap": true,
+    "inlineSources": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "moduleResolution": "node",
+    "sourceRoot": "src",
+    "experimentalDecorators": true
+  }
+}

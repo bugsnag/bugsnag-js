@@ -8,7 +8,7 @@ export interface IConfig {
   autoNotify?: boolean;
   appVersion?: string;
   appType?: string;
-  endpoints?: { notify: string, sessions: string };
+  endpoints?: { notify: string, sessions?: string };
   autoCaptureSessions?: boolean;
   notifyReleaseStages?: string[];
   releaseStage?: string;
