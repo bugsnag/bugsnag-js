@@ -1,0 +1,13 @@
+{
+  "name": "bugsnag-js-fixtures-plugin-vue-webpack4",
+  "private": true,
+  "scripts": {
+    "build": "webpack"
+  },
+  "dependencies": {
+    "es3ify-webpack-plugin": "0.0.1",
+    "vue": "^2.5.17",
+    "webpack": "^4.8.1",
+    "webpack-cli": "^2.1.3"
+  }
+}

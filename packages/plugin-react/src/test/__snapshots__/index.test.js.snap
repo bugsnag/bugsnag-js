@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`does not render FallbackComponent when no error 1`] = `"test"`;
+
+exports[`renders FallbackComponent on error 1`] = `"fallback"`;
+
+exports[`renders correctly 1`] = `"test"`;

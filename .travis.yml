@@ -4,15 +4,13 @@ language: node_js
 node_js:
   - '10'
 before_install:
-  - npm i -g npm@5.3.0
-  - npm i -g lerna
   - gem install bundler -v 1.16.1
 install:
   - BUNDLE_GEMFILE="packages/browser/Gemfile" bundle install
   - npm install
-  - lerna bootstrap
+  - npx lerna bootstrap
 before_script:
-  - lerna run build  --scope='@bugsnag/browser'
+  - npx lerna run build
 script:
   - npm run test:browser
 env:
@@ -46,16 +44,16 @@ stage: browser end to end tests
 jobs:
   include:
     - stage: linting
+      before_script: skip
       install:
         - npm install
-        - lerna bootstrap
+        - npx lerna bootstrap
       script: npm run test:lint
       env: BROWSER=na
     - stage: unit tests
       install:
         - npm install
-        - lerna bootstrap
-        - lerna run build
+        - npx lerna bootstrap
       script:
         - npm run test:unit && npm run test:types
       env: BROWSER=na
@@ -63,8 +61,9 @@ jobs:
       install:
         - BUNDLE_GEMFILE="packages/node/Gemfile" bundle install
         - npm install
-        - lerna bootstrap
-        - lerna run build --scope='@bugsnag/node' --scope='@bugsnag/plugin-express' --scope='@bugsnag/plugin-koa' --scope='@bugsnag/plugin-restify'
+        - npx lerna bootstrap
+      before_script:
+        - npx lerna run build
       script:
         - npm run test:node
       env: BROWSER=na

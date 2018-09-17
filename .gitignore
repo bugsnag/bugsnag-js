@@ -5,3 +5,4 @@ coverage
 dist
 .DS_Store
 maze_output
+*.ngsummary.json
