@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-angular",
-  "version": "5.0.0-alpha.0",
+  "version": "5.0.0-alpha.1",
   "description": "Angular integration for bugsnag-js",
   "main": "dist/index.js",
   "browser": "dist/index.js",
@@ -25,17 +25,15 @@
   },
   "author": "Bugsnag",
   "license": "MIT",
-  "dependencies": {
-  },
   "devDependencies": {
     "@angular/cli": "^1.7.4",
     "@angular/compiler": "^4.4.7",
     "@angular/compiler-cli": "^4.4.7",
     "@angular/core": "^4.4.7",
+    "@bugsnag/js": "^5.0.0-alpha.1",
     "rxjs": "^5.5.8",
     "tslint": "^5.9.1",
     "typescript": "2.3.4",
-    "zone.js": "^0.8.26",
-    "@bugsnag/js": "^5.0.0-alpha.0"
+    "zone.js": "^0.8.26"
   }
 }
