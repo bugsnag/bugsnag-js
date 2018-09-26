@@ -121,10 +121,41 @@ These tests require docker to be running.
 npm run test:node
 ```
 
-## Releases
-
-TODO
-
 ## Prereleases
 
-TODO
+If you are starting a new prerelease, use one of the following commands:
+
+```
+lerna version [premajor | preminor | prepatch]
+```
+
+For subsequent iterations on that release, run:
+
+```
+lerna version prerelease
+```
+
+If you want to publish the release to npm, use the following command:
+
+```
+# note you will need to source the npm opt from your 2FA provider
+ NPM_CONFIG_OTP=XXXXXX lerna publish from-git --npm-tag next
+```
+
+The `--npm-tag next` part ensures that it is not installed by unsuspecting users who do not specify a version.
+
+If you want to publish the release to the CDN, use the following command:
+
+```
+lerna run cdn-upload
+```
+
+## Releases
+
+To graduate a prerelease into a release you will want to use `patch` as the version.
+
+```
+lerna version [major | minor | patch]
+NPM_CONFIG_OTP=XXXXXXX lerna publish from-git
+lerna run cdn-upload
+```

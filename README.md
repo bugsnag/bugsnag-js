@@ -63,7 +63,7 @@ Most updates to this repo will be made by Bugsnag employees. We are unable to ac
 git clone git@github.com:bugsnag/bugsnag-js.git
 cd bugsnag-js
 npm i
-npx lerna run bootstrap
+npx lerna bootstrap
 npx lerna run build
 cd packages/browser && bundle
 cd ../node && bundle
