@@ -19,11 +19,11 @@ See [packages](/packages) for a full list of contents.
 ## Getting started
 
 1. [Create a Bugsnag account](https://www.bugsnag.com)
-2. Complete the instructions in the [integration guide](https://docs.bugsnag.com/platforms/browsers/)
+2. Complete the instructions in the [integration guide](https://docs.bugsnag.com/platforms/javascript/)
 3. Report handled exceptions using
-   [`bugsnagClient.notify()`](https://docs.bugsnag.com/platforms/browsers/js/#reporting-handled-exceptions)
+   [`bugsnagClient.notify()`](https://docs.bugsnag.com/platforms/javascript/#reporting-handled-exceptions)
 4. Customize your integration using the
-   [configuration options](https://docs.bugsnag.com/platforms/browsers/js/configuration-options/)
+   [configuration options](https://docs.bugsnag.com/platforms/javascript/configuration-options/)
 
 ## Integrating with frameworks
 
@@ -33,25 +33,23 @@ Use the following plugins and guides to integrate Bugsnag with various framework
 
 | Framework  | Bugsnag plugin | Documentation |
 | ---------- | -------------- | --------------|
-| React | [@bugsnag/plugin-react](#TODO) | [React docs](#TODO)
-| Vue | [@bugsnag/plugin-vue](#TODO) | [Vue docs](#TODO)
-| Angular | [@bugsnag/plugin-angular](#TODO) | [Angular docs](#TODO)
-| Backbone | - | [Backbone docs](#TODO) |
-| Ember | - | [Ember docs](#TODO) |
+| Vue | [@bugsnag/plugin-vue](packages/plugin-vue) | [Vue docs](https://docs.bugsnag.com/platforms/javascript/vue)
+| React | [@bugsnag/plugin-react](packages/plugin-react) | [React docs](https://docs.bugsnag.com/platforms/javascript/react)
+| Angular | [@bugsnag/plugin-angular](packages/plugin-angular) | [Angular docs](https://docs.bugsnag.com/platforms/javascript/angular)
 
 ### Server
 
 | Framework  | Bugsnag plugin | Documentation |
 | ---------- | -------------- | --------------|
-| Express | [@bugsnag/plugin-express](#TODO)  | [Express docs](#TODO) |
-| Restify | [@bugsnag/plugin-restify](#TODO)  | [Restify docs](#TODO) |
-| Koa | [@bugsnag/plugin-koa](#TODO)  | [Koa docs](#TODO) |
+| Koa | [@bugsnag/plugin-koa](packages/plugin-koa)  | [Koa docs](https://docs.bugsnag.com/platforms/javascript/koa) |
+| Express | [@bugsnag/plugin-express](packages/plugin-express)  | [Express docs](https://docs.bugsnag.com/platforms/javascript/express) |
+| Restify | [@bugsnag/plugin-restify](packages/plugin-restify)  | [Restify docs](https://docs.bugsnag.com/platforms/javascript/restify) |
 
 ## Support
 
-* Check out the [FAQ](#TODO) and [configuration options](#TODO)
-* [Search open and closed issues](#TODO) for similar problems
-* [Report a bug or request a feature](#TODO)
+* Check out the [FAQ](https://docs.bugsnag.com/platforms/javascript/faq) and [configuration options](https://docs.bugsnag.com/platforms/javascript/configuration-options)
+* [Search open and closed issues](https://github.com/bugsnag/bugsnag-js/issues?q=+) for similar problems
+* [Report a bug or request a feature](https://github.com/bugsnag/bugsnag-js/issues/new)
 
 ## Contributing
 
