@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>@bugsnag/js: Plain JS example</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <!-- load bugsnag with a simple script tag -->
+    <script src="//d2wy8f7a9ursnm.cloudfront.net/v5.0.0-alpha.1/bugsnag.min.js"></script>
+  </head>
+  <body>
+    <img width="200" src="bugsnag.png"/>
+    <h1>Plain JS example</h1>
+    <p>
+      This page is a basic example of how to include <code>@bugsnag/js</code> on a page via a
+      <code>&lt;script&gt;</code> tag.
+    </p>
+    <div id="buttons">
+      <h3>Send some errors by clicking below:</h3>
+      <button type="button" id="jsHandled">Send handled</button>
+      <button type="button" id="jsUnhandled">Send unhandled</button>
+    </div>
+    <!-- in app.js you'll find syntax and configuration examples. -->
+    <script src="app.js"></script>
+  </body>
+</html>

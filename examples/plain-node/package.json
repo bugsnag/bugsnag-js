@@ -1,0 +1,11 @@
+{
+  "name": "bugsnag-js-example",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app"
+  },
+  "dependencies": {
+    "@bugsnag/js": "^5.0.0-alpha.1"
+  }
+}
