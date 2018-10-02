@@ -1,0 +1,14 @@
+{
+  "name": "bugsnag-js-example",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "tsc",
+    "start": "node src/app.js"
+  },
+  "dependencies": {
+    "@bugsnag/core": "^5.0.0-alpha.1",
+    "@bugsnag/js": "^5.0.0-alpha.2",
+    "@types/node": "^10.11.3",
+    "typescript": "^3.1.1"
+  }
+}
