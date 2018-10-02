@@ -27,7 +27,8 @@
   },
   "files": [
     "browser",
-    "node"
+    "node",
+    "types.d.ts"
   ],
   "author": "Bugsnag",
   "license": "MIT",
