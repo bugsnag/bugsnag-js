@@ -20,7 +20,8 @@
     "build": "npm run clean && npm run build:dist && npm run build:dist:min",
     "build:dist": "NODE_ENV=production IS_BROWSER=yes ../../bin/bundle src/index.js --standalone=bugsnag__react | ../../bin/extract-source-map dist/bugsnag-react.js",
     "build:dist:min": "NODE_ENV=production IS_BROWSER=yes ../../bin/bundle src/index.js --standalone=bugsnag__react | ../../bin/minify dist/bugsnag-react.min.js",
-    "test": "jest"
+    "test": "jest",
+    "postversion": "npm run build"
   },
   "author": "Bugsnag",
   "license": "MIT",

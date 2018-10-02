@@ -20,7 +20,8 @@
     "clean": "rm -fr dist && mkdir dist",
     "build": "npm run clean && npm run build:dist",
     "build:dist": "../../bin/bundle src/express.js --node --exclude=iserror --standalone=bugsnag-express | ../../bin/extract-source-map dist/bugsnag-express.js",
-    "test": "nyc --reporter=lcov -- jasmine '!(node_modules)/**/*.test.js'"
+    "test": "nyc --reporter=lcov -- jasmine '!(node_modules)/**/*.test.js'",
+    "postversion": "npm run build"
   },
   "author": "Bugsnag",
   "license": "MIT",

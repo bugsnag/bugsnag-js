@@ -21,7 +21,8 @@
     "lint": "tslint -p .",
     "build": "npm run clean && npm run build:dist",
     "build:dist": "ngc -p .",
-    "test": "npm run lint"
+    "test": "npm run lint",
+    "postversion": "npm run build"
   },
   "author": "Bugsnag",
   "license": "MIT",
