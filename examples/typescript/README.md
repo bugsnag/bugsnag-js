@@ -16,7 +16,7 @@ Use the instructions below to run the application. When it runs, the output will
 ```
 [bugsnag] Loaded!
 
-  Welcome to the plain Node.js example app. Type one of the
+  Welcome to the plain TypeScript example app. Type one of the
   following keys, followed by enter, to perform each action:
 
   u = report an (u)nhandled error
