@@ -6,7 +6,7 @@ This "universal" repository combines Bugsnag's browser and Node.js notifiers and
 
 ### Upgrading
 
-There are no external API changes from `bugsnag-js` v4 -> `@bugsnag/js` is very simple.
+There are minimal external API changes from `bugsnag-js` v4 -> `@bugsnag/js`, so the migration is very simple.
 
 #### CDN users
 
@@ -41,6 +41,52 @@ Subsequently, in the application, any requires/imports should be updated (this s
 ```diff
 + var bugsnag = require('@bugsnag/js')
 - var bugsnag = require('bugsnag-js')
+```
+
+### bugsnag-{vue|react|angular} users
+
+The plugin interface has changed slightly and these packages have been migrated to the @bugsnag namespace.
+
+Remove the old module and install the new module:
+
+```
+# npm
+npm rm --save bugsnag-{vue|react|angular}
+npm install --save @bugsnag/plugin-{vue|react|angular}
+
+# yarn
+yarn remove bugsnag-{vue|react|angular}
+yarn add @bugsnag/plugin-{vue|react|angular}
+```
+
+#### Vue
+
+```diff
++ const bugsnagVue = require('@bugsnag/plugin-vue')
+- const bugsnagVue = require('bugsnag-vue')
+
++ bugsnagClient.use(bugsnagVue, Vue)
+- bugsnagClient.use(bugsnagVue(Vue))
+```
+
+#### React
+
+```diff
++ const bugsnagReact = require('@bugsnag/plugin-react')
+- const bugsnagReact = require('bugsnag-react')
+
++ bugsnagClient.use(bugsnagReact, React)
+- bugsnagClient.use(bugsnagReact(React))
+
++ const ErrorBoundary = bugsnagClient.getPlugin('react')
+- const ErrorBoundary = bugsnagClient.use(createPlugin(React))
+```
+
+#### Angular
+
+```diff
++ import { BugsnagErrorHandler } from '@bugsnag/plugin-angular'
+- import BugsnagErrorHandler from 'bugsnag-angular'
 ```
 
 ## Node.js
