@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-node-device",
-  "version": "5.0.0-alpha.1",
+  "version": "5.0.0-alpha.2",
   "main": "device.js",
   "description": "@bugsnag/js plugin to set device info in node",
   "homepage": "https://www.bugsnag.com/",

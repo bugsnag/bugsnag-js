@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-node-uncaught-exception",
-  "version": "5.0.0-alpha.1",
+  "version": "5.0.0-alpha.2",
   "main": "uncaught-exception.js",
   "description": "@bugsnag/js plugin to capture and report uncaught exceptions",
   "homepage": "https://www.bugsnag.com/",
