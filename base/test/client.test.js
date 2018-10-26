@@ -103,6 +103,20 @@ describe('base/client', () => {
       expect(sent).toBe(true)
     })
 
+    it('generates a correct error message, when null is passed', done => {
+      const client = new Client(VALID_NOTIFIER)
+      client.transport({
+        sendReport: (logger, config, payload) => {
+          const report = payload.events[0].toJSON()
+          expect(report.exceptions[0].message).toEqual('Bugsnag usage error. notify() expected error/opts parameters, got nothing')
+          process.nextTick(() => done())
+        }
+      })
+      client.configure({ apiKey: 'API_KEY_YEAH' })
+      const sent = client.notify(null)
+      expect(sent).toBe(true)
+    })
+
     it('supports manually setting severity', done => {
       const client = new Client(VALID_NOTIFIER)
       client.transport({

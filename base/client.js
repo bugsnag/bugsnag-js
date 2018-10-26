@@ -237,7 +237,7 @@ const normaliseError = (error, opts, logger) => {
         err = new Error(error.message || error.errorMessage)
         err.name = error.name || error.errorClass
         errorFramesToSkip += 2
-      } else {
+      } else if (error !== null) {
         const msg = generateNotifyUsageMessage('unsupported object')
         logger.warn(`${LOG_USAGE_ERR_PREFIX} ${msg}`)
         err = new Error(`${REPORT_USAGE_ERR_PREFIX} ${msg}`)
