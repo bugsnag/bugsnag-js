@@ -1,5 +1,9 @@
 unless ENV['MAZE_SKIP_INSTALL']
+
   Dir.chdir('features/fixtures') do
+    run_command('rm -fr bugsnag-node*.tgz')
+    run_command('rm -fr bugsnag-plugin*.tgz')
+
     # pack local packages so they can be loaded into the Docker images
     run_command('npm pack --verbose ../../')
     run_command('npm pack --verbose ../../../plugin-express')
