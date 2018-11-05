@@ -5,7 +5,7 @@ const { isoDate } = require('@bugsnag/core/lib/es-utils')
  */
 module.exports = {
   init: (client) => {
-    const device = { hostname: client.config.hostname }
+    const device = { hostname: client.config.hostname, versions: process.versions }
 
     // merge with anything already set on the client
     client.device = { ...device, ...client.device }
