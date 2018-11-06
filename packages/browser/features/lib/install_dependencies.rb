@@ -3,6 +3,8 @@ require_relative './fixture_package_jsons'
 version = (JSON.parse open('package.json', &:read))['version']
 
 unless ENV['MAZE_SKIP_INSTALL']
+  run_command('rm -fr bugsnag-browser*.tgz')
+
   # package up local @bugsnag/js so it can be installed in the fixtures
   run_command('npm pack --verbose')
 
@@ -31,19 +33,19 @@ unless ENV['MAZE_SKIP_INSTALL']
   # install node_modules
   Dir.chdir('features/fixtures') do
     run_command(
-      "npm install --no-package-lock --no-save --verbose ../../bugsnag-browser-#{version}.tgz"
+      "npm install --no-package-lock --no-save --verbose ../../bugsnag-browser-*.tgz"
     )
     run_command(
-      "npm install --no-package-lock --no-save --verbose ../../../plugin-react/bugsnag-plugin-react-#{version}.tgz"
+      "npm install --no-package-lock --no-save --verbose ../../../plugin-react/bugsnag-plugin-react-*.tgz"
     )
     run_command(
-      "npm install --no-package-lock --no-save --verbose ../../../plugin-vue/bugsnag-plugin-vue-#{version}.tgz"
+      "npm install --no-package-lock --no-save --verbose ../../../plugin-vue/bugsnag-plugin-vue-*.tgz"
     )
   end
 
   Dir.chdir('features/fixtures/plugin_angular/ng') do
     run_command(
-      "npm install --no-package-lock --no-save --verbose ../../../../../plugin-angular/bugsnag-plugin-angular-#{version}.tgz  ../../../../../node/bugsnag-node-#{version}.tgz  ../../../../../browser/bugsnag-browser-#{version}.tgz ../../../../../js/bugsnag-js-#{version}.tgz"
+      "npm install --no-package-lock --no-save --verbose ../../../../../plugin-angular/bugsnag-plugin-angular-*.tgz  ../../../../../node/bugsnag-node-#{version}.tgz  ../../../../../browser/bugsnag-browser-#{version}.tgz ../../../../../js/bugsnag-js-#{version}.tgz"
     )
   end
 
