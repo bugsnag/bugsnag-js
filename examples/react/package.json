@@ -1,0 +1,29 @@
+{
+  "name": "reacty",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@bugsnag/js": "^5.0.0-alpha.1",
+    "@bugsnag/plugin-react": "^5.0.0-alpha.1",
+    "react": "^16.6.0",
+    "react-dom": "^16.6.0",
+    "react-scripts": "2.1.1",
+    "serve": "^10.0.2"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "serve": "npm run build && serve -s build"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}
