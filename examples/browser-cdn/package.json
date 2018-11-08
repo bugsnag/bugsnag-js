@@ -2,7 +2,7 @@
   "name": "bugsnag-js-example",
   "version": "1.0.0",
   "scripts": {
-    "start": "serve . -p 65531"
+    "start": "serve . -p 65531 -n"
   },
   "dependencies": {
     "serve": "^10.0.2"
