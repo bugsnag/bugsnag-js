@@ -21,8 +21,13 @@ app.post('/crash', (req, res) => {
   setTimeout(() => { throw new Error('Uh oh') })
 })
 
+app.post('/unhandled', (req, res) => {
+  throw new Error('Invalid DSL syntax')
+})
+
 app.post('/handled', (req, res) => {
-  throw new Error('Just a wobble')
+  req.bugsnag.notify(new Error('Could not connect to xyz service'))
+  res.sendStatus(503)
 })
 
 app.post('/add-info', (req, res, next) => {
