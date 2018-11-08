@@ -23,7 +23,7 @@ The project includes a `Dockerfile`. If you're familiar with docker, this is the
 
 ```
 docker build -t bugsnag-js-example-koa . && \
-docker run -p 9871:9871 -it -e BUGSNAG_API_KEY='YOUR_API_KEY' bugsnag-js-example-koa
+docker run -p 9872:9872 -it -e BUGSNAG_API_KEY='YOUR_API_KEY' bugsnag-js-example-koa
 ```
 
 __Note__: remember to replace `YOUR_API_KEY` in the command with your own!
