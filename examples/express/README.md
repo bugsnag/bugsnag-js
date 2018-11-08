@@ -15,6 +15,8 @@ Use the instructions below to run the application.
 
 Once started, it will serve a page at http://localhost:9871 with buttons that cause the server to send various errors.
 
+*Note that if you hit the button that crashes the server, you will need to restart it again!*
+
 ### With docker
 
 The project includes a `Dockerfile`. If you're familiar with docker, this is the easiest way to start the example. Otherwise, skip ahead to the [without docker](#without-docker) section.
