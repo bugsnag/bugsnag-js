@@ -1,0 +1,8 @@
+<div id="buttons">
+  <h3>Send some errors by clicking below:</h3>
+  <button (click)="triggerUnhandledError()">Send unhandled</button>
+  <button (click)="triggerHandledError()">Send handled</button>
+  <button (click)="triggerRenderError()">Trigger render error</button>
+  <!-- when true, the below line will throw an unhandled exception. -->
+  <div *ngIf="doARenderError">{{ doARenderError.non.existent.property }}</div>
+</div>
