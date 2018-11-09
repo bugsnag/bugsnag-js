@@ -1,0 +1,14 @@
+{
+  "name": "bugsnag-js-example",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app"
+  },
+  "dependencies": {
+    "@bugsnag/js": "^5.0.0-alpha.1",
+    "@bugsnag/plugin-restify": "^5.0.0-alpha.1",
+    "restify": "^7.2.2",
+    "restify-errors": "^6.1.1"
+  }
+}
