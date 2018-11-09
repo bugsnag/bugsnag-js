@@ -34,12 +34,18 @@ describe('plugin: node device', () => {
     client.notify(new Error('noooo'))
   })
 
-  it('should attach the process.versions hash', () => {
+  it('should attach the process.versions hash', done => {
     const client = new Client(VALID_NOTIFIER)
     client.setOptions({ apiKey: 'API_KEY_YEAH' })
     client.configure(schema)
     client.use(plugin)
 
-    expect(client.device.versions).toEqual(process.versions)
+    client.delivery({
+      sendReport: (logger, config, payload) => {
+        expect(payload.events[0].metaData.device.runtimeVersions).toEqual(process.versions)
+        done()
+      }
+    })
+    client.notify(new Error('noooo'))
   })
 })
