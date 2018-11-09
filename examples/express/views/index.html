@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>@bugsnag/js: Express example</title>
+  <link rel="stylesheet" type="text/css" href="/static/index.css" />
+</head>
+<body>
+  <img width="200" src="/static/bugsnag.png"/>
+  <h1>Express example</h1>
+  <p>
+    This an example of how to include <code>@bugsnag/js</code> in an Express app.
+  </p>
+  <div id="buttons">
+    <h3>Send some errors by clicking below:</h3>
+    <form action="/handled" method="POST"><input type="submit" value="Send a handled error" /></form>
+    <form action="/unhandled" method="POST"><input type="submit" value="Send an unhandled error" /></form>
+    <form action="/add-info" method="POST"><input type="submit" value="Attach user info to an error" /></form>
+    <form action="/crash" method="POST"><input type="submit" value="Crash the server" /></form>
+  </div>
+</body>
+</html>
