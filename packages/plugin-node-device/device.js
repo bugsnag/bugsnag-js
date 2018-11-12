@@ -13,6 +13,7 @@ module.exports = {
     // add time just as the report is sent
     client.config.beforeSend.unshift((report) => {
       report.device = { ...report.device, time: isoDate() }
+      report.updateMetaData('device', { runtimeVersions: process.versions })
     })
   }
 }
