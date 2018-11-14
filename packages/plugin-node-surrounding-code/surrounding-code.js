@@ -8,12 +8,17 @@ module.exports = {
   init: client => {
     if (!client.config.sendCode) return
 
-    const loadSurroundingCode = stackframe => new Promise((resolve, reject) => {
+    const loadSurroundingCode = (stackframe, cache) => new Promise((resolve, reject) => {
       try {
         if (!stackframe.lineNumber || !stackframe.file) return resolve(stackframe)
+        const cacheKey = `${stackframe.file}@${stackframe.lineNumber}`
+        if (cacheKey in cache) {
+          stackframe.code = cache[cacheKey]
+          return resolve(stackframe)
+        }
         getSurroundingCode(stackframe.file, stackframe.lineNumber, (err, code) => {
           if (err) return resolve(stackframe)
-          stackframe.code = code
+          stackframe.code = cache[cacheKey] = code
           return resolve(stackframe)
         })
       } catch (e) {
@@ -22,11 +27,9 @@ module.exports = {
     })
 
     client.config.beforeSend.push(report => new Promise((resolve, reject) => {
-      Promise.all(report.stacktrace.map(loadSurroundingCode))
-        .then(stacktrace => {
-          report.stacktrace = stacktrace
-          resolve()
-        })
+      const cache = Object.create(null)
+      pMapSeries(report.stacktrace.map(stackframe => () => loadSurroundingCode(stackframe, cache)))
+        .then(resolve)
         .catch(reject)
     }))
   },
@@ -92,4 +95,19 @@ class CodeRange extends Writable {
   getCode () {
     return this._code
   }
+}
+
+const pMapSeries = (ps) => {
+  return new Promise((resolve, reject) => {
+    const res = []
+    ps
+      .reduce((accum, p) => {
+        return accum.then(r => {
+          res.push(r)
+          return p()
+        })
+      }, Promise.resolve())
+      .then(r => { res.push(r) })
+      .then(() => { resolve(res.slice(1)) })
+  })
 }
