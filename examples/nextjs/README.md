@@ -16,8 +16,8 @@ cd bugsnag-js/examples/next
 Take a look at…
 - [`lib/bugsnag.js`](lib/bugsnag.js) for how to setup Bugsnag once for your application so it can be imported and used anywhere on the server or client
 - [`next.config.js`](next.config.js) to see how the environment variables are passed through to both the client and server build
-- [`pages/_app.js`](src/_app.js) to see how the React `ErrorBoundary` is used to wrap all pages in the application
-- [`pages/_error.js`](src/_error.js) to see how to override the built-in error page to intercept SSR errors
+- [`pages/_app.js`](pages/_app.js) to see how the React `ErrorBoundary` is used to wrap all pages in the application
+- [`pages/_error.js`](pages/_error.js) to see how to override the built-in error page to intercept SSR errors
 - [`pages/index.js`](pages/index.js) to see how the errors are triggered
 - [`components/CrashyButton.js`](components/CrashyButton.js) to see how the render error is triggered
 
