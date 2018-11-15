@@ -18,8 +18,8 @@ exports.init = (client, win = window) => {
   // hashchange has some metaData that we care about
   win.addEventListener('hashchange', event => {
     const metaData = event.oldURL
-      ? { from: relativeLocation(event.oldURL), to: relativeLocation(event.newURL), state: getCurrentState() }
-      : { to: relativeLocation(win.location.href) }
+      ? { from: relativeLocation(event.oldURL, win), to: relativeLocation(event.newURL, win), state: getCurrentState(win) }
+      : { to: relativeLocation(win.location.href, win) }
     client.leaveBreadcrumb('Hash changed', metaData, 'navigation')
   }, true)
 
