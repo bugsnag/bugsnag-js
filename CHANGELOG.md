@@ -92,3 +92,12 @@ yarn add @bugsnag/plugin-{vue|react|angular}
 ## Node.js
 
 Users of the existing `bugsnag` (node) package should note that this upgrade is **not** backwards compatible and should follow the new [integration guides](https://docs.bugsnag.com/platforms/javascript).
+
+Please note the signature of the `notify()` function is similar, but has some noteworthy differences:
+
+`bugsnagClient.notify(error, opts)`
+
+- Previously `metaData` could be provided by passing arbitrary keys to `opts`. Now, it must be passed explicitly as `opts.metaData`.
+- `groupingHash` is no longer an option, but it can be set using `report.groupingHash` in a `beforeSend` callback.
+
+Please refer to the documentation, since `notify()` will ignore `opts` that it doesn't recognize.
