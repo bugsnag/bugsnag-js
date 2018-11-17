@@ -10,7 +10,7 @@ declare module "@bugsnag/core" {
       onUnhandledRejection?: (err: any, report: Bugsnag.Report, logger: Bugsnag.ILogger) => void;
       proxy?: string;
       projectRoot?: string;
-      sendCode?: string;
+      sendCode?: boolean;
     }
   }
 }
