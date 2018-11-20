@@ -4,7 +4,7 @@
   "main": "dist/bugsnag-react.js",
   "description": "React integration for @bugsnag/js",
   "browser": "dist/bugsnag-react.js",
-  "types": "types/bugsnag-vue.d.ts",
+  "types": "types/bugsnag-react.d.ts",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
     "type": "git",
