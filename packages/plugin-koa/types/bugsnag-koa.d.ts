@@ -1,3 +1,3 @@
-import { IPlugin } from "@bugsnag/core";
-declare const bugsnagPluginExpress: IPlugin;
-export default bugsnagPluginExpress;
+import { Bugsnag } from "@bugsnag/node";
+declare const bugsnagPluginKoa: Bugsnag.IPlugin;
+export default bugsnagPluginKoa;

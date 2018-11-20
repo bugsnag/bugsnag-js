@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+# exit on all errors
+set -e
+
+# ensure directory exists
+mkdir -p dist/types/bugsnag-core
+
+# copy all .d.ts files from @bugsnag/core
+cp node_modules/@bugsnag/core/types/*.d.ts dist/types/bugsnag-core
+
+# copy all .d.ts files from this module
+cp types/*.d.ts dist/types
+
+# replace any references to @bugsnag/core with the new, bundled, local path
+cat types/bugsnag.d.ts | sed 's/@bugsnag\/core/\.\/bugsnag-core/' > dist/types/bugsnag.d.ts
