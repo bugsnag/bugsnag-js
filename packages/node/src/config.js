@@ -19,6 +19,10 @@ module.exports = {
     ...schema.logger,
     defaultValue: () => getPrefixedConsole()
   },
+  releaseStage: {
+    ...schema.releaseStage,
+    defaultValue: () => process.env.NODE_ENV || 'production'
+  },
   proxy: {
     defaultValue: () => undefined,
     message: 'should be a string',

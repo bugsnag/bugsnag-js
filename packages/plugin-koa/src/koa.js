@@ -34,6 +34,26 @@ module.exports = {
       }
     }
 
+    requestHandler.v1 = function * (next) {
+      // Get a client to be scoped to this request. If sessions are enabled, use the
+      // startSession() call to get a session client, otherwise, clone the existing client.
+      const requestClient = client.config.autoCaptureSessions ? client.startSession() : clone(client)
+
+      this.bugsnag = requestClient
+
+      // extract request info and pass it to the relevant bugsnag properties
+      const { request, metaData } = getRequestAndMetaDataFromCtx(this)
+      requestClient.metaData = { ...requestClient.metaData, request: metaData }
+      requestClient.request = request
+
+      try {
+        yield next
+      } catch (err) {
+        this.bugsnag.notify(createReportFromErr(err, handledState))
+        if (!this.headerSent) this.status = 500
+      }
+    }
+
     const errorHandler = (err, ctx) => {
       if (ctx.bugsnag) {
         ctx.bugsnag.notify(createReportFromErr(err, handledState))
