@@ -1,5 +1,13 @@
 const { describe, it, expect } = global
 
+const fs = require('fs')
+let createReadStreamCount = 0
+const originalReadStream = fs.createReadStream
+fs.createReadStream = function () {
+  createReadStreamCount++
+  return originalReadStream.apply(fs, arguments)
+}
+
 const plugin = require('../')
 const { join } = require('path')
 const Report = require('@bugsnag/core/report')
@@ -126,6 +134,76 @@ describe('plugin: node surrounding code', () => {
         lineNumber: 45,
         columnNumber: 1,
         fileName: join(__dirname, 'fixtures', '02.js')
+      }
+    ]))
+  })
+
+  it('only loads code once for the same file/line/column', done => {
+    const client = new Client(VALID_NOTIFIER)
+
+    const startCount = createReadStreamCount
+
+    client.delivery({
+      sendReport: (logger, config, report) => {
+        const endCount = createReadStreamCount
+        expect(endCount - startCount).toBe(1)
+        report.events[0].stacktrace.forEach(stackframe => {
+          expect(stackframe.code).toEqual({
+            '1': '// this is just some arbitrary (but real) javascript for testing, taken from',
+            '2': '// https://github.com/bengourley/source-map-decoder/',
+            '3': '',
+            '4': '//'
+          })
+        })
+        done()
+      },
+      sendSession: () => {}
+    })
+
+    client.setOptions({ apiKey: 'api_key' })
+    client.configure()
+    client.use(plugin)
+
+    client.notify(new Report('Error', 'surrounding code loading test', [
+      {
+        lineNumber: 1,
+        columnNumber: 1,
+        fileName: join(__dirname, 'fixtures', '01.js')
+      },
+      {
+        lineNumber: 1,
+        columnNumber: 1,
+        fileName: join(__dirname, 'fixtures', '01.js')
+      },
+      {
+        lineNumber: 1,
+        columnNumber: 1,
+        fileName: join(__dirname, 'fixtures', '01.js')
+      },
+      {
+        lineNumber: 1,
+        columnNumber: 1,
+        fileName: join(__dirname, 'fixtures', '01.js')
+      },
+      {
+        lineNumber: 1,
+        columnNumber: 1,
+        fileName: join(__dirname, 'fixtures', '01.js')
+      },
+      {
+        lineNumber: 1,
+        columnNumber: 1,
+        fileName: join(__dirname, 'fixtures', '01.js')
+      },
+      {
+        lineNumber: 1,
+        columnNumber: 1,
+        fileName: join(__dirname, 'fixtures', '01.js')
+      },
+      {
+        lineNumber: 1,
+        columnNumber: 1,
+        fileName: join(__dirname, 'fixtures', '01.js')
       }
     ]))
   })
