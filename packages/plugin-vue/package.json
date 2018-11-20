@@ -31,7 +31,7 @@
     "@bugsnag/browser": "* || >=5.0.0-rc.1"
   },
   "devDependencies": {
-    "@bugsnag/core": "^5.0.0-rc.3",
+    "@bugsnag/core": "5.0.0-rc.3",
     "jasmine": "^3.1.0",
     "nyc": "^12.0.2",
     "vue": "^2.5.8"

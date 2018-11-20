@@ -20,7 +20,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "dependencies": {
-    "@bugsnag/core": "^5.0.0-rc.3",
+    "@bugsnag/core": "5.0.0-rc.3",
     "backo": "^1.1.0"
   },
   "devDependencies": {

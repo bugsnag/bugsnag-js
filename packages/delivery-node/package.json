@@ -20,7 +20,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "dependencies": {
-    "@bugsnag/core": "^5.0.0-rc.3",
+    "@bugsnag/core": "5.0.0-rc.3",
     "request": "^2.87.0"
   },
   "devDependencies": {
