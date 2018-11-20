@@ -30,9 +30,6 @@
     "node",
     "types.d.ts"
   ],
-  "scripts": {
-    "postversion": "npm run build"
-  },
   "author": "Bugsnag",
   "license": "MIT",
   "dependencies": {
