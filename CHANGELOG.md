@@ -17,6 +17,20 @@ Users of the CDN just need to update the link:
 - https://d2wy8f7a9ursnm.cloudfront.net/v5.0.0/bugsnag.min.js
 ```
 
+#### Node.js
+
+Users of the existing `bugsnag` (node) package should note that this upgrade is **not** backwards compatible and should follow the new [integration guides](https://docs.bugsnag.com/platforms/javascript).
+
+Please note the signature of the `notify()` function is similar, but has some noteworthy differences:
+
+`bugsnagClient.notify(error, opts)`
+
+- Previously `metaData` could be provided by passing arbitrary keys to `opts`. Now, it must be passed explicitly as `opts.metaData`.
+- `groupingHash` is no longer an option, but it can be set using `report.groupingHash` in a `beforeSend` callback.
+
+Please refer to the documentation, since `notify()` will ignore `opts` that it doesn't recognize.
+
+
 #### npm/yarn users
 
 Users of the `bugsnag-js` browser JS package will need to remove that dependency and add `@bugsnag/js`.
@@ -89,15 +103,6 @@ yarn add @bugsnag/plugin-{vue|react|angular}
 - import BugsnagErrorHandler from 'bugsnag-angular'
 ```
 
-## Node.js
+#### TypeScript
 
-Users of the existing `bugsnag` (node) package should note that this upgrade is **not** backwards compatible and should follow the new [integration guides](https://docs.bugsnag.com/platforms/javascript).
-
-Please note the signature of the `notify()` function is similar, but has some noteworthy differences:
-
-`bugsnagClient.notify(error, opts)`
-
-- Previously `metaData` could be provided by passing arbitrary keys to `opts`. Now, it must be passed explicitly as `opts.metaData`.
-- `groupingHash` is no longer an option, but it can be set using `report.groupingHash` in a `beforeSend` callback.
-
-Please refer to the documentation, since `notify()` will ignore `opts` that it doesn't recognize.
+TypeScript definitions are bundled with each of the published modules and should "just work".
