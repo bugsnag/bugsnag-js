@@ -15,7 +15,7 @@ declare class Client {
   public BugsnagBreadcrumb: typeof Breadcrumb;
   public BugsnagSession: typeof Session;
 
-  public use(plugin: common.IPlugin): Client;
+  public use(plugin: common.IPlugin, ...args: any[]): Client;
   public getPlugin(name: string): any;
   public setOptions(opts: common.IConfig): Client;
   public configure(schema?: common.IConfigSchema): Client;
