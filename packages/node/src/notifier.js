@@ -45,6 +45,11 @@ module.exports = (opts, userPlugins = []) => {
 
   bugsnag._logger.debug(`Loaded!`)
 
+  bugsnag.leaveBreadcrumb = function () {
+    bugsnag._logger.warn('Breadcrumbs are not supported in Node.js yet')
+    return this
+  }
+
   return bugsnag
 }
 
