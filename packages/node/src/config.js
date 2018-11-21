@@ -19,10 +19,6 @@ module.exports = {
     ...schema.logger,
     defaultValue: () => getPrefixedConsole()
   },
-  autoBreadcrumbs: {
-    ...schema.autoBreadcrumbs,
-    defaultValue: () => false
-  },
   releaseStage: {
     ...schema.releaseStage,
     defaultValue: () => process.env.NODE_ENV || 'production'

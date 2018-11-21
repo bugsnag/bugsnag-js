@@ -9,6 +9,9 @@ const delivery = require('@bugsnag/delivery-node')
 // extend the base config schema with some node-specific options
 const schema = { ...require('@bugsnag/core/config').schema, ...require('./config') }
 
+// remove autoBreadcrumbs from the config schema
+delete schema.autoBreadcrumbs
+
 const pluginSurroundingCode = require('@bugsnag/plugin-node-surrounding-code')
 const pluginInProject = require('@bugsnag/plugin-node-in-project')
 const pluginStripProjectRoot = require('@bugsnag/plugin-strip-project-root')
