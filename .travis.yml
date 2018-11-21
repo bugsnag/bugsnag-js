@@ -10,7 +10,7 @@ install:
   - npm install
   - npx lerna bootstrap
 before_script:
-  - npx lerna run build
+  - npm run build
 script:
   - npm run test:browser
 env:
@@ -63,7 +63,7 @@ jobs:
         - npm install
         - npx lerna bootstrap
       before_script:
-        - npx lerna run build
+        - npm run build
       script:
         - npm run test:node
       env: BROWSER=na

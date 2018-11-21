@@ -1,3 +1,3 @@
-import { IPlugin } from "@bugsnag/core";
-declare const bugsnagPluginRestify: IPlugin;
+import { Bugsnag } from "@bugsnag/node";
+declare const bugsnagPluginRestify: Bugsnag.IPlugin;
 export default bugsnagPluginRestify;

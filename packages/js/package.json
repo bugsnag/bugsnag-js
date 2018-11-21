@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/js",
-  "version": "5.0.0-rc.1",
+  "version": "5.0.0-rc.4",
   "main": "node/notifier.js",
   "browser": "browser/notifier.js",
   "types": "types.d.ts",
@@ -30,14 +30,11 @@
     "node",
     "types.d.ts"
   ],
-  "scripts": {
-    "postversion": "npm run build"
-  },
   "author": "Bugsnag",
   "license": "MIT",
   "dependencies": {
-    "@bugsnag/browser": "^5.0.0-rc.1",
-    "@bugsnag/node": "^5.0.0-rc.1"
+    "@bugsnag/browser": "^5.0.0-rc.4",
+    "@bugsnag/node": "^5.0.0-rc.4"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0",

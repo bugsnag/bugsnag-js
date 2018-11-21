@@ -1,8 +1,8 @@
 {
   "name": "@bugsnag/node",
-  "version": "5.0.0-rc.1",
+  "version": "5.0.0-rc.4",
   "main": "dist/bugsnag.js",
-  "types": "types/bugsnag.d.ts",
+  "types": "dist/types/bugsnag.d.ts",
   "description": "Bugsnag error reporter for Node.js",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
@@ -13,29 +13,30 @@
     "access": "public"
   },
   "files": [
-    "dist",
-    "types"
+    "dist"
   ],
   "scripts": {
     "clean": "rm -fr dist && mkdir dist",
-    "build": "npm run clean && npm run build:dist",
+    "bundle-types": "../../bin/bundle-types",
+    "build": "npm run clean && npm run build:dist && npm run bundle-types",
     "build:dist": "../../bin/bundle src/notifier.js --node --exclude=iserror,stack-generator,error-stack-parser,request,pump,byline --standalone=bugsnag | ../../bin/extract-source-map dist/bugsnag.js",
-    "test": "bundle exec maze-runner"
+    "test": "bundle exec maze-runner",
+    "postversion": "npm run build"
   },
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^5.0.0-rc.1",
-    "@bugsnag/delivery-node": "^5.0.0-rc.1",
-    "@bugsnag/plugin-contextualize": "^5.0.0-rc.1",
-    "@bugsnag/plugin-intercept": "^5.0.0-rc.1",
-    "@bugsnag/plugin-node-device": "^5.0.0-rc.1",
-    "@bugsnag/plugin-node-in-project": "^5.0.0-rc.1",
-    "@bugsnag/plugin-node-surrounding-code": "^5.0.0-rc.1",
-    "@bugsnag/plugin-node-uncaught-exception": "^5.0.0-rc.1",
-    "@bugsnag/plugin-node-unhandled-rejection": "^5.0.0-rc.1",
-    "@bugsnag/plugin-server-session": "^5.0.0-rc.1",
-    "@bugsnag/plugin-strip-project-root": "^5.0.0-rc.1",
+    "@bugsnag/core": "^5.0.0-rc.4",
+    "@bugsnag/delivery-node": "^5.0.0-rc.4",
+    "@bugsnag/plugin-contextualize": "^5.0.0-rc.4",
+    "@bugsnag/plugin-intercept": "^5.0.0-rc.4",
+    "@bugsnag/plugin-node-device": "^5.0.0-rc.4",
+    "@bugsnag/plugin-node-in-project": "^5.0.0-rc.4",
+    "@bugsnag/plugin-node-surrounding-code": "^5.0.0-rc.4",
+    "@bugsnag/plugin-node-uncaught-exception": "^5.0.0-rc.4",
+    "@bugsnag/plugin-node-unhandled-rejection": "^5.0.0-rc.4",
+    "@bugsnag/plugin-server-session": "^5.0.0-rc.4",
+    "@bugsnag/plugin-strip-project-root": "^5.0.0-rc.4",
     "jasmine": "^3.1.0",
     "nyc": "^12.0.2"
   },

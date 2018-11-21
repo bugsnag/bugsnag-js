@@ -9,6 +9,9 @@ const delivery = require('@bugsnag/delivery-node')
 // extend the base config schema with some node-specific options
 const schema = { ...require('@bugsnag/core/config').schema, ...require('./config') }
 
+// remove autoBreadcrumbs from the config schema
+delete schema.autoBreadcrumbs
+
 const pluginSurroundingCode = require('@bugsnag/plugin-node-surrounding-code')
 const pluginInProject = require('@bugsnag/plugin-node-in-project')
 const pluginStripProjectRoot = require('@bugsnag/plugin-strip-project-root')
@@ -44,6 +47,11 @@ module.exports = (opts, userPlugins = []) => {
   plugins.forEach(pl => bugsnag.use(pl))
 
   bugsnag._logger.debug(`Loaded!`)
+
+  bugsnag.leaveBreadcrumb = function () {
+    bugsnag._logger.warn('Breadcrumbs are not supported in Node.js yet')
+    return this
+  }
 
   return bugsnag
 }

@@ -25,6 +25,7 @@
     "uglify-js": "^3.4.9"
   },
   "scripts": {
+    "build": "lerna run build --scope '@bugsnag/node' --scope '@bugsnag/browser' && lerna run build --ignore '@bugsnag/node' --ignore '@bugsnag/browser'",
     "test:lint": "standard",
     "test:unit": "lerna run test --ignore '@bugsnag/browser' --ignore '@bugsnag/node'",
     "test:types": "lerna run test:types",
