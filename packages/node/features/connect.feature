@@ -1,4 +1,4 @@
-Feature: @bugsnag/plugin-express
+Feature: @bugsnag/plugin-express (connect)
 
 Background:
   Given I set environment variable "BUGSNAG_API_KEY" to "9c2151b65d615a3a95ba408142c8698f"
@@ -6,10 +6,10 @@ Background:
 
 Scenario Outline: a synchronous thrown error in a route
   And I set environment variable "NODE_VERSION" to "<node version>"
-  And I have built the service "express"
-  And I start the service "express"
-  And I wait for the app to respond on port "4312"
-  Then I open the URL "http://localhost:4312/sync"
+  And I have built the service "connect"
+  And I start the service "connect"
+  And I wait for the app to respond on port "4318"
+  Then I open the URL "http://localhost:4318/sync"
   And I wait for 2 seconds
   Then I should receive a request
   And the request used the Node notifier
@@ -22,7 +22,7 @@ Scenario Outline: a synchronous thrown error in a route
   And the exception "message" equals "sync"
   And the exception "type" equals "nodejs"
   And the "file" of stack frame 0 equals "scenarios/app.js"
-  And the event "request.url" equals "http://localhost:4312/sync"
+  And the event "request.url" equals "http://localhost:4318/sync"
   And the event "request.httpMethod" equals "GET"
 
   Examples:
@@ -33,10 +33,10 @@ Scenario Outline: a synchronous thrown error in a route
 
 Scenario Outline: an asynchronous thrown error in a route
   And I set environment variable "NODE_VERSION" to "<node version>"
-  And I have built the service "express"
-  And I start the service "express"
-  And I wait for the app to respond on port "4312"
-  Then I open the URL "http://localhost:4312/async"
+  And I have built the service "connect"
+  And I start the service "connect"
+  And I wait for the app to respond on port "4318"
+  Then I open the URL "http://localhost:4318/async"
   And I wait for 2 seconds
   Then I should receive a request
   And the request used the Node notifier
@@ -58,10 +58,10 @@ Scenario Outline: an asynchronous thrown error in a route
 
 Scenario Outline: an error passed to next(err)
   And I set environment variable "NODE_VERSION" to "<node version>"
-  And I have built the service "express"
-  And I start the service "express"
-  And I wait for the app to respond on port "4312"
-  Then I open the URL "http://localhost:4312/next"
+  And I have built the service "connect"
+  And I start the service "connect"
+  And I wait for the app to respond on port "4318"
+  Then I open the URL "http://localhost:4318/next"
   And I wait for 2 seconds
   Then I should receive a request
   And the request used the Node notifier
@@ -83,10 +83,10 @@ Scenario Outline: an error passed to next(err)
 
 Scenario Outline: a synchronous promise rejection in a route
   And I set environment variable "NODE_VERSION" to "<node version>"
-  And I have built the service "express"
-  And I start the service "express"
-  And I wait for the app to respond on port "4312"
-  Then I open the URL "http://localhost:4312/rejection-sync"
+  And I have built the service "connect"
+  And I start the service "connect"
+  And I wait for the app to respond on port "4318"
+  Then I open the URL "http://localhost:4318/rejection-sync"
   And I wait for 2 seconds
   Then I should receive a request
   And the request used the Node notifier
@@ -108,10 +108,10 @@ Scenario Outline: a synchronous promise rejection in a route
 
 Scenario Outline: an asynchronous promise rejection in a route
   And I set environment variable "NODE_VERSION" to "<node version>"
-  And I have built the service "express"
-  And I start the service "express"
-  And I wait for the app to respond on port "4312"
-  Then I open the URL "http://localhost:4312/rejection-async"
+  And I have built the service "connect"
+  And I start the service "connect"
+  And I wait for the app to respond on port "4318"
+  Then I open the URL "http://localhost:4318/rejection-async"
   And I wait for 2 seconds
   Then I should receive a request
   And the request used the Node notifier
@@ -133,10 +133,10 @@ Scenario Outline: an asynchronous promise rejection in a route
 
 Scenario Outline: a string passed to next(err)
   And I set environment variable "NODE_VERSION" to "<node version>"
-  And I have built the service "express"
-  And I start the service "express"
-  And I wait for the app to respond on port "4312"
-  Then I open the URL "http://localhost:4312/string-as-error"
+  And I have built the service "connect"
+  And I start the service "connect"
+  And I wait for the app to respond on port "4318"
+  Then I open the URL "http://localhost:4318/string-as-error"
   And I wait for 2 seconds
   Then I should receive a request
   And the request used the Node notifier
@@ -158,10 +158,10 @@ Scenario Outline: a string passed to next(err)
 
 Scenario Outline: throwing non-Error error
   And I set environment variable "NODE_VERSION" to "<node version>"
-  And I have built the service "express"
-  And I start the service "express"
-  And I wait for the app to respond on port "4312"
-  Then I open the URL "http://localhost:4312/throw-non-error"
+  And I have built the service "connect"
+  And I start the service "connect"
+  And I wait for the app to respond on port "4318"
+  Then I open the URL "http://localhost:4318/throw-non-error"
   And I wait for 2 seconds
   Then I should receive a request
   And the request used the Node notifier

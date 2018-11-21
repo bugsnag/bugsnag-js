@@ -1,0 +1,6 @@
+{
+  "name": "bugsnag-test",
+  "dependencies": {
+    "connect": "^3.6.6"
+  }
+}

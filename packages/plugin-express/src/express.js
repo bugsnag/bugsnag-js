@@ -36,7 +36,10 @@ module.exports = {
           if (e) return client._logger('Failed to send report to Bugsnag')
           req.bugsnag.config.onUncaughtException(err, report, client._logger)
         })
-        if (!res.headersSent) res.sendStatus(500)
+        if (!res.headersSent) {
+          res.status = 500
+          res.end('Internal server error')
+        }
       })
 
       return dom.run(next)
