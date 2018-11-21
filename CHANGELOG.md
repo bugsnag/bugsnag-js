@@ -1,108 +1,235 @@
-## 5.0.0 (TBD)
+# Changelog
+
+## 5.0.0 (2018-11-21)
 
 This is the first release of Bugsnag notifiers under the `@bugsnag` namespace.
 
 This "universal" repository combines Bugsnag's browser and Node.js notifiers and so for continuity with the browser version, which was at v4, **the starting point for this monorepo and all of its packages is `v5.0.0`**.
 
-### Upgrading
+See [UPGRADING.md](UPGRADING.md) for guidance on how to update your application.
 
-There are minimal external API changes from `bugsnag-js` v4 -> `@bugsnag/js`, so the migration is very simple.
+## 4.7.3 (2018-08-01)
 
-#### CDN users
+### Removed
+- Stop sending stacktrace with breadcrumb metadata
 
-Users of the CDN just need to update the link:
-
-```diff
-+ https://d2wy8f7a9ursnm.cloudfront.net/v4.7.3/bugsnag.min.js
-- https://d2wy8f7a9ursnm.cloudfront.net/v5.0.0/bugsnag.min.js
-```
-
-#### Node.js
-
-Users of the existing `bugsnag` (node) package should note that this upgrade is **not** backwards compatible and should follow the new [integration guides](https://docs.bugsnag.com/platforms/javascript).
-
-Please note the signature of the `notify()` function is similar, but has some noteworthy differences:
-
-`bugsnagClient.notify(error, opts)`
-
-- Previously `metaData` could be provided by passing arbitrary keys to `opts`. Now, it must be passed explicitly as `opts.metaData`.
-- `groupingHash` is no longer an option, but it can be set using `report.groupingHash` in a `beforeSend` callback.
-
-Please refer to the documentation, since `notify()` will ignore `opts` that it doesn't recognize.
+### Fixed
+- Added missing instance properties to `Breadcrumb` TypeScript definition
 
 
-#### npm/yarn users
 
-Users of the `bugsnag-js` browser JS package will need to remove that dependency and add `@bugsnag/js`.
+## 4.7.2 (2018-06-18)
 
-```
-# npm
-npm rm --save bugsnag-js
-npm install --save @bugsnag/js
+### Fixed
+- Workaround for iOS9 Safari CSP issue which caused bugsnag-js to throw an error (#358, #357)
 
-# yarn
-yarn remove bugsnag-js
-yarn add @bugsnag/js
-```
 
-Subsequently, in the application, any requires/imports should be updated (this should be a simple find and replace):
+## 4.7.1 (2018-06-04)
+
+This release fixes a couple of bugs with stacktrace parsing.
+
+### Fixed
+- Incorrect parsing of stacktraces for errors in Chrome that have no stackframes (#355)
+- Incorrect parsing of stacktraces for errors in Firefox/Safari that have "@" in the URL path (#354)
+
+
+## 4.7.0 (2018-05-31)
+
+**Note**: this release alters the behaviour of the notifier to track sessions automatically.
+
+As part of this change, the way in which URLs are configured has been updated:
 
 ```diff
-+ import bugsnag from "@bugsnag/js"
-- import bugsnag from "bugsnag-js"
+- endpoint: 'https://bugsnag-notify.example.com',
+- sessionEndpoint: 'https://bugsnag-sessions.example.com',
++ endpoints: {
++  notify: 'https://bugsnag-notify.example.com',
++  sessions: 'https://bugsnag-sessions.example.com'
++ }
 ```
 
-```diff
-+ var bugsnag = require('@bugsnag/js')
-- var bugsnag = require('bugsnag-js')
-```
+`endpoints` and `sessionEndpoints` are now deprecated but still supported. Note that session tracking
+will be disabled if the notify endpoint is configured but the sessions endpoint is not – this is to
+avoid inadvertently sending session payloads to the wrong server.
 
-### bugsnag-{vue|react|angular} users
+### Added
+- A new end-to-end/black box test suite has been added (#351)
 
-The plugin interface has changed slightly and these packages have been migrated to the @bugsnag namespace.
+### Changed
+- `autoCaptureSessions` default value was `false` and is now true (#341)
 
-Remove the old module and install the new module:
+### Deprecated
+- `endpoint` and `sessionEndpoints` have been deprecated and combined into a single new option: `endpoints` (#341)
 
-```
-# npm
-npm rm --save bugsnag-{vue|react|angular}
-npm install --save @bugsnag/plugin-{vue|react|angular}
+### Removed
+- The old `e2e` test suite has been removed (#351)
 
-# yarn
-yarn remove bugsnag-{vue|react|angular}
-yarn add @bugsnag/plugin-{vue|react|angular}
-```
 
-#### Vue
 
-```diff
-+ const bugsnagVue = require('@bugsnag/plugin-vue')
-- const bugsnagVue = require('bugsnag-vue')
+## 4.6.3 (2018-05-10)
 
-+ bugsnagClient.use(bugsnagVue, Vue)
-- bugsnagClient.use(bugsnagVue(Vue))
-```
+### Fixed
+- Use the correct network breadcrumb type (`network` -> `request`). Fixes network breadcrumbs not displaying in the dashboard. (#348)
 
-#### React
 
-```diff
-+ const bugsnagReact = require('@bugsnag/plugin-react')
-- const bugsnagReact = require('bugsnag-react')
+## 4.6.2 (2018-05-08)
 
-+ bugsnagClient.use(bugsnagReact, React)
-- bugsnagClient.use(bugsnagReact(React))
+The previous version (v4.6.1) was removed from the npm registry and the CDN because of critical issue surrounding history state methods. This release resolves that issue. The release notes for v4.6.1 are included here too for completeness.
 
-+ const ErrorBoundary = bugsnagClient.getPlugin('react')
-- const ErrorBoundary = bugsnagClient.use(createPlugin(React))
-```
+### Fixed
+- Fix history API url parameter logic (#347)
+- Only pass in `url` parameter to history methods when it is not `undefined`. Fixes a bug in IE11 where it converts `undefined` to a string, causing a redirect to `/undefined`. (#342)
+- Prevent a crash in IE10 when accessing `history.state`. (#345)
 
-#### Angular
 
-```diff
-+ import { BugsnagErrorHandler } from '@bugsnag/plugin-angular'
-- import BugsnagErrorHandler from 'bugsnag-angular'
-```
+## 4.6.1 (2018-05-03)
 
-#### TypeScript
+A couple of fixes for IE10/11 relating to quirks in their implementation of the history APIs.
 
-TypeScript definitions are bundled with each of the published modules and should "just work".
+### Fixed
+- Only pass in `url` parameter to history methods when it is not `undefined`. Fixes a bug in IE11 where it converts `undefined` to a string, causing a redirect to `/undefined`. (#342)
+- Prevent a crash in IE10 when accessing `history.state`. (#345)
+
+
+## 4.6.0 (2018-04-20)
+
+### Added
+- It is now possible to customize the logger by setting the `logger` option of the configuration object. A custom logger must have the methods `debug`, `info`, `warn` and `error`. To completely disable logging, set `logger: null`. (#340)
+
+### Fixed
+- A custom version of [safe-json-stringify](https://github.com/bugsnag/safe-json-stringify) now fully protects against circular structures returned from toJSON() and arbitrarily wide/deep structures (#338)
+
+
+## 4.5.0 (2018-04-06)
+
+### Added
+- New breadcrumbs! Breadcrumbs are now left when requests are made using XMLHttpRequest (ajax) or fetch(). This works with all request libraries out of the box: jQuery, axios, superagent etc. Metadata includes HTTP method, request url and the status code (if available). By default network breadcrumbs are collected all with other autoBreadcrumb types. If you don't want to collect network breadcrumbs, set `networkBreadcrumbsEnabled: false`. (#334)
+
+### Changed
+- As part of #334 [envify](https://github.com/hughsk/envify) was added to compile out plugin "destroy" logic that was only required for tests.
+
+
+## 4.4.0 (2018-03-15)
+
+### Changed
+- Switch from a protocol-relative default for endpoint and sessionEndpoint to "https://". IE8/9 will attempt to send via http if the protocol of the current page is http. Otherwise all requests will now go via https unless configured otherwise (#333).
+
+### Fixed
+- Fix rollup bundling issue (switching to a forked version of cuid) (#331)
+
+
+## 4.3.1 (2018-03-07)
+
+### Changed
+- Perf improvements for breadcrumbs, most notably console log methods with lots of data (#329)
+
+
+## 4.3.0 (2018-02-23)
+
+<!-- optional: if this is a significant release, describe it in a sentence or two -->
+
+### Added
+- Stub exported types to appease Angular's JIT compiler in dev mode (#323)
+- Make hasStack(err) check more strict, making the unhandled rejection handler more robust and useful (#322)
+
+### Changed
+- Strip query strings and fragments from stackframe files (#328)
+- Switch to upstream version of `fast-safe-stringify`
+
+
+## 4.2.0 (2018-01-24)
+
+This release fixes a few issues with the fetching of inline
+script content, particularly after the location has changed
+due to window.history methods.
+
+Unhandled promise rejection should also contain more actionable
+information (when the rejection reason is a DOMException, null,
+or undefined). Support for Bluebird promises was also added.
+
+### Added
+- Support for unhandled bluebird promise rejections (#317)
+- Option to prevent IP collection (#313)
+
+### Changed
+- Improved serialization of promise rejection reasons (#317)
+- If a string was thrown and not caught, use it as the error message (#319)
+
+### Fixed
+- Collection of inline script content improved (#320, #318)
+
+
+## 4.1.3 (2018-01-15)
+
+### Fixed
+- Fix call to non-existent `logger.log()` (credit @alexstrat #304)
+
+
+## 4.1.2 (2018-01-09)
+
+### Added
+- Session sending now respects `notifyReleaseStages` option
+
+### Changed
+- Rename option `enableSessionTracking` -> `autoCaptureSessions` for consistency with other platforms
+
+
+## 4.1.1 (2018-01-06)
+
+### Fixed
+- metaData and user were incorrectly attached to `report.app` (credit @tremlab #300)
+
+
+## 4.1.0 (2018-01-05)
+
+### Added
+- Support for tracking sessions and overall crash rate by setting `sessionTrackingEnabled` to `true`.
+In addition, sessions can be indicated manually using `bugsnagClient.startSession()` (#296)
+- `user` and `metaData` can now be supplied in configuration object (#299)
+- Bower and jspm support has been added as a result of #297 and some additional configuration
+
+### Changed
+- `dist` directory (built assets) are now stored in git (#297)
+
+
+## 4.0.3 (2017-12-15)
+
+### Changed
+- Handle inline script content per older notifiers for consistent grouping (#289)
+
+### Fixed
+- Correctly capture the page contents when an inline script error happens (#289)
+
+
+## 4.0.2 (2017-12-14)
+
+### Added
+- Add more type exports (#286)
+- Add frameworks section to README.md
+- Add READMEs to examples
+
+### Changed
+- Add more detail to JS example (credit @tremlab, #284)
+- Ensure empty/useless stackframes are removed
+- Removed arbitrary timeouts from tests to alleviate CI flakiness
+
+### Fixed
+- Expose `metaData` and `user` types on `Client` class (#287)
+- Give navigation details the correct type (some were marked as "manual")
+
+
+## 4.0.1 (2017-12-07)
+
+### Changed
+- Improve type definition for notify() error argument (credit @rokerkony)
+- Remove process.env.NODE_ENV inferred releaseStage
+- Sidestep uglify's drop_compat option to prevent it from breaking bugsnag
+
+
+## 4.0.0 (2017-12-04)
+
+Version 4 is a milestone release. A complete re-write and modernization for Bugsnag's JS error reporting.
+
+See UPGRADING.md for migrating from v3 and see docs.bugsnag.com for full documentation.
+
+🚀

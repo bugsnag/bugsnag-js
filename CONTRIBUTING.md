@@ -9,8 +9,6 @@ Thanks for stopping by! This document should cover most topics surrounding contr
 * [System requirements](#system-requirements)
 * [Testing](#testing)
 
-'[GitHub] bugsnag-js - having trouble getting started with Bugsnag'
-
 ## Reporting issues
 Are you having trouble getting started? Please [contact us directly](mailto:support@bugsnag.com?subject=%5BGitHub%5D%20bugsnag-js%20-%20having%20trouble%20getting%20started%20with%20Bugsnag) for assistance with integrating Bugsnag into your application.
 If you have spotted a problem with this module, feel free to open a [new issue](https://github.com/bugsnag/bugsnag-js/issues/new?template=Bug_report.md). Here are a few things to check before doing so:
@@ -138,8 +136,7 @@ lerna version prerelease
 If you want to publish the release to npm, use the following command:
 
 ```
-# note you will need to source the npm opt from your 2FA provider
- NPM_CONFIG_OTP=XXXXXX lerna publish from-git --npm-tag next
+lerna publish from-git --npm-tag next
 ```
 
 The `--npm-tag next` part ensures that it is not installed by unsuspecting users who do not specify a version.
@@ -156,6 +153,6 @@ To graduate a prerelease into a release you will want to use `patch` as the vers
 
 ```
 lerna version [major | minor | patch]
-NPM_CONFIG_OTP=XXXXXXX lerna publish from-git
+lerna publish from-git
 lerna run cdn-upload
 ```
