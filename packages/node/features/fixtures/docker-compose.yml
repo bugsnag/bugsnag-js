@@ -69,6 +69,19 @@ services:
       - BUGSNAG_SESSIONS_ENDPOINT
     restart: "no"
 
+  connect:
+    build:
+      context: connect
+      args:
+        - NODE_VERSION
+    ports:
+      - "4318:4318"
+    environment:
+      - BUGSNAG_API_KEY
+      - BUGSNAG_NOTIFY_ENDPOINT
+      - BUGSNAG_SESSIONS_ENDPOINT
+    restart: "no"
+
   restify:
     build:
       context: restify
