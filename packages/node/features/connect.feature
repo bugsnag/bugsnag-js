@@ -148,7 +148,7 @@ Scenario Outline: a string passed to next(err)
   And the exception "errorClass" equals "Error"
   And the exception "message" matches "^Handled a non-error\."
   And the exception "type" equals "nodejs"
-  And the "file" of stack frame 0 equals "node_modules/@bugsnag/plugin-connect/dist/bugsnag-connect.js"
+  And the "file" of stack frame 0 equals "node_modules/@bugsnag/plugin-express/dist/bugsnag-express.js"
 
   Examples:
   | node version |
@@ -173,7 +173,7 @@ Scenario Outline: throwing non-Error error
   And the exception "errorClass" equals "Error"
   And the exception "message" matches "^Handled a non-error\."
   And the exception "type" equals "nodejs"
-  And the "file" of stack frame 0 equals "node_modules/@bugsnag/plugin-connect/dist/bugsnag-connect.js"
+  And the "file" of stack frame 0 equals "node_modules/@bugsnag/plugin-express/dist/bugsnag-express.js"
 
   Examples:
   | node version |
