@@ -26,13 +26,15 @@ module.exports = {
     // get whatever HTML exists at this point in time
     html = getHtml()
 
+    const prev = doc.onreadystatechange
     // then update it when the DOM content has loaded
-    doc.onreadystatechange = () => {
+    doc.onreadystatechange = function () {
       // IE8 compatible alternative to document#DOMContentLoaded
       if (doc.readyState === 'interactive') {
         html = getHtml()
         DOMContentLoaded = true
       }
+      if (typeof prev === 'function') prev.apply(this, arguments)
     }
 
     client.config.beforeSend.unshift(addInlineContent)
