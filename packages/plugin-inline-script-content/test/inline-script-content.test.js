@@ -50,6 +50,20 @@ Lorem ipsum dolor sit amet.
 `)
   })
 
+  it('calls the previous onreadystatechange handler if it exists', done => {
+    const prevHandler = () => { done() }
+    const document = { documentElement: { outerHTML: '' }, onreadystatechange: prevHandler }
+    const window = { location: { href: 'https://app.bugsnag.com/errors' }, document }
+    const client = new Client(VALID_NOTIFIER)
+    client.setOptions({ apiKey: 'API_KEY_YEAH' })
+    client.configure()
+    client.use(plugin, document, window)
+    // check it installed a new onreadystatechange handler
+    expect(document.onreadystatechange === prevHandler).toBe(false)
+    // now check it calls the previous one
+    document.onreadystatechange()
+  })
+
   it('should find scripts content successfully', () => {
     const a = plugin.extractScriptContent([
       'some stuff before script',
