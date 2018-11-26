@@ -9,7 +9,11 @@ exports.init = (client) => {
     console[method] = (...args) => {
       client.leaveBreadcrumb('Console output', reduce(args, (accum, arg, i) => {
         // do the best/simplest stringification of each argument
-        let stringified = String(arg)
+        let stringified = '[Unknown value]'
+        // this may fail if the input is:
+        // - an object whose [[Prototype]] is null (no toString)
+        // - an object with a broken toString or @@toPrimitive implementation
+        try { stringified = String(arg) } catch (e) {}
         // if it stringifies to [object Object] attempt to JSON stringify
         if (stringified === '[object Object]') {
           // catch stringify errors and fallback to [object Object]
