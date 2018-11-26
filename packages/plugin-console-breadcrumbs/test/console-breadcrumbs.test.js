@@ -31,4 +31,13 @@ describe('plugin: console breadcrumbs', () => {
     // undo the global side effects of wrapping console.* for the rest of the tests
     plugin.destroy()
   })
+
+  it('should not throw when an object without toString is logged', () => {
+    const c = new Client(VALID_NOTIFIER)
+    c.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
+    c.configure()
+    c.use(plugin)
+    expect(() => console.log(Object.create(null))).not.toThrow()
+    plugin.destroy()
+  })
 })
