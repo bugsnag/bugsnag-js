@@ -34,7 +34,7 @@ export default {
         this.$bugsnag.notify(e)
       }
     },
-    // Throws an error outside in a timer which will be reported buy the bugsnagClient
+    // Throws an error outside in a timer which will be reported by the bugsnagClient
     sendUnhandled: function () {
       setTimeout(() => {
         throw new Error('Crashy')
