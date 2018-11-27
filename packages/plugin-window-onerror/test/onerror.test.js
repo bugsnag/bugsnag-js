@@ -5,9 +5,11 @@ const plugin = require('../')
 const Client = require('@bugsnag/core/client')
 const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
-let window = {}
+let window
 
 describe('plugin: window onerror', () => {
+  beforeEach(() => { window = {} })
+
   it('should set a window.onerror event handler', () => {
     const client = new Client(VALID_NOTIFIER)
     client.setOptions({ apiKey: 'API_KEY_YEAH' })
@@ -17,8 +19,6 @@ describe('plugin: window onerror', () => {
   })
 
   describe('window.onerror function', () => {
-    beforeEach(() => { window = {} })
-
     it('captures uncaught errors in timer callbacks', done => {
       const client = new Client(VALID_NOTIFIER)
       const payloads = []
@@ -183,6 +183,50 @@ describe('plugin: window onerror', () => {
       } catch (e) {
         done(e)
       }
+    })
+
+    it('calls a previously installed window.onerror callback', function (done) {
+      const args = [ 'Uncaught Error: derp!', 'http://localhost:4999', 10, 3, new Error('derp!') ]
+      window.onerror = (messageOrEvent, url, lineNo, charNo, error) => {
+        expect(messageOrEvent).toBe(args[0])
+        expect(url).toBe(args[1])
+        expect(lineNo).toBe(args[2])
+        expect(charNo).toBe(args[3])
+        expect(error).toBe(args[4])
+        expect(payloads.length).toBe(1)
+        done()
+      }
+      const client = new Client(VALID_NOTIFIER)
+      const payloads = []
+      client.setOptions({ apiKey: 'API_KEY_YEAH' })
+      client.configure()
+      client.use(plugin, window)
+      client.delivery({ sendReport: (logger, config, payload) => payloads.push(payload) })
+
+      // call onerror as it would be when `throw 'hello' is run`
+      window.onerror(...args)
+    })
+
+    it('calls a previously installed window.onerror when a CORS error happens', function (done) {
+      const args = [ 'Script error.', undefined, 0, undefined, undefined ]
+      window.onerror = (messageOrEvent, url, lineNo, charNo, error) => {
+        expect(messageOrEvent).toBe(args[0])
+        expect(url).toBe(args[1])
+        expect(lineNo).toBe(args[2])
+        expect(charNo).toBe(args[3])
+        expect(error).toBe(args[4])
+        expect(payloads.length).toBe(0)
+        done()
+      }
+      const client = new Client(VALID_NOTIFIER)
+      const payloads = []
+      client.setOptions({ apiKey: 'API_KEY_YEAH' })
+      client.configure()
+      client.use(plugin, window)
+      client.delivery({ sendReport: (logger, config, payload) => payloads.push(payload) })
+
+      // call onerror as it would be when `throw 'hello' is run`
+      window.onerror(...args)
     })
   })
 })
