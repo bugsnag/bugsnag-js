@@ -1,5 +1,18 @@
 # Changelog
 
+## 5.X.X (TBD)
+
+### Fixed
+
+- Ensure objects with a `null` prototype or bad `toString()` implementation don't cause an error in console breadcrumbs (#429)
+- Ensure user ip is not collected when `collectUserIp=false` but user.id is explicitly `undefined` (#428)
+- Ensure previous `window.onerror` callback is always called (#427)
+- Ensure previous `window.onreadystatechange` callback is called (#426)
+
+### Added
+
+- Nuxt.js example (#425)
+
 ## 5.0.0 (2018-11-21)
 
 This is the first release of Bugsnag notifiers under the `@bugsnag` namespace.
