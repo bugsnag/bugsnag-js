@@ -15,6 +15,7 @@
     "@bugsnag/plugin-express": "^5.0.0",
     "@bugsnag/plugin-vue": "^5.0.0",
     "cross-env": "^5.2.0",
+    "event-stream": "^3.3.4",
     "nuxt": "^2.0.0"
   },
   "devDependencies": {
