@@ -39,6 +39,23 @@ describe('plugin: ip', () => {
     expect(payloads[0].events[0].request).toEqual({ clientIp: '[NOT COLLECTED]' })
   })
 
+  it('overwrites a user id if it is explicitly `undefined`', () => {
+    const client = new Client(VALID_NOTIFIER)
+    const payloads = []
+    client.setOptions({ apiKey: 'API_KEY_YEAH', collectUserIp: false })
+    client.configure()
+    client.use(plugin)
+
+    client.user = { id: undefined }
+
+    client.delivery({ sendReport: (logger, config, payload) => payloads.push(payload) })
+    client.notify(new Error('noooo'))
+
+    expect(payloads.length).toEqual(1)
+    expect(payloads[0].events[0].user).toEqual({ id: '[NOT COLLECTED]' })
+    expect(payloads[0].events[0].request).toEqual({ clientIp: '[NOT COLLECTED]' })
+  })
+
   it('redacts user IP if none is provided', () => {
     const client = new Client(VALID_NOTIFIER)
     const payloads = []
