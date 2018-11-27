@@ -1,0 +1,24 @@
+{
+  "name": "bugsnag-js-example",
+  "version": "1.0.0",
+  "description": "My lovely Nuxt.js project",
+  "author": "Ben Gourley",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate"
+  },
+  "dependencies": {
+    "@bugsnag/js": "^5.0.0",
+    "@bugsnag/plugin-express": "^5.0.0",
+    "@bugsnag/plugin-vue": "^5.0.0",
+    "cross-env": "^5.2.0",
+    "event-stream": "^3.3.4",
+    "nuxt": "^2.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
+  }
+}
