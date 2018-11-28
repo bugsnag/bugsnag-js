@@ -14,8 +14,8 @@ Upgrading from `bugsnag-node` requires a more significant update.
 Users of the CDN just need to update the link:
 
 ```diff
-+ https://d2wy8f7a9ursnm.cloudfront.net/v4.7.3/bugsnag.min.js
-- https://d2wy8f7a9ursnm.cloudfront.net/v5.0.0/bugsnag.min.js
+- https://d2wy8f7a9ursnm.cloudfront.net/v4.7.3/bugsnag.min.js
++ https://d2wy8f7a9ursnm.cloudfront.net/v5.0.0/bugsnag.min.js
 ```
 
 #### npm/yarn users
