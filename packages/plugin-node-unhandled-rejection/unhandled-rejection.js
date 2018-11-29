@@ -10,7 +10,7 @@ module.exports = {
         unhandled: true,
         severityReason: { type: 'unhandledPromiseRejection' }
       }), {}, (e, report) => {
-        if (e) return client._logger('Failed to send report to Bugsnag')
+        if (e) client._logger.error('Failed to send report to Bugsnag')
         client.config.onUnhandledRejection(err, report, client._logger)
       })
     }
