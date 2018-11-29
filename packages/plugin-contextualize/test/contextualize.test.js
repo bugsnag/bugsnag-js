@@ -96,4 +96,36 @@ describe('plugin: contextualize', () => {
       fs.createReadStream('does not exist')
     })
   })
+
+  it('should tolerate a failed report', done => {
+    const c = new Client(VALID_NOTIFIER)
+    c.delivery({
+      sendReport: (config, logger, report, cb) => {
+        cb(new Error('sending failed'))
+      },
+      sendSession: () => {}
+    })
+    c.setOptions({
+      apiKey: 'api_key',
+      onUncaughtException: (err) => {
+        expect(err.message).toBe('no item available')
+        done()
+      }
+    })
+    c.configure({
+      ...schema,
+      onUncaughtException: {
+        validate: val => typeof val === 'function',
+        message: 'should be a function',
+        defaultValue: () => {}
+      }
+    })
+    c.use(plugin)
+    const contextualize = c.getPlugin('contextualize')
+    contextualize(() => {
+      load(8, (err) => {
+        if (err) throw err
+      })
+    })
+  })
 })
