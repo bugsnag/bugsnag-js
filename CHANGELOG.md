@@ -1,6 +1,6 @@
 # Changelog
 
-## 5.X.X (TBD)
+## 5.0.1 (2018-11-29)
 
 ### Fixed
 
@@ -8,7 +8,7 @@
 - Ensure user ip is not collected when `collectUserIp=false` but user.id is explicitly `undefined` (#428)
 - Ensure previous `window.onerror` callback is always called (#427)
 - Ensure previous `window.onreadystatechange` callback is called (#426)
-- Ensure log methods are correctly called and that relevant callbacks are called in the event of a report failure (#437) 
+- Ensure log methods are correctly called and that relevant callbacks are called in the event of a report failure (#437)
 
 ### Added
 
