@@ -124,5 +124,31 @@ describe('plugin: unhandled rejection', () => {
       err.stack = true
       listener({ reason: err })
     })
+
+    it('tolerates event.detail propties which throw', done => {
+      const client = new Client(VALID_NOTIFIER)
+      client.setOptions({ apiKey: 'API_KEY_YEAH' })
+      client.configure()
+      client.use(plugin, window)
+      client.delivery({
+        sendReport: (logger, config, payload) => {
+          const report = payload.events[0].toJSON()
+          expect(report.severity).toBe('error')
+          expect(report.unhandled).toBe(true)
+          expect(report.exceptions[0].errorClass).toBe('Error')
+          expect(report.exceptions[0].message).toBe('blah')
+          expect(report.severityReason).toEqual({ type: 'unhandledPromiseRejection' })
+          plugin.destroy(window)
+          done()
+        }
+      })
+
+      const err = new Error('blah')
+      const detail = {}
+      Object.defineProperty(detail, 'reason', {
+        get: () => { throw new Error('bad accessor') }
+      })
+      listener({ reason: err, detail })
+    })
   })
 })
