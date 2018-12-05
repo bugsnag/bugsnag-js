@@ -44,14 +44,16 @@ module.exports = {
 const decorateStack = (stack, url, lineNo, charNo) => {
   const culprit = stack[0]
   if (!culprit) return stack
-  if (!culprit.fileName) culprit.setFileName(url)
-  if (!culprit.lineNumber) culprit.setLineNumber(lineNo)
+  if (!culprit.fileName && typeof url === 'string') culprit.setFileName(url)
+  if (!culprit.lineNumber && isActualNumber(lineNo)) culprit.setLineNumber(lineNo)
   if (!culprit.columnNumber) {
-    if (charNo !== undefined) {
+    if (isActualNumber(charNo)) {
       culprit.setColumnNumber(charNo)
-    } else if (window.event && window.event.errorCharacter) {
-      culprit.setColumnNumber(window.event && window.event.errorCharacter)
+    } else if (window.event && isActualNumber(window.event.errorCharacter)) {
+      culprit.setColumnNumber(window.event.errorCharacter)
     }
   }
   return stack
 }
+
+const isActualNumber = (n) => typeof n === 'number' && String.call(n) !== 'NaN'
