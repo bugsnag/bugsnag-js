@@ -21,6 +21,7 @@ const cfClient = cf.createClient(
 
 const headers = {
   'Cache-Control': 'public, max-age=315360000',
+  'Access-Control-Allow-Origin': '*',
   'x-amz-acl': 'public-read'
 }
 
