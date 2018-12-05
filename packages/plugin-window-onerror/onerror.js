@@ -20,11 +20,11 @@ module.exports = {
             report = new client.BugsnagReport('window.onerror', String(error), decorateStack(client.BugsnagReport.getStacktrace(error, 1), url, lineNo, charNo), handledState)
             report.updateMetaData('window onerror', { error })
           }
-        } else if ((typeof messageOrEvent === 'object' && messageOrEvent !== null) && !url && !lineNo && !charNo && !error) {
+        } else if ((typeof messageOrEvent === 'object' && messageOrEvent !== null) && (!url || typeof url !== 'string') && !lineNo && !charNo && !error) {
           const name = messageOrEvent.type ? `Event: ${messageOrEvent.type}` : 'window.onerror'
           const message = messageOrEvent.message || messageOrEvent.detail || ''
           report = new client.BugsnagReport(name, message, client.BugsnagReport.getStacktrace(new Error(), 1).slice(1), handledState)
-          report.updateMetaData('window onerror', { event: messageOrEvent })
+          report.updateMetaData('window onerror', { event: messageOrEvent, extraParameters: url })
         } else {
           report = new client.BugsnagReport('window.onerror', String(messageOrEvent), decorateStack(client.BugsnagReport.getStacktrace(error, 1), url, lineNo, charNo), handledState)
           report.updateMetaData('window onerror', { event: messageOrEvent })
