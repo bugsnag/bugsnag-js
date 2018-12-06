@@ -1,0 +1,17 @@
+plugins: &plugins
+  docker-compose#v2.5.1:
+    run: ci
+
+steps:
+  - label: 'Lint'
+    plugins: *plugins
+    command:
+      'npm run test:lint'
+
+  - label: 'Unit tests'
+    plugins: *plugins
+    command: sh -c 'npm run build && npm run test:unit'
+
+  - label: 'Type checks/tests'
+    plugins: *plugins
+    command: sh -c 'npm run build && npm run test:types'
