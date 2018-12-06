@@ -1,10 +1,12 @@
 # Changelog
 
-## 5.x.x (TBD)
+## 5.0.2 (2018-12-06)
 
 ### Fixed
 
 - Tolerate errors accessing properties of an unhandled rejection event (#394, #442)
+- Improve robustness of `window.onerror` callback, supporting additional jQuery parameter (#443, fixing #393 and #392)
+- Add CORS header `Access-Control-Allow-Origin: *` to uploaded S3 assets (#444)
 
 ## 5.0.1 (2018-11-29)
 
