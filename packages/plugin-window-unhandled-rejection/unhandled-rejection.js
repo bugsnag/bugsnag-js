@@ -12,10 +12,13 @@ exports.init = (client, win = window) => {
     let error = event.reason
     let isBluebird = false
 
-    if (event.detail && event.detail.reason) {
-      error = event.detail.reason
-      isBluebird = true
-    }
+    // accessing properties on event.detail can throw errors (see #394)
+    try {
+      if (event.detail && event.detail.reason) {
+        error = event.detail.reason
+        isBluebird = true
+      }
+    } catch (e) {}
 
     const handledState = {
       severity: 'error',

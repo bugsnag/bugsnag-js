@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.x.x (TBD)
+
+### Fixed
+
+- Tolerate errors accessing properties of an unhandled rejection event (#394, #442)
+
 ## 5.0.1 (2018-11-29)
 
 ### Fixed
