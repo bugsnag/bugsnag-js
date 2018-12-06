@@ -1,6 +1,6 @@
 <img src="https://user-images.githubusercontent.com/609579/42215465-7223c4a4-7eb6-11e8-8b4c-9d7b30dfeb88.png" alt="Bugsnag logo" width="200"/>
 
-**Universal JavaScript error reporting.**
+**Universal JavaScript error reporting**
 
 Automatically detect JavaScript errors in the browser and Node.js, with plugins for React, Vue, Angular, Express, Restify and Koa. Get cross-platform error detection for handled and unhandled errors with real-time error alerts and detailed diagnostic reports.
 
