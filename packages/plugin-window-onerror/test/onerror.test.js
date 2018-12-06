@@ -100,6 +100,30 @@ describe('plugin: window onerror', () => {
       expect(report.exceptions[0].message).toBe('something bad happened')
       expect(report.severityReason).toEqual({ type: 'unhandledException' })
     })
+
+    it('handles single argument usage of window.onerror with extra parameter', () => {
+      const client = new Client(VALID_NOTIFIER)
+      const payloads = []
+      client.setOptions({ apiKey: 'API_KEY_YEAH' })
+      client.configure()
+      client.use(plugin, window)
+      client.delivery({ sendReport: (logger, config, payload) => payloads.push(payload) })
+
+      // this situation is caused by the following kind of jQuery call:
+      // jQuery('select.province').trigger(jQuery.Event('error.validator.bv'), { valid: false })
+      const event = { type: 'error', detail: 'something bad happened' }
+      const extra = { valid: false }
+      window.onerror(event, extra)
+
+      expect(payloads.length).toBe(1)
+      const report = payloads[0].events[0].toJSON()
+      expect(report.severity).toBe('error')
+      expect(report.unhandled).toBe(true)
+      expect(report.exceptions[0].errorClass).toBe('Event: error')
+      expect(report.exceptions[0].message).toBe('something bad happened')
+      expect(report.severityReason).toEqual({ type: 'unhandledException' })
+    })
+
     //
     // if ('addEventListener' in window) {
     //   it('captures uncaught errors in DOM (level 3) event handlers', done => {
