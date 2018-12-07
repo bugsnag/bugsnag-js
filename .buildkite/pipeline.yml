@@ -1,6 +1,6 @@
 plugins: &plugins
   docker-compose#v2.5.1:
-    run: ci-extended
+    run: ci-basic
 
 steps:
   - label: 'Lint'
@@ -21,6 +21,6 @@ steps:
   - label: 'Browser tests'
     plugins:
       docker-compose#v2.5.1:
-        run: ci-extended
+        run: ci-browser
     env:
       BROWSER: "chrome_61"
