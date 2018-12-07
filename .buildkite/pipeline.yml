@@ -4,10 +4,16 @@ steps:
       docker-compose#v2.5.1:
         build: ci-basic
         image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
-        cache-from: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js:latest
+        cache-from: ci-basic:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:latest
+
+  - wait
+
+  - label: ":docker: Push latest to repository"
+    plugins:
+      docker-compose#v2.5.1:
         push:
-          - 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
-          - 855461928731.dkr.ecr.us-west-1.amazonaws.com/js:latest
+          - ci-basic:855461928731.dkr.ecr.us-west-1.amazonaws.com/js
+          - ci-basic:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:latest
 
   - wait
 
