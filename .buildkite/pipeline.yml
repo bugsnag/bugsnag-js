@@ -26,11 +26,11 @@ steps:
         run: ci-basic
     command: 'npm run test:types'
 
-  - wait
+  # - wait
 
-  - label: 'Browser tests'
-    plugins:
-      docker-compose#v2.5.1:
-        run: ci-browser
-    env:
-      BROWSER: "chrome_61"
+  # - label: 'Browser tests'
+  #   plugins:
+  #     docker-compose#v2.5.1:
+  #       run: ci-browser
+  #   env:
+  #     BROWSER: "chrome_61"
