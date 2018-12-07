@@ -5,16 +5,15 @@ plugins: &plugins
 steps:
   - label: 'Lint'
     plugins: *plugins
-    command:
-      'npm run test:lint'
+    command: 'npm run test:lint'
 
   - label: 'Unit tests'
     plugins: *plugins
-    command: sh -c 'npm run build && npm run test:unit'
+    command: 'npm run test:unit'
 
   - label: 'Type checks/tests'
     plugins: *plugins
-    command: sh -c 'npm run build && npm run test:types'
+    command: 'npm run test:types'
 
   - wait
 

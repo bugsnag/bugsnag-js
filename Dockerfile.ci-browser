@@ -13,4 +13,5 @@ RUN npm install
 COPY . /usr/src/app/
 
 RUN npx lerna bootstrap
+RUN npm run build
 WORKDIR packages/browser
