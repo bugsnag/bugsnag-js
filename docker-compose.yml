@@ -1,5 +1,23 @@
 version: '3.4'
 services:
-  ci:
+  ci-basic:
     build:
       context: .
+      dockerfile: Dockerfile.ci-basic
+
+  ci-browser:
+    build:
+      context: .
+      dockerfile: Dockerfile.ci-browser
+    environment:
+      - BROWSER_STACK_USERNAME
+      - BROWSER_STACK_ACCESS_KEY
+      - BROWSER
+      - CI
+    command: bundle exec maze-runner
+
+  browserstack-tunnel:
+    image: exilit/browserstacklocal:latest
+    command: '$BROWSER_STACK_ACCESS_KEY'
+    environment:
+      - BROWSERSTACK_LOCAL_KEY

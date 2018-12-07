@@ -1,6 +1,6 @@
 plugins: &plugins
   docker-compose#v2.5.1:
-    run: ci
+    run: ci-extended
 
 steps:
   - label: 'Lint'
@@ -15,3 +15,12 @@ steps:
   - label: 'Type checks/tests'
     plugins: *plugins
     command: sh -c 'npm run build && npm run test:types'
+
+  - wait
+
+  - label: 'Browser tests'
+    plugins:
+      docker-compose#v2.5.1:
+        run: ci-extended
+    env:
+      BROWSER: "chrome_61"

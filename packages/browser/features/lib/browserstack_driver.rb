@@ -16,14 +16,14 @@ def bs_local_args
     'key' => ENV['BROWSER_STACK_ACCESS_KEY'],
     'v' => 'true',
     'force' => 'true',
-    'localIdentifier' => bs_local_id
+    # 'localIdentifier' => bs_local_id
   }
 end
 
 def driver_start
   caps = Selenium::WebDriver::Remote::Capabilities.new
   caps['browserstack.local'] = 'true'
-  caps['browserstack.localIdentifier'] = bs_local_id
+  # caps['browserstack.localIdentifier'] = bs_local_id
   caps['browserstack.console'] = 'errors'
   caps.merge! browsers[ENV['BROWSER']]
   Selenium::WebDriver.for :remote,

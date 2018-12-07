@@ -25,7 +25,7 @@ else
 end
 Process.detach(pid)
 
-unless ENV['TRAVIS']
+unless ENV['TRAVIS'] || ENV['CI']
   puts 'starting browserstack local'
   bs_local = bs_local_start
 end
@@ -55,12 +55,16 @@ end
 
 # test helpers
 
+# def current_ip
+#   # Parses the output of `ifconfig` to retreive the host IP for docker to talk to
+#   # Breaks compatability with Windows
+#   ip_addr = `ifconfig | grep -Eo 'inet (addr:)?([0-9]*\\\.){3}[0-9]*' | grep -v '127.0.0.1'`
+#   ip_list = /((?:[0-9]*\.){3}[0-9]*)/.match(ip_addr)
+#   ip_list.captures.first
+# end
+
 def current_ip
-  # Parses the output of `ifconfig` to retreive the host IP for docker to talk to
-  # Breaks compatability with Windows
-  ip_addr = `ifconfig | grep -Eo 'inet (addr:)?([0-9]*\\\.){3}[0-9]*' | grep -v '127.0.0.1'`
-  ip_list = /((?:[0-9]*\.){3}[0-9]*)/.match(ip_addr)
-  ip_list.captures.first
+  'ci-browser'
 end
 
 def get_test_url path
