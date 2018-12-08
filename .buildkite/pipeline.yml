@@ -2,32 +2,32 @@ steps:
   - label: ':docker: Build'
     plugins:
       - docker-compose#v2.5.1:
-          build: ci-basic
+          build: ci
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
-          cache-from: ci-basic:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:${BUILDKITE_BRANCH:-[latest]}
+          cache-from: ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:${BUILDKITE_BRANCH:-[latest]}
       - docker-compose#v2.5.1:
           push:
-            - ci-basic:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:latest
-            - ci-basic:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:${BUILDKITE_BRANCH}
+            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:latest
+            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:${BUILDKITE_BRANCH}
 
   - wait
 
   - label: 'Lint'
     plugins:
       docker-compose#v2.5.1:
-        run: ci-basic
+        run: ci
     command: 'npm run test:lint'
 
   - label: 'Unit tests'
     plugins:
       docker-compose#v2.5.1:
-        run: ci-basic
+        run: ci
     command: 'npm run test:unit'
 
   - label: 'Type checks/tests'
     plugins:
       docker-compose#v2.5.1:
-        run: ci-basic
+        run: ci
     command: 'npm run test:types'
 
   - wait
