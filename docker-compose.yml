@@ -1,20 +1,19 @@
 version: '3.4'
 services:
-  ci-basic:
-    build:
-      context: .
-      dockerfile: Dockerfile.ci-basic
+  ci:
+    build: ./
 
-  ci-browser:
-    build:
-      context: .
-      dockerfile: Dockerfile.ci-browser
+  maze-runner:
+    image: 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner:master-cli
     environment:
       - BROWSER_STACK_USERNAME
       - BROWSER_STACK_ACCESS_KEY
       - BROWSER
       - CI
-    command: bundle exec maze-runner
+    command: /packages
+    volumes:
+      - ./packages:/packages
+      - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
       - browserstack-tunnel
 

@@ -1,12 +1,12 @@
-FROM node:10-alpine
+FROM node:10-alpine as ci
 
 RUN apk add --update bash
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
 COPY package*.json ./
 RUN npm install
 
-COPY . /usr/src/app/
+COPY . ./
 RUN npx lerna bootstrap
 RUN npm run build
