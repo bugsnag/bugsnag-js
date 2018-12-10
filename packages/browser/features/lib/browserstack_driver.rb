@@ -23,7 +23,7 @@ end
 def driver_start
   caps = Selenium::WebDriver::Remote::Capabilities.new
   caps['browserstack.local'] = 'true'
-  # caps['browserstack.localIdentifier'] = bs_local_id
+  caps['browserstack.localIdentifier'] = bs_local_id
   caps['browserstack.console'] = 'errors'
   caps.merge! browsers[ENV['BROWSER']]
   Selenium::WebDriver.for :remote,
