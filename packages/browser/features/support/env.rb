@@ -25,7 +25,7 @@ else
 end
 Process.detach(pid)
 
-unless ENV['TRAVIS'] || ENV['CI']
+unless false
   puts 'starting browserstack local'
   bs_local = bs_local_start
 end
@@ -64,7 +64,7 @@ end
 # end
 
 def current_ip
-  'ci-browser'
+  'localhost'
 end
 
 def get_test_url path

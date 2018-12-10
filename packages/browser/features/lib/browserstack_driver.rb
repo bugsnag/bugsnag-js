@@ -16,7 +16,7 @@ def bs_local_args
     'key' => ENV['BROWSER_STACK_ACCESS_KEY'],
     'v' => 'true',
     'force' => 'true',
-    # 'localIdentifier' => bs_local_id
+    'localIdentifier' => bs_local_id
   }
 end
 

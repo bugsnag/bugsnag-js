@@ -3,19 +3,19 @@ plugins: &plugins
     run: ci-basic
 
 steps:
-  - label: 'Lint'
-    plugins: *plugins
-    command: 'npm run test:lint'
-
-  - label: 'Unit tests'
-    plugins: *plugins
-    command: 'npm run test:unit'
-
-  - label: 'Type checks/tests'
-    plugins: *plugins
-    command: 'npm run test:types'
-
-  - wait
+  # - label: 'Lint'
+  #   plugins: *plugins
+  #   command: 'npm run test:lint'
+  #
+  # - label: 'Unit tests'
+  #   plugins: *plugins
+  #   command: 'npm run test:unit'
+  #
+  # - label: 'Type checks/tests'
+  #   plugins: *plugins
+  #   command: 'npm run test:types'
+  #
+  # - wait
 
   - label: 'Browser tests'
     plugins:

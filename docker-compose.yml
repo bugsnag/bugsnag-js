@@ -14,12 +14,4 @@ services:
       - BROWSER_STACK_ACCESS_KEY
       - BROWSER
       - CI
-    command: bundle exec maze-runner
-    depends_on:
-      - browserstack-tunnel
-
-  browserstack-tunnel:
-    image: exilit/browserstacklocal:latest
-    command: '$BROWSER_STACK_ACCESS_KEY'
-    environment:
-      - BROWSERSTACK_LOCAL_KEY
+    command: bundle exec maze-runner features/auto_notify
