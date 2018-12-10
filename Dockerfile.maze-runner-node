@@ -1,0 +1,13 @@
+# Image used to build the features required to run the maze-runner tests on node
+FROM node:10-alpine as node-feature-builder
+RUN apk update && apk add git openssh-client
+WORKDIR /app/
+COPY packages/ ./packages/
+RUN npm pack --verbose packages/node/
+RUN npm pack --verbose packages/plugin-express/
+RUN npm pack --verbose packages/plugin-koa/
+RUN npm pack --verbose packages/plugin-restify/
+
+# The maze-runner browser tests
+FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner:master-cli as node-maze-runner
+COPY --from=node-feature-builder /app/*.tgz /tmp/
