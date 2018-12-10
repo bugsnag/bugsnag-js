@@ -14,4 +14,5 @@ services:
       - BROWSER_STACK_ACCESS_KEY
       - BROWSER
       - CI
-    command: bundle exec maze-runner features/auto_notify
+      - MAZE_SKIP_INSTALL
+    command: bundle exec maze-runner features/auto_notify.feature

@@ -1,6 +1,5 @@
 require 'selenium-webdriver'
 require_relative './fast-selenium'
-require 'browserstack/local'
 require 'yaml'
 
 def browsers
@@ -9,15 +8,6 @@ end
 
 def bs_local_id
   ENV['BROWSERSTACK_LOCAL_IDENTIFIER'] || 'mazzzzeee'
-end
-
-def bs_local_args
-  {
-    'key' => ENV['BROWSER_STACK_ACCESS_KEY'],
-    'v' => 'true',
-    'force' => 'true',
-    'localIdentifier' => bs_local_id
-  }
 end
 
 def driver_start
@@ -32,7 +22,5 @@ def driver_start
 end
 
 def bs_local_start
-  bs_local = BrowserStack::Local.new
-  bs_local.start(bs_local_args)
-  bs_local
+  system "/BrowserStackLocal -d start --key #{ENV['BROWSER_STACK_ACCESS_KEY']} --local-identifier #{bs_local_id}"
 end

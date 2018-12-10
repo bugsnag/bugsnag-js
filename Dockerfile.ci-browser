@@ -2,8 +2,24 @@ FROM node:10-alpine
 
 RUN apk add --no-cache --update ruby-full ruby-bundler ruby-dev git build-base libffi-dev curl-dev bash
 
-# All of this is required for browserstack local on alpine
-RUN apk add --no-cache libc6-compat
+
+# https://github.com/sgerrand/alpine-pkg-glibc
+ENV GLIBC_VERSION 2.23-r3
+
+RUN wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub \
+  && wget "https://github.com/sgerrand/alpine-pkg-glibc/releases/download/$GLIBC_VERSION/glibc-$GLIBC_VERSION.apk" \
+  && apk --no-cache add "glibc-$GLIBC_VERSION.apk" \
+  && rm "glibc-$GLIBC_VERSION.apk" \
+  && wget "https://github.com/sgerrand/alpine-pkg-glibc/releases/download/$GLIBC_VERSION/glibc-bin-$GLIBC_VERSION.apk" \
+  && apk --no-cache add "glibc-bin-$GLIBC_VERSION.apk" \
+  && rm "glibc-bin-$GLIBC_VERSION.apk" \
+  && wget "https://github.com/sgerrand/alpine-pkg-glibc/releases/download/$GLIBC_VERSION/glibc-i18n-$GLIBC_VERSION.apk" \
+  && apk --no-cache add "glibc-i18n-$GLIBC_VERSION.apk" \
+  && rm "glibc-i18n-$GLIBC_VERSION.apk"
+
+RUN wget -q https://www.browserstack.com/browserstack-local/BrowserStackLocal-linux-x64.zip \
+  && unzip BrowserStackLocal-linux-x64.zip \
+  && rm BrowserStackLocal-linux-x64.zip
 
 WORKDIR /usr/src/app
 

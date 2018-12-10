@@ -25,10 +25,8 @@ else
 end
 Process.detach(pid)
 
-unless false
-  puts 'starting browserstack local'
-  bs_local = bs_local_start
-end
+puts 'starting browserstack local'
+bs_local = bs_local_start
 
 puts 'starting webdriver'
 $driver = driver_start
@@ -85,9 +83,9 @@ end
 at_exit do
   # Runs when the test run is completed
   $driver.quit
-  unless ENV['TRAVIS']
-    bs_local.stop
-  end
+  # unless ENV['TRAVIS']
+  #   bs_local.stop
+  # end
   begin
     Process.kill('KILL', pid)
   rescue
