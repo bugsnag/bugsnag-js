@@ -15,4 +15,4 @@ services:
       - BROWSER
       - CI
       - MAZE_SKIP_INSTALL
-    command: bundle exec maze-runner features/auto_notify.feature
+    command: bundle exec maze-runner
