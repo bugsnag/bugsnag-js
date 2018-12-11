@@ -1,24 +1,17 @@
-version: '3.4'
+version: '3.5'
 services:
   ci:
     build: ./
 
-  maze-runner:
-    image: 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner:master-cli
-    environment:
-      - BROWSER_STACK_USERNAME
-      - BROWSER_STACK_ACCESS_KEY
-      - BROWSER
-      - CI
-    command: /packages
+  node-maze-runner:
+    build:
+      context: .
+      target: node-maze-runner
+    command: /app/features/connect.feature
+    networks:
+      - maze-runner
     volumes:
-      - ./packages:/packages
       - /var/run/docker.sock:/var/run/docker.sock
-    depends_on:
-      - browserstack-tunnel
-
-  browserstack-tunnel:
-    image: exilit/browserstacklocal:latest
-    command: '$BROWSER_STACK_ACCESS_KEY'
-    environment:
-      - BROWSERSTACK_LOCAL_KEY
+networks:
+  maze-runner:
+    name: maze-runner

@@ -1,5 +1,5 @@
 ARG NODE_VERSION=8
-FROM bugsnag_node_test:$NODE_VERSION
+FROM node:$NODE_VERSION
 
 WORKDIR /usr/src/app
 

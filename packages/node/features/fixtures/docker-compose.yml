@@ -1,4 +1,4 @@
-version: '3.4'
+version: '3.5'
 services:
 
   handled:
@@ -74,8 +74,11 @@ services:
       context: connect
       args:
         - NODE_VERSION
+    container_name: connect
     ports:
       - "4318:4318"
+    networks:
+      - maze-runner
     environment:
       - BUGSNAG_API_KEY
       - BUGSNAG_NOTIFY_ENDPOINT
@@ -138,3 +141,6 @@ services:
   corporate-proxy:
     image: minimum2scp/squid
     restart: "no"
+networks:
+  maze-runner:
+    name: maze-runner
