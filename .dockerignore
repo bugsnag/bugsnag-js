@@ -2,3 +2,5 @@ node_modules
 .git
 examples
 **/node_modules
+Dockerfile
+docker-compose.yml

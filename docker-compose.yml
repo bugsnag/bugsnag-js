@@ -1,17 +1,23 @@
 version: '3.5'
 services:
   ci:
-    build: ./
+    build:
+      context: .
+      target: ci
 
   node-maze-runner:
     build:
       context: .
       target: node-maze-runner
-    command: /app/features/connect.feature
+    environment:
+      NODE_VERSION:
     networks:
-      - maze-runner
+      node-maze-runner:
+        aliases:
+          - maze-runner
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+
 networks:
-  maze-runner:
-    name: maze-runner
+  node-maze-runner:
+    name: node-v${NODE_VERSION:-10}-maze-runner

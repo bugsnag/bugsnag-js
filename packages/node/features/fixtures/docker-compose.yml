@@ -10,6 +10,10 @@ services:
       - BUGSNAG_API_KEY
       - BUGSNAG_NOTIFY_ENDPOINT
       - BUGSNAG_SESSIONS_ENDPOINT
+    networks:
+      node-maze-runner:
+        aliases:
+          - handled
     restart: "no"
 
   unhandled:
@@ -21,6 +25,10 @@ services:
       - BUGSNAG_API_KEY
       - BUGSNAG_NOTIFY_ENDPOINT
       - BUGSNAG_SESSIONS_ENDPOINT
+    networks:
+      node-maze-runner:
+        aliases:
+          - unhandled
     restart: "no"
 
   surrounding_code:
@@ -32,6 +40,10 @@ services:
       - BUGSNAG_API_KEY
       - BUGSNAG_NOTIFY_ENDPOINT
       - BUGSNAG_SESSIONS_ENDPOINT
+    networks:
+      node-maze-runner:
+        aliases:
+          - surrounding_code
     restart: "no"
 
   project_root:
@@ -43,6 +55,10 @@ services:
       - BUGSNAG_API_KEY
       - BUGSNAG_NOTIFY_ENDPOINT
       - BUGSNAG_SESSIONS_ENDPOINT
+    networks:
+      node-maze-runner:
+        aliases:
+          - project_root
     restart: "no"
 
   sessions:
@@ -54,6 +70,10 @@ services:
       - BUGSNAG_API_KEY
       - BUGSNAG_NOTIFY_ENDPOINT
       - BUGSNAG_SESSIONS_ENDPOINT
+    networks:
+      node-maze-runner:
+        aliases:
+          - sessions
     restart: "no"
 
   express:
@@ -61,28 +81,14 @@ services:
       context: express
       args:
         - NODE_VERSION
-    ports:
-      - "4312:4312"
     environment:
       - BUGSNAG_API_KEY
       - BUGSNAG_NOTIFY_ENDPOINT
       - BUGSNAG_SESSIONS_ENDPOINT
-    restart: "no"
-
-  connect:
-    build:
-      context: connect
-      args:
-        - NODE_VERSION
-    container_name: connect
-    ports:
-      - "4318:4318"
     networks:
-      - maze-runner
-    environment:
-      - BUGSNAG_API_KEY
-      - BUGSNAG_NOTIFY_ENDPOINT
-      - BUGSNAG_SESSIONS_ENDPOINT
+      node-maze-runner:
+        aliases:
+          - express
     restart: "no"
 
   restify:
@@ -90,12 +96,14 @@ services:
       context: restify
       args:
         - NODE_VERSION
-    ports:
-      - "4314:4314"
     environment:
       - BUGSNAG_API_KEY
       - BUGSNAG_NOTIFY_ENDPOINT
       - BUGSNAG_SESSIONS_ENDPOINT
+    networks:
+      node-maze-runner:
+        aliases:
+          - restify
     restart: "no"
 
   koa:
@@ -103,12 +111,14 @@ services:
       context: koa
       args:
         - NODE_VERSION
-    ports:
-      - "4313:4313"
     environment:
       - BUGSNAG_API_KEY
       - BUGSNAG_NOTIFY_ENDPOINT
       - BUGSNAG_SESSIONS_ENDPOINT
+    networks:
+      node-maze-runner:
+        aliases:
+          - koa
     restart: "no"
 
   koa-1x:
@@ -116,12 +126,14 @@ services:
       context: koa-1x
       args:
         - NODE_VERSION
-    ports:
-      - "4320:4320"
     environment:
       - BUGSNAG_API_KEY
       - BUGSNAG_NOTIFY_ENDPOINT
       - BUGSNAG_SESSIONS_ENDPOINT
+    networks:
+      node-maze-runner:
+        aliases:
+          - koa-1x
     restart: "no"
 
   proxy:
@@ -134,6 +146,10 @@ services:
       - BUGSNAG_NOTIFY_ENDPOINT
       - BUGSNAG_SESSIONS_ENDPOINT
       - HTTP_PROXY
+    networks:
+      node-maze-runner:
+        aliases:
+          - proxy
     restart: "no"
     depends_on:
       - corporate-proxy
@@ -141,6 +157,22 @@ services:
   corporate-proxy:
     image: minimum2scp/squid
     restart: "no"
+
+  connect:
+    build:
+      context: connect
+      args:
+        - NODE_VERSION
+    networks:
+      node-maze-runner:
+        aliases:
+          - connect
+    environment:
+      - BUGSNAG_API_KEY
+      - BUGSNAG_NOTIFY_ENDPOINT
+      - BUGSNAG_SESSIONS_ENDPOINT
+    restart: "no"
+
 networks:
-  maze-runner:
-    name: maze-runner
+  node-maze-runner:
+    name: node-v${NODE_VERSION:-10}-maze-runner
