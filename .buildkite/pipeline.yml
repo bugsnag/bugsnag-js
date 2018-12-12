@@ -34,5 +34,6 @@ steps:
     plugins:
       docker-compose#v2.5.1:
         run: browser-maze-runner
+        cache-from: ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:${BUILDKITE_BRANCH:-[latest]}
     env:
       BROWSER: "chrome_61"
