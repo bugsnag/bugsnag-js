@@ -1,25 +1,25 @@
 plugins: &plugins
   docker-compose#v2.5.1:
-    run: ci-basic
+    run: ci
 
 steps:
-  # - label: 'Lint'
-  #   plugins: *plugins
-  #   command: 'npm run test:lint'
-  #
-  # - label: 'Unit tests'
-  #   plugins: *plugins
-  #   command: 'npm run test:unit'
-  #
-  # - label: 'Type checks/tests'
-  #   plugins: *plugins
-  #   command: 'npm run test:types'
-  #
-  # - wait
+  - label: 'Lint'
+    plugins: *plugins
+    command: 'npm run test:lint'
+
+  - label: 'Unit tests'
+    plugins: *plugins
+    command: 'npm run test:unit'
+
+  - label: 'Type checks/tests'
+    plugins: *plugins
+    command: 'npm run test:types'
+
+  - wait
 
   - label: 'Browser tests'
     plugins:
       docker-compose#v2.5.1:
-        run: ci-browser
+        run: browser-maze-runner
     env:
       BROWSER: "chrome_61"
