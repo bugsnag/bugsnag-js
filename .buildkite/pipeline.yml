@@ -14,6 +14,8 @@ steps:
             - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:latest
             - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:${BUILDKITE_BRANCH}
 
+  - wait
+
   - label: 'Lint'
     plugins: *plugins
     command: 'npm run test:lint'
