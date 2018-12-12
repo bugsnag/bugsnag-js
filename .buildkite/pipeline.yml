@@ -32,7 +32,7 @@ steps:
 
   - wait
 
-  - label: 'Browser tests'
+  - label: ':chrome: Browser tests'
     plugins:
       docker-compose#v2.5.1:
         run: browser-maze-runner
@@ -40,7 +40,7 @@ steps:
     env:
       BROWSER: "chrome_61"
 
-  - label: 'Node 10 tests'
+  - label: ':node: Node 10 tests'
     plugins:
       docker-compose#v2.5.1:
         run: node-maze-runner
