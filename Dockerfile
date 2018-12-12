@@ -69,6 +69,7 @@ RUN wget -q https://www.browserstack.com/browserstack-local/BrowserStackLocal-li
 
 COPY --from=browser-feature-builder /app/packages/browser /app/packages/browser/
 WORKDIR /app/packages/browser
+RUN for d in features/fixtures/*/; do cp /app/*.tgz "$d"; done
 
 # The maze-runner node tests
 FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner:node-cli as node-maze-runner

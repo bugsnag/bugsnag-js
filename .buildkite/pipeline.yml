@@ -1,7 +1,3 @@
-plugins: &plugins
-  docker-compose#v2.5.1:
-    run: ci
-
 steps:
   - label: ':docker: Build'
     plugins:
@@ -17,15 +13,21 @@ steps:
   - wait
 
   - label: 'Lint'
-    plugins: *plugins
+    plugins:
+      docker-compose#v2.5.1:
+        run: ci
     command: 'npm run test:lint'
 
   - label: 'Unit tests'
-    plugins: *plugins
+    plugins:
+      docker-compose#v2.5.1:
+        run: ci
     command: 'npm run test:unit'
 
   - label: 'Type checks/tests'
-    plugins: *plugins
+    plugins:
+      docker-compose#v2.5.1:
+        run: ci
     command: 'npm run test:types'
 
   - wait
@@ -34,6 +36,14 @@ steps:
     plugins:
       docker-compose#v2.5.1:
         run: browser-maze-runner
-        cache-from: ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:${BUILDKITE_BRANCH:-[latest]}
+        cache-from: ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:latest
     env:
       BROWSER: "chrome_61"
+
+  - label: 'Node 10 tests'
+    plugins:
+      docker-compose#v2.5.1:
+        run: node-maze-runner
+        cache-from: ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:latest
+    env:
+      NODE_VERSION: "10"

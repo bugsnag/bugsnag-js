@@ -4,10 +4,9 @@ Background:
   Given I set environment variable "BUGSNAG_API_KEY" to "9c2151b65d615a3a95ba408142c8698f"
   And I configure the bugsnag notify endpoint
   And I configure the bugsnag sessions endpoint
-
-Scenario Outline: calling startSession() manually
-  And I set environment variable "NODE_VERSION" to "<node version>"
   And I have built the service "sessions"
+
+Scenario: calling startSession() manually
   And I run the service "sessions" with the command "node scenarios/start-session"
   And I wait for 2 seconds
   Then I should receive a request
@@ -17,15 +16,7 @@ Scenario Outline: calling startSession() manually
   And the payload has a valid sessions array
   And the sessionCount "sessionsStarted" equals 1
 
-  Examples:
-  | node version |
-  | 4            |
-  | 6            |
-  | 8            |
-
-Scenario Outline: calling startSession() when autoCaptureSessions=false
-  And I set environment variable "NODE_VERSION" to "<node version>"
-  And I have built the service "sessions"
+Scenario: calling startSession() when autoCaptureSessions=false
   And I run the service "sessions" with the command "node scenarios/start-session-auto-off"
   And I wait for 2 seconds
   Then I should receive a request
@@ -35,15 +26,7 @@ Scenario Outline: calling startSession() when autoCaptureSessions=false
   And the payload has a valid sessions array
   And the sessionCount "sessionsStarted" equals 1
 
-  Examples:
-  | node version |
-  | 4            |
-  | 6            |
-  | 8            |
-
-Scenario Outline: calling startSession() manually 100x
-  And I set environment variable "NODE_VERSION" to "<node version>"
-  And I have built the service "sessions"
+Scenario: calling startSession() manually 100x
   And I run the service "sessions" with the command "node scenarios/start-session-100"
   And I wait for 2 seconds
   Then I should receive a request
@@ -53,15 +36,7 @@ Scenario Outline: calling startSession() manually 100x
   And the payload has a valid sessions array
   And the sessionCount "sessionsStarted" equals 100
 
-  Examples:
-  | node version |
-  | 4            |
-  | 6            |
-  | 8            |
-
-Scenario Outline: calling startSession() repeatedly across summary interval boundaries
-  And I set environment variable "NODE_VERSION" to "<node version>"
-  And I have built the service "sessions"
+Scenario: calling startSession() repeatedly across summary interval boundaries
   And I run the service "sessions" with the command "node scenarios/start-session-async"
   And I wait for 3 seconds
   Then I should receive 2 requests
@@ -79,15 +54,7 @@ Scenario Outline: calling startSession() repeatedly across summary interval boun
   And the payload has a valid sessions array for request 1
   And the sessionCount "sessionsStarted" equals 50 for request 1
 
-  Examples:
-  | node version |
-  | 4            |
-  | 6            |
-  | 8            |
-
-Scenario Outline: calling notify() on a sessionClient
-  And I set environment variable "NODE_VERSION" to "<node version>"
-  And I have built the service "sessions"
+Scenario: calling notify() on a sessionClient
   And I run the service "sessions" with the command "node scenarios/start-session-notify"
   And I wait for 3 seconds
   Then I should receive 2 requests
@@ -100,9 +67,3 @@ Scenario Outline: calling notify() on a sessionClient
   And the payload field "events.0.session" is not null for request 1
   And the payload field "events.0.session.events.handled" equals 1 for request 1
   And the payload field "events.0.session.events.unhandled" equals 0 for request 1
-
-  Examples:
-  | node version |
-  | 4            |
-  | 6            |
-  | 8            |

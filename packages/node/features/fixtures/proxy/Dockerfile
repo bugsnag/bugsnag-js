@@ -1,12 +1,11 @@
 ARG NODE_VERSION=8
-FROM bugsnag_node_test:$NODE_VERSION
+FROM node:$NODE_VERSION-alpine
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
-COPY package* /usr/src/app/
+COPY package* ./
 RUN npm install
 
-COPY . /usr/src/app/
+COPY . ./
 
-RUN npm install --no-package-lock --no-save /tmp/bugsnag-node.tgz
-RUN node --version
+RUN npm install --no-package-lock --no-save bugsnag-node*.tgz
