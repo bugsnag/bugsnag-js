@@ -4,18 +4,28 @@ steps:
       - docker-compose#v2.5.1:
           build:
             - ci
+          image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
+          cache-from:
+            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-latest
+      - docker-compose#v2.5.1:
+          push:
+            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-latest
+
+  - wait
+
+  - label:  ':docker: Build maze runner images'
+    plugins:
+      - docker-compose#v2.5.1:
+          build:
             - browser-maze-runner
             - node-maze-runner
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
           cache-from:
             - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-latest
-            - browser-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:browser-maze-runner-latest
-            - node-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:node-maze-runner-latest
       - docker-compose#v2.5.1:
           push:
-            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-latest
-            - browser-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:browser-maze-runner-latest
-            - node-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:node-maze-runner-latest
+            - node-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-latest
+            - browser-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-latest
 
   - wait
 
