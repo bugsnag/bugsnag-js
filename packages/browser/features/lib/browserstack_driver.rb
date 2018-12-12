@@ -7,7 +7,7 @@ def browsers
 end
 
 def bs_local_id
-  ENV['BROWSERSTACK_LOCAL_IDENTIFIER'] || 'mazzzzeee'
+  ENV['BROWSER_STACK_LOCAL_IDENTIFIER'] || 'mazzzzeee'
 end
 
 def driver_start

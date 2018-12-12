@@ -1,18 +1,29 @@
-version: '3.4'
+version: '3.5'
 services:
-  ci-basic:
-    build:
-      context: .
-      dockerfile: Dockerfile.ci-basic
+  ci:
+    build: ./
 
-  ci-browser:
+  browser-maze-runner:
     build:
       context: .
-      dockerfile: Dockerfile.ci-browser
+      target: browser-maze-runner
+    networks:
+      - maze-runner
     environment:
+      - BROWSER
       - BROWSER_STACK_USERNAME
       - BROWSER_STACK_ACCESS_KEY
-      - BROWSER
-      - CI
-      - MAZE_SKIP_INSTALL
-    command: bundle exec maze-runner
+
+  node-maze-runner:
+    build:
+      context: .
+      target: node-maze-runner
+    command: /app/features/connect.feature
+    networks:
+      - maze-runner
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+networks:
+  maze-runner:
+    name: maze-runner

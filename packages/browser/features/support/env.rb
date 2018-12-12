@@ -8,10 +8,10 @@ require 'test/unit'
 include Test::Unit::Assertions
 
 require_relative '../lib/browserstack_driver'
-require_relative '../lib/fixture_package_jsons'
-
-puts 'installing dependencies'
-require_relative '../lib/install_dependencies'
+# require_relative '../lib/fixture_package_jsons'
+#
+# puts 'installing dependencies'
+# require_relative '../lib/install_dependencies'
 
 $errors = YAML::load open 'features/fixtures/browser_errors.yml'
 $port = "9020"
@@ -36,20 +36,20 @@ Before do
   # Runs before every Scenario
 end
 
-$fixtures_built = Hash.new
-get_package_jsons_for_fixtures.each do |pkg|
-  fixture_dirname = File.basename(File.expand_path(File.join(pkg, '..', '..')))
-  iteration_dirname = File.basename(File.expand_path(File.join(pkg, '..')))
-  puts "adding '@#{fixture_dirname}' build hook for #{iteration_dirname}"
-  Before "@#{fixture_dirname}" do
-    unless $fixtures_built[pkg]
-      $fixtures_built[pkg] = true
-      Dir.chdir(File.dirname pkg) do
-        run_command('npm run build')
-      end
-    end
-  end
-end
+# $fixtures_built = Hash.new
+# get_package_jsons_for_fixtures.each do |pkg|
+#   fixture_dirname = File.basename(File.expand_path(File.join(pkg, '..', '..')))
+#   iteration_dirname = File.basename(File.expand_path(File.join(pkg, '..')))
+#   puts "adding '@#{fixture_dirname}' build hook for #{iteration_dirname}"
+#   Before "@#{fixture_dirname}" do
+#     unless $fixtures_built[pkg]
+#       $fixtures_built[pkg] = true
+#       Dir.chdir(File.dirname pkg) do
+#         run_command('npm run build')
+#       end
+#     end
+#   end
+# end
 
 # test helpers
 
