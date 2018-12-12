@@ -1,5 +1,6 @@
 # Image used to build the features required to run the browser maze-runner tests
-FROM ci as browser-feature-builder
+ARG BUILDKITE_BUILD_NUMBER=latest
+FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-$BUILDKITE_BUILD_NUMBER as browser-feature-builder
 
 WORKDIR /app
 RUN npm pack --verbose packages/js/

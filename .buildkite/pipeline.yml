@@ -10,6 +10,7 @@ steps:
       - docker-compose#v2.5.1:
           push:
             - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-latest
+            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BUILD_NUMBER}
 
   - wait
 
@@ -21,11 +22,11 @@ steps:
             - node-maze-runner
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
           cache-from:
-            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-latest
-      - docker-compose#v2.5.1:
-          push:
-            - node-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-latest
-            - browser-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-latest
+            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BUILD_NUMBER}
+      # - docker-compose#v2.5.1:
+      #     push:
+      #       - node-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-latest
+      #       - browser-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-latest
 
   - wait
 

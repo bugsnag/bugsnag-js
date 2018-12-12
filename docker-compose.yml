@@ -10,6 +10,8 @@ services:
       context: .
       dockerfile: Dockerfile.browser
       target: browser-maze-runner
+      args:
+        - BUILDKITE_BUILD_NUMBER
     networks:
       - maze-runner
     environment:
@@ -22,6 +24,8 @@ services:
       context: .
       dockerfile: Dockerfile.node
       target: node-maze-runner
+      args:
+        - BUILDKITE_BUILD_NUMBER
     environment:
       NODE_VERSION:
     networks:
