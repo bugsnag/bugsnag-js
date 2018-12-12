@@ -6,13 +6,13 @@ steps:
   - label: ':docker: Build'
     plugins:
       - docker-compose#v2.5.1:
-        build: ci
-        image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
-        cache-from: ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:${BUILDKITE_BRANCH:-[latest]}
+          build: ci
+          image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
+          cache-from: ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:${BUILDKITE_BRANCH:-[latest]}
       - docker-compose#v2.5.1:
-        push:
-          - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:latest
-          - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:${BUILDKITE_BRANCH}
+          push:
+            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:latest
+            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:${BUILDKITE_BRANCH}
 
   - label: 'Lint'
     plugins: *plugins
