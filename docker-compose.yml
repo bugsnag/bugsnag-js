@@ -39,4 +39,3 @@ networks:
   node-maze-runner:
     name: node-v${NODE_VERSION:-10}-maze-runner
   maze-runner:
-    name: maze-runner
