@@ -3,11 +3,12 @@ services:
   ci:
     build:
       context: .
-      target: ci
+      dockerfile: Dockerfile.ci
 
   browser-maze-runner:
     build:
       context: .
+      dockerfile: Dockerfile.browser
       target: browser-maze-runner
     networks:
       - maze-runner
@@ -19,6 +20,7 @@ services:
   node-maze-runner:
     build:
       context: .
+      dockerfile: Dockerfile.node
       target: node-maze-runner
     environment:
       NODE_VERSION:

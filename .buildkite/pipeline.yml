@@ -4,11 +4,15 @@ steps:
       - docker-compose#v2.5.1:
           build: ci
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
-          cache-from: ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:${BUILDKITE_BRANCH:-[latest]}
+          cache-from:
+            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:latest
+            - browser-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:latest
+            - node-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:latest
       - docker-compose#v2.5.1:
           push:
             - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:latest
-            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:${BUILDKITE_BRANCH}
+            - browser-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:latest
+            - node-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:latest
 
   - wait
 
@@ -36,7 +40,6 @@ steps:
     plugins:
       docker-compose#v2.5.1:
         run: browser-maze-runner
-        cache-from: ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:latest
     env:
       BROWSER: "chrome_61"
 
@@ -44,6 +47,5 @@ steps:
     plugins:
       docker-compose#v2.5.1:
         run: node-maze-runner
-        cache-from: ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:latest
     env:
       NODE_VERSION: "10"
