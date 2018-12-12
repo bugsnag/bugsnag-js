@@ -51,12 +51,12 @@ steps:
 
   - wait
 
-  - label: ':chrome: Browser tests'
-    plugins:
-      docker-compose#v2.5.1:
-        run: browser-maze-runner
-    env:
-      BROWSER: "chrome_61"
+  # - label: ':chrome: Browser tests'
+  #   plugins:
+  #     docker-compose#v2.5.1:
+  #       run: browser-maze-runner
+  #   env:
+  #     BROWSER: "chrome_61"
 
   - label: ':node: Node 10 tests'
     plugins:
