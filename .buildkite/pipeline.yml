@@ -21,5 +21,6 @@ steps:
     plugins:
       docker-compose#v2.5.1:
         run: browser-maze-runner
+    command: 'bundle exec maze-runner'
     env:
       BROWSER: "chrome_61"

@@ -2,6 +2,7 @@ version: '3.5'
 services:
   ci:
     build: ./
+    target: ci
 
   browser-maze-runner:
     build:
