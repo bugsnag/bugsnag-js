@@ -1,5 +1,5 @@
 steps:
-  - label: ':docker: Build'
+  - label: ':docker: Build CI image'
     plugins:
       - docker-compose#v2.5.1:
           build:
@@ -14,20 +14,29 @@ steps:
 
   - wait
 
-  - label:  ':docker: Build maze runner images'
+  - label:  ':docker: Build browser maze runner image'
     plugins:
       - docker-compose#v2.5.1:
           build:
             - browser-maze-runner
-            - node-maze-runner
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
           cache-from:
             - browser-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:browser-maze-runner-latest
+      - docker-compose#v2.5.1:
+          push:
+            - browser-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:browser-maze-runner-latest
+
+  - label:  ':docker: Build node maze runner image'
+    plugins:
+      - docker-compose#v2.5.1:
+          build:
+            - node-maze-runner
+          image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
+          cache-from:
             - node-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:node-maze-runner-latest
       - docker-compose#v2.5.1:
           push:
             - node-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:node-maze-runner-latest
-            - browser-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:browser-maze-runner-latest
 
   - wait
 
