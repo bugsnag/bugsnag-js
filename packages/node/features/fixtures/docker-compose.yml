@@ -163,10 +163,11 @@ services:
       context: connect
       args:
         - NODE_VERSION
+    container_name: connect
     networks:
       node-maze-runner:
-        aliases:
-          - connect
+        # aliases:
+        #   - connect
     environment:
       - BUGSNAG_API_KEY
       - BUGSNAG_NOTIFY_ENDPOINT
