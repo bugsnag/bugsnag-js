@@ -24,6 +24,7 @@ services:
       target: node-maze-runner
       args:
         - BUILDKITE_BUILD_NUMBER
+    command: features/connect.feature
     environment:
       NODE_VERSION:
       VERBOSE: 'true'
