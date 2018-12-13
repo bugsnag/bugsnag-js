@@ -31,11 +31,8 @@ services:
       VERBOSE: 'true'
     networks:
       node-maze-runner:
-        aliases:
-          - maze-runner
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 
 networks:
   node-maze-runner:
-    name: node-v${NODE_VERSION:-10}-maze-runner
