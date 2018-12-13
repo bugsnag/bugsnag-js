@@ -67,21 +67,23 @@ steps:
   #   env:
   #     BROWSER: "chrome_61"
 
-  # - label: ':node: Node 4'
-  #   plugins:
-  #     bugsnag/docker-compose#v2.5.3:
-  #       run: node-maze-runner
-  #       use-aliases: true
-  #   env:
-  #     NODE_VERSION: "4"
+  - label: ':node: Node 4'
+    plugins:
+      bugsnag/docker-compose#v2.5.3:
+        run: node-maze-runner
+        use-aliases: true
+    env:
+      COMPOSE_PROJECT_NAME: node4
+      NODE_VERSION: "4"
 
-  # - label: ':node: Node 6'
-  #   plugins:
-  #     bugsnag/docker-compose#v2.5.3:
-  #       run: node-maze-runner
-  #       use-aliases: true
-  #   env:
-  #     NODE_VERSION: "6"
+  - label: ':node: Node 6'
+    plugins:
+      bugsnag/docker-compose#v2.5.3:
+        run: node-maze-runner
+        use-aliases: true
+    env:
+      COMPOSE_PROJECT_NAME: node6
+      NODE_VERSION: "6"
 
   - label: ':node: Node 8'
     plugins:
