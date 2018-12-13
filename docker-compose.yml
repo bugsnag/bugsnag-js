@@ -12,7 +12,8 @@ services:
       target: browser-maze-runner
       args:
         - BUILDKITE_BUILD_NUMBER
-    browser-maze-runner:
+    networks:
+      browser-maze-runner:
         aliases:
           - maze-runner
     environment:
