@@ -26,6 +26,7 @@ services:
         - BUILDKITE_BUILD_NUMBER
     environment:
       NODE_VERSION:
+      COMPOSE_PROJECT_NAME:
     networks:
       node-maze-runner:
         aliases:
