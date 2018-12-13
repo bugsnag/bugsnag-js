@@ -69,7 +69,7 @@ steps:
 
   - label: ':node: Node 10 tests'
     plugins:
-      bugsnag/docker-compose#v2.5.2:
+      bugsnag/docker-compose#v2.5.3:
         run: node-maze-runner
         use-aliases: true
     env:
