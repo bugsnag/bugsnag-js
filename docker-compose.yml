@@ -26,6 +26,7 @@ services:
         - BUILDKITE_BUILD_NUMBER
     environment:
       NODE_VERSION:
+      VERBOSE: 'true'
     networks:
       node-maze-runner:
         aliases:
