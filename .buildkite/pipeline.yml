@@ -83,13 +83,13 @@ steps:
   #   env:
   #     NODE_VERSION: "6"
 
-  # - label: ':node: Node 8'
-  #   plugins:
-  #     bugsnag/docker-compose#v2.5.3:
-  #       run: node-maze-runner
-  #       use-aliases: true
-  #   env:
-  #     NODE_VERSION: "8"
+  - label: ':node: Node 8'
+    plugins:
+      bugsnag/docker-compose#v2.5.3:
+        run: node-maze-runner
+        use-aliases: true
+    env:
+      NODE_VERSION: "8"
 
   - label: ':node: Node 10'
     plugins:
