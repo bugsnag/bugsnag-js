@@ -40,4 +40,4 @@ networks:
   node-maze-runner:
     name: node-v${NODE_VERSION:-10}-maze-runner
   browser-maze-runner:
-    name: browser-${BROWSER:chrome_61}-maze-runner
+    name: browser-${BROWSER:-chrome_61}-maze-runner
