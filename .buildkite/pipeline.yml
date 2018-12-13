@@ -89,6 +89,7 @@ steps:
         run: node-maze-runner
         use-aliases: true
     env:
+      COMPOSE_PROJECT_NAME: node8
       NODE_VERSION: "8"
 
   - label: ':node: Node 10'
@@ -97,4 +98,5 @@ steps:
         run: node-maze-runner
         use-aliases: true
     env:
+      COMPOSE_PROJECT_NAME: node10
       NODE_VERSION: "10"
