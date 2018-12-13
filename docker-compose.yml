@@ -12,8 +12,9 @@ services:
       target: browser-maze-runner
       args:
         - BUILDKITE_BUILD_NUMBER
-    networks:
-      - maze-runner
+    browser-maze-runner:
+        aliases:
+          - maze-runner
     environment:
       - BROWSER
       - BROWSER_STACK_USERNAME
@@ -38,4 +39,5 @@ services:
 networks:
   node-maze-runner:
     name: node-v${NODE_VERSION:-10}-maze-runner
-  maze-runner:
+  browser-maze-runner:
+    name: browser-${BROWSER:chrome_61}-maze-runner
