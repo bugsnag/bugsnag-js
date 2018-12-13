@@ -67,7 +67,7 @@ steps:
     env:
       BROWSER: "chrome_61"
 
-  - label: ':node: Node 4 tests'
+  - label: ':node: Node 4'
     plugins:
       bugsnag/docker-compose#v2.5.3:
         run: node-maze-runner
@@ -75,7 +75,7 @@ steps:
     env:
       NODE_VERSION: "4"
 
-  - label: ':node: Node 6 tests'
+  - label: ':node: Node 6'
     plugins:
       bugsnag/docker-compose#v2.5.3:
         run: node-maze-runner
@@ -83,7 +83,7 @@ steps:
     env:
       NODE_VERSION: "6"
 
-  - label: ':node: Node 8 tests'
+  - label: ':node: Node 8'
     plugins:
       bugsnag/docker-compose#v2.5.3:
         run: node-maze-runner
@@ -91,7 +91,7 @@ steps:
     env:
       NODE_VERSION: "8"
 
-  - label: ':node: Node 10 tests'
+  - label: ':node: Node 10'
     plugins:
       bugsnag/docker-compose#v2.5.3:
         run: node-maze-runner
