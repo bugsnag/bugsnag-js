@@ -69,7 +69,8 @@ steps:
 
   - label: ':node: Node 10 tests'
     plugins:
-      docker-compose#v2.5.1:
+      bugsnag/docker-compose#master:
         run: node-maze-runner
+        use-aliases: true
     env:
       NODE_VERSION: "10"
