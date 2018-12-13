@@ -1,6 +1,23 @@
+# CI test image for unit/lint/type tests
+FROM node:10-alpine as ci
+
+RUN apk add --update bash
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm install
+
+COPY babel.config.js tslint.json lerna.json ./
+COPY packages ./packages
+COPY bin ./bin
+RUN npx lerna bootstrap
+RUN npm run build
+
+
 # Image used to build the features required to run the node maze-runner tests
 ARG BUILDKITE_BUILD_NUMBER=latest
-FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-$BUILDKITE_BUILD_NUMBER as node-feature-builder
+FROM ci as node-feature-builder
 WORKDIR /app
 RUN npm pack --verbose packages/node/
 RUN npm pack --verbose packages/plugin-express/
