@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.x.x (TBD)
+
+### Fixed
+
+- Support @bugsnag/node being consumed in a Webpack bundle for Node (#450, #441)
+
 ## 5.0.2 (2018-12-06)
 
 ### Fixed
