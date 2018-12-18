@@ -173,6 +173,21 @@ services:
       - BUGSNAG_SESSIONS_ENDPOINT
     restart: "no"
 
+  webpack:
+    build:
+      context: webpack
+      args:
+        - NODE_VERSION
+    networks:
+      node-maze-runner:
+        aliases:
+          - webpack
+    environment:
+      - BUGSNAG_API_KEY
+      - BUGSNAG_NOTIFY_ENDPOINT
+      - BUGSNAG_SESSIONS_ENDPOINT
+    restart: "no"
+
 networks:
   node-maze-runner:
     name: node-v${NODE_VERSION:-10}-maze-runner

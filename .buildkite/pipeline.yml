@@ -85,7 +85,7 @@ steps:
     env:
       COMPOSE_PROJECT_NAME: node4
       NODE_VERSION: "4"
-    command: '-e koa.feature -e koa-1x.feature'
+    command: '-e koa.feature -e koa-1x.feature -e webpack.feature'
 
   - label: ':node: Node 6'
     plugins:
