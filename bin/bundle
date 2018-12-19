@@ -14,10 +14,10 @@ const standalone = (args.find(arg => /^--standalone=/.test(arg)) || '').replace(
 const b = browserify(entry, { debug: true, standalone, node: forNode })
   .transform('babelify', { global: true, ...babelConfig })
   .transform('browserify-versionify')
+  .plugin('browser-pack-flat/plugin')
 
 if (!forNode) {
   b.transform('envify', { global: true })
-  b.plugin('browser-pack-flat/plugin')
 }
 
 b
