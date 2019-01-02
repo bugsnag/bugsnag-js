@@ -35,13 +35,13 @@ yarn add @bugsnag/js
 Subsequently, in the application, any requires/imports should be updated (this should be a simple find and replace):
 
 ```diff
-+ import bugsnag from "@bugsnag/js"
 - import bugsnag from "bugsnag-js"
++ import bugsnag from "@bugsnag/js"
 ```
 
 ```diff
-+ var bugsnag = require('@bugsnag/js')
 - var bugsnag = require('bugsnag-js')
++ var bugsnag = require('@bugsnag/js')
 ```
 
 ### bugsnag-{vue|react|angular} users
@@ -63,31 +63,31 @@ yarn add @bugsnag/plugin-{vue|react|angular}
 #### Vue
 
 ```diff
-+ const bugsnagVue = require('@bugsnag/plugin-vue')
 - const bugsnagVue = require('bugsnag-vue')
++ const bugsnagVue = require('@bugsnag/plugin-vue')
 
-+ bugsnagClient.use(bugsnagVue, Vue)
 - bugsnagClient.use(bugsnagVue(Vue))
++ bugsnagClient.use(bugsnagVue, Vue)
 ```
 
 #### React
 
 ```diff
-+ const bugsnagReact = require('@bugsnag/plugin-react')
 - const bugsnagReact = require('bugsnag-react')
++ const bugsnagReact = require('@bugsnag/plugin-react')
 
-+ bugsnagClient.use(bugsnagReact, React)
 - bugsnagClient.use(bugsnagReact(React))
++ bugsnagClient.use(bugsnagReact, React)
 
-+ const ErrorBoundary = bugsnagClient.getPlugin('react')
 - const ErrorBoundary = bugsnagClient.use(createPlugin(React))
++ const ErrorBoundary = bugsnagClient.getPlugin('react')
 ```
 
 #### Angular
 
 ```diff
-+ import { BugsnagErrorHandler } from '@bugsnag/plugin-angular'
 - import BugsnagErrorHandler from 'bugsnag-angular'
++ import { BugsnagErrorHandler } from '@bugsnag/plugin-angular'
 ```
 
 #### Node.js
