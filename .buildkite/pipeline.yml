@@ -12,25 +12,18 @@ steps:
           push:
             - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
             - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-latest
-            # This image is used as the FROM in the maze runner images built after this one
-            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BUILD_NUMBER}
 
   - wait
 
-  # - label:  ':docker: Build browser maze runner image'
-  #   plugins:
-  #     # Required for multiple cache from images for a single service
-  #     - bugsnag/docker-compose#v2.5.3:
-  #         build:
-  #           - browser-maze-runner
-  #         image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
-  #         cache-from:
-  #           - browser-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:browser-maze-runner-${BUILDKITE_BRANCH}
-  #           - browser-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:browser-maze-runner-latest
-  #     - docker-compose#v2.5.1:
-  #         push:
-  #           - browser-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:browser-maze-runner-${BUILDKITE_BRANCH}
-  #           - browser-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:browser-maze-runner-latest
+  - label:  ':docker: Build browser maze runner image'
+    plugins:
+      # Required for multiple cache from images for a single service
+      - bugsnag/docker-compose#v2.5.3:
+          build:
+            - browser-maze-runner
+          image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
+          cache-from:
+            - browser-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
 
   - label:  ':docker: Build node maze runner image'
     plugins:
@@ -40,12 +33,7 @@ steps:
             - node-maze-runner
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
           cache-from:
-            - node-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:node-maze-runner-${BUILDKITE_BRANCH}
-            - node-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:node-maze-runner-latest
-      - docker-compose#v2.5.1:
-          push:
-            - node-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:node-maze-runner-${BUILDKITE_BRANCH}
-            - node-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:node-maze-runner-latest
+            - node-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
 
   - wait
 
@@ -67,8 +55,6 @@ steps:
         run: ci
     command: 'npm run test:types'
 
-  - wait
-
   # - label: ':chrome: Browser tests'
   #   plugins:
   #     docker-compose#v2.5.1:
@@ -83,7 +69,6 @@ steps:
         run: node-maze-runner
         use-aliases: true
     env:
-      COMPOSE_PROJECT_NAME: node4
       NODE_VERSION: "4"
     command: '-e koa.feature -e koa-1x.feature -e webpack.feature'
 
@@ -94,7 +79,6 @@ steps:
         run: node-maze-runner
         use-aliases: true
     env:
-      COMPOSE_PROJECT_NAME: node6
       NODE_VERSION: "6"
     command: '-e koa.feature -e koa-1x.feature'
 
@@ -105,7 +89,6 @@ steps:
         run: node-maze-runner
         use-aliases: true
     env:
-      COMPOSE_PROJECT_NAME: node8
       NODE_VERSION: "8"
 
   - label: ':node: Node 10'
@@ -115,5 +98,4 @@ steps:
         run: node-maze-runner
         use-aliases: true
     env:
-      COMPOSE_PROJECT_NAME: node10
       NODE_VERSION: "10"
