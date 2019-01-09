@@ -45,9 +45,9 @@ steps:
             - browser-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:browser-maze-runner-${BUILDKITE_BRANCH}
             - browser-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:browser-maze-runner-latest
       - docker-compose#v2.5.1:
-        push:
-          - browser-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:browser-maze-runner-${BUILDKITE_BRANCH}
-          - browser-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:browser-maze-runner-latest
+          push:
+            - browser-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:browser-maze-runner-${BUILDKITE_BRANCH}
+            - browser-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:browser-maze-runner-latest
 
   - label:  ':docker: Build node maze runner image'
     plugins:
@@ -61,9 +61,9 @@ steps:
             - node-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:node-maze-runner-${BUILDKITE_BRANCH}
             - node-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:node-maze-runner-latest
       - docker-compose#v2.5.1:
-        push:
-          - node-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:node-maze-runner-${BUILDKITE_BRANCH}
-          - node-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:node-maze-runner-latest
+          push:
+            - node-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:node-maze-runner-${BUILDKITE_BRANCH}
+            - node-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:node-maze-runner-latest
 
   - wait
 
