@@ -1,5 +1,5 @@
 # CI test image for unit/lint/type tests
-FROM node:10-alpine as ci
+FROM node:10-alpine
 
 RUN apk add --update bash
 

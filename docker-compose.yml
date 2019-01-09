@@ -13,9 +13,10 @@ services:
       args:
         - BUILDKITE_BUILD_NUMBER
     environment:
-      - BROWSER
-      - BROWSER_STACK_USERNAME
-      - BROWSER_STACK_ACCESS_KEY
+      BROWSER: "${BROWSER:-chrome_61}"
+      BROWSER_STACK_USERNAME:
+      BROWSER_STACK_ACCESS_KEY:
+      COMPOSE_PROJECT_NAME: "browser${BROWSER:-chrome_61}"
 
   node-maze-runner:
     build:
@@ -25,8 +26,8 @@ services:
       args:
         - BUILDKITE_BUILD_NUMBER
     environment:
-      NODE_VERSION:
-      COMPOSE_PROJECT_NAME:
+      NODE_VERSION: "${NODE_VERSION:-10}"
+      COMPOSE_PROJECT_NAME: "node${NODE_VERSION:-10}"
     networks:
       node-maze-runner:
         aliases:
