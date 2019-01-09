@@ -29,6 +29,7 @@ services:
       NODE_VERSION: "${NODE_VERSION:-10}"
       COMPOSE_PROJECT_NAME: "node${NODE_VERSION:-10}"
       VERBOSE: 'true'
+    command: features/connect.feature
     networks:
       node-maze-runner:
         aliases:
