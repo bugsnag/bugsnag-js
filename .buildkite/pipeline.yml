@@ -53,41 +53,41 @@ steps:
 
   - wait
 
-  # - label: ':chrome: Browser tests'
-  #   plugins:
-  #     docker-compose#v2.5.1:
-  #       run: browser-maze-runner
-  #   env:
-  #     BROWSER: "chrome_61"
+  - label: ':chrome: Browser tests'
+    plugins:
+      docker-compose#v2.5.1:
+        run: browser-maze-runner
+    env:
+      BROWSER: "chrome_61"
 
-  # - label: ':node: Node 4'
-  #   plugins:
-  #     # Required for use-aliases support
-  #     bugsnag/docker-compose#v2.5.3:
-  #       run: node-maze-runner
-  #       use-aliases: true
-  #   env:
-  #     NODE_VERSION: "4"
-  #   command: '-e koa.feature -e koa-1x.feature -e webpack.feature'
+  - label: ':node: Node 4'
+    plugins:
+      # Required for use-aliases support
+      bugsnag/docker-compose#v2.5.3:
+        run: node-maze-runner
+        use-aliases: true
+    env:
+      NODE_VERSION: "4"
+    command: '-e koa.feature -e koa-1x.feature -e webpack.feature'
 
-  # - label: ':node: Node 6'
-  #   plugins:
-  #     # Required for use-aliases support
-  #     bugsnag/docker-compose#v2.5.3:
-  #       run: node-maze-runner
-  #       use-aliases: true
-  #   env:
-  #     NODE_VERSION: "6"
-  #   command: '-e koa.feature -e koa-1x.feature'
+  - label: ':node: Node 6'
+    plugins:
+      # Required for use-aliases support
+      bugsnag/docker-compose#v2.5.3:
+        run: node-maze-runner
+        use-aliases: true
+    env:
+      NODE_VERSION: "6"
+    command: '-e koa.feature -e koa-1x.feature'
 
-  # - label: ':node: Node 8'
-  #   plugins:
-  #     # Required for use-aliases support
-  #     bugsnag/docker-compose#v2.5.3:
-  #       run: node-maze-runner
-  #       use-aliases: true
-  #   env:
-  #     NODE_VERSION: "8"
+  - label: ':node: Node 8'
+    plugins:
+      # Required for use-aliases support
+      bugsnag/docker-compose#v2.5.3:
+        run: node-maze-runner
+        use-aliases: true
+    env:
+      NODE_VERSION: "8"
 
   - label: ':node: Node 10'
     plugins:
