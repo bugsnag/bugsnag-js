@@ -28,6 +28,7 @@ services:
     environment:
       NODE_VERSION: "${NODE_VERSION:-10}"
       COMPOSE_PROJECT_NAME: "node${NODE_VERSION:-10}"
+      DEBUG: 'true'
     networks:
       node-maze-runner:
         aliases:
