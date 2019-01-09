@@ -5,7 +5,6 @@ var bugsnagClient = bugsnag({
     notify: process.env.BUGSNAG_NOTIFY_ENDPOINT,
     sessions: process.env.BUGSNAG_SESSIONS_ENDPOINT
   },
-  proxy: 'http://corporate-proxy:3128'
+  proxy: 'http://corporate-proxy:3128/'
 })
-
 bugsnagClient.notify(new Error('hi via proxy'))
