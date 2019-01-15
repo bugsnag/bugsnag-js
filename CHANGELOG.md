@@ -2,6 +2,12 @@
 
 ## 5.x.x (TBD)
 
+### Added
+
+- Support serialising error objects (via. @bugsnag/safe-json-stringify@v4.0.0) (#356, #458)
+
+## 5.1.0 (2018-12-19)
+
 ### Fixed
 
 - Support @bugsnag/node being consumed in a Webpack bundle for Node (#450, #441)
