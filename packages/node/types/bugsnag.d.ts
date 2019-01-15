@@ -26,7 +26,7 @@ declare module "@bugsnag/core" {
     hostname?: string;
     onUncaughtException?: afterErrorCb;
     onUnhandledRejection?: afterErrorCb;
-    proxy?: string;
+    agent?: any;
     projectRoot?: string;
     sendCode?: boolean;
     autoBreadcrumbs?: void;

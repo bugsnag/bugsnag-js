@@ -1,12 +1,11 @@
 const payload = require('@bugsnag/core/lib/json-payload')
 const { isoDate } = require('@bugsnag/core/lib/es-utils')
-const request = require('request')
+const request = require('./request')
 
 module.exports = () => ({
   sendReport: (logger, config, report, cb = () => {}) => {
     try {
       request({
-        method: 'POST',
         url: config.endpoints.notify,
         headers: {
           'Content-Type': 'application/json',
@@ -15,8 +14,8 @@ module.exports = () => ({
           'Bugsnag-Sent-At': isoDate()
         },
         body: payload.report(report, config.filters),
-        proxy: config.proxy
-      }, (err, res, body) => {
+        agent: config.agent
+      }, (err, body) => {
         if (err) logger.error(err)
         cb(err)
       })
@@ -28,7 +27,6 @@ module.exports = () => ({
   sendSession: (logger, config, session, cb = () => {}) => {
     try {
       request({
-        method: 'POST',
         url: config.endpoints.sessions,
         headers: {
           'Content-Type': 'application/json',
@@ -37,7 +35,7 @@ module.exports = () => ({
           'Bugsnag-Sent-At': isoDate()
         },
         body: payload.session(session, config.filters),
-        proxy: config.proxy
+        agent: config.agent
       }, err => {
         if (err) logger.error(err)
         cb(err)
