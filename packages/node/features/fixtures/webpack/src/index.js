@@ -4,7 +4,7 @@ var bugsnagClient = bugsnag({
   endpoints: {
     notify: process.env.BUGSNAG_NOTIFY_ENDPOINT,
     sessions: process.env.BUGSNAG_SESSIONS_ENDPOINT
-  },
-  proxy: 'http://corporate-proxy:3128/'
+  }
 })
-bugsnagClient.notify(new Error('hi via proxy'))
+
+bugsnagClient.notify(new Error('hello from a webpack node bundle'))

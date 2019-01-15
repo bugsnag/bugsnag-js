@@ -1,0 +1,15 @@
+# CI test image for unit/lint/type tests
+FROM node:10-alpine
+
+RUN apk add --update bash
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm install
+
+COPY babel.config.js tslint.json lerna.json ./
+COPY packages ./packages
+COPY bin ./bin
+RUN npx lerna bootstrap
+RUN npm run build

@@ -1,0 +1,40 @@
+version: '3.6'
+services:
+  ci:
+    build:
+      context: .
+      dockerfile: Dockerfile.ci
+
+  browser-maze-runner:
+    build:
+      context: .
+      dockerfile: Dockerfile.browser
+      target: browser-maze-runner
+      args:
+        - BUILDKITE_BUILD_NUMBER
+    environment:
+      BROWSER: "${BROWSER:-chrome_61}"
+      BROWSER_STACK_USERNAME:
+      BROWSER_STACK_ACCESS_KEY:
+      COMPOSE_PROJECT_NAME: "browser${BROWSER:-chrome_61}"
+
+  node-maze-runner:
+    build:
+      context: .
+      dockerfile: Dockerfile.node
+      target: node-maze-runner
+      args:
+        - BUILDKITE_BUILD_NUMBER
+    environment:
+      NODE_VERSION: "${NODE_VERSION:-10}"
+      COMPOSE_PROJECT_NAME: "node${NODE_VERSION:-10}"
+    networks:
+      node-maze-runner:
+        aliases:
+          - maze-runner
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+networks:
+  node-maze-runner:
+    name: node-v${NODE_VERSION:-10}-maze-runner

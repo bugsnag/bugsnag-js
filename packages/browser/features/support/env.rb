@@ -8,10 +8,10 @@ require 'test/unit'
 include Test::Unit::Assertions
 
 require_relative '../lib/browserstack_driver'
-require_relative '../lib/fixture_package_jsons'
-
-puts 'installing dependencies'
-require_relative '../lib/install_dependencies'
+# require_relative '../lib/fixture_package_jsons'
+#
+# puts 'installing dependencies'
+# require_relative '../lib/install_dependencies'
 
 $errors = YAML::load open 'features/fixtures/browser_errors.yml'
 $port = "9020"
@@ -25,10 +25,8 @@ else
 end
 Process.detach(pid)
 
-unless ENV['TRAVIS']
-  puts 'starting browserstack local'
-  bs_local = bs_local_start
-end
+puts 'starting browserstack local'
+bs_local = bs_local_start
 
 puts 'starting webdriver'
 $driver = driver_start
@@ -38,29 +36,33 @@ Before do
   # Runs before every Scenario
 end
 
-$fixtures_built = Hash.new
-get_package_jsons_for_fixtures.each do |pkg|
-  fixture_dirname = File.basename(File.expand_path(File.join(pkg, '..', '..')))
-  iteration_dirname = File.basename(File.expand_path(File.join(pkg, '..')))
-  puts "adding '@#{fixture_dirname}' build hook for #{iteration_dirname}"
-  Before "@#{fixture_dirname}" do
-    unless $fixtures_built[pkg]
-      $fixtures_built[pkg] = true
-      Dir.chdir(File.dirname pkg) do
-        run_command('npm run build')
-      end
-    end
-  end
-end
+# $fixtures_built = Hash.new
+# get_package_jsons_for_fixtures.each do |pkg|
+#   fixture_dirname = File.basename(File.expand_path(File.join(pkg, '..', '..')))
+#   iteration_dirname = File.basename(File.expand_path(File.join(pkg, '..')))
+#   puts "adding '@#{fixture_dirname}' build hook for #{iteration_dirname}"
+#   Before "@#{fixture_dirname}" do
+#     unless $fixtures_built[pkg]
+#       $fixtures_built[pkg] = true
+#       Dir.chdir(File.dirname pkg) do
+#         run_command('npm run build')
+#       end
+#     end
+#   end
+# end
 
 # test helpers
 
+# def current_ip
+#   # Parses the output of `ifconfig` to retreive the host IP for docker to talk to
+#   # Breaks compatability with Windows
+#   ip_addr = `ifconfig | grep -Eo 'inet (addr:)?([0-9]*\\\.){3}[0-9]*' | grep -v '127.0.0.1'`
+#   ip_list = /((?:[0-9]*\.){3}[0-9]*)/.match(ip_addr)
+#   ip_list.captures.first
+# end
+
 def current_ip
-  # Parses the output of `ifconfig` to retreive the host IP for docker to talk to
-  # Breaks compatability with Windows
-  ip_addr = `ifconfig | grep -Eo 'inet (addr:)?([0-9]*\\\.){3}[0-9]*' | grep -v '127.0.0.1'`
-  ip_list = /((?:[0-9]*\.){3}[0-9]*)/.match(ip_addr)
-  ip_list.captures.first
+  'localhost'
 end
 
 def get_test_url path
@@ -81,9 +83,9 @@ end
 at_exit do
   # Runs when the test run is completed
   $driver.quit
-  unless ENV['TRAVIS']
-    bs_local.stop
-  end
+  # unless ENV['TRAVIS']
+  #   bs_local.stop
+  # end
   begin
     Process.kill('KILL', pid)
   rescue

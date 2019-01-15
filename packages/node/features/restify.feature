@@ -3,13 +3,12 @@ Feature: @bugsnag/plugin-restify
 Background:
   Given I set environment variable "BUGSNAG_API_KEY" to "9c2151b65d615a3a95ba408142c8698f"
   And I configure the bugsnag notify endpoint
-
-Scenario Outline: a synchronous thrown error in a route
-  And I set environment variable "NODE_VERSION" to "<node version>"
   And I have built the service "restify"
   And I start the service "restify"
-  And I wait for the app to respond on port "4314"
-  Then I open the URL "http://localhost:4314/sync"
+  And I wait for the host "restify" to respond on port "80"
+
+Scenario: a synchronous thrown error in a route
+  Then I open the URL "http://restify/sync"
   And I wait for 2 seconds
   Then I should receive a request
   And the request used the Node notifier
@@ -22,21 +21,11 @@ Scenario Outline: a synchronous thrown error in a route
   And the exception "message" equals "sync"
   And the exception "type" equals "nodejs"
   And the "file" of stack frame 0 equals "scenarios/app.js"
-  And the event "request.url" equals "http://localhost:4314/sync"
+  And the event "request.url" equals "http://restify/sync"
   And the event "request.httpMethod" equals "GET"
 
-  Examples:
-  | node version |
-  | 4            |
-  | 6            |
-  | 8            |
-
-Scenario Outline: an asynchronous thrown error in a route
-  And I set environment variable "NODE_VERSION" to "<node version>"
-  And I have built the service "restify"
-  And I start the service "restify"
-  And I wait for the app to respond on port "4314"
-  Then I open the URL "http://localhost:4314/async"
+Scenario: an asynchronous thrown error in a route
+  Then I open the URL "http://restify/async"
   And I wait for 2 seconds
   Then I should receive a request
   And the request used the Node notifier
@@ -50,18 +39,8 @@ Scenario Outline: an asynchronous thrown error in a route
   And the exception "type" equals "nodejs"
   And the "file" of stack frame 0 equals "scenarios/app.js"
 
-  Examples:
-  | node version |
-  | 4            |
-  | 6            |
-  | 8            |
-
-Scenario Outline: an error passed to next(err)
-  And I set environment variable "NODE_VERSION" to "<node version>"
-  And I have built the service "restify"
-  And I start the service "restify"
-  And I wait for the app to respond on port "4314"
-  Then I open the URL "http://localhost:4314/next"
+Scenario: an error passed to next(err)
+  Then I open the URL "http://restify/next"
   And I wait for 2 seconds
   Then I should receive a request
   And the request used the Node notifier
@@ -75,18 +54,8 @@ Scenario Outline: an error passed to next(err)
   And the exception "type" equals "nodejs"
   And the "file" of stack frame 0 equals "scenarios/app.js"
 
-  Examples:
-  | node version |
-  | 4            |
-  | 6            |
-  | 8            |
-
-Scenario Outline: throwing non-Error error
-  And I set environment variable "NODE_VERSION" to "<node version>"
-  And I have built the service "restify"
-  And I start the service "restify"
-  And I wait for the app to respond on port "4314"
-  Then I open the URL "http://localhost:4314/throw-non-error"
+Scenario: throwing non-Error error
+  Then I open the URL "http://restify/throw-non-error"
   And I wait for 2 seconds
   Then I should receive a request
   And the request used the Node notifier
@@ -100,33 +69,13 @@ Scenario Outline: throwing non-Error error
   And the exception "type" equals "nodejs"
   And the "file" of stack frame 0 equals "node_modules/@bugsnag/plugin-restify/dist/bugsnag-restify.js"
 
-  Examples:
-  | node version |
-  | 4            |
-  | 6            |
-  | 8            |
-
-Scenario Outline: an explicit 404
-  And I set environment variable "NODE_VERSION" to "<node version>"
-  And I have built the service "restify"
-  And I start the service "restify"
-  And I wait for the app to respond on port "4314"
-  Then I open the URL "http://localhost:4314/not-found"
+Scenario: an explicit 404
+  Then I open the URL "http://restify/not-found"
   And I wait for 2 seconds
   Then I should receive 0 requests
 
-  Examples:
-  | node version |
-  | 4            |
-  | 6            |
-  | 8            |
-
-Scenario Outline: an explicit internal server error
-  And I set environment variable "NODE_VERSION" to "<node version>"
-  And I have built the service "restify"
-  And I start the service "restify"
-  And I wait for the app to respond on port "4314"
-  Then I open the URL "http://localhost:4314/internal"
+Scenario: an explicit internal server error
+  Then I open the URL "http://restify/internal"
   And I wait for 2 seconds
   Then I should receive a request
   And the request used the Node notifier
@@ -139,9 +88,3 @@ Scenario Outline: an explicit internal server error
   And the exception "message" equals "oh noes!"
   And the exception "type" equals "nodejs"
   And the "file" of stack frame 0 equals "scenarios/app.js"
-
-  Examples:
-  | node version |
-  | 4            |
-  | 6            |
-  | 8            |
