@@ -1,10 +1,14 @@
 # Changelog
 
-## 5.x.x (TBD)
+## 6.x.x (TBD)
 
 ### Added
 
 - Support serialising error objects (via. @bugsnag/safe-json-stringify@v4.0.0) (#356, #458)
+
+### Removed
+
+- `request` is no longer used for sending error reports and sessions. This results in a much smaller dependency footprint. If you were using the `proxy` option or `http(s)_proxy` environment variables you will need to update your implementation to pass in a proxy agent. See the [proxy guide](https://docs.bugsnag.com/platforms/javascript/node-proxy/) on our docs for more information.
 
 ## 5.1.0 (2018-12-19)
 
