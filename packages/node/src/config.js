@@ -26,7 +26,7 @@ module.exports = {
   agent: {
     defaultValue: () => undefined,
     message: 'should be an HTTP(s) agent',
-    validate: value => value === undefined || isObject(value)
+    validate: value => value === undefined || isAgent(value)
   },
   onUncaughtException: {
     defaultValue: () => (err, report, logger) => {
@@ -58,4 +58,4 @@ const getContext = report =>
     ? ` at ${report.request.httpMethod} ${report.request.path || report.request.url}`
     : ``
 
-const isObject = value => typeof value === 'object' && value !== null
+const isAgent = value => (typeof value === 'object' && value !== null) || typeof value === 'boolean'
