@@ -18,6 +18,10 @@ const getEndpoints = () =>
  * Leaves breadcrumbs when network requests occur
  */
 exports.init = (_client, _win = window) => {
+  const explicitlyDisabled = _client.config.networkBreadcrumbsEnabled === false
+  const implicitlyDisabled = _client.config.autoBreadcrumbs === false && _client.config.networkBreadcrumbsEnabled !== true
+  if (explicitlyDisabled || implicitlyDisabled) return
+
   client = _client
   win = _win
   monkeyPatchXMLHttpRequest()
