@@ -79,4 +79,75 @@ describe('delivery:node', () => {
       })
     })
   })
+
+  it('handles errors gracefully (ECONNREFUSED)', done => {
+    const payload = { sample: 'payload' }
+    const config = {
+      apiKey: 'aaaaaaaa',
+      endpoints: { notify: `http://0.0.0.0:9999/notify/` },
+      filters: []
+    }
+    let didLog = false
+    const log = () => { didLog = true }
+    delivery().sendReport({
+      error: log
+    }, config, payload, (err) => {
+      expect(didLog).toBe(true)
+      expect(err).toBeTruthy()
+      expect(err.code).toBe('ECONNREFUSED')
+      done()
+    })
+  })
+
+  it('handles errors gracefully (socket hang up)', done => {
+    const server = http.createServer((req, res) => {
+      req.connection.destroy()
+    })
+
+    server.listen((err) => {
+      expect(err).toBeFalsy()
+      const payload = { sample: 'payload' }
+      const config = {
+        apiKey: 'aaaaaaaa',
+        endpoints: { notify: `http://0.0.0.0:${server.address().port}/notify/` },
+        filters: []
+      }
+      let didLog = false
+      const log = () => { didLog = true }
+      delivery().sendReport({
+        error: log
+      }, config, payload, (err) => {
+        expect(didLog).toBe(true)
+        expect(err).toBeTruthy()
+        expect(err.code).toBe('ECONNRESET')
+        done()
+      })
+    })
+  })
+
+  it('handles errors gracefully (HTTP 503)', done => {
+    const server = http.createServer((req, res) => {
+      res.statusCode = 503
+      res.end('NOT OK')
+    })
+
+    server.listen((err) => {
+      expect(err).toBeFalsy()
+      const payload = { sample: 'payload' }
+      const config = {
+        apiKey: 'aaaaaaaa',
+        endpoints: { notify: `http://0.0.0.0:${server.address().port}/notify/` },
+        filters: []
+      }
+      let didLog = false
+      const log = () => { didLog = true }
+      delivery().sendReport({
+        error: log
+      }, config, payload, (err) => {
+        expect(didLog).toBe(true)
+        expect(err).toBeTruthy()
+        done()
+      })
+    })
+  })
 })
