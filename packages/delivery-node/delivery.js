@@ -16,7 +16,7 @@ module.exports = () => ({
         body: payload.report(report, config.filters),
         agent: config.agent
       }, (err, body) => {
-        if (err) logger.error(err)
+        if (err) logger.error('Report failed to send…', err)
         cb(err)
       })
     } catch (e) {
@@ -37,7 +37,7 @@ module.exports = () => ({
         body: payload.session(session, config.filters),
         agent: config.agent
       }, err => {
-        if (err) logger.error(err)
+        if (err) logger.error('Session failed to send…', err)
         cb(err)
       })
     } catch (e) {
