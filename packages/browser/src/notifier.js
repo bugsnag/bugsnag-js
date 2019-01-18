@@ -82,23 +82,10 @@ module.exports = (opts) => {
     bugsnag.use(pluginUnhandledRejection)
   }
 
-  if (inferBreadcrumbSetting(bugsnag.config, 'navigationBreadcrumbsEnabled')) {
-    bugsnag.use(pluginNavigationBreadcrumbs)
-  }
-
-  if (inferBreadcrumbSetting(bugsnag.config, 'interactionBreadcrumbsEnabled')) {
-    bugsnag.use(pluginInteractionBreadcrumbs)
-  }
-
-  if (inferBreadcrumbSetting(bugsnag.config, 'networkBreadcrumbsEnabled')) {
-    bugsnag.use(pluginNetworkBreadcrumbs)
-  }
-
-  // because console breadcrumbs play havoc with line numbers,
-  // if not explicitly enabled, only setup on non-development evironments
-  if (inferBreadcrumbSetting(bugsnag.config, 'consoleBreadcrumbsEnabled', false)) {
-    bugsnag.use(pluginConsoleBreadcrumbs)
-  }
+  bugsnag.use(pluginNavigationBreadcrumbs)
+  bugsnag.use(pluginInteractionBreadcrumbs)
+  bugsnag.use(pluginNetworkBreadcrumbs)
+  bugsnag.use(pluginConsoleBreadcrumbs)
 
   bugsnag._logger.debug(`Loaded!`)
 
@@ -106,12 +93,6 @@ module.exports = (opts) => {
     ? bugsnag.startSession()
     : bugsnag
 }
-
-const inferBreadcrumbSetting = (config, val, defaultInDev = true) =>
-  typeof config[val] === 'boolean'
-    ? config[val]
-    : (config.autoBreadcrumbs &&
-        (defaultInDev || !/^dev(elopment)?$/.test(config.releaseStage)))
 
 // Stub this value because this is what the type interface looks like
 // (types/bugsnag.d.ts). This is only an issue in Angular's development

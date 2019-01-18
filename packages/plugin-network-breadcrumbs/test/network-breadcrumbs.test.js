@@ -7,7 +7,7 @@ const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
 // mock XMLHttpRequest
 function XMLHttpRequest () {
-  this._listeners = {}
+  this._listeners = { load: () => {}, error: () => {} }
   this.status = null
 }
 XMLHttpRequest.prototype.open = function (method, url) {
@@ -220,5 +220,35 @@ describe('plugin: network breadcrumbs', () => {
       }))
       done()
     })
+  })
+
+  it('should not be enabled when autoBreadcrumbs=false', () => {
+    const window = { XMLHttpRequest }
+
+    const client = new Client(VALID_NOTIFIER)
+    client.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa', autoBreadcrumbs: false })
+    client.configure()
+    client.use(plugin, window)
+
+    const request = new window.XMLHttpRequest()
+    request.open('GET', '/')
+    request.send(false, 200)
+
+    expect(client.breadcrumbs.length).toBe(0)
+  })
+
+  it('should be enabled when autoBreadcrumbs=false and networkBreadcrumbsEnabled=true', () => {
+    const window = { XMLHttpRequest }
+
+    const client = new Client(VALID_NOTIFIER)
+    client.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa', autoBreadcrumbs: false, networkBreadcrumbsEnabled: true })
+    client.configure()
+    client.use(plugin, window)
+
+    const request = new window.XMLHttpRequest()
+    request.open('GET', '/')
+    request.send(false, 200)
+
+    expect(client.breadcrumbs.length).toBe(1)
   })
 })
