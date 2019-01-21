@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/delivery-x-domain-request",
-  "version": "5.1.0",
+  "version": "5.2.0",
   "main": "delivery.js",
   "description": "@bugsnag/js delivery mechanism for IE 8, 9 and 10",
   "homepage": "https://www.bugsnag.com/",
@@ -20,7 +20,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "dependencies": {
-    "@bugsnag/core": "^5.1.0"
+    "@bugsnag/core": "^5.2.0"
   },
   "devDependencies": {
     "jasmine": "^3.1.0",
