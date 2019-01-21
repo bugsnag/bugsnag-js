@@ -1,5 +1,15 @@
 # Changelog
 
+## 5.2.0 (2019-01-21)
+
+### Added
+
+- Support serialising error objects (via. @bugsnag/safe-json-stringify@v4.0.0) (#356, #458)
+
+### Fixed
+
+- Fixed granular breadcrumb config logic (#461, #465, #466)
+
 ## 5.1.0 (2018-12-19)
 
 ### Fixed

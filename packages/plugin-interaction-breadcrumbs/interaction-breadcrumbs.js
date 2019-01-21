@@ -5,6 +5,10 @@ module.exports = {
   init: (client, win = window) => {
     if (!('addEventListener' in win)) return
 
+    const explicitlyDisabled = client.config.interactionBreadcrumbsEnabled === false
+    const implicitlyDisabled = client.config.autoBreadcrumbs === false && client.config.interactionBreadcrumbsEnabled !== true
+    if (explicitlyDisabled || implicitlyDisabled) return
+
     win.addEventListener('click', (event) => {
       let targetText, targetSelector
       try {
