@@ -43,4 +43,44 @@ describe('plugin: console breadcrumbs', () => {
     expect(c.breadcrumbs[0].metaData['[0]']).toBe('[Unknown value]')
     plugin.destroy()
   })
+
+  it('should not be enabled when autoBreadcrumbs=false', () => {
+    const c = new Client(VALID_NOTIFIER)
+    c.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa', autoBreadcrumbs: false })
+    c.configure()
+    c.use(plugin)
+    console.log(123)
+    expect(c.breadcrumbs.length).toBe(0)
+    plugin.destroy()
+  })
+
+  it('should be enabled when autoBreadcrumbs=false, consoleBreadcrumbsEnabled=true', () => {
+    const c = new Client(VALID_NOTIFIER)
+    c.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa', autoBreadcrumbs: false, consoleBreadcrumbsEnabled: true })
+    c.configure()
+    c.use(plugin)
+    console.log(123)
+    expect(c.breadcrumbs.length).toBe(1)
+    plugin.destroy()
+  })
+
+  it('should be not enabled by default when releaseStage=development', () => {
+    const c = new Client(VALID_NOTIFIER)
+    c.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa', releaseStage: 'development' })
+    c.configure()
+    c.use(plugin)
+    console.log(123)
+    expect(c.breadcrumbs.length).toBe(0)
+    plugin.destroy()
+  })
+
+  it('can be enabled when releaseStage=development', () => {
+    const c = new Client(VALID_NOTIFIER)
+    c.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa', releaseStage: 'development', consoleBreadcrumbsEnabled: true })
+    c.configure()
+    c.use(plugin)
+    console.log(123)
+    expect(c.breadcrumbs.length).toBe(1)
+    plugin.destroy()
+  })
 })
