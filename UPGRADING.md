@@ -1,6 +1,24 @@
 Upgrading
 =========
 
+## 5.x to 6.x
+
+__This change only affects users that are sending via a proxy in Node.__
+
+The only major change from 5 to 6 is the removal of [`request`](https://github.com/request/request) from the `@bugsnag/delivery-node`. This means that no changes are required for users of the browser package.
+
+Only if you were using the `proxy` option or an `http(s)_proxy` environment variable in Node do you need to make changes.
+
+From now on, you need to supply a proxy agent, which Bugsnag will use for all its HTTP(s) requests. For example:
+
+```diff
++ const HttpsProxyAgent = require('https-proxy-agent')
+  const bugsnagClient = bugsnag({
+-   proxy: 'http://corporate-proxy:3128/'
++   agent: new HttpsProxyAgent('http://corporate-proxy:3128/')
+  })
+```
+
 ## 4.x to 5.x
 
 `@bugsnag/js` v5 is the first "universal" JavaScript release.
