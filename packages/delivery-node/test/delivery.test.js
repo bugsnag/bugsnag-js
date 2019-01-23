@@ -3,7 +3,7 @@ const { describe, it, expect } = global
 const delivery = require('../')
 const http = require('http')
 
-const mockServer = () => {
+const mockServer = (successCode = 200) => {
   const requests = []
   return {
     requests,
@@ -17,6 +17,7 @@ const mockServer = () => {
           headers: req.headers,
           body
         })
+        res.statusCode = successCode
         res.end('OK')
       })
     })
@@ -53,7 +54,7 @@ describe('delivery:node', () => {
   })
 
   it('sends sessions successfully', done => {
-    const { requests, server } = mockServer()
+    const { requests, server } = mockServer(202)
     server.listen((err) => {
       expect(err).toBeUndefined()
 

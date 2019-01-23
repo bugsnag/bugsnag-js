@@ -24,7 +24,7 @@ module.exports = ({ url, headers, body, agent }, cb) => {
   req.on('response', res => {
     bufferResponse(res, (err, body) => {
       if (err) return onError(err)
-      if (res.statusCode !== 200) {
+      if (res.statusCode < 200 || res.statusCode >= 300) {
         return onError(new Error(`Bad statusCode from API: ${res.statusCode}\n${body}`))
       }
       cb(null, body)
