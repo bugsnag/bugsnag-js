@@ -42,7 +42,7 @@ describe('delivery:node', () => {
         expect(requests[0].url).toMatch('/notify/')
         expect(requests[0].headers['content-type']).toEqual('application/json')
         expect(requests[0].headers['bugsnag-api-key']).toEqual('aaaaaaaa')
-        expect(requests[0].headers['bugsnag-payload-version']).toEqual('4.0')
+        expect(requests[0].headers['bugsnag-payload-version']).toEqual('4')
         expect(requests[0].headers['bugsnag-sent-at']).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/)
         expect(requests[0].body).toBe(JSON.stringify(payload))
 
