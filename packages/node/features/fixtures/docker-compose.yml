@@ -11,7 +11,7 @@ services:
       - BUGSNAG_NOTIFY_ENDPOINT
       - BUGSNAG_SESSIONS_ENDPOINT
     networks:
-      node-maze-runner:
+      default:
         aliases:
           - handled
     restart: "no"
@@ -26,7 +26,7 @@ services:
       - BUGSNAG_NOTIFY_ENDPOINT
       - BUGSNAG_SESSIONS_ENDPOINT
     networks:
-      node-maze-runner:
+      default:
         aliases:
           - unhandled
     restart: "no"
@@ -41,7 +41,7 @@ services:
       - BUGSNAG_NOTIFY_ENDPOINT
       - BUGSNAG_SESSIONS_ENDPOINT
     networks:
-      node-maze-runner:
+      default:
         aliases:
           - surrounding_code
     restart: "no"
@@ -56,7 +56,7 @@ services:
       - BUGSNAG_NOTIFY_ENDPOINT
       - BUGSNAG_SESSIONS_ENDPOINT
     networks:
-      node-maze-runner:
+      default:
         aliases:
           - project_root
     restart: "no"
@@ -71,7 +71,7 @@ services:
       - BUGSNAG_NOTIFY_ENDPOINT
       - BUGSNAG_SESSIONS_ENDPOINT
     networks:
-      node-maze-runner:
+      default:
         aliases:
           - sessions
     restart: "no"
@@ -86,7 +86,7 @@ services:
       - BUGSNAG_NOTIFY_ENDPOINT
       - BUGSNAG_SESSIONS_ENDPOINT
     networks:
-      node-maze-runner:
+      default:
         aliases:
           - express
     restart: "no"
@@ -101,7 +101,7 @@ services:
       - BUGSNAG_NOTIFY_ENDPOINT
       - BUGSNAG_SESSIONS_ENDPOINT
     networks:
-      node-maze-runner:
+      default:
         aliases:
           - restify
     restart: "no"
@@ -116,7 +116,7 @@ services:
       - BUGSNAG_NOTIFY_ENDPOINT
       - BUGSNAG_SESSIONS_ENDPOINT
     networks:
-      node-maze-runner:
+      default:
         aliases:
           - koa
     restart: "no"
@@ -131,7 +131,7 @@ services:
       - BUGSNAG_NOTIFY_ENDPOINT
       - BUGSNAG_SESSIONS_ENDPOINT
     networks:
-      node-maze-runner:
+      default:
         aliases:
           - koa-1x
     restart: "no"
@@ -147,7 +147,7 @@ services:
       - BUGSNAG_SESSIONS_ENDPOINT
       - HTTP_PROXY
     networks:
-      node-maze-runner:
+      default:
         aliases:
           - proxy
     restart: "no"
@@ -164,7 +164,7 @@ services:
       args:
         - NODE_VERSION
     networks:
-      node-maze-runner:
+      default:
         aliases:
           - connect
     environment:
@@ -179,7 +179,7 @@ services:
       args:
         - NODE_VERSION
     networks:
-      node-maze-runner:
+      default:
         aliases:
           - webpack
     environment:
@@ -189,5 +189,5 @@ services:
     restart: "no"
 
 networks:
-  node-maze-runner:
+  default:
     name: node-v${NODE_VERSION:-10}-maze-runner

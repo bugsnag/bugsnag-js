@@ -1,19 +1,16 @@
 Feature: @bugsnag/plugin-koa
 
 Background:
-  Given I set environment variable "BUGSNAG_API_KEY" to "9c2151b65d615a3a95ba408142c8698f"
-  And I configure the bugsnag notify endpoint
-  And I have built the service "koa"
+  Given I store the api key in the environment variable "BUGSNAG_API_KEY"
+  And I store the endpoint in the environment variable "BUGSNAG_NOTIFY_ENDPOINT"
+  And I store the endpoint in the environment variable "BUGSNAG_SESSIONS_ENDPOINT"
   And I start the service "koa"
-  And I wait for the host "koa" to respond on port "80"
+  And I wait for the host "koa" to open port "80"
 
 Scenario: a synchronous thrown error in a route
   Then I open the URL "http://koa/err"
-  And I wait for 2 seconds
-  Then I should receive a request
-  And the request used the Node notifier
-  And the request used payload v4 headers
-  And the "bugsnag-api-key" header equals "9c2151b65d615a3a95ba408142c8698f"
+  And I wait to receive a request
+  Then the request is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is true
   And the event "severity" equals "error"
   And the event "severityReason.type" equals "unhandledErrorMiddleware"
@@ -26,11 +23,8 @@ Scenario: a synchronous thrown error in a route
 
 Scenario: an asynchronous thrown error in a route
   Then I open the URL "http://koa/async-err"
-  And I wait for 2 seconds
-  Then I should receive a request
-  And the request used the Node notifier
-  And the request used payload v4 headers
-  And the "bugsnag-api-key" header equals "9c2151b65d615a3a95ba408142c8698f"
+  And I wait to receive a request
+  Then the request is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is true
   And the event "severity" equals "error"
   And the event "severityReason.type" equals "unhandledErrorMiddleware"
@@ -41,11 +35,8 @@ Scenario: an asynchronous thrown error in a route
 
 Scenario: An error created with with ctx.throw()
   Then I open the URL "http://koa/ctx-throw"
-  And I wait for 2 seconds
-  Then I should receive a request
-  And the request used the Node notifier
-  And the request used payload v4 headers
-  And the "bugsnag-api-key" header equals "9c2151b65d615a3a95ba408142c8698f"
+  And I wait to receive a request
+  Then the request is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is true
   And the event "severity" equals "error"
   And the event "severityReason.type" equals "unhandledErrorMiddleware"
@@ -57,11 +48,8 @@ Scenario: An error created with with ctx.throw()
 
 Scenario: an error thrown before the requestHandler middleware
   Then I open the URL "http://koa/error-before-handler"
-  And I wait for 2 seconds
-  Then I should receive a request
-  And the request used the Node notifier
-  And the request used payload v4 headers
-  And the "bugsnag-api-key" header equals "9c2151b65d615a3a95ba408142c8698f"
+  And I wait to receive a request
+  Then the request is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is true
   And the event "severity" equals "error"
   And the event "severityReason.type" equals "unhandledErrorMiddleware"
@@ -72,11 +60,8 @@ Scenario: an error thrown before the requestHandler middleware
 
 Scenario: throwing non-Error error
   Then I open the URL "http://koa/throw-non-error"
-  And I wait for 2 seconds
-  Then I should receive a request
-  And the request used the Node notifier
-  And the request used payload v4 headers
-  And the "bugsnag-api-key" header equals "9c2151b65d615a3a95ba408142c8698f"
+  And I wait to receive a request
+  Then the request is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is true
   And the event "severity" equals "error"
   And the event "severityReason.type" equals "unhandledErrorMiddleware"

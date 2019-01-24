@@ -38,7 +38,7 @@ RUN find . -path */package.json -type f -mindepth 2 -maxdepth 3 | \
   xargs -I % bash -c 'cd `dirname %` && npm install --no-package-lock && npm run build'
 
 # The maze-runner browser tests
-FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner:browser-cli as browser-maze-runner
+FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner:v2-cli as browser-maze-runner
 RUN apk add --no-cache ruby-dev build-base libffi-dev curl-dev
 ENV GLIBC_VERSION 2.23-r3
 

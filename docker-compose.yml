@@ -26,15 +26,17 @@ services:
       args:
         - BUILDKITE_BUILD_NUMBER
     environment:
+      VERBOSE:
+      DEBUG:
       NODE_VERSION: "${NODE_VERSION:-10}"
       COMPOSE_PROJECT_NAME: "node${NODE_VERSION:-10}"
     networks:
-      node-maze-runner:
+      default:
         aliases:
           - maze-runner
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 
 networks:
-  node-maze-runner:
+  default:
     name: node-v${NODE_VERSION:-10}-maze-runner

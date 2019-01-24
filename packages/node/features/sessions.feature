@@ -1,69 +1,58 @@
 Feature: Server side session tracking
 
 Background:
-  Given I set environment variable "BUGSNAG_API_KEY" to "9c2151b65d615a3a95ba408142c8698f"
-  And I configure the bugsnag notify endpoint
-  And I configure the bugsnag sessions endpoint
-  And I have built the service "sessions"
+  Given I store the api key in the environment variable "BUGSNAG_API_KEY"
+  And I store the endpoint in the environment variable "BUGSNAG_NOTIFY_ENDPOINT"
+  And I store the endpoint in the environment variable "BUGSNAG_SESSIONS_ENDPOINT"
 
 Scenario: calling startSession() manually
   And I run the service "sessions" with the command "node scenarios/start-session"
-  And I wait for 2 seconds
-  Then I should receive a request
-  And the request used the Node notifier
-  And the "bugsnag-api-key" header equals "9c2151b65d615a3a95ba408142c8698f"
-  And the request is a valid for the session tracking API
+  And I wait to receive a request
+  Then the request is valid for the session reporting API version "1" for the "Bugsnag Node" notifier
   And the payload has a valid sessions array
   And the sessionCount "sessionsStarted" equals 1
 
 Scenario: calling startSession() when autoCaptureSessions=false
   And I run the service "sessions" with the command "node scenarios/start-session-auto-off"
-  And I wait for 2 seconds
-  Then I should receive a request
-  And the request used the Node notifier
-  And the "bugsnag-api-key" header equals "9c2151b65d615a3a95ba408142c8698f"
-  And the request is a valid for the session tracking API
+  And I wait to receive a request
+  Then the request is valid for the session reporting API version "1" for the "Bugsnag Node" notifier
   And the payload has a valid sessions array
   And the sessionCount "sessionsStarted" equals 1
 
 Scenario: calling startSession() manually 100x
   And I run the service "sessions" with the command "node scenarios/start-session-100"
-  And I wait for 2 seconds
-  Then I should receive a request
-  And the request used the Node notifier
-  And the "bugsnag-api-key" header equals "9c2151b65d615a3a95ba408142c8698f"
-  And the request is a valid for the session tracking API
+  And I wait to receive a request
+  Then the request is valid for the session reporting API version "1" for the "Bugsnag Node" notifier
   And the payload has a valid sessions array
   And the sessionCount "sessionsStarted" equals 100
 
 Scenario: calling startSession() repeatedly across summary interval boundaries
   And I run the service "sessions" with the command "node scenarios/start-session-async"
-  And I wait for 3 seconds
-  Then I should receive 2 requests
-  And the request used the Node notifier
+  And I wait to receive 2 requests
 
   # first batch
-  And the "bugsnag-api-key" header equals "9c2151b65d615a3a95ba408142c8698f" for request 0
-  And request 0 is a valid for the session tracking API
-  And the payload has a valid sessions array for request 0
-  And the sessionCount "sessionsStarted" equals 50 for request 0
+  And the request is valid for the session reporting API version "1" for the "Bugsnag Node" notifier
+  And the payload has a valid sessions array
+  And the sessionCount "sessionsStarted" equals 50
+  And I discard the oldest request
 
   # second batch
-  And request 1 is a valid for the session tracking API
-  And the "bugsnag-api-key" header equals "9c2151b65d615a3a95ba408142c8698f" for request 1
-  And the payload has a valid sessions array for request 1
-  And the sessionCount "sessionsStarted" equals 50 for request 1
+  And the request is valid for the session reporting API version "1" for the "Bugsnag Node" notifier
+  And the payload has a valid sessions array
+  And the sessionCount "sessionsStarted" equals 50
 
 Scenario: calling notify() on a sessionClient
   And I run the service "sessions" with the command "node scenarios/start-session-notify"
-  And I wait for 3 seconds
-  Then I should receive 2 requests
-  And the request used the Node notifier
-  And the "bugsnag-api-key" header equals "9c2151b65d615a3a95ba408142c8698f"
-  And the request is a valid for the session tracking API
+  And I wait to receive 2 requests
+
+  # First request is a sessions request
+  Then the request is valid for the session reporting API version "1" for the "Bugsnag Node" notifier
   And the payload has a valid sessions array
   And the sessionCount "sessionsStarted" equals 1
+  And I discard the oldest request
+
   # the second request should be an error report
-  And the payload field "events.0.session" is not null for request 1
-  And the payload field "events.0.session.events.handled" equals 1 for request 1
-  And the payload field "events.0.session.events.unhandled" equals 0 for request 1
+  Then the request is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
+  And the payload field "events.0.session" is not null
+  And the payload field "events.0.session.events.handled" equals 1
+  And the payload field "events.0.session.events.unhandled" equals 0

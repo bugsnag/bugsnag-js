@@ -1,17 +1,14 @@
 Feature: Reporting handled errors
 
 Background:
-  Given I set environment variable "BUGSNAG_API_KEY" to "9c2151b65d615a3a95ba408142c8698f"
-  And I configure the bugsnag notify endpoint
-  And I have built the service "handled"
+  Given I store the api key in the environment variable "BUGSNAG_API_KEY"
+  And I store the endpoint in the environment variable "BUGSNAG_NOTIFY_ENDPOINT"
+  And I store the endpoint in the environment variable "BUGSNAG_SESSIONS_ENDPOINT"
 
 Scenario: calling notify() with an error
   And I run the service "handled" with the command "node scenarios/notify"
-  And I wait for 1 second
-  Then I should receive a request
-  And the request used the Node notifier
-  And the request used payload v4 headers
-  And the "bugsnag-api-key" header equals "9c2151b65d615a3a95ba408142c8698f"
+  And I wait to receive a request
+  Then the request is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is false
   And the event "severity" equals "warning"
   And the event "severityReason.type" equals "handledException"
@@ -22,11 +19,8 @@ Scenario: calling notify() with an error
 
 Scenario: calling notify() with am error from try/catch
   And I run the service "handled" with the command "node scenarios/notify-try-catch"
-  And I wait for 1 second
-  Then I should receive a request
-  And the request used the Node notifier
-  And the request used payload v4 headers
-  And the "bugsnag-api-key" header equals "9c2151b65d615a3a95ba408142c8698f"
+  And I wait to receive a request
+  Then the request is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is false
   And the event "severity" equals "warning"
   And the event "severityReason.type" equals "handledException"
@@ -37,11 +31,8 @@ Scenario: calling notify() with am error from try/catch
 
 Scenario: calling notify with an error from Promise.catch()
   And I run the service "handled" with the command "node scenarios/notify-promise-catch"
-  And I wait for 1 second
-  Then I should receive a request
-  And the request used the Node notifier
-  And the request used payload v4 headers
-  And the "bugsnag-api-key" header equals "9c2151b65d615a3a95ba408142c8698f"
+  And I wait to receive a request
+  Then the request is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is false
   And the event "severity" equals "warning"
   And the event "severityReason.type" equals "handledException"
@@ -53,11 +44,8 @@ Scenario: calling notify with an error from Promise.catch()
 
 Scenario: using intercept to notify an async error
   And I run the service "handled" with the command "node scenarios/intercept-callback"
-  And I wait for 1 second
-  Then I should receive a request
-  And the request used the Node notifier
-  And the request used payload v4 headers
-  And the "bugsnag-api-key" header equals "9c2151b65d615a3a95ba408142c8698f"
+  And I wait to receive a request
+  Then the request is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is false
   And the event "severity" equals "warning"
   And the event "severityReason.type" equals "callbackErrorIntercept"
@@ -69,11 +57,8 @@ Scenario: using intercept to notify an async error
 
 Scenario: using intercept to notify a promise rejection
   And I run the service "handled" with the command "node scenarios/intercept-rejection"
-  And I wait for 1 second
-  Then I should receive a request
-  And the request used the Node notifier
-  And the request used payload v4 headers
-  And the "bugsnag-api-key" header equals "9c2151b65d615a3a95ba408142c8698f"
+  And I wait to receive a request
+  Then the request is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is false
   And the event "severity" equals "warning"
   And the event "severityReason.type" equals "callbackErrorIntercept"

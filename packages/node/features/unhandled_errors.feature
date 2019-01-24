@@ -1,17 +1,14 @@
 Feature: Reporting unhandled errors
 
 Background:
-  Given I set environment variable "BUGSNAG_API_KEY" to "9c2151b65d615a3a95ba408142c8698f"
-  And I configure the bugsnag notify endpoint
-  And I have built the service "unhandled"
+  Given I store the api key in the environment variable "BUGSNAG_API_KEY"
+  And I store the endpoint in the environment variable "BUGSNAG_NOTIFY_ENDPOINT"
+  And I store the endpoint in the environment variable "BUGSNAG_SESSIONS_ENDPOINT"
 
 Scenario: reporting thrown exception which is not caught
   And I run the service "unhandled" with the command "node scenarios/thrown-error-not-caught"
-  And I wait for 1 second
-  Then I should receive a request
-  And the request used the Node notifier
-  And the request used payload v4 headers
-  And the "bugsnag-api-key" header equals "9c2151b65d615a3a95ba408142c8698f"
+  And I wait to receive a request
+  Then the request is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is true
   And the event "severity" equals "error"
   And the event "severityReason.type" equals "unhandledException"
@@ -24,15 +21,12 @@ Scenario: reporting thrown exception which is not caught
 Scenario: not reporting uncaughtExceptions when autoNotify is off
   And I run the service "unhandled" with the command "node scenarios/thrown-error-not-caught-auto-notify-off"
   And I wait for 1 second
-  Then I should receive 0 requests
+  Then I should receive no requests
 
 Scenario: reporting unhandled promise rejections
   And I run the service "unhandled" with the command "node scenarios/unhandled-promise-rejection"
-  And I wait for 1 second
-  Then I should receive a request
-  And the request used the Node notifier
-  And the request used payload v4 headers
-  And the "bugsnag-api-key" header equals "9c2151b65d615a3a95ba408142c8698f"
+  And I wait to receive a request
+  Then the request is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is true
   And the event "severity" equals "error"
   And the event "severityReason.type" equals "unhandledPromiseRejection"
@@ -44,11 +38,8 @@ Scenario: reporting unhandled promise rejections
 
 Scenario: reporting unhandled promise rejections
   And I run the service "unhandled" with the command "node scenarios/unhandled-promise-rejection"
-  And I wait for 1 second
-  Then I should receive a request
-  And the request used the Node notifier
-  And the request used payload v4 headers
-  And the "bugsnag-api-key" header equals "9c2151b65d615a3a95ba408142c8698f"
+  And I wait to receive a request
+  Then the request is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is true
   And the event "severity" equals "error"
   And the event "severityReason.type" equals "unhandledPromiseRejection"
@@ -61,15 +52,12 @@ Scenario: reporting unhandled promise rejections
 Scenario: not reporting unhandledRejections when autoNotify is off
   And I run the service "unhandled" with the command "node scenarios/unhandled-promise-rejection-auto-notify-off"
   And I wait for 1 second
-  Then I should receive 0 requests
+  Then I should receive no requests
 
 Scenario: using contextualize to add context to an error
   And I run the service "unhandled" with the command "node scenarios/contextualize"
-  And I wait for 1 second
-  Then I should receive a request
-  And the request used the Node notifier
-  And the request used payload v4 headers
-  And the "bugsnag-api-key" header equals "9c2151b65d615a3a95ba408142c8698f"
+  And I wait to receive a request
+  Then the request is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is true
   And the event "severity" equals "error"
   And the event "severityReason.type" equals "unhandledException"

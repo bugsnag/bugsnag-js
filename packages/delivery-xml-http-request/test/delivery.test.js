@@ -88,7 +88,7 @@ describe('delivery:XMLHttpRequest', () => {
       expect(requests[0].url).toMatch('/echo/')
       expect(requests[0].headers['Content-Type']).toEqual('application/json')
       expect(requests[0].headers['Bugsnag-Api-Key']).toEqual('aaaaaaaa')
-      expect(requests[0].headers['Bugsnag-Payload-Version']).toEqual('1.0')
+      expect(requests[0].headers['Bugsnag-Payload-Version']).toEqual('1')
       expect(requests[0].headers['Bugsnag-Sent-At']).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/)
       expect(requests[0].data).toBe(JSON.stringify(payload))
       done()
