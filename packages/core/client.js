@@ -4,7 +4,7 @@ const BugsnagBreadcrumb = require('./breadcrumb')
 const BugsnagSession = require('./session')
 const { map, includes, isArray } = require('./lib/es-utils')
 const inferReleaseStage = require('./lib/infer-release-stage')
-const isError = require('iserror')
+const isError = require('./lib/iserror')
 const some = require('./lib/async-some')
 const runBeforeSend = require('./lib/run-before-send')
 

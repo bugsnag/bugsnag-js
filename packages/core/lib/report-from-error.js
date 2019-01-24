@@ -1,5 +1,5 @@
 const Report = require('../report')
-const iserror = require('iserror')
+const iserror = require('./iserror')
 
 module.exports = (maybeError, handledState) => {
   const actualError = iserror(maybeError)

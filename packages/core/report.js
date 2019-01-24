@@ -1,4 +1,4 @@
-const ErrorStackParser = require('error-stack-parser')
+const ErrorStackParser = require('./lib/error-stack-parser')
 const StackGenerator = require('stack-generator')
 const hasStack = require('./lib/has-stack')
 const { reduce, filter } = require('./lib/es-utils')
