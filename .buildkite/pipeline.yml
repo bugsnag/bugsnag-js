@@ -1,14 +1,14 @@
 steps:
   - label: ':docker: Build CI image'
     plugins:
-      - docker-compose#v2.5.1:
+      - docker-compose#v2.6.0:
           build:
             - ci
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
           cache-from:
             - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
             - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-latest
-      - docker-compose#v2.5.1:
+      - docker-compose#v2.6.0:
           push:
             - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
             - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-latest
@@ -17,25 +17,25 @@ steps:
 
   - label: 'Lint'
     plugins:
-      docker-compose#v2.5.1:
+      docker-compose#v2.6.0:
         run: ci
     command: 'npm run test:lint'
 
   - label: 'Unit tests'
     plugins:
-      docker-compose#v2.5.1:
+      docker-compose#v2.6.0:
         run: ci
     command: 'npm run test:unit'
 
   - label: 'Type checks/tests'
     plugins:
-      docker-compose#v2.5.1:
+      docker-compose#v2.6.0:
         run: ci
     command: 'npm run test:types'
 
   - label:  ':docker: Build browser maze runner image'
     plugins:
-      - docker-compose#v2.5.1:
+      - docker-compose#v2.6.0:
           build:
             - browser-maze-runner
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
@@ -44,7 +44,7 @@ steps:
 
   - label:  ':docker: Build node maze runner image'
     plugins:
-      - docker-compose#v2.5.1:
+      - docker-compose#v2.6.0:
           build:
             - node-maze-runner
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
@@ -55,15 +55,14 @@ steps:
 
   - label: ':chrome: Browser tests'
     plugins:
-      docker-compose#v2.5.1:
+      docker-compose#v2.6.0:
         run: browser-maze-runner
     env:
       BROWSER: "chrome_61"
 
   - label: ':node: Node 4'
     plugins:
-      # Required for use-aliases support
-      bugsnag/docker-compose#v2.5.3:
+      docker-compose#v2.6.0:
         run: node-maze-runner
         use-aliases: true
     env:
@@ -72,8 +71,7 @@ steps:
 
   - label: ':node: Node 6'
     plugins:
-      # Required for use-aliases support
-      bugsnag/docker-compose#v2.5.3:
+      docker-compose#v2.6.0:
         run: node-maze-runner
         use-aliases: true
     env:
@@ -82,8 +80,7 @@ steps:
 
   - label: ':node: Node 8'
     plugins:
-      # Required for use-aliases support
-      bugsnag/docker-compose#v2.5.3:
+      docker-compose#v2.6.0:
         run: node-maze-runner
         use-aliases: true
     env:
@@ -91,8 +88,7 @@ steps:
 
   - label: ':node: Node 10'
     plugins:
-      # Required for use-aliases support
-      bugsnag/docker-compose#v2.5.3:
+      docker-compose#v2.6.0:
         run: node-maze-runner
         use-aliases: true
     env:
