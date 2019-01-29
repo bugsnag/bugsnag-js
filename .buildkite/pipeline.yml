@@ -60,26 +60,26 @@ steps:
     env:
       BROWSER: "chrome_61"
 
-  - label: ':chrome: Browser tests'
-    plugins:
-      docker-compose#v2.6.0:
-        run: browser-maze-runner
-    env:
-      BROWSER: "chrome_43"
+  # - label: ':chrome: Browser tests'
+  #   plugins:
+  #     docker-compose#v2.6.0:
+  #       run: browser-maze-runner
+  #   env:
+  #     BROWSER: "chrome_43"
 
-  - label: ':edge: Browser tests'
-    plugins:
-      docker-compose#v2.6.0:
-        run: browser-maze-runner
-    env:
-      BROWSER: "edge_14"
+  # - label: ':edge: Browser tests'
+  #   plugins:
+  #     docker-compose#v2.6.0:
+  #       run: browser-maze-runner
+  #   env:
+  #     BROWSER: "edge_14"
 
-  - label: ':edge: Browser tests'
-    plugins:
-      docker-compose#v2.6.0:
-        run: browser-maze-runner
-    env:
-      BROWSER: "edge_15"
+  # - label: ':edge: Browser tests'
+  #   plugins:
+  #     docker-compose#v2.6.0:
+  #       run: browser-maze-runner
+  #   env:
+  #     BROWSER: "edge_15"
 
   - label: ':node: Node 4'
     plugins:
