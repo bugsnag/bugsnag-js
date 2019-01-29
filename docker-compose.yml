@@ -18,7 +18,6 @@ services:
       BROWSER: "${BROWSER:-chrome_61}"
       BROWSER_STACK_USERNAME:
       BROWSER_STACK_ACCESS_KEY:
-      COMPOSE_PROJECT_NAME: "browser${BROWSER:-chrome_61}"
     networks:
       default:
         aliases:
@@ -36,6 +35,7 @@ services:
       DEBUG:
       NODE_VERSION: "${NODE_VERSION:-10}"
       COMPOSE_PROJECT_NAME: "node${NODE_VERSION:-10}"
+      NETWORK_NAME: "${BUILDKITE_JOB_ID:-js-maze-runner}"
     networks:
       default:
         aliases:
@@ -45,4 +45,4 @@ services:
 
 networks:
   default:
-    name: node-v${NODE_VERSION:-10}-maze-runner
+    name: ${BUILDKITE_JOB_ID:-js-maze-runner}

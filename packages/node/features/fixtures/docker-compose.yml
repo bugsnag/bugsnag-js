@@ -190,4 +190,4 @@ services:
 
 networks:
   default:
-    name: node-v${NODE_VERSION:-10}-maze-runner
+    name: ${NETWORK_NAME:-js-maze-runner}
