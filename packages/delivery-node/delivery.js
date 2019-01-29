@@ -4,6 +4,11 @@ const request = require('./request')
 
 module.exports = () => ({
   sendReport: (logger, config, report, cb = () => {}) => {
+    const _cb = err => {
+      if (err) logger.error(`Report failed to send…\n${(err && err.stack) ? err.stack : err}`, err)
+      cb(err)
+    }
+
     try {
       request({
         url: config.endpoints.notify,
@@ -15,16 +20,17 @@ module.exports = () => ({
         },
         body: payload.report(report, config.filters),
         agent: config.agent
-      }, (err, body) => {
-        if (err) logger.error('Report failed to send…', err)
-        cb(err)
-      })
+      }, (err, body) => _cb(err))
     } catch (e) {
-      logger.error(e)
-      cb(e)
+      _cb(e)
     }
   },
   sendSession: (logger, config, session, cb = () => {}) => {
+    const _cb = err => {
+      if (err) logger.error(`Session failed to send…\n${(err && err.stack) ? err.stack : err}`, err)
+      cb(err)
+    }
+
     try {
       request({
         url: config.endpoints.sessions,
@@ -36,13 +42,9 @@ module.exports = () => ({
         },
         body: payload.session(session, config.filters),
         agent: config.agent
-      }, err => {
-        if (err) logger.error('Session failed to send…', err)
-        cb(err)
-      })
+      }, err => _cb(err))
     } catch (e) {
-      logger.error(e)
-      cb(e)
+      _cb(e)
     }
   }
 })
