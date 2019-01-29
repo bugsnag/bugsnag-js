@@ -13,10 +13,16 @@ services:
       args:
         - BUILDKITE_BUILD_NUMBER
     environment:
+      VERBOSE:
+      DEBUG:
       BROWSER: "${BROWSER:-chrome_61}"
       BROWSER_STACK_USERNAME:
       BROWSER_STACK_ACCESS_KEY:
       COMPOSE_PROJECT_NAME: "browser${BROWSER:-chrome_61}"
+    networks:
+      default:
+        aliases:
+          - maze-runner
 
   node-maze-runner:
     build:

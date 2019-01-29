@@ -4,13 +4,12 @@
     <script src="dist/c.js"></script>
   </head>
   <body>
-    <pre id="bugsnag-test-should-run">YES</pre>
+    <pre id="bugsnag-test-should-run">PENDING</pre>
     <script>
       var el = document.getElementById('bugsnag-test-should-run')
       el.textContent = el.innerText = typeof Promise !== 'undefined'
         ? 'YES'
         : 'NO'
     </script>
-    <pre id="bugsnag-test-state">PENDING</pre>
   </body>
 </html>

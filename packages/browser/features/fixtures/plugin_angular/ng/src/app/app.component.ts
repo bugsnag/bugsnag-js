@@ -13,6 +13,6 @@ export class AppComponent {
   ngOnInit() {
     setTimeout(() => {
       this.yes = true
-    }, 1000)
+    }, 1)
   }
 }

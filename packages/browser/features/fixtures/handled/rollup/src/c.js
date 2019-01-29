@@ -6,14 +6,7 @@ var bugsnagClient = bugsnag(config)
 go()
   .then(function () {})
   .catch(function (e) {
-    bugsnagClient.notify(e, {
-      beforeSend: function () {
-        setTimeout(function () {
-          var el = document.getElementById('bugsnag-test-state')
-          el.textContent = el.innerText = 'DONE'
-        }, 5000)
-      }
-    })
+    bugsnagClient.notify(e)
   })
 
 function go() {

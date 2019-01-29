@@ -10,10 +10,6 @@ bugsnagClient.use(bugsnagReact, React)
 var ErrorBoundary = bugsnagClient.getPlugin('react')
 
 function beforeSend () {
-  setTimeout(function () {
-    var el = document.getElementById('bugsnag-test-state')
-    el.textContent = el.innerText = 'DONE'
-  }, 5000)
 }
 
 function ErrorView () {

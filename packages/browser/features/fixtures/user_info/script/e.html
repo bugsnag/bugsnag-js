@@ -3,24 +3,17 @@
   <head>
     <script src="/node_modules/@bugsnag/browser/dist/bugsnag.min.js"></script>
     <script type="text/javascript">
-      var ENDPOINT = decodeURIComponent(window.location.search.match(/ENDPOINT=(.+)/)[1])
+      var ENDPOINT = decodeURIComponent(window.location.search.match(/ENDPOINT=([^&]+)/)[1])
+      var API_KEY = decodeURIComponent(window.location.search.match(/API_KEY=([^&]+)/)[1])
       var bugsnagClient = bugsnag({
-        apiKey: 'ABC',
+        apiKey: API_KEY,
         endpoint: ENDPOINT
       })
     </script>
   </head>
   <body>
-    <pre id="bugsnag-test-should-run">YES</pre>
-    <pre id="bugsnag-test-state">PENDING</pre>
     <script>
       bugsnagClient.notify(new Error('user info does work'))
-    </script>
-    <script>
-      setTimeout(function () {
-        var el = document.getElementById('bugsnag-test-state')
-        el.textContent = el.innerText = 'DONE'
-      }, 5000)
     </script>
   </body>
 </html>
