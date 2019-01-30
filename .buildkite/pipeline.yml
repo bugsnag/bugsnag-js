@@ -71,6 +71,42 @@ steps:
     concurrency: 1
     concurrency_group: 'browserstack'
 
+  - label: ':ie: v8 Browser tests'
+    plugins:
+      docker-compose#v2.6.0:
+        run: browser-maze-runner
+    env:
+      BROWSER: "ie_8"
+    concurrency: 1
+    concurrency_group: 'browserstack'
+
+  - label: ':ie: v9 Browser tests'
+    plugins:
+      docker-compose#v2.6.0:
+        run: browser-maze-runner
+    env:
+      BROWSER: "ie_9"
+    concurrency: 1
+    concurrency_group: 'browserstack'
+
+  - label: ':ie: v10 Browser tests'
+    plugins:
+      docker-compose#v2.6.0:
+        run: browser-maze-runner
+    env:
+      BROWSER: "ie_10"
+    concurrency: 1
+    concurrency_group: 'browserstack'
+
+  - label: ':ie: v11 Browser tests'
+    plugins:
+      docker-compose#v2.6.0:
+        run: browser-maze-runner
+    env:
+      BROWSER: "ie_11"
+    concurrency: 1
+    concurrency_group: 'browserstack'
+
   - label: ':edge: v14 Browser tests'
     plugins:
       docker-compose#v2.6.0:
@@ -86,6 +122,69 @@ steps:
         run: browser-maze-runner
     env:
       BROWSER: "edge_15"
+    concurrency: 1
+    concurrency_group: 'browserstack'
+
+  - label: ':safari: v6 Browser tests'
+    plugins:
+      docker-compose#v2.6.0:
+        run: browser-maze-runner
+    env:
+      BROWSER: "safari_6"
+    concurrency: 1
+    concurrency_group: 'browserstack'
+
+  - label: ':safari: v10 Browser tests'
+    plugins:
+      docker-compose#v2.6.0:
+        run: browser-maze-runner
+    env:
+      BROWSER: "safari_10"
+    concurrency: 1
+    concurrency_group: 'browserstack'
+
+  - label: ':desktop_computer: Opera v12 Browser tests'
+    plugins:
+      docker-compose#v2.6.0:
+        run: browser-maze-runner
+    env:
+      BROWSER: "opera_12"
+    concurrency: 1
+    concurrency_group: 'browserstack'
+
+  - label: ':iphone: v7 Browser tests'
+    plugins:
+      docker-compose#v2.6.0:
+        run: browser-maze-runner
+    env:
+      BROWSER: "iphone_7"
+    concurrency: 1
+    concurrency_group: 'browserstack'
+
+  - label: ':android: Samsung Galaxy S8 Browser tests'
+    plugins:
+      docker-compose#v2.6.0:
+        run: browser-maze-runner
+    env:
+      BROWSER: "android_s8"
+    concurrency: 1
+    concurrency_group: 'browserstack'
+
+  - label: ':firefox: v30 Browser tests'
+    plugins:
+      docker-compose#v2.6.0:
+        run: browser-maze-runner
+    env:
+      BROWSER: "firefox_30"
+    concurrency: 1
+    concurrency_group: 'browserstack'
+
+  - label: ':firefox: v56 Browser tests'
+    plugins:
+      docker-compose#v2.6.0:
+        run: browser-maze-runner
+    env:
+      BROWSER: "firefox_56"
     concurrency: 1
     concurrency_group: 'browserstack'
 
