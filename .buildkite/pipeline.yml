@@ -59,6 +59,8 @@ steps:
         run: browser-maze-runner
     env:
       BROWSER: "chrome_43"
+    concurrency: 1
+    concurrency_group: 'browserstack'
 
   - label: ':chrome: v61 Browser tests'
     plugins:
@@ -75,6 +77,8 @@ steps:
         run: browser-maze-runner
     env:
       BROWSER: "edge_14"
+    concurrency: 1
+    concurrency_group: 'browserstack'
 
   - label: ':edge: v15 Browser tests'
     plugins:
