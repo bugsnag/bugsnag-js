@@ -209,7 +209,7 @@ opera_12:
     errorMessage: 'Undefined variable: foo'
   unhandled_syntax:
     errorClass: 'window.onerror'
-    errorMessage: "Syntax error at line 17 while loading: expected ';', got '!'"
+    errorMessage: "Syntax error at line 16 while loading: expected ';', got '!'"
     lineNumber: 16
     file: '/unhandled/script/a.html'
   unhandled_thrown:

@@ -152,14 +152,14 @@ steps:
     concurrency: 5
     concurrency_group: 'browserstack'
 
-  - label: ':iphone: iOS v7 Browser tests'
-    plugins:
-      docker-compose#v2.6.0:
-        run: browser-maze-runner
-    env:
-      BROWSER: "iphone_7"
-    concurrency: 5
-    concurrency_group: 'browserstack'
+  # - label: ':iphone: iOS 10.3 Browser tests'
+  #   plugins:
+  #     docker-compose#v2.6.0:
+  #       run: browser-maze-runner
+  #   env:
+  #     BROWSER: "iphone_7"
+  #   concurrency: 5
+  #   concurrency_group: 'browserstack'
 
   - label: ':android: Samsung Galaxy S8 Browser tests'
     plugins:

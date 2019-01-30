@@ -50,9 +50,9 @@ safari_10:
 
 opera_12:
   browser: "opera"
-  browser_version: "12.15"
-  os: "OS X"
-  os_version: "high sierra"
+  browser_version: "12.16"
+  os: "windows"
+  os_version: "8"
 
 iphone_7:
   browser: "iphone"

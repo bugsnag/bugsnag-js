@@ -22,5 +22,5 @@ def driver_start
 end
 
 def bs_local_start
-  system "/BrowserStackLocal -d start --key #{ENV['BROWSER_STACK_ACCESS_KEY']} --local-identifier #{bs_local_id}"
+  system "/BrowserStackLocal -d start --key #{ENV['BROWSER_STACK_ACCESS_KEY']} --local-identifier #{bs_local_id} --force-local"
 end
