@@ -53,6 +53,13 @@ steps:
 
   - wait
 
+  - label: ':chrome: v43 Browser tests'
+    plugins:
+      docker-compose#v2.6.0:
+        run: browser-maze-runner
+    env:
+      BROWSER: "chrome_43"
+
   - label: ':chrome: v61 Browser tests'
     plugins:
       docker-compose#v2.6.0:
@@ -62,19 +69,12 @@ steps:
     concurrency: 1
     concurrency_group: 'browserstack'
 
-  # - label: ':chrome: Browser tests'
-  #   plugins:
-  #     docker-compose#v2.6.0:
-  #       run: browser-maze-runner
-  #   env:
-  #     BROWSER: "chrome_43"
-
-  # - label: ':edge: Browser tests'
-  #   plugins:
-  #     docker-compose#v2.6.0:
-  #       run: browser-maze-runner
-  #   env:
-  #     BROWSER: "edge_14"
+  - label: ':edge: v14 Browser tests'
+    plugins:
+      docker-compose#v2.6.0:
+        run: browser-maze-runner
+    env:
+      BROWSER: "edge_14"
 
   - label: ':edge: v15 Browser tests'
     plugins:
