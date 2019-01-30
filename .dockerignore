@@ -8,3 +8,4 @@ Dockerfile
 Dockerfile*
 docker-compose.yml
 **/*.tgz
+.buildkite
