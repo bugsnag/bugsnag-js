@@ -25,7 +25,7 @@ bs_local_start
 $driver = driver_start
 
 def get_test_url path
-  "http://maze-runner:#{FIXTURES_SERVER_PORT}#{path}?ENDPOINT=#{URI::encode("http://maze-runner:#{MOCK_API_PORT}")}&API_KEY=#{URI::encode($api_key)}"
+  "http://#{ENV['HOST']}:#{FIXTURES_SERVER_PORT}#{path}?ENDPOINT=#{URI::encode("http://#{ENV['API_HOST']}:#{MOCK_API_PORT}")}&API_KEY=#{URI::encode($api_key)}"
 end
 
 def get_error_message id

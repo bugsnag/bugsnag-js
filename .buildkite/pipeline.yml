@@ -110,6 +110,7 @@ steps:
         use-aliases: true
     env:
       BROWSER: "ie_11"
+      HOST: 'localhost'
     concurrency: 5
     concurrency_group: 'browserstack'
 
