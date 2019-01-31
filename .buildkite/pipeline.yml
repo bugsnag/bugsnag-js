@@ -57,6 +57,7 @@ steps:
     plugins:
       docker-compose#v2.6.0:
         run: browser-maze-runner
+        use-aliases: true
     env:
       BROWSER: "chrome_43"
     concurrency: 5
@@ -66,6 +67,7 @@ steps:
     plugins:
       docker-compose#v2.6.0:
         run: browser-maze-runner
+        use-aliases: true
     env:
       BROWSER: "chrome_61"
     concurrency: 5
@@ -75,6 +77,7 @@ steps:
     plugins:
       docker-compose#v2.6.0:
         run: browser-maze-runner
+        use-aliases: true
     env:
       BROWSER: "ie_8"
     concurrency: 5
@@ -84,6 +87,7 @@ steps:
     plugins:
       docker-compose#v2.6.0:
         run: browser-maze-runner
+        use-aliases: true
     env:
       BROWSER: "ie_9"
     concurrency: 5
@@ -93,6 +97,7 @@ steps:
     plugins:
       docker-compose#v2.6.0:
         run: browser-maze-runner
+        use-aliases: true
     env:
       BROWSER: "ie_10"
     concurrency: 5
@@ -102,6 +107,7 @@ steps:
     plugins:
       docker-compose#v2.6.0:
         run: browser-maze-runner
+        use-aliases: true
     env:
       BROWSER: "ie_11"
     concurrency: 5
@@ -111,6 +117,7 @@ steps:
     plugins:
       docker-compose#v2.6.0:
         run: browser-maze-runner
+        use-aliases: true
     env:
       BROWSER: "edge_14"
     concurrency: 5
@@ -120,6 +127,7 @@ steps:
     plugins:
       docker-compose#v2.6.0:
         run: browser-maze-runner
+        use-aliases: true
     env:
       BROWSER: "edge_15"
     concurrency: 5
@@ -129,6 +137,7 @@ steps:
     plugins:
       docker-compose#v2.6.0:
         run: browser-maze-runner
+        use-aliases: true
     env:
       BROWSER: "safari_6"
     concurrency: 5
@@ -138,6 +147,7 @@ steps:
     plugins:
       docker-compose#v2.6.0:
         run: browser-maze-runner
+        use-aliases: true
     env:
       BROWSER: "safari_10"
     concurrency: 5
@@ -147,24 +157,27 @@ steps:
     plugins:
       docker-compose#v2.6.0:
         run: browser-maze-runner
+        use-aliases: true
     env:
       BROWSER: "opera_12"
     concurrency: 5
     concurrency_group: 'browserstack'
 
-  # - label: ':iphone: iOS 10.3 Browser tests'
-  #   plugins:
-  #     docker-compose#v2.6.0:
-  #       run: browser-maze-runner
-  #   env:
-  #     BROWSER: "iphone_7"
-  #   concurrency: 5
-  #   concurrency_group: 'browserstack'
+  - label: ':iphone: iOS 10.3 Browser tests'
+    plugins:
+      docker-compose#v2.6.0:
+        run: browser-maze-runner
+  use-aliases: true
+    env:
+      BROWSER: "iphone_7"
+    concurrency: 5
+    concurrency_group: 'browserstack'
 
   - label: ':android: Samsung Galaxy S8 Browser tests'
     plugins:
       docker-compose#v2.6.0:
         run: browser-maze-runner
+        use-aliases: true
     env:
       BROWSER: "android_s8"
     concurrency: 5
@@ -174,6 +187,7 @@ steps:
     plugins:
       docker-compose#v2.6.0:
         run: browser-maze-runner
+        use-aliases: true
     env:
       BROWSER: "firefox_30"
     concurrency: 5
@@ -183,6 +197,7 @@ steps:
     plugins:
       docker-compose#v2.6.0:
         run: browser-maze-runner
+        use-aliases: true
     env:
       BROWSER: "firefox_56"
     concurrency: 5
