@@ -167,7 +167,7 @@ steps:
     plugins:
       docker-compose#v2.6.0:
         run: browser-maze-runner
-  use-aliases: true
+        use-aliases: true
     env:
       BROWSER: "iphone_7"
     concurrency: 5
