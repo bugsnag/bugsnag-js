@@ -40,7 +40,7 @@ steps:
             - browser-maze-runner
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
           cache-from:
-            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
+            - browser-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
 
   - label:  ':docker: Build node maze runner image'
     plugins:
@@ -110,7 +110,7 @@ steps:
         use-aliases: true
     env:
       BROWSER: "ie_11"
-      HOST: 'localhost'
+      HOST: 'localhost' # IE11 needs the host set to localhost for some reason!ß
     concurrency: 5
     concurrency_group: 'browserstack'
 
