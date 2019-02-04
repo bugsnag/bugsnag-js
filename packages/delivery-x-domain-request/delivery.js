@@ -3,7 +3,7 @@ const { isoDate } = require('@bugsnag/core/lib/es-utils')
 
 module.exports = (win = window) => ({
   sendReport: (logger, config, report, cb = () => {}) => {
-    const url = getApiUrl(config, 'notify', '4.0', win)
+    const url = getApiUrl(config, 'notify', '4', win)
     const req = new win.XDomainRequest()
     req.onload = function () {
       cb(null)
@@ -19,7 +19,7 @@ module.exports = (win = window) => ({
     }, 0)
   },
   sendSession: (logger, config, session, cb = () => {}) => {
-    const url = getApiUrl(config, 'sessions', '1.0', win)
+    const url = getApiUrl(config, 'sessions', '1', win)
     const req = new win.XDomainRequest()
     req.onload = function () {
       cb(null)

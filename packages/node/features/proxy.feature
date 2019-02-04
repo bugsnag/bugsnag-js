@@ -1,8 +1,9 @@
 Feature: Proxy support
 
 Background:
-  Given I set environment variable "BUGSNAG_API_KEY" to "9c2151b65d615a3a95ba408142c8698f"
-  And I configure the bugsnag notify endpoint
+  Given I store the api key in the environment variable "BUGSNAG_API_KEY"
+  And I store the endpoint in the environment variable "BUGSNAG_NOTIFY_ENDPOINT"
+  And I store the endpoint in the environment variable "BUGSNAG_SESSIONS_ENDPOINT"
 
 # Scenario Outline: using environment variables to configure a proxy
 #   And I set environment variable "NODE_VERSION" to "<node version>"
@@ -12,7 +13,7 @@ Background:
 #   And I wait for 1 second
 #   Then I should receive a request
 #   And the request used the Node notifier
-#   And the request used payload v4 headers
+#   And the request used payload version "4"
 #   And the "bugsnag-api-key" header equals "9c2151b65d615a3a95ba408142c8698f"
 #   And the event "unhandled" is false
 #   And the event "severity" equals "warning"
@@ -47,7 +48,7 @@ Background:
 #   And I wait for 1 second
 #   Then I should receive a request
 #   And the request used the Node notifier
-#   And the request used payload v4 headers
+#   And the request used payload version "4"
 #   And the "bugsnag-api-key" header equals "9c2151b65d615a3a95ba408142c8698f"
 #   And the event "unhandled" is false
 #   And the event "severity" equals "warning"

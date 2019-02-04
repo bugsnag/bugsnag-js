@@ -50,13 +50,13 @@ Then(/^the request is a valid browser payload for the error reporting API$/) do
       And the "Content-Type" header equals one of:
         | application/json |
         | application/json; charset=UTF-8 |
-      And the "Bugsnag-Payload-Version" header equals "4.0"
+      And the "Bugsnag-Payload-Version" header equals "4"
       And the "Bugsnag-Sent-At" header is a timestamp
     }
   else
     steps %Q{
       Then the "apiKey" query parameter is not null
-      And the "payloadVersion" query parameter equals "4.0"
+      And the "payloadVersion" query parameter equals "4"
       And the "sentAt" query parameter is a timestamp
     }
   end
@@ -70,6 +70,8 @@ Then(/^the request is a valid browser payload for the error reporting API$/) do
     And each element in payload field "events" has "severityReason.type"
     And each element in payload field "events" has "unhandled"
     And each element in payload field "events" has "exceptions"
+
+    And the exception "type" equals "browserjs"
   }
 end
 
@@ -80,13 +82,13 @@ Then(/^the request is a valid browser payload for the session tracking API$/) do
       And the "Content-Type" header equals one of:
         | application/json |
         | application/json; charset=UTF-8 |
-      And the "Bugsnag-Payload-Version" header equals "1.0"
+      And the "Bugsnag-Payload-Version" header equals "1"
       And the "Bugsnag-Sent-At" header is a timestamp
     }
   else
     steps %Q{
       Then the "apiKey" query parameter is not null
-      And the "payloadVersion" query parameter equals "1.0"
+      And the "payloadVersion" query parameter equals "1"
       And the "sentAt" query parameter is a timestamp
     }
   end

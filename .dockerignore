@@ -1,0 +1,11 @@
+node_modules
+.git
+examples
+**/node_modules
+lerna-debug.log
+npm-debug.log
+Dockerfile
+Dockerfile*
+docker-compose.yml
+**/*.tgz
+.buildkite
