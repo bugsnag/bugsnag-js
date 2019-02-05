@@ -21,7 +21,9 @@ RUN npm pack --verbose packages/plugin-angular/
 RUN npm pack --verbose packages/plugin-react/
 RUN npm pack --verbose packages/plugin-vue/
 
-WORKDIR packages/browser/features/fixtures
+COPY test/browser test/browser
+
+WORKDIR /app/test/browser/features/fixtures
 RUN npm install --no-package-lock --no-save ../../../../bugsnag-browser-*.tgz
 RUN npm install --no-package-lock --no-save ../../../../bugsnag-plugin-react-*.tgz
 RUN npm install --no-package-lock --no-save ../../../../bugsnag-plugin-vue-*.tgz
@@ -33,9 +35,13 @@ RUN npm install --no-package-lock --no-save \
   ../../../../../../bugsnag-js-*.tgz
 
 # install the dependencies and build each fixture
-WORKDIR /app/packages/browser/features/fixtures
+WORKDIR /app/test/browser/features/fixtures
 RUN find . -path */package.json -type f -mindepth 2 -maxdepth 3 | \
   xargs -I % bash -c 'cd `dirname %` && npm install --no-package-lock && npm run build'
+
+# once the fixtures are built we no longer need node_modules and
+# it makes the COPY later on much faster if we don't have them
+RUN rm -fr **/*/node_modules/
 
 # The maze-runner browser tests
 FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner:v2-cli as browser-maze-runner
@@ -57,5 +63,5 @@ RUN wget -q https://www.browserstack.com/browserstack-local/BrowserStackLocal-li
   && unzip BrowserStackLocal-linux-x64.zip \
   && rm BrowserStackLocal-linux-x64.zip
 
-COPY --from=browser-feature-builder /app/packages/browser /app/packages/browser/
-WORKDIR /app/packages/browser
+COPY --from=browser-feature-builder /app/test/browser /app/test/browser/
+WORKDIR /app/test/browser
