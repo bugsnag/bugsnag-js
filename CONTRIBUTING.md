@@ -47,7 +47,8 @@ Here’s a bit about our process designing and building the Bugsnag libraries:
 In order to develop on the project you’ll need to be on Mac/Linux٭. You’ll need:
 - [node](https://nodejs.org) `v8+` (which includes [npm](https://www.npmjs.com/get-npm) 5+)
 - [git](https://git-scm.com/)
-- Optional: [ruby](https://www.ruby-lang.org/en/) and [bundler](https://bundler.io/) for running end to end tests locally
+
+If you want to run the end-to-end tests locally you'll need [Docker](https://www.docker.com/products/docker-desktop) (including Docker Compose), and the [AWS CLI](https://aws.amazon.com/cli/). Note that you'll also need some BrowserStack and AWS credentials which are only available to Bugsnag employees.
 
 ## Testing
 
@@ -59,22 +60,23 @@ Clone and navigate to this repo:
 git clone git@github.com:bugsnag/bugsnag-js.git
 cd bugsnag-js
 ```
+
 Install top level dependencies:
+
 ```js
 npm i
-cd packages/browser && bundle
-cd ../node && bundle
-cd ../..
 ```
 
-Install dependencies of each package:
+Bootstrap all of the individual packages:
+
 ```sh
-npx lerna bootstrap
+npm run bootstrap
 ```
 
-Build any package that requires building:
+Build each of the standalone packages:
+
 ```sh
-npx lerna build
+npm run build
 ```
 
 ### Unit tests
@@ -103,21 +105,77 @@ npm run test:lint
 
 ### End to end
 
+These tests are implemented with our notifier testing tool [Maze runner](https://github.com/bugsnag/maze-runner).
+
+End to end tests are written in cucumber-style `.feature` files, and need Ruby-backed "steps" in order to know what to run. The tests are located in the top level [`test`](/test/) directory.
+
+Maze runner's CLI and the test fixtures are containerised so you'll need Docker (and Docker Compose) to run them.
+
+__Note: only Bugsnag employees can run the end-to-end tests.__ We have dedicated test infrastructure and private BrowserStack credentials which can't be shared outside of the organisation.
+
+##### Authenticating with the private container registry
+
+You'll need to set the credentials for the aws profile in order to access the private docker registry:
+
+```
+aws configure --profile=opensource
+```
+
+Subsequently you'll need to run the following commmand to authenticate with the registry:
+
+```
+npm run test:test-container-registry-login
+```
+
+__Your session will periodically expire__, so you'll need to run this command to re-authenticate when that happens.
+
 #### Browser
 
-These tests require the `BROWSER` environment variable to be set (choose a value from [`packages/browser/features/browsers.yml`](/packages/browser/features/browsers.yml)). It also requires some browserstack credentials to be set in your environment.
+The browser tests drive real, remote browsers using BrowserStack. As a Bugsnag employee you can access the necessary credentials in our shared password manager.
+
+The following environment variables need to be set:
+
+- `BROWSER` (the browser you want to test on – choose a key from [`test/browser/features/browsers.yml`](/test/browser/features/browsers.yml))
+- `BROWSER_STACK_USERNAME`
+- `BROWSER_STACK_ACCESS_KEY`
 
 ```sh
-BROWSER=chrome_61 npm run test:browser
+BROWSER=chrome_61 \
+BROWSER_STACK_USERNAME=xxx \
+BROWSER_STACK_ACCESS_KEY=xxx \
+  npm run test:browser
+```
+
+To run a single feature file:
+
+```sh
+BROWSER=chrome_61 \
+BROWSER_STACK_USERNAME=xxx \
+BROWSER_STACK_ACCESS_KEY=xxx \
+  npm run test:browser -- features/unhandled_errors.feature
 ```
 
 #### Node
 
-These tests require docker to be running.
+To run the Node test suite:
 
 ```sh
-npm run test:node
+npm run test:browser
 ```
+
+You can use the `NODE_VERSION` env var to choose which version of Node to run the tests on. The default version is `10`.
+
+To run a single feature file:
+
+```sh
+npm run test:node -- features/unhandled_errors.feature
+```
+
+## CI
+
+CI runs on Buildkite. Tests are run automatically on any branch from within this repo. PRs from external repos do not run on the private test infrastructure. Once an external PR has been reviewed by a Bugsnag employee, a branch can be created within this repo in order to run on CI.
+
+⚠️ __Caution__: exercise due due-diligence before creating a branch based on an external contribution – for example, be sure not to merge a bitcoin miner disguised as a bug fix!
 
 ## Prereleases
 
