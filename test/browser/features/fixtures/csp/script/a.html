@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' 'self';">
+    <script src="/node_modules/@bugsnag/browser/dist/bugsnag.min.js"></script>
+    <script type="text/javascript">
+      var ENDPOINT = decodeURIComponent(window.location.search.match(/ENDPOINT=([^&]+)/)[1])
+      var API_KEY = decodeURIComponent(window.location.search.match(/API_KEY=([^&]+)/)[1])
+      var bugsnagClient = bugsnag({
+        apiKey: API_KEY,
+        endpoints: {
+          notify: ENDPOINT,
+          sessions: ENDPOINT
+        },
+        autoNotify: false
+      })
+    </script>
+  </head>
+  <body>
+    <pre id="bugsnag-test-state">PENDING</pre>
+    <script>
+      setTimeout(function () {
+        var el = document.getElementById('bugsnag-test-state')
+        // if the CSP violation caused bugsnag not to init, bugsnagClient won't be defined
+        el.textContent = el.innerText = (bugsnagClient ? 'DONE' : 'ERROR')
+      }, 100)
+    </script>
+  </body>
+</html>

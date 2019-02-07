@@ -11,7 +11,7 @@ module.exports = () => ({
         headers: {
           'Content-Type': 'application/json',
           'Bugsnag-Api-Key': report.apiKey || config.apiKey,
-          'Bugsnag-Payload-Version': '4.0',
+          'Bugsnag-Payload-Version': '4',
           'Bugsnag-Sent-At': isoDate()
         },
         body: payload.report(report, config.filters),
@@ -33,7 +33,7 @@ module.exports = () => ({
         headers: {
           'Content-Type': 'application/json',
           'Bugsnag-Api-Key': config.apiKey,
-          'Bugsnag-Payload-Version': '1.0',
+          'Bugsnag-Payload-Version': '1',
           'Bugsnag-Sent-At': isoDate()
         },
         body: payload.session(session, config.filters),

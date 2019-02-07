@@ -58,13 +58,27 @@ Most updates to this repo will be made by Bugsnag employees. We are unable to ac
 ## Development quick start
 
 ```sh
+# Clone the repository
 git clone git@github.com:bugsnag/bugsnag-js.git
 cd bugsnag-js
+
+# Install top-level dependencies
 npm i
-npx lerna bootstrap
-npx lerna run build
-cd packages/browser && bundle
-cd ../node && bundle
+
+# Bootstrap all of the packages
+npm run bootstrap
+
+# Build the standalone notifiers and plugins
+npm run build
+
+# Run the unit tests
+npm run test:unit
+
+# Run the linter
+npm run test:lint
+
+# Run the typescript compatibility tests
+npm run test:types
 ```
 
 See [contributing](CONTRIBUTING.md) for more information.

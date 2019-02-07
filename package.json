@@ -25,12 +25,16 @@
     "uglify-js": "^3.4.9"
   },
   "scripts": {
+    "bootstrap": "lerna run bootstrap",
     "build": "lerna run build --scope '@bugsnag/node' --scope '@bugsnag/browser' && lerna run build --ignore '@bugsnag/node' --ignore '@bugsnag/browser'",
     "test:lint": "standard",
     "test:unit": "lerna run test --ignore '@bugsnag/browser' --ignore '@bugsnag/node'",
     "test:types": "lerna run test:types",
-    "test:browser": "lerna run test --scope '@bugsnag/browser' --stream",
-    "test:node": "lerna run test --scope '@bugsnag/node' --stream"
+    "test:test-container-registry-login": "$(aws ecr get-login --profile=opensource --no-include-email)",
+    "test:build-browser-container": "docker-compose build --pull browser-maze-runner",
+    "test:build-node-container": "docker-compose build --pull node-maze-runner",
+    "test:browser": "npm run test:build-browser-container && docker-compose run --use-aliases browser-maze-runner",
+    "test:node": "npm run test:build-node-container && docker-compose run --use-aliases node-maze-runner"
   },
   "standard": {
     "ignore": [
