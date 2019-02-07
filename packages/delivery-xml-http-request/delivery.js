@@ -12,7 +12,7 @@ module.exports = (win = window) => ({
       req.open('POST', url)
       req.setRequestHeader('Content-Type', 'application/json')
       req.setRequestHeader('Bugsnag-Api-Key', report.apiKey || config.apiKey)
-      req.setRequestHeader('Bugsnag-Payload-Version', '4.0')
+      req.setRequestHeader('Bugsnag-Payload-Version', '4')
       req.setRequestHeader('Bugsnag-Sent-At', isoDate())
       req.send(payload.report(report, config.filters))
     } catch (e) {
@@ -29,7 +29,7 @@ module.exports = (win = window) => ({
       req.open('POST', url)
       req.setRequestHeader('Content-Type', 'application/json')
       req.setRequestHeader('Bugsnag-Api-Key', config.apiKey)
-      req.setRequestHeader('Bugsnag-Payload-Version', '1.0')
+      req.setRequestHeader('Bugsnag-Payload-Version', '1')
       req.setRequestHeader('Bugsnag-Sent-At', isoDate())
       req.send(payload.session(session, config.filters))
     } catch (e) {

@@ -20,7 +20,6 @@
     "bundle-types": "../../bin/bundle-types",
     "build": "npm run clean && npm run build:dist && npm run bundle-types",
     "build:dist": "../../bin/bundle src/notifier.js --node --exclude=iserror,stack-generator,error-stack-parser,pump,byline --standalone=bugsnag | ../../bin/extract-source-map dist/bugsnag.js",
-    "test": "bundle exec maze-runner",
     "postversion": "npm run build"
   },
   "author": "Bugsnag",

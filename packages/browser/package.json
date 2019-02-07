@@ -23,7 +23,6 @@
     "build:dist": "NODE_ENV=production IS_BROWSER=yes ../../bin/bundle src/notifier.js --standalone=bugsnag | ../../bin/extract-source-map dist/bugsnag.js",
     "build:dist:min": "NODE_ENV=production IS_BROWSER=yes ../../bin/bundle src/notifier.js --standalone=bugsnag | ../../bin/minify dist/bugsnag.min.js",
     "test:types": "tslint -c ../../tslint.json types/*.d.ts && jasmine 'types/**/*.test.js'",
-    "test": "bundle exec maze-runner",
     "cdn-upload": "./bin/cdn-upload",
     "postversion": "npm run build"
   },
