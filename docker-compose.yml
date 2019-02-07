@@ -1,0 +1,51 @@
+version: '3.6'
+services:
+  ci:
+    build:
+      context: .
+      dockerfile: Dockerfile.ci
+
+  browser-maze-runner:
+    build:
+      context: .
+      dockerfile: Dockerfile.browser
+      target: browser-maze-runner
+      args:
+        - BUILDKITE_BUILD_NUMBER
+    environment:
+      VERBOSE:
+      DEBUG:
+      BROWSER: "${BROWSER:-chrome_61}"
+      BROWSER_STACK_USERNAME:
+      BROWSER_STACK_ACCESS_KEY:
+      BROWSER_STACK_LOCAL_IDENTIFIER: ${BUILDKITE_JOB_ID:-maze-runner}
+      HOST: "${HOST:-maze-runner}"
+      API_HOST: "${API_HOST:-maze-runner}"
+    networks:
+      default:
+        aliases:
+          - maze-runner
+
+  node-maze-runner:
+    build:
+      context: .
+      dockerfile: Dockerfile.node
+      target: node-maze-runner
+      args:
+        - BUILDKITE_BUILD_NUMBER
+    environment:
+      VERBOSE:
+      DEBUG:
+      NODE_VERSION: "${NODE_VERSION:-10}"
+      COMPOSE_PROJECT_NAME: "node${NODE_VERSION:-10}"
+      NETWORK_NAME: "${BUILDKITE_JOB_ID:-js-maze-runner}"
+    networks:
+      default:
+        aliases:
+          - maze-runner
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+networks:
+  default:
+    name: ${BUILDKITE_JOB_ID:-js-maze-runner}

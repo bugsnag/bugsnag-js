@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <script src="/node_modules/@bugsnag/browser/dist/bugsnag.min.js"></script>
+    <script type="text/javascript">
+      var ENDPOINT = decodeURIComponent(window.location.search.match(/ENDPOINT=([^&]+)/)[1])
+      var API_KEY = decodeURIComponent(window.location.search.match(/API_KEY=([^&]+)/)[1])
+      var bugsnagClient = bugsnag({
+        apiKey: API_KEY,
+        endpoint: ENDPOINT
+      })
+    </script>
+  </head>
+  <body>
+    <script>
+      !dsfkl!123()
+    </script>
+  </body>
+</html>

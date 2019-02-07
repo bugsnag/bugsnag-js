@@ -1,0 +1,67 @@
+# CI test image for unit/lint/type tests
+FROM node:10-alpine as browser-feature-builder
+
+RUN apk add --update bash
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm install
+
+COPY babel.config.js tslint.json lerna.json ./
+COPY packages ./packages
+COPY bin ./bin
+RUN npx lerna bootstrap
+RUN npm run build
+
+RUN npm pack --verbose packages/js/
+RUN npm pack --verbose packages/browser/
+RUN npm pack --verbose packages/node/
+RUN npm pack --verbose packages/plugin-angular/
+RUN npm pack --verbose packages/plugin-react/
+RUN npm pack --verbose packages/plugin-vue/
+
+COPY test/browser test/browser
+
+WORKDIR /app/test/browser/features/fixtures
+RUN npm install --no-package-lock --no-save ../../../../bugsnag-browser-*.tgz
+RUN npm install --no-package-lock --no-save ../../../../bugsnag-plugin-react-*.tgz
+RUN npm install --no-package-lock --no-save ../../../../bugsnag-plugin-vue-*.tgz
+WORKDIR plugin_angular/ng
+RUN npm install --no-package-lock --no-save \
+  ../../../../../../bugsnag-plugin-angular-*.tgz  \
+  ../../../../../../bugsnag-node-*.tgz \
+  ../../../../../../bugsnag-browser-*.tgz \
+  ../../../../../../bugsnag-js-*.tgz
+
+# install the dependencies and build each fixture
+WORKDIR /app/test/browser/features/fixtures
+RUN find . -path */package.json -type f -mindepth 2 -maxdepth 3 | \
+  xargs -I % bash -c 'cd `dirname %` && npm install --no-package-lock && npm run build'
+
+# once the fixtures are built we no longer need node_modules and
+# it makes the COPY later on much faster if we don't have them
+RUN rm -fr **/*/node_modules/
+
+# The maze-runner browser tests
+FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner:v2-cli as browser-maze-runner
+RUN apk add --no-cache ruby-dev build-base libffi-dev curl-dev
+ENV GLIBC_VERSION 2.23-r3
+
+RUN wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub \
+  && wget "https://github.com/sgerrand/alpine-pkg-glibc/releases/download/$GLIBC_VERSION/glibc-$GLIBC_VERSION.apk" \
+  && apk --no-cache add "glibc-$GLIBC_VERSION.apk" \
+  && rm "glibc-$GLIBC_VERSION.apk" \
+  && wget "https://github.com/sgerrand/alpine-pkg-glibc/releases/download/$GLIBC_VERSION/glibc-bin-$GLIBC_VERSION.apk" \
+  && apk --no-cache add "glibc-bin-$GLIBC_VERSION.apk" \
+  && rm "glibc-bin-$GLIBC_VERSION.apk" \
+  && wget "https://github.com/sgerrand/alpine-pkg-glibc/releases/download/$GLIBC_VERSION/glibc-i18n-$GLIBC_VERSION.apk" \
+  && apk --no-cache add "glibc-i18n-$GLIBC_VERSION.apk" \
+  && rm "glibc-i18n-$GLIBC_VERSION.apk"
+
+RUN wget -q https://www.browserstack.com/browserstack-local/BrowserStackLocal-linux-x64.zip \
+  && unzip BrowserStackLocal-linux-x64.zip \
+  && rm BrowserStackLocal-linux-x64.zip
+
+COPY --from=browser-feature-builder /app/test/browser /app/test/browser/
+WORKDIR /app/test/browser
