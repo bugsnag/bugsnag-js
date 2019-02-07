@@ -159,7 +159,7 @@ services:
       context: corporate-proxy
     restart: "no"
     networks:
-      node-maze-runner:
+      default:
         aliases:
           - corporate-proxy
 
