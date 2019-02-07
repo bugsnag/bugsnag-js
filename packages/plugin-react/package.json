@@ -28,7 +28,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "peerDependencies": {
-    "@bugsnag/browser": "* || >=5.0.0-rc.1"
+    "@bugsnag/js": "*"
   },
   "devDependencies": {
     "@babel/core": "^7.0.1",
