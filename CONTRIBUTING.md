@@ -160,7 +160,7 @@ BROWSER_STACK_ACCESS_KEY=xxx \
 To run the Node test suite:
 
 ```sh
-npm run test:browser
+npm run test:node
 ```
 
 You can use the `NODE_VERSION` env var to choose which version of Node to run the tests on. The default version is `10`.
@@ -175,7 +175,7 @@ npm run test:node -- features/unhandled_errors.feature
 
 CI runs on Buildkite. Tests are run automatically on any branch from within this repo. PRs from external repos do not run on the private test infrastructure. Once an external PR has been reviewed by a Bugsnag employee, a branch can be created within this repo in order to run on CI.
 
-⚠️ __Caution__: exercise due due-diligence before creating a branch based on an external contribution – for example, be sure not to merge a bitcoin miner disguised as a bug fix!
+⚠️ __Caution__: exercise due-diligence before creating a branch based on an external contribution – for example, be sure not to merge a bitcoin miner disguised as a bug fix!
 
 ## Prereleases
 
