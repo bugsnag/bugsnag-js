@@ -1,7 +1,7 @@
 const hasStack = require('@bugsnag/core/lib/has-stack')
 const { reduce } = require('@bugsnag/core/lib/es-utils')
-const ErrorStackParser = require('error-stack-parser')
-const isError = require('iserror')
+const ErrorStackParser = require('@bugsnag/core/lib/error-stack-parser')
+const isError = require('@bugsnag/core/lib/iserror')
 
 /*
  * Automatically notifies Bugsnag when window.onunhandledrejection is called
