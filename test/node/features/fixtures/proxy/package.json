@@ -1,5 +1,6 @@
 {
   "name": "bugsnag-test",
   "dependencies": {
+    "http-proxy-agent": "^2.1.0"
   }
 }

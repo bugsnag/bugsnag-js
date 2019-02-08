@@ -155,8 +155,13 @@ services:
       - corporate-proxy
 
   corporate-proxy:
-    image: minimum2scp/squid
+    build:
+      context: corporate-proxy
     restart: "no"
+    networks:
+      default:
+        aliases:
+          - corporate-proxy
 
   connect:
     build:
