@@ -1,0 +1,54 @@
+{
+  "name": "@bugsnag/expo",
+  "version": "0.0.0",
+  "main": "src/notifier.js",
+  "types": "dist/types/bugsnag.d.ts",
+  "description": "Bugsnag error reporter for Expo applications",
+  "keywords": [
+    "bugsnag",
+    "expo",
+    "react native",
+    "exception",
+    "error",
+    "javascript",
+    "monitoring",
+    "reporting",
+    "stability",
+    "mobile"
+  ],
+  "homepage": "https://www.bugsnag.com/",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:bugsnag/bugsnag-js.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "src/notifier.js",
+    "src/config.js",
+    "hooks/post-publish.js",
+    "dist"
+  ],
+  "scripts": {
+    "clean": "rm -fr dist && mkdir dist",
+    "bundle-types": "../../bin/bundle-types",
+    "build": "npm run clean && npm run bundle-types",
+    "test:types": "tslint -c ../../tslint.json types/*.d.ts && jasmine 'types/**/*.test.js'",
+    "postversion": "npm run build"
+  },
+  "author": "Bugsnag",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/cli": "^7.0.0",
+    "jasmine": "^3.1.0",
+    "nyc": "^12.0.2",
+    "tslint": "^5.12.1",
+    "typescript": "^3.3.3"
+  },
+  "dependencies": {
+    "@bugsnag/core": "^5.2.0",
+    "bugsnag-build-reporter": "^1.0.1",
+    "bugsnag-sourcemaps": "^1.1.0"
+  }
+}
