@@ -23,10 +23,10 @@ module.exports = {
     ...schema.releaseStage,
     defaultValue: () => process.env.NODE_ENV || 'production'
   },
-  proxy: {
+  agent: {
     defaultValue: () => undefined,
-    message: 'should be a string',
-    validate: value => value === undefined || stringWithLength(value)
+    message: 'should be an HTTP(s) agent',
+    validate: value => value === undefined || isAgent(value)
   },
   onUncaughtException: {
     defaultValue: () => (err, report, logger) => {
@@ -57,3 +57,5 @@ const getContext = report =>
   report.request && Object.keys(report.request).length
     ? ` at ${report.request.httpMethod} ${report.request.path || report.request.url}`
     : ``
+
+const isAgent = value => (typeof value === 'object' && value !== null) || typeof value === 'boolean'
