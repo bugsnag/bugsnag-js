@@ -7,6 +7,10 @@ const createReportFromErr = require('@bugsnag/core/lib/report-from-error')
 module.exports = {
   init: (client, ErrorUtils = global.ErrorUtils) => {
     if (!client.config.autoNotify) return
+    if (!ErrorUtils) {
+      client._logger.warn('ErrorUtils is not defined. Can’t attach a global error handler.')
+      return
+    }
     const prev = ErrorUtils.getGlobalHandler()
 
     ErrorUtils.setGlobalHandler((error, isFatal) => {

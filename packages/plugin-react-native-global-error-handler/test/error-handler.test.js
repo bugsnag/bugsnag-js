@@ -27,6 +27,24 @@ describe('plugin: react native global error handler', () => {
     expect(typeof eu.getGlobalHandler()).toBe('function')
   })
 
+  it('should warn if ErrorUtils is not defined', done => {
+    const client = new Client(VALID_NOTIFIER)
+    client.setOptions({
+      apiKey: 'API_KEY_YEAH',
+      logger: {
+        debug: () => {},
+        info: () => {},
+        warn: msg => {
+          expect(msg).toMatch(/ErrorUtils/)
+          done()
+        },
+        error: () => {}
+      }
+    })
+    client.configure()
+    client.use(plugin)
+  })
+
   it('should call through to an exising handler', done => {
     const client = new Client(VALID_NOTIFIER)
     client.delivery({
