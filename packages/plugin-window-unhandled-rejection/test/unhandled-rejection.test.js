@@ -22,8 +22,8 @@ describe('plugin: unhandled rejection', () => {
       client.setOptions({ apiKey: 'API_KEY_YEAH' })
       client.configure()
       client.use(plugin, window)
-      client.delivery({
-        sendReport: (logger, config, payload) => {
+      client.delivery(client => ({
+        sendReport: (payload) => {
           const report = payload.events[0].toJSON()
           expect(report.severity).toBe('error')
           expect(report.unhandled).toBe(true)
@@ -31,7 +31,7 @@ describe('plugin: unhandled rejection', () => {
           plugin.destroy(window)
           done()
         }
-      })
+      }))
 
       // simulate an UnhandledRejection event
       listener({ reason: new Error('BAD_PROMISE') })
@@ -42,8 +42,8 @@ describe('plugin: unhandled rejection', () => {
       client.setOptions({ apiKey: 'API_KEY_YEAH' })
       client.configure()
       client.use(plugin, window)
-      client.delivery({
-        sendReport: (logger, config, payload) => {
+      client.delivery(client => ({
+        sendReport: (payload) => {
           const report = payload.events[0].toJSON()
           expect(report.severity).toBe('error')
           expect(report.unhandled).toBe(true)
@@ -54,7 +54,7 @@ describe('plugin: unhandled rejection', () => {
           plugin.destroy(window)
           done()
         }
-      })
+      }))
 
       listener({ reason: null })
     })
@@ -67,7 +67,7 @@ describe('plugin: unhandled rejection', () => {
     //   client.configure()
     //   client.use(plugin, window)
     //   client.delivery({
-    //     sendReport: (logger, config, payload) => {
+    //     sendReport: (payload) => {
     //       const report = payload.events[0].toJSON()
     //       expect(report.severity).toBe('error')
     //       expect(report.unhandled).toBe(true)
@@ -107,8 +107,8 @@ describe('plugin: unhandled rejection', () => {
       client.setOptions({ apiKey: 'API_KEY_YEAH' })
       client.configure()
       client.use(plugin, window)
-      client.delivery({
-        sendReport: (logger, config, payload) => {
+      client.delivery(client => ({
+        sendReport: (payload) => {
           const report = payload.events[0].toJSON()
           expect(report.severity).toBe('error')
           expect(report.unhandled).toBe(true)
@@ -118,7 +118,7 @@ describe('plugin: unhandled rejection', () => {
           plugin.destroy(window)
           done()
         }
-      })
+      }))
 
       const err = new Error('blah')
       err.stack = true
@@ -130,8 +130,8 @@ describe('plugin: unhandled rejection', () => {
       client.setOptions({ apiKey: 'API_KEY_YEAH' })
       client.configure()
       client.use(plugin, window)
-      client.delivery({
-        sendReport: (logger, config, payload) => {
+      client.delivery(client => ({
+        sendReport: (payload) => {
           const report = payload.events[0].toJSON()
           expect(report.severity).toBe('error')
           expect(report.unhandled).toBe(true)
@@ -141,7 +141,7 @@ describe('plugin: unhandled rejection', () => {
           plugin.destroy(window)
           done()
         }
-      })
+      }))
 
       const err = new Error('blah')
       const detail = {}

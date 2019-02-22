@@ -29,10 +29,10 @@ describe('plugin: node unhandled rejection handler', () => {
 
   it('should call the configured onUnhandledRejection callback', done => {
     const c = new Client(VALID_NOTIFIER)
-    c.delivery({
+    c.delivery(client => ({
       sendReport: (...args) => args[args.length - 1](),
       sendSession: (...args) => args[args.length - 1]()
-    })
+    }))
     c.setOptions({
       apiKey: 'api_key',
       onUnhandledRejection: (err, report) => {
@@ -59,10 +59,10 @@ describe('plugin: node unhandled rejection handler', () => {
 
   it('should tolerate delivery errors', done => {
     const c = new Client(VALID_NOTIFIER)
-    c.delivery({
+    c.delivery(client => ({
       sendReport: (...args) => args[args.length - 1](new Error('floop')),
       sendSession: (...args) => args[args.length - 1]()
-    })
+    }))
     c.setOptions({
       apiKey: 'api_key',
       onUnhandledRejection: (err, report) => {

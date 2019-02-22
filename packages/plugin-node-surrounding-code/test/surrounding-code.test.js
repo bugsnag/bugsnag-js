@@ -18,8 +18,8 @@ describe('plugin: node surrounding code', () => {
   it('should load code successfully for stackframes whose files exist', done => {
     const client = new Client(VALID_NOTIFIER)
 
-    client.delivery({
-      sendReport: (logger, config, report) => {
+    client.delivery(client => ({
+      sendReport: (report) => {
         const evt = report.events[0]
         expect(Object.keys(evt.stacktrace[0].code))
           .toEqual([ '19', '20', '21', '22', '23', '24', '25' ])
@@ -39,7 +39,7 @@ describe('plugin: node surrounding code', () => {
         done()
       },
       sendSession: () => {}
-    })
+    }))
 
     client.setOptions({ apiKey: 'api_key' })
     client.configure()
@@ -65,8 +65,8 @@ describe('plugin: node surrounding code', () => {
   it('should tolerate missing files for some stackframes', done => {
     const client = new Client(VALID_NOTIFIER)
 
-    client.delivery({
-      sendReport: (logger, config, report) => {
+    client.delivery(client => ({
+      sendReport: (report) => {
         const evt = report.events[0]
         expect(evt.stacktrace[0].code).toBeTruthy()
         expect(evt.stacktrace[1].code).toBeUndefined()
@@ -74,7 +74,7 @@ describe('plugin: node surrounding code', () => {
         done()
       },
       sendSession: () => {}
-    })
+    }))
 
     client.setOptions({ apiKey: 'api_key' })
     client.configure()
@@ -100,8 +100,8 @@ describe('plugin: node surrounding code', () => {
   it('behaves sensibly for code at the beginning and end of a file', done => {
     const client = new Client(VALID_NOTIFIER)
 
-    client.delivery({
-      sendReport: (logger, config, report) => {
+    client.delivery(client => ({
+      sendReport: (report) => {
         const evt = report.events[0]
         expect(evt.stacktrace[0].code).toEqual({
           '1': '// this is just some arbitrary (but real) javascript for testing, taken from',
@@ -118,7 +118,7 @@ describe('plugin: node surrounding code', () => {
         done()
       },
       sendSession: () => {}
-    })
+    }))
 
     client.setOptions({ apiKey: 'api_key' })
     client.configure()
@@ -143,8 +143,8 @@ describe('plugin: node surrounding code', () => {
 
     const startCount = createReadStreamCount
 
-    client.delivery({
-      sendReport: (logger, config, report) => {
+    client.delivery(client => ({
+      sendReport: (report) => {
         const endCount = createReadStreamCount
         expect(endCount - startCount).toBe(1)
         report.events[0].stacktrace.forEach(stackframe => {
@@ -158,7 +158,7 @@ describe('plugin: node surrounding code', () => {
         done()
       },
       sendSession: () => {}
-    })
+    }))
 
     client.setOptions({ apiKey: 'api_key' })
     client.configure()

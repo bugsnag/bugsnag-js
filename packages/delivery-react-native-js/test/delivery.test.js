@@ -37,7 +37,7 @@ describe('delivery:react native js', () => {
         endpoints: { notify: `http://0.0.0.0:${server.address().port}/notify/` },
         filters: []
       }
-      delivery(fetch).sendReport({}, config, payload, (err) => {
+      delivery({ config, loggger: {} }, fetch).sendReport(payload, (err) => {
         expect(err).toBe(null)
         expect(requests.length).toBe(1)
         expect(requests[0].method).toBe('POST')
@@ -65,7 +65,7 @@ describe('delivery:react native js', () => {
         endpoints: { notify: 'blah', sessions: `http://0.0.0.0:${server.address().port}/sessions/` },
         filters: []
       }
-      delivery(fetch).sendSession({}, config, payload, (err) => {
+      delivery({ config, loggger: {} }, fetch).sendSession(payload, (err) => {
         expect(err).toBe(null)
         expect(requests.length).toBe(1)
         expect(requests[0].method).toBe('POST')
@@ -91,9 +91,7 @@ describe('delivery:react native js', () => {
     }
     let didLog = false
     const log = () => { didLog = true }
-    delivery(fetch).sendReport({
-      error: log
-    }, config, payload, (err) => {
+    delivery({ config, _logger: { error: log } }, fetch).sendReport(payload, (err) => {
       expect(didLog).toBe(true)
       expect(err).toBeTruthy()
       expect(err.code).toBe('ECONNREFUSED')
@@ -116,9 +114,7 @@ describe('delivery:react native js', () => {
       }
       let didLog = false
       const log = () => { didLog = true }
-      delivery(fetch).sendReport({
-        error: log
-      }, config, payload, (err) => {
+      delivery({ config, _logger: { error: log } }, fetch).sendReport(payload, (err) => {
         expect(didLog).toBe(true)
         expect(err).toBeTruthy()
         expect(err.code).toBe('ECONNRESET')
@@ -143,9 +139,7 @@ describe('delivery:react native js', () => {
       }
       let didLog = false
       const log = () => { didLog = true }
-      delivery().sendReport({
-        error: log
-      }, config, payload, (err) => {
+      delivery({ config, _logger: { error: log } }, fetch).sendReport(payload, (err) => {
         expect(didLog).toBe(true)
         expect(err).toBeTruthy()
         done()
