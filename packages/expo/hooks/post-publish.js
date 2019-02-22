@@ -1,5 +1,5 @@
-const { upload } = require('bugsnag-sourcemaps')
-const { reportBuild } = require('bugsnag-build-reporter')
+// const { upload } = require('bugsnag-sourcemaps')
+// const { reportBuild } = require('bugsnag-build-reporter')
 
 module.exports = async ({
   config,
