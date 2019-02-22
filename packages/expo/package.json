@@ -47,7 +47,8 @@
     "typescript": "^3.3.3"
   },
   "dependencies": {
-    "@bugsnag/core": "^5.2.0",
+    "@bugsnag/core": "^6.0.0",
+    "@bugsnag/delivery-react-native-js": "^6.0.0",
     "bugsnag-build-reporter": "^1.0.1",
     "bugsnag-sourcemaps": "^1.1.0"
   }
