@@ -7,6 +7,7 @@ const Client = require('@bugsnag/core/client')
 const schema = { ...require('@bugsnag/core/config').schema, ...require('./config') }
 
 const plugins = [
+  require('@bugsnag/plugin-react-native-global-error-handler')
 ]
 
 module.exports = (opts) => {
