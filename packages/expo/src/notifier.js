@@ -4,7 +4,7 @@ const url = 'https://github.com/bugsnag/bugsnag-js'
 
 const Client = require('@bugsnag/core/client')
 
-const delivery = require('@bugsnag/delivery-react-native-js')
+const delivery = require('@bugsnag/delivery-expo')
 
 const schema = { ...require('@bugsnag/core/config').schema, ...require('./config') }
 
@@ -18,7 +18,7 @@ module.exports = (opts) => {
 
   const bugsnag = new Client({ name, version, url })
 
-  bugsnag.delivery(delivery())
+  bugsnag.delivery(delivery)
   bugsnag.setOptions(opts)
   bugsnag.configure(schema)
 

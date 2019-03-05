@@ -1,10 +1,16 @@
-/* global describe, expect, it */
+/* global describe, expect, it, spyOn */
 
 const fetch = require('node-fetch')
-const delivery = require('../')
+const proxyquire = require('proxyquire').noCallThru().noPreserveCache()
 const http = require('http')
 
-const mockServer = (successCode = 200) => {
+const noopQueue = {
+  enqueue: () => {},
+  dequeue: () => {}
+}
+const noopRedelivery = () => {}
+
+const mockServer = (statusCode = 200) => {
   const requests = []
   return {
     requests,
@@ -18,15 +24,20 @@ const mockServer = (successCode = 200) => {
           headers: req.headers,
           body
         })
-        res.statusCode = successCode
-        res.end('OK')
+        res.statusCode = statusCode
+        res.end(http.STATUS_CODES[statusCode])
       })
     })
   }
 }
 
-describe('delivery:react native js', () => {
+describe('delivery: expo', () => {
   it('sends reports successfully', done => {
+    const delivery = proxyquire('../', {
+      './queue': noopQueue,
+      './redelivery': noopRedelivery
+    })
+
     const { requests, server } = mockServer()
     server.listen((err) => {
       expect(err).toBeUndefined()
@@ -37,7 +48,7 @@ describe('delivery:react native js', () => {
         endpoints: { notify: `http://0.0.0.0:${server.address().port}/notify/` },
         filters: []
       }
-      delivery({ config, loggger: {} }, fetch).sendReport(payload, (err) => {
+      delivery({ config, _logger: {} }, fetch).sendReport(payload, (err) => {
         expect(err).toBe(null)
         expect(requests.length).toBe(1)
         expect(requests[0].method).toBe('POST')
@@ -55,6 +66,11 @@ describe('delivery:react native js', () => {
   })
 
   it('sends sessions successfully', done => {
+    const delivery = proxyquire('../', {
+      './queue': noopQueue,
+      './redelivery': noopRedelivery
+    })
+
     const { requests, server } = mockServer(202)
     server.listen((err) => {
       expect(err).toBeUndefined()
@@ -65,7 +81,7 @@ describe('delivery:react native js', () => {
         endpoints: { notify: 'blah', sessions: `http://0.0.0.0:${server.address().port}/sessions/` },
         filters: []
       }
-      delivery({ config, loggger: {} }, fetch).sendSession(payload, (err) => {
+      delivery({ config, _logger: {} }, fetch).sendSession(payload, (err) => {
         expect(err).toBe(null)
         expect(requests.length).toBe(1)
         expect(requests[0].method).toBe('POST')
@@ -83,6 +99,13 @@ describe('delivery:react native js', () => {
   })
 
   it('handles errors gracefully (ECONNREFUSED)', done => {
+    const mockQueue = { enqueue: (req) => {}, dequeue: () => {} }
+    const spiedEnqueue = spyOn(mockQueue, 'enqueue')
+    const delivery = proxyquire('../', {
+      './queue': mockQueue,
+      './redelivery': noopRedelivery
+    })
+
     const payload = { sample: 'payload' }
     const config = {
       apiKey: 'aaaaaaaa',
@@ -95,11 +118,75 @@ describe('delivery:react native js', () => {
       expect(didLog).toBe(true)
       expect(err).toBeTruthy()
       expect(err.code).toBe('ECONNREFUSED')
+      expect(spiedEnqueue).toHaveBeenCalled()
+      done()
+    })
+  })
+
+  it('handles errors gracefully (400)', done => {
+    const mockQueue = { enqueue: (req) => {}, dequeue: () => {} }
+    const spiedEnqueue = spyOn(mockQueue, 'enqueue')
+    const delivery = proxyquire('../', {
+      './queue': mockQueue,
+      './redelivery': noopRedelivery
+    })
+
+    const { requests, server } = mockServer(400)
+    server.listen((err) => {
+      expect(err).toBeUndefined()
+
+      const payload = { sample: 'payload' }
+      const config = {
+        apiKey: 'aaaaaaaa',
+        endpoints: { notify: `http://0.0.0.0:${server.address().port}/notify/` },
+        filters: []
+      }
+      let didLog = false
+      const log = () => { didLog = true }
+      delivery({ config, _logger: { error: log } }, fetch).sendReport(payload, (err) => {
+        expect(didLog).toBe(true)
+        expect(spiedEnqueue).not.toHaveBeenCalled()
+        expect(err).toBeTruthy()
+        expect(requests.length).toBe(1)
+        server.close()
+        done()
+      })
+    })
+  })
+
+  it('handles errors gracefully for sessions (ECONNREFUSED)', done => {
+    const mockQueue = { enqueue: (req) => {}, dequeue: () => {} }
+    const spiedEnqueue = spyOn(mockQueue, 'enqueue')
+    const delivery = proxyquire('../', {
+      './queue': mockQueue,
+      './redelivery': noopRedelivery
+    })
+
+    const payload = { sample: 'payload' }
+    const config = {
+      apiKey: 'aaaaaaaa',
+      endpoints: { sessions: `http://0.0.0.0:9999/sessions/` },
+      filters: []
+    }
+    let didLog = false
+    const log = () => { didLog = true }
+    delivery({ config, _logger: { error: log } }, fetch).sendSession(payload, (err) => {
+      expect(didLog).toBe(true)
+      expect(err).toBeTruthy()
+      expect(err.code).toBe('ECONNREFUSED')
+      expect(spiedEnqueue).toHaveBeenCalled()
       done()
     })
   })
 
   it('handles errors gracefully (socket hang up)', done => {
+    const mockQueue = { enqueue: (req) => {}, dequeue: () => {} }
+    const spiedEnqueue = spyOn(mockQueue, 'enqueue')
+    const delivery = proxyquire('../', {
+      './queue': mockQueue,
+      './redelivery': noopRedelivery
+    })
+
     const server = http.createServer((req, res) => {
       req.connection.destroy()
     })
@@ -118,12 +205,20 @@ describe('delivery:react native js', () => {
         expect(didLog).toBe(true)
         expect(err).toBeTruthy()
         expect(err.code).toBe('ECONNRESET')
+        expect(spiedEnqueue).toHaveBeenCalled()
         done()
       })
     })
   })
 
   it('handles errors gracefully (HTTP 503)', done => {
+    const mockQueue = { enqueue: (req) => {}, dequeue: () => {} }
+    const spiedEnqueue = spyOn(mockQueue, 'enqueue')
+    const delivery = proxyquire('../', {
+      './queue': mockQueue,
+      './redelivery': noopRedelivery
+    })
+
     const server = http.createServer((req, res) => {
       res.statusCode = 503
       res.end('NOT OK')
@@ -142,8 +237,23 @@ describe('delivery:react native js', () => {
       delivery({ config, _logger: { error: log } }, fetch).sendReport(payload, (err) => {
         expect(didLog).toBe(true)
         expect(err).toBeTruthy()
+        expect(spiedEnqueue).toHaveBeenCalled()
         done()
       })
     })
+  })
+
+  it('starts the redelivery loop', done => {
+    const mockDelivery = {
+      start: (send, noopQueue) => {
+        expect(typeof send).toBe('function')
+        done()
+      }
+    }
+    const delivery = proxyquire('../', {
+      './queue': noopQueue,
+      './redelivery': mockDelivery.start
+    })
+    delivery({}, fetch)
   })
 })
