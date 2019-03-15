@@ -68,7 +68,7 @@ describe('plugin: expo device', () => {
     const plugin = proxyquire('../', {
       'expo': {
         Constants: {
-          platform: { ios: { model: IOS_MODEL, platform: IOS_PLATFORM, system: IOS_VERSION } },
+          platform: { ios: { model: IOS_MODEL, platform: IOS_PLATFORM, systemVersion: IOS_VERSION } },
           manifest: { sdkVersion: SDK_VERSION },
           expoVersion: EXPO_VERSION
         }

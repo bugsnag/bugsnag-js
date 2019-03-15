@@ -28,7 +28,7 @@ module.exports = {
       modelName: Constants.platform.ios ? Constants.platform.ios.model : undefined,
       modelNumber: Constants.platform.ios ? Constants.platform.ios.platform : undefined,
       osName: Platform.OS,
-      osVersion: Constants.platform.ios ? Constants.platform.ios.system : Constants.systemVersion,
+      osVersion: Constants.platform.ios ? Constants.platform.ios.systemVersion : Constants.systemVersion,
       runtimeVersions: {
         reactNative: rnVersion,
         expoApp: Constants.expoVersion,
