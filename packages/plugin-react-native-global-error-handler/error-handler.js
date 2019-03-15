@@ -17,7 +17,8 @@ module.exports = {
       client.notify(createReportFromErr(error, {
         severity: 'error',
         unhandled: true,
-        severityReason: { type: 'unhandledException' }
+        severityReason: { type: 'unhandledException' },
+        attemptDelivery: false
       }), {}, () => {
         if (typeof prev === 'function') prev(error, isFatal)
       })
