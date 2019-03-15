@@ -1,61 +1,93 @@
-const REDELIVER_INTERVAL_MS = 30 * 1000
+const RETRY_INTERVAL_MS = 30 * 1000
 const MAX_RETRIES = 5
 
-module.exports = (
-  send,
-  queue,
-  onerror = () => {},
-  redeliveryInterval = REDELIVER_INTERVAL_MS,
-  maxRetries = MAX_RETRIES
-) => {
-  let timer = null
-  let stopped = false
+/*
+ * This class consumes from a queue of undelivered payloads and attempts to re-send
+ * them. If delivery succeeds, the item is removed from the queue. If it fails, the
+ * item is updated with with number of attempted retries. However, if MAX_RETRIES is
+ * reached the item is removed from the queue.
+ */
+module.exports = class RedeliveryLoop {
+  constructor (
+    send,
+    queue,
+    onerror = () => {},
+    retryInterval = RETRY_INTERVAL_MS,
+    maxRetries = MAX_RETRIES
+  ) {
+    this._send = send
+    this._queue = queue
+    this._onerror = onerror
+    this._retryInterval = retryInterval
+    this._maxRetries = maxRetries
 
-  const stop = () => {
-    stopped = true
-    clearTimeout(timer)
+    this._timer = null
+    this._stopped = true
   }
 
-  const schedule = (fn, t) => {
-    if (stopped) return
-    timer = setTimeout(fn, t)
+  stop () {
+    this._stopped = true
+    clearTimeout(this._timer)
   }
 
-  const redeliver = async () => {
+  start () {
+    // no-op if we're already running
+    if (!this._stopped) return
+    this._stopped = false
+    this._schedule(0)
+  }
+
+  _schedule (t) {
+    if (this._stopped) return
+    this._timer = setTimeout(this._redeliver.bind(this), t)
+  }
+
+  async _redeliver () {
     try {
       // pop a failed request off of the queue
-      const req = await queue.dequeue(onerror)
+      const res = await this._queue.peek()
 
-      // if there isn't anything on the queue, wait and try again
-      if (!req) {
-        schedule(redeliver, redeliveryInterval)
+      // if there isn't anything on the queue, stop the loop
+      if (!res) {
+        this.stop()
         return
       }
 
+      const { id, payload } = res
+
       // if there is, attempt to deliver it
-      send(req.url, req.opts, (err) => {
-        if (err) {
-          onerror(err)
-          // increment the retry count
-          const r = { ...req, retries: req.retries + 1 }
-          // if it's allowed some more retries and the failure this time is not
-          // explicitly marked isRetryable=false, enqueue it again for later
-          if (err.isRetryable !== false && r.retries < maxRetries) queue.enqueue(r, onerror)
-          // try again later
-          schedule(redeliver, redeliveryInterval)
-          return
+      this._send(payload.url, payload.opts, async (err) => {
+        try {
+          if (err) {
+            this._onerror(err)
+
+            if (err.isRetryable === false) {
+              await this._queue.remove(id)
+              return this._schedule(0)
+            }
+
+            if (payload.retries >= this._maxRetries) {
+              await this._queue.remove(id)
+            } else {
+              // increment the retry count and save it
+              const updates = { retries: payload.retries + 1 }
+              await this._queue.update(id, updates)
+            }
+
+            // this request failed so wait a while before retrying
+            return this._schedule(this._retryInterval)
+          }
+
+          // this request succeeded, grab another immediately after we delete this one
+          await this._queue.remove(id)
+          this._schedule(0)
+        } catch (e) {
+          this._onerror(e)
+          this._schedule(0)
         }
-        // this redelivery succeed, grab another immediately
-        schedule(redeliver, 0)
       })
     } catch (e) {
-      onerror(e)
+      this._onerror(e)
     }
   }
-
-  // kick off the redeliver loop, but not before the notifier has been configured
-  schedule(redeliver, 0)
-
-  // allow the timeout to be cleared
-  return () => stop()
 }
