@@ -48,9 +48,14 @@
   },
   "dependencies": {
     "@bugsnag/core": "^6.0.0",
+    "@bugsnag/plugin-react": "^6.0.0",
     "@bugsnag/plugin-react-native-global-error-handler": "^6.0.0",
     "@bugsnag/plugin-react-native-unhandled-rejection": "^6.0.0",
     "bugsnag-build-reporter": "^1.0.1",
     "bugsnag-sourcemaps": "^1.1.0"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "expo": "*"
   }
 }
