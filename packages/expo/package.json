@@ -37,6 +37,9 @@
     "test:types": "tslint -c ../../tslint.json types/*.d.ts && jasmine 'types/**/*.test.js'",
     "postversion": "npm run build"
   },
+  "bin": {
+    "bugsnag-expo": "bin/cli.js"
+  },
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
@@ -48,18 +51,20 @@
   },
   "dependencies": {
     "@bugsnag/core": "^6.0.0",
-    "@bugsnag/plugin-expo-device": "^6.0.0",
-    "@bugsnag/plugin-expo-app": "^6.0.0",
-    "@bugsnag/plugin-react": "^6.0.0",
     "@bugsnag/plugin-console-breadcrumbs": "^6.0.0",
+    "@bugsnag/plugin-expo-app": "^6.0.0",
+    "@bugsnag/plugin-expo-device": "^6.0.0",
     "@bugsnag/plugin-network-breadcrumbs": "^6.0.0",
+    "@bugsnag/plugin-react": "^6.0.0",
     "@bugsnag/plugin-react-native-global-error-handler": "^6.0.0",
     "@bugsnag/plugin-react-native-unhandled-rejection": "^6.0.0",
     "bugsnag-build-reporter": "^1.0.1",
-    "bugsnag-sourcemaps": "^1.1.0"
+    "bugsnag-sourcemaps": "^1.1.0",
+    "command-line-args": "^5.0.2",
+    "prompts": "^2.0.4"
   },
   "peerDependencies": {
-    "react": "*",
-    "expo": "*"
+    "expo": "*",
+    "react": "*"
   }
 }
