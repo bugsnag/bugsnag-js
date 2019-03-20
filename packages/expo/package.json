@@ -48,6 +48,7 @@
   },
   "dependencies": {
     "@bugsnag/core": "^6.0.0",
+    "@bugsnag/plugin-expo-device": "^6.0.0",
     "@bugsnag/plugin-expo-app": "^6.0.0",
     "@bugsnag/plugin-react": "^6.0.0",
     "@bugsnag/plugin-console-breadcrumbs": "^6.0.0",
