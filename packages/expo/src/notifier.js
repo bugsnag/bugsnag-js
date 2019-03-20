@@ -1,6 +1,7 @@
 const name = 'Bugsnag Expo'
 const { version } = require('../package.json')
 const url = 'https://github.com/bugsnag/bugsnag-js'
+
 const React = require('react')
 const { Constants } = require('expo')
 
@@ -21,6 +22,19 @@ const bugsnagReact = require('@bugsnag/plugin-react')
 module.exports = (opts) => {
   // handle very simple use case where user supplies just the api key as a string
   if (typeof opts === 'string') opts = { apiKey: opts }
+
+  // ensure opts is actually an object (at this point it
+  // could be null, undefined, a number, a boolean etc.)
+  opts = { ...opts }
+
+  // attempt to fetch apiKey from app.json if we didn't get one explicitly passed
+  if (!opts.apiKey &&
+    Constants.manifest &&
+    Constants.manifest.extra &&
+    Constants.manifest.extra.bugsnag &&
+    Constants.manifest.extra.bugsnag.apiKey) {
+    opts.apiKey = Constants.manifest.extra.bugsnag.apiKey
+  }
 
   const bugsnag = new Client({ name, version, url })
 
