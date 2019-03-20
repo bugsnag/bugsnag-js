@@ -1,6 +1,7 @@
 const name = 'Bugsnag Expo'
 const { version } = require('../package.json')
 const url = 'https://github.com/bugsnag/bugsnag-js'
+const React = require('react')
 const { Constants } = require('expo')
 
 const Client = require('@bugsnag/core/client')
@@ -13,6 +14,8 @@ const plugins = [
   require('@bugsnag/plugin-console-breadcrumbs'),
   require('@bugsnag/plugin-network-breadcrumbs')
 ]
+
+const bugsnagReact = require('@bugsnag/plugin-react')
 
 module.exports = (opts) => {
   // handle very simple use case where user supplies just the api key as a string
@@ -36,6 +39,7 @@ module.exports = (opts) => {
         bugsnag.use(pl)
     }
   })
+  bugsnag.use(bugsnagReact, React)
 
   bugsnag._logger.debug(`Loaded!`)
 
