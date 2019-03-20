@@ -22,6 +22,7 @@ module.exports = (opts) => {
 
   // attempt to fetch apiKey from app.json if we didn't get one explicitly passed
   if (!opts.apiKey &&
+    Constants.manifest &&
     Constants.manifest.extra &&
     Constants.manifest.extra.bugsnag &&
     Constants.manifest.extra.bugsnag.apiKey) {
