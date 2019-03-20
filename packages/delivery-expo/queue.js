@@ -20,7 +20,7 @@ module.exports = class UndeliveredPayloadQueue {
    */
   async init () {
     const { exists, isDirectory } = await FileSystem.getInfoAsync(this._path)
-    if (exists && isDirectory) return true
+    if (exists && isDirectory) return
     await FileSystem.makeDirectoryAsync(this._path, { intermediates: true })
   }
 

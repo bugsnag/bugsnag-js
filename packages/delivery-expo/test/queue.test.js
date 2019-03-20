@@ -215,7 +215,6 @@ describe('delivery: expo -> queue', () => {
         },
         readDirectoryAsync: () => {
           const files = Array(70).fill(1).map(() => Queue.generateFilename('stuff'))
-          console.log(files)
           return Promise.resolve(files)
         },
         deleteAsync: () => {}

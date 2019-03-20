@@ -52,7 +52,7 @@ module.exports = (client, fetch = global.fetch) => {
           },
           body
         }
-        if (!networkStatus.isConnected || (report._handledState && report._handledState.attemptDelivery === false)) {
+        if (!networkStatus.isConnected || report.attemptImmediateDelivery === false) {
           enqueue('report', { url, opts })
           return cb(null)
         }

@@ -14,12 +14,13 @@ module.exports = {
     const prev = ErrorUtils.getGlobalHandler()
 
     ErrorUtils.setGlobalHandler((error, isFatal) => {
-      client.notify(createReportFromErr(error, {
+      const report = createReportFromErr(error, {
         severity: 'error',
         unhandled: true,
-        severityReason: { type: 'unhandledException' },
-        attemptDelivery: false
-      }), {}, () => {
+        severityReason: { type: 'unhandledException' }
+      })
+      report.attemptImmediateDelivery = false
+      client.notify(report, {}, () => {
         if (typeof prev === 'function') prev(error, isFatal)
       })
     })

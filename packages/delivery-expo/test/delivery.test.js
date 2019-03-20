@@ -287,7 +287,7 @@ describe('delivery: expo', () => {
     })
   })
 
-  it('does not send a report marked with attemptDelivery=false', done => {
+  it('does not send a report marked with report.attemptImmediateDelivery=false', done => {
     class MockQueue {
       async init () {}
       async enqueue (req) {}
@@ -300,7 +300,7 @@ describe('delivery: expo', () => {
       './network-status': MockNetworkStatus
     })
 
-    const payload = { sample: 'payload', _handledState: { attemptDelivery: false } }
+    const payload = { sample: 'payload', attemptImmediateDelivery: false }
     const config = {
       apiKey: 'aaaaaaaa',
       endpoints: { notify: `https://some-address.com` },
