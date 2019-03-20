@@ -10,20 +10,25 @@ const { includes } = require('@bugsnag/core/lib/es-utils')
 let restoreFunctions = []
 let client
 let win
+let getIgnoredUrls
 
-const getEndpoints = () =>
-  [ client.config.endpoints.notify, client.config.endpoints.sessions ]
+const defaultIgnoredUrls = () => [
+  client.config.endpoints.notify,
+  client.config.endpoints.sessions
+]
 
 /*
  * Leaves breadcrumbs when network requests occur
  */
-exports.init = (_client, _win = window) => {
+exports.name = 'networkBreadcrumbs'
+exports.init = (_client, _getIgnoredUrls = defaultIgnoredUrls, _win = window) => {
   const explicitlyDisabled = _client.config.networkBreadcrumbsEnabled === false
   const implicitlyDisabled = _client.config.autoBreadcrumbs === false && _client.config.networkBreadcrumbsEnabled !== true
   if (explicitlyDisabled || implicitlyDisabled) return
 
   client = _client
   win = _win
+  getIgnoredUrls = _getIgnoredUrls
   monkeyPatchXMLHttpRequest()
   monkeyPatchFetch()
 }
@@ -79,7 +84,7 @@ const monkeyPatchXMLHttpRequest = () => {
 }
 
 function handleXHRLoad () {
-  if (includes(getEndpoints(), this[REQUEST_URL_KEY])) {
+  if (includes(getIgnoredUrls(), this[REQUEST_URL_KEY])) {
     // don't leave a network breadcrumb from bugsnag notify calls
     return
   }
@@ -96,7 +101,7 @@ function handleXHRLoad () {
 }
 
 function handleXHRError () {
-  if (includes(getEndpoints(), this[REQUEST_URL_KEY])) {
+  if (includes(getIgnoredUrls, this[REQUEST_URL_KEY])) {
     // don't leave a network breadcrumb from bugsnag notify calls
     return
   }
@@ -108,7 +113,10 @@ function handleXHRError () {
 
 // window.fetch monkey patch
 const monkeyPatchFetch = () => {
-  if (!('fetch' in win)) return
+  // only patch it if it exists and if it is not a polyfill (patching a polyfilled
+  // fetch() results in duplicate breadcrumbs for the same request because the
+  // implementation uses XMLHttpRequest which is also patched)
+  if (!('fetch' in win) || win.fetch.polyfill) return
 
   const oldFetch = win.fetch
   win.fetch = function fetch (...args) {
