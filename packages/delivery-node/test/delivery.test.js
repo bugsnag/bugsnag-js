@@ -36,7 +36,7 @@ describe('delivery:node', () => {
         endpoints: { notify: `http://0.0.0.0:${server.address().port}/notify/` },
         filters: []
       }
-      delivery().sendReport({}, config, payload, (err) => {
+      delivery({ _logger: {}, config }).sendReport(payload, (err) => {
         expect(err).toBe(null)
         expect(requests.length).toBe(1)
         expect(requests[0].method).toBe('POST')
@@ -64,7 +64,7 @@ describe('delivery:node', () => {
         endpoints: { notify: 'blah', sessions: `http://0.0.0.0:${server.address().port}/sessions/` },
         filters: []
       }
-      delivery().sendSession({}, config, payload, (err) => {
+      delivery({ _logger: {}, config }).sendSession(payload, (err) => {
         expect(err).toBe(null)
         expect(requests.length).toBe(1)
         expect(requests[0].method).toBe('POST')
@@ -90,9 +90,7 @@ describe('delivery:node', () => {
     }
     let didLog = false
     const log = () => { didLog = true }
-    delivery().sendReport({
-      error: log
-    }, config, payload, (err) => {
+    delivery({ config, _logger: { error: log } }).sendReport(payload, (err) => {
       expect(didLog).toBe(true)
       expect(err).toBeTruthy()
       expect(err.code).toBe('ECONNREFUSED')
@@ -115,9 +113,7 @@ describe('delivery:node', () => {
       }
       let didLog = false
       const log = () => { didLog = true }
-      delivery().sendReport({
-        error: log
-      }, config, payload, (err) => {
+      delivery({ config, _logger: { error: log } }).sendReport(payload, (err) => {
         expect(didLog).toBe(true)
         expect(err).toBeTruthy()
         expect(err.code).toBe('ECONNRESET')
@@ -142,9 +138,7 @@ describe('delivery:node', () => {
       }
       let didLog = false
       const log = () => { didLog = true }
-      delivery().sendReport({
-        error: log
-      }, config, payload, (err) => {
+      delivery({ config, _logger: { error: log } }).sendReport(payload, (err) => {
         expect(didLog).toBe(true)
         expect(err).toBeTruthy()
         done()

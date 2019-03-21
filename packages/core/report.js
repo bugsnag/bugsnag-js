@@ -37,6 +37,12 @@ class BugsnagReport {
     }, [])
     this.user = undefined
     this.session = undefined
+
+    // Flags.
+    // Note these are not initialised unless they are used
+    // to save unnecessary bytes in the browser bundle
+
+    /* this.attemptImmediateDelivery, default: true */
   }
 
   ignore () {

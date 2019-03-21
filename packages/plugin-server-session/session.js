@@ -62,16 +62,11 @@ const sendSessionSummary = client => sessionCounts => {
   }
 
   function req (cb) {
-    client._delivery.sendSession(
-      client._logger,
-      client.config,
-      {
-        notifier: client.notifier,
-        device: client.device,
-        app: { ...{ releaseStage }, ...client.app },
-        sessionCounts
-      },
-      cb
-    )
+    client._delivery.sendSession({
+      notifier: client.notifier,
+      device: client.device,
+      app: { ...{ releaseStage }, ...client.app },
+      sessionCounts
+    }, cb)
   }
 }

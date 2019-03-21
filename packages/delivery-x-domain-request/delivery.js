@@ -1,9 +1,9 @@
 const payload = require('@bugsnag/core/lib/json-payload')
 const { isoDate } = require('@bugsnag/core/lib/es-utils')
 
-module.exports = (win = window) => ({
-  sendReport: (logger, config, report, cb = () => {}) => {
-    const url = getApiUrl(config, 'notify', '4', win)
+module.exports = (client, win = window) => ({
+  sendReport: (report, cb = () => {}) => {
+    const url = getApiUrl(client.config, 'notify', '4', win)
     const req = new win.XDomainRequest()
     req.onload = function () {
       cb(null)
@@ -11,15 +11,15 @@ module.exports = (win = window) => ({
     req.open('POST', url)
     setTimeout(() => {
       try {
-        req.send(payload.report(report, config.filters))
+        req.send(payload.report(report, client.config.filters))
       } catch (e) {
-        logger.error(e)
+        client._logger.error(e)
         cb(e)
       }
     }, 0)
   },
-  sendSession: (logger, config, session, cb = () => {}) => {
-    const url = getApiUrl(config, 'sessions', '1', win)
+  sendSession: (session, cb = () => {}) => {
+    const url = getApiUrl(client.config, 'sessions', '1', win)
     const req = new win.XDomainRequest()
     req.onload = function () {
       cb(null)
@@ -27,9 +27,9 @@ module.exports = (win = window) => ({
     req.open('POST', url)
     setTimeout(() => {
       try {
-        req.send(payload.session(session, config.filters))
+        req.send(payload.session(session, client.config.filters))
       } catch (e) {
-        logger.error(e)
+        this._logger.error(e)
         cb(e)
       }
     }, 0)

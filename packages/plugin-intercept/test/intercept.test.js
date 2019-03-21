@@ -32,10 +32,10 @@ function pload (index, cb) {
 describe('plugin: intercept', () => {
   it('does nothing with a happy-case callback', done => {
     const c = new Client(VALID_NOTIFIER)
-    c.delivery({
+    c.delivery(client => ({
       sendReport: () => expect(true).toBe(false),
       sendSession: () => {}
-    })
+    }))
     c.setOptions({ apiKey: 'api_key' })
     c.configure()
     c.use(plugin)
@@ -48,13 +48,13 @@ describe('plugin: intercept', () => {
 
   it('reports when the callback recieves an error', done => {
     const c = new Client(VALID_NOTIFIER)
-    c.delivery({
-      sendReport: (config, logger, report) => {
+    c.delivery(client => ({
+      sendReport: (report) => {
         expect(report.events[0].errorMessage).toBe('no item available')
         done()
       },
       sendSession: () => {}
-    })
+    }))
     c.setOptions({ apiKey: 'api_key' })
     c.configure()
     c.use(plugin)
@@ -67,10 +67,10 @@ describe('plugin: intercept', () => {
 
   it('works with resolved promises', done => {
     const c = new Client(VALID_NOTIFIER)
-    c.delivery({
+    c.delivery(client => ({
       sendReport: () => expect(true).toBe(false),
       sendSession: () => {}
-    })
+    }))
     c.setOptions({ apiKey: 'api_key' })
     c.configure()
     c.use(plugin)
@@ -83,13 +83,13 @@ describe('plugin: intercept', () => {
 
   it('works with rejected promises', done => {
     const c = new Client(VALID_NOTIFIER)
-    c.delivery({
-      sendReport: (config, logger, report) => {
+    c.delivery(client => ({
+      sendReport: (report) => {
         expect(report.events[0].errorMessage).toBe('no item available')
         done()
       },
       sendSession: () => {}
-    })
+    }))
     c.setOptions({ apiKey: 'api_key' })
     c.configure()
     c.use(plugin)
@@ -102,15 +102,15 @@ describe('plugin: intercept', () => {
 
   it('should add a stacktrace when missing', done => {
     const c = new Client(VALID_NOTIFIER)
-    c.delivery({
-      sendReport: (config, logger, report, cb) => {
+    c.delivery(client => ({
+      sendReport: (report, cb) => {
         expect(report.events[0].errorMessage).toBe('ENOENT: no such file or directory, open \'does not exist\'')
         expect(report.events[0].stacktrace[0].file).toBe(`${__filename}`)
         cb(null)
         done()
       },
       sendSession: () => {}
-    })
+    }))
     c.setOptions({
       apiKey: 'api_key'
     })
