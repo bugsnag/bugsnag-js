@@ -97,8 +97,8 @@ describe('@bugsnag/core/client', () => {
 
     it('delivers an error report', done => {
       const client = new Client(VALID_NOTIFIER)
-      client.delivery({
-        sendReport: (logger, config, payload) => {
+      client.delivery(client => ({
+        sendReport: payload => {
           expect(payload).toBeTruthy()
           expect(Array.isArray(payload.events)).toBe(true)
           const report = payload.events[0].toJSON()
@@ -106,7 +106,7 @@ describe('@bugsnag/core/client', () => {
           expect(report.severityReason).toEqual({ type: 'handledException' })
           process.nextTick(() => done())
         }
-      })
+      }))
       client.setOptions({ apiKey: 'API_KEY_YEAH' })
       client.configure()
       client.notify(new Error('oh em gee'))
@@ -114,8 +114,8 @@ describe('@bugsnag/core/client', () => {
 
     it('supports manually setting severity', done => {
       const client = new Client(VALID_NOTIFIER)
-      client.delivery({
-        sendReport: (logger, config, payload) => {
+      client.delivery(client => ({
+        sendReport: (payload) => {
           expect(payload).toBeTruthy()
           expect(Array.isArray(payload.events)).toBe(true)
           const report = payload.events[0].toJSON()
@@ -123,7 +123,7 @@ describe('@bugsnag/core/client', () => {
           expect(report.severityReason).toEqual({ type: 'userSpecifiedSeverity' })
           done()
         }
-      })
+      }))
       client.setOptions({ apiKey: 'API_KEY_YEAH' })
       client.configure()
       client.notify(new Error('oh em gee'), { severity: 'error' })
@@ -131,8 +131,8 @@ describe('@bugsnag/core/client', () => {
 
     it('supports setting severity via callback', done => {
       const client = new Client(VALID_NOTIFIER)
-      client.delivery({
-        sendReport: (logger, config, payload) => {
+      client.delivery(client => ({
+        sendReport: (payload) => {
           expect(payload).toBeTruthy()
           expect(Array.isArray(payload.events)).toBe(true)
           const report = payload.events[0].toJSON()
@@ -140,7 +140,7 @@ describe('@bugsnag/core/client', () => {
           expect(report.severityReason).toEqual({ type: 'userCallbackSetSeverity' })
           done()
         }
-      })
+      }))
       client.setOptions({ apiKey: 'API_KEY_YEAH' })
       client.configure()
       client.notify(new Error('oh em gee'), {
@@ -152,11 +152,11 @@ describe('@bugsnag/core/client', () => {
 
     it('supports preventing send with report.ignore() / return false', done => {
       const client = new Client(VALID_NOTIFIER)
-      client.delivery({
-        sendReport: (logger, config, payload) => {
+      client.delivery(client => ({
+        sendReport: (payload) => {
           fail('sendReport() should not be called')
         }
-      })
+      }))
       client.setOptions({ apiKey: 'API_KEY_YEAH' })
       client.configure()
 
@@ -169,11 +169,11 @@ describe('@bugsnag/core/client', () => {
 
     it('supports preventing send with notifyReleaseStages', done => {
       const client = new Client(VALID_NOTIFIER)
-      client.delivery({
-        sendReport: (logger, config, payload) => {
+      client.delivery(client => ({
+        sendReport: (payload) => {
           fail('sendReport() should not be called')
         }
-      })
+      }))
       client.setOptions({ apiKey: 'API_KEY_YEAH', notifyReleaseStages: [] })
       client.configure()
 
@@ -186,11 +186,11 @@ describe('@bugsnag/core/client', () => {
 
     it('supports setting releaseStage via config.releaseStage', done => {
       const client = new Client(VALID_NOTIFIER)
-      client.delivery({
-        sendReport: (logger, config, payload) => {
+      client.delivery(client => ({
+        sendReport: (payload) => {
           fail('sendReport() should not be called')
         }
-      })
+      }))
       client.setOptions({ apiKey: 'API_KEY_YEAH', releaseStage: 'staging', notifyReleaseStages: [ 'production' ] })
       client.configure()
 
@@ -203,11 +203,11 @@ describe('@bugsnag/core/client', () => {
 
     it('supports setting releaseStage via client.app.releaseStage', done => {
       const client = new Client(VALID_NOTIFIER)
-      client.delivery({
-        sendReport: (logger, config, payload) => {
+      client.delivery(client => ({
+        sendReport: (payload) => {
           fail('sendReport() should not be called')
         }
-      })
+      }))
       client.setOptions({ apiKey: 'API_KEY_YEAH', notifyReleaseStages: [ 'production' ] })
       client.configure()
       client.app.releaseStage = 'staging'
@@ -221,12 +221,12 @@ describe('@bugsnag/core/client', () => {
 
     it('includes releaseStage in report.app', done => {
       const client = new Client(VALID_NOTIFIER)
-      client.delivery({
-        sendReport: (logger, config, payload) => {
+      client.delivery(client => ({
+        sendReport: (payload) => {
           expect(payload.events[0].app.releaseStage).toBe('staging')
           done()
         }
-      })
+      }))
       client.setOptions({ apiKey: 'API_KEY_YEAH', notifyReleaseStages: [ 'staging' ] })
       client.configure()
       client.app.releaseStage = 'staging'
@@ -235,12 +235,12 @@ describe('@bugsnag/core/client', () => {
 
     it('includes releaseStage in report.app when set via config', done => {
       const client = new Client(VALID_NOTIFIER)
-      client.delivery({
-        sendReport: (logger, config, payload) => {
+      client.delivery(client => ({
+        sendReport: (payload) => {
           expect(payload.events[0].app.releaseStage).toBe('staging')
           done()
         }
-      })
+      }))
       client.setOptions({ apiKey: 'API_KEY_YEAH', notifyReleaseStages: [ 'staging' ], releaseStage: 'staging' })
       client.configure()
       client.notify(new Error('oh em eff gee'))
@@ -248,12 +248,12 @@ describe('@bugsnag/core/client', () => {
 
     it('prefers client.app.releaseStage over config.releaseStage', done => {
       const client = new Client(VALID_NOTIFIER)
-      client.delivery({
-        sendReport: (logger, config, payload) => {
+      client.delivery(client => ({
+        sendReport: (payload) => {
           expect(payload.events[0].app.releaseStage).toBe('testing')
           done()
         }
-      })
+      }))
       client.setOptions({ apiKey: 'API_KEY_YEAH', notifyReleaseStages: [ 'testing' ], releaseStage: 'staging' })
       client.configure()
       client.app.releaseStage = 'testing'
@@ -262,12 +262,12 @@ describe('@bugsnag/core/client', () => {
 
     it('populates client.app.version if config.appVersion is supplied', done => {
       const client = new Client(VALID_NOTIFIER)
-      client.delivery({
-        sendReport: (logger, config, payload) => {
+      client.delivery(client => ({
+        sendReport: (payload) => {
           expect(payload.events[0].app.version).toBe('1.2.3')
           done()
         }
-      })
+      }))
       client.setOptions({ apiKey: 'API_KEY_YEAH', appVersion: '1.2.3' })
       client.configure()
       client.notify(new Error('oh em eff gee'))
@@ -278,7 +278,7 @@ describe('@bugsnag/core/client', () => {
       const client = new Client(VALID_NOTIFIER)
       client.setOptions({ apiKey: 'API_KEY_YEAH' })
       client.configure()
-      client.delivery({ sendReport: (logger, config, payload) => payloads.push(payload) })
+      client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
 
       client.notify(undefined)
       client.notify(null)
@@ -303,7 +303,7 @@ describe('@bugsnag/core/client', () => {
       const client = new Client(VALID_NOTIFIER)
       client.setOptions({ apiKey: 'API_KEY_YEAH' })
       client.configure()
-      client.delivery({ sendReport: (logger, config, payload) => payloads.push(payload) })
+      client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
       client.notify({ name: 'UnknownThing', message: 'found a thing that couldn’t be dealt with' })
 
       expect(payloads.length).toBe(1)
@@ -316,7 +316,7 @@ describe('@bugsnag/core/client', () => {
       const client = new Client(VALID_NOTIFIER)
       client.setOptions({ apiKey: 'API_KEY_YEAH' })
       client.configure()
-      client.delivery({ sendReport: (logger, config, payload) => payloads.push(payload) })
+      client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
       client.notify(new Error('foobar'))
       expect(client.breadcrumbs.length).toBe(1)
       expect(client.breadcrumbs[0].type).toBe('error')
@@ -443,9 +443,9 @@ describe('@bugsnag/core/client', () => {
           return client
         }
       })
-      client.delivery({
+      client.delivery(client => ({
         sendSession: () => {},
-        sendReport: (logger, config, report, cb) => {
+        sendReport: (report, cb) => {
           if (++i < 10) return
           const r = JSON.parse(JSON.stringify(report.events[0]))
           expect(r.session).toBeDefined()
@@ -453,7 +453,7 @@ describe('@bugsnag/core/client', () => {
           expect(r.session.events.unhandled).toBe(4)
           done()
         }
-      })
+      }))
       const sessionClient = client.startSession()
       sessionClient.notify(new Error('broke'))
       sessionClient.notify(new Report('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))

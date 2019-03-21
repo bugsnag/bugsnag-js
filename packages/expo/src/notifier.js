@@ -7,6 +7,8 @@ const { Constants } = require('expo')
 
 const Client = require('@bugsnag/core/client')
 
+const delivery = require('@bugsnag/delivery-expo')
+
 const schema = { ...require('@bugsnag/core/config').schema, ...require('./config') }
 
 const plugins = [
@@ -40,6 +42,7 @@ module.exports = (opts) => {
 
   const bugsnag = new Client({ name, version, url })
 
+  bugsnag.delivery(delivery)
   bugsnag.setOptions(opts)
   bugsnag.configure(schema)
 

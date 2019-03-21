@@ -57,7 +57,7 @@ module.exports = (opts) => {
   bugsnag.setOptions(opts)
 
   // set delivery based on browser capability (IE 8+9 have an XDomainRequest object)
-  bugsnag.delivery(window.XDomainRequest ? dXDomainRequest() : dXMLHttpRequest())
+  bugsnag.delivery(window.XDomainRequest ? dXDomainRequest : dXMLHttpRequest)
 
   // configure with user supplied options
   // errors can be thrown here that prevent the lib from being in a useable state

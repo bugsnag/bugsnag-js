@@ -13,8 +13,8 @@ describe('plugin: react native rejection handler', () => {
     const c = new Client(VALID_NOTIFIER)
     c.setOptions({ apiKey: 'api_key' })
     c.configure()
-    c.delivery({
-      sendReport: (config, logger, report) => {
+    c.delivery(client => ({
+      sendReport: (report) => {
         const r = JSON.parse(JSON.stringify(report))
         expect(r).toBeTruthy()
         expect(r.events[0].severity).toBe('error')
@@ -22,7 +22,7 @@ describe('plugin: react native rejection handler', () => {
         expect(r.events[0].unhandled).toBe(true)
         done()
       }
-    })
+    }))
     const stop = plugin.init(c)
     // in the interests of keeping the tests quick, TypeErrors get rejected quicker
     // see: https://github.com/then/promise/blob/d980ed01b7a383bfec416c96095e2f40fd18ab34/src/rejection-tracking.js#L48-L54
@@ -38,11 +38,11 @@ describe('plugin: react native rejection handler', () => {
     const c = new Client(VALID_NOTIFIER)
     c.setOptions({ apiKey: 'api_key', autoNotify: false })
     c.configure()
-    c.delivery({
-      sendReport: (config, logger, report) => {
+    c.delivery(client => ({
+      sendReport: (report) => {
         expect(report).not.toBeTruthy()
       }
-    })
+    }))
     const stop = plugin.init(c)
     try {
       String.floop()

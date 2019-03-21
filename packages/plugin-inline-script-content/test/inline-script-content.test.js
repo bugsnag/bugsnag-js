@@ -34,7 +34,7 @@ Lorem ipsum dolor sit amet.
     client.use(plugin, document, window)
 
     expect(client.config.beforeSend.length).toBe(1)
-    client.delivery({ sendReport: (logger, config, payload) => payloads.push(payload) })
+    client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
     client.notify(new Report('BadThing', 'Happens in script tags', [
       { fileName: window.location.href.replace(/#.*$/), lineNumber: 10 }
     ]))

@@ -47,10 +47,10 @@ describe('plugin: react native global error handler', () => {
 
   it('should call through to an exising handler', done => {
     const client = new Client(VALID_NOTIFIER)
-    client.delivery({
+    client.delivery(client => ({
       sendSession: () => {},
       sendReport: (...args) => args[args.length - 1](null)
-    })
+    }))
     client.setOptions({ apiKey: 'API_KEY_YEAH' })
     client.configure()
     const eu = new MockErrorUtils()
@@ -66,16 +66,16 @@ describe('plugin: react native global error handler', () => {
 
   it('should have the correct handled state', done => {
     const client = new Client(VALID_NOTIFIER)
-    client.delivery({
+    client.delivery(client => ({
       sendSession: () => {},
-      sendReport: (logger, config, report, cb) => {
+      sendReport: (report, cb) => {
         const r = JSON.parse(JSON.stringify(report))
         expect(r.events[0].severity).toBe('error')
         expect(r.events[0].unhandled).toBe(true)
         expect(r.events[0].severityReason).toEqual({ type: 'unhandledException' })
         done()
       }
-    })
+    }))
     client.setOptions({ apiKey: 'API_KEY_YEAH' })
     client.configure()
     const eu = new MockErrorUtils()

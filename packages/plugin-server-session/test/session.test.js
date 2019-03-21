@@ -23,14 +23,14 @@ describe('plugin: server sessions', () => {
     c.setOptions({
       apiKey: 'aaaa-aaaa-aaaa-aaaa'
     })
-    c.delivery({
+    c.delivery(client => ({
       sendReport: () => {},
-      sendSession: (logger, config, session, cb = () => {}) => {
+      sendSession: (session, cb = () => {}) => {
         expect(session.sessionCounts.length).toBe(1)
         expect(session.sessionCounts[0].sessionsStarted).toBe(123)
         done()
       }
-    })
+    }))
 
     c.configure()
     c.use(plugin)
@@ -67,13 +67,13 @@ describe('plugin: server sessions', () => {
       releaseStage: 'qa',
       notifyReleaseStages: [ 'production' ]
     })
-    c.delivery({
+    c.delivery(client => ({
       sendReport: () => {},
-      sendSession: (logger, config, session, cb = () => {}) => {
+      sendSession: (session, cb = () => {}) => {
         // no session should be sent
         expect(true).toBe(false)
       }
-    })
+    }))
 
     c.configure()
     c.use(plugin)
@@ -105,16 +105,16 @@ describe('plugin: server sessions', () => {
     // this is normally set by a plugin
     c.device = { hostname: 'test-machine.local' }
 
-    c.delivery({
+    c.delivery(client => ({
       sendReport: () => {},
-      sendSession: (logger, config, session, cb = () => {}) => {
+      sendSession: (session, cb = () => {}) => {
         expect(session.sessionCounts.length).toBe(1)
         expect(session.sessionCounts[0].sessionsStarted).toBe(123)
         expect(session.app).toEqual({ version: '1.2.3', releaseStage: 'qa', type: 'server' })
         expect(session.device).toEqual({ hostname: 'test-machine.local' })
         done()
       }
-    })
+    }))
 
     c.configure()
     c.use(plugin)

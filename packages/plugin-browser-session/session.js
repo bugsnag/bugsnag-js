@@ -23,22 +23,18 @@ const sessionDelegate = {
       return sessionClient
     }
 
-    sessionClient._delivery.sendSession(
-      sessionClient._logger,
-      sessionClient.config,
-      {
-        notifier: sessionClient.notifier,
-        device: sessionClient.device,
-        app: { ...{ releaseStage }, ...sessionClient.app },
-        sessions: [
-          {
-            id: sessionClient._session.id,
-            startedAt: sessionClient._session.startedAt,
-            user: sessionClient.user
-          }
-        ]
-      }
-    )
+    sessionClient._delivery.sendSession({
+      notifier: sessionClient.notifier,
+      device: sessionClient.device,
+      app: { ...{ releaseStage }, ...sessionClient.app },
+      sessions: [
+        {
+          id: sessionClient._session.id,
+          startedAt: sessionClient._session.startedAt,
+          user: sessionClient.user
+        }
+      ]
+    })
 
     return sessionClient
   }
