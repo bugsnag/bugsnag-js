@@ -71,74 +71,76 @@ describe('plugin: expo device', () => {
     }))
     c.notify(new Error('flip'))
   })
-  //
-  // it('should should use versionCode if defined (android)', done => {
-  //   const VERSION_CODE = '1.0'
-  //   const plugin = proxyquire('../', {
-  //     'expo': {
-  //       Constants: {
-  //         platform: {
-  //           android: { versionCode: VERSION_CODE }
-  //         },
-  //         manifest: { version: '1.0.0' }
-  //       }
-  //     },
-  //     'react-native': {
-  //       AppState: {
-  //         addEventListener: () => {},
-  //         currentState: 'active'
-  //       }
-  //     }
-  //   })
-  //   const c = new Client(VALID_NOTIFIER)
-  //   c.setOptions({ apiKey: 'api_key' })
-  //   c.configure()
-  //
-  //   c.use(plugin)
-  //   c.delivery(client => ({
-  //     sendReport: (report) => {
-  //       const r = JSON.parse(JSON.stringify(report))
-  //       expect(r).toBeTruthy()
-  //       expect(r.events[0].app.versionCode).toBe(VERSION_CODE)
-  //       done()
-  //     }
-  //   }))
-  //   c.notify(new Error('flip'))
-  // })
-  //
-  // it('should should use bundleVersion if defined (ios)', done => {
-  //   const BUNDLE_VERSION = '1.0'
-  //   const plugin = proxyquire('../', {
-  //     'expo': {
-  //       Constants: {
-  //         platform: {
-  //           ios: { buildNumber: BUNDLE_VERSION }
-  //         },
-  //         manifest: { version: '1.0.0' }
-  //       }
-  //     },
-  //     'react-native': {
-  //       AppState: {
-  //         addEventListener: () => {},
-  //         currentState: 'active'
-  //       }
-  //     }
-  //   })
-  //   const c = new Client(VALID_NOTIFIER)
-  //   c.setOptions({ apiKey: 'api_key' })
-  //   c.configure()
-  //
-  //   c.use(plugin)
-  //   c.delivery(client => ({
-  //     sendReport: (report) => {
-  //       const r = JSON.parse(JSON.stringify(report))
-  //       expect(r).toBeTruthy()
-  //       expect(r.events[0].app.bundleVersion).toBe(BUNDLE_VERSION)
-  //       done()
-  //     }
-  //   }))
-  //   c.notify(new Error('flip'))
-  // })
+
+  it('should should use versionCode if defined (android)', done => {
+    const VERSION_CODE = '1.0'
+    const plugin = proxyquire('../', {
+      'expo': {
+        Constants: {
+          platform: {
+            android: { versionCode: VERSION_CODE }
+          },
+          manifest: { version: '1.0.0' },
+          appOwnership: 'standalone'
+        }
+      },
+      'react-native': {
+        AppState: {
+          addEventListener: () => {},
+          currentState: 'active'
+        }
+      }
+    })
+    const c = new Client(VALID_NOTIFIER)
+    c.setOptions({ apiKey: 'api_key' })
+    c.configure()
+
+    c.use(plugin)
+    c.delivery(client => ({
+      sendReport: (report) => {
+        const r = JSON.parse(JSON.stringify(report))
+        expect(r).toBeTruthy()
+        expect(r.events[0].metaData.app.nativeVersionCode).toBe(VERSION_CODE)
+        done()
+      }
+    }))
+    c.notify(new Error('flip'))
+  })
+
+  it('should should use bundleVersion if defined (ios)', done => {
+    const BUNDLE_VERSION = '1.0'
+    const plugin = proxyquire('../', {
+      'expo': {
+        Constants: {
+          platform: {
+            ios: { buildNumber: BUNDLE_VERSION }
+          },
+          manifest: { version: '1.0.0' },
+          appOwnership: 'standalone'
+        }
+      },
+      'react-native': {
+        AppState: {
+          addEventListener: () => {},
+          currentState: 'active'
+        }
+      }
+    })
+    const c = new Client(VALID_NOTIFIER)
+    c.setOptions({ apiKey: 'api_key' })
+    c.configure()
+
+    c.use(plugin)
+    c.delivery(client => ({
+      sendReport: (report) => {
+        const r = JSON.parse(JSON.stringify(report))
+        expect(r).toBeTruthy()
+        expect(r.events[0].metaData.app.nativeBundleVersion).toBe(BUNDLE_VERSION)
+        done()
+      }
+    }))
+    c.notify(new Error('flip'))
+  })
 
   it('detects whether the app is inForeground', done => {
     const AppState = {
