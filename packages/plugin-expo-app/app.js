@@ -15,6 +15,16 @@ module.exports = {
       lastState = newState
     })
 
+    // let bundleVersion, versionCode
+    // if (Constants.appOwnership === 'standalone') {
+    //   if (Constants.platform.ios && Constants.platform.ios.buildNumber) {
+    //     bundleVersion = Constants.platform.ios.buildNumber
+    //   }
+    //   if (Constants.platform.android && Constants.platform.android.versionCode) {
+    //     versionCode = Constants.platform.android.versionCode
+    //   }
+    // }
+
     client.config.beforeSend.unshift(report => {
       const now = new Date()
       const inForeground = AppState.currentState === 'active'
@@ -23,18 +33,11 @@ module.exports = {
       if (inForeground) {
         report.app.durationInForeground = now - lastEnteredForeground
       }
+      // report.updateMetaData('app', { bundleVersion, versionCode })
     })
 
     if (!client.app.version && Constants.manifest.version) {
       client.app.version = Constants.manifest.version
-    }
-
-    if (Constants.platform.android && Constants.platform.android.versionCode) {
-      client.app.versionCode = Constants.platform.android.versionCode
-    }
-
-    if (Constants.platform.ios && Constants.platform.ios.buildNumber) {
-      client.app.bundleVersion = Constants.platform.ios.buildNumber
     }
 
     if (Constants.manifest.revisionId) {
