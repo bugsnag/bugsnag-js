@@ -27,7 +27,8 @@
   "files": [
     "src/notifier.js",
     "src/config.js",
-    "hooks/post-publish.js",
+    "hooks",
+    "bin",
     "dist"
   ],
   "scripts": {
