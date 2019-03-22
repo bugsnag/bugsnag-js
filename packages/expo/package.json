@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/expo",
-  "version": "0.0.0",
+  "version": "7.0.0-pre-alpha-ben.0",
   "main": "src/notifier.js",
   "types": "dist/types/bugsnag.d.ts",
   "description": "Bugsnag error reporter for Expo applications",
@@ -48,20 +48,20 @@
     "typescript": "^3.3.3"
   },
   "dependencies": {
-    "@bugsnag/core": "^6.0.0",
-    "@bugsnag/delivery-expo": "^6.0.0",
-    "@bugsnag/plugin-expo-device": "^6.0.0",
-    "@bugsnag/plugin-expo-app": "^6.0.0",
-    "@bugsnag/plugin-react": "^6.0.0",
-    "@bugsnag/plugin-console-breadcrumbs": "^6.0.0",
-    "@bugsnag/plugin-network-breadcrumbs": "^6.0.0",
-    "@bugsnag/plugin-react-native-global-error-handler": "^6.0.0",
-    "@bugsnag/plugin-react-native-unhandled-rejection": "^6.0.0",
+    "@bugsnag/core": "^7.0.0-pre-alpha-ben.0",
+    "@bugsnag/delivery-expo": "^7.0.0-pre-alpha-ben.0",
+    "@bugsnag/plugin-console-breadcrumbs": "^7.0.0-pre-alpha-ben.0",
+    "@bugsnag/plugin-expo-app": "^7.0.0-pre-alpha-ben.0",
+    "@bugsnag/plugin-expo-device": "^7.0.0-pre-alpha-ben.0",
+    "@bugsnag/plugin-network-breadcrumbs": "^7.0.0-pre-alpha-ben.0",
+    "@bugsnag/plugin-react": "^7.0.0-pre-alpha-ben.0",
+    "@bugsnag/plugin-react-native-global-error-handler": "^7.0.0-pre-alpha-ben.0",
+    "@bugsnag/plugin-react-native-unhandled-rejection": "^7.0.0-pre-alpha-ben.0",
     "bugsnag-build-reporter": "^1.0.1",
     "bugsnag-sourcemaps": "^1.1.0"
   },
   "peerDependencies": {
-    "react": "*",
-    "expo": "*"
+    "expo": "*",
+    "react": "*"
   }
 }
