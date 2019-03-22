@@ -56,7 +56,7 @@ module.exports = (client, fetch = global.fetch) => {
           enqueue('report', { url, opts })
           return cb(null)
         }
-        client._logger.info(`Sending report ${report.errorClass}: ${report.errorMessage}`)
+        client._logger.info(`Sending report ${report.exceptions[0].errorClass}: ${report.exceptions[0].errorMessage}`)
         send(url, opts, err => {
           if (err) return onerror(err, { url, opts }, 'report', cb)
           cb(null)
