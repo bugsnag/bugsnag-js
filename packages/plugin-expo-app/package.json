@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-expo-app",
-  "version": "7.0.0-pre-alpha-ben.0",
+  "version": "7.0.0-pre-alpha-ben.1",
   "main": "app.js",
   "description": "@bugsnag/js plugin to provide information about an Expo app",
   "homepage": "https://www.bugsnag.com/",
@@ -20,7 +20,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^7.0.0-pre-alpha-ben.0",
+    "@bugsnag/core": "^7.0.0-pre-alpha-ben.1",
     "jasmine": "3.1.0",
     "nyc": "^12.0.2",
     "proxyquire": "^2.1.0"
