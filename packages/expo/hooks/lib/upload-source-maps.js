@@ -22,8 +22,8 @@ module.exports = async (
   const iosBundlePath = join(dir, 'ios.bundle.js')
   const iosSourceMapPath = join(dir, 'ios.bundle.js.map')
 
-  await promisify(writeFile)(iosSourceMapPath, androidSourceMap, 'utf-8')
-  await promisify(writeFile)(iosBundlePath, androidBundle, 'utf-8')
+  await promisify(writeFile)(iosSourceMapPath, iosSourceMap, 'utf-8')
+  await promisify(writeFile)(iosBundlePath, iosBundle, 'utf-8')
 
   await promisify(writeFile)(androidSourceMapPath, androidSourceMap, 'utf-8')
   await promisify(writeFile)(androidBundlePath, androidBundle, 'utf-8')

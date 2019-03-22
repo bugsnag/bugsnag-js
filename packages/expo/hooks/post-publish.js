@@ -23,10 +23,10 @@ module.exports = async ({
     } else {
       throw new Error('@bugsnag/expo postPublish hook requires your Bugsnag API key')
     }
-    if (config && config.reportBuild !== false) {
+    if (!config || config.reportBuild !== false) {
       await reportBuild(apiKey, iosManifest, projectRoot)
     }
-    if (config && config.uploadSourcemaps !== false) {
+    if (!config || config.uploadSourcemaps !== false) {
       await uploadSourcemaps(
         apiKey,
         iosManifest,
