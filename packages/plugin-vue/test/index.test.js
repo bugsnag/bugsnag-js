@@ -14,14 +14,14 @@ describe('bugsnag vue', () => {
   it('installs Vue.config.errorHandler', done => {
     const client = new BugsnagClient(NOTIFIER)
     // client.logger(console)
-    client.delivery({
-      sendReport: (logger, config, report) => {
+    client.delivery(client => ({
+      sendReport: (report) => {
         expect(report.events[0].errorClass).toBe('Error')
         expect(report.events[0].errorMessage).toBe('oops')
         expect(report.events[0].metaData['vue']).toBeDefined()
         done()
       }
-    })
+    }))
     client.setOptions({ apiKey: 'API_KEYYY' })
     client.configure()
     const Vue = { config: {} }

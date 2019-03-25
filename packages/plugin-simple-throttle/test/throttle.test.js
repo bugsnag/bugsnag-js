@@ -14,7 +14,7 @@ describe('plugin: throttle', () => {
     })
     c.configure()
     c.use(plugin)
-    c.delivery({ sendReport: (logger, config, payload) => payloads.push(payload) })
+    c.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
     for (let i = 0; i < 100; i++) c.notify(new Error('This is fail'))
     expect(payloads.length).toBe(10)
   })

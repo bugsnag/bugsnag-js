@@ -25,7 +25,7 @@ describe('plugin: window onerror', () => {
       client.setOptions({ apiKey: 'API_KEY_YEAH' })
       client.configure()
       client.use(plugin, window)
-      client.delivery({ sendReport: (logger, config, payload) => payloads.push(payload) })
+      client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
 
       window.onerror('Uncaught Error: Bad things', 'foo.js', 10, 20, new Error('Bad things'))
 
@@ -47,7 +47,7 @@ describe('plugin: window onerror', () => {
     //   client.setOptions({ apiKey: 'API_KEY_YEAH' })
     //   client.configure()
     //   client.use(plugin, window)
-    //   client.delivery({ sendReport: (logger, config, payload) => payloads.push(payload) })
+    //   client.delivery({ sendReport: (payload) => payloads.push(payload) })
     //
     //   window.eval(`
     //     var el = window.document.createElement('BUTTON')
@@ -76,7 +76,7 @@ describe('plugin: window onerror', () => {
       client.setOptions({ apiKey: 'API_KEY_YEAH' })
       client.configure()
       client.use(plugin, window)
-      client.delivery({ sendReport: (logger, config, payload) => payloads.push(payload) })
+      client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
 
       window.onerror('Uncaught Error: Bad things', 'foo.js', 10, 20, new Error('Bad things'))
     })
@@ -87,7 +87,7 @@ describe('plugin: window onerror', () => {
       client.setOptions({ apiKey: 'API_KEY_YEAH' })
       client.configure()
       client.use(plugin, window)
-      client.delivery({ sendReport: (logger, config, payload) => payloads.push(payload) })
+      client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
 
       const event = { type: 'error', detail: 'something bad happened' }
       window.onerror(event)
@@ -107,7 +107,7 @@ describe('plugin: window onerror', () => {
       client.setOptions({ apiKey: 'API_KEY_YEAH' })
       client.configure()
       client.use(plugin, window)
-      client.delivery({ sendReport: (logger, config, payload) => payloads.push(payload) })
+      client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
 
       // this situation is caused by the following kind of jQuery call:
       // jQuery('select.province').trigger(jQuery.Event('error.validator.bv'), { valid: false })
@@ -132,7 +132,7 @@ describe('plugin: window onerror', () => {
     //     client.setOptions({ apiKey: 'API_KEY_YEAH' })
     //     client.configure()
     //     client.use(plugin)
-    //     client.delivery({ sendReport: (logger, config, payload) => payloads.push(payload) })
+    //     client.delivery({ sendReport: (payload) => payloads.push(payload) })
     //
     //     const el = document.createElement('BUTTON')
     //     el.addEventListener('click', () => { throw new Error('bad button l3') })
@@ -161,7 +161,7 @@ describe('plugin: window onerror', () => {
     //     client.setOptions({ apiKey: 'API_KEY_YEAH' })
     //     client.configure()
     //     client.use(plugin)
-    //     client.delivery({ sendReport: (logger, config, payload) => payloads.push(payload) })
+    //     client.delivery({ sendReport: (payload) => payloads.push(payload) })
     //
     //     window.requestAnimationFrame(() => {
     //       throw new Error('ERR_RAF')
@@ -188,7 +188,7 @@ describe('plugin: window onerror', () => {
       client.setOptions({ apiKey: 'API_KEY_YEAH' })
       client.configure()
       client.use(plugin, window)
-      client.delivery({ sendReport: (logger, config, payload) => payloads.push(payload) })
+      client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
 
       // call onerror as it would be when `throw 'hello' is run`
       window.onerror('uncaught exception: hello', '', 0, 0, 'hello')
@@ -225,7 +225,7 @@ describe('plugin: window onerror', () => {
       client.setOptions({ apiKey: 'API_KEY_YEAH' })
       client.configure()
       client.use(plugin, window)
-      client.delivery({ sendReport: (logger, config, payload) => payloads.push(payload) })
+      client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
 
       // call onerror as it would be when `throw 'hello' is run`
       window.onerror(...args)
@@ -247,7 +247,7 @@ describe('plugin: window onerror', () => {
       client.setOptions({ apiKey: 'API_KEY_YEAH' })
       client.configure()
       client.use(plugin, window)
-      client.delivery({ sendReport: (logger, config, payload) => payloads.push(payload) })
+      client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
 
       // call onerror as it would be when `throw 'hello' is run`
       window.onerror(...args)

@@ -102,7 +102,7 @@ class BugsnagClient {
   }
 
   delivery (d) {
-    this._delivery = d
+    this._delivery = d(this)
     return this
   }
 
@@ -225,7 +225,7 @@ class BugsnagClient {
         report._handledState.severityReason = { type: 'userCallbackSetSeverity' }
       }
 
-      this._delivery.sendReport(this._logger, this.config, {
+      this._delivery.sendReport({
         apiKey: report.apiKey || this.config.apiKey,
         notifier: this.notifier,
         events: [ report ]

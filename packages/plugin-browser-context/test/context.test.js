@@ -19,7 +19,7 @@ describe('plugin: context', () => {
     client.configure()
     client.use(plugin, window)
 
-    client.delivery({ sendReport: (logger, config, payload) => payloads.push(payload) })
+    client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
     client.notify(new Error('noooo'))
 
     expect(payloads.length).toEqual(1)
@@ -35,7 +35,7 @@ describe('plugin: context', () => {
 
     client.context = 'something else'
 
-    client.delivery({ sendReport: (logger, config, payload) => payloads.push(payload) })
+    client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
     client.notify(new Error('noooo'))
 
     expect(payloads.length).toEqual(1)

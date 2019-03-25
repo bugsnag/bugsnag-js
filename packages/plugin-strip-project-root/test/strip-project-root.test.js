@@ -11,8 +11,8 @@ describe('plugin: strip project root', () => {
   it('should remove the project root if it matches the start of the stackframe’s file', done => {
     const client = new Client(VALID_NOTIFIER)
 
-    client.delivery({
-      sendReport: (logger, config, report) => {
+    client.delivery(client => ({
+      sendReport: (report) => {
         const evt = report.events[0]
         expect(evt.stacktrace[0].file).toBe(join('lib', '01.js'))
         expect(evt.stacktrace[1].file).toBe(join('lib', '02.js'))
@@ -20,7 +20,7 @@ describe('plugin: strip project root', () => {
         done()
       },
       sendSession: () => {}
-    })
+    }))
 
     client.setOptions({ apiKey: 'api_key', projectRoot: '/app' })
     client.configure({
@@ -53,8 +53,8 @@ describe('plugin: strip project root', () => {
   it('should not remove a matching substring if it is not at the start', done => {
     const client = new Client(VALID_NOTIFIER)
 
-    client.delivery({
-      sendReport: (logger, config, report) => {
+    client.delivery(client => ({
+      sendReport: (report) => {
         const evt = report.events[0]
         expect(evt.stacktrace[0].file).toBe(join('/var', 'lib', '01.js'))
         expect(evt.stacktrace[1].file).toBe(join('/foo', 'lib', '02.js'))
@@ -62,7 +62,7 @@ describe('plugin: strip project root', () => {
         done()
       },
       sendSession: () => {}
-    })
+    }))
 
     client.setOptions({ apiKey: 'api_key', projectRoot: '/app' })
     client.configure({
@@ -95,15 +95,15 @@ describe('plugin: strip project root', () => {
   it('should work with node_modules and node internals', done => {
     const client = new Client(VALID_NOTIFIER)
 
-    client.delivery({
-      sendReport: (logger, config, report) => {
+    client.delivery(client => ({
+      sendReport: (report) => {
         const evt = report.events[0]
         expect(evt.stacktrace[0].file).toBe('_module.js')
         expect(evt.stacktrace[1].file).toBe(join('node_modules', 'bugsnag-example', 'index.js'))
         done()
       },
       sendSession: () => {}
-    })
+    }))
 
     client.setOptions({ apiKey: 'api_key', projectRoot: '/app' })
     client.configure({
@@ -132,8 +132,8 @@ describe('plugin: strip project root', () => {
   it('should tolerate stackframe.file not being a string', done => {
     const client = new Client(VALID_NOTIFIER)
 
-    client.delivery({
-      sendReport: (logger, config, report) => {
+    client.delivery(client => ({
+      sendReport: (report) => {
         const evt = report.events[0]
         expect(evt.stacktrace[0].file).toBe('global code')
         expect(evt.stacktrace[1].file).toBe('global code')
@@ -141,7 +141,7 @@ describe('plugin: strip project root', () => {
         done()
       },
       sendSession: () => {}
-    })
+    }))
 
     client.setOptions({ apiKey: 'api_key', projectRoot: '/app' })
     client.configure({

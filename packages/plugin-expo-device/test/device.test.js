@@ -35,8 +35,8 @@ describe('plugin: expo device', () => {
     c.setOptions({ apiKey: 'api_key' })
     c.configure()
     const before = (new Date()).toISOString()
-    c.delivery({
-      sendReport: (config, logger, report) => {
+    c.delivery(client => ({
+      sendReport: (report) => {
         const r = JSON.parse(JSON.stringify(report))
         expect(r).toBeTruthy()
         expect(r.events[0].device).toBeTruthy()
@@ -53,7 +53,7 @@ describe('plugin: expo device', () => {
         })
         done()
       }
-    })
+    }))
     c.use(plugin)
     c.notify(new Error('device testing'))
   })
@@ -88,8 +88,8 @@ describe('plugin: expo device', () => {
     c.setOptions({ apiKey: 'api_key' })
     c.configure()
     const before = (new Date()).toISOString()
-    c.delivery({
-      sendReport: (config, logger, report) => {
+    c.delivery(client => ({
+      sendReport: (report) => {
         const r = JSON.parse(JSON.stringify(report))
         expect(r).toBeTruthy()
         expect(r.events[0].device).toBeTruthy()
@@ -105,7 +105,7 @@ describe('plugin: expo device', () => {
         })
         done()
       }
-    })
+    }))
     c.use(plugin)
     c.notify(new Error('device testing'))
   })
@@ -158,8 +158,8 @@ describe('plugin: expo device', () => {
     c.setOptions({ apiKey: 'api_key' })
     c.configure()
     const reports = []
-    c.delivery({
-      sendReport: (config, logger, report) => {
+    c.delivery(client => ({
+      sendReport: (report) => {
         const r = JSON.parse(JSON.stringify(report))
         reports.push(r)
         if (reports.length === 4) {
@@ -170,7 +170,7 @@ describe('plugin: expo device', () => {
           done()
         }
       }
-    })
+    }))
     c.use(plugin)
     expect(d._listeners.change.length).toBe(1)
     c.notify(new Error('device testing'))
