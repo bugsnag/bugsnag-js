@@ -29,6 +29,7 @@ module.exports = async (
   await promisify(writeFile)(androidBundlePath, androidBundle, 'utf-8')
 
   // android
+  console.log(`Uploading Android source map`)
   await upload({
     apiKey,
     appVersion: androidManifest.version,
@@ -39,10 +40,11 @@ module.exports = async (
   })
 
   // ios
+  console.log(`Uploading iOS source map`)
   await upload({
     apiKey,
     appVersion: iosManifest.version,
-    minifiedUrl: iosManifest.bundleUrl, // WRONG!
+    minifiedUrl: iosManifest.bundleUrl,
     minifiedFile: iosBundlePath,
     codeBundleId: iosManifest.revisionId,
     sourceMap: iosSourceMapPath
