@@ -38,6 +38,7 @@ module.exports = (client, fetch = global.fetch) => {
   return {
     sendReport: (report, cb = () => {}) => {
       const url = client.config.endpoints.notify
+      console.log(report)
 
       let body, opts
       try {
@@ -56,7 +57,7 @@ module.exports = (client, fetch = global.fetch) => {
           enqueue('report', { url, opts })
           return cb(null)
         }
-        client._logger.info(`Sending report ${report.errorClass}: ${report.errorMessage}`)
+        client._logger.info(`Sending report ${report.events[0].errorClass}: ${report.events[0].errorMessage}`)
         send(url, opts, err => {
           if (err) return onerror(err, { url, opts }, 'report', cb)
           cb(null)
