@@ -17,7 +17,8 @@ const plugins = [
   require('@bugsnag/plugin-expo-device'),
   require('@bugsnag/plugin-expo-app'),
   require('@bugsnag/plugin-console-breadcrumbs'),
-  require('@bugsnag/plugin-network-breadcrumbs')
+  require('@bugsnag/plugin-network-breadcrumbs'),
+  require('@bugsnag/plugin-react-native-connectivity-breadcrumbs')
 ]
 
 const bugsnagReact = require('@bugsnag/plugin-react')
