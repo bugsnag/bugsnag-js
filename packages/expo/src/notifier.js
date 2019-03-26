@@ -18,7 +18,8 @@ const plugins = [
   require('@bugsnag/plugin-expo-app'),
   require('@bugsnag/plugin-console-breadcrumbs'),
   require('@bugsnag/plugin-network-breadcrumbs'),
-  require('@bugsnag/plugin-react-native-connectivity-breadcrumbs')
+  require('@bugsnag/plugin-react-native-connectivity-breadcrumbs'),
+  require('@bugsnag/plugin-browser-session')
 ]
 
 const bugsnagReact = require('@bugsnag/plugin-react')
@@ -63,7 +64,9 @@ module.exports = (opts) => {
 
   bugsnag._logger.debug(`Loaded!`)
 
-  return bugsnag
+  return bugsnag.config.autoCaptureSessions
+    ? bugsnag.startSession()
+    : bugsnag
 }
 
 module.exports['default'] = module.exports
