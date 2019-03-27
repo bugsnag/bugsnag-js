@@ -20,6 +20,7 @@ declare module "@bugsnag/core" {
     filters?: Array<string | RegExp>;
     // catch-all for any missing options
     [key: string]: any;
+    orientationBreadcrumbsEnabled?: boolean;
   }
 }
 
