@@ -3,12 +3,12 @@ services:
   ci:
     build:
       context: .
-      dockerfile: Dockerfile.ci
+      dockerfile: dockerfiles/Dockerfile.ci
 
   browser-maze-runner:
     build:
       context: .
-      dockerfile: Dockerfile.browser
+      dockerfile: dockerfiles/Dockerfile.browser
       target: browser-maze-runner
       args:
         - BUILDKITE_BUILD_NUMBER
@@ -29,22 +29,65 @@ services:
   node-maze-runner:
     build:
       context: .
-      dockerfile: Dockerfile.node
+      dockerfile: dockerfiles/Dockerfile.node
       target: node-maze-runner
+    environment:
+      VERBOSE:
+      DEBUG:
+    networks:
+      default:
+        aliases:
+          - maze-runner
+
+  expo-maze-runner:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile.expo
       args:
         - BUILDKITE_BUILD_NUMBER
     environment:
       VERBOSE:
       DEBUG:
-      NODE_VERSION: "${NODE_VERSION:-10}"
-      COMPOSE_PROJECT_NAME: "node${NODE_VERSION:-10}"
-      NETWORK_NAME: "${BUILDKITE_JOB_ID:-js-maze-runner}"
+      BROWSER_STACK_USERNAME:
+      BROWSER_STACK_ACCESS_KEY:
+      BROWSER_STACK_LOCAL_IDENTIFIER: ${BUILDKITE_JOB_ID:-maze-runner}
+      APP_LOCATION:
+      DEVICE_TYPE:
     networks:
       default:
         aliases:
           - maze-runner
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - ./build:/app/test/expo/packages
+
+  expo-publisher:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile.expo-publisher
+    environment:
+      EXPO_USERNAME:
+      EXPO_PASSWORD:
+    networks:
+      default:
+        aliases:
+          - maze-runner
+
+  expo-android-builder:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile.expo-android-builder
+      args:
+        EXPO_USERNAME:
+        EXPO_PASSWORD:
+    environment:
+      VERBOSE:
+      DEBUG:
+    networks:
+      default:
+        aliases:
+          - maze-runner
+    volumes:
+      - ./build:/app/test/expo/features/fixtures/build
 
 networks:
   default:

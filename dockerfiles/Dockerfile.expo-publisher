@@ -1,0 +1,28 @@
+FROM node:10-alpine
+
+RUN apk add --update bash
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm install
+
+COPY babel.config.js tslint.json lerna.json ./
+COPY packages ./packages
+COPY bin ./bin
+RUN npx lerna bootstrap
+RUN npm run build
+
+Run apk add --update git
+Run npm upgrade -g npm
+
+RUN node ./packages/expo/support/bundle-dev
+
+COPY test/expo test/expo
+
+WORKDIR /app/test/expo/features/fixtures/test-app
+RUN npm install
+
+RUN npm i --no-package-lock --no-save file:/app/$(ls /app/ | grep bugsnag-expo)
+
+CMD node_modules/.bin/expo login -u $EXPO_USERNAME -p $EXPO_PASSWORD && node_modules/.bin/expo publish

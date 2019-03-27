@@ -1,0 +1,34 @@
+FROM node:8-jessie
+
+RUN apt-get update
+RUN apt-get install -y software-properties-common
+RUN echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections
+RUN echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections
+
+RUN add-apt-repository "deb http://ppa.launchpad.net/webupd8team/java/ubuntu xenial main"
+RUN apt-get update
+
+RUN apt-get install -y oracle-java8-installer
+
+WORKDIR /app
+
+COPY test/expo test/expo
+
+WORKDIR test/expo/features/fixtures/test-app
+RUN npm i -g gulp-cli
+RUN npm i turtle-cli bunyan
+RUN node_modules/.bin/turtle setup:android
+
+ARG EXPO_USERNAME
+ARG EXPO_PASSWORD
+
+RUN EXPO_ANDROID_KEYSTORE_PASSWORD=password \
+    EXPO_ANDROID_KEY_PASSWORD=password \
+    node_modules/.bin/turtle build:android \
+    --keystore-path fakekeys.jks \
+    --keystore-alias password \
+    --output ./output.apk
+
+RUN mkdir -p /app/test/expo/features/fixtures/build
+
+CMD cp output.apk /app/test/expo/features/fixtures/build/output.apk
