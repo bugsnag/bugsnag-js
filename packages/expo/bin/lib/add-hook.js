@@ -9,8 +9,7 @@ module.exports = async (projectRoot) => {
     conf.expo.hooks = conf.expo.hooks || {}
     conf.expo.hooks.postPublish = conf.expo.hooks.postPublish || []
     if (conf.expo.hooks.postPublish.find(h => h.file === hook.file)) {
-      console.log('@bugsnag/expo postPublish hook is already installed')
-      return
+      return '@bugsnag/expo postPublish hook is already installed'
     }
     conf.expo.hooks.postPublish.push(hook)
     await promisify(writeFile)(appJsonPath, JSON.stringify(conf, null, 2), 'utf8')

@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
 const commandLineArgs = require('command-line-args')
-const { red } = require('kleur')
+const { resolve } = require('path')
+const { red, yellow } = require('kleur')
 
 const commands = new Map([
   [ 'add-hook', require('./commands/add-hook') ],
@@ -15,13 +16,16 @@ const commands = new Map([
 // define top-level options
 const cliOpts = [
   { name: 'command', defaultOption: true },
-  { name: 'verbose', alias: 'v', type: Boolean },
+  { name: 'quiet', alias: 'q', type: Boolean },
   { name: 'help', type: Boolean },
   { name: 'project-root', defaultValue: process.cwd() }
 ]
 
 const parsedArgs = commandLineArgs(cliOpts, { stopAtFirstUnknown: true })
 const argv = parsedArgs._unknown || []
+
+// make project root absolute
+parsedArgs['project-root'] = resolve(process.cwd(), parsedArgs['project-root'])
 
 const go = async () => {
   try {
@@ -36,7 +40,7 @@ const go = async () => {
     process.exitCode = 1
 
     // print out what was received
-    if (parsedArgs.command) console.log(`Unknown command: ${parsedArgs.command}`)
+    if (parsedArgs.command) console.log(yellow(`\n  Unknown command: ${parsedArgs.command}`))
 
     // send help
     return await commands.get('help')(argv, parsedArgs)

@@ -1,7 +1,7 @@
 const prompts = require('prompts')
 const addHook = require('../lib/add-hook')
 const { onCancel } = require('../lib/utils')
-const { blue } = require('kleur')
+const { blue, yellow } = require('kleur')
 
 module.exports = async (argv, globalOpts) => {
   const res = await prompts({
@@ -12,7 +12,7 @@ module.exports = async (argv, globalOpts) => {
   }, { onCancel })
   if (res.addHook) {
     console.log(blue(`> Inserting hook config into app.json`))
-    await addHook(globalOpts['project-root'])
-    console.log(blue(`> Done`))
+    const msg = await addHook(globalOpts['project-root'])
+    if (msg) console.log(yellow(`  ${msg}`))
   }
 }
