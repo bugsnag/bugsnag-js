@@ -15,225 +15,328 @@ steps:
 
   - wait
 
-  - label: 'Lint'
-    plugins:
-      docker-compose#v2.6.0:
-        run: ci
-    command: 'npm run test:lint'
+  # - label: 'Lint'
+  #   plugins:
+  #     docker-compose#v2.6.0:
+  #       run: ci
+  #   command: 'npm run test:lint'
 
-  - label: 'Unit tests'
-    plugins:
-      docker-compose#v2.6.0:
-        run: ci
-    command: 'npm run test:unit'
+  # - label: 'Unit tests'
+  #   plugins:
+  #     docker-compose#v2.6.0:
+  #       run: ci
+  #   command: 'npm run test:unit'
 
-  - label: 'Type checks/tests'
-    plugins:
-      docker-compose#v2.6.0:
-        run: ci
-    command: 'npm run test:types'
+  # - label: 'Type checks/tests'
+  #   plugins:
+  #     docker-compose#v2.6.0:
+  #       run: ci
+  #   command: 'npm run test:types'
 
-  - label:  ':docker: Build browser maze runner image'
+  # - label:  ':docker: Build browser maze runner image'
+  #   plugins:
+  #     - docker-compose#v2.6.0:
+  #         build:
+  #           - browser-maze-runner
+  #         image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
+  #         cache-from:
+  #           - browser-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
+
+  # - label:  ':docker: Build node maze runner image'
+  #   plugins:
+  #     - docker-compose#v2.6.0:
+  #         build:
+  #           - node-maze-runner
+  #         image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
+  #         cache-from:
+  #           - node-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
+
+  - label:  ':docker: Build expo maze runner image'
     plugins:
       - docker-compose#v2.6.0:
           build:
-            - browser-maze-runner
+            - expo-maze-runner
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
           cache-from:
-            - browser-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
-
-  - label:  ':docker: Build node maze runner image'
-    plugins:
-      - docker-compose#v2.6.0:
-          build:
-            - node-maze-runner
-          image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
-          cache-from:
-            - node-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
+            - expo-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
 
   - wait
 
-  - label: ':chrome: v43 Browser tests'
+  # - label: ':chrome: v43 Browser tests'
+  #   plugins:
+  #     docker-compose#v2.6.0:
+  #       run: browser-maze-runner
+  #       use-aliases: true
+  #   env:
+  #     BROWSER: "chrome_43"
+  #   concurrency: 5
+  #   concurrency_group: 'browserstack'
+
+  # - label: ':chrome: v61 Browser tests'
+  #   plugins:
+  #     docker-compose#v2.6.0:
+  #       run: browser-maze-runner
+  #       use-aliases: true
+  #   env:
+  #     BROWSER: "chrome_61"
+  #   concurrency: 5
+  #   concurrency_group: 'browserstack'
+
+  # - label: ':ie: v8 Browser tests'
+  #   plugins:
+  #     docker-compose#v2.6.0:
+  #       run: browser-maze-runner
+  #       use-aliases: true
+  #   env:
+  #     BROWSER: "ie_8"
+  #   concurrency: 5
+  #   concurrency_group: 'browserstack'
+
+  # - label: ':ie: v9 Browser tests'
+  #   plugins:
+  #     docker-compose#v2.6.0:
+  #       run: browser-maze-runner
+  #       use-aliases: true
+  #   env:
+  #     BROWSER: "ie_9"
+  #   concurrency: 5
+  #   concurrency_group: 'browserstack'
+
+  # - label: ':ie: v10 Browser tests'
+  #   plugins:
+  #     docker-compose#v2.6.0:
+  #       run: browser-maze-runner
+  #       use-aliases: true
+  #   env:
+  #     BROWSER: "ie_10"
+  #   concurrency: 5
+  #   concurrency_group: 'browserstack'
+
+  # - label: ':ie: v11 Browser tests'
+  #   plugins:
+  #     docker-compose#v2.6.0:
+  #       run: browser-maze-runner
+  #       use-aliases: true
+  #   env:
+  #     BROWSER: "ie_11"
+  #     HOST: 'localhost' # IE11 needs the host set to localhost for some reason!ß
+  #   concurrency: 5
+  #   concurrency_group: 'browserstack'
+
+  # - label: ':edge: v14 Browser tests'
+  #   plugins:
+  #     docker-compose#v2.6.0:
+  #       run: browser-maze-runner
+  #       use-aliases: true
+  #   env:
+  #     BROWSER: "edge_14"
+  #   concurrency: 5
+  #   concurrency_group: 'browserstack'
+
+  # - label: ':edge: v15 Browser tests'
+  #   plugins:
+  #     docker-compose#v2.6.0:
+  #       run: browser-maze-runner
+  #       use-aliases: true
+  #   env:
+  #     BROWSER: "edge_15"
+  #   concurrency: 5
+  #   concurrency_group: 'browserstack'
+
+  # - label: ':safari: v6 Browser tests'
+  #   plugins:
+  #     docker-compose#v2.6.0:
+  #       run: browser-maze-runner
+  #       use-aliases: true
+  #   env:
+  #     BROWSER: "safari_6"
+  #   concurrency: 5
+  #   concurrency_group: 'browserstack'
+
+  # - label: ':safari: v10 Browser tests'
+  #   plugins:
+  #     docker-compose#v2.6.0:
+  #       run: browser-maze-runner
+  #       use-aliases: true
+  #   env:
+  #     BROWSER: "safari_10"
+  #   concurrency: 5
+  #   concurrency_group: 'browserstack'
+
+  # - label: ':desktop_computer: Opera v12 Browser tests'
+  #   plugins:
+  #     docker-compose#v2.6.0:
+  #       run: browser-maze-runner
+  #       use-aliases: true
+  #   env:
+  #     BROWSER: "opera_12"
+  #   concurrency: 5
+  #   concurrency_group: 'browserstack'
+
+  # - label: ':iphone: iOS 10.3 Browser tests'
+  #   plugins:
+  #     docker-compose#v2.6.0:
+  #       run: browser-maze-runner
+  #       use-aliases: true
+  #   env:
+  #     BROWSER: "iphone_7"
+  #   concurrency: 5
+  #   concurrency_group: 'browserstack'
+
+  # - label: ':android: Samsung Galaxy S8 Browser tests'
+  #   plugins:
+  #     docker-compose#v2.6.0:
+  #       run: browser-maze-runner
+  #       use-aliases: true
+  #   env:
+  #     BROWSER: "android_s8"
+  #   concurrency: 5
+  #   concurrency_group: 'browserstack'
+
+  # - label: ':firefox: v30 Browser tests'
+  #   plugins:
+  #     docker-compose#v2.6.0:
+  #       run: browser-maze-runner
+  #       use-aliases: true
+  #   env:
+  #     BROWSER: "firefox_30"
+  #   concurrency: 5
+  #   concurrency_group: 'browserstack'
+
+  # - label: ':firefox: v56 Browser tests'
+  #   plugins:
+  #     docker-compose#v2.6.0:
+  #       run: browser-maze-runner
+  #       use-aliases: true
+  #   env:
+  #     BROWSER: "firefox_56"
+  #   concurrency: 5
+  #   concurrency_group: 'browserstack'
+
+  # - label: ':node: Node 4'
+  #   plugins:
+  #     docker-compose#v2.6.0:
+  #       run: node-maze-runner
+  #       use-aliases: true
+  #   env:
+  #     NODE_VERSION: "4"
+  #   command: '-e koa.feature -e koa-1x.feature -e webpack.feature'
+
+  # - label: ':node: Node 6'
+  #   plugins:
+  #     docker-compose#v2.6.0:
+  #       run: node-maze-runner
+  #       use-aliases: true
+  #   env:
+  #     NODE_VERSION: "6"
+  #   command: '-e koa.feature -e koa-1x.feature'
+
+  # - label: ':node: Node 8'
+  #   plugins:
+  #     docker-compose#v2.6.0:
+  #       run: node-maze-runner
+  #       use-aliases: true
+  #   env:
+  #     NODE_VERSION: "8"
+
+  # - label: ':node: Node 10'
+  #   plugins:
+  #     docker-compose#v2.6.0:
+  #       run: node-maze-runner
+  #       use-aliases: true
+  #   env:
+  #     NODE_VERSION: "10"
+
+  - label:  ':docker: Publish expo app'
+    plugins:
+      - docker-compose#v2.6.0:
+          run:
+            - expo-publisher
+          image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
+          cache-from:
+            - expo-publisher:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
+
+  - wait
+
+  - label:  ':docker: Build expo APK'
+    artifact_paths: build/output.apk
+    plugins:
+      - docker-compose#v2.6.0:
+          run:
+            - expo-android-builder
+          cache-from:
+            - expo-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
+
+  - wait
+
+  - label: 'expo Android 9'
+    command: buildkite-agent artifact download build/output.apk build/
     plugins:
       docker-compose#v2.6.0:
-        run: browser-maze-runner
+        run: expo-maze-runner
         use-aliases: true
     env:
-      BROWSER: "chrome_43"
+      DEVICE_TYPE: "ANDROID_9"
+      APP_LOCATION: "build/output.apk"
     concurrency: 5
     concurrency_group: 'browserstack'
 
-  - label: ':chrome: v61 Browser tests'
+  - label: 'expo Android 8'
+    command: buildkite-agent artifact download build/output.apk build/
     plugins:
       docker-compose#v2.6.0:
-        run: browser-maze-runner
+        run: expo-maze-runner
         use-aliases: true
     env:
-      BROWSER: "chrome_61"
+      DEVICE_TYPE: "ANDROID_8"
+      APP_LOCATION: "build/output.apk"
     concurrency: 5
     concurrency_group: 'browserstack'
 
-  - label: ':ie: v8 Browser tests'
+  - label: 'expo Android 7'
+    command: buildkite-agent artifact download build/output.apk build/
     plugins:
       docker-compose#v2.6.0:
-        run: browser-maze-runner
+        run: expo-maze-runner
         use-aliases: true
     env:
-      BROWSER: "ie_8"
+      DEVICE_TYPE: "ANDROID_7"
+      APP_LOCATION: "build/output.apk"
     concurrency: 5
     concurrency_group: 'browserstack'
 
-  - label: ':ie: v9 Browser tests'
+  - label: 'expo Android 6'
+    command: buildkite-agent artifact download build/output.apk build/
     plugins:
       docker-compose#v2.6.0:
-        run: browser-maze-runner
+        run: expo-maze-runner
         use-aliases: true
     env:
-      BROWSER: "ie_9"
+      DEVICE_TYPE: "ANDROID_6"
+      APP_LOCATION: "build/output.apk"
     concurrency: 5
     concurrency_group: 'browserstack'
 
-  - label: ':ie: v10 Browser tests'
+  - label: 'expo Android 5'
+    command: buildkite-agent artifact download build/output.apk build/
     plugins:
       docker-compose#v2.6.0:
-        run: browser-maze-runner
+        run: expo-maze-runner
         use-aliases: true
     env:
-      BROWSER: "ie_10"
+      DEVICE_TYPE: "ANDROID_5"
+      APP_LOCATION: "build/output.apk"
     concurrency: 5
     concurrency_group: 'browserstack'
 
-  - label: ':ie: v11 Browser tests'
+  - label: 'expo Android 4'
+    command: buildkite-agent artifact download build/output.apk build/
     plugins:
       docker-compose#v2.6.0:
-        run: browser-maze-runner
+        run: expo-maze-runner
         use-aliases: true
     env:
-      BROWSER: "ie_11"
-      HOST: 'localhost' # IE11 needs the host set to localhost for some reason!ß
+      DEVICE_TYPE: "ANDROID_4"
+      APP_LOCATION: "build/output.apk"
     concurrency: 5
     concurrency_group: 'browserstack'
-
-  - label: ':edge: v14 Browser tests'
-    plugins:
-      docker-compose#v2.6.0:
-        run: browser-maze-runner
-        use-aliases: true
-    env:
-      BROWSER: "edge_14"
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':edge: v15 Browser tests'
-    plugins:
-      docker-compose#v2.6.0:
-        run: browser-maze-runner
-        use-aliases: true
-    env:
-      BROWSER: "edge_15"
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':safari: v6 Browser tests'
-    plugins:
-      docker-compose#v2.6.0:
-        run: browser-maze-runner
-        use-aliases: true
-    env:
-      BROWSER: "safari_6"
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':safari: v10 Browser tests'
-    plugins:
-      docker-compose#v2.6.0:
-        run: browser-maze-runner
-        use-aliases: true
-    env:
-      BROWSER: "safari_10"
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':desktop_computer: Opera v12 Browser tests'
-    plugins:
-      docker-compose#v2.6.0:
-        run: browser-maze-runner
-        use-aliases: true
-    env:
-      BROWSER: "opera_12"
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':iphone: iOS 10.3 Browser tests'
-    plugins:
-      docker-compose#v2.6.0:
-        run: browser-maze-runner
-        use-aliases: true
-    env:
-      BROWSER: "iphone_7"
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':android: Samsung Galaxy S8 Browser tests'
-    plugins:
-      docker-compose#v2.6.0:
-        run: browser-maze-runner
-        use-aliases: true
-    env:
-      BROWSER: "android_s8"
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':firefox: v30 Browser tests'
-    plugins:
-      docker-compose#v2.6.0:
-        run: browser-maze-runner
-        use-aliases: true
-    env:
-      BROWSER: "firefox_30"
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':firefox: v56 Browser tests'
-    plugins:
-      docker-compose#v2.6.0:
-        run: browser-maze-runner
-        use-aliases: true
-    env:
-      BROWSER: "firefox_56"
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':node: Node 4'
-    plugins:
-      docker-compose#v2.6.0:
-        run: node-maze-runner
-        use-aliases: true
-    env:
-      NODE_VERSION: "4"
-    command: '-e koa.feature -e koa-1x.feature -e webpack.feature'
-
-  - label: ':node: Node 6'
-    plugins:
-      docker-compose#v2.6.0:
-        run: node-maze-runner
-        use-aliases: true
-    env:
-      NODE_VERSION: "6"
-    command: '-e koa.feature -e koa-1x.feature'
-
-  - label: ':node: Node 8'
-    plugins:
-      docker-compose#v2.6.0:
-        run: node-maze-runner
-        use-aliases: true
-    env:
-      NODE_VERSION: "8"
-
-  - label: ':node: Node 10'
-    plugins:
-      docker-compose#v2.6.0:
-        run: node-maze-runner
-        use-aliases: true
-    env:
-      NODE_VERSION: "10"
