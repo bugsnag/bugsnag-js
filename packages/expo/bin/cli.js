@@ -16,7 +16,6 @@ const commands = new Map([
 // define top-level options
 const cliOpts = [
   { name: 'command', defaultOption: true },
-  { name: 'quiet', alias: 'q', type: Boolean },
   { name: 'help', type: Boolean },
   { name: 'project-root', defaultValue: process.cwd() }
 ]
