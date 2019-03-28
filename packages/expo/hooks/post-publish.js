@@ -16,12 +16,12 @@ module.exports = async ({
 }) => {
   try {
     let apiKey
-    if (config && config.apiKey) {
-      apiKey = config.apiKey
-    } else if (exp.extra.bugsnag && exp.extra.bugsnag.apiKey) {
+    if (exp.extra && exp.extra.bugsnag && exp.extra.bugsnag.apiKey) {
       apiKey = exp.extra.bugsnag.apiKey
     } else {
-      throw new Error('@bugsnag/expo postPublish hook requires your Bugsnag API key')
+      throw new Error(
+        '@bugsnag/expo postPublish hook requires your Bugsnag API key'
+      )
     }
     if (!config || config.reportBuild !== false) {
       await reportBuild(apiKey, iosManifest, projectRoot)

@@ -4,6 +4,8 @@ const { tmpdir } = require('os')
 const { sep, join } = require('path')
 const { mkdtemp, writeFile } = require('fs')
 
+const writeFileAsync = promisify(writeFile)
+
 module.exports = async (
   apiKey,
   iosManifest,
@@ -22,11 +24,11 @@ module.exports = async (
   const iosBundlePath = join(dir, 'ios.bundle.js')
   const iosSourceMapPath = join(dir, 'ios.bundle.js.map')
 
-  await promisify(writeFile)(iosSourceMapPath, iosSourceMap, 'utf-8')
-  await promisify(writeFile)(iosBundlePath, iosBundle, 'utf-8')
+  await writeFileAsync(iosSourceMapPath, iosSourceMap, 'utf-8')
+  await writeFileAsync(iosBundlePath, iosBundle, 'utf-8')
 
-  await promisify(writeFile)(androidSourceMapPath, androidSourceMap, 'utf-8')
-  await promisify(writeFile)(androidBundlePath, androidBundle, 'utf-8')
+  await writeFileAsync(androidSourceMapPath, androidSourceMap, 'utf-8')
+  await writeFileAsync(androidBundlePath, androidBundle, 'utf-8')
 
   // android
   console.log(`Uploading Android source map`)
