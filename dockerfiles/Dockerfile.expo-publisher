@@ -28,4 +28,8 @@ RUN npm dedupe
 
 RUN cat /proc/sys/fs/inotify/max_user_watches
 
+RUN echo fs.inotify.max_user_watches=524288 | tee -a /etc/sysctl.conf && sysctl -p
+
+RUN cat /proc/sys/fs/inotify/max_user_watches
+
 CMD node_modules/.bin/expo login -u $EXPO_USERNAME -p $EXPO_PASSWORD && node_modules/.bin/expo publish
