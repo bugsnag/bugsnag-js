@@ -22,8 +22,8 @@ function load (index, cb) {
 describe('plugin: contextualize', () => {
   it('should call the onUnhandledException callback when an error is captured', done => {
     const c = new Client(VALID_NOTIFIER)
-    c.delivery({
-      sendReport: (config, logger, report, cb) => {
+    c.delivery(client => ({
+      sendReport: (report, cb) => {
         expect(report.events[0].errorMessage).toBe('no item available')
         expect(report.events[0].severity).toBe('warning')
         expect(report.events[0].user).toEqual({
@@ -34,7 +34,7 @@ describe('plugin: contextualize', () => {
         cb(null)
       },
       sendSession: () => {}
-    })
+    }))
     c.setOptions({
       apiKey: 'api_key',
       onUncaughtException: (err) => {
@@ -68,14 +68,14 @@ describe('plugin: contextualize', () => {
 
   it('should add a stacktrace when missing', done => {
     const c = new Client(VALID_NOTIFIER)
-    c.delivery({
-      sendReport: (config, logger, report, cb) => {
+    c.delivery(client => ({
+      sendReport: (report, cb) => {
         expect(report.events[0].errorMessage).toBe('ENOENT: no such file or directory, open \'does not exist\'')
         expect(report.events[0].stacktrace[0].file).toBe(`${__filename}`)
         cb(null)
       },
       sendSession: () => {}
-    })
+    }))
     c.setOptions({
       apiKey: 'api_key',
       onUncaughtException: () => {
@@ -99,12 +99,12 @@ describe('plugin: contextualize', () => {
 
   it('should tolerate a failed report', done => {
     const c = new Client(VALID_NOTIFIER)
-    c.delivery({
-      sendReport: (config, logger, report, cb) => {
+    c.delivery(client => ({
+      sendReport: (report, cb) => {
         cb(new Error('sending failed'))
       },
       sendSession: () => {}
-    })
+    }))
     c.setOptions({
       apiKey: 'api_key',
       onUncaughtException: (err) => {

@@ -29,10 +29,10 @@ describe('plugin: node uncaught exception handler', () => {
 
   it('should call the configured onUncaughtException callback', done => {
     const c = new Client(VALID_NOTIFIER)
-    c.delivery({
+    c.delivery(client => ({
       sendReport: (...args) => args[args.length - 1](),
       sendSession: (...args) => args[args.length - 1]()
-    })
+    }))
     c.setOptions({
       apiKey: 'api_key',
       onUncaughtException: (err, report) => {
@@ -59,10 +59,10 @@ describe('plugin: node uncaught exception handler', () => {
 
   it('should tolerate delivery errors', done => {
     const c = new Client(VALID_NOTIFIER)
-    c.delivery({
+    c.delivery(client => ({
       sendReport: (...args) => args[args.length - 1](new Error('failed')),
       sendSession: (...args) => args[args.length - 1]()
-    })
+    }))
     c.setOptions({
       apiKey: 'api_key',
       onUncaughtException: (err, report) => {

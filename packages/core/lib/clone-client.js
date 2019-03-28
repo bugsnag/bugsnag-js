@@ -15,8 +15,8 @@ module.exports = (client) => {
   clone.request = { ...client.request }
   clone.user = { ...client.user }
 
-  clone.logger(client._logger)
-  clone.delivery(client._delivery)
+  clone._logger = client._logger
+  clone._delivery = client._delivery
 
   return clone
 }

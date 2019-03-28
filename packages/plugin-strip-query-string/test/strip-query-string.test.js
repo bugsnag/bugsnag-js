@@ -44,7 +44,7 @@ describe('plugin: strip query string', () => {
     client.configure()
     client.use(plugin)
 
-    client.delivery({ sendReport: (logger, config, payload) => payloads.push(payload) })
+    client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
     const err = new Error('noooo')
     err.stack = 'Error: foo\n  at page.html?id=intro:89:10'
     client.notify(err)

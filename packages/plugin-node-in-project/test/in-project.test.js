@@ -11,8 +11,8 @@ describe('plugin: node in project', () => {
   it('should mark stackframes as "inProject" if it is a descendent of the "projectRoot"', done => {
     const client = new Client(VALID_NOTIFIER)
 
-    client.delivery({
-      sendReport: (logger, config, report) => {
+    client.delivery(client => ({
+      sendReport: (report) => {
         const evt = report.events[0]
         expect(evt.stacktrace[0].inProject).toBe(true)
         expect(evt.stacktrace[1].inProject).toBe(true)
@@ -20,7 +20,7 @@ describe('plugin: node in project', () => {
         done()
       },
       sendSession: () => {}
-    })
+    }))
 
     client.setOptions({ apiKey: 'api_key', projectRoot: '/app' })
     client.configure({
@@ -53,8 +53,8 @@ describe('plugin: node in project', () => {
   it('should mark stackframes as "out of project" if it is not a descendent of "projectRoot"', done => {
     const client = new Client(VALID_NOTIFIER)
 
-    client.delivery({
-      sendReport: (logger, config, report) => {
+    client.delivery(client => ({
+      sendReport: (report) => {
         const evt = report.events[0]
         expect(evt.stacktrace[0].inProject).toBe(false)
         expect(evt.stacktrace[1].inProject).toBe(false)
@@ -62,7 +62,7 @@ describe('plugin: node in project', () => {
         done()
       },
       sendSession: () => {}
-    })
+    }))
 
     client.setOptions({ apiKey: 'api_key', projectRoot: '/app' })
     client.configure({
@@ -95,15 +95,15 @@ describe('plugin: node in project', () => {
   it('should work with node_modules and node internals', done => {
     const client = new Client(VALID_NOTIFIER)
 
-    client.delivery({
-      sendReport: (logger, config, report) => {
+    client.delivery(client => ({
+      sendReport: (report) => {
         const evt = report.events[0]
         expect(evt.stacktrace[0].inProject).toBe(false)
         expect(evt.stacktrace[1].inProject).toBe(false)
         done()
       },
       sendSession: () => {}
-    })
+    }))
 
     client.setOptions({ apiKey: 'api_key', projectRoot: '/app' })
     client.configure({
@@ -132,8 +132,8 @@ describe('plugin: node in project', () => {
   it('should tolerate stackframe.file not being a string', done => {
     const client = new Client(VALID_NOTIFIER)
 
-    client.delivery({
-      sendReport: (logger, config, report) => {
+    client.delivery(client => ({
+      sendReport: (report) => {
         const evt = report.events[0]
         expect(evt.stacktrace[0].inProject).toBe(false)
         expect(evt.stacktrace[1].inProject).toBe(false)
@@ -141,7 +141,7 @@ describe('plugin: node in project', () => {
         done()
       },
       sendSession: () => {}
-    })
+    }))
 
     client.setOptions({ apiKey: 'api_key', projectRoot: '/app' })
     client.configure({

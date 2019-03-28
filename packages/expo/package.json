@@ -55,6 +55,8 @@
   },
   "dependencies": {
     "@bugsnag/core": "^6.0.0",
+    "@bugsnag/delivery-expo": "^6.0.0",
+    "@bugsnag/plugin-browser-session": "^6.0.0",
     "@bugsnag/plugin-console-breadcrumbs": "^6.0.0",
     "@bugsnag/plugin-expo-app": "^6.0.0",
     "@bugsnag/plugin-expo-device": "^6.0.0",

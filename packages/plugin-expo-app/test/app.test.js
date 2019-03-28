@@ -27,14 +27,14 @@ describe('plugin: expo device', () => {
     c.configure()
 
     c.use(plugin)
-    c.delivery({
-      sendReport: (config, logger, report) => {
+    c.delivery(client => ({
+      sendReport: (report) => {
         const r = JSON.parse(JSON.stringify(report))
         expect(r).toBeTruthy()
         expect(r.events[0].app.version).toBe(VERSION)
         done()
       }
-    })
+    }))
     c.notify(new Error('flip'))
   })
 
@@ -61,14 +61,14 @@ describe('plugin: expo device', () => {
     c.configure()
 
     c.use(plugin)
-    c.delivery({
-      sendReport: (config, logger, report) => {
+    c.delivery(client => ({
+      sendReport: (report) => {
         const r = JSON.parse(JSON.stringify(report))
         expect(r).toBeTruthy()
         expect(r.events[0].app.codeBundleId).toBe(REVISION_ID)
         done()
       }
-    })
+    }))
     c.notify(new Error('flip'))
   })
 
@@ -95,14 +95,14 @@ describe('plugin: expo device', () => {
     c.configure()
 
     c.use(plugin)
-    c.delivery({
-      sendReport: (config, logger, report) => {
+    c.delivery(client => ({
+      sendReport: (report) => {
         const r = JSON.parse(JSON.stringify(report))
         expect(r).toBeTruthy()
         expect(r.events[0].app.versionCode).toBe(VERSION_CODE)
         done()
       }
-    })
+    }))
     c.notify(new Error('flip'))
   })
 
@@ -129,14 +129,14 @@ describe('plugin: expo device', () => {
     c.configure()
 
     c.use(plugin)
-    c.delivery({
-      sendReport: (config, logger, report) => {
+    c.delivery(client => ({
+      sendReport: (report) => {
         const r = JSON.parse(JSON.stringify(report))
         expect(r).toBeTruthy()
         expect(r.events[0].app.bundleVersion).toBe(BUNDLE_VERSION)
         done()
       }
-    })
+    }))
     c.notify(new Error('flip'))
   })
 
@@ -164,8 +164,8 @@ describe('plugin: expo device', () => {
     c.use(plugin)
     expect(typeof listener).toBe('function')
     const reports = []
-    c.delivery({
-      sendReport: (config, logger, report) => {
+    c.delivery(client => ({
+      sendReport: (report) => {
         const r = JSON.parse(JSON.stringify(report))
         expect(r).toBeTruthy()
         reports.push(r)
@@ -175,7 +175,7 @@ describe('plugin: expo device', () => {
         expect(reports[2].events[0].app.inForeground).toBe(true)
         done()
       }
-    })
+    }))
     c.notify(new Error('flip'))
     setTimeout(() => {
       listener('inactive')

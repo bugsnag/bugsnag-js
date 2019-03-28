@@ -40,7 +40,7 @@ module.exports = (opts, userPlugins = []) => {
 
   const bugsnag = new Client({ name, version, url })
 
-  bugsnag.delivery(delivery())
+  bugsnag.delivery(delivery)
   bugsnag.setOptions(opts)
   bugsnag.configure(schema)
 
