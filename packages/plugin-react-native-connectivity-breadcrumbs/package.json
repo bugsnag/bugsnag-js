@@ -1,8 +1,8 @@
 {
-  "name": "@bugsnag/delivery-node",
-  "version": "7.0.0-pre-alpha-ben.1",
-  "main": "delivery.js",
-  "description": "@bugsnag/node delivery mechanism",
+  "name": "@bugsnag/plugin-react-native-connectivity-breadcrumbs",
+  "version": "6.0.0",
+  "main": "connectivity.js",
+  "description": "@bugsnag/js plugin to create breadcrumbs when the network status changes in a React Native app",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
     "type": "git",
@@ -19,11 +19,10 @@
   },
   "author": "Bugsnag",
   "license": "MIT",
-  "dependencies": {
-    "@bugsnag/core": "^7.0.0-pre-alpha-ben.1"
-  },
   "devDependencies": {
-    "jasmine": "^3.1.0",
-    "nyc": "^12.0.2"
+    "@bugsnag/core": "^6.0.0",
+    "jasmine": "3.1.0",
+    "nyc": "^12.0.2",
+    "proxyquire": "^2.1.0"
   }
 }

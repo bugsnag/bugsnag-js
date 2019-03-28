@@ -80,7 +80,8 @@ describe('plugin: expo device', () => {
           platform: {
             android: { versionCode: VERSION_CODE }
           },
-          manifest: { version: '1.0.0' }
+          manifest: { version: '1.0.0' },
+          appOwnership: 'standalone'
         }
       },
       'react-native': {
@@ -99,7 +100,7 @@ describe('plugin: expo device', () => {
       sendReport: (report) => {
         const r = JSON.parse(JSON.stringify(report))
         expect(r).toBeTruthy()
-        expect(r.events[0].app.versionCode).toBe(VERSION_CODE)
+        expect(r.events[0].metaData.app.nativeVersionCode).toBe(VERSION_CODE)
         done()
       }
     }))
@@ -114,7 +115,8 @@ describe('plugin: expo device', () => {
           platform: {
             ios: { buildNumber: BUNDLE_VERSION }
           },
-          manifest: { version: '1.0.0' }
+          manifest: { version: '1.0.0' },
+          appOwnership: 'standalone'
         }
       },
       'react-native': {
@@ -133,7 +135,7 @@ describe('plugin: expo device', () => {
       sendReport: (report) => {
         const r = JSON.parse(JSON.stringify(report))
         expect(r).toBeTruthy()
-        expect(r.events[0].app.bundleVersion).toBe(BUNDLE_VERSION)
+        expect(r.events[0].metaData.app.nativeBundleVersion).toBe(BUNDLE_VERSION)
         done()
       }
     }))
