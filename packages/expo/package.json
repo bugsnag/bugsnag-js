@@ -55,6 +55,7 @@
     "@bugsnag/plugin-expo-device": "^6.0.0",
     "@bugsnag/plugin-network-breadcrumbs": "^6.0.0",
     "@bugsnag/plugin-react": "^6.0.0",
+    "@bugsnag/plugin-react-native-connectivity-breadcrumbs": "^6.0.0",
     "@bugsnag/plugin-react-native-global-error-handler": "^6.0.0",
     "@bugsnag/plugin-react-native-unhandled-rejection": "^6.0.0",
     "bugsnag-build-reporter": "^1.0.1",
