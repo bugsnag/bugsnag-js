@@ -22,13 +22,11 @@ RUN node_modules/.bin/turtle setup:android
 ARG EXPO_USERNAME
 ARG EXPO_PASSWORD
 
-RUN EXPO_ANDROID_KEYSTORE_PASSWORD=password \
+RUN mkdir -p /app/test/expo/features/fixtures/build
+
+CMD EXPO_ANDROID_KEYSTORE_PASSWORD=password \
     EXPO_ANDROID_KEY_PASSWORD=password \
     node_modules/.bin/turtle build:android \
     --keystore-path fakekeys.jks \
     --keystore-alias password \
-    --output ./output.apk
-
-RUN mkdir -p /app/test/expo/features/fixtures/build
-
-CMD cp output.apk /app/test/expo/features/fixtures/build/output.apk
+    --output /app/test/expo/features/fixtures/build/output.apk
