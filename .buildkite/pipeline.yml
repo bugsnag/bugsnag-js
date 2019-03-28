@@ -77,6 +77,18 @@ steps:
             - expo-publisher:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
             - expo-publisher:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-latest
 
+  - label:  ':docker: Build expo android builder'
+    plugins:
+      - docker-compose#v2.6.0:
+          build:
+            - expo-android-builder
+          cache-from:
+            - expo-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
+      - docker-compose#v2.6.0:
+          push:
+            - expo-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
+            - expo-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-latest
+
   - wait
 
   # - label: ':chrome: v43 Browser tests'
@@ -269,23 +281,10 @@ steps:
   - label:  ':docker: Publish expo app'
     plugins:
       - docker-compose#v2.6.0:
-          run:
-            - expo-publisher
+          run: expo-publisher
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
           cache-from:
             - expo-publisher:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
-
-  - label:  ':docker: Build expo android builder'
-    plugins:
-      - docker-compose#v2.6.0:
-          build:
-            - expo-android-builder
-          cache-from:
-            - expo-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
-      - docker-compose#v2.6.0:
-          push:
-            - expo-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
-            - expo-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-latest
 
   - wait
 
@@ -293,8 +292,7 @@ steps:
     artifact_paths: build/output.apk
     plugins:
       - docker-compose#v2.6.0:
-          run:
-            - expo-android-builder
+          run: expo-android-builder
           cache-from:
             - expo-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
 
