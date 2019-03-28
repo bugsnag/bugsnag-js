@@ -60,7 +60,7 @@ steps:
           cache-from:
             - expo-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
 
-    - label:  ':docker: Publish expo app'
+  - label:  ':docker: Publish expo app'
     plugins:
       - docker-compose#v2.6.0:
           build:
