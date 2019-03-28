@@ -24,4 +24,6 @@ RUN npm install
 
 RUN npm i --no-package-lock --no-save --ignore-scripts file:/app/$(ls /app/ | grep bugsnag-expo)
 
+RUN npm dedupe
+
 CMD node_modules/.bin/expo login -u $EXPO_USERNAME -p $EXPO_PASSWORD && node_modules/.bin/expo publish

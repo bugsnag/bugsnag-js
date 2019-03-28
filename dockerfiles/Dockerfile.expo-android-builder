@@ -10,23 +10,21 @@ RUN apt-get update
 
 RUN apt-get install -y oracle-java8-installer
 
-WORKDIR /app
+WORKDIR /app/test/expo
 
-COPY test/expo test/expo
-
-WORKDIR test/expo/features/fixtures/test-app
 RUN npm i -g gulp-cli
 RUN npm i turtle-cli bunyan
-RUN node_modules/.bin/turtle setup:android
+RUN node_modules/.bin/turtle setup:android >> setup.log
 
-ARG EXPO_USERNAME
-ARG EXPO_PASSWORD
+COPY test/expo .
 
-RUN mkdir -p /app/test/expo/features/fixtures/build
+RUN mkdir -p features/fixures/build
+
+WORKDIR features/fixtures/test-app
 
 CMD EXPO_ANDROID_KEYSTORE_PASSWORD=password \
     EXPO_ANDROID_KEY_PASSWORD=password \
     node_modules/.bin/turtle build:android \
     --keystore-path fakekeys.jks \
     --keystore-alias password \
-    --output /app/test/expo/features/fixtures/build/output.apk
+    --output /app/test/expo/features/fixtures/build/output.apk >> build.log
