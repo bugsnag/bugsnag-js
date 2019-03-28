@@ -8,7 +8,7 @@
       "ios",
       "android"
     ],
-    "version": "1.0.0",
+    "version": "2.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -29,13 +29,16 @@
     "android": {
       "package": "com.bugsnag.bentest"
     },
+    "extra": {
+      "bugsnag": {
+        "apiKey": "c8c0f735638c67f3348440fb1b2e7911"
+      }
+    },
     "hooks": {
       "postPublish": [
         {
-          "file": "./scratch/post-publish-hook",
-          "config": {
-            "apiKey": "API_KEY"
-          }
+          "file": "@bugsnag/expo/hooks/post-publish",
+          "config": {}
         }
       ]
     }
