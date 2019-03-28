@@ -59,6 +59,10 @@ steps:
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
           cache-from:
             - expo-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
+      - docker-compose#v2.6.0:
+          push:
+            - expo-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
+            - expo-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-latest
 
   - label:  ':docker: Build expo publisher'
     plugins:
@@ -68,6 +72,10 @@ steps:
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
           cache-from:
             - expo-publisher:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
+      - docker-compose#v2.6.0:
+          push:
+            - expo-publisher:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
+            - expo-publisher:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-latest
 
   - wait
 
@@ -274,6 +282,10 @@ steps:
             - expo-android-builder
           cache-from:
             - expo-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
+      - docker-compose#v2.6.0:
+          push:
+            - expo-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
+            - expo-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-latest
 
   - wait
 
