@@ -20,7 +20,7 @@ module.exports = (packageManager, projectRoot) => {
       if (code === 0) return resolve()
       reject(
         new Error(
-          `Command exited with non-zero exit code (${code}) "${cmd[0]} ${cmd[1].join(' ')}"\nstdout:\n${stdout}\nstderr:${stderr}`
+          `Command exited with non-zero exit code (${code}) "${cmd[0]} ${cmd[1].join(' ')}"\nstdout:\n${stdout}\n\nstderr:\n${stderr}`
         )
       )
     })

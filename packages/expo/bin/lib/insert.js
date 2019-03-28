@@ -10,7 +10,7 @@ module.exports = async (projectRoot) => {
     const appJsPath = join(projectRoot, 'App.js')
     const appJs = await promisify(readFile)(appJsPath, 'utf8')
     if (importRe.test(appJs) || requireRe.test(appJs)) {
-      return '@bugsnag/expo is aleady imported in App.js'
+      return '@bugsnag/expo is already imported in App.js'
     }
     await promisify(writeFile)(appJsPath, `${module.exports.code}\n${appJs}`, 'utf8')
   } catch (e) {
@@ -24,5 +24,5 @@ module.exports = async (projectRoot) => {
 
 module.exports.code =
 `import bugsnag from '@bugsnag/expo';
-const bugsagClient = bugsnag();
+const bugsnagClient = bugsnag();
 `
