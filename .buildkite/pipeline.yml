@@ -65,6 +65,7 @@ steps:
             - expo-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-latest
 
   - label:  ':docker: Publish expo app'
+    command: 'echo fs.inotify.max_user_watches=524288 | tee -a /etc/sysctl.conf && sysctl -p'
     plugins:
       - docker-compose#v2.6.0:
           run: expo-publisher

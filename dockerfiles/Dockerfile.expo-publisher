@@ -26,10 +26,4 @@ RUN npm i --no-package-lock --no-save --ignore-scripts file:/app/$(ls /app/ | gr
 
 RUN npm dedupe
 
-RUN cat /proc/sys/fs/inotify/max_user_watches
-
-RUN echo fs.inotify.max_user_watches=524288 | tee -a /etc/sysctl.conf && sysctl -p
-
-RUN cat /proc/sys/fs/inotify/max_user_watches
-
 CMD node_modules/.bin/expo login -u $EXPO_USERNAME -p $EXPO_PASSWORD && node_modules/.bin/expo publish
