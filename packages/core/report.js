@@ -2,6 +2,7 @@ const ErrorStackParser = require('./lib/error-stack-parser')
 const StackGenerator = require('stack-generator')
 const hasStack = require('./lib/has-stack')
 const { reduce, filter } = require('./lib/es-utils')
+const jsRuntime = require('./lib/js-runtime')
 
 class BugsnagReport {
   constructor (errorClass, errorMessage, stacktrace = [], handledState = defaultHandledState()) {
@@ -105,7 +106,7 @@ class BugsnagReport {
           errorClass: this.errorClass,
           message: this.errorMessage,
           stacktrace: this.stacktrace,
-          type: process.env.IS_BROWSER ? 'browserjs' : 'nodejs'
+          type: jsRuntime
         }
       ],
       severity: this.severity,
