@@ -13,7 +13,17 @@ COPY bin ./bin
 RUN npx lerna bootstrap
 RUN npm run build
 
-Run apk add --update git
+Run apk add --update git libssl-dev autoconf automake libtool
+
+RUN git clone https://github.com/facebook/watchman.git
+
+WORKDIR watchman
+
+RUN git checkout v4.9.0
+RUN ./autogen.sh
+RUN ./configure
+RUN make
+RUN make install
 
 RUN node ./packages/expo/support/bundle-dev
 
