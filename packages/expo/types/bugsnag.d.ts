@@ -21,6 +21,7 @@ declare module "@bugsnag/core" {
     // catch-all for any missing options
     [key: string]: any;
     // options for all bundled expo plugins
+    appStateBreadcrumbsEnabled?: boolean;
     consoleBreadcrumbsEnabled?: boolean;
     networkBreadcrumbsEnabled?: boolean;
     navigationBreadcrumbsEnabled?: boolean;
