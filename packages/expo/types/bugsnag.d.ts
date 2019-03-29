@@ -25,6 +25,7 @@ declare module "@bugsnag/core" {
     networkBreadcrumbsEnabled?: boolean;
     navigationBreadcrumbsEnabled?: boolean;
     connectivityBreadcrumbsEnabled?: boolean;
+    orientationBreadcrumbsEnabled?: boolean;
   }
 }
 
