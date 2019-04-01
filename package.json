@@ -33,8 +33,10 @@
     "test:test-container-registry-login": "$(aws ecr get-login --profile=opensource --no-include-email)",
     "test:build-browser-container": "docker-compose build --pull browser-maze-runner",
     "test:build-node-container": "docker-compose build --pull node-maze-runner",
+    "test:build-expo-android-container": "test/expo/scripts/build-android-locally.sh",
     "test:browser": "npm run test:build-browser-container && docker-compose run --use-aliases browser-maze-runner",
-    "test:node": "npm run test:build-node-container && docker-compose run --use-aliases node-maze-runner"
+    "test:node": "npm run test:build-node-container && docker-compose run --use-aliases node-maze-runner",
+    "test:expo:android": "npm run test:build-expo-android-container && APP_LOCATION=build/output.apk docker-compose run --use-aliases expo-maze-runner"
   },
   "standard": {
     "ignore": [
