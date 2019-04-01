@@ -10,7 +10,8 @@
     "expo": "^32.0.0",
     "expo-cli": "^2.11.9",
     "react": "16.5.0",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz"
+    "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
+    "@babel/runtime": "7.4.2"
   },
   "devDependencies": {
     "babel-preset-expo": "^5.0.0"
