@@ -31,6 +31,9 @@
     },
     "hooks": {
     },
-    "scheme": "test-app"
+    "scheme": "test-app",
+    "packagerOpts": {
+      "nonPersistent": true
+    }
   }
 }
