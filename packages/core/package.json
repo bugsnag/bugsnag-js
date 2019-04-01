@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/core",
-  "version": "7.0.0-pre-alpha-ben.1",
+  "version": "7.0.0-pre-alpha-ben.2",
   "types": "types/index.d.ts",
   "description": "Core classes and utilities for Bugsnag notifiers",
   "homepage": "https://www.bugsnag.com/",
