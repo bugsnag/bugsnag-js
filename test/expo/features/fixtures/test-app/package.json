@@ -13,6 +13,9 @@
     "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
     "@babel/runtime": "7.4.2"
   },
+  "metro": {
+    "watch": false
+  },
   "devDependencies": {
     "babel-preset-expo": "^5.0.0"
   },
