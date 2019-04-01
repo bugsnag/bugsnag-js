@@ -25,25 +25,31 @@
     "access": "public"
   },
   "files": [
-    "src/notifier.js",
-    "src/config.js",
+    "src",
     "hooks",
-    "bin",
-    "dist"
+    "dist",
+    "bin"
   ],
   "scripts": {
     "clean": "rm -fr dist && mkdir dist",
     "bundle-types": "../../bin/bundle-types",
     "build": "npm run clean && npm run bundle-types",
+    "test": "nyc --reporter=lcov -x bin/lib/test/lib/* -x **/*.test.js -- jasmine '!(node_modules|types)/**/*.test.js'",
     "test:types": "tslint -c ../../tslint.json types/*.d.ts && jasmine 'types/**/*.test.js'",
     "postversion": "npm run build"
+  },
+  "bin": {
+    "bugsnag-expo": "bin/cli.js"
   },
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
     "@babel/cli": "^7.0.0",
-    "jasmine": "^3.1.0",
+    "jasmine": "3.1.0",
+    "ncp": "^2.0.0",
     "nyc": "^12.0.2",
+    "proxyquire": "^2.1.0",
+    "rimraf": "^2.6.3",
     "tslint": "^5.12.1",
     "typescript": "^3.3.3"
   },
@@ -62,7 +68,10 @@
     "@bugsnag/plugin-react-native-orientation-breadcrumbs": "^6.0.0",
     "@bugsnag/plugin-react-native-unhandled-rejection": "^7.0.0-pre-alpha-ben.1",
     "bugsnag-build-reporter": "^1.0.1",
-    "bugsnag-sourcemaps": "^1.1.0"
+    "bugsnag-sourcemaps": "^1.1.0",
+    "command-line-args": "^5.0.2",
+    "kleur": "^3.0.2",
+    "prompts": "^2.0.4"
   },
   "peerDependencies": {
     "expo": "*",
