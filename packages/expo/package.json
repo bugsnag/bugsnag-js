@@ -56,7 +56,7 @@
   "dependencies": {
     "@bugsnag/core": "^7.0.0-pre-alpha-ben.2",
     "@bugsnag/delivery-expo": "^7.0.0-pre-alpha-ben.2",
-    "@bugsnag/plugin-browser-session": "^6.0.0",
+    "@bugsnag/plugin-browser-session": "^7.0.0-pre-alpha-ben.2",
     "@bugsnag/plugin-console-breadcrumbs": "^7.0.0-pre-alpha-ben.2",
     "@bugsnag/plugin-expo-app": "^7.0.0-pre-alpha-ben.2",
     "@bugsnag/plugin-expo-device": "^7.0.0-pre-alpha-ben.2",
