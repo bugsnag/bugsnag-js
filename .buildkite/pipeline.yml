@@ -273,9 +273,9 @@ steps:
 
   - label: 'expo Android 9'
     plugins:
-      - artifacts#v1.2.0:
+      artifacts#v1.2.0:
         download: "build/output.apk"
-      - docker-compose#v2.6.0:
+      docker-compose#v2.6.0:
         run: expo-maze-runner
         use-aliases: true
     env:
@@ -286,9 +286,9 @@ steps:
 
   - label: 'expo Android 8'
     plugins:
-      - artifacts#v1.2.0:
+      artifacts#v1.2.0:
         download: "build/output.apk"
-      - docker-compose#v2.6.0:
+      docker-compose#v2.6.0:
         run: expo-maze-runner
         use-aliases: true
     env:
@@ -299,9 +299,9 @@ steps:
 
   - label: 'expo Android 7'
     plugins:
-      - artifacts#v1.2.0:
+      artifacts#v1.2.0:
         download: "build/output.apk"
-      - docker-compose#v2.6.0:
+      docker-compose#v2.6.0:
         run: expo-maze-runner
         use-aliases: true
     env:
@@ -312,9 +312,9 @@ steps:
 
   - label: 'expo Android 6'
     plugins:
-      - artifacts#v1.2.0:
+      artifacts#v1.2.0:
         download: "build/output.apk"
-      - docker-compose#v2.6.0:
+      docker-compose#v2.6.0:
         run: expo-maze-runner
         use-aliases: true
     env:
@@ -325,9 +325,9 @@ steps:
 
   - label: 'expo Android 5'
     plugins:
-      - artifacts#v1.2.0:
+      artifacts#v1.2.0:
         download: "build/output.apk"
-      - docker-compose#v2.6.0:
+      docker-compose#v2.6.0:
         run: expo-maze-runner
         use-aliases: true
     env:
@@ -338,9 +338,9 @@ steps:
 
   - label: 'expo Android 4'
     plugins:
-      - artifacts#v1.2.0:
+      artifacts#v1.2.0:
         download: "build/output.apk"
-      - docker-compose#v2.6.0:
+      docker-compose#v2.6.0:
         run: expo-maze-runner
         use-aliases: true
     env:
