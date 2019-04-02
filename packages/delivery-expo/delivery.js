@@ -38,7 +38,6 @@ module.exports = (client, fetch = global.fetch) => {
   return {
     sendReport: (report, cb = () => {}) => {
       const url = client.config.endpoints.notify
-      console.log(report)
 
       let body, opts
       try {

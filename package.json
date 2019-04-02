@@ -42,7 +42,8 @@
       "examples",
       "features",
       "**/node_modules/**",
-      "fixtures"
+      "fixtures",
+      "scratch"
     ]
   }
 }
