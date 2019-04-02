@@ -275,6 +275,7 @@ steps:
     commands:
     - pwd
     - ls -a
+    - ls build
     plugins:
       artifacts#v1.2.0:
         download: "build/output.apk"

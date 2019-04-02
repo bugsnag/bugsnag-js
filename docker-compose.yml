@@ -58,7 +58,7 @@ services:
         aliases:
           - maze-runner
     volumes:
-      - ./build:/app/test/expo/packages
+      - ./build:/app/test/expo/build
 
   expo-publisher:
     build:
