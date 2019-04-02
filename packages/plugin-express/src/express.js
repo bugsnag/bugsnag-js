@@ -37,7 +37,7 @@ module.exports = {
           req.bugsnag.config.onUncaughtException(err, report, client._logger)
         })
         if (!res.headersSent) {
-          res.status = 500
+          res.statusCode = 500
           res.end('Internal server error')
         }
       })
