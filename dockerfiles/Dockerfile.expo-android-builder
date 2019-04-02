@@ -24,4 +24,4 @@ CMD EXPO_ANDROID_KEYSTORE_PASSWORD=password \
     node_modules/.bin/turtle build:android \
     --keystore-path fakekeys.jks \
     --keystore-alias password \
-    --output /app/test/expo/features/fixtures/build/output.apk >> build.log
+    --output /app/test/expo/features/fixtures/build/output.apk
