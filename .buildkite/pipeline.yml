@@ -64,13 +64,13 @@ steps:
             - expo-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
             - expo-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-latest
 
-  - label:  ':docker: Publish expo app'
-    plugins:
-      - docker-compose#v2.6.0:
-          run: expo-publisher
-          image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
-          cache-from:
-            - expo-publisher:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
+  # - label:  ':docker: Publish expo app'
+  #   plugins:
+  #     - docker-compose#v2.6.0:
+  #         run: expo-publisher
+  #         image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
+  #         cache-from:
+  #           - expo-publisher:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
 
   - wait
 
@@ -270,6 +270,12 @@ steps:
             - expo-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
 
   - wait
+
+  - label: 'expo test-step'
+    plugins:
+      command: pwd
+      artifacts#v1.2.0:
+        download: "build/output.apk"
 
   - label: 'expo Android 9'
     plugins:
