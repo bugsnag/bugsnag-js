@@ -272,7 +272,6 @@ steps:
   - wait
 
   - label: 'expo Android 9'
-    command: buildkite-agent artifact download build/output.apk build/
     plugins:
       - artifacts#v1.2.0:
         download: "build/output.apk"
@@ -286,7 +285,6 @@ steps:
     concurrency_group: 'browserstack'
 
   - label: 'expo Android 8'
-    command: buildkite-agent artifact download build/output.apk build/
     plugins:
       - artifacts#v1.2.0:
         download: "build/output.apk"
@@ -300,7 +298,6 @@ steps:
     concurrency_group: 'browserstack'
 
   - label: 'expo Android 7'
-    command: buildkite-agent artifact download build/output.apk build/
     plugins:
       - artifacts#v1.2.0:
         download: "build/output.apk"
@@ -314,7 +311,6 @@ steps:
     concurrency_group: 'browserstack'
 
   - label: 'expo Android 6'
-    command: buildkite-agent artifact download build/output.apk build/
     plugins:
       - artifacts#v1.2.0:
         download: "build/output.apk"
@@ -328,7 +324,6 @@ steps:
     concurrency_group: 'browserstack'
 
   - label: 'expo Android 5'
-    command: buildkite-agent artifact download build/output.apk build/
     plugins:
       - artifacts#v1.2.0:
         download: "build/output.apk"
@@ -342,7 +337,6 @@ steps:
     concurrency_group: 'browserstack'
 
   - label: 'expo Android 4'
-    command: buildkite-agent artifact download build/output.apk build/
     plugins:
       - artifacts#v1.2.0:
         download: "build/output.apk"
