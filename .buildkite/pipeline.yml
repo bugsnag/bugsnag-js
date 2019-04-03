@@ -269,6 +269,13 @@ steps:
           cache-from:
             - expo-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
 
+  - label:  ':docker: Build expo IPA'
+    agents:
+      queue: "opensource-mac"
+    commands:
+      - ls
+      - whoami
+
   - wait
 
   - label: 'expo Android 9'
