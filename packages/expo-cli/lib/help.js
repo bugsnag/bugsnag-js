@@ -1,8 +1,8 @@
 module.exports = () => console.log(`
-  bugsnag-expo - a tool to help integrate @bugsnag/expo with an Expo project
+  bugsnag-expo-cli - a tool to help integrate @bugsnag/expo with an Expo project
 
   usage
-    bugsnag-expo <command>
+    bugsnag-expo-cli <command>
 
   commands
     init            integrates Bugsnag with an Expo project
