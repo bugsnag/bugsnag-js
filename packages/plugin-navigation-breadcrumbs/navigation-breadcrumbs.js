@@ -69,8 +69,8 @@ const wrapHistoryFn = (client, target, fn, win) => {
     client.leaveBreadcrumb(`History ${fn}`, stateChangeToMetaData(win, state, title, url), 'navigation')
     // if throttle plugin is in use, refresh the event sent count
     if (typeof client.refresh === 'function') client.refresh()
-    // if the client is operating in session-mode, a new route should trigger a new session
-    if (client.session) client.startSession()
+    // if the client is operating in auto session-mode, a new route should trigger a new session
+    if (client.config.autoCaptureSessions) client.startSession()
     // Internet Explorer will convert `undefined` to a string when passed, causing an unintended redirect
     // to '/undefined'. therefore we only pass the url if it's not undefined.
     orig.apply(target, [ state, title ].concat(url !== undefined ? url : []))
