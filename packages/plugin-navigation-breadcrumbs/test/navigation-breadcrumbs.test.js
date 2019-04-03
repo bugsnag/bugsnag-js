@@ -47,6 +47,40 @@ describe('plugin: navigation breadcrumbs', () => {
     expect(c.breadcrumbs.length).toBe(0)
   })
 
+  it('should start a new session if autoCaptureSessions=true', (done) => {
+    const c = new Client(VALID_NOTIFIER)
+    c.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
+    c.configure()
+    c.sessionDelegate({
+      startSession: client => {
+        done()
+      }
+    })
+    const { winHandlers, docHandlers, window } = getMockWindow()
+    c.use(plugin, window)
+    winHandlers['load'].forEach((h) => h.call(window))
+    docHandlers['DOMContentLoaded'].forEach((h) => h.call(window.document))
+    window.history.replaceState({}, 'bar', 'network-breadcrumb-test.html')
+  })
+
+  it('should not a new session if autoCaptureSessions=false', (done) => {
+    const c = new Client(VALID_NOTIFIER)
+    c.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa', autoCaptureSessions: false })
+    c.configure()
+    c.sessionDelegate({
+      startSession: client => {
+        expect('shouldn’t get here').toBe(false)
+        done()
+      }
+    })
+    const { winHandlers, docHandlers, window } = getMockWindow()
+    c.use(plugin, window)
+    winHandlers['load'].forEach((h) => h.call(window))
+    docHandlers['DOMContentLoaded'].forEach((h) => h.call(window.document))
+    window.history.replaceState({}, 'bar', 'network-breadcrumb-test.html')
+    setTimeout(() => done(), 1)
+  })
+
   it('should be enabled when autoBreadcrumbs=false and navigationBreadcrumbsEnabled=true', () => {
     const c = new Client(VALID_NOTIFIER)
     c.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa', autoBreadcrumbs: false, navigationBreadcrumbsEnabled: true })
