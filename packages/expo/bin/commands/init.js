@@ -6,6 +6,6 @@ const addHook = require('./add-hook')
 module.exports = async (argv, globalOpts) => {
   await install(argv, globalOpts)
   await setApiKey(argv, globalOpts)
-  await insert()
-  await addHook()
+  await insert(argv, globalOpts)
+  await addHook(argv, globalOpts)
 }

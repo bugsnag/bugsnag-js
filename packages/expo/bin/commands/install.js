@@ -4,6 +4,7 @@ const { readFile } = require('fs')
 const { join } = require('path')
 const install = require('../lib/install')
 const { onCancel } = require('../lib/utils')
+const { blue } = require('kleur')
 
 module.exports = async (argv, globalOpts) => {
   const projectRoot = globalOpts['project-root']
@@ -11,6 +12,7 @@ module.exports = async (argv, globalOpts) => {
   const isWanted = await confirmWanted(alreadyInstalled, projectRoot)
   if (isWanted) {
     const tool = await withTool(projectRoot)
+    console.log(blue(`> Installing @bugsnag/expo with ${tool}. This could take a while!`))
     await install(tool)
   }
 }
