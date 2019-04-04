@@ -246,7 +246,7 @@ const normaliseError = (error, opts, logger) => {
         _opts = { metaData: { notifier: { notifyArgs: [ error, opts ] } } }
       } else {
         err = new Error(String(error))
-        errorFramesToSkip += 2
+        errorFramesToSkip += 3
       }
       break
     case 'number':
@@ -262,7 +262,7 @@ const normaliseError = (error, opts, logger) => {
       } else if (error !== null && hasNecessaryFields(error)) {
         err = new Error(error.message || error.errorMessage)
         err.name = error.name || error.errorClass
-        errorFramesToSkip += 2
+        errorFramesToSkip += 3
       } else {
         err = createAndLogUsageError(error === null ? 'null' : 'unsupported object')
       }

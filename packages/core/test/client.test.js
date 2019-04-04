@@ -307,6 +307,8 @@ describe('@bugsnag/core/client', () => {
       expect(payloads.length).toBe(1)
       expect(payloads[0].events[0].toJSON().exceptions[0].errorClass).toBe('UnknownThing')
       expect(payloads[0].events[0].toJSON().exceptions[0].message).toBe('found a thing that couldn’t be dealt with')
+      expect(payloads[0].events[0].toJSON().exceptions[0].stacktrace[0].method).not.toMatch(/BugsnagClient/)
+      expect(payloads[0].events[0].toJSON().exceptions[0].stacktrace[0].file).not.toMatch(/core\/client\.js/)
     })
 
     it('leaves a breadcrumb of the error', () => {

@@ -51,3 +51,35 @@ Scenario Outline: calling notify() with Error within Promise catch
     | browserify |
     | rollup     |
     | typescript |
+
+Scenario Outline: calling notify() with an object, getting a generated a stacktrace
+  When I navigate to the URL "/handled/<type>/d.html"
+  Then I wait to receive a request
+  And the request is a valid browser payload for the error reporting API
+  And the exception "errorClass" equals "Errr"
+  And the exception "message" equals "make a stacktrace for me"
+  And the exception "type" equals "browserjs"
+
+  # this ensures that the generated stacktrace doesn't include frames from bugsnag's source
+  And the payload field "events.0.exceptions.0.stacktrace" is an array with 1 elements?
+  And the payload field "events.0.exceptions.0.stacktrace.0.file" ends with "d.html"
+
+  Examples:
+    | type       |
+    | script     |
+
+Scenario Outline: calling notify() with a string, getting a generated stacktrace
+  When I navigate to the URL "/handled/<type>/e.html"
+  Then I wait to receive a request
+  And the request is a valid browser payload for the error reporting API
+  And the exception "errorClass" equals "Error"
+  And the exception "message" equals "make a stacktrace for me"
+  And the exception "type" equals "browserjs"
+
+  # this ensures that the generated stacktrace doesn't include frames from bugsnag's source
+  And the payload field "events.0.exceptions.0.stacktrace" is an array with 1 elements?
+  And the payload field "events.0.exceptions.0.stacktrace.0.file" ends with "e.html"
+
+  Examples:
+    | type       |
+    | script     |
