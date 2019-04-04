@@ -22,7 +22,7 @@ declare class Client {
   public delivery(delivery: common.IDelivery): Client;
   public logger(logger: common.ILogger): Client;
   public sessionDelegate(sessionDelegate: common.ISessionDelegate): Client;
-  public notify(error: common.NotifiableError, opts?: common.INotifyOpts): boolean;
+  public notify(error: common.NotifiableError, opts?: common.INotifyOpts, cb?: (err: any) => void): void;
   public leaveBreadcrumb(name: string, metaData?: any, type?: string, timestamp?: string): Client;
   public startSession(): Client;
 }
