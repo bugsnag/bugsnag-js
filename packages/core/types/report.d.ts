@@ -33,7 +33,14 @@ declare class Report {
     url: string;
   };
 
-  constructor(errorClass: string, errorMessage: string, stacktrace?: any[], handledState?: IHandledState);
+  constructor(
+    errorClass: string,
+    errorMessage: string,
+    stacktrace?: any[],
+    handledState?: IHandledState,
+    originalError?: any,
+  );
+
   public isIgnored(): boolean;
   public ignore(): void;
   public updateMetaData(section: string, value: object): Report;
