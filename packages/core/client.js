@@ -228,6 +228,8 @@ class BugsnagClient {
 }
 
 const normaliseError = (error, opts, logger) => {
+  const synthesizedErrorFramesToSkip = 3
+
   const createAndLogUsageError = reason => {
     const msg = generateNotifyUsageMessage(reason)
     logger.warn(`${LOG_USAGE_ERR_PREFIX} ${msg}`)
@@ -246,7 +248,7 @@ const normaliseError = (error, opts, logger) => {
         _opts = { metaData: { notifier: { notifyArgs: [ error, opts ] } } }
       } else {
         err = new Error(String(error))
-        errorFramesToSkip += 3
+        errorFramesToSkip = synthesizedErrorFramesToSkip
       }
       break
     case 'number':
@@ -262,7 +264,7 @@ const normaliseError = (error, opts, logger) => {
       } else if (error !== null && hasNecessaryFields(error)) {
         err = new Error(error.message || error.errorMessage)
         err.name = error.name || error.errorClass
-        errorFramesToSkip += 3
+        errorFramesToSkip = synthesizedErrorFramesToSkip
       } else {
         err = createAndLogUsageError(error === null ? 'null' : 'unsupported object')
       }
