@@ -60,8 +60,7 @@ Scenario: calling notify() with an object, getting a generated a stacktrace
   And the exception "message" equals "make a stacktrace for me"
   And the exception "type" equals "browserjs"
 
-  # this ensures that the generated stacktrace doesn't include frames from bugsnag's source
-  And the payload field "events.0.exceptions.0.stacktrace" is an array with 3 elements?
+  # this ensures the first generated stackframe doesn't come from bugsnag's source
   And the payload field "events.0.exceptions.0.stacktrace.0.method" equals "a"
 
 Scenario: calling notify() with a string, getting a generated stacktrace
@@ -72,6 +71,5 @@ Scenario: calling notify() with a string, getting a generated stacktrace
   And the exception "message" equals "make a stacktrace for me"
   And the exception "type" equals "browserjs"
 
-  # this ensures that the generated stacktrace doesn't include frames from bugsnag's source
-  And the payload field "events.0.exceptions.0.stacktrace" is an array with 3 elements?
+  # this ensures the first generated stackframe doesn't come from bugsnag's source
   And the payload field "events.0.exceptions.0.stacktrace.0.method" equals "a"
