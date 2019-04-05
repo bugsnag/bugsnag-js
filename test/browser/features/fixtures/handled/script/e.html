@@ -14,7 +14,12 @@
   </head>
   <body>
     <script>
-      bugsnagClient.notify('make a stacktrace for me')
+      function a () {
+        bugsnagClient.notify('make a stacktrace for me')
+      }
+      function b () { a() }
+      function c () { b() }
+      c()
     </script>
   </body>
 </html>
