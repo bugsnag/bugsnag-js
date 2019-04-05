@@ -318,6 +318,7 @@ describe('@bugsnag/core/client', () => {
       expect(client.breadcrumbs.length).toBe(1)
       expect(client.breadcrumbs[0].type).toBe('error')
       expect(client.breadcrumbs[0].name).toBe('Error')
+      expect(client.breadcrumbs[0].metaData.stacktrace).toBe(undefined)
       // the error shouldn't appear as a breadcrumb for itself
       expect(payloads[0].events[0].breadcrumbs.length).toBe(0)
     })
