@@ -161,7 +161,7 @@ class BugsnagClient {
     if (typeof opts !== 'object' || opts === null) opts = {}
 
     // create a report from the error, if it isn't one already
-    const report = BugsnagReport.ensureReport(err, errorFramesToSkip, 1)
+    const report = BugsnagReport.ensureReport(err, errorFramesToSkip, 2)
 
     report.app = { ...{ releaseStage }, ...report.app, ...this.app }
     report.context = report.context || opts.context || this.context || undefined
