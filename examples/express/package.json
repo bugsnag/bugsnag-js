@@ -6,8 +6,8 @@
     "start": "node app"
   },
   "dependencies": {
-    "@bugsnag/js": "^5.0.0-alpha.1",
-    "@bugsnag/plugin-express": "^5.0.0-alpha.1",
+    "@bugsnag/js": "^6.0.0",
+    "@bugsnag/plugin-express": "^6.0.0",
     "express": "^4.16.4"
   }
 }
