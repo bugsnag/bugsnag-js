@@ -14,7 +14,6 @@ module.exports = () => console.log(`
     help            prints this text
 
   options
-    --vebose -v     switch on verbose logging
     --project-root  set the path to the expo project
                     (defaults to the current working directory)
 `)

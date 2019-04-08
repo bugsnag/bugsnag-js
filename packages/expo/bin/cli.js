@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
 const commandLineArgs = require('command-line-args')
+const { resolve } = require('path')
+const { red, yellow } = require('kleur')
 
 const commands = new Map([
   [ 'add-hook', require('./commands/add-hook') ],
@@ -14,7 +16,6 @@ const commands = new Map([
 // define top-level options
 const cliOpts = [
   { name: 'command', defaultOption: true },
-  { name: 'verbose', alias: 'v', type: Boolean },
   { name: 'help', type: Boolean },
   { name: 'project-root', defaultValue: process.cwd() }
 ]
@@ -22,20 +23,30 @@ const cliOpts = [
 const parsedArgs = commandLineArgs(cliOpts, { stopAtFirstUnknown: true })
 const argv = parsedArgs._unknown || []
 
-const go = () => {
-  // `bugsnag-expo --help` works
-  if (parsedArgs.help) return commands.get('help')(argv, parsedArgs)
+// make project root absolute
+parsedArgs['project-root'] = resolve(process.cwd(), parsedArgs['project-root'])
 
-  // bugsnag-expo <cmd>
-  const cmd = commands.get(parsedArgs.command)
-  if (cmd) return cmd(argv, parsedArgs)
+const go = async () => {
+  try {
+    // `bugsnag-expo --help` works
+    if (parsedArgs.help) return await commands.get('help')(argv, parsedArgs)
 
-  // no command found, maybe nothing was provided?
-  process.exitCode = 1
-  // print out what was received
-  if (parsedArgs.command) console.log(`Unknown command: ${parsedArgs.command}`)
-  // send help
-  return commands.get('help')(argv, parsedArgs)
+    // bugsnag-expo <cmd>
+    const cmd = commands.get(parsedArgs.command)
+    if (cmd) return await cmd(argv, parsedArgs)
+
+    // no command found, maybe nothing was provided?
+    process.exitCode = 1
+
+    // print out what was received
+    if (parsedArgs.command) console.log(yellow(`\n  Unknown command: ${parsedArgs.command}`))
+
+    // send help
+    return await commands.get('help')(argv, parsedArgs)
+  } catch (e) {
+    console.error(red(`\n  ${e.stack.split('\n').join('\n  ')} \n`))
+    process.exitCode = 1
+  }
 }
 
 go()

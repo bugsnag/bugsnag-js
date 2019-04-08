@@ -58,7 +58,7 @@ services:
         aliases:
           - maze-runner
     volumes:
-      - ./build:/app/test/expo/packages
+      - ./build:/app/test/expo/build
 
   expo-publisher:
     build:
@@ -76,12 +76,11 @@ services:
     build:
       context: .
       dockerfile: dockerfiles/Dockerfile.expo-android-builder
-      args:
-        EXPO_USERNAME:
-        EXPO_PASSWORD:
     environment:
       VERBOSE:
       DEBUG:
+      EXPO_USERNAME:
+      EXPO_PASSWORD:
     networks:
       default:
         aliases:
