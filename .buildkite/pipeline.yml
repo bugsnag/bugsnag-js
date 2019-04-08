@@ -64,14 +64,6 @@ steps:
             - expo-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
             - expo-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-latest
 
-  - label:  ':docker: Publish expo app'
-    plugins:
-      - docker-compose#v2.6.0:
-          run: expo-publisher
-          image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
-          cache-from:
-            - expo-publisher:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
-
   - wait
 
   # - label: ':chrome: v43 Browser tests'
@@ -258,6 +250,14 @@ steps:
   #       use-aliases: true
   #   env:
   #     NODE_VERSION: "10"
+
+  - label:  ':docker: Publish expo app'
+    plugins:
+      - docker-compose#v2.6.0:
+          run: expo-publisher
+          image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
+          cache-from:
+            - expo-publisher:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
 
   - wait
 
