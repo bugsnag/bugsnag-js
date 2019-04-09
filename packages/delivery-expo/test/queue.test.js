@@ -258,4 +258,132 @@ describe('delivery: expo -> queue', () => {
       done()
     })
   })
+
+  describe('init()', () => {
+    it('should only enter the create logic once for simultaneous calls', async (done) => {
+      let exists = false
+      let isDirectory = false
+      let makeCount = 0
+      const MockFileSystem = {
+        cacheDirectory: 'file://var/data/foo.bar.app/',
+        getInfoAsync: async () => ({ exists, isDirectory }),
+        makeDirectoryAsync: () => new Promise((resolve, reject) => {
+          makeCount++
+          setTimeout(() => resolve(), 20)
+        }),
+        readAsStringAsync: () => {},
+        writeAsStringAsync: () => {},
+        readDirectoryAsync: () => {},
+        deleteAsync: () => {}
+      }
+      const Queue = proxyquire('../queue', {
+        'expo': { FileSystem: MockFileSystem }
+      })
+      const q = new Queue('stuff')
+      const proms = []
+      proms.push(() => q.init())
+      proms.push(() => q.init())
+      proms.push(() => new Promise((resolve, reject) => {
+        setTimeout(() => {
+          q.init().then(resolve, reject)
+        }, 5)
+      }))
+      proms.push(() => new Promise((resolve, reject) => {
+        setTimeout(() => {
+          q.init().then(resolve, reject)
+        }, 10)
+      }))
+      await Promise.all(proms.map(p => p()))
+      expect(makeCount).toBe(1)
+      done()
+    })
+
+    it('should tolerate errors when the directory was succesfully created', async (done) => {
+      let exists = false
+      let isDirectory = false
+      const MockFileSystem = {
+        cacheDirectory: 'file://var/data/foo.bar.app/',
+        getInfoAsync: async () => ({ exists, isDirectory }),
+        makeDirectoryAsync: () => new Promise((resolve, reject) => {
+          setTimeout(() => {
+            exists = true
+            isDirectory = true
+            reject(new Error('floop'))
+          }, 20)
+        }),
+        readAsStringAsync: () => {},
+        writeAsStringAsync: () => {},
+        readDirectoryAsync: () => {},
+        deleteAsync: () => {}
+      }
+      const Queue = proxyquire('../queue', {
+        'expo': { FileSystem: MockFileSystem }
+      })
+      const q = new Queue('stuff')
+      await q.init()
+      done()
+    })
+
+    it('should rethrow errors when the directory was not succesfully created', async (done) => {
+      let exists = false
+      let isDirectory = false
+      const MockFileSystem = {
+        cacheDirectory: 'file://var/data/foo.bar.app/',
+        getInfoAsync: async () => ({ exists, isDirectory }),
+        makeDirectoryAsync: () => new Promise((resolve, reject) => {
+          setTimeout(() => {
+            reject(new Error('fleerp'))
+          }, 20)
+        }),
+        readAsStringAsync: () => {},
+        writeAsStringAsync: () => {},
+        readDirectoryAsync: () => {},
+        deleteAsync: () => {}
+      }
+      const Queue = proxyquire('../queue', {
+        'expo': { FileSystem: MockFileSystem }
+      })
+      const q = new Queue('stuff')
+      let didErr = false
+      try {
+        await q.init()
+      } catch (e) {
+        expect(e).toBeTruthy()
+        expect(e.message).toBe('fleerp')
+        didErr = true
+      }
+      expect(didErr).toBe(true)
+      done()
+    })
+
+    it('should reject all pending promises', async (done) => {
+      let exists = false
+      let isDirectory = false
+      const MockFileSystem = {
+        cacheDirectory: 'file://var/data/foo.bar.app/',
+        getInfoAsync: async () => ({ exists, isDirectory }),
+        makeDirectoryAsync: () => new Promise((resolve, reject) => {
+          setTimeout(() => {
+            reject(new Error('fleerp'))
+          }, 20)
+        }),
+        readAsStringAsync: () => {},
+        writeAsStringAsync: () => {},
+        readDirectoryAsync: () => {},
+        deleteAsync: () => {}
+      }
+      const Queue = proxyquire('../queue', {
+        'expo': { FileSystem: MockFileSystem }
+      })
+      const q = new Queue('stuff')
+      let errs = []
+      await Promise.all([
+        q.init().catch(e => errs.push(e)),
+        q.init().catch(e => errs.push(e)),
+        q.init().catch(e => errs.push(e))
+      ])
+      expect(errs.length).toBe(3)
+      done()
+    })
+  })
 })
