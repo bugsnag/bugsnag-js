@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/delivery-xml-http-request",
-  "version": "7.0.0-pre-alpha-ben.4",
+  "version": "7.0.0-pre-alpha-ben.6",
   "main": "delivery.js",
   "description": "@bugsnag/js delivery mechanism for most browsers",
   "homepage": "https://www.bugsnag.com/",
@@ -20,7 +20,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "dependencies": {
-    "@bugsnag/core": "^7.0.0-pre-alpha-ben.4"
+    "@bugsnag/core": "^7.0.0-pre-alpha-ben.6"
   },
   "devDependencies": {
     "jasmine": "^3.1.0",
