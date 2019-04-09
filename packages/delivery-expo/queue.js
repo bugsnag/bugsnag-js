@@ -13,15 +13,52 @@ module.exports = class UndeliveredPayloadQueue {
     this._path = `${PAYLOAD_PATH}/${this._resource}`
     this._onerror = onerror
     this._truncating = false
+    this._initCall = null
+  }
+
+  /*
+   * Calls _init(), ensuring it only does that task once returning
+   * the same promise to each concurrent caller
+   */
+  async init () {
+    // we don't want multiple calls to init() to incur multiple attempts at creating
+    // the directory, so we assign the existing _init() call
+    if (this._initCall) return this._initCall
+    this._initCall = this._init()
+      .then(() => { this._initCall = null })
+      .catch(e => {
+        this._initCall = null
+        throw e
+      })
+    return this._initCall
   }
 
   /*
    * Ensure the persistent cache directory exists
    */
-  async init () {
+  async _init () {
+    if (await this._checkCacheDirExists()) return
+    try {
+      await FileSystem.makeDirectoryAsync(this._path, { intermediates: true })
+    } catch (e) {
+      // Expo has a bug where `makeDirectoryAsync` can error, even though it succesfully
+      // created the directory. See:
+      //   https://github.com/expo/expo/issues/2050
+      //   https://forums.expo.io/t/makedirectoryasync-error-could-not-be-created/11916
+      //
+      // To tolerate this, after getting an error, we check whether the directory
+      // now exist, swallowing the error if so, rethrowing if not.
+      if (await this._checkCacheDirExists()) return
+      throw e
+    }
+  }
+
+  /*
+   * Check if the cache directory exists
+   */
+  async _checkCacheDirExists () {
     const { exists, isDirectory } = await FileSystem.getInfoAsync(this._path)
-    if (exists && isDirectory) return
-    await FileSystem.makeDirectoryAsync(this._path, { intermediates: true })
+    return exists && isDirectory
   }
 
   /*
