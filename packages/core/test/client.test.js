@@ -285,11 +285,9 @@ describe('@bugsnag/core/client', () => {
       client.notify('str1', 'str2')
       client.notify('str1', null)
 
-      payloads
-        .filter((p, i) => i < 3)
-        .map(p => p.events[0].toJSON().exceptions[0].message)
-        .forEach(message => expect(message).toMatch(/^Bugsnag usage error/))
-
+      expect(payloads[0].events[0].toJSON().exceptions[0].message).toBe('Bugsnag usage error. notify() expected error/opts parameters, got nothing')
+      expect(payloads[1].events[0].toJSON().exceptions[0].message).toBe('Bugsnag usage error. notify() expected error/opts parameters, got null')
+      expect(payloads[2].events[0].toJSON().exceptions[0].message).toBe('Bugsnag usage error. notify() expected error/opts parameters, got function')
       expect(payloads[3].events[0].toJSON().exceptions[0].message).toBe('1')
       expect(payloads[4].events[0].toJSON().exceptions[0].message).toBe('errrororor')
       expect(payloads[5].events[0].toJSON().metaData).toEqual({ notifier: { notifyArgs: [ 'str1', 'str2' ] } })
@@ -306,6 +304,8 @@ describe('@bugsnag/core/client', () => {
       expect(payloads.length).toBe(1)
       expect(payloads[0].events[0].toJSON().exceptions[0].errorClass).toBe('UnknownThing')
       expect(payloads[0].events[0].toJSON().exceptions[0].message).toBe('found a thing that couldn’t be dealt with')
+      expect(payloads[0].events[0].toJSON().exceptions[0].stacktrace[0].method).not.toMatch(/BugsnagClient/)
+      expect(payloads[0].events[0].toJSON().exceptions[0].stacktrace[0].file).not.toMatch(/core\/client\.js/)
     })
 
     it('leaves a breadcrumb of the error', () => {

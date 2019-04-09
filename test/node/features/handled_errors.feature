@@ -17,7 +17,7 @@ Scenario: calling notify() with an error
   And the "file" of stack frame 0 equals "scenarios/notify.js"
   And the "lineNumber" of stack frame 0 equals 10
 
-Scenario: calling notify() with am error from try/catch
+Scenario: calling notify() with an error from try/catch
   And I run the service "handled" with the command "node scenarios/notify-try-catch"
   And I wait to receive a request
   Then the request is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
@@ -67,3 +67,16 @@ Scenario: using intercept to notify a promise rejection
   And the exception "type" equals "nodejs"
   And the "file" of stack frame 0 equals "scenarios/intercept-rejection.js"
   And the "lineNumber" of stack frame 0 equals 21
+
+Scenario: calling notify with a string
+  And I run the service "handled" with the command "node scenarios/notify-string"
+  And I wait to receive a request
+  Then the request is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
+  And the event "unhandled" is false
+  And the event "severity" equals "warning"
+  And the event "severityReason.type" equals "handledException"
+  And the exception "errorClass" equals "Error"
+  And the exception "message" equals "create an error for me"
+  And the exception "type" equals "nodejs"
+  And the "file" of stack frame 0 equals "scenarios/notify-string.js"
+  And the "lineNumber" of stack frame 0 equals 10
