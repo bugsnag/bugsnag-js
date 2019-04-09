@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-angular",
-  "version": "7.0.0-pre-alpha-ben.5",
+  "version": "7.0.0-pre-alpha-ben.6",
   "description": "Angular integration for bugsnag-js",
   "main": "dist/index.js",
   "browser": "dist/index.js",
@@ -31,7 +31,7 @@
     "@angular/compiler": "^4.4.7",
     "@angular/compiler-cli": "^4.4.7",
     "@angular/core": "^4.4.7",
-    "@bugsnag/js": "^7.0.0-pre-alpha-ben.5",
+    "@bugsnag/js": "^7.0.0-pre-alpha-ben.6",
     "rxjs": "^5.5.8",
     "tslint": "^5.9.1",
     "typescript": "2.3.4",
