@@ -400,6 +400,23 @@ describe('@bugsnag/core/client', () => {
         done()
       })
     })
+
+    it('should attach the original error to the report object', done => {
+      const client = new Client(VALID_NOTIFIER)
+      client.setOptions({ apiKey: 'API_KEY', beforeSend: () => false })
+      client.configure()
+      client.delivery({
+        sendSession: () => {},
+        sendReport: (logger, config, report, cb) => cb(null)
+      })
+      const orig = new Error('111')
+      client.notify(orig, {}, (err, report) => {
+        expect(err).toBe(null)
+        expect(report).toBeTruthy()
+        expect(report.originalError).toBe(orig)
+        done()
+      })
+    })
   })
 
   describe('leaveBreadcrumb()', () => {

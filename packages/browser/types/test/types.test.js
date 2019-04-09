@@ -106,4 +106,22 @@ console.log(bugsnagClient.getPlugin('foo') === 10)
     ])
     expect(stdout.toString()).toBe('')
   })
+
+  it('should work with the notify() callback', () => {
+    const program = `
+import bugsnag from "../../..";
+const bugsnagClient = bugsnag('api_key');
+bugsnagClient.notify(new Error('123'), {
+  beforeSend: (report) => { return false }
+}, (err, report) => {
+  console.log(report.originalError)
+})
+`.trim()
+    writeFileSync(`${__dirname}/fixtures/app.ts`, program)
+    const { stdout } = spawnSync('./node_modules/.bin/tsc', [
+      '--strict',
+      `${__dirname}/fixtures/app.ts`
+    ])
+    expect(stdout.toString()).toBe('')
+  })
 })

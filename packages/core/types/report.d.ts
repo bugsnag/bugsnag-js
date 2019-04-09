@@ -32,6 +32,7 @@ declare class Report {
   public request: {
     url: string;
   };
+  public originalError: any;
 
   constructor(
     errorClass: string,
