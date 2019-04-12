@@ -2,11 +2,6 @@ import React, { Component } from 'react'
 import { View, Button } from 'react-native'
 import { bugsnagClient } from './bugsnag'
 
-setTimeout(() => {
-  Promise.reject(new Error('UnhandledPromiseRejection'))
-}, 5)
-
-
 export default class Handled extends Component {
   handledError = () => {
     bugsnagClient.notify(new Error('HandledError'))

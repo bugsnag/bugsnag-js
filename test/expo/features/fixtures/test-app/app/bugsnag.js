@@ -1,8 +1,8 @@
 import bugsnag from '@bugsnag/expo'
 
 const endpoints = {
-  notify: 'http://10.0.2.2:9339',
-  sessions: 'http://10.0.2.2:9339'
+  notify: 'http://localhost:9339',
+  sessions: 'http://localhost:9339'
 }
 
 const bugsnagClient = bugsnag({

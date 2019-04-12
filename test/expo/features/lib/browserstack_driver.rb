@@ -49,8 +49,24 @@ module BSAppAutomator
       @driver.find_element(:accessibility_id, element_id).click unless @driver.nil?
     end
 
+    def click_named_element(name)
+      @driver.find_element(:name, name).click unless @driver.nil?
+    end
+
+    def background_app(timeout=3)
+      @driver.background_app(timeout)
+    end
+
+    def rotate_device(orientation)
+      @driver.rotation = orientation
+    end
+
     def reset_app
       @driver.reset
+    end
+
+    def toggle_airplane_mode
+      @driver.toggle_airplane_mode
     end
   end
 end

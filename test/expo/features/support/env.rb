@@ -44,6 +44,37 @@ def click_element(element)
   end
 end
 
+def set_dropdown_value(element, value)
+  unless $bs_driver.nil?
+    $bs_driver.click_element(element)
+    sleep(1)
+    $bs_driver.click_named_element(value)
+  end
+end
+
+def timeout_app(timeout)
+  unless $bs_driver.nil?
+    $bs_driver.background_app(timeout)
+  end
+end
+
+def rotate_device
+  unless $bs_driver.nil?
+    $bs_driver.rotate_device(:landscape)
+    sleep(0.5)
+    $bs_driver.rotate_device(:portrait)
+  end
+end
+
+def toggle_airplane_mode
+  unless $bs_driver.nil?
+    $bs_driver.toggle_airplane_mode
+    sleep(1)
+    $bs_driver.toggle_airplane_mode
+  end
+end
+
+
 def stop_driver
   unless $bs_driver.nil?
     $bs_driver.stop_driver
