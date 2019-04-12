@@ -185,7 +185,7 @@ class BugsnagClient {
     // exit early if the reports should not be sent on the current releaseStage
     if (isArray(this.config.notifyReleaseStages) && !includes(this.config.notifyReleaseStages, releaseStage)) {
       this._logger.warn(`Report not sent due to releaseStage/notifyReleaseStages configuration`)
-      return false
+      return cb(null, report)
     }
 
     const originalSeverity = report.severity
@@ -201,7 +201,7 @@ class BugsnagClient {
 
       if (preventSend) {
         this._logger.debug(`Report not sent due to beforeSend callback`)
-        return false
+        return cb(null, report)
       }
 
       // only leave a crumb for the error if actually got sent

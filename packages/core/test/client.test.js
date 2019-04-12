@@ -177,8 +177,7 @@ describe('@bugsnag/core/client', () => {
       client.setOptions({ apiKey: 'API_KEY_YEAH', notifyReleaseStages: [] })
       client.configure()
 
-      const sent = client.notify(new Error('oh em eff gee'))
-      expect(sent).toBe(false)
+      client.notify(new Error('oh em eff gee'))
 
       // give the event loop a tick to see if the reports get send
       process.nextTick(() => done())
@@ -194,8 +193,7 @@ describe('@bugsnag/core/client', () => {
       client.setOptions({ apiKey: 'API_KEY_YEAH', releaseStage: 'staging', notifyReleaseStages: [ 'production' ] })
       client.configure()
 
-      const sent = client.notify(new Error('oh em eff gee'))
-      expect(sent).toBe(false)
+      client.notify(new Error('oh em eff gee'))
 
       // give the event loop a tick to see if the reports get send
       process.nextTick(() => done())
@@ -212,8 +210,7 @@ describe('@bugsnag/core/client', () => {
       client.configure()
       client.app.releaseStage = 'staging'
 
-      const sent = client.notify(new Error('oh em eff gee'))
-      expect(sent).toBe(false)
+      client.notify(new Error('oh em eff gee'))
 
       // give the event loop a tick to see if the reports get send
       process.nextTick(() => done())
@@ -337,6 +334,88 @@ describe('@bugsnag/core/client', () => {
         }
       })
       expect(client.metaData.foo['3']).toBe(undefined)
+    })
+
+    it('should call the callback (success)', done => {
+      const client = new Client(VALID_NOTIFIER)
+      client.setOptions({ apiKey: 'API_KEY' })
+      client.configure()
+      client.delivery({
+        sendSession: () => {},
+        sendReport: (logger, config, report, cb) => cb(null)
+      })
+      client.notify(new Error('111'), {}, (err, report) => {
+        expect(err).toBe(null)
+        expect(report).toBeTruthy()
+        expect(report.errorMessage).toBe('111')
+        done()
+      })
+    })
+
+    it('should call the callback (err)', done => {
+      const client = new Client(VALID_NOTIFIER)
+      client.setOptions({ apiKey: 'API_KEY' })
+      client.configure()
+      client.delivery({
+        sendSession: () => {},
+        sendReport: (logger, config, report, cb) => cb(new Error('flerp'))
+      })
+      client.notify(new Error('111'), {}, (err, report) => {
+        expect(err).toBeTruthy()
+        expect(err.message).toBe('flerp')
+        expect(report).toBeTruthy()
+        expect(report.errorMessage).toBe('111')
+        done()
+      })
+    })
+
+    it('should call the callback even if the report doesn’t send (notifyReleaseStages)', done => {
+      const client = new Client(VALID_NOTIFIER)
+      client.setOptions({ apiKey: 'API_KEY', notifyReleaseStages: [ 'production' ], releaseStage: 'development' })
+      client.configure()
+      client.delivery({
+        sendSession: () => {},
+        sendReport: (logger, config, report, cb) => cb(null)
+      })
+      client.notify(new Error('111'), {}, (err, report) => {
+        expect(err).toBe(null)
+        expect(report).toBeTruthy()
+        expect(report.errorMessage).toBe('111')
+        done()
+      })
+    })
+
+    it('should call the callback even if the report doesn’t send (beforeSend)', done => {
+      const client = new Client(VALID_NOTIFIER)
+      client.setOptions({ apiKey: 'API_KEY', beforeSend: () => false })
+      client.configure()
+      client.delivery({
+        sendSession: () => {},
+        sendReport: (logger, config, report, cb) => cb(null)
+      })
+      client.notify(new Error('111'), {}, (err, report) => {
+        expect(err).toBe(null)
+        expect(report).toBeTruthy()
+        expect(report.errorMessage).toBe('111')
+        done()
+      })
+    })
+
+    it('should attach the original error to the report object', done => {
+      const client = new Client(VALID_NOTIFIER)
+      client.setOptions({ apiKey: 'API_KEY', beforeSend: () => false })
+      client.configure()
+      client.delivery({
+        sendSession: () => {},
+        sendReport: (logger, config, report, cb) => cb(null)
+      })
+      const orig = new Error('111')
+      client.notify(orig, {}, (err, report) => {
+        expect(err).toBe(null)
+        expect(report).toBeTruthy()
+        expect(report.originalError).toBe(orig)
+        done()
+      })
     })
   })
 

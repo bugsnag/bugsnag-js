@@ -29,7 +29,7 @@ exports.init = (client, win = window) => {
     let report
     if (error && hasStack(error)) {
       // if it quacks like an Error…
-      report = new client.BugsnagReport(error.name, error.message, ErrorStackParser.parse(error), handledState)
+      report = new client.BugsnagReport(error.name, error.message, ErrorStackParser.parse(error), handledState, error)
       if (isBluebird) {
         report.stacktrace = reduce(report.stacktrace, fixBluebirdStacktrace(error), [])
       }
@@ -40,7 +40,8 @@ exports.init = (client, win = window) => {
         error && error.name ? error.name : 'UnhandledRejection',
         error && error.message ? error.message : msg,
         [],
-        handledState
+        handledState,
+        error
       )
       // stuff the rejection reason into metaData, it could be useful
       report.updateMetaData('promise', 'rejection reason', serializableReason(error))

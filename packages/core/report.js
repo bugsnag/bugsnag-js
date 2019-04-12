@@ -4,7 +4,7 @@ const hasStack = require('./lib/has-stack')
 const { reduce, filter } = require('./lib/es-utils')
 
 class BugsnagReport {
-  constructor (errorClass, errorMessage, stacktrace = [], handledState = defaultHandledState()) {
+  constructor (errorClass, errorMessage, stacktrace = [], handledState = defaultHandledState(), originalError) {
     // duck-typing ftw >_<
     this.__isBugsnagReport = true
 
@@ -37,6 +37,7 @@ class BugsnagReport {
     }, [])
     this.user = undefined
     this.session = undefined
+    this.originalError = originalError
   }
 
   ignore () {
@@ -164,9 +165,9 @@ BugsnagReport.ensureReport = function (reportOrError, errorFramesToSkip = 0, gen
   if (reportOrError.__isBugsnagReport) return reportOrError
   try {
     const stacktrace = BugsnagReport.getStacktrace(reportOrError, errorFramesToSkip, 1 + generatedFramesToSkip)
-    return new BugsnagReport(reportOrError.name, reportOrError.message, stacktrace)
+    return new BugsnagReport(reportOrError.name, reportOrError.message, stacktrace, undefined, reportOrError)
   } catch (e) {
-    return new BugsnagReport(reportOrError.name, reportOrError.message, [])
+    return new BugsnagReport(reportOrError.name, reportOrError.message, [], undefined, reportOrError)
   }
 }
 

@@ -20,7 +20,7 @@ export interface IConfig {
   [key: string]: any;
 }
 
-export type BeforeSend = (report: Report, cb?: (err: null | Error) => void) => void | Promise<void>;
+export type BeforeSend = (report: Report, cb?: (err: null | Error) => void) => void | Promise<void> | boolean;
 
 export interface IPlugin {
   name?: string;
