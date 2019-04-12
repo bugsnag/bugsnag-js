@@ -157,18 +157,11 @@ class BugsnagClient {
     let { err, errorFramesToSkip, _opts } = normaliseError(error, opts, this._logger)
     if (_opts) opts = _opts
 
-    // if we have something falsey at this point, report usage error
-    if (!err) {
-      const msg = generateNotifyUsageMessage('nothing')
-      this._logger.warn(`${LOG_USAGE_ERR_PREFIX} ${msg}`)
-      err = new Error(`${REPORT_USAGE_ERR_PREFIX} ${msg}`)
-    }
-
     // ensure opts is an object
     if (typeof opts !== 'object' || opts === null) opts = {}
 
     // create a report from the error, if it isn't one already
-    const report = BugsnagReport.ensureReport(err, errorFramesToSkip, 1)
+    const report = BugsnagReport.ensureReport(err, errorFramesToSkip, 2)
 
     report.app = { ...{ releaseStage }, ...report.app, ...this.app }
     report.context = report.context || opts.context || this.context || undefined
@@ -192,7 +185,7 @@ class BugsnagClient {
     // exit early if the reports should not be sent on the current releaseStage
     if (isArray(this.config.notifyReleaseStages) && !includes(this.config.notifyReleaseStages, releaseStage)) {
       this._logger.warn(`Report not sent due to releaseStage/notifyReleaseStages configuration`)
-      return false
+      return cb(null, report)
     }
 
     const originalSeverity = report.severity
@@ -208,7 +201,7 @@ class BugsnagClient {
 
       if (preventSend) {
         this._logger.debug(`Report not sent due to beforeSend callback`)
-        return false
+        return cb(null, report)
       }
 
       // only leave a crumb for the error if actually got sent
@@ -216,8 +209,7 @@ class BugsnagClient {
         this.leaveBreadcrumb(report.errorClass, {
           errorClass: report.errorClass,
           errorMessage: report.errorMessage,
-          severity: report.severity,
-          stacktrace: report.stacktrace
+          severity: report.severity
         }, 'error')
       }
 
@@ -235,6 +227,14 @@ class BugsnagClient {
 }
 
 const normaliseError = (error, opts, logger) => {
+  const synthesizedErrorFramesToSkip = 3
+
+  const createAndLogUsageError = reason => {
+    const msg = generateNotifyUsageMessage(reason)
+    logger.warn(`${LOG_USAGE_ERR_PREFIX} ${msg}`)
+    return new Error(`${REPORT_USAGE_ERR_PREFIX} ${msg}`)
+  }
+
   let err
   let errorFramesToSkip = 0
   let _opts
@@ -243,13 +243,11 @@ const normaliseError = (error, opts, logger) => {
       if (typeof opts === 'string') {
         // ≤v3 used to have a notify('ErrorName', 'Error message') interface
         // report usage/deprecation errors if this function is called like that
-        const msg = generateNotifyUsageMessage('string/string')
-        logger.warn(`${LOG_USAGE_ERR_PREFIX} ${msg}`)
-        err = new Error(`${REPORT_USAGE_ERR_PREFIX} ${msg}`)
+        err = createAndLogUsageError('string/string')
         _opts = { metaData: { notifier: { notifyArgs: [ error, opts ] } } }
       } else {
         err = new Error(String(error))
-        errorFramesToSkip += 2
+        errorFramesToSkip = synthesizedErrorFramesToSkip
       }
       break
     case 'number':
@@ -257,9 +255,7 @@ const normaliseError = (error, opts, logger) => {
       err = new Error(String(error))
       break
     case 'function':
-      const msg = generateNotifyUsageMessage('function')
-      logger.warn(`${LOG_USAGE_ERR_PREFIX} ${msg}`)
-      err = new Error(`${REPORT_USAGE_ERR_PREFIX} ${msg}`)
+      err = createAndLogUsageError('function')
       break
     case 'object':
       if (error !== null && (isError(error) || error.__isBugsnagReport)) {
@@ -267,13 +263,13 @@ const normaliseError = (error, opts, logger) => {
       } else if (error !== null && hasNecessaryFields(error)) {
         err = new Error(error.message || error.errorMessage)
         err.name = error.name || error.errorClass
-        errorFramesToSkip += 2
+        errorFramesToSkip = synthesizedErrorFramesToSkip
       } else {
-        const msg = generateNotifyUsageMessage('unsupported object')
-        logger.warn(`${LOG_USAGE_ERR_PREFIX} ${msg}`)
-        err = new Error(`${REPORT_USAGE_ERR_PREFIX} ${msg}`)
+        err = createAndLogUsageError(error === null ? 'null' : 'unsupported object')
       }
       break
+    default:
+      err = createAndLogUsageError('nothing')
   }
   return { err, errorFramesToSkip, _opts }
 }

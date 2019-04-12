@@ -3,5 +3,5 @@
   "packages": [
     "packages/*"
   ],
-  "version": "7.0.0-pre-alpha-ben.6"
+  "version": "6.1.0"
 }

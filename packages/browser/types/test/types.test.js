@@ -34,4 +34,8 @@ describe('types', () => {
   it('should work with plugins', () => {
     assertTsProgramCompiles('plugins')
   })
+
+  it('should work with the notify() callback', () => {
+    assertTsProgramCompiles('notify-callback')
+  })
 })
