@@ -1,5 +1,25 @@
 # Changelog
 
+## 6.1.0 (2019-04-12)
+
+### Added
+
+- (core): Improvements to logging and available information when error reports are not sent [#515](https://github.com/bugsnag/bugsnag-js/pull/515)
+
+### Changed
+
+- (delivery-node): Error stack is now included in first argument to logger [#486](https://github.com/bugsnag/bugsnag-js/pull/486)
+
+### Removed
+
+- (core): Stacktrace is omitted in error breadcrumbs (it's not used by the dashboard) [#512](https://github.com/bugsnag/bugsnag-js/pull/512)
+
+## Fixed
+
+- (plugin-navigation-breadcrumbs): `startSession()` is not called when `autoCaptureSessions=false` [#514](https://github.com/bugsnag/bugsnag-js/pull/514)
+- (plugin-express): Express/Connect now send a 500 (not 200) HTTP status when about to crash [#513](https://github.com/bugsnag/bugsnag-js/pull/513)
+- (core): Bad logic in `notify()` error normalisation [#516](https://github.com/bugsnag/bugsnag-js/pull/516)
+
 ## 6.0.0 (2019-02-21)
 
 ### Removed
