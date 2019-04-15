@@ -16,8 +16,8 @@ Scenario: App-state breadcrumbs are captured by default
 Scenario: App-state breadcrumbs can be disabled
   Given the element "appStateBreadcrumbs" is present
   And I click the element "appStateBreadcrumbs"
-  Given the element "disabledAppStateBreadcrumbsBehaviour" is present
-  When I click the element "disabledAppStateBreadcrumbsBehaviour"
+  Given the element "disabledAppStateBreadcrumbsBehaviourButton" is present
+  When I click the element "disabledAppStateBreadcrumbsBehaviourButton"
   And I send the app to the background for 2 seconds
   Given the element "triggerAppStateBreadcrumbsErrorButton" is present
   When I click the element "triggerAppStateBreadcrumbsErrorButton"

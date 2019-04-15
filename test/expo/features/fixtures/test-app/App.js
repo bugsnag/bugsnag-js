@@ -12,6 +12,8 @@ import OrientationBreadcrumbs from './app/orientation_breadcrumbs'
 import ConnectivityBreadcrumbs from './app/connectivity_breadcrumbs'
 import MetaDataFeature from './app/meta_data'
 import ManualBreadcrumbs from './app/manual_breadcrumbs'
+import DeviceFeature from './app/device'
+import Sessions from './app/sessions'
 
 export default class App extends React.Component {
   constructor(props) {
@@ -31,7 +33,9 @@ export default class App extends React.Component {
         'orientationBreadcrumbs',
         'connectivityBreadcrumbs',
         'metaDataFeature',
-        'manualBreadcrumbs'
+        'manualBreadcrumbs',
+        'deviceFeature',
+        'sessions'
       ]
     }
   }
@@ -62,6 +66,10 @@ export default class App extends React.Component {
         return (<MetaDataFeature></MetaDataFeature>)
       case 'manualBreadcrumbs':
         return (<ManualBreadcrumbs></ManualBreadcrumbs>)
+      case 'deviceFeature':
+        return (<DeviceFeature></DeviceFeature>)
+      case 'sessions':
+        return (<Sessions></Sessions>)
     }
     return this.renderScenarioOptions()
   }

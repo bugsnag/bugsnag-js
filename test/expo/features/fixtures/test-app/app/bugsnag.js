@@ -7,7 +7,8 @@ const endpoints = {
 
 const bugsnagClient = bugsnag({
   apiKey: 'MyApiKey',
-  endpoints: endpoints
+  endpoints: endpoints,
+  autoCaptureSessions: false
 })
 
 export {
