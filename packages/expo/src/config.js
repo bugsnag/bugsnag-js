@@ -2,6 +2,17 @@
 
 const { schema } = require('@bugsnag/core/config')
 const { reduce } = require('@bugsnag/core/lib/es-utils')
+const { Constants } = require('expo')
+
+// If the developer property is not present in the manifest, it means the app is
+// not connected to a development tool and is either a published app running in
+// the Expo client, or a standalone app (we also assume production for a missing
+// manifest, but that should never happen)
+const IS_PRODUCTION = !Constants.manifest || !Constants.manifest.developer
+
+// The app can still run in production "mode" in development environments, in which
+// cases the global boolean __DEV__ will be set to true
+const IS_PRODUCTION_MODE = typeof __DEV__ === 'undefined' || __DEV__ !== true
 
 module.exports = {
   logger: {
@@ -10,7 +21,11 @@ module.exports = {
   },
   releaseStage: {
     ...schema.releaseStage,
-    defaultValue: () => process.env.NODE_ENV || 'production'
+    defaultValue: () => {
+      if (IS_PRODUCTION) return 'production'
+      if (IS_PRODUCTION_MODE) return 'local-prod'
+      return 'local-dev'
+    }
   }
 }
 
@@ -18,7 +33,7 @@ const getPrefixedConsole = () => {
   return reduce([ 'debug', 'info', 'warn', 'error' ], (accum, method) => {
     // console.error causes standalone expo apps to reload on android
     // so don't do any logging that level – use console.warn instead
-    const consoleMethod = (__DEV__ && method === 'error') ? console.warn : console[method]
+    const consoleMethod = (IS_PRODUCTION && method === 'error') ? console.warn : console[method]
     accum[method] = consoleMethod.bind(console, '[bugsnag]')
     return accum
   }, {})

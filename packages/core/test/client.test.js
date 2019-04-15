@@ -177,8 +177,7 @@ describe('@bugsnag/core/client', () => {
       client.setOptions({ apiKey: 'API_KEY_YEAH', notifyReleaseStages: [] })
       client.configure()
 
-      const sent = client.notify(new Error('oh em eff gee'))
-      expect(sent).toBe(false)
+      client.notify(new Error('oh em eff gee'))
 
       // give the event loop a tick to see if the reports get send
       process.nextTick(() => done())
@@ -194,8 +193,7 @@ describe('@bugsnag/core/client', () => {
       client.setOptions({ apiKey: 'API_KEY_YEAH', releaseStage: 'staging', notifyReleaseStages: [ 'production' ] })
       client.configure()
 
-      const sent = client.notify(new Error('oh em eff gee'))
-      expect(sent).toBe(false)
+      client.notify(new Error('oh em eff gee'))
 
       // give the event loop a tick to see if the reports get send
       process.nextTick(() => done())
@@ -212,8 +210,7 @@ describe('@bugsnag/core/client', () => {
       client.configure()
       client.app.releaseStage = 'staging'
 
-      const sent = client.notify(new Error('oh em eff gee'))
-      expect(sent).toBe(false)
+      client.notify(new Error('oh em eff gee'))
 
       // give the event loop a tick to see if the reports get send
       process.nextTick(() => done())
@@ -288,11 +285,9 @@ describe('@bugsnag/core/client', () => {
       client.notify('str1', 'str2')
       client.notify('str1', null)
 
-      payloads
-        .filter((p, i) => i < 3)
-        .map(p => p.events[0].toJSON().exceptions[0].message)
-        .forEach(message => expect(message).toMatch(/^Bugsnag usage error/))
-
+      expect(payloads[0].events[0].toJSON().exceptions[0].message).toBe('Bugsnag usage error. notify() expected error/opts parameters, got nothing')
+      expect(payloads[1].events[0].toJSON().exceptions[0].message).toBe('Bugsnag usage error. notify() expected error/opts parameters, got null')
+      expect(payloads[2].events[0].toJSON().exceptions[0].message).toBe('Bugsnag usage error. notify() expected error/opts parameters, got function')
       expect(payloads[3].events[0].toJSON().exceptions[0].message).toBe('1')
       expect(payloads[4].events[0].toJSON().exceptions[0].message).toBe('errrororor')
       expect(payloads[5].events[0].toJSON().metaData).toEqual({ notifier: { notifyArgs: [ 'str1', 'str2' ] } })
@@ -309,6 +304,8 @@ describe('@bugsnag/core/client', () => {
       expect(payloads.length).toBe(1)
       expect(payloads[0].events[0].toJSON().exceptions[0].errorClass).toBe('UnknownThing')
       expect(payloads[0].events[0].toJSON().exceptions[0].message).toBe('found a thing that couldn’t be dealt with')
+      expect(payloads[0].events[0].toJSON().exceptions[0].stacktrace[0].method).not.toMatch(/BugsnagClient/)
+      expect(payloads[0].events[0].toJSON().exceptions[0].stacktrace[0].file).not.toMatch(/core\/client\.js/)
     })
 
     it('leaves a breadcrumb of the error', () => {
@@ -321,6 +318,7 @@ describe('@bugsnag/core/client', () => {
       expect(client.breadcrumbs.length).toBe(1)
       expect(client.breadcrumbs[0].type).toBe('error')
       expect(client.breadcrumbs[0].name).toBe('Error')
+      expect(client.breadcrumbs[0].metaData.stacktrace).toBe(undefined)
       // the error shouldn't appear as a breadcrumb for itself
       expect(payloads[0].events[0].breadcrumbs.length).toBe(0)
     })
@@ -336,6 +334,88 @@ describe('@bugsnag/core/client', () => {
         }
       })
       expect(client.metaData.foo['3']).toBe(undefined)
+    })
+
+    it('should call the callback (success)', done => {
+      const client = new Client(VALID_NOTIFIER)
+      client.setOptions({ apiKey: 'API_KEY' })
+      client.configure()
+      client.delivery(client => ({
+        sendSession: () => {},
+        sendReport: (report, cb) => cb(null)
+      }))
+      client.notify(new Error('111'), {}, (err, report) => {
+        expect(err).toBe(null)
+        expect(report).toBeTruthy()
+        expect(report.errorMessage).toBe('111')
+        done()
+      })
+    })
+
+    it('should call the callback (err)', done => {
+      const client = new Client(VALID_NOTIFIER)
+      client.setOptions({ apiKey: 'API_KEY' })
+      client.configure()
+      client.delivery(client => ({
+        sendSession: () => {},
+        sendReport: (report, cb) => cb(new Error('flerp'))
+      }))
+      client.notify(new Error('111'), {}, (err, report) => {
+        expect(err).toBeTruthy()
+        expect(err.message).toBe('flerp')
+        expect(report).toBeTruthy()
+        expect(report.errorMessage).toBe('111')
+        done()
+      })
+    })
+
+    it('should call the callback even if the report doesn’t send (notifyReleaseStages)', done => {
+      const client = new Client(VALID_NOTIFIER)
+      client.setOptions({ apiKey: 'API_KEY', notifyReleaseStages: [ 'production' ], releaseStage: 'development' })
+      client.configure()
+      client.delivery(client => ({
+        sendSession: () => {},
+        sendReport: (report, cb) => cb(null)
+      }))
+      client.notify(new Error('111'), {}, (err, report) => {
+        expect(err).toBe(null)
+        expect(report).toBeTruthy()
+        expect(report.errorMessage).toBe('111')
+        done()
+      })
+    })
+
+    it('should call the callback even if the report doesn’t send (beforeSend)', done => {
+      const client = new Client(VALID_NOTIFIER)
+      client.setOptions({ apiKey: 'API_KEY', beforeSend: () => false })
+      client.configure()
+      client.delivery(client => ({
+        sendSession: () => {},
+        sendReport: (report, cb) => cb(null)
+      }))
+      client.notify(new Error('111'), {}, (err, report) => {
+        expect(err).toBe(null)
+        expect(report).toBeTruthy()
+        expect(report.errorMessage).toBe('111')
+        done()
+      })
+    })
+
+    it('should attach the original error to the report object', done => {
+      const client = new Client(VALID_NOTIFIER)
+      client.setOptions({ apiKey: 'API_KEY', beforeSend: () => false })
+      client.configure()
+      client.delivery(client => ({
+        sendSession: () => {},
+        sendReport: (report, cb) => cb(null)
+      }))
+      const orig = new Error('111')
+      client.notify(orig, {}, (err, report) => {
+        expect(err).toBe(null)
+        expect(report).toBeTruthy()
+        expect(report.originalError).toBe(orig)
+        done()
+      })
     })
   })
 

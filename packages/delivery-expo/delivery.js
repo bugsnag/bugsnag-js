@@ -33,7 +33,7 @@ module.exports = (client, fetch = global.fetch) => {
     cb(err)
   }
 
-  const { queues, queueConsumers } = initRedelivery(networkStatus, logError, send)
+  const { queues, queueConsumers } = initRedelivery(networkStatus, client._logger, send)
 
   return {
     sendReport: (report, cb = () => {}) => {
@@ -98,15 +98,17 @@ module.exports = (client, fetch = global.fetch) => {
   }
 }
 
-const initRedelivery = (networkStatus, onerror, send) => {
+const initRedelivery = (networkStatus, logger, send) => {
+  const onQueueError = e => logger.error('UndeliveredPayloadQueue error', e)
   const queues = {
-    'report': new UndeliveredPayloadQueue('report', onerror),
-    'session': new UndeliveredPayloadQueue('session', onerror)
+    'report': new UndeliveredPayloadQueue('report', onQueueError),
+    'session': new UndeliveredPayloadQueue('session', onQueueError)
   }
 
+  const onLoopError = e => logger.error('RedeliveryLoop error', e)
   const queueConsumers = {
-    'report': new RedeliveryLoop(send, queues.report, onerror),
-    'session': new RedeliveryLoop(send, queues.session, onerror)
+    'report': new RedeliveryLoop(send, queues.report, onLoopError),
+    'session': new RedeliveryLoop(send, queues.session, onLoopError)
   }
 
   Promise.all([ queues.report.init(), queues.session.init() ])
@@ -121,7 +123,7 @@ const initRedelivery = (networkStatus, onerror, send) => {
         }
       })
     })
-    .catch(onerror)
+    .catch(onQueueError)
 
   return { queues, queueConsumers }
 }

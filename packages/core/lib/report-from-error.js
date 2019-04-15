@@ -9,7 +9,8 @@ module.exports = (maybeError, handledState) => {
     actualError.name,
     actualError.message,
     Report.getStacktrace(actualError),
-    handledState
+    handledState,
+    maybeError
   )
   if (maybeError !== actualError) report.updateMetaData('error', 'non-error value', String(maybeError))
   return report
