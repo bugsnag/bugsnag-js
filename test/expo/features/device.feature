@@ -11,11 +11,17 @@ Scenario: Device data is included by default
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "DeviceDefaultError"
   And the event "device.id" is not null
-  And the event "device.osName" is one of:
+  And the event "device.osName" equals one of:
     | android |
     | ios     |
   And the event "device.osVersion" is not null
   And the event "device.orientation" equals "portrait"
+  And the event "device.time" is not null
+  And the event "device.runtimeVersions.reactNative" matches "\d+\.\d+\.\d"
+  And the event "device.runtimeVersions.expoApp" equals "2.0.0"
+  And the event "device.runtimeVersions.expoSdk" matches "\d+\.\d+\.\d"
+  And the event "metaData.device.isDevice" is true
+  And the event "metaData.device.appOwnership" equals "standalone"
 
 Scenario: Device data can be modified on the client
   Given the element "deviceClientButton" is present
@@ -24,12 +30,18 @@ Scenario: Device data can be modified on the client
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "DeviceClientError"
   And the event "device.id" is not null
-  And the event "device.osName" is one of:
+  And the event "device.osName" equals one of:
     | android |
     | ios     |
   And the event "device.osVersion" equals "testOSVersion"
   And the event "device.newThing" equals "this is new"
   And the event "device.orientation" equals "portrait"
+  And the event "device.time" is not null
+  And the event "metaData.device.isDevice" is true
+  And the event "metaData.device.appOwnership" equals "standalone"
+  And the event "device.runtimeVersions.reactNative" matches "\d+\.\d+\.\d"
+  And the event "device.runtimeVersions.expoApp" equals "2.0.0"
+  And the event "device.runtimeVersions.expoSdk" matches "\d+\.\d+\.\d"
 
 Scenario: Device data can be modified by a callback
   Given the element "deviceCallbackButton" is present
@@ -39,13 +51,18 @@ Scenario: Device data can be modified by a callback
   And the exception "message" equals "DeviceCallbackError"
   And the event "device.id" is not null
   And the event "device.osVersion" is not null
-  And the event "device.osName" is one of:
+  And the event "device.osName" equals one of:
     | android |
     | ios     |
   And the event "device.model" equals "brandNewPhone"
   And the event "device.newThing" equals "another new thing"
-  And the event "device.simulator" is false
   And the event "device.orientation" equals "portrait"
+  And the event "device.time" is not null
+  And the event "metaData.device.isDevice" is true
+  And the event "metaData.device.appOwnership" equals "standalone"
+  And the event "device.runtimeVersions.reactNative" matches "\d+\.\d+\.\d"
+  And the event "device.runtimeVersions.expoApp" equals "2.0.0"
+  And the event "device.runtimeVersions.expoSdk" matches "\d+\.\d+\.\d"
 
 Scenario: Device data can be modified by handled options
   Given the element "deviceOptsButton" is present
@@ -55,7 +72,14 @@ Scenario: Device data can be modified by handled options
   And the exception "message" equals "DeviceOptsError"
   And the event "device.id" equals "assuming direct control"
   And the event "device.osVersion" is not null
-  And the event "device.model" is not null
-  And the event "device.simulator" is false
-  And the event "device.orientation" is "portrait"
+  And the event "device.osName" equals one of:
+    | android |
+    | ios     |
+  And the event "device.orientation" equals "portrait"
   And the event "device.newThing" equals "not original"
+  And the event "device.time" is not null
+  And the event "metaData.device.isDevice" is true
+  And the event "metaData.device.appOwnership" equals "standalone"
+  And the event "device.runtimeVersions.reactNative" matches "\d+\.\d+\.\d"
+  And the event "device.runtimeVersions.expoApp" equals "2.0.0"
+  And the event "device.runtimeVersions.expoSdk" matches "\d+\.\d+\.\d"

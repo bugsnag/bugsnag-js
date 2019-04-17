@@ -57,16 +57,8 @@ module BSAppAutomator
       @driver.background_app(timeout)
     end
 
-    def rotate_device(orientation)
-      @driver.rotation = orientation
-    end
-
     def reset_app
       @driver.reset
-    end
-
-    def toggle_airplane_mode
-      @driver.toggle_airplane_mode
     end
   end
 end

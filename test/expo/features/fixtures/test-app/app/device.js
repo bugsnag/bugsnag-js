@@ -23,7 +23,7 @@ export default class AppFeature extends Component {
   }
 
   optsDevice = () => {
-    bugsnagClient.notify(new Error('DeviceCallbackError'), {
+    bugsnagClient.notify(new Error('DeviceOptsError'), {
       device: {
         id: "assuming direct control",
         newThing: "not original"

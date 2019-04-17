@@ -4,6 +4,9 @@ import { bugsnagClient } from './bugsnag'
 
 export default class ManualBreadcrumbs extends Component {
   manualBreadcrumb = () => {
+    while (bugsnagClient.breadcrumbs.length > 0) {
+      bugsnagClient.breadcrumbs.pop()
+    }
     bugsnagClient.leaveBreadcrumb("manualBreadcrumb", {
       reason: "testing"
     })

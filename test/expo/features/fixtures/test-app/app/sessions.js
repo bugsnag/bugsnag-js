@@ -6,7 +6,6 @@ import bugsnag from '@bugsnag/expo'
 export default class Sessions extends Component {
   autoSession = () => {
     bugsnag({
-      apiKey: 'MyApiKey',
       endpoints: endpoints,
       autoNotify: false,
       autoCaptureSessions: true

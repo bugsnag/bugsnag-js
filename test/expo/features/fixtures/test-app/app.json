@@ -9,7 +9,7 @@
       "android"
     ],
     "version": "2.0.0",
-    "orientation": "portrait",
+    "orientation": "default",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
@@ -31,16 +31,8 @@
     },
     "extra": {
       "bugsnag": {
-        "apiKey": "c8c0f735638c67f3348440fb1b2e7911"
+        "apiKey": "c761737f5e7132c4440ffa941fa0e218"
       }
-    },
-    "hooks": {
-      "postPublish": [
-        {
-          "file": "@bugsnag/expo/hooks/post-publish",
-          "config": {}
-        }
-      ]
     }
   }
 }

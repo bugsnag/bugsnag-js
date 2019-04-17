@@ -13,7 +13,7 @@ Scenario: App-state breadcrumbs are captured by default
   And the exception "message" equals "defaultAppStateBreadcrumbsBehaviour"
   And the event has a "state" breadcrumb named "App state changed"
 
-Scenario: App-state breadcrumbs can be disabled
+Scenario: App-state breadcrumbs can be disabled specifically
   Given the element "appStateBreadcrumbs" is present
   And I click the element "appStateBreadcrumbs"
   Given the element "disabledAppStateBreadcrumbsBehaviourButton" is present
@@ -24,6 +24,19 @@ Scenario: App-state breadcrumbs can be disabled
   Then I wait to receive a request
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "disabledAppStateBreadcrumbsBehaviour"
+  And the event does not have a "state" breadcrumb named "App state changed"
+
+Scenario: App-state breadcrumbs are disabled with other auto-breadcrumbs
+  Given the element "appStateBreadcrumbs" is present
+  And I click the element "appStateBreadcrumbs"
+  Given the element "disabledAllAppStateBreadcrumbsBehaviourButton" is present
+  When I click the element "disabledAllAppStateBreadcrumbsBehaviourButton"
+  And I send the app to the background for 2 seconds
+  Given the element "triggerAppStateBreadcrumbsErrorButton" is present
+  When I click the element "triggerAppStateBreadcrumbsErrorButton"
+  Then I wait to receive a request
+  And the exception "errorClass" equals "Error"
+  And the exception "message" equals "disabledAllAppStateBreadcrumbsBehaviour"
   And the event does not have a "state" breadcrumb named "App state changed"
 
 Scenario: App-state breadcrumbs overrides auto-breadcrumbs
@@ -49,7 +62,7 @@ Scenario: Console breadcrumbs are captured by default
   And the exception "message" equals "defaultConsoleBreadcrumbsBehaviour"
   And the event has a "log" breadcrumb named "Console output"
 
-Scenario: Console breadcrumbs can be disabled
+Scenario: Console breadcrumbs can be disabled explicitly
   Given the element "consoleBreadcrumbs" is present
   And I click the element "consoleBreadcrumbs"
   Given the element "disabledConsoleBreadcrumbsBehaviourButton" is present
@@ -57,6 +70,16 @@ Scenario: Console breadcrumbs can be disabled
   Then I wait to receive a request
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "disabledConsoleBreadcrumbsBehaviour"
+  And the event does not have a "log" breadcrumb named "Console output"
+
+Scenario: Console breadcrumbs are disabled with other auto-breadcrumbs
+  Given the element "consoleBreadcrumbs" is present
+  And I click the element "consoleBreadcrumbs"
+  Given the element "disabledAllConsoleBreadcrumbsBehaviourButton" is present
+  When I click the element "disabledAllConsoleBreadcrumbsBehaviourButton"
+  Then I wait to receive a request
+  And the exception "errorClass" equals "Error"
+  And the exception "message" equals "disabledAllConsoleBreadcrumbsBehaviour"
   And the event does not have a "log" breadcrumb named "Console output"
 
 Scenario: Console breadcrumbs overrides auto-breadcrumbs
@@ -69,80 +92,46 @@ Scenario: Console breadcrumbs overrides auto-breadcrumbs
   And the exception "message" equals "overrideConsoleBreadcrumbsBehaviour"
   And the event has a "log" breadcrumb named "Console output"
 
-Scenario: Orientation breadcrumbs are captured by default
-  Given the element "orientationBreadcrumbs" is present
-  And I click the element "orientationBreadcrumbs"
-  Given the element "defaultOrientationBreadcrumbsBehaviourButton" is present
-  When I click the element "defaultOrientationBreadcrumbsBehaviourButton"
-  And I rotate the device
-  Given the element "triggerOrientationBreadcrumbsErrorButton" is present
-  When I click the element "triggerOrientationBreadcrumbsErrorButton"
+Scenario: Network breadcrumbs are captured by default
+  Given the element "networkBreadcrumbs" is present
+  And I click the element "networkBreadcrumbs"
+  Given the element "defaultNetworkBreadcrumbsBehaviourButton" is present
+  When I click the element "defaultNetworkBreadcrumbsBehaviourButton"
   Then I wait to receive a request
   And the exception "errorClass" equals "Error"
-  And the exception "message" equals "defaultOrientationBreadcrumbsBehaviour"
-  And the event has a "state" breadcrumb named "Orientation changed"
+  And the exception "message" equals "defaultNetworkBreadcrumbsBehaviour"
+  And the event has a "request" breadcrumb named "XMLHttpRequest succeeded"
+  And the event "breadcrumbs.0.metaData.status" equals 200
+  And the event "breadcrumbs.0.metaData.request" equals "GET http://postman-echo.com/get"
 
-Scenario: Orientation breadcrumbs can be disabled
-  Given the element "orientationBreadcrumbs" is present
-  And I click the element "orientationBreadcrumbs"
-  Given the element "disabledOrientationBreadcrumbsBehaviourButton" is present
-  When I click the element "disabledOrientationBreadcrumbsBehaviourButton"
-  And I rotate the device
-  Given the element "triggerOrientationBreadcrumbsErrorButton" is present
-  When I click the element "triggerOrientationBreadcrumbsErrorButton"
+Scenario: Network breadcrumbs can be disabled explicitly
+  Given the element "networkBreadcrumbs" is present
+  And I click the element "networkBreadcrumbs"
+  Given the element "disabledNetworkBreadcrumbsBehaviourButton" is present
+  When I click the element "disabledNetworkBreadcrumbsBehaviourButton"
   Then I wait to receive a request
   And the exception "errorClass" equals "Error"
-  And the exception "message" equals "disabledOrientationBreadcrumbsBehaviour"
-  And the event does not have a "state" breadcrumb named "Orientation changed"
+  And the exception "message" equals "disabledNetworkBreadcrumbsBehaviour"
+  And the event does not have a "request" breadcrumb named "XMLHttpRequest succeeded"
 
-Scenario: Orientation breadcrumbs overrides auto-breadcrumbs
-  Given the element "orientationBreadcrumbs" is present
-  And I click the element "orientationBreadcrumbs"
-  Given the element "overrideOrientationBreadcrumbsBehaviourButton" is present
-  When I click the element "overrideOrientationBreadcrumbsBehaviourButton"
-  And I rotate the device
-  Given the element "triggerOrientationBreadcrumbsErrorButton" is present
-  When I click the element "triggerOrientationBreadcrumbsErrorButton"
+Scenario: Network breadcrumbs are disabled with other auto-breadcrumbs
+  Given the element "networkBreadcrumbs" is present
+  And I click the element "networkBreadcrumbs"
+  Given the element "disabledAllNetworkBreadcrumbsBehaviourButton" is present
+  When I click the element "disabledAllNetworkBreadcrumbsBehaviourButton"
   Then I wait to receive a request
   And the exception "errorClass" equals "Error"
-  And the exception "message" equals "overrideOrientationBreadcrumbsBehaviour"
-  And the event has a "state" breadcrumb named "Orientation changed"
+  And the exception "message" equals "disabledAllNetworkBreadcrumbsBehaviour"
+  And the event does not have a "request" breadcrumb named "XMLHttpRequest succeeded"
 
-Scenario: Connectivity breadcrumbs are captured by default
-  Given the element "connectivityBreadcrumbs" is present
-  And I click the element "connectivityBreadcrumbs"
-  Given the element "defaultConnectivityBreadcrumbsBehaviourButton" is present
-  When I click the element "defaultConnectivityBreadcrumbsBehaviourButton"
-  And I activate and then disable airplane mode
-  Given the element "triggerConnectivityBreadcrumbsErrorButton" is present
-  When I click the element "triggerConnectivityBreadcrumbsErrorButton"
+Scenario: Network breadcrumbs overrides auto-breadcrumbs
+  Given the element "networkBreadcrumbs" is present
+  And I click the element "networkBreadcrumbs"
+  Given the element "overrideNetworkBreadcrumbsBehaviourButton" is present
+  When I click the element "overrideNetworkBreadcrumbsBehaviourButton"
   Then I wait to receive a request
   And the exception "errorClass" equals "Error"
-  And the exception "message" equals "defaultConnectivityBreadcrumbsBehaviour"
-  And the event has a "state" breadcrumb named "Connectivity changed"
-
-Scenario: Connectivity breadcrumbs can be disabled
-  Given the element "connectivityBreadcrumbs" is present
-  And I click the element "connectivityBreadcrumbs"
-  Given the element "disabledConnectivityBreadcrumbsBehaviourButton" is present
-  When I click the element "disabledConnectivityBreadcrumbsBehaviourButton"
-  And I activate and then disable airplane mode
-  Given the element "triggerConnectivityBreadcrumbsErrorButton" is present
-  When I click the element "triggerConnectivityBreadcrumbsErrorButton"
-  Then I wait to receive a request
-  And the exception "errorClass" equals "Error"
-  And the exception "message" equals "disabledConnectivityBreadcrumbsBehaviour"
-  And the event has a "state" breadcrumb named "Connectivity changed"
-
-Scenario: Connectivity breadcrumbs overrides auto-breadcrumbs
-  Given the element "connectivityBreadcrumbs" is present
-  And I click the element "connectivityBreadcrumbs"
-  Given the element "overrideConnectivityBreadcrumbsBehaviourButton" is present
-  When I click the element "overrideConnectivityBreadcrumbsBehaviourButton"
-  And I activate and then disable airplane mode
-  Given the element "triggerConnectivityBreadcrumbsErrorButton" is present
-  When I click the element "triggerConnectivityBreadcrumbsErrorButton"
-  Then I wait to receive a request
-  And the exception "errorClass" equals "Error"
-  And the exception "message" equals "overrideConnectivityBreadcrumbsBehaviour"
-  And the event has a "state" breadcrumb named "Connectivity changed"
+  And the exception "message" equals "overrideNetworkBreadcrumbsBehaviour"
+  And the event has a "request" breadcrumb named "XMLHttpRequest succeeded"
+  And the event "breadcrumbs.0.metaData.status" equals 200
+  And the event "breadcrumbs.0.metaData.request" equals "GET http://postman-echo.com/get"

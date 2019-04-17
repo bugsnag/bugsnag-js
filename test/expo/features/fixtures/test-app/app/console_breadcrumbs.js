@@ -15,7 +15,6 @@ export default class ConsoleBreadcrumbs extends Component {
   defaultConsoleBreadcrumbsBehaviour = () => {
     this.triggerConsoleBreadcrumbsError(
       bugsnag({
-        apiKey: 'MyApiKey',
         endpoints: endpoints,
         autoNotify: false,
         autoCaptureSessions: false
@@ -27,7 +26,6 @@ export default class ConsoleBreadcrumbs extends Component {
   disabledConsoleBreadcrumbsBehaviour = () => {
     this.triggerConsoleBreadcrumbsError(
       bugsnag({
-        apiKey: 'MyApiKey',
         endpoints: endpoints,
         autoNotify: false,
         autoCaptureSessions: false,
@@ -37,10 +35,21 @@ export default class ConsoleBreadcrumbs extends Component {
     )
   }
 
+  disabledAllConsoleBreadcrumbsBehaviour = () => {
+    this.triggerConsoleBreadcrumbsError(
+      bugsnag({
+        endpoints: endpoints,
+        autoNotify: false,
+        autoCaptureSessions: false,
+        autoBreadcrumbs: false
+      }),
+      "disabledAllConsoleBreadcrumbsBehaviour"
+    )
+  }
+
   overrideConsoleBreadcrumbsBehaviour = () => {
     this.triggerConsoleBreadcrumbsError(
       bugsnag({
-        apiKey: 'MyApiKey',
         endpoints: endpoints,
         autoNotify: false,
         autoCaptureSessions: false,
@@ -70,6 +79,10 @@ export default class ConsoleBreadcrumbs extends Component {
         <Button accessibilityLabel="overrideConsoleBreadcrumbsBehaviourButton"
           title="overrideConsoleBreadcrumbsBehaviour"
           onPress={this.overrideConsoleBreadcrumbsBehaviour}
+        />
+        <Button accessibilityLabel="disabledAllConsoleBreadcrumbsBehaviourButton"
+          title="disabledAllConsoleBreadcrumbsBehaviour"
+          onPress={this.disabledAllConsoleBreadcrumbsBehaviour}
         />
       </View>
     )

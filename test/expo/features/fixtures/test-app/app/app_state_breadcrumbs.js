@@ -16,7 +16,6 @@ export default class AppStateBreadcrumbs extends Component {
     this.setState(() => (
       {
         client: bugsnag({
-          apiKey: 'MyApiKey',
           endpoints: endpoints,
           autoNotify: false,
           autoCaptureSessions: false
@@ -30,7 +29,6 @@ export default class AppStateBreadcrumbs extends Component {
     this.setState(() => (
       {
         client: bugsnag({
-          apiKey: 'MyApiKey',
           endpoints: endpoints,
           autoNotify: false,
           autoCaptureSessions: false,
@@ -41,11 +39,24 @@ export default class AppStateBreadcrumbs extends Component {
     ))
   }
 
+  disabledAllAppStateBreadcrumbsBehaviour = () => {
+    this.setState(() => (
+      {
+        client: bugsnag({
+          endpoints: endpoints,
+          autoNotify: false,
+          autoCaptureSessions: false,
+          autoBreadcrumbs: false
+        }),
+        errorMessage: "disabledAllAppStateBreadcrumbsBehaviour"
+      }
+    ))
+  }
+
   overrideAppStateBreadcrumbsBehaviour = () => {
     this.setState(() => (
       {
         client: bugsnag({
-          apiKey: 'MyApiKey',
           endpoints: endpoints,
           autoNotify: false,
           autoCaptureSessions: false,
@@ -73,6 +84,10 @@ export default class AppStateBreadcrumbs extends Component {
         <Button accessibilityLabel="disabledAppStateBreadcrumbsBehaviourButton"
           title="disabledAppStateBreadcrumbsBehaviour"
           onPress={this.disabledAppStateBreadcrumbsBehaviour}
+        />
+        <Button accessibilityLabel="disabledAllAppStateBreadcrumbsBehaviourButton"
+          title="disabledAllAppStateBreadcrumbsBehaviour"
+          onPress={this.disabledAllAppStateBreadcrumbsBehaviour}
         />
         <Button accessibilityLabel="overrideAppStateBreadcrumbsBehaviourButton"
           title="overrideAppStateBreadcrumbsBehaviour"

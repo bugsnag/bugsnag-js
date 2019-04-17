@@ -58,23 +58,6 @@ def timeout_app(timeout)
   end
 end
 
-def rotate_device
-  unless $bs_driver.nil?
-    $bs_driver.rotate_device(:landscape)
-    sleep(0.5)
-    $bs_driver.rotate_device(:portrait)
-  end
-end
-
-def toggle_airplane_mode
-  unless $bs_driver.nil?
-    $bs_driver.toggle_airplane_mode
-    sleep(1)
-    $bs_driver.toggle_airplane_mode
-  end
-end
-
-
 def stop_driver
   unless $bs_driver.nil?
     $bs_driver.stop_driver
@@ -82,11 +65,34 @@ def stop_driver
   end
 end
 
+FAILED_SCENARIO_OUTPUT_PATH = File.join(Dir.pwd, 'maze_output')
+
+def write_failed_requests_to_disk(scenario)	
+  Dir.mkdir(FAILED_SCENARIO_OUTPUT_PATH) unless Dir.exists? FAILED_SCENARIO_OUTPUT_PATH	
+  Dir.chdir(FAILED_SCENARIO_OUTPUT_PATH) do	
+    date = DateTime.now.strftime('%d%m%y%H%M%S%L')	
+    Server.stored_requests.each_with_index do |request, i|	
+      filename = "#{scenario.name}-request#{i}-#{date}.log"	
+      File.open(filename, 'w+') do |file|	
+        file.puts "URI: #{request[:request].request_uri}"	
+        file.puts "HEADERS:"	
+        request[:request].header.each do |key, values|	
+          file.puts "  #{key}: #{values.map {|v| "'#{v}'"}.join(' ')}"	
+        end	
+        file.puts	
+        file.puts "BODY:"	
+        file.puts JSON.pretty_generate(request[:body])	
+      end	
+    end	
+  end	
+end
+
 # Reset the app between each run
-After do
+After do |scenario|
   unless $bs_driver.nil?
     $bs_driver.reset_app
   end
+  write_failed_requests_to_disk(scenario) if scenario.failed?
 end
 
 # Ensure the browserstack instance is stopped

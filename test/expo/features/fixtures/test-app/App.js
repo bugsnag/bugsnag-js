@@ -8,12 +8,11 @@ import AppStateBreadcrumbs from './app/app_state_breadcrumbs'
 import UserFeature from './app/user'
 import ConsoleBreadcrumbs from './app/console_breadcrumbs'
 import IgnoreReport from './app/ignore_report'
-import OrientationBreadcrumbs from './app/orientation_breadcrumbs'
-import ConnectivityBreadcrumbs from './app/connectivity_breadcrumbs'
 import MetaDataFeature from './app/meta_data'
 import ManualBreadcrumbs from './app/manual_breadcrumbs'
 import DeviceFeature from './app/device'
 import Sessions from './app/sessions'
+import NetworkBreadcrumbs from './app/network_breadcrumbs'
 
 export default class App extends React.Component {
   constructor(props) {
@@ -30,12 +29,11 @@ export default class App extends React.Component {
         'userFeature',
         'consoleBreadcrumbs',
         'ignoreReport',
-        'orientationBreadcrumbs',
-        'connectivityBreadcrumbs',
         'metaDataFeature',
         'manualBreadcrumbs',
         'deviceFeature',
-        'sessions'
+        'sessions',
+        'networkBreadcrumbs'
       ]
     }
   }
@@ -58,10 +56,6 @@ export default class App extends React.Component {
         return (<ConsoleBreadcrumbs></ConsoleBreadcrumbs>)
       case 'ignoreReport':
         return (<IgnoreReport></IgnoreReport>)
-      case 'orientationBreadcrumbs':
-        return (<OrientationBreadcrumbs></OrientationBreadcrumbs>)
-      case 'connectivityBreadcrumbs':
-        return (<ConnectivityBreadcrumbs></ConnectivityBreadcrumbs>)
       case 'metaDataFeature':
         return (<MetaDataFeature></MetaDataFeature>)
       case 'manualBreadcrumbs':
@@ -70,6 +64,8 @@ export default class App extends React.Component {
         return (<DeviceFeature></DeviceFeature>)
       case 'sessions':
         return (<Sessions></Sessions>)
+      case 'networkBreadcrumbs':
+        return (<NetworkBreadcrumbs></NetworkBreadcrumbs>)
     }
     return this.renderScenarioOptions()
   }
@@ -109,6 +105,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+    paddingTop: '15%'
   },
   child: {
     flex: 1
