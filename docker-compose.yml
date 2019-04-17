@@ -59,6 +59,7 @@ services:
           - maze-runner
     volumes:
       - ./build:/app/test/expo/build
+      # - ./maze_output:/app/test/expo/maze_output # Uncomment for local runs
 
   expo-publisher:
     build:
