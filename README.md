@@ -2,19 +2,19 @@
 
 **Universal JavaScript error reporting.**
 
-Automatically detect JavaScript errors in the browser and Node.js, with plugins for React, Vue, Angular, Express, Restify and Koa. Get cross-platform error detection for handled and unhandled errors with real-time error alerts and detailed diagnostic reports.
+Automatically detect JavaScript errors in the browser, Node.js and Expo, with plugins for React, Vue, Angular, Express, Restify and Koa. Get cross-platform error detection for handled and unhandled errors with real-time error alerts and detailed diagnostic reports.
 
 Learn more about [JavaScript error reporting](https://www.bugsnag.com/platforms/javascript/) from Bugsnag.
 
 ---
 
-This is a monorepo (managed with [Lerna](https://lernajs.io/)) containing our universal error reporting client: [`@bugsnag/js`](/packages/js), along with:
+This is a monorepo (managed with [Lerna](https://lernajs.io/)) containing our universal error reporting client [`@bugsnag/js`](/packages/js) and our Expo client [`@bugsnag/expo`](/packages/expo), along with:
 
 - the core Bugsnag libraries for reporting errors ([`@bugsnag/core`](/packages/core))
 - plugins for supporting various frameworks (e.g. [`@bugsnag/plugin-react`](/packages/plugin-react))
 - plugins for internal functionality (e.g. [`@bugsnag/plugin-simple-throttle`](/packages/plugin-simple-throttle))
 
-See [packages](/packages) for a full list of contents.
+Etc. See [packages](/packages) for a full list of contents.
 
 ## Getting started
 
