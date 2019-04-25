@@ -1,5 +1,27 @@
 # Changelog
 
+## 6.2.0 (2019-04-23)
+
+This release adds [`@bugsnag/expo`](http://docs.bugsnag.com/platforms/react-native/expo), a notifier for use on React Native apps that are built using [Expo](https://expo.io/).
+
+A small internal change was made to facilitate this new notifier, but there are no changes required for existing users of documented APIs.
+
+### Added
+
+- (expo): a new top-level notifier `@bugsnag/expo` including a whole bunch of packages:
+  - `@bugsnag/delivery-expo` - Expo-specific delivery mechanism which caches on disk when a crash happens, or the network is not available
+  - `@bugsnag/plugin-expo-app` - gathers app information
+  - `@bugsnag/plugin-expo-device` - gathers device information
+  - `@bugsnag/plugin-react-native-app-state-breadcrumbs` - collects breadcrumbs when the app transitions to the foreground/background
+  - `@bugsnag/plugin-react-native-connectivity-breadcrumbs` - collects breadcrumbs when the state of the network changes
+  - `@bugsnag/plugin-react-native-global-error-handler` - reports unhandled errors
+  - `@bugsnag/plugin-react-native-orientation-breadcrumbs` - collects breadcrumbs when the device orientation changes
+  - `@bugsnag/plugin-react-native-unhandled-rejection` - reports unhandled promise rejections
+
+### Changed
+
+- (core): internal delivery interface now receives the `client` it is attached to on creation, and the `sendReport`/`sendSession` methods are no longer passed the `logger` and `config` objects which can be accesses on the client [#489](https://github.com/bugsnag/bugsnag-js/pull/489) (_Note: this was an undocumented internal API_)
+
 ## 6.1.0 (2019-04-12)
 
 ### Added
