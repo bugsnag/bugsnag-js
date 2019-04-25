@@ -6,7 +6,6 @@ const Client = require('@bugsnag/core/client')
 const Report = require('@bugsnag/core/report')
 const Session = require('@bugsnag/core/session')
 const Breadcrumb = require('@bugsnag/core/breadcrumb')
-const { map } = require('@bugsnag/core/lib/es-utils')
 
 // extend the base config schema with some browser-specific options
 const schema = { ...require('@bugsnag/core/config').schema, ...require('./config') }
@@ -36,20 +35,10 @@ module.exports = (opts) => {
 
   // support renamed/deprecated options
 
-  const warnings = []
-
-  if (opts.sessionTrackingEnabled) {
-    warnings.push('deprecated option sessionTrackingEnabled is now called autoCaptureSessions')
-    opts.autoCaptureSessions = opts.sessionTrackingEnabled
-  }
-
-  if ((opts.endpoint || opts.sessionEndpoint) && !opts.endpoints) {
-    warnings.push('deprecated options endpoint/sessionEndpoint are now configured in the endpoints object')
-    opts.endpoints = { notify: opts.endpoint, sessions: opts.sessionEndpoint }
-  }
+  let warningMessage = ''
 
   if (opts.endpoints && opts.endpoints.notify && !opts.endpoints.sessions) {
-    warnings.push('notify endpoint is set but sessions endpoint is not. No sessions will be sent.')
+    warningMessage += 'notify endpoint is set but sessions endpoint is not. No sessions will be sent.'
   }
 
   const bugsnag = new Client({ name, version, url })
@@ -63,7 +52,7 @@ module.exports = (opts) => {
   // errors can be thrown here that prevent the lib from being in a useable state
   bugsnag.configure(schema)
 
-  map(warnings, w => bugsnag._logger.warn(w))
+  if (warningMessage) bugsnag._logger.warn(warningMessage)
 
   // always-on browser-specific plugins
   bugsnag.use(pluginDevice)
