@@ -11,7 +11,7 @@ COPY babel.config.js tslint.json lerna.json ./
 COPY packages ./packages
 COPY bin ./bin
 RUN npx lerna bootstrap
-RUN npx lerna build
+RUN npm run build
 
 RUN npx lerna exec -- npm prune --production
 
