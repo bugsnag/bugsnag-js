@@ -20,9 +20,6 @@ declare module "@bugsnag/core" {
     filters?: Array<string | RegExp>;
     // catch-all for any missing options
     [key: string]: any;
-    // deprecated options which are still supported
-    endpoint?: string;
-    sessionEndpoint?: string;
     // options for all bundled browser plugins
     maxEvents?: number;
     consoleBreadcrumbsEnabled?: boolean;
