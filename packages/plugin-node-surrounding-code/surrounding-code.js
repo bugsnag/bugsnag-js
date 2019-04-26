@@ -86,7 +86,7 @@ class CodeRange extends Writable {
     this._n++
     if (this._n < this._start) return cb(null)
     if (this._n <= this._end) {
-      this._code[String(this._n)] = chunk
+      this._code[String(this._n)] = chunk.length <= 200 ? chunk : chunk.substr(0, 200)
       return cb(null)
     }
     this.emit('done')

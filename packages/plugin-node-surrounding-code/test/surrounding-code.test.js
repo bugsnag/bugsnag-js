@@ -207,4 +207,32 @@ describe('plugin: node surrounding code', () => {
       }
     ]))
   })
+
+  it('truncates lines to 150 characters', done => {
+    const client = new Client(VALID_NOTIFIER)
+
+    client.delivery(client => ({
+      sendReport: (report) => {
+        report.events[0].stacktrace.forEach(stackframe => {
+          Object.keys(stackframe.code).forEach(key => {
+            expect(stackframe.code[key].length <= 200).toBe(true)
+          })
+        })
+        done()
+      },
+      sendSession: () => {}
+    }))
+
+    client.setOptions({ apiKey: 'api_key' })
+    client.configure()
+    client.use(plugin)
+
+    client.notify(new Report('Error', 'surrounding code loading test', [
+      {
+        lineNumber: 1,
+        columnNumber: 1,
+        fileName: join(__dirname, 'fixtures', '04.js')
+      }
+    ]))
+  })
 })
