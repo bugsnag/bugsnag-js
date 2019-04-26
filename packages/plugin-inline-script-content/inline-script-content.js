@@ -91,7 +91,7 @@ module.exports = {
       'Notification', 'SVGElementInstance', 'Screen', 'TextTrack', 'TextTrackCue', 'TextTrackList',
       'WebSocket', 'WebSocketWorker', 'Worker', 'XMLHttpRequest', 'XMLHttpRequestEventTarget', 'XMLHttpRequestUpload'
     ], o => {
-      if (!win[o] || typeof win[o].prototype.addEventListener !== 'function') return
+      if (!win[o] || !win[o].prototype || typeof win[o].prototype.addEventListener !== 'function') return
       __proxy(win[o].prototype, 'addEventListener', original =>
         __traceOriginalScript(original, eventTargetCallbackAccessor)
       )
