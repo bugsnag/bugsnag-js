@@ -106,22 +106,27 @@ module.exports = {
         var cba = callbackAccessor(args)
         var cb = cba.get()
         if (typeof cb !== 'function') return fn.apply(this, args)
-        if (cb.__trace__) {
-          cba.replace(cb.__trace__)
-        } else {
-          var script = getCurrentScript()
-          // this function mustn't be annonymous due to a bug in the stack
-          // generation logic, meaning it gets tripped up
-          // see: https://github.com/stacktracejs/stack-generator/issues/6
-          cb.__trace__ = function __trace__ () {
-            // set the script that called this function
-            updateLastScript(script)
-            // immediately unset it
-            _setTimeout(function () { updateLastScript(null) }, 0)
-            cb.apply(this, arguments)
+        try {
+          if (cb.__trace__) {
+            cba.replace(cb.__trace__)
+          } else {
+            var script = getCurrentScript()
+            // this function mustn't be annonymous due to a bug in the stack
+            // generation logic, meaning it gets tripped up
+            // see: https://github.com/stacktracejs/stack-generator/issues/6
+            cb.__trace__ = function __trace__ () {
+              // set the script that called this function
+              updateLastScript(script)
+              // immediately unset it
+              _setTimeout(function () { updateLastScript(null) }, 0)
+              cb.apply(this, arguments)
+            }
+            cb.__trace__.__trace__ = cb.__trace__
+            cba.replace(cb.__trace__)
           }
-          cb.__trace__.__trace__ = cb.__trace__
-          cba.replace(cb.__trace__)
+        } catch (e) {
+          // swallow these errors on Selenium:
+          // Permission denied to access property '__trace__'
         }
         // IE8 doesn't let you call .apply() on setTimeout/setInterval
         if (fn.apply) return fn.apply(this, args)
