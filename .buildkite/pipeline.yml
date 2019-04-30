@@ -281,7 +281,7 @@ steps:
       - 'mkdir build'
       - 'env'
       - |
-        node_modules/.bin/turtle build:ios --team-id $APPLE_TEAM_ID --dist-p12-path $EXPO_P12_PATH --provisioning-profile-path $EXPO_PROVISIONING_PROFILE_PATH -o build/output.ipa
+        node_modules/.bin/turtle build:ios --team-id $APPLE_TEAM_ID --dist-p12-path $$EXPO_P12_PATH --provisioning-profile-path $$EXPO_PROVISIONING_PROFILE_PATH -o build/output.ipa
 
   - wait
 
