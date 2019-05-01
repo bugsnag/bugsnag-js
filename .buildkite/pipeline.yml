@@ -274,8 +274,6 @@ steps:
       queue: "opensource-mac"
     artifact_paths: build/output.ipa
     commands:
-      - pwd
-      - ls
       - test/expo/scripts/build-ios.sh
 
   - wait
