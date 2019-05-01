@@ -9,9 +9,8 @@ WORKDIR /app/test/expo/features/fixtures/test-app
 RUN mkdir -p /app/test/expo/features/fixures/build
 
 RUN npm update -g npm
-RUN npm i -g gulp-cli node-gyp
-RUN npm i turtle-cli bunyan
-RUN node_modules/.bin/turtle setup:android
+RUN npm i -g gulp-cli node-gyp bunyan
+RUN npm i turtle-cli
 
 COPY test/expo/features/fixtures/test-app .
 
