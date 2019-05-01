@@ -1,25 +1,25 @@
 steps:
-  - label: ':docker: Build CI image'
-    plugins:
-      - docker-compose#v2.6.0:
-          build:
-            - ci
-          image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
-          cache-from:
-            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
-            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-latest
-      - docker-compose#v2.6.0:
-          push:
-            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
-            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-latest
+  # - label: ':docker: Build CI image'
+  #   plugins:
+  #     - docker-compose#v2.6.0:
+  #         build:
+  #           - ci
+  #         image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
+  #         cache-from:
+  #           - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
+  #           - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-latest
+  #     - docker-compose#v2.6.0:
+  #         push:
+  #           - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
+  #           - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-latest
 
   - wait
 
-  - label: 'Lint'
-    plugins:
-      docker-compose#v2.6.0:
-        run: ci
-    command: 'npm run test:lint'
+  # - label: 'Lint'
+  #   plugins:
+  #     docker-compose#v2.6.0:
+  #       run: ci
+  #   command: 'npm run test:lint'
 
   # - label: 'Unit tests'
   #   plugins:
@@ -51,18 +51,18 @@ steps:
   #         cache-from:
   #           - node-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
 
-  - label: ':docker: Build expo maze runner image'
-    plugins:
-      - docker-compose#v2.6.0:
-          build:
-            - expo-maze-runner
-          image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
-          cache-from:
-            - expo-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
-      - docker-compose#v2.6.0:
-          push:
-            - expo-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
-            - expo-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-latest
+  # - label: ':docker: Build expo maze runner image'
+  #   plugins:
+  #     - docker-compose#v2.6.0:
+  #         build:
+  #           - expo-maze-runner
+  #         image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
+  #         cache-from:
+  #           - expo-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
+  #     - docker-compose#v2.6.0:
+  #         push:
+  #           - expo-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
+  #           - expo-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-latest
 
   - wait
 
@@ -279,6 +279,7 @@ steps:
       - |
         perl -0777 -i.original -pe "s/entitlements\\['aps-environment'\\] =[^;]+;//gs" node_modules/turtle-cli/node_modules/xdl/build/detach/IosNSBundle.js
       - mkdir build
+      - ls
       - |
         node_modules/.bin/turtle build:ios --team-id $APPLE_TEAM_ID --dist-p12-path $$EXPO_P12_PATH --provisioning-profile-path $$EXPO_PROVISIONING_PROFILE_PATH -o build/output.ipa
 
@@ -349,41 +350,41 @@ steps:
   #   concurrency: 5
   #   concurrency_group: 'browserstack'
 
-  - label: 'expo iOS 10'
-    plugins:
-      artifacts#v1.2.0:
-        download: "build/output.ipa"
-      docker-compose#v2.6.0:
-        run: expo-maze-runner
-        use-aliases: true
-    env:
-      DEVICE_TYPE: "IOS_10"
-      APP_LOCATION: "build/output.ipa"
-    concurrency: 5
-    concurrency_group: 'browserstack'
+  # - label: 'expo iOS 10'
+  #   plugins:
+  #     artifacts#v1.2.0:
+  #       download: "build/output.ipa"
+  #     docker-compose#v2.6.0:
+  #       run: expo-maze-runner
+  #       use-aliases: true
+  #   env:
+  #     DEVICE_TYPE: "IOS_10"
+  #     APP_LOCATION: "build/output.ipa"
+  #   concurrency: 5
+  #   concurrency_group: 'browserstack'
 
-  - label: 'expo iOS 11'
-    plugins:
-      artifacts#v1.2.0:
-        download: "build/output.ipa"
-      docker-compose#v2.6.0:
-        run: expo-maze-runner
-        use-aliases: true
-    env:
-      DEVICE_TYPE: "IOS_11"
-      APP_LOCATION: "build/output.ipa"
-    concurrency: 5
-    concurrency_group: 'browserstack'
+  # - label: 'expo iOS 11'
+  #   plugins:
+  #     artifacts#v1.2.0:
+  #       download: "build/output.ipa"
+  #     docker-compose#v2.6.0:
+  #       run: expo-maze-runner
+  #       use-aliases: true
+  #   env:
+  #     DEVICE_TYPE: "IOS_11"
+  #     APP_LOCATION: "build/output.ipa"
+  #   concurrency: 5
+  #   concurrency_group: 'browserstack'
 
-  - label: 'expo iOS 12'
-    plugins:
-      artifacts#v1.2.0:
-        download: "build/output.ipa"
-      docker-compose#v2.6.0:
-        run: expo-maze-runner
-        use-aliases: true
-    env:
-      DEVICE_TYPE: "IOS_12"
-      APP_LOCATION: "build/output.ipa"
-    concurrency: 5
-    concurrency_group: 'browserstack'
+  # - label: 'expo iOS 12'
+  #   plugins:
+  #     artifacts#v1.2.0:
+  #       download: "build/output.ipa"
+  #     docker-compose#v2.6.0:
+  #       run: expo-maze-runner
+  #       use-aliases: true
+  #   env:
+  #     DEVICE_TYPE: "IOS_12"
+  #     APP_LOCATION: "build/output.ipa"
+  #   concurrency: 5
+  #   concurrency_group: 'browserstack'
