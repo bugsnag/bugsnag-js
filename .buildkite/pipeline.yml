@@ -21,35 +21,35 @@ steps:
         run: ci
     command: 'npm run test:lint'
 
-  - label: 'Unit tests'
-    plugins:
-      docker-compose#v2.6.0:
-        run: ci
-    command: 'npm run test:unit'
+  # - label: 'Unit tests'
+  #   plugins:
+  #     docker-compose#v2.6.0:
+  #       run: ci
+  #   command: 'npm run test:unit'
 
-  - label: 'Type checks/tests'
-    plugins:
-      docker-compose#v2.6.0:
-        run: ci
-    command: 'npm run test:types'
+  # - label: 'Type checks/tests'
+  #   plugins:
+  #     docker-compose#v2.6.0:
+  #       run: ci
+  #   command: 'npm run test:types'
 
-  - label:  ':docker: Build browser maze runner image'
-    plugins:
-      - docker-compose#v2.6.0:
-          build:
-            - browser-maze-runner
-          image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
-          cache-from:
-            - browser-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
+  # - label:  ':docker: Build browser maze runner image'
+  #   plugins:
+  #     - docker-compose#v2.6.0:
+  #         build:
+  #           - browser-maze-runner
+  #         image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
+  #         cache-from:
+  #           - browser-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
 
-  - label:  ':docker: Build node maze runner image'
-    plugins:
-      - docker-compose#v2.6.0:
-          build:
-            - node-maze-runner
-          image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
-          cache-from:
-            - node-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
+  # - label:  ':docker: Build node maze runner image'
+  #   plugins:
+  #     - docker-compose#v2.6.0:
+  #         build:
+  #           - node-maze-runner
+  #         image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
+  #         cache-from:
+  #           - node-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
 
   - label: ':docker: Build expo maze runner image'
     plugins:
@@ -251,23 +251,23 @@ steps:
   #   env:
   #     NODE_VERSION: "10"
 
-  - label: ':docker: Publish expo app'
-    plugins:
-      - docker-compose#v2.6.0:
-          run: expo-publisher
-          image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
-          cache-from:
-            - expo-publisher:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
+  # - label: ':docker: Publish expo app'
+  #   plugins:
+  #     - docker-compose#v2.6.0:
+  #         run: expo-publisher
+  #         image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
+  #         cache-from:
+  #           - expo-publisher:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
 
   - wait
 
-  - label: ':docker: Build expo APK'
-    artifact_paths: build/output.apk
-    plugins:
-      - docker-compose#v2.6.0:
-          run: expo-android-builder
-          cache-from:
-            - expo-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
+  # - label: ':docker: Build expo APK'
+  #   artifact_paths: build/output.apk
+  #   plugins:
+  #     - docker-compose#v2.6.0:
+  #         run: expo-android-builder
+  #         cache-from:
+  #           - expo-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
 
   - label: ':docker: Build expo IPA'
     agents:
@@ -284,70 +284,70 @@ steps:
 
   - wait
 
-  - label: 'expo Android 9'
-    plugins:
-      artifacts#v1.2.0:
-        download: "build/output.apk"
-      docker-compose#v2.6.0:
-        run: expo-maze-runner
-        use-aliases: true
-    env:
-      DEVICE_TYPE: "ANDROID_9"
-      APP_LOCATION: "build/output.apk"
-    concurrency: 5
-    concurrency_group: 'browserstack'
+  # - label: 'expo Android 9'
+  #   plugins:
+  #     artifacts#v1.2.0:
+  #       download: "build/output.apk"
+  #     docker-compose#v2.6.0:
+  #       run: expo-maze-runner
+  #       use-aliases: true
+  #   env:
+  #     DEVICE_TYPE: "ANDROID_9"
+  #     APP_LOCATION: "build/output.apk"
+  #   concurrency: 5
+  #   concurrency_group: 'browserstack'
 
-  - label: 'expo Android 8'
-    plugins:
-      artifacts#v1.2.0:
-        download: "build/output.apk"
-      docker-compose#v2.6.0:
-        run: expo-maze-runner
-        use-aliases: true
-    env:
-      DEVICE_TYPE: "ANDROID_8"
-      APP_LOCATION: "build/output.apk"
-    concurrency: 5
-    concurrency_group: 'browserstack'
+  # - label: 'expo Android 8'
+  #   plugins:
+  #     artifacts#v1.2.0:
+  #       download: "build/output.apk"
+  #     docker-compose#v2.6.0:
+  #       run: expo-maze-runner
+  #       use-aliases: true
+  #   env:
+  #     DEVICE_TYPE: "ANDROID_8"
+  #     APP_LOCATION: "build/output.apk"
+  #   concurrency: 5
+  #   concurrency_group: 'browserstack'
 
-  - label: 'expo Android 7'
-    plugins:
-      artifacts#v1.2.0:
-        download: "build/output.apk"
-      docker-compose#v2.6.0:
-        run: expo-maze-runner
-        use-aliases: true
-    env:
-      DEVICE_TYPE: "ANDROID_7"
-      APP_LOCATION: "build/output.apk"
-    concurrency: 5
-    concurrency_group: 'browserstack'
+  # - label: 'expo Android 7'
+  #   plugins:
+  #     artifacts#v1.2.0:
+  #       download: "build/output.apk"
+  #     docker-compose#v2.6.0:
+  #       run: expo-maze-runner
+  #       use-aliases: true
+  #   env:
+  #     DEVICE_TYPE: "ANDROID_7"
+  #     APP_LOCATION: "build/output.apk"
+  #   concurrency: 5
+  #   concurrency_group: 'browserstack'
 
-  - label: 'expo Android 6'
-    plugins:
-      artifacts#v1.2.0:
-        download: "build/output.apk"
-      docker-compose#v2.6.0:
-        run: expo-maze-runner
-        use-aliases: true
-    env:
-      DEVICE_TYPE: "ANDROID_6"
-      APP_LOCATION: "build/output.apk"
-    concurrency: 5
-    concurrency_group: 'browserstack'
+  # - label: 'expo Android 6'
+  #   plugins:
+  #     artifacts#v1.2.0:
+  #       download: "build/output.apk"
+  #     docker-compose#v2.6.0:
+  #       run: expo-maze-runner
+  #       use-aliases: true
+  #   env:
+  #     DEVICE_TYPE: "ANDROID_6"
+  #     APP_LOCATION: "build/output.apk"
+  #   concurrency: 5
+  #   concurrency_group: 'browserstack'
 
-  - label: 'expo Android 5'
-    plugins:
-      artifacts#v1.2.0:
-        download: "build/output.apk"
-      docker-compose#v2.6.0:
-        run: expo-maze-runner
-        use-aliases: true
-    env:
-      DEVICE_TYPE: "ANDROID_5"
-      APP_LOCATION: "build/output.apk"
-    concurrency: 5
-    concurrency_group: 'browserstack'
+  # - label: 'expo Android 5'
+  #   plugins:
+  #     artifacts#v1.2.0:
+  #       download: "build/output.apk"
+  #     docker-compose#v2.6.0:
+  #       run: expo-maze-runner
+  #       use-aliases: true
+  #   env:
+  #     DEVICE_TYPE: "ANDROID_5"
+  #     APP_LOCATION: "build/output.apk"
+  #   concurrency: 5
+  #   concurrency_group: 'browserstack'
 
   - label: 'expo iOS 10'
     plugins:
