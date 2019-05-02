@@ -58,7 +58,6 @@ module.exports = (opts) => {
   bugsnag.use(pluginDevice)
   bugsnag.use(pluginContext)
   bugsnag.use(pluginRequest)
-  bugsnag.use(pluginInlineScriptContent)
   bugsnag.use(pluginThrottle)
   bugsnag.use(pluginSession)
   bugsnag.use(pluginIp)
@@ -75,6 +74,9 @@ module.exports = (opts) => {
   bugsnag.use(pluginInteractionBreadcrumbs)
   bugsnag.use(pluginNetworkBreadcrumbs)
   bugsnag.use(pluginConsoleBreadcrumbs)
+
+  // this one added last to avoid wrapping functionality before bugsnag uses it
+  bugsnag.use(pluginInlineScriptContent)
 
   bugsnag._logger.debug(`Loaded!`)
 
