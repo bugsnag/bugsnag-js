@@ -89,8 +89,7 @@ def write_failed_requests_to_disk(scenario)
 end
 
 Before('@skipAndroid78') do |scenario|
-  pp scenario
-  scenario.skip if ANDROID_78_SKIP.include?(@device_type)
+  skip_this_scenario if ANDROID_78_SKIP.include?(@device_type)
 end
 
 # Reset the app between each run
