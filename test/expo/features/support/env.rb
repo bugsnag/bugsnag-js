@@ -3,7 +3,6 @@ require 'json'
 require_relative '../lib/browserstack_driver'
 
 BROWSER_STACK_URI = "https://api-cloud.browserstack.com/app-automate/upload"
-ANDROID_78_SKIP = ['ANDROID_7', 'ANDROID_8']
 
 @bs_username = ENV['BROWSER_STACK_USERNAME']
 @bs_access_key = ENV['BROWSER_STACK_ACCESS_KEY']
@@ -88,8 +87,16 @@ def write_failed_requests_to_disk(scenario)
   end
 end
 
-Before('@skip_android_78') do |scenario|
-  skip_this_scenario if ANDROID_78_SKIP.include?(@device_type)
+Before('@skip_android_5') do
+  skip_this_scenario if @device_type === 'ANDROID_5'
+end
+
+Before('@skip_android_7') do
+  skip_this_scenario if @device_type === 'ANDROID_7'
+end
+
+Before('@skip_android_8') do
+  skip_this_scenario if @device_type === 'ANDROID_8'
 end
 
 # Reset the app between each run
