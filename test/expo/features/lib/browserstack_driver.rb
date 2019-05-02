@@ -15,6 +15,7 @@ module BSAppAutomator
       caps['browserstack.local'] = 'true'
       caps['browserstack.localIdentifier'] = local_id
       caps['browserstack.console'] = 'errors'
+      caps['browserstack.networkLogs'] = true
       caps['app'] = app_url
       @appium_driver = Appium::Driver.new({
         'caps' => caps,

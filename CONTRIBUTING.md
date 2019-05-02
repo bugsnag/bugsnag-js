@@ -196,6 +196,28 @@ EXPO_PASSWORD=xxx \
   npm run test:expo:android
 ```
 
+To run against an iOS device, several additional details are required. These include:
+
+- `APPLE_TEAM_ID`
+- `EXPO_PROVISIONING_PROFILE_PATH`: The provisioning profile required to build the app
+- `EXPO_P12_PATH`: The certificate required to sign the app
+- `EXPO_IOS_DIST_P12_PASSWORD`: The password required for the above certificate
+
+To run against an iOS device:
+
+```sh
+DEVICE_TYPE=IOS_10 \
+BROWSER_STACK_USERNAME=xxx \
+BROWSER_STACK_ACCESS_KEY=xxx \
+EXPO_USERNAME=xxx \
+EXPO_PASSWORD=xxx \
+APPLE_TEAM_ID=xxx \
+EXPO_PROVISIONING_PROFILE_PATH=xxx \
+EXPO_P12_PATH=xxx \
+EXPO_IOS_DIST_P12_PASSWORD=xxx
+  npm run test:expo:ios
+```
+
 ## CI
 
 CI runs on Buildkite. Tests are run automatically on any branch from within this repo. PRs from external repos do not run on the private test infrastructure. Once an external PR has been reviewed by a Bugsnag employee, a branch can be created within this repo in order to run on CI.
