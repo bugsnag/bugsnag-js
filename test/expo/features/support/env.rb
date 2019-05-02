@@ -88,7 +88,7 @@ def write_failed_requests_to_disk(scenario)
   end
 end
 
-Before('@skipAndroid78') do |scenario|
+Before('@skip_android_78') do |scenario|
   skip_this_scenario if ANDROID_78_SKIP.include?(@device_type)
 end
 

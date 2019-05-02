@@ -12,7 +12,7 @@ Scenario: A render error is captured by an error boundary
   And the exception "message" starts with "Error: An error has occurred in Buggy component!"
   And the event "metaData.react.componentStack" is not null
 
-@skipAndroid78
+@skip_android_78
 Scenario: When a render error occurs, a fallback is presented
   Given the element "errorBoundaryFallbackButton" is present
   When I click the element "errorBoundaryFallbackButton"
