@@ -1,5 +1,6 @@
 Feature: Automatically added breadcrumbs
 
+@skip_android_5
 Scenario: App-state breadcrumbs are captured by default
   Given the element "appStateBreadcrumbs" is present
   And I click the element "appStateBreadcrumbs"
@@ -13,6 +14,7 @@ Scenario: App-state breadcrumbs are captured by default
   And the exception "message" equals "defaultAppStateBreadcrumbsBehaviour"
   And the event has a "state" breadcrumb named "App state changed"
 
+@skip_android_5
 Scenario: App-state breadcrumbs can be disabled specifically
   Given the element "appStateBreadcrumbs" is present
   And I click the element "appStateBreadcrumbs"
@@ -26,6 +28,7 @@ Scenario: App-state breadcrumbs can be disabled specifically
   And the exception "message" equals "disabledAppStateBreadcrumbsBehaviour"
   And the event does not have a "state" breadcrumb named "App state changed"
 
+@skip_android_5
 Scenario: App-state breadcrumbs are disabled with other auto-breadcrumbs
   Given the element "appStateBreadcrumbs" is present
   And I click the element "appStateBreadcrumbs"
@@ -39,6 +42,7 @@ Scenario: App-state breadcrumbs are disabled with other auto-breadcrumbs
   And the exception "message" equals "disabledAllAppStateBreadcrumbsBehaviour"
   And the event does not have a "state" breadcrumb named "App state changed"
 
+@skip_android_5
 Scenario: App-state breadcrumbs overrides auto-breadcrumbs
   Given the element "appStateBreadcrumbs" is present
   And I click the element "appStateBreadcrumbs"

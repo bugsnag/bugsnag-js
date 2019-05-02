@@ -41,6 +41,8 @@ services:
       default:
         aliases:
           - maze-runner
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
 
   expo-maze-runner:
     build:
@@ -62,7 +64,6 @@ services:
           - maze-runner
     volumes:
       - ./build:/app/test/expo/build
-      # - ./maze_output:/app/test/expo/maze_output # Uncomment for local runs
 
   expo-publisher:
     build:
