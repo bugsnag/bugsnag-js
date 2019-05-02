@@ -117,9 +117,13 @@ module.exports = {
             cb.__trace__ = function __trace__ () {
               // set the script that called this function
               updateLastScript(script)
-              // immediately unset it
+              // immediately unset the currentScript synchronously below, however
+              // if this cb throws an error the line after will not get run so schedule
+              // an almost-immediate aysnc update too
               _setTimeout(function () { updateLastScript(null) }, 0)
-              cb.apply(this, arguments)
+              const ret = cb.apply(this, arguments)
+              updateLastScript(null)
+              return ret
             }
             cb.__trace__.__trace__ = cb.__trace__
             cba.replace(cb.__trace__)
