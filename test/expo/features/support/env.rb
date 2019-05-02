@@ -7,11 +7,14 @@ BROWSER_STACK_URI = "https://api-cloud.browserstack.com/app-automate/upload"
 @bs_username = ENV['BROWSER_STACK_USERNAME']
 @bs_access_key = ENV['BROWSER_STACK_ACCESS_KEY']
 @bs_local_id = ENV['BROWSER_STACK_LOCAL_IDENTIFIER'] || 'mazzzzeee'
-@device_type = ENV['DEVICE_TYPE']
 
 @bs_app_url = nil
 
 $bs_driver = nil
+
+def device_type
+  ENV['DEVICE_TYPE']
+end
 
 def upload_app
   res = `curl -u "#{@bs_username}:#{@bs_access_key}" -X POST "#{BROWSER_STACK_URI}" -F "file=@#{ENV['APP_LOCATION']}"`
@@ -26,7 +29,7 @@ end
 
 def start_driver
   unless $bs_driver
-    $bs_driver = BSAppAutomator::Driver.new(@device_type, @bs_app_url, @bs_username, @bs_access_key, @bs_local_id)
+    $bs_driver = BSAppAutomator::Driver.new(device_type, @bs_app_url, @bs_username, @bs_access_key, @bs_local_id)
     $bs_driver.start_local
     $bs_driver.start_driver
   end
@@ -87,16 +90,16 @@ def write_failed_requests_to_disk(scenario)
   end
 end
 
-Before('@skip_android_5') do
-  skip_this_scenario if @device_type === 'ANDROID_5'
+Before('@skip_android_5') do |scenario|
+  skip_this_scenario("Skipping scenario") if device_type == 'ANDROID_5'
 end
 
-Before('@skip_android_7') do
-  skip_this_scenario if @device_type === 'ANDROID_7'
+Before('@skip_android_7') do |scenario|
+  skip_this_scenario("Skipping scenario") if device_type == 'ANDROID_7'
 end
 
-Before('@skip_android_8') do
-  skip_this_scenario if @device_type === 'ANDROID_8'
+Before('@skip_android_8') do |scenario|
+  skip_this_scenario("Skipping scenario") if device_type == 'ANDROID_8'
 end
 
 # Reset the app between each run
@@ -118,7 +121,7 @@ unless @bs_username && @bs_access_key
   exit(false)
 end
 
-unless @device_type
+unless device_type
   puts "Test device type not defined, exiting"
   exit(false)
 end
