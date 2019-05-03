@@ -2,6 +2,8 @@ const { map, reduce, filter } = require('@bugsnag/core/lib/es-utils')
 
 module.exports = {
   init: (client, doc = document, win = window) => {
+    if (!client.config.trackInlineScripts) return
+
     const originalLocation = win.location.href
     let html = ''
     let DOMContentLoaded = false
@@ -140,6 +142,13 @@ module.exports = {
           default: return fn()
         }
       }
+    }
+  },
+  configSchema: {
+    trackInlineScripts: {
+      validate: value => value === true || value === false,
+      defaultValue: () => true,
+      message: 'should be true|false'
     }
   }
 }

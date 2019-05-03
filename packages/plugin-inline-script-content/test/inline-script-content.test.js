@@ -59,4 +59,19 @@ Lorem ipsum dolor sit amet.
     // now check it calls the previous one
     document.onreadystatechange()
   })
+
+  it('does no wrapping of global functions when disabled', () => {
+    const document = { documentElement: { outerHTML: '' } }
+    const addEventListener = function () {}
+    const window = { location: { href: 'https://app.bugsnag.com/errors' }, document }
+    function EventTarget () {}
+    EventTarget.prototype.addEventListener = addEventListener
+    window.EventTarget = EventTarget
+    const client = new Client(VALID_NOTIFIER)
+    client.setOptions({ apiKey: 'API_KEY_YEAH', trackInlineScripts: false })
+    client.configure()
+    client.use(plugin, document, window)
+    // check the addEventListener function was not wrapped
+    expect(window.EventTarget.prototype.addEventListener).toBe(addEventListener)
+  })
 })
