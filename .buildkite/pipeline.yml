@@ -251,6 +251,15 @@ steps:
     env:
       NODE_VERSION: "10"
 
+  - label: ':node: Node 12'
+    plugins:
+      docker-compose#v2.6.0:
+        run: node-maze-runner
+        use-aliases: true
+    env:
+      NODE_VERSION: "12"
+
+
   - label:  ':docker: Publish expo app'
     plugins:
       - docker-compose#v2.6.0:
