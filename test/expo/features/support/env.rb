@@ -47,14 +47,6 @@ def click_element(element)
   end
 end
 
-def set_dropdown_value(element, value)
-  unless $bs_driver.nil?
-    $bs_driver.click_element(element)
-    sleep(1)
-    $bs_driver.click_named_element(value)
-  end
-end
-
 def timeout_app(timeout)
   unless $bs_driver.nil?
     $bs_driver.background_app(timeout)
