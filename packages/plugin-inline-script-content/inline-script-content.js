@@ -1,4 +1,5 @@
 const { map, reduce, filter } = require('@bugsnag/core/lib/es-utils')
+const MAX_LINE_LENGTH = 200
 
 module.exports = {
   init: (client, doc = document, win = window) => {
@@ -45,7 +46,7 @@ module.exports = {
       const start = Math.max(zeroBasedLine - 3, 0)
       const end = Math.min(zeroBasedLine + 3, htmlLines.length - 1)
       return reduce(htmlLines.slice(start, end), (accum, line, i) => {
-        accum[i + lineNumber - 3] = line
+        accum[i + lineNumber - 3] = line.length <= MAX_LINE_LENGTH ? line : line.substr(0, MAX_LINE_LENGTH)
         return accum
       }, {})
     }
