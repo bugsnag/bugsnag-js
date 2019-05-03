@@ -251,7 +251,16 @@ steps:
     env:
       NODE_VERSION: "10"
 
-  - label: ':docker: Publish expo app'
+  - label: ':node: Node 12'
+    plugins:
+      docker-compose#v2.6.0:
+        run: node-maze-runner
+        use-aliases: true
+    env:
+      NODE_VERSION: "12"
+
+
+  - label:  ':docker: Publish expo app'
     plugins:
       - docker-compose#v2.6.0:
           run: expo-publisher
@@ -342,6 +351,7 @@ steps:
       APP_LOCATION: "build/output.apk"
     concurrency: 5
     concurrency_group: 'browserstack'
+<<<<<<< HEAD
 
   - label: 'expo iOS 10'
     plugins:
@@ -381,3 +391,5 @@ steps:
       APP_LOCATION: "build/output.ipa"
     concurrency: 5
     concurrency_group: 'browserstack'
+=======
+>>>>>>> expo-ci

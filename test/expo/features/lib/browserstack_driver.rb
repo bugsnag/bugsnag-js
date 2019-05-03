@@ -41,7 +41,7 @@ module BSAppAutomator
       status
     end
 
-    def wait_for_element(element_id, timeout=30)
+    def wait_for_element(element_id, timeout=15)
       wait = Selenium::WebDriver::Wait.new(:timeout => timeout)
       wait.until { self.driver.find_element(:accessibility_id, element_id).displayed? }
     end
