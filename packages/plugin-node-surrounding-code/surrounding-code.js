@@ -1,4 +1,6 @@
 const SURROUNDING_LINES = 3
+const MAX_LINE_LENGTH = 200
+
 const { createReadStream } = require('fs')
 const { Writable } = require('stream')
 const pump = require('pump')
@@ -86,7 +88,7 @@ class CodeRange extends Writable {
     this._n++
     if (this._n < this._start) return cb(null)
     if (this._n <= this._end) {
-      this._code[String(this._n)] = chunk.length <= 200 ? chunk : chunk.substr(0, 200)
+      this._code[String(this._n)] = chunk.length <= MAX_LINE_LENGTH ? chunk : chunk.substr(0, MAX_LINE_LENGTH)
       return cb(null)
     }
     this.emit('done')

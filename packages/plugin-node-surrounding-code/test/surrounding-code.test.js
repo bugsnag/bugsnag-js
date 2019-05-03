@@ -208,7 +208,7 @@ describe('plugin: node surrounding code', () => {
     ]))
   })
 
-  it('truncates lines to 150 characters', done => {
+  it('truncates lines to a sensible number of characters', done => {
     const client = new Client(VALID_NOTIFIER)
 
     client.delivery(client => ({
