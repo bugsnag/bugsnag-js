@@ -72,6 +72,7 @@ services:
     environment:
       EXPO_USERNAME:
       EXPO_PASSWORD:
+      EXPO_RELEASE_CHANNEL:
     networks:
       default:
         aliases:
@@ -86,6 +87,7 @@ services:
       DEBUG:
       EXPO_USERNAME:
       EXPO_PASSWORD:
+      EXPO_RELEASE_CHANNEL:
     networks:
       default:
         aliases:

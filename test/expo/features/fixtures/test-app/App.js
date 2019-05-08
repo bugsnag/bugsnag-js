@@ -14,27 +14,27 @@ import DeviceFeature from './app/device'
 import Sessions from './app/sessions'
 import NetworkBreadcrumbs from './app/network_breadcrumbs'
 
+const SCENARIOS = [
+  'handled',
+  'unhandled',
+  'errorBoundary',
+  'appFeature',
+  'appStateBreadcrumbs',
+  'userFeature',
+  'consoleBreadcrumbs',
+  'ignoreReport',
+  'metaDataFeature',
+  'manualBreadcrumbs',
+  'deviceFeature',
+  'sessions',
+  'networkBreadcrumbs'
+]
+
 export default class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      scenario: null,
-      scenarios: [
-        '',
-        'handled',
-        'unhandled',
-        'errorBoundary',
-        'appFeature',
-        'appStateBreadcrumbs',
-        'userFeature',
-        'consoleBreadcrumbs',
-        'ignoreReport',
-        'metaDataFeature',
-        'manualBreadcrumbs',
-        'deviceFeature',
-        'sessions',
-        'networkBreadcrumbs'
-      ]
+      scenario: null
     }
   }
 
@@ -71,18 +71,13 @@ export default class App extends React.Component {
   }
 
   renderScenarioOptions() {
-    return this.state.scenarios.map((scenario, index) => {
+    return SCENARIOS.map((scenario, index) => {
 
       return <Button accessibilityLabel={scenario}
                      key={index}
                      title={'Scenario: ' + scenario}
                      onPress={() => {
-                       this.setState(previous => (
-                         {
-                           scenario:scenario,
-                           scenarios: previous.scenarios
-                         }
-                       ))
+                       this.setState({ scenario })
                      }}/>
     })
   }

@@ -261,6 +261,8 @@ steps:
 
 
   - label:  ':docker: Publish expo app'
+    env:
+      EXPO_RELEASE_CHANNEL: ${BUILDKITE_BUILD_ID}
     plugins:
       - docker-compose#v2.6.0:
           run: expo-publisher
@@ -271,6 +273,8 @@ steps:
   - wait
 
   - label:  ':docker: Build expo APK'
+    env:
+      EXPO_RELEASE_CHANNEL: ${BUILDKITE_BUILD_ID}
     artifact_paths: build/output.apk
     plugins:
       - docker-compose#v2.6.0:
