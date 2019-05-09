@@ -1,5 +1,6 @@
 const { map, reduce, filter } = require('@bugsnag/core/lib/es-utils')
 const MAX_LINE_LENGTH = 200
+const MAX_SCRIPT_LENGTH = 500000
 
 module.exports = {
   init: (client, doc = document, win = window) => {
@@ -63,7 +64,14 @@ module.exports = {
 
       // grab the last script known to have run
       const currentScript = getCurrentScript()
-      if (currentScript) report.updateMetaData('script', 'content', currentScript.innerHTML)
+      if (currentScript) {
+        const content = currentScript.innerHTML
+        report.updateMetaData(
+          'script',
+          'content',
+          content.length <= MAX_SCRIPT_LENGTH ? content : content.substr(0, MAX_SCRIPT_LENGTH)
+        )
+      }
 
       // only attempt to grab some surrounding code if we have a line number
       if (frame.lineNumber === undefined) return

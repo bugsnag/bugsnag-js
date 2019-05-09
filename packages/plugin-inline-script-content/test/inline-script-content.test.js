@@ -74,4 +74,87 @@ Lorem ipsum dolor sit amet.
     // check the addEventListener function was not wrapped
     expect(window.EventTarget.prototype.addEventListener).toBe(addEventListener)
   })
+
+  it('truncates script content to a reasonable length', () => {
+    let scriptContent = ``
+    for (let i = 0; i < 10000; i++) {
+      scriptContent += `function fn_${i} (arg0, arg1, arg2) {\n`
+      scriptContent += `  console.log('this is an awfully long inline script!')\n`
+      scriptContent += `}\n`
+    }
+    expect(scriptContent.length > 500000).toBe(true)
+    const document = {
+      scripts: [ { innerHTML: scriptContent } ],
+      currentScript: { innerHTML: scriptContent },
+      documentElement: {
+        outerHTML: `<p>
+Lorem ipsum dolor sit amet.
+Lorem ipsum dolor sit amet.
+Lorem ipsum dolor sit amet.
+</p>
+<script>${scriptContent}
+</script>
+<p>more content</p>`
+      }
+    }
+    const window = { location: { href: 'https://app.bugsnag.com/errors' } }
+
+    const client = new Client(VALID_NOTIFIER)
+    const payloads = []
+    client.setOptions({ apiKey: 'API_KEY_YEAH' })
+    client.configure()
+    client.use(plugin, document, window)
+
+    expect(client.config.beforeSend.length).toBe(1)
+    client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
+    client.notify(new Report('BadThing', 'Happens in script tags', [
+      { fileName: window.location.href, lineNumber: 10 }
+    ]))
+    expect(payloads.length).toEqual(1)
+    expect(payloads[0].events[0].stacktrace[0].code).toBeDefined()
+    expect(payloads[0].events[0].metaData.script).toBeDefined()
+    expect(payloads[0].events[0].metaData.script.content.length).toBe(500000)
+  })
+
+  it('truncates surrounding code lines to a reasonable length', () => {
+    const longMessage = Array(1000).fill('jim').join(',')
+    const scriptContent = `function fn (arg0, arg1, arg2) {
+  console.log('${longMessage}')
+}`
+    expect(longMessage.length > 200).toBe(true)
+    const document = {
+      scripts: [ { innerHTML: scriptContent } ],
+      currentScript: { innerHTML: scriptContent },
+      documentElement: {
+        outerHTML: `<p>
+Lorem ipsum dolor sit amet.
+Lorem ipsum dolor sit amet.
+Lorem ipsum dolor sit amet.
+</p>
+<script>${scriptContent}
+</script>
+<p>more content</p>`
+      }
+    }
+    const window = { location: { href: 'https://app.bugsnag.com/errors' } }
+
+    const client = new Client(VALID_NOTIFIER)
+    const payloads = []
+    client.setOptions({ apiKey: 'API_KEY_YEAH' })
+    client.configure()
+    client.use(plugin, document, window)
+
+    expect(client.config.beforeSend.length).toBe(1)
+    client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
+    client.notify(new Report('BadThing', 'Happens in script tags', [
+      { fileName: window.location.href, lineNumber: 7 }
+    ]))
+    expect(payloads.length).toEqual(1)
+    expect(payloads[0].events[0].stacktrace[0].code).toBeDefined()
+    const surroundingCode = payloads[0].events[0].stacktrace[0].code
+    Object.keys(surroundingCode).forEach(line => {
+      expect(surroundingCode[line].length > 200).toBe(false)
+    })
+    expect(payloads[0].events[0].metaData.script).toBeDefined()
+  })
 })
