@@ -94,6 +94,18 @@ Before('@skip_android_8') do |scenario|
   skip_this_scenario("Skipping scenario") if device_type == 'ANDROID_8'
 end
 
+Before('@skip_ios_10') do |scenario|
+  skip_this_scenario("Skipping scenario") if device_type == 'IOS_10'
+end
+
+Before('@skip_ios_11') do |scenario|
+  skip_this_scenario("Skipping scenario") if device_type == 'IOS_11'
+end
+
+Before('@skip_ios_12') do |scenario|
+  skip_this_scenario("Skipping scenario") if device_type == 'IOS_12'
+end
+
 # Reset the app between each run
 After do |scenario|
   unless $bs_driver.nil?
