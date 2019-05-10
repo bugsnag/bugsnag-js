@@ -66,7 +66,7 @@ steps:
 
   - wait
 
-  x- label:  ':docker: Publish expo app'
+  - label:  ':docker: Publish expo app'
     env:
       EXPO_RELEASE_CHANNEL: ${BUILDKITE_BUILD_ID}
     plugins:
