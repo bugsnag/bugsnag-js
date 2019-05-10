@@ -1,6 +1,6 @@
 FROM node:12-alpine
 
-RUN apk add --update bash
+RUN apk add --update bash python
 
 WORKDIR /app
 
