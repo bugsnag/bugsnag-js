@@ -66,16 +66,6 @@ steps:
 
   - wait
 
-  - label:  ':docker: Publish expo app'
-    env:
-      EXPO_RELEASE_CHANNEL: ${BUILDKITE_BUILD_ID}
-    plugins:
-      - docker-compose#v2.6.0:
-          run: expo-publisher
-          image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
-          cache-from:
-            - expo-publisher:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
-
   - label: ':chrome: v43 Browser tests'
     plugins:
       docker-compose#v2.6.0:
@@ -268,6 +258,22 @@ steps:
         use-aliases: true
     env:
       NODE_VERSION: "12"
+
+  - wait
+
+  - block: 'Request expo run confirmation'
+
+  - wait
+
+  - label:  ':docker: Publish expo app'
+    env:
+      EXPO_RELEASE_CHANNEL: ${BUILDKITE_BUILD_ID}
+    plugins:
+      - docker-compose#v2.6.0:
+          run: expo-publisher
+          image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
+          cache-from:
+            - expo-publisher:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
 
   - wait
 
