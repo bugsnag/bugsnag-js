@@ -351,7 +351,6 @@ steps:
       APP_LOCATION: "build/output.apk"
     concurrency: 5
     concurrency_group: 'browserstack'
-<<<<<<< HEAD
 
   - label: 'expo iOS 10'
     plugins:
@@ -391,5 +390,3 @@ steps:
       APP_LOCATION: "build/output.ipa"
     concurrency: 5
     concurrency_group: 'browserstack'
-=======
->>>>>>> expo-ci
