@@ -13,7 +13,7 @@ WORKDIR /app/test/expo/features/fixtures/test-app
 
 RUN mkdir -p /app/test/expo/features/fixures/build
 
-RUN npm i -g gulp-cli node-gyp
+RUN yarn global add gulp-cli node-gyp
 RUN yarn add bunyan turtle-cli
 
 RUN node_modules/.bin/turtle setup:android
@@ -25,4 +25,5 @@ CMD EXPO_ANDROID_KEYSTORE_PASSWORD=password \
     node_modules/.bin/turtle build:android \
     --keystore-path fakekeys.jks \
     --keystore-alias password \
-    --output /app/test/expo/features/fixtures/build/output.apk
+    --output /app/test/expo/features/fixtures/build/output.apk \
+    --release-channel $EXPO_RELEASE_CHANNEL
