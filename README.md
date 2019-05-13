@@ -47,10 +47,10 @@ Use the following plugins and guides to integrate Bugsnag with various framework
 
 ### Mobile
 
-| Framework  | Bugsnag plugin | Documentation |
+| Framework  | Bugsnag notifier | Documentation |
 | ---------- | -------------- | --------------|
 | Expo | [@bugsnag/expo](packages/expo)  | [Expo docs](https://docs.bugsnag.com/platforms/react-native/expo/) |
-| React Native | See the [bugsnag-react-native](https://github.com/bugsnag/bugsnag-react-native) notifier | |
+| React Native | [bugsnag-react-native](https://github.com/bugsnag/bugsnag-react-native) (lives in a separate repo) | [Docs](https://docs.bugsnag.com/platforms/react-native/react-native/) |
 
 ## Support
 
