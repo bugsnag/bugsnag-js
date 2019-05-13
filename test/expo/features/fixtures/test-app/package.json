@@ -8,12 +8,10 @@
   },
   "dependencies": {
     "@babel/runtime": "7.4.2",
-    "bunyan": "^1.8.12",
     "expo": "^32.0.0",
     "expo-cli": "^2.14.0",
     "react": "16.5.0",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
-    "turtle-cli": "^0.6.1"
+    "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz"
   },
   "devDependencies": {
     "babel-preset-expo": "^5.0.0"
