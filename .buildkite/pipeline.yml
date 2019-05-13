@@ -279,10 +279,10 @@ steps:
       - docker-compose#v2.6.0:
           run: expo-android-builder
           cache-from:
-            - expo-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:latest
+            - expo-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-android-builder-latest
       - docker-compose#v2.6.0:
           push:
-            - expo-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:latest
+            - expo-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-android-builder-latest
 
   - label: ':docker: Build expo IPA'
     agents:
