@@ -1,5 +1,11 @@
 # Changelog
 
+## TBD
+
+### Changed
+
+- (node): Added Node version string to report information (device.runtimeVersions) [#537](https://github.com/bugsnag/bugsnag-js/pull/537)
+
 ## 6.2.0 (2019-04-23)
 
 This release adds [`@bugsnag/expo`](http://docs.bugsnag.com/platforms/react-native/expo), a notifier for use on React Native apps that are built using [Expo](https://expo.io/).
