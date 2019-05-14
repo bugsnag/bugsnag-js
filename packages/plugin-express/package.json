@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-express",
-  "version": "6.0.0",
+  "version": "6.2.0",
   "main": "dist/bugsnag-express.js",
   "types": "types/bugsnag-express.d.ts",
   "description": "@bugsnag/js error handling middleware for Express (and Connect) web servers",
@@ -29,7 +29,7 @@
     "@bugsnag/js": "*"
   },
   "devDependencies": {
-    "@bugsnag/core": "^6.0.0",
+    "@bugsnag/core": "^6.2.0",
     "jasmine": "^3.1.0",
     "nyc": "^12.0.2"
   },

@@ -21,6 +21,7 @@ export class BugsnagErrorHandler extends ErrorHandler {
       error.message,
       this.bugsnagClient.BugsnagReport.getStacktrace(error),
       handledState,
+      error,
     );
 
     if (error.ngDebugContext) {

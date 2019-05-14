@@ -24,13 +24,13 @@ describe('plugin: node device', () => {
     expect(client.config.beforeSend.length).toBe(1)
     expect(client.device.hostname).toBe('test-machine.local')
 
-    client.delivery({
-      sendReport: (logger, config, payload) => {
+    client.delivery(client => ({
+      sendReport: (payload) => {
         expect(payload.events[0].device).toBeDefined()
         expect(payload.events[0].device.time).toMatch(ISO_8601)
         done()
       }
-    })
+    }))
     client.notify(new Error('noooo'))
   })
 
@@ -40,12 +40,12 @@ describe('plugin: node device', () => {
     client.configure(schema)
     client.use(plugin)
 
-    client.delivery({
-      sendReport: (logger, config, payload) => {
+    client.delivery(client => ({
+      sendReport: (payload) => {
         expect(payload.events[0].metaData.device.runtimeVersions).toEqual(process.versions)
         done()
       }
-    })
+    }))
     client.notify(new Error('noooo'))
   })
 })

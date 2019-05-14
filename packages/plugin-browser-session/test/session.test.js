@@ -11,8 +11,8 @@ describe('plugin: sessions', () => {
     c.setOptions({ apiKey: 'API_KEY' })
     c.configure()
     c.use(plugin)
-    c.delivery({
-      sendSession: (logger, config, session, cb) => {
+    c.delivery(client => ({
+      sendSession: (session, cb) => {
         expect(typeof session).toBe('object')
         expect(session.notifier).toEqual(VALID_NOTIFIER)
         expect(session.sessions.length).toBe(1)
@@ -21,7 +21,7 @@ describe('plugin: sessions', () => {
         expect(session.sessions[0].startedAt).toBeTruthy()
         done()
       }
-    })
+    }))
     c.startSession()
   })
 
@@ -31,9 +31,9 @@ describe('plugin: sessions', () => {
     c.configure()
     let i = 0
     c.use(plugin)
-    c.delivery({
+    c.delivery(client => ({
       sendSession: () => {},
-      sendReport: (logger, config, report, cb) => {
+      sendReport: (report, cb) => {
         if (++i < 10) return
         const r = JSON.parse(JSON.stringify(report.events[0]))
         expect(r.session).toBeDefined()
@@ -41,7 +41,7 @@ describe('plugin: sessions', () => {
         expect(r.session.events.unhandled).toBe(4)
         done()
       }
-    })
+    }))
     const sessionClient = c.startSession()
     sessionClient.notify(new Error('broke'))
     sessionClient.notify(new c.BugsnagReport('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
@@ -60,13 +60,13 @@ describe('plugin: sessions', () => {
     c.setOptions({ apiKey: 'API_KEY', releaseStage: 'foo' })
     c.configure()
     c.use(plugin)
-    c.delivery({
-      sendSession: (logger, config, session, cb) => {
+    c.delivery(client => ({
+      sendSession: (session, cb) => {
         expect(typeof session).toBe('object')
         expect(session.app.releaseStage).toBe('foo')
         done()
       }
-    })
+    }))
     c.startSession()
   })
 
@@ -75,11 +75,11 @@ describe('plugin: sessions', () => {
     c.setOptions({ apiKey: 'API_KEY', releaseStage: 'foo', notifyReleaseStages: [ 'baz' ] })
     c.configure()
     c.use(plugin)
-    c.delivery({
-      sendSession: (logger, config, session, cb) => {
+    c.delivery(client => ({
+      sendSession: (session, cb) => {
         expect(true).toBe(false)
       }
-    })
+    }))
     c.startSession()
     setTimeout(done, 150)
   })
@@ -100,11 +100,11 @@ describe('plugin: sessions', () => {
         done()
       }
     })
-    c.delivery({
-      sendSession: (logger, config, session, cb) => {
+    c.delivery(client => ({
+      sendSession: (session, cb) => {
         expect(true).toBe(false)
       }
-    })
+    }))
     c.startSession()
   })
 })

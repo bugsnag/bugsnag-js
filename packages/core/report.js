@@ -2,9 +2,10 @@ const ErrorStackParser = require('./lib/error-stack-parser')
 const StackGenerator = require('stack-generator')
 const hasStack = require('./lib/has-stack')
 const { reduce, filter } = require('./lib/es-utils')
+const jsRuntime = require('./lib/js-runtime')
 
 class BugsnagReport {
-  constructor (errorClass, errorMessage, stacktrace = [], handledState = defaultHandledState()) {
+  constructor (errorClass, errorMessage, stacktrace = [], handledState = defaultHandledState(), originalError) {
     // duck-typing ftw >_<
     this.__isBugsnagReport = true
 
@@ -37,6 +38,13 @@ class BugsnagReport {
     }, [])
     this.user = undefined
     this.session = undefined
+    this.originalError = originalError
+
+    // Flags.
+    // Note these are not initialised unless they are used
+    // to save unnecessary bytes in the browser bundle
+
+    /* this.attemptImmediateDelivery, default: true */
   }
 
   ignore () {
@@ -99,7 +107,7 @@ class BugsnagReport {
           errorClass: this.errorClass,
           message: this.errorMessage,
           stacktrace: this.stacktrace,
-          type: process.env.IS_BROWSER ? 'browserjs' : 'nodejs'
+          type: jsRuntime
         }
       ],
       severity: this.severity,
@@ -153,10 +161,16 @@ const stringOrFallback = (str, fallback) => typeof str === 'string' && str ? str
 
 BugsnagReport.getStacktrace = function (error, errorFramesToSkip = 0, generatedFramesToSkip = 0) {
   if (hasStack(error)) return ErrorStackParser.parse(error).slice(errorFramesToSkip)
-  // error wasn't provided or didn't have a stacktrace so try to walk the callstack
-  return filter(StackGenerator.backtrace(), frame =>
-    (frame.functionName || '').indexOf('StackGenerator$$') === -1
-  ).slice(1 + generatedFramesToSkip)
+  // in IE11 a new Error() doesn't have a stacktrace until you throw it, so try that here
+  try {
+    throw error
+  } catch (e) {
+    if (hasStack(e)) return ErrorStackParser.parse(error).slice(1 + generatedFramesToSkip)
+    // error wasn't provided or didn't have a stacktrace so try to walk the callstack
+    return filter(StackGenerator.backtrace(), frame =>
+      (frame.functionName || '').indexOf('StackGenerator$$') === -1
+    ).slice(1 + generatedFramesToSkip)
+  }
 }
 
 BugsnagReport.ensureReport = function (reportOrError, errorFramesToSkip = 0, generatedFramesToSkip = 0) {
@@ -164,9 +178,9 @@ BugsnagReport.ensureReport = function (reportOrError, errorFramesToSkip = 0, gen
   if (reportOrError.__isBugsnagReport) return reportOrError
   try {
     const stacktrace = BugsnagReport.getStacktrace(reportOrError, errorFramesToSkip, 1 + generatedFramesToSkip)
-    return new BugsnagReport(reportOrError.name, reportOrError.message, stacktrace)
+    return new BugsnagReport(reportOrError.name, reportOrError.message, stacktrace, undefined, reportOrError)
   } catch (e) {
-    return new BugsnagReport(reportOrError.name, reportOrError.message, [])
+    return new BugsnagReport(reportOrError.name, reportOrError.message, [], undefined, reportOrError)
   }
 }
 

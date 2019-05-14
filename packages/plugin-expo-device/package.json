@@ -1,0 +1,28 @@
+{
+  "name": "@bugsnag/plugin-expo-device",
+  "version": "6.2.0",
+  "main": "device.js",
+  "description": "@bugsnag/js plugin to attach Expo-specific device info to reports",
+  "homepage": "https://www.bugsnag.com/",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:bugsnag/bugsnag-js.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "*.js"
+  ],
+  "scripts": {
+    "test": "nyc --reporter=lcov -- jasmine '!(node_modules)/**/*.test.js'"
+  },
+  "author": "Bugsnag",
+  "license": "MIT",
+  "devDependencies": {
+    "@bugsnag/core": "^7.0.0-pre-alpha-ben.6",
+    "jasmine": "3.1.0",
+    "nyc": "^12.0.2",
+    "proxyquire": "^2.1.0"
+  }
+}

@@ -27,7 +27,8 @@ module.exports = {
               error.name,
               error.message,
               decorateStack(client.BugsnagReport.getStacktrace(error), url, lineNo, charNo),
-              handledState
+              handledState,
+              error
             )
           } else {
             // otherwise, for non error values that were thrown, stringify it for
@@ -36,7 +37,8 @@ module.exports = {
               'window.onerror',
               String(error),
               decorateStack(client.BugsnagReport.getStacktrace(error, 1), url, lineNo, charNo),
-              handledState
+              handledState,
+              error
             )
             // include the raw input as metadata
             report.updateMetaData('window onerror', { error })
@@ -63,7 +65,8 @@ module.exports = {
             name,
             message,
             client.BugsnagReport.getStacktrace(new Error(), 1).slice(1),
-            handledState
+            handledState,
+            messageOrEvent
           )
           // include the raw input as metadata – it might contain more info than we extracted
           report.updateMetaData('window onerror', { event: messageOrEvent, extraParameters: url })
@@ -74,7 +77,8 @@ module.exports = {
             'window.onerror',
             String(messageOrEvent),
             decorateStack(client.BugsnagReport.getStacktrace(error, 1), url, lineNo, charNo),
-            handledState
+            handledState,
+            messageOrEvent
           )
           // include the raw input as metadata – it might contain more info than we extracted
           report.updateMetaData('window onerror', { event: messageOrEvent })

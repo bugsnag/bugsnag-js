@@ -1,0 +1,46 @@
+{
+  "expo": {
+    "name": "Ben's example",
+    "slug": "my-expo-project",
+    "privacy": "unlisted",
+    "sdkVersion": "32.0.0",
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "version": "2.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.bugsnag.bentest"
+    },
+    "android": {
+      "package": "com.bugsnag.bentest"
+    },
+    "extra": {
+      "bugsnag": {
+        "apiKey": "c8c0f735638c67f3348440fb1b2e7911"
+      }
+    },
+    "hooks": {
+      "postPublish": [
+        {
+          "file": "@bugsnag/expo/hooks/post-publish",
+          "config": {}
+        }
+      ]
+    }
+  }
+}

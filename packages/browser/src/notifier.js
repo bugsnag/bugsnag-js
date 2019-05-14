@@ -6,7 +6,6 @@ const Client = require('@bugsnag/core/client')
 const Report = require('@bugsnag/core/report')
 const Session = require('@bugsnag/core/session')
 const Breadcrumb = require('@bugsnag/core/breadcrumb')
-const { map } = require('@bugsnag/core/lib/es-utils')
 
 // extend the base config schema with some browser-specific options
 const schema = { ...require('@bugsnag/core/config').schema, ...require('./config') }
@@ -36,20 +35,10 @@ module.exports = (opts) => {
 
   // support renamed/deprecated options
 
-  const warnings = []
-
-  if (opts.sessionTrackingEnabled) {
-    warnings.push('deprecated option sessionTrackingEnabled is now called autoCaptureSessions')
-    opts.autoCaptureSessions = opts.sessionTrackingEnabled
-  }
-
-  if ((opts.endpoint || opts.sessionEndpoint) && !opts.endpoints) {
-    warnings.push('deprecated options endpoint/sessionEndpoint are now configured in the endpoints object')
-    opts.endpoints = { notify: opts.endpoint, sessions: opts.sessionEndpoint }
-  }
+  let warningMessage = ''
 
   if (opts.endpoints && opts.endpoints.notify && !opts.endpoints.sessions) {
-    warnings.push('notify endpoint is set but sessions endpoint is not. No sessions will be sent.')
+    warningMessage += 'notify endpoint is set but sessions endpoint is not. No sessions will be sent.'
   }
 
   const bugsnag = new Client({ name, version, url })
@@ -57,19 +46,18 @@ module.exports = (opts) => {
   bugsnag.setOptions(opts)
 
   // set delivery based on browser capability (IE 8+9 have an XDomainRequest object)
-  bugsnag.delivery(window.XDomainRequest ? dXDomainRequest() : dXMLHttpRequest())
+  bugsnag.delivery(window.XDomainRequest ? dXDomainRequest : dXMLHttpRequest)
 
   // configure with user supplied options
   // errors can be thrown here that prevent the lib from being in a useable state
   bugsnag.configure(schema)
 
-  map(warnings, w => bugsnag._logger.warn(w))
+  if (warningMessage) bugsnag._logger.warn(warningMessage)
 
   // always-on browser-specific plugins
   bugsnag.use(pluginDevice)
   bugsnag.use(pluginContext)
   bugsnag.use(pluginRequest)
-  bugsnag.use(pluginInlineScriptContent)
   bugsnag.use(pluginThrottle)
   bugsnag.use(pluginSession)
   bugsnag.use(pluginIp)
@@ -86,6 +74,9 @@ module.exports = (opts) => {
   bugsnag.use(pluginInteractionBreadcrumbs)
   bugsnag.use(pluginNetworkBreadcrumbs)
   bugsnag.use(pluginConsoleBreadcrumbs)
+
+  // this one added last to avoid wrapping functionality before bugsnag uses it
+  bugsnag.use(pluginInlineScriptContent)
 
   bugsnag._logger.debug(`Loaded!`)
 

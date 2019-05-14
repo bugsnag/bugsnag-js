@@ -1,0 +1,31 @@
+{
+  "name": "@bugsnag/delivery-expo",
+  "version": "6.2.0",
+  "main": "delivery.js",
+  "description": "@bugsnag/js delivery mechanism to send reports from Expo, using the FileSystem API to cache and retry sending failed reports",
+  "homepage": "https://www.bugsnag.com/",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:bugsnag/bugsnag-js.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "*.js"
+  ],
+  "scripts": {
+    "test": "nyc --reporter=lcov -- jasmine '!(node_modules)/**/*.test.js'"
+  },
+  "author": "Bugsnag",
+  "license": "MIT",
+  "dependencies": {
+    "@bugsnag/core": "^7.0.0-pre-alpha-ben.6"
+  },
+  "devDependencies": {
+    "jasmine": "3.1.0",
+    "node-fetch": "^2.3.0",
+    "nyc": "^12.0.2",
+    "proxyquire": "^2.1.0"
+  }
+}
