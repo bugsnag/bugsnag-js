@@ -111,7 +111,9 @@ describe('plugin: server sessions', () => {
         expect(session.sessionCounts.length).toBe(1)
         expect(session.sessionCounts[0].sessionsStarted).toBe(123)
         expect(session.app).toEqual({ version: '1.2.3', releaseStage: 'qa', type: 'server' })
-        expect(session.device).toEqual({ hostname: 'test-machine.local' })
+        expect(session.device.hostname).toBe('test-machine.local')
+        expect(session.device.runtimeVersions).toBeDefined()
+        expect(session.device.runtimeVersions.node).toEqual(process.versions.node)
         done()
       }
     }))

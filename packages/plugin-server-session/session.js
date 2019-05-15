@@ -7,6 +7,12 @@ const Backoff = require('backo')
 
 module.exports = {
   init: client => {
+    // capture runtime information for report and merge with anything already set on the client
+    const device = {
+      runtimeVersions: { node: process.versions.node }
+    }
+    client.device = { ...device, ...client.device }
+
     const sessionTracker = new SessionTracker(client.config.sessionSummaryInterval)
     sessionTracker.on('summary', sendSessionSummary(client))
     sessionTracker.start()
