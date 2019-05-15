@@ -314,7 +314,7 @@ steps:
       DEVICE_TYPE: "ANDROID_9"
       APP_LOCATION: "build/output.apk"
     concurrency: 5
-    concurrency_group: 'browserstack'
+    concurrency_group: 'browserstack-app'
 
   - label: 'expo Android 8'
     plugins:
@@ -327,7 +327,7 @@ steps:
       DEVICE_TYPE: "ANDROID_8"
       APP_LOCATION: "build/output.apk"
     concurrency: 5
-    concurrency_group: 'browserstack'
+    concurrency_group: 'browserstack-app'
 
   - label: 'expo Android 7'
     plugins:
@@ -340,7 +340,7 @@ steps:
       DEVICE_TYPE: "ANDROID_7"
       APP_LOCATION: "build/output.apk"
     concurrency: 5
-    concurrency_group: 'browserstack'
+    concurrency_group: 'browserstack-app'
 
   - label: 'expo Android 6'
     plugins:
@@ -353,7 +353,7 @@ steps:
       DEVICE_TYPE: "ANDROID_6"
       APP_LOCATION: "build/output.apk"
     concurrency: 5
-    concurrency_group: 'browserstack'
+    concurrency_group: 'browserstack-app'
 
   - label: 'expo Android 5'
     plugins:
@@ -366,7 +366,7 @@ steps:
       DEVICE_TYPE: "ANDROID_5"
       APP_LOCATION: "build/output.apk"
     concurrency: 5
-    concurrency_group: 'browserstack'
+    concurrency_group: 'browserstack-app'
 
   - label: 'expo iOS 10'
     plugins:
@@ -379,7 +379,7 @@ steps:
       DEVICE_TYPE: "IOS_10"
       APP_LOCATION: "build/output.ipa"
     concurrency: 5
-    concurrency_group: 'browserstack'
+    concurrency_group: 'browserstack-app'
 
   - label: 'expo iOS 11'
     plugins:
@@ -392,7 +392,7 @@ steps:
       DEVICE_TYPE: "IOS_11"
       APP_LOCATION: "build/output.ipa"
     concurrency: 5
-    concurrency_group: 'browserstack'
+    concurrency_group: 'browserstack-app'
 
   - label: 'expo iOS 12'
     plugins:
@@ -405,4 +405,4 @@ steps:
       DEVICE_TYPE: "IOS_12"
       APP_LOCATION: "build/output.ipa"
     concurrency: 5
-    concurrency_group: 'browserstack'
+    concurrency_group: 'browserstack-app'
