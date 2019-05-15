@@ -277,11 +277,9 @@ steps:
     artifact_paths: build/output.apk
     plugins:
       - docker-compose#v2.6.0:
-          build: expo-android-builder
+          run: expo-android-builder
           cache-from:
             - expo-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-android-builder-latest
-      - docker-compose#v2.6.0:
-          run: expo-android-builder
       - docker-compose#v2.6.0:
           push:
             - expo-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-android-builder-latest
