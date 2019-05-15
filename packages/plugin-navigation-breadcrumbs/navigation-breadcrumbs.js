@@ -75,7 +75,9 @@ const wrapHistoryFn = (client, target, fn, win) => {
     // to '/undefined'. therefore we only pass the url if it's not undefined.
     orig.apply(target, [ state, title ].concat(url !== undefined ? url : []))
   }
-  target[fn]._restore = () => { target[fn] = orig }
+  if (process.env.NODE_ENV !== 'production') {
+    target[fn]._restore = () => { target[fn] = orig }
+  }
 }
 
 const getCurrentState = (win) => {
