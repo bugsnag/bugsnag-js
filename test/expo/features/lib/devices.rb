@@ -8,13 +8,13 @@ module BSAppAutomator
         "os_version" => "9.0"
       },
       "ANDROID_8" => {
-        "device" => "Galaxy Note 9",
+        "device" => "Samsung Galaxy Note 9",
         "platformName" => "Android",
         "os" => "android",
         "os_version" => "8.1"
       },
       "ANDROID_7" => {
-        "device" => "Galaxy Note 8",
+        "device" => "Samsung Galaxy Note 8",
         "platformName" => "Android",
         "os" => "android",
         "os_version" => "7.1"
