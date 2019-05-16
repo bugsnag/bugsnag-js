@@ -4,7 +4,7 @@
 
 ### Changed
 
-- (node): Added Node version string to report information (device.runtimeVersions) [#537](https://github.com/bugsnag/bugsnag-js/pull/537)
+- (node): Added Node version string to report and session payloads (device.runtimeVersions) [#537](https://github.com/bugsnag/bugsnag-js/pull/537)
 
 ## 6.2.0 (2019-04-23)
 
