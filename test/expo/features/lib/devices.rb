@@ -8,13 +8,13 @@ module BSAppAutomator
         "os_version" => "9.0"
       },
       "ANDROID_8" => {
-        "device" => "Google Pixel 2",
+        "device" => "Galaxy S9 Plus",
         "platformName" => "Android",
         "os" => "android",
-        "os_version" => "8.0"
+        "os_version" => "8.1"
       },
       "ANDROID_7" => {
-        "device" => "Google Pixel",
+        "device" => "Galaxy Note 8",
         "platformName" => "Android",
         "os" => "android",
         "os_version" => "7.1"
