@@ -10,20 +10,20 @@ Scenario: report for unhandled event contains runtime version information
   And I wait to receive a request
   Then the request is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is true
-  And the event "device.runtimeVersions.node" is not null
+  And the event "device.runtimeVersions.node" matches "(\d+\.){2}\d+"
 
 Scenario: report for handled event contains runtime version information
   And I run the service "handled" with the command "node scenarios/notify"
   And I wait to receive a request
   Then the request is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is false
-  And the event "device.runtimeVersions.node" is not null
+  And the event "device.runtimeVersions.node" matches "(\d+\.){2}\d+"
 
 Scenario: session payload contains runtime version information
   And I run the service "sessions" with the command "node scenarios/start-session"
   And I wait to receive a request
   Then the request is valid for the session reporting API version "1" for the "Bugsnag Node" notifier
   And the payload has a valid sessions array
-  And the payload field "device.runtimeVersions.node" is not null
+  And the payload field "device.runtimeVersions.node" matches the regex "(\d+\.){2}\d+"
 
   
