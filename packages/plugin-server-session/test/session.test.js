@@ -103,7 +103,7 @@ describe('plugin: server sessions', () => {
     })
 
     // this is normally set by a plugin
-    c.device = { hostname: 'test-machine.local' }
+    c.device = { hostname: 'test-machine.local', runtimeVersions: { node: '0.0.1' } }
 
     c.delivery(client => ({
       sendReport: () => {},
@@ -111,7 +111,8 @@ describe('plugin: server sessions', () => {
         expect(session.sessionCounts.length).toBe(1)
         expect(session.sessionCounts[0].sessionsStarted).toBe(123)
         expect(session.app).toEqual({ version: '1.2.3', releaseStage: 'qa', type: 'server' })
-        expect(session.device).toEqual({ hostname: 'test-machine.local' })
+        expect(session.device.hostname).toBe('test-machine.local')
+        expect(session.device.runtimeVersions.node).toBe('0.0.1')
         done()
       }
     }))
