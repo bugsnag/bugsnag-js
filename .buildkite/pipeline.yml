@@ -40,12 +40,12 @@ steps:
       - docker-compose#v2.6.0:
           build: expo-publisher
           cache-from:
-            - expo-publisher:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
-            - expo-publisher:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-latest
+            - expo-publisher:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-publisher-${BUILDKITE_BRANCH}
+            - expo-publisher:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-publisher-latest
       - docker-compose#v2.6.0:
           push:
-            - expo-publisher:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
-            - expo-publisher:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-latest
+            - expo-publisher:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-publisher-${BUILDKITE_BRANCH}
+            - expo-publisher:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-publisher-latest
 
   - label:  ':docker: Build browser maze runner image'
     plugins:
