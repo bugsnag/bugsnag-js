@@ -33,6 +33,20 @@ steps:
         run: ci
     command: 'npm run test:types'
 
+  - label:  ':docker: Build expo publisher'
+    env:
+      EXPO_RELEASE_CHANNEL: ${BUILDKITE_BUILD_ID}
+    plugins:
+      - docker-compose#v2.6.0:
+          build: expo-publisher
+          cache-from:
+            - expo-publisher:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
+            - expo-publisher:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-latest
+      - docker-compose#v2.6.0:
+          push:
+            - expo-publisher:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
+            - expo-publisher:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-latest
+
   - label:  ':docker: Build browser maze runner image'
     plugins:
       - docker-compose#v2.6.0:
@@ -72,9 +86,6 @@ steps:
     plugins:
       - docker-compose#v2.6.0:
           run: expo-publisher
-          image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
-          cache-from:
-            - expo-publisher:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
 
   - label:  ':docker: Build expo APK builder'
     env:
@@ -84,9 +95,11 @@ steps:
       - docker-compose#v2.6.0:
           build: expo-android-builder
           cache-from:
+            - expo-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-android-builder-${BUILDKITE_BRANCH}
             - expo-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-android-builder-latest
       - docker-compose#v2.6.0:
           push:
+            - expo-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-android-builder-${BUILDKITE_BRANCH}
             - expo-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-android-builder-latest
 
   - label: ':chrome: v43 Browser tests'
