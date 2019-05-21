@@ -57,3 +57,8 @@ Scenario: throwing non-Error error
   And the exception "message" matches "^Handled a non-error\."
   And the exception "type" equals "nodejs"
   And the "file" of stack frame 0 equals "node_modules/@bugsnag/plugin-koa/dist/bugsnag-koa.js"
+
+Scenario: A non-5XX error created with with ctx.throw()
+  Then I open the URL "http://koa-1x/ctx-throw-400"
+  And I wait for 1 second
+  Then I should receive no requests
