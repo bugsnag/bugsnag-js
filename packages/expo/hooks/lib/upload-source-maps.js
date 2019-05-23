@@ -14,7 +14,8 @@ module.exports = async (
   androidManifest,
   androidBundle,
   androidSourceMap,
-  projectRoot
+  projectRoot,
+  endpoint
 ) => {
   const dir = await makeTmpDir()
 
@@ -30,26 +31,29 @@ module.exports = async (
   await writeFileAsync(androidSourceMapPath, androidSourceMap, 'utf-8')
   await writeFileAsync(androidBundlePath, androidBundle, 'utf-8')
 
+  const opts = { apiKey }
+  if (endpoint) opts.endpoint = endpoint
+
   // android
   console.log(`Uploading Android source map`)
   await upload({
-    apiKey,
     appVersion: androidManifest.version,
     minifiedUrl: '*/cached-bundle-experience-*',
     minifiedFile: androidBundlePath,
     codeBundleId: androidManifest.revisionId,
-    sourceMap: androidSourceMapPath
+    sourceMap: androidSourceMapPath,
+    ...opts
   })
 
   // ios
   console.log(`Uploading iOS source map`)
   await upload({
-    apiKey,
     appVersion: iosManifest.version,
     minifiedUrl: iosManifest.bundleUrl,
     minifiedFile: iosBundlePath,
     codeBundleId: iosManifest.revisionId,
-    sourceMap: iosSourceMapPath
+    sourceMap: iosSourceMapPath,
+    ...opts
   })
 }
 
