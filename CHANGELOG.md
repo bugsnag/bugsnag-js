@@ -1,10 +1,20 @@
 # Changelog
 
-## TBD
+## 6.3.0 (TBD)
 
 ### Changed
 
+- (plugin-inline-script-content): Overhaul inline script tracking [#528](https://github.com/bugsnag/bugsnag-js/pull/528)
 - (node): Added Node version string to report and session payloads (device.runtimeVersions) [#537](https://github.com/bugsnag/bugsnag-js/pull/537)
+- (core): Update docs url so that it doesn't follow a redirect [#536](https://github.com/bugsnag/bugsnag-js/pull/536)
+- (plugin-navigation-breadcrumbs): Compile away `_restore()` function from output bundle which is only used in tests [#533](https://github.com/bugsnag/bugsnag-js/pull/533)
+
+### Fixed
+
+- (plugin-koa): Send the correct status code when handling `ctx.throw()` errors [#541](https://github.com/bugsnag/bugsnag-js/pull/541)
+- (plugin-angular): Target ES6 so that classes in the build are native, not polyfilled [#540](https://github.com/bugsnag/bugsnag-js/pull/540)
+- (plugin-angular): Support subsequent rebuilds of an Angular app in AOT mode [#539](https://github.com/bugsnag/bugsnag-js/pull/539)
+- (plugin-node-surrounding-code): Truncate line length so that minified code doesn't exceed payload limit [#531](https://github.com/bugsnag/bugsnag-js/pull/531)
 
 ## 6.2.0 (2019-04-23)
 
