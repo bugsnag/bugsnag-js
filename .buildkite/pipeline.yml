@@ -90,7 +90,6 @@ steps:
   - label:  ':docker: Build expo APK builder'
     env:
       EXPO_RELEASE_CHANNEL: ${BUILDKITE_BUILD_ID}
-    artifact_paths: build/output.apk
     plugins:
       - docker-compose#v2.6.0:
           build: expo-android-builder
