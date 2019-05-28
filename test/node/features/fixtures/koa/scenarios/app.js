@@ -45,6 +45,8 @@ app.use(async (ctx, next) => {
     await erroneous()
   } else if (ctx.path === '/ctx-throw') {
     ctx.throw(500, 'thrown')
+  } else if (ctx.path === '/ctx-throw-400') {
+    ctx.throw(400, 'thrown')
   } else if (ctx.path === '/throw-non-error') {
     throw 'error' // eslint-disable-line
   } else {

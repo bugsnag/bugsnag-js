@@ -23,10 +23,14 @@ module.exports = async ({
         '@bugsnag/expo postPublish hook requires your Bugsnag API key'
       )
     }
-    if (!config || config.reportBuild !== false) {
-      await reportBuild(apiKey, iosManifest, projectRoot)
+
+    const buildReporterConfig = (config && config.buildReporter) ? config.buildReporter : {}
+    if (buildReporterConfig.disabled !== true) {
+      await reportBuild(apiKey, iosManifest, projectRoot, buildReporterConfig.endpoint)
     }
-    if (!config || config.uploadSourcemaps !== false) {
+
+    const sourceMapConfig = (config && config.sourceMapUploader) ? config.sourceMapUploader : {}
+    if (sourceMapConfig.disabled !== true) {
       await uploadSourcemaps(
         apiKey,
         iosManifest,
@@ -35,7 +39,8 @@ module.exports = async ({
         androidManifest,
         androidBundle,
         androidSourceMap,
-        projectRoot
+        projectRoot,
+        sourceMapConfig.endpoint
       )
     }
   } catch (e) {

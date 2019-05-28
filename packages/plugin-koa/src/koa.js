@@ -29,8 +29,10 @@ module.exports = {
       try {
         await next()
       } catch (err) {
-        ctx.bugsnag.notify(createReportFromErr(err, handledState))
-        if (!ctx.response.headerSent) ctx.response.status = 500
+        if (err.status === undefined || err.status >= 500) {
+          ctx.bugsnag.notify(createReportFromErr(err, handledState))
+        }
+        if (!ctx.response.headerSent) ctx.response.status = err.status || 500
       }
     }
 
@@ -49,8 +51,10 @@ module.exports = {
       try {
         yield next
       } catch (err) {
-        this.bugsnag.notify(createReportFromErr(err, handledState))
-        if (!this.headerSent) this.status = 500
+        if (err.status === undefined || err.status >= 500) {
+          this.bugsnag.notify(createReportFromErr(err, handledState))
+        }
+        if (!this.headerSent) this.status = err.status || 500
       }
     }
 

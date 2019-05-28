@@ -161,10 +161,16 @@ const stringOrFallback = (str, fallback) => typeof str === 'string' && str ? str
 
 BugsnagReport.getStacktrace = function (error, errorFramesToSkip = 0, generatedFramesToSkip = 0) {
   if (hasStack(error)) return ErrorStackParser.parse(error).slice(errorFramesToSkip)
-  // error wasn't provided or didn't have a stacktrace so try to walk the callstack
-  return filter(StackGenerator.backtrace(), frame =>
-    (frame.functionName || '').indexOf('StackGenerator$$') === -1
-  ).slice(1 + generatedFramesToSkip)
+  // in IE11 a new Error() doesn't have a stacktrace until you throw it, so try that here
+  try {
+    throw error
+  } catch (e) {
+    if (hasStack(e)) return ErrorStackParser.parse(error).slice(1 + generatedFramesToSkip)
+    // error wasn't provided or didn't have a stacktrace so try to walk the callstack
+    return filter(StackGenerator.backtrace(), frame =>
+      (frame.functionName || '').indexOf('StackGenerator$$') === -1
+    ).slice(1 + generatedFramesToSkip)
+  }
 }
 
 BugsnagReport.ensureReport = function (reportOrError, errorFramesToSkip = 0, generatedFramesToSkip = 0) {

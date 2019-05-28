@@ -45,6 +45,13 @@ Use the following plugins and guides to integrate Bugsnag with various framework
 | Express | [@bugsnag/plugin-express](packages/plugin-express)  | [Express docs](https://docs.bugsnag.com/platforms/javascript/express) |
 | Restify | [@bugsnag/plugin-restify](packages/plugin-restify)  | [Restify docs](https://docs.bugsnag.com/platforms/javascript/restify) |
 
+### Mobile
+
+| Framework  | Bugsnag notifier | Documentation |
+| ---------- | -------------- | --------------|
+| Expo | [@bugsnag/expo](packages/expo)  | [Expo docs](https://docs.bugsnag.com/platforms/react-native/expo/) |
+| React Native | [bugsnag-react-native](https://github.com/bugsnag/bugsnag-react-native) (lives in a separate repo) | [React Native docs](https://docs.bugsnag.com/platforms/react-native/react-native/) |
+
 ## Support
 
 * Check out the [FAQ](https://docs.bugsnag.com/platforms/javascript/faq) and [configuration options](https://docs.bugsnag.com/platforms/javascript/configuration-options)
