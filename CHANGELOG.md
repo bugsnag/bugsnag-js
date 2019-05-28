@@ -2,10 +2,14 @@
 
 ## 6.3.0 (2019-05-28)
 
+### Added
+
+- (expo): Support configuration of post-publish hook, allowing On-premise users to customize the build/source map endpoints. [#542](https://github.com/bugsnag/bugsnag-js/pull/542)
+
 ### Changed
 
 - (plugin-inline-script-content): Overhaul inline script tracking [#528](https://github.com/bugsnag/bugsnag-js/pull/528)
-- (node): Added Node version string to report and session payloads (device.runtimeVersions) [#537](https://github.com/bugsnag/bugsnag-js/pull/537)
+- (node): Add Node version string to report and session payloads (device.runtimeVersions) [#537](https://github.com/bugsnag/bugsnag-js/pull/537)
 - (core): Update docs url so that it doesn't follow a redirect [#536](https://github.com/bugsnag/bugsnag-js/pull/536)
 - (plugin-navigation-breadcrumbs): Compile away `_restore()` function from output bundle which is only used in tests [#533](https://github.com/bugsnag/bugsnag-js/pull/533)
 
