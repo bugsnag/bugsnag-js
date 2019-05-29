@@ -4,7 +4,7 @@ bs_local_id = ENV['BROWSER_STACK_LOCAL_IDENTIFIER'] || 'mazzzzeee'
 app_location = ENV['APP_LOCATION']
 
 def device_type
-  @bs_device ||= ENV['DEVICE_TYPE']
+  ENV['DEVICE_TYPE']
 end
 
 Before('@skip_android_5') do |scenario|

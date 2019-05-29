@@ -11,17 +11,14 @@ def bs_local_id
 end
 
 def driver_start
-  pp "Starting driver"
   caps = Selenium::WebDriver::Remote::Capabilities.new
   caps['browserstack.local'] = 'true'
   caps['browserstack.localIdentifier'] = bs_local_id
   caps['browserstack.console'] = 'errors'
   caps.merge! browsers[ENV['BROWSER']]
-  driver = Selenium::WebDriver.for :remote,
+  Selenium::WebDriver.for :remote,
     url: "http://#{ENV['BROWSER_STACK_USERNAME']}:#{ENV['BROWSER_STACK_ACCESS_KEY']}@hub.browserstack.com/wd/hub",
     desired_capabilities: caps
-  pp driver
-  driver
 end
 
 def bs_local_start
