@@ -31,6 +31,10 @@ Before('@skip_ios_12') do |scenario|
   skip_this_scenario("Skipping scenario") if device_type == 'IOS_12'
 end
 
+After do |_scenario|
+  $driver.reset
+end
+
 AfterConfiguration do |config|
   AppAutomateDriver.new(bs_username, bs_access_key, bs_local_id, device_type, app_location, :accessibility_id)
   $driver.start_driver
