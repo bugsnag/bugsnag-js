@@ -1,6 +1,7 @@
 include Test::Unit::Assertions
 
 When("I navigate to the URL {string}") do |path|
+  pp $driver
   $driver.navigate.to get_test_url path
 end
 
