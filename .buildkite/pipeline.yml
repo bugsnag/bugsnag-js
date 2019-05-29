@@ -21,6 +21,7 @@ steps:
       branch: '${BUILDKITE_BRANCH}'
       commit: '${BUILDKITE_COMMIT}'
       message: '${BUILDKITE_MESSAGE}'
+    async: true
 
   - label: 'Lint'
     plugins:
