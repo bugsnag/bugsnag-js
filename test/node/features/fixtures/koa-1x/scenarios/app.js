@@ -43,6 +43,8 @@ app.use(function * (next) {
     throw new Error('noooop')
   } else if (this.path === '/ctx-throw') {
     this.throw(500, 'thrown')
+  } else if (this.path === '/ctx-throw-400') {
+    this.throw(400, 'thrown')
   } else if (this.path === '/throw-non-error') {
     throw 'error' // eslint-disable-line
   } else {
