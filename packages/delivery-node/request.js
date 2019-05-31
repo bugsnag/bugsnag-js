@@ -18,7 +18,8 @@ module.exports = ({ url, headers, body, agent }, cb) => {
     hostname: parsedUrl.hostname,
     port: parsedUrl.port,
     path: parsedUrl.path,
-    headers
+    headers,
+    agent
   })
   req.on('error', onError)
   req.on('response', res => {
