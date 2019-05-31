@@ -68,7 +68,6 @@ steps:
         use-aliases: true
     env:
       BROWSER: "chrome_43"
-      VERBOSE: 'true'
     concurrency: 5
     concurrency_group: 'browserstack'
 
