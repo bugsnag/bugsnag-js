@@ -29,7 +29,8 @@ def get_error_message id
   ERRORS[ENV['BROWSER']][id]
 end
 
-AfterConfiguration do |config|
+AfterConfiguration do
+  # Necessary as Appium removes any existing $driver instance on load
   bs_local_start
   $driver = driver_start
 end
