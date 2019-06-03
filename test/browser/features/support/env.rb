@@ -21,15 +21,18 @@ else
 end
 Process.detach(pid)
 
-bs_local_start
-$driver = driver_start
-
 def get_test_url path
   "http://#{ENV['HOST']}:#{FIXTURES_SERVER_PORT}#{path}?ENDPOINT=#{URI::encode("http://#{ENV['API_HOST']}:#{MOCK_API_PORT}")}&API_KEY=#{URI::encode($api_key)}"
 end
 
 def get_error_message id
   ERRORS[ENV['BROWSER']][id]
+end
+
+AfterConfiguration do
+  # Necessary as Appium removes any existing $driver instance on load
+  bs_local_start
+  $driver = driver_start
 end
 
 at_exit do
