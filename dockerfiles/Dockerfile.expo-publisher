@@ -1,0 +1,25 @@
+FROM node:12-alpine
+
+RUN apk add --update bash git
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm install
+
+COPY babel.config.js tslint.json lerna.json ./
+COPY packages ./packages
+COPY bin ./bin
+RUN npx lerna bootstrap
+RUN npx lerna run build --scope "@bugsnag/expo" --scope "@bugsnag/plugin-react"
+
+RUN npx lerna exec --scope "@bugsnag/plugin-react-native-unhandled-rejection" -- npm prune --production
+
+WORKDIR /app
+
+COPY test/expo test/expo
+
+WORKDIR /app/test/expo/features/fixtures/test-app
+RUN npm install
+
+CMD node_modules/.bin/expo login -u $EXPO_USERNAME -p $EXPO_PASSWORD && node_modules/.bin/expo publish --release-channel $EXPO_RELEASE_CHANNEL

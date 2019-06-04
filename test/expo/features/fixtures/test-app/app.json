@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Ben's example",
-    "slug": "my-expo-project",
+    "name": "Test Fixture",
+    "slug": "test-fixture",
     "privacy": "unlisted",
     "sdkVersion": "32.0.0",
     "platforms": [
@@ -9,7 +9,7 @@
       "android"
     ],
     "version": "2.0.0",
-    "orientation": "portrait",
+    "orientation": "default",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
@@ -24,23 +24,15 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.bugsnag.bentest"
+      "bundleIdentifier": "com.bugsnag.expo.testfixture"
     },
     "android": {
-      "package": "com.bugsnag.bentest"
+      "package": "com.bugsnag.expo.testfixture"
     },
     "extra": {
       "bugsnag": {
-        "apiKey": "c8c0f735638c67f3348440fb1b2e7911"
+        "apiKey": "645470b8c7f62177e1a723e26c9a48d7"
       }
-    },
-    "hooks": {
-      "postPublish": [
-        {
-          "file": "@bugsnag/expo/hooks/post-publish",
-          "config": {}
-        }
-      ]
     }
   }
 }
