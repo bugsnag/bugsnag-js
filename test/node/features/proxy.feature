@@ -14,3 +14,8 @@ Scenario: using options to configure a proxy
   And the event "severityReason.type" equals "handledException"
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "hi via proxy"
+
+Scenario: making sure no request get through a bad proxy
+  And I run the service "proxy" with the command "node scenarios/misconfigured-proxy"
+  And I wait for 1 second
+  Then I should receive no requests
