@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/node",
-  "version": "6.3.0",
+  "version": "6.3.1",
   "main": "dist/bugsnag.js",
   "types": "dist/types/bugsnag.d.ts",
   "description": "Bugsnag error reporter for Node.js",
@@ -26,7 +26,7 @@
   "license": "MIT",
   "devDependencies": {
     "@bugsnag/core": "^6.3.0",
-    "@bugsnag/delivery-node": "^6.3.0",
+    "@bugsnag/delivery-node": "^6.3.1",
     "@bugsnag/plugin-contextualize": "^6.3.0",
     "@bugsnag/plugin-intercept": "^6.3.0",
     "@bugsnag/plugin-node-device": "^6.3.0",
