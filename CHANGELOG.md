@@ -1,5 +1,11 @@
 # Changelog
 
+## 6.3.1 (2019-06-17)
+
+### Fixed
+
+- (node): Ensure agent is passed through to http(s) request for proxy support [#548](https://github.com/bugsnag/bugsnag-js/pull/548) / [#546](https://github.com/bugsnag/bugsnag-js/pull/546)
+
 ## 6.3.0 (2019-05-28)
 
 ### Added
