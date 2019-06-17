@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "C4519EFDD2C3B96E9BD67A5CED575450FFB87C90",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "4FD7C20106F5BD91089CFF7BC197AC2E448D173B" : 9223372036854775807,
+    "C4519EFDD2C3B96E9BD67A5CED575450FFB87C90" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "9F7EA1F3-098E-45AC-A518-9AFE39AC4C64",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "4FD7C20106F5BD91089CFF7BC197AC2E448D173B" : "bugsnag-cocoa\/development\/Kiwi\/",
+    "C4519EFDD2C3B96E9BD67A5CED575450FFB87C90" : "bugsnag-cocoa\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "Bugsnag",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "iOS\/Bugsnag.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/kiwi-bdd\/Kiwi",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "4FD7C20106F5BD91089CFF7BC197AC2E448D173B"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/bugsnag\/bugsnag-cocoa.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "C4519EFDD2C3B96E9BD67A5CED575450FFB87C90"
+    }
+  ]
+}

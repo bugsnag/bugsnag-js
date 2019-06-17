@@ -1,0 +1,68 @@
+{
+  "name": "@bugsnag/react-native",
+  "version": "6.3.0",
+  "main": "src/notifier.js",
+  "types": "dist/types/bugsnag.d.ts",
+  "description": "Bugsnag error reporter for React Native applications",
+  "keywords": [
+    "bugsnag",
+    "react native",
+    "exception",
+    "error",
+    "javascript",
+    "monitoring",
+    "reporting",
+    "stability",
+    "mobile"
+  ],
+  "homepage": "https://www.bugsnag.com/",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:bugsnag/bugsnag-js.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "src",
+    "dist",
+    "android",
+    "ios/BugsnagReactNative.{h,m,xcodeproj}",
+    "ios/BSGConvert.{h,m}",
+    "ios/vendor/bugsnag-cocoa/Source/**/*.{h,m,mm,cpp,c}",
+    "ios/vendor/bugsnag-cocoa/iOS/{Bugsnag.xcodeproj,Info.plist,module.modulemap}",
+    "BugsnagReactNative.podspec"
+  ],
+  "scripts": {
+    "clean": "rm -fr dist && mkdir dist",
+    "bundle-types": "../../bin/bundle-types",
+    "build": "npm run clean && npm run bundle-types",
+    "test:types": "tslint -c ../../tslint.json types/*.d.ts && jasmine 'types/**/*.test.js'",
+    "postversion": "npm run build"
+  },
+  "author": "Bugsnag",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/cli": "^7.0.0",
+    "jasmine": "3.1.0",
+    "nyc": "^12.0.2",
+    "react-native": "^0.59.9",
+    "tslint": "^5.12.1",
+    "typescript": "^3.3.3"
+  },
+  "dependencies": {
+    "@bugsnag/core": "^6.3.0",
+    "@bugsnag/delivery-react-native": "^6.3.0",
+    "@bugsnag/plugin-console-breadcrumbs": "^6.3.0",
+    "@bugsnag/plugin-network-breadcrumbs": "^6.3.0",
+    "@bugsnag/plugin-react": "^6.2.0",
+    "@bugsnag/plugin-react-native-app-state-breadcrumbs": "^6.3.0",
+    "@bugsnag/plugin-react-native-client-sync": "^6.3.0",
+    "@bugsnag/plugin-react-native-connectivity-breadcrumbs": "^6.3.0",
+    "@bugsnag/plugin-react-native-global-error-handler": "^6.2.0",
+    "@bugsnag/plugin-react-native-orientation-breadcrumbs": "^6.3.0",
+    "@bugsnag/plugin-react-native-report-sync": "^6.3.0",
+    "@bugsnag/plugin-react-native-session": "^6.3.0",
+    "@bugsnag/plugin-react-native-unhandled-rejection": "^6.2.0"
+  }
+}
