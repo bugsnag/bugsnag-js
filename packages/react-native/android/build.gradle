@@ -25,6 +25,7 @@ android {
         versionCode 1
         versionName '7.0.0'
         consumerProguardFiles 'proguard-rules.pro'
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     lintOptions {
         abortOnError true
@@ -36,6 +37,12 @@ android {
 dependencies {
     api 'com.bugsnag:bugsnag-android:4.15.0'
     implementation 'com.facebook.react:react-native:+'
+
+    androidTestImplementation "junit:junit:4.12"
+    androidTestImplementation "org.mockito:mockito-core:2.28.2"
+    androidTestImplementation "com.android.support.test:runner:0.5", {
+        exclude group: "com.android.support", module: "support-annotations"
+    }
 }
 
 allprojects {
