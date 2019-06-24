@@ -74,7 +74,7 @@ module.exports = {
       }
 
       // only attempt to grab some surrounding code if we have a line number
-      if (frame === undefined || frame.lineNumber === undefined) return
+      if (!frame || frame.lineNumber === undefined) return
       frame.code = addSurroundingCode(frame.lineNumber)
     })
 
