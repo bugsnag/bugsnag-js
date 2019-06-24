@@ -52,3 +52,17 @@ allprojects {
         maven { url 'https://maven.google.com' }
     }
 }
+
+apply plugin: 'checkstyle'
+
+checkstyle {
+    toolVersion = "8.18"
+}
+
+task("checkstyle", type: Checkstyle) {
+    configFile rootProject.file("config/checkstyle/checkstyle.xml")
+    source  "src/"
+    include "**/*.java"
+    exclude "**/external/**/*.java"
+    classpath = files()
+}
