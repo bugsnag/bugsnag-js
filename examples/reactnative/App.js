@@ -8,11 +8,11 @@
 
 import React, { Component } from 'react';
 import { View, Text, Button, ScrollView, StyleSheet, Platform } from 'react-native';
-import { Client } from 'bugsnag-react-native';
 import { NativeModules } from 'react-native';
 
 // setup bugsnag client to capture errors automatically
-const bugsnag = new Client();
+import bugsnag from '@bugsnag/react-native';
+const client = bugsnag('api-key');
 
 function triggerException() {
   bogusFunction(); // eslint-disable-line no-undef
@@ -57,7 +57,7 @@ export default class App extends Component {
                 try { // execute crashy code
                   triggerHandledException();
                 } catch (error) {
-                  bugsnag.notify(error);
+                  client.notify(error);
                 }
               }} />
             <Text style={styles.info}>
@@ -70,8 +70,8 @@ export default class App extends Component {
                 try { // execute crashy code
                   throw new Error("Error with user");
                 } catch (error) {
-                  bugsnag.setUser("user-5fab67", "John Smith", "john@example.com");
-                  bugsnag.notify(error);
+                  client.setUser("user-5fab67", "John Smith", "john@example.com");
+                  client.notify(error);
                 }
               }} />
             <Text style={styles.info}>
@@ -82,14 +82,14 @@ export default class App extends Component {
               title="Leave breadcrumbs"
               onPress={() => {
                 // log a breadcrumb, which will be attached to the error report
-                bugsnag.leaveBreadcrumb('About to execute crashy code', {
+                client.leaveBreadcrumb('About to execute crashy code', {
                   type: 'user'
                 });
 
                 try { // execute crashy code
                   throw new Error("Error with breadcrumbs");
                 } catch (error) {
-                  bugsnag.notify(error);
+                  client.notify(error);
                 }
               }} />
             <Text style={styles.info}>

@@ -1,4 +1,4 @@
-package com.bugsnag.android;
+package com.bugsnag.reactnative;
 
 import static org.junit.Assert.assertEquals;
 
