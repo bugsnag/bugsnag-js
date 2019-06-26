@@ -196,6 +196,8 @@ Calls straight through to the native `resumeSession()` method.
   - `BugsnagReactNative` version
   - `bugsnag-android` version
 
+The reason for these values being fields rather than exposed via a method is that [on iOS constant values can be exposed so that their access from JS doesn't go across the bridge](https://facebook.github.io/react-native/docs/0.59/native-modules-ios#exporting-constants) (there doesn't seem to be an equivalent on Android but the fields can be `static`/`final`).
+
 ## Data transfer
 
 Data sent from JS to native code via the React Native bridge is serialised into the following types:
