@@ -198,6 +198,117 @@ Calls straight through to the native `resumeSession()` method.
 
 The reason for these values being fields rather than exposed via a method is that [on iOS constant values can be exposed so that their access from JS doesn't go across the bridge](https://facebook.github.io/react-native/docs/0.59/native-modules-ios#exporting-constants) (there doesn't seem to be an equivalent on Android but the fields can be `static`/`final`).
 
+### Events
+
+To communicate from native -> JS we can emit events. The things we need the native layer to tell JS about are:
+
+- changes to client state (`context`, `user` and `metData`)
+- is that it?
+
+
+The interface for events is the following:
+
+```
+MessageEvent {
+  type: String,
+  value: Object
+}
+```
+
+
+<details><summary>Implementation, collapsed for brevity</summary>
+
+###### JS
+
+The interface for listening to events on the JS looks like this:
+
+```js
+// Native -> JS sync
+import { DeviceEventEmitter, NativeEventEmitter, NativeModules } from 'react-native'
+
+const getEmitter = () => {
+  switch (Platform.OS) {
+    case 'Android':
+      return DeviceEventEmitter
+    case 'iOS':
+      return NativeEventEmitter(NativeModules.BugsnagReactNativeEmitter)
+    default:
+      throw new Error('what platform are you even on though')
+  }
+}
+
+const nativeSubscribe = (cb) => getEmitter().addListener('sync', cb)
+
+// subscribe to native changes and reflect them silently in JS
+nativeSubscribe(event => {
+  switch (event.type) {
+    case 'USER_UPDATE':
+      // set user
+      break
+    case 'META_DATA_UPDATE':
+      // set metaData
+      break
+    // etc.
+  }
+})
+```
+
+Sending events works quite differently on each platform.
+
+###### Android
+
+- subscribe to observable properties on the client
+- forward on the changes to the JS runtime via the event
+
+```java
+emitter = reactContext.getJSModule(
+  DeviceEventManagerModule.RCTDeviceEventEmitter.class
+)
+
+client.metaData.subscribe {
+  // potentially just forward on the event? but in reality
+  // we'll probably need to unpack it and repackage it with
+  // com.facebook.react.bridge.* types
+  emitter.emit('bugsnag::sync', it)
+}
+```
+
+###### iOS
+
+- Create a module which implements an event emitter
+- Watch observable properties for changes
+- Send the sync event with a message defined by the protocol
+
+__BugsnagReactNativeEmitter.h__
+```objc
+#import <React/RCTBridgeModule.h>
+#import <React/RCTEventEmitter.h>
+
+@interface BugsnagReactNativeEmitter : RCTEventEmitter <RCTBridgeModule>
+
+@end
+```
+__BugsnagReactNativeEmitter.m__
+```objc
+#import "BugsnagReactNativeEmitter.h"
+
+@implementation BugsnagReactNativeEmitter
+
+- (NSArray<NSString *> *)supportedEvents {
+  return @[@"bugsnag::sync"];
+}
+
+// call this method when changes happen
+
+- (void)onChange {
+  [self sendEventWithName:@"bugsnag::sync" type:@{@"USER_UPDATE": user}];
+}
+
+@end
+```
+
+</details>
+
 ## Data transfer
 
 Data sent from JS to native code via the React Native bridge is serialised into the following types:
