@@ -151,7 +151,7 @@ public void getPayloadInfo(Promise promise)
 | `user`        |
 | `context`     |
 
-#### BugsnagReactNative.leaveBreadcrumb(breadcrumb): void`
+#### `BugsnagReactNative.leaveBreadcrumb(breadcrumb): void`
 
 Breadcrumbs collected from JS should be sent to the native layer to be stored.
 
