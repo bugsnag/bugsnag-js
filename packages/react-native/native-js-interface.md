@@ -4,7 +4,9 @@ This is a working spec of the interface that the native layer of `@bugsnag/react
 
 ## Intro
 
-`BugsnagReactNative` is a class which will be instantiated once for the entire runtime and accessible via JS. It's responsible for managing the communicating with the native client (either `bugsnag-android` or `bugsnag-cocoa`) and providing data and invocations from JS to the native client. The React Native runtime is responsible for instantiating this singleton class.
+`BugsnagReactNative` is a class which will be instantiated once for the entire runtime and accessible via JS. It's responsible for managing the communication with the native client (either `bugsnag-android` or `bugsnag-cocoa`), invoking methods and providing data.
+
+The React Native runtime is responsible for instantiating this singleton class.
 
 ## Accessing `BugsnagReactNative` from JavaScript
 
