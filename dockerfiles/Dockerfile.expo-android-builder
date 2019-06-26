@@ -27,3 +27,4 @@ CMD EXPO_ANDROID_KEYSTORE_PASSWORD=password \
     --keystore-alias password \
     --output /app/test/expo/features/fixtures/build/output.apk \
     --release-channel $EXPO_RELEASE_CHANNEL
+    --type apk
