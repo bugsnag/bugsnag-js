@@ -1,10 +1,10 @@
 # Native/JS interface
 
-This is a working spec of this the interface that the native layer (`BugsnagReactNative.{java|m}`) exposes to JavaScript.
+This is a working spec of the interface that the native layer of `@bugsnag/react-native` exposes to JavaScript.
 
 ## Intro
 
-`BugsnagReactNative` is a class which will be instantiated once for the entire runtime and accessible via JS. It's responsible for managing the communicating with the native client (either `bugsnag-android` or `bugsnag-cocoa`) and providing data and invocations from JS to the native client.
+`BugsnagReactNative` is a class which will be instantiated once for the entire runtime and accessible via JS. It's responsible for managing the communicating with the native client (either `bugsnag-android` or `bugsnag-cocoa`) and providing data and invocations from JS to the native client. The React Native runtime is responsible for instantiating this singleton class.
 
 ## Accessing `BugsnagReactNative` from JavaScript
 
@@ -23,7 +23,7 @@ const { BugsnagReactNative } = NativeModules
 
 Retrieves a data structure representing the configuration which the native client was initialised with. The data structure needn't be immutable since it will be passed over the bridge anyway, but mutations should not have any effect.
 
-An "empty" map will indicate to the JS layer that the native client is not configured, which is a problem.
+A return value of `null` will indicate to the JS layer that the native client is not configured. The JS notifier can do something sensible with this information, like throw an error or log a warning.
 
 This method is required to be synchronous so it should be annotated as such. This is because during its synchronous configuration, the JS layer needs to obtain config from the native layer.
 
@@ -42,29 +42,53 @@ public ReadableMap getConfig()
 RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(getConfig);
 ```
 
-#### `BugsnagReactNative.updateClientState(key, updates): void`
+#### `BugsnagReactNative.updateMetaData(update): void`
 
-Updates to mutable client state in JS (e.g. `metaData`, `user`) should be replicated and stored in the native layer using this method.
+Updates to `metaData` in JS should be replicated and stored in the native layer using this method.
 
 ###### Android
 ```java
-void updateClientState(String key, ReadableMap update)
+void updateMetaData(ReadableMap update)
 ```
 
 ###### iOS
 ```objc
-- (void)updateClientState:(NSString * key)
-                         :newValue (NSDictionary *)update;
+- (void)updateMetaData:(NSDictionary *)update;
 ```
 
-The keys in the updates map are the names of the properties to be updated and the values are encoded objects containing the new value for that property. The list of allowed keys is:
+#### `BugsnagReactNative.updateContext(update): void`
 
-- `user`: a Map<String, String> with `id`, `name` and `email`
-- `metaData`: a Map<String, Map> of metadata tabs
+Updates to `context` in JS should be replicated and stored in the native layer using this method.
 
-#### `BugsnagReactNative.deliver(payload): Promise<boolean>`
+###### Android
+```java
+void updateContext(String update)
+```
 
-Send a report that was created in JS-land. The boolean return value denotes the following:
+###### iOS
+```objc
+- (void)updateContext:(NSString *)update;
+```
+
+#### `BugsnagReactNative.updateUser(user): void`
+
+Updates to `user` in JS should be replicated and stored in the native layer using this method.
+
+###### Android
+```java
+void updateUser(String id, String name, String email)
+```
+
+###### iOS
+```objc
+- (void)updateUser:(NSString *)id
+                  :withName(NSstring *)name
+                  :withEmail(NSstring *)email;
+```
+
+#### `BugsnagReactNative.dispatch(report): Promise<boolean>`
+
+Pass a report that was created in JS-land to the native layer for delivery. The boolean return value denotes the following:
 
 - `true`: the report was sent, or was enqueued with the intention of sending later
 - `false`: the report was not sent and will never be sent
@@ -76,8 +100,8 @@ The `report` contains this subset of the error reporting payload structure:
 | `exceptions`               | `Array[Exception]`    |
 | `severity`                 | `String`              |
 | `unhandled`                | `boolean`             |
-| `app`                      | `Map<String, String>` |
-| `device`                   | `Map<String, String>` |
+| `app`                      | `Map<String, any>`    |
+| `device`                   | `Map<String, any>`    |
 | `breadcrumbs`              | `Array<Breadcrumb>`   |
 | `context`                  | `String`              |
 | `user`                     | `Map`                 |
@@ -88,12 +112,12 @@ The native layer will be responsible for tracking the handled/unhandled count ba
 
 ###### Android
 ```java
-public void deliver(ReadableMap payload, Promise promise)
+public void dispatch(ReadableMap payload, Promise promise)
 ```
 
 ###### iOS
 ```objc
-- (void)deliver:(NSDictionary *)payload
+- (void)dispatch:(NSDictionary *)payload
         resolve:(RCTPromiseResolveBlock)resolve
          reject:(RCTPromiseRejectBlock)reject;
 ```
