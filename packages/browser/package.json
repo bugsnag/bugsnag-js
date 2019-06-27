@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/browser",
-  "version": "6.3.0",
+  "version": "6.3.2-alpha.0",
   "main": "dist/bugsnag.js",
   "types": "dist/types/bugsnag.d.ts",
   "description": "Bugsnag error reporter for browser JavaScript",
@@ -38,7 +38,7 @@
     "@bugsnag/plugin-browser-session": "^6.3.0",
     "@bugsnag/plugin-client-ip": "^6.3.0",
     "@bugsnag/plugin-console-breadcrumbs": "^6.3.0",
-    "@bugsnag/plugin-inline-script-content": "^6.3.0",
+    "@bugsnag/plugin-inline-script-content": "^6.3.2-alpha.0",
     "@bugsnag/plugin-interaction-breadcrumbs": "^6.3.0",
     "@bugsnag/plugin-navigation-breadcrumbs": "^6.3.0",
     "@bugsnag/plugin-network-breadcrumbs": "^6.3.0",
