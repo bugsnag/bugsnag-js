@@ -33,7 +33,7 @@ This method is required to be synchronous so it should be annotated as such. Thi
 
 ```java
 @ReactMethod(isBlockingSynchronousMethod = true)
-public ReadableMap getConfig()
+public WritableMap getConfig()
 ```
 
 ###### iOS
