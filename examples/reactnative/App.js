@@ -12,7 +12,7 @@ import { NativeModules } from 'react-native';
 
 // setup bugsnag client to capture errors automatically
 import bugsnag from '@bugsnag/react-native';
-const client = bugsnag('api-key');
+const bugsnagClient = bugsnag('api-key');
 
 function triggerException() {
   bogusFunction(); // eslint-disable-line no-undef
@@ -57,7 +57,7 @@ export default class App extends Component {
                 try { // execute crashy code
                   triggerHandledException();
                 } catch (error) {
-                  client.notify(error);
+                  bugsnagClient.notify(error);
                 }
               }} />
             <Text style={styles.info}>
@@ -70,8 +70,8 @@ export default class App extends Component {
                 try { // execute crashy code
                   throw new Error("Error with user");
                 } catch (error) {
-                  client.setUser("user-5fab67", "John Smith", "john@example.com");
-                  client.notify(error);
+                  bugsnagClient.setUser("user-5fab67", "John Smith", "john@example.com");
+                  bugsnagClient.notify(error);
                 }
               }} />
             <Text style={styles.info}>
@@ -82,14 +82,14 @@ export default class App extends Component {
               title="Leave breadcrumbs"
               onPress={() => {
                 // log a breadcrumb, which will be attached to the error report
-                client.leaveBreadcrumb('About to execute crashy code', {
+                bugsnagClient.leaveBreadcrumb('About to execute crashy code', {
                   type: 'user'
                 });
 
                 try { // execute crashy code
                   throw new Error("Error with breadcrumbs");
                 } catch (error) {
-                  client.notify(error);
+                  bugsnagClient.notify(error);
                 }
               }} />
             <Text style={styles.info}>
