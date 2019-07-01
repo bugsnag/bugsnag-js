@@ -112,7 +112,7 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void updateContext(String context) {
-        // TODO update context
+        Bugsnag.getClient().setContext(context);
     }
 
     /**
@@ -120,7 +120,7 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     void updateUser(String id, String name, String email) {
-        // TODO update user
+        Bugsnag.getClient().setUser(id, name, email);
     }
 
     /**
