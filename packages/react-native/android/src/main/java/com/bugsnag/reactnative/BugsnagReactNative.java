@@ -18,6 +18,7 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.WritableMap;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -92,9 +93,10 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod(isBlockingSynchronousMethod = true)
-    public void getConfig(Promise promise) {
+    public WritableMap getConfig() {
         Configuration config = Bugsnag.getClient().getConfig();
         // TODO serialise as a readablemap
+        return null;
     }
 
     /**
