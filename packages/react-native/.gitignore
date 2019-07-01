@@ -1,5 +1,6 @@
 # Android/IntelliJ
 #
+.npmrc
 build/
 .idea
 .gradle
