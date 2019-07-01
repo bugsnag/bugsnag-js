@@ -53,4 +53,6 @@ On the project you want to install `@bugsnag/react-native` substitute the versio
 
 ```
 yarn add @bugsnag/react-native@99.99.99-canary.<hash>
+# or
+npm i @bugsnag/react-native@99.99.99-canary.<hash>
 ```
