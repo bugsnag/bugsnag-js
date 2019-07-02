@@ -7,6 +7,7 @@ import com.bugsnag.android.Callback;
 import com.bugsnag.android.Client;
 import com.bugsnag.android.Configuration;
 import com.bugsnag.android.InternalHooks;
+import com.bugsnag.android.MetaData;
 import com.bugsnag.android.Report;
 
 import android.content.Context;
@@ -104,7 +105,8 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void updateMetaData(ReadableMap update) {
-        // TODO update metadata
+        MetaData metaData = new MetaData(update.toHashMap());
+        Bugsnag.getClient().setMetaData(metaData);
     }
 
     /**
