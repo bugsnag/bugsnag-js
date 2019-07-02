@@ -1,7 +1,7 @@
 package com.bugsnag.reactnative;
 
-import com.facebook.react.bridge.ReadableMap;
+import java.util.Map;
 
-interface ReadableMapDeserializer<T> {
-    T deserialize(ReadableMap map);
+public interface ReadableMapDeserializer<T> {
+    T deserialize(Map<String, Object> map);
 }
