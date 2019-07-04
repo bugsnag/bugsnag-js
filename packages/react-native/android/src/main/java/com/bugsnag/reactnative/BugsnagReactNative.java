@@ -1,6 +1,7 @@
 package com.bugsnag.reactnative;
 
 import com.bugsnag.android.Breadcrumb;
+import com.bugsnag.android.BreadcrumbDeserializer;
 import com.bugsnag.android.Bugsnag;
 import com.bugsnag.android.Callback;
 import com.bugsnag.android.Client;
@@ -169,7 +170,7 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
             Bugsnag.getClient().leaveBreadcrumb(breadcrumb.getName(),
                     breadcrumb.getType(), breadcrumb.getMetadata());
         } else {
-            // TODO log a warning
+            InternalHooks.logWarning("Failed to leave breadcrumb");
         }
     }
 
