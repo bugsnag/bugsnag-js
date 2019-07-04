@@ -20,6 +20,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.WritableNativeMap;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,6 +36,7 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
     static String bugsnagAndroidVersion;
 
     private final BreadcrumbDeserializer breadcrumbDeserializer = new BreadcrumbDeserializer();
+    private final ConfigSerializer configSerializer = new ConfigSerializer();
 
     public BugsnagReactNative(@Nonnull ReactApplicationContext reactContext) {
         super(reactContext);
@@ -96,8 +98,7 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
     @ReactMethod(isBlockingSynchronousMethod = true)
     public WritableMap getConfig() {
         Configuration config = Bugsnag.getClient().getConfig();
-        // TODO serialise as a readablemap
-        return null;
+        return configSerializer.serialize(config);
     }
 
     /**
