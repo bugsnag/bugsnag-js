@@ -73,7 +73,7 @@ module.exports = {
     }
 
     // make the client observable
-    const { observedClient, silentlyUpdate, subscribe } = observeClient(client)
+    const { observedClient, /* silentlyUpdate, */ subscribe } = observeClient(client)
     subscribe(event => {
       NativeClient.updateClientProperty(serializeForNativeLayer({ [event.name]: event.value }, client._logger))
     })
