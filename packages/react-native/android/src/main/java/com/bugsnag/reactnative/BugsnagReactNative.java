@@ -10,12 +10,14 @@ import com.bugsnag.android.Error;
 import com.bugsnag.android.ErrorDeserializer;
 import com.bugsnag.android.InternalHooks;
 import com.bugsnag.android.MetaData;
+import com.bugsnag.android.NativeInterface;
 import com.bugsnag.android.Report;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -24,7 +26,9 @@ import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
@@ -34,6 +38,7 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
     public static WritableMap versions;
 
     private final BreadcrumbDeserializer breadcrumbDeserializer = new BreadcrumbDeserializer();
+    private final BreadcrumbSerializer breadcrumbSerializer = new BreadcrumbSerializer();
     private ErrorDeserializer errorDeserializer = new ErrorDeserializer();
     private final ConfigSerializer configSerializer = new ConfigSerializer();
 
@@ -111,6 +116,9 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
         return "BugsnagReactNative";
     }
 
+    /**
+     * @return the config for use by the JS layer
+     */
     @ReactMethod(isBlockingSynchronousMethod = true)
     public WritableMap getConfig() {
         configureBugsnagAndroidVersion(Bugsnag.getClient());
@@ -165,11 +173,18 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void getPayloadInfo(Promise promise) {
-        Client client = Bugsnag.getClient();
-        Map<String, Object> info = new HashMap<>();
-        info.put("app", client.getAppData());
-        info.put("device", client.getDeviceData());
-        info.put("breadcrumbs", client.getBreadcrumbs());
+        WritableMap info = new WritableNativeMap();
+        info.putMap("app", Arguments.makeNativeMap(NativeInterface.getAppData()));
+        info.putMap("device", Arguments.makeNativeMap(NativeInterface.getDeviceData()));
+
+        List<Breadcrumb> breadcrumbs = NativeInterface.getBreadcrumbs();
+        List<WritableMap> values = new ArrayList<>();
+
+        for (Breadcrumb breadcrumb : breadcrumbs) {
+            values.add(breadcrumbSerializer.serialize(breadcrumb));
+        }
+
+        info.putArray("breadcrumbs", Arguments.makeNativeArray(values));
         promise.resolve(info);
     }
 

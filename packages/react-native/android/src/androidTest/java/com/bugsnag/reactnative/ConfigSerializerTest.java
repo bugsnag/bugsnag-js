@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 
 import com.bugsnag.android.Configuration;
 
-import android.support.test.InstrumentationRegistry;
+import androidx.test.InstrumentationRegistry;
 
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;

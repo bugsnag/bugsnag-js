@@ -30,6 +30,9 @@ public class InternalHooks {
         Logger.warn(msg);
     }
 
+    /**
+     * Constructs an empty error
+     */
     public static Error generateError(Configuration config,
                                       SessionTracker sessionTracker, boolean unhandled) {
         Error.Builder builder = new Error.Builder(config, new RuntimeException(),
