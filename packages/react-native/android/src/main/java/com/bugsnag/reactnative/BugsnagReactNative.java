@@ -8,6 +8,7 @@ import com.bugsnag.android.Configuration;
 import com.bugsnag.android.Error;
 import com.bugsnag.android.ErrorDeserializer;
 import com.bugsnag.android.InternalHooks;
+import com.bugsnag.android.MetaData;
 import com.bugsnag.android.Report;
 
 import android.content.Context;
@@ -20,6 +21,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.WritableNativeMap;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,6 +38,7 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
 
     private final BreadcrumbDeserializer breadcrumbDeserializer = new BreadcrumbDeserializer();
     private ErrorDeserializer errorDeserializer = new ErrorDeserializer();
+    private final ConfigSerializer configSerializer = new ConfigSerializer();
 
     public BugsnagReactNative(@Nonnull ReactApplicationContext reactContext) {
         super(reactContext);
@@ -97,8 +100,7 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
     @ReactMethod(isBlockingSynchronousMethod = true)
     public WritableMap getConfig() {
         Configuration config = Bugsnag.getClient().getConfig();
-        // TODO serialise as a readablemap
-        return null;
+        return configSerializer.serialize(config);
     }
 
     /**
@@ -106,7 +108,8 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void updateMetaData(ReadableMap update) {
-        // TODO update metadata
+        MetaData metaData = new MetaData(update.toHashMap());
+        Bugsnag.getClient().setMetaData(metaData);
     }
 
     /**
