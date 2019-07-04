@@ -2,10 +2,11 @@ package com.bugsnag.reactnative;
 
 import com.bugsnag.android.Breadcrumb;
 import com.bugsnag.android.Bugsnag;
-import com.bugsnag.android.BugsnagException;
 import com.bugsnag.android.Callback;
 import com.bugsnag.android.Client;
 import com.bugsnag.android.Configuration;
+import com.bugsnag.android.Error;
+import com.bugsnag.android.ErrorDeserializer;
 import com.bugsnag.android.InternalHooks;
 import com.bugsnag.android.MetaData;
 import com.bugsnag.android.Report;
@@ -36,6 +37,7 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
     static String bugsnagAndroidVersion;
 
     private final BreadcrumbDeserializer breadcrumbDeserializer = new BreadcrumbDeserializer();
+    private ErrorDeserializer errorDeserializer = new ErrorDeserializer();
     private final ConfigSerializer configSerializer = new ConfigSerializer();
 
     public BugsnagReactNative(@Nonnull ReactApplicationContext reactContext) {
@@ -131,10 +133,10 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void dispatch(ReadableMap payload, Promise promise) {
-        // TODO deserialize stacktrace etc here
-        BugsnagException exc = new BugsnagException("", "", new StackTraceElement[]{});
+        // TODO pass in error to notify call
+        Error error = errorDeserializer.deserialize(payload.toHashMap());
 
-        Bugsnag.getClient().notify(exc, new Callback() {
+        Bugsnag.getClient().notify(new RuntimeException(), new Callback() {
             @Override
             public void beforeNotify(@NonNull Report report) {
                 // TODO modify payload here
@@ -161,7 +163,7 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void leaveBreadcrumb(ReadableMap map) {
-        Breadcrumb breadcrumb = breadcrumbDeserializer.deserialize(map);
+        Breadcrumb breadcrumb = breadcrumbDeserializer.deserialize(map.toHashMap());
 
         if (breadcrumb != null) {
             Bugsnag.getClient().leaveBreadcrumb(breadcrumb.getName(),

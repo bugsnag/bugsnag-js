@@ -30,4 +30,15 @@ public class InternalHooks {
         Logger.warn(msg);
     }
 
+    public static Error generateError(Configuration config,
+                                      SessionTracker sessionTracker, boolean unhandled) {
+        Error.Builder builder = new Error.Builder(config, new RuntimeException(),
+                sessionTracker, Thread.currentThread(), unhandled);
+
+        if (unhandled) { // TODO promise rejection etc?
+            builder.severityReasonType(HandledState.REASON_UNHANDLED_EXCEPTION);
+        }
+        return builder.build();
+    }
+
 }
