@@ -31,11 +31,7 @@ import javax.annotation.Nonnull;
 
 public class BugsnagReactNative extends ReactContextBaseJavaModule {
 
-    // TODO populate this (read directly from JS)
-    public static ReadableMap versions;
-
-    static String bugsnagJsVersion; // TODO need to set this value
-    static String bugsnagAndroidVersion;
+    public static WritableMap versions;
 
     private final BreadcrumbDeserializer breadcrumbDeserializer = new BreadcrumbDeserializer();
     private ErrorDeserializer errorDeserializer = new ErrorDeserializer();
@@ -88,9 +84,26 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
 
         // TODO set these as config up front if possible
         client.setIgnoreClasses("com.facebook.react.common.JavascriptException");
-        bugsnagAndroidVersion = client.getClass().getPackage().getSpecificationVersion();
         // TODO set codeBundleId here
         Log.d("BugsnagReactNative", "Initialised bugsnag-react-native");
+    }
+
+    private static void configureBugsnagAndroidVersion(Client client) {
+        versions = new WritableNativeMap();
+        String androidVersion = getPackageVersion(client.getClass());
+        String rnVersion = getPackageVersion(BugsnagReactNative.class);
+
+        if (androidVersion != null) {
+            versions.putString("bugsnag-android", androidVersion);
+        }
+        if (rnVersion != null) {
+            versions.putString("bugsnag-react-native", rnVersion);
+        }
+    }
+
+    private static String getPackageVersion(Class clz) {
+        Package pkg = clz.getPackage();
+        return pkg != null ? pkg.getSpecificationVersion() : null;
     }
 
     @Override
@@ -100,6 +113,7 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
 
     @ReactMethod(isBlockingSynchronousMethod = true)
     public WritableMap getConfig() {
+        configureBugsnagAndroidVersion(Bugsnag.getClient());
         Configuration config = Bugsnag.getClient().getConfig();
         return configSerializer.serialize(config);
     }
