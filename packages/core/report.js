@@ -3,6 +3,7 @@ const StackGenerator = require('stack-generator')
 const hasStack = require('./lib/has-stack')
 const { reduce, filter } = require('./lib/es-utils')
 const jsRuntime = require('./lib/js-runtime')
+const State = require('./lib/state')
 
 class BugsnagReport {
   constructor (errorClass, errorMessage, stacktrace = [], handledState = defaultHandledState(), originalError) {
@@ -10,34 +11,30 @@ class BugsnagReport {
     this.__isBugsnagReport = true
 
     this._ignored = false
-
-    // private (un)handled state
     this._handledState = handledState
+    this._session = undefined
 
-    // setable props
-    this.app = undefined
-    this.apiKey = undefined
-    this.breadcrumbs = []
-    this.context = undefined
-    this.device = undefined
-    this.errorClass = stringOrFallback(errorClass, '[no error class]')
-    this.errorMessage = stringOrFallback(errorMessage, '[no error message]')
-    this.groupingHash = undefined
-    this.metaData = {}
-    this.request = undefined
-    this.severity = this._handledState.severity
-    this.stacktrace = reduce(stacktrace, (accum, frame) => {
-      const f = formatStackframe(frame)
-      // don't include a stackframe if none of its properties are defined
-      try {
-        if (JSON.stringify(f) === '{}') return accum
-        return accum.concat(f)
-      } catch (e) {
-        return accum
+    this._internalState = new State({
+      apiKey: { initialValue: () => undefined },
+      severity: { initialValue: () => this._handledState.severity },
+      groupingHash: { initialValue: () => undefined },
+      errorClass: { initialValue: () => stringOrFallback(errorClass, '[no error class]') },
+      errorMessage: { initialValue: () => stringOrFallback(errorMessage, '[no error message]') },
+      breadcrumbs: { initialValue: () => [] },
+      stacktrace: {
+        initialValue: () => reduce(stacktrace, (accum, frame) => {
+          const f = formatStackframe(frame)
+          // don't include a stackframe if none of its properties are defined
+          try {
+            if (JSON.stringify(f) === '{}') return accum
+            return accum.concat(f)
+          } catch (e) {
+            return accum
+          }
+        }, [])
       }
-    }, [])
-    this.user = undefined
-    this.session = undefined
+    })
+
     this.originalError = originalError
 
     // Flags.
@@ -55,73 +52,42 @@ class BugsnagReport {
     return this._ignored
   }
 
-  updateMetaData (section, ...args) {
-    if (!section) return this
-    let updates
-
-    // updateMetaData("section", null) -> removes section
-    if (args[0] === null) return this.removeMetaData(section)
-
-    // updateMetaData("section", "property", null) -> removes property from section
-    if (args[1] === null) return this.removeMetaData(section, args[0], args[1])
-
-    // normalise the two supported input types into object form
-    if (typeof args[0] === 'object') updates = args[0]
-    if (typeof args[0] === 'string') updates = { [args[0]]: args[1] }
-
-    // exit if we don't have an updates object at this point
-    if (!updates) return this
-
-    // ensure a section with this name exists
-    if (!this.metaData[section]) this.metaData[section] = {}
-
-    // merge the updates with the existing section
-    this.metaData[section] = { ...this.metaData[section], ...updates }
-
-    return this
+  get (...args) {
+    return this._internalState.get(...args)
   }
 
-  removeMetaData (section, property) {
-    if (typeof section !== 'string') return this
+  set (...args) {
+    return this._internalState.set(...args)
+  }
 
-    // remove an entire section
-    if (!property) {
-      delete this.metaData[section]
-      return this
-    }
-
-    // remove a single property from a section
-    if (this.metaData[section]) {
-      delete this.metaData[section][property]
-      return this
-    }
-
-    return this
+  clear (...args) {
+    return this._internalState.clear(...args)
   }
 
   toJSON () {
+    const payload = this._internalState.toPayload()
     return {
       payloadVersion: '4',
       exceptions: [
         {
-          errorClass: this.errorClass,
-          message: this.errorMessage,
-          stacktrace: this.stacktrace,
+          errorClass: payload.errorClass,
+          message: payload.errorMessage,
+          stacktrace: payload.stacktrace,
           type: jsRuntime
         }
       ],
-      severity: this.severity,
+      severity: payload.severity,
       unhandled: this._handledState.unhandled,
       severityReason: this._handledState.severityReason,
-      app: this.app,
-      device: this.device,
-      breadcrumbs: this.breadcrumbs,
-      context: this.context,
-      user: this.user,
-      metaData: this.metaData,
-      groupingHash: this.groupingHash,
-      request: this.request,
-      session: this.session
+      app: payload.app,
+      device: payload.device,
+      breadcrumbs: payload.breadcrumbs,
+      context: payload.context,
+      user: payload.user,
+      metaData: payload.metaData,
+      groupingHash: payload.groupingHash,
+      request: payload.request,
+      session: this._session
     }
   }
 }
