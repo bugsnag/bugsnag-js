@@ -10,6 +10,7 @@ import com.bugsnag.android.Error;
 import com.bugsnag.android.ErrorDeserializer;
 import com.bugsnag.android.InternalHooks;
 import com.bugsnag.android.MetaData;
+import com.bugsnag.android.NativeAndroidBridge;
 import com.bugsnag.android.NativeInterface;
 import com.bugsnag.android.Report;
 
