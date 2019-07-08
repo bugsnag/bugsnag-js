@@ -11,6 +11,8 @@ const State = require('./lib/state')
 const LOG_USAGE_ERR_PREFIX = `Usage error.`
 const REPORT_USAGE_ERR_PREFIX = `Bugsnag usage error.`
 
+const DEPRECATED_PROPS = [ 'app', 'device', 'context', 'user', 'request', 'metaData' ]
+
 class BugsnagClient {
   constructor (notifier) {
     if (!notifier || !notifier.name || !notifier.version || !notifier.url) {
@@ -51,6 +53,21 @@ class BugsnagClient {
     this.notify = function () {
       return notify.apply(self, arguments)
     }
+
+    try { this._supportDeprecatedProps() } catch (e) {}
+  }
+
+  _supportDeprecatedProps () {
+    map(DEPRECATED_PROPS, prop => Object.defineProperty(this, prop, {
+      set: function (value) {
+        this._logger.error(`Setting client.${prop} directly is no longer supported. Use client.set('${prop}', value) instead.`)
+        this.set(prop, value)
+      },
+      get: function () {
+        this._logger.error(`Getting client.${prop} directly is no longer supported. Use client.get('${prop}') instead.`)
+        return this.get(prop)
+      }
+    }))
   }
 
   setOptions (opts) {
@@ -163,8 +180,8 @@ class BugsnagClient {
 
     // give all of the client's internal state to the report
     report._internalState.extend(this._internalState)
-    // get feedback for any invalid report.set() calls
-    report._internalState.onfail = msg => this._logger.warn(msg)
+    // allow the report to use the client's logger
+    report._logger = this._logger
     // copy in breadcrumbs
     report.set('breadcrumbs', this.breadcrumbs.slice(0))
     // prevent any subsequent changes to immutable properties

@@ -1,9 +1,14 @@
 const ErrorStackParser = require('./lib/error-stack-parser')
 const StackGenerator = require('stack-generator')
 const hasStack = require('./lib/has-stack')
-const { reduce, filter } = require('./lib/es-utils')
+const { reduce, filter, map } = require('./lib/es-utils')
 const jsRuntime = require('./lib/js-runtime')
 const State = require('./lib/state')
+
+const DEPRECATED_PROPS = [
+  'app', 'device', 'context', 'user', 'request', 'metaData', 'apiKey', 'severity',
+  'groupingHash', 'errorClass', 'errorMessage', 'breadcrumbs', 'stacktrace'
+]
 
 class BugsnagReport {
   constructor (errorClass, errorMessage, stacktrace = [], handledState = defaultHandledState(), originalError) {
@@ -13,6 +18,8 @@ class BugsnagReport {
     this._ignored = false
     this._handledState = handledState
     this._session = undefined
+
+    this._logger = { debug: () => {}, info: () => {}, warn: () => {}, error: () => {} }
 
     this._internalState = new State({
       apiKey: { initialValue: () => undefined },
@@ -37,11 +44,26 @@ class BugsnagReport {
 
     this.originalError = originalError
 
+    try { this._supportDeprecatedProps() } catch (e) {}
+
     // Flags.
     // Note these are not initialised unless they are used
     // to save unnecessary bytes in the browser bundle
 
     /* this.attemptImmediateDelivery, default: true */
+  }
+
+  _supportDeprecatedProps () {
+    map(DEPRECATED_PROPS, prop => Object.defineProperty(this, prop, {
+      set: function (value) {
+        this._logger.error(`Setting report.${prop} directly is no longer supported. Use report.set('${prop}', value) instead.`)
+        this.set(prop, value)
+      },
+      get: function () {
+        this._logger.error(`Getting report.${prop} directly is no longer supported. Use report.get('${prop}') instead.`)
+        return this.get(prop)
+      }
+    }))
   }
 
   ignore () {
