@@ -19,7 +19,7 @@ describe('plugin: request', () => {
     client.notify(new Error('noooo'))
 
     expect(payloads.length).toEqual(1)
-    expect(payloads[0].events[0].request).toEqual({ url: window.location.href })
+    expect(payloads[0].events[0].get('request')).toEqual({ url: window.location.href })
   })
 
   it('sets doesn’t overwrite an existing request', () => {
@@ -29,12 +29,12 @@ describe('plugin: request', () => {
     client.configure()
     client.use(plugin, window)
 
-    client.request = { url: 'foobar' }
+    client.set('request', { url: 'foobar' })
 
     client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
     client.notify(new Error('noooo'))
 
     expect(payloads.length).toEqual(1)
-    expect(payloads[0].events[0].request).toEqual({ url: 'foobar' })
+    expect(payloads[0].events[0].get('request')).toEqual({ url: 'foobar' })
   })
 })
