@@ -21,8 +21,7 @@ module.exports = {
     // get the initial orientation
     updateOrientation()
 
-    client.device = {
-      ...client.device,
+    client.set('device', {
       id: Constants.installationId,
       manufacturer: Constants.platform.ios ? 'Apple' : undefined,
       modelName: Constants.platform.ios ? Constants.platform.ios.model : undefined,
@@ -35,17 +34,15 @@ module.exports = {
         expoSdk: Constants.manifest.sdkVersion,
         androidApiLevel: Constants.platform.android ? String(Platform.Version) : undefined
       }
-    }
+    })
 
     client.config.beforeSend.unshift(report => {
-      report.device = {
-        ...report.device,
+      report.set('device', {
         time: isoDate(),
-        orientation
-      }
-      report.updateMetaData('device', {
+        orientation,
         isDevice: Constants.isDevice,
-        appOwnership: Constants.appOwnership
+        appOwnership: Constants.appOwnership,
+        ...report.get('device')
       })
     })
   }
