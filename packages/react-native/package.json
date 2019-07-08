@@ -35,9 +35,7 @@
   ],
   "scripts": {
     "clean": "rm -fr dist && mkdir dist",
-    "bundle-types": "../../bin/bundle-types",
-    "build": "npm run clean && npm run bundle-types",
-    "test:types": "tslint -c ../../tslint.json types/*.d.ts && jasmine 'types/**/*.test.js'",
+    "build": "npm run clean",
     "postversion": "npm run build"
   },
   "author": "Bugsnag",
