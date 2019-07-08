@@ -16,9 +16,9 @@ describe('bugsnag vue', () => {
     // client.logger(console)
     client.delivery(client => ({
       sendReport: (report) => {
-        expect(report.events[0].errorClass).toBe('Error')
-        expect(report.events[0].errorMessage).toBe('oops')
-        expect(report.events[0].metaData['vue']).toBeDefined()
+        expect(report.events[0].get('errorClass')).toBe('Error')
+        expect(report.events[0].get('errorMessage')).toBe('oops')
+        expect(report.events[0].get('vue')).toBeDefined()
         done()
       }
     }))
