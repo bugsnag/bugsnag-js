@@ -31,7 +31,7 @@ exports.init = (client, win = window) => {
       // if it quacks like an Error…
       report = new client.BugsnagReport(error.name, error.message, ErrorStackParser.parse(error), handledState, error)
       if (isBluebird) {
-        report.stacktrace = reduce(report.stacktrace, fixBluebirdStacktrace(error), [])
+        report.set('stacktrace', reduce(report.get('stacktrace'), fixBluebirdStacktrace(error), []))
       }
     } else {
       // if it doesn't…
@@ -44,7 +44,7 @@ exports.init = (client, win = window) => {
         error
       )
       // stuff the rejection reason into metaData, it could be useful
-      report.updateMetaData('promise', 'rejection reason', serializableReason(error))
+      report.set('promise', 'rejection reason', serializableReason(error))
     }
 
     client.notify(report)
