@@ -80,16 +80,13 @@ class State {
   }
 
   extend (other) {
-    this.state = []
-      .concat(keys(this.state))
-      .concat(keys(other.state))
-      .reduce((accum, k) => {
-        if (!(k in accum)) {
-          merge(accum, k, other.state[k])
-          merge(accum, k, this.state[k])
-        }
-        return accum
-      }, {})
+    this.state = reduce([].concat(keys(this.state)).concat(keys(other.state)), (accum, k) => {
+      if (!(k in accum)) {
+        if (other.state[k] !== undefined) merge(accum, k, other.state[k])
+        if (this.state[k] !== undefined) merge(accum, k, this.state[k])
+      }
+      return accum
+    }, {})
   }
 
   set (...args) {
@@ -166,7 +163,7 @@ const merge = (host, key, value) => {
   if (value === CLEAR_SYMBOL) {
     delete host[key]
   } else {
-    host[key] = value && typeof value === 'object' && typeof host[key] === 'object'
+    host[key] = value && typeof value === 'object' && typeof host[key] === 'object' && !isArray(value)
       ? { ...host[key], ...value }
       : value
   }

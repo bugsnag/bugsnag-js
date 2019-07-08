@@ -301,7 +301,7 @@ describe('@bugsnag/core/client', () => {
       expect(client.breadcrumbs[0].name).toBe('Error')
       expect(client.breadcrumbs[0].metaData.stacktrace).toBe(undefined)
       // the error shouldn't appear as a breadcrumb for itself
-      expect(payloads[0].events[0].breadcrumbs.length).toBe(0)
+      expect(payloads[0].events[0].get('breadcrumbs').length).toBe(0)
     })
 
     it('doesn’t modify global client.metaData when using updateMetaData() method', () => {
