@@ -2,6 +2,7 @@ const { describe, it, expect } = global
 
 const delivery = require('../')
 const http = require('http')
+const Report = require('@bugsnag/core/report')
 
 const mockServer = (successCode = 200) => {
   const requests = []
@@ -30,7 +31,7 @@ describe('delivery:node', () => {
     server.listen((err) => {
       expect(err).toBeUndefined()
 
-      const payload = { sample: 'payload' }
+      const payload = new Report('Error', 'sample error')
       const config = {
         apiKey: 'aaaaaaaa',
         endpoints: { notify: `http://0.0.0.0:${server.address().port}/notify/` },
@@ -58,7 +59,7 @@ describe('delivery:node', () => {
     server.listen((err) => {
       expect(err).toBeUndefined()
 
-      const payload = { sample: 'payload' }
+      const payload = new Report('Error', 'sample error')
       const config = {
         apiKey: 'aaaaaaaa',
         endpoints: { notify: 'blah', sessions: `http://0.0.0.0:${server.address().port}/sessions/` },
@@ -82,7 +83,7 @@ describe('delivery:node', () => {
   })
 
   it('handles errors gracefully (ECONNREFUSED)', done => {
-    const payload = { sample: 'payload' }
+    const payload = new Report('Error', 'sample error')
     const config = {
       apiKey: 'aaaaaaaa',
       endpoints: { notify: `http://0.0.0.0:9999/notify/` },
@@ -105,7 +106,7 @@ describe('delivery:node', () => {
 
     server.listen((err) => {
       expect(err).toBeFalsy()
-      const payload = { sample: 'payload' }
+      const payload = new Report('Error', 'sample error')
       const config = {
         apiKey: 'aaaaaaaa',
         endpoints: { notify: `http://0.0.0.0:${server.address().port}/notify/` },
@@ -130,7 +131,7 @@ describe('delivery:node', () => {
 
     server.listen((err) => {
       expect(err).toBeFalsy()
-      const payload = { sample: 'payload' }
+      const payload = new Report('Error', 'sample error')
       const config = {
         apiKey: 'aaaaaaaa',
         endpoints: { notify: `http://0.0.0.0:${server.address().port}/notify/` },
