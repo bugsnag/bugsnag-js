@@ -1,5 +1,4 @@
 const { isArray, includes } = require('@bugsnag/core/lib/es-utils')
-const inferReleaseStage = require('@bugsnag/core/lib/infer-release-stage')
 
 module.exports = {
   init: client => client.sessionDelegate(sessionDelegate)
@@ -10,7 +9,7 @@ const sessionDelegate = {
     const sessionClient = client
     sessionClient._session = new client.BugsnagSession()
 
-    const releaseStage = inferReleaseStage(sessionClient)
+    const releaseStage = sessionClient.get('app', 'releaseStage')
 
     // exit early if the reports should not be sent on the current releaseStage
     if (isArray(sessionClient.config.notifyReleaseStages) && !includes(sessionClient.config.notifyReleaseStages, releaseStage)) {
@@ -25,8 +24,8 @@ const sessionDelegate = {
 
     sessionClient._delivery.sendSession({
       notifier: sessionClient.notifier,
-      device: sessionClient.device,
-      app: { ...{ releaseStage }, ...sessionClient.app },
+      device: sessionClient.get('device'),
+      app: sessionClient.get('app'),
       sessions: [
         {
           id: sessionClient._session.id,
