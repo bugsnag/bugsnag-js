@@ -24,9 +24,9 @@ describe('plugin: contextualize', () => {
     const c = new Client(VALID_NOTIFIER)
     c.delivery(client => ({
       sendReport: (report, cb) => {
-        expect(report.events[0].errorMessage).toBe('no item available')
-        expect(report.events[0].severity).toBe('warning')
-        expect(report.events[0].user).toEqual({
+        expect(report.events[0].get('errorMessage')).toBe('no item available')
+        expect(report.events[0].get('severity')).toBe('warning')
+        expect(report.events[0].get('user')).toEqual({
           id: '1a2c3cd4',
           name: 'Ben Gourley',
           email: 'ben.gourley@bugsnag.com'
@@ -56,13 +56,13 @@ describe('plugin: contextualize', () => {
       load(8, (err) => {
         if (err) throw err
       })
-    }, {
-      user: {
+    }, report => {
+      report.set('user', {
         id: '1a2c3cd4',
         name: 'Ben Gourley',
         email: 'ben.gourley@bugsnag.com'
-      },
-      severity: 'warning'
+      })
+      report.set('severity', 'warning')
     })
   })
 
@@ -70,8 +70,8 @@ describe('plugin: contextualize', () => {
     const c = new Client(VALID_NOTIFIER)
     c.delivery(client => ({
       sendReport: (report, cb) => {
-        expect(report.events[0].errorMessage).toBe('ENOENT: no such file or directory, open \'does not exist\'')
-        expect(report.events[0].stacktrace[0].file).toBe(`${__filename}`)
+        expect(report.events[0].get('errorMessage')).toBe('ENOENT: no such file or directory, open \'does not exist\'')
+        expect(report.events[0].get('stacktrace')[0].file).toBe(`${__filename}`)
         cb(null)
       },
       sendSession: () => {}
