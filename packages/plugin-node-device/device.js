@@ -11,11 +11,11 @@ module.exports = {
     }
 
     // merge with anything already set on the client
-    client.device = { ...device, ...client.device }
+    client.set('device', { ...device, ...client.device })
 
     // add time just as the report is sent
     client.config.beforeSend.unshift((report) => {
-      report.device = { ...report.device, time: isoDate() }
+      report.set('device', 'time', isoDate())
     })
   }
 }

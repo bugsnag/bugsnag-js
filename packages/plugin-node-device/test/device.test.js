@@ -22,14 +22,14 @@ describe('plugin: node device', () => {
     client.use(plugin)
 
     expect(client.config.beforeSend.length).toBe(1)
-    expect(client.device.hostname).toBe('test-machine.local')
-    expect(client.device.runtimeVersions).toBeDefined()
-    expect(client.device.runtimeVersions.node).toEqual(process.versions.node)
+    expect(client.get('device').hostname).toBe('test-machine.local')
+    expect(client.get('device').runtimeVersions).toBeDefined()
+    expect(client.get('device').runtimeVersions.node).toEqual(process.versions.node)
 
     client.delivery(client => ({
       sendReport: (payload) => {
-        expect(payload.events[0].device).toBeDefined()
-        expect(payload.events[0].device.time).toMatch(ISO_8601)
+        expect(payload.events[0].get('device')).toBeDefined()
+        expect(payload.events[0].get('device', 'time')).toMatch(ISO_8601)
         done()
       }
     }))
