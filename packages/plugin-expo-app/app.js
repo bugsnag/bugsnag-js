@@ -28,20 +28,23 @@ module.exports = {
     client.config.beforeSend.unshift(report => {
       const now = new Date()
       const inForeground = AppState.currentState === 'active'
-      report.app.inForeground = inForeground
-      report.app.duration = now - appStart
+      report.set('app', {
+        inForeground: inForeground,
+        duration: now - appStart,
+        nativeBundleVersion,
+        nativeVersionCode
+      })
       if (inForeground) {
-        report.app.durationInForeground = now - lastEnteredForeground
+        report.set('app', 'durationInForeground', now - lastEnteredForeground)
       }
-      report.updateMetaData('app', { nativeBundleVersion, nativeVersionCode })
     })
 
-    if (!client.app.version && Constants.manifest.version) {
-      client.app.version = Constants.manifest.version
+    if (!client.get('app', 'version') && Constants.manifest.version) {
+      client.set('app', 'version', Constants.manifest.version)
     }
 
     if (Constants.manifest.revisionId) {
-      client.app.codeBundleId = Constants.manifest.revisionId
+      client.set('app', 'codeBundleId', Constants.manifest.revisionId)
     }
   }
 }
