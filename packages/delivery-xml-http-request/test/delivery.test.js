@@ -1,6 +1,7 @@
 const { describe, it, expect } = global
 
 const delivery = require('../')
+const Report = require('@bugsnag/core/report')
 
 describe('delivery:XMLHttpRequest', () => {
   it('sends reports successfully', done => {
@@ -29,7 +30,7 @@ describe('delivery:XMLHttpRequest', () => {
       this.onreadystatechange()
     }
 
-    const payload = { sample: 'payload' }
+    const payload = new Report('Error', 'sample error')
     const config = {
       apiKey: 'aaaaaaaa',
       endpoints: { notify: '/echo/' },

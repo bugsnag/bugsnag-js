@@ -11,7 +11,7 @@ module.exports = (client, win = window) => ({
       }
       req.open('POST', url)
       req.setRequestHeader('Content-Type', 'application/json')
-      req.setRequestHeader('Bugsnag-Api-Key', report.apiKey || client.config.apiKey)
+      req.setRequestHeader('Bugsnag-Api-Key', report.get('apiKey') || client.config.apiKey)
       req.setRequestHeader('Bugsnag-Payload-Version', '4')
       req.setRequestHeader('Bugsnag-Sent-At', isoDate())
       req.send(payload.report(report, client.config.filters))
