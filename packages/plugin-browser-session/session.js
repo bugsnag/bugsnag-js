@@ -30,7 +30,7 @@ const sessionDelegate = {
         {
           id: sessionClient._session.id,
           startedAt: sessionClient._session.startedAt,
-          user: sessionClient.user
+          user: sessionClient._internalState.toPayload().user
         }
       ]
     })

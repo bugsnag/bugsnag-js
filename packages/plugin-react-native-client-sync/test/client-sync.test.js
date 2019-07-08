@@ -2,7 +2,13 @@
 
 const Client = require('@bugsnag/core/client')
 const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
-const plugin = require('../')
+const proxyquire = require('proxyquire').noCallThru()
+const plugin = proxyquire('../', {
+  'react-native': {
+    Platform: { OS: 'Android' },
+    DeviceEventEmitter: { addListener: () => {} }
+  }
+})
 
 describe('plugin: react native client sync', () => {
   it('updates context', done => {
@@ -10,14 +16,12 @@ describe('plugin: react native client sync', () => {
     c.setOptions({ apiKey: 'api_key' })
     c.configure()
     c.use(plugin, {
-      updateClientProperty: (updates) => {
-        expect(Object.keys(updates).length).toBe(1)
-        expect(updates['context']).toEqual({ type: 'string', value: '1234' })
+      updateContext: (update) => {
+        expect(update).toBe('1234')
         done()
       }
     })
-    const observedClient = c.getPlugin('observedClient')
-    observedClient.context = '1234'
+    c.set('context', '1234')
   })
 
   it('updates metaData', done => {
@@ -25,25 +29,18 @@ describe('plugin: react native client sync', () => {
     c.setOptions({ apiKey: 'api_key' })
     c.configure()
     c.use(plugin, {
-      updateClientProperty: (updates) => {
+      updateMetaData: (updates) => {
         expect(Object.keys(updates).length).toBe(1)
-        expect(updates['metaData']).toEqual({
-          type: 'map',
-          value: {
-            widget: {
-              type: 'map',
-              value: {
-                id: { type: 'string', value: '14' },
-                count: { type: 'number', value: 340 }
-              }
-            }
+        expect(updates).toEqual({
+          widget: {
+            id: '14',
+            count: 340
           }
         })
         done()
       }
     })
-    const observedClient = c.getPlugin('observedClient')
-    observedClient.metaData = { widget: { id: '14', count: 340 } }
+    c.set('widget', { id: '14', count: 340 })
   })
 
   it('updates nested metaData', done => {
@@ -51,24 +48,18 @@ describe('plugin: react native client sync', () => {
     c.setOptions({ apiKey: 'api_key' })
     c.configure()
     c.use(plugin, {
-      updateClientProperty: (updates) => {
+      updateMetaData: (updates) => {
         expect(Object.keys(updates).length).toBe(1)
-        expect(updates['metaData']).toEqual({
-          type: 'map',
-          value: {
-            widget: {
-              type: 'map',
-              value: {
-                id: { type: 'string', value: '14' },
-                count: { type: 'number', value: 340 }
-              }
-            }
+        expect(updates).toEqual({
+          widget: {
+            id: '909',
+            count: 340
           }
         })
         done()
       }
     })
-    const observedClient = c.getPlugin('observedClient')
-    observedClient.metaData = { widget: { id: '14', count: 340 } }
+    c._internalState._set({ key: 'widget', nestedKeys: [], value: { id: '12', count: 340 }, silent: true })
+    c.set('widget', 'id', '909')
   })
 })

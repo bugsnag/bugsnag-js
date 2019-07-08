@@ -30,7 +30,7 @@ describe('delivery:XMLHttpRequest', () => {
       this.onreadystatechange()
     }
 
-    const payload = new Report('Error', 'sample error')
+    const payload = { events: [ new Report('Error', 'sample error') ] }
     const config = {
       apiKey: 'aaaaaaaa',
       endpoints: { notify: '/echo/' },
@@ -76,7 +76,7 @@ describe('delivery:XMLHttpRequest', () => {
       this.onreadystatechange()
     }
 
-    const payload = { sample: 'payload' }
+    const payload = { events: [ new Report('Error', 'sample error') ] }
     const config = {
       apiKey: 'aaaaaaaa',
       endpoints: { notify: '/', sessions: '/echo/' },

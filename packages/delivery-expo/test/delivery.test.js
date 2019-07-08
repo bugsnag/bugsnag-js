@@ -369,7 +369,7 @@ describe('delivery: expo', () => {
   it('doesn’t attempt to send when not connected', done => {
     class MockQueue {
       async init () {}
-      async enqueue (req) { console.log('enqueue') }
+      async enqueue (req) {}
       async dequeue () {}
     }
     const spiedEnqueue = spyOn(MockQueue.prototype, 'enqueue')

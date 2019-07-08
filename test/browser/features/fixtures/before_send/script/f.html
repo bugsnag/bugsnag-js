@@ -14,10 +14,8 @@
   </head>
   <body>
     <script>
-      bugsnagClient.notify(new Error('before send does work'), {
-        beforeSend: function (report) {
-          report.ignore()
-        }
+      bugsnagClient.notify(new Error('before send does work'), function (report) {
+        report.ignore()
       })
     </script>
   </body>

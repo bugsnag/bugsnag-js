@@ -10,7 +10,7 @@
         apiKey: API_KEY,
         endpoints: { notify: ENDPOINT },
         beforeSend: function (report) {
-          report.updateMetaData('before_send', 'global', 'works')
+          report.set('before_send', 'global', 'works')
         }
       })
     </script>
