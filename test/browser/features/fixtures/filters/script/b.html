@@ -15,11 +15,9 @@
   </head>
   <body>
     <script>
-      bugsnagClient.metaData = {
-        details: {
-          api_key: 'fffffffff'
-        }
-      }
+      bugsnagClient.set('details', {
+        api_key: 'fffffffff'
+      })
       bugsnagClient.notify(new Error('sensitive?'), function (report) {
         report.set('user', { id: '21', password: '123456', secret: 'don’t tell anyone' })
       })
