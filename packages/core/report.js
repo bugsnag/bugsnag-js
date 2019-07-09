@@ -4,6 +4,7 @@ const hasStack = require('./lib/has-stack')
 const { reduce, filter, map } = require('./lib/es-utils')
 const jsRuntime = require('./lib/js-runtime')
 const State = require('./lib/state')
+const supportDeprecatedProps = require('./lib/deprecated-prop-support')
 
 const DEPRECATED_PROPS = [
   'app', 'device', 'context', 'user', 'request', 'metaData', 'apiKey', 'severity',
@@ -44,7 +45,7 @@ class BugsnagReport {
 
     this.originalError = originalError
 
-    try { this._supportDeprecatedProps() } catch (e) {}
+    try { supportDeprecatedProps(this, 'report', DEPRECATED_PROPS) } catch (e) {}
 
     // Flags.
     // Note these are not initialised unless they are used

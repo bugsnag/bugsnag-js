@@ -7,6 +7,7 @@ const isError = require('./lib/iserror')
 const some = require('./lib/async-some')
 const runBeforeSend = require('./lib/run-before-send')
 const State = require('./lib/state')
+const supportDeprecatedProps = require('./lib/deprecated-prop-support')
 
 const LOG_USAGE_ERR_PREFIX = `Usage error.`
 const REPORT_USAGE_ERR_PREFIX = `Bugsnag usage error.`
@@ -54,20 +55,7 @@ class BugsnagClient {
       return notify.apply(self, arguments)
     }
 
-    try { this._supportDeprecatedProps() } catch (e) {}
-  }
-
-  _supportDeprecatedProps () {
-    map(DEPRECATED_PROPS, prop => Object.defineProperty(this, prop, {
-      set: function (value) {
-        this._logger.error(`Setting client.${prop} directly is no longer supported. Use client.set('${prop}', value) instead.`)
-        this.set(prop, value)
-      },
-      get: function () {
-        this._logger.error(`Getting client.${prop} directly is no longer supported. Use client.get('${prop}') instead.`)
-        return this.get(prop)
-      }
-    }))
+    try { supportDeprecatedProps(this, 'client', DEPRECATED_PROPS) } catch (e) {}
   }
 
   setOptions (opts) {
