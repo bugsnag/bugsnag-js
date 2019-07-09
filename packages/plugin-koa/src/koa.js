@@ -22,9 +22,8 @@ module.exports = {
       ctx.bugsnag = requestClient
 
       // extract request info and pass it to the relevant bugsnag properties
-      const { request, metaData } = getRequestAndMetaDataFromCtx(ctx)
-      requestClient.metaData = { ...requestClient.metaData, request: metaData }
-      requestClient.request = request
+      const request = processRequestInfo(ctx)
+      requestClient.set('request', request)
 
       try {
         await next()
@@ -44,9 +43,8 @@ module.exports = {
       this.bugsnag = requestClient
 
       // extract request info and pass it to the relevant bugsnag properties
-      const { request, metaData } = getRequestAndMetaDataFromCtx(this)
-      requestClient.metaData = { ...requestClient.metaData, request: metaData }
-      requestClient.request = request
+      const request = processRequestInfo(this)
+      requestClient.set('request', request)
 
       try {
         yield next
@@ -63,7 +61,9 @@ module.exports = {
         ctx.bugsnag.notify(createReportFromErr(err, handledState))
       } else {
         client._logger.warn('ctx.bugsnag is not defined. Make sure the @bugsnag/plugin-koa requestHandler middleware is added first.')
-        client.notify(createReportFromErr(err, handledState), getRequestAndMetaDataFromCtx(ctx))
+        client.notify(createReportFromErr(err, handledState), report => {
+          report.set('request', processRequestInfo(ctx))
+        })
       }
     }
 
@@ -71,17 +71,15 @@ module.exports = {
   }
 }
 
-const getRequestAndMetaDataFromCtx = ctx => {
+const processRequestInfo = ctx => {
   const requestInfo = extractRequestInfo(ctx)
   return {
-    metaData: requestInfo,
-    request: {
-      clientIp: requestInfo.clientIp,
-      headers: requestInfo.headers,
-      httpMethod: requestInfo.httpMethod,
-      url: requestInfo.url,
-      referer: requestInfo.referer
-    }
+    ...requestInfo,
+    clientIp: requestInfo.clientIp,
+    headers: requestInfo.headers,
+    httpMethod: requestInfo.httpMethod,
+    url: requestInfo.url,
+    referer: requestInfo.referer
   }
 }
 

@@ -30,12 +30,12 @@ describe('delivery:XMLHttpRequest', () => {
       this.onreadystatechange()
     }
 
-    const payload = { events: [ new Report('Error', 'sample error') ] }
     const config = {
       apiKey: 'aaaaaaaa',
       endpoints: { notify: '/echo/' },
       filters: []
     }
+    const payload = { apiKey: config.apiKey, events: [ new Report('Error', 'sample error') ] }
     delivery({ logger: {}, config }, { XMLHttpRequest }).sendReport(payload, (err) => {
       expect(err).toBe(null)
       expect(requests.length).toBe(1)
@@ -76,12 +76,12 @@ describe('delivery:XMLHttpRequest', () => {
       this.onreadystatechange()
     }
 
-    const payload = { events: [ new Report('Error', 'sample error') ] }
     const config = {
       apiKey: 'aaaaaaaa',
       endpoints: { notify: '/', sessions: '/echo/' },
       filters: []
     }
+    const payload = { apiKey: config.apiKey, events: [ new Report('Error', 'sample error') ] }
     delivery({ config, logger: {} }, { XMLHttpRequest }).sendSession(payload, (err) => {
       expect(err).toBe(null)
       expect(requests.length).toBe(1)

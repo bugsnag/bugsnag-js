@@ -11,8 +11,6 @@ var bugsnagClient = bugsnag({
 var contextualize = bugsnagClient.getPlugin('contextualize')
 contextualize(function () {
   fs.createReadStream('does not exist')
-}, {
-  metaData: {
-    subsystem: { name: 'fs reader', widgetsAdded: 'cat,dog,mouse' }
-  }
+}, (report) => {
+  report.set('subsystem', { name: 'fs reader', widgetsAdded: 'cat,dog,mouse' })
 })

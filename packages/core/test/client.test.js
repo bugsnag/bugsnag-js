@@ -304,17 +304,17 @@ describe('@bugsnag/core/client', () => {
       expect(payloads[0].events[0].get('breadcrumbs').length).toBe(0)
     })
 
-    it('doesn’t modify global client.metaData when using updateMetaData() method', () => {
+    it('doesn’t modify client metaData when updating report metaData', () => {
       const client = new Client(VALID_NOTIFIER)
       client.setOptions({ apiKey: 'API_KEY_YEAH' })
       client.configure()
-      client.metaData = { foo: [ 1, 2, 3 ] }
+      client.set({ foo: [ 1, 2, 3 ] })
       client.notify(new Error('changes afoot'), {
         beforeSend: (report) => {
-          report.updateMetaData('foo', '3', 1)
+          report.set('foo', '3', 1)
         }
       })
-      expect(client.metaData.foo['3']).toBe(undefined)
+      expect(client.get('foo', '3')).toBe(undefined)
     })
 
     it('should call the callback (success)', done => {

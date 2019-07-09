@@ -45,7 +45,7 @@ module.exports = (client, fetch = global.fetch) => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Bugsnag-Api-Key': report.events[0].get('apiKey') || client.config.apiKey,
+            'Bugsnag-Api-Key': report.apiKey,
             'Bugsnag-Payload-Version': '4',
             'Bugsnag-Sent-At': isoDate()
           },
