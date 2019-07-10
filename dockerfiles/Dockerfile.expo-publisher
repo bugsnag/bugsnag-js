@@ -8,7 +8,22 @@ COPY package*.json ./
 RUN npm install
 
 COPY babel.config.js tslint.json lerna.json ./
-COPY packages ./packages
+COPY packages/core ./packages/core
+COPY packages/js ./packages/js
+COPY packages/expo ./packages/expo
+COPY packages/delivery-expo ./packages/delivery-expo
+COPY packages/plugin-browser-session ./packages/plugin-browser-session
+COPY packages/plugin-console-breadcrumbs ./packages/plugin-console-breadcrumbs
+COPY packages/plugin-expo-app ./packages/plugin-expo-app
+COPY packages/plugin-expo-device ./packages/plugin-expo-device
+COPY packages/plugin-network-breadcrumbs ./packages/plugin-network-breadcrumbs
+COPY packages/plugin-react ./packages/plugin-react
+COPY packages/plugin-react-native-app-state-breadcrumbs ./packages/plugin-react-native-app-state-breadcrumbs
+COPY packages/plugin-react-native-connectivity-breadcrumbs ./packages/plugin-react-native-connectivity-breadcrumbs
+COPY packages/plugin-react-native-global-error-handler ./packages/plugin-react-native-global-error-handler
+COPY packages/plugin-react-native-orientation-breadcrumbs ./packages/plugin-react-native-orientation-breadcrumbs
+COPY packages/plugin-react-native-unhandled-rejection ./packages/plugin-react-native-unhandled-rejection
+
 COPY bin ./bin
 RUN npx lerna bootstrap
 RUN npx lerna run build --scope "@bugsnag/expo" --scope "@bugsnag/plugin-react"
