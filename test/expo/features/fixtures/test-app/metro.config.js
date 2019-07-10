@@ -2,11 +2,17 @@ const { resolve, join } = require('path')
 const { readdirSync } = require('fs')
 
 const pkgs = resolve(__dirname, '../../../../../packages')
+const ignoredPackages = ['react-native']
 
 const watchFolders = [ __dirname, join(__dirname, 'node_modules') ]
   .concat(
     readdirSync(pkgs)
-      .map(pkg => join(pkgs, pkg))
+      .map(pkg => {
+        if (ignoredPackages.indexOf(pkg) < 0) {
+          return join(pkgs, pkg)
+        }
+      })
+      .filter(entry => entry)
   )
 
 module.exports = {
