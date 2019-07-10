@@ -26,7 +26,9 @@
   "files": [
     "src",
     "dist",
-    "android",
+    "android/build.gradle",
+    "android/proguard-rules.pro",
+    "android/src/main",
     "ios/BugsnagReactNative.{h,m,xcodeproj}",
     "ios/BSGConvert.{h,m}",
     "ios/vendor/bugsnag-cocoa/Source/**/*.{h,m,mm,cpp,c}",
