@@ -1,5 +1,12 @@
 # Changelog
 
+## 6.3.2 (2019-06-27)
+
+### Fixed
+
+- (plugin-inline-script): Ensure inline script content callback doesn't cause error logs when there are no stackframes [#559](https://github.com/bugsnag/bugsnag-js/pull/559) / [#563](https://github.com/bugsnag/bugsnag-js/pull/563)
+- (plugin-angular): Bundle an ES5 and an ES6 version of the plugin to support various Angular build settings [#565](https://github.com/bugsnag/bugsnag-js/pull/559) / [#563](https://github.com/bugsnag/bugsnag-js/pull/565)
+
 ## 6.3.1 (2019-06-17)
 
 ### Fixed
