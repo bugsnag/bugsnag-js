@@ -7,12 +7,11 @@ const ignoredPackages = ['react-native']
 const watchFolders = [ __dirname, join(__dirname, 'node_modules') ]
   .concat(
     readdirSync(pkgs)
-      .map(pkg => {
-        if (ignoredPackages.indexOf(pkg) < 0) {
-          return join(pkgs, pkg)
-        }
-      })
-      .filter(entry => entry)
+      .reduce((paths, pkg) =>
+        ignoredPackages.includes(pkg)
+        ? paths
+        : paths.concat(join(pkgs, pkg))
+      , [])
   )
 
 module.exports = {
