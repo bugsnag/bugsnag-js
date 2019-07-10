@@ -10,6 +10,7 @@ import com.bugsnag.android.Error;
 import com.bugsnag.android.ErrorDeserializer;
 import com.bugsnag.android.InternalHooks;
 import com.bugsnag.android.MetaData;
+import com.bugsnag.android.NativeAndroidBridge;
 import com.bugsnag.android.NativeInterface;
 import com.bugsnag.android.Report;
 
@@ -25,25 +26,28 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Nonnull;
 
 public class BugsnagReactNative extends ReactContextBaseJavaModule {
 
     public static WritableMap versions;
+    private static NativeAndroidBridge androidBridge;
 
     private final BreadcrumbDeserializer breadcrumbDeserializer = new BreadcrumbDeserializer();
     private final BreadcrumbSerializer breadcrumbSerializer = new BreadcrumbSerializer();
     private ErrorDeserializer errorDeserializer = new ErrorDeserializer();
     private final ConfigSerializer configSerializer = new ConfigSerializer();
 
+    private final ReactApplicationContext reactContext;
+
     public BugsnagReactNative(@Nonnull ReactApplicationContext reactContext) {
         super(reactContext);
+        this.reactContext = reactContext;
     }
 
     /**
@@ -93,6 +97,35 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
         Log.d("BugsnagReactNative", "Initialised bugsnag-react-native");
     }
 
+    @Override
+    public String getName() {
+        return "BugsnagReactNative";
+    }
+
+    /**
+     * @return the config for use by the JS layer
+     */
+    @ReactMethod(isBlockingSynchronousMethod = true)
+    public WritableMap getConfig() {
+        configureBugsnagAndroidVersion(Bugsnag.getClient());
+        setupNativeEventEmitter(reactContext);
+
+        Configuration config = Bugsnag.getClient().getConfig();
+        return configSerializer.serialize(config);
+    }
+
+    private void setupNativeEventEmitter(@Nonnull ReactApplicationContext reactContext) {
+        final DeviceEventManagerModule.RCTDeviceEventEmitter emitter
+                = reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class);
+        androidBridge = new NativeAndroidBridge(new NativeAndroidBridge.NativeEventListener() {
+            @Override
+            public void onNativeEvent(WritableMap nativeEvent) {
+                emitter.emit("bugsnag::sync", nativeEvent);
+            }
+        });
+        Bugsnag.getClient().addObserver(androidBridge);
+    }
+
     private static void configureBugsnagAndroidVersion(Client client) {
         versions = new WritableNativeMap();
         String androidVersion = getPackageVersion(client.getClass());
@@ -109,21 +142,6 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
     private static String getPackageVersion(Class clz) {
         Package pkg = clz.getPackage();
         return pkg != null ? pkg.getSpecificationVersion() : null;
-    }
-
-    @Override
-    public String getName() {
-        return "BugsnagReactNative";
-    }
-
-    /**
-     * @return the config for use by the JS layer
-     */
-    @ReactMethod(isBlockingSynchronousMethod = true)
-    public WritableMap getConfig() {
-        configureBugsnagAndroidVersion(Bugsnag.getClient());
-        Configuration config = Bugsnag.getClient().getConfig();
-        return configSerializer.serialize(config);
     }
 
     /**
