@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-inline-script-content",
-  "version": "6.3.0",
+  "version": "6.3.2",
   "main": "inline-script-content.js",
   "description": "@bugsnag/js plugin to attach inline script content to error reports",
   "homepage": "https://www.bugsnag.com/",
