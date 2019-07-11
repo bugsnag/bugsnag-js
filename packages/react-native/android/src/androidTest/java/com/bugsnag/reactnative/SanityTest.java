@@ -1,11 +1,8 @@
-package com.bugsnag.android;
+package com.bugsnag.reactnative;
 
 import static org.junit.Assert.assertEquals;
 
-import com.bugsnag.reactnative.BugsnagReactNative;
-
-import android.content.Context;
-import android.support.test.InstrumentationRegistry;
+import androidx.test.InstrumentationRegistry;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 

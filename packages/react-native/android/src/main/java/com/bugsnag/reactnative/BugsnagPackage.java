@@ -1,20 +1,14 @@
 package com.bugsnag.reactnative;
 
 import com.facebook.react.ReactPackage;
-import com.facebook.react.bridge.JavaScriptModule;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 public class BugsnagPackage implements ReactPackage {
-
-    public List<Class<? extends JavaScriptModule>> createJSModules() {
-        return Collections.emptyList();
-    }
 
     @SuppressWarnings("rawtypes") // the ReactPackage interface uses a raw type, ignore it
     @Override
@@ -24,6 +18,6 @@ public class BugsnagPackage implements ReactPackage {
 
     @Override
     public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
-        return Arrays.<NativeModule>asList(new BugsnagReactNative(reactContext));
+        return Collections.<NativeModule>singletonList(new BugsnagReactNative(reactContext));
     }
 }

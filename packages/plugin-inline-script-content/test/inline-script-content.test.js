@@ -1,4 +1,4 @@
-const { describe, it, expect } = global
+const { describe, it, expect, spyOn } = global
 
 const plugin = require('../')
 
@@ -156,5 +156,38 @@ Lorem ipsum dolor sit amet.
       expect(surroundingCode[line].length > 200).toBe(false)
     })
     expect(payloads[0].events[0].get('script')).toBeDefined()
+  })
+
+  it('works when the stacktrace is empty', () => {
+    const scriptContent = `console.log("EMPTY")`
+    const document = {
+      scripts: [ { innerHTML: scriptContent } ],
+      currentScript: { innerHTML: scriptContent },
+      documentElement: {
+        outerHTML: `<p>
+Lorem ipsum dolor sit amet.
+Lorem ipsum dolor sit amet.
+Lorem ipsum dolor sit amet.
+</p>
+<script>${scriptContent}
+</script>
+<p>more content</p>`
+      }
+    }
+    const window = { location: { href: 'https://app.bugsnag.com/errors' } }
+
+    const client = new Client(VALID_NOTIFIER)
+    const payloads = []
+    client.setOptions({ apiKey: 'API_KEY_YEAH' })
+    client.configure()
+    client.use(plugin, document, window)
+
+    expect(client.config.beforeSend.length).toBe(1)
+    client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
+    const spy = spyOn(client._logger, 'error')
+    client.notify(new Report('EmptyStacktrace', 'Has nothing in it', []))
+    expect(payloads.length).toEqual(1)
+    expect(payloads[0].events[0].stacktrace).toEqual([])
+    expect(spy).toHaveBeenCalledTimes(0)
   })
 })
