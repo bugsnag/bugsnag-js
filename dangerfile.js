@@ -12,22 +12,22 @@ const after = {
   gzipped: parseInt(readFileSync(`${__dirname}/.size/after-gzipped`, 'utf8').trim())
 }
 
-const formatKbs = (n) => (n / 1000).toFixed(2)
+const formatKbs = (n) => `${(n / 1000).toFixed(2)} kB`
 
 const diffMinSize = before.minified - after.minified
 const diffZipSize = before.gzipped - after.gzipped
 const showDiff = n => {
   if (n > 0) return `⚠️ +${n} bytes ⬆️`
   if (n < 0) return `-${n} bytes ⬇️`
-  return 'No change'
+  return '_No change_'
 }
 
 markdown(`
 ### \`@bugsnag/browser\` bundle size diff
 
-|        | Minified                      | Minfied + Gzipped            |
-|--------|-------------------------------|------------------------------|
-| Before | ${formatKbs(before.minified)} | ${formatKbs(before.gzipped)} |
-| After  | ${formatKbs(after.minified)}  | ${formatKbs(after.gzipped)}  |
-| ±      | ${showDiff(diffMinSize)}      | ${showDiff(diffZipSize)}     |
+|        | Minified                      | Minfied + Gzipped                    |
+|--------|-------------------------------|--------------------------------------|
+| Before | \`${formatKbs(before.minified)}\` | \`${formatKbs(before.gzipped)}\` |
+| After  | \`${formatKbs(after.minified)}\`  | \`${formatKbs(after.gzipped)}\`  |
+| ±      | ${showDiff(diffMinSize)}          | ${showDiff(diffZipSize)}         |
 `)
