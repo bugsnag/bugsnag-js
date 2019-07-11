@@ -1,7 +1,7 @@
 const ErrorStackParser = require('./lib/error-stack-parser')
 const StackGenerator = require('stack-generator')
 const hasStack = require('./lib/has-stack')
-const { reduce, filter, map } = require('./lib/es-utils')
+const { reduce, filter } = require('./lib/es-utils')
 const jsRuntime = require('./lib/js-runtime')
 const State = require('./lib/state')
 const supportDeprecatedProps = require('./lib/deprecated-prop-support')
@@ -52,19 +52,6 @@ class BugsnagReport {
     // to save unnecessary bytes in the browser bundle
 
     /* this.attemptImmediateDelivery, default: true */
-  }
-
-  _supportDeprecatedProps () {
-    map(DEPRECATED_PROPS, prop => Object.defineProperty(this, prop, {
-      set: function (value) {
-        this._logger.error(`Setting report.${prop} directly is no longer supported. Use report.set('${prop}', value) instead.`)
-        this.set(prop, value)
-      },
-      get: function () {
-        this._logger.error(`Getting report.${prop} directly is no longer supported. Use report.get('${prop}') instead.`)
-        return this.get(prop)
-      }
-    }))
   }
 
   ignore () {
