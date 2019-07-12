@@ -36,7 +36,7 @@ RUN npm install --no-package-lock --no-save \
 
 # install the dependencies and build each fixture
 WORKDIR /app/test/browser/features/fixtures
-RUN find . -path */package.json -type f -mindepth 2 -maxdepth 3 | \
+RUN find . -name package.json -type f -mindepth 2 -maxdepth 3 | \
   xargs -I % bash -c 'cd `dirname %` && npm install --no-package-lock && npm run build'
 
 # once the fixtures are built we no longer need node_modules and
