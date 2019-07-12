@@ -102,20 +102,23 @@ module.exports = {
       'Notification', 'SVGElementInstance', 'Screen', 'TextTrack', 'TextTrackCue', 'TextTrackList',
       'WebSocket', 'WebSocketWorker', 'Worker', 'XMLHttpRequest', 'XMLHttpRequestEventTarget', 'XMLHttpRequestUpload'
     ], o => {
-      if (!win[o] || !win[o].prototype || typeof win[o].prototype.addEventListener !== 'function') return
+      if (!win[o] || !win[o].prototype || !win[o].prototype.hasOwnProperty || !win[o].prototype.hasOwnProperty('addEventListener')) return
       __proxy(win[o].prototype, 'addEventListener', original =>
         __traceOriginalScript(original, eventTargetCallbackAccessor)
       )
       __proxy(win[o].prototype, 'removeEventListener', original =>
-        __traceOriginalScript(original, eventTargetCallbackAccessor)
+        __traceOriginalScript(original, eventTargetCallbackAccessor, true)
       )
     })
 
-    function __traceOriginalScript (fn, callbackAccessor) {
+    function __traceOriginalScript (fn, callbackAccessor, alsoCallOriginal = false) {
       return function () {
-        var args = Array.prototype.slice.call(arguments)
-        var cba = callbackAccessor(args)
-        var cb = cba.get()
+        // this is required for removeEventListener to remove anything added with
+        // addEventListener before the functions started being wrapped by Bugsnag
+        const args = Array.prototype.slice.call(arguments)
+        const cba = callbackAccessor(args)
+        const cb = cba.get()
+        if (alsoCallOriginal) fn.apply(this, args)
         if (typeof cb !== 'function') return fn.apply(this, args)
         try {
           if (cb.__trace__) {
