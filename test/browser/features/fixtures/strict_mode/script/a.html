@@ -2,11 +2,11 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <script src="/node_modules/@bugsnag/browser/dist/bugsnag.min.js"></script>
-    <script type="text/javascript">
+    <script type="module" src="/node_modules/@bugsnag/browser/dist/bugsnag.min.js"></script>
+    <script type="module">
       var ENDPOINT = decodeURIComponent(window.location.search.match(/ENDPOINT=([^&]+)/)[1])
       var API_KEY = decodeURIComponent(window.location.search.match(/API_KEY=([^&]+)/)[1])
-      var bugsnagClient = bugsnag({
+      window.bugsnagClient = window.bugsnag({
         apiKey: API_KEY,
         endpoints: { notify: ENDPOINT }
       })
@@ -22,8 +22,11 @@
       el.textContent = el.innerText = typeof __lacksModuleSupport !== 'undefined' ? 'NO' : 'YES'
     </script>
     <script type="module">
-      var error = { name: 'Error', message: 'strict mode' }
-      bugsnagClient.notify(error)
+      var customError = {
+        name: 'Unlikely scenario',
+        stack: window.bugsnagClient.BugsnagReport.getStacktrace()
+      }
+      window.bugsnagClient.notify(customError)
     </script>
   </body>
 </html>

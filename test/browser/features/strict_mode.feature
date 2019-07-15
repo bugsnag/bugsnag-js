@@ -7,4 +7,4 @@ Scenario: notifier does not error in strict mode
   Then I wait to receive a request
   And the request is a valid browser payload for the error reporting API
   And the exception "errorClass" equals "Error"
-  And the exception "message" equals "strict mode"
+  And the exception "message" equals "Bugsnag usage error. notify() expected error/opts parameters, got unsupported object"
