@@ -1,21 +1,19 @@
-const serializeForNativeLayer = require('./native-serializer')
 const { DeviceEventEmitter, NativeEventEmitter, NativeModules, Platform } = require('react-native')
 
 module.exports = {
   init: (client, NativeClient) => {
     // patch breadcrumb method to sync it on the native client
     client.leaveBreadcrumb = (name, metaData, type, timestamp) => {
-      const metadata = serializeForNativeLayer(metaData, client._logger)
-      NativeClient.leaveBreadcrumb({ name, metadata, type, timestamp })
+      NativeClient.leaveBreadcrumb({ name, metaData, type, timestamp })
     }
 
     client._internalState.subscribe((prop, val) => {
-      console.log('CHANGE', prop, val)
       switch (prop) {
         case 'context':
           return NativeClient.updateContext(val)
         case 'user':
-          return NativeClient.updateUser(val)
+          const { id, name, email } = val
+          return NativeClient.updateUser(id, name, email)
         default:
           return NativeClient.updateMetaData({ [prop]: val })
       }
@@ -32,14 +30,19 @@ module.exports = {
       }
     }
 
-    const nativeSubscribe = (cb) => getEmitter().addListener('sync', cb)
+    const nativeSubscribe = (cb) => getEmitter().addListener('bugsnag::sync', cb)
     nativeSubscribe(event => {
       switch (event.type) {
         case 'USER_UPDATE':
           client._internalState._set({ key: 'user', nestedKeys: [], value: event.value, silent: true })
           break
         case 'META_DATA_UPDATE':
-          // set metaData
+          Object.keys(event.value).forEach(k => {
+            client._internalState._set({ key: k, nestedKeys: [], value: event.value[k], silent: true })
+          })
+          break
+        case 'CONTEXT_UPDATE':
+          client._internalState._set({ key: 'context', nestedKeys: [], value: event.value, silent: true })
           break
         // etc.
         default:
