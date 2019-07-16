@@ -1,4 +1,5 @@
 import Breadcrumb from "./breadcrumb";
+import * as common from "./common";
 
 declare class Report {
   public static getStacktrace(
@@ -13,25 +14,6 @@ declare class Report {
     generatedFramesToSkip?: number,
   ): Report;
 
-  public app: {
-    releaseStage: string;
-    [key: string]: string;
-  };
-  public apiKey: string;
-  public breadcrumbs: Breadcrumb[];
-  public context: string;
-  public device: object;
-  public errorClass: string;
-  public errorMessage: string;
-  public groupingHash: string;
-  public metaData: object;
-  public severity: "info" | "warning" | "error";
-  public stacktrace: IStackframe[];
-  public user: object;
-  public session: object;
-  public request: {
-    url: string;
-  };
   public originalError: any;
 
   constructor(
@@ -44,9 +26,11 @@ declare class Report {
 
   public isIgnored(): boolean;
   public ignore(): void;
-  public updateMetaData(section: string, value: object): Report;
-  public updateMetaData(section: string, property: string, value: object): Report;
-  public removeMetaData(section: string, property: string): Report;
+
+  public set(updates: common.IStateUpdateObj): void;
+  public set(key: string, ...args: any[]): void;
+  public get(key: string, ...nestedKeys: string[]): any;
+  public clear(key: string, ...nestedKeys: string[]): void;
 }
 
 interface IHandledState {

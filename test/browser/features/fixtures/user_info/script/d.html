@@ -14,13 +14,11 @@
   </head>
   <body>
     <script>
-      bugsnagClient.notify(new Error('user info does work'), {
-        beforeSend: function (report) {
-          report.user = {
-            id: 'cjhc06q3d0000q9ojtam2y3w5',
-            name: 'Bug S. Nag'
-          }
-        }
+      bugsnagClient.notify(new Error('user info does work'), function (report) {
+        report.set('user', {
+          id: 'cjhc06q3d0000q9ojtam2y3w5',
+          name: 'Bug S. Nag'
+        })
       })
     </script>
   </body>

@@ -38,7 +38,6 @@ module.exports = (client, fetch = global.fetch) => {
   return {
     sendReport: (report, cb = () => {}) => {
       const url = client.config.endpoints.notify
-
       let body, opts
       try {
         body = payload.report(report, client.config.filters)
@@ -46,17 +45,17 @@ module.exports = (client, fetch = global.fetch) => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Bugsnag-Api-Key': report.apiKey || client.config.apiKey,
+            'Bugsnag-Api-Key': report.apiKey,
             'Bugsnag-Payload-Version': '4',
             'Bugsnag-Sent-At': isoDate()
           },
           body
         }
-        if (!networkStatus.isConnected || report.attemptImmediateDelivery === false) {
+        if (!networkStatus.isConnected || report.events[0].attemptImmediateDelivery === false) {
           enqueue('report', { url, opts })
           return cb(null)
         }
-        client._logger.info(`Sending report ${report.events[0].errorClass}: ${report.events[0].errorMessage}`)
+        client._logger.info(`Sending report ${report.events[0].get('errorClass')}: ${report.events[0].get('errorMessage')}`)
         send(url, opts, err => {
           if (err) return onerror(err, { url, opts }, 'report', cb)
           cb(null)

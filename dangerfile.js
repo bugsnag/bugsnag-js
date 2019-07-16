@@ -14,11 +14,11 @@ const after = {
 
 const formatKbs = (n) => `${(n / 1000).toFixed(2)} kB`
 
-const diffMinSize = before.minified - after.minified
-const diffZipSize = before.gzipped - after.gzipped
+const diffMinSize = after.minified - before.minified
+const diffZipSize = after.gzipped - before.gzipped
 const showDiff = n => {
-  if (n > 0) return `⚠️ +${n} bytes ⬆️`
-  if (n < 0) return `-${n} bytes ⬇️`
+  if (n > 0) return `⚠️ \`+${n.toLocaleString()} bytes\``
+  if (n < 0) return `\`${n.toLocaleString()} bytes\``
   return '_No change_'
 }
 

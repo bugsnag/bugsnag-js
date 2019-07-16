@@ -1,7 +1,7 @@
 const serializeForNativeLayer = require('./native-serializer')
+const { DeviceEventEmitter, NativeEventEmitter, NativeModules, Platform } = require('react-native')
 
 module.exports = {
-  name: 'observedClient',
   init: (client, NativeClient) => {
     // patch breadcrumb method to sync it on the native client
     client.leaveBreadcrumb = (name, metaData, type, timestamp) => {
@@ -9,75 +9,41 @@ module.exports = {
       NativeClient.leaveBreadcrumb({ name, metadata, type, timestamp })
     }
 
-    // constructs proxies which wrap the client and its properties so
-    // that behaves the same, but we can be notified of updates
-    const observeClient = client => {
-      const listeners = []
-
-      // TODO: make this watch all nested props
-      const watch = (obj, prop, value) => {
-        return new Proxy(value, clientPropHandler(prop))
+    client._internalState.subscribe((prop, val) => {
+      console.log('CHANGE', prop, val)
+      switch (prop) {
+        case 'context':
+          return NativeClient.updateContext(val)
+        case 'user':
+          return NativeClient.updateUser(val)
+        default:
+          return NativeClient.updateMetaData({ [prop]: val })
       }
+    })
 
-      const clientPropHandler = (name) => ({
-        set: (obj, prop, value) => {
-          obj[prop] = value
-          updateListeners({ name: prop, value: obj[prop] })
-        },
-        deleteProperty: (obj, prop) => {
-          delete obj[prop]
-          updateListeners({ name: prop, value: obj[prop] })
-        }
-      })
-
-      const updateListeners = (data) => {
-        // notify the listeners of this update
-        listeners.forEach(l => l(data))
-      }
-
-      const update = (client, obj, prop, value) => {
-        switch (prop) {
-          case 'user':
-          case 'metaData':
-            obj[prop] = watch(obj, prop, value)
-            break
-          case 'context':
-            obj[prop] = value
-            break
-          default:
-            obj[prop] = value
-        }
-      }
-
-      return {
-        // proxies all the observable properties so that it can be subscribed to
-        observedClient: new Proxy(client, {
-          set: (obj, prop, value) => {
-            update(client, obj, prop, value)
-            updateListeners({ name: prop, value: obj[prop] })
-          },
-          deleteProperty: (obj, prop) => {
-            delete obj[prop]
-          }
-        }),
-
-        // provides an escape-hatch for updating properties
-        // without triggering circular updates
-        silentlyUpdate: (prop, val) => {
-          client[prop] = val
-        },
-
-        // subscribe to updates on the observed client
-        subscribe: (listener) => listeners.push(listener)
+    const getEmitter = () => {
+      switch (Platform.OS) {
+        case 'Android':
+          return DeviceEventEmitter
+        case 'iOS':
+          return NativeEventEmitter(NativeModules.BugsnagReactNativeEmitter)
+        default:
+          throw new Error('what platform are you even on though')
       }
     }
 
-    // make the client observable
-    const { observedClient, /* silentlyUpdate, */ subscribe } = observeClient(client)
-    subscribe(event => {
-      NativeClient.updateClientProperty(serializeForNativeLayer({ [event.name]: event.value }, client._logger))
+    const nativeSubscribe = (cb) => getEmitter().addListener('sync', cb)
+    nativeSubscribe(event => {
+      switch (event.type) {
+        case 'USER_UPDATE':
+          client._internalState._set({ key: 'user', nestedKeys: [], value: event.value, silent: true })
+          break
+        case 'META_DATA_UPDATE':
+          // set metaData
+          break
+        // etc.
+        default:
+      }
     })
-
-    return observedClient
   }
 }

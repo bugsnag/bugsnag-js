@@ -10,12 +10,12 @@ module.exports = {
       userAgent: nav.userAgent
     }
 
-    // merge with anything already set on the client
-    client.device = { ...device, ...client.device }
+    // merge with anything already set on the client (but don't overwrite anything)
+    client.set('device', { ...device, ...client.get('device') })
 
     // add time just as the report is sent
     client.config.beforeSend.unshift((report) => {
-      report.device = { ...report.device, time: isoDate() }
+      report.set('device', { time: isoDate() })
     })
   }
 }

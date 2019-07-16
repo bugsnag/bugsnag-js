@@ -2,7 +2,7 @@ module.exports = {
   init: (client, NativeClient) => {
     client.config.beforeSend.unshift(async report => {
       const info = NativeClient.nativePayloadInfo()
-      console.log('TODO add native payload info to report', info)
+      report.set(info)
     })
   }
 }

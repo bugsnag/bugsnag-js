@@ -51,7 +51,7 @@ module.exports = (opts) => {
 
   bugsnag._logger.debug(`Loaded!`)
 
-  return bugsnag.getPlugin('observedClient')
+  return bugsnag
 }
 
 module.exports['default'] = module.exports

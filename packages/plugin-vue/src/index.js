@@ -8,7 +8,7 @@ module.exports = {
       const handledState = { severity: 'error', unhandled: true, severityReason: { type: 'unhandledException' } }
       const report = new client.BugsnagReport(err.name, err.message, client.BugsnagReport.getStacktrace(err), handledState, err)
 
-      report.updateMetaData('vue', {
+      report.set('vue', {
         errorInfo: info,
         component: vm ? formatComponentName(vm, true) : undefined,
         props: vm ? vm.$options.propsData : undefined

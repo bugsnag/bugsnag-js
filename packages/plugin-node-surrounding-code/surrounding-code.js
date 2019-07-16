@@ -30,7 +30,7 @@ module.exports = {
 
     client.config.beforeSend.push(report => new Promise((resolve, reject) => {
       const cache = Object.create(null)
-      pMapSeries(report.stacktrace.map(stackframe => () => loadSurroundingCode(stackframe, cache)))
+      pMapSeries(report.get('stacktrace').map(stackframe => () => loadSurroundingCode(stackframe, cache)))
         .then(resolve)
         .catch(reject)
     }))
