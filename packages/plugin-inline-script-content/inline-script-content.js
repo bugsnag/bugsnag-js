@@ -57,7 +57,7 @@ module.exports = {
       // happens before the inline script check as it happens for all errors
       report.set('stacktrace', filter(report.get('stacktrace'), f => !(/__trace__$/.test(f.method))))
 
-      const frame = report.get('stacktrace', [0])
+      const frame = report.get('stacktrace')[0]
 
       // if frame.file exists and is not the original location of the page, this can't be an inline script
       if (frame && frame.file && frame.file.replace(/#.*$/, '') !== originalLocation.replace(/#.*$/, '')) return

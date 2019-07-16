@@ -187,7 +187,7 @@ Lorem ipsum dolor sit amet.
     const spy = spyOn(client._logger, 'error')
     client.notify(new Report('EmptyStacktrace', 'Has nothing in it', []))
     expect(payloads.length).toEqual(1)
-    expect(payloads[0].events[0].stacktrace).toEqual([])
+    expect(payloads[0].events[0].get('stacktrace')).toEqual([])
     expect(spy).toHaveBeenCalledTimes(0)
   })
 
