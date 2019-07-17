@@ -115,11 +115,18 @@ class State {
 
   _set ({ key, nestedKeys, value, silent }) {
     if (nestedKeys.length < 1) {
-      if (isRequiredSection(this.props, key) && (!value || typeof value !== 'object' || value === CLEAR_SYMBOL)) {
+      const requiredSection = isRequiredSection(this.props, key)
+      const isObject = value && typeof value === 'object'
+      if (requiredSection && (!isObject || value === CLEAR_SYMBOL)) {
         this.onfail(value === CLEAR_SYMBOL ? `"${key}" is required and can’t be cleared` : `"${key}" must be an object`)
         return
       }
-      merge(this.state, `$__${key}`, value)
+      if (isObject && !isArray(value)) {
+        merge(this.state, `$__${key}`, {})
+        map(keys(value), k => this._set({ key, nestedKeys: [ k ], value: value[k], silent: true }))
+      } else {
+        merge(this.state, `$__${key}`, value)
+      }
     } else {
       if (this._locked && includes(keys(IMMUTABLE), key) && includes(IMMUTABLE[key], nestedKeys[0])) {
         this.onfail(`"${key}.${nestedKeys[0]}" cannot be changed after initialisation`)

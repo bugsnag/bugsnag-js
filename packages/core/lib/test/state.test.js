@@ -188,4 +188,14 @@ describe('@bugsnag/core/lib/state', () => {
       expect(Array.isArray(n.get('items'))).toBe(true)
     })
   })
+
+  describe('_setWithObject()', () => {
+    it('honours the rules', () => {
+      const m = new State()
+      m.set({ app: { version: '1.2.3' } })
+      m.lock()
+      m.set({ app: { version: '1.2.4' } })
+      expect(m.get('app', 'version')).toBe('1.2.3')
+    })
+  })
 })
