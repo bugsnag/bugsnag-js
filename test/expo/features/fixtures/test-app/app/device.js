@@ -8,26 +8,15 @@ export default class AppFeature extends Component {
   }
 
   clientDevice = () => {
-    bugsnagClient.device.osVersion = 'testOSVersion'
-    bugsnagClient.device.newThing = 'this is new'
+    bugsnagClient.set('device', 'osVersion', 'testOSVersion')
+    bugsnagClient.set('device', 'newThing', 'this is new')
     bugsnagClient.notify(new Error('DeviceClientError'))
   }
 
   callbackDevice = () => {
-    bugsnagClient.notify(new Error('DeviceCallbackError'), {
-      beforeSend: report => {
-        report.device.model = 'brandNewPhone',
-        report.device.newThing = 'another new thing'
-      }
-    })
-  }
-
-  optsDevice = () => {
-    bugsnagClient.notify(new Error('DeviceOptsError'), {
-      device: {
-        id: "assuming direct control",
-        newThing: "not original"
-      }
+    bugsnagClient.notify(new Error('DeviceCallbackError'), report => {
+      report.set('device', 'model', 'brandNewPhone',)
+      report.set('device', 'newThing', 'another new thing')
     })
   }
 
@@ -45,10 +34,6 @@ export default class AppFeature extends Component {
         <Button accessibilityLabel="deviceCallbackButton"
           title="callbackDevice"
           onPress={this.callbackDevice}
-        />
-        <Button accessibilityLabel="deviceOptsButton"
-          title="optsDevice"
-          onPress={this.optsDevice}
         />
       </View>
     )

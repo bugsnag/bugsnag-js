@@ -4,18 +4,14 @@ import { bugsnagClient } from './bugsnag'
 
 export default class IgnoreReport extends Component {
   ignoreReportIgnore = () => {
-    bugsnagClient.notify(new Error('IgnoredError'), {
-      beforeSend: report => {
-        report.ignore()
-      }
+    bugsnagClient.notify(new Error('IgnoredError'), report => {
+      report.ignore()
     })
   }
 
   ignoreReportFalse = () => {
-    bugsnagClient.notify(new Error('IgnoredError'), {
-      beforeSend: report => {
-        return false
-      }
+    bugsnagClient.notify(new Error('IgnoredError'), report => {
+      return false
     })
   }
 

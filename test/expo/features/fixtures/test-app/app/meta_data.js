@@ -4,35 +4,17 @@ import { bugsnagClient } from './bugsnag'
 
 export default class MetaData extends Component {
   metaDataClient = () => {
-    bugsnagClient.metaData = {
-      extra: {
-        reason: "metaDataClientName"
-      }
-    }
+    bugsnagClient.set('extra', {
+      reason: "metaDataClientName"
+    })
     bugsnagClient.notify(new Error('MetaDataClientError'))
   }
 
   metaDataCallback = () => {
-    bugsnagClient.notify(new Error('MetaDataCallbackError'),
-    {
-      beforeSend: report => {
-        report.metaData = {
-          extra: {
-            reason: "metaDataCallbackName"
-          }
-        }
-      }
-    })
-  }
-
-  metaDataOpts = () => {
-    bugsnagClient.notify(new Error('MetaDataOptsError'),
-    {
-      metaData: {
-        extra: {
-          reason: "metaDataOptsName"
-        }
-      }
+    bugsnagClient.notify(new Error('MetaDataCallbackError'), report => {
+      report.set('extra', {
+        reason: "metaDataCallbackName"
+      })
     })
   }
 
@@ -46,10 +28,6 @@ export default class MetaData extends Component {
         <Button accessibilityLabel="metaDataCallbackButton"
           title="metaDataCallback"
           onPress={this.metaDataCallback}
-        />
-        <Button accessibilityLabel="metaDataOptsButton"
-          title="metaDataOpts"
-          onPress={this.metaDataOpts}
         />
       </View>
     )

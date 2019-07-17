@@ -19,11 +19,3 @@ Scenario: User data can be set via a callback
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "UserCallbackError"
   And the event "user.name" equals "userCallbackName"
-
-Scenario: User data can be set via handled options
-  Given the element "userOptsButton" is present
-  When I click the element "userOptsButton"
-  Then I wait to receive a request
-  And the exception "errorClass" equals "Error"
-  And the exception "message" equals "UserOptsError"
-  And the event "user.name" equals "userOptsName"
