@@ -121,7 +121,7 @@ class State {
         this.onfail(value === CLEAR_SYMBOL ? `"${key}" is required and can’t be cleared` : `"${key}" must be an object`)
         return
       }
-      if (isObject && !isArray(value)) {
+      if (isObject && !isArray(value) && value !== CLEAR_SYMBOL) {
         merge(this.state, `$__${key}`, {})
         map(keys(value), k => this._set({ key, nestedKeys: [ k ], value: value[k], silent: true }))
       } else {
