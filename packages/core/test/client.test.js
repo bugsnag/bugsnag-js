@@ -112,23 +112,6 @@ describe('@bugsnag/core/client', () => {
       client.notify(new Error('oh em gee'))
     })
 
-    it('supports manually setting severity', done => {
-      const client = new Client(VALID_NOTIFIER)
-      client.delivery(client => ({
-        sendReport: (payload) => {
-          expect(payload).toBeTruthy()
-          expect(Array.isArray(payload.events)).toBe(true)
-          const report = payload.events[0].toJSON()
-          expect(report.severity).toBe('error')
-          expect(report.severityReason).toEqual({ type: 'userSpecifiedSeverity' })
-          done()
-        }
-      }))
-      client.setOptions({ apiKey: 'API_KEY_YEAH' })
-      client.configure()
-      client.notify(new Error('oh em gee'), { severity: 'error' })
-    })
-
     it('supports setting severity via callback', done => {
       const client = new Client(VALID_NOTIFIER)
       client.delivery(client => ({
@@ -143,10 +126,8 @@ describe('@bugsnag/core/client', () => {
       }))
       client.setOptions({ apiKey: 'API_KEY_YEAH' })
       client.configure()
-      client.notify(new Error('oh em gee'), {
-        beforeSend: report => {
-          report.severity = 'info'
-        }
+      client.notify(new Error('oh em gee'), report => {
+        report.set('severity', 'info')
       })
     })
 
@@ -160,8 +141,8 @@ describe('@bugsnag/core/client', () => {
       client.setOptions({ apiKey: 'API_KEY_YEAH' })
       client.configure()
 
-      client.notify(new Error('oh em gee'), { beforeSend: report => report.ignore() })
-      client.notify(new Error('oh em eff gee'), { beforeSend: report => false })
+      client.notify(new Error('oh em gee'), report => report.ignore())
+      client.notify(new Error('oh em eff gee'), report => false)
 
       // give the event loop a tick to see if the reports get send
       process.nextTick(() => done())
@@ -199,42 +180,43 @@ describe('@bugsnag/core/client', () => {
       process.nextTick(() => done())
     })
 
-    it('supports setting releaseStage via client.app.releaseStage', done => {
-      const client = new Client(VALID_NOTIFIER)
-      client.delivery(client => ({
-        sendReport: (payload) => {
-          fail('sendReport() should not be called')
-        }
-      }))
-      client.setOptions({ apiKey: 'API_KEY_YEAH', notifyReleaseStages: [ 'production' ] })
-      client.configure()
-      client.app.releaseStage = 'staging'
+    // it('supports setting releaseStage via client.app.releaseStage', done => {
+    //   const client = new Client(VALID_NOTIFIER)
+    //   client.delivery(client => ({
+    //     sendReport: (payload) => {
+    //       fail('sendReport() should not be called')
+    //     }
+    //   }))
+    //   client.setOptions({ apiKey: 'API_KEY_YEAH', notifyReleaseStages: [ 'production' ] })
+    //   client.configure()
+    //   client.app.releaseStage = 'staging'
+    //
+    //   client.notify(new Error('oh em eff gee'))
+    //
+    //   // give the event loop a tick to see if the reports get send
+    //   process.nextTick(() => done())
+    // })
 
-      client.notify(new Error('oh em eff gee'))
-
-      // give the event loop a tick to see if the reports get send
-      process.nextTick(() => done())
-    })
-
-    it('includes releaseStage in report.app', done => {
-      const client = new Client(VALID_NOTIFIER)
-      client.delivery(client => ({
-        sendReport: (payload) => {
-          expect(payload.events[0].app.releaseStage).toBe('staging')
-          done()
-        }
-      }))
-      client.setOptions({ apiKey: 'API_KEY_YEAH', notifyReleaseStages: [ 'staging' ] })
-      client.configure()
-      client.app.releaseStage = 'staging'
-      client.notify(new Error('oh em eff gee'))
-    })
+    // TODO: client.set('app', 'releaseStage', 'staging') is not allowed
+    // it('includes releaseStage in report.app', done => {
+    //   const client = new Client(VALID_NOTIFIER)
+    //   client.delivery(client => ({
+    //     sendReport: (payload) => {
+    //       expect(payload.events[0].app.releaseStage).toBe('staging')
+    //       done()
+    //     }
+    //   }))
+    //   client.setOptions({ apiKey: 'API_KEY_YEAH', notifyReleaseStages: [ 'staging' ] })
+    //   client.configure()
+    //   client.set('app', 'releaseStage', 'staging')
+    //   client.notify(new Error('oh em eff gee'))
+    // })
 
     it('includes releaseStage in report.app when set via config', done => {
       const client = new Client(VALID_NOTIFIER)
       client.delivery(client => ({
         sendReport: (payload) => {
-          expect(payload.events[0].app.releaseStage).toBe('staging')
+          expect(payload.events[0].get('app', 'releaseStage')).toBe('staging')
           done()
         }
       }))
@@ -243,25 +225,26 @@ describe('@bugsnag/core/client', () => {
       client.notify(new Error('oh em eff gee'))
     })
 
-    it('prefers client.app.releaseStage over config.releaseStage', done => {
-      const client = new Client(VALID_NOTIFIER)
-      client.delivery(client => ({
-        sendReport: (payload) => {
-          expect(payload.events[0].app.releaseStage).toBe('testing')
-          done()
-        }
-      }))
-      client.setOptions({ apiKey: 'API_KEY_YEAH', notifyReleaseStages: [ 'testing' ], releaseStage: 'staging' })
-      client.configure()
-      client.app.releaseStage = 'testing'
-      client.notify(new Error('oh em eff gee'))
-    })
+    // TODO: don't allow client.set('app', 'releaseStage')
+    // it('prefers client.app.releaseStage over config.releaseStage', done => {
+    //   const client = new Client(VALID_NOTIFIER)
+    //   client.delivery(client => ({
+    //     sendReport: (payload) => {
+    //       expect(payload.events[0].app.releaseStage).toBe('testing')
+    //       done()
+    //     }
+    //   }))
+    //   client.setOptions({ apiKey: 'API_KEY_YEAH', notifyReleaseStages: [ 'testing' ], releaseStage: 'staging' })
+    //   client.configure()
+    //   client.app.releaseStage = 'testing'
+    //   client.notify(new Error('oh em eff gee'))
+    // })
 
     it('populates client.app.version if config.appVersion is supplied', done => {
       const client = new Client(VALID_NOTIFIER)
       client.delivery(client => ({
         sendReport: (payload) => {
-          expect(payload.events[0].app.version).toBe('1.2.3')
+          expect(payload.events[0].get('app', 'version')).toBe('1.2.3')
           done()
         }
       }))
@@ -282,7 +265,6 @@ describe('@bugsnag/core/client', () => {
       client.notify(() => {})
       client.notify(1)
       client.notify('errrororor')
-      client.notify('str1', 'str2')
       client.notify('str1', null)
 
       expect(payloads[0].events[0].toJSON().exceptions[0].message).toBe('Bugsnag usage error. notify() expected error/opts parameters, got nothing')
@@ -290,7 +272,6 @@ describe('@bugsnag/core/client', () => {
       expect(payloads[2].events[0].toJSON().exceptions[0].message).toBe('Bugsnag usage error. notify() expected error/opts parameters, got function')
       expect(payloads[3].events[0].toJSON().exceptions[0].message).toBe('1')
       expect(payloads[4].events[0].toJSON().exceptions[0].message).toBe('errrororor')
-      expect(payloads[5].events[0].toJSON().metaData).toEqual({ notifier: { notifyArgs: [ 'str1', 'str2' ] } })
     })
 
     it('supports { name, message } usage', () => {
@@ -320,20 +301,20 @@ describe('@bugsnag/core/client', () => {
       expect(client.breadcrumbs[0].name).toBe('Error')
       expect(client.breadcrumbs[0].metaData.stacktrace).toBe(undefined)
       // the error shouldn't appear as a breadcrumb for itself
-      expect(payloads[0].events[0].breadcrumbs.length).toBe(0)
+      expect(payloads[0].events[0].get('breadcrumbs').length).toBe(0)
     })
 
-    it('doesn’t modify global client.metaData when using updateMetaData() method', () => {
+    it('doesn’t modify client metaData when updating report metaData', () => {
       const client = new Client(VALID_NOTIFIER)
       client.setOptions({ apiKey: 'API_KEY_YEAH' })
       client.configure()
-      client.metaData = { foo: [ 1, 2, 3 ] }
+      client.set({ foo: [ 1, 2, 3 ] })
       client.notify(new Error('changes afoot'), {
         beforeSend: (report) => {
-          report.updateMetaData('foo', '3', 1)
+          report.set('foo', '3', 1)
         }
       })
-      expect(client.metaData.foo['3']).toBe(undefined)
+      expect(client.get('foo', '3')).toBe(undefined)
     })
 
     it('should call the callback (success)', done => {
@@ -344,10 +325,10 @@ describe('@bugsnag/core/client', () => {
         sendSession: () => {},
         sendReport: (report, cb) => cb(null)
       }))
-      client.notify(new Error('111'), {}, (err, report) => {
+      client.notify(new Error('111'), () => {}, (err, report) => {
         expect(err).toBe(null)
         expect(report).toBeTruthy()
-        expect(report.errorMessage).toBe('111')
+        expect(report.get('errorMessage')).toBe('111')
         done()
       })
     })
@@ -360,11 +341,11 @@ describe('@bugsnag/core/client', () => {
         sendSession: () => {},
         sendReport: (report, cb) => cb(new Error('flerp'))
       }))
-      client.notify(new Error('111'), {}, (err, report) => {
+      client.notify(new Error('111'), () => {}, (err, report) => {
         expect(err).toBeTruthy()
         expect(err.message).toBe('flerp')
         expect(report).toBeTruthy()
-        expect(report.errorMessage).toBe('111')
+        expect(report.get('errorMessage')).toBe('111')
         done()
       })
     })
@@ -377,10 +358,10 @@ describe('@bugsnag/core/client', () => {
         sendSession: () => {},
         sendReport: (report, cb) => cb(null)
       }))
-      client.notify(new Error('111'), {}, (err, report) => {
+      client.notify(new Error('111'), () => {}, (err, report) => {
         expect(err).toBe(null)
         expect(report).toBeTruthy()
-        expect(report.errorMessage).toBe('111')
+        expect(report.get('errorMessage')).toBe('111')
         done()
       })
     })
@@ -393,10 +374,10 @@ describe('@bugsnag/core/client', () => {
         sendSession: () => {},
         sendReport: (report, cb) => cb(null)
       }))
-      client.notify(new Error('111'), {}, (err, report) => {
+      client.notify(new Error('111'), () => {}, (err, report) => {
         expect(err).toBe(null)
         expect(report).toBeTruthy()
-        expect(report.errorMessage).toBe('111')
+        expect(report.get('errorMessage')).toBe('111')
         done()
       })
     })

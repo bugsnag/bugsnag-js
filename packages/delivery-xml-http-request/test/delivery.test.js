@@ -1,6 +1,7 @@
 const { describe, it, expect } = global
 
 const delivery = require('../')
+const Report = require('@bugsnag/core/report')
 
 describe('delivery:XMLHttpRequest', () => {
   it('sends reports successfully', done => {
@@ -29,12 +30,12 @@ describe('delivery:XMLHttpRequest', () => {
       this.onreadystatechange()
     }
 
-    const payload = { sample: 'payload' }
     const config = {
       apiKey: 'aaaaaaaa',
       endpoints: { notify: '/echo/' },
       filters: []
     }
+    const payload = { apiKey: config.apiKey, events: [ new Report('Error', 'sample error') ] }
     delivery({ logger: {}, config }, { XMLHttpRequest }).sendReport(payload, (err) => {
       expect(err).toBe(null)
       expect(requests.length).toBe(1)
@@ -75,12 +76,12 @@ describe('delivery:XMLHttpRequest', () => {
       this.onreadystatechange()
     }
 
-    const payload = { sample: 'payload' }
     const config = {
       apiKey: 'aaaaaaaa',
       endpoints: { notify: '/', sessions: '/echo/' },
       filters: []
     }
+    const payload = { apiKey: config.apiKey, events: [ new Report('Error', 'sample error') ] }
     delivery({ config, logger: {} }, { XMLHttpRequest }).sendSession(payload, (err) => {
       expect(err).toBe(null)
       expect(requests.length).toBe(1)

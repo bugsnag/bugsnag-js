@@ -8,11 +8,8 @@ export default class AppFeature extends Component {
   }
 
   enhancedApp = () => {
-    bugsnagClient.notify(new Error('HandledError'), {
-      beforeSend: report => {
-        report.app.releaseStage = 'enhancedReleaseStage',
-        report.app.version = '5.5.5'
-      }
+    bugsnagClient.notify(new Error('HandledError'), report => {
+        report.set('app', 'id', 'com.enhanced.app')
     })
   }
 

@@ -41,7 +41,7 @@ module.exports = {
               error
             )
             // include the raw input as metadata
-            report.updateMetaData('window onerror', { error })
+            report.set('window onerror', { error })
           }
         } else if (
           // This complex case detects "error" events that are typically synthesised
@@ -69,7 +69,7 @@ module.exports = {
             messageOrEvent
           )
           // include the raw input as metadata – it might contain more info than we extracted
-          report.updateMetaData('window onerror', { event: messageOrEvent, extraParameters: url })
+          report.set('window onerror', { event: messageOrEvent, extraParameters: url })
         } else {
           // Lastly, if there was no "error" parameter this event was probably from an old
           // browser that doesn't support that. Instead we need to generate a stacktrace.
@@ -81,7 +81,7 @@ module.exports = {
             messageOrEvent
           )
           // include the raw input as metadata – it might contain more info than we extracted
-          report.updateMetaData('window onerror', { event: messageOrEvent })
+          report.set('window onerror', { event: messageOrEvent })
         }
 
         client.notify(report)

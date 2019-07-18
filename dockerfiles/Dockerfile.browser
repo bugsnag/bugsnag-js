@@ -21,8 +21,8 @@ RUN npm pack --verbose packages/plugin-angular/
 RUN npm pack --verbose packages/plugin-react/
 RUN npm pack --verbose packages/plugin-vue/
 
-COPY test/browser test/browser
-
+# copy in and build fixtures
+COPY test/browser/features/fixtures test/browser/features/fixtures/
 WORKDIR /app/test/browser/features/fixtures
 RUN npm install --no-package-lock --no-save ../../../../bugsnag-browser-*.tgz
 RUN npm install --no-package-lock --no-save ../../../../bugsnag-plugin-react-*.tgz
@@ -42,6 +42,13 @@ RUN find . -path */package.json -type f -mindepth 2 -maxdepth 3 | \
 # once the fixtures are built we no longer need node_modules and
 # it makes the COPY later on much faster if we don't have them
 RUN rm -fr **/*/node_modules/
+
+# finally copy over features to prevent unnecessary cache invalidations
+WORKDIR /app
+COPY test/browser/features/lib test/browser/features/lib/
+COPY test/browser/features/steps test/browser/features/steps/
+COPY test/browser/features/support test/browser/features/support/
+COPY test/browser/features/* test/browser/features/
 
 # The maze-runner browser tests
 FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner:v2-cli as browser-maze-runner

@@ -103,7 +103,7 @@ describe('plugin: server sessions', () => {
     })
 
     // this is normally set by a plugin
-    c.device = { hostname: 'test-machine.local', runtimeVersions: { node: '0.0.1' } }
+    c.set('device', { hostname: 'test-machine.local', runtimeVersions: { node: '0.0.1' } })
 
     c.delivery(client => ({
       sendReport: () => {},
@@ -136,16 +136,16 @@ describe('plugin: server sessions', () => {
     c.use(plugin)
 
     c.leaveBreadcrumb('tick')
-    c.metaData = { datetime: { tz: 'GMT+1' } }
+    c.set({ datetime: { tz: 'GMT+1' } })
 
     const sessionClient = c.startSession()
 
     sessionClient.leaveBreadcrumb('tock')
-    sessionClient.metaData = { ...sessionClient.metaData, other: { widgetsAdded: 'cat,dog,mouse' } }
+    sessionClient.set({ ...sessionClient.metaData, other: { widgetsAdded: 'cat,dog,mouse' } })
 
     expect(c.breadcrumbs.length).toBe(1)
-    expect(Object.keys(c.metaData).length).toBe(1)
+    expect(c.get('other')).toBe(undefined)
     expect(sessionClient.breadcrumbs.length).toBe(2)
-    expect(Object.keys(sessionClient.metaData).length).toBe(2)
+    expect(sessionClient.get('other')).toEqual({ widgetsAdded: 'cat,dog,mouse' })
   })
 })

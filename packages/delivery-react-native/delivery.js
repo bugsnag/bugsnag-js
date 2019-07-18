@@ -3,7 +3,7 @@ module.exports = (client, NativeClient) => ({
     const event = payload.events[0]
     const report = event.toJSON()
     // this is because JS beforeSend operates on the event – report is not in scope
-    report.threads = event.threads
+    report.threads = event.get('threads')
     NativeClient.deliver(report).then(cb).catch(cb)
   },
   sendSession: () => {

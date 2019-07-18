@@ -9,6 +9,7 @@ RUN npm install
 
 COPY babel.config.js tslint.json lerna.json ./
 COPY packages ./packages
+
 COPY bin ./bin
 RUN npx lerna bootstrap
 RUN npx lerna run build --scope "@bugsnag/expo" --scope "@bugsnag/plugin-react"

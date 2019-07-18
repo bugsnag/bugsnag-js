@@ -7,6 +7,9 @@ before_script:
   - npx lerna run build --scope @bugsnag/browser
   - cat packages/browser/dist/bugsnag.min.js | wc -c > .size/after-minified
   - cat packages/browser/dist/bugsnag.min.js | gzip | wc -c > .size/after-gzipped
+  - git reset --hard HEAD
+  - git remote set-branches origin $TRAVIS_BRANCH
+  - git fetch
   - git checkout $TRAVIS_BRANCH
   - npm ci
   - npx lerna bootstrap --ignore @bugsnag/expo

@@ -14,7 +14,7 @@ module.exports = (client) => ({
         url: client.config.endpoints.notify,
         headers: {
           'Content-Type': 'application/json',
-          'Bugsnag-Api-Key': report.apiKey || client.config.apiKey,
+          'Bugsnag-Api-Key': report.apiKey,
           'Bugsnag-Payload-Version': '4',
           'Bugsnag-Sent-At': isoDate()
         },
