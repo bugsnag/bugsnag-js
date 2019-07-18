@@ -7,11 +7,11 @@ steps:
           build: expo-publisher
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
           cache-from:
-            - expo-publisher:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-publisher-${BUILDKITE_BRANCH}
+            - expo-publisher:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-publisher-${BRANCH_NAME}
             - expo-publisher:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-publisher-latest
       - docker-compose#v2.6.0:
           push:
-            - expo-publisher:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-publisher-${BUILDKITE_BRANCH}
+            - expo-publisher:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-publisher-${BRANCH_NAME}
             - expo-publisher:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-publisher-latest
 
   - label: ':docker: Build expo maze runner image'
@@ -20,10 +20,10 @@ steps:
           build: expo-maze-runner
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
           cache-from:
-            - expo-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
+            - expo-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
       - docker-compose#v2.6.0:
           push:
-            - expo-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BUILDKITE_BRANCH}
+            - expo-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
             - expo-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-latest
 
   - label:  ':docker: Build expo APK builder'
@@ -34,11 +34,11 @@ steps:
           build: expo-android-builder
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
           cache-from:
-            - expo-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-android-builder-${BUILDKITE_BRANCH}
+            - expo-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-android-builder-${BRANCH_NAME}
             - expo-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-android-builder-latest
       - docker-compose#v2.6.0:
           push:
-            - expo-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-android-builder-${BUILDKITE_BRANCH}
+            - expo-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-android-builder-${BRANCH_NAME}
             - expo-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-android-builder-latest
 
   - wait
