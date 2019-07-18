@@ -9,7 +9,7 @@ export default class AppFeature extends Component {
 
   enhancedApp = () => {
     bugsnagClient.notify(new Error('HandledError'), report => {
-        report.set('app', 'name', 'enhanced app')
+        report.set('app', 'id', 'com.enhanced.app')
     })
   }
 
