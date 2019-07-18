@@ -28,13 +28,10 @@ const plugins = [
 
 const bugsnagReact = require('@bugsnag/plugin-react')
 
-module.exports = (opts) => {
-  // handle very simple use case where user supplies just the api key as a string
-  if (typeof opts === 'string') opts = { apiKey: opts }
-
+module.exports = (userOpts) => {
   // ensure opts is actually an object (at this point it
   // could be null, undefined, a number, a boolean etc.)
-  opts = { ...opts }
+  const opts = { ...NativeClient.configure(), ...userOpts }
 
   const bugsnag = new Client({ name, version, url })
 
