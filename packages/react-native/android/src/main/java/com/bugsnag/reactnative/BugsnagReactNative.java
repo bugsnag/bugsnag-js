@@ -106,7 +106,7 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
      * @return the config for use by the JS layer
      */
     @ReactMethod(isBlockingSynchronousMethod = true)
-    public WritableMap getConfig() {
+    public WritableMap configure() {
         configureBugsnagAndroidVersion(Bugsnag.getClient());
         setupNativeEventEmitter(reactContext);
 
