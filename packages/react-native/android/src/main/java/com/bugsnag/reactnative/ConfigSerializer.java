@@ -15,9 +15,15 @@ public class ConfigSerializer implements WritableMapSerializer<Configuration> {
         endpoints.putString("sessions", config.getSessionEndpoint());
         map.putMap("endpoints", endpoints);
         map.putString("apiKey", config.getApiKey());
-        map.putString("appVersion", config.getAppVersion());
+        String appVersion = config.getAppVersion();
+        if (appVersion != null) {
+            map.putString("appVersion", appVersion);
+        }
+        String releaseStage = config.getReleaseStage();
+        if (releaseStage != null) {
+            map.putString("releaseStage", releaseStage);
+        }
         map.putString("buildUuid", config.getBuildUUID());
-        map.putString("releaseStage", config.getReleaseStage());
         map.putBoolean("sendThreads", config.getSendThreads());
         map.putBoolean("autoCaptureSessions", config.getAutoCaptureSessions());
         map.putBoolean("detectAnrs", config.getDetectAnrs());
