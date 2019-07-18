@@ -21,9 +21,9 @@ module.exports = {
 
     const getEmitter = () => {
       switch (Platform.OS) {
-        case 'Android':
+        case 'android':
           return DeviceEventEmitter
-        case 'iOS':
+        case 'ios':
           return NativeEventEmitter(NativeModules.BugsnagReactNativeEmitter)
         default:
           throw new Error('what platform are you even on though')

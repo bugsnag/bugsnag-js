@@ -7,7 +7,7 @@ const proxyquire = require('proxyquire').noCallThru()
 describe('plugin: react native client sync', () => {
   const plugin = proxyquire('../', {
     'react-native': {
-      Platform: { OS: 'Android' },
+      Platform: { OS: 'android' },
       DeviceEventEmitter: { addListener: () => {} }
     }
   })
@@ -112,7 +112,7 @@ describe('plugin: react native client sync', () => {
     it('silently updates context when an update is received', () => {
       const plugin = proxyquire('../', {
         'react-native': {
-          Platform: { OS: 'Android' },
+          Platform: { OS: 'android' },
           DeviceEventEmitter: {
             addListener: (event, listener) => {
               expect(event).toBe('bugsnag::sync')
@@ -135,7 +135,7 @@ describe('plugin: react native client sync', () => {
     it('silently updates user when an update is received', () => {
       const plugin = proxyquire('../', {
         'react-native': {
-          Platform: { OS: 'Android' },
+          Platform: { OS: 'android' },
           DeviceEventEmitter: {
             addListener: (event, listener) => {
               expect(event).toBe('bugsnag::sync')
@@ -158,7 +158,7 @@ describe('plugin: react native client sync', () => {
     it('silently updates metadata when an update is received', () => {
       const plugin = proxyquire('../', {
         'react-native': {
-          Platform: { OS: 'Android' },
+          Platform: { OS: 'android' },
           DeviceEventEmitter: {
             addListener: (event, listener) => {
               expect(event).toBe('bugsnag::sync')
@@ -184,7 +184,7 @@ describe('plugin: react native client sync', () => {
     it('ignores upates it doesn’t understand', (done) => {
       const plugin = proxyquire('../', {
         'react-native': {
-          Platform: { OS: 'Android' },
+          Platform: { OS: 'android' },
           DeviceEventEmitter: {
             addListener: (event, listener) => {
               expect(event).toBe('bugsnag::sync')
