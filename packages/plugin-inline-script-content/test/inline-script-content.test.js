@@ -190,4 +190,45 @@ Lorem ipsum dolor sit amet.
     expect(payloads[0].events[0].stacktrace).toEqual([])
     expect(spy).toHaveBeenCalledTimes(0)
   })
+
+  it('calls removeEventListener with wrapped and unwrapped callback', () => {
+    const scriptContent = `console.log("unwrapped")`
+    const document = {
+      scripts: [ { innerHTML: scriptContent } ],
+      currentScript: { innerHTML: scriptContent },
+      documentElement: {
+        outerHTML: `<p>
+Lorem ipsum dolor sit amet.
+Lorem ipsum dolor sit amet.
+Lorem ipsum dolor sit amet.
+</p>
+<script>${scriptContent}
+</script>
+<p>more content</p>`
+      }
+    }
+    function Window () {}
+    Window.prototype = {
+      addEventListener: function () {},
+      removeEventListener: function () {}
+    }
+    const window = {
+      location: { href: 'https://app.bugsnag.com/errors' }
+    }
+
+    Object.setPrototypeOf(window, Window.prototype)
+    window.Window = Window
+
+    function myfun () {}
+    window.addEventListener('click', myfun)
+
+    const spy = spyOn(Window.prototype, 'removeEventListener')
+    const client = new Client(VALID_NOTIFIER)
+    client.setOptions({ apiKey: 'API_KEY_YEAH' })
+    client.configure()
+    client.use(plugin, document, window)
+
+    window.removeEventListener('click', myfun)
+    expect(spy).toHaveBeenCalledTimes(2)
+  })
 })
