@@ -65,6 +65,8 @@ steps:
   - label: ':docker: Build expo IPA'
     agents:
       queue: "opensource-mac"
+    env:
+      EXPO_RELEASE_CHANNEL: ${BUILDKITE_BUILD_ID}
     artifact_paths: build/output.ipa
     commands:
       - test/expo/scripts/build-ios.sh
