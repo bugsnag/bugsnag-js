@@ -36,6 +36,9 @@ declare module "@bugsnag/core" {
 // two ways to call the exported function: apiKey or config object
 declare function bugsnag(apiKeyOrOpts: string | BugsnagCore.IConfig): BugsnagCore.Client;
 
+declare function loadConfig(): { [key: string]: any };
+
 // commonjs/requirejs export
 export default bugsnag;
+export { loadConfig };
 export { BugsnagCore as Bugsnag }
