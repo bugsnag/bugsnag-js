@@ -20,6 +20,8 @@ RUN node_modules/.bin/turtle setup:android
 
 COPY test/expo/features/fixtures/test-app .
 
+ENV GRADLE_OPTS="-Dorg.gradle.daemon=false"
+
 CMD EXPO_ANDROID_KEYSTORE_PASSWORD=password \
     EXPO_ANDROID_KEY_PASSWORD=password \
     node_modules/.bin/turtle build:android \
