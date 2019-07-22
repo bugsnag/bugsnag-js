@@ -18,6 +18,7 @@
   "scripts": {
     "clean": "rm -fr dist && mkdir dist",
     "bundle-types": "../../bin/bundle-types",
+    "test": "nyc --reporter=lcov -- jasmine '!(node_modules)/**/*.test.js'",
     "build": "npm run clean && npm run build:dist && npm run bundle-types",
     "build:dist": "../../bin/bundle src/notifier.js --node --exclude=iserror,stack-generator,error-stack-parser,pump,byline --standalone=bugsnag | ../../bin/extract-source-map dist/bugsnag.js",
     "postversion": "npm run build"
@@ -36,7 +37,7 @@
     "@bugsnag/plugin-node-unhandled-rejection": "^6.3.0",
     "@bugsnag/plugin-server-session": "^6.3.0",
     "@bugsnag/plugin-strip-project-root": "^6.3.0",
-    "jasmine": "^3.1.0",
+    "jasmine": "3.1.0",
     "nyc": "^12.0.2"
   },
   "dependencies": {

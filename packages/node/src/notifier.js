@@ -56,4 +56,6 @@ module.exports = (opts, userPlugins = []) => {
   return bugsnag
 }
 
+module.exports.loadConfig = require('./config-loader')
+
 module.exports['default'] = module.exports
