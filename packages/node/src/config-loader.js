@@ -1,15 +1,16 @@
 const { readFileSync } = require('fs')
-const { join, dirname } = require('path')
+const { join, resolve, sep } = require('path')
+
+const getAllContainingPaths = (p) => {
+  const parts = p.split(sep)
+  if (parts.length < 3) return [ p ]
+  return [ p ].concat(getAllContainingPaths(parts.slice(0, -1).join(sep)))
+}
 
 const LOOKUP_PATHS = []
-  .concat(
-    // current directory of the process
-    process.cwd()
-  )
-  .concat(
-    // directory of the app's entrypoint
-    process.mainModule ? dirname(process.mainModule.filename) : []
-  )
+  .concat(process.mainModule ? process.mainModule.paths.map(p => resolve(p, '..')) : [])
+  .concat(getAllContainingPaths(process.cwd()))
+  .reduce((accum, p) => accum.includes(p) ? accum : accum.concat(p), [])
 
 const findPackageConfig = () => {
   return LOOKUP_PATHS.reduce((accum, p) => {
