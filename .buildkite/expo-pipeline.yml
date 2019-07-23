@@ -1,5 +1,6 @@
 steps:
   - label:  ':docker: Build expo publisher'
+    timeout_in_minutes: 20
     env:
       EXPO_RELEASE_CHANNEL: ${BUILDKITE_BUILD_ID}
     plugins:
@@ -15,6 +16,7 @@ steps:
             - expo-publisher:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-publisher-latest
 
   - label: ':docker: Build expo maze runner image'
+    timeout_in_minutes: 5
     plugins:
       - docker-compose#v2.6.0:
           build: expo-maze-runner
@@ -27,6 +29,7 @@ steps:
             - expo-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-latest
 
   - label:  ':docker: Build expo APK builder'
+    timeout_in_minutes: 20
     env:
       EXPO_RELEASE_CHANNEL: ${BUILDKITE_BUILD_ID}
     plugins:
@@ -44,6 +47,7 @@ steps:
   - wait
 
   - label:  ':docker: Publish expo app'
+    timeout_in_minutes: 10
     env:
       EXPO_RELEASE_CHANNEL: ${BUILDKITE_BUILD_ID}
     plugins:
@@ -53,6 +57,7 @@ steps:
   - wait
 
   - label:  ':docker: Build expo APK'
+    timeout_in_minutes: 10
     env:
       EXPO_RELEASE_CHANNEL: ${BUILDKITE_BUILD_ID}
     artifact_paths: build/output.apk
@@ -63,6 +68,7 @@ steps:
             - expo-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-android-builder-latest
 
   - label: ':docker: Build expo IPA'
+    timeout_in_minutes: 10
     agents:
       queue: "opensource-mac"
     env:
@@ -74,6 +80,7 @@ steps:
   - wait
 
   - label: 'expo Android 9'
+    timeout_in_minutes: 30
     plugins:
       artifacts#v1.2.0:
         download: "build/output.apk"
@@ -87,6 +94,7 @@ steps:
     concurrency_group: 'browserstack-app'
 
   - label: 'expo Android 8'
+    timeout_in_minutes: 30
     plugins:
       artifacts#v1.2.0:
         download: "build/output.apk"
@@ -100,6 +108,7 @@ steps:
     concurrency_group: 'browserstack-app'
 
   - label: 'expo Android 7'
+    timeout_in_minutes: 30
     plugins:
       artifacts#v1.2.0:
         download: "build/output.apk"
@@ -113,6 +122,7 @@ steps:
     concurrency_group: 'browserstack-app'
 
   - label: 'expo Android 6'
+    timeout_in_minutes: 30
     plugins:
       artifacts#v1.2.0:
         download: "build/output.apk"
@@ -126,6 +136,7 @@ steps:
     concurrency_group: 'browserstack-app'
 
   - label: 'expo Android 5'
+    timeout_in_minutes: 30
     plugins:
       artifacts#v1.2.0:
         download: "build/output.apk"
@@ -139,6 +150,7 @@ steps:
     concurrency_group: 'browserstack-app'
 
   - label: 'expo iOS 10'
+    timeout_in_minutes: 30
     plugins:
       artifacts#v1.2.0:
         download: "build/output.ipa"
@@ -152,6 +164,7 @@ steps:
     concurrency_group: 'browserstack-app'
 
   - label: 'expo iOS 11'
+    timeout_in_minutes: 30
     plugins:
       artifacts#v1.2.0:
         download: "build/output.ipa"
@@ -165,6 +178,7 @@ steps:
     concurrency_group: 'browserstack-app'
 
   - label: 'expo iOS 12'
+    timeout_in_minutes: 30
     plugins:
       artifacts#v1.2.0:
         download: "build/output.ipa"
