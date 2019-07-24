@@ -21,16 +21,21 @@ module.exports = {
 
     const getEmitter = () => {
       switch (Platform.OS) {
-        case 'Android':
+        case 'android':
           return DeviceEventEmitter
-        case 'iOS':
+        case 'ios':
           return NativeEventEmitter(NativeModules.BugsnagReactNativeEmitter)
         default:
-          throw new Error('what platform are you even on though')
+          client._logger.error(new Error(`Platform "${Platform.OS}" is not fully supported by @bugsnag/react-native.`))
+          return null
       }
     }
 
-    const nativeSubscribe = (cb) => getEmitter().addListener('bugsnag::sync', cb)
+    const nativeSubscribe = (cb) => {
+      const nativeEmitter = getEmitter()
+      if (nativeEmitter) nativeEmitter.addListener('bugsnag::sync', cb)
+    }
+
     nativeSubscribe(event => {
       switch (event.type) {
         case 'USER_UPDATE':

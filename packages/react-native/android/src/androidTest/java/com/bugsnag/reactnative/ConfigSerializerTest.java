@@ -11,6 +11,7 @@ import androidx.test.InstrumentationRegistry;
 
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.NoSuchKeyException;
 import com.facebook.soloader.SoLoader;
 
 import org.junit.Test;
@@ -44,5 +45,25 @@ public class ConfigSerializerTest {
         ReadableMap endpoints = map.getMap("endpoints");
         assertEquals("https://notify.bugsnag.com", endpoints.getString("notify"));
         assertEquals("https://sessions.bugsnag.com", endpoints.getString("sessions"));
+    }
+
+    @Test
+    public void testConfigSerialisationWithMissingValues() throws IOException {
+        SoLoader.init(InstrumentationRegistry.getContext(), 0);
+        Configuration config = new Configuration("api-key");
+
+        WritableMap map = configSerializer.serialize(config);
+        assertNotNull(map);
+        assertEquals("api-key", map.getString("apiKey"));
+        try {
+          map.getString("appVersion");
+        } catch (NoSuchKeyException e) {
+          assertEquals(e.getMessage(), "appVersion");
+        }
+        try {
+          map.getString("releaseStage");
+        } catch (NoSuchKeyException e) {
+          assertEquals(e.getMessage(), "releaseStage");
+        }
     }
 }
