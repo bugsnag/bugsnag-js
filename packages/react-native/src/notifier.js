@@ -26,18 +26,41 @@ const plugins = [
   require('@bugsnag/plugin-react-native-orientation-breadcrumbs')
 ]
 
+const ALLOWED_JS_OPTS = [
+  'logger', 'beforeSend', 'user', 'context', 'metaData'
+]
+
 const bugsnagReact = require('@bugsnag/plugin-react')
 
-module.exports = (userOpts) => {
-  // ensure opts is actually an object (at this point it
-  // could be null, undefined, a number, a boolean etc.)
-  const opts = { ...NativeClient.configure(), ...userOpts }
+module.exports = (jsOpts = {}) => {
+  const warnings = []
+
+  if (typeof jsOpts === 'object' && jsOpts) {
+    const ignoredOpts = Object.keys(jsOpts).filter(k => !ALLOWED_JS_OPTS.includes(k))
+    if (ignoredOpts.length) {
+      warnings.push(`The following options were supplied in JS but they will not be used:\n\n- ${ignoredOpts.join('\n - ')}\n\nAll options should be supplied in native config except:\n\n- ${ALLOWED_JS_OPTS.join('\n - ')}`)
+    }
+  }
+
+  const opts = {
+    // all config is set up in and provided by the native layer…
+    ...NativeClient.configure(),
+    // …with a few exceptions
+    ...ALLOWED_JS_OPTS.reduce((accum, k) => {
+      if (jsOpts && typeof jsOpts === 'object' && typeof jsOpts[k] !== 'undefined') {
+        accum[k] = jsOpts[k]
+      }
+      return accum
+    }, {})
+  }
 
   const bugsnag = new Client({ name, version, url })
 
   bugsnag.delivery(client => delivery(client, NativeClient))
   bugsnag.setOptions(opts)
   bugsnag.configure(schema)
+
+  if (warnings) warnings.forEach(w => bugsnag._logger.warn(w))
 
   bugsnag.use(session, NativeClient)
   bugsnag.use(reportSync, NativeClient)
