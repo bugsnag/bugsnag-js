@@ -818,6 +818,17 @@
     lodash "^4.17.11"
     to-fast-properties "^2.0.0"
 
+"@bugsnag/core@^6.3.0":
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/@bugsnag/core/-/core-6.3.0.tgz#8050cf392f3cd2c4c8cf01a94c3744baa63edb23"
+  integrity sha512-VuOj8xIxoy5/derJ5zgQVtpDVV2YYcjIqhKeATzhWililroKlEfHw3LqriK50IM5sM6dQ9AxS4IV4uVnNeoepA==
+  dependencies:
+    "@bugsnag/cuid" "^3.0.0"
+    "@bugsnag/safe-json-stringify" "4.0.0"
+    error-stack-parser "^2.0.2"
+    iserror "0.0.2"
+    stack-generator "^2.0.3"
+
 "@bugsnag/core@^7.0.0-pre-alpha-ben.6":
   version "7.0.0-pre-alpha-ben.6"
   resolved "https://registry.yarnpkg.com/@bugsnag/core/-/core-7.0.0-pre-alpha-ben.6.tgz#453379e536fc2c304c54182d9b414ab14dccbedd"
@@ -834,94 +845,94 @@
   resolved "https://registry.yarnpkg.com/@bugsnag/cuid/-/cuid-3.0.0.tgz#2ee7642a30aee6dc86f5e7f824653741e42e5c35"
   integrity sha512-LOt8aaBI+KvOQGneBtpuCz3YqzyEAehd1f3nC5yr9TIYW1+IzYKa2xWS4EiMz5pPOnRPHkyyS5t/wmSmN51Gjg==
 
-"@bugsnag/delivery-expo@^6.2.0-alpha.1":
-  version "6.2.0-alpha.1"
-  resolved "https://registry.yarnpkg.com/@bugsnag/delivery-expo/-/delivery-expo-6.2.0-alpha.1.tgz#cde79ec8f18cc93ebc92abcc5f80b54750a7306e"
-  integrity sha512-IZG8l/AOGsxe/7sicawoFEo5Ezp2qb7oUAvYT5SZhS116I9WCSYOXa7s8ZvktJulGELHgpZwmZI9F/cmgV4Wjw==
+"@bugsnag/delivery-expo@^6.2.0":
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/@bugsnag/delivery-expo/-/delivery-expo-6.2.0.tgz#09e97bda5287101b9f4f947f6138c32b72fcff93"
+  integrity sha512-IiJDBkY6Z7j1lqiRsMsx/zY/ZD3mAsplCAZ7h/SXJPpROh1mCQuJLDi/UjenOOFABhqHCNo8ffdfhFHOx4mmMg==
   dependencies:
     "@bugsnag/core" "^7.0.0-pre-alpha-ben.6"
 
-"@bugsnag/expo@^6.2.0-alpha.1":
-  version "6.2.0-alpha.1"
-  resolved "https://registry.yarnpkg.com/@bugsnag/expo/-/expo-6.2.0-alpha.1.tgz#5d714c963101a0ef612c24f77448b8170385e739"
-  integrity sha512-8N92QlqjX1YeAgyNpb+rgcppCWfqS6vYGUysiZNXIKkqj/2lc5bRFMaByIk3T3li9qHFZe8mRVT6OpRG9SkqNg==
+"@bugsnag/expo@^6.3.0":
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/@bugsnag/expo/-/expo-6.3.0.tgz#d96ada2124a592a1a9e89fa003b71803a7760917"
+  integrity sha512-T5gByE/NRhhj3RKDdVbvR+KYVEB4zFpvqvsIOFgk6IFQpOn3eI4QKNGgU9vz8HyT3Xl0W+s6Tq8ftos/vTDN3g==
   dependencies:
-    "@bugsnag/core" "^7.0.0-pre-alpha-ben.6"
-    "@bugsnag/delivery-expo" "^6.2.0-alpha.1"
-    "@bugsnag/plugin-browser-session" "^7.0.0-pre-alpha-ben.6"
-    "@bugsnag/plugin-console-breadcrumbs" "^7.0.0-pre-alpha-ben.6"
-    "@bugsnag/plugin-expo-app" "^6.2.0-alpha.1"
-    "@bugsnag/plugin-expo-device" "^6.2.0-alpha.1"
-    "@bugsnag/plugin-network-breadcrumbs" "^7.0.0-pre-alpha-ben.6"
-    "@bugsnag/plugin-react" "^7.0.0-pre-alpha-ben.6"
-    "@bugsnag/plugin-react-native-app-state-breadcrumbs" "^6.2.0-alpha.1"
-    "@bugsnag/plugin-react-native-connectivity-breadcrumbs" "^6.2.0-alpha.1"
-    "@bugsnag/plugin-react-native-global-error-handler" "^6.2.0-alpha.1"
-    "@bugsnag/plugin-react-native-orientation-breadcrumbs" "^6.2.0-alpha.1"
-    "@bugsnag/plugin-react-native-unhandled-rejection" "^6.2.0-alpha.1"
+    "@bugsnag/core" "^6.3.0"
+    "@bugsnag/delivery-expo" "^6.2.0"
+    "@bugsnag/plugin-browser-session" "^6.3.0"
+    "@bugsnag/plugin-console-breadcrumbs" "^6.3.0"
+    "@bugsnag/plugin-expo-app" "^6.2.0"
+    "@bugsnag/plugin-expo-device" "^6.2.0"
+    "@bugsnag/plugin-network-breadcrumbs" "^6.3.0"
+    "@bugsnag/plugin-react" "^6.2.0"
+    "@bugsnag/plugin-react-native-app-state-breadcrumbs" "^6.3.0"
+    "@bugsnag/plugin-react-native-connectivity-breadcrumbs" "^6.3.0"
+    "@bugsnag/plugin-react-native-global-error-handler" "^6.2.0"
+    "@bugsnag/plugin-react-native-orientation-breadcrumbs" "^6.3.0"
+    "@bugsnag/plugin-react-native-unhandled-rejection" "^6.2.0"
     bugsnag-build-reporter "^1.0.1"
     bugsnag-sourcemaps "^1.1.0"
 
-"@bugsnag/plugin-browser-session@^7.0.0-pre-alpha-ben.6":
-  version "7.0.0-pre-alpha-ben.6"
-  resolved "https://registry.yarnpkg.com/@bugsnag/plugin-browser-session/-/plugin-browser-session-7.0.0-pre-alpha-ben.6.tgz#f1df7df9800c8cf2ba380e89692a75feac3a958e"
-  integrity sha512-5VE0WyvjMUtFV3oC6eQeqiukwZxaOX4XwlvAzpM2nrxYk3Yji8GKm+TRWxHM87TMJk/xtUbxSajJDmHwADK/zw==
+"@bugsnag/plugin-browser-session@^6.3.0":
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/@bugsnag/plugin-browser-session/-/plugin-browser-session-6.3.0.tgz#db33494f241c52f367d5b8a764133b6abe833b51"
+  integrity sha512-Q/0bFXmyYgIt8gGZ8Z+fcwF/AmRH9EEKrcrsTAlUwVrcIJbPRjJl8a2UkmPgZbIzpYCnHcOocQXniF7XOfuslg==
   dependencies:
-    "@bugsnag/core" "^7.0.0-pre-alpha-ben.6"
+    "@bugsnag/core" "^6.3.0"
 
-"@bugsnag/plugin-console-breadcrumbs@^7.0.0-pre-alpha-ben.6":
-  version "7.0.0-pre-alpha-ben.6"
-  resolved "https://registry.yarnpkg.com/@bugsnag/plugin-console-breadcrumbs/-/plugin-console-breadcrumbs-7.0.0-pre-alpha-ben.6.tgz#e182275d1cde15af2d388a50c8338fa3e4349384"
-  integrity sha512-K3pbXIM7yep2RCJ6gJ7AbMRBsyAeo9ho7laqQxZKqDqMMUTMHJz++0bMTcUUjro+lPVsQhPebOkr0VdAhJw/8w==
+"@bugsnag/plugin-console-breadcrumbs@^6.3.0":
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/@bugsnag/plugin-console-breadcrumbs/-/plugin-console-breadcrumbs-6.3.0.tgz#946f54d896e4b9a7ad6a1667a94d0390500abbae"
+  integrity sha512-T9DdYnBGyT1Gz2sVzrmc75SFSf7SvviXQTRk26HySFTnFVwQKeiombq6/GGjfFO6Gd4bnDF9OHVmDnxUgwXwMg==
   dependencies:
-    "@bugsnag/core" "^7.0.0-pre-alpha-ben.6"
+    "@bugsnag/core" "^6.3.0"
 
-"@bugsnag/plugin-expo-app@^6.2.0-alpha.1":
-  version "6.2.0-alpha.1"
-  resolved "https://registry.yarnpkg.com/@bugsnag/plugin-expo-app/-/plugin-expo-app-6.2.0-alpha.1.tgz#bdcf7853b8ef0d0d8996ed171946ae7adf698b28"
-  integrity sha512-co1mJM399hzhJ73yn/M2fKx4xnrawujyIrLRXCfBEI1yR9sR+lqEQol1xVywAIrX/WENMnfQxg6p5imIgb2mow==
+"@bugsnag/plugin-expo-app@^6.2.0":
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/@bugsnag/plugin-expo-app/-/plugin-expo-app-6.2.0.tgz#ab81708c1935846079f9ab64bb68d05d89bc7b86"
+  integrity sha512-u1IP77irnGsQ1/OmjCtvJPG81xUkPpk5GM9EuCf/YF9flx2G6XntOEi+cAJH5qQ/e1jeLRbYDyx+/gF8plmzOA==
 
-"@bugsnag/plugin-expo-device@^6.2.0-alpha.1":
-  version "6.2.0-alpha.1"
-  resolved "https://registry.yarnpkg.com/@bugsnag/plugin-expo-device/-/plugin-expo-device-6.2.0-alpha.1.tgz#369e0bbc5ad2c6dcda11daaaf193d3c495a7bf15"
-  integrity sha512-k7JSwcQ//ho3Yj2zaBspO2TwjVpkfhWixnkHKHxaiJTIYX8q5szkHfXGunDAimWHgJryfagoHPPom7dNBAJKfQ==
+"@bugsnag/plugin-expo-device@^6.2.0":
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/@bugsnag/plugin-expo-device/-/plugin-expo-device-6.2.0.tgz#a78c3b9a65ae927753f935f63cfdfbf6b5a9f050"
+  integrity sha512-1cKH7HkTq3JzyU25ENt224IKTbtiQIGdAJ+cR2ud1QgwHHCyxU7A25mxEmW0m1Kh8aE9H6GExmaa8Q/0jIOkoQ==
 
-"@bugsnag/plugin-network-breadcrumbs@^7.0.0-pre-alpha-ben.6":
-  version "7.0.0-pre-alpha-ben.6"
-  resolved "https://registry.yarnpkg.com/@bugsnag/plugin-network-breadcrumbs/-/plugin-network-breadcrumbs-7.0.0-pre-alpha-ben.6.tgz#ebf5456a6afbc287adee3ae636e5c017ce3c7a1b"
-  integrity sha512-TW8iAIck813dsv86bIHwmJ5+yL5/ndzwUZbrjiH6S5ViZ056jbf85A8TD4C0eimMgpRbCX5zlJsqAJfwjYxfmg==
+"@bugsnag/plugin-network-breadcrumbs@^6.3.0":
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/@bugsnag/plugin-network-breadcrumbs/-/plugin-network-breadcrumbs-6.3.0.tgz#d50ab35f4b025c3f5ee726634245c8cb0a82c1b7"
+  integrity sha512-HStFDWTYyQmcQlyoL5rhjCALfHArHiOA+Zb05VGaKA062lKnP+C1tAZzcYTsM2WtleOXaPg95Yal7HqO10q/nw==
   dependencies:
-    "@bugsnag/core" "^7.0.0-pre-alpha-ben.6"
+    "@bugsnag/core" "^6.3.0"
 
-"@bugsnag/plugin-react-native-app-state-breadcrumbs@^6.2.0-alpha.1":
-  version "6.2.0-alpha.1"
-  resolved "https://registry.yarnpkg.com/@bugsnag/plugin-react-native-app-state-breadcrumbs/-/plugin-react-native-app-state-breadcrumbs-6.2.0-alpha.1.tgz#dbeac182cc08ad0aa7224a36630560f0a311309b"
-  integrity sha512-NlBRgRkyuIrXJPaPTf9EXmmJ0ncrSgx08UwmhCL7mGZxVDIr8znA39SePk5AnLVwm0QxF+QlhwgVju0OO7DwVg==
+"@bugsnag/plugin-react-native-app-state-breadcrumbs@^6.3.0":
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/@bugsnag/plugin-react-native-app-state-breadcrumbs/-/plugin-react-native-app-state-breadcrumbs-6.3.0.tgz#9153581d49cd76b51eae0e7d81accd444c21bb77"
+  integrity sha512-DmUi3aOPH0i2ru0aLV33KJfvwwWy1NPCoI13p0B9KZngHeXEy+VXu33aB9lQ2jHyRnGQlBIBDp1PXzagAvDAaQ==
 
-"@bugsnag/plugin-react-native-connectivity-breadcrumbs@^6.2.0-alpha.1":
-  version "6.2.0-alpha.1"
-  resolved "https://registry.yarnpkg.com/@bugsnag/plugin-react-native-connectivity-breadcrumbs/-/plugin-react-native-connectivity-breadcrumbs-6.2.0-alpha.1.tgz#a1dcf37e11b0b5e3173cc24cfbe48be554e7871c"
-  integrity sha512-pEsiV0/71FI46ZMDs+2Q0nUTUDw6W/s6NejTUCN1/XRRQv5E0OWfZZVhnRBQkQLlNSco5Gr0YuXlyKccDHXEKA==
+"@bugsnag/plugin-react-native-connectivity-breadcrumbs@^6.3.0":
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/@bugsnag/plugin-react-native-connectivity-breadcrumbs/-/plugin-react-native-connectivity-breadcrumbs-6.3.0.tgz#64f8a23d5b2fb31562b50a7050a828716295822d"
+  integrity sha512-5QpH9EE08wd0Gg52ntNYCi3RRYtzxwsSSwm0t5BS4VuX7rBLKt/BjX0ufhbJ1pB63pVZYc8kizd0XWwe9vE6YA==
 
-"@bugsnag/plugin-react-native-global-error-handler@^6.2.0-alpha.1":
-  version "6.2.0-alpha.1"
-  resolved "https://registry.yarnpkg.com/@bugsnag/plugin-react-native-global-error-handler/-/plugin-react-native-global-error-handler-6.2.0-alpha.1.tgz#d583d0d7892f6a6ebadc28b846d4fa082dbb88e7"
-  integrity sha512-FndrxvqY6tnhQ9SzS2VKHvhOboxusdIH8eCXGq0ZMWDW4ixKEMXHdTdK5lILEtostcJtfknwheMTcFQ0dwqBhg==
+"@bugsnag/plugin-react-native-global-error-handler@^6.2.0":
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/@bugsnag/plugin-react-native-global-error-handler/-/plugin-react-native-global-error-handler-6.2.0.tgz#86786b8033f12d996623a6a73f610f72ad8166a9"
+  integrity sha512-pvRRKqlUOAECL7Da7XfiBU91HVtat7uXIfcHLYuQtOJCDiGVmU644oWCZYCKDIO/s70jVGfFJOLTBon29L4IiA==
 
-"@bugsnag/plugin-react-native-orientation-breadcrumbs@^6.2.0-alpha.1":
-  version "6.2.0-alpha.1"
-  resolved "https://registry.yarnpkg.com/@bugsnag/plugin-react-native-orientation-breadcrumbs/-/plugin-react-native-orientation-breadcrumbs-6.2.0-alpha.1.tgz#9d798fc647ae5674c463d43df19c253217861433"
-  integrity sha512-f/bntPCrTl4aS0afZAYKDFVdvf+syQeuMRXyQJWDeu58VLVTC+GkizeeHLxiWO5UT7leA678jX+tMIJbPiig2w==
+"@bugsnag/plugin-react-native-orientation-breadcrumbs@^6.3.0":
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/@bugsnag/plugin-react-native-orientation-breadcrumbs/-/plugin-react-native-orientation-breadcrumbs-6.3.0.tgz#df3e1168e6caa63064f1bc152b3b585a65115118"
+  integrity sha512-MBZV7dmj8OAjzcbGFvllEDs2370p6MYZapYBemV8PEIM0UuPH4bkFwzkt54GypBWuGgTHp2CvfV4dUfDKkGVWQ==
 
-"@bugsnag/plugin-react-native-unhandled-rejection@^6.2.0-alpha.1":
-  version "6.2.0-alpha.1"
-  resolved "https://registry.yarnpkg.com/@bugsnag/plugin-react-native-unhandled-rejection/-/plugin-react-native-unhandled-rejection-6.2.0-alpha.1.tgz#d45b315cffe341896a3b663467d49afb3ea0c80e"
-  integrity sha512-K9921dmQUvGTkynknH7vNZcja3Qt00mR38+2NvTWvJ+aSYkCtEwOr+HR5FOXZXH7uYmPZo1kUWJEil07Av6VnQ==
+"@bugsnag/plugin-react-native-unhandled-rejection@^6.2.0":
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/@bugsnag/plugin-react-native-unhandled-rejection/-/plugin-react-native-unhandled-rejection-6.2.0.tgz#50cd877c960e482f55e0d90810656d4f557a77a1"
+  integrity sha512-3mcsHc3sMgltiND+iA30tqvPlpyS+O58IJDbSJN8rLhG6zfX3O4b1Ycyz7b6DyLAJEHYXEpEdu9nI/JzzKpgDQ==
 
-"@bugsnag/plugin-react@^7.0.0-pre-alpha-ben.6":
-  version "7.0.0-pre-alpha-ben.6"
-  resolved "https://registry.yarnpkg.com/@bugsnag/plugin-react/-/plugin-react-7.0.0-pre-alpha-ben.6.tgz#8beb48f84f2fe9d024741d1d9497504576770a44"
-  integrity sha512-s0fDMkzg67KZ0nozi5xZ6ODGokScUtBXnEbAEPSynNmJcfHqEtgfk/5/bV6+qjjxp4fRBwM46t5N+fSeVj9VGg==
+"@bugsnag/plugin-react@^6.2.0":
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/@bugsnag/plugin-react/-/plugin-react-6.2.0.tgz#47941f434d9be547f89b139ce80781e7d5e7fe44"
+  integrity sha512-JI56D3ZhXGjH5UqeSTltdxVTPjMpfNI/Vd5XP0V/gBAJb6CeILX3hLe5G1VmxxZciVNEfG5724YKgadqp6/uWg==
 
 "@bugsnag/safe-json-stringify@4.0.0":
   version "4.0.0"

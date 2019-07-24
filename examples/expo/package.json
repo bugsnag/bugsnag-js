@@ -11,7 +11,7 @@
     "preset": "jest-expo"
   },
   "dependencies": {
-    "@bugsnag/expo": "^6.2.0-alpha.1",
+    "@bugsnag/expo": "^6.3.0",
     "@expo/samples": "2.1.1",
     "expo": "^32.0.0",
     "react": "16.5.0",
