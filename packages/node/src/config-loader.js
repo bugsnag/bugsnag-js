@@ -10,7 +10,7 @@ const getAllContainingPaths = (p) => {
 const LOOKUP_PATHS = []
   .concat(process.mainModule ? process.mainModule.paths.map(p => resolve(p, '..')) : [])
   .concat(getAllContainingPaths(process.cwd()))
-  .reduce((accum, p) => accum.includes(p) ? accum : accum.concat(p), [])
+  .reduce((accum, p) => accum.indexOf(p) !== -1 ? accum : accum.concat(p), [])
 
 const findPackageConfig = () => {
   return LOOKUP_PATHS.reduce((accum, p) => {
