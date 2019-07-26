@@ -1,7 +1,16 @@
 steps:
+  - label: 'Propare packages'
+    timeout_in_minutes: 1
+    command: test/scripts/create_package.json_tar.sh
+    artifact_paths: min_packages.tar
+
+  - wait
+
   - label: ':docker: Build CI image'
     timeout_in_minutes: 10
     plugins:
+      - artifacts#v1.2.0:
+          download: min_packages.tar
       - docker-compose#v2.6.0:
           build:
             - ci
@@ -48,6 +57,8 @@ steps:
   - label:  ':docker: Build browser maze runner image'
     timeout_in_minutes: 10
     plugins:
+      - artifacts#v1.2.0:
+          download: min_packages.tar
       - docker-compose#v2.6.0:
           build:
             - browser-maze-runner
@@ -58,6 +69,8 @@ steps:
   - label:  ':docker: Build node maze runner image'
     timeout_in_minutes: 10
     plugins:
+      - artifacts#v1.2.0:
+          download: min_packages.tar
       - docker-compose#v2.6.0:
           build:
             - node-maze-runner
