@@ -167,9 +167,13 @@ BugsnagReport.getStacktrace = function (error, errorFramesToSkip = 0, generatedF
   } catch (e) {
     if (hasStack(e)) return ErrorStackParser.parse(error).slice(1 + generatedFramesToSkip)
     // error wasn't provided or didn't have a stacktrace so try to walk the callstack
-    return filter(StackGenerator.backtrace(), frame =>
-      (frame.functionName || '').indexOf('StackGenerator$$') === -1
-    ).slice(1 + generatedFramesToSkip)
+    try {
+      return filter(StackGenerator.backtrace(), frame =>
+        (frame.functionName || '').indexOf('StackGenerator$$') === -1
+      ).slice(1 + generatedFramesToSkip)
+    } catch (e) {
+      return []
+    }
   }
 }
 
