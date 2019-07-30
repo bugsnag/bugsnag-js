@@ -2,7 +2,6 @@ steps:
   - label: 'Prepare packages'
     timeout_in_minutes: 1
     command:
-      - echo $BRANCH_NAME
       - test/scripts/create_package.json_tar.sh
     artifact_paths: min_packages.tar
 
@@ -19,11 +18,11 @@ steps:
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
           cache-from:
             - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base-${BRANCH_NAME}
-            # - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base
+            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base
       - docker-compose#v2.6.0:
           push:
             - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base-${BRANCH_NAME}
-            # - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base
+            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base
 
   - wait
 
