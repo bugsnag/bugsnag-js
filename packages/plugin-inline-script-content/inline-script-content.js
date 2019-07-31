@@ -116,11 +116,11 @@ module.exports = {
         // this is required for removeEventListener to remove anything added with
         // addEventListener before the functions started being wrapped by Bugsnag
         const args = Array.prototype.slice.call(arguments)
-        const cba = callbackAccessor(args)
-        const cb = cba.get()
-        if (alsoCallOriginal) fn.apply(this, args)
-        if (typeof cb !== 'function') return fn.apply(this, args)
         try {
+          const cba = callbackAccessor(args)
+          const cb = cba.get()
+          if (alsoCallOriginal) fn.apply(this, args)
+          if (typeof cb !== 'function') return fn.apply(this, args)
           if (cb.__trace__) {
             cba.replace(cb.__trace__)
           } else {
@@ -145,6 +145,7 @@ module.exports = {
         } catch (e) {
           // swallow these errors on Selenium:
           // Permission denied to access property '__trace__'
+          // WebDriverException: Message: Permission denied to access property "handleEvent"
         }
         // IE8 doesn't let you call .apply() on setTimeout/setInterval
         if (fn.apply) return fn.apply(this, args)
