@@ -1,9 +1,9 @@
 steps:
-  - label: 'Prepare packages'
+  - label: ':docker: Prepare package.json'
     timeout_in_minutes: 1
     plugins:
       - docker-compose#v2.6.0:
-          run: packager
+          run: minimal-packager
     artifact_paths: min_packages.tar
 
   - wait

@@ -1,6 +1,6 @@
 version: '3.6'
 services:
-  packager:
+  minimal-packager:
     build:
       context: .
       dockerfile: dockerfiles/Dockerfile.package
