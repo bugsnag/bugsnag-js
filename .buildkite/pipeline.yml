@@ -1,7 +1,8 @@
 steps:
   - label: 'Prepare packages'
     timeout_in_minutes: 1
-    - docker-compose#v2.6.0:
+    plugins:
+      - docker-compose#v2.6.0:
           run: packager
     artifact_paths: min_packages.tar
 
