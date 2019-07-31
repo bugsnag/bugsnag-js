@@ -1,8 +1,8 @@
 steps:
   - label: 'Prepare packages'
     timeout_in_minutes: 1
-    command:
-      - test/scripts/create_package.json_tar.sh
+    - docker-compose#v2.6.0:
+          run: packager
     artifact_paths: min_packages.tar
 
   - wait
