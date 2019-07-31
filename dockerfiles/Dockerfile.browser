@@ -9,7 +9,7 @@ COPY package*.json ./
 RUN npm install
 
 COPY babel.config.js tslint.json lerna.json ./
-ADD min_packages.tar packages
+ADD min_packages.tar .
 COPY bin ./bin
 RUN npx lerna bootstrap
 COPY packages ./packages
