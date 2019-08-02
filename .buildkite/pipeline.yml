@@ -1,18 +1,29 @@
 steps:
+  - label: ':docker: Prepare package.json'
+    timeout_in_minutes: 1
+    plugins:
+      - docker-compose#v2.6.0:
+          run: minimal-packager
+    artifact_paths: min_packages.tar
+
+  - wait
+
   - label: ':docker: Build CI image'
     timeout_in_minutes: 20
     plugins:
+      - artifacts#v1.2.0:
+          download: min_packages.tar
       - docker-compose#v2.6.0:
           build:
             - ci
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
           cache-from:
-            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
-            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-latest
+            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base-${BRANCH_NAME}
+            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base
       - docker-compose#v2.6.0:
           push:
-            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
-            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-latest
+            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base-${BRANCH_NAME}
+            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base
 
   - wait
 
@@ -48,22 +59,26 @@ steps:
   - label:  ':docker: Build browser maze runner image'
     timeout_in_minutes: 20
     plugins:
+      - artifacts#v1.2.0:
+          download: min_packages.tar
       - docker-compose#v2.6.0:
           build:
             - browser-maze-runner
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
           cache-from:
-            - browser-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
+            - browser-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-browser-${BRANCH_NAME}
 
   - label:  ':docker: Build node maze runner image'
     timeout_in_minutes: 20
     plugins:
+      - artifacts#v1.2.0:
+          download: min_packages.tar
       - docker-compose#v2.6.0:
           build:
             - node-maze-runner
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
           cache-from:
-            - node-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
+            - node-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-node-${BRANCH_NAME}
 
   - wait
 
