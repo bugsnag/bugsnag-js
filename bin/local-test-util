@@ -98,7 +98,12 @@ async function clean () {
 }
 
 async function run (args) {
-  await runTests(args)
+  try {
+    await runTests(args)
+  } catch (e) {
+    console.log(e)
+    process.exitCode = 1
+  }
 }
 
 // --------------
@@ -228,6 +233,9 @@ async function buildFixtures (fixture) {
 
 async function runTests (args) {
   trace('run tests')
+  if (!process.env.BROWSER_STACK_USERNAME || !process.env.BROWSER_STACK_ACCESS_KEY) {
+    throw new Error('BROWSER_STACK_USERNAME and BROWSER_STACK_ACCESS_KEY env vars must be set')
+  }
   return ex(`docker`, [
     `run`,
     `-it`,
