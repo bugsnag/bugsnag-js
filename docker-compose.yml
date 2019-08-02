@@ -1,5 +1,11 @@
 version: '3.6'
 services:
+  minimal-packager:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile.package
+    volumes:
+      - .:/app/build
   ci:
     build:
       context: .

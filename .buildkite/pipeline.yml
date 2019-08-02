@@ -1,18 +1,29 @@
 steps:
-  - label: ':docker: Build CI image'
-    timeout_in_minutes: 10
+  - label: ':docker: Prepare package.json'
+    timeout_in_minutes: 1
     plugins:
+      - docker-compose#v2.6.0:
+          run: minimal-packager
+    artifact_paths: min_packages.tar
+
+  - wait
+
+  - label: ':docker: Build CI image'
+    timeout_in_minutes: 20
+    plugins:
+      - artifacts#v1.2.0:
+          download: min_packages.tar
       - docker-compose#v2.6.0:
           build:
             - ci
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
           cache-from:
-            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
-            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-latest
+            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base-${BRANCH_NAME}
+            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base
       - docker-compose#v2.6.0:
           push:
-            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
-            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-latest
+            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base-${BRANCH_NAME}
+            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base
 
   - wait
 
@@ -25,50 +36,54 @@ steps:
     async: true
 
   - label: 'Lint'
-    timeout_in_minutes: 5
+    timeout_in_minutes: 10
     plugins:
       docker-compose#v2.6.0:
         run: ci
     command: 'npm run test:lint'
 
   - label: 'Unit tests'
-    timeout_in_minutes: 5
+    timeout_in_minutes: 10
     plugins:
       docker-compose#v2.6.0:
         run: ci
     command: 'npm run test:unit'
 
   - label: 'Type checks/tests'
-    timeout_in_minutes: 5
+    timeout_in_minutes: 10
     plugins:
       docker-compose#v2.6.0:
         run: ci
     command: 'npm run test:types'
 
   - label:  ':docker: Build browser maze runner image'
-    timeout_in_minutes: 10
+    timeout_in_minutes: 20
     plugins:
+      - artifacts#v1.2.0:
+          download: min_packages.tar
       - docker-compose#v2.6.0:
           build:
             - browser-maze-runner
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
           cache-from:
-            - browser-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
+            - browser-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-browser-${BRANCH_NAME}
 
   - label:  ':docker: Build node maze runner image'
-    timeout_in_minutes: 10
+    timeout_in_minutes: 20
     plugins:
+      - artifacts#v1.2.0:
+          download: min_packages.tar
       - docker-compose#v2.6.0:
           build:
             - node-maze-runner
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
           cache-from:
-            - node-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
+            - node-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-node-${BRANCH_NAME}
 
   - wait
 
   - label: ':chrome: v43 Browser tests'
-    timeout_in_minutes: 5
+    timeout_in_minutes: 10
     plugins:
       docker-compose#v2.6.0:
         run: browser-maze-runner
@@ -79,7 +94,7 @@ steps:
     concurrency_group: 'browserstack'
 
   - label: ':chrome: v61 Browser tests'
-    timeout_in_minutes: 5
+    timeout_in_minutes: 10
     plugins:
       docker-compose#v2.6.0:
         run: browser-maze-runner
@@ -90,7 +105,7 @@ steps:
     concurrency_group: 'browserstack'
 
   - label: ':ie: v8 Browser tests'
-    timeout_in_minutes: 5
+    timeout_in_minutes: 10
     plugins:
       docker-compose#v2.6.0:
         run: browser-maze-runner
@@ -101,7 +116,7 @@ steps:
     concurrency_group: 'browserstack'
 
   - label: ':ie: v9 Browser tests'
-    timeout_in_minutes: 5
+    timeout_in_minutes: 10
     plugins:
       docker-compose#v2.6.0:
         run: browser-maze-runner
@@ -112,7 +127,7 @@ steps:
     concurrency_group: 'browserstack'
 
   - label: ':ie: v10 Browser tests'
-    timeout_in_minutes: 5
+    timeout_in_minutes: 10
     plugins:
       docker-compose#v2.6.0:
         run: browser-maze-runner
@@ -123,7 +138,7 @@ steps:
     concurrency_group: 'browserstack'
 
   - label: ':ie: v11 Browser tests'
-    timeout_in_minutes: 5
+    timeout_in_minutes: 10
     plugins:
       docker-compose#v2.6.0:
         run: browser-maze-runner
@@ -135,7 +150,7 @@ steps:
     concurrency_group: 'browserstack'
 
   - label: ':edge: v14 Browser tests'
-    timeout_in_minutes: 5
+    timeout_in_minutes: 10
     plugins:
       docker-compose#v2.6.0:
         run: browser-maze-runner
@@ -146,7 +161,7 @@ steps:
     concurrency_group: 'browserstack'
 
   - label: ':edge: v15 Browser tests'
-    timeout_in_minutes: 5
+    timeout_in_minutes: 10
     plugins:
       docker-compose#v2.6.0:
         run: browser-maze-runner
@@ -157,7 +172,7 @@ steps:
     concurrency_group: 'browserstack'
 
   - label: ':safari: v6 Browser tests'
-    timeout_in_minutes: 5
+    timeout_in_minutes: 10
     plugins:
       docker-compose#v2.6.0:
         run: browser-maze-runner
@@ -168,7 +183,7 @@ steps:
     concurrency_group: 'browserstack'
 
   - label: ':safari: v10 Browser tests'
-    timeout_in_minutes: 5
+    timeout_in_minutes: 10
     plugins:
       docker-compose#v2.6.0:
         run: browser-maze-runner
@@ -179,7 +194,7 @@ steps:
     concurrency_group: 'browserstack'
 
   - label: ':desktop_computer: Opera v12 Browser tests'
-    timeout_in_minutes: 5
+    timeout_in_minutes: 10
     plugins:
       docker-compose#v2.6.0:
         run: browser-maze-runner
@@ -190,7 +205,7 @@ steps:
     concurrency_group: 'browserstack'
 
   - label: ':iphone: iOS 10.3 Browser tests'
-    timeout_in_minutes: 10
+    timeout_in_minutes: 20
     plugins:
       docker-compose#v2.6.0:
         run: browser-maze-runner
@@ -201,7 +216,7 @@ steps:
     concurrency_group: 'browserstack'
 
   - label: ':android: Samsung Galaxy S8 Browser tests'
-    timeout_in_minutes: 5
+    timeout_in_minutes: 10
     plugins:
       docker-compose#v2.6.0:
         run: browser-maze-runner
@@ -212,7 +227,7 @@ steps:
     concurrency_group: 'browserstack'
 
   - label: ':firefox: v30 Browser tests'
-    timeout_in_minutes: 5
+    timeout_in_minutes: 10
     plugins:
       docker-compose#v2.6.0:
         run: browser-maze-runner
@@ -223,7 +238,7 @@ steps:
     concurrency_group: 'browserstack'
 
   - label: ':firefox: v56 Browser tests'
-    timeout_in_minutes: 5
+    timeout_in_minutes: 10
     plugins:
       docker-compose#v2.6.0:
         run: browser-maze-runner
@@ -234,7 +249,7 @@ steps:
     concurrency_group: 'browserstack'
 
   - label: ':node: Node 4'
-    timeout_in_minutes: 15
+    timeout_in_minutes: 30
     plugins:
       docker-compose#v2.6.0:
         run: node-maze-runner
@@ -244,7 +259,7 @@ steps:
     command: '-e koa.feature -e koa-1x.feature -e webpack.feature'
 
   - label: ':node: Node 6'
-    timeout_in_minutes: 15
+    timeout_in_minutes: 30
     plugins:
       docker-compose#v2.6.0:
         run: node-maze-runner
@@ -254,7 +269,7 @@ steps:
     command: '-e koa.feature -e koa-1x.feature'
 
   - label: ':node: Node 8'
-    timeout_in_minutes: 15
+    timeout_in_minutes: 30
     plugins:
       docker-compose#v2.6.0:
         run: node-maze-runner
@@ -263,7 +278,7 @@ steps:
       NODE_VERSION: "8"
 
   - label: ':node: Node 10'
-    timeout_in_minutes: 15
+    timeout_in_minutes: 30
     plugins:
       docker-compose#v2.6.0:
         run: node-maze-runner
@@ -272,7 +287,7 @@ steps:
       NODE_VERSION: "10"
 
   - label: ':node: Node 12'
-    timeout_in_minutes: 15
+    timeout_in_minutes: 30
     plugins:
       docker-compose#v2.6.0:
         run: node-maze-runner
