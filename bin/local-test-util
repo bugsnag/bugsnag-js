@@ -235,7 +235,7 @@ async function runTests (args) {
     `-e`, `BROWSER_STACK_ACCESS_KEY`,
     `-e`, `HOST=localhost`,
     `-e`, `API_HOST=localhost`,
-    `-e`, `BROWSER=chrome_61`,
+    `-e`, `BROWSER=${process.env.BROWSER || 'chrome_61'}`,
     `-v`, `${process.cwd()}/test/browser/:/app/test/browser`,
     `-w`, `/app/test/browser`,
     `-p`, `9020:9020`,
