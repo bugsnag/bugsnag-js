@@ -3,6 +3,7 @@
 const { spawn, exec } = require('child_process')
 const { promisify } = require('util')
 const { dirname, join, resolve, basename } = require('path')
+const execAsync = promisify(exec)
 
 const help = `
   $ ./bin/local-test-util
@@ -89,6 +90,7 @@ async function updateFixtures (fixture) {
 async function clean () {
   try {
     await cleanFixtures()
+    await cleanNotifiers()
   } catch (e) {
     console.log(e)
     process.exitCode = 1
@@ -188,8 +190,17 @@ async function cleanFixtures (fixture) {
   await ex('rm', [ `-fr`, `${process.cwd()}/test/browser/features/fixtures/node_modules` ])
 }
 
+async function cleanNotifiers () {
+  const { stdout, stderr } = await execAsync('ls')
+  if (stderr) throw new Error(`"ls" wrote this to stderr: ${stderr}`)
+  const tgzs = stdout.trim().split('\n').filter(f => /^bugsnag-.*\.tgz$/.test(f))
+  for (const t of tgzs) {
+    await ex('rm', [ t ])
+  }
+}
+
 async function findFixtureManifests (fixture) {
-  const { stdout, stderr } = await promisify(exec)('find test/browser/features/fixtures \\( -path "*/package.json" -and \\! -path "*/node_modules/*" \\) -type f -mindepth 2 -maxdepth 3')
+  const { stdout, stderr } = await execAsync('find test/browser/features/fixtures \\( -path "*/package.json" -and \\! -path "*/node_modules/*" \\) -type f -mindepth 2 -maxdepth 3')
   if (stderr) throw new Error(`"find" wrote this to stderr: ${stderr}`)
   return stdout.trim().split('\n').filter(m => {
     if (!fixture) return true
