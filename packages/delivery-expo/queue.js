@@ -1,4 +1,4 @@
-const { FileSystem } = require('expo')
+const FileSystem = require('expo-file-system')
 
 const MAX_ITEMS = 64
 const PAYLOAD_PATH = `${FileSystem.cacheDirectory}bugsnag`

@@ -1,4 +1,4 @@
-const { Constants } = require('expo')
+const Constants = require('expo-constants').default
 const { AppState } = require('react-native')
 
 const appStart = new Date()
