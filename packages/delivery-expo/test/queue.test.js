@@ -17,7 +17,7 @@ describe('delivery: expo -> queue', () => {
         deleteAsync: () => {}
       }
       const Queue = proxyquire('../queue', {
-        'expo': { FileSystem: MockFileSystem }
+        'expo-file-system': MockFileSystem
       })
       const q = new Queue('stuff')
       expect(await q.peek()).toBe(null)
@@ -37,7 +37,7 @@ describe('delivery: expo -> queue', () => {
         deleteAsync: () => {}
       }
       const Queue = proxyquire('../queue', {
-        'expo': { FileSystem: MockFileSystem }
+        'expo-file-system': MockFileSystem
       })
       const q = new Queue('stuff')
       expect(await q.peek()).toBe(null)
@@ -65,7 +65,7 @@ describe('delivery: expo -> queue', () => {
         deleteAsync: async () => {}
       }
       const Queue = proxyquire('../queue', {
-        'expo': { FileSystem: MockFileSystem }
+        'expo-file-system': MockFileSystem
       })
       const q = new Queue('stuff')
       const req = await q.peek()
@@ -90,7 +90,7 @@ describe('delivery: expo -> queue', () => {
         deleteAsync: () => {}
       }
       const Queue = proxyquire('../queue', {
-        'expo': { FileSystem: MockFileSystem }
+        'expo-file-system': MockFileSystem
       })
       const q = new Queue('stuff', err => {
         expect(err).not.toBe(null)
@@ -119,7 +119,7 @@ describe('delivery: expo -> queue', () => {
         }
       }
       const Queue = proxyquire('../queue', {
-        'expo': { FileSystem: MockFileSystem }
+        'expo-file-system': MockFileSystem
       })
       files.push(Queue.generateFilename('stuff'))
       const q = new Queue('stuff')
@@ -148,7 +148,7 @@ describe('delivery: expo -> queue', () => {
         deleteAsync: () => {}
       }
       const Queue = proxyquire('../queue', {
-        'expo': { FileSystem: MockFileSystem }
+        'expo-file-system': MockFileSystem
       })
       const q = new Queue('stuff', err => expect(err).toBe(null))
       await q.enqueue()
@@ -177,7 +177,7 @@ describe('delivery: expo -> queue', () => {
       }
 
       const Queue = proxyquire('../queue', {
-        'expo': { FileSystem: MockFileSystem }
+        'expo-file-system': MockFileSystem
       })
       const q = new Queue('stuff', err => expect(err).toBe(null))
       await q.enqueue({})
@@ -197,7 +197,7 @@ describe('delivery: expo -> queue', () => {
         deleteAsync: () => {}
       }
       const Queue = proxyquire('../queue', {
-        'expo': { FileSystem: MockFileSystem }
+        'expo-file-system': MockFileSystem
       })
       const q = new Queue('stuff', err => expect(err).not.toBe(null))
       await q.enqueue({})
@@ -221,7 +221,7 @@ describe('delivery: expo -> queue', () => {
       }
       const deleteSpy = spyOn(MockFileSystem, 'deleteAsync')
       const Queue = proxyquire('../queue', {
-        'expo': { FileSystem: MockFileSystem }
+        'expo-file-system': MockFileSystem
       })
       const q = new Queue('stuff')
       await q.enqueue({})
@@ -249,7 +249,7 @@ describe('delivery: expo -> queue', () => {
         deleteAsync: () => {}
       }
       const Queue = proxyquire('../queue', {
-        'expo': { FileSystem: MockFileSystem }
+        'expo-file-system': MockFileSystem
       })
       const q = new Queue('stuff')
       await q.update('file://var/data/foo.bar.app/bugsnag/stuff/bugsnag-stuff-1234.json', {
@@ -277,7 +277,7 @@ describe('delivery: expo -> queue', () => {
         deleteAsync: () => {}
       }
       const Queue = proxyquire('../queue', {
-        'expo': { FileSystem: MockFileSystem }
+        'expo-file-system': MockFileSystem
       })
       const q = new Queue('stuff')
       const proms = []
@@ -317,7 +317,7 @@ describe('delivery: expo -> queue', () => {
         deleteAsync: () => {}
       }
       const Queue = proxyquire('../queue', {
-        'expo': { FileSystem: MockFileSystem }
+        'expo-file-system': MockFileSystem
       })
       const q = new Queue('stuff')
       await q.init()
@@ -341,7 +341,7 @@ describe('delivery: expo -> queue', () => {
         deleteAsync: () => {}
       }
       const Queue = proxyquire('../queue', {
-        'expo': { FileSystem: MockFileSystem }
+        'expo-file-system': MockFileSystem
       })
       const q = new Queue('stuff')
       let didErr = false
@@ -373,7 +373,7 @@ describe('delivery: expo -> queue', () => {
         deleteAsync: () => {}
       }
       const Queue = proxyquire('../queue', {
-        'expo': { FileSystem: MockFileSystem }
+        'expo-file-system': MockFileSystem
       })
       const q = new Queue('stuff')
       let errs = []
