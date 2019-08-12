@@ -17,7 +17,8 @@ module.exports = {
       'react-native': resolve(__dirname, 'node_modules/react-native'),
       'react': resolve(__dirname, 'node_modules/react'),
       '@babel/runtime': resolve(__dirname, 'node_modules/@babel/runtime'),
-      'promise': resolve(__dirname, 'node_modules/promise')
+      'promise': resolve(__dirname, 'node_modules/promise'),
+      '@unimodules/core': resolve(__dirname, 'node_modules/@unimodules/core')
     }
   }
 }

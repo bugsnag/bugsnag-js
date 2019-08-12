@@ -1,7 +1,10 @@
 import bugsnagClient from './lib/bugsnag';
 import React from 'react';
 import { Platform, StatusBar, StyleSheet, View } from 'react-native';
-import { AppLoading, Asset, Font, Icon } from 'expo';
+import { AppLoading } from 'expo';
+import * as Font from 'expo-font';
+import { Asset } from 'expo-asset';
+import * as Icon from '@expo/vector-icons';
 import AppNavigator from './navigation/AppNavigator';
 import ErrorFallback from './components/ErrorFallback';
 
