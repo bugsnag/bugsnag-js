@@ -78,6 +78,7 @@ const selectVersion = async (dir) => {
         : 'If you want the latest version of @bugsnag/expo hit enter, otherwise type the version you want',
       initial: isPre33 ? '6.3.0' : 'latest',
       validate: str => {
+        if (str === 'latest') return true
         if (semver.valid(str)) return true
         if (semver.validRange(str)) return true
         return 'Version must be: a valid semver version/range or "latest"'
