@@ -1,9 +1,8 @@
 # Changelog
 
-## 6.4.0 (TBD)
+## 6.4.0 (2019-08-13)
 
 ### Changed
-
 - (expo): Support Expo SDK 34, dropping support for versions < 33 [#610](https://github.com/bugsnag/bugsnag-js/pull/610)
 
 ### Added
@@ -11,6 +10,8 @@
 
 ### Fixed
 - (plugin-inline-script-content): Tolerate `WebDriverException: Message: Permission denied to access property "handleEvent"` errors when running in selenium [#605](https://github.com/bugsnag/bugsnag-js/pull/605)
+- (core): Tolerate being bundled in strict mode [#584](https://github.com/bugsnag/bugsnag-js/pull/584)
+- (plugin-inline-script-content): Ensure event handlers added before Bugsnag can be removed [#582](https://github.com/bugsnag/bugsnag-js/pull/582)
 
 ## 6.3.2 (2019-06-27)
 
