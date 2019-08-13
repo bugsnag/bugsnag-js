@@ -3,7 +3,7 @@ const { version } = require('../package.json')
 const url = 'https://github.com/bugsnag/bugsnag-js'
 
 const React = require('react')
-const { Constants } = require('expo')
+const Constants = require('expo-constants').default
 
 const Client = require('@bugsnag/core/client')
 

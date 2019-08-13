@@ -2,7 +2,7 @@
 
 const { schema } = require('@bugsnag/core/config')
 const { reduce } = require('@bugsnag/core/lib/es-utils')
-const { Constants } = require('expo')
+const Constants = require('expo-constants').default
 
 // If the developer property is not present in the manifest, it means the app is
 // not connected to a development tool and is either a published app running in

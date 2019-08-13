@@ -1,0 +1,252 @@
+#!/usr/bin/env node
+
+const { spawn, exec } = require('child_process')
+const { promisify } = require('util')
+const { dirname, join, resolve, basename } = require('path')
+const execAsync = promisify(exec)
+
+const help = `
+  $ ./bin/local-test-util
+
+  commands for running end-to-end browser tests locally
+  outside of docker for quicker iteration in development
+
+  * ensure docker is running *
+
+  usage:
+    ./bin/local-test-util init
+    ./bin/local-test-util update
+    ./bin/local-test-util run <maze-args>
+    ./bin/local-test-util update-notifier <name>
+    ./bin/local-test-util update-fixture <name>
+    ./bin/local-test-util clean
+`
+
+const cmd = process.argv[2]
+
+switch (cmd) {
+  case 'init':
+    init()
+    break
+  case 'update':
+    update()
+    break
+  case 'update-notifier':
+    updateNotifiers(process.argv[3])
+    break
+  case 'update-fixture':
+    updateFixtures(process.argv[3])
+    break
+  case 'clean':
+    clean()
+    break
+  case 'run':
+    run(process.argv.slice(3))
+    break
+  case 'help':
+  default:
+    if (cmd && cmd !== 'help') console.log(`unknown command ${cmd}`)
+    console.log(help)
+    process.exitCode = 1
+}
+
+// --------------
+//    COMMANDS
+// --------------
+
+async function init () {
+  try {
+    await cleanFixtures()
+    await update()
+  } catch (e) {
+    console.log(e)
+    process.exitCode = 1
+  }
+}
+
+async function update () {
+  try {
+    await bootstrap()
+    await updateNotifiers()
+    await installFixtureDeps()
+    await buildFixtures()
+  } catch (e) {
+    console.log(e)
+    process.exitCode = 1
+  }
+}
+
+async function updateNotifiers (notifier) {
+  await buildNotifiers(notifier)
+  await packNotifiers(notifier)
+  await installNotifiers(notifier)
+  await installNgNotifier(notifier)
+}
+
+async function updateFixtures (fixture) {
+  await buildFixtures(fixture)
+}
+
+async function clean () {
+  try {
+    await cleanFixtures()
+    await cleanNotifiers()
+  } catch (e) {
+    console.log(e)
+    process.exitCode = 1
+  }
+}
+
+async function run (args) {
+  try {
+    await runTests(args)
+  } catch (e) {
+    console.log(e)
+    process.exitCode = 1
+  }
+}
+
+// --------------
+//    Utilities
+// --------------
+
+async function ex (cmd, args, uopts) {
+  const opts = { stdio: 'inherit', ...uopts }
+  console.log(`>>> "${cmd} ${args.join(' ')}" with opts: ${JSON.stringify(opts)}`)
+  return new Promise((resolve, reject) => {
+    const proc = spawn(cmd, args, opts)
+    proc.on('error', reject)
+    proc.on('close', () => resolve())
+  })
+}
+
+function trace (stepname) {
+  console.log(`\n• ${stepname} •\n  ${Array(stepname.length).fill('-').join('')}`)
+}
+
+async function bootstrap () {
+  trace('bootstrap')
+  return ex(`npm`, [ `run`, `bootstrap` ])
+}
+
+async function buildNotifiers (notifier) {
+  trace('build notifiers')
+  if (notifier) {
+    return ex(`npx`, [ `lerna`, `run`, `build` ].concat(notifier ? [ '--scope', `@bugsnag/${notifier}` ] : []))
+  } else {
+    return ex(`npm`, [ `run`, `build` ])
+  }
+}
+
+async function packNotifiers (notifier) {
+  const notifiers = notifier
+    ? [ notifier ]
+    : [ 'js', 'browser', 'node', 'plugin-angular', 'plugin-react', 'plugin-vue' ]
+  for (const n of notifiers) {
+    await ex(`npm`, [ `pack`, `--verbose`, `packages/${n}/` ])
+  }
+}
+
+async function installNotifiers (notifier) {
+  trace('install notifiers')
+  if (notifier && ![ 'browser', 'plugin-vue', 'plugin-react' ].includes(notifier)) return
+  await ex(`npm`, [
+    `install`,
+    `--no-package-lock`,
+    `--no-save`
+  ].concat(notifier
+    ? [
+      `../../../../bugsnag-${notifier}-${require(`../packages/${notifier}/package.json`).version}.tgz`
+    ]
+    : [
+      `../../../../bugsnag-browser-${require('../packages/browser/package.json').version}.tgz`,
+      `../../../../bugsnag-plugin-react-${require('../packages/plugin-react/package.json').version}.tgz`,
+      `../../../../bugsnag-plugin-vue-${require('../packages/plugin-vue/package.json').version}.tgz`
+    ]
+  ), {
+    cwd: `${__dirname}/../test/browser/features/fixtures`
+  })
+}
+
+async function installNgNotifier (notifier) {
+  trace('install ng notifier')
+  if (notifier && ![ 'browser', 'node', 'js', 'plugin-angular' ].includes(notifier)) return
+  await ex(`npm`, [
+    `install`,
+    `--no-package-lock`,
+    `--no-save`,
+    `../../../../../../bugsnag-browser-${require('../packages/browser/package.json').version}.tgz`,
+    `../../../../../../bugsnag-js-${require('../packages/js/package.json').version}.tgz`,
+    `../../../../../../bugsnag-node-${require('../packages/node/package.json').version}.tgz`,
+    `../../../../../../bugsnag-plugin-angular-${require('../packages/plugin-angular/package.json').version}.tgz`
+  ], {
+    cwd: `${__dirname}/../test/browser/features/fixtures/plugin_angular/ng`
+  })
+}
+
+async function cleanFixtures (fixture) {
+  trace('clean fixture')
+  const manifests = await findFixtureManifests(fixture)
+  for (const m of manifests) {
+    const cwd = join(process.cwd(), dirname(m))
+    await ex('rm', [ `-fr`, `node_modules` ], { cwd })
+    await ex('rm', [ `-fr`, `dist` ], { cwd })
+  }
+  await ex('rm', [ `-fr`, `${process.cwd()}/test/browser/features/fixtures/node_modules` ])
+}
+
+async function cleanNotifiers () {
+  const { stdout, stderr } = await execAsync('ls')
+  if (stderr) throw new Error(`"ls" wrote this to stderr: ${stderr}`)
+  const tgzs = stdout.trim().split('\n').filter(f => /^bugsnag-.*\.tgz$/.test(f))
+  for (const t of tgzs) {
+    await ex('rm', [ t ])
+  }
+}
+
+async function findFixtureManifests (fixture) {
+  const { stdout, stderr } = await execAsync('find test/browser/features/fixtures \\( -path "*/package.json" -and \\! -path "*/node_modules/*" \\) -type f -mindepth 2 -maxdepth 3')
+  if (stderr) throw new Error(`"find" wrote this to stderr: ${stderr}`)
+  return stdout.trim().split('\n').filter(m => {
+    if (!fixture) return true
+    return basename(resolve(m, '..', '..')) === fixture
+  })
+}
+
+async function installFixtureDeps (fixture) {
+  trace('install fixture deps')
+  const manifests = await findFixtureManifests(fixture)
+  for (const m of manifests) {
+    const cwd = join(process.cwd(), dirname(m))
+    await ex('npm', [ `install`, `--no-package-lock` ], { cwd })
+  }
+}
+
+async function buildFixtures (fixture) {
+  trace('build fixtures')
+  const manifests = await findFixtureManifests(fixture)
+  for (const m of manifests) {
+    const cwd = join(process.cwd(), dirname(m))
+    await ex('npm', [ `run`, `build` ], { cwd })
+  }
+}
+
+async function runTests (args) {
+  trace('run tests')
+  if (!process.env.BROWSER_STACK_USERNAME || !process.env.BROWSER_STACK_ACCESS_KEY) {
+    throw new Error('BROWSER_STACK_USERNAME and BROWSER_STACK_ACCESS_KEY env vars must be set')
+  }
+  return ex(`docker`, [
+    `run`,
+    `-it`,
+    `-e`, `BROWSER_STACK_USERNAME`,
+    `-e`, `BROWSER_STACK_ACCESS_KEY`,
+    `-e`, `HOST=localhost`,
+    `-e`, `API_HOST=localhost`,
+    `-e`, `BROWSER=${process.env.BROWSER || 'chrome_61'}`,
+    `-v`, `${process.cwd()}/test/browser/:/app/test/browser`,
+    `-w`, `/app/test/browser`,
+    `-p`, `9020:9020`,
+    `855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner:v2-cli`
+  ].concat(args || []))
+}

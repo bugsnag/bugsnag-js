@@ -1,4 +1,4 @@
-const { Constants } = require('expo')
+const Constants = require('expo-constants').default
 const { Dimensions, Platform } = require('react-native')
 const { isoDate } = require('@bugsnag/core/lib/es-utils')
 const rnVersion = require('react-native/package.json').version
