@@ -12,6 +12,7 @@
 - (plugin-inline-script-content): Tolerate `WebDriverException: Message: Permission denied to access property "handleEvent"` errors when running in selenium [#605](https://github.com/bugsnag/bugsnag-js/pull/605)
 - (core): Tolerate being bundled in strict mode [#584](https://github.com/bugsnag/bugsnag-js/pull/584)
 - (plugin-inline-script-content): Ensure event handlers added before Bugsnag can be removed [#582](https://github.com/bugsnag/bugsnag-js/pull/582)
+- (core): Update `error-stack-parser` to ensure spaces in filenames are parsed correctly [#612](https://github.com/bugsnag/bugsnag-js/pull/612)
 
 ## 6.3.2 (2019-06-27)
 
