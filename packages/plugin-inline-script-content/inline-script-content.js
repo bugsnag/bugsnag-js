@@ -21,7 +21,7 @@ module.exports = {
         html = getHtml()
         DOMContentLoaded = true
       }
-      if (typeof prev === 'function') prev.apply(this, arguments)
+      try { prev.apply(this, arguments) } catch (e) {}
     }
 
     var _lastScript = null
