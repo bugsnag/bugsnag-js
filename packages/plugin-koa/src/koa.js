@@ -33,6 +33,13 @@ module.exports = {
           ctx.bugsnag.notify(createReportFromErr(err, handledState))
         }
         if (!ctx.response.headerSent) ctx.response.status = err.status || 500
+        try {
+          // this function will throw if you give it a non-error, but we still want
+          // to output that, so if it throws, pass it back what it threw (a TypeError)
+          ctx.app.onerror(err)
+        } catch (e) {
+          ctx.app.onerror(e)
+        }
       }
     }
 
