@@ -33,6 +33,7 @@ module.exports = {
           ctx.bugsnag.notify(createReportFromErr(err, handledState))
         }
         if (!ctx.response.headerSent) ctx.response.status = err.status || 500
+        ctx.app.onerror(err)
       }
     }
 
