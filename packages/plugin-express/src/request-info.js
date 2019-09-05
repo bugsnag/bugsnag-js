@@ -20,9 +20,12 @@ module.exports = req => {
   request.query = extractObject(req, 'query')
   request.body = extractObject(req, 'body')
 
+  request.clientIp = req.ip || (connection ? connection.remoteAddress : undefined)
+  request.referer = req.headers.referer || req.headers.referrer
+
   if (connection) {
     request.connection = {
-      remoteAddress: connection.remoteAddress || req.ip,
+      remoteAddress: connection.remoteAddress,
       remotePort: connection.remotePort,
       bytesRead: connection.bytesRead,
       bytesWritten: connection.bytesWritten,
