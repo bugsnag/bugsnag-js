@@ -231,4 +231,36 @@ Lorem ipsum dolor sit amet.
     window.removeEventListener('click', myfun)
     expect(spy).toHaveBeenCalledTimes(2)
   })
+
+  it('gets the correct line numbers for errors at the start of the document', () => {
+    const scriptContent = `throw new Error('oh')\nconsole.log('next')`
+    const document = {
+      scripts: [ { innerHTML: scriptContent } ],
+      currentScript: { innerHTML: scriptContent },
+      documentElement: {
+        outerHTML: `<script>${scriptContent}</script>`
+      }
+    }
+    const window = { location: { href: 'https://app.bugsnag.com/errors' } }
+
+    const client = new Client(VALID_NOTIFIER)
+    const payloads = []
+    client.setOptions({ apiKey: 'API_KEY_YEAH' })
+    client.configure()
+    client.use(plugin, document, window)
+
+    expect(client.config.beforeSend.length).toBe(1)
+    client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
+    client.notify(new Report('Error', 'oh', [
+      { fileName: window.location.href, lineNumber: 1 }
+    ]))
+    expect(payloads.length).toEqual(1)
+    expect(payloads[0].events[0].stacktrace[0].code).toEqual({
+      1: '<!-- DOC START -->',
+      2: '<script>throw new Error(\'oh\')',
+      3: 'console.log(\'next\')</script>'
+    })
+    expect(payloads[0].events[0].metaData.script).toBeDefined()
+    expect(payloads[0].events[0].metaData.script.content).toEqual(scriptContent)
+  })
 })
