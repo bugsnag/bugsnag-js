@@ -26,7 +26,7 @@ describe('plugin: koa', () => {
       c.use(plugin)
       const middleware = c.getPlugin('koa')
       const mockCtx = {
-        req: { connection: { address: () => ({ port: 1234 }) } },
+        req: { connection: { address: () => ({ port: 1234 }) }, headers: {} },
         request: { query: {} },
         res: {},
         response: { headerSent: false },

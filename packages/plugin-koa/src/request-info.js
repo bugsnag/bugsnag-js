@@ -12,8 +12,10 @@ module.exports = ctx => {
     headers: request.headers,
     httpVersion: request.httpVersion,
     query: ctx.request.query,
+    referer: request.headers.referer || request.headers.referrer,
+    clientIp: ctx.ip || (request.connection ? request.connection.remoteAddress : undefined),
     connection: request.connection ? {
-      remoteAddress: request.connection.remoteAddress || request.ip,
+      remoteAddress: request.connection.remoteAddress,
       remotePort: request.connection.remotePort,
       bytesRead: request.connection.bytesRead,
       bytesWritten: request.connection.bytesWritten,
