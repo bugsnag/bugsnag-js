@@ -10,7 +10,7 @@ RUN unzip -q sdk-tools-linux-4333796.zip
 
 ENV PATH="${PATH}:/sdk/tools:/sdk/tools/bin"
 
-RUN yes | sdkmanager "platform-tools"
+RUN yes | sdkmanager "platform-tools" "build-tools;28.0.3"
 
 ENV PATH="${PATH}:/sdk/platform-tools"
 ENV ANDROID_HOME="/sdk/"

@@ -42,6 +42,8 @@ steps:
     env:
       DEVICE_TYPE: "ANDROID_9"
       APP_LOCATION: "build/rn0.55.apk"
+    concurrency: 5
+    concurrency_group: 'browserstack-app'
 
   - label: ':android: React-native 0.60 Android 9'
     plugins:
@@ -53,3 +55,5 @@ steps:
     env:
       DEVICE_TYPE: "ANDROID_9"
       APP_LOCATION: "build/rn0.60.apk"
+    concurrency: 5
+    concurrency_group: 'browserstack-app'
