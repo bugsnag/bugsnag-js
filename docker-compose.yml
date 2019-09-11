@@ -101,6 +101,48 @@ services:
     volumes:
       - ./build:/app/test/expo/features/fixtures/build
 
+  react-native-android-base:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile.react-native-android-base
+
+  react-native-android-builder:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile.react-native-android-builder
+      args:
+        - REACT_NATIVE_VERSION
+    environment:
+      VERBOSE:
+      DEBUG:
+    networks:
+      default:
+        aliases:
+          - maze-runner
+    volumes:
+      - ./build:/app/build
+
+  react-native-maze-runner:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile.react-native
+      args:
+        - BUILDKITE_BUILD_NUMBER
+    environment:
+      VERBOSE:
+      DEBUG:
+      BROWSER_STACK_USERNAME:
+      BROWSER_STACK_ACCESS_KEY:
+      BROWSER_STACK_LOCAL_IDENTIFIER: ${BUILDKITE_JOB_ID:-maze-runner}
+      APP_LOCATION:
+      DEVICE_TYPE:
+    networks:
+      default:
+        aliases:
+          - maze-runner
+    volumes:
+      - ./build:/app/test/react-native/build
+
 networks:
   default:
     name: ${BUILDKITE_JOB_ID:-js-maze-runner}

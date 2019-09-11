@@ -1,0 +1,38 @@
+FROM openjdk:8-jdk-stretch
+
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
+RUN apt-get update
+RUN apt-get install -y gradle jq git-core curl build-essential openssl libssl-dev nodejs
+
+WORKDIR /sdk
+RUN wget https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip -q
+RUN unzip -q sdk-tools-linux-4333796.zip
+
+ENV PATH="${PATH}:/sdk/tools:/sdk/tools/bin"
+
+RUN yes | sdkmanager "platform-tools"
+
+ENV PATH="${PATH}:/sdk/platform-tools"
+ENV ANDROID_HOME="/sdk/"
+
+WORKDIR /app
+
+ENV GRADLE_OPTS="-Dorg.gradle.daemon=false"
+
+COPY test/react-native/features /app/features
+
+ARG REACT_NATIVE_VERSION
+ENV REACT_NATIVE_FIXTURE=${REACT_NATIVE_VERSION}
+
+RUN echo ${REACT_NATIVE_VERSION}
+
+RUN cp -r /app/features/fixtures/app/ /app/features/fixtures/${REACT_NATIVE_VERSION}/app/
+
+WORKDIR /app/features/fixtures/${REACT_NATIVE_VERSION}
+
+RUN npm install
+
+WORKDIR /app/features/fixtures/${REACT_NATIVE_VERSION}/android
+
+CMD ./gradlew assembleRelease && \
+    cp /app/features/fixtures/$REACT_NATIVE_FIXTURE/android/app/build/outputs/apk/release/app-release.apk /app/build/$REACT_NATIVE_FIXTURE.apk

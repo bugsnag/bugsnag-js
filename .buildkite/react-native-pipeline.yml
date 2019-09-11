@@ -1,0 +1,55 @@
+steps:
+  - label: ':docker: Build React-native android base image'
+    plugins:
+      - docker-compose#v2.6.0:
+          build: react-native-android-base
+          image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
+          cache-from:
+            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:rn-android-base-${BRANCH_NAME}
+            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:rn-android-base-latest
+      - docker-compose#v2.6.0:
+          push:
+            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:rn-android-base-${BRANCH_NAME}
+            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:rn-android-base-latest
+
+  - wait
+
+  - label: ':docker: Build React-native 0.55 apk'
+    plugins:
+      - docker-compose#v2.6.0:
+          run: react-native-android-builder
+    artifact_paths: build/rn0.55.apk
+    env:
+      REACT_NATIVE_VERSION: rn0.55
+
+  - label: ':docker: Build React-native 0.60 apk'
+    plugins:
+      - docker-compose#v2.6.0:
+          run: react-native-android-builder
+    artifact_paths: build/rn0.60.apk
+    env:
+      REACT_NATIVE_VERSION: rn0.60
+
+  - wait
+
+  - label: ':android: React-native 0.55 Android 9'
+    plugins:
+      artifacts#v1.2.0:
+        download: "build/rn0.55.apk"
+      docker-compose#v2.6.0:
+        run: react-native-maze-runner
+        use-aliases: true
+    env:
+      DEVICE_TYPE: "ANDROID_9"
+      APP_LOCATION: "build/rn0.55.apk"
+
+  - label: ':android: React-native 0.60 Android 9'
+    plugins:
+      artifacts#v1.2.0:
+        download: "build/rn0.60.apk"
+      docker-compose#v2.6.0:
+        run: react-native-maze-runner
+        use-aliases: true
+    env:
+      DEVICE_TYPE: "ANDROID_9"
+      APP_LOCATION: "build/rn0.60.apk"
