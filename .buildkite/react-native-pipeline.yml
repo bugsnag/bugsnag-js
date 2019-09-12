@@ -30,6 +30,24 @@ steps:
     env:
       REACT_NATIVE_VERSION: rn0.60
 
+  - label: ':ios: Build React-native 0.55 ipa'
+    agents:
+      queue: "opensource-mac"
+    env:
+      REACT_NATIVE_VERSION: rn0.55
+    artifact_paths: build/rn0.55.ipa
+    commands:
+      - test/react-native/scripts/build-ios.sh
+
+  - label: ':ios: Build React-native 0.60 ipa'
+    agents:
+      queue: "opensource-mac"
+    env:
+      REACT_NATIVE_VERSION: rn0.60
+    artifact_paths: build/rn0.60.ipa
+    commands:
+      - test/react-native/scripts/build-ios.sh
+
   - wait
 
   - label: ':android: React-native 0.55 Android 9'
@@ -55,5 +73,31 @@ steps:
     env:
       DEVICE_TYPE: "ANDROID_9"
       APP_LOCATION: "build/rn0.60.apk"
+    concurrency: 5
+    concurrency_group: 'browserstack-app'
+
+  - label: ':ios: React-native 0.55 iOS 12'
+    plugins:
+      artifacts#v1.2.0:
+        download: "build/rn0.55.ipa"
+      docker-compose#v2.6.0:
+        run: react-native-maze-runner
+        use-aliases: true
+    env:
+      DEVICE_TYPE: "IOS_12"
+      APP_LOCATION: "build/rn0.55.ipa"
+    concurrency: 5
+    concurrency_group: 'browserstack-app'
+
+  - label: ':ios: React-native 0.60 iOS 12'
+    plugins:
+      artifacts#v1.2.0:
+        download: "build/rn0.60.ipa"
+      docker-compose#v2.6.0:
+        run: react-native-maze-runner
+        use-aliases: true
+    env:
+      DEVICE_TYPE: "IOS_12"
+      APP_LOCATION: "build/rn0.60.ipa"
     concurrency: 5
     concurrency_group: 'browserstack-app'

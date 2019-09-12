@@ -58,5 +58,6 @@ buck-out/
 # CocoaPods
 /ios/Pods/
 
-
 /app/
+/output/
+/reactnative.xcarchive/

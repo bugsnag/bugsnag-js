@@ -54,3 +54,8 @@ buck-out/
 
 # Bundle artifact
 *.jsbundle
+
+/app/
+/output/
+/rn055.xcarchive/
+/third-party/
