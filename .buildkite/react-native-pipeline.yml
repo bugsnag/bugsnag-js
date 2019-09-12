@@ -5,12 +5,12 @@ steps:
           build: react-native-android-base
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
           cache-from:
-            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:rn-android-base-${BRANCH_NAME}
-            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:rn-android-base-latest
+            - react-native-andorid-base:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:rn-android-base-${BRANCH_NAME}
+            - react-native-android-base:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:rn-android-base-latest
       - docker-compose#v2.6.0:
           push:
-            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:rn-android-base-${BRANCH_NAME}
-            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:rn-android-base-latest
+            - react-native-android-base:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:rn-android-base-${BRANCH_NAME}
+            - react-native-android-base:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:rn-android-base-latest
 
   - wait
 
