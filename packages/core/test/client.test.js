@@ -280,6 +280,7 @@ describe('@bugsnag/core/client', () => {
       client.notify(undefined)
       client.notify(null)
       client.notify(() => {})
+      client.notify({ name: 'some message' })
       client.notify(1)
       client.notify('errrororor')
       client.notify('str1', 'str2')
@@ -288,9 +289,12 @@ describe('@bugsnag/core/client', () => {
       expect(payloads[0].events[0].toJSON().exceptions[0].message).toBe('Bugsnag usage error. notify() expected error/opts parameters, got nothing')
       expect(payloads[1].events[0].toJSON().exceptions[0].message).toBe('Bugsnag usage error. notify() expected error/opts parameters, got null')
       expect(payloads[2].events[0].toJSON().exceptions[0].message).toBe('Bugsnag usage error. notify() expected error/opts parameters, got function')
-      expect(payloads[3].events[0].toJSON().exceptions[0].message).toBe('1')
-      expect(payloads[4].events[0].toJSON().exceptions[0].message).toBe('errrororor')
-      expect(payloads[5].events[0].toJSON().metaData).toEqual({ notifier: { notifyArgs: [ 'str1', 'str2' ] } })
+      expect(payloads[3].events[0].toJSON().exceptions[0].message).toBe('Bugsnag usage error. notify() expected error/opts parameters, got unsupported object')
+      expect(payloads[4].events[0].toJSON().exceptions[0].message).toBe('1')
+      expect(payloads[5].events[0].toJSON().exceptions[0].message).toBe('errrororor')
+      expect(payloads[6].events[0].toJSON().metaData).toEqual({ notifier: { notifyArgs: [ 'str1', 'str2' ] } })
+      expect(payloads[7].events[0].toJSON().exceptions[0].message).toBe('str1')
+      expect(payloads[7].events[0].toJSON().metaData).toEqual({})
     })
 
     it('supports { name, message } usage', () => {

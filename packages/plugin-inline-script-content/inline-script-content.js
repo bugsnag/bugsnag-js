@@ -21,7 +21,7 @@ module.exports = {
         html = getHtml()
         DOMContentLoaded = true
       }
-      if (typeof prev === 'function') prev.apply(this, arguments)
+      try { prev.apply(this, arguments) } catch (e) {}
     }
 
     var _lastScript = null
@@ -45,9 +45,9 @@ module.exports = {
       const htmlLines = [ '<!-- DOC START -->' ].concat(html.split('\n'))
       const zeroBasedLine = lineNumber - 1
       const start = Math.max(zeroBasedLine - 3, 0)
-      const end = Math.min(zeroBasedLine + 3, htmlLines.length - 1)
+      const end = Math.min(zeroBasedLine + 3, htmlLines.length)
       return reduce(htmlLines.slice(start, end), (accum, line, i) => {
-        accum[i + lineNumber - 3] = line.length <= MAX_LINE_LENGTH ? line : line.substr(0, MAX_LINE_LENGTH)
+        accum[start + 1 + i] = line.length <= MAX_LINE_LENGTH ? line : line.substr(0, MAX_LINE_LENGTH)
         return accum
       }, {})
     }

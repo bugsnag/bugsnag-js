@@ -1,5 +1,13 @@
 # Changelog
 
+## 6.4.1 (2019-09-24)
+
+### Fixed
+- (plugin-koa): Ensure unhandled Koa errors are logged out and that non-errors don't generate two reports [#614](https://github.com/bugsnag/bugsnag-js/pull/614)
+- (plugin-inline-script-content): Tolerate errors when trying to call existing installed handler [#613](https://github.com/bugsnag/bugsnag-js/issues/613) (fixes [#608](https://github.com/bugsnag/bugsnag-js/issues/608))
+- (plugin-inline-script-content): Ensure line numbers are correct when error is at line 1/2/3 [#616](https://github.com/bugsnag/bugsnag-js/issues/616)
+- (plugin-koa|express|restify): Ensure `clientIp` and `referer` are properly collected [#617](https://github.com/bugsnag/bugsnag-js/issues/617) (fixes [#615](https://github.com/bugsnag/bugsnag-js/issues/615))
+
 ## 6.4.0 (2019-08-13)
 
 ### Changed
