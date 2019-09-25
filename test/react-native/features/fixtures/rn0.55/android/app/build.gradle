@@ -124,8 +124,7 @@ android {
     // applicationVariants are e.g. debug, release
     applicationVariants.all { variant ->
         variant.outputs.each { output ->
-            output.outputFile = new File(
-                output.outputFile.parent + '/release/',
+            output.outputFileName = new File(
                 output.outputFile.name.replace("-unsigned.apk", ".apk")
             )
             // For each separate APK per architecture, set a unique version code as described here:

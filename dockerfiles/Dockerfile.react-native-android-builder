@@ -32,6 +32,8 @@ WORKDIR /app/features/fixtures/${REACT_NATIVE_VERSION}
 
 RUN npm install
 
+RUN ./node_modules/.bin/react-native link
+
 WORKDIR /app/features/fixtures/${REACT_NATIVE_VERSION}/android
 
 CMD ./gradlew assembleRelease && \
