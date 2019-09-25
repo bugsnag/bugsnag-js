@@ -8,9 +8,10 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@babel/runtime": "^7.6.0",
+    "bugsnag-react-native": "^2.23.1",
     "react": "16.8.6",
-    "react-native": "0.60.5",
-    "@babel/runtime": "^7.6.0"
+    "react-native": "0.60.5"
   },
   "devDependencies": {
     "@babel/core": "^7.6.0",

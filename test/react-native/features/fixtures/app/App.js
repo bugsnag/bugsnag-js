@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import {Client, Configuration, StandardDelivery} from 'bugsnag-react-native';
+import Scenarios from './Scenarios';
 import {
   View,
   Text,
@@ -33,31 +35,35 @@ export default class App extends Component {
   }
 
   startScenario = () => {
-    console.log("StartScenario")
-    fetch('http://bs-local.com:9339', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        type: 'Start Scenario',
-        state: this.state
-      })
-    })
+    console.log("Running scenario: " + this.state.currentScenario)
+    console.log("  with MetaData: " + this.state.scenarioMetaData)
+    let config = this.prepareBugsnagConfig()
+    let scenarioName = this.state.currentScenario
+    let scenarioMetaData = this.state.scenarioMetaData
+    let scenario = new Scenarios[scenarioName](config, scenarioMetaData)
+    let client = new Client(config)
+    scenario.run(client)
   }
 
   startBugsnag = () => {
-    console.log("StartScenario")
-    fetch('http://bs-local.com:9339', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        type: 'Start Bugsnag',
-        state: this.state
-      })
-    })
+    console.log("Starting Bugsnag for scenario: " + this.state.currentScenario)
+    console.log("  with MetaData: " + this.state.scenarioMetaData)
+    let config = this.prepareBugsnagConfig()
+    let scenarioName = this.state.currentScenario
+    let scenarioMetaData = this.state.scenarioMetaData
+    let scenario = new Scenarios[scenarioName](config, scenarioMetaData)
+    let client = new Client(config)
+  }
+
+  prepareBugsnagConfig() {
+    let config = new Configuration("ABCDEFGHIJKLMNOPQRSTUVWXYZ123456")
+    let delivery = new StandardDelivery(
+      "http://bs-local.com:9339",
+      "http://bs-local.com:9339"
+    )
+    config.delivery = delivery
+    config.autoCaptureSessions = false
+    return config
   }
 
   render () {
