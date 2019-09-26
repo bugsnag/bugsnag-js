@@ -10,7 +10,8 @@
     "@babel/runtime": "^7.6.0",
     "bugsnag-react-native": "^2.23.1",
     "react": "16.3.1",
-    "react-native": "0.55"
+    "react-native": "0.55",
+    "stacktrace-parser": "0.1.4"
   },
   "devDependencies": {
     "babel-jest": "24.9.0",

@@ -25,7 +25,7 @@
       <meta-data android:name="com.bugsnag.android.API_KEY"
           android:value="ABCDEFGHIJKLMNOPQRSTUVWXYZ123456"/>
       <meta-data android:name="com.bugsnag.android.DETECT_NDK_CRASHES"
-          android:value="true"/>
+            android:value="true"/>
     </application>
 
 </manifest>

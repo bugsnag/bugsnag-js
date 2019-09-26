@@ -24,8 +24,6 @@ COPY test/react-native/features /app/features
 ARG REACT_NATIVE_VERSION
 ENV REACT_NATIVE_FIXTURE=${REACT_NATIVE_VERSION}
 
-RUN echo ${REACT_NATIVE_VERSION}
-
 RUN cp -r /app/features/fixtures/app/ /app/features/fixtures/${REACT_NATIVE_VERSION}/app/
 
 WORKDIR /app/features/fixtures/${REACT_NATIVE_VERSION}
