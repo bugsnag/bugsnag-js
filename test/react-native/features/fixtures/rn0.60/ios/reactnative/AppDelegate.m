@@ -8,6 +8,7 @@
 #import "AppDelegate.h"
 
 #import <BugsnagReactNative/BugsnagReactNative.h>
+#import "BugsnagConfiguration.h"
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
@@ -17,7 +18,14 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
-  [BugsnagReactNative start];
+  
+  BugsnagConfiguration *config = [BugsnagConfiguration new];
+  config.reportOOMs = false;
+  [config setEndpointsForNotify:@"http://bs-local.com:9339"
+                    sessions:@"http://session.example.com" ];
+  config.shouldAutoCaptureSessions = NO;
+  [BugsnagReactNative startWithConfiguration:config];
+
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
                                                    moduleName:@"reactnative"
                                             initialProperties:nil];
