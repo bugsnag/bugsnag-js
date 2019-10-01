@@ -8,8 +8,7 @@ Scenario: Catching an Unhandled error
   And the exception "message" equals "UnhandledError"
 
 Scenario: Catching an Unhandled promise rejection
-  When I run "UnhandledPromiseRejectionScenario" and relaunch the app
-  And I configure Bugsnag for "UnhandledPromiseRejectionScenario"
+  When I run "UnhandledPromiseRejectionScenario"
   Then I wait to receive a request
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "UnhandledPromiseRejection"
