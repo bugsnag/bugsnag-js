@@ -1,11 +1,24 @@
+import AppDefaultScenario from './scenarios/AppDefaultScenario'
+import CallbackOnClientScenario from './scenarios/CallbackOnClientScenario'
+import CallbackOnNotifyScenario from './scenarios/CallbackOnNotifyScenario'
+import DeviceDefaultScenario from './scenarios/DeviceDefaultScenario'
+import HandledCaughtErrorScenario from './scenarios/HandledCaughtErrorScenario'
+import IgnoredReportScenario from './scenarios/IgnoredReportScenario'
 import UnhandledErrorScenario from './scenarios/UnhandledErrorScenario'
 import UnhandledPromiseRejectionScenario from './scenarios/UnhandledPromiseRejectionScenario'
-import HandledErrorScenario from './scenarios/HandledErrorScenario'
-import HandledCaughtErrorScenario from './scenarios/HandledCaughtErrorScenario'
+import UserCallbackScenario from './scenarios/UserCallbackScenario'
+import UserClientScenario from './scenarios/UserClientScenario'
+
 
 export default {
+    AppDefaultScenario,
+    CallbackOnClientScenario,
+    CallbackOnNotifyScenario,
+    DeviceDefaultScenario,
+    HandledCaughtErrorScenario,
+    IgnoredReportScenario,
     UnhandledErrorScenario,
     UnhandledPromiseRejectionScenario,
-    HandledErrorScenario,
-    HandledCaughtErrorScenario
+    UserCallbackScenario,
+    UserClientScenario
 }
