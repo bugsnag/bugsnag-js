@@ -2,6 +2,7 @@ import Scenario from "./Scenario";
 
 export default class CallbackOnClientScenario extends Scenario {
     constructor(config, extraData) {
+        super(config, extraData)
         config.registerBeforeSendCallback((report, error) => {
             report.metadata = {
                 ...report.metadata,

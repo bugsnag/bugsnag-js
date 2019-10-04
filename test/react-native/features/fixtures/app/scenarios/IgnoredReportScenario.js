@@ -2,6 +2,7 @@ import Scenario from "./Scenario";
 
 export default class IgnoredReportScenario extends Scenario {
     constructor(config, extraData) {
+        super(config, extraData)
         config.registerBeforeSendCallback((report, error) => {
             return false
         })
