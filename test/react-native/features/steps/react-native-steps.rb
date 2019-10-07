@@ -43,3 +43,15 @@ When("I configure the app to run in the {string} state") do |event_metadata|
     And I send the keys "#{event_metadata}" to the element "scenarioMetaDataInput"
   }
 end
+
+Then("the event {string} equals one of:") do |field_path, table|
+  actual_value = read_key_path(Server.current_request[:body], "events.0.#{field_path}")
+  valid_values = table.raw.flatten
+  assert_true(valid_values.include?(actual_value), "#{field_path} value: #{actual_value} did not match the given list: #{valid_values}")
+end
+
+Then("the payload field {string} equals one of:") do |field_path, table|
+  actual_value = read_key_path(Server.current_request[:body], field_path)
+  valid_values = table.raw.flatten
+  assert_true(valid_values.include?(actual_value), "#{field_path} value: #{actual_value} did not match the given list: #{valid_values}")
+end

@@ -8,7 +8,7 @@ Scenario: Device data is included by default
   And the event "device.id" is not null
   And the event "device.osName" equals one of:
     | android |
-    | ios     |
+    | iOS     |
   And the event "device.osVersion" is not null
   And the event "device.orientation" equals "portrait"
   And the event "device.time" is not null
