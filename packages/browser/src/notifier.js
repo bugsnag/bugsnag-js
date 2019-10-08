@@ -85,10 +85,8 @@ module.exports = (opts) => {
     : bugsnag
 }
 
-// Stub this value because this is what the type interface looks like
-// (types/bugsnag.d.ts). This is only an issue in Angular's development
-// mode as its TS/DI thingy attempts to use this value at runtime.
-// In most other situations, TS only uses the types at compile time.
+// Angular's DI system needs this interface to match what is exposed
+// in the type definition file (types/bugsnag.d.ts)
 module.exports.Bugsnag = {
   Client,
   Report,
