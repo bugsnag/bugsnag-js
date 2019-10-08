@@ -3,6 +3,9 @@ const version = '__VERSION__'
 const url = 'https://github.com/bugsnag/bugsnag-js'
 
 const Client = require('@bugsnag/core/client')
+const Report = require('@bugsnag/core/report')
+const Session = require('@bugsnag/core/session')
+const Breadcrumb = require('@bugsnag/core/breadcrumb')
 
 const delivery = require('@bugsnag/delivery-node')
 
