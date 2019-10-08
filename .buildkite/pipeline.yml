@@ -212,6 +212,7 @@ steps:
         use-aliases: true
     env:
       BROWSER: "iphone_7"
+      HOST: "bs-local.com"
     concurrency: 5
     concurrency_group: 'browserstack'
 
