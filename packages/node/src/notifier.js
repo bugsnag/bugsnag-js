@@ -56,4 +56,14 @@ module.exports = (opts, userPlugins = []) => {
   return bugsnag
 }
 
+// Angular's DI system needs this interface to match what is exposed
+// in the type definition file (types/bugsnag.d.ts)
+module.exports.Bugsnag = {
+  Client,
+  Report,
+  Session,
+  Breadcrumb
+}
+
+// Export a "default" property for compatibility with ESM imports
 module.exports['default'] = module.exports
