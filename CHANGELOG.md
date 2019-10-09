@@ -1,5 +1,10 @@
 # Changelog
 
+## 6.4.2 (2019-10-09)
+
+### Fixed
+- (plugin-angular): Ensure Node notifier matches the type interface in the .d.ts file [#626](https://github.com/bugsnag/bugsnag-js/pull/626)
+
 ## 6.4.1 (2019-09-24)
 
 ### Fixed
