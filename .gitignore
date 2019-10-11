@@ -8,3 +8,5 @@ dist
 maze_output
 *.ngsummary.json
 .size
+*.tgz
+min_packages.tar

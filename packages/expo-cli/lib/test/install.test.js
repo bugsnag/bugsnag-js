@@ -11,7 +11,7 @@ describe('expo-cli: install', () => {
 
     const spawn = (cmd, args, opts) => {
       expect(cmd).toBe('npm')
-      expect(args).toEqual([ 'install', '@bugsnag/expo' ])
+      expect(args).toEqual([ 'install', '@bugsnag/expo@latest' ])
       expect(opts).toEqual({ cwd: projectRoot })
       const proc = new EventEmitter()
       proc.stdout = new Readable({
@@ -31,7 +31,7 @@ describe('expo-cli: install', () => {
     }
 
     const install = proxyquire('../install', { 'child_process': { spawn } })
-    const msg = await install('npm', projectRoot)
+    const msg = await install('npm', 'latest', projectRoot)
     expect(msg).toBe(undefined)
   })
 
@@ -40,7 +40,7 @@ describe('expo-cli: install', () => {
 
     const spawn = (cmd, args, opts) => {
       expect(cmd).toBe('yarn')
-      expect(args).toEqual([ 'add', '@bugsnag/expo' ])
+      expect(args).toEqual([ 'add', '@bugsnag/expo@6.3.1' ])
       expect(opts).toEqual({ cwd: projectRoot })
       const proc = new EventEmitter()
       proc.stdout = new Readable({
@@ -60,7 +60,7 @@ describe('expo-cli: install', () => {
     }
 
     const install = proxyquire('../install', { 'child_process': { spawn } })
-    const msg = await install('yarn', projectRoot)
+    const msg = await install('yarn', '6.3.1', projectRoot)
     expect(msg).toBe(undefined)
   })
 
@@ -87,7 +87,7 @@ describe('expo-cli: install', () => {
 
     const install = proxyquire('../install', { 'child_process': { spawn } })
     try {
-      await install('yarn', projectRoot)
+      await install('yarn', 'latest', projectRoot)
       expect('should not be here').toBe(false)
     } catch (e) {
       expect(e.message).toMatch(/Command exited with non-zero exit code/)
@@ -119,7 +119,7 @@ describe('expo-cli: install', () => {
 
     const install = proxyquire('../install', { 'child_process': { spawn } })
     try {
-      await install('yarn', projectRoot)
+      await install('yarn', 'latest', projectRoot)
       expect('should not be here').toBe(false)
     } catch (e) {
       expect(e.message).toMatch(/floop/)
@@ -133,7 +133,7 @@ describe('expo-cli: install', () => {
 
     const install = proxyquire('../install', { 'child_process': { spawn } })
     try {
-      await install(undefined, projectRoot)
+      await install(undefined, 'latest', projectRoot)
       expect('should not be here').toBe(false)
     } catch (e) {
       expect(e.message).toMatch(/Don’t know what command to use for /)

@@ -1,8 +1,8 @@
 const { spawn } = require('child_process')
 
-module.exports = (packageManager, projectRoot) => {
+module.exports = (packageManager, version, projectRoot) => {
   return new Promise((resolve, reject) => {
-    const cmd = commands.get(packageManager)
+    const cmd = commands(version).get(packageManager)
     if (!cmd) return reject(new Error(`Don’t know what command to use for ${packageManager}`))
     const proc = spawn(cmd[0], cmd[1], { cwd: projectRoot })
 
@@ -27,7 +27,7 @@ module.exports = (packageManager, projectRoot) => {
   })
 }
 
-const commands = new Map([
-  [ 'yarn', [ 'yarn', [ 'add', '@bugsnag/expo' ] ] ],
-  [ 'npm', [ 'npm', [ 'install', '@bugsnag/expo' ] ] ]
+const commands = version => new Map([
+  [ 'yarn', [ 'yarn', [ 'add', `@bugsnag/expo@${version}` ] ] ],
+  [ 'npm', [ 'npm', [ 'install', `@bugsnag/expo@${version}` ] ] ]
 ])
