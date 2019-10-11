@@ -25,7 +25,7 @@ export class BugsnagErrorHandler extends ErrorHandler {
     );
 
     if (error.ngDebugContext) {
-      report.set("angular", {
+      report.updateMetaData("angular", {
         component: error.ngDebugContext.component,
         context: error.ngDebugContext.context,
       });

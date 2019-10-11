@@ -93,11 +93,17 @@ export interface ISession {
   user?: object;
 }
 
+export interface INotifyOpts {
+  context?: string;
+  device?: object;
+  request?: object;
+  user?: object;
+  metaData?: object;
+  severity?: "info" | "warning" | "error";
+  beforeSend?: BeforeSend;
+}
+
 export type NotifiableError = Error
   | { errorClass: string; errorMessage: string; }
   | { name: string; message: string; }
   | any;
-
-export interface IStateUpdateObj {
-  [key: string]: any;
-}

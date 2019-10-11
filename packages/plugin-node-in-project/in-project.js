@@ -5,11 +5,11 @@ module.exports = {
   init: client => client.config.beforeSend.push(report => {
     if (!client.config.projectRoot) return
     const projectRoot = normalizePath(client.config.projectRoot)
-    report.set('stacktrace', map(report.get('stacktrace'), stackframe => {
+    report.stacktrace = map(report.stacktrace, stackframe => {
       stackframe.inProject = typeof stackframe.file === 'string' &&
         stackframe.file.indexOf(projectRoot) === 0 &&
         !/\/node_modules\//.test(stackframe.file)
       return stackframe
-    }))
+    })
   })
 }

@@ -6,8 +6,11 @@ module.exports = {
     if (client.config.collectUserIp) return
 
     client.config.beforeSend.push(report => {
-      report.set('user', 'id', report.get('user', 'id') || '[NOT COLLECTED]')
-      report.set('request', 'clientIp', '[NOT COLLECTED]')
+      // If user.id is explicitly undefined, it will be missing from the payload. It needs
+      // removing so that the following line replaces it
+      if (report.user && typeof report.user.id === 'undefined') delete report.user.id
+      report.user = { id: '[NOT COLLECTED]', ...report.user }
+      report.request = { clientIp: '[NOT COLLECTED]', ...report.request }
     })
   },
   configSchema: {

@@ -3,6 +3,9 @@ const version = '__VERSION__'
 const url = 'https://github.com/bugsnag/bugsnag-js'
 
 const Client = require('@bugsnag/core/client')
+const Report = require('@bugsnag/core/report')
+const Session = require('@bugsnag/core/session')
+const Breadcrumb = require('@bugsnag/core/breadcrumb')
 
 const delivery = require('@bugsnag/delivery-node')
 
@@ -56,4 +59,14 @@ module.exports = (opts, userPlugins = []) => {
   return bugsnag
 }
 
+// Angular's DI system needs this interface to match what is exposed
+// in the type definition file (types/bugsnag.d.ts)
+module.exports.Bugsnag = {
+  Client,
+  Report,
+  Session,
+  Breadcrumb
+}
+
+// Export a "default" property for compatibility with ESM imports
 module.exports['default'] = module.exports

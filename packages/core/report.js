@@ -3,13 +3,6 @@ const StackGenerator = require('stack-generator')
 const hasStack = require('./lib/has-stack')
 const { reduce, filter } = require('./lib/es-utils')
 const jsRuntime = require('./lib/js-runtime')
-const State = require('./lib/state')
-const supportDeprecatedProps = require('./lib/deprecated-prop-support')
-
-const DEPRECATED_PROPS = [
-  'app', 'device', 'context', 'user', 'request', 'metaData', 'apiKey', 'severity',
-  'groupingHash', 'errorClass', 'errorMessage', 'breadcrumbs', 'stacktrace'
-]
 
 class BugsnagReport {
   constructor (errorClass, errorMessage, stacktrace = [], handledState = defaultHandledState(), originalError) {
@@ -17,35 +10,35 @@ class BugsnagReport {
     this.__isBugsnagReport = true
 
     this._ignored = false
+
+    // private (un)handled state
     this._handledState = handledState
-    this._session = undefined
 
-    this._logger = { debug: () => {}, info: () => {}, warn: () => {}, error: () => {} }
-
-    this._internalState = new State({
-      apiKey: { initialValue: () => undefined },
-      severity: { initialValue: () => this._handledState.severity },
-      groupingHash: { initialValue: () => undefined },
-      errorClass: { initialValue: () => stringOrFallback(errorClass, '[no error class]') },
-      errorMessage: { initialValue: () => stringOrFallback(errorMessage, '[no error message]') },
-      breadcrumbs: { initialValue: () => [] },
-      stacktrace: {
-        initialValue: () => reduce(stacktrace, (accum, frame) => {
-          const f = formatStackframe(frame)
-          // don't include a stackframe if none of its properties are defined
-          try {
-            if (JSON.stringify(f) === '{}') return accum
-            return accum.concat(f)
-          } catch (e) {
-            return accum
-          }
-        }, [])
+    // setable props
+    this.app = undefined
+    this.apiKey = undefined
+    this.breadcrumbs = []
+    this.context = undefined
+    this.device = undefined
+    this.errorClass = stringOrFallback(errorClass, '[no error class]')
+    this.errorMessage = stringOrFallback(errorMessage, '[no error message]')
+    this.groupingHash = undefined
+    this.metaData = {}
+    this.request = undefined
+    this.severity = this._handledState.severity
+    this.stacktrace = reduce(stacktrace, (accum, frame) => {
+      const f = formatStackframe(frame)
+      // don't include a stackframe if none of its properties are defined
+      try {
+        if (JSON.stringify(f) === '{}') return accum
+        return accum.concat(f)
+      } catch (e) {
+        return accum
       }
-    })
-
+    }, [])
+    this.user = undefined
+    this.session = undefined
     this.originalError = originalError
-
-    try { supportDeprecatedProps(this, 'report', DEPRECATED_PROPS) } catch (e) {}
 
     // Flags.
     // Note these are not initialised unless they are used
@@ -62,42 +55,73 @@ class BugsnagReport {
     return this._ignored
   }
 
-  get (...args) {
-    return this._internalState.get(...args)
+  updateMetaData (section, ...args) {
+    if (!section) return this
+    let updates
+
+    // updateMetaData("section", null) -> removes section
+    if (args[0] === null) return this.removeMetaData(section)
+
+    // updateMetaData("section", "property", null) -> removes property from section
+    if (args[1] === null) return this.removeMetaData(section, args[0], args[1])
+
+    // normalise the two supported input types into object form
+    if (typeof args[0] === 'object') updates = args[0]
+    if (typeof args[0] === 'string') updates = { [args[0]]: args[1] }
+
+    // exit if we don't have an updates object at this point
+    if (!updates) return this
+
+    // ensure a section with this name exists
+    if (!this.metaData[section]) this.metaData[section] = {}
+
+    // merge the updates with the existing section
+    this.metaData[section] = { ...this.metaData[section], ...updates }
+
+    return this
   }
 
-  set (...args) {
-    return this._internalState.set(...args)
-  }
+  removeMetaData (section, property) {
+    if (typeof section !== 'string') return this
 
-  clear (...args) {
-    return this._internalState.clear(...args)
+    // remove an entire section
+    if (!property) {
+      delete this.metaData[section]
+      return this
+    }
+
+    // remove a single property from a section
+    if (this.metaData[section]) {
+      delete this.metaData[section][property]
+      return this
+    }
+
+    return this
   }
 
   toJSON () {
-    const payload = this._internalState.toPayload()
     return {
       payloadVersion: '4',
       exceptions: [
         {
-          errorClass: payload.errorClass,
-          message: payload.errorMessage,
-          stacktrace: payload.stacktrace,
+          errorClass: this.errorClass,
+          message: this.errorMessage,
+          stacktrace: this.stacktrace,
           type: jsRuntime
         }
       ],
-      severity: payload.severity,
+      severity: this.severity,
       unhandled: this._handledState.unhandled,
       severityReason: this._handledState.severityReason,
-      app: payload.app,
-      device: payload.device,
-      breadcrumbs: payload.breadcrumbs,
-      context: payload.context,
-      user: payload.user,
-      metaData: payload.metaData,
-      groupingHash: payload.groupingHash,
-      request: payload.request,
-      session: this._session
+      app: this.app,
+      device: this.device,
+      breadcrumbs: this.breadcrumbs,
+      context: this.context,
+      user: this.user,
+      metaData: this.metaData,
+      groupingHash: this.groupingHash,
+      request: this.request,
+      session: this.session
     }
   }
 }
@@ -143,9 +167,13 @@ BugsnagReport.getStacktrace = function (error, errorFramesToSkip = 0, generatedF
   } catch (e) {
     if (hasStack(e)) return ErrorStackParser.parse(error).slice(1 + generatedFramesToSkip)
     // error wasn't provided or didn't have a stacktrace so try to walk the callstack
-    return filter(StackGenerator.backtrace(), frame =>
-      (frame.functionName || '').indexOf('StackGenerator$$') === -1
-    ).slice(1 + generatedFramesToSkip)
+    try {
+      return filter(StackGenerator.backtrace(), frame =>
+        (frame.functionName || '').indexOf('StackGenerator$$') === -1
+      ).slice(1 + generatedFramesToSkip)
+    } catch (e) {
+      return []
+    }
   }
 }
 

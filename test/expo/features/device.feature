@@ -34,7 +34,7 @@ Scenario: Device data can be modified on the client
     | android |
     | ios     |
   And the event "device.osVersion" equals "testOSVersion"
-  And the event "metaData.device.newThing" equals "this is new"
+  And the event "device.newThing" equals "this is new"
   And the event "device.orientation" equals "portrait"
   And the event "device.time" is not null
   And the event "metaData.device.isDevice" is true
@@ -55,8 +55,28 @@ Scenario: Device data can be modified by a callback
     | android |
     | ios     |
   And the event "device.model" equals "brandNewPhone"
-  And the event "metaData.device.newThing" equals "another new thing"
+  And the event "device.newThing" equals "another new thing"
   And the event "device.orientation" equals "portrait"
+  And the event "device.time" is not null
+  And the event "metaData.device.isDevice" is true
+  And the event "metaData.device.appOwnership" equals "standalone"
+  And the event "device.runtimeVersions.reactNative" matches "\d+\.\d+\.\d"
+  And the event "device.runtimeVersions.expoApp" matches "\d+\.\d+\.\d"
+  And the event "device.runtimeVersions.expoSdk" matches "\d+\.\d+\.\d"
+
+Scenario: Device data can be modified by handled options
+  Given the element "deviceOptsButton" is present
+  When I click the element "deviceOptsButton"
+  Then I wait to receive a request
+  And the exception "errorClass" equals "Error"
+  And the exception "message" equals "DeviceOptsError"
+  And the event "device.id" equals "assuming direct control"
+  And the event "device.osVersion" is not null
+  And the event "device.osName" equals one of:
+    | android |
+    | ios     |
+  And the event "device.orientation" equals "portrait"
+  And the event "device.newThing" equals "not original"
   And the event "device.time" is not null
   And the event "metaData.device.isDevice" is true
   And the event "metaData.device.appOwnership" equals "standalone"

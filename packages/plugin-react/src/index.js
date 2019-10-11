@@ -17,7 +17,7 @@ module.exports = {
         const handledState = { severity: 'error', unhandled: true, severityReason: { type: 'unhandledException' } }
         const report = new BugsnagReport(error.name, error.message, BugsnagReport.getStacktrace(error), handledState, error)
         if (info && info.componentStack) info.componentStack = formatComponentStack(info.componentStack)
-        report.set('react', info)
+        report.updateMetaData('react', info)
         client.notify(report, { beforeSend })
         this.setState({ error, info })
       }

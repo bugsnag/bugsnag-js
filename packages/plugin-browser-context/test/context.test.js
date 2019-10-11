@@ -23,7 +23,7 @@ describe('plugin: context', () => {
     client.notify(new Error('noooo'))
 
     expect(payloads.length).toEqual(1)
-    expect(payloads[0].events[0].get('context')).toBe(window.location.pathname)
+    expect(payloads[0].events[0].context).toBe(window.location.pathname)
   })
 
   it('sets doesn’t overwrite an existing context', () => {
@@ -33,12 +33,12 @@ describe('plugin: context', () => {
     client.configure()
     client.use(plugin, window)
 
-    client.set('context', 'something else')
+    client.context = 'something else'
 
     client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
     client.notify(new Error('noooo'))
 
     expect(payloads.length).toEqual(1)
-    expect(payloads[0].events[0].get('context')).toBe('something else')
+    expect(payloads[0].events[0].context).toBe('something else')
   })
 })

@@ -41,9 +41,9 @@ Lorem ipsum dolor sit amet.
       { fileName: window.location.href, lineNumber: 10 }
     ]))
     expect(payloads.length).toEqual(1)
-    expect(payloads[0].events[0].get('stacktrace')[0].code).toBeDefined()
-    expect(payloads[0].events[0].get('script')).toBeDefined()
-    expect(payloads[0].events[0].get('script', 'content')).toEqual(scriptContent)
+    expect(payloads[0].events[0].stacktrace[0].code).toBeDefined()
+    expect(payloads[0].events[0].metaData.script).toBeDefined()
+    expect(payloads[0].events[0].metaData.script.content).toEqual(scriptContent)
   })
 
   it('calls the previous onreadystatechange handler if it exists', done => {
@@ -111,9 +111,9 @@ Lorem ipsum dolor sit amet.
       { fileName: window.location.href, lineNumber: 10 }
     ]))
     expect(payloads.length).toEqual(1)
-    expect(payloads[0].events[0].get('stacktrace')[0].code).toBeDefined()
-    expect(payloads[0].events[0].get('script')).toBeDefined()
-    expect(payloads[0].events[0].get('script', 'content').length).toBe(500000)
+    expect(payloads[0].events[0].stacktrace[0].code).toBeDefined()
+    expect(payloads[0].events[0].metaData.script).toBeDefined()
+    expect(payloads[0].events[0].metaData.script.content.length).toBe(500000)
   })
 
   it('truncates surrounding code lines to a reasonable length', () => {
@@ -150,12 +150,12 @@ Lorem ipsum dolor sit amet.
       { fileName: window.location.href, lineNumber: 7 }
     ]))
     expect(payloads.length).toEqual(1)
-    expect(payloads[0].events[0].get('stacktrace')[0].code).toBeDefined()
-    const surroundingCode = payloads[0].events[0].get('stacktrace')[0].code
+    expect(payloads[0].events[0].stacktrace[0].code).toBeDefined()
+    const surroundingCode = payloads[0].events[0].stacktrace[0].code
     Object.keys(surroundingCode).forEach(line => {
       expect(surroundingCode[line].length > 200).toBe(false)
     })
-    expect(payloads[0].events[0].get('script')).toBeDefined()
+    expect(payloads[0].events[0].metaData.script).toBeDefined()
   })
 
   it('works when the stacktrace is empty', () => {
@@ -187,7 +187,7 @@ Lorem ipsum dolor sit amet.
     const spy = spyOn(client._logger, 'error')
     client.notify(new Report('EmptyStacktrace', 'Has nothing in it', []))
     expect(payloads.length).toEqual(1)
-    expect(payloads[0].events[0].get('stacktrace')).toEqual([])
+    expect(payloads[0].events[0].stacktrace).toEqual([])
     expect(spy).toHaveBeenCalledTimes(0)
   })
 
@@ -230,5 +230,37 @@ Lorem ipsum dolor sit amet.
 
     window.removeEventListener('click', myfun)
     expect(spy).toHaveBeenCalledTimes(2)
+  })
+
+  it('gets the correct line numbers for errors at the start of the document', () => {
+    const scriptContent = `throw new Error('oh')\nconsole.log('next')`
+    const document = {
+      scripts: [ { innerHTML: scriptContent } ],
+      currentScript: { innerHTML: scriptContent },
+      documentElement: {
+        outerHTML: `<script>${scriptContent}</script>`
+      }
+    }
+    const window = { location: { href: 'https://app.bugsnag.com/errors' } }
+
+    const client = new Client(VALID_NOTIFIER)
+    const payloads = []
+    client.setOptions({ apiKey: 'API_KEY_YEAH' })
+    client.configure()
+    client.use(plugin, document, window)
+
+    expect(client.config.beforeSend.length).toBe(1)
+    client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
+    client.notify(new Report('Error', 'oh', [
+      { fileName: window.location.href, lineNumber: 1 }
+    ]))
+    expect(payloads.length).toEqual(1)
+    expect(payloads[0].events[0].stacktrace[0].code).toEqual({
+      1: '<!-- DOC START -->',
+      2: '<script>throw new Error(\'oh\')',
+      3: 'console.log(\'next\')</script>'
+    })
+    expect(payloads[0].events[0].metaData.script).toBeDefined()
+    expect(payloads[0].events[0].metaData.script.content).toEqual(scriptContent)
   })
 })

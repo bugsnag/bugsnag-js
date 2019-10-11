@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/core",
-  "version": "6.3.0",
+  "version": "6.4.1",
   "types": "types/index.d.ts",
   "description": "Core classes and utilities for Bugsnag notifiers",
   "homepage": "https://www.bugsnag.com/",
@@ -25,7 +25,7 @@
   "dependencies": {
     "@bugsnag/cuid": "^3.0.0",
     "@bugsnag/safe-json-stringify": "4.0.0",
-    "error-stack-parser": "^2.0.2",
+    "error-stack-parser": "^2.0.3",
     "iserror": "0.0.2",
     "stack-generator": "^2.0.3"
   },

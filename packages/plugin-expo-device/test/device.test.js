@@ -12,8 +12,8 @@ describe('plugin: expo device', () => {
     const ANDROID_API_LEVEL = 28
     const ANDROID_VERSION = '8.0.0'
     const plugin = proxyquire('../', {
-      'expo': {
-        Constants: {
+      'expo-constants': {
+        default: {
           platform: { android: {} },
           manifest: { sdkVersion: SDK_VERSION },
           expoVersion: EXPO_VERSION,
@@ -66,8 +66,8 @@ describe('plugin: expo device', () => {
     const IOS_PLATFORM = 'iPhone1,1'
     const IOS_VERSION = '11.2'
     const plugin = proxyquire('../', {
-      'expo': {
-        Constants: {
+      'expo-constants': {
+        default: {
           platform: { ios: { model: IOS_MODEL, platform: IOS_PLATFORM, systemVersion: IOS_VERSION } },
           manifest: { sdkVersion: SDK_VERSION },
           expoVersion: EXPO_VERSION
@@ -141,8 +141,8 @@ describe('plugin: expo device', () => {
 
     const d = new Dimensions()
     const plugin = proxyquire('../', {
-      'expo': {
-        Constants: {
+      'expo-constants': {
+        default: {
           platform: { ios: { model: IOS_MODEL, platform: IOS_PLATFORM, system: IOS_VERSION } },
           manifest: { sdkVersion: SDK_VERSION },
           expoVersion: EXPO_VERSION

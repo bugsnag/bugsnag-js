@@ -3,16 +3,13 @@ const BugsnagReport = require('./report')
 const BugsnagBreadcrumb = require('./breadcrumb')
 const BugsnagSession = require('./session')
 const { map, includes, isArray } = require('./lib/es-utils')
+const inferReleaseStage = require('./lib/infer-release-stage')
 const isError = require('./lib/iserror')
 const some = require('./lib/async-some')
 const runBeforeSend = require('./lib/run-before-send')
-const State = require('./lib/state')
-const supportDeprecatedProps = require('./lib/deprecated-prop-support')
 
 const LOG_USAGE_ERR_PREFIX = `Usage error.`
 const REPORT_USAGE_ERR_PREFIX = `Bugsnag usage error.`
-
-const DEPRECATED_PROPS = [ 'app', 'device', 'context', 'user', 'request', 'metaData' ]
 
 class BugsnagClient {
   constructor (notifier) {
@@ -41,7 +38,13 @@ class BugsnagClient {
 
     this.breadcrumbs = []
 
-    this._internalState = new State({}, (msg) => this._logger.warn(msg))
+    // setable props
+    this.app = {}
+    this.context = undefined
+    this.device = undefined
+    this.metaData = undefined
+    this.request = undefined
+    this.user = {}
 
     // expose internal constructors
     this.BugsnagClient = BugsnagClient
@@ -54,20 +57,10 @@ class BugsnagClient {
     this.notify = function () {
       return notify.apply(self, arguments)
     }
-
-    try { supportDeprecatedProps(this, 'client', DEPRECATED_PROPS) } catch (e) {}
   }
 
   setOptions (opts) {
     this._opts = { ...this._opts, ...opts }
-  }
-
-  get (...args) {
-    return this._internalState.get(...args)
-  }
-
-  set (...args) {
-    return this._internalState.set(...args)
   }
 
   configure (partialSchema = config.schema) {
@@ -76,15 +69,12 @@ class BugsnagClient {
 
     if (!validity.valid === true) throw new Error(generateConfigErrorMessage(validity.errors))
 
-    // ensure beforeSend is an array
+    // update and elevate some special options if they were passed in at this point
     if (typeof conf.beforeSend === 'function') conf.beforeSend = [ conf.beforeSend ]
-
-    if (conf.appVersion) this.set('app', 'version', conf.appVersion)
-    if (conf.releaseStage) this.set('app', 'releaseStage', conf.releaseStage)
-    if (conf.appType) this.set('app', 'type', conf.appType)
-    if (conf.metaData) this.set(conf.metaData)
-    if (conf.user) this.set('user', conf.user)
-
+    if (conf.appVersion) this.app.version = conf.appVersion
+    if (conf.appType) this.app.type = conf.appType
+    if (conf.metaData) this.metaData = conf.metaData
+    if (conf.user) this.user = conf.user
     if (conf.logger) this.logger(conf.logger)
 
     // merge with existing config
@@ -157,44 +147,56 @@ class BugsnagClient {
     return this
   }
 
-  notify (error, beforeSend = () => {}, cb = () => {}) {
+  notify (error, opts = {}, cb = () => {}) {
     if (!this._configured) throw new Error('client not configured')
 
+    // releaseStage can be set via config.releaseStage or client.app.releaseStage
+    const releaseStage = inferReleaseStage(this)
+
     // ensure we have an error (or a reasonable object representation of an error)
-    let { err, errorFramesToSkip } = normaliseError(error, this._logger)
+    let { err, errorFramesToSkip, _opts } = normaliseError(error, opts, this._logger)
+    if (_opts) opts = _opts
+
+    // ensure opts is an object
+    if (typeof opts !== 'object' || opts === null) opts = {}
 
     // create a report from the error, if it isn't one already
     const report = BugsnagReport.ensureReport(err, errorFramesToSkip, 2)
 
-    // give all of the client's internal state to the report
-    report._internalState.extend(this._internalState)
-    // allow the report to use the client's logger
-    report._logger = this._logger
-    // copy in breadcrumbs
-    report.set('breadcrumbs', this.breadcrumbs.slice(0))
-    // prevent any subsequent changes to immutable properties
-    report._internalState.lock()
+    report.app = { ...{ releaseStage }, ...report.app, ...this.app }
+    report.context = report.context || opts.context || this.context || undefined
+    report.device = { ...report.device, ...this.device, ...opts.device }
+    report.request = { ...report.request, ...this.request, ...opts.request }
+    report.user = { ...report.user, ...this.user, ...opts.user }
+    report.metaData = { ...report.metaData, ...this.metaData, ...opts.metaData }
+    report.breadcrumbs = this.breadcrumbs.slice(0)
 
     if (this._session) {
       this._session.trackError(report)
-      report._session = this._session
+      report.session = this._session
+    }
+
+    // set severity if supplied
+    if (opts.severity !== undefined) {
+      report.severity = opts.severity
+      report._handledState.severityReason = { type: 'userSpecifiedSeverity' }
     }
 
     // exit early if the reports should not be sent on the current releaseStage
-    if (isArray(this.config.notifyReleaseStages) && !includes(this.config.notifyReleaseStages, this.config.releaseStage)) {
+    if (isArray(this.config.notifyReleaseStages) && !includes(this.config.notifyReleaseStages, releaseStage)) {
       this._logger.warn(`Report not sent due to releaseStage/notifyReleaseStages configuration`)
       return cb(null, report)
     }
 
-    const originalSeverity = report.get('severity')
+    const originalSeverity = report.severity
 
-    const callbacks = this.config.beforeSend.concat(beforeSend)
+    const beforeSend = [].concat(opts.beforeSend).concat(this.config.beforeSend)
     const onBeforeSendErr = err => {
       this._logger.error(`Error occurred in beforeSend callback, continuing anyway…`)
       this._logger.error(err)
     }
 
-    some(callbacks, runBeforeSend(report, onBeforeSendErr), (err, preventSend) => {
+    some(beforeSend, runBeforeSend(report, onBeforeSendErr), (err, preventSend) => {
       if (err) onBeforeSendErr(err)
 
       if (preventSend) {
@@ -204,19 +206,19 @@ class BugsnagClient {
 
       // only leave a crumb for the error if actually got sent
       if (this.config.autoBreadcrumbs) {
-        this.leaveBreadcrumb(report.get('errorClass'), {
-          errorClass: report.get('errorClass'),
-          errorMessage: report.get('errorMessage'),
-          severity: report.get('severity')
+        this.leaveBreadcrumb(report.errorClass, {
+          errorClass: report.errorClass,
+          errorMessage: report.errorMessage,
+          severity: report.severity
         }, 'error')
       }
 
-      if (originalSeverity !== report.get('severity')) {
+      if (originalSeverity !== report.severity) {
         report._handledState.severityReason = { type: 'userCallbackSetSeverity' }
       }
 
       this._delivery.sendReport({
-        apiKey: report.get('apiKey') || this.config.apiKey,
+        apiKey: report.apiKey || this.config.apiKey,
         notifier: this.notifier,
         events: [ report ]
       }, (err) => cb(err, report))
@@ -224,7 +226,7 @@ class BugsnagClient {
   }
 }
 
-const normaliseError = (error, logger) => {
+const normaliseError = (error, opts, logger) => {
   const synthesizedErrorFramesToSkip = 3
 
   const createAndLogUsageError = reason => {
@@ -235,10 +237,18 @@ const normaliseError = (error, logger) => {
 
   let err
   let errorFramesToSkip = 0
+  let _opts
   switch (typeof error) {
     case 'string':
-      err = new Error(String(error))
-      errorFramesToSkip = synthesizedErrorFramesToSkip
+      if (typeof opts === 'string') {
+        // ≤v3 used to have a notify('ErrorName', 'Error message') interface
+        // report usage/deprecation errors if this function is called like that
+        err = createAndLogUsageError('string/string')
+        _opts = { metaData: { notifier: { notifyArgs: [ error, opts ] } } }
+      } else {
+        err = new Error(String(error))
+        errorFramesToSkip = synthesizedErrorFramesToSkip
+      }
       break
     case 'number':
     case 'boolean':
@@ -261,7 +271,7 @@ const normaliseError = (error, logger) => {
     default:
       err = createAndLogUsageError('nothing')
   }
-  return { err, errorFramesToSkip }
+  return { err, errorFramesToSkip, _opts }
 }
 
 const hasNecessaryFields = error =>

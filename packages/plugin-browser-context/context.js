@@ -4,8 +4,8 @@
 module.exports = {
   init: (client, win = window) => {
     client.config.beforeSend.unshift(report => {
-      if (report.get('context')) return
-      report.set('context', win.location.pathname)
+      if (report.context) return
+      report.context = win.location.pathname
     })
   }
 }

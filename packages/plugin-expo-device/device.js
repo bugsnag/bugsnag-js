@@ -1,4 +1,4 @@
-const { Constants } = require('expo')
+const Constants = require('expo-constants').default
 const { Dimensions, Platform } = require('react-native')
 const { isoDate } = require('@bugsnag/core/lib/es-utils')
 const rnVersion = require('react-native/package.json').version
@@ -21,7 +21,8 @@ module.exports = {
     // get the initial orientation
     updateOrientation()
 
-    client.set('device', {
+    client.device = {
+      ...client.device,
       id: Constants.installationId,
       manufacturer: Constants.platform.ios ? 'Apple' : undefined,
       modelName: Constants.platform.ios ? Constants.platform.ios.model : undefined,
@@ -34,15 +35,17 @@ module.exports = {
         expoSdk: Constants.manifest.sdkVersion,
         androidApiLevel: Constants.platform.android ? String(Platform.Version) : undefined
       }
-    })
+    }
 
     client.config.beforeSend.unshift(report => {
-      report.set('device', {
+      report.device = {
+        ...report.device,
         time: isoDate(),
-        orientation,
+        orientation
+      }
+      report.updateMetaData('device', {
         isDevice: Constants.isDevice,
-        appOwnership: Constants.appOwnership,
-        ...report.get('device')
+        appOwnership: Constants.appOwnership
       })
     })
   }

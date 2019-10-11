@@ -53,11 +53,9 @@ const getPrefixedConsole = () => {
   }, {})
 }
 
-const getContext = report => {
-  const req = report.get('request')
-  return req && Object.keys(req).length
-    ? ` at ${req.httpMethod} ${req.path || req.url}`
+const getContext = report =>
+  report.request && Object.keys(report.request).length
+    ? ` at ${report.request.httpMethod} ${report.request.path || report.request.url}`
     : ``
-}
 
 const isAgent = value => (typeof value === 'object' && value !== null) || typeof value === 'boolean'

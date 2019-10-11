@@ -5,7 +5,7 @@ import renderer from 'react-test-renderer'
 import plugin from '../'
 
 class BugsnagReport {
-  set () {
+  updateMetaData () {
     return this
   }
 }

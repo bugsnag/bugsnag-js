@@ -12,6 +12,6 @@ module.exports = (maybeError, handledState) => {
     handledState,
     maybeError
   )
-  if (maybeError !== actualError) report.set('error', 'non-error value', String(maybeError))
+  if (maybeError !== actualError) report.updateMetaData('error', 'non-error value', String(maybeError))
   return report
 }

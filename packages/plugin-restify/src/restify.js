@@ -25,8 +25,9 @@ module.exports = {
       req.bugsnag = requestClient
 
       // extract request info and pass it to the relevant bugsnag properties
-      const request = processRequestInfo(req)
-      requestClient.set('request', request)
+      const { request, metaData } = getRequestAndMetaDataFromReq(req)
+      requestClient.metaData = { ...requestClient.metaData, request: metaData }
+      requestClient.request = request
 
       // unhandled errors caused by this request
       dom.on('error', (err) => {
@@ -55,9 +56,7 @@ module.exports = {
         client._logger.warn(
           'req.bugsnag is not defined. Make sure the @bugsnag/plugin-restify requestHandler middleware is added first.'
         )
-        client.notify(createReportFromErr(err, handledState), report => {
-          report.set('request', processRequestInfo(req))
-        })
+        client.notify(createReportFromErr(err, handledState, getRequestAndMetaDataFromReq(req)))
       }
       cb()
     }
@@ -66,15 +65,17 @@ module.exports = {
   }
 }
 
-const processRequestInfo = req => {
+const getRequestAndMetaDataFromReq = req => {
   const requestInfo = extractRequestInfo(req)
   return {
-    ...requestInfo,
-    clientIp: requestInfo.clientIp,
-    headers: requestInfo.headers,
-    httpMethod: requestInfo.httpMethod,
-    url: requestInfo.url,
-    referer: requestInfo.referer
+    metaData: requestInfo,
+    request: {
+      clientIp: requestInfo.clientIp,
+      headers: requestInfo.headers,
+      httpMethod: requestInfo.httpMethod,
+      url: requestInfo.url,
+      referer: requestInfo.referer
+    }
   }
 }
 

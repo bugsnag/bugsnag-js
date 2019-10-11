@@ -22,9 +22,9 @@ describe('plugin: device', () => {
 
     const ISO_8601 = /^\d{4}(-\d\d(-\d\d(T\d\d:\d\d(:\d\d)?(\.\d+)?(([+-]\d\d:\d\d)|Z)?)?)?)?$/i
     expect(payloads.length).toEqual(1)
-    expect(payloads[0].events[0].get('device')).toBeDefined()
-    expect(payloads[0].events[0].get('device', 'time')).toMatch(ISO_8601)
-    expect(payloads[0].events[0].get('device', 'locale')).toBe(navigator.browserLanguage)
-    expect(payloads[0].events[0].get('device', 'userAgent')).toBe(navigator.userAgent)
+    expect(payloads[0].events[0].device).toBeDefined()
+    expect(payloads[0].events[0].device.time).toMatch(ISO_8601)
+    expect(payloads[0].events[0].device.locale).toBe(navigator.browserLanguage)
+    expect(payloads[0].events[0].device.userAgent).toBe(navigator.userAgent)
   })
 })

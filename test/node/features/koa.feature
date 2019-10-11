@@ -20,6 +20,7 @@ Scenario: a synchronous thrown error in a route
   And the "file" of stack frame 0 equals "scenarios/app.js"
   And the event "request.url" equals "http://koa/err"
   And the event "request.httpMethod" equals "GET"
+  And the event "request.clientIp" is not null
 
 Scenario: an asynchronous thrown error in a route
   Then I open the URL "http://koa/async-err"

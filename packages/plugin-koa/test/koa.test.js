@@ -17,4 +17,22 @@ describe('plugin: koa', () => {
     expect(typeof middleware.errorHandler).toBe('function')
     expect(middleware.errorHandler.length).toBe(2)
   })
+
+  describe('requestHandler', () => {
+    it('should call through to app.onerror to ensure the error is logged out', (done) => {
+      const c = new Client(VALID_NOTIFIER)
+      c.setOptions({ apiKey: 'api_key' })
+      c.configure()
+      c.use(plugin)
+      const middleware = c.getPlugin('koa')
+      const mockCtx = {
+        req: { connection: { address: () => ({ port: 1234 }) }, headers: {} },
+        request: { query: {} },
+        res: {},
+        response: { headerSent: false },
+        app: { onerror: () => done() }
+      }
+      middleware.requestHandler(mockCtx)
+    })
+  })
 })

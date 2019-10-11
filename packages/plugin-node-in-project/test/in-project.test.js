@@ -14,9 +14,9 @@ describe('plugin: node in project', () => {
     client.delivery(client => ({
       sendReport: (report) => {
         const evt = report.events[0]
-        expect(evt.get('stacktrace')[0].inProject).toBe(true)
-        expect(evt.get('stacktrace')[1].inProject).toBe(true)
-        expect(evt.get('stacktrace')[2].inProject).toBe(true)
+        expect(evt.stacktrace[0].inProject).toBe(true)
+        expect(evt.stacktrace[1].inProject).toBe(true)
+        expect(evt.stacktrace[2].inProject).toBe(true)
         done()
       },
       sendSession: () => {}
@@ -56,9 +56,9 @@ describe('plugin: node in project', () => {
     client.delivery(client => ({
       sendReport: (report) => {
         const evt = report.events[0]
-        expect(evt.get('stacktrace')[0].inProject).toBe(false)
-        expect(evt.get('stacktrace')[1].inProject).toBe(false)
-        expect(evt.get('stacktrace')[2].inProject).toBe(false)
+        expect(evt.stacktrace[0].inProject).toBe(false)
+        expect(evt.stacktrace[1].inProject).toBe(false)
+        expect(evt.stacktrace[2].inProject).toBe(false)
         done()
       },
       sendSession: () => {}
@@ -98,8 +98,8 @@ describe('plugin: node in project', () => {
     client.delivery(client => ({
       sendReport: (report) => {
         const evt = report.events[0]
-        expect(evt.get('stacktrace')[0].inProject).toBe(false)
-        expect(evt.get('stacktrace')[1].inProject).toBe(false)
+        expect(evt.stacktrace[0].inProject).toBe(false)
+        expect(evt.stacktrace[1].inProject).toBe(false)
         done()
       },
       sendSession: () => {}
@@ -135,9 +135,9 @@ describe('plugin: node in project', () => {
     client.delivery(client => ({
       sendReport: (report) => {
         const evt = report.events[0]
-        expect(evt.get('stacktrace')[0].inProject).toBe(false)
-        expect(evt.get('stacktrace')[1].inProject).toBe(false)
-        expect(evt.get('stacktrace')[2].inProject).toBe(false)
+        expect(evt.stacktrace[0].inProject).toBe(false)
+        expect(evt.stacktrace[1].inProject).toBe(false)
+        expect(evt.stacktrace[2].inProject).toBe(false)
         done()
       },
       sendSession: () => {}

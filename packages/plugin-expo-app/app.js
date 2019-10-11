@@ -1,4 +1,4 @@
-const { Constants } = require('expo')
+const Constants = require('expo-constants').default
 const { AppState } = require('react-native')
 
 const appStart = new Date()
@@ -28,23 +28,20 @@ module.exports = {
     client.config.beforeSend.unshift(report => {
       const now = new Date()
       const inForeground = AppState.currentState === 'active'
-      report.set('app', {
-        inForeground: inForeground,
-        duration: now - appStart,
-        nativeBundleVersion,
-        nativeVersionCode
-      })
+      report.app.inForeground = inForeground
+      report.app.duration = now - appStart
       if (inForeground) {
-        report.set('app', 'durationInForeground', now - lastEnteredForeground)
+        report.app.durationInForeground = now - lastEnteredForeground
       }
+      report.updateMetaData('app', { nativeBundleVersion, nativeVersionCode })
     })
 
-    if (!client.get('app', 'version') && Constants.manifest.version) {
-      client.set('app', 'version', Constants.manifest.version)
+    if (!client.app.version && Constants.manifest.version) {
+      client.app.version = Constants.manifest.version
     }
 
     if (Constants.manifest.revisionId) {
-      client.set('app', 'codeBundleId', Constants.manifest.revisionId)
+      client.app.codeBundleId = Constants.manifest.revisionId
     }
   }
 }

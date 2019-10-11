@@ -14,12 +14,12 @@ describe('plugin: ip', () => {
     client.use(plugin)
 
     client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
-    client.notify(new Error('noooo'), report => {
-      report.set('request', { 'some': 'detail' })
+    client.notify(new Error('noooo'), {
+      beforeSend: report => { report.request = { 'some': 'detail' } }
     })
 
     expect(payloads.length).toEqual(1)
-    expect(payloads[0].events[0].get('request')).toEqual({ 'some': 'detail' })
+    expect(payloads[0].events[0].request).toEqual({ 'some': 'detail' })
   })
 
   it('doesn’t overwrite an existing user id', () => {
@@ -29,14 +29,14 @@ describe('plugin: ip', () => {
     client.configure()
     client.use(plugin)
 
-    client.set('user', { id: 'foobar' })
+    client.user = { id: 'foobar' }
 
     client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
     client.notify(new Error('noooo'))
 
     expect(payloads.length).toEqual(1)
-    expect(payloads[0].events[0].get('user')).toEqual({ id: 'foobar' })
-    expect(payloads[0].events[0].get('request')).toEqual({ clientIp: '[NOT COLLECTED]' })
+    expect(payloads[0].events[0].user).toEqual({ id: 'foobar' })
+    expect(payloads[0].events[0].request).toEqual({ clientIp: '[NOT COLLECTED]' })
   })
 
   it('overwrites a user id if it is explicitly `undefined`', () => {
@@ -52,8 +52,8 @@ describe('plugin: ip', () => {
     client.notify(new Error('noooo'))
 
     expect(payloads.length).toEqual(1)
-    expect(payloads[0].events[0].get('user')).toEqual({ id: '[NOT COLLECTED]' })
-    expect(payloads[0].events[0].get('request')).toEqual({ clientIp: '[NOT COLLECTED]' })
+    expect(payloads[0].events[0].user).toEqual({ id: '[NOT COLLECTED]' })
+    expect(payloads[0].events[0].request).toEqual({ clientIp: '[NOT COLLECTED]' })
   })
 
   it('redacts user IP if none is provided', () => {
@@ -67,7 +67,7 @@ describe('plugin: ip', () => {
     client.notify(new Error('noooo'))
 
     expect(payloads.length).toEqual(1)
-    expect(payloads[0].events[0].get('user')).toEqual({ id: '[NOT COLLECTED]' })
-    expect(payloads[0].events[0].get('request')).toEqual({ clientIp: '[NOT COLLECTED]' })
+    expect(payloads[0].events[0].user).toEqual({ id: '[NOT COLLECTED]' })
+    expect(payloads[0].events[0].request).toEqual({ clientIp: '[NOT COLLECTED]' })
   })
 })

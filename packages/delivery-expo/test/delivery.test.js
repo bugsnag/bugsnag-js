@@ -3,7 +3,7 @@
 const fetch = require('node-fetch')
 const proxyquire = require('proxyquire').noCallThru().noPreserveCache()
 const http = require('http')
-const Report = require('@bugsnag/core/report')
+
 const noopLogger = {
   debug: () => {},
   info: () => {},
@@ -60,14 +60,13 @@ describe('delivery: expo', () => {
     server.listen((err) => {
       expect(err).toBeUndefined()
 
+      const payload = {
+        events: [ { errorClass: 'Error', errorMessage: 'foo is not a function' } ]
+      }
       const config = {
         apiKey: 'aaaaaaaa',
         endpoints: { notify: `http://0.0.0.0:${server.address().port}/notify/` },
         filters: []
-      }
-      const payload = {
-        apiKey: config.apiKey,
-        events: [ new Report('Error', 'sample error') ]
       }
       delivery({ config, _logger: noopLogger }, fetch).sendReport(payload, (err) => {
         expect(err).toBe(null)
@@ -97,14 +96,11 @@ describe('delivery: expo', () => {
     server.listen((err) => {
       expect(err).toBeUndefined()
 
+      const payload = { events: [ { errorClass: 'Error', errorMessage: 'foo is not a function' } ] }
       const config = {
         apiKey: 'aaaaaaaa',
         endpoints: { notify: 'blah', sessions: `http://0.0.0.0:${server.address().port}/sessions/` },
         filters: []
-      }
-      const payload = {
-        apiKey: config.apiKey,
-        events: [ new Report('Error', 'sample error') ]
       }
       delivery({ config, _logger: noopLogger }, fetch).sendSession(payload, (err) => {
         expect(err).toBe(null)
@@ -136,14 +132,11 @@ describe('delivery: expo', () => {
       './network-status': MockNetworkStatus
     })
 
+    const payload = { events: [ { errorClass: 'Error', errorMessage: 'foo is not a function' } ] }
     const config = {
       apiKey: 'aaaaaaaa',
       endpoints: { notify: `http://0.0.0.0:9999/notify/` },
       filters: []
-    }
-    const payload = {
-      apiKey: config.apiKey,
-      events: [ new Report('Error', 'sample error') ]
     }
     let didLog = false
     const log = () => { didLog = true }
@@ -173,14 +166,11 @@ describe('delivery: expo', () => {
     server.listen((err) => {
       expect(err).toBeUndefined()
 
+      const payload = { events: [ { errorClass: 'Error', errorMessage: 'foo is not a function' } ] }
       const config = {
         apiKey: 'aaaaaaaa',
         endpoints: { notify: `http://0.0.0.0:${server.address().port}/notify/` },
         filters: []
-      }
-      const payload = {
-        apiKey: config.apiKey,
-        events: [ new Report('Error', 'sample error') ]
       }
       let didLog = false
       const log = () => { didLog = true }
@@ -208,14 +198,11 @@ describe('delivery: expo', () => {
       './network-status': MockNetworkStatus
     })
 
+    const payload = { events: [ { errorClass: 'Error', errorMessage: 'foo is not a function' } ] }
     const config = {
       apiKey: 'aaaaaaaa',
       endpoints: { sessions: `http://0.0.0.0:9999/sessions/` },
       filters: []
-    }
-    const payload = {
-      apiKey: config.apiKey,
-      events: [ new Report('Error', 'sample error') ]
     }
     let didLog = false
     const log = () => { didLog = true }
@@ -247,14 +234,11 @@ describe('delivery: expo', () => {
 
     server.listen((err) => {
       expect(err).toBeFalsy()
+      const payload = { events: [ { errorClass: 'Error', errorMessage: 'foo is not a function' } ] }
       const config = {
         apiKey: 'aaaaaaaa',
         endpoints: { notify: `http://0.0.0.0:${server.address().port}/notify/` },
         filters: []
-      }
-      const payload = {
-        apiKey: config.apiKey,
-        events: [ new Report('Error', 'sample error') ]
       }
       let didLog = false
       const log = () => { didLog = true }
@@ -288,14 +272,11 @@ describe('delivery: expo', () => {
 
     server.listen((err) => {
       expect(err).toBeFalsy()
+      const payload = { events: [ { errorClass: 'Error', errorMessage: 'foo is not a function' } ] }
       const config = {
         apiKey: 'aaaaaaaa',
         endpoints: { notify: `http://0.0.0.0:${server.address().port}/notify/` },
         filters: []
-      }
-      const payload = {
-        apiKey: config.apiKey,
-        events: [ new Report('Error', 'sample error') ]
       }
       let didLog = false
       const log = () => { didLog = true }
@@ -321,14 +302,12 @@ describe('delivery: expo', () => {
       './network-status': MockNetworkStatus
     })
 
-    const report = new Report('Error', 'sample error')
-    report.attemptImmediateDelivery = false
+    const payload = { sample: 'payload', attemptImmediateDelivery: false }
     const config = {
       apiKey: 'aaaaaaaa',
       endpoints: { notify: `https://some-address.com` },
       filters: []
     }
-    const payload = { apiKey: config.apiKey, events: [ report ] }
     delivery({ config, _logger: noopLogger }, fetch).sendReport(payload, (err) => {
       expect(err).not.toBeTruthy()
       expect(spiedEnqueue).toHaveBeenCalled()
@@ -388,7 +367,7 @@ describe('delivery: expo', () => {
   it('doesn’t attempt to send when not connected', done => {
     class MockQueue {
       async init () {}
-      async enqueue (req) {}
+      async enqueue (req) { console.log('enqueue') }
       async dequeue () {}
     }
     const spiedEnqueue = spyOn(MockQueue.prototype, 'enqueue')
@@ -403,14 +382,11 @@ describe('delivery: expo', () => {
       './redelivery': NoopRedelivery,
       './network-status': MockNetworkStatus
     })
+    const payload = { events: [ { errorClass: 'Error', errorMessage: 'foo is not a function' } ] }
     const config = {
       apiKey: 'aaaaaaaa',
       endpoints: { notify: `http://some-address.com` },
       filters: []
-    }
-    const payload = {
-      apiKey: config.apiKey,
-      events: [ new Report('Error', 'sample error') ]
     }
     let n = 0
     const _done = () => {

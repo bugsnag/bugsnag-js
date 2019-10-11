@@ -8,8 +8,8 @@ describe('plugin: expo device', () => {
   it('should should use version if defined (all platforms)', done => {
     const VERSION = '1.0.0'
     const plugin = proxyquire('../', {
-      'expo': {
-        Constants: {
+      'expo-constants': {
+        default: {
           platform: {
           },
           manifest: { version: VERSION }
@@ -42,8 +42,8 @@ describe('plugin: expo device', () => {
     const VERSION = '1.0.0'
     const REVISION_ID = '1.0.0-r132432'
     const plugin = proxyquire('../', {
-      'expo': {
-        Constants: {
+      'expo-constants': {
+        default: {
           platform: {
           },
           manifest: { version: VERSION, revisionId: REVISION_ID }
@@ -75,8 +75,8 @@ describe('plugin: expo device', () => {
   it('should should use versionCode if defined (android)', done => {
     const VERSION_CODE = '1.0'
     const plugin = proxyquire('../', {
-      'expo': {
-        Constants: {
+      'expo-constants': {
+        default: {
           platform: {
             android: { versionCode: VERSION_CODE }
           },
@@ -110,8 +110,8 @@ describe('plugin: expo device', () => {
   it('should should use bundleVersion if defined (ios)', done => {
     const BUNDLE_VERSION = '1.0'
     const plugin = proxyquire('../', {
-      'expo': {
-        Constants: {
+      'expo-constants': {
+        default: {
           platform: {
             ios: { buildNumber: BUNDLE_VERSION }
           },
@@ -151,8 +151,8 @@ describe('plugin: expo device', () => {
     }
     let listener
     const plugin = proxyquire('../', {
-      'expo': {
-        Constants: {
+      'expo-constants': {
+        default: {
           platform: {},
           manifest: {}
         }

@@ -38,31 +38,25 @@ describe('plugin: strip query string', () => {
     client.setOptions({
       apiKey: 'API_KEY_YEAH',
       beforeSend: report => {
-        originalStacktrace = report.get('stacktrace').map(f => f)
+        originalStacktrace = report.stacktrace.map(f => f)
       }
     })
     client.configure()
     client.use(plugin)
 
-    client.delivery(client => ({
-      sendReport: (payload) => {
-        payloads.push(JSON.parse(JSON.stringify(payload)))
-      }
-    }))
+    client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
     const err = new Error('noooo')
     err.stack = 'Error: foo\n  at page.html?id=intro:89:10'
     client.notify(err)
 
     expect(
-      originalStacktrace[0].file.indexOf(
-        payloads[0].events[0].exceptions[0].stacktrace[0].file
-      )
+      originalStacktrace[0].file.indexOf(payloads[0].events[0].stacktrace[0].file)
     ).toEqual(0)
     expect(
-      payloads[0].events[0].exceptions[0].stacktrace[0].file.length < originalStacktrace[0].file.length
+      payloads[0].events[0].stacktrace[0].file.length < originalStacktrace[0].file.length
     ).toBe(true)
     expect(
-      /\?/.test(payloads[0].events[0].exceptions[0].stacktrace[0].file)
+      /\?/.test(payloads[0].events[0].stacktrace[0].file)
     ).toBe(false)
   })
 })

@@ -22,8 +22,9 @@ module.exports = {
       ctx.bugsnag = requestClient
 
       // extract request info and pass it to the relevant bugsnag properties
-      const request = processRequestInfo(ctx)
-      requestClient.set('request', request)
+      const { request, metaData } = getRequestAndMetaDataFromCtx(ctx)
+      requestClient.metaData = { ...requestClient.metaData, request: metaData }
+      requestClient.request = request
 
       try {
         await next()
@@ -32,6 +33,13 @@ module.exports = {
           ctx.bugsnag.notify(createReportFromErr(err, handledState))
         }
         if (!ctx.response.headerSent) ctx.response.status = err.status || 500
+        try {
+          // this function will throw if you give it a non-error, but we still want
+          // to output that, so if it throws, pass it back what it threw (a TypeError)
+          ctx.app.onerror(err)
+        } catch (e) {
+          ctx.app.onerror(e)
+        }
       }
     }
 
@@ -43,8 +51,9 @@ module.exports = {
       this.bugsnag = requestClient
 
       // extract request info and pass it to the relevant bugsnag properties
-      const request = processRequestInfo(this)
-      requestClient.set('request', request)
+      const { request, metaData } = getRequestAndMetaDataFromCtx(this)
+      requestClient.metaData = { ...requestClient.metaData, request: metaData }
+      requestClient.request = request
 
       try {
         yield next
@@ -61,9 +70,7 @@ module.exports = {
         ctx.bugsnag.notify(createReportFromErr(err, handledState))
       } else {
         client._logger.warn('ctx.bugsnag is not defined. Make sure the @bugsnag/plugin-koa requestHandler middleware is added first.')
-        client.notify(createReportFromErr(err, handledState), report => {
-          report.set('request', processRequestInfo(ctx))
-        })
+        client.notify(createReportFromErr(err, handledState), getRequestAndMetaDataFromCtx(ctx))
       }
     }
 
@@ -71,15 +78,17 @@ module.exports = {
   }
 }
 
-const processRequestInfo = ctx => {
+const getRequestAndMetaDataFromCtx = ctx => {
   const requestInfo = extractRequestInfo(ctx)
   return {
-    ...requestInfo,
-    clientIp: requestInfo.clientIp,
-    headers: requestInfo.headers,
-    httpMethod: requestInfo.httpMethod,
-    url: requestInfo.url,
-    referer: requestInfo.referer
+    metaData: requestInfo,
+    request: {
+      clientIp: requestInfo.clientIp,
+      headers: requestInfo.headers,
+      httpMethod: requestInfo.httpMethod,
+      url: requestInfo.url,
+      referer: requestInfo.referer
+    }
   }
 }
 

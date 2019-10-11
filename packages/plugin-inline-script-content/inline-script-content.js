@@ -21,7 +21,7 @@ module.exports = {
         html = getHtml()
         DOMContentLoaded = true
       }
-      if (typeof prev === 'function') prev.apply(this, arguments)
+      try { prev.apply(this, arguments) } catch (e) {}
     }
 
     var _lastScript = null
@@ -45,9 +45,9 @@ module.exports = {
       const htmlLines = [ '<!-- DOC START -->' ].concat(html.split('\n'))
       const zeroBasedLine = lineNumber - 1
       const start = Math.max(zeroBasedLine - 3, 0)
-      const end = Math.min(zeroBasedLine + 3, htmlLines.length - 1)
+      const end = Math.min(zeroBasedLine + 3, htmlLines.length)
       return reduce(htmlLines.slice(start, end), (accum, line, i) => {
-        accum[i + lineNumber - 3] = line.length <= MAX_LINE_LENGTH ? line : line.substr(0, MAX_LINE_LENGTH)
+        accum[start + 1 + i] = line.length <= MAX_LINE_LENGTH ? line : line.substr(0, MAX_LINE_LENGTH)
         return accum
       }, {})
     }
@@ -55,9 +55,9 @@ module.exports = {
     client.config.beforeSend.unshift(report => {
       // remove any of our own frames that may be part the stack this
       // happens before the inline script check as it happens for all errors
-      report.set('stacktrace', filter(report.get('stacktrace'), f => !(/__trace__$/.test(f.method))))
+      report.stacktrace = filter(report.stacktrace, f => !(/__trace__$/.test(f.method)))
 
-      const frame = report.get('stacktrace')[0]
+      const frame = report.stacktrace[0]
 
       // if frame.file exists and is not the original location of the page, this can't be an inline script
       if (frame && frame.file && frame.file.replace(/#.*$/, '') !== originalLocation.replace(/#.*$/, '')) return
@@ -66,7 +66,7 @@ module.exports = {
       const currentScript = getCurrentScript()
       if (currentScript) {
         const content = currentScript.innerHTML
-        report.set(
+        report.updateMetaData(
           'script',
           'content',
           content.length <= MAX_SCRIPT_LENGTH ? content : content.substr(0, MAX_SCRIPT_LENGTH)
@@ -116,11 +116,11 @@ module.exports = {
         // this is required for removeEventListener to remove anything added with
         // addEventListener before the functions started being wrapped by Bugsnag
         const args = Array.prototype.slice.call(arguments)
-        const cba = callbackAccessor(args)
-        const cb = cba.get()
-        if (alsoCallOriginal) fn.apply(this, args)
-        if (typeof cb !== 'function') return fn.apply(this, args)
         try {
+          const cba = callbackAccessor(args)
+          const cb = cba.get()
+          if (alsoCallOriginal) fn.apply(this, args)
+          if (typeof cb !== 'function') return fn.apply(this, args)
           if (cb.__trace__) {
             cba.replace(cb.__trace__)
           } else {
@@ -145,6 +145,7 @@ module.exports = {
         } catch (e) {
           // swallow these errors on Selenium:
           // Permission denied to access property '__trace__'
+          // WebDriverException: Message: Permission denied to access property "handleEvent"
         }
         // IE8 doesn't let you call .apply() on setTimeout/setInterval
         if (fn.apply) return fn.apply(this, args)
