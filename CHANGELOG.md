@@ -1,6 +1,6 @@
 # Changelog
 
-## 6.4.3 (TBC)
+## 6.4.3 (2019-10-21)
 
 ### Fixed
 - (browser): Add browser alias to `dist/types/bugsnag` to fix Angular build failure [#632](https://github.com/bugsnag/bugsnag-js/pull/632) ([GDreyV](https://github.com/GDreyV))
