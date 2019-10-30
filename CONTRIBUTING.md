@@ -77,10 +77,10 @@ lerna version prerelease
 If you want to publish the release to npm, use the following command:
 
 ```
-lerna publish from-git --npm-tag next
+lerna publish from-git --dist-tag next
 ```
 
-The `--npm-tag next` part ensures that it is not installed by unsuspecting users who do not specify a version.
+The `--dist-tag next` part ensures that it is not installed by unsuspecting users who do not specify a version – npm automatically adds the `latest` tag to a published module unless one is specified.
 
 If you want to publish the release to the CDN, use the following command:
 
