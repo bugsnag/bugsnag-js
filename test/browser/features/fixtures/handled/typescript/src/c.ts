@@ -1,12 +1,12 @@
-import bugsnag from '@bugsnag/browser'
+import Bugsnag from '@bugsnag/browser'
 import config from './lib/config'
 
-var bugsnagClient = bugsnag(config)
+Bugsnag.init(config)
 
 go()
   .then(function () {})
   .catch(function (e: any) {
-    bugsnagClient.notify(e)
+    Bugsnag.notify(e)
   })
 
 function go() {

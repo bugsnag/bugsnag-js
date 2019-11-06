@@ -1,5 +1,5 @@
-import { Bugsnag } from '@bugsnag/browser';
-import bugsnag from '@bugsnag/browser';
-import bugsnagNode from '@bugsnag/node';
-export { Bugsnag };
-export default bugsnag;
+import Bugsnag, { Client, Event, Session, Breadcrumb, AbstractTypes } from '@bugsnag/browser';
+// import { Bugsnag as bugsnagNode } from '@bugsnag/node';
+// export { Bugsnag, bugsnagNode };
+export default Bugsnag;
+export { Client, Event, Session, Breadcrumb, AbstractTypes };

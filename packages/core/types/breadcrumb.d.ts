@@ -1,9 +1,9 @@
 declare class Breadcrumb {
-  public name: string;
-  public metaData: object;
+  public message: string;
+  public metadata: object;
   public type: string;
   public timestamp: string;
-  constructor(name: string, metaData?: object, type?: string, timestamp?: string);
+  constructor(message: string, metadata?: object, type?: string, timestamp?: string);
 }
 
 export default Breadcrumb;

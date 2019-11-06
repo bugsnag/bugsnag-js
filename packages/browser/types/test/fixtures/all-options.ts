@@ -1,24 +1,20 @@
-import bugsnag from "../../.."
-bugsnag({
+import Bugsnag from "../../.."
+Bugsnag.init({
   apiKey: "abc",
   appVersion: "1.2.3",
   appType: "worker",
-  autoNotify: true,
-  beforeSend: [],
-  endpoints: {"notify":"https://notify.bugsnag.com","sessions":"https://sessions.bugsnag.com"},
-  autoCaptureSessions: true,
-  notifyReleaseStages: [],
+  autoDetectErrors: true,
+  onError: [ () => false, (event) => { event.errors[0].errorClass = 'diffclass' } ],
+  endpoints: { notify: "https://notify.bugsnag.com", sessions: "https://sessions.bugsnag.com" },
+  autoTrackSessions: true,
+  enabledReleaseStages: [],
   releaseStage: "production",
   maxBreadcrumbs: 20,
-  autoBreadcrumbs: true,
+  enabledBreadcrumbTypes: ['manual', 'log'],
   user: null,
-  metaData: null,
+  metadata: null,
   logger: undefined,
-  filters: ["foo",/bar/],
+  redactedKeys: ["foo",/bar/],
   collectUserIp: true,
-  consoleBreadcrumbsEnabled: undefined,
-  interactionBreadcrumbsEnabled: undefined,
-  navigationBreadcrumbsEnabled: undefined,
-  networkBreadcrumbsEnabled: undefined,
   maxEvents: 10
 })

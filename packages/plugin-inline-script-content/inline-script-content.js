@@ -4,7 +4,7 @@ const MAX_SCRIPT_LENGTH = 500000
 
 module.exports = {
   init: (client, doc = document, win = window) => {
-    if (!client.config.trackInlineScripts) return
+    if (!client._config.trackInlineScripts) return
 
     const originalLocation = win.location.href
     let html = ''
@@ -42,7 +42,7 @@ module.exports = {
       // get whatever html has rendered at this point
       if (!DOMContentLoaded || !html) html = getHtml()
       // simulate the raw html
-      const htmlLines = [ '<!-- DOC START -->' ].concat(html.split('\n'))
+      const htmlLines = ['<!-- DOC START -->'].concat(html.split('\n'))
       const zeroBasedLine = lineNumber - 1
       const start = Math.max(zeroBasedLine - 3, 0)
       const end = Math.min(zeroBasedLine + 3, htmlLines.length)
@@ -52,35 +52,37 @@ module.exports = {
       }, {})
     }
 
-    client.config.beforeSend.unshift(report => {
-      // remove any of our own frames that may be part the stack this
-      // happens before the inline script check as it happens for all errors
-      report.stacktrace = filter(report.stacktrace, f => !(/__trace__$/.test(f.method)))
+    client.addOnError(event => {
+      event.errors.map(err => {
+        // remove any of our own frames that may be part the stack this
+        // happens before the inline script check as it happens for all errors
+        err.stacktrace = filter(err.stacktrace, f => !(/__trace__$/.test(f.method)))
 
-      const frame = report.stacktrace[0]
+        const frame = err.stacktrace[0]
 
-      // if frame.file exists and is not the original location of the page, this can't be an inline script
-      if (frame && frame.file && frame.file.replace(/#.*$/, '') !== originalLocation.replace(/#.*$/, '')) return
+        // if frame.file exists and is not the original location of the page, this can't be an inline script
+        if (frame && frame.file && frame.file.replace(/#.*$/, '') !== originalLocation.replace(/#.*$/, '')) return
 
-      // grab the last script known to have run
-      const currentScript = getCurrentScript()
-      if (currentScript) {
-        const content = currentScript.innerHTML
-        report.updateMetaData(
-          'script',
-          'content',
-          content.length <= MAX_SCRIPT_LENGTH ? content : content.substr(0, MAX_SCRIPT_LENGTH)
-        )
-      }
+        // grab the last script known to have run
+        const currentScript = getCurrentScript()
+        if (currentScript) {
+          const content = currentScript.innerHTML
+          event.addMetadata(
+            'script',
+            'content',
+            content.length <= MAX_SCRIPT_LENGTH ? content : content.substr(0, MAX_SCRIPT_LENGTH)
+          )
+        }
 
-      // only attempt to grab some surrounding code if we have a line number
-      if (!frame || !frame.lineNumber) return
-      frame.code = addSurroundingCode(frame.lineNumber)
-    })
+        // only attempt to grab some surrounding code if we have a line number
+        if (!frame || !frame.lineNumber) return
+        frame.code = addSurroundingCode(frame.lineNumber)
+      })
+    }, true)
 
     // Proxy all the timer functions whose callback is their 0th argument.
     // Keep a reference to the original setTimeout because we need it later
-    const [ _setTimeout ] = map([
+    const [_setTimeout] = map([
       'setTimeout',
       'setInterval',
       'setImmediate',
@@ -102,7 +104,7 @@ module.exports = {
       'Notification', 'SVGElementInstance', 'Screen', 'TextTrack', 'TextTrackCue', 'TextTrackList',
       'WebSocket', 'WebSocketWorker', 'Worker', 'XMLHttpRequest', 'XMLHttpRequestEventTarget', 'XMLHttpRequestUpload'
     ], o => {
-      if (!win[o] || !win[o].prototype || !win[o].prototype.hasOwnProperty || !win[o].prototype.hasOwnProperty('addEventListener')) return
+      if (!win[o] || !win[o].prototype || !Object.prototype.hasOwnProperty.call(win[o].prototype, 'addEventListener')) return
       __proxy(win[o].prototype, 'addEventListener', original =>
         __traceOriginalScript(original, eventTargetCallbackAccessor)
       )

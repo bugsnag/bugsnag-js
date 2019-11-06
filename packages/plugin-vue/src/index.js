@@ -6,17 +6,17 @@ module.exports = {
 
     const handler = (err, vm, info) => {
       const handledState = { severity: 'error', unhandled: true, severityReason: { type: 'unhandledException' } }
-      const report = new client.BugsnagReport(err.name, err.message, client.BugsnagReport.getStacktrace(err), handledState, err)
+      const event = new client.Event(err.name, err.message, client.Event.getStacktrace(err), err, handledState)
 
-      report.updateMetaData('vue', {
-        errorInfo: info,
-        component: vm ? formatComponentName(vm, true) : undefined,
-        props: vm ? vm.$options.propsData : undefined
+      client._notify(event, event => {
+        event.addMetadata('vue', {
+          errorInfo: info,
+          component: vm ? formatComponentName(vm, true) : undefined,
+          props: vm ? vm.$options.propsData : undefined
+        })
       })
 
-      client.notify(report)
       if (typeof console !== 'undefined' && typeof console.error === 'function') console.error(err)
-
       if (typeof prev === 'function') prev.call(this, err, vm, info)
     }
 

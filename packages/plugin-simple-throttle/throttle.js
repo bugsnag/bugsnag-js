@@ -1,7 +1,7 @@
 const { intRange } = require('@bugsnag/core/lib/validators')
 
 /*
- * Throttles and dedupes error reports
+ * Throttles and dedupes events
  */
 
 module.exports = {
@@ -10,11 +10,11 @@ module.exports = {
     let n = 0
 
     // add beforeSend hook
-    client.config.beforeSend.push((report) => {
+    client.addOnError((event) => {
       // have max events been sent already?
-      if (n >= client.config.maxEvents) return report.ignore()
+      if (n >= client._config.maxEvents) return false
       n++
-    })
+    }, true)
 
     client.refresh = () => { n = 0 }
   },

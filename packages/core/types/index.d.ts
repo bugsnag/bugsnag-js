@@ -1,7 +1,7 @@
 import Breadcrumb from "./breadcrumb";
 import Client from "./client";
-import Report from "./report";
+import Event from "./event";
 import Session from "./session";
+import * as AbstractTypes from "./common";
 
-export { Breadcrumb, Client, Report, Session };
-export * from "./common";
+export { Breadcrumb, Client, Event, Session, AbstractTypes };

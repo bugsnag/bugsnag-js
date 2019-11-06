@@ -16,23 +16,22 @@ const ISO_8601 = /^\d{4}(-\d\d(-\d\d(T\d\d:\d\d(:\d\d)?(\.\d+)?(([+-]\d\d:\d\d)|
 
 describe('plugin: node device', () => {
   it('should set device = { hostname, runtimeVersions } add a beforeSend callback which adds device time', done => {
-    const client = new Client(VALID_NOTIFIER)
-    client.setOptions({ apiKey: 'API_KEY_YEAH' })
-    client.configure(schema)
+    const client = new Client({ apiKey: 'API_KEY_YEAH' }, schema, VALID_NOTIFIER)
     client.use(plugin)
 
-    expect(client.config.beforeSend.length).toBe(1)
-    expect(client.device.hostname).toBe('test-machine.local')
-    expect(client.device.runtimeVersions).toBeDefined()
-    expect(client.device.runtimeVersions.node).toEqual(process.versions.node)
+    expect(client._cbs.e.length).toBe(1)
 
-    client.delivery(client => ({
-      sendReport: (payload) => {
+    client._delivery(client => ({
+      sendEvent: (payload) => {
         expect(payload.events[0].device).toBeDefined()
         expect(payload.events[0].device.time).toMatch(ISO_8601)
         done()
       }
     }))
-    client.notify(new Error('noooo'))
+    client.notify(new Error('noooo'), event => {
+      expect(event.device.hostname).toBe('test-machine.local')
+      expect(event.device.runtimeVersions).toBeDefined()
+      expect(event.device.runtimeVersions.node).toEqual(process.versions.node)
+    })
   })
 })

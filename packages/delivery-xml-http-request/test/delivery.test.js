@@ -33,9 +33,9 @@ describe('delivery:XMLHttpRequest', () => {
     const config = {
       apiKey: 'aaaaaaaa',
       endpoints: { notify: '/echo/' },
-      filters: []
+      redactedKeys: []
     }
-    delivery({ logger: {}, config }, { XMLHttpRequest }).sendReport(payload, (err) => {
+    delivery({ _config: config, _logger: {} }, { XMLHttpRequest }).sendEvent(payload, (err) => {
       expect(err).toBe(null)
       expect(requests.length).toBe(1)
       expect(requests[0].method).toBe('POST')
@@ -79,9 +79,9 @@ describe('delivery:XMLHttpRequest', () => {
     const config = {
       apiKey: 'aaaaaaaa',
       endpoints: { notify: '/', sessions: '/echo/' },
-      filters: []
+      redactedKeys: []
     }
-    delivery({ config, logger: {} }, { XMLHttpRequest }).sendSession(payload, (err) => {
+    delivery({ _config: config, _logger: {} }, { XMLHttpRequest }).sendSession(payload, (err) => {
       expect(err).toBe(null)
       expect(requests.length).toBe(1)
       expect(requests[0].method).toBe('POST')

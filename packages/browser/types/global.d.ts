@@ -1,4 +1,4 @@
-import bugsnag from "./bugsnag";
+import Bugsnag from "./bugsnag";
 
-export as namespace bugsnag;
-export = bugsnag;
+export as namespace Bugsnag;
+export = Bugsnag;

@@ -1,13 +1,15 @@
 const hasStack = require('@bugsnag/core/lib/has-stack')
 const { reduce } = require('@bugsnag/core/lib/es-utils')
-const ErrorStackParser = require('@bugsnag/core/lib/error-stack-parser')
 const isError = require('@bugsnag/core/lib/iserror')
+const Event = require('@bugsnag/core/event')
 
 /*
  * Automatically notifies Bugsnag when window.onunhandledrejection is called
  */
 let _listener
 exports.init = (client, win = window) => {
+  if (client._config.autoDetectErrors === false || client._config.autoDetectUnhandledRejections === false) return
+
   const listener = event => {
     let error = event.reason
     let isBluebird = false
@@ -26,28 +28,27 @@ exports.init = (client, win = window) => {
       severityReason: { type: 'unhandledPromiseRejection' }
     }
 
-    let report
     if (error && hasStack(error)) {
       // if it quacks like an Error…
-      report = new client.BugsnagReport(error.name, error.message, ErrorStackParser.parse(error), handledState, error)
+      let stacktrace = Event.getStacktrace(error)
       if (isBluebird) {
-        report.stacktrace = reduce(report.stacktrace, fixBluebirdStacktrace(error), [])
+        stacktrace = reduce(stacktrace, fixBluebirdStacktrace(error), [])
       }
+      client._notify(new Event(error.name, error.message, stacktrace, error, handledState))
     } else {
       // if it doesn't…
       const msg = 'Rejection reason was not an Error. See "Promise" tab for more detail.'
-      report = new client.BugsnagReport(
+      client._notify(new Event(
         error && error.name ? error.name : 'UnhandledRejection',
         error && error.message ? error.message : msg,
         [],
-        handledState,
-        error
-      )
-      // stuff the rejection reason into metaData, it could be useful
-      report.updateMetaData('promise', 'rejection reason', serializableReason(error))
+        error,
+        handledState
+      ), (event) => {
+        // stuff the rejection reason into metaData, it could be useful
+        event.addMetadata('promise', 'rejection reason', serializableReason(error))
+      })
     }
-
-    client.notify(report)
   }
   if ('addEventListener' in win) {
     win.addEventListener('unhandledrejection', listener)
@@ -57,6 +58,14 @@ exports.init = (client, win = window) => {
     }
   }
   _listener = listener
+}
+
+exports.schema = {
+  autoDetectUnhandledRejections: {
+    defaultValue: () => undefined,
+    message: 'should be true|false',
+    validate: (value) => value === true || value === false || value === undefined
+  }
 }
 
 if (process.env.NODE_ENV !== 'production') {

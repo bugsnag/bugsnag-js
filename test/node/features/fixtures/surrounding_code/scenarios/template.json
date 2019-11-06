@@ -2,7 +2,7 @@
   "17": "add(5)(2) // -> 7",
   "18": "subtract(5)(2) // -> 3",
   "19": "",
-  "20": "bugsnagClient.notify(new Error('surround me'))",
+  "20": "Bugsnag.notify(new Error('surround me'))",
   "21": "",
   "22": "function subtract (a) {",
   "23": "  return function (b) {"

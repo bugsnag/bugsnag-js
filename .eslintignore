@@ -1,0 +1,8 @@
+dist
+examples
+features
+**/node_modules/**
+fixtures
+scratch
+coverage
+packages/core/types/test/*.js

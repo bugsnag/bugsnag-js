@@ -4,29 +4,13 @@ import { bugsnagClient } from './bugsnag'
 
 export default class User extends Component {
   userClient = () => {
-    bugsnagClient.user = {
-      name: "userClientName"
-    }
+    bugsnagClient.setUser("123", "bug@sn.ag", "userClientName")
     bugsnagClient.notify(new Error('UserClientError'))
   }
 
   userCallback = () => {
-    bugsnagClient.notify(new Error('UserCallbackError'),
-    {
-      beforeSend: report => {
-        report.user = {
-          name: "userCallbackName"
-        }
-      }
-    })
-  }
-
-  userOpts = () => {
-    bugsnagClient.notify(new Error('UserOptsError'),
-    {
-      user: {
-        name: "userOptsName"
-      }
+    bugsnagClient.notify(new Error('UserCallbackError'), event => {
+      event.setUser("123", "bug@sn.ag", "userCallbackName")
     })
   }
 
@@ -40,10 +24,6 @@ export default class User extends Component {
         <Button accessibilityLabel="userCallbackButton"
           title="userCallback"
           onPress={this.userCallback}
-        />
-        <Button accessibilityLabel="userOptsButton"
-          title="userOpts"
-          onPress={this.userOpts}
         />
       </View>
     )

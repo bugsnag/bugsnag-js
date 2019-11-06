@@ -1,5 +1,4 @@
-const { isArray, includes } = require('@bugsnag/core/lib/es-utils')
-const inferReleaseStage = require('@bugsnag/core/lib/infer-release-stage')
+const { reduce, isArray, includes } = require('@bugsnag/core/lib/es-utils')
 const { intRange } = require('@bugsnag/core/lib/validators')
 const clone = require('@bugsnag/core/lib/clone-client')
 const SessionTracker = require('./tracker')
@@ -7,15 +6,29 @@ const Backoff = require('backo')
 
 module.exports = {
   init: client => {
-    const sessionTracker = new SessionTracker(client.config.sessionSummaryInterval)
+    const sessionTracker = new SessionTracker(client._config.sessionSummaryInterval)
     sessionTracker.on('summary', sendSessionSummary(client))
     sessionTracker.start()
-    client.sessionDelegate({
-      startSession: client => {
+    client._sessionDelegate({
+      startSession: (client, session) => {
         const sessionClient = clone(client)
-        sessionClient._session = new client.BugsnagSession()
+        sessionClient._session = session
+        sessionClient._pausedSession = null
         sessionTracker.track(sessionClient._session)
         return sessionClient
+      },
+      pauseSession: (client) => {
+        client._pausedSession = client._session
+        client._session = null
+      },
+      resumeSession: (client) => {
+        if (client._pausedSession) {
+          client._session = client._pausedSession
+          client._pausedSession = null
+          return client
+        } else {
+          return client.startSession()
+        }
       }
     })
   },
@@ -29,16 +42,14 @@ module.exports = {
 }
 
 const sendSessionSummary = client => sessionCounts => {
-  const releaseStage = inferReleaseStage(client)
-
   // exit early if the reports should not be sent on the current releaseStage
-  if (isArray(client.config.notifyReleaseStages) && !includes(client.config.notifyReleaseStages, releaseStage)) {
-    client._logger.warn(`Session not sent due to releaseStage/notifyReleaseStages configuration`)
+  if (isArray(client._config.enabledReleaseStages) && !includes(client._config.enabledReleaseStages, client._config.releaseStage)) {
+    client.__logger.warn('Session not sent due to releaseStage/enabledReleaseStages configuration')
     return
   }
 
-  if (!client.config.endpoints.sessions) {
-    client._logger.warn(`Session not sent due to missing endpoints.sessions configuration`)
+  if (!client._config.endpoints.sessions) {
+    client.__logger.warn('Session not sent due to missing endpoints.sessions configuration')
     return
   }
 
@@ -51,22 +62,26 @@ const sendSessionSummary = client => sessionCounts => {
   function handleRes (err) {
     if (!err) {
       const sessionCount = sessionCounts.reduce((accum, s) => accum + s.sessionsStarted, 0)
-      return client._logger.debug(`${sessionCount} session(s) reported`)
+      return client.__logger.debug(`${sessionCount} session(s) reported`)
     }
     if (backoff.attempts === 10) {
-      client._logger.error('Session delivery failed, max retries exceeded', err)
+      client.__logger.error('Session delivery failed, max retries exceeded', err)
       return
     }
-    client._logger.debug('Session delivery failed, retry #' + (backoff.attempts + 1) + '/' + maxAttempts, err)
+    client.__logger.debug('Session delivery failed, retry #' + (backoff.attempts + 1) + '/' + maxAttempts, err)
     setTimeout(() => req(handleRes), backoff.duration())
   }
 
   function req (cb) {
-    client._delivery.sendSession({
-      notifier: client.notifier,
-      device: client.device,
-      app: { ...{ releaseStage }, ...client.app },
-      sessionCounts
-    }, cb)
+    const payload = { notifier: client._notifier, sessionCounts, app: {}, device: {} }
+    client._addAppData(payload)
+    const cbs = client._cbs.sp.slice(0)
+    client.__delivery.sendSession(
+      reduce(cbs, (accum, cb) => {
+        cb(accum)
+        return accum
+      }, payload),
+      cb
+    )
   }
 }

@@ -1,15 +1,15 @@
-var bugsnag = require('@bugsnag/browser')
+var Bugsnag = require('@bugsnag/browser')
 var bugsnagReact = require('@bugsnag/plugin-react')
 var React = require('react')
 var ReactDOM = require('react-dom')
 var config = require('./lib/config')
 
-var bugsnagClient = bugsnag(config)
-bugsnagClient.use(bugsnagReact, React)
+Bugsnag.init(config)
+Bugsnag.use(bugsnagReact, React)
 
-var ErrorBoundary = bugsnagClient.getPlugin('react')
+var ErrorBoundary = Bugsnag.getPlugin('react')
 
-function beforeSend () {
+function onError () {
 }
 
 function ErrorView () {
@@ -23,7 +23,7 @@ function MainView () {
 var text = function () { throw new Error('borked') }
 
 function App () {
-  return <ErrorBoundary FallbackComponent={ErrorView} beforeSend={beforeSend}>
+  return <ErrorBoundary FallbackComponent={ErrorView} onError={onError}>
     <MainView />
   </ErrorBoundary>
 }

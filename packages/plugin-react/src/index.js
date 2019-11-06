@@ -11,16 +11,20 @@ module.exports = {
           info: null
         }
       }
+
       componentDidCatch (error, info) {
-        const { beforeSend } = this.props
-        const BugsnagReport = client.BugsnagReport
+        const { onError } = this.props
         const handledState = { severity: 'error', unhandled: true, severityReason: { type: 'unhandledException' } }
-        const report = new BugsnagReport(error.name, error.message, BugsnagReport.getStacktrace(error), handledState, error)
-        if (info && info.componentStack) info.componentStack = formatComponentStack(info.componentStack)
-        report.updateMetaData('react', info)
-        client.notify(report, { beforeSend })
+        const event = new client.Event(error.name, error.message, client.Event.getStacktrace(error), error, handledState)
+        client._notify(event, [
+          event => {
+            if (info && info.componentStack) info.componentStack = formatComponentStack(info.componentStack)
+            event.addMetadata('react', info)
+          }
+        ].concat(onError))
         this.setState({ error, info })
       }
+
       render () {
         const { error } = this.state
         if (error) {
@@ -45,4 +49,4 @@ const formatComponentStack = str => {
 }
 
 module.exports.formatComponentStack = formatComponentStack
-module.exports['default'] = module.exports
+module.exports.default = module.exports

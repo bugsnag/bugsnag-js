@@ -1,7 +1,7 @@
-import bugsnag from "../../..";
-const bugsnagClient = bugsnag('api_key');
-bugsnagClient.use({
+import Bugsnag from "../../..";
+Bugsnag.init('api_key')
+Bugsnag.use({
   name: 'foobar',
   init: client => 10
 })
-console.log(bugsnagClient.getPlugin('foo') === 10)
+console.log(Bugsnag.getPlugin('foo') === 10)

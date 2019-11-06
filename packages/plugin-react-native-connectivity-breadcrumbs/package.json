@@ -24,5 +24,6 @@
     "jasmine": "3.1.0",
     "nyc": "^12.0.2",
     "proxyquire": "^2.1.0"
-  }
+  },
+  "dependencies": {}
 }

@@ -3,9 +3,11 @@ const version = '__VERSION__'
 const url = 'https://github.com/bugsnag/bugsnag-js'
 
 const Client = require('@bugsnag/core/client')
-const Report = require('@bugsnag/core/report')
+const Event = require('@bugsnag/core/event')
 const Session = require('@bugsnag/core/session')
 const Breadcrumb = require('@bugsnag/core/breadcrumb')
+
+const { reduce, keys } = require('@bugsnag/core/lib/es-utils')
 
 const delivery = require('@bugsnag/delivery-node')
 
@@ -13,11 +15,11 @@ const delivery = require('@bugsnag/delivery-node')
 const schema = { ...require('@bugsnag/core/config').schema, ...require('./config') }
 
 // remove autoBreadcrumbs from the config schema
-delete schema.autoBreadcrumbs
+delete schema.enabledBreadcrumbTypes
 
 const pluginSurroundingCode = require('@bugsnag/plugin-node-surrounding-code')
-const pluginInProject = require('@bugsnag/plugin-node-in-project')
 const pluginStripProjectRoot = require('@bugsnag/plugin-strip-project-root')
+const pluginInProject = require('@bugsnag/plugin-node-in-project')
 const pluginServerSession = require('@bugsnag/plugin-server-session')
 const pluginNodeDevice = require('@bugsnag/plugin-node-device')
 const pluginNodeUncaughtException = require('@bugsnag/plugin-node-uncaught-exception')
@@ -27,8 +29,8 @@ const pluginContextualize = require('@bugsnag/plugin-contextualize')
 
 const plugins = [
   pluginSurroundingCode,
-  pluginInProject,
   pluginStripProjectRoot,
+  pluginInProject,
   pluginServerSession,
   pluginNodeDevice,
   pluginNodeUncaughtException,
@@ -37,36 +39,53 @@ const plugins = [
   pluginContextualize
 ]
 
-module.exports = (opts, userPlugins = []) => {
-  // handle very simple use case where user supplies just the api key as a string
-  if (typeof opts === 'string') opts = { apiKey: opts }
+const Bugsnag = {
+  _client: null,
+  createClient: (opts) => {
+    // handle very simple use case where user supplies just the api key as a string
+    if (typeof opts === 'string') opts = { apiKey: opts }
+    if (!opts) opts = {}
 
-  const bugsnag = new Client({ name, version, url })
+    const bugsnag = new Client(opts, schema, { name, version, url })
 
-  bugsnag.delivery(delivery)
-  bugsnag.setOptions(opts)
-  bugsnag.configure(schema)
+    bugsnag._delivery(delivery)
 
-  plugins.forEach(pl => bugsnag.use(pl))
+    plugins.forEach(pl => bugsnag.use(pl))
 
-  bugsnag._logger.debug(`Loaded!`)
+    bugsnag.__logger.debug('Loaded!')
 
-  bugsnag.leaveBreadcrumb = function () {
-    bugsnag._logger.warn('Breadcrumbs are not supported in Node.js yet')
-    return this
+    bugsnag.leaveBreadcrumb = function () {
+      bugsnag.__logger.warn('Breadcrumbs are not supported in Node.js yet')
+      return this
+    }
+
+    return bugsnag
+  },
+  init: (opts) => {
+    if (Bugsnag._client) {
+      Bugsnag._client.__logger.warn('init() called twice')
+      return Bugsnag._client
+    }
+    Bugsnag._client = Bugsnag.createClient(opts)
+    Bugsnag._client._depth += 1
   }
-
-  return bugsnag
 }
 
-// Angular's DI system needs this interface to match what is exposed
-// in the type definition file (types/bugsnag.d.ts)
-module.exports.Bugsnag = {
-  Client,
-  Report,
-  Session,
-  Breadcrumb
-}
+reduce(keys(Client.prototype), (accum, m) => {
+  if (/^_/.test(m)) return accum
+  accum[m] = function () {
+    if (!Bugsnag._client) return console.error(`Bugsnag.${m}(…) was called before Bugsnag.init()`)
+    return Bugsnag._client[m].apply(Bugsnag._client, arguments)
+  }
+  return accum
+}, Bugsnag)
+
+module.exports = Bugsnag
+
+module.exports.Client = Client
+module.exports.Event = Event
+module.exports.Session = Session
+module.exports.Breadcrumb = Breadcrumb
 
 // Export a "default" property for compatibility with ESM imports
-module.exports['default'] = module.exports
+module.exports.default = Bugsnag

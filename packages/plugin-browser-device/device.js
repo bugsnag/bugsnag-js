@@ -10,12 +10,12 @@ module.exports = {
       userAgent: nav.userAgent
     }
 
-    // merge with anything already set on the client
-    client.device = { ...device, ...client.device }
+    client.addOnError((event) => {
+      event.device = { ...event.device, ...device, time: isoDate() }
+    }, true)
 
-    // add time just as the report is sent
-    client.config.beforeSend.unshift((report) => {
-      report.device = { ...report.device, time: isoDate() }
-    })
+    client._addOnSessionPayload(sessionPayload => {
+      sessionPayload.device = { ...sessionPayload.device, userAgent: device.userAgent }
+    }, true)
   }
 }

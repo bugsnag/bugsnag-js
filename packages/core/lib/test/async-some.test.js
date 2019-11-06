@@ -1,7 +1,7 @@
 const { describe, it, expect } = global
 
 const some = require('../async-some')
-const runBeforeSend = require('../run-before-send')
+const createCallbackRunner = require('../async-callback-runner')
 
 describe('async-some', () => {
   describe('reduce(arr, fn, accum)', () => {
@@ -15,7 +15,7 @@ describe('async-some', () => {
           resolve()
         })
       ]
-      some(beforeSendFns, runBeforeSend(report, () => {}), (err, result) => {
+      some(beforeSendFns, createCallbackRunner(report, () => {}), (err, result) => {
         expect(!err)
         expect(result).toBe(false)
         expect(report.name).toBe('ben')
@@ -33,7 +33,7 @@ describe('async-some', () => {
       })
     })
 
-    it('handles continues after runBeforeSend errors (throw)', done => {
+    it('handles continues after createCallbackRunner errors (throw)', done => {
       const report = { isIgnored: () => false }
       let called = false
       const beforeSendFns = [
@@ -41,14 +41,14 @@ describe('async-some', () => {
         (report) => { throw new Error('derp') },
         (report) => { called = true }
       ]
-      some(beforeSendFns, runBeforeSend(report, () => {}), (err, result) => {
+      some(beforeSendFns, createCallbackRunner(report, () => {}), (err, result) => {
         expect(!err)
         expect(called).toBe(true)
         done()
       })
     })
 
-    it('handles continues after runBeforeSend errors (promise reject)', done => {
+    it('handles continues after createCallbackRunner errors (promise reject)', done => {
       const report = { isIgnored: () => false }
       let called = false
       const beforeSendFns = [
@@ -59,14 +59,14 @@ describe('async-some', () => {
           resolve()
         })
       ]
-      some(beforeSendFns, runBeforeSend(report, () => {}), (err, result) => {
+      some(beforeSendFns, createCallbackRunner(report, () => {}), (err, result) => {
         expect(!err)
         expect(called).toBe(true)
         done()
       })
     })
 
-    it('handles continues after runBeforeSend errors (cb(err))', done => {
+    it('handles continues after createCallbackRunner errors (cb(err))', done => {
       const report = { isIgnored: () => false }
       let called = false
       const beforeSendFns = [
@@ -77,7 +77,7 @@ describe('async-some', () => {
           cb(null)
         }
       ]
-      some(beforeSendFns, runBeforeSend(report, () => {}), (err, result) => {
+      some(beforeSendFns, createCallbackRunner(report, () => {}), (err, result) => {
         expect(!err)
         expect(called).toBe(true)
         done()

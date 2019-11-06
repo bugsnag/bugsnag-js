@@ -17,10 +17,10 @@ module.exports = (arr, fn, cb) => {
   let index = 0
 
   const next = () => {
-    if (index >= length) return cb(null, false)
+    if (index >= length) return setTimeout(() => cb(null, false))
     fn(arr[index], (err, result) => {
       if (err) return cb(err, false)
-      if (result === true) return cb(null, true)
+      if (result === true) return setTimeout(() => cb(null, true))
       index++
       next()
     })

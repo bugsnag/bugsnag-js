@@ -21,32 +21,29 @@ module.exports = {
     // get the initial orientation
     updateOrientation()
 
-    client.device = {
-      ...client.device,
-      id: Constants.installationId,
-      manufacturer: Constants.platform.ios ? 'Apple' : undefined,
-      modelName: Constants.platform.ios ? Constants.platform.ios.model : undefined,
-      modelNumber: Constants.platform.ios ? Constants.platform.ios.platform : undefined,
-      osName: Platform.OS,
-      osVersion: Constants.platform.ios ? Constants.platform.ios.systemVersion : Constants.systemVersion,
-      runtimeVersions: {
-        reactNative: rnVersion,
-        expoApp: Constants.expoVersion,
-        expoSdk: Constants.manifest.sdkVersion,
-        androidApiLevel: Constants.platform.android ? String(Platform.Version) : undefined
-      }
-    }
-
-    client.config.beforeSend.unshift(report => {
-      report.device = {
-        ...report.device,
+    client.addOnError(event => {
+      event.device = {
+        ...event.device,
+        ...client.device,
+        id: Constants.installationId,
+        manufacturer: Constants.platform.ios ? 'Apple' : undefined,
+        modelName: Constants.platform.ios ? Constants.platform.ios.model : undefined,
+        modelNumber: Constants.platform.ios ? Constants.platform.ios.platform : undefined,
+        osName: Platform.OS,
+        osVersion: Constants.platform.ios ? Constants.platform.ios.systemVersion : Constants.systemVersion,
+        runtimeVersions: {
+          reactNative: rnVersion,
+          expoApp: Constants.expoVersion,
+          expoSdk: Constants.manifest.sdkVersion,
+          androidApiLevel: Constants.platform.android ? String(Platform.Version) : undefined
+        },
         time: isoDate(),
         orientation
       }
-      report.updateMetaData('device', {
+      event.addMetadata('device', {
         isDevice: Constants.isDevice,
         appOwnership: Constants.appOwnership
       })
-    })
+    }, true)
   }
 }

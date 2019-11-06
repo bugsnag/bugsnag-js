@@ -7,14 +7,12 @@ const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
 describe('plugin: navigation breadcrumbs', () => {
   it('should drop breadcrumb for navigational activity', done => {
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
-    c.configure()
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' }, undefined, VALID_NOTIFIER)
 
     const { winHandlers, docHandlers, window } = getMockWindow()
     c.use(plugin, window)
-    winHandlers['load'].forEach((h) => h.call(window))
-    docHandlers['DOMContentLoaded'].forEach((h) => h.call(window.document))
+    winHandlers.load.forEach((h) => h.call(window))
+    docHandlers.DOMContentLoaded.forEach((h) => h.call(window.document))
 
     var plainObject = Object.create(null)
     plainObject.dummyProperty = true
@@ -23,51 +21,45 @@ describe('plugin: navigation breadcrumbs', () => {
 
     // first ensure that the pushState command works to change the url of the page
     window.history.replaceState(state, 'bar', 'network-breadcrumb-test.html')
-    expect(c.breadcrumbs[c.breadcrumbs.length - 1].metaData.to).toMatch(/^\/?network-breadcrumb-test\.html$/)
+    expect(c._breadcrumbs[c._breadcrumbs.length - 1].metadata.to).toMatch(/^\/?network-breadcrumb-test\.html$/)
 
     window.history.replaceState(state, 'bar')
     // then ensure that it works with `undefined` as the url parameter (IE11-specific issue)
-    expect(c.breadcrumbs[c.breadcrumbs.length - 1].metaData.to).toMatch(/^\/?network-breadcrumb-test\.html$/)
+    expect(c._breadcrumbs[c._breadcrumbs.length - 1].metadata.to).toMatch(/^\/?network-breadcrumb-test\.html$/)
 
-    expect(c.breadcrumbs.length).toBe(6)
+    expect(c._breadcrumbs.length).toBe(6)
 
     done()
   })
 
-  it('should not be enabled when autoBreadcrumbs=false', () => {
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa', autoBreadcrumbs: false })
-    c.configure()
+  it('should not be enabled when enabledBreadcrumbTypes=null', () => {
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: null }, undefined, VALID_NOTIFIER)
     const { winHandlers, docHandlers, window } = getMockWindow()
     c.use(plugin, window)
-    winHandlers['load'].forEach((h) => h.call(window))
-    docHandlers['DOMContentLoaded'].forEach((h) => h.call(window.document))
+    winHandlers.load.forEach((h) => h.call(window))
+    docHandlers.DOMContentLoaded.forEach((h) => h.call(window.document))
     window.history.replaceState({}, 'bar', 'network-breadcrumb-test.html')
     window.history.replaceState({}, 'bar')
-    expect(c.breadcrumbs.length).toBe(0)
+    expect(c._breadcrumbs.length).toBe(0)
   })
 
-  it('should start a new session if autoCaptureSessions=true', (done) => {
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
-    c.configure()
-    c.sessionDelegate({
+  it('should start a new session if autoTrackSessions=true', (done) => {
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' }, undefined, VALID_NOTIFIER)
+    c._sessionDelegate({
       startSession: client => {
         done()
       }
     })
     const { winHandlers, docHandlers, window } = getMockWindow()
     c.use(plugin, window)
-    winHandlers['load'].forEach((h) => h.call(window))
-    docHandlers['DOMContentLoaded'].forEach((h) => h.call(window.document))
+    winHandlers.load.forEach((h) => h.call(window))
+    docHandlers.DOMContentLoaded.forEach((h) => h.call(window.document))
     window.history.replaceState({}, 'bar', 'network-breadcrumb-test.html')
   })
 
-  it('should not a new session if autoCaptureSessions=false', (done) => {
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa', autoCaptureSessions: false })
-    c.configure()
-    c.sessionDelegate({
+  it('should not a new session if autoTrackSessions=false', (done) => {
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', autoTrackSessions: false }, undefined, VALID_NOTIFIER)
+    c._sessionDelegate({
       startSession: client => {
         expect('shouldn’t get here').toBe(false)
         done()
@@ -75,23 +67,21 @@ describe('plugin: navigation breadcrumbs', () => {
     })
     const { winHandlers, docHandlers, window } = getMockWindow()
     c.use(plugin, window)
-    winHandlers['load'].forEach((h) => h.call(window))
-    docHandlers['DOMContentLoaded'].forEach((h) => h.call(window.document))
+    winHandlers.load.forEach((h) => h.call(window))
+    docHandlers.DOMContentLoaded.forEach((h) => h.call(window.document))
     window.history.replaceState({}, 'bar', 'network-breadcrumb-test.html')
     setTimeout(() => done(), 1)
   })
 
-  it('should be enabled when autoBreadcrumbs=false and navigationBreadcrumbsEnabled=true', () => {
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa', autoBreadcrumbs: false, navigationBreadcrumbsEnabled: true })
-    c.configure()
+  it('should be enabled when enabledBreadcrumbTypes=["navigation"]', () => {
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: ['navigation'] }, undefined, VALID_NOTIFIER)
     const { winHandlers, docHandlers, window } = getMockWindow()
     c.use(plugin, window)
-    winHandlers['load'].forEach((h) => h.call(window))
-    docHandlers['DOMContentLoaded'].forEach((h) => h.call(window.document))
+    winHandlers.load.forEach((h) => h.call(window))
+    docHandlers.DOMContentLoaded.forEach((h) => h.call(window.document))
     window.history.replaceState({}, 'bar', 'network-breadcrumb-test.html')
     window.history.replaceState({}, 'bar')
-    expect(c.breadcrumbs.length).toBe(5)
+    expect(c._breadcrumbs.length).toBe(5)
   })
 })
 
@@ -127,7 +117,7 @@ const getMockWindow = () => {
         return el
       },
       addEventListener: function (evt, handler) {
-        docHandlers[evt] = docHandlers[evt] ? docHandlers[evt].concat(handler) : [ handler ]
+        docHandlers[evt] = docHandlers[evt] ? docHandlers[evt].concat(handler) : [handler]
       }
     },
     location: {
@@ -141,7 +131,7 @@ const getMockWindow = () => {
       popState: function () {}
     },
     addEventListener: function (evt, handler) {
-      winHandlers[evt] = winHandlers[evt] ? winHandlers[evt].concat(handler) : [ handler ]
+      winHandlers[evt] = winHandlers[evt] ? winHandlers[evt].concat(handler) : [handler]
     }
   }
   return { winHandlers, docHandlers, window }

@@ -30,13 +30,13 @@ describe('delivery:node', () => {
     server.listen((err) => {
       expect(err).toBeUndefined()
 
-      const payload = { sample: 'payload' }
+      const payload = { sample: 'payload', apiKey: 'aaaaaaaa' }
       const config = {
         apiKey: 'aaaaaaaa',
         endpoints: { notify: `http://0.0.0.0:${server.address().port}/notify/` },
-        filters: []
+        redactedKeys: []
       }
-      delivery({ _logger: {}, config }).sendReport(payload, (err) => {
+      delivery({ __logger: {}, _config: config }).sendEvent(payload, (err) => {
         expect(err).toBe(null)
         expect(requests.length).toBe(1)
         expect(requests[0].method).toBe('POST')
@@ -58,13 +58,13 @@ describe('delivery:node', () => {
     server.listen((err) => {
       expect(err).toBeUndefined()
 
-      const payload = { sample: 'payload' }
+      const payload = { sample: 'payload', apiKey: 'aaaaaaaa' }
       const config = {
         apiKey: 'aaaaaaaa',
         endpoints: { notify: 'blah', sessions: `http://0.0.0.0:${server.address().port}/sessions/` },
-        filters: []
+        redactedKeys: []
       }
-      delivery({ _logger: {}, config }).sendSession(payload, (err) => {
+      delivery({ __logger: {}, _config: config }).sendSession(payload, (err) => {
         expect(err).toBe(null)
         expect(requests.length).toBe(1)
         expect(requests[0].method).toBe('POST')
@@ -82,15 +82,15 @@ describe('delivery:node', () => {
   })
 
   it('handles errors gracefully (ECONNREFUSED)', done => {
-    const payload = { sample: 'payload' }
+    const payload = { sample: 'payload', apiKey: 'aaaaaaaa' }
     const config = {
       apiKey: 'aaaaaaaa',
-      endpoints: { notify: `http://0.0.0.0:9999/notify/` },
-      filters: []
+      endpoints: { notify: 'http://0.0.0.0:9999/notify/' },
+      redactedKeys: []
     }
     let didLog = false
     const log = () => { didLog = true }
-    delivery({ config, _logger: { error: log } }).sendReport(payload, (err) => {
+    delivery({ _config: config, __logger: { error: log } }).sendEvent(payload, (err) => {
       expect(didLog).toBe(true)
       expect(err).toBeTruthy()
       expect(err.code).toBe('ECONNREFUSED')
@@ -105,15 +105,15 @@ describe('delivery:node', () => {
 
     server.listen((err) => {
       expect(err).toBeFalsy()
-      const payload = { sample: 'payload' }
+      const payload = { sample: 'payload', apiKey: 'aaaaaaaa' }
       const config = {
         apiKey: 'aaaaaaaa',
         endpoints: { notify: `http://0.0.0.0:${server.address().port}/notify/` },
-        filters: []
+        redactedKeys: []
       }
       let didLog = false
       const log = () => { didLog = true }
-      delivery({ config, _logger: { error: log } }).sendReport(payload, (err) => {
+      delivery({ _config: config, __logger: { error: log } }).sendEvent(payload, (err) => {
         expect(didLog).toBe(true)
         expect(err).toBeTruthy()
         expect(err.code).toBe('ECONNRESET')
@@ -130,15 +130,15 @@ describe('delivery:node', () => {
 
     server.listen((err) => {
       expect(err).toBeFalsy()
-      const payload = { sample: 'payload' }
+      const payload = { sample: 'payload', apiKey: 'aaaaaaaa' }
       const config = {
         apiKey: 'aaaaaaaa',
         endpoints: { notify: `http://0.0.0.0:${server.address().port}/notify/` },
-        filters: []
+        redactedKeys: []
       }
       let didLog = false
       const log = () => { didLog = true }
-      delivery({ config, _logger: { error: log } }).sendReport(payload, (err) => {
+      delivery({ _config: config, __logger: { error: log } }).sendEvent(payload, (err) => {
         expect(didLog).toBe(true)
         expect(err).toBeTruthy()
         done()

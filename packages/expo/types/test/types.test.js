@@ -4,7 +4,7 @@ const { spawnSync } = require('child_process')
 const cleanupFiles = []
 
 afterAll(() => {
-  cleanupFiles.forEach(f => spawnSync('rm', [ '-f', `${__dirname}/fixtures/${f}` ]))
+  cleanupFiles.forEach(f => spawnSync('rm', ['-f', `${__dirname}/fixtures/${f}`]))
 })
 
 const assertTsProgramCompiles = p => {

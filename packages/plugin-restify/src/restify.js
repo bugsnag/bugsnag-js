@@ -1,6 +1,6 @@
 const domain = require('domain') // eslint-disable-line
 const extractRequestInfo = require('./request-info')
-const createReportFromErr = require('@bugsnag/core/lib/report-from-error')
+const ensureError = require('@bugsnag/core/lib/ensure-error')
 const clone = require('@bugsnag/core/lib/clone-client')
 const handledState = {
   severity: 'error',
@@ -19,21 +19,31 @@ module.exports = {
 
       // Get a client to be scoped to this request. If sessions are enabled, use the
       // startSession() call to get a session client, otherwise, clone the existing client.
-      const requestClient = client.config.autoCaptureSessions ? client.startSession() : clone(client)
+      const requestClient = client._config.autoTrackSessions ? client.startSession() : clone(client)
 
       // attach it to the request
       req.bugsnag = requestClient
 
       // extract request info and pass it to the relevant bugsnag properties
-      const { request, metaData } = getRequestAndMetaDataFromReq(req)
-      requestClient.metaData = { ...requestClient.metaData, request: metaData }
-      requestClient.request = request
+      const { request, metadata } = getRequestAndMetaDataFromReq(req)
+      requestClient.addMetadata('request', metadata)
+      req.bugsnag.__request = request
 
       // unhandled errors caused by this request
-      dom.on('error', (err) => {
-        req.bugsnag.notify(createReportFromErr(err, handledState), {}, (e, report) => {
-          if (e) client._logger.error('Failed to send report to Bugsnag')
-          req.bugsnag.config.onUncaughtException(err, report, client._logger)
+      dom.on('error', (maybeError) => {
+        const { actualError, metadata } = ensureError(maybeError)
+        req.bugsnag._notify(new client.Event(
+          actualError.name,
+          actualError.message,
+          client.Event.getStacktrace(actualError, 0, 1),
+          maybeError,
+          handledState
+        ), event => {
+          if (metadata) event.addMetadata('error', metadata)
+          event.request = { ...event.request, ...req.bugsnag.__request }
+        }, (e, event) => {
+          if (e) client.__logger.error('Failed to send event to Bugsnag')
+          req.bugsnag._config.onUncaughtException(maybeError, event, client.__logger)
         })
         if (!res.headersSent) {
           const body = 'Internal server error'
@@ -48,15 +58,37 @@ module.exports = {
       return dom.run(next)
     }
 
-    const errorHandler = (req, res, err, cb) => {
-      if (err.statusCode && err.statusCode < 500) return cb()
+    const errorHandler = (req, res, maybeError, cb) => {
+      const { actualError, metadata } = ensureError(maybeError)
+      const errMetadata = metadata
+      if (maybeError.statusCode && maybeError.statusCode < 500) return cb()
       if (req.bugsnag) {
-        req.bugsnag.notify(createReportFromErr(err, handledState))
+        req.bugsnag._notify(new client.Event(
+          actualError.name,
+          actualError.message,
+          client.Event.getStacktrace(actualError, 0, 1),
+          maybeError,
+          handledState
+        ), event => {
+          if (metadata) event.addMetadata('error', metadata)
+          event.request = { ...event.request, ...req.bugsnag.__request }
+        })
       } else {
-        client._logger.warn(
+        client.__logger.warn(
           'req.bugsnag is not defined. Make sure the @bugsnag/plugin-restify requestHandler middleware is added first.'
         )
-        client.notify(createReportFromErr(err, handledState, getRequestAndMetaDataFromReq(req)))
+        client._notify(new client.Event(
+          actualError.name,
+          actualError.message,
+          client.Event.getStacktrace(actualError, 0, 1),
+          maybeError,
+          handledState
+        ), event => {
+          if (errMetadata) event.addMetadata('error', errMetadata)
+          const { request, metadata } = getRequestAndMetaDataFromReq(req)
+          event.addMetadata('request', metadata)
+          event.request = { ...event.request, ...request }
+        })
       }
       cb()
     }
@@ -68,7 +100,7 @@ module.exports = {
 const getRequestAndMetaDataFromReq = req => {
   const requestInfo = extractRequestInfo(req)
   return {
-    metaData: requestInfo,
+    metadata: requestInfo,
     request: {
       clientIp: requestInfo.clientIp,
       headers: requestInfo.headers,
@@ -79,4 +111,4 @@ const getRequestAndMetaDataFromReq = req => {
   }
 }
 
-module.exports['default'] = module.exports
+module.exports.default = module.exports

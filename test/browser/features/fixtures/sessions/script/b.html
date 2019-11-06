@@ -6,9 +6,9 @@
     <script type="text/javascript">
       var ENDPOINT = decodeURIComponent(window.location.search.match(/ENDPOINT=([^&]+)/)[1])
       var API_KEY = decodeURIComponent(window.location.search.match(/API_KEY=([^&]+)/)[1])
-      var bugsnagClient = bugsnag({
+      Bugsnag.init({
         apiKey: API_KEY,
-        autoCaptureSessions: false,
+        autoTrackSessions: false,
         endpoints: {
           notify: ENDPOINT,
           sessions: ENDPOINT

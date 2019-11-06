@@ -5,10 +5,11 @@ const { createReadStream } = require('fs')
 const { Writable } = require('stream')
 const pump = require('pump')
 const byline = require('byline')
+const { reduce } = require('@bugsnag/core/lib/es-utils')
 
 module.exports = {
   init: client => {
-    if (!client.config.sendCode) return
+    if (!client._config.sendCode) return
 
     const loadSurroundingCode = (stackframe, cache) => new Promise((resolve, reject) => {
       try {
@@ -28,12 +29,13 @@ module.exports = {
       }
     })
 
-    client.config.beforeSend.push(report => new Promise((resolve, reject) => {
+    client.addOnError(event => new Promise((resolve, reject) => {
       const cache = Object.create(null)
-      pMapSeries(report.stacktrace.map(stackframe => () => loadSurroundingCode(stackframe, cache)))
+      const allFrames = reduce(event.errors, (accum, er) => accum.concat(er.stacktrace), [])
+      pMapSeries(allFrames.map(stackframe => () => loadSurroundingCode(stackframe, cache)))
         .then(resolve)
         .catch(reject)
-    }))
+    }), true)
   },
   configSchema: {
     sendCode: {
@@ -84,6 +86,7 @@ class CodeRange extends Writable {
     this._n = 0
     this._code = {}
   }
+
   _write (chunk, enc, cb) {
     this._n++
     if (this._n < this._start) return cb(null)
@@ -94,6 +97,7 @@ class CodeRange extends Writable {
     this.emit('done')
     return cb(null)
   }
+
   getCode () {
     return this._code
   }

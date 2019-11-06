@@ -13,18 +13,16 @@ describe('plugin: server sessions', () => {
           { startedAt: '2017-12-12T13:54:00.000Z', sessionsStarted: 123 }
         ])
       }
+
       stop () {}
       track () {}
     }
     const plugin = proxyquire('../session', {
       './tracker': TrackerMock
     })
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({
-      apiKey: 'aaaa-aaaa-aaaa-aaaa'
-    })
-    c.delivery(client => ({
-      sendReport: () => {},
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' }, undefined, VALID_NOTIFIER)
+    c._delivery(client => ({
+      sendEvent: () => {},
       sendSession: (session, cb = () => {}) => {
         expect(session.sessionCounts.length).toBe(1)
         expect(session.sessionCounts[0].sessionsStarted).toBe(123)
@@ -32,18 +30,18 @@ describe('plugin: server sessions', () => {
       }
     }))
 
-    c.configure()
     c.use(plugin)
     c.startSession()
   })
 
-  it('should not send the session report when releaseStage is not in notifyReleaseStages', done => {
+  it('should not send the session report when releaseStage is not in enabledReleaseStages', done => {
     class TrackerMock extends Emitter {
       start () {
         this.emit('summary', [
           { startedAt: '2017-12-12T13:54:00.000Z', sessionsStarted: 123 }
         ])
       }
+
       stop () {}
       track () {}
     }
@@ -51,31 +49,29 @@ describe('plugin: server sessions', () => {
       './tracker': TrackerMock
     })
 
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({
+    const c = new Client({
       apiKey: 'aaaa-aaaa-aaaa-aaaa',
       logger: {
         debug: () => {},
         info: () => {},
         warn: (msg) => {
-          expect(msg).toBe('Session not sent due to releaseStage/notifyReleaseStages configuration')
+          expect(msg).toBe('Session not sent due to releaseStage/enabledReleaseStages configuration')
           setTimeout(done, 150)
         },
         error: () => {}
       },
       endpoints: { notify: 'bloo', sessions: 'blah' },
       releaseStage: 'qa',
-      notifyReleaseStages: [ 'production' ]
-    })
-    c.delivery(client => ({
-      sendReport: () => {},
+      enabledReleaseStages: ['production']
+    }, undefined, VALID_NOTIFIER)
+    c._delivery(client => ({
+      sendEvent: () => {},
       sendSession: (session, cb = () => {}) => {
         // no session should be sent
         expect(true).toBe(false)
       }
     }))
 
-    c.configure()
     c.use(plugin)
     c.startSession()
   })
@@ -87,26 +83,28 @@ describe('plugin: server sessions', () => {
           { startedAt: '2017-12-12T13:54:00.000Z', sessionsStarted: 123 }
         ])
       }
+
       stop () {}
       track () {}
     }
     const plugin = proxyquire('../session', { './tracker': TrackerMock })
 
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({
+    const c = new Client({
       apiKey: 'aaaa-aaaa-aaaa-aaaa',
       endpoints: { notify: 'bloo', sessions: 'blah' },
-      notifyReleaseStages: null,
+      enabledReleaseStages: null,
       releaseStage: 'qa',
       appType: 'server',
       appVersion: '1.2.3'
-    })
+    }, undefined, VALID_NOTIFIER)
 
     // this is normally set by a plugin
-    c.device = { hostname: 'test-machine.local', runtimeVersions: { node: '0.0.1' } }
+    c._addOnSessionPayload(session => {
+      session.device = { hostname: 'test-machine.local', runtimeVersions: { node: '0.0.1' } }
+    })
 
-    c.delivery(client => ({
-      sendReport: () => {},
+    c._delivery(client => ({
+      sendEvent: () => {},
       sendSession: (session, cb = () => {}) => {
         expect(session.sessionCounts.length).toBe(1)
         expect(session.sessionCounts[0].sessionsStarted).toBe(123)
@@ -117,7 +115,6 @@ describe('plugin: server sessions', () => {
       }
     }))
 
-    c.configure()
     c.use(plugin)
     c.startSession()
   })
@@ -130,22 +127,43 @@ describe('plugin: server sessions', () => {
     }
     const plugin = proxyquire('../session', { './tracker': TrackerMock })
 
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
-    c.configure()
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' }, undefined, VALID_NOTIFIER)
     c.use(plugin)
 
     c.leaveBreadcrumb('tick')
-    c.metaData = { datetime: { tz: 'GMT+1' } }
+    c.addMetadata('datetime', 'tz', 'GMT+1')
 
     const sessionClient = c.startSession()
 
     sessionClient.leaveBreadcrumb('tock')
-    sessionClient.metaData = { ...sessionClient.metaData, other: { widgetsAdded: 'cat,dog,mouse' } }
+    sessionClient.addMetadata('other', 'widgetsAdded', 'cat,dog,mouse')
 
-    expect(c.breadcrumbs.length).toBe(1)
-    expect(Object.keys(c.metaData).length).toBe(1)
-    expect(sessionClient.breadcrumbs.length).toBe(2)
-    expect(Object.keys(sessionClient.metaData).length).toBe(2)
+    expect(c._breadcrumbs.length).toBe(1)
+    expect(Object.keys(c._metadata).length).toBe(1)
+    expect(sessionClient._breadcrumbs.length).toBe(2)
+    expect(Object.keys(sessionClient._metadata).length).toBe(2)
+  })
+
+  it('should support pausing/resuming sessions', () => {
+    class TrackerMock extends Emitter {
+      start () {}
+      stop () {}
+      track () {}
+    }
+    const plugin = proxyquire('../session', { './tracker': TrackerMock })
+
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' }, undefined, VALID_NOTIFIER)
+    c.use(plugin)
+    const sessionClient = c.startSession()
+    const sid0 = sessionClient._session.id
+    sessionClient.pauseSession()
+    const s1 = sessionClient._session
+    sessionClient.resumeSession()
+    const sid2 = sessionClient._session.id
+    expect(sid2).toBe(sid0)
+    expect(s1).toBe(null)
+    sessionClient._session = null
+    const resumedClient = sessionClient.resumeSession()
+    expect(resumedClient._session).toBeTruthy()
   })
 })

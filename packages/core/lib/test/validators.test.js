@@ -1,6 +1,6 @@
 const { describe, it, expect } = global
 
-const { intRange, stringWithLength } = require('../validators')
+const { intRange, stringWithLength, arrayOfStrings } = require('../validators')
 
 describe('intRange(min, max)(val)', () => {
   it('work with various values', () => {
@@ -30,5 +30,16 @@ describe('stringWithLength(val)', () => {
     expect(stringWithLength(undefined)).toBe(false)
     expect(stringWithLength(10)).toBe(false)
     expect(stringWithLength([])).toBe(false)
+  })
+})
+
+describe('arrayOfStrings(val)', () => {
+  it('should work with various values', () => {
+    expect(arrayOfStrings(['hi'])).toBe(true)
+    expect(arrayOfStrings('')).toBe(false)
+    expect(arrayOfStrings(null)).toBe(true)
+    expect(arrayOfStrings(undefined)).toBe(false)
+    expect(arrayOfStrings(['hi', 1])).toBe(false)
+    expect(arrayOfStrings([])).toBe(true)
   })
 })

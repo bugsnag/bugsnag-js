@@ -1,22 +1,28 @@
 module.exports = (client) => {
-  const clone = new client.BugsnagClient(client.notifier)
-  clone.configure({})
+  const clone = new client.Client({}, {}, client._notifier)
 
-  // changes to these properties should be reflected in the original client
-  clone.config = client.config
-  clone.app = client.app
-  clone.context = client.context
-  clone.device = client.device
+  clone._config = client._config
+  clone._context = client._context
+  clone._depth = client._depth
 
   // changes to these properties should not be reflected in the original client,
   // so ensure they are are (shallow) cloned
-  clone.breadcrumbs = client.breadcrumbs.slice()
-  clone.metaData = { ...client.metaData }
-  clone.request = { ...client.request }
-  clone.user = { ...client.user }
+  clone._breadcrumbs = client._breadcrumbs.slice()
+  clone._user = { ...client._user }
+  clone._metadata = { ...client._metadata }
 
-  clone._logger = client._logger
-  clone._delivery = client._delivery
+  clone.__logger = client.__logger
+  clone.__delivery = client.__delivery
+  clone.__sessionDelegate = client.__sessionDelegate
+
+  clone._plugins = client._plugins
+
+  clone._cbs = {
+    e: client._cbs.e.slice(),
+    sp: client._cbs.sp.slice(),
+    s: client._cbs.s.slice(),
+    b: client._cbs.b.slice()
+  }
 
   return clone
 }

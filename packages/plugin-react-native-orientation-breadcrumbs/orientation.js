@@ -2,9 +2,7 @@ const { Dimensions } = require('react-native')
 
 module.exports = {
   init: client => {
-    const explicitlyDisabled = client.config.orientationBreadcrumbsEnabled === false
-    const implicitlyDisabled = client.config.autoBreadcrumbs === false && client.config.orientationBreadcrumbsEnabled !== true
-    if (explicitlyDisabled || implicitlyDisabled) return
+    if (!client._config.enabledBreadcrumbTypes || !client._config.enabledBreadcrumbTypes.includes('state')) return
 
     let lastOrientation
 
@@ -20,11 +18,11 @@ module.exports = {
     }
 
     const updateOrientation = () => {
-      let newOrientation = getCurrentOrientation()
+      const newOrientation = getCurrentOrientation()
 
       if (lastOrientation !== newOrientation) {
         client.leaveBreadcrumb(
-          `Orientation changed`,
+          'Orientation changed',
           { from: lastOrientation, to: newOrientation },
           'state'
         )
@@ -34,12 +32,5 @@ module.exports = {
 
     lastOrientation = getCurrentOrientation()
     Dimensions.addEventListener('change', updateOrientation)
-  },
-  configSchema: {
-    orientationBreadcrumbsEnabled: {
-      defaultValue: () => undefined,
-      validate: (value) => value === true || value === false || value === undefined,
-      message: 'should be true|false'
-    }
   }
 }

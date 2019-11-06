@@ -14,20 +14,29 @@
     "@babel/plugin-transform-shorthand-properties": "^7.0.0",
     "@babel/plugin-transform-spread": "^7.0.0",
     "@babel/plugin-transform-template-literals": "^7.0.0",
+    "@typescript-eslint/eslint-plugin": "^2.5.0",
+    "@typescript-eslint/parser": "^2.5.0",
     "babelify": "^10.0.0",
     "browser-pack-flat": "^3.2.0",
     "browserify": "^16.2.2",
     "browserify-versionify": "^1.0.6",
     "envify": "^4.1.0",
+    "eslint": "^6.5.1",
+    "eslint-config-standard": "^14.1.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-node": "^10.0.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-react": "^7.16.0",
+    "eslint-plugin-standard": "^4.0.1",
     "exorcist": "^1.0.1",
     "lerna": "^2.11.0",
-    "standard": "^11.0.1",
+    "typescript": "^3.6.4",
     "uglify-js": "^3.4.9"
   },
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "build": "lerna run build --scope '@bugsnag/node' --scope '@bugsnag/browser' --scope '@bugsnag/expo' && lerna run build --ignore '@bugsnag/node' --ignore '@bugsnag/browser' --ignore '@bugsnag/expo'",
-    "test:lint": "standard",
+    "test:lint": "eslint . && eslint --no-eslintrc -c .eslintrc.ts.js --ext .ts .",
     "test:unit": "lerna run test --ignore '@bugsnag/browser' --ignore '@bugsnag/node'",
     "test:types": "lerna run test:types",
     "test:test-container-registry-login": "$(aws ecr get-login --profile=opensource --no-include-email)",
@@ -39,15 +48,5 @@
     "test:node": "npm run test:build-node-container && docker-compose run --use-aliases node-maze-runner",
     "test:expo:android": "npm run test:build-expo-android-container && APP_LOCATION=build/output.apk docker-compose run --use-aliases expo-maze-runner",
     "test:expo:ios": "npm run test:build-expo-ios-container && APP_LOCATION=build/output.ipa docker-compose run --use-aliases expo-maze-runner"
-  },
-  "standard": {
-    "ignore": [
-      "dist",
-      "examples",
-      "features",
-      "**/node_modules/**",
-      "fixtures",
-      "scratch"
-    ]
   }
 }

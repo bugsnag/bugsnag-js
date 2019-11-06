@@ -2,38 +2,36 @@ const { describe, it, expect } = global
 
 const plugin = require('../')
 const { join } = require('path')
-const Report = require('@bugsnag/core/report')
+const Event = require('@bugsnag/core/event')
 const Client = require('@bugsnag/core/client')
 const { schema } = require('@bugsnag/core/config')
 const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
 describe('plugin: strip project root', () => {
   it('should remove the project root if it matches the start of the stackframe’s file', done => {
-    const client = new Client(VALID_NOTIFIER)
-
-    client.delivery(client => ({
-      sendReport: (report) => {
-        const evt = report.events[0]
-        expect(evt.stacktrace[0].file).toBe(join('lib', '01.js'))
-        expect(evt.stacktrace[1].file).toBe(join('lib', '02.js'))
-        expect(evt.stacktrace[2].file).toBe(join('lib', '03.js'))
-        done()
-      },
-      sendSession: () => {}
-    }))
-
-    client.setOptions({ apiKey: 'api_key', projectRoot: '/app' })
-    client.configure({
+    const client = new Client({ apiKey: 'api_key', projectRoot: '/app' }, {
       ...schema,
       projectRoot: {
         validate: () => true,
         defaultValue: () => '',
         message: ''
       }
-    })
+    }, VALID_NOTIFIER)
+
+    client._delivery(client => ({
+      sendEvent: (report) => {
+        const evt = report.events[0]
+        expect(evt.errors[0].stacktrace[0].file).toBe(join('lib', '01.js'))
+        expect(evt.errors[0].stacktrace[1].file).toBe(join('lib', '02.js'))
+        expect(evt.errors[0].stacktrace[2].file).toBe(join('lib', '03.js'))
+        done()
+      },
+      sendSession: () => {}
+    }))
+
     client.use(plugin)
 
-    client.notify(new Report('Error', 'strip project root test', [
+    client._notify(new Event('Error', 'strip project root test', [
       {
         lineNumber: 22,
         columnNumber: 18,
@@ -51,31 +49,29 @@ describe('plugin: strip project root', () => {
   })
 
   it('should not remove a matching substring if it is not at the start', done => {
-    const client = new Client(VALID_NOTIFIER)
-
-    client.delivery(client => ({
-      sendReport: (report) => {
-        const evt = report.events[0]
-        expect(evt.stacktrace[0].file).toBe(join('/var', 'lib', '01.js'))
-        expect(evt.stacktrace[1].file).toBe(join('/foo', 'lib', '02.js'))
-        expect(evt.stacktrace[2].file).toBe(join('/tmp', 'lib', '03.js'))
-        done()
-      },
-      sendSession: () => {}
-    }))
-
-    client.setOptions({ apiKey: 'api_key', projectRoot: '/app' })
-    client.configure({
+    const client = new Client({ apiKey: 'api_key', projectRoot: '/app' }, {
       ...schema,
       projectRoot: {
         validate: () => true,
         defaultValue: () => '',
         message: ''
       }
-    })
+    }, VALID_NOTIFIER)
+
+    client._delivery(client => ({
+      sendEvent: (report) => {
+        const evt = report.events[0]
+        expect(evt.errors[0].stacktrace[0].file).toBe(join('/var', 'lib', '01.js'))
+        expect(evt.errors[0].stacktrace[1].file).toBe(join('/foo', 'lib', '02.js'))
+        expect(evt.errors[0].stacktrace[2].file).toBe(join('/tmp', 'lib', '03.js'))
+        done()
+      },
+      sendSession: () => {}
+    }))
+
     client.use(plugin)
 
-    client.notify(new Report('Error', 'strip project root test', [
+    client._notify(new Event('Error', 'strip project root test', [
       {
         lineNumber: 22,
         columnNumber: 18,
@@ -93,30 +89,28 @@ describe('plugin: strip project root', () => {
   })
 
   it('should work with node_modules and node internals', done => {
-    const client = new Client(VALID_NOTIFIER)
-
-    client.delivery(client => ({
-      sendReport: (report) => {
-        const evt = report.events[0]
-        expect(evt.stacktrace[0].file).toBe('_module.js')
-        expect(evt.stacktrace[1].file).toBe(join('node_modules', 'bugsnag-example', 'index.js'))
-        done()
-      },
-      sendSession: () => {}
-    }))
-
-    client.setOptions({ apiKey: 'api_key', projectRoot: '/app' })
-    client.configure({
+    const client = new Client({ apiKey: 'api_key', projectRoot: '/app' }, {
       ...schema,
       projectRoot: {
         validate: () => true,
         defaultValue: () => '',
         message: ''
       }
-    })
+    }, VALID_NOTIFIER)
+
+    client._delivery(client => ({
+      sendEvent: (report) => {
+        const evt = report.events[0]
+        expect(evt.errors[0].stacktrace[0].file).toBe('_module.js')
+        expect(evt.errors[0].stacktrace[1].file).toBe(join('node_modules', 'bugsnag-example', 'index.js'))
+        done()
+      },
+      sendSession: () => {}
+    }))
+
     client.use(plugin)
 
-    client.notify(new Report('Error', 'strip project root test', [
+    client._notify(new Event('Error', 'strip project root test', [
       {
         lineNumber: 22,
         columnNumber: 18,
@@ -130,31 +124,29 @@ describe('plugin: strip project root', () => {
   })
 
   it('should tolerate stackframe.file not being a string', done => {
-    const client = new Client(VALID_NOTIFIER)
-
-    client.delivery(client => ({
-      sendReport: (report) => {
-        const evt = report.events[0]
-        expect(evt.stacktrace[0].file).toBe('global code')
-        expect(evt.stacktrace[1].file).toBe('global code')
-        expect(evt.stacktrace[2].file).toEqual({})
-        done()
-      },
-      sendSession: () => {}
-    }))
-
-    client.setOptions({ apiKey: 'api_key', projectRoot: '/app' })
-    client.configure({
+    const client = new Client({ apiKey: 'api_key', projectRoot: '/app' }, {
       ...schema,
       projectRoot: {
         validate: () => true,
         defaultValue: () => '',
         message: ''
       }
-    })
+    }, VALID_NOTIFIER)
+
+    client._delivery(client => ({
+      sendEvent: (report) => {
+        const evt = report.events[0]
+        expect(evt.errors[0].stacktrace[0].file).toBe('global code')
+        expect(evt.errors[0].stacktrace[1].file).toBe('global code')
+        expect(evt.errors[0].stacktrace[2].file).toEqual({})
+        done()
+      },
+      sendSession: () => {}
+    }))
+
     client.use(plugin)
 
-    client.notify(new Report('Error', 'strip project root test', [
+    client._notify(new Event('Error', 'strip project root test', [
       {
         lineNumber: 22,
         columnNumber: 18,

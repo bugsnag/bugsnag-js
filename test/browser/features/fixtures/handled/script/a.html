@@ -6,7 +6,7 @@
     <script type="text/javascript">
       var ENDPOINT = decodeURIComponent(window.location.search.match(/ENDPOINT=([^&]+)/)[1])
       var API_KEY = decodeURIComponent(window.location.search.match(/API_KEY=([^&]+)/)[1])
-      var bugsnagClient = bugsnag({
+      Bugsnag.init({
         apiKey: API_KEY,
         endpoints: { notify: ENDPOINT }
       })
@@ -14,7 +14,7 @@
   </head>
   <body>
     <script>
-      bugsnagClient.notify(new Error('bad things'))
+      Bugsnag.notify(new Error('bad things'))
     </script>
   </body>
 </html>

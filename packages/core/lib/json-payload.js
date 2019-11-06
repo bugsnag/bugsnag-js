@@ -1,36 +1,29 @@
 const jsonStringify = require('@bugsnag/safe-json-stringify')
-const REPORT_FILTER_PATHS = [
-  'events.[].app',
+const REPORT_REDACTED_PATHS = [
   'events.[].metaData',
-  'events.[].user',
-  'events.[].breadcrumbs',
-  'events.[].request',
-  'events.[].device'
+  'events.[].breadcrumbs.metaData',
+  'events.[].request'
 ]
-const SESSION_FILTER_PATHS = [
-  'device',
-  'app',
-  'user'
-]
-
-module.exports.report = (report, filterKeys) => {
-  let payload = jsonStringify(report, null, null, { filterPaths: REPORT_FILTER_PATHS, filterKeys })
+module.exports.event = (event, redactedKeys) => {
+  let payload = jsonStringify(event, null, null, { redactedPaths: REPORT_REDACTED_PATHS, redactedKeys })
   if (payload.length > 10e5) {
-    delete report.events[0].metaData
-    report.events[0].metaData = {
-      notifier:
+    delete event.events[0]._metaData
+    event.events[0].metaData = {
+      notifier: {
+        warning:
 `WARNING!
 Serialized payload was ${payload.length / 10e5}MB (limit = 1MB)
-metaData was removed`
+metadata was removed`
+      }
     }
-    payload = jsonStringify(report, null, null, { filterPaths: REPORT_FILTER_PATHS, filterKeys })
+    payload = jsonStringify(event, null, null, { redactedPaths: REPORT_REDACTED_PATHS, redactedKeys })
     if (payload.length > 10e5) throw new Error('payload exceeded 1MB limit')
   }
   return payload
 }
 
-module.exports.session = (report, filterKeys) => {
-  const payload = jsonStringify(report, null, null, { filterPaths: SESSION_FILTER_PATHS, filterKeys })
+module.exports.session = (session, redactedKeys) => {
+  const payload = jsonStringify(session, null, null)
   if (payload.length > 10e5) throw new Error('payload exceeded 1MB limit')
   return payload
 }

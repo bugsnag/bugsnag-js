@@ -11,7 +11,7 @@ describe('expo-cli: insert', () => {
     const msg = await insert(projectRoot)
     expect(msg).toBe(undefined)
     const appJs = await promisify(readFile)(`${projectRoot}/App.js`, 'utf8')
-    expect(appJs).toMatch(/^import bugsnag from '@bugsnag\/expo';\sconst bugsnagClient = bugsnag\(\);\s/)
+    expect(appJs).toMatch(/^import Bugsnag from '@bugsnag\/expo';\sBugsnag\.init\(\);\s/)
   })
 
   it('shouldn’t insert if @bugsnag/expo is already imported (import)', async () => {

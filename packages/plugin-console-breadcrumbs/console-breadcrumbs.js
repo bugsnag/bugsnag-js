@@ -1,14 +1,12 @@
-const { map, reduce, filter } = require('@bugsnag/core/lib/es-utils')
+const { includes, map, reduce, filter } = require('@bugsnag/core/lib/es-utils')
 
 /*
  * Leaves breadcrumbs when console log methods are called
  */
 exports.init = (client) => {
-  const isDev = /^dev(elopment)?$/.test(client.config.releaseStage)
+  const isDev = /^dev(elopment)?$/.test(client._config.releaseStage)
 
-  const explicitlyDisabled = client.config.consoleBreadcrumbsEnabled === false
-  const implicitlyDisabled = (client.config.autoBreadcrumbs === false || isDev) && client.config.consoleBreadcrumbsEnabled !== true
-  if (explicitlyDisabled || implicitlyDisabled) return
+  if (!client._config.enabledBreadcrumbTypes || !includes(client._config.enabledBreadcrumbTypes, 'log') || isDev) return
 
   map(CONSOLE_LOG_METHODS, method => {
     const original = console[method]
@@ -36,20 +34,12 @@ exports.init = (client) => {
   })
 }
 
-exports.configSchema = {
-  consoleBreadcrumbsEnabled: {
-    defaultValue: () => undefined,
-    validate: (value) => value === true || value === false || value === undefined,
-    message: 'should be true|false'
-  }
-}
-
 if (process.env.NODE_ENV !== 'production') {
   exports.destroy = () => CONSOLE_LOG_METHODS.forEach(method => {
     if (typeof console[method]._restore === 'function') console[method]._restore()
   })
 }
 
-const CONSOLE_LOG_METHODS = filter([ 'log', 'debug', 'info', 'warn', 'error' ], method =>
+const CONSOLE_LOG_METHODS = filter(['log', 'debug', 'info', 'warn', 'error'], method =>
   typeof console !== 'undefined' && typeof console[method] === 'function'
 )

@@ -1,4 +1,4 @@
-import Report from "./report";
+import Event from "./event";
 
 declare class Session {
   public startedAt: string;
@@ -7,7 +7,7 @@ declare class Session {
     _handled: number;
     _unhandled: number;
   };
-  public trackError: (report: Report) => void;
+  public track: (event: Event) => void;
 }
 
 export default Session;

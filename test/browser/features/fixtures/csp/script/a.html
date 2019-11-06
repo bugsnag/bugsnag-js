@@ -7,13 +7,13 @@
     <script type="text/javascript">
       var ENDPOINT = decodeURIComponent(window.location.search.match(/ENDPOINT=([^&]+)/)[1])
       var API_KEY = decodeURIComponent(window.location.search.match(/API_KEY=([^&]+)/)[1])
-      var bugsnagClient = bugsnag({
+      var bugsnagClient = Bugsnag.createClient({
         apiKey: API_KEY,
         endpoints: {
           notify: ENDPOINT,
           sessions: ENDPOINT
         },
-        autoNotify: false
+        autoDetectErrors: false
       })
     </script>
   </head>

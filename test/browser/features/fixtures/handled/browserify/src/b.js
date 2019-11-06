@@ -1,10 +1,10 @@
-var bugsnag = require('@bugsnag/browser')
+var Bugsnag = require('@bugsnag/browser')
 var config = require('./lib/config')
 
-var bugsnagClient = bugsnag(config)
+Bugsnag.init(config)
 
 try {
   foo.bar()
 } catch (e) {
-  bugsnagClient.notify(e)
+  Bugsnag.notify(e)
 }

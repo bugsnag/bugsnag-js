@@ -1,16 +1,16 @@
-import bugsnag from '@bugsnag/expo'
+import Bugsnag from '@bugsnag/expo'
 
 const endpoints = {
   notify: 'http://bs-local.com:9339',
   sessions: 'http://bs-local.com:9339'
 }
 
-const bugsnagClient = bugsnag({
+const bugsnagClient = Bugsnag.createClient({
   endpoints: endpoints,
-  autoCaptureSessions: false
+  autoTrackSessions: false
 })
 
 export {
-    endpoints,
-    bugsnagClient
+  endpoints,
+  bugsnagClient
 }

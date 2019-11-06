@@ -31,32 +31,37 @@ describe('plugin: strip query string', () => {
     )
   })
 
-  it('runs the strip beforeSend callback without errors', () => {
-    const client = new Client(VALID_NOTIFIER)
+  it('runs the strip onError callback without errors', done => {
+    const client = new Client({
+      apiKey: 'API_KEY_YEAH'
+    }, undefined, VALID_NOTIFIER)
     const payloads = []
     let originalStacktrace
-    client.setOptions({
-      apiKey: 'API_KEY_YEAH',
-      beforeSend: report => {
-        originalStacktrace = report.stacktrace.map(f => f)
-      }
-    })
-    client.configure()
     client.use(plugin)
 
-    client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
+    client.addOnError(event => {
+      originalStacktrace = event.errors[0].stacktrace.map(f => f)
+    }, true)
+
+    client._delivery(client => ({
+      sendEvent: (payload, cb) => {
+        payloads.push(payload)
+        cb()
+      }
+    }))
     const err = new Error('noooo')
     err.stack = 'Error: foo\n  at page.html?id=intro:89:10'
-    client.notify(err)
-
-    expect(
-      originalStacktrace[0].file.indexOf(payloads[0].events[0].stacktrace[0].file)
-    ).toEqual(0)
-    expect(
-      payloads[0].events[0].stacktrace[0].file.length < originalStacktrace[0].file.length
-    ).toBe(true)
-    expect(
-      /\?/.test(payloads[0].events[0].stacktrace[0].file)
-    ).toBe(false)
+    client.notify(err, () => {}, () => {
+      expect(
+        originalStacktrace[0].file.indexOf(payloads[0].events[0].errors[0].stacktrace[0].file)
+      ).toEqual(0)
+      expect(
+        payloads[0].events[0].errors[0].stacktrace[0].file.length < originalStacktrace[0].file.length
+      ).toBe(true)
+      expect(
+        /\?/.test(payloads[0].events[0].errors[0].stacktrace[0].file)
+      ).toBe(false)
+      done()
+    })
   })
 })

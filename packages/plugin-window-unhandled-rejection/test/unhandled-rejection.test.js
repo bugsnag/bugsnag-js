@@ -6,7 +6,7 @@ const Client = require('@bugsnag/core/client')
 const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
 let listener = null
-let window = {
+const window = {
   addEventListener: (evt, handler) => {
     listener = handler
   },
@@ -18,12 +18,10 @@ let window = {
 describe('plugin: unhandled rejection', () => {
   describe('window.onunhandledrejection function', () => {
     it('captures unhandled promise rejections', done => {
-      const client = new Client(VALID_NOTIFIER)
-      client.setOptions({ apiKey: 'API_KEY_YEAH' })
-      client.configure()
+      const client = new Client({ apiKey: 'API_KEY_YEAH' }, undefined, VALID_NOTIFIER)
       client.use(plugin, window)
-      client.delivery(client => ({
-        sendReport: (payload) => {
+      client._delivery(client => ({
+        sendEvent: (payload) => {
           const report = payload.events[0].toJSON()
           expect(report.severity).toBe('error')
           expect(report.unhandled).toBe(true)
@@ -38,12 +36,10 @@ describe('plugin: unhandled rejection', () => {
     })
 
     it('handles bad user input', done => {
-      const client = new Client(VALID_NOTIFIER)
-      client.setOptions({ apiKey: 'API_KEY_YEAH' })
-      client.configure()
+      const client = new Client({ apiKey: 'API_KEY_YEAH' }, undefined, VALID_NOTIFIER)
       client.use(plugin, window)
-      client.delivery(client => ({
-        sendReport: (payload) => {
+      client._delivery(client => ({
+        sendEvent: (payload) => {
           const report = payload.events[0].toJSON()
           expect(report.severity).toBe('error')
           expect(report.unhandled).toBe(true)
@@ -66,8 +62,8 @@ describe('plugin: unhandled rejection', () => {
     // setOptions({ apiKey: 'API_KEY_YEAH' })
     //   client.configure()
     //   client.use(plugin, window)
-    //   client.delivery({
-    //     sendReport: (payload) => {
+    //   client._delivery({
+    //     sendEvent: (payload) => {
     //       const report = payload.events[0].toJSON()
     //       expect(report.severity).toBe('error')
     //       expect(report.unhandled).toBe(true)
@@ -103,12 +99,10 @@ describe('plugin: unhandled rejection', () => {
     // })
 
     it('handles errors with non-string stacks', done => {
-      const client = new Client(VALID_NOTIFIER)
-      client.setOptions({ apiKey: 'API_KEY_YEAH' })
-      client.configure()
+      const client = new Client({ apiKey: 'API_KEY_YEAH' }, undefined, VALID_NOTIFIER)
       client.use(plugin, window)
-      client.delivery(client => ({
-        sendReport: (payload) => {
+      client._delivery(client => ({
+        sendEvent: (payload) => {
           const report = payload.events[0].toJSON()
           expect(report.severity).toBe('error')
           expect(report.unhandled).toBe(true)
@@ -126,12 +120,10 @@ describe('plugin: unhandled rejection', () => {
     })
 
     it('tolerates event.detail propties which throw', done => {
-      const client = new Client(VALID_NOTIFIER)
-      client.setOptions({ apiKey: 'API_KEY_YEAH' })
-      client.configure()
+      const client = new Client({ apiKey: 'API_KEY_YEAH' }, undefined, VALID_NOTIFIER)
       client.use(plugin, window)
-      client.delivery(client => ({
-        sendReport: (payload) => {
+      client._delivery(client => ({
+        sendEvent: (payload) => {
           const report = payload.events[0].toJSON()
           expect(report.severity).toBe('error')
           expect(report.unhandled).toBe(true)

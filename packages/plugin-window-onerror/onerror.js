@@ -1,18 +1,19 @@
 /*
  * Automatically notifies Bugsnag when window.onerror is called
  */
+const Event = require('@bugsnag/core/event')
 
 module.exports = {
   init: (client, win = window) => {
+    if (client._config.autoDetectErrors === false) return
+
     function onerror (messageOrEvent, url, lineNo, charNo, error) {
       // Ignore errors with no info due to CORS settings
       if (lineNo === 0 && /Script error\.?/.test(messageOrEvent)) {
-        client._logger.warn('Ignoring cross-domain or eval script error. See docs: https://tinyurl.com/yy3rn63z')
+        client.__logger.warn('Ignoring cross-domain or eval script error. See docs: https://tinyurl.com/yy3rn63z')
       } else {
         // any error sent to window.onerror is unhandled and has severity=error
         const handledState = { severity: 'error', unhandled: true, severityReason: { type: 'unhandledException' } }
-
-        let report
 
         // window.onerror can be called in a number of ways. This big if-else is how we
         // figure out which arguments were supplied, and what kind of values it received.
@@ -23,25 +24,26 @@ module.exports = {
 
           if (error.name && error.message) {
             // if it looks like an error, construct a report object using its stack
-            report = new client.BugsnagReport(
+            client._notify(new Event(
               error.name,
               error.message,
-              decorateStack(client.BugsnagReport.getStacktrace(error), url, lineNo, charNo),
-              handledState,
-              error
-            )
+              decorateStack(Event.getStacktrace(error), url, lineNo, charNo),
+              error,
+              handledState
+            ))
           } else {
             // otherwise, for non error values that were thrown, stringify it for
             // use as the error message and get/generate a stacktrace
-            report = new client.BugsnagReport(
+            client._notify(new Event(
               'window.onerror',
               String(error),
-              decorateStack(client.BugsnagReport.getStacktrace(error, 1), url, lineNo, charNo),
-              handledState,
-              error
-            )
-            // include the raw input as metadata
-            report.updateMetaData('window onerror', { error })
+              decorateStack(Event.getStacktrace(error, 1), url, lineNo, charNo),
+              error,
+              handledState
+            ), (event) => {
+              // include the raw input as metadata
+              event.addMetadata('window onerror', { error })
+            })
           }
         } else if (
           // This complex case detects "error" events that are typically synthesised
@@ -61,32 +63,32 @@ module.exports = {
           // attempt to find a message from one of the conventional properties, but
           // default to empty string (the report will fill it with a placeholder)
           const message = messageOrEvent.message || messageOrEvent.detail || ''
-          report = new client.BugsnagReport(
+          client._notify(new Event(
             name,
             message,
-            client.BugsnagReport.getStacktrace(new Error(), 1).slice(1),
-            handledState,
-            messageOrEvent
-          )
-          // include the raw input as metadata – it might contain more info than we extracted
-          report.updateMetaData('window onerror', { event: messageOrEvent, extraParameters: url })
+            Event.getStacktrace(new Error(), 1).slice(1),
+            messageOrEvent,
+            handledState
+          ), (event) => {
+            // include the raw input as metadata – it might contain more info than we extracted
+            event.addMetadata('window onerror', { event: messageOrEvent, extraParameters: url })
+          })
         } else {
           // Lastly, if there was no "error" parameter this event was probably from an old
           // browser that doesn't support that. Instead we need to generate a stacktrace.
-          report = new client.BugsnagReport(
+          client._notify(new Event(
             'window.onerror',
             String(messageOrEvent),
-            decorateStack(client.BugsnagReport.getStacktrace(error, 1), url, lineNo, charNo),
-            handledState,
-            messageOrEvent
-          )
-          // include the raw input as metadata – it might contain more info than we extracted
-          report.updateMetaData('window onerror', { event: messageOrEvent })
+            decorateStack(Event.getStacktrace(error, 1), url, lineNo, charNo),
+            messageOrEvent,
+            handledState
+          ), (event) => {
+            // include the raw input as metadata – it might contain more info than we extracted
+            event.addMetadata('window onerror', { event: messageOrEvent })
+          })
         }
-
-        client.notify(report)
       }
-
+      // always call through to original onerror handler
       if (typeof prevOnError === 'function') prevOnError.apply(this, arguments)
     }
 

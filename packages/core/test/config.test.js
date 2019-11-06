@@ -57,7 +57,7 @@ describe('@bugsnag/core/config', () => {
         config.schema[k].validate()
         config.schema[k].validate(-1)
         config.schema[k].validate('stringy stringerson')
-        config.schema[k].validate([ 'foo', 'bar', 'baz' ])
+        config.schema[k].validate(['foo', 'bar', 'baz'])
         config.schema[k].validate(new Date())
         config.schema[k].validate(null)
         expect(typeof config.schema[k].message).toBe('string')

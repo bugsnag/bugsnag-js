@@ -3,23 +3,23 @@ const { isoDate } = require('@bugsnag/core/lib/es-utils')
 const request = require('./request')
 
 module.exports = (client) => ({
-  sendReport: (report, cb = () => {}) => {
+  sendEvent: (event, cb = () => {}) => {
     const _cb = err => {
-      if (err) client._logger.error(`Report failed to send…\n${(err && err.stack) ? err.stack : err}`, err)
+      if (err) client.__logger.error(`Report failed to send…\n${(err && err.stack) ? err.stack : err}`, err)
       cb(err)
     }
 
     try {
       request({
-        url: client.config.endpoints.notify,
+        url: client._config.endpoints.notify,
         headers: {
           'Content-Type': 'application/json',
-          'Bugsnag-Api-Key': report.apiKey || client.config.apiKey,
+          'Bugsnag-Api-Key': event.apiKey,
           'Bugsnag-Payload-Version': '4',
           'Bugsnag-Sent-At': isoDate()
         },
-        body: payload.report(report, client.config.filters),
-        agent: client.config.agent
+        body: payload.event(event, client._config.redactedKeys),
+        agent: client._config.agent
       }, (err, body) => _cb(err))
     } catch (e) {
       _cb(e)
@@ -27,21 +27,21 @@ module.exports = (client) => ({
   },
   sendSession: (session, cb = () => {}) => {
     const _cb = err => {
-      if (err) client._logger.error(`Session failed to send…\n${(err && err.stack) ? err.stack : err}`, err)
+      if (err) client.__logger.error(`Session failed to send…\n${(err && err.stack) ? err.stack : err}`, err)
       cb(err)
     }
 
     try {
       request({
-        url: client.config.endpoints.sessions,
+        url: client._config.endpoints.sessions,
         headers: {
           'Content-Type': 'application/json',
-          'Bugsnag-Api-Key': client.config.apiKey,
+          'Bugsnag-Api-Key': client._config.apiKey,
           'Bugsnag-Payload-Version': '1',
           'Bugsnag-Sent-At': isoDate()
         },
-        body: payload.session(session, client.config.filters),
-        agent: client.config.agent
+        body: payload.session(session, client._config.redactedKeys),
+        agent: client._config.agent
       }, err => _cb(err))
     } catch (e) {
       _cb(e)

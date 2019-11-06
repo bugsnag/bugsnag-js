@@ -6,7 +6,7 @@
     <script type="module">
       var ENDPOINT = decodeURIComponent(window.location.search.match(/ENDPOINT=([^&]+)/)[1])
       var API_KEY = decodeURIComponent(window.location.search.match(/API_KEY=([^&]+)/)[1])
-      window.bugsnagClient = window.bugsnag({
+      window.Bugsnag.init({
         apiKey: API_KEY,
         endpoints: { notify: ENDPOINT }
       })
@@ -24,9 +24,9 @@
     <script type="module">
       var customError = {
         name: 'Unlikely scenario',
-        stack: window.bugsnagClient.BugsnagReport.getStacktrace()
+        stack: Bugsnag.Event.getStacktrace()
       }
-      window.bugsnagClient.notify(customError)
+      window.Bugsnag.notify(customError)
     </script>
   </body>
 </html>

@@ -1,3 +1,3 @@
-import { Bugsnag } from "@bugsnag/browser";
-declare const bugsnagPluginReact: Bugsnag.IPlugin;
+import { AbstractTypes } from "@bugsnag/browser";
+declare const bugsnagPluginReact: AbstractTypes.Plugin;
 export default bugsnagPluginReact;

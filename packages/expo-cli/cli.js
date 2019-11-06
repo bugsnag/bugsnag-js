@@ -5,12 +5,12 @@ const { resolve } = require('path')
 const { red, yellow } = require('kleur')
 
 const commands = new Map([
-  [ 'add-hook', require('./commands/add-hook') ],
-  [ 'help', require('./commands/help') ],
-  [ 'init', require('./commands/init') ],
-  [ 'insert', require('./commands/insert') ],
-  [ 'install', require('./commands/install') ],
-  [ 'set-api-key', require('./commands/set-api-key') ]
+  ['add-hook', require('./commands/add-hook')],
+  ['help', require('./commands/help')],
+  ['init', require('./commands/init')],
+  ['insert', require('./commands/insert')],
+  ['install', require('./commands/install')],
+  ['set-api-key', require('./commands/set-api-key')]
 ])
 
 // define top-level options

@@ -10,7 +10,7 @@ module.exports = async (argv, globalOpts) => {
     message,
     initial: true
   }, { onCancel })
-  console.log(blue(`> Inserting Bugsnag initialization into App.js`))
+  console.log(blue('> Inserting Bugsnag initialization into App.js'))
   if (res.insert) {
     const msg = await insert(globalOpts['project-root'])
     if (msg) console.log(yellow(`  ${msg}`))

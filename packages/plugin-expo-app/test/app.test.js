@@ -4,7 +4,7 @@ const proxyquire = require('proxyquire').noPreserveCache().noCallThru()
 const Client = require('@bugsnag/core/client')
 const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
-describe('plugin: expo device', () => {
+describe('plugin: expo app', () => {
   it('should should use version if defined (all platforms)', done => {
     const VERSION = '1.0.0'
     const plugin = proxyquire('../', {
@@ -22,14 +22,11 @@ describe('plugin: expo device', () => {
         }
       }
     })
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'api_key' })
-    c.configure()
-
+    const c = new Client({ apiKey: 'api_key' }, undefined, VALID_NOTIFIER)
     c.use(plugin)
-    c.delivery(client => ({
-      sendReport: (report) => {
-        const r = JSON.parse(JSON.stringify(report))
+    c._delivery(client => ({
+      sendEvent: (payload) => {
+        const r = JSON.parse(JSON.stringify(payload))
         expect(r).toBeTruthy()
         expect(r.events[0].app.version).toBe(VERSION)
         done()
@@ -56,14 +53,12 @@ describe('plugin: expo device', () => {
         }
       }
     })
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'api_key' })
-    c.configure()
+    const c = new Client({ apiKey: 'api_key' }, undefined, VALID_NOTIFIER)
 
     c.use(plugin)
-    c.delivery(client => ({
-      sendReport: (report) => {
-        const r = JSON.parse(JSON.stringify(report))
+    c._delivery(client => ({
+      sendEvent: (payload) => {
+        const r = JSON.parse(JSON.stringify(payload))
         expect(r).toBeTruthy()
         expect(r.events[0].app.codeBundleId).toBe(REVISION_ID)
         done()
@@ -91,14 +86,12 @@ describe('plugin: expo device', () => {
         }
       }
     })
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'api_key' })
-    c.configure()
+    const c = new Client({ apiKey: 'api_key' }, undefined, VALID_NOTIFIER)
 
     c.use(plugin)
-    c.delivery(client => ({
-      sendReport: (report) => {
-        const r = JSON.parse(JSON.stringify(report))
+    c._delivery(client => ({
+      sendEvent: (payload) => {
+        const r = JSON.parse(JSON.stringify(payload))
         expect(r).toBeTruthy()
         expect(r.events[0].metaData.app.nativeVersionCode).toBe(VERSION_CODE)
         done()
@@ -126,14 +119,12 @@ describe('plugin: expo device', () => {
         }
       }
     })
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'api_key' })
-    c.configure()
+    const c = new Client({ apiKey: 'api_key' }, undefined, VALID_NOTIFIER)
 
     c.use(plugin)
-    c.delivery(client => ({
-      sendReport: (report) => {
-        const r = JSON.parse(JSON.stringify(report))
+    c._delivery(client => ({
+      sendEvent: (payload) => {
+        const r = JSON.parse(JSON.stringify(payload))
         expect(r).toBeTruthy()
         expect(r.events[0].metaData.app.nativeBundleVersion).toBe(BUNDLE_VERSION)
         done()
@@ -159,22 +150,20 @@ describe('plugin: expo device', () => {
       },
       'react-native': { AppState }
     })
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'api_key' })
-    c.configure()
+    const c = new Client({ apiKey: 'api_key' }, undefined, VALID_NOTIFIER)
 
     c.use(plugin)
     expect(typeof listener).toBe('function')
-    const reports = []
-    c.delivery(client => ({
-      sendReport: (report) => {
-        const r = JSON.parse(JSON.stringify(report))
+    const payloads = []
+    c._delivery(client => ({
+      sendEvent: (payload) => {
+        const r = JSON.parse(JSON.stringify(payload))
         expect(r).toBeTruthy()
-        reports.push(r)
-        if (reports.length < 3) return
-        expect(reports[0].events[0].app.inForeground).toBe(true)
-        expect(reports[1].events[0].app.inForeground).toBe(false)
-        expect(reports[2].events[0].app.inForeground).toBe(true)
+        payloads.push(r)
+        if (payloads.length < 3) return
+        expect(payloads[0].events[0].app.inForeground).toBe(true)
+        expect(payloads[1].events[0].app.inForeground).toBe(false)
+        expect(payloads[2].events[0].app.inForeground).toBe(true)
         done()
       }
     }))

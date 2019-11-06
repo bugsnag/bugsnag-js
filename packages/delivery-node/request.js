@@ -1,5 +1,6 @@
 const http = require('http')
 const https = require('https')
+// eslint-disable-next-line node/no-deprecated-api
 const { parse } = require('url')
 
 module.exports = ({ url, headers, body, agent }, cb) => {

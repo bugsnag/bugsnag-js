@@ -7,7 +7,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 
-COPY babel.config.js tslint.json lerna.json ./
+COPY babel.config.js lerna.json .eslintignore .eslintrc.js .eslintrc.ts.js ./
 COPY packages ./packages
 COPY bin ./bin
 RUN npx lerna bootstrap

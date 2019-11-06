@@ -1,3 +1,3 @@
-import { Bugsnag } from "@bugsnag/node";
-declare const bugsnagPluginRestify: Bugsnag.IPlugin;
+import { AbstractTypes } from "@bugsnag/node";
+declare const bugsnagPluginRestify: AbstractTypes.IPlugin;
 export default bugsnagPluginRestify;

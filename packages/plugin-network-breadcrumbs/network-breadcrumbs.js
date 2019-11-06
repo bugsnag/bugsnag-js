@@ -13,19 +13,15 @@ let win
 let getIgnoredUrls
 
 const defaultIgnoredUrls = () => [
-  client.config.endpoints.notify,
-  client.config.endpoints.sessions
+  client._config.endpoints.notify,
+  client._config.endpoints.sessions
 ]
 
 /*
  * Leaves breadcrumbs when network requests occur
  */
-exports.name = 'networkBreadcrumbs'
 exports.init = (_client, _getIgnoredUrls = defaultIgnoredUrls, _win = window) => {
-  const explicitlyDisabled = _client.config.networkBreadcrumbsEnabled === false
-  const implicitlyDisabled = _client.config.autoBreadcrumbs === false && _client.config.networkBreadcrumbsEnabled !== true
-  if (explicitlyDisabled || implicitlyDisabled) return
-
+  if (!_client._config.enabledBreadcrumbTypes || !includes(_client._config.enabledBreadcrumbTypes, 'request')) return
   client = _client
   win = _win
   getIgnoredUrls = _getIgnoredUrls
@@ -33,13 +29,7 @@ exports.init = (_client, _getIgnoredUrls = defaultIgnoredUrls, _win = window) =>
   monkeyPatchFetch()
 }
 
-exports.configSchema = {
-  networkBreadcrumbsEnabled: {
-    defaultValue: () => undefined,
-    validate: (value) => value === true || value === false || value === undefined,
-    message: 'should be true|false'
-  }
-}
+exports.name = 'networkBreadcrumbs'
 
 if (process.env.NODE_ENV !== 'production') {
   exports.destroy = () => {
@@ -88,15 +78,15 @@ function handleXHRLoad () {
     // don't leave a network breadcrumb from bugsnag notify calls
     return
   }
-  const metaData = {
+  const metadata = {
     status: this.status,
     request: `${this[REQUEST_METHOD_KEY]} ${this[REQUEST_URL_KEY]}`
   }
   if (this.status >= 400) {
     // contacted server but got an error response
-    client.leaveBreadcrumb('XMLHttpRequest failed', metaData, BREADCRUMB_TYPE)
+    client.leaveBreadcrumb('XMLHttpRequest failed', metadata, BREADCRUMB_TYPE)
   } else {
-    client.leaveBreadcrumb('XMLHttpRequest succeeded', metaData, BREADCRUMB_TYPE)
+    client.leaveBreadcrumb('XMLHttpRequest succeeded', metadata, BREADCRUMB_TYPE)
   }
 }
 
@@ -120,7 +110,7 @@ const monkeyPatchFetch = () => {
 
   const oldFetch = win.fetch
   win.fetch = function fetch (...args) {
-    let [url, options] = args
+    const [url, options] = args
     let method = 'GET'
     if (options && options.method) {
       method = options.method
@@ -147,15 +137,15 @@ const monkeyPatchFetch = () => {
 }
 
 const handleFetchSuccess = (response, method, url) => {
-  const metaData = {
+  const metadata = {
     status: response.status,
     request: `${method} ${url}`
   }
   if (response.status >= 400) {
     // when the request comes back with a 4xx or 5xx status it does not reject the fetch promise,
-    client.leaveBreadcrumb('fetch() failed', metaData, BREADCRUMB_TYPE)
+    client.leaveBreadcrumb('fetch() failed', metadata, BREADCRUMB_TYPE)
   } else {
-    client.leaveBreadcrumb('fetch() succeeded', metaData, BREADCRUMB_TYPE)
+    client.leaveBreadcrumb('fetch() succeeded', metadata, BREADCRUMB_TYPE)
   }
 }
 

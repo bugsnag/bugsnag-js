@@ -1,17 +1,19 @@
-var bugsnag = require('@bugsnag/node')
-var bugsnagExpress = require('@bugsnag/plugin-restify')
+var Bugsnag = require('@bugsnag/node')
+var bugsnagRestify = require('@bugsnag/plugin-restify')
 var restify = require('restify')
 var errors = require('restify-errors')
 
-var bugsnagClient = bugsnag({
+Bugsnag.init({
   apiKey: process.env.BUGSNAG_API_KEY,
   endpoints: {
     notify: process.env.BUGSNAG_NOTIFY_ENDPOINT,
     sessions: process.env.BUGSNAG_SESSIONS_ENDPOINT
   }
-}).use(bugsnagExpress)
+})
 
-var middleware = bugsnagClient.getPlugin('restify')
+Bugsnag.use(bugsnagRestify)
+
+var middleware = Bugsnag.getPlugin('restify')
 
 var server = restify.createServer()
 

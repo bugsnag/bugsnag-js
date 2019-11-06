@@ -1,3 +1,5 @@
+const { includes } = require('@bugsnag/core/lib/es-utils')
+
 /*
  * Leaves breadcrumbs when the user interacts with the DOM
  */
@@ -5,9 +7,7 @@ module.exports = {
   init: (client, win = window) => {
     if (!('addEventListener' in win)) return
 
-    const explicitlyDisabled = client.config.interactionBreadcrumbsEnabled === false
-    const implicitlyDisabled = client.config.autoBreadcrumbs === false && client.config.interactionBreadcrumbsEnabled !== true
-    if (explicitlyDisabled || implicitlyDisabled) return
+    if (!client._config.enabledBreadcrumbTypes || !includes(client._config.enabledBreadcrumbTypes, 'user')) return
 
     win.addEventListener('click', (event) => {
       let targetText, targetSelector
@@ -17,17 +17,10 @@ module.exports = {
       } catch (e) {
         targetText = '[hidden]'
         targetSelector = '[hidden]'
-        client._logger.error('Cross domain error when tracking click event. See docs: https://tinyurl.com/yy3rn63z')
+        client.__logger.error('Cross domain error when tracking click event. See docs: https://tinyurl.com/yy3rn63z')
       }
       client.leaveBreadcrumb('UI click', { targetText, targetSelector }, 'user')
     }, true)
-  },
-  configSchema: {
-    interactionBreadcrumbsEnabled: {
-      defaultValue: () => undefined,
-      validate: (value) => value === true || value === false || value === undefined,
-      message: 'should be true|false'
-    }
   }
 }
 
@@ -41,7 +34,7 @@ const getNodeText = el => {
 
 // Create a label from tagname, id and css class of the element
 function getNodeSelector (el, win) {
-  const parts = [ el.tagName ]
+  const parts = [el.tagName]
   if (el.id) parts.push('#' + el.id)
   if (el.className && el.className.length) parts.push(`.${el.className.split(' ').join('.')}`)
   // Can't get much more advanced with the current browser

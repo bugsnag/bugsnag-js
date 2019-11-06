@@ -8,7 +8,7 @@ import AppStateBreadcrumbs from './app/app_state_breadcrumbs'
 import UserFeature from './app/user'
 import ConsoleBreadcrumbs from './app/console_breadcrumbs'
 import IgnoreReport from './app/ignore_report'
-import MetaDataFeature from './app/meta_data'
+import MetadataFeature from './app/metadata'
 import ManualBreadcrumbs from './app/manual_breadcrumbs'
 import DeviceFeature from './app/device'
 import Sessions from './app/sessions'
@@ -23,7 +23,7 @@ const SCENARIOS = [
   'userFeature',
   'consoleBreadcrumbs',
   'ignoreReport',
-  'metaDataFeature',
+  'metadataFeature',
   'manualBreadcrumbs',
   'deviceFeature',
   'sessions',
@@ -56,8 +56,8 @@ export default class App extends React.Component {
         return (<ConsoleBreadcrumbs></ConsoleBreadcrumbs>)
       case 'ignoreReport':
         return (<IgnoreReport></IgnoreReport>)
-      case 'metaDataFeature':
-        return (<MetaDataFeature></MetaDataFeature>)
+      case 'metadataFeature':
+        return (<MetadataFeature></MetadataFeature>)
       case 'manualBreadcrumbs':
         return (<ManualBreadcrumbs></ManualBreadcrumbs>)
       case 'deviceFeature':
@@ -72,7 +72,6 @@ export default class App extends React.Component {
 
   renderScenarioOptions() {
     return SCENARIOS.map((scenario, index) => {
-
       return <Button accessibilityLabel={scenario}
                      key={index}
                      title={'Scenario: ' + scenario}

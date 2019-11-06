@@ -6,9 +6,7 @@ const plugin = require('../')
 
 describe('plugin: restify', () => {
   it('exports two middleware functions', () => {
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'api_key' })
-    c.configure()
+    const c = new Client({ apiKey: 'api_key' }, undefined, VALID_NOTIFIER)
     c.use(plugin)
     const middleware = c.getPlugin('restify')
     expect(typeof middleware.requestHandler).toBe('function')

@@ -1,28 +1,27 @@
-import * as BugsnagCore from "@bugsnag/core";
+import { Client, Breadcrumb, Event, Session, AbstractTypes } from "@bugsnag/core";
 
-type afterErrorCb = (err: any, report: BugsnagCore.IConfig, logger: BugsnagCore.ILogger) => void;
-
-// overwrite config interface, adding node-specific options
+// overwrite config interface, adding browser-specific options
 declare module "@bugsnag/core" {
-  interface IConfig {
+  interface Config {
     apiKey: string;
-    beforeSend?: BugsnagCore.BeforeSend | BugsnagCore.BeforeSend[];
-    // autoBreadcrumbs?: boolean; // this option is disabled in node, see below
-    autoNotify?: boolean;
     appVersion?: string;
     appType?: string;
-    endpoints?: { notify: string, sessions?: string };
-    autoCaptureSessions?: boolean;
-    notifyReleaseStages?: string[];
+    autoDetectErrors?: boolean;
+    autoDetectUnhandledRejections?: boolean;
+    onError?: AbstractTypes.OnErrorCallback | AbstractTypes.OnErrorCallback[];
+    endpoints?: { notify: string; sessions?: string };
+    autoTrackSessions?: boolean;
+    enabledReleaseStages?: string[];
     releaseStage?: string;
     maxBreadcrumbs?: number;
-    user?: object | null;
-    metaData?: object | null;
-    logger?: BugsnagCore.ILogger | null;
-    filters?: Array<string | RegExp>;
+    enabledBreadcrumbTypes?: AbstractTypes.BreadcrumbType[];
+    user?: { id?: string; name?: string; email?: string } | null;
+    metadata?: object | null;
+    logger?: AbstractTypes.Logger | null;
+    redactedKeys?: Array<string | RegExp>;
     // catch-all for any missing options
     [key: string]: any;
-    // options for node-specific built-ins
+    // options for all bundled browser plugins
     hostname?: string;
     onUncaughtException?: afterErrorCb;
     onUnhandledRejection?: afterErrorCb;
@@ -33,9 +32,9 @@ declare module "@bugsnag/core" {
   }
 }
 
-// two ways to call the exported function: apiKey or config object
-declare function bugsnag(apiKeyOrOpts: string | BugsnagCore.IConfig): BugsnagCore.Client;
+type afterErrorCb = (err: any, report: BugsnagCore.Config, logger: BugsnagCore.Logger) => void;
 
-// commonjs/requirejs export
-export default bugsnag;
-export { BugsnagCore as Bugsnag }
+declare const Bugsnag: AbstractTypes.BugsnagStatic;
+
+export default Bugsnag;
+export { Client, Breadcrumb, Event, Session, AbstractTypes };

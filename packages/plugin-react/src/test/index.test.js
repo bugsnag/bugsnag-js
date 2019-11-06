@@ -4,23 +4,23 @@ import React from 'react'
 import renderer from 'react-test-renderer'
 import plugin from '../'
 
-class BugsnagReport {
-  updateMetaData () {
-    return this
+class Event {
+  addMetadata () {
   }
 }
 
-const bugsnag = {
-  BugsnagReport,
-  notify: jest.fn()
+const bugsnagClient = {
+  Event,
+  _notify: jest.fn()
 }
 
-bugsnag.BugsnagReport.getStacktrace = jest.fn()
+bugsnagClient.Event.getStacktrace = jest.fn()
+bugsnagClient.Event.prototype.addMetadata = jest.fn()
 
-const ErrorBoundary = plugin.init(bugsnag, React)
+const ErrorBoundary = plugin.init(bugsnagClient, React)
 
 beforeEach(() => {
-  bugsnag.notify.mockReset()
+  bugsnagClient._notify.mockReset()
 })
 
 test('formatComponentStack(str)', () => {
@@ -28,7 +28,7 @@ test('formatComponentStack(str)', () => {
   in BadButton
   in ErrorBoundary`
   expect(plugin.formatComponentStack(str))
-    .toBe(`in BadButton\nin ErrorBoundary`)
+    .toBe('in BadButton\nin ErrorBoundary')
 })
 
 const BadComponent = () => {
@@ -55,7 +55,7 @@ it('calls notify on error', () => {
   renderer
     .create(<ErrorBoundary><BadComponent /></ErrorBoundary>)
     .toJSON()
-  expect(bugsnag.notify).toHaveBeenCalledTimes(1)
+  expect(bugsnagClient._notify).toHaveBeenCalledTimes(1)
 })
 
 it('does not render FallbackComponent when no error', () => {
@@ -85,13 +85,13 @@ it('passes the props to the FallbackComponent', () => {
   }, {})
 })
 
-it('it passes the beforeSend function to the Bugsnag notify call', () => {
-  const beforeSend = () => {}
+it('it passes the onError function to the Bugsnag notify call', () => {
+  const onError = () => {}
   renderer
-    .create(<ErrorBoundary beforeSend={beforeSend}><BadComponent /></ErrorBoundary>)
+    .create(<ErrorBoundary onError={onError}><BadComponent /></ErrorBoundary>)
     .toJSON()
-  expect(bugsnag.notify).toBeCalledWith(
-    expect.any(BugsnagReport),
-    expect.objectContaining({ beforeSend: beforeSend })
+  expect(bugsnagClient._notify).toBeCalledWith(
+    expect.any(Event),
+    expect.arrayContaining([expect.any(Function), onError])
   )
 })

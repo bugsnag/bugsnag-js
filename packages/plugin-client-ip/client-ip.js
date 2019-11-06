@@ -3,15 +3,15 @@
  */
 module.exports = {
   init: (client) => {
-    if (client.config.collectUserIp) return
+    if (client._config.collectUserIp) return
 
-    client.config.beforeSend.push(report => {
+    client.addOnError(event => {
       // If user.id is explicitly undefined, it will be missing from the payload. It needs
       // removing so that the following line replaces it
-      if (report.user && typeof report.user.id === 'undefined') delete report.user.id
-      report.user = { id: '[NOT COLLECTED]', ...report.user }
-      report.request = { clientIp: '[NOT COLLECTED]', ...report.request }
-    })
+      if (event._user && typeof event._user.id === 'undefined') delete event._user.id
+      event._user = { id: '[REDACTED]', ...event._user }
+      event.request = { clientIp: '[REDACTED]', ...event.request }
+    }, true)
   },
   configSchema: {
     collectUserIp: {

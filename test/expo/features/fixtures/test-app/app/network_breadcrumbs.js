@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { View, Button } from 'react-native'
 import { endpoints } from './bugsnag'
-import bugsnag from '@bugsnag/expo'
+import Bugsnag from '@bugsnag/expo'
 
 export default class NetworkBreadcrumbs extends Component {
   constructor(props) {
@@ -14,10 +14,10 @@ export default class NetworkBreadcrumbs extends Component {
 
   defaultNetworkBreadcrumbsBehaviour = () => {
     this.triggerNetworkBreadcrumbsError(
-      bugsnag({
+      Bugsnag.createClient({
         endpoints: endpoints,
-        autoNotify: false,
-        autoCaptureSessions: false
+        autoDetectErrors: false,
+        autoTrackSessions: false
       }),
       "defaultNetworkBreadcrumbsBehaviour"
     )
@@ -25,11 +25,11 @@ export default class NetworkBreadcrumbs extends Component {
 
   disabledNetworkBreadcrumbsBehaviour = () => {
     this.triggerNetworkBreadcrumbsError(
-      bugsnag({
+      Bugsnag.createClient({
         endpoints: endpoints,
-        autoNotify: false,
-        autoCaptureSessions: false,
-        networkBreadcrumbsEnabled: false
+        autoDetectErrors: false,
+        autoTrackSessions: false,
+        enabledBreadcrumbTypes: []
       }),
       "disabledNetworkBreadcrumbsBehaviour"
     )
@@ -37,11 +37,11 @@ export default class NetworkBreadcrumbs extends Component {
 
   disabledAllNetworkBreadcrumbsBehaviour = () => {
     this.triggerNetworkBreadcrumbsError(
-      bugsnag({
+      Bugsnag.createClient({
         endpoints: endpoints,
-        autoNotify: false,
-        autoCaptureSessions: false,
-        autoBreadcrumbs: false
+        autoDetectErrors: false,
+        autoTrackSessions: false,
+        enabledBreadcrumbTypes: null
       }),
       "disabledAllNetworkBreadcrumbsBehaviour"
     )
@@ -49,12 +49,12 @@ export default class NetworkBreadcrumbs extends Component {
 
   overrideNetworkBreadcrumbsBehaviour = () => {
     this.triggerNetworkBreadcrumbsError(
-      bugsnag({
+      Bugsnag.createClient({
         endpoints: endpoints,
-        autoNotify: false,
-        autoCaptureSessions: false,
+        autoDetectErrors: false,
+        autoTrackSessions: false,
         autoBreadcrumbs: false,
-        networkBreadcrumbsEnabled: true
+        enabledBreadcrumbTypes: ["request"]
       }),
       "overrideNetworkBreadcrumbsBehaviour"
     )

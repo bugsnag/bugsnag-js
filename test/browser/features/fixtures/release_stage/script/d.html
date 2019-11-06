@@ -6,17 +6,17 @@
     <script type="text/javascript">
       var ENDPOINT = decodeURIComponent(window.location.search.match(/ENDPOINT=([^&]+)/)[1])
       var API_KEY = decodeURIComponent(window.location.search.match(/API_KEY=([^&]+)/)[1])
-      var bugsnagClient = bugsnag({
+      Bugsnag.init({
         apiKey: API_KEY,
         endpoints: { notify: ENDPOINT },
         releaseStage: 'staging',
-        notifyReleaseStages: [ 'production', 'staging' ]
+        enabledReleaseStages: [ 'production', 'staging' ]
       })
     </script>
   </head>
   <body>
     <script>
-      bugsnagClient.notify(new Error('release stage does work'))
+      Bugsnag.notify(new Error('release stage does work'))
     </script>
   </body>
 </html>

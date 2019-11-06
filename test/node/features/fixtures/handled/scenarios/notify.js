@@ -1,5 +1,5 @@
-var bugsnag = require('@bugsnag/node')
-var bugsnagClient = bugsnag({
+var Bugsnag = require('@bugsnag/node')
+Bugsnag.init({
   apiKey: process.env.BUGSNAG_API_KEY,
   endpoints: {
     notify: process.env.BUGSNAG_NOTIFY_ENDPOINT,
@@ -7,4 +7,4 @@ var bugsnagClient = bugsnag({
   }
 })
 
-bugsnagClient.notify(new Error('hi from the abyss'))
+Bugsnag.notify(new Error('hi from the abyss'))

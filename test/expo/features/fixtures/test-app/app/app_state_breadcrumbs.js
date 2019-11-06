@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { View, Button } from 'react-native'
 import { endpoints } from './bugsnag'
-import bugsnag from '@bugsnag/expo'
+import Bugsnag from '@bugsnag/expo'
 
 export default class AppStateBreadcrumbs extends Component {
   constructor(props) {
@@ -15,10 +15,10 @@ export default class AppStateBreadcrumbs extends Component {
   defaultAppStateBreadcrumbsBehaviour = () => {
     this.setState(() => (
       {
-        client: bugsnag({
+        client: Bugsnag.createClient({
           endpoints: endpoints,
-          autoNotify: false,
-          autoCaptureSessions: false
+          autoDetectErrors: false,
+          autoTrackSessions: false
         }),
         errorMessage: "defaultAppStateBreadcrumbsBehaviour"
       }
@@ -28,11 +28,11 @@ export default class AppStateBreadcrumbs extends Component {
   disabledAppStateBreadcrumbsBehaviour = () => {
     this.setState(() => (
       {
-        client: bugsnag({
+        client: Bugsnag.createClient({
           endpoints: endpoints,
-          autoNotify: false,
-          autoCaptureSessions: false,
-          appStateBreadcrumbsEnabled: false
+          autoDetectErrors: false,
+          autoTrackSessions: false,
+          enabledBreadcrumbTypes: []
         }),
         errorMessage: "disabledAppStateBreadcrumbsBehaviour"
       }
@@ -42,11 +42,11 @@ export default class AppStateBreadcrumbs extends Component {
   disabledAllAppStateBreadcrumbsBehaviour = () => {
     this.setState(() => (
       {
-        client: bugsnag({
+        client: Bugsnag.createClient({
           endpoints: endpoints,
-          autoNotify: false,
-          autoCaptureSessions: false,
-          autoBreadcrumbs: false
+          autoDetectErrors: false,
+          autoTrackSessions: false,
+          enabledBreadcrumbTypes: []
         }),
         errorMessage: "disabledAllAppStateBreadcrumbsBehaviour"
       }
@@ -56,12 +56,11 @@ export default class AppStateBreadcrumbs extends Component {
   overrideAppStateBreadcrumbsBehaviour = () => {
     this.setState(() => (
       {
-        client: bugsnag({
+        client: Bugsnag.createClient({
           endpoints: endpoints,
-          autoNotify: false,
-          autoCaptureSessions: false,
-          autoBreadcrumbs: false,
-          appStateBreadcrumbsEnabled: true
+          autoDetectErrors: false,
+          autoTrackSessions: false,
+          enabledBreadcrumbTypes: ['state']
         }),
         errorMessage: "overrideAppStateBreadcrumbsBehaviour"
       }

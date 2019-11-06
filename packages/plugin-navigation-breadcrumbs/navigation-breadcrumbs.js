@@ -1,12 +1,12 @@
+const { includes } = require('@bugsnag/core/lib/es-utils')
+
 /*
  * Leaves breadcrumbs when navigation methods are called or events are emitted
  */
 exports.init = (client, win = window) => {
   if (!('addEventListener' in win)) return
 
-  const explicitlyDisabled = client.config.navigationBreadcrumbsEnabled === false
-  const implicitlyDisabled = client.config.autoBreadcrumbs === false && client.config.navigationBreadcrumbsEnabled !== true
-  if (explicitlyDisabled || implicitlyDisabled) return
+  if (!client._config.enabledBreadcrumbTypes || !includes(client._config.enabledBreadcrumbTypes, 'navigation')) return
 
   // returns a function that will drop a breadcrumb with a given name
   const drop = name => () => client.leaveBreadcrumb(name, {}, 'navigation')
@@ -33,14 +33,6 @@ exports.init = (client, win = window) => {
   if (win.history.pushState) wrapHistoryFn(client, win.history, 'pushState', win)
 
   client.leaveBreadcrumb('Bugsnag loaded', {}, 'navigation')
-}
-
-exports.configSchema = {
-  navigationBreadcrumbsEnabled: {
-    defaultValue: () => undefined,
-    validate: (value) => value === true || value === false || value === undefined,
-    message: 'should be true|false'
-  }
 }
 
 if (process.env.NODE_ENV !== 'production') {
@@ -70,10 +62,10 @@ const wrapHistoryFn = (client, target, fn, win) => {
     // if throttle plugin is in use, refresh the event sent count
     if (typeof client.refresh === 'function') client.refresh()
     // if the client is operating in auto session-mode, a new route should trigger a new session
-    if (client.config.autoCaptureSessions) client.startSession()
+    if (client._config.autoTrackSessions) client.startSession()
     // Internet Explorer will convert `undefined` to a string when passed, causing an unintended redirect
     // to '/undefined'. therefore we only pass the url if it's not undefined.
-    orig.apply(target, [ state, title ].concat(url !== undefined ? url : []))
+    orig.apply(target, [state, title].concat(url !== undefined ? url : []))
   }
   if (process.env.NODE_ENV !== 'production') {
     target[fn]._restore = () => { target[fn] = orig }

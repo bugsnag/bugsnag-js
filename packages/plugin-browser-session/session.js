@@ -1,32 +1,33 @@
-const { isArray, includes } = require('@bugsnag/core/lib/es-utils')
-const inferReleaseStage = require('@bugsnag/core/lib/infer-release-stage')
+const { reduce, isArray, includes } = require('@bugsnag/core/lib/es-utils')
 
 module.exports = {
-  init: client => client.sessionDelegate(sessionDelegate)
+  init: client => client._sessionDelegate(sessionDelegate)
 }
 
 const sessionDelegate = {
-  startSession: client => {
+  startSession: (client, session) => {
     const sessionClient = client
-    sessionClient._session = new client.BugsnagSession()
 
-    const releaseStage = inferReleaseStage(sessionClient)
+    sessionClient._session = session
+    sessionClient._pausedSession = null
+
+    const releaseStage = sessionClient._config.releaseStage
 
     // exit early if the reports should not be sent on the current releaseStage
-    if (isArray(sessionClient.config.notifyReleaseStages) && !includes(sessionClient.config.notifyReleaseStages, releaseStage)) {
-      sessionClient._logger.warn(`Session not sent due to releaseStage/notifyReleaseStages configuration`)
+    if (isArray(sessionClient._config.enabledReleaseStages) && !includes(sessionClient._config.enabledReleaseStages, releaseStage)) {
+      sessionClient.__logger.warn('Session not sent due to releaseStage/enabledReleaseStages configuration')
       return sessionClient
     }
 
-    if (!sessionClient.config.endpoints.sessions) {
-      sessionClient._logger.warn(`Session not sent due to missing endpoints.sessions configuration`)
+    if (!sessionClient._config.endpoints.sessions) {
+      sessionClient.__logger.warn('Session not sent due to missing endpoints.sessions configuration')
       return sessionClient
     }
 
-    sessionClient._delivery.sendSession({
-      notifier: sessionClient.notifier,
-      device: sessionClient.device,
-      app: { ...{ releaseStage }, ...sessionClient.app },
+    const payload = {
+      notifier: sessionClient._notifier,
+      device: {},
+      app: {},
       sessions: [
         {
           id: sessionClient._session.id,
@@ -34,8 +35,29 @@ const sessionDelegate = {
           user: sessionClient.user
         }
       ]
-    })
+    }
+    client._addAppData(payload)
+    const cbs = client._cbs.sp.slice(0)
+    sessionClient.__delivery.sendSession(
+      reduce(cbs, (accum, cb) => {
+        cb(accum)
+        return accum
+      }, payload)
+    )
 
     return sessionClient
+  },
+  pauseSession: client => {
+    client._pausedSession = client._session
+    client._session = null
+  },
+  resumeSession: client => {
+    if (client._pausedSession) {
+      client._session = client._pausedSession
+      client._pausedSession = null
+      return client
+    } else {
+      return client.startSession()
+    }
   }
 }

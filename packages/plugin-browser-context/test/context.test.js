@@ -12,33 +12,31 @@ const window = {
 }
 
 describe('plugin: context', () => {
-  it('sets client.context (and report.context) to window.location.pathname', () => {
-    const client = new Client(VALID_NOTIFIER)
+  it('sets event.context to window.location.pathname', done => {
+    const client = new Client({ apiKey: 'API_KEY_YEAH' }, undefined, VALID_NOTIFIER)
     const payloads = []
-    client.setOptions({ apiKey: 'API_KEY_YEAH' })
-    client.configure()
     client.use(plugin, window)
 
-    client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
-    client.notify(new Error('noooo'))
-
-    expect(payloads.length).toEqual(1)
-    expect(payloads[0].events[0].context).toBe(window.location.pathname)
+    client._delivery(client => ({ sendEvent: (payload, cb) => { payloads.push(payload); cb() } }))
+    client.notify(new Error('noooo'), () => {}, () => {
+      expect(payloads.length).toEqual(1)
+      expect(payloads[0].events[0]._context).toBe(window.location.pathname)
+      done()
+    })
   })
 
-  it('sets doesn’t overwrite an existing context', () => {
-    const client = new Client(VALID_NOTIFIER)
+  it('sets doesn’t overwrite an existing context', done => {
+    const client = new Client({ apiKey: 'API_KEY_YEAH' }, undefined, VALID_NOTIFIER)
     const payloads = []
-    client.setOptions({ apiKey: 'API_KEY_YEAH' })
-    client.configure()
     client.use(plugin, window)
 
-    client.context = 'something else'
+    client.setContext('something else')
 
-    client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
-    client.notify(new Error('noooo'))
-
-    expect(payloads.length).toEqual(1)
-    expect(payloads[0].events[0].context).toBe('something else')
+    client._delivery(client => ({ sendEvent: (payload, cb) => { payloads.push(payload); cb() } }))
+    client.notify(new Error('noooo'), () => {}, () => {
+      expect(payloads.length).toEqual(1)
+      expect(payloads[0].events[0]._context).toBe('something else')
+      done()
+    })
   })
 })

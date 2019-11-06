@@ -1,16 +1,17 @@
-const bugsnag = require('@bugsnag/node')
+const Bugsnag = require('@bugsnag/node')
 const bugsnagKoa = require('@bugsnag/plugin-koa')
 const Koa = require('koa')
 
-const bugsnagClient = bugsnag({
+Bugsnag.init({
   apiKey: process.env.BUGSNAG_API_KEY,
   endpoints: {
     notify: process.env.BUGSNAG_NOTIFY_ENDPOINT,
     sessions: process.env.BUGSNAG_SESSIONS_ENDPOINT
   }
-}).use(bugsnagKoa)
+})
+Bugsnag.use(bugsnagKoa)
 
-const middleware = bugsnagClient.getPlugin('koa')
+const middleware = Bugsnag.getPlugin('koa')
 
 const app = new Koa()
 

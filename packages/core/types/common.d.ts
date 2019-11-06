@@ -1,109 +1,63 @@
+import Breadcrumb from "./breadcrumb";
 import Client from "./client";
-import Report from "./report";
+import Event from "./event";
+import Session from "./session";
+import BugsnagStatic from "./bugsnag";
 
-export interface IConfig {
+export interface Config {
   apiKey: string;
-  beforeSend?: BeforeSend | BeforeSend[];
-  autoBreadcrumbs?: boolean;
-  autoNotify?: boolean;
   appVersion?: string;
   appType?: string;
-  endpoints?: { notify: string, sessions?: string };
-  autoCaptureSessions?: boolean;
-  notifyReleaseStages?: string[];
+  autoDetectErrors?: boolean;
+  autoDetectUnhandledRejections?: boolean;
+  onError?: OnErrorCallback | OnErrorCallback[];
+  endpoints?: { notify: string; sessions?: string };
+  autoTrackSessions?: boolean;
+  enabledReleaseStages?: string[];
   releaseStage?: string;
   maxBreadcrumbs?: number;
-  user?: object | null;
-  metaData?: object | null;
-  logger?: ILogger | null;
-  filters?: Array<string | RegExp>;
+  enabledBreadcrumbTypes?: BreadcrumbType[];
+  user?: { id?: string; name?: string; email?: string } | null;
+  metadata?: object | null;
+  logger?: Logger | null;
+  redactedKeys?: Array<string | RegExp>;
+  context?: string;
   [key: string]: any;
 }
 
-export type BeforeSend = (report: Report, cb?: (err: null | Error) => void) => void | Promise<void> | boolean;
+export type OnErrorCallback = (event: Event, cb?: (err: null | Error) => void) => void | Promise<void> | boolean;
+export type OnSessionCallback = (session: Session) => void | boolean;
+export type OnBreadcrumbCallback = (breadcrumb: Breadcrumb) => void | boolean;
 
-export interface IPlugin {
+export type BreadcrumbType = "error" | "log" | "manual" | "navigation" | "process" | "request" | "state" | "user";
+
+export interface Plugin {
   name?: string;
   init: (client: Client) => any;
-  configSchema?: IConfigSchema;
+  configSchema?: ConfigSchema;
   destroy?(): void;
 }
 
-export interface IConfigSchemaEntry {
+export interface ConfigSchemaEntry {
   message: string;
   validate: (val: any) => boolean;
   defaultValue: () => any;
 }
 
-export interface IConfigSchema {
-  [key: string]: IConfigSchemaEntry;
+export interface ConfigSchema {
+  [key: string]: ConfigSchemaEntry;
 }
 
-export interface IDelivery {
-  name: string;
-  sendReport: (
-    logger: ILogger,
-    config: any,
-    report: IReportPayload,
-    cb?: (e: Error | null, resText: string) => void,
-  ) => void;
-  sendSession: (
-    logger: ILogger,
-    config: any,
-    report: ISessionPayload,
-    cb?: (e: Error | null, resText: string) => void,
-  ) => void;
-}
-
-export interface ILogger {
+export interface Logger {
   debug: (...args: any[]) => void;
   info: (...args: any[]) => void;
   warn: (...args: any[]) => void;
   error: (...args: any[]) => void;
 }
 
-export interface ISessionDelegate {
-  startSession: (client: Client) => Client;
-}
-
-export interface IReportPayload {  apiKey: string;
-  notifier: {
-    name: string;
-    version: string;
-    url: string;
-  };
-  events: Report[];
-}
-
-export interface ISessionPayload {
-  notifier: {
-    name: string;
-    version: string;
-    url: string;
-  };
-  device?: object;
-  user?: object;
-  app?: object;
-  sessions: ISession[];
-}
-
-export interface ISession {
-  id: string;
-  startedAt: string;
-  user?: object;
-}
-
-export interface INotifyOpts {
-  context?: string;
-  device?: object;
-  request?: object;
-  user?: object;
-  metaData?: object;
-  severity?: "info" | "warning" | "error";
-  beforeSend?: BeforeSend;
-}
-
 export type NotifiableError = Error
-  | { errorClass: string; errorMessage: string; }
-  | { name: string; message: string; }
+  | { errorClass: string; errorMessage: string }
+  | { name: string; message: string }
   | any;
+
+export { BugsnagStatic }

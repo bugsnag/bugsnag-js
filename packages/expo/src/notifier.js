@@ -2,10 +2,15 @@ const name = 'Bugsnag Expo'
 const { version } = require('../package.json')
 const url = 'https://github.com/bugsnag/bugsnag-js'
 
+const { reduce } = require('@bugsnag/core/lib/es-utils')
+
 const React = require('react')
 const Constants = require('expo-constants').default
 
 const Client = require('@bugsnag/core/client')
+const Event = require('@bugsnag/core/event')
+const Session = require('@bugsnag/core/session')
+const Breadcrumb = require('@bugsnag/core/breadcrumb')
 
 const delivery = require('@bugsnag/delivery-expo')
 
@@ -26,49 +31,74 @@ const plugins = [
 
 const bugsnagReact = require('@bugsnag/plugin-react')
 
-module.exports = (opts) => {
-  // handle very simple use case where user supplies just the api key as a string
-  if (typeof opts === 'string') opts = { apiKey: opts }
+module.exports.default = module.exports
 
-  // ensure opts is actually an object (at this point it
-  // could be null, undefined, a number, a boolean etc.)
-  opts = { ...opts }
+const Bugsnag = {
+  _client: null,
+  createClient: (opts) => {
+    // handle very simple use case where user supplies just the api key as a string
+    if (typeof opts === 'string') opts = { apiKey: opts }
+    if (!opts) opts = {}
 
-  // attempt to fetch apiKey from app.json if we didn't get one explicitly passed
-  if (!opts.apiKey &&
-    Constants.manifest &&
-    Constants.manifest.extra &&
-    Constants.manifest.extra.bugsnag &&
-    Constants.manifest.extra.bugsnag.apiKey) {
-    opts.apiKey = Constants.manifest.extra.bugsnag.apiKey
-  }
-
-  const bugsnag = new Client({ name, version, url })
-
-  bugsnag.delivery(delivery)
-  bugsnag.setOptions(opts)
-  bugsnag.configure(schema)
-
-  plugins.forEach(pl => {
-    switch (pl.name) {
-      case 'networkBreadcrumbs':
-        bugsnag.use(pl, () => [
-          bugsnag.config.endpoints.notify,
-          bugsnag.config.endpoints.sessions,
-          Constants.manifest.logUrl
-        ])
-        break
-      default:
-        bugsnag.use(pl)
+    // attempt to fetch apiKey from app.json if we didn't get one explicitly passed
+    if (!opts.apiKey &&
+      Constants.manifest &&
+      Constants.manifest.extra &&
+      Constants.manifest.extra.bugsnag &&
+      Constants.manifest.extra.bugsnag.apiKey) {
+      opts.apiKey = Constants.manifest.extra.bugsnag.apiKey
     }
-  })
-  bugsnag.use(bugsnagReact, React)
 
-  bugsnag._logger.debug(`Loaded!`)
+    const bugsnag = new Client(opts, schema, { name, version, url })
 
-  return bugsnag.config.autoCaptureSessions
-    ? bugsnag.startSession()
-    : bugsnag
+    bugsnag._delivery(delivery)
+
+    plugins.forEach(pl => {
+      switch (pl.name) {
+        case 'networkBreadcrumbs':
+          bugsnag.use(pl, () => [
+            bugsnag._config.endpoints.notify,
+            bugsnag._config.endpoints.sessions,
+            Constants.manifest.logUrl
+          ])
+          break
+        default:
+          bugsnag.use(pl)
+      }
+    })
+    bugsnag.use(bugsnagReact, React)
+
+    bugsnag.__logger.debug('Loaded!')
+
+    if (bugsnag._config.autoTrackSessions) bugsnag.startSession()
+
+    return bugsnag
+  },
+  init: (opts) => {
+    if (Bugsnag._client) {
+      Bugsnag._client.__logger.warn('init() called twice')
+      return Bugsnag._client
+    }
+    Bugsnag._client = Bugsnag.createClient(opts)
+    Bugsnag._client._depth += 1
+  }
 }
 
-module.exports['default'] = module.exports
+reduce(Object.getOwnPropertyNames(Client.prototype), (accum, m) => {
+  if (/^_/.test(m)) return accum
+  accum[m] = function () {
+    if (!Bugsnag._client) return console.error(`Bugsnag.${m}(…) was called before Bugsnag.init()`)
+    return Bugsnag._client[m].apply(Bugsnag._client, arguments)
+  }
+  return accum
+}, Bugsnag)
+
+module.exports = Bugsnag
+
+module.exports.Client = Client
+module.exports.Event = Event
+module.exports.Session = Session
+module.exports.Breadcrumb = Breadcrumb
+
+// Export a "default" property for compatibility with ESM imports
+module.exports.default = Bugsnag
