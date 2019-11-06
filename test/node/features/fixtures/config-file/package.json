@@ -1,0 +1,16 @@
+{
+  "name": "bugsnag-test",
+  "bugsnag": {
+    "enabledReleaseStages": ["production", "staging"],
+    "appType": "worker",
+    "appVersion": "1.0.0",
+    "maxBreadcrumbs": 5,
+    "redactedKeys": ["accessToken"],
+    "metadata": {
+      "serviceCredentials": {
+        "host": "authentication.xyz",
+        "accessToken": "c2VjcmV0IGtleQo="
+      }
+    }
+  }
+}

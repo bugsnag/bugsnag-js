@@ -13,6 +13,7 @@ const delivery = require('@bugsnag/delivery-node')
 
 // extend the base config schema with some node-specific options
 const schema = { ...require('@bugsnag/core/config').schema, ...require('./config') }
+const loadConfig = require('./config-loader')
 
 // remove autoBreadcrumbs from the config schema
 delete schema.enabledBreadcrumbTypes
@@ -39,12 +40,22 @@ const plugins = [
   pluginContextualize
 ]
 
+const Configuration = {
+  load: () => {
+    try {
+      return loadConfig()
+    } catch (e) {
+      throw new Error(`Could not load Bugsnag configuration from package.json due to the following error:\n │\n └  ${e.stack.split('\n').join('\n  ')}\n`)
+    }
+  }
+}
+
 const Bugsnag = {
   _client: null,
   createClient: (opts) => {
     // handle very simple use case where user supplies just the api key as a string
     if (typeof opts === 'string') opts = { apiKey: opts }
-    if (!opts) opts = {}
+    if (!opts) opts = Configuration.load()
 
     const bugsnag = new Client(opts, schema, { name, version, url })
 
@@ -86,6 +97,8 @@ module.exports.Client = Client
 module.exports.Event = Event
 module.exports.Session = Session
 module.exports.Breadcrumb = Breadcrumb
+
+module.exports.Configuration = Configuration
 
 // Export a "default" property for compatibility with ESM imports
 module.exports.default = Bugsnag

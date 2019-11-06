@@ -193,6 +193,21 @@ services:
       - BUGSNAG_SESSIONS_ENDPOINT
     restart: "no"
 
+  config-file:
+    build:
+      context: config-file
+      args:
+        - NODE_VERSION
+    networks:
+      default:
+        aliases:
+          - config-file
+    environment:
+      - BUGSNAG_API_KEY
+      - BUGSNAG_NOTIFY_ENDPOINT
+      - BUGSNAG_SESSIONS_ENDPOINT
+    restart: "no"
+
 networks:
   default:
     name: ${NETWORK_NAME:-js-maze-runner}

@@ -1,0 +1,8 @@
+{
+  "name": "Bugsnag config loader test",
+  "version": "0.0.1",
+  "bugsnag": {
+    "apiKey": "123",
+    "releaseStage": "jim"
+  }
+}

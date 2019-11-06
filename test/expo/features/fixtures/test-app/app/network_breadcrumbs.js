@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { View, Button } from 'react-native'
-import { endpoints } from './bugsnag'
+import { buildConfiguration } from './bugsnag'
 import Bugsnag from '@bugsnag/expo'
 
 export default class NetworkBreadcrumbs extends Component {
@@ -13,49 +13,40 @@ export default class NetworkBreadcrumbs extends Component {
   }
 
   defaultNetworkBreadcrumbsBehaviour = () => {
+    let config = buildConfiguration()
+    config.autoDetectErrors = false
     this.triggerNetworkBreadcrumbsError(
-      Bugsnag.createClient({
-        endpoints: endpoints,
-        autoDetectErrors: false,
-        autoTrackSessions: false
-      }),
+      Bugsnag.createClient(config),
       "defaultNetworkBreadcrumbsBehaviour"
     )
   }
 
   disabledNetworkBreadcrumbsBehaviour = () => {
+    let config = buildConfiguration()
+    config.autoDetectErrors = false
+    config.enabledBreadcrumbTypes = []
     this.triggerNetworkBreadcrumbsError(
-      Bugsnag.createClient({
-        endpoints: endpoints,
-        autoDetectErrors: false,
-        autoTrackSessions: false,
-        enabledBreadcrumbTypes: []
-      }),
+      Bugsnag.createClient(config),
       "disabledNetworkBreadcrumbsBehaviour"
     )
   }
 
   disabledAllNetworkBreadcrumbsBehaviour = () => {
+    let config = buildConfiguration()
+    config.autoDetectErrors = false
+    config.enabledBreadcrumbTypes = null
     this.triggerNetworkBreadcrumbsError(
-      Bugsnag.createClient({
-        endpoints: endpoints,
-        autoDetectErrors: false,
-        autoTrackSessions: false,
-        enabledBreadcrumbTypes: null
-      }),
+      Bugsnag.createClient(config),
       "disabledAllNetworkBreadcrumbsBehaviour"
     )
   }
 
   overrideNetworkBreadcrumbsBehaviour = () => {
+    let config = buildConfiguration()
+    config.autoDetectErrors = false
+    config.enabledBreadcrumbTypes = ["request"]
     this.triggerNetworkBreadcrumbsError(
-      Bugsnag.createClient({
-        endpoints: endpoints,
-        autoDetectErrors: false,
-        autoTrackSessions: false,
-        autoBreadcrumbs: false,
-        enabledBreadcrumbTypes: ["request"]
-      }),
+      Bugsnag.createClient(config),
       "overrideNetworkBreadcrumbsBehaviour"
     )
   }

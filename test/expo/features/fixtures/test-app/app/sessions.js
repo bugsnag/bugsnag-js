@@ -1,15 +1,14 @@
 import React, { Component } from 'react'
 import { View, Button } from 'react-native'
-import { endpoints, bugsnagClient } from './bugsnag'
+import { bugsnagClient, buildConfiguration } from './bugsnag'
 import Bugsnag from '@bugsnag/expo'
 
 export default class Sessions extends Component {
   autoSession = () => {
-    Bugsnag.createClient({
-      endpoints: endpoints,
-      autoDetectErrors: false,
-      autoTrackSessions: true
-    })
+    let config = buildConfiguration()
+    config.autoDetectErrors = false
+    config.autoTrackSessions = true
+    Bugsnag.createClient(config)
   }
 
   manualSession = () => {

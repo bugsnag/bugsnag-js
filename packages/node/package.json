@@ -20,7 +20,8 @@
     "bundle-types": "../../bin/bundle-types",
     "build": "npm run clean && npm run build:dist && npm run bundle-types",
     "build:dist": "../../bin/bundle src/notifier.js --node --exclude=iserror,stack-generator,error-stack-parser,pump,byline --standalone=bugsnag | ../../bin/extract-source-map dist/bugsnag.js",
-    "postversion": "npm run build"
+    "postversion": "npm run build",
+    "test": "nyc --reporter=lcov -- jasmine '!(node_modules)/**/*.test.js'"
   },
   "author": "Bugsnag",
   "license": "MIT",

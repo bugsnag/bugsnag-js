@@ -31,23 +31,20 @@ const plugins = [
 
 const bugsnagReact = require('@bugsnag/plugin-react')
 
-module.exports.default = module.exports
+const Configuration = {
+  load: () => {
+    if (Constants.manifest && Constants.manifest.extra) {
+      return { ...Constants.manifest.extra.bugsnag }
+    }
+  }
+}
 
 const Bugsnag = {
   _client: null,
   createClient: (opts) => {
     // handle very simple use case where user supplies just the api key as a string
     if (typeof opts === 'string') opts = { apiKey: opts }
-    if (!opts) opts = {}
-
-    // attempt to fetch apiKey from app.json if we didn't get one explicitly passed
-    if (!opts.apiKey &&
-      Constants.manifest &&
-      Constants.manifest.extra &&
-      Constants.manifest.extra.bugsnag &&
-      Constants.manifest.extra.bugsnag.apiKey) {
-      opts.apiKey = Constants.manifest.extra.bugsnag.apiKey
-    }
+    if (!opts) opts = Configuration.load()
 
     const bugsnag = new Client(opts, schema, { name, version, url })
 
@@ -99,6 +96,8 @@ module.exports.Client = Client
 module.exports.Event = Event
 module.exports.Session = Session
 module.exports.Breadcrumb = Breadcrumb
+
+module.exports.Configuration = Configuration
 
 // Export a "default" property for compatibility with ESM imports
 module.exports.default = Bugsnag

@@ -61,3 +61,7 @@ export type NotifiableError = Error
   | any;
 
 export { BugsnagStatic }
+
+export interface Configuration {
+  load: () => object;
+}

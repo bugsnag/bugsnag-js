@@ -1,52 +1,44 @@
 import React, { Component } from 'react'
 import { View, Button } from 'react-native'
-import { endpoints } from './bugsnag'
+import { buildConfiguration } from './bugsnag'
 import Bugsnag from '@bugsnag/expo'
 
 export default class ConsoleBreadcrumbs extends Component {
   defaultConsoleBreadcrumbsBehaviour = () => {
+    let config = buildConfiguration()
+    config.autoDetectErrors = false
     this.triggerConsoleBreadcrumbsError(
-      Bugsnag.createClient({
-        endpoints: endpoints,
-        autoDetectErrors: false,
-        autoTrackSessions: false
-      }),
+      Bugsnag.createClient(config),
       "defaultConsoleBreadcrumbsBehaviour"
     )
   }
 
   disabledConsoleBreadcrumbsBehaviour = () => {
+    let config = buildConfiguration()
+    config.autoDetectErrors = false
+    config.enabledBreadcrumbTypes = []
     this.triggerConsoleBreadcrumbsError(
-      Bugsnag.createClient({
-        endpoints: endpoints,
-        autoDetectErrors: false,
-        autoTrackSessions: false,
-        enabledBreadcrumbTypes: []
-      }),
+      Bugsnag.createClient(config),
       "disabledConsoleBreadcrumbsBehaviour"
     )
   }
 
   disabledAllConsoleBreadcrumbsBehaviour = () => {
+    let config = buildConfiguration()
+    config.autoDetectErrors = false
+    config.enabledBreadcrumbTypes = null
     this.triggerConsoleBreadcrumbsError(
-      Bugsnag.createClient({
-        endpoints: endpoints,
-        autoDetectErrors: false,
-        autoTrackSessions: false,
-        enabledBreadcrumbTypes: null
-      }),
+      Bugsnag.createClient(config),
       "disabledAllConsoleBreadcrumbsBehaviour"
     )
   }
 
   overrideConsoleBreadcrumbsBehaviour = () => {
+    let config = buildConfiguration()
+    config.autoDetectErrors = false
+    config.enabledBreadcrumbTypes = ['log']
     this.triggerConsoleBreadcrumbsError(
-      Bugsnag.createClient({
-        endpoints: endpoints,
-        autoDetectErrors: false,
-        autoTrackSessions: false,
-        enabledBreadcrumbTypes: ["log"]
-      }),
+      Bugsnag.createClient(config),
       "overrideConsoleBreadcrumbsBehaviour"
     )
   }
