@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-react",
-  "version": "6.4.0",
+  "version": "7.0.0-alpha.0",
   "main": "dist/bugsnag-react.js",
   "description": "React integration for @bugsnag/js",
   "browser": "dist/bugsnag-react.js",
@@ -39,6 +39,5 @@
     "jest": "^23.6.0",
     "react": "^16.5.0",
     "react-test-renderer": "^16.5.0"
-  },
-  "dependencies": {}
+  }
 }
