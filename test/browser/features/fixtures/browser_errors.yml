@@ -257,7 +257,7 @@ android_s8:
     errorMessage: 'foo is not defined'
   unhandled_syntax:
     errorClass: 'SyntaxError'
-    errorMessage: "Unexpected token !"
+    errorMessage: "Unexpected token '!'"
     lineNumber: 17
     columnNumber: 13
     file: '/unhandled/script/a.html'
