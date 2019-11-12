@@ -5,7 +5,7 @@ declare class Report {
     error: any,
     errorFramesToSkip?: number,
     generatedFramesToSkip?: number,
-  ): IStackframe[];
+  ): Stackframe[];
 
   public static ensureReport(
     reportOrError: any,
@@ -26,7 +26,7 @@ declare class Report {
   public groupingHash: string;
   public metaData: object;
   public severity: "info" | "warning" | "error";
-  public stacktrace: IStackframe[];
+  public stacktrace: Stackframe[];
   public user: object;
   public session: object;
   public request: {
@@ -38,7 +38,7 @@ declare class Report {
     errorClass: string,
     errorMessage: string,
     stacktrace?: any[],
-    handledState?: IHandledState,
+    handledState?: HandledState,
     originalError?: any,
   );
 
@@ -49,7 +49,7 @@ declare class Report {
   public removeMetaData(section: string, property: string): Report;
 }
 
-interface IHandledState {
+interface HandledState {
   severity: string;
   unhandled: boolean;
   severityReason: {
@@ -58,7 +58,7 @@ interface IHandledState {
   };
 }
 
-interface IStackframe {
+interface Stackframe {
   file: string;
   method?: string;
   lineNumber?: number;
