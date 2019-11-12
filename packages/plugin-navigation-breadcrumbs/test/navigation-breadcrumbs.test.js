@@ -16,9 +16,9 @@ describe('plugin: navigation breadcrumbs', () => {
     winHandlers.load.forEach((h) => h.call(window))
     docHandlers.DOMContentLoaded.forEach((h) => h.call(window.document))
 
-    var plainObject = Object.create(null)
+    const plainObject = Object.create(null)
     plainObject.dummyProperty = true
-    var state = { myObject: plainObject }
+    const state = { myObject: plainObject }
     window.history.replaceState(state, 'foo', 'bar.html')
 
     // first ensure that the pushState command works to change the url of the page

@@ -52,8 +52,8 @@ class BugsnagClient {
     this.BugsnagBreadcrumb = BugsnagBreadcrumb
     this.BugsnagSession = BugsnagSession
 
-    var self = this
-    var notify = this.notify
+    const self = this
+    const notify = this.notify
     this.notify = function () {
       return notify.apply(self, arguments)
     }

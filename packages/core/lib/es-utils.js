@@ -21,6 +21,7 @@ const map = (arr, fn) =>
 const includes = (arr, x) =>
   reduce(arr, (accum, item, i, arr) => accum === true || item === x, false)
 
+/* eslint-disable-next-line no-prototype-builtins */
 const _hasDontEnumBug = !({ toString: null }).propertyIsEnumerable('toString')
 const _dontEnums = [
   'toString', 'toLocaleString', 'valueOf', 'hasOwnProperty',
