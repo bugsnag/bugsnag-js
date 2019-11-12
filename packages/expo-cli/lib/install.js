@@ -28,6 +28,6 @@ module.exports = (packageManager, version, projectRoot) => {
 }
 
 const commands = version => new Map([
-  [ 'yarn', [ 'yarn', [ 'add', `@bugsnag/expo@${version}` ] ] ],
-  [ 'npm', [ 'npm', [ 'install', `@bugsnag/expo@${version}` ] ] ]
+  ['yarn', ['yarn', ['add', `@bugsnag/expo@${version}`]]],
+  ['npm', ['npm', ['install', `@bugsnag/expo@${version}`]]]
 ])

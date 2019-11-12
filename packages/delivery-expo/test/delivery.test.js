@@ -61,7 +61,7 @@ describe('delivery: expo', () => {
       expect(err).toBeUndefined()
 
       const payload = {
-        events: [ { errorClass: 'Error', errorMessage: 'foo is not a function' } ]
+        events: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }]
       }
       const config = {
         apiKey: 'aaaaaaaa',
@@ -96,7 +96,7 @@ describe('delivery: expo', () => {
     server.listen((err) => {
       expect(err).toBeUndefined()
 
-      const payload = { events: [ { errorClass: 'Error', errorMessage: 'foo is not a function' } ] }
+      const payload = { events: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }] }
       const config = {
         apiKey: 'aaaaaaaa',
         endpoints: { notify: 'blah', sessions: `http://0.0.0.0:${server.address().port}/sessions/` },
@@ -132,10 +132,10 @@ describe('delivery: expo', () => {
       './network-status': MockNetworkStatus
     })
 
-    const payload = { events: [ { errorClass: 'Error', errorMessage: 'foo is not a function' } ] }
+    const payload = { events: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }] }
     const config = {
       apiKey: 'aaaaaaaa',
-      endpoints: { notify: `http://0.0.0.0:9999/notify/` },
+      endpoints: { notify: 'http://0.0.0.0:9999/notify/' },
       filters: []
     }
     let didLog = false
@@ -166,7 +166,7 @@ describe('delivery: expo', () => {
     server.listen((err) => {
       expect(err).toBeUndefined()
 
-      const payload = { events: [ { errorClass: 'Error', errorMessage: 'foo is not a function' } ] }
+      const payload = { events: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }] }
       const config = {
         apiKey: 'aaaaaaaa',
         endpoints: { notify: `http://0.0.0.0:${server.address().port}/notify/` },
@@ -198,10 +198,10 @@ describe('delivery: expo', () => {
       './network-status': MockNetworkStatus
     })
 
-    const payload = { events: [ { errorClass: 'Error', errorMessage: 'foo is not a function' } ] }
+    const payload = { events: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }] }
     const config = {
       apiKey: 'aaaaaaaa',
-      endpoints: { sessions: `http://0.0.0.0:9999/sessions/` },
+      endpoints: { sessions: 'http://0.0.0.0:9999/sessions/' },
       filters: []
     }
     let didLog = false
@@ -234,7 +234,7 @@ describe('delivery: expo', () => {
 
     server.listen((err) => {
       expect(err).toBeFalsy()
-      const payload = { events: [ { errorClass: 'Error', errorMessage: 'foo is not a function' } ] }
+      const payload = { events: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }] }
       const config = {
         apiKey: 'aaaaaaaa',
         endpoints: { notify: `http://0.0.0.0:${server.address().port}/notify/` },
@@ -272,7 +272,7 @@ describe('delivery: expo', () => {
 
     server.listen((err) => {
       expect(err).toBeFalsy()
-      const payload = { events: [ { errorClass: 'Error', errorMessage: 'foo is not a function' } ] }
+      const payload = { events: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }] }
       const config = {
         apiKey: 'aaaaaaaa',
         endpoints: { notify: `http://0.0.0.0:${server.address().port}/notify/` },
@@ -305,7 +305,7 @@ describe('delivery: expo', () => {
     const payload = { sample: 'payload', attemptImmediateDelivery: false }
     const config = {
       apiKey: 'aaaaaaaa',
-      endpoints: { notify: `https://some-address.com` },
+      endpoints: { notify: 'https://some-address.com' },
       filters: []
     }
     delivery({ config, _logger: noopLogger }, fetch).sendReport(payload, (err) => {
@@ -341,6 +341,7 @@ describe('delivery: expo', () => {
       constructor () {
         this.isConnected = false
       }
+
       watch (fn) {
         watcher = fn
         onWatch()
@@ -375,6 +376,7 @@ describe('delivery: expo', () => {
       constructor () {
         this.isConnected = false
       }
+
       watch () {}
     }
     const delivery = proxyquire('../', {
@@ -382,10 +384,10 @@ describe('delivery: expo', () => {
       './redelivery': NoopRedelivery,
       './network-status': MockNetworkStatus
     })
-    const payload = { events: [ { errorClass: 'Error', errorMessage: 'foo is not a function' } ] }
+    const payload = { events: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }] }
     const config = {
       apiKey: 'aaaaaaaa',
-      endpoints: { notify: `http://some-address.com` },
+      endpoints: { notify: 'http://some-address.com' },
       filters: []
     }
     let n = 0

@@ -85,7 +85,7 @@ describe('delivery:node', () => {
     const payload = { sample: 'payload' }
     const config = {
       apiKey: 'aaaaaaaa',
-      endpoints: { notify: `http://0.0.0.0:9999/notify/` },
+      endpoints: { notify: 'http://0.0.0.0:9999/notify/' },
       filters: []
     }
     let didLog = false

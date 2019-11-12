@@ -50,6 +50,6 @@ if (process.env.NODE_ENV !== 'production') {
   })
 }
 
-const CONSOLE_LOG_METHODS = filter([ 'log', 'debug', 'info', 'warn', 'error' ], method =>
+const CONSOLE_LOG_METHODS = filter(['log', 'debug', 'info', 'warn', 'error'], method =>
   typeof console !== 'undefined' && typeof console[method] === 'function'
 )

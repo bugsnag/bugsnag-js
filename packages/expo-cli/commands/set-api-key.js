@@ -14,7 +14,7 @@ module.exports = async (argv, globalOpts) => {
         : 'API key is required. You can find it by going to\nhttps://app.bugsnag.com/settings/ > Projects'
     }
   }, { onCancel })
-  console.log(blue(`> Inserting API key into app.json`))
+  console.log(blue('> Inserting API key into app.json'))
   const msg = await setApiKey(response.apiKey, globalOpts['project-root'])
   if (msg) console.log(yellow(`  ${msg}`))
 }

@@ -23,8 +23,8 @@ module.exports = {
 
 const getPrefixedConsole = () => {
   const logger = {}
-  const consoleLog = console['log']
-  map([ 'debug', 'info', 'warn', 'error' ], (method) => {
+  const consoleLog = console.log
+  map(['debug', 'info', 'warn', 'error'], (method) => {
     const consoleMethod = console[method]
     logger[method] = typeof consoleMethod === 'function'
       ? consoleMethod.bind(console, '[bugsnag]')

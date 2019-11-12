@@ -30,7 +30,7 @@ module.exports = {
 }
 
 const getPrefixedConsole = () => {
-  return reduce([ 'debug', 'info', 'warn', 'error' ], (accum, method) => {
+  return reduce(['debug', 'info', 'warn', 'error'], (accum, method) => {
     // console.error causes standalone expo apps to reload on android
     // so don't do any logging that level – use console.warn instead
     const consoleMethod = (IS_PRODUCTION && method === 'error') ? console.warn : console[method]

@@ -8,7 +8,7 @@ module.exports = {
 
     NetInfo.addEventListener('connectionChange', ({ type, effectiveType }) => {
       client.leaveBreadcrumb(
-        `Connectivity changed`,
+        'Connectivity changed',
         {
           type,
           effectiveType

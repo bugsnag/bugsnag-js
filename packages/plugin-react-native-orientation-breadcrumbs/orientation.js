@@ -20,11 +20,11 @@ module.exports = {
     }
 
     const updateOrientation = () => {
-      let newOrientation = getCurrentOrientation()
+      const newOrientation = getCurrentOrientation()
 
       if (lastOrientation !== newOrientation) {
         client.leaveBreadcrumb(
-          `Orientation changed`,
+          'Orientation changed',
           { from: lastOrientation, to: newOrientation },
           'state'
         )

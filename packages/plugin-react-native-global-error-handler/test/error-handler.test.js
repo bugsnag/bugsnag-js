@@ -9,9 +9,11 @@ class MockErrorUtils {
   constructor () {
     this._globalHandler = null
   }
+
   setGlobalHandler (h) {
     this._globalHandler = h
   }
+
   getGlobalHandler () {
     return this._globalHandler
   }

@@ -86,7 +86,7 @@ module.exports = (client, fetch = global.fetch) => {
           enqueue('session', { url, opts })
           return cb(null)
         }
-        client._logger.info(`Sending session`)
+        client._logger.info('Sending session')
         send(url, opts, err => {
           if (err) return onerror(err, { url, opts }, 'session', cb)
           cb(null)
@@ -101,17 +101,17 @@ module.exports = (client, fetch = global.fetch) => {
 const initRedelivery = (networkStatus, logger, send) => {
   const onQueueError = e => logger.error('UndeliveredPayloadQueue error', e)
   const queues = {
-    'report': new UndeliveredPayloadQueue('report', onQueueError),
-    'session': new UndeliveredPayloadQueue('session', onQueueError)
+    report: new UndeliveredPayloadQueue('report', onQueueError),
+    session: new UndeliveredPayloadQueue('session', onQueueError)
   }
 
   const onLoopError = e => logger.error('RedeliveryLoop error', e)
   const queueConsumers = {
-    'report': new RedeliveryLoop(send, queues.report, onLoopError),
-    'session': new RedeliveryLoop(send, queues.session, onLoopError)
+    report: new RedeliveryLoop(send, queues.report, onLoopError),
+    session: new RedeliveryLoop(send, queues.session, onLoopError)
   }
 
-  Promise.all([ queues.report.init(), queues.session.init() ])
+  Promise.all([queues.report.init(), queues.session.init()])
     .then(() => {
       networkStatus.watch(isConnected => {
         if (isConnected) {

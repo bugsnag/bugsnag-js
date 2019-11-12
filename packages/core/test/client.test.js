@@ -190,7 +190,7 @@ describe('@bugsnag/core/client', () => {
           fail('sendReport() should not be called')
         }
       }))
-      client.setOptions({ apiKey: 'API_KEY_YEAH', releaseStage: 'staging', notifyReleaseStages: [ 'production' ] })
+      client.setOptions({ apiKey: 'API_KEY_YEAH', releaseStage: 'staging', notifyReleaseStages: ['production'] })
       client.configure()
 
       client.notify(new Error('oh em eff gee'))
@@ -206,7 +206,7 @@ describe('@bugsnag/core/client', () => {
           fail('sendReport() should not be called')
         }
       }))
-      client.setOptions({ apiKey: 'API_KEY_YEAH', notifyReleaseStages: [ 'production' ] })
+      client.setOptions({ apiKey: 'API_KEY_YEAH', notifyReleaseStages: ['production'] })
       client.configure()
       client.app.releaseStage = 'staging'
 
@@ -224,7 +224,7 @@ describe('@bugsnag/core/client', () => {
           done()
         }
       }))
-      client.setOptions({ apiKey: 'API_KEY_YEAH', notifyReleaseStages: [ 'staging' ] })
+      client.setOptions({ apiKey: 'API_KEY_YEAH', notifyReleaseStages: ['staging'] })
       client.configure()
       client.app.releaseStage = 'staging'
       client.notify(new Error('oh em eff gee'))
@@ -238,7 +238,7 @@ describe('@bugsnag/core/client', () => {
           done()
         }
       }))
-      client.setOptions({ apiKey: 'API_KEY_YEAH', notifyReleaseStages: [ 'staging' ], releaseStage: 'staging' })
+      client.setOptions({ apiKey: 'API_KEY_YEAH', notifyReleaseStages: ['staging'], releaseStage: 'staging' })
       client.configure()
       client.notify(new Error('oh em eff gee'))
     })
@@ -251,7 +251,7 @@ describe('@bugsnag/core/client', () => {
           done()
         }
       }))
-      client.setOptions({ apiKey: 'API_KEY_YEAH', notifyReleaseStages: [ 'testing' ], releaseStage: 'staging' })
+      client.setOptions({ apiKey: 'API_KEY_YEAH', notifyReleaseStages: ['testing'], releaseStage: 'staging' })
       client.configure()
       client.app.releaseStage = 'testing'
       client.notify(new Error('oh em eff gee'))
@@ -292,7 +292,7 @@ describe('@bugsnag/core/client', () => {
       expect(payloads[3].events[0].toJSON().exceptions[0].message).toBe('Bugsnag usage error. notify() expected error/opts parameters, got unsupported object')
       expect(payloads[4].events[0].toJSON().exceptions[0].message).toBe('1')
       expect(payloads[5].events[0].toJSON().exceptions[0].message).toBe('errrororor')
-      expect(payloads[6].events[0].toJSON().metaData).toEqual({ notifier: { notifyArgs: [ 'str1', 'str2' ] } })
+      expect(payloads[6].events[0].toJSON().metaData).toEqual({ notifier: { notifyArgs: ['str1', 'str2'] } })
       expect(payloads[7].events[0].toJSON().exceptions[0].message).toBe('str1')
       expect(payloads[7].events[0].toJSON().metaData).toEqual({})
     })
@@ -331,7 +331,7 @@ describe('@bugsnag/core/client', () => {
       const client = new Client(VALID_NOTIFIER)
       client.setOptions({ apiKey: 'API_KEY_YEAH' })
       client.configure()
-      client.metaData = { foo: [ 1, 2, 3 ] }
+      client.metaData = { foo: [1, 2, 3] }
       client.notify(new Error('changes afoot'), {
         beforeSend: (report) => {
           report.updateMetaData('foo', '3', 1)
@@ -375,7 +375,7 @@ describe('@bugsnag/core/client', () => {
 
     it('should call the callback even if the report doesn’t send (notifyReleaseStages)', done => {
       const client = new Client(VALID_NOTIFIER)
-      client.setOptions({ apiKey: 'API_KEY', notifyReleaseStages: [ 'production' ], releaseStage: 'development' })
+      client.setOptions({ apiKey: 'API_KEY', notifyReleaseStages: ['production'], releaseStage: 'development' })
       client.configure()
       client.delivery(client => ({
         sendSession: () => {},

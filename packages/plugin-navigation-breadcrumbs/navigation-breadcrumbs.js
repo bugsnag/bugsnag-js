@@ -73,7 +73,7 @@ const wrapHistoryFn = (client, target, fn, win) => {
     if (client.config.autoCaptureSessions) client.startSession()
     // Internet Explorer will convert `undefined` to a string when passed, causing an unintended redirect
     // to '/undefined'. therefore we only pass the url if it's not undefined.
-    orig.apply(target, [ state, title ].concat(url !== undefined ? url : []))
+    orig.apply(target, [state, title].concat(url !== undefined ? url : []))
   }
   if (process.env.NODE_ENV !== 'production') {
     target[fn]._restore = () => { target[fn] = orig }

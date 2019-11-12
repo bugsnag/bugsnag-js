@@ -28,7 +28,7 @@ test('formatComponentStack(str)', () => {
   in BadButton
   in ErrorBoundary`
   expect(plugin.formatComponentStack(str))
-    .toBe(`in BadButton\nin ErrorBoundary`)
+    .toBe('in BadButton\nin ErrorBoundary')
 })
 
 const BadComponent = () => {

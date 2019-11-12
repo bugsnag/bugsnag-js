@@ -11,7 +11,7 @@ describe('expo-cli: install', () => {
 
     const spawn = (cmd, args, opts) => {
       expect(cmd).toBe('npm')
-      expect(args).toEqual([ 'install', '@bugsnag/expo@latest' ])
+      expect(args).toEqual(['install', '@bugsnag/expo@latest'])
       expect(opts).toEqual({ cwd: projectRoot })
       const proc = new EventEmitter()
       proc.stdout = new Readable({
@@ -30,7 +30,7 @@ describe('expo-cli: install', () => {
       return proc
     }
 
-    const install = proxyquire('../install', { 'child_process': { spawn } })
+    const install = proxyquire('../install', { child_process: { spawn } })
     const msg = await install('npm', 'latest', projectRoot)
     expect(msg).toBe(undefined)
   })
@@ -40,7 +40,7 @@ describe('expo-cli: install', () => {
 
     const spawn = (cmd, args, opts) => {
       expect(cmd).toBe('yarn')
-      expect(args).toEqual([ 'add', '@bugsnag/expo@6.3.1' ])
+      expect(args).toEqual(['add', '@bugsnag/expo@6.3.1'])
       expect(opts).toEqual({ cwd: projectRoot })
       const proc = new EventEmitter()
       proc.stdout = new Readable({
@@ -59,7 +59,7 @@ describe('expo-cli: install', () => {
       return proc
     }
 
-    const install = proxyquire('../install', { 'child_process': { spawn } })
+    const install = proxyquire('../install', { child_process: { spawn } })
     const msg = await install('yarn', '6.3.1', projectRoot)
     expect(msg).toBe(undefined)
   })
@@ -85,7 +85,7 @@ describe('expo-cli: install', () => {
       return proc
     }
 
-    const install = proxyquire('../install', { 'child_process': { spawn } })
+    const install = proxyquire('../install', { child_process: { spawn } })
     try {
       await install('yarn', 'latest', projectRoot)
       expect('should not be here').toBe(false)
@@ -117,7 +117,7 @@ describe('expo-cli: install', () => {
       return proc
     }
 
-    const install = proxyquire('../install', { 'child_process': { spawn } })
+    const install = proxyquire('../install', { child_process: { spawn } })
     try {
       await install('yarn', 'latest', projectRoot)
       expect('should not be here').toBe(false)
@@ -131,7 +131,7 @@ describe('expo-cli: install', () => {
 
     const spawn = (cmd, args, opts) => {}
 
-    const install = proxyquire('../install', { 'child_process': { spawn } })
+    const install = proxyquire('../install', { child_process: { spawn } })
     try {
       await install(undefined, 'latest', projectRoot)
       expect('should not be here').toBe(false)

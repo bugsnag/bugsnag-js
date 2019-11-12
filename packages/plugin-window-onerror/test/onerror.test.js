@@ -210,7 +210,7 @@ describe('plugin: window onerror', () => {
     })
 
     it('calls a previously installed window.onerror callback', function (done) {
-      const args = [ 'Uncaught Error: derp!', 'http://localhost:4999', 10, 3, new Error('derp!') ]
+      const args = ['Uncaught Error: derp!', 'http://localhost:4999', 10, 3, new Error('derp!')]
       window.onerror = (messageOrEvent, url, lineNo, charNo, error) => {
         expect(messageOrEvent).toBe(args[0])
         expect(url).toBe(args[1])
@@ -232,7 +232,7 @@ describe('plugin: window onerror', () => {
     })
 
     it('calls a previously installed window.onerror when a CORS error happens', function (done) {
-      const args = [ 'Script error.', undefined, 0, undefined, undefined ]
+      const args = ['Script error.', undefined, 0, undefined, undefined]
       window.onerror = (messageOrEvent, url, lineNo, charNo, error) => {
         expect(messageOrEvent).toBe(args[0])
         expect(url).toBe(args[1])

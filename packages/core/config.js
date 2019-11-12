@@ -43,7 +43,7 @@ module.exports.schema = {
         (obj.autoCaptureSessions === false || stringWithLength(val.sessions))
       ) &&
       // ensure no keys other than notify/session are set on endpoints object
-      filter(keys(val), k => !includes([ 'notify', 'sessions' ], k)).length === 0
+      filter(keys(val), k => !includes(['notify', 'sessions'], k)).length === 0
   },
   autoCaptureSessions: {
     defaultValue: (val, opts) => opts.endpoints === undefined || (!!opts.endpoints && !!opts.endpoints.sessions),
@@ -86,13 +86,13 @@ module.exports.schema = {
     validate: value =>
       (!value) ||
       (value && reduce(
-        [ 'debug', 'info', 'warn', 'error' ],
+        ['debug', 'info', 'warn', 'error'],
         (accum, method) => accum && typeof value[method] === 'function',
         true
       ))
   },
   filters: {
-    defaultValue: () => [ 'password' ],
+    defaultValue: () => ['password'],
     message: 'should be an array of strings|regexes',
     validate: value =>
       isArray(value) && value.length === filter(value, s =>

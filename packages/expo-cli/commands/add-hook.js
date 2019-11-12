@@ -11,10 +11,10 @@ module.exports = async (argv, globalOpts) => {
     initial: true
   }, { onCancel })
   if (res.addHook) {
-    console.log(blue(`> Inserting hook config into app.json`))
+    console.log(blue('> Inserting hook config into app.json'))
     const msg = await addHook(globalOpts['project-root'])
     if (msg) console.log(yellow(`  ${msg}`))
   }
 }
 
-const message = `Do you want to automatically upload source maps to Bugsnag? (this will modify your app.json)`
+const message = 'Do you want to automatically upload source maps to Bugsnag? (this will modify your app.json)'

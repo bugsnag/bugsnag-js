@@ -75,4 +75,4 @@ const getRequestAndMetaDataFromReq = req => {
   }
 }
 
-module.exports['default'] = module.exports
+module.exports.default = module.exports

@@ -13,6 +13,7 @@ describe('plugin: server sessions', () => {
           { startedAt: '2017-12-12T13:54:00.000Z', sessionsStarted: 123 }
         ])
       }
+
       stop () {}
       track () {}
     }
@@ -44,6 +45,7 @@ describe('plugin: server sessions', () => {
           { startedAt: '2017-12-12T13:54:00.000Z', sessionsStarted: 123 }
         ])
       }
+
       stop () {}
       track () {}
     }
@@ -65,7 +67,7 @@ describe('plugin: server sessions', () => {
       },
       endpoints: { notify: 'bloo', sessions: 'blah' },
       releaseStage: 'qa',
-      notifyReleaseStages: [ 'production' ]
+      notifyReleaseStages: ['production']
     })
     c.delivery(client => ({
       sendReport: () => {},
@@ -87,6 +89,7 @@ describe('plugin: server sessions', () => {
           { startedAt: '2017-12-12T13:54:00.000Z', sessionsStarted: 123 }
         ])
       }
+
       stop () {}
       track () {}
     }

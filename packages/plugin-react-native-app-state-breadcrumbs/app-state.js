@@ -7,7 +7,7 @@ module.exports = {
     if (explicitlyDisabled || implicitlyDisabled) return
 
     AppState.addEventListener('change', state => {
-      client.leaveBreadcrumb(`App state changed`, { state }, 'state')
+      client.leaveBreadcrumb('App state changed', { state }, 'state')
     })
   },
   configSchema: {

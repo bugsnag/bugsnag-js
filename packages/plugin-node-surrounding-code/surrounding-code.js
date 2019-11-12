@@ -84,6 +84,7 @@ class CodeRange extends Writable {
     this._n = 0
     this._code = {}
   }
+
   _write (chunk, enc, cb) {
     this._n++
     if (this._n < this._start) return cb(null)
@@ -94,6 +95,7 @@ class CodeRange extends Writable {
     this.emit('done')
     return cb(null)
   }
+
   getCode () {
     return this._code
   }

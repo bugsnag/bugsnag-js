@@ -92,4 +92,4 @@ const getRequestAndMetaDataFromCtx = ctx => {
   }
 }
 
-module.exports['default'] = module.exports
+module.exports.default = module.exports

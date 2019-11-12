@@ -119,16 +119,19 @@ describe('plugin: expo device', () => {
     const IOS_VERSION = '11.2'
     class Dimensions {
       constructor (w = 768, h = 1024) {
-        this._listeners = { 'change': [] }
+        this._listeners = { change: [] }
         this._set(w, h)
       }
+
       addEventListener (event, cb) {
         this._listeners[event].push(cb)
       }
+
       get (type) {
         expect(type).toBe('screen')
         return { width: this._width, height: this._height }
       }
+
       _set (w, h) {
         this._width = w
         this._height = h
