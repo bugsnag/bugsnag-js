@@ -12,7 +12,7 @@ Scenario: calling startSession() manually
   And the payload has a valid sessions array
   And the sessionCount "sessionsStarted" equals 1
 
-Scenario: calling startSession() when autoCaptureSessions=false
+Scenario: calling startSession() when autoTrackSessions=false
   And I run the service "sessions" with the command "node scenarios/start-session-auto-off"
   And I wait to receive a request
   Then the request is valid for the session reporting API version "1" for the "Bugsnag Node" notifier

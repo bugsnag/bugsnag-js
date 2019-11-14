@@ -6,7 +6,8 @@ var API_KEY = decodeURIComponent(window.location.search.match(/API_KEY=([^&]+)/)
 const bugsnagClient = bugsnag({
   apiKey: API_KEY,
   endpoints: {
-    notify: ENDPOINT
+    notify: ENDPOINT,
+    sessions: '/noop'
   },
   beforeSend: (report) => {
   }

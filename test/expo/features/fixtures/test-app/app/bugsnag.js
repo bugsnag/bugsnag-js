@@ -7,7 +7,7 @@ const endpoints = {
 
 const bugsnagClient = bugsnag({
   endpoints: endpoints,
-  autoCaptureSessions: false
+  autoTrackSessions: false
 })
 
 export {
