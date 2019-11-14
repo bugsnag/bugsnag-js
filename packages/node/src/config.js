@@ -29,16 +29,16 @@ module.exports = {
     validate: value => value === undefined || isAgent(value)
   },
   onUncaughtException: {
-    defaultValue: () => (err, report, logger) => {
-      logger.error(`Uncaught exception${getContext(report)}, the process will now terminate…\n${(err && err.stack) ? err.stack : err}`)
+    defaultValue: () => (err, event, logger) => {
+      logger.error(`Uncaught exception${getContext(event)}, the process will now terminate…\n${(err && err.stack) ? err.stack : err}`)
       process.exit(1)
     },
     message: 'should be a function',
     validate: value => typeof value === 'function'
   },
   onUnhandledRejection: {
-    defaultValue: () => (err, report, logger) => {
-      logger.error(`Unhandled rejection${getContext(report)}…\n${(err && err.stack) ? err.stack : err}`)
+    defaultValue: () => (err, event, logger) => {
+      logger.error(`Unhandled rejection${getContext(event)}…\n${(err && err.stack) ? err.stack : err}`)
     },
     message: 'should be a function',
     validate: value => typeof value === 'function'
@@ -53,9 +53,9 @@ const getPrefixedConsole = () => {
   }, {})
 }
 
-const getContext = report =>
-  report.request && Object.keys(report.request).length
-    ? ` at ${report.request.httpMethod} ${report.request.path || report.request.url}`
+const getContext = event =>
+  event.request && Object.keys(event.request).length
+    ? ` at ${event.request.httpMethod} ${event.request.path || event.request.url}`
     : ''
 
 const isAgent = value => (typeof value === 'object' && value !== null) || typeof value === 'boolean'

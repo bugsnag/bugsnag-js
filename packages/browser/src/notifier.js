@@ -3,7 +3,7 @@ const version = '__VERSION__'
 const url = 'https://github.com/bugsnag/bugsnag-js'
 
 const Client = require('@bugsnag/core/client')
-const Report = require('@bugsnag/core/report')
+const Event = require('@bugsnag/core/event')
 const Session = require('@bugsnag/core/session')
 const Breadcrumb = require('@bugsnag/core/breadcrumb')
 
@@ -89,7 +89,7 @@ module.exports = (opts) => {
 // in the type definition file (types/bugsnag.d.ts)
 module.exports.Bugsnag = {
   Client,
-  Report,
+  Event,
   Session,
   Breadcrumb
 }

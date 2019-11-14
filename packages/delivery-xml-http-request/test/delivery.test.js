@@ -3,7 +3,7 @@ const { describe, it, expect } = global
 const delivery = require('../')
 
 describe('delivery:XMLHttpRequest', () => {
-  it('sends reports successfully', done => {
+  it('sends events successfully', done => {
     const requests = []
 
     // mock XMLHttpRequest class
@@ -35,7 +35,7 @@ describe('delivery:XMLHttpRequest', () => {
       endpoints: { notify: '/echo/' },
       filters: []
     }
-    delivery({ logger: {}, config }, { XMLHttpRequest }).sendReport(payload, (err) => {
+    delivery({ logger: {}, config }, { XMLHttpRequest }).sendEvent(payload, (err) => {
       expect(err).toBe(null)
       expect(requests.length).toBe(1)
       expect(requests[0].method).toBe('POST')

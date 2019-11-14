@@ -7,7 +7,7 @@ import AppFeature from './app/app'
 import AppStateBreadcrumbs from './app/app_state_breadcrumbs'
 import UserFeature from './app/user'
 import ConsoleBreadcrumbs from './app/console_breadcrumbs'
-import IgnoreReport from './app/ignore_report'
+import IgnoreEvent from './app/ignore_event'
 import MetaDataFeature from './app/meta_data'
 import ManualBreadcrumbs from './app/manual_breadcrumbs'
 import DeviceFeature from './app/device'
@@ -22,7 +22,7 @@ const SCENARIOS = [
   'appStateBreadcrumbs',
   'userFeature',
   'consoleBreadcrumbs',
-  'ignoreReport',
+  'ignoreEvent',
   'metaDataFeature',
   'manualBreadcrumbs',
   'deviceFeature',
@@ -54,8 +54,8 @@ export default class App extends React.Component {
         return (<UserFeature></UserFeature>)
       case 'consoleBreadcrumbs':
         return (<ConsoleBreadcrumbs></ConsoleBreadcrumbs>)
-      case 'ignoreReport':
-        return (<IgnoreReport></IgnoreReport>)
+      case 'ignoreEvent':
+        return (<IgnoreEvent></IgnoreEvent>)
       case 'metaDataFeature':
         return (<MetaDataFeature></MetaDataFeature>)
       case 'manualBreadcrumbs':

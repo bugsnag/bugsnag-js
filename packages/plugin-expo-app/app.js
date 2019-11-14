@@ -25,15 +25,15 @@ module.exports = {
       }
     }
 
-    client.config.beforeSend.unshift(report => {
+    client.config.beforeSend.unshift(event => {
       const now = new Date()
       const inForeground = AppState.currentState === 'active'
-      report.app.inForeground = inForeground
-      report.app.duration = now - appStart
+      event.app.inForeground = inForeground
+      event.app.duration = now - appStart
       if (inForeground) {
-        report.app.durationInForeground = now - lastEnteredForeground
+        event.app.durationInForeground = now - lastEnteredForeground
       }
-      report.updateMetaData('app', { nativeBundleVersion, nativeVersionCode })
+      event.updateMetaData('app', { nativeBundleVersion, nativeVersionCode })
     })
 
     if (!client.app.version && Constants.manifest.version) {

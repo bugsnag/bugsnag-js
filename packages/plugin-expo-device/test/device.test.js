@@ -36,8 +36,8 @@ describe('plugin: expo device', () => {
     c.configure()
     const before = (new Date()).toISOString()
     c.delivery(client => ({
-      sendReport: (report) => {
-        const r = JSON.parse(JSON.stringify(report))
+      sendEvent: (event) => {
+        const r = JSON.parse(JSON.stringify(event))
         expect(r).toBeTruthy()
         expect(r.events[0].device).toBeTruthy()
         const now = (new Date()).toISOString()
@@ -89,8 +89,8 @@ describe('plugin: expo device', () => {
     c.configure()
     const before = (new Date()).toISOString()
     c.delivery(client => ({
-      sendReport: (report) => {
-        const r = JSON.parse(JSON.stringify(report))
+      sendEvent: (event) => {
+        const r = JSON.parse(JSON.stringify(event))
         expect(r).toBeTruthy()
         expect(r.events[0].device).toBeTruthy()
         const now = (new Date()).toISOString()
@@ -160,16 +160,16 @@ describe('plugin: expo device', () => {
     const c = new Client(VALID_NOTIFIER)
     c.setOptions({ apiKey: 'api_key' })
     c.configure()
-    const reports = []
+    const events = []
     c.delivery(client => ({
-      sendReport: (report) => {
-        const r = JSON.parse(JSON.stringify(report))
-        reports.push(r)
-        if (reports.length === 4) {
-          expect(reports[0].events[0].device.orientation).toBe('portrait')
-          expect(reports[1].events[0].device.orientation).toBe('landscape')
-          expect(reports[2].events[0].device.orientation).toBe('landscape')
-          expect(reports[3].events[0].device.orientation).toBe(undefined)
+      sendEvent: (event) => {
+        const r = JSON.parse(JSON.stringify(event))
+        events.push(r)
+        if (events.length === 4) {
+          expect(events[0].events[0].device.orientation).toBe('portrait')
+          expect(events[1].events[0].device.orientation).toBe('landscape')
+          expect(events[2].events[0].device.orientation).toBe('landscape')
+          expect(events[3].events[0].device.orientation).toBe(undefined)
           done()
         }
       }

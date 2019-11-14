@@ -14,11 +14,11 @@ const ErrorScreen = () =>
     <p>This <code>FallbackComponent</code> prop can be used to show something useful to your users when such errors occur.</p>
   </div>
 
-const beforeSend = report => {
+const beforeSend = event => {
   // You can also provide a beforeSend callback to run just on errors caught by
   // the error boundary. Maybe you want to attach some of the current state from
   // whatever model/store you're using (e.g redux)
-  console.log('about to send this report', { report })
+  console.log('about to send this event', { event })
 }
 
 ReactDOM.render(

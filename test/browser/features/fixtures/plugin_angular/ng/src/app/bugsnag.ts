@@ -8,7 +8,7 @@ const bugsnagClient = bugsnag({
   endpoints: {
     notify: ENDPOINT
   },
-  beforeSend: (report) => {
+  beforeSend: (event) => {
   }
 });
 

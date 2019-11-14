@@ -25,7 +25,7 @@ const mockServer = (successCode = 200) => {
 }
 
 describe('delivery:node', () => {
-  it('sends reports successfully', done => {
+  it('sends events successfully', done => {
     const { requests, server } = mockServer()
     server.listen((err) => {
       expect(err).toBeUndefined()
@@ -36,7 +36,7 @@ describe('delivery:node', () => {
         endpoints: { notify: `http://0.0.0.0:${server.address().port}/notify/` },
         filters: []
       }
-      delivery({ _logger: {}, config }).sendReport(payload, (err) => {
+      delivery({ _logger: {}, config }).sendEvent(payload, (err) => {
         expect(err).toBe(null)
         expect(requests.length).toBe(1)
         expect(requests[0].method).toBe('POST')
@@ -90,7 +90,7 @@ describe('delivery:node', () => {
     }
     let didLog = false
     const log = () => { didLog = true }
-    delivery({ config, _logger: { error: log } }).sendReport(payload, (err) => {
+    delivery({ config, _logger: { error: log } }).sendEvent(payload, (err) => {
       expect(didLog).toBe(true)
       expect(err).toBeTruthy()
       expect(err.code).toBe('ECONNREFUSED')
@@ -113,7 +113,7 @@ describe('delivery:node', () => {
       }
       let didLog = false
       const log = () => { didLog = true }
-      delivery({ config, _logger: { error: log } }).sendReport(payload, (err) => {
+      delivery({ config, _logger: { error: log } }).sendEvent(payload, (err) => {
         expect(didLog).toBe(true)
         expect(err).toBeTruthy()
         expect(err.code).toBe('ECONNRESET')
@@ -138,7 +138,7 @@ describe('delivery:node', () => {
       }
       let didLog = false
       const log = () => { didLog = true }
-      delivery({ config, _logger: { error: log } }).sendReport(payload, (err) => {
+      delivery({ config, _logger: { error: log } }).sendEvent(payload, (err) => {
         expect(didLog).toBe(true)
         expect(err).toBeTruthy()
         done()

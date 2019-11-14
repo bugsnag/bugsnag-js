@@ -9,7 +9,7 @@
       var bugsnagClient = bugsnag({
         apiKey: API_KEY,
         endpoints: { notify: ENDPOINT },
-        beforeSend: function (report) {
+        beforeSend: function (event) {
           return false
         }
       })

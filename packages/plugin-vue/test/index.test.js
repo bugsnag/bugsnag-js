@@ -15,10 +15,10 @@ describe('bugsnag vue', () => {
     const client = new BugsnagClient(NOTIFIER)
     // client.logger(console)
     client.delivery(client => ({
-      sendReport: (report) => {
-        expect(report.events[0].errorClass).toBe('Error')
-        expect(report.events[0].errorMessage).toBe('oops')
-        expect(report.events[0].metaData.vue).toBeDefined()
+      sendEvent: (event) => {
+        expect(event.events[0].errorClass).toBe('Error')
+        expect(event.events[0].errorMessage).toBe('oops')
+        expect(event.events[0].metaData.vue).toBeDefined()
         done()
       }
     }))

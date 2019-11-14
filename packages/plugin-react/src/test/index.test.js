@@ -4,18 +4,18 @@ import React from 'react'
 import renderer from 'react-test-renderer'
 import plugin from '../'
 
-class BugsnagReport {
+class BugsnagEvent {
   updateMetaData () {
     return this
   }
 }
 
 const bugsnag = {
-  BugsnagReport,
+  BugsnagEvent,
   notify: jest.fn()
 }
 
-bugsnag.BugsnagReport.getStacktrace = jest.fn()
+bugsnag.BugsnagEvent.getStacktrace = jest.fn()
 
 const ErrorBoundary = plugin.init(bugsnag, React)
 
@@ -91,7 +91,7 @@ it('it passes the beforeSend function to the Bugsnag notify call', () => {
     .create(<ErrorBoundary beforeSend={beforeSend}><BadComponent /></ErrorBoundary>)
     .toJSON()
   expect(bugsnag.notify).toBeCalledWith(
-    expect.any(BugsnagReport),
+    expect.any(BugsnagEvent),
     expect.objectContaining({ beforeSend: beforeSend })
   )
 })

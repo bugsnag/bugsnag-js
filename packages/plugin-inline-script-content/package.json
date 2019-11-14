@@ -2,7 +2,7 @@
   "name": "@bugsnag/plugin-inline-script-content",
   "version": "6.4.1",
   "main": "inline-script-content.js",
-  "description": "@bugsnag/js plugin to attach inline script content to error reports",
+  "description": "@bugsnag/js plugin to attach inline script content to error events",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
     "type": "git",

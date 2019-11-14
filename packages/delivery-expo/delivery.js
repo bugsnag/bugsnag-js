@@ -36,33 +36,33 @@ module.exports = (client, fetch = global.fetch) => {
   const { queues, queueConsumers } = initRedelivery(networkStatus, client._logger, send)
 
   return {
-    sendReport: (report, cb = () => {}) => {
+    sendEvent: (event, cb = () => {}) => {
       const url = client.config.endpoints.notify
 
       let body, opts
       try {
-        body = payload.report(report, client.config.filters)
+        body = payload.event(event, client.config.filters)
         opts = {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Bugsnag-Api-Key': report.apiKey || client.config.apiKey,
+            'Bugsnag-Api-Key': event.apiKey || client.config.apiKey,
             'Bugsnag-Payload-Version': '4',
             'Bugsnag-Sent-At': isoDate()
           },
           body
         }
-        if (!networkStatus.isConnected || report.attemptImmediateDelivery === false) {
-          enqueue('report', { url, opts })
+        if (!networkStatus.isConnected || event.attemptImmediateDelivery === false) {
+          enqueue('event', { url, opts })
           return cb(null)
         }
-        client._logger.info(`Sending report ${report.events[0].errorClass}: ${report.events[0].errorMessage}`)
+        client._logger.info(`Sending event ${event.events[0].errorClass}: ${event.events[0].errorMessage}`)
         send(url, opts, err => {
-          if (err) return onerror(err, { url, opts }, 'report', cb)
+          if (err) return onerror(err, { url, opts }, 'event', cb)
           cb(null)
         })
       } catch (e) {
-        onerror(e, { url, opts }, 'report', cb)
+        onerror(e, { url, opts }, 'event', cb)
       }
     },
 
@@ -101,24 +101,24 @@ module.exports = (client, fetch = global.fetch) => {
 const initRedelivery = (networkStatus, logger, send) => {
   const onQueueError = e => logger.error('UndeliveredPayloadQueue error', e)
   const queues = {
-    report: new UndeliveredPayloadQueue('report', onQueueError),
+    event: new UndeliveredPayloadQueue('event', onQueueError),
     session: new UndeliveredPayloadQueue('session', onQueueError)
   }
 
   const onLoopError = e => logger.error('RedeliveryLoop error', e)
   const queueConsumers = {
-    report: new RedeliveryLoop(send, queues.report, onLoopError),
+    event: new RedeliveryLoop(send, queues.event, onLoopError),
     session: new RedeliveryLoop(send, queues.session, onLoopError)
   }
 
-  Promise.all([queues.report.init(), queues.session.init()])
+  Promise.all([queues.event.init(), queues.session.init()])
     .then(() => {
       networkStatus.watch(isConnected => {
         if (isConnected) {
-          queueConsumers.report.start()
+          queueConsumers.event.start()
           queueConsumers.session.start()
         } else {
-          queueConsumers.report.stop()
+          queueConsumers.event.stop()
           queueConsumers.session.stop()
         }
       })

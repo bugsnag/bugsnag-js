@@ -28,8 +28,8 @@ describe('plugin: expo device', () => {
 
     c.use(plugin)
     c.delivery(client => ({
-      sendReport: (report) => {
-        const r = JSON.parse(JSON.stringify(report))
+      sendEvent: (event) => {
+        const r = JSON.parse(JSON.stringify(event))
         expect(r).toBeTruthy()
         expect(r.events[0].app.version).toBe(VERSION)
         done()
@@ -62,8 +62,8 @@ describe('plugin: expo device', () => {
 
     c.use(plugin)
     c.delivery(client => ({
-      sendReport: (report) => {
-        const r = JSON.parse(JSON.stringify(report))
+      sendEvent: (event) => {
+        const r = JSON.parse(JSON.stringify(event))
         expect(r).toBeTruthy()
         expect(r.events[0].app.codeBundleId).toBe(REVISION_ID)
         done()
@@ -97,8 +97,8 @@ describe('plugin: expo device', () => {
 
     c.use(plugin)
     c.delivery(client => ({
-      sendReport: (report) => {
-        const r = JSON.parse(JSON.stringify(report))
+      sendEvent: (event) => {
+        const r = JSON.parse(JSON.stringify(event))
         expect(r).toBeTruthy()
         expect(r.events[0].metaData.app.nativeVersionCode).toBe(VERSION_CODE)
         done()
@@ -132,8 +132,8 @@ describe('plugin: expo device', () => {
 
     c.use(plugin)
     c.delivery(client => ({
-      sendReport: (report) => {
-        const r = JSON.parse(JSON.stringify(report))
+      sendEvent: (event) => {
+        const r = JSON.parse(JSON.stringify(event))
         expect(r).toBeTruthy()
         expect(r.events[0].metaData.app.nativeBundleVersion).toBe(BUNDLE_VERSION)
         done()
@@ -165,16 +165,16 @@ describe('plugin: expo device', () => {
 
     c.use(plugin)
     expect(typeof listener).toBe('function')
-    const reports = []
+    const events = []
     c.delivery(client => ({
-      sendReport: (report) => {
-        const r = JSON.parse(JSON.stringify(report))
+      sendEvent: (event) => {
+        const r = JSON.parse(JSON.stringify(event))
         expect(r).toBeTruthy()
-        reports.push(r)
-        if (reports.length < 3) return
-        expect(reports[0].events[0].app.inForeground).toBe(true)
-        expect(reports[1].events[0].app.inForeground).toBe(false)
-        expect(reports[2].events[0].app.inForeground).toBe(true)
+        events.push(r)
+        if (events.length < 3) return
+        expect(events[0].events[0].app.inForeground).toBe(true)
+        expect(events[1].events[0].app.inForeground).toBe(false)
+        expect(events[2].events[0].app.inForeground).toBe(true)
         done()
       }
     }))

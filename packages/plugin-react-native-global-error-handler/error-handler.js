@@ -2,7 +2,7 @@
 * Automatically notifies Bugsnag when React Native's global error handler is called
 */
 
-const createReportFromErr = require('@bugsnag/core/lib/report-from-error')
+const createEventFromErr = require('@bugsnag/core/lib/event-from-error')
 
 module.exports = {
   init: (client, ErrorUtils = global.ErrorUtils) => {
@@ -14,13 +14,13 @@ module.exports = {
     const prev = ErrorUtils.getGlobalHandler()
 
     ErrorUtils.setGlobalHandler((error, isFatal) => {
-      const report = createReportFromErr(error, {
+      const event = createEventFromErr(error, {
         severity: 'error',
         unhandled: true,
         severityReason: { type: 'unhandledException' }
       })
-      report.attemptImmediateDelivery = false
-      client.notify(report, {}, () => {
+      event.attemptImmediateDelivery = false
+      client.notify(event, {}, () => {
         if (typeof prev === 'function') prev(error, isFatal)
       })
     })

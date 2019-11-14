@@ -37,14 +37,14 @@ describe('plugin: strip query string', () => {
     let originalStacktrace
     client.setOptions({
       apiKey: 'API_KEY_YEAH',
-      beforeSend: report => {
-        originalStacktrace = report.stacktrace.map(f => f)
+      beforeSend: event => {
+        originalStacktrace = event.stacktrace.map(f => f)
       }
     })
     client.configure()
     client.use(plugin)
 
-    client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
+    client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
     const err = new Error('noooo')
     err.stack = 'Error: foo\n  at page.html?id=intro:89:10'
     client.notify(err)

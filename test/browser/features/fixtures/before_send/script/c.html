@@ -9,8 +9,8 @@
       var bugsnagClient = bugsnag({
         apiKey: API_KEY,
         endpoints: { notify: ENDPOINT },
-        beforeSend: function (report) {
-          report.ignore()
+        beforeSend: function (event) {
+          event.ignore()
         }
       })
     </script>

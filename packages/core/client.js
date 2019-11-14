@@ -1,5 +1,5 @@
 const config = require('./config')
-const BugsnagReport = require('./report')
+const BugsnagEvent = require('./event')
 const BugsnagBreadcrumb = require('./breadcrumb')
 const BugsnagSession = require('./session')
 const { map, includes, isArray } = require('./lib/es-utils')
@@ -28,7 +28,7 @@ class BugsnagClient {
     this.config = {}
 
     // // i/o
-    this._delivery = { sendSession: () => {}, sendReport: () => {} }
+    this._delivery = { sendSession: () => {}, sendEvent: () => {} }
     this._logger = { debug: () => {}, info: () => {}, warn: () => {}, error: () => {} }
 
     // plugins
@@ -48,7 +48,7 @@ class BugsnagClient {
 
     // expose internal constructors
     this.BugsnagClient = BugsnagClient
-    this.BugsnagReport = BugsnagReport
+    this.BugsnagEvent = BugsnagEvent
     this.BugsnagBreadcrumb = BugsnagBreadcrumb
     this.BugsnagSession = BugsnagSession
 
@@ -160,35 +160,35 @@ class BugsnagClient {
     // ensure opts is an object
     if (typeof opts !== 'object' || opts === null) opts = {}
 
-    // create a report from the error, if it isn't one already
-    const report = BugsnagReport.ensureReport(err, errorFramesToSkip, 2)
+    // create a event from the error, if it isn't one already
+    const event = BugsnagEvent.ensureEvent(err, errorFramesToSkip, 2)
 
-    report.app = { ...{ releaseStage }, ...report.app, ...this.app }
-    report.context = report.context || opts.context || this.context || undefined
-    report.device = { ...report.device, ...this.device, ...opts.device }
-    report.request = { ...report.request, ...this.request, ...opts.request }
-    report.user = { ...report.user, ...this.user, ...opts.user }
-    report.metaData = { ...report.metaData, ...this.metaData, ...opts.metaData }
-    report.breadcrumbs = this.breadcrumbs.slice(0)
+    event.app = { ...{ releaseStage }, ...event.app, ...this.app }
+    event.context = event.context || opts.context || this.context || undefined
+    event.device = { ...event.device, ...this.device, ...opts.device }
+    event.request = { ...event.request, ...this.request, ...opts.request }
+    event.user = { ...event.user, ...this.user, ...opts.user }
+    event.metaData = { ...event.metaData, ...this.metaData, ...opts.metaData }
+    event.breadcrumbs = this.breadcrumbs.slice(0)
 
     if (this._session) {
-      this._session.trackError(report)
-      report.session = this._session
+      this._session.trackError(event)
+      event.session = this._session
     }
 
     // set severity if supplied
     if (opts.severity !== undefined) {
-      report.severity = opts.severity
-      report._handledState.severityReason = { type: 'userSpecifiedSeverity' }
+      event.severity = opts.severity
+      event._handledState.severityReason = { type: 'userSpecifiedSeverity' }
     }
 
-    // exit early if the reports should not be sent on the current releaseStage
+    // exit early if the events should not be sent on the current releaseStage
     if (isArray(this.config.notifyReleaseStages) && !includes(this.config.notifyReleaseStages, releaseStage)) {
-      this._logger.warn('Report not sent due to releaseStage/notifyReleaseStages configuration')
-      return cb(null, report)
+      this._logger.warn('Event not sent due to releaseStage/notifyReleaseStages configuration')
+      return cb(null, event)
     }
 
-    const originalSeverity = report.severity
+    const originalSeverity = event.severity
 
     const beforeSend = [].concat(opts.beforeSend).concat(this.config.beforeSend)
     const onBeforeSendErr = err => {
@@ -196,32 +196,32 @@ class BugsnagClient {
       this._logger.error(err)
     }
 
-    some(beforeSend, runBeforeSend(report, onBeforeSendErr), (err, preventSend) => {
+    some(beforeSend, runBeforeSend(event, onBeforeSendErr), (err, preventSend) => {
       if (err) onBeforeSendErr(err)
 
       if (preventSend) {
-        this._logger.debug('Report not sent due to beforeSend callback')
-        return cb(null, report)
+        this._logger.debug('Event not sent due to beforeSend callback')
+        return cb(null, event)
       }
 
       // only leave a crumb for the error if actually got sent
       if (this.config.autoBreadcrumbs) {
-        this.leaveBreadcrumb(report.errorClass, {
-          errorClass: report.errorClass,
-          errorMessage: report.errorMessage,
-          severity: report.severity
+        this.leaveBreadcrumb(event.errorClass, {
+          errorClass: event.errorClass,
+          errorMessage: event.errorMessage,
+          severity: event.severity
         }, 'error')
       }
 
-      if (originalSeverity !== report.severity) {
-        report._handledState.severityReason = { type: 'userCallbackSetSeverity' }
+      if (originalSeverity !== event.severity) {
+        event._handledState.severityReason = { type: 'userCallbackSetSeverity' }
       }
 
-      this._delivery.sendReport({
-        apiKey: report.apiKey || this.config.apiKey,
+      this._delivery.sendEvent({
+        apiKey: event.apiKey || this.config.apiKey,
         notifier: this.notifier,
-        events: [report]
-      }, (err) => cb(err, report))
+        events: [event]
+      }, (err) => cb(err, event))
     })
   }
 }
@@ -242,7 +242,7 @@ const normaliseError = (error, opts, logger) => {
     case 'string':
       if (typeof opts === 'string') {
         // ≤v3 used to have a notify('ErrorName', 'Error message') interface
-        // report usage/deprecation errors if this function is called like that
+        // event usage/deprecation errors if this function is called like that
         err = createAndLogUsageError('string/string')
         _opts = { metaData: { notifier: { notifyArgs: [error, opts] } } }
       } else {
@@ -258,7 +258,7 @@ const normaliseError = (error, opts, logger) => {
       err = createAndLogUsageError('function')
       break
     case 'object':
-      if (error !== null && (isError(error) || error.__isBugsnagReport)) {
+      if (error !== null && (isError(error) || error.__isBugsnagEvent)) {
         err = error
       } else if (error !== null && hasNecessaryFields(error)) {
         err = new Error(error.message || error.errorMessage)

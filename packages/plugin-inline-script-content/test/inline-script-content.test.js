@@ -3,7 +3,7 @@ const { describe, it, expect, spyOn } = global
 const plugin = require('../')
 
 const Client = require('@bugsnag/core/client')
-const Report = require('@bugsnag/core/report')
+const Event = require('@bugsnag/core/event')
 const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
 describe('plugin: inline script content', () => {
@@ -36,8 +36,8 @@ Lorem ipsum dolor sit amet.
     client.use(plugin, document, window)
 
     expect(client.config.beforeSend.length).toBe(1)
-    client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
-    client.notify(new Report('BadThing', 'Happens in script tags', [
+    client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
+    client.notify(new Event('BadThing', 'Happens in script tags', [
       { fileName: window.location.href, lineNumber: 10 }
     ]))
     expect(payloads.length).toEqual(1)
@@ -106,8 +106,8 @@ Lorem ipsum dolor sit amet.
     client.use(plugin, document, window)
 
     expect(client.config.beforeSend.length).toBe(1)
-    client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
-    client.notify(new Report('BadThing', 'Happens in script tags', [
+    client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
+    client.notify(new Event('BadThing', 'Happens in script tags', [
       { fileName: window.location.href, lineNumber: 10 }
     ]))
     expect(payloads.length).toEqual(1)
@@ -145,8 +145,8 @@ Lorem ipsum dolor sit amet.
     client.use(plugin, document, window)
 
     expect(client.config.beforeSend.length).toBe(1)
-    client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
-    client.notify(new Report('BadThing', 'Happens in script tags', [
+    client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
+    client.notify(new Event('BadThing', 'Happens in script tags', [
       { fileName: window.location.href, lineNumber: 7 }
     ]))
     expect(payloads.length).toEqual(1)
@@ -183,9 +183,9 @@ Lorem ipsum dolor sit amet.
     client.use(plugin, document, window)
 
     expect(client.config.beforeSend.length).toBe(1)
-    client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
+    client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
     const spy = spyOn(client._logger, 'error')
-    client.notify(new Report('EmptyStacktrace', 'Has nothing in it', []))
+    client.notify(new Event('EmptyStacktrace', 'Has nothing in it', []))
     expect(payloads.length).toEqual(1)
     expect(payloads[0].events[0].stacktrace).toEqual([])
     expect(spy).toHaveBeenCalledTimes(0)
@@ -250,8 +250,8 @@ Lorem ipsum dolor sit amet.
     client.use(plugin, document, window)
 
     expect(client.config.beforeSend.length).toBe(1)
-    client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
-    client.notify(new Report('Error', 'oh', [
+    client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
+    client.notify(new Event('Error', 'oh', [
       { fileName: window.location.href, lineNumber: 1 }
     ]))
     expect(payloads.length).toEqual(1)

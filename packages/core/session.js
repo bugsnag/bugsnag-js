@@ -17,8 +17,8 @@ class Session {
     }
   }
 
-  trackError (report) {
-    this[report._handledState.unhandled ? '_unhandled' : '_handled'] += 1
+  trackError (event) {
+    this[event._handledState.unhandled ? '_unhandled' : '_handled'] += 1
   }
 }
 

@@ -30,17 +30,17 @@ describe('plugin: node unhandled rejection handler', () => {
   it('should call the configured onUnhandledRejection callback', done => {
     const c = new Client(VALID_NOTIFIER)
     c.delivery(client => ({
-      sendReport: (...args) => args[args.length - 1](),
+      sendEvent: (...args) => args[args.length - 1](),
       sendSession: (...args) => args[args.length - 1]()
     }))
     c.setOptions({
       apiKey: 'api_key',
-      onUnhandledRejection: (err, report) => {
+      onUnhandledRejection: (err, event) => {
         expect(err.message).toBe('never gonna catch me')
-        expect(report.errorMessage).toBe('never gonna catch me')
-        expect(report._handledState.unhandled).toBe(true)
-        expect(report._handledState.severity).toBe('error')
-        expect(report._handledState.severityReason).toEqual({ type: 'unhandledPromiseRejection' })
+        expect(event.errorMessage).toBe('never gonna catch me')
+        expect(event._handledState.unhandled).toBe(true)
+        expect(event._handledState.severity).toBe('error')
+        expect(event._handledState.severityReason).toEqual({ type: 'unhandledPromiseRejection' })
         plugin.destroy()
         done()
       }
@@ -60,17 +60,17 @@ describe('plugin: node unhandled rejection handler', () => {
   it('should tolerate delivery errors', done => {
     const c = new Client(VALID_NOTIFIER)
     c.delivery(client => ({
-      sendReport: (...args) => args[args.length - 1](new Error('floop')),
+      sendEvent: (...args) => args[args.length - 1](new Error('floop')),
       sendSession: (...args) => args[args.length - 1]()
     }))
     c.setOptions({
       apiKey: 'api_key',
-      onUnhandledRejection: (err, report) => {
+      onUnhandledRejection: (err, event) => {
         expect(err.message).toBe('never gonna catch me')
-        expect(report.errorMessage).toBe('never gonna catch me')
-        expect(report._handledState.unhandled).toBe(true)
-        expect(report._handledState.severity).toBe('error')
-        expect(report._handledState.severityReason).toEqual({ type: 'unhandledPromiseRejection' })
+        expect(event.errorMessage).toBe('never gonna catch me')
+        expect(event._handledState.unhandled).toBe(true)
+        expect(event._handledState.severity).toBe('error')
+        expect(event._handledState.severityReason).toEqual({ type: 'unhandledPromiseRejection' })
         plugin.destroy()
         done()
       }

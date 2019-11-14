@@ -13,9 +13,9 @@ describe('plugin: ip', () => {
     client.configure()
     client.use(plugin)
 
-    client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
+    client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
     client.notify(new Error('noooo'), {
-      beforeSend: report => { report.request = { some: 'detail' } }
+      beforeSend: event => { event.request = { some: 'detail' } }
     })
 
     expect(payloads.length).toEqual(1)
@@ -31,7 +31,7 @@ describe('plugin: ip', () => {
 
     client.user = { id: 'foobar' }
 
-    client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
+    client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
     client.notify(new Error('noooo'))
 
     expect(payloads.length).toEqual(1)
@@ -48,7 +48,7 @@ describe('plugin: ip', () => {
 
     client.user = { id: undefined }
 
-    client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
+    client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
     client.notify(new Error('noooo'))
 
     expect(payloads.length).toEqual(1)
@@ -63,7 +63,7 @@ describe('plugin: ip', () => {
     client.configure()
     client.use(plugin)
 
-    client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
+    client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
     client.notify(new Error('noooo'))
 
     expect(payloads.length).toEqual(1)

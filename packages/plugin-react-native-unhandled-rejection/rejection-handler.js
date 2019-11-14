@@ -3,7 +3,7 @@
 */
 
 const rnPromise = require('promise/setimmediate/rejection-tracking')
-const createReportFromErr = require('@bugsnag/core/lib/report-from-error')
+const createEventFromErr = require('@bugsnag/core/lib/event-from-error')
 
 module.exports = {
   init: (client) => {
@@ -11,7 +11,7 @@ module.exports = {
     rnPromise.enable({
       allRejections: true,
       onUnhandled: (id, error) => {
-        client.notify(createReportFromErr(error, {
+        client.notify(createEventFromErr(error, {
           severity: 'error',
           unhandled: true,
           severityReason: { type: 'unhandledPromiseRejection' }

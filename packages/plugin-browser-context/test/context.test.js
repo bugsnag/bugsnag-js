@@ -12,14 +12,14 @@ const window = {
 }
 
 describe('plugin: context', () => {
-  it('sets client.context (and report.context) to window.location.pathname', () => {
+  it('sets client.context (and event.context) to window.location.pathname', () => {
     const client = new Client(VALID_NOTIFIER)
     const payloads = []
     client.setOptions({ apiKey: 'API_KEY_YEAH' })
     client.configure()
     client.use(plugin, window)
 
-    client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
+    client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
     client.notify(new Error('noooo'))
 
     expect(payloads.length).toEqual(1)
@@ -35,7 +35,7 @@ describe('plugin: context', () => {
 
     client.context = 'something else'
 
-    client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
+    client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
     client.notify(new Error('noooo'))
 
     expect(payloads.length).toEqual(1)

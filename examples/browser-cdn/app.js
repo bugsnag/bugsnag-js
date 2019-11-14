@@ -35,18 +35,18 @@ var bugsnagClient = bugsnag({
   // one of the most powerful tools in our library, beforeSend lets you evaluate,
   // modify, add and remove data before sending the error to bugsnag. The actions
   // here will be applied to *all* errors, handled and unhandled.
-  beforeSend: function (report) {
+  beforeSend: function (event) {
     // the below downgrades handled exceptions sent with the generic "Error"
     // class to info. In this example, it only affects the notification called
     // at the very end of this app.js.
-    if (report.errorClass === 'Error' && report.severity === 'warning') {
-      report.severity = 'info'
+    if (event.errorClass === 'Error' && event.severity === 'warning') {
+      event.severity = 'info'
     }
     // note that if you return false from the beforeSend,
-    // this will cancel the entire error report.
+    // this will cancel the entire error event.
   },
 
-  // attached any user data you'd like to report.
+  // attached any user data you'd like to event.
   user: {
     name: 'Grace Hopper',
     email: 'ghopper@code.com',
@@ -67,7 +67,7 @@ var bugsnagClient = bugsnag({
 })
 
 // Below function will catch an error, and shows how you can add/modify
-// information to the report right before sending.
+// information to the event right before sending.
 // Note that the beforeSend defined in the earlier initialization of bugsnag
 // above will be applied *after* the statements executed here in notify().
 function sendHandled () {

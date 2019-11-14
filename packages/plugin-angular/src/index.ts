@@ -16,22 +16,22 @@ export class BugsnagErrorHandler extends ErrorHandler {
       unhandled: true,
     };
 
-    const report = new this.bugsnagClient.BugsnagReport(
+    const event = new this.bugsnagClient.BugsnagEvent(
       error.name,
       error.message,
-      this.bugsnagClient.BugsnagReport.getStacktrace(error),
+      this.bugsnagClient.BugsnagEvent.getStacktrace(error),
       handledState,
       error,
     );
 
     if (error.ngDebugContext) {
-      report.updateMetaData("angular", {
+      event.updateMetaData("angular", {
         component: error.ngDebugContext.component,
         context: error.ngDebugContext.context,
       });
     }
 
-    this.bugsnagClient.notify(report);
+    this.bugsnagClient.notify(event);
     ErrorHandler.prototype.handleError.call(this, error);
   }
 }

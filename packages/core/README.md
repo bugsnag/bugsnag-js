@@ -3,7 +3,7 @@
 This package contains the core classes and utilities common to the Bugsnag notifier for any JS-based platform:
 
 - `Client` class
-- `Report` class
+- `Event` class
 - `Breadcrumb` class
 - `Session` class
 - `config` scheme and utils

@@ -6,7 +6,7 @@ const Client = require('@bugsnag/core/client')
 const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
 describe('plugin: server sessions', () => {
-  it('should send the session report', done => {
+  it('should send the session', done => {
     class TrackerMock extends Emitter {
       start () {
         this.emit('summary', [
@@ -25,7 +25,7 @@ describe('plugin: server sessions', () => {
       apiKey: 'aaaa-aaaa-aaaa-aaaa'
     })
     c.delivery(client => ({
-      sendReport: () => {},
+      sendEvent: () => {},
       sendSession: (session, cb = () => {}) => {
         expect(session.sessionCounts.length).toBe(1)
         expect(session.sessionCounts[0].sessionsStarted).toBe(123)
@@ -38,7 +38,7 @@ describe('plugin: server sessions', () => {
     c.startSession()
   })
 
-  it('should not send the session report when releaseStage is not in notifyReleaseStages', done => {
+  it('should not send the session when releaseStage is not in notifyReleaseStages', done => {
     class TrackerMock extends Emitter {
       start () {
         this.emit('summary', [
@@ -70,7 +70,7 @@ describe('plugin: server sessions', () => {
       notifyReleaseStages: ['production']
     })
     c.delivery(client => ({
-      sendReport: () => {},
+      sendEvent: () => {},
       sendSession: (session, cb = () => {}) => {
         // no session should be sent
         expect(true).toBe(false)
@@ -109,7 +109,7 @@ describe('plugin: server sessions', () => {
     c.device = { hostname: 'test-machine.local', runtimeVersions: { node: '0.0.1' } }
 
     c.delivery(client => ({
-      sendReport: () => {},
+      sendEvent: () => {},
       sendSession: (session, cb = () => {}) => {
         expect(session.sessionCounts.length).toBe(1)
         expect(session.sessionCounts[0].sessionsStarted).toBe(123)

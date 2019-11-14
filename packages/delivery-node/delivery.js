@@ -3,9 +3,9 @@ const { isoDate } = require('@bugsnag/core/lib/es-utils')
 const request = require('./request')
 
 module.exports = (client) => ({
-  sendReport: (report, cb = () => {}) => {
+  sendEvent: (event, cb = () => {}) => {
     const _cb = err => {
-      if (err) client._logger.error(`Report failed to send…\n${(err && err.stack) ? err.stack : err}`, err)
+      if (err) client._logger.error(`Event failed to send…\n${(err && err.stack) ? err.stack : err}`, err)
       cb(err)
     }
 
@@ -14,11 +14,11 @@ module.exports = (client) => ({
         url: client.config.endpoints.notify,
         headers: {
           'Content-Type': 'application/json',
-          'Bugsnag-Api-Key': report.apiKey || client.config.apiKey,
+          'Bugsnag-Api-Key': event.apiKey || client.config.apiKey,
           'Bugsnag-Payload-Version': '4',
           'Bugsnag-Sent-At': isoDate()
         },
-        body: payload.report(report, client.config.filters),
+        body: payload.event(event, client.config.filters),
         agent: client.config.agent
       }, (err, body) => _cb(err))
     } catch (e) {
