@@ -6,7 +6,7 @@ const Client = require('@bugsnag/core/client')
 const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
 let listener = null
-let window = {
+const window = {
   addEventListener: (evt, handler) => {
     listener = handler
   },

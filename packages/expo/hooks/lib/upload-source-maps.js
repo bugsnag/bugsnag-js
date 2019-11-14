@@ -35,7 +35,7 @@ module.exports = async (
   if (endpoint) opts.endpoint = endpoint
 
   // android
-  console.log(`Uploading Android source map`)
+  console.log('Uploading Android source map')
   await upload({
     appVersion: androidManifest.version,
     minifiedUrl: '*/cached-bundle-experience-*',
@@ -46,7 +46,7 @@ module.exports = async (
   })
 
   // ios
-  console.log(`Uploading iOS source map`)
+  console.log('Uploading iOS source map')
   await upload({
     appVersion: iosManifest.version,
     minifiedUrl: iosManifest.bundleUrl,

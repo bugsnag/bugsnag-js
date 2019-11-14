@@ -49,7 +49,7 @@ module.exports = (opts, userPlugins = []) => {
 
   plugins.forEach(pl => bugsnag.use(pl))
 
-  bugsnag._logger.debug(`Loaded!`)
+  bugsnag._logger.debug('Loaded!')
 
   bugsnag.leaveBreadcrumb = function () {
     bugsnag._logger.warn('Breadcrumbs are not supported in Node.js yet')
@@ -69,4 +69,4 @@ module.exports.Bugsnag = {
 }
 
 // Export a "default" property for compatibility with ESM imports
-module.exports['default'] = module.exports
+module.exports.default = module.exports

@@ -24,15 +24,15 @@ module.exports = {
       try { prev.apply(this, arguments) } catch (e) {}
     }
 
-    var _lastScript = null
+    let _lastScript = null
     const updateLastScript = script => {
       _lastScript = script
     }
 
     const getCurrentScript = () => {
-      var script = doc.currentScript || _lastScript
+      let script = doc.currentScript || _lastScript
       if (!script && !DOMContentLoaded) {
-        var scripts = doc.scripts || doc.getElementsByTagName('script')
+        const scripts = doc.scripts || doc.getElementsByTagName('script')
         script = scripts[scripts.length - 1]
       }
       return script
@@ -42,7 +42,7 @@ module.exports = {
       // get whatever html has rendered at this point
       if (!DOMContentLoaded || !html) html = getHtml()
       // simulate the raw html
-      const htmlLines = [ '<!-- DOC START -->' ].concat(html.split('\n'))
+      const htmlLines = ['<!-- DOC START -->'].concat(html.split('\n'))
       const zeroBasedLine = lineNumber - 1
       const start = Math.max(zeroBasedLine - 3, 0)
       const end = Math.min(zeroBasedLine + 3, htmlLines.length)
@@ -80,7 +80,7 @@ module.exports = {
 
     // Proxy all the timer functions whose callback is their 0th argument.
     // Keep a reference to the original setTimeout because we need it later
-    const [ _setTimeout ] = map([
+    const [_setTimeout] = map([
       'setTimeout',
       'setInterval',
       'setImmediate',
@@ -102,7 +102,7 @@ module.exports = {
       'Notification', 'SVGElementInstance', 'Screen', 'TextTrack', 'TextTrackCue', 'TextTrackList',
       'WebSocket', 'WebSocketWorker', 'Worker', 'XMLHttpRequest', 'XMLHttpRequestEventTarget', 'XMLHttpRequestUpload'
     ], o => {
-      if (!win[o] || !win[o].prototype || !win[o].prototype.hasOwnProperty || !win[o].prototype.hasOwnProperty('addEventListener')) return
+      if (!win[o] || !win[o].prototype || !Object.prototype.hasOwnProperty.call(win[o].prototype, 'addEventListener')) return
       __proxy(win[o].prototype, 'addEventListener', original =>
         __traceOriginalScript(original, eventTargetCallbackAccessor)
       )
@@ -124,7 +124,7 @@ module.exports = {
           if (cb.__trace__) {
             cba.replace(cb.__trace__)
           } else {
-            var script = getCurrentScript()
+            const script = getCurrentScript()
             // this function mustn't be annonymous due to a bug in the stack
             // generation logic, meaning it gets tripped up
             // see: https://github.com/stacktracejs/stack-generator/issues/6
@@ -167,15 +167,15 @@ module.exports = {
 }
 
 function __proxy (host, name, replacer) {
-  var original = host[name]
+  const original = host[name]
   if (!original) return original
-  var replacement = replacer(original)
+  const replacement = replacer(original)
   host[name] = replacement
   return original
 }
 
 function eventTargetCallbackAccessor (args) {
-  var isEventHandlerObj = !!args[1] && typeof args[1].handleEvent === 'function'
+  const isEventHandlerObj = !!args[1] && typeof args[1].handleEvent === 'function'
   return {
     get: function () {
       return isEventHandlerObj ? args[1].handleEvent : args[1]

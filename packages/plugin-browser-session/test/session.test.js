@@ -72,7 +72,7 @@ describe('plugin: sessions', () => {
 
   it('doesn’t send when releaseStage is not in notifyReleaseStages', (done) => {
     const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'API_KEY', releaseStage: 'foo', notifyReleaseStages: [ 'baz' ] })
+    c.setOptions({ apiKey: 'API_KEY', releaseStage: 'foo', notifyReleaseStages: ['baz'] })
     c.configure()
     c.use(plugin)
     c.delivery(client => ({

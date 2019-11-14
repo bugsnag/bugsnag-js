@@ -37,7 +37,7 @@ npm run test:unit
 
 ## Type tests
 
-This tests the validity of TypeScript typing files, and lints them using tslint.
+This tests the validity of .d.ts files by attempting to compile a TypeScript program that uses Bugsnag.
 
 ```sh
 npm run test:types
@@ -45,7 +45,7 @@ npm run test:types
 
 ## Linting
 
-Lints the entire repo using standardjs rules.
+Lints the entire repo with ESLint. On JavaScript files this uses the [standard](https://github.com/standard/eslint-config-standard) ruleset and on TypeScript files this uses the [@typescript/eslint](https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin) recommended set of rules.
 
 ```sh
 npm run test:lint

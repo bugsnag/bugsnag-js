@@ -1,3 +1,3 @@
 import { Bugsnag } from "@bugsnag/browser";
-declare const bugsnagPluginVue: Bugsnag.IPlugin;
+declare const bugsnagPluginVue: Bugsnag.Plugin;
 export default bugsnagPluginVue;

@@ -12,7 +12,7 @@ describe('plugin: interaction breadcrumbs', () => {
     c.configure()
     const { window, winHandlers, els } = getMockWindow()
     c.use(plugin, window)
-    winHandlers['click'].forEach(fn => fn.call(window, { target: els[0] }))
+    winHandlers.click.forEach(fn => fn.call(window, { target: els[0] }))
     expect(c.breadcrumbs.length).toBe(1)
   })
 
@@ -22,7 +22,7 @@ describe('plugin: interaction breadcrumbs', () => {
     c.configure()
     const { window, winHandlers, els } = getMockWindow()
     c.use(plugin, window)
-    winHandlers['click'].forEach(fn => fn.call(window, { target: els[0] }))
+    winHandlers.click.forEach(fn => fn.call(window, { target: els[0] }))
     expect(c.breadcrumbs.length).toBe(0)
   })
 
@@ -32,7 +32,7 @@ describe('plugin: interaction breadcrumbs', () => {
     c.configure()
     const { window, winHandlers, els } = getMockWindow()
     c.use(plugin, window)
-    winHandlers['click'].forEach(fn => fn.call(window, { target: els[0] }))
+    winHandlers.click.forEach(fn => fn.call(window, { target: els[0] }))
     expect(c.breadcrumbs.length).toBe(1)
   })
 })
@@ -61,20 +61,20 @@ const getMockWindow = () => {
     parentNode: null
   }
 
-  parent.parentNode = { childNodes: [ parent ] }
+  parent.parentNode = { childNodes: [parent] }
   els.forEach(el => { el.parentNode = parent })
 
-  let winHandlers = { 'click': [] }
+  const winHandlers = { click: [] }
   const window = {
     addEventListener: function (evt, handler) {
-      winHandlers[evt] = winHandlers[evt] ? winHandlers[evt].concat(handler) : [ handler ]
+      winHandlers[evt] = winHandlers[evt] ? winHandlers[evt].concat(handler) : [handler]
     },
     document: {
       querySelectorAll: function (query) {
         switch (query) {
           case 'BUTTON.button': return els
-          case 'BUTTON.button:nth-child(1)': return [ els[0] ]
-          case 'DIV#buttons': return [ parent ]
+          case 'BUTTON.button:nth-child(1)': return [els[0]]
+          case 'DIV#buttons': return [parent]
           default: return []
         }
       }

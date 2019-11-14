@@ -13,12 +13,12 @@ describe('plugin: navigation breadcrumbs', () => {
 
     const { winHandlers, docHandlers, window } = getMockWindow()
     c.use(plugin, window)
-    winHandlers['load'].forEach((h) => h.call(window))
-    docHandlers['DOMContentLoaded'].forEach((h) => h.call(window.document))
+    winHandlers.load.forEach((h) => h.call(window))
+    docHandlers.DOMContentLoaded.forEach((h) => h.call(window.document))
 
-    var plainObject = Object.create(null)
+    const plainObject = Object.create(null)
     plainObject.dummyProperty = true
-    var state = { myObject: plainObject }
+    const state = { myObject: plainObject }
     window.history.replaceState(state, 'foo', 'bar.html')
 
     // first ensure that the pushState command works to change the url of the page
@@ -40,8 +40,8 @@ describe('plugin: navigation breadcrumbs', () => {
     c.configure()
     const { winHandlers, docHandlers, window } = getMockWindow()
     c.use(plugin, window)
-    winHandlers['load'].forEach((h) => h.call(window))
-    docHandlers['DOMContentLoaded'].forEach((h) => h.call(window.document))
+    winHandlers.load.forEach((h) => h.call(window))
+    docHandlers.DOMContentLoaded.forEach((h) => h.call(window.document))
     window.history.replaceState({}, 'bar', 'network-breadcrumb-test.html')
     window.history.replaceState({}, 'bar')
     expect(c.breadcrumbs.length).toBe(0)
@@ -58,8 +58,8 @@ describe('plugin: navigation breadcrumbs', () => {
     })
     const { winHandlers, docHandlers, window } = getMockWindow()
     c.use(plugin, window)
-    winHandlers['load'].forEach((h) => h.call(window))
-    docHandlers['DOMContentLoaded'].forEach((h) => h.call(window.document))
+    winHandlers.load.forEach((h) => h.call(window))
+    docHandlers.DOMContentLoaded.forEach((h) => h.call(window.document))
     window.history.replaceState({}, 'bar', 'network-breadcrumb-test.html')
   })
 
@@ -75,8 +75,8 @@ describe('plugin: navigation breadcrumbs', () => {
     })
     const { winHandlers, docHandlers, window } = getMockWindow()
     c.use(plugin, window)
-    winHandlers['load'].forEach((h) => h.call(window))
-    docHandlers['DOMContentLoaded'].forEach((h) => h.call(window.document))
+    winHandlers.load.forEach((h) => h.call(window))
+    docHandlers.DOMContentLoaded.forEach((h) => h.call(window.document))
     window.history.replaceState({}, 'bar', 'network-breadcrumb-test.html')
     setTimeout(() => done(), 1)
   })
@@ -87,8 +87,8 @@ describe('plugin: navigation breadcrumbs', () => {
     c.configure()
     const { winHandlers, docHandlers, window } = getMockWindow()
     c.use(plugin, window)
-    winHandlers['load'].forEach((h) => h.call(window))
-    docHandlers['DOMContentLoaded'].forEach((h) => h.call(window.document))
+    winHandlers.load.forEach((h) => h.call(window))
+    docHandlers.DOMContentLoaded.forEach((h) => h.call(window.document))
     window.history.replaceState({}, 'bar', 'network-breadcrumb-test.html')
     window.history.replaceState({}, 'bar')
     expect(c.breadcrumbs.length).toBe(5)
@@ -127,7 +127,7 @@ const getMockWindow = () => {
         return el
       },
       addEventListener: function (evt, handler) {
-        docHandlers[evt] = docHandlers[evt] ? docHandlers[evt].concat(handler) : [ handler ]
+        docHandlers[evt] = docHandlers[evt] ? docHandlers[evt].concat(handler) : [handler]
       }
     },
     location: {
@@ -141,7 +141,7 @@ const getMockWindow = () => {
       popState: function () {}
     },
     addEventListener: function (evt, handler) {
-      winHandlers[evt] = winHandlers[evt] ? winHandlers[evt].concat(handler) : [ handler ]
+      winHandlers[evt] = winHandlers[evt] ? winHandlers[evt].concat(handler) : [handler]
     }
   }
   return { winHandlers, docHandlers, window }

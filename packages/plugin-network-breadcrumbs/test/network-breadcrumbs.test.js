@@ -14,10 +14,10 @@ XMLHttpRequest.prototype.open = function (method, url) {
 }
 XMLHttpRequest.prototype.send = function (fail, status) {
   if (fail) {
-    this._listeners['error'].call(this)
+    this._listeners.error.call(this)
   } else {
     this.status = status
-    this._listeners['load'].call(this)
+    this._listeners.load.call(this)
   }
 }
 XMLHttpRequest.prototype.addEventListener = function (evt, listener) {
@@ -123,7 +123,7 @@ describe('plugin: network breadcrumbs', () => {
       type: 'request',
       name: 'XMLHttpRequest error',
       metaData: {
-        request: `GET https://another-domain.xyz/`
+        request: 'GET https://another-domain.xyz/'
       }
     }))
   })
@@ -215,7 +215,7 @@ describe('plugin: network breadcrumbs', () => {
         type: 'request',
         name: 'fetch() error',
         metaData: {
-          request: `GET https://another-domain.xyz/foo/bar`
+          request: 'GET https://another-domain.xyz/foo/bar'
         }
       }))
       done()

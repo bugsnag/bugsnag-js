@@ -78,7 +78,7 @@ module.exports = (opts) => {
   // this one added last to avoid wrapping functionality before bugsnag uses it
   bugsnag.use(pluginInlineScriptContent)
 
-  bugsnag._logger.debug(`Loaded!`)
+  bugsnag._logger.debug('Loaded!')
 
   return bugsnag.config.autoCaptureSessions
     ? bugsnag.startSession()
@@ -95,4 +95,4 @@ module.exports.Bugsnag = {
 }
 
 // Export a "default" property for compatibility with ESM imports
-module.exports['default'] = module.exports
+module.exports.default = module.exports

@@ -41,7 +41,7 @@ const getNodeText = el => {
 
 // Create a label from tagname, id and css class of the element
 function getNodeSelector (el, win) {
-  const parts = [ el.tagName ]
+  const parts = [el.tagName]
   if (el.id) parts.push('#' + el.id)
   if (el.className && el.className.length) parts.push(`.${el.className.split(' ').join('.')}`)
   // Can't get much more advanced with the current browser

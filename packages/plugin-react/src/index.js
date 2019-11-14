@@ -11,6 +11,7 @@ module.exports = {
           info: null
         }
       }
+
       componentDidCatch (error, info) {
         const { beforeSend } = this.props
         const BugsnagReport = client.BugsnagReport
@@ -21,6 +22,7 @@ module.exports = {
         client.notify(report, { beforeSend })
         this.setState({ error, info })
       }
+
       render () {
         const { error } = this.state
         if (error) {
@@ -45,4 +47,4 @@ const formatComponentStack = str => {
 }
 
 module.exports.formatComponentStack = formatComponentStack
-module.exports['default'] = module.exports
+module.exports.default = module.exports

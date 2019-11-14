@@ -15,7 +15,7 @@ describe('plugin: console breadcrumbs', () => {
     // make sure it's null-safe
     console.log(null)
     console.log({
-      foo: [ 1, 2, 3, 'four' ]
+      foo: [1, 2, 3, 'four']
     }, {
       pets: {
         cat: 'scratcher',

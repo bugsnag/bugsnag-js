@@ -29,7 +29,7 @@ describe('@bugsnag/core/report', () => {
     it('creates a report from an error', () => {
       const Report = proxyquire('../report', {
         'stack-generator': {
-          backtrace: () => [ {}, {} ]
+          backtrace: () => [{}, {}]
         }
       })
       const r0 = Report.ensureReport(new Error('normal error'))
@@ -89,7 +89,7 @@ describe('@bugsnag/core/report', () => {
       const Report = require('../report')
       const r = new Report('Err', 'bad', [])
       r.updateMetaData('metaaaaa', 'flip', 'flop')
-      expect(r.metaData['metaaaaa']).toEqual({ flip: 'flop' })
+      expect(r.metaData.metaaaaa).toEqual({ flip: 'flop' })
     })
 
     it('handles bad input', () => {
@@ -113,7 +113,7 @@ describe('@bugsnag/core/report', () => {
       r.updateMetaData('specific detail', { extra: 'stuff', more: 'things' })
 
       r.updateMetaData('metaaaaa', null)
-      expect(r.metaData['metaaaaa']).toBe(undefined)
+      expect(r.metaData.metaaaaa).toBe(undefined)
 
       r.updateMetaData('specific detail', 'more', null)
       expect(r.metaData['specific detail']).toEqual({ extra: 'stuff' })

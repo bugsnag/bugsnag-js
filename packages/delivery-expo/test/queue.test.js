@@ -32,7 +32,7 @@ describe('delivery: expo -> queue', () => {
         readAsStringAsync: () => {},
         writeAsStringAsync: () => {},
         readDirectoryAsync: () => {
-          return Promise.resolve([ '.DS_Store', '.meta', 'something_else' ])
+          return Promise.resolve(['.DS_Store', '.meta', 'something_else'])
         },
         deleteAsync: () => {}
       }
@@ -60,7 +60,7 @@ describe('delivery: expo -> queue', () => {
         },
         writeAsStringAsync: () => {},
         readDirectoryAsync: () => {
-          return Promise.resolve([ Queue.generateFilename('stuff') ])
+          return Promise.resolve([Queue.generateFilename('stuff')])
         },
         deleteAsync: async () => {}
       }
@@ -134,7 +134,7 @@ describe('delivery: expo -> queue', () => {
       const MockFileSystem = {
         cacheDirectory: 'file://var/data/foo.bar.app/',
         getInfoAsync: (path) => {
-          expect(path).toBe(`file://var/data/foo.bar.app/bugsnag/stuff`)
+          expect(path).toBe('file://var/data/foo.bar.app/bugsnag/stuff')
           return Promise.resolve({ exists: true, isDirectory: true })
         },
         makeDirectoryAsync: () => {},
@@ -159,11 +159,11 @@ describe('delivery: expo -> queue', () => {
       const MockFileSystem = {
         cacheDirectory: 'file://var/data/foo.bar.app/',
         getInfoAsync: (path) => {
-          expect(path).toBe(`file://var/data/foo.bar.app/bugsnag/stuff`)
+          expect(path).toBe('file://var/data/foo.bar.app/bugsnag/stuff')
           return Promise.resolve({ exists: false })
         },
         makeDirectoryAsync: (path) => {
-          expect(path).toBe(`file://var/data/foo.bar.app/bugsnag/stuff`)
+          expect(path).toBe('file://var/data/foo.bar.app/bugsnag/stuff')
           return Promise.resolve()
         },
         readAsStringAsync: () => {},
@@ -261,8 +261,8 @@ describe('delivery: expo -> queue', () => {
 
   describe('init()', () => {
     it('should only enter the create logic once for simultaneous calls', async (done) => {
-      let exists = false
-      let isDirectory = false
+      const exists = false
+      const isDirectory = false
       let makeCount = 0
       const MockFileSystem = {
         cacheDirectory: 'file://var/data/foo.bar.app/',
@@ -325,8 +325,8 @@ describe('delivery: expo -> queue', () => {
     })
 
     it('should rethrow errors when the directory was not succesfully created', async (done) => {
-      let exists = false
-      let isDirectory = false
+      const exists = false
+      const isDirectory = false
       const MockFileSystem = {
         cacheDirectory: 'file://var/data/foo.bar.app/',
         getInfoAsync: async () => ({ exists, isDirectory }),
@@ -357,8 +357,8 @@ describe('delivery: expo -> queue', () => {
     })
 
     it('should reject all pending promises', async (done) => {
-      let exists = false
-      let isDirectory = false
+      const exists = false
+      const isDirectory = false
       const MockFileSystem = {
         cacheDirectory: 'file://var/data/foo.bar.app/',
         getInfoAsync: async () => ({ exists, isDirectory }),
@@ -376,7 +376,7 @@ describe('delivery: expo -> queue', () => {
         'expo-file-system': MockFileSystem
       })
       const q = new Queue('stuff')
-      let errs = []
+      const errs = []
       await Promise.all([
         q.init().catch(e => errs.push(e)),
         q.init().catch(e => errs.push(e)),

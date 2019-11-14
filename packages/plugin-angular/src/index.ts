@@ -36,7 +36,7 @@ export class BugsnagErrorHandler extends ErrorHandler {
   }
 }
 
-const plugin: Bugsnag.IPlugin = {
+const plugin: Bugsnag.Plugin = {
   init: (client: Bugsnag.Client): ErrorHandler => {
     return new BugsnagErrorHandler(client);
   },

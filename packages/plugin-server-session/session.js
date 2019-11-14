@@ -33,12 +33,12 @@ const sendSessionSummary = client => sessionCounts => {
 
   // exit early if the reports should not be sent on the current releaseStage
   if (isArray(client.config.notifyReleaseStages) && !includes(client.config.notifyReleaseStages, releaseStage)) {
-    client._logger.warn(`Session not sent due to releaseStage/notifyReleaseStages configuration`)
+    client._logger.warn('Session not sent due to releaseStage/notifyReleaseStages configuration')
     return
   }
 
   if (!client.config.endpoints.sessions) {
-    client._logger.warn(`Session not sent due to missing endpoints.sessions configuration`)
+    client._logger.warn('Session not sent due to missing endpoints.sessions configuration')
     return
   }
 

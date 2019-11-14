@@ -64,11 +64,11 @@ module.exports = (opts) => {
   })
   bugsnag.use(bugsnagReact, React)
 
-  bugsnag._logger.debug(`Loaded!`)
+  bugsnag._logger.debug('Loaded!')
 
   return bugsnag.config.autoCaptureSessions
     ? bugsnag.startSession()
     : bugsnag
 }
 
-module.exports['default'] = module.exports
+module.exports.default = module.exports

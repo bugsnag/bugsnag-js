@@ -8,8 +8,8 @@ const isError = require('./lib/iserror')
 const some = require('./lib/async-some')
 const runBeforeSend = require('./lib/run-before-send')
 
-const LOG_USAGE_ERR_PREFIX = `Usage error.`
-const REPORT_USAGE_ERR_PREFIX = `Bugsnag usage error.`
+const LOG_USAGE_ERR_PREFIX = 'Usage error.'
+const REPORT_USAGE_ERR_PREFIX = 'Bugsnag usage error.'
 
 class BugsnagClient {
   constructor (notifier) {
@@ -52,8 +52,8 @@ class BugsnagClient {
     this.BugsnagBreadcrumb = BugsnagBreadcrumb
     this.BugsnagSession = BugsnagSession
 
-    var self = this
-    var notify = this.notify
+    const self = this
+    const notify = this.notify
     this.notify = function () {
       return notify.apply(self, arguments)
     }
@@ -70,7 +70,7 @@ class BugsnagClient {
     if (!validity.valid === true) throw new Error(generateConfigErrorMessage(validity.errors))
 
     // update and elevate some special options if they were passed in at this point
-    if (typeof conf.beforeSend === 'function') conf.beforeSend = [ conf.beforeSend ]
+    if (typeof conf.beforeSend === 'function') conf.beforeSend = [conf.beforeSend]
     if (conf.appVersion) this.app.version = conf.appVersion
     if (conf.appType) this.app.type = conf.appType
     if (conf.metaData) this.metaData = conf.metaData
@@ -154,7 +154,7 @@ class BugsnagClient {
     const releaseStage = inferReleaseStage(this)
 
     // ensure we have an error (or a reasonable object representation of an error)
-    let { err, errorFramesToSkip, _opts } = normaliseError(error, opts, this._logger)
+    const { err, errorFramesToSkip, _opts } = normaliseError(error, opts, this._logger)
     if (_opts) opts = _opts
 
     // ensure opts is an object
@@ -184,7 +184,7 @@ class BugsnagClient {
 
     // exit early if the reports should not be sent on the current releaseStage
     if (isArray(this.config.notifyReleaseStages) && !includes(this.config.notifyReleaseStages, releaseStage)) {
-      this._logger.warn(`Report not sent due to releaseStage/notifyReleaseStages configuration`)
+      this._logger.warn('Report not sent due to releaseStage/notifyReleaseStages configuration')
       return cb(null, report)
     }
 
@@ -192,7 +192,7 @@ class BugsnagClient {
 
     const beforeSend = [].concat(opts.beforeSend).concat(this.config.beforeSend)
     const onBeforeSendErr = err => {
-      this._logger.error(`Error occurred in beforeSend callback, continuing anyway…`)
+      this._logger.error('Error occurred in beforeSend callback, continuing anyway…')
       this._logger.error(err)
     }
 
@@ -200,7 +200,7 @@ class BugsnagClient {
       if (err) onBeforeSendErr(err)
 
       if (preventSend) {
-        this._logger.debug(`Report not sent due to beforeSend callback`)
+        this._logger.debug('Report not sent due to beforeSend callback')
         return cb(null, report)
       }
 
@@ -220,7 +220,7 @@ class BugsnagClient {
       this._delivery.sendReport({
         apiKey: report.apiKey || this.config.apiKey,
         notifier: this.notifier,
-        events: [ report ]
+        events: [report]
       }, (err) => cb(err, report))
     })
   }
@@ -244,7 +244,7 @@ const normaliseError = (error, opts, logger) => {
         // ≤v3 used to have a notify('ErrorName', 'Error message') interface
         // report usage/deprecation errors if this function is called like that
         err = createAndLogUsageError('string/string')
-        _opts = { metaData: { notifier: { notifyArgs: [ error, opts ] } } }
+        _opts = { metaData: { notifier: { notifyArgs: [error, opts] } } }
       } else {
         err = new Error(String(error))
         errorFramesToSkip = synthesizedErrorFramesToSkip

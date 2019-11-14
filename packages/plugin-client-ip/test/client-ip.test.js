@@ -15,11 +15,11 @@ describe('plugin: ip', () => {
 
     client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
     client.notify(new Error('noooo'), {
-      beforeSend: report => { report.request = { 'some': 'detail' } }
+      beforeSend: report => { report.request = { some: 'detail' } }
     })
 
     expect(payloads.length).toEqual(1)
-    expect(payloads[0].events[0].request).toEqual({ 'some': 'detail' })
+    expect(payloads[0].events[0].request).toEqual({ some: 'detail' })
   })
 
   it('doesn’t overwrite an existing user id', () => {

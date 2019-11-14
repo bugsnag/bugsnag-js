@@ -33,7 +33,7 @@
     "clean": "rm -fr dist && mkdir dist",
     "bundle-types": "../../bin/bundle-types",
     "build": "npm run clean && npm run bundle-types",
-    "test:types": "tslint -c ../../tslint.json types/*.d.ts && jasmine 'types/**/*.test.js'",
+    "test:types": "jasmine 'types/**/*.test.js'",
     "postversion": "npm run build"
   },
   "author": "Bugsnag",
@@ -42,7 +42,6 @@
     "@babel/cli": "^7.0.0",
     "jasmine": "3.1.0",
     "nyc": "^12.0.2",
-    "tslint": "^5.12.1",
     "typescript": "^3.3.3"
   },
   "dependencies": {

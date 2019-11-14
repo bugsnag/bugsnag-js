@@ -8,7 +8,7 @@ const fs = require('fs')
 
 // mock an async resource
 
-const items = [ 'a', 'b', 'c' ]
+const items = ['a', 'b', 'c']
 
 // node-style error-first
 function load (index, cb) {

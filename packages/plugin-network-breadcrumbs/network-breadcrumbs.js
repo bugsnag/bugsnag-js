@@ -120,7 +120,7 @@ const monkeyPatchFetch = () => {
 
   const oldFetch = win.fetch
   win.fetch = function fetch (...args) {
-    let [url, options] = args
+    const [url, options] = args
     let method = 'GET'
     if (options && options.method) {
       method = options.method

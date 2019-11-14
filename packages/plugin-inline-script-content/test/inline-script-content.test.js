@@ -14,7 +14,7 @@ describe('plugin: inline script content', () => {
 BadThing.prototype = Object.create(Error.prototype)
 bugsnagClient.notify(new BadThing('Happens in script tags'))`
     const document = {
-      scripts: [ { innerHTML: scriptContent } ],
+      scripts: [{ innerHTML: scriptContent }],
       currentScript: { innerHTML: scriptContent },
       documentElement: {
         outerHTML: `<p>
@@ -76,15 +76,15 @@ Lorem ipsum dolor sit amet.
   })
 
   it('truncates script content to a reasonable length', () => {
-    let scriptContent = ``
+    let scriptContent = ''
     for (let i = 0; i < 10000; i++) {
       scriptContent += `function fn_${i} (arg0, arg1, arg2) {\n`
-      scriptContent += `  console.log('this is an awfully long inline script!')\n`
-      scriptContent += `}\n`
+      scriptContent += '  console.log(\'this is an awfully long inline script!\')\n'
+      scriptContent += '}\n'
     }
     expect(scriptContent.length > 500000).toBe(true)
     const document = {
-      scripts: [ { innerHTML: scriptContent } ],
+      scripts: [{ innerHTML: scriptContent }],
       currentScript: { innerHTML: scriptContent },
       documentElement: {
         outerHTML: `<p>
@@ -123,7 +123,7 @@ Lorem ipsum dolor sit amet.
 }`
     expect(longMessage.length > 200).toBe(true)
     const document = {
-      scripts: [ { innerHTML: scriptContent } ],
+      scripts: [{ innerHTML: scriptContent }],
       currentScript: { innerHTML: scriptContent },
       documentElement: {
         outerHTML: `<p>
@@ -159,9 +159,9 @@ Lorem ipsum dolor sit amet.
   })
 
   it('works when the stacktrace is empty', () => {
-    const scriptContent = `console.log("EMPTY")`
+    const scriptContent = 'console.log("EMPTY")'
     const document = {
-      scripts: [ { innerHTML: scriptContent } ],
+      scripts: [{ innerHTML: scriptContent }],
       currentScript: { innerHTML: scriptContent },
       documentElement: {
         outerHTML: `<p>
@@ -192,9 +192,9 @@ Lorem ipsum dolor sit amet.
   })
 
   it('calls removeEventListener with wrapped and unwrapped callback', () => {
-    const scriptContent = `console.log("unwrapped")`
+    const scriptContent = 'console.log("unwrapped")'
     const document = {
-      scripts: [ { innerHTML: scriptContent } ],
+      scripts: [{ innerHTML: scriptContent }],
       currentScript: { innerHTML: scriptContent },
       documentElement: {
         outerHTML: `<p>
@@ -233,9 +233,9 @@ Lorem ipsum dolor sit amet.
   })
 
   it('gets the correct line numbers for errors at the start of the document', () => {
-    const scriptContent = `throw new Error('oh')\nconsole.log('next')`
+    const scriptContent = 'throw new Error(\'oh\')\nconsole.log(\'next\')'
     const document = {
-      scripts: [ { innerHTML: scriptContent } ],
+      scripts: [{ innerHTML: scriptContent }],
       currentScript: { innerHTML: scriptContent },
       documentElement: {
         outerHTML: `<script>${scriptContent}</script>`

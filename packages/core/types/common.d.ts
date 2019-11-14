@@ -1,72 +1,72 @@
 import Client from "./client";
 import Report from "./report";
 
-export interface IConfig {
+export interface Config {
   apiKey: string;
   beforeSend?: BeforeSend | BeforeSend[];
   autoBreadcrumbs?: boolean;
   autoNotify?: boolean;
   appVersion?: string;
   appType?: string;
-  endpoints?: { notify: string, sessions?: string };
+  endpoints?: { notify: string; sessions?: string };
   autoCaptureSessions?: boolean;
   notifyReleaseStages?: string[];
   releaseStage?: string;
   maxBreadcrumbs?: number;
   user?: object | null;
   metaData?: object | null;
-  logger?: ILogger | null;
+  logger?: Logger | null;
   filters?: Array<string | RegExp>;
   [key: string]: any;
 }
 
 export type BeforeSend = (report: Report, cb?: (err: null | Error) => void) => void | Promise<void> | boolean;
 
-export interface IPlugin {
+export interface Plugin {
   name?: string;
   init: (client: Client) => any;
-  configSchema?: IConfigSchema;
+  configSchema?: ConfigSchema;
   destroy?(): void;
 }
 
-export interface IConfigSchemaEntry {
+export interface ConfigSchemaEntry {
   message: string;
   validate: (val: any) => boolean;
   defaultValue: () => any;
 }
 
-export interface IConfigSchema {
-  [key: string]: IConfigSchemaEntry;
+export interface ConfigSchema {
+  [key: string]: ConfigSchemaEntry;
 }
 
-export interface IDelivery {
+export interface Delivery {
   name: string;
   sendReport: (
-    logger: ILogger,
+    logger: Logger,
     config: any,
-    report: IReportPayload,
+    report: ReportPayload,
     cb?: (e: Error | null, resText: string) => void,
   ) => void;
   sendSession: (
-    logger: ILogger,
+    logger: Logger,
     config: any,
-    report: ISessionPayload,
+    report: SessionPayload,
     cb?: (e: Error | null, resText: string) => void,
   ) => void;
 }
 
-export interface ILogger {
+export interface Logger {
   debug: (...args: any[]) => void;
   info: (...args: any[]) => void;
   warn: (...args: any[]) => void;
   error: (...args: any[]) => void;
 }
 
-export interface ISessionDelegate {
+export interface SessionDelegate {
   startSession: (client: Client) => Client;
 }
 
-export interface IReportPayload {  apiKey: string;
+export interface ReportPayload {  apiKey: string;
   notifier: {
     name: string;
     version: string;
@@ -75,7 +75,7 @@ export interface IReportPayload {  apiKey: string;
   events: Report[];
 }
 
-export interface ISessionPayload {
+export interface SessionPayload {
   notifier: {
     name: string;
     version: string;
@@ -84,16 +84,16 @@ export interface ISessionPayload {
   device?: object;
   user?: object;
   app?: object;
-  sessions: ISession[];
+  sessions: Session[];
 }
 
-export interface ISession {
+export interface Session {
   id: string;
   startedAt: string;
   user?: object;
 }
 
-export interface INotifyOpts {
+export interface NotifyOpts {
   context?: string;
   device?: object;
   request?: object;
@@ -104,6 +104,6 @@ export interface INotifyOpts {
 }
 
 export type NotifiableError = Error
-  | { errorClass: string; errorMessage: string; }
-  | { name: string; message: string; }
+  | { errorClass: string; errorMessage: string }
+  | { name: string; message: string }
   | any;

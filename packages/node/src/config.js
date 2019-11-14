@@ -46,7 +46,7 @@ module.exports = {
 }
 
 const getPrefixedConsole = () => {
-  return reduce([ 'debug', 'info', 'warn', 'error' ], (accum, method) => {
+  return reduce(['debug', 'info', 'warn', 'error'], (accum, method) => {
     const consoleMethod = console[method] || console.log
     accum[method] = consoleMethod.bind(console, '[bugsnag]')
     return accum
@@ -56,6 +56,6 @@ const getPrefixedConsole = () => {
 const getContext = report =>
   report.request && Object.keys(report.request).length
     ? ` at ${report.request.httpMethod} ${report.request.path || report.request.url}`
-    : ``
+    : ''
 
 const isAgent = value => (typeof value === 'object' && value !== null) || typeof value === 'boolean'
