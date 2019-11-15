@@ -17,7 +17,7 @@ export default class NetworkBreadcrumbs extends Component {
       bugsnag({
         endpoints: endpoints,
         autoNotify: false,
-        autoCaptureSessions: false
+        autoTrackSessions: false
       }),
       "defaultNetworkBreadcrumbsBehaviour"
     )
@@ -28,7 +28,7 @@ export default class NetworkBreadcrumbs extends Component {
       bugsnag({
         endpoints: endpoints,
         autoNotify: false,
-        autoCaptureSessions: false,
+        autoTrackSessions: false,
         networkBreadcrumbsEnabled: false
       }),
       "disabledNetworkBreadcrumbsBehaviour"
@@ -40,7 +40,7 @@ export default class NetworkBreadcrumbs extends Component {
       bugsnag({
         endpoints: endpoints,
         autoNotify: false,
-        autoCaptureSessions: false,
+        autoTrackSessions: false,
         autoBreadcrumbs: false
       }),
       "disabledAllNetworkBreadcrumbsBehaviour"
@@ -52,7 +52,7 @@ export default class NetworkBreadcrumbs extends Component {
       bugsnag({
         endpoints: endpoints,
         autoNotify: false,
-        autoCaptureSessions: false,
+        autoTrackSessions: false,
         autoBreadcrumbs: false,
         networkBreadcrumbsEnabled: true
       }),

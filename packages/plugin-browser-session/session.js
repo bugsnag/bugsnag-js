@@ -18,11 +18,6 @@ const sessionDelegate = {
       return sessionClient
     }
 
-    if (!sessionClient.config.endpoints.sessions) {
-      sessionClient._logger.warn('Session not sent due to missing endpoints.sessions configuration')
-      return sessionClient
-    }
-
     sessionClient._delivery.sendSession({
       notifier: sessionClient.notifier,
       device: sessionClient.device,

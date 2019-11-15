@@ -10,7 +10,7 @@ declare module "@bugsnag/core" {
     appVersion?: string;
     appType?: string;
     endpoints?: { notify: string; sessions?: string };
-    autoCaptureSessions?: boolean;
+    autoTrackSessions?: boolean;
     notifyReleaseStages?: string[];
     releaseStage?: string;
     maxBreadcrumbs?: number;

@@ -80,7 +80,7 @@ module.exports = (opts) => {
 
   bugsnag._logger.debug('Loaded!')
 
-  return bugsnag.config.autoCaptureSessions
+  return bugsnag.config.autoTrackSessions
     ? bugsnag.startSession()
     : bugsnag
 }

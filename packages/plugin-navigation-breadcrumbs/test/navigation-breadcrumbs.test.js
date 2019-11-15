@@ -47,7 +47,7 @@ describe('plugin: navigation breadcrumbs', () => {
     expect(c.breadcrumbs.length).toBe(0)
   })
 
-  it('should start a new session if autoCaptureSessions=true', (done) => {
+  it('should start a new session if autoTrackSessions=true', (done) => {
     const c = new Client(VALID_NOTIFIER)
     c.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
     c.configure()
@@ -63,9 +63,9 @@ describe('plugin: navigation breadcrumbs', () => {
     window.history.replaceState({}, 'bar', 'network-breadcrumb-test.html')
   })
 
-  it('should not a new session if autoCaptureSessions=false', (done) => {
+  it('should not a new session if autoTrackSessions=false', (done) => {
     const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa', autoCaptureSessions: false })
+    c.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa', autoTrackSessions: false })
     c.configure()
     c.sessionDelegate({
       startSession: client => {

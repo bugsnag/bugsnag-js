@@ -5,7 +5,7 @@ var bugsnagClient = bugsnag({
     notify: process.env.BUGSNAG_NOTIFY_ENDPOINT,
     sessions: process.env.BUGSNAG_SESSIONS_ENDPOINT
   },
-  autoCaptureSessions: false,
+  autoTrackSessions: false,
   sessionSummaryInterval: 1000
 })
 

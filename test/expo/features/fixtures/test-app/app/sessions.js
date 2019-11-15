@@ -8,7 +8,7 @@ export default class Sessions extends Component {
     bugsnag({
       endpoints: endpoints,
       autoNotify: false,
-      autoCaptureSessions: true
+      autoTrackSessions: true
     })
   }
 
