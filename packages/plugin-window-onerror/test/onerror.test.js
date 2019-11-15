@@ -18,6 +18,14 @@ describe('plugin: window onerror', () => {
     expect(typeof window.onerror).toBe('function')
   })
 
+  it('should not add a window.onerror event handler when autoDetectErrors=false', () => {
+    const client = new Client(VALID_NOTIFIER)
+    client.setOptions({ apiKey: 'API_KEY_YEAH', autoDetectErrors: false })
+    client.configure()
+    client.use(plugin, window)
+    expect(window.onerror).toBe(undefined)
+  })
+
   describe('window.onerror function', () => {
     it('captures uncaught errors in timer callbacks', done => {
       const client = new Client(VALID_NOTIFIER)
