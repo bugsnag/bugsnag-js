@@ -20,7 +20,7 @@ module.exports = {
 
       // Get a client to be scoped to this request. If sessions are enabled, use the
       // startSession() call to get a session client, otherwise, clone the existing client.
-      const requestClient = client.config.autoCaptureSessions ? client.startSession() : clone(client)
+      const requestClient = client.config.autoTrackSessions ? client.startSession() : clone(client)
 
       // attach it to the request
       req.bugsnag = requestClient

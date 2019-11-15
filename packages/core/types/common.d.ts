@@ -8,8 +8,8 @@ export interface Config {
   autoNotify?: boolean;
   appVersion?: string;
   appType?: string;
-  endpoints?: { notify: string; sessions?: string };
-  autoCaptureSessions?: boolean;
+  endpoints?: { notify: string; sessions: string };
+  autoTrackSessions?: boolean;
   notifyReleaseStages?: string[];
   releaseStage?: string;
   maxBreadcrumbs?: number;

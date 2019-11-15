@@ -32,21 +32,19 @@ module.exports.schema = {
       notify: 'https://notify.bugsnag.com',
       sessions: 'https://sessions.bugsnag.com'
     }),
-    message: 'should be an object containing endpoint URLs { notify, sessions }. sessions is optional if autoCaptureSessions=false',
-    validate: (val, obj) =>
+    message: 'should be an object containing endpoint URLs { notify, sessions }',
+    validate: val =>
       // first, ensure it's an object
       (val && typeof val === 'object') &&
       (
-        // endpoints.notify must always be set
-        stringWithLength(val.notify) &&
-        // endpoints.sessions must be set unless session tracking is explicitly off
-        (obj.autoCaptureSessions === false || stringWithLength(val.sessions))
+        // notify and sessions must always be set
+        stringWithLength(val.notify) && stringWithLength(val.sessions)
       ) &&
       // ensure no keys other than notify/session are set on endpoints object
       filter(keys(val), k => !includes(['notify', 'sessions'], k)).length === 0
   },
-  autoCaptureSessions: {
-    defaultValue: (val, opts) => opts.endpoints === undefined || (!!opts.endpoints && !!opts.endpoints.sessions),
+  autoTrackSessions: {
+    defaultValue: val => true,
     message: 'should be true|false',
     validate: val => val === true || val === false
   },

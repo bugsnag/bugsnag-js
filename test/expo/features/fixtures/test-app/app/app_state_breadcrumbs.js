@@ -18,7 +18,7 @@ export default class AppStateBreadcrumbs extends Component {
         client: bugsnag({
           endpoints: endpoints,
           autoNotify: false,
-          autoCaptureSessions: false
+          autoTrackSessions: false
         }),
         errorMessage: "defaultAppStateBreadcrumbsBehaviour"
       }
@@ -31,7 +31,7 @@ export default class AppStateBreadcrumbs extends Component {
         client: bugsnag({
           endpoints: endpoints,
           autoNotify: false,
-          autoCaptureSessions: false,
+          autoTrackSessions: false,
           appStateBreadcrumbsEnabled: false
         }),
         errorMessage: "disabledAppStateBreadcrumbsBehaviour"
@@ -45,7 +45,7 @@ export default class AppStateBreadcrumbs extends Component {
         client: bugsnag({
           endpoints: endpoints,
           autoNotify: false,
-          autoCaptureSessions: false,
+          autoTrackSessions: false,
           autoBreadcrumbs: false
         }),
         errorMessage: "disabledAllAppStateBreadcrumbsBehaviour"
@@ -59,7 +59,7 @@ export default class AppStateBreadcrumbs extends Component {
         client: bugsnag({
           endpoints: endpoints,
           autoNotify: false,
-          autoCaptureSessions: false,
+          autoTrackSessions: false,
           autoBreadcrumbs: false,
           appStateBreadcrumbsEnabled: true
         }),

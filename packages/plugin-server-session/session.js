@@ -37,11 +37,6 @@ const sendSessionSummary = client => sessionCounts => {
     return
   }
 
-  if (!client.config.endpoints.sessions) {
-    client._logger.warn('Session not sent due to missing endpoints.sessions configuration')
-    return
-  }
-
   if (!sessionCounts.length) return
 
   const backoff = new Backoff({ min: 1000, max: 10000 })

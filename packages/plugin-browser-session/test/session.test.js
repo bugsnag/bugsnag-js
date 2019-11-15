@@ -84,27 +84,16 @@ describe('plugin: sessions', () => {
     setTimeout(done, 150)
   })
 
-  it('logs a warning when no session endpoint is set', (done) => {
+  it('rejects config when session endpoint is not set', () => {
     const c = new Client(VALID_NOTIFIER)
     c.setOptions({
       apiKey: 'API_KEY',
       releaseStage: 'foo',
       endpoints: { notify: '/foo' },
-      autoCaptureSessions: false
+      autoTrackSessions: false
     })
-    c.configure()
-    c.use(plugin)
-    c.logger({
-      warn: msg => {
-        expect(msg).toMatch(/session not sent/i)
-        done()
-      }
-    })
-    c.delivery(client => ({
-      sendSession: (session, cb) => {
-        expect(true).toBe(false)
-      }
-    }))
-    c.startSession()
+    expect(() => c.configure()).toThrowError(
+      /"endpoints" should be an object containing endpoint URLs { notify, sessions }/
+    )
   })
 })
