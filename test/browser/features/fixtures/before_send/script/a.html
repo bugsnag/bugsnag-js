@@ -9,8 +9,8 @@
       var bugsnagClient = bugsnag({
         apiKey: API_KEY,
         endpoints: { notify: ENDPOINT, sessions: '/noop' },
-        beforeSend: function (report) {
-          report.updateMetaData('before_send', 'global', 'works')
+        beforeSend: function (event) {
+          event.updateMetaData('before_send', 'global', 'works')
         }
       })
     </script>

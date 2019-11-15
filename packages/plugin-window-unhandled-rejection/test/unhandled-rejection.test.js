@@ -23,11 +23,11 @@ describe('plugin: unhandled rejection', () => {
       client.configure()
       client.use(plugin, window)
       client.delivery(client => ({
-        sendReport: (payload) => {
-          const report = payload.events[0].toJSON()
-          expect(report.severity).toBe('error')
-          expect(report.unhandled).toBe(true)
-          expect(report.severityReason).toEqual({ type: 'unhandledPromiseRejection' })
+        sendEvent: (payload) => {
+          const event = payload.events[0].toJSON()
+          expect(event.severity).toBe('error')
+          expect(event.unhandled).toBe(true)
+          expect(event.severityReason).toEqual({ type: 'unhandledPromiseRejection' })
           plugin.destroy(window)
           done()
         }
@@ -43,14 +43,14 @@ describe('plugin: unhandled rejection', () => {
       client.configure()
       client.use(plugin, window)
       client.delivery(client => ({
-        sendReport: (payload) => {
-          const report = payload.events[0].toJSON()
-          expect(report.severity).toBe('error')
-          expect(report.unhandled).toBe(true)
-          expect(report.exceptions[0].errorClass).toBe('UnhandledRejection')
-          expect(report.exceptions[0].message).toBe('Rejection reason was not an Error. See "Promise" tab for more detail.')
-          expect(report.severityReason).toEqual({ type: 'unhandledPromiseRejection' })
-          expect(report.metaData.promise['rejection reason']).toEqual('undefined (or null)')
+        sendEvent: (payload) => {
+          const event = payload.events[0].toJSON()
+          expect(event.severity).toBe('error')
+          expect(event.unhandled).toBe(true)
+          expect(event.exceptions[0].errorClass).toBe('UnhandledRejection')
+          expect(event.exceptions[0].message).toBe('Rejection reason was not an Error. See "Promise" tab for more detail.')
+          expect(event.severityReason).toEqual({ type: 'unhandledPromiseRejection' })
+          expect(event.metaData.promise['rejection reason']).toEqual('undefined (or null)')
           plugin.destroy(window)
           done()
         }
@@ -67,14 +67,14 @@ describe('plugin: unhandled rejection', () => {
     //   client.configure()
     //   client.use(plugin, window)
     //   client.delivery({
-    //     sendReport: (payload) => {
-    //       const report = payload.events[0].toJSON()
-    //       expect(report.severity).toBe('error')
-    //       expect(report.unhandled).toBe(true)
-    //       expect(report.exceptions[0].errorClass).toBe('AbortError')
-    //       expect(report.exceptions[0].message).toBe('Subscription failed - no active Service Worker')
-    //       expect(report.severityReason).toEqual({ type: 'unhandledPromiseRejection' })
-    //       expect(report.metaData.promise['rejection reason']).toEqual({
+    //     sendEvent: (payload) => {
+    //       const event = payload.events[0].toJSON()
+    //       expect(event.severity).toBe('error')
+    //       expect(event.unhandled).toBe(true)
+    //       expect(event.exceptions[0].errorClass).toBe('AbortError')
+    //       expect(event.exceptions[0].message).toBe('Subscription failed - no active Service Worker')
+    //       expect(event.severityReason).toEqual({ type: 'unhandledPromiseRejection' })
+    //       expect(event.metaData.promise['rejection reason']).toEqual({
     //         '[object DOMException]': {
     //           name: 'AbortError',
     //           message: 'Subscription failed - no active Service Worker',
@@ -108,13 +108,13 @@ describe('plugin: unhandled rejection', () => {
       client.configure()
       client.use(plugin, window)
       client.delivery(client => ({
-        sendReport: (payload) => {
-          const report = payload.events[0].toJSON()
-          expect(report.severity).toBe('error')
-          expect(report.unhandled).toBe(true)
-          expect(report.exceptions[0].errorClass).toBe('Error')
-          expect(report.exceptions[0].message).toBe('blah')
-          expect(report.severityReason).toEqual({ type: 'unhandledPromiseRejection' })
+        sendEvent: (payload) => {
+          const event = payload.events[0].toJSON()
+          expect(event.severity).toBe('error')
+          expect(event.unhandled).toBe(true)
+          expect(event.exceptions[0].errorClass).toBe('Error')
+          expect(event.exceptions[0].message).toBe('blah')
+          expect(event.severityReason).toEqual({ type: 'unhandledPromiseRejection' })
           plugin.destroy(window)
           done()
         }
@@ -131,13 +131,13 @@ describe('plugin: unhandled rejection', () => {
       client.configure()
       client.use(plugin, window)
       client.delivery(client => ({
-        sendReport: (payload) => {
-          const report = payload.events[0].toJSON()
-          expect(report.severity).toBe('error')
-          expect(report.unhandled).toBe(true)
-          expect(report.exceptions[0].errorClass).toBe('Error')
-          expect(report.exceptions[0].message).toBe('blah')
-          expect(report.severityReason).toEqual({ type: 'unhandledPromiseRejection' })
+        sendEvent: (payload) => {
+          const event = payload.events[0].toJSON()
+          expect(event.severity).toBe('error')
+          expect(event.unhandled).toBe(true)
+          expect(event.exceptions[0].errorClass).toBe('Error')
+          expect(event.exceptions[0].message).toBe('blah')
+          expect(event.severityReason).toEqual({ type: 'unhandledPromiseRejection' })
           plugin.destroy(window)
           done()
         }

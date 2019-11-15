@@ -30,8 +30,8 @@ Use the instructions below to run the application. When it runs, the output will
     Calls the leaveBreadcrumb() method.
 
   b = calling notify with a (b)efore send callback
-    Runs custom logic before a report is sent. This contrived example will
-    pseudo-randomly prevent 50% of the reports from sending.
+    Runs custom logic before an event is sent. This contrived example will
+    pseudo-randomly prevent 50% of the events from sending.
 ```
 
 Take a look at [app.js](app.js) to see how each action is implemented.

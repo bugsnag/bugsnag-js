@@ -4,6 +4,7 @@
 
 - Migrate lint tooling to ESLint for both .js and .ts source files [#644](https://github.com/bugsnag/bugsnag-js/pull/644)
 - Rename `autoCaptureSessions` -> `autoTrackSessions` and simplify validation logic [#647](https://github.com/bugsnag/bugsnag-js/pull/647)
+- Rename `report` to `event` [#646](https://github.com/bugsnag/bugsnag-js/pull/646)
 
 ## 6.4.3 (2019-10-21)
 

@@ -12,7 +12,7 @@ const sessionDelegate = {
 
     const releaseStage = inferReleaseStage(sessionClient)
 
-    // exit early if the reports should not be sent on the current releaseStage
+    // exit early if the current releaseStage is not enabled
     if (isArray(sessionClient.config.notifyReleaseStages) && !includes(sessionClient.config.notifyReleaseStages, releaseStage)) {
       sessionClient._logger.warn('Session not sent due to releaseStage/notifyReleaseStages configuration')
       return sessionClient

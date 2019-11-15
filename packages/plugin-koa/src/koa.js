@@ -1,4 +1,4 @@
-const createReportFromErr = require('@bugsnag/core/lib/report-from-error')
+const createEventFromErr = require('@bugsnag/core/lib/event-from-error')
 const clone = require('@bugsnag/core/lib/clone-client')
 const extractRequestInfo = require('./request-info')
 
@@ -30,7 +30,7 @@ module.exports = {
         await next()
       } catch (err) {
         if (err.status === undefined || err.status >= 500) {
-          ctx.bugsnag.notify(createReportFromErr(err, handledState))
+          ctx.bugsnag.notify(createEventFromErr(err, handledState))
         }
         if (!ctx.response.headerSent) ctx.response.status = err.status || 500
         try {
@@ -59,7 +59,7 @@ module.exports = {
         yield next
       } catch (err) {
         if (err.status === undefined || err.status >= 500) {
-          this.bugsnag.notify(createReportFromErr(err, handledState))
+          this.bugsnag.notify(createEventFromErr(err, handledState))
         }
         if (!this.headerSent) this.status = err.status || 500
       }
@@ -67,10 +67,10 @@ module.exports = {
 
     const errorHandler = (err, ctx) => {
       if (ctx.bugsnag) {
-        ctx.bugsnag.notify(createReportFromErr(err, handledState))
+        ctx.bugsnag.notify(createEventFromErr(err, handledState))
       } else {
         client._logger.warn('ctx.bugsnag is not defined. Make sure the @bugsnag/plugin-koa requestHandler middleware is added first.')
-        client.notify(createReportFromErr(err, handledState), getRequestAndMetaDataFromCtx(ctx))
+        client.notify(createEventFromErr(err, handledState), getRequestAndMetaDataFromCtx(ctx))
       }
     }
 

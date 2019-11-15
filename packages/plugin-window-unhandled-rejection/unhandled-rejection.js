@@ -8,14 +8,14 @@ const isError = require('@bugsnag/core/lib/iserror')
  */
 let _listener
 exports.init = (client, win = window) => {
-  const listener = event => {
-    let error = event.reason
+  const listener = evt => {
+    let error = evt.reason
     let isBluebird = false
 
-    // accessing properties on event.detail can throw errors (see #394)
+    // accessing properties on evt.detail can throw errors (see #394)
     try {
-      if (event.detail && event.detail.reason) {
-        error = event.detail.reason
+      if (evt.detail && evt.detail.reason) {
+        error = evt.detail.reason
         isBluebird = true
       }
     } catch (e) {}
@@ -26,17 +26,17 @@ exports.init = (client, win = window) => {
       severityReason: { type: 'unhandledPromiseRejection' }
     }
 
-    let report
+    let event
     if (error && hasStack(error)) {
       // if it quacks like an Error…
-      report = new client.BugsnagReport(error.name, error.message, ErrorStackParser.parse(error), handledState, error)
+      event = new client.BugsnagEvent(error.name, error.message, ErrorStackParser.parse(error), handledState, error)
       if (isBluebird) {
-        report.stacktrace = reduce(report.stacktrace, fixBluebirdStacktrace(error), [])
+        event.stacktrace = reduce(event.stacktrace, fixBluebirdStacktrace(error), [])
       }
     } else {
       // if it doesn't…
       const msg = 'Rejection reason was not an Error. See "Promise" tab for more detail.'
-      report = new client.BugsnagReport(
+      event = new client.BugsnagEvent(
         error && error.name ? error.name : 'UnhandledRejection',
         error && error.message ? error.message : msg,
         [],
@@ -44,10 +44,10 @@ exports.init = (client, win = window) => {
         error
       )
       // stuff the rejection reason into metaData, it could be useful
-      report.updateMetaData('promise', 'rejection reason', serializableReason(error))
+      event.updateMetaData('promise', 'rejection reason', serializableReason(error))
     }
 
-    client.notify(report)
+    client.notify(event)
   }
   if ('addEventListener' in win) {
     win.addEventListener('unhandledrejection', listener)

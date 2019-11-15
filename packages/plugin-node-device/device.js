@@ -13,9 +13,9 @@ module.exports = {
     // merge with anything already set on the client
     client.device = { ...device, ...client.device }
 
-    // add time just as the report is sent
-    client.config.beforeSend.unshift((report) => {
-      report.device = { ...report.device, time: isoDate() }
+    // add time just as the event is sent
+    client.config.beforeSend.unshift((event) => {
+      event.device = { ...event.device, time: isoDate() }
     })
   }
 }

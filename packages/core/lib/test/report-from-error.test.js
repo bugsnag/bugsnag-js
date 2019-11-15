@@ -1,26 +1,26 @@
 const { describe, it, expect } = global
 
-const createReportFromErr = require('../report-from-error')
+const createEventFromErr = require('../event-from-error')
 
-describe('createReportFromErr(maybeErr)', () => {
+describe('createEventFromErr(maybeErr)', () => {
   it('works with errors', () => {
-    const report = createReportFromErr(new Error('jim'))
-    expect(report.errorMessage).toBe('jim')
+    const event = createEventFromErr(new Error('jim'))
+    expect(event.errorMessage).toBe('jim')
   })
 
   it('tolerates null', () => {
-    const report = createReportFromErr(null)
-    expect(report.errorMessage).toBe('Handled a non-error. See "error" tab for more detail.')
-    expect(report.metaData.error['non-error value']).toBe('null')
+    const event = createEventFromErr(null)
+    expect(event.errorMessage).toBe('Handled a non-error. See "error" tab for more detail.')
+    expect(event.metaData.error['non-error value']).toBe('null')
   })
 
   it('accepts acustom handledState', () => {
-    const report = createReportFromErr(new Error('floop'), {
+    const event = createEventFromErr(new Error('floop'), {
       unhandled: true,
       severity: 'info',
       severityReason: { type: 'userCallbackSetSeverity' }
     })
-    expect(report.errorMessage).toBe('floop')
-    expect(report._handledState.unhandled).toBe(true)
+    expect(event.errorMessage).toBe('floop')
+    expect(event._handledState.unhandled).toBe(true)
   })
 })

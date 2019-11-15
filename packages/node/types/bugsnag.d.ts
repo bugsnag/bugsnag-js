@@ -1,6 +1,6 @@
 import * as BugsnagCore from "@bugsnag/core";
 
-type afterErrorCb = (err: any, report: BugsnagCore.Config, logger: BugsnagCore.Logger) => void;
+type afterErrorCb = (err: any, event: BugsnagCore.Event, logger: BugsnagCore.Logger) => void;
 
 // overwrite config interface, adding node-specific options
 declare module "@bugsnag/core" {

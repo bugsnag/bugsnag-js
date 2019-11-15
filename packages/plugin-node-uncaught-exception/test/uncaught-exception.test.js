@@ -30,17 +30,17 @@ describe('plugin: node uncaught exception handler', () => {
   it('should call the configured onUncaughtException callback', done => {
     const c = new Client(VALID_NOTIFIER)
     c.delivery(client => ({
-      sendReport: (...args) => args[args.length - 1](),
+      sendEvent: (...args) => args[args.length - 1](),
       sendSession: (...args) => args[args.length - 1]()
     }))
     c.setOptions({
       apiKey: 'api_key',
-      onUncaughtException: (err, report) => {
+      onUncaughtException: (err, event) => {
         expect(err.message).toBe('never gonna catch me')
-        expect(report.errorMessage).toBe('never gonna catch me')
-        expect(report._handledState.unhandled).toBe(true)
-        expect(report._handledState.severity).toBe('error')
-        expect(report._handledState.severityReason).toEqual({ type: 'unhandledException' })
+        expect(event.errorMessage).toBe('never gonna catch me')
+        expect(event._handledState.unhandled).toBe(true)
+        expect(event._handledState.severity).toBe('error')
+        expect(event._handledState.severityReason).toEqual({ type: 'unhandledException' })
         plugin.destroy()
         done()
       }
@@ -60,17 +60,17 @@ describe('plugin: node uncaught exception handler', () => {
   it('should tolerate delivery errors', done => {
     const c = new Client(VALID_NOTIFIER)
     c.delivery(client => ({
-      sendReport: (...args) => args[args.length - 1](new Error('failed')),
+      sendEvent: (...args) => args[args.length - 1](new Error('failed')),
       sendSession: (...args) => args[args.length - 1]()
     }))
     c.setOptions({
       apiKey: 'api_key',
-      onUncaughtException: (err, report) => {
+      onUncaughtException: (err, event) => {
         expect(err.message).toBe('never gonna catch me')
-        expect(report.errorMessage).toBe('never gonna catch me')
-        expect(report._handledState.unhandled).toBe(true)
-        expect(report._handledState.severity).toBe('error')
-        expect(report._handledState.severityReason).toEqual({ type: 'unhandledException' })
+        expect(event.errorMessage).toBe('never gonna catch me')
+        expect(event._handledState.unhandled).toBe(true)
+        expect(event._handledState.severity).toBe('error')
+        expect(event._handledState.severityReason).toEqual({ type: 'unhandledException' })
         plugin.destroy()
         done()
       }

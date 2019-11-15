@@ -49,7 +49,7 @@ const mockServer = (statusCode = 200) => {
 }
 
 describe('delivery: expo', () => {
-  it('sends reports successfully', done => {
+  it('sends events successfully', done => {
     const delivery = proxyquire('../', {
       './queue': NoopQueue,
       './redelivery': NoopRedelivery,
@@ -68,7 +68,7 @@ describe('delivery: expo', () => {
         endpoints: { notify: `http://0.0.0.0:${server.address().port}/notify/` },
         filters: []
       }
-      delivery({ config, _logger: noopLogger }, fetch).sendReport(payload, (err) => {
+      delivery({ config, _logger: noopLogger }, fetch).sendEvent(payload, (err) => {
         expect(err).toBe(null)
         expect(requests.length).toBe(1)
         expect(requests[0].method).toBe('POST')
@@ -140,7 +140,7 @@ describe('delivery: expo', () => {
     }
     let didLog = false
     const log = () => { didLog = true }
-    delivery({ config, _logger: { error: log, info: () => {} } }, fetch).sendReport(payload, (err) => {
+    delivery({ config, _logger: { error: log, info: () => {} } }, fetch).sendEvent(payload, (err) => {
       expect(didLog).toBe(true)
       expect(err).toBeTruthy()
       expect(err.code).toBe('ECONNREFUSED')
@@ -174,7 +174,7 @@ describe('delivery: expo', () => {
       }
       let didLog = false
       const log = () => { didLog = true }
-      delivery({ config, _logger: { error: log, info: () => {} } }, fetch).sendReport(payload, (err) => {
+      delivery({ config, _logger: { error: log, info: () => {} } }, fetch).sendEvent(payload, (err) => {
         expect(didLog).toBe(true)
         expect(spiedEnqueue).not.toHaveBeenCalled()
         expect(err).toBeTruthy()
@@ -242,7 +242,7 @@ describe('delivery: expo', () => {
       }
       let didLog = false
       const log = () => { didLog = true }
-      delivery({ config, _logger: { error: log, info: () => {} } }, fetch).sendReport(payload, (err) => {
+      delivery({ config, _logger: { error: log, info: () => {} } }, fetch).sendEvent(payload, (err) => {
         expect(didLog).toBe(true)
         expect(err).toBeTruthy()
         expect(err.code).toBe('ECONNRESET')
@@ -280,7 +280,7 @@ describe('delivery: expo', () => {
       }
       let didLog = false
       const log = () => { didLog = true }
-      delivery({ config, _logger: { error: log, info: () => {} } }, fetch).sendReport(payload, (err) => {
+      delivery({ config, _logger: { error: log, info: () => {} } }, fetch).sendEvent(payload, (err) => {
         expect(didLog).toBe(true)
         expect(err).toBeTruthy()
         expect(spiedEnqueue).toHaveBeenCalled()
@@ -289,7 +289,7 @@ describe('delivery: expo', () => {
     })
   })
 
-  it('does not send a report marked with report.attemptImmediateDelivery=false', done => {
+  it('does not send an event marked with event.attemptImmediateDelivery=false', done => {
     class MockQueue {
       async init () {}
       async enqueue (req) {}
@@ -308,7 +308,7 @@ describe('delivery: expo', () => {
       endpoints: { notify: 'https://some-address.com' },
       filters: []
     }
-    delivery({ config, _logger: noopLogger }, fetch).sendReport(payload, (err) => {
+    delivery({ config, _logger: noopLogger }, fetch).sendEvent(payload, (err) => {
       expect(err).not.toBeTruthy()
       expect(spiedEnqueue).toHaveBeenCalled()
       done()
@@ -396,7 +396,7 @@ describe('delivery: expo', () => {
       if (n === 2) done()
     }
     const d = delivery({ config, _logger: noopLogger }, fetch)
-    d.sendReport(payload, (err) => {
+    d.sendEvent(payload, (err) => {
       expect(err).not.toBeTruthy()
       expect(spiedEnqueue).toHaveBeenCalledTimes(1)
       _done()

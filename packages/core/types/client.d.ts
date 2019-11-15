@@ -1,6 +1,6 @@
 import Breadcrumb from "./breadcrumb";
 import * as common from "./common";
-import Report from "./report";
+import Event from "./event";
 import Session from "./session";
 
 declare class Client {
@@ -11,7 +11,7 @@ declare class Client {
   public user: object;
   public metaData: object;
 
-  public BugsnagReport: typeof Report;
+  public BugsnagEvent: typeof Event;
   public BugsnagBreadcrumb: typeof Breadcrumb;
   public BugsnagSession: typeof Session;
 
@@ -25,7 +25,7 @@ declare class Client {
   public notify(
     error: common.NotifiableError,
     opts?: common.NotifyOpts,
-    cb?: (err: any, report: Report) => void,
+    cb?: (err: any, event: Event) => void,
   ): void;
   public leaveBreadcrumb(name: string, metaData?: any, type?: string, timestamp?: string): Client;
   public startSession(): Client;

@@ -1,17 +1,17 @@
-const Report = require('../report')
+const Event = require('../event')
 const iserror = require('./iserror')
 
 module.exports = (maybeError, handledState) => {
   const actualError = iserror(maybeError)
     ? maybeError
     : new Error('Handled a non-error. See "error" tab for more detail.')
-  const report = new Report(
+  const event = new Event(
     actualError.name,
     actualError.message,
-    Report.getStacktrace(actualError),
+    Event.getStacktrace(actualError),
     handledState,
     maybeError
   )
-  if (maybeError !== actualError) report.updateMetaData('error', 'non-error value', String(maybeError))
-  return report
+  if (maybeError !== actualError) event.updateMetaData('error', 'non-error value', String(maybeError))
+  return event
 }

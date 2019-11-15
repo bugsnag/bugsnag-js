@@ -37,13 +37,13 @@ module.exports = {
       }
     }
 
-    client.config.beforeSend.unshift(report => {
-      report.device = {
-        ...report.device,
+    client.config.beforeSend.unshift(event => {
+      event.device = {
+        ...event.device,
         time: isoDate(),
         orientation
       }
-      report.updateMetaData('device', {
+      event.updateMetaData('device', {
         isDevice: Constants.isDevice,
         appOwnership: Constants.appOwnership
       })

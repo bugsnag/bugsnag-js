@@ -5,8 +5,8 @@ const { map } = require('@bugsnag/core/lib/es-utils')
 
 module.exports = {
   init: (client) => {
-    client.config.beforeSend.push(report => {
-      report.stacktrace = map(report.stacktrace, frame => ({ ...frame, file: strip(frame.file) }))
+    client.config.beforeSend.push(event => {
+      event.stacktrace = map(event.stacktrace, frame => ({ ...frame, file: strip(frame.file) }))
     })
   }
 }

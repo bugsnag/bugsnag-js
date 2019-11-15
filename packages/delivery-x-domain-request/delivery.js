@@ -2,7 +2,7 @@ const payload = require('@bugsnag/core/lib/json-payload')
 const { isoDate } = require('@bugsnag/core/lib/es-utils')
 
 module.exports = (client, win = window) => ({
-  sendReport: (report, cb = () => {}) => {
+  sendEvent: (event, cb = () => {}) => {
     const url = getApiUrl(client.config, 'notify', '4', win)
     const req = new win.XDomainRequest()
     req.onload = function () {
@@ -11,7 +11,7 @@ module.exports = (client, win = window) => ({
     req.open('POST', url)
     setTimeout(() => {
       try {
-        req.send(payload.report(report, client.config.filters))
+        req.send(payload.event(event, client.config.filters))
       } catch (e) {
         client._logger.error(e)
         cb(e)

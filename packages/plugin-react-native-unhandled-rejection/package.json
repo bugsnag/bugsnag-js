@@ -20,7 +20,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^7.0.0-pre-alpha-ben.6",
+    "@bugsnag/core": "^6.4.1",
     "jasmine": "3.1.0",
     "nyc": "^12.0.2",
     "promise": "^8.0.2"

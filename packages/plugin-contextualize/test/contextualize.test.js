@@ -23,10 +23,10 @@ describe('plugin: contextualize', () => {
   it('should call the onUnhandledException callback when an error is captured', done => {
     const c = new Client(VALID_NOTIFIER)
     c.delivery(client => ({
-      sendReport: (report, cb) => {
-        expect(report.events[0].errorMessage).toBe('no item available')
-        expect(report.events[0].severity).toBe('warning')
-        expect(report.events[0].user).toEqual({
+      sendEvent: (payload, cb) => {
+        expect(payload.events[0].errorMessage).toBe('no item available')
+        expect(payload.events[0].severity).toBe('warning')
+        expect(payload.events[0].user).toEqual({
           id: '1a2c3cd4',
           name: 'Ben Gourley',
           email: 'ben.gourley@bugsnag.com'
@@ -69,9 +69,9 @@ describe('plugin: contextualize', () => {
   it('should add a stacktrace when missing', done => {
     const c = new Client(VALID_NOTIFIER)
     c.delivery(client => ({
-      sendReport: (report, cb) => {
-        expect(report.events[0].errorMessage).toBe('ENOENT: no such file or directory, open \'does not exist\'')
-        expect(report.events[0].stacktrace[0].file).toBe(`${__filename}`)
+      sendEvent: (payload, cb) => {
+        expect(payload.events[0].errorMessage).toBe('ENOENT: no such file or directory, open \'does not exist\'')
+        expect(payload.events[0].stacktrace[0].file).toBe(`${__filename}`)
         cb(null)
       },
       sendSession: () => {}
@@ -97,10 +97,10 @@ describe('plugin: contextualize', () => {
     })
   })
 
-  it('should tolerate a failed report', done => {
+  it('should tolerate a failed event', done => {
     const c = new Client(VALID_NOTIFIER)
     c.delivery(client => ({
-      sendReport: (report, cb) => {
+      sendEvent: (payload, cb) => {
         cb(new Error('sending failed'))
       },
       sendSession: () => {}

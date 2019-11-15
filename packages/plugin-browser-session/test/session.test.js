@@ -33,9 +33,9 @@ describe('plugin: sessions', () => {
     c.use(plugin)
     c.delivery(client => ({
       sendSession: () => {},
-      sendReport: (report, cb) => {
+      sendEvent: (payload, cb) => {
         if (++i < 10) return
-        const r = JSON.parse(JSON.stringify(report.events[0]))
+        const r = JSON.parse(JSON.stringify(payload.events[0]))
         expect(r.session).toBeDefined()
         expect(r.session.events.handled).toBe(6)
         expect(r.session.events.unhandled).toBe(4)
@@ -44,15 +44,15 @@ describe('plugin: sessions', () => {
     }))
     const sessionClient = c.startSession()
     sessionClient.notify(new Error('broke'))
-    sessionClient.notify(new c.BugsnagReport('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
+    sessionClient.notify(new c.BugsnagEvent('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
     sessionClient.notify(new Error('broke'))
     sessionClient.notify(new Error('broke'))
-    sessionClient.notify(new c.BugsnagReport('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
+    sessionClient.notify(new c.BugsnagEvent('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
     sessionClient.notify(new Error('broke'))
     sessionClient.notify(new Error('broke'))
     sessionClient.notify(new Error('broke'))
-    sessionClient.notify(new c.BugsnagReport('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
-    sessionClient.notify(new c.BugsnagReport('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
+    sessionClient.notify(new c.BugsnagEvent('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
+    sessionClient.notify(new c.BugsnagEvent('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
   })
 
   it('correctly infers releaseStage', (done) => {

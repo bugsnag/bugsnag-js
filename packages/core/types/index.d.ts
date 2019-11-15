@@ -1,7 +1,7 @@
 import Breadcrumb from "./breadcrumb";
 import Client from "./client";
-import Report from "./report";
+import Event from "./event";
 import Session from "./session";
 
-export { Breadcrumb, Client, Report, Session };
+export { Breadcrumb, Client, Event, Session };
 export * from "./common";

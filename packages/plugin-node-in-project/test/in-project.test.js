@@ -2,7 +2,7 @@ const { describe, it, expect } = global
 
 const plugin = require('../')
 const { join } = require('path')
-const Report = require('@bugsnag/core/report')
+const Event = require('@bugsnag/core/event')
 const Client = require('@bugsnag/core/client')
 const { schema } = require('@bugsnag/core/config')
 const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
@@ -12,8 +12,8 @@ describe('plugin: node in project', () => {
     const client = new Client(VALID_NOTIFIER)
 
     client.delivery(client => ({
-      sendReport: (report) => {
-        const evt = report.events[0]
+      sendEvent: (payload) => {
+        const evt = payload.events[0]
         expect(evt.stacktrace[0].inProject).toBe(true)
         expect(evt.stacktrace[1].inProject).toBe(true)
         expect(evt.stacktrace[2].inProject).toBe(true)
@@ -33,7 +33,7 @@ describe('plugin: node in project', () => {
     })
     client.use(plugin)
 
-    client.notify(new Report('Error', 'in project test', [
+    client.notify(new Event('Error', 'in project test', [
       {
         lineNumber: 22,
         columnNumber: 18,
@@ -54,8 +54,8 @@ describe('plugin: node in project', () => {
     const client = new Client(VALID_NOTIFIER)
 
     client.delivery(client => ({
-      sendReport: (report) => {
-        const evt = report.events[0]
+      sendEvent: (payload) => {
+        const evt = payload.events[0]
         expect(evt.stacktrace[0].inProject).toBe(false)
         expect(evt.stacktrace[1].inProject).toBe(false)
         expect(evt.stacktrace[2].inProject).toBe(false)
@@ -75,7 +75,7 @@ describe('plugin: node in project', () => {
     })
     client.use(plugin)
 
-    client.notify(new Report('Error', 'in project test', [
+    client.notify(new Event('Error', 'in project test', [
       {
         lineNumber: 22,
         columnNumber: 18,
@@ -96,8 +96,8 @@ describe('plugin: node in project', () => {
     const client = new Client(VALID_NOTIFIER)
 
     client.delivery(client => ({
-      sendReport: (report) => {
-        const evt = report.events[0]
+      sendEvent: (payload) => {
+        const evt = payload.events[0]
         expect(evt.stacktrace[0].inProject).toBe(false)
         expect(evt.stacktrace[1].inProject).toBe(false)
         done()
@@ -116,7 +116,7 @@ describe('plugin: node in project', () => {
     })
     client.use(plugin)
 
-    client.notify(new Report('Error', 'in project test', [
+    client.notify(new Event('Error', 'in project test', [
       {
         lineNumber: 22,
         columnNumber: 18,
@@ -133,8 +133,8 @@ describe('plugin: node in project', () => {
     const client = new Client(VALID_NOTIFIER)
 
     client.delivery(client => ({
-      sendReport: (report) => {
-        const evt = report.events[0]
+      sendEvent: (payload) => {
+        const evt = payload.events[0]
         expect(evt.stacktrace[0].inProject).toBe(false)
         expect(evt.stacktrace[1].inProject).toBe(false)
         expect(evt.stacktrace[2].inProject).toBe(false)
@@ -154,7 +154,7 @@ describe('plugin: node in project', () => {
     })
     client.use(plugin)
 
-    client.notify(new Report('Error', 'in project test', [
+    client.notify(new Event('Error', 'in project test', [
       {
         lineNumber: 22,
         columnNumber: 18,

@@ -1,5 +1,5 @@
 import Client from "./client";
-import Report from "./report";
+import Event from "./event";
 
 export interface Config {
   apiKey: string;
@@ -20,7 +20,7 @@ export interface Config {
   [key: string]: any;
 }
 
-export type BeforeSend = (report: Report, cb?: (err: null | Error) => void) => void | Promise<void> | boolean;
+export type BeforeSend = (event: Event, cb?: (err: null | Error) => void) => void | Promise<void> | boolean;
 
 export interface Plugin {
   name?: string;
@@ -41,16 +41,16 @@ export interface ConfigSchema {
 
 export interface Delivery {
   name: string;
-  sendReport: (
+  sendEvent: (
     logger: Logger,
     config: any,
-    report: ReportPayload,
+    event: EventPayload,
     cb?: (e: Error | null, resText: string) => void,
   ) => void;
   sendSession: (
     logger: Logger,
     config: any,
-    report: SessionPayload,
+    event: SessionPayload,
     cb?: (e: Error | null, resText: string) => void,
   ) => void;
 }
@@ -66,13 +66,13 @@ export interface SessionDelegate {
   startSession: (client: Client) => Client;
 }
 
-export interface ReportPayload {  apiKey: string;
+export interface EventPayload {  apiKey: string;
   notifier: {
     name: string;
     version: string;
     url: string;
   };
-  events: Report[];
+  events: Event[];
 }
 
 export interface SessionPayload {

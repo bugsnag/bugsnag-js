@@ -4,10 +4,10 @@ const hasStack = require('./lib/has-stack')
 const { reduce, filter } = require('./lib/es-utils')
 const jsRuntime = require('./lib/js-runtime')
 
-class BugsnagReport {
+class BugsnagEvent {
   constructor (errorClass, errorMessage, stacktrace = [], handledState = defaultHandledState(), originalError) {
     // duck-typing ftw >_<
-    this.__isBugsnagReport = true
+    this.__isBugsnagEvent = true
 
     this._ignored = false
 
@@ -159,7 +159,7 @@ const stringOrFallback = (str, fallback) => typeof str === 'string' && str ? str
 
 // Helpers
 
-BugsnagReport.getStacktrace = function (error, errorFramesToSkip = 0, generatedFramesToSkip = 0) {
+BugsnagEvent.getStacktrace = function (error, errorFramesToSkip = 0, generatedFramesToSkip = 0) {
   if (hasStack(error)) return ErrorStackParser.parse(error).slice(errorFramesToSkip)
   // in IE11 a new Error() doesn't have a stacktrace until you throw it, so try that here
   try {
@@ -177,15 +177,15 @@ BugsnagReport.getStacktrace = function (error, errorFramesToSkip = 0, generatedF
   }
 }
 
-BugsnagReport.ensureReport = function (reportOrError, errorFramesToSkip = 0, generatedFramesToSkip = 0) {
-  // notify() can be called with a Report object. In this case no action is required
-  if (reportOrError.__isBugsnagReport) return reportOrError
+BugsnagEvent.ensureEvent = function (eventOrError, errorFramesToSkip = 0, generatedFramesToSkip = 0) {
+  // notify() can be called with an Event object. In this case no action is required
+  if (eventOrError.__isBugsnagEvent) return eventOrError
   try {
-    const stacktrace = BugsnagReport.getStacktrace(reportOrError, errorFramesToSkip, 1 + generatedFramesToSkip)
-    return new BugsnagReport(reportOrError.name, reportOrError.message, stacktrace, undefined, reportOrError)
+    const stacktrace = BugsnagEvent.getStacktrace(eventOrError, errorFramesToSkip, 1 + generatedFramesToSkip)
+    return new BugsnagEvent(eventOrError.name, eventOrError.message, stacktrace, undefined, eventOrError)
   } catch (e) {
-    return new BugsnagReport(reportOrError.name, reportOrError.message, [], undefined, reportOrError)
+    return new BugsnagEvent(eventOrError.name, eventOrError.message, [], undefined, eventOrError)
   }
 }
 
-module.exports = BugsnagReport
+module.exports = BugsnagEvent

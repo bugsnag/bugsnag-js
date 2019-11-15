@@ -51,7 +51,7 @@ describe('plugin: react native global error handler', () => {
     const client = new Client(VALID_NOTIFIER)
     client.delivery(client => ({
       sendSession: () => {},
-      sendReport: (...args) => args[args.length - 1](null)
+      sendEvent: (...args) => args[args.length - 1](null)
     }))
     client.setOptions({ apiKey: 'API_KEY_YEAH' })
     client.configure()
@@ -70,8 +70,8 @@ describe('plugin: react native global error handler', () => {
     const client = new Client(VALID_NOTIFIER)
     client.delivery(client => ({
       sendSession: () => {},
-      sendReport: (report, cb) => {
-        const r = JSON.parse(JSON.stringify(report))
+      sendEvent: (payload, cb) => {
+        const r = JSON.parse(JSON.stringify(payload))
         expect(r.events[0].severity).toBe('error')
         expect(r.events[0].unhandled).toBe(true)
         expect(r.events[0].severityReason).toEqual({ type: 'unhandledException' })

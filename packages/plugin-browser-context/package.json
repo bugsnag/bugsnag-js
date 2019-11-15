@@ -2,7 +2,7 @@
   "name": "@bugsnag/plugin-browser-context",
   "version": "6.4.1",
   "main": "context.js",
-  "description": "@bugsnag/js plugin to set report context in browsers",
+  "description": "@bugsnag/js plugin to set event context in browsers",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
     "type": "git",

@@ -25,16 +25,16 @@ describe('plugin: window onerror', () => {
       client.setOptions({ apiKey: 'API_KEY_YEAH' })
       client.configure()
       client.use(plugin, window)
-      client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
+      client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
 
       window.onerror('Uncaught Error: Bad things', 'foo.js', 10, 20, new Error('Bad things'))
 
       try {
         expect(payloads.length).toBe(1)
-        const report = payloads[0].events[0].toJSON()
-        expect(report.severity).toBe('error')
-        expect(report.unhandled).toBe(true)
-        expect(report.severityReason).toEqual({ type: 'unhandledException' })
+        const event = payloads[0].events[0].toJSON()
+        expect(event.severity).toBe('error')
+        expect(event.unhandled).toBe(true)
+        expect(event.severityReason).toEqual({ type: 'unhandledException' })
         done()
       } catch (e) {
         done(e)
@@ -47,7 +47,7 @@ describe('plugin: window onerror', () => {
     //   client.setOptions({ apiKey: 'API_KEY_YEAH' })
     //   client.configure()
     //   client.use(plugin, window)
-    //   client.delivery({ sendReport: (payload) => payloads.push(payload) })
+    //   client.delivery({ sendEvent: (payload) => payloads.push(payload) })
     //
     //   window.eval(`
     //     var el = window.document.createElement('BUTTON')
@@ -58,10 +58,10 @@ describe('plugin: window onerror', () => {
     //
     //   try {
     //     expect(payloads.length).toBe(1)
-    //     const report = payloads[0].events[0].toJSON()
-    //     expect(report.severity).toBe('error')
-    //     expect(report.unhandled).toBe(true)
-    //     expect(report.severityReason).toEqual({ type: 'unhandledException' })
+    //     const event = payloads[0].events[0].toJSON()
+    //     expect(event.severity).toBe('error')
+    //     expect(event.unhandled).toBe(true)
+    //     expect(event.severityReason).toEqual({ type: 'unhandledException' })
     //     done()
     //   } catch (e) {
     //     done(e)
@@ -76,7 +76,7 @@ describe('plugin: window onerror', () => {
       client.setOptions({ apiKey: 'API_KEY_YEAH' })
       client.configure()
       client.use(plugin, window)
-      client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
+      client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
 
       window.onerror('Uncaught Error: Bad things', 'foo.js', 10, 20, new Error('Bad things'))
     })
@@ -87,18 +87,18 @@ describe('plugin: window onerror', () => {
       client.setOptions({ apiKey: 'API_KEY_YEAH' })
       client.configure()
       client.use(plugin, window)
-      client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
+      client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
 
-      const event = { type: 'error', detail: 'something bad happened' }
-      window.onerror(event)
+      const evt = { type: 'error', detail: 'something bad happened' }
+      window.onerror(evt)
 
       expect(payloads.length).toBe(1)
-      const report = payloads[0].events[0].toJSON()
-      expect(report.severity).toBe('error')
-      expect(report.unhandled).toBe(true)
-      expect(report.exceptions[0].errorClass).toBe('Event: error')
-      expect(report.exceptions[0].message).toBe('something bad happened')
-      expect(report.severityReason).toEqual({ type: 'unhandledException' })
+      const event = payloads[0].events[0].toJSON()
+      expect(event.severity).toBe('error')
+      expect(event.unhandled).toBe(true)
+      expect(event.exceptions[0].errorClass).toBe('Event: error')
+      expect(event.exceptions[0].message).toBe('something bad happened')
+      expect(event.severityReason).toEqual({ type: 'unhandledException' })
     })
 
     it('handles single argument usage of window.onerror with extra parameter', () => {
@@ -107,21 +107,21 @@ describe('plugin: window onerror', () => {
       client.setOptions({ apiKey: 'API_KEY_YEAH' })
       client.configure()
       client.use(plugin, window)
-      client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
+      client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
 
       // this situation is caused by the following kind of jQuery call:
       // jQuery('select.province').trigger(jQuery.Event('error.validator.bv'), { valid: false })
-      const event = { type: 'error', detail: 'something bad happened' }
+      const evt = { type: 'error', detail: 'something bad happened' }
       const extra = { valid: false }
-      window.onerror(event, extra)
+      window.onerror(evt, extra)
 
       expect(payloads.length).toBe(1)
-      const report = payloads[0].events[0].toJSON()
-      expect(report.severity).toBe('error')
-      expect(report.unhandled).toBe(true)
-      expect(report.exceptions[0].errorClass).toBe('Event: error')
-      expect(report.exceptions[0].message).toBe('something bad happened')
-      expect(report.severityReason).toEqual({ type: 'unhandledException' })
+      const event = payloads[0].events[0].toJSON()
+      expect(event.severity).toBe('error')
+      expect(event.unhandled).toBe(true)
+      expect(event.exceptions[0].errorClass).toBe('Event: error')
+      expect(event.exceptions[0].message).toBe('something bad happened')
+      expect(event.severityReason).toEqual({ type: 'unhandledException' })
     })
 
     //
@@ -132,7 +132,7 @@ describe('plugin: window onerror', () => {
     //     client.setOptions({ apiKey: 'API_KEY_YEAH' })
     //     client.configure()
     //     client.use(plugin)
-    //     client.delivery({ sendReport: (payload) => payloads.push(payload) })
+    //     client.delivery({ sendEvent: (payload) => payloads.push(payload) })
     //
     //     const el = document.createElement('BUTTON')
     //     el.addEventListener('click', () => { throw new Error('bad button l3') })
@@ -142,10 +142,10 @@ describe('plugin: window onerror', () => {
     //     setTimeout(() => {
     //       try {
     //         expect(payloads.length).toBe(1)
-    //         const report = payloads[0].events[0].toJSON()
-    //         expect(report.severity).toBe('error')
-    //         expect(report.unhandled).toBe(true)
-    //         expect(report.severityReason).toEqual({ type: 'unhandledException' })
+    //         const event = payloads[0].events[0].toJSON()
+    //         expect(event.severity).toBe('error')
+    //         expect(event.unhandled).toBe(true)
+    //         expect(event.severityReason).toEqual({ type: 'unhandledException' })
     //         done()
     //       } catch (e) {
     //         done(e)
@@ -161,7 +161,7 @@ describe('plugin: window onerror', () => {
     //     client.setOptions({ apiKey: 'API_KEY_YEAH' })
     //     client.configure()
     //     client.use(plugin)
-    //     client.delivery({ sendReport: (payload) => payloads.push(payload) })
+    //     client.delivery({ sendEvent: (payload) => payloads.push(payload) })
     //
     //     window.requestAnimationFrame(() => {
     //       throw new Error('ERR_RAF')
@@ -170,10 +170,10 @@ describe('plugin: window onerror', () => {
     //     window.requestAnimationFrame(() => {
     //       try {
     //         expect(payloads.length).toBe(1)
-    //         const report = payloads[0].events[0].toJSON()
-    //         expect(report.severity).toBe('error')
-    //         expect(report.unhandled).toBe(true)
-    //         expect(report.severityReason).toEqual({ type: 'unhandledException' })
+    //         const event = payloads[0].events[0].toJSON()
+    //         expect(event.severity).toBe('error')
+    //         expect(event.unhandled).toBe(true)
+    //         expect(event.severityReason).toEqual({ type: 'unhandledException' })
     //         done()
     //       } catch (e) {
     //         done(e)
@@ -188,21 +188,21 @@ describe('plugin: window onerror', () => {
       client.setOptions({ apiKey: 'API_KEY_YEAH' })
       client.configure()
       client.use(plugin, window)
-      client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
+      client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
 
       // call onerror as it would be when `throw 'hello' is run`
       window.onerror('uncaught exception: hello', '', 0, 0, 'hello')
 
       try {
         expect(payloads.length).toBe(1)
-        const report = payloads[0].events[0].toJSON()
-        expect(report.exceptions[0].errorClass).toBe('window.onerror')
-        expect(report.exceptions[0].message).toMatch(
+        const event = payloads[0].events[0].toJSON()
+        expect(event.exceptions[0].errorClass).toBe('window.onerror')
+        expect(event.exceptions[0].message).toMatch(
           /^hello|uncaught hello|exception thrown and not caught|uncaught exception: hello$/i
         )
-        expect(report.severity).toBe('error')
-        expect(report.unhandled).toBe(true)
-        expect(report.severityReason).toEqual({ type: 'unhandledException' })
+        expect(event.severity).toBe('error')
+        expect(event.unhandled).toBe(true)
+        expect(event.severityReason).toEqual({ type: 'unhandledException' })
         done()
       } catch (e) {
         done(e)
@@ -225,7 +225,7 @@ describe('plugin: window onerror', () => {
       client.setOptions({ apiKey: 'API_KEY_YEAH' })
       client.configure()
       client.use(plugin, window)
-      client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
+      client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
 
       // call onerror as it would be when `throw 'hello' is run`
       window.onerror(...args)
@@ -247,7 +247,7 @@ describe('plugin: window onerror', () => {
       client.setOptions({ apiKey: 'API_KEY_YEAH' })
       client.configure()
       client.use(plugin, window)
-      client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
+      client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
 
       // call onerror as it would be when `throw 'hello' is run`
       window.onerror(...args)

@@ -3,7 +3,7 @@ const { describe, it, expect } = global
 const delivery = require('../')
 
 describe('delivery:XDomainRequest', () => {
-  it('sends reports successfully', done => {
+  it('sends events successfully', done => {
     const requests = []
 
     // mock XDomainRequest class
@@ -30,7 +30,7 @@ describe('delivery:XDomainRequest', () => {
       endpoints: { notify: '/echo/' },
       filters: []
     }
-    delivery({ logger: {}, config }, window).sendReport(payload, (err) => {
+    delivery({ logger: {}, config }, window).sendEvent(payload, (err) => {
       expect(err).toBe(null)
       expect(requests.length).toBe(1)
       expect(requests[0].method).toBe('POST')

@@ -2,7 +2,7 @@
   "name": "@bugsnag/plugin-simple-throttle",
   "version": "6.4.1",
   "main": "throttle.js",
-  "description": "@bugsnag/js plugin to prevent too many reports from being sent",
+  "description": "@bugsnag/js plugin to prevent too many events from being sent",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
     "type": "git",

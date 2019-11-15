@@ -3,21 +3,21 @@ const { describe, it, expect } = global
 const proxyquire = require('proxyquire').noPreserveCache()
 const ErrorStackParser = require('error-stack-parser')
 
-describe('@bugsnag/core/report', () => {
+describe('@bugsnag/core/event', () => {
   describe('constructor', () => {
     it('sets default handledState', () => {
-      const Report = require('../report')
+      const Event = require('../event')
       const err = new Error('noooooo')
-      const r = new Report(err.name, err.message, ErrorStackParser.parse(err))
+      const r = new Event(err.name, err.message, ErrorStackParser.parse(err))
       expect(r._handledState.severity).toBe('warning')
       expect(r._handledState.unhandled).toBe(false)
       expect(r._handledState.severityReason).toEqual({ type: 'handledException' })
     })
 
     it('doesn’t create empty stackframes', () => {
-      const Report = require('../report')
+      const Event = require('../event')
       const err = new Error('noooooo')
-      const r = new Report(err.name, err.message, [
+      const r = new Event(err.name, err.message, [
         { foo: 10 },
         { toJSON: () => { throw new Error('do not serialise me, srsly') } }
       ])
@@ -25,35 +25,35 @@ describe('@bugsnag/core/report', () => {
     })
   })
 
-  describe('BugsnagReport.ensureReport()', () => {
-    it('creates a report from an error', () => {
-      const Report = proxyquire('../report', {
+  describe('BugsnagEvent.ensureEvent()', () => {
+    it('creates an event from an error', () => {
+      const Event = proxyquire('../event', {
         'stack-generator': {
           backtrace: () => [{}, {}]
         }
       })
-      const r0 = Report.ensureReport(new Error('normal error'))
-      expect(r0 instanceof Report).toBe(true)
+      const r0 = Event.ensureEvent(new Error('normal error'))
+      expect(r0 instanceof Event).toBe(true)
 
       const e = new Error('normal error')
       delete e.stack
-      const r1 = Report.ensureReport(e)
-      expect(r1 instanceof Report).toBe(true)
+      const r1 = Event.ensureEvent(e)
+      expect(r1 instanceof Event).toBe(true)
       expect(r1.stacktrace.length).toEqual(0)
     })
 
-    it('returns the same report if passed', () => {
-      const Report = require('../report')
-      const r = new Report('E', 'bad', [])
-      const r0 = Report.ensureReport(r)
+    it('returns the same event if passed', () => {
+      const Event = require('../event')
+      const r = new Event('E', 'bad', [])
+      const r0 = Event.ensureEvent(r)
       expect(r).toBe(r0)
     })
   })
 
   describe('ignore()', () => {
     it('updates the return value of .isIgnored()', () => {
-      const Report = require('../report')
-      const r = new Report('Err', 'bad', [])
+      const Event = require('../event')
+      const r = new Event('Err', 'bad', [])
       r.ignore()
       expect(r.isIgnored()).toBe(true)
     })
@@ -61,15 +61,15 @@ describe('@bugsnag/core/report', () => {
 
   describe('updateMetaData()', () => {
     it('updates a whole new section', () => {
-      const Report = require('../report')
-      const r = new Report('Err', 'bad', [])
+      const Event = require('../event')
+      const r = new Event('Err', 'bad', [])
       r.updateMetaData('specific detail', { extra: 'stuff' })
       expect(r.metaData['specific detail']).toEqual({ extra: 'stuff' })
     })
 
     it('merges an object with an existing section', () => {
-      const Report = require('../report')
-      const r = new Report('Err', 'bad', [])
+      const Event = require('../event')
+      const r = new Event('Err', 'bad', [])
       r.updateMetaData('specific detail', { extra: 'stuff' })
       expect(r.metaData['specific detail']).toEqual({ extra: 'stuff' })
       r.updateMetaData('specific detail', { detail: 500 })
@@ -77,8 +77,8 @@ describe('@bugsnag/core/report', () => {
     })
 
     it('adds a single property to an existing section', () => {
-      const Report = require('../report')
-      const r = new Report('Err', 'bad', [])
+      const Event = require('../event')
+      const r = new Event('Err', 'bad', [])
       r.updateMetaData('specific detail', { extra: 'stuff' })
       expect(r.metaData['specific detail']).toEqual({ extra: 'stuff' })
       r.updateMetaData('specific detail', 'more', 'things')
@@ -86,15 +86,15 @@ describe('@bugsnag/core/report', () => {
     })
 
     it('creates a new section when updating a single property that doesn’t exist yet', () => {
-      const Report = require('../report')
-      const r = new Report('Err', 'bad', [])
+      const Event = require('../event')
+      const r = new Event('Err', 'bad', [])
       r.updateMetaData('metaaaaa', 'flip', 'flop')
       expect(r.metaData.metaaaaa).toEqual({ flip: 'flop' })
     })
 
     it('handles bad input', () => {
-      const Report = require('../report')
-      const r = new Report('Err', 'bad', [])
+      const Event = require('../event')
+      const r = new Event('Err', 'bad', [])
       const before = Object.assign({}, r.metaData)
       r.updateMetaData()
       expect(r.metaData).toEqual(before)
@@ -107,8 +107,8 @@ describe('@bugsnag/core/report', () => {
     })
 
     it('removes sections and properties', () => {
-      const Report = require('../report')
-      const r = new Report('Err', 'bad', [])
+      const Event = require('../event')
+      const r = new Event('Err', 'bad', [])
       r.updateMetaData('metaaaaa', 'flip', 'flop')
       r.updateMetaData('specific detail', { extra: 'stuff', more: 'things' })
 
@@ -120,10 +120,10 @@ describe('@bugsnag/core/report', () => {
     })
   })
 
-  describe('report.removeMetaData()', () => {
+  describe('event.removeMetaData()', () => {
     it('removes things', () => {
-      const Report = require('../report')
-      const r = new Report('Err', 'bad', [])
+      const Event = require('../event')
+      const r = new Event('Err', 'bad', [])
 
       // create some things to be removed
       r.updateMetaData('specific detail', { extra: 'stuff' })
@@ -141,8 +141,8 @@ describe('@bugsnag/core/report', () => {
     })
 
     it('handles bad input', () => {
-      const Report = require('../report')
-      const r = new Report('Err', 'bad', [])
+      const Event = require('../event')
+      const r = new Event('Err', 'bad', [])
 
       // create some things to be removed
       r.updateMetaData('specific detail', { extra: 'stuff' })
@@ -167,10 +167,10 @@ describe('@bugsnag/core/report', () => {
     })
   })
 
-  describe('report.toJSON()', () => {
+  describe('event.toJSON()', () => {
     it('serializes correctly', () => {
-      const Report = require('../report')
-      const r = new Report('Err', 'bad', [])
+      const Event = require('../event')
+      const r = new Event('Err', 'bad', [])
       const reserialized = JSON.parse(JSON.stringify(r))
       expect(reserialized.payloadVersion).toBe('4')
       expect(reserialized.exceptions.length).toBe(1)

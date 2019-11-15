@@ -2,7 +2,7 @@
   "name": "@bugsnag/plugin-contextualize",
   "version": "6.4.1",
   "main": "contextualize.js",
-  "description": "@bugsnag/js plugin to add context to unhandled error reports",
+  "description": "@bugsnag/js plugin to add context to unhandled events",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
     "type": "git",

@@ -1,6 +1,6 @@
 const domain = require('domain') // eslint-disable-line
 const extractRequestInfo = require('./request-info')
-const createReportFromErr = require('@bugsnag/core/lib/report-from-error')
+const createEventFromErr = require('@bugsnag/core/lib/event-from-error')
 const clone = require('@bugsnag/core/lib/clone-client')
 const handledState = {
   severity: 'error',
@@ -31,9 +31,9 @@ module.exports = {
 
       // unhandled errors caused by this request
       dom.on('error', (err) => {
-        req.bugsnag.notify(createReportFromErr(err, handledState), {}, (e, report) => {
-          if (e) client._logger.error('Failed to send report to Bugsnag')
-          req.bugsnag.config.onUncaughtException(err, report, client._logger)
+        req.bugsnag.notify(createEventFromErr(err, handledState), {}, (e, event) => {
+          if (e) client._logger.error('Failed to send event to Bugsnag')
+          req.bugsnag.config.onUncaughtException(err, event, client._logger)
         })
         if (!res.headersSent) {
           const body = 'Internal server error'
@@ -51,12 +51,12 @@ module.exports = {
     const errorHandler = (req, res, err, cb) => {
       if (err.statusCode && err.statusCode < 500) return cb()
       if (req.bugsnag) {
-        req.bugsnag.notify(createReportFromErr(err, handledState))
+        req.bugsnag.notify(createEventFromErr(err, handledState))
       } else {
         client._logger.warn(
           'req.bugsnag is not defined. Make sure the @bugsnag/plugin-restify requestHandler middleware is added first.'
         )
-        client.notify(createReportFromErr(err, handledState, getRequestAndMetaDataFromReq(req)))
+        client.notify(createEventFromErr(err, handledState, getRequestAndMetaDataFromReq(req)))
       }
       cb()
     }

@@ -2,7 +2,7 @@ const { describe, it, expect } = global
 
 const plugin = require('../')
 const { join } = require('path')
-const Report = require('@bugsnag/core/report')
+const Event = require('@bugsnag/core/event')
 const Client = require('@bugsnag/core/client')
 const { schema } = require('@bugsnag/core/config')
 const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
@@ -12,8 +12,8 @@ describe('plugin: strip project root', () => {
     const client = new Client(VALID_NOTIFIER)
 
     client.delivery(client => ({
-      sendReport: (report) => {
-        const evt = report.events[0]
+      sendEvent: (payload) => {
+        const evt = payload.events[0]
         expect(evt.stacktrace[0].file).toBe(join('lib', '01.js'))
         expect(evt.stacktrace[1].file).toBe(join('lib', '02.js'))
         expect(evt.stacktrace[2].file).toBe(join('lib', '03.js'))
@@ -33,7 +33,7 @@ describe('plugin: strip project root', () => {
     })
     client.use(plugin)
 
-    client.notify(new Report('Error', 'strip project root test', [
+    client.notify(new Event('Error', 'strip project root test', [
       {
         lineNumber: 22,
         columnNumber: 18,
@@ -54,8 +54,8 @@ describe('plugin: strip project root', () => {
     const client = new Client(VALID_NOTIFIER)
 
     client.delivery(client => ({
-      sendReport: (report) => {
-        const evt = report.events[0]
+      sendEvent: (payload) => {
+        const evt = payload.events[0]
         expect(evt.stacktrace[0].file).toBe(join('/var', 'lib', '01.js'))
         expect(evt.stacktrace[1].file).toBe(join('/foo', 'lib', '02.js'))
         expect(evt.stacktrace[2].file).toBe(join('/tmp', 'lib', '03.js'))
@@ -75,7 +75,7 @@ describe('plugin: strip project root', () => {
     })
     client.use(plugin)
 
-    client.notify(new Report('Error', 'strip project root test', [
+    client.notify(new Event('Error', 'strip project root test', [
       {
         lineNumber: 22,
         columnNumber: 18,
@@ -96,8 +96,8 @@ describe('plugin: strip project root', () => {
     const client = new Client(VALID_NOTIFIER)
 
     client.delivery(client => ({
-      sendReport: (report) => {
-        const evt = report.events[0]
+      sendEvent: (payload) => {
+        const evt = payload.events[0]
         expect(evt.stacktrace[0].file).toBe('_module.js')
         expect(evt.stacktrace[1].file).toBe(join('node_modules', 'bugsnag-example', 'index.js'))
         done()
@@ -116,7 +116,7 @@ describe('plugin: strip project root', () => {
     })
     client.use(plugin)
 
-    client.notify(new Report('Error', 'strip project root test', [
+    client.notify(new Event('Error', 'strip project root test', [
       {
         lineNumber: 22,
         columnNumber: 18,
@@ -133,8 +133,8 @@ describe('plugin: strip project root', () => {
     const client = new Client(VALID_NOTIFIER)
 
     client.delivery(client => ({
-      sendReport: (report) => {
-        const evt = report.events[0]
+      sendEvent: (payload) => {
+        const evt = payload.events[0]
         expect(evt.stacktrace[0].file).toBe('global code')
         expect(evt.stacktrace[1].file).toBe('global code')
         expect(evt.stacktrace[2].file).toEqual({})
@@ -154,7 +154,7 @@ describe('plugin: strip project root', () => {
     })
     client.use(plugin)
 
-    client.notify(new Report('Error', 'strip project root test', [
+    client.notify(new Event('Error', 'strip project root test', [
       {
         lineNumber: 22,
         columnNumber: 18,

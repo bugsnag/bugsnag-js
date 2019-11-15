@@ -1,7 +1,7 @@
 const { describe, it, expect, fail } = global
 
 const Client = require('../client')
-const Report = require('../report')
+const Event = require('../event')
 const Session = require('../session')
 
 const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
@@ -95,15 +95,15 @@ describe('@bugsnag/core/client', () => {
       expect(() => client.notify()).toThrow()
     })
 
-    it('delivers an error report', done => {
+    it('delivers an error event', done => {
       const client = new Client(VALID_NOTIFIER)
       client.delivery(client => ({
-        sendReport: payload => {
+        sendEvent: payload => {
           expect(payload).toBeTruthy()
           expect(Array.isArray(payload.events)).toBe(true)
-          const report = payload.events[0].toJSON()
-          expect(report.severity).toBe('warning')
-          expect(report.severityReason).toEqual({ type: 'handledException' })
+          const event = payload.events[0].toJSON()
+          expect(event.severity).toBe('warning')
+          expect(event.severityReason).toEqual({ type: 'handledException' })
           process.nextTick(() => done())
         }
       }))
@@ -115,12 +115,12 @@ describe('@bugsnag/core/client', () => {
     it('supports manually setting severity', done => {
       const client = new Client(VALID_NOTIFIER)
       client.delivery(client => ({
-        sendReport: (payload) => {
+        sendEvent: (payload) => {
           expect(payload).toBeTruthy()
           expect(Array.isArray(payload.events)).toBe(true)
-          const report = payload.events[0].toJSON()
-          expect(report.severity).toBe('error')
-          expect(report.severityReason).toEqual({ type: 'userSpecifiedSeverity' })
+          const event = payload.events[0].toJSON()
+          expect(event.severity).toBe('error')
+          expect(event.severityReason).toEqual({ type: 'userSpecifiedSeverity' })
           done()
         }
       }))
@@ -132,46 +132,46 @@ describe('@bugsnag/core/client', () => {
     it('supports setting severity via callback', done => {
       const client = new Client(VALID_NOTIFIER)
       client.delivery(client => ({
-        sendReport: (payload) => {
+        sendEvent: (payload) => {
           expect(payload).toBeTruthy()
           expect(Array.isArray(payload.events)).toBe(true)
-          const report = payload.events[0].toJSON()
-          expect(report.severity).toBe('info')
-          expect(report.severityReason).toEqual({ type: 'userCallbackSetSeverity' })
+          const event = payload.events[0].toJSON()
+          expect(event.severity).toBe('info')
+          expect(event.severityReason).toEqual({ type: 'userCallbackSetSeverity' })
           done()
         }
       }))
       client.setOptions({ apiKey: 'API_KEY_YEAH' })
       client.configure()
       client.notify(new Error('oh em gee'), {
-        beforeSend: report => {
-          report.severity = 'info'
+        beforeSend: event => {
+          event.severity = 'info'
         }
       })
     })
 
-    it('supports preventing send with report.ignore() / return false', done => {
+    it('supports preventing send with event.ignore() / return false', done => {
       const client = new Client(VALID_NOTIFIER)
       client.delivery(client => ({
-        sendReport: (payload) => {
-          fail('sendReport() should not be called')
+        sendEvent: (payload) => {
+          fail('sendEvent() should not be called')
         }
       }))
       client.setOptions({ apiKey: 'API_KEY_YEAH' })
       client.configure()
 
-      client.notify(new Error('oh em gee'), { beforeSend: report => report.ignore() })
-      client.notify(new Error('oh em eff gee'), { beforeSend: report => false })
+      client.notify(new Error('oh em gee'), { beforeSend: event => event.ignore() })
+      client.notify(new Error('oh em eff gee'), { beforeSend: event => false })
 
-      // give the event loop a tick to see if the reports get send
+      // give the event loop a tick to see if the event gets send
       process.nextTick(() => done())
     })
 
     it('supports preventing send with notifyReleaseStages', done => {
       const client = new Client(VALID_NOTIFIER)
       client.delivery(client => ({
-        sendReport: (payload) => {
-          fail('sendReport() should not be called')
+        sendEvent: (payload) => {
+          fail('sendEvent() should not be called')
         }
       }))
       client.setOptions({ apiKey: 'API_KEY_YEAH', notifyReleaseStages: [] })
@@ -179,15 +179,15 @@ describe('@bugsnag/core/client', () => {
 
       client.notify(new Error('oh em eff gee'))
 
-      // give the event loop a tick to see if the reports get send
+      // give the event loop a tick to see if the event gets send
       process.nextTick(() => done())
     })
 
     it('supports setting releaseStage via config.releaseStage', done => {
       const client = new Client(VALID_NOTIFIER)
       client.delivery(client => ({
-        sendReport: (payload) => {
-          fail('sendReport() should not be called')
+        sendEvent: (payload) => {
+          fail('sendEvent() should not be called')
         }
       }))
       client.setOptions({ apiKey: 'API_KEY_YEAH', releaseStage: 'staging', notifyReleaseStages: ['production'] })
@@ -195,15 +195,15 @@ describe('@bugsnag/core/client', () => {
 
       client.notify(new Error('oh em eff gee'))
 
-      // give the event loop a tick to see if the reports get send
+      // give the event loop a tick to see if the event gets send
       process.nextTick(() => done())
     })
 
     it('supports setting releaseStage via client.app.releaseStage', done => {
       const client = new Client(VALID_NOTIFIER)
       client.delivery(client => ({
-        sendReport: (payload) => {
-          fail('sendReport() should not be called')
+        sendEvent: (payload) => {
+          fail('sendEvent() should not be called')
         }
       }))
       client.setOptions({ apiKey: 'API_KEY_YEAH', notifyReleaseStages: ['production'] })
@@ -212,14 +212,14 @@ describe('@bugsnag/core/client', () => {
 
       client.notify(new Error('oh em eff gee'))
 
-      // give the event loop a tick to see if the reports get send
+      // give the event loop a tick to see if the event gets send
       process.nextTick(() => done())
     })
 
-    it('includes releaseStage in report.app', done => {
+    it('includes releaseStage in event.app', done => {
       const client = new Client(VALID_NOTIFIER)
       client.delivery(client => ({
-        sendReport: (payload) => {
+        sendEvent: (payload) => {
           expect(payload.events[0].app.releaseStage).toBe('staging')
           done()
         }
@@ -230,10 +230,10 @@ describe('@bugsnag/core/client', () => {
       client.notify(new Error('oh em eff gee'))
     })
 
-    it('includes releaseStage in report.app when set via config', done => {
+    it('includes releaseStage in event.app when set via config', done => {
       const client = new Client(VALID_NOTIFIER)
       client.delivery(client => ({
-        sendReport: (payload) => {
+        sendEvent: (payload) => {
           expect(payload.events[0].app.releaseStage).toBe('staging')
           done()
         }
@@ -246,7 +246,7 @@ describe('@bugsnag/core/client', () => {
     it('prefers client.app.releaseStage over config.releaseStage', done => {
       const client = new Client(VALID_NOTIFIER)
       client.delivery(client => ({
-        sendReport: (payload) => {
+        sendEvent: (payload) => {
           expect(payload.events[0].app.releaseStage).toBe('testing')
           done()
         }
@@ -260,7 +260,7 @@ describe('@bugsnag/core/client', () => {
     it('populates client.app.version if config.appVersion is supplied', done => {
       const client = new Client(VALID_NOTIFIER)
       client.delivery(client => ({
-        sendReport: (payload) => {
+        sendEvent: (payload) => {
           expect(payload.events[0].app.version).toBe('1.2.3')
           done()
         }
@@ -275,7 +275,7 @@ describe('@bugsnag/core/client', () => {
       const client = new Client(VALID_NOTIFIER)
       client.setOptions({ apiKey: 'API_KEY_YEAH' })
       client.configure()
-      client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
+      client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
 
       client.notify(undefined)
       client.notify(null)
@@ -302,7 +302,7 @@ describe('@bugsnag/core/client', () => {
       const client = new Client(VALID_NOTIFIER)
       client.setOptions({ apiKey: 'API_KEY_YEAH' })
       client.configure()
-      client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
+      client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
       client.notify({ name: 'UnknownThing', message: 'found a thing that couldn’t be dealt with' })
 
       expect(payloads.length).toBe(1)
@@ -317,7 +317,7 @@ describe('@bugsnag/core/client', () => {
       const client = new Client(VALID_NOTIFIER)
       client.setOptions({ apiKey: 'API_KEY_YEAH' })
       client.configure()
-      client.delivery(client => ({ sendReport: (payload) => payloads.push(payload) }))
+      client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
       client.notify(new Error('foobar'))
       expect(client.breadcrumbs.length).toBe(1)
       expect(client.breadcrumbs[0].type).toBe('error')
@@ -333,8 +333,8 @@ describe('@bugsnag/core/client', () => {
       client.configure()
       client.metaData = { foo: [1, 2, 3] }
       client.notify(new Error('changes afoot'), {
-        beforeSend: (report) => {
-          report.updateMetaData('foo', '3', 1)
+        beforeSend: (event) => {
+          event.updateMetaData('foo', '3', 1)
         }
       })
       expect(client.metaData.foo['3']).toBe(undefined)
@@ -346,12 +346,12 @@ describe('@bugsnag/core/client', () => {
       client.configure()
       client.delivery(client => ({
         sendSession: () => {},
-        sendReport: (report, cb) => cb(null)
+        sendEvent: (payload, cb) => cb(null)
       }))
-      client.notify(new Error('111'), {}, (err, report) => {
+      client.notify(new Error('111'), {}, (err, event) => {
         expect(err).toBe(null)
-        expect(report).toBeTruthy()
-        expect(report.errorMessage).toBe('111')
+        expect(event).toBeTruthy()
+        expect(event.errorMessage).toBe('111')
         done()
       })
     })
@@ -362,62 +362,62 @@ describe('@bugsnag/core/client', () => {
       client.configure()
       client.delivery(client => ({
         sendSession: () => {},
-        sendReport: (report, cb) => cb(new Error('flerp'))
+        sendEvent: (payload, cb) => cb(new Error('flerp'))
       }))
-      client.notify(new Error('111'), {}, (err, report) => {
+      client.notify(new Error('111'), {}, (err, event) => {
         expect(err).toBeTruthy()
         expect(err.message).toBe('flerp')
-        expect(report).toBeTruthy()
-        expect(report.errorMessage).toBe('111')
+        expect(event).toBeTruthy()
+        expect(event.errorMessage).toBe('111')
         done()
       })
     })
 
-    it('should call the callback even if the report doesn’t send (notifyReleaseStages)', done => {
+    it('should call the callback even if the event doesn’t send (notifyReleaseStages)', done => {
       const client = new Client(VALID_NOTIFIER)
       client.setOptions({ apiKey: 'API_KEY', notifyReleaseStages: ['production'], releaseStage: 'development' })
       client.configure()
       client.delivery(client => ({
         sendSession: () => {},
-        sendReport: (report, cb) => cb(null)
+        sendEvent: (payload, cb) => cb(null)
       }))
-      client.notify(new Error('111'), {}, (err, report) => {
+      client.notify(new Error('111'), {}, (err, event) => {
         expect(err).toBe(null)
-        expect(report).toBeTruthy()
-        expect(report.errorMessage).toBe('111')
+        expect(event).toBeTruthy()
+        expect(event.errorMessage).toBe('111')
         done()
       })
     })
 
-    it('should call the callback even if the report doesn’t send (beforeSend)', done => {
+    it('should call the callback even if the event doesn’t send (beforeSend)', done => {
       const client = new Client(VALID_NOTIFIER)
       client.setOptions({ apiKey: 'API_KEY', beforeSend: () => false })
       client.configure()
       client.delivery(client => ({
         sendSession: () => {},
-        sendReport: (report, cb) => cb(null)
+        sendEvent: (payload, cb) => cb(null)
       }))
-      client.notify(new Error('111'), {}, (err, report) => {
+      client.notify(new Error('111'), {}, (err, event) => {
         expect(err).toBe(null)
-        expect(report).toBeTruthy()
-        expect(report.errorMessage).toBe('111')
+        expect(event).toBeTruthy()
+        expect(event.errorMessage).toBe('111')
         done()
       })
     })
 
-    it('should attach the original error to the report object', done => {
+    it('should attach the original error to the event object', done => {
       const client = new Client(VALID_NOTIFIER)
       client.setOptions({ apiKey: 'API_KEY', beforeSend: () => false })
       client.configure()
       client.delivery(client => ({
         sendSession: () => {},
-        sendReport: (report, cb) => cb(null)
+        sendEvent: (payload, cb) => cb(null)
       }))
       const orig = new Error('111')
-      client.notify(orig, {}, (err, report) => {
+      client.notify(orig, {}, (err, event) => {
         expect(err).toBe(null)
-        expect(report).toBeTruthy()
-        expect(report.originalError).toBe(orig)
+        expect(event).toBeTruthy()
+        expect(event.originalError).toBe(orig)
         done()
       })
     })
@@ -529,9 +529,9 @@ describe('@bugsnag/core/client', () => {
       })
       client.delivery(client => ({
         sendSession: () => {},
-        sendReport: (report, cb) => {
+        sendEvent: (payload, cb) => {
           if (++i < 10) return
-          const r = JSON.parse(JSON.stringify(report.events[0]))
+          const r = JSON.parse(JSON.stringify(payload.events[0]))
           expect(r.session).toBeDefined()
           expect(r.session.events.handled).toBe(6)
           expect(r.session.events.unhandled).toBe(4)
@@ -540,15 +540,15 @@ describe('@bugsnag/core/client', () => {
       }))
       const sessionClient = client.startSession()
       sessionClient.notify(new Error('broke'))
-      sessionClient.notify(new Report('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
+      sessionClient.notify(new Event('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
       sessionClient.notify(new Error('broke'))
       sessionClient.notify(new Error('broke'))
-      sessionClient.notify(new Report('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
+      sessionClient.notify(new Event('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
       sessionClient.notify(new Error('broke'))
       sessionClient.notify(new Error('broke'))
       sessionClient.notify(new Error('broke'))
-      sessionClient.notify(new Report('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
-      sessionClient.notify(new Report('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
+      sessionClient.notify(new Event('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
+      sessionClient.notify(new Event('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
     })
   })
 })

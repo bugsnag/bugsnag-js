@@ -1,17 +1,17 @@
 import Breadcrumb from "./breadcrumb";
 
-declare class Report {
+declare class Event {
   public static getStacktrace(
     error: any,
     errorFramesToSkip?: number,
     generatedFramesToSkip?: number,
   ): Stackframe[];
 
-  public static ensureReport(
-    reportOrError: any,
+  public static ensureEvent(
+    eventOrError: any,
     errorFramesToSkip?: number,
     generatedFramesToSkip?: number,
-  ): Report;
+  ): Event;
 
   public app: {
     releaseStage: string;
@@ -44,9 +44,9 @@ declare class Report {
 
   public isIgnored(): boolean;
   public ignore(): void;
-  public updateMetaData(section: string, value: object): Report;
-  public updateMetaData(section: string, property: string, value: object): Report;
-  public removeMetaData(section: string, property: string): Report;
+  public updateMetaData(section: string, value: object): Event;
+  public updateMetaData(section: string, property: string, value: object): Event;
+  public removeMetaData(section: string, property: string): Event;
 }
 
 interface HandledState {
@@ -67,4 +67,4 @@ interface Stackframe {
   inProject?: boolean;
 }
 
-export default Report;
+export default Event;

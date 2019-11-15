@@ -24,7 +24,7 @@
     <script type="module">
       var customError = {
         name: 'Unlikely scenario',
-        stack: window.bugsnagClient.BugsnagReport.getStacktrace()
+        stack: window.bugsnagClient.BugsnagEvent.getStacktrace()
       }
       window.bugsnagClient.notify(customError)
     </script>

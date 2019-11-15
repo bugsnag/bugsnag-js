@@ -6,21 +6,21 @@ const runBeforeSend = require('../run-before-send')
 describe('async-some', () => {
   describe('reduce(arr, fn, accum)', () => {
     it('works with sync/async/promises', done => {
-      const report = { name: 'ben', isIgnored: () => false }
+      const event = { name: 'ben', isIgnored: () => false }
       const beforeSendFns = [
-        (report) => { report.age = 10 },
-        (report, cb) => { setTimeout(() => cb(null, true), 5) },
-        (report) => new Promise((resolve) => {
-          report.promiseRan = 'yes'
+        (event) => { event.age = 10 },
+        (event, cb) => { setTimeout(() => cb(null, true), 5) },
+        (event) => new Promise((resolve) => {
+          event.promiseRan = 'yes'
           resolve()
         })
       ]
-      some(beforeSendFns, runBeforeSend(report, () => {}), (err, result) => {
+      some(beforeSendFns, runBeforeSend(event, () => {}), (err, result) => {
         expect(!err)
         expect(result).toBe(false)
-        expect(report.name).toBe('ben')
-        expect(report.age).toBe(10)
-        expect(report.promiseRan).toBe('yes')
+        expect(event.name).toBe('ben')
+        expect(event.age).toBe(10)
+        expect(event.promiseRan).toBe('yes')
         done()
       })
     })
@@ -34,14 +34,14 @@ describe('async-some', () => {
     })
 
     it('handles continues after runBeforeSend errors (throw)', done => {
-      const report = { isIgnored: () => false }
+      const event = { isIgnored: () => false }
       let called = false
       const beforeSendFns = [
-        (report) => {},
-        (report) => { throw new Error('derp') },
-        (report) => { called = true }
+        (event) => {},
+        (event) => { throw new Error('derp') },
+        (event) => { called = true }
       ]
-      some(beforeSendFns, runBeforeSend(report, () => {}), (err, result) => {
+      some(beforeSendFns, runBeforeSend(event, () => {}), (err, result) => {
         expect(!err)
         expect(called).toBe(true)
         done()
@@ -49,17 +49,17 @@ describe('async-some', () => {
     })
 
     it('handles continues after runBeforeSend errors (promise reject)', done => {
-      const report = { isIgnored: () => false }
+      const event = { isIgnored: () => false }
       let called = false
       const beforeSendFns = [
-        (report) => new Promise((resolve) => resolve()),
-        (report) => new Promise((resolve, reject) => reject(new Error('derp'))),
-        (report) => new Promise((resolve) => {
+        (event) => new Promise((resolve) => resolve()),
+        (event) => new Promise((resolve, reject) => reject(new Error('derp'))),
+        (event) => new Promise((resolve) => {
           called = true
           resolve()
         })
       ]
-      some(beforeSendFns, runBeforeSend(report, () => {}), (err, result) => {
+      some(beforeSendFns, runBeforeSend(event, () => {}), (err, result) => {
         expect(!err)
         expect(called).toBe(true)
         done()
@@ -67,17 +67,17 @@ describe('async-some', () => {
     })
 
     it('handles continues after runBeforeSend errors (cb(err))', done => {
-      const report = { isIgnored: () => false }
+      const event = { isIgnored: () => false }
       let called = false
       const beforeSendFns = [
-        (report, cb) => cb(null),
-        (report, cb) => cb(new Error('derp')),
-        (report, cb) => {
+        (event, cb) => cb(null),
+        (event, cb) => cb(new Error('derp')),
+        (event, cb) => {
           called = true
           cb(null)
         }
       ]
-      some(beforeSendFns, runBeforeSend(report, () => {}), (err, result) => {
+      some(beforeSendFns, runBeforeSend(event, () => {}), (err, result) => {
         expect(!err)
         expect(called).toBe(true)
         done()

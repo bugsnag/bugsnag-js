@@ -13,8 +13,8 @@ export default class User extends Component {
   userCallback = () => {
     bugsnagClient.notify(new Error('UserCallbackError'),
     {
-      beforeSend: report => {
-        report.user = {
+      beforeSend: event => {
+        event.user = {
           name: "userCallbackName"
         }
       }

@@ -71,12 +71,12 @@ function leaveBreadcrumb () {
 
 function beforeSend () {
   console.log('calling notify() with a beforeSend callback…')
-  // beforeSend can be used to modify a report or prevent it from being sent at all
-  // this example pseudo-randomly filters out approximately half of the reports
+  // beforeSend can be used to modify an event or prevent it from being sent at all
+  // this example pseudo-randomly filters out approximately half of the events
   bugsnagClient.notify(new Error('sometimes will send'), {
-    beforeSend: (report) => {
+    beforeSend: (event) => {
       const n = Math.random()
-      if (n <= 0.5) report.ignore()
+      if (n <= 0.5) event.ignore()
     }
   })
 }

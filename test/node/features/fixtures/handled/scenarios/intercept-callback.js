@@ -10,6 +10,6 @@ var bugsnagClient = bugsnag({
 
 var intercept = bugsnagClient.getPlugin('intercept')
 fs.readFile('does not exist', intercept(function (data) {
-  // callback should never get called so the following report is _not_ expected
+  // callback should never get called so the following event is _not_ expected
   bugsnagClient.notify(new Error('nope'))
 }))
