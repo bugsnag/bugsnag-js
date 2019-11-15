@@ -160,7 +160,7 @@ class BugsnagClient {
     // ensure opts is an object
     if (typeof opts !== 'object' || opts === null) opts = {}
 
-    // create a event from the error, if it isn't one already
+    // create an event from the error, if it isn't one already
     const event = BugsnagEvent.ensureEvent(err, errorFramesToSkip, 2)
 
     event.app = { ...{ releaseStage }, ...event.app, ...this.app }
@@ -182,7 +182,7 @@ class BugsnagClient {
       event._handledState.severityReason = { type: 'userSpecifiedSeverity' }
     }
 
-    // exit early if the events should not be sent on the current releaseStage
+    // exit early if events should not be sent on the current releaseStage
     if (isArray(this.config.notifyReleaseStages) && !includes(this.config.notifyReleaseStages, releaseStage)) {
       this._logger.warn('Event not sent due to releaseStage/notifyReleaseStages configuration')
       return cb(null, event)

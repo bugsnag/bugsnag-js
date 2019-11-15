@@ -12,8 +12,8 @@ describe('plugin: strip project root', () => {
     const client = new Client(VALID_NOTIFIER)
 
     client.delivery(client => ({
-      sendEvent: (event) => {
-        const evt = event.events[0]
+      sendEvent: (payload) => {
+        const evt = payload.events[0]
         expect(evt.stacktrace[0].file).toBe(join('lib', '01.js'))
         expect(evt.stacktrace[1].file).toBe(join('lib', '02.js'))
         expect(evt.stacktrace[2].file).toBe(join('lib', '03.js'))
@@ -54,8 +54,8 @@ describe('plugin: strip project root', () => {
     const client = new Client(VALID_NOTIFIER)
 
     client.delivery(client => ({
-      sendEvent: (event) => {
-        const evt = event.events[0]
+      sendEvent: (payload) => {
+        const evt = payload.events[0]
         expect(evt.stacktrace[0].file).toBe(join('/var', 'lib', '01.js'))
         expect(evt.stacktrace[1].file).toBe(join('/foo', 'lib', '02.js'))
         expect(evt.stacktrace[2].file).toBe(join('/tmp', 'lib', '03.js'))
@@ -96,8 +96,8 @@ describe('plugin: strip project root', () => {
     const client = new Client(VALID_NOTIFIER)
 
     client.delivery(client => ({
-      sendEvent: (event) => {
-        const evt = event.events[0]
+      sendEvent: (payload) => {
+        const evt = payload.events[0]
         expect(evt.stacktrace[0].file).toBe('_module.js')
         expect(evt.stacktrace[1].file).toBe(join('node_modules', 'bugsnag-example', 'index.js'))
         done()
@@ -133,8 +133,8 @@ describe('plugin: strip project root', () => {
     const client = new Client(VALID_NOTIFIER)
 
     client.delivery(client => ({
-      sendEvent: (event) => {
-        const evt = event.events[0]
+      sendEvent: (payload) => {
+        const evt = payload.events[0]
         expect(evt.stacktrace[0].file).toBe('global code')
         expect(evt.stacktrace[1].file).toBe('global code')
         expect(evt.stacktrace[2].file).toEqual({})

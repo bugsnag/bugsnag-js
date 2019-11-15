@@ -33,9 +33,9 @@ describe('plugin: sessions', () => {
     c.use(plugin)
     c.delivery(client => ({
       sendSession: () => {},
-      sendEvent: (event, cb) => {
+      sendEvent: (payload, cb) => {
         if (++i < 10) return
-        const r = JSON.parse(JSON.stringify(event.events[0]))
+        const r = JSON.parse(JSON.stringify(payload.events[0]))
         expect(r.session).toBeDefined()
         expect(r.session.events.handled).toBe(6)
         expect(r.session.events.unhandled).toBe(4)

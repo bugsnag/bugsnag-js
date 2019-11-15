@@ -70,8 +70,8 @@ describe('plugin: react native global error handler', () => {
     const client = new Client(VALID_NOTIFIER)
     client.delivery(client => ({
       sendSession: () => {},
-      sendEvent: (event, cb) => {
-        const r = JSON.parse(JSON.stringify(event))
+      sendEvent: (payload, cb) => {
+        const r = JSON.parse(JSON.stringify(payload))
         expect(r.events[0].severity).toBe('error')
         expect(r.events[0].unhandled).toBe(true)
         expect(r.events[0].severityReason).toEqual({ type: 'unhandledException' })

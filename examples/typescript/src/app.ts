@@ -32,7 +32,7 @@ console.log(`
     Calls the leaveBreadcrumb() method.
 
   b = calling notify with a (b)efore send callback
-    Runs custom logic before a event is sent. This contrived example will
+    Runs custom logic before an event is sent. This contrived example will
     pseudo-randomly prevent 50% of the events from sending.
 `)
 

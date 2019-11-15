@@ -163,7 +163,7 @@ describe('@bugsnag/core/client', () => {
       client.notify(new Error('oh em gee'), { beforeSend: event => event.ignore() })
       client.notify(new Error('oh em eff gee'), { beforeSend: event => false })
 
-      // give the event loop a tick to see if the events get send
+      // give the event loop a tick to see if the event gets send
       process.nextTick(() => done())
     })
 
@@ -179,7 +179,7 @@ describe('@bugsnag/core/client', () => {
 
       client.notify(new Error('oh em eff gee'))
 
-      // give the event loop a tick to see if the events get send
+      // give the event loop a tick to see if the event gets send
       process.nextTick(() => done())
     })
 
@@ -195,7 +195,7 @@ describe('@bugsnag/core/client', () => {
 
       client.notify(new Error('oh em eff gee'))
 
-      // give the event loop a tick to see if the events get send
+      // give the event loop a tick to see if the event gets send
       process.nextTick(() => done())
     })
 
@@ -212,7 +212,7 @@ describe('@bugsnag/core/client', () => {
 
       client.notify(new Error('oh em eff gee'))
 
-      // give the event loop a tick to see if the events get send
+      // give the event loop a tick to see if the event gets send
       process.nextTick(() => done())
     })
 
@@ -346,7 +346,7 @@ describe('@bugsnag/core/client', () => {
       client.configure()
       client.delivery(client => ({
         sendSession: () => {},
-        sendEvent: (event, cb) => cb(null)
+        sendEvent: (payload, cb) => cb(null)
       }))
       client.notify(new Error('111'), {}, (err, event) => {
         expect(err).toBe(null)
@@ -362,7 +362,7 @@ describe('@bugsnag/core/client', () => {
       client.configure()
       client.delivery(client => ({
         sendSession: () => {},
-        sendEvent: (event, cb) => cb(new Error('flerp'))
+        sendEvent: (payload, cb) => cb(new Error('flerp'))
       }))
       client.notify(new Error('111'), {}, (err, event) => {
         expect(err).toBeTruthy()
@@ -379,7 +379,7 @@ describe('@bugsnag/core/client', () => {
       client.configure()
       client.delivery(client => ({
         sendSession: () => {},
-        sendEvent: (event, cb) => cb(null)
+        sendEvent: (payload, cb) => cb(null)
       }))
       client.notify(new Error('111'), {}, (err, event) => {
         expect(err).toBe(null)
@@ -395,7 +395,7 @@ describe('@bugsnag/core/client', () => {
       client.configure()
       client.delivery(client => ({
         sendSession: () => {},
-        sendEvent: (event, cb) => cb(null)
+        sendEvent: (payload, cb) => cb(null)
       }))
       client.notify(new Error('111'), {}, (err, event) => {
         expect(err).toBe(null)
@@ -411,7 +411,7 @@ describe('@bugsnag/core/client', () => {
       client.configure()
       client.delivery(client => ({
         sendSession: () => {},
-        sendEvent: (event, cb) => cb(null)
+        sendEvent: (payload, cb) => cb(null)
       }))
       const orig = new Error('111')
       client.notify(orig, {}, (err, event) => {
@@ -529,9 +529,9 @@ describe('@bugsnag/core/client', () => {
       })
       client.delivery(client => ({
         sendSession: () => {},
-        sendEvent: (event, cb) => {
+        sendEvent: (payload, cb) => {
           if (++i < 10) return
-          const r = JSON.parse(JSON.stringify(event.events[0]))
+          const r = JSON.parse(JSON.stringify(payload.events[0]))
           expect(r.session).toBeDefined()
           expect(r.session.events.handled).toBe(6)
           expect(r.session.events.unhandled).toBe(4)

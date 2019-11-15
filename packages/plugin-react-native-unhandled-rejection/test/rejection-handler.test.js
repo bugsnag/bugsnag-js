@@ -14,8 +14,8 @@ describe('plugin: react native rejection handler', () => {
     c.setOptions({ apiKey: 'api_key' })
     c.configure()
     c.delivery(client => ({
-      sendEvent: (event) => {
-        const r = JSON.parse(JSON.stringify(event))
+      sendEvent: (payload) => {
+        const r = JSON.parse(JSON.stringify(payload))
         expect(r).toBeTruthy()
         expect(r.events[0].severity).toBe('error')
         expect(r.events[0].severityReason).toEqual({ type: 'unhandledPromiseRejection' })
@@ -34,13 +34,13 @@ describe('plugin: react native rejection handler', () => {
     stop()
   })
 
-  it('should be disbaled when autoNotify=false', done => {
+  it('should be disabled when autoNotify=false', done => {
     const c = new Client(VALID_NOTIFIER)
     c.setOptions({ apiKey: 'api_key', autoNotify: false })
     c.configure()
     c.delivery(client => ({
-      sendEvent: (event) => {
-        expect(event).not.toBeTruthy()
+      sendEvent: (payload) => {
+        expect(payload).not.toBeTruthy()
       }
     }))
     const stop = plugin.init(c)
@@ -51,7 +51,7 @@ describe('plugin: react native rejection handler', () => {
     }
     stop()
 
-    // the rejection tracker waits 100ms before eventing TypeError as unhandled
+    // the rejection tracker waits 100ms before reporting TypeError as unhandled
     // so be generous and wait 3x that
     setTimeout(() => done(), 300)
   })

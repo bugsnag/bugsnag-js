@@ -12,8 +12,8 @@ describe('plugin: node in project', () => {
     const client = new Client(VALID_NOTIFIER)
 
     client.delivery(client => ({
-      sendEvent: (event) => {
-        const evt = event.events[0]
+      sendEvent: (payload) => {
+        const evt = payload.events[0]
         expect(evt.stacktrace[0].inProject).toBe(true)
         expect(evt.stacktrace[1].inProject).toBe(true)
         expect(evt.stacktrace[2].inProject).toBe(true)
@@ -54,8 +54,8 @@ describe('plugin: node in project', () => {
     const client = new Client(VALID_NOTIFIER)
 
     client.delivery(client => ({
-      sendEvent: (event) => {
-        const evt = event.events[0]
+      sendEvent: (payload) => {
+        const evt = payload.events[0]
         expect(evt.stacktrace[0].inProject).toBe(false)
         expect(evt.stacktrace[1].inProject).toBe(false)
         expect(evt.stacktrace[2].inProject).toBe(false)
@@ -96,8 +96,8 @@ describe('plugin: node in project', () => {
     const client = new Client(VALID_NOTIFIER)
 
     client.delivery(client => ({
-      sendEvent: (event) => {
-        const evt = event.events[0]
+      sendEvent: (payload) => {
+        const evt = payload.events[0]
         expect(evt.stacktrace[0].inProject).toBe(false)
         expect(evt.stacktrace[1].inProject).toBe(false)
         done()
@@ -133,8 +133,8 @@ describe('plugin: node in project', () => {
     const client = new Client(VALID_NOTIFIER)
 
     client.delivery(client => ({
-      sendEvent: (event) => {
-        const evt = event.events[0]
+      sendEvent: (payload) => {
+        const evt = payload.events[0]
         expect(evt.stacktrace[0].inProject).toBe(false)
         expect(evt.stacktrace[1].inProject).toBe(false)
         expect(evt.stacktrace[2].inProject).toBe(false)

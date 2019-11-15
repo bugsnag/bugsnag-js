@@ -36,8 +36,8 @@ describe('plugin: expo device', () => {
     c.configure()
     const before = (new Date()).toISOString()
     c.delivery(client => ({
-      sendEvent: (event) => {
-        const r = JSON.parse(JSON.stringify(event))
+      sendEvent: (payload) => {
+        const r = JSON.parse(JSON.stringify(payload))
         expect(r).toBeTruthy()
         expect(r.events[0].device).toBeTruthy()
         const now = (new Date()).toISOString()
@@ -89,8 +89,8 @@ describe('plugin: expo device', () => {
     c.configure()
     const before = (new Date()).toISOString()
     c.delivery(client => ({
-      sendEvent: (event) => {
-        const r = JSON.parse(JSON.stringify(event))
+      sendEvent: (payload) => {
+        const r = JSON.parse(JSON.stringify(payload))
         expect(r).toBeTruthy()
         expect(r.events[0].device).toBeTruthy()
         const now = (new Date()).toISOString()
@@ -162,8 +162,8 @@ describe('plugin: expo device', () => {
     c.configure()
     const events = []
     c.delivery(client => ({
-      sendEvent: (event) => {
-        const r = JSON.parse(JSON.stringify(event))
+      sendEvent: (payload) => {
+        const r = JSON.parse(JSON.stringify(payload))
         events.push(r)
         if (events.length === 4) {
           expect(events[0].events[0].device.orientation).toBe('portrait')

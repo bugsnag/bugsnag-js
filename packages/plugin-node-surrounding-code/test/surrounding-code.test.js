@@ -19,8 +19,8 @@ describe('plugin: node surrounding code', () => {
     const client = new Client(VALID_NOTIFIER)
 
     client.delivery(client => ({
-      sendEvent: (event) => {
-        const evt = event.events[0]
+      sendEvent: (payload) => {
+        const evt = payload.events[0]
         expect(Object.keys(evt.stacktrace[0].code))
           .toEqual(['19', '20', '21', '22', '23', '24', '25'])
         expect(evt.stacktrace[0].code['22'])
@@ -66,8 +66,8 @@ describe('plugin: node surrounding code', () => {
     const client = new Client(VALID_NOTIFIER)
 
     client.delivery(client => ({
-      sendEvent: (event) => {
-        const evt = event.events[0]
+      sendEvent: (payload) => {
+        const evt = payload.events[0]
         expect(evt.stacktrace[0].code).toBeTruthy()
         expect(evt.stacktrace[1].code).toBeUndefined()
         expect(evt.stacktrace[2].code).toBeTruthy()
@@ -101,8 +101,8 @@ describe('plugin: node surrounding code', () => {
     const client = new Client(VALID_NOTIFIER)
 
     client.delivery(client => ({
-      sendEvent: (event) => {
-        const evt = event.events[0]
+      sendEvent: (payload) => {
+        const evt = payload.events[0]
         expect(evt.stacktrace[0].code).toEqual({
           1: '// this is just some arbitrary (but real) javascript for testing, taken from',
           2: '// https://github.com/bengourley/source-map-decoder/',
@@ -144,10 +144,10 @@ describe('plugin: node surrounding code', () => {
     const startCount = createReadStreamCount
 
     client.delivery(client => ({
-      sendEvent: (event) => {
+      sendEvent: (payload) => {
         const endCount = createReadStreamCount
         expect(endCount - startCount).toBe(1)
-        event.events[0].stacktrace.forEach(stackframe => {
+        payload.events[0].stacktrace.forEach(stackframe => {
           expect(stackframe.code).toEqual({
             1: '// this is just some arbitrary (but real) javascript for testing, taken from',
             2: '// https://github.com/bengourley/source-map-decoder/',
@@ -212,8 +212,8 @@ describe('plugin: node surrounding code', () => {
     const client = new Client(VALID_NOTIFIER)
 
     client.delivery(client => ({
-      sendEvent: (event) => {
-        event.events[0].stacktrace.forEach(stackframe => {
+      sendEvent: (payload) => {
+        payload.events[0].stacktrace.forEach(stackframe => {
           Object.keys(stackframe.code).forEach(key => {
             expect(stackframe.code[key].length <= 200).toBe(true)
           })

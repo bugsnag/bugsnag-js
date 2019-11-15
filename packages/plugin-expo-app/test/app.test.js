@@ -28,8 +28,8 @@ describe('plugin: expo device', () => {
 
     c.use(plugin)
     c.delivery(client => ({
-      sendEvent: (event) => {
-        const r = JSON.parse(JSON.stringify(event))
+      sendEvent: (payload) => {
+        const r = JSON.parse(JSON.stringify(payload))
         expect(r).toBeTruthy()
         expect(r.events[0].app.version).toBe(VERSION)
         done()
@@ -62,8 +62,8 @@ describe('plugin: expo device', () => {
 
     c.use(plugin)
     c.delivery(client => ({
-      sendEvent: (event) => {
-        const r = JSON.parse(JSON.stringify(event))
+      sendEvent: (payload) => {
+        const r = JSON.parse(JSON.stringify(payload))
         expect(r).toBeTruthy()
         expect(r.events[0].app.codeBundleId).toBe(REVISION_ID)
         done()
@@ -97,8 +97,8 @@ describe('plugin: expo device', () => {
 
     c.use(plugin)
     c.delivery(client => ({
-      sendEvent: (event) => {
-        const r = JSON.parse(JSON.stringify(event))
+      sendEvent: (payload) => {
+        const r = JSON.parse(JSON.stringify(payload))
         expect(r).toBeTruthy()
         expect(r.events[0].metaData.app.nativeVersionCode).toBe(VERSION_CODE)
         done()
@@ -132,8 +132,8 @@ describe('plugin: expo device', () => {
 
     c.use(plugin)
     c.delivery(client => ({
-      sendEvent: (event) => {
-        const r = JSON.parse(JSON.stringify(event))
+      sendEvent: (payload) => {
+        const r = JSON.parse(JSON.stringify(payload))
         expect(r).toBeTruthy()
         expect(r.events[0].metaData.app.nativeBundleVersion).toBe(BUNDLE_VERSION)
         done()
@@ -167,8 +167,8 @@ describe('plugin: expo device', () => {
     expect(typeof listener).toBe('function')
     const events = []
     c.delivery(client => ({
-      sendEvent: (event) => {
-        const r = JSON.parse(JSON.stringify(event))
+      sendEvent: (payload) => {
+        const r = JSON.parse(JSON.stringify(payload))
         expect(r).toBeTruthy()
         events.push(r)
         if (events.length < 3) return
