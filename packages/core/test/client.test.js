@@ -163,7 +163,7 @@ describe('@bugsnag/core/client', () => {
       client.notify(new Error('oh em gee'), { beforeSend: event => event.ignore() })
       client.notify(new Error('oh em eff gee'), { beforeSend: event => false })
 
-      // give the event loop a tick to see if the event gets send
+      // give the event loop a tick to see if the event gets sent
       process.nextTick(() => done())
     })
 
@@ -179,7 +179,7 @@ describe('@bugsnag/core/client', () => {
 
       client.notify(new Error('oh em eff gee'))
 
-      // give the event loop a tick to see if the event gets send
+      // give the event loop a tick to see if the event gets sent
       process.nextTick(() => done())
     })
 
@@ -195,7 +195,7 @@ describe('@bugsnag/core/client', () => {
 
       client.notify(new Error('oh em eff gee'))
 
-      // give the event loop a tick to see if the event gets send
+      // give the event loop a tick to see if the event gets sent
       process.nextTick(() => done())
     })
 
@@ -212,7 +212,7 @@ describe('@bugsnag/core/client', () => {
 
       client.notify(new Error('oh em eff gee'))
 
-      // give the event loop a tick to see if the event gets send
+      // give the event loop a tick to see if the event gets sent
       process.nextTick(() => done())
     })
 
