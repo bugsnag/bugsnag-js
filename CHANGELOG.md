@@ -1,5 +1,9 @@
 # Changelog
 
+## TBD
+
+- Migrate lint tooling to ESLint for both .js and .ts source files [#644](https://github.com/bugsnag/bugsnag-js/pull/644)
+
 ## 6.4.3 (2019-10-21)
 
 ### Fixed
