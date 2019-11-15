@@ -62,14 +62,8 @@ module.exports = (opts) => {
   bugsnag.use(pluginSession)
   bugsnag.use(pluginIp)
   bugsnag.use(pluginStripQueryString)
-
-  // optional browser-specific plugins
-
-  if (bugsnag.config.autoNotify !== false) {
-    bugsnag.use(pluginWindowOnerror)
-    bugsnag.use(pluginUnhandledRejection)
-  }
-
+  bugsnag.use(pluginWindowOnerror)
+  bugsnag.use(pluginUnhandledRejection)
   bugsnag.use(pluginNavigationBreadcrumbs)
   bugsnag.use(pluginInteractionBreadcrumbs)
   bugsnag.use(pluginNetworkBreadcrumbs)

@@ -8,7 +8,8 @@ declare module "@bugsnag/core" {
     apiKey: string;
     beforeSend?: BugsnagCore.BeforeSend | BugsnagCore.BeforeSend[];
     // autoBreadcrumbs?: boolean; // this option is disabled in node, see below
-    autoNotify?: boolean;
+    autoDetectErrors?: boolean;
+    autoDetectUnhandledRejections?: boolean;
     appVersion?: string;
     appType?: string;
     endpoints?: { notify: string; sessions?: string };

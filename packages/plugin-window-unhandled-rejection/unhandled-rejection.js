@@ -8,6 +8,7 @@ const isError = require('@bugsnag/core/lib/iserror')
  */
 let _listener
 exports.init = (client, win = window) => {
+  if (!client.config.autoDetectErrors || !client.config.autoDetectUnhandledRejections) return
   const listener = evt => {
     let error = evt.reason
     let isBluebird = false

@@ -7,7 +7,7 @@ const createEventFromErr = require('@bugsnag/core/lib/event-from-error')
 
 module.exports = {
   init: (client) => {
-    if (!client.config.autoNotify) return () => {}
+    if (!client.config.autoDetectErrors || !client.config.autoDetectUnhandledRejections) return () => {}
     rnPromise.enable({
       allRejections: true,
       onUnhandled: (id, error) => {

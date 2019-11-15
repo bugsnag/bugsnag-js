@@ -6,7 +6,8 @@ declare module "@bugsnag/core" {
     apiKey?: string;
     beforeSend?: BugsnagCore.BeforeSend | BugsnagCore.BeforeSend[];
     autoBreadcrumbs?: boolean;
-    autoNotify?: boolean;
+    autoDetectErrors?: boolean;
+    autoDetectUnhandledRejections?: boolean;
     appVersion?: string;
     appType?: string;
     endpoints?: { notify: string; sessions?: string };

@@ -1,4 +1,4 @@
-const { describe, it, expect } = global
+const { describe, it, expect, spyOn } = global
 
 const plugin = require('../')
 
@@ -149,6 +149,30 @@ describe('plugin: unhandled rejection', () => {
         get: () => { throw new Error('bad accessor') }
       })
       listener({ reason: err, detail })
+    })
+
+    it('is disabled when autoDetectErrors=false', () => {
+      const window = {
+        addEventListener: () => {}
+      }
+      const addEventListenerSpy = spyOn(window, 'addEventListener')
+      const client = new Client(VALID_NOTIFIER)
+      client.setOptions({ apiKey: 'API_KEY_YEAH', autoDetectErrors: false })
+      client.configure()
+      client.use(plugin, window)
+      expect(addEventListenerSpy).toHaveBeenCalledTimes(0)
+    })
+
+    it('is disabled when autoDetectUnhandledRejections=false', () => {
+      const window = {
+        addEventListener: () => {}
+      }
+      const addEventListenerSpy = spyOn(window, 'addEventListener')
+      const client = new Client(VALID_NOTIFIER)
+      client.setOptions({ apiKey: 'API_KEY_YEAH', autoDetectUnhandledRejections: false })
+      client.configure()
+      client.use(plugin, window)
+      expect(addEventListenerSpy).toHaveBeenCalledTimes(0)
     })
   })
 })

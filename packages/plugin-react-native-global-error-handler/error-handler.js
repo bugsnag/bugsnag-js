@@ -6,7 +6,7 @@ const createEventFromErr = require('@bugsnag/core/lib/event-from-error')
 
 module.exports = {
   init: (client, ErrorUtils = global.ErrorUtils) => {
-    if (!client.config.autoNotify) return
+    if (!client.config.autoDetectErrors) return
     if (!ErrorUtils) {
       client._logger.warn('ErrorUtils is not defined. Can’t attach a global error handler.')
       return

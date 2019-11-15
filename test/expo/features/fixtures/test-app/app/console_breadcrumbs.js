@@ -16,7 +16,7 @@ export default class ConsoleBreadcrumbs extends Component {
     this.triggerConsoleBreadcrumbsError(
       bugsnag({
         endpoints: endpoints,
-        autoNotify: false,
+        autoDetectErrors: false,
         autoTrackSessions: false
       }),
       "defaultConsoleBreadcrumbsBehaviour"
@@ -27,7 +27,7 @@ export default class ConsoleBreadcrumbs extends Component {
     this.triggerConsoleBreadcrumbsError(
       bugsnag({
         endpoints: endpoints,
-        autoNotify: false,
+        autoDetectErrors: false,
         autoTrackSessions: false,
         consoleBreadcrumbsEnabled: false
       }),
@@ -39,7 +39,7 @@ export default class ConsoleBreadcrumbs extends Component {
     this.triggerConsoleBreadcrumbsError(
       bugsnag({
         endpoints: endpoints,
-        autoNotify: false,
+        autoDetectErrors: false,
         autoTrackSessions: false,
         autoBreadcrumbs: false
       }),
@@ -51,7 +51,7 @@ export default class ConsoleBreadcrumbs extends Component {
     this.triggerConsoleBreadcrumbsError(
       bugsnag({
         endpoints: endpoints,
-        autoNotify: false,
+        autoDetectErrors: false,
         autoTrackSessions: false,
         autoBreadcrumbs: false,
         consoleBreadcrumbsEnabled: true

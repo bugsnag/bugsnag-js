@@ -4,6 +4,7 @@
 
 module.exports = {
   init: (client, win = window) => {
+    if (!client.config.autoDetectErrors) return
     function onerror (messageOrEvent, url, lineNo, charNo, error) {
       // Ignore errors with no info due to CORS settings
       if (lineNo === 0 && /Script error\.?/.test(messageOrEvent)) {

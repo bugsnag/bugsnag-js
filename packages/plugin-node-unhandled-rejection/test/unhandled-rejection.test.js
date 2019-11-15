@@ -17,10 +17,20 @@ describe('plugin: node unhandled rejection handler', () => {
     plugin.destroy()
   })
 
-  it('does not add a process#unhandledRejection listener if autoNotify=false', () => {
+  it('does not add a process#unhandledRejection listener if autoDetectErrors=false', () => {
     const before = process.listeners('unhandledRejection').length
     const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'api_key', autoNotify: false })
+    c.setOptions({ apiKey: 'api_key', autoDetectErrors: false })
+    c.configure()
+    c.use(plugin)
+    const after = process.listeners('unhandledRejection').length
+    expect(after).toBe(before)
+  })
+
+  it('does not add a process#unhandledRejection listener if autoDetectUnhandledRejections=false', () => {
+    const before = process.listeners('unhandledRejection').length
+    const c = new Client(VALID_NOTIFIER)
+    c.setOptions({ apiKey: 'api_key', autoDetectUnhandledRejections: false })
     c.configure()
     c.use(plugin)
     const after = process.listeners('unhandledRejection').length
