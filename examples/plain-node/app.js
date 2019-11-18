@@ -7,10 +7,10 @@ var bugsnagClient = bugsnag({
   apiKey: process.env.BUGSNAG_API_KEY,
   // setting the appVersion is useful to track when errors are introduced/fixed
   appVersion: '1.2.3',
-  // using a combination of releaseStage/notifyReleaseStages you can ensure you
+  // using a combination of releaseStage/enabledReleaseStages you can ensure you
   // only get reports from the environments you care about
   releaseStage: 'production',
-  notifyReleaseStages: [ 'staging', 'production' ],
+  enabledReleaseStages: [ 'staging', 'production' ],
   // you can set global metaData when you initialise Bugsnag
   metaData: {}
 })

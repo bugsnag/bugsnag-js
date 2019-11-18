@@ -14,7 +14,7 @@ declare module "@bugsnag/core" {
     appType?: string;
     endpoints?: { notify: string; sessions?: string };
     autoTrackSessions?: boolean;
-    notifyReleaseStages?: string[];
+    enabledReleaseStages?: string[];
     releaseStage?: string;
     maxBreadcrumbs?: number;
     user?: object | null;

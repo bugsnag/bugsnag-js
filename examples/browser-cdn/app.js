@@ -30,7 +30,7 @@ var bugsnagClient = bugsnag({
   releaseStage: 'development',
 
   //  defines which release stages bugsnag should report. e.g. ignore staging errors.
-  notifyReleaseStages: [ 'development', 'production' ],
+  enabledReleaseStages: [ 'development', 'production' ],
 
   // one of the most powerful tools in our library, beforeSend lets you evaluate,
   // modify, add and remove data before sending the error to bugsnag. The actions

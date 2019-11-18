@@ -8,7 +8,7 @@ bugsnag({
   beforeSend: [],
   endpoints: {"notify":"https://notify.bugsnag.com","sessions":"https://sessions.bugsnag.com"},
   autoTrackSessions: true,
-  notifyReleaseStages: [],
+  enabledReleaseStages: [],
   releaseStage: "production",
   maxBreadcrumbs: 20,
   autoBreadcrumbs: true,

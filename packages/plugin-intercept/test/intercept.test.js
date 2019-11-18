@@ -114,7 +114,7 @@ describe('plugin: intercept', () => {
     c.setOptions({
       apiKey: 'api_key'
     })
-    c.configure({})
+    c.configure()
     c.use(plugin)
     const intercept = c.getPlugin('intercept')
     fs.readFile('does not exist', intercept(data => {

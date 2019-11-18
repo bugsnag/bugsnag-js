@@ -1,4 +1,4 @@
-const { isArray, includes } = require('@bugsnag/core/lib/es-utils')
+const { includes } = require('@bugsnag/core/lib/es-utils')
 const inferReleaseStage = require('@bugsnag/core/lib/infer-release-stage')
 
 module.exports = {
@@ -13,8 +13,8 @@ const sessionDelegate = {
     const releaseStage = inferReleaseStage(sessionClient)
 
     // exit early if the current releaseStage is not enabled
-    if (isArray(sessionClient.config.notifyReleaseStages) && !includes(sessionClient.config.notifyReleaseStages, releaseStage)) {
-      sessionClient._logger.warn('Session not sent due to releaseStage/notifyReleaseStages configuration')
+    if (sessionClient.config.enabledReleaseStages.length > 0 && !includes(sessionClient.config.enabledReleaseStages, releaseStage)) {
+      sessionClient._logger.warn('Session not sent due to releaseStage/enabledReleaseStages configuration')
       return sessionClient
     }
 
