@@ -28,14 +28,14 @@ describe('plugin: react native app state breadcrumbs', () => {
     _cb('background')
     expect(client.breadcrumbs.length).toBe(1)
     expect(client.breadcrumbs[0].type).toBe('state')
-    expect(client.breadcrumbs[0].name).toBe('App state changed')
-    expect(client.breadcrumbs[0].metaData).toEqual({ state: 'background' })
+    expect(client.breadcrumbs[0].message).toBe('App state changed')
+    expect(client.breadcrumbs[0].metadata).toEqual({ state: 'background' })
 
     _cb('active')
     expect(client.breadcrumbs.length).toBe(2)
     expect(client.breadcrumbs[1].type).toBe('state')
-    expect(client.breadcrumbs[1].name).toBe('App state changed')
-    expect(client.breadcrumbs[1].metaData).toEqual({ state: 'active' })
+    expect(client.breadcrumbs[1].message).toBe('App state changed')
+    expect(client.breadcrumbs[1].metadata).toEqual({ state: 'active' })
   })
 
   it('should not be enabled when enabledBreadcrumbTypes=null', () => {

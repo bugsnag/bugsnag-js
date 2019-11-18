@@ -28,14 +28,14 @@ describe('plugin: react native connectivity breadcrumbs', () => {
     _cb({ type: 'wifi', effectiveType: '3g' })
     expect(client.breadcrumbs.length).toBe(1)
     expect(client.breadcrumbs[0].type).toBe('state')
-    expect(client.breadcrumbs[0].name).toBe('Connectivity changed')
-    expect(client.breadcrumbs[0].metaData).toEqual({ type: 'wifi', effectiveType: '3g' })
+    expect(client.breadcrumbs[0].message).toBe('Connectivity changed')
+    expect(client.breadcrumbs[0].metadata).toEqual({ type: 'wifi', effectiveType: '3g' })
 
     _cb({ type: 'none', effectiveType: 'unknown' })
     expect(client.breadcrumbs.length).toBe(2)
     expect(client.breadcrumbs[1].type).toBe('state')
-    expect(client.breadcrumbs[1].name).toBe('Connectivity changed')
-    expect(client.breadcrumbs[1].metaData).toEqual({ type: 'none', effectiveType: 'unknown' })
+    expect(client.breadcrumbs[1].message).toBe('Connectivity changed')
+    expect(client.breadcrumbs[1].metadata).toEqual({ type: 'none', effectiveType: 'unknown' })
   })
 
   it('should not be enabled when enabledBreadcrumbTypes=null', () => {

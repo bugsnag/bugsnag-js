@@ -321,8 +321,8 @@ describe('@bugsnag/core/client', () => {
       client.notify(new Error('foobar'))
       expect(client.breadcrumbs.length).toBe(1)
       expect(client.breadcrumbs[0].type).toBe('error')
-      expect(client.breadcrumbs[0].name).toBe('Error')
-      expect(client.breadcrumbs[0].metaData.stacktrace).toBe(undefined)
+      expect(client.breadcrumbs[0].message).toBe('Error')
+      expect(client.breadcrumbs[0].metadata.stacktrace).toBe(undefined)
       // the error shouldn't appear as a breadcrumb for itself
       expect(payloads[0].events[0].breadcrumbs.length).toBe(0)
     })
@@ -431,8 +431,8 @@ describe('@bugsnag/core/client', () => {
       client.leaveBreadcrumb('french stick')
       expect(client.breadcrumbs.length).toBe(1)
       expect(client.breadcrumbs[0].type).toBe('manual')
-      expect(client.breadcrumbs[0].name).toBe('french stick')
-      expect(client.breadcrumbs[0].metaData).toEqual({})
+      expect(client.breadcrumbs[0].message).toBe('french stick')
+      expect(client.breadcrumbs[0].metadata).toEqual({})
     })
 
     it('caps the length of breadcrumbs at the configured limit', () => {
@@ -447,14 +447,14 @@ describe('@bugsnag/core/client', () => {
       expect(client.breadcrumbs.length).toBe(3)
       client.leaveBreadcrumb('seedy farmhouse')
       expect(client.breadcrumbs.length).toBe(3)
-      expect(client.breadcrumbs.map(b => b.name)).toEqual([
+      expect(client.breadcrumbs.map(b => b.message)).toEqual([
         'medium sliced white hovis',
         'pumperninkel',
         'seedy farmhouse'
       ])
     })
 
-    it('doesn’t add the breadcrumb if it didn’t contain anything useful', () => {
+    it('doesn’t add the breadcrumb if it didn’t contain a message', () => {
       const client = new Client(VALID_NOTIFIER)
       client.setOptions({ apiKey: 'API_KEY_YEAH' })
       client.configure()
@@ -462,12 +462,7 @@ describe('@bugsnag/core/client', () => {
       client.leaveBreadcrumb(null, { data: 'is useful' })
       client.leaveBreadcrumb(null, {}, null)
       client.leaveBreadcrumb(null, { t: 10 }, null, 4)
-      expect(client.breadcrumbs.length).toBe(3)
-      expect(client.breadcrumbs[0].type).toBe('manual')
-      expect(client.breadcrumbs[0].name).toBe('[anonymous]')
-      expect(client.breadcrumbs[0].metaData).toEqual({ data: 'is useful' })
-      expect(client.breadcrumbs[1].type).toBe('manual')
-      expect(typeof client.breadcrumbs[2].timestamp).toBe('string')
+      expect(client.breadcrumbs.length).toBe(0)
     })
 
     it('allows maxBreadcrumbs to be set to 0', () => {

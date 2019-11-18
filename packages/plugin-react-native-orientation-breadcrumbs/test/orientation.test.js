@@ -33,8 +33,8 @@ describe('plugin: react native orientation breadcrumbs', () => {
     currentDimensions = { height: 200, width: 100 }
     _cb()
     expect(client.breadcrumbs.length).toBe(1)
-    expect(client.breadcrumbs[0].name).toBe('Orientation changed')
-    expect(client.breadcrumbs[0].metaData).toEqual({ from: 'landscape', to: 'portrait' })
+    expect(client.breadcrumbs[0].message).toBe('Orientation changed')
+    expect(client.breadcrumbs[0].metadata).toEqual({ from: 'landscape', to: 'portrait' })
 
     currentDimensions = { height: 200, width: 100 }
     _cb()
@@ -43,8 +43,8 @@ describe('plugin: react native orientation breadcrumbs', () => {
     currentDimensions = { height: 100, width: 200 }
     _cb()
     expect(client.breadcrumbs.length).toBe(2)
-    expect(client.breadcrumbs[1].name).toBe('Orientation changed')
-    expect(client.breadcrumbs[1].metaData).toEqual({ from: 'portrait', to: 'landscape' })
+    expect(client.breadcrumbs[1].message).toBe('Orientation changed')
+    expect(client.breadcrumbs[1].metadata).toEqual({ from: 'portrait', to: 'landscape' })
   })
 
   it('should not be enabled when enabledBreadcrumbTypes=null', () => {

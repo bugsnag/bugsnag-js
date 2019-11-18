@@ -124,19 +124,19 @@ class BugsnagClient {
     return this._sessionDelegate.startSession(this)
   }
 
-  leaveBreadcrumb (name, metaData, type, timestamp) {
+  leaveBreadcrumb (message, metadata, type) {
     if (!this._configured) throw new Error('client not configured')
 
     // coerce bad values so that the defaults get set
-    name = name || undefined
-    type = typeof type === 'string' ? type : undefined
-    timestamp = typeof timestamp === 'string' ? timestamp : undefined
-    metaData = typeof metaData === 'object' && metaData !== null ? metaData : undefined
+    message = typeof message === 'string' ? message : ''
+    type = typeof type === 'string' ? type : 'manual'
+    metadata = typeof metadata === 'object' && metadata !== null ? metadata : {}
 
-    // if no name and no metaData, usefulness of this crumb is questionable at best so discard
-    if (typeof name !== 'string' && !metaData) return
+    // if no message, discard
+    if (!message) return
 
-    const crumb = new BugsnagBreadcrumb(name, metaData, type, timestamp)
+    const crumb = new BugsnagBreadcrumb(message, metadata, type)
+
     // check the breadcrumb is the list of enabled types
     if (!this.config.enabledBreadcrumbTypes || !includes(this.config.enabledBreadcrumbTypes, crumb.type)) return
 

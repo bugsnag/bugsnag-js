@@ -1,19 +1,19 @@
 const { isoDate } = require('./lib/es-utils')
 
 class BugsnagBreadcrumb {
-  constructor (name = '[anonymous]', metaData = {}, type = 'manual', timestamp = isoDate()) {
+  constructor (message, metadata, type, timestamp = isoDate()) {
     this.type = type
-    this.name = name
-    this.metaData = metaData
+    this.message = message
+    this.metadata = metadata
     this.timestamp = timestamp
   }
 
   toJSON () {
     return {
       type: this.type,
-      name: this.name,
+      name: this.message,
       timestamp: this.timestamp,
-      metaData: this.metaData
+      metaData: this.metadata
     }
   }
 }
