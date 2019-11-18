@@ -3,7 +3,7 @@ const createEventFromErr = require('@bugsnag/core/lib/event-from-error')
 let _handler
 module.exports = {
   init: client => {
-    if (!client.config.autoNotify) return
+    if (!client.config.autoDetectErrors || !client.config.autoDetectUnhandledRejections) return
     _handler = err => {
       client.notify(createEventFromErr(err, {
         severity: 'error',

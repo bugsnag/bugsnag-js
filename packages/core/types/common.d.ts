@@ -5,7 +5,8 @@ export interface Config {
   apiKey: string;
   beforeSend?: BeforeSend | BeforeSend[];
   autoBreadcrumbs?: boolean;
-  autoNotify?: boolean;
+  autoDetectErrors?: boolean;
+  autoDetectUnhandledRejections?: boolean;
   appVersion?: string;
   appType?: string;
   endpoints?: { notify: string; sessions: string };

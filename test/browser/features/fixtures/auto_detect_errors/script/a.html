@@ -9,13 +9,13 @@
       var bugsnagClient = bugsnag({
         apiKey: API_KEY,
         endpoints: { notify: ENDPOINT, sessions: '/noop' },
-        autoNotify: false
+        autoDetectErrors: false
       })
     </script>
   </head>
   <body>
     <script>
-      throw new Error('auto notify does not work')
+      throw new Error('auto detect errors does not work')
     </script>
     <script>
       bugsnagClient.notify(new Error('manual notify does work'))

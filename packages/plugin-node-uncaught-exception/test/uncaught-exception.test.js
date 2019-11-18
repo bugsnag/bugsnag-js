@@ -17,10 +17,10 @@ describe('plugin: node uncaught exception handler', () => {
     plugin.destroy()
   })
 
-  it('does not add a process#uncaughtException listener when autoNotify=false', () => {
+  it('does not add a process#uncaughtException listener when autoDetectErrors=false', () => {
     const before = process.listeners('uncaughtException').length
     const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'api_key', autoNotify: false })
+    c.setOptions({ apiKey: 'api_key', autoDetectErrors: false })
     c.configure()
     c.use(plugin)
     const after = process.listeners('uncaughtException').length

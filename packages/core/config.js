@@ -17,7 +17,12 @@ module.exports.schema = {
     message: 'should be a string',
     validate: value => value === null || stringWithLength(value)
   },
-  autoNotify: {
+  autoDetectErrors: {
+    defaultValue: () => true,
+    message: 'should be true|false',
+    validate: value => value === true || value === false
+  },
+  autoDetectUnhandledRejections: {
     defaultValue: () => true,
     message: 'should be true|false',
     validate: value => value === true || value === false

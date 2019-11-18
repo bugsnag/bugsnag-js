@@ -16,7 +16,7 @@ export default class NetworkBreadcrumbs extends Component {
     this.triggerNetworkBreadcrumbsError(
       bugsnag({
         endpoints: endpoints,
-        autoNotify: false,
+        autoDetectErrors: false,
         autoTrackSessions: false
       }),
       "defaultNetworkBreadcrumbsBehaviour"
@@ -27,7 +27,7 @@ export default class NetworkBreadcrumbs extends Component {
     this.triggerNetworkBreadcrumbsError(
       bugsnag({
         endpoints: endpoints,
-        autoNotify: false,
+        autoDetectErrors: false,
         autoTrackSessions: false,
         networkBreadcrumbsEnabled: false
       }),
@@ -39,7 +39,7 @@ export default class NetworkBreadcrumbs extends Component {
     this.triggerNetworkBreadcrumbsError(
       bugsnag({
         endpoints: endpoints,
-        autoNotify: false,
+        autoDetectErrors: false,
         autoTrackSessions: false,
         autoBreadcrumbs: false
       }),
@@ -51,7 +51,7 @@ export default class NetworkBreadcrumbs extends Component {
     this.triggerNetworkBreadcrumbsError(
       bugsnag({
         endpoints: endpoints,
-        autoNotify: false,
+        autoDetectErrors: false,
         autoTrackSessions: false,
         autoBreadcrumbs: false,
         networkBreadcrumbsEnabled: true

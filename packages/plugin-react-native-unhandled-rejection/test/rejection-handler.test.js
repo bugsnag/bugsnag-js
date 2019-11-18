@@ -34,9 +34,31 @@ describe('plugin: react native rejection handler', () => {
     stop()
   })
 
-  it('should be disabled when autoNotify=false', done => {
+  it('should be disabled when autoDetectErrors=false', done => {
     const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'api_key', autoNotify: false })
+    c.setOptions({ apiKey: 'api_key', autoDetectErrors: false })
+    c.configure()
+    c.delivery(client => ({
+      sendReport: (report) => {
+        expect(report).not.toBeTruthy()
+      }
+    }))
+    const stop = plugin.init(c)
+    try {
+      String.floop()
+    } catch (e) {
+      RnPromise.reject(e)
+    }
+    stop()
+
+    // the rejection tracker waits 100ms before reporting TypeError as unhandled
+    // so be generous and wait 3x that
+    setTimeout(() => done(), 300)
+  })
+
+  it('should be disbaled when autoDetectUnhandledRejections=false', done => {
+    const c = new Client(VALID_NOTIFIER)
+    c.setOptions({ apiKey: 'api_key', autoDetectUnhandledRejections: false })
     c.configure()
     c.delivery(client => ({
       sendEvent: (payload) => {

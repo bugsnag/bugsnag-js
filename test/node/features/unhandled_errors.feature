@@ -18,7 +18,7 @@ Scenario: reporting thrown exception which is not caught
   And the "file" of stack frame 0 equals "scenarios/thrown-error-not-caught.js"
   And the "lineNumber" of stack frame 0 equals 10
 
-Scenario: not reporting uncaughtExceptions when autoNotify is off
+Scenario: not reporting uncaughtExceptions when autoDetectErrors is off
   And I run the service "unhandled" with the command "node scenarios/thrown-error-not-caught-auto-notify-off"
   And I wait for 1 second
   Then I should receive no requests
@@ -49,7 +49,7 @@ Scenario: reporting unhandled promise rejections
   And the "file" of stack frame 0 equals "scenarios/unhandled-promise-rejection.js"
   And the "lineNumber" of stack frame 0 equals 10
 
-Scenario: not reporting unhandledRejections when autoNotify is off
+Scenario: not reporting unhandledRejections when autoDetectErrors is off
   And I run the service "unhandled" with the command "node scenarios/unhandled-promise-rejection-auto-notify-off"
   And I wait for 1 second
   Then I should receive no requests
