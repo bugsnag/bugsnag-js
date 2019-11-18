@@ -1,6 +1,8 @@
 const { filter, reduce, keys, isArray, includes } = require('./lib/es-utils')
 const { intRange, stringWithLength } = require('./lib/validators')
 
+const BREADCRUMB_TYPES = ['navigation', 'request', 'process', 'log', 'user', 'state', 'error', 'manual']
+
 module.exports.schema = {
   apiKey: {
     defaultValue: () => null,
@@ -68,10 +70,13 @@ module.exports.schema = {
     message: 'should be a number ≤40',
     validate: value => intRange(0, 40)(value)
   },
-  autoBreadcrumbs: {
-    defaultValue: () => true,
-    message: 'should be true|false',
-    validate: (value) => typeof value === 'boolean'
+  enabledBreadcrumbTypes: {
+    defaultValue: () => BREADCRUMB_TYPES,
+    message: `should be null or a list of available breadcrumb types (${BREADCRUMB_TYPES.join(',')})`,
+    validate: value => value === null || (isArray(value) && reduce(BREADCRUMB_TYPES, (accum, maybeType) => {
+      if (accum === false) return accum
+      return includes(BREADCRUMB_TYPES, maybeType)
+    }, true))
   },
   user: {
     defaultValue: () => null,

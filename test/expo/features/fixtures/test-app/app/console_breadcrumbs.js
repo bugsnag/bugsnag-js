@@ -29,7 +29,7 @@ export default class ConsoleBreadcrumbs extends Component {
         endpoints: endpoints,
         autoDetectErrors: false,
         autoTrackSessions: false,
-        consoleBreadcrumbsEnabled: false
+        enabledBreadcrumbTypes: ['request']
       }),
       "disabledConsoleBreadcrumbsBehaviour"
     )
@@ -41,7 +41,7 @@ export default class ConsoleBreadcrumbs extends Component {
         endpoints: endpoints,
         autoDetectErrors: false,
         autoTrackSessions: false,
-        autoBreadcrumbs: false
+        enabledBreadcrumbTypes: []
       }),
       "disabledAllConsoleBreadcrumbsBehaviour"
     )
@@ -53,8 +53,7 @@ export default class ConsoleBreadcrumbs extends Component {
         endpoints: endpoints,
         autoDetectErrors: false,
         autoTrackSessions: false,
-        autoBreadcrumbs: false,
-        consoleBreadcrumbsEnabled: true
+        enabledBreadcrumbTypes: ['log']
       }),
       "overrideConsoleBreadcrumbsBehaviour"
     )

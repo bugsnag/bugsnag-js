@@ -1,12 +1,12 @@
+const { includes } = require('@bugsnag/core/lib/es-utils')
+
 /*
  * Leaves breadcrumbs when navigation methods are called or events are emitted
  */
 exports.init = (client, win = window) => {
   if (!('addEventListener' in win)) return
 
-  const explicitlyDisabled = client.config.navigationBreadcrumbsEnabled === false
-  const implicitlyDisabled = client.config.autoBreadcrumbs === false && client.config.navigationBreadcrumbsEnabled !== true
-  if (explicitlyDisabled || implicitlyDisabled) return
+  if (!client.config.enabledBreadcrumbTypes || !includes(client.config.enabledBreadcrumbTypes, 'navigation')) return
 
   // returns a function that will drop a breadcrumb with a given name
   const drop = name => () => client.leaveBreadcrumb(name, {}, 'navigation')
@@ -33,14 +33,6 @@ exports.init = (client, win = window) => {
   if (win.history.pushState) wrapHistoryFn(client, win.history, 'pushState', win)
 
   client.leaveBreadcrumb('Bugsnag loaded', {}, 'navigation')
-}
-
-exports.configSchema = {
-  navigationBreadcrumbsEnabled: {
-    defaultValue: () => undefined,
-    validate: (value) => value === true || value === false || value === undefined,
-    message: 'should be true|false'
-  }
 }
 
 if (process.env.NODE_ENV !== 'production') {

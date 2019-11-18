@@ -5,9 +5,9 @@ declare module "@bugsnag/core" {
   interface Config {
     apiKey: string;
     beforeSend?: BugsnagCore.BeforeSend | BugsnagCore.BeforeSend[];
-    autoBreadcrumbs?: boolean;
     autoDetectErrors?: boolean;
     autoDetectUnhandledRejections?: boolean;
+    enabledBreadcrumbTypes?: BugsnagCore.BreadcrumbType[] | null;
     appVersion?: string;
     appType?: string;
     endpoints?: { notify: string; sessions?: string };
@@ -23,10 +23,6 @@ declare module "@bugsnag/core" {
     [key: string]: any;
     // options for all bundled browser plugins
     maxEvents?: number;
-    consoleBreadcrumbsEnabled?: boolean;
-    networkBreadcrumbsEnabled?: boolean;
-    navigationBreadcrumbsEnabled?: boolean;
-    interactionBreadcrumbsEnabled?: boolean;
     collectUserIp?: boolean;
   }
 }

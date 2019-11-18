@@ -1,3 +1,5 @@
+const { includes } = require('@bugsnag/core/lib/es-utils')
+
 /*
  * Leaves breadcrumbs when the user interacts with the DOM
  */
@@ -5,9 +7,7 @@ module.exports = {
   init: (client, win = window) => {
     if (!('addEventListener' in win)) return
 
-    const explicitlyDisabled = client.config.interactionBreadcrumbsEnabled === false
-    const implicitlyDisabled = client.config.autoBreadcrumbs === false && client.config.interactionBreadcrumbsEnabled !== true
-    if (explicitlyDisabled || implicitlyDisabled) return
+    if (!client.config.enabledBreadcrumbTypes || !includes(client.config.enabledBreadcrumbTypes, 'user')) return
 
     win.addEventListener('click', (event) => {
       let targetText, targetSelector
@@ -21,13 +21,6 @@ module.exports = {
       }
       client.leaveBreadcrumb('UI click', { targetText, targetSelector }, 'user')
     }, true)
-  },
-  configSchema: {
-    interactionBreadcrumbsEnabled: {
-      defaultValue: () => undefined,
-      validate: (value) => value === true || value === false || value === undefined,
-      message: 'should be true|false'
-    }
   }
 }
 

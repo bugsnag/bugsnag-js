@@ -137,6 +137,8 @@ class BugsnagClient {
     if (typeof name !== 'string' && !metaData) return
 
     const crumb = new BugsnagBreadcrumb(name, metaData, type, timestamp)
+    // check the breadcrumb is the list of enabled types
+    if (!this.config.enabledBreadcrumbTypes || !includes(this.config.enabledBreadcrumbTypes, crumb.type)) return
 
     // push the valid crumb onto the queue and maintain the length
     this.breadcrumbs.push(crumb)
@@ -205,13 +207,11 @@ class BugsnagClient {
       }
 
       // only leave a crumb for the error if actually got sent
-      if (this.config.autoBreadcrumbs) {
-        this.leaveBreadcrumb(event.errorClass, {
-          errorClass: event.errorClass,
-          errorMessage: event.errorMessage,
-          severity: event.severity
-        }, 'error')
-      }
+      BugsnagClient.prototype.leaveBreadcrumb.call(this, event.errorClass, {
+        errorClass: event.errorClass,
+        errorMessage: event.errorMessage,
+        severity: event.severity
+      }, 'error')
 
       if (originalSeverity !== event.severity) {
         event._handledState.severityReason = { type: 'userCallbackSetSeverity' }

@@ -16,9 +16,9 @@ describe('plugin: interaction breadcrumbs', () => {
     expect(c.breadcrumbs.length).toBe(1)
   })
 
-  it('should not be enabled when autoBreadcrumbs=false', () => {
+  it('should not be enabled when enabledBreadcrumbTypes=[]', () => {
     const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa', autoBreadcrumbs: false })
+    c.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: [] })
     c.configure()
     const { window, winHandlers, els } = getMockWindow()
     c.use(plugin, window)
@@ -26,9 +26,9 @@ describe('plugin: interaction breadcrumbs', () => {
     expect(c.breadcrumbs.length).toBe(0)
   })
 
-  it('should be enabled when autoBreadcrumbs=false and interactionBreadcrumbsEnabled=true', () => {
+  it('should be enabled when enabledBreadcrumbTypes=["user"]', () => {
     const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa', autoBreadcrumbs: false, interactionBreadcrumbsEnabled: true })
+    c.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: ['user'] })
     c.configure()
     const { window, winHandlers, els } = getMockWindow()
     c.use(plugin, window)

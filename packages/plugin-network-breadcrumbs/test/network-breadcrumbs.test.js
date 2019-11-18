@@ -222,11 +222,11 @@ describe('plugin: network breadcrumbs', () => {
     })
   })
 
-  it('should not be enabled when autoBreadcrumbs=false', () => {
+  it('should not be enabled when enabledBreadcrumbTypes=[]', () => {
     const window = { XMLHttpRequest }
 
     const client = new Client(VALID_NOTIFIER)
-    client.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa', autoBreadcrumbs: false })
+    client.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: [] })
     client.configure()
     client.use(plugin, () => [], window)
 
@@ -237,11 +237,11 @@ describe('plugin: network breadcrumbs', () => {
     expect(client.breadcrumbs.length).toBe(0)
   })
 
-  it('should be enabled when autoBreadcrumbs=false and networkBreadcrumbsEnabled=true', () => {
+  it('should be enabled when enabledBreadcrumbTypes=["request"]', () => {
     const window = { XMLHttpRequest }
 
     const client = new Client(VALID_NOTIFIER)
-    client.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa', autoBreadcrumbs: false, networkBreadcrumbsEnabled: true })
+    client.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: ['request'] })
     client.configure()
     client.use(plugin, () => [], window)
 

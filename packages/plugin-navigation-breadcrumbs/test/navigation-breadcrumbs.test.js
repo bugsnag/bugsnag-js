@@ -34,9 +34,9 @@ describe('plugin: navigation breadcrumbs', () => {
     done()
   })
 
-  it('should not be enabled when autoBreadcrumbs=false', () => {
+  it('should not be enabled when enabledBreadcrumbTypes=[]', () => {
     const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa', autoBreadcrumbs: false })
+    c.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: [] })
     c.configure()
     const { winHandlers, docHandlers, window } = getMockWindow()
     c.use(plugin, window)
@@ -81,9 +81,9 @@ describe('plugin: navigation breadcrumbs', () => {
     setTimeout(() => done(), 1)
   })
 
-  it('should be enabled when autoBreadcrumbs=false and navigationBreadcrumbsEnabled=true', () => {
+  it('should be enabled when enabledReleaseStages=["navigation"]', () => {
     const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa', autoBreadcrumbs: false, navigationBreadcrumbsEnabled: true })
+    c.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledReleaseStages: ['navigation'] })
     c.configure()
     const { winHandlers, docHandlers, window } = getMockWindow()
     c.use(plugin, window)

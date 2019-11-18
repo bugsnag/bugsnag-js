@@ -38,7 +38,7 @@ describe('plugin: react native connectivity breadcrumbs', () => {
     expect(client.breadcrumbs[1].metaData).toEqual({ type: 'none', effectiveType: 'unknown' })
   })
 
-  it('should not be enabled when autoBreadcrumbs=false', () => {
+  it('should not be enabled when enabledBreadcrumbTypes=null', () => {
     let _cb
     const NetInfo = {
       addEventListener: (type, fn) => {
@@ -50,14 +50,14 @@ describe('plugin: react native connectivity breadcrumbs', () => {
     })
 
     const client = new Client(VALID_NOTIFIER)
-    client.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa', autoBreadcrumbs: false })
+    client.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: null })
     client.configure()
     client.use(plugin)
 
     expect(_cb).toBe(undefined)
   })
 
-  it('should not be enabled when connectivityBreadcrumbsEnabled=false', () => {
+  it('should not be enabled when enabledBreadcrumbTypes=[]', () => {
     let _cb
     const NetInfo = {
       addEventListener: (type, fn) => {
@@ -69,14 +69,14 @@ describe('plugin: react native connectivity breadcrumbs', () => {
     })
 
     const client = new Client(VALID_NOTIFIER)
-    client.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa', connectivityBreadcrumbsEnabled: false })
+    client.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: [] })
     client.configure()
     client.use(plugin)
 
     expect(_cb).toBe(undefined)
   })
 
-  it('should be enabled when autoBreadcrumbs=false and connectivityBreadcrumbsEnabled=true', () => {
+  it('should be enabled when enabledBreadcrumbTypes=["state"]', () => {
     let _cb
     const NetInfo = {
       addEventListener: (type, fn) => {
@@ -88,7 +88,7 @@ describe('plugin: react native connectivity breadcrumbs', () => {
     })
 
     const client = new Client(VALID_NOTIFIER)
-    client.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa', autoBreadcrumbs: false, connectivityBreadcrumbsEnabled: true })
+    client.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: ['state'] })
     client.configure()
     client.use(plugin)
 

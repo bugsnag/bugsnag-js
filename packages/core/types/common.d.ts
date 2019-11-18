@@ -4,7 +4,7 @@ import Event from "./event";
 export interface Config {
   apiKey: string;
   beforeSend?: BeforeSend | BeforeSend[];
-  autoBreadcrumbs?: boolean;
+  enabledBreadcrumbTypes?: BreadcrumbType[];
   autoDetectErrors?: boolean;
   autoDetectUnhandledRejections?: boolean;
   appVersion?: string;
