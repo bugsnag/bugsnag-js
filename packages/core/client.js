@@ -2,7 +2,7 @@ const config = require('./config')
 const BugsnagEvent = require('./event')
 const BugsnagBreadcrumb = require('./breadcrumb')
 const BugsnagSession = require('./session')
-const { map, includes, isArray } = require('./lib/es-utils')
+const { map, includes } = require('./lib/es-utils')
 const inferReleaseStage = require('./lib/infer-release-stage')
 const isError = require('./lib/iserror')
 const some = require('./lib/async-some')
@@ -183,8 +183,8 @@ class BugsnagClient {
     }
 
     // exit early if events should not be sent on the current releaseStage
-    if (isArray(this.config.notifyReleaseStages) && !includes(this.config.notifyReleaseStages, releaseStage)) {
-      this._logger.warn('Event not sent due to releaseStage/notifyReleaseStages configuration')
+    if (this.config.enabledReleaseStages.length > 0 && !includes(this.config.enabledReleaseStages, releaseStage)) {
+      this._logger.warn('Event not sent due to releaseStage/enabledReleaseStages configuration')
       return cb(null, event)
     }
 

@@ -167,14 +167,14 @@ describe('@bugsnag/core/client', () => {
       process.nextTick(() => done())
     })
 
-    it('supports preventing send with notifyReleaseStages', done => {
+    it('supports preventing send with enabledReleaseStages', done => {
       const client = new Client(VALID_NOTIFIER)
       client.delivery(client => ({
         sendEvent: (payload) => {
           fail('sendEvent() should not be called')
         }
       }))
-      client.setOptions({ apiKey: 'API_KEY_YEAH', notifyReleaseStages: [] })
+      client.setOptions({ apiKey: 'API_KEY_YEAH', enabledReleaseStages: ['qa'] })
       client.configure()
 
       client.notify(new Error('oh em eff gee'))
@@ -190,7 +190,7 @@ describe('@bugsnag/core/client', () => {
           fail('sendEvent() should not be called')
         }
       }))
-      client.setOptions({ apiKey: 'API_KEY_YEAH', releaseStage: 'staging', notifyReleaseStages: ['production'] })
+      client.setOptions({ apiKey: 'API_KEY_YEAH', releaseStage: 'staging', enabledReleaseStages: ['production'] })
       client.configure()
 
       client.notify(new Error('oh em eff gee'))
@@ -206,7 +206,7 @@ describe('@bugsnag/core/client', () => {
           fail('sendEvent() should not be called')
         }
       }))
-      client.setOptions({ apiKey: 'API_KEY_YEAH', notifyReleaseStages: ['production'] })
+      client.setOptions({ apiKey: 'API_KEY_YEAH', enabledReleaseStages: ['production'] })
       client.configure()
       client.app.releaseStage = 'staging'
 
@@ -224,7 +224,7 @@ describe('@bugsnag/core/client', () => {
           done()
         }
       }))
-      client.setOptions({ apiKey: 'API_KEY_YEAH', notifyReleaseStages: ['staging'] })
+      client.setOptions({ apiKey: 'API_KEY_YEAH', enabledReleaseStages: ['staging'] })
       client.configure()
       client.app.releaseStage = 'staging'
       client.notify(new Error('oh em eff gee'))
@@ -238,7 +238,7 @@ describe('@bugsnag/core/client', () => {
           done()
         }
       }))
-      client.setOptions({ apiKey: 'API_KEY_YEAH', notifyReleaseStages: ['staging'], releaseStage: 'staging' })
+      client.setOptions({ apiKey: 'API_KEY_YEAH', enabledReleaseStages: ['staging'], releaseStage: 'staging' })
       client.configure()
       client.notify(new Error('oh em eff gee'))
     })
@@ -251,7 +251,7 @@ describe('@bugsnag/core/client', () => {
           done()
         }
       }))
-      client.setOptions({ apiKey: 'API_KEY_YEAH', notifyReleaseStages: ['testing'], releaseStage: 'staging' })
+      client.setOptions({ apiKey: 'API_KEY_YEAH', enabledReleaseStages: ['testing'], releaseStage: 'staging' })
       client.configure()
       client.app.releaseStage = 'testing'
       client.notify(new Error('oh em eff gee'))
@@ -373,9 +373,9 @@ describe('@bugsnag/core/client', () => {
       })
     })
 
-    it('should call the callback even if the event doesn’t send (notifyReleaseStages)', done => {
+    it('should call the callback even if the event doesn’t send (enabledReleaseStages)', done => {
       const client = new Client(VALID_NOTIFIER)
-      client.setOptions({ apiKey: 'API_KEY', notifyReleaseStages: ['production'], releaseStage: 'development' })
+      client.setOptions({ apiKey: 'API_KEY', enabledReleaseStages: ['production'], releaseStage: 'development' })
       client.configure()
       client.delivery(client => ({
         sendSession: () => {},

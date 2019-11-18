@@ -53,10 +53,10 @@ module.exports.schema = {
     message: 'should be true|false',
     validate: val => val === true || val === false
   },
-  notifyReleaseStages: {
-    defaultValue: () => null,
+  enabledReleaseStages: {
+    defaultValue: () => [],
     message: 'should be an array of strings',
-    validate: value => value === null || (isArray(value) && filter(value, f => typeof f === 'string').length === value.length)
+    validate: value => isArray(value) && filter(value, f => typeof f === 'string').length === value.length
   },
   releaseStage: {
     defaultValue: () => 'production',

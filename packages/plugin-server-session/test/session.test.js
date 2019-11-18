@@ -38,7 +38,7 @@ describe('plugin: server sessions', () => {
     c.startSession()
   })
 
-  it('should not send the session when releaseStage is not in notifyReleaseStages', done => {
+  it('should not send the session when releaseStage is not in enabledReleaseStages', done => {
     class TrackerMock extends Emitter {
       start () {
         this.emit('summary', [
@@ -60,14 +60,14 @@ describe('plugin: server sessions', () => {
         debug: () => {},
         info: () => {},
         warn: (msg) => {
-          expect(msg).toBe('Session not sent due to releaseStage/notifyReleaseStages configuration')
+          expect(msg).toBe('Session not sent due to releaseStage/enabledReleaseStages configuration')
           setTimeout(done, 150)
         },
         error: () => {}
       },
       endpoints: { notify: 'bloo', sessions: 'blah' },
       releaseStage: 'qa',
-      notifyReleaseStages: ['production']
+      enabledReleaseStages: ['production']
     })
     c.delivery(client => ({
       sendEvent: () => {},
@@ -99,7 +99,7 @@ describe('plugin: server sessions', () => {
     c.setOptions({
       apiKey: 'aaaa-aaaa-aaaa-aaaa',
       endpoints: { notify: 'bloo', sessions: 'blah' },
-      notifyReleaseStages: null,
+      enabledReleaseStages: ['qa'],
       releaseStage: 'qa',
       appType: 'server',
       appVersion: '1.2.3'
