@@ -108,3 +108,8 @@ export type NotifiableError = Error
   | { errorClass: string; errorMessage: string }
   | { name: string; message: string }
   | any;
+
+type Primitive = boolean | string | number | undefined | null;
+export type BreadcrumbMetadataValue = Primitive | Array<Primitive>;
+
+export type BreadcrumbType = "error" | "log" | "manual" | "navigation" | "process" | "request" | "state" | "user";
