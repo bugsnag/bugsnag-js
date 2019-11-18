@@ -6,6 +6,7 @@
 - Rename `autoNotify` -> `autoDetectErrors`, and add `autoDetectUnhandledRejections` option [#648](https://github.com/bugsnag/bugsnag-js/pull/648)
 - Rename `autoCaptureSessions` -> `autoTrackSessions` and simplify validation logic [#647](https://github.com/bugsnag/bugsnag-js/pull/647)
 - Rename `report` to `event` [#646](https://github.com/bugsnag/bugsnag-js/pull/646)
+- Rename `notifyReleaseStages` -> `enabledReleaseStages` [#649](https://github.com/bugsnag/bugsnag-js/pull/649)
 
 ## 6.4.3 (2019-10-21)
 
