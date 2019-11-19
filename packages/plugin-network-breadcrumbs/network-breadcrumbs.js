@@ -22,23 +22,13 @@ const defaultIgnoredUrls = () => [
  */
 exports.name = 'networkBreadcrumbs'
 exports.init = (_client, _getIgnoredUrls = defaultIgnoredUrls, _win = window) => {
-  const explicitlyDisabled = _client.config.networkBreadcrumbsEnabled === false
-  const implicitlyDisabled = _client.config.autoBreadcrumbs === false && _client.config.networkBreadcrumbsEnabled !== true
-  if (explicitlyDisabled || implicitlyDisabled) return
+  if (!_client.config.enabledBreadcrumbTypes || !includes(_client.config.enabledBreadcrumbTypes, 'request')) return
 
   client = _client
   win = _win
   getIgnoredUrls = _getIgnoredUrls
   monkeyPatchXMLHttpRequest()
   monkeyPatchFetch()
-}
-
-exports.configSchema = {
-  networkBreadcrumbsEnabled: {
-    defaultValue: () => undefined,
-    validate: (value) => value === true || value === false || value === undefined,
-    message: 'should be true|false'
-  }
 }
 
 if (process.env.NODE_ENV !== 'production') {

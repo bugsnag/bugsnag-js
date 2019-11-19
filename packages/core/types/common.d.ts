@@ -4,7 +4,7 @@ import Event from "./event";
 export interface Config {
   apiKey: string;
   beforeSend?: BeforeSend | BeforeSend[];
-  autoBreadcrumbs?: boolean;
+  enabledBreadcrumbTypes?: BreadcrumbType[];
   autoDetectErrors?: boolean;
   autoDetectUnhandledRejections?: boolean;
   appVersion?: string;
@@ -108,3 +108,8 @@ export type NotifiableError = Error
   | { errorClass: string; errorMessage: string }
   | { name: string; message: string }
   | any;
+
+type Primitive = boolean | string | number | undefined | null;
+export type BreadcrumbMetadataValue = Primitive | Array<Primitive>;
+
+export type BreadcrumbType = "error" | "log" | "manual" | "navigation" | "process" | "request" | "state" | "user";

@@ -29,7 +29,7 @@ export default class NetworkBreadcrumbs extends Component {
         endpoints: endpoints,
         autoDetectErrors: false,
         autoTrackSessions: false,
-        networkBreadcrumbsEnabled: false
+        enabledBreadcrumbTypes: ['state']
       }),
       "disabledNetworkBreadcrumbsBehaviour"
     )
@@ -41,7 +41,7 @@ export default class NetworkBreadcrumbs extends Component {
         endpoints: endpoints,
         autoDetectErrors: false,
         autoTrackSessions: false,
-        autoBreadcrumbs: false
+        enabledBreadcrumbTypes: []
       }),
       "disabledAllNetworkBreadcrumbsBehaviour"
     )
@@ -53,8 +53,7 @@ export default class NetworkBreadcrumbs extends Component {
         endpoints: endpoints,
         autoDetectErrors: false,
         autoTrackSessions: false,
-        autoBreadcrumbs: false,
-        networkBreadcrumbsEnabled: true
+        enabledBreadcrumbTypes: ['request']
       }),
       "overrideNetworkBreadcrumbsBehaviour"
     )

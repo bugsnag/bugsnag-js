@@ -11,15 +11,11 @@ bugsnag({
   enabledReleaseStages: ['zzz'],
   releaseStage: "production",
   maxBreadcrumbs: 20,
-  autoBreadcrumbs: true,
+  enabledBreadcrumbTypes: ['manual','log','request'],
   user: null,
   metaData: null,
   logger: undefined,
   filters: ["foo",/bar/],
   collectUserIp: true,
-  consoleBreadcrumbsEnabled: undefined,
-  interactionBreadcrumbsEnabled: undefined,
-  navigationBreadcrumbsEnabled: undefined,
-  networkBreadcrumbsEnabled: undefined,
   maxEvents: 10
 })

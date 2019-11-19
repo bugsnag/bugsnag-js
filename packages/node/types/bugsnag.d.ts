@@ -7,7 +7,6 @@ declare module "@bugsnag/core" {
   interface Config {
     apiKey: string;
     beforeSend?: BugsnagCore.BeforeSend | BugsnagCore.BeforeSend[];
-    // autoBreadcrumbs?: boolean; // this option is disabled in node, see below
     autoDetectErrors?: boolean;
     autoDetectUnhandledRejections?: boolean;
     appVersion?: string;
@@ -30,7 +29,8 @@ declare module "@bugsnag/core" {
     agent?: any;
     projectRoot?: string;
     sendCode?: boolean;
-    autoBreadcrumbs?: void;
+    // breadcrumbs are disabled in Node
+    enabledBreadcrumbTypes?: void;
   }
 }
 

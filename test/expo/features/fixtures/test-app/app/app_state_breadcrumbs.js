@@ -32,7 +32,7 @@ export default class AppStateBreadcrumbs extends Component {
           endpoints: endpoints,
           autoDetectErrors: false,
           autoTrackSessions: false,
-          appStateBreadcrumbsEnabled: false
+          enabledBreadcrumbTypes: ['log']
         }),
         errorMessage: "disabledAppStateBreadcrumbsBehaviour"
       }
@@ -46,7 +46,7 @@ export default class AppStateBreadcrumbs extends Component {
           endpoints: endpoints,
           autoDetectErrors: false,
           autoTrackSessions: false,
-          autoBreadcrumbs: false
+          enabledBreadcrumbTypes: []
         }),
         errorMessage: "disabledAllAppStateBreadcrumbsBehaviour"
       }
@@ -60,8 +60,7 @@ export default class AppStateBreadcrumbs extends Component {
           endpoints: endpoints,
           autoDetectErrors: false,
           autoTrackSessions: false,
-          autoBreadcrumbs: false,
-          appStateBreadcrumbsEnabled: true
+          enabledBreadcrumbTypes: ['state']
         }),
         errorMessage: "overrideAppStateBreadcrumbsBehaviour"
       }

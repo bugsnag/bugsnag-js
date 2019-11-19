@@ -27,7 +27,7 @@ declare class Client {
     opts?: common.NotifyOpts,
     cb?: (err: any, event: Event) => void,
   ): void;
-  public leaveBreadcrumb(name: string, metaData?: any, type?: string, timestamp?: string): Client;
+  public leaveBreadcrumb(message: string, metadata?: { [key: string]: common.BreadcrumbMetadataValue }, type?: string): Client;
   public startSession(): Client;
 }
 

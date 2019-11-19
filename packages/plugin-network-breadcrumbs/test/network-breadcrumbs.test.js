@@ -59,8 +59,8 @@ describe('plugin: network breadcrumbs', () => {
     expect(client.breadcrumbs.length).toBe(1)
     expect(client.breadcrumbs[0]).toEqual(jasmine.objectContaining({
       type: 'request',
-      name: 'XMLHttpRequest succeeded',
-      metaData: {
+      message: 'XMLHttpRequest succeeded',
+      metadata: {
         status: 200,
         request: 'GET /'
       }
@@ -97,8 +97,8 @@ describe('plugin: network breadcrumbs', () => {
     expect(client.breadcrumbs.length).toBe(1)
     expect(client.breadcrumbs[0]).toEqual(jasmine.objectContaining({
       type: 'request',
-      name: 'XMLHttpRequest failed',
-      metaData: {
+      message: 'XMLHttpRequest failed',
+      metadata: {
         status: 404,
         request: 'GET /this-does-not-exist'
       }
@@ -121,8 +121,8 @@ describe('plugin: network breadcrumbs', () => {
     expect(client.breadcrumbs.length).toBe(1)
     expect(client.breadcrumbs[0]).toEqual(jasmine.objectContaining({
       type: 'request',
-      name: 'XMLHttpRequest error',
-      metaData: {
+      message: 'XMLHttpRequest error',
+      metadata: {
         request: 'GET https://another-domain.xyz/'
       }
     }))
@@ -169,8 +169,8 @@ describe('plugin: network breadcrumbs', () => {
       expect(client.breadcrumbs.length).toBe(1)
       expect(client.breadcrumbs[0]).toEqual(jasmine.objectContaining({
         type: 'request',
-        name: 'fetch() succeeded',
-        metaData: {
+        message: 'fetch() succeeded',
+        metadata: {
           status: 200,
           request: 'GET /'
         }
@@ -191,8 +191,8 @@ describe('plugin: network breadcrumbs', () => {
       expect(client.breadcrumbs.length).toBe(1)
       expect(client.breadcrumbs[0]).toEqual(jasmine.objectContaining({
         type: 'request',
-        name: 'fetch() failed',
-        metaData: {
+        message: 'fetch() failed',
+        metadata: {
           status: 404,
           request: 'GET /does-not-exist'
         }
@@ -213,8 +213,8 @@ describe('plugin: network breadcrumbs', () => {
       expect(client.breadcrumbs.length).toBe(1)
       expect(client.breadcrumbs[0]).toEqual(jasmine.objectContaining({
         type: 'request',
-        name: 'fetch() error',
-        metaData: {
+        message: 'fetch() error',
+        metadata: {
           request: 'GET https://another-domain.xyz/foo/bar'
         }
       }))
@@ -222,11 +222,11 @@ describe('plugin: network breadcrumbs', () => {
     })
   })
 
-  it('should not be enabled when autoBreadcrumbs=false', () => {
+  it('should not be enabled when enabledBreadcrumbTypes=[]', () => {
     const window = { XMLHttpRequest }
 
     const client = new Client(VALID_NOTIFIER)
-    client.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa', autoBreadcrumbs: false })
+    client.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: [] })
     client.configure()
     client.use(plugin, () => [], window)
 
@@ -237,11 +237,11 @@ describe('plugin: network breadcrumbs', () => {
     expect(client.breadcrumbs.length).toBe(0)
   })
 
-  it('should be enabled when autoBreadcrumbs=false and networkBreadcrumbsEnabled=true', () => {
+  it('should be enabled when enabledBreadcrumbTypes=["request"]', () => {
     const window = { XMLHttpRequest }
 
     const client = new Client(VALID_NOTIFIER)
-    client.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa', autoBreadcrumbs: false, networkBreadcrumbsEnabled: true })
+    client.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: ['request'] })
     client.configure()
     client.use(plugin, () => [], window)
 
