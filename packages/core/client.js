@@ -135,10 +135,10 @@ class BugsnagClient {
     // if no message, discard
     if (!message) return
 
-    const crumb = new BugsnagBreadcrumb(message, metadata, type)
-
     // check the breadcrumb is the list of enabled types
-    if (!this.config.enabledBreadcrumbTypes || !includes(this.config.enabledBreadcrumbTypes, crumb.type)) return
+    if (!this.config.enabledBreadcrumbTypes || !includes(this.config.enabledBreadcrumbTypes, type)) return
+
+    const crumb = new BugsnagBreadcrumb(message, metadata, type)
 
     // push the valid crumb onto the queue and maintain the length
     this.breadcrumbs.push(crumb)
