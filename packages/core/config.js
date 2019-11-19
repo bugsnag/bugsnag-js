@@ -73,7 +73,7 @@ module.exports.schema = {
   enabledBreadcrumbTypes: {
     defaultValue: () => BREADCRUMB_TYPES,
     message: `should be null or a list of available breadcrumb types (${BREADCRUMB_TYPES.join(',')})`,
-    validate: value => value === null || (isArray(value) && reduce(BREADCRUMB_TYPES, (accum, maybeType) => {
+    validate: value => value === null || (isArray(value) && reduce(value, (accum, maybeType) => {
       if (accum === false) return accum
       return includes(BREADCRUMB_TYPES, maybeType)
     }, true))

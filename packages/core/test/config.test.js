@@ -64,4 +64,11 @@ describe('@bugsnag/core/config', () => {
       })
     })
   })
+
+  describe('enabledBreadcrumbTypes', () => {
+    it('fails when a supplied value is not a valid breadcrumb type', () => {
+      const enabledBreadcrumbTypesValidator = config.schema.enabledBreadcrumbTypes.validate
+      expect(enabledBreadcrumbTypesValidator(['UNKNOWN_BREADCRUMB_TYPE'])).toBe(false)
+    })
+  })
 })
