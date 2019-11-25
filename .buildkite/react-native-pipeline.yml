@@ -57,6 +57,7 @@ steps:
       docker-compose#v2.6.0:
         run: react-native-maze-runner
         use-aliases: true
+    command: --tags "not @wip"
     env:
       DEVICE_TYPE: "ANDROID_9"
       APP_LOCATION: "build/rn0.55.apk"
@@ -70,6 +71,7 @@ steps:
       docker-compose#v2.6.0:
         run: react-native-maze-runner
         use-aliases: true
+    command: --tags "not @wip"
     env:
       DEVICE_TYPE: "ANDROID_9"
       APP_LOCATION: "build/rn0.60.apk"
@@ -83,6 +85,7 @@ steps:
       docker-compose#v2.6.0:
         run: react-native-maze-runner
         use-aliases: true
+    command: --tags "not @wip"
     env:
       DEVICE_TYPE: "IOS_12"
       APP_LOCATION: "build/rn0.55.ipa"
@@ -96,6 +99,7 @@ steps:
       docker-compose#v2.6.0:
         run: react-native-maze-runner
         use-aliases: true
+    command: --tags "not @wip"
     env:
       DEVICE_TYPE: "IOS_12"
       APP_LOCATION: "build/rn0.60.ipa"
