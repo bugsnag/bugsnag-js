@@ -1,4 +1,6 @@
-#!
+#!/bin/bash
+
+set -e
 
 if [ -z "$REACT_NATIVE_VERSION" ]; then
     echo "The environment variable 'REACT_NATIVE_VERSION' must be set"
