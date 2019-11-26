@@ -12,7 +12,7 @@ module.exports = {
     // add onError hook
     client.config.onError.push((event) => {
       // have max events been sent already?
-      if (n >= client.config.maxEvents) return event.ignore()
+      if (n >= client.config.maxEvents) return false
       n++
     })
 

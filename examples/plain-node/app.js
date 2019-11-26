@@ -76,7 +76,7 @@ function onError () {
   bugsnagClient.notify(new Error('sometimes will send'), {
     onError: (event) => {
       const n = Math.random()
-      if (n <= 0.5) event.ignore()
+      if (n <= 0.5) return false
     }
   })
 }
