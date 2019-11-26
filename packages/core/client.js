@@ -5,8 +5,7 @@ const BugsnagSession = require('./session')
 const { map, includes } = require('./lib/es-utils')
 const inferReleaseStage = require('./lib/infer-release-stage')
 const isError = require('./lib/iserror')
-const some = require('./lib/async-some')
-const runBeforeSend = require('./lib/run-before-send')
+const runCallbacks = require('./lib/callback-runner')
 
 const LOG_USAGE_ERR_PREFIX = 'Usage error.'
 const REPORT_USAGE_ERR_PREFIX = 'Bugsnag usage error.'
@@ -193,15 +192,16 @@ class BugsnagClient {
     const originalSeverity = event.severity
 
     const beforeSend = [].concat(opts.beforeSend).concat(this.config.beforeSend)
-    const onBeforeSendErr = err => {
+    const onCallbackError = err => {
+      // errors in callbacks are tolerated but we want to log them out
       this._logger.error('Error occurred in beforeSend callback, continuing anyway…')
       this._logger.error(err)
     }
 
-    some(beforeSend, runBeforeSend(event, onBeforeSendErr), (err, preventSend) => {
-      if (err) onBeforeSendErr(err)
+    runCallbacks(beforeSend, event, onCallbackError, (err, shouldSend) => {
+      if (err) onCallbackError(err)
 
-      if (preventSend) {
+      if (!shouldSend) {
         this._logger.debug('Event not sent due to beforeSend callback')
         return cb(null, event)
       }

@@ -9,8 +9,6 @@ class BugsnagEvent {
     // duck-typing ftw >_<
     this.__isBugsnagEvent = true
 
-    this._ignored = false
-
     // private (un)handled state
     this._handledState = handledState
 
@@ -45,14 +43,6 @@ class BugsnagEvent {
     // to save unnecessary bytes in the browser bundle
 
     /* this.attemptImmediateDelivery, default: true */
-  }
-
-  ignore () {
-    this._ignored = true
-  }
-
-  isIgnored () {
-    return this._ignored
   }
 
   updateMetaData (section, ...args) {

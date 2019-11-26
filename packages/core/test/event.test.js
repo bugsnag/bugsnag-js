@@ -50,15 +50,6 @@ describe('@bugsnag/core/event', () => {
     })
   })
 
-  describe('ignore()', () => {
-    it('updates the return value of .isIgnored()', () => {
-      const Event = require('../event')
-      const r = new Event('Err', 'bad', [])
-      r.ignore()
-      expect(r.isIgnored()).toBe(true)
-    })
-  })
-
   describe('updateMetaData()', () => {
     it('updates a whole new section', () => {
       const Event = require('../event')

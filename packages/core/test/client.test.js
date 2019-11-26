@@ -150,7 +150,7 @@ describe('@bugsnag/core/client', () => {
       })
     })
 
-    it('supports preventing send with event.ignore() / return false', done => {
+    it('supports preventing send by returning false', done => {
       const client = new Client(VALID_NOTIFIER)
       client.delivery(client => ({
         sendEvent: (payload) => {
@@ -160,8 +160,7 @@ describe('@bugsnag/core/client', () => {
       client.setOptions({ apiKey: 'API_KEY_YEAH' })
       client.configure()
 
-      client.notify(new Error('oh em gee'), { beforeSend: event => event.ignore() })
-      client.notify(new Error('oh em eff gee'), { beforeSend: event => false })
+      client.notify(new Error('oh em gee'), { beforeSend: event => false })
 
       // give the event loop a tick to see if the event gets sent
       process.nextTick(() => done())

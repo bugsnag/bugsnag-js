@@ -42,7 +42,6 @@ declare class Event {
     originalError?: any,
   );
 
-  public isIgnored(): boolean;
   public ignore(): void;
   public updateMetaData(section: string, value: object): Event;
   public updateMetaData(section: string, property: string, value: object): Event;
