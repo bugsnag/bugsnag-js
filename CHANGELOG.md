@@ -7,7 +7,8 @@
 - Rename `autoCaptureSessions` -> `autoTrackSessions` and simplify validation logic [#647](https://github.com/bugsnag/bugsnag-js/pull/647)
 - Rename `report` to `event` [#646](https://github.com/bugsnag/bugsnag-js/pull/646)
 - Rename `notifyReleaseStages` -> `enabledReleaseStages` [#649](https://github.com/bugsnag/bugsnag-js/pull/649)
-- Remove individual breadcrumb flags in favour of `enabledBreadcrumbTypes`, rename `breadcrumb.{ name -> message, metaData -> metadata }`, and update `leaveBreadcrumb()` type signature to be more explicit [#650](https://github.com/bugsnag/bugsnag-js/pull/649)
+- Remove individual breadcrumb flags in favour of `enabledBreadcrumbTypes`, rename `breadcrumb.{ name -> message, metaData -> metadata }`, and update `leaveBreadcrumb()` type signature to be more explicit [#650](https://github.com/bugsnag/bugsnag-js/pull/650)
+- Rename `beforeSend` -> `onError`, remove `event.ignore()` and refactor callback logic [#654](https://github.com/bugsnag/bugsnag-js/pull/654)
 
 ## 6.4.3 (2019-10-21)
 
