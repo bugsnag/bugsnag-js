@@ -28,7 +28,7 @@ module.exports = {
       }
     })
 
-    client.config.beforeSend.push(event => new Promise((resolve, reject) => {
+    client.config.onError.push(event => new Promise((resolve, reject) => {
       const cache = Object.create(null)
       pMapSeries(event.stacktrace.map(stackframe => () => loadSurroundingCode(stackframe, cache)))
         .then(resolve)

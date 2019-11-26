@@ -52,7 +52,7 @@ module.exports = {
       }, {})
     }
 
-    client.config.beforeSend.unshift(event => {
+    client.config.onError.unshift(event => {
       // remove any of our own frames that may be part the stack this
       // happens before the inline script check as it happens for all errors
       event.stacktrace = filter(event.stacktrace, f => !(/__trace__$/.test(f.method)))

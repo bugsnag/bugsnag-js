@@ -4,7 +4,7 @@ import * as BugsnagCore from "@bugsnag/core";
 declare module "@bugsnag/core" {
   interface Config {
     apiKey: string;
-    beforeSend?: BugsnagCore.BeforeSend | BugsnagCore.BeforeSend[];
+    onError?: BugsnagCore.OnError | BugsnagCore.OnError[];
     autoDetectErrors?: boolean;
     autoDetectUnhandledRejections?: boolean;
     enabledBreadcrumbTypes?: BugsnagCore.BreadcrumbType[] | null;

@@ -15,7 +15,7 @@ describe('plugin: ip', () => {
 
     client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
     client.notify(new Error('noooo'), {
-      beforeSend: event => { event.request = { some: 'detail' } }
+      onError: event => { event.request = { some: 'detail' } }
     })
 
     expect(payloads.length).toEqual(1)

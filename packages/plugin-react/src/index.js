@@ -13,13 +13,13 @@ module.exports = {
       }
 
       componentDidCatch (error, info) {
-        const { beforeSend } = this.props
+        const { onError } = this.props
         const BugsnagEvent = client.BugsnagEvent
         const handledState = { severity: 'error', unhandled: true, severityReason: { type: 'unhandledException' } }
         const event = new BugsnagEvent(error.name, error.message, BugsnagEvent.getStacktrace(error), handledState, error)
         if (info && info.componentStack) info.componentStack = formatComponentStack(info.componentStack)
         event.updateMetaData('react', info)
-        client.notify(event, { beforeSend })
+        client.notify(event, { onError })
         this.setState({ error, info })
       }
 

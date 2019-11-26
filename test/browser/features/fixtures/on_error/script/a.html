@@ -9,15 +9,15 @@
       var bugsnagClient = bugsnag({
         apiKey: API_KEY,
         endpoints: { notify: ENDPOINT, sessions: '/noop' },
-        beforeSend: function (event) {
-          return false
+        onError: function (event) {
+          event.updateMetaData('on_error', 'global', 'works')
         }
       })
     </script>
   </head>
   <body>
     <script>
-      bugsnagClient.notify(new Error('before send does work'))
+      bugsnagClient.notify(new Error('on error does work'))
     </script>
   </body>
 </html>

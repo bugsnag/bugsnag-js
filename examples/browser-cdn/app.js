@@ -32,17 +32,17 @@ var bugsnagClient = bugsnag({
   //  defines which release stages bugsnag should report. e.g. ignore staging errors.
   enabledReleaseStages: [ 'development', 'production' ],
 
-  // one of the most powerful tools in our library, beforeSend lets you evaluate,
+  // one of the most powerful tools in our library, onError lets you evaluate,
   // modify, add and remove data before sending the error to bugsnag. The actions
   // here will be applied to *all* errors, handled and unhandled.
-  beforeSend: function (event) {
+  onError: function (event) {
     // the below downgrades handled exceptions sent with the generic "Error"
     // class to info. In this example, it only affects the notification called
     // at the very end of this app.js.
     if (event.errorClass === 'Error' && event.severity === 'warning') {
       event.severity = 'info'
     }
-    // note that if you return false from the beforeSend,
+    // note that if you return false from the onError,
     // this will cancel the entire error event.
   },
 
@@ -54,7 +54,7 @@ var bugsnagClient = bugsnag({
   },
 
   // add any custom attributes relevant to your app. Note that metadata can be
-  // added here, in a specific notify() or in a beforeSend.
+  // added here, in a specific notify() or in an onError.
   metaData: {
     company: {
       name: "Xavier's School for Gifted Youngsters"
@@ -68,7 +68,7 @@ var bugsnagClient = bugsnag({
 
 // Below function will catch an error, and shows how you can add/modify
 // information to the event right before sending.
-// Note that the beforeSend defined in the earlier initialization of bugsnag
+// Note that the onError defined in the earlier initialization of bugsnag
 // above will be applied *after* the statements executed here in notify().
 function sendHandled () {
   try {
@@ -79,9 +79,9 @@ function sendHandled () {
 
     bugsnagClient.notify(e, {
       context: 'a handled ReferenceError with metadata',
-      // Note that metadata can be declared globally, in the notification (as below) or in a beforeSend.
+      // Note that metadata can be declared globally, in the notification (as below) or in an onError.
       // The below metadata will be supplemented (not replaced) by the metadata
-      // in the beforeSend method. See our docs if you prefer to overwrite/remove metadata.
+      // in the onError method. See our docs if you prefer to overwrite/remove metadata.
       metaData: {
         details: {
           info: 'Any important details specific to the context of this particular error/function.'}

@@ -15,7 +15,7 @@ export default class MetaData extends Component {
   metaDataCallback = () => {
     bugsnagClient.notify(new Error('MetaDataCallbackError'),
     {
-      beforeSend: event => {
+      onError: event => {
         event.metaData = {
           extra: {
             reason: "metaDataCallbackName"

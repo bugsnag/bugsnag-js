@@ -3,7 +3,7 @@ import Event from "./event";
 
 export interface Config {
   apiKey: string;
-  beforeSend?: BeforeSend | BeforeSend[];
+  onError?: OnError | OnError[];
   enabledBreadcrumbTypes?: BreadcrumbType[];
   autoDetectErrors?: boolean;
   autoDetectUnhandledRejections?: boolean;
@@ -21,7 +21,7 @@ export interface Config {
   [key: string]: any;
 }
 
-export type BeforeSend = (event: Event, cb?: (err: null | Error) => void) => void | Promise<void> | boolean;
+export type OnError = (event: Event, cb?: (err: null | Error) => void) => void | Promise<void> | boolean;
 
 export interface Plugin {
   name?: string;
@@ -101,7 +101,7 @@ export interface NotifyOpts {
   user?: object;
   metaData?: object;
   severity?: "info" | "warning" | "error";
-  beforeSend?: BeforeSend;
+  onError?: OnError;
 }
 
 export type NotifiableError = Error

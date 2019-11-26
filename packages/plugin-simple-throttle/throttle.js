@@ -9,8 +9,8 @@ module.exports = {
     // track sent events for each init of the plugin
     let n = 0
 
-    // add beforeSend hook
-    client.config.beforeSend.push((event) => {
+    // add onError hook
+    client.config.onError.push((event) => {
       // have max events been sent already?
       if (n >= client.config.maxEvents) return event.ignore()
       n++

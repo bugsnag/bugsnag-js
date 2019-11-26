@@ -29,9 +29,9 @@ console.log(`
   l = (l)eave a breadcrumb
     Calls the leaveBreadcrumb() method.
 
-  b = calling notify with a (b)efore send callback
-    Runs custom logic before a report is sent. This contrived example will
-    pseudo-randomly prevent 50% of the reports from sending.
+  o = calling notify with an (o)n error callback
+    Runs custom logic before an event is sent. This contrived example will
+    pseudo-randomly prevent 50% of the events from sending.
 `)
 
 process.stdin.resume()
@@ -41,7 +41,7 @@ process.stdin.on('data', function (d) {
     case 'u': return unhandledError()
     case 'h': return handledError()
     case 'l': return leaveBreadcrumb()
-    case 'b': return beforeSend()
+    case 'o': return onError()
     default: return unknown(d)
   }
 })
@@ -69,12 +69,12 @@ function leaveBreadcrumb () {
   bugsnagClient.leaveBreadcrumb('network blip')
 }
 
-function beforeSend () {
-  console.log('calling notify() with a beforeSend callback…')
-  // beforeSend can be used to modify an event or prevent it from being sent at all
+function onError () {
+  console.log('calling notify() with an onError callback…')
+  // onError can be used to modify an event or prevent it from being sent at all
   // this example pseudo-randomly filters out approximately half of the events
   bugsnagClient.notify(new Error('sometimes will send'), {
-    beforeSend: (event) => {
+    onError: (event) => {
       const n = Math.random()
       if (n <= 0.5) event.ignore()
     }

@@ -7,7 +7,7 @@ const Event = require('@bugsnag/core/event')
 const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
 describe('plugin: inline script content', () => {
-  it('should add a beforeSend callback which captures the HTML content if file=current url', () => {
+  it('should add an onError callback which captures the HTML content if file=current url', () => {
     const scriptContent = `function BadThing() {
   Error.apply(this, args)
 }
@@ -35,7 +35,7 @@ Lorem ipsum dolor sit amet.
     client.configure()
     client.use(plugin, document, window)
 
-    expect(client.config.beforeSend.length).toBe(1)
+    expect(client.config.onError.length).toBe(1)
     client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
     client.notify(new Event('BadThing', 'Happens in script tags', [
       { fileName: window.location.href, lineNumber: 10 }
@@ -105,7 +105,7 @@ Lorem ipsum dolor sit amet.
     client.configure()
     client.use(plugin, document, window)
 
-    expect(client.config.beforeSend.length).toBe(1)
+    expect(client.config.onError.length).toBe(1)
     client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
     client.notify(new Event('BadThing', 'Happens in script tags', [
       { fileName: window.location.href, lineNumber: 10 }
@@ -144,7 +144,7 @@ Lorem ipsum dolor sit amet.
     client.configure()
     client.use(plugin, document, window)
 
-    expect(client.config.beforeSend.length).toBe(1)
+    expect(client.config.onError.length).toBe(1)
     client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
     client.notify(new Event('BadThing', 'Happens in script tags', [
       { fileName: window.location.href, lineNumber: 7 }
@@ -182,7 +182,7 @@ Lorem ipsum dolor sit amet.
     client.configure()
     client.use(plugin, document, window)
 
-    expect(client.config.beforeSend.length).toBe(1)
+    expect(client.config.onError.length).toBe(1)
     client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
     const spy = spyOn(client._logger, 'error')
     client.notify(new Event('EmptyStacktrace', 'Has nothing in it', []))
@@ -249,7 +249,7 @@ Lorem ipsum dolor sit amet.
     client.configure()
     client.use(plugin, document, window)
 
-    expect(client.config.beforeSend.length).toBe(1)
+    expect(client.config.onError.length).toBe(1)
     client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
     client.notify(new Event('Error', 'oh', [
       { fileName: window.location.href, lineNumber: 1 }

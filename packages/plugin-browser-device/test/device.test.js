@@ -8,14 +8,14 @@ const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 const navigator = { locale: 'en_GB', userAgent: 'testing browser 1.2.3' }
 
 describe('plugin: device', () => {
-  it('should add a beforeSend callback which captures device information', () => {
+  it('should add an onError callback which captures device information', () => {
     const client = new Client(VALID_NOTIFIER)
     const payloads = []
     client.setOptions({ apiKey: 'API_KEY_YEAH' })
     client.configure()
     client.use(plugin, navigator)
 
-    expect(client.config.beforeSend.length).toBe(1)
+    expect(client.config.onError.length).toBe(1)
 
     client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
     client.notify(new Error('noooo'))

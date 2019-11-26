@@ -5,7 +5,7 @@ bugsnag({
   appType: "worker",
   autoDetectErrors: true,
   autoDetectUnhandledRejections: true,
-  beforeSend: [],
+  onError: [],
   endpoints: {"notify":"https://notify.bugsnag.com","sessions":"https://sessions.bugsnag.com"},
   autoTrackSessions: true,
   enabledReleaseStages: ['zzz'],

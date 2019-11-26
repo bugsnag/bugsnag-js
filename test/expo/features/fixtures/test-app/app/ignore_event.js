@@ -5,7 +5,7 @@ import { bugsnagClient } from './bugsnag'
 export default class IgnoreEvent extends Component {
   ignoreEventIgnore = () => {
     bugsnagClient.notify(new Error('IgnoredError'), {
-      beforeSend: event => {
+      onError: event => {
         event.ignore()
       }
     })
@@ -13,7 +13,7 @@ export default class IgnoreEvent extends Component {
 
   ignoreEventFalse = () => {
     bugsnagClient.notify(new Error('IgnoredError'), {
-      beforeSend: event => {
+      onError: event => {
         return false
       }
     })

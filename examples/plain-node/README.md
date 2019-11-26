@@ -29,7 +29,7 @@ Use the instructions below to run the application. When it runs, the output will
   l = (l)eave a breadcrumb
     Calls the leaveBreadcrumb() method.
 
-  b = calling notify with a (b)efore send callback
+  o = calling notify with an (o)n error callback
     Runs custom logic before an event is sent. This contrived example will
     pseudo-randomly prevent 50% of the events from sending.
 ```

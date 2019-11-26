@@ -14,7 +14,7 @@ module.exports = {
     client.device = { ...device, ...client.device }
 
     // add time just as the event is sent
-    client.config.beforeSend.unshift((event) => {
+    client.config.onError.unshift((event) => {
       event.device = { ...event.device, time: isoDate() }
     })
   }
