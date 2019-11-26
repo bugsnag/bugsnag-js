@@ -25,8 +25,6 @@
   },
   "devDependencies": {
     "jasmine": "3.1.0",
-    "node-fetch": "^2.3.0",
-    "nyc": "^12.0.2",
-    "proxyquire": "^2.1.0"
+    "nyc": "^12.0.2"
   }
 }
