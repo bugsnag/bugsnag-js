@@ -9,7 +9,7 @@ bugsnagClient.use(bugsnagReact, React)
 
 var ErrorBoundary = bugsnagClient.getPlugin('react')
 
-function beforeSend () {
+function onError () {
 }
 
 function ErrorView () {
@@ -23,7 +23,7 @@ function MainView () {
 var text = function () { throw new Error('borked') }
 
 function App () {
-  return <ErrorBoundary FallbackComponent={ErrorView} beforeSend={beforeSend}>
+  return <ErrorBoundary FallbackComponent={ErrorView} onError={onError}>
     <MainView />
   </ErrorBoundary>
 }

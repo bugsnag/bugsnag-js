@@ -29,7 +29,7 @@ module.exports.schema = {
     message: 'should be true|false',
     validate: value => value === true || value === false
   },
-  beforeSend: {
+  onError: {
     defaultValue: () => [],
     message: 'should be a function or array of functions',
     validate: value => typeof value === 'function' || (isArray(value) && filter(value, f => typeof f === 'function').length === value.length)

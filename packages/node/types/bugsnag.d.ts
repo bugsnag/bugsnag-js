@@ -6,7 +6,7 @@ type afterErrorCb = (err: any, event: BugsnagCore.Event, logger: BugsnagCore.Log
 declare module "@bugsnag/core" {
   interface Config {
     apiKey: string;
-    beforeSend?: BugsnagCore.BeforeSend | BugsnagCore.BeforeSend[];
+    onError?: BugsnagCore.OnError | BugsnagCore.OnError[];
     autoDetectErrors?: boolean;
     autoDetectUnhandledRejections?: boolean;
     appVersion?: string;

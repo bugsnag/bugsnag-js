@@ -1,4 +1,4 @@
-const { describe, it, expect, fail } = global
+const { describe, it, expect, fail, spyOn } = global
 
 const Client = require('../client')
 const Event = require('../event')
@@ -144,13 +144,13 @@ describe('@bugsnag/core/client', () => {
       client.setOptions({ apiKey: 'API_KEY_YEAH' })
       client.configure()
       client.notify(new Error('oh em gee'), {
-        beforeSend: event => {
+        onError: event => {
           event.severity = 'info'
         }
       })
     })
 
-    it('supports preventing send with event.ignore() / return false', done => {
+    it('supports preventing send by returning false', done => {
       const client = new Client(VALID_NOTIFIER)
       client.delivery(client => ({
         sendEvent: (payload) => {
@@ -160,11 +160,34 @@ describe('@bugsnag/core/client', () => {
       client.setOptions({ apiKey: 'API_KEY_YEAH' })
       client.configure()
 
-      client.notify(new Error('oh em gee'), { beforeSend: event => event.ignore() })
-      client.notify(new Error('oh em eff gee'), { beforeSend: event => false })
+      client.notify(new Error('oh em gee'), { onError: event => false })
 
       // give the event loop a tick to see if the event gets sent
       process.nextTick(() => done())
+    })
+
+    it('tolerates errors in callbacks', done => {
+      const client = new Client(VALID_NOTIFIER)
+      const onErrorSpy = spyOn({ onError: () => {} }, 'onError')
+      client.delivery(client => ({
+        sendEvent: (payload) => {
+          expect(payload.events[0].errorMessage).toBe('oh no!')
+          expect(onErrorSpy).toHaveBeenCalledTimes(1)
+          done()
+        }
+      }))
+      client.setOptions({
+        apiKey: 'API_KEY_YEAH',
+        onError: [
+          event => {
+            throw new Error('Ooops')
+          },
+          onErrorSpy
+        ]
+      })
+      client.configure()
+
+      client.notify(new Error('oh no!'))
     })
 
     it('supports preventing send with enabledReleaseStages', done => {
@@ -333,7 +356,7 @@ describe('@bugsnag/core/client', () => {
       client.configure()
       client.metaData = { foo: [1, 2, 3] }
       client.notify(new Error('changes afoot'), {
-        beforeSend: (event) => {
+        onError: (event) => {
           event.updateMetaData('foo', '3', 1)
         }
       })
@@ -389,9 +412,9 @@ describe('@bugsnag/core/client', () => {
       })
     })
 
-    it('should call the callback even if the event doesn’t send (beforeSend)', done => {
+    it('should call the callback even if the event doesn’t send (onError)', done => {
       const client = new Client(VALID_NOTIFIER)
-      client.setOptions({ apiKey: 'API_KEY', beforeSend: () => false })
+      client.setOptions({ apiKey: 'API_KEY', onError: () => false })
       client.configure()
       client.delivery(client => ({
         sendSession: () => {},
@@ -407,7 +430,7 @@ describe('@bugsnag/core/client', () => {
 
     it('should attach the original error to the event object', done => {
       const client = new Client(VALID_NOTIFIER)
-      client.setOptions({ apiKey: 'API_KEY', beforeSend: () => false })
+      client.setOptions({ apiKey: 'API_KEY', onError: () => false })
       client.configure()
       client.delivery(client => ({
         sendSession: () => {},

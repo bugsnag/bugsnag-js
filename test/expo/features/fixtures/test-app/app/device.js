@@ -15,7 +15,7 @@ export default class AppFeature extends Component {
 
   callbackDevice = () => {
     bugsnagClient.notify(new Error('DeviceCallbackError'), {
-      beforeSend: event => {
+      onError: event => {
         event.device.model = 'brandNewPhone',
         event.device.newThing = 'another new thing'
       }

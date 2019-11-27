@@ -25,7 +25,7 @@ module.exports = {
       }
     }
 
-    client.config.beforeSend.unshift(event => {
+    client.config.onError.unshift(event => {
       const now = new Date()
       const inForeground = AppState.currentState === 'active'
       event.app.inForeground = inForeground

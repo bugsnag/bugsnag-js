@@ -3,7 +3,7 @@
  */
 module.exports = {
   init: (client, win = window) => {
-    client.config.beforeSend.unshift(event => {
+    client.config.onError.unshift(event => {
       if (event.context) return
       event.context = win.location.pathname
     })

@@ -14,9 +14,9 @@
   </head>
   <body>
     <script>
-      bugsnagClient.notify(new Error('before send does work'), {
-        beforeSend: function (event) {
-          event.ignore()
+      bugsnagClient.notify(new Error('on error does work'), {
+        onError: function (event) {
+          event.updateMetaData('on_error', 'notify_opts', 'works')
         }
       })
     </script>

@@ -9,7 +9,7 @@ const bugsnagClient = bugsnag({
     notify: ENDPOINT,
     sessions: '/noop'
   },
-  beforeSend: (event) => {
+  onError: (event) => {
   }
 });
 

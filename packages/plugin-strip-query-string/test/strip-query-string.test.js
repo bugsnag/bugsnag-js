@@ -31,13 +31,13 @@ describe('plugin: strip query string', () => {
     )
   })
 
-  it('runs the strip beforeSend callback without errors', () => {
+  it('runs the strip onError callback without errors', () => {
     const client = new Client(VALID_NOTIFIER)
     const payloads = []
     let originalStacktrace
     client.setOptions({
       apiKey: 'API_KEY_YEAH',
-      beforeSend: event => {
+      onError: event => {
         originalStacktrace = event.stacktrace.map(f => f)
       }
     })
