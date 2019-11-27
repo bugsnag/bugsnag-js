@@ -40,22 +40,6 @@ describe('async-every', () => {
     })
   })
 
-  it('runs the callbacks in series', done => {
-    let inFlight = 0
-    every([1, 2, 3, 4, 5, 6, 7, 8], (val, cb) => {
-      inFlight++
-      setTimeout(() => {
-        expect(inFlight).toBe(1)
-        inFlight--
-        cb(null)
-      }, 10)
-    }, (err, result) => {
-      expect(err).toBe(null)
-      expect(result).toBe(true)
-      done()
-    })
-  })
-
   it('runs all the callbacks if none return false', done => {
     let calls = 0
     every([1, 2, 3, 4, 5, 6, 7, 8], (val, cb) => {

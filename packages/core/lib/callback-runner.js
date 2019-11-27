@@ -7,7 +7,7 @@ module.exports = (callbacks, event, onCallbackError, cb) => {
   //  - promise/thenable - resolve(value)
   // It normalises each of these into the lowest common denominator – a node-style callback
   const runMaybeAsyncCallback = (fn, cb) => {
-    if (typeof fn !== 'function') return cb(null, true)
+    if (typeof fn !== 'function') return cb(null)
     try {
       // if function appears sync…
       if (fn.length !== 2) {
@@ -16,7 +16,7 @@ module.exports = (callbacks, event, onCallbackError, cb) => {
         if (ret && typeof ret.then === 'function') {
           return ret.then(
             // resolve
-            val => setTimeout(() => cb(null, val), 0),
+            val => setTimeout(() => cb(null, val)),
             // reject
             err => {
               setTimeout(() => {
@@ -32,13 +32,13 @@ module.exports = (callbacks, event, onCallbackError, cb) => {
       fn(event, (err, result) => {
         if (err) {
           onCallbackError(err)
-          return cb(null, true)
+          return cb(null)
         }
         cb(null, result)
       })
     } catch (e) {
       onCallbackError(e)
-      cb(null, true)
+      cb(null)
     }
   }
 

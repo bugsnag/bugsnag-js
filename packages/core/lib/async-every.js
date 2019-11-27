@@ -15,7 +15,7 @@ module.exports = (arr, fn, cb) => {
   const next = () => {
     if (index >= arr.length) return cb(null, true)
     fn(arr[index], (err, result) => {
-      if (err) return cb(err, true)
+      if (err) return cb(err)
       if (result === false) return cb(null, false)
       index++
       next()

@@ -1,4 +1,4 @@
-const { describe, it, expect, fail } = global
+const { describe, it, expect, fail, spyOn } = global
 
 const Client = require('../client')
 const Event = require('../event')
@@ -164,6 +164,30 @@ describe('@bugsnag/core/client', () => {
 
       // give the event loop a tick to see if the event gets sent
       process.nextTick(() => done())
+    })
+
+    it('tolerates errors in callbacks', done => {
+      const client = new Client(VALID_NOTIFIER)
+      const onErrorSpy = spyOn({ onError: () => {} }, 'onError')
+      client.delivery(client => ({
+        sendEvent: (payload) => {
+          expect(payload.events[0].errorMessage).toBe('oh no!')
+          expect(onErrorSpy).toHaveBeenCalledTimes(1)
+          done()
+        }
+      }))
+      client.setOptions({
+        apiKey: 'API_KEY_YEAH',
+        onError: [
+          event => {
+            throw new Error('Ooops')
+          },
+          onErrorSpy
+        ]
+      })
+      client.configure()
+
+      client.notify(new Error('oh no!'))
     })
 
     it('supports preventing send with enabledReleaseStages', done => {
