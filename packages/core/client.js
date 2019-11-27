@@ -181,14 +181,14 @@ class BugsnagClient {
 
     const originalSeverity = event.severity
 
-    const onError = [].concat(opts.onError).concat(this.config.onError)
     const onCallbackError = err => {
       // errors in callbacks are tolerated but we want to log them out
       this._logger.error('Error occurred in onError callback, continuing anyway…')
       this._logger.error(err)
     }
 
-    runCallbacks(onError, event, onCallbackError, (err, shouldSend) => {
+    const callbacks = [].concat(onError).concat(this.config.onError)
+    runCallbacks(callbacks, event, onCallbackError, (err, shouldSend) => {
       if (err) onCallbackError(err)
 
       if (!shouldSend) {
