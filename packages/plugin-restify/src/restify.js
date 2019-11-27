@@ -31,7 +31,7 @@ module.exports = {
 
       // unhandled errors caused by this request
       dom.on('error', (err) => {
-        req.bugsnag.notify(createEventFromErr(err, handledState), {}, (e, event) => {
+        req.bugsnag.notify(createEventFromErr(err, handledState), () => {}, (e, event) => {
           if (e) client._logger.error('Failed to send event to Bugsnag')
           req.bugsnag.config.onUncaughtException(err, event, client._logger)
         })
@@ -56,7 +56,11 @@ module.exports = {
         client._logger.warn(
           'req.bugsnag is not defined. Make sure the @bugsnag/plugin-restify requestHandler middleware is added first.'
         )
-        client.notify(createEventFromErr(err, handledState, getRequestAndMetaDataFromReq(req)))
+        client.notify(createEventFromErr(err, handledState), (event) => {
+          const { metaData, request } = getRequestAndMetaDataFromReq(req)
+          event.request = { ...request }
+          event.metaData = { ...metaData }
+        })
       }
       cb()
     }

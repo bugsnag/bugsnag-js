@@ -9,7 +9,7 @@ module.exports = {
         severity: 'error',
         unhandled: true,
         severityReason: { type: 'unhandledException' }
-      }), {}, (e, event) => {
+      }), () => {}, (e, event) => {
         if (e) client._logger.error('Failed to send event to Bugsnag')
         client.config.onUncaughtException(err, event, client._logger)
       })

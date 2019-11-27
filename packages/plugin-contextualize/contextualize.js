@@ -6,7 +6,7 @@ const { getStack, maybeUseFallbackStack } = require('@bugsnag/core/lib/node-fall
 module.exports = {
   name: 'contextualize',
   init: client => {
-    const contextualize = (fn, opts) => {
+    const contextualize = (fn, onError) => {
       // capture a stacktrace in case a resulting error has nothing
       const fallbackStack = getStack()
 
@@ -19,7 +19,7 @@ module.exports = {
           unhandled: true,
           severityReason: { type: 'unhandledException' }
         })
-        client.notify(event, opts, (e, event) => {
+        client.notify(event, onError, (e, event) => {
           if (e) client._logger.error('Failed to send event to Bugsnag')
           client.config.onUncaughtException(err, event, client._logger)
         })

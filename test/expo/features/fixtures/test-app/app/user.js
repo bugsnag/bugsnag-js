@@ -11,21 +11,9 @@ export default class User extends Component {
   }
 
   userCallback = () => {
-    bugsnagClient.notify(new Error('UserCallbackError'),
-    {
-      onError: event => {
-        event.user = {
-          name: "userCallbackName"
-        }
-      }
-    })
-  }
-
-  userOpts = () => {
-    bugsnagClient.notify(new Error('UserOptsError'),
-    {
-      user: {
-        name: "userOptsName"
+    bugsnagClient.notify(new Error('UserCallbackError'), event => {
+      event.user = {
+        name: "userCallbackName"
       }
     })
   }
@@ -40,10 +28,6 @@ export default class User extends Component {
         <Button accessibilityLabel="userCallbackButton"
           title="userCallback"
           onPress={this.userCallback}
-        />
-        <Button accessibilityLabel="userOptsButton"
-          title="userOpts"
-          onPress={this.userOpts}
         />
       </View>
     )

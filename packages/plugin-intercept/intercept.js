@@ -4,10 +4,10 @@ const { getStack, maybeUseFallbackStack } = require('@bugsnag/core/lib/node-fall
 module.exports = {
   name: 'intercept',
   init: client => {
-    const intercept = (opts, cb = () => {}) => {
-      if (typeof opts === 'function') {
-        cb = opts
-        opts = {}
+    const intercept = (onError = () => {}, cb) => {
+      if (typeof cb !== 'function') {
+        cb = onError
+        onError = () => {}
       }
 
       // capture a stacktrace in case a resulting error has nothing
@@ -22,7 +22,7 @@ module.exports = {
             unhandled: false,
             severityReason: { type: 'callbackErrorIntercept' }
           })
-          client.notify(event, opts)
+          client.notify(event, onError)
           return
         }
         cb(...data) // eslint-disable-line

@@ -13,24 +13,10 @@ export default class MetaData extends Component {
   }
 
   metaDataCallback = () => {
-    bugsnagClient.notify(new Error('MetaDataCallbackError'),
-    {
-      onError: event => {
-        event.metaData = {
-          extra: {
-            reason: "metaDataCallbackName"
-          }
-        }
-      }
-    })
-  }
-
-  metaDataOpts = () => {
-    bugsnagClient.notify(new Error('MetaDataOptsError'),
-    {
-      metaData: {
+    bugsnagClient.notify(new Error('MetaDataCallbackError'), event => {
+      event.metaData = {
         extra: {
-          reason: "metaDataOptsName"
+          reason: "metaDataCallbackName"
         }
       }
     })
@@ -46,10 +32,6 @@ export default class MetaData extends Component {
         <Button accessibilityLabel="metaDataCallbackButton"
           title="metaDataCallback"
           onPress={this.metaDataCallback}
-        />
-        <Button accessibilityLabel="metaDataOptsButton"
-          title="metaDataOpts"
-          onPress={this.metaDataOpts}
         />
       </View>
     )

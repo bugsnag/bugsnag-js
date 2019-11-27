@@ -112,23 +112,6 @@ describe('@bugsnag/core/client', () => {
       client.notify(new Error('oh em gee'))
     })
 
-    it('supports manually setting severity', done => {
-      const client = new Client(VALID_NOTIFIER)
-      client.delivery(client => ({
-        sendEvent: (payload) => {
-          expect(payload).toBeTruthy()
-          expect(Array.isArray(payload.events)).toBe(true)
-          const event = payload.events[0].toJSON()
-          expect(event.severity).toBe('error')
-          expect(event.severityReason).toEqual({ type: 'userSpecifiedSeverity' })
-          done()
-        }
-      }))
-      client.setOptions({ apiKey: 'API_KEY_YEAH' })
-      client.configure()
-      client.notify(new Error('oh em gee'), { severity: 'error' })
-    })
-
     it('supports setting severity via callback', done => {
       const client = new Client(VALID_NOTIFIER)
       client.delivery(client => ({
@@ -143,10 +126,8 @@ describe('@bugsnag/core/client', () => {
       }))
       client.setOptions({ apiKey: 'API_KEY_YEAH' })
       client.configure()
-      client.notify(new Error('oh em gee'), {
-        onError: event => {
-          event.severity = 'info'
-        }
+      client.notify(new Error('oh em gee'), event => {
+        event.severity = 'info'
       })
     })
 
@@ -160,7 +141,7 @@ describe('@bugsnag/core/client', () => {
       client.setOptions({ apiKey: 'API_KEY_YEAH' })
       client.configure()
 
-      client.notify(new Error('oh em gee'), { onError: event => false })
+      client.notify(new Error('oh em gee'), event => false)
 
       // give the event loop a tick to see if the event gets sent
       process.nextTick(() => done())
@@ -309,13 +290,13 @@ describe('@bugsnag/core/client', () => {
       client.notify('str1', 'str2')
       client.notify('str1', null)
 
-      expect(payloads[0].events[0].toJSON().exceptions[0].message).toBe('Bugsnag usage error. notify() expected error/opts parameters, got nothing')
-      expect(payloads[1].events[0].toJSON().exceptions[0].message).toBe('Bugsnag usage error. notify() expected error/opts parameters, got null')
-      expect(payloads[2].events[0].toJSON().exceptions[0].message).toBe('Bugsnag usage error. notify() expected error/opts parameters, got function')
-      expect(payloads[3].events[0].toJSON().exceptions[0].message).toBe('Bugsnag usage error. notify() expected error/opts parameters, got unsupported object')
+      expect(payloads[0].events[0].toJSON().exceptions[0].message).toBe('Bugsnag usage error. notify(err) expected an error, got nothing')
+      expect(payloads[1].events[0].toJSON().exceptions[0].message).toBe('Bugsnag usage error. notify(err) expected an error, got null')
+      expect(payloads[2].events[0].toJSON().exceptions[0].message).toBe('Bugsnag usage error. notify(err) expected an error, got function')
+      expect(payloads[3].events[0].toJSON().exceptions[0].message).toBe('Bugsnag usage error. notify(err) expected an error, got unsupported object')
       expect(payloads[4].events[0].toJSON().exceptions[0].message).toBe('1')
       expect(payloads[5].events[0].toJSON().exceptions[0].message).toBe('errrororor')
-      expect(payloads[6].events[0].toJSON().metaData).toEqual({ notifier: { notifyArgs: ['str1', 'str2'] } })
+      expect(payloads[6].events[0].toJSON().exceptions[0].message).toBe('str1')
       expect(payloads[7].events[0].toJSON().exceptions[0].message).toBe('str1')
       expect(payloads[7].events[0].toJSON().metaData).toEqual({})
     })
@@ -355,10 +336,8 @@ describe('@bugsnag/core/client', () => {
       client.setOptions({ apiKey: 'API_KEY_YEAH' })
       client.configure()
       client.metaData = { foo: [1, 2, 3] }
-      client.notify(new Error('changes afoot'), {
-        onError: (event) => {
-          event.updateMetaData('foo', '3', 1)
-        }
+      client.notify(new Error('changes afoot'), (event) => {
+        event.updateMetaData('foo', '3', 1)
       })
       expect(client.metaData.foo['3']).toBe(undefined)
     })

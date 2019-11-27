@@ -70,7 +70,11 @@ module.exports = {
         ctx.bugsnag.notify(createEventFromErr(err, handledState))
       } else {
         client._logger.warn('ctx.bugsnag is not defined. Make sure the @bugsnag/plugin-koa requestHandler middleware is added first.')
-        client.notify(createEventFromErr(err, handledState), getRequestAndMetaDataFromCtx(ctx))
+        client.notify(createEventFromErr(err, handledState), (event) => {
+          const { metaData, request } = getRequestAndMetaDataFromCtx(ctx)
+          event.request = { ...request }
+          event.metaData = { ...metaData }
+        })
       }
     }
 

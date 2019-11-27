@@ -92,6 +92,6 @@ it('it passes the onError function to the Bugsnag notify call', () => {
     .toJSON()
   expect(bugsnag.notify).toBeCalledWith(
     expect.any(BugsnagEvent),
-    expect.objectContaining({ onError: onError })
+    onError
   )
 })

@@ -13,12 +13,6 @@ Scenario: setting user on client
   And the request is a valid browser payload for the error reporting API
   And the event "user.id" equals "cjhc05e8u0000peojhf4vfd68"
 
-Scenario: setting user in notify opts
-  When I navigate to the URL "/user_info/script/c.html"
-  Then I wait to receive a request
-  And the request is a valid browser payload for the error reporting API
-  And the event "user.id" equals "cjhc05lp80000psoj7g2crz7e"
-
 Scenario: setting user in onError callback
   When I navigate to the URL "/user_info/script/d.html"
   Then I wait to receive a request
