@@ -13,8 +13,8 @@ let win
 let getIgnoredUrls
 
 const defaultIgnoredUrls = () => [
-  client.config.endpoints.notify,
-  client.config.endpoints.sessions
+  client._config.endpoints.notify,
+  client._config.endpoints.sessions
 ]
 
 /*
@@ -22,7 +22,7 @@ const defaultIgnoredUrls = () => [
  */
 exports.name = 'networkBreadcrumbs'
 exports.init = (_client, _getIgnoredUrls = defaultIgnoredUrls, _win = window) => {
-  if (!_client.config.enabledBreadcrumbTypes || !includes(_client.config.enabledBreadcrumbTypes, 'request')) return
+  if (!_client._config.enabledBreadcrumbTypes || !includes(_client._config.enabledBreadcrumbTypes, 'request')) return
 
   client = _client
   win = _win

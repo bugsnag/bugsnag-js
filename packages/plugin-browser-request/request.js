@@ -3,7 +3,7 @@
  */
 module.exports = {
   init: (client, win = window) => {
-    client.config.onError.unshift(event => {
+    client._config.onError.unshift(event => {
       if (event.request && event.request.url) return
       event.request = { ...event.request, url: win.location.href }
     })

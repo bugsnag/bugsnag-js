@@ -3,7 +3,6 @@
 const plugin = require('../')
 
 const Client = require('@bugsnag/core/client')
-const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
 class MockErrorUtils {
   constructor () {
@@ -21,17 +20,14 @@ class MockErrorUtils {
 
 describe('plugin: react native global error handler', () => {
   it('should set a global error handler', () => {
-    const client = new Client(VALID_NOTIFIER)
-    client.setOptions({ apiKey: 'API_KEY_YEAH' })
-    client.configure()
+    const client = new Client({ apiKey: 'API_KEY_YEAH' })
     const eu = new MockErrorUtils()
     client.use(plugin, eu)
     expect(typeof eu.getGlobalHandler()).toBe('function')
   })
 
   it('should warn if ErrorUtils is not defined', done => {
-    const client = new Client(VALID_NOTIFIER)
-    client.setOptions({
+    const client = new Client({
       apiKey: 'API_KEY_YEAH',
       logger: {
         debug: () => {},
@@ -43,18 +39,15 @@ describe('plugin: react native global error handler', () => {
         error: () => {}
       }
     })
-    client.configure()
     client.use(plugin)
   })
 
   it('should call through to an exising handler', done => {
-    const client = new Client(VALID_NOTIFIER)
+    const client = new Client({ apiKey: 'API_KEY_YEAH' })
     client.delivery(client => ({
       sendSession: () => {},
       sendEvent: (...args) => args[args.length - 1](null)
     }))
-    client.setOptions({ apiKey: 'API_KEY_YEAH' })
-    client.configure()
     const eu = new MockErrorUtils()
     const error = new Error('floop')
     eu.setGlobalHandler(function (err, isFatal) {
@@ -67,7 +60,7 @@ describe('plugin: react native global error handler', () => {
   })
 
   it('should have the correct handled state', done => {
-    const client = new Client(VALID_NOTIFIER)
+    const client = new Client({ apiKey: 'API_KEY_YEAH' })
     client.delivery(client => ({
       sendSession: () => {},
       sendEvent: (payload, cb) => {
@@ -78,8 +71,6 @@ describe('plugin: react native global error handler', () => {
         done()
       }
     }))
-    client.setOptions({ apiKey: 'API_KEY_YEAH' })
-    client.configure()
     const eu = new MockErrorUtils()
     client.use(plugin, eu)
     eu._globalHandler(new Error('argh'))

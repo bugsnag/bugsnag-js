@@ -1,9 +1,8 @@
 module.exports = (client) => {
-  const clone = new client.BugsnagClient(client.notifier)
-  clone.configure({})
+  const clone = new client.BugsnagClient({}, {}, client._notifier)
 
   // changes to these properties should be reflected in the original client
-  clone.config = client.config
+  clone._config = client._config
   clone.app = client.app
   clone.context = client.context
   clone.device = client.device

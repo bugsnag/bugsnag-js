@@ -1,7 +1,6 @@
 const { describe, it, expect } = global
 
 const Client = require('@bugsnag/core/client')
-const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 const plugin = require('../')
 const fs = require('fs')
 
@@ -31,13 +30,11 @@ function pload (index, cb) {
 
 describe('plugin: intercept', () => {
   it('does nothing with a happy-case callback', done => {
-    const c = new Client(VALID_NOTIFIER)
+    const c = new Client({ apiKey: 'api_key' })
     c.delivery(client => ({
       sendEvent: () => expect(true).toBe(false),
       sendSession: () => {}
     }))
-    c.setOptions({ apiKey: 'api_key' })
-    c.configure()
     c.use(plugin)
     const intercept = c.getPlugin('intercept')
     load(1, intercept((item) => {
@@ -47,7 +44,7 @@ describe('plugin: intercept', () => {
   })
 
   it('sends an event when the callback recieves an error', done => {
-    const c = new Client(VALID_NOTIFIER)
+    const c = new Client({ apiKey: 'api_key' })
     c.delivery(client => ({
       sendEvent: (payload) => {
         expect(payload.events[0].errorMessage).toBe('no item available')
@@ -55,8 +52,6 @@ describe('plugin: intercept', () => {
       },
       sendSession: () => {}
     }))
-    c.setOptions({ apiKey: 'api_key' })
-    c.configure()
     c.use(plugin)
     const intercept = c.getPlugin('intercept')
     load(4, intercept((item) => {
@@ -66,13 +61,11 @@ describe('plugin: intercept', () => {
   })
 
   it('works with resolved promises', done => {
-    const c = new Client(VALID_NOTIFIER)
+    const c = new Client({ apiKey: 'api_key' })
     c.delivery(client => ({
       sendEvent: () => expect(true).toBe(false),
       sendSession: () => {}
     }))
-    c.setOptions({ apiKey: 'api_key' })
-    c.configure()
     c.use(plugin)
     const intercept = c.getPlugin('intercept')
     pload(0).then(item => {
@@ -82,7 +75,7 @@ describe('plugin: intercept', () => {
   })
 
   it('works with rejected promises', done => {
-    const c = new Client(VALID_NOTIFIER)
+    const c = new Client({ apiKey: 'api_key' })
     c.delivery(client => ({
       sendEvent: (payload) => {
         expect(payload.events[0].errorMessage).toBe('no item available')
@@ -90,8 +83,6 @@ describe('plugin: intercept', () => {
       },
       sendSession: () => {}
     }))
-    c.setOptions({ apiKey: 'api_key' })
-    c.configure()
     c.use(plugin)
     const intercept = c.getPlugin('intercept')
     pload(7).then(item => {
@@ -101,7 +92,7 @@ describe('plugin: intercept', () => {
   })
 
   it('should add a stacktrace when missing', done => {
-    const c = new Client(VALID_NOTIFIER)
+    const c = new Client({ apiKey: 'api_key' })
     c.delivery(client => ({
       sendEvent: (payload, cb) => {
         expect(payload.events[0].errorMessage).toBe('ENOENT: no such file or directory, open \'does not exist\'')
@@ -111,10 +102,6 @@ describe('plugin: intercept', () => {
       },
       sendSession: () => {}
     }))
-    c.setOptions({
-      apiKey: 'api_key'
-    })
-    c.configure()
     c.use(plugin)
     const intercept = c.getPlugin('intercept')
     fs.readFile('does not exist', intercept(data => {

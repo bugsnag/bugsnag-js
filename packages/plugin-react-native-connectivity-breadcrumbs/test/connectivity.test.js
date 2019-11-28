@@ -3,7 +3,6 @@ const { describe, it, expect } = global
 const proxyquire = require('proxyquire').noCallThru().noPreserveCache()
 
 const Client = require('@bugsnag/core/client')
-const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
 describe('plugin: react native connectivity breadcrumbs', () => {
   it('should create a breadcrumb when the NetInfo#connectionChange event happens', () => {
@@ -17,9 +16,7 @@ describe('plugin: react native connectivity breadcrumbs', () => {
       'react-native': { NetInfo }
     })
 
-    const client = new Client(VALID_NOTIFIER)
-    client.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
-    client.configure()
+    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
     client.use(plugin)
 
     expect(typeof _cb).toBe('function')
@@ -49,9 +46,7 @@ describe('plugin: react native connectivity breadcrumbs', () => {
       'react-native': { NetInfo }
     })
 
-    const client = new Client(VALID_NOTIFIER)
-    client.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: null })
-    client.configure()
+    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: null })
     client.use(plugin)
 
     expect(_cb).toBe(undefined)
@@ -68,9 +63,7 @@ describe('plugin: react native connectivity breadcrumbs', () => {
       'react-native': { NetInfo }
     })
 
-    const client = new Client(VALID_NOTIFIER)
-    client.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: [] })
-    client.configure()
+    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: [] })
     client.use(plugin)
 
     expect(_cb).toBe(undefined)
@@ -87,9 +80,7 @@ describe('plugin: react native connectivity breadcrumbs', () => {
       'react-native': { NetInfo }
     })
 
-    const client = new Client(VALID_NOTIFIER)
-    client.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: ['state'] })
-    client.configure()
+    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: ['state'] })
     client.use(plugin)
 
     expect(typeof _cb).toBe('function')

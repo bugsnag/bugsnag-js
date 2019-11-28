@@ -3,16 +3,13 @@ const { describe, it, expect } = global
 const plugin = require('../')
 
 const Client = require('@bugsnag/core/client')
-const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
 const window = { location: { href: 'http://xyz.abc/foo/bar.html' } }
 
 describe('plugin: request', () => {
   it('sets event.request to window.location.href', () => {
-    const client = new Client(VALID_NOTIFIER)
+    const client = new Client({ apiKey: 'API_KEY_YEAH' })
     const payloads = []
-    client.setOptions({ apiKey: 'API_KEY_YEAH' })
-    client.configure()
     client.use(plugin, window)
 
     client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
@@ -23,10 +20,8 @@ describe('plugin: request', () => {
   })
 
   it('sets doesn’t overwrite an existing request', () => {
-    const client = new Client(VALID_NOTIFIER)
+    const client = new Client({ apiKey: 'API_KEY_YEAH' })
     const payloads = []
-    client.setOptions({ apiKey: 'API_KEY_YEAH' })
-    client.configure()
     client.use(plugin, window)
 
     client.request = { url: 'foobar' }

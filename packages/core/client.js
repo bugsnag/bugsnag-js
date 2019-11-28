@@ -11,20 +11,14 @@ const LOG_USAGE_ERR_PREFIX = 'Usage error.'
 const REPORT_USAGE_ERR_PREFIX = 'Bugsnag usage error.'
 
 class BugsnagClient {
-  constructor (notifier) {
-    if (!notifier || !notifier.name || !notifier.version || !notifier.url) {
-      throw new Error('`notifier` argument is required')
-    }
-
+  constructor (configuration, schema = config.schema, notifier) {
     // notifier id
-    this.notifier = notifier
-
-    // configure() should be called before notify()
-    this._configured = false
+    this._notifier = notifier
 
     // intialise opts and config
-    this._opts = {}
-    this.config = {}
+    this._opts = configuration
+    this._config = {}
+    this._schema = schema
 
     // // i/o
     this._delivery = { sendSession: () => {}, sendEvent: () => {} }
@@ -51,6 +45,8 @@ class BugsnagClient {
     this.BugsnagBreadcrumb = BugsnagBreadcrumb
     this.BugsnagSession = BugsnagSession
 
+    this._extractConfiguration()
+
     const self = this
     const notify = this.notify
     this.notify = function () {
@@ -58,11 +54,7 @@ class BugsnagClient {
     }
   }
 
-  setOptions (opts) {
-    this._opts = { ...this._opts, ...opts }
-  }
-
-  configure (partialSchema = config.schema) {
+  _extractConfiguration (partialSchema = this._schema) {
     const conf = config.mergeDefaults(this._opts, partialSchema)
     const validity = config.validate(conf, partialSchema)
 
@@ -77,16 +69,13 @@ class BugsnagClient {
     if (conf.logger) this.logger(conf.logger)
 
     // merge with existing config
-    this.config = { ...this.config, ...conf }
-
-    this._configured = true
+    this._config = { ...this._config, ...conf }
 
     return this
   }
 
   use (plugin, ...args) {
-    if (!this._configured) throw new Error('client not configured')
-    if (plugin.configSchema) this.configure(plugin.configSchema)
+    if (plugin.configSchema) this._extractConfiguration(plugin.configSchema)
     const result = plugin.init(this, ...args)
     // JS objects are not the safest way to store arbitrarily keyed values,
     // so bookend the key with some characters that prevent tampering with
@@ -124,8 +113,6 @@ class BugsnagClient {
   }
 
   leaveBreadcrumb (message, metadata, type) {
-    if (!this._configured) throw new Error('client not configured')
-
     // coerce bad values so that the defaults get set
     message = typeof message === 'string' ? message : ''
     type = typeof type === 'string' ? type : 'manual'
@@ -135,22 +122,20 @@ class BugsnagClient {
     if (!message) return
 
     // check the breadcrumb is the list of enabled types
-    if (!this.config.enabledBreadcrumbTypes || !includes(this.config.enabledBreadcrumbTypes, type)) return
+    if (!this._config.enabledBreadcrumbTypes || !includes(this._config.enabledBreadcrumbTypes, type)) return
 
     const crumb = new BugsnagBreadcrumb(message, metadata, type)
 
     // push the valid crumb onto the queue and maintain the length
     this.breadcrumbs.push(crumb)
-    if (this.breadcrumbs.length > this.config.maxBreadcrumbs) {
-      this.breadcrumbs = this.breadcrumbs.slice(this.breadcrumbs.length - this.config.maxBreadcrumbs)
+    if (this.breadcrumbs.length > this._config.maxBreadcrumbs) {
+      this.breadcrumbs = this.breadcrumbs.slice(this.breadcrumbs.length - this._config.maxBreadcrumbs)
     }
 
     return this
   }
 
   notify (error, onError, cb = () => {}) {
-    if (!this._configured) throw new Error('client not configured')
-
     // releaseStage can be set via config.releaseStage or client.app.releaseStage
     const releaseStage = inferReleaseStage(this)
 
@@ -174,7 +159,7 @@ class BugsnagClient {
     }
 
     // exit early if events should not be sent on the current releaseStage
-    if (this.config.enabledReleaseStages.length > 0 && !includes(this.config.enabledReleaseStages, releaseStage)) {
+    if (this._config.enabledReleaseStages.length > 0 && !includes(this._config.enabledReleaseStages, releaseStage)) {
       this._logger.warn('Event not sent due to releaseStage/enabledReleaseStages configuration')
       return cb(null, event)
     }
@@ -187,7 +172,7 @@ class BugsnagClient {
       this._logger.error(err)
     }
 
-    const callbacks = [].concat(onError).concat(this.config.onError)
+    const callbacks = [].concat(onError).concat(this._config.onError)
     runCallbacks(callbacks, event, onCallbackError, (err, shouldSend) => {
       if (err) onCallbackError(err)
 
@@ -208,8 +193,8 @@ class BugsnagClient {
       }
 
       this._delivery.sendEvent({
-        apiKey: event.apiKey || this.config.apiKey,
-        notifier: this.notifier,
+        apiKey: event.apiKey || this._config.apiKey,
+        notifier: this._notifier,
         events: [event]
       }, (err) => cb(err, event))
     })

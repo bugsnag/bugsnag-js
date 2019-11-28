@@ -3,13 +3,10 @@ const { describe, it, expect } = global
 const plugin = require('../')
 
 const Client = require('@bugsnag/core/client')
-const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
 describe('plugin: console breadcrumbs', () => {
   it('should leave a breadcrumb when console.log() is called', () => {
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
-    c.configure()
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
     c.use(plugin)
     console.log('check 1, 2')
     // make sure it's null-safe
@@ -33,9 +30,7 @@ describe('plugin: console breadcrumbs', () => {
   })
 
   it('should not throw when an object without toString is logged', () => {
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
-    c.configure()
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
     c.use(plugin)
     expect(() => console.log(Object.create(null))).not.toThrow()
     expect(c.breadcrumbs.length).toBe(1)
@@ -45,9 +40,7 @@ describe('plugin: console breadcrumbs', () => {
   })
 
   it('should not be enabled when enabledBreadcrumbTypes=[]', () => {
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: [] })
-    c.configure()
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: [] })
     c.use(plugin)
     console.log(123)
     expect(c.breadcrumbs.length).toBe(0)
@@ -55,9 +48,7 @@ describe('plugin: console breadcrumbs', () => {
   })
 
   it('should be enabled when enabledBreadcrumbTypes=["log"]', () => {
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: ['log'] })
-    c.configure()
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: ['log'] })
     c.use(plugin)
     console.log(123)
     expect(c.breadcrumbs.length).toBe(1)
@@ -65,9 +56,7 @@ describe('plugin: console breadcrumbs', () => {
   })
 
   it('should be not enabled by default when releaseStage=development', () => {
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa', releaseStage: 'development' })
-    c.configure()
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', releaseStage: 'development' })
     c.use(plugin)
     console.log(123)
     expect(c.breadcrumbs.length).toBe(0)

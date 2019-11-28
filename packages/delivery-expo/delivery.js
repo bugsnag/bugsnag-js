@@ -37,16 +37,16 @@ module.exports = (client, fetch = global.fetch) => {
 
   return {
     sendEvent: (event, cb = () => {}) => {
-      const url = client.config.endpoints.notify
+      const url = client._config.endpoints.notify
 
       let body, opts
       try {
-        body = payload.event(event, client.config.filters)
+        body = payload.event(event, client._config.filters)
         opts = {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Bugsnag-Api-Key': event.apiKey || client.config.apiKey,
+            'Bugsnag-Api-Key': event.apiKey || client._config.apiKey,
             'Bugsnag-Payload-Version': '4',
             'Bugsnag-Sent-At': isoDate()
           },
@@ -67,16 +67,16 @@ module.exports = (client, fetch = global.fetch) => {
     },
 
     sendSession: (session, cb = () => {}) => {
-      const url = client.config.endpoints.sessions
+      const url = client._config.endpoints.sessions
 
       let body, opts
       try {
-        body = payload.session(session, client.config.filters)
+        body = payload.session(session, client._config.filters)
         opts = {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Bugsnag-Api-Key': client.config.apiKey,
+            'Bugsnag-Api-Key': client._config.apiKey,
             'Bugsnag-Payload-Version': '1',
             'Bugsnag-Sent-At': isoDate()
           },

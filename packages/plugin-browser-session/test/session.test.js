@@ -7,9 +7,7 @@ const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
 describe('plugin: sessions', () => {
   it('notifies the session endpoint', (done) => {
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'API_KEY' })
-    c.configure()
+    const c = new Client({ apiKey: 'API_KEY' }, undefined, VALID_NOTIFIER)
     c.use(plugin)
     c.delivery(client => ({
       sendSession: (session, cb) => {
@@ -26,9 +24,7 @@ describe('plugin: sessions', () => {
   })
 
   it('tracks handled/unhandled error counts and sends them in error payloads', (done) => {
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'API_KEY' })
-    c.configure()
+    const c = new Client({ apiKey: 'API_KEY' })
     let i = 0
     c.use(plugin)
     c.delivery(client => ({
@@ -56,9 +52,7 @@ describe('plugin: sessions', () => {
   })
 
   it('correctly infers releaseStage', (done) => {
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'API_KEY', releaseStage: 'foo' })
-    c.configure()
+    const c = new Client({ apiKey: 'API_KEY', releaseStage: 'foo' })
     c.use(plugin)
     c.delivery(client => ({
       sendSession: (session, cb) => {
@@ -71,9 +65,7 @@ describe('plugin: sessions', () => {
   })
 
   it('doesn’t send when releaseStage is not in enabledReleaseStages', (done) => {
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'API_KEY', releaseStage: 'foo', enabledReleaseStages: ['baz'] })
-    c.configure()
+    const c = new Client({ apiKey: 'API_KEY', releaseStage: 'foo', enabledReleaseStages: ['baz'] })
     c.use(plugin)
     c.delivery(client => ({
       sendSession: (session, cb) => {
@@ -85,14 +77,15 @@ describe('plugin: sessions', () => {
   })
 
   it('rejects config when session endpoint is not set', () => {
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({
-      apiKey: 'API_KEY',
-      releaseStage: 'foo',
-      endpoints: { notify: '/foo' },
-      autoTrackSessions: false
-    })
-    expect(() => c.configure()).toThrowError(
+    expect(() => {
+      const c = new Client({
+        apiKey: 'API_KEY',
+        releaseStage: 'foo',
+        endpoints: { notify: '/foo' },
+        autoTrackSessions: false
+      })
+      expect(c).toBe(c)
+    }).toThrowError(
       /"endpoints" should be an object containing endpoint URLs { notify, sessions }/
     )
   })

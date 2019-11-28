@@ -6,7 +6,7 @@ const { isoDate } = require('@bugsnag/core/lib/es-utils')
 module.exports = {
   init: (client) => {
     const device = {
-      hostname: client.config.hostname,
+      hostname: client._config.hostname,
       runtimeVersions: { node: process.versions.node }
     }
 
@@ -14,7 +14,7 @@ module.exports = {
     client.device = { ...device, ...client.device }
 
     // add time just as the event is sent
-    client.config.onError.unshift((event) => {
+    client._config.onError.unshift((event) => {
       event.device = { ...event.device, time: isoDate() }
     })
   }

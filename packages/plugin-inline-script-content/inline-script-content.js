@@ -4,7 +4,7 @@ const MAX_SCRIPT_LENGTH = 500000
 
 module.exports = {
   init: (client, doc = document, win = window) => {
-    if (!client.config.trackInlineScripts) return
+    if (!client._config.trackInlineScripts) return
 
     const originalLocation = win.location.href
     let html = ''
@@ -52,7 +52,7 @@ module.exports = {
       }, {})
     }
 
-    client.config.onError.unshift(event => {
+    client._config.onError.unshift(event => {
       // remove any of our own frames that may be part the stack this
       // happens before the inline script check as it happens for all errors
       event.stacktrace = filter(event.stacktrace, f => !(/__trace__$/.test(f.method)))

@@ -3,7 +3,6 @@ const { describe, it, expect } = global
 const proxyquire = require('proxyquire').noCallThru().noPreserveCache()
 const Emitter = require('events')
 const Client = require('@bugsnag/core/client')
-const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
 describe('plugin: server sessions', () => {
   it('should send the session', done => {
@@ -20,10 +19,7 @@ describe('plugin: server sessions', () => {
     const plugin = proxyquire('../session', {
       './tracker': TrackerMock
     })
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({
-      apiKey: 'aaaa-aaaa-aaaa-aaaa'
-    })
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
     c.delivery(client => ({
       sendEvent: () => {},
       sendSession: (session, cb = () => {}) => {
@@ -33,7 +29,6 @@ describe('plugin: server sessions', () => {
       }
     }))
 
-    c.configure()
     c.use(plugin)
     c.startSession()
   })
@@ -53,8 +48,7 @@ describe('plugin: server sessions', () => {
       './tracker': TrackerMock
     })
 
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({
+    const c = new Client({
       apiKey: 'aaaa-aaaa-aaaa-aaaa',
       logger: {
         debug: () => {},
@@ -77,7 +71,6 @@ describe('plugin: server sessions', () => {
       }
     }))
 
-    c.configure()
     c.use(plugin)
     c.startSession()
   })
@@ -95,8 +88,7 @@ describe('plugin: server sessions', () => {
     }
     const plugin = proxyquire('../session', { './tracker': TrackerMock })
 
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({
+    const c = new Client({
       apiKey: 'aaaa-aaaa-aaaa-aaaa',
       endpoints: { notify: 'bloo', sessions: 'blah' },
       enabledReleaseStages: ['qa'],
@@ -120,7 +112,6 @@ describe('plugin: server sessions', () => {
       }
     }))
 
-    c.configure()
     c.use(plugin)
     c.startSession()
   })
@@ -133,9 +124,7 @@ describe('plugin: server sessions', () => {
     }
     const plugin = proxyquire('../session', { './tracker': TrackerMock })
 
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
-    c.configure()
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
     c.use(plugin)
 
     c.leaveBreadcrumb('tick')

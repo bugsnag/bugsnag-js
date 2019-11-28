@@ -2,7 +2,6 @@
 
 const proxyquire = require('proxyquire').noPreserveCache().noCallThru()
 const Client = require('@bugsnag/core/client')
-const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
 describe('plugin: expo device', () => {
   it('should should use version if defined (all platforms)', done => {
@@ -22,9 +21,7 @@ describe('plugin: expo device', () => {
         }
       }
     })
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'api_key' })
-    c.configure()
+    const c = new Client({ apiKey: 'api_key' })
 
     c.use(plugin)
     c.delivery(client => ({
@@ -56,9 +53,7 @@ describe('plugin: expo device', () => {
         }
       }
     })
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'api_key' })
-    c.configure()
+    const c = new Client({ apiKey: 'api_key' })
 
     c.use(plugin)
     c.delivery(client => ({
@@ -91,9 +86,7 @@ describe('plugin: expo device', () => {
         }
       }
     })
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'api_key' })
-    c.configure()
+    const c = new Client({ apiKey: 'api_key' })
 
     c.use(plugin)
     c.delivery(client => ({
@@ -126,9 +119,7 @@ describe('plugin: expo device', () => {
         }
       }
     })
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'api_key' })
-    c.configure()
+    const c = new Client({ apiKey: 'api_key' })
 
     c.use(plugin)
     c.delivery(client => ({
@@ -159,9 +150,7 @@ describe('plugin: expo device', () => {
       },
       'react-native': { AppState }
     })
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'api_key' })
-    c.configure()
+    const c = new Client({ apiKey: 'api_key' })
 
     c.use(plugin)
     expect(typeof listener).toBe('function')

@@ -7,7 +7,7 @@ const Backoff = require('backo')
 
 module.exports = {
   init: client => {
-    const sessionTracker = new SessionTracker(client.config.sessionSummaryInterval)
+    const sessionTracker = new SessionTracker(client._config.sessionSummaryInterval)
     sessionTracker.on('summary', sendSessionSummary(client))
     sessionTracker.start()
     client.sessionDelegate({
@@ -32,7 +32,7 @@ const sendSessionSummary = client => sessionCounts => {
   const releaseStage = inferReleaseStage(client)
 
   // exit early if the current releaseStage is not enabled
-  if (client.config.enabledReleaseStages.length > 0 && !includes(client.config.enabledReleaseStages, releaseStage)) {
+  if (client._config.enabledReleaseStages.length > 0 && !includes(client._config.enabledReleaseStages, releaseStage)) {
     client._logger.warn('Session not sent due to releaseStage/enabledReleaseStages configuration')
     return
   }
@@ -58,7 +58,7 @@ const sendSessionSummary = client => sessionCounts => {
 
   function req (cb) {
     client._delivery.sendSession({
-      notifier: client.notifier,
+      notifier: client._notifier,
       device: client.device,
       app: { ...{ releaseStage }, ...client.app },
       sessionCounts

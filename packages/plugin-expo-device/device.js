@@ -37,7 +37,7 @@ module.exports = {
       }
     }
 
-    client.config.onError.unshift(event => {
+    client._config.onError.unshift(event => {
       event.device = {
         ...event.device,
         time: isoDate(),

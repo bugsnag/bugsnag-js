@@ -3,7 +3,7 @@ const { isoDate } = require('@bugsnag/core/lib/es-utils')
 
 module.exports = (client, win = window) => ({
   sendEvent: (event, cb = () => {}) => {
-    const url = getApiUrl(client.config, 'notify', '4', win)
+    const url = getApiUrl(client._config, 'notify', '4', win)
     const req = new win.XDomainRequest()
     req.onload = function () {
       cb(null)
@@ -11,7 +11,7 @@ module.exports = (client, win = window) => ({
     req.open('POST', url)
     setTimeout(() => {
       try {
-        req.send(payload.event(event, client.config.filters))
+        req.send(payload.event(event, client._config.filters))
       } catch (e) {
         client._logger.error(e)
         cb(e)
@@ -19,7 +19,7 @@ module.exports = (client, win = window) => ({
     }, 0)
   },
   sendSession: (session, cb = () => {}) => {
-    const url = getApiUrl(client.config, 'sessions', '1', win)
+    const url = getApiUrl(client._config, 'sessions', '1', win)
     const req = new win.XDomainRequest()
     req.onload = function () {
       cb(null)
@@ -27,7 +27,7 @@ module.exports = (client, win = window) => ({
     req.open('POST', url)
     setTimeout(() => {
       try {
-        req.send(payload.session(session, client.config.filters))
+        req.send(payload.session(session, client._config.filters))
       } catch (e) {
         this._logger.error(e)
         cb(e)

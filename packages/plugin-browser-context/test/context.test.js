@@ -3,7 +3,6 @@ const { describe, it, expect } = global
 const plugin = require('../')
 
 const Client = require('@bugsnag/core/client')
-const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
 const window = {
   location: {
@@ -13,10 +12,8 @@ const window = {
 
 describe('plugin: context', () => {
   it('sets client.context (and event.context) to window.location.pathname', () => {
-    const client = new Client(VALID_NOTIFIER)
+    const client = new Client({ apiKey: 'API_KEY_YEAH' })
     const payloads = []
-    client.setOptions({ apiKey: 'API_KEY_YEAH' })
-    client.configure()
     client.use(plugin, window)
 
     client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
@@ -27,10 +24,8 @@ describe('plugin: context', () => {
   })
 
   it('sets doesn’t overwrite an existing context', () => {
-    const client = new Client(VALID_NOTIFIER)
+    const client = new Client({ apiKey: 'API_KEY_YEAH' })
     const payloads = []
-    client.setOptions({ apiKey: 'API_KEY_YEAH' })
-    client.configure()
     client.use(plugin, window)
 
     client.context = 'something else'

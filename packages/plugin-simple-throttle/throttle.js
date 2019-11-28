@@ -10,9 +10,9 @@ module.exports = {
     let n = 0
 
     // add onError hook
-    client.config.onError.push((event) => {
+    client._config.onError.push((event) => {
       // have max events been sent already?
-      if (n >= client.config.maxEvents) return false
+      if (n >= client._config.maxEvents) return false
       n++
     })
 

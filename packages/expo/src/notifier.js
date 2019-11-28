@@ -43,18 +43,16 @@ module.exports = (opts) => {
     opts.apiKey = Constants.manifest.extra.bugsnag.apiKey
   }
 
-  const bugsnag = new Client({ name, version, url })
+  const bugsnag = new Client(opts, schema, { name, version, url })
 
   bugsnag.delivery(delivery)
-  bugsnag.setOptions(opts)
-  bugsnag.configure(schema)
 
   plugins.forEach(pl => {
     switch (pl.name) {
       case 'networkBreadcrumbs':
         bugsnag.use(pl, () => [
-          bugsnag.config.endpoints.notify,
-          bugsnag.config.endpoints.sessions,
+          bugsnag._config.endpoints.notify,
+          bugsnag._config.endpoints.sessions,
           Constants.manifest.logUrl
         ])
         break
@@ -66,7 +64,7 @@ module.exports = (opts) => {
 
   bugsnag._logger.debug('Loaded!')
 
-  return bugsnag.config.autoTrackSessions
+  return bugsnag._config.autoTrackSessions
     ? bugsnag.startSession()
     : bugsnag
 }
