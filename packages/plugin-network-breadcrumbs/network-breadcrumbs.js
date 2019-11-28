@@ -78,15 +78,15 @@ function handleXHRLoad () {
     // don't leave a network breadcrumb from bugsnag notify calls
     return
   }
-  const metaData = {
+  const metadata = {
     status: this.status,
     request: `${this[REQUEST_METHOD_KEY]} ${this[REQUEST_URL_KEY]}`
   }
   if (this.status >= 400) {
     // contacted server but got an error response
-    client.leaveBreadcrumb('XMLHttpRequest failed', metaData, BREADCRUMB_TYPE)
+    client.leaveBreadcrumb('XMLHttpRequest failed', metadata, BREADCRUMB_TYPE)
   } else {
-    client.leaveBreadcrumb('XMLHttpRequest succeeded', metaData, BREADCRUMB_TYPE)
+    client.leaveBreadcrumb('XMLHttpRequest succeeded', metadata, BREADCRUMB_TYPE)
   }
 }
 
@@ -137,15 +137,15 @@ const monkeyPatchFetch = () => {
 }
 
 const handleFetchSuccess = (response, method, url) => {
-  const metaData = {
+  const metadata = {
     status: response.status,
     request: `${method} ${url}`
   }
   if (response.status >= 400) {
     // when the request comes back with a 4xx or 5xx status it does not reject the fetch promise,
-    client.leaveBreadcrumb('fetch() failed', metaData, BREADCRUMB_TYPE)
+    client.leaveBreadcrumb('fetch() failed', metadata, BREADCRUMB_TYPE)
   } else {
-    client.leaveBreadcrumb('fetch() succeeded', metaData, BREADCRUMB_TYPE)
+    client.leaveBreadcrumb('fetch() succeeded', metadata, BREADCRUMB_TYPE)
   }
 }
 

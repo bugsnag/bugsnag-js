@@ -15,11 +15,9 @@
   </head>
   <body>
     <script>
-      bugsnagClient.metaData = {
-        details: {
-          stacktrace: [ 'a', 'b' ]
-        }
-      }
+      bugsnagClient.addMetadata('details', {
+        stacktrace: [ 'a', 'b' ]
+      })
       function handle () {
         bugsnagClient.notify(new Error('sensitive?'), function (event) {
           event.setUser('21')

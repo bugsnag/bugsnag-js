@@ -39,8 +39,8 @@ Lorem ipsum dolor sit amet.
     ]))
     expect(payloads.length).toEqual(1)
     expect(payloads[0].events[0].stacktrace[0].code).toBeDefined()
-    expect(payloads[0].events[0].metaData.script).toBeDefined()
-    expect(payloads[0].events[0].metaData.script.content).toEqual(scriptContent)
+    expect(payloads[0].events[0]._metadata.script).toBeDefined()
+    expect(payloads[0].events[0]._metadata.script.content).toEqual(scriptContent)
   })
 
   it('calls the previous onreadystatechange handler if it exists', done => {
@@ -103,8 +103,8 @@ Lorem ipsum dolor sit amet.
     ]))
     expect(payloads.length).toEqual(1)
     expect(payloads[0].events[0].stacktrace[0].code).toBeDefined()
-    expect(payloads[0].events[0].metaData.script).toBeDefined()
-    expect(payloads[0].events[0].metaData.script.content.length).toBe(500000)
+    expect(payloads[0].events[0]._metadata.script).toBeDefined()
+    expect(payloads[0].events[0]._metadata.script.content.length).toBe(500000)
   })
 
   it('truncates surrounding code lines to a reasonable length', () => {
@@ -144,7 +144,7 @@ Lorem ipsum dolor sit amet.
     Object.keys(surroundingCode).forEach(line => {
       expect(surroundingCode[line].length > 200).toBe(false)
     })
-    expect(payloads[0].events[0].metaData.script).toBeDefined()
+    expect(payloads[0].events[0]._metadata.script).toBeDefined()
   })
 
   it('works when the stacktrace is empty', () => {
@@ -243,7 +243,7 @@ Lorem ipsum dolor sit amet.
       2: '<script>throw new Error(\'oh\')',
       3: 'console.log(\'next\')</script>'
     })
-    expect(payloads[0].events[0].metaData.script).toBeDefined()
-    expect(payloads[0].events[0].metaData.script.content).toEqual(scriptContent)
+    expect(payloads[0].events[0]._metadata.script).toBeDefined()
+    expect(payloads[0].events[0]._metadata.script.content).toEqual(scriptContent)
   })
 })

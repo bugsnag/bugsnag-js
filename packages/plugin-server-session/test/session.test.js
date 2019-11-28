@@ -128,16 +128,16 @@ describe('plugin: server sessions', () => {
     c.use(plugin)
 
     c.leaveBreadcrumb('tick')
-    c.metaData = { datetime: { tz: 'GMT+1' } }
+    c._metadata = { datetime: { tz: 'GMT+1' } }
 
     const sessionClient = c.startSession()
 
     sessionClient.leaveBreadcrumb('tock')
-    sessionClient.metaData = { ...sessionClient.metaData, other: { widgetsAdded: 'cat,dog,mouse' } }
+    sessionClient.addMetadata('other', { widgetsAdded: 'cat,dog,mouse' })
 
     expect(c.breadcrumbs.length).toBe(1)
-    expect(Object.keys(c.metaData).length).toBe(1)
+    expect(Object.keys(c._metadata).length).toBe(1)
     expect(sessionClient.breadcrumbs.length).toBe(2)
-    expect(Object.keys(sessionClient.metaData).length).toBe(2)
+    expect(Object.keys(sessionClient._metadata).length).toBe(2)
   })
 })

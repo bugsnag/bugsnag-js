@@ -43,7 +43,7 @@ module.exports = {
         time: isoDate(),
         orientation
       }
-      event.updateMetaData('device', {
+      event.addMetadata('device', {
         isDevice: Constants.isDevice,
         appOwnership: Constants.appOwnership
       })

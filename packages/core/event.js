@@ -3,6 +3,7 @@ const StackGenerator = require('stack-generator')
 const hasStack = require('./lib/has-stack')
 const { reduce, filter } = require('./lib/es-utils')
 const jsRuntime = require('./lib/js-runtime')
+const metadataDelegate = require('./lib/metadata-delegate')
 
 class BugsnagEvent {
   constructor (errorClass, errorMessage, stacktrace = [], handledState = defaultHandledState(), originalError) {
@@ -21,7 +22,7 @@ class BugsnagEvent {
     this.errorClass = stringOrFallback(errorClass, '[no error class]')
     this.errorMessage = stringOrFallback(errorMessage, '[no error message]')
     this.groupingHash = undefined
-    this.metaData = {}
+    this._metadata = {}
     this.request = undefined
     this.severity = this._handledState.severity
     this.stacktrace = reduce(stacktrace, (accum, frame) => {
@@ -45,48 +46,16 @@ class BugsnagEvent {
     /* this.attemptImmediateDelivery, default: true */
   }
 
-  updateMetaData (section, ...args) {
-    if (!section) return this
-    let updates
-
-    // updateMetaData("section", null) -> removes section
-    if (args[0] === null) return this.removeMetaData(section)
-
-    // updateMetaData("section", "property", null) -> removes property from section
-    if (args[1] === null) return this.removeMetaData(section, args[0], args[1])
-
-    // normalise the two supported input types into object form
-    if (typeof args[0] === 'object') updates = args[0]
-    if (typeof args[0] === 'string') updates = { [args[0]]: args[1] }
-
-    // exit if we don't have an updates object at this point
-    if (!updates) return this
-
-    // ensure a section with this name exists
-    if (!this.metaData[section]) this.metaData[section] = {}
-
-    // merge the updates with the existing section
-    this.metaData[section] = { ...this.metaData[section], ...updates }
-
-    return this
+  addMetadata (section, ...args) {
+    return metadataDelegate.add.call(this, section, ...args)
   }
 
-  removeMetaData (section, property) {
-    if (typeof section !== 'string') return this
+  getMetadata (section, key) {
+    return metadataDelegate.get.call(this, section, key)
+  }
 
-    // remove an entire section
-    if (!property) {
-      delete this.metaData[section]
-      return this
-    }
-
-    // remove a single property from a section
-    if (this.metaData[section]) {
-      delete this.metaData[section][property]
-      return this
-    }
-
-    return this
+  clearMetadata (section, key) {
+    return metadataDelegate.clear.call(this, section, key)
   }
 
   getUser () {
@@ -115,8 +84,8 @@ class BugsnagEvent {
       device: this.device,
       breadcrumbs: this.breadcrumbs,
       context: this.context,
+      metaData: this._metadata,
       user: this._user,
-      metaData: this.metaData,
       groupingHash: this.groupingHash,
       request: this.request,
       session: this.session

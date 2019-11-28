@@ -83,7 +83,7 @@ module.exports.schema = {
     message: '(object) user should be an object',
     validate: (value) => typeof value === 'object'
   },
-  metaData: {
+  metadata: {
     defaultValue: () => null,
     message: 'should be an object',
     validate: (value) => typeof value === 'object'

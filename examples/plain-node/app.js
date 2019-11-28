@@ -11,8 +11,8 @@ var bugsnagClient = bugsnag({
   // only get reports from the environments you care about
   releaseStage: 'production',
   enabledReleaseStages: [ 'staging', 'production' ],
-  // you can set global metaData when you initialise Bugsnag
-  metaData: {}
+  // you can set global metadata when you initialise Bugsnag
+  metadata: {}
 })
 
 console.log(`

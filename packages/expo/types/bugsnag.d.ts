@@ -16,7 +16,7 @@ declare module "@bugsnag/core" {
     releaseStage?: string;
     maxBreadcrumbs?: number;
     user?: object | null;
-    metaData?: object | null;
+    metadata?: { [key: string]: any };
     logger?: BugsnagCore.Logger | null;
     filters?: Array<string | RegExp>;
     // catch-all for any missing options

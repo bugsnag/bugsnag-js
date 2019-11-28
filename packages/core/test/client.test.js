@@ -284,13 +284,13 @@ describe('@bugsnag/core/client', () => {
       expect(payloads[0].events[0].breadcrumbs.length).toBe(0)
     })
 
-    it('doesn’t modify global client.metaData when using updateMetaData() method', () => {
+    it('doesn’t modify global client.metadata when using addMetadata() method', () => {
       const client = new Client({ apiKey: 'API_KEY_YEAH' })
-      client.metaData = { foo: [1, 2, 3] }
+      client.addMetadata('foo', 'bar', [1, 2, 3])
       client.notify(new Error('changes afoot'), (event) => {
-        event.updateMetaData('foo', '3', 1)
+        event.addMetadata('foo', '3', 1)
       })
-      expect(client.metaData.foo['3']).toBe(undefined)
+      expect(client._metadata.foo['3']).toBe(undefined)
     })
 
     it('should call the callback (success)', done => {
@@ -473,6 +473,31 @@ describe('@bugsnag/core/client', () => {
       sessionClient.notify(new Error('broke'))
       sessionClient.notify(new Event('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
       sessionClient.notify(new Event('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
+    })
+  })
+
+  describe('add/get/clearMetadata()', () => {
+    it('modifies and retrieves metadata', () => {
+      const client = new Client({ apiKey: 'API_KEY' })
+      client.addMetadata('a', 'b', 'c')
+      expect(client.getMetadata('a')).toEqual({ b: 'c' })
+      expect(client.getMetadata('a', 'b')).toBe('c')
+      client.clearMetadata('a', 'b')
+      expect(client.getMetadata('a', 'b')).toBe(undefined)
+      client.clearMetadata('a')
+      expect(client.getMetadata('a')).toBe(undefined)
+    })
+
+    it('can be set in config', () => {
+      const client = new Client({
+        apiKey: 'API_KEY',
+        metadata: {
+          'system metrics': {
+            ms_since_last_jolt: 10032
+          }
+        }
+      })
+      expect(client.getMetadata('system metrics', 'ms_since_last_jolt')).toBe(10032)
     })
   })
 

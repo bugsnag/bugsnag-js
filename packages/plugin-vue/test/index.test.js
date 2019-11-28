@@ -16,7 +16,7 @@ describe('bugsnag vue', () => {
       sendEvent: (payload) => {
         expect(payload.events[0].errorClass).toBe('Error')
         expect(payload.events[0].errorMessage).toBe('oops')
-        expect(payload.events[0].metaData.vue).toBeDefined()
+        expect(payload.events[0]._metadata.vue).toBeDefined()
         done()
       }
     }))

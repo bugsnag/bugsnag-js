@@ -11,7 +11,7 @@ describe('createEventFromErr(maybeErr)', () => {
   it('tolerates null', () => {
     const event = createEventFromErr(null)
     expect(event.errorMessage).toBe('Handled a non-error. See "error" tab for more detail.')
-    expect(event.metaData.error['non-error value']).toBe('null')
+    expect(event._metadata.error['non-error value']).toBe('null')
   })
 
   it('accepts acustom handledState', () => {

@@ -15,7 +15,7 @@ export interface Config {
   releaseStage?: string;
   maxBreadcrumbs?: number;
   user?: object | null;
-  metaData?: object | null;
+  metadata?: { [key: string]: any };
   logger?: Logger | null;
   filters?: Array<string | RegExp>;
   [key: string]: any;
@@ -92,16 +92,6 @@ export interface Session {
   id: string;
   startedAt: string;
   user?: object;
-}
-
-export interface NotifyOpts {
-  context?: string;
-  device?: object;
-  request?: object;
-  user?: object;
-  metaData?: object;
-  severity?: "info" | "warning" | "error";
-  onError?: OnError;
 }
 
 export type NotifiableError = Error

@@ -24,7 +24,6 @@ declare class Event {
   public errorClass: string;
   public errorMessage: string;
   public groupingHash: string;
-  public metaData: object;
   public severity: "info" | "warning" | "error";
   public stacktrace: Stackframe[];
   public session: object;
@@ -41,13 +40,15 @@ declare class Event {
     originalError?: any,
   );
 
-  public updateMetaData(section: string, value: object): Event;
-  public updateMetaData(section: string, property: string, value: object): Event;
-  public removeMetaData(section: string, property: string): Event;
-
   // user
   public getUser(): { id?: string; email?: string; name?: string };
   public setUser(id?: string, email?: string, name?: string): void;
+
+  // metadata
+  public addMetadata(section: string, values: { [key: string]: any }): void;
+  public addMetadata(section: string, key: string, value: any): void;
+  public getMetadata(section: string, key?: string): any;
+  public clearMetadata(section: string, key?: string): void;
 }
 
 interface HandledState {

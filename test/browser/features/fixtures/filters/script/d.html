@@ -15,12 +15,10 @@
   </head>
   <body>
     <script>
-      bugsnagClient.metaData = {
-        details0: {},
-        details1: /foobar/,
-        details2: { unlucky: [ 13 ]  },
-        detailsA: 'aaaa'
-      }
+      bugsnagClient.addMetadata('details0', {})
+      bugsnagClient.addMetadata('details1', /foobar/)
+      bugsnagClient.addMetadata('details2', { unlucky: [ 13 ]  })
+      bugsnagClient.addMetadata('detailsA', 'aaaa')
       bugsnagClient.notify(new Error('sensitive?'))
     </script>
   </body>
