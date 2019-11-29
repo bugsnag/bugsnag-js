@@ -38,7 +38,7 @@ describe('plugin: contextualize', () => {
       sendEvent: (payload, cb) => {
         expect(payload.events[0].errorMessage).toBe('no item available')
         expect(payload.events[0].severity).toBe('warning')
-        expect(payload.events[0].user).toEqual({
+        expect(payload.events[0]._user).toEqual({
           id: '1a2c3cd4',
           name: 'Ben Gourley',
           email: 'ben.gourley@bugsnag.com'
@@ -54,11 +54,7 @@ describe('plugin: contextualize', () => {
         if (err) throw err
       })
     }, (event) => {
-      event.user = {
-        id: '1a2c3cd4',
-        name: 'Ben Gourley',
-        email: 'ben.gourley@bugsnag.com'
-      }
+      event.setUser('1a2c3cd4', 'ben.gourley@bugsnag.com', 'Ben Gourley')
       event.severity = 'warning'
     })
   })

@@ -34,7 +34,7 @@ class BugsnagEvent {
         return accum
       }
     }, [])
-    this.user = undefined
+    this._user = {}
     this.session = undefined
     this.originalError = originalError
 
@@ -89,6 +89,14 @@ class BugsnagEvent {
     return this
   }
 
+  getUser () {
+    return this._user
+  }
+
+  setUser (id, email, name) {
+    this._user = { id, email, name }
+  }
+
   toJSON () {
     return {
       payloadVersion: '4',
@@ -107,7 +115,7 @@ class BugsnagEvent {
       device: this.device,
       breadcrumbs: this.breadcrumbs,
       context: this.context,
-      user: this.user,
+      user: this._user,
       metaData: this.metaData,
       groupingHash: this.groupingHash,
       request: this.request,

@@ -22,13 +22,13 @@ describe('plugin: ip', () => {
     const payloads = []
     client.use(plugin)
 
-    client.user = { id: 'foobar' }
+    client._user = { id: 'foobar' }
 
     client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
     client.notify(new Error('noooo'))
 
     expect(payloads.length).toEqual(1)
-    expect(payloads[0].events[0].user).toEqual({ id: 'foobar' })
+    expect(payloads[0].events[0]._user).toEqual({ id: 'foobar' })
     expect(payloads[0].events[0].request).toEqual({ clientIp: '[NOT COLLECTED]' })
   })
 
@@ -37,13 +37,13 @@ describe('plugin: ip', () => {
     const payloads = []
     client.use(plugin)
 
-    client.user = { id: undefined }
+    client._user = { id: undefined }
 
     client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
     client.notify(new Error('noooo'))
 
     expect(payloads.length).toEqual(1)
-    expect(payloads[0].events[0].user).toEqual({ id: '[NOT COLLECTED]' })
+    expect(payloads[0].events[0]._user).toEqual({ id: '[NOT COLLECTED]' })
     expect(payloads[0].events[0].request).toEqual({ clientIp: '[NOT COLLECTED]' })
   })
 
@@ -56,7 +56,7 @@ describe('plugin: ip', () => {
     client.notify(new Error('noooo'))
 
     expect(payloads.length).toEqual(1)
-    expect(payloads[0].events[0].user).toEqual({ id: '[NOT COLLECTED]' })
+    expect(payloads[0].events[0]._user).toEqual({ id: '[NOT COLLECTED]' })
     expect(payloads[0].events[0].request).toEqual({ clientIp: '[NOT COLLECTED]' })
   })
 })

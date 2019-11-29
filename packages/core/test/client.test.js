@@ -475,4 +475,23 @@ describe('@bugsnag/core/client', () => {
       sessionClient.notify(new Event('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
     })
   })
+
+  describe('getUser() / setUser()', () => {
+    it('sets and retrieves user properties', () => {
+      const c = new Client({ apiKey: 'aaaa' })
+      c.setUser('123')
+      expect(c.getUser()).toEqual({ id: '123', email: undefined, name: undefined })
+      c.setUser('123', 'bug@sn.ag')
+      expect(c.getUser()).toEqual({ id: '123', email: 'bug@sn.ag', name: undefined })
+      c.setUser('123', 'bug@sn.ag', 'Bug S. Nag')
+      expect(c.getUser()).toEqual({ id: '123', email: 'bug@sn.ag', name: 'Bug S. Nag' })
+      c.setUser()
+      expect(c.getUser()).toEqual({ id: undefined, email: undefined, name: undefined })
+    })
+
+    it('can be set via config', () => {
+      const c = new Client({ apiKey: 'API_KEY', user: { id: '123', email: 'bug@sn.ag', name: 'Bug S. Nag' } })
+      expect(c.getUser()).toEqual({ id: '123', email: 'bug@sn.ag', name: 'Bug S. Nag' })
+    })
+  })
 })

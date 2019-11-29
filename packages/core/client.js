@@ -37,7 +37,7 @@ class BugsnagClient {
     this.device = undefined
     this.metaData = undefined
     this.request = undefined
-    this.user = {}
+    this._user = {}
 
     // expose internal constructors
     this.BugsnagClient = BugsnagClient
@@ -65,13 +65,21 @@ class BugsnagClient {
     if (conf.appVersion) this.app.version = conf.appVersion
     if (conf.appType) this.app.type = conf.appType
     if (conf.metaData) this.metaData = conf.metaData
-    if (conf.user) this.user = conf.user
+    if (conf.user) this._user = conf.user
     if (conf.logger) this.logger(conf.logger)
 
     // merge with existing config
     this._config = { ...this._config, ...conf }
 
     return this
+  }
+
+  getUser () {
+    return this._user
+  }
+
+  setUser (id, email, name) {
+    this._user = { id, email, name }
   }
 
   use (plugin, ...args) {
@@ -149,7 +157,7 @@ class BugsnagClient {
     event.context = event.context || this.context || undefined
     event.device = { ...event.device, ...this.device }
     event.request = { ...event.request, ...this.request }
-    event.user = { ...event.user, ...this.user }
+    event._user = { ...event._user, ...this._user }
     event.metaData = { ...event.metaData, ...this.metaData }
     event.breadcrumbs = this.breadcrumbs.slice(0)
 

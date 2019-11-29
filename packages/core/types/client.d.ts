@@ -7,12 +7,15 @@ declare class Client {
   public app: object;
   public device: object;
   public context: string | void;
-  public user: object;
   public metaData: object;
 
   public BugsnagEvent: typeof Event;
   public BugsnagBreadcrumb: typeof Breadcrumb;
   public BugsnagSession: typeof Session;
+
+  // user
+  public getUser(): { id?: string; email?: string; name?: string };
+  public setUser(id?: string, email?: string, name?: string): void;
 
   public use(plugin: common.Plugin, ...args: any[]): Client;
   public getPlugin(name: string): any;

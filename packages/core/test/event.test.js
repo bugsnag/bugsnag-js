@@ -158,6 +158,21 @@ describe('@bugsnag/core/event', () => {
     })
   })
 
+  describe('event.setUser() / event.getUser()', () => {
+    it('sets and retrieves user properties', () => {
+      const Event = require('../event')
+      const r = new Event('Err', 'bad', [])
+      r.setUser('123')
+      expect(r.getUser()).toEqual({ id: '123', email: undefined, name: undefined })
+      r.setUser('123', 'bug@sn.ag')
+      expect(r.getUser()).toEqual({ id: '123', email: 'bug@sn.ag', name: undefined })
+      r.setUser('123', 'bug@sn.ag', 'Bug S. Nag')
+      expect(r.getUser()).toEqual({ id: '123', email: 'bug@sn.ag', name: 'Bug S. Nag' })
+      r.setUser()
+      expect(r.getUser()).toEqual({ id: undefined, email: undefined, name: undefined })
+    })
+  })
+
   describe('event.toJSON()', () => {
     it('serializes correctly', () => {
       const Event = require('../event')

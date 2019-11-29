@@ -2,7 +2,6 @@ const jsonStringify = require('@bugsnag/safe-json-stringify')
 const EVENT_FILTER_PATHS = [
   'events.[].app',
   'events.[].metaData',
-  'events.[].user',
   'events.[].breadcrumbs',
   'events.[].request',
   'events.[].device'

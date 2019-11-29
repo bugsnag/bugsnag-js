@@ -10,10 +10,7 @@
         apiKey: API_KEY,
         endpoints: { notify: ENDPOINT, sessions: '/noop' }
       })
-      bugsnagClient.user = {
-        id: 'cjhc05e8u0000peojhf4vfd68',
-        name: 'Bug S. Nag'
-      }
+      bugsnagClient.setUser('cjhc05e8u0000peojhf4vfd68', 'bug@sn.ag', 'Bug S. Nag')
     </script>
   </head>
   <body>

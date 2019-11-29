@@ -31,7 +31,7 @@ server.post('/unhandled', (req, res, next) => {
 })
 
 server.post('/add-info', (req, res, next) => {
-  req.bugsnag.user = { id: '123', name: 'jim' }
+  req.bugsnag.setUser('123', 'jim@jim.com', 'jim')
   next(new Error('Cannot load Jim’s items'))
 })
 
