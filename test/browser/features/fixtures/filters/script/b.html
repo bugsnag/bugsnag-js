@@ -21,7 +21,8 @@
         }
       }
       bugsnagClient.notify(new Error('sensitive?'), function (event) {
-        event.user = { id: '21', password: '123456', secret: 'don’t tell anyone' }
+        event.setUser('21')
+        event.metaData.user = { password: '123456', secret: 'don’t tell anyone' }
       })
     </script>
   </body>

@@ -15,10 +15,7 @@
   <body>
     <script>
       bugsnagClient.notify(new Error('user info does work'), function (event) {
-        event.user = {
-          id: 'cjhc06q3d0000q9ojtam2y3w5',
-          name: 'Bug S. Nag'
-        }
+        event.setUser('cjhc06q3d0000q9ojtam2y3w5', 'bug@sn.ag', 'Bug S. Nag')
       })
     </script>
   </body>

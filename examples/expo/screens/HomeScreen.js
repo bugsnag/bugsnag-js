@@ -43,7 +43,7 @@ export default class HomeScreen extends React.Component {
               <Button title="Send an unhandled error" onPress={() => { throw new Error('unexpected item in bagging area')}} />
             </View>
             <View style={styles.errorButtonView}>
-              <Button title="Add user information" onPress={() => { bugsnagClient.user = { 'id': '123', 'name': 'Bug McSnag', email: 'bugs.nag@bugsnag.com' } }} />
+              <Button title="Add user information" onPress={() => { bugsnagClient.setUser('123', 'bugs.nag@bugsnag.com', 'Bug McSnag') }} />
             </View>
             <View style={styles.errorButtonView}>
               <Button title="Send a render error" onPress={() => { this.setState({ shouldError: true })}} />

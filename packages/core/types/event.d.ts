@@ -27,7 +27,6 @@ declare class Event {
   public metaData: object;
   public severity: "info" | "warning" | "error";
   public stacktrace: Stackframe[];
-  public user: object;
   public session: object;
   public request: {
     url: string;
@@ -45,6 +44,10 @@ declare class Event {
   public updateMetaData(section: string, value: object): Event;
   public updateMetaData(section: string, property: string, value: object): Event;
   public removeMetaData(section: string, property: string): Event;
+
+  // user
+  public getUser(): { id?: string; email?: string; name?: string };
+  public setUser(id?: string, email?: string, name?: string): void;
 }
 
 interface HandledState {

@@ -34,7 +34,7 @@ app.use(
       ctx.response.status = 503
     })
     .post('/add-info', (ctx, next) => {
-      ctx.bugsnag.user = { id: '123', name: 'jim' }
+      ctx.bugsnag.setUser('123', 'jim@jim.com', 'jim')
       throw new Error('Cannot load Jim’s items')
     })
     .routes()

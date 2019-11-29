@@ -12,7 +12,7 @@ module.exports = (client) => {
   clone.breadcrumbs = client.breadcrumbs.slice()
   clone.metaData = { ...client.metaData }
   clone.request = { ...client.request }
-  clone.user = { ...client.user }
+  clone._user = { ...client._user }
 
   clone._logger = client._logger
   clone._delivery = client._delivery

@@ -11,6 +11,7 @@
 - Rename `beforeSend` -> `onError`, remove `event.ignore()` and refactor callback logic [#654](https://github.com/bugsnag/bugsnag-js/pull/654)
 - Update signature of `notify(err, opts?, cb?)` -> `notify(err, onError?, cb?)` for a canonical way to update events [#655](https://github.com/bugsnag/bugsnag-js/pull/655)
 - Simplify client configuration, and store resulting config privately [#656](https://github.com/bugsnag/bugsnag-js/pull/656)
+- User is now stored privately on `client` and `event` and updated via get/set methods [#657](https://github.com/bugsnag/bugsnag-js/pull/657)
 
 ## 6.4.3 (2019-10-21)
 
