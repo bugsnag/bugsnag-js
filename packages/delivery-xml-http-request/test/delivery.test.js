@@ -35,7 +35,7 @@ describe('delivery:XMLHttpRequest', () => {
       endpoints: { notify: '/echo/' },
       filters: []
     }
-    delivery({ logger: {}, config }, { XMLHttpRequest }).sendEvent(payload, (err) => {
+    delivery({ logger: {}, _config: config }, { XMLHttpRequest }).sendEvent(payload, (err) => {
       expect(err).toBe(null)
       expect(requests.length).toBe(1)
       expect(requests[0].method).toBe('POST')
@@ -81,7 +81,7 @@ describe('delivery:XMLHttpRequest', () => {
       endpoints: { notify: '/', sessions: '/echo/' },
       filters: []
     }
-    delivery({ config, logger: {} }, { XMLHttpRequest }).sendSession(payload, (err) => {
+    delivery({ _config: config, logger: {} }, { XMLHttpRequest }).sendSession(payload, (err) => {
       expect(err).toBe(null)
       expect(requests.length).toBe(1)
       expect(requests[0].method).toBe('POST')

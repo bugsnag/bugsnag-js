@@ -41,11 +41,9 @@ module.exports = (opts, userPlugins = []) => {
   // handle very simple use case where user supplies just the api key as a string
   if (typeof opts === 'string') opts = { apiKey: opts }
 
-  const bugsnag = new Client({ name, version, url })
+  const bugsnag = new Client(opts, schema, { name, version, url })
 
   bugsnag.delivery(delivery)
-  bugsnag.setOptions(opts)
-  bugsnag.configure(schema)
 
   plugins.forEach(pl => bugsnag.use(pl))
 

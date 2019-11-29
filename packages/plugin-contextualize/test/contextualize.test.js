@@ -1,7 +1,6 @@
 const { describe, it, expect } = global
 
 const Client = require('@bugsnag/core/client')
-const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 const schema = require('@bugsnag/core/config').schema
 const plugin = require('../')
 const fs = require('fs')
@@ -21,7 +20,20 @@ function load (index, cb) {
 
 describe('plugin: contextualize', () => {
   it('should call the onUnhandledException callback when an error is captured', done => {
-    const c = new Client(VALID_NOTIFIER)
+    const c = new Client({
+      apiKey: 'api_key',
+      onUncaughtException: (err) => {
+        expect(err.message).toBe('no item available')
+        done()
+      }
+    }, {
+      ...schema,
+      onUncaughtException: {
+        validate: val => typeof val === 'function',
+        message: 'should be a function',
+        defaultValue: () => {}
+      }
+    })
     c.delivery(client => ({
       sendEvent: (payload, cb) => {
         expect(payload.events[0].errorMessage).toBe('no item available')
@@ -35,21 +47,6 @@ describe('plugin: contextualize', () => {
       },
       sendSession: () => {}
     }))
-    c.setOptions({
-      apiKey: 'api_key',
-      onUncaughtException: (err) => {
-        expect(err.message).toBe('no item available')
-        done()
-      }
-    })
-    c.configure({
-      ...schema,
-      onUncaughtException: {
-        validate: val => typeof val === 'function',
-        message: 'should be a function',
-        defaultValue: () => {}
-      }
-    })
     c.use(plugin)
     const contextualize = c.getPlugin('contextualize')
     contextualize(() => {
@@ -67,7 +64,19 @@ describe('plugin: contextualize', () => {
   })
 
   it('should add a stacktrace when missing', done => {
-    const c = new Client(VALID_NOTIFIER)
+    const c = new Client({
+      apiKey: 'api_key',
+      onUncaughtException: () => {
+        done()
+      }
+    }, {
+      ...schema,
+      onUncaughtException: {
+        validate: val => typeof val === 'function',
+        message: 'should be a function',
+        defaultValue: () => {}
+      }
+    })
     c.delivery(client => ({
       sendEvent: (payload, cb) => {
         expect(payload.events[0].errorMessage).toBe('ENOENT: no such file or directory, open \'does not exist\'')
@@ -76,20 +85,6 @@ describe('plugin: contextualize', () => {
       },
       sendSession: () => {}
     }))
-    c.setOptions({
-      apiKey: 'api_key',
-      onUncaughtException: () => {
-        done()
-      }
-    })
-    c.configure({
-      ...schema,
-      onUncaughtException: {
-        validate: val => typeof val === 'function',
-        message: 'should be a function',
-        defaultValue: () => {}
-      }
-    })
     c.use(plugin)
     const contextualize = c.getPlugin('contextualize')
     contextualize(() => {
@@ -98,21 +93,13 @@ describe('plugin: contextualize', () => {
   })
 
   it('should tolerate a failed event', done => {
-    const c = new Client(VALID_NOTIFIER)
-    c.delivery(client => ({
-      sendEvent: (payload, cb) => {
-        cb(new Error('sending failed'))
-      },
-      sendSession: () => {}
-    }))
-    c.setOptions({
+    const c = new Client({
       apiKey: 'api_key',
       onUncaughtException: (err) => {
         expect(err.message).toBe('no item available')
         done()
       }
-    })
-    c.configure({
+    }, {
       ...schema,
       onUncaughtException: {
         validate: val => typeof val === 'function',
@@ -120,6 +107,12 @@ describe('plugin: contextualize', () => {
         defaultValue: () => {}
       }
     })
+    c.delivery(client => ({
+      sendEvent: (payload, cb) => {
+        cb(new Error('sending failed'))
+      },
+      sendSession: () => {}
+    }))
     c.use(plugin)
     const contextualize = c.getPlugin('contextualize')
     contextualize(() => {

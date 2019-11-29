@@ -3,7 +3,6 @@ const { describe, it, expect, beforeEach } = global
 const plugin = require('../')
 
 const Client = require('@bugsnag/core/client')
-const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
 let window
 
@@ -11,27 +10,21 @@ describe('plugin: window onerror', () => {
   beforeEach(() => { window = {} })
 
   it('should set a window.onerror event handler', () => {
-    const client = new Client(VALID_NOTIFIER)
-    client.setOptions({ apiKey: 'API_KEY_YEAH' })
-    client.configure()
+    const client = new Client({ apiKey: 'API_KEY_YEAH' })
     client.use(plugin, window)
     expect(typeof window.onerror).toBe('function')
   })
 
   it('should not add a window.onerror event handler when autoDetectErrors=false', () => {
-    const client = new Client(VALID_NOTIFIER)
-    client.setOptions({ apiKey: 'API_KEY_YEAH', autoDetectErrors: false })
-    client.configure()
+    const client = new Client({ apiKey: 'API_KEY_YEAH', autoDetectErrors: false })
     client.use(plugin, window)
     expect(window.onerror).toBe(undefined)
   })
 
   describe('window.onerror function', () => {
     it('captures uncaught errors in timer callbacks', done => {
-      const client = new Client(VALID_NOTIFIER)
+      const client = new Client({ apiKey: 'API_KEY_YEAH' })
       const payloads = []
-      client.setOptions({ apiKey: 'API_KEY_YEAH' })
-      client.configure()
       client.use(plugin, window)
       client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
 
@@ -79,10 +72,8 @@ describe('plugin: window onerror', () => {
     it('calls any previously registered window.onerror callback', done => {
       window.onerror = () => done()
 
-      const client = new Client(VALID_NOTIFIER)
+      const client = new Client({ apiKey: 'API_KEY_YEAH' })
       const payloads = []
-      client.setOptions({ apiKey: 'API_KEY_YEAH' })
-      client.configure()
       client.use(plugin, window)
       client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
 
@@ -90,10 +81,8 @@ describe('plugin: window onerror', () => {
     })
 
     it('handles single argument usage of window.onerror', () => {
-      const client = new Client(VALID_NOTIFIER)
+      const client = new Client({ apiKey: 'API_KEY_YEAH' })
       const payloads = []
-      client.setOptions({ apiKey: 'API_KEY_YEAH' })
-      client.configure()
       client.use(plugin, window)
       client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
 
@@ -110,10 +99,8 @@ describe('plugin: window onerror', () => {
     })
 
     it('handles single argument usage of window.onerror with extra parameter', () => {
-      const client = new Client(VALID_NOTIFIER)
+      const client = new Client({ apiKey: 'API_KEY_YEAH' })
       const payloads = []
-      client.setOptions({ apiKey: 'API_KEY_YEAH' })
-      client.configure()
       client.use(plugin, window)
       client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
 
@@ -191,10 +178,8 @@ describe('plugin: window onerror', () => {
     // }
 
     it('extracts meaning from non-error values as error messages', function (done) {
-      const client = new Client(VALID_NOTIFIER)
+      const client = new Client({ apiKey: 'API_KEY_YEAH' })
       const payloads = []
-      client.setOptions({ apiKey: 'API_KEY_YEAH' })
-      client.configure()
       client.use(plugin, window)
       client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
 
@@ -228,10 +213,8 @@ describe('plugin: window onerror', () => {
         expect(payloads.length).toBe(1)
         done()
       }
-      const client = new Client(VALID_NOTIFIER)
+      const client = new Client({ apiKey: 'API_KEY_YEAH' })
       const payloads = []
-      client.setOptions({ apiKey: 'API_KEY_YEAH' })
-      client.configure()
       client.use(plugin, window)
       client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
 
@@ -250,10 +233,8 @@ describe('plugin: window onerror', () => {
         expect(payloads.length).toBe(0)
         done()
       }
-      const client = new Client(VALID_NOTIFIER)
+      const client = new Client({ apiKey: 'API_KEY_YEAH' })
       const payloads = []
-      client.setOptions({ apiKey: 'API_KEY_YEAH' })
-      client.configure()
       client.use(plugin, window)
       client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
 

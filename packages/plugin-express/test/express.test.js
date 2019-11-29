@@ -2,14 +2,11 @@ const { describe, it, expect } = global
 
 // const express = require('express')
 const Client = require('@bugsnag/core/client')
-const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 const plugin = require('../')
 
 describe('plugin: express', () => {
   it('exports two middleware functions', () => {
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'api_key' })
-    c.configure()
+    const c = new Client({ apiKey: 'api_key' })
     c.use(plugin)
     const middleware = c.getPlugin('express')
     expect(typeof middleware.requestHandler).toBe('function')

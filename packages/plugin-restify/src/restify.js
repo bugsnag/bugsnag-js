@@ -19,7 +19,7 @@ module.exports = {
 
       // Get a client to be scoped to this request. If sessions are enabled, use the
       // startSession() call to get a session client, otherwise, clone the existing client.
-      const requestClient = client.config.autoTrackSessions ? client.startSession() : clone(client)
+      const requestClient = client._config.autoTrackSessions ? client.startSession() : clone(client)
 
       // attach it to the request
       req.bugsnag = requestClient
@@ -33,7 +33,7 @@ module.exports = {
       dom.on('error', (err) => {
         req.bugsnag.notify(createEventFromErr(err, handledState), () => {}, (e, event) => {
           if (e) client._logger.error('Failed to send event to Bugsnag')
-          req.bugsnag.config.onUncaughtException(err, event, client._logger)
+          req.bugsnag._config.onUncaughtException(err, event, client._logger)
         })
         if (!res.headersSent) {
           const body = 'Internal server error'

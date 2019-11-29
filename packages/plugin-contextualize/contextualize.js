@@ -21,7 +21,7 @@ module.exports = {
         })
         client.notify(event, onError, (e, event) => {
           if (e) client._logger.error('Failed to send event to Bugsnag')
-          client.config.onUncaughtException(err, event, client._logger)
+          client._config.onUncaughtException(err, event, client._logger)
         })
       })
       process.nextTick(() => dom.run(fn))

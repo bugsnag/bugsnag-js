@@ -2,7 +2,6 @@
 
 const proxyquire = require('proxyquire').noPreserveCache().noCallThru()
 const Client = require('@bugsnag/core/client')
-const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
 describe('plugin: expo device', () => {
   it('should extract the expected properties from expo/react native (android)', done => {
@@ -31,9 +30,7 @@ describe('plugin: expo device', () => {
       },
       'react-native/package.json': { version: REACT_NATIVE_VERSION }
     })
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'api_key' })
-    c.configure()
+    const c = new Client({ apiKey: 'api_key' })
     const before = (new Date()).toISOString()
     c.delivery(client => ({
       sendEvent: (payload) => {
@@ -84,9 +81,7 @@ describe('plugin: expo device', () => {
       },
       'react-native/package.json': { version: REACT_NATIVE_VERSION }
     })
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'api_key' })
-    c.configure()
+    const c = new Client({ apiKey: 'api_key' })
     const before = (new Date()).toISOString()
     c.delivery(client => ({
       sendEvent: (payload) => {
@@ -157,9 +152,7 @@ describe('plugin: expo device', () => {
       },
       'react-native/package.json': { version: REACT_NATIVE_VERSION }
     })
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'api_key' })
-    c.configure()
+    const c = new Client({ apiKey: 'api_key' })
     const events = []
     c.delivery(client => ({
       sendEvent: (payload) => {

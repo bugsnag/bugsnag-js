@@ -3,7 +3,6 @@ const { describe, it, expect, spyOn } = global
 const plugin = require('../')
 
 const Client = require('@bugsnag/core/client')
-const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
 let listener = null
 const window = {
@@ -18,9 +17,7 @@ const window = {
 describe('plugin: unhandled rejection', () => {
   describe('window.onunhandledrejection function', () => {
     it('captures unhandled promise rejections', done => {
-      const client = new Client(VALID_NOTIFIER)
-      client.setOptions({ apiKey: 'API_KEY_YEAH' })
-      client.configure()
+      const client = new Client({ apiKey: 'API_KEY_YEAH' })
       client.use(plugin, window)
       client.delivery(client => ({
         sendEvent: (payload) => {
@@ -38,9 +35,7 @@ describe('plugin: unhandled rejection', () => {
     })
 
     it('handles bad user input', done => {
-      const client = new Client(VALID_NOTIFIER)
-      client.setOptions({ apiKey: 'API_KEY_YEAH' })
-      client.configure()
+      const client = new Client({ apiKey: 'API_KEY_YEAH' })
       client.use(plugin, window)
       client.delivery(client => ({
         sendEvent: (payload) => {
@@ -103,9 +98,7 @@ describe('plugin: unhandled rejection', () => {
     // })
 
     it('handles errors with non-string stacks', done => {
-      const client = new Client(VALID_NOTIFIER)
-      client.setOptions({ apiKey: 'API_KEY_YEAH' })
-      client.configure()
+      const client = new Client({ apiKey: 'API_KEY_YEAH' })
       client.use(plugin, window)
       client.delivery(client => ({
         sendEvent: (payload) => {
@@ -126,9 +119,7 @@ describe('plugin: unhandled rejection', () => {
     })
 
     it('tolerates event.detail propties which throw', done => {
-      const client = new Client(VALID_NOTIFIER)
-      client.setOptions({ apiKey: 'API_KEY_YEAH' })
-      client.configure()
+      const client = new Client({ apiKey: 'API_KEY_YEAH' })
       client.use(plugin, window)
       client.delivery(client => ({
         sendEvent: (payload) => {
@@ -156,9 +147,7 @@ describe('plugin: unhandled rejection', () => {
         addEventListener: () => {}
       }
       const addEventListenerSpy = spyOn(window, 'addEventListener')
-      const client = new Client(VALID_NOTIFIER)
-      client.setOptions({ apiKey: 'API_KEY_YEAH', autoDetectErrors: false })
-      client.configure()
+      const client = new Client({ apiKey: 'API_KEY_YEAH', autoDetectErrors: false })
       client.use(plugin, window)
       expect(addEventListenerSpy).toHaveBeenCalledTimes(0)
     })
@@ -168,9 +157,7 @@ describe('plugin: unhandled rejection', () => {
         addEventListener: () => {}
       }
       const addEventListenerSpy = spyOn(window, 'addEventListener')
-      const client = new Client(VALID_NOTIFIER)
-      client.setOptions({ apiKey: 'API_KEY_YEAH', autoDetectUnhandledRejections: false })
-      client.configure()
+      const client = new Client({ apiKey: 'API_KEY_YEAH', autoDetectUnhandledRejections: false })
       client.use(plugin, window)
       expect(addEventListenerSpy).toHaveBeenCalledTimes(0)
     })

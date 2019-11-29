@@ -2,15 +2,12 @@ const { describe, it, expect } = global
 
 const Client = require('@bugsnag/core/client')
 const schema = require('@bugsnag/core/config').schema
-const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 const plugin = require('../')
 
 describe('plugin: node uncaught exception handler', () => {
   it('should listen to the process#uncaughtException event', () => {
     const before = process.listeners('uncaughtException').length
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'api_key' })
-    c.configure()
+    const c = new Client({ apiKey: 'api_key' })
     c.use(plugin)
     const after = process.listeners('uncaughtException').length
     expect(after - before).toBe(1)
@@ -19,21 +16,14 @@ describe('plugin: node uncaught exception handler', () => {
 
   it('does not add a process#uncaughtException listener when autoDetectErrors=false', () => {
     const before = process.listeners('uncaughtException').length
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'api_key', autoDetectErrors: false })
-    c.configure()
+    const c = new Client({ apiKey: 'api_key', autoDetectErrors: false })
     c.use(plugin)
     const after = process.listeners('uncaughtException').length
     expect(after).toBe(before)
   })
 
   it('should call the configured onUncaughtException callback', done => {
-    const c = new Client(VALID_NOTIFIER)
-    c.delivery(client => ({
-      sendEvent: (...args) => args[args.length - 1](),
-      sendSession: (...args) => args[args.length - 1]()
-    }))
-    c.setOptions({
+    const c = new Client({
       apiKey: 'api_key',
       onUncaughtException: (err, event) => {
         expect(err.message).toBe('never gonna catch me')
@@ -44,8 +34,7 @@ describe('plugin: node uncaught exception handler', () => {
         plugin.destroy()
         done()
       }
-    })
-    c.configure({
+    }, {
       ...schema,
       onUncaughtException: {
         validate: val => typeof val === 'function',
@@ -53,17 +42,16 @@ describe('plugin: node uncaught exception handler', () => {
         defaultValue: () => {}
       }
     })
+    c.delivery(client => ({
+      sendEvent: (...args) => args[args.length - 1](),
+      sendSession: (...args) => args[args.length - 1]()
+    }))
     c.use(plugin)
     process.listeners('uncaughtException')[1](new Error('never gonna catch me'))
   })
 
   it('should tolerate delivery errors', done => {
-    const c = new Client(VALID_NOTIFIER)
-    c.delivery(client => ({
-      sendEvent: (...args) => args[args.length - 1](new Error('failed')),
-      sendSession: (...args) => args[args.length - 1]()
-    }))
-    c.setOptions({
+    const c = new Client({
       apiKey: 'api_key',
       onUncaughtException: (err, event) => {
         expect(err.message).toBe('never gonna catch me')
@@ -74,8 +62,7 @@ describe('plugin: node uncaught exception handler', () => {
         plugin.destroy()
         done()
       }
-    })
-    c.configure({
+    }, {
       ...schema,
       onUncaughtException: {
         validate: val => typeof val === 'function',
@@ -83,6 +70,10 @@ describe('plugin: node uncaught exception handler', () => {
         defaultValue: () => {}
       }
     })
+    c.delivery(client => ({
+      sendEvent: (...args) => args[args.length - 1](new Error('failed')),
+      sendSession: (...args) => args[args.length - 1]()
+    }))
     c.use(plugin)
     process.listeners('uncaughtException')[1](new Error('never gonna catch me'))
   })

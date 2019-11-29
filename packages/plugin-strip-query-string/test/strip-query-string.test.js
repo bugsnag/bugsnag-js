@@ -3,7 +3,6 @@ const { describe, it, expect } = global
 const plugin = require('../')
 
 const Client = require('@bugsnag/core/client')
-const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
 describe('plugin: strip query string', () => {
   it('should strip querystrings and fragments from urls', () => {
@@ -32,16 +31,14 @@ describe('plugin: strip query string', () => {
   })
 
   it('runs the strip onError callback without errors', () => {
-    const client = new Client(VALID_NOTIFIER)
-    const payloads = []
-    let originalStacktrace
-    client.setOptions({
+    const client = new Client({
       apiKey: 'API_KEY_YEAH',
       onError: event => {
         originalStacktrace = event.stacktrace.map(f => f)
       }
     })
-    client.configure()
+    const payloads = []
+    let originalStacktrace
     client.use(plugin)
 
     client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))

@@ -4,7 +4,6 @@ const plugin = require('../')
 
 const Client = require('@bugsnag/core/client')
 const Event = require('@bugsnag/core/event')
-const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
 describe('plugin: inline script content', () => {
   it('should add an onError callback which captures the HTML content if file=current url', () => {
@@ -29,13 +28,11 @@ Lorem ipsum dolor sit amet.
     }
     const window = { location: { href: 'https://app.bugsnag.com/errors' } }
 
-    const client = new Client(VALID_NOTIFIER)
+    const client = new Client({ apiKey: 'API_KEY_YEAH' })
     const payloads = []
-    client.setOptions({ apiKey: 'API_KEY_YEAH' })
-    client.configure()
     client.use(plugin, document, window)
 
-    expect(client.config.onError.length).toBe(1)
+    expect(client._config.onError.length).toBe(1)
     client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
     client.notify(new Event('BadThing', 'Happens in script tags', [
       { fileName: window.location.href, lineNumber: 10 }
@@ -50,9 +47,7 @@ Lorem ipsum dolor sit amet.
     const prevHandler = () => { done() }
     const document = { documentElement: { outerHTML: '' }, onreadystatechange: prevHandler }
     const window = { location: { href: 'https://app.bugsnag.com/errors' }, document }
-    const client = new Client(VALID_NOTIFIER)
-    client.setOptions({ apiKey: 'API_KEY_YEAH' })
-    client.configure()
+    const client = new Client({ apiKey: 'API_KEY_YEAH' })
     client.use(plugin, document, window)
     // check it installed a new onreadystatechange handler
     expect(document.onreadystatechange === prevHandler).toBe(false)
@@ -67,9 +62,7 @@ Lorem ipsum dolor sit amet.
     function EventTarget () {}
     EventTarget.prototype.addEventListener = addEventListener
     window.EventTarget = EventTarget
-    const client = new Client(VALID_NOTIFIER)
-    client.setOptions({ apiKey: 'API_KEY_YEAH', trackInlineScripts: false })
-    client.configure()
+    const client = new Client({ apiKey: 'API_KEY_YEAH', trackInlineScripts: false })
     client.use(plugin, document, window)
     // check the addEventListener function was not wrapped
     expect(window.EventTarget.prototype.addEventListener).toBe(addEventListener)
@@ -99,13 +92,11 @@ Lorem ipsum dolor sit amet.
     }
     const window = { location: { href: 'https://app.bugsnag.com/errors' } }
 
-    const client = new Client(VALID_NOTIFIER)
+    const client = new Client({ apiKey: 'API_KEY_YEAH' })
     const payloads = []
-    client.setOptions({ apiKey: 'API_KEY_YEAH' })
-    client.configure()
     client.use(plugin, document, window)
 
-    expect(client.config.onError.length).toBe(1)
+    expect(client._config.onError.length).toBe(1)
     client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
     client.notify(new Event('BadThing', 'Happens in script tags', [
       { fileName: window.location.href, lineNumber: 10 }
@@ -138,13 +129,11 @@ Lorem ipsum dolor sit amet.
     }
     const window = { location: { href: 'https://app.bugsnag.com/errors' } }
 
-    const client = new Client(VALID_NOTIFIER)
+    const client = new Client({ apiKey: 'API_KEY_YEAH' })
     const payloads = []
-    client.setOptions({ apiKey: 'API_KEY_YEAH' })
-    client.configure()
     client.use(plugin, document, window)
 
-    expect(client.config.onError.length).toBe(1)
+    expect(client._config.onError.length).toBe(1)
     client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
     client.notify(new Event('BadThing', 'Happens in script tags', [
       { fileName: window.location.href, lineNumber: 7 }
@@ -176,13 +165,11 @@ Lorem ipsum dolor sit amet.
     }
     const window = { location: { href: 'https://app.bugsnag.com/errors' } }
 
-    const client = new Client(VALID_NOTIFIER)
+    const client = new Client({ apiKey: 'API_KEY_YEAH' })
     const payloads = []
-    client.setOptions({ apiKey: 'API_KEY_YEAH' })
-    client.configure()
     client.use(plugin, document, window)
 
-    expect(client.config.onError.length).toBe(1)
+    expect(client._config.onError.length).toBe(1)
     client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
     const spy = spyOn(client._logger, 'error')
     client.notify(new Event('EmptyStacktrace', 'Has nothing in it', []))
@@ -223,9 +210,7 @@ Lorem ipsum dolor sit amet.
     window.addEventListener('click', myfun)
 
     const spy = spyOn(Window.prototype, 'removeEventListener')
-    const client = new Client(VALID_NOTIFIER)
-    client.setOptions({ apiKey: 'API_KEY_YEAH' })
-    client.configure()
+    const client = new Client({ apiKey: 'API_KEY_YEAH' })
     client.use(plugin, document, window)
 
     window.removeEventListener('click', myfun)
@@ -243,13 +228,11 @@ Lorem ipsum dolor sit amet.
     }
     const window = { location: { href: 'https://app.bugsnag.com/errors' } }
 
-    const client = new Client(VALID_NOTIFIER)
+    const client = new Client({ apiKey: 'API_KEY_YEAH' })
     const payloads = []
-    client.setOptions({ apiKey: 'API_KEY_YEAH' })
-    client.configure()
     client.use(plugin, document, window)
 
-    expect(client.config.onError.length).toBe(1)
+    expect(client._config.onError.length).toBe(1)
     client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
     client.notify(new Event('Error', 'oh', [
       { fileName: window.location.href, lineNumber: 1 }

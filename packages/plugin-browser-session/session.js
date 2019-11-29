@@ -13,13 +13,13 @@ const sessionDelegate = {
     const releaseStage = inferReleaseStage(sessionClient)
 
     // exit early if the current releaseStage is not enabled
-    if (sessionClient.config.enabledReleaseStages.length > 0 && !includes(sessionClient.config.enabledReleaseStages, releaseStage)) {
+    if (sessionClient._config.enabledReleaseStages.length > 0 && !includes(sessionClient._config.enabledReleaseStages, releaseStage)) {
       sessionClient._logger.warn('Session not sent due to releaseStage/enabledReleaseStages configuration')
       return sessionClient
     }
 
     sessionClient._delivery.sendSession({
-      notifier: sessionClient.notifier,
+      notifier: sessionClient._notifier,
       device: sessionClient.device,
       app: { ...{ releaseStage }, ...sessionClient.app },
       sessions: [

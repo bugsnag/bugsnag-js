@@ -30,7 +30,7 @@ describe('delivery:XDomainRequest', () => {
       endpoints: { notify: '/echo/' },
       filters: []
     }
-    delivery({ logger: {}, config }, window).sendEvent(payload, (err) => {
+    delivery({ logger: {}, _config: config }, window).sendEvent(payload, (err) => {
       expect(err).toBe(null)
       expect(requests.length).toBe(1)
       expect(requests[0].method).toBe('POST')
@@ -69,7 +69,7 @@ describe('delivery:XDomainRequest', () => {
       endpoints: { notify: '/echo/', sessions: '/sessions/' },
       filters: []
     }
-    delivery({ logger: {}, config }, window).sendSession(payload, (err) => {
+    delivery({ logger: {}, _config: config }, window).sendSession(payload, (err) => {
       expect(err).toBe(null)
       expect(requests.length).toBe(1)
       expect(requests[0].method).toBe('POST')

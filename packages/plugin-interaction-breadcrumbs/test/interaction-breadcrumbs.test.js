@@ -3,13 +3,10 @@ const { describe, it, expect } = global
 const plugin = require('../')
 
 const Client = require('@bugsnag/core/client')
-const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
 describe('plugin: interaction breadcrumbs', () => {
   it('should drop a breadcrumb when an element is clicked', () => {
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
-    c.configure()
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
     const { window, winHandlers, els } = getMockWindow()
     c.use(plugin, window)
     winHandlers.click.forEach(fn => fn.call(window, { target: els[0] }))
@@ -17,9 +14,7 @@ describe('plugin: interaction breadcrumbs', () => {
   })
 
   it('should not be enabled when enabledBreadcrumbTypes=[]', () => {
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: [] })
-    c.configure()
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: [] })
     const { window, winHandlers, els } = getMockWindow()
     c.use(plugin, window)
     winHandlers.click.forEach(fn => fn.call(window, { target: els[0] }))
@@ -27,9 +22,7 @@ describe('plugin: interaction breadcrumbs', () => {
   })
 
   it('should be enabled when enabledBreadcrumbTypes=["user"]', () => {
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: ['user'] })
-    c.configure()
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: ['user'] })
     const { window, winHandlers, els } = getMockWindow()
     c.use(plugin, window)
     winHandlers.click.forEach(fn => fn.call(window, { target: els[0] }))

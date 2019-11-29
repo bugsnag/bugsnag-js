@@ -3,13 +3,10 @@ const { describe, it, expect } = global
 const plugin = require('../navigation-breadcrumbs')
 
 const Client = require('@bugsnag/core/client')
-const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
 describe('plugin: navigation breadcrumbs', () => {
   it('should drop breadcrumb for navigational activity', done => {
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
-    c.configure()
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
 
     const { winHandlers, docHandlers, window } = getMockWindow()
     c.use(plugin, window)
@@ -35,9 +32,7 @@ describe('plugin: navigation breadcrumbs', () => {
   })
 
   it('should not be enabled when enabledBreadcrumbTypes=[]', () => {
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: [] })
-    c.configure()
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: [] })
     const { winHandlers, docHandlers, window } = getMockWindow()
     c.use(plugin, window)
     winHandlers.load.forEach((h) => h.call(window))
@@ -48,9 +43,7 @@ describe('plugin: navigation breadcrumbs', () => {
   })
 
   it('should start a new session if autoTrackSessions=true', (done) => {
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
-    c.configure()
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
     c.sessionDelegate({
       startSession: client => {
         done()
@@ -64,9 +57,7 @@ describe('plugin: navigation breadcrumbs', () => {
   })
 
   it('should not a new session if autoTrackSessions=false', (done) => {
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa', autoTrackSessions: false })
-    c.configure()
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', autoTrackSessions: false })
     c.sessionDelegate({
       startSession: client => {
         expect('shouldn’t get here').toBe(false)
@@ -82,9 +73,7 @@ describe('plugin: navigation breadcrumbs', () => {
   })
 
   it('should be enabled when enabledReleaseStages=["navigation"]', () => {
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledReleaseStages: ['navigation'] })
-    c.configure()
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledReleaseStages: ['navigation'] })
     const { winHandlers, docHandlers, window } = getMockWindow()
     c.use(plugin, window)
     winHandlers.load.forEach((h) => h.call(window))

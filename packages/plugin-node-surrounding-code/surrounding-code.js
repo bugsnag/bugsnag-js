@@ -8,7 +8,7 @@ const byline = require('byline')
 
 module.exports = {
   init: client => {
-    if (!client.config.sendCode) return
+    if (!client._config.sendCode) return
 
     const loadSurroundingCode = (stackframe, cache) => new Promise((resolve, reject) => {
       try {
@@ -28,7 +28,7 @@ module.exports = {
       }
     })
 
-    client.config.onError.push(event => new Promise((resolve, reject) => {
+    client._config.onError.push(event => new Promise((resolve, reject) => {
       const cache = Object.create(null)
       pMapSeries(event.stacktrace.map(stackframe => () => loadSurroundingCode(stackframe, cache)))
         .then(resolve)

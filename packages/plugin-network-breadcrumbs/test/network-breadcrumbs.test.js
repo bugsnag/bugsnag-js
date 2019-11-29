@@ -3,7 +3,6 @@ const { describe, it, expect, jasmine, afterEach } = global
 const plugin = require('../')
 
 const Client = require('@bugsnag/core/client')
-const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
 // mock XMLHttpRequest
 function XMLHttpRequest () {
@@ -46,9 +45,7 @@ describe('plugin: network breadcrumbs', () => {
   it('should leave a breadcrumb when an XMLHTTPRequest resolves', () => {
     const window = { XMLHttpRequest }
 
-    const client = new Client(VALID_NOTIFIER)
-    client.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
-    client.configure()
+    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
     client.use(plugin, () => [], window)
 
     const request = new window.XMLHttpRequest()
@@ -70,9 +67,7 @@ describe('plugin: network breadcrumbs', () => {
   it('should not leave duplicate breadcrumbs if open() is called twice', () => {
     const window = { XMLHttpRequest }
 
-    const client = new Client(VALID_NOTIFIER)
-    client.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
-    client.configure()
+    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
     client.use(plugin, undefined, window)
 
     const request = new window.XMLHttpRequest()
@@ -85,9 +80,7 @@ describe('plugin: network breadcrumbs', () => {
   it('should leave a breadcrumb when an XMLHTTPRequest has a failed response', () => {
     const window = { XMLHttpRequest }
 
-    const client = new Client(VALID_NOTIFIER)
-    client.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
-    client.configure()
+    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
     client.use(plugin, () => [], window)
 
     const request = new window.XMLHttpRequest()
@@ -108,9 +101,7 @@ describe('plugin: network breadcrumbs', () => {
   it('should leave a breadcrumb when an XMLHTTPRequest has a network error', () => {
     const window = { XMLHttpRequest }
 
-    const client = new Client(VALID_NOTIFIER)
-    client.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
-    client.configure()
+    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
     client.use(plugin, () => [], window)
 
     const request = new window.XMLHttpRequest()
@@ -131,13 +122,11 @@ describe('plugin: network breadcrumbs', () => {
   it('should not leave a breadcrumb for request to bugsnag notify endpoint', () => {
     const window = { XMLHttpRequest }
 
-    const client = new Client(VALID_NOTIFIER)
-    client.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
-    client.configure()
+    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
     client.use(plugin, undefined, window)
 
     const request = new window.XMLHttpRequest()
-    request.open('GET', client.config.endpoints.notify)
+    request.open('GET', client._config.endpoints.notify)
     request.send(false, 200)
 
     expect(client.breadcrumbs.length).toBe(0)
@@ -146,13 +135,11 @@ describe('plugin: network breadcrumbs', () => {
   it('should not leave a breadcrumb for session tracking requests', () => {
     const window = { XMLHttpRequest }
 
-    const client = new Client(VALID_NOTIFIER)
-    client.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
-    client.configure()
+    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
     client.use(plugin, undefined, window)
 
     const request = new window.XMLHttpRequest()
-    request.open('GET', client.config.endpoints.sessions)
+    request.open('GET', client._config.endpoints.sessions)
     request.send(false, 200)
     expect(client.breadcrumbs.length).toBe(0)
   })
@@ -160,9 +147,7 @@ describe('plugin: network breadcrumbs', () => {
   it('should leave a breadcrumb when a fetch() resolves', (done) => {
     const window = { XMLHttpRequest, fetch }
 
-    const client = new Client(VALID_NOTIFIER)
-    client.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
-    client.configure()
+    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
     client.use(plugin, () => [], window)
 
     window.fetch('/', {}, false, 200).then(() => {
@@ -182,9 +167,7 @@ describe('plugin: network breadcrumbs', () => {
   it('should leave a breadcrumb when a fetch() has a failed response', (done) => {
     const window = { XMLHttpRequest, fetch }
 
-    const client = new Client(VALID_NOTIFIER)
-    client.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
-    client.configure()
+    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
     client.use(plugin, () => [], window)
 
     window.fetch('/does-not-exist', {}, false, 404).then(() => {
@@ -204,9 +187,7 @@ describe('plugin: network breadcrumbs', () => {
   it('should leave a breadcrumb when a fetch() has a network error', (done) => {
     const window = { XMLHttpRequest, fetch }
 
-    const client = new Client(VALID_NOTIFIER)
-    client.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
-    client.configure()
+    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
     client.use(plugin, () => [], window)
 
     window.fetch('https://another-domain.xyz/foo/bar', {}, true).catch(() => {
@@ -225,9 +206,7 @@ describe('plugin: network breadcrumbs', () => {
   it('should not be enabled when enabledBreadcrumbTypes=[]', () => {
     const window = { XMLHttpRequest }
 
-    const client = new Client(VALID_NOTIFIER)
-    client.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: [] })
-    client.configure()
+    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: [] })
     client.use(plugin, () => [], window)
 
     const request = new window.XMLHttpRequest()
@@ -240,9 +219,7 @@ describe('plugin: network breadcrumbs', () => {
   it('should be enabled when enabledBreadcrumbTypes=["request"]', () => {
     const window = { XMLHttpRequest }
 
-    const client = new Client(VALID_NOTIFIER)
-    client.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: ['request'] })
-    client.configure()
+    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: ['request'] })
     client.use(plugin, () => [], window)
 
     const request = new window.XMLHttpRequest()

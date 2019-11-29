@@ -3,9 +3,9 @@
  */
 module.exports = {
   init: (client) => {
-    if (client.config.collectUserIp) return
+    if (client._config.collectUserIp) return
 
-    client.config.onError.push(event => {
+    client._config.onError.push(event => {
       // If user.id is explicitly undefined, it will be missing from the payload. It needs
       // removing so that the following line replaces it
       if (event.user && typeof event.user.id === 'undefined') delete event.user.id

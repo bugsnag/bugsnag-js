@@ -2,7 +2,6 @@
 
 const plugin = require('../')
 const Client = require('@bugsnag/core/client')
-const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
 // use the promise polyfill that RN uses, otherwise the unhandled rejections in
 // this test go to node's process#unhandledRejection event
@@ -10,9 +9,7 @@ const RnPromise = require('promise/setimmediate')
 
 describe('plugin: react native rejection handler', () => {
   it('should hook in to the promise rejection tracker', done => {
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'api_key' })
-    c.configure()
+    const c = new Client({ apiKey: 'api_key' })
     c.delivery(client => ({
       sendEvent: (payload) => {
         const r = JSON.parse(JSON.stringify(payload))
@@ -35,9 +32,7 @@ describe('plugin: react native rejection handler', () => {
   })
 
   it('should be disabled when autoDetectErrors=false', done => {
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'api_key', autoDetectErrors: false })
-    c.configure()
+    const c = new Client({ apiKey: 'api_key', autoDetectErrors: false })
     c.delivery(client => ({
       sendReport: (report) => {
         expect(report).not.toBeTruthy()
@@ -57,9 +52,7 @@ describe('plugin: react native rejection handler', () => {
   })
 
   it('should be disbaled when autoDetectUnhandledRejections=false', done => {
-    const c = new Client(VALID_NOTIFIER)
-    c.setOptions({ apiKey: 'api_key', autoDetectUnhandledRejections: false })
-    c.configure()
+    const c = new Client({ apiKey: 'api_key', autoDetectUnhandledRejections: false })
     c.delivery(client => ({
       sendEvent: (payload) => {
         expect(payload).not.toBeTruthy()
