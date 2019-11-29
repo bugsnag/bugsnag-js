@@ -21,8 +21,8 @@
         }
       }
       function handle () {
-        bugsnagClient.notify(new Error('sensitive?'), {
-          user: { id: '21', password: '123456', secret: 'don’t tell anyone' }
+        bugsnagClient.notify(new Error('sensitive?'), function (event) {
+          event.user = { id: '21', password: '123456', secret: 'don’t tell anyone' }
         })
       }
 

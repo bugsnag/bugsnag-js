@@ -14,10 +14,8 @@
   </head>
   <body>
     <script>
-      bugsnagClient.notify(new Error('on error does work'), {
-        onError: function (event) {
-          event.updateMetaData('on_error', 'notify_opts', 'works')
-        }
+      bugsnagClient.notify(new Error('on error does work'), function (event) {
+        event.updateMetaData('on_error', 'notify_opts', 'works')
       })
     </script>
   </body>

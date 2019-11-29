@@ -20,7 +20,7 @@ module.exports = {
         severityReason: { type: 'unhandledException' }
       })
       event.attemptImmediateDelivery = false
-      client.notify(event, {}, () => {
+      client.notify(event, () => {}, () => {
         if (typeof prev === 'function') prev(error, isFatal)
       })
     })

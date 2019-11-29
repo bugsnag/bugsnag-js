@@ -19,7 +19,7 @@ module.exports = {
         const event = new BugsnagEvent(error.name, error.message, BugsnagEvent.getStacktrace(error), handledState, error)
         if (info && info.componentStack) info.componentStack = formatComponentStack(info.componentStack)
         event.updateMetaData('react', info)
-        client.notify(event, { onError })
+        client.notify(event, onError)
         this.setState({ error, info })
       }
 

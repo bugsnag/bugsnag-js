@@ -14,20 +14,9 @@ export default class AppFeature extends Component {
   }
 
   callbackDevice = () => {
-    bugsnagClient.notify(new Error('DeviceCallbackError'), {
-      onError: event => {
-        event.device.model = 'brandNewPhone',
-        event.device.newThing = 'another new thing'
-      }
-    })
-  }
-
-  optsDevice = () => {
-    bugsnagClient.notify(new Error('DeviceOptsError'), {
-      device: {
-        id: "assuming direct control",
-        newThing: "not original"
-      }
+    bugsnagClient.notify(new Error('DeviceCallbackError'), event => {
+      event.device.model = 'brandNewPhone',
+      event.device.newThing = 'another new thing'
     })
   }
 
@@ -45,10 +34,6 @@ export default class AppFeature extends Component {
         <Button accessibilityLabel="deviceCallbackButton"
           title="callbackDevice"
           onPress={this.callbackDevice}
-        />
-        <Button accessibilityLabel="deviceOptsButton"
-          title="optsDevice"
-          onPress={this.optsDevice}
         />
       </View>
     )

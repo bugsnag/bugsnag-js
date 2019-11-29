@@ -77,15 +77,14 @@ function sendHandled () {
   } catch (e) {
     console.log('a handled error with metadata has been reported to your Bugsnag dashboard')
 
-    bugsnagClient.notify(e, {
-      context: 'a handled ReferenceError with metadata',
+    bugsnagClient.notify(e, event => {
+      event.context = 'a handled ReferenceError with metadata'
       // Note that metadata can be declared globally, in the notification (as below) or in an onError.
       // The below metadata will be supplemented (not replaced) by the metadata
       // in the onError method. See our docs if you prefer to overwrite/remove metadata.
-      metaData: {
-        details: {
-          info: 'Any important details specific to the context of this particular error/function.'}
-      }
+      event.addMetaData('details', {
+        info: 'Any important details specific to the context of this particular error/function.'
+      })
     })
   }
 }

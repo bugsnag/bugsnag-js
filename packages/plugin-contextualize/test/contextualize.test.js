@@ -56,13 +56,13 @@ describe('plugin: contextualize', () => {
       load(8, (err) => {
         if (err) throw err
       })
-    }, {
-      user: {
+    }, (event) => {
+      event.user = {
         id: '1a2c3cd4',
         name: 'Ben Gourley',
         email: 'ben.gourley@bugsnag.com'
-      },
-      severity: 'warning'
+      }
+      event.severity = 'warning'
     })
   })
 

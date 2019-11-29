@@ -75,10 +75,8 @@ function onError () {
   console.log('calling notify() with an onError callback…')
   // onError can be used to modify an event or prevent it from being sent at all
   // this example pseudo-randomly filters out approximately half of the events
-  bugsnagClient.notify(new Error('sometimes will send'), {
-    onError: (event) => {
-      const n = Math.random()
-      if (n <= 0.5) return false
-    }
+  bugsnagClient.notify(new Error('sometimes will send'), (event) => {
+    const n = Math.random()
+    if (n <= 0.5) return false
   })
 }

@@ -14,10 +14,8 @@
   </head>
   <body>
     <script>
-      bugsnagClient.notify(new Error('on error does work'), {
-        onError: function (event) {
-          return false
-        }
+      bugsnagClient.notify(new Error('on error does work'), function (event) {
+        return false
       })
     </script>
   </body>

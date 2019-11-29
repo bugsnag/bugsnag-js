@@ -19,11 +19,3 @@ Scenario: Meta data can be set via a callback
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "MetaDataCallbackError"
   And the event "metaData.extra.reason" equals "metaDataCallbackName"
-
-Scenario: Meta data can be set via handled options
-  Given the element "metaDataOptsButton" is present
-  When I click the element "metaDataOptsButton"
-  Then I wait to receive a request
-  And the exception "errorClass" equals "Error"
-  And the exception "message" equals "MetaDataOptsError"
-  And the event "metaData.extra.reason" equals "metaDataOptsName"

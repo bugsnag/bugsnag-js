@@ -24,7 +24,7 @@ declare class Client {
   public sessionDelegate(sessionDelegate: common.SessionDelegate): Client;
   public notify(
     error: common.NotifiableError,
-    opts?: common.NotifyOpts,
+    onError?: common.OnError,
     cb?: (err: any, event: Event) => void,
   ): void;
   public leaveBreadcrumb(message: string, metadata?: { [key: string]: common.BreadcrumbMetadataValue }, type?: string): Client;

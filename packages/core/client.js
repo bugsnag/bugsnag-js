@@ -148,39 +148,29 @@ class BugsnagClient {
     return this
   }
 
-  notify (error, opts = {}, cb = () => {}) {
+  notify (error, onError, cb = () => {}) {
     if (!this._configured) throw new Error('client not configured')
 
     // releaseStage can be set via config.releaseStage or client.app.releaseStage
     const releaseStage = inferReleaseStage(this)
 
     // ensure we have an error (or a reasonable object representation of an error)
-    const { err, errorFramesToSkip, _opts } = normaliseError(error, opts, this._logger)
-    if (_opts) opts = _opts
-
-    // ensure opts is an object
-    if (typeof opts !== 'object' || opts === null) opts = {}
+    const { err, errorFramesToSkip } = normaliseError(error, this._logger)
 
     // create an event from the error, if it isn't one already
     const event = BugsnagEvent.ensureEvent(err, errorFramesToSkip, 2)
 
     event.app = { ...{ releaseStage }, ...event.app, ...this.app }
-    event.context = event.context || opts.context || this.context || undefined
-    event.device = { ...event.device, ...this.device, ...opts.device }
-    event.request = { ...event.request, ...this.request, ...opts.request }
-    event.user = { ...event.user, ...this.user, ...opts.user }
-    event.metaData = { ...event.metaData, ...this.metaData, ...opts.metaData }
+    event.context = event.context || this.context || undefined
+    event.device = { ...event.device, ...this.device }
+    event.request = { ...event.request, ...this.request }
+    event.user = { ...event.user, ...this.user }
+    event.metaData = { ...event.metaData, ...this.metaData }
     event.breadcrumbs = this.breadcrumbs.slice(0)
 
     if (this._session) {
       this._session.trackError(event)
       event.session = this._session
-    }
-
-    // set severity if supplied
-    if (opts.severity !== undefined) {
-      event.severity = opts.severity
-      event._handledState.severityReason = { type: 'userSpecifiedSeverity' }
     }
 
     // exit early if events should not be sent on the current releaseStage
@@ -191,14 +181,14 @@ class BugsnagClient {
 
     const originalSeverity = event.severity
 
-    const onError = [].concat(opts.onError).concat(this.config.onError)
     const onCallbackError = err => {
       // errors in callbacks are tolerated but we want to log them out
       this._logger.error('Error occurred in onError callback, continuing anyway…')
       this._logger.error(err)
     }
 
-    runCallbacks(onError, event, onCallbackError, (err, shouldSend) => {
+    const callbacks = [].concat(onError).concat(this.config.onError)
+    runCallbacks(callbacks, event, onCallbackError, (err, shouldSend) => {
       if (err) onCallbackError(err)
 
       if (!shouldSend) {
@@ -226,7 +216,7 @@ class BugsnagClient {
   }
 }
 
-const normaliseError = (error, opts, logger) => {
+const normaliseError = (error, logger) => {
   const synthesizedErrorFramesToSkip = 3
 
   const createAndLogUsageError = reason => {
@@ -237,18 +227,10 @@ const normaliseError = (error, opts, logger) => {
 
   let err
   let errorFramesToSkip = 0
-  let _opts
   switch (typeof error) {
     case 'string':
-      if (typeof opts === 'string') {
-        // ≤v3 used to have a notify('ErrorName', 'Error message') interface
-        // event usage/deprecation errors if this function is called like that
-        err = createAndLogUsageError('string/string')
-        _opts = { metaData: { notifier: { notifyArgs: [error, opts] } } }
-      } else {
-        err = new Error(String(error))
-        errorFramesToSkip = synthesizedErrorFramesToSkip
-      }
+      err = new Error(String(error))
+      errorFramesToSkip = synthesizedErrorFramesToSkip
       break
     case 'number':
     case 'boolean':
@@ -271,7 +253,7 @@ const normaliseError = (error, opts, logger) => {
     default:
       err = createAndLogUsageError('nothing')
   }
-  return { err, errorFramesToSkip, _opts }
+  return { err, errorFramesToSkip }
 }
 
 const hasNecessaryFields = error =>
@@ -282,7 +264,7 @@ const generateConfigErrorMessage = errors =>
   `Bugsnag configuration error\n${map(errors, (err) => `"${err.key}" ${err.message} \n    got ${stringify(err.value)}`).join('\n\n')}`
 
 const generateNotifyUsageMessage = actual =>
-  `notify() expected error/opts parameters, got ${actual}`
+  `notify(err) expected an error, got ${actual}`
 
 const stringify = val => typeof val === 'object' ? JSON.stringify(val) : String(val)
 

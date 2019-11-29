@@ -27,8 +27,8 @@ export class AppComponent {
       throw("Bad thing!");
     } catch (e) {
       // below modifies the handled error, and then sends it to your dashboard.
-      bugsnagClient.notify(e, {
-          context: 'Don\'t worry - I handled it!'
+      bugsnagClient.notify(e, function (event) {
+        event.context = 'Don\'t worry - I handled it!'
       });
     }
     // resets the button
