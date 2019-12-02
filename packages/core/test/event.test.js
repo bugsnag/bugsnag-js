@@ -158,7 +158,7 @@ describe('@bugsnag/core/event', () => {
     })
   })
 
-  describe('event.clearMetadata()', () => {
+  describe('event.getMetadata()', () => {
     it('retrieves things', () => {
       const Event = require('../event')
       const r = new Event('Err', 'bad', [])
