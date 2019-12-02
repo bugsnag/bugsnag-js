@@ -40,22 +40,6 @@ export interface ConfigSchema {
   [key: string]: ConfigSchemaEntry;
 }
 
-export interface Delivery {
-  name: string;
-  sendEvent: (
-    logger: Logger,
-    config: any,
-    event: EventPayload,
-    cb?: (e: Error | null, resText: string) => void,
-  ) => void;
-  sendSession: (
-    logger: Logger,
-    config: any,
-    event: SessionPayload,
-    cb?: (e: Error | null, resText: string) => void,
-  ) => void;
-}
-
 export interface Logger {
   debug: (...args: any[]) => void;
   info: (...args: any[]) => void;

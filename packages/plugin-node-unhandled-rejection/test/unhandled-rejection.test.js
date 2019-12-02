@@ -50,7 +50,7 @@ describe('plugin: node unhandled rejection handler', () => {
         defaultValue: () => {}
       }
     })
-    c.delivery(client => ({
+    c._setDelivery(client => ({
       sendEvent: (...args) => args[args.length - 1](),
       sendSession: (...args) => args[args.length - 1]()
     }))
@@ -78,7 +78,7 @@ describe('plugin: node unhandled rejection handler', () => {
         defaultValue: () => {}
       }
     })
-    c.delivery(client => ({
+    c._setDelivery(client => ({
       sendEvent: (...args) => args[args.length - 1](new Error('floop')),
       sendSession: (...args) => args[args.length - 1]()
     }))

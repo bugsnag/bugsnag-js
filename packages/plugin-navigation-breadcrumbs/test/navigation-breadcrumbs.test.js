@@ -44,11 +44,11 @@ describe('plugin: navigation breadcrumbs', () => {
 
   it('should start a new session if autoTrackSessions=true', (done) => {
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
-    c.sessionDelegate({
+    c._sessionDelegate = {
       startSession: client => {
         done()
       }
-    })
+    }
     const { winHandlers, docHandlers, window } = getMockWindow()
     c.use(plugin, window)
     winHandlers.load.forEach((h) => h.call(window))
@@ -58,12 +58,12 @@ describe('plugin: navigation breadcrumbs', () => {
 
   it('should not a new session if autoTrackSessions=false', (done) => {
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', autoTrackSessions: false })
-    c.sessionDelegate({
+    c._sessionDelegate = {
       startSession: client => {
         expect('shouldn’t get here').toBe(false)
         done()
       }
-    })
+    }
     const { winHandlers, docHandlers, window } = getMockWindow()
     c.use(plugin, window)
     winHandlers.load.forEach((h) => h.call(window))

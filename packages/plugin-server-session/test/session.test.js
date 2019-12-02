@@ -20,7 +20,7 @@ describe('plugin: server sessions', () => {
       './tracker': TrackerMock
     })
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
-    c.delivery(client => ({
+    c._setDelivery(client => ({
       sendEvent: () => {},
       sendSession: (session, cb = () => {}) => {
         expect(session.sessionCounts.length).toBe(1)
@@ -63,7 +63,7 @@ describe('plugin: server sessions', () => {
       releaseStage: 'qa',
       enabledReleaseStages: ['production']
     })
-    c.delivery(client => ({
+    c._setDelivery(client => ({
       sendEvent: () => {},
       sendSession: (session, cb = () => {}) => {
         // no session should be sent
@@ -100,7 +100,7 @@ describe('plugin: server sessions', () => {
     // this is normally set by a plugin
     c.device = { hostname: 'test-machine.local', runtimeVersions: { node: '0.0.1' } }
 
-    c.delivery(client => ({
+    c._setDelivery(client => ({
       sendEvent: () => {},
       sendSession: (session, cb = () => {}) => {
         expect(session.sessionCounts.length).toBe(1)

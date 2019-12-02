@@ -12,7 +12,7 @@ describe('plugin: request', () => {
     const payloads = []
     client.use(plugin, window)
 
-    client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
+    client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
     client.notify(new Error('noooo'))
 
     expect(payloads.length).toEqual(1)
@@ -26,7 +26,7 @@ describe('plugin: request', () => {
 
     client.request = { url: 'foobar' }
 
-    client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
+    client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
     client.notify(new Error('noooo'))
 
     expect(payloads.length).toEqual(1)

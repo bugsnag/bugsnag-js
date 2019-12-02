@@ -9,7 +9,7 @@ describe('plugin: sessions', () => {
   it('notifies the session endpoint', (done) => {
     const c = new Client({ apiKey: 'API_KEY' }, undefined, VALID_NOTIFIER)
     c.use(plugin)
-    c.delivery(client => ({
+    c._setDelivery(client => ({
       sendSession: (session, cb) => {
         expect(typeof session).toBe('object')
         expect(session.notifier).toEqual(VALID_NOTIFIER)
@@ -27,7 +27,7 @@ describe('plugin: sessions', () => {
     const c = new Client({ apiKey: 'API_KEY' })
     let i = 0
     c.use(plugin)
-    c.delivery(client => ({
+    c._setDelivery(client => ({
       sendSession: () => {},
       sendEvent: (payload, cb) => {
         if (++i < 10) return
@@ -54,7 +54,7 @@ describe('plugin: sessions', () => {
   it('correctly infers releaseStage', (done) => {
     const c = new Client({ apiKey: 'API_KEY', releaseStage: 'foo' })
     c.use(plugin)
-    c.delivery(client => ({
+    c._setDelivery(client => ({
       sendSession: (session, cb) => {
         expect(typeof session).toBe('object')
         expect(session.app.releaseStage).toBe('foo')
@@ -67,7 +67,7 @@ describe('plugin: sessions', () => {
   it('doesn’t send when releaseStage is not in enabledReleaseStages', (done) => {
     const c = new Client({ apiKey: 'API_KEY', releaseStage: 'foo', enabledReleaseStages: ['baz'] })
     c.use(plugin)
-    c.delivery(client => ({
+    c._setDelivery(client => ({
       sendSession: (session, cb) => {
         expect(true).toBe(false)
       }

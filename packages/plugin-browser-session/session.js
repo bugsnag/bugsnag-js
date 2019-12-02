@@ -2,7 +2,7 @@ const { includes } = require('@bugsnag/core/lib/es-utils')
 const inferReleaseStage = require('@bugsnag/core/lib/infer-release-stage')
 
 module.exports = {
-  init: client => client.sessionDelegate(sessionDelegate)
+  init: client => { client._sessionDelegate = sessionDelegate }
 }
 
 const sessionDelegate = {
