@@ -1,53 +1,48 @@
-module.exports = {
-  add (section, ...args) {
-    if (!section) return this
-    let updates
+const add = (state, section, ...args) => {
+  if (!section) return
+  let updates
 
-    // addMetadata("section", null) -> clears section
-    if (args[0] === null) return this.clearMetadata(section)
+  // addMetadata("section", null) -> clears section
+  if (args[0] === null) return clear(state, section)
 
-    // normalise the two supported input types into object form
-    if (typeof args[0] === 'object') updates = args[0]
-    if (typeof args[0] === 'string') updates = { [args[0]]: args[1] }
+  // normalise the two supported input types into object form
+  if (typeof args[0] === 'object') updates = args[0]
+  if (typeof args[0] === 'string') updates = { [args[0]]: args[1] }
 
-    // exit if we don't have an updates object at this point
-    if (!updates) return this
+  // exit if we don't have an updates object at this point
+  if (!updates) return
 
-    // ensure a section with this name exists
-    if (!this._metadata[section]) this._metadata[section] = {}
+  // ensure a section with this name exists
+  if (!state[section]) state[section] = {}
 
-    // merge the updates with the existing section
-    this._metadata[section] = { ...this._metadata[section], ...updates }
+  // merge the updates with the existing section
+  state[section] = { ...state[section], ...updates }
+}
 
-    return this
-  },
+const get = (state, section, key) => {
+  if (typeof section !== 'string') return undefined
+  if (!key) {
+    return state[section]
+  }
+  if (state[section]) {
+    return state[section][key]
+  }
+  return undefined
+}
 
-  get (section, key) {
-    if (typeof section !== 'string') return undefined
-    if (!key) {
-      return this._metadata[section]
-    }
-    if (this._metadata[section]) {
-      return this._metadata[section][key]
-    }
-    return undefined
-  },
+const clear = (state, section, key) => {
+  if (typeof section !== 'string') return
 
-  clear (section, key) {
-    if (typeof section !== 'string') return this
+  // clear an entire section
+  if (!key) {
+    delete state[section]
+    return
+  }
 
-    // clear an entire section
-    if (!key) {
-      delete this._metadata[section]
-      return this
-    }
-
-    // clear a single value from a section
-    if (this._metadata[section]) {
-      delete this._metadata[section][key]
-      return this
-    }
-
-    return this
+  // clear a single value from a section
+  if (state[section]) {
+    delete state[section][key]
   }
 }
+
+module.exports = { add, get, clear }

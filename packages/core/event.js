@@ -47,15 +47,15 @@ class BugsnagEvent {
   }
 
   addMetadata (section, ...args) {
-    return metadataDelegate.add.call(this, section, ...args)
+    return metadataDelegate.add(this._metadata, section, ...args)
   }
 
   getMetadata (section, key) {
-    return metadataDelegate.get.call(this, section, key)
+    return metadataDelegate.get(this._metadata, section, key)
   }
 
   clearMetadata (section, key) {
-    return metadataDelegate.clear.call(this, section, key)
+    return metadataDelegate.clear(this._metadata, section, key)
   }
 
   getUser () {
