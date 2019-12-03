@@ -24,6 +24,7 @@ steps:
           push:
             - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base-${BRANCH_NAME}
             - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base
+    artifact_paths: lerna-debug.log
 
   - wait
 
