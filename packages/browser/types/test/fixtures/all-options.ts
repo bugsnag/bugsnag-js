@@ -13,7 +13,7 @@ bugsnag({
   maxBreadcrumbs: 20,
   enabledBreadcrumbTypes: ['manual','log','request'],
   user: null,
-  metaData: null,
+  metaData: {},
   logger: undefined,
   filters: ["foo",/bar/],
   collectUserIp: true,

@@ -33,7 +33,7 @@ module.exports = {
       if (inForeground) {
         event.app.durationInForeground = now - lastEnteredForeground
       }
-      event.updateMetaData('app', { nativeBundleVersion, nativeVersionCode })
+      event.addMetadata('app', { nativeBundleVersion, nativeVersionCode })
     })
 
     if (!client.app.version && Constants.manifest.version) {

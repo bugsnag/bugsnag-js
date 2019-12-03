@@ -7,7 +7,12 @@ declare class Client {
   public app: object;
   public device: object;
   public context: string | void;
-  public metaData: object;
+
+  // metadata
+  public addMetadata(section: string, values: { [key: string]: any }): void;
+  public addMetadata(section: string, key: string, value: any): void;
+  public getMetadata(section: string, key?: string): any;
+  public clearMetadata(section: string, key?: string): void;
 
   public BugsnagEvent: typeof Event;
   public BugsnagBreadcrumb: typeof Breadcrumb;

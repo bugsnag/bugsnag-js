@@ -66,7 +66,7 @@ module.exports = {
       const currentScript = getCurrentScript()
       if (currentScript) {
         const content = currentScript.innerHTML
-        event.updateMetaData(
+        event.addMetadata(
           'script',
           'content',
           content.length <= MAX_SCRIPT_LENGTH ? content : content.substr(0, MAX_SCRIPT_LENGTH)

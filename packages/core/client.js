@@ -6,6 +6,7 @@ const { map, includes } = require('./lib/es-utils')
 const inferReleaseStage = require('./lib/infer-release-stage')
 const isError = require('./lib/iserror')
 const runCallbacks = require('./lib/callback-runner')
+const metadataDelegate = require('./lib/metadata-delegate')
 
 const LOG_USAGE_ERR_PREFIX = 'Usage error.'
 const REPORT_USAGE_ERR_PREFIX = 'Bugsnag usage error.'
@@ -29,13 +30,14 @@ class BugsnagClient {
 
     this._session = null
 
+    this._metadata = {}
+
     this.breadcrumbs = []
 
     // setable props
     this.app = {}
     this.context = undefined
     this.device = undefined
-    this.metaData = undefined
     this.request = undefined
     this._user = {}
 
@@ -54,6 +56,18 @@ class BugsnagClient {
     }
   }
 
+  addMetadata (section, ...args) {
+    return metadataDelegate.add(this._metadata, section, ...args)
+  }
+
+  getMetadata (section, key) {
+    return metadataDelegate.get(this._metadata, section, key)
+  }
+
+  clearMetadata (section, key) {
+    return metadataDelegate.clear(this._metadata, section, key)
+  }
+
   _extractConfiguration (partialSchema = this._schema) {
     const conf = config.mergeDefaults(this._opts, partialSchema)
     const validity = config.validate(conf, partialSchema)
@@ -64,7 +78,7 @@ class BugsnagClient {
     if (typeof conf.onError === 'function') conf.onError = [conf.onError]
     if (conf.appVersion) this.app.version = conf.appVersion
     if (conf.appType) this.app.type = conf.appType
-    if (conf.metaData) this.metaData = conf.metaData
+    if (conf.metadata) this._metadata = conf.metadata
     if (conf.user) this._user = conf.user
     if (conf.logger) this.logger(conf.logger)
 
@@ -157,8 +171,8 @@ class BugsnagClient {
     event.context = event.context || this.context || undefined
     event.device = { ...event.device, ...this.device }
     event.request = { ...event.request, ...this.request }
+    event._metadata = { ...event._metadata, ...this._metadata }
     event._user = { ...event._user, ...this._user }
-    event.metaData = { ...event.metaData, ...this.metaData }
     event.breadcrumbs = this.breadcrumbs.slice(0)
 
     if (this._session) {

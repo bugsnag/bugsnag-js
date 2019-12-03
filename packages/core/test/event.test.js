@@ -50,85 +50,85 @@ describe('@bugsnag/core/event', () => {
     })
   })
 
-  describe('updateMetaData()', () => {
+  describe('addMetadata()', () => {
     it('updates a whole new section', () => {
       const Event = require('../event')
       const r = new Event('Err', 'bad', [])
-      r.updateMetaData('specific detail', { extra: 'stuff' })
-      expect(r.metaData['specific detail']).toEqual({ extra: 'stuff' })
+      r.addMetadata('specific detail', { extra: 'stuff' })
+      expect(r._metadata['specific detail']).toEqual({ extra: 'stuff' })
     })
 
     it('merges an object with an existing section', () => {
       const Event = require('../event')
       const r = new Event('Err', 'bad', [])
-      r.updateMetaData('specific detail', { extra: 'stuff' })
-      expect(r.metaData['specific detail']).toEqual({ extra: 'stuff' })
-      r.updateMetaData('specific detail', { detail: 500 })
-      expect(r.metaData['specific detail']).toEqual({ extra: 'stuff', detail: 500 })
+      r.addMetadata('specific detail', { extra: 'stuff' })
+      expect(r._metadata['specific detail']).toEqual({ extra: 'stuff' })
+      r.addMetadata('specific detail', { detail: 500 })
+      expect(r._metadata['specific detail']).toEqual({ extra: 'stuff', detail: 500 })
     })
 
     it('adds a single property to an existing section', () => {
       const Event = require('../event')
       const r = new Event('Err', 'bad', [])
-      r.updateMetaData('specific detail', { extra: 'stuff' })
-      expect(r.metaData['specific detail']).toEqual({ extra: 'stuff' })
-      r.updateMetaData('specific detail', 'more', 'things')
-      expect(r.metaData['specific detail']).toEqual({ extra: 'stuff', more: 'things' })
+      r.addMetadata('specific detail', { extra: 'stuff' })
+      expect(r._metadata['specific detail']).toEqual({ extra: 'stuff' })
+      r.addMetadata('specific detail', 'more', 'things')
+      expect(r._metadata['specific detail']).toEqual({ extra: 'stuff', more: 'things' })
     })
 
     it('creates a new section when updating a single property that doesn’t exist yet', () => {
       const Event = require('../event')
       const r = new Event('Err', 'bad', [])
-      r.updateMetaData('metaaaaa', 'flip', 'flop')
-      expect(r.metaData.metaaaaa).toEqual({ flip: 'flop' })
+      r.addMetadata('metaaaaa', 'flip', 'flop')
+      expect(r._metadata.metaaaaa).toEqual({ flip: 'flop' })
     })
 
     it('handles bad input', () => {
       const Event = require('../event')
       const r = new Event('Err', 'bad', [])
-      const before = Object.assign({}, r.metaData)
-      r.updateMetaData()
-      expect(r.metaData).toEqual(before)
-      r.updateMetaData(123)
-      expect(r.metaData).toEqual(before)
-      r.updateMetaData(new Date())
-      expect(r.metaData).toEqual(before)
-      r.updateMetaData('strrrr')
-      expect(r.metaData).toEqual(before)
+      const before = Object.assign({}, r._metadata)
+      r.addMetadata()
+      expect(r._metadata).toEqual(before)
+      r.addMetadata(123)
+      expect(r._metadata).toEqual(before)
+      r.addMetadata(new Date())
+      expect(r._metadata).toEqual(before)
+      r.addMetadata('strrrr')
+      expect(r._metadata).toEqual(before)
     })
 
     it('removes sections and properties', () => {
       const Event = require('../event')
       const r = new Event('Err', 'bad', [])
-      r.updateMetaData('metaaaaa', 'flip', 'flop')
-      r.updateMetaData('specific detail', { extra: 'stuff', more: 'things' })
+      r.addMetadata('metaaaaa', 'flip', 'flop')
+      r.addMetadata('specific detail', { extra: 'stuff', more: 'things' })
 
-      r.updateMetaData('metaaaaa', null)
-      expect(r.metaData.metaaaaa).toBe(undefined)
+      r.addMetadata('metaaaaa', null)
+      expect(r._metadata.metaaaaa).toBe(undefined)
 
-      r.updateMetaData('specific detail', 'more', null)
-      expect(r.metaData['specific detail']).toEqual({ extra: 'stuff' })
+      r.addMetadata('specific detail', 'more', null)
+      expect(r._metadata['specific detail']).toEqual({ extra: 'stuff', more: null })
     })
   })
 
-  describe('event.removeMetaData()', () => {
+  describe('event.clearMetadata()', () => {
     it('removes things', () => {
       const Event = require('../event')
       const r = new Event('Err', 'bad', [])
 
       // create some things to be removed
-      r.updateMetaData('specific detail', { extra: 'stuff' })
-      r.updateMetaData('another thing', { check: 12, t: 0 })
-      expect(r.metaData).toEqual({
+      r.addMetadata('specific detail', { extra: 'stuff' })
+      r.addMetadata('another thing', { check: 12, t: 0 })
+      expect(r._metadata).toEqual({
         'another thing': { check: 12, t: 0 },
         'specific detail': { extra: 'stuff' }
       })
 
-      r.removeMetaData('specific detail')
-      expect(r.metaData['specific detail']).toBe(undefined)
+      r.clearMetadata('specific detail')
+      expect(r._metadata['specific detail']).toBe(undefined)
 
-      r.removeMetaData('another thing', 't')
-      expect(r.metaData['another thing']).toEqual({ check: 12 })
+      r.clearMetadata('another thing', 't')
+      expect(r._metadata['another thing']).toEqual({ check: 12 })
     })
 
     it('handles bad input', () => {
@@ -136,25 +136,49 @@ describe('@bugsnag/core/event', () => {
       const r = new Event('Err', 'bad', [])
 
       // create some things to be removed
-      r.updateMetaData('specific detail', { extra: 'stuff' })
-      r.updateMetaData('another thing', { check: 12, t: 0 })
-      expect(r.metaData).toEqual({
+      r.addMetadata('specific detail', { extra: 'stuff' })
+      r.addMetadata('another thing', { check: 12, t: 0 })
+      expect(r._metadata).toEqual({
         'another thing': { check: 12, t: 0 },
         'specific detail': { extra: 'stuff' }
       })
 
       // calling with bad input
-      const before = Object.assign({}, r.metaData)
-      r.removeMetaData()
-      expect(r.metaData).toEqual(before)
-      r.removeMetaData(123)
-      expect(r.metaData).toEqual(before)
-      r.removeMetaData(new Date())
-      expect(r.metaData).toEqual(before)
+      const before = Object.assign({}, r._metadata)
+      r.clearMetadata()
+      expect(r._metadata).toEqual(before)
+      r.clearMetadata(123)
+      expect(r._metadata).toEqual(before)
+      r.clearMetadata(new Date())
+      expect(r._metadata).toEqual(before)
 
       // removing a property of a section that doesn't exist
-      r.removeMetaData('foo', 'bar')
-      expect(r.metaData).toEqual(before)
+      r.clearMetadata('foo', 'bar')
+      expect(r._metadata).toEqual(before)
+    })
+  })
+
+  describe('event.getMetadata()', () => {
+    it('retrieves things', () => {
+      const Event = require('../event')
+      const r = new Event('Err', 'bad', [])
+
+      // create some things to be get
+      r.addMetadata('specific detail', { extra: 'stuff' })
+      r.addMetadata('another thing', { check: 12, t: 0 })
+      expect(r.getMetadata('another thing')).toEqual({ check: 12, t: 0 })
+      expect(r.getMetadata('specific detail')).toEqual({ extra: 'stuff' })
+      expect(r.getMetadata('specific detail', 'extra')).toEqual('stuff')
+    })
+
+    it('handles bad input', () => {
+      const Event = require('../event')
+      const r = new Event('Err', 'bad', [])
+      expect(r.getMetadata('nothing here')).toBe(undefined)
+      expect(r.getMetadata(undefined)).toBe(undefined)
+      expect(r.getMetadata('nothing here', 'or here')).toBe(undefined)
+      r.addMetadata('specific detail', { extra: 'stuff' })
+      expect(r.getMetadata('specific detail', 'jim')).toBe(undefined)
     })
   })
 

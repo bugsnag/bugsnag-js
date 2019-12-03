@@ -31,7 +31,7 @@ Scenario: it works with regexes
   When I navigate to the URL "/filters/script/d.html"
   Then I wait to receive a request
   And the request is a valid browser payload for the error reporting API
-  And the event "metaData.details0" equals "[Filtered]"
-  And the event "metaData.details1" equals "[Filtered]"
-  And the event "metaData.details2" equals "[Filtered]"
-  And the event "metaData.detailsA" equals "aaaa"
+  And the event "metaData.extra.details0" equals "[Filtered]"
+  And the event "metaData.extra.details1" equals "[Filtered]"
+  And the event "metaData.extra.details2" equals "[Filtered]"
+  And the event "metaData.extra.detailsA" equals "aaaa"

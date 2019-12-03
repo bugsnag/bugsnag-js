@@ -12,6 +12,6 @@ module.exports = (maybeError, handledState) => {
     handledState,
     maybeError
   )
-  if (maybeError !== actualError) event.updateMetaData('error', 'non-error value', String(maybeError))
+  if (maybeError !== actualError) event.addMetadata('error', 'non-error value', String(maybeError))
   return event
 }

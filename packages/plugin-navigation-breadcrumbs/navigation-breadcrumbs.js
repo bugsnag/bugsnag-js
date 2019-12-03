@@ -19,12 +19,12 @@ exports.init = (client, win = window) => {
   // some browsers like to emit popstate when the page loads, so only add the popstate listener after that
   win.addEventListener('load', () => win.addEventListener('popstate', drop('Navigated back'), true))
 
-  // hashchange has some metaData that we care about
+  // hashchange has some metadata that we care about
   win.addEventListener('hashchange', event => {
-    const metaData = event.oldURL
+    const metadata = event.oldURL
       ? { from: relativeLocation(event.oldURL, win), to: relativeLocation(event.newURL, win), state: getCurrentState(win) }
       : { to: relativeLocation(win.location.href, win) }
-    client.leaveBreadcrumb('Hash changed', metaData, 'navigation')
+    client.leaveBreadcrumb('Hash changed', metadata, 'navigation')
   }, true)
 
   // the only way to know about replaceState/pushState is to wrap them… >_<
@@ -50,7 +50,7 @@ const relativeLocation = (url, win) => {
   return `${a.pathname}${a.search}${a.hash}`
 }
 
-const stateChangeToMetaData = (win, state, title, url) => {
+const stateChangeToMetadata = (win, state, title, url) => {
   const currentPath = relativeLocation(win.location.href, win)
   return { title, state, prevState: getCurrentState(win), to: url || currentPath, from: currentPath }
 }
@@ -58,7 +58,7 @@ const stateChangeToMetaData = (win, state, title, url) => {
 const wrapHistoryFn = (client, target, fn, win) => {
   const orig = target[fn]
   target[fn] = (state, title, url) => {
-    client.leaveBreadcrumb(`History ${fn}`, stateChangeToMetaData(win, state, title, url), 'navigation')
+    client.leaveBreadcrumb(`History ${fn}`, stateChangeToMetadata(win, state, title, url), 'navigation')
     // if throttle plugin is in use, refresh the event sent count
     if (typeof client.refresh === 'function') client.refresh()
     // if the client is operating in auto session-mode, a new route should trigger a new session

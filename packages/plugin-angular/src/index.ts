@@ -25,7 +25,7 @@ export class BugsnagErrorHandler extends ErrorHandler {
     );
 
     if (error.ngDebugContext) {
-      event.updateMetaData("angular", {
+      event.addMetadata("angular", {
         component: error.ngDebugContext.component,
         context: error.ngDebugContext.context,
       });

@@ -23,6 +23,6 @@ export default function (options) {
   this.nuxt.hook('render:setupMiddleware', app => app.use(bugsnagClient.getPlugin('express').requestHandler))
   this.nuxt.hook('render:errorMiddleware', app => app.use(bugsnagClient.getPlugin('express').errorHandler))
   this.nuxt.hook('generate:routeFailed', ({ route, errors }) => {
-    errors.forEach(({ error }) => bugsnagClient.notify(error, event => { event.addMetaData({ route }) }))
+    errors.forEach(({ error }) => bugsnagClient.notify(error, event => { event.addMetadata({ route }) }))
   })
 }

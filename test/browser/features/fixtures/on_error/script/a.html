@@ -10,7 +10,7 @@
         apiKey: API_KEY,
         endpoints: { notify: ENDPOINT, sessions: '/noop' },
         onError: function (event) {
-          event.updateMetaData('on_error', 'global', 'works')
+          event.addMetadata('on_error', 'global', 'works')
         }
       })
     </script>

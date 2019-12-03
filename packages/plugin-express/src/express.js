@@ -26,8 +26,8 @@ module.exports = {
       req.bugsnag = requestClient
 
       // extract request info and pass it to the relevant bugsnag properties
-      const { request, metaData } = getRequestAndMetaDataFromReq(req)
-      requestClient.metaData = { ...requestClient.metaData, request: metaData }
+      const { request, metadata } = getRequestAndMetadataFromReq(req)
+      requestClient.addMetadata('request', metadata)
       requestClient.request = request
 
       // unhandled errors caused by this request
@@ -53,9 +53,9 @@ module.exports = {
           'req.bugsnag is not defined. Make sure the @bugsnag/plugin-express requestHandler middleware is added first.'
         )
         client.notify(createEventFromErr(err, handledState), (event) => {
-          const { metaData, request } = getRequestAndMetaDataFromReq(req)
+          const { metadata, request } = getRequestAndMetadataFromReq(req)
           event.request = { ...request }
-          event.metaData = { ...metaData }
+          event.addMetadata('request', metadata)
         })
       }
       next(err)
@@ -65,10 +65,10 @@ module.exports = {
   }
 }
 
-const getRequestAndMetaDataFromReq = req => {
+const getRequestAndMetadataFromReq = req => {
   const requestInfo = extractRequestInfo(req)
   return {
-    metaData: requestInfo,
+    metadata: requestInfo,
     request: {
       clientIp: requestInfo.clientIp,
       headers: requestInfo.headers,

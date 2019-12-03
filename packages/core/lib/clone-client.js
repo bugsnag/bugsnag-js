@@ -10,7 +10,7 @@ module.exports = (client) => {
   // changes to these properties should not be reflected in the original client,
   // so ensure they are are (shallow) cloned
   clone.breadcrumbs = client.breadcrumbs.slice()
-  clone.metaData = { ...client.metaData }
+  clone._metadata = { ...client._metadata }
   clone.request = { ...client.request }
   clone._user = { ...client._user }
 

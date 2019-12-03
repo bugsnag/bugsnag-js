@@ -55,7 +55,7 @@ var bugsnagClient = bugsnag({
 
   // add any custom attributes relevant to your app. Note that metadata can be
   // added here, in a specific notify() or in an onError.
-  metaData: {
+  metadata: {
     company: {
       name: "Xavier's School for Gifted Youngsters"
     }
@@ -82,7 +82,7 @@ function sendHandled () {
       // Note that metadata can be declared globally, in the notification (as below) or in an onError.
       // The below metadata will be supplemented (not replaced) by the metadata
       // in the onError method. See our docs if you prefer to overwrite/remove metadata.
-      event.addMetaData('details', {
+      event.addMetadata('details', {
         info: 'Any important details specific to the context of this particular error/function.'
       })
     })

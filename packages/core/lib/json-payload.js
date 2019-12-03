@@ -15,12 +15,11 @@ const SESSION_FILTER_PATHS = [
 module.exports.event = (event, filterKeys) => {
   let payload = jsonStringify(event, null, null, { filterPaths: EVENT_FILTER_PATHS, filterKeys })
   if (payload.length > 10e5) {
-    delete event.events[0].metaData
-    event.events[0].metaData = {
+    event.events[0]._metadata = {
       notifier:
 `WARNING!
 Serialized payload was ${payload.length / 10e5}MB (limit = 1MB)
-metaData was removed`
+metadata was removed`
     }
     payload = jsonStringify(event, null, null, { filterPaths: EVENT_FILTER_PATHS, filterKeys })
     if (payload.length > 10e5) throw new Error('payload exceeded 1MB limit')

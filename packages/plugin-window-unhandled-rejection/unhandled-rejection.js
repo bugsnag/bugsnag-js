@@ -44,8 +44,8 @@ exports.init = (client, win = window) => {
         handledState,
         error
       )
-      // stuff the rejection reason into metaData, it could be useful
-      event.updateMetaData('promise', 'rejection reason', serializableReason(error))
+      // stuff the rejection reason into metadata, it could be useful
+      event.addMetadata('promise', 'rejection reason', serializableReason(error))
     }
 
     client.notify(event)
