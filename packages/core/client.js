@@ -84,8 +84,6 @@ class BugsnagClient {
 
     // merge with existing config
     this._config = { ...this._config, ...conf }
-
-    return this
   }
 
   getUser () {
