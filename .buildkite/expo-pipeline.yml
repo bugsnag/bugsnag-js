@@ -14,6 +14,7 @@ steps:
           push:
             - expo-publisher:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-publisher-${BRANCH_NAME}
             - expo-publisher:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-publisher-latest
+    artifact_paths: lerna-debug.log
 
   - label: ':docker: Build expo maze runner image'
     timeout_in_minutes: 10
