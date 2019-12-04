@@ -120,11 +120,21 @@ const monkeyPatchFetch = () => {
 
   const oldFetch = win.fetch
   win.fetch = function fetch (...args) {
-    let [url, options] = args
+    const [urlOrRequest, options] = args
+
     let method = 'GET'
-    if (options && options.method) {
-      method = options.method
+    let url
+
+    if (typeof urlOrRequest === 'string') {
+      url = urlOrRequest
+      if (options && options.method) {
+        method = options.method
+      }
+    } else {
+      url = urlOrRequest.url
+      method = urlOrRequest.method
     }
+
     return new Promise((resolve, reject) => {
       // pass through to native fetch
       oldFetch(...args)
