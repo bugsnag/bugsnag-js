@@ -113,7 +113,6 @@ class BugsnagClient {
 
   _setDelivery (d) {
     this._delivery = d(this)
-    return this
   }
 
   startSession () {
