@@ -125,11 +125,11 @@ const monkeyPatchFetch = () => {
     let method
     let url = null
 
-    if (typeof urlOrRequest === 'object' && urlOrRequest !== null) {
+    if (urlOrRequest && typeof urlOrRequest === 'object') {
       url = urlOrRequest.url
       if (options && 'method' in options) {
         method = options.method
-      } else if ('method' in urlOrRequest) {
+      } else if (urlOrRequest && 'method' in urlOrRequest) {
         method = urlOrRequest.method
       }
     } else {

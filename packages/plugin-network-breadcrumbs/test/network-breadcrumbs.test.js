@@ -278,6 +278,28 @@ describe('plugin: network breadcrumbs', () => {
     })
   })
 
+  it('should handle fetch(url, null)', (done) => {
+    const window = { XMLHttpRequest, fetch }
+
+    const client = new Client(VALID_NOTIFIER)
+    client.setOptions({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
+    client.configure()
+    client.use(plugin, () => [], window)
+
+    window.fetch('/', null, false, 200).then(() => {
+      expect(client.breadcrumbs.length).toBe(1)
+      expect(client.breadcrumbs[0]).toEqual(jasmine.objectContaining({
+        type: 'request',
+        name: 'fetch() succeeded',
+        metaData: {
+          status: 200,
+          request: 'GET /'
+        }
+      }))
+      done()
+    })
+  })
+
   it('should handle fetch(undefined)', (done) => {
     const window = { XMLHttpRequest, fetch }
 
