@@ -21,29 +21,8 @@ module.exports = {
         if (error) {
           // if the last parameter (error) was supplied, this is a modern browser's
           // way of saying "this value was thrown and not caught"
-
-          if (error.name && error.message) {
-            // if it looks like an error, construct a event object using its stack
-            event = new client.BugsnagEvent(
-              error.name,
-              error.message,
-              decorateStack(client.BugsnagEvent.getStacktrace(error), url, lineNo, charNo),
-              handledState,
-              error
-            )
-          } else {
-            // otherwise, for non error values that were thrown, stringify it for
-            // use as the error message and get/generate a stacktrace
-            event = new client.BugsnagEvent(
-              'window.onerror',
-              String(error),
-              decorateStack(client.BugsnagEvent.getStacktrace(error, 1), url, lineNo, charNo),
-              handledState,
-              error
-            )
-            // include the raw input as metadata
-            event.addMetadata('window onerror', { error })
-          }
+          event = client.BugsnagEvent.create(error, true, handledState, 'window onerror', 1)
+          decorateStack(event.stacktrace, url, lineNo, charNo)
         } else if (
           // This complex case detects "error" events that are typically synthesised
           // by jquery's trigger method (although can be created in other ways). In
@@ -58,34 +37,26 @@ module.exports = {
           !lineNo && !charNo && !error
         ) {
           // The jQuery event may have a "type" property, if so use it as part of the error message
-          const name = messageOrEvent.type ? `Event: ${messageOrEvent.type}` : 'window.onerror'
+          const name = messageOrEvent.type ? `Event: ${messageOrEvent.type}` : 'Error'
           // attempt to find a message from one of the conventional properties, but
           // default to empty string (the event will fill it with a placeholder)
           const message = messageOrEvent.message || messageOrEvent.detail || ''
-          event = new client.BugsnagEvent(
-            name,
-            message,
-            client.BugsnagEvent.getStacktrace(new Error(), 1).slice(1),
-            handledState,
-            messageOrEvent
-          )
+
+          event = client.BugsnagEvent.create({ name, message }, true, handledState, 'window onerror', 1)
+
+          // provide the original thing onerror received – not our error-like object we passed to _notify
+          event.originalError = messageOrEvent
+
           // include the raw input as metadata – it might contain more info than we extracted
           event.addMetadata('window onerror', { event: messageOrEvent, extraParameters: url })
         } else {
           // Lastly, if there was no "error" parameter this event was probably from an old
           // browser that doesn't support that. Instead we need to generate a stacktrace.
-          event = new client.BugsnagEvent(
-            'window.onerror',
-            String(messageOrEvent),
-            decorateStack(client.BugsnagEvent.getStacktrace(error, 1), url, lineNo, charNo),
-            handledState,
-            messageOrEvent
-          )
-          // include the raw input as metadata – it might contain more info than we extracted
-          event.addMetadata('window onerror', { event: messageOrEvent })
+          event = client.BugsnagEvent.create(messageOrEvent, true, handledState, 'window onerror', 1)
+          decorateStack(event.stacktrace, url, lineNo, charNo)
         }
 
-        client.notify(event)
+        client._notify(event)
       }
 
       if (typeof prevOnError === 'function') prevOnError.apply(this, arguments)
@@ -100,18 +71,17 @@ module.exports = {
 // This function will augment the first stackframe with any useful info that was
 // received as arguments to the onerror callback.
 const decorateStack = (stack, url, lineNo, charNo) => {
+  if (!stack[0]) stack.push({})
   const culprit = stack[0]
-  if (!culprit) return stack
-  if (!culprit.fileName && typeof url === 'string') culprit.setFileName(url)
-  if (!culprit.lineNumber && isActualNumber(lineNo)) culprit.setLineNumber(lineNo)
+  if (!culprit.file && typeof url === 'string') culprit.file = url
+  if (!culprit.lineNumber && isActualNumber(lineNo)) culprit.lineNumber = lineNo
   if (!culprit.columnNumber) {
     if (isActualNumber(charNo)) {
-      culprit.setColumnNumber(charNo)
+      culprit.columnNumber = charNo
     } else if (window.event && isActualNumber(window.event.errorCharacter)) {
-      culprit.setColumnNumber(window.event.errorCharacter)
+      culprit.columnNumber = window.event.errorCharacter
     }
   }
-  return stack
 }
 
 const isActualNumber = (n) => typeof n === 'number' && String.call(n) !== 'NaN'

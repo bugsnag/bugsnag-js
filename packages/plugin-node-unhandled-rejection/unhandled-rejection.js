@@ -1,15 +1,14 @@
-const createEventFromErr = require('@bugsnag/core/lib/event-from-error')
-
 let _handler
 module.exports = {
   init: client => {
     if (!client._config.autoDetectErrors || !client._config.autoDetectUnhandledRejections) return
     _handler = err => {
-      client.notify(createEventFromErr(err, {
+      const event = client.BugsnagEvent.create(err, false, {
         severity: 'error',
         unhandled: true,
         severityReason: { type: 'unhandledPromiseRejection' }
-      }), () => {}, (e, event) => {
+      }, 'unhandledRejection handler', 1)
+      client._notify(event, () => {}, (e, event) => {
         if (e) client._logger.error('Failed to send event to Bugsnag')
         client._config.onUnhandledRejection(err, event, client._logger)
       })

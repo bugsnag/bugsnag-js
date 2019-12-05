@@ -1,7 +1,4 @@
-const hasStack = require('@bugsnag/core/lib/has-stack')
 const { reduce } = require('@bugsnag/core/lib/es-utils')
-const ErrorStackParser = require('@bugsnag/core/lib/error-stack-parser')
-const isError = require('@bugsnag/core/lib/iserror')
 
 /*
  * Automatically notifies Bugsnag when window.onunhandledrejection is called
@@ -21,34 +18,17 @@ exports.init = (client, win = window) => {
       }
     } catch (e) {}
 
-    const handledState = {
+    const event = client.BugsnagEvent.create(error, false, {
       severity: 'error',
       unhandled: true,
       severityReason: { type: 'unhandledPromiseRejection' }
+    }, 'unhandledrejection handler', 1, client._logger)
+
+    if (isBluebird) {
+      event.stacktrace = reduce(event.stacktrace, fixBluebirdStacktrace(error), [])
     }
 
-    let event
-    if (error && hasStack(error)) {
-      // if it quacks like an Error…
-      event = new client.BugsnagEvent(error.name, error.message, ErrorStackParser.parse(error), handledState, error)
-      if (isBluebird) {
-        event.stacktrace = reduce(event.stacktrace, fixBluebirdStacktrace(error), [])
-      }
-    } else {
-      // if it doesn't…
-      const msg = 'Rejection reason was not an Error. See "Promise" tab for more detail.'
-      event = new client.BugsnagEvent(
-        error && error.name ? error.name : 'UnhandledRejection',
-        error && error.message ? error.message : msg,
-        [],
-        handledState,
-        error
-      )
-      // stuff the rejection reason into metadata, it could be useful
-      event.addMetadata('promise', 'rejection reason', serializableReason(error))
-    }
-
-    client.notify(event)
+    client._notify(event)
   }
   if ('addEventListener' in win) {
     win.addEventListener('unhandledrejection', listener)
@@ -70,23 +50,6 @@ if (process.env.NODE_ENV !== 'production') {
       }
     }
     _listener = null
-  }
-}
-
-const serializableReason = (err) => {
-  if (err === null || err === undefined) {
-    return 'undefined (or null)'
-  } else if (isError(err)) {
-    return {
-      [Object.prototype.toString.call(err)]: {
-        name: err.name,
-        message: err.message,
-        code: err.code,
-        stack: err.stack
-      }
-    }
-  } else {
-    return err
   }
 }
 

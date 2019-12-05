@@ -30,7 +30,7 @@ describe('plugin: strip project root', () => {
 
     client.use(plugin)
 
-    client.notify(new Event('Error', 'strip project root test', [
+    client._notify(new Event('Error', 'strip project root test', [
       {
         lineNumber: 22,
         columnNumber: 18,
@@ -70,7 +70,7 @@ describe('plugin: strip project root', () => {
 
     client.use(plugin)
 
-    client.notify(new Event('Error', 'strip project root test', [
+    client._notify(new Event('Error', 'strip project root test', [
       {
         lineNumber: 22,
         columnNumber: 18,
@@ -109,7 +109,7 @@ describe('plugin: strip project root', () => {
 
     client.use(plugin)
 
-    client.notify(new Event('Error', 'strip project root test', [
+    client._notify(new Event('Error', 'strip project root test', [
       {
         lineNumber: 22,
         columnNumber: 18,
@@ -145,7 +145,7 @@ describe('plugin: strip project root', () => {
 
     client.use(plugin)
 
-    client.notify(new Event('Error', 'strip project root test', [
+    client._notify(new Event('Error', 'strip project root test', [
       {
         lineNumber: 22,
         columnNumber: 18,

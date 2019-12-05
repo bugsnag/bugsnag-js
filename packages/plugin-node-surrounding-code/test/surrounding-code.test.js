@@ -42,7 +42,7 @@ describe('plugin: node surrounding code', () => {
 
     client.use(plugin)
 
-    client.notify(new Event('Error', 'surrounding code loading test', [
+    client._notify(new Event('Error', 'surrounding code loading test', [
       {
         lineNumber: 22,
         columnNumber: 18,
@@ -75,7 +75,7 @@ describe('plugin: node surrounding code', () => {
 
     client.use(plugin)
 
-    client.notify(new Event('Error', 'surrounding code loading test', [
+    client._notify(new Event('Error', 'surrounding code loading test', [
       {
         lineNumber: 22,
         columnNumber: 18,
@@ -117,7 +117,7 @@ describe('plugin: node surrounding code', () => {
 
     client.use(plugin)
 
-    client.notify(new Event('Error', 'surrounding code loading test', [
+    client._notify(new Event('Error', 'surrounding code loading test', [
       {
         lineNumber: 1,
         columnNumber: 1,
@@ -155,7 +155,7 @@ describe('plugin: node surrounding code', () => {
 
     client.use(plugin)
 
-    client.notify(new Event('Error', 'surrounding code loading test', [
+    client._notify(new Event('Error', 'surrounding code loading test', [
       {
         lineNumber: 1,
         columnNumber: 1,
@@ -216,7 +216,7 @@ describe('plugin: node surrounding code', () => {
 
     client.use(plugin)
 
-    client.notify(new Event('Error', 'surrounding code loading test', [
+    client._notify(new Event('Error', 'surrounding code loading test', [
       {
         lineNumber: 1,
         columnNumber: 1,

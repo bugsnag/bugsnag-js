@@ -34,7 +34,7 @@ Lorem ipsum dolor sit amet.
 
     expect(client._cbs.e.length).toBe(1)
     client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
-    client.notify(new Event('BadThing', 'Happens in script tags', [
+    client._notify(new Event('BadThing', 'Happens in script tags', [
       { fileName: window.location.href, lineNumber: 10 }
     ]))
     expect(payloads.length).toEqual(1)
@@ -98,7 +98,7 @@ Lorem ipsum dolor sit amet.
 
     expect(client._cbs.e.length).toBe(1)
     client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
-    client.notify(new Event('BadThing', 'Happens in script tags', [
+    client._notify(new Event('BadThing', 'Happens in script tags', [
       { fileName: window.location.href, lineNumber: 10 }
     ]))
     expect(payloads.length).toEqual(1)
@@ -135,7 +135,7 @@ Lorem ipsum dolor sit amet.
 
     expect(client._cbs.e.length).toBe(1)
     client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
-    client.notify(new Event('BadThing', 'Happens in script tags', [
+    client._notify(new Event('BadThing', 'Happens in script tags', [
       { fileName: window.location.href, lineNumber: 7 }
     ]))
     expect(payloads.length).toEqual(1)
@@ -172,7 +172,7 @@ Lorem ipsum dolor sit amet.
     expect(client._cbs.e.length).toBe(1)
     client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
     const spy = spyOn(client._logger, 'error')
-    client.notify(new Event('EmptyStacktrace', 'Has nothing in it', []))
+    client._notify(new Event('EmptyStacktrace', 'Has nothing in it', []))
     expect(payloads.length).toEqual(1)
     expect(payloads[0].events[0].stacktrace).toEqual([])
     expect(spy).toHaveBeenCalledTimes(0)
@@ -234,7 +234,7 @@ Lorem ipsum dolor sit amet.
 
     expect(client._cbs.e.length).toBe(1)
     client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
-    client.notify(new Event('Error', 'oh', [
+    client._notify(new Event('Error', 'oh', [
       { fileName: window.location.href, lineNumber: 1 }
     ]))
     expect(payloads.length).toEqual(1)

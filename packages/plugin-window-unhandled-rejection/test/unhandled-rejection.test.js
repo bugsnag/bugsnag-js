@@ -42,10 +42,10 @@ describe('plugin: unhandled rejection', () => {
           const event = payload.events[0].toJSON()
           expect(event.severity).toBe('error')
           expect(event.unhandled).toBe(true)
-          expect(event.exceptions[0].errorClass).toBe('UnhandledRejection')
-          expect(event.exceptions[0].message).toBe('Rejection reason was not an Error. See "Promise" tab for more detail.')
+          expect(event.exceptions[0].errorClass).toBe('Bugsnag::InputError')
+          expect(event.exceptions[0].message).toBe('unhandledrejection handler received a non-error. See "unhandledrejection handler" tab for more detail.')
           expect(event.severityReason).toEqual({ type: 'unhandledPromiseRejection' })
-          expect(event.metaData.promise['rejection reason']).toEqual('undefined (or null)')
+          expect(event.metaData['unhandledrejection handler']['non-error parameter']).toEqual('null')
           plugin.destroy(window)
           done()
         }

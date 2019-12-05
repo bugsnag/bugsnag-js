@@ -12,15 +12,17 @@ class BugsnagEvent {
 
 const bugsnag = {
   BugsnagEvent,
-  notify: jest.fn()
+  _notify: jest.fn()
 }
 
-bugsnag.BugsnagEvent.getStacktrace = jest.fn()
+bugsnag.BugsnagEvent.create = jest.fn(function () {
+  return new BugsnagEvent()
+})
 
 const ErrorBoundary = plugin.init(bugsnag, React)
 
 beforeEach(() => {
-  bugsnag.notify.mockReset()
+  bugsnag._notify.mockReset()
 })
 
 test('formatComponentStack(str)', () => {
@@ -55,7 +57,7 @@ it('calls notify on error', () => {
   renderer
     .create(<ErrorBoundary><BadComponent /></ErrorBoundary>)
     .toJSON()
-  expect(bugsnag.notify).toHaveBeenCalledTimes(1)
+  expect(bugsnag._notify).toHaveBeenCalledTimes(1)
 })
 
 it('does not render FallbackComponent when no error', () => {
@@ -90,7 +92,7 @@ it('it passes the onError function to the Bugsnag notify call', () => {
   renderer
     .create(<ErrorBoundary onError={onError}><BadComponent /></ErrorBoundary>)
     .toJSON()
-  expect(bugsnag.notify).toBeCalledWith(
+  expect(bugsnag._notify).toBeCalledWith(
     expect.any(BugsnagEvent),
     onError
   )

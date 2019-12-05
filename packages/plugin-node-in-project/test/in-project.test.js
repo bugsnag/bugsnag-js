@@ -30,7 +30,7 @@ describe('plugin: node in project', () => {
 
     client.use(plugin)
 
-    client.notify(new Event('Error', 'in project test', [
+    client._notify(new Event('Error', 'in project test', [
       {
         lineNumber: 22,
         columnNumber: 18,
@@ -70,7 +70,7 @@ describe('plugin: node in project', () => {
 
     client.use(plugin)
 
-    client.notify(new Event('Error', 'in project test', [
+    client._notify(new Event('Error', 'in project test', [
       {
         lineNumber: 22,
         columnNumber: 18,
@@ -109,7 +109,7 @@ describe('plugin: node in project', () => {
 
     client.use(plugin)
 
-    client.notify(new Event('Error', 'in project test', [
+    client._notify(new Event('Error', 'in project test', [
       {
         lineNumber: 22,
         columnNumber: 18,
@@ -145,7 +145,7 @@ describe('plugin: node in project', () => {
 
     client.use(plugin)
 
-    client.notify(new Event('Error', 'in project test', [
+    client._notify(new Event('Error', 'in project test', [
       {
         lineNumber: 22,
         columnNumber: 18,
