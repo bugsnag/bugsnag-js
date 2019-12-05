@@ -122,17 +122,25 @@ const monkeyPatchFetch = () => {
   win.fetch = function fetch (...args) {
     const [urlOrRequest, options] = args
 
-    let method = 'GET'
-    let url
+    let method
+    let url = null
 
-    if (typeof urlOrRequest === 'string') {
-      url = urlOrRequest
-      if (options && options.method) {
+    if (typeof urlOrRequest === 'object' && urlOrRequest !== null) {
+      url = urlOrRequest.url
+      if (options && 'method' in options) {
         method = options.method
+      } else if ('method' in urlOrRequest) {
+        method = urlOrRequest.method
       }
     } else {
-      url = urlOrRequest.url
-      method = urlOrRequest.method
+      url = urlOrRequest
+      if (options && 'method' in options) {
+        method = options.method
+      }
+    }
+
+    if (method === undefined) {
+      method = 'GET'
     }
 
     return new Promise((resolve, reject) => {
