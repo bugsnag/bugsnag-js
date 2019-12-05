@@ -1,6 +1,5 @@
 const { describe, it, expect } = global
 
-const proxyquire = require('proxyquire').noPreserveCache()
 const ErrorStackParser = require('error-stack-parser')
 
 describe('@bugsnag/core/event', () => {
@@ -22,31 +21,6 @@ describe('@bugsnag/core/event', () => {
         { toJSON: () => { throw new Error('do not serialise me, srsly') } }
       ])
       expect(r.stacktrace.length).toBe(0)
-    })
-  })
-
-  describe('BugsnagEvent.ensureEvent()', () => {
-    it('creates an event from an error', () => {
-      const Event = proxyquire('../event', {
-        'stack-generator': {
-          backtrace: () => [{}, {}]
-        }
-      })
-      const r0 = Event.ensureEvent(new Error('normal error'))
-      expect(r0 instanceof Event).toBe(true)
-
-      const e = new Error('normal error')
-      delete e.stack
-      const r1 = Event.ensureEvent(e)
-      expect(r1 instanceof Event).toBe(true)
-      expect(r1.stacktrace.length).toEqual(0)
-    })
-
-    it('returns the same event if passed', () => {
-      const Event = require('../event')
-      const r = new Event('E', 'bad', [])
-      const r0 = Event.ensureEvent(r)
-      expect(r).toBe(r0)
     })
   })
 

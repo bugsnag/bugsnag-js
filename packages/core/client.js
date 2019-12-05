@@ -4,15 +4,11 @@ const BugsnagBreadcrumb = require('./breadcrumb')
 const BugsnagSession = require('./session')
 const { map, includes, filter } = require('./lib/es-utils')
 const inferReleaseStage = require('./lib/infer-release-stage')
-const isError = require('./lib/iserror')
 const runCallbacks = require('./lib/callback-runner')
 const metadataDelegate = require('./lib/metadata-delegate')
 const runSyncCallbacks = require('./lib/sync-callback-runner')
 
 const noop = () => {}
-
-const LOG_USAGE_ERR_PREFIX = 'Usage error.'
-const REPORT_USAGE_ERR_PREFIX = 'Bugsnag usage error.'
 
 class BugsnagClient {
   constructor (configuration, schema = config.schema, notifier) {
@@ -65,6 +61,11 @@ class BugsnagClient {
     this.BugsnagSession = BugsnagSession
 
     this._extractConfiguration()
+
+    // when notify() is called we need to know how many frames are from our own source
+    // this inital value is 1 not 0 because we wrap notify() to ensure it is always
+    // bound to have the client as its `this` value – see below.
+    this._depth = 1
 
     const self = this
     const notify = this.notify
@@ -204,15 +205,14 @@ class BugsnagClient {
     }
   }
 
-  notify (error, onError, cb = noop) {
+  notify (maybeError, onError, cb = noop) {
+    const event = BugsnagEvent.create(maybeError, true, undefined, 'notify()', this._depth + 1, this._logger)
+    this._notify(event, onError, cb)
+  }
+
+  _notify (event, onError, cb = noop) {
     // releaseStage can be set via config.releaseStage or client.app.releaseStage
     const releaseStage = inferReleaseStage(this)
-
-    // ensure we have an error (or a reasonable object representation of an error)
-    const { err, errorFramesToSkip } = normaliseError(error, this._logger)
-
-    // create an event from the error, if it isn't one already
-    const event = BugsnagEvent.ensureEvent(err, errorFramesToSkip, 2)
 
     event.app = { ...{ releaseStage }, ...event.app, ...this.app }
     event.context = event.context || this.context || undefined
@@ -270,55 +270,8 @@ class BugsnagClient {
   }
 }
 
-const normaliseError = (error, logger) => {
-  const synthesizedErrorFramesToSkip = 3
-
-  const createAndLogUsageError = reason => {
-    const msg = generateNotifyUsageMessage(reason)
-    logger.warn(`${LOG_USAGE_ERR_PREFIX} ${msg}`)
-    return new Error(`${REPORT_USAGE_ERR_PREFIX} ${msg}`)
-  }
-
-  let err
-  let errorFramesToSkip = 0
-  switch (typeof error) {
-    case 'string':
-      err = new Error(String(error))
-      errorFramesToSkip = synthesizedErrorFramesToSkip
-      break
-    case 'number':
-    case 'boolean':
-      err = new Error(String(error))
-      break
-    case 'function':
-      err = createAndLogUsageError('function')
-      break
-    case 'object':
-      if (error !== null && (isError(error) || error.__isBugsnagEvent)) {
-        err = error
-      } else if (error !== null && hasNecessaryFields(error)) {
-        err = new Error(error.message || error.errorMessage)
-        err.name = error.name || error.errorClass
-        errorFramesToSkip = synthesizedErrorFramesToSkip
-      } else {
-        err = createAndLogUsageError(error === null ? 'null' : 'unsupported object')
-      }
-      break
-    default:
-      err = createAndLogUsageError('nothing')
-  }
-  return { err, errorFramesToSkip }
-}
-
-const hasNecessaryFields = error =>
-  (typeof error.name === 'string' || typeof error.errorClass === 'string') &&
-  (typeof error.message === 'string' || typeof error.errorMessage === 'string')
-
 const generateConfigErrorMessage = errors =>
   `Bugsnag configuration error\n${map(errors, (err) => `"${err.key}" ${err.message} \n    got ${stringify(err.value)}`).join('\n\n')}`
-
-const generateNotifyUsageMessage = actual =>
-  `notify(err) expected an error, got ${actual}`
 
 const stringify = val => typeof val === 'object' ? JSON.stringify(val) : String(val)
 
