@@ -44,7 +44,7 @@ describe('plugin: react native global error handler', () => {
 
   it('should call through to an exising handler', done => {
     const client = new Client({ apiKey: 'API_KEY_YEAH' })
-    client.delivery(client => ({
+    client._setDelivery(client => ({
       sendSession: () => {},
       sendEvent: (...args) => args[args.length - 1](null)
     }))
@@ -61,7 +61,7 @@ describe('plugin: react native global error handler', () => {
 
   it('should have the correct handled state', done => {
     const client = new Client({ apiKey: 'API_KEY_YEAH' })
-    client.delivery(client => ({
+    client._setDelivery(client => ({
       sendSession: () => {},
       sendEvent: (payload, cb) => {
         const r = JSON.parse(JSON.stringify(payload))

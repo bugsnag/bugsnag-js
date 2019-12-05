@@ -26,7 +26,7 @@ describe('plugin: window onerror', () => {
       const client = new Client({ apiKey: 'API_KEY_YEAH' })
       const payloads = []
       client.use(plugin, window)
-      client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
+      client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
 
       window.onerror('Uncaught Error: Bad things', 'foo.js', 10, 20, new Error('Bad things'))
 
@@ -75,7 +75,7 @@ describe('plugin: window onerror', () => {
       const client = new Client({ apiKey: 'API_KEY_YEAH' })
       const payloads = []
       client.use(plugin, window)
-      client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
+      client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
 
       window.onerror('Uncaught Error: Bad things', 'foo.js', 10, 20, new Error('Bad things'))
     })
@@ -84,7 +84,7 @@ describe('plugin: window onerror', () => {
       const client = new Client({ apiKey: 'API_KEY_YEAH' })
       const payloads = []
       client.use(plugin, window)
-      client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
+      client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
 
       const evt = { type: 'error', detail: 'something bad happened' }
       window.onerror(evt)
@@ -102,7 +102,7 @@ describe('plugin: window onerror', () => {
       const client = new Client({ apiKey: 'API_KEY_YEAH' })
       const payloads = []
       client.use(plugin, window)
-      client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
+      client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
 
       // this situation is caused by the following kind of jQuery call:
       // jQuery('select.province').trigger(jQuery.Event('error.validator.bv'), { valid: false })
@@ -181,7 +181,7 @@ describe('plugin: window onerror', () => {
       const client = new Client({ apiKey: 'API_KEY_YEAH' })
       const payloads = []
       client.use(plugin, window)
-      client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
+      client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
 
       // call onerror as it would be when `throw 'hello' is run`
       window.onerror('uncaught exception: hello', '', 0, 0, 'hello')
@@ -216,7 +216,7 @@ describe('plugin: window onerror', () => {
       const client = new Client({ apiKey: 'API_KEY_YEAH' })
       const payloads = []
       client.use(plugin, window)
-      client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
+      client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
 
       // call onerror as it would be when `throw 'hello' is run`
       window.onerror(...args)
@@ -236,7 +236,7 @@ describe('plugin: window onerror', () => {
       const client = new Client({ apiKey: 'API_KEY_YEAH' })
       const payloads = []
       client.use(plugin, window)
-      client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
+      client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
 
       // call onerror as it would be when `throw 'hello' is run`
       window.onerror(...args)

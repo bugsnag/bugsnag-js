@@ -45,7 +45,7 @@ module.exports = (opts) => {
 
   const bugsnag = new Client(opts, schema, { name, version, url })
 
-  bugsnag.delivery(delivery)
+  bugsnag._setDelivery(delivery)
 
   plugins.forEach(pl => {
     switch (pl.name) {

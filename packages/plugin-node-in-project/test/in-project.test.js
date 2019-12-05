@@ -17,7 +17,7 @@ describe('plugin: node in project', () => {
       }
     })
 
-    client.delivery(client => ({
+    client._setDelivery(client => ({
       sendEvent: (payload) => {
         const evt = payload.events[0]
         expect(evt.stacktrace[0].inProject).toBe(true)
@@ -57,7 +57,7 @@ describe('plugin: node in project', () => {
       }
     })
 
-    client.delivery(client => ({
+    client._setDelivery(client => ({
       sendEvent: (payload) => {
         const evt = payload.events[0]
         expect(evt.stacktrace[0].inProject).toBe(false)
@@ -97,7 +97,7 @@ describe('plugin: node in project', () => {
       }
     })
 
-    client.delivery(client => ({
+    client._setDelivery(client => ({
       sendEvent: (payload) => {
         const evt = payload.events[0]
         expect(evt.stacktrace[0].inProject).toBe(false)
@@ -132,7 +132,7 @@ describe('plugin: node in project', () => {
       }
     })
 
-    client.delivery(client => ({
+    client._setDelivery(client => ({
       sendEvent: (payload) => {
         const evt = payload.events[0]
         expect(evt.stacktrace[0].inProject).toBe(false)

@@ -24,7 +24,7 @@ describe('plugin: expo device', () => {
     const c = new Client({ apiKey: 'api_key' })
 
     c.use(plugin)
-    c.delivery(client => ({
+    c._setDelivery(client => ({
       sendEvent: (payload) => {
         const r = JSON.parse(JSON.stringify(payload))
         expect(r).toBeTruthy()
@@ -56,7 +56,7 @@ describe('plugin: expo device', () => {
     const c = new Client({ apiKey: 'api_key' })
 
     c.use(plugin)
-    c.delivery(client => ({
+    c._setDelivery(client => ({
       sendEvent: (payload) => {
         const r = JSON.parse(JSON.stringify(payload))
         expect(r).toBeTruthy()
@@ -89,7 +89,7 @@ describe('plugin: expo device', () => {
     const c = new Client({ apiKey: 'api_key' })
 
     c.use(plugin)
-    c.delivery(client => ({
+    c._setDelivery(client => ({
       sendEvent: (payload) => {
         const r = JSON.parse(JSON.stringify(payload))
         expect(r).toBeTruthy()
@@ -122,7 +122,7 @@ describe('plugin: expo device', () => {
     const c = new Client({ apiKey: 'api_key' })
 
     c.use(plugin)
-    c.delivery(client => ({
+    c._setDelivery(client => ({
       sendEvent: (payload) => {
         const r = JSON.parse(JSON.stringify(payload))
         expect(r).toBeTruthy()
@@ -155,7 +155,7 @@ describe('plugin: expo device', () => {
     c.use(plugin)
     expect(typeof listener).toBe('function')
     const events = []
-    c.delivery(client => ({
+    c._setDelivery(client => ({
       sendEvent: (payload) => {
         const r = JSON.parse(JSON.stringify(payload))
         expect(r).toBeTruthy()

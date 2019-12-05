@@ -10,7 +10,7 @@ const RnPromise = require('promise/setimmediate')
 describe('plugin: react native rejection handler', () => {
   it('should hook in to the promise rejection tracker', done => {
     const c = new Client({ apiKey: 'api_key' })
-    c.delivery(client => ({
+    c._setDelivery(client => ({
       sendEvent: (payload) => {
         const r = JSON.parse(JSON.stringify(payload))
         expect(r).toBeTruthy()
@@ -33,7 +33,7 @@ describe('plugin: react native rejection handler', () => {
 
   it('should be disabled when autoDetectErrors=false', done => {
     const c = new Client({ apiKey: 'api_key', autoDetectErrors: false })
-    c.delivery(client => ({
+    c._setDelivery(client => ({
       sendReport: (report) => {
         expect(report).not.toBeTruthy()
       }
@@ -53,7 +53,7 @@ describe('plugin: react native rejection handler', () => {
 
   it('should be disbaled when autoDetectUnhandledRejections=false', done => {
     const c = new Client({ apiKey: 'api_key', autoDetectUnhandledRejections: false })
-    c.delivery(client => ({
+    c._setDelivery(client => ({
       sendEvent: (payload) => {
         expect(payload).not.toBeTruthy()
       }

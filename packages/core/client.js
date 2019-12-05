@@ -80,7 +80,7 @@ class BugsnagClient {
     if (conf.appType) this.app.type = conf.appType
     if (conf.metadata) this._metadata = conf.metadata
     if (conf.user) this._user = conf.user
-    if (conf.logger) this.logger(conf.logger)
+    if (conf.logger) this._logger = conf.logger
 
     // merge with existing config
     this._config = { ...this._config, ...conf }
@@ -111,19 +111,8 @@ class BugsnagClient {
     return this._plugins[`~${name}~`]
   }
 
-  delivery (d) {
+  _setDelivery (d) {
     this._delivery = d(this)
-    return this
-  }
-
-  logger (l, sid) {
-    this._logger = l
-    return this
-  }
-
-  sessionDelegate (s) {
-    this._sessionDelegate = s
-    return this
   }
 
   startSession () {

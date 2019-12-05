@@ -37,7 +37,7 @@ module.exports = (opts) => {
   const bugsnag = new Client(opts, schema, { name, version, url })
 
   // set delivery based on browser capability (IE 8+9 have an XDomainRequest object)
-  bugsnag.delivery(window.XDomainRequest ? dXDomainRequest : dXMLHttpRequest)
+  bugsnag._setDelivery(window.XDomainRequest ? dXDomainRequest : dXMLHttpRequest)
 
   // add browser-specific plugins
   bugsnag.use(pluginDevice)

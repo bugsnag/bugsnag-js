@@ -34,7 +34,7 @@ describe('plugin: contextualize', () => {
         defaultValue: () => {}
       }
     })
-    c.delivery(client => ({
+    c._setDelivery(client => ({
       sendEvent: (payload, cb) => {
         expect(payload.events[0].errorMessage).toBe('no item available')
         expect(payload.events[0].severity).toBe('warning')
@@ -73,7 +73,7 @@ describe('plugin: contextualize', () => {
         defaultValue: () => {}
       }
     })
-    c.delivery(client => ({
+    c._setDelivery(client => ({
       sendEvent: (payload, cb) => {
         expect(payload.events[0].errorMessage).toBe('ENOENT: no such file or directory, open \'does not exist\'')
         expect(payload.events[0].stacktrace[0].file).toBe(`${__filename}`)
@@ -103,7 +103,7 @@ describe('plugin: contextualize', () => {
         defaultValue: () => {}
       }
     })
-    c.delivery(client => ({
+    c._setDelivery(client => ({
       sendEvent: (payload, cb) => {
         cb(new Error('sending failed'))
       },

@@ -10,14 +10,14 @@ module.exports = {
     const sessionTracker = new SessionTracker(client._config.sessionSummaryInterval)
     sessionTracker.on('summary', sendSessionSummary(client))
     sessionTracker.start()
-    client.sessionDelegate({
+    client._sessionDelegate = {
       startSession: client => {
         const sessionClient = clone(client)
         sessionClient._session = new client.BugsnagSession()
         sessionTracker.track(sessionClient._session)
         return sessionClient
       }
-    })
+    }
   },
   configSchema: {
     sessionSummaryInterval: {

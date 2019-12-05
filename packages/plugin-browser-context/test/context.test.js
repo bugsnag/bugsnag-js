@@ -16,7 +16,7 @@ describe('plugin: context', () => {
     const payloads = []
     client.use(plugin, window)
 
-    client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
+    client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
     client.notify(new Error('noooo'))
 
     expect(payloads.length).toEqual(1)
@@ -30,7 +30,7 @@ describe('plugin: context', () => {
 
     client.context = 'something else'
 
-    client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
+    client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
     client.notify(new Error('noooo'))
 
     expect(payloads.length).toEqual(1)

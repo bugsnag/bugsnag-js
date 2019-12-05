@@ -31,7 +31,7 @@ function pload (index, cb) {
 describe('plugin: intercept', () => {
   it('does nothing with a happy-case callback', done => {
     const c = new Client({ apiKey: 'api_key' })
-    c.delivery(client => ({
+    c._setDelivery(client => ({
       sendEvent: () => expect(true).toBe(false),
       sendSession: () => {}
     }))
@@ -45,7 +45,7 @@ describe('plugin: intercept', () => {
 
   it('sends an event when the callback recieves an error', done => {
     const c = new Client({ apiKey: 'api_key' })
-    c.delivery(client => ({
+    c._setDelivery(client => ({
       sendEvent: (payload) => {
         expect(payload.events[0].errorMessage).toBe('no item available')
         done()
@@ -62,7 +62,7 @@ describe('plugin: intercept', () => {
 
   it('works with resolved promises', done => {
     const c = new Client({ apiKey: 'api_key' })
-    c.delivery(client => ({
+    c._setDelivery(client => ({
       sendEvent: () => expect(true).toBe(false),
       sendSession: () => {}
     }))
@@ -76,7 +76,7 @@ describe('plugin: intercept', () => {
 
   it('works with rejected promises', done => {
     const c = new Client({ apiKey: 'api_key' })
-    c.delivery(client => ({
+    c._setDelivery(client => ({
       sendEvent: (payload) => {
         expect(payload.events[0].errorMessage).toBe('no item available')
         done()
@@ -93,7 +93,7 @@ describe('plugin: intercept', () => {
 
   it('should add a stacktrace when missing', done => {
     const c = new Client({ apiKey: 'api_key' })
-    c.delivery(client => ({
+    c._setDelivery(client => ({
       sendEvent: (payload, cb) => {
         expect(payload.events[0].errorMessage).toBe('ENOENT: no such file or directory, open \'does not exist\'')
         expect(payload.events[0].stacktrace[0].file).toBe(`${__filename}`)

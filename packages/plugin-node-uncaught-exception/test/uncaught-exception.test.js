@@ -42,7 +42,7 @@ describe('plugin: node uncaught exception handler', () => {
         defaultValue: () => {}
       }
     })
-    c.delivery(client => ({
+    c._setDelivery(client => ({
       sendEvent: (...args) => args[args.length - 1](),
       sendSession: (...args) => args[args.length - 1]()
     }))
@@ -70,7 +70,7 @@ describe('plugin: node uncaught exception handler', () => {
         defaultValue: () => {}
       }
     })
-    c.delivery(client => ({
+    c._setDelivery(client => ({
       sendEvent: (...args) => args[args.length - 1](new Error('failed')),
       sendSession: (...args) => args[args.length - 1]()
     }))

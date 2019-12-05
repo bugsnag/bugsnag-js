@@ -23,7 +23,7 @@ describe('plugin: node device', () => {
     expect(client.device.runtimeVersions).toBeDefined()
     expect(client.device.runtimeVersions.node).toEqual(process.versions.node)
 
-    client.delivery(client => ({
+    client._setDelivery(client => ({
       sendEvent: (payload) => {
         expect(payload.events[0].device).toBeDefined()
         expect(payload.events[0].device.time).toMatch(ISO_8601)

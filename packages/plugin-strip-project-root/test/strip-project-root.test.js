@@ -17,7 +17,7 @@ describe('plugin: strip project root', () => {
       }
     })
 
-    client.delivery(client => ({
+    client._setDelivery(client => ({
       sendEvent: (payload) => {
         const evt = payload.events[0]
         expect(evt.stacktrace[0].file).toBe(join('lib', '01.js'))
@@ -57,7 +57,7 @@ describe('plugin: strip project root', () => {
       }
     })
 
-    client.delivery(client => ({
+    client._setDelivery(client => ({
       sendEvent: (payload) => {
         const evt = payload.events[0]
         expect(evt.stacktrace[0].file).toBe(join('/var', 'lib', '01.js'))
@@ -97,7 +97,7 @@ describe('plugin: strip project root', () => {
       }
     })
 
-    client.delivery(client => ({
+    client._setDelivery(client => ({
       sendEvent: (payload) => {
         const evt = payload.events[0]
         expect(evt.stacktrace[0].file).toBe('_module.js')
@@ -132,7 +132,7 @@ describe('plugin: strip project root', () => {
       }
     })
 
-    client.delivery(client => ({
+    client._setDelivery(client => ({
       sendEvent: (payload) => {
         const evt = payload.events[0]
         expect(evt.stacktrace[0].file).toBe('global code')
