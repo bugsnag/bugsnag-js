@@ -151,8 +151,6 @@ class BugsnagClient {
     if (this.breadcrumbs.length > this._config.maxBreadcrumbs) {
       this.breadcrumbs = this.breadcrumbs.slice(this.breadcrumbs.length - this._config.maxBreadcrumbs)
     }
-
-    return this
   }
 
   notify (error, onError, cb = () => {}) {
