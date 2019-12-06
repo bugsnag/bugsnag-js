@@ -84,8 +84,6 @@ class BugsnagClient {
 
     // merge with existing config
     this._config = { ...this._config, ...conf }
-
-    return this
   }
 
   getUser () {
@@ -142,8 +140,6 @@ class BugsnagClient {
     if (this.breadcrumbs.length > this._config.maxBreadcrumbs) {
       this.breadcrumbs = this.breadcrumbs.slice(this.breadcrumbs.length - this._config.maxBreadcrumbs)
     }
-
-    return this
   }
 
   notify (error, onError, cb = () => {}) {
