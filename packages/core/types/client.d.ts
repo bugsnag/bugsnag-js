@@ -24,9 +24,6 @@ declare class Client {
 
   public use(plugin: common.Plugin, ...args: any[]): Client;
   public getPlugin(name: string): any;
-  public delivery(delivery: common.Delivery): Client;
-  public logger(logger: common.Logger): Client;
-  public sessionDelegate(sessionDelegate: common.SessionDelegate): Client;
   public notify(
     error: common.NotifiableError,
     onError?: common.OnError,

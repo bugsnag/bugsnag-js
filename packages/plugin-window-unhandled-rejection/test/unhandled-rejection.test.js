@@ -19,7 +19,7 @@ describe('plugin: unhandled rejection', () => {
     it('captures unhandled promise rejections', done => {
       const client = new Client({ apiKey: 'API_KEY_YEAH' })
       client.use(plugin, window)
-      client.delivery(client => ({
+      client._setDelivery(client => ({
         sendEvent: (payload) => {
           const event = payload.events[0].toJSON()
           expect(event.severity).toBe('error')
@@ -37,7 +37,7 @@ describe('plugin: unhandled rejection', () => {
     it('handles bad user input', done => {
       const client = new Client({ apiKey: 'API_KEY_YEAH' })
       client.use(plugin, window)
-      client.delivery(client => ({
+      client._setDelivery(client => ({
         sendEvent: (payload) => {
           const event = payload.events[0].toJSON()
           expect(event.severity).toBe('error')
@@ -100,7 +100,7 @@ describe('plugin: unhandled rejection', () => {
     it('handles errors with non-string stacks', done => {
       const client = new Client({ apiKey: 'API_KEY_YEAH' })
       client.use(plugin, window)
-      client.delivery(client => ({
+      client._setDelivery(client => ({
         sendEvent: (payload) => {
           const event = payload.events[0].toJSON()
           expect(event.severity).toBe('error')
@@ -121,7 +121,7 @@ describe('plugin: unhandled rejection', () => {
     it('tolerates event.detail propties which throw', done => {
       const client = new Client({ apiKey: 'API_KEY_YEAH' })
       client.use(plugin, window)
-      client.delivery(client => ({
+      client._setDelivery(client => ({
         sendEvent: (payload) => {
           const event = payload.events[0].toJSON()
           expect(event.severity).toBe('error')

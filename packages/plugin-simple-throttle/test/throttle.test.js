@@ -9,7 +9,7 @@ describe('plugin: throttle', () => {
     const payloads = []
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
     c.use(plugin)
-    c.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
+    c._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
     for (let i = 0; i < 100; i++) c.notify(new Error('This is fail'))
     expect(payloads.length).toBe(10)
   })

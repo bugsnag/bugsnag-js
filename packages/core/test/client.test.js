@@ -47,7 +47,7 @@ describe('@bugsnag/core/client', () => {
         expect(msg).toBeTruthy()
         done()
       }
-      client.logger({ debug: log, info: log, warn: log, error: log })
+      client._logger = { debug: log, info: log, warn: log, error: log }
       client._logger.debug('hey')
     })
     it('can supply a different logger via config', done => {
@@ -78,7 +78,7 @@ describe('@bugsnag/core/client', () => {
   describe('notify()', () => {
     it('delivers an error event', done => {
       const client = new Client({ apiKey: 'API_KEY_YEAH' })
-      client.delivery(client => ({
+      client._setDelivery(client => ({
         sendEvent: payload => {
           expect(payload).toBeTruthy()
           expect(Array.isArray(payload.events)).toBe(true)
@@ -93,7 +93,7 @@ describe('@bugsnag/core/client', () => {
 
     it('supports setting severity via callback', done => {
       const client = new Client({ apiKey: 'API_KEY_YEAH' })
-      client.delivery(client => ({
+      client._setDelivery(client => ({
         sendEvent: (payload) => {
           expect(payload).toBeTruthy()
           expect(Array.isArray(payload.events)).toBe(true)
@@ -110,7 +110,7 @@ describe('@bugsnag/core/client', () => {
 
     it('supports preventing send by returning false', done => {
       const client = new Client({ apiKey: 'API_KEY_YEAH' })
-      client.delivery(client => ({
+      client._setDelivery(client => ({
         sendEvent: (payload) => {
           fail('sendEvent() should not be called')
         }
@@ -133,7 +133,7 @@ describe('@bugsnag/core/client', () => {
           onErrorSpy
         ]
       })
-      client.delivery(client => ({
+      client._setDelivery(client => ({
         sendEvent: (payload) => {
           expect(payload.events[0].errorMessage).toBe('oh no!')
           expect(onErrorSpy).toHaveBeenCalledTimes(1)
@@ -146,7 +146,7 @@ describe('@bugsnag/core/client', () => {
 
     it('supports preventing send with enabledReleaseStages', done => {
       const client = new Client({ apiKey: 'API_KEY_YEAH', enabledReleaseStages: ['qa'] })
-      client.delivery(client => ({
+      client._setDelivery(client => ({
         sendEvent: (payload) => {
           fail('sendEvent() should not be called')
         }
@@ -160,7 +160,7 @@ describe('@bugsnag/core/client', () => {
 
     it('supports setting releaseStage via config.releaseStage', done => {
       const client = new Client({ apiKey: 'API_KEY_YEAH', releaseStage: 'staging', enabledReleaseStages: ['production'] })
-      client.delivery(client => ({
+      client._setDelivery(client => ({
         sendEvent: (payload) => {
           fail('sendEvent() should not be called')
         }
@@ -174,7 +174,7 @@ describe('@bugsnag/core/client', () => {
 
     it('supports setting releaseStage via client.app.releaseStage', done => {
       const client = new Client({ apiKey: 'API_KEY_YEAH', enabledReleaseStages: ['production'] })
-      client.delivery(client => ({
+      client._setDelivery(client => ({
         sendEvent: (payload) => {
           fail('sendEvent() should not be called')
         }
@@ -189,7 +189,7 @@ describe('@bugsnag/core/client', () => {
 
     it('includes releaseStage in event.app', done => {
       const client = new Client({ apiKey: 'API_KEY_YEAH', enabledReleaseStages: ['staging'] })
-      client.delivery(client => ({
+      client._setDelivery(client => ({
         sendEvent: (payload) => {
           expect(payload.events[0].app.releaseStage).toBe('staging')
           done()
@@ -201,7 +201,7 @@ describe('@bugsnag/core/client', () => {
 
     it('includes releaseStage in event.app when set via config', done => {
       const client = new Client({ apiKey: 'API_KEY_YEAH', enabledReleaseStages: ['staging'], releaseStage: 'staging' })
-      client.delivery(client => ({
+      client._setDelivery(client => ({
         sendEvent: (payload) => {
           expect(payload.events[0].app.releaseStage).toBe('staging')
           done()
@@ -212,7 +212,7 @@ describe('@bugsnag/core/client', () => {
 
     it('prefers client.app.releaseStage over config.releaseStage', done => {
       const client = new Client({ apiKey: 'API_KEY_YEAH', enabledReleaseStages: ['testing'], releaseStage: 'staging' })
-      client.delivery(client => ({
+      client._setDelivery(client => ({
         sendEvent: (payload) => {
           expect(payload.events[0].app.releaseStage).toBe('testing')
           done()
@@ -224,7 +224,7 @@ describe('@bugsnag/core/client', () => {
 
     it('populates client.app.version if config.appVersion is supplied', done => {
       const client = new Client({ apiKey: 'API_KEY_YEAH', appVersion: '1.2.3' })
-      client.delivery(client => ({
+      client._setDelivery(client => ({
         sendEvent: (payload) => {
           expect(payload.events[0].app.version).toBe('1.2.3')
           done()
@@ -236,7 +236,7 @@ describe('@bugsnag/core/client', () => {
     it('can handle all kinds of bad input', () => {
       const payloads = []
       const client = new Client({ apiKey: 'API_KEY_YEAH' })
-      client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
+      client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
 
       client.notify(undefined)
       client.notify(null)
@@ -261,7 +261,7 @@ describe('@bugsnag/core/client', () => {
     it('supports { name, message } usage', () => {
       const payloads = []
       const client = new Client({ apiKey: 'API_KEY_YEAH' })
-      client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
+      client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
       client.notify({ name: 'UnknownThing', message: 'found a thing that couldn’t be dealt with' })
 
       expect(payloads.length).toBe(1)
@@ -274,7 +274,7 @@ describe('@bugsnag/core/client', () => {
     it('leaves a breadcrumb of the error', () => {
       const payloads = []
       const client = new Client({ apiKey: 'API_KEY_YEAH' })
-      client.delivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
+      client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
       client.notify(new Error('foobar'))
       expect(client.breadcrumbs.length).toBe(1)
       expect(client.breadcrumbs[0].type).toBe('error')
@@ -295,7 +295,7 @@ describe('@bugsnag/core/client', () => {
 
     it('should call the callback (success)', done => {
       const client = new Client({ apiKey: 'API_KEY' })
-      client.delivery(client => ({
+      client._setDelivery(client => ({
         sendSession: () => {},
         sendEvent: (payload, cb) => cb(null)
       }))
@@ -309,7 +309,7 @@ describe('@bugsnag/core/client', () => {
 
     it('should call the callback (err)', done => {
       const client = new Client({ apiKey: 'API_KEY' })
-      client.delivery(client => ({
+      client._setDelivery(client => ({
         sendSession: () => {},
         sendEvent: (payload, cb) => cb(new Error('flerp'))
       }))
@@ -324,7 +324,7 @@ describe('@bugsnag/core/client', () => {
 
     it('should call the callback even if the event doesn’t send (enabledReleaseStages)', done => {
       const client = new Client({ apiKey: 'API_KEY', enabledReleaseStages: ['production'], releaseStage: 'development' })
-      client.delivery(client => ({
+      client._setDelivery(client => ({
         sendSession: () => {},
         sendEvent: (payload, cb) => cb(null)
       }))
@@ -338,7 +338,7 @@ describe('@bugsnag/core/client', () => {
 
     it('should call the callback even if the event doesn’t send (onError)', done => {
       const client = new Client({ apiKey: 'API_KEY', onError: () => false })
-      client.delivery(client => ({
+      client._setDelivery(client => ({
         sendSession: () => {},
         sendEvent: (payload, cb) => cb(null)
       }))
@@ -352,7 +352,7 @@ describe('@bugsnag/core/client', () => {
 
     it('should attach the original error to the event object', done => {
       const client = new Client({ apiKey: 'API_KEY', onError: () => false })
-      client.delivery(client => ({
+      client._setDelivery(client => ({
         sendSession: () => {},
         sendEvent: (payload, cb) => cb(null)
       }))
@@ -418,19 +418,19 @@ describe('@bugsnag/core/client', () => {
     it('calls the provided the session delegate and return delegate’s return value', () => {
       const client = new Client({ apiKey: 'API_KEY' })
       let ret
-      client.sessionDelegate({
+      client._sessionDelegate = {
         startSession: c => {
           expect(c).toBe(client)
           ret = {}
           return ret
         }
-      })
+      }
       expect(client.startSession()).toBe(ret)
     })
 
     it('calls warns if a session delegate is not provided', (done) => {
       const client = new Client({ apiKey: 'API_KEY' })
-      client.logger({
+      client._logger = {
         debug: () => {},
         info: () => {},
         warn: (...args) => {
@@ -438,20 +438,20 @@ describe('@bugsnag/core/client', () => {
           done()
         },
         error: () => {}
-      })
+      }
       client.startSession()
     })
 
     it('tracks error counts using the session delegate and sends them in error payloads', (done) => {
       const client = new Client({ apiKey: 'API_KEY' })
       let i = 0
-      client.sessionDelegate({
+      client._sessionDelegate = {
         startSession: (client) => {
           client._session = new Session()
           return client
         }
-      })
-      client.delivery(client => ({
+      }
+      client._setDelivery(client => ({
         sendSession: () => {},
         sendEvent: (payload, cb) => {
           if (++i < 10) return

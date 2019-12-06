@@ -11,8 +11,7 @@ describe('bugsnag vue', () => {
 
   it('installs Vue.config.errorHandler', done => {
     const client = new BugsnagClient({ apiKey: 'API_KEYYY' })
-    // client.logger(console)
-    client.delivery(client => ({
+    client._setDelivery(client => ({
       sendEvent: (payload) => {
         expect(payload.events[0].errorClass).toBe('Error')
         expect(payload.events[0].errorMessage).toBe('oops')

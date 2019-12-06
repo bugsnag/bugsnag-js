@@ -17,7 +17,7 @@ describe('plugin: node surrounding code', () => {
   it('should load code successfully for stackframes whose files exist', done => {
     const client = new Client({ apiKey: 'api_key' })
 
-    client.delivery(client => ({
+    client._setDelivery(client => ({
       sendEvent: (payload) => {
         const evt = payload.events[0]
         expect(Object.keys(evt.stacktrace[0].code))
@@ -62,7 +62,7 @@ describe('plugin: node surrounding code', () => {
   it('should tolerate missing files for some stackframes', done => {
     const client = new Client({ apiKey: 'api_key' })
 
-    client.delivery(client => ({
+    client._setDelivery(client => ({
       sendEvent: (payload) => {
         const evt = payload.events[0]
         expect(evt.stacktrace[0].code).toBeTruthy()
@@ -95,7 +95,7 @@ describe('plugin: node surrounding code', () => {
   it('behaves sensibly for code at the beginning and end of a file', done => {
     const client = new Client({ apiKey: 'api_key' })
 
-    client.delivery(client => ({
+    client._setDelivery(client => ({
       sendEvent: (payload) => {
         const evt = payload.events[0]
         expect(evt.stacktrace[0].code).toEqual({
@@ -136,7 +136,7 @@ describe('plugin: node surrounding code', () => {
 
     const startCount = createReadStreamCount
 
-    client.delivery(client => ({
+    client._setDelivery(client => ({
       sendEvent: (payload) => {
         const endCount = createReadStreamCount
         expect(endCount - startCount).toBe(1)
@@ -202,7 +202,7 @@ describe('plugin: node surrounding code', () => {
   it('truncates lines to a sensible number of characters', done => {
     const client = new Client({ apiKey: 'api_key' })
 
-    client.delivery(client => ({
+    client._setDelivery(client => ({
       sendEvent: (payload) => {
         payload.events[0].stacktrace.forEach(stackframe => {
           Object.keys(stackframe.code).forEach(key => {
