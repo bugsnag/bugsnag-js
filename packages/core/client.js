@@ -2,11 +2,13 @@ const config = require('./config')
 const BugsnagEvent = require('./event')
 const BugsnagBreadcrumb = require('./breadcrumb')
 const BugsnagSession = require('./session')
-const { map, includes } = require('./lib/es-utils')
+const { map, includes, filter } = require('./lib/es-utils')
 const inferReleaseStage = require('./lib/infer-release-stage')
 const isError = require('./lib/iserror')
 const runCallbacks = require('./lib/callback-runner')
 const metadataDelegate = require('./lib/metadata-delegate')
+
+const noop = () => {}
 
 const LOG_USAGE_ERR_PREFIX = 'Usage error.'
 const REPORT_USAGE_ERR_PREFIX = 'Bugsnag usage error.'
@@ -22,8 +24,8 @@ class BugsnagClient {
     this._schema = schema
 
     // // i/o
-    this._delivery = { sendSession: () => {}, sendEvent: () => {} }
-    this._logger = { debug: () => {}, info: () => {}, warn: () => {}, error: () => {} }
+    this._delivery = { sendSession: noop, sendEvent: noop }
+    this._logger = { debug: noop, info: noop, warn: noop, error: noop }
 
     // plugins
     this._plugins = {}
@@ -40,6 +42,20 @@ class BugsnagClient {
     this.device = undefined
     this.request = undefined
     this._user = {}
+
+    // callbacks:
+    //  e: onError
+    //  s: onSession
+    //  sp: onSessionPayload
+    //  b: onBreadcrumb
+    // (note these names are minified by hand because object
+    // properties are not safe to minify automatically)
+    this._cbs = {
+      e: [],
+      s: [],
+      sp: [],
+      b: []
+    }
 
     // expose internal constructors
     this.BugsnagClient = BugsnagClient
@@ -75,12 +91,16 @@ class BugsnagClient {
     if (!validity.valid === true) throw new Error(generateConfigErrorMessage(validity.errors))
 
     // update and elevate some special options if they were passed in at this point
-    if (typeof conf.onError === 'function') conf.onError = [conf.onError]
     if (conf.appVersion) this.app.version = conf.appVersion
     if (conf.appType) this.app.type = conf.appType
     if (conf.metadata) this._metadata = conf.metadata
     if (conf.user) this._user = conf.user
     if (conf.logger) this._logger = conf.logger
+
+    // add callbacks
+    if (conf.onError && conf.onError.length) this._cbs.e = this._cbs.e.concat(conf.onError)
+    if (conf.onBreadcrumb && conf.onBreadcrumb.length) this._cbs.b = this._cbs.b.concat(conf.onBreadcrumb)
+    if (conf.onSession && conf.onSession.length) this._cbs.s = this._cbs.s.concat(conf.onSession)
 
     // merge with existing config
     this._config = { ...this._config, ...conf }
@@ -114,11 +134,53 @@ class BugsnagClient {
   }
 
   startSession () {
-    if (!this._sessionDelegate) {
-      this._logger.warn('No session implementation is installed')
+    const session = new BugsnagSession()
+    // run synchronous onSession callbacks
+    let ignore = false
+    const cbs = this._cbs.s.slice(0)
+    while (!ignore) {
+      if (!cbs.length) break
+      try {
+        ignore = cbs.pop()(session) === false
+      } catch (e) {
+        this._logger.error('Error occurred in onSession callback, continuing anyway…')
+        this._logger.error(e)
+      }
+    }
+
+    if (ignore) {
+      this._logger.debug('Session not started due to onSession callback')
       return this
     }
-    return this._sessionDelegate.startSession(this)
+    return this._sessionDelegate.startSession(this, session)
+  }
+
+  addOnError (fn, front = false) {
+    this._cbs.e[front ? 'unshift' : 'push'](fn)
+  }
+
+  removeOnError (fn) {
+    this._cbs.e = filter(this._cbs.e, f => f !== fn)
+  }
+
+  _addOnSessionPayload (fn) {
+    this._cbs.sp.push(fn)
+  }
+
+  addOnSession (fn) {
+    this._cbs.s.push(fn)
+  }
+
+  removeOnSession (fn) {
+    this._cbs.s = filter(this._cbs.s, f => f !== fn)
+  }
+
+  addOnBreadcrumb (fn) {
+    this._cbs.b.push(fn)
+  }
+
+  removeOnBreadcrumb (fn) {
+    this._cbs.b = filter(this._cbs.b, f => f !== fn)
   }
 
   leaveBreadcrumb (message, metadata, type) {
@@ -135,6 +197,24 @@ class BugsnagClient {
 
     const crumb = new BugsnagBreadcrumb(message, metadata, type)
 
+    // run synchronous onBreadcrumb callbacks
+    let ignore = false
+    const cbs = this._cbs.b.slice(0)
+    while (!ignore) {
+      if (!cbs.length) break
+      try {
+        ignore = cbs.pop()(crumb) === false
+      } catch (e) {
+        this._logger.error('Error occurred in onBreadcrumb callback, continuing anyway…')
+        this._logger.error(e)
+      }
+    }
+
+    if (ignore) {
+      this._logger.debug('Breadcrumb not attached due to onBreadcrumb callback')
+      return
+    }
+
     // push the valid crumb onto the queue and maintain the length
     this.breadcrumbs.push(crumb)
     if (this.breadcrumbs.length > this._config.maxBreadcrumbs) {
@@ -142,7 +222,7 @@ class BugsnagClient {
     }
   }
 
-  notify (error, onError, cb = () => {}) {
+  notify (error, onError, cb = noop) {
     // releaseStage can be set via config.releaseStage or client.app.releaseStage
     const releaseStage = inferReleaseStage(this)
 
@@ -179,7 +259,7 @@ class BugsnagClient {
       this._logger.error(err)
     }
 
-    const callbacks = [].concat(onError).concat(this._config.onError)
+    const callbacks = [].concat(this._cbs.e).concat(onError)
     runCallbacks(callbacks, event, onCallbackError, (err, shouldSend) => {
       if (err) onCallbackError(err)
 

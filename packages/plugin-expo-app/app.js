@@ -25,7 +25,7 @@ module.exports = {
       }
     }
 
-    client._config.onError.unshift(event => {
+    client.addOnError(event => {
       const now = new Date()
       const inForeground = AppState.currentState === 'active'
       event.app.inForeground = inForeground
@@ -34,7 +34,7 @@ module.exports = {
         event.app.durationInForeground = now - lastEnteredForeground
       }
       event.addMetadata('app', { nativeBundleVersion, nativeVersionCode })
-    })
+    }, true)
 
     if (!client.app.version && Constants.manifest.version) {
       client.app.version = Constants.manifest.version

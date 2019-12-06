@@ -32,7 +32,7 @@ Lorem ipsum dolor sit amet.
     const payloads = []
     client.use(plugin, document, window)
 
-    expect(client._config.onError.length).toBe(1)
+    expect(client._cbs.e.length).toBe(1)
     client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
     client.notify(new Event('BadThing', 'Happens in script tags', [
       { fileName: window.location.href, lineNumber: 10 }
@@ -96,7 +96,7 @@ Lorem ipsum dolor sit amet.
     const payloads = []
     client.use(plugin, document, window)
 
-    expect(client._config.onError.length).toBe(1)
+    expect(client._cbs.e.length).toBe(1)
     client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
     client.notify(new Event('BadThing', 'Happens in script tags', [
       { fileName: window.location.href, lineNumber: 10 }
@@ -133,7 +133,7 @@ Lorem ipsum dolor sit amet.
     const payloads = []
     client.use(plugin, document, window)
 
-    expect(client._config.onError.length).toBe(1)
+    expect(client._cbs.e.length).toBe(1)
     client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
     client.notify(new Event('BadThing', 'Happens in script tags', [
       { fileName: window.location.href, lineNumber: 7 }
@@ -169,7 +169,7 @@ Lorem ipsum dolor sit amet.
     const payloads = []
     client.use(plugin, document, window)
 
-    expect(client._config.onError.length).toBe(1)
+    expect(client._cbs.e.length).toBe(1)
     client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
     const spy = spyOn(client._logger, 'error')
     client.notify(new Event('EmptyStacktrace', 'Has nothing in it', []))
@@ -232,7 +232,7 @@ Lorem ipsum dolor sit amet.
     const payloads = []
     client.use(plugin, document, window)
 
-    expect(client._config.onError.length).toBe(1)
+    expect(client._cbs.e.length).toBe(1)
     client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
     client.notify(new Event('Error', 'oh', [
       { fileName: window.location.href, lineNumber: 1 }

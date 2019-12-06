@@ -12,7 +12,7 @@ describe('plugin: device', () => {
     const payloads = []
     client.use(plugin, navigator)
 
-    expect(client._config.onError.length).toBe(1)
+    expect(client._cbs.e.length).toBe(1)
 
     client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
     client.notify(new Error('noooo'))

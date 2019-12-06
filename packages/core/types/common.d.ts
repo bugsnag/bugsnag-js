@@ -1,9 +1,13 @@
 import Client from "./client";
 import Event from "./event";
+import Session from "./session";
+import Breadcrumb from "./breadcrumb";
 
 export interface Config {
   apiKey: string;
   onError?: OnError | OnError[];
+  onBreadcrumb?: OnBreadcrumb | OnBreadcrumb[];
+  onSession?: OnSession | OnSession[];
   enabledBreadcrumbTypes?: BreadcrumbType[];
   autoDetectErrors?: boolean;
   autoDetectUnhandledRejections?: boolean;
@@ -22,6 +26,8 @@ export interface Config {
 }
 
 export type OnError = (event: Event, cb?: (err: null | Error) => void) => void | Promise<void> | boolean;
+export type OnSession = (session: Session) => boolean;
+export type OnBreadcrumb = (breadcrumb: Breadcrumb) => boolean;
 
 export interface Plugin {
   name?: string;

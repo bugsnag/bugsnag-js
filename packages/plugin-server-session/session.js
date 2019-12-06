@@ -6,14 +6,14 @@ const SessionTracker = require('./tracker')
 const Backoff = require('backo')
 
 module.exports = {
-  init: client => {
+  init: (client) => {
     const sessionTracker = new SessionTracker(client._config.sessionSummaryInterval)
     sessionTracker.on('summary', sendSessionSummary(client))
     sessionTracker.start()
     client._sessionDelegate = {
-      startSession: client => {
+      startSession: (client, session) => {
         const sessionClient = clone(client)
-        sessionClient._session = new client.BugsnagSession()
+        sessionClient._session = session
         sessionTracker.track(sessionClient._session)
         return sessionClient
       }

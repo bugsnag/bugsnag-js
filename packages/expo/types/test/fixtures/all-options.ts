@@ -5,7 +5,17 @@ bugsnag({
   appType: "worker",
   autoDetectErrors: true,
   autoDetectUnhandledRejections: true,
-  onError: [],
+  onError: [
+    event => true
+  ],
+  onBreadcrumb: b => {
+    console.log(b.message)
+    return false
+  },
+  onSession: s => {
+    console.log(s.id)
+    return true
+  }
   endpoints: {"notify":"https://notify.bugsnag.com","sessions":"https://sessions.bugsnag.com"},
   autoTrackSessions: true,
   enabledReleaseStages: ['zzz'],

@@ -5,7 +5,7 @@ const { map } = require('@bugsnag/core/lib/es-utils')
 
 module.exports = {
   init: (client) => {
-    client._config.onError.push(event => {
+    client.addOnError(event => {
       event.stacktrace = map(event.stacktrace, frame => ({ ...frame, file: strip(frame.file) }))
     })
   }
