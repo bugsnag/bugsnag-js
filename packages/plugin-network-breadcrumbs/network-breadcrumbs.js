@@ -119,8 +119,9 @@ const monkeyPatchFetch = () => {
   if (!('fetch' in win) || win.fetch.polyfill) return
 
   const oldFetch = win.fetch
-  win.fetch = function fetch (...args) {
-    const [urlOrRequest, options] = args
+  win.fetch = function fetch () {
+    const urlOrRequest = arguments[0]
+    const options = arguments[1]
 
     let method
     let url = null
@@ -145,7 +146,7 @@ const monkeyPatchFetch = () => {
 
     return new Promise((resolve, reject) => {
       // pass through to native fetch
-      oldFetch(...args)
+      oldFetch(...arguments)
         .then(response => {
           handleFetchSuccess(response, method, url)
           resolve(response)
