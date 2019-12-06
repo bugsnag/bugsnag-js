@@ -119,15 +119,34 @@ const monkeyPatchFetch = () => {
   if (!('fetch' in win) || win.fetch.polyfill) return
 
   const oldFetch = win.fetch
-  win.fetch = function fetch (...args) {
-    let [url, options] = args
-    let method = 'GET'
-    if (options && options.method) {
-      method = options.method
+  win.fetch = function fetch () {
+    const urlOrRequest = arguments[0]
+    const options = arguments[1]
+
+    let method
+    let url = null
+
+    if (urlOrRequest && typeof urlOrRequest === 'object') {
+      url = urlOrRequest.url
+      if (options && 'method' in options) {
+        method = options.method
+      } else if (urlOrRequest && 'method' in urlOrRequest) {
+        method = urlOrRequest.method
+      }
+    } else {
+      url = urlOrRequest
+      if (options && 'method' in options) {
+        method = options.method
+      }
     }
+
+    if (method === undefined) {
+      method = 'GET'
+    }
+
     return new Promise((resolve, reject) => {
       // pass through to native fetch
-      oldFetch(...args)
+      oldFetch(...arguments)
         .then(response => {
           handleFetchSuccess(response, method, url)
           resolve(response)

@@ -1,5 +1,8 @@
 # Changelog
 
+## TBD
+- (plugin-network-breadcrumbs): Fixes the `window.fetch` monkey-patch to also accept `Request`. [#662](https://github.com/bugsnag/bugsnag-js/pull/662)
+
 ## 6.4.3 (2019-10-21)
 
 ### Fixed
