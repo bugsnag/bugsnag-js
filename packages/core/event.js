@@ -158,7 +158,7 @@ BugsnagEvent.create = function (maybeError, tolerateNonErrors, handledState, com
   } catch (e) {
     event = new BugsnagEvent(error.name, error.message, [], handledState, maybeError)
   }
-  if (error.name === 'Bugsnag::InputError') {
+  if (error.name === 'InvalidError') {
     event.addMetadata(`${component}`, 'non-error parameter', makeSerialisable(maybeError))
   }
   return event
@@ -190,7 +190,7 @@ const normaliseError = (maybeError, tolerateNonErrors, component, logger) => {
   const createAndLogInputError = (reason, value) => {
     if (logger) logger.warn(`${component} received a non-error: "${reason}"`)
     const err = new Error(`${component} received a non-error. See "${component}" tab for more detail.`)
-    err.name = 'Bugsnag::InputError'
+    err.name = 'InvalidError'
     return err
   }
 

@@ -77,7 +77,7 @@ Scenario: a string passed to next(err)
   And the event "unhandled" is true
   And the event "severity" equals "error"
   And the event "severityReason.type" equals "unhandledErrorMiddleware"
-  And the exception "errorClass" equals "Bugsnag::InputError"
+  And the exception "errorClass" equals "InvalidError"
   And the exception "message" matches "^express middleware received a non-error\."
   And the exception "type" equals "nodejs"
 
@@ -88,6 +88,6 @@ Scenario: throwing non-Error error
   And the event "unhandled" is true
   And the event "severity" equals "error"
   And the event "severityReason.type" equals "unhandledErrorMiddleware"
-  And the exception "errorClass" equals "Bugsnag::InputError"
+  And the exception "errorClass" equals "InvalidError"
   And the exception "message" matches "^express middleware received a non-error\."
   And the exception "type" equals "nodejs"
