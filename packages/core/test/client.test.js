@@ -412,6 +412,45 @@ describe('@bugsnag/core/client', () => {
       client.leaveBreadcrumb('toast')
       expect(client.breadcrumbs.length).toBe(0)
     })
+
+    it('doesn’t store the breadcrumb if an onBreadcrumb callback returns false', () => {
+      let calls = 0
+      const client = new Client({
+        apiKey: 'API_KEY_YEAH',
+        onBreadcrumb: b => {
+          calls++
+          return false
+        }
+      })
+      client.leaveBreadcrumb('message')
+      expect(calls).toBe(1)
+      expect(client.breadcrumbs.length).toBe(0)
+    })
+
+    it('tolerates errors in onBreadcrumb callbacks', () => {
+      let calls = 0
+      const client = new Client({
+        apiKey: 'API_KEY_YEAH',
+        onBreadcrumb: b => {
+          calls++
+          throw new Error('uh oh')
+        }
+      })
+      client.leaveBreadcrumb('message')
+      expect(calls).toBe(1)
+      expect(client.breadcrumbs.length).toBe(1)
+    })
+
+    it('ignores breadcrumb types that aren’t in the enabled list', () => {
+      const client = new Client({
+        apiKey: 'API_KEY_YEAH',
+        enabledBreadcrumbTypes: ['manual']
+      })
+      client.leaveBreadcrumb('brrrrr')
+      client.leaveBreadcrumb('GET /jim', {}, 'request')
+      expect(client.breadcrumbs.length).toBe(1)
+      expect(client.breadcrumbs[0].message).toBe('brrrrr')
+    })
   })
 
   describe('startSession()', () => {
@@ -426,20 +465,6 @@ describe('@bugsnag/core/client', () => {
         }
       }
       expect(client.startSession()).toBe(ret)
-    })
-
-    it('calls warns if a session delegate is not provided', (done) => {
-      const client = new Client({ apiKey: 'API_KEY' })
-      client._logger = {
-        debug: () => {},
-        info: () => {},
-        warn: (...args) => {
-          expect(args[0]).toMatch(/^No session/)
-          done()
-        },
-        error: () => {}
-      }
-      client.startSession()
     })
 
     it('tracks error counts using the session delegate and sends them in error payloads', (done) => {
@@ -473,6 +498,86 @@ describe('@bugsnag/core/client', () => {
       sessionClient.notify(new Error('broke'))
       sessionClient.notify(new Event('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
       sessionClient.notify(new Event('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
+    })
+
+    it('does not start the session if onSession returns false', () => {
+      const client = new Client({ apiKey: 'API_KEY', onSession: s => false })
+      const sessionDelegate = {
+        startSession: () => {},
+        pauseSession: () => {},
+        resumeSession: () => {}
+      }
+      client._sessionDelegate = sessionDelegate
+
+      const startSpy = spyOn(sessionDelegate, 'startSession')
+
+      client.startSession()
+      expect(startSpy).toHaveBeenCalledTimes(0)
+    })
+
+    it('tolerates errors in onSession callbacks', () => {
+      const client = new Client({
+        apiKey: 'API_KEY',
+        onSession: s => {
+          throw new Error('oh no')
+        }
+      })
+      const sessionDelegate = {
+        startSession: () => {},
+        pauseSession: () => {},
+        resumeSession: () => {}
+      }
+      client._sessionDelegate = sessionDelegate
+
+      const startSpy = spyOn(sessionDelegate, 'startSession')
+
+      client.startSession()
+      expect(startSpy).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  describe('callbacks', () => {
+    it('supports adding and removing onError/onSession/onBreadcrumb callbacks', (done) => {
+      const c = new Client({ apiKey: 'API_KEY' })
+      c._setDelivery(client => ({ sendEvent: (p, cb) => cb(null), sendSession: (s, cb) => cb(null) }))
+      c._logger = console
+      const sessionDelegate = {
+        startSession: () => {},
+        pauseSession: () => {},
+        resumeSession: () => {}
+      }
+      c._sessionDelegate = sessionDelegate
+      const eSpy = spyOn({ fn: () => {} }, 'fn')
+      const bSpy = spyOn({ fn: () => {} }, 'fn')
+      const sSpy = spyOn({ fn: () => {} }, 'fn')
+
+      c.addOnError(eSpy)
+      c.addOnSession(sSpy)
+      c.addOnBreadcrumb(bSpy)
+
+      expect(c._cbs.e.length).toBe(1)
+      expect(c._cbs.s.length).toBe(1)
+      expect(c._cbs.b.length).toBe(1)
+
+      c.startSession()
+      expect(sSpy).toHaveBeenCalledTimes(1)
+      c.notify(new Error(), () => {}, () => {
+        expect(bSpy).toHaveBeenCalledTimes(1)
+        expect(eSpy).toHaveBeenCalledTimes(1)
+
+        c.removeOnError(eSpy)
+        c.removeOnSession(sSpy)
+        c.removeOnBreadcrumb(bSpy)
+
+        c.startSession()
+        expect(sSpy).toHaveBeenCalledTimes(1)
+        c.notify(new Error(), () => {}, () => {
+          expect(bSpy).toHaveBeenCalledTimes(1)
+          expect(eSpy).toHaveBeenCalledTimes(1)
+
+          done()
+        })
+      })
     })
   })
 

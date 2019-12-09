@@ -6,9 +6,9 @@ module.exports = {
 }
 
 const sessionDelegate = {
-  startSession: client => {
+  startSession: (client, session) => {
     const sessionClient = client
-    sessionClient._session = new client.BugsnagSession()
+    sessionClient._session = session
 
     const releaseStage = inferReleaseStage(sessionClient)
 

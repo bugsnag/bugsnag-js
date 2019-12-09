@@ -37,7 +37,7 @@ module.exports = {
       }
     }
 
-    client._config.onError.unshift(event => {
+    client.addOnError(event => {
       event.device = {
         ...event.device,
         time: isoDate(),
@@ -47,6 +47,6 @@ module.exports = {
         isDevice: Constants.isDevice,
         appOwnership: Constants.appOwnership
       })
-    })
+    }, true)
   }
 }

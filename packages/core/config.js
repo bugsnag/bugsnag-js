@@ -1,5 +1,5 @@
 const { filter, reduce, keys, isArray, includes } = require('./lib/es-utils')
-const { intRange, stringWithLength } = require('./lib/validators')
+const { intRange, stringWithLength, listOfFunctions } = require('./lib/validators')
 
 const BREADCRUMB_TYPES = ['navigation', 'request', 'process', 'log', 'user', 'state', 'error', 'manual']
 
@@ -32,7 +32,17 @@ module.exports.schema = {
   onError: {
     defaultValue: () => [],
     message: 'should be a function or array of functions',
-    validate: value => typeof value === 'function' || (isArray(value) && filter(value, f => typeof f === 'function').length === value.length)
+    validate: listOfFunctions
+  },
+  onSession: {
+    defaultValue: () => [],
+    message: 'should be a function or array of functions',
+    validate: listOfFunctions
+  },
+  onBreadcrumb: {
+    defaultValue: () => [],
+    message: 'should be a function or array of functions',
+    validate: listOfFunctions
   },
   endpoints: {
     defaultValue: () => ({

@@ -1,19 +1,29 @@
-import bugsnag from "../../.."
+import bugsnag, { Bugsnag } from "../../.."
 bugsnag({
   apiKey: "abc",
   appVersion: "1.2.3",
   appType: "worker",
   autoDetectErrors: true,
   autoDetectUnhandledRejections: true,
-  onError: [],
+  onError: [
+    event => true
+  ],
+  onBreadcrumb: (b: Bugsnag.Breadcrumb) => {
+    console.log(b.message)
+    return false
+  },
+  onSession: (s: Bugsnag.Session) => {
+    console.log(s.id)
+    return true
+  },
   endpoints: {"notify":"https://notify.bugsnag.com","sessions":"https://sessions.bugsnag.com"},
   autoTrackSessions: true,
-  enabledReleaseStages: [],
+  enabledReleaseStages: ['zzz'],
   releaseStage: "production",
   maxBreadcrumbs: 20,
   enabledBreadcrumbTypes: ['manual','log','request'],
   user: null,
-  metaData: {},
+  metadata: {},
   logger: undefined,
   filters: ["foo",/bar/],
   collectUserIp: true,

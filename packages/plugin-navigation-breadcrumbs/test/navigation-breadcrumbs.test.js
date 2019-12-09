@@ -7,6 +7,11 @@ const Client = require('@bugsnag/core/client')
 describe('plugin: navigation breadcrumbs', () => {
   it('should drop breadcrumb for navigational activity', done => {
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
+    c._sessionDelegate = {
+      startSession: () => {},
+      pauseSession: () => {},
+      resumeSession: () => {}
+    }
 
     const { winHandlers, docHandlers, window } = getMockWindow()
     c.use(plugin, window)
@@ -33,6 +38,11 @@ describe('plugin: navigation breadcrumbs', () => {
 
   it('should not be enabled when enabledBreadcrumbTypes=[]', () => {
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: [] })
+    c._sessionDelegate = {
+      startSession: () => {},
+      pauseSession: () => {},
+      resumeSession: () => {}
+    }
     const { winHandlers, docHandlers, window } = getMockWindow()
     c.use(plugin, window)
     winHandlers.load.forEach((h) => h.call(window))
@@ -74,6 +84,11 @@ describe('plugin: navigation breadcrumbs', () => {
 
   it('should be enabled when enabledReleaseStages=["navigation"]', () => {
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledReleaseStages: ['navigation'] })
+    c._sessionDelegate = {
+      startSession: () => {},
+      pauseSession: () => {},
+      resumeSession: () => {}
+    }
     const { winHandlers, docHandlers, window } = getMockWindow()
     c.use(plugin, window)
     winHandlers.load.forEach((h) => h.call(window))

@@ -14,6 +14,13 @@ module.exports = (client) => {
   clone.request = { ...client.request }
   clone._user = { ...client._user }
 
+  clone._cbs = {
+    e: client._cbs.e.slice(),
+    s: client._cbs.s.slice(),
+    sp: client._cbs.sp.slice(),
+    b: client._cbs.b.slice()
+  }
+
   clone._logger = client._logger
   clone._delivery = client._delivery
 
