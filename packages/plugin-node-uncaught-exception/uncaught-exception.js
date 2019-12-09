@@ -3,7 +3,7 @@ module.exports = {
   init: client => {
     if (!client._config.autoDetectErrors) return
     _handler = err => {
-      const event = client.BugsnagEvent.create(err, true, {
+      const event = client.BugsnagEvent.create(err, false, {
         severity: 'error',
         unhandled: true,
         severityReason: { type: 'unhandledException' }
