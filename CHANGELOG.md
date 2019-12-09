@@ -15,6 +15,7 @@
 - Rename `metaData` -> `metadata` and add consistent `add/get/clearMetadata()` methods to `Client`/`Event` for manipulating metadata explicitly, rather than mutating a property [#658](https://github.com/bugsnag/bugsnag-js/pull/658)
 - Remove non-public methods from `Client` interface: `logger()`, `delivery()` and `sessionDelegate()` [#659](https://github.com/bugsnag/bugsnag-js/pull/659)
 - Update `leaveBreadcrumb()` type signature to return `void`. [#661](https://github.com/bugsnag/bugsnag-js/pull/661)
+- Add `onBreadcrumb` and `onSession` callbacks. [#665](https://github.com/bugsnag/bugsnag-js/pull/665)
 
 ## 6.4.3 (2019-10-21)
 
