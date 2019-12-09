@@ -563,7 +563,7 @@ describe('@bugsnag/core/client', () => {
       expect(sSpy).toHaveBeenCalledTimes(1)
       c.notify(new Error(), () => {}, () => {
         expect(bSpy).toHaveBeenCalledTimes(1)
-        expect(bSpy).toHaveBeenCalledTimes(1)
+        expect(eSpy).toHaveBeenCalledTimes(1)
 
         c.removeOnError(eSpy)
         c.removeOnSession(sSpy)
@@ -573,7 +573,7 @@ describe('@bugsnag/core/client', () => {
         expect(sSpy).toHaveBeenCalledTimes(1)
         c.notify(new Error(), () => {}, () => {
           expect(bSpy).toHaveBeenCalledTimes(1)
-          expect(bSpy).toHaveBeenCalledTimes(1)
+          expect(eSpy).toHaveBeenCalledTimes(1)
 
           done()
         })
