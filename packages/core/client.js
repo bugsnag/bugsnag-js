@@ -7,6 +7,7 @@ const inferReleaseStage = require('./lib/infer-release-stage')
 const isError = require('./lib/iserror')
 const runCallbacks = require('./lib/callback-runner')
 const metadataDelegate = require('./lib/metadata-delegate')
+const runSyncCallbacks = require('./lib/sync-callback-runner')
 
 const noop = () => {}
 
@@ -135,18 +136,9 @@ class BugsnagClient {
 
   startSession () {
     const session = new BugsnagSession()
-    // run synchronous onSession callbacks
-    let ignore = false
-    const cbs = this._cbs.s.slice(0)
-    while (!ignore) {
-      if (!cbs.length) break
-      try {
-        ignore = cbs.pop()(session) === false
-      } catch (e) {
-        this._logger.error('Error occurred in onSession callback, continuing anyway…')
-        this._logger.error(e)
-      }
-    }
+
+    // run onSession callbacks
+    const ignore = runSyncCallbacks(this._cbs.s.slice(0), session, 'onSession', this._logger)
 
     if (ignore) {
       this._logger.debug('Session not started due to onSession callback')
@@ -197,18 +189,8 @@ class BugsnagClient {
 
     const crumb = new BugsnagBreadcrumb(message, metadata, type)
 
-    // run synchronous onBreadcrumb callbacks
-    let ignore = false
-    const cbs = this._cbs.b.slice(0)
-    while (!ignore) {
-      if (!cbs.length) break
-      try {
-        ignore = cbs.pop()(crumb) === false
-      } catch (e) {
-        this._logger.error('Error occurred in onBreadcrumb callback, continuing anyway…')
-        this._logger.error(e)
-      }
-    }
+    // run onBreadcrumb callbacks
+    const ignore = runSyncCallbacks(this._cbs.b.slice(0), crumb, 'onBreadcrumb', this._logger)
 
     if (ignore) {
       this._logger.debug('Breadcrumb not attached due to onBreadcrumb callback')
