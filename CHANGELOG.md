@@ -17,6 +17,7 @@
 - Update `leaveBreadcrumb()` type signature to return `void`. [#661](https://github.com/bugsnag/bugsnag-js/pull/661)
 - Add `onBreadcrumb` and `onSession` callbacks. [#665](https://github.com/bugsnag/bugsnag-js/pull/665)
 - Refactor `notify()` to not accept events (they go via `_notify()` instead). Consolidate `Event` static methods into a single `.create()` utility, used by all automatic errors detection components. [#664](https://github.com/bugsnag/bugsnag-js/pull/664)
+- Refactor `notify()` to not accept events (they go via `_notify()` instead). Consolidate `Event` static methods into a single `.create()` utility, used by all automatic error detection components. [#664](https://github.com/bugsnag/bugsnag-js/pull/664)
 
 ## 6.4.3 (2019-10-21)
 
