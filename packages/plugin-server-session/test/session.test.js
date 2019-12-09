@@ -140,4 +140,27 @@ describe('plugin: server sessions', () => {
     expect(sessionClient.breadcrumbs.length).toBe(2)
     expect(Object.keys(sessionClient._metadata).length).toBe(2)
   })
+
+  it('should support pausing/resuming sessions', () => {
+    class TrackerMock extends Emitter {
+      start () {}
+      stop () {}
+      track () {}
+    }
+    const plugin = proxyquire('../session', { './tracker': TrackerMock })
+
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
+    c.use(plugin)
+    const sessionClient = c.startSession()
+    const sid0 = sessionClient._session.id
+    sessionClient.pauseSession()
+    const s1 = sessionClient._session
+    sessionClient.resumeSession()
+    const sid2 = sessionClient._session.id
+    expect(sid2).toBe(sid0)
+    expect(s1).toBe(null)
+    sessionClient._session = null
+    const resumedClient = sessionClient.resumeSession()
+    expect(resumedClient._session).toBeTruthy()
+  })
 })

@@ -9,6 +9,7 @@ const sessionDelegate = {
   startSession: (client, session) => {
     const sessionClient = client
     sessionClient._session = session
+    sessionClient._pausedSession = null
 
     const releaseStage = inferReleaseStage(sessionClient)
 
@@ -32,5 +33,18 @@ const sessionDelegate = {
     })
 
     return sessionClient
+  },
+  resumeSession: (client) => {
+    if (client._pausedSession) {
+      client._session = client._pausedSession
+      client._pausedSession = null
+      return client
+    } else {
+      return client.startSession()
+    }
+  },
+  pauseSession: (client) => {
+    client._pausedSession = client._session
+    client._session = null
   }
 }

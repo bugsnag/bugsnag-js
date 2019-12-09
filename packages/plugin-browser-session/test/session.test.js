@@ -89,4 +89,42 @@ describe('plugin: sessions', () => {
       /"endpoints" should be an object containing endpoint URLs { notify, sessions }/
     )
   })
+
+  it('supports pausing and resuming sessions', (done) => {
+    const payloads = []
+    const c = new Client({
+      apiKey: 'API_KEY'
+    })
+    c.use(plugin)
+    c._setDelivery(client => ({
+      sendEvent: (p, cb = () => {}) => {
+        payloads.push(p)
+        cb()
+      },
+      sendSession: (p, cb = () => {}) => cb()
+    }))
+    c.notify(new Error('1'))
+    c.startSession()
+    c.notify(new Error('2'))
+    c.pauseSession()
+    c.notify(new Error('3'))
+    c.resumeSession()
+    c.notify(new Error('4'))
+    c.startSession()
+    c.notify(new Error('5'))
+    c._pausedSession = c._session = null
+    c.resumeSession()
+    c.notify(new Error('6'))
+
+    setTimeout(() => {
+      expect(payloads.length).toBe(6)
+      expect(payloads[0].events[0].session).toBe(undefined)
+      expect(payloads[1].events[0].session).toBeDefined()
+      expect(payloads[2].events[0].session).toBe(undefined)
+      expect(payloads[3].events[0].session.id).toBe(payloads[1].events[0].session.id)
+      expect(payloads[4].events[0].session.id).not.toBe(payloads[3].events[0].session.id)
+      expect(payloads[5].events[0].session.id).not.toBe(payloads[4].events[0].session.id)
+      done()
+    }, 0)
+  })
 })

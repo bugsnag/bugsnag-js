@@ -22,6 +22,11 @@ declare class Client {
   public getUser(): { id?: string; email?: string; name?: string };
   public setUser(id?: string, email?: string, name?: string): void;
 
+  // sessions
+  public startSession(): Client;
+  public pauseSession(): void;
+  public resumeSession(): Client;
+
   public use(plugin: common.Plugin, ...args: any[]): Client;
   public getPlugin(name: string): any;
   public notify(
@@ -35,7 +40,6 @@ declare class Client {
     cb?: (err: any, event: Event) => void,
   ): void;
   public leaveBreadcrumb(message: string, metadata?: { [key: string]: common.BreadcrumbMetadataValue }, type?: string): void;
-  public startSession(): Client;
 }
 
 export default Client;
