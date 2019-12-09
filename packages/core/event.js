@@ -174,18 +174,26 @@ const normaliseError = (maybeError, tolerateNonErrors, component, logger) => {
   let error
   let internalFrames = 0
 
-  const createAndLogInputError = (reason, value) => {
+  const createAndLogInputError = (reason) => {
     if (logger) logger.warn(`${component} received a non-error: "${reason}"`)
     const err = new Error(`${component} received a non-error. See "${component}" tab for more detail.`)
     err.name = 'InvalidError'
     return err
   }
 
+  // In some cases:
+  //
+  //  - the promise rejection handler (both in the browser and node)
+  //  - the node uncaughtException handler
+  //
+  // We are really limited in what we can do to get a stacktrace. So we use the
+  // tolerateNonErrors option to ensure that the resulting error communicates as
+  // such.
   if (!tolerateNonErrors) {
     if (isError(maybeError)) {
       error = maybeError
     } else {
-      error = createAndLogInputError(typeof maybeError, maybeError)
+      error = createAndLogInputError(typeof maybeError)
       internalFrames += 2
     }
   } else {
@@ -197,7 +205,7 @@ const normaliseError = (maybeError, tolerateNonErrors, component, logger) => {
         internalFrames += 1
         break
       case 'function':
-        error = createAndLogInputError('function', maybeError)
+        error = createAndLogInputError('function')
         internalFrames += 2
         break
       case 'object':
@@ -208,13 +216,13 @@ const normaliseError = (maybeError, tolerateNonErrors, component, logger) => {
           error.name = maybeError.name || maybeError.errorClass
           internalFrames += 1
         } else {
-          error = createAndLogInputError(maybeError === null ? 'null' : 'unsupported object', maybeError)
+          error = createAndLogInputError(maybeError === null ? 'null' : 'unsupported object')
           internalFrames += 2
         }
         break
       default:
-        error = createAndLogInputError('nothing', maybeError)
-        internalFrames++
+        error = createAndLogInputError('nothing')
+        internalFrames += 2
     }
   }
 
