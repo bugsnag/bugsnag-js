@@ -1,4 +1,5 @@
 const { reduce } = require('@bugsnag/core/lib/es-utils')
+const isError = require('@bugsnag/core/lib/iserror')
 
 /*
  * Automatically notifies Bugsnag when window.onunhandledrejection is called
@@ -28,7 +29,17 @@ exports.init = (client, win = window) => {
       event.stacktrace = reduce(event.stacktrace, fixBluebirdStacktrace(error), [])
     }
 
-    client._notify(event)
+    client._notify(event, (event) => {
+      if (isError(event.originalError) && !event.originalError.stack) {
+        event.addMetadata('unhandledRejection handler', {
+          [Object.prototype.toString.call(event.originalError)]: {
+            name: event.originalError.name,
+            message: event.originalError.message,
+            code: event.originalError.code
+          }
+        })
+      }
+    })
   }
   if ('addEventListener' in win) {
     win.addEventListener('unhandledrejection', listener)

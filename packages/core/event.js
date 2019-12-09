@@ -165,22 +165,9 @@ BugsnagEvent.create = function (maybeError, tolerateNonErrors, handledState, com
 }
 
 const makeSerialisable = (err) => {
-  if (err === null) {
-    return 'null'
-  } else if (err === undefined) {
-    return 'undefined'
-  } else if (isError(err)) {
-    return {
-      [Object.prototype.toString.call(err)]: {
-        name: err.name,
-        message: err.message,
-        code: err.code,
-        stack: err.stack
-      }
-    }
-  } else {
-    return err
-  }
+  if (err === null) return 'null'
+  if (err === undefined) return 'undefined'
+  return err
 }
 
 const normaliseError = (maybeError, tolerateNonErrors, component, logger) => {
