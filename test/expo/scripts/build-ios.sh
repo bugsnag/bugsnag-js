@@ -5,7 +5,7 @@ set -e
 # Lets make sure the build folder was cleared out correctly
 rm -rf $BUILDKITE_BUILD_CHECKOUT_PATH/build/*
 cd test/expo/features/fixtures/test-app
-npm i turtle-cli@0.11.1 bunyan
+npm i turtle-cli@0.13.1 bunyan
 perl -0777 -i.original -pe "s/entitlements\\['aps-environment'\\] =[^;]+;//gs" node_modules/turtle-cli/node_modules/xdl/build/detach/IosNSBundle.js
 node_modules/.bin/turtle build:ios \
   -c ./app.json \

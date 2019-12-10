@@ -6,7 +6,7 @@ docker-compose build expo-publisher
 docker-compose run expo-publisher
 
 cd test/expo/features/fixtures/test-app && \
-npm i turtle-cli@0.11.1 bunyan --no-save --no-package-lock && \
+npm i turtle-cli@0.13.1 bunyan --no-save --no-package-lock && \
 perl -0777 -i.original -pe "s/entitlements\\['aps-environment'\\] =[^;]+;//gs" node_modules/turtle-cli/node_modules/xdl/build/detach/IosNSBundle.js && \
 node_modules/.bin/turtle build:ios \
   -c test/expo/features/fixtures/test-app/app.json \
