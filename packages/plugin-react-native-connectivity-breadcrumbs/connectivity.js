@@ -1,4 +1,4 @@
-const { NetInfo } = require('react-native')
+const NetInfo = require('@react-native-community/netinfo')
 
 module.exports = {
   init: client => {
@@ -6,14 +6,9 @@ module.exports = {
     const implicitlyDisabled = client.config.autoBreadcrumbs === false && client.config.connectivityBreadcrumbsEnabled !== true
     if (explicitlyDisabled || implicitlyDisabled) return
 
-    NetInfo.addEventListener('connectionChange', ({ type, effectiveType }) => {
+    NetInfo.addEventListener(({ isConnected, isInternetReachable, type }) => {
       client.leaveBreadcrumb(
-        `Connectivity changed`,
-        {
-          type,
-          effectiveType
-        },
-        'state'
+        `Connectivity changed`, { isConnected, isInternetReachable, type }, 'state'
       )
     })
   },
