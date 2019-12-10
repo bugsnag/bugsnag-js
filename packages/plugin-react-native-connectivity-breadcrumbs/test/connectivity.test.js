@@ -6,7 +6,7 @@ const Client = require('@bugsnag/core/client')
 const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
 describe('plugin: react native connectivity breadcrumbs', () => {
-  it('should create a breadcrumb when the NetInfo#connectionChange event happens', () => {
+  it('should create a breadcrumb when NetInfo events happen', () => {
     let _cb
     const NetInfo = {
       addEventListener: (fn) => {
@@ -29,13 +29,13 @@ describe('plugin: react native connectivity breadcrumbs', () => {
     expect(client.breadcrumbs.length).toBe(1)
     expect(client.breadcrumbs[0].type).toBe('state')
     expect(client.breadcrumbs[0].name).toBe('Connectivity changed')
-    expect(client.breadcrumbs[0].metaData).toEqual({ type: 'wifi' })
+    expect(client.breadcrumbs[0].metaData).toEqual({ type: 'wifi', isConnected: true, isInternetReachable: true })
 
     _cb({ type: 'none', isConnected: false, isInternetReachable: false })
     expect(client.breadcrumbs.length).toBe(2)
     expect(client.breadcrumbs[1].type).toBe('state')
     expect(client.breadcrumbs[1].name).toBe('Connectivity changed')
-    expect(client.breadcrumbs[1].metaData).toEqual({ type: 'none' })
+    expect(client.breadcrumbs[1].metaData).toEqual({ type: 'none', isConnected: false, isInternetReachable: false })
   })
 
   it('should not be enabled when autoBreadcrumbs=false', () => {
