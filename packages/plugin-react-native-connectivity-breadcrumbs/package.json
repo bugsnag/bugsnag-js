@@ -19,6 +19,9 @@
   },
   "author": "Bugsnag",
   "license": "MIT",
+  "dependencies": {
+    "@react-native-community/netinfo": "^5.0.0"
+  },
   "devDependencies": {
     "@bugsnag/core": "^6.4.1",
     "jasmine": "3.1.0",

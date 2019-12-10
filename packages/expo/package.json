@@ -59,7 +59,6 @@
     "@bugsnag/plugin-react-native-global-error-handler": "^6.4.0",
     "@bugsnag/plugin-react-native-orientation-breadcrumbs": "^6.4.1",
     "@bugsnag/plugin-react-native-unhandled-rejection": "^6.4.0",
-    "@react-native-community/netinfo": "^5.0.0",
     "bugsnag-build-reporter": "^1.0.1",
     "bugsnag-sourcemaps": "^1.1.0",
     "expo-constants": "^6.0.0"
