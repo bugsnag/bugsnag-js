@@ -8,7 +8,7 @@ describe('delivery: expo -> NetworkStatus', () => {
     const NetworkStatus = proxyquire('../network-status', {
       '@react-native-community/netinfo': {
         addEventListener: (fn) => { listeners.push(fn) },
-        fetch: () => new Promise(resolve => setTimeout(() => resolve({ isInternetReachable: true }), 1))
+        fetch: () => new Promise(resolve => setTimeout(() => resolve({ isConnected: true }), 1))
       }
     })
     const ns = new NetworkStatus()
@@ -20,7 +20,7 @@ describe('delivery: expo -> NetworkStatus', () => {
       expect(ns.isConnected).toBe(true)
       // then it should start listening
       expect(listeners.length).toBe(1)
-      listeners[0]({ isInternetReachable: false })
+      listeners[0]({ isConnected: false })
       // check that the change we sent updated the value
       expect(ns.isConnected).toBe(false)
       done()
@@ -32,7 +32,7 @@ describe('delivery: expo -> NetworkStatus', () => {
     const NetworkStatus = proxyquire('../network-status', {
       '@react-native-community/netinfo': {
         addEventListener: (fn) => { listeners.push(fn) },
-        fetch: () => new Promise(resolve => setTimeout(() => resolve({ isInternetReachable: true }), 1))
+        fetch: () => new Promise(resolve => setTimeout(() => resolve({ isConnected: true }), 1))
       }
     })
     const ns = new NetworkStatus()
@@ -51,9 +51,9 @@ describe('delivery: expo -> NetworkStatus', () => {
     })
 
     setTimeout(() => {
-      listeners[0]({ isInternetReachable: false })
+      listeners[0]({ isConnected: false })
       setTimeout(() => {
-        listeners[0]({ isInternetReachable: true })
+        listeners[0]({ isConnected: true })
       }, 1)
     }, 2)
   })

@@ -25,10 +25,10 @@ module.exports = class NetworkStatus {
   _watch () {
     // get the initial status
     NetInfo.fetch().then(state => {
-      this._update(state.isInternetReachable)
+      this._update(state.isConnected)
       // then listen for subsequent changes
       NetInfo.addEventListener(state => {
-        this._update(state.isInternetReachable)
+        this._update(state.isConnected)
       })
     })
   }
