@@ -11,6 +11,7 @@ RUN npm install
 COPY babel.config.js tslint.json lerna.json ./
 ADD min_packages.tar .
 COPY bin ./bin
+RUN npm --version
 RUN npx lerna bootstrap --concurrency 1
 COPY packages ./packages
 RUN npm run build
