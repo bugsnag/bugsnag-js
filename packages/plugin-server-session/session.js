@@ -14,8 +14,22 @@ module.exports = {
       startSession: (client, session) => {
         const sessionClient = clone(client)
         sessionClient._session = session
+        sessionClient._pausedSession = null
         sessionTracker.track(sessionClient._session)
         return sessionClient
+      },
+      pauseSession: (client) => {
+        client._pausedSession = client._session
+        client._session = null
+      },
+      resumeSession: (client) => {
+        if (client._pausedSession) {
+          client._session = client._pausedSession
+          client._pausedSession = null
+          return client
+        } else {
+          return client.startSession()
+        }
       }
     }
   },

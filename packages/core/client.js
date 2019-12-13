@@ -176,6 +176,14 @@ class BugsnagClient {
     this._cbs.b = filter(this._cbs.b, f => f !== fn)
   }
 
+  pauseSession () {
+    return this._sessionDelegate.pauseSession(this)
+  }
+
+  resumeSession () {
+    return this._sessionDelegate.resumeSession(this)
+  }
+
   leaveBreadcrumb (message, metadata, type) {
     // coerce bad values so that the defaults get set
     message = typeof message === 'string' ? message : ''

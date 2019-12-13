@@ -613,6 +613,30 @@ describe('@bugsnag/core/client', () => {
     })
   })
 
+  describe('pause/resumeSession()', () => {
+    it('forwards on calls to the session delegate', () => {
+      const client = new Client({ apiKey: 'API_KEY' })
+      const sessionDelegate = {
+        startSession: () => {},
+        pauseSession: () => {},
+        resumeSession: () => {}
+      }
+      client._sessionDelegate = sessionDelegate
+
+      const startSpy = spyOn(sessionDelegate, 'startSession')
+      const pauseSpy = spyOn(sessionDelegate, 'pauseSession')
+      const resumeSpy = spyOn(sessionDelegate, 'resumeSession')
+      client._sessionDelegate = sessionDelegate
+
+      client.startSession()
+      expect(startSpy).toHaveBeenCalledTimes(1)
+      client.pauseSession()
+      expect(pauseSpy).toHaveBeenCalledTimes(1)
+      client.resumeSession()
+      expect(resumeSpy).toHaveBeenCalledTimes(1)
+    })
+  })
+
   describe('getUser() / setUser()', () => {
     it('sets and retrieves user properties', () => {
       const c = new Client({ apiKey: 'aaaa' })

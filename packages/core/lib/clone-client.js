@@ -23,6 +23,7 @@ module.exports = (client) => {
 
   clone._logger = client._logger
   clone._delivery = client._delivery
+  clone._sessionDelegate = client._sessionDelegate
 
   return clone
 }
