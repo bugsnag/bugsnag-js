@@ -19,6 +19,7 @@
 - Refactor `notify()` to not accept events (they go via `_notify()` instead). Consolidate `Event` static methods into a single `.create()` utility, used by all automatic errors detection components. [#664](https://github.com/bugsnag/bugsnag-js/pull/664)
 - Refactor `notify()` to not accept events (they go via `_notify()` instead). Consolidate `Event` static methods into a single `.create()` utility, used by all automatic error detection components. [#664](https://github.com/bugsnag/bugsnag-js/pull/664)
 - Add methods to pause and resume sessions [#666](https://github.com/bugsnag/bugsnag-js/pull/666)
+- Add `pauseSession()` and `resumeSession()` methods to `Client` [#666](https://github.com/bugsnag/bugsnag-js/pull/666)
 
 ## 6.4.3 (2019-10-21)
 
