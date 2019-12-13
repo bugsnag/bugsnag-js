@@ -151,16 +151,29 @@ describe('plugin: server sessions', () => {
 
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
     c.use(plugin)
+
+    // start a session and get its id
     const sessionClient = c.startSession()
     const sid0 = sessionClient._session.id
+
+    // ensure pausing the session clears the client._session property
     sessionClient.pauseSession()
     const s1 = sessionClient._session
+    const psid1 = sessionClient._pausedSession.id
+    expect(s1).toBe(null)
+    expect(psid1).toBe(sid0)
+
+    // ensure resuming the session gets back the original session (not a new one)
     sessionClient.resumeSession()
     const sid2 = sessionClient._session.id
     expect(sid2).toBe(sid0)
-    expect(s1).toBe(null)
+
+    // ensure resumeSession() starts a new one when no paused session exists
     sessionClient._session = null
+    sessionClient._pausedSession = null
     const resumedClient = sessionClient.resumeSession()
     expect(resumedClient._session).toBeTruthy()
+    const sid3 = resumedClient._session.id
+    expect(sid3).not.toBe(sid0)
   })
 })
