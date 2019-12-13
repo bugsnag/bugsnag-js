@@ -1,6 +1,5 @@
 const domain = require('domain') // eslint-disable-line
 const extractRequestInfo = require('./request-info')
-const createEventFromErr = require('@bugsnag/core/lib/event-from-error')
 const clone = require('@bugsnag/core/lib/clone-client')
 const handledState = {
   severity: 'error',
@@ -31,7 +30,8 @@ module.exports = {
 
       // unhandled errors caused by this request
       dom.on('error', (err) => {
-        req.bugsnag.notify(createEventFromErr(err, handledState), () => {}, (e, event) => {
+        const event = client.BugsnagEvent.create(err, false, handledState, 'restify middleware', 1)
+        req.bugsnag._notify(event, () => {}, (e, event) => {
           if (e) client._logger.error('Failed to send event to Bugsnag')
           req.bugsnag._config.onUncaughtException(err, event, client._logger)
         })
@@ -50,13 +50,14 @@ module.exports = {
 
     const errorHandler = (req, res, err, cb) => {
       if (err.statusCode && err.statusCode < 500) return cb()
+      const event = client.BugsnagEvent.create(err, false, handledState, 'restify middleware', 1)
       if (req.bugsnag) {
-        req.bugsnag.notify(createEventFromErr(err, handledState))
+        req.bugsnag._notify(event)
       } else {
         client._logger.warn(
           'req.bugsnag is not defined. Make sure the @bugsnag/plugin-restify requestHandler middleware is added first.'
         )
-        client.notify(createEventFromErr(err, handledState), (event) => {
+        client._notify(event, (event) => {
           const { metadata, request } = getRequestAndMetadataFromReq(req)
           event.request = { ...request }
           event.addMetadata('request', metadata)

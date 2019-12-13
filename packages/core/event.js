@@ -4,6 +4,7 @@ const hasStack = require('./lib/has-stack')
 const { reduce, filter } = require('./lib/es-utils')
 const jsRuntime = require('./lib/js-runtime')
 const metadataDelegate = require('./lib/metadata-delegate')
+const isError = require('./lib/iserror')
 
 class BugsnagEvent {
   constructor (errorClass, errorMessage, stacktrace = [], handledState = defaultHandledState(), originalError) {
@@ -126,33 +127,125 @@ const stringOrFallback = (str, fallback) => typeof str === 'string' && str ? str
 
 // Helpers
 
-BugsnagEvent.getStacktrace = function (error, errorFramesToSkip = 0, generatedFramesToSkip = 0) {
+BugsnagEvent.getStacktrace = function (error, errorFramesToSkip, backtraceFramesToSkip) {
   if (hasStack(error)) return ErrorStackParser.parse(error).slice(errorFramesToSkip)
-  // in IE11 a new Error() doesn't have a stacktrace until you throw it, so try that here
+  // error wasn't provided or didn't have a stacktrace so try to walk the callstack
   try {
-    throw error
+    return filter(StackGenerator.backtrace(), frame =>
+      (frame.functionName || '').indexOf('StackGenerator$$') === -1
+    ).slice(1 + backtraceFramesToSkip)
   } catch (e) {
-    if (hasStack(e)) return ErrorStackParser.parse(error).slice(1 + generatedFramesToSkip)
-    // error wasn't provided or didn't have a stacktrace so try to walk the callstack
-    try {
-      return filter(StackGenerator.backtrace(), frame =>
-        (frame.functionName || '').indexOf('StackGenerator$$') === -1
-      ).slice(1 + generatedFramesToSkip)
-    } catch (e) {
-      return []
-    }
+    return []
   }
 }
 
-BugsnagEvent.ensureEvent = function (eventOrError, errorFramesToSkip = 0, generatedFramesToSkip = 0) {
-  // notify() can be called with an Event object. In this case no action is required
-  if (eventOrError.__isBugsnagEvent) return eventOrError
+BugsnagEvent.create = function (maybeError, tolerateNonErrors, handledState, component, errorFramesToSkip = 0, logger) {
+  const [error, internalFrames] = normaliseError(maybeError, tolerateNonErrors, component, logger)
+  let event
   try {
-    const stacktrace = BugsnagEvent.getStacktrace(eventOrError, errorFramesToSkip, 1 + generatedFramesToSkip)
-    return new BugsnagEvent(eventOrError.name, eventOrError.message, stacktrace, undefined, eventOrError)
+    const stacktrace = BugsnagEvent.getStacktrace(
+      error,
+      // if an error was created/throw in the normaliseError() function, we need to
+      // tell the getStacktrace() function to skip the number of frames we know will
+      // be from our own functions. This is added to the number of frames deep we
+      // were told about
+      internalFrames > 0 ? 1 + internalFrames + errorFramesToSkip : 0,
+      // if there's no stacktrace, the callstack may be walked to generated one.
+      // this is how many frames should be removed because they come from our library
+      1 + errorFramesToSkip
+    )
+    event = new BugsnagEvent(error.name, error.message, stacktrace, handledState, maybeError)
   } catch (e) {
-    return new BugsnagEvent(eventOrError.name, eventOrError.message, [], undefined, eventOrError)
+    event = new BugsnagEvent(error.name, error.message, [], handledState, maybeError)
   }
+  if (error.name === 'InvalidError') {
+    event.addMetadata(`${component}`, 'non-error parameter', makeSerialisable(maybeError))
+  }
+  return event
 }
+
+const makeSerialisable = (err) => {
+  if (err === null) return 'null'
+  if (err === undefined) return 'undefined'
+  return err
+}
+
+const normaliseError = (maybeError, tolerateNonErrors, component, logger) => {
+  let error
+  let internalFrames = 0
+
+  const createAndLogInputError = (reason) => {
+    if (logger) logger.warn(`${component} received a non-error: "${reason}"`)
+    const err = new Error(`${component} received a non-error. See "${component}" tab for more detail.`)
+    err.name = 'InvalidError'
+    return err
+  }
+
+  // In some cases:
+  //
+  //  - the promise rejection handler (both in the browser and node)
+  //  - the node uncaughtException handler
+  //
+  // We are really limited in what we can do to get a stacktrace. So we use the
+  // tolerateNonErrors option to ensure that the resulting error communicates as
+  // such.
+  if (!tolerateNonErrors) {
+    if (isError(maybeError)) {
+      error = maybeError
+    } else {
+      error = createAndLogInputError(typeof maybeError)
+      internalFrames += 2
+    }
+  } else {
+    switch (typeof maybeError) {
+      case 'string':
+      case 'number':
+      case 'boolean':
+        error = new Error(String(maybeError))
+        internalFrames += 1
+        break
+      case 'function':
+        error = createAndLogInputError('function')
+        internalFrames += 2
+        break
+      case 'object':
+        if (maybeError !== null && isError(maybeError)) {
+          error = maybeError
+        } else if (maybeError !== null && hasNecessaryFields(maybeError)) {
+          error = new Error(maybeError.message || maybeError.errorMessage)
+          error.name = maybeError.name || maybeError.errorClass
+          internalFrames += 1
+        } else {
+          error = createAndLogInputError(maybeError === null ? 'null' : 'unsupported object')
+          internalFrames += 2
+        }
+        break
+      default:
+        error = createAndLogInputError('nothing')
+        internalFrames += 2
+    }
+  }
+
+  if (!hasStack(error)) {
+    // in IE10/11 a new Error() doesn't have a stacktrace until you throw it, so try that here
+    try {
+      throw error
+    } catch (e) {
+      if (hasStack(e)) {
+        error = e
+        // if the error only got a stacktrace after we threw it here, we know it
+        // will only have one extra internal frame from this function, regardless
+        // of whether it went through createAndLogInputError() or not
+        internalFrames = 1
+      }
+    }
+  }
+
+  return [error, internalFrames]
+}
+
+const hasNecessaryFields = error =>
+  (typeof error.name === 'string' || typeof error.errorClass === 'string') &&
+  (typeof error.message === 'string' || typeof error.errorMessage === 'string')
 
 module.exports = BugsnagEvent

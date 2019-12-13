@@ -247,13 +247,20 @@ describe('@bugsnag/core/client', () => {
       client.notify('str1', 'str2')
       client.notify('str1', null)
 
-      expect(payloads[0].events[0].toJSON().exceptions[0].message).toBe('Bugsnag usage error. notify(err) expected an error, got nothing')
-      expect(payloads[1].events[0].toJSON().exceptions[0].message).toBe('Bugsnag usage error. notify(err) expected an error, got null')
-      expect(payloads[2].events[0].toJSON().exceptions[0].message).toBe('Bugsnag usage error. notify(err) expected an error, got function')
-      expect(payloads[3].events[0].toJSON().exceptions[0].message).toBe('Bugsnag usage error. notify(err) expected an error, got unsupported object')
+      expect(payloads[0].events[0].toJSON().exceptions[0].message).toBe('notify() received a non-error. See "notify()" tab for more detail.')
+      expect(payloads[0].events[0].toJSON().metaData).toEqual({ 'notify()': { 'non-error parameter': 'undefined' } })
+
+      expect(payloads[1].events[0].toJSON().exceptions[0].message).toBe('notify() received a non-error. See "notify()" tab for more detail.')
+      expect(payloads[1].events[0].toJSON().metaData).toEqual({ 'notify()': { 'non-error parameter': 'null' } })
+
+      expect(payloads[2].events[0].toJSON().exceptions[0].message).toBe('notify() received a non-error. See "notify()" tab for more detail.')
+
+      expect(payloads[3].events[0].toJSON().exceptions[0].message).toBe('notify() received a non-error. See "notify()" tab for more detail.')
+
       expect(payloads[4].events[0].toJSON().exceptions[0].message).toBe('1')
       expect(payloads[5].events[0].toJSON().exceptions[0].message).toBe('errrororor')
       expect(payloads[6].events[0].toJSON().exceptions[0].message).toBe('str1')
+
       expect(payloads[7].events[0].toJSON().exceptions[0].message).toBe('str1')
       expect(payloads[7].events[0].toJSON().metaData).toEqual({})
     })
@@ -489,15 +496,15 @@ describe('@bugsnag/core/client', () => {
       }))
       const sessionClient = client.startSession()
       sessionClient.notify(new Error('broke'))
-      sessionClient.notify(new Event('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
+      sessionClient._notify(new Event('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
       sessionClient.notify(new Error('broke'))
       sessionClient.notify(new Error('broke'))
-      sessionClient.notify(new Event('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
+      sessionClient._notify(new Event('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
       sessionClient.notify(new Error('broke'))
       sessionClient.notify(new Error('broke'))
       sessionClient.notify(new Error('broke'))
-      sessionClient.notify(new Event('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
-      sessionClient.notify(new Event('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
+      sessionClient._notify(new Event('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
+      sessionClient._notify(new Event('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
     })
 
     it('does not start the session if onSession returns false', () => {

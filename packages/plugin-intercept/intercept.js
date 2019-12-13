@@ -1,4 +1,3 @@
-const createEventFromErr = require('@bugsnag/core/lib/event-from-error')
 const { getStack, maybeUseFallbackStack } = require('@bugsnag/core/lib/node-fallback-stack')
 
 module.exports = {
@@ -17,12 +16,12 @@ module.exports = {
         if (err) {
           // check if the stacktrace has no context, if so, if so append the frames we created earlier
           if (err.stack) maybeUseFallbackStack(err, fallbackStack)
-          const event = createEventFromErr(err, {
+          const event = client.BugsnagEvent.create(err, true, {
             severity: 'warning',
             unhandled: false,
             severityReason: { type: 'callbackErrorIntercept' }
-          })
-          client.notify(event, onError)
+          }, 'intercept()', 1)
+          client._notify(event, onError)
           return
         }
         cb(...data) // eslint-disable-line

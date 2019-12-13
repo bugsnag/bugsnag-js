@@ -1,16 +1,14 @@
 import Breadcrumb from "./breadcrumb";
+import * as common from "./common";
 
 declare class Event {
-  public static getStacktrace(
-    error: any,
-    errorFramesToSkip?: number,
-    generatedFramesToSkip?: number,
-  ): Stackframe[];
-
-  public static ensureEvent(
-    eventOrError: any,
-    errorFramesToSkip?: number,
-    generatedFramesToSkip?: number,
+  public static create(
+    maybeError: any,
+    tolerateNonErrors: boolean,
+    handledState: HandledState,
+    component: string,
+    errorFramesToSkip: number,
+    logger?: common.Logger
   ): Event;
 
   public app: {
@@ -31,14 +29,6 @@ declare class Event {
     url: string;
   };
   public originalError: any;
-
-  constructor(
-    errorClass: string,
-    errorMessage: string,
-    stacktrace?: any[],
-    handledState?: HandledState,
-    originalError?: any,
-  );
 
   // user
   public getUser(): { id?: string; email?: string; name?: string };

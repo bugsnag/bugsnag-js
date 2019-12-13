@@ -29,6 +29,11 @@ declare class Client {
     onError?: common.OnError,
     cb?: (err: any, event: Event) => void,
   ): void;
+  public _notify(
+    event: Event,
+    onError?: common.OnError,
+    cb?: (err: any, event: Event) => void,
+  ): void;
   public leaveBreadcrumb(message: string, metadata?: { [key: string]: common.BreadcrumbMetadataValue }, type?: string): void;
   public startSession(): Client;
 }
