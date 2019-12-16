@@ -21,6 +21,7 @@
 - Add methods to pause and resume sessions [#666](https://github.com/bugsnag/bugsnag-js/pull/666)
 - Add `pauseSession()` and `resumeSession()` methods to `Client` [#666](https://github.com/bugsnag/bugsnag-js/pull/666)
 - Remove `client.request` property [#672](https://github.com/bugsnag/bugsnag-js/pull/672)
+- Remove `client.device` property [#673](https://github.com/bugsnag/bugsnag-js/pull/673)
 
 ## 6.4.3 (2019-10-21)
 
