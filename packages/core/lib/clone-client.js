@@ -5,7 +5,6 @@ module.exports = (client) => {
   clone._config = client._config
   clone.app = client.app
   clone.context = client.context
-  clone.device = client.device
 
   // changes to these properties should not be reflected in the original client,
   // so ensure they are are (shallow) cloned

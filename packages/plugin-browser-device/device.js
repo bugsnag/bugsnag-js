@@ -10,12 +10,13 @@ module.exports = {
       userAgent: nav.userAgent
     }
 
-    // merge with anything already set on the client
-    client.device = { ...device, ...client.device }
-
     // add time just as the event is sent
     client.addOnError((event) => {
-      event.device = { ...event.device, time: isoDate() }
+      event.device = {
+        ...event.device,
+        ...device,
+        time: isoDate()
+      }
     }, true)
   }
 }

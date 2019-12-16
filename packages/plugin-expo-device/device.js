@@ -21,8 +21,7 @@ module.exports = {
     // get the initial orientation
     updateOrientation()
 
-    client.device = {
-      ...client.device,
+    const device = {
       id: Constants.installationId,
       manufacturer: Constants.platform.ios ? 'Apple' : undefined,
       modelName: Constants.platform.ios ? Constants.platform.ios.model : undefined,
@@ -37,12 +36,12 @@ module.exports = {
       }
     }
 
+    client._addOnSessionPayload(sp => {
+      sp.device = { ...sp.device, ...device }
+    })
+
     client.addOnError(event => {
-      event.device = {
-        ...event.device,
-        time: isoDate(),
-        orientation
-      }
+      event.device = { ...event.device, time: isoDate(), orientation, ...device }
       event.addMetadata('device', {
         isDevice: Constants.isDevice,
         appOwnership: Constants.appOwnership
