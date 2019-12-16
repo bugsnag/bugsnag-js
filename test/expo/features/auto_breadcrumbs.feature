@@ -105,8 +105,8 @@ Scenario: Network breadcrumbs are captured by default
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "defaultNetworkBreadcrumbsBehaviour"
   And the event has a "request" breadcrumb named "XMLHttpRequest succeeded"
-  And the event "breadcrumbs.0.metaData.status" equals 200
-  And the event "breadcrumbs.0.metaData.request" equals "GET http://postman-echo.com/get"
+  And the event "breadcrumbs.1.metaData.status" equals 200
+  And the event "breadcrumbs.1.metaData.request" equals "GET http://postman-echo.com/get"
 
 Scenario: Network breadcrumbs can be disabled explicitly
   Given the element "networkBreadcrumbs" is present
