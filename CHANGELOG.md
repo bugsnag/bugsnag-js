@@ -1,6 +1,6 @@
 # Changelog
 
-## TBD
+## 6.5.0 (2019-12-16)
 
 ### Added
 - (expo): Add support for breaking changes in Expo SDK v36 [#670](https://github.com/bugsnag/bugsnag-js/pull/670)
