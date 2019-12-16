@@ -11,7 +11,6 @@ module.exports = (client) => {
   // so ensure they are are (shallow) cloned
   clone.breadcrumbs = client.breadcrumbs.slice()
   clone._metadata = { ...client._metadata }
-  clone.request = { ...client.request }
   clone._user = { ...client._user }
 
   clone._cbs = {

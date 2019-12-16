@@ -37,7 +37,6 @@ class BugsnagClient {
     this.app = {}
     this.context = undefined
     this.device = undefined
-    this.request = undefined
     this._user = {}
 
     // callbacks:
@@ -225,7 +224,6 @@ class BugsnagClient {
     event.app = { ...{ releaseStage }, ...event.app, ...this.app }
     event.context = event.context || this.context || undefined
     event.device = { ...event.device, ...this.device }
-    event.request = { ...event.request, ...this.request }
     event._metadata = { ...event._metadata, ...this._metadata }
     event._user = { ...event._user, ...this._user }
     event.breadcrumbs = this.breadcrumbs.slice(0)
