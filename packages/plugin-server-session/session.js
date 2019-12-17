@@ -79,7 +79,7 @@ const sendSessionSummary = client => sessionCounts => {
       sessionCounts
     }
 
-    const ignore = runSyncCallbacks(client._cbs.sp.slice(0), payload, 'onSessionPayload', client._logger)
+    const ignore = runSyncCallbacks(client._cbs.sp, payload, 'onSessionPayload', client._logger)
     if (ignore) {
       client._logger.debug('Session not sent due to onSessionPayload callback')
       return cb(null)

@@ -137,7 +137,7 @@ class BugsnagClient {
     const session = new BugsnagSession()
 
     // run onSession callbacks
-    const ignore = runSyncCallbacks(this._cbs.s.slice(0), session, 'onSession', this._logger)
+    const ignore = runSyncCallbacks(this._cbs.s, session, 'onSession', this._logger)
 
     if (ignore) {
       this._logger.debug('Session not started due to onSession callback')
@@ -197,7 +197,7 @@ class BugsnagClient {
     const crumb = new BugsnagBreadcrumb(message, metadata, type)
 
     // run onBreadcrumb callbacks
-    const ignore = runSyncCallbacks(this._cbs.b.slice(0), crumb, 'onBreadcrumb', this._logger)
+    const ignore = runSyncCallbacks(this._cbs.b, crumb, 'onBreadcrumb', this._logger)
 
     if (ignore) {
       this._logger.debug('Breadcrumb not attached due to onBreadcrumb callback')
