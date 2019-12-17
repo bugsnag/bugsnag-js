@@ -20,8 +20,8 @@ class BugsnagEvent {
     this.breadcrumbs = []
     this.context = undefined
     this.device = undefined
-    this.errorClass = stringOrFallback(errorClass, '[no error class]')
-    this.errorMessage = stringOrFallback(errorMessage, '[no error message]')
+    this.errorClass = ensureString(errorClass)
+    this.errorMessage = ensureString(errorMessage)
     this.groupingHash = undefined
     this._metadata = {}
     this.request = undefined
@@ -123,7 +123,7 @@ const defaultHandledState = () => ({
   severityReason: { type: 'handledException' }
 })
 
-const stringOrFallback = (str, fallback) => typeof str === 'string' && str ? str : fallback
+const ensureString = (str) => typeof str === 'string' ? str : ''
 
 // Helpers
 
