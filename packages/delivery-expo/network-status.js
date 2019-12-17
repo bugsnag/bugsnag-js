@@ -1,4 +1,4 @@
-const { NetInfo } = require('react-native')
+const NetInfo = require('@react-native-community/netinfo')
 
 /*
  * This class provides the following:
@@ -24,11 +24,11 @@ module.exports = class NetworkStatus {
 
   _watch () {
     // get the initial status
-    NetInfo.isConnected.fetch().then(isConnected => {
-      this._update(isConnected)
+    NetInfo.fetch().then(state => {
+      this._update(state.isConnected)
       // then listen for subsequent changes
-      NetInfo.isConnected.addEventListener('connectionChange', isConnected => {
-        this._update(isConnected)
+      NetInfo.addEventListener(state => {
+        this._update(state.isConnected)
       })
     })
   }

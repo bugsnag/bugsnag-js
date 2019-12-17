@@ -26,6 +26,11 @@ const plugins = [
 
 const bugsnagReact = require('@bugsnag/plugin-react')
 
+// The NetInfo module makes requests to this URL to detect if the device is connected
+// to the internet. We don't want these requests to be recorded as breadcrumbs.
+// see https://github.com/react-native-community/react-native-netinfo/blob/d39b18c61e220d518d8403b6f4f4ab5bcc8c973c/src/index.ts#L16
+const NET_INFO_REACHABILITY_URL = 'https://clients3.google.com/generate_204'
+
 module.exports = (opts) => {
   // handle very simple use case where user supplies just the api key as a string
   if (typeof opts === 'string') opts = { apiKey: opts }
@@ -55,7 +60,8 @@ module.exports = (opts) => {
         bugsnag.use(pl, () => [
           bugsnag.config.endpoints.notify,
           bugsnag.config.endpoints.sessions,
-          Constants.manifest.logUrl
+          Constants.manifest.logUrl,
+          NET_INFO_REACHABILITY_URL
         ])
         break
       default:
