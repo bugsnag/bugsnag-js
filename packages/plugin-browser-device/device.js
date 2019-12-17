@@ -10,6 +10,10 @@ module.exports = {
       userAgent: nav.userAgent
     }
 
+    client.addOnSession(session => {
+      session.device = { ...session.device, ...device }
+    })
+
     // add time just as the event is sent
     client.addOnError((event) => {
       event.device = {

@@ -36,8 +36,8 @@ module.exports = {
       }
     }
 
-    client._addOnSessionPayload(sp => {
-      sp.device = { ...sp.device, ...device }
+    client.addOnSession(session => {
+      session.device = { ...session.device, ...device }
     })
 
     client.addOnError(event => {

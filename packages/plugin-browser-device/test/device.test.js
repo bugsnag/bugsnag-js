@@ -24,4 +24,25 @@ describe('plugin: device', () => {
     expect(payloads[0].events[0].device.locale).toBe(navigator.browserLanguage)
     expect(payloads[0].events[0].device.userAgent).toBe(navigator.userAgent)
   })
+
+  it('should add an onSession callback which captures device information', () => {
+    const client = new Client({ apiKey: 'API_KEY_YEAH' })
+    const payloads = []
+    client._sessionDelegate = {
+      startSession: (client, session) => {
+        client._delivery.sendSession(session)
+      }
+    }
+    client.use(plugin, navigator)
+
+    expect(client._cbs.s.length).toBe(1)
+
+    client._setDelivery(client => ({ sendSession: (payload) => payloads.push(payload) }))
+    client.startSession()
+
+    expect(payloads.length).toEqual(1)
+    expect(payloads[0].device).toBeDefined()
+    expect(payloads[0].device.locale).toBe(navigator.browserLanguage)
+    expect(payloads[0].device.userAgent).toBe(navigator.userAgent)
+  })
 })

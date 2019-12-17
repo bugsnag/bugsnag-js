@@ -1,6 +1,5 @@
 const { includes } = require('@bugsnag/core/lib/es-utils')
 const inferReleaseStage = require('@bugsnag/core/lib/infer-release-stage')
-const runSyncCallbacks = require('@bugsnag/core/lib/sync-callback-runner')
 
 module.exports = {
   init: client => { client._sessionDelegate = sessionDelegate }
@@ -20,9 +19,9 @@ const sessionDelegate = {
       return sessionClient
     }
 
-    const payload = {
+    sessionClient._delivery.sendSession({
       notifier: sessionClient._notifier,
-      device: {},
+      device: session.device,
       app: { ...{ releaseStage }, ...sessionClient.app },
       sessions: [
         {
@@ -31,15 +30,7 @@ const sessionDelegate = {
           user: sessionClient._user
         }
       ]
-    }
-
-    const ignore = runSyncCallbacks(sessionClient._cbs.sp.slice(0), payload, 'onSessionPayload', sessionClient._logger)
-    if (ignore) {
-      sessionClient._logger.debug('Session not sent due to onSessionPayload callback')
-      return sessionClient
-    }
-
-    sessionClient._delivery.sendSession(payload)
+    })
     return sessionClient
   },
   resumeSession: (client) => {
