@@ -60,7 +60,54 @@ CI runs on Buildkite. Tests are run automatically on any branch from within this
 
 ⚠️ __Caution__: exercise due-diligence before creating a branch based on an external contribution – for example, be sure not to merge a bitcoin miner disguised as a bug fix!
 
-## Prereleases
+## Releases
+
+Before creating any release:
+
+- run `npm install` in the root of the project and `npm run bootstrap` to ensure the top-level node_modules and leaf node_modules are all correct for the branch you have checked out.
+- ensure you are logged in to npm and that you have access to publish to the following on npm
+  - any packages in the `@bugsnag` namespace
+  - the `bugsnag-expo-cli` package
+- ensure you have an AWS key pair with access to our S3 bucket and cloudfront distribution. Export these in your environment as `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` (if you're going to publish to the CDN)
+
+To start a release:
+
+- decide on a version number
+- create a new release branch from `next` with the version number in the branch name
+`git checkout -b release/vX.Y.Z`
+- update the version number and date in the changelog
+- make a PR from your release branch to `master` entitled `Release vX.Y.Z`
+- get the release PR reviewed – all code changes should have been reviewed already, this should be a review of the integration of all changes to be shipped and the changelog
+- consider shipping a [prerelease](#prereleases) to aid testing the release
+
+Once the release PR has been approved:
+
+- merge the PR into master
+- `git checkout master` and `git pull`
+
+You are now ready to make the release:
+
+```
+lerna version [major | minor | patch]
+lerna publish from-git
+```
+
+<small>Note: if a prerelease was made, to graduate it into a normal release you will want to use `patch` as the version.</small>
+
+At this point it is sensible to perform some manual smoke tests to ensure the new version on npm works as expected. Only then publish to the CDN:
+
+```
+lerna run cdn-upload
+```
+
+Finally:
+
+- create a release on GitHub https://github.com/bugsnag/bugsnag-js/releases/new
+- use the tag vX.Y.Z as the name of the release
+- copy the release notes from `CHANGELOG.md`
+- publish the release
+
+### Prereleases
 
 If you are starting a new prerelease, use one of the following commands:
 
@@ -85,15 +132,5 @@ The `--dist-tag next` part ensures that it is not installed by unsuspecting user
 If you want to publish the release to the CDN, use the following command:
 
 ```
-lerna run cdn-upload
-```
-
-## Releases
-
-To graduate a prerelease into a release you will want to use `patch` as the version.
-
-```
-lerna version [major | minor | patch]
-lerna publish from-git
 lerna run cdn-upload
 ```
