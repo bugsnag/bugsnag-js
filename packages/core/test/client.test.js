@@ -172,34 +172,7 @@ describe('@bugsnag/core/client', () => {
       process.nextTick(() => done())
     })
 
-    it('supports setting releaseStage via client.app.releaseStage', done => {
-      const client = new Client({ apiKey: 'API_KEY_YEAH', enabledReleaseStages: ['production'] })
-      client._setDelivery(client => ({
-        sendEvent: (payload) => {
-          fail('sendEvent() should not be called')
-        }
-      }))
-      client.app.releaseStage = 'staging'
-
-      client.notify(new Error('oh em eff gee'))
-
-      // give the event loop a tick to see if the event gets sent
-      process.nextTick(() => done())
-    })
-
     it('includes releaseStage in event.app', done => {
-      const client = new Client({ apiKey: 'API_KEY_YEAH', enabledReleaseStages: ['staging'] })
-      client._setDelivery(client => ({
-        sendEvent: (payload) => {
-          expect(payload.events[0].app.releaseStage).toBe('staging')
-          done()
-        }
-      }))
-      client.app.releaseStage = 'staging'
-      client.notify(new Error('oh em eff gee'))
-    })
-
-    it('includes releaseStage in event.app when set via config', done => {
       const client = new Client({ apiKey: 'API_KEY_YEAH', enabledReleaseStages: ['staging'], releaseStage: 'staging' })
       client._setDelivery(client => ({
         sendEvent: (payload) => {
@@ -210,19 +183,7 @@ describe('@bugsnag/core/client', () => {
       client.notify(new Error('oh em eff gee'))
     })
 
-    it('prefers client.app.releaseStage over config.releaseStage', done => {
-      const client = new Client({ apiKey: 'API_KEY_YEAH', enabledReleaseStages: ['testing'], releaseStage: 'staging' })
-      client._setDelivery(client => ({
-        sendEvent: (payload) => {
-          expect(payload.events[0].app.releaseStage).toBe('testing')
-          done()
-        }
-      }))
-      client.app.releaseStage = 'testing'
-      client.notify(new Error('oh em eff gee'))
-    })
-
-    it('populates client.app.version if config.appVersion is supplied', done => {
+    it('populates app.version if config.appVersion is supplied', done => {
       const client = new Client({ apiKey: 'API_KEY_YEAH', appVersion: '1.2.3' })
       client._setDelivery(client => ({
         sendEvent: (payload) => {

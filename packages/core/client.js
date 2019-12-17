@@ -3,7 +3,6 @@ const Event = require('./event')
 const Breadcrumb = require('./breadcrumb')
 const Session = require('./session')
 const { map, includes, filter } = require('./lib/es-utils')
-const inferReleaseStage = require('./lib/infer-release-stage')
 const runCallbacks = require('./lib/callback-runner')
 const metadataDelegate = require('./lib/metadata-delegate')
 const runSyncCallbacks = require('./lib/sync-callback-runner')
@@ -34,7 +33,6 @@ class Client {
     this.breadcrumbs = []
 
     // setable props
-    this.app = {}
     this.context = undefined
     this._user = {}
 
@@ -91,8 +89,6 @@ class Client {
     if (!validity.valid === true) throw new Error(generateConfigErrorMessage(validity.errors))
 
     // update and elevate some special options if they were passed in at this point
-    if (conf.appVersion) this.app.version = conf.appVersion
-    if (conf.appType) this.app.type = conf.appType
     if (conf.metadata) this._metadata = conf.metadata
     if (conf.user) this._user = conf.user
     if (conf.logger) this._logger = conf.logger
@@ -135,6 +131,12 @@ class Client {
 
   startSession () {
     const session = new Session()
+
+    session.app = {
+      releaseStage: this._config.releaseStage,
+      version: this._config.appVersion,
+      type: this._config.appType
+    }
 
     // run onSession callbacks
     const ignore = runSyncCallbacks(this._cbs.s, session, 'onSession', this._logger)
@@ -217,10 +219,12 @@ class Client {
   }
 
   _notify (event, onError, cb = noop) {
-    // releaseStage can be set via config.releaseStage or client.app.releaseStage
-    const releaseStage = inferReleaseStage(this)
-
-    event.app = { ...{ releaseStage }, ...event.app, ...this.app }
+    event.app = {
+      ...event.app,
+      releaseStage: this._config.releaseStage,
+      version: this._config.appVersion,
+      type: this._config.appType
+    }
     event.context = event.context || this.context || undefined
     event._metadata = { ...event._metadata, ...this._metadata }
     event._user = { ...event._user, ...this._user }
@@ -232,7 +236,7 @@ class Client {
     }
 
     // exit early if events should not be sent on the current releaseStage
-    if (this._config.enabledReleaseStages.length > 0 && !includes(this._config.enabledReleaseStages, releaseStage)) {
+    if (this._config.enabledReleaseStages.length > 0 && !includes(this._config.enabledReleaseStages, this._config.releaseStage)) {
       this._logger.warn('Event not sent due to releaseStage/enabledReleaseStages configuration')
       return cb(null, event)
     }
