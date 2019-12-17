@@ -36,7 +36,6 @@ class BugsnagClient {
     // setable props
     this.app = {}
     this.context = undefined
-    this.device = undefined
     this._user = {}
 
     // callbacks:
@@ -138,7 +137,7 @@ class BugsnagClient {
     const session = new BugsnagSession()
 
     // run onSession callbacks
-    const ignore = runSyncCallbacks(this._cbs.s.slice(0), session, 'onSession', this._logger)
+    const ignore = runSyncCallbacks(this._cbs.s, session, 'onSession', this._logger)
 
     if (ignore) {
       this._logger.debug('Session not started due to onSession callback')
@@ -198,7 +197,7 @@ class BugsnagClient {
     const crumb = new BugsnagBreadcrumb(message, metadata, type)
 
     // run onBreadcrumb callbacks
-    const ignore = runSyncCallbacks(this._cbs.b.slice(0), crumb, 'onBreadcrumb', this._logger)
+    const ignore = runSyncCallbacks(this._cbs.b, crumb, 'onBreadcrumb', this._logger)
 
     if (ignore) {
       this._logger.debug('Breadcrumb not attached due to onBreadcrumb callback')
@@ -223,7 +222,6 @@ class BugsnagClient {
 
     event.app = { ...{ releaseStage }, ...event.app, ...this.app }
     event.context = event.context || this.context || undefined
-    event.device = { ...event.device, ...this.device }
     event._metadata = { ...event._metadata, ...this._metadata }
     event._user = { ...event._user, ...this._user }
     event.breadcrumbs = this.breadcrumbs.slice(0)

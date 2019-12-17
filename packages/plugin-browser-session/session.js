@@ -21,7 +21,7 @@ const sessionDelegate = {
 
     sessionClient._delivery.sendSession({
       notifier: sessionClient._notifier,
-      device: sessionClient.device,
+      device: session.device,
       app: { ...{ releaseStage }, ...sessionClient.app },
       sessions: [
         {
@@ -31,7 +31,6 @@ const sessionDelegate = {
         }
       ]
     })
-
     return sessionClient
   },
   resumeSession: (client) => {

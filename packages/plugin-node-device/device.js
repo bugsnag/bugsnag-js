@@ -10,12 +10,16 @@ module.exports = {
       runtimeVersions: { node: process.versions.node }
     }
 
-    // merge with anything already set on the client
-    client.device = { ...device, ...client.device }
+    client._addOnSessionPayload(sp => {
+      sp.device = {
+        ...sp.device,
+        ...device
+      }
+    })
 
     // add time just as the event is sent
     client.addOnError((event) => {
-      event.device = { ...event.device, time: isoDate() }
+      event.device = { ...event.device, ...device, time: isoDate() }
     }, true)
   }
 }

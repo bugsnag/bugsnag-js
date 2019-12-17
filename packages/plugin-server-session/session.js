@@ -4,6 +4,7 @@ const { intRange } = require('@bugsnag/core/lib/validators')
 const clone = require('@bugsnag/core/lib/clone-client')
 const SessionTracker = require('./tracker')
 const Backoff = require('backo')
+const runSyncCallbacks = require('@bugsnag/core/lib/sync-callback-runner')
 
 module.exports = {
   init: (client) => {
@@ -71,11 +72,19 @@ const sendSessionSummary = client => sessionCounts => {
   }
 
   function req (cb) {
-    client._delivery.sendSession({
+    const payload = {
       notifier: client._notifier,
-      device: client.device,
+      device: {},
       app: { ...{ releaseStage }, ...client.app },
       sessionCounts
-    }, cb)
+    }
+
+    const ignore = runSyncCallbacks(client._cbs.sp, payload, 'onSessionPayload', client._logger)
+    if (ignore) {
+      client._logger.debug('Session not sent due to onSessionPayload callback')
+      return cb(null)
+    }
+
+    client._delivery.sendSession(payload, cb)
   }
 }

@@ -98,7 +98,9 @@ describe('plugin: server sessions', () => {
     })
 
     // this is normally set by a plugin
-    c.device = { hostname: 'test-machine.local', runtimeVersions: { node: '0.0.1' } }
+    c._addOnSessionPayload(sp => {
+      sp.device = { hostname: 'test-machine.local', runtimeVersions: { node: '0.0.1' } }
+    })
 
     c._setDelivery(client => ({
       sendEvent: () => {},

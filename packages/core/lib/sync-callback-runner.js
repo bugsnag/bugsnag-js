@@ -1,6 +1,6 @@
 module.exports = (callbacks, callbackArg, callbackType, logger) => {
   let ignore = false
-  const cbs = callbacks.slice(0)
+  const cbs = callbacks.slice()
   while (!ignore) {
     if (!cbs.length) break
     try {
