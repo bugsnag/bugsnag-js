@@ -8,9 +8,6 @@ const isError = require('./lib/iserror')
 
 class Event {
   constructor (errorClass, errorMessage, stacktrace = [], handledState = defaultHandledState(), originalError) {
-    // duck-typing ftw >_<
-    this.__isEvent = true
-
     // private (un)handled state
     this._handledState = handledState
 
