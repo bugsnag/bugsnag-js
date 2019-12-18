@@ -4,19 +4,19 @@ import React from 'react'
 import renderer from 'react-test-renderer'
 import plugin from '../'
 
-class BugsnagEvent {
+class Event {
   addMetadata () {
     return this
   }
 }
 
 const bugsnag = {
-  BugsnagEvent,
+  Event,
   _notify: jest.fn()
 }
 
-bugsnag.BugsnagEvent.create = jest.fn(function () {
-  return new BugsnagEvent()
+bugsnag.Event.create = jest.fn(function () {
+  return new Event()
 })
 
 const ErrorBoundary = plugin.init(bugsnag, React)
@@ -93,7 +93,7 @@ it('it passes the onError function to the Bugsnag notify call', () => {
     .create(<ErrorBoundary onError={onError}><BadComponent /></ErrorBoundary>)
     .toJSON()
   expect(bugsnag._notify).toBeCalledWith(
-    expect.any(BugsnagEvent),
+    expect.any(Event),
     onError
   )
 })

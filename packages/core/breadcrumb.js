@@ -1,6 +1,6 @@
 const { isoDate } = require('./lib/es-utils')
 
-class BugsnagBreadcrumb {
+class Breadcrumb {
   constructor (message, metadata, type, timestamp = isoDate()) {
     this.type = type
     this.message = message
@@ -18,4 +18,4 @@ class BugsnagBreadcrumb {
   }
 }
 
-module.exports = BugsnagBreadcrumb
+module.exports = Breadcrumb

@@ -14,9 +14,9 @@ declare class Client {
   public getMetadata(section: string, key?: string): any;
   public clearMetadata(section: string, key?: string): void;
 
-  public BugsnagEvent: typeof Event;
-  public BugsnagBreadcrumb: typeof Breadcrumb;
-  public BugsnagSession: typeof Session;
+  public Event: typeof Event;
+  public Breadcrumb: typeof Breadcrumb;
+  public Session: typeof Session;
 
   // user
   public getUser(): { id?: string; email?: string; name?: string };

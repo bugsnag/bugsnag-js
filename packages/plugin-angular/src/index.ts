@@ -16,7 +16,7 @@ export class BugsnagErrorHandler extends ErrorHandler {
       unhandled: true,
     };
 
-    const event = this.bugsnagClient.BugsnagEvent.create(
+    const event = this.bugsnagClient.Event.create(
       error,
       true,
       handledState,

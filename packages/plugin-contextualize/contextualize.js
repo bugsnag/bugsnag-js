@@ -13,7 +13,7 @@ module.exports = {
       dom.on('error', err => {
         // check if the stacktrace has no context, if so, if so append the frames we created earlier
         if (err.stack) maybeUseFallbackStack(err, fallbackStack)
-        const event = client.BugsnagEvent.create(err, true, {
+        const event = client.Event.create(err, true, {
           severity: 'error',
           unhandled: true,
           severityReason: { type: 'unhandledException' }
