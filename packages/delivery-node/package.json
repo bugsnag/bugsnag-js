@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/delivery-node",
-  "version": "6.4.1",
+  "version": "6.5.0",
   "main": "delivery.js",
   "description": "@bugsnag/node delivery mechanism",
   "homepage": "https://www.bugsnag.com/",
@@ -20,7 +20,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "dependencies": {
-    "@bugsnag/core": "^6.4.1"
+    "@bugsnag/core": "^6.5.0"
   },
   "devDependencies": {
     "jasmine": "^3.1.0",

@@ -29,7 +29,7 @@
     "eslint-plugin-react": "^7.16.0",
     "eslint-plugin-standard": "^4.0.1",
     "exorcist": "^1.0.1",
-    "lerna": "^2.11.0",
+    "lerna": "^3.19.0",
     "ncp": "^2.0.0",
     "node-fetch": "^2.6.0",
     "proxyquire": "^2.1.3",

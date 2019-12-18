@@ -14,7 +14,7 @@ WORKDIR /app/test/expo/features/fixtures/test-app
 RUN mkdir -p /app/test/expo/features/fixures/build
 
 RUN yarn global add gulp-cli node-gyp
-RUN yarn add bunyan rsync turtle-cli@0.11.1
+RUN yarn add bunyan rsync turtle-cli@0.13.1
 
 RUN node_modules/.bin/turtle setup:android
 

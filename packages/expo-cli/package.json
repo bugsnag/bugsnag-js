@@ -1,6 +1,6 @@
 {
   "name": "bugsnag-expo-cli",
-  "version": "6.4.0",
+  "version": "6.5.0",
   "description": "A tool to help integrate Bugsnag with an Expo app",
   "bin": "cli.js",
   "scripts": {

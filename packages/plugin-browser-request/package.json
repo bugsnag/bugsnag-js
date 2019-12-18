@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-browser-request",
-  "version": "6.4.1",
+  "version": "6.5.0",
   "main": "request.js",
   "description": "@bugsnag/js plugin to set request info in browsers",
   "homepage": "https://www.bugsnag.com/",
@@ -20,7 +20,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^6.4.1",
+    "@bugsnag/core": "^6.5.0",
     "jasmine": "^3.1.0",
     "nyc": "^12.0.2"
   }
