@@ -25,6 +25,7 @@
 - Stop applying default error class/message when none is supplied [#676](https://github.com/bugsnag/bugsnag-js/pull/676)
 - Remove Bugsnag* prefix from internal class names [#679](https://github.com/bugsnag/bugsnag-js/pull/679)
 - Remove `client.app` property [#677](https://github.com/bugsnag/bugsnag-js/pull/677)
+- Rename and make private the `Session` method `trackError()` -> `_track()` [#675](https://github.com/bugsnag/bugsnag-js/pull/675)
 
 ## 6.5.0 (2019-12-16)
 

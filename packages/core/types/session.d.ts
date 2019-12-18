@@ -7,7 +7,6 @@ declare class Session {
     _handled: number;
     _unhandled: number;
   };
-  public trackError: (event: Event) => void;
 }
 
 export default Session;

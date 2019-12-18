@@ -231,7 +231,7 @@ class Client {
     event.breadcrumbs = this.breadcrumbs.slice(0)
 
     if (this._session) {
-      this._session.trackError(event)
+      this._session._track(event)
       event.session = this._session
     }
 
