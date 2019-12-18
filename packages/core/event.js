@@ -6,10 +6,10 @@ const jsRuntime = require('./lib/js-runtime')
 const metadataDelegate = require('./lib/metadata-delegate')
 const isError = require('./lib/iserror')
 
-class BugsnagEvent {
+class Event {
   constructor (errorClass, errorMessage, stacktrace = [], handledState = defaultHandledState(), originalError) {
     // duck-typing ftw >_<
-    this.__isBugsnagEvent = true
+    this.__isEvent = true
 
     // private (un)handled state
     this._handledState = handledState
@@ -127,7 +127,7 @@ const ensureString = (str) => typeof str === 'string' ? str : ''
 
 // Helpers
 
-BugsnagEvent.getStacktrace = function (error, errorFramesToSkip, backtraceFramesToSkip) {
+Event.getStacktrace = function (error, errorFramesToSkip, backtraceFramesToSkip) {
   if (hasStack(error)) return ErrorStackParser.parse(error).slice(errorFramesToSkip)
   // error wasn't provided or didn't have a stacktrace so try to walk the callstack
   try {
@@ -139,11 +139,11 @@ BugsnagEvent.getStacktrace = function (error, errorFramesToSkip, backtraceFrames
   }
 }
 
-BugsnagEvent.create = function (maybeError, tolerateNonErrors, handledState, component, errorFramesToSkip = 0, logger) {
+Event.create = function (maybeError, tolerateNonErrors, handledState, component, errorFramesToSkip = 0, logger) {
   const [error, internalFrames] = normaliseError(maybeError, tolerateNonErrors, component, logger)
   let event
   try {
-    const stacktrace = BugsnagEvent.getStacktrace(
+    const stacktrace = Event.getStacktrace(
       error,
       // if an error was created/throw in the normaliseError() function, we need to
       // tell the getStacktrace() function to skip the number of frames we know will
@@ -154,9 +154,9 @@ BugsnagEvent.create = function (maybeError, tolerateNonErrors, handledState, com
       // this is how many frames should be removed because they come from our library
       1 + errorFramesToSkip
     )
-    event = new BugsnagEvent(error.name, error.message, stacktrace, handledState, maybeError)
+    event = new Event(error.name, error.message, stacktrace, handledState, maybeError)
   } catch (e) {
-    event = new BugsnagEvent(error.name, error.message, [], handledState, maybeError)
+    event = new Event(error.name, error.message, [], handledState, maybeError)
   }
   if (error.name === 'InvalidError') {
     event.addMetadata(`${component}`, 'non-error parameter', makeSerialisable(maybeError))
@@ -248,4 +248,4 @@ const hasNecessaryFields = error =>
   (typeof error.name === 'string' || typeof error.errorClass === 'string') &&
   (typeof error.message === 'string' || typeof error.errorMessage === 'string')
 
-module.exports = BugsnagEvent
+module.exports = Event

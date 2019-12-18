@@ -30,7 +30,7 @@ module.exports = {
 
       // unhandled errors caused by this request
       dom.on('error', (err) => {
-        const event = client.BugsnagEvent.create(err, false, handledState, 'express middleware', 1)
+        const event = client.Event.create(err, false, handledState, 'express middleware', 1)
         event.request = request
         req.bugsnag._notify(event, () => {}, (e, event) => {
           if (e) client._logger.error('Failed to send event to Bugsnag')
@@ -46,7 +46,7 @@ module.exports = {
     }
 
     const errorHandler = (err, req, res, next) => {
-      const event = client.BugsnagEvent.create(err, false, handledState, 'express middleware', 1)
+      const event = client.Event.create(err, false, handledState, 'express middleware', 1)
 
       const { metadata, request } = getRequestAndMetadataFromReq(req)
       event.request = { ...event.request, ...request }

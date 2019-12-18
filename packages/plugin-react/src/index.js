@@ -15,7 +15,7 @@ module.exports = {
       componentDidCatch (error, info) {
         const { onError } = this.props
         const handledState = { severity: 'error', unhandled: true, severityReason: { type: 'unhandledException' } }
-        const event = client.BugsnagEvent.create(
+        const event = client.Event.create(
           error,
           true,
           handledState,

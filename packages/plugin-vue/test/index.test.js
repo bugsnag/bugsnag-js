@@ -1,16 +1,16 @@
 const { describe, it, expect } = global
 const plugin = require('../src')
-const BugsnagClient = require('@bugsnag/core/client')
+const Client = require('@bugsnag/core/client')
 
 describe('bugsnag vue', () => {
   it('throws when missing Vue', () => {
     expect(() => {
-      plugin.init(new BugsnagClient({ apiKey: 'API_KEYYY' }))
+      plugin.init(new Client({ apiKey: 'API_KEYYY' }))
     }).toThrow()
   })
 
   it('installs Vue.config.errorHandler', done => {
-    const client = new BugsnagClient({ apiKey: 'API_KEYYY' })
+    const client = new Client({ apiKey: 'API_KEYYY' })
     client._setDelivery(client => ({
       sendEvent: (payload) => {
         expect(payload.events[0].errorClass).toBe('Error')

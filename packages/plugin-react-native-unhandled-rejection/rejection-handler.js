@@ -10,7 +10,7 @@ module.exports = {
     rnPromise.enable({
       allRejections: true,
       onUnhandled: (id, error) => {
-        const event = client.BugsnagEvent.create(error, false, {
+        const event = client.Event.create(error, false, {
           severity: 'error',
           unhandled: true,
           severityReason: { type: 'unhandledPromiseRejection' }

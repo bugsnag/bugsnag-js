@@ -12,7 +12,7 @@ module.exports = {
     const prev = ErrorUtils.getGlobalHandler()
 
     ErrorUtils.setGlobalHandler((error, isFatal) => {
-      const event = client.BugsnagEvent.create(error, true, {
+      const event = client.Event.create(error, true, {
         severity: 'error',
         unhandled: true,
         severityReason: { type: 'unhandledException' }

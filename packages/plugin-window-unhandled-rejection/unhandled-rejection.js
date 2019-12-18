@@ -19,7 +19,7 @@ exports.init = (client, win = window) => {
       }
     } catch (e) {}
 
-    const event = client.BugsnagEvent.create(error, false, {
+    const event = client.Event.create(error, false, {
       severity: 'error',
       unhandled: true,
       severityReason: { type: 'unhandledPromiseRejection' }

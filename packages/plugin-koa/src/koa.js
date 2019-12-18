@@ -28,7 +28,7 @@ module.exports = {
         await next()
       } catch (err) {
         if (err.status === undefined || err.status >= 500) {
-          const event = client.BugsnagEvent.create(err, false, handledState, 'koa middleware', 1)
+          const event = client.Event.create(err, false, handledState, 'koa middleware', 1)
           event.request = request
           ctx.bugsnag._notify(event)
         }
@@ -58,7 +58,7 @@ module.exports = {
         yield next
       } catch (err) {
         if (err.status === undefined || err.status >= 500) {
-          const event = client.BugsnagEvent.create(err, false, handledState, 'koa middleware', 1)
+          const event = client.Event.create(err, false, handledState, 'koa middleware', 1)
           event.request = request
           this.bugsnag._notify(event)
         }
@@ -67,7 +67,7 @@ module.exports = {
     }
 
     const errorHandler = (err, ctx) => {
-      const event = client.BugsnagEvent.create(err, false, handledState, 'koa middleware', 1)
+      const event = client.Event.create(err, false, handledState, 'koa middleware', 1)
 
       const { metadata, request } = getRequestAndMetadataFromCtx(ctx)
       event.request = { ...event.request, ...request }

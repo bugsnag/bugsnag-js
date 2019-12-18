@@ -21,7 +21,7 @@ module.exports = {
         if (error) {
           // if the last parameter (error) was supplied, this is a modern browser's
           // way of saying "this value was thrown and not caught"
-          event = client.BugsnagEvent.create(error, true, handledState, 'window onerror', 1)
+          event = client.Event.create(error, true, handledState, 'window onerror', 1)
           decorateStack(event.stacktrace, url, lineNo, charNo)
         } else if (
           // This complex case detects "error" events that are typically synthesised
@@ -42,7 +42,7 @@ module.exports = {
           // default to empty string (the event will fill it with a placeholder)
           const message = messageOrEvent.message || messageOrEvent.detail || ''
 
-          event = client.BugsnagEvent.create({ name, message }, true, handledState, 'window onerror', 1)
+          event = client.Event.create({ name, message }, true, handledState, 'window onerror', 1)
 
           // provide the original thing onerror received – not our error-like object we passed to _notify
           event.originalError = messageOrEvent
@@ -52,7 +52,7 @@ module.exports = {
         } else {
           // Lastly, if there was no "error" parameter this event was probably from an old
           // browser that doesn't support that. Instead we need to generate a stacktrace.
-          event = client.BugsnagEvent.create(messageOrEvent, true, handledState, 'window onerror', 1)
+          event = client.Event.create(messageOrEvent, true, handledState, 'window onerror', 1)
           decorateStack(event.stacktrace, url, lineNo, charNo)
         }
 

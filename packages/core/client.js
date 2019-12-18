@@ -1,7 +1,7 @@
 const config = require('./config')
-const BugsnagEvent = require('./event')
-const BugsnagBreadcrumb = require('./breadcrumb')
-const BugsnagSession = require('./session')
+const Event = require('./event')
+const Breadcrumb = require('./breadcrumb')
+const Session = require('./session')
 const { map, includes, filter } = require('./lib/es-utils')
 const inferReleaseStage = require('./lib/infer-release-stage')
 const runCallbacks = require('./lib/callback-runner')
@@ -10,7 +10,7 @@ const runSyncCallbacks = require('./lib/sync-callback-runner')
 
 const noop = () => {}
 
-class BugsnagClient {
+class Client {
   constructor (configuration, schema = config.schema, notifier) {
     // notifier id
     this._notifier = notifier
@@ -53,10 +53,10 @@ class BugsnagClient {
     }
 
     // expose internal constructors
-    this.BugsnagClient = BugsnagClient
-    this.BugsnagEvent = BugsnagEvent
-    this.BugsnagBreadcrumb = BugsnagBreadcrumb
-    this.BugsnagSession = BugsnagSession
+    this.Client = Client
+    this.Event = Event
+    this.Breadcrumb = Breadcrumb
+    this.Session = Session
 
     this._extractConfiguration()
 
@@ -134,7 +134,7 @@ class BugsnagClient {
   }
 
   startSession () {
-    const session = new BugsnagSession()
+    const session = new Session()
 
     // run onSession callbacks
     const ignore = runSyncCallbacks(this._cbs.s, session, 'onSession', this._logger)
@@ -194,7 +194,7 @@ class BugsnagClient {
     // check the breadcrumb is the list of enabled types
     if (!this._config.enabledBreadcrumbTypes || !includes(this._config.enabledBreadcrumbTypes, type)) return
 
-    const crumb = new BugsnagBreadcrumb(message, metadata, type)
+    const crumb = new Breadcrumb(message, metadata, type)
 
     // run onBreadcrumb callbacks
     const ignore = runSyncCallbacks(this._cbs.b, crumb, 'onBreadcrumb', this._logger)
@@ -212,7 +212,7 @@ class BugsnagClient {
   }
 
   notify (maybeError, onError, cb = noop) {
-    const event = BugsnagEvent.create(maybeError, true, undefined, 'notify()', this._depth + 1, this._logger)
+    const event = Event.create(maybeError, true, undefined, 'notify()', this._depth + 1, this._logger)
     this._notify(event, onError, cb)
   }
 
@@ -255,7 +255,7 @@ class BugsnagClient {
       }
 
       // only leave a crumb for the error if actually got sent
-      BugsnagClient.prototype.leaveBreadcrumb.call(this, event.errorClass, {
+      Client.prototype.leaveBreadcrumb.call(this, event.errorClass, {
         errorClass: event.errorClass,
         errorMessage: event.errorMessage,
         severity: event.severity
@@ -279,4 +279,4 @@ const generateConfigErrorMessage = errors =>
 
 const stringify = val => typeof val === 'object' ? JSON.stringify(val) : String(val)
 
-module.exports = BugsnagClient
+module.exports = Client
