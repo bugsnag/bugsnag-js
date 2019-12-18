@@ -48,6 +48,10 @@ module.exports = (opts) => {
     opts.apiKey = Constants.manifest.extra.bugsnag.apiKey
   }
 
+  if (!opts.appVersion && Constants.manifest && Constants.manifest.version) {
+    opts.appVersion = Constants.manifest.version
+  }
+
   const bugsnag = new Client(opts, schema, { name, version, url })
 
   bugsnag._setDelivery(delivery)

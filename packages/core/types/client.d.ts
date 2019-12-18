@@ -4,8 +4,6 @@ import Event from "./event";
 import Session from "./session";
 
 declare class Client {
-  public app: object;
-  public device: object;
   public context: string | void;
 
   // metadata

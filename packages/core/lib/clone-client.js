@@ -3,7 +3,6 @@ module.exports = (client) => {
 
   // changes to these properties should be reflected in the original client
   clone._config = client._config
-  clone.app = client.app
   clone.context = client.context
 
   // changes to these properties should not be reflected in the original client,

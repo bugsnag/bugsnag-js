@@ -3,38 +3,7 @@
 const proxyquire = require('proxyquire').noPreserveCache().noCallThru()
 const Client = require('@bugsnag/core/client')
 
-describe('plugin: expo device', () => {
-  it('should should use version if defined (all platforms)', done => {
-    const VERSION = '1.0.0'
-    const plugin = proxyquire('../', {
-      'expo-constants': {
-        default: {
-          platform: {
-          },
-          manifest: { version: VERSION }
-        }
-      },
-      'react-native': {
-        AppState: {
-          addEventListener: () => {},
-          currentState: 'active'
-        }
-      }
-    })
-    const c = new Client({ apiKey: 'api_key' })
-
-    c.use(plugin)
-    c._setDelivery(client => ({
-      sendEvent: (payload) => {
-        const r = JSON.parse(JSON.stringify(payload))
-        expect(r).toBeTruthy()
-        expect(r.events[0].app.version).toBe(VERSION)
-        done()
-      }
-    }))
-    c.notify(new Error('flip'))
-  })
-
+describe('plugin: expo app', () => {
   it('should should use revisionId if defined (all platforms)', done => {
     const VERSION = '1.0.0'
     const REVISION_ID = '1.0.0-r132432'
