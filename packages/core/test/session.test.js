@@ -11,7 +11,7 @@ describe('@bugsnag/core/session', () => {
       expect(s.events).toEqual({ handled: 0, unhandled: 0 })
     })
   })
-  describe('track()', () => {
+  describe('_track()', () => {
     it('returns the correct data structure', () => {
       const s = new Session()
       s._track({ _handledState: { unhandled: true } })
