@@ -19,21 +19,18 @@ class Client {
     this._config = {}
     this._schema = schema
 
-    // // i/o
+    // i/o
     this._delivery = { sendSession: noop, sendEvent: noop }
     this._logger = { debug: noop, info: noop, warn: noop, error: noop }
 
     // plugins
     this._plugins = {}
 
+    // state
+    this._breadcrumbs = []
     this._session = null
-
     this._metadata = {}
-
-    this.breadcrumbs = []
-
-    // setable props
-    this.context = undefined
+    this._context = undefined
     this._user = {}
 
     // callbacks:
@@ -82,6 +79,14 @@ class Client {
     return metadataDelegate.clear(this._metadata, section, key)
   }
 
+  getContext () {
+    return this._context
+  }
+
+  setContext (c) {
+    this._context = c
+  }
+
   _extractConfiguration (partialSchema = this._schema) {
     const conf = config.mergeDefaults(this._opts, partialSchema)
     const validity = config.validate(conf, partialSchema)
@@ -91,6 +96,7 @@ class Client {
     // update and elevate some special options if they were passed in at this point
     if (conf.metadata) this._metadata = conf.metadata
     if (conf.user) this._user = conf.user
+    if (conf.context) this._context = conf.context
     if (conf.logger) this._logger = conf.logger
 
     // add callbacks
@@ -207,9 +213,9 @@ class Client {
     }
 
     // push the valid crumb onto the queue and maintain the length
-    this.breadcrumbs.push(crumb)
-    if (this.breadcrumbs.length > this._config.maxBreadcrumbs) {
-      this.breadcrumbs = this.breadcrumbs.slice(this.breadcrumbs.length - this._config.maxBreadcrumbs)
+    this._breadcrumbs.push(crumb)
+    if (this._breadcrumbs.length > this._config.maxBreadcrumbs) {
+      this._breadcrumbs = this._breadcrumbs.slice(this._breadcrumbs.length - this._config.maxBreadcrumbs)
     }
   }
 
@@ -225,10 +231,10 @@ class Client {
       version: this._config.appVersion,
       type: this._config.appType
     }
-    event.context = event.context || this.context || undefined
+    event.context = event.context || this._context
     event._metadata = { ...event._metadata, ...this._metadata }
     event._user = { ...event._user, ...this._user }
-    event.breadcrumbs = this.breadcrumbs.slice(0)
+    event.breadcrumbs = this._breadcrumbs.slice()
 
     if (this._session) {
       this._session._track(event)
