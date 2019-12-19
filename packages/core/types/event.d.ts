@@ -11,24 +11,21 @@ declare class Event {
     logger?: common.Logger
   ): Event;
 
-  public app: {
-    releaseStage: string;
-    [key: string]: string;
-  };
-  public apiKey: string;
+  public app: App;
+  public device: Device;
+  public request: Request;
+
+  public errors: Error[];
   public breadcrumbs: Breadcrumb[];
-  public context: string;
-  public device: object;
-  public errorClass: string;
-  public errorMessage: string;
-  public groupingHash: string;
+
   public severity: "info" | "warning" | "error";
-  public stacktrace: Stackframe[];
-  public session: object;
-  public request: {
-    url: string;
-  };
-  public originalError: any;
+
+  public readonly originalError: any;
+  public readonly unhandled: boolean;
+
+  public apiKey?: string;
+  public context?: string;
+  public groupingHash?: string;
 
   // user
   public getUser(): { id?: string; email?: string; name?: string };
@@ -57,6 +54,50 @@ interface Stackframe {
   columnNumber?: number;
   code?: object;
   inProject?: boolean;
+}
+
+interface Error {
+  errorClass: string;
+  errorMessage: string;
+  stacktrace: Stackframe[];
+}
+
+interface Device {
+  id?: string;
+  hostname?: string;
+  locale?: string;
+  manufacturer?: string;
+  model?: string;
+  modelNumber?: string;
+  orientation?: string;
+  osName?: string;
+  osVersion?: string;
+  runtimeVersions: {
+    [key: string]: any;
+  };
+  time?: string;
+  userAgent?: string;
+  [key: string]: any;
+}
+
+interface App {
+  codeBundleId?: string;
+  duration?: number;
+  durationInForeground?: number;
+  inForeground: boolean;
+  releaseStage?: string;
+  type?: string;
+  version?: string;
+  [key: string]: any;
+}
+
+interface Request {
+  clientIp?: string;
+  headers?: { [key: string]: string };
+  httpMethod?: string;
+  referer?: string;
+  url?: string;
+  [key: string]: any;
 }
 
 export default Event;
