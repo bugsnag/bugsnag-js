@@ -35,7 +35,7 @@ describe('plugin: node unhandled rejection handler', () => {
       apiKey: 'api_key',
       onUnhandledRejection: (err, event) => {
         expect(err.message).toBe('never gonna catch me')
-        expect(event.errorMessage).toBe('never gonna catch me')
+        expect(event.errors[0].errorMessage).toBe('never gonna catch me')
         expect(event._handledState.unhandled).toBe(true)
         expect(event._handledState.severity).toBe('error')
         expect(event._handledState.severityReason).toEqual({ type: 'unhandledPromiseRejection' })
@@ -63,7 +63,7 @@ describe('plugin: node unhandled rejection handler', () => {
       apiKey: 'api_key',
       onUnhandledRejection: (err, event) => {
         expect(err.message).toBe('never gonna catch me')
-        expect(event.errorMessage).toBe('never gonna catch me')
+        expect(event.errors[0].errorMessage).toBe('never gonna catch me')
         expect(event._handledState.unhandled).toBe(true)
         expect(event._handledState.severity).toBe('error')
         expect(event._handledState.severityReason).toEqual({ type: 'unhandledPromiseRejection' })

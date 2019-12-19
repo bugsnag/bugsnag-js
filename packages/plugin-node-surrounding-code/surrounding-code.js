@@ -30,7 +30,8 @@ module.exports = {
 
     client.addOnError(event => new Promise((resolve, reject) => {
       const cache = Object.create(null)
-      pMapSeries(event.stacktrace.map(stackframe => () => loadSurroundingCode(stackframe, cache)))
+      const allFrames = event.errors.reduce((accum, er) => accum.concat(er.stacktrace), [])
+      pMapSeries(allFrames.map(stackframe => () => loadSurroundingCode(stackframe, cache)))
         .then(resolve)
         .catch(reject)
     }))

@@ -20,9 +20,9 @@ describe('plugin: strip project root', () => {
     client._setDelivery(client => ({
       sendEvent: (payload) => {
         const evt = payload.events[0]
-        expect(evt.stacktrace[0].file).toBe(join('lib', '01.js'))
-        expect(evt.stacktrace[1].file).toBe(join('lib', '02.js'))
-        expect(evt.stacktrace[2].file).toBe(join('lib', '03.js'))
+        expect(evt.errors[0].stacktrace[0].file).toBe(join('lib', '01.js'))
+        expect(evt.errors[0].stacktrace[1].file).toBe(join('lib', '02.js'))
+        expect(evt.errors[0].stacktrace[2].file).toBe(join('lib', '03.js'))
         done()
       },
       sendSession: () => {}
@@ -60,9 +60,9 @@ describe('plugin: strip project root', () => {
     client._setDelivery(client => ({
       sendEvent: (payload) => {
         const evt = payload.events[0]
-        expect(evt.stacktrace[0].file).toBe(join('/var', 'lib', '01.js'))
-        expect(evt.stacktrace[1].file).toBe(join('/foo', 'lib', '02.js'))
-        expect(evt.stacktrace[2].file).toBe(join('/tmp', 'lib', '03.js'))
+        expect(evt.errors[0].stacktrace[0].file).toBe(join('/var', 'lib', '01.js'))
+        expect(evt.errors[0].stacktrace[1].file).toBe(join('/foo', 'lib', '02.js'))
+        expect(evt.errors[0].stacktrace[2].file).toBe(join('/tmp', 'lib', '03.js'))
         done()
       },
       sendSession: () => {}
@@ -100,8 +100,8 @@ describe('plugin: strip project root', () => {
     client._setDelivery(client => ({
       sendEvent: (payload) => {
         const evt = payload.events[0]
-        expect(evt.stacktrace[0].file).toBe('_module.js')
-        expect(evt.stacktrace[1].file).toBe(join('node_modules', 'bugsnag-example', 'index.js'))
+        expect(evt.errors[0].stacktrace[0].file).toBe('_module.js')
+        expect(evt.errors[0].stacktrace[1].file).toBe(join('node_modules', 'bugsnag-example', 'index.js'))
         done()
       },
       sendSession: () => {}
@@ -135,9 +135,9 @@ describe('plugin: strip project root', () => {
     client._setDelivery(client => ({
       sendEvent: (payload) => {
         const evt = payload.events[0]
-        expect(evt.stacktrace[0].file).toBe('global code')
-        expect(evt.stacktrace[1].file).toBe('global code')
-        expect(evt.stacktrace[2].file).toEqual({})
+        expect(evt.errors[0].stacktrace[0].file).toBe('global code')
+        expect(evt.errors[0].stacktrace[1].file).toBe('global code')
+        expect(evt.errors[0].stacktrace[2].file).toEqual({})
         done()
       },
       sendSession: () => {}

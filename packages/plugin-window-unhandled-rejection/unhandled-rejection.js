@@ -1,4 +1,4 @@
-const { reduce } = require('@bugsnag/core/lib/es-utils')
+const { map } = require('@bugsnag/core/lib/es-utils')
 const isError = require('@bugsnag/core/lib/iserror')
 
 /*
@@ -26,7 +26,7 @@ exports.init = (client, win = window) => {
     }, 'unhandledrejection handler', 1, client._logger)
 
     if (isBluebird) {
-      event.stacktrace = reduce(event.stacktrace, fixBluebirdStacktrace(error), [])
+      map(event.errors[0].stacktrace, fixBluebirdStacktrace(error))
     }
 
     client._notify(event, (event) => {
@@ -82,10 +82,9 @@ if (process.env.NODE_ENV !== 'production') {
 //
 // Bluebird pads method names with spaces so trim that too…
 // https://github.com/petkaantonov/bluebird/blob/b7f21399816d02f979fe434585334ce901dcaf44/src/debuggability.js#L568-L571
-const fixBluebirdStacktrace = (error) => (accum, frame) => {
-  if (frame.file === error.toString()) return accum
+const fixBluebirdStacktrace = (error) => (frame) => {
+  if (frame.file === error.toString()) return
   if (frame.method) {
     frame.method = frame.method.replace(/^\s+/, '')
   }
-  return accum.concat(frame)
 }
