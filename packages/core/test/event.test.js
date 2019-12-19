@@ -20,7 +20,7 @@ describe('@bugsnag/core/event', () => {
         { foo: 10 },
         { toJSON: () => { throw new Error('do not serialise me, srsly') } }
       ])
-      expect(r.stacktrace.length).toBe(0)
+      expect(r.errors[0].stacktrace.length).toBe(0)
     })
   })
 
