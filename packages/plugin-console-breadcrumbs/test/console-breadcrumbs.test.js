@@ -20,11 +20,11 @@ describe('plugin: console breadcrumbs', () => {
         rabbit: 'sniffer'
       }
     })
-    expect(c.breadcrumbs.length).toBe(3)
-    expect(c.breadcrumbs[0].metadata['[0]']).toBe('check 1, 2')
-    expect(c.breadcrumbs[1].metadata['[0]']).toBe('null')
-    expect(c.breadcrumbs[2].metadata['[0]']).toBe('{"foo":[1,2,3,"four"]}')
-    expect(c.breadcrumbs[2].metadata['[1]']).toBe('{"pets":{"cat":"scratcher","dog":"pupper","rabbit":"sniffer"}}')
+    expect(c._breadcrumbs.length).toBe(3)
+    expect(c._breadcrumbs[0].metadata['[0]']).toBe('check 1, 2')
+    expect(c._breadcrumbs[1].metadata['[0]']).toBe('null')
+    expect(c._breadcrumbs[2].metadata['[0]']).toBe('{"foo":[1,2,3,"four"]}')
+    expect(c._breadcrumbs[2].metadata['[1]']).toBe('{"pets":{"cat":"scratcher","dog":"pupper","rabbit":"sniffer"}}')
     // undo the global side effects of wrapping console.* for the rest of the tests
     plugin.destroy()
   })
@@ -33,9 +33,9 @@ describe('plugin: console breadcrumbs', () => {
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
     c.use(plugin)
     expect(() => console.log(Object.create(null))).not.toThrow()
-    expect(c.breadcrumbs.length).toBe(1)
-    expect(c.breadcrumbs[0].message).toBe('Console output')
-    expect(c.breadcrumbs[0].metadata['[0]']).toBe('[Unknown value]')
+    expect(c._breadcrumbs.length).toBe(1)
+    expect(c._breadcrumbs[0].message).toBe('Console output')
+    expect(c._breadcrumbs[0].metadata['[0]']).toBe('[Unknown value]')
     plugin.destroy()
   })
 
@@ -43,7 +43,7 @@ describe('plugin: console breadcrumbs', () => {
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: [] })
     c.use(plugin)
     console.log(123)
-    expect(c.breadcrumbs.length).toBe(0)
+    expect(c._breadcrumbs.length).toBe(0)
     plugin.destroy()
   })
 
@@ -51,7 +51,7 @@ describe('plugin: console breadcrumbs', () => {
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: ['log'] })
     c.use(plugin)
     console.log(123)
-    expect(c.breadcrumbs.length).toBe(1)
+    expect(c._breadcrumbs.length).toBe(1)
     plugin.destroy()
   })
 
@@ -59,7 +59,7 @@ describe('plugin: console breadcrumbs', () => {
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', releaseStage: 'development' })
     c.use(plugin)
     console.log(123)
-    expect(c.breadcrumbs.length).toBe(0)
+    expect(c._breadcrumbs.length).toBe(0)
     plugin.destroy()
   })
 })

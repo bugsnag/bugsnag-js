@@ -28,7 +28,7 @@ describe('plugin: context', () => {
     const payloads = []
     client.use(plugin, window)
 
-    client.context = 'something else'
+    client.setContext('something else')
 
     client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
     client.notify(new Error('noooo'))

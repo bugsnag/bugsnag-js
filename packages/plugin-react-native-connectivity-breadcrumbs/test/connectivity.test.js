@@ -20,19 +20,19 @@ describe('plugin: react native connectivity breadcrumbs', () => {
     client.use(plugin)
 
     expect(typeof _cb).toBe('function')
-    expect(client.breadcrumbs.length).toBe(0)
+    expect(client._breadcrumbs.length).toBe(0)
 
     _cb({ type: 'wifi', isConnected: true, isInternetReachable: true })
-    expect(client.breadcrumbs.length).toBe(1)
-    expect(client.breadcrumbs[0].type).toBe('state')
-    expect(client.breadcrumbs[0].message).toBe('Connectivity changed')
-    expect(client.breadcrumbs[0].metadata).toEqual({ type: 'wifi', isConnected: true, isInternetReachable: true })
+    expect(client._breadcrumbs.length).toBe(1)
+    expect(client._breadcrumbs[0].type).toBe('state')
+    expect(client._breadcrumbs[0].message).toBe('Connectivity changed')
+    expect(client._breadcrumbs[0].metadata).toEqual({ type: 'wifi', isConnected: true, isInternetReachable: true })
 
     _cb({ type: 'none', isConnected: false, isInternetReachable: false })
-    expect(client.breadcrumbs.length).toBe(2)
-    expect(client.breadcrumbs[1].type).toBe('state')
-    expect(client.breadcrumbs[1].message).toBe('Connectivity changed')
-    expect(client.breadcrumbs[1].metadata).toEqual({ type: 'none', isConnected: false, isInternetReachable: false })
+    expect(client._breadcrumbs.length).toBe(2)
+    expect(client._breadcrumbs[1].type).toBe('state')
+    expect(client._breadcrumbs[1].message).toBe('Connectivity changed')
+    expect(client._breadcrumbs[1].metadata).toEqual({ type: 'none', isConnected: false, isInternetReachable: false })
   })
 
   it('should not be enabled when enabledBreadcrumbTypes=null', () => {

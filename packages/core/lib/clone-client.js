@@ -1,15 +1,14 @@
 module.exports = (client) => {
   const clone = new client.Client({}, {}, client._notifier)
 
-  // changes to these properties should be reflected in the original client
   clone._config = client._config
-  clone.context = client.context
 
   // changes to these properties should not be reflected in the original client,
   // so ensure they are are (shallow) cloned
-  clone.breadcrumbs = client.breadcrumbs.slice()
+  clone._breadcrumbs = client._breadcrumbs.slice()
   clone._metadata = { ...client._metadata }
   clone._user = { ...client._user }
+  clone._context = client._context
 
   clone._cbs = {
     e: client._cbs.e.slice(),

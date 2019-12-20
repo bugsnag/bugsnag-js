@@ -137,9 +137,9 @@ describe('plugin: server sessions', () => {
     sessionClient.leaveBreadcrumb('tock')
     sessionClient.addMetadata('other', { widgetsAdded: 'cat,dog,mouse' })
 
-    expect(c.breadcrumbs.length).toBe(1)
+    expect(c._breadcrumbs.length).toBe(1)
     expect(Object.keys(c._metadata).length).toBe(1)
-    expect(sessionClient.breadcrumbs.length).toBe(2)
+    expect(sessionClient._breadcrumbs.length).toBe(2)
     expect(Object.keys(sessionClient._metadata).length).toBe(2)
   })
 

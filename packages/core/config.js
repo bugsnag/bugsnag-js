@@ -88,9 +88,14 @@ module.exports.schema = {
       return includes(BREADCRUMB_TYPES, maybeType)
     }, true))
   },
+  context: {
+    defaultValue: () => undefined,
+    message: 'should be a string',
+    validate: value => value === undefined || typeof value === 'string'
+  },
   user: {
     defaultValue: () => null,
-    message: '(object) user should be an object',
+    message: 'should be an object',
     validate: (value) => typeof value === 'object'
   },
   metadata: {
