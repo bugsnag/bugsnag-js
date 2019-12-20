@@ -31,6 +31,16 @@ module.exports = {
       rules: {
         '@typescript-eslint/no-explicit-any': 'off'
       }
+    },
+    // Linting for tests
+    {
+      files: ['**/*.test.[tj]s?(x)'],
+      env: {
+        jest: true,
+        browser: true,
+      },
+      plugins: ['eslint-plugin-jest'],
+      extends: ['plugin:jest/recommended'],
     }
   ]
 }
