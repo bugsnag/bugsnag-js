@@ -5,29 +5,30 @@ import Breadcrumb from "./breadcrumb";
 
 export interface Config {
   apiKey: string;
-  onError?: OnError | OnError[];
-  onBreadcrumb?: OnBreadcrumb | OnBreadcrumb[];
-  onSession?: OnSession | OnSession[];
-  enabledBreadcrumbTypes?: BreadcrumbType[];
-  autoDetectErrors?: boolean;
-  autoDetectUnhandledRejections?: boolean;
   appVersion?: string;
   appType?: string;
-  endpoints?: { notify: string; sessions: string };
+  autoDetectErrors?: boolean;
+  autoDetectUnhandledRejections?: boolean;
   autoTrackSessions?: boolean;
+  context?: string;
+  enabledBreadcrumbTypes?: BreadcrumbType[];
   enabledReleaseStages?: string[];
-  releaseStage?: string;
-  maxBreadcrumbs?: number;
-  user?: object | null;
-  metadata?: { [key: string]: any };
-  logger?: Logger | null;
+  endpoints?: { notify: string; sessions: string };
   filters?: Array<string | RegExp>;
+  onBreadcrumb?: OnBreadcrumbCallback | OnBreadcrumbCallback[];
+  onError?: OnErrorCallback | OnErrorCallback[];
+  onSession?: OnSessionCallback | OnSessionCallback[];
+  logger?: Logger | null;
+  maxBreadcrumbs?: number;
+  metadata?: { [key: string]: any };
+  releaseStage?: string;
+  user?: {} | null;
   [key: string]: any;
 }
 
-export type OnError = (event: Event, cb?: (err: null | Error) => void) => void | Promise<void> | boolean;
-export type OnSession = (session: Session) => boolean;
-export type OnBreadcrumb = (breadcrumb: Breadcrumb) => boolean;
+export type OnErrorCallback = (event: Event, cb?: (err: null | Error) => void) => void | Promise<void> | boolean;
+export type OnSessionCallback = (session: Session) => void | boolean;
+export type OnBreadcrumbCallback = (breadcrumb: Breadcrumb) => void | boolean;
 
 export interface Plugin {
   name?: string;
@@ -72,16 +73,10 @@ export interface SessionPayload {
     version: string;
     url: string;
   };
-  device?: object;
-  user?: object;
-  app?: object;
+  device?: Device;
+  user?: User;
+  app?: App;
   sessions: Session[];
-}
-
-export interface Session {
-  id: string;
-  startedAt: string;
-  user?: object;
 }
 
 export type NotifiableError = Error
@@ -93,3 +88,47 @@ type Primitive = boolean | string | number | undefined | null;
 export type BreadcrumbMetadataValue = Primitive | Array<Primitive>;
 
 export type BreadcrumbType = "error" | "log" | "manual" | "navigation" | "process" | "request" | "state" | "user";
+
+interface Device {
+  id?: string;
+  hostname?: string;
+  locale?: string;
+  manufacturer?: string;
+  model?: string;
+  modelNumber?: string;
+  orientation?: string;
+  osName?: string;
+  osVersion?: string;
+  runtimeVersions?: {
+    [key: string]: any;
+  };
+  time?: string;
+  userAgent?: string;
+  [key: string]: any;
+}
+
+interface App {
+  codeBundleId?: string;
+  duration?: number;
+  durationInForeground?: number;
+  inForeground?: boolean;
+  releaseStage?: string;
+  type?: string;
+  version?: string;
+  [key: string]: any;
+}
+
+interface Request {
+  clientIp?: string;
+  headers?: { [key: string]: string };
+  httpMethod?: string;
+  referer?: string;
+  url?: string;
+  [key: string]: any;
+}
+
+export interface User {
+  id?: string;
+  email?: string;
+  name?: string
+}

@@ -11,9 +11,9 @@ declare class Event {
     logger?: common.Logger
   ): Event;
 
-  public app: App;
-  public device: Device;
-  public request: Request;
+  public app: common.App;
+  public device: common.Device;
+  public request: common.Request;
 
   public errors: Error[];
   public breadcrumbs: Breadcrumb[];
@@ -28,7 +28,7 @@ declare class Event {
   public groupingHash?: string;
 
   // user
-  public getUser(): { id?: string; email?: string; name?: string };
+  public getUser(): common.User;
   public setUser(id?: string, email?: string, name?: string): void;
 
   // metadata
@@ -61,44 +61,6 @@ interface Error {
   errorMessage: string;
   stacktrace: Stackframe[];
   type: string;
-}
-
-interface Device {
-  id?: string;
-  hostname?: string;
-  locale?: string;
-  manufacturer?: string;
-  model?: string;
-  modelNumber?: string;
-  orientation?: string;
-  osName?: string;
-  osVersion?: string;
-  runtimeVersions?: {
-    [key: string]: any;
-  };
-  time?: string;
-  userAgent?: string;
-  [key: string]: any;
-}
-
-interface App {
-  codeBundleId?: string;
-  duration?: number;
-  durationInForeground?: number;
-  inForeground?: boolean;
-  releaseStage?: string;
-  type?: string;
-  version?: string;
-  [key: string]: any;
-}
-
-interface Request {
-  clientIp?: string;
-  headers?: { [key: string]: string };
-  httpMethod?: string;
-  referer?: string;
-  url?: string;
-  [key: string]: any;
 }
 
 export default Event;

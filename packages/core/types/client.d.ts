@@ -4,7 +4,27 @@ import Event from "./event";
 import Session from "./session";
 
 declare class Client {
-  public context: string | void;
+  private constructor();
+
+  // reporting errors
+  public notify(
+    error: common.NotifiableError,
+    onError?: common.OnErrorCallback,
+    cb?: (err: any, event: Event) => void
+  ): void;
+
+  public _notify(
+    event: Event,
+    onError?: common.OnErrorCallback,
+    cb?: (err: any, event: Event) => void,
+  ): void;
+
+  // breadcrumbs
+  public leaveBreadcrumb(
+    message: string,
+    metadata?: { [key: string]: common.BreadcrumbMetadataValue },
+    type?: common.BreadcrumbType
+  ): void;
 
   // metadata
   public addMetadata(section: string, values: { [key: string]: any }): void;
@@ -12,12 +32,12 @@ declare class Client {
   public getMetadata(section: string, key?: string): any;
   public clearMetadata(section: string, key?: string): void;
 
-  public Event: typeof Event;
-  public Breadcrumb: typeof Breadcrumb;
-  public Session: typeof Session;
+  // context
+  public getContext(): string | undefined;
+  public setContext(c: string): void;
 
   // user
-  public getUser(): { id?: string; email?: string; name?: string };
+  public getUser(): common.User;
   public setUser(id?: string, email?: string, name?: string): void;
 
   // sessions
@@ -25,19 +45,24 @@ declare class Client {
   public pauseSession(): void;
   public resumeSession(): Client;
 
+  // callbacks
+  public addOnError(fn: common.OnErrorCallback): void;
+  public removeOnError(fn: common.OnErrorCallback): void;
+
+  public addOnSession(fn: common.OnSessionCallback): void;
+  public removeOnSession(fn: common.OnSessionCallback): void;
+
+  public addOnBreadcrumb(fn: common.OnBreadcrumbCallback): void;
+  public removeOnBreadcrumb(fn: common.OnBreadcrumbCallback): void;
+
+  // plugins
   public use(plugin: common.Plugin, ...args: any[]): Client;
   public getPlugin(name: string): any;
-  public notify(
-    error: common.NotifiableError,
-    onError?: common.OnError,
-    cb?: (err: any, event: Event) => void,
-  ): void;
-  public _notify(
-    event: Event,
-    onError?: common.OnError,
-    cb?: (err: any, event: Event) => void,
-  ): void;
-  public leaveBreadcrumb(message: string, metadata?: { [key: string]: common.BreadcrumbMetadataValue }, type?: string): void;
+
+  // access to internal classes
+  public Breadcrumb: typeof Breadcrumb;
+  public Event: typeof Event;
+  public Session: typeof Session;
 }
 
 export default Client;
