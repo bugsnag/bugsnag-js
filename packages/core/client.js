@@ -232,7 +232,7 @@ class Client {
 
     if (this._session) {
       this._session._track(event)
-      event.session = this._session
+      event._session = this._session
     }
 
     // exit early if events should not be sent on the current releaseStage
@@ -259,9 +259,9 @@ class Client {
       }
 
       // only leave a crumb for the error if actually got sent
-      Client.prototype.leaveBreadcrumb.call(this, event.errorClass, {
-        errorClass: event.errorClass,
-        errorMessage: event.errorMessage,
+      Client.prototype.leaveBreadcrumb.call(this, event.errors[0].errorClass, {
+        errorClass: event.errors[0].errorClass,
+        errorMessage: event.errors[0].errorMessage,
         severity: event.severity
       }, 'error')
 

@@ -22,7 +22,7 @@ module.exports = {
           // if the last parameter (error) was supplied, this is a modern browser's
           // way of saying "this value was thrown and not caught"
           event = client.Event.create(error, true, handledState, 'window onerror', 1)
-          decorateStack(event.stacktrace, url, lineNo, charNo)
+          decorateStack(event.errors[0].stacktrace, url, lineNo, charNo)
         } else if (
           // This complex case detects "error" events that are typically synthesised
           // by jquery's trigger method (although can be created in other ways). In
@@ -53,7 +53,7 @@ module.exports = {
           // Lastly, if there was no "error" parameter this event was probably from an old
           // browser that doesn't support that. Instead we need to generate a stacktrace.
           event = client.Event.create(messageOrEvent, true, handledState, 'window onerror', 1)
-          decorateStack(event.stacktrace, url, lineNo, charNo)
+          decorateStack(event.errors[0].stacktrace, url, lineNo, charNo)
         }
 
         client._notify(event)

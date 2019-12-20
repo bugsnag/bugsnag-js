@@ -1,41 +1,49 @@
 const ErrorStackParser = require('./lib/error-stack-parser')
 const StackGenerator = require('stack-generator')
 const hasStack = require('./lib/has-stack')
-const { reduce, filter } = require('./lib/es-utils')
+const { map, reduce, filter } = require('./lib/es-utils')
 const jsRuntime = require('./lib/js-runtime')
 const metadataDelegate = require('./lib/metadata-delegate')
 const isError = require('./lib/iserror')
 
 class Event {
   constructor (errorClass, errorMessage, stacktrace = [], handledState = defaultHandledState(), originalError) {
-    // private (un)handled state
-    this._handledState = handledState
-
-    // setable props
-    this.app = undefined
     this.apiKey = undefined
-    this.breadcrumbs = []
     this.context = undefined
-    this.device = undefined
-    this.errorClass = ensureString(errorClass)
-    this.errorMessage = ensureString(errorMessage)
     this.groupingHash = undefined
-    this._metadata = {}
-    this.request = undefined
-    this.severity = this._handledState.severity
-    this.stacktrace = reduce(stacktrace, (accum, frame) => {
-      const f = formatStackframe(frame)
-      // don't include a stackframe if none of its properties are defined
-      try {
-        if (JSON.stringify(f) === '{}') return accum
-        return accum.concat(f)
-      } catch (e) {
-        return accum
-      }
-    }, [])
-    this._user = {}
-    this.session = undefined
     this.originalError = originalError
+
+    this._handledState = handledState
+    this.severity = this._handledState.severity
+    this.unhandled = this._handledState.unhandled
+
+    this.app = {}
+    this.device = {}
+    this.request = {}
+
+    this.breadcrumbs = []
+
+    this._metadata = {}
+    this._user = {}
+    this._session = undefined
+
+    this.errors = [
+      {
+        errorClass: ensureString(errorClass),
+        errorMessage: ensureString(errorMessage),
+        type: jsRuntime,
+        stacktrace: reduce(stacktrace, (accum, frame) => {
+          const f = formatStackframe(frame)
+          // don't include a stackframe if none of its properties are defined
+          try {
+            if (JSON.stringify(f) === '{}') return accum
+            return accum.concat(f)
+          } catch (e) {
+            return accum
+          }
+        }, [])
+      }
+    ]
 
     // Flags.
     // Note these are not initialised unless they are used
@@ -67,26 +75,19 @@ class Event {
   toJSON () {
     return {
       payloadVersion: '4',
-      exceptions: [
-        {
-          errorClass: this.errorClass,
-          message: this.errorMessage,
-          stacktrace: this.stacktrace,
-          type: jsRuntime
-        }
-      ],
+      exceptions: map(this.errors, er => ({ ...er, message: er.errorMessage })),
       severity: this.severity,
       unhandled: this._handledState.unhandled,
       severityReason: this._handledState.severityReason,
       app: this.app,
       device: this.device,
+      request: this.request,
       breadcrumbs: this.breadcrumbs,
       context: this.context,
+      groupingHash: this.groupingHash,
       metaData: this._metadata,
       user: this._user,
-      groupingHash: this.groupingHash,
-      request: this.request,
-      session: this.session
+      session: this._session
     }
   }
 }

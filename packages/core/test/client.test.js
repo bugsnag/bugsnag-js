@@ -135,7 +135,7 @@ describe('@bugsnag/core/client', () => {
       })
       client._setDelivery(client => ({
         sendEvent: (payload) => {
-          expect(payload.events[0].errorMessage).toBe('oh no!')
+          expect(payload.events[0].errors[0].errorMessage).toBe('oh no!')
           expect(onErrorSpy).toHaveBeenCalledTimes(1)
           done()
         }
@@ -270,7 +270,7 @@ describe('@bugsnag/core/client', () => {
       client.notify(new Error('111'), {}, (err, event) => {
         expect(err).toBe(null)
         expect(event).toBeTruthy()
-        expect(event.errorMessage).toBe('111')
+        expect(event.errors[0].errorMessage).toBe('111')
         done()
       })
     })
@@ -285,7 +285,7 @@ describe('@bugsnag/core/client', () => {
         expect(err).toBeTruthy()
         expect(err.message).toBe('flerp')
         expect(event).toBeTruthy()
-        expect(event.errorMessage).toBe('111')
+        expect(event.errors[0].errorMessage).toBe('111')
         done()
       })
     })
@@ -299,7 +299,7 @@ describe('@bugsnag/core/client', () => {
       client.notify(new Error('111'), {}, (err, event) => {
         expect(err).toBe(null)
         expect(event).toBeTruthy()
-        expect(event.errorMessage).toBe('111')
+        expect(event.errors[0].errorMessage).toBe('111')
         done()
       })
     })
@@ -313,7 +313,7 @@ describe('@bugsnag/core/client', () => {
       client.notify(new Error('111'), {}, (err, event) => {
         expect(err).toBe(null)
         expect(event).toBeTruthy()
-        expect(event.errorMessage).toBe('111')
+        expect(event.errors[0].errorMessage).toBe('111')
         done()
       })
     })

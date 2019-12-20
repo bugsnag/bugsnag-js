@@ -13,8 +13,8 @@ describe('bugsnag vue', () => {
     const client = new Client({ apiKey: 'API_KEYYY' })
     client._setDelivery(client => ({
       sendEvent: (payload) => {
-        expect(payload.events[0].errorClass).toBe('Error')
-        expect(payload.events[0].errorMessage).toBe('oops')
+        expect(payload.events[0].errors[0].errorClass).toBe('Error')
+        expect(payload.events[0].errors[0].errorMessage).toBe('oops')
         expect(payload.events[0]._metadata.vue).toBeDefined()
         done()
       }

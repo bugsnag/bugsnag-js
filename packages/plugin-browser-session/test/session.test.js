@@ -118,12 +118,12 @@ describe('plugin: sessions', () => {
 
     setTimeout(() => {
       expect(payloads.length).toBe(6)
-      expect(payloads[0].events[0].session).toBe(undefined)
-      expect(payloads[1].events[0].session).toBeDefined()
-      expect(payloads[2].events[0].session).toBe(undefined)
-      expect(payloads[3].events[0].session.id).toBe(payloads[1].events[0].session.id)
-      expect(payloads[4].events[0].session.id).not.toBe(payloads[3].events[0].session.id)
-      expect(payloads[5].events[0].session.id).not.toBe(payloads[4].events[0].session.id)
+      expect(payloads[0].events[0]._session).toBe(undefined)
+      expect(payloads[1].events[0]._session).toBeDefined()
+      expect(payloads[2].events[0]._session).toBe(undefined)
+      expect(payloads[3].events[0]._session.id).toBe(payloads[1].events[0]._session.id)
+      expect(payloads[4].events[0]._session.id).not.toBe(payloads[3].events[0]._session.id)
+      expect(payloads[5].events[0]._session.id).not.toBe(payloads[4].events[0]._session.id)
       done()
     }, 0)
   })
