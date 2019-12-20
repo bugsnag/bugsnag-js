@@ -5,8 +5,8 @@ module.exports = {
     {
       displayName: 'core packages',
       testMatch: [
-        testsForPackage('core'),
+        testsForPackage('core')
       ]
-    },
+    }
   ]
 }

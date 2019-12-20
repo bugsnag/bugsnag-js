@@ -34,7 +34,9 @@ module.exports = {
     },
     // Linting for tests
     {
-      files: ['**/*.test.[tj]s?(x)'],
+      files: [
+        'packages/core/**/*.test.[tj]s?(x)'
+      ],
       env: {
         jest: true,
         browser: true,

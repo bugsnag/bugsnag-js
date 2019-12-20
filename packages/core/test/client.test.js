@@ -25,45 +25,53 @@ describe('@bugsnag/core/client', () => {
   })
 
   describe('use()', () => {
-    it('supports plugins', done => {
-      const client = new Client({ apiKey: '123' })
-      client.use({
-        name: 'test plugin',
-        description: 'nothing much to see here',
-        init: (c) => {
-          expect(c).toEqual(client)
-          done()
-        }
+    it('supports plugins', () => {
+      return new Promise(resolve => {
+        const client = new Client({ apiKey: '123' })
+        client.use({
+          name: 'test plugin',
+          description: 'nothing much to see here',
+          init: (c) => {
+            expect(c).toEqual(client)
+            resolve()
+          }
+        })
       })
     })
   })
 
   describe('logger()', () => {
-    it('can supply a different logger', done => {
-      const client = new Client({ apiKey: 'API_KEY_YEAH' })
-      const log = (msg) => {
-        expect(msg).toBeTruthy()
-        done()
-      }
-      client._logger = { debug: log, info: log, warn: log, error: log }
-      client._logger.debug('hey')
-    })
-    it('can supply a different logger via config', done => {
-      const log = (msg) => {
-        expect(msg).toBeTruthy()
-        done()
-      }
-      const client = new Client({
-        apiKey: 'API_KEY_YEAH',
-        logger: {
-          debug: log,
-          info: log,
-          warn: log,
-          error: log
+    it('can supply a different logger', () => {
+      return new Promise(resolve => {
+        const client = new Client({ apiKey: 'API_KEY_YEAH' })
+        const log = (msg) => {
+          expect(msg).toBeTruthy()
+          resolve()
         }
+        client._logger = { debug: log, info: log, warn: log, error: log }
+        client._logger.debug('hey')
       })
-      client._logger.debug('hey')
     })
+    it('can supply a different logger via config', () => {
+      return new Promise(resolve => {
+        const log = (msg) => {
+          expect(msg).toBeTruthy()
+          resolve()
+        }
+        const client = new Client({
+          apiKey: 'API_KEY_YEAH',
+          logger: {
+            debug: log,
+            info: log,
+            warn: log,
+            error: log
+          }
+        })
+        client._logger.debug('hey')
+      })
+    })
+
+    // eslint-disable-next-line jest/expect-expect
     it('is ok with a null logger', () => {
       const client = new Client({
         apiKey: 'API_KEY_YEAH',
@@ -74,161 +82,187 @@ describe('@bugsnag/core/client', () => {
   })
 
   describe('notify()', () => {
-    it('delivers an error event', done => {
-      const client = new Client({ apiKey: 'API_KEY_YEAH' })
-      client._setDelivery(client => ({
-        sendEvent: payload => {
-          expect(payload).toBeTruthy()
-          expect(Array.isArray(payload.events)).toBe(true)
-          const event = payload.events[0].toJSON()
-          expect(event.severity).toBe('warning')
-          expect(event.severityReason).toEqual({ type: 'handledException' })
-          process.nextTick(() => done())
-        }
-      }))
-      client.notify(new Error('oh em gee'))
-    })
-
-    it('supports setting severity via callback', done => {
-      const client = new Client({ apiKey: 'API_KEY_YEAH' })
-      client._setDelivery(client => ({
-        sendEvent: (payload) => {
-          expect(payload).toBeTruthy()
-          expect(Array.isArray(payload.events)).toBe(true)
-          const event = payload.events[0].toJSON()
-          expect(event.severity).toBe('info')
-          expect(event.severityReason).toEqual({ type: 'userCallbackSetSeverity' })
-          done()
-        }
-      }))
-      client.notify(new Error('oh em gee'), event => {
-        event.severity = 'info'
+    it('delivers an error event', () => {
+      return new Promise(resolve => {
+        const client = new Client({ apiKey: 'API_KEY_YEAH' })
+        client._setDelivery(client => ({
+          sendEvent: payload => {
+            expect(payload).toBeTruthy()
+            expect(Array.isArray(payload.events)).toBe(true)
+            const event = payload.events[0].toJSON()
+            expect(event.severity).toBe('warning')
+            expect(event.severityReason).toEqual({ type: 'handledException' })
+            process.nextTick(() => resolve())
+          }
+        }))
+        client.notify(new Error('oh em gee'))
       })
     })
 
-    it('supports preventing send by returning false', done => {
-      const client = new Client({ apiKey: 'API_KEY_YEAH' })
-      client._setDelivery(client => ({
-        sendEvent: (payload) => {
-          fail('sendEvent() should not be called')
-        }
-      }))
-
-      client.notify(new Error('oh em gee'), event => false)
-
-      // give the event loop a tick to see if the event gets sent
-      process.nextTick(() => done())
-    })
-
-    it('tolerates errors in callbacks', done => {
-      const onErrorSpy = spyOn({ onError: () => {} }, 'onError')
-      const client = new Client({
-        apiKey: 'API_KEY_YEAH',
-        onError: [
-          event => {
-            throw new Error('Ooops')
-          },
-          onErrorSpy
-        ]
+    it('supports setting severity via callback', () => {
+      return new Promise(resolve => {
+        const client = new Client({ apiKey: 'API_KEY_YEAH' })
+        client._setDelivery(client => ({
+          sendEvent: (payload) => {
+            expect(payload).toBeTruthy()
+            expect(Array.isArray(payload.events)).toBe(true)
+            const event = payload.events[0].toJSON()
+            expect(event.severity).toBe('info')
+            expect(event.severityReason).toEqual({ type: 'userCallbackSetSeverity' })
+            resolve()
+          }
+        }))
+        client.notify(new Error('oh em gee'), event => {
+          event.severity = 'info'
+        })
       })
-      client._setDelivery(client => ({
-        sendEvent: (payload) => {
-          expect(payload.events[0].errorMessage).toBe('oh no!')
-          expect(onErrorSpy).toHaveBeenCalledTimes(1)
-          done()
-        }
-      }))
-
-      client.notify(new Error('oh no!'))
     })
 
-    it('supports preventing send with enabledReleaseStages', done => {
-      const client = new Client({ apiKey: 'API_KEY_YEAH', enabledReleaseStages: ['qa'] })
-      client._setDelivery(client => ({
-        sendEvent: (payload) => {
-          fail('sendEvent() should not be called')
-        }
-      }))
+    // eslint-disable-next-line jest/expect-expect
+    it('supports preventing send by returning false', () => {
+      return new Promise((resolve, reject) => {
+        const client = new Client({ apiKey: 'API_KEY_YEAH' })
+        client._setDelivery(client => ({
+          sendEvent: (payload) => {
+            reject(new Error('sendEvent() should not be called'))
+          }
+        }))
 
-      client.notify(new Error('oh em eff gee'))
+        client.notify(new Error('oh em gee'), event => false)
 
-      // give the event loop a tick to see if the event gets sent
-      process.nextTick(() => done())
+        // give the event loop a tick to see if the event gets sent
+        process.nextTick(() => resolve())
+      })
     })
 
-    it('supports setting releaseStage via config.releaseStage', done => {
-      const client = new Client({ apiKey: 'API_KEY_YEAH', releaseStage: 'staging', enabledReleaseStages: ['production'] })
-      client._setDelivery(client => ({
-        sendEvent: (payload) => {
-          fail('sendEvent() should not be called')
-        }
-      }))
+    it('tolerates errors in callbacks', () => {
+      return new Promise(resolve => {
+        const onErrorSpy = jest.spyOn({ onError: () => {} }, 'onError')
+        const client = new Client({
+          apiKey: 'API_KEY_YEAH',
+          onError: [
+            event => {
+              throw new Error('Ooops')
+            },
+            onErrorSpy
+          ]
+        })
+        client._setDelivery(client => ({
+          sendEvent: (payload) => {
+            expect(payload.events[0].errorMessage).toBe('oh no!')
+            expect(onErrorSpy).toHaveBeenCalledTimes(1)
+            resolve()
+          }
+        }))
 
-      client.notify(new Error('oh em eff gee'))
-
-      // give the event loop a tick to see if the event gets sent
-      process.nextTick(() => done())
+        client.notify(new Error('oh no!'))
+      })
     })
 
-    it('supports setting releaseStage via client.app.releaseStage', done => {
-      const client = new Client({ apiKey: 'API_KEY_YEAH', enabledReleaseStages: ['production'] })
-      client._setDelivery(client => ({
-        sendEvent: (payload) => {
-          fail('sendEvent() should not be called')
-        }
-      }))
-      client.app.releaseStage = 'staging'
+    // eslint-disable-next-line jest/expect-expect
+    it('supports preventing send with enabledReleaseStages', () => {
+      return new Promise((resolve, reject) => {
+        const client = new Client({ apiKey: 'API_KEY_YEAH', enabledReleaseStages: ['qa'] })
+        client._setDelivery(client => ({
+          sendEvent: (payload) => {
+            reject(new Error('sendEvent() should not be called'))
+          }
+        }))
 
-      client.notify(new Error('oh em eff gee'))
+        client.notify(new Error('oh em eff gee'))
 
-      // give the event loop a tick to see if the event gets sent
-      process.nextTick(() => done())
+        // give the event loop a tick to see if the event gets sent
+        process.nextTick(() => resolve())
+      })
     })
 
-    it('includes releaseStage in event.app', done => {
-      const client = new Client({ apiKey: 'API_KEY_YEAH', enabledReleaseStages: ['staging'] })
-      client._setDelivery(client => ({
-        sendEvent: (payload) => {
-          expect(payload.events[0].app.releaseStage).toBe('staging')
-          done()
-        }
-      }))
-      client.app.releaseStage = 'staging'
-      client.notify(new Error('oh em eff gee'))
+    // eslint-disable-next-line jest/expect-expect
+    it('supports setting releaseStage via config.releaseStage', () => {
+      return new Promise((resolve, reject) => {
+        const client = new Client({ apiKey: 'API_KEY_YEAH', releaseStage: 'staging', enabledReleaseStages: ['production'] })
+        client._setDelivery(client => ({
+          sendEvent: (payload) => {
+            reject(new Error('sendEvent() should not be called'))
+          }
+        }))
+
+        client.notify(new Error('oh em eff gee'))
+
+        // give the event loop a tick to see if the event gets sent
+        process.nextTick(() => resolve())
+      })
     })
 
-    it('includes releaseStage in event.app when set via config', done => {
-      const client = new Client({ apiKey: 'API_KEY_YEAH', enabledReleaseStages: ['staging'], releaseStage: 'staging' })
-      client._setDelivery(client => ({
-        sendEvent: (payload) => {
-          expect(payload.events[0].app.releaseStage).toBe('staging')
-          done()
-        }
-      }))
-      client.notify(new Error('oh em eff gee'))
+    // eslint-disable-next-line jest/expect-expect
+    it('supports setting releaseStage via client.app.releaseStage', () => {
+      return new Promise((resolve, reject) => {
+        const client = new Client({ apiKey: 'API_KEY_YEAH', enabledReleaseStages: ['production'] })
+        client._setDelivery(client => ({
+          sendEvent: (payload) => {
+            reject(new Error('sendEvent() should not be called'))
+          }
+        }))
+        client.app.releaseStage = 'staging'
+
+        client.notify(new Error('oh em eff gee'))
+
+        // give the event loop a tick to see if the event gets sent
+        process.nextTick(() => resolve())
+      })
     })
 
-    it('prefers client.app.releaseStage over config.releaseStage', done => {
-      const client = new Client({ apiKey: 'API_KEY_YEAH', enabledReleaseStages: ['testing'], releaseStage: 'staging' })
-      client._setDelivery(client => ({
-        sendEvent: (payload) => {
-          expect(payload.events[0].app.releaseStage).toBe('testing')
-          done()
-        }
-      }))
-      client.app.releaseStage = 'testing'
-      client.notify(new Error('oh em eff gee'))
+    it('includes releaseStage in event.app', () => {
+      return new Promise(resolve => {
+        const client = new Client({ apiKey: 'API_KEY_YEAH', enabledReleaseStages: ['staging'] })
+        client._setDelivery(client => ({
+          sendEvent: (payload) => {
+            expect(payload.events[0].app.releaseStage).toBe('staging')
+            resolve()
+          }
+        }))
+        client.app.releaseStage = 'staging'
+        client.notify(new Error('oh em eff gee'))
+      })
     })
 
-    it('populates client.app.version if config.appVersion is supplied', done => {
-      const client = new Client({ apiKey: 'API_KEY_YEAH', appVersion: '1.2.3' })
-      client._setDelivery(client => ({
-        sendEvent: (payload) => {
-          expect(payload.events[0].app.version).toBe('1.2.3')
-          done()
-        }
-      }))
-      client.notify(new Error('oh em eff gee'))
+    it('includes releaseStage in event.app when set via config', () => {
+      return new Promise(resolve => {
+        const client = new Client({ apiKey: 'API_KEY_YEAH', enabledReleaseStages: ['staging'], releaseStage: 'staging' })
+        client._setDelivery(client => ({
+          sendEvent: (payload) => {
+            expect(payload.events[0].app.releaseStage).toBe('staging')
+            resolve()
+          }
+        }))
+        client.notify(new Error('oh em eff gee'))
+      })
+    })
+
+    it('prefers client.app.releaseStage over config.releaseStage', () => {
+      return new Promise(resolve => {
+        const client = new Client({ apiKey: 'API_KEY_YEAH', enabledReleaseStages: ['testing'], releaseStage: 'staging' })
+        client._setDelivery(client => ({
+          sendEvent: (payload) => {
+            expect(payload.events[0].app.releaseStage).toBe('testing')
+            resolve()
+          }
+        }))
+        client.app.releaseStage = 'testing'
+        client.notify(new Error('oh em eff gee'))
+      })
+    })
+
+    it('populates client.app.version if config.appVersion is supplied', () => {
+      return new Promise(resolve => {
+        const client = new Client({ apiKey: 'API_KEY_YEAH', appVersion: '1.2.3' })
+        client._setDelivery(client => ({
+          sendEvent: (payload) => {
+            expect(payload.events[0].app.version).toBe('1.2.3')
+            resolve()
+          }
+        }))
+        client.notify(new Error('oh em eff gee'))
+      })
     })
 
     it('can handle all kinds of bad input', () => {
@@ -291,75 +325,85 @@ describe('@bugsnag/core/client', () => {
       expect(client._metadata.foo['3']).toBe(undefined)
     })
 
-    it('should call the callback (success)', done => {
-      const client = new Client({ apiKey: 'API_KEY' })
-      client._setDelivery(client => ({
-        sendSession: () => {},
-        sendEvent: (payload, cb) => cb(null)
-      }))
-      client.notify(new Error('111'), {}, (err, event) => {
-        expect(err).toBe(null)
-        expect(event).toBeTruthy()
-        expect(event.errorMessage).toBe('111')
-        done()
+    it('should call the callback (success)', () => {
+      return new Promise(resolve => {
+        const client = new Client({ apiKey: 'API_KEY' })
+        client._setDelivery(client => ({
+          sendSession: () => {},
+          sendEvent: (payload, cb) => cb(null)
+        }))
+        client.notify(new Error('111'), {}, (err, event) => {
+          expect(err).toBe(null)
+          expect(event).toBeTruthy()
+          expect(event.errorMessage).toBe('111')
+          resolve()
+        })
       })
     })
 
-    it('should call the callback (err)', done => {
-      const client = new Client({ apiKey: 'API_KEY' })
-      client._setDelivery(client => ({
-        sendSession: () => {},
-        sendEvent: (payload, cb) => cb(new Error('flerp'))
-      }))
-      client.notify(new Error('111'), {}, (err, event) => {
-        expect(err).toBeTruthy()
-        expect(err.message).toBe('flerp')
-        expect(event).toBeTruthy()
-        expect(event.errorMessage).toBe('111')
-        done()
+    it('should call the callback (err)', () => {
+      return new Promise(resolve => {
+        const client = new Client({ apiKey: 'API_KEY' })
+        client._setDelivery(client => ({
+          sendSession: () => {},
+          sendEvent: (payload, cb) => cb(new Error('flerp'))
+        }))
+        client.notify(new Error('111'), {}, (err, event) => {
+          expect(err).toBeTruthy()
+          expect(err.message).toBe('flerp')
+          expect(event).toBeTruthy()
+          expect(event.errorMessage).toBe('111')
+          resolve()
+        })
       })
     })
 
-    it('should call the callback even if the event doesn’t send (enabledReleaseStages)', done => {
-      const client = new Client({ apiKey: 'API_KEY', enabledReleaseStages: ['production'], releaseStage: 'development' })
-      client._setDelivery(client => ({
-        sendSession: () => {},
-        sendEvent: (payload, cb) => cb(null)
-      }))
-      client.notify(new Error('111'), {}, (err, event) => {
-        expect(err).toBe(null)
-        expect(event).toBeTruthy()
-        expect(event.errorMessage).toBe('111')
-        done()
+    it('should call the callback even if the event doesn’t send (enabledReleaseStages)', () => {
+      return new Promise(resolve => {
+        const client = new Client({ apiKey: 'API_KEY', enabledReleaseStages: ['production'], releaseStage: 'development' })
+        client._setDelivery(client => ({
+          sendSession: () => {},
+          sendEvent: (payload, cb) => cb(null)
+        }))
+        client.notify(new Error('111'), {}, (err, event) => {
+          expect(err).toBe(null)
+          expect(event).toBeTruthy()
+          expect(event.errorMessage).toBe('111')
+          resolve()
+        })
       })
     })
 
-    it('should call the callback even if the event doesn’t send (onError)', done => {
-      const client = new Client({ apiKey: 'API_KEY', onError: () => false })
-      client._setDelivery(client => ({
-        sendSession: () => {},
-        sendEvent: (payload, cb) => cb(null)
-      }))
-      client.notify(new Error('111'), {}, (err, event) => {
-        expect(err).toBe(null)
-        expect(event).toBeTruthy()
-        expect(event.errorMessage).toBe('111')
-        done()
+    it('should call the callback even if the event doesn’t send (onError)', () => {
+      return new Promise(resolve => {
+        const client = new Client({ apiKey: 'API_KEY', onError: () => false })
+        client._setDelivery(client => ({
+          sendSession: () => {},
+          sendEvent: (payload, cb) => cb(null)
+        }))
+        client.notify(new Error('111'), {}, (err, event) => {
+          expect(err).toBe(null)
+          expect(event).toBeTruthy()
+          expect(event.errorMessage).toBe('111')
+          resolve()
+        })
       })
     })
 
-    it('should attach the original error to the event object', done => {
-      const client = new Client({ apiKey: 'API_KEY', onError: () => false })
-      client._setDelivery(client => ({
-        sendSession: () => {},
-        sendEvent: (payload, cb) => cb(null)
-      }))
-      const orig = new Error('111')
-      client.notify(orig, {}, (err, event) => {
-        expect(err).toBe(null)
-        expect(event).toBeTruthy()
-        expect(event.originalError).toBe(orig)
-        done()
+    it('should attach the original error to the event object', () => {
+      return new Promise(resolve => {
+        const client = new Client({ apiKey: 'API_KEY', onError: () => false })
+        client._setDelivery(client => ({
+          sendSession: () => {},
+          sendEvent: (payload, cb) => cb(null)
+        }))
+        const orig = new Error('111')
+        client.notify(orig, {}, (err, event) => {
+          expect(err).toBe(null)
+          expect(event).toBeTruthy()
+          expect(event.originalError).toBe(orig)
+          resolve()
+        })
       })
     })
   })
@@ -426,51 +470,55 @@ describe('@bugsnag/core/client', () => {
       expect(client.startSession()).toBe(ret)
     })
 
-    it('calls warns if a session delegate is not provided', (done) => {
-      const client = new Client({ apiKey: 'API_KEY' })
-      client._logger = {
-        debug: () => {},
-        info: () => {},
-        warn: (...args) => {
-          expect(args[0]).toMatch(/^No session/)
-          done()
-        },
-        error: () => {}
-      }
-      client.startSession()
+    it('calls warns if a session delegate is not provided', () => {
+      return new Promise((resolve) => {
+        const client = new Client({ apiKey: 'API_KEY' })
+        client._logger = {
+          debug: () => {},
+          info: () => {},
+          warn: (...args) => {
+            expect(args[0]).toMatch(/^No session/)
+            resolve()
+          },
+          error: () => {}
+        }
+        client.startSession()
+      })
     })
 
-    it('tracks error counts using the session delegate and sends them in error payloads', (done) => {
-      const client = new Client({ apiKey: 'API_KEY' })
-      let i = 0
-      client._sessionDelegate = {
-        startSession: (client) => {
-          client._session = new Session()
-          return client
+    it('tracks error counts using the session delegate and sends them in error payloads', () => {
+      return new Promise((resolve) => {
+        const client = new Client({ apiKey: 'API_KEY' })
+        let i = 0
+        client._sessionDelegate = {
+          startSession: (client) => {
+            client._session = new Session()
+            return client
+          }
         }
-      }
-      client._setDelivery(client => ({
-        sendSession: () => {},
-        sendEvent: (payload, cb) => {
-          if (++i < 10) return
-          const r = JSON.parse(JSON.stringify(payload.events[0]))
-          expect(r.session).toBeDefined()
-          expect(r.session.events.handled).toBe(6)
-          expect(r.session.events.unhandled).toBe(4)
-          done()
-        }
-      }))
-      const sessionClient = client.startSession()
-      sessionClient.notify(new Error('broke'))
-      sessionClient.notify(new Event('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
-      sessionClient.notify(new Error('broke'))
-      sessionClient.notify(new Error('broke'))
-      sessionClient.notify(new Event('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
-      sessionClient.notify(new Error('broke'))
-      sessionClient.notify(new Error('broke'))
-      sessionClient.notify(new Error('broke'))
-      sessionClient.notify(new Event('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
-      sessionClient.notify(new Event('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
+        client._setDelivery(client => ({
+          sendSession: () => {},
+          sendEvent: (payload, cb) => {
+            if (++i < 10) return
+            const r = JSON.parse(JSON.stringify(payload.events[0]))
+            expect(r.session).toBeDefined()
+            expect(r.session.events.handled).toBe(6)
+            expect(r.session.events.unhandled).toBe(4)
+            resolve()
+          }
+        }))
+        const sessionClient = client.startSession()
+        sessionClient.notify(new Error('broke'))
+        sessionClient.notify(new Event('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
+        sessionClient.notify(new Error('broke'))
+        sessionClient.notify(new Error('broke'))
+        sessionClient.notify(new Event('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
+        sessionClient.notify(new Error('broke'))
+        sessionClient.notify(new Error('broke'))
+        sessionClient.notify(new Error('broke'))
+        sessionClient.notify(new Event('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
+        sessionClient.notify(new Event('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
+      })
     })
   })
 
