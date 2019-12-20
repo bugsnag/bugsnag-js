@@ -95,7 +95,7 @@ module.exports.schema = {
   },
   user: {
     defaultValue: () => null,
-    message: 'user should be an object',
+    message: 'should be an object',
     validate: (value) => typeof value === 'object'
   },
   metadata: {
