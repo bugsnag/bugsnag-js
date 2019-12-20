@@ -1,4 +1,4 @@
-import bugsnag, { Bugsnag } from "../../.."
+import bugsnag, { Breadcrumb, Session } from "../../.."
 bugsnag({
   apiKey: "abc",
   appVersion: "1.2.3",
@@ -8,11 +8,11 @@ bugsnag({
   onError: [
     event => true
   ],
-  onBreadcrumb: (b: Bugsnag.Breadcrumb) => {
+  onBreadcrumb: (b: Breadcrumb) => {
     console.log(b.message)
     return false
   },
-  onSession: (s: Bugsnag.Session) => {
+  onSession: (s: Session) => {
     console.log(s.id)
     return true
   },
