@@ -10,7 +10,6 @@ module.exports = {
       if (typeof stackframe.file === 'string' && stackframe.file.indexOf(projectRoot) === 0) {
         stackframe.file = stackframe.file.replace(projectRoot, '')
       }
-      return stackframe
     })
   })
 }

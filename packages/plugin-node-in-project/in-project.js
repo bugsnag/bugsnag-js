@@ -10,7 +10,6 @@ module.exports = {
       stackframe.inProject = typeof stackframe.file === 'string' &&
         stackframe.file.indexOf(projectRoot) === 0 &&
         !/\/node_modules\//.test(stackframe.file)
-      return stackframe
     })
   })
 }
