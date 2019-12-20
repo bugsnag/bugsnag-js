@@ -60,6 +60,7 @@ interface Error {
   errorClass: string;
   errorMessage: string;
   stacktrace: Stackframe[];
+  type: string;
 }
 
 interface Device {
@@ -72,7 +73,7 @@ interface Device {
   orientation?: string;
   osName?: string;
   osVersion?: string;
-  runtimeVersions: {
+  runtimeVersions?: {
     [key: string]: any;
   };
   time?: string;
@@ -84,7 +85,7 @@ interface App {
   codeBundleId?: string;
   duration?: number;
   durationInForeground?: number;
-  inForeground: boolean;
+  inForeground?: boolean;
   releaseStage?: string;
   type?: string;
   version?: string;
