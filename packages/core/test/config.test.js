@@ -1,5 +1,3 @@
-const { describe, it, expect } = global
-
 const config = require('../config')
 
 describe('@bugsnag/core/config', () => {

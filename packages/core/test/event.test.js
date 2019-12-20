@@ -1,12 +1,13 @@
-const { describe, it, expect } = global
-
-const proxyquire = require('proxyquire').noPreserveCache()
 const ErrorStackParser = require('error-stack-parser')
+const Event = require('../event')
+
+jest.mock('stack-generator', () => ({
+  backtrace: () => [{}, {}]
+}))
 
 describe('@bugsnag/core/event', () => {
   describe('constructor', () => {
     it('sets default handledState', () => {
-      const Event = require('../event')
       const err = new Error('noooooo')
       const r = new Event(err.name, err.message, ErrorStackParser.parse(err))
       expect(r._handledState.severity).toBe('warning')
@@ -15,7 +16,6 @@ describe('@bugsnag/core/event', () => {
     })
 
     it('doesn’t create empty stackframes', () => {
-      const Event = require('../event')
       const err = new Error('noooooo')
       const r = new Event(err.name, err.message, [
         { foo: 10 },
@@ -27,11 +27,6 @@ describe('@bugsnag/core/event', () => {
 
   describe('BugsnagEvent.ensureEvent()', () => {
     it('creates an event from an error', () => {
-      const Event = proxyquire('../event', {
-        'stack-generator': {
-          backtrace: () => [{}, {}]
-        }
-      })
       const r0 = Event.ensureEvent(new Error('normal error'))
       expect(r0 instanceof Event).toBe(true)
 
@@ -43,7 +38,6 @@ describe('@bugsnag/core/event', () => {
     })
 
     it('returns the same event if passed', () => {
-      const Event = require('../event')
       const r = new Event('E', 'bad', [])
       const r0 = Event.ensureEvent(r)
       expect(r).toBe(r0)
@@ -52,14 +46,12 @@ describe('@bugsnag/core/event', () => {
 
   describe('addMetadata()', () => {
     it('updates a whole new section', () => {
-      const Event = require('../event')
       const r = new Event('Err', 'bad', [])
       r.addMetadata('specific detail', { extra: 'stuff' })
       expect(r._metadata['specific detail']).toEqual({ extra: 'stuff' })
     })
 
     it('merges an object with an existing section', () => {
-      const Event = require('../event')
       const r = new Event('Err', 'bad', [])
       r.addMetadata('specific detail', { extra: 'stuff' })
       expect(r._metadata['specific detail']).toEqual({ extra: 'stuff' })
@@ -68,7 +60,6 @@ describe('@bugsnag/core/event', () => {
     })
 
     it('adds a single property to an existing section', () => {
-      const Event = require('../event')
       const r = new Event('Err', 'bad', [])
       r.addMetadata('specific detail', { extra: 'stuff' })
       expect(r._metadata['specific detail']).toEqual({ extra: 'stuff' })
@@ -77,14 +68,12 @@ describe('@bugsnag/core/event', () => {
     })
 
     it('creates a new section when updating a single property that doesn’t exist yet', () => {
-      const Event = require('../event')
       const r = new Event('Err', 'bad', [])
       r.addMetadata('metaaaaa', 'flip', 'flop')
       expect(r._metadata.metaaaaa).toEqual({ flip: 'flop' })
     })
 
     it('handles bad input', () => {
-      const Event = require('../event')
       const r = new Event('Err', 'bad', [])
       const before = Object.assign({}, r._metadata)
       r.addMetadata()
@@ -98,7 +87,6 @@ describe('@bugsnag/core/event', () => {
     })
 
     it('removes sections and properties', () => {
-      const Event = require('../event')
       const r = new Event('Err', 'bad', [])
       r.addMetadata('metaaaaa', 'flip', 'flop')
       r.addMetadata('specific detail', { extra: 'stuff', more: 'things' })
@@ -113,7 +101,6 @@ describe('@bugsnag/core/event', () => {
 
   describe('event.clearMetadata()', () => {
     it('removes things', () => {
-      const Event = require('../event')
       const r = new Event('Err', 'bad', [])
 
       // create some things to be removed
@@ -132,7 +119,6 @@ describe('@bugsnag/core/event', () => {
     })
 
     it('handles bad input', () => {
-      const Event = require('../event')
       const r = new Event('Err', 'bad', [])
 
       // create some things to be removed
@@ -160,7 +146,6 @@ describe('@bugsnag/core/event', () => {
 
   describe('event.getMetadata()', () => {
     it('retrieves things', () => {
-      const Event = require('../event')
       const r = new Event('Err', 'bad', [])
 
       // create some things to be get
@@ -172,7 +157,6 @@ describe('@bugsnag/core/event', () => {
     })
 
     it('handles bad input', () => {
-      const Event = require('../event')
       const r = new Event('Err', 'bad', [])
       expect(r.getMetadata('nothing here')).toBe(undefined)
       expect(r.getMetadata(undefined)).toBe(undefined)
@@ -184,7 +168,6 @@ describe('@bugsnag/core/event', () => {
 
   describe('event.setUser() / event.getUser()', () => {
     it('sets and retrieves user properties', () => {
-      const Event = require('../event')
       const r = new Event('Err', 'bad', [])
       r.setUser('123')
       expect(r.getUser()).toEqual({ id: '123', email: undefined, name: undefined })
@@ -199,7 +182,6 @@ describe('@bugsnag/core/event', () => {
 
   describe('event.toJSON()', () => {
     it('serializes correctly', () => {
-      const Event = require('../event')
       const r = new Event('Err', 'bad', [])
       const reserialized = JSON.parse(JSON.stringify(r))
       expect(reserialized.payloadVersion).toBe('4')

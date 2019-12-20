@@ -1,5 +1,3 @@
-const { describe, it, expect } = global
-
 const Session = require('../session')
 
 describe('@bugsnag/core/session', () => {

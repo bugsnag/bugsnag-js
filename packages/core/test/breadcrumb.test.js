@@ -1,5 +1,3 @@
-const { describe, it, expect } = global
-
 const Breadcrumb = require('../breadcrumb')
 
 describe('@bugsnag/core/breadcrumb', () => {

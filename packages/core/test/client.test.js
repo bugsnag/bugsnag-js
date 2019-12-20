@@ -1,5 +1,3 @@
-const { describe, it, expect, fail, spyOn } = global
-
 const Client = require('../client')
 const Event = require('../event')
 const Session = require('../session')
