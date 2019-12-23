@@ -6,16 +6,16 @@
     <script type="text/javascript">
       var ENDPOINT = decodeURIComponent(window.location.search.match(/ENDPOINT=([^&]+)/)[1])
       var API_KEY = decodeURIComponent(window.location.search.match(/API_KEY=([^&]+)/)[1])
-      var bugsnagClient = bugsnag({
+      Bugsnag.init({
         apiKey: API_KEY,
         endpoints: { notify: ENDPOINT, sessions: '/noop' }
       })
-      bugsnagClient.setUser('cjhc05e8u0000peojhf4vfd68', 'bug@sn.ag', 'Bug S. Nag')
+      Bugsnag.setUser('cjhc05e8u0000peojhf4vfd68', 'bug@sn.ag', 'Bug S. Nag')
     </script>
   </head>
   <body>
     <script>
-      bugsnagClient.notify(new Error('user info does work'))
+      Bugsnag.notify(new Error('user info does work'))
     </script>
   </body>
 </html>

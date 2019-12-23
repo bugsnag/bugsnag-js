@@ -1,12 +1,12 @@
 declare var foo: any
 
-import bugsnag from '@bugsnag/browser'
+import Bugsnag from '@bugsnag/browser'
 import config from './lib/config'
 
-var bugsnagClient = bugsnag(config)
+Bugsnag.init(config)
 
 try {
   foo.bar()
 } catch (e) {
-  bugsnagClient.notify(e)
+  Bugsnag.notify(e)
 }

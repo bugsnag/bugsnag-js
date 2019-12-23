@@ -1,6 +1,6 @@
-import bugsnag from '@bugsnag/browser'
+import Bugsnag from '@bugsnag/browser'
 import config from './lib/config'
 
-var bugsnagClient = bugsnag(config)
+Bugsnag.init(config)
 
-bugsnagClient.notify(new Error('bad things'))
+Bugsnag.notify(new Error('bad things'))

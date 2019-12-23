@@ -4,7 +4,7 @@ import { BugsnagErrorHandler } from '@bugsnag/plugin-angular';
 import bugsnagClient from './bugsnag';
 
 export function errorHandlerFactory() {
-  return new BugsnagErrorHandler(bugsnagClient)
+  return new BugsnagErrorHandler(bugsnagClient);
 }
 
 import { AppComponent } from './app.component';

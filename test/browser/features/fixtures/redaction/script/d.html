@@ -6,7 +6,7 @@
     <script type="text/javascript">
       var ENDPOINT = decodeURIComponent(window.location.search.match(/ENDPOINT=([^&]+)/)[1])
       var API_KEY = decodeURIComponent(window.location.search.match(/API_KEY=([^&]+)/)[1])
-      var bugsnagClient = bugsnag({
+      Bugsnag.init({
         apiKey: API_KEY,
         endpoints: { notify: ENDPOINT, sessions: '/noop' },
         filters: [ /details\d/ ]
@@ -15,11 +15,11 @@
   </head>
   <body>
     <script>
-      bugsnagClient.addMetadata('extra', 'details0', {})
-      bugsnagClient.addMetadata('extra', 'details1', /foobar/)
-      bugsnagClient.addMetadata('extra', 'details2', { unlucky: [ 13 ]  })
-      bugsnagClient.addMetadata('extra', 'detailsA', 'aaaa')
-      bugsnagClient.notify(new Error('sensitive?'))
+      Bugsnag.addMetadata('extra', 'details0', {})
+      Bugsnag.addMetadata('extra', 'details1', /foobar/)
+      Bugsnag.addMetadata('extra', 'details2', { unlucky: [ 13 ]  })
+      Bugsnag.addMetadata('extra', 'detailsA', 'aaaa')
+      Bugsnag.notify(new Error('sensitive?'))
     </script>
   </body>
 </html>

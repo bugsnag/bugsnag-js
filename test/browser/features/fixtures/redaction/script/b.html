@@ -6,7 +6,7 @@
     <script type="text/javascript">
       var ENDPOINT = decodeURIComponent(window.location.search.match(/ENDPOINT=([^&]+)/)[1])
       var API_KEY = decodeURIComponent(window.location.search.match(/API_KEY=([^&]+)/)[1])
-      var bugsnagClient = bugsnag({
+      Bugsnag.init({
         apiKey: API_KEY,
         endpoints: { notify: ENDPOINT, sessions: '/noop' },
         filters: [ 'api_key', 'secret' ]
@@ -15,10 +15,10 @@
   </head>
   <body>
     <script>
-      bugsnagClient.addMetadata('details', {
+      Bugsnag.addMetadata('details', {
         api_key: 'fffffffff'
       })
-      bugsnagClient.notify(new Error('sensitive?'), function (event) {
+      Bugsnag.notify(new Error('sensitive?'), function (event) {
         event.setUser('21')
         event.addMetadata('user', { password: '123456', secret: 'don’t tell anyone' })
       })

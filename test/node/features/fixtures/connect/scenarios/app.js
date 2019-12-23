@@ -1,16 +1,17 @@
-var bugsnag = require('@bugsnag/node')
+var Bugsnag = require('@bugsnag/node')
 var bugsnagExpress = require('@bugsnag/plugin-express')
 var connect = require('connect')
 
-var bugsnagClient = bugsnag({
+Bugsnag.init({
   apiKey: process.env.BUGSNAG_API_KEY,
   endpoints: {
     notify: process.env.BUGSNAG_NOTIFY_ENDPOINT,
     sessions: process.env.BUGSNAG_SESSIONS_ENDPOINT
   }
-}).use(bugsnagExpress)
+})
+Bugsnag.use(bugsnagExpress)
 
-var middleware = bugsnagClient.getPlugin('express')
+var middleware = Bugsnag.getPlugin('express')
 
 var app = connect()
 
