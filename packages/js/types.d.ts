@@ -1,5 +1,5 @@
-import { Bugsnag } from '@bugsnag/browser';
-import bugsnag from '@bugsnag/browser';
-import '@bugsnag/node';
-export { Bugsnag };
+import { Client, BrowserConfig } from "@bugsnag/browser";
+import { NodeConfig } from "@bugsnag/node";
+declare function bugsnag(apiKeyOrOpts: string | NodeConfig | BrowserConfig): Client;
 export default bugsnag;
+export * from "@bugsnag/browser"

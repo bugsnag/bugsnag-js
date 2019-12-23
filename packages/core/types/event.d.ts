@@ -1,5 +1,11 @@
 import Breadcrumb from "./breadcrumb";
-import * as common from "./common";
+import {
+  App,
+  Device,
+  Request,
+  Logger,
+  User
+} from "./common";
 
 declare class Event {
   public static create(
@@ -8,7 +14,7 @@ declare class Event {
     handledState: HandledState,
     component: string,
     errorFramesToSkip: number,
-    logger?: common.Logger
+    logger?: Logger
   ): Event;
 
   public app: App;
@@ -28,7 +34,7 @@ declare class Event {
   public groupingHash?: string;
 
   // user
-  public getUser(): { id?: string; email?: string; name?: string };
+  public getUser(): User;
   public setUser(id?: string, email?: string, name?: string): void;
 
   // metadata
@@ -61,44 +67,6 @@ interface Error {
   errorMessage: string;
   stacktrace: Stackframe[];
   type: string;
-}
-
-interface Device {
-  id?: string;
-  hostname?: string;
-  locale?: string;
-  manufacturer?: string;
-  model?: string;
-  modelNumber?: string;
-  orientation?: string;
-  osName?: string;
-  osVersion?: string;
-  runtimeVersions?: {
-    [key: string]: any;
-  };
-  time?: string;
-  userAgent?: string;
-  [key: string]: any;
-}
-
-interface App {
-  codeBundleId?: string;
-  duration?: number;
-  durationInForeground?: number;
-  inForeground?: boolean;
-  releaseStage?: string;
-  type?: string;
-  version?: string;
-  [key: string]: any;
-}
-
-interface Request {
-  clientIp?: string;
-  headers?: { [key: string]: string };
-  httpMethod?: string;
-  referer?: string;
-  url?: string;
-  [key: string]: any;
 }
 
 export default Event;
