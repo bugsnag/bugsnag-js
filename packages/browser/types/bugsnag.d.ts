@@ -1,6 +1,6 @@
-import { Client, Breadcrumb, Event, Session, AbstractTypes } from "@bugsnag/core";
+import { Client, Breadcrumb, Event, Session, Config } from "@bugsnag/core";
 
-interface BrowserConfig extends AbstractTypes.Config {
+interface BrowserConfig extends Config {
   maxEvents?: number;
   collectUserIp?: boolean;
 }
@@ -10,4 +10,5 @@ declare function bugsnag(apiKeyOrOpts: string | BrowserConfig): Client;
 
 // commonjs/requirejs export
 export default bugsnag;
-export { Client, Breadcrumb, Event, Session, AbstractTypes, BrowserConfig };
+export { BrowserConfig }
+export * from "@bugsnag/core";

@@ -1,6 +1,6 @@
-import { Client, AbstractTypes } from "../../..";
+import { Client, NotifiableError, OnErrorCallback } from "../../..";
 let bugsnagInstance: Client | undefined = undefined;
-export function notify(error: AbstractTypes.NotifiableError, onError?: AbstractTypes.OnErrorCallback): void {
+export function notify(error: NotifiableError, onError?: OnErrorCallback): void {
   if (bugsnagInstance === undefined) {
     return
   }

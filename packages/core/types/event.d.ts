@@ -1,5 +1,11 @@
 import Breadcrumb from "./breadcrumb";
-import * as common from "./common";
+import {
+  App,
+  Device,
+  Request,
+  Logger,
+  User
+} from "./common";
 
 declare class Event {
   public static create(
@@ -8,12 +14,12 @@ declare class Event {
     handledState: HandledState,
     component: string,
     errorFramesToSkip: number,
-    logger?: common.Logger
+    logger?: Logger
   ): Event;
 
-  public app: common.App;
-  public device: common.Device;
-  public request: common.Request;
+  public app: App;
+  public device: Device;
+  public request: Request;
 
   public errors: Error[];
   public breadcrumbs: Breadcrumb[];
@@ -28,7 +34,7 @@ declare class Event {
   public groupingHash?: string;
 
   // user
-  public getUser(): common.User;
+  public getUser(): User;
   public setUser(id?: string, email?: string, name?: string): void;
 
   // metadata

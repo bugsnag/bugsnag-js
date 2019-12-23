@@ -1,5 +1,5 @@
 import Event from "./event";
-import * as common from "./common";
+import { App, Device, User } from "./common";
 
 declare class Session {
   public startedAt: string;
@@ -8,9 +8,9 @@ declare class Session {
     _handled: number;
     _unhandled: number;
   };
-  device?: common.Device;
-  user?: common.User;
-  app?: common.App;
+  device?: Device;
+  user?: User;
+  app?: App;
 }
 
 export default Session;

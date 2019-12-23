@@ -1,5 +1,5 @@
 import { ErrorHandler, Injectable } from "@angular/core";
-import { Client, AbstractTypes } from "@bugsnag/js";
+import { Client, Plugin } from "@bugsnag/js";
 
 @Injectable()
 export class BugsnagErrorHandler extends ErrorHandler {
@@ -20,7 +20,7 @@ export class BugsnagErrorHandler extends ErrorHandler {
       error,
       true,
       handledState,
-      'angular error handler',
+      "angular error handler",
       1
     );
 
@@ -36,7 +36,7 @@ export class BugsnagErrorHandler extends ErrorHandler {
   }
 }
 
-const plugin: AbstractTypes.Plugin = {
+const plugin: Plugin = {
   init: (client: Client): ErrorHandler => {
     return new BugsnagErrorHandler(client);
   },

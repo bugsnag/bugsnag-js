@@ -1,5 +1,14 @@
 import Breadcrumb from "./breadcrumb";
-import * as common from "./common";
+import {
+  NotifiableError,
+  BreadcrumbMetadataValue,
+  BreadcrumbType,
+  Plugin,
+  OnErrorCallback,
+  OnSessionCallback,
+  OnBreadcrumbCallback,
+  User
+} from "./common";
 import Event from "./event";
 import Session from "./session";
 
@@ -8,22 +17,22 @@ declare class Client {
 
   // reporting errors
   public notify(
-    error: common.NotifiableError,
-    onError?: common.OnErrorCallback,
+    error: NotifiableError,
+    onError?: OnErrorCallback,
     cb?: (err: any, event: Event) => void
   ): void;
 
   public _notify(
     event: Event,
-    onError?: common.OnErrorCallback,
+    onError?: OnErrorCallback,
     cb?: (err: any, event: Event) => void,
   ): void;
 
   // breadcrumbs
   public leaveBreadcrumb(
     message: string,
-    metadata?: { [key: string]: common.BreadcrumbMetadataValue },
-    type?: common.BreadcrumbType
+    metadata?: { [key: string]: BreadcrumbMetadataValue },
+    type?: BreadcrumbType
   ): void;
 
   // metadata
@@ -37,7 +46,7 @@ declare class Client {
   public setContext(c: string): void;
 
   // user
-  public getUser(): common.User;
+  public getUser(): User;
   public setUser(id?: string, email?: string, name?: string): void;
 
   // sessions
@@ -46,17 +55,17 @@ declare class Client {
   public resumeSession(): Client;
 
   // callbacks
-  public addOnError(fn: common.OnErrorCallback): void;
-  public removeOnError(fn: common.OnErrorCallback): void;
+  public addOnError(fn: OnErrorCallback): void;
+  public removeOnError(fn: OnErrorCallback): void;
 
-  public addOnSession(fn: common.OnSessionCallback): void;
-  public removeOnSession(fn: common.OnSessionCallback): void;
+  public addOnSession(fn: OnSessionCallback): void;
+  public removeOnSession(fn: OnSessionCallback): void;
 
-  public addOnBreadcrumb(fn: common.OnBreadcrumbCallback): void;
-  public removeOnBreadcrumb(fn: common.OnBreadcrumbCallback): void;
+  public addOnBreadcrumb(fn: OnBreadcrumbCallback): void;
+  public removeOnBreadcrumb(fn: OnBreadcrumbCallback): void;
 
   // plugins
-  public use(plugin: common.Plugin, ...args: any[]): Client;
+  public use(plugin: Plugin, ...args: any[]): Client;
   public getPlugin(name: string): any;
 
   // access to internal classes

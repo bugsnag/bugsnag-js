@@ -1,11 +1,11 @@
-import { Client, Breadcrumb, Event, Session, AbstractTypes } from "@bugsnag/core";
+import { Client, Breadcrumb, Event, Session, Logger, Config } from "@bugsnag/core";
 
-type afterErrorCb = (err: any, event: Event, logger: AbstractTypes.Logger) => void;
+type AfterErrorCb = (err: any, event: Event, logger: Logger) => void;
 
-interface NodeConfig extends AbstractTypes.Config {
+interface NodeConfig extends Config {
   hostname?: string;
-  onUncaughtException?: afterErrorCb;
-  onUnhandledRejection?: afterErrorCb;
+  onUncaughtException?: AfterErrorCb;
+  onUnhandledRejection?: AfterErrorCb;
   agent?: any;
   projectRoot?: string;
   sendCode?: boolean;
@@ -16,4 +16,5 @@ declare function bugsnag(apiKeyOrOpts: string | NodeConfig): Client;
 
 // commonjs/requirejs export
 export default bugsnag;
-export { Client, Breadcrumb, Event, Session, AbstractTypes, NodeConfig };
+export * from "@bugsnag/core";
+export { NodeConfig };
