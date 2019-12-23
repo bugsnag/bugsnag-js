@@ -29,6 +29,7 @@
 - Update `Event` to support multiple errors [#680](https://github.com/bugsnag/bugsnag-js/pull/680)
 - Move breadcrumbs to a private property on `client._breadcrumbs` [#681](https://github.com/bugsnag/bugsnag-js/pull/681)
 - Move context to a private property on `Client`, and get/set via `getContext()/setContext()` [#681](https://github.com/bugsnag/bugsnag-js/pull/681)
+- Update `@bugsnag/safe-json-stringify` to replace redacted values with `[REDACTED]` [#683](https://github.com/bugsnag/bugsnag-js/pull/683)
 
 ## 6.5.0 (2019-12-16)
 
