@@ -1,14 +1,17 @@
-import { Client, Breadcrumb, Event, Session, Config } from "@bugsnag/core";
+import { Client, Config, BugsnagStatic } from "@bugsnag/core";
 
 interface BrowserConfig extends Config {
   maxEvents?: number;
   collectUserIp?: boolean;
 }
 
-// two ways to call the exported function: apiKey or config object
-declare function bugsnag(apiKeyOrOpts: string | BrowserConfig): Client;
+interface BrowserBugsnagStatic extends BugsnagStatic {
+  init(apiKeyOrOpts: string | BrowserConfig): void;
+  createClient(apiKeyOrOpts: string | BrowserConfig): Client;
+}
 
-// commonjs/requirejs export
-export default bugsnag;
-export { BrowserConfig }
+declare const Bugsnag: BrowserBugsnagStatic;
+
+export default Bugsnag;
 export * from "@bugsnag/core";
+export { BrowserConfig }

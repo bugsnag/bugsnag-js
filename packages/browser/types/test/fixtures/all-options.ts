@@ -1,5 +1,5 @@
-import bugsnag, { Breadcrumb, Session } from "../../.."
-bugsnag({
+import Bugsnag, { Breadcrumb, Session } from "../../.."
+Bugsnag.init({
   apiKey: "abc",
   appVersion: "1.2.3",
   appType: "worker",

@@ -7,6 +7,8 @@ const Event = require('@bugsnag/core/event')
 const Session = require('@bugsnag/core/session')
 const Breadcrumb = require('@bugsnag/core/breadcrumb')
 
+const { reduce, keys } = require('@bugsnag/core/lib/es-utils')
+
 // extend the base config schema with some browser-specific options
 const schema = { ...require('@bugsnag/core/config').schema, ...require('./config') }
 
@@ -29,49 +31,68 @@ const pluginStripQueryString = require('@bugsnag/plugin-strip-query-string')
 const dXDomainRequest = require('@bugsnag/delivery-x-domain-request')
 const dXMLHttpRequest = require('@bugsnag/delivery-xml-http-request')
 
-module.exports = (opts) => {
-  // handle very simple use case where user supplies just the api key as a string
-  if (typeof opts === 'string') opts = { apiKey: opts }
+const Bugsnag = {
+  _client: null,
+  createClient: (opts) => {
+    // handle very simple use case where user supplies just the api key as a string
+    if (typeof opts === 'string') opts = { apiKey: opts }
+    if (!opts) opts = {}
 
-  // configure a client with user supplied options
-  const bugsnag = new Client(opts, schema, { name, version, url })
+    // configure a client with user supplied options
+    const bugsnag = new Client(opts, schema, { name, version, url })
 
-  // set delivery based on browser capability (IE 8+9 have an XDomainRequest object)
-  bugsnag._setDelivery(window.XDomainRequest ? dXDomainRequest : dXMLHttpRequest)
+    // set delivery based on browser capability (IE 8+9 have an XDomainRequest object)
+    bugsnag._setDelivery(window.XDomainRequest ? dXDomainRequest : dXMLHttpRequest)
 
-  // add browser-specific plugins
-  bugsnag.use(pluginDevice)
-  bugsnag.use(pluginContext)
-  bugsnag.use(pluginRequest)
-  bugsnag.use(pluginThrottle)
-  bugsnag.use(pluginSession)
-  bugsnag.use(pluginIp)
-  bugsnag.use(pluginStripQueryString)
-  bugsnag.use(pluginWindowOnerror)
-  bugsnag.use(pluginUnhandledRejection)
-  bugsnag.use(pluginNavigationBreadcrumbs)
-  bugsnag.use(pluginInteractionBreadcrumbs)
-  bugsnag.use(pluginNetworkBreadcrumbs)
-  bugsnag.use(pluginConsoleBreadcrumbs)
+    // add browser-specific plugins
+    bugsnag.use(pluginDevice)
+    bugsnag.use(pluginContext)
+    bugsnag.use(pluginRequest)
+    bugsnag.use(pluginThrottle)
+    bugsnag.use(pluginSession)
+    bugsnag.use(pluginIp)
+    bugsnag.use(pluginStripQueryString)
+    bugsnag.use(pluginWindowOnerror)
+    bugsnag.use(pluginUnhandledRejection)
+    bugsnag.use(pluginNavigationBreadcrumbs)
+    bugsnag.use(pluginInteractionBreadcrumbs)
+    bugsnag.use(pluginNetworkBreadcrumbs)
+    bugsnag.use(pluginConsoleBreadcrumbs)
 
-  // this one added last to avoid wrapping functionality before bugsnag uses it
-  bugsnag.use(pluginInlineScriptContent)
+    // this one added last to avoid wrapping functionality before bugsnag uses it
+    bugsnag.use(pluginInlineScriptContent)
 
-  bugsnag._logger.debug('Loaded!')
+    bugsnag._logger.debug('Loaded!')
 
-  return bugsnag._config.autoTrackSessions
-    ? bugsnag.startSession()
-    : bugsnag
+    return bugsnag._config.autoTrackSessions
+      ? bugsnag.startSession()
+      : bugsnag
+  },
+  init: (opts) => {
+    if (Bugsnag._client) {
+      Bugsnag._client._logger.warn('init() called twice')
+      return Bugsnag._client
+    }
+    Bugsnag._client = Bugsnag.createClient(opts)
+    Bugsnag._client._depth += 1
+  }
 }
 
-// Angular's DI system needs this interface to match what is exposed
-// in the type definition file (types/bugsnag.d.ts)
-module.exports.Bugsnag = {
-  Client,
-  Event,
-  Session,
-  Breadcrumb
-}
+reduce(keys(Client.prototype), (accum, m) => {
+  if (/^_/.test(m)) return accum
+  accum[m] = function () {
+    if (!Bugsnag._client) return console.log(`Bugsnag.${m}(…) was called before Bugsnag.init()`)
+    return Bugsnag._client[m].apply(Bugsnag._client, arguments)
+  }
+  return accum
+}, Bugsnag)
+
+module.exports = Bugsnag
+
+module.exports.Client = Client
+module.exports.Event = Event
+module.exports.Session = Session
+module.exports.Breadcrumb = Breadcrumb
 
 // Export a "default" property for compatibility with ESM imports
-module.exports.default = module.exports
+module.exports.default = Bugsnag

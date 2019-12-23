@@ -1,4 +1,4 @@
-import { Client, Breadcrumb, Event, Session, Logger, Config } from "@bugsnag/core";
+import { Client, Event, Logger, Config, BugsnagStatic } from "@bugsnag/core";
 
 type AfterErrorCb = (err: any, event: Event, logger: Logger) => void;
 
@@ -11,10 +11,13 @@ interface NodeConfig extends Config {
   sendCode?: boolean;
 }
 
-// two ways to call the exported function: apiKey or config object
-declare function bugsnag(apiKeyOrOpts: string | NodeConfig): Client;
+interface NodeBugsnagStatic extends BugsnagStatic {
+  init(apiKeyOrOpts: string | NodeConfig): void;
+  createClient(apiKeyOrOpts: string | NodeConfig): Client;
+}
 
-// commonjs/requirejs export
-export default bugsnag;
+declare const Bugsnag: NodeBugsnagStatic;
+
+export default Bugsnag;
 export * from "@bugsnag/core";
 export { NodeConfig };

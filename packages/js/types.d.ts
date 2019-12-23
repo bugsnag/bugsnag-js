@@ -1,5 +1,12 @@
-import { Client, BrowserConfig } from "@bugsnag/browser";
+import { Client, Config, BrowserConfig, BugsnagStatic } from "@bugsnag/browser";
 import { NodeConfig } from "@bugsnag/node";
-declare function bugsnag(apiKeyOrOpts: string | NodeConfig | BrowserConfig): Client;
-export default bugsnag;
+
+interface UniversalBugsnagStatic extends BugsnagStatic {
+  init(apiKeyOrOpts: string | BrowserConfig | NodeConfig): void;
+  createClient(apiKeyOrOpts: string | BrowserConfig | NodeConfig): Client;
+}
+
+declare const Bugsnag: UniversalBugsnagStatic;
+
+export default Bugsnag;
 export * from "@bugsnag/browser"
