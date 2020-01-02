@@ -44,7 +44,7 @@ module.exports = {
 
 const sendSessionSummary = client => sessionCounts => {
   // exit early if the current releaseStage is not enabled
-  if (client._config.enabledReleaseStages.length > 0 && !includes(client._config.enabledReleaseStages, client._config.releaseStage)) {
+  if (client._config.enabledReleaseStages !== null && !includes(client._config.enabledReleaseStages, client._config.releaseStage)) {
     client._logger.warn('Session not sent due to releaseStage/enabledReleaseStages configuration')
     return
   }

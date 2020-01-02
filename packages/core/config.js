@@ -66,9 +66,9 @@ module.exports.schema = {
     validate: val => val === true || val === false
   },
   enabledReleaseStages: {
-    defaultValue: () => [],
+    defaultValue: () => null,
     message: 'should be an array of strings',
-    validate: value => isArray(value) && filter(value, f => typeof f === 'string').length === value.length
+    validate: value => value === null || (isArray(value) && filter(value, f => typeof f === 'string').length === value.length)
   },
   releaseStage: {
     defaultValue: () => 'production',
