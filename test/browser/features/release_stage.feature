@@ -24,13 +24,13 @@ Scenario: setting releaseStage=staging enabledReleaseStages=[production,staging]
   And the request is a valid browser payload for the error reporting API
   And the event "app.releaseStage" equals "staging"
 
-Scenario: setting releaseStage=staging enabledReleaseStages=null
+Scenario: setting enabledReleaseStages=null
   When I navigate to the URL "/release_stage/script/e.html"
   Then I wait to receive a request
   And the request is a valid browser payload for the error reporting API
   And the event "app.releaseStage" equals "production"
 
-Scenario: setting releaseStage=staging enabledReleaseStages=[]
+Scenario: setting enabledReleaseStages=[]
   When I navigate to the URL "/release_stage/script/f.html"
   And I wait for 2 seconds
   Then I should receive no requests
