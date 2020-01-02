@@ -3,7 +3,7 @@ node_js:
   - "12"
 before_script:
   - mkdir .size
-  - npx lerna bootstrap --ignore @bugsnag/expo
+  - npx lerna bootstrap --ignore @bugsnag/expo --concurrency 1
   - npx lerna run build --scope @bugsnag/browser
   - cat packages/browser/dist/bugsnag.min.js | wc -c > .size/after-minified
   - cat packages/browser/dist/bugsnag.min.js | gzip | wc -c > .size/after-gzipped
