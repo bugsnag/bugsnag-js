@@ -9,7 +9,8 @@
       var bugsnagClient = bugsnag({
         apiKey: API_KEY,
         endpoints: { notify: ENDPOINT, sessions: '/noop' },
-        enabledReleaseStages: null
+        enabledReleaseStages: null,
+        releaseStage: 'development'
       })
     </script>
   </head>
