@@ -139,10 +139,14 @@ class Client {
     const session = new Session()
 
     session.app = {
-      releaseStage: this._config.releaseStage,
-      version: this._config.appVersion,
-      type: this._config.appType
+      ...{
+        releaseStage: this._config.releaseStage,
+        version: this._config.appVersion,
+        type: this._config.appType
+      }
     }
+
+    session.user = { ...this._user }
 
     // run onSession callbacks
     const ignore = runSyncCallbacks(this._cbs.s, session, 'onSession', this._logger)
