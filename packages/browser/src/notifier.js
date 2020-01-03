@@ -70,18 +70,19 @@ const Bugsnag = {
   },
   init: (opts) => {
     if (Bugsnag._client) {
-      Bugsnag._client._logger.warn('init() called twice')
+      Bugsnag._client._logger.warn('Bugsnag.init() was called more than once. Ignoring.')
       return Bugsnag._client
     }
     Bugsnag._client = Bugsnag.createClient(opts)
     Bugsnag._client._depth += 1
+    return Bugsnag._client
   }
 }
 
 reduce(keys(Client.prototype), (accum, m) => {
   if (/^_/.test(m)) return accum
   accum[m] = function () {
-    if (!Bugsnag._client) return console.log(`Bugsnag.${m}(…) was called before Bugsnag.init()`)
+    if (!Bugsnag._client) return console.log(`Bugsnag.${m}() was called before Bugsnag.init()`)
     return Bugsnag._client[m].apply(Bugsnag._client, arguments)
   }
   return accum

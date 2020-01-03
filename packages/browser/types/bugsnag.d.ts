@@ -6,7 +6,7 @@ interface BrowserConfig extends Config {
 }
 
 interface BrowserBugsnagStatic extends BugsnagStatic {
-  init(apiKeyOrOpts: string | BrowserConfig): void;
+  init(apiKeyOrOpts: string | BrowserConfig): Client;
   createClient(apiKeyOrOpts: string | BrowserConfig): Client;
 }
 

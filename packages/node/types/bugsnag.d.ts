@@ -12,7 +12,7 @@ interface NodeConfig extends Config {
 }
 
 interface NodeBugsnagStatic extends BugsnagStatic {
-  init(apiKeyOrOpts: string | NodeConfig): void;
+  init(apiKeyOrOpts: string | NodeConfig): Client;
   createClient(apiKeyOrOpts: string | NodeConfig): Client;
 }
 

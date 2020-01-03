@@ -13,7 +13,7 @@ import {
 } from "./common";
 
 export default interface BugsnagStatic {
-  init(apiKeyOrOpts: string | Config): void;
+  init(apiKeyOrOpts: string | Config): Client;
 
   createClient(apiKeyOrOpts: string | Config): Client;
 
