@@ -76,9 +76,9 @@ module.exports.schema = {
     validate: value => typeof value === 'string' && value.length
   },
   maxBreadcrumbs: {
-    defaultValue: () => 20,
-    message: 'should be a number ≤40',
-    validate: value => intRange(0, 40)(value)
+    defaultValue: () => 25,
+    message: 'should be a number ≤100',
+    validate: value => intRange(0, 100)(value)
   },
   enabledBreadcrumbTypes: {
     defaultValue: () => BREADCRUMB_TYPES,
