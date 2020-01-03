@@ -21,7 +21,7 @@
   "license": "MIT",
   "dependencies": {
     "@bugsnag/core": "^6.5.0",
-    "@react-native-community/netinfo": "^5.0.0",
+    "@react-native-community/netinfo": "4.6.0",
     "expo-file-system": "^6.0.2"
   },
   "devDependencies": {
