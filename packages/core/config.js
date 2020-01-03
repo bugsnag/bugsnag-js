@@ -94,14 +94,14 @@ module.exports.schema = {
     validate: value => value === undefined || typeof value === 'string'
   },
   user: {
-    defaultValue: () => null,
+    defaultValue: () => ({}),
     message: 'should be an object',
-    validate: (value) => typeof value === 'object'
+    validate: (value) => typeof value === 'object' && value !== null
   },
   metadata: {
-    defaultValue: () => null,
+    defaultValue: () => ({}),
     message: 'should be an object',
-    validate: (value) => typeof value === 'object'
+    validate: (value) => typeof value === 'object' && value !== null
   },
   logger: {
     defaultValue: () => undefined,
