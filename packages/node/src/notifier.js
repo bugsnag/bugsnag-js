@@ -7,7 +7,7 @@ const Event = require('@bugsnag/core/event')
 const Session = require('@bugsnag/core/session')
 const Breadcrumb = require('@bugsnag/core/breadcrumb')
 
-const { reduce, keys } = require('@bugsnag/core/lib/es-utils')
+const { map, keys } = require('@bugsnag/core/lib/es-utils')
 
 const delivery = require('@bugsnag/delivery-node')
 
@@ -71,14 +71,13 @@ const Bugsnag = {
   }
 }
 
-reduce(keys(Client.prototype), (accum, m) => {
-  if (/^_/.test(m)) return accum
-  accum[m] = function () {
+map(keys(Client.prototype), (m) => {
+  if (/^_/.test(m)) return
+  Bugsnag[m] = function () {
     if (!Bugsnag._client) return console.error(`Bugsnag.${m}() was called before Bugsnag.init()`)
     return Bugsnag._client[m].apply(Bugsnag._client, arguments)
   }
-  return accum
-}, Bugsnag)
+})
 
 module.exports = Bugsnag
 
