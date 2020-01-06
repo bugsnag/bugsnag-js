@@ -56,7 +56,7 @@ module.exports = {
         client._logger.warn(
           'req.bugsnag is not defined. Make sure the @bugsnag/plugin-restify requestHandler middleware is added first.'
         )
-        client.notify(createReportFromErr(err, handledState, getRequestAndMetaDataFromReq(req)))
+        client.notify(createReportFromErr(err, handledState), getRequestAndMetaDataFromReq(req))
       }
       cb()
     }
