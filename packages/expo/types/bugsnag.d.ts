@@ -1,8 +1,6 @@
-import { Client, Config } from "@bugsnag/core";
+import { Client, Config, BugsnagStatic } from "@bugsnag/core";
 
-// two ways to call the exported function: apiKey or config object
-declare function bugsnag(apiKeyOrOpts?: string | Config): Client;
+declare const Bugsnag: BugsnagStatic;
 
-// commonjs/requirejs export
-export default bugsnag;
+export default Bugsnag;
 export * from "@bugsnag/core";

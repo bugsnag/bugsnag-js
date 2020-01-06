@@ -22,7 +22,6 @@ describe('Type definitions', () => {
     expect(client.Breadcrumb).toBeDefined()
     expect(client.Event).toBeDefined()
     expect(client.Session).toBeDefined()
-
   })
 
   it('works for reporting errors', done => {

@@ -23,7 +23,6 @@ export interface Config {
   metadata?: { [key: string]: any };
   releaseStage?: string;
   user?: {} | null;
-  [key: string]: any;
 }
 
 export type OnErrorCallback = (event: Event, cb?: (err: null | Error) => void) => void | Promise<void> | boolean;

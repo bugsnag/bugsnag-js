@@ -7,6 +7,8 @@ const Event = require('@bugsnag/core/event')
 const Session = require('@bugsnag/core/session')
 const Breadcrumb = require('@bugsnag/core/breadcrumb')
 
+const { map, keys } = require('@bugsnag/core/lib/es-utils')
+
 const delivery = require('@bugsnag/delivery-node')
 
 // extend the base config schema with some node-specific options
@@ -37,33 +39,52 @@ const plugins = [
   pluginContextualize
 ]
 
-module.exports = (opts, userPlugins = []) => {
-  // handle very simple use case where user supplies just the api key as a string
-  if (typeof opts === 'string') opts = { apiKey: opts }
+const Bugsnag = {
+  _client: null,
+  createClient: (opts) => {
+    // handle very simple use case where user supplies just the api key as a string
+    if (typeof opts === 'string') opts = { apiKey: opts }
+    if (!opts) opts = {}
 
-  const bugsnag = new Client(opts, schema, { name, version, url })
+    const bugsnag = new Client(opts, schema, { name, version, url })
 
-  bugsnag._setDelivery(delivery)
+    bugsnag._setDelivery(delivery)
 
-  plugins.forEach(pl => bugsnag.use(pl))
+    plugins.forEach(pl => bugsnag.use(pl))
 
-  bugsnag._logger.debug('Loaded!')
+    bugsnag._logger.debug('Loaded!')
 
-  bugsnag.leaveBreadcrumb = function () {
-    bugsnag._logger.warn('Breadcrumbs are not supported in Node.js yet')
+    bugsnag.leaveBreadcrumb = function () {
+      bugsnag._logger.warn('Breadcrumbs are not supported in Node.js yet')
+    }
+
+    return bugsnag
+  },
+  init: (opts) => {
+    if (Bugsnag._client) {
+      Bugsnag._client._logger.warn('Bugsnag.init() was called more than once. Ignoring.')
+      return Bugsnag._client
+    }
+    Bugsnag._client = Bugsnag.createClient(opts)
+    Bugsnag._client._depth += 1
+    return Bugsnag._client
   }
-
-  return bugsnag
 }
 
-// Angular's DI system needs this interface to match what is exposed
-// in the type definition file (types/bugsnag.d.ts)
-module.exports.Bugsnag = {
-  Client,
-  Event,
-  Session,
-  Breadcrumb
-}
+map(keys(Client.prototype), (m) => {
+  if (/^_/.test(m)) return
+  Bugsnag[m] = function () {
+    if (!Bugsnag._client) return console.error(`Bugsnag.${m}() was called before Bugsnag.init()`)
+    return Bugsnag._client[m].apply(Bugsnag._client, arguments)
+  }
+})
+
+module.exports = Bugsnag
+
+module.exports.Client = Client
+module.exports.Event = Event
+module.exports.Session = Session
+module.exports.Breadcrumb = Breadcrumb
 
 // Export a "default" property for compatibility with ESM imports
-module.exports.default = module.exports
+module.exports.default = Bugsnag

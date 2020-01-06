@@ -1,8 +1,8 @@
-var bugsnag = require('@bugsnag/node')
+var Bugsnag = require('@bugsnag/node')
 var lodash = require('lodash')
 var call = require('../../out')
 
-var bugsnagClient = bugsnag({
+Bugsnag.init({
   apiKey: process.env.BUGSNAG_API_KEY,
   endpoints: {
     notify: process.env.BUGSNAG_NOTIFY_ENDPOINT,
@@ -15,6 +15,6 @@ var bugsnagClient = bugsnag({
 // error has a stackframe from inside node_modules
 call(function () {
   lodash.throttle(function () {
-    bugsnagClient.notify(new Error('project root'))
+    Bugsnag.notify(new Error('project root'))
   })()
 })

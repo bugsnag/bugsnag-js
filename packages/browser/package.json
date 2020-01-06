@@ -23,8 +23,8 @@
     "clean": "rm -fr dist && mkdir dist",
     "bundle-types": "../../bin/bundle-types",
     "build": "npm run clean && npm run build:dist && npm run build:dist:min && npm run bundle-types",
-    "build:dist": "NODE_ENV=production IS_BROWSER=yes ../../bin/bundle src/notifier.js --standalone=bugsnag | ../../bin/extract-source-map dist/bugsnag.js",
-    "build:dist:min": "NODE_ENV=production IS_BROWSER=yes ../../bin/bundle src/notifier.js --standalone=bugsnag | ../../bin/minify dist/bugsnag.min.js",
+    "build:dist": "NODE_ENV=production IS_BROWSER=yes ../../bin/bundle src/notifier.js --standalone=Bugsnag | ../../bin/extract-source-map dist/bugsnag.js",
+    "build:dist:min": "NODE_ENV=production IS_BROWSER=yes ../../bin/bundle src/notifier.js --standalone=Bugsnag | ../../bin/minify dist/bugsnag.min.js",
     "test:types": "jasmine 'types/**/*.test.js'",
     "cdn-upload": "./bin/cdn-upload",
     "postversion": "npm run build"
