@@ -15,7 +15,7 @@ document.getElementById('jsUnhandled').addEventListener('click', sendUnhandled)
 
 // Initialize Bugsnag to begin tracking errors. Only an api key is required, but
 // here are some other helpful configuration details:
-var bugsnagClient = bugsnag({
+Bugsnag.init({
   // get your own api key at bugsnag.com
   apiKey: '6eccabc796ef28a154314498f79b724e',
 
@@ -77,7 +77,7 @@ function sendHandled () {
   } catch (e) {
     console.log('a handled error with metadata has been reported to your Bugsnag dashboard')
 
-    bugsnagClient.notify(e, event => {
+    Bugsnag.notify(e, event => {
       event.context = 'a handled ReferenceError with metadata'
       // Note that metadata can be declared globally, in the notification (as below) or in an onError.
       // The below metadata will be supplemented (not replaced) by the metadata
@@ -99,4 +99,4 @@ function sendUnhandled () {
 }
 
 // below is the simplest notification syntax, akin to logging.
-window.bugsnagClient.notify('End of file')
+window.Bugsnag.notify('End of file')
