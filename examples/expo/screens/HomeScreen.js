@@ -1,4 +1,4 @@
-import bugsnagClient from '../lib/bugsnag';
+import Bugsnag from '@bugsnag/expo';
 import React from 'react';
 import {
   Image,
@@ -37,13 +37,13 @@ export default class HomeScreen extends React.Component {
           <View style={styles.getStartedContainer}>
 
             <View style={styles.errorButtonView}>
-              <Button title="Send a handled error" onPress={() => bugsnagClient.notify(new Error('till roll out of paper'))} />
+              <Button title="Send a handled error" onPress={() => Bugsnag.notify(new Error('till roll out of paper'))} />
             </View>
             <View style={styles.errorButtonView}>
               <Button title="Send an unhandled error" onPress={() => { throw new Error('unexpected item in bagging area')}} />
             </View>
             <View style={styles.errorButtonView}>
-              <Button title="Add user information" onPress={() => { bugsnagClient.setUser('123', 'bugs.nag@bugsnag.com', 'Bug McSnag') }} />
+              <Button title="Add user information" onPress={() => { Bugsnag.setUser('123', 'bugs.nag@bugsnag.com', 'Bug McSnag') }} />
             </View>
             <View style={styles.errorButtonView}>
               <Button title="Send a render error" onPress={() => { this.setState({ shouldError: true })}} />

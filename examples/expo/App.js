@@ -1,4 +1,4 @@
-import bugsnagClient from './lib/bugsnag';
+import Bugsnag from '@bugsnag/expo';
 import React from 'react';
 import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 import { AppLoading } from 'expo';
@@ -8,7 +8,9 @@ import * as Icon from '@expo/vector-icons';
 import AppNavigator from './navigation/AppNavigator';
 import ErrorFallback from './components/ErrorFallback';
 
-const ErrorBoundary = bugsnagClient.getPlugin('react')
+Bugsnag.init()
+
+const ErrorBoundary = Bugsnag.getPlugin('react')
 
 export default class AppContainer extends React.Component {
   render() {
@@ -60,7 +62,7 @@ class App extends React.Component {
   };
 
   _handleLoadingError = error => {
-    bugsnagClient.notify(error);
+    Bugsnag.notify(error);
   };
 
   _handleFinishLoading = () => {

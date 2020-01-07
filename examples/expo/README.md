@@ -12,9 +12,8 @@ cd bugsnag-js/examples/expo
 ```
 
 Take a look at…
-- [`lib/bugsnag.js`](lib/bugsnag.js) to see how the Bugsnag client is instantiated once and exported for use in various parts of the app
+- [`App.js`](App.js) to see Bugsnag is initialized, how the `ErrorBoundary` is used and [`components/ErrorFallback.js`](components/ErrorFallback.js) to see how it is implemented
 - [`screens/HomeScreen.js`](screens/HomeScreen.js) for how various errors are triggered for the purpose of this example
-- [`App.js`](App.js) to see how the `ErrorBoundary` is used and [`components/ErrorFallback.js`](components/ErrorFallback.js) to see how it is implemented
 
 Make sure you have the Expo CLI installed:
 
