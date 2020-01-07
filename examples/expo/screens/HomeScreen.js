@@ -32,7 +32,7 @@ export default class HomeScreen extends React.Component {
           </View>
 
           <Text style={styles.welcomeText}>Welcome to the Bugsnag / Expo example app. Press the buttons below send errors.</Text>
-          <Text style={styles.welcomeText}>Add your API to <Text style={styles.codeText}>app.json</Text> if you want to see the errors in your dashboard.</Text>
+          <Text style={styles.welcomeText}>Add your API key to <Text style={styles.codeText}>app.json</Text> if you want to see the errors in your dashboard.</Text>
 
           <View style={styles.getStartedContainer}>
 
