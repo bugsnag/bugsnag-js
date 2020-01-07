@@ -1,8 +1,8 @@
-import bugsnag from '@bugsnag/expo'
+import Bugsnag from '@bugsnag/expo'
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 
-const bugsnagClient = bugsnag()
+Bugsnag.init()
 
 export default class App extends React.Component {
   render () {
