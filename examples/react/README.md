@@ -13,9 +13,8 @@ git clone git@github.com:bugsnag/bugsnag-js.git
 cd bugsnag-js/examples/react
 ```
 Take a look at…
-- [`src/index.js`](src/index.js) to see how the `ErrorBoundary` is used
+- [`src/index.js`](src/index.js) to see how to setup Bugsnag once for your application and how the `ErrorBoundary` is used
 - [`src/components/BadButtons.js`](src/components/BadButtons.js) to see how the errors are triggered
-- [`src/lib/bugsnag.js`](src/lib/bugsnag.js) for how to setup Bugsnag once for your application so it can be imported and used anywhere
 
 ### With docker
 
@@ -36,4 +35,4 @@ Ensure you have a version of Node.js >=4 on your machine.
 npm install
 npm run serve
 ```
-__Note__: remember to replace `YOUR_API_KEY` in `src/lib/bugsnag.js` with your own!
+__Note__: remember to replace `YOUR_API_KEY` in `src/index.js` with your own!
