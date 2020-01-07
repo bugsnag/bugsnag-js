@@ -12,7 +12,7 @@
 
 <script>
 import Vue from 'vue'
-import bugsnagClient from '../lib/bugsnag'
+import Bugsnag from '@bugsnag/js'
 export default {
   name: 'BadButtons',
   data: () => ({
@@ -26,15 +26,15 @@ export default {
     }
   },
   methods: {
-    // Tell the bugsnagClient about an error that was handled
+    // Tell the Bugsnag about an error that was handled
     sendHandled: function () {
       try {
         throw new Error('Catch me if you can')
       } catch (e) {
-        bugsnagClient.notify(e)
+        Bugsnag.notify(e)
       }
     },
-    // Throws an error outside in a timer which will be reported buy the bugsnagClient
+    // Throws an error outside in a timer which will be reported buy the Bugsnag
     sendUnhandled: function () {
       setTimeout(() => {
         throw new Error('Crashy')
