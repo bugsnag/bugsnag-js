@@ -22,9 +22,9 @@ const sessionDelegate = {
       app: session.app,
       sessions: [
         {
-          id: sessionClient._session.id,
-          startedAt: sessionClient._session.startedAt,
-          user: sessionClient._user
+          id: session.id,
+          startedAt: session.startedAt,
+          user: session._user
         }
       ]
     })
