@@ -19,16 +19,16 @@ yarn add @bugsnag/js @bugsnag/plugin-angular
 In your the root of your angular app, typically `app.module.ts`:
 
 ```typescript
-// Import bugsnag-js and bugsnag-angular
-import BugsnagErrorHandler from 'bugsnag-angular'
-import bugsnag from 'bugsnag-js'
+// Import bugsnag-js and @bugsnag/angular
+import { BugsnagErrorHandler } from '@bugsnag/plugin-angular'
+import Bugsnag from 'bugsnag-js'
 
 // configure Bugsnag ASAP, before any other imports
-const bugsnagClient = bugsnag('API_KEY')
+Bugsnag.init('API_KEY')
 
-// create a factory which will return the bugsnag error handler
+// create a factory which will return the Bugsnag error handler
 export function errorHandlerFactory() {
-  return new BugsnagErrorHandler(bugsnagClient)
+  return new BugsnagErrorHandler()
 }
 
 import { ErrorHandler, NgModule } from '@angular/core'
