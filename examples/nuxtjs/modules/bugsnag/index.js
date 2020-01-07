@@ -1,6 +1,6 @@
 import { join } from 'path'
 import consola from 'consola'
-import bugsnag from '@bugsnag/js'
+import Bugsnag from '@bugsnag/js'
 import bugsnagExpress from '@bugsnag/plugin-express'
 
 export default function (options) {
@@ -16,13 +16,13 @@ export default function (options) {
     ssr: false
   })
 
-  const bugsnagClient = bugsnag({ apiKey: bugsnagOptions.serverApiKey, logger })
-  bugsnagClient.use(bugsnagExpress)
+  Bugsnag.init({ apiKey: bugsnagOptions.serverApiKey, logger })
+  Bugsnag.use(bugsnagExpress)
 
   logger.info('Adding server handlers')
-  this.nuxt.hook('render:setupMiddleware', app => app.use(bugsnagClient.getPlugin('express').requestHandler))
-  this.nuxt.hook('render:errorMiddleware', app => app.use(bugsnagClient.getPlugin('express').errorHandler))
+  this.nuxt.hook('render:setupMiddleware', app => app.use(Bugsnag.getPlugin('express').requestHandler))
+  this.nuxt.hook('render:errorMiddleware', app => app.use(Bugsnag.getPlugin('express').errorHandler))
   this.nuxt.hook('generate:routeFailed', ({ route, errors }) => {
-    errors.forEach(({ error }) => bugsnagClient.notify(error, event => { event.addMetadata({ route }) }))
+    errors.forEach(({ error }) => Bugsnag.notify(error, event => { event.addMetadata({ route }) }))
   })
 }
