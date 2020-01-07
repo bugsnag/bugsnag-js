@@ -25,16 +25,16 @@ Depending on how your application is structured, usage differs slightly:
 
 ```js
 // initialize bugsnag ASAP, before other imports
-import bugsnag from '@bugsnag/js'
-const bugsnagClient = bugsnag('API_KEY')
+import Bugsnag from '@bugsnag/js'
+Bugsnag.init('API_KEY')
 
 import ReactDOM from 'react-dom'
 import React from 'react'
 import bugsnagReact from '@bugsnag/plugin-react'
-bugsnagClient.use(bugsnagReact, React)
+Bugsnag.use(bugsnagReact, React)
 
 // wrap your entire app tree in the ErrorBoundary provided
-const ErrorBoundary = bugsnagClient.getPlugin('react');
+const ErrorBoundary = Bugsnag.getPlugin('react');
 ReactDOM.render(
   <ErrorBoundary>
     <YourApp />
