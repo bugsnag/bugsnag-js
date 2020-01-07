@@ -19,7 +19,7 @@ yarn add @bugsnag/js @bugsnag/plugin-angular
 In your the root of your angular app, typically `app.module.ts`:
 
 ```typescript
-// Import bugsnag-js and @bugsnag/angular
+// Import bugsnag-js and @bugsnag/plugin-angular
 import { BugsnagErrorHandler } from '@bugsnag/plugin-angular'
 import Bugsnag from 'bugsnag-js'
 

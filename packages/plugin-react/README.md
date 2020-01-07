@@ -26,7 +26,7 @@ Depending on how your application is structured, usage differs slightly:
 ```js
 // initialize bugsnag ASAP, before other imports
 import Bugsnag from '@bugsnag/js'
-Bugsnag('API_KEY')
+Bugsnag.init('API_KEY')
 
 import ReactDOM from 'react-dom'
 import React from 'react'
