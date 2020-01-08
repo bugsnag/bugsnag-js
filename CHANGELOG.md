@@ -33,6 +33,7 @@
 - Refactor type definitions [#682](https://github.com/bugsnag/bugsnag-js/pull/682)
 - Add static `Bugsnag` client interface [#685](https://github.com/bugsnag/bugsnag-js/pull/685)
 - Add `getUser()` and `setUser()` methods to `Session` [#692](https://github.com/bugsnag/bugsnag-js/pull/692)
+- Ensure automatic context is not used when `setContext(null)` has been called [#694](https://github.com/bugsnag/bugsnag-js/pull/694)
 
 ### Fixed
 - (expo): Pin `@react-native-community/netinfo` dependency to exact version bundled by Expo [#691](https://github.com/bugsnag/bugsnag-js/pull/691)
