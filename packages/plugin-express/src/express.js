@@ -52,7 +52,7 @@ module.exports = {
         client._logger.warn(
           'req.bugsnag is not defined. Make sure the @bugsnag/plugin-express requestHandler middleware is added first.'
         )
-        client.notify(createReportFromErr(err, handledState, getRequestAndMetaDataFromReq(req)))
+        client.notify(createReportFromErr(err, handledState), getRequestAndMetaDataFromReq(req))
       }
       next(err)
     }
