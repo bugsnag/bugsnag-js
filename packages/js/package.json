@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/js",
-  "version": "7.0.0-alpha.1",
+  "version": "7.0.0-alpha.2",
   "main": "node/notifier.js",
   "browser": "browser/notifier.js",
   "types": "types.d.ts",
