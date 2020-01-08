@@ -1,6 +1,6 @@
 # Changelog
 
-## TBD
+## 6.5.1 (2020-01-08)
 
 ### Fixed
 - (expo): Pin `@react-native-community/netinfo` dependency to exact version bundled by Expo [#691](https://github.com/bugsnag/bugsnag-js/pull/691)
