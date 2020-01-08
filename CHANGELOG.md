@@ -16,7 +16,6 @@
 - Remove non-public methods from `Client` interface: `logger()`, `delivery()` and `sessionDelegate()` [#659](https://github.com/bugsnag/bugsnag-js/pull/659)
 - Update `leaveBreadcrumb()` type signature to return `void`. [#661](https://github.com/bugsnag/bugsnag-js/pull/661)
 - Add `onBreadcrumb` and `onSession` callbacks. [#665](https://github.com/bugsnag/bugsnag-js/pull/665)
-- Refactor `notify()` to not accept events (they go via `_notify()` instead). Consolidate `Event` static methods into a single `.create()` utility, used by all automatic errors detection components. [#664](https://github.com/bugsnag/bugsnag-js/pull/664)
 - Refactor `notify()` to not accept events (they go via `_notify()` instead). Consolidate `Event` static methods into a single `.create()` utility, used by all automatic error detection components. [#664](https://github.com/bugsnag/bugsnag-js/pull/664)
 - Add methods to pause and resume sessions [#666](https://github.com/bugsnag/bugsnag-js/pull/666)
 - Add `pauseSession()` and `resumeSession()` methods to `Client` [#666](https://github.com/bugsnag/bugsnag-js/pull/666)
@@ -35,8 +34,11 @@
 - Add `getUser()` and `setUser()` methods to `Session` [#692](https://github.com/bugsnag/bugsnag-js/pull/692)
 - Ensure automatic context is not used when `setContext(null)` has been called [#694](https://github.com/bugsnag/bugsnag-js/pull/694)
 
+## 6.5.1 (2020-01-08)
+
 ### Fixed
 - (expo): Pin `@react-native-community/netinfo` dependency to exact version bundled by Expo [#691](https://github.com/bugsnag/bugsnag-js/pull/691)
+- (plugin-express), (plugin-restify): Send request metadata as the correct `notify()` parameter [#687](https://github.com/bugsnag/bugsnag-js/pull/687)
 
 ## 6.5.0 (2019-12-16)
 
