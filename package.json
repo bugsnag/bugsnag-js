@@ -1,6 +1,6 @@
 {
   "devDependencies": {
-    "@babel/core": "^7.7.5",
+    "@babel/core": "^7.0.0",
     "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
     "@babel/plugin-syntax-object-rest-spread": "^7.0.0",
     "@babel/plugin-transform-arrow-functions": "^7.0.0",
@@ -14,10 +14,8 @@
     "@babel/plugin-transform-shorthand-properties": "^7.0.0",
     "@babel/plugin-transform-spread": "^7.0.0",
     "@babel/plugin-transform-template-literals": "^7.0.0",
-    "@babel/preset-env": "^7.7.5",
     "@typescript-eslint/eslint-plugin": "^2.5.0",
     "@typescript-eslint/parser": "^2.5.0",
-    "babel-jest": "^24.9.0",
     "babelify": "^10.0.0",
     "browser-pack-flat": "^3.2.0",
     "browserify": "^16.2.2",

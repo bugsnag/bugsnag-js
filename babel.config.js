@@ -1,7 +1,5 @@
 module.exports = api => {
-  if (api && !api.env('test')) {
-    api.cache(false)
-  }
+  if (api) api.cache(false)
   const presets = []
   const plugins = [
     ['@babel/plugin-transform-arrow-functions'],
@@ -18,18 +16,5 @@ module.exports = api => {
     ['@babel/plugin-proposal-object-rest-spread', { loose: true }],
     ['@babel/syntax-object-rest-spread']
   ]
-
-  if (api && api.env('test')) {
-    presets.push(
-      [
-        '@babel/preset-env',
-        {
-          targets: {
-            node: 'current'
-          }
-        }
-      ]
-    )
-  }
   return { presets, plugins }
 }
