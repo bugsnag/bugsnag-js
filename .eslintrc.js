@@ -43,6 +43,9 @@ module.exports = {
       },
       plugins: ['eslint-plugin-jest'],
       extends: ['plugin:jest/recommended'],
+      rules: {
+        'jest/no-test-callback': 'off'
+      }
     }
   ]
 }
