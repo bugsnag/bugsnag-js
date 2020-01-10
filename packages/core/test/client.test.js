@@ -64,13 +64,15 @@ describe('@bugsnag/core/client', () => {
       })
       client._logger.debug('hey')
     })
-    // eslint-disable-next-line jest/expect-expect
     it('is ok with a null logger', () => {
       const client = new Client({
         apiKey: 'API_KEY_YEAH',
         logger: null
       })
-      client._logger.debug('hey')
+
+      expect(() => {
+        client._logger.debug('hey')
+      }).not.toThrow()
     })
   })
 
