@@ -3,7 +3,7 @@ const testsForPackage = (packageName) => `<rootDir>/packages/${packageName}/**/*
 module.exports = {
   projects: [
     {
-      displayName: 'core packages',
+      displayName: 'core',
       testMatch: [
         testsForPackage('core')
       ]
