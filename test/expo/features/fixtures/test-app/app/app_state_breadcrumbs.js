@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { View, Button } from 'react-native'
 import { endpoints } from './bugsnag'
-import bugsnag from '@bugsnag/expo'
+import Bugsnag from '@bugsnag/expo'
 
 export default class AppStateBreadcrumbs extends Component {
   constructor(props) {
@@ -15,7 +15,7 @@ export default class AppStateBreadcrumbs extends Component {
   defaultAppStateBreadcrumbsBehaviour = () => {
     this.setState(() => (
       {
-        client: bugsnag({
+        client: Bugsnag.createClient({
           endpoints: endpoints,
           autoDetectErrors: false,
           autoTrackSessions: false
@@ -28,7 +28,7 @@ export default class AppStateBreadcrumbs extends Component {
   disabledAppStateBreadcrumbsBehaviour = () => {
     this.setState(() => (
       {
-        client: bugsnag({
+        client: Bugsnag.createClient({
           endpoints: endpoints,
           autoDetectErrors: false,
           autoTrackSessions: false,
@@ -42,7 +42,7 @@ export default class AppStateBreadcrumbs extends Component {
   disabledAllAppStateBreadcrumbsBehaviour = () => {
     this.setState(() => (
       {
-        client: bugsnag({
+        client: Bugsnag.createClient({
           endpoints: endpoints,
           autoDetectErrors: false,
           autoTrackSessions: false,
@@ -56,7 +56,7 @@ export default class AppStateBreadcrumbs extends Component {
   overrideAppStateBreadcrumbsBehaviour = () => {
     this.setState(() => (
       {
-        client: bugsnag({
+        client: Bugsnag.createClient({
           endpoints: endpoints,
           autoDetectErrors: false,
           autoTrackSessions: false,

@@ -1,12 +1,16 @@
 import { ErrorHandler, Injectable } from "@angular/core";
-import { Bugsnag } from "@bugsnag/js";
+import Bugsnag, { Client, Plugin } from "@bugsnag/js";
 
 @Injectable()
 export class BugsnagErrorHandler extends ErrorHandler {
-  public bugsnagClient: Bugsnag.Client;
-  constructor(bugsnagClient: Bugsnag.Client) {
+  public bugsnagClient: Client;
+  constructor(client?: Client) {
     super();
-    this.bugsnagClient = bugsnagClient;
+    if (client) {
+      this.bugsnagClient = client;
+    } else {
+      this.bugsnagClient = ((Bugsnag as any)._client as Client)
+    }
   }
 
   public handleError(error: any): void {
@@ -16,12 +20,12 @@ export class BugsnagErrorHandler extends ErrorHandler {
       unhandled: true,
     };
 
-    const event = new this.bugsnagClient.BugsnagEvent(
-      error.name,
-      error.message,
-      this.bugsnagClient.BugsnagEvent.getStacktrace(error),
-      handledState,
+    const event = this.bugsnagClient.Event.create(
       error,
+      true,
+      handledState,
+      "angular error handler",
+      1
     );
 
     if (error.ngDebugContext) {
@@ -31,13 +35,13 @@ export class BugsnagErrorHandler extends ErrorHandler {
       });
     }
 
-    this.bugsnagClient.notify(event);
+    this.bugsnagClient._notify(event);
     ErrorHandler.prototype.handleError.call(this, error);
   }
 }
 
-const plugin: Bugsnag.Plugin = {
-  init: (client: Bugsnag.Client): ErrorHandler => {
+const plugin: Plugin = {
+  init: (client: Client): ErrorHandler => {
     return new BugsnagErrorHandler(client);
   },
   name: "Angular",

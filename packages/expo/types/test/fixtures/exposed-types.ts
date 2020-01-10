@@ -1,6 +1,6 @@
-import { Bugsnag } from "../../..";
-let bugsnagInstance: Bugsnag.Client | undefined = undefined;
-export function notify(error: Bugsnag.NotifiableError, onError?: Bugsnag.OnError): void {
+import { Client, NotifiableError, OnErrorCallback } from "../../..";
+let bugsnagInstance: Client | undefined = undefined;
+export function notify(error: NotifiableError, onError?: OnErrorCallback): void {
   if (bugsnagInstance === undefined) {
     return
   }

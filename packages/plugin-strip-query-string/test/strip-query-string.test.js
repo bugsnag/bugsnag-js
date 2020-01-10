@@ -34,7 +34,7 @@ describe('plugin: strip query string', () => {
     const client = new Client({
       apiKey: 'API_KEY_YEAH',
       onError: event => {
-        originalStacktrace = event.stacktrace.map(f => f)
+        originalStacktrace = event.errors[0].stacktrace.map(f => ({ ...f }))
       }
     })
     const payloads = []
@@ -47,13 +47,13 @@ describe('plugin: strip query string', () => {
     client.notify(err)
 
     expect(
-      originalStacktrace[0].file.indexOf(payloads[0].events[0].stacktrace[0].file)
+      originalStacktrace[0].file.indexOf(payloads[0].events[0].errors[0].stacktrace[0].file)
     ).toEqual(0)
     expect(
-      payloads[0].events[0].stacktrace[0].file.length < originalStacktrace[0].file.length
+      payloads[0].events[0].errors[0].stacktrace[0].file.length < originalStacktrace[0].file.length
     ).toBe(true)
     expect(
-      /\?/.test(payloads[0].events[0].stacktrace[0].file)
+      /\?/.test(payloads[0].events[0].errors[0].stacktrace[0].file)
     ).toBe(false)
   })
 })

@@ -25,7 +25,13 @@ module.exports = {
       }
     }
 
-    client._config.onError.unshift(event => {
+    client.addOnSession(session => {
+      if (Constants.manifest.revisionId) {
+        session.app.codeBundleId = Constants.manifest.revisionId
+      }
+    })
+
+    client.addOnError(event => {
       const now = new Date()
       const inForeground = AppState.currentState === 'active'
       event.app.inForeground = inForeground
@@ -34,14 +40,10 @@ module.exports = {
         event.app.durationInForeground = now - lastEnteredForeground
       }
       event.addMetadata('app', { nativeBundleVersion, nativeVersionCode })
-    })
 
-    if (!client.app.version && Constants.manifest.version) {
-      client.app.version = Constants.manifest.version
-    }
-
-    if (Constants.manifest.revisionId) {
-      client.app.codeBundleId = Constants.manifest.revisionId
-    }
+      if (Constants.manifest.revisionId) {
+        event.app.codeBundleId = Constants.manifest.revisionId
+      }
+    }, true)
   }
 }

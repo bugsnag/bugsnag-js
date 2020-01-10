@@ -7,12 +7,6 @@ export default class AppFeature extends Component {
     bugsnagClient.notify(new Error('DeviceDefaultError'))
   }
 
-  clientDevice = () => {
-    bugsnagClient.device.osVersion = 'testOSVersion'
-    bugsnagClient.device.newThing = 'this is new'
-    bugsnagClient.notify(new Error('DeviceClientError'))
-  }
-
   callbackDevice = () => {
     bugsnagClient.notify(new Error('DeviceCallbackError'), event => {
       event.device.model = 'brandNewPhone',
@@ -26,10 +20,6 @@ export default class AppFeature extends Component {
         <Button accessibilityLabel="deviceDefaultButton"
           title="defaultDevice"
           onPress={this.defaultDevice}
-        />
-        <Button accessibilityLabel="deviceClientButton"
-          title="clientDevice"
-          onPress={this.clientDevice}
         />
         <Button accessibilityLabel="deviceCallbackButton"
           title="callbackDevice"

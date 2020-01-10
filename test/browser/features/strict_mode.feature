@@ -6,5 +6,5 @@ Scenario: notifier does not error in strict mode
   And the test should run in this browser
   Then I wait to receive a request
   And the request is a valid browser payload for the error reporting API
-  And the exception "errorClass" equals "Error"
-  And the exception "message" equals "Bugsnag usage error. notify(err) expected an error, got unsupported object"
+  And the exception "errorClass" equals "InvalidError"
+  And the payload field "events.0.exceptions.0.message" equals "notify() received a non-error. See \"notify()\" tab for more detail."

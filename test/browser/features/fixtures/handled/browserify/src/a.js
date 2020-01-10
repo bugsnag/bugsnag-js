@@ -1,6 +1,6 @@
-var bugsnag = require('@bugsnag/browser')
+var Bugsnag = require('@bugsnag/browser')
 var config = require('./lib/config')
 
-var bugsnagClient = bugsnag(config)
+Bugsnag.init(config)
 
-bugsnagClient.notify(new Error('bad things'))
+Bugsnag.notify(new Error('bad things'))

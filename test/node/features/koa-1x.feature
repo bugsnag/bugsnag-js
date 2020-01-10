@@ -53,10 +53,9 @@ Scenario: throwing non-Error error
   And the event "unhandled" is true
   And the event "severity" equals "error"
   And the event "severityReason.type" equals "unhandledErrorMiddleware"
-  And the exception "errorClass" equals "Error"
-  And the exception "message" matches "^Handled a non-error\."
+  And the exception "errorClass" equals "InvalidError"
+  And the exception "message" matches "^koa middleware received a non-error\."
   And the exception "type" equals "nodejs"
-  And the "file" of stack frame 0 equals "node_modules/@bugsnag/plugin-koa/dist/bugsnag-koa.js"
 
 Scenario: A non-5XX error created with with ctx.throw()
   Then I open the URL "http://koa-1x/ctx-throw-400"

@@ -189,7 +189,7 @@ describe('plugin: window onerror', () => {
       try {
         expect(payloads.length).toBe(1)
         const event = payloads[0].events[0].toJSON()
-        expect(event.exceptions[0].errorClass).toBe('window.onerror')
+        expect(event.exceptions[0].errorClass).toBe('Error')
         expect(event.exceptions[0].message).toMatch(
           /^hello|uncaught hello|exception thrown and not caught|uncaught exception: hello$/i
         )

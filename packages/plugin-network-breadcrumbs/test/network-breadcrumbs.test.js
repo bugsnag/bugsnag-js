@@ -26,6 +26,7 @@ XMLHttpRequest.prototype.removeEventListener = function (evt, listener) {
   if (listener === this._listeners[evt]) delete this._listeners[evt]
 }
 
+// mock fetch
 function fetch (url, options, fail, status) {
   return new Promise((resolve, reject) => {
     if (fail) {
@@ -34,6 +35,12 @@ function fetch (url, options, fail, status) {
       resolve({ status })
     }
   })
+}
+
+// mock (fetch) Request
+function Request (url, opts) {
+  this.url = url
+  this.method = (opts && opts.method) || 'GET'
 }
 
 describe('plugin: network breadcrumbs', () => {
@@ -53,8 +60,8 @@ describe('plugin: network breadcrumbs', () => {
     // tell the mock request to succeed with status code 200
     request.send(false, 200)
 
-    expect(client.breadcrumbs.length).toBe(1)
-    expect(client.breadcrumbs[0]).toEqual(jasmine.objectContaining({
+    expect(client._breadcrumbs.length).toBe(1)
+    expect(client._breadcrumbs[0]).toEqual(jasmine.objectContaining({
       type: 'request',
       message: 'XMLHttpRequest succeeded',
       metadata: {
@@ -74,7 +81,7 @@ describe('plugin: network breadcrumbs', () => {
     request.open('GET', '/')
     request.open('GET', '/')
     request.send(false, 200)
-    expect(client.breadcrumbs.length).toBe(1)
+    expect(client._breadcrumbs.length).toBe(1)
   })
 
   it('should leave a breadcrumb when an XMLHTTPRequest has a failed response', () => {
@@ -87,8 +94,8 @@ describe('plugin: network breadcrumbs', () => {
     request.open('GET', '/this-does-not-exist')
     request.send(false, 404)
 
-    expect(client.breadcrumbs.length).toBe(1)
-    expect(client.breadcrumbs[0]).toEqual(jasmine.objectContaining({
+    expect(client._breadcrumbs.length).toBe(1)
+    expect(client._breadcrumbs[0]).toEqual(jasmine.objectContaining({
       type: 'request',
       message: 'XMLHttpRequest failed',
       metadata: {
@@ -109,8 +116,8 @@ describe('plugin: network breadcrumbs', () => {
     request.open('GET', 'https://another-domain.xyz/')
     request.send(true)
 
-    expect(client.breadcrumbs.length).toBe(1)
-    expect(client.breadcrumbs[0]).toEqual(jasmine.objectContaining({
+    expect(client._breadcrumbs.length).toBe(1)
+    expect(client._breadcrumbs[0]).toEqual(jasmine.objectContaining({
       type: 'request',
       message: 'XMLHttpRequest error',
       metadata: {
@@ -129,7 +136,7 @@ describe('plugin: network breadcrumbs', () => {
     request.open('GET', client._config.endpoints.notify)
     request.send(false, 200)
 
-    expect(client.breadcrumbs.length).toBe(0)
+    expect(client._breadcrumbs.length).toBe(0)
   })
 
   it('should not leave a breadcrumb for session tracking requests', () => {
@@ -141,7 +148,7 @@ describe('plugin: network breadcrumbs', () => {
     const request = new window.XMLHttpRequest()
     request.open('GET', client._config.endpoints.sessions)
     request.send(false, 200)
-    expect(client.breadcrumbs.length).toBe(0)
+    expect(client._breadcrumbs.length).toBe(0)
   })
 
   it('should leave a breadcrumb when a fetch() resolves', (done) => {
@@ -151,13 +158,197 @@ describe('plugin: network breadcrumbs', () => {
     client.use(plugin, () => [], window)
 
     window.fetch('/', {}, false, 200).then(() => {
-      expect(client.breadcrumbs.length).toBe(1)
-      expect(client.breadcrumbs[0]).toEqual(jasmine.objectContaining({
+      expect(client._breadcrumbs.length).toBe(1)
+      expect(client._breadcrumbs[0]).toEqual(jasmine.objectContaining({
         type: 'request',
         message: 'fetch() succeeded',
         metadata: {
           status: 200,
           request: 'GET /'
+        }
+      }))
+      done()
+    })
+  })
+
+  it('should handle a fetch(url, { method: null })', (done) => {
+    const window = { XMLHttpRequest, fetch }
+
+    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
+    client.use(plugin, () => [], window)
+
+    window.fetch('/', { method: null }, false, 405).then(() => {
+      expect(client._breadcrumbs.length).toBe(1)
+      expect(client._breadcrumbs[0]).toEqual(jasmine.objectContaining({
+        type: 'request',
+        message: 'fetch() failed',
+        metadata: {
+          status: 405,
+          request: 'null /'
+        }
+      }))
+      done()
+    })
+  })
+
+  it('should handle a fetch() request supplied with a Request object', (done) => {
+    const window = { XMLHttpRequest, fetch }
+
+    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
+    client.use(plugin, () => [], window)
+
+    const request = new Request('/')
+
+    window.fetch(request, {}, false, 200).then(() => {
+      expect(client._breadcrumbs.length).toBe(1)
+      expect(client._breadcrumbs[0]).toEqual(jasmine.objectContaining({
+        type: 'request',
+        message: 'fetch() succeeded',
+        metadata: {
+          status: 200,
+          request: 'GET /'
+        }
+      }))
+      done()
+    })
+  })
+
+  it('should handle a fetch() request supplied with a Request object that has a method specified', (done) => {
+    const window = { XMLHttpRequest, fetch }
+
+    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
+    client.use(plugin, () => [], window)
+
+    const request = new Request('/', { method: 'PUT' })
+
+    window.fetch(request, {}, false, 200).then(() => {
+      expect(client._breadcrumbs.length).toBe(1)
+      expect(client._breadcrumbs[0]).toEqual(jasmine.objectContaining({
+        type: 'request',
+        message: 'fetch() succeeded',
+        metadata: {
+          status: 200,
+          request: 'PUT /'
+        }
+      }))
+      done()
+    })
+  })
+
+  it('should handle fetch(null)', (done) => {
+    const window = { XMLHttpRequest, fetch }
+
+    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
+    client.use(plugin, () => [], window)
+
+    window.fetch(null, {}, false, 404).then(() => {
+      expect(client._breadcrumbs.length).toBe(1)
+      expect(client._breadcrumbs[0]).toEqual(jasmine.objectContaining({
+        type: 'request',
+        message: 'fetch() failed',
+        metadata: {
+          status: 404,
+          request: 'GET null'
+        }
+      }))
+      done()
+    })
+  })
+
+  it('should handle fetch(url, null)', (done) => {
+    const window = { XMLHttpRequest, fetch }
+
+    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
+    client.use(plugin, () => [], window)
+
+    window.fetch('/', null, false, 200).then(() => {
+      expect(client._breadcrumbs.length).toBe(1)
+      expect(client._breadcrumbs[0]).toEqual(jasmine.objectContaining({
+        type: 'request',
+        message: 'fetch() succeeded',
+        metadata: {
+          status: 200,
+          request: 'GET /'
+        }
+      }))
+      done()
+    })
+  })
+
+  it('should handle fetch(undefined)', (done) => {
+    const window = { XMLHttpRequest, fetch }
+
+    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
+    client.use(plugin, () => [], window)
+
+    window.fetch(undefined, {}, false, 404).then(() => {
+      expect(client._breadcrumbs.length).toBe(1)
+      expect(client._breadcrumbs[0]).toEqual(jasmine.objectContaining({
+        type: 'request',
+        message: 'fetch() failed',
+        metadata: {
+          status: 404,
+          request: 'GET undefined'
+        }
+      }))
+      done()
+    })
+  })
+
+  it('should handle a fetch(request, { method })', (done) => {
+    const window = { XMLHttpRequest, fetch }
+
+    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
+    client.use(plugin, () => [], window)
+
+    window.fetch(new Request('/foo', { method: 'GET' }), { method: 'PUT' }, false, 200).then(() => {
+      expect(client._breadcrumbs.length).toBe(1)
+      expect(client._breadcrumbs[0]).toEqual(jasmine.objectContaining({
+        type: 'request',
+        message: 'fetch() succeeded',
+        metadata: {
+          status: 200,
+          request: 'PUT /foo'
+        }
+      }))
+      done()
+    })
+  })
+
+  it('should handle a fetch(request, { method: null })', (done) => {
+    const window = { XMLHttpRequest, fetch }
+
+    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
+    client.use(plugin, () => [], window)
+
+    window.fetch(new Request('/foo'), { method: null }, false, 405).then(() => {
+      expect(client._breadcrumbs.length).toBe(1)
+      expect(client._breadcrumbs[0]).toEqual(jasmine.objectContaining({
+        type: 'request',
+        message: 'fetch() failed',
+        metadata: {
+          status: 405,
+          request: 'null /foo'
+        }
+      }))
+      done()
+    })
+  })
+
+  it('should handle a fetch(request, { method: undefined })', (done) => {
+    const window = { XMLHttpRequest, fetch }
+
+    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
+    client.use(plugin, () => [], window)
+
+    window.fetch(new Request('/foo'), { method: undefined }, false, 200).then(() => {
+      expect(client._breadcrumbs.length).toBe(1)
+      expect(client._breadcrumbs[0]).toEqual(jasmine.objectContaining({
+        type: 'request',
+        message: 'fetch() succeeded',
+        metadata: {
+          status: 200,
+          request: 'GET /foo'
         }
       }))
       done()
@@ -171,8 +362,8 @@ describe('plugin: network breadcrumbs', () => {
     client.use(plugin, () => [], window)
 
     window.fetch('/does-not-exist', {}, false, 404).then(() => {
-      expect(client.breadcrumbs.length).toBe(1)
-      expect(client.breadcrumbs[0]).toEqual(jasmine.objectContaining({
+      expect(client._breadcrumbs.length).toBe(1)
+      expect(client._breadcrumbs[0]).toEqual(jasmine.objectContaining({
         type: 'request',
         message: 'fetch() failed',
         metadata: {
@@ -191,8 +382,8 @@ describe('plugin: network breadcrumbs', () => {
     client.use(plugin, () => [], window)
 
     window.fetch('https://another-domain.xyz/foo/bar', {}, true).catch(() => {
-      expect(client.breadcrumbs.length).toBe(1)
-      expect(client.breadcrumbs[0]).toEqual(jasmine.objectContaining({
+      expect(client._breadcrumbs.length).toBe(1)
+      expect(client._breadcrumbs[0]).toEqual(jasmine.objectContaining({
         type: 'request',
         message: 'fetch() error',
         metadata: {
@@ -213,7 +404,7 @@ describe('plugin: network breadcrumbs', () => {
     request.open('GET', '/')
     request.send(false, 200)
 
-    expect(client.breadcrumbs.length).toBe(0)
+    expect(client._breadcrumbs.length).toBe(0)
   })
 
   it('should be enabled when enabledBreadcrumbTypes=["request"]', () => {
@@ -226,6 +417,6 @@ describe('plugin: network breadcrumbs', () => {
     request.open('GET', '/')
     request.send(false, 200)
 
-    expect(client.breadcrumbs.length).toBe(1)
+    expect(client._breadcrumbs.length).toBe(1)
   })
 })

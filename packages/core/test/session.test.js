@@ -9,14 +9,14 @@ describe('@bugsnag/core/session', () => {
       expect(s.events).toEqual({ handled: 0, unhandled: 0 })
     })
   })
-  describe('trackError()', () => {
+  describe('_track()', () => {
     it('returns the correct data structure', () => {
       const s = new Session()
-      s.trackError({ _handledState: { unhandled: true } })
-      s.trackError({ _handledState: { unhandled: false } })
-      s.trackError({ _handledState: { unhandled: true } })
-      s.trackError({ _handledState: { unhandled: true } })
-      s.trackError({ _handledState: { unhandled: false } })
+      s._track({ _handledState: { unhandled: true } })
+      s._track({ _handledState: { unhandled: false } })
+      s._track({ _handledState: { unhandled: true } })
+      s._track({ _handledState: { unhandled: true } })
+      s._track({ _handledState: { unhandled: false } })
       expect(s.toJSON().events).toEqual({ handled: 2, unhandled: 3 })
     })
   })

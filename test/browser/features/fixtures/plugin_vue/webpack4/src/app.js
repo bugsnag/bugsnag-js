@@ -1,10 +1,10 @@
-var bugsnag = require('@bugsnag/browser')
+var Bugsnag = require('@bugsnag/browser')
 var bugsnagVue = require('@bugsnag/plugin-vue')
 var Vue = require('vue/dist/vue.common.js')
 var config = require('./lib/config')
 
-var bugsnagClient = bugsnag(config)
-bugsnagClient.use(bugsnagVue, Vue)
+Bugsnag.init(config)
+Bugsnag.use(bugsnagVue, Vue)
 
 var app = new Vue({
   el: '#app',

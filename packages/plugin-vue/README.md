@@ -20,11 +20,11 @@ yarn add bugsnag-js @bugsnag/plugin-vue
 
 ```js
 const Vue = require('vue')
-const bugsnag = require('@bugsnag/js')
+const Bugsnag = require('@bugsnag/js')
 const bugsnagVue = require('@bugsnag/plugin-vue')
 
-const bugsnagClient = bugsnag('API_KEY')
-bugsnagClient.use(bugsnagVue, Vue)
+Bugsnag.init('API_KEY')
+Bugsnag.use(bugsnagVue, Vue)
 ```
 
 ## Support

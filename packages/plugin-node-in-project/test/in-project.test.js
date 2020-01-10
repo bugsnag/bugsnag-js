@@ -20,9 +20,9 @@ describe('plugin: node in project', () => {
     client._setDelivery(client => ({
       sendEvent: (payload) => {
         const evt = payload.events[0]
-        expect(evt.stacktrace[0].inProject).toBe(true)
-        expect(evt.stacktrace[1].inProject).toBe(true)
-        expect(evt.stacktrace[2].inProject).toBe(true)
+        expect(evt.errors[0].stacktrace[0].inProject).toBe(true)
+        expect(evt.errors[0].stacktrace[1].inProject).toBe(true)
+        expect(evt.errors[0].stacktrace[2].inProject).toBe(true)
         done()
       },
       sendSession: () => {}
@@ -30,7 +30,7 @@ describe('plugin: node in project', () => {
 
     client.use(plugin)
 
-    client.notify(new Event('Error', 'in project test', [
+    client._notify(new Event('Error', 'in project test', [
       {
         lineNumber: 22,
         columnNumber: 18,
@@ -60,9 +60,9 @@ describe('plugin: node in project', () => {
     client._setDelivery(client => ({
       sendEvent: (payload) => {
         const evt = payload.events[0]
-        expect(evt.stacktrace[0].inProject).toBe(false)
-        expect(evt.stacktrace[1].inProject).toBe(false)
-        expect(evt.stacktrace[2].inProject).toBe(false)
+        expect(evt.errors[0].stacktrace[0].inProject).toBe(false)
+        expect(evt.errors[0].stacktrace[1].inProject).toBe(false)
+        expect(evt.errors[0].stacktrace[2].inProject).toBe(false)
         done()
       },
       sendSession: () => {}
@@ -70,7 +70,7 @@ describe('plugin: node in project', () => {
 
     client.use(plugin)
 
-    client.notify(new Event('Error', 'in project test', [
+    client._notify(new Event('Error', 'in project test', [
       {
         lineNumber: 22,
         columnNumber: 18,
@@ -100,8 +100,8 @@ describe('plugin: node in project', () => {
     client._setDelivery(client => ({
       sendEvent: (payload) => {
         const evt = payload.events[0]
-        expect(evt.stacktrace[0].inProject).toBe(false)
-        expect(evt.stacktrace[1].inProject).toBe(false)
+        expect(evt.errors[0].stacktrace[0].inProject).toBe(false)
+        expect(evt.errors[0].stacktrace[1].inProject).toBe(false)
         done()
       },
       sendSession: () => {}
@@ -109,7 +109,7 @@ describe('plugin: node in project', () => {
 
     client.use(plugin)
 
-    client.notify(new Event('Error', 'in project test', [
+    client._notify(new Event('Error', 'in project test', [
       {
         lineNumber: 22,
         columnNumber: 18,
@@ -135,9 +135,9 @@ describe('plugin: node in project', () => {
     client._setDelivery(client => ({
       sendEvent: (payload) => {
         const evt = payload.events[0]
-        expect(evt.stacktrace[0].inProject).toBe(false)
-        expect(evt.stacktrace[1].inProject).toBe(false)
-        expect(evt.stacktrace[2].inProject).toBe(false)
+        expect(evt.errors[0].stacktrace[0].inProject).toBe(false)
+        expect(evt.errors[0].stacktrace[1].inProject).toBe(false)
+        expect(evt.errors[0].stacktrace[2].inProject).toBe(false)
         done()
       },
       sendSession: () => {}
@@ -145,7 +145,7 @@ describe('plugin: node in project', () => {
 
     client.use(plugin)
 
-    client.notify(new Event('Error', 'in project test', [
+    client._notify(new Event('Error', 'in project test', [
       {
         lineNumber: 22,
         columnNumber: 18,

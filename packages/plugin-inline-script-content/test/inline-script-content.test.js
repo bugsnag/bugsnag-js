@@ -32,13 +32,13 @@ Lorem ipsum dolor sit amet.
     const payloads = []
     client.use(plugin, document, window)
 
-    expect(client._config.onError.length).toBe(1)
+    expect(client._cbs.e.length).toBe(1)
     client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
-    client.notify(new Event('BadThing', 'Happens in script tags', [
+    client._notify(new Event('BadThing', 'Happens in script tags', [
       { fileName: window.location.href, lineNumber: 10 }
     ]))
     expect(payloads.length).toEqual(1)
-    expect(payloads[0].events[0].stacktrace[0].code).toBeDefined()
+    expect(payloads[0].events[0].errors[0].stacktrace[0].code).toBeDefined()
     expect(payloads[0].events[0]._metadata.script).toBeDefined()
     expect(payloads[0].events[0]._metadata.script.content).toEqual(scriptContent)
   })
@@ -96,13 +96,13 @@ Lorem ipsum dolor sit amet.
     const payloads = []
     client.use(plugin, document, window)
 
-    expect(client._config.onError.length).toBe(1)
+    expect(client._cbs.e.length).toBe(1)
     client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
-    client.notify(new Event('BadThing', 'Happens in script tags', [
+    client._notify(new Event('BadThing', 'Happens in script tags', [
       { fileName: window.location.href, lineNumber: 10 }
     ]))
     expect(payloads.length).toEqual(1)
-    expect(payloads[0].events[0].stacktrace[0].code).toBeDefined()
+    expect(payloads[0].events[0].errors[0].stacktrace[0].code).toBeDefined()
     expect(payloads[0].events[0]._metadata.script).toBeDefined()
     expect(payloads[0].events[0]._metadata.script.content.length).toBe(500000)
   })
@@ -133,14 +133,14 @@ Lorem ipsum dolor sit amet.
     const payloads = []
     client.use(plugin, document, window)
 
-    expect(client._config.onError.length).toBe(1)
+    expect(client._cbs.e.length).toBe(1)
     client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
-    client.notify(new Event('BadThing', 'Happens in script tags', [
+    client._notify(new Event('BadThing', 'Happens in script tags', [
       { fileName: window.location.href, lineNumber: 7 }
     ]))
     expect(payloads.length).toEqual(1)
-    expect(payloads[0].events[0].stacktrace[0].code).toBeDefined()
-    const surroundingCode = payloads[0].events[0].stacktrace[0].code
+    expect(payloads[0].events[0].errors[0].stacktrace[0].code).toBeDefined()
+    const surroundingCode = payloads[0].events[0].errors[0].stacktrace[0].code
     Object.keys(surroundingCode).forEach(line => {
       expect(surroundingCode[line].length > 200).toBe(false)
     })
@@ -169,12 +169,12 @@ Lorem ipsum dolor sit amet.
     const payloads = []
     client.use(plugin, document, window)
 
-    expect(client._config.onError.length).toBe(1)
+    expect(client._cbs.e.length).toBe(1)
     client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
     const spy = spyOn(client._logger, 'error')
-    client.notify(new Event('EmptyStacktrace', 'Has nothing in it', []))
+    client._notify(new Event('EmptyStacktrace', 'Has nothing in it', []))
     expect(payloads.length).toEqual(1)
-    expect(payloads[0].events[0].stacktrace).toEqual([])
+    expect(payloads[0].events[0].errors[0].stacktrace).toEqual([])
     expect(spy).toHaveBeenCalledTimes(0)
   })
 
@@ -232,13 +232,13 @@ Lorem ipsum dolor sit amet.
     const payloads = []
     client.use(plugin, document, window)
 
-    expect(client._config.onError.length).toBe(1)
+    expect(client._cbs.e.length).toBe(1)
     client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
-    client.notify(new Event('Error', 'oh', [
+    client._notify(new Event('Error', 'oh', [
       { fileName: window.location.href, lineNumber: 1 }
     ]))
     expect(payloads.length).toEqual(1)
-    expect(payloads[0].events[0].stacktrace[0].code).toEqual({
+    expect(payloads[0].events[0].errors[0].stacktrace[0].code).toEqual({
       1: '<!-- DOC START -->',
       2: '<script>throw new Error(\'oh\')',
       3: 'console.log(\'next\')</script>'

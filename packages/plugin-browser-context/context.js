@@ -3,9 +3,9 @@
  */
 module.exports = {
   init: (client, win = window) => {
-    client._config.onError.unshift(event => {
-      if (event.context) return
+    client.addOnError(event => {
+      if (event.context !== undefined) return
       event.context = win.location.pathname
-    })
+    }, true)
   }
 }

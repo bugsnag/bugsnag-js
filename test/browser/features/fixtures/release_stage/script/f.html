@@ -6,26 +6,16 @@
     <script type="text/javascript">
       var ENDPOINT = decodeURIComponent(window.location.search.match(/ENDPOINT=([^&]+)/)[1])
       var API_KEY = decodeURIComponent(window.location.search.match(/API_KEY=([^&]+)/)[1])
-      var bugsnagClient = bugsnag({
+      Bugsnag.init({
         apiKey: API_KEY,
         endpoints: { notify: ENDPOINT, sessions: '/noop' },
-        filters: [ 'stacktrace', 'secret' ]
+        enabledReleaseStages: []
       })
     </script>
   </head>
   <body>
     <script>
-      bugsnagClient.addMetadata('details', {
-        stacktrace: [ 'a', 'b' ]
-      })
-      function handle () {
-        bugsnagClient.notify(new Error('sensitive?'), function (event) {
-          event.setUser('21')
-          event.addMetadata('user', { password: '123456', secret: 'don’t tell anyone' })
-        })
-      }
-
-      handle()
+      Bugsnag.notify(new Error('release stage does work'))
     </script>
   </body>
 </html>

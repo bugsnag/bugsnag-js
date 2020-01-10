@@ -1,5 +1,5 @@
-import bugsnag from "../../..";
-const bugsnagClient = bugsnag({
+import Bugsnag from "../../..";
+Bugsnag.init({
   apiKey: 'api_key',
   onError: (event) => {
     event.breadcrumbs.map(breadcrumb => {

@@ -24,10 +24,10 @@ describe('plugin: request', () => {
     const payloads = []
     client.use(plugin, window)
 
-    client.request = { url: 'foobar' }
-
     client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
-    client.notify(new Error('noooo'))
+    client.notify(new Error('noooo'), event => {
+      event.request.url = 'foobar'
+    })
 
     expect(payloads.length).toEqual(1)
     expect(payloads[0].events[0].request).toEqual({ url: 'foobar' })

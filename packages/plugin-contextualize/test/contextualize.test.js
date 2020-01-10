@@ -36,7 +36,7 @@ describe('plugin: contextualize', () => {
     })
     c._setDelivery(client => ({
       sendEvent: (payload, cb) => {
-        expect(payload.events[0].errorMessage).toBe('no item available')
+        expect(payload.events[0].errors[0].errorMessage).toBe('no item available')
         expect(payload.events[0].severity).toBe('warning')
         expect(payload.events[0]._user).toEqual({
           id: '1a2c3cd4',
@@ -75,8 +75,8 @@ describe('plugin: contextualize', () => {
     })
     c._setDelivery(client => ({
       sendEvent: (payload, cb) => {
-        expect(payload.events[0].errorMessage).toBe('ENOENT: no such file or directory, open \'does not exist\'')
-        expect(payload.events[0].stacktrace[0].file).toBe(`${__filename}`)
+        expect(payload.events[0].errors[0].errorMessage).toBe('ENOENT: no such file or directory, open \'does not exist\'')
+        expect(payload.events[0].errors[0].stacktrace[0].file).toBe(`${__filename}`)
         cb(null)
       },
       sendSession: () => {}

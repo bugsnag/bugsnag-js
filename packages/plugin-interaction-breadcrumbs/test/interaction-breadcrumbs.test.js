@@ -10,7 +10,7 @@ describe('plugin: interaction breadcrumbs', () => {
     const { window, winHandlers, els } = getMockWindow()
     c.use(plugin, window)
     winHandlers.click.forEach(fn => fn.call(window, { target: els[0] }))
-    expect(c.breadcrumbs.length).toBe(1)
+    expect(c._breadcrumbs.length).toBe(1)
   })
 
   it('should not be enabled when enabledBreadcrumbTypes=[]', () => {
@@ -18,7 +18,7 @@ describe('plugin: interaction breadcrumbs', () => {
     const { window, winHandlers, els } = getMockWindow()
     c.use(plugin, window)
     winHandlers.click.forEach(fn => fn.call(window, { target: els[0] }))
-    expect(c.breadcrumbs.length).toBe(0)
+    expect(c._breadcrumbs.length).toBe(0)
   })
 
   it('should be enabled when enabledBreadcrumbTypes=["user"]', () => {
@@ -26,7 +26,7 @@ describe('plugin: interaction breadcrumbs', () => {
     const { window, winHandlers, els } = getMockWindow()
     c.use(plugin, window)
     winHandlers.click.forEach(fn => fn.call(window, { target: els[0] }))
-    expect(c.breadcrumbs.length).toBe(1)
+    expect(c._breadcrumbs.length).toBe(1)
   })
 })
 

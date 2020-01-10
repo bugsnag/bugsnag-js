@@ -1,6 +1,7 @@
 {
   "name": "@bugsnag/core",
-  "version": "6.4.1",
+  "main": "index.js",
+  "version": "7.0.0-alpha.1",
   "types": "types/index.d.ts",
   "description": "Core classes and utilities for Bugsnag notifiers",
   "homepage": "https://www.bugsnag.com/",
@@ -20,12 +21,14 @@
   "license": "MIT",
   "dependencies": {
     "@bugsnag/cuid": "^3.0.0",
-    "@bugsnag/safe-json-stringify": "4.0.0",
+    "@bugsnag/safe-json-stringify": "^5.0.0",
     "error-stack-parser": "^2.0.3",
     "iserror": "0.0.2",
     "stack-generator": "^2.0.3"
   },
   "devDependencies": {
+    "@types/jasmine": "^3.5.0",
+    "@types/node": "^12.12.21",
     "typescript": "^2.9.2"
   }
 }

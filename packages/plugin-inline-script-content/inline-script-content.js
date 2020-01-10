@@ -52,12 +52,12 @@ module.exports = {
       }, {})
     }
 
-    client._config.onError.unshift(event => {
+    client.addOnError(event => {
       // remove any of our own frames that may be part the stack this
       // happens before the inline script check as it happens for all errors
-      event.stacktrace = filter(event.stacktrace, f => !(/__trace__$/.test(f.method)))
+      event.errors[0].stacktrace = filter(event.errors[0].stacktrace, f => !(/__trace__$/.test(f.method)))
 
-      const frame = event.stacktrace[0]
+      const frame = event.errors[0].stacktrace[0]
 
       // if frame.file exists and is not the original location of the page, this can't be an inline script
       if (frame && frame.file && frame.file.replace(/#.*$/, '') !== originalLocation.replace(/#.*$/, '')) return
@@ -76,7 +76,7 @@ module.exports = {
       // only attempt to grab some surrounding code if we have a line number
       if (!frame || !frame.lineNumber) return
       frame.code = addSurroundingCode(frame.lineNumber)
-    })
+    }, true)
 
     // Proxy all the timer functions whose callback is their 0th argument.
     // Keep a reference to the original setTimeout because we need it later

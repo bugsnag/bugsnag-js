@@ -39,7 +39,7 @@ var bugsnagClient = bugsnag({
     // the below downgrades handled exceptions sent with the generic "Error"
     // class to info. In this example, it only affects the notification called
     // at the very end of this app.js.
-    if (event.errorClass === 'Error' && event.severity === 'warning') {
+    if (event.errors[0].errorClass === 'Error' && event.severity === 'warning') {
       event.severity = 'info'
     }
     // note that if you return false from the onError,

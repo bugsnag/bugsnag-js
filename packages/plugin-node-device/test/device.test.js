@@ -18,15 +18,16 @@ describe('plugin: node device', () => {
     const client = new Client({ apiKey: 'API_KEY_YEAH' }, schema)
     client.use(plugin)
 
-    expect(client._config.onError.length).toBe(1)
-    expect(client.device.hostname).toBe('test-machine.local')
-    expect(client.device.runtimeVersions).toBeDefined()
-    expect(client.device.runtimeVersions.node).toEqual(process.versions.node)
+    expect(client._cbs.sp.length).toBe(1)
+    expect(client._cbs.e.length).toBe(1)
 
     client._setDelivery(client => ({
       sendEvent: (payload) => {
         expect(payload.events[0].device).toBeDefined()
         expect(payload.events[0].device.time).toMatch(ISO_8601)
+        expect(payload.events[0].device.hostname).toBe('test-machine.local')
+        expect(payload.events[0].device.runtimeVersions).toBeDefined()
+        expect(payload.events[0].device.runtimeVersions.node).toEqual(process.versions.node)
         done()
       }
     }))

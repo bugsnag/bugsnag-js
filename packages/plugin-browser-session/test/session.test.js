@@ -40,15 +40,15 @@ describe('plugin: sessions', () => {
     }))
     const sessionClient = c.startSession()
     sessionClient.notify(new Error('broke'))
-    sessionClient.notify(new c.BugsnagEvent('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
+    sessionClient._notify(new c.Event('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
     sessionClient.notify(new Error('broke'))
     sessionClient.notify(new Error('broke'))
-    sessionClient.notify(new c.BugsnagEvent('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
+    sessionClient._notify(new c.Event('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
     sessionClient.notify(new Error('broke'))
     sessionClient.notify(new Error('broke'))
     sessionClient.notify(new Error('broke'))
-    sessionClient.notify(new c.BugsnagEvent('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
-    sessionClient.notify(new c.BugsnagEvent('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
+    sessionClient._notify(new c.Event('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
+    sessionClient._notify(new c.Event('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
   })
 
   it('correctly infers releaseStage', (done) => {
@@ -88,5 +88,43 @@ describe('plugin: sessions', () => {
     }).toThrowError(
       /"endpoints" should be an object containing endpoint URLs { notify, sessions }/
     )
+  })
+
+  it('supports pausing and resuming sessions', (done) => {
+    const payloads = []
+    const c = new Client({
+      apiKey: 'API_KEY'
+    })
+    c.use(plugin)
+    c._setDelivery(client => ({
+      sendEvent: (p, cb = () => {}) => {
+        payloads.push(p)
+        cb()
+      },
+      sendSession: (p, cb = () => {}) => cb()
+    }))
+    c.notify(new Error('1'))
+    c.startSession()
+    c.notify(new Error('2'))
+    c.pauseSession()
+    c.notify(new Error('3'))
+    c.resumeSession()
+    c.notify(new Error('4'))
+    c.startSession()
+    c.notify(new Error('5'))
+    c._pausedSession = c._session = null
+    c.resumeSession()
+    c.notify(new Error('6'))
+
+    setTimeout(() => {
+      expect(payloads.length).toBe(6)
+      expect(payloads[0].events[0]._session).toBe(undefined)
+      expect(payloads[1].events[0]._session).toBeDefined()
+      expect(payloads[2].events[0]._session).toBe(undefined)
+      expect(payloads[3].events[0]._session.id).toBe(payloads[1].events[0]._session.id)
+      expect(payloads[4].events[0]._session.id).not.toBe(payloads[3].events[0]._session.id)
+      expect(payloads[5].events[0]._session.id).not.toBe(payloads[4].events[0]._session.id)
+      done()
+    }, 0)
   })
 })

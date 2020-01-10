@@ -1,5 +1,5 @@
-var bugsnag = require('@bugsnag/node')
-var bugsnagClient = bugsnag({
+var Bugsnag = require('@bugsnag/node')
+Bugsnag.init({
   apiKey: process.env.BUGSNAG_API_KEY,
   endpoints: {
     notify: process.env.BUGSNAG_NOTIFY_ENDPOINT,
@@ -8,7 +8,7 @@ var bugsnagClient = bugsnag({
   sessionSummaryInterval: 1000
 })
 
-var sessionClient = bugsnagClient.startSession()
+var sessionClient = Bugsnag.startSession()
 setTimeout(function () {
   sessionClient.notify(new Error('in a session'))
 }, 1500)

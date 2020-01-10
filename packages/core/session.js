@@ -7,6 +7,17 @@ class Session {
     this.startedAt = isoDate()
     this._handled = 0
     this._unhandled = 0
+    this._user = {}
+    this.app = {}
+    this.device = {}
+  }
+
+  getUser () {
+    return this._user
+  }
+
+  setUser (id, email, name) {
+    this._user = { id, email, name }
   }
 
   toJSON () {
@@ -17,7 +28,7 @@ class Session {
     }
   }
 
-  trackError (event) {
+  _track (event) {
     this[event._handledState.unhandled ? '_unhandled' : '_handled'] += 1
   }
 }

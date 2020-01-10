@@ -1,6 +1,6 @@
-var bugsnag = require('@bugsnag/node')
+var Bugsnag = require('@bugsnag/node')
 var ProxyAgent = require('http-proxy-agent')
-var bugsnagClient = bugsnag({
+Bugsnag.init({
   apiKey: process.env.BUGSNAG_API_KEY,
   endpoints: {
     notify: process.env.BUGSNAG_NOTIFY_ENDPOINT,
@@ -8,4 +8,4 @@ var bugsnagClient = bugsnag({
   },
   agent: new ProxyAgent('http://corporate-proxy:3128')
 })
-bugsnagClient.notify(new Error('hi via proxy'))
+Bugsnag.notify(new Error('hi via proxy'))

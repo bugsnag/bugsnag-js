@@ -47,7 +47,7 @@ describe('plugin: intercept', () => {
     const c = new Client({ apiKey: 'api_key' })
     c._setDelivery(client => ({
       sendEvent: (payload) => {
-        expect(payload.events[0].errorMessage).toBe('no item available')
+        expect(payload.events[0].errors[0].errorMessage).toBe('no item available')
         done()
       },
       sendSession: () => {}
@@ -78,7 +78,7 @@ describe('plugin: intercept', () => {
     const c = new Client({ apiKey: 'api_key' })
     c._setDelivery(client => ({
       sendEvent: (payload) => {
-        expect(payload.events[0].errorMessage).toBe('no item available')
+        expect(payload.events[0].errors[0].errorMessage).toBe('no item available')
         done()
       },
       sendSession: () => {}
@@ -95,8 +95,8 @@ describe('plugin: intercept', () => {
     const c = new Client({ apiKey: 'api_key' })
     c._setDelivery(client => ({
       sendEvent: (payload, cb) => {
-        expect(payload.events[0].errorMessage).toBe('ENOENT: no such file or directory, open \'does not exist\'')
-        expect(payload.events[0].stacktrace[0].file).toBe(`${__filename}`)
+        expect(payload.events[0].errors[0].errorMessage).toBe('ENOENT: no such file or directory, open \'does not exist\'')
+        expect(payload.events[0].errors[0].stacktrace[0].file).toBe(`${__filename}`)
         cb(null)
         done()
       },

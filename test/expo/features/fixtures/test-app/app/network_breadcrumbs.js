@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { View, Button } from 'react-native'
 import { endpoints } from './bugsnag'
-import bugsnag from '@bugsnag/expo'
+import Bugsnag from '@bugsnag/expo'
 
 export default class NetworkBreadcrumbs extends Component {
   constructor(props) {
@@ -14,7 +14,7 @@ export default class NetworkBreadcrumbs extends Component {
 
   defaultNetworkBreadcrumbsBehaviour = () => {
     this.triggerNetworkBreadcrumbsError(
-      bugsnag({
+      Bugsnag.createClient({
         endpoints: endpoints,
         autoDetectErrors: false,
         autoTrackSessions: false
@@ -25,7 +25,7 @@ export default class NetworkBreadcrumbs extends Component {
 
   disabledNetworkBreadcrumbsBehaviour = () => {
     this.triggerNetworkBreadcrumbsError(
-      bugsnag({
+      Bugsnag.createClient({
         endpoints: endpoints,
         autoDetectErrors: false,
         autoTrackSessions: false,
@@ -37,7 +37,7 @@ export default class NetworkBreadcrumbs extends Component {
 
   disabledAllNetworkBreadcrumbsBehaviour = () => {
     this.triggerNetworkBreadcrumbsError(
-      bugsnag({
+      Bugsnag.createClient({
         endpoints: endpoints,
         autoDetectErrors: false,
         autoTrackSessions: false,
@@ -49,7 +49,7 @@ export default class NetworkBreadcrumbs extends Component {
 
   overrideNetworkBreadcrumbsBehaviour = () => {
     this.triggerNetworkBreadcrumbsError(
-      bugsnag({
+      Bugsnag.createClient({
         endpoints: endpoints,
         autoDetectErrors: false,
         autoTrackSessions: false,

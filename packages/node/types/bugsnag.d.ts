@@ -1,42 +1,23 @@
-import * as BugsnagCore from "@bugsnag/core";
+import { Client, Event, Logger, Config, BugsnagStatic } from "@bugsnag/core";
 
-type afterErrorCb = (err: any, event: BugsnagCore.Event, logger: BugsnagCore.Logger) => void;
+type AfterErrorCb = (err: any, event: Event, logger: Logger) => void;
 
-// overwrite config interface, adding node-specific options
-declare module "@bugsnag/core" {
-  interface Config {
-    apiKey: string;
-    onError?: BugsnagCore.OnError | BugsnagCore.OnError[];
-    autoDetectErrors?: boolean;
-    autoDetectUnhandledRejections?: boolean;
-    appVersion?: string;
-    appType?: string;
-    endpoints?: { notify: string; sessions?: string };
-    autoTrackSessions?: boolean;
-    enabledReleaseStages?: string[];
-    releaseStage?: string;
-    maxBreadcrumbs?: number;
-    user?: object | null;
-    metadata?: { [key: string]: any };
-    logger?: BugsnagCore.Logger | null;
-    filters?: Array<string | RegExp>;
-    // catch-all for any missing options
-    [key: string]: any;
-    // options for node-specific built-ins
-    hostname?: string;
-    onUncaughtException?: afterErrorCb;
-    onUnhandledRejection?: afterErrorCb;
-    agent?: any;
-    projectRoot?: string;
-    sendCode?: boolean;
-    // breadcrumbs are disabled in Node
-    enabledBreadcrumbTypes?: void;
-  }
+interface NodeConfig extends Config {
+  hostname?: string;
+  onUncaughtException?: AfterErrorCb;
+  onUnhandledRejection?: AfterErrorCb;
+  agent?: any;
+  projectRoot?: string;
+  sendCode?: boolean;
 }
 
-// two ways to call the exported function: apiKey or config object
-declare function bugsnag(apiKeyOrOpts: string | BugsnagCore.Config): BugsnagCore.Client;
+interface NodeBugsnagStatic extends BugsnagStatic {
+  init(apiKeyOrOpts: string | NodeConfig): Client;
+  createClient(apiKeyOrOpts: string | NodeConfig): Client;
+}
 
-// commonjs/requirejs export
-export default bugsnag;
-export { BugsnagCore as Bugsnag }
+declare const Bugsnag: NodeBugsnagStatic;
+
+export default Bugsnag;
+export * from "@bugsnag/core";
+export { NodeConfig };

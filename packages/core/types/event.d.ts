@@ -1,47 +1,40 @@
 import Breadcrumb from "./breadcrumb";
+import {
+  App,
+  Device,
+  Request,
+  Logger,
+  User
+} from "./common";
 
 declare class Event {
-  public static getStacktrace(
-    error: any,
-    errorFramesToSkip?: number,
-    generatedFramesToSkip?: number,
-  ): Stackframe[];
-
-  public static ensureEvent(
-    eventOrError: any,
-    errorFramesToSkip?: number,
-    generatedFramesToSkip?: number,
+  public static create(
+    maybeError: any,
+    tolerateNonErrors: boolean,
+    handledState: HandledState,
+    component: string,
+    errorFramesToSkip: number,
+    logger?: Logger
   ): Event;
 
-  public app: {
-    releaseStage: string;
-    [key: string]: string;
-  };
-  public apiKey: string;
-  public breadcrumbs: Breadcrumb[];
-  public context: string;
-  public device: object;
-  public errorClass: string;
-  public errorMessage: string;
-  public groupingHash: string;
-  public severity: "info" | "warning" | "error";
-  public stacktrace: Stackframe[];
-  public session: object;
-  public request: {
-    url: string;
-  };
-  public originalError: any;
+  public app: App;
+  public device: Device;
+  public request: Request;
 
-  constructor(
-    errorClass: string,
-    errorMessage: string,
-    stacktrace?: any[],
-    handledState?: HandledState,
-    originalError?: any,
-  );
+  public errors: Error[];
+  public breadcrumbs: Breadcrumb[];
+
+  public severity: "info" | "warning" | "error";
+
+  public readonly originalError: any;
+  public readonly unhandled: boolean;
+
+  public apiKey?: string;
+  public context?: string;
+  public groupingHash?: string;
 
   // user
-  public getUser(): { id?: string; email?: string; name?: string };
+  public getUser(): User;
   public setUser(id?: string, email?: string, name?: string): void;
 
   // metadata
@@ -67,6 +60,13 @@ interface Stackframe {
   columnNumber?: number;
   code?: object;
   inProject?: boolean;
+}
+
+interface Error {
+  errorClass: string;
+  errorMessage: string;
+  stacktrace: Stackframe[];
+  type: string;
 }
 
 export default Event;

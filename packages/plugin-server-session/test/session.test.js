@@ -98,7 +98,9 @@ describe('plugin: server sessions', () => {
     })
 
     // this is normally set by a plugin
-    c.device = { hostname: 'test-machine.local', runtimeVersions: { node: '0.0.1' } }
+    c._addOnSessionPayload(sp => {
+      sp.device = { hostname: 'test-machine.local', runtimeVersions: { node: '0.0.1' } }
+    })
 
     c._setDelivery(client => ({
       sendEvent: () => {},
@@ -135,9 +137,45 @@ describe('plugin: server sessions', () => {
     sessionClient.leaveBreadcrumb('tock')
     sessionClient.addMetadata('other', { widgetsAdded: 'cat,dog,mouse' })
 
-    expect(c.breadcrumbs.length).toBe(1)
+    expect(c._breadcrumbs.length).toBe(1)
     expect(Object.keys(c._metadata).length).toBe(1)
-    expect(sessionClient.breadcrumbs.length).toBe(2)
+    expect(sessionClient._breadcrumbs.length).toBe(2)
     expect(Object.keys(sessionClient._metadata).length).toBe(2)
+  })
+
+  it('should support pausing/resuming sessions', () => {
+    class TrackerMock extends Emitter {
+      start () {}
+      stop () {}
+      track () {}
+    }
+    const plugin = proxyquire('../session', { './tracker': TrackerMock })
+
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
+    c.use(plugin)
+
+    // start a session and get its id
+    const sessionClient = c.startSession()
+    const sid0 = sessionClient._session.id
+
+    // ensure pausing the session clears the client._session property
+    sessionClient.pauseSession()
+    const s1 = sessionClient._session
+    const psid1 = sessionClient._pausedSession.id
+    expect(s1).toBe(null)
+    expect(psid1).toBe(sid0)
+
+    // ensure resuming the session gets back the original session (not a new one)
+    sessionClient.resumeSession()
+    const sid2 = sessionClient._session.id
+    expect(sid2).toBe(sid0)
+
+    // ensure resumeSession() starts a new one when no paused session exists
+    sessionClient._session = null
+    sessionClient._pausedSession = null
+    const resumedClient = sessionClient.resumeSession()
+    expect(resumedClient._session).toBeTruthy()
+    const sid3 = resumedClient._session.id
+    expect(sid3).not.toBe(sid0)
   })
 })

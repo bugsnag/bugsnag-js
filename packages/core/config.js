@@ -1,5 +1,5 @@
 const { filter, reduce, keys, isArray, includes } = require('./lib/es-utils')
-const { intRange, stringWithLength } = require('./lib/validators')
+const { intRange, stringWithLength, listOfFunctions } = require('./lib/validators')
 
 const BREADCRUMB_TYPES = ['navigation', 'request', 'process', 'log', 'user', 'state', 'error', 'manual']
 
@@ -32,7 +32,17 @@ module.exports.schema = {
   onError: {
     defaultValue: () => [],
     message: 'should be a function or array of functions',
-    validate: value => typeof value === 'function' || (isArray(value) && filter(value, f => typeof f === 'function').length === value.length)
+    validate: listOfFunctions
+  },
+  onSession: {
+    defaultValue: () => [],
+    message: 'should be a function or array of functions',
+    validate: listOfFunctions
+  },
+  onBreadcrumb: {
+    defaultValue: () => [],
+    message: 'should be a function or array of functions',
+    validate: listOfFunctions
   },
   endpoints: {
     defaultValue: () => ({
@@ -56,9 +66,9 @@ module.exports.schema = {
     validate: val => val === true || val === false
   },
   enabledReleaseStages: {
-    defaultValue: () => [],
+    defaultValue: () => null,
     message: 'should be an array of strings',
-    validate: value => isArray(value) && filter(value, f => typeof f === 'string').length === value.length
+    validate: value => value === null || (isArray(value) && filter(value, f => typeof f === 'string').length === value.length)
   },
   releaseStage: {
     defaultValue: () => 'production',
@@ -66,9 +76,9 @@ module.exports.schema = {
     validate: value => typeof value === 'string' && value.length
   },
   maxBreadcrumbs: {
-    defaultValue: () => 20,
-    message: 'should be a number ≤40',
-    validate: value => intRange(0, 40)(value)
+    defaultValue: () => 25,
+    message: 'should be a number ≤100',
+    validate: value => intRange(0, 100)(value)
   },
   enabledBreadcrumbTypes: {
     defaultValue: () => BREADCRUMB_TYPES,
@@ -78,15 +88,20 @@ module.exports.schema = {
       return includes(BREADCRUMB_TYPES, maybeType)
     }, true))
   },
+  context: {
+    defaultValue: () => undefined,
+    message: 'should be a string',
+    validate: value => value === undefined || typeof value === 'string'
+  },
   user: {
-    defaultValue: () => null,
-    message: '(object) user should be an object',
-    validate: (value) => typeof value === 'object'
+    defaultValue: () => ({}),
+    message: 'should be an object',
+    validate: (value) => typeof value === 'object' && value !== null
   },
   metadata: {
-    defaultValue: () => null,
+    defaultValue: () => ({}),
     message: 'should be an object',
-    validate: (value) => typeof value === 'object'
+    validate: (value) => typeof value === 'object' && value !== null
   },
   logger: {
     defaultValue: () => undefined,
