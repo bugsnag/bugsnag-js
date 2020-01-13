@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-// import the bugsnag-js client you initialized in bugsnag.ts
-import bugsnagClient from './bugsnag';
+import Bugsnag from '@bugsnag/js';
 
 @Component({
   selector: 'app-root',
@@ -27,7 +26,7 @@ export class AppComponent {
       throw("Bad thing!");
     } catch (e) {
       // below modifies the handled error, and then sends it to your dashboard.
-      bugsnagClient.notify(e, function (event) {
+      Bugsnag.notify(e, function (event) {
         event.context = 'Don\'t worry - I handled it!'
       });
     }

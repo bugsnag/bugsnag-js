@@ -11,7 +11,7 @@
     "preset": "jest-expo"
   },
   "dependencies": {
-    "@bugsnag/expo": "6.4.0-alpha.0",
+    "@bugsnag/expo": "7.0.0-alpha.3",
     "@expo/samples": "2.1.1",
     "@expo/vector-icons": "^10.0.4",
     "expo": "^34.0.1",

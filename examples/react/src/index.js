@@ -1,11 +1,14 @@
+import Bugsnag from '@bugsnag/js'
+import bugsnagReact from '@bugsnag/plugin-react'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import './index.css'
 import App from './App'
 
-import bugsnagClient from './lib/bugsnag'
+Bugsnag.init('YOUR_API_KEY')
+Bugsnag.use(bugsnagReact, React)
 
-const ErrorBoundary = bugsnagClient.getPlugin('react')
+const ErrorBoundary = Bugsnag.getPlugin('react')
 
 const ErrorScreen = () =>
   <div>

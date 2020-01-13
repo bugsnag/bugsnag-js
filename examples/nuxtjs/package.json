@@ -11,9 +11,9 @@
     "generate": "nuxt generate"
   },
   "dependencies": {
-    "@bugsnag/js": "^5.0.0",
-    "@bugsnag/plugin-express": "^5.0.0",
-    "@bugsnag/plugin-vue": "^5.0.0",
+    "@bugsnag/js": "^7.0.0-alpha.2",
+    "@bugsnag/plugin-express": "^7.0.0-alpha.1",
+    "@bugsnag/plugin-vue": "^7.0.0-alpha.1",
     "cross-env": "^5.2.0",
     "event-stream": "^3.3.4",
     "nuxt": "^2.0.0"

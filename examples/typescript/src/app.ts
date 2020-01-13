@@ -1,10 +1,10 @@
 // include Bugsnag from the installed dependencies
-import bugsnag from '@bugsnag/js'
+import Bugsnag from '@bugsnag/js'
 
 const apiKey: string = process.env.BUGSNAG_API_KEY ? process.env.BUGSNAG_API_KEY : ''
 
 // initialise Bugsnag with some basic options
-const bugsnagClient = bugsnag({
+Bugsnag.init({
   // this loads the apiKey from the environment so be sure to pass it in
   apiKey: apiKey,
   // setting the appVersion is useful to track when errors are introduced/fixed
@@ -61,21 +61,21 @@ function unhandledError () {
 function handledError () {
   console.log('notifying of a handled error…')
   // you can notify Bugsnag of errors you handled or created yourself
-  bugsnagClient.notify(new Error('scheduling clash'))
+  Bugsnag.notify(new Error('scheduling clash'))
 }
 
 function leaveBreadcrumb () {
   console.log('leaving a breadcrumb…')
   // you can record all kinds of events which will be sent along with error reports
   // these can help when trying to understand the conditions leading up to an error
-  bugsnagClient.leaveBreadcrumb('network blip')
+  Bugsnag.leaveBreadcrumb('network blip')
 }
 
 function onError () {
   console.log('calling notify() with an onError callback…')
   // onError can be used to modify an event or prevent it from being sent at all
   // this example pseudo-randomly filters out approximately half of the events
-  bugsnagClient.notify(new Error('sometimes will send'), (event) => {
+  Bugsnag.notify(new Error('sometimes will send'), (event) => {
     const n = Math.random()
     if (n <= 0.5) return false
   })

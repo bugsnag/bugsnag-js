@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@bugsnag/js": "^5.0.0-alpha.1",
-    "@bugsnag/plugin-react": "^5.0.0-alpha.1",
+    "@bugsnag/js": "^7.0.0-alpha.2",
+    "@bugsnag/plugin-react": "^7.0.0-alpha.1",
     "react": "^16.6.0",
     "react-dom": "^16.6.0",
     "react-scripts": "2.1.1",
