@@ -11,6 +11,7 @@ const assertTsProgramCompiles = p => {
   cleanupFiles.push(`${p}.js`)
   const { stdout, stderr, err } = spawnSync('./node_modules/.bin/tsc', [
     '--strict',
+    '--skipLibCheck',
     `${__dirname}/fixtures/${p}.ts`
   ], { encoding: 'utf8' })
   expect(err).toBeFalsy()

@@ -1,5 +1,4 @@
 import Bugsnag, { Client, Config } from '../..'
-import "jasmine"
 
 // the client's constructor isn't public in TS so this drops down to JS to create one for the tests
 function createClient (opts: Config): Client {
