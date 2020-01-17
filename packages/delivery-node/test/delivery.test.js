@@ -34,7 +34,7 @@ describe('delivery:node', () => {
       const config = {
         apiKey: 'aaaaaaaa',
         endpoints: { notify: `http://0.0.0.0:${server.address().port}/notify/` },
-        filters: []
+        redactedKeys: []
       }
       delivery({ _logger: {}, _config: config }).sendEvent(payload, (err) => {
         expect(err).toBe(null)
@@ -62,7 +62,7 @@ describe('delivery:node', () => {
       const config = {
         apiKey: 'aaaaaaaa',
         endpoints: { notify: 'blah', sessions: `http://0.0.0.0:${server.address().port}/sessions/` },
-        filters: []
+        redactedKeys: []
       }
       delivery({ _logger: {}, _config: config }).sendSession(payload, (err) => {
         expect(err).toBe(null)
@@ -86,7 +86,7 @@ describe('delivery:node', () => {
     const config = {
       apiKey: 'aaaaaaaa',
       endpoints: { notify: 'http://0.0.0.0:9999/notify/' },
-      filters: []
+      redactedKeys: []
     }
     let didLog = false
     const log = () => { didLog = true }
@@ -109,7 +109,7 @@ describe('delivery:node', () => {
       const config = {
         apiKey: 'aaaaaaaa',
         endpoints: { notify: `http://0.0.0.0:${server.address().port}/notify/` },
-        filters: []
+        redactedKeys: []
       }
       let didLog = false
       const log = () => { didLog = true }
@@ -134,7 +134,7 @@ describe('delivery:node', () => {
       const config = {
         apiKey: 'aaaaaaaa',
         endpoints: { notify: `http://0.0.0.0:${server.address().port}/notify/` },
-        filters: []
+        redactedKeys: []
       }
       let didLog = false
       const log = () => { didLog = true }

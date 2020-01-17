@@ -14,7 +14,7 @@ export interface Config {
   enabledBreadcrumbTypes?: BreadcrumbType[];
   enabledReleaseStages?: string[];
   endpoints?: { notify: string; sessions: string };
-  filters?: Array<string | RegExp>;
+  redactedKeys?: Array<string | RegExp>;
   onBreadcrumb?: OnBreadcrumbCallback | OnBreadcrumbCallback[];
   onError?: OnErrorCallback | OnErrorCallback[];
   onSession?: OnSessionCallback | OnSessionCallback[];

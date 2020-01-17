@@ -9,7 +9,7 @@
       Bugsnag.init({
         apiKey: API_KEY,
         endpoints: { notify: ENDPOINT, sessions: '/noop' },
-        filters: [ /details\d/ ]
+        redactedKeys: [ /details\d/ ]
       })
     </script>
   </head>
