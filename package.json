@@ -48,7 +48,7 @@
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "build": "lerna run build --scope '@bugsnag/node' --scope '@bugsnag/browser' --scope '@bugsnag/expo' && lerna run build --ignore '@bugsnag/node' --ignore '@bugsnag/browser' --ignore '@bugsnag/expo'",
-    "test:lint": "eslint . --report-unused-disable-directives",
+    "test:lint": "eslint --ext .ts,.js --report-unused-disable-directives .",
     "test:unit": "jest && lerna run test --ignore '@bugsnag/browser' --ignore '@bugsnag/node'",
     "test:types": "tsc -p tsconfig.json && lerna run test:types",
     "test:test-container-registry-login": "$(aws ecr get-login --profile=opensource --no-include-email)",
