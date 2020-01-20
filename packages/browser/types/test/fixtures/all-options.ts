@@ -25,7 +25,7 @@ Bugsnag.init({
   user: null,
   metadata: {},
   logger: undefined,
-  filters: ["foo",/bar/],
+  redactedKeys: ["foo",/bar/],
   collectUserIp: true,
   maxEvents: 10
 })
