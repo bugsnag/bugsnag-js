@@ -16,7 +16,7 @@ export default function (options) {
     ssr: false
   })
 
-  Bugsnag.init({ apiKey: bugsnagOptions.serverApiKey, logger })
+  Bugsnag.start({ apiKey: bugsnagOptions.serverApiKey, logger })
   Bugsnag.use(bugsnagExpress)
 
   logger.info('Adding server handlers')

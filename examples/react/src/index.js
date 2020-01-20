@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom'
 import './index.css'
 import App from './App'
 
-Bugsnag.init('YOUR_API_KEY')
+Bugsnag.start('YOUR_API_KEY')
 Bugsnag.use(bugsnagReact, React)
 
 const ErrorBoundary = Bugsnag.getPlugin('react')

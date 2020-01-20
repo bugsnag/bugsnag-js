@@ -1,5 +1,5 @@
 import Bugsnag from "../../..";
-Bugsnag.init('api_key');
+Bugsnag.start('api_key');
 Bugsnag.use({
   name: 'foobar',
   init: client => 10

@@ -3,7 +3,7 @@ var bugsnagExpress = require('@bugsnag/plugin-restify')
 var restify = require('restify')
 var errors = require('restify-errors')
 
-Bugsnag.init({
+Bugsnag.start({
   apiKey: process.env.BUGSNAG_API_KEY,
   endpoints: {
     notify: process.env.BUGSNAG_NOTIFY_ENDPOINT,

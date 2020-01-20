@@ -8,7 +8,7 @@ import * as Icon from '@expo/vector-icons';
 import AppNavigator from './navigation/AppNavigator';
 import ErrorFallback from './components/ErrorFallback';
 
-Bugsnag.init()
+Bugsnag.start()
 
 const ErrorBoundary = Bugsnag.getPlugin('react')
 

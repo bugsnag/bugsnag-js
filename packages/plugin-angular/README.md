@@ -24,7 +24,7 @@ import { BugsnagErrorHandler } from '@bugsnag/plugin-angular'
 import Bugsnag from 'bugsnag-js'
 
 // configure Bugsnag ASAP, before any other imports
-Bugsnag.init('API_KEY')
+Bugsnag.start('API_KEY')
 
 // create a factory which will return the Bugsnag error handler
 export function errorHandlerFactory() {

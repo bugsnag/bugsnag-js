@@ -6,7 +6,7 @@ import { BugsnagErrorHandler } from '@bugsnag/plugin-angular';
 import Bugsnag from '@bugsnag/js';
 import { AppComponent } from './app.component';
 
-Bugsnag.init('YOUR_API_KEY');
+Bugsnag.start('YOUR_API_KEY');
 
 // There are certain errors within Angular that get caught by its own error handler
 // and only logged to the console. These errors will never make it to Bugsnag by

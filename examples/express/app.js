@@ -2,7 +2,7 @@ const Bugsnag = require('@bugsnag/js')
 const express = require('express')
 const { readFileSync } = require('fs')
 
-Bugsnag.init(process.env.BUGSNAG_API_KEY)
+Bugsnag.start(process.env.BUGSNAG_API_KEY)
 Bugsnag.use(require('@bugsnag/plugin-express'))
 
 const app = express()

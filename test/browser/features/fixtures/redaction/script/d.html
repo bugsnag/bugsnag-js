@@ -6,7 +6,7 @@
     <script type="text/javascript">
       var ENDPOINT = decodeURIComponent(window.location.search.match(/ENDPOINT=([^&]+)/)[1])
       var API_KEY = decodeURIComponent(window.location.search.match(/API_KEY=([^&]+)/)[1])
-      Bugsnag.init({
+      Bugsnag.start({
         apiKey: API_KEY,
         endpoints: { notify: ENDPOINT, sessions: '/noop' },
         redactedKeys: [ /details\d/ ]
