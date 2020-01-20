@@ -2,7 +2,7 @@ const Bugsnag = require('@bugsnag/expo')
 const React = require('react')
 const { StyleSheet, Text, View } = require('react-native')
 
-Bugsnag.init()
+Bugsnag.start()
 
 export default class App extends React.Component {
   render () {

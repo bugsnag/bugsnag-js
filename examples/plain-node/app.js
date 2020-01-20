@@ -2,7 +2,7 @@
 var Bugsnag = require('@bugsnag/js')
 
 // initialise Bugsnag with some basic options
-Bugsnag.init({
+Bugsnag.start({
   // this loads the apiKey from the environment so be sure to pass it in
   apiKey: process.env.BUGSNAG_API_KEY,
   // setting the appVersion is useful to track when errors are introduced/fixed

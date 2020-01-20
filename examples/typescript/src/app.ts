@@ -4,7 +4,7 @@ import Bugsnag from '@bugsnag/js'
 const apiKey: string = process.env.BUGSNAG_API_KEY ? process.env.BUGSNAG_API_KEY : ''
 
 // initialise Bugsnag with some basic options
-Bugsnag.init({
+Bugsnag.start({
   // this loads the apiKey from the environment so be sure to pass it in
   apiKey: apiKey,
   // setting the appVersion is useful to track when errors are introduced/fixed

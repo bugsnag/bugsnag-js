@@ -2,7 +2,7 @@ const restify = require('restify')
 const Bugsnag = require('@bugsnag/js')
 const { readFileSync } = require('fs')
 
-Bugsnag.init(process.env.BUGSNAG_API_KEY)
+Bugsnag.start(process.env.BUGSNAG_API_KEY)
 Bugsnag.use(require('@bugsnag/plugin-restify'))
 
 const server = restify.createServer()

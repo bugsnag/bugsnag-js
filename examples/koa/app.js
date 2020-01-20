@@ -5,7 +5,7 @@ const serve = require('koa-static')
 const mount = require('koa-mount')
 const { readFileSync } = require('fs')
 
-Bugsnag.init(process.env.BUGSNAG_API_KEY)
+Bugsnag.start(process.env.BUGSNAG_API_KEY)
 Bugsnag.use(require('@bugsnag/plugin-koa'))
 
 const app = new Koa()

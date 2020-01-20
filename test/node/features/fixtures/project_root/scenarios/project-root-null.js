@@ -1,7 +1,7 @@
 var Bugsnag = require('@bugsnag/node')
 var lodash = require('lodash')
 
-Bugsnag.init({
+Bugsnag.start({
   apiKey: process.env.BUGSNAG_API_KEY,
   endpoints: {
     notify: process.env.BUGSNAG_NOTIFY_ENDPOINT,

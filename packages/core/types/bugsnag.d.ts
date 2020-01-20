@@ -13,6 +13,6 @@ import {
 } from "./common";
 
 export default interface BugsnagStatic extends Client {
-  init(apiKeyOrOpts: string | Config): Client;
+  start(apiKeyOrOpts: string | Config): Client;
   createClient(apiKeyOrOpts: string | Config): Client;
 }

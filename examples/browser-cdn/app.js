@@ -15,7 +15,7 @@ document.getElementById('jsUnhandled').addEventListener('click', sendUnhandled)
 
 // Initialize Bugsnag to begin tracking errors. Only an api key is required, but
 // here are some other helpful configuration details:
-Bugsnag.init({
+Bugsnag.start({
   // get your own api key at bugsnag.com
   apiKey: '6eccabc796ef28a154314498f79b724e',
 

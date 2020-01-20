@@ -14,10 +14,10 @@ In most applications, the desire is to create a single Bugsnag client – it's r
 + import Bugsnag from '@bugsnag/js'
 
 - const bugsnagClient = bugsnag(/ * opts */)
-+ Bugsnag.init(/ * opts */)
++ Bugsnag.start(/ * opts */)
 ```
 
-You can choose to hold on to the `Client` returned by `Bugsnag.init()`, or not. After ensuring `Bugsnag.init()` is called first, you can call any `Client` method on the static interface, which forwards the method call onto the initialized client:
+You can choose to hold on to the `Client` returned by `Bugsnag.start()`, or not. After ensuring `Bugsnag.start()` is called first, you can call any `Client` method on the static interface, which forwards the method call onto the initialized client:
 
 - `Bugsnag.notify()`
 - `Bugsnag.leaveBreadcrumb()`
@@ -54,13 +54,13 @@ export function render () {
 }
 ```
 
-This update means `lib/bugsnag.js` can go away. As long as you ensure `Bugsnag.init()` is called first, you can simply do:
+This update means `lib/bugsnag.js` can go away. As long as you ensure `Bugsnag.start()` is called first, you can simply do:
 
 **index.js**
 ```js
 // NEW EXAMPLE
 import Bugsnag from '@bugsnag/js'
-Bugsnag.init(/* your opts here */)
+Bugsnag.start(/* your opts here */)
 Bugsnag.leaveBreadcrumb('App starting…')
 ```
 
@@ -142,17 +142,17 @@ Before, `app`, `device`, `request`, `user`, `metaData` and `context` were simply
 
 ```diff
 - bugsnagClient.app.version = '1.2.3'
-+ Bugsnag.init({ appVersion: '1.2.3' })
++ Bugsnag.start({ appVersion: '1.2.3' })
 ```
 
 ```diff
 - bugsnagClient.app.releaseStage = 'staging'
-+ Bugsnag.init({ releaseStage: 'staging' })
++ Bugsnag.start({ releaseStage: 'staging' })
 ```
 
 ```diff
 - bugsnagClient.app.type = 'worker'
-+ Bugsnag.init({ appType: 'worker' })
++ Bugsnag.start({ appType: 'worker' })
 ```
 
 The `app` section of the payload is now reserved for properties defined by Bugsnag. If you want to send information to be displayed under the "App" tab in the dashboard, provide it under an `app` section in metadata.
@@ -189,7 +189,7 @@ It remains possible to specify the user `{ id, email, name }` in configuration:
 
 ```diff
 - bugsnag({
-+ Bugsnag.init({
++ Bugsnag.start({
     user: {
       id: '123',
       email: 'bug@sn.ag',
@@ -224,7 +224,7 @@ It remains possible to supply initial metadata in configuration:
 
 ```diff
 - bugsnag({
-+ Bugsnag.init({
++ Bugsnag.start({
 +   metaData: {
 +   metadata: {
       section: { key: value }
@@ -252,7 +252,7 @@ And it remains possible to supply initial context in configuration:
 
 ```diff
 - bugsnag({
-+ Bugsnag.init({
++ Bugsnag.start({
     context: document.location.href
   })
 ```

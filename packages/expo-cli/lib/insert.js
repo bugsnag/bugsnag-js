@@ -24,5 +24,5 @@ module.exports = async (projectRoot) => {
 
 module.exports.code =
 `import Bugsnag from '@bugsnag/expo';
-Bugsnag.init();
+Bugsnag.start();
 `

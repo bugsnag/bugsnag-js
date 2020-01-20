@@ -2,7 +2,7 @@ import Bugsnag from '@bugsnag/expo'
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 
-Bugsnag.init()
+Bugsnag.start()
 
 export default class App extends React.Component {
   render () {
