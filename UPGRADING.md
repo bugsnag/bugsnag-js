@@ -142,7 +142,7 @@ Before, `app`, `device`, `request`, `user`, `metaData` and `context` were simply
 
 ```diff
 - bugsnagClient.app.version = '1.2.3'
-+ Bugsnag.init({ version: '1.2.3' })
++ Bugsnag.init({ appVersion: '1.2.3' })
 ```
 
 ```diff
