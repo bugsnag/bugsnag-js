@@ -22,9 +22,12 @@ describe('plugin: node unhandled rejection handler', () => {
     expect(after).toBe(before)
   })
 
-  it('does not add a process#unhandledRejection listener if autoDetectUnhandledRejections=false', () => {
+  it('does not add a process#unhandledRejection listener if enabledErrorTypes.unhandledRejections=false', () => {
     const before = process.listeners('unhandledRejection').length
-    const c = new Client({ apiKey: 'api_key', autoDetectUnhandledRejections: false })
+    const c = new Client({
+      apiKey: 'api_key',
+      enabledErrorTypes: { unhandledExceptions: false, unhandledRejections: false }
+    })
     c.use(plugin)
     const after = process.listeners('unhandledRejection').length
     expect(after).toBe(before)

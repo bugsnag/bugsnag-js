@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <script src="/node_modules/@bugsnag/browser/dist/bugsnag.min.js"></script>
+    <script type="text/javascript">
+      var ENDPOINT = decodeURIComponent(window.location.search.match(/ENDPOINT=([^&]+)/)[1])
+      var API_KEY = decodeURIComponent(window.location.search.match(/API_KEY=([^&]+)/)[1])
+      Bugsnag.init({
+        apiKey: API_KEY,
+        endpoints: { notify: ENDPOINT, sessions: '/noop' },
+        enabledErrorTypes: { unhandledExceptions: false, unhandledRejections: false }
+      })
+    </script>
+  </head>
+  <body>
+    <script>
+      var el = document.getElementById('bugsnag-test-should-run')
+      el.textContent = el.innerText = (typeof Promise !== 'undefined' && 'onunhandledrejection' in window)
+        ? 'YES'
+        : 'NO'
+    </script>
+    <script>
+      Promise.reject(new Error('auto detect errors does not work'))
+    </script>
+    <script>
+      Bugsnag.notify(new Error('manual notify does work'))
+    </script>
+  </body>
+</html>

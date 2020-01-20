@@ -8,7 +8,10 @@ export interface Config {
   appVersion?: string;
   appType?: string;
   autoDetectErrors?: boolean;
-  autoDetectUnhandledRejections?: boolean;
+  enabledErrorTypes?: {
+    unhandledExceptions: boolean;
+    unhandledRejections: boolean;
+  };
   autoTrackSessions?: boolean;
   context?: string;
   enabledBreadcrumbTypes?: BreadcrumbType[];

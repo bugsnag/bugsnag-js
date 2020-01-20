@@ -4,7 +4,10 @@ Bugsnag.init({
   appVersion: "1.2.3",
   appType: "worker",
   autoDetectErrors: true,
-  autoDetectUnhandledRejections: true,
+  enabledErrorTypes: {
+    unhandledExceptions: true,
+    unhandledRejections: true
+  },
   onError: [
     event => true
   ],

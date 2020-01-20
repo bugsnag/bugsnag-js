@@ -5,6 +5,7 @@
 module.exports = {
   init: (client, ErrorUtils = global.ErrorUtils) => {
     if (!client._config.autoDetectErrors) return
+    if (!client._config.enabledErrorTypes.unhandledExceptions) return
     if (!ErrorUtils) {
       client._logger.warn('ErrorUtils is not defined. Can’t attach a global error handler.')
       return
