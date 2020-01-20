@@ -25,10 +25,5 @@
     "error-stack-parser": "^2.0.3",
     "iserror": "0.0.2",
     "stack-generator": "^2.0.3"
-  },
-  "devDependencies": {
-    "@types/jasmine": "^3.5.0",
-    "@types/node": "^12.12.21",
-    "typescript": "^2.9.2"
   }
 }

@@ -6,7 +6,6 @@ const assertTsProgramCompiles = p => {
   const { stdout, stderr, err } = spawnSync('./node_modules/.bin/tsc', [
     '--strict',
     '--noEmit',
-    '--skipLibCheck',
     `${__dirname}/fixtures/${p}.ts`
   ], { encoding: 'utf8' })
   expect(err).toBeFalsy()
