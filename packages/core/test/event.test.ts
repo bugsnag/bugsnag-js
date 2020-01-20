@@ -1,5 +1,5 @@
-const ErrorStackParser = require('error-stack-parser')
-const Event = require('../event')
+import ErrorStackParser from 'error-stack-parser'
+import Event from '../event'
 
 jest.mock('stack-generator', () => ({
   backtrace: () => [{}, {}]
@@ -29,29 +29,29 @@ describe('@bugsnag/core/event', () => {
     it('updates a whole new section', () => {
       const r = new Event('Err', 'bad', [])
       r.addMetadata('specific detail', { extra: 'stuff' })
-      expect(r._metadata['specific detail']).toEqual({ extra: 'stuff' })
+      expect((r._metadata as any)['specific detail']).toEqual({ extra: 'stuff' })
     })
 
     it('merges an object with an existing section', () => {
       const r = new Event('Err', 'bad', [])
       r.addMetadata('specific detail', { extra: 'stuff' })
-      expect(r._metadata['specific detail']).toEqual({ extra: 'stuff' })
+      expect((r._metadata as any)['specific detail']).toEqual({ extra: 'stuff' })
       r.addMetadata('specific detail', { detail: 500 })
-      expect(r._metadata['specific detail']).toEqual({ extra: 'stuff', detail: 500 })
+      expect((r._metadata as any)['specific detail']).toEqual({ extra: 'stuff', detail: 500 })
     })
 
     it('adds a single property to an existing section', () => {
       const r = new Event('Err', 'bad', [])
       r.addMetadata('specific detail', { extra: 'stuff' })
-      expect(r._metadata['specific detail']).toEqual({ extra: 'stuff' })
+      expect((r._metadata as any)['specific detail']).toEqual({ extra: 'stuff' })
       r.addMetadata('specific detail', 'more', 'things')
-      expect(r._metadata['specific detail']).toEqual({ extra: 'stuff', more: 'things' })
+      expect((r._metadata as any)['specific detail']).toEqual({ extra: 'stuff', more: 'things' })
     })
 
     it('creates a new section when updating a single property that doesn’t exist yet', () => {
       const r = new Event('Err', 'bad', [])
       r.addMetadata('metaaaaa', 'flip', 'flop')
-      expect(r._metadata.metaaaaa).toEqual({ flip: 'flop' })
+      expect((r._metadata as any).metaaaaa).toEqual({ flip: 'flop' })
     })
 
     it('handles bad input', () => {
@@ -73,10 +73,10 @@ describe('@bugsnag/core/event', () => {
       r.addMetadata('specific detail', { extra: 'stuff', more: 'things' })
 
       r.addMetadata('metaaaaa', null)
-      expect(r._metadata.metaaaaa).toBe(undefined)
+      expect((r._metadata as any).metaaaaa).toBe(undefined)
 
       r.addMetadata('specific detail', 'more', null)
-      expect(r._metadata['specific detail']).toEqual({ extra: 'stuff', more: null })
+      expect((r._metadata as any)['specific detail']).toEqual({ extra: 'stuff', more: null })
     })
   })
 
@@ -93,10 +93,10 @@ describe('@bugsnag/core/event', () => {
       })
 
       r.clearMetadata('specific detail')
-      expect(r._metadata['specific detail']).toBe(undefined)
+      expect((r._metadata as any)['specific detail']).toBe(undefined)
 
       r.clearMetadata('another thing', 't')
-      expect(r._metadata['another thing']).toEqual({ check: 12 })
+      expect((r._metadata as any)['another thing']).toEqual({ check: 12 })
     })
 
     it('handles bad input', () => {

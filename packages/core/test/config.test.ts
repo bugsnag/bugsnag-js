@@ -1,4 +1,4 @@
-const config = require('../config')
+import config from '../config'
 
 describe('@bugsnag/core/config', () => {
   describe('validate()', () => {
@@ -51,14 +51,15 @@ describe('@bugsnag/core/config', () => {
   describe('schema', () => {
     it('has the required properties { validate(), defaultValue(), message }', () => {
       Object.keys(config.schema).forEach(k => {
-        config.schema[k].defaultValue(undefined, {})
-        config.schema[k].validate()
-        config.schema[k].validate(-1)
-        config.schema[k].validate('stringy stringerson')
-        config.schema[k].validate(['foo', 'bar', 'baz'])
-        config.schema[k].validate(new Date())
-        config.schema[k].validate(null)
-        expect(typeof config.schema[k].message).toBe('string')
+        const key= k as unknown as keyof typeof config.schema 
+        config.schema[key].defaultValue(undefined)
+        config.schema[key].validate()
+        config.schema[key].validate(-1)
+        config.schema[key].validate('stringy stringerson')
+        config.schema[key].validate(['foo', 'bar', 'baz'])
+        config.schema[key].validate(new Date())
+        config.schema[key].validate(null)
+        expect(typeof config.schema[key].message).toBe('string')
       })
     })
   })

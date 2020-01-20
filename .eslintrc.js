@@ -1,11 +1,18 @@
-// eslint config for .js files
+const ruleOverrides = {
+  'jest/no-test-callback': 'off',
+  '@typescript-eslint/explicit-function-return-type': 'off',
+  '@typescript-eslint/no-explicit-any': 'off',
+  '@typescript-eslint/no-unused-vars': 'off',
+  '@typescript-eslint/camelcase': 'off',
+}
+
 module.exports = {
   plugins: [
     'react'
   ],
   rules: {
     'react/jsx-uses-react': 'error',
-    'react/jsx-uses-vars': 'error'
+    'react/jsx-uses-vars': 'error',
   },
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -29,7 +36,7 @@ module.exports = {
         'plugin:@typescript-eslint/recommended'
       ],
       rules: {
-        '@typescript-eslint/no-explicit-any': 'off'
+        ...ruleOverrides
       }
     },
     // Linting for tests
@@ -42,9 +49,14 @@ module.exports = {
         browser: true,
       },
       plugins: ['eslint-plugin-jest'],
-      extends: ['plugin:jest/recommended'],
+      extends: [
+        'eslint:recommended',
+        'plugin:@typescript-eslint/eslint-recommended',
+        'plugin:@typescript-eslint/recommended',
+        'plugin:jest/recommended'
+      ],
       rules: {
-        'jest/no-test-callback': 'off'
+        ...ruleOverrides
       }
     }
   ]

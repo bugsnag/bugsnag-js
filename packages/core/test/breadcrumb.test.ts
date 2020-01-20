@@ -1,4 +1,4 @@
-const Breadcrumb = require('../breadcrumb')
+import Breadcrumb from '../breadcrumb'
 
 describe('@bugsnag/core/breadcrumb', () => {
   describe('toJSON()', () => {

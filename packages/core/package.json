@@ -17,9 +17,6 @@
     "types",
     "*.js"
   ],
-  "scripts": {
-    "test:types": "tsc -p types/test/tsconfig.json && jest types/test/test.js"
-  },
   "author": "Bugsnag",
   "license": "MIT",
   "dependencies": {

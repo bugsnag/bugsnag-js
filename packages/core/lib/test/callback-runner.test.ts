@@ -1,11 +1,18 @@
-const { describe, it, expect } = global
+import runCallbacks from '../callback-runner'
+import { NodeCallbackType } from '../async-every'
 
-const runCallbacks = require('../callback-runner')
+interface TestEvent {
+  name: string;
+  age?: number;
+  promiseRan?: string;
+}
+
+type Callback<T> = (event: T, cb: NodeCallbackType<boolean>) => void;
 
 describe('runCallbacks()', () => {
   it('works with sync/async/promises', done => {
-    const event = { name: 'ben' }
-    const callbacks = [
+    const event: TestEvent = { name: 'ben' }
+    const callbacks: Callback<TestEvent>[] = [
       (event) => { event.age = 10 },
       (event, cb) => { setTimeout(() => cb(null, true), 5) },
       (event) => new Promise((resolve) => {
@@ -25,7 +32,7 @@ describe('runCallbacks()', () => {
   it('continues after errors (throw)', done => {
     const event = {}
     let called = false
-    const callbacks = [
+    const callbacks: Callback<{}>[] = [
       (event) => {},
       (event) => { throw new Error('derp') },
       (event) => { called = true }
@@ -40,7 +47,7 @@ describe('runCallbacks()', () => {
   it('continues after errors (promise reject)', done => {
     const event = {}
     let called = false
-    const callbacks = [
+    const callbacks: Callback<{}>[] = [
       (event) => new Promise((resolve) => resolve()),
       (event) => new Promise((resolve, reject) => reject(new Error('derp'))),
       (event) => new Promise((resolve) => {
@@ -58,7 +65,7 @@ describe('runCallbacks()', () => {
   it('continues after errors (cb(err))', done => {
     const event = {}
     let called = false
-    const callbacks = [
+    const callbacks: Callback<{}>[] = [
       (event, cb) => cb(null),
       (event, cb) => cb(new Error('derp')),
       (event, cb) => {
@@ -76,7 +83,7 @@ describe('runCallbacks()', () => {
   it('skips non-functions', done => {
     const event = {}
     let called = false
-    const callbacks = [
+    const callbacks: Array<Callback<{}> | null> = [
       (event, cb) => cb(null),
       null,
       (event, cb) => {
