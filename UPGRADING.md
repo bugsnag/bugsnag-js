@@ -1,6 +1,351 @@
 Upgrading
 =========
 
+## 6.x to 7.x
+
+__This version contains many breaking changes__. It is part of an effort to unify our notifier libraries across platforms, making the user interface more consistent, and implementations better on multi-layered environments where multiple Bugsnag libraries need to work together (such as React Native).
+
+### New static interface
+
+In most applications, the desire is to create a single Bugsnag client – it's rare that you'd want to instantiate multiple clients. We've made static initialization the primary interface, so that the user experience is optimized around the main use case – creating a single client:
+
+```diff
+- import bugsnag from '@bugsnag/js'
++ import Bugsnag from '@bugsnag/js'
+
+- const bugsnagClient = bugsnag(/ * opts */)
++ Bugsnag.init(/ * opts */)
+```
+
+You can choose to hold on to the `Client` returned by `Bugsnag.init()`, or not. After ensuring `Bugsnag.init()` is called first, you can call any `Client` method on the static interface, which forwards the method call onto the initialized client:
+
+- `Bugsnag.notify()`
+- `Bugsnag.leaveBreadcrumb()`
+- `Bugsnag.startSession()`, `Bugsnag.pauseSession()`, ` Bugsnag.resumeSession()`
+- `Bugsnag.setContext()`, `Bugsnag.getContext()`
+- `Bugsnag.setUser()`, `Bugsnag.getUser()`
+- `Bugsnag.addMetadata()`, `Bugsnag.getMetadata()`, `Bugsnag.clearMetadata()`
+- `Bugsnag.use()`, `Bugsnag.getPlugin()`
+
+A common pattern when implementing Bugsnag pre-v7 is to do something like the following, initializing a Bugsnag client which can then be imported in various parts of the application:
+
+**lib/bugsnag.js**
+```js
+// OLD EXAMPLE
+import bugsnagClient from '@bugsnag/js'
+const bugsnagClient = bugsnag(/* your opts here */)
+export bugsnagClient
+```
+
+**index.js**
+```js
+// OLD EXAMPLE
+import bugsnagClient '/lib/bugsnag'
+import HelloWorld from './components/HelloWorld'
+bugsnagClient.leaveBreadcrumb('App starting…')
+```
+
+**components/HelloWorld.js**
+```js
+// OLD EXAMPLE
+import bugsnagClient from '/lib/bugsnag'
+export function render () {
+  bugsnagClient.notify(new Error('render failed'))
+}
+```
+
+This update means `lib/bugsnag.js` can go away. As long as you ensure `Bugsnag.init()` is called first, you can simply do:
+
+**index.js**
+```js
+// NEW EXAMPLE
+import Bugsnag from '@bugsnag/js'
+Bugsnag.init(/* your opts here */)
+Bugsnag.leaveBreadcrumb('App starting…')
+```
+
+**components/HelloWorld.js**
+```js
+// NEW EXAMPLE
+import Bugsnag from '@bugsnag/js'
+export function render () {
+  Bugsnag.notify(new Error('render failed'))
+}
+```
+
+If you need to create multiple clients, you can use the `Bugsnag.createClient(…)` method:
+
+```diff
+- const bugsnagClient = bugsnag(/* opts */)
++ const bugsnagClient = Bugsnag.createClient(/* opts */)
+```
+
+### Options
+
+Many options have been renamed, reworked or replaced.
+
+```diff
+  {
+-   notifyReleaseStages: ['staging','production'],
++   enabledReleaseStages: ['staging','production'],
+
+-   autoNotify: false,
++   autoDetectErrors: false,
+
+    // When autoDetectErrors is true, this option
+    // sets which kinds of errors to detect
++   enabledErrorTypes: {
++     unhandledExceptions: false,
++     unhandledRejections: false
++   },
+
+-   autoBreadcrumbsEnabled: false,
+-   consoleBreadcrumbsEnabled: false,
+-   interactionBreadcrumbsEnabled: false,
+-   navigationBreadcrumbsEnabled: false,
+-   networkBreadcrumbsEnabled: false,
++   enabledBreadcrumbTypes: [
++     'navigation', 'request', 'process', 'log', 'user', 'state', 'error', 'manual'
++   ],
+
+-   autoCaptureSessions: false,
++   autoTrackSessions: false,
+
+    // beforeSend callbacks have been renamed to onError
+    // and now receive an event parameter rather than report
+-   beforeSend: (report) => {}
++   onError: (event) => {}
+
+-   filters: [],
++   redactedKeys: []
+
+-   metaData: {},
++   metadata: {},
+
++   onSession: (session) => {
++     // a callback to run each time a session is created
++   }
+
++   onBreadcrumb: (breadcrumb) => {
++     // a callback to run each time a breadcrumb is created
++   }
+  }
+```
+
+### Mutable state
+
+Before, `app`, `device`, `request`, `user`, `metaData` and `context` were simply properties hanging off of the client that could be mutated at-will. Now, their structure and how/where they are set is more strictly controlled.
+
+#### App
+
+`version`, `type` and `releaseStage` can now _only_ be supplied in configuration and are deemed immutable after the client has been initialized.
+
+```diff
+- bugsnagClient.app.version = '1.2.3'
++ Bugsnag.init({ appVersion: '1.2.3' })
+```
+
+```diff
+- bugsnagClient.app.releaseStage = 'staging'
++ Bugsnag.init({ releaseStage: 'staging' })
+```
+
+```diff
+- bugsnagClient.app.type = 'worker'
++ Bugsnag.init({ appType: 'worker' })
+```
+
+The `app` section of the payload is now reserved for properties defined by Bugsnag. If you want to send information to be displayed under the "App" tab in the dashboard, provide it under an `app` section in metadata.
+
+```diff
+- bugsnagClient.app.gitSha = 'c6f0f2'
++ Bugsnag.addMetadata('app', 'gitSha', 'c6f0f2')
+```
+
+The app data provided in config and collected automatically by Bugsnag is accessible in `onError` callbacks under the `event.app` property. Any data that needs to be inspected, removed or changed can be done here if necessary.
+
+#### Device
+
+Similarly, the `device` section of the payload is now reserved for properties defined by Bugsnag. If you want to send information to be displayed under the "Device" tab in the dashboard, provide it under a `device` section in metadata.
+
+```diff
+- bugsnagClient.device.browserPlugins = navigator.plugins
++ Bugsnag.addMetadata('device', 'browserPlugins', navigator.plugins)
+```
+
+The device data collected automatically by Bugsnag is accessible in `onError` callbacks under the `event.device` property. Any data that needs to be inspected, removed or changed can be done here if necessary.
+
+#### User
+
+Setting a user's `id`, `email` and `name` must now be done via the `setUser(id, email, name)` method. If you want to send more information to be displayed under the "User" tab in the dashboard, provide it under a `user` section in metadata.
+
+```diff
+- client.user = { id: '123', email: 'bug@sn.ag', name: 'Bug S. Nag', roles: [ 'admin', 'subscriber' ] }
++ Bugsnag.setUser('123', 'bug@sn.ag', 'Bug S. Nag')
++ Bugsnag.addMetadata('user', 'roles', [ 'admin', 'subscriber' ])
+```
+
+It remains possible to specify the user `{ id, email, name }` in configuration:
+
+```diff
+- bugsnag({
++ Bugsnag.init({
+    user: {
+      id: '123',
+      email: 'bug@sn.ag',
+      name: 'Bug S. Nag'
+    }
+  })
+```
+
+#### Metadata
+
+The consistent mis-capitalisation of "metaData" has been corrected to "metadata" 🎉
+
+The `client.metaData` property has now been removed, and metadata is managed via the following methods, which control the metadata which is attached to every event:
+
+```js
+Bugsnag.addMetadata(section, key, value)
+Bugsnag.addMetadata(section, { [key]: value, …})
+Bugsnag.getMetadata(section, key)
+Bugsnag.clearMetadata(section, key)
+```
+
+The same methods are available on an event, to control the metadata that is included with only that event:
+
+```js
+event.addMetadata(section, key, value)
+event.addMetadata(section, { [key]: value, … })
+event.getMetadata(section, key)
+event.clearMetadata(section, key)
+```
+
+It remains possible to supply initial metadata in configuration:
+
+```diff
+- bugsnag({
++ Bugsnag.init({
++   metaData: {
++   metadata: {
+      section: { key: value }
+    }
+  })
+```
+
+#### Context
+
+On the client, context is now managed via `get/setContext()`:
+
+```diff
+- client.context = 'Account > Manage addresses'
++ Bugsnag.setContext('Account > Manage addresses')
+```
+
+In an `onError` callback, `event.context` is simply a property that can be mutated directly.
+
+```diff
+- report.context = document.location.href
++ event.context = document.location.href
+```
+
+And it remains possible to supply initial context in configuration:
+
+```diff
+- bugsnag({
++ Bugsnag.init({
+    context: document.location.href
+  })
+```
+
+Note that by manually setting context at any point, this will switch off any automatic context setting.
+
+### `notify()` signature and `onError`
+
+The signature of `notify()` has changed. Before, the second parameter `opts` allowed specifying some of the report's properties, as well as a callback to run. Now, the only way to provide extra information to an error report is to provide a callback to run. `onError` is the new name for `beforeSend` and it now receives an `event`, the new name for `report`.
+
+```diff
+- bugsnagClient.notify(err, opts, cb)
++ Bugsnag.notify(err, onError, cb)
+```
+
+Here are some examples:
+
+```diff
+  // changing severity
+- bugsnagClient.notify(err, { severity: 'info' })
++ Bugsnag.notify(err, event => { severity: 'info' })
+
+  // preventing send
+- bugsnagClient.notify(err, report => {
++ Bugsnag.notify(err, event => {
+-   if (report.context === '/test-error-page') {
++   if (event.context === '/test-error-page') {
+      return false
+    }
+  })
+
+  // updating error class/message
+- bugsnagClient.notify(err, {
+-   beforeSend: report => {
+-     report.errorClass = 'MyCustomError'
+-     report.errorMessage = 'Something went wrong'
+-   }
+- })
++ Bugsnag.notify(err, event => {
++   event.errors[0].errorClass = 'MyCustomError'
++   event.errors[0].errorMessage = 'Something went wrong'
++ })
+```
+
+And here is the full difference between the report and event interface:
+
+```diff
+- class Report {
++ class Event {
+    // These properties remain intact and unchanged
+    apiKey
+    app
+    device
+    request
+    context
+    breadcrumbs
+    groupingHash
+    severity
+    originalError
+
+    // the event implements the same metadata methods as the client
+-   metaData
+-   updateMetaData(section, key, value)
+-   removeMetaData(section, key)
++   addMetadata(section, key, value)
++   getMetadata(section, key)
++   clearMetadata(section, key)
+
+    // an event can now contain multiple errors
+-   errorClass
+-   errorMessage
+-   stacktrace
++   errors [
++     { errorClass, errorMessage, stacktrace, type }
++   ]
+
+-   user
++   getUser()
++   setUser(id, name, email)
+
+-   session
+
+    // now the only way to ignore an error report is
+    // to return false from an onError callback
+-   ignore()
+-   isIgnored()
+  }
+```
+
+---
+
+See the [full documentation](https://docs.bugsnag.com/platforms/javascript) for more information.
+
 ## 5.x to 6.x
 
 __This change only affects users that are sending via a proxy in Node.__
