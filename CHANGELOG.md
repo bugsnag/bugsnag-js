@@ -1,5 +1,11 @@
 # Changelog
 
+## TBD
+
+### Changed
+
+- (node): Use `util.inspect()` on plain object errors when logging their value [#696](https://github.com/bugsnag/bugsnag-js/pull/696) 
+
 ## 6.5.1 (2020-01-08)
 
 ### Fixed
