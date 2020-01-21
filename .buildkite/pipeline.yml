@@ -2,7 +2,7 @@ steps:
   - label: ':docker: Prepare package.json'
     timeout_in_minutes: 1
     plugins:
-      - docker-compose#v2.6.0:
+      - docker-compose#v3.1.0:
           run: minimal-packager
     artifact_paths: min_packages.tar
 
@@ -13,14 +13,14 @@ steps:
     plugins:
       - artifacts#v1.2.0:
           download: min_packages.tar
-      - docker-compose#v2.6.0:
+      - docker-compose#v3.1.0:
           build:
             - ci
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
           cache-from:
             - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base-${BRANCH_NAME}
             - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base
-      - docker-compose#v2.6.0:
+      - docker-compose#v3.1.0:
           push:
             - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base-${BRANCH_NAME}
             - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base
@@ -38,21 +38,21 @@ steps:
   - label: 'Lint'
     timeout_in_minutes: 10
     plugins:
-      docker-compose#v2.6.0:
+      docker-compose#v3.1.0:
         run: ci
     command: 'npm run test:lint'
 
   - label: 'Unit tests'
     timeout_in_minutes: 10
     plugins:
-      docker-compose#v2.6.0:
+      docker-compose#v3.1.0:
         run: ci
     command: 'npm run test:unit'
 
   - label: 'Type checks/tests'
     timeout_in_minutes: 10
     plugins:
-      docker-compose#v2.6.0:
+      docker-compose#v3.1.0:
         run: ci
     command: 'npm run test:types'
 
@@ -61,7 +61,7 @@ steps:
     plugins:
       - artifacts#v1.2.0:
           download: min_packages.tar
-      - docker-compose#v2.6.0:
+      - docker-compose#v3.1.0:
           build:
             - browser-maze-runner
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
@@ -73,7 +73,7 @@ steps:
     plugins:
       - artifacts#v1.2.0:
           download: min_packages.tar
-      - docker-compose#v2.6.0:
+      - docker-compose#v3.1.0:
           build:
             - node-maze-runner
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
@@ -85,7 +85,7 @@ steps:
   - label: ':chrome: v43 Browser tests'
     timeout_in_minutes: 10
     plugins:
-      docker-compose#v2.6.0:
+      docker-compose#v3.1.0:
         run: browser-maze-runner
         use-aliases: true
     env:
@@ -96,7 +96,7 @@ steps:
   - label: ':chrome: v61 Browser tests'
     timeout_in_minutes: 10
     plugins:
-      docker-compose#v2.6.0:
+      docker-compose#v3.1.0:
         run: browser-maze-runner
         use-aliases: true
     env:
@@ -107,7 +107,7 @@ steps:
   - label: ':ie: v8 Browser tests'
     timeout_in_minutes: 10
     plugins:
-      docker-compose#v2.6.0:
+      docker-compose#v3.1.0:
         run: browser-maze-runner
         use-aliases: true
     env:
@@ -118,7 +118,7 @@ steps:
   - label: ':ie: v9 Browser tests'
     timeout_in_minutes: 10
     plugins:
-      docker-compose#v2.6.0:
+      docker-compose#v3.1.0:
         run: browser-maze-runner
         use-aliases: true
     env:
@@ -129,7 +129,7 @@ steps:
   - label: ':ie: v10 Browser tests'
     timeout_in_minutes: 10
     plugins:
-      docker-compose#v2.6.0:
+      docker-compose#v3.1.0:
         run: browser-maze-runner
         use-aliases: true
     env:
@@ -140,7 +140,7 @@ steps:
   - label: ':ie: v11 Browser tests'
     timeout_in_minutes: 10
     plugins:
-      docker-compose#v2.6.0:
+      docker-compose#v3.1.0:
         run: browser-maze-runner
         use-aliases: true
     env:
@@ -152,7 +152,7 @@ steps:
   - label: ':edge: v14 Browser tests'
     timeout_in_minutes: 10
     plugins:
-      docker-compose#v2.6.0:
+      docker-compose#v3.1.0:
         run: browser-maze-runner
         use-aliases: true
     env:
@@ -163,7 +163,7 @@ steps:
   - label: ':edge: v15 Browser tests'
     timeout_in_minutes: 10
     plugins:
-      docker-compose#v2.6.0:
+      docker-compose#v3.1.0:
         run: browser-maze-runner
         use-aliases: true
     env:
@@ -174,7 +174,7 @@ steps:
   - label: ':safari: v6 Browser tests'
     timeout_in_minutes: 10
     plugins:
-      docker-compose#v2.6.0:
+      docker-compose#v3.1.0:
         run: browser-maze-runner
         use-aliases: true
     env:
@@ -185,7 +185,7 @@ steps:
   - label: ':safari: v10 Browser tests'
     timeout_in_minutes: 10
     plugins:
-      docker-compose#v2.6.0:
+      docker-compose#v3.1.0:
         run: browser-maze-runner
         use-aliases: true
     env:
@@ -196,7 +196,7 @@ steps:
   - label: ':desktop_computer: Opera v12 Browser tests'
     timeout_in_minutes: 10
     plugins:
-      docker-compose#v2.6.0:
+      docker-compose#v3.1.0:
         run: browser-maze-runner
         use-aliases: true
     env:
@@ -207,7 +207,7 @@ steps:
   - label: ':iphone: iOS 10.3 Browser tests'
     timeout_in_minutes: 20
     plugins:
-      docker-compose#v2.6.0:
+      docker-compose#v3.1.0:
         run: browser-maze-runner
         use-aliases: true
     env:
@@ -219,7 +219,7 @@ steps:
   - label: ':android: Samsung Galaxy S8 Browser tests'
     timeout_in_minutes: 10
     plugins:
-      docker-compose#v2.6.0:
+      docker-compose#v3.1.0:
         run: browser-maze-runner
         use-aliases: true
     env:
@@ -230,7 +230,7 @@ steps:
   - label: ':firefox: v30 Browser tests'
     timeout_in_minutes: 10
     plugins:
-      docker-compose#v2.6.0:
+      docker-compose#v3.1.0:
         run: browser-maze-runner
         use-aliases: true
     env:
@@ -241,7 +241,7 @@ steps:
   - label: ':firefox: v56 Browser tests'
     timeout_in_minutes: 10
     plugins:
-      docker-compose#v2.6.0:
+      docker-compose#v3.1.0:
         run: browser-maze-runner
         use-aliases: true
     env:
@@ -252,7 +252,7 @@ steps:
   - label: ':node: Node 4'
     timeout_in_minutes: 30
     plugins:
-      docker-compose#v2.6.0:
+      docker-compose#v3.1.0:
         run: node-maze-runner
         use-aliases: true
     env:
@@ -262,7 +262,7 @@ steps:
   - label: ':node: Node 6'
     timeout_in_minutes: 30
     plugins:
-      docker-compose#v2.6.0:
+      docker-compose#v3.1.0:
         run: node-maze-runner
         use-aliases: true
     env:
@@ -272,7 +272,7 @@ steps:
   - label: ':node: Node 8'
     timeout_in_minutes: 30
     plugins:
-      docker-compose#v2.6.0:
+      docker-compose#v3.1.0:
         run: node-maze-runner
         use-aliases: true
     env:
@@ -281,7 +281,7 @@ steps:
   - label: ':node: Node 10'
     timeout_in_minutes: 30
     plugins:
-      docker-compose#v2.6.0:
+      docker-compose#v3.1.0:
         run: node-maze-runner
         use-aliases: true
     env:
@@ -290,7 +290,7 @@ steps:
   - label: ':node: Node 12'
     timeout_in_minutes: 30
     plugins:
-      docker-compose#v2.6.0:
+      docker-compose#v3.1.0:
         run: node-maze-runner
         use-aliases: true
     env:
