@@ -22,6 +22,17 @@ describe('plugin: node uncaught exception handler', () => {
     expect(after).toBe(before)
   })
 
+  it('does not add a process#uncaughtException listener when enabledErrorTypes.unhandledExceptions=false', () => {
+    const before = process.listeners('uncaughtException').length
+    const c = new Client({
+      apiKey: 'api_key',
+      enabledErrorTypes: { unhandledExceptions: false, unhandledRejections: true }
+    })
+    c.use(plugin)
+    const after = process.listeners('uncaughtException').length
+    expect(after).toBe(before)
+  })
+
   it('should call the configured onUncaughtException callback', done => {
     const c = new Client({
       apiKey: 'api_key',

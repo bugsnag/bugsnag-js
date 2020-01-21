@@ -51,8 +51,11 @@ describe('plugin: react native rejection handler', () => {
     setTimeout(() => done(), 300)
   })
 
-  it('should be disbaled when autoDetectUnhandledRejections=false', done => {
-    const c = new Client({ apiKey: 'api_key', autoDetectUnhandledRejections: false })
+  it('should be disabled when enabledErrorTypes.unhandledRejections=false', done => {
+    const c = new Client({
+      apiKey: 'api_key',
+      enabledErrorTypes: { unhandledRejections: false, unhandledExceptions: true }
+    })
     c._setDelivery(client => ({
       sendEvent: (payload) => {
         expect(payload).not.toBeTruthy()
