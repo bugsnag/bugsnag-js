@@ -3,6 +3,7 @@ const { reduce } = require('@bugsnag/core/lib/es-utils')
 const { stringWithLength } = require('@bugsnag/core/lib/validators')
 const os = require('os')
 const process = require('process')
+const { inspect } = require('util')
 
 module.exports = {
   projectRoot: {
@@ -30,7 +31,7 @@ module.exports = {
   },
   onUncaughtException: {
     defaultValue: () => (err, report, logger) => {
-      logger.error(`Uncaught exception${getContext(report)}, the process will now terminate…\n${(err && err.stack) ? err.stack : err}`)
+      logger.error(`Uncaught exception${getContext(report)}, the process will now terminate…\n${printError(err)}`)
       process.exit(1)
     },
     message: 'should be a function',
@@ -38,12 +39,14 @@ module.exports = {
   },
   onUnhandledRejection: {
     defaultValue: () => (err, report, logger) => {
-      logger.error(`Unhandled rejection${getContext(report)}…\n${(err && err.stack) ? err.stack : err}`)
+      logger.error(`Unhandled rejection${getContext(report)}…\n${printError(err)}`)
     },
     message: 'should be a function',
     validate: value => typeof value === 'function'
   }
 }
+
+const printError = err => err && err.stack ? err.stack : inspect(err)
 
 const getPrefixedConsole = () => {
   return reduce([ 'debug', 'info', 'warn', 'error' ], (accum, method) => {
