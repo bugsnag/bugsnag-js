@@ -1,0 +1,82 @@
+{
+  "name": "@bugsnag/react-native",
+  "version": "7.0.0-alpha.3",
+  "main": "src/notifier.js",
+  "types": "dist/types/bugsnag.d.ts",
+  "description": "Bugsnag error reporter for React Native applications",
+  "keywords": [
+    "bugsnag",
+    "react native",
+    "exception",
+    "error",
+    "javascript",
+    "monitoring",
+    "reporting",
+    "stability",
+    "mobile"
+  ],
+  "homepage": "https://www.bugsnag.com/",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:bugsnag/bugsnag-js.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "rnpm": {
+    "ios": {
+      "project": "ios/BugsnagReactNative.xcodeproj",
+      "sharedLibraries": [
+        "libz"
+      ]
+    },
+    "android": {
+      "packageInstance": "new BugsnagPackage()",
+      "packageImportPath": "import com.bugsnag.reactnative.BugsnagPackage;"
+    }
+  },
+  "files": [
+    "src",
+    "dist",
+    "android/build.gradle",
+    "android/proguard-rules.pro",
+    "android/src/main",
+    "ios/Bugsnag",
+    "ios/BugsnagReactNative",
+    "ios/BugsnagReactNative.xcodeproj",
+    "ios/vendor/bugsnag-cocoa/Configurations/Config.xcconfig",
+    "ios/vendor/bugsnag-cocoa/Source/**/*.{h,m,mm,cpp,c}",
+    "ios/vendor/bugsnag-cocoa/iOS/{Bugsnag.xcodeproj,Info.plist,module.modulemap}",
+    "BugsnagReactNative.podspec"
+  ],
+  "scripts": {
+    "clean": "rm -fr dist && mkdir dist",
+    "build": "npm run clean",
+    "postversion": "npm run build"
+  },
+  "author": "Bugsnag",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/cli": "^7.0.0",
+    "jasmine": "3.1.0",
+    "nyc": "^12.0.2",
+    "react-native": "^0.59.9",
+    "tslint": "^5.12.1",
+    "typescript": "^3.3.3"
+  },
+  "dependencies": {
+    "@bugsnag/core": "7.0.0-alpha.1",
+    "@bugsnag/delivery-react-native": "7.0.0-alpha.1",
+    "@bugsnag/plugin-console-breadcrumbs": "7.0.0-alpha.1",
+    "@bugsnag/plugin-network-breadcrumbs": "7.0.0-alpha.1",
+    "@bugsnag/plugin-react": "7.0.0-alpha.1",
+    "@bugsnag/plugin-react-native-app-state-breadcrumbs": "7.0.0-alpha.1",
+    "@bugsnag/plugin-react-native-client-sync": "7.0.0-alpha.1",
+    "@bugsnag/plugin-react-native-connectivity-breadcrumbs": "7.0.0-alpha.1",
+    "@bugsnag/plugin-react-native-event-sync": "7.0.0-alpha.1",
+    "@bugsnag/plugin-react-native-global-error-handler": "7.0.0-alpha.1",
+    "@bugsnag/plugin-react-native-orientation-breadcrumbs": "7.0.0-alpha.1",
+    "@bugsnag/plugin-react-native-session": "7.0.0-alpha.1",
+    "@bugsnag/plugin-react-native-unhandled-rejection": "7.0.0-alpha.1"
+  }
+}
