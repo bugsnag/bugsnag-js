@@ -1,13 +1,13 @@
 steps:
   - label: ':docker: Build React-native android base image'
     plugins:
-      - docker-compose#v2.6.0:
+      - docker-compose#v3.1.0:
           build: react-native-android-base
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
           cache-from:
             - react-native-andorid-base:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:rn-android-base-${BRANCH_NAME}
             - react-native-android-base:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:rn-android-base-latest
-      - docker-compose#v2.6.0:
+      - docker-compose#v3.1.0:
           push:
             - react-native-android-base:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:rn-android-base-${BRANCH_NAME}
             - react-native-android-base:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:rn-android-base-latest
@@ -16,7 +16,7 @@ steps:
 
   - label: ':docker: Build React-native 0.55 apk'
     plugins:
-      - docker-compose#v2.6.0:
+      - docker-compose#v3.1.0:
           run: react-native-android-builder
     artifact_paths: build/rn0.55.apk
     env:
@@ -24,7 +24,7 @@ steps:
 
   - label: ':docker: Build React-native 0.60 apk'
     plugins:
-      - docker-compose#v2.6.0:
+      - docker-compose#v3.1.0:
           run: react-native-android-builder
     artifact_paths: build/rn0.60.apk
     env:
@@ -54,7 +54,7 @@ steps:
     plugins:
       artifacts#v1.2.0:
         download: "build/rn0.55.apk"
-      docker-compose#v2.6.0:
+      docker-compose#v3.1.0:
         run: react-native-maze-runner
         use-aliases: true
     command: --tags "not @wip"
@@ -68,7 +68,7 @@ steps:
     plugins:
       artifacts#v1.2.0:
         download: "build/rn0.60.apk"
-      docker-compose#v2.6.0:
+      docker-compose#v3.1.0:
         run: react-native-maze-runner
         use-aliases: true
     command: --tags "not @wip"
@@ -82,7 +82,7 @@ steps:
     plugins:
       artifacts#v1.2.0:
         download: "build/rn0.55.ipa"
-      docker-compose#v2.6.0:
+      docker-compose#v3.1.0:
         run: react-native-maze-runner
         use-aliases: true
     command: --tags "not @wip"
@@ -96,7 +96,7 @@ steps:
     plugins:
       artifacts#v1.2.0:
         download: "build/rn0.60.ipa"
-      docker-compose#v2.6.0:
+      docker-compose#v3.1.0:
         run: react-native-maze-runner
         use-aliases: true
     command: --tags "not @wip"
