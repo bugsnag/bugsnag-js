@@ -13,7 +13,7 @@ describe('delivery: react native', () => {
     c.setOptions({ apiKey: 'api_key' })
     c.configure()
     c.delivery(client => delivery(client, NativeClient))
-    const threads = [ {}, {} ]
+    const threads = [{}, {}]
     c.notify(new Error('123'), report => {
       report.set('threads', threads)
     }, (err, report) => {

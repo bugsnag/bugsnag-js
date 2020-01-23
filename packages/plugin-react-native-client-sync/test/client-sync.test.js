@@ -164,7 +164,7 @@ describe('plugin: react native client sync', () => {
               expect(event).toBe('bugsnag::sync')
               setTimeout(() => listener({
                 type: 'META_DATA_UPDATE',
-                value: { extra: { apples: [ 'pink lady', 'braeburn', 'golden delicious' ] } }
+                value: { extra: { apples: ['pink lady', 'braeburn', 'golden delicious'] } }
               }), 0)
             }
           }
@@ -177,7 +177,7 @@ describe('plugin: react native client sync', () => {
       c.use(plugin)
       expect(c.get('extra')).toEqual(undefined)
       setTimeout(() => {
-        expect(c.get('extra')).toEqual({ apples: [ 'pink lady', 'braeburn', 'golden delicious' ] })
+        expect(c.get('extra')).toEqual({ apples: ['pink lady', 'braeburn', 'golden delicious'] })
       }, 1)
     })
 

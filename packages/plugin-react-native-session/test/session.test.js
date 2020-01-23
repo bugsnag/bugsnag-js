@@ -2,7 +2,6 @@ const { describe, it, expect, spyOn } = global
 
 const plugin = require('../')
 const Client = require('@bugsnag/core/client')
-const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
 describe('plugin: react native session', () => {
   it('adds missing methods and forwards calls to native client', () => {

@@ -8,28 +8,28 @@ module.exports = {
 
     const origSetUser = client.setUser
     client.setUser = function () {
-      const ret = client.__proto__.setUser.apply(this, arguments)
+      const ret = origSetUser.apply(this, arguments)
       NativeClient.updateUser(this._user.id, this._user.email, this._user.name)
       return ret
     }
 
     const origSetContext = client.setContext
     client.setContext = function () {
-      const ret = client.__proto__.setContext.apply(this, arguments)
+      const ret = origSetContext.apply(this, arguments)
       NativeClient.updateContext(this._context)
       return ret
     }
 
     const origAddMetadata = client.addMetadata
     client.addMetadata = function () {
-      const ret = client.__proto__.addMetadata.apply(this, arguments)
+      const ret = origAddMetadata.apply(this, arguments)
       NativeClient.updateMetaData(client._metadata)
       return ret
     }
 
     const origClearMetadata = client.clearMetadata
     client.clearMetadata = function () {
-      const ret = client.__proto__.clearMetadata.apply(this, arguments)
+      const ret = origClearMetadata.apply(this, arguments)
       NativeClient.updateMetaData(client._metadata)
       return ret
     }
