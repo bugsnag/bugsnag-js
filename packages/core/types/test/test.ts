@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+
 import Bugsnag, { Client, Config } from '../..'
 import "jasmine"
 

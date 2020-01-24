@@ -1,4 +1,4 @@
-import { Client, Config, BrowserConfig, BugsnagStatic } from "@bugsnag/browser";
+import { Client, BrowserConfig, BugsnagStatic } from "@bugsnag/browser";
 import { NodeConfig } from "@bugsnag/node";
 
 interface UniversalBugsnagStatic extends BugsnagStatic {
