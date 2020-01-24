@@ -1,4 +1,4 @@
-import { App, Device, User } from "./common";
+import { App, Device, User } from './common'
 
 declare class Session {
   public startedAt: string;
@@ -11,4 +11,4 @@ declare class Session {
   public setUser(id?: string, email?: string, name?: string): void;
 }
 
-export default Session;
+export default Session

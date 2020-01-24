@@ -1,4 +1,4 @@
-import Breadcrumb from "./breadcrumb";
+import Breadcrumb from './breadcrumb'
 import {
   NotifiableError,
   BreadcrumbMetadataValue,
@@ -8,9 +8,9 @@ import {
   OnSessionCallback,
   OnBreadcrumbCallback,
   User
-} from "./common";
-import Event from "./event";
-import Session from "./session";
+} from './common'
+import Event from './event'
+import Session from './session'
 
 declare class Client {
   private constructor();
@@ -74,4 +74,4 @@ declare class Client {
   public Session: typeof Session;
 }
 
-export default Client;
+export default Client
