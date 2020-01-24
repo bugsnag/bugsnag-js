@@ -1,4 +1,3 @@
-import Event from "./event";
 import { App, Device, User } from "./common";
 
 declare class Session {

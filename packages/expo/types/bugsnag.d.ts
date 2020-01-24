@@ -1,4 +1,4 @@
-import { Client, Config, BugsnagStatic } from "@bugsnag/core";
+import { BugsnagStatic } from "@bugsnag/core";
 
 declare const Bugsnag: BugsnagStatic;
 
