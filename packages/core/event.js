@@ -22,6 +22,7 @@ class Event {
     this.request = {}
 
     this.breadcrumbs = []
+    this.threads = []
 
     this._metadata = {}
     this._user = {}
