@@ -12,7 +12,7 @@ import { NativeModules } from 'react-native';
 
 // setup bugsnag client to capture errors automatically
 import Bugsnag from '@bugsnag/react-native';
-Bugsnag.init();
+Bugsnag.start();
 
 function triggerException() {
   bogusFunction(); // eslint-disable-line no-undef

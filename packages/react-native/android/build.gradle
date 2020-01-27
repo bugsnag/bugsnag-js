@@ -35,7 +35,7 @@ android {
 }
 
 dependencies {
-    api 'com.bugsnag:bugsnag-android:4.22.999'
+    api 'com.bugsnag:bugsnag-android:4.22.1001'
     implementation 'com.facebook.react:react-native:+'
 
     androidTestImplementation "junit:junit:4.12"
