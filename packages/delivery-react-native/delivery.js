@@ -16,5 +16,7 @@ module.exports = (client, NativeClient) => ({
       groupingHash: event.groupingHash
     }).then(() => cb()).catch(cb)
   },
-  sendSession: () => {}
+  sendSession: () => {
+    client._logger.warn('@bugsnag/delivery-react-native sendSession() should never be called', new Error().stack)
+  }
 })
