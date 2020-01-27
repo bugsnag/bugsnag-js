@@ -1,11 +1,22 @@
 module.exports = (client, NativeClient) => ({
   sendEvent: (payload, cb = () => {}) => {
     const event = payload.events[0]
-    // this is because JS beforeSend operates on the event – report is not in scope
-    // report.threads = event.get('threads')
-    NativeClient.dispatch(event.toJSON()).then(() => cb()).catch(cb)
+    NativeClient.dispatch({
+      errors: event.errors,
+      severity: event.severity,
+      severityReason: event._handledState.severityReason,
+      unhandled: event.unhandled,
+      app: event.app,
+      device: event.device,
+      threads: event.threads,
+      breadcrumbs: event.breadcrumbs,
+      context: event.context,
+      user: event._user,
+      metadata: event._metadata,
+      groupingHash: event.groupingHash
+    }).then(() => cb()).catch(cb)
   },
   sendSession: () => {
-    // TODO: log/warn here? If this gets used the something has gone wrong…
+    client._logger.warn('@bugsnag/delivery-react-native sendSession() should never be called', new Error().stack)
   }
 })
