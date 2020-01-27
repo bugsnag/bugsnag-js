@@ -1,11 +1,11 @@
-import Breadcrumb from "./breadcrumb";
+import Breadcrumb from './breadcrumb'
 import {
   App,
   Device,
   Request,
   Logger,
   User
-} from "./common";
+} from './common'
 
 declare class Event {
   public static create(
@@ -24,7 +24,7 @@ declare class Event {
   public errors: Error[];
   public breadcrumbs: Breadcrumb[];
 
-  public severity: "info" | "warning" | "error";
+  public severity: 'info' | 'warning' | 'error';
 
   public readonly originalError: any;
   public readonly unhandled: boolean;
@@ -45,28 +45,28 @@ declare class Event {
 }
 
 interface HandledState {
-  severity: string;
-  unhandled: boolean;
+  severity: string
+  unhandled: boolean
   severityReason: {
-    type: string;
-    [key: string]: any;
-  };
+    type: string
+    [key: string]: any
+  }
 }
 
 interface Stackframe {
-  file: string;
-  method?: string;
-  lineNumber?: number;
-  columnNumber?: number;
-  code?: object;
-  inProject?: boolean;
+  file: string
+  method?: string
+  lineNumber?: number
+  columnNumber?: number
+  code?: object
+  inProject?: boolean
 }
 
 interface Error {
-  errorClass: string;
-  errorMessage: string;
-  stacktrace: Stackframe[];
-  type: string;
+  errorClass: string
+  errorMessage: string
+  stacktrace: Stackframe[]
+  type: string
 }
 
-export default Event;
+export default Event

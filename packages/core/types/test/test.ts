@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 
 import Bugsnag, { Client, Config } from '../..'
-import "jasmine"
+import 'jasmine'
 
 // the client's constructor isn't public in TS so this drops down to JS to create one for the tests
 function createClient (opts: Config): Client {
