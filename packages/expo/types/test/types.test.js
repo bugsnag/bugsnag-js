@@ -1,16 +1,11 @@
-const { describe, it, expect, afterAll } = global
+const { describe, it, expect } = global
 
 const { spawnSync } = require('child_process')
-const cleanupFiles = []
-
-afterAll(() => {
-  cleanupFiles.forEach(f => spawnSync('rm', ['-f', `${__dirname}/fixtures/${f}`]))
-})
 
 const assertTsProgramCompiles = p => {
-  cleanupFiles.push(`${p}.js`)
   const { stdout, stderr, err } = spawnSync('./node_modules/.bin/tsc', [
     '--strict',
+    '--noEmit',
     `${__dirname}/fixtures/${p}.ts`
   ], { encoding: 'utf8' })
   expect(err).toBeFalsy()
