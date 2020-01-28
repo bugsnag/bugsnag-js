@@ -1,5 +1,6 @@
 module.exports = api => {
-  const isTest = api.env('test')
+  // NB: This function can be called without an api argument, e.g. by bin/bundle
+
   const presets = []
   const plugins = [
     ['@babel/plugin-transform-arrow-functions'],
@@ -17,11 +18,11 @@ module.exports = api => {
     ['@babel/syntax-object-rest-spread']
   ]
 
-  if (!isTest) {
+  if (api && !api.env('test')) {
     api.cache(false)
   }
 
-  if (isTest) {
+  if (api && api.env('test')) {
     presets.push(
       [
         '@babel/preset-env',
