@@ -41,7 +41,7 @@ module.exports = (client, fetch = global.fetch) => {
 
       let body, opts
       try {
-        body = payload.event(event, client._config.filters)
+        body = payload.event(event, client._config.redactedKeys)
         opts = {
           method: 'POST',
           headers: {
@@ -71,7 +71,7 @@ module.exports = (client, fetch = global.fetch) => {
 
       let body, opts
       try {
-        body = payload.session(session, client._config.filters)
+        body = payload.session(session, client._config.redactedKeys)
         opts = {
           method: 'POST',
           headers: {

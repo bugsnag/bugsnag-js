@@ -14,7 +14,7 @@ module.exports = (client, win = window) => ({
       req.setRequestHeader('Bugsnag-Api-Key', event.apiKey || client._config.apiKey)
       req.setRequestHeader('Bugsnag-Payload-Version', '4')
       req.setRequestHeader('Bugsnag-Sent-At', isoDate())
-      req.send(payload.event(event, client._config.filters))
+      req.send(payload.event(event, client._config.redactedKeys))
     } catch (e) {
       client._logger.error(e)
     }
@@ -31,7 +31,7 @@ module.exports = (client, win = window) => ({
       req.setRequestHeader('Bugsnag-Api-Key', client._config.apiKey)
       req.setRequestHeader('Bugsnag-Payload-Version', '1')
       req.setRequestHeader('Bugsnag-Sent-At', isoDate())
-      req.send(payload.session(session, client._config.filters))
+      req.send(payload.session(session, client._config.redactedKeys))
     } catch (e) {
       client._logger.error(e)
     }

@@ -1,3 +1,3 @@
-import { Bugsnag } from "@bugsnag/browser";
-declare const bugsnagPluginReact: Bugsnag.Plugin;
-export default bugsnagPluginReact;
+import { Bugsnag } from '@bugsnag/browser'
+declare const bugsnagPluginReact: Bugsnag.Plugin
+export default bugsnagPluginReact

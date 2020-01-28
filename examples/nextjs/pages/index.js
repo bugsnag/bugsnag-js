@@ -1,7 +1,7 @@
 import Head from 'next/head'
 
 import CrashyButton from '../components/CrashyButton'
-import bugsnagClient from '../lib/bugsnag'
+import Bugsnag from '../lib/bugsnag'
 
 export default () =>
   <div>
@@ -17,7 +17,7 @@ export default () =>
     </p>
     <div id="buttons">
       <h3>Send some errors by clicking below:</h3>
-      <button onClick={() => bugsnagClient.notify(new Error('bad!'))}>Send handled</button>
+      <button onClick={() => Bugsnag.notify(new Error('bad!'))}>Send handled</button>
       <button onClick={() => { throw new Error('bad!') }}>Send unhandled</button>
       <CrashyButton>Trigger a React render error</CrashyButton>
       <a className="button" href="borked">Send an error from the server</a>

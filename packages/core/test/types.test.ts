@@ -1,4 +1,6 @@
-import Bugsnag, { Client, Config } from '..'
+/* eslint-disable @typescript-eslint/no-empty-function */
+
+import Bugsnag, { Client, Config } from '../..'
 
 // the client's constructor isn't public in TS so this drops down to JS to create one for the tests
 function createClient (opts: Config): Client {

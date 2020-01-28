@@ -66,7 +66,7 @@ describe('delivery: expo', () => {
       const config = {
         apiKey: 'aaaaaaaa',
         endpoints: { notify: `http://0.0.0.0:${server.address().port}/notify/` },
-        filters: []
+        redactedKeys: []
       }
       delivery({ _config: config, _logger: noopLogger }, fetch).sendEvent(payload, (err) => {
         expect(err).toBe(null)
@@ -100,7 +100,7 @@ describe('delivery: expo', () => {
       const config = {
         apiKey: 'aaaaaaaa',
         endpoints: { notify: 'blah', sessions: `http://0.0.0.0:${server.address().port}/sessions/` },
-        filters: []
+        redactedKeys: []
       }
       delivery({ _config: config, _logger: noopLogger }, fetch).sendSession(payload, (err) => {
         expect(err).toBe(null)
@@ -136,7 +136,7 @@ describe('delivery: expo', () => {
     const config = {
       apiKey: 'aaaaaaaa',
       endpoints: { notify: 'http://0.0.0.0:9999/notify/' },
-      filters: []
+      redactedKeys: []
     }
     let didLog = false
     const log = () => { didLog = true }
@@ -170,7 +170,7 @@ describe('delivery: expo', () => {
       const config = {
         apiKey: 'aaaaaaaa',
         endpoints: { notify: `http://0.0.0.0:${server.address().port}/notify/` },
-        filters: []
+        redactedKeys: []
       }
       let didLog = false
       const log = () => { didLog = true }
@@ -202,7 +202,7 @@ describe('delivery: expo', () => {
     const config = {
       apiKey: 'aaaaaaaa',
       endpoints: { sessions: 'http://0.0.0.0:9999/sessions/' },
-      filters: []
+      redactedKeys: []
     }
     let didLog = false
     const log = () => { didLog = true }
@@ -238,7 +238,7 @@ describe('delivery: expo', () => {
       const config = {
         apiKey: 'aaaaaaaa',
         endpoints: { notify: `http://0.0.0.0:${server.address().port}/notify/` },
-        filters: []
+        redactedKeys: []
       }
       let didLog = false
       const log = () => { didLog = true }
@@ -276,7 +276,7 @@ describe('delivery: expo', () => {
       const config = {
         apiKey: 'aaaaaaaa',
         endpoints: { notify: `http://0.0.0.0:${server.address().port}/notify/` },
-        filters: []
+        redactedKeys: []
       }
       let didLog = false
       const log = () => { didLog = true }
@@ -306,7 +306,7 @@ describe('delivery: expo', () => {
     const config = {
       apiKey: 'aaaaaaaa',
       endpoints: { notify: 'https://some-address.com' },
-      filters: []
+      redactedKeys: []
     }
     delivery({ _config: config, _logger: noopLogger }, fetch).sendEvent(payload, (err) => {
       expect(err).not.toBeTruthy()
@@ -388,7 +388,7 @@ describe('delivery: expo', () => {
     const config = {
       apiKey: 'aaaaaaaa',
       endpoints: { notify: 'http://some-address.com' },
-      filters: []
+      redactedKeys: []
     }
     let n = 0
     const _done = () => {

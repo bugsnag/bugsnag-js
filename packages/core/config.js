@@ -2,6 +2,7 @@ const { filter, reduce, keys, isArray, includes } = require('./lib/es-utils')
 const { intRange, stringWithLength, listOfFunctions } = require('./lib/validators')
 
 const BREADCRUMB_TYPES = ['navigation', 'request', 'process', 'log', 'user', 'state', 'error', 'manual']
+const defaultErrorTypes = { unhandledExceptions: true, unhandledRejections: true }
 
 module.exports.schema = {
   apiKey: {
@@ -24,10 +25,18 @@ module.exports.schema = {
     message: 'should be true|false',
     validate: value => value === true || value === false
   },
-  autoDetectUnhandledRejections: {
-    defaultValue: () => true,
-    message: 'should be true|false',
-    validate: value => value === true || value === false
+  enabledErrorTypes: {
+    defaultValue: (val) => ({ ...defaultErrorTypes, ...val }),
+    message: 'should be an object containing the flags { unhandledExceptions:true|false, unhandledRejections:true|false }',
+    validate: value => {
+      // ensure we have an object
+      if (typeof value !== 'object' || !value) return false
+      // ensure it only has a subset of the allowed keys
+      if (keys(value).sort().join(',') !== keys(defaultErrorTypes).sort().join(',')) return false
+      // ensure all of the values are boolean
+      if (filter(keys(value), k => typeof value[k] === 'boolean').length === keys.length) return false
+      return true
+    }
   },
   onError: {
     defaultValue: () => [],
@@ -114,7 +123,7 @@ module.exports.schema = {
         true
       ))
   },
-  filters: {
+  redactedKeys: {
     defaultValue: () => ['password'],
     message: 'should be an array of strings|regexes',
     validate: value =>

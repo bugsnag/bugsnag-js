@@ -23,7 +23,7 @@ const Vue = require('vue')
 const Bugsnag = require('@bugsnag/js')
 const bugsnagVue = require('@bugsnag/plugin-vue')
 
-Bugsnag.init('API_KEY')
+Bugsnag.start('API_KEY')
 Bugsnag.use(bugsnagVue, Vue)
 ```
 

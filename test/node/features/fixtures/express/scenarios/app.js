@@ -2,7 +2,7 @@ var Bugsnag = require('@bugsnag/node')
 var bugsnagExpress = require('@bugsnag/plugin-express')
 var express = require('express')
 
-Bugsnag.init({
+Bugsnag.start({
   apiKey: process.env.BUGSNAG_API_KEY,
   endpoints: {
     notify: process.env.BUGSNAG_NOTIFY_ENDPOINT,

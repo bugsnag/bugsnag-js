@@ -152,12 +152,15 @@ describe('plugin: unhandled rejection', () => {
       expect(addEventListenerSpy).toHaveBeenCalledTimes(0)
     })
 
-    it('is disabled when autoDetectUnhandledRejections=false', () => {
+    it('is disabled when enabledErrorTypes.unhandledRejections=false', () => {
       const window = {
         addEventListener: () => {}
       }
       const addEventListenerSpy = spyOn(window, 'addEventListener')
-      const client = new Client({ apiKey: 'API_KEY_YEAH', autoDetectUnhandledRejections: false })
+      const client = new Client({
+        apiKey: 'API_KEY_YEAH',
+        enabledErrorTypes: { unhandledExceptions: false, unhandledRejections: false }
+      })
       client.use(plugin, window)
       expect(addEventListenerSpy).toHaveBeenCalledTimes(0)
     })

@@ -1,10 +1,13 @@
 import Bugsnag, { Breadcrumb, Session } from "../../.."
-Bugsnag.init({
+Bugsnag.start({
   apiKey: "abc",
   appVersion: "1.2.3",
   appType: "worker",
   autoDetectErrors: true,
-  autoDetectUnhandledRejections: true,
+  enabledErrorTypes: {
+    unhandledExceptions: true,
+    unhandledRejections: true
+  },
   onError: [
     event => true
   ],
@@ -25,7 +28,7 @@ Bugsnag.init({
   user: null,
   metadata: {},
   logger: undefined,
-  filters: ["foo",/bar/],
+  redactedKeys: ["foo",/bar/],
   collectUserIp: true,
   maxEvents: 10
 })

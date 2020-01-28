@@ -3,7 +3,7 @@ var bugsnagVue = require('@bugsnag/plugin-vue')
 var Vue = require('vue/dist/vue.common.js')
 var config = require('./lib/config')
 
-Bugsnag.init(config)
+Bugsnag.start(config)
 Bugsnag.use(bugsnagVue, Vue)
 
 var app = new Vue({

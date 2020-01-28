@@ -42,7 +42,27 @@ describe('plugin: react native global error handler', () => {
     client.use(plugin)
   })
 
-  it('should call through to an exising handler', done => {
+  it('should not set a global error handler when autoDetectErrors=false', () => {
+    const client = new Client({
+      apiKey: 'API_KEY_YEAH',
+      autoDetectErrors: false
+    })
+    const eu = new MockErrorUtils()
+    client.use(plugin, eu)
+    expect(eu.getGlobalHandler()).toBe(null)
+  })
+
+  it('should not set a global error handler when enabledErrorTypes.unhandledExceptions=false', () => {
+    const client = new Client({
+      apiKey: 'API_KEY_YEAH',
+      enabledErrorTypes: { unhandledExceptions: false, unhandledRejections: false }
+    })
+    const eu = new MockErrorUtils()
+    client.use(plugin, eu)
+    expect(eu.getGlobalHandler()).toBe(null)
+  })
+
+  it('should call through to an existing handler', done => {
     const client = new Client({ apiKey: 'API_KEY_YEAH' })
     client._setDelivery(client => ({
       sendSession: () => {},

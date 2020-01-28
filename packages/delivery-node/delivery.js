@@ -18,7 +18,7 @@ module.exports = (client) => ({
           'Bugsnag-Payload-Version': '4',
           'Bugsnag-Sent-At': isoDate()
         },
-        body: payload.event(event, client._config.filters),
+        body: payload.event(event, client._config.redactedKeys),
         agent: client._config.agent
       }, (err, body) => _cb(err))
     } catch (e) {
@@ -40,7 +40,7 @@ module.exports = (client) => ({
           'Bugsnag-Payload-Version': '1',
           'Bugsnag-Sent-At': isoDate()
         },
-        body: payload.session(session, client._config.filters),
+        body: payload.session(session, client._config.redactedKeys),
         agent: client._config.agent
       }, err => _cb(err))
     } catch (e) {

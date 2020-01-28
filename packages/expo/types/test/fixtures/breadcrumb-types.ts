@@ -1,5 +1,5 @@
 import Bugsnag from "../../..";
-Bugsnag.init({
+Bugsnag.start({
   apiKey: 'api_key',
   onError: (event) => {
     event.breadcrumbs.map(breadcrumb => {

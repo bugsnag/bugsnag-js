@@ -9,13 +9,16 @@
       Bugsnag.start({
         apiKey: API_KEY,
         endpoints: { notify: ENDPOINT, sessions: '/noop' },
-        releaseStage: 'production'
+        enabledErrorTypes: { unhandledExceptions: false, unhandledRejections: false }
       })
     </script>
   </head>
   <body>
     <script>
-      Bugsnag.notify(new Error('release stage does work'))
+      throw new Error('auto detect errors does not work')
+    </script>
+    <script>
+      Bugsnag.notify(new Error('manual notify does work'))
     </script>
   </body>
 </html>

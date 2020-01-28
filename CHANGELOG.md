@@ -3,7 +3,7 @@
 ## TBD
 
 - Migrate lint tooling to ESLint for both .js and .ts source files [#644](https://github.com/bugsnag/bugsnag-js/pull/644)
-- Rename `autoNotify` -> `autoDetectErrors`, and add `autoDetectUnhandledRejections` option [#648](https://github.com/bugsnag/bugsnag-js/pull/648)
+- Rename `autoNotify` -> `autoDetectErrors`, and add `enabledErrorTypes` option for granularity [#706](https://github.com/bugsnag/bugsnag-js/pull/706)
 - Rename `autoCaptureSessions` -> `autoTrackSessions` and simplify validation logic [#647](https://github.com/bugsnag/bugsnag-js/pull/647)
 - Rename `report` to `event` [#646](https://github.com/bugsnag/bugsnag-js/pull/646)
 - Rename `notifyReleaseStages` -> `enabledReleaseStages` [#649](https://github.com/bugsnag/bugsnag-js/pull/649)
@@ -33,6 +33,7 @@
 - Add static `Bugsnag` client interface [#685](https://github.com/bugsnag/bugsnag-js/pull/685)
 - Add `getUser()` and `setUser()` methods to `Session` [#692](https://github.com/bugsnag/bugsnag-js/pull/692)
 - Ensure automatic context is not used when `setContext(null)` has been called [#694](https://github.com/bugsnag/bugsnag-js/pull/694)
+- Rename `filters` option to `redactedKeys` [#704](https://github.com/bugsnag/bugsnag-js/pull/704)
 
 ## 6.5.1 (2020-01-08)
 

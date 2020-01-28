@@ -21,6 +21,18 @@ describe('plugin: window onerror', () => {
     expect(window.onerror).toBe(undefined)
   })
 
+  it('should not add a window.onerror event handler when enabledErrorTypes.unhandledExceptions=false', () => {
+    const client = new Client({
+      apiKey: 'API_KEY_YEAH',
+      enabledErrorTypes: {
+        unhandledExceptions: false,
+        unhandledRejections: false
+      }
+    })
+    client.use(plugin, window)
+    expect(window.onerror).toBe(undefined)
+  })
+
   describe('window.onerror function', () => {
     it('captures uncaught errors in timer callbacks', done => {
       const client = new Client({ apiKey: 'API_KEY_YEAH' })

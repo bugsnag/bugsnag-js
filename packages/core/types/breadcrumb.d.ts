@@ -1,4 +1,4 @@
-import { BreadcrumbType, BreadcrumbMetadataValue } from "./common";
+import { BreadcrumbType, BreadcrumbMetadataValue } from './common'
 
 declare class Breadcrumb {
   public message: string;
@@ -7,4 +7,4 @@ declare class Breadcrumb {
   public timestamp: string;
 }
 
-export default Breadcrumb;
+export default Breadcrumb

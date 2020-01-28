@@ -1,9 +1,9 @@
 import React from 'react'
 import App, { Container } from 'next/app'
-import bugsnagClient from '../lib/bugsnag'
+import Bugsnag from '../lib/bugsnag'
 import Error from './_error'
 
-const ErrorBoundary = bugsnagClient.getPlugin('react')
+const ErrorBoundary = Bugsnag.getPlugin('react')
 
 export default class MyApp extends App {
   static async getInitialProps ({ Component, router, ctx }) {

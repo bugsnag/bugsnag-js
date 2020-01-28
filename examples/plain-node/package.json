@@ -6,6 +6,6 @@
     "start": "node app"
   },
   "dependencies": {
-    "@bugsnag/js": "^5.0.0-alpha.1"
+    "@bugsnag/js": "^7.0.0-alpha.2"
   }
 }

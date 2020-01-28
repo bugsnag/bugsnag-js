@@ -5,8 +5,8 @@
     "start": "node app"
   },
   "dependencies": {
-    "@bugsnag/js": "^5.0.0-alpha.1",
-    "@bugsnag/plugin-koa": "^5.0.0-alpha.1",
+    "@bugsnag/js": "^7.0.0-alpha.2",
+    "@bugsnag/plugin-koa": "^7.0.0-alpha.1",
     "koa": "^2.6.1",
     "koa-mount": "^4.0.0",
     "koa-router": "^7.4.0",
