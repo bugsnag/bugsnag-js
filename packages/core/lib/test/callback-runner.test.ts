@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import runCallbacks from '../callback-runner'
 import { NodeCallbackType } from '../async-every'
 
 interface TestEvent {
-  name: string;
-  age?: number;
-  promiseRan?: string;
+  name: string
+  age?: number
+  promiseRan?: string
 }
 
 type Callback<T> = (event: T, cb: NodeCallbackType<boolean>) => void;
@@ -12,7 +13,7 @@ type Callback<T> = (event: T, cb: NodeCallbackType<boolean>) => void;
 describe('runCallbacks()', () => {
   it('works with sync/async/promises', done => {
     const event: TestEvent = { name: 'ben' }
-    const callbacks: Callback<TestEvent>[] = [
+    const callbacks: Array<Callback<TestEvent>> = [
       (event) => { event.age = 10 },
       (event, cb) => { setTimeout(() => cb(null, true), 5) },
       (event) => new Promise((resolve) => {
@@ -32,7 +33,7 @@ describe('runCallbacks()', () => {
   it('continues after errors (throw)', done => {
     const event = {}
     let called = false
-    const callbacks: Callback<{}>[] = [
+    const callbacks: Array<Callback<{}>> = [
       (event) => {},
       (event) => { throw new Error('derp') },
       (event) => { called = true }
@@ -47,7 +48,7 @@ describe('runCallbacks()', () => {
   it('continues after errors (promise reject)', done => {
     const event = {}
     let called = false
-    const callbacks: Callback<{}>[] = [
+    const callbacks: Array<Callback<{}>> = [
       (event) => new Promise((resolve) => resolve()),
       (event) => new Promise((resolve, reject) => reject(new Error('derp'))),
       (event) => new Promise((resolve) => {
@@ -65,7 +66,7 @@ describe('runCallbacks()', () => {
   it('continues after errors (cb(err))', done => {
     const event = {}
     let called = false
-    const callbacks: Callback<{}>[] = [
+    const callbacks: Array<Callback<{}>> = [
       (event, cb) => cb(null),
       (event, cb) => cb(new Error('derp')),
       (event, cb) => {

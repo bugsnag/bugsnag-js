@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 const Client = require('../client')
 const Event = require('../event')
 const Session = require('../session')
