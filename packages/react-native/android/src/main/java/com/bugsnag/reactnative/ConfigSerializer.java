@@ -29,7 +29,7 @@ public class ConfigSerializer implements WritableMapSerializer<ImmutableConfig> 
         }
 
         map.putString("buildUuid", config.getBuildUuid());
-        map.putBoolean("sendThreads", config.getSendThreads());
+        // map.putBoolean("sendThreads", config.getSendThreads());
         map.putBoolean("autoTrackSessions", config.getAutoTrackSessions());
         // map.putBoolean("detectAnrs", config.getDetectAnrs());
         // map.putBoolean("detectNdkCrashes", config.getDetectNdkCrashes());

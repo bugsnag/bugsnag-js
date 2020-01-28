@@ -47,7 +47,7 @@ public class MainApplication extends Application implements ReactApplication {
   public void onCreate() {
     super.onCreate();
     BugsnagReactNativePlugin.register();
-    Bugsnag.init(this);
+    Bugsnag.start(this);
     SoLoader.init(this, /* native exopackage */ false);
   }
 }
