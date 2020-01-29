@@ -7,20 +7,20 @@ describe('plugin: react native session', () => {
   it('adds missing methods and forwards calls to native client', () => {
     const NativeClient = {
       startSession: () => {},
-      stopSession: () => {},
+      pauseSession: () => {},
       resumeSession: () => {}
     }
 
     const startSpy = spyOn(NativeClient, 'startSession')
-    const stopSpy = spyOn(NativeClient, 'stopSession')
+    const pauseSpy = spyOn(NativeClient, 'pauseSession')
     const resumeSpy = spyOn(NativeClient, 'resumeSession')
 
     const c = new Client({ apiKey: 'api_key' })
     c.use(plugin, NativeClient)
     c.startSession()
     expect(startSpy).toHaveBeenCalledTimes(1)
-    c.stopSession()
-    expect(stopSpy).toHaveBeenCalledTimes(1)
+    c.pauseSession()
+    expect(pauseSpy).toHaveBeenCalledTimes(1)
     c.resumeSession()
     expect(resumeSpy).toHaveBeenCalledTimes(1)
   })
