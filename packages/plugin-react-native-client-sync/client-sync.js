@@ -21,16 +21,16 @@ module.exports = {
     }
 
     const origAddMetadata = client.addMetadata
-    client.addMetadata = function () {
+    client.addMetadata = function (key) {
       const ret = origAddMetadata.apply(this, arguments)
-      NativeClient.updateMetaData(client._metadata)
+      NativeClient.updateMetadata(key, client._metadata[key])
       return ret
     }
 
     const origClearMetadata = client.clearMetadata
-    client.clearMetadata = function () {
+    client.clearMetadata = function (key) {
       const ret = origClearMetadata.apply(this, arguments)
-      NativeClient.updateMetaData(client._metadata)
+      NativeClient.updateMetaData(key, client._metadata[key])
       return ret
     }
 
@@ -53,16 +53,17 @@ module.exports = {
 
     nativeSubscribe(event => {
       switch (event.type) {
-        case 'USER_UPDATE':
-          origSetUser.call(client, event.value.id, event.value.email, event.value.name)
+        case 'UserUpdate':
+          origSetUser.call(client, event.data.id, event.data.email, event.data.name)
           break
-        case 'METADATA_UPDATE':
-          origAddMetadata.call(client, event.value)
+        case 'MetadataUpdate':
+          Object.keys(event.data).forEach(k => {
+            origAddMetadata.call(client, k, event.data[k])
+          })
           break
-        case 'CONTEXT_UPDATE':
-          origSetContext.call(client, event.value)
+        case 'ContextUpdate':
+          origSetContext.call(client, event.data)
           break
-        // etc.
         default:
       }
     })
