@@ -49,6 +49,9 @@ app.use(function * (next) {
     this.throw(400, 'thrown')
   } else if (this.path === '/throw-non-error') {
     throw 'error' // eslint-disable-line
+  } else if (this.path === '/handled') {
+    this.bugsnag.notify(new Error('handled'))
+    yield next
   } else {
     yield next
   }

@@ -75,6 +75,11 @@ server.get('/internal', function (req, res, next) {
   return next(err)
 })
 
+server.get('/handled', function (req, res, next) {
+  req.bugsnag.notify(new Error('handled'))
+  res.end('OK')
+})
+
 server.on('restifyError', middleware.errorHandler)
 
 server.listen(80)
