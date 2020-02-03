@@ -4,7 +4,11 @@
 
 ### Changed
 
-- (node): Use `util.inspect()` on plain object errors when logging their value [#696](https://github.com/bugsnag/bugsnag-js/pull/696) 
+- (node): Use `util.inspect()` on plain object errors when logging their value [#696](https://github.com/bugsnag/bugsnag-js/pull/696)
+
+### Fixed
+
+- (delivery-x-domain-request): Correct `this`->`client` reference when attempting to log an error [#722](https://github.com/bugsnag/bugsnag-js/pull/722) 
 
 ## 6.5.1 (2020-01-08)
 
