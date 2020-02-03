@@ -29,7 +29,7 @@ module.exports = (client, win = window) => ({
       try {
         req.send(payload.session(session, client.config.filters))
       } catch (e) {
-        this._logger.error(e)
+        client._logger.error(e)
         cb(e)
       }
     }, 0)
