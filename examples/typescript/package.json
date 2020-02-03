@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "build": "tsc",
-    "start": "node src/app.js"
+    "start": "npm run build && node src/app.js"
   },
   "dependencies": {
     "@bugsnag/core": "^5.0.0-alpha.1",
