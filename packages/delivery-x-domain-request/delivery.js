@@ -1,5 +1,4 @@
 const payload = require('@bugsnag/core/lib/json-payload')
-const { isoDate } = require('@bugsnag/core/lib/es-utils')
 
 module.exports = (client, win = window) => ({
   sendEvent: (event, cb = () => {}) => {
@@ -36,8 +35,11 @@ module.exports = (client, win = window) => ({
   }
 })
 
-const getApiUrl = (config, endpoint, version, win) =>
-  `${matchPageProtocol(config.endpoints[endpoint], win.location.protocol)}?apiKey=${encodeURIComponent(config.apiKey)}&payloadVersion=${version}&sentAt=${encodeURIComponent(isoDate())}`
+const getApiUrl = (config, endpoint, version, win) => {
+  const isoDate = JSON.parse(JSON.stringify(new Date()))
+  const url = matchPageProtocol(config.endpoints[endpoint], win.location.protocol)
+  return `${url}?apiKey=${encodeURIComponent(config.apiKey)}&payloadVersion=${version}&sentAt=${encodeURIComponent(isoDate)}`
+}
 
 const matchPageProtocol = module.exports._matchPageProtocol = (endpoint, pageProtocol) =>
   pageProtocol === 'http:'

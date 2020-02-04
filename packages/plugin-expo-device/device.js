@@ -1,6 +1,5 @@
 const Constants = require('expo-constants').default
 const { Dimensions, Platform } = require('react-native')
-const { isoDate } = require('@bugsnag/core/lib/es-utils')
 const rnVersion = require('react-native/package.json').version
 
 module.exports = {
@@ -41,7 +40,7 @@ module.exports = {
     })
 
     client.addOnError(event => {
-      event.device = { ...event.device, time: isoDate(), orientation, ...device }
+      event.device = { ...event.device, time: new Date(), orientation, ...device }
       event.addMetadata('device', {
         isDevice: Constants.isDevice,
         appOwnership: Constants.appOwnership

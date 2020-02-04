@@ -1,7 +1,7 @@
 import { App, Device, User } from './common'
 
 declare class Session {
-  public startedAt: string;
+  public startedAt: Date;
   public id: string;
 
   public device?: Device;

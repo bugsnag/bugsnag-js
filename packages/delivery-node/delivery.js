@@ -1,5 +1,4 @@
 const payload = require('@bugsnag/core/lib/json-payload')
-const { isoDate } = require('@bugsnag/core/lib/es-utils')
 const request = require('./request')
 
 module.exports = (client) => ({
@@ -16,7 +15,7 @@ module.exports = (client) => ({
           'Content-Type': 'application/json',
           'Bugsnag-Api-Key': event.apiKey || client._config.apiKey,
           'Bugsnag-Payload-Version': '4',
-          'Bugsnag-Sent-At': isoDate()
+          'Bugsnag-Sent-At': (new Date()).toISOString()
         },
         body: payload.event(event, client._config.redactedKeys),
         agent: client._config.agent
@@ -38,7 +37,7 @@ module.exports = (client) => ({
           'Content-Type': 'application/json',
           'Bugsnag-Api-Key': client._config.apiKey,
           'Bugsnag-Payload-Version': '1',
-          'Bugsnag-Sent-At': isoDate()
+          'Bugsnag-Sent-At': (new Date()).toISOString()
         },
         body: payload.session(session, client._config.redactedKeys),
         agent: client._config.agent
