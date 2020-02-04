@@ -59,8 +59,8 @@ const wrapHistoryFn = (client, target, fn, win) => {
   const orig = target[fn]
   target[fn] = (state, title, url) => {
     client.leaveBreadcrumb(`History ${fn}`, stateChangeToMetadata(win, state, title, url), 'navigation')
-    // if throttle plugin is in use, refresh the event sent count
-    if (typeof client.refresh === 'function') client.refresh()
+    // if throttle plugin is in use, reset the event sent count
+    if (typeof client.resetEventCount === 'function') client.resetEventCount()
     // if the client is operating in auto session-mode, a new route should trigger a new session
     if (client._config.autoTrackSessions) client.startSession()
     // Internet Explorer will convert `undefined` to a string when passed, causing an unintended redirect

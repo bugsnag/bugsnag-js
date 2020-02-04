@@ -16,7 +16,7 @@ module.exports = {
       n++
     })
 
-    client.refresh = () => { n = 0 }
+    client.resetEventCount = () => { n = 0 }
   },
   configSchema: {
     maxEvents: {

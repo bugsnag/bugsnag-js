@@ -79,7 +79,7 @@ const Bugsnag = {
   }
 }
 
-map(keys(Client.prototype), (m) => {
+map(['resetEventCount'].concat(keys(Client.prototype)), (m) => {
   if (/^_/.test(m)) return
   Bugsnag[m] = function () {
     if (!Bugsnag._client) return console.log(`Bugsnag.${m}() was called before Bugsnag.start()`)
