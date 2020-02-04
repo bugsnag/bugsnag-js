@@ -17,10 +17,9 @@ describe('plugin: device', () => {
     client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
     client.notify(new Error('noooo'))
 
-    const ISO_8601 = /^\d{4}(-\d\d(-\d\d(T\d\d:\d\d(:\d\d)?(\.\d+)?(([+-]\d\d:\d\d)|Z)?)?)?)?$/i
     expect(payloads.length).toEqual(1)
     expect(payloads[0].events[0].device).toBeDefined()
-    expect(payloads[0].events[0].device.time).toMatch(ISO_8601)
+    expect(payloads[0].events[0].device.time instanceof Date).toBe(true)
     expect(payloads[0].events[0].device.locale).toBe(navigator.browserLanguage)
     expect(payloads[0].events[0].device.userAgent).toBe(navigator.userAgent)
   })

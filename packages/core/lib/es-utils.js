@@ -47,20 +47,4 @@ const keys = obj => {
 // Array#isArray
 const isArray = obj => Object.prototype.toString.call(obj) === '[object Array]'
 
-const _pad = n => n < 10 ? `0${n}` : n
-
-// Date#toISOString
-const isoDate = () => {
-  // from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString
-  const d = new Date()
-  return d.getUTCFullYear() +
-    '-' + _pad(d.getUTCMonth() + 1) +
-    '-' + _pad(d.getUTCDate()) +
-    'T' + _pad(d.getUTCHours()) +
-    ':' + _pad(d.getUTCMinutes()) +
-    ':' + _pad(d.getUTCSeconds()) +
-    '.' + (d.getUTCMilliseconds() / 1000).toFixed(3).slice(2, 5) +
-    'Z'
-}
-
-module.exports = { map, reduce, filter, includes, keys, isArray, isoDate }
+module.exports = { map, reduce, filter, includes, keys, isArray }

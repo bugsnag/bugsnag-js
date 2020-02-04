@@ -1,7 +1,5 @@
-const { isoDate } = require('./lib/es-utils')
-
 class Breadcrumb {
-  constructor (message, metadata, type, timestamp = isoDate()) {
+  constructor (message, metadata, type, timestamp = new Date()) {
     this.type = type
     this.message = message
     this.metadata = metadata

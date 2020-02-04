@@ -1,5 +1,4 @@
 const payload = require('@bugsnag/core/lib/json-payload')
-const { isoDate } = require('@bugsnag/core/lib/es-utils')
 const UndeliveredPayloadQueue = require('./queue')
 const NetworkStatus = require('./network-status')
 const RedeliveryLoop = require('./redelivery')
@@ -48,7 +47,7 @@ module.exports = (client, fetch = global.fetch) => {
             'Content-Type': 'application/json',
             'Bugsnag-Api-Key': event.apiKey || client._config.apiKey,
             'Bugsnag-Payload-Version': '4',
-            'Bugsnag-Sent-At': isoDate()
+            'Bugsnag-Sent-At': (new Date()).toISOString()
           },
           body
         }
@@ -78,7 +77,7 @@ module.exports = (client, fetch = global.fetch) => {
             'Content-Type': 'application/json',
             'Bugsnag-Api-Key': client._config.apiKey,
             'Bugsnag-Payload-Version': '1',
-            'Bugsnag-Sent-At': isoDate()
+            'Bugsnag-Sent-At': (new Date()).toISOString()
           },
           body
         }
