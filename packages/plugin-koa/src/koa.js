@@ -22,14 +22,16 @@ module.exports = {
 
       // extract request info and pass it to the relevant bugsnag properties
       const { request, metadata } = getRequestAndMetadataFromCtx(ctx)
-      requestClient.addMetadata('request', metadata.request)
+      requestClient.addMetadata('request', metadata)
+      requestClient.addOnError((event) => {
+        event.request = { ...event.request, ...request }
+      }, true)
 
       try {
         await next()
       } catch (err) {
         if (err.status === undefined || err.status >= 500) {
           const event = client.Event.create(err, false, handledState, 'koa middleware', 1)
-          event.request = request
           ctx.bugsnag._notify(event)
         }
         if (!ctx.response.headerSent) ctx.response.status = err.status || 500
@@ -53,13 +55,15 @@ module.exports = {
       // extract request info and pass it to the relevant bugsnag properties
       const { request, metadata } = getRequestAndMetadataFromCtx(this)
       requestClient.addMetadata('request', metadata)
+      requestClient.addOnError((event) => {
+        event.request = { ...event.request, ...request }
+      }, true)
 
       try {
         yield next
       } catch (err) {
         if (err.status === undefined || err.status >= 500) {
           const event = client.Event.create(err, false, handledState, 'koa middleware', 1)
-          event.request = request
           this.bugsnag._notify(event)
         }
         if (!this.headerSent) this.status = err.status || 500
