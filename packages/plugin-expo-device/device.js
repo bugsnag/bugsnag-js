@@ -24,7 +24,7 @@ module.exports = {
     const device = {
       id: Constants.installationId,
       manufacturer: Constants.platform.ios ? 'Apple' : undefined,
-      modelName: Constants.platform.ios ? Constants.platform.ios.model : undefined,
+      model: Constants.platform.ios ? Constants.platform.ios.model : undefined,
       modelNumber: Constants.platform.ios ? Constants.platform.ios.platform : undefined,
       osName: Platform.OS,
       osVersion: Constants.platform.ios ? Constants.platform.ios.systemVersion : Constants.systemVersion,

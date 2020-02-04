@@ -91,6 +91,8 @@ describe('plugin: expo device', () => {
         const now = (new Date()).toISOString()
         expect(now >= r.events[0].device.time).toBe(true)
         expect(before <= r.events[0].device.time).toBe(true)
+        expect(r.events[0].device.model).toBe(IOS_MODEL)
+        expect(r.events[0].device.modelNumber).toBe(IOS_PLATFORM)
         expect(r.events[0].device.osName).toBe('ios')
         expect(r.events[0].device.osVersion).toBe(IOS_VERSION)
         expect(r.events[0].device.runtimeVersions).toEqual({
