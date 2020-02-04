@@ -1,5 +1,7 @@
 const { filter, reduce, keys, isArray, includes } = require('./lib/es-utils')
-const { intRange, stringWithLength, listOfFunctions } = require('./lib/validators')
+const intRange = require('./lib/validators/int-range')
+const stringWithLength = require('./lib/validators/string-with-length')
+const listOfFunctions = require('./lib/validators/list-of-functions')
 
 const BREADCRUMB_TYPES = ['navigation', 'request', 'process', 'log', 'user', 'state', 'error', 'manual']
 const defaultErrorTypes = { unhandledExceptions: true, unhandledRejections: true }

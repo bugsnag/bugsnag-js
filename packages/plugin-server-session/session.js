@@ -1,5 +1,5 @@
 const { includes } = require('@bugsnag/core/lib/es-utils')
-const { intRange } = require('@bugsnag/core/lib/validators')
+const intRange = require('@bugsnag/core/lib/validators/int-range')
 const clone = require('@bugsnag/core/lib/clone-client')
 const SessionTracker = require('./tracker')
 const Backoff = require('backo')

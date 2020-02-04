@@ -1,6 +1,6 @@
 const { schema } = require('@bugsnag/core/config')
 const { reduce } = require('@bugsnag/core/lib/es-utils')
-const { stringWithLength } = require('@bugsnag/core/lib/validators')
+const stringWithLength = require('@bugsnag/core/lib/validators/string-with-length')
 const os = require('os')
 const process = require('process')
 
