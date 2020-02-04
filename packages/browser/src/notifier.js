@@ -7,7 +7,8 @@ const Event = require('@bugsnag/core/event')
 const Session = require('@bugsnag/core/session')
 const Breadcrumb = require('@bugsnag/core/breadcrumb')
 
-const { map, keys } = require('@bugsnag/core/lib/es-utils')
+const map = require('@bugsnag/core/lib/es-utils/map')
+const keys = require('@bugsnag/core/lib/es-utils/keys')
 
 // extend the base config schema with some browser-specific options
 const schema = { ...require('@bugsnag/core/config').schema, ...require('./config') }

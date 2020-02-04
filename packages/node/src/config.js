@@ -1,5 +1,4 @@
 const { schema } = require('@bugsnag/core/config')
-const { reduce } = require('@bugsnag/core/lib/es-utils')
 const stringWithLength = require('@bugsnag/core/lib/validators/string-with-length')
 const os = require('os')
 const process = require('process')
@@ -46,7 +45,7 @@ module.exports = {
 }
 
 const getPrefixedConsole = () => {
-  return reduce(['debug', 'info', 'warn', 'error'], (accum, method) => {
+  return ['debug', 'info', 'warn', 'error'].reduce((accum, method) => {
     const consoleMethod = console[method] || console.log
     accum[method] = consoleMethod.bind(console, '[bugsnag]')
     return accum

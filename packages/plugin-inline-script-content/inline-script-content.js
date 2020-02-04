@@ -1,4 +1,7 @@
-const { map, reduce, filter } = require('@bugsnag/core/lib/es-utils')
+const map = require('@bugsnag/core/lib/es-utils/map')
+const reduce = require('@bugsnag/core/lib/es-utils/reduce')
+const filter = require('@bugsnag/core/lib/es-utils/filter')
+
 const MAX_LINE_LENGTH = 200
 const MAX_SCRIPT_LENGTH = 500000
 

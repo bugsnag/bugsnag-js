@@ -1,4 +1,3 @@
-const { includes } = require('@bugsnag/core/lib/es-utils')
 const intRange = require('@bugsnag/core/lib/validators/int-range')
 const clone = require('@bugsnag/core/lib/clone-client')
 const SessionTracker = require('./tracker')
@@ -44,7 +43,7 @@ module.exports = {
 
 const sendSessionSummary = client => sessionCounts => {
   // exit early if the current releaseStage is not enabled
-  if (client._config.enabledReleaseStages !== null && !includes(client._config.enabledReleaseStages, client._config.releaseStage)) {
+  if (client._config.enabledReleaseStages !== null && !client._config.enabledReleaseStages.includes(client._config.releaseStage)) {
     client._logger.warn('Session not sent due to releaseStage/enabledReleaseStages configuration')
     return
   }

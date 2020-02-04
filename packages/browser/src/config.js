@@ -1,5 +1,5 @@
 const { schema } = require('@bugsnag/core/config')
-const { map } = require('@bugsnag/core/lib/es-utils')
+const map = require('@bugsnag/core/lib/es-utils/map')
 const stringWithLength = require('@bugsnag/core/lib/validators/string-with-length')
 
 module.exports = {
