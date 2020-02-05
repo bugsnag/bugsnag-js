@@ -68,6 +68,9 @@ declare class Client {
   public use(plugin: Plugin, ...args: any[]): Client;
   public getPlugin(name: string): any;
 
+  // implemented on the browser notifier only
+  public resetEventCount?(): void;
+
   // access to internal classes
   public Breadcrumb: typeof Breadcrumb;
   public Event: typeof Event;
