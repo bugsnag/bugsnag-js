@@ -13,7 +13,7 @@ import Event from './event'
 import Session from './session'
 
 declare class Client {
-  private constructor();
+  protected constructor();
 
   // reporting errors
   public notify(
