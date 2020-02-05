@@ -11,7 +11,6 @@ const schema = {
     message: 'should be a string'
   }
 }
-const ISO_8601 = /^\d{4}(-\d\d(-\d\d(T\d\d:\d\d(:\d\d)?(\.\d+)?(([+-]\d\d:\d\d)|Z)?)?)?)?$/i
 
 describe('plugin: node device', () => {
   it('should set device = { hostname, runtimeVersions } add an onError callback which adds device time', done => {
@@ -24,7 +23,7 @@ describe('plugin: node device', () => {
     client._setDelivery(client => ({
       sendEvent: (payload) => {
         expect(payload.events[0].device).toBeDefined()
-        expect(payload.events[0].device.time).toMatch(ISO_8601)
+        expect(payload.events[0].device.time instanceof Date).toBe(true)
         expect(payload.events[0].device.hostname).toBe('test-machine.local')
         expect(payload.events[0].device.runtimeVersions).toBeDefined()
         expect(payload.events[0].device.runtimeVersions.node).toEqual(process.versions.node)

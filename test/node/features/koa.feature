@@ -70,7 +70,21 @@ Scenario: throwing non-Error error
   And the exception "message" matches "^koa middleware received a non-error\."
   And the exception "type" equals "nodejs"
 
-Scenario: A non-5XX error created with with ctx.throw()
+Scenario: A non-5XX error created with ctx.throw()
   Then I open the URL "http://koa/ctx-throw-400"
   And I wait for 1 second
   Then I should receive no requests
+
+Scenario: A handled error with ctx.bugsnag.notify()
+  Then I open the URL "http://koa/handled"
+  And I wait to receive a request
+  Then the request is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
+  And the event "unhandled" is false
+  And the event "severity" equals "warning"
+  And the exception "errorClass" equals "Error"
+  And the exception "message" equals "handled"
+  And the exception "type" equals "nodejs"
+  And the "file" of stack frame 0 equals "scenarios/app.js"
+  And the event "request.url" equals "http://koa/handled"
+  And the event "request.httpMethod" equals "GET"
+  And the event "request.clientIp" is not null

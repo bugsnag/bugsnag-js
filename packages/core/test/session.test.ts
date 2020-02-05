@@ -5,7 +5,7 @@ describe('@bugsnag/core/session', () => {
     it('returns the correct data structure', () => {
       const s = new Session().toJSON()
       expect(typeof s.id).toBe('string')
-      expect(typeof s.startedAt).toBe('string')
+      expect(s.startedAt instanceof Date).toBe(true)
       expect(s.events).toEqual({ handled: 0, unhandled: 0 })
     })
   })

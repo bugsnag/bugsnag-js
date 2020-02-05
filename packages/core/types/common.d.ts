@@ -105,7 +105,7 @@ interface Device {
   runtimeVersions?: {
     [key: string]: any
   }
-  time?: string
+  time?: Date
   userAgent?: string
   [key: string]: any
 }

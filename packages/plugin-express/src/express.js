@@ -27,11 +27,13 @@ module.exports = {
       // extract request info and pass it to the relevant bugsnag properties
       const { request, metadata } = getRequestAndMetadataFromReq(req)
       requestClient.addMetadata('request', metadata)
+      requestClient.addOnError((event) => {
+        event.request = { ...event.request, ...request }
+      }, true)
 
       // unhandled errors caused by this request
       dom.on('error', (err) => {
         const event = client.Event.create(err, false, handledState, 'express middleware', 1)
-        event.request = request
         req.bugsnag._notify(event, () => {}, (e, event) => {
           if (e) client._logger.error('Failed to send event to Bugsnag')
           req.bugsnag._config.onUncaughtException(err, event, client._logger)

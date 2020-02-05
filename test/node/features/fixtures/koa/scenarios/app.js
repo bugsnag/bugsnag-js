@@ -51,6 +51,9 @@ app.use(async (ctx, next) => {
     ctx.throw(400, 'thrown')
   } else if (ctx.path === '/throw-non-error') {
     throw 'error' // eslint-disable-line
+  } else if (ctx.path === '/handled') {
+    ctx.bugsnag.notify(new Error('handled'))
+    await next()
   } else {
     await next()
   }
