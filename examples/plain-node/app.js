@@ -26,9 +26,6 @@ console.log(`
   h = report a (h)andled error
     Creates a new error and reports it with a call to .notify(err).
 
-  l = (l)eave a breadcrumb
-    Calls the leaveBreadcrumb() method.
-
   b = calling notify with a (b)efore send callback
     Runs custom logic before a report is sent. This contrived example will
     pseudo-randomly prevent 50% of the reports from sending.
@@ -40,7 +37,7 @@ process.stdin.on('data', function (d) {
   switch (d) {
     case 'u': return unhandledError()
     case 'h': return handledError()
-    case 'l': return leaveBreadcrumb()
+    //case 'l': return leaveBreadcrumb()
     case 'b': return beforeSend()
     default: return unknown(d)
   }
@@ -62,6 +59,7 @@ function handledError () {
   bugsnagClient.notify(new Error('scheduling clash'))
 }
 
+// TODO Breadcrumbs not yet implemented for Node
 function leaveBreadcrumb () {
   console.log('leaving a breadcrumb…')
   // you can record all kinds of events which will be sent along with error reports

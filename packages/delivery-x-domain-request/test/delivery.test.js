@@ -42,6 +42,30 @@ describe('delivery:XDomainRequest', () => {
     })
   })
 
+  it('calls back with an error when report sending fails', done => {
+    // mock XDomainRequest class
+    function XDomainRequest () {}
+    XDomainRequest.prototype.open = function (method, url) {
+      this.method = method
+      this.url = url
+    }
+    XDomainRequest.prototype.send = function (method, url) {
+      throw new Error('send error')
+    }
+    const window = { XDomainRequest, location: { protocol: 'https://' } }
+    const payload = { sample: 'payload' }
+    const config = {
+      apiKey: 'aaaaaaaa',
+      endpoints: { notify: '/echo/', sessions: '/sessions/' },
+      filters: []
+    }
+    delivery({ _logger: { error: () => {} }, config }, window).sendReport(payload, (err) => {
+      expect(err).not.toBe(null)
+      expect(err.message).toBe('send error')
+      done()
+    })
+  })
+
   it('sends sessions successfully', done => {
     const requests = []
 
@@ -77,6 +101,30 @@ describe('delivery:XDomainRequest', () => {
         /\/sessions\/\?apiKey=aaaaaaaa&payloadVersion=1&sentAt=\d{4}-\d{2}-\d{2}T\d{2}%3A\d{2}%3A\d{2}\.\d{3}Z/
       )
       expect(requests[0].data).toBe(JSON.stringify(payload))
+      done()
+    })
+  })
+
+  it('calls back with an error when session sending fails', done => {
+    // mock XDomainRequest class
+    function XDomainRequest () {}
+    XDomainRequest.prototype.open = function (method, url) {
+      this.method = method
+      this.url = url
+    }
+    XDomainRequest.prototype.send = function (method, url) {
+      throw new Error('send error')
+    }
+    const window = { XDomainRequest, location: { protocol: 'https://' } }
+    const payload = { sample: 'payload' }
+    const config = {
+      apiKey: 'aaaaaaaa',
+      endpoints: { notify: '/echo/', sessions: '/sessions/' },
+      filters: []
+    }
+    delivery({ _logger: { error: () => {} }, config }, window).sendSession(payload, (err) => {
+      expect(err).not.toBe(null)
+      expect(err.message).toBe('send error')
       done()
     })
   })
