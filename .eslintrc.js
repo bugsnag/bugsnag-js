@@ -1,10 +1,11 @@
 const ruleOverrides = {
-  // TODO CHECK THESE
+  // Disable preferring Promise-based async tests
   'jest/no-test-callback': 'off',
+
+  // Let TypeScript inference work without being verbose
   '@typescript-eslint/explicit-function-return-type': 'off',
-  '@typescript-eslint/no-unused-vars': 'off',
-  '@typescript-eslint/camelcase': 'off',
   
+  // (Explicit) any has its valid use cases
   '@typescript-eslint/no-explicit-any': 'off',
         
   // This incorrectly fails on TypeScript method override signatures
