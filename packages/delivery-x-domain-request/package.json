@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/delivery-x-domain-request",
-  "version": "6.5.0",
+  "version": "6.5.2",
   "main": "delivery.js",
   "description": "@bugsnag/js delivery mechanism for IE 8, 9 and 10",
   "homepage": "https://www.bugsnag.com/",
