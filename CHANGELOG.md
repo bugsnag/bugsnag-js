@@ -2,40 +2,44 @@
 
 ## TBD
 
+### Added
+- Add `onBreadcrumb` and `onSession` callbacks. [#665](https://github.com/bugsnag/bugsnag-js/pull/665)
+- Add `pauseSession()` and `resumeSession()` methods to `Client` [#666](https://github.com/bugsnag/bugsnag-js/pull/666)
+- Add static `Bugsnag` client interface [#685](https://github.com/bugsnag/bugsnag-js/pull/685)
+- Add `getUser()` and `setUser()` methods to `Session` [#692](https://github.com/bugsnag/bugsnag-js/pull/692)
+
+### Changed
 - Migrate lint tooling to ESLint for both .js and .ts source files [#644](https://github.com/bugsnag/bugsnag-js/pull/644)
 - Rename `autoNotify` -> `autoDetectErrors`, and add `enabledErrorTypes` option for granularity [#706](https://github.com/bugsnag/bugsnag-js/pull/706)
 - Rename `autoCaptureSessions` -> `autoTrackSessions` and simplify validation logic [#647](https://github.com/bugsnag/bugsnag-js/pull/647)
 - Rename `report` to `event` [#646](https://github.com/bugsnag/bugsnag-js/pull/646)
 - Rename `notifyReleaseStages` -> `enabledReleaseStages` [#649](https://github.com/bugsnag/bugsnag-js/pull/649)
-- Remove individual breadcrumb flags in favour of `enabledBreadcrumbTypes`, rename `breadcrumb.{ name -> message, metaData -> metadata }`, and update `leaveBreadcrumb()` type signature to be more explicit [#650](https://github.com/bugsnag/bugsnag-js/pull/650)
 - Rename `beforeSend` -> `onError`, remove `event.ignore()` and refactor callback logic [#654](https://github.com/bugsnag/bugsnag-js/pull/654)
 - Update signature of `notify(err, opts?, cb?)` -> `notify(err, onError?, cb?)` for a canonical way to update events [#655](https://github.com/bugsnag/bugsnag-js/pull/655)
 - Simplify client configuration, and store resulting config privately [#656](https://github.com/bugsnag/bugsnag-js/pull/656)
 - User is now stored privately on `client` and `event` and updated via get/set methods [#657](https://github.com/bugsnag/bugsnag-js/pull/657)
+- Remove individual breadcrumb flags in favour of `enabledBreadcrumbTypes`, rename `breadcrumb.{ name -> message, metaData -> metadata }`, and update `leaveBreadcrumb()` type signature to be more explicit [#650](https://github.com/bugsnag/bugsnag-js/pull/650)
 - Rename `metaData` -> `metadata` and add consistent `add/get/clearMetadata()` methods to `Client`/`Event` for manipulating metadata explicitly, rather than mutating a property [#658](https://github.com/bugsnag/bugsnag-js/pull/658)
-- Remove non-public methods from `Client` interface: `logger()`, `delivery()` and `sessionDelegate()` [#659](https://github.com/bugsnag/bugsnag-js/pull/659)
 - Update `leaveBreadcrumb()` type signature to return `void`. [#661](https://github.com/bugsnag/bugsnag-js/pull/661)
-- Add `onBreadcrumb` and `onSession` callbacks. [#665](https://github.com/bugsnag/bugsnag-js/pull/665)
 - Refactor `notify()` to not accept events (they go via `_notify()` instead). Consolidate `Event` static methods into a single `.create()` utility, used by all automatic error detection components. [#664](https://github.com/bugsnag/bugsnag-js/pull/664)
-- Add methods to pause and resume sessions [#666](https://github.com/bugsnag/bugsnag-js/pull/666)
-- Add `pauseSession()` and `resumeSession()` methods to `Client` [#666](https://github.com/bugsnag/bugsnag-js/pull/666)
-- Remove `client.request` property [#672](https://github.com/bugsnag/bugsnag-js/pull/672)
-- Remove `client.device` property [#673](https://github.com/bugsnag/bugsnag-js/pull/673)
 - Stop applying default error class/message when none is supplied [#676](https://github.com/bugsnag/bugsnag-js/pull/676)
 - Remove Bugsnag* prefix from internal class names [#679](https://github.com/bugsnag/bugsnag-js/pull/679)
-- Remove `client.app` property [#677](https://github.com/bugsnag/bugsnag-js/pull/677)
 - Rename and make private the `Session` method `trackError()` -> `_track()` [#675](https://github.com/bugsnag/bugsnag-js/pull/675)
 - Update `Event` to support multiple errors [#680](https://github.com/bugsnag/bugsnag-js/pull/680)
-- Move breadcrumbs to a private property on `client._breadcrumbs` [#681](https://github.com/bugsnag/bugsnag-js/pull/681)
 - Move context to a private property on `Client`, and get/set via `getContext()/setContext()` [#681](https://github.com/bugsnag/bugsnag-js/pull/681)
 - Update `@bugsnag/safe-json-stringify` to replace redacted values with `[REDACTED]` [#683](https://github.com/bugsnag/bugsnag-js/pull/683)
 - Refactor type definitions [#682](https://github.com/bugsnag/bugsnag-js/pull/682)
-- Add static `Bugsnag` client interface [#685](https://github.com/bugsnag/bugsnag-js/pull/685)
-- Add `getUser()` and `setUser()` methods to `Session` [#692](https://github.com/bugsnag/bugsnag-js/pull/692)
 - Ensure automatic context is not used when `setContext(null)` has been called [#694](https://github.com/bugsnag/bugsnag-js/pull/694)
 - Rename `filters` option to `redactedKeys` [#704](https://github.com/bugsnag/bugsnag-js/pull/704)
 - Rename `device.modelName` to `device.model` [#726](https://github.com/bugsnag/bugsnag-js/pull/726)
 - Rename `client.refresh()` to `client.resetEventCount()` [#727](https://github.com/bugsnag/bugsnag-js/pull/727)
+
+### Removed
+- Remove non-public methods from `Client` interface: `logger()`, `delivery()` and `sessionDelegate()` [#659](https://github.com/bugsnag/bugsnag-js/pull/659)
+- Remove `client.request` property [#672](https://github.com/bugsnag/bugsnag-js/pull/672)
+- Remove `client.device` property [#673](https://github.com/bugsnag/bugsnag-js/pull/673)
+- Remove `client.app` property [#677](https://github.com/bugsnag/bugsnag-js/pull/677)
+- Move breadcrumbs to a private property on `client._breadcrumbs` [#681](https://github.com/bugsnag/bugsnag-js/pull/681)
 
 ## 6.5.1 (2020-01-08)
 
