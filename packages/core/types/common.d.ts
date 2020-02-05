@@ -134,3 +134,21 @@ export interface User {
   email?: string;
   name?: string
 }
+
+type ThreadType = 'cocoa' | 'android' | 'browserJs'
+export interface Thread {
+  id: string;
+  name: string;
+  errorReportingThread: boolean;
+  type: ThreadType;
+  stacktrace: Stackframe[];
+}
+
+interface Stackframe {
+  file: string;
+  method?: string;
+  lineNumber?: number;
+  columnNumber?: number;
+  code?: object;
+  inProject?: boolean;
+}

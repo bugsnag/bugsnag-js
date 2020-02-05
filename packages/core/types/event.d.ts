@@ -4,7 +4,9 @@ import {
   Device,
   Request,
   Logger,
-  User
+  User,
+  Thread,
+  Stackframe
 } from "./common";
 
 declare class Event {
@@ -23,6 +25,7 @@ declare class Event {
 
   public errors: Error[];
   public breadcrumbs: Breadcrumb[];
+  public threads: Thread[];
 
   public severity: "info" | "warning" | "error";
 
@@ -51,15 +54,6 @@ interface HandledState {
     type: string;
     [key: string]: any;
   };
-}
-
-interface Stackframe {
-  file: string;
-  method?: string;
-  lineNumber?: number;
-  columnNumber?: number;
-  code?: object;
-  inProject?: boolean;
 }
 
 interface Error {
