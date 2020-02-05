@@ -1,6 +1,6 @@
 # Changelog
 
-## TBD
+## 6.5.2 (2020-02-05)
 
 ### Changed
 
