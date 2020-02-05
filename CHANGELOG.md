@@ -35,6 +35,7 @@
 - Ensure automatic context is not used when `setContext(null)` has been called [#694](https://github.com/bugsnag/bugsnag-js/pull/694)
 - Rename `filters` option to `redactedKeys` [#704](https://github.com/bugsnag/bugsnag-js/pull/704)
 - Rename `device.modelName` to `device.model` [#726](https://github.com/bugsnag/bugsnag-js/pull/726)
+- Rename `client.refresh()` to `client.resetEventCount()` [#727](https://github.com/bugsnag/bugsnag-js/pull/727)
 
 ## 6.5.1 (2020-01-08)
 
