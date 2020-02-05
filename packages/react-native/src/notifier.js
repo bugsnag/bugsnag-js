@@ -46,9 +46,7 @@ const Bugsnag = {
 
     bugsnag._logger.debug('Loaded!')
 
-    return bugsnag._config.autoTrackSessions
-      ? bugsnag.startSession()
-      : bugsnag
+    return bugsnag
   },
   start: (opts) => {
     if (Bugsnag._client) {
