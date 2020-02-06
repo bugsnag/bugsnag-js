@@ -2,6 +2,7 @@ const { schema } = require('@bugsnag/core/config')
 const stringWithLength = require('@bugsnag/core/lib/validators/string-with-length')
 const os = require('os')
 const process = require('process')
+const { inspect } = require('util')
 
 module.exports = {
   projectRoot: {
@@ -29,7 +30,7 @@ module.exports = {
   },
   onUncaughtException: {
     defaultValue: () => (err, event, logger) => {
-      logger.error(`Uncaught exception${getContext(event)}, the process will now terminate…\n${(err && err.stack) ? err.stack : err}`)
+      logger.error(`Uncaught exception${getContext(event)}, the process will now terminate…\n${printError(err)}`)
       process.exit(1)
     },
     message: 'should be a function',
@@ -37,12 +38,14 @@ module.exports = {
   },
   onUnhandledRejection: {
     defaultValue: () => (err, event, logger) => {
-      logger.error(`Unhandled rejection${getContext(event)}…\n${(err && err.stack) ? err.stack : err}`)
+      logger.error(`Unhandled rejection${getContext(event)}…\n${printError(err)}`)
     },
     message: 'should be a function',
     validate: value => typeof value === 'function'
   }
 }
+
+const printError = err => err && err.stack ? err.stack : inspect(err)
 
 const getPrefixedConsole = () => {
   return ['debug', 'info', 'warn', 'error'].reduce((accum, method) => {

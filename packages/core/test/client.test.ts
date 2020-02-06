@@ -1,13 +1,14 @@
-const { describe, it, expect, fail, spyOn } = global
-
-const Client = require('../client')
-const Event = require('../event')
-const Session = require('../session')
+/* eslint-disable @typescript-eslint/no-empty-function */
+import Client from '../client'
+import Event from '../event'
+import { Session } from '..'
 
 describe('@bugsnag/core/client', () => {
   describe('constructor', () => {
     it('can handle bad input', () => {
+      // @ts-ignore
       expect(() => new Client()).toThrow()
+      // @ts-ignore
       expect(() => new Client('foo')).toThrow()
     })
   })
@@ -16,6 +17,7 @@ describe('@bugsnag/core/client', () => {
     it('handles bad/good input', () => {
       expect(() => {
         // no opts supplied
+        // @ts-ignore
         const client = new Client({})
         expect(client).toBe(client)
       }).toThrow()
@@ -31,6 +33,7 @@ describe('@bugsnag/core/client', () => {
       const client = new Client({ apiKey: '123' })
       client.use({
         name: 'test plugin',
+        // @ts-ignore
         description: 'nothing much to see here',
         init: (c) => {
           expect(c).toEqual(client)
@@ -43,7 +46,7 @@ describe('@bugsnag/core/client', () => {
   describe('logger()', () => {
     it('can supply a different logger', done => {
       const client = new Client({ apiKey: 'API_KEY_YEAH' })
-      const log = (msg) => {
+      const log = (msg: any) => {
         expect(msg).toBeTruthy()
         done()
       }
@@ -51,7 +54,7 @@ describe('@bugsnag/core/client', () => {
       client._logger.debug('hey')
     })
     it('can supply a different logger via config', done => {
-      const log = (msg) => {
+      const log = (msg: any) => {
         expect(msg).toBeTruthy()
         done()
       }
@@ -71,7 +74,10 @@ describe('@bugsnag/core/client', () => {
         apiKey: 'API_KEY_YEAH',
         logger: null
       })
-      client._logger.debug('hey')
+
+      expect(() => {
+        client._logger.debug('hey')
+      }).not.toThrow()
     })
   })
 
@@ -107,12 +113,12 @@ describe('@bugsnag/core/client', () => {
         event.severity = 'info'
       })
     })
-
+    // eslint-disable-next-line jest/expect-expect
     it('supports preventing send by returning false', done => {
       const client = new Client({ apiKey: 'API_KEY_YEAH' })
       client._setDelivery(client => ({
         sendEvent: (payload) => {
-          fail('sendEvent() should not be called')
+          done('sendEvent() should not be called')
         }
       }))
 
@@ -123,7 +129,9 @@ describe('@bugsnag/core/client', () => {
     })
 
     it('tolerates errors in callbacks', done => {
-      const onErrorSpy = spyOn({ onError: () => {} }, 'onError')
+      expect.assertions(2)
+
+      const onErrorSpy = jest.fn()
       const client = new Client({
         apiKey: 'API_KEY_YEAH',
         onError: [
@@ -144,11 +152,12 @@ describe('@bugsnag/core/client', () => {
       client.notify(new Error('oh no!'))
     })
 
+    // eslint-disable-next-line jest/expect-expect
     it('supports preventing send with enabledReleaseStages', done => {
       const client = new Client({ apiKey: 'API_KEY_YEAH', enabledReleaseStages: ['qa'] })
       client._setDelivery(client => ({
         sendEvent: (payload) => {
-          fail('sendEvent() should not be called')
+          done('sendEvent() should not be called')
         }
       }))
 
@@ -158,11 +167,12 @@ describe('@bugsnag/core/client', () => {
       process.nextTick(() => done())
     })
 
+    // eslint-disable-next-line jest/expect-expect
     it('supports setting releaseStage via config.releaseStage', done => {
       const client = new Client({ apiKey: 'API_KEY_YEAH', releaseStage: 'staging', enabledReleaseStages: ['production'] })
       client._setDelivery(client => ({
         sendEvent: (payload) => {
-          fail('sendEvent() should not be called')
+          done('sendEvent() should not be called')
         }
       }))
 
@@ -195,7 +205,7 @@ describe('@bugsnag/core/client', () => {
     })
 
     it('can handle all kinds of bad input', () => {
-      const payloads = []
+      const payloads: any[] = []
       const client = new Client({ apiKey: 'API_KEY_YEAH' })
       client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
 
@@ -205,7 +215,9 @@ describe('@bugsnag/core/client', () => {
       client.notify({ name: 'some message' })
       client.notify(1)
       client.notify('errrororor')
+      // @ts-ignore
       client.notify('str1', 'str2')
+      // @ts-ignore
       client.notify('str1', null)
 
       expect(payloads[0].events[0].toJSON().exceptions[0].message).toBe('notify() received a non-error. See "notify()" tab for more detail.')
@@ -227,7 +239,7 @@ describe('@bugsnag/core/client', () => {
     })
 
     it('supports { name, message } usage', () => {
-      const payloads = []
+      const payloads: any[] = []
       const client = new Client({ apiKey: 'API_KEY_YEAH' })
       client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
       client.notify({ name: 'UnknownThing', message: 'found a thing that couldn’t be dealt with' })
@@ -240,13 +252,14 @@ describe('@bugsnag/core/client', () => {
     })
 
     it('leaves a breadcrumb of the error', () => {
-      const payloads = []
+      const payloads: any[] = []
       const client = new Client({ apiKey: 'API_KEY_YEAH' })
       client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
       client.notify(new Error('foobar'))
       expect(client._breadcrumbs.length).toBe(1)
       expect(client._breadcrumbs[0].type).toBe('error')
       expect(client._breadcrumbs[0].message).toBe('Error')
+      // @ts-ignore
       expect(client._breadcrumbs[0].metadata.stacktrace).toBe(undefined)
       // the error shouldn't appear as a breadcrumb for itself
       expect(payloads[0].events[0].breadcrumbs.length).toBe(0)
@@ -267,6 +280,7 @@ describe('@bugsnag/core/client', () => {
         sendSession: () => {},
         sendEvent: (payload, cb) => cb(null)
       }))
+      // @ts-ignore
       client.notify(new Error('111'), {}, (err, event) => {
         expect(err).toBe(null)
         expect(event).toBeTruthy()
@@ -281,6 +295,7 @@ describe('@bugsnag/core/client', () => {
         sendSession: () => {},
         sendEvent: (payload, cb) => cb(new Error('flerp'))
       }))
+      // @ts-ignore
       client.notify(new Error('111'), {}, (err, event) => {
         expect(err).toBeTruthy()
         expect(err.message).toBe('flerp')
@@ -296,6 +311,7 @@ describe('@bugsnag/core/client', () => {
         sendSession: () => {},
         sendEvent: (payload, cb) => cb(null)
       }))
+      // @ts-ignore
       client.notify(new Error('111'), {}, (err, event) => {
         expect(err).toBe(null)
         expect(event).toBeTruthy()
@@ -310,6 +326,7 @@ describe('@bugsnag/core/client', () => {
         sendSession: () => {},
         sendEvent: (payload, cb) => cb(null)
       }))
+      // @ts-ignore
       client.notify(new Error('111'), {}, (err, event) => {
         expect(err).toBe(null)
         expect(event).toBeTruthy()
@@ -325,6 +342,7 @@ describe('@bugsnag/core/client', () => {
         sendEvent: (payload, cb) => cb(null)
       }))
       const orig = new Error('111')
+      // @ts-ignore
       client.notify(orig, {}, (err, event) => {
         expect(err).toBe(null)
         expect(event).toBeTruthy()
@@ -363,9 +381,13 @@ describe('@bugsnag/core/client', () => {
 
     it('doesn’t add the breadcrumb if it didn’t contain a message', () => {
       const client = new Client({ apiKey: 'API_KEY_YEAH' })
+      // @ts-ignore
       client.leaveBreadcrumb(undefined)
+      // @ts-ignore
       client.leaveBreadcrumb(null, { data: 'is useful' })
+      // @ts-ignore
       client.leaveBreadcrumb(null, {}, null)
+      // @ts-ignore
       client.leaveBreadcrumb(null, { t: 10 }, null, 4)
       expect(client._breadcrumbs.length).toBe(0)
     })
@@ -446,7 +468,7 @@ describe('@bugsnag/core/client', () => {
       }
       client._setDelivery(client => ({
         sendSession: () => {},
-        sendEvent: (payload, cb) => {
+        sendEvent: (payload: any, cb: any) => {
           if (++i < 10) return
           const r = JSON.parse(JSON.stringify(payload.events[0]))
           expect(r.session).toBeDefined()
@@ -477,7 +499,7 @@ describe('@bugsnag/core/client', () => {
       }
       client._sessionDelegate = sessionDelegate
 
-      const startSpy = spyOn(sessionDelegate, 'startSession')
+      const startSpy = jest.spyOn(sessionDelegate, 'startSession')
 
       client.startSession()
       expect(startSpy).toHaveBeenCalledTimes(0)
@@ -497,7 +519,7 @@ describe('@bugsnag/core/client', () => {
       }
       client._sessionDelegate = sessionDelegate
 
-      const startSpy = spyOn(sessionDelegate, 'startSession')
+      const startSpy = jest.spyOn(sessionDelegate, 'startSession')
 
       client.startSession()
       expect(startSpy).toHaveBeenCalledTimes(1)
@@ -507,7 +529,7 @@ describe('@bugsnag/core/client', () => {
   describe('callbacks', () => {
     it('supports adding and removing onError/onSession/onBreadcrumb callbacks', (done) => {
       const c = new Client({ apiKey: 'API_KEY' })
-      c._setDelivery(client => ({ sendEvent: (p, cb) => cb(null), sendSession: (s, cb) => cb(null) }))
+      c._setDelivery(client => ({ sendEvent: (p, cb) => cb(null), sendSession: (s: any, cb: any) => cb(null) }))
       c._logger = console
       const sessionDelegate = {
         startSession: () => {},
@@ -515,9 +537,9 @@ describe('@bugsnag/core/client', () => {
         resumeSession: () => {}
       }
       c._sessionDelegate = sessionDelegate
-      const eSpy = spyOn({ fn: () => {} }, 'fn')
-      const bSpy = spyOn({ fn: () => {} }, 'fn')
-      const sSpy = spyOn({ fn: () => {} }, 'fn')
+      const eSpy = jest.fn()
+      const bSpy = jest.fn()
+      const sSpy = jest.fn()
 
       c.addOnError(eSpy)
       c.addOnSession(sSpy)
@@ -596,9 +618,9 @@ describe('@bugsnag/core/client', () => {
       }
       client._sessionDelegate = sessionDelegate
 
-      const startSpy = spyOn(sessionDelegate, 'startSession')
-      const pauseSpy = spyOn(sessionDelegate, 'pauseSession')
-      const resumeSpy = spyOn(sessionDelegate, 'resumeSession')
+      const startSpy = jest.spyOn(sessionDelegate, 'startSession')
+      const pauseSpy = jest.spyOn(sessionDelegate, 'pauseSession')
+      const resumeSpy = jest.spyOn(sessionDelegate, 'resumeSession')
       client._sessionDelegate = sessionDelegate
 
       client.startSession()

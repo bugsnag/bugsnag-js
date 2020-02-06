@@ -1,7 +1,5 @@
-const { describe, it, expect } = global
-
-const intRange = require('../validators/int-range')
-const stringWithLength = require('../validators/string-with-length')
+import intRange from '../validators/int-range'
+import stringWithLength from '../validators/string-with-length'
 
 describe('intRange(min, max)(val)', () => {
   it('work with various values', () => {
