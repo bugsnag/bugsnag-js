@@ -55,8 +55,8 @@ class Event {
     /* this.attemptImmediateDelivery, default: true */
   }
 
-  addMetadata (section, ...args) {
-    return metadataDelegate.add(this._metadata, section, ...args)
+  addMetadata (section, keyOrObj, maybeVal) {
+    return metadataDelegate.add(this._metadata, section, keyOrObj, maybeVal)
   }
 
   getMetadata (section, key) {

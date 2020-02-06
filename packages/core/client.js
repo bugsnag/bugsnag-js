@@ -70,8 +70,8 @@ class Client {
     }
   }
 
-  addMetadata (section, ...args) {
-    return metadataDelegate.add(this._metadata, section, ...args)
+  addMetadata (section, keyOrObj, maybeVal) {
+    return metadataDelegate.add(this._metadata, section, keyOrObj, maybeVal)
   }
 
   getMetadata (section, key) {
@@ -119,9 +119,9 @@ class Client {
     this._user = { id, email, name }
   }
 
-  use (plugin, ...args) {
+  use (plugin) {
     if (plugin.configSchema) this._extractConfiguration(plugin.configSchema)
-    const result = plugin.init(this, ...args)
+    const result = plugin.init.apply(null, [this].concat([].slice.call(arguments, 1)))
     // JS objects are not the safest way to store arbitrarily keyed values,
     // so bookend the key with some characters that prevent tampering with
     // stuff like __proto__ etc. (only store the result if the plugin had a

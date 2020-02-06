@@ -1,15 +1,15 @@
 const assign = require('./es-utils/assign')
 
-const add = (state, section, ...args) => {
+const add = (state, section, keyOrObj, maybeVal) => {
   if (!section) return
   let updates
 
   // addMetadata("section", null) -> clears section
-  if (args[0] === null) return clear(state, section)
+  if (keyOrObj === null) return clear(state, section)
 
   // normalise the two supported input types into object form
-  if (typeof args[0] === 'object') updates = args[0]
-  if (typeof args[0] === 'string') updates = { [args[0]]: args[1] }
+  if (typeof keyOrObj === 'object') updates = keyOrObj
+  if (typeof keyOrObj === 'string') updates = { [keyOrObj]: maybeVal }
 
   // exit if we don't have an updates object at this point
   if (!updates) return
