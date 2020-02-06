@@ -1,5 +1,6 @@
 const { schema } = require('@bugsnag/core/config')
 const map = require('@bugsnag/core/lib/es-utils/map')
+const assign = require('@bugsnag/core/lib/es-utils/assign')
 const stringWithLength = require('@bugsnag/core/lib/validators/string-with-length')
 
 module.exports = {
@@ -11,14 +12,13 @@ module.exports = {
     message: 'should be set',
     validate: stringWithLength
   },
-  logger: {
-    ...schema.logger,
+  logger: assign({}, schema.logger, {
     defaultValue: () =>
       // set logger based on browser capability
       (typeof console !== 'undefined' && typeof console.debug === 'function')
         ? getPrefixedConsole()
         : undefined
-  }
+  })
 }
 
 const getPrefixedConsole = () => {

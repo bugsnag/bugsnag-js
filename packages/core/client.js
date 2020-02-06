@@ -5,6 +5,7 @@ const Session = require('./session')
 const map = require('./lib/es-utils/map')
 const includes = require('./lib/es-utils/includes')
 const filter = require('./lib/es-utils/filter')
+const assign = require('./lib/es-utils/assign')
 const runCallbacks = require('./lib/callback-runner')
 const metadataDelegate = require('./lib/metadata-delegate')
 const runSyncCallbacks = require('./lib/sync-callback-runner')
@@ -107,7 +108,7 @@ class Client {
     if (conf.onSession && conf.onSession.length) this._cbs.s = this._cbs.s.concat(conf.onSession)
 
     // merge with existing config
-    this._config = { ...this._config, ...conf }
+    this._config = assign({}, this._config, conf)
   }
 
   getUser () {
@@ -144,7 +145,7 @@ class Client {
     session.app.version = this._config.appVersion
     session.app.type = this._config.appType
 
-    session._user = { ...this._user }
+    session._user = assign({}, this._user)
 
     // run onSession callbacks
     const ignore = runSyncCallbacks(this._cbs.s, session, 'onSession', this._logger)
@@ -227,15 +228,14 @@ class Client {
   }
 
   _notify (event, onError, cb = noop) {
-    event.app = {
-      ...event.app,
+    event.app = assign({}, event.app, {
       releaseStage: this._config.releaseStage,
       version: this._config.appVersion,
       type: this._config.appType
-    }
+    })
     event.context = event.context || this._context
-    event._metadata = { ...event._metadata, ...this._metadata }
-    event._user = { ...event._user, ...this._user }
+    event._metadata = assign({}, event._metadata, this._metadata)
+    event._user = assign({}, event._user, this._user)
     event.breadcrumbs = this._breadcrumbs.slice()
 
     if (this._session) {

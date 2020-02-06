@@ -1,3 +1,5 @@
+const assign = require('./es-utils/assign')
+
 const add = (state, section, ...args) => {
   if (!section) return
   let updates
@@ -16,7 +18,7 @@ const add = (state, section, ...args) => {
   if (!state[section]) state[section] = {}
 
   // merge the updates with the existing section
-  state[section] = { ...state[section], ...updates }
+  state[section] = assign({}, state[section], updates)
 }
 
 const get = (state, section, key) => {

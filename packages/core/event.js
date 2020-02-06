@@ -4,6 +4,7 @@ const hasStack = require('./lib/has-stack')
 const map = require('./lib/es-utils/map')
 const reduce = require('./lib/es-utils/reduce')
 const filter = require('./lib/es-utils/filter')
+const assign = require('./lib/es-utils/assign')
 const jsRuntime = require('./lib/js-runtime')
 const metadataDelegate = require('./lib/metadata-delegate')
 const isError = require('./lib/iserror')
@@ -77,7 +78,7 @@ class Event {
   toJSON () {
     return {
       payloadVersion: '4',
-      exceptions: map(this.errors, er => ({ ...er, message: er.errorMessage })),
+      exceptions: map(this.errors, er => assign({}, er, { message: er.errorMessage })),
       severity: this.severity,
       unhandled: this._handledState.unhandled,
       severityReason: this._handledState.severityReason,
