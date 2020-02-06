@@ -1,12 +1,10 @@
-const { describe, it, expect } = global
-
-const every = require('../async-every')
+import every from '../async-every'
 
 describe('async-every', () => {
   it('handles iterator errors', done => {
-    every([1], (item, cb) => cb(new Error('derp')), (err, result) => {
-      expect(err)
-      expect(err.message).toBe('derp')
+    every([1], (item, cb) => cb(new Error('derp')), (err) => {
+      expect(err).toBeTruthy()
+      expect(err?.message).toBe('derp')
       done()
     })
   })

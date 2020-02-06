@@ -1,6 +1,4 @@
-const { describe, it, expect } = global
-
-const Session = require('../session')
+import Session from '../session'
 
 describe('@bugsnag/core/session', () => {
   describe('toJSON()', () => {
