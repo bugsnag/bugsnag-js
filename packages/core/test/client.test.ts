@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import Client from '../Client'
-import Event from '../Event'
+import Client from '../client'
+import Event from '../event'
 import { Session } from '..'
 
 describe('@bugsnag/core/client', () => {
