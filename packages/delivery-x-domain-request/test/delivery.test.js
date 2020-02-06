@@ -57,9 +57,9 @@ describe('delivery:XDomainRequest', () => {
     const config = {
       apiKey: 'aaaaaaaa',
       endpoints: { notify: '/echo/', sessions: '/sessions/' },
-      filters: []
+      redactedKeys: []
     }
-    delivery({ _logger: { error: () => {} }, config }, window).sendReport(payload, (err) => {
+    delivery({ _logger: { error: () => {} }, _config: config }, window).sendEvent(payload, (err) => {
       expect(err).not.toBe(null)
       expect(err.message).toBe('send error')
       done()
@@ -122,7 +122,7 @@ describe('delivery:XDomainRequest', () => {
       endpoints: { notify: '/echo/', sessions: '/sessions/' },
       filters: []
     }
-    delivery({ _logger: { error: () => {} }, config }, window).sendSession(payload, (err) => {
+    delivery({ _logger: { error: () => {} }, _config: config }, window).sendSession(payload, (err) => {
       expect(err).not.toBe(null)
       expect(err.message).toBe('send error')
       done()
