@@ -118,7 +118,7 @@ module.exports = {
       return function () {
         // this is required for removeEventListener to remove anything added with
         // addEventListener before the functions started being wrapped by Bugsnag
-        const args = Array.prototype.slice.call(arguments)
+        const args = [].slice.call(arguments)
         try {
           const cba = callbackAccessor(args)
           const cb = cba.get()
