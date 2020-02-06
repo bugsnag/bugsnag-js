@@ -1,4 +1,30 @@
-// eslint config for .js files
+const ruleOverrides = {
+  // Disable preferring Promise-based async tests
+  'jest/no-test-callback': 'off',
+
+  // Let TypeScript inference work without being verbose
+  '@typescript-eslint/explicit-function-return-type': 'off',
+  
+  // (Explicit) any has its valid use cases
+  '@typescript-eslint/no-explicit-any': 'off',
+        
+  // This incorrectly fails on TypeScript method override signatures
+  'no-dupe-class-members': 'off',
+
+  // Disable all rules that require parserServices (for now)
+  '@typescript-eslint/no-floating-promises': 'off',
+  '@typescript-eslint/no-misused-promises': 'off',
+  '@typescript-eslint/no-unnecessary-type-assertion': 'off',
+  '@typescript-eslint/prefer-nullish-coalescing': 'off',
+  '@typescript-eslint/prefer-readonly': 'off',
+  '@typescript-eslint/promise-function-async': 'off',
+  '@typescript-eslint/require-array-sort-compare': 'off',
+  '@typescript-eslint/require-await': 'off',
+  '@typescript-eslint/restrict-plus-operands': 'off',
+  '@typescript-eslint/restrict-template-expressions': 'off',
+  '@typescript-eslint/strict-boolean-expressions': 'off',
+}
+
 module.exports = {
   plugins: [
     'react'
@@ -23,13 +49,31 @@ module.exports = {
     // linting for ts files
     {
       files: ['**/*.ts'],
+      extends: 'standard-with-typescript',
+      // We can't use rules which requires parserServices as there is no tsconfig that represents the whole monorepo (yet).
+      // 'parserOptions': {
+      //     'project': './tsconfig.json'
+      // },
+      rules: {
+        ...ruleOverrides
+      }
+    },
+    // Linting for tests
+    {
+      files: [
+        'packages/core/**/*.test.[tj]s?(x)'
+      ],
+      env: {
+        jest: true,
+        browser: true,
+      },
+      plugins: ['eslint-plugin-jest'],
       extends: [
-        'eslint:recommended',
-        'plugin:@typescript-eslint/eslint-recommended',
-        'plugin:@typescript-eslint/recommended'
+        'standard-with-typescript',
+        'plugin:jest/recommended'
       ],
       rules: {
-        '@typescript-eslint/no-explicit-any': 'off'
+        ...ruleOverrides
       }
     }
   ]

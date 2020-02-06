@@ -1,5 +1,3 @@
-const { isoDate } = require('@bugsnag/core/lib/es-utils')
-
 /*
  * Automatically detects browser device details
  */
@@ -19,7 +17,7 @@ module.exports = {
       event.device = {
         ...event.device,
         ...device,
-        time: isoDate()
+        time: new Date()
       }
     }, true)
   }

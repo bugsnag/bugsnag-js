@@ -342,6 +342,28 @@ And here is the full difference between the report and event interface:
   }
 ```
 
+### Reset event count
+
+The method to reset the event count, preventing the `maxEvents` limit from being hit has been renamed:
+
+```diff
+- bugsnagClient.refresh()
++ Bugsnag.resetEventCount()
+```
+
+### Session endpoint
+
+Previously it was valid to supply a `notify` endpoint without supplying a `sessions` endpoint. Now if you supply one, you must supply the other. Note, this only applies when configuring the notifier for Bugsnag On-Premise.
+
+```diff
+  {
+    endpoints: {
+      notify: 'https://custom-bugsnag-notify.yourdom.ain'
++     sessions: 'https://custom-bugsnag-sessions.yourdom.ain'
+    }
+  }
+```
+
 ---
 
 See the [full documentation](https://docs.bugsnag.com/platforms/javascript) for more information.

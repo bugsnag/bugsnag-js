@@ -1,6 +1,4 @@
-const { describe, it, expect } = global
-
-const { map, reduce, filter, keys, isArray, includes } = require('../es-utils')
+import { map, reduce, filter, keys, isArray, includes } from '../es-utils'
 
 describe('es-utils', () => {
   describe('reduce(arr, fn, accum)', () => {

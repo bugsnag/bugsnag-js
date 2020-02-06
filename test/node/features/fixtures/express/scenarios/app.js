@@ -64,6 +64,11 @@ app.get('/throw-non-error', function (req, res, next) {
   throw 1 // eslint-disable-line
 })
 
+app.get('/handled', function (req, res, next) {
+  req.bugsnag.notify(new Error('handled'))
+  res.end('OK')
+})
+
 app.use(middleware.errorHandler)
 
 app.listen(80)

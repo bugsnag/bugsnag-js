@@ -1,4 +1,4 @@
-import Breadcrumb from "./breadcrumb";
+import Breadcrumb from './breadcrumb'
 import {
   App,
   Device,
@@ -27,7 +27,7 @@ declare class Event {
   public breadcrumbs: Breadcrumb[];
   public threads: Thread[];
 
-  public severity: "info" | "warning" | "error";
+  public severity: 'info' | 'warning' | 'error';
 
   public readonly originalError: any;
   public readonly unhandled: boolean;
@@ -48,19 +48,19 @@ declare class Event {
 }
 
 interface HandledState {
-  severity: string;
-  unhandled: boolean;
+  severity: string
+  unhandled: boolean
   severityReason: {
-    type: string;
-    [key: string]: any;
-  };
+    type: string
+    [key: string]: any
+  }
 }
 
 interface Error {
-  errorClass: string;
-  errorMessage: string;
-  stacktrace: Stackframe[];
-  type: string;
+  errorClass: string
+  errorMessage: string
+  stacktrace: Stackframe[]
+  type: string
 }
 
-export default Event;
+export default Event

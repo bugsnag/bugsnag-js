@@ -1,10 +1,9 @@
-const { isoDate } = require('./lib/es-utils')
 const cuid = require('@bugsnag/cuid')
 
 class Session {
   constructor () {
     this.id = cuid()
-    this.startedAt = isoDate()
+    this.startedAt = new Date()
     this._handled = 0
     this._unhandled = 0
     this._user = {}
