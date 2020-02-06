@@ -353,12 +353,12 @@ The method to reset the event count, preventing the `maxEvents` limit from being
 
 ### Session endpoint
 
-Previously it was valid to supply a `notify` endpoint without supplying a `sessions` endpoint. Now if you supply one, you must supply the other.
+Previously it was valid to supply a `notify` endpoint without supplying a `sessions` endpoint. Now if you supply one, you must supply the other. Note, this only applies when configuring the notifier for Bugsnag On-Premise.
 
 ```diff
   {
     endpoints: {
-      notify: 'https://custom-bugsnag-notify.yourdom.ain/'
+      notify: 'https://custom-bugsnag-notify.yourdom.ain'
 +     sessions: 'https://custom-bugsnag-sessions.yourdom.ain'
     }
   }
