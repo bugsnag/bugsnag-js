@@ -26,7 +26,7 @@ describe('delivery: react native', () => {
       expect(sent[0].severity).toBe('warning')
       expect(sent[0].severityReason.type).toBe('handledException')
       expect(sent[0].unhandled).toBe(false)
-      expect(sent[0].app).toEqual({ releaseStage: 'production', version: null, type: null })
+      expect(sent[0].app).toEqual({ releaseStage: 'production', version: undefined, type: undefined })
       expect(sent[0].device).toEqual({})
       // TODO enable once event.threads exists
       // expect(sent[0].threads).toEqual({})

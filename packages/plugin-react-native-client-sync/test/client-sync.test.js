@@ -74,7 +74,7 @@ describe('plugin: react native client sync', () => {
           DeviceEventEmitter: {
             addListener: (event, listener) => {
               expect(event).toBe('bugsnag::sync')
-              setTimeout(() => listener({ type: 'ContextUpdate', value: 'new context' }), 0)
+              setTimeout(() => listener({ type: 'ContextUpdate', data: 'new context' }), 0)
             }
           }
         }
@@ -95,7 +95,7 @@ describe('plugin: react native client sync', () => {
           DeviceEventEmitter: {
             addListener: (event, listener) => {
               expect(event).toBe('bugsnag::sync')
-              setTimeout(() => listener({ type: 'UserUpdate', value: { id: '1234', name: 'Ben', email: 'ben@bensnag.be' } }), 0)
+              setTimeout(() => listener({ type: 'UserUpdate', data: { id: '1234', name: 'Ben', email: 'ben@bensnag.be' } }), 0)
             }
           }
         }
@@ -118,7 +118,7 @@ describe('plugin: react native client sync', () => {
               expect(event).toBe('bugsnag::sync')
               setTimeout(() => listener({
                 type: 'MetadataUpdate',
-                value: { extra: { apples: ['pink lady', 'braeburn', 'golden delicious'] } }
+                data: { extra: { apples: ['pink lady', 'braeburn', 'golden delicious'] } }
               }), 0)
             }
           }
@@ -140,7 +140,7 @@ describe('plugin: react native client sync', () => {
           DeviceEventEmitter: {
             addListener: (event, listener) => {
               expect(event).toBe('bugsnag::sync')
-              setTimeout(() => listener({ type: 'UnknownUpdate', value: {} }), 0)
+              setTimeout(() => listener({ type: 'UnknownUpdate', data: {} }), 0)
             }
           }
         }
