@@ -1,25 +1,29 @@
-const { describe, it, expect } = global
+import Client from '@bugsnag/core/client'
+import plugin from '../'
 
-const proxyquire = require('proxyquire').noCallThru().noPreserveCache()
+// @ts-ignore
+import { AppState } from 'react-native'
 
-const Client = require('@bugsnag/core/client')
+jest.mock('react-native', () => ({
+  AppState: {
+    addEventListener: jest.fn()
+  }
+}))
+
+const MockAddEventListener = AppState.addEventListener as jest.MockedFunction<typeof AppState.addEventListener>
 
 describe('plugin: react native app state breadcrumbs', () => {
-  it('should create a breadcrumb when the AppState#change event happens', () => {
-    let _cb
-    const AppState = {
-      addEventListener: (type, fn) => {
-        _cb = fn
-      }
-    }
-    const plugin = proxyquire('../', {
-      'react-native': { AppState }
-    })
+  beforeEach(() => {
+    MockAddEventListener.mockReset()
+  })
 
+  it('should create a breadcrumb when the AppState#change event happens', () => {
     const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
     client.use(plugin)
 
-    expect(typeof _cb).toBe('function')
+    expect(MockAddEventListener).toHaveBeenCalledWith('change', expect.any(Function))
+    const _cb = MockAddEventListener.mock.calls[0][1]
+
     expect(client._breadcrumbs.length).toBe(0)
 
     _cb('background')
@@ -36,53 +40,24 @@ describe('plugin: react native app state breadcrumbs', () => {
   })
 
   it('should not be enabled when enabledBreadcrumbTypes=null', () => {
-    let _cb
-    const AppState = {
-      addEventListener: (type, fn) => {
-        _cb = fn
-      }
-    }
-    const plugin = proxyquire('../', {
-      'react-native': { AppState }
-    })
-
+    // @ts-ignore
     const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: null })
     client.use(plugin)
 
-    expect(_cb).toBe(undefined)
+    expect(AppState.addEventListener).not.toHaveBeenCalled()
   })
 
   it('should not be enabled when enabledBreadcrumbTypes=[]', () => {
-    let _cb
-    const AppState = {
-      addEventListener: (type, fn) => {
-        _cb = fn
-      }
-    }
-    const plugin = proxyquire('../', {
-      'react-native': { AppState }
-    })
-
     const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: [] })
     client.use(plugin)
 
-    expect(_cb).toBe(undefined)
+    expect(AppState.addEventListener).not.toHaveBeenCalled()
   })
 
   it('should be enabled when enabledBreadcrumbTypes=["state"]', () => {
-    let _cb
-    const AppState = {
-      addEventListener: (type, fn) => {
-        _cb = fn
-      }
-    }
-    const plugin = proxyquire('../', {
-      'react-native': { AppState }
-    })
-
     const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: ['state'] })
     client.use(plugin)
 
-    expect(typeof _cb).toBe('function')
+    expect(AppState.addEventListener).toHaveBeenCalledWith('change', expect.any(Function))
   })
 })

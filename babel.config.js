@@ -17,6 +17,7 @@ module.exports = api => {
     ['@babel/plugin-proposal-object-rest-spread', { loose: true }],
     ['@babel/syntax-object-rest-spread']
   ]
+  const overrides = []
 
   if (api && !api.env('test')) {
     api.cache(false)
@@ -34,7 +35,14 @@ module.exports = api => {
       ],
       '@babel/preset-typescript'
     )
+    plugins.unshift(
+      ['@babel/plugin-proposal-class-properties', { loose: true }]
+    )
+    overrides.push({
+      test: './node_modules/react-native/**/*',
+      presets: ['module:metro-react-native-babel-preset']
+    })
   }
 
-  return { presets, plugins }
+  return { presets, plugins, overrides }
 }
