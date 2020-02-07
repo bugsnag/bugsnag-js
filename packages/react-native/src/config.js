@@ -1,5 +1,4 @@
 const { schema } = require('@bugsnag/core/config')
-const { reduce } = require('@bugsnag/core/lib/es-utils')
 
 const ALLOWED_IN_JS = ['onError', 'onBreadcrumb', 'logger', 'metadata', 'user', 'context']
 
@@ -12,7 +11,7 @@ module.exports.schema = {
 }
 
 const getPrefixedConsole = () => {
-  return reduce(['debug', 'info', 'warn', 'error'], (accum, method) => {
+  return ['debug', 'info', 'warn', 'error'].reduce((accum, method) => {
     accum[method] = console[method].bind(console, '[bugsnag]')
     return accum
   }, {})
