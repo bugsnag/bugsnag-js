@@ -4,7 +4,7 @@
   "main": "dist/bugsnag-react.js",
   "description": "React integration for @bugsnag/js",
   "browser": "dist/bugsnag-react.js",
-  "types": "types/bugsnag-react.d.ts",
+  "types": "dist/types/bugsnag-plugin-react.d.ts",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
     "type": "git",
@@ -19,7 +19,8 @@
   ],
   "scripts": {
     "clean": "rm -fr dist && mkdir dist",
-    "build": "npm run clean && npm run build:dist && npm run build:dist:min",
+    "bundle-types": "../../bin/bundle-types bugsnag-plugin-react",
+    "build": "npm run clean && npm run build:dist && npm run build:dist:min && npm run bundle-types ",
     "build:dist": "NODE_ENV=production IS_BROWSER=yes ../../bin/bundle src/index.js --standalone=bugsnag__react | ../../bin/extract-source-map dist/bugsnag-react.js",
     "build:dist:min": "NODE_ENV=production IS_BROWSER=yes ../../bin/bundle src/index.js --standalone=bugsnag__react | ../../bin/minify dist/bugsnag-react.min.js",
     "test": "jest",
@@ -34,6 +35,7 @@
     "@babel/core": "^7.0.1",
     "@babel/preset-env": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
+    "@bugsnag/core": "^7.0.0-rc.0",
     "babel-core": "^7.0.0-0",
     "babel-jest": "^23.6.0",
     "jest": "^23.6.0",

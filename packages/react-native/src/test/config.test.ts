@@ -1,4 +1,4 @@
-import { schema, load } from '../config'
+import { load } from '../config'
 
 describe('react-native config: load()', () => {
   it('should load config from the provided NativeClient', () => {
