@@ -10,8 +10,6 @@ const Event = require('@bugsnag/core/event')
 const Session = require('@bugsnag/core/session')
 const Breadcrumb = require('@bugsnag/core/breadcrumb')
 
-const { map } = require('@bugsnag/core/lib/es-utils')
-
 const delivery = require('@bugsnag/delivery-expo')
 
 const schema = { ...require('@bugsnag/core/config').schema, ...require('./config') }
@@ -95,7 +93,7 @@ const Bugsnag = {
 
 // Object.keys(Client.prototype) does not work on native classes
 // because the methods are non enumerable
-map(Object.getOwnPropertyNames(Client.prototype), (m) => {
+Object.getOwnPropertyNames(Client.prototype).map((m) => {
   if (/^_/.test(m)) return
   Bugsnag[m] = function () {
     if (!Bugsnag._client) return console.warn(`Bugsnag.${m}() was called before Bugsnag.start()`)

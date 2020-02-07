@@ -1,4 +1,7 @@
-const { map, reduce, filter } = require('@bugsnag/core/lib/es-utils')
+const map = require('@bugsnag/core/lib/es-utils/map')
+const reduce = require('@bugsnag/core/lib/es-utils/reduce')
+const filter = require('@bugsnag/core/lib/es-utils/filter')
+
 const MAX_LINE_LENGTH = 200
 const MAX_SCRIPT_LENGTH = 500000
 
@@ -115,7 +118,7 @@ module.exports = {
       return function () {
         // this is required for removeEventListener to remove anything added with
         // addEventListener before the functions started being wrapped by Bugsnag
-        const args = Array.prototype.slice.call(arguments)
+        const args = [].slice.call(arguments)
         try {
           const cba = callbackAccessor(args)
           const cb = cba.get()

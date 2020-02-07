@@ -1,5 +1,12 @@
-const { filter, reduce, keys, isArray, includes } = require('./lib/es-utils')
-const { intRange, stringWithLength, listOfFunctions } = require('./lib/validators')
+const filter = require('./lib/es-utils/filter')
+const reduce = require('./lib/es-utils/reduce')
+const keys = require('./lib/es-utils/keys')
+const isArray = require('./lib/es-utils/is-array')
+const includes = require('./lib/es-utils/includes')
+const assign = require('./lib/es-utils/assign')
+const intRange = require('./lib/validators/int-range')
+const stringWithLength = require('./lib/validators/string-with-length')
+const listOfFunctions = require('./lib/validators/list-of-functions')
 
 const BREADCRUMB_TYPES = ['navigation', 'request', 'process', 'log', 'user', 'state', 'error', 'manual']
 const defaultErrorTypes = { unhandledExceptions: true, unhandledRejections: true }
@@ -26,7 +33,7 @@ module.exports.schema = {
     validate: value => value === true || value === false
   },
   enabledErrorTypes: {
-    defaultValue: (val) => ({ ...defaultErrorTypes, ...val }),
+    defaultValue: (val) => assign({}, defaultErrorTypes, val),
     message: 'should be an object containing the flags { unhandledExceptions:true|false, unhandledRejections:true|false }',
     validate: value => {
       // ensure we have an object

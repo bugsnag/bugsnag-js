@@ -1,3 +1,5 @@
+const assign = require('@bugsnag/core/lib/es-utils/assign')
+
 /*
  * Automatically detects browser device details
  */
@@ -9,16 +11,16 @@ module.exports = {
     }
 
     client.addOnSession(session => {
-      session.device = { ...session.device, ...device }
+      session.device = assign({}, session.device, device)
     })
 
     // add time just as the event is sent
     client.addOnError((event) => {
-      event.device = {
-        ...event.device,
-        ...device,
-        time: new Date()
-      }
+      event.device = assign({},
+        event.device,
+        device,
+        { time: new Date() }
+      )
     }, true)
   }
 }

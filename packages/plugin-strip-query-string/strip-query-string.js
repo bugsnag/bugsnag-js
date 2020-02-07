@@ -1,7 +1,8 @@
 /*
  * Remove query strings (and fragments) from stacktraces
  */
-const { map, reduce } = require('@bugsnag/core/lib/es-utils')
+const map = require('@bugsnag/core/lib/es-utils/map')
+const reduce = require('@bugsnag/core/lib/es-utils/reduce')
 
 module.exports = {
   init: (client) => {

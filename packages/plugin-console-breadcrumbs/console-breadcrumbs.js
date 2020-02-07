@@ -1,4 +1,7 @@
-const { map, reduce, filter, includes } = require('@bugsnag/core/lib/es-utils')
+const map = require('@bugsnag/core/lib/es-utils/map')
+const reduce = require('@bugsnag/core/lib/es-utils/reduce')
+const filter = require('@bugsnag/core/lib/es-utils/filter')
+const includes = require('@bugsnag/core/lib/es-utils/includes')
 
 /*
  * Leaves breadcrumbs when console log methods are called

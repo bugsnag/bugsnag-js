@@ -1,4 +1,4 @@
-const { intRange } = require('@bugsnag/core/lib/validators')
+const intRange = require('@bugsnag/core/lib/validators/int-range')
 
 /*
  * Throttles and dedupes events
