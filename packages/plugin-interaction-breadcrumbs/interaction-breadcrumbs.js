@@ -1,4 +1,4 @@
-const { includes } = require('@bugsnag/core/lib/es-utils')
+const includes = require('@bugsnag/core/lib/es-utils/includes')
 
 /*
  * Leaves breadcrumbs when the user interacts with the DOM

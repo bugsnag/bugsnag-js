@@ -1,4 +1,5 @@
-import { intRange, stringWithLength } from '../validators'
+import intRange from '../validators/int-range'
+import stringWithLength from '../validators/string-with-length'
 
 describe('intRange(min, max)(val)', () => {
   it('work with various values', () => {
