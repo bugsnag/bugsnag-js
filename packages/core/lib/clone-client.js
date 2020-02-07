@@ -1,3 +1,5 @@
+const assign = require('./es-utils/assign')
+
 module.exports = (client) => {
   const clone = new client.Client({}, {}, client._notifier)
 
@@ -6,8 +8,8 @@ module.exports = (client) => {
   // changes to these properties should not be reflected in the original client,
   // so ensure they are are (shallow) cloned
   clone._breadcrumbs = client._breadcrumbs.slice()
-  clone._metadata = { ...client._metadata }
-  clone._user = { ...client._user }
+  clone._metadata = assign({}, client._metadata)
+  clone._user = assign({}, client._user)
   clone._context = client._context
 
   clone._cbs = {

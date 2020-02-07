@@ -5,7 +5,7 @@ const REQUEST_SETUP_KEY = 'BS~~S'
 const REQUEST_URL_KEY = 'BS~~U'
 const REQUEST_METHOD_KEY = 'BS~~M'
 
-const { includes } = require('@bugsnag/core/lib/es-utils')
+const includes = require('@bugsnag/core/lib/es-utils/includes')
 
 let restoreFunctions = []
 let client

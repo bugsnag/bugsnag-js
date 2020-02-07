@@ -1,4 +1,4 @@
-const { map } = require('@bugsnag/core/lib/es-utils')
+const map = require('@bugsnag/core/lib/es-utils/map')
 const isError = require('@bugsnag/core/lib/iserror')
 
 /*

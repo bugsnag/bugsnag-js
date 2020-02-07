@@ -7,10 +7,12 @@ const Event = require('@bugsnag/core/event')
 const Session = require('@bugsnag/core/session')
 const Breadcrumb = require('@bugsnag/core/breadcrumb')
 
-const { map, keys } = require('@bugsnag/core/lib/es-utils')
+const map = require('@bugsnag/core/lib/es-utils/map')
+const keys = require('@bugsnag/core/lib/es-utils/keys')
+const assign = require('@bugsnag/core/lib/es-utils/assign')
 
 // extend the base config schema with some browser-specific options
-const schema = { ...require('@bugsnag/core/config').schema, ...require('./config') }
+const schema = assign({}, require('@bugsnag/core/config').schema, require('./config'))
 
 const pluginWindowOnerror = require('@bugsnag/plugin-window-onerror')
 const pluginUnhandledRejection = require('@bugsnag/plugin-window-unhandled-rejection')

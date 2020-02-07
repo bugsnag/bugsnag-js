@@ -1,4 +1,4 @@
-const { includes } = require('@bugsnag/core/lib/es-utils')
+const includes = require('@bugsnag/core/lib/es-utils/includes')
 
 module.exports = {
   init: client => { client._sessionDelegate = sessionDelegate }

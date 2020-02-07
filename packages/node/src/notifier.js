@@ -7,8 +7,6 @@ const Event = require('@bugsnag/core/event')
 const Session = require('@bugsnag/core/session')
 const Breadcrumb = require('@bugsnag/core/breadcrumb')
 
-const { map, keys } = require('@bugsnag/core/lib/es-utils')
-
 const delivery = require('@bugsnag/delivery-node')
 
 // extend the base config schema with some node-specific options
@@ -71,7 +69,7 @@ const Bugsnag = {
   }
 }
 
-map(keys(Client.prototype), (m) => {
+Object.keys(Client.prototype).forEach((m) => {
   if (/^_/.test(m)) return
   Bugsnag[m] = function () {
     if (!Bugsnag._client) return console.error(`Bugsnag.${m}() was called before Bugsnag.start()`)
