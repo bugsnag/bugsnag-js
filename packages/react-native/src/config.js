@@ -1,6 +1,3 @@
-const NativeModules = require('react-native').NativeModules
-const NativeClient = NativeModules.BugsnagReactNative
-
 const { schema } = require('@bugsnag/core/config')
 const { reduce } = require('@bugsnag/core/lib/es-utils')
 
@@ -21,7 +18,7 @@ const getPrefixedConsole = () => {
   }, {})
 }
 
-module.exports.load = () => {
+module.exports.load = (NativeClient) => {
   const nativeOpts = NativeClient.configure()
 
   // if we don't have any native options, something went wrong

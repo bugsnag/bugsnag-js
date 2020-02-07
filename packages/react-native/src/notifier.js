@@ -28,7 +28,7 @@ const plugins = [
 
 const bugsnagReact = require('@bugsnag/plugin-react')
 
-const Configuration = { load }
+const Configuration = { load: () => load(NativeClient) }
 const Bugsnag = {
   _client: null,
   createClient: (jsOpts) => {
