@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/browser",
-  "version": "6.5.0",
+  "version": "6.5.2",
   "main": "dist/bugsnag.js",
   "types": "dist/types/bugsnag.d.ts",
   "description": "Bugsnag error reporter for browser JavaScript",
@@ -33,7 +33,7 @@
   "license": "MIT",
   "devDependencies": {
     "@bugsnag/core": "^6.5.0",
-    "@bugsnag/delivery-x-domain-request": "^6.5.0",
+    "@bugsnag/delivery-x-domain-request": "^6.5.2",
     "@bugsnag/delivery-xml-http-request": "^6.5.0",
     "@bugsnag/plugin-browser-context": "^6.5.0",
     "@bugsnag/plugin-browser-device": "^6.5.0",
