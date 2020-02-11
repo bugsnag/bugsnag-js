@@ -2,6 +2,7 @@ package com.bugsnag.reactnative
 
 import com.bugsnag.android.Client
 import com.bugsnag.android.InternalHooks
+import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
@@ -29,7 +30,9 @@ class BugsnagReactNative(reactContext: ReactApplicationContext) :
 
         // TODO: I think we also want to return values for state here too:
         // i.e of user, context and metadata
-        return configSerializer.serialize(config)
+        val map = HashMap<String, Any?>()
+        configSerializer.serialize(map, config)
+        return map.toWritableMap()
     }
 
     override fun getName(): String {
