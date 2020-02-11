@@ -2,16 +2,11 @@ const { resolve, join } = require('path')
 const { readdirSync } = require('fs')
 
 const pkgs = resolve(__dirname, '../../../../../packages')
-const mods = resolve(__dirname, '../../../../../node_modules')
 
 const watchFolders = [ __dirname, join(__dirname, 'node_modules') ]
   .concat(
     readdirSync(pkgs)
       .map(pkg => join(pkgs, pkg))
-  )
-  .concat(
-    readdirSync(mods)
-      .map(pkg => join(mods, pkg))
   )
 
 module.exports = {
