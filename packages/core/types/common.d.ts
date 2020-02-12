@@ -138,18 +138,18 @@ export interface User {
 
 type ThreadType = 'cocoa' | 'android' | 'browserJs'
 export interface Thread {
-  id: string;
-  name: string;
-  errorReportingThread: boolean;
-  type: ThreadType;
-  stacktrace: Stackframe[];
+  id: string
+  name: string
+  errorReportingThread: boolean
+  type: ThreadType
+  stacktrace: Stackframe[]
 }
 
 interface Stackframe {
-  file: string;
-  method?: string;
-  lineNumber?: number;
-  columnNumber?: number;
-  code?: object;
-  inProject?: boolean;
+  file: string
+  method?: string
+  lineNumber?: number
+  columnNumber?: number
+  code?: object
+  inProject?: boolean
 }

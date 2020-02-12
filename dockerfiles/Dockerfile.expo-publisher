@@ -15,6 +15,8 @@ RUN npx lerna run build --scope "@bugsnag/expo" --scope "@bugsnag/plugin-react"
 
 RUN npx lerna exec --scope "@bugsnag/plugin-react-native-unhandled-rejection" -- npm prune --production
 
+RUN rm -rf node_modules
+
 WORKDIR /app
 
 COPY test/expo test/expo
