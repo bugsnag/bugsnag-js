@@ -7,7 +7,7 @@ import {
   User,
   Thread,
   Stackframe
-} from "./common";
+} from './common'
 
 declare class Event {
   public static create(
@@ -17,34 +17,34 @@ declare class Event {
     component: string,
     errorFramesToSkip: number,
     logger?: Logger
-  ): Event;
+  ): Event
 
-  public app: App;
-  public device: Device;
-  public request: Request;
+  public app: App
+  public device: Device
+  public request: Request
 
   public errors: Error[];
-  public breadcrumbs: Breadcrumb[];
-  public threads: Thread[];
+  public breadcrumbs: Breadcrumb[]
+  public threads: Thread[]
 
-  public severity: 'info' | 'warning' | 'error';
+  public severity: 'info' | 'warning' | 'error'
 
-  public readonly originalError: any;
-  public readonly unhandled: boolean;
+  public readonly originalError: any
+  public readonly unhandled: boolean
 
-  public apiKey?: string;
-  public context?: string;
-  public groupingHash?: string;
+  public apiKey?: string
+  public context?: string
+  public groupingHash?: string
 
   // user
-  public getUser(): User;
-  public setUser(id?: string, email?: string, name?: string): void;
+  public getUser(): User
+  public setUser(id?: string, email?: string, name?: string): void
 
   // metadata
-  public addMetadata(section: string, values: { [key: string]: any }): void;
-  public addMetadata(section: string, key: string, value: any): void;
-  public getMetadata(section: string, key?: string): any;
-  public clearMetadata(section: string, key?: string): void;
+  public addMetadata(section: string, values: { [key: string]: any }): void
+  public addMetadata(section: string, key: string, value: any): void
+  public getMetadata(section: string, key?: string): any
+  public clearMetadata(section: string, key?: string): void
 }
 
 interface HandledState {

@@ -17,7 +17,7 @@ const session = require('@bugsnag/plugin-react-native-session')
 const eventSync = require('@bugsnag/plugin-react-native-event-sync')
 const clientSync = require('@bugsnag/plugin-react-native-client-sync')
 
-const schema = { ...require('@bugsnag/core/config').schema, ...require('./config') }
+const { schema, load } = require('./config')
 
 const plugins = [
   require('@bugsnag/plugin-react-native-global-error-handler'),
@@ -28,10 +28,20 @@ const plugins = [
 
 const bugsnagReact = require('@bugsnag/plugin-react')
 
+const Configuration = { load: () => load(NativeClient) }
 const Bugsnag = {
   _client: null,
   createClient: (jsOpts) => {
-    const opts = { ...NativeClient.configure(), ...jsOpts }
+    let opts
+    if (jsOpts && jsOpts._didLoadFromConfig) {
+      // values were already sourced from Configuration.load()
+      opts = jsOpts
+    } else {
+      // load the native configuration
+      opts = Configuration.load()
+      // mutate the options with anything supplied in JS. This will throw
+      Object.keys(jsOpts).forEach(k => { opts[k] = jsOpts[k] })
+    }
 
     const bugsnag = new Client(opts, schema, { name, version, url })
 
@@ -40,6 +50,18 @@ const Bugsnag = {
     bugsnag.use(session, NativeClient)
     bugsnag.use(eventSync, NativeClient)
     bugsnag.use(clientSync, NativeClient)
+
+    if (opts.user && opts.user !== opts._originalValues.user) {
+      bugsnag.setUser(opts.user.id, opts.user.email, opts.user.name)
+    }
+
+    if (opts.context && opts.context !== opts._originalValues.context) {
+      bugsnag.setContext(opts.context)
+    }
+
+    if (opts.metadata && opts.metadata !== opts._originalValues.metadata) {
+      Object.keys(opts.metadata).forEach(k => bugsnag.addMetadata(k, opts.metadata[k]))
+    }
 
     plugins.forEach(pl => bugsnag.use(pl))
     bugsnag.use(bugsnagReact, React)
@@ -75,6 +97,7 @@ module.exports.Client = Client
 module.exports.Event = Event
 module.exports.Session = Session
 module.exports.Breadcrumb = Breadcrumb
+module.exports.Configuration = Configuration
 
 // Export a "default" property for compatibility with ESM imports
 module.exports.default = Bugsnag

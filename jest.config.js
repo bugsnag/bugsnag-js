@@ -7,6 +7,13 @@ module.exports = {
       testMatch: [
         testsForPackage('core')
       ]
+    },
+    {
+      displayName: 'react-native',
+      preset: 'react-native',
+      testMatch: [
+        testsForPackage('react-native')
+      ]
     }
   ]
 }

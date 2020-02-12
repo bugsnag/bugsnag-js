@@ -4,10 +4,10 @@ const ruleOverrides = {
 
   // Let TypeScript inference work without being verbose
   '@typescript-eslint/explicit-function-return-type': 'off',
-  
+
   // (Explicit) any has its valid use cases
   '@typescript-eslint/no-explicit-any': 'off',
-        
+
   // This incorrectly fails on TypeScript method override signatures
   'no-dupe-class-members': 'off',
 
@@ -23,6 +23,7 @@ const ruleOverrides = {
   '@typescript-eslint/restrict-plus-operands': 'off',
   '@typescript-eslint/restrict-template-expressions': 'off',
   '@typescript-eslint/strict-boolean-expressions': 'off',
+  '@typescript-eslint/no-empty-function': 'off'
 }
 
 module.exports = {
