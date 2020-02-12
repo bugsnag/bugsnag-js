@@ -1,8 +1,8 @@
-import { BreadcrumbType, BreadcrumbMetadataValue } from './common'
+import { BreadcrumbType } from './common'
 
 declare class Breadcrumb {
   public message: string;
-  public metadata: BreadcrumbMetadataValue;
+  public metadata: { [key: string]: any };
   public type: BreadcrumbType;
   public timestamp: Date;
 }
