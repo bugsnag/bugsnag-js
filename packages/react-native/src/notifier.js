@@ -39,8 +39,10 @@ const Bugsnag = {
     } else {
       // load the native configuration
       opts = Configuration.load()
-      // mutate the options with anything supplied in JS. This will throw
-      Object.keys(jsOpts).forEach(k => { opts[k] = jsOpts[k] })
+      if (jsOpts && typeof jsOpts === 'object') {
+        // mutate the options with anything supplied in JS. This will throw
+        Object.keys(jsOpts).forEach(k => { opts[k] = jsOpts[k] })
+      }
     }
 
     const bugsnag = new Client(opts, schema, { name, version, url })
