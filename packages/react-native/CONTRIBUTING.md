@@ -36,19 +36,7 @@ registry=http://localhost:4873
 
 #### Android
 
-The work on this notifier is based off of the a newer version of `bugsnag-android` than has been published. Therefore you need to checkout a particular branch and publish it to your maven local:
-
-```sh
-cd bugsnag-android
-git fetch
-git checkout configuration-immutability-refactor
-
-# increment the version in gradle.properties to something arbitrary and high
-
-./gradlew assembleRelease publishToMavenLocal
-```
-
-Then update the version of `bugsnag-android` in `packages/react-native/android/build.gradle` to the arbitrary version you selected. Any time new Android changes are pulled down you will need to repeat this process and update the version number.
+Currently this branch relies on a snapshotted version of bugsnag-android, which should _just work_.
 
 #### iOS
 

@@ -29,5 +29,9 @@ allprojects {
         mavenLocal()
         jcenter()
         google()
+
+        maven { // add this to use snapshots
+            url "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
     }
 }
