@@ -17,7 +17,7 @@ class BugsnagReactNative(reactContext: ReactApplicationContext) :
     internal lateinit var client: Client
 
     @ReactMethod(isBlockingSynchronousMethod = true)
-    private fun configure(): WritableMap {
+    fun configure(): WritableMap {
         try {
             // see if bugsnag-android is already initalised
             client = InternalHooks.getClient()
@@ -37,38 +37,38 @@ class BugsnagReactNative(reactContext: ReactApplicationContext) :
     }
 
     @ReactMethod
-    private fun leaveBreadcrumb(map: ReadableMap) {
+    fun leaveBreadcrumb(map: ReadableMap) {
         client.leaveBreadcrumb("Breadcrumb from JS: TODO")
     }
 
     @ReactMethod
-    internal fun startSession() = client.startSession()
+    fun startSession() = client.startSession()
 
     @ReactMethod
-    internal fun pauseSession() = client.pauseSession()
+    fun pauseSession() = client.pauseSession()
 
     @ReactMethod
-    internal fun resumeSession() {
+    fun resumeSession() {
         client.resumeSession()
     }
 
     @ReactMethod
-    internal fun updateContext(context: String?) {
+    fun updateContext(context: String?) {
         client.context = context
     }
 
     @ReactMethod
-    private fun updateMetadata(section: String, data: ReadableMap) {
+    fun updateMetadata(section: String, data: ReadableMap) {
         client.addMetadata(section, "TODO", "metadata update from js")
     }
 
     @ReactMethod
-    internal fun updateUser(id: String?, email: String?, name: String?) {
+    fun updateUser(id: String?, email: String?, name: String?) {
         client.setUser(id, email, name)
     }
 
     @ReactMethod
-    private fun dispatch(payload: ReadableMap, promise: Promise) {
+    fun dispatch(payload: ReadableMap, promise: Promise) {
         client.notify(RuntimeException("TODO")) {
             // TODO modify payload here
             true
@@ -77,7 +77,7 @@ class BugsnagReactNative(reactContext: ReactApplicationContext) :
     }
 
     @ReactMethod
-    private fun getPayloadInfo(promise: Promise) {
+    fun getPayloadInfo(promise: Promise) {
         val info = WritableNativeMap()
         // info.putMap("app", Arguments.makeNativeMap(NativeInterface.getAppData()));
         // info.putMap("device", Arguments.makeNativeMap(NativeInterface.getDeviceData()));
