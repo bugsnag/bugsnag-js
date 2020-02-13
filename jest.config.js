@@ -7,6 +7,12 @@ module.exports = {
       testMatch: [
         testsForPackage('core')
       ]
-    }
-  ]
+    },
+    {
+      displayName: 'node plugins',
+      testEnvironment: 'node',
+      testMatch: [
+        testsForPackage('plugin-server-*')
+      ]
+    }]
 }
