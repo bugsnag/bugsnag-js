@@ -24,7 +24,9 @@ public class ConfigSerializer implements WritableMapSerializer<ImmutableConfig> 
         map.put("enabledReleaseStages", config.getEnabledReleaseStages());
         map.put("releaseStage", config.getReleaseStage());
         map.put("buildUuid", config.getBuildUuid());
-        map.put("appVersion", config.getAppVersion());
+        if (config.getAppVersion() != null) {
+            map.put("appVersion", config.getAppVersion());
+        }
         map.put("versionCode", config.getVersionCode());
         map.put("codeBundleId", config.getCodeBundleId());
         map.put("type", config.getAppType());
