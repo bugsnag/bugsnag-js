@@ -1,7 +1,7 @@
 package com.bugsnag.reactnative;
 
-import com.facebook.react.bridge.WritableMap;
+import java.util.Map;
 
 interface WritableMapSerializer<T> {
-    WritableMap serialize(T obj);
+    void serialize(Map<String, Object> map, T obj);
 }
