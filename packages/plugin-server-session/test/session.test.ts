@@ -2,6 +2,7 @@ import { EventEmitter } from 'events'
 import Client from '@bugsnag/core/client'
 import _Tracker from '../tracker'
 import plugin from '../session'
+import { Session } from '@bugsnag/core'
 
 const Tracker = _Tracker as jest.MockedClass<typeof _Tracker>
 
@@ -135,18 +136,18 @@ describe('plugin: server sessions', () => {
 
     // start a session and get its id
     const sessionClient = c.startSession()
-    const sid0 = sessionClient._session?.id
+    const sid0 = (sessionClient._session as Session).id
 
     // ensure pausing the session clears the client._session property
     sessionClient.pauseSession()
     const s1 = sessionClient._session
-    const psid1 = sessionClient._pausedSession?.id
+    const psid1 = (sessionClient._pausedSession as Session).id
     expect(s1).toBe(null)
     expect(psid1).toBe(sid0)
 
     // ensure resuming the session gets back the original session (not a new one)
     sessionClient.resumeSession()
-    const sid2 = sessionClient._session?.id
+    const sid2 = (sessionClient._session as Session).id
     expect(sid2).toBe(sid0)
 
     // ensure resumeSession() starts a new one when no paused session exists
@@ -154,7 +155,7 @@ describe('plugin: server sessions', () => {
     sessionClient._pausedSession = null
     const resumedClient = sessionClient.resumeSession()
     expect(resumedClient._session).toBeTruthy()
-    const sid3 = resumedClient._session?.id
+    const sid3 = (resumedClient._session as Session).id
     expect(sid3).not.toBe(sid0)
   })
 })
