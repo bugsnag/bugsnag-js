@@ -23,10 +23,17 @@ export default class ClientWithInternals extends Client {
   }) => void
 
   _metadata: { [key: string]: any }
-  _session: Session
+
+  startSession(): ClientWithInternals
+  resumeSession(): ClientWithInternals;
+  _session: Session | null
+  _pausedSession: Session | null
+
   _sessionDelegate: {
     startSession: (client: ClientWithInternals) => any
   }
+
+  _addOnSessionPayload: (cb: (sessionPayload: Session) => void) => void
 
   _cbs: {
     e: OnErrorCallback[]

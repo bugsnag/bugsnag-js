@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import Client from '../client'
 import Event from '../event'
 import { Session } from '..'

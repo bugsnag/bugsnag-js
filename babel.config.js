@@ -2,7 +2,15 @@ module.exports = api => {
   // NB: This function can be called without an api argument, e.g. by bin/bundle
 
   const presets = []
-  const plugins = [
+  const plugins = []
+  const overrides = []
+
+  if (api && api.env('test')) {
+    presets.push('@babel/preset-typescript')
+    plugins.push(['@babel/plugin-transform-modules-commonjs'])
+  }
+
+  plugins.push(
     ['@babel/plugin-transform-arrow-functions'],
     ['@babel/plugin-transform-block-scoping'],
     ['@babel/plugin-transform-classes', { loose: true }],
@@ -16,25 +24,11 @@ module.exports = api => {
     ['@babel/plugin-transform-template-literals', { loose: true }],
     ['@babel/plugin-proposal-object-rest-spread', { loose: true }],
     ['@babel/syntax-object-rest-spread']
-  ]
+  )
 
   if (api && !api.env('test')) {
     api.cache(false)
   }
 
-  if (api && api.env('test')) {
-    presets.push(
-      [
-        '@babel/preset-env',
-        {
-          targets: {
-            node: 'current'
-          }
-        }
-      ],
-      '@babel/preset-typescript'
-    )
-  }
-
-  return { presets, plugins }
+  return { presets, plugins, overrides }
 }

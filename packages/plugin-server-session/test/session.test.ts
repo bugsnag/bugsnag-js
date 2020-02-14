@@ -1,12 +1,16 @@
-const { describe, it, expect } = global
+import { EventEmitter } from 'events'
+import Client from '@bugsnag/core/client'
+import _Tracker from '../tracker'
+import plugin from '../session'
+import { Session } from '@bugsnag/core'
 
-const proxyquire = require('proxyquire').noCallThru().noPreserveCache()
-const Emitter = require('events')
-const Client = require('@bugsnag/core/client')
+const Tracker = _Tracker as jest.MockedClass<typeof _Tracker>
+
+jest.mock('../tracker')
 
 describe('plugin: server sessions', () => {
-  it('should send the session', done => {
-    class TrackerMock extends Emitter {
+  beforeEach(() => {
+    class TrackerMock extends EventEmitter {
       start () {
         this.emit('summary', [
           { startedAt: '2017-12-12T13:54:00.000Z', sessionsStarted: 123 }
@@ -16,13 +20,14 @@ describe('plugin: server sessions', () => {
       stop () {}
       track () {}
     }
-    const plugin = proxyquire('../session', {
-      './tracker': TrackerMock
-    })
+
+    Tracker.mockImplementation(() => new TrackerMock() as any)
+  })
+  it('should send the session', done => {
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
     c._setDelivery(client => ({
       sendEvent: () => {},
-      sendSession: (session, cb = () => {}) => {
+      sendSession: (session: any, cb = () => {}) => {
         expect(session.sessionCounts.length).toBe(1)
         expect(session.sessionCounts[0].sessionsStarted).toBe(123)
         done()
@@ -34,20 +39,7 @@ describe('plugin: server sessions', () => {
   })
 
   it('should not send the session when releaseStage is not in enabledReleaseStages', done => {
-    class TrackerMock extends Emitter {
-      start () {
-        this.emit('summary', [
-          { startedAt: '2017-12-12T13:54:00.000Z', sessionsStarted: 123 }
-        ])
-      }
-
-      stop () {}
-      track () {}
-    }
-    const plugin = proxyquire('../session', {
-      './tracker': TrackerMock
-    })
-
+    expect.assertions(1)
     const c = new Client({
       apiKey: 'aaaa-aaaa-aaaa-aaaa',
       logger: {
@@ -65,9 +57,8 @@ describe('plugin: server sessions', () => {
     })
     c._setDelivery(client => ({
       sendEvent: () => {},
-      sendSession: (session, cb = () => {}) => {
-        // no session should be sent
-        expect(true).toBe(false)
+      sendSession: (session: any, cb = () => {}) => {
+        done(new Error('no session should be sent'))
       }
     }))
 
@@ -76,18 +67,7 @@ describe('plugin: server sessions', () => {
   })
 
   it('should include the correct app and device payload properties', done => {
-    class TrackerMock extends Emitter {
-      start () {
-        this.emit('summary', [
-          { startedAt: '2017-12-12T13:54:00.000Z', sessionsStarted: 123 }
-        ])
-      }
-
-      stop () {}
-      track () {}
-    }
-    const plugin = proxyquire('../session', { './tracker': TrackerMock })
-
+    expect.assertions(5)
     const c = new Client({
       apiKey: 'aaaa-aaaa-aaaa-aaaa',
       endpoints: { notify: 'bloo', sessions: 'blah' },
@@ -104,7 +84,7 @@ describe('plugin: server sessions', () => {
 
     c._setDelivery(client => ({
       sendEvent: () => {},
-      sendSession: (session, cb = () => {}) => {
+      sendSession: (session: any, cb = () => {}) => {
         expect(session.sessionCounts.length).toBe(1)
         expect(session.sessionCounts[0].sessionsStarted).toBe(123)
         expect(session.app).toEqual({ version: '1.2.3', releaseStage: 'qa', type: 'server' })
@@ -119,12 +99,12 @@ describe('plugin: server sessions', () => {
   })
 
   it('should clone properties that shouldn’t be mutated on the original client', () => {
-    class TrackerMock extends Emitter {
+    class TrackerMock extends EventEmitter {
       start () {}
       stop () {}
       track () {}
     }
-    const plugin = proxyquire('../session', { './tracker': TrackerMock })
+    Tracker.mockImplementation(() => new TrackerMock() as any)
 
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
     c.use(plugin)
@@ -144,30 +124,30 @@ describe('plugin: server sessions', () => {
   })
 
   it('should support pausing/resuming sessions', () => {
-    class TrackerMock extends Emitter {
+    class TrackerMock extends EventEmitter {
       start () {}
       stop () {}
       track () {}
     }
-    const plugin = proxyquire('../session', { './tracker': TrackerMock })
+    Tracker.mockImplementation(() => new TrackerMock() as any)
 
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
     c.use(plugin)
 
     // start a session and get its id
     const sessionClient = c.startSession()
-    const sid0 = sessionClient._session.id
+    const sid0 = (sessionClient._session as Session).id
 
     // ensure pausing the session clears the client._session property
     sessionClient.pauseSession()
     const s1 = sessionClient._session
-    const psid1 = sessionClient._pausedSession.id
+    const psid1 = (sessionClient._pausedSession as Session).id
     expect(s1).toBe(null)
     expect(psid1).toBe(sid0)
 
     // ensure resuming the session gets back the original session (not a new one)
     sessionClient.resumeSession()
-    const sid2 = sessionClient._session.id
+    const sid2 = (sessionClient._session as Session).id
     expect(sid2).toBe(sid0)
 
     // ensure resumeSession() starts a new one when no paused session exists
@@ -175,7 +155,7 @@ describe('plugin: server sessions', () => {
     sessionClient._pausedSession = null
     const resumedClient = sessionClient.resumeSession()
     expect(resumedClient._session).toBeTruthy()
-    const sid3 = resumedClient._session.id
+    const sid3 = (resumedClient._session as Session).id
     expect(sid3).not.toBe(sid0)
   })
 })
