@@ -3,7 +3,7 @@ package com.bugsnag.reactnative
 import com.bugsnag.android.BreadcrumbType
 import com.bugsnag.android.Client
 import com.bugsnag.android.InternalHooks
-import com.facebook.react.bridge.Arguments
+import com.bugsnag.android.NativeInterface
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
@@ -87,7 +87,18 @@ class BugsnagReactNative(reactContext: ReactApplicationContext) :
 
     @ReactMethod
     fun getPayloadInfo(promise: Promise) {
-        val info = WritableNativeMap()
+//        val info: WritableMap// = WritableNativeMap()
+        NativeInterface.setClient(client)
+        NativeInterface.getBreadcrumbs()
+
+        // TODO implement below
+//        info.putArray("breadcrumbs", null)
+//        info.putArray("threads", null)
+//        info.putMap("app", null)
+//        info.putMap("device", null)
+
+
+
         // info.putMap("app", Arguments.makeNativeMap(NativeInterface.getAppData()));
         // info.putMap("device", Arguments.makeNativeMap(NativeInterface.getDeviceData()));
         //
@@ -99,6 +110,6 @@ class BugsnagReactNative(reactContext: ReactApplicationContext) :
         // }
         //
         // info.putArray("breadcrumbs", Arguments.makeNativeArray(values));
-        promise.resolve(info)
+        promise.resolve(null)
     }
 }
