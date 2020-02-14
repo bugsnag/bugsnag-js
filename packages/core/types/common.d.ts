@@ -25,7 +25,7 @@ export interface Config {
   maxBreadcrumbs?: number
   metadata?: { [key: string]: any }
   releaseStage?: string
-  user?: {} | null
+  user?: User | null
 }
 
 export type OnErrorCallback = (event: Event, cb?: (err: null | Error) => void) => void | Promise<void> | boolean;
