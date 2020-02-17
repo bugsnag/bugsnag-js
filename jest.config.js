@@ -9,10 +9,18 @@ module.exports = {
       ]
     },
     {
+      displayName: 'react native',
+      preset: 'react-native',
+      testMatch: [
+        testsForPackage('plugin-react-native-unhandled-rejection')
+      ]
+    },
+    {
       displayName: 'node plugins',
       testEnvironment: 'node',
       testMatch: [
         testsForPackage('plugin-server-*')
       ]
-    }]
+    }
+  ]
 }
