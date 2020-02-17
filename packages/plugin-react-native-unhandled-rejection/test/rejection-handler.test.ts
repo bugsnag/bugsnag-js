@@ -1,6 +1,5 @@
 import plugin from '../'
 import Client from '@bugsnag/core/client'
-import Event from '@bugsnag/core/event'
 
 // use the promise polyfill that RN uses, otherwise the unhandled rejections in
 // this test go to node's process#unhandledRejection event
@@ -9,6 +8,8 @@ import RnPromise from 'promise/setimmediate'
 
 describe('plugin: react native rejection handler', () => {
   it('should hook in to the promise rejection tracker', (done) => {
+    expect.assertions(4)
+
     const c = new Client({ apiKey: 'api_key' })
     c._setDelivery(client => ({
       sendEvent: (payload) => {
@@ -33,12 +34,12 @@ describe('plugin: react native rejection handler', () => {
   })
 
   it('should be disabled when autoDetectErrors=false', (done) => {
-    expect.assertions(1)
+    expect.assertions(0)
 
     const c = new Client({ apiKey: 'api_key', autoDetectErrors: false })
     c._setDelivery(client => ({
-      sendReport: (report) => {
-        expect(report).not.toBeTruthy()
+      sendEvent: (payload) => {
+        done(new Error('event should not be sent when autoDetectErrors=false'))
       }
     }))
     const stop = plugin.init(c)
@@ -55,13 +56,13 @@ describe('plugin: react native rejection handler', () => {
     setTimeout(done, 300)
   })
 
-  it('should be disabled when autoDetectUnhandledRejections=false', (done) => {
-    expect.assertions(1)
+  it('should be disabled when enabledErrorTypes.unhandledRejections=false', (done) => {
+    expect.assertions(0)
 
-    const c = new Client({ apiKey: 'api_key', autoDetectUnhandledRejections: false })
-    c._setDelivery((client: Client) => ({
-      sendEvent: (payload: Event) => {
-        expect(payload).not.toBeTruthy()
+    const c = new Client({ apiKey: 'api_key', autoDetectErrors: true, enabledErrorTypes: { unhandledRejections: false, unhandledExceptions: true } })
+    c._setDelivery((client) => ({
+      sendEvent: (payload) => {
+        done(new Error('event should not be sent when enabledErrorTypes.unhandledRejections=false'))
       }
     }))
     const stop = plugin.init(c)
