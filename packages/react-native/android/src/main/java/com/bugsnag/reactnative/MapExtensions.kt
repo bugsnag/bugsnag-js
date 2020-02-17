@@ -13,6 +13,7 @@ internal fun Map<String, Any?>.toWritableMap(): WritableMap {
             null -> nativeMap.putNull(key)
             is Boolean -> nativeMap.putBoolean(key, obj)
             is Int -> nativeMap.putInt(key, obj)
+            is Long -> nativeMap.putDouble(key, obj.toDouble())
             is Number -> nativeMap.putDouble(key, obj as Double)
             is String -> nativeMap.putString(key, obj)
             is Map<*, *> -> nativeMap.putMap(key, Arguments.makeNativeMap(obj as MutableMap<String, Any>))
