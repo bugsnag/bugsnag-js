@@ -40,7 +40,7 @@
     // "baseUrl": "./",                       /* Base directory to resolve non-absolute module names. */
     // "paths": {},                           /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */
     // "rootDirs": [],                        /* List of root folders whose combined content represents the structure of the project at runtime. */
-    // "typeRoots": [                            /* List of folders to include type definitions from. */
+    // "typeRoots": [                         /* List of folders to include type definitions from. */
     //   "node_modules/@types",
     //   "packages/core/types"
     // ],
@@ -62,5 +62,6 @@
   "include": [
     "packages/core",
     "packages/plugin-react-native-app-state-breadcrumbs",
+    "packages/plugin-server-session",
   ]
 }

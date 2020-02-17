@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import Client from '../client'
 import Event from '../event'
 import { Session } from '..'
@@ -259,7 +258,6 @@ describe('@bugsnag/core/client', () => {
       expect(client._breadcrumbs.length).toBe(1)
       expect(client._breadcrumbs[0].type).toBe('error')
       expect(client._breadcrumbs[0].message).toBe('Error')
-      // @ts-ignore
       expect(client._breadcrumbs[0].metadata.stacktrace).toBe(undefined)
       // the error shouldn't appear as a breadcrumb for itself
       expect(payloads[0].events[0].breadcrumbs.length).toBe(0)

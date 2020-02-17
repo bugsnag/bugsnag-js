@@ -13,6 +13,13 @@ module.exports = {
       testMatch: [
         testsForPackage('plugin-react-native-app-state-breadcrumbs')
       ]
+    },
+    {
+      displayName: 'node plugins',
+      testEnvironment: 'node',
+      testMatch: [
+        testsForPackage('plugin-server-*')
+      ]
     }
   ]
 }

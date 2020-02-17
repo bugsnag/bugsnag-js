@@ -28,6 +28,7 @@
 - Update `Event` to support multiple errors [#680](https://github.com/bugsnag/bugsnag-js/pull/680)
 - Move context to a private property on `Client`, and get/set via `getContext()/setContext()` [#681](https://github.com/bugsnag/bugsnag-js/pull/681)
 - Update `@bugsnag/safe-json-stringify` to replace redacted values with `[REDACTED]` [#683](https://github.com/bugsnag/bugsnag-js/pull/683)
+- Update `collectUserIp` option to use `[REDACTED]` instead of `[NOT COLLECTED]` for consistency [#743](https://github.com/bugsnag/bugsnag-js/pull/743)
 - Refactor type definitions [#682](https://github.com/bugsnag/bugsnag-js/pull/682)
 - Ensure automatic context is not used when `setContext(null)` has been called [#694](https://github.com/bugsnag/bugsnag-js/pull/694)
 - Rename `filters` option to `redactedKeys` [#704](https://github.com/bugsnag/bugsnag-js/pull/704)

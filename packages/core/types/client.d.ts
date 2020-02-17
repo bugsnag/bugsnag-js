@@ -1,7 +1,6 @@
 import Breadcrumb from './breadcrumb'
 import {
   NotifiableError,
-  BreadcrumbMetadataValue,
   BreadcrumbType,
   Plugin,
   OnErrorCallback,
@@ -31,7 +30,7 @@ declare class Client {
   // breadcrumbs
   public leaveBreadcrumb(
     message: string,
-    metadata?: { [key: string]: BreadcrumbMetadataValue },
+    metadata?: { [key: string]: any },
     type?: BreadcrumbType
   ): void;
 
