@@ -67,8 +67,11 @@ class BugsnagReactNative(reactContext: ReactApplicationContext) :
     }
 
     @ReactMethod
-    fun updateMetadata(section: String, data: ReadableMap) {
-        client.addMetadata(section, "TODO", "metadata update from js")
+    fun updateMetadata(section: String, data: ReadableMap?) {
+        when (data) {
+            null -> client.clearMetadata(section)
+            else -> client.addMetadata(section, data.toHashMap())
+        }
     }
 
     @ReactMethod
