@@ -1,5 +1,6 @@
 package com.bugsnag.reactnative
 
+import com.bugsnag.android.BreadcrumbType
 import com.bugsnag.android.Client
 import com.bugsnag.android.InternalHooks
 import com.facebook.react.bridge.Arguments
@@ -10,6 +11,7 @@ import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.bridge.WritableNativeMap
+import java.util.Locale
 
 class BugsnagReactNative(reactContext: ReactApplicationContext) :
     ReactContextBaseJavaModule(reactContext) {
@@ -41,7 +43,11 @@ class BugsnagReactNative(reactContext: ReactApplicationContext) :
 
     @ReactMethod
     fun leaveBreadcrumb(map: ReadableMap) {
-        client.leaveBreadcrumb("Breadcrumb from JS: TODO")
+        val msg = map.getString("message")!!
+        val type = BreadcrumbType.valueOf(map.getString("type")!!.toUpperCase(Locale.US))
+        val data = map.getMap("metadata")
+        val metadata: Map<String, Any?> = data?.toHashMap() ?: emptyMap()
+        client.leaveBreadcrumb(msg, type, metadata)
     }
 
     @ReactMethod
