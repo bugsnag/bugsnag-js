@@ -1,6 +1,7 @@
 package com.bugsnag.reactnative
 
 import com.bugsnag.android.BreadcrumbType
+import com.bugsnag.android.Bugsnag
 import com.bugsnag.android.Client
 import com.bugsnag.android.InternalHooks
 import com.facebook.react.bridge.Arguments
@@ -17,23 +18,28 @@ class BugsnagReactNative(reactContext: ReactApplicationContext) :
     ReactContextBaseJavaModule(reactContext) {
 
     private val configSerializer = ConfigSerializer()
+    internal lateinit var internalHooks: InternalHooks
     internal lateinit var client: Client
+
+    private val appSerializer = AppSerializer()
+    private val deviceSerializer = DeviceSerializer()
+    private val breadcrumbSerializer = BreadcrumbSerializer()
+    private val threadSerializer = ThreadSerializer()
 
     @ReactMethod(isBlockingSynchronousMethod = true)
     fun configure(): WritableMap {
         try {
             // see if bugsnag-android is already initalised
-            client = InternalHooks.getClient()
+            client = Bugsnag.getClient()
+            internalHooks = InternalHooks(client)
         } catch (er: IllegalStateException) {
             throw er
         }
 
-        val config = InternalHooks.getConfig()
-
         // TODO: I think we also want to return values for state here too:
         // i.e of user, context and metadata
         val map = HashMap<String, Any?>()
-        configSerializer.serialize(map, config)
+        configSerializer.serialize(map, internalHooks.config)
         return map.toWritableMap()
     }
 
@@ -90,18 +96,29 @@ class BugsnagReactNative(reactContext: ReactApplicationContext) :
 
     @ReactMethod
     fun getPayloadInfo(promise: Promise) {
-        val info = WritableNativeMap()
-        // info.putMap("app", Arguments.makeNativeMap(NativeInterface.getAppData()));
-        // info.putMap("device", Arguments.makeNativeMap(NativeInterface.getDeviceData()));
-        //
-        // List<Breadcrumb> breadcrumbs = NativeInterface.getBreadcrumbs();
-        // List<WritableMap> values = new ArrayList<>();
-        //
-        // for (Breadcrumb breadcrumb : breadcrumbs) {
-        //     values.add(breadcrumbSerializer.serialize(breadcrumb));
-        // }
-        //
-        // info.putArray("breadcrumbs", Arguments.makeNativeArray(values));
+        val info: WritableMap = WritableNativeMap()
+
+        val app = mutableMapOf<String, Any?>()
+        appSerializer.serialize(app, internalHooks.appWithState)
+        info.putMap("app", app.toWritableMap())
+
+        val device = mutableMapOf<String, Any?>()
+        deviceSerializer.serialize(device, internalHooks.deviceWithState)
+        info.putMap("device", device.toWritableMap())
+
+        val crumbs: List<Map<String, Any?>> = internalHooks.breadcrumbs.map {
+            val map = mutableMapOf<String, Any?>()
+            breadcrumbSerializer.serialize(map, it)
+            map
+        }
+        info.putArray("breadcrumbs", Arguments.makeNativeArray(crumbs))
+
+        val threads: List<Map<String, Any?>> = internalHooks.threads.map {
+            val map = mutableMapOf<String, Any?>()
+            threadSerializer.serialize(map, it)
+            map
+        }
+        info.putArray("threads", Arguments.makeNativeArray(threads))
         promise.resolve(info)
     }
 }
