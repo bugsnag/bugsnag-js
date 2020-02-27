@@ -8,113 +8,111 @@ import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.bridge.WritableNativeMap
-import java.util.Locale
 
 class BugsnagReactNative(reactContext: ReactApplicationContext) :
     ReactContextBaseJavaModule(reactContext) {
 
-    private val configSerializer = ConfigSerializer()
-    internal lateinit var internalHooks: InternalHooks
-    internal lateinit var client: Client
+    lateinit var plugin: BugsnagReactNativePlugin
+    lateinit var logger: Logger
 
-    private val appSerializer = AppSerializer()
-    private val deviceSerializer = DeviceSerializer()
-    private val breadcrumbSerializer = BreadcrumbSerializer()
-    private val threadSerializer = ThreadSerializer()
+    override fun getName(): String = "BugsnagReactNative"
+
+    private fun logFailure(msg: String) {
+        logger.e("Failed to call $msg on bugsnag-plugin-react-native, continuing")
+    }
 
     @ReactMethod(isBlockingSynchronousMethod = true)
     fun configure(): WritableMap {
-        try {
-            // see if bugsnag-android is already initalised
-            client = Bugsnag.getClient()
-            internalHooks = InternalHooks(client)
-        } catch (er: IllegalStateException) {
-            throw er
+        return try {
+            logger = NativeInterface.getLogger()
+            plugin = NativeInterface.getPlugin(BugsnagReactNativePlugin::class.java)!!
+            plugin.configure().toWritableMap()
+        } catch (exc: Throwable) {
+            logFailure("configure")
+            WritableNativeMap()
         }
-
-        // TODO: I think we also want to return values for state here too:
-        // i.e of user, context and metadata
-        val map = HashMap<String, Any?>()
-        configSerializer.serialize(map, internalHooks.config)
-        return map.toWritableMap()
-    }
-
-    override fun getName(): String {
-        return "BugsnagReactNative"
     }
 
     @ReactMethod
     fun leaveBreadcrumb(map: ReadableMap) {
-        val msg = map.getString("message")!!
-        val type = BreadcrumbType.valueOf(map.getString("type")!!.toUpperCase(Locale.US))
-        val data = map.getMap("metadata")
-        val metadata: Map<String, Any?> = data?.toHashMap() ?: emptyMap()
-        client.leaveBreadcrumb(msg, type, metadata)
+        try {
+            plugin.leaveBreadcrumb(map.toHashMap())
+        } catch (exc: Throwable) {
+            logFailure("leaveBreadcrumb")
+        }
     }
 
     @ReactMethod
-    fun startSession() = client.startSession()
+    fun startSession() {
+        try {
+            plugin.startSession()
+        } catch (exc: Throwable) {
+            logFailure("startSession")
+        }
+    }
 
     @ReactMethod
-    fun pauseSession() = client.pauseSession()
+    fun pauseSession() {
+        try {
+            plugin.pauseSession()
+        } catch (exc: Throwable) {
+            logFailure("pauseSession")
+        }
+    }
 
     @ReactMethod
     fun resumeSession() {
-        client.resumeSession()
+        try {
+            plugin.resumeSession()
+        } catch (exc: Throwable) {
+            logFailure("resumeSession")
+        }
     }
 
     @ReactMethod
     fun updateContext(context: String?) {
-        client.context = context
+        try {
+            plugin.updateContext(context)
+        } catch (exc: Throwable) {
+            logFailure("updateContext")
+        }
     }
 
     @ReactMethod
     fun updateMetadata(section: String, data: ReadableMap?) {
-        when (data) {
-            null -> client.clearMetadata(section)
-            else -> client.addMetadata(section, data.toHashMap())
+        try {
+            plugin.updateMetadata(section, data?.toHashMap())
+        } catch (exc: Throwable) {
+            logFailure("updateMetadata")
         }
     }
 
     @ReactMethod
     fun updateUser(id: String?, email: String?, name: String?) {
-        client.setUser(id, email, name)
+        try {
+            plugin.updateUser(id, email, name)
+        } catch (exc: Throwable) {
+            logFailure("updateUser")
+        }
     }
 
     @ReactMethod
     fun dispatch(payload: ReadableMap, promise: Promise) {
-        client.notify(RuntimeException("TODO")) {
-            // TODO modify payload here
-            true
+        try {
+            plugin.dispatch(payload.toHashMap())
+            promise.resolve(true)
+        } catch (exc: Throwable) {
+            logFailure("dispatch")
         }
-        promise.resolve(true)
     }
 
     @ReactMethod
     fun getPayloadInfo(promise: Promise) {
-        val info: WritableMap = WritableNativeMap()
-
-        val app = mutableMapOf<String, Any?>()
-        appSerializer.serialize(app, internalHooks.appWithState)
-        info.putMap("app", app.toWritableMap())
-
-        val device = mutableMapOf<String, Any?>()
-        deviceSerializer.serialize(device, internalHooks.deviceWithState)
-        info.putMap("device", device.toWritableMap())
-
-        val crumbs: List<Map<String, Any?>> = internalHooks.breadcrumbs.map {
-            val map = mutableMapOf<String, Any?>()
-            breadcrumbSerializer.serialize(map, it)
-            map
+        try {
+            val info = plugin.getPayloadInfo()
+            promise.resolve(Arguments.makeNativeMap(info))
+        } catch (exc: Throwable) {
+            logFailure("getPayloadInfo")
         }
-        info.putArray("breadcrumbs", Arguments.makeNativeArray(crumbs))
-
-        val threads: List<Map<String, Any?>> = internalHooks.threads.map {
-            val map = mutableMapOf<String, Any?>()
-            threadSerializer.serialize(map, it)
-            map
-        }
-        info.putArray("threads", Arguments.makeNativeArray(threads))
-        promise.resolve(info)
     }
 }
