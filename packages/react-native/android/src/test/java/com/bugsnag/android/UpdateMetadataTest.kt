@@ -1,9 +1,7 @@
-package com.bugsnag.reactnative
+package com.bugsnag.android
 
-import com.bugsnag.android.Client
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReadableMap
-import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith

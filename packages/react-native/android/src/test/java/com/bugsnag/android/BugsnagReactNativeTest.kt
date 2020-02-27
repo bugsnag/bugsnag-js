@@ -1,6 +1,5 @@
-package com.bugsnag.reactnative
+package com.bugsnag.android
 
-import com.bugsnag.android.Client
 import com.facebook.react.bridge.ReactApplicationContext
 import org.junit.Assert.assertEquals
 import org.junit.Before

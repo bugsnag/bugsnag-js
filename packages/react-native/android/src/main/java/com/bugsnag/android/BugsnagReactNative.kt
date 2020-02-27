@@ -1,9 +1,5 @@
-package com.bugsnag.reactnative
+package com.bugsnag.android
 
-import com.bugsnag.android.BreadcrumbType
-import com.bugsnag.android.Bugsnag
-import com.bugsnag.android.Client
-import com.bugsnag.android.InternalHooks
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext

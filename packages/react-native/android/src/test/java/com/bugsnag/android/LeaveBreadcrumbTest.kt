@@ -1,7 +1,5 @@
-package com.bugsnag.reactnative
+package com.bugsnag.android
 
-import com.bugsnag.android.BreadcrumbType
-import com.bugsnag.android.Client
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReadableMap
 import org.junit.Before
