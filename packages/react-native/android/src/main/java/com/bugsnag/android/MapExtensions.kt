@@ -1,4 +1,4 @@
-package com.bugsnag.reactnative
+package com.bugsnag.android
 
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.WritableMap
