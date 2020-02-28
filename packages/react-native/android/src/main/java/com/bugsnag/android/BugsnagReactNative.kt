@@ -24,8 +24,9 @@ class BugsnagReactNative(reactContext: ReactApplicationContext) :
     @ReactMethod(isBlockingSynchronousMethod = true)
     fun configure(): WritableMap {
         return try {
-            logger = NativeInterface.getLogger()
-            plugin = NativeInterface.getPlugin(BugsnagReactNativePlugin::class.java)!!
+            val client = Bugsnag.getClient()
+            logger = client.logger
+            plugin = client.getPlugin(BugsnagReactNativePlugin::class.java)!!
             plugin.configure().toWritableMap()
         } catch (exc: Throwable) {
             logFailure("configure")
