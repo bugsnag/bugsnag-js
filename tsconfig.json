@@ -62,6 +62,7 @@
   "include": [
     "packages/core",
     "packages/plugin-react-native-app-state-breadcrumbs",
+    "packages/plugin-react-native-unhandled-rejection",
     "packages/plugin-server-session",
   ]
 }
