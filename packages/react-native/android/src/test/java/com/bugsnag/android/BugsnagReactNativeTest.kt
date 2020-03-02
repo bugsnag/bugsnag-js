@@ -1,11 +1,15 @@
 package com.bugsnag.android
 
+import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
+import com.facebook.react.bridge.ReadableMap
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
+import org.mockito.Mockito.`when`
+import org.mockito.Mockito.any
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
@@ -17,14 +21,22 @@ class BugsnagReactNativeTest {
     lateinit var ctx: ReactApplicationContext
 
     @Mock
-    lateinit var client: Client
+    lateinit var plugin: BugsnagReactNativePlugin
+
+    @Mock
+    lateinit var map: ReadableMap
+
+    @Mock
+    lateinit var promise: Promise
 
     private lateinit var brn: BugsnagReactNative
 
     @Before
     fun setUp() {
         brn = BugsnagReactNative(ctx)
-        brn.client = client
+        brn.plugin = plugin
+        brn.logger = object: Logger {}
+        `when`(map.toHashMap()).thenReturn(HashMap())
     }
 
     @Test
@@ -33,32 +45,50 @@ class BugsnagReactNativeTest {
     }
 
     @Test
+    fun leaveBreadcrumb() {
+        brn.leaveBreadcrumb(map)
+        verify(plugin, times(1)).leaveBreadcrumb(any())
+    }
+
+    @Test
     fun startSession() {
         brn.startSession()
-        verify(client, times(1)).startSession()
+        verify(plugin, times(1)).startSession()
     }
 
     @Test
     fun pauseSession() {
         brn.pauseSession()
-        verify(client, times(1)).pauseSession()
+        verify(plugin, times(1)).pauseSession()
     }
 
     @Test
     fun resumeSession() {
         brn.resumeSession()
-        verify(client, times(1)).resumeSession()
+        verify(plugin, times(1)).resumeSession()
     }
 
     @Test
     fun updateContext() {
         brn.updateContext("Foo")
-        verify(client, times(1)).context = "Foo"
+        verify(plugin, times(1)).updateContext("Foo")
     }
 
     @Test
     fun updateUser() {
         brn.updateUser("123", "joe@example.com", "Joe")
-        verify(client, times(1)).setUser("123", "joe@example.com", "Joe")
+        verify(plugin, times(1)).updateUser("123", "joe@example.com", "Joe")
+    }
+
+    @Test
+    fun dispatch() {
+        brn.dispatch(map, promise)
+        verify(plugin, times(1)).dispatch(any())
+    }
+
+    @Test
+    fun getPayloadInfo() {
+        brn.getPayloadInfo(promise)
+        verify(plugin, times(1)).getPayloadInfo()
     }
 }
