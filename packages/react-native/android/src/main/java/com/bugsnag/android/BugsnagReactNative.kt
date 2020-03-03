@@ -8,10 +8,12 @@ import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.bridge.WritableNativeMap
+import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter
 
-class BugsnagReactNative(reactContext: ReactApplicationContext) :
+class BugsnagReactNative(private val reactContext: ReactApplicationContext) :
     ReactContextBaseJavaModule(reactContext) {
 
+    lateinit var bridge: RCTDeviceEventEmitter
     lateinit var plugin: BugsnagReactNativePlugin
     lateinit var logger: Logger
 
@@ -25,13 +27,33 @@ class BugsnagReactNative(reactContext: ReactApplicationContext) :
     private fun configure(): WritableMap {
         return try {
             val client = Bugsnag.getClient()
+            bridge = reactContext.getJSModule(RCTDeviceEventEmitter::class.java)
             logger = client.logger
             plugin = client.getPlugin(BugsnagReactNativePlugin::class.java)!!
+            plugin.registerForMessageEvents { emitEvent(it) }
             plugin.configure().toWritableMap()
         } catch (exc: Throwable) {
             logFailure("configure", exc)
             WritableNativeMap()
         }
+    }
+
+    /**
+     * Serializes a MessageEvent into a WritableMap and sends it across the React Bridge
+     */
+    private fun emitEvent(event: MessageEvent) {
+        logger.d("Received MessageEvent: ${event.type}")
+
+        val map = Arguments.createMap()
+        map.putString("type", event.type)
+
+        when (event.type) {
+            "ContextUpdate" -> map.putString("data", event.data as String?)
+            "UserUpdate" -> map.putMap("data", Arguments.makeNativeMap(event.data as Map<String, Any?>?))
+            "MetadataUpdate" -> map.putMap("data", Arguments.makeNativeMap(event.data as Map<String, Any?>?))
+            else -> logger.w("Received unknown message event ${event.type}, ignoring")
+        }
+        bridge.emit("bugsnag::sync", map)
     }
 
     @ReactMethod
