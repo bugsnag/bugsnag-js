@@ -88,7 +88,7 @@ class BugsnagReactNativeTest {
 
     @Test
     fun getPayloadInfo() {
-        brn.getPayloadInfo(promise)
+        brn.getPayloadInfo(map, promise)
         verify(plugin, times(1)).getPayloadInfo()
     }
 }

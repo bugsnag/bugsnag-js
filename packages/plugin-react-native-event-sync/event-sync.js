@@ -6,7 +6,7 @@ module.exports = {
         breadcrumbs,
         app,
         device
-      } = await NativeClient.getPayloadInfo()
+      } = await NativeClient.getPayloadInfo({ unhandled: event.unhandled })
 
       event.breadcrumbs = breadcrumbs
       event.app = { ...event.app, ...app }

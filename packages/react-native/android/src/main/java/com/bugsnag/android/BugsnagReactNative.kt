@@ -109,9 +109,10 @@ class BugsnagReactNative(reactContext: ReactApplicationContext) :
     }
 
     @ReactMethod
-    private fun getPayloadInfo(promise: Promise) {
+    private fun getPayloadInfo(payload: ReadableMap, promise: Promise) {
         try {
-            val info = plugin.getPayloadInfo()
+            val unhandled = payload.getBoolean("unhandled")
+            val info = plugin.getPayloadInfo(unhandled)
             promise.resolve(Arguments.makeNativeMap(info))
         } catch (exc: Throwable) {
             logFailure("getPayloadInfo", exc)
