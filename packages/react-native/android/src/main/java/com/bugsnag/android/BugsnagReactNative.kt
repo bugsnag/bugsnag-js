@@ -13,6 +13,14 @@ import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEm
 class BugsnagReactNative(private val reactContext: ReactApplicationContext) :
     ReactContextBaseJavaModule(reactContext) {
 
+    internal companion object {
+        private const val UPDATE_CONTEXT = "ContextUpdate"
+        private const val UPDATE_USER = "UserUpdate"
+        private const val UPDATE_METADATA = "MetadataUpdate"
+        private const val SYNC_KEY = "bugsnag::sync"
+        private const val DATA_KEY = "data"
+    }
+
     lateinit var bridge: RCTDeviceEventEmitter
     lateinit var plugin: BugsnagReactNativePlugin
     lateinit var logger: Logger
@@ -48,12 +56,12 @@ class BugsnagReactNative(private val reactContext: ReactApplicationContext) :
         map.putString("type", event.type)
 
         when (event.type) {
-            "ContextUpdate" -> map.putString("data", event.data as String?)
-            "UserUpdate" -> map.putMap("data", Arguments.makeNativeMap(event.data as Map<String, Any?>?))
-            "MetadataUpdate" -> map.putMap("data", Arguments.makeNativeMap(event.data as Map<String, Any?>?))
+            UPDATE_CONTEXT -> map.putString(DATA_KEY, event.data as String?)
+            UPDATE_USER -> map.putMap(DATA_KEY, Arguments.makeNativeMap(event.data as Map<String, Any?>?))
+            UPDATE_METADATA -> map.putMap(DATA_KEY, Arguments.makeNativeMap(event.data as Map<String, Any?>?))
             else -> logger.w("Received unknown message event ${event.type}, ignoring")
         }
-        bridge.emit("bugsnag::sync", map)
+        bridge.emit(SYNC_KEY, map)
     }
 
     @ReactMethod
