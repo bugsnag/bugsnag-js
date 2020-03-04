@@ -17,103 +17,104 @@ class BugsnagReactNative(reactContext: ReactApplicationContext) :
 
     override fun getName(): String = "BugsnagReactNative"
 
-    private fun logFailure(msg: String) {
-        logger.e("Failed to call $msg on bugsnag-plugin-react-native, continuing")
+    private fun logFailure(msg: String, exc: Throwable) {
+        logger.e("Failed to call $msg on bugsnag-plugin-react-native, continuing", exc)
     }
 
     @ReactMethod(isBlockingSynchronousMethod = true)
-    fun configure(): WritableMap {
+    private fun configure(): WritableMap {
         return try {
             val client = Bugsnag.getClient()
             logger = client.logger
             plugin = client.getPlugin(BugsnagReactNativePlugin::class.java)!!
             plugin.configure().toWritableMap()
         } catch (exc: Throwable) {
-            logFailure("configure")
+            logFailure("configure", exc)
             WritableNativeMap()
         }
     }
 
     @ReactMethod
-    fun leaveBreadcrumb(map: ReadableMap) {
+    private fun leaveBreadcrumb(map: ReadableMap) {
         try {
             plugin.leaveBreadcrumb(map.toHashMap())
         } catch (exc: Throwable) {
-            logFailure("leaveBreadcrumb")
+            logFailure("leaveBreadcrumb", exc)
         }
     }
 
     @ReactMethod
-    fun startSession() {
+    private fun startSession() {
         try {
             plugin.startSession()
         } catch (exc: Throwable) {
-            logFailure("startSession")
+            logFailure("startSession", exc)
         }
     }
 
     @ReactMethod
-    fun pauseSession() {
+    private fun pauseSession() {
         try {
             plugin.pauseSession()
         } catch (exc: Throwable) {
-            logFailure("pauseSession")
+            logFailure("pauseSession", exc)
         }
     }
 
     @ReactMethod
-    fun resumeSession() {
+    private fun resumeSession() {
         try {
             plugin.resumeSession()
         } catch (exc: Throwable) {
-            logFailure("resumeSession")
+            logFailure("resumeSession", exc)
         }
     }
 
     @ReactMethod
-    fun updateContext(context: String?) {
+    private fun updateContext(context: String?) {
         try {
             plugin.updateContext(context)
         } catch (exc: Throwable) {
-            logFailure("updateContext")
+            logFailure("updateContext", exc)
         }
     }
 
     @ReactMethod
-    fun updateMetadata(section: String, data: ReadableMap?) {
+    private fun updateMetadata(section: String, data: ReadableMap?) {
         try {
             plugin.updateMetadata(section, data?.toHashMap())
         } catch (exc: Throwable) {
-            logFailure("updateMetadata")
+            logFailure("updateMetadata", exc)
         }
     }
 
     @ReactMethod
-    fun updateUser(id: String?, email: String?, name: String?) {
+    private fun updateUser(id: String?, email: String?, name: String?) {
         try {
             plugin.updateUser(id, email, name)
         } catch (exc: Throwable) {
-            logFailure("updateUser")
+            logFailure("updateUser", exc)
         }
     }
 
     @ReactMethod
-    fun dispatch(payload: ReadableMap, promise: Promise) {
+    private fun dispatch(payload: ReadableMap, promise: Promise) {
         try {
             plugin.dispatch(payload.toHashMap())
             promise.resolve(true)
         } catch (exc: Throwable) {
-            logFailure("dispatch")
+            logFailure("dispatch", exc)
+            promise.resolve(false)
         }
     }
 
     @ReactMethod
-    fun getPayloadInfo(promise: Promise) {
+    private fun getPayloadInfo(promise: Promise) {
         try {
             val info = plugin.getPayloadInfo()
             promise.resolve(Arguments.makeNativeMap(info))
         } catch (exc: Throwable) {
-            logFailure("getPayloadInfo")
+            logFailure("getPayloadInfo", exc)
         }
     }
 }
