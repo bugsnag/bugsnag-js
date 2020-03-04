@@ -3,7 +3,7 @@ package com.reactnative;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import com.bugsnag.reactnative.BugsnagPackage;
+import com.bugsnag.android.BugsnagPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -46,7 +46,6 @@ public class MainApplication extends Application implements ReactApplication {
   @Override
   public void onCreate() {
     super.onCreate();
-    BugsnagReactNativePlugin.register();
     Bugsnag.start(this);
     SoLoader.init(this, /* native exopackage */ false);
   }
