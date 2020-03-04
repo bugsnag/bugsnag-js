@@ -8,10 +8,20 @@ import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.bridge.WritableNativeMap
+import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter
 
-class BugsnagReactNative(reactContext: ReactApplicationContext) :
+class BugsnagReactNative(private val reactContext: ReactApplicationContext) :
     ReactContextBaseJavaModule(reactContext) {
 
+    internal companion object {
+        private const val UPDATE_CONTEXT = "ContextUpdate"
+        private const val UPDATE_USER = "UserUpdate"
+        private const val UPDATE_METADATA = "MetadataUpdate"
+        private const val SYNC_KEY = "bugsnag::sync"
+        private const val DATA_KEY = "data"
+    }
+
+    lateinit var bridge: RCTDeviceEventEmitter
     lateinit var plugin: BugsnagReactNativePlugin
     lateinit var logger: Logger
 
@@ -25,13 +35,33 @@ class BugsnagReactNative(reactContext: ReactApplicationContext) :
     private fun configure(): WritableMap {
         return try {
             val client = Bugsnag.getClient()
+            bridge = reactContext.getJSModule(RCTDeviceEventEmitter::class.java)
             logger = client.logger
             plugin = client.getPlugin(BugsnagReactNativePlugin::class.java)!!
+            plugin.registerForMessageEvents { emitEvent(it) }
             plugin.configure().toWritableMap()
         } catch (exc: Throwable) {
             logFailure("configure", exc)
             WritableNativeMap()
         }
+    }
+
+    /**
+     * Serializes a MessageEvent into a WritableMap and sends it across the React Bridge
+     */
+    private fun emitEvent(event: MessageEvent) {
+        logger.d("Received MessageEvent: ${event.type}")
+
+        val map = Arguments.createMap()
+        map.putString("type", event.type)
+
+        when (event.type) {
+            UPDATE_CONTEXT -> map.putString(DATA_KEY, event.data as String?)
+            UPDATE_USER -> map.putMap(DATA_KEY, Arguments.makeNativeMap(event.data as Map<String, Any?>?))
+            UPDATE_METADATA -> map.putMap(DATA_KEY, Arguments.makeNativeMap(event.data as Map<String, Any?>?))
+            else -> logger.w("Received unknown message event ${event.type}, ignoring")
+        }
+        bridge.emit(SYNC_KEY, map)
     }
 
     @ReactMethod
