@@ -64,7 +64,6 @@ declare class Client {
   public removeOnBreadcrumb(fn: OnBreadcrumbCallback): void;
 
   // plugins
-  public use(plugin: Plugin, ...args: any[]): Client;
   public getPlugin(name: string): any;
 
   // implemented on the browser notifier only

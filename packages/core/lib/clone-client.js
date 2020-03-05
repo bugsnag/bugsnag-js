@@ -1,7 +1,7 @@
 const assign = require('./es-utils/assign')
 
 module.exports = (client) => {
-  const clone = new client.Client({}, {}, client._notifier)
+  const clone = new client.Client({}, {}, [], client._notifier)
 
   clone._config = client._config
 

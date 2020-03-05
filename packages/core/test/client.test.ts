@@ -29,16 +29,18 @@ describe('@bugsnag/core/client', () => {
 
   describe('use()', () => {
     it('supports plugins', done => {
-      const client = new Client({ apiKey: '123' })
-      client.use({
-        name: 'test plugin',
-        // @ts-ignore
-        description: 'nothing much to see here',
-        init: (c) => {
-          expect(c).toEqual(client)
-          done()
-        }
+      let pluginClient
+      const client = new Client({
+        apiKey: '123',
+        plugins: [{
+          name: 'test plugin',
+          load: (c) => {
+            pluginClient = c
+            done()
+          }
+        }]
       })
+      expect(pluginClient).toEqual(client)
     })
   })
 
@@ -442,7 +444,7 @@ describe('@bugsnag/core/client', () => {
   })
 
   describe('startSession()', () => {
-    it('calls the provided the session delegate and return delegate’s return value', () => {
+    it('calls the provided session delegate and return delegate’s return value', () => {
       const client = new Client({ apiKey: 'API_KEY' })
       let ret
       client._sessionDelegate = {

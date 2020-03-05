@@ -14,8 +14,8 @@ export interface Config {
   }
   autoTrackSessions?: boolean
   context?: string
-  enabledBreadcrumbTypes?: BreadcrumbType[]
-  enabledReleaseStages?: string[]
+  enabledBreadcrumbTypes?: BreadcrumbType[] | null
+  enabledReleaseStages?: string | null
   endpoints?: { notify: string, sessions: string }
   redactedKeys?: Array<string | RegExp>
   onBreadcrumb?: OnBreadcrumbCallback | OnBreadcrumbCallback[]
@@ -26,6 +26,7 @@ export interface Config {
   metadata?: { [key: string]: any }
   releaseStage?: string
   user?: {} | null
+  plugins?: Plugin[]
 }
 
 export type OnErrorCallback = (event: Event, cb?: (err: null | Error) => void) => void | Promise<void> | boolean;
@@ -34,19 +35,8 @@ export type OnBreadcrumbCallback = (breadcrumb: Breadcrumb) => void | boolean;
 
 export interface Plugin {
   name?: string
-  init: (client: Client) => any
-  configSchema?: ConfigSchema
+  load: (client: Client) => any
   destroy?(): void
-}
-
-export interface ConfigSchemaEntry {
-  message: string
-  validate: (val: any) => boolean
-  defaultValue: () => any
-}
-
-export interface ConfigSchema {
-  [key: string]: ConfigSchemaEntry
 }
 
 export interface Logger {
