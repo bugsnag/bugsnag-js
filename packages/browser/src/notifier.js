@@ -40,29 +40,31 @@ const Bugsnag = {
     if (typeof opts === 'string') opts = { apiKey: opts }
     if (!opts) opts = {}
 
+    const internalPlugins = [
+      // add browser-specific plugins
+      pluginDevice(),
+      pluginContext(),
+      pluginRequest(),
+      pluginThrottle,
+      pluginSession,
+      pluginIp,
+      pluginStripQueryString,
+      pluginWindowOnerror(),
+      pluginUnhandledRejection(),
+      pluginNavigationBreadcrumbs(),
+      pluginInteractionBreadcrumbs(),
+      pluginNetworkBreadcrumbs(),
+      pluginConsoleBreadcrumbs,
+
+      // this one added last to avoid wrapping functionality before bugsnag uses it
+      pluginInlineScriptContent()
+    ]
+
     // configure a client with user supplied options
-    const bugsnag = new Client(opts, schema, { name, version, url })
+    const bugsnag = new Client(opts, schema, internalPlugins, { name, version, url })
 
     // set delivery based on browser capability (IE 8+9 have an XDomainRequest object)
     bugsnag._setDelivery(window.XDomainRequest ? dXDomainRequest : dXMLHttpRequest)
-
-    // add browser-specific plugins
-    bugsnag.use(pluginDevice)
-    bugsnag.use(pluginContext)
-    bugsnag.use(pluginRequest)
-    bugsnag.use(pluginThrottle)
-    bugsnag.use(pluginSession)
-    bugsnag.use(pluginIp)
-    bugsnag.use(pluginStripQueryString)
-    bugsnag.use(pluginWindowOnerror)
-    bugsnag.use(pluginUnhandledRejection)
-    bugsnag.use(pluginNavigationBreadcrumbs)
-    bugsnag.use(pluginInteractionBreadcrumbs)
-    bugsnag.use(pluginNetworkBreadcrumbs)
-    bugsnag.use(pluginConsoleBreadcrumbs)
-
-    // this one added last to avoid wrapping functionality before bugsnag uses it
-    bugsnag.use(pluginInlineScriptContent)
 
     bugsnag._logger.debug('Loaded!')
 
