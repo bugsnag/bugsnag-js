@@ -7,10 +7,10 @@ Bugsnag.start({
   endpoints: {
     notify: process.env.BUGSNAG_NOTIFY_ENDPOINT,
     sessions: process.env.BUGSNAG_SESSIONS_ENDPOINT
-  }
+  },
+  plugins: [bugsnagKoa]
 })
 
-Bugsnag.use(bugsnagKoa)
 
 const middleware = Bugsnag.getPlugin('koa')
 

@@ -1,5 +1,5 @@
 var Bugsnag = require('@bugsnag/node')
-var bugsnagExpress = require('@bugsnag/plugin-restify')
+var bugsnagRestify = require('@bugsnag/plugin-restify')
 var restify = require('restify')
 var errors = require('restify-errors')
 
@@ -8,10 +8,9 @@ Bugsnag.start({
   endpoints: {
     notify: process.env.BUGSNAG_NOTIFY_ENDPOINT,
     sessions: process.env.BUGSNAG_SESSIONS_ENDPOINT
-  }
+  },
+  plugins: [bugsnagRestify]
 })
-
-Bugsnag.use(bugsnagExpress)
 
 var middleware = Bugsnag.getPlugin('restify')
 

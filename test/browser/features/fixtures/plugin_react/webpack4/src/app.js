@@ -1,11 +1,9 @@
 var Bugsnag = require('@bugsnag/browser')
-var bugsnagReact = require('@bugsnag/plugin-react')
-var React = require('react')
 var ReactDOM = require('react-dom')
+var React = require('react')
 var config = require('./lib/config')
 
 Bugsnag.start(config)
-Bugsnag.use(bugsnagReact, React)
 
 var ErrorBoundary = Bugsnag.getPlugin('react')
 
