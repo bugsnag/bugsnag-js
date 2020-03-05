@@ -1,7 +1,7 @@
 const includes = require('@bugsnag/core/lib/es-utils/includes')
 
 module.exports = {
-  init: client => { client._sessionDelegate = sessionDelegate }
+  load: client => { client._sessionDelegate = sessionDelegate }
 }
 
 const sessionDelegate = {

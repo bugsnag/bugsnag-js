@@ -28,9 +28,8 @@ Lorem ipsum dolor sit amet.
     }
     const window = { location: { href: 'https://app.bugsnag.com/errors' } }
 
-    const client = new Client({ apiKey: 'API_KEY_YEAH' })
+    const client = new Client({ apiKey: 'API_KEY_YEAH' }, undefined, [plugin(document, window)])
     const payloads = []
-    client.use(plugin, document, window)
 
     expect(client._cbs.e.length).toBe(1)
     client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
@@ -47,12 +46,12 @@ Lorem ipsum dolor sit amet.
     const prevHandler = () => { done() }
     const document = { documentElement: { outerHTML: '' }, onreadystatechange: prevHandler }
     const window = { location: { href: 'https://app.bugsnag.com/errors' }, document }
-    const client = new Client({ apiKey: 'API_KEY_YEAH' })
-    client.use(plugin, document, window)
+    const client = new Client({ apiKey: 'API_KEY_YEAH' }, undefined, [plugin(document, window)])
     // check it installed a new onreadystatechange handler
     expect(document.onreadystatechange === prevHandler).toBe(false)
     // now check it calls the previous one
     document.onreadystatechange()
+    expect(client).toBe(client)
   })
 
   it('does no wrapping of global functions when disabled', () => {
@@ -62,10 +61,10 @@ Lorem ipsum dolor sit amet.
     function EventTarget () {}
     EventTarget.prototype.addEventListener = addEventListener
     window.EventTarget = EventTarget
-    const client = new Client({ apiKey: 'API_KEY_YEAH', trackInlineScripts: false })
-    client.use(plugin, document, window)
+    const client = new Client({ apiKey: 'API_KEY_YEAH', trackInlineScripts: false }, undefined, [plugin(document, window)])
     // check the addEventListener function was not wrapped
     expect(window.EventTarget.prototype.addEventListener).toBe(addEventListener)
+    expect(client).toBe(client)
   })
 
   it('truncates script content to a reasonable length', () => {
@@ -92,9 +91,8 @@ Lorem ipsum dolor sit amet.
     }
     const window = { location: { href: 'https://app.bugsnag.com/errors' } }
 
-    const client = new Client({ apiKey: 'API_KEY_YEAH' })
+    const client = new Client({ apiKey: 'API_KEY_YEAH' }, undefined, [plugin(document, window)])
     const payloads = []
-    client.use(plugin, document, window)
 
     expect(client._cbs.e.length).toBe(1)
     client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
@@ -129,9 +127,8 @@ Lorem ipsum dolor sit amet.
     }
     const window = { location: { href: 'https://app.bugsnag.com/errors' } }
 
-    const client = new Client({ apiKey: 'API_KEY_YEAH' })
+    const client = new Client({ apiKey: 'API_KEY_YEAH' }, undefined, [plugin(document, window)])
     const payloads = []
-    client.use(plugin, document, window)
 
     expect(client._cbs.e.length).toBe(1)
     client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
@@ -165,9 +162,8 @@ Lorem ipsum dolor sit amet.
     }
     const window = { location: { href: 'https://app.bugsnag.com/errors' } }
 
-    const client = new Client({ apiKey: 'API_KEY_YEAH' })
+    const client = new Client({ apiKey: 'API_KEY_YEAH' }, undefined, [plugin(document, window)])
     const payloads = []
-    client.use(plugin, document, window)
 
     expect(client._cbs.e.length).toBe(1)
     client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
@@ -210,11 +206,11 @@ Lorem ipsum dolor sit amet.
     window.addEventListener('click', myfun)
 
     const spy = spyOn(Window.prototype, 'removeEventListener')
-    const client = new Client({ apiKey: 'API_KEY_YEAH' })
-    client.use(plugin, document, window)
+    const client = new Client({ apiKey: 'API_KEY_YEAH' }, undefined, [plugin(document, window)])
 
     window.removeEventListener('click', myfun)
     expect(spy).toHaveBeenCalledTimes(2)
+    expect(client).toBe(client)
   })
 
   it('gets the correct line numbers for errors at the start of the document', () => {
@@ -228,9 +224,8 @@ Lorem ipsum dolor sit amet.
     }
     const window = { location: { href: 'https://app.bugsnag.com/errors' } }
 
-    const client = new Client({ apiKey: 'API_KEY_YEAH' })
+    const client = new Client({ apiKey: 'API_KEY_YEAH' }, undefined, [plugin(document, window)])
     const payloads = []
-    client.use(plugin, document, window)
 
     expect(client._cbs.e.length).toBe(1)
     client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))

@@ -14,8 +14,7 @@ const schema = {
 
 describe('plugin: node device', () => {
   it('should set device = { hostname, runtimeVersions } add an onError callback which adds device time', done => {
-    const client = new Client({ apiKey: 'API_KEY_YEAH' }, schema)
-    client.use(plugin)
+    const client = new Client({ apiKey: 'API_KEY_YEAH', plugins: [plugin] }, schema)
 
     expect(client._cbs.sp.length).toBe(1)
     expect(client._cbs.e.length).toBe(1)

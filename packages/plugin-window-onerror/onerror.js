@@ -2,8 +2,8 @@
  * Automatically notifies Bugsnag when window.onerror is called
  */
 
-module.exports = {
-  init: (client, win = window) => {
+module.exports = (win = window) => ({
+  load: (client) => {
     if (!client._config.autoDetectErrors) return
     if (!client._config.enabledErrorTypes.unhandledExceptions) return
     function onerror (messageOrEvent, url, lineNo, charNo, error) {
@@ -66,7 +66,7 @@ module.exports = {
     const prevOnError = win.onerror
     win.onerror = onerror
   }
-}
+})
 
 // Sometimes the stacktrace has less information than was passed to window.onerror.
 // This function will augment the first stackframe with any useful info that was

@@ -25,7 +25,8 @@ describe('plugin: contextualize', () => {
       onUncaughtException: (err) => {
         expect(err.message).toBe('no item available')
         done()
-      }
+      },
+      plugins: [plugin]
     }, {
       ...schema,
       onUncaughtException: {
@@ -47,7 +48,6 @@ describe('plugin: contextualize', () => {
       },
       sendSession: () => {}
     }))
-    c.use(plugin)
     const contextualize = c.getPlugin('contextualize')
     contextualize(() => {
       load(8, (err) => {
@@ -64,7 +64,8 @@ describe('plugin: contextualize', () => {
       apiKey: 'api_key',
       onUncaughtException: () => {
         done()
-      }
+      },
+      plugins: [plugin]
     }, {
       ...schema,
       onUncaughtException: {
@@ -81,7 +82,6 @@ describe('plugin: contextualize', () => {
       },
       sendSession: () => {}
     }))
-    c.use(plugin)
     const contextualize = c.getPlugin('contextualize')
     contextualize(() => {
       fs.createReadStream('does not exist')
@@ -94,7 +94,8 @@ describe('plugin: contextualize', () => {
       onUncaughtException: (err) => {
         expect(err.message).toBe('no item available')
         done()
-      }
+      },
+      plugins: [plugin]
     }, {
       ...schema,
       onUncaughtException: {
@@ -109,7 +110,6 @@ describe('plugin: contextualize', () => {
       },
       sendSession: () => {}
     }))
-    c.use(plugin)
     const contextualize = c.getPlugin('contextualize')
     contextualize(() => {
       load(8, (err) => {

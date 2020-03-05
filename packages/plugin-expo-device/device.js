@@ -3,7 +3,7 @@ const { Dimensions, Platform } = require('react-native')
 const rnVersion = require('react-native/package.json').version
 
 module.exports = {
-  init: client => {
+  load: client => {
     let orientation
     const updateOrientation = () => {
       const { height, width } = Dimensions.get('screen')

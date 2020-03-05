@@ -2,7 +2,7 @@
 
 import React from 'react'
 import renderer from 'react-test-renderer'
-import plugin from '../'
+import BugsnagPluginReact from '../'
 
 class Event {
   addMetadata () {
@@ -19,7 +19,8 @@ bugsnag.Event.create = jest.fn(function () {
   return new Event()
 })
 
-const ErrorBoundary = plugin.init(bugsnag, React)
+const plugin = new BugsnagPluginReact(React)
+const ErrorBoundary = plugin.load(bugsnag)
 
 beforeEach(() => {
   bugsnag._notify.mockReset()
@@ -29,7 +30,7 @@ test('formatComponentStack(str)', () => {
   const str = `
   in BadButton
   in ErrorBoundary`
-  expect(plugin.formatComponentStack(str))
+  expect(BugsnagPluginReact.formatComponentStack(str))
     .toBe('in BadButton\nin ErrorBoundary')
 })
 

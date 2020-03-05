@@ -1,7 +1,12 @@
-module.exports = {
-  name: 'vue',
-  init: (client, Vue = window.Vue) => {
+module.exports = class BugsnagVuePlugin {
+  constructor (Vue = window.Vue) {
     if (!Vue) throw new Error('cannot find Vue')
+    this.Vue = Vue
+    this.name = 'vue'
+  }
+
+  load (client) {
+    const Vue = this.Vue
     const prev = Vue.config.errorHandler
 
     const handler = (err, vm, info) => {

@@ -1,4 +1,4 @@
-const { describe, it, expect } = global
+const { describe, it, expect, spyOn } = global
 
 const plugin = require('../')
 
@@ -7,8 +7,7 @@ const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
 describe('plugin: sessions', () => {
   it('notifies the session endpoint', (done) => {
-    const c = new Client({ apiKey: 'API_KEY' }, undefined, VALID_NOTIFIER)
-    c.use(plugin)
+    const c = new Client({ apiKey: 'API_KEY' }, undefined, [plugin], VALID_NOTIFIER)
     c._setDelivery(client => ({
       sendSession: (session, cb) => {
         expect(typeof session).toBe('object')
@@ -24,9 +23,8 @@ describe('plugin: sessions', () => {
   })
 
   it('tracks handled/unhandled error counts and sends them in error payloads', (done) => {
-    const c = new Client({ apiKey: 'API_KEY' })
+    const c = new Client({ apiKey: 'API_KEY' }, undefined, [plugin], VALID_NOTIFIER)
     let i = 0
-    c.use(plugin)
     c._setDelivery(client => ({
       sendSession: () => {},
       sendEvent: (payload, cb) => {
@@ -52,8 +50,8 @@ describe('plugin: sessions', () => {
   })
 
   it('correctly infers releaseStage', (done) => {
-    const c = new Client({ apiKey: 'API_KEY', releaseStage: 'foo' })
-    c.use(plugin)
+    const c = new Client({ apiKey: 'API_KEY', releaseStage: 'foo' }, undefined, [plugin], VALID_NOTIFIER)
+
     c._setDelivery(client => ({
       sendSession: (session, cb) => {
         expect(typeof session).toBe('object')
@@ -65,8 +63,7 @@ describe('plugin: sessions', () => {
   })
 
   it('doesn’t send when releaseStage is not in enabledReleaseStages', (done) => {
-    const c = new Client({ apiKey: 'API_KEY', releaseStage: 'foo', enabledReleaseStages: ['baz'] })
-    c.use(plugin)
+    const c = new Client({ apiKey: 'API_KEY', releaseStage: 'foo', enabledReleaseStages: ['baz'] }, undefined, [plugin], VALID_NOTIFIER)
     c._setDelivery(client => ({
       sendSession: (session, cb) => {
         expect(true).toBe(false)
@@ -76,26 +73,25 @@ describe('plugin: sessions', () => {
     setTimeout(done, 150)
   })
 
-  it('rejects config when session endpoint is not set', () => {
-    expect(() => {
-      const c = new Client({
-        apiKey: 'API_KEY',
-        releaseStage: 'foo',
-        endpoints: { notify: '/foo' },
-        autoTrackSessions: false
-      })
-      expect(c).toBe(c)
-    }).toThrowError(
-      /"endpoints" should be an object containing endpoint URLs { notify, sessions }/
-    )
+  it('uses default endpoints when session endpoint is not set', () => {
+    const logger = { debug: () => {}, info: () => {}, warn: () => {}, error: () => {} }
+    const warnSpy = spyOn(logger, 'warn')
+    const c = new Client({
+      apiKey: 'API_KEY',
+      releaseStage: 'foo',
+      endpoints: { notify: '/foo' },
+      autoTrackSessions: false,
+      logger
+    }, undefined, [plugin], VALID_NOTIFIER)
+    expect(c._config.endpoints.sessions).toBe('https://sessions.bugsnag.com')
+    expect(warnSpy.calls.first().args[0].message).toBe('Invalid configuration\n  - endpoints should be an object containing endpoint URLs { notify, sessions }, got {"notify":"/foo"}')
   })
 
   it('supports pausing and resuming sessions', (done) => {
     const payloads = []
     const c = new Client({
       apiKey: 'API_KEY'
-    })
-    c.use(plugin)
+    }, undefined, [plugin], VALID_NOTIFIER)
     c._setDelivery(client => ({
       sendEvent: (p, cb = () => {}) => {
         payloads.push(p)

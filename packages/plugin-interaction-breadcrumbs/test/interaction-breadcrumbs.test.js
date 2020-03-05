@@ -6,25 +6,22 @@ const Client = require('@bugsnag/core/client')
 
 describe('plugin: interaction breadcrumbs', () => {
   it('should drop a breadcrumb when an element is clicked', () => {
-    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
     const { window, winHandlers, els } = getMockWindow()
-    c.use(plugin, window)
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', plugins: [plugin(window)] })
     winHandlers.click.forEach(fn => fn.call(window, { target: els[0] }))
     expect(c._breadcrumbs.length).toBe(1)
   })
 
   it('should not be enabled when enabledBreadcrumbTypes=[]', () => {
-    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: [] })
     const { window, winHandlers, els } = getMockWindow()
-    c.use(plugin, window)
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: [], plugins: [plugin(window)] })
     winHandlers.click.forEach(fn => fn.call(window, { target: els[0] }))
     expect(c._breadcrumbs.length).toBe(0)
   })
 
   it('should be enabled when enabledBreadcrumbTypes=["user"]', () => {
-    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: ['user'] })
     const { window, winHandlers, els } = getMockWindow()
-    c.use(plugin, window)
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: ['user'], plugins: [plugin(window)] })
     winHandlers.click.forEach(fn => fn.call(window, { target: els[0] }))
     expect(c._breadcrumbs.length).toBe(1)
   })

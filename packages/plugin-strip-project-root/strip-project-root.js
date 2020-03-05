@@ -1,7 +1,7 @@
 const normalizePath = require('@bugsnag/core/lib/path-normalizer')
 
 module.exports = {
-  init: client => client.addOnError(event => {
+  load: client => client.addOnError(event => {
     if (!client._config.projectRoot) return
     const projectRoot = normalizePath(client._config.projectRoot)
     const allFrames = event.errors.reduce((accum, er) => accum.concat(er.stacktrace), [])

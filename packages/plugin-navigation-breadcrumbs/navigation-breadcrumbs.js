@@ -1,38 +1,51 @@
 const includes = require('@bugsnag/core/lib/es-utils/includes')
 
 /*
- * Leaves breadcrumbs when navigation methods are called or events are emitted
- */
-exports.init = (client, win = window) => {
-  if (!('addEventListener' in win)) return
+* Leaves breadcrumbs when navigation methods are called or events are emitted
+*/
+module.exports = (win = window) => {
+  const plugin = {
+    load: (client) => {
+      if (!('addEventListener' in win)) return
 
-  if (!client._config.enabledBreadcrumbTypes || !includes(client._config.enabledBreadcrumbTypes, 'navigation')) return
+      if (!client._config.enabledBreadcrumbTypes || !includes(client._config.enabledBreadcrumbTypes, 'navigation')) return
 
-  // returns a function that will drop a breadcrumb with a given name
-  const drop = name => () => client.leaveBreadcrumb(name, {}, 'navigation')
+      // returns a function that will drop a breadcrumb with a given name
+      const drop = name => () => client.leaveBreadcrumb(name, {}, 'navigation')
 
-  // simple drops – just names, no meta
-  win.addEventListener('pagehide', drop('Page hidden'), true)
-  win.addEventListener('pageshow', drop('Page shown'), true)
-  win.addEventListener('load', drop('Page loaded'), true)
-  win.document.addEventListener('DOMContentLoaded', drop('DOMContentLoaded'), true)
-  // some browsers like to emit popstate when the page loads, so only add the popstate listener after that
-  win.addEventListener('load', () => win.addEventListener('popstate', drop('Navigated back'), true))
+      // simple drops – just names, no meta
+      win.addEventListener('pagehide', drop('Page hidden'), true)
+      win.addEventListener('pageshow', drop('Page shown'), true)
+      win.addEventListener('load', drop('Page loaded'), true)
+      win.document.addEventListener('DOMContentLoaded', drop('DOMContentLoaded'), true)
+      // some browsers like to emit popstate when the page loads, so only add the popstate listener after that
+      win.addEventListener('load', () => win.addEventListener('popstate', drop('Navigated back'), true))
 
-  // hashchange has some metadata that we care about
-  win.addEventListener('hashchange', event => {
-    const metadata = event.oldURL
-      ? { from: relativeLocation(event.oldURL, win), to: relativeLocation(event.newURL, win), state: getCurrentState(win) }
-      : { to: relativeLocation(win.location.href, win) }
-    client.leaveBreadcrumb('Hash changed', metadata, 'navigation')
-  }, true)
+      // hashchange has some metadata that we care about
+      win.addEventListener('hashchange', event => {
+        const metadata = event.oldURL
+          ? { from: relativeLocation(event.oldURL, win), to: relativeLocation(event.newURL, win), state: getCurrentState(win) }
+          : { to: relativeLocation(win.location.href, win) }
+        client.leaveBreadcrumb('Hash changed', metadata, 'navigation')
+      }, true)
 
-  // the only way to know about replaceState/pushState is to wrap them… >_<
+      // the only way to know about replaceState/pushState is to wrap them… >_<
 
-  if (win.history.replaceState) wrapHistoryFn(client, win.history, 'replaceState', win)
-  if (win.history.pushState) wrapHistoryFn(client, win.history, 'pushState', win)
+      if (win.history.replaceState) wrapHistoryFn(client, win.history, 'replaceState', win)
+      if (win.history.pushState) wrapHistoryFn(client, win.history, 'pushState', win)
 
-  client.leaveBreadcrumb('Bugsnag loaded', {}, 'navigation')
+      client.leaveBreadcrumb('Bugsnag loaded', {}, 'navigation')
+    }
+  }
+
+  if (process.env.NODE_ENV !== 'production') {
+    plugin.destroy = (win = window) => {
+      win.history.replaceState._restore()
+      win.history.pushState._restore()
+    }
+  }
+
+  return plugin
 }
 
 if (process.env.NODE_ENV !== 'production') {

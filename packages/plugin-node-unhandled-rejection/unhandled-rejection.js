@@ -1,6 +1,6 @@
 let _handler
 module.exports = {
-  init: client => {
+  load: client => {
     if (!client._config.autoDetectErrors || !client._config.enabledErrorTypes.unhandledRejections) return
     _handler = err => {
       const event = client.Event.create(err, false, {
