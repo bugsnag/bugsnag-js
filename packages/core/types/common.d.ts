@@ -15,7 +15,7 @@ export interface Config {
   autoTrackSessions?: boolean
   context?: string
   enabledBreadcrumbTypes?: BreadcrumbType[] | null
-  enabledReleaseStages?: string | null
+  enabledReleaseStages?: string[] | null
   endpoints?: { notify: string, sessions: string }
   redactedKeys?: Array<string | RegExp>
   onBreadcrumb?: OnBreadcrumbCallback | OnBreadcrumbCallback[]

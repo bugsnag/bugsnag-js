@@ -2,7 +2,6 @@ import Breadcrumb from './breadcrumb'
 import {
   NotifiableError,
   BreadcrumbType,
-  Plugin,
   OnErrorCallback,
   OnSessionCallback,
   OnBreadcrumbCallback,
