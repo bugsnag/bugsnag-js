@@ -21,7 +21,7 @@ describe('plugin: react native rejection handler', () => {
         done()
       }
     }))
-    const stop = plugin.init(c)
+    const stop = plugin.load(c)
     // in the interests of keeping the tests quick, TypeErrors get rejected quicker
     // see: https://github.com/then/promise/blob/d980ed01b7a383bfec416c96095e2f40fd18ab34/src/rejection-tracking.js#L48-L54
     try {
@@ -42,7 +42,7 @@ describe('plugin: react native rejection handler', () => {
         done(new Error('event should not be sent when autoDetectErrors=false'))
       }
     }))
-    const stop = plugin.init(c)
+    const stop = plugin.load(c)
     try {
       // @ts-ignore
       String.floop()
@@ -65,7 +65,7 @@ describe('plugin: react native rejection handler', () => {
         done(new Error('event should not be sent when enabledErrorTypes.unhandledRejections=false'))
       }
     }))
-    const stop = plugin.init(c)
+    const stop = plugin.load(c)
     try {
       // @ts-ignore
       String.floop()

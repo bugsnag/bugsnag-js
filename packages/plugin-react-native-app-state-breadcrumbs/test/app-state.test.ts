@@ -21,8 +21,7 @@ describe('plugin: react native app state breadcrumbs', () => {
   })
 
   it('should create a breadcrumb when the AppState#change event happens', () => {
-    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
-    client.use(plugin)
+    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', plugins: [plugin] })
 
     expect(MockAddEventListener).toHaveBeenCalledWith('change', expect.any(Function))
     const _cb = MockAddEventListener.mock.calls[0][1]
@@ -43,24 +42,20 @@ describe('plugin: react native app state breadcrumbs', () => {
   })
 
   it('should not be enabled when enabledBreadcrumbTypes=null', () => {
-    // @ts-ignore
-    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: null })
-    client.use(plugin)
-
+    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: null, plugins: [plugin] })
+    expect(client).toBe(client)
     expect(AppState.addEventListener).not.toHaveBeenCalled()
   })
 
   it('should not be enabled when enabledBreadcrumbTypes=[]', () => {
-    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: [] })
-    client.use(plugin)
-
+    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: [], plugins: [plugin] })
+    expect(client).toBe(client)
     expect(AppState.addEventListener).not.toHaveBeenCalled()
   })
 
   it('should be enabled when enabledBreadcrumbTypes=["state"]', () => {
-    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: ['state'] })
-    client.use(plugin)
-
+    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: ['state'], plugins: [plugin] })
+    expect(client).toBe(client)
     expect(AppState.addEventListener).toHaveBeenCalledWith('change', expect.any(Function))
   })
 })

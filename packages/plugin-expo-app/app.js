@@ -4,7 +4,7 @@ const { AppState } = require('react-native')
 const appStart = new Date()
 
 module.exports = {
-  init: client => {
+  load: client => {
     let lastEnteredForeground = appStart
     let lastState = AppState.currentState
 

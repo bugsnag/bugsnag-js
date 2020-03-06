@@ -22,9 +22,8 @@ describe('plugin: expo app', () => {
         }
       }
     })
-    const c = new Client({ apiKey: 'api_key' })
+    const c = new Client({ apiKey: 'api_key', plugins: [plugin] })
 
-    c.use(plugin)
     c._setDelivery(client => ({
       sendEvent: (payload) => {
         const r = JSON.parse(JSON.stringify(payload))
@@ -55,9 +54,8 @@ describe('plugin: expo app', () => {
         }
       }
     })
-    const c = new Client({ apiKey: 'api_key' })
+    const c = new Client({ apiKey: 'api_key', plugins: [plugin] })
 
-    c.use(plugin)
     c._setDelivery(client => ({
       sendEvent: (payload) => {
         const r = JSON.parse(JSON.stringify(payload))
@@ -88,9 +86,8 @@ describe('plugin: expo app', () => {
         }
       }
     })
-    const c = new Client({ apiKey: 'api_key' })
+    const c = new Client({ apiKey: 'api_key', plugins: [plugin] })
 
-    c.use(plugin)
     c._setDelivery(client => ({
       sendEvent: (payload) => {
         const r = JSON.parse(JSON.stringify(payload))
@@ -119,9 +116,8 @@ describe('plugin: expo app', () => {
       },
       'react-native': { AppState }
     })
-    const c = new Client({ apiKey: 'api_key' })
+    const c = new Client({ apiKey: 'api_key', plugins: [plugin] })
 
-    c.use(plugin)
     expect(typeof listener).toBe('function')
     const events = []
     c._setDelivery(client => ({

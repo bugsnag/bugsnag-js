@@ -8,7 +8,7 @@ const { schema } = require('@bugsnag/core/config')
 
 describe('plugin: node in project', () => {
   it('should mark stackframes as "inProject" if it is a descendent of the "projectRoot"', done => {
-    const client = new Client({ apiKey: 'api_key', projectRoot: '/app' }, {
+    const client = new Client({ apiKey: 'api_key', projectRoot: '/app', plugins: [plugin] }, {
       ...schema,
       projectRoot: {
         validate: () => true,
@@ -28,8 +28,6 @@ describe('plugin: node in project', () => {
       sendSession: () => {}
     }))
 
-    client.use(plugin)
-
     client._notify(new Event('Error', 'in project test', [
       {
         lineNumber: 22,
@@ -48,7 +46,7 @@ describe('plugin: node in project', () => {
   })
 
   it('should mark stackframes as "out of project" if it is not a descendent of "projectRoot"', done => {
-    const client = new Client({ apiKey: 'api_key', projectRoot: '/app' }, {
+    const client = new Client({ apiKey: 'api_key', projectRoot: '/app', plugins: [plugin] }, {
       ...schema,
       projectRoot: {
         validate: () => true,
@@ -67,8 +65,6 @@ describe('plugin: node in project', () => {
       },
       sendSession: () => {}
     }))
-
-    client.use(plugin)
 
     client._notify(new Event('Error', 'in project test', [
       {
@@ -88,7 +84,7 @@ describe('plugin: node in project', () => {
   })
 
   it('should work with node_modules and node internals', done => {
-    const client = new Client({ apiKey: 'api_key', projectRoot: '/app' }, {
+    const client = new Client({ apiKey: 'api_key', projectRoot: '/app', plugins: [plugin] }, {
       ...schema,
       projectRoot: {
         validate: () => true,
@@ -107,8 +103,6 @@ describe('plugin: node in project', () => {
       sendSession: () => {}
     }))
 
-    client.use(plugin)
-
     client._notify(new Event('Error', 'in project test', [
       {
         lineNumber: 22,
@@ -123,7 +117,7 @@ describe('plugin: node in project', () => {
   })
 
   it('should tolerate stackframe.file not being a string', done => {
-    const client = new Client({ apiKey: 'api_key', projectRoot: '/app' }, {
+    const client = new Client({ apiKey: 'api_key', projectRoot: '/app', plugins: [plugin] }, {
       ...schema,
       projectRoot: {
         validate: () => true,
@@ -142,8 +136,6 @@ describe('plugin: node in project', () => {
       },
       sendSession: () => {}
     }))
-
-    client.use(plugin)
 
     client._notify(new Event('Error', 'in project test', [
       {

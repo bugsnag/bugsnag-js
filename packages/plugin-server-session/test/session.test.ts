@@ -12,9 +12,9 @@ describe('plugin: server sessions', () => {
   beforeEach(() => {
     class TrackerMock extends EventEmitter {
       start () {
-        this.emit('summary', [
+        setTimeout(() => this.emit('summary', [
           { startedAt: '2017-12-12T13:54:00.000Z', sessionsStarted: 123 }
-        ])
+        ]))
       }
 
       stop () {}
@@ -23,8 +23,9 @@ describe('plugin: server sessions', () => {
 
     Tracker.mockImplementation(() => new TrackerMock() as any)
   })
+
   it('should send the session', done => {
-    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' }, undefined, [plugin])
     c._setDelivery(client => ({
       sendEvent: () => {},
       sendSession: (session: any, cb = () => {}) => {
@@ -34,7 +35,6 @@ describe('plugin: server sessions', () => {
       }
     }))
 
-    c.use(plugin)
     c.startSession()
   })
 
@@ -54,7 +54,7 @@ describe('plugin: server sessions', () => {
       endpoints: { notify: 'bloo', sessions: 'blah' },
       releaseStage: 'qa',
       enabledReleaseStages: ['production']
-    })
+    }, undefined, [plugin])
     c._setDelivery(client => ({
       sendEvent: () => {},
       sendSession: (session: any, cb = () => {}) => {
@@ -62,7 +62,6 @@ describe('plugin: server sessions', () => {
       }
     }))
 
-    c.use(plugin)
     c.startSession()
   })
 
@@ -75,7 +74,7 @@ describe('plugin: server sessions', () => {
       releaseStage: 'qa',
       appType: 'server',
       appVersion: '1.2.3'
-    })
+    }, undefined, [plugin])
 
     // this is normally set by a plugin
     c._addOnSessionPayload(sp => {
@@ -94,7 +93,6 @@ describe('plugin: server sessions', () => {
       }
     }))
 
-    c.use(plugin)
     c.startSession()
   })
 
@@ -106,8 +104,7 @@ describe('plugin: server sessions', () => {
     }
     Tracker.mockImplementation(() => new TrackerMock() as any)
 
-    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
-    c.use(plugin)
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' }, undefined, [plugin])
 
     c.leaveBreadcrumb('tick')
     c._metadata = { datetime: { tz: 'GMT+1' } }
@@ -131,8 +128,7 @@ describe('plugin: server sessions', () => {
     }
     Tracker.mockImplementation(() => new TrackerMock() as any)
 
-    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
-    c.use(plugin)
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' }, undefined, [plugin])
 
     // start a session and get its id
     const sessionClient = c.startSession()

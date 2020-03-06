@@ -12,7 +12,7 @@ const handledState = {
 
 module.exports = {
   name: 'koa',
-  init: client => {
+  load: client => {
     const requestHandler = async (ctx, next) => {
       // Get a client to be scoped to this request. If sessions are enabled, use the
       // startSession() call to get a session client, otherwise, clone the existing client.

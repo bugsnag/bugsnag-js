@@ -30,7 +30,7 @@ describe('plugin: expo device', () => {
       },
       'react-native/package.json': { version: REACT_NATIVE_VERSION }
     })
-    const c = new Client({ apiKey: 'api_key' })
+    const c = new Client({ apiKey: 'api_key', plugins: [plugin] })
     const before = (new Date()).toISOString()
     c._setDelivery(client => ({
       sendEvent: (payload) => {
@@ -51,7 +51,6 @@ describe('plugin: expo device', () => {
         done()
       }
     }))
-    c.use(plugin)
     c.notify(new Error('device testing'))
   })
 
@@ -81,7 +80,7 @@ describe('plugin: expo device', () => {
       },
       'react-native/package.json': { version: REACT_NATIVE_VERSION }
     })
-    const c = new Client({ apiKey: 'api_key' })
+    const c = new Client({ apiKey: 'api_key', plugins: [plugin] })
     const before = (new Date()).toISOString()
     c._setDelivery(client => ({
       sendEvent: (payload) => {
@@ -103,7 +102,6 @@ describe('plugin: expo device', () => {
         done()
       }
     }))
-    c.use(plugin)
     c.notify(new Error('device testing'))
   })
 
@@ -154,7 +152,7 @@ describe('plugin: expo device', () => {
       },
       'react-native/package.json': { version: REACT_NATIVE_VERSION }
     })
-    const c = new Client({ apiKey: 'api_key' })
+    const c = new Client({ apiKey: 'api_key', plugins: [plugin] })
     const events = []
     c._setDelivery(client => ({
       sendEvent: (payload) => {
@@ -169,7 +167,6 @@ describe('plugin: expo device', () => {
         }
       }
     }))
-    c.use(plugin)
     expect(d._listeners.change.length).toBe(1)
     c.notify(new Error('device testing'))
     d._set(1024, 768)

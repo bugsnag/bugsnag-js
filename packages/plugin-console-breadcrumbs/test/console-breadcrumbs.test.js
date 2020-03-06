@@ -6,8 +6,7 @@ const Client = require('@bugsnag/core/client')
 
 describe('plugin: console breadcrumbs', () => {
   it('should leave a breadcrumb when console.log() is called', () => {
-    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
-    c.use(plugin)
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', plugins: [plugin] })
     console.log('check 1, 2')
     // make sure it's null-safe
     console.log(null)
@@ -30,8 +29,7 @@ describe('plugin: console breadcrumbs', () => {
   })
 
   it('should not throw when an object without toString is logged', () => {
-    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
-    c.use(plugin)
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', plugins: [plugin] })
     expect(() => console.log(Object.create(null))).not.toThrow()
     expect(c._breadcrumbs.length).toBe(1)
     expect(c._breadcrumbs[0].message).toBe('Console output')
@@ -40,24 +38,21 @@ describe('plugin: console breadcrumbs', () => {
   })
 
   it('should not be enabled when enabledBreadcrumbTypes=[]', () => {
-    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: [] })
-    c.use(plugin)
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: [], plugins: [plugin] })
     console.log(123)
     expect(c._breadcrumbs.length).toBe(0)
     plugin.destroy()
   })
 
   it('should be enabled when enabledBreadcrumbTypes=["log"]', () => {
-    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: ['log'] })
-    c.use(plugin)
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: ['log'], plugins: [plugin] })
     console.log(123)
     expect(c._breadcrumbs.length).toBe(1)
     plugin.destroy()
   })
 
   it('should be not enabled by default when releaseStage=development', () => {
-    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', releaseStage: 'development' })
-    c.use(plugin)
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', releaseStage: 'development', plugins: [plugin] })
     console.log(123)
     expect(c._breadcrumbs.length).toBe(0)
     plugin.destroy()

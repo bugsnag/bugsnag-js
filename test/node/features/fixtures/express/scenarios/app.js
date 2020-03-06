@@ -7,10 +7,10 @@ Bugsnag.start({
   endpoints: {
     notify: process.env.BUGSNAG_NOTIFY_ENDPOINT,
     sessions: process.env.BUGSNAG_SESSIONS_ENDPOINT
-  }
+  },
+  plugins: [bugsnagExpress]
 })
 
-Bugsnag.use(bugsnagExpress)
 
 var middleware = Bugsnag.getPlugin('express')
 

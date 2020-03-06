@@ -13,26 +13,26 @@ const Breadcrumb = require('@bugsnag/core/breadcrumb')
 const delivery = require('@bugsnag/delivery-expo')
 
 const schema = { ...require('@bugsnag/core/config').schema, ...require('./config') }
-
-const plugins = [
-  require('@bugsnag/plugin-react-native-global-error-handler'),
-  require('@bugsnag/plugin-react-native-unhandled-rejection'),
-  require('@bugsnag/plugin-expo-device'),
-  require('@bugsnag/plugin-expo-app'),
-  require('@bugsnag/plugin-console-breadcrumbs'),
-  require('@bugsnag/plugin-network-breadcrumbs'),
-  require('@bugsnag/plugin-react-native-app-state-breadcrumbs'),
-  require('@bugsnag/plugin-react-native-connectivity-breadcrumbs'),
-  require('@bugsnag/plugin-react-native-orientation-breadcrumbs'),
-  require('@bugsnag/plugin-browser-session')
-]
-
-const bugsnagReact = require('@bugsnag/plugin-react')
+const BugsnagPluginReact = require('@bugsnag/plugin-react')
 
 // The NetInfo module makes requests to this URL to detect if the device is connected
 // to the internet. We don't want these requests to be recorded as breadcrumbs.
 // see https://github.com/react-native-community/react-native-netinfo/blob/d39b18c61e220d518d8403b6f4f4ab5bcc8c973c/src/index.ts#L16
 const NET_INFO_REACHABILITY_URL = 'https://clients3.google.com/generate_204'
+
+const internalPlugins = [
+  require('@bugsnag/plugin-react-native-global-error-handler')(),
+  require('@bugsnag/plugin-react-native-unhandled-rejection'),
+  require('@bugsnag/plugin-expo-device'),
+  require('@bugsnag/plugin-expo-app'),
+  require('@bugsnag/plugin-console-breadcrumbs'),
+  require('@bugsnag/plugin-network-breadcrumbs')([NET_INFO_REACHABILITY_URL, Constants.manifest.logUrl]),
+  require('@bugsnag/plugin-react-native-app-state-breadcrumbs'),
+  require('@bugsnag/plugin-react-native-connectivity-breadcrumbs'),
+  require('@bugsnag/plugin-react-native-orientation-breadcrumbs'),
+  require('@bugsnag/plugin-browser-session'),
+  new BugsnagPluginReact(React)
+]
 
 const Bugsnag = {
   _client: null,
@@ -54,25 +54,9 @@ const Bugsnag = {
       opts.appVersion = Constants.manifest.version
     }
 
-    const bugsnag = new Client(opts, schema, { name, version, url })
+    const bugsnag = new Client(opts, schema, internalPlugins, { name, version, url })
 
     bugsnag._setDelivery(delivery)
-
-    plugins.forEach(pl => {
-      switch (pl.name) {
-        case 'networkBreadcrumbs':
-          bugsnag.use(pl, () => [
-            bugsnag._config.endpoints.notify,
-            bugsnag._config.endpoints.sessions,
-            Constants.manifest.logUrl,
-            NET_INFO_REACHABILITY_URL
-          ])
-          break
-        default:
-          bugsnag.use(pl)
-      }
-    })
-    bugsnag.use(bugsnagReact, React)
 
     bugsnag._logger.debug('Loaded!')
 

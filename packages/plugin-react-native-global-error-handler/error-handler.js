@@ -2,8 +2,8 @@
 * Automatically notifies Bugsnag when React Native's global error handler is called
 */
 
-module.exports = {
-  init: (client, ErrorUtils = global.ErrorUtils) => {
+module.exports = (ErrorUtils = global.ErrorUtils) => ({
+  load: (client) => {
     if (!client._config.autoDetectErrors) return
     if (!client._config.enabledErrorTypes.unhandledExceptions) return
     if (!ErrorUtils) {
@@ -24,4 +24,4 @@ module.exports = {
       })
     })
   }
-}
+})

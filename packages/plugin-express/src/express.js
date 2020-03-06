@@ -13,7 +13,7 @@ const handledState = {
 
 module.exports = {
   name: 'express',
-  init: client => {
+  load: client => {
     const requestHandler = (req, res, next) => {
       const dom = domain.create()
 

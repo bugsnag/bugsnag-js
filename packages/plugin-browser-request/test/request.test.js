@@ -8,9 +8,8 @@ const window = { location: { href: 'http://xyz.abc/foo/bar.html' } }
 
 describe('plugin: request', () => {
   it('sets event.request to window.location.href', () => {
-    const client = new Client({ apiKey: 'API_KEY_YEAH' })
+    const client = new Client({ apiKey: 'API_KEY_YEAH', plugins: [plugin(window)] })
     const payloads = []
-    client.use(plugin, window)
 
     client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
     client.notify(new Error('noooo'))
@@ -20,9 +19,8 @@ describe('plugin: request', () => {
   })
 
   it('sets doesn’t overwrite an existing request', () => {
-    const client = new Client({ apiKey: 'API_KEY_YEAH' })
+    const client = new Client({ apiKey: 'API_KEY_YEAH', plugins: [plugin(window)] })
     const payloads = []
-    client.use(plugin, window)
 
     client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
     client.notify(new Error('noooo'), event => {

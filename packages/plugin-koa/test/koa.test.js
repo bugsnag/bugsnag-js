@@ -6,13 +6,12 @@ const plugin = require('../')
 
 describe('plugin: koa', () => {
   it('exports two middleware functions', () => {
-    const c = new Client({ apiKey: 'api_key' })
+    const c = new Client({ apiKey: 'api_key', plugins: [plugin] })
     c._sessionDelegate = {
       startSession: () => c,
       pauseSession: () => {},
       resumeSession: () => {}
     }
-    c.use(plugin)
     const middleware = c.getPlugin('koa')
     expect(typeof middleware.requestHandler).toBe('function')
     expect(middleware.requestHandler.length).toBe(2)
@@ -22,13 +21,13 @@ describe('plugin: koa', () => {
 
   describe('requestHandler', () => {
     it('should call through to app.onerror to ensure the error is logged out', (done) => {
-      const c = new Client({ apiKey: 'api_key' })
+      const c = new Client({ apiKey: 'api_key', plugins: [plugin] })
       c._sessionDelegate = {
         startSession: () => c,
         pauseSession: () => {},
         resumeSession: () => {}
       }
-      c.use(plugin)
+
       const middleware = c.getPlugin('koa')
       const mockCtx = {
         req: { connection: { address: () => ({ port: 1234 }) }, headers: {} },

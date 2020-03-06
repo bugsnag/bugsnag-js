@@ -1,6 +1,6 @@
 let _handler
 module.exports = {
-  init: client => {
+  load: client => {
     if (!client._config.autoDetectErrors) return
     if (!client._config.enabledErrorTypes.unhandledExceptions) return
     _handler = err => {
