@@ -1,7 +1,7 @@
-import { Bugsnag } from '@bugsnag/browser'
+import { Plugin } from '@bugsnag/browser'
 import React from 'react'
 
-declare class BugsnagPluginReact extends Bugsnag.Plugin {
+declare class BugsnagPluginReact extends Plugin {
   constructor(React?: React)
 }
 
