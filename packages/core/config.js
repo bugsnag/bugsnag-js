@@ -3,13 +3,12 @@ const reduce = require('./lib/es-utils/reduce')
 const keys = require('./lib/es-utils/keys')
 const isArray = require('./lib/es-utils/is-array')
 const includes = require('./lib/es-utils/includes')
-const assign = require('./lib/es-utils/assign')
 const intRange = require('./lib/validators/int-range')
 const stringWithLength = require('./lib/validators/string-with-length')
 const listOfFunctions = require('./lib/validators/list-of-functions')
 
 const BREADCRUMB_TYPES = require('./lib/breadcrumb-types')
-const defaultErrorTypes = { unhandledExceptions: true, unhandledRejections: true }
+const defaultErrorTypes = () => ({ unhandledExceptions: true, unhandledRejections: true })
 
 module.exports.schema = {
   apiKey: {
@@ -33,15 +32,18 @@ module.exports.schema = {
     validate: value => value === true || value === false
   },
   enabledErrorTypes: {
-    defaultValue: (val) => assign({}, defaultErrorTypes, val),
+    defaultValue: () => defaultErrorTypes(),
     message: 'should be an object containing the flags { unhandledExceptions:true|false, unhandledRejections:true|false }',
+    allowPartialObject: true,
     validate: value => {
       // ensure we have an object
       if (typeof value !== 'object' || !value) return false
+      const providedKeys = keys(value)
+      const defaultKeys = keys(defaultErrorTypes())
       // ensure it only has a subset of the allowed keys
-      if (keys(value).sort().join(',') !== keys(defaultErrorTypes).sort().join(',')) return false
+      if (filter(providedKeys, k => includes(defaultKeys, k)).length < providedKeys.length) return false
       // ensure all of the values are boolean
-      if (filter(keys(value), k => typeof value[k] === 'boolean').length === keys.length) return false
+      if (filter(keys(value), k => typeof value[k] !== 'boolean').length > 0) return false
       return true
     }
   },

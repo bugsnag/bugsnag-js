@@ -9,8 +9,8 @@ export interface Config {
   appType?: string
   autoDetectErrors?: boolean
   enabledErrorTypes?: {
-    unhandledExceptions: boolean
-    unhandledRejections: boolean
+    unhandledExceptions?: boolean
+    unhandledRejections?: boolean
   }
   autoTrackSessions?: boolean
   context?: string

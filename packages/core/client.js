@@ -111,7 +111,11 @@ class Client {
           accum.errors[key] = schema[key].message
           accum.config[key] = defaultValue
         } else {
-          accum.config[key] = opts[key]
+          if (schema[key].allowPartialObject) {
+            accum.config[key] = assign(defaultValue, opts[key])
+          } else {
+            accum.config[key] = opts[key]
+          }
         }
       } else {
         accum.config[key] = defaultValue

@@ -23,4 +23,25 @@ describe('@bugsnag/core/config', () => {
       expect(enabledBreadcrumbTypesValidator(['UNKNOWN_BREADCRUMB_TYPE'])).toBe(false)
     })
   })
+
+  describe('enabledErrorTypes', () => {
+    it('is ok with an empty object', () => {
+      const enabledErrorTypesValidator = config.schema.enabledErrorTypes.validate
+      expect(enabledErrorTypesValidator({})).toBe(true)
+    })
+
+    it('works with a subset of error types', () => {
+      const enabledErrorTypesValidator = config.schema.enabledErrorTypes.validate
+      expect(enabledErrorTypesValidator({ unhandledExceptions: true })).toBe(true)
+    })
+
+    it('fails when an additional unsupported type is provided', () => {
+      const enabledErrorTypesValidator = config.schema.enabledErrorTypes.validate
+      expect(enabledErrorTypesValidator({
+        unhandledExceptions: true,
+        unhandledRejections: false,
+        unwantedDistractions: true
+      })).toBe(false)
+    })
+  })
 })
