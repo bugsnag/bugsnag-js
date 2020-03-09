@@ -431,15 +431,13 @@ describe('@bugsnag/core/client', () => {
       expect(client._breadcrumbs.length).toBe(1)
     })
 
-    it('ignores breadcrumb types that aren’t in the enabled list', () => {
+    it('coerces breadcrumb types that aren’t valid to "manual"', () => {
       const client = new Client({
-        apiKey: 'API_KEY_YEAH',
-        enabledBreadcrumbTypes: ['manual']
+        apiKey: 'API_KEY_YEAH'
       })
-      client.leaveBreadcrumb('brrrrr')
-      client.leaveBreadcrumb('GET /jim', {}, 'request')
+      client.leaveBreadcrumb('GET /jim', {}, 'requeeest')
       expect(client._breadcrumbs.length).toBe(1)
-      expect(client._breadcrumbs[0].message).toBe('brrrrr')
+      expect(client._breadcrumbs[0].type).toBe('manual')
     })
   })
 

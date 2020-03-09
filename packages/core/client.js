@@ -11,6 +11,7 @@ const assign = require('./lib/es-utils/assign')
 const runCallbacks = require('./lib/callback-runner')
 const metadataDelegate = require('./lib/metadata-delegate')
 const runSyncCallbacks = require('./lib/sync-callback-runner')
+const BREADCRUMB_TYPES = require('./lib/breadcrumb-types')
 
 const noop = () => {}
 
@@ -227,14 +228,11 @@ class Client {
   leaveBreadcrumb (message, metadata, type) {
     // coerce bad values so that the defaults get set
     message = typeof message === 'string' ? message : ''
-    type = typeof type === 'string' ? type : 'manual'
+    type = (typeof type === 'string' && includes(BREADCRUMB_TYPES, type)) ? type : 'manual'
     metadata = typeof metadata === 'object' && metadata !== null ? metadata : {}
 
     // if no message, discard
     if (!message) return
-
-    // check the breadcrumb is the list of enabled types
-    if (!this._config.enabledBreadcrumbTypes || !includes(this._config.enabledBreadcrumbTypes, type)) return
 
     const crumb = new Breadcrumb(message, metadata, type)
 
