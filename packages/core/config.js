@@ -7,7 +7,7 @@ const intRange = require('./lib/validators/int-range')
 const stringWithLength = require('./lib/validators/string-with-length')
 const listOfFunctions = require('./lib/validators/list-of-functions')
 
-const BREADCRUMB_TYPES = ['navigation', 'request', 'process', 'log', 'user', 'state', 'error', 'manual']
+const BREADCRUMB_TYPES = require('./lib/breadcrumb-types')
 const defaultErrorTypes = () => ({ unhandledExceptions: true, unhandledRejections: true })
 
 module.exports.schema = {
