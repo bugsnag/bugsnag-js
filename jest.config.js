@@ -12,6 +12,7 @@ module.exports = {
       displayName: 'react native',
       preset: 'react-native',
       testMatch: [
+        testsForPackage('plugin-react-native-app-state-breadcrumbs'),
         testsForPackage('plugin-react-native-unhandled-rejection')
       ]
     },
