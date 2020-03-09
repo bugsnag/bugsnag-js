@@ -35,11 +35,11 @@ describe('plugin: strip query string', () => {
       apiKey: 'API_KEY_YEAH',
       onError: event => {
         originalStacktrace = event.errors[0].stacktrace.map(f => ({ ...f }))
-      }
+      },
+      plugins: [plugin]
     })
     const payloads = []
     let originalStacktrace
-    client.use(plugin)
 
     client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
     const err = new Error('noooo')

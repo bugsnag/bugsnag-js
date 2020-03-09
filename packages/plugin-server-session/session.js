@@ -5,7 +5,7 @@ const Backoff = require('backo')
 const runSyncCallbacks = require('@bugsnag/core/lib/sync-callback-runner')
 
 module.exports = {
-  init: (client) => {
+  load: (client) => {
     const sessionTracker = new SessionTracker(client._config.sessionSummaryInterval)
     sessionTracker.on('summary', sendSessionSummary(client))
     sessionTracker.start()

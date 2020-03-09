@@ -1,7 +1,7 @@
 const NetInfo = require('@react-native-community/netinfo')
 
 module.exports = {
-  init: client => {
+  load: client => {
     if (!client._config.enabledBreadcrumbTypes || !client._config.enabledBreadcrumbTypes.includes('state')) return
 
     NetInfo.addEventListener(({ isConnected, isInternetReachable, type }) => {

@@ -15,7 +15,7 @@ const Client = require('@bugsnag/core/client')
 
 describe('plugin: node surrounding code', () => {
   it('should load code successfully for stackframes whose files exist', done => {
-    const client = new Client({ apiKey: 'api_key' })
+    const client = new Client({ apiKey: 'api_key' }, undefined, [plugin])
 
     client._setDelivery(client => ({
       sendEvent: (payload) => {
@@ -40,8 +40,6 @@ describe('plugin: node surrounding code', () => {
       sendSession: () => {}
     }))
 
-    client.use(plugin)
-
     client._notify(new Event('Error', 'surrounding code loading test', [
       {
         lineNumber: 22,
@@ -60,7 +58,7 @@ describe('plugin: node surrounding code', () => {
   })
 
   it('should tolerate missing files for some stackframes', done => {
-    const client = new Client({ apiKey: 'api_key' })
+    const client = new Client({ apiKey: 'api_key' }, undefined, [plugin])
 
     client._setDelivery(client => ({
       sendEvent: (payload) => {
@@ -72,8 +70,6 @@ describe('plugin: node surrounding code', () => {
       },
       sendSession: () => {}
     }))
-
-    client.use(plugin)
 
     client._notify(new Event('Error', 'surrounding code loading test', [
       {
@@ -93,7 +89,7 @@ describe('plugin: node surrounding code', () => {
   })
 
   it('behaves sensibly for code at the beginning and end of a file', done => {
-    const client = new Client({ apiKey: 'api_key' })
+    const client = new Client({ apiKey: 'api_key' }, undefined, [plugin])
 
     client._setDelivery(client => ({
       sendEvent: (payload) => {
@@ -115,8 +111,6 @@ describe('plugin: node surrounding code', () => {
       sendSession: () => {}
     }))
 
-    client.use(plugin)
-
     client._notify(new Event('Error', 'surrounding code loading test', [
       {
         lineNumber: 1,
@@ -132,7 +126,7 @@ describe('plugin: node surrounding code', () => {
   })
 
   it('only loads code once for the same file/line/column', done => {
-    const client = new Client({ apiKey: 'api_key' })
+    const client = new Client({ apiKey: 'api_key' }, undefined, [plugin])
 
     const startCount = createReadStreamCount
 
@@ -152,8 +146,6 @@ describe('plugin: node surrounding code', () => {
       },
       sendSession: () => {}
     }))
-
-    client.use(plugin)
 
     client._notify(new Event('Error', 'surrounding code loading test', [
       {
@@ -200,7 +192,7 @@ describe('plugin: node surrounding code', () => {
   })
 
   it('truncates lines to a sensible number of characters', done => {
-    const client = new Client({ apiKey: 'api_key' })
+    const client = new Client({ apiKey: 'api_key' }, undefined, [plugin])
 
     client._setDelivery(client => ({
       sendEvent: (payload) => {
@@ -213,8 +205,6 @@ describe('plugin: node surrounding code', () => {
       },
       sendSession: () => {}
     }))
-
-    client.use(plugin)
 
     client._notify(new Event('Error', 'surrounding code loading test', [
       {

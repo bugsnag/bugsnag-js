@@ -18,11 +18,8 @@ describe('plugin: react native orientation breadcrumbs', () => {
       'react-native': { Dimensions }
     })
 
-    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
-
     currentDimensions = { height: 100, width: 200 }
-
-    client.use(plugin)
+    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', plugins: [plugin] })
 
     expect(typeof _cb).toBe('function')
     expect(client._breadcrumbs.length).toBe(0)
@@ -55,10 +52,10 @@ describe('plugin: react native orientation breadcrumbs', () => {
       'react-native': { Dimensions }
     })
 
-    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: null })
-    client.use(plugin)
+    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: null, plugins: [plugin] })
 
     expect(_cb).toBe(undefined)
+    expect(client).toBe(client)
   })
 
   it('should not be enabled when enabledBreadcrumbTypes=[]', () => {
@@ -72,10 +69,10 @@ describe('plugin: react native orientation breadcrumbs', () => {
       'react-native': { Dimensions }
     })
 
-    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: [] })
-    client.use(plugin)
+    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: [], plugins: [plugin] })
 
     expect(_cb).toBe(undefined)
+    expect(client).toBe(client)
   })
 
   it('should be enabled when enabledBreadcrumbTypes=["state"]', () => {
@@ -90,9 +87,9 @@ describe('plugin: react native orientation breadcrumbs', () => {
       'react-native': { Dimensions }
     })
 
-    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: ['state'] })
-    client.use(plugin)
+    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: ['state'], plugins: [plugin] })
 
     expect(typeof _cb).toBe('function')
+    expect(client).toBe(client)
   })
 })

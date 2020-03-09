@@ -7,7 +7,7 @@ const pump = require('pump')
 const byline = require('byline')
 
 module.exports = {
-  init: client => {
+  load: client => {
     if (!client._config.sendCode) return
 
     const loadSurroundingCode = (stackframe, cache) => new Promise((resolve, reject) => {

@@ -12,9 +12,8 @@ const window = {
 
 describe('plugin: context', () => {
   it('sets client.context (and event.context) to window.location.pathname', done => {
-    const client = new Client({ apiKey: 'API_KEY_YEAH' })
+    const client = new Client({ apiKey: 'API_KEY_YEAH' }, undefined, [plugin(window)])
     const payloads = []
-    client.use(plugin, window)
 
     client._setDelivery(client => ({
       sendEvent: (payload, cb) => {
@@ -33,9 +32,8 @@ describe('plugin: context', () => {
   })
 
   it('sets doesn’t overwrite an existing context', done => {
-    const client = new Client({ apiKey: 'API_KEY_YEAH' })
+    const client = new Client({ apiKey: 'API_KEY_YEAH' }, undefined, [plugin(window)])
     const payloads = []
-    client.use(plugin, window)
 
     client.setContext('something else')
 

@@ -4,7 +4,7 @@ const { getStack, maybeUseFallbackStack } = require('@bugsnag/core/lib/node-fall
 
 module.exports = {
   name: 'contextualize',
-  init: client => {
+  load: client => {
     const contextualize = (fn, onError) => {
       // capture a stacktrace in case a resulting error has nothing
       const fallbackStack = getStack()

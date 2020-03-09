@@ -7,18 +7,18 @@ const plugin = require('../')
 describe('plugin: node unhandled rejection handler', () => {
   it('should listen to the process#unhandledRejection event', () => {
     const before = process.listeners('unhandledRejection').length
-    const c = new Client({ apiKey: 'api_key' })
-    c.use(plugin)
+    const c = new Client({ apiKey: 'api_key', plugins: [plugin] })
     const after = process.listeners('unhandledRejection').length
     expect(before < after).toBe(true)
+    expect(c).toBe(c)
     plugin.destroy()
   })
 
   it('does not add a process#unhandledRejection listener if autoDetectErrors=false', () => {
     const before = process.listeners('unhandledRejection').length
-    const c = new Client({ apiKey: 'api_key', autoDetectErrors: false })
-    c.use(plugin)
+    const c = new Client({ apiKey: 'api_key', autoDetectErrors: false, plugins: [plugin] })
     const after = process.listeners('unhandledRejection').length
+    expect(c).toBe(c)
     expect(after).toBe(before)
   })
 
@@ -26,10 +26,11 @@ describe('plugin: node unhandled rejection handler', () => {
     const before = process.listeners('unhandledRejection').length
     const c = new Client({
       apiKey: 'api_key',
-      enabledErrorTypes: { unhandledExceptions: false, unhandledRejections: false }
+      enabledErrorTypes: { unhandledExceptions: false, unhandledRejections: false },
+      plugins: [plugin]
     })
-    c.use(plugin)
     const after = process.listeners('unhandledRejection').length
+    expect(c).toBe(c)
     expect(after).toBe(before)
   })
 
@@ -44,7 +45,8 @@ describe('plugin: node unhandled rejection handler', () => {
         expect(event._handledState.severityReason).toEqual({ type: 'unhandledPromiseRejection' })
         plugin.destroy()
         done()
-      }
+      },
+      plugins: [plugin]
     }, {
       ...schema,
       onUnhandledRejection: {
@@ -57,7 +59,6 @@ describe('plugin: node unhandled rejection handler', () => {
       sendEvent: (...args) => args[args.length - 1](),
       sendSession: (...args) => args[args.length - 1]()
     }))
-    c.use(plugin)
     process.listeners('unhandledRejection')[1](new Error('never gonna catch me'))
   })
 
@@ -72,7 +73,8 @@ describe('plugin: node unhandled rejection handler', () => {
         expect(event._handledState.severityReason).toEqual({ type: 'unhandledPromiseRejection' })
         plugin.destroy()
         done()
-      }
+      },
+      plugins: [plugin]
     }, {
       ...schema,
       onUnhandledRejection: {
@@ -85,7 +87,6 @@ describe('plugin: node unhandled rejection handler', () => {
       sendEvent: (...args) => args[args.length - 1](new Error('floop')),
       sendSession: (...args) => args[args.length - 1]()
     }))
-    c.use(plugin)
     process.listeners('unhandledRejection')[1](new Error('never gonna catch me'))
   })
 })

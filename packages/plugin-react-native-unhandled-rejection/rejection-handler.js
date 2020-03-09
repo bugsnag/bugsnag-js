@@ -5,7 +5,7 @@
 const rnPromise = require('promise/setimmediate/rejection-tracking')
 
 module.exports = {
-  init: (client) => {
+  load: (client) => {
     if (!client._config.autoDetectErrors || !client._config.enabledErrorTypes.unhandledRejections) return () => {}
     rnPromise.enable({
       allRejections: true,

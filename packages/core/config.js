@@ -137,22 +137,13 @@ module.exports.schema = {
       isArray(value) && value.length === filter(value, s =>
         (typeof s === 'string' || (s && typeof s.test === 'function'))
       ).length
+  },
+  plugins: {
+    defaultValue: () => ([]),
+    message: 'should be an array of plugin objects',
+    validate: value =>
+      isArray(value) && value.length === filter(value, p =>
+        (p && typeof p === 'object' && typeof p.load === 'function')
+      ).length
   }
-}
-
-module.exports.mergeDefaults = (opts, schema) => {
-  if (!opts || !schema) throw new Error('opts and schema objects are required')
-  return reduce(keys(schema), (accum, key) => {
-    accum[key] = opts[key] !== undefined ? opts[key] : schema[key].defaultValue(opts[key], opts)
-    return accum
-  }, {})
-}
-
-module.exports.validate = (opts, schema) => {
-  if (!opts || !schema) throw new Error('opts and schema objects are required')
-  const errors = reduce(keys(schema), (accum, key) => {
-    if (schema[key].validate(opts[key], opts)) return accum
-    return accum.concat({ key, message: schema[key].message, value: opts[key] })
-  }, [])
-  return { valid: !errors.length, errors }
 }

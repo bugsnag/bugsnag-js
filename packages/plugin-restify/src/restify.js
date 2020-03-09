@@ -12,7 +12,7 @@ const handledState = {
 
 module.exports = {
   name: 'restify',
-  init: client => {
+  load: client => {
     const requestHandler = (req, res, next) => {
       const dom = domain.create()
 

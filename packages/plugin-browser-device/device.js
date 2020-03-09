@@ -3,8 +3,8 @@ const assign = require('@bugsnag/core/lib/es-utils/assign')
 /*
  * Automatically detects browser device details
  */
-module.exports = {
-  init: (client, nav = navigator) => {
+module.exports = (nav = navigator) => ({
+  load: (client) => {
     const device = {
       locale: nav.browserLanguage || nav.systemLanguage || nav.userLanguage || nav.language,
       userAgent: nav.userAgent
@@ -23,4 +23,4 @@ module.exports = {
       )
     }, true)
   }
-}
+})

@@ -1,67 +1,73 @@
 const map = require('@bugsnag/core/lib/es-utils/map')
 const isError = require('@bugsnag/core/lib/iserror')
 
+let _listener
 /*
  * Automatically notifies Bugsnag when window.onunhandledrejection is called
  */
-let _listener
-exports.init = (client, win = window) => {
-  if (!client._config.autoDetectErrors || !client._config.enabledErrorTypes.unhandledRejections) return
-  const listener = evt => {
-    let error = evt.reason
-    let isBluebird = false
+module.exports = (win = window) => {
+  const plugin = {
+    load: (client) => {
+      if (!client._config.autoDetectErrors || !client._config.enabledErrorTypes.unhandledRejections) return
+      const listener = evt => {
+        let error = evt.reason
+        let isBluebird = false
 
-    // accessing properties on evt.detail can throw errors (see #394)
-    try {
-      if (evt.detail && evt.detail.reason) {
-        error = evt.detail.reason
-        isBluebird = true
-      }
-    } catch (e) {}
+        // accessing properties on evt.detail can throw errors (see #394)
+        try {
+          if (evt.detail && evt.detail.reason) {
+            error = evt.detail.reason
+            isBluebird = true
+          }
+        } catch (e) {}
 
-    const event = client.Event.create(error, false, {
-      severity: 'error',
-      unhandled: true,
-      severityReason: { type: 'unhandledPromiseRejection' }
-    }, 'unhandledrejection handler', 1, client._logger)
+        const event = client.Event.create(error, false, {
+          severity: 'error',
+          unhandled: true,
+          severityReason: { type: 'unhandledPromiseRejection' }
+        }, 'unhandledrejection handler', 1, client._logger)
 
-    if (isBluebird) {
-      map(event.errors[0].stacktrace, fixBluebirdStacktrace(error))
-    }
+        if (isBluebird) {
+          map(event.errors[0].stacktrace, fixBluebirdStacktrace(error))
+        }
 
-    client._notify(event, (event) => {
-      if (isError(event.originalError) && !event.originalError.stack) {
-        event.addMetadata('unhandledRejection handler', {
-          [Object.prototype.toString.call(event.originalError)]: {
-            name: event.originalError.name,
-            message: event.originalError.message,
-            code: event.originalError.code
+        client._notify(event, (event) => {
+          if (isError(event.originalError) && !event.originalError.stack) {
+            event.addMetadata('unhandledRejection handler', {
+              [Object.prototype.toString.call(event.originalError)]: {
+                name: event.originalError.name,
+                message: event.originalError.message,
+                code: event.originalError.code
+              }
+            })
           }
         })
       }
-    })
-  }
-  if ('addEventListener' in win) {
-    win.addEventListener('unhandledrejection', listener)
-  } else {
-    win.onunhandledrejection = (reason, promise) => {
-      listener({ detail: { reason, promise } })
-    }
-  }
-  _listener = listener
-}
-
-if (process.env.NODE_ENV !== 'production') {
-  exports.destroy = (win = window) => {
-    if (_listener) {
       if ('addEventListener' in win) {
-        win.removeEventListener('unhandledrejection', _listener)
+        win.addEventListener('unhandledrejection', listener)
       } else {
-        win.onunhandledrejection = null
+        win.onunhandledrejection = (reason, promise) => {
+          listener({ detail: { reason, promise } })
+        }
       }
+      _listener = listener
     }
-    _listener = null
   }
+
+  if (process.env.NODE_ENV !== 'production') {
+    plugin.destroy = (win = window) => {
+      if (_listener) {
+        if ('addEventListener' in win) {
+          win.removeEventListener('unhandledrejection', _listener)
+        } else {
+          win.onunhandledrejection = null
+        }
+      }
+      _listener = null
+    }
+  }
+
+  return plugin
 }
 
 // The stack parser on bluebird stacks in FF get a suprious first frame:

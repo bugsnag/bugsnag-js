@@ -5,7 +5,7 @@ const intRange = require('@bugsnag/core/lib/validators/int-range')
  */
 
 module.exports = {
-  init: (client) => {
+  load: (client) => {
     // track sent events for each init of the plugin
     let n = 0
 

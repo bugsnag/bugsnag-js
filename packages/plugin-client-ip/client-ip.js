@@ -4,7 +4,7 @@ const assign = require('@bugsnag/core/lib/es-utils/assign')
  * Prevent collection of user IPs
  */
 module.exports = {
-  init: (client) => {
+  load: (client) => {
     if (client._config.collectUserIp) return
 
     client.addOnError(event => {
