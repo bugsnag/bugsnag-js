@@ -25,6 +25,17 @@ describe('@bugsnag/core/client', () => {
       const client = new Client({ apiKey: 'API_KEY_YEAH' })
       expect(client._config.apiKey).toBe('API_KEY_YEAH')
     })
+
+    it('extends partial options', () => {
+      const client = new Client({
+        apiKey: 'API_KEY',
+        enabledErrorTypes: { unhandledExceptions: false }
+      })
+      expect(client._config.enabledErrorTypes).toEqual({
+        unhandledExceptions: false,
+        unhandledRejections: true
+      })
+    })
   })
 
   describe('use()', () => {
