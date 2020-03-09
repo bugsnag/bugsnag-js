@@ -435,6 +435,7 @@ describe('@bugsnag/core/client', () => {
       const client = new Client({
         apiKey: 'API_KEY_YEAH'
       })
+      // @ts-ignore
       client.leaveBreadcrumb('GET /jim', {}, 'requeeest')
       expect(client._breadcrumbs.length).toBe(1)
       expect(client._breadcrumbs[0].type).toBe('manual')
