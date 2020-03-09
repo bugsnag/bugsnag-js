@@ -8,7 +8,7 @@ const stringWithLength = require('./lib/validators/string-with-length')
 const listOfFunctions = require('./lib/validators/list-of-functions')
 
 const BREADCRUMB_TYPES = ['navigation', 'request', 'process', 'log', 'user', 'state', 'error', 'manual']
-const defaultErrorTypes = { unhandledExceptions: true, unhandledRejections: true }
+const defaultErrorTypes = () => ({ unhandledExceptions: true, unhandledRejections: true })
 
 module.exports.schema = {
   apiKey: {
@@ -32,14 +32,14 @@ module.exports.schema = {
     validate: value => value === true || value === false
   },
   enabledErrorTypes: {
-    defaultValue: () => defaultErrorTypes,
+    defaultValue: () => defaultErrorTypes(),
     message: 'should be an object containing the flags { unhandledExceptions:true|false, unhandledRejections:true|false }',
     allowPartialObject: true,
     validate: value => {
       // ensure we have an object
       if (typeof value !== 'object' || !value) return false
       const providedKeys = keys(value)
-      const defaultKeys = keys(defaultErrorTypes)
+      const defaultKeys = keys(defaultErrorTypes())
       // ensure it only has a subset of the allowed keys
       if (filter(providedKeys, k => includes(defaultKeys, k)).length < providedKeys.length) return false
       // ensure all of the values are boolean
