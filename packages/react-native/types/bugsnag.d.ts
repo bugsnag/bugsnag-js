@@ -1,7 +1,7 @@
 import { Client, BugsnagStatic, Config } from '@bugsnag/core'
 
 // these properties are allowed to be configured in the JS layer
-type Configurable = 'onError' | 'onBreadcrumb' | 'logger' | 'metadata' | 'user' | 'context'
+type Configurable = 'onError' | 'onBreadcrumb' | 'logger' | 'metadata' | 'user' | 'context' | 'plugins'
 
 type ReactNativeConfig = Pick<Config, Configurable>
 

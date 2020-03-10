@@ -13,54 +13,70 @@ describe('plugin: react native client sync', () => {
 
   describe('js -> native', () => {
     it('updates context', done => {
-      const c = new Client({ apiKey: 'api_key' })
-      c.use(plugin, {
-        updateContext: (update) => {
-          expect(update).toBe('1234')
-          done()
-        }
+      const c = new Client({
+        apiKey: 'api_key',
+        plugins: [
+          plugin({
+            updateContext: (update) => {
+              expect(update).toBe('1234')
+              done()
+            }
+          })
+        ]
       })
       c.setContext('1234')
     })
 
     it('updates metaData', done => {
-      const c = new Client({ apiKey: 'api_key' })
-      c.use(plugin, {
-        updateMetadata: (key, updates) => {
-          expect(key).toBe('widget')
-          expect(updates).toEqual({
-            id: '14',
-            count: 340
+      const c = new Client({
+        apiKey: 'api_key',
+        plugins: [
+          plugin({
+            updateMetadata: (key, updates) => {
+              expect(key).toBe('widget')
+              expect(updates).toEqual({
+                id: '14',
+                count: 340
+              })
+              done()
+            }
           })
-          done()
-        }
+        ]
       })
       c.addMetadata('widget', { id: '14', count: 340 })
       expect(c.getMetadata('widget')).toEqual({ id: '14', count: 340 })
     })
 
     it('updates user', done => {
-      const c = new Client({ apiKey: 'api_key' })
-      c.use(plugin, {
-        updateUser: (id, email, name) => {
-          expect(id).toBe('1234')
-          expect(name).toBe('Ben')
-          expect(email).toBe('ben@bensnag.be')
-          done()
-        }
+      const c = new Client({
+        apiKey: 'api_key',
+        plugins: [
+          plugin({
+            updateUser: (id, email, name) => {
+              expect(id).toBe('1234')
+              expect(name).toBe('Ben')
+              expect(email).toBe('ben@bensnag.be')
+              done()
+            }
+          })
+        ]
       })
       c.setUser('1234', 'ben@bensnag.be', 'Ben')
       expect(c.getUser()).toEqual({ id: '1234', name: 'Ben', email: 'ben@bensnag.be' })
     })
 
     it('syncs breadcrumbs', (done) => {
-      const c = new Client({ apiKey: 'api_key' })
-      c.use(plugin, {
-        leaveBreadcrumb: ({ message, metadata, type, timestamp }) => {
-          expect(message).toBe('Spin')
-          expect(metadata).toEqual({ direction: 'ccw', deg: '90' })
-          done()
-        }
+      const c = new Client({
+        apiKey: 'api_key',
+        plugins: [
+          plugin({
+            leaveBreadcrumb: ({ message, metadata, type, timestamp }) => {
+              expect(message).toBe('Spin')
+              expect(metadata).toEqual({ direction: 'ccw', deg: '90' })
+              done()
+            }
+          })
+        ]
       })
       c.leaveBreadcrumb('Spin', { direction: 'ccw', deg: '90' })
     })
@@ -80,8 +96,7 @@ describe('plugin: react native client sync', () => {
         }
       })
 
-      const c = new Client({ apiKey: 'api_key' })
-      c.use(plugin)
+      const c = new Client({ apiKey: 'api_key', plugins: [plugin()] })
       expect(c.getContext()).toBe(undefined)
       setTimeout(() => {
         expect(c.getContext()).toBe('new context')
@@ -101,8 +116,7 @@ describe('plugin: react native client sync', () => {
         }
       })
 
-      const c = new Client({ apiKey: 'api_key' })
-      c.use(plugin)
+      const c = new Client({ apiKey: 'api_key', plugins: [plugin()] })
       expect(c.getUser()).toEqual({})
       setTimeout(() => {
         expect(c.getUser()).toEqual({ id: '1234', name: 'Ben', email: 'ben@bensnag.be' })
@@ -125,8 +139,7 @@ describe('plugin: react native client sync', () => {
         }
       })
 
-      const c = new Client({ apiKey: 'api_key' })
-      c.use(plugin)
+      const c = new Client({ apiKey: 'api_key', plugins: [plugin()] })
       expect(c.getMetadata('extra')).toEqual(undefined)
       setTimeout(() => {
         expect(c.getMetadata('extra')).toEqual({ apples: ['pink lady', 'braeburn', 'golden delicious'] })
@@ -146,8 +159,8 @@ describe('plugin: react native client sync', () => {
         }
       })
 
-      const c = new Client({ apiKey: 'api_key' })
-      c.use(plugin)
+      const c = new Client({ apiKey: 'api_key', plugins: [plugin()] })
+      expect(c).toBeTruthy()
       setTimeout(() => {
         done()
       }, 1)

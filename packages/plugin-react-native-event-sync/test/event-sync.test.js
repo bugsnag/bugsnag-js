@@ -12,32 +12,36 @@ describe('plugin: react native event sync', () => {
   })
 
   it('updates report state with native payload info', done => {
-    const c = new Client({ apiKey: 'api_key' })
     const ts = new Date()
-    c.use(plugin, {
-      getPayloadInfo: async () => {
-        return {
-          device: { osName: 'android', manufacturer: 'google' },
-          app: { versionCode: '1.0' },
-          breadcrumbs: [
-            {
-              message: 'Test',
-              type: 'manual',
-              metadata: { meta: 'data' },
-              timestamp: ts.toISOString()
+    const c = new Client({
+      apiKey: 'api_key',
+      plugins: [
+        plugin({
+          getPayloadInfo: async () => {
+            return {
+              device: { osName: 'android', manufacturer: 'google' },
+              app: { versionCode: '1.0' },
+              breadcrumbs: [
+                {
+                  message: 'Test',
+                  type: 'manual',
+                  metadata: { meta: 'data' },
+                  timestamp: ts.toISOString()
+                }
+              ],
+              threads: [
+                {
+                  id: '123',
+                  name: 'main',
+                  errorReportingThread: false,
+                  type: 'android',
+                  stacktrace: []
+                }
+              ]
             }
-          ],
-          threads: [
-            {
-              id: '123',
-              name: 'main',
-              errorReportingThread: false,
-              type: 'android',
-              stacktrace: []
-            }
-          ]
-        }
-      }
+          }
+        })
+      ]
     })
 
     c.notify(new Error('blah'), (event) => {

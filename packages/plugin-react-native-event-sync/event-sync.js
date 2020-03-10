@@ -1,5 +1,5 @@
-module.exports = {
-  init: (client, NativeClient) => {
+module.exports = (NativeClient) => ({
+  load: (client) => {
     client.addOnError(async event => {
       const {
         threads,
@@ -14,4 +14,4 @@ module.exports = {
       event.threads = threads
     }, true)
   }
-}
+})

@@ -1,7 +1,7 @@
 const { DeviceEventEmitter, NativeEventEmitter, NativeModules, Platform } = require('react-native')
 
-module.exports = {
-  init: (client, NativeClient) => {
+module.exports = (NativeClient) => ({
+  load: (client) => {
     client.addOnBreadcrumb(breadcrumb => {
       NativeClient.leaveBreadcrumb(breadcrumb)
     })
@@ -68,4 +68,4 @@ module.exports = {
       }
     })
   }
-}
+})

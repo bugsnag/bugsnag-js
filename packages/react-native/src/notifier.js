@@ -13,20 +13,21 @@ const Session = require('@bugsnag/core/session')
 const Breadcrumb = require('@bugsnag/core/breadcrumb')
 
 const delivery = require('@bugsnag/delivery-react-native')
-const session = require('@bugsnag/plugin-react-native-session')
-const eventSync = require('@bugsnag/plugin-react-native-event-sync')
-const clientSync = require('@bugsnag/plugin-react-native-client-sync')
+
+const BugsnagPluginReact = require('@bugsnag/plugin-react')
 
 const { schema, load } = require('./config')
 
-const plugins = [
-  require('@bugsnag/plugin-react-native-global-error-handler'),
+const internalPlugins = [
+  require('@bugsnag/plugin-react-native-session')(NativeClient),
+  require('@bugsnag/plugin-react-native-event-sync')(NativeClient),
+  require('@bugsnag/plugin-react-native-client-sync')(NativeClient),
+  require('@bugsnag/plugin-react-native-global-error-handler')(),
   require('@bugsnag/plugin-react-native-unhandled-rejection'),
   require('@bugsnag/plugin-console-breadcrumbs'),
-  require('@bugsnag/plugin-network-breadcrumbs')
+  require('@bugsnag/plugin-network-breadcrumbs')(),
+  new BugsnagPluginReact(React)
 ]
-
-const bugsnagReact = require('@bugsnag/plugin-react')
 
 const Configuration = { load: () => load(NativeClient) }
 const Bugsnag = {
@@ -45,13 +46,9 @@ const Bugsnag = {
       }
     }
 
-    const bugsnag = new Client(opts, schema, { name, version, url })
+    const bugsnag = new Client(opts, schema, internalPlugins, { name, version, url })
 
     bugsnag._setDelivery(client => delivery(client, NativeClient))
-
-    bugsnag.use(session, NativeClient)
-    bugsnag.use(eventSync, NativeClient)
-    bugsnag.use(clientSync, NativeClient)
 
     if (opts.user && opts.user !== opts._originalValues.user) {
       bugsnag.setUser(opts.user.id, opts.user.email, opts.user.name)
@@ -64,9 +61,6 @@ const Bugsnag = {
     if (opts.metadata && opts.metadata !== opts._originalValues.metadata) {
       Object.keys(opts.metadata).forEach(k => bugsnag.addMetadata(k, opts.metadata[k]))
     }
-
-    plugins.forEach(pl => bugsnag.use(pl))
-    bugsnag.use(bugsnagReact, React)
 
     bugsnag._logger.debug('Loaded!')
 

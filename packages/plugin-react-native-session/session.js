@@ -1,5 +1,5 @@
-module.exports = {
-  init: (client, NativeClient) => {
+module.exports = NativeClient => ({
+  load: (client) => {
     const delegate = {
       startSession: client => {
         NativeClient.startSession()
@@ -16,4 +16,4 @@ module.exports = {
 
     client._sessionDelegate = delegate
   }
-}
+})

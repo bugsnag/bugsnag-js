@@ -15,8 +15,7 @@ describe('plugin: react native session', () => {
     const pauseSpy = spyOn(NativeClient, 'pauseSession')
     const resumeSpy = spyOn(NativeClient, 'resumeSession')
 
-    const c = new Client({ apiKey: 'api_key' })
-    c.use(plugin, NativeClient)
+    const c = new Client({ apiKey: 'api_key', plugins: [plugin(NativeClient)] })
     c.startSession()
     expect(startSpy).toHaveBeenCalledTimes(1)
     c.pauseSession()
