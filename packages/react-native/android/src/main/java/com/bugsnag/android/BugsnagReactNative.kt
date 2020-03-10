@@ -39,7 +39,7 @@ class BugsnagReactNative(private val reactContext: ReactApplicationContext) :
             logger = client.logger
             plugin = client.getPlugin(BugsnagReactNativePlugin::class.java)!!
             plugin.registerForMessageEvents { emitEvent(it) }
-            plugin.configure().toWritableMap()
+            plugin.configure("todo").toWritableMap()
         } catch (exc: Throwable) {
             logFailure("configure", exc)
             WritableNativeMap()
