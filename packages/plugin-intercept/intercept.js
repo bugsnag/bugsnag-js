@@ -2,7 +2,7 @@ const { getStack, maybeUseFallbackStack } = require('@bugsnag/core/lib/node-fall
 
 module.exports = {
   name: 'intercept',
-  init: client => {
+  load: client => {
     const intercept = (onError = () => {}, cb) => {
       if (typeof cb !== 'function') {
         cb = onError

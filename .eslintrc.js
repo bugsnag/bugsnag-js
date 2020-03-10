@@ -8,6 +8,9 @@ const ruleOverrides = {
   // (Explicit) any has its valid use cases
   '@typescript-eslint/no-explicit-any': 'off',
 
+  // We use noop functions liberally (() => {})
+  '@typescript-eslint/no-empty-function': 'off',
+
   // This incorrectly fails on TypeScript method override signatures
   'no-dupe-class-members': 'off',
 
@@ -23,7 +26,10 @@ const ruleOverrides = {
   '@typescript-eslint/restrict-plus-operands': 'off',
   '@typescript-eslint/restrict-template-expressions': 'off',
   '@typescript-eslint/strict-boolean-expressions': 'off',
-  '@typescript-eslint/no-empty-function': 'off'
+  '@typescript-eslint/no-throw-literal': 'off',
+  '@typescript-eslint/no-implied-eval': 'off',
+  '@typescript-eslint/no-unnecessary-boolean-literal-compare': 'off',
+  '@typescript-eslint/prefer-includes': 'off',
 }
 
 module.exports = {
@@ -62,7 +68,7 @@ module.exports = {
     // Linting for tests
     {
       files: [
-        'packages/core/**/*.test.[tj]s?(x)'
+        '**/*.test.ts'
       ],
       env: {
         jest: true,

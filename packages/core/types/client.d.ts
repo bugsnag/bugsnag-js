@@ -1,9 +1,7 @@
 import Breadcrumb from './breadcrumb'
 import {
   NotifiableError,
-  BreadcrumbMetadataValue,
   BreadcrumbType,
-  Plugin,
   OnErrorCallback,
   OnSessionCallback,
   OnBreadcrumbCallback,
@@ -31,7 +29,7 @@ declare class Client {
   // breadcrumbs
   public leaveBreadcrumb(
     message: string,
-    metadata?: { [key: string]: BreadcrumbMetadataValue },
+    metadata?: { [key: string]: any },
     type?: BreadcrumbType
   ): void;
 
@@ -65,7 +63,6 @@ declare class Client {
   public removeOnBreadcrumb(fn: OnBreadcrumbCallback): void;
 
   // plugins
-  public use(plugin: Plugin, ...args: any[]): Client;
   public getPlugin(name: string): any;
 
   // implemented on the browser notifier only

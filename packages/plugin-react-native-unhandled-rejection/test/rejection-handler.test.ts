@@ -1,14 +1,15 @@
-/* global describe, it, expect */
-
-const plugin = require('../')
-const Client = require('@bugsnag/core/client')
+import plugin from '../'
+import Client from '@bugsnag/core/client'
 
 // use the promise polyfill that RN uses, otherwise the unhandled rejections in
 // this test go to node's process#unhandledRejection event
-const RnPromise = require('promise/setimmediate')
+// @ts-ignore
+import RnPromise from 'promise/setimmediate'
 
 describe('plugin: react native rejection handler', () => {
-  it('should hook in to the promise rejection tracker', done => {
+  it('should hook in to the promise rejection tracker', (done) => {
+    expect.assertions(4)
+
     const c = new Client({ apiKey: 'api_key' })
     c._setDelivery(client => ({
       sendEvent: (payload) => {
@@ -20,10 +21,11 @@ describe('plugin: react native rejection handler', () => {
         done()
       }
     }))
-    const stop = plugin.init(c)
+    const stop = plugin.load(c)
     // in the interests of keeping the tests quick, TypeErrors get rejected quicker
     // see: https://github.com/then/promise/blob/d980ed01b7a383bfec416c96095e2f40fd18ab34/src/rejection-tracking.js#L48-L54
     try {
+      // @ts-ignore
       String.floop()
     } catch (e) {
       RnPromise.reject(e)
@@ -31,15 +33,18 @@ describe('plugin: react native rejection handler', () => {
     stop()
   })
 
-  it('should be disabled when autoDetectErrors=false', done => {
+  it('should be disabled when autoDetectErrors=false', (done) => {
+    expect.assertions(0)
+
     const c = new Client({ apiKey: 'api_key', autoDetectErrors: false })
     c._setDelivery(client => ({
-      sendReport: (report) => {
-        expect(report).not.toBeTruthy()
+      sendEvent: (payload) => {
+        done(new Error('event should not be sent when autoDetectErrors=false'))
       }
     }))
-    const stop = plugin.init(c)
+    const stop = plugin.load(c)
     try {
+      // @ts-ignore
       String.floop()
     } catch (e) {
       RnPromise.reject(e)
@@ -48,21 +53,21 @@ describe('plugin: react native rejection handler', () => {
 
     // the rejection tracker waits 100ms before reporting TypeError as unhandled
     // so be generous and wait 3x that
-    setTimeout(() => done(), 300)
+    setTimeout(done, 300)
   })
 
-  it('should be disabled when enabledErrorTypes.unhandledRejections=false', done => {
-    const c = new Client({
-      apiKey: 'api_key',
-      enabledErrorTypes: { unhandledRejections: false, unhandledExceptions: true }
-    })
-    c._setDelivery(client => ({
+  it('should be disabled when enabledErrorTypes.unhandledRejections=false', (done) => {
+    expect.assertions(0)
+
+    const c = new Client({ apiKey: 'api_key', autoDetectErrors: true, enabledErrorTypes: { unhandledRejections: false, unhandledExceptions: true } })
+    c._setDelivery((client) => ({
       sendEvent: (payload) => {
-        expect(payload).not.toBeTruthy()
+        done(new Error('event should not be sent when enabledErrorTypes.unhandledRejections=false'))
       }
     }))
-    const stop = plugin.init(c)
+    const stop = plugin.load(c)
     try {
+      // @ts-ignore
       String.floop()
     } catch (e) {
       RnPromise.reject(e)
@@ -71,6 +76,6 @@ describe('plugin: react native rejection handler', () => {
 
     // the rejection tracker waits 100ms before reporting TypeError as unhandled
     // so be generous and wait 3x that
-    setTimeout(() => done(), 300)
+    setTimeout(done, 300)
   })
 })

@@ -1,16 +1,17 @@
 const { describe, it, expect } = global
-const plugin = require('../src')
+const BugsnagVuePlugin = require('../src')
 const Client = require('@bugsnag/core/client')
 
 describe('bugsnag vue', () => {
   it('throws when missing Vue', () => {
     expect(() => {
-      plugin.init(new Client({ apiKey: 'API_KEYYY' }))
+      new BugsnagVuePlugin().load(new Client({ apiKey: 'API_KEYYY' }))
     }).toThrow()
   })
 
   it('installs Vue.config.errorHandler', done => {
-    const client = new Client({ apiKey: 'API_KEYYY' })
+    const Vue = { config: {} }
+    const client = new Client({ apiKey: 'API_KEYYY', plugins: [new BugsnagVuePlugin(Vue)] })
     client._setDelivery(client => ({
       sendEvent: (payload) => {
         expect(payload.events[0].errors[0].errorClass).toBe('Error')
@@ -19,14 +20,12 @@ describe('bugsnag vue', () => {
         done()
       }
     }))
-    const Vue = { config: {} }
-    client.use(plugin, Vue)
     expect(typeof Vue.config.errorHandler).toBe('function')
     Vue.config.errorHandler(new Error('oops'), { $root: true, $options: {} }, 'callback for watcher "fooBarBaz"')
   })
 
   it('bugsnag vue: classify(str)', () => {
-    expect(plugin.classify('foo_bar')).toBe('FooBar')
-    expect(plugin.classify('foo-bar')).toBe('FooBar')
+    expect(BugsnagVuePlugin.classify('foo_bar')).toBe('FooBar')
+    expect(BugsnagVuePlugin.classify('foo-bar')).toBe('FooBar')
   })
 })

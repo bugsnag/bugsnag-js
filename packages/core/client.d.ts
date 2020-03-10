@@ -1,4 +1,4 @@
-import { Client, OnErrorCallback, Config, Breadcrumb, Session, OnSessionCallback, OnBreadcrumbCallback } from './types'
+import { Client, OnErrorCallback, Config, Breadcrumb, Session, OnSessionCallback, OnBreadcrumbCallback, Plugin } from './types'
 
 interface LoggerConfig {
   debug: (msg: any) => void
@@ -14,7 +14,7 @@ interface LoggerConfig {
  * module itself once it is converted to TypeScript.
  */
 export default class ClientWithInternals extends Client {
-  public constructor(opts: Config)
+  public constructor(opts: Config, schema?: {[key: string]: any}, internalPlugins?: Plugin[])
   _config: { [key: string]: {} }
   _logger: LoggerConfig
   _breadcrumbs: Breadcrumb[];
@@ -23,10 +23,17 @@ export default class ClientWithInternals extends Client {
   }) => void
 
   _metadata: { [key: string]: any }
-  _session: Session
+
+  startSession(): ClientWithInternals
+  resumeSession(): ClientWithInternals;
+  _session: Session | null
+  _pausedSession: Session | null
+
   _sessionDelegate: {
     startSession: (client: ClientWithInternals) => any
   }
+
+  _addOnSessionPayload: (cb: (sessionPayload: Session) => void) => void
 
   _cbs: {
     e: OnErrorCallback[]

@@ -1,8 +1,6 @@
-const { describe, it, expect, afterEach } = global
-
-const Tracker = require('../tracker')
-const Session = require('@bugsnag/core/session')
-const timekeeper = require('timekeeper')
+import Tracker from '../tracker'
+import Session from '@bugsnag/core/session'
+import timekeeper from 'timekeeper'
 
 describe('session tracker', () => {
   it('should track sessions and summarize per minute', done => {

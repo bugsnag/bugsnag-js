@@ -2,7 +2,7 @@
  * Automatically detects browser device details
  */
 module.exports = {
-  init: (client) => {
+  load: (client) => {
     const device = {
       hostname: client._config.hostname,
       runtimeVersions: { node: process.versions.node }

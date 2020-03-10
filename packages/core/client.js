@@ -5,20 +5,22 @@ const Session = require('./session')
 const map = require('./lib/es-utils/map')
 const includes = require('./lib/es-utils/includes')
 const filter = require('./lib/es-utils/filter')
+const reduce = require('./lib/es-utils/reduce')
+const keys = require('./lib/es-utils/keys')
 const assign = require('./lib/es-utils/assign')
 const runCallbacks = require('./lib/callback-runner')
 const metadataDelegate = require('./lib/metadata-delegate')
 const runSyncCallbacks = require('./lib/sync-callback-runner')
+const BREADCRUMB_TYPES = require('./lib/breadcrumb-types')
 
 const noop = () => {}
 
 class Client {
-  constructor (configuration, schema = config.schema, notifier) {
+  constructor (configuration, schema = config.schema, internalPlugins = [], notifier) {
     // notifier id
     this._notifier = notifier
 
     // intialise opts and config
-    this._opts = configuration
     this._config = {}
     this._schema = schema
 
@@ -56,7 +58,10 @@ class Client {
     this.Breadcrumb = Breadcrumb
     this.Session = Session
 
-    this._extractConfiguration()
+    this._config = this._configure(configuration, internalPlugins)
+    map(internalPlugins.concat(this._config.plugins), pl => {
+      if (pl) this._loadPlugin(pl)
+    })
 
     // when notify() is called we need to know how many frames are from our own source
     // this inital value is 1 not 0 because we wrap notify() to ensure it is always
@@ -90,25 +95,57 @@ class Client {
     this._context = c
   }
 
-  _extractConfiguration (partialSchema = this._schema) {
-    const conf = config.mergeDefaults(this._opts, partialSchema)
-    const validity = config.validate(conf, partialSchema)
+  _configure (opts, internalPlugins) {
+    const schema = reduce(internalPlugins, (schema, plugin) => {
+      if (plugin && plugin.configSchema) return assign({}, schema, plugin.configSchema)
+      return schema
+    }, this._schema)
 
-    if (!validity.valid === true) throw new Error(generateConfigErrorMessage(validity.errors))
+    // accumulate configuration and error messages
+    const { errors, config } = reduce(keys(schema), (accum, key) => {
+      const defaultValue = schema[key].defaultValue(opts[key])
 
-    // update and elevate some special options if they were passed in at this point
-    if (conf.metadata) this._metadata = conf.metadata
-    if (conf.user) this._user = conf.user
-    if (conf.context) this._context = conf.context
-    if (conf.logger) this._logger = conf.logger
+      if (opts[key] !== undefined) {
+        const valid = schema[key].validate(opts[key])
+        if (!valid) {
+          accum.errors[key] = schema[key].message
+          accum.config[key] = defaultValue
+        } else {
+          if (schema[key].allowPartialObject) {
+            accum.config[key] = assign(defaultValue, opts[key])
+          } else {
+            accum.config[key] = opts[key]
+          }
+        }
+      } else {
+        accum.config[key] = defaultValue
+      }
+
+      return accum
+    }, { errors: {}, config: {} })
+
+    // missing api key is the only fatal error
+    if (schema.apiKey && !config.apiKey) {
+      throw new Error('No Bugsnag API Key set')
+    }
+
+    // update and elevate some options
+    this._metadata = config.metadata
+    this._user = config.user
+    this._context = config.context
+    if (config.logger) this._logger = config.logger
 
     // add callbacks
-    if (conf.onError && conf.onError.length) this._cbs.e = this._cbs.e.concat(conf.onError)
-    if (conf.onBreadcrumb && conf.onBreadcrumb.length) this._cbs.b = this._cbs.b.concat(conf.onBreadcrumb)
-    if (conf.onSession && conf.onSession.length) this._cbs.s = this._cbs.s.concat(conf.onSession)
+    if (config.onError && config.onError.length) this._cbs.e = this._cbs.e.concat(config.onError)
+    if (config.onBreadcrumb && config.onBreadcrumb.length) this._cbs.b = this._cbs.b.concat(config.onBreadcrumb)
+    if (config.onSession && config.onSession.length) this._cbs.s = this._cbs.s.concat(config.onSession)
 
-    // merge with existing config
-    this._config = assign({}, this._config, conf)
+    // finally warn about any invalid config where we fell back to the default
+    if (keys(errors).length) {
+      this._logger.warn(generateConfigErrorMessage(errors, opts))
+    }
+
+    return config
   }
 
   getUser () {
@@ -119,9 +156,8 @@ class Client {
     this._user = { id, email, name }
   }
 
-  use (plugin) {
-    if (plugin.configSchema) this._extractConfiguration(plugin.configSchema)
-    const result = plugin.init.apply(null, [this].concat([].slice.call(arguments, 1)))
+  _loadPlugin (plugin) {
+    const result = plugin.load(this)
     // JS objects are not the safest way to store arbitrarily keyed values,
     // so bookend the key with some characters that prevent tampering with
     // stuff like __proto__ etc. (only store the result if the plugin had a
@@ -196,14 +232,11 @@ class Client {
   leaveBreadcrumb (message, metadata, type) {
     // coerce bad values so that the defaults get set
     message = typeof message === 'string' ? message : ''
-    type = typeof type === 'string' ? type : 'manual'
+    type = (typeof type === 'string' && includes(BREADCRUMB_TYPES, type)) ? type : 'manual'
     metadata = typeof metadata === 'object' && metadata !== null ? metadata : {}
 
     // if no message, discard
     if (!message) return
-
-    // check the breadcrumb is the list of enabled types
-    if (!this._config.enabledBreadcrumbTypes || !includes(this._config.enabledBreadcrumbTypes, type)) return
 
     const crumb = new Breadcrumb(message, metadata, type)
 
@@ -286,9 +319,20 @@ class Client {
   }
 }
 
-const generateConfigErrorMessage = errors =>
-  `Bugsnag configuration error\n${map(errors, (err) => `"${err.key}" ${err.message} \n    got ${stringify(err.value)}`).join('\n\n')}`
+const generateConfigErrorMessage = (errors, rawInput) => {
+  const er = new Error(
+  `Invalid configuration\n${map(keys(errors), key => `  - ${key} ${errors[key]}, got ${stringify(rawInput[key])}`).join('\n\n')}`)
+  return er
+}
 
-const stringify = val => typeof val === 'object' ? JSON.stringify(val) : String(val)
+const stringify = val => {
+  switch (typeof val) {
+    case 'string':
+    case 'number':
+    case 'object':
+      return JSON.stringify(val)
+    default: return String(val)
+  }
+}
 
 module.exports = Client

@@ -1,3 +1,8 @@
-import { Plugin } from '@bugsnag/core'
-declare const bugsnagPluginReact: Plugin
-export default bugsnagPluginReact
+import { Plugin } from '@bugsnag/browser'
+import React from 'react'
+
+declare class BugsnagPluginReact extends Plugin {
+  constructor(React?: React)
+}
+
+export default BugsnagPluginReact

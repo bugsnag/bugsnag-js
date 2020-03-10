@@ -25,20 +25,33 @@ describe('@bugsnag/core/client', () => {
       const client = new Client({ apiKey: 'API_KEY_YEAH' })
       expect(client._config.apiKey).toBe('API_KEY_YEAH')
     })
+
+    it('extends partial options', () => {
+      const client = new Client({
+        apiKey: 'API_KEY',
+        enabledErrorTypes: { unhandledExceptions: false }
+      })
+      expect(client._config.enabledErrorTypes).toEqual({
+        unhandledExceptions: false,
+        unhandledRejections: true
+      })
+    })
   })
 
   describe('use()', () => {
     it('supports plugins', done => {
-      const client = new Client({ apiKey: '123' })
-      client.use({
-        name: 'test plugin',
-        // @ts-ignore
-        description: 'nothing much to see here',
-        init: (c) => {
-          expect(c).toEqual(client)
-          done()
-        }
+      let pluginClient
+      const client = new Client({
+        apiKey: '123',
+        plugins: [{
+          name: 'test plugin',
+          load: (c) => {
+            pluginClient = c
+            done()
+          }
+        }]
       })
+      expect(pluginClient).toEqual(client)
     })
   })
 
@@ -258,7 +271,6 @@ describe('@bugsnag/core/client', () => {
       expect(client._breadcrumbs.length).toBe(1)
       expect(client._breadcrumbs[0].type).toBe('error')
       expect(client._breadcrumbs[0].message).toBe('Error')
-      // @ts-ignore
       expect(client._breadcrumbs[0].metadata.stacktrace).toBe(undefined)
       // the error shouldn't appear as a breadcrumb for itself
       expect(payloads[0].events[0].breadcrumbs.length).toBe(0)
@@ -430,20 +442,19 @@ describe('@bugsnag/core/client', () => {
       expect(client._breadcrumbs.length).toBe(1)
     })
 
-    it('ignores breadcrumb types that aren’t in the enabled list', () => {
+    it('coerces breadcrumb types that aren’t valid to "manual"', () => {
       const client = new Client({
-        apiKey: 'API_KEY_YEAH',
-        enabledBreadcrumbTypes: ['manual']
+        apiKey: 'API_KEY_YEAH'
       })
-      client.leaveBreadcrumb('brrrrr')
-      client.leaveBreadcrumb('GET /jim', {}, 'request')
+      // @ts-ignore
+      client.leaveBreadcrumb('GET /jim', {}, 'requeeest')
       expect(client._breadcrumbs.length).toBe(1)
-      expect(client._breadcrumbs[0].message).toBe('brrrrr')
+      expect(client._breadcrumbs[0].type).toBe('manual')
     })
   })
 
   describe('startSession()', () => {
-    it('calls the provided the session delegate and return delegate’s return value', () => {
+    it('calls the provided session delegate and return delegate’s return value', () => {
       const client = new Client({ apiKey: 'API_KEY' })
       let ret
       client._sessionDelegate = {

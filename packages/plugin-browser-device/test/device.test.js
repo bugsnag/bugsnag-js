@@ -8,9 +8,8 @@ const navigator = { locale: 'en_GB', userAgent: 'testing browser 1.2.3' }
 
 describe('plugin: device', () => {
   it('should add an onError callback which captures device information', () => {
-    const client = new Client({ apiKey: 'API_KEY_YEAH' })
+    const client = new Client({ apiKey: 'API_KEY_YEAH', plugins: [plugin(navigator)] })
     const payloads = []
-    client.use(plugin, navigator)
 
     expect(client._cbs.e.length).toBe(1)
 
@@ -25,14 +24,13 @@ describe('plugin: device', () => {
   })
 
   it('should add an onSession callback which captures device information', () => {
-    const client = new Client({ apiKey: 'API_KEY_YEAH' })
+    const client = new Client({ apiKey: 'API_KEY_YEAH', plugins: [plugin(navigator)] })
     const payloads = []
     client._sessionDelegate = {
       startSession: (client, session) => {
         client._delivery.sendSession(session)
       }
     }
-    client.use(plugin, navigator)
 
     expect(client._cbs.s.length).toBe(1)
 

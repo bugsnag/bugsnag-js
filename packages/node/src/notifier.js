@@ -25,7 +25,7 @@ const pluginNodeUnhandledRejection = require('@bugsnag/plugin-node-unhandled-rej
 const pluginIntercept = require('@bugsnag/plugin-intercept')
 const pluginContextualize = require('@bugsnag/plugin-contextualize')
 
-const plugins = [
+const internalPlugins = [
   pluginSurroundingCode,
   pluginInProject,
   pluginStripProjectRoot,
@@ -44,11 +44,9 @@ const Bugsnag = {
     if (typeof opts === 'string') opts = { apiKey: opts }
     if (!opts) opts = {}
 
-    const bugsnag = new Client(opts, schema, { name, version, url })
+    const bugsnag = new Client(opts, schema, internalPlugins, { name, version, url })
 
     bugsnag._setDelivery(delivery)
-
-    plugins.forEach(pl => bugsnag.use(pl))
 
     bugsnag._logger.debug('Loaded!')
 

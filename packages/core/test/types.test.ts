@@ -2,7 +2,7 @@ import Bugsnag, { Client, Config } from '..'
 
 // the client's constructor isn't public in TS so this drops down to JS to create one for the tests
 function createClient (opts: Config): Client {
-  const c = new (Bugsnag.Client as any)(opts, undefined, { name: 'Type Tests', version: 'nope', url: 'https://github.com/bugsnag/bugsnag-js' })
+  const c = new (Bugsnag.Client as any)(opts, undefined, [], { name: 'Type Tests', version: 'nope', url: 'https://github.com/bugsnag/bugsnag-js' })
   c._setDelivery(() => ({
     sendSession: (p: any, cb: () => void): void => { cb() },
     sendEvent: (p: any, cb: () => void): void => { cb() }

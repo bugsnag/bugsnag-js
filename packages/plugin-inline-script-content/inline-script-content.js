@@ -5,8 +5,8 @@ const filter = require('@bugsnag/core/lib/es-utils/filter')
 const MAX_LINE_LENGTH = 200
 const MAX_SCRIPT_LENGTH = 500000
 
-module.exports = {
-  init: (client, doc = document, win = window) => {
+module.exports = (doc = document, win = window) => ({
+  load: (client) => {
     if (!client._config.trackInlineScripts) return
 
     const originalLocation = win.location.href
@@ -167,7 +167,7 @@ module.exports = {
       message: 'should be true|false'
     }
   }
-}
+})
 
 function __proxy (host, name, replacer) {
   const original = host[name]

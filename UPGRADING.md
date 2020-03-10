@@ -129,6 +129,9 @@ Many options have been renamed, reworked or replaced.
 +   onBreadcrumb: (breadcrumb) => {
 +     // a callback to run each time a breadcrumb is created
 +   }
+
+    // plugins must now be supplied in config rather than via client.use()
++   plugins: []
   }
 ```
 
@@ -362,6 +365,45 @@ Previously it was valid to supply a `notify` endpoint without supplying a `sessi
 +     sessions: 'https://custom-bugsnag-sessions.yourdom.ain'
     }
   }
+```
+
+## Plugins
+
+Plugins must now be supplied in configuration, and the `client.use()` method has been removed. For users of the following plugins, some changes are required:
+
+### `@bugsnag/plugin-react`
+
+```diff
+- import bugsnagReact from '@bugsnag/plugin-react'
++ import BugsnagPluginReact from '@bugsnag/plugin-react'
+
+- const bugsnagClient = bugsnag('YOUR_API_KEY')
++ Bugsnag.start({ apiKey: 'YOUR_API_KEY', plugins: [new BugsnagPluginReact(React)] })
+
+- bugsnagClient.use(bugsnagReact, React)
+```
+
+### `@bugsnag/plugin-vue`
+
+```diff
+- import bugsnagVue from '@bugsnag/plugin-vue'
++ import BugsnagPluginVue from '@bugsnag/plugin-vue'
+
+- const bugsnagClient = bugsnag('YOUR_API_KEY')
++ Bugsnag.start({ apiKey: 'YOUR_API_KEY', plugins: [new BugsnagPluginVue(Vue)] })
+
+- bugsnagClient.use(bugsnagVue, Vue)
+```
+
+### `@bugsnag/plugin-{restify|koa|express}`
+
+Since these plugins don't need any input, their usage is simpler and follows this pattern
+
+```diff
+- bugsnagClient.use(plugin)
++ Bugsnag.start({
++   plugins: [plugin]
++ })
 ```
 
 ---

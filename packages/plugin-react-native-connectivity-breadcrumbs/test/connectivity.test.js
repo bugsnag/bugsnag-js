@@ -16,8 +16,8 @@ describe('plugin: react native connectivity breadcrumbs', () => {
       '@react-native-community/netinfo': NetInfo
     })
 
-    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' })
-    client.use(plugin)
+    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', plugins: [plugin] })
+    expect(client).toBe(client)
 
     expect(typeof _cb).toBe('function')
     expect(client._breadcrumbs.length).toBe(0)
@@ -46,8 +46,8 @@ describe('plugin: react native connectivity breadcrumbs', () => {
       '@react-native-community/netinfo': NetInfo
     })
 
-    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: null })
-    client.use(plugin)
+    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: null, plugins: [plugin] })
+    expect(client).toBe(client)
 
     expect(_cb).toBe(undefined)
   })
@@ -63,8 +63,8 @@ describe('plugin: react native connectivity breadcrumbs', () => {
       '@react-native-community/netinfo': NetInfo
     })
 
-    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: [] })
-    client.use(plugin)
+    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: [], plugins: [plugin] })
+    expect(client).toBe(client)
 
     expect(_cb).toBe(undefined)
   })
@@ -80,8 +80,8 @@ describe('plugin: react native connectivity breadcrumbs', () => {
       '@react-native-community/netinfo': NetInfo
     })
 
-    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: ['state'] })
-    client.use(plugin)
+    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: ['state'], plugins: [plugin] })
+    expect(client).toBe(client)
 
     expect(typeof _cb).toBe('function')
   })

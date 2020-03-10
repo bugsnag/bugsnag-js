@@ -5,7 +5,7 @@ const map = require('@bugsnag/core/lib/es-utils/map')
 const reduce = require('@bugsnag/core/lib/es-utils/reduce')
 
 module.exports = {
-  init: (client) => {
+  load: (client) => {
     client.addOnError(event => {
       const allFrames = reduce(event.errors, (accum, er) => accum.concat(er.stacktrace), [])
       map(allFrames, frame => {

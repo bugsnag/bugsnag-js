@@ -1,17 +1,14 @@
 const { schema } = require('@bugsnag/core/config')
 const map = require('@bugsnag/core/lib/es-utils/map')
 const assign = require('@bugsnag/core/lib/es-utils/assign')
-const stringWithLength = require('@bugsnag/core/lib/validators/string-with-length')
 
 module.exports = {
-  releaseStage: {
+  releaseStage: assign({}, schema.releaseStage, {
     defaultValue: () => {
       if (/^localhost(:\d+)?$/.test(window.location.host)) return 'development'
       return 'production'
-    },
-    message: 'should be set',
-    validate: stringWithLength
-  },
+    }
+  }),
   logger: assign({}, schema.logger, {
     defaultValue: () =>
       // set logger based on browser capability

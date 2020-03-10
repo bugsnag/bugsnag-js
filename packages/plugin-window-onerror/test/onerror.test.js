@@ -10,15 +10,15 @@ describe('plugin: window onerror', () => {
   beforeEach(() => { window = {} })
 
   it('should set a window.onerror event handler', () => {
-    const client = new Client({ apiKey: 'API_KEY_YEAH' })
-    client.use(plugin, window)
+    const client = new Client({ apiKey: 'API_KEY_YEAH', plugins: [plugin(window)] })
     expect(typeof window.onerror).toBe('function')
+    expect(client).toBe(client)
   })
 
   it('should not add a window.onerror event handler when autoDetectErrors=false', () => {
-    const client = new Client({ apiKey: 'API_KEY_YEAH', autoDetectErrors: false })
-    client.use(plugin, window)
+    const client = new Client({ apiKey: 'API_KEY_YEAH', autoDetectErrors: false, plugins: [plugin(window)] })
     expect(window.onerror).toBe(undefined)
+    expect(client).toBe(client)
   })
 
   it('should not add a window.onerror event handler when enabledErrorTypes.unhandledExceptions=false', () => {
@@ -27,17 +27,17 @@ describe('plugin: window onerror', () => {
       enabledErrorTypes: {
         unhandledExceptions: false,
         unhandledRejections: false
-      }
+      },
+      plugins: [plugin(window)]
     })
-    client.use(plugin, window)
     expect(window.onerror).toBe(undefined)
+    expect(client).toBe(client)
   })
 
   describe('window.onerror function', () => {
     it('captures uncaught errors in timer callbacks', done => {
-      const client = new Client({ apiKey: 'API_KEY_YEAH' })
+      const client = new Client({ apiKey: 'API_KEY_YEAH', plugins: [plugin(window)] })
       const payloads = []
-      client.use(plugin, window)
       client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
 
       window.onerror('Uncaught Error: Bad things', 'foo.js', 10, 20, new Error('Bad things'))
@@ -84,18 +84,16 @@ describe('plugin: window onerror', () => {
     it('calls any previously registered window.onerror callback', done => {
       window.onerror = () => done()
 
-      const client = new Client({ apiKey: 'API_KEY_YEAH' })
+      const client = new Client({ apiKey: 'API_KEY_YEAH', plugins: [plugin(window)] })
       const payloads = []
-      client.use(plugin, window)
       client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
 
       window.onerror('Uncaught Error: Bad things', 'foo.js', 10, 20, new Error('Bad things'))
     })
 
     it('handles single argument usage of window.onerror', () => {
-      const client = new Client({ apiKey: 'API_KEY_YEAH' })
+      const client = new Client({ apiKey: 'API_KEY_YEAH', plugins: [plugin(window)] })
       const payloads = []
-      client.use(plugin, window)
       client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
 
       const evt = { type: 'error', detail: 'something bad happened' }
@@ -111,9 +109,8 @@ describe('plugin: window onerror', () => {
     })
 
     it('handles single argument usage of window.onerror with extra parameter', () => {
-      const client = new Client({ apiKey: 'API_KEY_YEAH' })
+      const client = new Client({ apiKey: 'API_KEY_YEAH', plugins: [plugin(window)] })
       const payloads = []
-      client.use(plugin, window)
       client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
 
       // this situation is caused by the following kind of jQuery call:
@@ -190,9 +187,8 @@ describe('plugin: window onerror', () => {
     // }
 
     it('extracts meaning from non-error values as error messages', function (done) {
-      const client = new Client({ apiKey: 'API_KEY_YEAH' })
+      const client = new Client({ apiKey: 'API_KEY_YEAH', plugins: [plugin(window)] })
       const payloads = []
-      client.use(plugin, window)
       client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
 
       // call onerror as it would be when `throw 'hello' is run`
@@ -225,9 +221,8 @@ describe('plugin: window onerror', () => {
         expect(payloads.length).toBe(1)
         done()
       }
-      const client = new Client({ apiKey: 'API_KEY_YEAH' })
+      const client = new Client({ apiKey: 'API_KEY_YEAH', plugins: [plugin(window)] })
       const payloads = []
-      client.use(plugin, window)
       client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
 
       // call onerror as it would be when `throw 'hello' is run`
@@ -245,9 +240,8 @@ describe('plugin: window onerror', () => {
         expect(payloads.length).toBe(0)
         done()
       }
-      const client = new Client({ apiKey: 'API_KEY_YEAH' })
+      const client = new Client({ apiKey: 'API_KEY_YEAH', plugins: [plugin(window)] })
       const payloads = []
-      client.use(plugin, window)
       client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
 
       // call onerror as it would be when `throw 'hello' is run`

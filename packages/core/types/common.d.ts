@@ -9,13 +9,13 @@ export interface Config {
   appType?: string
   autoDetectErrors?: boolean
   enabledErrorTypes?: {
-    unhandledExceptions: boolean
-    unhandledRejections: boolean
+    unhandledExceptions?: boolean
+    unhandledRejections?: boolean
   }
   autoTrackSessions?: boolean
   context?: string
-  enabledBreadcrumbTypes?: BreadcrumbType[]
-  enabledReleaseStages?: string[]
+  enabledBreadcrumbTypes?: BreadcrumbType[] | null
+  enabledReleaseStages?: string[] | null
   endpoints?: { notify: string, sessions: string }
   redactedKeys?: Array<string | RegExp>
   onBreadcrumb?: OnBreadcrumbCallback | OnBreadcrumbCallback[]
@@ -25,6 +25,7 @@ export interface Config {
   maxBreadcrumbs?: number
   metadata?: { [key: string]: any }
   releaseStage?: string
+  plugins?: Plugin[]
   user?: User | null
 }
 
@@ -34,19 +35,8 @@ export type OnBreadcrumbCallback = (breadcrumb: Breadcrumb) => void | boolean;
 
 export interface Plugin {
   name?: string
-  init: (client: Client) => any
-  configSchema?: ConfigSchema
+  load: (client: Client) => any
   destroy?(): void
-}
-
-export interface ConfigSchemaEntry {
-  message: string
-  validate: (val: any) => boolean
-  defaultValue: () => any
-}
-
-export interface ConfigSchema {
-  [key: string]: ConfigSchemaEntry
 }
 
 export interface Logger {
@@ -86,9 +76,6 @@ export type NotifiableError = Error
 | { errorClass: string, errorMessage: string }
 | { name: string, message: string }
 | any;
-
-type Primitive = boolean | string | number | undefined | null;
-export type BreadcrumbMetadataValue = Primitive | Primitive[];
 
 export type BreadcrumbType = 'error' | 'log' | 'manual' | 'navigation' | 'process' | 'request' | 'state' | 'user';
 

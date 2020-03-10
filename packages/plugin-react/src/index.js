@@ -1,7 +1,12 @@
-module.exports = {
-  name: 'react',
-  init: (client, React = window.React) => {
+module.exports = class BugsnagReactPlugin {
+  constructor (React = window.React) {
     if (!React) throw new Error('cannot find React')
+    this.React = React
+    this.name = 'react'
+  }
+
+  load (client) {
+    const React = this.React
 
     class ErrorBoundary extends React.Component {
       constructor (props) {

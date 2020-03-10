@@ -3,8 +3,8 @@ const includes = require('@bugsnag/core/lib/es-utils/includes')
 /*
  * Leaves breadcrumbs when the user interacts with the DOM
  */
-module.exports = {
-  init: (client, win = window) => {
+module.exports = (win = window) => ({
+  load: (client) => {
     if (!('addEventListener' in win)) return
 
     if (!client._config.enabledBreadcrumbTypes || !includes(client._config.enabledBreadcrumbTypes, 'user')) return
@@ -22,7 +22,7 @@ module.exports = {
       client.leaveBreadcrumb('UI click', { targetText, targetSelector }, 'user')
     }, true)
   }
-}
+})
 
 // extract text content from a element
 const getNodeText = el => {

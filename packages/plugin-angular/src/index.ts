@@ -41,7 +41,7 @@ export class BugsnagErrorHandler extends ErrorHandler {
 }
 
 const plugin: Plugin = {
-  init: (client: Client): ErrorHandler => {
+  load: (client: Client): ErrorHandler => {
     return new BugsnagErrorHandler(client)
   },
   name: 'Angular'
