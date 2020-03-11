@@ -65,6 +65,15 @@ class BugsnagReactNative(private val reactContext: ReactApplicationContext) :
     }
 
     @ReactMethod
+    private fun updateCodeBundleId(id: String?) {
+        try {
+            plugin.updateCodeBundleId(id)
+        } catch (exc: Throwable) {
+            logFailure("updateCodeBundleId", exc)
+        }
+    }
+
+    @ReactMethod
     private fun leaveBreadcrumb(map: ReadableMap) {
         try {
             plugin.leaveBreadcrumb(map.toHashMap())

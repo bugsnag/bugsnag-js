@@ -1,12 +1,18 @@
 const { schema } = require('@bugsnag/core/config')
+const stringWithLength = require('@bugsnag/core/lib/validators/string-with-length')
 
-const ALLOWED_IN_JS = ['onError', 'onBreadcrumb', 'logger', 'metadata', 'user', 'context']
+const ALLOWED_IN_JS = ['onError', 'onBreadcrumb', 'logger', 'metadata', 'user', 'context', 'codeBundleId']
 
 module.exports.schema = {
   ...schema,
   logger: {
     ...schema.logger,
     defaultValue: () => getPrefixedConsole()
+  },
+  codeBundleId: {
+    defaultValue: () => null,
+    message: 'should be a string',
+    validate: val => (val === null || stringWithLength(val))
   }
 }
 
@@ -17,7 +23,7 @@ const getPrefixedConsole = () => {
   }, {})
 }
 
-module.exports.load = (NativeClient) => {
+module.exports.load = (NativeClient, warn = console.warn) => {
   const nativeOpts = NativeClient.configure()
 
   // if we don't have any native options, something went wrong
@@ -28,20 +34,22 @@ module.exports.load = (NativeClient) => {
   // save the original values to check for mutations (user, context and metadata can be supplied in JS)
   Object.defineProperty(nativeOpts, '_originalValues', { value: { ...nativeOpts }, enumerable: false, writable: false })
 
-  return freeze(nativeOpts)
+  return freeze(nativeOpts, warn)
 }
 
-const freeze = opts => {
+const freeze = (opts, warn) => {
   return new Proxy(opts, {
     set (obj, prop, value) {
       if (!ALLOWED_IN_JS.includes(prop)) {
-        throw new Error(`[bugsnag] Cannot set "${prop}" configuration option in JS. This must be set in the native layer.`)
+        warn(`[bugsnag] Cannot set "${prop}" configuration option in JS. This must be set in the native layer.`)
+        return true
       }
       return Reflect.set(...arguments)
     },
     deleteProperty (target, prop) {
       if (!ALLOWED_IN_JS.includes(prop)) {
-        throw new Error(`[bugsnag] Cannot delete "${prop}" configuration option in JS. This must be set in the native layer.`)
+        warn(`[bugsnag] Cannot delete "${prop}" configuration option in JS. This must be set in the native layer.`)
+        return true
       }
       return Reflect.deleteProperty(...arguments)
     }
