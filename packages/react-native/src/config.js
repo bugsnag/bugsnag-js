@@ -23,7 +23,7 @@ const getPrefixedConsole = () => {
   }, {})
 }
 
-module.exports.load = (NativeClient) => {
+module.exports.load = (NativeClient, warn = console.warn) => {
   const nativeOpts = NativeClient.configure()
 
   // if we don't have any native options, something went wrong
@@ -34,22 +34,22 @@ module.exports.load = (NativeClient) => {
   // save the original values to check for mutations (user, context and metadata can be supplied in JS)
   Object.defineProperty(nativeOpts, '_originalValues', { value: { ...nativeOpts }, enumerable: false, writable: false })
 
-  return freeze(nativeOpts)
+  return freeze(nativeOpts, warn)
 }
 
-const freeze = opts => {
+const freeze = (opts, warn) => {
   return new Proxy(opts, {
     set (obj, prop, value) {
       if (!ALLOWED_IN_JS.includes(prop)) {
-        console.warn(new Error(`[bugsnag] Cannot set "${prop}" configuration option in JS. This must be set in the native layer.`))
-        return
+        warn(`[bugsnag] Cannot set "${prop}" configuration option in JS. This must be set in the native layer.`)
+        return true
       }
       return Reflect.set(...arguments)
     },
     deleteProperty (target, prop) {
       if (!ALLOWED_IN_JS.includes(prop)) {
-        console.warn(new Error(`[bugsnag] Cannot delete "${prop}" configuration option in JS. This must be set in the native layer.`))
-        return
+        warn(`[bugsnag] Cannot delete "${prop}" configuration option in JS. This must be set in the native layer.`)
+        return true
       }
       return Reflect.deleteProperty(...arguments)
     }

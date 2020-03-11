@@ -22,20 +22,22 @@ describe('react-native config: load()', () => {
     }).toThrow(/Configuration could not be loaded from native client/)
   })
 
-  it('should throw if the user attempts to modify native config', () => {
+  it('should warn if the user attempts to modify native config', () => {
+    const warnSpy = jest.fn()
     const mockNativeClient = {
       configure: () => ({
         apiKey: '123',
         autoDetectErrors: true
       })
     }
-    expect(() => {
-      const config = load(mockNativeClient)
-      config.apiKey = '456'
-    }).toThrow(/Cannot set "apiKey" configuration option in JS. This must be set in the native layer./)
-    expect(() => {
-      const config = load(mockNativeClient)
-      config.autoDetectErrors = false
-    }).toThrow(/Cannot set "autoDetectErrors" configuration option in JS. This must be set in the native layer./)
+
+    const config = load(mockNativeClient, warnSpy)
+
+    config.apiKey = '456'
+    config.autoDetectErrors = false
+
+    expect(warnSpy.mock.calls.length).toBe(2)
+    expect(warnSpy.mock.calls[0][0]).toMatch(/Cannot set "apiKey" configuration option in JS. This must be set in the native layer./)
+    expect(warnSpy.mock.calls[1][0]).toMatch(/Cannot set "autoDetectErrors" configuration option in JS. This must be set in the native layer./)
   })
 })
