@@ -1,4 +1,5 @@
 const { schema } = require('@bugsnag/core/config')
+const stringWithLength = require('@bugsnag/core/lib/validators/string-with-length')
 
 const ALLOWED_IN_JS = ['onError', 'onBreadcrumb', 'logger', 'metadata', 'user', 'context']
 
@@ -35,13 +36,15 @@ const freeze = opts => {
   return new Proxy(opts, {
     set (obj, prop, value) {
       if (!ALLOWED_IN_JS.includes(prop)) {
-        throw new Error(`[bugsnag] Cannot set "${prop}" configuration option in JS. This must be set in the native layer.`)
+        console.warn(new Error(`[bugsnag] Cannot set "${prop}" configuration option in JS. This must be set in the native layer.`))
+        return
       }
       return Reflect.set(...arguments)
     },
     deleteProperty (target, prop) {
       if (!ALLOWED_IN_JS.includes(prop)) {
-        throw new Error(`[bugsnag] Cannot delete "${prop}" configuration option in JS. This must be set in the native layer.`)
+        console.warn(new Error(`[bugsnag] Cannot delete "${prop}" configuration option in JS. This must be set in the native layer.`))
+        return
       }
       return Reflect.deleteProperty(...arguments)
     }
