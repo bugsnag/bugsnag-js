@@ -71,7 +71,7 @@
     "@bugsnag/delivery-react-native": "7.0.0-alpha.1",
     "@bugsnag/plugin-console-breadcrumbs": "7.0.0-rc.2",
     "@bugsnag/plugin-network-breadcrumbs": "7.0.0-rc.2",
-    "@bugsnag/plugin-react": "7.0.0-rc.0",
+    "@bugsnag/plugin-react": "7.0.0-rc.2",
     "@bugsnag/plugin-react-native-client-sync": "7.0.0-alpha.1",
     "@bugsnag/plugin-react-native-event-sync": "7.0.0-alpha.1",
     "@bugsnag/plugin-react-native-global-error-handler": "7.0.0-rc.2",
