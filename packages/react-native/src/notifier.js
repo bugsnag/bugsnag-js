@@ -62,6 +62,10 @@ const Bugsnag = {
       Object.keys(opts.metadata).forEach(k => bugsnag.addMetadata(k, opts.metadata[k]))
     }
 
+    if (opts.codeBundleId) {
+      NativeClient.updateCodeBundleId(opts.codeBundleId)
+    }
+
     bugsnag._logger.debug('Loaded!')
 
     return bugsnag

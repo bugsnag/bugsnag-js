@@ -1,13 +1,18 @@
 const { schema } = require('@bugsnag/core/config')
 const stringWithLength = require('@bugsnag/core/lib/validators/string-with-length')
 
-const ALLOWED_IN_JS = ['onError', 'onBreadcrumb', 'logger', 'metadata', 'user', 'context']
+const ALLOWED_IN_JS = ['onError', 'onBreadcrumb', 'logger', 'metadata', 'user', 'context', 'codeBundleId']
 
 module.exports.schema = {
   ...schema,
   logger: {
     ...schema.logger,
     defaultValue: () => getPrefixedConsole()
+  },
+  codeBundleId: {
+    defaultValue: () => null,
+    message: 'should be a string',
+    validate: val => (val === null || stringWithLength(val))
   }
 }
 
