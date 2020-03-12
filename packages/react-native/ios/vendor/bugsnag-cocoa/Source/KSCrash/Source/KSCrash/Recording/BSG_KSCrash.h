@@ -33,7 +33,7 @@
 
 typedef enum {
     BSG_KSCDeleteNever,
-    BSG_KSCDeleteOnSucess,
+    BSG_KSCDeleteOnSuccess,
     BSG_KSCDeleteAlways
 } BSG_KSCDeleteBehavior;
 

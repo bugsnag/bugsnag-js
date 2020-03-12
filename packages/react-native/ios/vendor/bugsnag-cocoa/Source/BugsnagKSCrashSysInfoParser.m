@@ -11,6 +11,7 @@
 #import "BugsnagCollections.h"
 #import "BugsnagKeys.h"
 #import "BugsnagConfiguration.h"
+#import "Private.h"
 #import "BugsnagLogger.h"
 
 NSNumber *BSGDeviceFreeSpace(NSSearchPathDirectory directory) {

@@ -1658,9 +1658,6 @@ void bsg_kscrashreport_writeStandardReport(
 
     bsg_ksjsonendEncode(bsg_getJsonContext(writer));
 
-    if (!bsg_ksfuflushWriteBuffer(fd)) {
-        BSG_KSLOG_ERROR("Failed to flush write buffer");
-    }
     close(fd);
 }
 

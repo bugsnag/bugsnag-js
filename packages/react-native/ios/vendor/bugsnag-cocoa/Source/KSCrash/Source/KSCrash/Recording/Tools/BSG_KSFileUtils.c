@@ -30,23 +30,8 @@
 #include "BSG_KSLogger.h"
 
 #include <errno.h>
-#include <fcntl.h>
-#include <stdlib.h>
 #include <string.h>
-#include <sys/stat.h>
 #include <unistd.h>
-
-/** Buffer size to use in the "writeFmt" functions.
- * If the formatted output length would exceed this value, it is truncated.
- */
-#ifndef BSG_KSFU_WriteFmtBufferSize
-#define BSG_KSFU_WriteFmtBufferSize 1024
-#endif
-
-#define BUFFER_SIZE 65536
-
-char charBuffer[BUFFER_SIZE];
-ssize_t bufferLen = 0;
 
 const char *bsg_ksfulastPathEntry(const char *const path) {
     if (path == NULL) {
@@ -57,106 +42,42 @@ const char *bsg_ksfulastPathEntry(const char *const path) {
     return lastFile == NULL ? path : lastFile + 1;
 }
 
-bool bsg_ksfuflushWriteBuffer(const int fd) {
-    const char *pos = charBuffer;
-    while (bufferLen > 0) {
-        ssize_t bytesWritten = write(fd, pos, (size_t)bufferLen);
-        if (bytesWritten == -1) {
-            BSG_KSLOG_ERROR("Could not write to fd %d: %s", fd,
-                            strerror(errno));
-            return false;
-        }
-        bufferLen -= bytesWritten;
-        pos += bytesWritten;
-    }
-    return true;
-}
-
 bool bsg_ksfuwriteBytesToFD(const int fd, const char *const bytes,
                             ssize_t length) {
+    ssize_t bytesRemaining = length;
+    ssize_t bytesWritten = 0;
+    const char *unwrittenBytes = (const char *)bytes;
 
-    for (ssize_t k = 0; k < length; k++) {
-        if (bufferLen >= BUFFER_SIZE) {
-            if (!bsg_ksfuflushWriteBuffer(fd)) {
-                return false;
-            }
+    // write(2) attempts to write the entire length but may write less than
+    // that, the exact number of bytes are specified in the return value. In
+    // the (unlikely) event that the bytes written are less than length, this
+    // function retries with the remaining bytes until all bytes are written,
+    // handling potential error cases as needed.
+    while (bytesRemaining > 0) {
+      bytesWritten = write(fd, unwrittenBytes, bytesRemaining);
+      if (bytesWritten == -1) {
+        // Retry as-is if a signal interrupt occurred, as its a recoverable
+        // error. Otherwise exit early as the file descriptor cannot be written
+        // (due to lack of disk space, invalid fd, invalid file offset etc).
+        //
+        // write(2): Upon successful completion the number of bytes which were
+        // written is returned.  Otherwise, a -1 is returned and the global
+        // variable errno is set to indicate the error.
+        //
+        // ERRORS
+        //   The write(), writev(), and pwrite() system calls will fail and
+        //   the file pointer will remain unchanged if:
+        //
+        //   ...
+        //   [EINTR] A signal interrupts the write before it could be completed.
+        if (errno != EINTR) {
+          return false; // Unrecoverable
         }
-        charBuffer[bufferLen] = bytes[k];
-        bufferLen++;
+      } else {
+        bytesRemaining -= bytesWritten;
+        unwrittenBytes += bytesWritten;
+      }
     }
+
     return true;
-}
-
-bool bsg_ksfureadBytesFromFD(const int fd, char *const bytes, ssize_t length) {
-    char *pos = bytes;
-    while (length > 0) {
-        ssize_t bytesRead = read(fd, pos, (size_t)length);
-        if (bytesRead == -1) {
-            BSG_KSLOG_ERROR("Could not write to fd %d: %s", fd,
-                            strerror(errno));
-            return false;
-        }
-        length -= bytesRead;
-        pos += bytesRead;
-    }
-    return true;
-}
-
-bool bsg_ksfuwriteStringToFD(const int fd, const char *const string) {
-    if (*string != 0) {
-        size_t bytesToWrite = strlen(string);
-        const char *pos = string;
-        while (bytesToWrite > 0) {
-            ssize_t bytesWritten = write(fd, pos, bytesToWrite);
-            if (bytesWritten == -1) {
-                BSG_KSLOG_ERROR("Could not write to fd %d: %s", fd,
-                                strerror(errno));
-                return false;
-            }
-            bytesToWrite -= (size_t)bytesWritten;
-            pos += bytesWritten;
-        }
-        return true;
-    }
-    return false;
-}
-
-bool bsg_ksfuwriteFmtToFD(const int fd, const char *const fmt, ...) {
-    if (*fmt != 0) {
-        va_list args;
-        va_start(args, fmt);
-        bool result = bsg_ksfuwriteFmtArgsToFD(fd, fmt, args);
-        va_end(args);
-        return result;
-    }
-    return false;
-}
-
-bool bsg_ksfuwriteFmtArgsToFD(const int fd, const char *const fmt,
-                              va_list args) {
-    if (*fmt != 0) {
-        char buffer[BSG_KSFU_WriteFmtBufferSize];
-        vsnprintf(buffer, sizeof(buffer), fmt, args);
-        return bsg_ksfuwriteStringToFD(fd, buffer);
-    }
-    return false;
-}
-
-ssize_t bsg_ksfureadLineFromFD(const int fd, char *const buffer,
-                               const int maxLength) {
-    char *end = buffer + maxLength - 1;
-    *end = 0;
-    char *ch;
-    for (ch = buffer; ch < end; ch++) {
-        ssize_t bytesRead = read(fd, ch, 1);
-        if (bytesRead < 0) {
-            BSG_KSLOG_ERROR("Could not read from fd %d: %s", fd,
-                            strerror(errno));
-            return -1;
-        } else if (bytesRead == 0 || *ch == '\n') {
-            break;
-        }
-    }
-    *ch = 0;
-    return ch - buffer;
 }

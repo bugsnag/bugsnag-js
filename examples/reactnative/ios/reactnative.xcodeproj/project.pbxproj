@@ -43,7 +43,6 @@
 		D803F755063C455C884E36A9 /* libBugsnagReactNative.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 222C3AC58CC848CB8CDB5055 /* libBugsnagReactNative.a */; };
 		E79C318922C0E29600B91745 /* CrashyCrashy.m in Sources */ = {isa = PBXBuildFile; fileRef = E79C318822C0E29600B91745 /* CrashyCrashy.m */; };
 		E79C318A22C0E29600B91745 /* CrashyCrashy.m in Sources */ = {isa = PBXBuildFile; fileRef = E79C318822C0E29600B91745 /* CrashyCrashy.m */; };
-		EB51803D9EE2493B94D231E8 /* libRNCNetInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AEF2F386410F4BF092DA8F72 /* libRNCNetInfo.a */; };
 		ED297163215061F000B7C4FE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED297162215061F000B7C4FE /* JavaScriptCore.framework */; };
 		ED2971652150620600B7C4FE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED2971642150620600B7C4FE /* JavaScriptCore.framework */; };
 /* End PBXBuildFile section */
@@ -273,20 +272,6 @@
 			remoteGlobalIDString = 2D2A28201D9B03D100D4039D;
 			remoteInfo = "RCTAnimation-tvOS";
 		};
-		6513207923C8C7140049A12A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F4CDDFAEC4CF4B4E8247C060 /* RNCNetInfo.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 134814201AA4EA6300B7C361;
-			remoteInfo = RNCNetInfo;
-		};
-		6513207B23C8C7140049A12A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F4CDDFAEC4CF4B4E8247C060 /* RNCNetInfo.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = B5027B1B2237B30F00F1AABA;
-			remoteInfo = "RNCNetInfo-tvOS";
-		};
 		65AE6AA123D8932D00301CC1 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B894EFC24A53484C888A7926 /* BugsnagReactNative.xcodeproj */;
@@ -381,7 +366,6 @@
 		E79C318822C0E29600B91745 /* CrashyCrashy.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = CrashyCrashy.m; path = reactnative/CrashyCrashy.m; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
-		F4CDDFAEC4CF4B4E8247C060 /* RNCNetInfo.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNCNetInfo.xcodeproj; path = "../node_modules/@react-native-community/netinfo/ios/RNCNetInfo.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -410,7 +394,6 @@
 				832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */,
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
-				EB51803D9EE2493B94D231E8 /* libRNCNetInfo.a in Frameworks */,
 				D803F755063C455C884E36A9 /* libBugsnagReactNative.a in Frameworks */,
 				878F466493FD4DD1B60B06ED /* libz.tbd in Frameworks */,
 			);
@@ -582,15 +565,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		6513207523C8C7130049A12A /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				6513207A23C8C7140049A12A /* libRNCNetInfo.a */,
-				6513207C23C8C7140049A12A /* libRNCNetInfo-tvOS.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		65AE6A9E23D8932D00301CC1 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -623,7 +597,6 @@
 				832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */,
 				00C302DF1ABCB9EE00DB3ED1 /* RCTVibration.xcodeproj */,
 				139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */,
-				F4CDDFAEC4CF4B4E8247C060 /* RNCNetInfo.xcodeproj */,
 				B894EFC24A53484C888A7926 /* BugsnagReactNative.xcodeproj */,
 			);
 			name = Libraries;
@@ -847,10 +820,6 @@
 					ProductGroup = 146834001AC3E56700842450 /* Products */;
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
 				},
-				{
-					ProductGroup = 6513207523C8C7130049A12A /* Products */;
-					ProjectRef = F4CDDFAEC4CF4B4E8247C060 /* RNCNetInfo.xcodeproj */;
-				},
 			);
 			projectRoot = "";
 			targets = (
@@ -1071,20 +1040,6 @@
 			fileType = archive.ar;
 			path = libRCTAnimation.a;
 			remoteRef = 5E9157341DD0AC6500FF2AA8 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		6513207A23C8C7140049A12A /* libRNCNetInfo.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libRNCNetInfo.a;
-			remoteRef = 6513207923C8C7140049A12A /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		6513207C23C8C7140049A12A /* libRNCNetInfo-tvOS.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libRNCNetInfo-tvOS.a";
-			remoteRef = 6513207B23C8C7140049A12A /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		65AE6AA223D8932D00301CC1 /* libBugsnagReactNative.a */ = {

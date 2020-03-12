@@ -28,14 +28,15 @@
 #import "Bugsnag.h"
 #import "BugsnagLogger.h"
 #import "BugsnagCollections.h"
-#import "BugsnagNotifier.h"
+#import "BugsnagClient.h"
 #import "BugsnagKeys.h"
 #import "BSG_KSSystemInfo.h"
+#import "Private.h"
 
 // This is private in Bugsnag, but really we want package private so define
 // it here.
 @interface Bugsnag ()
-+ (BugsnagNotifier *)notifier;
++ (BugsnagClient *)client;
 @end
 
 @implementation BugsnagSink
@@ -64,17 +65,17 @@
     
     for (NSString *fileKey in reports) {
         NSDictionary *report = reports[fileKey];
-        BugsnagCrashReport *bugsnagReport = [[BugsnagCrashReport alloc] initWithKSReport:report];
+        BugsnagEvent *bugsnagReport = [[BugsnagEvent alloc] initWithKSReport:report];
         if (![bugsnagReport shouldBeSent])
             continue;
         BOOL shouldSend = YES;
-        for (BugsnagBeforeSendBlock block in configuration.beforeSendBlocks) {
+        for (BugsnagOnSendBlock block in configuration.onSendBlocks) {
             @try {
                 shouldSend = block(report, bugsnagReport);
                 if (!shouldSend)
                     break;
             } @catch (NSException *exception) {
-                bsg_log_err(@"Error from beforeSend callback: %@", exception);
+                bsg_log_err(@"Error from onSend callback: %@", exception);
             }
         }
         if (shouldSend) {
@@ -90,17 +91,6 @@
     }
 
     NSDictionary *reportData = [self getBodyFromReports:bugsnagReports];
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    for (BugsnagBeforeNotifyHook hook in configuration.beforeNotifyHooks) {
-        if (reportData) {
-            reportData = hook(bugsnagReports, reportData);
-        } else {
-            break;
-        }
-    }
-#pragma clang diagnostic pop
 
     if (reportData == nil) {
         if (onCompletion) {
@@ -120,14 +110,14 @@
 // Generates the payload for notifying Bugsnag
 - (NSDictionary *)getBodyFromReports:(NSArray *)reports {
     NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
-    BSGDictSetSafeObject(data, [Bugsnag notifier].details, BSGKeyNotifier);
-    BSGDictSetSafeObject(data, [Bugsnag notifier].configuration.apiKey, BSGKeyApiKey);
+    BSGDictSetSafeObject(data, [Bugsnag client].details, BSGKeyNotifier);
+    BSGDictSetSafeObject(data, [Bugsnag client].configuration.apiKey, BSGKeyApiKey);
     BSGDictSetSafeObject(data, @"4.0", @"payloadVersion");
 
     NSMutableArray *formatted =
             [[NSMutableArray alloc] initWithCapacity:[reports count]];
 
-    for (BugsnagCrashReport *report in reports) {
+    for (BugsnagEvent *report in reports) {
         BSGArrayAddSafeObject(formatted, [report toJson]);
     }
 

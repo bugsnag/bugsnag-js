@@ -13,6 +13,7 @@
 #import "Bugsnag.h"
 #import "BugsnagKSCrashSysInfoParser.h"
 #import "BugsnagSessionTracker.h"
+#import "Private.h"
 
 @interface BSGOutOfMemoryWatchdog ()
 @property(nonatomic, getter=isWatching) BOOL watching;
@@ -184,7 +185,7 @@
             BOOL sameVersions = [lastBootOSVersion isEqualToString:osVersion] &&
                                 [lastBootBundleVersion isEqualToString:bundleVersion] &&
                                 [lastBootAppVersion isEqualToString:appVersion];
-            BOOL shouldReport = config.reportOOMs
+            BOOL shouldReport = (config.enabledErrorTypes & BSGErrorTypesOOMs)
                 && (lastBootInForeground && lastBootWasActive);
             [self deleteSentinelFile];
             return sameVersions && shouldReport;
@@ -243,6 +244,8 @@
     app[@"releaseStage"] = config.releaseStage;
     app[@"version"] = systemInfo[@BSG_KSSystemField_BundleShortVersion] ?: @"";
     app[@"bundleVersion"] = systemInfo[@BSG_KSSystemField_BundleVersion] ?: @"";
+    // 'codeBundleId' only (optionally) exists for React Native clients and defaults otherwise to nil
+    app[@"codeBundleId"] = [config codeBundleId];
 #if BSGOOMAvailable
     UIApplicationState state = [BSG_KSSystemInfo currentAppState];
     app[@"inForeground"] = @([BSG_KSSystemInfo isInForeground:state]);
@@ -262,8 +265,12 @@
     // device[@"lowMemory"] is initially unset
     device[@"osBuild"] = systemInfo[@BSG_KSSystemField_OSVersion];
     device[@"osVersion"] = systemInfo[@BSG_KSSystemField_SystemVersion];
+    device[@"osName"] = systemInfo[@BSG_KSSystemField_SystemName];
+    // Translated from 'iDeviceMaj,Min' into human-readable "iPhone X" description on the server
     device[@"model"] = systemInfo[@BSG_KSSystemField_Machine];
+    device[@"modelNumber"] = systemInfo[@ BSG_KSSystemField_Model];
     device[@"wordSize"] = @(PLATFORM_WORD_SIZE);
+    device[@"locale"] = [[NSLocale currentLocale] localeIdentifier];
 #if TARGET_OS_SIMULATOR
     device[@"simulator"] = @YES;
 #else

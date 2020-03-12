@@ -1,5 +1,5 @@
 //
-//  BugsnagNotifier.m
+//  BugsnagClient.m
 //
 //  Created by Conrad Irwin on 2014-10-01.
 //
@@ -24,7 +24,7 @@
 // THE SOFTWARE.
 //
 
-#import "BugsnagNotifier.h"
+#import "BugsnagClient.h"
 #import "BSGConnectivity.h"
 #import "Bugsnag.h"
 #import "Private.h"
@@ -33,6 +33,7 @@
 #import "BugsnagLogger.h"
 #import "BugsnagKeys.h"
 #import "BugsnagSessionTracker.h"
+#import "BugsnagPluginClient.h"
 #import "BSGOutOfMemoryWatchdog.h"
 #import "BSG_RFC3339DateTool.h"
 #import "BSG_KSCrashC.h"
@@ -58,8 +59,8 @@ static NSInteger const BSGNotifierStackFrameCount = 5;
 struct bugsnag_data_t {
     // Contains the state of the event (handled/unhandled)
     char *handledState;
-    // Contains the user-specified metaData, including the user tab from config.
-    char *metaDataJSON;
+    // Contains the user-specified metadata, including the user tab from config.
+    char *metadataJSON;
     // Contains the Bugsnag configuration, all under the "config" tab.
     char *configJSON;
     // Contains notifier state, under "deviceState" and crash-specific
@@ -68,8 +69,8 @@ struct bugsnag_data_t {
     // Contains properties in the Bugsnag payload overridden by the user before
     // it was sent
     char *userOverridesJSON;
-    // User onCrash handler
-    void (*onCrash)(const BSG_KSCrashReportWriter *writer);
+    // User onError handler
+    void (*onError)(const BSG_KSCrashReportWriter *writer);
 };
 
 static struct bugsnag_data_t bsg_g_bugsnag_data;
@@ -107,8 +108,9 @@ void BSSerializeDataCrashHandler(const BSG_KSCrashReportWriter *writer, int type
         if (bsg_g_bugsnag_data.stateJSON) {
             writer->addJSONElement(writer, "state", bsg_g_bugsnag_data.stateJSON);
         }
-        if (bsg_g_bugsnag_data.metaDataJSON) {
-            writer->addJSONElement(writer, "metaData", bsg_g_bugsnag_data.metaDataJSON);
+        if (bsg_g_bugsnag_data.metadataJSON) {
+            // The API expects "metaData", capitalised as such.  Elsewhere is is one word.
+            writer->addJSONElement(writer, "metaData", bsg_g_bugsnag_data.metadataJSON);
         }
         if (watchdogSentinelPath != NULL) {
             // Delete the file to indicate a handled termination
@@ -116,7 +118,7 @@ void BSSerializeDataCrashHandler(const BSG_KSCrashReportWriter *writer, int type
         }
         if (crashSentinelPath != NULL) {
             // Create a file to indicate that the crash has been handled by
-            // the library. This exists in case the subsequent `onCrash` handler
+            // the library. This exists in case the subsequent `onError` handler
             // crashes or otherwise corrupts the crash report file.
             int fd = open(crashSentinelPath, O_RDWR | O_CREAT, 0644);
             if (fd > -1) {
@@ -125,8 +127,8 @@ void BSSerializeDataCrashHandler(const BSG_KSCrashReportWriter *writer, int type
         }
     }
 
-    if (bsg_g_bugsnag_data.onCrash) {
-        bsg_g_bugsnag_data.onCrash(writer);
+    if (bsg_g_bugsnag_data.onError) {
+        bsg_g_bugsnag_data.onError(writer);
     }
 }
 
@@ -159,7 +161,7 @@ void BSSerializeJSONDictionary(NSDictionary *dictionary, char **destination) {
                                                          error:&error];
 
         if (!json) {
-            bsg_log_err(@"could not serialize metaData: %@", error);
+            bsg_log_err(@"could not serialize metadata: %@", error);
             return;
         }
         *destination = reallocf(*destination, [json length] + 1);
@@ -168,7 +170,7 @@ void BSSerializeJSONDictionary(NSDictionary *dictionary, char **destination) {
             (*destination)[[json length]] = '\0';
         }
     } @catch (NSException *exception) {
-        bsg_log_err(@"could not serialize metaData: %@", exception);
+        bsg_log_err(@"could not serialize metadata: %@", exception);
     }
 }
 
@@ -200,15 +202,20 @@ void BSGWriteSessionCrashData(BugsnagSession *session) {
     hasRecordedSessions = true;
 }
 
-@interface BugsnagNotifier ()
+@interface BugsnagClient ()
 @property(nonatomic, strong) BugsnagCrashSentry *crashSentry;
 @property(nonatomic, strong) BugsnagErrorReportApiClient *errorReportApiClient;
 @property(nonatomic, strong, readwrite) BugsnagSessionTracker *sessionTracker;
 @property (nonatomic, strong) BSGOutOfMemoryWatchdog *oomWatchdog;
+@property (nonatomic, strong) BugsnagPluginClient *pluginClient;
 @property (nonatomic) BOOL appCrashedLastLaunch;
 @end
 
-@implementation BugsnagNotifier
+@interface BugsnagConfiguration ()
+@property(nonatomic, readwrite, strong) NSMutableSet *plugins;
+@end
+
+@implementation BugsnagClient
 
 @synthesize configuration;
 
@@ -217,7 +224,7 @@ void BSGWriteSessionCrashData(BugsnagSession *session) {
     static NSString *const BSGCrashSentinelFileName = @"bugsnag_handled_crash.txt";
     if ((self = [super init])) {
         self.configuration = initConfiguration;
-        self.state = [[BugsnagMetaData alloc] init];
+        self.state = [[BugsnagMetadata alloc] init];
         NSString *notifierName =
 #if TARGET_OS_TV
             @"tvOS Bugsnag Notifier";
@@ -246,14 +253,14 @@ void BSGWriteSessionCrashData(BugsnagSession *session) {
                                                                       configuration:configuration];
         }
 
-        self.metaDataLock = [[NSLock alloc] init];
-        self.configuration.metaData.delegate = self;
+        self.metadataLock = [[NSLock alloc] init];
+        self.configuration.metadata.delegate = self;
         self.configuration.config.delegate = self;
         self.state.delegate = self;
         self.crashSentry = [BugsnagCrashSentry new];
         self.errorReportApiClient = [[BugsnagErrorReportApiClient alloc] initWithConfig:configuration
                                                                               queueName:@"Error API queue"];
-        bsg_g_bugsnag_data.onCrash = (void (*)(const BSG_KSCrashReportWriter *))self.configuration.onCrashHandler;
+        bsg_g_bugsnag_data.onError = (void (*)(const BSG_KSCrashReportWriter *))self.configuration.onError;
 
         static dispatch_once_t once_t;
         dispatch_once(&once_t, ^{
@@ -265,9 +272,10 @@ void BSGWriteSessionCrashData(BugsnagSession *session) {
                                                              BSGWriteSessionCrashData(session);
                                                          }];
 
-        [self metaDataChanged:self.configuration.metaData];
-        [self metaDataChanged:self.configuration.config];
-        [self metaDataChanged:self.state];
+        [self metadataChanged:self.configuration.metadata];
+        [self metadataChanged:self.configuration.config];
+        [self metadataChanged:self.state];
+        _pluginClient = [[BugsnagPluginClient alloc] initWithPlugins:self.configuration.plugins];
     }
     return self;
 }
@@ -280,6 +288,7 @@ NSString *const kUndoOperation = @"Undo Operation";
 NSString *const kRedoOperation = @"Redo Operation";
 NSString *const kTableViewSelectionChange = @"TableView Select Change";
 NSString *const kAppWillTerminate = @"App Will Terminate";
+NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
 
 - (void)initializeNotificationNameMap {
     notificationNameMap = @{
@@ -340,12 +349,12 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
 }
 
 - (void)start {
+    [self.pluginClient loadPlugins];
     [self.crashSentry install:self.configuration
                     apiClient:self.errorReportApiClient
                       onCrash:&BSSerializeDataCrashHandler];
     [self computeDidCrashLastLaunch];
     [self setupConnectivityListener];
-    [self updateAutomaticBreadcrumbDetectionSettings];
 
     NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
     [self watchLifecycleEvents:center];
@@ -397,19 +406,28 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
 
     _started = YES;
     // autoDetectErrors disables all unhandled event reporting
-    BOOL configuredToReportOOMs = self.configuration.reportOOMs && self.configuration.autoDetectErrors;
+    BOOL configuredToReportOOMs = self.configuration.autoDetectErrors
+        && ([[Bugsnag configuration] enabledErrorTypes] & BSGErrorTypesOOMs);
+    
     // Disable if a debugger is enabled, since the development cycle of starting
     // and restarting an app is also an uncatchable kill
     BOOL noDebuggerEnabled = !bsg_ksmachisBeingTraced();
+
     // Disable if in an app extension, since app extensions have a different
     // app lifecycle and the heuristic used for finding app terminations rooted
     // in fixable code does not apply
     BOOL notInAppExtension = ![BSG_KSSystemInfo isRunningInAppExtension];
+
     if (configuredToReportOOMs && noDebuggerEnabled && notInAppExtension) {
         [self.oomWatchdog enable];
     }
 
     [self.sessionTracker startNewSessionIfAutoCaptureEnabled];
+
+    [self addBreadcrumbWithBlock:^(BugsnagBreadcrumb *_Nonnull breadcrumb) {
+        breadcrumb.type = BSGBreadcrumbTypeState;
+        breadcrumb.message = BSGBreadcrumbLoadedMessage;
+    }];
 
     // notification not received in time on initial startup, so trigger manually
     [self willEnterForeground:self];
@@ -456,7 +474,7 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
  */
 - (void)unsubscribeFromNotifications:(id)sender {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [self.networkReachable stopWatchingConnectivity];
+    [BSGConnectivity stopMonitoring];
 
 #if TARGET_OS_TV || TARGET_OS_MAC
 #elif TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
@@ -500,8 +518,8 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
     [self.sessionTracker startNewSession];
 }
 
-- (void)stopSession {
-    [self.sessionTracker stopSession];
+- (void)pauseSession {
+    [self.sessionTracker pauseSession];
 }
 
 - (BOOL)resumeSession {
@@ -515,18 +533,28 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
 - (void)setupConnectivityListener {
     NSURL *url = self.configuration.notifyURL;
 
-    __weak id weakSelf = self;
-    self.networkReachable =
-        [[BSGConnectivity alloc] initWithURL:url
-                                 changeBlock:^(BSGConnectivity *connectivity) {
-                                   [weakSelf flushPendingReports];
-                                 }];
-    [self.networkReachable startWatchingConnectivity];
+    // ARC Reference - 4.2 __weak Semantics
+    // http://clang.llvm.org/docs/AutomaticReferenceCounting.html
+    // Avoid potential strong reference cycle between the 'client' instance and
+    // the BSGConnectivity static storage.
+    __weak typeof(self) weakSelf = self;
+    [BSGConnectivity monitorURL:url
+                  usingCallback:^(BOOL connected, NSString *connectionType) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        if (connected)
+            [strongSelf flushPendingReports];
+
+        [strongSelf addBreadcrumbWithBlock:^(BugsnagBreadcrumb *crumb) {
+            crumb.message = @"Connectivity change";
+            crumb.type = BSGBreadcrumbTypeState;
+            crumb.metadata  = @{ @"type"  :  connectionType };
+        }];
+    }];
 }
 
 
 - (void)notifyError:(NSError *)error
-              block:(void (^)(BugsnagCrashReport *))block {
+              block:(void (^)(BugsnagEvent *))block {
     BugsnagHandledState *state =
         [BugsnagHandledState handledStateWithSeverityReason:HandledError
                                                    severity:BSGSeverityWarning
@@ -536,8 +564,8 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
                                                  userInfo:error.userInfo];
     [self notify:wrapper
         handledState:state
-               block:^(BugsnagCrashReport *_Nonnull report) {
-                 NSMutableDictionary *metadata = [report.metaData mutableCopy];
+               block:^(BugsnagEvent *_Nonnull report) {
+                 NSMutableDictionary *metadata = [report.metadata mutableCopy];
                  metadata[@"nserror"] = @{
                      @"code" : @(error.code),
                      @"domain" : error.domain,
@@ -546,7 +574,7 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
                    if (report.context == nil) { // set context as error domain
                        report.context = [NSString stringWithFormat:@"%@ (%ld)", error.domain, (long)error.code];
                    }
-                 report.metaData = metadata;
+                 report.metadata = metadata;
 
                  if (block) {
                      block(report);
@@ -556,7 +584,7 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
 
 - (void)notifyException:(NSException *)exception
              atSeverity:(BSGSeverity)severity
-                  block:(void (^)(BugsnagCrashReport *))block {
+                  block:(void (^)(BugsnagEvent *))block {
 
     BugsnagHandledState *state = [BugsnagHandledState
         handledStateWithSeverityReason:UserSpecifiedSeverity
@@ -566,20 +594,20 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
 }
 
 - (void)notifyException:(NSException *)exception
-                  block:(void (^)(BugsnagCrashReport *))block {
+                  block:(void (^)(BugsnagEvent *))block {
     BugsnagHandledState *state =
         [BugsnagHandledState handledStateWithSeverityReason:HandledException];
     [self notify:exception handledState:state block:block];
 }
 
 - (void)internalClientNotify:(NSException *_Nonnull)exception
-                    withData:(NSDictionary *_Nullable)metaData
-                       block:(BugsnagNotifyBlock _Nullable)block {
+                    withData:(NSDictionary *_Nullable)metadata
+                       block:(BugsnagOnErrorBlock _Nullable)block {
 
-    BSGSeverity severity = BSGParseSeverity(metaData[BSGKeySeverity]);
-    NSString *severityReason = metaData[BSGKeySeverityReason];
-    BOOL unhandled = [metaData[BSGKeyUnhandled] boolValue];
-    NSString *logLevel = metaData[BSGKeyLogLevel];
+    BSGSeverity severity = BSGParseSeverity(metadata[BSGKeySeverity]);
+    NSString *severityReason = metadata[BSGKeySeverityReason];
+    BOOL unhandled = [metadata[BSGKeyUnhandled] boolValue];
+    NSString *logLevel = metadata[BSGKeyLogLevel];
     NSParameterAssert(severityReason.length > 0);
 
     SeverityReasonType severityReasonType =
@@ -634,7 +662,7 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
 
 - (void)notify:(NSException *)exception
     handledState:(BugsnagHandledState *_Nonnull)handledState
-           block:(void (^)(BugsnagCrashReport *))block {
+           block:(void (^)(BugsnagEvent *))block {
     NSString *exceptionName = exception.name ?: NSStringFromClass([exception class]);
     NSString *message = exception.reason;
     if (handledState.unhandled) {
@@ -643,11 +671,11 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
         [self.sessionTracker handleHandledErrorEvent];
     }
 
-    BugsnagCrashReport *report = [[BugsnagCrashReport alloc]
+    BugsnagEvent *report = [[BugsnagEvent alloc]
         initWithErrorName:exceptionName
              errorMessage:message
             configuration:self.configuration
-                 metaData:[self.configuration.metaData toDictionary]
+                 metadata:[self.configuration.metadata toDictionary]
              handledState:handledState
                   session:self.sessionTracker.runningSession];
     if (block) {
@@ -661,7 +689,7 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
     //    2 -[BSG_KSCrash
     //    reportUserException:reason:language:lineOfCode:stackTrace:terminateProgram:]
     //    3 -[BugsnagCrashSentry reportUserException:reason:]
-    //    4 -[BugsnagNotifier notify:message:block:]
+    //    4 -[BugsnagClient notify:message:block:]
 
     int depth = (int)(BSGNotifierStackFrameCount + report.depth);
 
@@ -675,13 +703,13 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
                              handledState:[handledState toJson]
                                  appState:[self.state toDictionary]
                         callbackOverrides:report.overrides
-                                 metadata:[report.metaData copy]
+                                 metadata:[report.metadata copy]
                                    config:[self.configuration.config toDictionary]
                              discardDepth:depth];
 
     [self addBreadcrumbWithBlock:^(BugsnagBreadcrumb *_Nonnull crumb) {
       crumb.type = BSGBreadcrumbTypeError;
-      crumb.name = reportName;
+      crumb.message = reportName;
       crumb.metadata = @{
           BSGKeyMessage : reportMessage,
           BSGKeySeverity : BSGFormatSeverity(report.severity)
@@ -709,19 +737,19 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
                toTabWithName:BSTabCrash];
 }
 
-- (void)metaDataChanged:(BugsnagMetaData *)metaData {
-    @synchronized(metaData) {
-        if (metaData == self.configuration.metaData) {
-            if ([self.metaDataLock tryLock]) {
-                BSSerializeJSONDictionary([metaData toDictionary],
-                                          &bsg_g_bugsnag_data.metaDataJSON);
-                [self.metaDataLock unlock];
+- (void)metadataChanged:(BugsnagMetadata *)metadata {
+    @synchronized(metadata) {
+        if (metadata == self.configuration.metadata) {
+            if ([self.metadataLock tryLock]) {
+                BSSerializeJSONDictionary([metadata toDictionary],
+                                          &bsg_g_bugsnag_data.metadataJSON);
+                [self.metadataLock unlock];
             }
-        } else if (metaData == self.configuration.config) {
-            BSSerializeJSONDictionary([metaData getTab:BSGKeyConfig],
+        } else if (metadata == self.configuration.config) {
+            BSSerializeJSONDictionary([metadata getMetadata:BSGKeyConfig],
                                       &bsg_g_bugsnag_data.configJSON);
-        } else if (metaData == self.state) {
-            BSSerializeJSONDictionary([metaData toDictionary],
+        } else if (metadata == self.state) {
+            BSSerializeJSONDictionary([metadata toDictionary],
                                       &bsg_g_bugsnag_data.stateJSON);
         } else {
             bsg_log_debug(@"Unknown metadata dictionary changed");
@@ -781,9 +809,9 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
 
     if (lastBreadcrumb &&
         [orientationNotifName isEqualToString:lastBreadcrumb[BSGKeyName]]) {
-        NSDictionary *metaData = lastBreadcrumb[BSGKeyMetaData];
+        NSDictionary *metadata = lastBreadcrumb[BSGKeyMetadata];
 
-        if ([orientation isEqualToString:metaData[BSGKeyOrientation]]) {
+        if ([orientation isEqualToString:metadata[BSGKeyOrientation]]) {
             return; // ignore duplicate orientation event
         }
     }
@@ -791,13 +819,6 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
     [[self state] addAttribute:BSGKeyOrientation
                      withValue:orientation
                  toTabWithName:BSGKeyDeviceState];
-    if ([self.configuration automaticallyCollectBreadcrumbs]) {
-        [self addBreadcrumbWithBlock:^(BugsnagBreadcrumb *_Nonnull breadcrumb) {
-          breadcrumb.type = BSGBreadcrumbTypeState;
-          breadcrumb.name = orientationNotifName;
-          breadcrumb.metadata = @{BSGKeyOrientation : orientation};
-        }];
-    }
 }
 
 - (void)lowMemoryWarning:(NSNotification *)notif {
@@ -805,9 +826,6 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
                      withValue:[[Bugsnag payloadDateFormatter]
                                    stringFromDate:[NSDate date]]
                  toTabWithName:BSGKeyDeviceState];
-    if ([self.configuration automaticallyCollectBreadcrumbs]) {
-        [self sendBreadcrumbForNotification:notif];
-    }
 }
 #endif
 
@@ -815,7 +833,7 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
     if (self.configuration.autoDetectErrors) {
         // Enable all crash detection
         bsg_kscrash_setHandlingCrashTypes(BSG_KSCrashTypeAll);
-        if (self.configuration.reportOOMs) {
+        if (self.configuration.enabledErrorTypes & BSGErrorTypesOOMs) {
             [self.oomWatchdog enable];
         }
     } else {
@@ -825,49 +843,6 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
         [self.oomWatchdog disable];
     }
 }
-
-- (void)updateAutomaticBreadcrumbDetectionSettings {
-    if ([self.configuration automaticallyCollectBreadcrumbs]) {
-        for (NSString *name in [self automaticBreadcrumbStateEvents]) {
-            [self crumbleNotification:name];
-        }
-        for (NSString *name in [self automaticBreadcrumbTableItemEvents]) {
-            [[NSNotificationCenter defaultCenter]
-                addObserver:self
-                   selector:@selector(sendBreadcrumbForTableViewNotification:)
-                       name:name
-                     object:nil];
-        }
-        for (NSString *name in [self automaticBreadcrumbControlEvents]) {
-            [[NSNotificationCenter defaultCenter]
-                addObserver:self
-                   selector:@selector(sendBreadcrumbForControlNotification:)
-                       name:name
-                     object:nil];
-        }
-        for (NSString *name in [self automaticBreadcrumbMenuItemEvents]) {
-            [[NSNotificationCenter defaultCenter]
-                addObserver:self
-                   selector:@selector(sendBreadcrumbForMenuItemNotification:)
-                       name:name
-                     object:nil];
-        }
-    } else {
-        NSArray *eventNames = [[[[self automaticBreadcrumbStateEvents]
-            arrayByAddingObjectsFromArray:[self
-                                              automaticBreadcrumbControlEvents]]
-            arrayByAddingObjectsFromArray:
-                [self automaticBreadcrumbMenuItemEvents]]
-            arrayByAddingObjectsFromArray:
-                [self automaticBreadcrumbTableItemEvents]];
-        for (NSString *name in eventNames) {
-            [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                            name:name
-                                                          object:nil];
-        }
-    }
-}
-
 - (NSArray<NSString *> *)automaticBreadcrumbStateEvents {
 #if TARGET_OS_TV
     return @[
@@ -966,7 +941,7 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
 - (void)sendBreadcrumbForNotification:(NSNotification *)note {
     [self addBreadcrumbWithBlock:^(BugsnagBreadcrumb *_Nonnull breadcrumb) {
       breadcrumb.type = BSGBreadcrumbTypeState;
-      breadcrumb.name = BSGBreadcrumbNameForNotificationName(note.name);
+      breadcrumb.message = BSGBreadcrumbNameForNotificationName(note.name);
     }];
 }
 
@@ -976,7 +951,7 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
     NSIndexPath *indexPath = [tableView indexPathForSelectedRow];
     [self addBreadcrumbWithBlock:^(BugsnagBreadcrumb *_Nonnull breadcrumb) {
       breadcrumb.type = BSGBreadcrumbTypeNavigation;
-      breadcrumb.name = BSGBreadcrumbNameForNotificationName(note.name);
+      breadcrumb.message = BSGBreadcrumbNameForNotificationName(note.name);
       if (indexPath) {
           breadcrumb.metadata =
               @{ @"row" : @(indexPath.row),
@@ -987,7 +962,7 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
     NSTableView *tableView = [note object];
     [self addBreadcrumbWithBlock:^(BugsnagBreadcrumb *_Nonnull breadcrumb) {
       breadcrumb.type = BSGBreadcrumbTypeNavigation;
-      breadcrumb.name = BSGBreadcrumbNameForNotificationName(note.name);
+      breadcrumb.message = BSGBreadcrumbNameForNotificationName(note.name);
       if (tableView) {
           breadcrumb.metadata = @{
               @"selectedRow" : @(tableView.selectedRow),
@@ -1006,7 +981,7 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
     if ([menuItem isKindOfClass:[NSMenuItem class]]) {
         [self addBreadcrumbWithBlock:^(BugsnagBreadcrumb *_Nonnull breadcrumb) {
           breadcrumb.type = BSGBreadcrumbTypeState;
-          breadcrumb.name = BSGBreadcrumbNameForNotificationName(notif.name);
+          breadcrumb.message = BSGBreadcrumbNameForNotificationName(notif.name);
           if (menuItem.title.length > 0)
               breadcrumb.metadata = @{BSGKeyAction : menuItem.title};
         }];
@@ -1020,7 +995,7 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
     UIControl *control = note.object;
     [self addBreadcrumbWithBlock:^(BugsnagBreadcrumb *_Nonnull breadcrumb) {
       breadcrumb.type = BSGBreadcrumbTypeUser;
-      breadcrumb.name = BSGBreadcrumbNameForNotificationName(note.name);
+      breadcrumb.message = BSGBreadcrumbNameForNotificationName(note.name);
       NSString *label = control.accessibilityLabel;
       if (label.length > 0) {
           breadcrumb.metadata = @{BSGKeyLabel : label};
@@ -1030,7 +1005,7 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
     NSControl *control = note.object;
     [self addBreadcrumbWithBlock:^(BugsnagBreadcrumb *_Nonnull breadcrumb) {
       breadcrumb.type = BSGBreadcrumbTypeUser;
-      breadcrumb.name = BSGBreadcrumbNameForNotificationName(note.name);
+      breadcrumb.message = BSGBreadcrumbNameForNotificationName(note.name);
       if ([control respondsToSelector:@selector(accessibilityLabel)]) {
           NSString *label = control.accessibilityLabel;
           if (label.length > 0) {

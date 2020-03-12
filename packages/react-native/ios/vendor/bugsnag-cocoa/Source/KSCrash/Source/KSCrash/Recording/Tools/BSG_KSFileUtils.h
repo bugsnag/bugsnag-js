@@ -34,9 +34,7 @@
 extern "C" {
 #endif
 
-#include <stdarg.h>
 #include <stdbool.h>
-#include <stdio.h>
 #include <sys/types.h>
 
 /** Get the last entry in a file path. Assumes UNIX style separators.
@@ -65,62 +63,6 @@ bool bsg_ksfuwriteBytesToFD(const int fd, const char *bytes, ssize_t length);
  * @param fd The file descriptor
  */
 bool bsg_ksfuflushWriteBuffer(const int fd);
-
-/** Read bytes from a file descriptor.
- *
- * @param fd The file descriptor.
- *
- * @param bytes Buffer to store the bytes in.
- *
- * @param length The number of bytes to read.
- *
- * @return true if the operation was successful.
- */
-bool bsg_ksfureadBytesFromFD(const int fd, char *bytes, ssize_t length);
-
-/** Write a string to a file.
- *
- * @param fd The file descriptor.
- *
- * @param string The string to write.
- *
- * @return true if successful.
- */
-bool bsg_ksfuwriteStringToFD(const int fd, const char *string);
-
-/** Write a formatted string to a file.
- *
- * @param fd The file descriptor.
- *
- * @param fmt The format specifier, followed by its arguments.
- *
- * @return true if successful.
- */
-bool bsg_ksfuwriteFmtToFD(const int fd, const char *fmt, ...);
-
-/** Write a formatted string to a file.
- *
- * @param fd The file descriptor.
- *
- * @param fmt The format specifier.
- *
- * @param args The arguments list.
- *
- * @return true if successful.
- */
-bool bsg_ksfuwriteFmtArgsToFD(const int fd, const char *fmt, va_list args);
-
-/** Read a single line from a file.
- *
- * @param fd The file descriptor.
- *
- * @param buffer The buffer to read into.
- *
- * @param maxLength The maximum length to read.
- *
- * @return The number of bytes read.
- */
-ssize_t bsg_ksfureadLineFromFD(const int fd, char *buffer, int maxLength);
 
 #ifdef __cplusplus
 }

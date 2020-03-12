@@ -35,7 +35,12 @@ NSNumber * _Nullable BSGDeviceFreeSpace(NSSearchPathDirectory directory);
     XCTAssertNotNil(device);
     XCTAssertNotNil(device[@"locale"]);
     XCTAssertNotNil(device[@"freeDisk"]);
-    XCTAssertNotNil(device[@"simulator"]);
+    
+    #if TARGET_OS_SIMULATOR
+        XCTAssertNotNil(device[@"simulator"]);
+    #elif TARGET_OS_IPHONE || TARGET_OS_TV
+        XCTAssertNil(device[@"simulator"]);
+    #endif
 }
 
 - (void)testDeviceFreeSpaceShouldBeLargeNumber {

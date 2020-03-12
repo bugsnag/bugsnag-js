@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #import "BSG_KSCrashReportFilterCompletion.h"
-#import "BugsnagCrashReport.h"
+#import "BugsnagEvent.h"
 #import "BugsnagConfiguration.h"
 #import "BugsnagApiClient.h"
 

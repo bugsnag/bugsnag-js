@@ -1,6 +1,8 @@
 #ifndef BugsnagPlugin_h
 #define BugsnagPlugin_h
 
+@class Bugsnag;
+
 /**
  * Internal interface for adding custom behavior
  */
@@ -8,9 +10,8 @@
 
 @required
 
-- (BOOL)isStarted;
-
-- (void)start;
+- (void)load;
+- (void)unload;
 
 @end
 

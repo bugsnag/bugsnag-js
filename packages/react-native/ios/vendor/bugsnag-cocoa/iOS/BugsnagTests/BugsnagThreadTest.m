@@ -6,12 +6,12 @@
 #import <Foundation/Foundation.h>
 #import <XCTest/XCTest.h>
 
-#import "BugsnagCrashReport.h"
+#import "BugsnagEvent.h"
 
 @interface BugsnagThreadTest : XCTestCase
 @end
 
-@interface BugsnagCrashReport ()
+@interface BugsnagEvent ()
 - (NSArray *)serializeThreadsWithException:(NSMutableDictionary *)exception;
 
 @property(nonatomic, readonly, copy, nullable) NSArray *threads;
@@ -20,7 +20,7 @@
 @implementation BugsnagThreadTest
 
 - (void)testEmptyThreads {
-    BugsnagCrashReport *report = [self generateReportWithThreads:@[]];
+    BugsnagEvent *report = [self generateReportWithThreads:@[]];
     NSArray *threads = [report serializeThreadsWithException:nil];
     XCTAssertTrue(threads.count == 0);
 }
@@ -63,7 +63,7 @@
             },
     ];
 
-    BugsnagCrashReport *report = [self generateReportWithThreads:trace];
+    BugsnagEvent *report = [self generateReportWithThreads:trace];
     NSArray *threads = [report serializeThreadsWithException:nil];
     XCTAssertTrue(threads.count == 2);
 
@@ -82,8 +82,8 @@
     XCTAssertNil(secondThread[@"errorReportingThread"]);
 }
 
-- (BugsnagCrashReport *)generateReportWithThreads:(NSArray *)threads {
-    return [[BugsnagCrashReport alloc] initWithKSReport:@{@"crash": @{@"threads": threads}}];
+- (BugsnagEvent *)generateReportWithThreads:(NSArray *)threads {
+    return [[BugsnagEvent alloc] initWithKSReport:@{@"crash": @{@"threads": threads}}];
 }
 
 

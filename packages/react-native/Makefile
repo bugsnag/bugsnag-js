@@ -8,5 +8,5 @@ endif
 	@rsync --delete -al ../../../bugsnag-cocoa/Configurations/ ios/vendor/bugsnag-cocoa/Configurations/
 	@rsync --delete -al ../../../bugsnag-cocoa/iOS/ ios/vendor/bugsnag-cocoa/iOS/
 	@rsync --delete -al ../../../bugsnag-cocoa/Source/BSG_KSCrashReportWriter.h ios/Bugsnag/
-	@rsync --delete -al ../../../bugsnag-cocoa/Source/Bugsnag{,MetaData,Configuration,Breadcrumb,CrashReport,Plugin}.h ios/Bugsnag/
+	@rsync --delete -al ../../../bugsnag-cocoa/Source/Bugsnag{,MetaData,Configuration,Breadcrumb,Event,Plugin}.h ios/Bugsnag/
 	@git status

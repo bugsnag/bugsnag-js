@@ -263,9 +263,6 @@ bool bsg_kscrashstate_i_saveState(const BSG_KSCrash_State *const state,
         goto done;
     }
     result = bsg_ksjsonendEncode(&JSONContext);
-    if (!bsg_ksfuflushWriteBuffer(fd)) {
-        BSG_KSLOG_ERROR(@"Failed to flush write buffer");
-    }
 
 done:
     close(fd);

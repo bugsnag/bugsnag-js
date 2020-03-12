@@ -3,8 +3,9 @@
 #import "BugsnagReactNativeEmitter.h"
 
 @interface Bugsnag ()
-+ (id)notifier;
++ (id)client;
 + (BOOL)bugsnagStarted;
++ (BugsnagConfiguration *)configuration;
 @end
 
 @implementation BugsnagReactNative
@@ -59,11 +60,12 @@ RCT_EXPORT_METHOD(leaveBreadcrumb
 }
 
 RCT_EXPORT_METHOD(startSession) { [Bugsnag startSession]; }
-RCT_EXPORT_METHOD(stopSession) { [Bugsnag stopSession]; }
+RCT_EXPORT_METHOD(pauseSession) { [Bugsnag pauseSession]; }
 RCT_EXPORT_METHOD(resumeSession) { [Bugsnag resumeSession]; }
 
 RCT_EXPORT_METHOD(getPayloadInfo
-                  :(RCTPromiseResolveBlock)resolve
+                  :(NSDictionary *)options
+           resolve:(RCTPromiseResolveBlock)resolve
             reject:(RCTPromiseRejectBlock)reject) {
   resolve(@{});
 }

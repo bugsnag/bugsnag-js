@@ -43,7 +43,7 @@
         NSUInteger sessionCount = payload.sessions.count;
         NSMutableDictionary *data = [payload toJson];
 
-        for (BeforeSendSession cb in self.config.beforeSendSessionBlocks) {
+        for (BugsnagOnSessionBlock cb in self.config.onSessionBlocks) {
             cb(data);
         }
 

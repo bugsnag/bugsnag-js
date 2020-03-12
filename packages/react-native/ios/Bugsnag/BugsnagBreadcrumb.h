@@ -47,8 +47,7 @@ typedef NS_ENUM(NSUInteger, BSGBreadcrumbType) {
      */
     BSGBreadcrumbTypeLog,
     /**
-     *  A navigation action, such as pushing a view controller or dismissing an
-     *  alert
+     *  A navigation action, such as pushing a view controller or dismissing an alert
      */
     BSGBreadcrumbTypeNavigation,
     /**
@@ -69,6 +68,27 @@ typedef NS_ENUM(NSUInteger, BSGBreadcrumbType) {
     BSGBreadcrumbTypeUser,
 };
 
+/**
+ * Types of breadcrumbs which can be reported
+ */
+typedef NS_OPTIONS(NSUInteger, BSGEnabledBreadcrumbType) {
+    BSGEnabledBreadcrumbTypeNone       = 0,
+    BSGEnabledBreadcrumbTypeState      = 1 << 1,
+    BSGEnabledBreadcrumbTypeUser       = 1 << 2,
+    BSGEnabledBreadcrumbTypeLog        = 1 << 3,
+    BSGEnabledBreadcrumbTypeNavigation = 1 << 4,
+    BSGEnabledBreadcrumbTypeRequest    = 1 << 5,
+    BSGEnabledBreadcrumbTypeProcess    = 1 << 6,
+    BSGEnabledBreadcrumbTypeError      = 1 << 7,
+    BSGEnabledBreadcrumbTypeAll = BSGEnabledBreadcrumbTypeState
+        | BSGEnabledBreadcrumbTypeUser
+        | BSGEnabledBreadcrumbTypeLog
+        | BSGEnabledBreadcrumbTypeNavigation
+        | BSGEnabledBreadcrumbTypeRequest
+        | BSGEnabledBreadcrumbTypeProcess
+        | BSGEnabledBreadcrumbTypeError,
+};
+
 @class BugsnagBreadcrumb;
 
 typedef void (^BSGBreadcrumbConfiguration)(BugsnagBreadcrumb *_Nonnull);
@@ -77,12 +97,13 @@ typedef void (^BSGBreadcrumbConfiguration)(BugsnagBreadcrumb *_Nonnull);
 
 @property(readonly, nullable) NSDate *timestamp;
 @property(readwrite) BSGBreadcrumbType type;
-@property(readwrite, copy, nonnull) NSString *name;
+@property(readwrite, copy, nonnull) NSString *message;
 @property(readwrite, copy, nonnull) NSDictionary *metadata;
 
 + (instancetype _Nullable)breadcrumbWithBlock:
     (BSGBreadcrumbConfiguration _Nonnull)block;
 
++ (instancetype _Nullable)breadcrumbFromDict:(NSDictionary *_Nonnull)dict;
 @end
 
 @interface BugsnagBreadcrumbs : NSObject
@@ -129,4 +150,8 @@ typedef void (^BSGBreadcrumbConfiguration)(BugsnagBreadcrumb *_Nonnull);
  */
 - (NSArray *_Nullable)arrayValue;
 
+/**
+ * The types of breadcrumbs which will be captured. By default, this is all types.
+ */
+@property BSGEnabledBreadcrumbType enabledBreadcrumbTypes;
 @end
