@@ -275,7 +275,7 @@ void BSGWriteSessionCrashData(BugsnagSession *session) {
         [self metadataChanged:self.configuration.metadata];
         [self metadataChanged:self.configuration.config];
         [self metadataChanged:self.state];
-        _pluginClient = [[BugsnagPluginClient alloc] initWithPlugins:self.configuration.plugins];
+        self.pluginClient = [[BugsnagPluginClient alloc] initWithPlugins:self.configuration.plugins];
     }
     return self;
 }

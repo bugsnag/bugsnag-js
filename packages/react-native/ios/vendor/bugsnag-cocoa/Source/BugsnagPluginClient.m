@@ -8,6 +8,7 @@
 
 #import "BugsnagPluginClient.h"
 #import "BugsnagPlugin.h"
+#import "BugsnagLogger.h"
 
 @interface BugsnagPluginClient ()
 @property NSSet<id<BugsnagPlugin>> *plugins;
@@ -24,7 +25,11 @@
 
 - (void)loadPlugins {
     for (id<BugsnagPlugin> plugin in self.plugins) {
-        [plugin load];
+        @try {
+            [plugin load];
+        } @catch (NSException *exception) {
+            bsg_log_err(@"Failed to load plugin %@, continuing with initialisation.", plugin);
+        }
     }
 }
 
