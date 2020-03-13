@@ -25,95 +25,114 @@
 //
 
 #import "BSGConnectivity.h"
+#import "Bugsnag.h"
 
-typedef void (^CallbackBlock)(SCNetworkReachabilityFlags flags);
+static SCNetworkReachabilityRef bsg_reachability_ref;
+BSGConnectivityChangeBlock bsg_reachability_change_block;
+SCNetworkReachabilityFlags bsg_current_reachability_state;
+
+NSString *const BSGConnectivityCellular = @"cellular";
+NSString *const BSGConnectivityWiFi = @"wifi";
+NSString *const BSGConnectivityNone = @"none";
+
+/**
+ * Check whether the connectivity change should be noted or ignored.
+ *
+ * @return YES if the connectivity change should be reported
+ */
+BOOL BSGConnectivityShouldReportChange(SCNetworkReachabilityFlags flags) {
+    #if TARGET_OS_TV || TARGET_OS_IPHONE
+        // kSCNetworkReachabilityFlagsIsWWAN does not exist on macOS
+        const SCNetworkReachabilityFlags importantFlags = kSCNetworkReachabilityFlagsIsWWAN | kSCNetworkReachabilityFlagsReachable;
+    #else
+        const SCNetworkReachabilityFlags importantFlags = kSCNetworkReachabilityFlagsReachable;
+    #endif
+    __block BOOL shouldReport = YES;
+    // Check if the reported state is different from the last known state (if any)
+    if ((flags & importantFlags) != (bsg_current_reachability_state & importantFlags)) {
+        // When first subscribing to be notified of changes, the callback is
+        // invoked immmediately even if nothing has changed. So this block
+        // ignores the very first check, reporting all others.
+        if (bsg_current_reachability_state == 0) {
+            shouldReport = NO;
+        }
+        // Cache the reachability state to report the previous value representation
+        bsg_current_reachability_state = flags;
+    } else {
+        shouldReport = NO;
+    }
+    return shouldReport;
+}
+
+/**
+ * Textual representation of a connection type
+ */
+NSString *BSGConnectivityFlagRepresentation(SCNetworkReachabilityFlags flags) {
+    BOOL connected = (flags & kSCNetworkReachabilityFlagsReachable);
+    #if TARGET_OS_TV || TARGET_OS_IPHONE
+        return connected
+            ? ((flags & kSCNetworkReachabilityFlagsIsWWAN) ? BSGConnectivityCellular : BSGConnectivityWiFi)
+            : BSGConnectivityNone;
+    #else
+        return connected ? BSGConnectivityWiFi : BSGConnectivityNone;
+    #endif
+}
 
 /**
  * Callback invoked by SCNetworkReachability, which calls an Objective-C block
  * that handles the connection change.
  */
-static void BSGConnectivityCallback(SCNetworkReachabilityRef target,
-                                    SCNetworkReachabilityFlags flags,
-                                    void *info) {
-    void (^callbackBlock)(SCNetworkReachabilityFlags) = (__bridge id)(info);
-    callbackBlock(flags);
+void BSGConnectivityCallback(SCNetworkReachabilityRef target,
+                             SCNetworkReachabilityFlags flags,
+                             void *info)
+{
+    if (bsg_reachability_change_block && BSGConnectivityShouldReportChange(flags)) {
+        BOOL connected = (flags & kSCNetworkReachabilityFlagsReachable);
+        bsg_reachability_change_block(connected, BSGConnectivityFlagRepresentation(flags));
+    }
 }
-
-@interface BSGConnectivity ()
-
-@property(nonatomic, assign) SCNetworkReachabilityRef reachabilityRef;
-@property(nonatomic, strong) dispatch_queue_t serialQueue;
-@property(nonatomic, copy) CallbackBlock callbackBlock;
-
-@end
 
 @implementation BSGConnectivity
 
-- (instancetype)initWithURL:(NSURL *)url
-                changeBlock:(ConnectivityChange)changeBlock {
-    if (self = [super init]) {
-        NSString *hostName = [url host];
-        _reachabilityRef = SCNetworkReachabilityCreateWithName(NULL, [hostName UTF8String]);
++ (void)monitorURL:(NSURL *)URL usingCallback:(BSGConnectivityChangeBlock)block {
+    static dispatch_once_t once_t;
+    static dispatch_queue_t reachabilityQueue;
+    dispatch_once(&once_t, ^{
+        reachabilityQueue = dispatch_queue_create("com.bugsnag.cocoa.connectivity", DISPATCH_QUEUE_SERIAL);
+    });
 
-        _connectivityChangeBlock = [changeBlock copy];
-        self.serialQueue = dispatch_queue_create("com.bugsnag.cocoa", NULL);
+    bsg_reachability_change_block = block;
 
-        __weak id weakSelf = self;
-        self.callbackBlock = ^(SCNetworkReachabilityFlags flags) {
-          if (weakSelf) {
-              [weakSelf connectivityChanged:flags];
-          }
-        };
+    NSString *host = [URL host];
+    if (![self isValidHostname:host]) {
+        return;
     }
-    return self;
-}
 
-- (void)dealloc {
-    [self stopWatchingConnectivity];
-
-    if (self.reachabilityRef) {
-        CFRelease(self.reachabilityRef);
-        self.reachabilityRef = nil;
+    bsg_reachability_ref = SCNetworkReachabilityCreateWithName(NULL, [host UTF8String]);
+    if (bsg_reachability_ref) { // Can be null if a bad hostname was specified
+        SCNetworkReachabilitySetCallback(bsg_reachability_ref, BSGConnectivityCallback, NULL);
+        SCNetworkReachabilitySetDispatchQueue(bsg_reachability_ref, reachabilityQueue);
     }
 }
 
 /**
- * Sets a callback with SCNetworkReachability
+ * Check if the host is valid and not equivalent to localhost, from which we can
+ * never truly disconnect. 🏡
+ * There are also system handlers for localhost which we don't want to catch
+ * inadvertently.
  */
-- (void)startWatchingConnectivity {
-    SCNetworkReachabilityContext context = {
-        .version = 0,
-        .info = (__bridge void *)self.callbackBlock,
-        .retain = CFRetain,
-        .release = CFRelease,
-    };
-
-    if (self.reachabilityRef) {
-        SCNetworkReachabilitySetCallback(self.reachabilityRef,
-                                         BSGConnectivityCallback, &context);
-        SCNetworkReachabilitySetDispatchQueue(self.reachabilityRef,
-                                              self.serialQueue);
-    }
++ (BOOL)isValidHostname:(NSString *)host {
+    return host.length > 0
+        && ![host isEqualToString:@"localhost"]
+        && ![host isEqualToString:@"::1"]
+        && ![host isEqualToString:@"127.0.0.1"];
 }
 
-/**
- * Stops the callback with SCNetworkReachability
- */
-- (void)stopWatchingConnectivity {
-    if (self.reachabilityRef) {
-        SCNetworkReachabilitySetCallback(self.reachabilityRef, NULL, NULL);
-        SCNetworkReachabilitySetDispatchQueue(self.reachabilityRef, NULL);
-    }
-}
-
-- (void)connectivityChanged:(SCNetworkReachabilityFlags)flags {
-    BOOL connected = YES;
-
-    if (!(flags & kSCNetworkReachabilityFlagsReachable)) {
-        connected = NO;
-    }
-    if (connected && self.connectivityChangeBlock) { // notify via block
-        self.connectivityChangeBlock(self);
++ (void)stopMonitoring {
+    bsg_reachability_change_block = nil;
+    if (bsg_reachability_ref) {
+        SCNetworkReachabilitySetCallback(bsg_reachability_ref, NULL, NULL);
+        SCNetworkReachabilitySetDispatchQueue(bsg_reachability_ref, NULL);
     }
 }
 

@@ -9,7 +9,7 @@
 #import "BugsnagErrorReportApiClient.h"
 #import "Bugsnag.h"
 #import "BugsnagLogger.h"
-#import "BugsnagNotifier.h"
+#import "BugsnagClient.h"
 #import "BugsnagSink.h"
 #import "BugsnagKeys.h"
 

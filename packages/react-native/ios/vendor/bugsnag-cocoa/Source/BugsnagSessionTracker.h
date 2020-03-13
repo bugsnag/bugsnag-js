@@ -34,7 +34,7 @@ extern NSString *const BSGSessionUpdateNotification;
  */
 - (void)startNewSession;
 
-- (void)stopSession;
+- (void)pauseSession;
 - (BOOL)resumeSession;
 
 /**

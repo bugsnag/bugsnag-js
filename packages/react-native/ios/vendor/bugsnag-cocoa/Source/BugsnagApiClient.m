@@ -8,6 +8,7 @@
 #import "Bugsnag.h"
 #import "BugsnagKeys.h"
 #import "BugsnagLogger.h"
+#import "Private.h"
 
 @interface BSGDelayOperation : NSOperation
 @end

@@ -8,14 +8,15 @@
 
 #import "BugsnagSessionTrackingPayload.h"
 #import "BugsnagCollections.h"
-#import "BugsnagNotifier.h"
+#import "BugsnagClient.h"
 #import "Bugsnag.h"
 #import "BugsnagKeys.h"
 #import "BSG_KSSystemInfo.h"
 #import "BugsnagKSCrashSysInfoParser.h"
+#import "Private.h"
 
 @interface Bugsnag ()
-+ (BugsnagNotifier *)notifier;
++ (BugsnagClient *)client;
 @end
 
 @implementation BugsnagSessionTrackingPayload
@@ -36,7 +37,7 @@
         [sessionData addObject:[session toJson]];
     }
     BSGDictInsertIfNotNil(dict, sessionData, @"sessions");
-    BSGDictSetSafeObject(dict, [Bugsnag notifier].details, BSGKeyNotifier);
+    BSGDictSetSafeObject(dict, [Bugsnag client].details, BSGKeyNotifier);
     
     NSDictionary *systemInfo = [BSG_KSSystemInfo systemInfo];
     BSGDictSetSafeObject(dict, BSGParseAppState(systemInfo,

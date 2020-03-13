@@ -18,7 +18,7 @@
           withName:(NSString *)name;
 
 - (void)startSession;
-- (void)stopSession;
+- (void)pauseSession;
 - (void)resumeSession;
 
 - (void)dispatch:(NSDictionary *)payload

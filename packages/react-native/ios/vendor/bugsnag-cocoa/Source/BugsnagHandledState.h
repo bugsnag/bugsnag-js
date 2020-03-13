@@ -6,7 +6,7 @@
 //  Copyright © 2017 Bugsnag. All rights reserved.
 //
 
-#import "BugsnagCrashReport.h"
+#import "BugsnagEvent.h"
 #import <Foundation/Foundation.h>
 
 typedef NS_ENUM(NSUInteger, SeverityReasonType) {

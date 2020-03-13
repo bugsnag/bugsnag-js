@@ -27,17 +27,31 @@
 #import <Foundation/Foundation.h>
 #import <SystemConfiguration/SystemConfiguration.h>
 
-@class BSGConnectivity;
+/**
+ * Function signature to connectivity monitoring callback of BSGConnectivity
+ *
+ * @param connected YES if the monitored URL is reachable
+ * @param typeDescription a textual representation of the connection type
+ */
+typedef void (^BSGConnectivityChangeBlock)(BOOL connected, NSString *_Nonnull typeDescription);
 
-typedef void (^ConnectivityChange)(BSGConnectivity *connectivity);
-
+/**
+ * Monitors network connectivity using SCNetworkReachability callbacks,
+ * providing a customizable callback block invoked when connectivity changes.
+ */
 @interface BSGConnectivity : NSObject
 
-@property(nonatomic, copy) ConnectivityChange connectivityChangeBlock;
+/**
+ * Invoke a block each time network connectivity changes
+ *
+ * @param URL   The URL monitored for changes. Should be equivalent to
+ *              BugsnagConfiguration.notifyURL
+ * @param block The block called when connectivity changes
+ */
++ (void)monitorURL:(NSURL *_Nonnull)URL usingCallback:(BSGConnectivityChangeBlock _Nonnull)block;
 
-- (instancetype)initWithURL:(NSURL *)url
-                changeBlock:(ConnectivityChange)changeBlock;
-- (void)startWatchingConnectivity;
-- (void)stopWatchingConnectivity;
-
+/**
+ * Stop monitoring the URL previously configured with monitorURL:usingCallback:
+ */
++ (void)stopMonitoring;
 @end

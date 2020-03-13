@@ -268,7 +268,7 @@ IMPLEMENT_EXCLUSIVE_SHARED_INSTANCE(BSG_KSCrash)
            if (error != nil) {
                BSG_KSLOG_ERROR(@"Failed to send reports: %@", error);
            }
-           if ((self.deleteBehaviorAfterSendAll == BSG_KSCDeleteOnSucess &&
+           if ((self.deleteBehaviorAfterSendAll == BSG_KSCDeleteOnSuccess &&
                 completed) ||
                self.deleteBehaviorAfterSendAll == BSG_KSCDeleteAlways) {
                [self deleteAllReports];

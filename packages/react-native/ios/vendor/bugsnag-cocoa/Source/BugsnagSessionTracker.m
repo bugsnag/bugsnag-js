@@ -58,7 +58,7 @@ NSString *const BSGSessionUpdateNotification = @"BugsnagSessionChanged";
     [self startNewSessionWithAutoCaptureValue:NO];
 }
 
-- (void)stopSession {
+- (void)pauseSession {
     [[self currentSession] stop];
 
     if (self.callback) {

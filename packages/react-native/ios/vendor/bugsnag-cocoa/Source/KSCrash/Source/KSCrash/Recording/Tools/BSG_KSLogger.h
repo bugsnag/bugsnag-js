@@ -24,6 +24,8 @@
 // THE SOFTWARE.
 //
 
+#import "BugsnagLogger.h"
+
 /**
  * BSG_KSLogger
  * ========
@@ -216,10 +218,6 @@ void bsg_i_kslog_logCBasic(const char *fmt, ...);
 #define DEBUG BSG_KSLogger_Level_Debug
 #define TRACE BSG_KSLogger_Level_Trace
 
-#ifndef BSG_KSLogger_Level
-#define BSG_KSLogger_Level BSG_KSLogger_Level_Info
-#endif
-
 #ifndef BSG_KSLogger_LocalLevel
 #define BSG_KSLogger_LocalLevel BSG_KSLogger_Level_None
 #endif
@@ -252,7 +250,7 @@ bool bsg_kslog_setLogFilename(const char *filename, bool overwrite);
  * @return TRUE if the logger would print at the specified level.
  */
 #define BSG_KSLOG_PRINTS_AT_LEVEL(LEVEL)                                       \
-    (BSG_KSLogger_Level >= LEVEL || BSG_KSLogger_LocalLevel >= LEVEL)
+    (BSG_LOG_LEVEL >= LEVEL || BSG_KSLogger_LocalLevel >= LEVEL)
 
 /** Log a message regardless of the log settings.
  * Normal version prints out full context. Basic version prints directly.

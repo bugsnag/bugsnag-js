@@ -1,26 +1,22 @@
 #import "Bugsnag.h"
-#import "BugsnagNotifier.h"
-#import "BugsnagPlugin.h"
+#import "BugsnagClient.h"
 #import "BugsnagReactNativePlugin.h"
 
 @interface Bugsnag ()
-+ (BugsnagNotifier *)notifier;
-+ (void)registerPlugin:(id<BugsnagPlugin>)plugin;
++ (BugsnagClient *)client;
 @end
 
 @interface BugsnagReactNativePlugin () <BugsnagPlugin>
-@property(nonatomic, getter=isStarted) BOOL started;
 @end
 
 @implementation BugsnagReactNativePlugin
 
-+ (void)register {
-  BugsnagReactNativePlugin *plugin = [BugsnagReactNativePlugin new];
-  [Bugsnag registerPlugin:plugin];
+- (void)load {
+    // TODO setup react-native plugin here
 }
 
-- (void)start {
-  self.started = YES;
+- (void)unload {
+
 }
 
 @end

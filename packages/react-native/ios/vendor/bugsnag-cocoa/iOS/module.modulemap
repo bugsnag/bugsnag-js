@@ -2,7 +2,7 @@ module Bugsnag {
     umbrella header "Bugsnag.h"
 
     header "BugsnagConfiguration.h"
-    header "BugsnagMetaData.h"
+    header "BugsnagMetadata.h"
     header "BugsnagBreadcrumb.h"
     header "BugsnagPlugin.h"
 

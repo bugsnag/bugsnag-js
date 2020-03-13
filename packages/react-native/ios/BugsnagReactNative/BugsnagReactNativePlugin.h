@@ -1,11 +1,7 @@
 #import <Foundation/Foundation.h>
 
-@interface BugsnagReactNativePlugin : NSObject
+#import "BugsnagPlugin.h"
 
-/**
- * Register the Bugsnag React Native plugin, prior to calling [Bugsnag start]
- *
- */
-+ (void)register;
+@interface BugsnagReactNativePlugin : NSObject<BugsnagPlugin>
 
 @end
