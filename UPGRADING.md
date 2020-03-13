@@ -25,7 +25,6 @@ You can choose to hold on to the `Client` returned by `Bugsnag.start()`, or not.
 - `Bugsnag.setContext()`, `Bugsnag.getContext()`
 - `Bugsnag.setUser()`, `Bugsnag.getUser()`
 - `Bugsnag.addMetadata()`, `Bugsnag.getMetadata()`, `Bugsnag.clearMetadata()`
-- `Bugsnag.use()`, `Bugsnag.getPlugin()`
 
 A common pattern when implementing Bugsnag pre-v7 is to do something like the following, initializing a Bugsnag client which can then be imported in various parts of the application:
 
