@@ -2,6 +2,13 @@ const { schema } = require('@bugsnag/core/config')
 const stringWithLength = require('@bugsnag/core/lib/validators/string-with-length')
 
 const ALLOWED_IN_JS = ['onError', 'onBreadcrumb', 'logger', 'metadata', 'user', 'context', 'codeBundleId']
+const allowedErrorTypes = () => ({
+  unhandledExceptions: true,
+  unhandledRejections: true,
+  anrs: true,
+  ndkCrashes: true,
+  ooms: true
+})
 
 module.exports.schema = {
   ...schema,
@@ -13,6 +20,21 @@ module.exports.schema = {
     defaultValue: () => null,
     message: 'should be a string',
     validate: val => (val === null || stringWithLength(val))
+  },
+  enabledErrorTypes: {
+    ...schema.enabledErrorTypes,
+    defaultValue: () => allowedErrorTypes(),
+    validate: value => {
+      // ensure we have an object
+      if (typeof value !== 'object' || !value) return false
+      const providedKeys = Object.keys(value)
+      const allowedKeys = Object.keys(allowedErrorTypes())
+      // ensure it only has a subset of the allowed keys
+      if (providedKeys.filter(k => allowedKeys.includes(k)).length < providedKeys.length) return false
+      // ensure all of the values are boolean
+      if (Object.keys(value).filter(k => typeof value[k] !== 'boolean').length > 0) return false
+      return true
+    }
   }
 }
 
