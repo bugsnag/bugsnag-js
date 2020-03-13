@@ -1,4 +1,4 @@
-import { load } from '../config'
+import { load, schema } from '../config'
 
 describe('react-native config: load()', () => {
   it('should load config from the provided NativeClient', () => {
@@ -39,5 +39,22 @@ describe('react-native config: load()', () => {
     expect(warnSpy.mock.calls.length).toBe(2)
     expect(warnSpy.mock.calls[0][0]).toMatch(/Cannot set "apiKey" configuration option in JS. This must be set in the native layer./)
     expect(warnSpy.mock.calls[1][0]).toMatch(/Cannot set "autoDetectErrors" configuration option in JS. This must be set in the native layer./)
+  })
+
+  it('supports native error types', () => {
+    expect(schema.enabledErrorTypes.validate({
+      unhandledExceptions: true,
+      unhandledRejections: true,
+      ndkCrashes: true,
+      anrs: false,
+      ooms: true
+    })).toBe(true)
+    expect(schema.enabledErrorTypes.validate({
+      unhandledExceptions: true,
+      unhandledRejections: true,
+      ndkCroshes: true,
+      anrs: false,
+      ooms: true
+    })).toBe(false)
   })
 })
