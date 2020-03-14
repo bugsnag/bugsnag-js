@@ -12,8 +12,8 @@
   },
   "dependencies": {
     "@bugsnag/js": "^7.0.0-alpha.2",
-    "@bugsnag/plugin-express": "^7.0.0-alpha.1",
-    "@bugsnag/plugin-vue": "^7.0.0-alpha.1",
+    "@bugsnag/plugin-express": "^7.0.0-rc.2",
+    "@bugsnag/plugin-vue": "^7.0.0-rc.2",
     "cross-env": "^5.2.0",
     "event-stream": "^3.3.4",
     "nuxt": "^2.0.0"

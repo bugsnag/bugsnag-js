@@ -1,9 +1,8 @@
 import Vue from 'vue'
-import bugsnag from '@bugsnag/js'
-import bugsnagVue from '@bugsnag/plugin-vue'
-Bugsnag.start('<%= options.apiKey %>')
-Bugsnag.use(bugsnagVue, Vue)
+import Bugsnag from '@bugsnag/js'
+import BugsnagPluginVue from '@bugsnag/plugin-vue'
 
-export default function ({ app }, inject) {
-  inject('bugsnag', bugsnagClient)
-}
+Bugsnag.start({
+  apiKey:'<%= options.apiKey %>',
+  plugins: [new BugsnagPluginVue(Vue)]
+})
