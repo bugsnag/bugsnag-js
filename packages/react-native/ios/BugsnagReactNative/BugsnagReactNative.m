@@ -37,7 +37,7 @@ RCT_EXPORT_METHOD(updateMetadata
 
 RCT_EXPORT_METHOD(updateContext
                   :(NSString *)context) {
-  //TODO
+    [Bugsnag setContext:context];
 }
 
 RCT_EXPORT_METHOD(updateUser
