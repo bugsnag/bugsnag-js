@@ -1,11 +1,11 @@
 import Vue from 'vue'
 import App from './App.vue'
 import Bugsnag from '@bugsnag/js'
-import BugsnagVuePlugin from '@bugsnag/plugin-vue'
+import BugsnagPluginVue from '@bugsnag/plugin-vue'
 
 Bugsnag.start({
   apiKey: 'YOUR_API_KEY',
-  plugins: [new BugsnagVuePlugin(Vue)]
+  plugins: [new BugsnagPluginVue(Vue)]
 })
 
 Vue.config.productionTip = false

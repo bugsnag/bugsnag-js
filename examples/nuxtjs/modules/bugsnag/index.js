@@ -1,7 +1,7 @@
 import { join } from 'path'
 import consola from 'consola'
 import Bugsnag from '@bugsnag/js'
-const BugsnagExpressPlugin = require('@bugsnag/plugin-express')
+const BugsnagPluginExpress = require('@bugsnag/plugin-express')
 
 export default function (options) {
   const logger = consola.withScope('Bugsnag')
@@ -19,7 +19,7 @@ export default function (options) {
   Bugsnag.start({
     apiKey: bugsnagOptions.serverApiKey,
     logger,
-    plugins: [BugsnagExpressPlugin]
+    plugins: [BugsnagPluginExpress]
   })
 
   logger.info('Adding server handlers')

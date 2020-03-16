@@ -4,11 +4,11 @@ const router = require('koa-router')
 const serve = require('koa-static')
 const mount = require('koa-mount')
 const { readFileSync } = require('fs')
-const BugsnagKoaPlugin = require('@bugsnag/plugin-koa')
+const BugsnagPluginKoa = require('@bugsnag/plugin-koa')
 
 Bugsnag.start({
   apiKey: process.env.BUGSNAG_API_KEY,
-  plugins: [BugsnagKoaPlugin]
+  plugins: [BugsnagPluginKoa]
 })
 
 const app = new Koa()
