@@ -13,7 +13,7 @@
               withData:(NSDictionary *)update;
 
 - (void)updateContext:(NSString *)context;
-- (void)updateUser:(NSString *)id
+- (void)updateUser:(NSString *)userId
          withEmail:(NSString *)email
           withName:(NSString *)name;
 

@@ -41,10 +41,10 @@ RCT_EXPORT_METHOD(updateContext
 }
 
 RCT_EXPORT_METHOD(updateUser
-                  :(NSString *)id
+                  :(NSString *)userId
          withEmail:(NSString *)email
           withName:(NSString *)name) {
-  //TODO
+    [Bugsnag setUser:userId withName:name andEmail:email];
 }
 
 RCT_EXPORT_METHOD(dispatch
