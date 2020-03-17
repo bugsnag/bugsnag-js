@@ -12,6 +12,7 @@
 </template>
 
 <script>
+import Bugsnag from '@bugsnag/js'
 import Vue from 'vue'
 export default {
   name: 'BadButtons',
@@ -31,7 +32,7 @@ export default {
       try {
         throw new Error('Catch me if you can')
       } catch (e) {
-        this.$bugsnag.notify(e)
+        Bugsnag.notify(e)
       }
     },
     // Throws an error outside in a timer which will be reported by the bugsnagClient

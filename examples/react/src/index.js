@@ -1,12 +1,14 @@
 import Bugsnag from '@bugsnag/js'
-import bugsnagReact from '@bugsnag/plugin-react'
+import BugsnagPluginReact from '@bugsnag/plugin-react'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import './index.css'
 import App from './App'
 
-Bugsnag.start('YOUR_API_KEY')
-Bugsnag.use(bugsnagReact, React)
+Bugsnag.start({
+  apiKey: 'YOUR_API_KEY',
+  plugins: [new BugsnagPluginReact(React)]
+})
 
 const ErrorBoundary = Bugsnag.getPlugin('react')
 
