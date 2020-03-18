@@ -32,7 +32,7 @@
     },
     "android": {
       "packageInstance": "new BugsnagPackage()",
-      "packageImportPath": "import com.bugsnag.reactnative.BugsnagPackage;"
+      "packageImportPath": "import com.bugsnag.android.BugsnagPackage;"
     }
   },
   "files": [
@@ -47,7 +47,8 @@
     "ios/vendor/bugsnag-cocoa/Configurations/Config.xcconfig",
     "ios/vendor/bugsnag-cocoa/Source/**/*.{h,m,mm,cpp,c}",
     "ios/vendor/bugsnag-cocoa/iOS/{Bugsnag.xcodeproj,Info.plist,module.modulemap}",
-    "BugsnagReactNative.podspec"
+    "BugsnagReactNative.podspec",
+    "react-native.config.js"
   ],
   "scripts": {
     "clean": "rm -fr dist && mkdir dist",
