@@ -35,10 +35,13 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(configure:(NSDictionary *)readableMap) {
     };
 }
 
-RCT_EXPORT_METHOD(updateMetadata
-                  :(NSString *)section
-          withData:(NSDictionary *)update) {
-  //TODO
+RCT_EXPORT_METHOD(updateMetadata:(NSString *)section
+                        withData:(NSDictionary *)update) {
+    if (update == nil) {
+        [Bugsnag clearMetadataFromSection:section];
+    } else {
+        [Bugsnag addMetadata:update toSection:section];
+    }
 }
 
 RCT_EXPORT_METHOD(updateContext:(NSString *)context) {
