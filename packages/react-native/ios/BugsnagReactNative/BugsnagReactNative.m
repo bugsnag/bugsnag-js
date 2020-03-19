@@ -62,7 +62,14 @@ RCT_EXPORT_METHOD(dispatch:(NSDictionary *)payload
 }
 
 RCT_EXPORT_METHOD(leaveBreadcrumb:(NSDictionary *)options) {
-  //TODO
+    NSString *message = options[@"message"];
+    if (message != nil) {
+        BSGBreadcrumbType type = [self breadcrumbTypeFromString:options[@"type"]];
+        NSDictionary *metadata = options[@"metadata"];
+        [Bugsnag leaveBreadcrumbWithMessage:message
+                                   metadata:metadata
+                                    andType:type];
+    }
 }
 
 RCT_EXPORT_METHOD(startSession) {
@@ -81,6 +88,28 @@ RCT_EXPORT_METHOD(getPayloadInfo:(NSDictionary *)options
                          resolve:(RCTPromiseResolveBlock)resolve
                           reject:(RCTPromiseRejectBlock)reject) {
     resolve(@{});
+}
+
+- (BSGBreadcrumbType)breadcrumbTypeFromString:(NSString *)value {
+    if ([@"manual" isEqualToString:value]) {
+        return BSGBreadcrumbTypeManual;
+    } else if ([@"error" isEqualToString:value]) {
+        return BSGBreadcrumbTypeError;
+    } else if ([@"log" isEqualToString:value]) {
+       return BSGBreadcrumbTypeLog;
+    } else if ([@"navigation" isEqualToString:value]) {
+        return BSGBreadcrumbTypeNavigation;
+    } else if ([@"process" isEqualToString:value]) {
+        return BSGBreadcrumbTypeProcess;
+    } else if ([@"request" isEqualToString:value]) {
+        return BSGBreadcrumbTypeRequest;
+    } else if ([@"state" isEqualToString:value]) {
+        return BSGBreadcrumbTypeState;
+    } else if ([@"user" isEqualToString:value]) {
+        return BSGBreadcrumbTypeUser;
+    } else {
+        return BSGBreadcrumbTypeManual; // return placeholder value
+    }
 }
 
 @end
