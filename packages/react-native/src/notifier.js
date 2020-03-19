@@ -29,7 +29,7 @@ const internalPlugins = [
   new BugsnagPluginReact(React)
 ]
 
-const Configuration = { load: () => load(NativeClient) }
+const Configuration = { load: () => load(NativeClient, version) }
 const Bugsnag = {
   _client: null,
   createClient: (jsOpts) => {

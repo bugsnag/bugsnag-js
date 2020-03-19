@@ -1,5 +1,6 @@
 const { schema } = require('@bugsnag/core/config')
 const stringWithLength = require('@bugsnag/core/lib/validators/string-with-length')
+const rnPackage = require('react-native/package.json')
 
 const ALLOWED_IN_JS = ['onError', 'onBreadcrumb', 'logger', 'metadata', 'user', 'context', 'codeBundleId']
 const allowedErrorTypes = () => ({
@@ -45,8 +46,17 @@ const getPrefixedConsole = () => {
   }, {})
 }
 
-module.exports.load = (NativeClient, warn = console.warn) => {
-  const nativeOpts = NativeClient.configure()
+const getEngine = () => global.hermes ? 'hermes' : 'jsc'
+const getReactNativeVersion = () => rnPackage.version
+
+module.exports.load = (
+  NativeClient,
+  notifierVersion,
+  engine = getEngine(),
+  reactNativeVersion = getReactNativeVersion(),
+  warn = console.warn
+) => {
+  const nativeOpts = NativeClient.configure({ notifierVersion, engine, reactNativeVersion })
 
   // if we don't have any native options, something went wrong
   if (!nativeOpts) throw new Error('[bugsnag] Configuration could not be loaded from native client')

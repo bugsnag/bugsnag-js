@@ -31,7 +31,7 @@ describe('react-native config: load()', () => {
       })
     }
 
-    const config = load(mockNativeClient, warnSpy)
+    const config = load(mockNativeClient, '1.1.1', 'test', '2.2.2', warnSpy)
 
     config.apiKey = '456'
     config.autoDetectErrors = false
