@@ -1,7 +1,10 @@
 import { Plugin } from '@bugsnag/browser'
 import Vue from 'vue'
 
-declare class BugsnagPluginVue extends Plugin {
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface BugsnagPluginVue extends Plugin { }
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
+declare class BugsnagPluginVue {
   constructor(Vue?: Vue)
 }
 

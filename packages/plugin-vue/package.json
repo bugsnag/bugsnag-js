@@ -31,6 +31,7 @@
     "@bugsnag/js": "*"
   },
   "devDependencies": {
+    "@bugsnag/browser": "^7.0.0-rc.2",
     "@bugsnag/core": "^7.0.0-rc.2",
     "jasmine": "^3.1.0",
     "nyc": "^12.0.2",
