@@ -1,4 +1,4 @@
-import { Plugin } from '@bugsnag/browser'
+import { Plugin } from '@bugsnag/core'
 import React from 'react'
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface

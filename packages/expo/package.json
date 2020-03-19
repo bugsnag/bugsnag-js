@@ -31,7 +31,7 @@
   ],
   "scripts": {
     "clean": "rm -fr dist && mkdir dist",
-    "bundle-types": "../../bin/bundle-types",
+    "bundle-types": "../../bin/bundle-types bugsnag",
     "build": "npm run clean && npm run bundle-types",
     "test:types": "jasmine 'types/**/*.test.js'",
     "postversion": "npm run build"

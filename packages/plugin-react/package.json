@@ -4,7 +4,7 @@
   "main": "dist/bugsnag-react.js",
   "description": "React integration for @bugsnag/js",
   "browser": "dist/bugsnag-react.js",
-  "types": "types/bugsnag-react.d.ts",
+  "types": "dist/types/bugsnag-plugin-react.d.ts",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
     "type": "git",
@@ -14,27 +14,23 @@
     "access": "public"
   },
   "files": [
-    "dist",
-    "types"
+    "dist"
   ],
   "scripts": {
     "clean": "rm -fr dist && mkdir dist",
-    "build": "npm run clean && npm run build:dist && npm run build:dist:min",
-    "build:dist": "NODE_ENV=production IS_BROWSER=yes ../../bin/bundle src/index.js --standalone=bugsnag__react | ../../bin/extract-source-map dist/bugsnag-react.js",
-    "build:dist:min": "NODE_ENV=production IS_BROWSER=yes ../../bin/bundle src/index.js --standalone=bugsnag__react | ../../bin/minify dist/bugsnag-react.min.js",
+    "bundle-types": "../../bin/bundle-types bugsnag-plugin-react",
+    "build": "npm run clean && ../../bin/bundle src/index.js | ../../bin/extract-source-map dist/bugsnag-react.js && npm run bundle-types",
     "test": "jest",
     "postversion": "npm run build"
   },
   "author": "Bugsnag",
   "license": "MIT",
-  "peerDependencies": {
-    "@bugsnag/js": "*"
-  },
   "devDependencies": {
     "@babel/core": "^7.0.1",
     "@babel/preset-env": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
-    "@bugsnag/browser": "^7.0.0-rc.2",
+    "@bugsnag/core": "^7.0.0-rc.2",
+    "@types/react": "^16.9.23",
     "babel-core": "^7.0.0-0",
     "babel-jest": "^23.6.0",
     "jest": "^23.6.0",
