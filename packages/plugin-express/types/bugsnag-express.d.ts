@@ -1,3 +1,3 @@
-import { Bugsnag } from '@bugsnag/node'
-declare const bugsnagPluginExpress: Bugsnag.Plugin
+import { Plugin } from '@bugsnag/node'
+declare const bugsnagPluginExpress: Plugin
 export default bugsnagPluginExpress
