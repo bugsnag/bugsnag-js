@@ -6,7 +6,7 @@ module.exports = {
       },
       android: {
         packageInstance: 'new BugsnagPackage()',
-        packageImportPath: 'import com.bugsnag.reactnative.BugsnagPackage;'
+        packageImportPath: 'import com.bugsnag.android.BugsnagPackage;'
       }
     },
     assets: [],
