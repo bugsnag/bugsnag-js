@@ -36,6 +36,37 @@ describe('@bugsnag/core/client', () => {
         unhandledRejections: true
       })
     })
+
+    it('warns with a valid but incorrect-looking api key', () => {
+      const logger = {
+        debug: jest.fn(),
+        warn: jest.fn(),
+        info: jest.fn(),
+        error: jest.fn()
+      }
+      const client = new Client({
+        apiKey: 'API_KEY',
+        logger
+      })
+      expect(client).toBeTruthy()
+      expect(logger.warn.mock.calls.length).toBe(1)
+      expect(logger.warn.mock.calls[0][0].message).toBe('Invalid configuration\n  - apiKey should be a string of 32 hexadecimal characters, got "API_KEY"')
+    })
+
+    it('does not warn with a valid api key', () => {
+      const logger = {
+        debug: jest.fn(),
+        warn: jest.fn(),
+        info: jest.fn(),
+        error: jest.fn()
+      }
+      const client = new Client({
+        apiKey: '123456abcdef123456abcdef123456ab',
+        logger
+      })
+      expect(client).toBeTruthy()
+      expect(logger.warn.mock.calls.length).toBe(0)
+    })
   })
 
   describe('use()', () => {

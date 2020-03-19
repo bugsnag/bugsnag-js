@@ -7,7 +7,7 @@ const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
 describe('plugin: sessions', () => {
   it('notifies the session endpoint', (done) => {
-    const c = new Client({ apiKey: 'API_KEY' }, undefined, [plugin], VALID_NOTIFIER)
+    const c = new Client({ apiKey: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' }, undefined, [plugin], VALID_NOTIFIER)
     c._setDelivery(client => ({
       sendSession: (session, cb) => {
         expect(typeof session).toBe('object')
@@ -23,7 +23,7 @@ describe('plugin: sessions', () => {
   })
 
   it('tracks handled/unhandled error counts and sends them in error payloads', (done) => {
-    const c = new Client({ apiKey: 'API_KEY' }, undefined, [plugin], VALID_NOTIFIER)
+    const c = new Client({ apiKey: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' }, undefined, [plugin], VALID_NOTIFIER)
     let i = 0
     c._setDelivery(client => ({
       sendSession: () => {},
@@ -50,7 +50,7 @@ describe('plugin: sessions', () => {
   })
 
   it('correctly infers releaseStage', (done) => {
-    const c = new Client({ apiKey: 'API_KEY', releaseStage: 'foo' }, undefined, [plugin], VALID_NOTIFIER)
+    const c = new Client({ apiKey: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', releaseStage: 'foo' }, undefined, [plugin], VALID_NOTIFIER)
 
     c._setDelivery(client => ({
       sendSession: (session, cb) => {
@@ -63,7 +63,7 @@ describe('plugin: sessions', () => {
   })
 
   it('doesn’t send when releaseStage is not in enabledReleaseStages', (done) => {
-    const c = new Client({ apiKey: 'API_KEY', releaseStage: 'foo', enabledReleaseStages: ['baz'] }, undefined, [plugin], VALID_NOTIFIER)
+    const c = new Client({ apiKey: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', releaseStage: 'foo', enabledReleaseStages: ['baz'] }, undefined, [plugin], VALID_NOTIFIER)
     c._setDelivery(client => ({
       sendSession: (session, cb) => {
         expect(true).toBe(false)
@@ -77,7 +77,7 @@ describe('plugin: sessions', () => {
     const logger = { debug: () => {}, info: () => {}, warn: () => {}, error: () => {} }
     const warnSpy = spyOn(logger, 'warn')
     const c = new Client({
-      apiKey: 'API_KEY',
+      apiKey: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
       releaseStage: 'foo',
       endpoints: { notify: '/foo' },
       autoTrackSessions: false,
@@ -90,7 +90,7 @@ describe('plugin: sessions', () => {
   it('supports pausing and resuming sessions', (done) => {
     const payloads = []
     const c = new Client({
-      apiKey: 'API_KEY'
+      apiKey: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
     }, undefined, [plugin], VALID_NOTIFIER)
     c._setDelivery(client => ({
       sendEvent: (p, cb = () => {}) => {
