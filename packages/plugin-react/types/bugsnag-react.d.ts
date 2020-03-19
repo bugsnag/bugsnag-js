@@ -1,5 +1,5 @@
 import { Plugin } from '@bugsnag/browser'
-import * as React from 'react'
+import React from 'react'
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface BugsnagPluginReact extends Plugin { }
