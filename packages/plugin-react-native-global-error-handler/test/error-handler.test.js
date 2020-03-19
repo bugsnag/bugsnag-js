@@ -21,14 +21,14 @@ class MockErrorUtils {
 describe('plugin: react native global error handler', () => {
   it('should set a global error handler', () => {
     const eu = new MockErrorUtils()
-    const client = new Client({ apiKey: 'API_KEY_YEAH', plugins: [plugin(eu)] })
+    const client = new Client({ apiKey: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', plugins: [plugin(eu)] })
     expect(typeof eu.getGlobalHandler()).toBe('function')
     expect(client).toBe(client)
   })
 
   it('should warn if ErrorUtils is not defined', done => {
     const client = new Client({
-      apiKey: 'API_KEY_YEAH',
+      apiKey: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
       logger: {
         debug: () => {},
         info: () => {},
@@ -46,7 +46,7 @@ describe('plugin: react native global error handler', () => {
   it('should not set a global error handler when autoDetectErrors=false', () => {
     const eu = new MockErrorUtils()
     const client = new Client({
-      apiKey: 'API_KEY_YEAH',
+      apiKey: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
       autoDetectErrors: false,
       plugins: [plugin(eu)]
     })
@@ -57,7 +57,7 @@ describe('plugin: react native global error handler', () => {
   it('should not set a global error handler when enabledErrorTypes.unhandledExceptions=false', () => {
     const eu = new MockErrorUtils()
     const client = new Client({
-      apiKey: 'API_KEY_YEAH',
+      apiKey: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
       enabledErrorTypes: { unhandledExceptions: false, unhandledRejections: false },
       plugins: [plugin(eu)]
     })
@@ -67,7 +67,7 @@ describe('plugin: react native global error handler', () => {
 
   it('should call through to an existing handler', done => {
     const eu = new MockErrorUtils()
-    const client = new Client({ apiKey: 'API_KEY_YEAH', plugins: [plugin(eu)] })
+    const client = new Client({ apiKey: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', plugins: [plugin(eu)] })
     client._setDelivery(client => ({
       sendSession: () => {},
       sendEvent: (...args) => args[args.length - 1](null)
@@ -83,7 +83,7 @@ describe('plugin: react native global error handler', () => {
 
   it('should have the correct handled state', done => {
     const eu = new MockErrorUtils()
-    const client = new Client({ apiKey: 'API_KEY_YEAH', plugins: [plugin(eu)] })
+    const client = new Client({ apiKey: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', plugins: [plugin(eu)] })
     client._setDelivery(client => ({
       sendSession: () => {},
       sendEvent: (payload, cb) => {
