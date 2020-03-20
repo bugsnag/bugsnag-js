@@ -1,3 +1,3 @@
-import { Bugsnag } from '@bugsnag/node'
-declare const bugsnagPluginKoa: Bugsnag.Plugin
+import { Plugin } from '@bugsnag/node'
+declare const bugsnagPluginKoa: Plugin
 export default bugsnagPluginKoa
