@@ -84,8 +84,8 @@ Scenario: calling window.client.notify() with an object, getting a generated sta
 
   # this ensure the stacktrace features all of the nested stackframes
   And the payload field "events.0.exceptions.0.stacktrace.0.method" equals "a"
-  And the payload field "events.0.exceptions.0.stacktrace.0.method" equals "b"
-  And the payload field "events.0.exceptions.0.stacktrace.0.method" equals "c"
+  And the payload field "events.0.exceptions.0.stacktrace.1.method" equals "b"
+  And the payload field "events.0.exceptions.0.stacktrace.2.method" equals "c"
 
 Scenario: calling window.client.notify() with a string, getting a generated stacktrace
   When I navigate to the URL "/handled/script/g.html"
@@ -97,5 +97,5 @@ Scenario: calling window.client.notify() with a string, getting a generated stac
 
   # this ensure the stacktrace features all of the nested stackframes
   And the payload field "events.0.exceptions.0.stacktrace.0.method" equals "a"
-  And the payload field "events.0.exceptions.0.stacktrace.0.method" equals "b"
-  And the payload field "events.0.exceptions.0.stacktrace.0.method" equals "c"
+  And the payload field "events.0.exceptions.0.stacktrace.1.method" equals "b"
+  And the payload field "events.0.exceptions.0.stacktrace.2.method" equals "c"

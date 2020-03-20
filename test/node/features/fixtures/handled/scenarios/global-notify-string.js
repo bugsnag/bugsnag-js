@@ -8,7 +8,7 @@ var client = Bugsnag.start({
 })
 
 function a () {
-  client.notify({ name: 'Errr', message: 'make a stacktrace for me' })
+  client.notify({ name: 'Error', message: 'make a stacktrace for me' })
 }
 function b () { a() }
 function c () { b() }
