@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <script src="/node_modules/@bugsnag/browser/dist/bugsnag.min.js"></script>
+    <script type="text/javascript">
+      var ENDPOINT = decodeURIComponent(window.location.search.match(/ENDPOINT=([^&]+)/)[1])
+      var API_KEY = decodeURIComponent(window.location.search.match(/API_KEY=([^&]+)/)[1])
+      window.client = Bugsnag.start({
+        apiKey: API_KEY,
+        endpoints: { notify: ENDPOINT, sessions: '/noop' }
+      })
+    </script>
+  </head>
+  <body>
+    <script>
+      function a () {
+        window.client.notify({ name: 'Errr', message: 'make a stacktrace for me' })
+      }
+      function b () { a() }
+      function c () { b() }
+      c()
+    </script>
+  </body>
+</html>
