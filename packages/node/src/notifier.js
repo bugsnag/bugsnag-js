@@ -62,7 +62,6 @@ const Bugsnag = {
       return Bugsnag._client
     }
     Bugsnag._client = Bugsnag.createClient(opts)
-    Bugsnag._client._depth += 1
     return Bugsnag._client
   }
 }
@@ -71,7 +70,10 @@ Object.keys(Client.prototype).forEach((m) => {
   if (/^_/.test(m)) return
   Bugsnag[m] = function () {
     if (!Bugsnag._client) return console.error(`Bugsnag.${m}() was called before Bugsnag.start()`)
-    return Bugsnag._client[m].apply(Bugsnag._client, arguments)
+    Bugsnag._client._depth += 1
+    const ret = Bugsnag._client[m].apply(Bugsnag._client, arguments)
+    Bugsnag._client._depth -= 1
+    return ret
   }
 })
 
