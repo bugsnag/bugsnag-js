@@ -73,3 +73,29 @@ Scenario: calling notify() with a string, getting a generated stacktrace
 
   # this ensures the first generated stackframe doesn't come from bugsnag's source
   And the payload field "events.0.exceptions.0.stacktrace.0.method" equals "a"
+
+Scenario: calling window.client.notify() with an object, getting a generated stacktrace
+  When I navigate to the URL "/handled/script/f.html"
+  Then I wait to receive a request
+  And the request is a valid browser payload for the error reporting API
+  And the exception "errorClass" equals "Error"
+  And the exception "message" equals "make a stacktrace for me"
+  And the exception "type" equals "browserjs"
+
+  # this ensure the stacktrace features all of the nested stackframes
+  And the payload field "events.0.exceptions.0.stacktrace.0.method" equals "a"
+  And the payload field "events.0.exceptions.0.stacktrace.1.method" equals "b"
+  And the payload field "events.0.exceptions.0.stacktrace.2.method" equals "c"
+
+Scenario: calling window.client.notify() with a string, getting a generated stacktrace
+  When I navigate to the URL "/handled/script/g.html"
+  Then I wait to receive a request
+  And the request is a valid browser payload for the error reporting API
+  And the exception "errorClass" equals "Error"
+  And the exception "message" equals "make a stacktrace for me"
+  And the exception "type" equals "browserjs"
+
+  # this ensure the stacktrace features all of the nested stackframes
+  And the payload field "events.0.exceptions.0.stacktrace.0.method" equals "a"
+  And the payload field "events.0.exceptions.0.stacktrace.1.method" equals "b"
+  And the payload field "events.0.exceptions.0.stacktrace.2.method" equals "c"
