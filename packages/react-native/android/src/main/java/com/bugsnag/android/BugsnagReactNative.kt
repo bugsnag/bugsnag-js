@@ -31,8 +31,18 @@ class BugsnagReactNative(private val reactContext: ReactApplicationContext) :
         logger.e("Failed to call $msg on bugsnag-plugin-react-native, continuing", exc)
     }
 
+    /*
+     * This method exists for when the app is run in a remote debugger,
+     * where synchronous methods are not allowed. It should not ordinarily
+     * be used.
+     */
+    @ReactMethod
+    private fun configureAsync(env: ReadableMap, promise: Promise) {
+      promise.resolve(configure(env))
+    }
+
     @ReactMethod(isBlockingSynchronousMethod = true)
-    private fun configure(env : ReadableMap): WritableMap {
+    private fun configure(env: ReadableMap): WritableMap {
         return try {
             val client = Bugsnag.getClient()
             bridge = reactContext.getJSModule(RCTDeviceEventEmitter::class.java)

@@ -1,4 +1,4 @@
-import Bugsnag, { Configuration, Breadcrumb, Session } from "../../.."
+import Bugsnag, { Breadcrumb, Session } from "../../.."
 Bugsnag.start({
   onError: [
     event => true
@@ -11,6 +11,3 @@ Bugsnag.start({
   metadata: {},
   logger: undefined,
 })
-
-const config = Configuration.load()
-Bugsnag.start(config)
