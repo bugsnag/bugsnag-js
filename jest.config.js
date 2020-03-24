@@ -1,4 +1,4 @@
-const testsForPackage = (packageName) => `<rootDir>/packages/${packageName}/**/*.test.[jt]s`
+const testsForPackage = (packageName) => `<rootDir>/packages/${packageName}/**/*.test.[jt]s?(x)`
 
 module.exports = {
   projects: [
@@ -6,6 +6,12 @@ module.exports = {
       displayName: 'core',
       testMatch: [
         testsForPackage('core')
+      ]
+    },
+    {
+      displayName: 'browser plugins',
+      testMatch: [
+        testsForPackage('plugin-react')
       ]
     },
     {
