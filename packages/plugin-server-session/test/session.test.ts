@@ -25,7 +25,7 @@ describe('plugin: server sessions', () => {
   })
 
   it('should send the session', done => {
-    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' }, undefined, [plugin])
+    const c = new Client({ apiKey: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' }, undefined, [plugin])
     c._setDelivery(client => ({
       sendEvent: () => {},
       sendSession: (session: any, cb = () => {}) => {
@@ -41,7 +41,7 @@ describe('plugin: server sessions', () => {
   it('should not send the session when releaseStage is not in enabledReleaseStages', done => {
     expect.assertions(1)
     const c = new Client({
-      apiKey: 'aaaa-aaaa-aaaa-aaaa',
+      apiKey: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
       logger: {
         debug: () => {},
         info: () => {},
@@ -68,7 +68,7 @@ describe('plugin: server sessions', () => {
   it('should include the correct app and device payload properties', done => {
     expect.assertions(5)
     const c = new Client({
-      apiKey: 'aaaa-aaaa-aaaa-aaaa',
+      apiKey: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
       endpoints: { notify: 'bloo', sessions: 'blah' },
       enabledReleaseStages: ['qa'],
       releaseStage: 'qa',
@@ -104,7 +104,7 @@ describe('plugin: server sessions', () => {
     }
     Tracker.mockImplementation(() => new TrackerMock() as any)
 
-    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' }, undefined, [plugin])
+    const c = new Client({ apiKey: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' }, undefined, [plugin])
 
     c.leaveBreadcrumb('tick')
     c._metadata = { datetime: { tz: 'GMT+1' } }
@@ -128,7 +128,7 @@ describe('plugin: server sessions', () => {
     }
     Tracker.mockImplementation(() => new TrackerMock() as any)
 
-    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' }, undefined, [plugin])
+    const c = new Client({ apiKey: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' }, undefined, [plugin])
 
     // start a session and get its id
     const sessionClient = c.startSession()

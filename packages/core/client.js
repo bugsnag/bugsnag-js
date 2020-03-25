@@ -124,9 +124,11 @@ class Client {
       return accum
     }, { errors: {}, config: {} })
 
-    // missing api key is the only fatal error
-    if (schema.apiKey && !config.apiKey) {
-      throw new Error('No Bugsnag API Key set')
+    if (schema.apiKey) {
+      // missing api key is the only fatal error
+      if (!config.apiKey) throw new Error('No Bugsnag API Key set')
+      // warn about an apikey that is not of the expected format
+      if (!/^[0-9a-f]{32}$/i.test(config.apiKey)) errors.apiKey = 'should be a string of 32 hexadecimal characters'
     }
 
     // update and elevate some options

@@ -39,7 +39,7 @@ module.exports = {
   ** Nuxt.js modules
   */
   modules: [
-    'modules/bugsnag'
+    '~/modules/bugsnag'
   ],
 
   bugsnag: {

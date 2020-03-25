@@ -78,7 +78,6 @@ const Bugsnag = {
       return Bugsnag._client
     }
     Bugsnag._client = Bugsnag.createClient(opts)
-    Bugsnag._client._depth += 1
     return Bugsnag._client
   }
 }
@@ -87,7 +86,10 @@ map(['resetEventCount'].concat(keys(Client.prototype)), (m) => {
   if (/^_/.test(m)) return
   Bugsnag[m] = function () {
     if (!Bugsnag._client) return console.log(`Bugsnag.${m}() was called before Bugsnag.start()`)
-    return Bugsnag._client[m].apply(Bugsnag._client, arguments)
+    Bugsnag._client._depth += 1
+    const ret = Bugsnag._client[m].apply(Bugsnag._client, arguments)
+    Bugsnag._client._depth -= 1
+    return ret
   }
 })
 

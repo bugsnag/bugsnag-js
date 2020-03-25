@@ -1,7 +1,7 @@
 import { join } from 'path'
 import consola from 'consola'
 import Bugsnag from '@bugsnag/js'
-import bugsnagExpress from '@bugsnag/plugin-express'
+const BugsnagPluginExpress = require('@bugsnag/plugin-express')
 
 export default function (options) {
   const logger = consola.withScope('Bugsnag')
@@ -16,8 +16,11 @@ export default function (options) {
     ssr: false
   })
 
-  Bugsnag.start({ apiKey: bugsnagOptions.serverApiKey, logger })
-  Bugsnag.use(bugsnagExpress)
+  Bugsnag.start({
+    apiKey: bugsnagOptions.serverApiKey,
+    logger,
+    plugins: [BugsnagPluginExpress]
+  })
 
   logger.info('Adding server handlers')
   this.nuxt.hook('render:setupMiddleware', app => app.use(Bugsnag.getPlugin('express').requestHandler))

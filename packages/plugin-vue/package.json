@@ -1,10 +1,10 @@
 {
   "name": "@bugsnag/plugin-vue",
-  "version": "7.0.0-rc.2",
+  "version": "7.0.0-rc.3",
   "description": "Vue.js integration for bugsnag-js",
   "main": "dist/bugsnag-vue.js",
   "browser": "dist/bugsnag-vue.js",
-  "types": "types/bugsnag-vue.d.ts",
+  "types": "dist/types/bugsnag-plugin-vue.d.ts",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
     "type": "git",
@@ -14,14 +14,12 @@
     "access": "public"
   },
   "files": [
-    "dist",
-    "types"
+    "dist"
   ],
   "scripts": {
     "clean": "rm -fr dist && mkdir dist",
-    "build": "npm run clean && npm run build:dist && npm run build:dist:min",
-    "build:dist": "NODE_ENV=production IS_BROWSER=yes ../../bin/bundle src/index.js --standalone=bugsnag__vue | ../../bin/extract-source-map dist/bugsnag-vue.js",
-    "build:dist:min": "NODE_ENV=production IS_BROWSER=yes ../../bin/bundle src/index.js --standalone=bugsnag__vue | ../../bin/minify dist/bugsnag-vue.min.js",
+    "bundle-types": "../../bin/bundle-types bugsnag-plugin-vue",
+    "build": "npm run clean && ../../bin/bundle src/index.js --standalone=BugsnagPluginVue | ../../bin/extract-source-map dist/bugsnag-vue.js && npm run bundle-types",
     "test": "nyc --reporter=lcov -- jasmine '!(node_modules)/**/*.test.js'",
     "postversion": "npm run build"
   },
@@ -31,7 +29,7 @@
     "@bugsnag/js": "*"
   },
   "devDependencies": {
-    "@bugsnag/core": "^7.0.0-rc.2",
+    "@bugsnag/core": "^7.0.0-rc.3",
     "jasmine": "^3.1.0",
     "nyc": "^12.0.2",
     "vue": "^2.5.8"

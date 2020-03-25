@@ -80,3 +80,18 @@ Scenario: calling notify with a string
   And the exception "type" equals "nodejs"
   And the "file" of stack frame 0 equals "scenarios/notify-string.js"
   And the "lineNumber" of stack frame 0 equals 10
+
+Scenario: calling an assigned client.notify with an object
+  And I run the service "handled" with the command "node scenarios/global-notify-string"
+  And I wait to receive a request
+  Then the request is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
+  And the event "unhandled" is false
+  And the event "severity" equals "warning"
+  And the event "severityReason.type" equals "handledException"
+  And the exception "errorClass" equals "Error"
+  And the exception "message" equals "make a stacktrace for me"
+  And the exception "type" equals "nodejs"
+  And the "file" of stack frame 0 equals "scenarios/global-notify-string.js"
+  And the "method" of stack frame 0 equals "a"
+  And the "method" of stack frame 1 equals "b"
+  And the "method" of stack frame 2 equals "c"
