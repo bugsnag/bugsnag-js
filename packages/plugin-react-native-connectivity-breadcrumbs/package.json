@@ -20,7 +20,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "dependencies": {
-    "@react-native-community/netinfo": "4.6.0"
+    "@react-native-community/netinfo": "5.5.0"
   },
   "devDependencies": {
     "@bugsnag/core": "^7.0.0-rc.3",
