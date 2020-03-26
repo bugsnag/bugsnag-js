@@ -28,6 +28,13 @@ module.exports = {
       testMatch: [
         testsForPackage('plugin-server-*')
       ]
+    },
+    {
+      displayName: 'node integration tests',
+      testEnvironment: 'node',
+      testMatch: [
+        '<rootDir>/packages/node/test/integration/**/*.test.[jt]s'
+      ]
     }
   ]
 }
