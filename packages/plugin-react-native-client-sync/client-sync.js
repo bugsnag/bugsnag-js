@@ -3,7 +3,11 @@ const { DeviceEventEmitter, NativeEventEmitter, NativeModules, Platform } = requ
 module.exports = (NativeClient) => ({
   load: (client) => {
     client.addOnBreadcrumb(breadcrumb => {
-      NativeClient.leaveBreadcrumb(breadcrumb)
+      // we copy the breadcrumb's properties over to a new object to ensure its
+      // to JSON() method doesn't get called before passing the object over the
+      // bridge. This happens in the remote debugger and means the "message"
+      // property is incorrectly named "name"
+      NativeClient.leaveBreadcrumb({ ...breadcrumb })
     })
 
     const origSetUser = client.setUser

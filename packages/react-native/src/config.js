@@ -57,19 +57,27 @@ module.exports.load = (
   warn = console.warn
 ) => {
   const nativeOpts = NativeClient.configure({ notifierVersion, engine, reactNativeVersion })
+  return freeze(nativeOpts, warn)
+}
 
-  // if we don't have any native options, something went wrong
-  if (!nativeOpts) throw new Error('[bugsnag] Configuration could not be loaded from native client')
-
-  // annotate the config object with the fact it came from the native layer
-  Object.defineProperty(nativeOpts, '_didLoadFromConfig', { value: true, enumerable: false })
-  // save the original values to check for mutations (user, context and metadata can be supplied in JS)
-  Object.defineProperty(nativeOpts, '_originalValues', { value: { ...nativeOpts }, enumerable: false, writable: false })
-
+module.exports.loadAsync = async (
+  NativeClient,
+  notifierVersion,
+  engine = getEngine(),
+  reactNativeVersion = getReactNativeVersion(),
+  warn = console.warn
+) => {
+  const nativeOpts = await NativeClient.configureAsync({ notifierVersion, engine, reactNativeVersion })
   return freeze(nativeOpts, warn)
 }
 
 const freeze = (opts, warn) => {
+  // if we don't have any native options, something went wrong
+  if (!opts) throw new Error('[bugsnag] Configuration could not be loaded from native client')
+
+  // save the original values to check for mutations (user, context and metadata can be supplied in JS)
+  Object.defineProperty(opts, '_originalValues', { value: { ...opts }, enumerable: false, writable: false })
+
   return new Proxy(opts, {
     set (obj, prop, value) {
       if (!ALLOWED_IN_JS.includes(prop)) {
