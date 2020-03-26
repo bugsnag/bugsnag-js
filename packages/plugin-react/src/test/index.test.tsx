@@ -1,10 +1,12 @@
-/* global jest, expect, it, beforeEach, test */
-
 import React from 'react'
 import renderer from 'react-test-renderer'
-import BugsnagPluginReact from '../'
+import BugsnagPluginReact from '..'
 
 class Event {
+  static create () {
+    return new Event()
+  }
+
   addMetadata () {
     return this
   }
@@ -14,10 +16,6 @@ const bugsnag = {
   Event,
   _notify: jest.fn()
 }
-
-bugsnag.Event.create = jest.fn(function () {
-  return new Event()
-})
 
 const plugin = new BugsnagPluginReact(React)
 const ErrorBoundary = plugin.load(bugsnag)
@@ -38,7 +36,8 @@ const BadComponent = () => {
   throw Error('BadComponent')
 }
 
-const GoodComponent = () => 'test'
+// see https://github.com/DefinitelyTyped/DefinitelyTyped/issues/20544
+const GoodComponent = (): JSX.Element => 'test' as unknown as JSX.Element
 
 it('renders correctly', () => {
   const tree = renderer
