@@ -1,12 +1,16 @@
 const NativeModules = require('react-native').NativeModules
 const NativeClient = NativeModules.BugsnagReactNative
 
-const REMOTE_DEBUGGING_WARNING = `Bugsnag cannot initialise synchronously when running in the remote debugger.
+const REMOTE_DEBUGGING_WARNING = `Bugsnag cannot initialize synchronously when running in the remote debugger.
 
 Error reporting is still supported, but synchronous calls afted Bugsnag.start() will no-op. This means Bugsnag.leaveBreadcrumb(), Bugsnag.setUser() and all other methods will only begin to work after a short delay.
 
 This only affects the remote debugger. Execution of JS in the normal way (on the device) is not affected.`
 
+// this is how some internal react native code detects whether the app is running
+// in the remote debugger:
+//   https://github.com/facebook/react-native/blob/1f4535c17572df78e2a033890220337e5703b614/Libraries/ReactNative/PaperUIManager.js#L62-L66
+// there's no public api for this so we use the same approach
 const isDebuggingRemotely = !global.nativeCallSyncHook
 
 const name = 'Bugsnag React Native'
@@ -97,7 +101,9 @@ const Bugsnag = {
       const stubClient = {}
       CLIENT_METHODS.reduce((accum, m) => {
         stubClient[m] = new Proxy(() => {
-          console.warn(`Bugsnag.${m}() will no-op because Bugsnag has not yet initialised`)
+          console.warn(
+            `This call to Bugsnag.${m}() is a no-op because remote debugging is enabled and Bugsnag has not yet initialized`
+          )
         }, {
           apply: (target, thisArg, argumentsList) => {
             if (!initialised) return Reflect.apply(target, thisArg, argumentsList)
