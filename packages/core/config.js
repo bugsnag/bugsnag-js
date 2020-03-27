@@ -113,8 +113,14 @@ module.exports.schema = {
   },
   user: {
     defaultValue: () => ({}),
-    message: 'should be an object',
-    validate: (value) => typeof value === 'object' && value !== null
+    message: 'should be an object with { id, email, name } properties',
+    validate: value =>
+      (value === null) ||
+      (value && reduce(
+        keys(value),
+        (accum, key) => accum && includes(['id', 'email', 'name'], key),
+        true
+      ))
   },
   metadata: {
     defaultValue: () => ({}),

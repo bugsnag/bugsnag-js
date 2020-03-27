@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-react",
-  "version": "7.0.0-rc.3",
+  "version": "7.0.0-rc.4",
   "main": "dist/bugsnag-react.js",
   "description": "React integration for @bugsnag/js",
   "browser": "dist/bugsnag-react.js",
@@ -20,21 +20,11 @@
     "clean": "rm -fr dist && mkdir dist",
     "bundle-types": "../../bin/bundle-types bugsnag-plugin-react",
     "build": "npm run clean && ../../bin/bundle src/index.js --standalone=BugsnagPluginReact | ../../bin/extract-source-map dist/bugsnag-react.js && npm run bundle-types",
-    "test": "jest",
     "postversion": "npm run build"
   },
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@babel/core": "^7.0.1",
-    "@babel/preset-env": "^7.0.0",
-    "@babel/preset-react": "^7.0.0",
-    "@bugsnag/core": "^7.0.0-rc.3",
-    "@types/react": "^16.9.23",
-    "babel-core": "^7.0.0-0",
-    "babel-jest": "^23.6.0",
-    "jest": "^23.6.0",
-    "react": "^16.5.0",
-    "react-test-renderer": "^16.5.0"
+    "@bugsnag/core": "^7.0.0-rc.4"
   }
 }

@@ -252,10 +252,15 @@ describe('@bugsnag/core/client', () => {
       const client = new Client({ apiKey: 'API_KEY_YEAH' })
       client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
 
+      // @ts-ignore
       client.notify(undefined)
+      // @ts-ignore
       client.notify(null)
+      // @ts-ignore
       client.notify(() => {})
+      // @ts-ignore
       client.notify({ name: 'some message' })
+      // @ts-ignore
       client.notify(1)
       client.notify('errrororor')
       // @ts-ignore

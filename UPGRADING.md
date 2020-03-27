@@ -228,7 +228,7 @@ It remains possible to supply initial metadata in configuration:
 ```diff
 - bugsnag({
 + Bugsnag.start({
-+   metaData: {
+-   metaData: {
 +   metadata: {
       section: { key: value }
     }

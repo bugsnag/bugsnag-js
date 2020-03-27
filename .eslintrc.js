@@ -68,7 +68,7 @@ module.exports = {
     // Linting for tests
     {
       files: [
-        '**/*.test.ts'
+        '**/*.test.ts?(x)'
       ],
       env: {
         jest: true,
