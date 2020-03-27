@@ -132,8 +132,8 @@ class Client {
     }
 
     // update and elevate some options
-    this._metadata = config.metadata
-    this._user = config.user
+    this._metadata = assign({}, config.metadata)
+    this._user = assign({}, config.user)
     this._context = config.context
     if (config.logger) this._logger = config.logger
 
