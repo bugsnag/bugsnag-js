@@ -75,7 +75,7 @@ export interface SessionPayload {
 export type NotifiableError = Error
 | { errorClass: string, errorMessage: string }
 | { name: string, message: string }
-| any;
+| string
 
 export type BreadcrumbType = 'error' | 'log' | 'manual' | 'navigation' | 'process' | 'request' | 'state' | 'user';
 
