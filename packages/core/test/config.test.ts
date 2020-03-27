@@ -17,6 +17,17 @@ describe('@bugsnag/core/config', () => {
     })
   })
 
+  describe('user', () => {
+    it('should only allow id, name and email', () => {
+      const userValidator = config.schema.user.validate
+      expect(userValidator(null)).toBe(true)
+      expect(userValidator({ id: '123', email: 'bug@sn.ag', name: 'Bugsnag' })).toBe(true)
+      expect(userValidator({ id: '123', email: 'bug@sn.ag', name: 'Bugsnag', extra: 'aaa' })).toBe(false)
+      expect(userValidator({ id: '123' })).toBe(true)
+      expect(userValidator('123')).toBe(false)
+    })
+  })
+
   describe('enabledBreadcrumbTypes', () => {
     it('fails when a supplied value is not a valid breadcrumb type', () => {
       const enabledBreadcrumbTypesValidator = config.schema.enabledBreadcrumbTypes.validate
