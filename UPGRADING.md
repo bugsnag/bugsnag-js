@@ -5,6 +5,8 @@ Upgrading
 
 __This version contains many breaking changes__. It is part of an effort to unify our notifier libraries across platforms, making the user interface more consistent, and implementations better on multi-layered environments where multiple Bugsnag libraries need to work together (such as React Native).
 
+__As a result of upgrading, your project may see new error groups for existing errors.__ This is because JavaScript errors are grouped by comparing the surrounding code.
+
 ### New static interface
 
 In most applications, the desire is to create a single Bugsnag client – it's rare that you'd want to instantiate multiple clients. We've made static initialization the primary interface, so that the user experience is optimized around the main use case – creating a single client:
@@ -276,7 +278,19 @@ Here are some examples:
 ```diff
   // changing severity
 - bugsnagClient.notify(err, { severity: 'info' })
-+ Bugsnag.notify(err, event => { severity: 'info' })
++ Bugsnag.notify(err, event => { event.severity = 'info' })
+
+  // adding metadata
+- bugsnagClient.notify(err, {
+-   metaData: {
+-     component: { instanceId: component.instanceId }
+-   }
+- })
++ Bugsnag.notify(err, event => {
++   event.addMetadata('component, {
++     instanceId: component.instanceId
++   }
++ })
 
   // preventing send
 - bugsnagClient.notify(err, report => {
