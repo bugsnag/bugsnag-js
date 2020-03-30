@@ -21,6 +21,11 @@ module.exports = {
         testsForPackage('react-native'),
         testsForPackage('plugin-react-native-app-state-breadcrumbs'),
         testsForPackage('plugin-react-native-unhandled-rejection')
+      ],
+      setupFiles: [
+        require.resolve('react-native/Libraries/Core/setUpGlobals.js'),
+        require.resolve('react-native/Libraries/Core/setUpXHR.js'),
+        '<rootDir>/packages/react-native/src/test/setup.js'
       ]
     },
     {
