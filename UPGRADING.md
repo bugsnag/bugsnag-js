@@ -235,6 +235,15 @@ It remains possible to supply initial metadata in configuration:
   })
 ```
 
+All metadata is now required to have a section. If you were previously supplying metadata without a section name (this would display on your dashboard under the "Custom" tab), we have enabled passing `null` as the section name for continuity:
+
+```js
+- bugsnagClient.metaData.assetUrl = config.assetUrl
++ Bugsnag.addMetadata(null, 'assetUrl', config.assetUrl)
+```
+
+You should only use this method if you have a custom filter based on some top-level metadata, otherwise you should supply a section name for your metadata.
+
 #### Context
 
 On the client, context is now managed via `get/setContext()`:
