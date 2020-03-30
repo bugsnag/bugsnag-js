@@ -283,7 +283,9 @@ Here are some examples:
   // adding metadata
 - bugsnagClient.notify(err, {
 -   metaData: {
--     component: { instanceId: component.instanceId }
+-     component: { 
+-       instanceId: component.instanceId
+-     }
 -   }
 - })
 + Bugsnag.notify(err, event => {
