@@ -1,7 +1,7 @@
 const assign = require('./es-utils/assign')
 
 const add = (state, section, keyOrObj, maybeVal) => {
-  if (!section) return
+  if (!section && section !== null) return
   let updates
 
   // addMetadata("section", null) -> clears section
@@ -14,11 +14,14 @@ const add = (state, section, keyOrObj, maybeVal) => {
   // exit if we don't have an updates object at this point
   if (!updates) return
 
-  // ensure a section with this name exists
-  if (!state[section]) state[section] = {}
-
-  // merge the updates with the existing section
-  state[section] = assign({}, state[section], updates)
+  if (section !== null) {
+    // ensure a section with this name exists
+    if (!state[section] || typeof state[section] !== 'object') state[section] = {}
+    // merge the updates with the existing section
+    state[section] = assign({}, state[section], updates)
+  } else {
+    assign(state, updates)
+  }
 }
 
 const get = (state, section, key) => {

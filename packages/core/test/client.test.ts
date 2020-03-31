@@ -639,6 +639,18 @@ describe('@bugsnag/core/client', () => {
       expect(client.getMetadata('a', 'b')).toBe(undefined)
       client.clearMetadata('a')
       expect(client.getMetadata('a')).toBe(undefined)
+
+      // check that top-level metadata can be added with section=null
+      client.addMetadata(null, 'top', 'val')
+      expect(client._metadata).toEqual({ top: 'val' })
+      client.addMetadata('top', 'key', 'val')
+      expect(client._metadata).toEqual({ top: { key: 'val' } })
+
+      client._metadata = {}
+
+      client.addMetadata('replace', 'key', 'origval')
+      client.addMetadata(null, 'replace', { diffkey: 'replaceval' })
+      expect(client._metadata).toEqual({ replace: { diffkey: 'replaceval' } })
     })
 
     it('can be set in config', () => {
