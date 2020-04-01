@@ -1,6 +1,6 @@
 steps:
   - label: ':docker: Prepare package.json'
-    timeout_in_minutes: 1
+    timeout_in_minutes: 3
     plugins:
       - docker-compose#v3.1.0:
           run: minimal-packager
