@@ -44,6 +44,12 @@
 - Remove `client.app` property [#677](https://github.com/bugsnag/bugsnag-js/pull/677)
 - Move breadcrumbs to a private property on `client._breadcrumbs` [#681](https://github.com/bugsnag/bugsnag-js/pull/681)
 
+## 6.6.0 (2020-04-02)
+
+### Changed
+
+- (expo): Add support for Expo SDK v37 [#781](https://github.com/bugsnag/bugsnag-js/pull/781)
+
 ## 6.5.2 (2020-02-05)
 
 ### Changed
