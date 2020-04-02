@@ -1,5 +1,11 @@
 # Changelog
 
+## 6.6.0 (2020-04-02)
+
+### Changed
+
+- (expo): Add support for Expo SDK v37 [#781](https://github.com/bugsnag/bugsnag-js/pull/781)
+
 ## 6.5.2 (2020-02-05)
 
 ### Changed
@@ -8,7 +14,7 @@
 
 ### Fixed
 
-- (delivery-x-domain-request): Correct `this`->`client` reference when attempting to log an error [#722](https://github.com/bugsnag/bugsnag-js/pull/722) 
+- (delivery-x-domain-request): Correct `this`->`client` reference when attempting to log an error [#722](https://github.com/bugsnag/bugsnag-js/pull/722)
 
 ## 6.5.1 (2020-01-08)
 

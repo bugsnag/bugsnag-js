@@ -18,6 +18,7 @@ services:
       target: browser-maze-runner
       args:
         - BUILDKITE_BUILD_NUMBER
+    command: --fail-fast --retry 2
     environment:
       VERBOSE:
       DEBUG:
@@ -37,6 +38,7 @@ services:
       context: .
       dockerfile: dockerfiles/Dockerfile.node
       target: node-maze-runner
+    command: --fail-fast --retry 2
     environment:
       NODE_VERSION: "${NODE_VERSION:-10}"
       COMPOSE_PROJECT_NAME: "node${NODE_VERSION:-10}"
@@ -56,6 +58,7 @@ services:
       dockerfile: dockerfiles/Dockerfile.expo
       args:
         - BUILDKITE_BUILD_NUMBER
+    command: --fail-fast --retry 2
     environment:
       VERBOSE:
       DEBUG:

@@ -76,7 +76,7 @@ steps:
     artifact_paths: build/output.ipa
     commands:
       - test/expo/scripts/build-ios.sh
-  
+
   - wait
 
   - label: 'expo Android 9'
@@ -90,9 +90,9 @@ steps:
     env:
       DEVICE_TYPE: "ANDROID_9"
       APP_LOCATION: "build/output.apk"
-    concurrency: 5
+    concurrency: 10
     concurrency_group: 'browserstack-app'
-  
+
   - label: 'expo iOS 12'
     timeout_in_minutes: 50
     plugins:
@@ -104,7 +104,7 @@ steps:
     env:
       DEVICE_TYPE: "IOS_12"
       APP_LOCATION: "build/output.ipa"
-    concurrency: 5
+    concurrency: 10
     concurrency_group: 'browserstack-app'
 
   - block: "Trigger full test suite"
@@ -120,7 +120,7 @@ steps:
     env:
       DEVICE_TYPE: "ANDROID_8"
       APP_LOCATION: "build/output.apk"
-    concurrency: 5
+    concurrency: 10
     concurrency_group: 'browserstack-app'
 
   - label: 'expo Android 7'
@@ -134,7 +134,7 @@ steps:
     env:
       DEVICE_TYPE: "ANDROID_7"
       APP_LOCATION: "build/output.apk"
-    concurrency: 5
+    concurrency: 10
     concurrency_group: 'browserstack-app'
 
   - label: 'expo Android 6'
@@ -148,7 +148,7 @@ steps:
     env:
       DEVICE_TYPE: "ANDROID_6"
       APP_LOCATION: "build/output.apk"
-    concurrency: 5
+    concurrency: 10
     concurrency_group: 'browserstack-app'
 
   - label: 'expo Android 5'
@@ -162,7 +162,7 @@ steps:
     env:
       DEVICE_TYPE: "ANDROID_5"
       APP_LOCATION: "build/output.apk"
-    concurrency: 5
+    concurrency: 10
     concurrency_group: 'browserstack-app'
 
   - label: 'expo iOS 10'
@@ -176,7 +176,7 @@ steps:
     env:
       DEVICE_TYPE: "IOS_10"
       APP_LOCATION: "build/output.ipa"
-    concurrency: 5
+    concurrency: 10
     concurrency_group: 'browserstack-app'
 
   - label: 'expo iOS 11'
@@ -190,5 +190,5 @@ steps:
     env:
       DEVICE_TYPE: "IOS_11"
       APP_LOCATION: "build/output.ipa"
-    concurrency: 5
+    concurrency: 10
     concurrency_group: 'browserstack-app'
