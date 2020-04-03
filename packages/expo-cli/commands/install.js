@@ -79,8 +79,7 @@ const selectVersion = async (dir) => {
     const isPre37 = (expoVersion && !semver.gte(semver.minVersion(expoVersion), '37.0.0'))
 
     if (isPre33) {
-      message = 'It looks like you’re using a version of Expo SDK <33. The last version of Bugsnag that supported your version of Expo is v6.3.0'
-      defaultVersion = '6.3.0'
+      throw new Error('Expo SDK <33 is no longer supported')
     } else if (isPre36) {
       message = 'It looks like you’re using a version of Expo SDK <36. The last version of Bugsnag that supported your version of Expo is v6.4.4'
       defaultVersion = '6.4.4'
