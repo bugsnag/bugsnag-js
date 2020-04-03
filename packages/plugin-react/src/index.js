@@ -15,6 +15,11 @@ module.exports = class BugsnagReactPlugin {
           error: null,
           info: null
         }
+        this.handleClearError = this.handleClearError.bind(this)
+      }
+
+      handleClearError () {
+        this.setState({ error: null, info: null })
       }
 
       componentDidCatch (error, info) {
@@ -36,7 +41,7 @@ module.exports = class BugsnagReactPlugin {
         const { error } = this.state
         if (error) {
           const { FallbackComponent } = this.props
-          if (FallbackComponent) return React.createElement(FallbackComponent, this.state)
+          if (FallbackComponent) return React.createElement(FallbackComponent, { ...this.state, clearError: this.handleClearError })
           return null
         }
         return this.props.children
