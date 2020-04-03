@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/expo",
-  "version": "6.6.0",
+  "version": "6.6.1",
   "main": "src/notifier.js",
   "types": "dist/types/bugsnag.d.ts",
   "description": "Bugsnag error reporter for Expo applications",
