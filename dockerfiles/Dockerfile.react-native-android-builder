@@ -28,7 +28,12 @@ RUN cp -r /app/features/fixtures/app/ /app/features/fixtures/${REACT_NATIVE_VERS
 
 WORKDIR /app/features/fixtures/${REACT_NATIVE_VERSION}
 
-RUN npm install
+RUN rm -f ~/.npmrc
+RUN echo "_auth=$REG_BASIC_CREDENTIAL" >> ~/.npmrc
+RUN echo "email=$REG_NPM_EMAIL" >> ~/.npmrc
+RUN echo "always-auth=true" >> ~/.npmrc
+
+RUN npm install @bugsnag/react-native@$(git rev-parse --short HEAD) --registry $REGISTRY_URL
 
 RUN ./node_modules/.bin/react-native link
 

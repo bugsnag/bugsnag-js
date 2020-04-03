@@ -1,16 +1,9 @@
 steps:
-  - label: ':docker: Build React-native android base image'
+  - label: ':docker: Build and publish JS packages'
     plugins:
       - docker-compose#v3.1.0:
-          build: react-native-android-base
+          build: publisher
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
-          cache-from:
-            - react-native-andorid-base:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:rn-android-base-${BRANCH_NAME}
-            - react-native-android-base:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:rn-android-base-latest
-      - docker-compose#v3.1.0:
-          push:
-            - react-native-android-base:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:rn-android-base-${BRANCH_NAME}
-            - react-native-android-base:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:rn-android-base-latest
 
   - wait
 

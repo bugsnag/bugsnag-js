@@ -6,6 +6,12 @@ services:
       dockerfile: dockerfiles/Dockerfile.package
     volumes:
       - .:/app/build
+
+  publisher:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile.publisher
+
   ci:
     build:
       context: .
