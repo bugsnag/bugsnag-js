@@ -1,7 +1,7 @@
 # CI test image for unit/lint/type tests
 FROM node:lts-alpine
 
-RUN apk add --update bash
+RUN apk add --update bash git
 
 WORKDIR /app
 
@@ -13,4 +13,4 @@ RUN rm -f ~/.npmrc
 RUN echo "_auth=$REG_BASIC_CREDENTIAL" >> ~/.npmrc
 RUN echo "email=$REG_NPM_EMAIL" >> ~/.npmrc
 RUN echo "always-auth=true" >> ~/.npmrc
-RUN lerna publish --canary --force-push --registry $PUBLISH_URL --dist-tag $(git rev-parse --short HEAD) prerelease
+RUN ./node_modules/.bin/lerna publish --canary --force-push --registry $PUBLISH_URL --dist-tag $(git rev-parse --short HEAD) prerelease

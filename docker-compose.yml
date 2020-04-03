@@ -11,6 +11,10 @@ services:
     build:
       context: .
       dockerfile: dockerfiles/Dockerfile.publisher
+      args:
+        - REG_BASIC_CREDENTIAL
+        - REG_NPM_EMAIL
+        - PUBLISH_URL
 
   ci:
     build:
