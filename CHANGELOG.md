@@ -1,5 +1,14 @@
 # Changelog
 
+## 6.6.1 (2020-04-03)
+
+### Fix
+
+- (expo): Ensure Expo packages that depend on `NetInfo` have their versions locked [#796](https://github.com/bugsnag/bugsnag-js/pull/796)
+- (expo-cli): Update Expo versions installed by the cli [#796](https://github.com/bugsnag/bugsnag-js/pull/796)
+
+Note, alongside this release, additional patches were made to previous minor versions of `@bugsnag/expo`: `6.5.3` and `6.4.4`. This is to ensure the correct version of `NetInfo` is depended on for SDK versions 36 and 34 respectively.
+
 ## 6.6.0 (2020-04-02)
 
 ### Changed
