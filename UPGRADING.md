@@ -237,6 +237,13 @@ It remains possible to supply initial metadata in configuration:
   })
 ```
 
+Previously, it was possible to add "top-level" metadata, i.e. data that you did not provide a specific `section` name for. In the dashboard, this would display under a tab with the heading "Custom". Since a section name is now required, for continuity both visually and for any custom filters you may have set up based on such data, you should set the section name to `'custom'`:
+
+```diff
+- bugsnagClient.metaData = { processId: 'aa874cbd', role: 'image-resizer' }
++ Bugsnag.addMetadata('custom', { processId: 'aa874cbd', role: 'image-resizer' })
+```
+
 #### Context
 
 On the client, context is now managed via `get/setContext()`:
