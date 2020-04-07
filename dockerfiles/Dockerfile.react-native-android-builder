@@ -38,8 +38,9 @@ RUN echo "email=$REG_NPM_EMAIL" >> ~/.npmrc
 RUN echo "always-auth=true" >> ~/.npmrc
 
 ARG REGISTRY_URL
-RUN npm install @bugsnag/react-native@$(git rev-parse --short HEAD) --registry $REGISTRY_URL
+
 RUN npm install --registry $REGISTRY_URL
+RUN npm install @bugsnag/react-native@$(git rev-parse --short HEAD) --registry $REGISTRY_URL
 
 RUN ./node_modules/.bin/react-native link
 
