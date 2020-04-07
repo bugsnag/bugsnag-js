@@ -1,7 +1,7 @@
 jest.mock('react-native')
 
-// eslint-disable-next-line
-import rnPromise from '@bugsnag/plugin-react-native-unhandled-rejection/node_modules/promise/setimmediate'
+// @ts-ignore
+import rnPromise from '@bugsnag/plugin-react-native-unhandled-rejection/node_modules/promise/setimmediate' // eslint-disable-line
 // eslint-disable-next-line
 import Bugsnag from '../../..'
 // @ts-ignore
@@ -58,6 +58,7 @@ describe('@bugsnag/react-native: handled and unhandled errors', () => {
     // we can't actually reject an error because that will fail the test, but we
     // can send an mocked promise rejection event
     try {
+      // @ts-ignore
       'sdf'.sdflkj()
     } catch (e) {
       console.log(e)
