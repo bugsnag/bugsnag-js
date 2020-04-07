@@ -1,5 +1,6 @@
 node_modules
 **/node_modules
+!packages/plugin-node-surrounding-code/test/fixtures/node_modules/mock-module/index.js
 lerna-debug.log
 npm-debug.log
 **/*.tgz
