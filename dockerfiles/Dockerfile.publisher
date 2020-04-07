@@ -18,4 +18,4 @@ RUN echo "email=$REG_NPM_EMAIL" >> ~/.npmrc
 RUN echo "always-auth=true" >> ~/.npmrc
 
 ARG PUBLISH_URL
-RUN ./node_modules/.bin/lerna publish --canary --force-publish --registry $PUBLISH_URL --dist-tag $(git rev-parse --short HEAD) prerelease
+RUN ./node_modules/.bin/lerna publish --canary --yes --force-publish --registry $PUBLISH_URL --dist-tag $(git rev-parse --short HEAD) prerelease
