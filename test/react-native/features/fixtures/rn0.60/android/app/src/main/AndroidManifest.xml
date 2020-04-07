@@ -24,8 +24,10 @@
       <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
       <meta-data android:name="com.bugsnag.android.API_KEY"
           android:value="ABCDEFGHIJKLMNOPQRSTUVWXYZ123456"/>
-      <meta-data android:name="com.bugsnag.android.DETECT_NDK_CRASHES"
-          android:value="true"/>
+      <meta-data android:name="com.bugsnag.android.ENDPOINT_NOTIFY"
+             android:value="http://bs-local.com:9339"/>
+      <meta-data android:name="com.bugsnag.android.ENDPOINT_SESSIONS"
+             android:value="http://bs-local.com:9339"/>
     </application>
 
 </manifest>

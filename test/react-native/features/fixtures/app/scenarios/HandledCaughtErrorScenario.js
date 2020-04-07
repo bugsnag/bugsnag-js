@@ -1,11 +1,12 @@
 import Scenario from "./Scenario";
+import Bugsnag from '@bugsnag/react-native';
 
 export default class HandledCaughtErrorScenario extends Scenario {
-    run(bugsnagClient) {
+    run() {
         try {
             throw new Error("HandledCaughtError")
         } catch (e) {
-            bugsnagClient.notify(e)
+            Bugsnag.notify(e)
         }
     }
 }

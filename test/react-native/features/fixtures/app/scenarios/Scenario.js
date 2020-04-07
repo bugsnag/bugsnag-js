@@ -1,5 +1,5 @@
 export default class Scenario {
-    constructor(bugsnagConfig, extraData) {}
+    constructor(extraData) {}
 
-    run(bugsnagClient) {}
+    run() {}
 }

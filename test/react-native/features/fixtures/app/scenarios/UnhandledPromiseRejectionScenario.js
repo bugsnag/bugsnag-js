@@ -1,7 +1,7 @@
 import Scenario from "./Scenario";
 
 export default class UnhandledPromiseRejectionScenario extends Scenario {
-    run(bugsnagClient) {
+    run() {
         Promise.reject(new Error("UnhandledPromiseRejection"))
     }
 }
