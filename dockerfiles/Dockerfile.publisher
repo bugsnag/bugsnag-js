@@ -3,12 +3,6 @@ FROM node:lts-alpine
 
 RUN apk add --update bash git
 
-WORKDIR /app
-
-COPY package*.json ./
-RUN npm install
-
-COPY . .
 RUN rm -f ~/.npmrc
 
 ARG REG_BASIC_CREDENTIAL
@@ -16,6 +10,18 @@ ARG REG_NPM_EMAIL
 RUN echo "_auth=$REG_BASIC_CREDENTIAL" >> ~/.npmrc
 RUN echo "email=$REG_NPM_EMAIL" >> ~/.npmrc
 RUN echo "always-auth=true" >> ~/.npmrc
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm install
+
+COPY . .
+
+RUN npm run bootstrap
+RUN npm run build
+
+RUN git checkout .
 
 ARG PUBLISH_URL
 RUN ./node_modules/.bin/lerna publish --canary --yes --force-publish --registry $PUBLISH_URL --dist-tag $(git rev-parse --short HEAD) prerelease
