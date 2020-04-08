@@ -77,6 +77,7 @@
     "@bugsnag/plugin-react-native-event-sync": "7.0.0-rc.4",
     "@bugsnag/plugin-react-native-global-error-handler": "7.0.0-rc.4",
     "@bugsnag/plugin-react-native-session": "7.0.0-rc.4",
-    "@bugsnag/plugin-react-native-unhandled-rejection": "7.0.0-rc.4"
+    "@bugsnag/plugin-react-native-unhandled-rejection": "7.0.0-rc.4",
+    "iserror": "^0.0.2"
   }
 }
