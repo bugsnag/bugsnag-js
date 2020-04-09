@@ -38,8 +38,8 @@ declare class Event {
   public setUser(id?: string, email?: string, name?: string): void;
 
   // metadata
-  public addMetadata(section: string | null, values: { [key: string]: any }): void;
-  public addMetadata(section: string | null, key: string, value: any): void;
+  public addMetadata(section: string, values: { [key: string]: any }): void;
+  public addMetadata(section: string, key: string, value: any): void;
   public getMetadata(section: string, key?: string): any;
   public clearMetadata(section: string, key?: string): void;
 }
