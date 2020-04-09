@@ -7,6 +7,7 @@ rm -rf $BUILDKITE_BUILD_CHECKOUT_PATH/build/*
 cd test/expo/features/fixtures/test-app
 npm i turtle-cli@0.14 bunyan
 perl -0777 -i.original -pe "s/entitlements\\['aps-environment'\\] =[^;]+;//gs" node_modules/\@expo/xdl/build/detach/IosNSBundle.js
+perl -0777 -i.original -pe "s/entitlements\\['aps-environment'\\] =[^;]+;//gs" node_modules/turtle-cli/node_modules/\@expo/xdl/build/detach/IosNSBundle.js
 mkdir -p ~/expo-bundle-files
 cp node_modules/\@expo/xdl/build/detach/IosNSBundle.js ~/expo-bundle-files/$EXPO_RELEASE_CHANNEL.js
 node_modules/.bin/turtle build:ios \
