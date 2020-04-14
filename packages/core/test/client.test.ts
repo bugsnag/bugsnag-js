@@ -487,6 +487,21 @@ describe('@bugsnag/core/client', () => {
       expect(client._breadcrumbs.length).toBe(1)
       expect(client._breadcrumbs[0].type).toBe('manual')
     })
+
+    it('only leaves an error breadcrumb if enabledBreadcrumbTypes contains "error"', (done) => {
+      const client = new Client({
+        apiKey: 'API_KEY_YEAH',
+        enabledBreadcrumbTypes: []
+      })
+      client._setDelivery(client => ({
+        sendSession: () => {},
+        sendEvent: (payload, cb) => cb(null)
+      }))
+      client.notify(new Error('oh no'), () => {}, () => {
+        expect(client._breadcrumbs.length).toBe(0)
+        done()
+      })
+    })
   })
 
   describe('startSession()', () => {

@@ -76,13 +76,16 @@ const selectVersion = async (dir) => {
     // help select compatible versions of @bugsnag/expo for older expo releases
     const isPre33 = (expoVersion && !semver.gte(semver.minVersion(expoVersion), '33.0.0'))
     const isPre36 = (expoVersion && !semver.gte(semver.minVersion(expoVersion), '36.0.0'))
+    const isPre37 = (expoVersion && !semver.gte(semver.minVersion(expoVersion), '37.0.0'))
 
     if (isPre33) {
-      message = 'It looks like you’re using a version of Expo SDK <33. The last version of Bugsnag that supported your version of Expo is v6.3.0'
-      defaultVersion = '6.3.0'
+      throw new Error('Expo SDK <33 is no longer supported')
     } else if (isPre36) {
-      message = 'It looks like you’re using a version of Expo SDK <36. The last version of Bugsnag that supported your version of Expo is v6.4.1'
-      defaultVersion = '6.4.1'
+      message = 'It looks like you’re using a version of Expo SDK <36. The last version of Bugsnag that supported your version of Expo is v6.4.4'
+      defaultVersion = '6.4.4'
+    } else if (isPre37) {
+      message = 'It looks like you’re using a version of Expo SDK <37. The last version of Bugsnag that supported your version of Expo is v6.5.3'
+      defaultVersion = '6.5.3'
     }
 
     const { version } = await prompts({
