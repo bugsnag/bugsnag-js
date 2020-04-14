@@ -11,7 +11,7 @@
   "dependencies": {
     "@bugsnag/js": "^7.0.0-rc.2",
     "@bugsnag/plugin-vue": "^7.0.0-rc.2",
-    "serve": "^10.0.2",
+    "serve": "^11.3.0",
     "vue": "^2.5.17"
   },
   "devDependencies": {

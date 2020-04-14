@@ -8,4 +8,4 @@ declare class BugsnagPluginVue {
   constructor(Vue?: Vue)
 }
 
-export default bugsnagPluginVue
+export default BugsnagPluginVue
