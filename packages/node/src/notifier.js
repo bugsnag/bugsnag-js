@@ -54,6 +54,8 @@ const Bugsnag = {
       bugsnag._logger.warn('Breadcrumbs are not supported in Node.js yet')
     }
 
+    bugsnag._config.enabledBreadcrumbTypes = []
+
     return bugsnag
   },
   start: (opts) => {

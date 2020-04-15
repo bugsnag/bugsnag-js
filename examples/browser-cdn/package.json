@@ -5,6 +5,6 @@
     "start": "serve . -p 65531 -n"
   },
   "dependencies": {
-    "serve": "^10.0.2"
+    "serve": "^11.3.0"
   }
 }
