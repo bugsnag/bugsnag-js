@@ -301,12 +301,14 @@ class Client {
         return cb(null, event)
       }
 
-      // only leave a crumb for the error if actually got sent
-      Client.prototype.leaveBreadcrumb.call(this, event.errors[0].errorClass, {
-        errorClass: event.errors[0].errorClass,
-        errorMessage: event.errors[0].errorMessage,
-        severity: event.severity
-      }, 'error')
+      if (includes(this._config.enabledBreadcrumbTypes, 'error')) {
+        // only leave a crumb for the error if actually got sent
+        Client.prototype.leaveBreadcrumb.call(this, event.errors[0].errorClass, {
+          errorClass: event.errors[0].errorClass,
+          errorMessage: event.errors[0].errorMessage,
+          severity: event.severity
+        }, 'error')
+      }
 
       if (originalSeverity !== event.severity) {
         event._handledState.severityReason = { type: 'userCallbackSetSeverity' }
