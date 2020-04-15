@@ -1,6 +1,6 @@
 # Changelog
 
-## TBD
+## 7.0.0 (2020-04-14)
 
 ### Added
 - Add `onBreadcrumb` and `onSession` callbacks. [#665](https://github.com/bugsnag/bugsnag-js/pull/665)
