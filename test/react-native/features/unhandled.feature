@@ -12,3 +12,10 @@ Scenario: Catching an Unhandled promise rejection
   Then I wait to receive a request
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "UnhandledPromiseRejection"
+
+Scenario: Catching an Unhandled Native error
+  When I run "UnhandledNativeErrorScenario" and relaunch the app
+  And I configure Bugsnag for "UnhandledNativeErrorScenario"
+  Then I wait to receive a request
+  And the exception "errorClass" equals "Error"
+  And the exception "message" equals "UnhandledError"

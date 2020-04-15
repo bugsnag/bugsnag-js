@@ -1,5 +1,5 @@
 export default class Scenario {
-    constructor(extraData) {}
+    constructor(configuration, extraData) {}
 
     run() {}
 }

@@ -3,7 +3,7 @@ package com.reactnative;
 import android.app.Application;
 import android.util.Log;
 
-import com.bugsnag.android.Bugsnag;
+import com.reactnative.BugsnagModulePackage;
 
 import com.facebook.react.PackageList;
 import com.facebook.hermes.reactexecutor.HermesExecutorFactory;
@@ -29,6 +29,7 @@ public class MainApplication extends Application implements ReactApplication {
       List<ReactPackage> packages = new PackageList(this).getPackages();
       // Packages that cannot be autolinked yet can be added manually here, for example:
       // packages.add(new MyReactNativePackage());
+      packages.add(new BugsnagModulePackage());
       return packages;
     }
 
@@ -46,7 +47,6 @@ public class MainApplication extends Application implements ReactApplication {
   @Override
   public void onCreate() {
     super.onCreate();
-    Bugsnag.start(this);
     SoLoader.init(this, /* native exopackage */ false);
   }
 }

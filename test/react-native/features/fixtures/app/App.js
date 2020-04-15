@@ -6,7 +6,8 @@ import {
   Text,
   TextInput,
   Button,
-  StyleSheet
+  StyleSheet,
+  NativeModules
 } from 'react-native';
 
 export default class App extends Component {
@@ -39,15 +40,32 @@ export default class App extends Component {
     console.log("  with MetaData: " + this.state.scenarioMetaData)
     let scenarioName = this.state.currentScenario
     let scenarioMetaData = this.state.scenarioMetaData
-    let scenario = new Scenarios[scenarioName](scenarioMetaData)
-    Bugsnag.start()
-    scenario.run()
+    let configuration = {
+      apiKey: "12312312312312312312312312312312",
+      endpoint: "http://192.168.1.68:62000",
+      autoTrackSessions: false
+    }
+    let scenario = new Scenarios[scenarioName](configuration, scenarioMetaData)
+    NativeModules.BugsnagTestInterface.startBugsnag(configuration, () => {
+      Bugsnag.start()
+      scenario.run()
+    })
   }
 
-  startBugsnag = () => {
+  startScenario = () => {
     console.log("Starting Bugsnag for scenario: " + this.state.currentScenario)
     console.log("  with MetaData: " + this.state.scenarioMetaData)
-    Bugsnag.start()
+    let scenarioName = this.state.currentScenario
+    let scenarioMetaData = this.state.scenarioMetaData
+    let configuration = {
+      apiKey: "12312312312312312312312312312312",
+      endpoint: "http://192.168.1.68:62000",
+      autoTrackSessions: false
+    }
+    let scenario = new Scenarios[scenarioName](configuration, scenarioMetaData)
+    NativeModules.BugsnagTestInterface.startBugsnag(configuration, () => {
+      Bugsnag.start()
+    })
   }
 
   render () {

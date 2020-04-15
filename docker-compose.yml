@@ -125,6 +125,7 @@ services:
         - REG_NPM_EMAIL
         - REGISTRY_URL
         - REACT_NATIVE_VERSION
+        - ANDROID_PACKAGE_PATH
     environment:
       VERBOSE:
       DEBUG:
