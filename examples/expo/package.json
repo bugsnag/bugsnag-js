@@ -11,7 +11,7 @@
     "preset": "jest-expo"
   },
   "dependencies": {
-    "@bugsnag/expo": "7.0.0-rc.6",
+    "@bugsnag/expo": "~7.0.0",
     "@expo/vector-icons": "~10.0.6",
     "@react-native-community/masked-view": "0.1.6",
     "@react-navigation/bottom-tabs": "^5.0.0",
