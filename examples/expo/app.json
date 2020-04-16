@@ -3,7 +3,6 @@
     "name": "Bugsnag Expo Example",
     "slug": "bugsnag-expo-example",
     "privacy": "unlisted",
-    "sdkVersion": "34.0.0",
     "platforms": [
       "ios",
       "android"
@@ -25,6 +24,7 @@
     "ios": {
       "supportsTablet": true
     },
+    "scheme": "bugsnagexpo",
     "extra": {
       "bugsnag": {
         "apiKey": "YOUR_API_KEY"
