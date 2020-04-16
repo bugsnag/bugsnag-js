@@ -53,7 +53,10 @@ allprojects {
     repositories {
         maven {
             // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
+            // once released, it should look in the node_modules at the root of the project
             url "$rootDir/../node_modules/react-native/android"
+            // in development, it needs to look at the top-level node_modules of the monorepo
+            url "$rootDir/../../../node_modules/react-native/android"
         }
         mavenLocal()
         jcenter()
