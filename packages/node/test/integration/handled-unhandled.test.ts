@@ -1,16 +1,35 @@
-// this sets up the mock from ../../__mocks__/https.js which prevents requests
-// from being sent to bugsnag, but also captures them so we can make assertions
-// about them
-jest.mock('https')
-
-import Bugsnag from '../..' // eslint-disable-line
-import https from 'https' // eslint-disable-line
+import Bugsnag from '../..'
+import https from 'https'
 
 // extend the https module type with the utilities added in mocks
 declare module 'https' {
-  const _requests: Array<{ opts: any, body: any }>
+  let _requests: Array<{ opts: any, body: any }>
   function _clear(): void
 }
+
+jest.mock('https', () => {
+  const { Readable, Writable } = require('stream') // eslint-disable-line
+
+  const requests: any[] = []
+  const httpsMock = jest.genMockFromModule('https') as (typeof https)
+
+  httpsMock.request = (opts: any) => {
+    const req = new Writable({
+      write: (body: any) => {
+        requests.push({ opts, body: JSON.parse(body) })
+      }
+    })
+    process.nextTick(() => {
+      req.emit('response', new Readable({ read: function () { this.push(null) } }))
+    })
+    return req
+  }
+
+  const ret = httpsMock
+  ret._requests = requests
+  ret._clear = () => { while (requests.length) requests.pop() }
+  return ret
+})
 
 // we can only start bugsnag once per file, because it installs global handlers
 // and doesn't have a way to uninstall itself
