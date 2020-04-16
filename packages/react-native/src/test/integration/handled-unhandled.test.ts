@@ -1,11 +1,41 @@
-jest.mock('react-native')
+// @ts-ignore
+import { NativeModules } from 'react-native'
+
+jest.mock('react-native', () => {
+  const events: any[] = []
+  return {
+    NativeModules: {
+      BugsnagReactNative: {
+        configure: () => ({
+          apiKey: 'abab1212abab1212abab1212abab1212',
+          enabledBreadcrumbTypes: []
+        }),
+        leaveBreadcrumb: () => {},
+        dispatch: async (event: any) => {
+          events.push(event)
+        },
+        getPayloadInfo: async () => ({
+          threads: [],
+          breadcrumbs: [],
+          app: {},
+          device: {}
+        }),
+        _events: events,
+        _clear: () => { while (events.length) events.pop() }
+      }
+    },
+    Platform: {
+      OS: 'android'
+    },
+    NativeEventEmitter: function () {},
+    DeviceEventEmitter: { addListener: () => {} }
+  }
+})
 
 // @ts-ignore
 import rnPromise from '@bugsnag/plugin-react-native-unhandled-rejection/node_modules/promise/setimmediate' // eslint-disable-line
 // eslint-disable-next-line
 import Bugsnag from '../../..'
-// @ts-ignore
-import { NativeModules } from 'react-native' // eslint-disable-line
 
 declare global {
   namespace NodeJS { // eslint-disable-line
