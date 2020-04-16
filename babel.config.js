@@ -10,7 +10,7 @@ module.exports = api => {
     plugins.push(['@babel/plugin-proposal-class-properties', { loose: true }])
     plugins.push(['@babel/plugin-transform-modules-commonjs'])
     overrides.push({
-      test: './node_modules/react-native/**/*',
+      test: 'node_modules/react-native/**/*',
       presets: ['module:metro-react-native-babel-preset']
     })
     overrides.push({
