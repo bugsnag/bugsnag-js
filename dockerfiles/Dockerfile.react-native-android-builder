@@ -28,7 +28,7 @@ RUN cp -r /app/features/fixtures/app/ /app/features/fixtures/${REACT_NATIVE_VERS
 
 ARG ANDROID_PACKAGE_PATH
 RUN find /app/features/fixtures/android-module/ -type f -exec sed -i -e "s/<ANDROID_PACKAGE_PATH>/${ANDROID_PACKAGE_PATH}/g" {} \;
-RUN cp -r /app/features/fixtures/app/ /app/features/fixtures/${REACT_NATIVE_VERSION}/android/app/src/main/java/com/${ANDROID_PACKAGE_PATH}/
+RUN cp -r /app/features/fixtures/android-module/* /app/features/fixtures/${REACT_NATIVE_VERSION}/android/app/src/main/java/com/${ANDROID_PACKAGE_PATH}/
 
 WORKDIR /app/features/fixtures/${REACT_NATIVE_VERSION}
 
