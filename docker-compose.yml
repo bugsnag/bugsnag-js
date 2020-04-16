@@ -15,6 +15,7 @@ services:
         - REG_BASIC_CREDENTIAL
         - REG_NPM_EMAIL
         - PUBLISH_URL
+        - BRANCH_NAME
 
   ci:
     build:
