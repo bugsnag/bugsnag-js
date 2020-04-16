@@ -42,7 +42,7 @@ export default class App extends Component {
     let scenarioMetaData = this.state.scenarioMetaData
     let configuration = {
       apiKey: "12312312312312312312312312312312",
-      endpoint: "http://192.168.1.68:62000",
+      endpoint: "http://bs-local.com:9339",
       autoTrackSessions: false
     }
     let scenario = new Scenarios[scenarioName](configuration, scenarioMetaData)
