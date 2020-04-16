@@ -1,10 +1,41 @@
-import { Client, OnErrorCallback, Config, Breadcrumb, Session, OnSessionCallback, OnBreadcrumbCallback, Plugin } from './types'
+import { Client, OnErrorCallback, Config, Breadcrumb, Session, OnSessionCallback, OnBreadcrumbCallback, Plugin, Device, User } from './types'
+import EventWithInternals from './event'
 
 interface LoggerConfig {
   debug: (msg: any) => void
   info: (msg: any) => void
   warn: (msg: any) => void
   error: (msg: any) => void
+}
+
+interface Notifier {
+  name: string
+  version: string
+  url: string
+}
+
+interface EventDeliveryPayload {
+  apiKey: string
+  notifier: Notifier
+  events: EventWithInternals[]
+}
+
+interface SessionDeliveryPayload {
+  notifier?: Notifier
+  device?: Device
+  app?: Session['app']
+  sessions?: [
+    {
+      id: string
+      startedAt: Date
+      user: User
+    }
+  ]
+}
+
+interface Delivery {
+  sendEvent(payload: EventDeliveryPayload, cb: (err?: Error | null) => void): void
+  sendSession(session: SessionDeliveryPayload, cb: (err?: Error | null) => void): void
 }
 
 /**
@@ -18,19 +49,18 @@ export default class ClientWithInternals extends Client {
   _config: { [key: string]: {} }
   _logger: LoggerConfig
   _breadcrumbs: Breadcrumb[];
-  _setDelivery: (handler: (client: Client) => {
-    sendEvent: (payload: any, cb: (err?: Error | null) => void) => void
-  }) => void
+  _delivery: Delivery
+  _setDelivery: (handler: (client: Client) => Delivery) => void
 
   _metadata: { [key: string]: any }
 
   startSession(): ClientWithInternals
-  resumeSession(): ClientWithInternals;
+  resumeSession(): ClientWithInternals
   _session: Session | null
   _pausedSession: Session | null
 
   _sessionDelegate: {
-    startSession: (client: ClientWithInternals) => any
+    startSession: (client: ClientWithInternals, session: Session) => any
   }
 
   _addOnSessionPayload: (cb: (sessionPayload: Session) => void) => void

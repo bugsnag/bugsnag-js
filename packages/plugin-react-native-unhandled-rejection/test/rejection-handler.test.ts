@@ -19,7 +19,8 @@ describe('plugin: react native rejection handler', () => {
         expect(r.events[0].severityReason).toEqual({ type: 'unhandledPromiseRejection' })
         expect(r.events[0].unhandled).toBe(true)
         done()
-      }
+      },
+      sendSession: () => {}
     }))
     const stop = plugin.load(c)
     // in the interests of keeping the tests quick, TypeErrors get rejected quicker
@@ -40,7 +41,8 @@ describe('plugin: react native rejection handler', () => {
     c._setDelivery(client => ({
       sendEvent: (payload) => {
         done(new Error('event should not be sent when autoDetectErrors=false'))
-      }
+      },
+      sendSession: () => {}
     }))
     const stop = plugin.load(c)
     try {
@@ -63,7 +65,8 @@ describe('plugin: react native rejection handler', () => {
     c._setDelivery((client) => ({
       sendEvent: (payload) => {
         done(new Error('event should not be sent when enabledErrorTypes.unhandledRejections=false'))
-      }
+      },
+      sendSession: () => {}
     }))
     const stop = plugin.load(c)
     try {
