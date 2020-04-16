@@ -61,7 +61,7 @@ describe('delivery: expo', () => {
       expect(err).toBeUndefined()
 
       const payload = {
-        events: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }]
+        events: [{ errors: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }] }]
       }
       const config = {
         apiKey: 'aaaaaaaa',
@@ -96,7 +96,9 @@ describe('delivery: expo', () => {
     server.listen((err) => {
       expect(err).toBeUndefined()
 
-      const payload = { events: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }] }
+      const payload = {
+        events: [{ errors: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }] }]
+      }
       const config = {
         apiKey: 'aaaaaaaa',
         endpoints: { notify: 'blah', sessions: `http://0.0.0.0:${server.address().port}/sessions/` },
@@ -132,7 +134,9 @@ describe('delivery: expo', () => {
       './network-status': MockNetworkStatus
     })
 
-    const payload = { events: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }] }
+    const payload = {
+      events: [{ errors: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }] }]
+    }
     const config = {
       apiKey: 'aaaaaaaa',
       endpoints: { notify: 'http://0.0.0.0:9999/notify/' },
@@ -166,7 +170,9 @@ describe('delivery: expo', () => {
     server.listen((err) => {
       expect(err).toBeUndefined()
 
-      const payload = { events: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }] }
+      const payload = {
+        events: [{ errors: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }] }]
+      }
       const config = {
         apiKey: 'aaaaaaaa',
         endpoints: { notify: `http://0.0.0.0:${server.address().port}/notify/` },
@@ -198,7 +204,9 @@ describe('delivery: expo', () => {
       './network-status': MockNetworkStatus
     })
 
-    const payload = { events: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }] }
+    const payload = {
+      events: [{ errors: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }] }]
+    }
     const config = {
       apiKey: 'aaaaaaaa',
       endpoints: { sessions: 'http://0.0.0.0:9999/sessions/' },
@@ -234,7 +242,9 @@ describe('delivery: expo', () => {
 
     server.listen((err) => {
       expect(err).toBeFalsy()
-      const payload = { events: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }] }
+      const payload = {
+        events: [{ errors: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }] }]
+      }
       const config = {
         apiKey: 'aaaaaaaa',
         endpoints: { notify: `http://0.0.0.0:${server.address().port}/notify/` },
@@ -272,7 +282,9 @@ describe('delivery: expo', () => {
 
     server.listen((err) => {
       expect(err).toBeFalsy()
-      const payload = { events: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }] }
+      const payload = {
+        events: [{ errors: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }] }]
+      }
       const config = {
         apiKey: 'aaaaaaaa',
         endpoints: { notify: `http://0.0.0.0:${server.address().port}/notify/` },
@@ -302,7 +314,10 @@ describe('delivery: expo', () => {
       './network-status': MockNetworkStatus
     })
 
-    const payload = { sample: 'payload', attemptImmediateDelivery: false }
+    const payload = {
+      events: [{ errors: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }] }],
+      attemptImmediateDelivery: false
+    }
     const config = {
       apiKey: 'aaaaaaaa',
       endpoints: { notify: 'https://some-address.com' },
@@ -384,7 +399,9 @@ describe('delivery: expo', () => {
       './redelivery': NoopRedelivery,
       './network-status': MockNetworkStatus
     })
-    const payload = { events: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }] }
+    const payload = {
+      events: [{ errors: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }] }]
+    }
     const config = {
       apiKey: 'aaaaaaaa',
       endpoints: { notify: 'http://some-address.com' },
