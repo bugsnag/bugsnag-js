@@ -1,6 +1,7 @@
 const { schema } = require('@bugsnag/core/config')
 const stringWithLength = require('@bugsnag/core/lib/validators/string-with-length')
 const rnPackage = require('react-native/package.json')
+const iserror = require('iserror')
 
 const ALLOWED_IN_JS = ['onError', 'onBreadcrumb', 'logger', 'metadata', 'user', 'context', 'codeBundleId']
 const allowedErrorTypes = () => ({
@@ -41,7 +42,19 @@ module.exports.schema = {
 
 const getPrefixedConsole = () => {
   return ['debug', 'info', 'warn', 'error'].reduce((accum, method) => {
-    accum[method] = console[method].bind(console, '[bugsnag]')
+    if (method !== 'warn') {
+      accum[method] = (...args) => console[method]('[bugsnag]', ...args)
+    } else {
+      accum[method] = (...args) => {
+        if (!iserror(args[0])) {
+          console[method]('[bugsnag]', ...args)
+        } else {
+          // a raw error doesn't display nicely in react native's yellow box,
+          // so this takes the message from the error an displays that instead
+          console[method]('[bugsnag]', `${args[0].message}`)
+        }
+      }
+    }
     return accum
   }, {})
 }
