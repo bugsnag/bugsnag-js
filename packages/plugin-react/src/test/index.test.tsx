@@ -117,6 +117,18 @@ it('resets the error boundary when the FallbackComponent calls the passed clearE
   expect(component.toJSON()).toMatchSnapshot()
 })
 
+it('a bad FallbackComponent implementation does not trigger stack overflow', () => {
+  const BadFallbackComponentImplementation = ({ clearError }: { clearError: () => void }) => {
+    clearError()
+
+    return <div>fallback</div>
+  }
+
+  expect(() => {
+    create(<ErrorBoundary FallbackComponent={BadFallbackComponentImplementation}><BadComponent /></ErrorBoundary>)
+  }).toThrow()
+})
+
 it('it passes the onError function to the Bugsnag notify call', () => {
   const onError = () => {}
   create(<ErrorBoundary onError={onError}><BadComponent /></ErrorBoundary>)
