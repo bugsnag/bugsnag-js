@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+### Added
+- (plugin-react): Add `clearError` prop to `ErrorBoundary`. [#797](https://github.com/bugsnag/bugsnag-js/pull/797)
+
 ## 7.0.0 (2020-04-14)
 
 ### Added
