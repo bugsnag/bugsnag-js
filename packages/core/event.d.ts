@@ -1,4 +1,5 @@
-import { Event } from '.'
+import { App, Device, Event, Request, Breadcrumb, User, Session } from './types'
+import { Error } from './types/event'
 
 interface HandledState {
   unhandled: boolean
@@ -16,5 +17,23 @@ export default class EventWithInternals extends Event {
   constructor (errorClass: string, errorMessage: string, stacktrace: any[], handledState?: HandledState, originalError?: Error)
   _metadata: { [key: string]: {} }
   _handledState: HandledState
-  toJSON(): any;
+  toJSON(): {
+    payloadVersion: '4'
+    exceptions: Array<Error & { message: Error['errorMessage'] }>
+    severity: Event['severity']
+    unhandled: boolean
+    severityReason: {
+      type: string
+      [key: string]: any
+    }
+    app: App
+    device: Device
+    request: Request
+    breadcrumbs: Breadcrumb[]
+    context: string | undefined
+    groupingHash: string | undefined
+    metaData: { [key: string]: {} }
+    user: User
+    session: Session
+  };
 }

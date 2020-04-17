@@ -1,4 +1,4 @@
-import { Client, OnErrorCallback, Config, Breadcrumb, Session, OnSessionCallback, OnBreadcrumbCallback, Plugin, Device, User } from './types'
+import { Client, OnErrorCallback, Config, Breadcrumb, Session, OnSessionCallback, OnBreadcrumbCallback, Plugin, Device, App } from './types'
 import EventWithInternals from './event'
 
 interface LoggerConfig {
@@ -23,14 +23,8 @@ interface EventDeliveryPayload {
 interface SessionDeliveryPayload {
   notifier?: Notifier
   device?: Device
-  app?: Session['app']
-  sessions?: [
-    {
-      id: string
-      startedAt: Date
-      user: User
-    }
-  ]
+  app?: App
+  sessions?: Session[]
 }
 
 interface Delivery {

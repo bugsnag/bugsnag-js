@@ -1,6 +1,6 @@
 import plugin from '../'
 
-import Client from '@bugsnag/core/client'
+import Client, { EventDeliveryPayload } from '@bugsnag/core/client'
 
 const window = {
   location: {
@@ -11,7 +11,7 @@ const window = {
 describe('plugin: context', () => {
   it('sets client.context (and event.context) to window.location.pathname', done => {
     const client = new Client({ apiKey: 'API_KEY_YEAH' }, undefined, [plugin(window)])
-    const payloads: any[] = []
+    const payloads: EventDeliveryPayload[] = []
 
     client._setDelivery(client => ({
       sendEvent: (payload, cb) => {
@@ -32,8 +32,9 @@ describe('plugin: context', () => {
   })
 
   it('sets doesn’t overwrite an existing context', done => {
+    expect.assertions(3)
     const client = new Client({ apiKey: 'API_KEY_YEAH' }, undefined, [plugin(window)])
-    const payloads: any[] = []
+    const payloads: EventDeliveryPayload[] = []
 
     client.setContext('something else')
 
