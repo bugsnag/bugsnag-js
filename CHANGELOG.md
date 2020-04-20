@@ -1,9 +1,12 @@
 # Changelog
 
-## Unreleased
+## TBD
 
 ### Added
 - (plugin-react): Add `clearError` prop to `ErrorBoundary`. [#797](https://github.com/bugsnag/bugsnag-js/pull/797)
+
+### Fixed
+- Ensure Expo delivery logs event details correctly (instead of `undefined`) [#804](https://github.com/bugsnag/bugsnag-js/pull/804)
 
 ## 7.0.0 (2020-04-14)
 
