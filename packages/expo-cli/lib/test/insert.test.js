@@ -50,4 +50,12 @@ describe('expo-cli: insert', () => {
       expect(e.message).toMatch(/The "path" argument must be of type string/)
     }
   })
+
+  it('inserts correct code for pre v7 versions of Bugsnag', async () => {
+    const projectRoot = await prepareFixture('already-installed-00')
+    const msg = await insert(projectRoot)
+    expect(msg).toBe(undefined)
+    const appJs = await promisify(readFile)(`${projectRoot}/App.js`, 'utf8')
+    expect(appJs).toMatch(/^import bugsnag from '@bugsnag\/expo';\sconst bugsnagClient = bugsnag\(\);\s/)
+  })
 })
