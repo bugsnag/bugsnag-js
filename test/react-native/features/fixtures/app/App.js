@@ -10,6 +10,13 @@ import {
   NativeModules
 } from 'react-native';
 
+let getDefaultConfiguration = () => { return {
+    apiKey: "12312312312312312312312312312312",
+    endpoint: "http://bs-local.com:9339",
+    autoTrackSessions: false
+  }
+}
+
 export default class App extends Component {
   constructor(props) {
     super(props)
@@ -40,11 +47,7 @@ export default class App extends Component {
     console.log("  with MetaData: " + this.state.scenarioMetaData)
     let scenarioName = this.state.currentScenario
     let scenarioMetaData = this.state.scenarioMetaData
-    let configuration = {
-      apiKey: "12312312312312312312312312312312",
-      endpoint: "http://bs-local.com:9339",
-      autoTrackSessions: false
-    }
+    let configuration = getDefaultConfiguration()
     let scenario = new Scenarios[scenarioName](configuration, scenarioMetaData)
     NativeModules.BugsnagTestInterface.startBugsnag(configuration, () => {
       Bugsnag.start()
@@ -52,16 +55,12 @@ export default class App extends Component {
     })
   }
 
-  startScenario = () => {
+  startBugsnag = () => {
     console.log("Starting Bugsnag for scenario: " + this.state.currentScenario)
     console.log("  with MetaData: " + this.state.scenarioMetaData)
     let scenarioName = this.state.currentScenario
     let scenarioMetaData = this.state.scenarioMetaData
-    let configuration = {
-      apiKey: "12312312312312312312312312312312",
-      endpoint: "http://192.168.1.68:62000",
-      autoTrackSessions: false
-    }
+    let configuration = getDefaultConfiguration()
     let scenario = new Scenarios[scenarioName](configuration, scenarioMetaData)
     NativeModules.BugsnagTestInterface.startBugsnag(configuration, () => {
       Bugsnag.start()
