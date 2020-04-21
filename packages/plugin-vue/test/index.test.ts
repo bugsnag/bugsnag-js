@@ -1,6 +1,6 @@
-const { describe, it, expect } = global
-const BugsnagVuePlugin = require('../src')
-const Client = require('@bugsnag/core/client')
+import BugsnagVuePlugin from '../src'
+import Client from '@bugsnag/core/client'
+import Vue from 'vue'
 
 describe('bugsnag vue', () => {
   it('throws when missing Vue', () => {
@@ -10,7 +10,6 @@ describe('bugsnag vue', () => {
   })
 
   it('installs Vue.config.errorHandler', done => {
-    const Vue = { config: {} }
     const client = new Client({ apiKey: 'API_KEYYY', plugins: [new BugsnagVuePlugin(Vue)] })
     client._setDelivery(client => ({
       sendEvent: (payload) => {
@@ -21,7 +20,7 @@ describe('bugsnag vue', () => {
       }
     }))
     expect(typeof Vue.config.errorHandler).toBe('function')
-    Vue.config.errorHandler(new Error('oops'), { $root: true, $options: {} }, 'callback for watcher "fooBarBaz"')
+    Vue.config.errorHandler(new Error('oops'), { $root: true, $options: {} } as unknown as Vue, 'callback for watcher "fooBarBaz"')
   })
 
   it('bugsnag vue: classify(str)', () => {

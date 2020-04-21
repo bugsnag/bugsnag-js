@@ -11,7 +11,8 @@ module.exports = {
     {
       displayName: 'browser plugins',
       testMatch: [
-        testsForPackage('plugin-react')
+        testsForPackage('plugin-react'),
+        testsForPackage('plugin-vue')
       ]
     },
     {
