@@ -22,9 +22,11 @@ describe('plugin: context', () => {
 
     }))
 
+    let eventContext
     client.notify(new Error('noooo'), (event) => {
-      expect(event.context).toBe(window.location.pathname)
+      eventContext = event.context
     }, () => {
+      expect(eventContext).toBe(window.location.pathname)
       expect(payloads.length).toEqual(1)
       expect(payloads[0].events[0].context).toBe(window.location.pathname)
       done()
