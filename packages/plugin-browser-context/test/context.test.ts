@@ -22,7 +22,7 @@ describe('plugin: context', () => {
 
     }))
 
-    let eventContext
+    let eventContext: string | undefined
     client.notify(new Error('noooo'), (event) => {
       eventContext = event.context
     }, () => {
