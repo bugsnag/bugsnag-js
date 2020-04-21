@@ -3,6 +3,7 @@
 ## TBD
 
 ### Fixed
+- (plugin-vue): Fix plugin type definitions [#809](https://github.com/bugsnag/bugsnag-js/pull/809)
 - Ensure Expo delivery logs event details correctly (instead of `undefined`) [#804](https://github.com/bugsnag/bugsnag-js/pull/804)
 
 ## 7.0.0 (2020-04-14)
