@@ -6,7 +6,7 @@ const install = require('../lib/install')
 const { onCancel } = require('../lib/utils')
 const { blue } = require('kleur')
 const semver = require('semver')
-const detectInstalled = require('.../lib/detect-installed')
+const detectInstalled = require('../lib/detect-installed')
 
 module.exports = async (argv, globalOpts) => {
   const projectRoot = globalOpts['project-root']
