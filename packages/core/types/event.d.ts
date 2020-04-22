@@ -62,7 +62,7 @@ interface Stackframe {
   inProject?: boolean
 }
 
-interface Error {
+export interface Error {
   errorClass: string
   errorMessage: string
   stacktrace: Stackframe[]
