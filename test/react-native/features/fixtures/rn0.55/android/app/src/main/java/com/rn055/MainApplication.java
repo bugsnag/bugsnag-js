@@ -8,7 +8,7 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 
-import com.reactnative.BugsnagModulePackage;
+import com.rn055.BugsnagModulePackage;
 
 import java.util.Arrays;
 import java.util.List;
