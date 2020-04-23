@@ -176,10 +176,13 @@ In addition, the react-native test fixture requires the current version of the r
 - `REG_NPM_EMAIL`: the email of the user accessing the repository
 - `REGISTRY_URL`: the remote address of the repository
 
+The targeted release of `@bugsnag/react-native` must be tagged with the short hash of the current commit in order to be picked up by the gradle build process.
+
 There are several react-native versions that can be targeted, as well as a corresponding package path used to integrate the android modules.  These should be set to the `REACT_NATIVE_VERSION` and `ANDROID_PACKAGE_PATH` environment variables according to the table below:
 
 | React native fixture | `REACT_NATIVE_VERSION` | `ANDROID_PACKAGE_PATH` |
 |----------------------|------------------------|------------------------|
+| 0.55                 | `rn0.55`               | `rn055`                |
 | 0.60                 | `rn0.60`               | `reactnative`          |
 
 The following environment variables need to be set:
