@@ -40,6 +40,9 @@ Currently this branch relies on a snapshotted version of bugsnag-android, which 
 
 The tests can be run with by running `./gradlew test -Pbugsnagdev=true` from the `android` directory.
 
+The AAR artefacts can be updated by running `./update-android.sh` from the `packages/react-native` directory.
+__Please ensure that you are building from a tagged release of bugsnag-android if releasing!__ It is necessary to build artefacts in this way to ensure the version name is distinct, and cannot clash with any value released on mavenCentral/jcenter.
+
 #### iOS
 
 The cocoa notifier is vendored in to this repo so nothing special is required there.
