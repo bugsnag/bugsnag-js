@@ -11,12 +11,10 @@ module.exports = async (projectRoot) => {
   try {
     const appJsPath = join(projectRoot, 'App.js')
     const appJs = await promisify(readFile)(appJsPath, 'utf8')
-    const manifestRange = await detectInstalled(projectRoot)
-    const isPostV7 = !manifestRange || semver.satisfies('7.0.0', manifestRange)
     if (importRe.test(appJs) || requireRe.test(appJs)) {
       return '@bugsnag/expo is already imported in App.js'
     }
-    await promisify(writeFile)(appJsPath, `${module.exports.code[isPostV7 ? 'postV7' : 'preV7']}\n${appJs}`, 'utf8')
+    await promisify(writeFile)(appJsPath, `${await getCode(projectRoot)}\n${appJs}`, 'utf8')
   } catch (e) {
     // swallow and rethrow for errors that we can produce better messaging for
     if (e.code === 'ENOENT') {
@@ -26,7 +24,7 @@ module.exports = async (projectRoot) => {
   }
 }
 
-module.exports.code = {
+const code = {
   preV7: `import bugsnag from '@bugsnag/expo';
 const bugsnagClient = bugsnag();
 `,
@@ -34,3 +32,11 @@ const bugsnagClient = bugsnag();
 Bugsnag.start();
 `
 }
+
+const getCode = async (projectRoot) => {
+  const manifestRange = await detectInstalled(projectRoot)
+  const isPostV7 = !manifestRange || semver.satisfies('7.0.0', manifestRange)
+  return code[isPostV7 ? 'postV7' : 'preV7']
+}
+
+module.exports.getCode = getCode
