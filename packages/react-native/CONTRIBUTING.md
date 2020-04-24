@@ -38,6 +38,8 @@ registry=http://localhost:4873
 
 Currently this branch relies on a snapshotted version of bugsnag-android, which should _just work_.
 
+The tests can be run with by running `./gradlew test -Pbugsnagdev=true` from the `android` directory.
+
 #### iOS
 
 The cocoa notifier is vendored in to this repo so nothing special is required there.

@@ -49,15 +49,21 @@ dependencies {
     testImplementation "org.mockito:mockito-core:2.28.2"
 }
 
+// All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
+// once released, it should look in the node_modules at the root of the project.
+//
+// In development, we need to edit this to look at the top-level node_modules of
+// the monorepo instead.
+def facebookRepo = "$rootDir/../node_modules/react-native/android"
+
+if (safeExtGet("bugsnagdev", false)) {
+    project.logger.lifecycle("Development mode enabled, searching for dependencies at top of monorepo.")
+    facebookRepo = "$rootDir/../../../node_modules/react-native/android"
+}
+
 allprojects {
     repositories {
-        maven {
-            // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
-            // once released, it should look in the node_modules at the root of the project
-            url "$rootDir/../node_modules/react-native/android"
-            // in development, it needs to look at the top-level node_modules of the monorepo
-            url "$rootDir/../../../node_modules/react-native/android"
-        }
+        maven { url facebookRepo }
         mavenLocal()
         jcenter()
         google()

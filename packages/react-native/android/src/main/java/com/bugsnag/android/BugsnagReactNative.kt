@@ -27,7 +27,7 @@ class BugsnagReactNative(private val reactContext: ReactApplicationContext) :
 
     override fun getName(): String = "BugsnagReactNative"
 
-    private fun logFailure(msg: String, exc: Throwable) {
+    fun logFailure(msg: String, exc: Throwable) {
         logger.e("Failed to call $msg on bugsnag-plugin-react-native, continuing", exc)
     }
 
@@ -37,12 +37,12 @@ class BugsnagReactNative(private val reactContext: ReactApplicationContext) :
      * be used.
      */
     @ReactMethod
-    private fun configureAsync(env: ReadableMap, promise: Promise) {
+    fun configureAsync(env: ReadableMap, promise: Promise) {
       promise.resolve(configure(env))
     }
 
     @ReactMethod(isBlockingSynchronousMethod = true)
-    private fun configure(env: ReadableMap): WritableMap {
+    fun configure(env: ReadableMap): WritableMap {
         return try {
             val client = Bugsnag.getClient()
             bridge = reactContext.getJSModule(RCTDeviceEventEmitter::class.java)
@@ -59,7 +59,7 @@ class BugsnagReactNative(private val reactContext: ReactApplicationContext) :
     /**
      * Serializes a MessageEvent into a WritableMap and sends it across the React Bridge
      */
-    private fun emitEvent(event: MessageEvent) {
+    fun emitEvent(event: MessageEvent) {
         logger.d("Received MessageEvent: ${event.type}")
 
         val map = Arguments.createMap()
@@ -75,7 +75,7 @@ class BugsnagReactNative(private val reactContext: ReactApplicationContext) :
     }
 
     @ReactMethod
-    private fun updateCodeBundleId(id: String?) {
+    fun updateCodeBundleId(id: String?) {
         try {
             plugin.updateCodeBundleId(id)
         } catch (exc: Throwable) {
@@ -84,7 +84,7 @@ class BugsnagReactNative(private val reactContext: ReactApplicationContext) :
     }
 
     @ReactMethod
-    private fun leaveBreadcrumb(map: ReadableMap) {
+    fun leaveBreadcrumb(map: ReadableMap) {
         try {
             plugin.leaveBreadcrumb(map.toHashMap())
         } catch (exc: Throwable) {
@@ -93,7 +93,7 @@ class BugsnagReactNative(private val reactContext: ReactApplicationContext) :
     }
 
     @ReactMethod
-    private fun startSession() {
+    fun startSession() {
         try {
             plugin.startSession()
         } catch (exc: Throwable) {
@@ -102,7 +102,7 @@ class BugsnagReactNative(private val reactContext: ReactApplicationContext) :
     }
 
     @ReactMethod
-    private fun pauseSession() {
+    fun pauseSession() {
         try {
             plugin.pauseSession()
         } catch (exc: Throwable) {
@@ -111,7 +111,7 @@ class BugsnagReactNative(private val reactContext: ReactApplicationContext) :
     }
 
     @ReactMethod
-    private fun resumeSession() {
+    fun resumeSession() {
         try {
             plugin.resumeSession()
         } catch (exc: Throwable) {
@@ -120,7 +120,7 @@ class BugsnagReactNative(private val reactContext: ReactApplicationContext) :
     }
 
     @ReactMethod
-    private fun updateContext(context: String?) {
+    fun updateContext(context: String?) {
         try {
             plugin.updateContext(context)
         } catch (exc: Throwable) {
@@ -129,7 +129,7 @@ class BugsnagReactNative(private val reactContext: ReactApplicationContext) :
     }
 
     @ReactMethod
-    private fun updateMetadata(section: String, data: ReadableMap?) {
+    fun updateMetadata(section: String, data: ReadableMap?) {
         try {
             plugin.updateMetadata(section, data?.toHashMap())
         } catch (exc: Throwable) {
@@ -138,7 +138,7 @@ class BugsnagReactNative(private val reactContext: ReactApplicationContext) :
     }
 
     @ReactMethod
-    private fun updateUser(id: String?, email: String?, name: String?) {
+    fun updateUser(id: String?, email: String?, name: String?) {
         try {
             plugin.updateUser(id, email, name)
         } catch (exc: Throwable) {
@@ -147,7 +147,7 @@ class BugsnagReactNative(private val reactContext: ReactApplicationContext) :
     }
 
     @ReactMethod
-    private fun dispatch(payload: ReadableMap, promise: Promise) {
+    fun dispatch(payload: ReadableMap, promise: Promise) {
         try {
             plugin.dispatch(payload.toHashMap())
             promise.resolve(true)
@@ -158,7 +158,7 @@ class BugsnagReactNative(private val reactContext: ReactApplicationContext) :
     }
 
     @ReactMethod
-    private fun getPayloadInfo(payload: ReadableMap, promise: Promise) {
+    fun getPayloadInfo(payload: ReadableMap, promise: Promise) {
         try {
             val unhandled = payload.getBoolean("unhandled")
             val info = plugin.getPayloadInfo(unhandled)
