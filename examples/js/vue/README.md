@@ -10,7 +10,7 @@ Clone the repo and `cd` into the directory of this example:
 
 ```
 git clone git@github.com:bugsnag/bugsnag-js.git
-cd bugsnag-js/examples/vue
+cd bugsnag-js/examples/js/vue
 ```
 Take a look at…
 - [`src/main.js`](src/main.js) for how to setup Bugsnag for your application

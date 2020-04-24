@@ -10,7 +10,7 @@ Clone the repo and `cd` into the directory of this example:
 
 ```
 git clone git@github.com:bugsnag/bugsnag-js.git
-cd bugsnag-js/examples/react
+cd bugsnag-js/examples/js/react
 ```
 Take a look at…
 - [`src/index.js`](src/index.js) to see how to setup Bugsnag once for your application and how the `ErrorBoundary` is used

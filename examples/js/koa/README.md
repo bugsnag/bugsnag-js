@@ -8,7 +8,7 @@ Clone the repo and `cd` into the directory of this example:
 
 ```
 git clone git@github.com:bugsnag/bugsnag-js.git
-cd bugsnag-js/examples/koa
+cd bugsnag-js/examples/js/koa
 ```
 
 Use the instructions below to run the application.

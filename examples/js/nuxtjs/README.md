@@ -10,7 +10,7 @@ Clone the repo and `cd` into the directory of this example:
 
 ```
 git clone git@github.com:bugsnag/bugsnag-js.git
-cd bugsnag-js/examples/nuxtjs
+cd bugsnag-js/examples/js/nuxtjs
 ```
 
 Take a look at…

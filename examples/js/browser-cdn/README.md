@@ -8,7 +8,7 @@ Clone the repo and `cd` into the directory of this example:
 
 ```
 git clone git@github.com:bugsnag/bugsnag-js.git
-cd bugsnag-js/examples/browser-cdn
+cd bugsnag-js/examples/js/browser-cdn
 ```
 
 Firstly, replace the `YOUR_API_KEY` in [app.js](app.js) with your own, then use the instructions below to run the application.
