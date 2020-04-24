@@ -1,6 +1,9 @@
-import { BugsnagStatic } from '@bugsnag/core'
+import { BugsnagStatic, Config, Client } from '@bugsnag/core'
 
-declare const Bugsnag: BugsnagStatic
+interface ExpoBugsnagStatic extends BugsnagStatic {
+  start(apiKeyOrOpts?: string | Config): Client
+}
+declare const Bugsnag: ExpoBugsnagStatic
 
 export default Bugsnag
 export * from '@bugsnag/core'
