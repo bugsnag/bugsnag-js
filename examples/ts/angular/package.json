@@ -22,9 +22,9 @@
     "@angular/platform-browser": "^5.2.0",
     "@angular/platform-browser-dynamic": "^5.2.0",
     "@angular/router": "^5.2.0",
-    "@bugsnag/core": "^7.0.0-rc.2",
-    "@bugsnag/js": "^7.0.0-rc.2",
-    "@bugsnag/plugin-angular": "^7.0.0-rc.2",
+    "@bugsnag/core": "^7.0.0",
+    "@bugsnag/js": "^7.0.0",
+    "@bugsnag/plugin-angular": "^7.0.0",
     "core-js": "^2.4.1",
     "rxjs": "^5.5.6",
     "zone.js": "^0.8.19"
