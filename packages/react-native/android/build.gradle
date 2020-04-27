@@ -40,9 +40,8 @@ android {
 }
 
 dependencies {
-    // TODO rely on snapshot version when published rather than mavenLocal
-    api "com.bugsnag:bugsnag-android:5.0.0-rc-react-native.01-SNAPSHOT"
-    api "com.bugsnag:bugsnag-plugin-react-native:5.0.0-rc-react-native.01-SNAPSHOT"
+    api "com.bugsnag:bugsnag-android:5.0.0-react-native"
+    api "com.bugsnag:bugsnag-plugin-react-native:5.0.0-react-native"
     implementation 'com.facebook.react:react-native:+'
 
     testImplementation "junit:junit:4.12"
@@ -56,20 +55,23 @@ dependencies {
 // the monorepo instead.
 def facebookRepo = "$rootDir/../node_modules/react-native/android"
 
+// A copy of bugsnag-android AAR artefacts are stored in @bugsnag/react-native/android,
+// as part of a local maven repository. This adds the repository as a source of
+// dependencies that Gradle can resolve.
+def bugsnagRepo = "$rootDir/../node_modules/@bugsnag/react-native/android"
+
 if (safeExtGet("bugsnagdev", false)) {
     project.logger.lifecycle("Development mode enabled, searching for dependencies at top of monorepo.")
     facebookRepo = "$rootDir/../../../node_modules/react-native/android"
+    bugsnagRepo = "$rootDir"
 }
 
 allprojects {
     repositories {
         maven { url facebookRepo }
-        mavenLocal()
+        maven { url bugsnagRepo }
         jcenter()
         google()
-        maven { // add this to use snapshots
-            url "https://oss.sonatype.org/content/repositories/snapshots/"
-        }
     }
 }
 
