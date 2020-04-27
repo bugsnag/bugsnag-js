@@ -30,3 +30,5 @@ Bugsnag.start({
   logger: undefined,
   redactedKeys: ["foo",/bar/]
 })
+
+Bugsnag.start()
