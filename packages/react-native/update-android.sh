@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 
 ANDROID_REPO_DIR=../../../bugsnag-android
 MAVEN_REPO_DIR=~/.m2/repository/com/bugsnag
