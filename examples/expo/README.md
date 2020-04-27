@@ -18,7 +18,7 @@ Take a look at…
 Make sure you have the Expo CLI installed:
 
 ```sh
-npm install -g expo
+npm install -g expo-cli
 ```
 
 Install the dependencies of this example app:

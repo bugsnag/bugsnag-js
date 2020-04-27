@@ -11,6 +11,8 @@ module.exports = {
     {
       displayName: 'browser plugins',
       testMatch: [
+        testsForPackage('plugin-browser-context'),
+        testsForPackage('plugin-browser-device'),
         testsForPackage('plugin-react')
       ]
     },

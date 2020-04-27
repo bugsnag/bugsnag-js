@@ -1,17 +1,18 @@
 {
   "expo": {
-    "name": "Bugsnag Expo Example",
-    "slug": "bugsnag-expo-example",
+    "name": "Bugsnag test fixture",
+    "slug": "bugsnag-test-fixture",
     "privacy": "unlisted",
+    "sdkVersion": "32.0.0",
     "platforms": [
       "ios",
       "android"
     ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/icon.png",
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -21,13 +22,9 @@
     "assetBundlePatterns": [
       "**/*"
     ],
-    "ios": {
-      "supportsTablet": true
-    },
-    "scheme": "bugsnagexpo",
     "extra": {
       "bugsnag": {
-        "apiKey": "YOUR_API_KEY"
+        "apiKey": "XoXoXoXoXoXo"
       }
     },
     "hooks": {
