@@ -15,22 +15,17 @@ class BugsnagSwiftTests: XCTestCase {
      * Confirm that the addMetadata() method is exposed to Swift correctly
      */
     func testAddMetadataToSectionIsExposedToSwiftCorrectly() {
-        do {
-            if let configuration = try BugsnagConfiguration(DUMMY_APIKEY_32CHAR_1) {
-                Bugsnag.start(with: configuration)
-                Bugsnag.addMetadata("mySection1", key: "myKey1", value: "myValue1")
-                
-                let exception1 = NSException(name: NSExceptionName(rawValue: "exception1"), reason: "reason1", userInfo: nil)
-                
-                Bugsnag.notify(exception1) { (event) in
-                    // Arbitrary test, replicating the ObjC one
-                    let value = (event.metadata["mySection1"] as? [String : Any])?["myKey1"] as? String
-                    XCTAssertEqual(value, "myValue1")
-                }
-            }
-        }
-        catch let e as NSError {
-            XCTFail("Failed to check method Swift exposure: \(e.debugDescription)")
+        let configuration = BugsnagConfiguration(DUMMY_APIKEY_32CHAR_1)
+        Bugsnag.start(with: configuration)
+        Bugsnag.addMetadata("myValue1", key: "myKey1", section: "mySection1")
+        
+        let exception1 = NSException(name: NSExceptionName(rawValue: "exception1"), reason: "reason1", userInfo: nil)
+        
+        Bugsnag.notify(exception1) { (event) in
+            // Arbitrary test, replicating the ObjC one
+            let value = event.getMetadata(section: "mySection1", key: "myKey1") as? String
+            XCTAssertEqual(value, "myValue1")
+            return true
         }
     }
     
@@ -38,7 +33,7 @@ class BugsnagSwiftTests: XCTestCase {
      * Confirm that the clearMetadata() method is exposed to Swift correctly
      */
     func testClearMetadataInSectionIsExposedToSwiftCorrectly() {
-        try! Bugsnag.start(with: BugsnagConfiguration(DUMMY_APIKEY_32CHAR_1)!)
+        Bugsnag.start(with: BugsnagConfiguration(DUMMY_APIKEY_32CHAR_1))
         // We don't need to check method's functioning, only that we can call it this way
         Bugsnag.clearMetadata(section: "testSection")
    }

@@ -7,6 +7,7 @@
 
 #import "Bugsnag.h"
 #import "BugsnagBreadcrumb.h"
+#import "BugsnagBreadcrumbs.h"
 
 @interface BugsnagBreadcrumb ()
 

@@ -8,6 +8,117 @@ Bugsnag Notifiers on other platforms.
 
 ## Enhancements
 
+* Rename `OnSend` to `OnSendError`
+  [#562](https://github.com/bugsnag/bugsnag-cocoa/pull/562)
+
+* Add `onCrashHandler` data to `BugsnagEvent` metadata
+  [#564](https://github.com/bugsnag/bugsnag-cocoa/pull/564)
+
+* Rename `BugsnagUser` properties
+  [#560](https://github.com/bugsnag/bugsnag-cocoa/pull/560)
+
+* Make `BugsnagOnErrorBlock` return `BOOL` rather than `void`
+  [#555](https://github.com/bugsnag/bugsnag-cocoa/pull/555)
+
+* Make `BugsnagPlugin` take `BugsnagClient` as param
+  [#558](https://github.com/bugsnag/bugsnag-cocoa/pull/558)
+
+* Make user editable on `BugsnagEvent`
+  [#557](https://github.com/bugsnag/bugsnag-cocoa/pull/557)
+
+* Add getter for `Bugsnag.context`
+  [#554](https://github.com/bugsnag/bugsnag-cocoa/pull/554)
+
+* Make `BugsnagUser` properties readonly
+  [#556](https://github.com/bugsnag/bugsnag-cocoa/pull/556)
+
+* Add `sendThreads` property to `BugsnagConfiguration`
+  [#549](https://github.com/bugsnag/bugsnag-cocoa/pull/549)
+
+* Hide additional methods from public API
+  [#552](https://github.com/bugsnag/bugsnag-cocoa/pull/552)
+
+* Move `codeBundleId` from configuration to non-public client property
+  [#548](https://github.com/bugsnag/bugsnag-cocoa/pull/548)
+
+* Add structured app/device fields to `BugsnagSession`
+  [#546](https://github.com/bugsnag/bugsnag-cocoa/pull/546)
+
+* Add `redactedKeys` for removing sensitive values from metadata
+  [#540](https://github.com/bugsnag/bugsnag-cocoa/pull/540)
+
+* Move endpoint configuration to class
+  [#542](https://github.com/bugsnag/bugsnag-cocoa/pull/542)
+
+* Make all callbacks return boolean values
+  [#534](https://github.com/bugsnag/bugsnag-cocoa/pull/534)
+
+* Add `originalError` property to `BugsnagEvent`
+  [#541](https://github.com/bugsnag/bugsnag-cocoa/pull/541)
+
+* Remove `attachCustomStacktrace` from public API
+  [#547](https://github.com/bugsnag/bugsnag-cocoa/pull/547)
+
+* Create structured `BugsnagError` class
+  [#533](https://github.com/bugsnag/bugsnag-cocoa/pull/533)
+
+* Create structured `BugsnagThread` class
+  [#532](https://github.com/bugsnag/bugsnag-cocoa/pull/532)
+
+* Convert `event.device` from `NSDictionary` to a structured class
+  [#526](https://github.com/bugsnag/bugsnag-cocoa/pull/526)
+
+* Create structured `BugsnagStackframe` class
+  [#528](https://github.com/bugsnag/bugsnag-cocoa/pull/528)
+
+* Convert `event.app` from `NSDictionary` to a structured class
+  [#520](https://github.com/bugsnag/bugsnag-cocoa/pull/520)
+
+* Make `BugsnagClient` a public interface
+[#517](https://github.com/bugsnag/bugsnag-cocoa/pull/517)
+
+* Remove unused APIs from `Bugsnag` interface
+[#514](https://github.com/bugsnag/bugsnag-cocoa/pull/514)
+
+* Enforce that `config.maxBreadcrumbs` must be between 0-100
+[#511](https://github.com/bugsnag/bugsnag-cocoa/pull/511)
+
+* Add unhandled property to `BugsnagEvent`
+[#512](https://github.com/bugsnag/bugsnag-cocoa/pull/512)
+
+* Rename `notifyReleaseStages` to `enabledReleaseStages`
+  [#509](https://github.com/bugsnag/bugsnag-cocoa/pull/509)
+
+* Remove unused APIs from `BugsnagSession` interface
+[#506](https://github.com/bugsnag/bugsnag-cocoa/pull/506)
+
+* Rename setUser/user interface on `Bugsnag` and `BugsnagConfiguration`
+[#505](https://github.com/bugsnag/bugsnag-cocoa/pull/505)
+
+* Rename `config.notifierType` to `config.appType`
+[#504](https://github.com/bugsnag/bugsnag-cocoa/pull/504)
+
+* Remove unused APIs on `BugsnagEvent` interface
+  [#498](https://github.com/bugsnag/bugsnag-cocoa/pull/498)
+
+* Allow addition/removal of `OnBreadcrumb` callbacks
+[#508](https://github.com/bugsnag/bugsnag-cocoa/pull/508)
+
+* Remove unused APIs from `BugsnagMetadata` interface
+[#501](https://github.com/bugsnag/bugsnag-cocoa/pull/501)
+
+* Remove unused APIs from `BugsnagConfiguration` interface
+  [#496](https://github.com/bugsnag/bugsnag-cocoa/pull/496)
+
+* Remove unused APIs from `BugsnagBreadcrumb` interface
+  [#502](https://github.com/bugsnag/bugsnag-cocoa/pull/502)
+
+* Remove notify method variants from public api on `Bugsnag`
+  [#497](https://github.com/bugsnag/bugsnag-cocoa/pull/497)
+
+* Remove `leaveBreadcrumbWithBlock` from public api on `Bugsnag`
+  [#491](https://github.com/bugsnag/bugsnag-cocoa/pull/491)
+
 * `BugsnagNotifier` is now `BugsnagClient`.
   [#480](https://github.com/bugsnag/bugsnag-cocoa/pull/480)
 
@@ -26,10 +137,11 @@ Bugsnag Notifiers on other platforms.
   from the default convenience `init()` to ensure that `apiKey` has a value set.  The `apiKey`
   must now be a correctly formatted one to be accepted.
 
-  * Swift: `try BugsnagConfiguration(_ apiKey)`
-  * Objective C: `[[BugsnagConfiguration alloc] initWithApiKey:error:]`
+  * Swift: `BugsnagConfiguration(_ apiKey)`
+  * Objective C: `[[BugsnagConfiguration alloc] initWithApiKey:]`
 
   [#446](https://github.com/bugsnag/bugsnag-cocoa/pull/446)
+  [#492](https://github.com/bugsnag/bugsnag-cocoa/pull/492)
 
 * Support editing breadcrumbs within an Event as objects. Breadcrumbs can now be
   inspected and modified from callbacks, for example:
@@ -56,7 +168,6 @@ Bugsnag Notifiers on other platforms.
   [#457](https://github.com/bugsnag/bugsnag-cocoa/pull/457)
      
 * Renamed callback functions in the Configuration class:
-  * `onCrashHandler` is now `onError`
   * `beforeSendBlocks` is now `onSendBlocks` (add using `config.add(onSend: { ... })`)
   * `beforeSendSessionBlocks` is now `onSessionBlocks` (add using `config.add(onSession: { ... })`)
 
@@ -104,10 +215,11 @@ Bugsnag Notifiers on other platforms.
 * Add metadata accessor methods to `BugsnagEvent`
   [#465](https://github.com/bugsnag/bugsnag-cocoa/pull/465)
   
-* Added a user-configurable `enabledErrorTypes` bitfield property to `BugsnagConfiguration`.
-  This allows users to choose which types of events are reported.  If automatic crash detection
+* Added a user-configurable `enabledErrorTypes` property to `BugsnagConfiguration`.
+  The `BugsnagErrorTypes` property allows users to choose which types of events are reported.  If automatic crash detection
   is disabled this value is ignored.  User-generated `notify()` events are reported in all cases.
   [#477](https://github.com/bugsnag/bugsnag-cocoa/pull/477)
+  [#561](https://github.com/bugsnag/bugsnag-cocoa/pull/561)
 
 * Internal logging has been unified.  Where before two preprocessor macros were
   required to configure both `Bugsnag` and `KSCrash` portions, now the Bugsnag
@@ -142,6 +254,24 @@ Bugsnag Notifiers on other platforms.
 * Added `removeOnSessionBlock()` methods to both `Bugsnag` and `BugsnagConfiguration` to allow removal
   of callbacks run when a session starts.
   [#483](https://github.com/bugsnag/bugsnag-cocoa/pull/483)
+  
+* Added `addOnSendBlock:`, `removeOnSendBlock:` and `clearOnSendBlocks` methods to `Bugsnag` 
+  and `BugsnagConfiguration`.
+  (#485)[https://github.com/bugsnag/bugsnag-cocoa/pull/485]
+  
+* Enhanced device orientation change breadcrumbs.  These are now reported with "from" and "to" values
+  in a form consistent with the Android notifier.
+  (#486)[https://github.com/bugsnag/bugsnag-cocoa/pull/486]
+  
+* The metadata interface is now consistent across the `Bugsnag`,  `BugsnagMetadata`, `BugsnagConfig`, `BugsnagClient` and `BugsnagEvent` 
+  classes.
+  (#513)[https://github.com/bugsnag/bugsnag-cocoa/pull/513]
+  
+* `BugsnagClient` now takes a shallow copy of the configuration passed in on initialisation.
+  (#524)[https://github.com/bugsnag/bugsnag-cocoa/pull/524]
+
+* The `bundleVersion` property is available on `BugsnagConfiguration` allowing overriding the default plist value.
+  (#550)[https://github.com/bugsnag/bugsnag-cocoa/pull/550]
 
 ## Bug fixes
 
@@ -153,6 +283,17 @@ Bugsnag Notifiers on other platforms.
   `locale`) that were missing from the OOM reports.
   [#444](https://github.com/bugsnag/bugsnag-cocoa/pull/444)
 
+* Increased the detail in handled event breadcrumbs
+  [#493](https://github.com/bugsnag/bugsnag-cocoa/pull/493)
+  
+* NSWorkspaceScreenSleep/Wake notifications now use the correct notification center.
+  (#525)[https://github.com/bugsnag/bugsnag-cocoa/pull/525]
+  
+* Device Charging status was being incorrectly reported as a number rather than a boolean.
+  Device charging status is represented as a four-valued enum.  If the device is plugged in it reports 
+  as charging, even if it is at 100%.  Any other values are reported as not charging.
+  (#551)[https://github.com/bugsnag/bugsnag-cocoa/pull/551]
+  
 ## 5.23.0 (2019-12-10)
 
 This release removes support for reporting 'partial' or 'minimal' crash reports

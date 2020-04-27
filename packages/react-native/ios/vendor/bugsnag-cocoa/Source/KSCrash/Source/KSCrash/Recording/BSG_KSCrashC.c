@@ -218,6 +218,6 @@ void bsg_kscrash_setReportWhenDebuggerIsAttached(
         reportWhenDebuggerIsAttached;
 }
 
-void bsg_kscrash_setThreadTracingEnabled(bool threadTracingEnabled) {
+void bsg_kscrash_setThreadTracingEnabled(int threadTracingEnabled) {
     crashContext()->crash.threadTracingEnabled = threadTracingEnabled;
 }

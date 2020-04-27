@@ -171,7 +171,7 @@ void bsg_kscrash_setSuspendThreadsForUserReported(
 void bsg_kscrash_setReportWhenDebuggerIsAttached(
     bool reportWhenDebuggerIsAttached);
 
-void bsg_kscrash_setThreadTracingEnabled(bool threadTracingEnabled);
+void bsg_kscrash_setThreadTracingEnabled(int threadTracingEnabled);
 
 void bsg_kscrash_setWriteBinaryImagesForUserReported(
     bool writeBinaryImagesForUserReported);

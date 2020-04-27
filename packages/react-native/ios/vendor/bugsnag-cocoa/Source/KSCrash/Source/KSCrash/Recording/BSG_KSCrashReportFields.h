@@ -174,6 +174,7 @@
 #define BSG_KSCrashField_Threads "threads"
 #define BSG_KSCrashField_User "user"
 #define BSG_KSCrashField_UserAtCrash "user_atcrash"
+#define BSG_KSCrashField_OnCrashMetadataSectionName "onCrash"
 
 #pragma mark Incomplete
 #define BSG_KSCrashField_Incomplete "incomplete"

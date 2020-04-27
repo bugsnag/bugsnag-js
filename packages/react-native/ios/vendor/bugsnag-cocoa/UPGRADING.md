@@ -8,17 +8,14 @@ Guide to ease migrations between significant changes
 
 #### Instantiation
 
-Initializing a configuration now requires a valid API key, setting an error
-parameter if initialization fails. In Swift, creating a configuration is now
-handled via the `try` mechanism.
+Initializing a configuration requires a valid API key.
 
 ```objc
 NSError *error;
-BugsnagConfiguration *config = [[BugsnagConfiguration alloc] initWithApiKey:@"YOUR API KEY HERE"
-                                                                      error:&error];
+BugsnagConfiguration *config = [[BugsnagConfiguration alloc] initWithApiKey:@"YOUR API KEY HERE"];
 ```
 ```swift
-  let config = try BugsnagConfiguration("YOUR API KEY HERE")
+  let config = BugsnagConfiguration("YOUR API KEY HERE")
 ```
 
 The exact error is available using the `BSGConfigurationErrorDomain` and
@@ -36,6 +33,12 @@ The exact error is available using the `BSGConfigurationErrorDomain` and
 
 + config.persistUserData()
 + config.deletePersistedUserData()
+
++ config.addOnBreadcrumb(block:)
++ config.removeOnBreadcrumb(block:)
+
++ config.redactedKeys
++ config.sendThreads
 ```
 
 #### Renames
@@ -47,24 +50,51 @@ The exact error is available using the `BSGConfigurationErrorDomain` and
 - config.autoCaptureSessions
 + config.autoTrackSessions
 
-- config.onCrashHandler
-+ config.onError
-
 - config.beforeSendBlocks
 - config.add(beforeSend:)
 + config.onSendBlocks
-+ config.add(onSend:)
++ config.addOnSendError(block:)
 
 - config.beforeSessionBlocks
 - config.add(beforeSession:)
 + config.onSessionBlocks
-+ config.add(onSession:)
++ config.addOnSession(block:)
 
 - config.automaticallyCollectBreadcrumbs
 + config.enabledBreadcrumbTypes
 
 - config.reportOOMs
 + config.enabledErrorTypes
+
+- config.currentUser
++ config.user
+
+- config.notifierType
++ config.appType
+
+- config.notifyReleaseStages
++ config.enabledReleaseStages
+
+- config.setEndpoints(notify: sessions)
++ config.setEndpoints(BugsnagEndpointConfiguration(notify: sessions))
+```
+
+#### Removals
+
+```diff
+- BugsnagBeforeNotifyHook
+- config.metadata
+- config.config
+- config.breadcrumbs
+- config.reportBackgroundOOMs
+- config.notifyURL
+- config.sessionURL
+- config.shouldAutoCaptureSessions
+- config.autoNotify
+- config.shouldSendReports
+- config.errorApiHeaders
+- config.sessionApiHeaders
+- config.codeBundleId
 ```
 
 ### `Bugsnag` class
@@ -77,6 +107,13 @@ The exact error is available using the `BSGConfigurationErrorDomain` and
 - Bugsnag.setBreadcrumbCapacity(40)
   let config = try BugsnagConfiguration("YOUR API KEY HERE")
 + config.setMaxBreadcrumbs(40)
+
+- Bugsnag.payloadDateFormatter()
+- Bugsnag.clearBreadcrumbs()
+
+- BugsnagSeverityError
+- BugsnagSeverityWarning
+- BugsnagSeverityInfo
 ```
 
 #### Additions
@@ -92,13 +129,15 @@ Bugsnag.getMetadata("section" key:"key")
 [Bugsnag getMetadata:@"section" key:@"key"];
 ```
 
+`startBugsnagWithApiKey` and `startBugsnagWithConfiguration` now return a `BugsnagClient`.
+
 #### Renames
 
 ```diff
 ObjC:
 
 - [Bugsnag configuration]
-+ [Bugsnag setUser:withName:andEmail:]
++ [Bugsnag setUser:withEmail:andName:]
 
 - [Bugsnag addAttribute:WithValuetoTabWithName:]
 + [Bugsnag addMetadataToSection:key:value:]
@@ -109,10 +148,16 @@ ObjC:
 - [Bugsnag stopSession]
 + [Bugsnag pauseSession]
 
+- [Bugsnag notify:withData:]
++ [Bugsnag notify:block:]
+
+- [Bugsnag notify:withData:severity:]
++ [Bugsnag notify:block:]
+
 Swift:
 
 - Bugsnag.configuration()
-+ Bugsnag.setUser(_:name:email:)
++ Bugsnag.setUser(_:email:name:)
 
 - Bugsnag.addAttribute(attributeName:withValue:toTabWithName:)
 + Bugsnag.addMetadata(_:key:value:)
@@ -122,6 +167,12 @@ Swift:
 
 - Bugsnag.stopSession()
 + Bugsnag.pauseSession()
+
+- Bugsnag.notify(exception:metadata:)
++ Bugsnag.notify(exception:block:)
+
+- Bugsnag.notify(exception:metadata:severity:)
++ Bugsnag.notify(exception:block:)
 ```
 
 ### `BugsnagMetadata` class
@@ -149,7 +200,14 @@ Swift:
 ```
 
 Note that `BugsnagMetadata.getTab()` previously would create a metadata section if it
-did not exist; the new behaviour in `getMetadata` is to return `nil`. 
+did not exist; the new behaviour in `getMetadata` is to return `nil`.
+
+#### Removals
+
+```diff
+- toDictionary
+- delegate
+```
 
 ### `BugsnagBreadcrumb` class
 
@@ -160,9 +218,25 @@ The short "name" value has been removed and replaced with an arbitrarily long "m
 + BugsnagBreadcrumb.message
 ```
 
+`BugsnagBreadcrumbs` is no longer publicly accessible, along with `BugsnagBreadcrumb` constructors.
+
 ### `BugsnagCrashReport` class
 
 This is now BugsnagEvent.
+
+#### Additions
+
+```diff
++ event.unhandled
++ event.originalError
++ event.user
++ event.setUser
+```
+
+`event.device` is now a structured class with properties for each value, rather than an `NSDictionary`.
+`event.app` is now a structured class with properties for each value, rather than an `NSDictionary`.
+`event.errors` is now an array containing a structured class with properties for each `BugsnagError` value.
+`event.threads` is now an array containing a structured class with properties for each `BugsnagThread` value.
 
 #### Renames
 
@@ -172,4 +246,60 @@ of the removed `addAttribute`:
 ```diff
 - BugsnagCrashReport.addAttribute(_:withValue:toTabWithName:)
 + BugsnagEvent.addMetadata(sectionName:key:value:)
+```
+
+#### Removals
+
+```diff
+- BSGParseSeverity
+- BSGFormatSeverity
+- [event serializableValueWithTopLevelData:]
+- [event shouldBeSent:]
+- [event toJson:]
+- [event enhancedErrorMessageForThread:]
+- event.enabledReleaseStages
+- event.handledState
+- event.overrides
+- event.depth
+- event.error
+- event.isIncomplete
+- [event attachCustomStacktrace:type:]
+
+### `BugsnagSession` class
+
+#### Additions
+
+```diff
++ session.id
++ session.setUser(id:name:email:)
++ session.user
++ session.app
++ session.device
+```
+
+#### Removals
+
+```diff
+- toJson
+- toDictionary
+- stop
+- resume
+- autoCaptured
+- handledCount
+- unhandledCount
+- stopped
+- user
+- sessionId
+```
+
+### `BugsnagUser` class
+
+#### Renames
+
+```diff
+- userId
++ id
+
+- emailAddress
++ email
 ```

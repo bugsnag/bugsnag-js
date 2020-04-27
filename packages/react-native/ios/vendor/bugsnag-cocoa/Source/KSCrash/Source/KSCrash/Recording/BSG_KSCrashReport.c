@@ -959,8 +959,13 @@ void bsg_kscrw_i_writeThread(const BSG_KSCrashReportWriter *const writer,
                              const char *const key,
                              const BSG_KSCrash_SentryContext *const crash,
                              const thread_t thread, const int index,
-                             const bool writeNotableAddresses) {
+                             const bool writeNotableAddresses,
+                             const bool recordAllThreads) {
     bool isCrashedThread = thread == crash->offendingThread;
+    if (!isCrashedThread && !recordAllThreads) {
+        return;
+    }
+
     BSG_STRUCT_MCONTEXT_L machineContextBuffer;
     uintptr_t backtraceBuffer[BSG_kMaxBacktraceDepth];
     int backtraceLength = sizeof(backtraceBuffer) / sizeof(*backtraceBuffer);
@@ -1012,7 +1017,8 @@ void bsg_kscrw_i_writeThread(const BSG_KSCrashReportWriter *const writer,
 void bsg_kscrw_i_writeAllThreads(const BSG_KSCrashReportWriter *const writer,
                                  const char *const key,
                                  const BSG_KSCrash_SentryContext *const crash,
-                                 bool writeNotableAddresses) {
+                                 bool writeNotableAddresses,
+                                 const bool recordAllThreads) {
     const task_t thisTask = mach_task_self();
     thread_act_array_t threads;
     mach_msg_type_number_t numThreads;
@@ -1028,7 +1034,7 @@ void bsg_kscrw_i_writeAllThreads(const BSG_KSCrashReportWriter *const writer,
     {
         for (mach_msg_type_number_t i = 0; i < numThreads; i++) {
             bsg_kscrw_i_writeThread(writer, NULL, crash, threads[i], (int)i,
-                                    writeNotableAddresses);
+                                    writeNotableAddresses, recordAllThreads);
         }
     }
     writer->endContainer(writer);
@@ -1539,7 +1545,7 @@ void bsg_kscrashreport_writeMinimalReport(
                 writer, BSG_KSCrashField_CrashedThread, &crashContext->crash,
                 crashContext->crash.offendingThread,
                 bsg_kscrw_i_threadIndex(crashContext->crash.offendingThread),
-                false);
+                false, false);
             bsg_kscrw_i_writeError(writer, BSG_KSCrashField_Error,
                                    &crashContext->crash);
         }
@@ -1610,20 +1616,22 @@ void bsg_kscrashreport_writeStandardReport(
 
         writer->beginObject(writer, BSG_KSCrashField_Crash);
         {
-            // Don't write the threads for user reported crashes to improve
-            // performance
-            if (crashContext->crash.threadTracingEnabled == true ||
-                crashContext->crash.crashType != BSG_KSCrashTypeUserReported) {
-                bsg_kscrw_i_writeAllThreads(
-                    writer, BSG_KSCrashField_Threads, &crashContext->crash,
-                    crashContext->config.introspectionRules.enabled);
-            }
-            bsg_kscrw_i_writeError(writer, BSG_KSCrashField_Error,
-                    &crashContext->crash);
+            // Conditionally write threads depending on user configuration
+            int sendPolicy = crashContext->crash.threadTracingEnabled;
+            bool unhandledCrash = crashContext->crash.crashType != BSG_KSCrashTypeUserReported;
+            bool recordAllThreads = sendPolicy == 0 || (unhandledCrash && sendPolicy == 1);
+
+            bsg_kscrw_i_writeAllThreads(writer, BSG_KSCrashField_Threads, &crashContext->crash,
+                    crashContext->config.introspectionRules.enabled, recordAllThreads);
+            bsg_kscrw_i_writeError(writer, BSG_KSCrashField_Error,&crashContext->crash);
         }
         writer->endContainer(writer);
 
         if (crashContext->config.onCrashNotify != NULL) {
+
+            // NOTE: The blacklist for BSG_KSCrashField_UserAtCrash children in BugsnagEvent.m
+            // should be updated when adding new fields here
+
             // Write handled exception report info
             writer->beginObject(writer, BSG_KSCrashField_UserAtCrash);
             if (crashContext->crash.crashType == BSG_KSCrashTypeUserReported) {
