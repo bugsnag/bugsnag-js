@@ -1,6 +1,6 @@
 # Changelog
 
-## 7.0.1 (2020-04-24)
+## 7.0.1 (2020-04-27)
 
 ### Fixed
 - (plugin-vue): Fix plugin type definitions [#809](https://github.com/bugsnag/bugsnag-js/pull/809)
