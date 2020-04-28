@@ -673,9 +673,8 @@
 			buildSettings = {
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/../../react-native/React/**",
 					"$(SRCROOT)/vendor/bugsnag-cocoa/Source/**",
-					"$(SRCROOT)/../node_modules/react-native/React/**",
+					"$(SRCROOT)/../../../node_modules/react-native/React/**",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -691,9 +690,8 @@
 			buildSettings = {
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/../../react-native/React/**",
 					"$(SRCROOT)/vendor/bugsnag-cocoa/Source/**",
-					"$(SRCROOT)/../node_modules/react-native/React/**",
+					"$(SRCROOT)/../../../node_modules/react-native/React/**",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
