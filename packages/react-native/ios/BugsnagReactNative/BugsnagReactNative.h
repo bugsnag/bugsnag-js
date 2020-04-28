@@ -7,12 +7,19 @@
 
 @interface BugsnagReactNative: NSObject<RCTBridgeModule>
 
-- (NSDictionary *)configure;
+- (void)configureAsync:(NSDictionary *)readableMap
+               resolve:(RCTPromiseResolveBlock)resolve
+                reject:(RCTPromiseRejectBlock)reject;
+
+- (NSDictionary *)configure:(NSDictionary *)readableMap;
+
+- (void)updateCodeBundleId:(NSString *)codeBundleId;
 
 - (void)updateMetadata:(NSString *)section
               withData:(NSDictionary *)update;
 
 - (void)updateContext:(NSString *)context;
+
 - (void)updateUser:(NSString *)userId
          withEmail:(NSString *)email
           withName:(NSString *)name;
@@ -22,10 +29,11 @@
 - (void)resumeSession;
 
 - (void)dispatch:(NSDictionary *)payload
-        resolve:(RCTPromiseResolveBlock)resolve
-         reject:(RCTPromiseRejectBlock)reject;
+         resolve:(RCTPromiseResolveBlock)resolve
+          reject:(RCTPromiseRejectBlock)reject;
 
-- (void)getPayloadInfo:(RCTPromiseResolveBlock)resolve
+- (void)getPayloadInfo:(NSDictionary *)payloadInfo
+               resolve:(RCTPromiseResolveBlock)resolve
                 reject:(RCTPromiseRejectBlock)reject;
 
 - (void)leaveBreadcrumb:(NSDictionary *)options;
