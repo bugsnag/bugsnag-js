@@ -28,12 +28,20 @@
 #import "BugsnagConfiguration.h"
 #import "BugsnagMetadata.h"
 #import "BugsnagPlugin.h"
+#import "BugsnagClient.h"
+#import "BugsnagEvent.h"
+#import "BugsnagApp.h"
+#import "BugsnagAppWithState.h"
+#import "BugsnagDevice.h"
+#import "BugsnagDeviceWithState.h"
+#import "BugsnagEndpointConfiguration.h"
+#import "BugsnagError.h"
+#import "BugsnagErrorTypes.h"
+#import "BugsnagSession.h"
+#import "BugsnagStackframe.h"
+#import "BugsnagThread.h"
 
-static NSString *_Nonnull const BugsnagSeverityError = @"error";
-static NSString *_Nonnull const BugsnagSeverityWarning = @"warning";
-static NSString *_Nonnull const BugsnagSeverityInfo = @"info";
-
-@interface Bugsnag : NSObject
+@interface Bugsnag : NSObject <BugsnagClassLevelMetadataStore>
 
 /** Start listening for crashes.
  *
@@ -44,7 +52,7 @@ static NSString *_Nonnull const BugsnagSeverityInfo = @"info";
  *
  * @param apiKey  The API key from your Bugsnag dashboard.
  */
-+ (void)startBugsnagWithApiKey:(NSString *_Nonnull)apiKey;
++ (BugsnagClient *_Nonnull)startBugsnagWithApiKey:(NSString *_Nonnull)apiKey;
 
 /** Start listening for crashes.
  *
@@ -55,15 +63,16 @@ static NSString *_Nonnull const BugsnagSeverityInfo = @"info";
  *
  * @param configuration  The configuration to use.
  */
-+ (void)startBugsnagWithConfiguration:
-    (BugsnagConfiguration *_Nonnull)configuration;
++ (BugsnagClient *_Nonnull)startBugsnagWithConfiguration:(BugsnagConfiguration *_Nonnull)configuration;
 
 /**
  * @return YES if Bugsnag has been started and the previous launch crashed
  */
 + (BOOL)appDidCrashLastLaunch;
 
+// =============================================================================
 // MARK: - Notify
+// =============================================================================
 
 /** Send a custom or caught exception to Bugsnag.
  *
@@ -99,64 +108,9 @@ static NSString *_Nonnull const BugsnagSeverityInfo = @"info";
 + (void)notifyError:(NSError *_Nonnull)error
               block:(BugsnagOnErrorBlock _Nullable)block;
 
-/** Send a custom or caught exception to Bugsnag.
- *
- * The exception will be sent to Bugsnag in the background allowing your
- * app to continue running.
- *
- * @param exception  The exception.
- *
- * @param metadata   Any additional information you want to send with the
- * report.
- */
-+ (void)notify:(NSException *_Nonnull)exception
-      withData:(NSDictionary *_Nullable)metadata
-    __deprecated_msg("Use notify:block: instead and add the metadata to the "
-                     "report directly.");
-
-/** Send a custom or caught exception to Bugsnag.
- *
- * The exception will be sent to Bugsnag in the background allowing your
- * app to continue running.
- *
- * @param exception  The exception.
- *
- * @param metadata   Any additional information you want to send with the
- * report.
- *
- * @param severity   The severity level (default: BugsnagSeverityWarning)
- */
-+ (void)notify:(NSException *_Nonnull)exception
-      withData:(NSDictionary *_Nullable)metadata
-    atSeverity:(NSString *_Nullable)severity
-    __deprecated_msg("Use notify:block: instead and add the metadata and "
-                     "severity to the report directly.");
-
-/**
- * Intended for use by other clients (React Native/Unity). Calling this method
- * directly from iOS is not supported.
- */
-+ (void)internalClientNotify:(NSException *_Nonnull)exception
-                    withData:(NSDictionary *_Nullable)metadata
-                       block:(BugsnagOnErrorBlock _Nullable)block;
-
-/** Add custom data to send to Bugsnag with every exception. If value is nil,
- *  delete the current value for attributeName
- *
- * See also [Bugsnag configuration].metaData;
- *
- * @param key      The name of the data.
- *
- * @param value    Its value.
- *
- * @param section  The tab to show it on on the Bugsnag dashboard.
- */
-+ (void)addMetadataToSection:(NSString *_Nonnull)section
-                         key:(NSString *_Nonnull)key
-                       value:(id _Nullable)value
-    NS_SWIFT_NAME(addMetadata(_:key:value:));
-
+// =============================================================================
 // MARK: - Breadcrumbs
+// =============================================================================
 
 /**
  * Leave a "breadcrumb" log message, representing an action that occurred
@@ -165,15 +119,6 @@ static NSString *_Nonnull const BugsnagSeverityInfo = @"info";
  * @param message  the log message to leave
  */
 + (void)leaveBreadcrumbWithMessage:(NSString *_Nonnull)message;
-
-/**
- *  Leave a "breadcrumb" log message with additional information about the
- *  environment at the time the breadcrumb was captured.
- *
- *  @param block configuration block
- */
-+ (void)leaveBreadcrumbWithBlock:
-    (void (^_Nonnull)(BugsnagBreadcrumb *_Nonnull))block;
 
 /**
  *  Leave a "breadcrumb" log message each time a notification with a provided
@@ -197,22 +142,9 @@ static NSString *_Nonnull const BugsnagSeverityInfo = @"info";
                            andType:(BSGBreadcrumbType)type
     NS_SWIFT_NAME(leaveBreadcrumb(_:metadata:type:));
 
-/**
- * Clear any breadcrumbs that have been left so far.
- */
-+ (void)clearBreadcrumbs;
-
-/**
- * Set the maximum number of breadcrumbs to keep and sent to Bugsnag.
- * By default, we'll keep and send the 20 most recent breadcrumb log
- * messages.
- *
- * @param capacity max number of breadcrumb log messages to send
- */
-+ (void)setBreadcrumbCapacity:(NSUInteger)capacity
-        __deprecated_msg("Use [BugsnagConfiguration setMaxBreadcrumbs:] instead");
-
+// =============================================================================
 // MARK: - Session
+// =============================================================================
 
 /**
  * Starts tracking a new session.
@@ -271,68 +203,30 @@ static NSString *_Nonnull const BugsnagSeverityInfo = @"info";
  */
 + (BOOL)resumeSession;
 
-/**
-* Return the metadata for a specific named section
-*
-* @param section The name of the section
-* @returns The mutable dictionary representing the metaadata section, if it
-*          exists, or nil if not.
-*/
-+ (NSMutableDictionary *_Nullable)getMetadata:(NSString *_Nonnull)section
-    NS_SWIFT_NAME(getMetadata(_:));
 
-/**
-* Return the metadata for a key in a specific named section
-*
-* @param section The name of the section
-* @param key The key
-* @returns The value of the keyed value if it exists or nil.
-*/
-+ (id _Nullable )getMetadata:(NSString *_Nonnull)section key:(NSString *_Nonnull)key
-    NS_SWIFT_NAME(getMetadata(_:key:));
 
-/**
- * Remove a key/value from a named matadata section.  If either the section or the
- * key do not exist no action will occur.
- *
- * @param sectionName The name of the section containing the value
- * @param key The key to remove
- */
-+ (void)clearMetadataInSection:(NSString *_Nonnull)sectionName
-                       withKey:(NSString *_Nonnull)key
-    NS_SWIFT_NAME(clearMetadata(section:key:));
-
-/**
-* Add a callback that would be invoked before a session is sent to Bugsnag.
-*
-* @param block The block to be added.
-*/
-+ (void)addOnSessionBlock:(BugsnagOnSessionBlock _Nonnull)block;
-
-/**
- * Remove a callback that would be invoked before a session is sent to Bugsnag.
- *
- * @param block The block to be removed.
- */
-+ (void)removeOnSessionBlock:(BugsnagOnSessionBlock _Nonnull )block;
-
+// =============================================================================
 // MARK: - Other methods
-
-+ (NSDateFormatter *_Nonnull)payloadDateFormatter;
+// =============================================================================
 
 /**
- * Replicates BugsnagConfiguration.context
- *
- * @param context A general summary of what was happening in the application
+ * Retrieves the context - a general summary of what was happening in the application
  */
 + (void)setContext:(NSString *_Nullable)context;
 
-/** Remove custom data from Bugsnag reports.
- *
- * @param sectionName        The section to clear.
+/**
+ * Retrieves the context - a general summary of what was happening in the application
  */
-+ (void)clearMetadataInSection:(NSString *_Nonnull)sectionName
-    NS_SWIFT_NAME(clearMetadata(section:));
++ (NSString *_Nullable)context;
+
+// =============================================================================
+// MARK: - User
+// =============================================================================
+
+/**
+ * The current user
+ */
++ (BugsnagUser *_Nonnull)user;
 
 /**
  *  Set user metadata
@@ -342,7 +236,69 @@ static NSString *_Nonnull const BugsnagSeverityInfo = @"info";
  *  @param email  Email address of the user
  */
 + (void)setUser:(NSString *_Nullable)userId
-       withName:(NSString *_Nullable)name
-       andEmail:(NSString *_Nullable)email;
+       withEmail:(NSString *_Nullable)email
+       andName:(NSString *_Nullable)name;
+
+// =============================================================================
+// MARK: - onSession
+// =============================================================================
+
+/**
+ *  Add a callback to be invoked before a session is sent to Bugsnag.
+ *
+ *  @param block A block which can modify the session
+ */
++ (void)addOnSessionBlock:(BugsnagOnSessionBlock _Nonnull)block
+    NS_SWIFT_NAME(addOnSession(block:));
+
+/**
+ * Remove a callback that would be invoked before a session is sent to Bugsnag.
+ *
+ * @param block The block to be removed.
+ */
++ (void)removeOnSessionBlock:(BugsnagOnSessionBlock _Nonnull)block
+    NS_SWIFT_NAME(removeOnSession(block:));
+
+// =============================================================================
+// MARK: - onSend
+// =============================================================================
+
+/**
+ *  Add a callback to be invoked before a report is sent to Bugsnag, to
+ *  change the report contents as needed
+ *
+ *  @param block A block which returns YES if the report should be sent
+ */
++ (void)addOnSendErrorBlock:(BugsnagOnSendErrorBlock _Nonnull)block
+    NS_SWIFT_NAME(addOnSendError(block:));
+
+/**
+ * Remove the callback that would be invoked before an event is sent.
+ *
+ * @param block The block to be removed.
+ */
++ (void)removeOnSendErrorBlock:(BugsnagOnSendErrorBlock _Nonnull)block
+    NS_SWIFT_NAME(removeOnSendError(block:));
+
+// =============================================================================
+// MARK: - onBreadcrumb
+// =============================================================================
+
+/**
+ *  Add a callback to be invoked when a breadcrumb is captured by Bugsnag, to
+ *  change the breadcrumb contents as needed
+ *
+ *  @param block A block which returns YES if the breadcrumb should be captured
+ */
++ (void)addOnBreadcrumbBlock:(BugsnagOnBreadcrumbBlock _Nonnull)block
+    NS_SWIFT_NAME(addOnBreadcrumb(block:));
+
+/**
+ * Remove the callback that would be invoked when a breadcrumb is captured.
+ *
+ * @param block The block to be removed.
+ */
++ (void)removeOnBreadcrumbBlock:(BugsnagOnBreadcrumbBlock _Nonnull)block
+    NS_SWIFT_NAME(removeOnBreadcrumb(block:));
 
 @end

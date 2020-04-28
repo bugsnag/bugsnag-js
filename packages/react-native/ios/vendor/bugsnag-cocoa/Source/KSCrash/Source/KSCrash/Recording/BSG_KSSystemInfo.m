@@ -34,6 +34,8 @@
 #import "BugsnagKeys.h"
 #import "BugsnagCollections.h"
 #import "BSG_KSLogger.h"
+#import "BSG_KSCrashReportFields.h"
+#import "BSG_KSMach.h"
 
 #import <CommonCrypto/CommonDigest.h>
 #if BSG_KSCRASH_HAS_UIKIT
@@ -422,8 +424,10 @@
     BSGDictSetSafeObject(sysInfo, [self deviceAndAppHash], @BSG_KSSystemField_DeviceAppHash);
     BSGDictSetSafeObject(sysInfo, [BSG_KSSystemInfo buildType], @BSG_KSSystemField_BuildType);
 
-    NSDictionary *memory =
-            @{@BSG_KSSystemField_Size: [self int64Sysctl:@"hw.memsize"]};
+    NSDictionary *memory = @{
+            @BSG_KSSystemField_Size: [self int64Sysctl:@"hw.memsize"],
+            @BSG_KSCrashField_Usable: @(bsg_ksmachusableMemory())
+    };
     BSGDictSetSafeObject(sysInfo, memory, @BSG_KSSystemField_Memory);
 
     return sysInfo;

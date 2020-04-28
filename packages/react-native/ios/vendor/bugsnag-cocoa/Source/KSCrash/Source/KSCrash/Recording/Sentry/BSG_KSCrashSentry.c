@@ -201,7 +201,7 @@ void bsg_kscrashsentry_resumeThreads(void) {
 
 void bsg_kscrashsentry_clearContext(BSG_KSCrash_SentryContext *context) {
     void (*onCrash)(void *) = context->onCrash;
-    bool threadTracingEnabled = context->threadTracingEnabled;
+    int threadTracingEnabled = context->threadTracingEnabled;
     bool reportWhenDebuggerIsAttached = context->reportWhenDebuggerIsAttached;
     bool suspendThreadsForUserReported = context->suspendThreadsForUserReported;
     bool writeBinaryImagesForUserReported =

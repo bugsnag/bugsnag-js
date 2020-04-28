@@ -44,7 +44,7 @@ RCT_EXPORT_METHOD(updateUser
                   :(NSString *)userId
          withEmail:(NSString *)email
           withName:(NSString *)name) {
-    [Bugsnag setUser:userId withName:name andEmail:email];
+    [Bugsnag setUser:userId withEmail:email andName:name];
 }
 
 RCT_EXPORT_METHOD(dispatch

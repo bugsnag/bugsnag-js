@@ -8,6 +8,10 @@
 
 static NSString *const kSessionStoreSuffix = @"-Session-";
 
+@interface BugsnagSession ()
+- (NSDictionary *)toJson;
+@end
+
 @implementation BugsnagSessionFileStore
 
 + (BugsnagSessionFileStore *)storeWithPath:(NSString *)path {
@@ -17,7 +21,7 @@ static NSString *const kSessionStoreSuffix = @"-Session-";
 
 - (void)write:(BugsnagSession *)session {
     // serialise session
-    NSString *filepath = [self pathToFileWithId:session.sessionId];
+    NSString *filepath = [self pathToFileWithId:session.id];
     NSDictionary *dict = [session toJson];
 
     NSError *error;

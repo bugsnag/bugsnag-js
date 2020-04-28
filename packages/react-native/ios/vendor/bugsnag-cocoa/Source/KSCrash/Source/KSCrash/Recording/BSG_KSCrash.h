@@ -30,6 +30,7 @@
 #import "BSG_KSCrashReportFilterCompletion.h"
 #import "BSG_KSCrashReportWriter.h"
 #import "BSG_KSCrashType.h"
+#import "BugsnagConfiguration.h"
 
 typedef enum {
     BSG_KSCDeleteNever,
@@ -155,7 +156,7 @@ typedef enum {
 /**
  * If YES, thread traces will be collected with each report.
  */
-@property(nonatomic, readwrite, assign) BOOL threadTracingEnabled;
+@property(nonatomic, readwrite, assign) int threadTracingEnabled;
 
 /**
  * If YES, binary images will be collected for each report.

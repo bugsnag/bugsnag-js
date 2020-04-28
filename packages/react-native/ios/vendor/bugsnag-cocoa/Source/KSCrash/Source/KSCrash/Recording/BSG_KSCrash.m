@@ -134,7 +134,7 @@ IMPLEMENT_EXCLUSIVE_SHARED_INSTANCE(BSG_KSCrash)
 
         self.suspendThreadsForUserReported = YES;
         self.reportWhenDebuggerIsAttached = NO;
-        self.threadTracingEnabled = YES;
+        self.threadTracingEnabled = BSGThreadSendPolicyAlways;
         self.writeBinaryImagesForUserReported = YES;
     }
     return self;
@@ -191,7 +191,7 @@ IMPLEMENT_EXCLUSIVE_SHARED_INSTANCE(BSG_KSCrash)
     bsg_kscrash_setReportWhenDebuggerIsAttached(reportWhenDebuggerIsAttached);
 }
 
-- (void)setThreadTracingEnabled:(BOOL)threadTracingEnabled {
+- (void)setThreadTracingEnabled:(int)threadTracingEnabled {
     _threadTracingEnabled = threadTracingEnabled;
     bsg_kscrash_setThreadTracingEnabled(threadTracingEnabled);
 }

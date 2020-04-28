@@ -9,6 +9,7 @@
 #import "BugsnagSession.h"
 #import "BugsnagCollections.h"
 #import "BSG_RFC3339DateTool.h"
+#import "BugsnagKeys.h"
 
 static NSString *const kBugsnagSessionId = @"id";
 static NSString *const kBugsnagUnhandledCount = @"unhandledCount";
@@ -16,8 +17,40 @@ static NSString *const kBugsnagHandledCount = @"handledCount";
 static NSString *const kBugsnagStartedAt = @"startedAt";
 static NSString *const kBugsnagUser = @"user";
 
+@interface BugsnagApp ()
+- (NSDictionary *)toDict;
++ (BugsnagApp *)deserializeFromJson:(NSDictionary *)json;
+@end
+
+@interface BugsnagDevice ()
+- (NSDictionary *)toDictionary;
++ (BugsnagDevice *)deserializeFromJson:(NSDictionary *)json;
+@end
+
+@interface BugsnagUser ()
+- (instancetype)initWithDictionary:(NSDictionary *)dict;
+- (instancetype)initWithUserId:(NSString *)userId name:(NSString *)name emailAddress:(NSString *)emailAddress;
+- (NSDictionary *)toJson;
+@end
+
 @interface BugsnagSession ()
 @property(readwrite, getter=isStopped) BOOL stopped;
+@property(readonly) BOOL autoCaptured;
+@property NSUInteger unhandledCount;
+@property NSUInteger handledCount;
+
+/**
+ * Representation used in report payloads
+ */
+- (NSDictionary *_Nonnull)toJson;
+
+/**
+ * Full representation of a session suitable for creating an identical session
+ * using initWithDictionary
+ */
+- (NSDictionary *_Nonnull)toDictionary;
+- (void)stop;
+- (void)resume;
 @end
 
 @implementation BugsnagSession
@@ -25,29 +58,30 @@ static NSString *const kBugsnagUser = @"user";
 - (instancetype)initWithId:(NSString *_Nonnull)sessionId
                  startDate:(NSDate *_Nonnull)startDate
                       user:(BugsnagUser *_Nullable)user
-              autoCaptured:(BOOL)autoCaptured {
-
+              autoCaptured:(BOOL)autoCaptured
+                       app:(BugsnagApp *_Nonnull)app
+                       device:(BugsnagDevice *_Nonnull)device {
     if (self = [super init]) {
-        _sessionId = sessionId;
+        _id = sessionId;
         _startedAt = [startDate copy];
         _user = user;
         _autoCaptured = autoCaptured;
+        _app = app;
+        _device = device;
     }
     return self;
 }
 
 - (instancetype)initWithDictionary:(NSDictionary *_Nonnull)dict {
     if (self = [super init]) {
-        _sessionId = dict[kBugsnagSessionId];
+        _id = dict[kBugsnagSessionId];
         _unhandledCount = [dict[kBugsnagUnhandledCount] unsignedIntegerValue];
         _handledCount = [dict[kBugsnagHandledCount] unsignedIntegerValue];
         _startedAt = [BSG_RFC3339DateTool dateFromString:dict[kBugsnagStartedAt]];
 
-        NSDictionary *userDict = dict[kBugsnagUser];
-
-        if (userDict) {
-            _user = [[BugsnagUser alloc] initWithDictionary:userDict];
-        }
+        _user = [[BugsnagUser alloc] initWithDictionary:dict[kBugsnagUser]];
+        _app = [BugsnagApp deserializeFromJson:dict[BSGKeyApp]];
+        _device = [BugsnagDevice deserializeFromJson:dict[BSGKeyDevice]];
     }
     return self;
 }
@@ -56,31 +90,38 @@ static NSString *const kBugsnagUser = @"user";
                           startDate:(NSDate *_Nonnull)startDate
                                user:(BugsnagUser *_Nullable)user
                        handledCount:(NSUInteger)handledCount
-                     unhandledCount:(NSUInteger)unhandledCount {
+                     unhandledCount:(NSUInteger)unhandledCount
+                                app:(BugsnagApp *_Nonnull)app
+                             device:(BugsnagDevice *_Nonnull)device {
     if (self = [super init]) {
-        _sessionId = sessionId;
+        _id = sessionId;
         _startedAt = startDate;
         _unhandledCount = unhandledCount;
         _handledCount = handledCount;
         _user = user;
+        _app = app;
+        _device = device;
     }
     return self;
 }
 
 - (NSDictionary *)toJson {
     NSMutableDictionary *dict = [NSMutableDictionary new];
-    BSGDictInsertIfNotNil(dict, self.sessionId, kBugsnagSessionId);
+    BSGDictInsertIfNotNil(dict, self.id, kBugsnagSessionId);
     BSGDictInsertIfNotNil(dict, [BSG_RFC3339DateTool stringFromDate:self.startedAt], kBugsnagStartedAt);
 
     if (self.user) {
         BSGDictInsertIfNotNil(dict, [self.user toJson], kBugsnagUser);
     }
+
+    BSGDictInsertIfNotNil(dict, [self.app toDict], BSGKeyApp);
+    BSGDictInsertIfNotNil(dict, [self.device toDictionary], BSGKeyDevice);
     return [NSDictionary dictionaryWithDictionary:dict];
 }
 
 - (NSDictionary *)toDictionary {
     NSMutableDictionary *dict = [NSMutableDictionary new];
-    dict[kBugsnagSessionId] = self.sessionId ?: @"";
+    dict[kBugsnagSessionId] = self.id ?: @"";
     dict[kBugsnagStartedAt] = self.startedAt ? [BSG_RFC3339DateTool stringFromDate:self.startedAt] : @"";
     dict[kBugsnagHandledCount] = @(self.handledCount);
     dict[kBugsnagUnhandledCount] = @(self.unhandledCount);
@@ -96,6 +137,12 @@ static NSString *const kBugsnagUser = @"user";
 
 - (void)resume {
     self.stopped = NO;
+}
+
+- (void)setUser:(NSString *_Nullable)userId
+      withEmail:(NSString *_Nullable)email
+        andName:(NSString *_Nullable)name {
+    _user = [[BugsnagUser alloc] initWithUserId:userId name:name emailAddress:email];
 }
 
 @end

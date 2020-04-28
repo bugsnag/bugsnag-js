@@ -7,6 +7,26 @@
 //
 
 #import "BugsnagHandledState.h"
+#import "BugsnagKeys.h"
+
+BSGSeverity BSGParseSeverity(NSString *severity) {
+    if ([severity isEqualToString:BSGKeyInfo])
+        return BSGSeverityInfo;
+    else if ([severity isEqualToString:BSGKeyWarning])
+        return BSGSeverityWarning;
+    return BSGSeverityError;
+}
+
+NSString *BSGFormatSeverity(BSGSeverity severity) {
+    switch (severity) {
+    case BSGSeverityError:
+        return BSGKeyError;
+    case BSGSeverityInfo:
+        return BSGKeyInfo;
+    case BSGSeverityWarning:
+        return BSGKeyWarning;
+    }
+}
 
 static NSString *const kUnhandled = @"unhandled";
 static NSString *const kSeverityReasonType = @"severityReasonType";
