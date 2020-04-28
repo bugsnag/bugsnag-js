@@ -1,12 +1,17 @@
 #import "Bugsnag.h"
 #import "BugsnagReactNative.h"
 #import "BugsnagReactNativeEmitter.h"
+#import "BugsnagConfigSerializer.h"
 
 @interface Bugsnag ()
 + (id)client;
 + (BOOL)bugsnagStarted;
 + (BugsnagConfiguration *)configuration;
 + (void)updateCodeBundleId:(NSString *)codeBundleId;
+@end
+
+@interface BugsnagReactNative ()
+@property (nonatomic) BugsnagConfigSerializer *configSerializer;
 @end
 
 @implementation BugsnagReactNative
@@ -20,20 +25,17 @@ RCT_EXPORT_METHOD(configureAsync:(NSDictionary *)readableMap
 }
 
 RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(configure:(NSDictionary *)readableMap) {
+    self.configSerializer = [BugsnagConfigSerializer new];
+
     if (![Bugsnag bugsnagStarted]) {
-        // TODO: fail loudly here
         return nil;
     }
 
     // TODO: use this emitter to inform JS of changes to user, context and metadata
     BugsnagReactNativeEmitter *emitter = [BugsnagReactNativeEmitter new];
 
-    // TODO: convert the entire config into a map
     BugsnagConfiguration *config = [Bugsnag configuration];
-    return @{
-        @"apiKey": [config apiKey],
-        @"releaseStage": [config releaseStage],
-    };
+    return [self.configSerializer serialize:config];
 }
 
 RCT_EXPORT_METHOD(updateMetadata:(NSString *)section
