@@ -55,7 +55,7 @@ module.exports = (client, fetch = global.fetch) => {
           enqueue('event', { url, opts })
           return cb(null)
         }
-        client._logger.info(`Sending event ${event.events[0].errorClass}: ${event.events[0].errorMessage}`)
+        client._logger.info(`Sending event ${event.events[0].errors[0].errorClass}: ${event.events[0].errors[0].errorMessage}`)
         send(url, opts, err => {
           if (err) return onerror(err, { url, opts }, 'event', cb)
           cb(null)

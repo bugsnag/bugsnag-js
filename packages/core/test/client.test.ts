@@ -135,7 +135,8 @@ describe('@bugsnag/core/client', () => {
           expect(event.severity).toBe('warning')
           expect(event.severityReason).toEqual({ type: 'handledException' })
           process.nextTick(() => done())
-        }
+        },
+        sendSession: () => {}
       }))
       client.notify(new Error('oh em gee'))
     })
@@ -150,7 +151,8 @@ describe('@bugsnag/core/client', () => {
           expect(event.severity).toBe('info')
           expect(event.severityReason).toEqual({ type: 'userCallbackSetSeverity' })
           done()
-        }
+        },
+        sendSession: () => {}
       }))
       client.notify(new Error('oh em gee'), event => {
         event.severity = 'info'
@@ -162,7 +164,8 @@ describe('@bugsnag/core/client', () => {
       client._setDelivery(client => ({
         sendEvent: (payload) => {
           done('sendEvent() should not be called')
-        }
+        },
+        sendSession: () => {}
       }))
 
       client.notify(new Error('oh em gee'), event => false)
@@ -189,7 +192,8 @@ describe('@bugsnag/core/client', () => {
           expect(payload.events[0].errors[0].errorMessage).toBe('oh no!')
           expect(onErrorSpy).toHaveBeenCalledTimes(1)
           done()
-        }
+        },
+        sendSession: () => {}
       }))
 
       client.notify(new Error('oh no!'))
@@ -201,7 +205,8 @@ describe('@bugsnag/core/client', () => {
       client._setDelivery(client => ({
         sendEvent: (payload) => {
           done('sendEvent() should not be called')
-        }
+        },
+        sendSession: () => {}
       }))
 
       client.notify(new Error('oh em eff gee'))
@@ -216,7 +221,8 @@ describe('@bugsnag/core/client', () => {
       client._setDelivery(client => ({
         sendEvent: (payload) => {
           done('sendEvent() should not be called')
-        }
+        },
+        sendSession: () => {}
       }))
 
       client.notify(new Error('oh em eff gee'))
@@ -231,7 +237,8 @@ describe('@bugsnag/core/client', () => {
         sendEvent: (payload) => {
           expect(payload.events[0].app.releaseStage).toBe('staging')
           done()
-        }
+        },
+        sendSession: () => {}
       }))
       client.notify(new Error('oh em eff gee'))
     })
@@ -242,7 +249,8 @@ describe('@bugsnag/core/client', () => {
         sendEvent: (payload) => {
           expect(payload.events[0].app.version).toBe('1.2.3')
           done()
-        }
+        },
+        sendSession: () => {}
       }))
       client.notify(new Error('oh em eff gee'))
     })
@@ -250,7 +258,7 @@ describe('@bugsnag/core/client', () => {
     it('can handle all kinds of bad input', () => {
       const payloads: any[] = []
       const client = new Client({ apiKey: 'API_KEY_YEAH' })
-      client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
+      client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload), sendSession: () => {} }))
 
       // @ts-ignore
       client.notify(undefined)
@@ -289,7 +297,7 @@ describe('@bugsnag/core/client', () => {
     it('supports { name, message } usage', () => {
       const payloads: any[] = []
       const client = new Client({ apiKey: 'API_KEY_YEAH' })
-      client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
+      client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload), sendSession: () => {} }))
       client.notify({ name: 'UnknownThing', message: 'found a thing that couldn’t be dealt with' })
 
       expect(payloads.length).toBe(1)
@@ -302,7 +310,7 @@ describe('@bugsnag/core/client', () => {
     it('leaves a breadcrumb of the error', () => {
       const payloads: any[] = []
       const client = new Client({ apiKey: 'API_KEY_YEAH' })
-      client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
+      client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload), sendSession: () => {} }))
       client.notify(new Error('foobar'))
       expect(client._breadcrumbs.length).toBe(1)
       expect(client._breadcrumbs[0].type).toBe('error')

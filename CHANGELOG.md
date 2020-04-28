@@ -1,5 +1,13 @@
 # Changelog
 
+## 7.0.1 (2020-04-27)
+
+### Fixed
+- (plugin-vue): Fix plugin type definitions [#809](https://github.com/bugsnag/bugsnag-js/pull/809)
+- (delivery-expo): Ensure Expo delivery logs event details correctly (instead of `undefined`) [#804](https://github.com/bugsnag/bugsnag-js/pull/804)
+- (expo-cli): Ensure Expo cli inserts correct code depending on the version of the notifier [#808](https://github.com/bugsnag/bugsnag-js/pull/808)
+- (expo): Ensure types allow `.start()` with no arguments [#817](https://github.com/bugsnag/bugsnag-js/pull/817)
+
 ## 7.0.0 (2020-04-14)
 
 ### Added
