@@ -8,7 +8,7 @@ Clone the repo and `cd` into the directory of this example:
 
 ```
 git clone git@github.com:bugsnag/bugsnag-js.git
-cd bugsnag-js/examples/ts/typescript
+cd bugsnag-js/examples/ts/plain-node
 ```
 
 Use the instructions below to run the application. When it runs, the output will look something like the following:
