@@ -2,7 +2,6 @@ const { schema } = require('@bugsnag/core/config')
 const stringWithLength = require('@bugsnag/core/lib/validators/string-with-length')
 const rnPackage = require('react-native/package.json')
 const iserror = require('iserror')
-// const Proxy = require('./lib/proxy')
 
 const ALLOWED_IN_JS = ['onError', 'onBreadcrumb', 'logger', 'metadata', 'user', 'context', 'codeBundleId']
 const allowedErrorTypes = () => ({
