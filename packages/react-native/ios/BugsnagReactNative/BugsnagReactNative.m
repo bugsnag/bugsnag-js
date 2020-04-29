@@ -6,6 +6,7 @@
 + (id)client;
 + (BOOL)bugsnagStarted;
 + (BugsnagConfiguration *)configuration;
++ (void)updateCodeBundleId:(NSString *)codeBundleId;
 @end
 
 @implementation BugsnagReactNative
@@ -49,7 +50,7 @@ RCT_EXPORT_METHOD(updateContext:(NSString *)context) {
 }
 
 RCT_EXPORT_METHOD(updateCodeBundleId:(NSString *)codeBundleId) {
-    // TODO
+    [Bugsnag updateCodeBundleId:codeBundleId];
 }
 
 RCT_EXPORT_METHOD(updateUser:(NSString *)userId
