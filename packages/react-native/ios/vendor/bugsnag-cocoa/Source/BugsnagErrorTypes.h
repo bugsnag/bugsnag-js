@@ -45,5 +45,12 @@
  */
 @property BOOL machExceptions;
 
+/**
+ * Sets whether Bugsnag should automatically capture and report unhandled promise rejections.
+ * This only applies to React Native apps.
+ * By default, this value is true.
+ */
+@property BOOL unhandledRejections;
+
 @end
 

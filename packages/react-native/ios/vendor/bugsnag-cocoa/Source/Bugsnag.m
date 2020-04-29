@@ -68,12 +68,12 @@ static BugsnagClient *bsg_g_bugsnag_client = NULL;
 
 @implementation Bugsnag
 
-+ (BugsnagClient *_Nonnull)startBugsnagWithApiKey:(NSString *)apiKey {
++ (BugsnagClient *_Nonnull)startWithApiKey:(NSString *_Nonnull)apiKey {
     BugsnagConfiguration *configuration = [[BugsnagConfiguration alloc] initWithApiKey:apiKey];
-    return [self startBugsnagWithConfiguration:configuration];
+    return [self startWithConfiguration:configuration];
 }
 
-+ (BugsnagClient *_Nonnull)startBugsnagWithConfiguration:(BugsnagConfiguration *)configuration {
++ (BugsnagClient *_Nonnull)startWithConfiguration:(BugsnagConfiguration *_Nonnull)configuration {
     @synchronized(self) {
         bsg_g_bugsnag_client =
                 [[BugsnagClient alloc] initWithConfiguration:configuration];

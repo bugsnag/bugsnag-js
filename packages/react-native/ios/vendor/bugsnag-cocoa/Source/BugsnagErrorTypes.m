@@ -16,6 +16,7 @@
         _signals = true;
         _cppExceptions = true;
         _machExceptions = true;
+        _unhandledRejections = true;
 
 #if DEBUG
         _ooms = false;
