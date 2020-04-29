@@ -165,3 +165,49 @@ EXPO_P12_PATH=xxx \
 EXPO_IOS_DIST_P12_PASSWORD=xxx \
   npm run test:expo:ios
 ```
+
+### React-native
+
+The React-native tests drive real, remote mobile devices using BrowserStack. As a Bugsnag employee you can access the necessary credentials in our shared password manager.
+
+In addition, the react-native test fixture requires the current version of the repo to be published to a locally owned NPM repository (! Not the official NPMJS repository !). This can be locally or remotely hosted, but should be versioned appropriately.  Three bits of information will need to be passed into the test run as environment variables in order to access this package:
+
+- `REG_BASIC_CREDENTIAL`: the basic auth credentials of an account able to access the repository
+- `REG_NPM_EMAIL`: the email of the user accessing the repository
+- `REGISTRY_URL`: the remote address of the repository
+
+The targeted release of `@bugsnag/react-native` must be tagged with the short hash of the current commit in order to be picked up by the gradle build process.
+
+There are several react-native versions that can be targeted, as well as a corresponding package path used to integrate the android modules.  These should be set to the `REACT_NATIVE_VERSION` and `ANDROID_PACKAGE_PATH` environment variables according to the table below:
+
+| React native fixture | `REACT_NATIVE_VERSION` | `ANDROID_PACKAGE_PATH` |
+|----------------------|------------------------|------------------------|
+| 0.55                 | `rn0.55`               | `rn055`                |
+| 0.60                 | `rn0.60`               | `reactnative`          |
+
+The following environment variables need to be set:
+
+- `DEVICE_TYPE`: the mobile operating system you want to test on – one of ANDROID_5, ANDROID_6, ANDROID_7, ANDROID_8, ANDROID_9, IOS_10, IOS_11, IOS_12
+- `BROWSER_STACK_USERNAME`
+- `BROWSER_STACK_ACCESS_KEY`
+- `REACT_NATIVE_VERSION`
+- `ANDROID_PACKAGE_PATH`
+- `REG_BASIC_CREDENTIAL`
+- `REG_NPM_EMAIL`
+- `REGISTRY_URL`
+
+To run against an android device:
+
+```sh
+DEVICE_TYPE=ANDROID_9 \
+REACT_NATIVE_VERSION=rn0.60 \
+ANDROID_PACKAGE_PATH=reactnative \
+REG_BASIC_CREDENTIAL=xxx \
+REG_NPM_EMAIL=xxx \
+REGISTRY_URL=xxx \
+BROWSER_STACK_USERNAME=xxx \
+BROWSER_STACK_ACCESS_KEY=xxx \
+  npm run test:react-native:android
+```
+
+iOS test devices are currently not supported for React-native testing.
