@@ -52,7 +52,7 @@
  *
  * @param apiKey  The API key from your Bugsnag dashboard.
  */
-+ (BugsnagClient *_Nonnull)startBugsnagWithApiKey:(NSString *_Nonnull)apiKey;
++ (BugsnagClient *_Nonnull)startWithApiKey:(NSString *_Nonnull)apiKey;
 
 /** Start listening for crashes.
  *
@@ -63,7 +63,7 @@
  *
  * @param configuration  The configuration to use.
  */
-+ (BugsnagClient *_Nonnull)startBugsnagWithConfiguration:(BugsnagConfiguration *_Nonnull)configuration;
++ (BugsnagClient *_Nonnull)startWithConfiguration:(BugsnagConfiguration *_Nonnull)configuration;
 
 /**
  * @return YES if Bugsnag has been started and the previous launch crashed

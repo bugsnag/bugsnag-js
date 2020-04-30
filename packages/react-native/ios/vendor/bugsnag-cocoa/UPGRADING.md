@@ -129,12 +129,18 @@ Bugsnag.getMetadata("section" key:"key")
 [Bugsnag getMetadata:@"section" key:@"key"];
 ```
 
-`startBugsnagWithApiKey` and `startBugsnagWithConfiguration` now return a `BugsnagClient`.
+`startWithApiKey` and `startWithConfiguration` now return a `BugsnagClient`.
 
 #### Renames
 
 ```diff
 ObjC:
+
+- [Bugsnag startBugsnagWithApiKey]
++ [Bugsnag startWithApiKey]
+
+- [Bugsnag startBugsnagWithConfiguration]
++ [Bugsnag startWithConfiguration]
 
 - [Bugsnag configuration]
 + [Bugsnag setUser:withEmail:andName:]
@@ -155,6 +161,11 @@ ObjC:
 + [Bugsnag notify:block:]
 
 Swift:
+- Bugsnag.startBugsnagWith(:apiKey)
++ Bugsnag.startWith(:apiKey)
+
+- Bugsnag.startBugsnagWith(:configuration)
++ Bugsnag.startWith(:configuration)
 
 - Bugsnag.configuration()
 + Bugsnag.setUser(_:email:name:)

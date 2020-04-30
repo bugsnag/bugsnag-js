@@ -170,12 +170,6 @@
 		E72BF77F1FC86A7A004BE82F /* BugsnagUser.h in Headers */ = {isa = PBXBuildFile; fileRef = E72BF77D1FC86A7A004BE82F /* BugsnagUser.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E72BF7801FC86A7A004BE82F /* BugsnagUser.m in Sources */ = {isa = PBXBuildFile; fileRef = E72BF77E1FC86A7A004BE82F /* BugsnagUser.m */; };
 		E72BF7811FC86A7A004BE82F /* BugsnagUser.m in Sources */ = {isa = PBXBuildFile; fileRef = E72BF77E1FC86A7A004BE82F /* BugsnagUser.m */; };
-		E732BAF52456F09100365780 /* BugsnagMetadataStore.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 009DF96824327FA2000A8363 /* BugsnagMetadataStore.h */; };
-		E732BAF62456F09100365780 /* BugsnagPluginClient.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E72AE1F3241A4E4400ED8972 /* BugsnagPluginClient.h */; };
-		E732BAF72456F09100365780 /* Private.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8A3B5F252407EC6400CE4A3A /* Private.h */; };
-		E732BAF82456F09100365780 /* BSGOutOfMemoryWatchdog.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8A70D9C722539C81006B696F /* BSGOutOfMemoryWatchdog.h */; };
-		E732BAF92456F09100365780 /* BSG_SSKeychain.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0061D84624067AF80041C068 /* BSG_SSKeychain.h */; };
-		E732BAFA2456F09100365780 /* BSG_KSCrashIdentifier.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8A530CBE22FDC3AE00F0C108 /* BSG_KSCrashIdentifier.h */; };
 		E733A7681FD7091F003EAA29 /* KSCrashSentry_NSException_Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = E733A7641FD7091F003EAA29 /* KSCrashSentry_NSException_Tests.m */; };
 		E733A76A1FD7091F003EAA29 /* KSCrashSentry_Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = E733A7661FD7091F003EAA29 /* KSCrashSentry_Tests.m */; };
 		E733A76B1FD7091F003EAA29 /* KSCrashSentry_Signal_Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = E733A7671FD7091F003EAA29 /* KSCrashSentry_Signal_Tests.m */; };
@@ -412,12 +406,6 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
-				E732BAF52456F09100365780 /* BugsnagMetadataStore.h in CopyFiles */,
-				E732BAF62456F09100365780 /* BugsnagPluginClient.h in CopyFiles */,
-				E732BAF72456F09100365780 /* Private.h in CopyFiles */,
-				E732BAF82456F09100365780 /* BSGOutOfMemoryWatchdog.h in CopyFiles */,
-				E732BAF92456F09100365780 /* BSG_SSKeychain.h in CopyFiles */,
-				E732BAFA2456F09100365780 /* BSG_KSCrashIdentifier.h in CopyFiles */,
 				E7565F7C245082580041768E /* BugsnagErrorTypes.h in CopyFiles */,
 				E77AFEF22448A13C0082B8BB /* BugsnagSessionInternal.h in CopyFiles */,
 				E77AFF0C244A18A00082B8BB /* BugsnagEndpointConfiguration.h in CopyFiles */,

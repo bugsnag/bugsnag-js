@@ -33,7 +33,7 @@
     config.autoDetectErrors = NO;
     config.releaseStage = @"MagicalTestingTime";
 
-    [Bugsnag startBugsnagWithConfiguration:config];
+    [Bugsnag startWithConfiguration:config];
 }
 
 - (void)testNilPathDoesNotCreateWatchdog {
