@@ -19,7 +19,7 @@
     BSGDictInsertIfNotNil(dict, config.enabledReleaseStages, @"enabledReleaseStages");
     BSGDictInsertIfNotNil(dict, config.releaseStage, @"releaseStage");
     BSGDictInsertIfNotNil(dict, config.appVersion, @"appVersion");
-    BSGDictInsertIfNotNil(dict, config.appType, @"type");
+    BSGDictInsertIfNotNil(dict, config.appType, @"appType");
     BSGDictInsertIfNotNil(dict, @(config.persistUser), @"persistUser");
     BSGDictInsertIfNotNil(dict, @(config.maxBreadcrumbs), @"maxBreadcrumbs");
     
