@@ -5,11 +5,29 @@
 #import "BugsnagEventDeserializer.h"
 
 @interface Bugsnag ()
++ (BugsnagClient *)client;
 + (BOOL)bugsnagStarted;
 + (BugsnagConfiguration *)configuration;
 + (void)updateCodeBundleId:(NSString *)codeBundleId;
 + (void)notifyInternal:(BugsnagEvent *_Nonnull)event
                  block:(BOOL (^_Nonnull)(BugsnagEvent *_Nonnull))block;
+@end
+
+@interface BugsnagClient()
+@property id sessionTracker;
+@property BugsnagMetadata *metadata;
+@end
+
+@interface BugsnagMetadata ()
+@end
+
+@interface BugsnagEvent ()
+- (instancetype _Nonnull)initWithErrorName:(NSString *_Nonnull)name
+                              errorMessage:(NSString *_Nonnull)message
+                             configuration:(BugsnagConfiguration *_Nonnull)config
+                                  metadata:(BugsnagMetadata *_Nullable)metadata
+                              handledState:(BugsnagHandledState *_Nonnull)handledState
+                                   session:(BugsnagSession *_Nullable)session;
 @end
 
 @interface BugsnagReactNative ()
@@ -68,6 +86,7 @@ RCT_EXPORT_METHOD(dispatch:(NSDictionary *)payload
                     reject:(RCTPromiseRejectBlock)reject) {
     BugsnagEventDeserializer *deserializer = [BugsnagEventDeserializer new];
     BugsnagEvent *event = [deserializer deserializeEvent:payload];
+
     [Bugsnag notifyInternal:event block:^BOOL(BugsnagEvent * _Nonnull event) {
         NSLog(@"Sending event from JS: %@", event);
         return true;
