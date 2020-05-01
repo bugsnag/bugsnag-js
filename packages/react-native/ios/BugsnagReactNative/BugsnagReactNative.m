@@ -51,6 +51,17 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(configure:(NSDictionary *)readableMap) {
         return nil;
     }
 
+    [Bugsnag addOnSendErrorBlock:^BOOL(BugsnagEvent * _Nonnull event) {
+        BugsnagError *error;
+
+        if ([event.errors count] > 0) {
+            error = event.errors[0];
+        }
+        return error != nil
+                && ![error.errorClass hasPrefix:@"RCTFatalException"]
+                && ![error.errorMessage hasPrefix:@"Unhandled JS Exception"];
+    }];
+
     // TODO: use this emitter to inform JS of changes to user, context and metadata
     BugsnagReactNativeEmitter *emitter = [BugsnagReactNativeEmitter new];
 
