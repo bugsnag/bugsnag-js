@@ -23,6 +23,7 @@ RUN npm run build
 
 RUN git checkout .
 
+COPY scripts/ scripts/
 ARG PUBLISH_URL
 ARG BRANCH_NAME
-RUN ./node_modules/.bin/lerna publish --canary --yes --force-publish --registry $PUBLISH_URL --preid $BRANCH_NAME --dist-tag $(git rev-parse --short HEAD) prerelease
+RUN scripts/ci_publisher.rb $BRANCH_NAME $PUBLISH_URL
