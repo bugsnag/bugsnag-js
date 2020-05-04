@@ -11,6 +11,8 @@
 - (NSArray *)collectBreadcrumbs;
 - (NSArray *)collectThreads;
 @property id notifier;
+@property id sessionTracker;
+@property BugsnagMetadata *metadata;
 @end
 
 @interface Bugsnag ()
@@ -20,11 +22,8 @@
 + (void)updateCodeBundleId:(NSString *)codeBundleId;
 + (void)notifyInternal:(BugsnagEvent *_Nonnull)event
                  block:(BOOL (^_Nonnull)(BugsnagEvent *_Nonnull))block;
-@end
-
-@interface BugsnagClient()
-@property id sessionTracker;
-@property BugsnagMetadata *metadata;
++ (void)addRuntimeVersionInfo:(NSString *)info
+                      withKey:(NSString *)key;
 @end
 
 @interface BugsnagMetadata ()
@@ -59,6 +58,8 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(configure:(NSDictionary *)readableMap) {
     if (![Bugsnag bugsnagStarted]) {
         return nil;
     }
+    [self updateNotifierInfo:readableMap];
+    [self addRuntimeVersionInfo:readableMap];
 
     [Bugsnag addOnSendErrorBlock:^BOOL(BugsnagEvent * _Nonnull event) {
         BugsnagError *error;
@@ -70,7 +71,6 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(configure:(NSDictionary *)readableMap) {
                 && ![error.errorClass hasPrefix:@"RCTFatalException"]
                 && ![error.errorMessage hasPrefix:@"Unhandled JS Exception"];
     }];
-    [self updateNotifierInfo:readableMap];
 
     // TODO: use this emitter to inform JS of changes to user, context and metadata
     BugsnagReactNativeEmitter *emitter = [BugsnagReactNativeEmitter new];
@@ -148,6 +148,13 @@ RCT_EXPORT_METHOD(getPayloadInfo:(NSDictionary *)options
     info[@"breadcrumbs"] = [client collectBreadcrumbs];
     info[@"threads"] = [client collectThreads];
     resolve(info);
+}
+
+- (void)addRuntimeVersionInfo:(NSDictionary *)info {
+    NSString *reactNativeVersion = info[@"reactNativeVersion"];
+    NSString *engine = info[@"engine"];
+    [Bugsnag addRuntimeVersionInfo:reactNativeVersion withKey:@"reactNativeVersion"];
+    [Bugsnag addRuntimeVersionInfo:engine withKey:@"engine"];
 }
 
 - (BSGBreadcrumbType)breadcrumbTypeFromString:(NSString *)value {
