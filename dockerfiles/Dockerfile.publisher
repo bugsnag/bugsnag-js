@@ -26,4 +26,4 @@ RUN git checkout .
 COPY scripts/ scripts/
 ARG PUBLISH_URL
 ARG BRANCH_NAME
-RUN scripts/ci_publisher.rb $BRANCH_NAME $PUBLISH_URL
+RUN node scripts/publish.js $PUBLISH_URL

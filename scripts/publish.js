@@ -25,4 +25,8 @@ function publish(publishUrl) {
   console.log(`./node_modules/.bin/lerna publish ${fullVersion} --yes --force-publish --no-push --no-git-tag-version --registry ${publishUrl}`)
 }
 
+if (process.argv.length !== 3) {
+  console.error("Usage: publish.js <registry url>")
+  process.exit(1)
+}
 publish(process.argv[2])

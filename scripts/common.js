@@ -16,7 +16,7 @@ module.exports = {
             console.log('Using BRANCH_NAME from the environment')
             branchName = process.env.BRANCH_NAME
         } else {
-            console.log('Using local Git repo to determine branch name')
+            console.log('Using local Git repo to determine branch name (environment BRANCH_NAME may also be used)')
             branchName = this.run('git branch --show-current')
         }
 
