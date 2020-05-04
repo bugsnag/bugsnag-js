@@ -2,23 +2,7 @@ const common = require('./common')
 
 function publish(publishUrl) {
 
-  /*
-   * Form version string: Include branch name and commit id to avoid most clashes.  Also include the year
-   * and month in the version to publish to make it easier to clear out our private NPM repository occasionally.
-   */
-  let commitId = common.run('git rev-parse --short HEAD')
-  let branchName;
-  if (process.env.BRANCH_NAME) {
-    console.log('Using BRANCH_NAME from the environment')
-    branchName = process.env.BRANCH_NAME
-  } else {
-    console.log('Using local Git repo to determine branch name')
-    branchName = common.run('git branch --show-current')
-  }
-
-  let d = new Date()
-  let month = d.getFullYear().toString().substr(-2) + '-' + (d.getMonth() + 1).toString().padStart(2, '0')
-  let versionBase = `0.0.0-ci-${month}-${branchName}-${commitId}`
+  let versionBase = common.determineBaseVersion()
 
   // Find any existing pre-releases for the branch/commit combination - to be sure we never collide.
   let versions = JSON.parse(common.run(`npm view @bugsnag/js versions --registry ${publishUrl} --json`))
