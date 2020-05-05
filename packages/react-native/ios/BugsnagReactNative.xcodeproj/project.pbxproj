@@ -19,6 +19,7 @@
 		E7819C5C2459C7A100A7EBDD /* BugsnagConfigSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = E7819C5B2459C7A100A7EBDD /* BugsnagConfigSerializer.m */; };
 		E7819C5D2459C7A500A7EBDD /* BugsnagConfigSerializer.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E7819C572459C7A100A7EBDD /* BugsnagConfigSerializer.h */; };
 		E7A8E9D624602C9800CCBBD1 /* BugsnagEventDeserializer.m in Sources */ = {isa = PBXBuildFile; fileRef = E7A8E9D524602C9800CCBBD1 /* BugsnagEventDeserializer.m */; };
+		E7A8EA3E2461679B00CCBBD1 /* BugsnagEventDeserializer.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E7A8E9D424602C9800CCBBD1 /* BugsnagEventDeserializer.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -171,6 +172,7 @@
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
+				E7A8EA3E2461679B00CCBBD1 /* BugsnagEventDeserializer.h in CopyFiles */,
 				E7819C5D2459C7A500A7EBDD /* BugsnagConfigSerializer.h in CopyFiles */,
 				E72AE2B9241AA1BB00ED8972 /* BugsnagReactNativeEmitter.h in CopyFiles */,
 				65ED539B23D86A77006E3DC2 /* BugsnagReactNativePlugin.h in CopyFiles */,
