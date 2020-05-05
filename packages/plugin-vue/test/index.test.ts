@@ -17,7 +17,8 @@ describe('bugsnag vue', () => {
         expect(payload.events[0].errors[0].errorMessage).toBe('oops')
         expect(payload.events[0]._metadata.vue).toBeDefined()
         done()
-      }
+      },
+      sendSession: () => {}
     }))
     expect(typeof Vue.config.errorHandler).toBe('function')
     Vue.config.errorHandler(new Error('oops'), { $root: true, $options: {} } as unknown as Vue, 'callback for watcher "fooBarBaz"')
