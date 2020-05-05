@@ -2,12 +2,14 @@
 #import "BugsnagReactNative.h"
 #import "BugsnagReactNativeEmitter.h"
 #import "BugsnagConfigSerializer.h"
+#import "BugsnagEventDeserializer.h"
 
 @interface Bugsnag ()
-+ (id)client;
 + (BOOL)bugsnagStarted;
 + (BugsnagConfiguration *)configuration;
 + (void)updateCodeBundleId:(NSString *)codeBundleId;
++ (void)notifyInternal:(BugsnagEvent *_Nonnull)event
+                 block:(BOOL (^_Nonnull)(BugsnagEvent *_Nonnull))block;
 @end
 
 @interface BugsnagReactNative ()
@@ -26,7 +28,7 @@ RCT_EXPORT_METHOD(configureAsync:(NSDictionary *)readableMap
 
 RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(configure:(NSDictionary *)readableMap) {
     self.configSerializer = [BugsnagConfigSerializer new];
-    
+
     if (![Bugsnag bugsnagStarted]) {
         return nil;
     }
@@ -64,6 +66,12 @@ RCT_EXPORT_METHOD(updateUser:(NSString *)userId
 RCT_EXPORT_METHOD(dispatch:(NSDictionary *)payload
                    resolve:(RCTPromiseResolveBlock)resolve
                     reject:(RCTPromiseRejectBlock)reject) {
+    BugsnagEventDeserializer *deserializer = [BugsnagEventDeserializer new];
+    BugsnagEvent *event = [deserializer deserializeEvent:payload];
+    [Bugsnag notifyInternal:event block:^BOOL(BugsnagEvent * _Nonnull event) {
+        NSLog(@"Sending event from JS: %@", event);
+        return true;
+    }];
     resolve(@{});
 }
 

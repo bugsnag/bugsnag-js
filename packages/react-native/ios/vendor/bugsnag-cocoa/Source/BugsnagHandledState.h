@@ -42,7 +42,7 @@ NSString *BSGFormatSeverity(BSGSeverity severity);
 
 @interface BugsnagHandledState : NSObject
 
-@property(nonatomic, readonly) BOOL unhandled;
+@property(nonatomic) BOOL unhandled;
 @property(nonatomic, readonly) SeverityReasonType severityReasonType;
 @property(nonatomic, readonly) BSGSeverity originalSeverity;
 @property(nonatomic) BSGSeverity currentSeverity;
