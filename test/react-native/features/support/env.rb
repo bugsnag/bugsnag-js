@@ -38,6 +38,7 @@ end
 AfterConfiguration do |config|
   AppAutomateDriver.new(bs_username, bs_access_key, bs_local_id, device_type, app_location, :accessibility_id)
   $driver.start_driver
+  $driver.reset
 end
 
 # Ensure the browserstack instance is stopped
