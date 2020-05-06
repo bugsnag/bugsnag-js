@@ -10,6 +10,7 @@
 - (NSDictionary *)collectDeviceWithState;
 - (NSArray *)collectBreadcrumbs;
 - (NSArray *)collectThreads;
+@property id notifier;
 @end
 
 @interface Bugsnag ()
@@ -69,6 +70,7 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(configure:(NSDictionary *)readableMap) {
                 && ![error.errorClass hasPrefix:@"RCTFatalException"]
                 && ![error.errorMessage hasPrefix:@"Unhandled JS Exception"];
     }];
+    [self updateNotifierInfo:readableMap];
 
     // TODO: use this emitter to inform JS of changes to user, context and metadata
     BugsnagReactNativeEmitter *emitter = [BugsnagReactNativeEmitter new];
@@ -168,6 +170,17 @@ RCT_EXPORT_METHOD(getPayloadInfo:(NSDictionary *)options
     } else {
         return BSGBreadcrumbTypeManual; // return placeholder value
     }
+}
+
+- (void)updateNotifierInfo:(NSDictionary *)info {
+    NSString *jsVersion = info[@"notifierVersion"];
+    id notifier = [Bugsnag client].notifier;
+    [notifier setValue:jsVersion forKey:@"version"];
+    [notifier setValue:@"Bugsnag React Native" forKey:@"name"];
+    [notifier setValue: @"https://github.com/bugsnag/bugsnag-js" forKey:@"url"];
+    
+    NSMutableArray *deps = [NSMutableArray arrayWithObject:[NSClassFromString(@"BugsnagNotifier") new]];
+    [notifier setValue:deps forKey:@"dependencies"];
 }
 
 @end
