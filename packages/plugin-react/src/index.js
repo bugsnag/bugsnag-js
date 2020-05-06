@@ -25,7 +25,7 @@ then pass in React when available to construct your error boundary
     }
     BugsnagPluginReactLazyInitializer.createErrorBoundary = (React) => {
       if (!React) throw new Error('@bugsnag/plugin-react reference to `React` was undefined')
-      createClass(React, client)
+      return createClass(React, client)
     }
     return BugsnagPluginReactLazyInitializer
   }
