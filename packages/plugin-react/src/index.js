@@ -13,6 +13,7 @@ module.exports = class BugsnagReactPlugin {
     const BugsnagPluginReactLazyInitializer = function () {
       throw new Error(`@bugsnag/plugin-react was used incorrectly. Valid usage is as follows:
 Pass React to the plugin constructor
+
   \`Bugsnag.start({ plugins: [new BugsnagPluginReact(React)] })\`
 and then call \`const ErrorBoundary = Bugsnag.getPlugin('react')\`
 
@@ -20,7 +21,7 @@ Or if React is not available until after Bugsnag has started,
 construct the plugin with no arguments
   \`Bugsnag.start({ plugins: [new BugsnagPluginReact()] })\`,
 then pass in React when available to construct your error boundary
-  \`Bugsnag.getPlugin('react').createErrorBoundary(React)\``)
+  \`const ErrorBoundary = Bugsnag.getPlugin('react').createErrorBoundary(React)\``)
     }
     BugsnagPluginReactLazyInitializer.createErrorBoundary = (React) => {
       if (!React) throw new Error('@bugsnag/plugin-react reference to `React` was undefined')
