@@ -18,7 +18,7 @@ const bugsnag = {
 }
 
 const plugin = new BugsnagPluginReact(React)
-const ErrorBoundary = plugin.load(bugsnag)
+const ErrorBoundary = plugin.load(bugsnag) as unknown as typeof React.Component
 
 beforeEach(() => {
   bugsnag._notify.mockReset()
