@@ -42,7 +42,7 @@
 
     BugsnagClient *client = [Bugsnag client];
     BugsnagSession *session = [client.sessionTracker valueForKey:@"runningSession"];
-    BugsnagMetadata *metadata = client.metadata;
+    BugsnagMetadata *metadata = [[BugsnagMetadata alloc] initWithDictionary:payload[@"metadata"]];
 
     NSDictionary *error = payload[@"errors"][0];
     BugsnagEvent *event = [[BugsnagEvent alloc] initWithErrorName:error[@"errorClass"]
@@ -52,6 +52,14 @@
                               handledState:nil
                                    session:session];
     event.breadcrumbs = [self deserializeBreadcrumbs:payload[@"breadcrumbs"]];
+    event.context = payload[@"context"];
+    event.groupingHash = payload[@"groupingHash"];
+    NSDictionary *user = payload[@"user"];
+
+    if (user) {
+        [event setUser:user[@"id"] withEmail:user[@"email"] andName:user[@"name"]];
+    }
+
     NSLog(@"Deserialized JS event: %@", [event toJson]);
     return event;
 }
