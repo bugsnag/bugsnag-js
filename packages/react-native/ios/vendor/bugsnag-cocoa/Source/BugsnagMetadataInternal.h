@@ -25,7 +25,9 @@ typedef void (^BugsnagObserverBlock)(BugsnagStateEvent *_Nonnull event);
 
 - (id)deepCopy;
 
-- (void)addObserverUsingBlock:(BugsnagObserverBlock _Nonnull)block;
+- (void)addObserverWithBlock:(BugsnagObserverBlock _Nonnull)block;
+
+- (void)removeObserverWithBlock:(BugsnagObserverBlock _Nonnull)block;
 
 @end
 

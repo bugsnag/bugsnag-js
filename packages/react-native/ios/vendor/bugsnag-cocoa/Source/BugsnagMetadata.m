@@ -101,8 +101,12 @@
     }
 }
 
-- (void)addObserverUsingBlock:(BugsnagObserverBlock _Nonnull)block {
+- (void)addObserverWithBlock:(BugsnagObserverBlock _Nonnull)block {
     [self.stateEventBlocks addObject:[block copy]];
+}
+
+- (void)removeObserverWithBlock:(BugsnagObserverBlock _Nonnull)block {
+    [self.stateEventBlocks removeObject:block];
 }
 
 // MARK: - <NSMutableCopying>
