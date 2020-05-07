@@ -46,6 +46,7 @@
 #import "BSGSerialization.h"
 #import "Bugsnag.h"
 #import "BugsnagErrorTypes.h"
+#import "BugsnagNotifier.h"
 
 #if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
@@ -53,8 +54,6 @@
 #import <AppKit/AppKit.h>
 #endif
 
-NSString *const NOTIFIER_VERSION = @"5.23.0";
-NSString *const NOTIFIER_URL = @"https://github.com/bugsnag/bugsnag-cocoa";
 NSString *const BSTabCrash = @"crash";
 NSString *const BSAttributeDepth = @"depth";
 NSString *const BSEventLowMemoryWarning = @"lowMemoryWarning";
@@ -362,21 +361,7 @@ NSString *_lastOrientation = nil;
         // Take a shallow copy of the configuration
         self.configuration = [initConfiguration copy];
         self.state = [[BugsnagMetadata alloc] init];
-        NSString *notifierName =
-#if TARGET_OS_TV
-            @"tvOS Bugsnag Notifier";
-#elif TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
-            @"iOS Bugsnag Notifier";
-#elif TARGET_OS_MAC
-            @"OSX Bugsnag Notifier";
-#else
-            @"Bugsnag Objective-C";
-#endif
-        self.details = [@{
-            BSGKeyName : notifierName,
-            BSGKeyVersion : NOTIFIER_VERSION,
-            BSGKeyUrl : NOTIFIER_URL
-        } mutableCopy];
+        self.notifier = [BugsnagNotifier new];
 
         NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(
                                 NSCachesDirectory, NSUserDomainMask, YES) firstObject];

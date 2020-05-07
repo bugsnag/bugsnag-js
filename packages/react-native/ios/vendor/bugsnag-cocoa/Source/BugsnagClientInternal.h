@@ -14,12 +14,13 @@
 @class BugsnagSessionTracker;
 @class BugsnagConfiguration;
 @class BugsnagMetadata;
+@class BugsnagNotifier;
 
 @interface BugsnagClient ()
 
 @property(nonatomic, readwrite, retain) BugsnagConfiguration *_Nullable configuration;
 @property(nonatomic, readwrite, strong) BugsnagMetadata *_Nonnull state;
-@property(nonatomic, readwrite, strong) NSDictionary *_Nonnull details;
+@property(nonatomic, readwrite, strong) BugsnagNotifier *_Nonnull notifier;
 @property(nonatomic, readwrite, strong) NSLock *_Nonnull metadataLock;
 @property(nonatomic, readwrite, strong) BugsnagSessionTracker *_Nonnull sessionTracker;
 @property(readonly) BOOL started;
