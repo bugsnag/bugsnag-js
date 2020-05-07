@@ -113,6 +113,7 @@ static bool hasRecordedSessions;
 @interface BugsnagDeviceWithState ()
 + (BugsnagDeviceWithState *)deviceWithDictionary:(NSDictionary *)event;
 - (NSDictionary *)toDictionary;
+- (void)appendRuntimeInfo:(NSDictionary *)info;
 @end
 
 /**
@@ -288,6 +289,7 @@ void BSGWriteSessionCrashData(BugsnagSession *session) {
 // The previous device orientation - iOS only
 @property (nonatomic, strong) NSString *lastOrientation;
 #endif
+@property NSMutableDictionary *extraRuntimeInfo;
 @end
 
 @interface BugsnagConfiguration ()
@@ -374,6 +376,7 @@ NSString *_lastOrientation = nil;
                                                                       configuration:configuration];
         }
 
+        self.extraRuntimeInfo = [NSMutableDictionary new];
         self.metadataLock = [[NSLock alloc] init];
         self.configuration.metadata.delegate = self;
         self.configuration.config.delegate = self;
@@ -895,6 +898,7 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
 - (void)notifyInternal:(BugsnagEvent *_Nonnull)event
                  block:(BugsnagOnErrorBlock)block
 {
+    [event.device appendRuntimeInfo:self.extraRuntimeInfo];
     if (block != nil && !block(event)) { // skip notifying if callback false
         return;
     }
@@ -1418,6 +1422,7 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
 - (NSDictionary *)collectDeviceWithState {
     NSDictionary *systemInfo = [BSG_KSSystemInfo systemInfo];
     BugsnagDeviceWithState *device = [BugsnagDeviceWithState deviceWithDictionary:@{@"system": systemInfo}];
+    [device appendRuntimeInfo:self.extraRuntimeInfo];
     return [device toDictionary];
 }
 
@@ -1441,6 +1446,15 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
     return @[
         // TODO implement
     ];
+}
+
+- (void)addRuntimeVersionInfo:(NSString *)info
+                      withKey:(NSString *)key {
+    [self.sessionTracker addRuntimeVersionInfo:info
+                                       withKey:key];
+    if (info != nil && key != nil) {
+        self.extraRuntimeInfo[key] = info;
+    }
 }
 
 @end

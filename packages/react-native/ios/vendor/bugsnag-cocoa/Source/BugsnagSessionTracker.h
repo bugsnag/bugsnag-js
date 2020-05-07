@@ -88,4 +88,7 @@ extern NSString *const BSGSessionUpdateNotification;
  */
 @property (nonatomic, strong, readonly) BugsnagSession *runningSession;
 
+- (void)addRuntimeVersionInfo:(NSString *)info
+                      withKey:(NSString *)key;
+
 @end
