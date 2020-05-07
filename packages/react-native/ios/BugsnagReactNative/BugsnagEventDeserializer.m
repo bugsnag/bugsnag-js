@@ -8,6 +8,8 @@
 
 #import "BugsnagEventDeserializer.h"
 
+BSGSeverity BSGParseSeverity(NSString *severity);
+
 @interface Bugsnag ()
 + (id)client;
 + (BugsnagConfiguration *)configuration;
@@ -19,6 +21,14 @@
 @end
 
 @interface BugsnagMetadata ()
+@end
+
+@interface BugsnagHandledState: NSObject
+- (instancetype)initWithSeverityReason:(NSUInteger)severityReason
+                              severity:(BSGSeverity)severity
+                             unhandled:(BOOL)unhandled
+                             attrValue:(NSString *)attrValue;
++ (NSUInteger)severityReasonFromString:(NSString *)string;
 @end
 
 @interface BugsnagEvent ()
@@ -45,11 +55,13 @@
     BugsnagMetadata *metadata = [[BugsnagMetadata alloc] initWithDictionary:payload[@"metadata"]];
 
     NSDictionary *error = payload[@"errors"][0];
+    BugsnagHandledState *handledState = [self deserializeHandledState:payload];
+
     BugsnagEvent *event = [[BugsnagEvent alloc] initWithErrorName:error[@"errorClass"]
                               errorMessage:error[@"errorMessage"]
                              configuration:[Bugsnag configuration]
                                   metadata:metadata
-                              handledState:nil
+                              handledState:handledState
                                    session:session];
     event.breadcrumbs = [self deserializeBreadcrumbs:payload[@"breadcrumbs"]];
     event.context = payload[@"context"];
@@ -77,6 +89,25 @@
         }
     }
     return array;
+}
+
+- (BugsnagHandledState *)deserializeHandledState:(NSDictionary *)payload {
+    NSDictionary *severityReason = payload[@"severityReason"];
+    NSDictionary *attrs = severityReason[@"attributes"];
+    NSString *attrVal;
+
+    if (attrs && [attrs count] > 0) {
+        attrVal = [attrs allValues][0];
+    }
+
+    NSUInteger reason = [BugsnagHandledState severityReasonFromString:payload[@"severityReason"]];
+
+    BSGSeverity severity = BSGParseSeverity(payload[@"severity"]);
+    BOOL unhandled = [payload[@"unhandled"] boolValue];
+    return [[BugsnagHandledState alloc] initWithSeverityReason:reason
+                                                      severity:severity
+                                                     unhandled:unhandled
+                                                     attrValue:attrVal];
 }
 
 @end
