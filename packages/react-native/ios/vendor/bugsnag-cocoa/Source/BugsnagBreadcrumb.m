@@ -191,14 +191,17 @@ BSGBreadcrumbType BSGBreadcrumbTypeFromString(NSString *value) {
 + (instancetype)breadcrumbFromDict:(NSDictionary *)dict {
     BOOL isValidCrumb = [dict[BSGKeyType] isKindOfClass:[NSString class]]
         && [dict[BSGKeyTimestamp] isKindOfClass:[NSString class]]
-        && [dict[BSGKeyMetadata] isKindOfClass:[NSDictionary class]]
+        && (
+            [dict[BSGKeyMetadata] isKindOfClass:[NSDictionary class]]
+            || [dict[@"metadata"] isKindOfClass:[NSDictionary class]] // react-native uses lowercase key
+            )
         // Accept legacy 'name' value if provided.
         && ([dict[BSGKeyMessage] isKindOfClass:[NSString class]]
             || [dict[BSGKeyName] isKindOfClass:[NSString class]]);
     if (isValidCrumb) {
         return [self breadcrumbWithBlock:^(BugsnagBreadcrumb *crumb) {
             crumb.message = dict[BSGKeyMessage] ?: dict[BSGKeyName];
-            crumb.metadata = dict[BSGKeyMetadata];
+            crumb.metadata = dict[BSGKeyMetadata] ?: dict[@"metadata"];
             crumb.timestamp = [[Bugsnag payloadDateFormatter] dateFromString:dict[BSGKeyTimestamp]];
             crumb.type = BSGBreadcrumbTypeFromString(dict[BSGKeyType]);
         }];

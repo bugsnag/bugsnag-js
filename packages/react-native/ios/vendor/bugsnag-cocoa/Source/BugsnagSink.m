@@ -31,6 +31,7 @@
 #import "BugsnagClient.h"
 #import "BugsnagClientInternal.h"
 #import "BugsnagKeys.h"
+#import "BugsnagNotifier.h"
 #import "BSG_KSSystemInfo.h"
 #import "Private.h"
 
@@ -38,6 +39,10 @@
 // it here.
 @interface Bugsnag ()
 + (BugsnagClient *)client;
+@end
+
+@interface BugsnagNotifier ()
+- (NSDictionary *)toDict;
 @end
 
 @interface BugsnagClient ()
@@ -132,7 +137,7 @@
 // Generates the payload for notifying Bugsnag
 - (NSDictionary *)getBodyFromEvents:(NSArray *)events {
     NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
-    BSGDictSetSafeObject(data, [Bugsnag client].details, BSGKeyNotifier);
+    BSGDictSetSafeObject(data, [[Bugsnag client].notifier toDict], BSGKeyNotifier);
     BSGDictSetSafeObject(data, [Bugsnag client].configuration.apiKey, BSGKeyApiKey);
     BSGDictSetSafeObject(data, @"4.0", @"payloadVersion");
 

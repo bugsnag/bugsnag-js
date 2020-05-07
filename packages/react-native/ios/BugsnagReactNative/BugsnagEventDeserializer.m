@@ -28,6 +28,11 @@
                                   metadata:(BugsnagMetadata *_Nullable)metadata
                               handledState:(BugsnagHandledState *_Nonnull)handledState
                                    session:(BugsnagSession *_Nullable)session;
+- (NSDictionary *)toJson;
+@end
+
+@interface BugsnagBreadcrumb ()
++ (instancetype)breadcrumbFromDict:(NSDictionary *)dict;
 @end
 
 @implementation BugsnagEventDeserializer
@@ -46,7 +51,24 @@
                                   metadata:metadata
                               handledState:nil
                                    session:session];
+    event.breadcrumbs = [self deserializeBreadcrumbs:payload[@"breadcrumbs"]];
+    NSLog(@"Deserialized JS event: %@", [event toJson]);
     return event;
+}
+
+- (NSArray *)deserializeBreadcrumbs:(NSArray *)crumbs {
+    NSMutableArray *array = [NSMutableArray new];
+
+    if (crumbs != nil) {
+        for (NSDictionary *crumb in crumbs) {
+            BugsnagBreadcrumb *obj = [BugsnagBreadcrumb breadcrumbFromDict:crumb];
+            
+            if (obj != nil) {
+                [array addObject:obj];
+            }
+        }
+    }
+    return array;
 }
 
 @end

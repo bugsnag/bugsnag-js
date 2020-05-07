@@ -12,10 +12,15 @@
 #import "BugsnagClientInternal.h"
 #import "Bugsnag.h"
 #import "BugsnagKeys.h"
+#import "BugsnagNotifier.h"
 #import "BSG_KSSystemInfo.h"
 #import "BugsnagConfiguration.h"
 #import "Private.h"
 #import "BugsnagApp.h"
+
+@interface BugsnagNotifier ()
+- (NSDictionary *)toDict;
+@end
 
 @interface BugsnagSession ()
 - (NSDictionary *)toDictionary;
@@ -66,7 +71,7 @@
         [sessionData addObject:[session toDictionary]];
     }
     BSGDictInsertIfNotNil(dict, sessionData, @"sessions");
-    BSGDictSetSafeObject(dict, [Bugsnag client].details, BSGKeyNotifier);
+    BSGDictSetSafeObject(dict, [[Bugsnag client].notifier toDict], BSGKeyNotifier);
 
     // app/device data collection relies on KSCrash reports,
     // need to mimic the JSON structure here

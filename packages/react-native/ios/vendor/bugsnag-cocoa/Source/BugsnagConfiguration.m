@@ -33,6 +33,7 @@
 #import "BugsnagUser.h"
 #import "BugsnagSessionTracker.h"
 #import "BugsnagLogger.h"
+#import "BSGConfigurationBuilder.h"
 #import "BSG_SSKeychain.h"
 #import "BugsnagBreadcrumbs.h"
 #import "BugsnagMetadataStore.h"
@@ -106,6 +107,15 @@ NSString * const kBugsnagUserUserId = @"BugsnagUserUserId";
 
 @implementation BugsnagConfiguration
 
++ (instancetype _Nonnull)loadConfig {
+    NSDictionary *options = [[NSBundle mainBundle] infoDictionary][@"bugsnag"];
+    return [BSGConfigurationBuilder configurationFromOptions:options];
+}
+
++ (instancetype)loadConfigFromOptions:(NSDictionary *)options {
+    return [BSGConfigurationBuilder configurationFromOptions:options];
+}
+
 // -----------------------------------------------------------------------------
 // MARK: - <NSCopying>
 // -----------------------------------------------------------------------------
@@ -145,7 +155,7 @@ NSString * const kBugsnagUserUserId = @"BugsnagUserUserId";
     [copy setUser:self.user.id
         withEmail:self.user.email
           andName:self.user.name];
-    
+
     return copy;
 }
 
@@ -163,7 +173,8 @@ NSString * const kBugsnagUserUserId = @"BugsnagUserUserId";
 + (BOOL)isValidApiKey:(NSString *)apiKey {
     NSCharacterSet *chars = [[NSCharacterSet
         characterSetWithCharactersInString:@"0123456789ABCDEF"] invertedSet];
-    BOOL isHex = (NSNotFound == [[apiKey uppercaseString] rangeOfCharacterFromSet:chars].location);
+    BOOL isHex = [apiKey isKindOfClass:[NSString class]] &&
+            (NSNotFound == [[apiKey uppercaseString] rangeOfCharacterFromSet:chars].location);
     return isHex && [apiKey length] == BSGApiKeyLength;
 }
 
@@ -185,13 +196,18 @@ NSString * const kBugsnagUserUserId = @"BugsnagUserUserId";
 {
     if (![BugsnagConfiguration isValidApiKey:apiKey]) {
         bsg_log_err(@"Invalid configuration. apiKey should be a 32-character hexademical string, got \"%@\"", apiKey);
+        _apiKey = @"";
     }
-    
+    if ([apiKey isKindOfClass: [NSString class]]) {
+        _apiKey = apiKey;
+    } else {
+        _apiKey = @"";
+    }
+
     self = [super init];
-    
+
     _metadata = [[BugsnagMetadata alloc] init];
     _config = [[BugsnagMetadata alloc] init];
-    _apiKey = apiKey;
     _bundleVersion = NSBundle.mainBundle.infoDictionary[@"CFBundleVersion"];
     _endpoints = [BugsnagEndpointConfiguration new];
     _sessionURL = [NSURL URLWithString:@"https://sessions.bugsnag.com"];
@@ -235,7 +251,7 @@ NSString * const kBugsnagUserUserId = @"BugsnagUserUserId";
 #elif TARGET_OS_MAC
     _appType = @"macOS";
 #endif
-    
+
     return self;
 }
 
@@ -261,7 +277,7 @@ NSString * const kBugsnagUserUserId = @"BugsnagUserUserId";
     // Persist the user
     if (_persistUser)
         [self persistUserData];
-    
+
     // Add user info to the metadata
     [self setUserMetadataFromUser:self.user];
 }
@@ -413,7 +429,7 @@ NSString * const kBugsnagUserUserId = @"BugsnagUserUserId";
                 [BSG_SSKeychain deletePasswordForService:kBugsnagUserName
                                              account:kBugsnagUserKeychainAccount];
             }
-            
+
             // UserId
             if (_user.id) {
                 [BSG_SSKeychain setPassword:_user.id
@@ -468,7 +484,7 @@ NSString * const kBugsnagUserUserId = @"BugsnagUserUserId";
     if (!self.enabledBreadcrumbTypes) {
         return YES;
     }
-    
+
     switch (type) {
         case BSGBreadcrumbTypeManual:
             return YES;

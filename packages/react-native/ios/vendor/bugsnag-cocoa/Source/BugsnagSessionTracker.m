@@ -18,7 +18,7 @@
 /**
  Number of seconds in background required to make a new session
  */
-NSTimeInterval const BSGNewSessionBackgroundDuration = 60;
+NSTimeInterval const BSGNewSessionBackgroundDuration = 30;
 
 NSString *const BSGSessionUpdateNotification = @"BugsnagSessionChanged";
 
