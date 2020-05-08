@@ -44,7 +44,7 @@ RUN echo "always-auth=true" >> ~/.npmrc
 ARG REGISTRY_URL
 RUN npm install --registry $REGISTRY_URL
 ARG BRANCH_NAME
-RUN BRANCH_NAME=${BRANCH_NAME} node scripts/instal.js $REGISTRY_URL
+RUN BRANCH_NAME=${BRANCH_NAME} node scripts/install.js $REGISTRY_URL
 RUN ./node_modules/.bin/react-native link
 
 # Gradle build
