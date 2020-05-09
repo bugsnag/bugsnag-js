@@ -31,6 +31,7 @@ RUN cp -r /app/features/fixtures/android-module/* /app/features/fixtures/${REACT
 WORKDIR /app/features/fixtures/${REACT_NATIVE_VERSION}
 COPY .git .git
 COPY scripts/ scripts/
+COPY lerna.json .
 
 # Setup NPM auth
 RUN rm -f ~/.npmrc
