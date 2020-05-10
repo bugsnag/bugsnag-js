@@ -68,4 +68,11 @@
     BSGDictInsertIfNotNil(dict, self.totalMemory, @"totalMemory");
     return dict;
 }
+
+- (void)appendRuntimeInfo:(NSDictionary *)info {
+    NSMutableDictionary *versions = [self.runtimeVersions mutableCopy];
+    [versions addEntriesFromDictionary:info];
+    self.runtimeVersions = versions;
+}
+
 @end

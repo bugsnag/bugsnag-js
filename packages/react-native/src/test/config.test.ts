@@ -8,7 +8,7 @@ describe('react-native config: load()', () => {
       })
     }
     const config = load(mockNativeClient)
-    expect(config.apiKey).toBe('123')
+    expect((config as any).apiKey).toBe('123')
     expect(config._originalValues).toEqual({ apiKey: '123' })
   })
 
@@ -30,7 +30,7 @@ describe('react-native config: load()', () => {
       })
     }
 
-    const config = load(mockNativeClient, '1.1.1', 'test', '2.2.2', warnSpy)
+    const config: any = load(mockNativeClient, '1.1.1', 'test', '2.2.2', warnSpy)
 
     config.apiKey = '456'
     config.autoDetectErrors = false

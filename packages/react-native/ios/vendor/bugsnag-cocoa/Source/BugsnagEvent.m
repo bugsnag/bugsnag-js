@@ -326,8 +326,8 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
             _deviceAppHash = [report valueForKeyPath:@"user.state.oom.device.id"];
 
             // no threads or metadata captured for OOMs
-            _threads = [NSMutableArray new];
-            [_errors addObject:[[BugsnagError alloc] initWithEvent:report errorReportingThread:nil]];
+            _threads = @[];
+            _errors = @[[[BugsnagError alloc] initWithEvent:report errorReportingThread:nil]];
             self.metadata = [BugsnagMetadata new];
 
             NSDictionary *sessionData = [report valueForKeyPath:@"user.state.oom.session"];
@@ -394,7 +394,7 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
                 }
             }
 
-            [_errors addObject:[[BugsnagError alloc] initWithEvent:report errorReportingThread:errorReportingThread]];
+            _errors = @[[[BugsnagError alloc] initWithEvent:report errorReportingThread:errorReportingThread]];
             _customException = BSGParseCustomException(report, [_errors[0].errorClass copy], [_errors[0].errorMessage copy]);
 
             if (!recordedState) { // the event was unhandled.
@@ -457,12 +457,11 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
                                    session:(BugsnagSession *_Nullable)session
 {
     if (self = [super init]) {
-        _errors = [NSMutableArray new];
         BugsnagError *error = [BugsnagError new];
         error.errorClass = name;
         error.errorMessage = message;
         error.type = BSGErrorTypeCocoa;
-        [_errors addObject:error];
+        _errors = @[error];
 
         _overrides = [NSDictionary new];
         _device = [BugsnagDeviceWithState new];
@@ -480,10 +479,16 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
         }
         self.breadcrumbs = [crumbs copy];
 
-        _handledState = handledState;
+        if (handledState == nil) { // initialise a sensible default to avoid crashing
+            _handledState = [BugsnagHandledState handledStateWithSeverityReason:HandledException
+                                                                       severity:BSGSeverityWarning
+                                                                      attrValue:nil];
+        } else {
+            _handledState = handledState;
+        }
         _severity = handledState.currentSeverity;
         _session = session;
-        _threads = [NSMutableArray new];
+        _threads = @[];
     }
     return self;
 }
@@ -813,6 +818,10 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
                        withKey:(NSString *_Nonnull)key
 {
     [self.metadata clearMetadataFromSection:sectionName withKey:key];
+}
+
+- (void)updateUnhandled:(BOOL)val {
+    self.handledState.unhandled = val;
 }
 
 @end

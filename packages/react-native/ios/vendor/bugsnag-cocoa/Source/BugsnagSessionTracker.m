@@ -14,11 +14,12 @@
 #import "BugsnagLogger.h"
 #import "BugsnagSessionInternal.h"
 #import "BSG_KSSystemInfo.h"
+#import "BugsnagCollections.h"
 
 /**
  Number of seconds in background required to make a new session
  */
-NSTimeInterval const BSGNewSessionBackgroundDuration = 60;
+NSTimeInterval const BSGNewSessionBackgroundDuration = 30;
 
 NSString *const BSGSessionUpdateNotification = @"BugsnagSessionChanged";
 
@@ -45,6 +46,7 @@ NSString *const BSGSessionUpdateNotification = @"BugsnagSessionChanged";
 
 @interface BugsnagDevice ()
 + (BugsnagDevice *)deviceWithDictionary:(NSDictionary *)event;
+- (void)appendRuntimeInfo:(NSDictionary *)info;
 @end
 
 @interface BugsnagSessionTrackingApiClient ()
@@ -63,6 +65,8 @@ NSString *const BSGSessionUpdateNotification = @"BugsnagSessionChanged";
  * Called when a session is altered
  */
 @property (nonatomic, strong, readonly) SessionTrackerCallback callback;
+
+@property NSMutableDictionary *extraRuntimeInfo;
 @end
 
 @implementation BugsnagSessionTracker
@@ -79,6 +83,7 @@ NSString *const BSGSessionUpdateNotification = @"BugsnagSessionChanged";
             BSG_KSLOG_ERROR(@"Failed to initialize session store.");
         }
         _sessionStore = [BugsnagSessionFileStore storeWithPath:storePath];
+        _extraRuntimeInfo = [NSMutableDictionary new];
     }
     return self;
 }
@@ -141,6 +146,8 @@ NSString *const BSGSessionUpdateNotification = @"BugsnagSessionChanged";
     NSDictionary *systemInfo = [BSG_KSSystemInfo systemInfo];
     BugsnagApp *app = [BugsnagApp appWithDictionary:@{@"system": systemInfo} config:self.config codeBundleId:self.codeBundleId];
     BugsnagDevice *device = [BugsnagDevice deviceWithDictionary:@{@"system": systemInfo}];
+    [device appendRuntimeInfo:self.extraRuntimeInfo];
+
     BugsnagSession *newSession = [[BugsnagSession alloc] initWithId:[[NSUUID UUID] UUIDString]
                                                           startDate:[NSDate date]
                                                                user:self.config.user
@@ -162,6 +169,13 @@ NSString *const BSGSessionUpdateNotification = @"BugsnagSessionChanged";
     [self postUpdateNotice];
 
     [self.apiClient deliverSessionsInStore:self.sessionStore];
+}
+
+- (void)addRuntimeVersionInfo:(NSString *)info
+                      withKey:(NSString *)key {
+    if (info != nil && key != nil) {
+        self.extraRuntimeInfo[key] = info;
+    }
 }
 
 - (void)registerExistingSession:(NSString *)sessionId

@@ -17,5 +17,5 @@ Scenario: Catching an Unhandled Native error
   When I run "UnhandledNativeErrorScenario" and relaunch the app
   And I configure Bugsnag for "UnhandledNativeErrorScenario"
   Then I wait to receive a request
-  And the exception "errorClass" equals "Error"
-  And the exception "message" equals "UnhandledError"
+  And the exception "errorClass" equals "java.lang.RuntimeException"
+  And the exception "message" equals "UnhandledExceptionScenario"

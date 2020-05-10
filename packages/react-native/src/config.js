@@ -88,23 +88,25 @@ const freeze = (opts, warn) => {
   // if we don't have any native options, something went wrong
   if (!opts) throw new Error('[bugsnag] Configuration could not be loaded from native client')
 
-  // save the original values to check for mutations (user, context and metadata can be supplied in JS)
-  Object.defineProperty(opts, '_originalValues', { value: { ...opts }, enumerable: false, writable: false })
-
-  return new Proxy(opts, {
-    set (obj, prop, value) {
-      if (!ALLOWED_IN_JS.includes(prop)) {
-        warn(`[bugsnag] Cannot set "${prop}" configuration option in JS. This must be set in the native layer.`)
-        return true
-      }
-      return Reflect.set(...arguments)
-    },
-    deleteProperty (target, prop) {
-      if (!ALLOWED_IN_JS.includes(prop)) {
-        warn(`[bugsnag] Cannot delete "${prop}" configuration option in JS. This must be set in the native layer.`)
-        return true
-      }
-      return Reflect.deleteProperty(...arguments)
-    }
+  const frozenOpts = {}
+  Object.keys(schema).forEach(k => {
+    let val = opts[k]
+    Object.defineProperty(frozenOpts, k, {
+      enumerable: true,
+      configurable: false,
+      set (newValue) {
+        if (!ALLOWED_IN_JS.includes(k)) {
+          warn(`[bugsnag] Cannot set "${k}" configuration option in JS. This must be set in the native layer.`)
+          return
+        }
+        val = newValue
+      },
+      get () { return val }
+    })
   })
+
+  // save the original values to check for mutations (user, context and metadata can be supplied in JS)
+  Object.defineProperty(frozenOpts, '_originalValues', { value: { ...opts }, enumerable: false, writable: false })
+
+  return frozenOpts
 }

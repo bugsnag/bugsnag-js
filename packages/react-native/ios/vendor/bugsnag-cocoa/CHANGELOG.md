@@ -8,6 +8,12 @@ Bugsnag Notifiers on other platforms.
 
 ## Enhancements
 
+* Alter default session background timeout to 30s
+  [#581](https://github.com/bugsnag/bugsnag-cocoa/pull/581)
+
+* Support loading configuration from values in `Info.plist`.
+  [#582](https://github.com/bugsnag/bugsnag-cocoa/pull/582)
+
 * Add `unhandledRejections` to `BugsnagErrorTypes`
   [#567](https://github.com/bugsnag/bugsnag-cocoa/pull/567)
 

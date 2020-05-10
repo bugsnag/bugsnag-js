@@ -47,7 +47,7 @@ typedef NS_ENUM(NSUInteger, BSGSeverity) {
  * at least one error that represents the root cause, with subsequent elements populated
  * from the cause.
  */
-@property(readonly, nonnull) NSMutableArray<BugsnagError *> *errors;
+@property(readwrite, copy, nonnull) NSArray<BugsnagError *> *errors;
 
 /**
  *  Customized hash for grouping this report with other errors
@@ -56,7 +56,7 @@ typedef NS_ENUM(NSUInteger, BSGSeverity) {
 /**
  *  Breadcrumbs from user events leading up to the error
  */
-@property(readwrite, copy, nullable) NSArray <BugsnagBreadcrumb *>*breadcrumbs;
+@property(readwrite, copy, nonnull) NSArray<BugsnagBreadcrumb *> *breadcrumbs;
 
 /**
  * A per-event override for the apiKey.
@@ -84,7 +84,7 @@ typedef NS_ENUM(NSUInteger, BSGSeverity) {
 /**
  * Thread traces for the error that occurred, if collection was enabled.
  */
-@property(readonly, nonnull) NSMutableArray<BugsnagThread *> *threads;
+@property(readwrite, copy, nonnull) NSArray<BugsnagThread *> *threads;
 
 /**
  * The original object that caused the error in your application. This value will only be populated for

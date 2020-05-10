@@ -78,6 +78,7 @@
     "@bugsnag/plugin-react-native-global-error-handler": "7.0.0",
     "@bugsnag/plugin-react-native-session": "7.0.0",
     "@bugsnag/plugin-react-native-unhandled-rejection": "7.0.0",
-    "iserror": "^0.0.2"
+    "iserror": "^0.0.2",
+    "proxy-polyfill": "^0.3.1"
   }
 }

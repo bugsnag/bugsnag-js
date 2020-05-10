@@ -1,5 +1,6 @@
 const NativeModules = require('react-native').NativeModules
 const NativeClient = NativeModules.BugsnagReactNative
+const Proxy = require('./lib/proxy')
 
 const REMOTE_DEBUGGING_WARNING = `Bugsnag cannot initialize synchronously when running in the remote debugger.
 

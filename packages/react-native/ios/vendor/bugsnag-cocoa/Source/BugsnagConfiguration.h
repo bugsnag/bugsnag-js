@@ -105,6 +105,14 @@ typedef BOOL (^BugsnagOnSessionBlock)(BugsnagSession *_Nonnull session);
 
 @interface BugsnagConfiguration : NSObject <BugsnagMetadataStore>
 
+/**
+ * Create a new configuration from the main bundle's infoDictionary, using keys nested under
+ * the "bugsnag" key.
+ *
+ * @return a BugsnagConfiguration containing the options set in the plist file
+ */
++ (instancetype _Nonnull)loadConfig;
+
 // -----------------------------------------------------------------------------
 // MARK: - Properties
 // -----------------------------------------------------------------------------
