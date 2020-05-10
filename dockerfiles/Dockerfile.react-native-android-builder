@@ -10,11 +10,11 @@ WORKDIR /sdk
 RUN wget https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip -q \
     && unzip -q sdk-tools-linux-4333796.zip \
     && rm sdk-tools-linux-4333796.zip
-ENV PATH="/sdk/tools:/sdk/tools/bin:${PATH}"
+ENV PATH="${PATH}:/sdk/tools:/sdk/tools/bin"
 RUN yes | sdkmanager "platform-tools" "build-tools;28.0.3"
 
 # Variables for Android builds
-ENV PATH="/sdk/platform-tools:${PATH}"
+ENV PATH="${PATH}:/sdk/platform-tools"
 ENV ANDROID_HOME="/sdk/"
 
 WORKDIR /app
