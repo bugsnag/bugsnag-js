@@ -2,7 +2,9 @@ const common = require('./common')
 
 function install(installUrl) {
     let version = common.determineVersion()
-    common.run(`npm install @bugsnag/react-native@${version} --registry ${installUrl}`)
+    let command = `npm install @bugsnag/react-native@${version} --registry ${installUrl}`
+    console.info(command)
+    common.run(command)
 }
 
 if (process.argv.length !== 3) {
