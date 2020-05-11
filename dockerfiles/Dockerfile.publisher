@@ -25,5 +25,6 @@ RUN git checkout .
 
 COPY scripts/ scripts/
 ARG PUBLISH_URL
+ARG BUILDKITE
 ARG BRANCH_NAME
-RUN BRANCH_NAME=${BRANCH_NAME} node scripts/publish.js $PUBLISH_URL
+RUN BUILDKITE=${BUILDKITE} BRANCH_NAME=${BRANCH_NAME} node scripts/publish.js $PUBLISH_URL
