@@ -1,3 +1,4 @@
+const lerna = require("../lerna.json");
 const { execSync } = require("child_process");
 
 module.exports = {
@@ -16,14 +17,13 @@ module.exports = {
             branchName = process.env.BRANCH_NAME
         } else {
             console.log('Using local Git repo to determine branch name (environment BRANCH_NAME may also be used)')
-            branchName = this.run('git branch --show-current').replace(/\//g,"-")
+            branchName = this.run('git rev-parse --abbrev-ref HEAD').replace(/\//g,"-")
         }
 
         // Distinguish from local use
         let ciIndicator = (process.env.BUILDKITE ? "ci-" : "")
 
         // Get the current version from lerna.json
-        const lerna = require("../lerna.json");
         let lernaVersion = lerna.version.match(/^[1-9][0-9]*\.[0-9]+\.[0-9]+/)[0];
 
         return `${lernaVersion}-${ciIndicator}${branchName}.${commitId}`
