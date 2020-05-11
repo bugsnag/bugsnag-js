@@ -19,10 +19,13 @@ module.exports = {
             branchName = this.run('git branch --show-current').replace(/\//g,"-")
         }
 
+        // Distinguish from local use
+        let ciIndicator = (process.env.BUILDKITE ? "ci-" : "")
+
         // Get the current version from lerna.json
         const lerna = require("../lerna.json");
         let lernaVersion = lerna.version.match(/^[1-9][0-9]*\.[0-9]+\.[0-9]+/)[0];
 
-        return `${lernaVersion}-${branchName}.${commitId}`
+        return `${lernaVersion}-${ciIndicator}${branchName}.${commitId}`
     }
 }
