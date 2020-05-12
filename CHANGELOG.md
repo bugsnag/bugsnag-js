@@ -1,5 +1,11 @@
 # Changelog
 
+## 7.0.2 (2020-05-12)
+
+### Fixed
+
+- (types): Correct `init` static method name to `start` [#847](https://github.com/bugsnag/bugsnag-js/pull/847)
+
 ## 7.0.1 (2020-04-27)
 
 ### Fixed
