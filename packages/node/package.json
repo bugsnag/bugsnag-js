@@ -2,7 +2,7 @@
   "name": "@bugsnag/node",
   "version": "7.0.1",
   "main": "dist/bugsnag.js",
-  "types": "dist/types/bugsnag.d.ts",
+  "types": "types/bugsnag.d.ts",
   "description": "Bugsnag error reporter for Node.js",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
@@ -13,19 +13,18 @@
     "access": "public"
   },
   "files": [
-    "dist"
+    "dist",
+    "types"
   ],
   "scripts": {
     "clean": "rm -fr dist && mkdir dist",
-    "bundle-types": "../../bin/bundle-types bugsnag",
-    "build": "npm run clean && npm run build:dist && npm run bundle-types",
+    "build": "npm run clean && npm run build:dist",
     "build:dist": "../../bin/bundle src/notifier.js --node --exclude=iserror,stack-generator,error-stack-parser,pump,byline --standalone=bugsnag | ../../bin/extract-source-map dist/bugsnag.js",
     "postversion": "npm run build"
   },
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^7.0.1",
     "@bugsnag/delivery-node": "^7.0.1",
     "@bugsnag/plugin-contextualize": "^7.0.1",
     "@bugsnag/plugin-intercept": "^7.0.1",
@@ -40,6 +39,7 @@
     "nyc": "^12.0.2"
   },
   "dependencies": {
+    "@bugsnag/core": "^7.0.1",
     "byline": "^5.0.0",
     "error-stack-parser": "^2.0.2",
     "iserror": "^0.0.2",

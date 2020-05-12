@@ -2,7 +2,7 @@
   "name": "@bugsnag/browser",
   "version": "7.0.1",
   "main": "dist/bugsnag.js",
-  "types": "dist/types/bugsnag.d.ts",
+  "types": "types/bugsnag.d.ts",
   "description": "Bugsnag error reporter for browser JavaScript",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
@@ -10,19 +10,19 @@
     "url": "git@github.com:bugsnag/bugsnag-js.git"
   },
   "browser": {
-    "dist/types/bugsnag": "./dist/bugsnag.js"
+    "types/bugsnag": "./dist/bugsnag.js"
   },
   "publishConfig": {
     "access": "public"
   },
   "files": [
-    "dist"
+    "dist",
+    "types"
   ],
   "scripts": {
     "size": "./bin/size",
     "clean": "rm -fr dist && mkdir dist",
-    "bundle-types": "../../bin/bundle-types bugsnag",
-    "build": "npm run clean && npm run build:dist && npm run build:dist:min && npm run bundle-types",
+    "build": "npm run clean && npm run build:dist && npm run build:dist:min",
     "build:dist": "NODE_ENV=production IS_BROWSER=yes ../../bin/bundle src/notifier.js --standalone=Bugsnag | ../../bin/extract-source-map dist/bugsnag.js",
     "build:dist:min": "NODE_ENV=production IS_BROWSER=yes ../../bin/bundle src/notifier.js --standalone=Bugsnag | ../../bin/minify dist/bugsnag.min.js",
     "test:types": "jasmine 'types/**/*.test.js'",
@@ -56,5 +56,8 @@
     "nyc": "^12.0.2",
     "semver": "^5.5.1",
     "typescript": "^3.7.5"
+  },
+  "dependencies": {
+    "@bugsnag/core": "^7.0.1"
   }
 }
