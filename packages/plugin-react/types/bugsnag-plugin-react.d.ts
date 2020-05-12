@@ -9,13 +9,13 @@ declare class BugsnagPluginReact {
 }
 
 interface BugsnagPluginReactResult {
-  createErrorBoundary(react?: typeof React): React.Component
+  createErrorBoundary(react?: typeof React): typeof React.Component
 }
 
-type ReactPluginId = 'react'
+// add a new call signature for the getPlugin() method that types the react plugin result
 declare module '@bugsnag/core' {
   interface Client {
-    getPlugin(id: ReactPluginId): BugsnagPluginReactResult | undefined
+    getPlugin(id: 'react'): BugsnagPluginReactResult | undefined
   }
 }
 

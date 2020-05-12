@@ -1,4 +1,4 @@
-module.exports = class BugsnagReactPlugin {
+module.exports = class BugsnagPluginReact {
   constructor (...args) {
     this.name = 'react'
     this.lazy = args.length === 0 && !window.React
