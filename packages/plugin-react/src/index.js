@@ -9,7 +9,12 @@ module.exports = class BugsnagReactPlugin {
   }
 
   load (client) {
-    if (!this.lazy) return createClass(this.React, client)
+    if (!this.lazy) {
+      const ErrorBoundary = createClass(this.React, client)
+      ErrorBoundary.createErrorBoundary = () => ErrorBoundary
+      return ErrorBoundary
+    }
+
     const BugsnagPluginReactLazyInitializer = function () {
       throw new Error(`@bugsnag/plugin-react was used incorrectly. Valid usage is as follows:
 Pass React to the plugin constructor
