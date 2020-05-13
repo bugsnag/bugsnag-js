@@ -16,7 +16,7 @@ const ErrorBoundary = Bugsnag.getPlugin('react')
 // OK: to use exactly the same logic you will need to cast
 const ErrorBoundary = Bugsnag.getPlugin('react') as unknown as React.Component
 
-// RECOMMENDED: or to make use of the provided type definitions, update to the new api
+// RECOMMENDED: to make use of the provided type definitions, update to the new api
 const ErrorBoundary = Bugsnag.getPlugin('react')!.createErrorBoundary()
 ```
 
@@ -62,7 +62,7 @@ Bugsnag.start({
   ]
 })
 
-+ Bugsnag.getPlugin('vue').installVueErrorHandler()
++ Bugsnag.getPlugin('vue').installVueErrorHandler(Vue)
 ```
 
 ## 6.x to 7.x
