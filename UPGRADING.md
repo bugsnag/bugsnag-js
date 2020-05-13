@@ -1,6 +1,70 @@
 Upgrading
 =========
 
+## 7.0 to 7.1
+
+This release contains an update to the way the React and Vue plugins work, allowing the reference to the framework to be supplied after Bugsnag has been initialized.
+
+### Types
+
+From a JS perspective, the update is backwards compatible. Despite being compatible at runtime, the change to type definitions will cause a compile error when TypeScript is used in conjunction with `@bugsnag/plugin-react`. The error is straightforward to resolve:
+
+```TypeScript
+// WRONG: return type was 'any', this will now fail to compile
+const ErrorBoundary = Bugsnag.getPlugin('react')
+
+// OK: to use exactly the same logic you will need to cast
+const ErrorBoundary = Bugsnag.getPlugin('react') as unknown as React.Component
+
+// RECOMMENDED: or to make use of the provided type definitions, update to the new api
+const ErrorBoundary = Bugsnag.getPlugin('react')!.createErrorBoundary()
+```
+
+_Note the use of the `!` operator._ The `getPlugin('react')` call will only return something if the react plugin was provided to `Bugsnag.start({ plugins: […] })`.
+
+### Plugins
+
+In order to work, The React and Vue plugin both require a reference to the respective framework to be passed in. This was required in the constructor, which meant there was no way to load Bugsnag _before_ the framework. To support this, we now support supplying the framework reference _after_ Bugsnag has started.
+
+Note that the existing usage is still supported.
+
+#### React
+
+```diff
+import Bugsnag from '@bugsnag/js'
+import BugsnagPluginReact from '@bugsnag/plugin-react'
+import * as React from 'react'
+
+Bugsnag.start({
+  apiKey: 'YOUR_API_KEY',
+  plugins: [
+-     new BugsnagPluginReact(React)
++     new BugsnagPluginReact()
+  ]
+})
+
+- const ErrorBoundary = Bugsnag.getPlugin('react')
++ const ErrorBoundary = Bugsnag.getPlugin('react').createErrorBoundary(React)
+```
+
+#### Vue
+
+```diff
+import Bugsnag from '@bugsnag/js'
+import BugsnagPluginVue from '@bugsnag/plugin-vue'
+import Vue from 'vue'
+
+Bugsnag.start({
+  apiKey: 'YOUR_API_KEY',
+  plugins: [
+-     new BugsnagPluginVue(Vue)
++     new BugsnagPluginVue()
+  ]
+})
+
++ Bugsnag.getPlugin('vue').installVueErrorHandler()
+```
+
 ## 6.x to 7.x
 
 __This version contains many breaking changes__. It is part of an effort to unify our notifier libraries across platforms, making the user interface more consistent, and implementations better on multi-layered environments where multiple Bugsnag libraries need to work together (such as React Native).
@@ -290,7 +354,7 @@ Here are some examples:
   // adding metadata
 - bugsnagClient.notify(err, {
 -   metaData: {
--     component: { 
+-     component: {
 -       instanceId: component.instanceId
 -     }
 -   }

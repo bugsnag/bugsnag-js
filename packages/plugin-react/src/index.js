@@ -20,7 +20,7 @@ module.exports = class BugsnagPluginReact {
 Pass React to the plugin constructor
 
   \`Bugsnag.start({ plugins: [new BugsnagPluginReact(React)] })\`
-and then call \`const ErrorBoundary = Bugsnag.getPlugin('react')\`
+and then call \`const ErrorBoundary = Bugsnag.getPlugin('react').createErrorBoundary()\`
 
 Or if React is not available until after Bugsnag has started,
 construct the plugin with no arguments
