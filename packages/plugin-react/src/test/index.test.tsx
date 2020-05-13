@@ -6,6 +6,11 @@ import Client from '@bugsnag/core/client'
 const client = new Client({ apiKey: '123', plugins: [new BugsnagPluginReact(React)] }, undefined)
 client._notify = jest.fn()
 
+type FallbackComponentType = React.ComponentType<{
+  error: Error
+  info: React.ErrorInfo
+}>
+
 // eslint-disable-next-line
 const ErrorBoundary = client.getPlugin('react')!.createErrorBoundary()
 
@@ -48,7 +53,7 @@ it('calls notify on error', () => {
 })
 
 it('does not render FallbackComponent when no error', () => {
-  const FallbackComponent = jest.fn(() => 'fallback')
+  const FallbackComponent = jest.fn(() => 'fallback') as unknown as FallbackComponentType
   const tree = renderer
     .create(<ErrorBoundary FallbackComponent={FallbackComponent}><GoodComponent /></ErrorBoundary>)
     .toJSON()
@@ -57,7 +62,7 @@ it('does not render FallbackComponent when no error', () => {
 })
 
 it('renders FallbackComponent on error', () => {
-  const FallbackComponent = jest.fn(() => 'fallback')
+  const FallbackComponent = jest.fn(() => 'fallback') as unknown as FallbackComponentType
   const tree = renderer
     .create(<ErrorBoundary FallbackComponent={FallbackComponent}><BadComponent /></ErrorBoundary>)
     .toJSON()
@@ -65,7 +70,7 @@ it('renders FallbackComponent on error', () => {
 })
 
 it('passes the props to the FallbackComponent', () => {
-  const FallbackComponent = jest.fn(() => 'fallback')
+  const FallbackComponent = jest.fn(() => 'fallback') as unknown as FallbackComponentType
   renderer
     .create(<ErrorBoundary FallbackComponent={FallbackComponent}><BadComponent /></ErrorBoundary>)
   expect(FallbackComponent).toBeCalledWith({

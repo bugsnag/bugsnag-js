@@ -1,4 +1,4 @@
-import { Plugin, Client } from '@bugsnag/core'
+import { Plugin, Client, OnErrorCallback } from '@bugsnag/core'
 import React from 'react'
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -8,8 +8,16 @@ declare class BugsnagPluginReact {
   constructor(react?: typeof React)
 }
 
+type BugsnagErrorBoundary = React.ComponentType<{
+  onError?: OnErrorCallback
+  FallbackComponent?: React.ComponentType<{
+    error: Error
+    info: React.ErrorInfo
+  }>
+}>
+
 interface BugsnagPluginReactResult {
-  createErrorBoundary(react?: typeof React): typeof React.Component
+  createErrorBoundary(react?: typeof React): BugsnagErrorBoundary
 }
 
 // add a new call signature for the getPlugin() method that types the react plugin result
