@@ -6,10 +6,12 @@ import Client from '@bugsnag/core/client'
 const client = new Client({ apiKey: '123', plugins: [new BugsnagPluginReact(React)] }, undefined)
 client._notify = jest.fn()
 
-type FallbackComponentType = React.ComponentType<{
+interface FallbackComponentProps {
   error: Error
   info: React.ErrorInfo
-}>
+  clearError: () => void
+}
+type FallbackComponentType = React.ComponentType<FallbackComponentProps>
 
 // eslint-disable-next-line
 const ErrorBoundary = client.getPlugin('react')!.createErrorBoundary()
@@ -30,12 +32,6 @@ const BadComponent = () => {
 
 // see https://github.com/DefinitelyTyped/DefinitelyTyped/issues/20544
 const GoodComponent = (): JSX.Element => 'test' as unknown as JSX.Element
-
-const FallbackComponent = ({ clearError }: { clearError: () => void }) => {
-  return (
-    <button onClick={() => clearError()}>clearError</button>
-  )
-}
 
 const ComponentWithBadButton = () => {
   const [clicked, setClicked] = useState(false)
@@ -90,6 +86,12 @@ it('passes the props to the FallbackComponent', () => {
 })
 
 it('resets the error boundary when the FallbackComponent calls the passed clearError prop', () => {
+  const FallbackComponent = ({ clearError }: FallbackComponentProps) => {
+    return (
+      <button onClick={() => clearError()}>clearError</button>
+    )
+  }
+
   const component = create(<ErrorBoundary FallbackComponent={FallbackComponent}><ComponentWithBadButton /></ErrorBoundary>)
   const instance = component.root
 
@@ -110,7 +112,9 @@ it('resets the error boundary when the FallbackComponent calls the passed clearE
 })
 
 it('a bad FallbackComponent implementation does not trigger stack overflow', () => {
-  const BadFallbackComponentImplementation = ({ clearError }: { clearError: () => void }) => {
+  const BadFallbackComponentImplementation = ({ error, info, clearError }: FallbackComponentProps) => {
+    function log (o: any) {}
+    log(error)
     clearError()
 
     return <div>fallback</div>

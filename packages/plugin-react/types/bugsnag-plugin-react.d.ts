@@ -13,6 +13,7 @@ type BugsnagErrorBoundary = React.ComponentType<{
   FallbackComponent?: React.ComponentType<{
     error: Error
     info: React.ErrorInfo
+    clearError: () => void
   }>
 }>
 
