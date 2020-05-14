@@ -69,5 +69,6 @@
     "packages/plugin-react",
     "packages/plugin-vue",
     "packages/plugin-express",
+    "packages/plugin-koa",
   ]
 }
