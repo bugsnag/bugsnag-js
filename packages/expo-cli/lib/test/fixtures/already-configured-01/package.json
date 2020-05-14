@@ -1,0 +1,8 @@
+{
+  "name": "bugsnag-test-fixture-01",
+  "private": "true",
+  "version": "0.0.0",
+  "dependencies": {
+    "@bugsnag/expo": "7.0.0"
+  }
+}

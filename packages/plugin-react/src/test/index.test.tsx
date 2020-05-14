@@ -1,28 +1,20 @@
 import React, { useState } from 'react'
 import { create, act } from 'react-test-renderer'
 import BugsnagPluginReact from '..'
+import Client from '@bugsnag/core/client'
 
-class Event {
-  static create () {
-    return new Event()
-  }
+const client = new Client({ apiKey: '123', plugins: [new BugsnagPluginReact(React)] }, undefined)
+client._notify = jest.fn()
 
-  addMetadata () {
-    return this
-  }
-}
+type FallbackComponentType = React.ComponentType<{
+  error: Error
+  info: React.ErrorInfo
+}>
 
-const bugsnag = {
-  Event,
-  _notify: jest.fn()
-}
+// eslint-disable-next-line
+const ErrorBoundary = client.getPlugin('react')!.createErrorBoundary()
 
-const plugin = new BugsnagPluginReact(React)
-const ErrorBoundary = plugin.load(bugsnag)
-
-beforeEach(() => {
-  bugsnag._notify.mockReset()
-})
+beforeEach(() => (client._notify as jest.Mock).mockClear())
 
 test('formatComponentStack(str)', () => {
   const str = `
@@ -69,11 +61,11 @@ it('renders correctly on error', () => {
 it('calls notify on error', () => {
   create(<ErrorBoundary><BadComponent /></ErrorBoundary>)
     .toJSON()
-  expect(bugsnag._notify).toHaveBeenCalledTimes(1)
+  expect(client._notify).toHaveBeenCalledTimes(1)
 })
 
 it('does not render FallbackComponent when no error', () => {
-  const FallbackComponent = jest.fn(() => 'fallback')
+  const FallbackComponent = jest.fn(() => 'fallback') as unknown as FallbackComponentType
   const tree = create(<ErrorBoundary FallbackComponent={FallbackComponent}><GoodComponent /></ErrorBoundary>)
     .toJSON()
   expect(tree).toMatchSnapshot()
@@ -81,14 +73,14 @@ it('does not render FallbackComponent when no error', () => {
 })
 
 it('renders FallbackComponent on error', () => {
-  const FallbackComponent = jest.fn(() => 'fallback')
+  const FallbackComponent = jest.fn(() => 'fallback') as unknown as FallbackComponentType
   const tree = create(<ErrorBoundary FallbackComponent={FallbackComponent}><BadComponent /></ErrorBoundary>)
     .toJSON()
   expect(tree).toMatchSnapshot()
 })
 
 it('passes the props to the FallbackComponent', () => {
-  const FallbackComponent = jest.fn(() => 'fallback')
+  const FallbackComponent = jest.fn(() => 'fallback') as unknown as FallbackComponentType
   create(<ErrorBoundary FallbackComponent={FallbackComponent}><BadComponent /></ErrorBoundary>)
   expect(FallbackComponent).toBeCalledWith({
     error: expect.any(Error),
@@ -133,8 +125,15 @@ it('it passes the onError function to the Bugsnag notify call', () => {
   const onError = () => {}
   create(<ErrorBoundary onError={onError}><BadComponent /></ErrorBoundary>)
     .toJSON()
-  expect(bugsnag._notify).toBeCalledWith(
-    expect.any(Event),
+  expect(client._notify).toBeCalledWith(
+    expect.any(client.Event),
     onError
   )
+})
+
+it('supports passing reference to React when the error boundary is created', () => {
+  const client = new Client({ apiKey: '123', plugins: [new BugsnagPluginReact()] }, undefined)
+  // eslint-disable-next-line
+  const ErrorBoundary = client.getPlugin('react')!.createErrorBoundary(React)
+  expect(ErrorBoundary).toBeTruthy()
 })

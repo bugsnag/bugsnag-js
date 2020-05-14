@@ -1,12 +1,34 @@
 # Changelog
 
-## TBD
+## 7.1.0 (TBD)
+
+This update contains some substantial changes to plugin type definitions. If you are using TypeScript alongside a framework, you may need to make changes to your app. Please refer to the [upgrade guide](./UPGRADING.md).
+
+### Changed
+
+- (plugin-react|plugin-vue): Support late passing of framework reference [#839](https://github.com/bugsnag/bugsnag-js/pull/839)
+
+### Added
+
+- (plugin-react): Add type definitions for `Bugsnag.getPlugin('react')` [#839](https://github.com/bugsnag/bugsnag-js/pull/839)
+- (plugin-vue): Add type definitions for `Bugsnag.getPlugin('vue')` [#839](https://github.com/bugsnag/bugsnag-js/pull/839)
+
+## 7.0.2 (2020-05-12)
+
+### Fixed
+
+- (types): Correct `init` static method name to `start` [#847](https://github.com/bugsnag/bugsnag-js/pull/847)
+
+## 7.0.1 (2020-04-27)
 
 ### Added
 - (plugin-react): Add `clearError` prop to `ErrorBoundary`. [#797](https://github.com/bugsnag/bugsnag-js/pull/797)
 
 ### Fixed
-- Ensure Expo delivery logs event details correctly (instead of `undefined`) [#804](https://github.com/bugsnag/bugsnag-js/pull/804)
+- (plugin-vue): Fix plugin type definitions [#809](https://github.com/bugsnag/bugsnag-js/pull/809)
+- (delivery-expo): Ensure Expo delivery logs event details correctly (instead of `undefined`) [#804](https://github.com/bugsnag/bugsnag-js/pull/804)
+- (expo-cli): Ensure Expo cli inserts correct code depending on the version of the notifier [#808](https://github.com/bugsnag/bugsnag-js/pull/808)
+- (expo): Ensure types allow `.start()` with no arguments [#817](https://github.com/bugsnag/bugsnag-js/pull/817)
 
 ## 7.0.0 (2020-04-14)
 

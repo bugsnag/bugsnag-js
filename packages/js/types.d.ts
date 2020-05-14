@@ -2,7 +2,7 @@ import { Client, BrowserConfig, BugsnagStatic } from '@bugsnag/browser'
 import { NodeConfig } from '@bugsnag/node'
 
 interface UniversalBugsnagStatic extends BugsnagStatic {
-  init(apiKeyOrOpts: string | BrowserConfig | NodeConfig): Client
+  start(apiKeyOrOpts: string | BrowserConfig | NodeConfig): Client
   createClient(apiKeyOrOpts: string | BrowserConfig | NodeConfig): Client
 }
 

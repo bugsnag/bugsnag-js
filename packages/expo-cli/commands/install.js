@@ -6,10 +6,11 @@ const install = require('../lib/install')
 const { onCancel } = require('../lib/utils')
 const { blue } = require('kleur')
 const semver = require('semver')
+const detectInstalled = require('../lib/detect-installed')
 
 module.exports = async (argv, globalOpts) => {
   const projectRoot = globalOpts['project-root']
-  const alreadyInstalled = await checkManifest(projectRoot)
+  const alreadyInstalled = await detectInstalled(projectRoot)
   const isWanted = await confirmWanted(alreadyInstalled, projectRoot)
   if (isWanted) {
     const version = await selectVersion(projectRoot)
@@ -42,27 +43,6 @@ const withTool = async (root) => {
     ],
     initial: cli === 'npm' ? 0 : 1
   }, { onCancel })).tool
-}
-
-const keys = maybeObj => {
-  try {
-    return Object.keys(maybeObj)
-  } catch (e) {
-    return []
-  }
-}
-
-const checkManifest = async (dir) => {
-  try {
-    const pkg = JSON.parse(await promisify(readFile)(join(dir, 'package.json'), 'utf8'))
-    const allDeps = []
-      .concat(keys(pkg.dependencies))
-      .concat(keys(pkg.devDependencies))
-      .concat(keys(pkg.peerDependencies))
-    return allDeps.includes('@bugsnag/expo')
-  } catch (e) {
-    throw new Error('Could not load package.json. Is this the project root?')
-  }
 }
 
 const selectVersion = async (dir) => {
