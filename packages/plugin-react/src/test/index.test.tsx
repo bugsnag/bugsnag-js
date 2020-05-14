@@ -1,28 +1,15 @@
 import React from 'react'
 import renderer from 'react-test-renderer'
 import BugsnagPluginReact from '..'
+import Client from '@bugsnag/core/client'
 
-class Event {
-  static create () {
-    return new Event()
-  }
+const client = new Client({ apiKey: '123', plugins: [new BugsnagPluginReact(React)] }, undefined)
+client._notify = jest.fn()
 
-  addMetadata () {
-    return this
-  }
-}
+// eslint-disable-next-line
+const ErrorBoundary = client.getPlugin('react')!.createErrorBoundary()
 
-const bugsnag = {
-  Event,
-  _notify: jest.fn()
-}
-
-const plugin = new BugsnagPluginReact(React)
-const ErrorBoundary = plugin.load(bugsnag)
-
-beforeEach(() => {
-  bugsnag._notify.mockReset()
-})
+beforeEach(() => (client._notify as jest.Mock).mockClear())
 
 test('formatComponentStack(str)', () => {
   const str = `
@@ -57,7 +44,7 @@ it('calls notify on error', () => {
   renderer
     .create(<ErrorBoundary><BadComponent /></ErrorBoundary>)
     .toJSON()
-  expect(bugsnag._notify).toHaveBeenCalledTimes(1)
+  expect(client._notify).toHaveBeenCalledTimes(1)
 })
 
 it('does not render FallbackComponent when no error', () => {
@@ -87,13 +74,20 @@ it('passes the props to the FallbackComponent', () => {
   }, {})
 })
 
-it('it passes the onError function to the Bugsnag notify call', () => {
+it('passes the onError function to the Bugsnag notify call', () => {
   const onError = () => {}
   renderer
     .create(<ErrorBoundary onError={onError}><BadComponent /></ErrorBoundary>)
     .toJSON()
-  expect(bugsnag._notify).toBeCalledWith(
-    expect.any(Event),
+  expect(client._notify).toBeCalledWith(
+    expect.any(client.Event),
     onError
   )
+})
+
+it('supports passing reference to React when the error boundary is created', () => {
+  const client = new Client({ apiKey: '123', plugins: [new BugsnagPluginReact()] }, undefined)
+  // eslint-disable-next-line
+  const ErrorBoundary = client.getPlugin('react')!.createErrorBoundary(React)
+  expect(ErrorBoundary).toBeTruthy()
 })

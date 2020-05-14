@@ -2,7 +2,7 @@
   "name": "@bugsnag/expo",
   "version": "7.0.1",
   "main": "src/notifier.js",
-  "types": "dist/types/bugsnag.d.ts",
+  "types": "types/bugsnag.d.ts",
   "description": "Bugsnag error reporter for Expo applications",
   "keywords": [
     "bugsnag",
@@ -27,14 +27,10 @@
   "files": [
     "src",
     "hooks",
-    "dist"
+    "types"
   ],
   "scripts": {
-    "clean": "rm -fr dist && mkdir dist",
-    "bundle-types": "../../bin/bundle-types bugsnag",
-    "build": "npm run clean && npm run bundle-types",
-    "test:types": "jasmine 'types/**/*.test.js'",
-    "postversion": "npm run build"
+    "test:types": "jasmine 'types/**/*.test.js'"
   },
   "author": "Bugsnag",
   "license": "MIT",
