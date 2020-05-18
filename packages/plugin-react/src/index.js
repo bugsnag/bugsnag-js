@@ -52,6 +52,11 @@ const createClass = (React, client) => class ErrorBoundary extends React.Compone
       error: null,
       info: null
     }
+    this.handleClearError = this.handleClearError.bind(this)
+  }
+
+  handleClearError () {
+    this.setState({ error: null, info: null })
   }
 
   componentDidCatch (error, info) {
@@ -73,7 +78,7 @@ const createClass = (React, client) => class ErrorBoundary extends React.Compone
     const { error } = this.state
     if (error) {
       const { FallbackComponent } = this.props
-      if (FallbackComponent) return React.createElement(FallbackComponent, this.state)
+      if (FallbackComponent) return React.createElement(FallbackComponent, { ...this.state, clearError: this.handleClearError })
       return null
     }
     return this.props.children
