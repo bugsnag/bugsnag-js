@@ -12,6 +12,7 @@ This update contains some substantial changes to plugin type definitions. If you
 
 - (plugin-react): Add type definitions for `Bugsnag.getPlugin('react')` [#839](https://github.com/bugsnag/bugsnag-js/pull/839)
 - (plugin-vue): Add type definitions for `Bugsnag.getPlugin('vue')` [#839](https://github.com/bugsnag/bugsnag-js/pull/839)
+- (plugin-react): Add `clearError` prop to `ErrorBoundary`. [#797](https://github.com/bugsnag/bugsnag-js/pull/797)
 
 ## 7.0.2 (2020-05-12)
 
