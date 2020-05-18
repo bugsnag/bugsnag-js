@@ -1,8 +1,8 @@
 {
   "name": "@bugsnag/expo",
-  "version": "7.0.0",
+  "version": "7.0.1",
   "main": "src/notifier.js",
-  "types": "dist/types/bugsnag.d.ts",
+  "types": "types/bugsnag.d.ts",
   "description": "Bugsnag error reporter for Expo applications",
   "keywords": [
     "bugsnag",
@@ -27,14 +27,10 @@
   "files": [
     "src",
     "hooks",
-    "dist"
+    "types"
   ],
   "scripts": {
-    "clean": "rm -fr dist && mkdir dist",
-    "bundle-types": "../../bin/bundle-types bugsnag",
-    "build": "npm run clean && npm run bundle-types",
-    "test:types": "jasmine 'types/**/*.test.js'",
-    "postversion": "npm run build"
+    "test:types": "jasmine 'types/**/*.test.js'"
   },
   "author": "Bugsnag",
   "license": "MIT",
@@ -45,19 +41,19 @@
     "typescript": "^3.7.5"
   },
   "dependencies": {
-    "@bugsnag/core": "^7.0.0",
-    "@bugsnag/delivery-expo": "^7.0.0",
-    "@bugsnag/plugin-browser-session": "^7.0.0",
-    "@bugsnag/plugin-console-breadcrumbs": "^7.0.0",
-    "@bugsnag/plugin-expo-app": "^7.0.0",
-    "@bugsnag/plugin-expo-device": "^7.0.0",
-    "@bugsnag/plugin-network-breadcrumbs": "^7.0.0",
-    "@bugsnag/plugin-react": "^7.0.0",
-    "@bugsnag/plugin-react-native-app-state-breadcrumbs": "^7.0.0",
-    "@bugsnag/plugin-react-native-connectivity-breadcrumbs": "^7.0.0",
-    "@bugsnag/plugin-react-native-global-error-handler": "^7.0.0",
-    "@bugsnag/plugin-react-native-orientation-breadcrumbs": "^7.0.0",
-    "@bugsnag/plugin-react-native-unhandled-rejection": "^7.0.0",
+    "@bugsnag/core": "^7.0.1",
+    "@bugsnag/delivery-expo": "^7.0.1",
+    "@bugsnag/plugin-browser-session": "^7.0.1",
+    "@bugsnag/plugin-console-breadcrumbs": "^7.0.1",
+    "@bugsnag/plugin-expo-app": "^7.0.1",
+    "@bugsnag/plugin-expo-device": "^7.0.1",
+    "@bugsnag/plugin-network-breadcrumbs": "^7.0.1",
+    "@bugsnag/plugin-react": "^7.0.1",
+    "@bugsnag/plugin-react-native-app-state-breadcrumbs": "^7.0.1",
+    "@bugsnag/plugin-react-native-connectivity-breadcrumbs": "^7.0.1",
+    "@bugsnag/plugin-react-native-global-error-handler": "^7.0.1",
+    "@bugsnag/plugin-react-native-orientation-breadcrumbs": "^7.0.1",
+    "@bugsnag/plugin-react-native-unhandled-rejection": "^7.0.1",
     "bugsnag-build-reporter": "^1.0.1",
     "bugsnag-sourcemaps": "^1.1.0",
     "expo-constants": "^6.0.0"

@@ -52,7 +52,7 @@
     "react-test-renderer": "^16.13.1",
     "rimraf": "^3.0.0",
     "timekeeper": "^2.2.0",
-    "typescript": "^3.7.5",
+    "typescript": "^3.9.2",
     "uglify-js": "^3.4.9"
   },
   "scripts": {

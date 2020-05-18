@@ -64,12 +64,20 @@
   },
   "include": [
     "packages/core",
-    "packages/react-native",
+
+    "packages/plugin-browser-context",
+    "packages/plugin-browser-device",
     "packages/plugin-react-native-app-state-breadcrumbs",
     "packages/plugin-react-native-unhandled-rejection",
     "packages/plugin-server-session",
+
     "packages/plugin-react",
     "packages/plugin-vue",
+    "packages/plugin-express",
+    "packages/plugin-koa",
+    "packages/plugin-restify",
+
     "packages/node",
+    "packages/react-native",
   ]
 }
