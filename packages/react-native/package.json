@@ -2,7 +2,7 @@
   "name": "@bugsnag/react-native",
   "version": "7.0.0",
   "main": "src/notifier.js",
-  "types": "dist/types/bugsnag.d.ts",
+  "types": "types/bugsnag.d.ts",
   "description": "Bugsnag error reporter for React Native applications",
   "keywords": [
     "bugsnag",
@@ -37,7 +37,6 @@
   },
   "files": [
     "src",
-    "dist",
     "android/build.gradle",
     "android/proguard-rules.pro",
     "android/src/main",
@@ -52,11 +51,7 @@
     "react-native.config.js"
   ],
   "scripts": {
-    "clean": "rm -fr dist && mkdir dist",
-    "bundle-types": "../../bin/bundle-types bugsnag",
-    "build": "npm run clean && npm run bundle-types",
-    "test:types": "jasmine 'types/**/*.test.js'",
-    "postversion": "npm run build"
+    "test:types": "jasmine 'types/**/*.test.js'"
   },
   "author": "Bugsnag",
   "license": "MIT",
@@ -68,16 +63,16 @@
     "typescript": "^3.3.3"
   },
   "dependencies": {
-    "@bugsnag/core": "7.0.0",
-    "@bugsnag/delivery-react-native": "7.0.0",
-    "@bugsnag/plugin-console-breadcrumbs": "7.0.0",
-    "@bugsnag/plugin-network-breadcrumbs": "7.0.0",
-    "@bugsnag/plugin-react": "7.0.0",
-    "@bugsnag/plugin-react-native-client-sync": "7.0.0",
-    "@bugsnag/plugin-react-native-event-sync": "7.0.0",
-    "@bugsnag/plugin-react-native-global-error-handler": "7.0.0",
-    "@bugsnag/plugin-react-native-session": "7.0.0",
-    "@bugsnag/plugin-react-native-unhandled-rejection": "7.0.0",
+    "@bugsnag/core": "7.0.1",
+    "@bugsnag/delivery-react-native": "7.0.2",
+    "@bugsnag/plugin-console-breadcrumbs": "7.0.1",
+    "@bugsnag/plugin-network-breadcrumbs": "7.0.1",
+    "@bugsnag/plugin-react": "7.0.1",
+    "@bugsnag/plugin-react-native-client-sync": "7.0.2",
+    "@bugsnag/plugin-react-native-event-sync": "7.0.2",
+    "@bugsnag/plugin-react-native-global-error-handler": "7.0.1",
+    "@bugsnag/plugin-react-native-session": "7.0.2",
+    "@bugsnag/plugin-react-native-unhandled-rejection": "7.0.1",
     "iserror": "^0.0.2",
     "proxy-polyfill": "^0.3.1"
   }

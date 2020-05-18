@@ -56,7 +56,7 @@ interface HandledState {
   }
 }
 
-interface Error {
+export interface Error {
   errorClass: string
   errorMessage: string
   stacktrace: Stackframe[]
