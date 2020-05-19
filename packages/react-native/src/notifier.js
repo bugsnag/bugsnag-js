@@ -94,7 +94,6 @@ const Bugsnag = {
     }
     if (!isDebuggingRemotely) {
       Bugsnag._client = createClient(opts)
-      Bugsnag._client._depth += 1
       return Bugsnag._client
     } else {
       console.warn(REMOTE_DEBUGGING_WARNING)
@@ -116,7 +115,6 @@ const Bugsnag = {
       createClientAsync(opts).then(client => {
         initialised = true
         Bugsnag._client = client
-        Bugsnag._client._depth += 1
       })
       return stubClient
     }
@@ -127,7 +125,10 @@ CLIENT_METHODS.map((m) => {
   if (/^_/.test(m)) return
   Bugsnag[m] = function () {
     if (!Bugsnag._client) return console.warn(`Bugsnag.${m}() was called before Bugsnag.start()`)
-    return Bugsnag._client[m].apply(Bugsnag._client, arguments)
+    Bugsnag._client._depth += 1
+    const ret = Bugsnag._client[m].apply(Bugsnag._client, arguments)
+    Bugsnag._client._depth -= 1
+    return ret
   }
 })
 
