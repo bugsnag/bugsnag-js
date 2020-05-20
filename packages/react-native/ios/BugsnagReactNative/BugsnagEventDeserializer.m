@@ -31,13 +31,28 @@ BSGSeverity BSGParseSeverity(NSString *severity);
 + (NSUInteger)severityReasonFromString:(NSString *)string;
 @end
 
+@interface BugsnagAppWithState()
++ (BugsnagAppWithState *)appFromJson:(NSDictionary *)json;
+@end
+
+@interface BugsnagDeviceWithState()
++ (BugsnagDeviceWithState *)deviceFromJson:(NSDictionary *)json;
+@end
+
+@interface BugsnagUser()
+- (instancetype)initWithDictionary:(NSDictionary *)dict;
+@end
+
 @interface BugsnagEvent ()
-- (instancetype _Nonnull)initWithErrorName:(NSString *_Nonnull)name
-                              errorMessage:(NSString *_Nonnull)message
-                             configuration:(BugsnagConfiguration *_Nonnull)config
-                                  metadata:(BugsnagMetadata *_Nullable)metadata
-                              handledState:(BugsnagHandledState *_Nonnull)handledState
-                                   session:(BugsnagSession *_Nullable)session;
+- (instancetype)initWithApp:(BugsnagAppWithState *)app
+                     device:(BugsnagDeviceWithState *)device
+               handledState:(BugsnagHandledState *)handledState
+                       user:(BugsnagUser *)user
+                   metadata:(BugsnagMetadata *)metadata
+                breadcrumbs:(NSArray<BugsnagBreadcrumb *> *)breadcrumbs
+                     errors:(NSArray<BugsnagError *> *)errors
+                    threads:(NSArray<BugsnagThread *> *)threads
+                    session:(BugsnagSession *)session;
 - (NSDictionary *)toJson;
 @end
 
@@ -56,21 +71,21 @@ BSGSeverity BSGParseSeverity(NSString *severity);
 
     NSDictionary *error = payload[@"errors"][0];
     BugsnagHandledState *handledState = [self deserializeHandledState:payload];
-
-    BugsnagEvent *event = [[BugsnagEvent alloc] initWithErrorName:error[@"errorClass"]
-                              errorMessage:error[@"errorMessage"]
-                             configuration:[Bugsnag configuration]
-                                  metadata:metadata
-                              handledState:handledState
-                                   session:session];
-    event.breadcrumbs = [self deserializeBreadcrumbs:payload[@"breadcrumbs"]];
-    event.context = payload[@"context"];
-    event.groupingHash = payload[@"groupingHash"];
     NSDictionary *user = payload[@"user"];
 
-    if (user) {
-        [event setUser:user[@"id"] withEmail:user[@"email"] andName:user[@"name"]];
-    }
+    BugsnagEvent *event = [[BugsnagEvent alloc] initWithApp:[BugsnagAppWithState appFromJson:payload[@"app"]]
+                                                     device:[BugsnagDeviceWithState deviceFromJson:payload[@"device"]]
+                                               handledState:handledState
+                                                       user:[[BugsnagUser alloc] initWithDictionary:user]
+                                                   metadata:metadata
+                                                breadcrumbs:[self deserializeBreadcrumbs:payload[@"breadcrumbs"]]
+                                                     errors:@[[BugsnagError new]] // TODO populate
+                                                    threads:@[] // TODO populate
+                                                    session:session];
+    event.context = payload[@"context"];
+    event.groupingHash = payload[@"groupingHash"];
+    event.errors[0].errorClass = error[@"errorClass"];
+    event.errors[0].errorMessage = error[@"errorMessage"];
 
     NSLog(@"Deserialized JS event: %@", [event toJson]);
     return event;
