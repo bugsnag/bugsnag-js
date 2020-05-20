@@ -125,7 +125,7 @@ int bsg_ksjsoncodec_i_appendEscapedString(
          src++) {
         *dst++ = *src;
     }
-    
+
     // Deal with complicated case (if any)
     for (; src < srcEnd; src++) {
         switch (*src) {
@@ -155,14 +155,14 @@ int bsg_ksjsoncodec_i_appendEscapedString(
             *dst++ = 't';
             break;
         default:
-                
+
             // escape control chars (U+0000 - U+001F)
             // see https://www.ietf.org/rfc/rfc4627.txt
-                
+
             if ((unsigned char)*src < ' ') {
                 unsigned int last = *src % 16;
                 unsigned int first = (*src - last) / 16;
-                
+
                 *dst++ = '\\';
                 *dst++ = 'u';
                 *dst++ = '0';

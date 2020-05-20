@@ -56,6 +56,8 @@ NSString *BSGFormatSeverity(BSGSeverity severity);
 + (instancetype)handledStateWithSeverityReason:
     (SeverityReasonType)severityReason;
 
++ (instancetype)handledStateFromJson:(NSDictionary *)json;
+
 + (instancetype)handledStateWithSeverityReason:
                     (SeverityReasonType)severityReason
                                       severity:(BSGSeverity)severity

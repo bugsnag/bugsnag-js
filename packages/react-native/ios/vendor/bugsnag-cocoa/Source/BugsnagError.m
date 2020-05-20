@@ -27,6 +27,19 @@ NSString *_Nonnull BSGSerializeErrorType(BSGErrorType errorType) {
     }
 }
 
+BSGErrorType BSGParseErrorType(NSString *errorType) {
+    if ([@"cocoa" isEqualToString:errorType]) {
+        return BSGErrorTypeCocoa;
+    } else if ([@"c" isEqualToString:errorType]) {
+        return BSGErrorTypeC;
+    } else if ([@"reactnativejs" isEqualToString:errorType]) {
+        return BSGErrorTypeReactNativeJs;
+    } else {
+        return BSGErrorTypeCocoa;
+    }
+}
+
+
 NSString *_Nonnull BSGParseErrorClass(NSDictionary *error, NSString *errorType) {
     NSString *errorClass;
 
@@ -60,6 +73,7 @@ NSString *BSGParseErrorMessage(NSDictionary *report, NSDictionary *error, NSStri
 
 @interface BugsnagStackframe ()
 - (NSDictionary *)toDictionary;
++ (BugsnagStackframe *)frameFromJson:(NSDictionary *)json;
 @end
 
 @interface BugsnagStacktrace ()
@@ -67,6 +81,10 @@ NSString *BSGParseErrorMessage(NSDictionary *report, NSDictionary *error, NSStri
 @end
 
 @implementation BugsnagError
+
+- (instancetype)initWithErrorReportingThread:(BugsnagThread *)thread {
+    return [self initWithEvent:@{} errorReportingThread:thread];
+}
 
 - (instancetype)initWithEvent:(NSDictionary *)event errorReportingThread:(BugsnagThread *)thread {
     if (self = [super init]) {
@@ -87,6 +105,39 @@ NSString *BSGParseErrorMessage(NSDictionary *report, NSDictionary *error, NSStri
         }
     }
     return self;
+}
+
+- (instancetype)initWithErrorClass:(NSString *)errorClass
+                      errorMessage:(NSString *)errorMessage
+                         errorType:(BSGErrorType)errorType
+                        stacktrace:(NSArray<BugsnagStackframe *> *)stacktrace {
+    if (self = [super init]) {
+        _errorClass = errorClass;
+        _errorMessage = errorMessage;
+        _type = errorType;
+        _stacktrace = stacktrace;
+    }
+    return self;
+}
+
++ (BugsnagError *)errorFromJson:(NSDictionary *)json {
+    NSArray *trace = json[BSGKeyStacktrace];
+    NSMutableArray *data = [NSMutableArray new];
+
+    if (trace != nil) {
+        for (NSDictionary *dict in trace) {
+            BugsnagStackframe *frame = [BugsnagStackframe frameFromJson:dict];
+
+            if (frame != nil) {
+                [data addObject:frame];
+            }
+        }
+    }
+    BugsnagError *error = [[BugsnagError alloc] initWithErrorClass:json[BSGKeyErrorClass]
+                                                      errorMessage:json[BSGKeyMessage]
+                                                         errorType:BSGParseErrorType(json[BSGKeyType])
+                                                        stacktrace:data];
+    return error;
 }
 
 - (NSDictionary *)findErrorReportingThread:(NSDictionary *)event {

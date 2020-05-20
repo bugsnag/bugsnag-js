@@ -131,21 +131,15 @@ void bsg_kscrash_setCrashNotifyCallback(
  *
  * @param name The exception name (for namespacing exception types).
  * @param reason A description of why the exception occurred.
- * @param stackAddresses An array of addresses or NULL
- * @param stackLength The number of addresses in stackAddresses
  * @param handledState The severity, reason, and handled-ness of the report
  * @param appState breadcrumbs and other app environmental info
  * @param overrides Report fields overridden by callbacks, collated in the
  *                  final report
  * @param metadata additional information to attach to the report
- * @param discardDepth The number of frames to discard from the top of the
- *                     stacktrace
  * @param terminateProgram If true, do not return from this function call.
  * Terminate the program instead.
  */
 void bsg_kscrash_reportUserException(const char *name, const char *reason,
-                                     uintptr_t *stackAddresses,
-                                     unsigned long stackLength,
                                      const char *severity,
                                      const char *handledState,
                                      const char *overrides,
@@ -153,7 +147,6 @@ void bsg_kscrash_reportUserException(const char *name, const char *reason,
                                      const char *metadata,
                                      const char *appState,
                                      const char *config,
-                                     int discardDepth,
                                      bool terminateProgram);
 
 /** If YES, user reported exceptions will suspend all threads during report
@@ -181,6 +174,16 @@ void bsg_kscrash_setWriteBinaryImagesForUserReported(
  * The current crash context
  */
 BSG_KSCrash_Context *crashContext(void);
+
+/**
+ * Captures a thread trace for the current application state, if the user
+ * has configured this functionality.
+ *
+ * @param discardDepth - the number of stack frames to discard
+ *
+ * @return a trace of all the threads as a JSON string.
+ */
+char *bsg_kscrash_captureThreadTrace(int discardDepth, int frameCount, uintptr_t *callstack);
 
 #ifdef __cplusplus
 }

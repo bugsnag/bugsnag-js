@@ -14,6 +14,7 @@ typedef NS_OPTIONS(NSUInteger, BSGThreadType) {
 };
 
 @class BugsnagStackframe;
+@class BugsnagStacktrace;
 
 /**
  * A representation of thread information recorded as part of a BugsnagEvent.

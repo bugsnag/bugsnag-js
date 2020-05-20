@@ -11,6 +11,14 @@
 #import "BugsnagStacktrace.h"
 #import "BugsnagKeys.h"
 
+BSGThreadType BSGParseThreadType(NSString *type) {
+    return [@"cocoa" isEqualToString:type] ? BSGThreadTypeCocoa : BSGThreadTypeReactNativeJs;
+}
+
+NSString *BSGSerializeThreadType(BSGThreadType type) {
+    return type == BSGThreadTypeCocoa ? @"cocoa" : @"reactnativejs";
+}
+
 @interface BugsnagStacktrace ()
 - (NSArray *)toArray;
 @end
@@ -20,10 +28,42 @@
 @end
 
 @interface BugsnagStacktrace ()
++ (instancetype)stacktraceFromJson:(NSDictionary *)json;
 @property NSMutableArray<BugsnagStackframe *> *trace;
 @end
 
 @implementation BugsnagThread
+
++ (instancetype)threadFromJson:(NSDictionary *)json {
+    if (json == nil) {
+        return nil;
+    }
+    NSString *type = json[@"type"];
+    BSGThreadType threadType = BSGParseThreadType(type);
+    BOOL errorReportingThread = json[@"errorReportingThread"] && [json[@"errorReportingThread"] boolValue];
+    BugsnagStacktrace *stacktrace = [BugsnagStacktrace stacktraceFromJson:json[BSGKeyStacktrace]];
+    BugsnagThread *thread = [[BugsnagThread alloc] initWithId:json[@"id"]
+                                                         name:json[@"name"]
+                                         errorReportingThread:errorReportingThread
+                                                         type:threadType
+                                                        trace:stacktrace];
+    return thread;
+}
+
+- (instancetype)initWithId:(NSString *)id
+                      name:(NSString *)name
+      errorReportingThread:(BOOL)errorReportingThread
+                      type:(BSGThreadType)type
+                     trace:(BugsnagStacktrace *)trace {
+    if (self = [super init]) {
+        _id = id;
+        _name = name;
+        _errorReportingThread = errorReportingThread;
+        _type = type;
+        _trace = trace;
+    }
+    return self;
+}
 
 - (instancetype)initWithThread:(NSDictionary *)thread binaryImages:(NSArray *)binaryImages {
     if (self = [super init]) {
@@ -46,7 +86,7 @@
     BSGDictInsertIfNotNil(dict, self.id, @"id");
     BSGDictInsertIfNotNil(dict, self.name, @"name");
     BSGDictSetSafeObject(dict, @(self.errorReportingThread), @"errorReportingThread");
-    BSGDictSetSafeObject(dict, self.type == BSGThreadTypeCocoa ? @"cocoa" : @"reactnativejs", @"type");
+    BSGDictSetSafeObject(dict, BSGSerializeThreadType(self.type), @"type");
     BSGDictSetSafeObject(dict, @(self.errorReportingThread), @"errorReportingThread");
     BSGDictSetSafeObject(dict, [self.trace toArray], @"stacktrace");
     return dict;
