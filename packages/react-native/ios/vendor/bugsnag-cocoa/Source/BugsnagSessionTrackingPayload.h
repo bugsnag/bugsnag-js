@@ -7,19 +7,18 @@
 //
 
 #import <Foundation/Foundation.h>
-
 #import "BugsnagSession.h"
 
 @class BugsnagConfiguration;
 
 @interface BugsnagSessionTrackingPayload : NSObject
 
+@property NSArray<BugsnagSession *> *sessions;
+
 - (instancetype)initWithSessions:(NSArray<BugsnagSession *> *)sessions
                           config:(BugsnagConfiguration *)config
                     codeBundleId:(NSString *)codeBundleId;
 
 - (NSMutableDictionary *)toJson;
-
-@property NSArray<BugsnagSession *> *sessions;
 
 @end

@@ -48,7 +48,8 @@ typedef void (^BSGConnectivityChangeBlock)(BOOL connected, NSString *_Nonnull ty
  *              BugsnagConfiguration.notifyURL
  * @param block The block called when connectivity changes
  */
-+ (void)monitorURL:(NSURL *_Nonnull)URL usingCallback:(BSGConnectivityChangeBlock _Nonnull)block;
++ (void)monitorURL:(NSURL *_Nonnull)URL
+     usingCallback:(BSGConnectivityChangeBlock _Nonnull)block;
 
 /**
  * Stop monitoring the URL previously configured with monitorURL:usingCallback:

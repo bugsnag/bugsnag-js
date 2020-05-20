@@ -30,7 +30,3 @@
 @interface BugsnagMetadata : NSObject <BugsnagMetadataStore>
 - (instancetype _Nonnull)initWithDictionary:(NSDictionary *_Nonnull)dict;
 @end
-
-@protocol BugsnagMetadataDelegate <NSObject>
-- (void)metadataChanged:(BugsnagMetadata *_Nonnull)metadata;
-@end

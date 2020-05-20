@@ -47,6 +47,9 @@
 #import "Bugsnag.h"
 #import "BugsnagErrorTypes.h"
 #import "BugsnagNotifier.h"
+#import "BugsnagMetadataInternal.h"
+#import "BugsnagStateEvent.h"
+#import "BugsnagCollections.h"
 
 #if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
@@ -285,6 +288,7 @@ void BSGWriteSessionCrashData(BugsnagSession *session) {
 @property (nonatomic) BOOL appDidCrashLastLaunch;
 @property (nonatomic, strong) BugsnagMetadata *metadata;
 @property (nonatomic) NSString *codeBundleId;
+@property(nonatomic, readwrite, strong) NSMutableArray *stateEventBlocks;
 #if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
 // The previous device orientation - iOS only
 @property (nonatomic, strong) NSString *lastOrientation;
@@ -313,12 +317,8 @@ void BSGWriteSessionCrashData(BugsnagSession *session) {
                                   metadata:(BugsnagMetadata *_Nullable)metadata
                               handledState:(BugsnagHandledState *_Nonnull)handledState
                                    session:(BugsnagSession *_Nullable)session;
-@end
-
-@interface BugsnagMetadata ()
-@property(unsafe_unretained) id<BugsnagMetadataDelegate> _Nullable delegate;
-- (NSDictionary *_Nonnull)toDictionary;
-- (id)deepCopy;
+- (void)setOverrideProperty:(NSString *)key value:(id)value;
+- (NSDictionary *)toJson;
 @end
 
 @interface BSGOutOfMemoryWatchdog ()
@@ -376,11 +376,9 @@ NSString *_lastOrientation = nil;
                                                                       configuration:configuration];
         }
 
+        self.stateEventBlocks = [NSMutableArray new];
         self.extraRuntimeInfo = [NSMutableDictionary new];
         self.metadataLock = [[NSLock alloc] init];
-        self.configuration.metadata.delegate = self;
-        self.configuration.config.delegate = self;
-        self.state.delegate = self;
         self.crashSentry = [BugsnagCrashSentry new];
         self.errorReportApiClient = [[BugsnagErrorReportApiClient alloc] initWithConfig:configuration
                                                                               queueName:@"Error API queue"];
@@ -398,9 +396,20 @@ NSString *_lastOrientation = nil;
 
         // Start with a copy of the configuration metadata
         self.metadata = [[configuration metadata] deepCopy];
+        // sync initial state
         [self metadataChanged:self.configuration.metadata];
         [self metadataChanged:self.configuration.config];
         [self metadataChanged:self.state];
+
+        // add observers for future metadata changes
+        // weakSelf is used as the BugsnagClient will always be instantiated
+        // for the entire lifecycle of an application, and there is therefore
+        // no need to check for strong self
+        __weak __typeof__(self) weakSelf = self;
+        [self addObserverUsingBlock:^(BugsnagStateEvent *event) {
+            [weakSelf metadataChanged:event.data];
+        }];
+
         self.pluginClient = [[BugsnagPluginClient alloc] initWithPlugins:self.configuration.plugins];
 
 #if TARGET_OS_IOS
@@ -408,6 +417,22 @@ NSString *_lastOrientation = nil;
 #endif
     }
     return self;
+}
+
+- (void)addObserverUsingBlock:(BugsnagObserverBlock _Nonnull)observer {
+    [self.stateEventBlocks addObject:[observer copy]];
+
+    // additionally listen for metadata updates
+    [self.metadata addObserverUsingBlock:observer];
+    [self.configuration.metadata addObserverUsingBlock:observer];
+    [self.configuration.config addObserverUsingBlock:observer];
+    [self.state addObserverUsingBlock:observer];
+}
+
+- (void)notifyObservers:(BugsnagStateEvent *)event {
+    for (BugsnagObserverBlock callback in self.stateEventBlocks) {
+        callback(event);
+    }
 }
 
 NSString *const kWindowVisible = @"Window Became Visible";
@@ -586,11 +611,15 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
         }
     }
     self.appDidCrashLastLaunch = handledCrashLastLaunch || [self.oomWatchdog didOOMLastLaunch];
+    
     // Ignore potential false positive OOM if previous session crashed and was
     // reported. There are two checks in place:
-    // 1. crashState->crashedLastLaunch: Accurate unless the crash callback crashes
-    // 2. crash sentinel file exists: This file is written in the event of a crash
-    //    and insures against the crash callback crashing
+    //
+    //     1. crashState->crashedLastLaunch: Accurate unless the crash callback crashes
+    //
+    //     2. crash sentinel file exists: This file is written in the event of a crash
+    //        and insures against the crash callback crashing
+    
     if (!handledCrashLastLaunch && [self.oomWatchdog didOOMLastLaunch]) {
         [self notifyOutOfMemoryEvent];
     }
@@ -625,7 +654,7 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
 
     #if TARGET_OS_TV || TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
     foregroundName = UIApplicationWillEnterForegroundNotification;
-    backgroundName = UIApplicationWillEnterForegroundNotification;
+    backgroundName = UIApplicationDidEnterBackgroundNotification;
     #elif TARGET_OS_MAC
     foregroundName = NSApplicationWillBecomeActiveNotification;
     backgroundName = NSApplicationDidFinishLaunchingNotification;
@@ -735,6 +764,12 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
     [self.metadata addMetadata:userId withKey:BSGKeyId    toSection:BSGKeyUser];
     [self.metadata addMetadata:name   withKey:BSGKeyName  toSection:BSGKeyUser];
     [self.metadata addMetadata:email  withKey:BSGKeyEmail toSection:BSGKeyUser];
+
+    NSMutableDictionary *dict = [NSMutableDictionary new];
+    BSGDictInsertIfNotNil(dict, self.user.id, @"id");
+    BSGDictInsertIfNotNil(dict, self.user.email, @"email");
+    BSGDictInsertIfNotNil(dict, self.user.name, @"name");
+    [self notifyObservers:[[BugsnagStateEvent alloc] initWithName:kStateEventUser data:dict]];
 }
 
 // =============================================================================
@@ -779,6 +814,7 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
 
 - (void)setContext:(NSString *_Nullable)context {
     self.configuration.context = context;
+    [self notifyObservers:[[BugsnagStateEvent alloc] initWithName:kStateEventContext data:context]];
 }
 
 - (NSString *)context {
@@ -867,6 +903,7 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
                              handledState:[handledState toJson]
                                  appState:appState
                         callbackOverrides:@{}
+                           eventOverrides:@{}
                                  metadata:@{}
                                    config:@{}
                              discardDepth:0];
@@ -931,12 +968,16 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
         exc = event.originalError;
     }
 
+    // handled errors should persist any information edited by the user
+    // in a section within the KSCrash report so it can be read
+    // when the error is delivered
     [self.crashSentry reportUserException:eventErrorClass
                                    reason:eventMessage
                         originalException:exc
                              handledState:[event.handledState toJson]
                                  appState:[self.state toDictionary]
                         callbackOverrides:event.overrides
+                           eventOverrides:[event toJson]
                                  metadata:[event.metadata toDictionary]
                                    config:[self.configuration.config toDictionary]
                              discardDepth:depth];
@@ -990,8 +1031,6 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
         } else if (metadata == self.state) {
             BSSerializeJSONDictionary([metadata toDictionary],
                                       &bsg_g_bugsnag_data.stateJSON);
-        } else {
-            bsg_log_debug(@"Unknown metadata dictionary changed");
         }
     }
 }

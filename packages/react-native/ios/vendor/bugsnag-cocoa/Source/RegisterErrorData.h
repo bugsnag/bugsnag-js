@@ -18,5 +18,6 @@
 @property (nonatomic, strong) NSString *_Nullable errorMessage;
 + (instancetype _Nonnull )errorDataFromThreads:(NSArray *_Nullable)threads;
 - (instancetype _Nonnull )initWithClass:(NSString *_Nonnull)errorClass
-                      message:(NSString *_Nonnull)errorMessage NS_DESIGNATED_INITIALIZER;
+                                message:(NSString *_Nonnull)errorMessage
+    NS_DESIGNATED_INITIALIZER;
 @end

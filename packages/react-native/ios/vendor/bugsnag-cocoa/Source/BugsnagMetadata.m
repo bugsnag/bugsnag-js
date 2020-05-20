@@ -25,13 +25,13 @@
 //
 
 #import "BugsnagMetadata.h"
+#import "BugsnagMetadataInternal.h"
 #import "BSGSerialization.h"
 #import "BugsnagLogger.h"
+#import "BugsnagStateEvent.h"
 
 @interface BugsnagMetadata ()
-@property(atomic, strong) NSMutableDictionary *dictionary;
-- (NSDictionary *_Nonnull)toDictionary;
-@property(unsafe_unretained) id<BugsnagMetadataDelegate> _Nullable delegate;
+@property(nonatomic, readwrite, strong) NSMutableArray *stateEventBlocks;
 @end
 
 @implementation BugsnagMetadata
@@ -46,15 +46,47 @@
         // Ensure that the instantiating dictionary is mutable.
         // Saves checks later.
         self.dictionary = [dict mutableCopy];
+        self.stateEventBlocks = [NSMutableArray new];
     }
-    [self.delegate metadataChanged:self];
+    [self notifyObservers];
     return self;
 }
 
-- (NSDictionary *)toDictionary
+- (NSDictionary *)toDictionary {
+    return [self.dictionary mutableCopy];
+}
+
+- (void)notifyObservers {
+    for (BugsnagObserverBlock callback in self.stateEventBlocks) {
+        BugsnagStateEvent *event = [[BugsnagStateEvent alloc] initWithName:kStateEventMetadata data:self];
+        callback(event);
+    }
+}
+
+- (void)addObserverUsingBlock:(BugsnagObserverBlock _Nonnull)block {
+    [self.stateEventBlocks addObject:[block copy]];
+}
+
+// MARK: - <NSMutableCopying>
+
+- (id)mutableCopyWithZone:(NSZone *)zone {
+    @synchronized(self) {
+        NSMutableDictionary *dict = [self.dictionary mutableCopy];
+        return [[BugsnagMetadata alloc] initWithDictionary:dict];
+    }
+}
+
+- (NSMutableDictionary *)getMetadata:(NSString *)sectionName {
+    @synchronized(self) {
+        return self.dictionary[sectionName];
+    }
+}
+
+- (NSMutableDictionary *)getMetadata:(NSString *)sectionName
+                                 key:(NSString *)key
 {
     @synchronized(self) {
-        return [NSDictionary dictionaryWithDictionary:self.dictionary];
+        return self.dictionary[sectionName][key];
     }
 }
 
@@ -104,7 +136,7 @@
     
     // Call the delegate if we've materially changed it
     if (metadataChanged) {
-        [self.delegate metadataChanged:self];
+        [self notifyObservers];
     }
 }
 
@@ -165,7 +197,7 @@
             
             // Call the delegate if we've materially changed it
             if (metadataChanged) {
-                [self.delegate metadataChanged:self];
+                [self notifyObservers];
             }
         }
     }
@@ -191,7 +223,7 @@
     @synchronized(self) {
         [self.dictionary removeObjectForKey:sectionName];
     }
-    [self.delegate metadataChanged:self];
+    [self notifyObservers];
 }
 
 - (void)clearMetadataFromSection:(NSString *)section
@@ -202,7 +234,7 @@
             [[[self dictionary] objectForKey:section] removeObjectForKey:key];
         }
     }
-    [self.delegate metadataChanged:self];
+    [self notifyObservers];
 }
 
 @end

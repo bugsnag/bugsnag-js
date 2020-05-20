@@ -27,7 +27,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property NSString *sessions;
 
-- (instancetype)initWithNotify:(NSString *)notify sessions:(NSString *)sessions;
+- (instancetype)initWithNotify:(NSString *)notify
+                      sessions:(NSString *)sessions;
 
 @end
 

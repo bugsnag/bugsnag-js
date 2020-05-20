@@ -22,6 +22,34 @@
 
 @implementation BugsnagAppWithState
 
++ (BugsnagAppWithState *)appFromJson:(NSDictionary *)json {
+    BugsnagAppWithState *app = [BugsnagAppWithState new];
+
+    id duration = json[@"duration"];
+    if (duration && [duration isKindOfClass:[NSNumber class]]) {
+        app.duration = [(NSNumber *) duration unsignedIntValue];
+    }
+
+    id durationInForeground = json[@"durationInForeground"];
+    if (durationInForeground && [durationInForeground isKindOfClass:[NSNumber class]]) {
+        app.durationInForeground = [(NSNumber *) durationInForeground unsignedIntValue];
+    }
+
+    id inForeground = json[@"inForeground"];
+    if (inForeground) {
+        app.inForeground = [(NSNumber *) inForeground boolValue];
+    }
+
+    app.bundleVersion = json[@"bundleVersion"];
+    app.codeBundleId = json[@"codeBundleId"];
+    app.dsymUuid = json[@"dsymUuid"];
+    app.id = json[@"id"];
+    app.releaseStage = json[@"releaseStage"];
+    app.type = json[@"type"];
+    app.version = json[@"version"];
+    return app;
+}
+
 + (BugsnagAppWithState *)appWithOomData:(NSDictionary *)event
 {
     BugsnagAppWithState *app = [BugsnagAppWithState new];

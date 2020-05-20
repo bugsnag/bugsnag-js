@@ -75,6 +75,33 @@ NSNumber *BSGDeviceFreeSpace(NSSearchPathDirectory directory) {
     return self;
 }
 
++ (BugsnagDeviceWithState *) deviceFromJson:(NSDictionary *)json {
+    BugsnagDeviceWithState *device = [BugsnagDeviceWithState new];
+    device.id = json[@"id"];
+    device.freeMemory = json[@"freeMemory"];
+    device.freeDisk = json[@"freeDisk"];
+    device.locale = json[@"locale"];
+    device.manufacturer = json[@"manufacturer"];
+    device.model = json[@"model"];
+    device.modelNumber = json[@"modelNumber"];
+    device.orientation = json[@"orientation"];
+    device.osName = json[@"osName"];
+    device.osVersion = json[@"osVersion"];
+    device.runtimeVersions = json[@"runtimeVersions"];
+    device.totalMemory = json[@"totalMemory"];
+
+    id jailbroken = json[@"jailbroken"];
+    if (jailbroken) {
+        device.jailbroken = [(NSNumber *) jailbroken boolValue];
+    }
+
+    id time = json[@"time"];
+    if (time && [time isKindOfClass:[NSString class]]) {
+        device.time = [device.formatter dateFromString:time];
+    }
+    return device;
+}
+
 + (BugsnagDeviceWithState *)deviceWithOomData:(NSDictionary *)data {
     BugsnagDeviceWithState *device = [BugsnagDeviceWithState new];
     device.id = data[@"id"];

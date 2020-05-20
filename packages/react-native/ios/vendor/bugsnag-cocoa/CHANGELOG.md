@@ -85,6 +85,7 @@ Bugsnag Notifiers on other platforms.
 
 * Convert `event.app` from `NSDictionary` to a structured class
   [#520](https://github.com/bugsnag/bugsnag-cocoa/pull/520)
+  [#600](https://github.com/bugsnag/bugsnag-cocoa/pull/600)
 
 * Make `BugsnagClient` a public interface
 [#517](https://github.com/bugsnag/bugsnag-cocoa/pull/517)
@@ -255,9 +256,10 @@ Bugsnag Notifiers on other platforms.
   should be performed prior to calling `Bugsnag.start()`.
   
 * User information is now persisted between application runs by default.  When set a users' 
-  email, id and name are set on `BugsnagConfiguration` they are stored in the Keychain and
+  email, id and name are set on `BugsnagConfiguration` they are stored in the User Defaults and
   restored if an application is restarted.  The values are also copied to the configuration metadata.
   [#469](https://github.com/bugsnag/bugsnag-cocoa/pull/469)
+  [#590](https://github.com/bugsnag/bugsnag-cocoa/pull/590)
   
 * Added callback-free method to leave breadcrumbs: `[Bugsnag leaveBreadcrumbWithMessage:metadata:andType]`
   (Swift: `Bugsnag.leaveBreadcrumb(_, metadata:, type:)`)
@@ -285,15 +287,30 @@ Bugsnag Notifiers on other platforms.
 * The `bundleVersion` property is available on `BugsnagConfiguration` allowing overriding the default plist value.
   (#550)[https://github.com/bugsnag/bugsnag-cocoa/pull/550]
 
+## 5.23.2 (2020-05-13)
+
+## Bug Fixes
+
+* Fixed an issue where an app could deadlock during a crash if unfavourable 
+  timing caused DYLD lock contention.
+  [#580](https://github.com/bugsnag/bugsnag-cocoa/pull/580)
+
+## 5.23.1 (2020-04-08)
+
 ## Bug fixes
 
 * Fix possible report corruption when using `notify()` from multiple threads
   when configured to skip capturing/reporting background thread contents
   (generally only Unity games).
+  [#442](https://github.com/bugsnag/bugsnag-cocoa/pull/442)
   
 * Added several additional event fields (`codeBundleId`, `osName`, `modelNumber`, 
   `locale`) that were missing from the OOM reports.
   [#444](https://github.com/bugsnag/bugsnag-cocoa/pull/444)
+  
+* Bugsnag now correctly records a new session if it is returning to the foreground 
+  after more than 60 seconds in the background.
+  [#529](https://github.com/bugsnag/bugsnag-cocoa/pull/529)
 
 * Increased the detail in handled event breadcrumbs
   [#493](https://github.com/bugsnag/bugsnag-cocoa/pull/493)
@@ -344,6 +361,7 @@ names are deprecated but still supported until the next major release.
   dependency with Carthage, the project will build three times before completing
   successfully. This issue will be resolved in a subsequent patch release.
   [#423](https://github.com/bugsnag/bugsnag-cocoa/pull/423)
+
 * Deprecate `config.reportBackgroundOOMs` property - designating any app
   termination as a possible error condition can cause a lot of false positives,
   especially since the app can die for many genuine reasons, especially when

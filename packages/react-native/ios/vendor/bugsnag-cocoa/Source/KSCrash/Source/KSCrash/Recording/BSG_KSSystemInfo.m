@@ -409,6 +409,7 @@
     BSGDictSetSafeObject(sysInfo, infoDict[BSGKeyExecutableName], @BSG_KSSystemField_Executable);
     BSGDictSetSafeObject(sysInfo, infoDict[@"CFBundleIdentifier"], @BSG_KSSystemField_BundleID);
     BSGDictSetSafeObject(sysInfo, infoDict[@"CFBundleName"], @BSG_KSSystemField_BundleName);
+    BSGDictSetSafeObject(sysInfo, infoDict[@"CFBundleExecutable"], @BSG_KSSystemField_BundleExecutable);
     BSGDictSetSafeObject(sysInfo, infoDict[@"CFBundleVersion"], @BSG_KSSystemField_BundleVersion);
     BSGDictSetSafeObject(sysInfo, infoDict[@"CFBundleShortVersionString"], @BSG_KSSystemField_BundleShortVersion);
     BSGDictSetSafeObject(sysInfo, [self appUUID], @BSG_KSSystemField_AppUUID);

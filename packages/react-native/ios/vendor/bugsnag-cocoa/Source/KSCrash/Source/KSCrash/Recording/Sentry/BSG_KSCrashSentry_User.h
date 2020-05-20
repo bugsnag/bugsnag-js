@@ -67,17 +67,18 @@ void bsg_kscrashsentry_uninstallUserExceptionHandler(void);
  * @param terminateProgram If true, do not return from this function call.
  * Terminate the program instead.
  */
-    void bsg_kscrashsentry_reportUserException(const char *name, const char *reason,
-                                               uintptr_t *stackAddresses,
-                                               unsigned long stackLength,
-                                               const char *severity,
-                                               const char *handledState,
-                                               const char *overrides,
-                                               const char *metadata,
-                                               const char *appState,
-                                               const char *config,
-                                               int discardDepth,
-                                               bool terminateProgram);
+void bsg_kscrashsentry_reportUserException(const char *name, const char *reason,
+        uintptr_t *stackAddresses,
+        unsigned long stackLength,
+        const char *severity,
+        const char *handledState,
+        const char *overrides,
+        const char *eventOverrides,
+        const char *metadata,
+        const char *appState,
+        const char *config,
+        int discardDepth,
+        bool terminateProgram);
 
 #ifdef __cplusplus
 }
