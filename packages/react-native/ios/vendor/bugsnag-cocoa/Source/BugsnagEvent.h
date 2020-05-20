@@ -37,6 +37,7 @@ typedef NS_ENUM(NSUInteger, BSGSeverity) {
  *  of the event
  */
 @property(readwrite, copy, nullable) NSString *context;
+
 /**
  *  The severity of the error generating the report
  */
@@ -118,4 +119,3 @@ typedef NS_ENUM(NSUInteger, BSGSeverity) {
         andName:(NSString *_Nullable)name;
 
 @end
-

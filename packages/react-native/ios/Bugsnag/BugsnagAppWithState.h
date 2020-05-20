@@ -31,4 +31,5 @@
  * Whether the application was in the foreground when the event occurred
  */
 @property(nonatomic) BOOL inForeground;
+
 @end

@@ -75,16 +75,17 @@ NSUInteger const BSG_MAX_STORED_REPORTS = 12;
                handledState:(NSDictionary *)handledState
                    appState:(NSDictionary *)appState
           callbackOverrides:(NSDictionary *)overrides
+             eventOverrides:(NSDictionary *)eventOverrides
                    metadata:(NSDictionary *)metadata
                      config:(NSDictionary *)config
-               discardDepth:(int)depth
-{
+               discardDepth:(int)depth {
     [[BSG_KSCrash sharedInstance] reportUserException:reportName
                                                reason:reportMessage
                                     originalException:ex
                                          handledState:handledState
                                              appState:appState
                                     callbackOverrides:overrides
+                                       eventOverrides:eventOverrides
                                              metadata:metadata
                                                config:config
                                          discardDepth:depth

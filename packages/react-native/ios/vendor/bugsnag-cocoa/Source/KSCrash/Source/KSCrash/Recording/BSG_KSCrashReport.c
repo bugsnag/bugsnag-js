@@ -36,10 +36,12 @@
 #include "BSG_KSObjC.h"
 #include "BSG_KSSignalInfo.h"
 #include "BSG_KSString.h"
+#include "BSG_KSMachHeaders.h"
 
 //#define BSG_kSLogger_LocalLevel TRACE
 #include "BSG_KSLogger.h"
 #include "BSG_KSCrashContext.h"
+#include "BSG_KSCrashSentry.h"
 
 #ifdef __arm64__
 #include <sys/_types/_ucontext64.h>
@@ -1090,70 +1092,23 @@ int bsg_kscrw_i_threadIndex(const thread_t thread) {
  *
  * @param key The object key, if needed.
  *
- * @param index Which image to write about.
+ * @param index Cached info about the binary image.
  */
 void bsg_kscrw_i_writeBinaryImage(const BSG_KSCrashReportWriter *const writer,
-                                  const char *const key, const uint32_t index) {
-    const struct mach_header *header = _dyld_get_image_header(index);
-    if (header == NULL) {
-        return;
-    }
-
-    uintptr_t cmdPtr = bsg_ksdlfirstCmdAfterHeader(header);
-    if (cmdPtr == 0) {
-        return;
-    }
-
-    // Look for the TEXT segment to get the image size.
-    // Also look for a UUID command.
-    uint64_t imageSize = 0;
-    uint64_t imageVmAddr = 0;
-    uint8_t *uuid = NULL;
-
-    for (uint32_t iCmd = 0; iCmd < header->ncmds; iCmd++) {
-        struct load_command *loadCmd = (struct load_command *)cmdPtr;
-        switch (loadCmd->cmd) {
-        case LC_SEGMENT: {
-            struct segment_command *segCmd = (struct segment_command *)cmdPtr;
-            if (strcmp(segCmd->segname, SEG_TEXT) == 0) {
-                imageSize = segCmd->vmsize;
-                imageVmAddr = segCmd->vmaddr;
-            }
-            break;
-        }
-        case LC_SEGMENT_64: {
-            struct segment_command_64 *segCmd =
-                (struct segment_command_64 *)cmdPtr;
-            if (strcmp(segCmd->segname, SEG_TEXT) == 0) {
-                imageSize = segCmd->vmsize;
-                imageVmAddr = segCmd->vmaddr;
-            }
-            break;
-        }
-        case LC_UUID: {
-            struct uuid_command *uuidCmd = (struct uuid_command *)cmdPtr;
-            uuid = uuidCmd->uuid;
-            break;
-        }
-        }
-        cmdPtr += loadCmd->cmdsize;
-    }
-
+                                  const char *const key,
+                                  const uint32_t index)
+{
+    BSG_Mach_Binary_Image_Info info = *bsg_dyld_get_image_info(index);
+    
     writer->beginObject(writer, key);
     {
-        writer->addUIntegerElement(writer, BSG_KSCrashField_ImageAddress,
-                                   (uintptr_t)header);
-        writer->addUIntegerElement(writer, BSG_KSCrashField_ImageVmAddress,
-                                   imageVmAddr);
-        writer->addUIntegerElement(writer, BSG_KSCrashField_ImageSize,
-                                   imageSize);
-        writer->addStringElement(writer, BSG_KSCrashField_Name,
-                                 _dyld_get_image_name(index));
-        writer->addUUIDElement(writer, BSG_KSCrashField_UUID, uuid);
-        writer->addIntegerElement(writer, BSG_KSCrashField_CPUType,
-                                  header->cputype);
-        writer->addIntegerElement(writer, BSG_KSCrashField_CPUSubType,
-                                  header->cpusubtype);
+        writer->addUIntegerElement(writer, BSG_KSCrashField_ImageAddress, (uintptr_t)info.header);
+        writer->addUIntegerElement(writer, BSG_KSCrashField_ImageVmAddress,          info.imageVmAddr);
+        writer->addUIntegerElement(writer, BSG_KSCrashField_ImageSize,               info.imageSize);
+        writer->addStringElement(writer, BSG_KSCrashField_Name,                      info.name);
+        writer->addUUIDElement(writer, BSG_KSCrashField_UUID,                        info.uuid);
+        writer->addIntegerElement(writer, BSG_KSCrashField_CPUType,                  info.header->cputype);
+        writer->addIntegerElement(writer, BSG_KSCrashField_CPUSubType,               info.header->cpusubtype);
     }
     writer->endContainer(writer);
 }
@@ -1165,12 +1120,14 @@ void bsg_kscrw_i_writeBinaryImage(const BSG_KSCrashReportWriter *const writer,
  * @param key The object key, if needed.
  */
 void bsg_kscrw_i_writeBinaryImages(const BSG_KSCrashReportWriter *const writer,
-                                   const char *const key) {
-    const uint32_t imageCount = _dyld_image_count();
+                                   const char *const key)
+{
+    const uint32_t imageCount = bsg_dyld_image_count();
 
     writer->beginArray(writer, key);
     {
         for (uint32_t iImg = 0; iImg < imageCount; iImg++) {
+            // Threads are suspended at this point; no need to synchronise/lock
             bsg_kscrw_i_writeBinaryImage(writer, NULL, iImg);
         }
     }
@@ -1638,6 +1595,10 @@ void bsg_kscrashreport_writeStandardReport(
                 if (crashContext->crash.userException.overrides != NULL) {
                    writer->addJSONElement(writer, BSG_KSCrashField_Overrides,
                                           crashContext->crash.userException.overrides);
+                }
+                if (crashContext->crash.userException.eventOverrides != NULL) {
+                    writer->addJSONElement(writer, BSG_KSCrashField_EventJson,
+                            crashContext->crash.userException.eventOverrides);
                 }
                 if (crashContext->crash.userException.handledState != NULL) {
                     writer->addJSONElement(writer, BSG_KSCrashField_HandledState,

@@ -122,6 +122,7 @@ typedef enum {
  * @param appState breadcrumbs and other app environmental info
  * @param overrides Report fields overridden by callbacks, collated in the
  *        final report
+ * @param eventOverrides the Bugsnag Error Payload, for handled errors only
  * @param metadata additional information to attach to the report
  * @param config delivery options
  * @param depth The number of frames to discard from the top of the stacktrace
@@ -134,6 +135,7 @@ typedef enum {
                handledState:(NSDictionary *)handledState
                    appState:(NSDictionary *)appState
           callbackOverrides:(NSDictionary *)overrides
+             eventOverrides:(NSDictionary *)eventOverrides
                    metadata:(NSDictionary *)metadata
                      config:(NSDictionary *)config
                discardDepth:(int)depth

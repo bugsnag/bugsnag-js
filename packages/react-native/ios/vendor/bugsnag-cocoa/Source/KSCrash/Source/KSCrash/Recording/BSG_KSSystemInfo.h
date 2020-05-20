@@ -29,6 +29,7 @@
 #define BSG_KSSystemField_BootTime "boot_time"
 #define BSG_KSSystemField_BundleID "CFBundleIdentifier"
 #define BSG_KSSystemField_BundleName "CFBundleName"
+#define BSG_KSSystemField_BundleExecutable "CFBundleExecutable"
 #define BSG_KSSystemField_BundleShortVersion "CFBundleShortVersionString"
 #define BSG_KSSystemField_BundleVersion "CFBundleVersion"
 #define BSG_KSSystemField_CPUArch "cpu_arch"

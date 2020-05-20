@@ -32,7 +32,7 @@
 
 @class BugsnagSessionTracker;
 
-@interface BugsnagClient : NSObject <BugsnagMetadataDelegate, BugsnagMetadataStore>
+@interface BugsnagClient : NSObject<BugsnagMetadataStore>
 
 - (instancetype _Nonnull)initWithConfiguration:(BugsnagConfiguration *_Nonnull)configuration;
 

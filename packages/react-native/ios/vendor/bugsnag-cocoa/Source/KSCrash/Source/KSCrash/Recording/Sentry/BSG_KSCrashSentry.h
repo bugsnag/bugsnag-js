@@ -143,6 +143,7 @@ typedef struct BSG_KSCrash_SentryContext {
 
         /** Handled exception report info: */
         const char *overrides; // info set in callbacks
+        const char *eventOverrides; // Bugsnag Error API JSON payload for handled events
         const char *handledState;
         const char *metadata;
         const char *state; // breadcrumbs, other shared app state

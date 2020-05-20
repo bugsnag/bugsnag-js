@@ -23,7 +23,7 @@
 #else
         @"Bugsnag Objective-C";
 #endif
-        self.version = @"5.23.0";
+        self.version = @"5.23.2";
         self.url = @"https://github.com/bugsnag/bugsnag-cocoa";
         self.dependencies = [NSMutableArray new];
     }

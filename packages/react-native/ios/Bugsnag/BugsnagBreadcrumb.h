@@ -81,12 +81,12 @@ typedef NS_OPTIONS(NSUInteger, BSGEnabledBreadcrumbType) {
     BSGEnabledBreadcrumbTypeProcess    = 1 << 6,
     BSGEnabledBreadcrumbTypeError      = 1 << 7,
     BSGEnabledBreadcrumbTypeAll = BSGEnabledBreadcrumbTypeState
-        | BSGEnabledBreadcrumbTypeUser
-        | BSGEnabledBreadcrumbTypeLog
-        | BSGEnabledBreadcrumbTypeNavigation
-        | BSGEnabledBreadcrumbTypeRequest
-        | BSGEnabledBreadcrumbTypeProcess
-        | BSGEnabledBreadcrumbTypeError,
+                                | BSGEnabledBreadcrumbTypeUser
+                                | BSGEnabledBreadcrumbTypeLog
+                                | BSGEnabledBreadcrumbTypeNavigation
+                                | BSGEnabledBreadcrumbTypeRequest
+                                | BSGEnabledBreadcrumbTypeProcess
+                                | BSGEnabledBreadcrumbTypeError,
 };
 
 @class BugsnagBreadcrumb;

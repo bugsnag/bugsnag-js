@@ -11,6 +11,17 @@
 #import "BugsnagConfiguration.h"
 #import "BugsnagCollections.h"
 
+/**
+ * Parse an event dictionary representation for App-specific metadata.
+ *
+ * @returns A dictionary of app-specific metadata
+ */
+NSDictionary *BSGParseAppMetadata(NSDictionary *event) {
+    NSMutableDictionary *app = [NSMutableDictionary new];
+    BSGDictSetSafeObject(app, [event valueForKeyPath:@"system.CFBundleExecutable"] , @"name");
+    return app;
+}
+
 @implementation BugsnagApp
 
 + (BugsnagApp *)deserializeFromJson:(NSDictionary *)json {
