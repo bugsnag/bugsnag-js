@@ -24,7 +24,7 @@ _Note the use of the `!` operator._ The `getPlugin('react')` call will only retu
 
 ### Plugins
 
-In order to work, The React and Vue plugin both require a reference to the respective framework to be passed in. This was required in the constructor, which meant there was no way to load Bugsnag _before_ the framework. To support this, we now support supplying the framework reference _after_ Bugsnag has started.
+In order to work, the React and Vue plugins both require a reference to the respective framework to be passed in. This was required in the constructor, which meant there was no way to load Bugsnag _before_ the framework. To support this, we now support supplying the framework reference _after_ Bugsnag has started.
 
 Note that the existing usage is still supported.
 
