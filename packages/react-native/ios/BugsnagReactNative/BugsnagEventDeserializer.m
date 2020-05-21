@@ -43,6 +43,10 @@ BSGSeverity BSGParseSeverity(NSString *severity);
 - (instancetype)initWithDictionary:(NSDictionary *)dict;
 @end
 
+@interface BugsnagThread ()
++ (instancetype)threadFromJson:(NSDictionary *)json;
+@end
+
 @interface BugsnagEvent ()
 - (instancetype)initWithApp:(BugsnagAppWithState *)app
                      device:(BugsnagDeviceWithState *)device
@@ -54,6 +58,7 @@ BSGSeverity BSGParseSeverity(NSString *severity);
                     threads:(NSArray<BugsnagThread *> *)threads
                     session:(BugsnagSession *)session;
 - (NSDictionary *)toJson;
+- (void)attachCustomStacktrace:(NSArray *)frames withType:(NSString *)type;
 @end
 
 @interface BugsnagBreadcrumb ()
@@ -63,13 +68,10 @@ BSGSeverity BSGParseSeverity(NSString *severity);
 @implementation BugsnagEventDeserializer
 
 - (BugsnagEvent *)deserializeEvent:(NSDictionary *)payload {
-    NSLog(@"Received JS payload dispatch: %@", payload);
-
     BugsnagClient *client = [Bugsnag client];
     BugsnagSession *session = [client.sessionTracker valueForKey:@"runningSession"];
     BugsnagMetadata *metadata = [[BugsnagMetadata alloc] initWithDictionary:payload[@"metadata"]];
 
-    NSDictionary *error = payload[@"errors"][0];
     BugsnagHandledState *handledState = [self deserializeHandledState:payload];
     NSDictionary *user = payload[@"user"];
 
@@ -79,15 +81,19 @@ BSGSeverity BSGParseSeverity(NSString *severity);
                                                        user:[[BugsnagUser alloc] initWithDictionary:user]
                                                    metadata:metadata
                                                 breadcrumbs:[self deserializeBreadcrumbs:payload[@"breadcrumbs"]]
-                                                     errors:@[[BugsnagError new]] // TODO populate
-                                                    threads:@[] // TODO populate
+                                                     errors:@[[BugsnagError new]]
+                                                    threads:[self deserializeThreads:payload[@"threads"]]
                                                     session:session];
     event.context = payload[@"context"];
     event.groupingHash = payload[@"groupingHash"];
-    event.errors[0].errorClass = error[@"errorClass"];
-    event.errors[0].errorMessage = error[@"errorMessage"];
 
-    NSLog(@"Deserialized JS event: %@", [event toJson]);
+    NSDictionary *error = payload[@"errors"][0];
+
+    if (error != nil) {
+        event.errors[0].errorClass = error[@"errorClass"];
+        event.errors[0].errorMessage = error[@"errorMessage"];
+        [event attachCustomStacktrace:error[@"stacktrace"] withType:@"reactnativejs"];
+    }
     return event;
 }
 
@@ -97,7 +103,7 @@ BSGSeverity BSGParseSeverity(NSString *severity);
     if (crumbs != nil) {
         for (NSDictionary *crumb in crumbs) {
             BugsnagBreadcrumb *obj = [BugsnagBreadcrumb breadcrumbFromDict:crumb];
-            
+
             if (obj != nil) {
                 [array addObject:obj];
             }
@@ -123,6 +129,21 @@ BSGSeverity BSGParseSeverity(NSString *severity);
                                                       severity:severity
                                                      unhandled:unhandled
                                                      attrValue:attrVal];
+}
+
+- (NSArray<BugsnagThread *> *)deserializeThreads:(NSArray *)threads {
+    NSMutableArray *array = [NSMutableArray new];
+
+    if (threads != nil) {
+        for (NSDictionary *thread in threads) {
+            BugsnagThread *obj = [BugsnagThread threadFromJson:thread];
+
+            if (obj != nil) {
+                [array addObject:obj];
+            }
+        }
+    }
+    return array;
 }
 
 @end

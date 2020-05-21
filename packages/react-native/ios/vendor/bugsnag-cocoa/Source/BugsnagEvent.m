@@ -752,8 +752,8 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
             BSGArrayAddSafeObject(array, [error toDictionary]);
         }
         BSGDictSetSafeObject(event, array, BSGKeyExceptions);
-        BSGDictSetSafeObject(event, [BugsnagThread serializeThreads:self.threads], BSGKeyThreads);
     }
+    BSGDictSetSafeObject(event, [BugsnagThread serializeThreads:self.threads], BSGKeyThreads);
 
     // Build Event
     BSGDictSetSafeObject(event, BSGFormatSeverity(self.severity), BSGKeySeverity);
