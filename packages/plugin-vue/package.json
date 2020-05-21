@@ -1,10 +1,10 @@
 {
   "name": "@bugsnag/plugin-vue",
-  "version": "7.0.2",
+  "version": "7.1.0-alpha.0",
   "description": "Vue.js integration for bugsnag-js",
   "main": "dist/bugsnag-vue.js",
   "browser": "dist/bugsnag-vue.js",
-  "types": "dist/types/bugsnag-plugin-vue.d.ts",
+  "types": "types/bugsnag-plugin-vue.d.ts",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
     "type": "git",
@@ -14,12 +14,12 @@
     "access": "public"
   },
   "files": [
-    "dist"
+    "dist",
+    "types"
   ],
   "scripts": {
     "clean": "rm -fr dist && mkdir dist",
-    "bundle-types": "../../bin/bundle-types bugsnag-plugin-vue",
-    "build": "npm run clean && ../../bin/bundle src/index.js --standalone=BugsnagPluginVue | ../../bin/extract-source-map dist/bugsnag-vue.js && npm run bundle-types",
+    "build": "npm run clean && ../../bin/bundle src/index.js --standalone=BugsnagPluginVue | ../../bin/extract-source-map dist/bugsnag-vue.js",
     "postversion": "npm run build"
   },
   "author": "Bugsnag",
@@ -28,9 +28,11 @@
     "@bugsnag/js": "*"
   },
   "devDependencies": {
-    "@bugsnag/core": "^7.0.1",
     "jasmine": "^3.1.0",
     "nyc": "^12.0.2",
     "vue": "^2.5.8"
+  },
+  "dependencies": {
+    "@bugsnag/core": "^7.1.0-alpha.0"
   }
 }

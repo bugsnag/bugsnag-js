@@ -1,33 +1,49 @@
-module.exports = class BugsnagVuePlugin {
-  constructor (Vue = window.Vue) {
-    if (!Vue) throw new Error('cannot find Vue')
-    this.Vue = Vue
+module.exports = class BugsnagPluginVue {
+  constructor (...args) {
     this.name = 'vue'
+    this.lazy = args.length === 0 && !window.Vue
+    if (!this.lazy) {
+      this.Vue = args[0] || window.Vue
+      if (!this.Vue) throw new Error('@bugsnag/plugin-vue reference to `Vue` was undefined')
+    }
   }
 
   load (client) {
-    const Vue = this.Vue
-    const prev = Vue.config.errorHandler
-
-    const handler = (err, vm, info) => {
-      const handledState = { severity: 'error', unhandled: true, severityReason: { type: 'unhandledException' } }
-      const event = client.Event.create(err, true, handledState, 1)
-
-      event.addMetadata('vue', {
-        errorInfo: info,
-        component: vm ? formatComponentName(vm, true) : undefined,
-        props: vm ? vm.$options.propsData : undefined
-      })
-
-      client._notify(event)
-      if (typeof console !== 'undefined' && typeof console.error === 'function') console.error(err)
-
-      if (typeof prev === 'function') prev.call(this, err, vm, info)
+    if (this.Vue) {
+      install(this.Vue, client)
+      return {
+        installVueErrorHandler: () => client._logger.warn('installVueErrorHandler() was called unnecessarily')
+      }
     }
-
-    Vue.config.errorHandler = handler
-    return null
+    return {
+      installVueErrorHandler: Vue => {
+        if (!Vue) client._logger.error(new Error('@bugsnag/plugin-vue reference to `Vue` was undefined'))
+        install(Vue, client)
+      }
+    }
   }
+}
+
+const install = (Vue, client) => {
+  const prev = Vue.config.errorHandler
+
+  const handler = (err, vm, info) => {
+    const handledState = { severity: 'error', unhandled: true, severityReason: { type: 'unhandledException' } }
+    const event = client.Event.create(err, true, handledState, 1)
+
+    event.addMetadata('vue', {
+      errorInfo: info,
+      component: vm ? formatComponentName(vm, true) : undefined,
+      props: vm ? vm.$options.propsData : undefined
+    })
+
+    client._notify(event)
+    if (typeof console !== 'undefined' && typeof console.error === 'function') console.error(err)
+
+    if (typeof prev === 'function') prev.call(this, err, vm, info)
+  }
+
+  Vue.config.errorHandler = handler
 }
 
 // taken and reworked from Vue.js source

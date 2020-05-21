@@ -12,11 +12,12 @@ Bugsnag.start({
 
 const ErrorBoundary = Bugsnag.getPlugin('react')
 
-const ErrorScreen = () =>
+const ErrorScreen = ({ clearError }) =>
   <div>
     <h1>⚠️ Error ⚠️</h1>
     <p><strong>Uh oh, there was an error in the component tree!</strong></p>
     <p>This <code>FallbackComponent</code> prop can be used to show something useful to your users when such errors occur.</p>
+    <button onClick={clearError}>Reset</button>
   </div>
 
 const onError = event => {

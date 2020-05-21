@@ -1,28 +1,22 @@
-import React from 'react'
-import renderer from 'react-test-renderer'
+import React, { useState } from 'react'
+import { create, act } from 'react-test-renderer'
 import BugsnagPluginReact from '..'
+import Client from '@bugsnag/core/client'
 
-class Event {
-  static create () {
-    return new Event()
-  }
+const client = new Client({ apiKey: '123', plugins: [new BugsnagPluginReact(React)] }, undefined)
+client._notify = jest.fn()
 
-  addMetadata () {
-    return this
-  }
+interface FallbackComponentProps {
+  error: Error
+  info: React.ErrorInfo
+  clearError: () => void
 }
+type FallbackComponentType = React.ComponentType<FallbackComponentProps>
 
-const bugsnag = {
-  Event,
-  _notify: jest.fn()
-}
+// eslint-disable-next-line
+const ErrorBoundary = client.getPlugin('react')!.createErrorBoundary()
 
-const plugin = new BugsnagPluginReact(React)
-const ErrorBoundary = plugin.load(bugsnag)
-
-beforeEach(() => {
-  bugsnag._notify.mockReset()
-})
+beforeEach(() => (client._notify as jest.Mock).mockClear())
 
 test('formatComponentStack(str)', () => {
   const str = `
@@ -39,61 +33,111 @@ const BadComponent = () => {
 // see https://github.com/DefinitelyTyped/DefinitelyTyped/issues/20544
 const GoodComponent = (): JSX.Element => 'test' as unknown as JSX.Element
 
+const ComponentWithBadButton = () => {
+  const [clicked, setClicked] = useState(false)
+
+  if (clicked) {
+    throw new Error('bad button')
+  }
+  return <button onClick={() => setClicked(true)}>click for error</button>
+}
+
 it('renders correctly', () => {
-  const tree = renderer
-    .create(<ErrorBoundary><GoodComponent /></ErrorBoundary>)
+  const tree = create(<ErrorBoundary><GoodComponent /></ErrorBoundary>)
     .toJSON()
   expect(tree).toMatchSnapshot()
 })
 
 it('renders correctly on error', () => {
-  const tree = renderer
-    .create(<ErrorBoundary><BadComponent /></ErrorBoundary>)
+  const tree = create(<ErrorBoundary><BadComponent /></ErrorBoundary>)
     .toJSON()
   expect(tree).toBe(null)
 })
 
 it('calls notify on error', () => {
-  renderer
-    .create(<ErrorBoundary><BadComponent /></ErrorBoundary>)
+  create(<ErrorBoundary><BadComponent /></ErrorBoundary>)
     .toJSON()
-  expect(bugsnag._notify).toHaveBeenCalledTimes(1)
+  expect(client._notify).toHaveBeenCalledTimes(1)
 })
 
 it('does not render FallbackComponent when no error', () => {
-  const FallbackComponent = jest.fn(() => 'fallback')
-  const tree = renderer
-    .create(<ErrorBoundary FallbackComponent={FallbackComponent}><GoodComponent /></ErrorBoundary>)
+  const FallbackComponent = jest.fn(() => 'fallback') as unknown as FallbackComponentType
+  const tree = create(<ErrorBoundary FallbackComponent={FallbackComponent}><GoodComponent /></ErrorBoundary>)
     .toJSON()
   expect(tree).toMatchSnapshot()
   expect(FallbackComponent).toHaveBeenCalledTimes(0)
 })
 
 it('renders FallbackComponent on error', () => {
-  const FallbackComponent = jest.fn(() => 'fallback')
-  const tree = renderer
-    .create(<ErrorBoundary FallbackComponent={FallbackComponent}><BadComponent /></ErrorBoundary>)
+  const FallbackComponent = jest.fn(() => 'fallback') as unknown as FallbackComponentType
+  const tree = create(<ErrorBoundary FallbackComponent={FallbackComponent}><BadComponent /></ErrorBoundary>)
     .toJSON()
   expect(tree).toMatchSnapshot()
 })
 
 it('passes the props to the FallbackComponent', () => {
-  const FallbackComponent = jest.fn(() => 'fallback')
-  renderer
-    .create(<ErrorBoundary FallbackComponent={FallbackComponent}><BadComponent /></ErrorBoundary>)
+  const FallbackComponent = jest.fn(() => 'fallback') as unknown as FallbackComponentType
+  create(<ErrorBoundary FallbackComponent={FallbackComponent}><BadComponent /></ErrorBoundary>)
   expect(FallbackComponent).toBeCalledWith({
     error: expect.any(Error),
-    info: { componentStack: expect.any(String) }
+    info: { componentStack: expect.any(String) },
+    clearError: expect.any(Function)
   }, {})
+})
+
+it('resets the error boundary when the FallbackComponent calls the passed clearError prop', () => {
+  const FallbackComponent = ({ clearError }: FallbackComponentProps) => {
+    return (
+      <button onClick={() => clearError()}>clearError</button>
+    )
+  }
+
+  const component = create(<ErrorBoundary FallbackComponent={FallbackComponent}><ComponentWithBadButton /></ErrorBoundary>)
+  const instance = component.root
+
+  // Trigger a render exception
+  const badButton = instance.findByType(ComponentWithBadButton).findByType('button')
+  act(() => {
+    badButton.props.onClick()
+  })
+
+  // Click the button in the fallback, which calls clearError
+  const button = instance.findByType(FallbackComponent).findByType('button')
+  act(() => {
+    button.props.onClick()
+  })
+
+  // expect to see ComponentWithBadButton again
+  expect(component.toJSON()).toMatchSnapshot()
+})
+
+it('a bad FallbackComponent implementation does not trigger stack overflow', () => {
+  const BadFallbackComponentImplementation = ({ error, info, clearError }: FallbackComponentProps) => {
+    function log (o: any) {}
+    log(error)
+    clearError()
+
+    return <div>fallback</div>
+  }
+
+  expect(() => {
+    create(<ErrorBoundary FallbackComponent={BadFallbackComponentImplementation}><BadComponent /></ErrorBoundary>)
+  }).toThrow()
 })
 
 it('it passes the onError function to the Bugsnag notify call', () => {
   const onError = () => {}
-  renderer
-    .create(<ErrorBoundary onError={onError}><BadComponent /></ErrorBoundary>)
+  create(<ErrorBoundary onError={onError}><BadComponent /></ErrorBoundary>)
     .toJSON()
-  expect(bugsnag._notify).toBeCalledWith(
-    expect.any(Event),
+  expect(client._notify).toBeCalledWith(
+    expect.any(client.Event),
     onError
   )
+})
+
+it('supports passing reference to React when the error boundary is created', () => {
+  const client = new Client({ apiKey: '123', plugins: [new BugsnagPluginReact()] }, undefined)
+  // eslint-disable-next-line
+  const ErrorBoundary = client.getPlugin('react')!.createErrorBoundary(React)
+  expect(ErrorBoundary).toBeTruthy()
 })
