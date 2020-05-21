@@ -1,6 +1,6 @@
 # Changelog
 
-## 7.1.0 (2020-05-20)
+## 7.1.0 (2020-05-21)
 
 This update contains some substantial changes to plugin type definitions. If you are using TypeScript alongside a framework, you may need to make changes to your app. Please refer to the [upgrade guide](./UPGRADING.md).
 
