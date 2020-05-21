@@ -82,6 +82,14 @@
  */
 + (BOOL)isRunningInAppExtension;
 
+/** Generate a 20 byte SHA1 hash that remains unique across a single device and
+ * application. This is slightly different from the Apple crash report key,
+ * which is unique to the device, regardless of the application.
+ *
+ * @return The stringified hex representation of the hash for this device + app.
+ */
++ (NSString *)deviceAndAppHash;
+
 #if TARGET_OS_TV || TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
 + (UIApplicationState)currentAppState;
 

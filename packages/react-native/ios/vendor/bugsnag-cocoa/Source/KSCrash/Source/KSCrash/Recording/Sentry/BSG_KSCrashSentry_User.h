@@ -54,22 +54,16 @@ void bsg_kscrashsentry_uninstallUserExceptionHandler(void);
  * @param name The exception name (for namespacing exception types).
  *
  * @param reason A description of why the exception occurred.
- * @param stackAddresses An array of addresses or NULL
- * @param stackLength The number of addresses in stackAddresses
  * @param handledState The severity, reason, and handled-ness of the report
  * @param appState breadcrumbs and other app environmental info
  * @param overrides Report fields overridden by callbacks, collated in the
  *                  final report
  * @param metadata additional information to attach to the report
- * @param discardDepth The number of frames to discard from the top of the
- *                     stacktrace
  *
  * @param terminateProgram If true, do not return from this function call.
  * Terminate the program instead.
  */
 void bsg_kscrashsentry_reportUserException(const char *name, const char *reason,
-        uintptr_t *stackAddresses,
-        unsigned long stackLength,
         const char *severity,
         const char *handledState,
         const char *overrides,
@@ -77,8 +71,19 @@ void bsg_kscrashsentry_reportUserException(const char *name, const char *reason,
         const char *metadata,
         const char *appState,
         const char *config,
-        int discardDepth,
         bool terminateProgram);
+
+/**
+ * Suspends execution of all threads, which is required to collect an
+ * accurate error report. If threads are already frozen calling this has no effect.
+ */
+void bsg_kscrashsentry_suspend_threads_user(void);
+
+/**
+ * Resumes execution of all threads, which is required after collecting an
+ * error report. If threads are already resumed calling this has no effect.
+ */
+void bsg_kscrashsentry_resume_threads_user(bool terminateProgram);
 
 #ifdef __cplusplus
 }

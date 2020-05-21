@@ -72,6 +72,27 @@ static NSString *const kBugsnagUser = @"user";
     return self;
 }
 
++ (instancetype)fromJson:(NSDictionary *)json {
+    if (!json) {
+        return nil;
+    }
+    BugsnagSession *session = [BugsnagSession new];
+    session.id = json[kBugsnagSessionId];
+
+    NSString *timestamp = json[kBugsnagStartedAt];
+
+    if (timestamp != nil) {
+        session.startedAt = [BSG_RFC3339DateTool dateFromString:timestamp];
+    }
+    NSDictionary *events = json[@"events"];
+
+    if (events != nil) {
+        session.unhandledCount = [events[@"unhandled"] unsignedIntegerValue];
+        session.handledCount = [events[@"handled"] unsignedIntegerValue];
+    }
+    return session;
+}
+
 - (instancetype)initWithDictionary:(NSDictionary *_Nonnull)dict {
     if (self = [super init]) {
         _id = dict[kBugsnagSessionId];

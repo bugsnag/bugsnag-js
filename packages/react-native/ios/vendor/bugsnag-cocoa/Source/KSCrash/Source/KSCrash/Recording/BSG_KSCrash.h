@@ -117,7 +117,6 @@ typedef enum {
  *
  * @param name The exception name (for namespacing exception types).
  * @param reason A description of why the exception occurred
- * @param exception The exception which was thrown (if any)
  * @param handledState The severity, reason, and handled-ness of the report
  * @param appState breadcrumbs and other app environmental info
  * @param overrides Report fields overridden by callbacks, collated in the
@@ -125,21 +124,28 @@ typedef enum {
  * @param eventOverrides the Bugsnag Error Payload, for handled errors only
  * @param metadata additional information to attach to the report
  * @param config delivery options
- * @param depth The number of frames to discard from the top of the stacktrace
  * @param terminateProgram If true, do not return from this function call.
  * Terminate the program instead.
  */
 - (void)reportUserException:(NSString *)name
                      reason:(NSString *)reason
-          originalException:(NSException *)exception
                handledState:(NSDictionary *)handledState
                    appState:(NSDictionary *)appState
           callbackOverrides:(NSDictionary *)overrides
              eventOverrides:(NSDictionary *)eventOverrides
                    metadata:(NSDictionary *)metadata
                      config:(NSDictionary *)config
-               discardDepth:(int)depth
            terminateProgram:(BOOL)terminateProgram;
+
+/**
+ * Collects a trace of all the threads running in application, if the user has
+ * configured this behaviour, and serializes them into an array of BugsnagThread.
+ *
+ * @param exc the exception to record
+ * @param depth the number of frames to discard from the main thread's stacktrace
+ * @return an array of BugsnagThread
+ */
+- (NSArray<BugsnagThread *> *)captureThreads:(NSException *)exc depth:(int)depth;
 
 /** If YES, user reported exceptions will suspend all threads during report
  * generation. All threads will be suspended while generating a crash report for

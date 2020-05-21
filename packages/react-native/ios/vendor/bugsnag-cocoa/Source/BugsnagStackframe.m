@@ -21,6 +21,28 @@
     return nil;
 }
 
++ (BugsnagStackframe *)frameFromJson:(NSDictionary *)json {
+    BugsnagStackframe *frame = [BugsnagStackframe new];
+    frame.machoFile = json[BSGKeyMachoFile];
+    frame.method = json[BSGKeyMethod];
+    frame.isPc = [json[BSGKeyIsPC] boolValue];
+    frame.isLr = [json[BSGKeyIsLR] boolValue];
+    frame.machoUuid = json[BSGKeyMachoUUID];
+    frame.machoVmAddress = [self readInt:json key:BSGKeyMachoVMAddress];
+    frame.frameAddress = [self readInt:json key:BSGKeyFrameAddress];
+    frame.symbolAddress = [self readInt:json key:BSGKeySymbolAddr];
+    frame.machoLoadAddress = [self readInt:json key:BSGKeyMachoLoadAddr];
+    return frame;
+}
+
++ (unsigned long)readInt:(NSDictionary *)json key:(NSString *)key {
+    NSString *obj = json[key];
+    if (obj) {
+        return strtoul([obj UTF8String], NULL, 16);
+    }
+    return 0;
+}
+
 + (BugsnagStackframe *)frameFromDict:(NSDictionary *)dict
                           withImages:(NSArray *)binaryImages {
     BugsnagStackframe *frame = [BugsnagStackframe new];
