@@ -159,8 +159,12 @@ describe('@bugsnag/core/client', () => {
       })
     })
     // eslint-disable-next-line jest/expect-expect
-    it('supports preventing send by returning false', done => {
-      const client = new Client({ apiKey: 'API_KEY_YEAH' })
+    it('supports preventing send by returning false in onError callback', done => {
+      const client = new Client({
+        apiKey: 'API_KEY_YEAH',
+        onError: () => false
+      })
+
       client._setDelivery(client => ({
         sendEvent: (payload) => {
           done('sendEvent() should not be called')
@@ -168,7 +172,23 @@ describe('@bugsnag/core/client', () => {
         sendSession: () => {}
       }))
 
-      client.notify(new Error('oh em gee'), event => false)
+      client.notify(new Error('oh em gee'))
+
+      // give the event loop a tick to see if the event gets sent
+      process.nextTick(() => done())
+    })
+    // eslint-disable-next-line jest/expect-expect
+    it('supports preventing send by returning false in notify callback', done => {
+      const client = new Client({ apiKey: 'API_KEY_YEAH' })
+
+      client._setDelivery(client => ({
+        sendEvent: (payload) => {
+          done('sendEvent() should not be called')
+        },
+        sendSession: () => {}
+      }))
+
+      client.notify(new Error('oh em gee'), () => false)
 
       // give the event loop a tick to see if the event gets sent
       process.nextTick(() => done())
@@ -362,10 +382,12 @@ describe('@bugsnag/core/client', () => {
 
     it('should call the callback even if the event doesn’t send (enabledReleaseStages)', done => {
       const client = new Client({ apiKey: 'API_KEY', enabledReleaseStages: ['production'], releaseStage: 'development' })
+
       client._setDelivery(client => ({
         sendSession: () => {},
-        sendEvent: (payload, cb) => cb(null)
+        sendEvent: () => { done('sendEvent() should not be called') }
       }))
+
       // @ts-ignore
       client.notify(new Error('111'), {}, (err, event) => {
         expect(err).toBe(null)
@@ -377,10 +399,12 @@ describe('@bugsnag/core/client', () => {
 
     it('should call the callback even if the event doesn’t send (onError)', done => {
       const client = new Client({ apiKey: 'API_KEY', onError: () => false })
+
       client._setDelivery(client => ({
         sendSession: () => {},
-        sendEvent: (payload, cb) => cb(null)
+        sendEvent: () => { done('sendEvent() should not be called') }
       }))
+
       // @ts-ignore
       client.notify(new Error('111'), {}, (err, event) => {
         expect(err).toBe(null)
@@ -462,7 +486,7 @@ describe('@bugsnag/core/client', () => {
       let calls = 0
       const client = new Client({
         apiKey: 'API_KEY_YEAH',
-        onBreadcrumb: b => {
+        onBreadcrumb: () => {
           calls++
           return false
         }
@@ -476,7 +500,7 @@ describe('@bugsnag/core/client', () => {
       let calls = 0
       const client = new Client({
         apiKey: 'API_KEY_YEAH',
-        onBreadcrumb: b => {
+        onBreadcrumb: () => {
           calls++
           throw new Error('uh oh')
         }
@@ -560,7 +584,7 @@ describe('@bugsnag/core/client', () => {
     })
 
     it('does not start the session if onSession returns false', () => {
-      const client = new Client({ apiKey: 'API_KEY', onSession: s => false })
+      const client = new Client({ apiKey: 'API_KEY', onSession: () => false })
       const sessionDelegate = {
         startSession: () => {},
         pauseSession: () => {},
@@ -577,7 +601,7 @@ describe('@bugsnag/core/client', () => {
     it('tolerates errors in onSession callbacks', () => {
       const client = new Client({
         apiKey: 'API_KEY',
-        onSession: s => {
+        onSession: () => {
           throw new Error('oh no')
         }
       })
