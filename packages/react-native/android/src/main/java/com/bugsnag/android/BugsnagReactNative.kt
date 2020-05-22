@@ -43,8 +43,13 @@ class BugsnagReactNative(private val reactContext: ReactApplicationContext) :
 
     @ReactMethod(isBlockingSynchronousMethod = true)
     fun configure(env: ReadableMap): WritableMap {
+        val client = try {
+            Bugsnag.getClient()
+        } catch (exc: IllegalStateException) {
+            throw IllegalStateException("Failed to initialise Android Client, please check you have " +
+            "added Bugsnag.start() in the onCreate() method of your Application subclass")
+        }
         return try {
-            val client = Bugsnag.getClient()
             bridge = reactContext.getJSModule(RCTDeviceEventEmitter::class.java)
             logger = client.logger
             plugin = client.getPlugin(BugsnagReactNativePlugin::class.java)!!
