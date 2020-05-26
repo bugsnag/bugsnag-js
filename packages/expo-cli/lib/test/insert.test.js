@@ -58,4 +58,12 @@ describe('expo-cli: insert', () => {
     const appJs = await promisify(readFile)(`${projectRoot}/App.js`, 'utf8')
     expect(appJs).toMatch(/^import bugsnag from '@bugsnag\/expo';\sconst bugsnagClient = bugsnag\(\);\s/)
   })
+
+  it('inserts correct code for post v7.0.0 versions of Bugsnag', async () => {
+    const projectRoot = await prepareFixture('already-installed-01')
+    const msg = await insert(projectRoot)
+    expect(msg).toBe(undefined)
+    const appJs = await promisify(readFile)(`${projectRoot}/App.js`, 'utf8')
+    expect(appJs).toMatch(/^import Bugsnag from '@bugsnag\/expo';\sBugsnag\.start\(\);\s/)
+  })
 })
