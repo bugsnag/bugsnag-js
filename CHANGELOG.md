@@ -7,7 +7,7 @@
 
 - (plugin-express): Use import syntax that works without TypeScript's `esModuleInterop` compiler flag [#866](https://github.com/bugsnag/bugsnag-js/pull/866)
 - (expo-cli): Ensure version detection logic for @bugsnag/expo works after v7.0.0 [#865](https://github.com/bugsnag/bugsnag-js/pull/865)
-- (core): Ensure callbacks supplied in config permit no named arguments [#863](https://github.com/bugsnag/bugsnag-js/pull/863)
+- (core): Ensure callbacks supplied in config permit functions with no named arguments [#863](https://github.com/bugsnag/bugsnag-js/pull/863)
 
 
 ## 7.1.0 (2020-05-21)
