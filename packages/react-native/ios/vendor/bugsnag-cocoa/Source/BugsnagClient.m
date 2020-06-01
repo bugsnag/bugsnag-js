@@ -107,6 +107,9 @@ static bool hasRecordedSessions;
 @property NSUInteger handledCount;
 @end
 
+@interface BugsnagThread ()
++ (NSMutableArray *)serializeThreads:(NSArray<BugsnagThread *> *)threads;
+@end
 
 @interface BugsnagAppWithState ()
 + (BugsnagAppWithState *)appWithDictionary:(NSDictionary *)event
@@ -1551,7 +1554,8 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
 - (NSArray *)collectThreads {
     int depth = (int)(BSGNotifierStackFrameCount);
     NSException *exc = [NSException exceptionWithName:@"Bugsnag" reason:@"" userInfo:nil];
-    return [[BSG_KSCrash sharedInstance] captureThreads:exc depth:depth];
+    NSArray<BugsnagThread *> *threads = [[BSG_KSCrash sharedInstance] captureThreads:exc depth:depth];
+    return [BugsnagThread serializeThreads:threads];
 }
 
 - (void)addRuntimeVersionInfo:(NSString *)info
