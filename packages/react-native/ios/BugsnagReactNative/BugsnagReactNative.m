@@ -72,9 +72,6 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(configure:(NSDictionary *)readableMap) {
                 && ![error.errorMessage hasPrefix:@"Unhandled JS Exception"];
     }];
 
-    // TODO: use this emitter to inform JS of changes to user, context and metadata
-    BugsnagReactNativeEmitter *emitter = [BugsnagReactNativeEmitter new];
-
     BugsnagConfiguration *config = [Bugsnag configuration];
     return [self.configSerializer serialize:config];
 }

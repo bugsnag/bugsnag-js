@@ -420,9 +420,13 @@ NSString *_lastOrientation = nil;
         // for the entire lifecycle of an application, and there is therefore
         // no need to check for strong self
         __weak __typeof__(self) weakSelf = self;
-        [self addObserverUsingBlock:^(BugsnagStateEvent *event) {
+        void (^observer)(BugsnagStateEvent *) = ^(BugsnagStateEvent *event) {
             [weakSelf metadataChanged:event.data];
-        }];
+        };
+        [self addObserverWithBlock:observer];
+        [self.configuration.metadata addObserverWithBlock:observer];
+        [self.configuration.config addObserverWithBlock:observer];
+        [self.state addObserverWithBlock:observer];
 
         self.pluginClient = [[BugsnagPluginClient alloc] initWithPlugins:self.configuration.plugins];
 
@@ -438,14 +442,18 @@ NSString *_lastOrientation = nil;
     return self;
 }
 
-- (void)addObserverUsingBlock:(BugsnagObserverBlock _Nonnull)observer {
+- (void)addObserverWithBlock:(BugsnagObserverBlock _Nonnull)observer {
     [self.stateEventBlocks addObject:[observer copy]];
 
     // additionally listen for metadata updates
-    [self.metadata addObserverUsingBlock:observer];
-    [self.configuration.metadata addObserverUsingBlock:observer];
-    [self.configuration.config addObserverUsingBlock:observer];
-    [self.state addObserverUsingBlock:observer];
+    [self.metadata addObserverWithBlock:observer];
+}
+
+- (void)removeObserverWithBlock:(BugsnagObserverBlock _Nonnull)observer {
+    [self.stateEventBlocks removeObject:observer];
+
+    // additionally listen for metadata updates
+    [self.metadata removeObserverWithBlock:observer];
 }
 
 - (void)notifyObservers:(BugsnagStateEvent *)event {
