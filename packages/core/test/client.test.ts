@@ -275,6 +275,30 @@ describe('@bugsnag/core/client', () => {
       client.notify(new Error('oh em eff gee'))
     })
 
+    it('includes duration in event.app', done => {
+      const start = +new Date()
+      const client = new Client({ apiKey: 'API_KEY_YEAH', enabledReleaseStages: ['staging'], releaseStage: 'staging' })
+
+      // Delay sending the notification by this many milliseconds to ensure
+      // 'duration' will always have a useful value
+      const delayMs = 10
+
+      client._setDelivery(client => ({
+        sendEvent: (payload) => {
+          // The maximum number of milliseconds 'duration' should be
+          const maximum = +new Date() - start
+
+          expect(payload.events[0].app.duration).toBeGreaterThanOrEqual(delayMs)
+          expect(payload.events[0].app.duration).toBeLessThanOrEqual(maximum)
+
+          done()
+        },
+        sendSession: () => {}
+      }))
+
+      setTimeout(() => client.notify(new Error('oh em eff gee')), delayMs)
+    })
+
     it('can handle all kinds of bad input', () => {
       const payloads: any[] = []
       const client = new Client({ apiKey: 'API_KEY_YEAH' })

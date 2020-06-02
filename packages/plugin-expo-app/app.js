@@ -1,11 +1,9 @@
 const Constants = require('expo-constants').default
 const { AppState } = require('react-native')
 
-const appStart = new Date()
-
 module.exports = {
   load: client => {
-    let lastEnteredForeground = appStart
+    let lastEnteredForeground = new Date()
     let lastState = AppState.currentState
 
     AppState.addEventListener('change', newState => {
@@ -35,7 +33,6 @@ module.exports = {
       const now = new Date()
       const inForeground = AppState.currentState === 'active'
       event.app.inForeground = inForeground
-      event.app.duration = now - appStart
       if (inForeground) {
         event.app.durationInForeground = now - lastEnteredForeground
       }
