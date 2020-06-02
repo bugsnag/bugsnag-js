@@ -25,6 +25,8 @@
     "nyc": "^12.0.2"
   },
   "dependencies": {
-    "expo-constants": "^6.0.0"
+    "expo-constants": "^6.0.0",
+    "expo-device": "^2.1.0",
+    "expo-file-system": "^8.1.0"
   }
 }
