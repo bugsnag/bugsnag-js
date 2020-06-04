@@ -44,9 +44,9 @@
     "ios/Bugsnag",
     "ios/BugsnagReactNative",
     "ios/BugsnagReactNative.xcodeproj",
-    "ios/vendor/bugsnag-cocoa/Configurations/Config.xcconfig",
-    "ios/vendor/bugsnag-cocoa/Source/**/*.{h,m,mm,cpp,c}",
-    "ios/vendor/bugsnag-cocoa/iOS/{Bugsnag.xcodeproj,Info.plist,module.modulemap}",
+    "ios/vendor/bugsnag-cocoa/Bugsnag/**/*.{h,m,mm,cpp,c}",
+    "ios/vendor/bugsnag-cocoa/Bugsnag.xcodeproj",
+    "ios/vendor/bugsnag-cocoa/Framework/{Info.plist,module.modulemap}",
     "BugsnagReactNative.podspec",
     "react-native.config.js"
   ],

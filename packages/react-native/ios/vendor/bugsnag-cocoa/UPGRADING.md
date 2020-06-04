@@ -18,9 +18,6 @@ BugsnagConfiguration *config = [[BugsnagConfiguration alloc] initWithApiKey:@"YO
   let config = BugsnagConfiguration("YOUR API KEY HERE")
 ```
 
-The exact error is available using the `BSGConfigurationErrorDomain` and
-`BSGConfigurationErrorCode` enumeration.
-
 #### Additions
 
 * `Bugsnag.setBreadcrumbCapacity()` is now `config.setMaxBreadcrumbs()`
