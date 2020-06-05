@@ -71,5 +71,6 @@
     "packages/plugin-express",
     "packages/plugin-koa",
     "packages/plugin-restify",
+    "packages/plugin-window-unhandled-rejection",
   ]
 }
