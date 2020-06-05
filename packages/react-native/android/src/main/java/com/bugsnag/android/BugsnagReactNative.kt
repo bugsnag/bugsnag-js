@@ -46,7 +46,7 @@ class BugsnagReactNative(private val reactContext: ReactApplicationContext) :
         val client = try {
             Bugsnag.getClient()
         } catch (exc: IllegalStateException) {
-            throw IllegalStateException("Failed to initialise Android Client, please check you have " +
+            throw IllegalStateException("Failed to initialise the native Bugsnag Android client, please check you have " +
             "added Bugsnag.start() in the onCreate() method of your Application subclass")
         }
         return try {
