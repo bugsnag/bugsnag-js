@@ -1,5 +1,5 @@
 //
-//  Bugsnag.h
+//  BugsnagMetaData.m
 //
 //  Created by Conrad Irwin on 2014-10-01.
 //
@@ -23,57 +23,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 //
+
 #import <Foundation/Foundation.h>
 
 #import "BugsnagConfiguration.h"
 #import "BugsnagMetadata.h"
-#import "BugsnagPlugin.h"
-#import "BugsnagClient.h"
-#import "BugsnagEvent.h"
-#import "BugsnagApp.h"
-#import "BugsnagAppWithState.h"
-#import "BugsnagDevice.h"
-#import "BugsnagDeviceWithState.h"
-#import "BugsnagEndpointConfiguration.h"
-#import "BugsnagError.h"
-#import "BugsnagErrorTypes.h"
-#import "BugsnagSession.h"
-#import "BugsnagStackframe.h"
-#import "BugsnagThread.h"
+#import "BugsnagMetadataStore.h"
 
-@interface Bugsnag : NSObject <BugsnagClassLevelMetadataStore>
+@class BugsnagSessionTracker;
 
-/**
- * All Bugsnag access is class-level.  Prevent the creation of instances.
- */
-- (instancetype _Nonnull )init NS_UNAVAILABLE NS_SWIFT_UNAVAILABLE("Use class methods to initialise Bugsnag.");
+@interface BugsnagClient : NSObject<BugsnagMetadataStore>
 
-/** Start listening for crashes.
- *
- * This method initializes Bugsnag with the default configuration. Any uncaught
- * NSExceptions, C++ exceptions, mach exceptions or signals will be logged to
- * disk before your app crashes. The next time your app boots, we send any such
- * reports to Bugsnag.
- *
- * @param apiKey  The API key from your Bugsnag dashboard.
- */
-+ (BugsnagClient *_Nonnull)startWithApiKey:(NSString *_Nonnull)apiKey;
-
-/** Start listening for crashes.
- *
- * This method initializes Bugsnag. Any uncaught NSExceptions, uncaught
- * C++ exceptions, mach exceptions or signals will be logged to disk before
- * your app crashes. The next time your app boots, we send any such
- * reports to Bugsnag.
- *
- * @param configuration  The configuration to use.
- */
-+ (BugsnagClient *_Nonnull)startWithConfiguration:(BugsnagConfiguration *_Nonnull)configuration;
-
-/**
- * @return YES if Bugsnag has been started and the previous launch crashed
- */
-+ (BOOL)appDidCrashLastLaunch;
+- (instancetype _Nonnull)initWithConfiguration:(BugsnagConfiguration *_Nonnull)configuration;
 
 // =============================================================================
 // MARK: - Notify
@@ -86,7 +47,7 @@
  *
  * @param exception  The exception.
  */
-+ (void)notify:(NSException *_Nonnull)exception;
+- (void)notify:(NSException *_Nonnull)exception;
 
 /**
  *  Send a custom or caught exception to Bugsnag
@@ -94,7 +55,7 @@
  *  @param exception The exception
  *  @param block     A block for optionally configuring the error report
  */
-+ (void)notify:(NSException *_Nonnull)exception
+- (void)notify:(NSException *_Nonnull)exception
          block:(BugsnagOnErrorBlock _Nullable)block;
 
 /**
@@ -102,7 +63,7 @@
  *
  *  @param error The error
  */
-+ (void)notifyError:(NSError *_Nonnull)error;
+- (void)notifyError:(NSError *_Nonnull)error;
 
 /**
  *  Send an error to Bugsnag
@@ -110,7 +71,7 @@
  *  @param error The error
  *  @param block A block for optionally configuring the error report
  */
-+ (void)notifyError:(NSError *_Nonnull)error
+- (void)notifyError:(NSError *_Nonnull)error
               block:(BugsnagOnErrorBlock _Nullable)block;
 
 // =============================================================================
@@ -123,7 +84,7 @@
  *
  * @param message  the log message to leave
  */
-+ (void)leaveBreadcrumbWithMessage:(NSString *_Nonnull)message;
+- (void)leaveBreadcrumbWithMessage:(NSString *_Nonnull)message;
 
 /**
  *  Leave a "breadcrumb" log message each time a notification with a provided
@@ -131,7 +92,7 @@
  *
  *  @param notificationName name of the notification to capture
  */
-+ (void)leaveBreadcrumbForNotificationName:(NSString *_Nonnull)notificationName;
+- (void)leaveBreadcrumbForNotificationName:(NSString *_Nonnull)notificationName;
 
 /**
  * Leave a "breadcrumb" log message, representing an action that occurred
@@ -142,10 +103,10 @@
  * @param metadata Additional metadata included with the breadcrumb.
  * @param type A BSGBreadcrumbTypeValue denoting the type of breadcrumb.
  */
-+ (void)leaveBreadcrumbWithMessage:(NSString *_Nonnull)message
+- (void)leaveBreadcrumbWithMessage:(NSString *_Nonnull)message
                           metadata:(NSDictionary *_Nullable)metadata
                            andType:(BSGBreadcrumbType)type
-    NS_SWIFT_NAME(leaveBreadcrumb(_:metadata:type:));
+NS_SWIFT_NAME(leaveBreadcrumb(_:metadata:type:));
 
 // =============================================================================
 // MARK: - Session
@@ -167,7 +128,7 @@
  * @see pauseSession:
  * @see resumeSession:
  */
-+ (void)startSession;
+- (void)startSession;
 
 /**
  * Stops tracking a session.
@@ -184,7 +145,7 @@
  * @see startSession:
  * @see resumeSession:
  */
-+ (void)pauseSession;
+- (void)pauseSession;
 
 /**
  * Resumes a session which has previously been stopped, or starts a new session if none exists.
@@ -206,7 +167,27 @@
  *
  * @return true if a previous session was resumed, false if a new session was started.
  */
-+ (BOOL)resumeSession;
+- (BOOL)resumeSession;
+
+// =============================================================================
+// MARK: - onSession
+// =============================================================================
+
+/**
+* Add a callback that would be invoked before a session is sent to Bugsnag.
+*
+* @param block The block to be added.
+*/
+- (void)addOnSessionBlock:(BugsnagOnSessionBlock _Nonnull)block
+    NS_SWIFT_NAME(addOnSession(block:));
+
+/**
+ * Remove a callback that would be invoked before a session is sent to Bugsnag.
+ *
+ * @param block The block to be removed.
+ */
+- (void)removeOnSessionBlock:(BugsnagOnSessionBlock _Nonnull )block
+    NS_SWIFT_NAME(removeOnSession(block:));
 
 // =============================================================================
 // MARK: - Other methods
@@ -215,12 +196,12 @@
 /**
  * Retrieves the context - a general summary of what was happening in the application
  */
-+ (void)setContext:(NSString *_Nullable)context;
+ @property NSString *_Nullable context;
 
 /**
- * Retrieves the context - a general summary of what was happening in the application
+ * @return YES if Bugsnag has been started and the previous launch crashed
  */
-+ (NSString *_Nullable)context;
+- (BOOL)appDidCrashLastLaunch;
 
 // =============================================================================
 // MARK: - User
@@ -229,7 +210,7 @@
 /**
  * The current user
  */
-+ (BugsnagUser *_Nonnull)user;
+- (BugsnagUser *_Nonnull)user;
 
 /**
  *  Set user metadata
@@ -238,29 +219,9 @@
  *  @param name   Name of the user
  *  @param email  Email address of the user
  */
-+ (void)setUser:(NSString *_Nullable)userId
-       withEmail:(NSString *_Nullable)email
-       andName:(NSString *_Nullable)name;
-
-// =============================================================================
-// MARK: - onSession
-// =============================================================================
-
-/**
- *  Add a callback to be invoked before a session is sent to Bugsnag.
- *
- *  @param block A block which can modify the session
- */
-+ (void)addOnSessionBlock:(BugsnagOnSessionBlock _Nonnull)block
-    NS_SWIFT_NAME(addOnSession(block:));
-
-/**
- * Remove a callback that would be invoked before a session is sent to Bugsnag.
- *
- * @param block The block to be removed.
- */
-+ (void)removeOnSessionBlock:(BugsnagOnSessionBlock _Nonnull)block
-    NS_SWIFT_NAME(removeOnSession(block:));
+- (void)setUser:(NSString *_Nullable)userId
+      withEmail:(NSString *_Nullable)email
+        andName:(NSString *_Nullable)name;
 
 // =============================================================================
 // MARK: - onSend
@@ -272,15 +233,15 @@
  *
  *  @param block A block which returns YES if the report should be sent
  */
-+ (void)addOnSendErrorBlock:(BugsnagOnSendErrorBlock _Nonnull)block
+- (void)addOnSendErrorBlock:(BugsnagOnSendErrorBlock _Nonnull)block
     NS_SWIFT_NAME(addOnSendError(block:));
 
 /**
- * Remove the callback that would be invoked before an event is sent.
+ * Remove an onSend callback, if it exists
  *
- * @param block The block to be removed.
+ * @param block The block to remove
  */
-+ (void)removeOnSendErrorBlock:(BugsnagOnSendErrorBlock _Nonnull)block
+- (void)removeOnSendErrorBlock:(BugsnagOnSendErrorBlock _Nonnull)block
     NS_SWIFT_NAME(removeOnSendError(block:));
 
 // =============================================================================
@@ -293,7 +254,7 @@
  *
  *  @param block A block which returns YES if the breadcrumb should be captured
  */
-+ (void)addOnBreadcrumbBlock:(BugsnagOnBreadcrumbBlock _Nonnull)block
+- (void)addOnBreadcrumbBlock:(BugsnagOnBreadcrumbBlock _Nonnull)block
     NS_SWIFT_NAME(addOnBreadcrumb(block:));
 
 /**
@@ -301,7 +262,7 @@
  *
  * @param block The block to be removed.
  */
-+ (void)removeOnBreadcrumbBlock:(BugsnagOnBreadcrumbBlock _Nonnull)block
+- (void)removeOnBreadcrumbBlock:(BugsnagOnBreadcrumbBlock _Nonnull)block
     NS_SWIFT_NAME(removeOnBreadcrumb(block:));
 
 @end
