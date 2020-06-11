@@ -1,0 +1,22 @@
+{
+  "name": "@bugsnag/plugin-browser-app",
+  "version": "7.1.1",
+  "main": "app.js",
+  "description": "@bugsnag/js plugin to set app info in browsers",
+  "homepage": "https://www.bugsnag.com/",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:bugsnag/bugsnag-js.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "*.js"
+  ],
+  "author": "Bugsnag",
+  "license": "MIT",
+  "devDependencies": {
+    "@bugsnag/core": "^7.1.1"
+  }
+}

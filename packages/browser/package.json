@@ -35,6 +35,7 @@
     "@bugsnag/core": "^7.0.1",
     "@bugsnag/delivery-x-domain-request": "^7.1.1",
     "@bugsnag/delivery-xml-http-request": "^7.1.1",
+    "@bugsnag/plugin-browser-app": "^7.1.1",
     "@bugsnag/plugin-browser-context": "^7.1.1",
     "@bugsnag/plugin-browser-device": "^7.1.1",
     "@bugsnag/plugin-browser-request": "^7.1.1",

@@ -13,6 +13,7 @@ module.exports = {
       testMatch: [
         testsForPackage('plugin-react'),
         testsForPackage('plugin-vue'),
+        testsForPackage('plugin-browser-app'),
         testsForPackage('plugin-browser-context'),
         testsForPackage('plugin-browser-device')
       ]

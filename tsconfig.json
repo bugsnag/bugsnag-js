@@ -61,6 +61,7 @@
   },
   "include": [
     "packages/core",
+    "packages/plugin-browser-app",
     "packages/plugin-browser-context",
     "packages/plugin-browser-device",
     "packages/plugin-react-native-app-state-breadcrumbs",
