@@ -58,10 +58,6 @@ class Client {
     this.Breadcrumb = Breadcrumb
     this.Session = Session
 
-    // store the time we were constructed so we can calculate the duration that
-    // the application has been running when an error is thrown
-    this._startTime = new Date()
-
     this._config = this._configure(configuration, internalPlugins)
     map(internalPlugins.concat(this._config.plugins), pl => {
       if (pl) this._loadPlugin(pl)
@@ -269,7 +265,6 @@ class Client {
   _notify (event, onError, cb = noop) {
     event.app = assign({}, event.app, {
       releaseStage: this._config.releaseStage,
-      duration: new Date() - this._startTime,
       version: this._config.appVersion,
       type: this._config.appType
     })
