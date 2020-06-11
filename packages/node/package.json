@@ -28,6 +28,7 @@
     "@bugsnag/delivery-node": "^7.1.1",
     "@bugsnag/plugin-contextualize": "^7.1.1",
     "@bugsnag/plugin-intercept": "^7.1.1",
+    "@bugsnag/plugin-node-app": "^7.1.1",
     "@bugsnag/plugin-node-device": "^7.1.1",
     "@bugsnag/plugin-node-in-project": "^7.1.1",
     "@bugsnag/plugin-node-surrounding-code": "^7.1.1",

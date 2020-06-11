@@ -15,6 +15,7 @@ const schema = { ...require('@bugsnag/core/config').schema, ...require('./config
 // remove enabledBreadcrumbTypes from the config schema
 delete schema.enabledBreadcrumbTypes
 
+const pluginApp = require('@bugsnag/plugin-node-app')
 const pluginSurroundingCode = require('@bugsnag/plugin-node-surrounding-code')
 const pluginInProject = require('@bugsnag/plugin-node-in-project')
 const pluginStripProjectRoot = require('@bugsnag/plugin-strip-project-root')
@@ -26,6 +27,7 @@ const pluginIntercept = require('@bugsnag/plugin-intercept')
 const pluginContextualize = require('@bugsnag/plugin-contextualize')
 
 const internalPlugins = [
+  pluginApp,
   pluginSurroundingCode,
   pluginInProject,
   pluginStripProjectRoot,

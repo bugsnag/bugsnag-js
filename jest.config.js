@@ -30,6 +30,7 @@ module.exports = {
       displayName: 'node plugins',
       testEnvironment: 'node',
       testMatch: [
+        testsForPackage('plugin-node-app'),
         testsForPackage('plugin-server-*')
       ]
     }
