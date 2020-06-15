@@ -8,6 +8,8 @@ Bugsnag.start({
   plugins: [new BugsnagPluginVue(Vue)]
 })
 
+Bugsnag.getPlugin('vue').installVueErrorHandler(Vue)
+
 Vue.config.productionTip = false
 
 new Vue({
