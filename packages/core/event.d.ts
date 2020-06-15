@@ -15,7 +15,7 @@ interface HandledState {
  */
 export default class EventWithInternals extends Event {
   constructor (errorClass: string, errorMessage: string, stacktrace: any[], handledState?: HandledState, originalError?: Error)
-  _metadata: { [key: string]: {} }
+  _metadata: { [key: string]: any }
   _handledState: HandledState
   toJSON(): {
     payloadVersion: '4'
@@ -32,7 +32,7 @@ export default class EventWithInternals extends Event {
     breadcrumbs: Breadcrumb[]
     context: string | undefined
     groupingHash: string | undefined
-    metaData: { [key: string]: {} }
+    metaData: { [key: string]: any }
     user: User
     session: Session
   };
