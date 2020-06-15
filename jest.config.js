@@ -15,6 +15,7 @@ module.exports = {
         testsForPackage('plugin-vue'),
         testsForPackage('plugin-browser-context'),
         testsForPackage('plugin-browser-device'),
+        testsForPackage('plugin-window-onerror'),
         testsForPackage('plugin-strip-query-string')
       ]
     },
