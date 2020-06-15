@@ -71,6 +71,7 @@
     "packages/plugin-express",
     "packages/plugin-koa",
     "packages/plugin-restify",
+    "packages/plugin-strip-query-string",
     "packages/plugin-strip-project-root",
   ]
 }
