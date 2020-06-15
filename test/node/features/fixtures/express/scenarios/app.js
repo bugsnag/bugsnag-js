@@ -1,6 +1,7 @@
 var Bugsnag = require('@bugsnag/node')
 var bugsnagExpress = require('@bugsnag/plugin-express')
 var express = require('express')
+var bodyParser = require('body-parser')
 
 Bugsnag.start({
   apiKey: process.env.BUGSNAG_API_KEY,
@@ -8,6 +9,7 @@ Bugsnag.start({
     notify: process.env.BUGSNAG_NOTIFY_ENDPOINT,
     sessions: process.env.BUGSNAG_SESSIONS_ENDPOINT
   },
+  autoTrackSessions: false,
   plugins: [bugsnagExpress]
 })
 
@@ -67,6 +69,10 @@ app.get('/throw-non-error', function (req, res, next) {
 app.get('/handled', function (req, res, next) {
   req.bugsnag.notify(new Error('handled'))
   res.end('OK')
+})
+
+app.post('/bodytest', bodyParser.urlencoded(), function (req, res, next) {
+  throw new Error('request body')
 })
 
 app.use(middleware.errorHandler)
