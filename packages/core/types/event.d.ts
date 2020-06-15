@@ -53,7 +53,7 @@ interface HandledState {
   }
 }
 
-interface Stackframe {
+export interface Stackframe {
   file: string
   method?: string
   lineNumber?: number

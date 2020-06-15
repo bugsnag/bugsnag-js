@@ -72,5 +72,7 @@
     "packages/plugin-koa",
     "packages/plugin-restify",
     "packages/plugin-window-onerror",
+    "packages/plugin-strip-query-string",
+    "packages/plugin-strip-project-root",
   ]
 }
