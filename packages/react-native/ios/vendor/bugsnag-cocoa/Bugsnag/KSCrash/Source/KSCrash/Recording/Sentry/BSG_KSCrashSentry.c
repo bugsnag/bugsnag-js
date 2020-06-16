@@ -94,14 +94,14 @@ bsg_kscrashsentry_installWithContext(BSG_KSCrash_SentryContext *context,
                                      void (*onCrash)(void *)) {
     if (bsg_ksmachisBeingTraced()) {
         if (context->reportWhenDebuggerIsAttached) {
-            BSG_KSLOG_WARN("KSCrash: App is running in a debugger. Crash "
+            BSG_KSLOG_WARN("App is running in a debugger. Crash "
                            "handling is enabled via configuration.");
             BSG_KSLOG_INFO(
                 "Installing handlers with context %p, crash types 0x%x.",
                 context, crashTypes);
         } else {
-            BSG_KSLOG_WARN("KSCrash: App is running in a debugger. Only user "
-                           "reported events will be handled.");
+            BSG_KSLOG_WARN("App is running in a debugger. Only handled "
+                           "events will be sent to Bugsnag.");
             crashTypes = BSG_KSCrashTypeUserReported;
         }
     } else {

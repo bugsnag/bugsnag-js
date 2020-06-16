@@ -69,6 +69,11 @@ static BugsnagClient *bsg_g_bugsnag_client = NULL;
 
 @implementation Bugsnag
 
++ (BugsnagClient *_Nonnull)start {
+    BugsnagConfiguration *configuration = [BugsnagConfiguration loadConfig];
+    return [self startWithConfiguration:configuration];
+}
+
 + (BugsnagClient *_Nonnull)startWithApiKey:(NSString *_Nonnull)apiKey {
     BugsnagConfiguration *configuration = [[BugsnagConfiguration alloc] initWithApiKey:apiKey];
     return [self startWithConfiguration:configuration];

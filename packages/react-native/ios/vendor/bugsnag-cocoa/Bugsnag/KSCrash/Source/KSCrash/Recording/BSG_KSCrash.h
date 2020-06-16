@@ -26,16 +26,11 @@
 
 #import <Foundation/Foundation.h>
 
-#import "BSG_KSCrashReportFilterCompletion.h"
+#import "BugsnagErrorReportSink.h"
+#import "BSGOnErrorSentBlock.h"
 #import "BSG_KSCrashReportWriter.h"
 #import "BSG_KSCrashType.h"
 #import "BugsnagConfiguration.h"
-
-typedef enum {
-    BSG_KSCDeleteNever,
-    BSG_KSCDeleteOnSuccess,
-    BSG_KSCDeleteAlways
-} BSG_KSCDeleteBehavior;
 
 /**
  * Reports any crashes that occur in the application.
@@ -51,18 +46,6 @@ typedef enum {
  * Default: nil
  */
 @property(nonatomic, readwrite, retain) NSDictionary *userInfo;
-
-/** What to do after sending reports via sendAllReportsWithCompletion:
- *
- * - Use KSCDeleteNever if you will manually manage the reports.
- * - Use KSCDeleteAlways if you will be using an alert confirmation (otherwise
- * it will nag the user incessantly until he selects "yes").
- * - Use KSCDeleteOnSuccess for all other situations.
- *
- * Default: KSCDeleteAlways
- */
-@property(nonatomic, readwrite, assign)
-    BSG_KSCDeleteBehavior deleteBehaviorAfterSendAll;
 
 /** The crash types that are being handled.
  * Note: This value may change once BSG_KSCrash is installed if some handlers
@@ -94,19 +77,12 @@ typedef enum {
 /** Send any outstanding crash reports to the current sink.
  * It will only attempt to send the most recent 5 reports. All others will be
  * deleted. Once the reports are successfully sent to the server, they may be
- * deleted locally, depending on the property "deleteAfterSendAll".
+ * deleted locally.
  *
- * Note: property "sink" MUST be set or else this method will call onCompletion
+ * Note: property "sink" MUST be set or else this method will call the block
  *       with an error.
- *
- * @param onCompletion Called when sending is complete (nil = ignore).
  */
-- (void)sendAllReportsWithCompletion:
-    (BSG_KSCrashReportFilterCompletion)onCompletion;
-
-/** Delete all unsent reports.
- */
-- (void)deleteAllReports;
+- (void)sendAllReports;
 
 /** Report a custom, user defined exception.
  * This can be useful when dealing with scripting languages.

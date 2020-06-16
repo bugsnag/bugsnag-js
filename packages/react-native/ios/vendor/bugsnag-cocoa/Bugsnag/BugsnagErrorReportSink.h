@@ -1,9 +1,9 @@
 //
-//  BSG_KSCrashCallCompletion.m
+//  BugsnagErrorReportSink.h
 //
-//  Created by Karl Stenerud on 2013-02-10.
+//  Created by Conrad Irwin on 2014-10-01.
 //
-//  Copyright (c) 2012 Karl Stenerud. All rights reserved.
+//  Copyright (c) 2014 Bugsnag, Inc. All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,12 +24,27 @@
 // THE SOFTWARE.
 //
 
-#import "BSG_KSCrashCallCompletion.h"
+#import <Foundation/Foundation.h>
+#import "BSG_KSCrash.h"
+#import "BugsnagErrorReportApiClient.h"
 
-void bsg_kscrash_i_callCompletion(
-    BSG_KSCrashReportFilterCompletion onCompletion, NSUInteger reportCount,
-    BOOL completed, NSError *error) {
-    if (onCompletion) {
-        onCompletion(reportCount, completed, error);
-    }
-}
+NS_ASSUME_NONNULL_BEGIN
+
+@interface BugsnagErrorReportSink : NSObject
+
+@property(nonatomic, strong) BugsnagErrorReportApiClient *apiClient;
+
+- (instancetype)initWithApiClient:(BugsnagErrorReportApiClient *)apiClient;
+
+/**
+ * Invoked when reports stored by KSCrash need to be delivered.
+ *
+ * @param ksCrashReports a map of KSCrash reports represented as dictionaries, with the filename as the key
+ * @param block a block that is invoked when delivery of each file concludes
+ */
+- (void)sendStoredReports:(NSDictionary <NSString *, NSDictionary *> *)ksCrashReports
+                withBlock:(BSGOnErrorSentBlock)block;
+
+@end
+
+NS_ASSUME_NONNULL_END

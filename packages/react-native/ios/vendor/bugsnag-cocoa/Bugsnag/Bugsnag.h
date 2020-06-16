@@ -50,6 +50,15 @@
 
 /** Start listening for crashes.
  *
+ * This method initializes Bugsnag with the configuration set in your PList. Any uncaught
+ * NSExceptions, C++ exceptions, mach exceptions or signals will be logged to
+ * disk before your app crashes. The next time your app boots, we send any such
+ * reports to Bugsnag.
+ */
++ (BugsnagClient *_Nonnull)start;
+
+/** Start listening for crashes.
+ *
  * This method initializes Bugsnag with the default configuration. Any uncaught
  * NSExceptions, C++ exceptions, mach exceptions or signals will be logged to
  * disk before your app crashes. The next time your app boots, we send any such

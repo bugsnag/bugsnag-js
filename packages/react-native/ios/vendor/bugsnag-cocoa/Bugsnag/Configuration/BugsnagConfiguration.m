@@ -44,10 +44,8 @@
 #import "BugsnagStateEvent.h"
 #import "BugsnagCollections.h"
 #import "BugsnagMetadataInternal.h"
+#import "BugsnagKeys.h"
 
-static NSString *const kHeaderApiPayloadVersion = @"Bugsnag-Payload-Version";
-static NSString *const kHeaderApiKey = @"Bugsnag-Api-Key";
-static NSString *const kHeaderApiSentAt = @"Bugsnag-Sent-At";
 static NSString *const BSGApiKeyMissingError = @"No Bugsnag API Key set";
 static NSString *const BSGInitError = @"Init is unavailable.  Use [[BugsnagConfiguration alloc] initWithApiKey:] instead.";
 static const int BSGApiKeyLength = 32;
@@ -342,17 +340,17 @@ NSString * const kBugsnagUserUserId = @"BugsnagUserUserId";
 
 - (NSDictionary *)errorApiHeaders {
     return @{
-             kHeaderApiPayloadVersion: @"4.0",
-             kHeaderApiKey: self.apiKey,
-             kHeaderApiSentAt: [BSG_RFC3339DateTool stringFromDate:[NSDate new]]
+             BSGHeaderApiPayloadVersion: @"4.0",
+             BSGHeaderApiKey: self.apiKey,
+             BSGHeaderApiSentAt: [BSG_RFC3339DateTool stringFromDate:[NSDate new]]
     };
 }
 
 - (NSDictionary *)sessionApiHeaders {
     return @{
-             kHeaderApiPayloadVersion: @"1.0",
-             kHeaderApiKey: self.apiKey,
-             kHeaderApiSentAt: [BSG_RFC3339DateTool stringFromDate:[NSDate new]]
+             BSGHeaderApiPayloadVersion: @"1.0",
+             BSGHeaderApiKey: self.apiKey,
+             BSGHeaderApiSentAt: [BSG_RFC3339DateTool stringFromDate:[NSDate new]]
              };
 }
 
@@ -553,16 +551,6 @@ NSString * const kBugsnagUserUserId = @"BugsnagUserUserId";
                          withKey:BSGKeyEnabledReleaseStages
                        toSection:BSGKeyConfig];
     }
-}
-
-// MARK: -
-
-- (void)setShouldAutoCaptureSessions:(BOOL)shouldAutoCaptureSessions {
-    self.autoTrackSessions = shouldAutoCaptureSessions;
-}
-
-- (BOOL)shouldAutoCaptureSessions {
-    return self.autoTrackSessions;
 }
 
 // MARK: - enabledBreadcrumbTypes
