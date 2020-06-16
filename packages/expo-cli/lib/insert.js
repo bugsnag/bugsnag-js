@@ -35,7 +35,7 @@ Bugsnag.start();
 
 const getCode = async (projectRoot) => {
   const manifestRange = await detectInstalled(projectRoot)
-  const isPostV7 = !manifestRange || semver.satisfies('7.0.0', manifestRange)
+  const isPostV7 = !manifestRange || semver.ltr('6.99.99', manifestRange)
   return code[isPostV7 ? 'postV7' : 'preV7']
 }
 

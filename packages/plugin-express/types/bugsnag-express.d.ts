@@ -1,5 +1,5 @@
 import { Plugin, Client } from '@bugsnag/core'
-import express from 'express'
+import * as express from 'express'
 
 declare const bugsnagPluginExpress: Plugin
 export default bugsnagPluginExpress

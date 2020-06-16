@@ -1,6 +1,16 @@
 # Changelog
 
-## 7.1.0 (TBD)
+
+## 7.1.1 (2020-05-26)
+
+### Fixed
+
+- (plugin-express): Use import syntax that works without TypeScript's `esModuleInterop` compiler flag [#866](https://github.com/bugsnag/bugsnag-js/pull/866)
+- (expo-cli): Ensure version detection logic for @bugsnag/expo works after v7.0.0 [#865](https://github.com/bugsnag/bugsnag-js/pull/865)
+- (core): Ensure callbacks supplied in config permit functions with no named arguments [#863](https://github.com/bugsnag/bugsnag-js/pull/863)
+
+
+## 7.1.0 (2020-05-21)
 
 This update contains some substantial changes to plugin type definitions. If you are using TypeScript alongside a framework, you may need to make changes to your app. Please refer to the [upgrade guide](./UPGRADING.md).
 
@@ -12,7 +22,8 @@ This update contains some substantial changes to plugin type definitions. If you
 
 - (plugin-react): Add type definitions for `Bugsnag.getPlugin('react')` [#839](https://github.com/bugsnag/bugsnag-js/pull/839)
 - (plugin-vue): Add type definitions for `Bugsnag.getPlugin('vue')` [#839](https://github.com/bugsnag/bugsnag-js/pull/839)
-- (plugin-react): Add `clearError` prop to `ErrorBoundary`. [#797](https://github.com/bugsnag/bugsnag-js/pull/797)
+- (plugin-react): Add `clearError` prop to `ErrorBoundary` [#797](https://github.com/bugsnag/bugsnag-js/pull/797)
+- (plugin-express|plugin-koa|plugin-restify): Add full type definitions for plugins [#853](https://github.com/bugsnag/bugsnag-js/pull/853)
 
 ## 7.0.2 (2020-05-12)
 

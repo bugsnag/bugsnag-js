@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-strip-project-root",
-  "version": "7.0.1",
+  "version": "7.1.1",
   "main": "strip-project-root.js",
   "description": "@bugsnag/js plugin to remove common project root paths from stacktraces",
   "homepage": "https://www.bugsnag.com/",
@@ -14,14 +14,9 @@
   "files": [
     "*.js"
   ],
-  "scripts": {
-    "test": "nyc --reporter=lcov -- jasmine '!(node_modules)/**/*.test.js'"
-  },
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^7.0.1",
-    "jasmine": "^3.1.0",
-    "nyc": "^12.0.2"
+    "@bugsnag/core": "^7.1.1"
   }
 }
