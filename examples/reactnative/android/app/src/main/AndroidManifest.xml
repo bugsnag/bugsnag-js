@@ -23,7 +23,7 @@
       </activity>
       <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
       <meta-data android:name="com.bugsnag.android.API_KEY"
-                 android:value="8f4b9d17b582d6e4c74d43d3e295b4c5"/>
+                 android:value="0abcdef000000abcdef000000abcdef0"/>
       <meta-data android:name="com.bugsnag.android.DETECT_NDK_CRASHES"
                  android:value="true"/>
     </application>
