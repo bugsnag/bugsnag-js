@@ -59,6 +59,7 @@
     if (image != nil) {
         frame.machoUuid = image[BSGKeyUuid];
         frame.machoVmAddress = image[BSGKeyImageVmAddress];
+        frame.machoFile = image[BSGKeyName];
         return frame;
     } else { // invalid frame, skip
         return nil;
@@ -86,6 +87,12 @@
     if (self.machoVmAddress != nil) {
         NSString *vmAddr = [NSString stringWithFormat:BSGKeyFrameAddrFormat, [self.machoVmAddress unsignedLongValue]];
         BSGDictSetSafeObject(dict, vmAddr, BSGKeyMachoVMAddress);
+    }
+    if (self.isPc) {
+        BSGDictSetSafeObject(dict, @(self.isPc), BSGKeyIsPC);
+    }
+    if (self.isLr) {
+        BSGDictSetSafeObject(dict, @(self.isLr), BSGKeyIsLR);
     }
     return dict;
 }

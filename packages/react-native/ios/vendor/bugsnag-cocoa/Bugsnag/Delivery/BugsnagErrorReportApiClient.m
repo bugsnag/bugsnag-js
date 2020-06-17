@@ -10,7 +10,7 @@
 #import "Bugsnag.h"
 #import "BugsnagLogger.h"
 #import "BugsnagClient.h"
-#import "BugsnagSink.h"
+#import "BugsnagErrorReportSink.h"
 #import "BugsnagKeys.h"
 
 @interface BSGDeliveryOperation : NSOperation
@@ -29,17 +29,9 @@
 - (void)main {
     @autoreleasepool {
         @try {
-            [[BSG_KSCrash sharedInstance]
-                    sendAllReportsWithCompletion:^(NSUInteger sentReportCount,
-                            BOOL completed, NSError *error) {
-                        if (error) {
-                            bsg_log_warn(@"Failed to send reports: %@", error);
-                        } else if (sentReportCount > 0) {
-                            bsg_log_info(@"Reports sent.");
-                        }
-                    }];
+            [[BSG_KSCrash sharedInstance] sendAllReports];
         } @catch (NSException *e) {
-            bsg_log_err(@"Could not send report: %@", e);
+            bsg_log_err(@"Could not send error report: %@", e);
         }
     }
 }

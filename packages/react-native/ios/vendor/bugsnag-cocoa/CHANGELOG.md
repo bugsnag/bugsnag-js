@@ -1,7 +1,7 @@
 Changelog
 =========
 
-## 6.0.0 (TBD)
+## TBD
 
 __This version contains many breaking changes__. It is part of an effort to unify our notifier
 libraries across platforms, making the user interface more consistent, and implementations better
@@ -12,6 +12,9 @@ Please see the [upgrade guide](UPGRADING.md) for details of all the changes and 
 how to upgrade.
 
 ## Enhancements
+
+* Allow starting Bugsnag from PList
+  [#676](https://github.com/bugsnag/bugsnag-cocoa/pull/676)
 
 * The comparison of redacted keys is now case-insensitive
   [#653](https://github.com/bugsnag/bugsnag-cocoa/pull/653)
@@ -236,12 +239,6 @@ how to upgrade.
   prominently displayed and is not truncated.
   [#433](https://github.com/bugsnag/bugsnag-cocoa/pull/433)
 
-* Added `Bugsnag.getMetadata(_ section)`.  The behaviour is: calling with a valid section
-  name will return the metadata for that section if it exists, or `nil` if it does not exist.  Other,
-  similar functionality (e.g. `BugsnagConfiguration.getTab()` has been renamed and
-  had usage aligned with this change.
-  [#459](https://github.com/bugsnag/bugsnag-cocoa/pull/459)
-
 * Add metadata accessor methods to `BugsnagEvent`
   [#465](https://github.com/bugsnag/bugsnag-cocoa/pull/465)
   
@@ -303,6 +300,9 @@ how to upgrade.
 
 * The `bundleVersion` property is available on `BugsnagConfiguration` allowing overriding the default plist value.
   [#550](https://github.com/bugsnag/bugsnag-cocoa/pull/550)
+
+* Deliver each event in a separate request to avoid exceeding payload size limit
+  [#424](https://github.com/bugsnag/bugsnag-cocoa/pull/424)
 
 ## 5.23.2 (2020-05-13)
 

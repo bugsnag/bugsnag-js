@@ -63,16 +63,16 @@
     "typescript": "^3.3.3"
   },
   "dependencies": {
-    "@bugsnag/core": "7.0.1",
-    "@bugsnag/delivery-react-native": "7.0.2",
-    "@bugsnag/plugin-console-breadcrumbs": "7.0.1",
-    "@bugsnag/plugin-network-breadcrumbs": "7.0.1",
-    "@bugsnag/plugin-react": "7.0.1",
-    "@bugsnag/plugin-react-native-client-sync": "7.0.2",
-    "@bugsnag/plugin-react-native-event-sync": "7.0.2",
-    "@bugsnag/plugin-react-native-global-error-handler": "7.0.1",
-    "@bugsnag/plugin-react-native-session": "7.0.2",
-    "@bugsnag/plugin-react-native-unhandled-rejection": "7.0.1",
+    "@bugsnag/core": "7.1.1",
+    "@bugsnag/delivery-react-native": "7.1.1",
+    "@bugsnag/plugin-console-breadcrumbs": "7.1.1",
+    "@bugsnag/plugin-network-breadcrumbs": "7.1.1",
+    "@bugsnag/plugin-react": "7.1.1",
+    "@bugsnag/plugin-react-native-client-sync": "7.1.1",
+    "@bugsnag/plugin-react-native-event-sync": "7.1.1",
+    "@bugsnag/plugin-react-native-global-error-handler": "7.1.1",
+    "@bugsnag/plugin-react-native-session": "7.1.1",
+    "@bugsnag/plugin-react-native-unhandled-rejection": "7.1.1",
     "iserror": "^0.0.2",
     "proxy-polyfill": "^0.3.1"
   }

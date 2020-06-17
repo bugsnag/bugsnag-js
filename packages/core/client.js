@@ -138,9 +138,9 @@ class Client {
     if (config.logger) this._logger = config.logger
 
     // add callbacks
-    if (config.onError && config.onError.length) this._cbs.e = this._cbs.e.concat(config.onError)
-    if (config.onBreadcrumb && config.onBreadcrumb.length) this._cbs.b = this._cbs.b.concat(config.onBreadcrumb)
-    if (config.onSession && config.onSession.length) this._cbs.s = this._cbs.s.concat(config.onSession)
+    if (config.onError) this._cbs.e = this._cbs.e.concat(config.onError)
+    if (config.onBreadcrumb) this._cbs.b = this._cbs.b.concat(config.onBreadcrumb)
+    if (config.onSession) this._cbs.s = this._cbs.s.concat(config.onSession)
 
     // finally warn about any invalid config where we fell back to the default
     if (keys(errors).length) {

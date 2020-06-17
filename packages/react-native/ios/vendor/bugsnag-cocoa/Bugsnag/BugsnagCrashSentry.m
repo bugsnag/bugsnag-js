@@ -11,7 +11,7 @@
 
 #import "BugsnagCrashSentry.h"
 #import "BugsnagLogger.h"
-#import "BugsnagSink.h"
+#import "BugsnagErrorReportSink.h"
 #import "BugsnagConfiguration.h"
 #import "Bugsnag.h"
 #import "BugsnagErrorTypes.h"
@@ -24,12 +24,10 @@ NSUInteger const BSG_MAX_STORED_REPORTS = 12;
       apiClient:(BugsnagErrorReportApiClient *)apiClient
         onCrash:(BSGReportCallback)onCrash
 {
-    BugsnagSink *sink = [[BugsnagSink alloc] initWithApiClient:apiClient];
+    BugsnagErrorReportSink *sink = [[BugsnagErrorReportSink alloc] initWithApiClient:apiClient];
     BSG_KSCrash *ksCrash = [BSG_KSCrash sharedInstance];
     ksCrash.sink = sink;
     ksCrash.introspectMemory = YES;
-    ksCrash.deleteBehaviorAfterSendAll =
-        BSG_KSCDeleteOnSuccess;
     ksCrash.onCrash = onCrash;
     ksCrash.maxStoredReports = BSG_MAX_STORED_REPORTS;
     ksCrash.threadTracingEnabled = (int) config.sendThreads;

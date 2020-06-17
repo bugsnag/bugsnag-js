@@ -1023,6 +1023,11 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
         [self.sessionTracker handleHandledErrorEvent];
     }
 
+    // apiKey not added to event JSON by default, need to add it here
+    // for when it is read next
+    NSMutableDictionary *eventOverrides = [[event toJson] mutableCopy];
+    eventOverrides[BSGKeyApiKey] = event.apiKey;
+
     // handled errors should persist any information edited by the user
     // in a section within the KSCrash report so it can be read
     // when the error is delivered
@@ -1031,7 +1036,7 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
                              handledState:[event.handledState toJson]
                                  appState:[self.state toDictionary]
                         callbackOverrides:event.overrides
-                           eventOverrides:[event toJson]
+                           eventOverrides:eventOverrides
                                  metadata:[event.metadata toDictionary]
                                    config:[self.configuration.config toDictionary]];
 

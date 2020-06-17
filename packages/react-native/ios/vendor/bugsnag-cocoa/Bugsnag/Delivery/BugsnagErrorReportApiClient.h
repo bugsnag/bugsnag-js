@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "BSG_KSCrashReportFilterCompletion.h"
+#import "BSGOnErrorSentBlock.h"
 #import "BugsnagEvent.h"
 #import "BugsnagConfiguration.h"
 #import "BugsnagApiClient.h"

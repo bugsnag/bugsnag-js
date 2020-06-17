@@ -519,80 +519,55 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
  * @return a BugsnagEvent containing the parsed information
  */
 - (instancetype)initWithUserData:(NSDictionary *)event {
-    self = [super init];
-    
-    if (self) {
-        NSDictionary *bugsnagPayload = [event valueForKeyPath:@"user.event"];
-        _apiKey = bugsnagPayload[@"apiKey"];
-        _context = bugsnagPayload[@"context"];
-        _groupingHash = bugsnagPayload[@"groupingHash"];
-        _app = [BugsnagAppWithState appFromJson:bugsnagPayload[@"app"]];
-        _device = [BugsnagDeviceWithState deviceFromJson:bugsnagPayload[@"device"]];
-        _handledState = [BugsnagHandledState handledStateFromJson:bugsnagPayload];
+    NSDictionary *bugsnagPayload = [event valueForKeyPath:@"user.event"];
+    // deserialize exceptions
+    NSArray *errorDicts = bugsnagPayload[BSGKeyExceptions];
+    NSMutableArray<BugsnagError *> *errors = [NSMutableArray new];
 
-        NSDictionary *user = bugsnagPayload[@"user"];
-        if (user != nil) {
-            _user = [[BugsnagUser alloc] initWithDictionary:user];
-        }
+    if (errorDicts != nil) {
+        for (NSDictionary *dict in errorDicts) {
+            BugsnagError *error = [BugsnagError errorFromJson:dict];
 
-        if (bugsnagPayload[@"metaData"]) {
-            _metadata = [[BugsnagMetadata alloc] initWithDictionary:bugsnagPayload[@"metaData"]];
-        }
-        
-        if (bugsnagPayload[@"breadcrumbs"]) {
-            _breadcrumbs = [BugsnagBreadcrumb breadcrumbArrayFromJson:bugsnagPayload[@"breadcrumbs"]];
-        }
-
-        // deserialize exceptions
-        NSArray *errorDicts = bugsnagPayload[BSGKeyExceptions];
-        NSMutableArray<BugsnagError *> *errors = [NSMutableArray new];
-
-        if (errorDicts != nil) {
-            for (NSDictionary *dict in errorDicts) {
-                BugsnagError *error = [BugsnagError errorFromJson:dict];
-
-                if (error != nil) {
-                    [errors addObject:error];
-                }
+            if (error != nil) {
+                [errors addObject:error];
             }
-        }
-
-        // deserialize threads
-        NSArray *threadDicts = bugsnagPayload[BSGKeyThreads];
-        NSMutableArray *threads = [NSMutableArray new];
-
-        if (threadDicts != nil) {
-            for (NSDictionary *dict in threadDicts) {
-                BugsnagThread *thread = [BugsnagThread threadFromJson:dict];
-
-                if (thread != nil) {
-                    [threads addObject:thread];
-                }
-            }
-        }
-        BugsnagSession *session = [BugsnagSession fromJson:bugsnagPayload[@"session"]];
-
-        self = [self initWithApp:[BugsnagAppWithState appFromJson:bugsnagPayload[@"app"]]
-                          device:[BugsnagDeviceWithState deviceFromJson:bugsnagPayload[@"device"]]
-                    handledState:[BugsnagHandledState handledStateFromJson:bugsnagPayload]
-                            user:[[BugsnagUser alloc] initWithDictionary:bugsnagPayload[@"user"]]
-                        metadata:[[BugsnagMetadata alloc] initWithDictionary:bugsnagPayload[@"metaData"]]
-                     breadcrumbs:[BugsnagBreadcrumb breadcrumbArrayFromJson:bugsnagPayload[@"breadcrumbs"]]
-                          errors:errors
-                         threads:threads
-                         session:session];
-        _apiKey = bugsnagPayload[@"apiKey"];
-        _context = bugsnagPayload[@"context"];
-        _groupingHash = bugsnagPayload[@"groupingHash"];
-        _error = [self getMetadataFromSection:BSGKeyError];
-
-        if ([errors count] > 0) {
-            BugsnagError *err = errors[0];
-            _customException = BSGParseCustomException(event, err.errorClass, err.errorMessage);
         }
     }
 
-    return self;
+    // deserialize threads
+    NSArray *threadDicts = bugsnagPayload[BSGKeyThreads];
+    NSMutableArray *threads = [NSMutableArray new];
+
+    if (threadDicts != nil) {
+        for (NSDictionary *dict in threadDicts) {
+            BugsnagThread *thread = [BugsnagThread threadFromJson:dict];
+
+            if (thread != nil) {
+                [threads addObject:thread];
+            }
+        }
+    }
+    BugsnagSession *session = [BugsnagSession fromJson:bugsnagPayload[@"session"]];
+
+    BugsnagEvent *obj = [self initWithApp:[BugsnagAppWithState appFromJson:bugsnagPayload[@"app"]]
+                      device:[BugsnagDeviceWithState deviceFromJson:bugsnagPayload[@"device"]]
+                handledState:[BugsnagHandledState handledStateFromJson:bugsnagPayload]
+                        user:[[BugsnagUser alloc] initWithDictionary:bugsnagPayload[@"user"]]
+                    metadata:[[BugsnagMetadata alloc] initWithDictionary:bugsnagPayload[@"metaData"]]
+                 breadcrumbs:[BugsnagBreadcrumb breadcrumbArrayFromJson:bugsnagPayload[@"breadcrumbs"]]
+                      errors:errors
+                     threads:threads
+                     session:session];
+    obj.apiKey = bugsnagPayload[@"apiKey"];
+    obj.context = bugsnagPayload[@"context"];
+    obj.groupingHash = bugsnagPayload[@"groupingHash"];
+    obj.error = [self getMetadataFromSection:BSGKeyError];
+
+    if ([errors count] > 0) {
+        BugsnagError *err = errors[0];
+        obj.customException = BSGParseCustomException(event, err.errorClass, err.errorMessage);
+    }
+    return obj;
 }
 
 - (NSMutableDictionary *)parseOnCrashData:(NSDictionary *)report {

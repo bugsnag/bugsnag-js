@@ -76,8 +76,10 @@
     "packages/plugin-express",
     "packages/plugin-koa",
     "packages/plugin-restify",
-
     "packages/node",
     "packages/react-native",
+    "packages/plugin-window-onerror",
+    "packages/plugin-strip-query-string",
+    "packages/plugin-strip-project-root",
   ]
 }
