@@ -20,7 +20,7 @@ describe('plugin: device', () => {
     expect(payloads[0].events[0].device.time instanceof Date).toBe(true)
     expect(payloads[0].events[0].device.locale).toBe(navigator.language)
     expect(payloads[0].events[0].device.userAgent).toBe(navigator.userAgent)
-    expect(payloads[0].events[0].device.orientation).toBe(undefined)
+    expect(payloads[0].events[0].device.orientation).toBe('portrait')
   })
 
   it('should capture the screen orientation if possible and add it to the event', () => {
@@ -58,7 +58,7 @@ describe('plugin: device', () => {
     expect(payloads[0].device).toBeDefined()
     expect(payloads[0].device && payloads[0].device.locale).toBe(navigator.language)
     expect(payloads[0].device && payloads[0].device.userAgent).toBe(navigator.userAgent)
-    expect(payloads[0].device && payloads[0].device.orientation).toBe(undefined)
+    expect(payloads[0].device && payloads[0].device.orientation).toBe('portrait')
   })
 
   it('should capture the screen orientation if possible and add it to the session', () => {
