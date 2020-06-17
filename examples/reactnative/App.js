@@ -26,6 +26,10 @@ function triggerNativeException() {
   NativeModules.CrashyCrashy.generateCrash()
 }
 
+function triggerNativeHandledError() {
+  NativeModules.CrashyCrashy.handledError()
+}
+
 export default class App extends Component {
   render() {
     return (
@@ -62,6 +66,15 @@ export default class App extends Component {
               }} />
             <Text style={styles.info}>
               Tap this button to send a handled error to Bugsnag
+            </Text>
+
+            <Button
+              title="Send Handled Native Exception"
+              onPress={() => {
+                triggerNativeHandledError()
+              }} />
+            <Text style={styles.info}>
+              Tap this button to send a native handled error to Bugsnag
             </Text>
 
             <Button
