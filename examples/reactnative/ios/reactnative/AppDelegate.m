@@ -18,10 +18,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  BugsnagConfiguration *configuration = [[BugsnagConfiguration alloc]
-                                         initWithApiKey:@"0abcdef000000abcdef000000abcdef0"];
-  [Bugsnag startWithConfiguration:configuration];
-  
+  [Bugsnag start];
+
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
                                                    moduleName:@"reactnative"
