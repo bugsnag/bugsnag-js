@@ -27,7 +27,9 @@ module.exports = {
     // disk space could be inaccurate as it may change between now and when an
     // error occurs, however it's unlikely to be drastically different
     let freeDisk
-    FileSystem.getFreeDiskStorageAsync().then(freeDiskStorage => { freeDisk = freeDiskStorage })
+    FileSystem.getFreeDiskStorageAsync()
+      .then(freeDiskStorage => { freeDisk = freeDiskStorage })
+      .catch(err => client._logger.warn('Could not detect free disk space', err))
 
     const device = {
       id: Constants.installationId,
