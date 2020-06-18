@@ -1,8 +1,8 @@
 {
-  "name": "@bugsnag/plugin-browser-app",
+  "name": "@bugsnag/plugin-app-duration",
   "version": "7.1.1",
   "main": "app.js",
-  "description": "@bugsnag/js plugin to set app info in browsers",
+  "description": "@bugsnag/js plugin to set app duration in browsers and node",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
     "type": "git",

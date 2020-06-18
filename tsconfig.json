@@ -61,10 +61,9 @@
   },
   "include": [
     "packages/core",
-    "packages/plugin-browser-app",
+    "packages/plugin-app-duration",
     "packages/plugin-browser-context",
     "packages/plugin-browser-device",
-    "packages/plugin-node-app",
     "packages/plugin-react-native-app-state-breadcrumbs",
     "packages/plugin-react-native-unhandled-rejection",
     "packages/plugin-server-session",

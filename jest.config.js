@@ -9,11 +9,16 @@ module.exports = {
       ]
     },
     {
+      displayName: 'shared plugins',
+      testMatch: [
+        testsForPackage('plugin-app-duration')
+      ]
+    },
+    {
       displayName: 'browser plugins',
       testMatch: [
         testsForPackage('plugin-react'),
         testsForPackage('plugin-vue'),
-        testsForPackage('plugin-browser-app'),
         testsForPackage('plugin-browser-context'),
         testsForPackage('plugin-browser-device')
       ]
@@ -30,7 +35,6 @@ module.exports = {
       displayName: 'node plugins',
       testEnvironment: 'node',
       testMatch: [
-        testsForPackage('plugin-node-app'),
         testsForPackage('plugin-server-*')
       ]
     }
