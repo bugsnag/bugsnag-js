@@ -12,7 +12,8 @@ Pod::Spec.new do |s|
   s.source       = { :git => "https://github.com/bugsnag/bugsnag-js.git", :tag => "v#{s.version}" }
   s.source_files = "ios/BugsnagReactNative/**/*.{h,m}",
                    "ios/vendor/bugsnag-cocoa/**/*.{h,mm,m,cpp,c}",
-  # s.public_header_files = "ios/Bugsnag/**/*.h"
+  s.public_header_files = "ios/vendor/bugsnag-cocoa/Bugsnag/**/*.h"
+  s.header_dir = 'Bugsnag'
   s.requires_arc = true
   s.dependency "React"
   #s.dependency "others"
