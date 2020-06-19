@@ -12,7 +12,6 @@
 #import <React/RCTRootView.h>
 
 #import <Bugsnag/Bugsnag.h>
-#import <BugsnagReactNative/BugsnagReactNativePlugin.h>
 
 @implementation AppDelegate
 
