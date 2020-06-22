@@ -1,5 +1,4 @@
 const Device = require('expo-device')
-const FileSystem = require('expo-file-system')
 const Constants = require('expo-constants').default
 const { Dimensions, Platform } = require('react-native')
 const rnVersion = require('react-native/package.json').version
@@ -21,15 +20,6 @@ module.exports = {
 
     // get the initial orientation
     updateOrientation()
-
-    // Fetch the free disk space up front because it's an async API so we don't
-    // want to do this in the onError callback. This means the reported free
-    // disk space could be inaccurate as it may change between now and when an
-    // error occurs, however it's unlikely to be drastically different
-    let freeDisk
-    FileSystem.getFreeDiskStorageAsync()
-      .then(freeDiskStorage => { freeDisk = freeDiskStorage })
-      .catch(err => client._logger.warn('Could not detect free disk space', err))
 
     const device = {
       id: Constants.installationId,
@@ -60,8 +50,7 @@ module.exports = {
       event.device = { ...event.device, time: new Date(), orientation, ...device }
       event.addMetadata('device', {
         isDevice: Constants.isDevice,
-        appOwnership: Constants.appOwnership,
-        freeDisk
+        appOwnership: Constants.appOwnership
       })
     }, true)
   }
