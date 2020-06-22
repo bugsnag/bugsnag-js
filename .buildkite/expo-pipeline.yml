@@ -48,6 +48,8 @@ steps:
 
   - label:  ':docker: Publish expo app'
     timeout_in_minutes: 20
+    agents:
+      queue: "opensource-highpower"
     env:
       EXPO_RELEASE_CHANNEL: ${BUILDKITE_BUILD_ID}
     plugins:
@@ -58,6 +60,8 @@ steps:
 
   - label:  ':docker: Build expo APK'
     timeout_in_minutes: 20
+    agents:
+      queue: "opensource-highpower"
     env:
       EXPO_RELEASE_CHANNEL: ${BUILDKITE_BUILD_ID}
     artifact_paths: build/output.apk

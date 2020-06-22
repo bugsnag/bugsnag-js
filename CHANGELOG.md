@@ -1,5 +1,9 @@
 # Changelog
 
+## TBD
+
+### Fixed
+- (plugin-express): Ensure `req.body` is always present in metadata by collecting it at the last possible moment [#872](https://github.com/bugsnag/bugsnag-js/pull/872)
 
 ## 7.1.1 (2020-05-26)
 

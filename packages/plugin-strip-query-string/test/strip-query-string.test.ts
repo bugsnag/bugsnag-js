@@ -1,8 +1,7 @@
-const { describe, it, expect } = global
+import plugin from '../'
 
-const plugin = require('../')
-
-const Client = require('@bugsnag/core/client')
+import Client, { EventDeliveryPayload } from '@bugsnag/core/client'
+import { Stackframe } from '@bugsnag/core/types/event'
 
 describe('plugin: strip query string', () => {
   it('should strip querystrings and fragments from urls', () => {
@@ -38,10 +37,10 @@ describe('plugin: strip query string', () => {
       },
       plugins: [plugin]
     })
-    const payloads = []
-    let originalStacktrace
+    const payloads: EventDeliveryPayload[] = []
+    let originalStacktrace: Stackframe[] = []
 
-    client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
+    client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload), sendSession: () => {} }))
     const err = new Error('noooo')
     err.stack = 'Error: foo\n  at page.html?id=intro:89:10'
     client.notify(err)

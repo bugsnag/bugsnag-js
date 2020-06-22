@@ -1,13 +1,15 @@
-const { describe, it, expect, beforeEach } = global
+/* eslint-disable jest/no-commented-out-tests */
 
-const plugin = require('../')
+import plugin from '../'
 
-const Client = require('@bugsnag/core/client')
+import Client, { EventDeliveryPayload } from '@bugsnag/core/client'
 
-let window
+type EnhancedWindow = Window & typeof globalThis & { onerror: OnErrorEventHandlerNonNull }
+
+let window: EnhancedWindow
 
 describe('plugin: window onerror', () => {
-  beforeEach(() => { window = {} })
+  beforeEach(() => { window = {} as unknown as EnhancedWindow })
 
   it('should set a window.onerror event handler', () => {
     const client = new Client({ apiKey: 'API_KEY_YEAH', plugins: [plugin(window)] })
@@ -37,8 +39,8 @@ describe('plugin: window onerror', () => {
   describe('window.onerror function', () => {
     it('captures uncaught errors in timer callbacks', done => {
       const client = new Client({ apiKey: 'API_KEY_YEAH', plugins: [plugin(window)] })
-      const payloads = []
-      client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
+      const payloads: EventDeliveryPayload[] = []
+      client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload), sendSession: () => {} }))
 
       window.onerror('Uncaught Error: Bad things', 'foo.js', 10, 20, new Error('Bad things'))
 
@@ -81,22 +83,23 @@ describe('plugin: window onerror', () => {
     //   }
     // })
 
+    // eslint-disable-next-line jest/expect-expect
     it('calls any previously registered window.onerror callback', done => {
       window.onerror = () => done()
 
       const client = new Client({ apiKey: 'API_KEY_YEAH', plugins: [plugin(window)] })
-      const payloads = []
-      client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
+      const payloads: EventDeliveryPayload[] = []
+      client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload), sendSession: () => {} }))
 
       window.onerror('Uncaught Error: Bad things', 'foo.js', 10, 20, new Error('Bad things'))
     })
 
     it('handles single argument usage of window.onerror', () => {
       const client = new Client({ apiKey: 'API_KEY_YEAH', plugins: [plugin(window)] })
-      const payloads = []
-      client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
+      const payloads: EventDeliveryPayload[] = []
+      client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload), sendSession: () => {} }))
 
-      const evt = { type: 'error', detail: 'something bad happened' }
+      const evt = { type: 'error', detail: 'something bad happened' } as unknown as Event
       window.onerror(evt)
 
       expect(payloads.length).toBe(1)
@@ -110,14 +113,15 @@ describe('plugin: window onerror', () => {
 
     it('handles single argument usage of window.onerror with extra parameter', () => {
       const client = new Client({ apiKey: 'API_KEY_YEAH', plugins: [plugin(window)] })
-      const payloads = []
-      client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
+      const payloads: EventDeliveryPayload[] = []
+
+      client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload), sendSession: () => {} }))
 
       // this situation is caused by the following kind of jQuery call:
       // jQuery('select.province').trigger(jQuery.Event('error.validator.bv'), { valid: false })
-      const evt = { type: 'error', detail: 'something bad happened' }
+      const evt = { type: 'error', detail: 'something bad happened' } as unknown as Event
       const extra = { valid: false }
-      window.onerror(evt, extra)
+      window.onerror(evt, extra as any)
 
       expect(payloads.length).toBe(1)
       const event = payloads[0].events[0].toJSON()
@@ -188,10 +192,12 @@ describe('plugin: window onerror', () => {
 
     it('extracts meaning from non-error values as error messages', function (done) {
       const client = new Client({ apiKey: 'API_KEY_YEAH', plugins: [plugin(window)] })
-      const payloads = []
-      client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
+      const payloads: EventDeliveryPayload[] = []
+
+      client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload), sendSession: () => {} }))
 
       // call onerror as it would be when `throw 'hello' is run`
+      // @ts-expect-error
       window.onerror('uncaught exception: hello', '', 0, 0, 'hello')
 
       try {
@@ -211,7 +217,7 @@ describe('plugin: window onerror', () => {
     })
 
     it('calls a previously installed window.onerror callback', function (done) {
-      const args = ['Uncaught Error: derp!', 'http://localhost:4999', 10, 3, new Error('derp!')]
+      const args = ['Uncaught Error: derp!', 'http://localhost:4999', 10, 3, new Error('derp!')] as const
       window.onerror = (messageOrEvent, url, lineNo, charNo, error) => {
         expect(messageOrEvent).toBe(args[0])
         expect(url).toBe(args[1])
@@ -222,15 +228,16 @@ describe('plugin: window onerror', () => {
         done()
       }
       const client = new Client({ apiKey: 'API_KEY_YEAH', plugins: [plugin(window)] })
-      const payloads = []
-      client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
+      const payloads: EventDeliveryPayload[] = []
+
+      client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload), sendSession: () => {} }))
 
       // call onerror as it would be when `throw 'hello' is run`
       window.onerror(...args)
     })
 
     it('calls a previously installed window.onerror when a CORS error happens', function (done) {
-      const args = ['Script error.', undefined, 0, undefined, undefined]
+      const args = ['Script error.', undefined, 0, undefined, undefined] as const
       window.onerror = (messageOrEvent, url, lineNo, charNo, error) => {
         expect(messageOrEvent).toBe(args[0])
         expect(url).toBe(args[1])
@@ -241,8 +248,9 @@ describe('plugin: window onerror', () => {
         done()
       }
       const client = new Client({ apiKey: 'API_KEY_YEAH', plugins: [plugin(window)] })
-      const payloads = []
-      client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
+      const payloads: EventDeliveryPayload[] = []
+
+      client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload), sendSession: () => {} }))
 
       // call onerror as it would be when `throw 'hello' is run`
       window.onerror(...args)

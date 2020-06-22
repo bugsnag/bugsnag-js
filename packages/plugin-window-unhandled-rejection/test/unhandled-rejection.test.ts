@@ -1,20 +1,23 @@
-const { describe, it, expect, spyOn } = global
+/* eslint-disable jest/no-commented-out-tests */
+import plugin from '../'
 
-const plugin = require('../')
-
-const Client = require('@bugsnag/core/client')
-
-let listener = null
-const window = {
-  addEventListener: (evt, handler) => {
-    listener = handler
-  },
-  removeEventListener: () => {
-    listener = null
-  }
-}
+import Client from '@bugsnag/core/client'
 
 describe('plugin: unhandled rejection', () => {
+  beforeEach(() => {
+    jest.spyOn(window, 'addEventListener')
+    jest.spyOn(window, 'removeEventListener')
+  })
+
+  afterEach(() => {
+    jest.restoreAllMocks()
+  })
+
+  function getUnhandledRejectionHandler () {
+    const handler = (window.addEventListener as jest.MockedFunction<typeof window.addEventListener>).mock.calls[0][1]
+    return handler as (payload: any) => void
+  }
+
   describe('window.onunhandledrejection function', () => {
     it('captures unhandled promise rejections', done => {
       const p = plugin(window)
@@ -25,16 +28,24 @@ describe('plugin: unhandled rejection', () => {
           expect(event.severity).toBe('error')
           expect(event.unhandled).toBe(true)
           expect(event.severityReason).toEqual({ type: 'unhandledPromiseRejection' })
+          // @ts-ignore
           p.destroy(window)
           done()
-        }
+        },
+        sendSession: () => {}
       }))
 
+      expect(window.addEventListener).toHaveBeenCalledWith('unhandledrejection', expect.any(Function))
+      expect(window.addEventListener).toHaveBeenCalledTimes(1)
+
+      const handler = getUnhandledRejectionHandler()
       // simulate an UnhandledRejection event
-      listener({ reason: new Error('BAD_PROMISE') })
+      handler({ reason: new Error('BAD_PROMISE') })
     })
 
     it('handles bad user input', done => {
+      expect.assertions(6)
+
       const p = plugin(window)
       const client = new Client({ apiKey: 'API_KEY_YEAH', plugins: [p] })
       client._setDelivery(client => ({
@@ -46,12 +57,16 @@ describe('plugin: unhandled rejection', () => {
           expect(event.exceptions[0].message).toBe('unhandledrejection handler received a non-error. See "unhandledrejection handler" tab for more detail.')
           expect(event.severityReason).toEqual({ type: 'unhandledPromiseRejection' })
           expect(event.metaData['unhandledrejection handler']['non-error parameter']).toEqual('null')
+          // @ts-ignore
           p.destroy(window)
           done()
-        }
+        },
+        sendSession: () => {}
       }))
 
-      listener({ reason: null })
+      const handler = getUnhandledRejectionHandler()
+
+      handler({ reason: null })
     })
 
     // TODO: it's very difficult to mock a DOMException so move this testing to maze-runner
@@ -108,17 +123,22 @@ describe('plugin: unhandled rejection', () => {
           expect(event.exceptions[0].errorClass).toBe('Error')
           expect(event.exceptions[0].message).toBe('blah')
           expect(event.severityReason).toEqual({ type: 'unhandledPromiseRejection' })
+          // @ts-ignore
           p.destroy(window)
           done()
-        }
+        },
+        sendSession: () => {}
       }))
 
+      const handler = getUnhandledRejectionHandler()
+
       const err = new Error('blah')
+      // @ts-expect-error
       err.stack = true
-      listener({ reason: err })
+      handler({ reason: err })
     })
 
-    it('tolerates event.detail propties which throw', done => {
+    it('tolerates event.detail properties which throw', done => {
       const p = plugin(window)
       const client = new Client({ apiKey: 'API_KEY_YEAH', plugins: [p] })
       client._setDelivery(client => ({
@@ -129,40 +149,36 @@ describe('plugin: unhandled rejection', () => {
           expect(event.exceptions[0].errorClass).toBe('Error')
           expect(event.exceptions[0].message).toBe('blah')
           expect(event.severityReason).toEqual({ type: 'unhandledPromiseRejection' })
+          // @ts-ignore
           p.destroy(window)
           done()
-        }
+        },
+        sendSession: () => {}
       }))
+
+      const handler = getUnhandledRejectionHandler()
 
       const err = new Error('blah')
       const detail = {}
       Object.defineProperty(detail, 'reason', {
         get: () => { throw new Error('bad accessor') }
       })
-      listener({ reason: err, detail })
+      handler({ reason: err, detail })
     })
 
     it('is disabled when autoDetectErrors=false', () => {
-      const window = {
-        addEventListener: () => {}
-      }
-      const addEventListenerSpy = spyOn(window, 'addEventListener')
       const client = new Client({ apiKey: 'API_KEY_YEAH', autoDetectErrors: false, plugins: [plugin(window)] })
-      expect(addEventListenerSpy).toHaveBeenCalledTimes(0)
+      expect(window.addEventListener).toHaveBeenCalledTimes(0)
       expect(client).toBe(client)
     })
 
     it('is disabled when enabledErrorTypes.unhandledRejections=false', () => {
-      const window = {
-        addEventListener: () => {}
-      }
-      const addEventListenerSpy = spyOn(window, 'addEventListener')
       const client = new Client({
         apiKey: 'API_KEY_YEAH',
         enabledErrorTypes: { unhandledExceptions: false, unhandledRejections: false },
         plugins: [plugin(window)]
       })
-      expect(addEventListenerSpy).toHaveBeenCalledTimes(0)
+      expect(window.addEventListener).toHaveBeenCalledTimes(0)
       expect(client).toBe(client)
     })
   })

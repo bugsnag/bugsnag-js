@@ -20,7 +20,10 @@ module.exports = {
         testsForPackage('plugin-react'),
         testsForPackage('plugin-vue'),
         testsForPackage('plugin-browser-context'),
-        testsForPackage('plugin-browser-device')
+        testsForPackage('plugin-browser-device'),
+        testsForPackage('plugin-window-unhandled-rejection'),
+        testsForPackage('plugin-window-onerror'),
+        testsForPackage('plugin-strip-query-string')
       ]
     },
     {
@@ -35,7 +38,8 @@ module.exports = {
       displayName: 'node plugins',
       testEnvironment: 'node',
       testMatch: [
-        testsForPackage('plugin-server-*')
+        testsForPackage('plugin-server-*'),
+        testsForPackage('packages/plugin-strip-project-root')
       ]
     }
   ]
