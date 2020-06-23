@@ -9,6 +9,12 @@ module.exports = {
       ]
     },
     {
+      displayName: 'shared plugins',
+      testMatch: [
+        testsForPackage('plugin-app-duration')
+      ]
+    },
+    {
       displayName: 'browser plugins',
       testMatch: [
         testsForPackage('plugin-react'),

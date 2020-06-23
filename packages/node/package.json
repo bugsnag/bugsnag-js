@@ -26,6 +26,7 @@
   "license": "MIT",
   "devDependencies": {
     "@bugsnag/delivery-node": "^7.1.1",
+    "@bugsnag/plugin-app-duration": "^7.1.1",
     "@bugsnag/plugin-contextualize": "^7.1.1",
     "@bugsnag/plugin-intercept": "^7.1.1",
     "@bugsnag/plugin-node-device": "^7.1.1",
