@@ -224,27 +224,6 @@ NS_SWIFT_NAME(leaveBreadcrumb(_:metadata:type:));
         andName:(NSString *_Nullable)name;
 
 // =============================================================================
-// MARK: - onSend
-// =============================================================================
-
-/**
- *  Add a callback to be invoked before a report is sent to Bugsnag, to
- *  change the report contents as needed
- *
- *  @param block A block which returns YES if the report should be sent
- */
-- (void)addOnSendErrorBlock:(BugsnagOnSendErrorBlock _Nonnull)block
-    NS_SWIFT_NAME(addOnSendError(block:));
-
-/**
- * Remove an onSend callback, if it exists
- *
- * @param block The block to remove
- */
-- (void)removeOnSendErrorBlock:(BugsnagOnSendErrorBlock _Nonnull)block
-    NS_SWIFT_NAME(removeOnSendError(block:));
-
-// =============================================================================
 // MARK: - onBreadcrumb
 // =============================================================================
 

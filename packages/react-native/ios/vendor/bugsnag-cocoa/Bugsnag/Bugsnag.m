@@ -344,24 +344,6 @@ static BugsnagClient *bsg_g_bugsnag_client = NULL;
 }
 
 // =============================================================================
-// MARK: - onSend
-// =============================================================================
-
-+ (void)addOnSendErrorBlock:(BugsnagOnSendErrorBlock _Nonnull)block
-{
-    if ([self bugsnagStarted]) {
-        [self.client addOnSendErrorBlock:block];
-    }
-}
-
-+ (void)removeOnSendErrorBlock:(BugsnagOnSendErrorBlock _Nonnull)block
-{
-    if ([self bugsnagStarted]) {
-        [self.client removeOnSendErrorBlock:block];
-    }
-}
-
-// =============================================================================
 // MARK: - OnBreadcrumb
 // =============================================================================
 
