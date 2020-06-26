@@ -6,7 +6,7 @@
     "start": "node node_modules/react-native/local-cli/cli.js start"
   },
   "dependencies": {
-    "@bugsnag/react-native": "^99.99.99-canary.33ed06ab6bc74d31e2b701aeaa2bfb5e42b89afb",
+    "@bugsnag/react-native": "^7.2.0-alpha.0",
     "react": "16.8.3",
     "react-native": "0.59.9"
   },
