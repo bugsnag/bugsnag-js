@@ -40,9 +40,14 @@
         app.inForeground = [(NSNumber *) inForeground boolValue];
     }
 
+    NSArray *dsyms = json[@"dsymUUIDs"];
+
+    if (dsyms && [dsyms count] > 0) {
+        app.dsymUuid = dsyms[0];
+    }
+
     app.bundleVersion = json[@"bundleVersion"];
     app.codeBundleId = json[@"codeBundleId"];
-    app.dsymUuid = json[@"dsymUuid"];
     app.id = json[@"id"];
     app.releaseStage = json[@"releaseStage"];
     app.type = json[@"type"];

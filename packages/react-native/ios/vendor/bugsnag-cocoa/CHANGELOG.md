@@ -1,7 +1,7 @@
 Changelog
 =========
 
-## TBD
+## 6.0.0 (2020-06-22)
 
 __This version contains many breaking changes__. It is part of an effort to unify our notifier
 libraries across platforms, making the user interface more consistent, and implementations better
@@ -283,9 +283,9 @@ how to upgrade.
   of callbacks run when a session starts.
   [#483](https://github.com/bugsnag/bugsnag-cocoa/pull/483)
   
-* Added `addOnSendBlock:`, `removeOnSendBlock:` and `clearOnSendBlocks` methods to `Bugsnag` 
-  and `BugsnagConfiguration`.
+* Added `addOnSendBlock:`, `removeOnSendBlock:` to `BugsnagConfiguration`.
   [#485](https://github.com/bugsnag/bugsnag-cocoa/pull/485)
+  [#485](https://github.com/bugsnag/bugsnag-cocoa/pull/713)
   
 * Enhanced device orientation change breadcrumbs.  These are now reported with "from" and "to" values
   in a form consistent with the Android notifier.
@@ -303,6 +303,13 @@ how to upgrade.
 
 * Deliver each event in a separate request to avoid exceeding payload size limit
   [#424](https://github.com/bugsnag/bugsnag-cocoa/pull/424)
+
+## 5.23.3 (2020-06-05)
+
+## Bug Fixes
+
+* Fix DYLD lock mechanism preventing compilation on iOS <10.
+  [#675](https://github.com/bugsnag/bugsnag-cocoa/pull/675)
 
 ## 5.23.2 (2020-05-13)
 

@@ -272,27 +272,6 @@
     NS_SWIFT_NAME(removeOnSession(block:));
 
 // =============================================================================
-// MARK: - onSend
-// =============================================================================
-
-/**
- *  Add a callback to be invoked before a report is sent to Bugsnag, to
- *  change the report contents as needed
- *
- *  @param block A block which returns YES if the report should be sent
- */
-+ (void)addOnSendErrorBlock:(BugsnagOnSendErrorBlock _Nonnull)block
-    NS_SWIFT_NAME(addOnSendError(block:));
-
-/**
- * Remove the callback that would be invoked before an event is sent.
- *
- * @param block The block to be removed.
- */
-+ (void)removeOnSendErrorBlock:(BugsnagOnSendErrorBlock _Nonnull)block
-    NS_SWIFT_NAME(removeOnSendError(block:));
-
-// =============================================================================
 // MARK: - onBreadcrumb
 // =============================================================================
 

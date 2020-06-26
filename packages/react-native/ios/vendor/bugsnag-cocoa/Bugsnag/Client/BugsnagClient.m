@@ -96,6 +96,9 @@ static NSUInteger handledCount;
 static NSUInteger unhandledCount;
 static bool hasRecordedSessions;
 
+NSDictionary *BSGParseAppMetadata(NSDictionary *event);
+NSDictionary *BSGParseDeviceMetadata(NSDictionary *event);
+
 @interface NSDictionary (BSGKSMerge)
 - (NSDictionary *)BSG_mergedInto:(NSDictionary *)dest;
 @end
@@ -364,12 +367,10 @@ void BSGWriteSessionCrashData(BugsnagSession *session) {
 
 @implementation BugsnagClient
 
-#if BSG_PLATFORM_IOS
 /**
  * Storage for the device orientation.  It is "last" whenever an orientation change is received
  */
 NSString *_lastOrientation = nil;
-#endif
 
 @synthesize configuration;
 
@@ -415,7 +416,7 @@ NSString *_lastOrientation = nil;
         // Start with a copy of the configuration metadata
         self.metadata = [[configuration metadata] deepCopy];
         // sync initial state
-        [self metadataChanged:self.configuration.metadata];
+        [self metadataChanged:self.metadata];
         [self metadataChanged:self.configuration.config];
         [self metadataChanged:self.state];
 
@@ -428,7 +429,7 @@ NSString *_lastOrientation = nil;
             [weakSelf metadataChanged:event.data];
         };
         [self addObserverWithBlock:observer];
-        [self.configuration.metadata addObserverWithBlock:observer];
+        [self.metadata addObserverWithBlock:observer];
         [self.configuration.config addObserverWithBlock:observer];
         [self.state addObserverWithBlock:observer];
 
@@ -617,6 +618,11 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
     // notification not received in time on initial startup, so trigger manually
     [self willEnterForeground:self];
     [self.pluginClient loadPlugins];
+
+    // add metadata about app/device
+    NSDictionary *systemInfo = [BSG_KSSystemInfo systemInfo];
+    [self.metadata addMetadata:BSGParseAppMetadata(@{@"system": systemInfo}) toSection:BSGKeyApp];
+    [self.metadata addMetadata:BSGParseDeviceMetadata(@{@"system": systemInfo}) toSection:BSGKeyDevice];
 }
 
 - (void)addTerminationObserver:(NSString *)name {
@@ -815,18 +821,6 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
 }
 
 // =============================================================================
-// MARK: - onSend
-// =============================================================================
-
-- (void)addOnSendErrorBlock:(BugsnagOnSendErrorBlock _Nonnull)block {
-    [self.configuration addOnSendErrorBlock:block];
-}
-
-- (void)removeOnSendErrorBlock:(BugsnagOnSendErrorBlock _Nonnull)block {
-    [self.configuration removeOnSendErrorBlock:block];
-}
-
-// =============================================================================
 // MARK: - onBreadcrumb
 // =============================================================================
 
@@ -983,12 +977,19 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
     NSArray *threads = [[BSG_KSCrash sharedInstance] captureThreads:exception depth:depth];
     NSArray *errors = @[[self generateError:exception threads:threads]];
 
+    BugsnagMetadata *metadata = [self.metadata deepCopy];
+    NSDictionary *deviceFields = [self.state getMetadataFromSection:BSGKeyDeviceState];
+
+    if (deviceFields) {
+        [metadata addMetadata:deviceFields toSection:BSGKeyDevice];
+    }
+
     NSDictionary *systemInfo = [BSG_KSSystemInfo systemInfo];
     BugsnagEvent *event = [[BugsnagEvent alloc] initWithApp:[self generateAppWithState:systemInfo]
                                                      device:[self generateDeviceWithState:systemInfo]
                                                handledState:handledState
                                                        user:self.user
-                                                   metadata:[self.metadata deepCopy]
+                                                   metadata:metadata
                                                 breadcrumbs:[NSArray arrayWithArray:self.configuration.breadcrumbs.breadcrumbs]
                                                      errors:errors
                                                     threads:threads
@@ -1099,7 +1100,7 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
 
 - (void)metadataChanged:(BugsnagMetadata *)metadata {
     @synchronized(metadata) {
-        if (metadata == self.configuration.metadata) {
+        if (metadata == self.metadata) {
             if ([self.metadataLock tryLock]) {
                 BSSerializeJSONDictionary([metadata toDictionary],
                                           &bsg_g_bugsnag_data.metadataJSON);
@@ -1126,13 +1127,13 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
     BOOL charging = [UIDevice currentDevice].batteryState == UIDeviceBatteryStateCharging ||
                     [UIDevice currentDevice].batteryState == UIDeviceBatteryStateFull;
 
-    [[self state] addMetadata:batteryLevel
-                     withKey:BSGKeyBatteryLevel
-                 toSection:BSGKeyDeviceState];
-    
-    [[self state] addMetadata:charging ? @YES : @NO
-                     withKey:BSGKeyCharging
-                 toSection:BSGKeyDeviceState];
+    [self.state addMetadata:batteryLevel
+                    withKey:BSGKeyBatteryLevel
+                  toSection:BSGKeyDeviceState];
+
+    [self.state addMetadata:charging ? @YES : @NO
+                    withKey:BSGKeyCharging
+                  toSection:BSGKeyDeviceState];
 }
 
 /**
@@ -1151,10 +1152,10 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
     }
 
     // Update the device orientation in metadata
-    [[self state] addMetadata:orientation
-                     withKey:BSGKeyOrientation
-                 toSection:BSGKeyDeviceState];
-    
+    [self.state addMetadata:orientation
+                    withKey:BSGKeyOrientation
+                  toSection:BSGKeyDeviceState];
+
     // Short-circuit the exit if we don't have enough info to record a full breadcrumb
     // or the orientation hasn't changed (false positive).
     if (!_lastOrientation || [orientation isEqualToString:_lastOrientation]) {
@@ -1176,7 +1177,7 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
 }
 
 - (void)lowMemoryWarning:(NSNotification *)notif {
-    [[self state] addMetadata:[[Bugsnag payloadDateFormatter] stringFromDate:[NSDate date]]
+    [self.state addMetadata:[[Bugsnag payloadDateFormatter] stringFromDate:[NSDate date]]
                       withKey:BSEventLowMemoryWarning
                     toSection:BSGKeyDeviceState];
      
@@ -1530,6 +1531,7 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
     BugsnagDeviceWithState *device = [BugsnagDeviceWithState deviceWithDictionary:@{@"system": systemInfo}];
     device.time = [NSDate date]; // default to current time for handled errors
     [device appendRuntimeInfo:self.extraRuntimeInfo];
+    device.orientation = _lastOrientation;
     return device;
 }
 
