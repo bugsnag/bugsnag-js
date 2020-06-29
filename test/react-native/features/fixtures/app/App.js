@@ -48,9 +48,10 @@ export default class App extends Component {
     let scenarioName = this.state.currentScenario
     let scenarioMetaData = this.state.scenarioMetaData
     let configuration = getDefaultConfiguration()
-    let scenario = new Scenarios[scenarioName](configuration, scenarioMetaData)
+    let jsConfig = {}
+    let scenario = new Scenarios[scenarioName](configuration, scenarioMetaData, jsConfig)
     NativeModules.BugsnagTestInterface.startBugsnag(configuration, () => {
-      Bugsnag.start()
+      Bugsnag.start(jsConfig)
       scenario.run()
     })
   }
@@ -61,9 +62,10 @@ export default class App extends Component {
     let scenarioName = this.state.currentScenario
     let scenarioMetaData = this.state.scenarioMetaData
     let configuration = getDefaultConfiguration()
-    let scenario = new Scenarios[scenarioName](configuration, scenarioMetaData)
+    let jsConfig = {}
+    let scenario = new Scenarios[scenarioName](configuration, scenarioMetaData, jsConfig)
     NativeModules.BugsnagTestInterface.startBugsnag(configuration, () => {
-      Bugsnag.start()
+      Bugsnag.start(jsConfig)
     })
   }
 

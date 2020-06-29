@@ -5,12 +5,14 @@ Scenario: Handled JS error
   Then I wait to receive a request
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "HandledCaughtError"
+  And the event "unhandled" is false
   And the event "app.version" equals "1.2.3"
   And the event "app.versionCode" equals 1
   And the event "app.releaseStage" equals "production"
   And the event "app.inForeground" is true
   And the event "app.duration" is not null
   And the event "app.durationInForeground" is not null
+  And the event "app.codeBundleId" equals "1.2.3-r00110011"
 
   # Android
   And the event "app.id" equals "com.reactnative"
@@ -26,12 +28,14 @@ Scenario: Unhandled JS error
   Then I wait to receive a request
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "UnhandledError"
+  And the event "unhandled" is true
   And the event "app.version" equals "1.2.3"
   And the event "app.versionCode" equals 1
   And the event "app.releaseStage" equals "production"
   And the event "app.inForeground" is true
   And the event "app.duration" is not null
   And the event "app.durationInForeground" is not null
+  And the event "app.codeBundleId" equals "1.2.3-r00110011"
 
   # Android
   And the event "app.id" equals "com.reactnative"
@@ -46,12 +50,14 @@ Scenario: Handled native error
   Then I wait to receive a request
   And the exception "errorClass" equals "java.lang.RuntimeException"
   And the exception "message" equals "AppNativeHandledScenario"
+  And the event "unhandled" is false
   And the event "app.version" equals "1.2.3"
   And the event "app.versionCode" equals 1
   And the event "app.releaseStage" equals "production"
   And the event "app.inForeground" is true
   And the event "app.duration" is not null
   And the event "app.durationInForeground" is not null
+  And the event "app.codeBundleId" equals "1.2.3-r00110011"
 
   # Android
   And the event "app.id" equals "com.reactnative"
@@ -66,12 +72,14 @@ Scenario: Unhandled native error
   Then I wait to receive a request
   And the exception "errorClass" equals "java.lang.RuntimeException"
   And the exception "message" equals "AppNativeUnhandledScenario"
+  And the event "unhandled" is true
   And the event "app.version" equals "1.2.3"
   And the event "app.versionCode" equals 1
   And the event "app.releaseStage" equals "production"
   And the event "app.inForeground" is true
   And the event "app.duration" is not null
   And the event "app.durationInForeground" is not null
+  And the event "app.codeBundleId" equals "1.2.3-r00110011"
 
   # Android
   And the event "app.id" equals "com.reactnative"
