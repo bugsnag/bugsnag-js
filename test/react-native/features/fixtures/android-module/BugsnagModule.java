@@ -9,6 +9,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.NoSuchKeyException;
 import com.<ANDROID_PACKAGE_PATH>.scenarios.Scenario;
 
 public class BugsnagModule extends ReactContextBaseJavaModule {
@@ -44,6 +45,15 @@ public class BugsnagModule extends ReactContextBaseJavaModule {
       Configuration config = new Configuration(options.getString("apiKey"));
       config.setEndpoints(new EndpointConfiguration(options.getString("endpoint"), options.getString("endpoint")));
       config.setAutoTrackSessions(options.getBoolean("autoTrackSessions"));
+      String appVersion = null;
+      try {
+        appVersion = options.getString("appVersion");
+      } catch (NoSuchKeyException e) {
+        // ignore NoSuchKeyException
+      }
+      if (appVersion != null) {
+        config.setAppVersion(appVersion);
+      }
       return config;
   }
 }
