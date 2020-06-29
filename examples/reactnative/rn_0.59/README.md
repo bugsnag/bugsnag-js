@@ -1,6 +1,6 @@
 # React Native
 
-This is an example project showing how to use `@bugsnag/js` with a React Native project.
+This is an example project showing how to use `@bugsnag/react-native` with a React Native v0.59 project.
 
 This project was bootstrapped with [`react-native-init`](https://www.npmjs.com/package/react-native-init).
 
@@ -9,7 +9,7 @@ This project was bootstrapped with [`react-native-init`](https://www.npmjs.com/p
 1. Clone the repo and `cd` into the directory of this example:
     ```
     git clone git@github.com:bugsnag/bugsnag-js.git
-    cd bugsnag-js/examples/reactnative
+    cd bugsnag-js/examples/reactnative/rn_0.59
     npm install
     ```
 
@@ -29,7 +29,7 @@ This project was bootstrapped with [`react-native-init`](https://www.npmjs.com/p
     <string>YOUR-API-KEY-HERE</string>
    ```
 
-    The API key can be found in the the bugsnag settings for your project.
+    The API key can be found in the Bugsnag settings for your project.
 
 1. Run the app on either Android or iOS:
 
@@ -38,7 +38,7 @@ react-native run-ios
 react-native run-android
 ```
 
-Please note that in development mode, unhandled JS errors will not be reported to bugsnag. You can run in release mode to test this:
+Please note that in development mode, unhandled JS errors will not be reported to Bugsnag. You can run in release mode to test this:
 
 ```
 react-native run-ios --configuration Release
