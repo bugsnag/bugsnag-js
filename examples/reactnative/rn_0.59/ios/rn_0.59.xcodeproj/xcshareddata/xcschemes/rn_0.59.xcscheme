@@ -29,9 +29,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "reactnative.app"
-               BlueprintName = "reactnative"
-               ReferencedContainer = "container:reactnative.xcodeproj">
+               BuildableName = "React Native 0.59 Example.app"
+               BlueprintName = "rn_0.59"
+               ReferencedContainer = "container:rn_0.59.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -45,7 +45,7 @@
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
                BuildableName = "reactnativeTests.xctest"
                BlueprintName = "reactnativeTests"
-               ReferencedContainer = "container:reactnative.xcodeproj">
+               ReferencedContainer = "container:rn_0.59.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -59,9 +59,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "reactnative.app"
-            BlueprintName = "reactnative"
-            ReferencedContainer = "container:reactnative.xcodeproj">
+            BuildableName = "React Native 0.59 Example.app"
+            BlueprintName = "rn_0.59"
+            ReferencedContainer = "container:rn_0.59.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <Testables>
@@ -72,7 +72,7 @@
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
                BuildableName = "reactnativeTests.xctest"
                BlueprintName = "reactnativeTests"
-               ReferencedContainer = "container:reactnative.xcodeproj">
+               ReferencedContainer = "container:rn_0.59.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -92,9 +92,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "reactnative.app"
-            BlueprintName = "reactnative"
-            ReferencedContainer = "container:reactnative.xcodeproj">
+            BuildableName = "React Native 0.59 Example.app"
+            BlueprintName = "rn_0.59"
+            ReferencedContainer = "container:rn_0.59.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -109,9 +109,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "reactnative.app"
-            BlueprintName = "reactnative"
-            ReferencedContainer = "container:reactnative.xcodeproj">
+            BuildableName = "React Native 0.59 Example.app"
+            BlueprintName = "rn_0.59"
+            ReferencedContainer = "container:rn_0.59.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
