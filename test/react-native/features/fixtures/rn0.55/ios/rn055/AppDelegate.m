@@ -7,9 +7,6 @@
 
 #import "AppDelegate.h"
 
-#import <BugsnagReactNative/BugsnagReactNative.h>
-#import "BugsnagConfiguration.h"
-
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
 
@@ -20,13 +17,6 @@
   NSURL *jsCodeLocation;
 
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
-
-  BugsnagConfiguration *config = [BugsnagConfiguration new];
-  config.reportOOMs = false;
-  [config setEndpointsForNotify:@"http://bs-local.com:9339"
-                    sessions:@"http://session.example.com" ];
-  config.shouldAutoCaptureSessions = NO;
-  [BugsnagReactNative startWithConfiguration:config];
 
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
                                                       moduleName:@"rn055"

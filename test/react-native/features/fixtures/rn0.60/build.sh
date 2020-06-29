@@ -1,5 +1,4 @@
-npm i
-cd ios && pod install
+ cd ios && pod install
 xcrun xcodebuild \
   -scheme reactnative \
   -workspace reactnative.xcworkspace \

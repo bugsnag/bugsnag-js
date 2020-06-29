@@ -1,5 +1,3 @@
-npm i
-
 # Install and configure glog
 cd node_modules/react-native
 ./scripts/ios-install-third-party.sh
