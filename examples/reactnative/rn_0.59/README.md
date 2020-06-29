@@ -1,6 +1,6 @@
 # React Native
 
-This is an example project showing how to use `@bugsnag/js` with a React Native v0.59 project.
+This is an example project showing how to use `@bugsnag/react-native` with a React Native v0.59 project.
 
 This project was bootstrapped with [`react-native-init`](https://www.npmjs.com/package/react-native-init).
 
