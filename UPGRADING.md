@@ -360,9 +360,9 @@ Here are some examples:
 -   }
 - })
 + Bugsnag.notify(err, event => {
-+   event.addMetadata('component, {
++   event.addMetadata('component', {
 +     instanceId: component.instanceId
-+   }
++   })
 + })
 
   // preventing send
