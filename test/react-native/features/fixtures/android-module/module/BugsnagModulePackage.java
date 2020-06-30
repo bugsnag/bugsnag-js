@@ -1,4 +1,4 @@
-package com.<ANDROID_PACKAGE_PATH>;
+package com.reactnative.module;
 
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;

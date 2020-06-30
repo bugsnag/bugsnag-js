@@ -1,4 +1,4 @@
-package com.<ANDROID_PACKAGE_PATH>.scenarios
+package com.reactnative.scenarios
 
 import android.app.Activity
 import android.app.Application
