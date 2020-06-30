@@ -9,6 +9,11 @@ function publish (publishUrl) {
   const myVersions = allVersions.filter(function (str) { return str.indexOf(version) !== -1; })
   if (myVersions.length === 0) {
     console.log(`Publishing as '${version}'`)
+
+    common.run('npm install')
+    common.run('npm run bootstrap')
+    common.run('npm run build')
+    common.run('git checkout .')
     common.run(`./node_modules/.bin/lerna publish ${version} --dist-tag ${distTag} --yes --force-publish --no-push --no-git-tag-version --registry ${publishUrl}`)
   } else {
     console.log(`Version '${version}' already found in registry - skipping publishing`)

@@ -14,16 +14,9 @@ RUN echo "always-auth=true" >> ~/.npmrc
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install
-
 COPY . .
-
-RUN npm run bootstrap
-RUN npm run build
-
-RUN git checkout .
-
 COPY scripts/ scripts/
+
 ARG PUBLISH_URL
 ARG BUILDKITE
 ARG BRANCH_NAME

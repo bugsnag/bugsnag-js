@@ -2,7 +2,8 @@ const lerna = require('../lerna.json')
 const { execSync } = require('child_process')
 
 module.exports = {
-  run: function run (command) {
+  run: function run (command, log = true) {
+    if (log) console.log(command)
     return execSync(command).toString().trim()
   },
   getCommitId: function getCommitId () {
