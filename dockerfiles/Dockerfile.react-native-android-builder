@@ -22,7 +22,6 @@ WORKDIR /app
 
 ENV GRADLE_OPTS="-Dorg.gradle.daemon=false"
 
-ARG ANDROID_PACKAGE_PATH
 ARG REACT_NATIVE_VERSION
 ENV REACT_NATIVE_FIXTURE=${REACT_NATIVE_VERSION}
 
@@ -52,9 +51,6 @@ WORKDIR /app/features/fixtures/${REACT_NATIVE_VERSION}
 RUN ./gradlew
 
 COPY test/react-native/features /app/features
-
-RUN find /app/features/fixtures/android-module/ -type f -exec sed -i -e "s/<ANDROID_PACKAGE_PATH>/${ANDROID_PACKAGE_PATH}/g" {} \;
-RUN cp -r /app/features/fixtures/android-module/* /app/features/fixtures/${REACT_NATIVE_VERSION}/android/app/src/main/java/com/${ANDROID_PACKAGE_PATH}/
 
 # npm install
 ARG REGISTRY_URL

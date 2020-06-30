@@ -14,7 +14,6 @@ steps:
     artifact_paths: build/rn0.55.apk
     env:
       REACT_NATIVE_VERSION: rn0.55
-      ANDROID_PACKAGE_PATH: rn055
 
   - label: ':docker: Build React-native 0.60 apk'
     plugins:
@@ -23,7 +22,6 @@ steps:
     artifact_paths: build/rn0.60.apk
     env:
       REACT_NATIVE_VERSION: rn0.60
-      ANDROID_PACKAGE_PATH: reactnative
 
   # - label: ':ios: Build React-native 0.55 ipa'
   #   agents:
