@@ -1,6 +1,20 @@
 Changelog
 =========
 
+## 6.0.1 (2020-06-29)
+
+* Move binary images store declaration from header file
+  [#725](https://github.com/bugsnag/bugsnag-cocoa/pull/725)
+
+* Make stacktrace properties for error/thread readwrite
+  [#722](https://github.com/bugsnag/bugsnag-cocoa/pull/722)
+
+* Fix incorrect string comparison of thread names in Mach exception handling
+  [#721](https://github.com/bugsnag/bugsnag-cocoa/pull/721)
+
+* Address unterminated string in thread gathering logic
+  [#720](https://github.com/bugsnag/bugsnag-cocoa/pull/720)
+
 ## 6.0.0 (2020-06-22)
 
 __This version contains many breaking changes__. It is part of an effort to unify our notifier

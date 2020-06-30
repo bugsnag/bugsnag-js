@@ -8,6 +8,7 @@
 
 #import "BugsnagThread.h"
 #import "BugsnagCollections.h"
+#import "BugsnagStackframe.h"
 #import "BugsnagStacktrace.h"
 #import "BugsnagKeys.h"
 
@@ -23,13 +24,13 @@ NSString *BSGSerializeThreadType(BSGThreadType type) {
 - (NSArray *)toArray;
 @end
 
-@interface BugsnagThread ()
-@property BugsnagStacktrace *trace;
-@end
-
 @interface BugsnagStacktrace ()
 + (instancetype)stacktraceFromJson:(NSDictionary *)json;
 @property NSMutableArray<BugsnagStackframe *> *trace;
+@end
+
+@interface BugsnagStackframe ()
+- (NSDictionary *)toDictionary;
 @end
 
 @implementation BugsnagThread
@@ -60,7 +61,7 @@ NSString *BSGSerializeThreadType(BSGThreadType type) {
         _name = name;
         _errorReportingThread = errorReportingThread;
         _type = type;
-        _trace = trace;
+        _stacktrace = trace.trace;
     }
     return self;
 }
@@ -72,13 +73,10 @@ NSString *BSGSerializeThreadType(BSGThreadType type) {
         self.type = BSGThreadTypeCocoa;
 
         NSArray *backtrace = thread[@"backtrace"][@"contents"];
-        self.trace = [[BugsnagStacktrace alloc] initWithTrace:backtrace binaryImages:binaryImages];
+        BugsnagStacktrace *frames = [[BugsnagStacktrace alloc] initWithTrace:backtrace binaryImages:binaryImages];
+        self.stacktrace = frames.trace;
     }
     return self;
-}
-
-- (NSMutableArray<BugsnagStackframe *> *)stacktrace {
-    return self.trace.trace;
 }
 
 - (NSDictionary *)toDictionary {
@@ -88,7 +86,12 @@ NSString *BSGSerializeThreadType(BSGThreadType type) {
     BSGDictSetSafeObject(dict, @(self.errorReportingThread), @"errorReportingThread");
     BSGDictSetSafeObject(dict, BSGSerializeThreadType(self.type), @"type");
     BSGDictSetSafeObject(dict, @(self.errorReportingThread), @"errorReportingThread");
-    BSGDictSetSafeObject(dict, [self.trace toArray], @"stacktrace");
+
+    NSMutableArray *array = [NSMutableArray new];
+    for (BugsnagStackframe *frame in self.stacktrace) {
+        [array addObject:[frame toDictionary]];
+    }
+    BSGDictSetSafeObject(dict, array, @"stacktrace");
     return dict;
 }
 

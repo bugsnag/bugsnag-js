@@ -15,6 +15,8 @@
 
 // MARK: - Locking
 
+static BSG_Mach_Binary_Images bsg_mach_binary_images;
+
 // Pragma's hide unavoidable (and expected) deprecation/unavailable warnings
 _Pragma("clang diagnostic push")
 _Pragma("clang diagnostic ignored \"-Wunguarded-availability\"")

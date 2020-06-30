@@ -34,7 +34,7 @@ typedef NS_OPTIONS(NSUInteger, BSGErrorType) {
 /**
  * Sets a representation of this error's stacktrace
  */
-@property(readonly, nonnull) NSArray<BugsnagStackframe *> *stacktrace;
+@property(nonnull) NSArray<BugsnagStackframe *> *stacktrace;
 
 /**
  * The type of the captured error

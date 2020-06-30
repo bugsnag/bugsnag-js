@@ -119,7 +119,7 @@ void bsg_kscrashstate_notifyAppCrash(BSG_KSCrashType type);
 
 /** Read-only access into the current state.
  */
-const BSG_KSCrash_State *const bsg_kscrashstate_currentState(void);
+const BSG_KSCrash_State *bsg_kscrashstate_currentState(void);
 
 #ifdef __cplusplus
 }

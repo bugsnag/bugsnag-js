@@ -373,6 +373,6 @@ void bsg_kscrashstate_notifyAppCrash(BSG_KSCrashType type) {
     }
 }
 
-const BSG_KSCrash_State *const bsg_kscrashstate_currentState(void) {
+const BSG_KSCrash_State *bsg_kscrashstate_currentState(void) {
     return bsg_g_state;
 }

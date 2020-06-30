@@ -39,7 +39,7 @@ typedef NS_OPTIONS(NSUInteger, BSGThreadType) {
 /**
  * Sets a representation of this thread's stacktrace
  */
-@property(readonly, nonnull) NSArray<BugsnagStackframe *> *stacktrace;
+@property(nonnull) NSArray<BugsnagStackframe *> *stacktrace;
 
 /**
  * Determines the type of thread based on the originating platform
