@@ -1,5 +1,4 @@
 export default class Scenario {
-    constructor(configuration, extraData) {}
-
-    run() {}
+  constructor(configuration, extraData, jsConfig) {}
+  run() {}
 }

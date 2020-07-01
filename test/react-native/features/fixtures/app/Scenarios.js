@@ -1,21 +1,17 @@
-import HandledCaughtErrorScenario from './scenarios/HandledCaughtErrorScenario'
-import UnhandledErrorScenario from './scenarios/UnhandledErrorScenario'
-import UnhandledPromiseRejectionScenario from './scenarios/UnhandledPromiseRejectionScenario'
-import HandledNativeErrorScenario from './scenarios/HandledNativeErrorScenario'
-import UnhandledNativeErrorScenario from './scenarios/UnhandledNativeErrorScenario'
-import AppJsHandledScenario from './scenarios/AppJsHandledScenario'
-import AppJsUnhandledScenario from './scenarios/AppJsUnhandledScenario'
-import AppNativeHandledScenario from './scenarios/AppNativeHandledScenario'
-import AppNativeUnhandledScenario from './scenarios/AppNativeUnhandledScenario'
+// handled.feature
+export { HandledJsErrorScenario } from './scenarios/HandledJsErrorScenario'
+export { HandledNativeErrorScenario } from './scenarios/HandledNativeErrorScenario'
 
-export default {
-    HandledCaughtErrorScenario,
-    UnhandledErrorScenario,
-    UnhandledPromiseRejectionScenario,
-    HandledNativeErrorScenario,
-    UnhandledNativeErrorScenario,
-    AppJsHandledScenario,
-    AppJsUnhandledScenario,
-    AppNativeHandledScenario,
-    AppNativeUnhandledScenario
-}
+// unhandled.feature
+export { UnhandledNativeErrorScenario } from './scenarios/UnhandledNativeErrorScenario'
+export { UnhandledJsErrorScenario } from './scenarios/UnhandledJsErrorScenario'
+export { UnhandledJsPromiseRejectionScenario } from './scenarios/UnhandledJsPromiseRejectionScenario'
+
+// app.feature
+export { AppJsHandledScenario } from './scenarios/AppJsHandledScenario'
+export { AppJsUnhandledScenario } from './scenarios/AppJsUnhandledScenario'
+export { AppNativeHandledScenario } from './scenarios/AppNativeHandledScenario'
+export { AppNativeUnhandledScenario } from './scenarios/AppNativeUnhandledScenario'
+export { AppConfigAppTypeScenario } from './scenarios/AppConfigAppTypeScenario'
+export { AppConfigReleaseStageScenario } from './scenarios/AppConfigReleaseStageScenario'
+export { AppConfigEnabledReleaseStagesScenario } from './scenarios/AppConfigEnabledReleaseStagesScenario'
