@@ -1,14 +1,15 @@
-package com.reactnative;
+package com.rn055;
 
 import android.app.Application;
 
+import com.facebook.react.BuildConfig;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 
-import com.rn055.BugsnagModulePackage;
+import com.reactnative.module.BugsnagModulePackage;
 
 import java.util.Arrays;
 import java.util.List;

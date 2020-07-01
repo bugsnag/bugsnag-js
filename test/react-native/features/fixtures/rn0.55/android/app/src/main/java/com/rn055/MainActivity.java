@@ -1,4 +1,4 @@
-package com.reactnative;
+package com.rn055;
 
 import com.facebook.react.ReactActivity;
 
