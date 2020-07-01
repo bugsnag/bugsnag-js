@@ -61,17 +61,6 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(configure:(NSDictionary *)readableMap) {
     [self updateNotifierInfo:readableMap];
     [self addRuntimeVersionInfo:readableMap];
 
-    [Bugsnag addOnSendErrorBlock:^BOOL(BugsnagEvent * _Nonnull event) {
-        BugsnagError *error;
-
-        if ([event.errors count] > 0) {
-            error = event.errors[0];
-        }
-        return error != nil
-                && ![error.errorClass hasPrefix:@"RCTFatalException"]
-                && ![error.errorMessage hasPrefix:@"Unhandled JS Exception"];
-    }];
-
     BugsnagConfiguration *config = [Bugsnag configuration];
     return [self.configSerializer serialize:config];
 }
