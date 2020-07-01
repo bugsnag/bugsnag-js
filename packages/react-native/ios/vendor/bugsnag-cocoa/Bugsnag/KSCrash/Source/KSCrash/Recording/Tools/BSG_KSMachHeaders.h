@@ -36,7 +36,6 @@ typedef struct {
     BSG_Mach_Binary_Image_Info *contents;
 } BSG_Mach_Binary_Images;
 
-static BSG_Mach_Binary_Images bsg_mach_binary_images;
 
 // MARK: - Locking
 

@@ -151,8 +151,8 @@ static const unsigned long dispatch_queue_key = __PTK_LIBDISPATCH_KEY0;
     uintptr_t dq_specific_q;
 
 struct dispatch_queue_s {
-    DISPATCH_STRUCT_HEADER(queue);
-    DISPATCH_QUEUE_HEADER;
+    DISPATCH_STRUCT_HEADER(queue)
+    DISPATCH_QUEUE_HEADER
     char dq_label[DISPATCH_QUEUE_MIN_LABEL_SIZE]; // must be last
     char _dq_pad[DISPATCH_QUEUE_CACHELINE_PAD];   // for static queues only
 };

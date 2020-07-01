@@ -324,7 +324,7 @@ IMPLEMENT_EXCLUSIVE_SHARED_INSTANCE(BSG_KSCrash)
         numFrames = 100;
         callstack = malloc(numFrames * sizeof(*callstack));
 
-        BSG_KSLOG_DEBUG("Fetching call stack.");
+        BSG_KSLOG_DEBUG(@"Fetching call stack.");
         numFrames = backtrace((void **)callstack, numFrames);
         if (numFrames <= 0) {
             BSG_KSLOG_ERROR(@"backtrace() returned call stack length of %d", numFrames);

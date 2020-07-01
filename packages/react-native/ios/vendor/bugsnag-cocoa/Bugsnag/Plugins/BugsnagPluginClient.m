@@ -11,27 +11,49 @@
 #import "BugsnagPlugin.h"
 #import "BugsnagLogger.h"
 
+static NSString *const kPluginReactNative = @"BugsnagReactNativePlugin";
+
 @interface Bugsnag ()
 + (BugsnagClient *)client;
 @end
 
 @interface BugsnagPluginClient ()
 @property NSSet<id<BugsnagPlugin>> *plugins;
+@property BugsnagClient *client;
 @end
 
 @implementation BugsnagPluginClient
 
-- (instancetype _Nonnull)initWithPlugins:(NSMutableSet<id<BugsnagPlugin>> *_Nonnull)plugins {
+- (instancetype _Nonnull)initWithPlugins:(NSMutableSet<id<BugsnagPlugin>> *_Nonnull)plugins
+                                  client:(BugsnagClient *)client {
     if (self = [super init]) {
-        _plugins = [NSSet setWithSet:plugins];
+        NSMutableSet *instantiatedPlugins = [plugins mutableCopy];
+        id rnPlugin = [self instantiateBugsnagPlugin:kPluginReactNative];
+
+        if (rnPlugin) {
+            [instantiatedPlugins addObject:rnPlugin];
+        }
+        _plugins = [NSSet setWithSet:instantiatedPlugins];
+        _client = client;
     }
     return self;
+}
+
+/**
+ * Automagically instantiate plugins which Bugsnag uses via class name (e.g. BugsnagReactNativePlugin)
+ */
+- (id)instantiateBugsnagPlugin:(NSString *)clzName {
+    Class clz = NSClassFromString(clzName);
+    if (clz) {
+        return [clz new];
+    }
+    return nil;
 }
 
 - (void)loadPlugins {
     for (id<BugsnagPlugin> plugin in self.plugins) {
         @try {
-            [plugin load:[Bugsnag client]];
+            [plugin load:self.client];
         } @catch (NSException *exception) {
             bsg_log_err(@"Failed to load plugin %@, continuing with initialisation.", plugin);
         }
