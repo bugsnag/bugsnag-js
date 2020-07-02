@@ -15,3 +15,4 @@ export { AppNativeUnhandledScenario } from './scenarios/AppNativeUnhandledScenar
 export { AppConfigAppTypeScenario } from './scenarios/AppConfigAppTypeScenario'
 export { AppConfigReleaseStageScenario } from './scenarios/AppConfigReleaseStageScenario'
 export { AppConfigEnabledReleaseStagesScenario } from './scenarios/AppConfigEnabledReleaseStagesScenario'
+export { AppConfigEnabledReleaseStagesNoSendScenario } from './scenarios/AppConfigEnabledReleaseStagesNoSendScenario'
