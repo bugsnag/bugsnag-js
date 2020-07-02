@@ -16,3 +16,8 @@ export { AppConfigAppTypeScenario } from './scenarios/AppConfigAppTypeScenario'
 export { AppConfigReleaseStageScenario } from './scenarios/AppConfigReleaseStageScenario'
 export { AppConfigEnabledReleaseStagesScenario } from './scenarios/AppConfigEnabledReleaseStagesScenario'
 export { AppConfigEnabledReleaseStagesNoSendScenario } from './scenarios/AppConfigEnabledReleaseStagesNoSendScenario'
+
+// breadcrumbs.feature
+export { BreadcrumbsAutomaticLoadedScenario } from './scenarios/BreadcrumbsAutomaticLoadedScenario'
+export { BreadcrumbsAutomaticErrorScenario } from './scenarios/BreadcrumbsAutomaticErrorScenario'
+export { BreadcrumbsManualScenario } from './scenarios/BreadcrumbsManualScenario'
