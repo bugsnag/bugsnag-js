@@ -1,8 +1,6 @@
-const { describe, it, expect } = global
-
-const Client = require('@bugsnag/core/client')
-const schema = require('@bugsnag/core/config').schema
-const plugin = require('../')
+import Client from '@bugsnag/core/client'
+import { schema } from '@bugsnag/core/config'
+import plugin from '../'
 
 describe('plugin: node unhandled rejection handler', () => {
   it('should listen to the process#unhandledRejection event', () => {
@@ -56,10 +54,10 @@ describe('plugin: node unhandled rejection handler', () => {
       }
     })
     c._setDelivery(client => ({
-      sendEvent: (...args) => args[args.length - 1](),
-      sendSession: (...args) => args[args.length - 1]()
+      sendEvent: (payload, cb) => cb(),
+      sendSession: (payload, cb) => cb()
     }))
-    process.listeners('unhandledRejection')[1](new Error('never gonna catch me'))
+    process.listeners('unhandledRejection')[0](new Error('never gonna catch me'), Promise.resolve())
   })
 
   it('should tolerate delivery errors', done => {
@@ -84,9 +82,9 @@ describe('plugin: node unhandled rejection handler', () => {
       }
     })
     c._setDelivery(client => ({
-      sendEvent: (...args) => args[args.length - 1](new Error('floop')),
-      sendSession: (...args) => args[args.length - 1]()
+      sendEvent: (payload, cb) => cb(new Error('floop')),
+      sendSession: (payload, cb) => cb()
     }))
-    process.listeners('unhandledRejection')[1](new Error('never gonna catch me'))
+    process.listeners('unhandledRejection')[0](new Error('never gonna catch me'), Promise.resolve())
   })
 })
