@@ -8,7 +8,7 @@ export class BreadcrumbsAutomaticErrorScenario extends Scenario {
   }
   run() {
     Bugsnag.notify(new Error('BreadcrumbsAutomaticErrorScenarioA'), () => {}, () => {
-      Bugsnag.notify(new Error('BreadcrumbsAutomaticErrorScenarioB'))
+      setTimeout(() => Bugsnag.notify(new Error('BreadcrumbsAutomaticErrorScenarioB')), 2000)
     })
   }
 }
