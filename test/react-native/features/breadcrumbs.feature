@@ -18,3 +18,17 @@ Scenario: Automatic breadcrumb for errors
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "BreadcrumbsAutomaticErrorScenarioB"
   And the event has a "error" breadcrumb named "Error"
+
+Scenario: Manual breadcrumbs (JS)
+  When I run "BreadcrumbsJsManualScenario"
+  Then I wait to receive a request
+  And the exception "errorClass" equals "Error"
+  And the exception "message" equals "BreadcrumbsJsManualScenario"
+  And the event has a "manual" breadcrumb named "oh crumbs"
+
+Scenario: Manual breadcrumbs (Native)
+  When I run "BreadcrumbsNativeManualScenario"
+  Then I wait to receive a request
+  And the exception "errorClass" equals "java.lang.RuntimeException"
+  And the exception "message" equals "BreadcrumbsNativeManualScenario"
+  And the event has a "manual" breadcrumb named "oh native crumbs"

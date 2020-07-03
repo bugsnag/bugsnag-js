@@ -20,4 +20,5 @@ export { AppConfigEnabledReleaseStagesNoSendScenario } from './scenarios/AppConf
 // breadcrumbs.feature
 export { BreadcrumbsAutomaticLoadedScenario } from './scenarios/BreadcrumbsAutomaticLoadedScenario'
 export { BreadcrumbsAutomaticErrorScenario } from './scenarios/BreadcrumbsAutomaticErrorScenario'
-export { BreadcrumbsManualScenario } from './scenarios/BreadcrumbsManualScenario'
+export { BreadcrumbsJsManualScenario } from './scenarios/BreadcrumbsJsManualScenario'
+export { BreadcrumbsNativeManualScenario } from './scenarios/BreadcrumbsNativeManualScenario'
