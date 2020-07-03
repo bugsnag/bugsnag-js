@@ -1,6 +1,8 @@
 #ifndef BugsnagPlugin_h
 #define BugsnagPlugin_h
 
+#import <Foundation/Foundation.h>
+
 @class Bugsnag;
 @class BugsnagClient;
 
