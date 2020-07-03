@@ -7,7 +7,7 @@ module.exports = {
     return execSync(command).toString().trim()
   },
   getCommitId: function getCommitId () {
-    return this.run('git rev-parse --short HEAD')
+    return this.run('git rev-parse --short=10 HEAD')
   },
   determineVersion: function determineVersion () {
     // Form version string - branch name and commit id
