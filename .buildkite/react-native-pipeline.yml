@@ -92,7 +92,6 @@ steps:
       docker-compose#v3.1.0:
         run: react-native-maze-runner
         use-aliases: true
-    command: --tags "not @wip"
     env:
       DEVICE_TYPE: "IOS_12"
       APP_LOCATION: "build/rn0.60.ipa"
