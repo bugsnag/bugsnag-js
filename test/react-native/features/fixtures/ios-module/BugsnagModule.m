@@ -37,5 +37,6 @@ BugsnagConfiguration *createConfiguration(NSDictionary * options) {
   NSString *endpoint = options[@"endpoint"];
   BugsnagEndpointConfiguration *endpoints = [[BugsnagEndpointConfiguration alloc] initWithNotify:endpoint sessions:endpoint];
   [config setEndpoints:endpoints];
+  [config setAutoTrackSessions:options[@"autoTrackSessions"]];
   return config;
 }
