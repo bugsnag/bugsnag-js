@@ -78,6 +78,6 @@
     "packages/plugin-strip-project-root",
     "packages/plugin-simple-throttle",
     "packages/plugin-intercept",
-    "plugin-node-unhandled-rejection"
+    "packages/plugin-node-unhandled-rejection"
   ]
 }
