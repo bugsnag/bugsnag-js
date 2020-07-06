@@ -32,7 +32,7 @@ module.exports = {
     const rnDirs = this.getRnDirectories(fixtures)
     rnDirs.forEach((dir) => {
       console.log(`Preparing Gradle builds for ${dir}`)
-      process.chdir(path.join(dir, 'android'))
+      common.changeDir(path.join(dir, 'android'))
       common.run('./gradlew build', true)
     })
   },
@@ -50,7 +50,7 @@ module.exports = {
 
     // JavaScript layer
     console.log(`Changing directory to: ${destFixtures}/${rnVersion}`)
-    process.chdir(`${destFixtures}/${rnVersion}`)
+    common.changeDir(`${destFixtures}/${rnVersion}`)
     common.run(`npm install --registry ${registryUrl}`, true)
 
     // Install notifier
@@ -61,7 +61,7 @@ module.exports = {
     common.run('node_modules/.bin/react-native link', true)
 
     // Native layer
-    process.chdir('android')
+    common.changeDir('android')
     common.run('./gradlew assembleRelease', true)
 
     // Finally, copy the APK back to the host
