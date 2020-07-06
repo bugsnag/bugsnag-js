@@ -10,6 +10,10 @@
 - (plugin-expo-device): Add total memory to error reports [#881](https://github.com/bugsnag/bugsnag-js/pull/881)
 - (plugin-node-device): Add OS name, OS version, total memory and free memory to error reports [#881](https://github.com/bugsnag/bugsnag-js/pull/881)
 
+### Changed
+
+- Update `@bugsnag/safe-json-stringify` to make `redactedKeys` case insensitive when using strings [#905](https://github.com/bugsnag/bugsnag-js/pull/905)
+
 ### Fixed
 - (plugin-express): Ensure `req.body` is always present in metadata by collecting it at the last possible moment [#872](https://github.com/bugsnag/bugsnag-js/pull/872)
 
