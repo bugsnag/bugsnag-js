@@ -42,10 +42,6 @@ module.exports = {
     const registryUrl = process.env.REGISTRY_URL
 
     console.log(`Installing notifier version: ${version}`)
-    console.log(`sourceFixtures: ${sourceFixtures}`)
-    console.log(`destFixtures: ${destFixtures}`)
-    console.log(`rnVersion: ${rnVersion}`)
-    console.log(`registryUrl: ${registryUrl}`)
 
     // Copy in files required
     common.run(`rsync -a ${sourceFixtures}/${rnVersion} ${destFixtures}`, true)
