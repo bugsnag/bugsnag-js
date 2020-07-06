@@ -77,5 +77,6 @@
     "packages/plugin-strip-query-string",
     "packages/plugin-strip-project-root",
     "packages/plugin-interaction-breadcrumbs",
+    "packages/plugin-browser-request",
   ]
 }
