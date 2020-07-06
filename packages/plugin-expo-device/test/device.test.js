@@ -16,8 +16,14 @@ describe('plugin: expo device', () => {
           platform: { android: {} },
           manifest: { sdkVersion: SDK_VERSION },
           expoVersion: EXPO_VERSION,
-          systemVersion: ANDROID_VERSION
+          systemVersion: ANDROID_VERSION,
+          isDevice: true,
+          appOwnership: 'standalone'
         }
+      },
+      'expo-device': {
+        manufacturer: 'Google',
+        modelName: 'Pixel 4'
       },
       'react-native': {
         Dimensions: {
@@ -40,6 +46,9 @@ describe('plugin: expo device', () => {
         const now = (new Date()).toISOString()
         expect(now >= r.events[0].device.time).toBe(true)
         expect(before <= r.events[0].device.time).toBe(true)
+        expect(r.events[0].device.manufacturer).toBe('Google')
+        expect(r.events[0].device.model).toBe('Pixel 4')
+        expect(r.events[0].device.modelNumber).toBe(undefined)
         expect(r.events[0].device.osName).toBe('android')
         expect(r.events[0].device.osVersion).toBe(ANDROID_VERSION)
         expect(r.events[0].device.runtimeVersions).toEqual({
@@ -48,6 +57,8 @@ describe('plugin: expo device', () => {
           expoApp: EXPO_VERSION,
           androidApiLevel: String(ANDROID_API_LEVEL)
         })
+        expect(r.events[0].metaData.device.isDevice).toBe(true)
+        expect(r.events[0].metaData.device.appOwnership).toBe('standalone')
         done()
       }
     }))
@@ -66,8 +77,13 @@ describe('plugin: expo device', () => {
         default: {
           platform: { ios: { model: IOS_MODEL, platform: IOS_PLATFORM, systemVersion: IOS_VERSION } },
           manifest: { sdkVersion: SDK_VERSION },
-          expoVersion: EXPO_VERSION
+          expoVersion: EXPO_VERSION,
+          isDevice: false,
+          appOwnership: 'expo'
         }
+      },
+      'expo-device': {
+        manufacturer: 'Apple'
       },
       'react-native': {
         Dimensions: {
@@ -90,6 +106,7 @@ describe('plugin: expo device', () => {
         const now = (new Date()).toISOString()
         expect(now >= r.events[0].device.time).toBe(true)
         expect(before <= r.events[0].device.time).toBe(true)
+        expect(r.events[0].device.manufacturer).toBe('Apple')
         expect(r.events[0].device.model).toBe(IOS_MODEL)
         expect(r.events[0].device.modelNumber).toBe(IOS_PLATFORM)
         expect(r.events[0].device.osName).toBe('ios')
@@ -99,6 +116,8 @@ describe('plugin: expo device', () => {
           expoSdk: SDK_VERSION,
           expoApp: EXPO_VERSION
         })
+        expect(r.events[0].metaData.device.isDevice).toBe(false)
+        expect(r.events[0].metaData.device.appOwnership).toBe('expo')
         done()
       }
     }))
@@ -143,9 +162,12 @@ describe('plugin: expo device', () => {
         default: {
           platform: { ios: { model: IOS_MODEL, platform: IOS_PLATFORM, system: IOS_VERSION } },
           manifest: { sdkVersion: SDK_VERSION },
-          expoVersion: EXPO_VERSION
+          expoVersion: EXPO_VERSION,
+          isDevice: true,
+          appOwnership: 'guest'
         }
       },
+      'expo-device': {},
       'react-native': {
         Dimensions: d,
         Platform: { OS: 'ios' }

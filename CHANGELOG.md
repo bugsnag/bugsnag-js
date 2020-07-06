@@ -2,6 +2,14 @@
 
 ## TBD
 
+### Added
+
+- (browser|node) Record the length of time the app has been running when an error occurs [#881](https://github.com/bugsnag/bugsnag-js/pull/881)
+- (plugin-browser-device): Add device orientation to error reports [#881](https://github.com/bugsnag/bugsnag-js/pull/881)
+- (plugin-expo-device): Add device manufacturer and model name for non-iOS devices to error reports [#881](https://github.com/bugsnag/bugsnag-js/pull/881)
+- (plugin-expo-device): Add total memory to error reports [#881](https://github.com/bugsnag/bugsnag-js/pull/881)
+- (plugin-node-device): Add OS name, OS version, total memory and free memory to error reports [#881](https://github.com/bugsnag/bugsnag-js/pull/881)
+
 ### Fixed
 - (plugin-express): Ensure `req.body` is always present in metadata by collecting it at the last possible moment [#872](https://github.com/bugsnag/bugsnag-js/pull/872)
 
