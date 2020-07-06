@@ -97,7 +97,7 @@ lerna publish from-git
 At this point it is sensible to perform some manual smoke tests to ensure the new version on npm works as expected. Only then publish to the CDN:
 
 ```
-lerna run cdn-upload
+npm run cdn-upload
 ```
 
 Finally:
