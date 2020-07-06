@@ -1,10 +1,8 @@
-const { describe, it, expect } = global
-
-const plugin = require('../')
-const { join } = require('path')
-const Event = require('@bugsnag/core/event')
-const Client = require('@bugsnag/core/client')
-const { schema } = require('@bugsnag/core/config')
+import plugin from '../'
+import { join } from 'path'
+import Event from '@bugsnag/core/event'
+import Client from '@bugsnag/core/client'
+import { schema } from '@bugsnag/core/config'
 
 describe('plugin: strip project root', () => {
   it('should remove the project root if it matches the start of the stackframe’s file', done => {

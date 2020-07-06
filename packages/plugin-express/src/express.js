@@ -25,10 +25,10 @@ module.exports = {
       req.bugsnag = requestClient
 
       // extract request info and pass it to the relevant bugsnag properties
-      const { request, metadata } = getRequestAndMetadataFromReq(req)
-      requestClient.addMetadata('request', metadata)
       requestClient.addOnError((event) => {
+        const { metadata, request } = getRequestAndMetadataFromReq(req)
         event.request = { ...event.request, ...request }
+        requestClient.addMetadata('request', metadata)
       }, true)
 
       // unhandled errors caused by this request

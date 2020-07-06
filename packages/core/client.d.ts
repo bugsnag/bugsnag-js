@@ -38,8 +38,8 @@ interface Delivery {
  * This is currently used by the unit tests. These will be rolled into the
  * module itself once it is converted to TypeScript.
  */
-export default class ClientWithInternals extends Client {
-  public constructor(opts: Config, schema?: {[key: string]: any}, internalPlugins?: Plugin[])
+export default class ClientWithInternals<T extends Config = Config> extends Client {
+  public constructor(opts: T, schema?: {[key: string]: any}, internalPlugins?: Plugin[])
   _config: { [key: string]: {} }
   _logger: LoggerConfig
   _breadcrumbs: Breadcrumb[];
