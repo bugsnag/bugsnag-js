@@ -1,6 +1,6 @@
 # Changelog
 
-## TBD
+## 7.2.0 (2020-07-06)
 
 ### Added
 
@@ -13,6 +13,7 @@
 ### Changed
 
 - Update `@bugsnag/safe-json-stringify` to make `redactedKeys` case insensitive when using strings [#905](https://github.com/bugsnag/bugsnag-js/pull/905)
+- (expo): Add support for Expo SDK v38 [#781](https://github.com/bugsnag/bugsnag-js/pull/890)
 
 ### Fixed
 - (plugin-express): Ensure `req.body` is always present in metadata by collecting it at the last possible moment [#872](https://github.com/bugsnag/bugsnag-js/pull/872)
