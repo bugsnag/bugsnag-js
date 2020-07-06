@@ -23,7 +23,8 @@ module.exports = {
         testsForPackage('plugin-browser-device'),
         testsForPackage('plugin-window-unhandled-rejection'),
         testsForPackage('plugin-window-onerror'),
-        testsForPackage('plugin-strip-query-string')
+        testsForPackage('plugin-strip-query-string'),
+        testsForPackage('plugin-interaction-breadcrumbs')
       ]
     },
     {

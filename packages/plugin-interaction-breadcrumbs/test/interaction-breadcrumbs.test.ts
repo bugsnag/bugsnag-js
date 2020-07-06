@@ -1,8 +1,6 @@
-const { describe, it, expect } = global
+import plugin from '../'
 
-const plugin = require('../')
-
-const Client = require('@bugsnag/core/client')
+import Client from '@bugsnag/core/client'
 
 describe('plugin: interaction breadcrumbs', () => {
   it('should drop a breadcrumb when an element is clicked', () => {
@@ -49,18 +47,18 @@ const getMockWindow = () => {
     childNodes: els,
     className: '',
     parentNode: null
-  }
+  } as any
 
   parent.parentNode = { childNodes: [parent] }
   els.forEach(el => { el.parentNode = parent })
 
-  const winHandlers = { click: [] }
+  const winHandlers: { [key: string]: Array<(event: any) => void> } = { click: [] }
   const window = {
-    addEventListener: function (evt, handler) {
+    addEventListener: function (evt: string, handler: (event: any) => void) {
       winHandlers[evt] = winHandlers[evt] ? winHandlers[evt].concat(handler) : [handler]
     },
     document: {
-      querySelectorAll: function (query) {
+      querySelectorAll: function (query: string) {
         switch (query) {
           case 'BUTTON.button': return els
           case 'BUTTON.button:nth-child(1)': return [els[0]]
@@ -69,6 +67,7 @@ const getMockWindow = () => {
         }
       }
     }
-  }
+  } as unknown as Window & typeof globalThis
+
   return { els, window, winHandlers }
 }
