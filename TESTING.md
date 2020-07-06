@@ -188,7 +188,16 @@ These should be set to the `REACT_NATIVE_VERSION` environment variable according
 
 The following environment variables need to be set:
 
-- `DEVICE_TYPE`: the mobile operating system you want to test on – one of ANDROID_5, ANDROID_6, ANDROID_7, ANDROID_8, ANDROID_9, IOS_10, IOS_11, IOS_12
+- `DEVICE_TYPE`: the mobile operating system you want to test on – one of:
+  - ANDROID_5
+  - ANDROID_6_0
+  - ANDROID_7_1
+  - ANDROID_8_1
+  - ANDROID_9_0
+  - ANDROID_10_0
+  - IOS_10
+  - IOS_11
+  - IOS_12
 - `BROWSER_STACK_USERNAME`
 - `BROWSER_STACK_ACCESS_KEY`
 - `REACT_NATIVE_VERSION`
@@ -196,10 +205,13 @@ The following environment variables need to be set:
 - `REG_NPM_EMAIL`
 - `REGISTRY_URL`
 
+By default, the test fixture used to run tests against will be built with a version of @bugsnag/react-native for the current branch/commit, e.g. `7.2.0-my-branch.231f6ef7`.
+This can be overridden using the environment variable NOTIFIER_VERSION and is useful during development when making test, but not notifier, changes.
+
 To run against an android device:
 
 ```sh
-DEVICE_TYPE=ANDROID_9 \
+DEVICE_TYPE=ANDROID_9.0 \
 REACT_NATIVE_VERSION=rn0.60 \
 REG_BASIC_CREDENTIAL=xxx \
 REG_NPM_EMAIL=xxx \
