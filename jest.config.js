@@ -24,7 +24,8 @@ module.exports = {
         testsForPackage('plugin-window-unhandled-rejection'),
         testsForPackage('plugin-window-onerror'),
         testsForPackage('plugin-strip-query-string'),
-        testsForPackage('plugin-interaction-breadcrumbs')
+        testsForPackage('plugin-interaction-breadcrumbs'),
+        testsForPackage('plugin-simple-throttle')
       ]
     },
     {
@@ -40,7 +41,9 @@ module.exports = {
       testEnvironment: 'node',
       testMatch: [
         testsForPackage('plugin-server-*'),
-        testsForPackage('packages/plugin-strip-project-root')
+        testsForPackage('plugin-strip-project-root'),
+        testsForPackage('plugin-intercept'),
+        testsForPackage('plugin-node-unhandled-rejection')
       ]
     }
   ]

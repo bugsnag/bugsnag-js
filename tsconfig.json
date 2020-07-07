@@ -77,5 +77,8 @@
     "packages/plugin-strip-query-string",
     "packages/plugin-strip-project-root",
     "packages/plugin-interaction-breadcrumbs",
+    "packages/plugin-simple-throttle",
+    "packages/plugin-intercept",
+    "packages/plugin-node-unhandled-rejection"
   ]
 }
