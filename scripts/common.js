@@ -10,6 +10,10 @@ module.exports = {
       return execSync(command).toString().trim()
     }
   },
+  changeDir (into) {
+    console.log(`Changing into directory: ${into}`)
+    process.chdir(into)
+  },
   getCommitId: function getCommitId () {
     return this.run('git rev-parse --short=10 HEAD')
   },
