@@ -1,4 +1,5 @@
-package com.<ANDROID_PACKAGE_PATH>;
+package com.reactnative.module;
+
 
 import java.util.HashSet;
 import java.util.Set;
@@ -14,7 +15,8 @@ import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.NoSuchKeyException;
-import com.<ANDROID_PACKAGE_PATH>.scenarios.Scenario;
+
+import com.reactnative.scenarios.Scenario;
 
 public class BugsnagModule extends ReactContextBaseJavaModule {
   private static ReactApplicationContext reactContext;

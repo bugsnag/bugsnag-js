@@ -2,9 +2,13 @@ const lerna = require('../lerna.json')
 const { execSync } = require('child_process')
 
 module.exports = {
-  run: function run (command, log = true) {
-    if (log) console.log(command)
-    return execSync(command).toString().trim()
+  run: function run (command, toStdout = false) {
+    console.log(command)
+    if (toStdout) {
+      execSync(command, { stdio: 'inherit' })
+    } else {
+      return execSync(command).toString().trim()
+    }
   },
   getCommitId: function getCommitId () {
     return this.run('git rev-parse --short=10 HEAD')

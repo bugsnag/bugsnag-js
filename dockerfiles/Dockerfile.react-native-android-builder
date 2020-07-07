@@ -1,9 +1,13 @@
 FROM openjdk:8-jdk-stretch
 
+# OS setup
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
 RUN apt-get update
-RUN apt-get install -y gradle jq git-core curl build-essential openssl libssl-dev nodejs
+RUN apt-get install -y gradle jq git-core curl build-essential openssl libssl-dev nodejs rsync
 
+RUN npm i -g run-func
+
+# Android tools
 WORKDIR /sdk
 RUN wget https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip -q \
     && unzip -q sdk-tools-linux-4333796.zip \
@@ -12,31 +16,14 @@ RUN wget https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip -q
 ENV PATH="${PATH}:/sdk/tools:/sdk/tools/bin"
 
 RUN yes | sdkmanager "platform-tools" "build-tools;28.0.3"
-
 ENV PATH="${PATH}:/sdk/platform-tools"
+
 ENV ANDROID_HOME="/sdk/"
+ENV GRADLE_OPTS="-Dorg.gradle.daemon=false"
 
 WORKDIR /app
 
-ENV GRADLE_OPTS="-Dorg.gradle.daemon=false"
-
-COPY test/react-native/features /app/features
-
-ARG REACT_NATIVE_VERSION
-ENV REACT_NATIVE_FIXTURE=${REACT_NATIVE_VERSION}
-
-RUN cp -r /app/features/fixtures/app/ /app/features/fixtures/${REACT_NATIVE_VERSION}/app/
-
-ARG ANDROID_PACKAGE_PATH
-RUN find /app/features/fixtures/android-module/ -type f -exec sed -i -e "s/<ANDROID_PACKAGE_PATH>/${ANDROID_PACKAGE_PATH}/g" {} \;
-RUN cp -r /app/features/fixtures/android-module/* /app/features/fixtures/${REACT_NATIVE_VERSION}/android/app/src/main/java/com/${ANDROID_PACKAGE_PATH}/
-
-WORKDIR /app/features/fixtures/${REACT_NATIVE_VERSION}
-
-COPY .git .git
-COPY scripts/ scripts/
-COPY lerna.json .
-
+# npm auth
 RUN rm -f ~/.npmrc
 ARG REG_BASIC_CREDENTIAL
 ARG REG_NPM_EMAIL
@@ -44,16 +31,15 @@ RUN echo "_auth=$REG_BASIC_CREDENTIAL" >> ~/.npmrc
 RUN echo "email=$REG_NPM_EMAIL" >> ~/.npmrc
 RUN echo "always-auth=true" >> ~/.npmrc
 
-ARG REGISTRY_URL
+# Prepare Gradle folders to avoid downloading Gradle again when the Docker cache is invalidated by changing source
+# First we copy the skeleton files gathered in advance of the Docker build using react-native-helper.gather().
+COPY lerna.json .
+COPY scripts/common.js scripts/react-native-helper.js scripts/
+COPY docker-temp/fixtures /app/features/fixtures/
+RUN run-func scripts/react-native-helper.js prepare /app/features/fixtures
 
-RUN npm install --registry $REGISTRY_URL
-ARG BUILDKITE
-ARG BRANCH_NAME
-RUN BUILDKITE=${BUILDKITE} BRANCH_NAME=${BRANCH_NAME} node scripts/install.js $REGISTRY_URL
+# Now copy in all the files needed to build
+COPY .git .git
 
-RUN ./node_modules/.bin/react-native link
-
-WORKDIR /app/features/fixtures/${REACT_NATIVE_VERSION}/android
-
-CMD ./gradlew assembleRelease && \
-    cp /app/features/fixtures/$REACT_NATIVE_FIXTURE/android/app/build/outputs/apk/release/app-release.apk /app/build/$REACT_NATIVE_FIXTURE.apk
+# Do a full build by running the container
+CMD run-func scripts/react-native-helper.js build "/app/test/react-native/features/fixtures" "/app/features/fixtures"

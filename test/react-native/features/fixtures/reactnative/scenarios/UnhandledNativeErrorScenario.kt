@@ -1,8 +1,8 @@
-package com.<ANDROID_PACKAGE_PATH>.scenarios
+package com.reactnative.scenarios
 
 import android.content.Context
 
-class AppNativeUnhandledScenario(context: Context): Scenario(context) {
+class UnhandledNativeErrorScenario(context: Context): Scenario(context) {
 
     override fun run() {
         super.run()

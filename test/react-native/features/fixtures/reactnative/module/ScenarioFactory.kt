@@ -1,12 +1,12 @@
-package com.<ANDROID_PACKAGE_PATH>
+package com.reactnative.module
 
 import android.content.Context
-import com.<ANDROID_PACKAGE_PATH>.scenarios.Scenario
+import com.reactnative.scenarios.Scenario
 
 class ScenarioFactory {
 
     fun testScenarioForName(scenarioName: String?, context: Context): Scenario {
-        val clz = Class.forName("com.<ANDROID_PACKAGE_PATH>.scenarios.$scenarioName")
+        val clz = Class.forName("com.reactnative.scenarios.$scenarioName")
         val constructor = clz.constructors[0]
         return constructor.newInstance(context) as Scenario
     }
