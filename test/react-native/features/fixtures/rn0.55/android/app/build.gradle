@@ -99,7 +99,7 @@ android {
     buildToolsVersion "28.0.3"
 
     defaultConfig {
-        applicationId "com.rn055"
+        applicationId "com.reactnative"
         minSdkVersion 16
         targetSdkVersion 22
         versionCode 1
