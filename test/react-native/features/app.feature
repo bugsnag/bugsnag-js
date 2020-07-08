@@ -15,7 +15,7 @@ Scenario: Handled JS error
   And the event "app.codeBundleId" equals "1.2.3-r00110011"
 
   # Android
-  # And the event "app.id" equals "com.reactnative"
+  And the event "app.id" equals "com.reactnative"
   And the event "app.type" equals "android"
   # iOS
   # And the event "app.id" equals "org.reactjs.native.example.reactnative"
@@ -38,7 +38,7 @@ Scenario: Unhandled JS error
   And the event "app.codeBundleId" equals "1.2.3-r00110011"
 
   # Android
-  # And the event "app.id" equals "com.reactnative"
+  And the event "app.id" equals "com.reactnative"
   And the event "app.type" equals "android"
   # iOS
   # And the event "app.id" equals "org.reactjs.native.example.reactnative"
@@ -60,7 +60,7 @@ Scenario: Handled native error
   And the event "app.codeBundleId" equals "1.2.3-r00110011"
 
   # Android
-  # And the event "app.id" equals "com.reactnative"
+  And the event "app.id" equals "com.reactnative"
   And the event "app.type" equals "android"
   # iOS
   # And the event "app.id" equals "org.reactjs.native.example.reactnative"
@@ -82,7 +82,7 @@ Scenario: Unhandled native error
   And the event "app.codeBundleId" equals "1.2.3-r00110011"
 
   # Android
-  # And the event "app.id" equals "com.reactnative"
+  And the event "app.id" equals "com.reactnative"
   And the event "app.type" equals "android"
   # iOS
   # And the event "app.id" equals "org.reactjs.native.example.reactnative"
