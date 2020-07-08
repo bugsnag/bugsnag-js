@@ -1,29 +1,43 @@
 steps:
   - label: ':docker: Build and publish JS packages'
     plugins:
-      - docker-compose#v3.1.0:
+      - docker-compose#v3.3.0:
           build: publisher
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
 
   - wait
 
-  - label: ':docker: Build React-native 0.55 apk'
+  - label: ':docker: Build React-Native Android Builder image'
+    timeout_in_minutes: 30
     plugins:
-      - docker-compose#v3.1.0:
-          run: react-native-android-builder
-    artifact_paths: build/rn0.55.apk
+      - improbable-eng/metahook:
+          post-checkout: scripts/gather-react-native-files.sh
+      - docker-compose#v3.3.0:
+          build: react-native-android-builder
+          image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
+          cache-from:  react-native-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
+      - docker-compose#v3.3.0:
+          push: react-native-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
+
+  - wait
+
+  - label: ':docker: Build React-native 0.55 apk'
     env:
-      REACT_NATIVE_VERSION: rn0.55
-      ANDROID_PACKAGE_PATH: rn055
+      REACT_NATIVE_VERSION: "rn0.55"
+    plugins:
+      - docker-compose#v3.3.0:
+          run: react-native-android-builder
+    artifact_paths:
+      - build/rn0.55.apk
 
   - label: ':docker: Build React-native 0.60 apk'
-    plugins:
-      - docker-compose#v3.1.0:
-          run: react-native-android-builder
-    artifact_paths: build/rn0.60.apk
     env:
-      REACT_NATIVE_VERSION: rn0.60
-      ANDROID_PACKAGE_PATH: reactnative
+      REACT_NATIVE_VERSION: "rn0.60"
+    plugins:
+      - docker-compose#v3.3.0:
+          run: react-native-android-builder
+    artifact_paths:
+      - build/rn0.60.apk
 
   # - label: ':ios: Build React-native 0.55 ipa'
   #   agents:
@@ -49,33 +63,33 @@ steps:
     plugins:
       artifacts#v1.2.0:
         download: "build/rn0.55.apk"
-      docker-compose#v3.1.0:
+      docker-compose#v3.3.0:
         run: react-native-maze-runner
         use-aliases: true
     env:
       DEVICE_TYPE: "ANDROID_9"
       APP_LOCATION: "build/rn0.55.apk"
-    concurrency: 5
+    concurrency: 10
     concurrency_group: 'browserstack-app'
 
   - label: ':android: React-native 0.60 Android 9'
     plugins:
       artifacts#v1.2.0:
         download: "build/rn0.60.apk"
-      docker-compose#v3.1.0:
+      docker-compose#v3.3.0:
         run: react-native-maze-runner
         use-aliases: true
     env:
       DEVICE_TYPE: "ANDROID_9"
       APP_LOCATION: "build/rn0.60.apk"
-    concurrency: 5
+    concurrency: 10
     concurrency_group: 'browserstack-app'
 
   # - label: ':ios: React-native 0.55 iOS 12'
   #   plugins:
   #     artifacts#v1.2.0:
   #       download: "build/rn0.55.ipa"
-  #     docker-compose#v3.1.0:
+  #     docker-compose#v3.3.0:
   #       run: react-native-maze-runner
   #       use-aliases: true
   #   command: --tags "not @wip"
@@ -89,7 +103,7 @@ steps:
   #   plugins:
   #     artifacts#v1.2.0:
   #       download: "build/rn0.60.ipa"
-  #     docker-compose#v3.1.0:
+  #     docker-compose#v3.3.0:
   #       run: react-native-maze-runner
   #       use-aliases: true
   #   command: --tags "not @wip"

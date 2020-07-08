@@ -1,7 +1,21 @@
 Changelog
 =========
 
-## TBD
+## 6.0.1 (2020-06-29)
+
+* Move binary images store declaration from header file
+  [#725](https://github.com/bugsnag/bugsnag-cocoa/pull/725)
+
+* Make stacktrace properties for error/thread readwrite
+  [#722](https://github.com/bugsnag/bugsnag-cocoa/pull/722)
+
+* Fix incorrect string comparison of thread names in Mach exception handling
+  [#721](https://github.com/bugsnag/bugsnag-cocoa/pull/721)
+
+* Address unterminated string in thread gathering logic
+  [#720](https://github.com/bugsnag/bugsnag-cocoa/pull/720)
+
+## 6.0.0 (2020-06-22)
 
 __This version contains many breaking changes__. It is part of an effort to unify our notifier
 libraries across platforms, making the user interface more consistent, and implementations better
@@ -283,9 +297,9 @@ how to upgrade.
   of callbacks run when a session starts.
   [#483](https://github.com/bugsnag/bugsnag-cocoa/pull/483)
   
-* Added `addOnSendBlock:`, `removeOnSendBlock:` and `clearOnSendBlocks` methods to `Bugsnag` 
-  and `BugsnagConfiguration`.
+* Added `addOnSendBlock:`, `removeOnSendBlock:` to `BugsnagConfiguration`.
   [#485](https://github.com/bugsnag/bugsnag-cocoa/pull/485)
+  [#485](https://github.com/bugsnag/bugsnag-cocoa/pull/713)
   
 * Enhanced device orientation change breadcrumbs.  These are now reported with "from" and "to" values
   in a form consistent with the Android notifier.
@@ -303,6 +317,13 @@ how to upgrade.
 
 * Deliver each event in a separate request to avoid exceeding payload size limit
   [#424](https://github.com/bugsnag/bugsnag-cocoa/pull/424)
+
+## 5.23.3 (2020-06-05)
+
+## Bug Fixes
+
+* Fix DYLD lock mechanism preventing compilation on iOS <10.
+  [#675](https://github.com/bugsnag/bugsnag-cocoa/pull/675)
 
 ## 5.23.2 (2020-05-13)
 

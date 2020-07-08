@@ -27,9 +27,6 @@
 #import "BugsnagPlatformConditional.h"
 
 #import "BugsnagConfiguration.h"
-#import "Bugsnag.h"
-#import "BugsnagClient.h"
-#import "BugsnagClientInternal.h"
 #import "BugsnagKeys.h"
 #import "BSG_RFC3339DateTool.h"
 #import "BugsnagUser.h"
@@ -44,7 +41,6 @@
 #import "BugsnagStateEvent.h"
 #import "BugsnagCollections.h"
 #import "BugsnagMetadataInternal.h"
-#import "BugsnagKeys.h"
 
 static NSString *const BSGApiKeyMissingError = @"No Bugsnag API Key set";
 static NSString *const BSGInitError = @"Init is unavailable.  Use [[BugsnagConfiguration alloc] initWithApiKey:] instead.";
@@ -54,10 +50,6 @@ static const int BSGApiKeyLength = 32;
 NSString * const kBugsnagUserEmailAddress = @"BugsnagUserEmailAddress";
 NSString * const kBugsnagUserName = @"BugsnagUserName";
 NSString * const kBugsnagUserUserId = @"BugsnagUserUserId";
-
-@interface Bugsnag ()
-+ (BugsnagClient *)client;
-@end
 
 @interface BugsnagUser ()
 - (instancetype)initWithDictionary:(NSDictionary *)dict;
@@ -542,7 +534,7 @@ NSString * const kBugsnagUserUserId = @"BugsnagUserUserId";
     }
 }
 
-- (void)setEnabledReleaseStages:(NSSet<NSString *> *)newReleaseStages;
+- (void)setEnabledReleaseStages:(NSSet<NSString *> *)newReleaseStages
 {
     @synchronized (self) {
         NSSet<NSString *> *releaseStagesCopy = [newReleaseStages copy];

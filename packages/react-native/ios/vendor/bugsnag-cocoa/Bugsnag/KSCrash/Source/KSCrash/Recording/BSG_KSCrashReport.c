@@ -1651,14 +1651,24 @@ void bsg_kscrashreport_logCrash(const BSG_KSCrash_Context *const crashContext) {
 }
 
 static const size_t bsg_g_buffer_increment = sizeof(char) * 8 * 1024;
-static size_t bsg_g_thread_json_size = 128 * 1024;
-static char *bsg_g_thread_json_data;
+static size_t bsg_g_thread_json_size = sizeof(char) * 128 * 1024;
+static char *bsg_g_thread_json_data = NULL;
 
 int bsg_kscrw_i_collectJsonData(const char *const data, const size_t length, void *const userData) {
-    if (bsg_kscrw_i_exceedsBufferLen(length)) {
+    if (bsg_g_thread_json_data == NULL) {
+        // Allocate initial memory for JSON data
+        void *ptr = malloc(bsg_g_thread_json_size);
+        if (ptr != NULL) {
+            bsg_g_thread_json_data = ptr;
+            *bsg_g_thread_json_data = '\0';
+        } else { // failed to allocate enough memory
+            return BSG_KSJSON_ERROR_CANNOT_ADD_DATA;
+        }
+    }
+    if (strlen(bsg_g_thread_json_data) + length >= bsg_g_thread_json_size) {
+        // Expand memory to hold further data
         bsg_g_thread_json_size += bsg_g_buffer_increment;
         void *ptr = realloc(bsg_g_thread_json_data, bsg_g_thread_json_size);
-
         if (ptr != NULL) {
             bsg_g_thread_json_data = ptr;
         } else { // failed to allocate enough memory
@@ -1670,23 +1680,18 @@ int bsg_kscrw_i_collectJsonData(const char *const data, const size_t length, voi
     return BSG_KSJSON_OK;
 }
 
-bool bsg_kscrw_i_exceedsBufferLen(const size_t length) {
-    return strlen(bsg_g_thread_json_data) + length >= bsg_g_thread_json_size;
-}
-
 void bsg_kscrw_i_resetThreadTraceData() {
-    if (bsg_g_thread_json_data == NULL) {
-        bsg_g_thread_json_data = malloc(bsg_g_thread_json_size);
+    if (bsg_g_thread_json_data != NULL) {
+        *bsg_g_thread_json_data = '\0';
     }
-    memset(bsg_g_thread_json_data, 0, strlen(bsg_g_thread_json_data));
 }
 
 char *bsg_kscrw_i_captureThreadTrace(const BSG_KSCrash_Context *crashContext) {
-    bsg_kscrw_i_resetThreadTraceData();
     BSG_KSJSONEncodeContext jsonContext;
     BSG_KSCrashReportWriter concreteWriter;
     BSG_KSCrashReportWriter *writer = &concreteWriter;
     bsg_kscrw_i_prepareReportWriter(writer, &jsonContext);
+    bsg_kscrw_i_resetThreadTraceData();
     bsg_ksjsonbeginEncode(bsg_getJsonContext(writer), false, bsg_kscrw_i_collectJsonData, 0);
     writer->beginObject(writer, BSG_KSCrashField_Report);
     bsg_kscrw_i_writeTraceInfo(crashContext, writer);

@@ -2,11 +2,20 @@ const lerna = require('../lerna.json')
 const { execSync } = require('child_process')
 
 module.exports = {
-  run: function run (command) {
-    return execSync(command).toString().trim()
+  run: function run (command, toStdout = false) {
+    console.log(command)
+    if (toStdout) {
+      execSync(command, { stdio: 'inherit' })
+    } else {
+      return execSync(command).toString().trim()
+    }
+  },
+  changeDir (into) {
+    console.log(`Changing into directory: ${into}`)
+    process.chdir(into)
   },
   getCommitId: function getCommitId () {
-    return this.run('git rev-parse --short HEAD')
+    return this.run('git rev-parse --short=10 HEAD')
   },
   determineVersion: function determineVersion () {
     // Form version string - branch name and commit id
