@@ -4,6 +4,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <Bugsnag/Bugsnag.h>
 
 @interface Scenario : NSObject
 

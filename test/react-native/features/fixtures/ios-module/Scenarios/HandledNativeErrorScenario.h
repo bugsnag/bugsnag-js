@@ -1,6 +1,6 @@
 #import <Foundation/Foundation.h>
 #import "Scenario.h"
 
-@interface HandledExceptionScenario : Scenario
+@interface HandledNativeErrorScenario : Scenario
 
 @end

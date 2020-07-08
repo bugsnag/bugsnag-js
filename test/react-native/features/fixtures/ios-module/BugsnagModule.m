@@ -33,10 +33,15 @@ RCT_EXPORT_METHOD(startBugsnag:(NSDictionary *)options readyCallback:(RCTRespons
 @end
 
 BugsnagConfiguration *createConfiguration(NSDictionary * options) {
+  NSLog(@"Received configuration options:");
+  for (id key in options) {
+      NSLog(@"key: %@, value: %@ \n", key, [options objectForKey:key]);
+  }
   BugsnagConfiguration *config = [[BugsnagConfiguration alloc] initWithApiKey:options[@"apiKey"]];
   NSString *endpoint = options[@"endpoint"];
   BugsnagEndpointConfiguration *endpoints = [[BugsnagEndpointConfiguration alloc] initWithNotify:endpoint sessions:endpoint];
   [config setEndpoints:endpoints];
-  [config setAutoTrackSessions:options[@"autoTrackSessions"]];
+  [config setAutoTrackSessions:[[options objectForKey:@"autoTrackSessions"]boolValue]];
+  config.enabledErrorTypes.ooms = NO; // Set by default, will add an override as required
   return config;
 }

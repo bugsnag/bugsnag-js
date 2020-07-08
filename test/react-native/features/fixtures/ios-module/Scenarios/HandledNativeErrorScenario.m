@@ -1,6 +1,6 @@
-import "BreadcrumbCallbackRemovalScenario.h"
+#import "HandledNativeErrorScenario.h"
 
-@implementation HandledExceptionScenario
+@implementation HandledNativeErrorScenario
 
 - (void)run {
     @try {
@@ -9,7 +9,7 @@ import "BreadcrumbCallbackRemovalScenario.h"
         [NSJSONSerialization dataWithJSONObject:actuallyReallyJSON options:0 error:nil];
     }
     @catch (NSException *exception) {
-        [Bugsnag notify:exception];
+      [Bugsnag notify:exception];
     }
 }
 
