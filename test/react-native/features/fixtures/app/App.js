@@ -17,12 +17,23 @@ let getDefaultConfiguration = () => { return {
   }
 }
 
+let getManualModeConfiguration = (apiKey) => { return {
+  apiKey: apiKey,
+  endpoints: {
+    notify: 'https://notify.bugsnag.com',
+    sessions: 'https://sessions.bugsnag.com'
+  },
+  autoTrackSessions: false
+}
+}
+
 export default class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
       currentScenario: '',
-      scenarioMetaData: ''
+      scenarioMetaData: '',
+      manualApiKey: null
     }
     console.log(`Available scenarios:\n  ${Object.keys(Scenarios).join('\n  ')}`)
   }
@@ -33,6 +44,10 @@ export default class App extends Component {
 
   setScenarioMetaData = newScenarioMetaData => {
     this.setState(() => ({ scenarioMetaData: newScenarioMetaData }))
+  }
+
+  setManualApiKey = newApiKey => {
+    this.setState(() => ({ manualApiKey: newApiKey }))
   }
 
   startScenario = () => {
@@ -55,7 +70,13 @@ export default class App extends Component {
     console.log(`  with MetaData: ${this.state.scenarioMetaData}`)
     let scenarioName = this.state.currentScenario
     let scenarioMetaData = this.state.scenarioMetaData
-    let configuration = getDefaultConfiguration()
+    let configuration
+    if (this.state.manualApiKey) {
+      configuration = getManualModeConfiguration(this.state.manualApiKey)
+    }
+    else {
+      configuration = getDefaultConfiguration()
+    }
     let jsConfig = {}
     let scenario = new Scenarios[scenarioName](configuration, scenarioMetaData, jsConfig)
     console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${JSON.stringify(jsConfig)} (js)`)
@@ -70,19 +91,27 @@ export default class App extends Component {
         <View style={styles.child}>
           <Text>React-native end-to-end test app</Text>
           <TextInput style={styles.textInput}
-            accessibilityLabel='scenarioInput'
-            onChangeText={this.setScenario} />
+                     placeholder='Scenario Name'
+                     accessibilityLabel='scenarioInput'
+                     onChangeText={this.setScenario} />
           <TextInput style={styles.textInput}
-            accessibilityLabel='scenarioMetaDataInput'
-            onChangeText={this.setScenarioMetaData} />
+                     placeholder='Scenario Metadata'
+                     accessibilityLabel='scenarioMetaDataInput'
+                     onChangeText={this.setScenarioMetaData} />
+
           <Button style={styles.clickyButton}
-            accessibilityLabel='startScenarioButton'
-            title='Start scenario'
-            onPress={this.startScenario}/>
+                  accessibilityLabel='startScenarioButton'
+                  title='Start scenario'
+                  onPress={this.startScenario}/>
           <Button style={styles.clickyButton}
-            accessibilityLabel='startBugsnagButton'
-            title='Start Bugsnag'
-            onPress={this.startBugsnag}/>
+                  accessibilityLabel='startBugsnagButton'
+                  title='Start Bugsnag'
+                  onPress={this.startBugsnag}/>
+
+          <Text>Manual testing mode</Text>
+          <TextInput placeholder='API key'
+                     style={styles.textInput}
+                     onChangeText={this.setManualApiKey} />
         </View>
       </View>
     );

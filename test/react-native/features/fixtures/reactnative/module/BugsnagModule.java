@@ -95,38 +95,37 @@ public class BugsnagModule extends ReactContextBaseJavaModule {
 
   private Configuration createConfiguration(ReadableMap options) {
       Configuration config = new Configuration(options.getString("apiKey"));
-      config.setEndpoints(new EndpointConfiguration(options.getString("endpoint"), options.getString("endpoint")));
       config.setAutoTrackSessions(options.getBoolean("autoTrackSessions"));
 
-      try {
+      if (options.hasKey("endpoint")) {
+        config.setEndpoints(new EndpointConfiguration(options.getString("endpoint"), options.getString("endpoint")));
+      }
+      else if (options.hasKey("endpoints")) {
+          ReadableMap endpoints = options.getMap("endpoints");
+          config.setEndpoints(new EndpointConfiguration(endpoints.getString("notify"), endpoints.getString("sessions")));
+      }
+
+      if (options.hasKey("appVersion")) {
         String appVersion = null;
         appVersion = options.getString("appVersion");
         config.setAppVersion(appVersion);
-      } catch (NoSuchKeyException e) {
-        // ignore NoSuchKeyException
       }
 
-      try {
+      if (options.hasKey("appType")) {
         String appType = options.getString("appType");
         config.setAppType(appType);
-      } catch (NoSuchKeyException e) {
-        // ignore NoSuchKeyException
       }
 
-      try {
+      if (options.hasKey("releaseStage")) {
         String releaseStage = options.getString("releaseStage");
         config.setReleaseStage(releaseStage);
-      } catch (NoSuchKeyException e) {
-        // ignore NoSuchKeyException
       }
 
-      try {
+      if (options.hasKey("enabledReleaseStages")) {
         Set<String> enabledReleaseStages = new HashSet<String>();
         ReadableArray ar = options.getArray("enabledReleaseStages");
         for (int i = 0; i < ar.size(); i++) enabledReleaseStages.add(ar.getString(i));
         config.setEnabledReleaseStages(enabledReleaseStages);
-      } catch (NoSuchKeyException e) {
-        // ignore NoSuchKeyException
       }
 
       return config;
