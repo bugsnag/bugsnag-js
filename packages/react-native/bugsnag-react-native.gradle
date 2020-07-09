@@ -1,0 +1,7 @@
+allprojects {
+    repositories {
+        maven { // bugsnag AAR dependencies are installed from npm
+            url "$rootDir/../node_modules/@bugsnag/react-native/android"
+        }
+    }
+}
