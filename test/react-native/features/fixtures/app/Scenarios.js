@@ -21,3 +21,9 @@ export { AppConfigEnabledReleaseStagesNoSendScenario } from './scenarios/AppConf
 export { ContextJsDefaultScenario } from './scenarios/ContextJsDefaultScenario'
 export { ContextJsCustomScenario } from './scenarios/ContextJsCustomScenario'
 export { ContextNativeCustomScenario } from './scenarios/ContextNativeCustomScenario'
+
+// breadcrumbs.feature
+export { BreadcrumbsAutomaticLoadedScenario } from './scenarios/BreadcrumbsAutomaticLoadedScenario'
+export { BreadcrumbsAutomaticErrorScenario } from './scenarios/BreadcrumbsAutomaticErrorScenario'
+export { BreadcrumbsJsManualScenario } from './scenarios/BreadcrumbsJsManualScenario'
+export { BreadcrumbsNativeManualScenario } from './scenarios/BreadcrumbsNativeManualScenario'
