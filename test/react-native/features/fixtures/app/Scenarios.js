@@ -22,3 +22,9 @@ export { BreadcrumbsAutomaticLoadedScenario } from './scenarios/BreadcrumbsAutom
 export { BreadcrumbsAutomaticErrorScenario } from './scenarios/BreadcrumbsAutomaticErrorScenario'
 export { BreadcrumbsJsManualScenario } from './scenarios/BreadcrumbsJsManualScenario'
 export { BreadcrumbsNativeManualScenario } from './scenarios/BreadcrumbsNativeManualScenario'
+
+// device.feature
+export { DeviceJsHandledScenario } from './scenarios/DeviceJsHandledScenario'
+export { DeviceJsUnhandledScenario } from './scenarios/DeviceJsUnhandledScenario'
+export { DeviceNativeHandledScenario } from './scenarios/DeviceNativeHandledScenario'
+export { DeviceNativeUnhandledScenario } from './scenarios/DeviceNativeUnhandledScenario'
