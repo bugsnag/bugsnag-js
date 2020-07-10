@@ -1,15 +1,13 @@
-const { describe, it, expect } = global
-
-const Client = require('@bugsnag/core/client')
-const plugin = require('../')
-const fs = require('fs')
+import Client from '@bugsnag/core/client'
+import plugin from '../'
+import fs from 'fs'
 
 // mock an async resource
 
 const items = ['a', 'b', 'c']
 
 // node-style error-first
-function load (index, cb) {
+function load (index: number, cb: (error: Error | null, result?: string) => void) {
   process.nextTick(() => {
     const item = items[index]
     if (item) return cb(null, item)
@@ -18,7 +16,7 @@ function load (index, cb) {
 }
 
 // promise
-function pload (index, cb) {
+function pload (index: number) {
   return new Promise((resolve, reject) => {
     process.nextTick(() => {
       const item = items[index]
@@ -36,7 +34,7 @@ describe('plugin: intercept', () => {
       sendSession: () => {}
     }))
     const intercept = c.getPlugin('intercept')
-    load(1, intercept((item) => {
+    load(1, intercept((item: string) => {
       expect(item).toBe('b')
       done()
     }))
@@ -52,7 +50,7 @@ describe('plugin: intercept', () => {
       sendSession: () => {}
     }))
     const intercept = c.getPlugin('intercept')
-    load(4, intercept((item) => {
+    load(4, intercept(() => {
       expect(true).toBe(false)
       done()
     }))
@@ -99,7 +97,7 @@ describe('plugin: intercept', () => {
       sendSession: () => {}
     }))
     const intercept = c.getPlugin('intercept')
-    fs.readFile('does not exist', intercept(data => {
+    fs.readFile('does not exist', intercept(() => {
       expect(true).toBe(false)
     }))
   })

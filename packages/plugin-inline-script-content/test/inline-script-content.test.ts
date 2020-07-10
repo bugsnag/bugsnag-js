@@ -1,9 +1,7 @@
-const { describe, it, expect, spyOn } = global
+import plugin from '../'
 
-const plugin = require('../')
-
-const Client = require('@bugsnag/core/client')
-const Event = require('@bugsnag/core/event')
+import Client from '@bugsnag/core/client'
+import Event from '@bugsnag/core/event'
 
 describe('plugin: inline script content', () => {
   it('should add an onError callback which captures the HTML content if file=current url', () => {
@@ -25,14 +23,14 @@ Lorem ipsum dolor sit amet.
 </script>
 <p>more content</p>`
       }
-    }
-    const window = { location: { href: 'https://app.bugsnag.com/errors' } }
+    } as unknown as Document
+    const window = { location: { href: 'https://app.bugsnag.com/errors' } } as unknown as Window &typeof globalThis
 
     const client = new Client({ apiKey: 'API_KEY_YEAH' }, undefined, [plugin(document, window)])
     const payloads = []
 
     expect(client._cbs.e.length).toBe(1)
-    client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
+    client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload), sendSession: () => {} }))
     client._notify(new Event('BadThing', 'Happens in script tags', [
       { fileName: window.location.href, lineNumber: 10 }
     ]))
@@ -44,22 +42,23 @@ Lorem ipsum dolor sit amet.
 
   it('calls the previous onreadystatechange handler if it exists', done => {
     const prevHandler = () => { done() }
-    const document = { documentElement: { outerHTML: '' }, onreadystatechange: prevHandler }
-    const window = { location: { href: 'https://app.bugsnag.com/errors' }, document }
+    const document = { documentElement: { outerHTML: '' }, onreadystatechange: prevHandler } as unknown as Document
+    const window = { location: { href: 'https://app.bugsnag.com/errors' }, document } as unknown as Window &typeof globalThis
     const client = new Client({ apiKey: 'API_KEY_YEAH' }, undefined, [plugin(document, window)])
     // check it installed a new onreadystatechange handler
     expect(document.onreadystatechange === prevHandler).toBe(false)
     // now check it calls the previous one
-    document.onreadystatechange()
+    document.onreadystatechange({} as unknown as globalThis.Event)
     expect(client).toBe(client)
   })
 
   it('does no wrapping of global functions when disabled', () => {
-    const document = { documentElement: { outerHTML: '' } }
+    const document = { documentElement: { outerHTML: '' } } as unknown as Document
     const addEventListener = function () {}
-    const window = { location: { href: 'https://app.bugsnag.com/errors' }, document }
+    const window = { location: { href: 'https://app.bugsnag.com/errors' }, document } as unknown as Window &typeof globalThis
     function EventTarget () {}
     EventTarget.prototype.addEventListener = addEventListener
+    // @ts-ignore
     window.EventTarget = EventTarget
     const client = new Client({ apiKey: 'API_KEY_YEAH', trackInlineScripts: false }, undefined, [plugin(document, window)])
     // check the addEventListener function was not wrapped
@@ -88,14 +87,14 @@ Lorem ipsum dolor sit amet.
 </script>
 <p>more content</p>`
       }
-    }
-    const window = { location: { href: 'https://app.bugsnag.com/errors' } }
+    } as unknown as Document
+    const window = { location: { href: 'https://app.bugsnag.com/errors' } } as unknown as Window &typeof globalThis
 
     const client = new Client({ apiKey: 'API_KEY_YEAH' }, undefined, [plugin(document, window)])
     const payloads = []
 
     expect(client._cbs.e.length).toBe(1)
-    client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
+    client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload), sendSession: () => {} }))
     client._notify(new Event('BadThing', 'Happens in script tags', [
       { fileName: window.location.href, lineNumber: 10 }
     ]))
@@ -124,14 +123,14 @@ Lorem ipsum dolor sit amet.
 </script>
 <p>more content</p>`
       }
-    }
-    const window = { location: { href: 'https://app.bugsnag.com/errors' } }
+    } as unknown as Document
+    const window = { location: { href: 'https://app.bugsnag.com/errors' } } as unknown as Window &typeof globalThis
 
     const client = new Client({ apiKey: 'API_KEY_YEAH' }, undefined, [plugin(document, window)])
     const payloads = []
 
     expect(client._cbs.e.length).toBe(1)
-    client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
+    client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload), sendSession: () => {} }))
     client._notify(new Event('BadThing', 'Happens in script tags', [
       { fileName: window.location.href, lineNumber: 7 }
     ]))
@@ -159,15 +158,15 @@ Lorem ipsum dolor sit amet.
 </script>
 <p>more content</p>`
       }
-    }
-    const window = { location: { href: 'https://app.bugsnag.com/errors' } }
+    } as unknown as Document
+    const window = { location: { href: 'https://app.bugsnag.com/errors' } } as unknown as Window &typeof globalThis
 
     const client = new Client({ apiKey: 'API_KEY_YEAH' }, undefined, [plugin(document, window)])
     const payloads = []
 
     expect(client._cbs.e.length).toBe(1)
-    client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
-    const spy = spyOn(client._logger, 'error')
+    client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload), sendSession: () => {} }))
+    const spy = jest.spyOn(client._logger, 'error')
     client._notify(new Event('EmptyStacktrace', 'Has nothing in it', []))
     expect(payloads.length).toEqual(1)
     expect(payloads[0].events[0].errors[0].stacktrace).toEqual([])
@@ -189,7 +188,7 @@ Lorem ipsum dolor sit amet.
 </script>
 <p>more content</p>`
       }
-    }
+    } as unknown as Document
     function Window () {}
     Window.prototype = {
       addEventListener: function () {},
@@ -197,15 +196,16 @@ Lorem ipsum dolor sit amet.
     }
     const window = {
       location: { href: 'https://app.bugsnag.com/errors' }
-    }
+    } as unknown as Window &typeof globalThis
 
     Object.setPrototypeOf(window, Window.prototype)
+    // @ts-ignore
     window.Window = Window
 
     function myfun () {}
     window.addEventListener('click', myfun)
 
-    const spy = spyOn(Window.prototype, 'removeEventListener')
+    const spy = jest.spyOn(Window.prototype, 'removeEventListener')
     const client = new Client({ apiKey: 'API_KEY_YEAH' }, undefined, [plugin(document, window)])
 
     window.removeEventListener('click', myfun)
@@ -221,14 +221,14 @@ Lorem ipsum dolor sit amet.
       documentElement: {
         outerHTML: `<script>${scriptContent}</script>`
       }
-    }
-    const window = { location: { href: 'https://app.bugsnag.com/errors' } }
+    } as unknown as Document
+    const window = { location: { href: 'https://app.bugsnag.com/errors' } } as unknown as Window &typeof globalThis
 
     const client = new Client({ apiKey: 'API_KEY_YEAH' }, undefined, [plugin(document, window)])
     const payloads = []
 
     expect(client._cbs.e.length).toBe(1)
-    client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload) }))
+    client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload), sendSession: () => {} }))
     client._notify(new Event('Error', 'oh', [
       { fileName: window.location.href, lineNumber: 1 }
     ]))
