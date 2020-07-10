@@ -16,7 +16,8 @@ Scenario: Handled JS error
   And the event "device.osName" equals "android"
   And the event "device.osVersion" matches "^\d+$"
   And the event "device.runtimeVersions.androidApiLevel" is not null
-  And the event "device.runtimeVersions.reactNativeVersion" matches "^\d+\.\d+\.\d+$"
+  And the event "device.runtimeVersions.reactNative" matches "^\d+\.\d+\.\d+$"
+  And the event "device.runtimeVersions.reactNativeJsEngine" matches "jsc"
   And the event "device.totalMemory" is not null
   And the event "device.freeDisk" is not null
   And the event "device.freeMemory" is not null
@@ -40,7 +41,8 @@ Scenario: Unhandled JS error
   And the event "device.osName" equals "android"
   And the event "device.osVersion" matches "^\d+$"
   And the event "device.runtimeVersions.androidApiLevel" is not null
-  And the event "device.runtimeVersions.reactNativeVersion" matches "^\d+\.\d+\.\d+$"
+  And the event "device.runtimeVersions.reactNative" matches "^\d+\.\d+\.\d+$"
+  And the event "device.runtimeVersions.reactNativeJsEngine" matches "jsc"
   And the event "device.totalMemory" is not null
   And the event "device.freeDisk" is not null
   And the event "device.freeMemory" is not null
@@ -64,7 +66,8 @@ Scenario: Handled native error
   And the event "device.osName" equals "android"
   And the event "device.osVersion" matches "^\d+$"
   And the event "device.runtimeVersions.androidApiLevel" is not null
-  And the event "device.runtimeVersions.reactNativeVersion" matches "^\d+\.\d+\.\d+$"
+  And the event "device.runtimeVersions.reactNative" matches "^\d+\.\d+\.\d+$"
+  And the event "device.runtimeVersions.reactNativeJsEngine" matches "jsc"
   And the event "device.totalMemory" is not null
   And the event "device.freeDisk" is not null
   And the event "device.freeMemory" is not null
@@ -88,7 +91,8 @@ Scenario: Unhandled native error
   And the event "device.osName" equals "android"
   And the event "device.osVersion" matches "^\d+$"
   And the event "device.runtimeVersions.androidApiLevel" is not null
-  And the event "device.runtimeVersions.reactNativeVersion" matches "^\d+\.\d+\.\d+$"
+  And the event "device.runtimeVersions.reactNative" matches "^\d+\.\d+\.\d+$"
+  And the event "device.runtimeVersions.reactNativeJsEngine" matches "jsc"
   And the event "device.totalMemory" is not null
   And the event "device.freeDisk" is not null
   And the event "device.freeMemory" is not null
