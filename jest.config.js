@@ -9,12 +9,19 @@ module.exports = {
       ]
     },
     {
+      displayName: 'shared plugins',
+      testMatch: [
+        testsForPackage('plugin-app-duration')
+      ]
+    },
+    {
       displayName: 'browser plugins',
       testMatch: [
         testsForPackage('plugin-react'),
         testsForPackage('plugin-vue'),
         testsForPackage('plugin-browser-context'),
         testsForPackage('plugin-browser-device'),
+        testsForPackage('plugin-window-unhandled-rejection'),
         testsForPackage('plugin-window-onerror'),
         testsForPackage('plugin-strip-query-string')
       ]

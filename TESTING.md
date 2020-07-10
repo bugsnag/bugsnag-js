@@ -178,30 +178,40 @@ In addition, the react-native test fixture requires the current version of the r
 
 The targeted release of `@bugsnag/react-native` must be tagged with the short hash of the current commit in order to be picked up by the gradle build process.
 
-There are several react-native versions that can be targeted, as well as a corresponding package path used to integrate the android modules.  These should be set to the `REACT_NATIVE_VERSION` and `ANDROID_PACKAGE_PATH` environment variables according to the table below:
+There may be several react-native versions that can be targeted.  
+These should be set to the `REACT_NATIVE_VERSION` environment variable according to the table below:
 
-| React native fixture | `REACT_NATIVE_VERSION` | `ANDROID_PACKAGE_PATH` |
-|----------------------|------------------------|------------------------|
-| 0.55                 | `rn0.55`               | `rn055`                |
-| 0.60                 | `rn0.60`               | `reactnative`          |
+| React native fixture | `REACT_NATIVE_VERSION` |
+|----------------------|------------------------|
+| 0.60                 | `rn0.60`               |
 
 The following environment variables need to be set:
 
-- `DEVICE_TYPE`: the mobile operating system you want to test on – one of ANDROID_5, ANDROID_6, ANDROID_7, ANDROID_8, ANDROID_9, IOS_10, IOS_11, IOS_12
+- `DEVICE_TYPE` - the mobile operating system you want to test on – one of:
+  - ANDROID_5
+  - ANDROID_6_0
+  - ANDROID_7_1
+  - ANDROID_8_1
+  - ANDROID_9_0
+  - ANDROID_10_0
+  - IOS_10
+  - IOS_11
+  - IOS_12
 - `BROWSER_STACK_USERNAME`
 - `BROWSER_STACK_ACCESS_KEY`
 - `REACT_NATIVE_VERSION`
-- `ANDROID_PACKAGE_PATH`
 - `REG_BASIC_CREDENTIAL`
 - `REG_NPM_EMAIL`
 - `REGISTRY_URL`
 
+By default, the test fixture used to run tests against will be built with a version of @bugsnag/react-native for the current branch/commit, e.g. `7.2.0-my-branch.231f6ef7`.
+This can be overridden using the environment variable NOTIFIER_VERSION and is useful during development when making test, but not notifier, changes.
+
 To run against an android device:
 
 ```sh
-DEVICE_TYPE=ANDROID_9 \
+DEVICE_TYPE=ANDROID_9.0 \
 REACT_NATIVE_VERSION=rn0.60 \
-ANDROID_PACKAGE_PATH=reactnative \
 REG_BASIC_CREDENTIAL=xxx \
 REG_NPM_EMAIL=xxx \
 REGISTRY_URL=xxx \
