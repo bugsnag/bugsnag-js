@@ -19,3 +19,7 @@ rsync --delete -al "$IOS_REPO_DIR/Bugsnag/" "$IOS_DST/Bugsnag/"
 rsync --delete -al "$IOS_REPO_DIR/Framework/" "$IOS_DST/Framework/"
 rsync --delete -al "$IOS_REPO_DIR/Bugsnag.xcodeproj/" "$IOS_DST/Bugsnag.xcodeproj/"
 rsync --delete -al "$IOS_REPO_DIR/Bugsnag.podspec.json" "$IOS_DST/Bugsnag.podspec.json"
+
+echo "Recording version"
+rm -rf ./ios/.bugsnag-cocoa-version
+echo $(cd $IOS_REPO_DIR && git rev-parse HEAD) >> ./ios/.bugsnag-cocoa-version

@@ -21,3 +21,7 @@ rm -rf $AAR_DST
 
 echo "Copying new AARs to bugsnag-js"
 cp -r $MAVEN_REPO_DIR $AAR_DST
+
+echo "Recording version"
+rm -rf ./android/.bugsnag-android-version
+echo $(cd $ANDROID_REPO_DIR && git rev-parse HEAD) >> ./android/.bugsnag-android-version

@@ -139,8 +139,8 @@ RCT_EXPORT_METHOD(getPayloadInfo:(NSDictionary *)options
 - (void)addRuntimeVersionInfo:(NSDictionary *)info {
     NSString *reactNativeVersion = info[@"reactNativeVersion"];
     NSString *engine = info[@"engine"];
-    [Bugsnag addRuntimeVersionInfo:reactNativeVersion withKey:@"reactNativeVersion"];
-    [Bugsnag addRuntimeVersionInfo:engine withKey:@"engine"];
+    [Bugsnag addRuntimeVersionInfo:reactNativeVersion withKey:@"reactNative"];
+    [Bugsnag addRuntimeVersionInfo:engine withKey:@"reactNativeJsengine"];
 }
 
 - (BSGBreadcrumbType)breadcrumbTypeFromString:(NSString *)value {
@@ -171,7 +171,7 @@ RCT_EXPORT_METHOD(getPayloadInfo:(NSDictionary *)options
     [notifier setValue:jsVersion forKey:@"version"];
     [notifier setValue:@"Bugsnag React Native" forKey:@"name"];
     [notifier setValue: @"https://github.com/bugsnag/bugsnag-js" forKey:@"url"];
-    
+
     NSMutableArray *deps = [NSMutableArray arrayWithObject:[NSClassFromString(@"BugsnagNotifier") new]];
     [notifier setValue:deps forKey:@"dependencies"];
 }

@@ -178,17 +178,16 @@ In addition, the react-native test fixture requires the current version of the r
 
 The targeted release of `@bugsnag/react-native` must be tagged with the short hash of the current commit in order to be picked up by the gradle build process.
 
-There are several react-native versions that can be targeted, as well as a corresponding package path used to integrate the android modules.  
+There may be several react-native versions that can be targeted.  
 These should be set to the `REACT_NATIVE_VERSION` environment variable according to the table below:
 
 | React native fixture | `REACT_NATIVE_VERSION` |
 |----------------------|------------------------|
-| 0.55                 | `rn0.55`               |
 | 0.60                 | `rn0.60`               |
 
 The following environment variables need to be set:
 
-- `DEVICE_TYPE`: the mobile operating system you want to test on – one of:
+- `DEVICE_TYPE` - the mobile operating system you want to test on – one of:
   - ANDROID_5
   - ANDROID_6_0
   - ANDROID_7_1

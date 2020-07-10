@@ -144,4 +144,44 @@ describe('plugin: expo app', () => {
       }, 20)
     }, 20)
   })
+
+  it('includes duration in event.app', done => {
+    const start = Date.now()
+
+    const plugin = proxyquire('../', {
+      'expo-constants': {
+        default: {
+          platform: {},
+          manifest: {}
+        }
+      },
+      'react-native': {
+        AppState: {
+          addEventListener: (name, fn) => {},
+          currentState: 'active'
+        }
+      }
+    })
+
+    const client = new Client({ apiKey: 'api_key', plugins: [plugin] })
+
+    // Delay sending the notification by this many milliseconds to ensure
+    // 'duration' will always have a useful value
+    const delayMs = 10
+
+    client._setDelivery(client => ({
+      sendEvent: (payload) => {
+        // The maximum number of milliseconds 'duration' should be
+        const maximum = Date.now() - start
+
+        expect(payload.events[0].app.duration).toBeGreaterThanOrEqual(delayMs)
+        expect(payload.events[0].app.duration).toBeLessThanOrEqual(maximum)
+
+        done()
+      },
+      sendSession: () => {}
+    }))
+
+    setTimeout(() => client.notify(new Error('flooopy doo')), delayMs)
+  })
 })

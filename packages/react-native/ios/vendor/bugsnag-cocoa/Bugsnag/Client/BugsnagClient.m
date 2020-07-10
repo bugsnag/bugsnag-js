@@ -1565,7 +1565,11 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
 }
 
 - (NSArray *)collectThreads {
-    int depth = (int)(BSGNotifierStackFrameCount);
+    // discard the following
+    // 1. [BugsnagReactNative getPayloadInfo:resolve:reject:]
+    // 2. [BugsnagClient collectThreads:]
+    // 3. [BSG_KSCrash captureThreads:]
+    int depth = 3;
     NSException *exc = [NSException exceptionWithName:@"Bugsnag" reason:@"" userInfo:nil];
     NSArray<BugsnagThread *> *threads = [[BSG_KSCrash sharedInstance] captureThreads:exc depth:depth];
     return [BugsnagThread serializeThreads:threads];

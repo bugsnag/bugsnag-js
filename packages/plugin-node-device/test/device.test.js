@@ -23,7 +23,11 @@ describe('plugin: node device', () => {
       sendEvent: (payload) => {
         expect(payload.events[0].device).toBeDefined()
         expect(payload.events[0].device.time instanceof Date).toBe(true)
+        expect(payload.events[0].device.osName).toBeDefined()
         expect(payload.events[0].device.hostname).toBe('test-machine.local')
+        expect(payload.events[0].device.osVersion).toBeDefined()
+        expect(payload.events[0].device.freeMemory).toBeGreaterThan(0)
+        expect(payload.events[0].device.totalMemory).toBeGreaterThan(payload.events[0].device.freeMemory)
         expect(payload.events[0].device.runtimeVersions).toBeDefined()
         expect(payload.events[0].device.runtimeVersions.node).toEqual(process.versions.node)
         done()

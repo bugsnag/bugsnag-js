@@ -64,7 +64,7 @@
   },
   "include": [
     "packages/core",
-
+    "packages/plugin-app-duration",
     "packages/plugin-browser-context",
     "packages/plugin-browser-device",
     "packages/plugin-react-native-app-state-breadcrumbs",
@@ -78,6 +78,7 @@
     "packages/plugin-restify",
     "packages/node",
     "packages/react-native",
+    "packages/plugin-window-unhandled-rejection",
     "packages/plugin-window-onerror",
     "packages/plugin-strip-query-string",
     "packages/plugin-strip-project-root",

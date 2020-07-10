@@ -34,11 +34,14 @@ module.exports = {
     client.addOnError(event => {
       const now = new Date()
       const inForeground = AppState.currentState === 'active'
+
       event.app.inForeground = inForeground
       event.app.duration = now - appStart
+
       if (inForeground) {
         event.app.durationInForeground = now - lastEnteredForeground
       }
+
       event.addMetadata('app', { nativeBundleVersion, nativeVersionCode })
 
       if (Constants.manifest.revisionId) {
