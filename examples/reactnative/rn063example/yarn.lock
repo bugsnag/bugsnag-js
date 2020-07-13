@@ -712,6 +712,106 @@
   resolved "https://bugsnag.jfrog.io/artifactory/api/npm/platforms-npm-virtual/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha1-daLotRy3WKdVPWgEpZMteqznXDk=
 
+"@bugsnag/core@^7.3.0-alpha.0", "@bugsnag/core@^7.3.0-v7-react-native-ios-fixture.d0c90eaa04":
+  version "7.3.0-v7-react-native-ios-fixture.d0c90eaa04"
+  resolved "https://bugsnag.jfrog.io/artifactory/api/npm/platforms-npm-virtual/@bugsnag/core/-/@bugsnag/core-7.3.0-v7-react-native-ios-fixture.d0c90eaa04.tgz#f63840953fdba61291d53f3a427968d609c3937a"
+  integrity sha1-9jhAlT/bphKR1T86Qnlo1gnDk3o=
+  dependencies:
+    "@bugsnag/cuid" "^3.0.0"
+    "@bugsnag/safe-json-stringify" "^6.0.0"
+    error-stack-parser "^2.0.3"
+    iserror "0.0.2"
+    stack-generator "^2.0.3"
+
+"@bugsnag/cuid@^3.0.0":
+  version "3.0.0"
+  resolved "https://bugsnag.jfrog.io/artifactory/api/npm/platforms-npm-virtual/@bugsnag/cuid/-/cuid-3.0.0.tgz#2ee7642a30aee6dc86f5e7f824653741e42e5c35"
+  integrity sha1-LudkKjCu5tyG9ef4JGU3QeQuXDU=
+
+"@bugsnag/delivery-react-native@^7.3.0-alpha.0":
+  version "7.3.0-v7-react-native-ios-fixture.d0c90eaa04"
+  resolved "https://bugsnag.jfrog.io/artifactory/api/npm/platforms-npm-virtual/@bugsnag/delivery-react-native/-/@bugsnag/delivery-react-native-7.3.0-v7-react-native-ios-fixture.d0c90eaa04.tgz#b2239fe2e5b412748be987c636186190ff21823e"
+  integrity sha1-siOf4uW0EnSL6YfGNhhhkP8hgj4=
+  dependencies:
+    "@bugsnag/core" "^7.3.0-v7-react-native-ios-fixture.d0c90eaa04"
+
+"@bugsnag/plugin-console-breadcrumbs@^7.3.0-alpha.0":
+  version "7.3.0-v7-react-native-ios-fixture.d0c90eaa04"
+  resolved "https://bugsnag.jfrog.io/artifactory/api/npm/platforms-npm-virtual/@bugsnag/plugin-console-breadcrumbs/-/@bugsnag/plugin-console-breadcrumbs-7.3.0-v7-react-native-ios-fixture.d0c90eaa04.tgz#5af26e61683a1220ffae48dd44054a292c9cbb93"
+  integrity sha1-WvJuYWg6EiD/rkjdRAVKKSycu5M=
+  dependencies:
+    "@bugsnag/core" "^7.3.0-v7-react-native-ios-fixture.d0c90eaa04"
+
+"@bugsnag/plugin-network-breadcrumbs@^7.3.0-alpha.0":
+  version "7.3.0-v7-react-native-ios-fixture.d0c90eaa04"
+  resolved "https://bugsnag.jfrog.io/artifactory/api/npm/platforms-npm-virtual/@bugsnag/plugin-network-breadcrumbs/-/@bugsnag/plugin-network-breadcrumbs-7.3.0-v7-react-native-ios-fixture.d0c90eaa04.tgz#6e6d168ca34450fef4836225c6b4e57101765f9b"
+  integrity sha1-bm0WjKNEUP70g2IlxrTlcQF2X5s=
+  dependencies:
+    "@bugsnag/core" "^7.3.0-v7-react-native-ios-fixture.d0c90eaa04"
+
+"@bugsnag/plugin-react-native-client-sync@^7.3.0-alpha.0":
+  version "7.3.0-v7-react-native-ios-fixture.d0c90eaa04"
+  resolved "https://bugsnag.jfrog.io/artifactory/api/npm/platforms-npm-virtual/@bugsnag/plugin-react-native-client-sync/-/@bugsnag/plugin-react-native-client-sync-7.3.0-v7-react-native-ios-fixture.d0c90eaa04.tgz#cbe56a7890699a1b23940585980473d3621a1f05"
+  integrity sha1-y+VqeJBpmhsjlAWFmARz02IaHwU=
+  dependencies:
+    "@bugsnag/core" "^7.3.0-v7-react-native-ios-fixture.d0c90eaa04"
+    proxyquire "^2.1.0"
+
+"@bugsnag/plugin-react-native-event-sync@^7.3.0-alpha.0":
+  version "7.3.0-v7-react-native-ios-fixture.d0c90eaa04"
+  resolved "https://bugsnag.jfrog.io/artifactory/api/npm/platforms-npm-virtual/@bugsnag/plugin-react-native-event-sync/-/@bugsnag/plugin-react-native-event-sync-7.3.0-v7-react-native-ios-fixture.d0c90eaa04.tgz#b4e5bcd1ef2d63ff03516e8aa116e95d51955c9f"
+  integrity sha1-tOW80e8tY/8DUW6KoRbpXVGVXJ8=
+  dependencies:
+    "@bugsnag/core" "^7.3.0-v7-react-native-ios-fixture.d0c90eaa04"
+    proxyquire "^2.1.1"
+
+"@bugsnag/plugin-react-native-global-error-handler@^7.3.0-alpha.0":
+  version "7.3.0-v7-react-native-ios-fixture.d0c90eaa04"
+  resolved "https://bugsnag.jfrog.io/artifactory/api/npm/platforms-npm-virtual/@bugsnag/plugin-react-native-global-error-handler/-/@bugsnag/plugin-react-native-global-error-handler-7.3.0-v7-react-native-ios-fixture.d0c90eaa04.tgz#97be9f8e43a225d8c238d603b06f2a32ebd981d8"
+  integrity sha1-l76fjkOiJdjCONYDsG8qMuvZgdg=
+
+"@bugsnag/plugin-react-native-session@^7.3.0-alpha.0":
+  version "7.3.0-v7-react-native-ios-fixture.d0c90eaa04"
+  resolved "https://bugsnag.jfrog.io/artifactory/api/npm/platforms-npm-virtual/@bugsnag/plugin-react-native-session/-/@bugsnag/plugin-react-native-session-7.3.0-v7-react-native-ios-fixture.d0c90eaa04.tgz#5030d25b47c5f4e1fc486c7a7fd109a349c194a1"
+  integrity sha1-UDDSW0fF9OH8SGx6f9EJo0nBlKE=
+  dependencies:
+    "@bugsnag/core" "^7.3.0-v7-react-native-ios-fixture.d0c90eaa04"
+
+"@bugsnag/plugin-react-native-unhandled-rejection@^7.3.0-alpha.0":
+  version "7.3.0-v7-react-native-ios-fixture.d0c90eaa04"
+  resolved "https://bugsnag.jfrog.io/artifactory/api/npm/platforms-npm-virtual/@bugsnag/plugin-react-native-unhandled-rejection/-/@bugsnag/plugin-react-native-unhandled-rejection-7.3.0-v7-react-native-ios-fixture.d0c90eaa04.tgz#ce1f1399d3d5012e5350ae5bce0cd50e050b01a4"
+  integrity sha1-zh8TmdPVAS5TUK5bzgzVDgULAaQ=
+
+"@bugsnag/plugin-react@^7.3.0-alpha.0":
+  version "7.3.0-v7-react-native-ios-fixture.d0c90eaa04"
+  resolved "https://bugsnag.jfrog.io/artifactory/api/npm/platforms-npm-virtual/@bugsnag/plugin-react/-/@bugsnag/plugin-react-7.3.0-v7-react-native-ios-fixture.d0c90eaa04.tgz#3c0987a167e9bffb825ed6183ee29593a8e21219"
+  integrity sha1-PAmHoWfpv/uCXtYYPuKVk6jiEhk=
+  dependencies:
+    "@bugsnag/core" "^7.3.0-v7-react-native-ios-fixture.d0c90eaa04"
+
+"@bugsnag/react-native@7.3.0-alpha.1":
+  version "7.3.0-alpha.1"
+  resolved "https://bugsnag.jfrog.io/artifactory/api/npm/platforms-npm-virtual/@bugsnag/react-native/-/react-native-7.3.0-alpha.1.tgz#572a137a0192f584600d9ff95b55431809291aa0"
+  integrity sha1-VyoTegGS9YRgDZ/5W1VDGAkpGqA=
+  dependencies:
+    "@bugsnag/core" "^7.3.0-alpha.0"
+    "@bugsnag/delivery-react-native" "^7.3.0-alpha.0"
+    "@bugsnag/plugin-console-breadcrumbs" "^7.3.0-alpha.0"
+    "@bugsnag/plugin-network-breadcrumbs" "^7.3.0-alpha.0"
+    "@bugsnag/plugin-react" "^7.3.0-alpha.0"
+    "@bugsnag/plugin-react-native-client-sync" "^7.3.0-alpha.0"
+    "@bugsnag/plugin-react-native-event-sync" "^7.3.0-alpha.0"
+    "@bugsnag/plugin-react-native-global-error-handler" "^7.3.0-alpha.0"
+    "@bugsnag/plugin-react-native-session" "^7.3.0-alpha.0"
+    "@bugsnag/plugin-react-native-unhandled-rejection" "^7.3.0-alpha.0"
+    iserror "^0.0.2"
+    proxy-polyfill "^0.3.1"
+
+"@bugsnag/safe-json-stringify@^6.0.0":
+  version "6.0.0"
+  resolved "https://bugsnag.jfrog.io/artifactory/api/npm/platforms-npm-virtual/@bugsnag/safe-json-stringify/-/safe-json-stringify-6.0.0.tgz#22abdcd83e008c369902976730c34c150148a758"
+  integrity sha1-Iqvc2D4AjDaZApdnMMNMFQFIp1g=
+
 "@cnakazawa/watch@^1.0.3":
   version "1.0.4"
   resolved "https://bugsnag.jfrog.io/artifactory/api/npm/platforms-npm-virtual/@cnakazawa/watch/-/watch-1.0.4.tgz#f864ae85004d0fcab6f50be9141c4da368d1656a"
@@ -2410,6 +2510,13 @@ error-ex@^1.3.1:
   dependencies:
     is-arrayish "^0.2.1"
 
+error-stack-parser@^2.0.3:
+  version "2.0.6"
+  resolved "https://bugsnag.jfrog.io/artifactory/api/npm/platforms-npm-virtual/error-stack-parser/-/error-stack-parser-2.0.6.tgz#5a99a707bd7a4c58a797902d48d82803ede6aad8"
+  integrity sha1-WpmnB716TFinl5AtSNgoA+3mqtg=
+  dependencies:
+    stackframe "^1.1.1"
+
 errorhandler@^1.5.0:
   version "1.5.1"
   resolved "https://bugsnag.jfrog.io/artifactory/api/npm/platforms-npm-virtual/errorhandler/-/errorhandler-1.5.1.tgz#b9ba5d17cf90744cd1e851357a6e75bf806a9a91"
@@ -2872,6 +2979,14 @@ file-uri-to-path@1.0.0:
   version "1.0.0"
   resolved "https://bugsnag.jfrog.io/artifactory/api/npm/platforms-npm-virtual/file-uri-to-path/-/file-uri-to-path-1.0.0.tgz#553a7b8446ff6f684359c445f1e37a05dacc33dd"
   integrity sha1-VTp7hEb/b2hDWcRF8eN6BdrMM90=
+
+fill-keys@^1.0.2:
+  version "1.0.2"
+  resolved "https://bugsnag.jfrog.io/artifactory/api/npm/platforms-npm-virtual/fill-keys/-/fill-keys-1.0.2.tgz#9a8fa36f4e8ad634e3bf6b4f3c8882551452eb20"
+  integrity sha1-mo+jb06K1jTjv2tPPIiCVRRS6yA=
+  dependencies:
+    is-object "~1.0.1"
+    merge-descriptors "~1.0.0"
 
 fill-range@^4.0.0:
   version "4.0.0"
@@ -3464,6 +3579,11 @@ is-number@^7.0.0:
   resolved "https://bugsnag.jfrog.io/artifactory/api/npm/platforms-npm-virtual/is-number/-/is-number-7.0.0.tgz#7535345b896734d5f80c4d06c50955527a14f12b"
   integrity sha1-dTU0W4lnNNX4DE0GxQlVUnoU8Ss=
 
+is-object@~1.0.1:
+  version "1.0.1"
+  resolved "https://bugsnag.jfrog.io/artifactory/api/npm/platforms-npm-virtual/is-object/-/is-object-1.0.1.tgz#8952688c5ec2ffd6b03ecc85e769e02903083470"
+  integrity sha1-iVJojF7C/9awPsyF52ngKQMINHA=
+
 is-plain-object@^2.0.3, is-plain-object@^2.0.4:
   version "2.0.4"
   resolved "https://bugsnag.jfrog.io/artifactory/api/npm/platforms-npm-virtual/is-plain-object/-/is-plain-object-2.0.4.tgz#2c163b3fafb1b606d9d17928f05c2a1c38e07677"
@@ -3531,6 +3651,11 @@ isarray@1.0.0, isarray@~1.0.0:
   version "1.0.0"
   resolved "https://bugsnag.jfrog.io/artifactory/api/npm/platforms-npm-virtual/isarray/-/isarray-1.0.0.tgz#bb935d48582cba168c06834957a54a3e07124f11"
   integrity sha1-u5NdSFgsuhaMBoNJV6VKPgcSTxE=
+
+iserror@0.0.2, iserror@^0.0.2:
+  version "0.0.2"
+  resolved "https://bugsnag.jfrog.io/artifactory/api/npm/platforms-npm-virtual/iserror/-/iserror-0.0.2.tgz#bd53451fe2f668b9f2402c1966787aaa2c7c0bf5"
+  integrity sha1-vVNFH+L2aLnyQCwZZnh6qix8C/U=
 
 isexe@^2.0.0:
   version "2.0.0"
@@ -4359,6 +4484,11 @@ map-visit@^1.0.0:
   dependencies:
     object-visit "^1.0.0"
 
+merge-descriptors@~1.0.0:
+  version "1.0.1"
+  resolved "https://bugsnag.jfrog.io/artifactory/api/npm/platforms-npm-virtual/merge-descriptors/-/merge-descriptors-1.0.1.tgz#b00aaa556dd8b44568150ec9d1b953f3f90cbb61"
+  integrity sha1-sAqqVW3YtEVoFQ7J0blT8/kMu2E=
+
 merge-stream@^1.0.1:
   version "1.0.1"
   resolved "https://bugsnag.jfrog.io/artifactory/api/npm/platforms-npm-virtual/merge-stream/-/merge-stream-1.0.1.tgz#4041202d508a342ba00174008df0c251b8c135e1"
@@ -4834,6 +4964,11 @@ mkdirp@^0.5.1:
   integrity sha1-2Rzv1i0UNsoPQWIOJRKI1CAJne8=
   dependencies:
     minimist "^1.2.5"
+
+module-not-found-error@^1.0.1:
+  version "1.0.1"
+  resolved "https://bugsnag.jfrog.io/artifactory/api/npm/platforms-npm-virtual/module-not-found-error/-/module-not-found-error-1.0.1.tgz#cf8b4ff4f29640674d6cdd02b0e3bc523c2bbdc0"
+  integrity sha1-z4tP9PKWQGdNbN0CsOO8UjwrvcA=
 
 ms@2.0.0:
   version "2.0.0"
@@ -5421,6 +5556,20 @@ prop-types@^15.6.2, prop-types@^15.7.2:
     object-assign "^4.1.1"
     react-is "^16.8.1"
 
+proxy-polyfill@^0.3.1:
+  version "0.3.2"
+  resolved "https://bugsnag.jfrog.io/artifactory/api/npm/platforms-npm-virtual/proxy-polyfill/-/proxy-polyfill-0.3.2.tgz#55f190054a3044e105d9de16e23719e1e9be0898"
+  integrity sha1-VfGQBUowROEF2d4W4jcZ4em+CJg=
+
+proxyquire@^2.1.0, proxyquire@^2.1.1:
+  version "2.1.3"
+  resolved "https://bugsnag.jfrog.io/artifactory/api/npm/platforms-npm-virtual/proxyquire/-/proxyquire-2.1.3.tgz#2049a7eefa10a9a953346a18e54aab2b4268df39"
+  integrity sha1-IEmn7voQqalTNGoY5UqrK0Jo3zk=
+  dependencies:
+    fill-keys "^1.0.2"
+    module-not-found-error "^1.0.1"
+    resolve "^1.11.1"
+
 pseudomap@^1.0.2:
   version "1.0.2"
   resolved "https://bugsnag.jfrog.io/artifactory/api/npm/platforms-npm-virtual/pseudomap/-/pseudomap-1.0.2.tgz#f052a28da70e618917ef0a8ac34c1ae5a68286b3"
@@ -5719,7 +5868,7 @@ resolve-url@^0.2.1:
   resolved "https://bugsnag.jfrog.io/artifactory/api/npm/platforms-npm-virtual/resolve-url/-/resolve-url-0.2.1.tgz#2c637fe77c893afd2a663fe21aa9080068e2052a"
   integrity sha1-LGN/53yJOv0qZj/iGqkIAGjiBSo=
 
-resolve@^1.10.0, resolve@^1.12.0, resolve@^1.17.0, resolve@^1.3.2, resolve@^1.5.0, resolve@^1.8.1:
+resolve@^1.10.0, resolve@^1.11.1, resolve@^1.12.0, resolve@^1.17.0, resolve@^1.3.2, resolve@^1.5.0, resolve@^1.8.1:
   version "1.17.0"
   resolved "https://bugsnag.jfrog.io/artifactory/api/npm/platforms-npm-virtual/resolve/-/resolve-1.17.0.tgz#b25941b54968231cc2d1bb76a79cb7f2c0bf8444"
   integrity sha1-sllBtUloIxzC0bt2p5y38sC/hEQ=
@@ -6142,6 +6291,13 @@ sshpk@^1.7.0:
     safer-buffer "^2.0.2"
     tweetnacl "~0.14.0"
 
+stack-generator@^2.0.3:
+  version "2.0.5"
+  resolved "https://bugsnag.jfrog.io/artifactory/api/npm/platforms-npm-virtual/stack-generator/-/stack-generator-2.0.5.tgz#fb00e5b4ee97de603e0773ea78ce944d81596c36"
+  integrity sha1-+wDltO6X3mA+B3PqeM6UTYFZbDY=
+  dependencies:
+    stackframe "^1.1.1"
+
 stack-utils@^1.0.1:
   version "1.0.2"
   resolved "https://bugsnag.jfrog.io/artifactory/api/npm/platforms-npm-virtual/stack-utils/-/stack-utils-1.0.2.tgz#33eba3897788558bebfc2db059dc158ec36cebb8"
@@ -6153,6 +6309,11 @@ stack-utils@^2.0.2:
   integrity sha1-XPSLRVe+y0Y40LxPIdI/XRlYZZM=
   dependencies:
     escape-string-regexp "^2.0.0"
+
+stackframe@^1.1.1:
+  version "1.2.0"
+  resolved "https://bugsnag.jfrog.io/artifactory/api/npm/platforms-npm-virtual/stackframe/-/stackframe-1.2.0.tgz#52429492d63c62eb989804c11552e3d22e779303"
+  integrity sha1-UkKUktY8YuuYmATBFVLj0i53kwM=
 
 stacktrace-parser@^0.1.3:
   version "0.1.10"

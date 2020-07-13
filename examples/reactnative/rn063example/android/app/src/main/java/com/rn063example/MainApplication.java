@@ -2,6 +2,12 @@ package com.rn063example;
 
 import android.app.Application;
 import android.content.Context;
+
+import com.bugsnag.android.Bugsnag;
+import com.bugsnag.android.BugsnagPackage;
+import com.bugsnag.android.BugsnagReactNativePlugin;
+
+import com.facebook.react.shell.MainReactPackage;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactInstanceManager;
@@ -9,6 +15,8 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
 import java.lang.reflect.InvocationTargetException;
+
+import java.util.Arrays;
 import java.util.List;
 
 public class MainApplication extends Application implements ReactApplication {
@@ -22,11 +30,11 @@ public class MainApplication extends Application implements ReactApplication {
 
         @Override
         protected List<ReactPackage> getPackages() {
-          @SuppressWarnings("UnnecessaryLocalVariable")
-          List<ReactPackage> packages = new PackageList(this).getPackages();
-          // Packages that cannot be autolinked yet can be added manually here, for example:
-          // packages.add(new MyReactNativePackage());
-          return packages;
+            return Arrays.asList(
+                new MainReactPackage(),
+                new BugsnagPackage(),
+                new CrashyPackage()
+            );
         }
 
         @Override
@@ -43,6 +51,7 @@ public class MainApplication extends Application implements ReactApplication {
   @Override
   public void onCreate() {
     super.onCreate();
+    Bugsnag.start(this);
     SoLoader.init(this, /* native exopackage */ false);
     initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
   }
