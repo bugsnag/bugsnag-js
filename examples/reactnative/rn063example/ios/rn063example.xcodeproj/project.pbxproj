@@ -11,6 +11,7 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		AA08368B24BC76A100915C2D /* CrashyCrashy.m in Sources */ = {isa = PBXBuildFile; fileRef = AA08368A24BC76A100915C2D /* CrashyCrashy.m */; };
 		C3F2224DE1F14751FC746FFD /* libPods-rn063example.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A457CB60E2578B7F073E6C17 /* libPods-rn063example.a */; };
 /* End PBXBuildFile section */
 
@@ -33,6 +34,8 @@
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = rn063example/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		94CBCFD427DE6E4B5EFD772E /* Pods-rn063example-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-rn063example-tvOS.release.xcconfig"; path = "Target Support Files/Pods-rn063example-tvOS/Pods-rn063example-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		A457CB60E2578B7F073E6C17 /* libPods-rn063example.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-rn063example.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA08368924BC76A100915C2D /* CrashyCrashy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CrashyCrashy.h; path = rn063example/CrashyCrashy.h; sourceTree = "<group>"; };
+		AA08368A24BC76A100915C2D /* CrashyCrashy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CrashyCrashy.m; path = rn063example/CrashyCrashy.m; sourceTree = "<group>"; };
 		B0936B99EC22CA4FA289E324 /* Pods-rn063example-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-rn063example-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-rn063example-tvOS/Pods-rn063example-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		CD3DFE941EA7F357455668A3 /* Pods-rn063example-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-rn063example-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-rn063example-tvOSTests/Pods-rn063example-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		CF2BBC9D6AC9CDEA1E53B3EA /* Pods-rn063example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-rn063example.release.xcconfig"; path = "Target Support Files/Pods-rn063example/Pods-rn063example.release.xcconfig"; sourceTree = "<group>"; };
@@ -73,6 +76,8 @@
 		13B07FAE1A68108700A75B9A /* rn063example */ = {
 			isa = PBXGroup;
 			children = (
+				AA08368924BC76A100915C2D /* CrashyCrashy.h */,
+				AA08368A24BC76A100915C2D /* CrashyCrashy.m */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -291,6 +296,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				AA08368B24BC76A100915C2D /* CrashyCrashy.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

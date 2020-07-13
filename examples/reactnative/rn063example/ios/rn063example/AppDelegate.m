@@ -1,5 +1,7 @@
 #import "AppDelegate.h"
 
+#import <Bugsnag/Bugsnag.h>
+
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
@@ -27,6 +29,8 @@ static void InitializeFlipper(UIApplication *application) {
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  [Bugsnag start];
+
 #ifdef FB_SONARKIT_ENABLED
   InitializeFlipper(application);
 #endif
