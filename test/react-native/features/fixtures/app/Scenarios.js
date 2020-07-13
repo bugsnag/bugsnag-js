@@ -39,3 +39,7 @@ export { UserJsClientScenario } from './scenarios/UserJsClientScenario'
 export { UserJsConfigScenario } from './scenarios/UserJsConfigScenario'
 export { UserJsEventScenario } from './scenarios/UserJsEventScenario'
 export { UserNativeClientScenario } from './scenarios/UserNativeClientScenario'
+
+// metadata.feature
+export { MetadataJsScenario } from './scenarios/MetadataJsScenario'
+export { MetadataNativeScenario } from './scenarios/MetadataNativeScenario'
