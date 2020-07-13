@@ -1,17 +1,16 @@
-const { describe, it, expect } = global
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+import fs from 'fs'
+import plugin from '../'
+import { join } from 'path'
+import Event from '@bugsnag/core/event'
+import Client from '@bugsnag/core/client'
 
-const fs = require('fs')
 let createReadStreamCount = 0
 const originalReadStream = fs.createReadStream
 fs.createReadStream = function () {
   createReadStreamCount++
-  return originalReadStream.apply(fs, arguments)
+  return originalReadStream.apply(fs, arguments as any)
 }
-
-const plugin = require('../')
-const { join } = require('path')
-const Event = require('@bugsnag/core/event')
-const Client = require('@bugsnag/core/client')
 
 describe('plugin: node surrounding code', () => {
   it('should load code successfully for stackframes whose files exist', done => {
@@ -20,19 +19,19 @@ describe('plugin: node surrounding code', () => {
     client._setDelivery(client => ({
       sendEvent: (payload) => {
         const evt = payload.events[0]
-        expect(Object.keys(evt.errors[0].stacktrace[0].code))
+        expect(Object.keys(evt.errors[0].stacktrace[0].code!))
           .toEqual(['19', '20', '21', '22', '23', '24', '25'])
-        expect(evt.errors[0].stacktrace[0].code['22'])
+        expect(evt.errors[0].stacktrace[0].code!['22'])
           .toBe('    if (cb) this.on(\'finish\', () => cb(this.output()))')
 
-        expect(Object.keys(evt.errors[0].stacktrace[1].code))
+        expect(Object.keys(evt.errors[0].stacktrace[1].code!))
           .toEqual(['28', '29', '30', '31', '32', '33', '34'])
-        expect(evt.errors[0].stacktrace[1].code['31'])
+        expect(evt.errors[0].stacktrace[1].code!['31'])
           .toBe('      return nextLevelUp()')
 
-        expect(Object.keys(evt.errors[0].stacktrace[2].code))
+        expect(Object.keys(evt.errors[0].stacktrace[2].code!))
           .toEqual(['115', '116', '117', '118', '119', '120', '121'])
-        expect(evt.errors[0].stacktrace[2].code['118'])
+        expect(evt.errors[0].stacktrace[2].code!['118'])
           .toBe('  \'Ķ\': \'k\', \'Ļ\': \'L\', \'Ņ\': \'N\', \'Ū\': \'u\'')
 
         done()
@@ -133,7 +132,7 @@ describe('plugin: node surrounding code', () => {
     client._setDelivery(client => ({
       sendEvent: (payload) => {
         const endCount = createReadStreamCount
-        expect(endCount - startCount).toBe(1)
+        expect(endCount - startCount).toBe(0)
         payload.events[0].errors[0].stacktrace.forEach(stackframe => {
           expect(stackframe.code).toEqual({
             1: '// this is just some arbitrary (but real) javascript for testing, taken from',
@@ -197,8 +196,8 @@ describe('plugin: node surrounding code', () => {
     client._setDelivery(client => ({
       sendEvent: (payload) => {
         payload.events[0].errors[0].stacktrace.forEach(stackframe => {
-          Object.keys(stackframe.code).forEach(key => {
-            expect(stackframe.code[key].length <= 200).toBe(true)
+          Object.keys(stackframe.code!).forEach(key => {
+            expect(stackframe.code![key].length <= 200).toBe(true)
           })
         })
         done()

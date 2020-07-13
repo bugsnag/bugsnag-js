@@ -58,7 +58,7 @@ export interface Stackframe {
   method?: string
   lineNumber?: number
   columnNumber?: number
-  code?: object
+  code?: Record<string, string>
   inProject?: boolean
 }
 
