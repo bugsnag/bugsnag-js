@@ -3,10 +3,11 @@
   <groupId>com.bugsnag</groupId>
   <artifactId>bugsnag-plugin-android-anr</artifactId>
   <versioning>
+    <latest>5.0.0-react-native</latest>
     <release>5.0.0-react-native</release>
     <versions>
       <version>5.0.0-react-native</version>
     </versions>
-    <lastUpdated>20200710085222</lastUpdated>
+    <lastUpdated>20200710104421</lastUpdated>
   </versioning>
 </metadata>
