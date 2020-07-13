@@ -9,5 +9,7 @@ Scenario: Calling notify() with a caught Error
 Scenario: Native notify() with a caught Error
   When I run "HandledNativeErrorScenario"
   Then I wait to receive a request
-  And the exception "errorClass" equals "java.lang.RuntimeException"
+  And the event "exceptions.0.errorClass" matches the correct platform value:
+  | android | Java.lang.RuntimeException |
+  | ios     | NSException                |
   And the exception "message" equals "HandledNativeErrorScenario"
