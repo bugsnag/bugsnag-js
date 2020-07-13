@@ -1,5 +1,6 @@
 package com.rn063example;
 
+import com.bugsnag.android.Bugsnag;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
@@ -17,5 +18,10 @@ public class CrashyModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void generateCrash() throws Exception {
         throw new Exception("Ooopsy from Java!");
+    }
+
+    @ReactMethod
+    public void handledError() throws Exception {
+        Bugsnag.notify(new Exception("Handled ooopsy from Java!"));
     }
 }
