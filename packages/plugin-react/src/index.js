@@ -1,9 +1,13 @@
 module.exports = class BugsnagPluginReact {
   constructor (...args) {
+    // Fetch React from the window object, if it exists
+    const globalReact = typeof window !== 'undefined' && window.React
+
     this.name = 'react'
-    this.lazy = args.length === 0 && !window.React
+    this.lazy = args.length === 0 && !globalReact
+
     if (!this.lazy) {
-      this.React = args[0] || window.React
+      this.React = args[0] || globalReact
       if (!this.React) throw new Error('@bugsnag/plugin-react reference to `React` was undefined')
     }
   }
