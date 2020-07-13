@@ -8,11 +8,6 @@ target 'rn063example' do
 
   use_react_native!(:path => config["reactNativePath"])
 
-  target 'rn063exampleTests' do
-    inherit! :complete
-    # Pods for testing
-  end
-
   # Enables Flipper.
   #
   # Note that if you have use_frameworks! enabled, Flipper will not work and
@@ -20,14 +15,5 @@ target 'rn063example' do
   use_flipper!
   post_install do |installer|
     flipper_post_install(installer)
-  end
-end
-
-target 'rn063example-tvOS' do
-  # Pods for rn063example-tvOS
-
-  target 'rn063example-tvOSTests' do
-    inherit! :search_paths
-    # Pods for testing
   end
 end
