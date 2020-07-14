@@ -7,20 +7,24 @@ Scenario: Handled JS error
   And the exception "message" equals "AppJsHandledScenario"
   And the event "unhandled" is false
   And the event "app.version" equals "1.2.3"
-  And the event "app.versionCode" equals 1
+  # Parameter not present on iOS devices
+  And the event "app.versionCode" matches the correct platform value:
+    | android | 1     |
+    | ios     | @skip |
   And the event "app.releaseStage" equals "production"
-  And the event "app.inForeground" is true
+  # TODO: PLAT-4622
+  And the event "app.inForeground" matches the correct platform value:
+    | android | true  |
+    | ios     | @skip |
   And the event "app.duration" is not null
   And the event "app.durationInForeground" is not null
   And the event "app.codeBundleId" equals "1.2.3-r00110011"
-
-  # Android
-  And the event "app.id" equals "com.reactnative"
-  And the event "app.type" equals "android"
-  # iOS
-  # And the event "app.id" equals "org.reactjs.native.example.reactnative"
-  # And the event "app.type" equals "ios"
-
+  And the event "app.id" matches the correct platform value:
+  | android | com.reactnative                        |
+  | ios     | org.reactjs.native.example.reactnative |
+  And the event "app.type" matches the correct platform value:
+  | android | android |
+  | ios     | iOS     |
 
 Scenario: Unhandled JS error
   When I run "AppJsUnhandledScenario" and relaunch the app
@@ -30,63 +34,84 @@ Scenario: Unhandled JS error
   And the exception "message" equals "AppJsUnhandledScenario"
   And the event "unhandled" is true
   And the event "app.version" equals "1.2.3"
-  And the event "app.versionCode" equals 1
+  # Parameter not present on iOS devices
+  And the event "app.versionCode" matches the correct platform value:
+    | android | 1     |
+    | ios     | @skip |
   And the event "app.releaseStage" equals "production"
-  And the event "app.inForeground" is true
+  # TODO: PLAT-4622
+  And the event "app.inForeground" matches the correct platform value:
+    | android | true  |
+    | ios     | @skip |
   And the event "app.duration" is not null
   And the event "app.durationInForeground" is not null
   And the event "app.codeBundleId" equals "1.2.3-r00110011"
-
-  # Android
-  And the event "app.id" equals "com.reactnative"
-  And the event "app.type" equals "android"
-  # iOS
-  # And the event "app.id" equals "org.reactjs.native.example.reactnative"
-  # And the event "app.type" equals "ios"
+  And the event "app.id" matches the correct platform value:
+  | android | com.reactnative                        |
+  | ios     | org.reactjs.native.example.reactnative |
+  And the event "app.type" matches the correct platform value:
+  | android | android |
+  | ios     | iOS   |
 
 Scenario: Handled native error
   When I run "AppNativeHandledScenario"
-  And I configure Bugsnag for "AppNativeHandledScenario"
   Then I wait to receive a request
-  And the exception "errorClass" equals "java.lang.RuntimeException"
+  And the event "exceptions.0.errorClass" matches the correct platform value:
+  | android | Java.lang.RuntimeException |
+  | ios     | NSException                |
   And the exception "message" equals "AppNativeHandledScenario"
   And the event "unhandled" is false
   And the event "app.version" equals "1.2.3"
-  And the event "app.versionCode" equals 1
+  # Parameter not present on iOS devices
+  And the event "app.versionCode" matches the correct platform value:
+    | android | 1     |
+    | ios     | @skip |
   And the event "app.releaseStage" equals "production"
-  And the event "app.inForeground" is true
+  # TODO: PLAT-4622
+  And the event "app.inForeground" matches the correct platform value:
+    | android | true  |
+    | ios     | @skip |
   And the event "app.duration" is not null
   And the event "app.durationInForeground" is not null
   And the event "app.codeBundleId" equals "1.2.3-r00110011"
-
-  # Android
-  And the event "app.id" equals "com.reactnative"
-  And the event "app.type" equals "android"
-  # iOS
-  # And the event "app.id" equals "org.reactjs.native.example.reactnative"
-  # And the event "app.type" equals "ios"
+  And the event "app.id" matches the correct platform value:
+  | android | com.reactnative                        |
+  | ios     | org.reactjs.native.example.reactnative |
+  And the event "app.type" matches the correct platform value:
+  | android | android |
+  | ios     | iOS     |
 
 Scenario: Unhandled native error
   When I run "AppNativeUnhandledScenario" and relaunch the app
   And I configure Bugsnag for "AppNativeUnhandledScenario"
   Then I wait to receive a request
-  And the exception "errorClass" equals "java.lang.RuntimeException"
+  And the event "exceptions.0.errorClass" matches the correct platform value:
+  | android | Java.lang.RuntimeException |
+  | ios     | NSException                |
   And the exception "message" equals "AppNativeUnhandledScenario"
   And the event "unhandled" is true
   And the event "app.version" equals "1.2.3"
-  And the event "app.versionCode" equals 1
+  # Parameter not present on iOS devices
+  And the event "app.versionCode" matches the correct platform value:
+    | android | 1     |
+    | ios     | @skip |
   And the event "app.releaseStage" equals "production"
-  And the event "app.inForeground" is true
+  # TODO: PLAT-4622
+  And the event "app.inForeground" matches the correct platform value:
+    | android | true  |
+    | ios     | @skip |
   And the event "app.duration" is not null
   And the event "app.durationInForeground" is not null
-  And the event "app.codeBundleId" equals "1.2.3-r00110011"
-
-  # Android
-  And the event "app.id" equals "com.reactnative"
-  And the event "app.type" equals "android"
-  # iOS
-  # And the event "app.id" equals "org.reactjs.native.example.reactnative"
-  # And the event "app.type" equals "ios"
+  # TODO: PLAT-4626
+  And the event "app.codeBundleId" matches the correct platform value:
+  | android | 1.2.3-r00110011 |
+  | ios     | @skip           |
+  And the event "app.id" matches the correct platform value:
+  | android | com.reactnative                        |
+  | ios     | org.reactjs.native.example.reactnative |
+  And the event "app.type" matches the correct platform value:
+  | android | android |
+  | ios     | iOS     |
 
 Scenario: Setting appType in configuration
   When I run "AppConfigAppTypeScenario"

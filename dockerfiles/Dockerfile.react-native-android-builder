@@ -42,4 +42,4 @@ RUN run-func scripts/react-native-helper.js prepare /app/features/fixtures
 COPY .git .git
 
 # Do a full build by running the container
-CMD run-func scripts/react-native-helper.js build "/app/test/react-native/features/fixtures" "/app/features/fixtures"
+CMD run-func scripts/react-native-helper.js buildAndroid "/app/test/react-native/features/fixtures" "/app/features/fixtures"

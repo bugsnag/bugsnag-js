@@ -43,5 +43,17 @@ BugsnagConfiguration *createConfiguration(NSDictionary * options) {
   [config setEndpoints:endpoints];
   [config setAutoTrackSessions:[[options objectForKey:@"autoTrackSessions"]boolValue]];
   config.enabledErrorTypes.ooms = NO; // Set by default, will add an override as required
+  if (options[@"appVersion"] != nil) {
+    [config setAppVersion:options[@"appVersion"]];
+  }
+  if (options[@"appType"] != nil) {
+    [config setAppType:options[@"appType"]];
+  }
+  if (options[@"releaseStage"] != nil) {
+    [config setReleaseStage:options[@"releaseStage"]];
+  }
+  if (options[@"enabledReleaseStages"] != nil) {
+    [config setEnabledReleaseStages:[NSSet setWithArray:options[@"enabledReleaseStages"]]];
+  }
   return config;
 }

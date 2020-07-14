@@ -37,7 +37,7 @@ steps:
       REACT_NATIVE_VERSION: rn0.60
     artifact_paths: build/rn0.60.ipa
     commands:
-      - test/react-native/scripts/build-ios.sh
+      - npm run test:build-react-native-ios
 
   - wait
 
