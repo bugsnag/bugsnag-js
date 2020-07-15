@@ -141,3 +141,38 @@ it('supports passing reference to React when the error boundary is created', () 
   const ErrorBoundary = client.getPlugin('react')!.createErrorBoundary(React)
   expect(ErrorBoundary).toBeTruthy()
 })
+
+describe('global React', () => {
+  // Workaround typescript getting upset at messing around with global
+  // by taking a reference as 'any' and modifying that instead
+  const globalReference: any = global
+  const actualWindow = globalReference.window
+
+  afterEach(() => {
+    globalReference.window = actualWindow
+    globalReference.window.React = undefined
+  })
+
+  it('can pull React out of the window object', () => {
+    globalReference.window.React = React
+
+    const client = new Client({ apiKey: 'API_KEYYY', plugins: [new BugsnagPluginReact()] })
+
+    // eslint-disable-next-line
+    const ErrorBoundary = client.getPlugin('react')!.createErrorBoundary()
+
+    expect(ErrorBoundary).toBeTruthy()
+  })
+
+  it('checks for window.React safely', () => {
+    // Delete the window object so that any unsafe check for 'window.React' will throw
+    delete globalReference.window
+
+    const client = new Client({ apiKey: 'API_KEYYY', plugins: [new BugsnagPluginReact()] })
+
+    // eslint-disable-next-line
+    const ErrorBoundary = client.getPlugin('react')!.createErrorBoundary(React)
+
+    expect(ErrorBoundary).toBeTruthy()
+  })
+})
