@@ -1,8 +1,8 @@
 {
-  "name": "@bugsnag/plugin-browser-device",
+  "name": "@bugsnag/plugin-app-duration",
   "version": "7.2.0",
-  "main": "device.js",
-  "description": "@bugsnag/js plugin to set device info in browsers",
+  "main": "app.js",
+  "description": "@bugsnag/js plugin to set app duration in browsers and node",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
     "type": "git",
