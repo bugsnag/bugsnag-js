@@ -22,7 +22,7 @@ This project was bootstrapped with `react-native init`.
                  android:value="YOUR-API-KEY-HERE" />
    ```
 
-   and [ios/BugsnagReactNativeExample/Info.plist](ios/BugsnagReactNativeExample/Info.plist#L4-L5):
+   and [ios/rn063example/Info.plist](ios/rn063example/Info.plist#L4-L5):
 
    ```xml
     <key>BugsnagAPIKey</key>
