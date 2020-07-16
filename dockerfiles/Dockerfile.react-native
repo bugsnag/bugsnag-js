@@ -3,3 +3,5 @@ FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner:typed-platform-che
 RUN apk add --no-cache ruby-dev build-base libffi-dev curl-dev curl
 COPY /test/react-native /app/test/react-native
 WORKDIR /app/test/react-native
+
+ENTRYPOINT ["bundle", "exec", "maze-runner"]
