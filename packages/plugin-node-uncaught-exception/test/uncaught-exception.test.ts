@@ -1,8 +1,7 @@
-const { describe, it, expect } = global
-
-const Client = require('@bugsnag/core/client')
-const schema = require('@bugsnag/core/config').schema
-const plugin = require('../')
+import Client from '@bugsnag/core/client'
+import { schema } from '@bugsnag/core/config'
+import plugin from '../'
+import EventWithInternals from '@bugsnag/core/event'
 
 describe('plugin: node uncaught exception handler', () => {
   it('should listen to the process#uncaughtException event', () => {
@@ -37,7 +36,7 @@ describe('plugin: node uncaught exception handler', () => {
   it('should call the configured onUncaughtException callback', done => {
     const c = new Client({
       apiKey: 'api_key',
-      onUncaughtException: (err, event) => {
+      onUncaughtException: (err: Error, event: EventWithInternals) => {
         expect(err.message).toBe('never gonna catch me')
         expect(event.errors[0].errorMessage).toBe('never gonna catch me')
         expect(event._handledState.unhandled).toBe(true)
@@ -50,22 +49,22 @@ describe('plugin: node uncaught exception handler', () => {
     }, {
       ...schema,
       onUncaughtException: {
-        validate: val => typeof val === 'function',
+        validate: (val: unknown) => typeof val === 'function',
         message: 'should be a function',
         defaultValue: () => {}
       }
     })
     c._setDelivery(client => ({
-      sendEvent: (...args) => args[args.length - 1](),
-      sendSession: (...args) => args[args.length - 1]()
+      sendEvent: (payload, cb) => cb(),
+      sendSession: (payload, cb) => cb()
     }))
-    process.listeners('uncaughtException')[1](new Error('never gonna catch me'))
+    process.listeners('uncaughtException')[0](new Error('never gonna catch me'))
   })
 
   it('should tolerate delivery errors', done => {
     const c = new Client({
       apiKey: 'api_key',
-      onUncaughtException: (err, event) => {
+      onUncaughtException: (err: Error, event: EventWithInternals) => {
         expect(err.message).toBe('never gonna catch me')
         expect(event.errors[0].errorMessage).toBe('never gonna catch me')
         expect(event._handledState.unhandled).toBe(true)
@@ -78,15 +77,15 @@ describe('plugin: node uncaught exception handler', () => {
     }, {
       ...schema,
       onUncaughtException: {
-        validate: val => typeof val === 'function',
+        validate: (val: unknown) => typeof val === 'function',
         message: 'should be a function',
         defaultValue: () => {}
       }
     })
     c._setDelivery(client => ({
-      sendEvent: (...args) => args[args.length - 1](new Error('failed')),
-      sendSession: (...args) => args[args.length - 1]()
+      sendEvent: (payload, cb) => cb(new Error('failed')),
+      sendSession: (payload, cb) => cb()
     }))
-    process.listeners('uncaughtException')[1](new Error('never gonna catch me'))
+    process.listeners('uncaughtException')[0](new Error('never gonna catch me'))
   })
 })

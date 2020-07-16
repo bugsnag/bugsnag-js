@@ -80,6 +80,10 @@
     "packages/plugin-browser-request",
     "packages/plugin-simple-throttle",
     "packages/plugin-intercept",
-    "packages/plugin-node-unhandled-rejection"
+    "packages/plugin-node-unhandled-rejection",
+    "packages/plugin-node-in-project",
+    "packages/plugin-node-device",
+    "packages/plugin-node-surrounding-code",
+    "packages/plugin-node-uncaught-exception"
   ]
 }

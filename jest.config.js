@@ -44,7 +44,11 @@ module.exports = {
         testsForPackage('plugin-server-*'),
         testsForPackage('plugin-strip-project-root'),
         testsForPackage('plugin-intercept'),
-        testsForPackage('plugin-node-unhandled-rejection')
+        testsForPackage('plugin-node-unhandled-rejection'),
+        testsForPackage('plugin-node-in-project'),
+        testsForPackage('plugin-node-device'),
+        testsForPackage('plugin-node-surrounding-code'),
+        testsForPackage('plugin-node-uncaught-exception')
       ]
     }
   ]
