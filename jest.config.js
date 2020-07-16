@@ -26,7 +26,9 @@ module.exports = {
         testsForPackage('plugin-window-onerror'),
         testsForPackage('plugin-strip-query-string'),
         testsForPackage('plugin-interaction-breadcrumbs'),
-        testsForPackage('plugin-simple-throttle')
+        testsForPackage('plugin-simple-throttle'),
+        testsForPackage('plugin-console-breadcrumbs'),
+        testsForPackage('plugin-browser-session')
       ]
     },
     {
