@@ -10,6 +10,6 @@ class ContextNativeCustomScenario(context: Context): Scenario(context) {
         Bugsnag.notify(generateException())
         Thread.sleep(500)
         Bugsnag.setContext("context-native")
-        Bugsnag.notify(generateException())
+        Bugsnag.notify(RuntimeException(javaClass.simpleName + "2"))
     }
 }

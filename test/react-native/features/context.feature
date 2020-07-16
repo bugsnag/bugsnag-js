@@ -11,30 +11,47 @@ Scenario: JS default context
 Scenario: JS custom context
   When I run "ContextJsCustomScenario"
   Then I wait to receive 3 requests
-  And the exception "errorClass" equals "Error"
-  And the exception "message" equals "ContextJsCustomScenarioA"
   And the event "unhandled" is false
-  And the event "context" equals "context-config"
-  And I discard the oldest request
   And the exception "errorClass" equals "Error"
-  And the exception "message" equals "ContextJsCustomScenarioB"
+  And the payload fields match one of the following sets:
+    | events.0.exceptions.0.message | events.0.context |
+    | ContextJsCustomScenarioA      | context-config   |
+    | ContextJsCustomScenarioB      | context-client   |
+    | ContextJsCustomScenarioC      | context-onerror  |
+  Then I discard the oldest request
   And the event "unhandled" is false
-  And the event "context" equals "context-client"
-  And I discard the oldest request
   And the exception "errorClass" equals "Error"
-  And the exception "message" equals "ContextJsCustomScenarioC"
+  And the payload fields match one of the following sets:
+    | events.0.exceptions.0.message | events.0.context |
+    | ContextJsCustomScenarioA      | context-config   |
+    | ContextJsCustomScenarioB      | context-client   |
+    | ContextJsCustomScenarioC      | context-onerror  |
+  Then I discard the oldest request
   And the event "unhandled" is false
-  And the event "context" equals "context-onerror"
+  And the exception "errorClass" equals "Error"
+  And the payload fields match one of the following sets:
+    | events.0.exceptions.0.message | events.0.context |
+    | ContextJsCustomScenarioA      | context-config   |
+    | ContextJsCustomScenarioB      | context-client   |
+    | ContextJsCustomScenarioC      | context-onerror  |
 
 Scenario: Native custom context
   When I run "ContextNativeCustomScenario"
   Then I wait to receive 2 requests
-  And the exception "errorClass" equals "java.lang.RuntimeException"
-  And the exception "message" equals "ContextNativeCustomScenario"
+  And the event "exceptions.0.errorClass" matches the string platform value:
+  | android | Java.lang.RuntimeException |
+  | ios     | NSException                |
+  And the payload fields match one of the following sets:
+    | events.0.exceptions.0.message | events.0.context |
+    | ContextNativeCustomScenario   | context-js       |
+    | ContextNativeCustomScenario2  | context-native   |
   And the event "unhandled" is false
-  And the event "context" equals "context-js"
   And I discard the oldest request
-  And the exception "errorClass" equals "java.lang.RuntimeException"
-  And the exception "message" equals "ContextNativeCustomScenario"
+  And the event "exceptions.0.errorClass" matches the string platform value:
+  | android | Java.lang.RuntimeException |
+  | ios     | NSException                |
   And the event "unhandled" is false
-  And the event "context" equals "context-native"
+  And the payload fields match one of the following sets:
+    | events.0.exceptions.0.message | events.0.context |
+    | ContextNativeCustomScenario   | context-js       |
+    | ContextNativeCustomScenario2  | context-native   |
