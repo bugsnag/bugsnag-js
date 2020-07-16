@@ -29,6 +29,8 @@ Scenario: Manual breadcrumbs (JS)
 Scenario: Manual breadcrumbs (Native)
   When I run "BreadcrumbsNativeManualScenario"
   Then I wait to receive a request
-  And the exception "errorClass" equals "java.lang.RuntimeException"
+  And the event "exceptions.0.errorClass" matches the string platform value:
+  | android | Java.lang.RuntimeException |
+  | ios     | NSException                |
   And the exception "message" equals "BreadcrumbsNativeManualScenario"
   And the event has a "manual" breadcrumb named "oh native crumbs"

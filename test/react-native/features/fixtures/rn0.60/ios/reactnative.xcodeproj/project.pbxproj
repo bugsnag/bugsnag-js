@@ -21,6 +21,7 @@
 		819AA33DD9E4324894666F7B /* libPods-reactnativeTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 34A013DC763918594BCEAE99 /* libPods-reactnativeTests.a */; };
 		A145176624A7A1F000C6FC6E /* BugsnagModule.m in Sources */ = {isa = PBXBuildFile; fileRef = A145176524A7A1F000C6FC6E /* BugsnagModule.m */; };
 		A145176A24A7A20300C6FC6E /* Scenario.m in Sources */ = {isa = PBXBuildFile; fileRef = A145176824A7A20300C6FC6E /* Scenario.m */; };
+		A181223C24C0BF5B0073596F /* BreadcrumbsNativeManualScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = A181223B24C0BF5B0073596F /* BreadcrumbsNativeManualScenario.m */; };
 		A1BFB36324BC6D3400394C5D /* UnhandledNativeErrorScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = A1BFB36224BC6D3400394C5D /* UnhandledNativeErrorScenario.m */; };
 		A1BFB36824BCEE0200394C5D /* AppNativeUnhandledScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = A1BFB36524BCEE0200394C5D /* AppNativeUnhandledScenario.m */; };
 		A1BFB36924BCEE0200394C5D /* AppNativeHandledScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = A1BFB36724BCEE0200394C5D /* AppNativeHandledScenario.m */; };
@@ -74,6 +75,8 @@
 		A145176524A7A1F000C6FC6E /* BugsnagModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BugsnagModule.m; path = "../../ios-module/BugsnagModule.m"; sourceTree = "<group>"; };
 		A145176824A7A20300C6FC6E /* Scenario.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Scenario.m; path = "../../ios-module/Scenarios/Scenario.m"; sourceTree = "<group>"; };
 		A145176924A7A20300C6FC6E /* Scenario.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Scenario.h; path = "../../ios-module/Scenarios/Scenario.h"; sourceTree = "<group>"; };
+		A181223A24C0BF5B0073596F /* BreadcrumbsNativeManualScenario.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BreadcrumbsNativeManualScenario.h; path = "../../ios-module/Scenarios/BreadcrumbsNativeManualScenario.h"; sourceTree = "<group>"; };
+		A181223B24C0BF5B0073596F /* BreadcrumbsNativeManualScenario.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BreadcrumbsNativeManualScenario.m; path = "../../ios-module/Scenarios/BreadcrumbsNativeManualScenario.m"; sourceTree = "<group>"; };
 		A1BFB36124BC6D3400394C5D /* UnhandledNativeErrorScenario.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UnhandledNativeErrorScenario.h; path = "../../ios-module/Scenarios/UnhandledNativeErrorScenario.h"; sourceTree = "<group>"; };
 		A1BFB36224BC6D3400394C5D /* UnhandledNativeErrorScenario.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UnhandledNativeErrorScenario.m; path = "../../ios-module/Scenarios/UnhandledNativeErrorScenario.m"; sourceTree = "<group>"; };
 		A1BFB36424BCEE0200394C5D /* AppNativeUnhandledScenario.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppNativeUnhandledScenario.h; path = "../../ios-module/Scenarios/AppNativeUnhandledScenario.h"; sourceTree = "<group>"; };
@@ -224,6 +227,8 @@
 		A145176724A7A1F500C6FC6E /* scenarios */ = {
 			isa = PBXGroup;
 			children = (
+				A181223A24C0BF5B0073596F /* BreadcrumbsNativeManualScenario.h */,
+				A181223B24C0BF5B0073596F /* BreadcrumbsNativeManualScenario.m */,
 				A1E567A824BE167800886226 /* ContextNativeCustomScenario.h */,
 				A1E567A924BE167800886226 /* ContextNativeCustomScenario.m */,
 				A1BFB36624BCEE0200394C5D /* AppNativeHandledScenario.h */,
@@ -603,6 +608,7 @@
 				A1E567AA24BE167800886226 /* ContextNativeCustomScenario.m in Sources */,
 				A1BFB36824BCEE0200394C5D /* AppNativeUnhandledScenario.m in Sources */,
 				A1BFB36324BC6D3400394C5D /* UnhandledNativeErrorScenario.m in Sources */,
+				A181223C24C0BF5B0073596F /* BreadcrumbsNativeManualScenario.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
