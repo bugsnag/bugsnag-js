@@ -33,3 +33,7 @@ export { DeviceJsHandledScenario } from './scenarios/DeviceJsHandledScenario'
 export { DeviceJsUnhandledScenario } from './scenarios/DeviceJsUnhandledScenario'
 export { DeviceNativeHandledScenario } from './scenarios/DeviceNativeHandledScenario'
 export { DeviceNativeUnhandledScenario } from './scenarios/DeviceNativeUnhandledScenario'
+
+// user.feature
+export { UserJsClientScenario } from './scenarios/UserJsClientScenario'
+export { UserJsConfigScenario } from './scenarios/UserJsConfigScenario'
