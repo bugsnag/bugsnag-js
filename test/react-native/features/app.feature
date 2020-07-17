@@ -106,7 +106,7 @@ Scenario: Unhandled native error
   And the event "app.codeBundleId" equals the platform-dependent string:
   | android | 1.2.3-r00110011 |
   | ios     | @skip           |
-  And the event "app.id" matches the string platform value:
+  And the event "app.id" equals the platform-dependent string:
   | android | com.reactnative                        |
   | ios     | org.reactjs.native.example.reactnative |
   And the event "app.type" equals the platform-dependent string:
