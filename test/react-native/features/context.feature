@@ -38,8 +38,8 @@ Scenario: JS custom context
 Scenario: Native custom context
   When I run "ContextNativeCustomScenario"
   Then I wait to receive 2 requests
-  And the event "exceptions.0.errorClass" matches the string platform value:
-  | android | Java.lang.RuntimeException |
+  And the event "exceptions.0.errorClass" equals the platform-dependent string:
+  | android | java.lang.RuntimeException |
   | ios     | NSException                |
   And the payload fields match one of the following sets:
     | events.0.exceptions.0.message | events.0.context |
@@ -47,8 +47,8 @@ Scenario: Native custom context
     | ContextNativeCustomScenario2  | context-native   |
   And the event "unhandled" is false
   And I discard the oldest request
-  And the event "exceptions.0.errorClass" matches the string platform value:
-  | android | Java.lang.RuntimeException |
+  And the event "exceptions.0.errorClass" equals the platform-dependent string:
+  | android | java.lang.RuntimeException |
   | ios     | NSException                |
   And the event "unhandled" is false
   And the payload fields match one of the following sets:

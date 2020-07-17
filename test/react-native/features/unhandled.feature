@@ -19,8 +19,8 @@ Scenario: Catching an Unhandled Native error
   When I run "UnhandledNativeErrorScenario" and relaunch the app
   And I configure Bugsnag for "UnhandledNativeErrorScenario"
   Then I wait to receive a request
-  And the event "exceptions.0.errorClass" matches the string platform value:
-  | android | Java.lang.RuntimeException |
+  And the event "exceptions.0.errorClass" equals the platform-dependent string:
+  | android | java.lang.RuntimeException |
   | ios     | NSException                |
   And the event "unhandled" is true
   And the exception "message" equals "UnhandledNativeErrorScenario"
