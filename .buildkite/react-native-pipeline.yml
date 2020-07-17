@@ -64,5 +64,5 @@ steps:
     env:
       DEVICE_TYPE: "IOS_12"
       APP_LOCATION: "build/rn0.60.ipa"
-    concurrency: 5
+    concurrency: 10
     concurrency_group: 'browserstack-app'
