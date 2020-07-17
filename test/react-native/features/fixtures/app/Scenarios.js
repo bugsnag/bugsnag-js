@@ -37,3 +37,4 @@ export { DeviceNativeUnhandledScenario } from './scenarios/DeviceNativeUnhandled
 // user.feature
 export { UserJsClientScenario } from './scenarios/UserJsClientScenario'
 export { UserJsConfigScenario } from './scenarios/UserJsConfigScenario'
+export { UserJsEventScenario } from './scenarios/UserJsEventScenario'
