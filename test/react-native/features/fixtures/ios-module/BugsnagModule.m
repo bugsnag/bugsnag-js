@@ -57,7 +57,7 @@ BugsnagConfiguration *createConfiguration(NSDictionary * options) {
   }
   if (options[@"configMetaData"] != nil) {
     NSDictionary *configMetaData = options[@"configMetaData"];
-    [config addMetaData:configMetaData toSection:@"nativedata"];
+    [config addMetadata:configMetaData toSection:@"nativedata"];
   }
   return config;
 }
