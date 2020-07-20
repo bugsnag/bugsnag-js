@@ -12,7 +12,7 @@ Scenario: Handled JS error
     | android | 1     |
     | ios     | @skip |
   And the event "app.releaseStage" equals "production"
-  # TODO: PLAT-4622
+  # TODO: PLAT-4531
   And the event "app.inForeground" equals the platform-dependent boolean:
     | android | true  |
     | ios     | @skip |
@@ -23,7 +23,9 @@ Scenario: Handled JS error
   | android | com.reactnative                        |
   | ios     | org.reactjs.native.example.reactnative |
   And the event "app.type" equals the platform-dependent string:
-  | android | android |
+  # TODO: PLAT-4639
+  | android | @skip |
+  #| android | android |
   | ios     | iOS     |
 
 Scenario: Unhandled JS error
@@ -39,7 +41,7 @@ Scenario: Unhandled JS error
     | android | 1     |
     | ios     | @skip |
   And the event "app.releaseStage" equals "production"
-  # TODO: PLAT-4622
+  # TODO: PLAT-4531
   And the event "app.inForeground" equals the platform-dependent boolean:
     | android | true  |
     | ios     | @skip |
@@ -50,7 +52,9 @@ Scenario: Unhandled JS error
   | android | com.reactnative                        |
   | ios     | org.reactjs.native.example.reactnative |
   And the event "app.type" equals the platform-dependent string:
-  | android | android |
+  # TODO: PLAT-4639
+    | android | @skip |
+  #| android | android |
   | ios     | iOS   |
 
 Scenario: Handled native error
@@ -67,7 +71,7 @@ Scenario: Handled native error
     | android | 1     |
     | ios     | @skip |
   And the event "app.releaseStage" equals "production"
-  # TODO: PLAT-4622
+  # TODO: PLAT-4531
   And the event "app.inForeground" equals the platform-dependent boolean:
     | android | true  |
     | ios     | @skip |
@@ -78,7 +82,9 @@ Scenario: Handled native error
   | android | com.reactnative                        |
   | ios     | org.reactjs.native.example.reactnative |
   And the event "app.type" equals the platform-dependent string:
-  | android | android |
+  # TODO: PLAT-4639
+    | android | @skip |
+  #| android | android |
   | ios     | iOS     |
 
 Scenario: Unhandled native error
@@ -96,7 +102,7 @@ Scenario: Unhandled native error
     | android | 1     |
     | ios     | @skip |
   And the event "app.releaseStage" equals "production"
-  # TODO: PLAT-4622
+  # TODO: PLAT-4531
   And the event "app.inForeground" equals the platform-dependent boolean:
     | android | true  |
     | ios     | @skip |
@@ -110,7 +116,9 @@ Scenario: Unhandled native error
   | android | com.reactnative                        |
   | ios     | org.reactjs.native.example.reactnative |
   And the event "app.type" equals the platform-dependent string:
-  | android | android |
+  # TODO: PLAT-4639
+    | android | @skip |
+  #| android | android |
   | ios     | iOS     |
 
 Scenario: Setting appType in configuration
@@ -119,7 +127,8 @@ Scenario: Setting appType in configuration
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "AppConfigAppTypeScenario"
   And the event "unhandled" is false
-  And the event "app.type" equals "mobileclient"
+  # TODO: PLAT-4639
+  # And the event "app.type" equals "mobileclient"
 
 Scenario: Setting releaseStage in configuration
   When I run "AppConfigReleaseStageScenario"
