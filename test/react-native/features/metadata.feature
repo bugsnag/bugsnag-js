@@ -12,8 +12,10 @@ Scenario: Setting metadata (JS)
 Scenario: Setting metadata (native)
   When I run "MetadataNativeScenario"
   Then I wait to receive a request
-  And the exception "errorClass" equals "java.lang.RuntimeException"
+  And the event "exceptions.0.errorClass" equals the platform-dependent string:
+  | android | java.lang.RuntimeException |
+  | ios     | NSException                |
   And the exception "message" equals "MetadataNativeScenario"
-  # And the event "metaData.nativedata.some_data" equals "set via config"
+  And the event "metaData.nativedata.some_data" equals "set via config"
   And the event "metaData.nativedata.some_more_data" equals "set via client"
   And the event "metaData.nativedata.even_more_data" equals "set via event"

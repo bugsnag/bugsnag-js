@@ -55,5 +55,9 @@ BugsnagConfiguration *createConfiguration(NSDictionary * options) {
   if (options[@"enabledReleaseStages"] != nil) {
     [config setEnabledReleaseStages:[NSSet setWithArray:options[@"enabledReleaseStages"]]];
   }
+  if (options[@"configMetaData"] != nil) {
+    NSDictionary *configMetaData = options[@"configMetaData"];
+    [config addMetaData:configMetaData toSection:@"nativedata"];
+  }
   return config;
 }
