@@ -135,6 +135,13 @@ public class BugsnagModule extends ReactContextBaseJavaModule {
         // ignore NoSuchKeyException
       }
 
+      try {
+        ReadableMap configMetaData = options.getReadableMap("configMetaData");
+        config.addMetadata("nativedata", configMetaData.toHashMap());
+      } catch (NoSuchKeyException e) {
+        // ignore NoSuchKeyException
+      }
+
       return config;
   }
 }
