@@ -220,4 +220,15 @@ BROWSER_STACK_ACCESS_KEY=xxx \
   npm run test:react-native:android
 ```
 
-iOS test devices are currently not supported for React-native testing.
+To run against an iOS device:
+
+```
+DEVICE_TYPE=ANDROID_9.0 \
+REACT_NATIVE_VERSION=rn0.60 \
+REG_BASIC_CREDENTIAL=xxx \
+REG_NPM_EMAIL=xxx \
+REGISTRY_URL=xxx \
+BROWSER_STACK_USERNAME=xxx \
+BROWSER_STACK_ACCESS_KEY=xxx \
+  npm run test:react-native:ios
+```

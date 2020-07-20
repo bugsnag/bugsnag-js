@@ -55,3 +55,18 @@ Then("the payload field {string} equals one of:") do |field_path, table|
   valid_values = table.raw.flatten
   assert_true(valid_values.include?(actual_value), "#{field_path} value: #{actual_value} did not match the given list: #{valid_values}")
 end
+
+Then("the following sets are present in the current payloads:") do |data_table|
+  expected_values = data_table.hashes
+  assert_equal(expected_values.length, Server.stored_requests.length)
+  payload_values = Server.stored_requests.map do |request|
+    payload_hash = {}
+    data_table.headers.each_with_object(payload_hash) do |field_path, payload_hash|
+      payload_hash[field_path] = read_key_path(request[:body], field_path)
+    end
+    payload_hash
+  end
+  expected_values.each do |expected_data|
+    assert_true(payload_values.include?(expected_data), "#{expected_data} was not found in any of the current payloads")
+  end
+end

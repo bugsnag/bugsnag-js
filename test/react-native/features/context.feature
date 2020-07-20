@@ -11,30 +11,30 @@ Scenario: JS default context
 Scenario: JS custom context
   When I run "ContextJsCustomScenario"
   Then I wait to receive 3 requests
-  And the exception "errorClass" equals "Error"
-  And the exception "message" equals "ContextJsCustomScenarioA"
+  And the following sets are present in the current payloads:
+    | events.0.exceptions.0.message | events.0.context | events.0.exceptions.0.errorClass |
+    | ContextJsCustomScenarioA      | context-config   | Error                            |
+    | ContextJsCustomScenarioB      | context-client   | Error                            |
+    | ContextJsCustomScenarioC      | context-onerror  | Error                            |
   And the event "unhandled" is false
-  And the event "context" equals "context-config"
-  And I discard the oldest request
-  And the exception "errorClass" equals "Error"
-  And the exception "message" equals "ContextJsCustomScenarioB"
+  Then I discard the oldest request
   And the event "unhandled" is false
-  And the event "context" equals "context-client"
-  And I discard the oldest request
-  And the exception "errorClass" equals "Error"
-  And the exception "message" equals "ContextJsCustomScenarioC"
+  Then I discard the oldest request
   And the event "unhandled" is false
-  And the event "context" equals "context-onerror"
 
 Scenario: Native custom context
   When I run "ContextNativeCustomScenario"
   Then I wait to receive 2 requests
-  And the exception "errorClass" equals "java.lang.RuntimeException"
-  And the exception "message" equals "ContextNativeCustomScenario"
+  And the event "exceptions.0.errorClass" equals the platform-dependent string:
+  | android | java.lang.RuntimeException |
+  | ios     | NSException                |
   And the event "unhandled" is false
-  And the event "context" equals "context-js"
+  And the following sets are present in the current payloads:
+    | events.0.exceptions.0.message | events.0.context |
+    | ContextNativeCustomScenario   | context-js       |
+    | ContextNativeCustomScenario2  | context-native   |
   And I discard the oldest request
-  And the exception "errorClass" equals "java.lang.RuntimeException"
-  And the exception "message" equals "ContextNativeCustomScenario"
+  And the event "exceptions.0.errorClass" equals the platform-dependent string:
+  | android | java.lang.RuntimeException |
+  | ios     | NSException                |
   And the event "unhandled" is false
-  And the event "context" equals "context-native"

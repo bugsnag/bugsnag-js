@@ -36,7 +36,7 @@ module.exports = {
       common.run('./gradlew build', true)
     })
   },
-  build: function build (sourceFixtures, destFixtures) {
+  buildAndroid: function buildAndroid (sourceFixtures, destFixtures) {
     const version = process.env.NOTIFIER_VERSION || common.determineVersion()
     const rnVersion = process.env.REACT_NATIVE_VERSION
     const registryUrl = process.env.REGISTRY_URL
@@ -66,5 +66,46 @@ module.exports = {
 
     // Finally, copy the APK back to the host
     fs.copyFileSync(`${destFixtures}/${rnVersion}/android/app/build/outputs/apk/release/app-release.apk`, `/app/build/${rnVersion}.apk`)
+  },
+  buildIOS: function buildIOS () {
+    const version = process.env.NOTIFIER_VERSION || common.determineVersion()
+    const rnVersion = process.env.REACT_NATIVE_VERSION
+    const registryUrl = process.env.REGISTRY_URL
+    const fixtureDir = `test/react-native/features/fixtures`
+    const targetDir = `${fixtureDir}/${rnVersion}`
+    const initialDir = process.cwd()
+
+    // We're not in docker so check the above are set
+    if ((rnVersion == undefined) || (registryUrl == undefined)) {
+      throw `Both REACT_NATIVE_VERSION and REGISTRY_URL environment variables must be set`
+    }
+
+    // Copy the JS code into the test fixture
+    console.log(`Copying JS app data from ${fixtureDir}/app to ${targetDir}`)
+    common.run(`cp -r ${fixtureDir}/app ${targetDir}/app`, true)
+
+    // JavaScript layer
+    console.log(`Changing directory to: ${targetDir} and running "npm install"`)
+    common.changeDir(`${targetDir}`)
+    common.run(`npm install --registry ${registryUrl}`, true)
+
+    // Install notifier
+    console.log(`Installing notifier: ${version}`)
+    const command = `npm install @bugsnag/react-native@${version} --registry ${registryUrl}`
+    common.run(command, true)
+
+    // Performing local build steps
+    console.log(`Locating local build script`)
+    if (!fs.existsSync(`./build.sh`)) {
+      throw `Local iOS build file at ./build.sh could not be found`
+    }
+    common.run(`./build.sh`, true)
+
+    // Copy file out to build directory
+    common.changeDir(initialDir)
+    if (!fs.existsSync(`build`)) {
+      common.run('mkdir build')
+    }
+    fs.copyFileSync(`${targetDir}/output/output.ipa`, `build/${rnVersion}.ipa`)
   }
 }
