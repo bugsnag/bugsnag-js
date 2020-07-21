@@ -127,7 +127,20 @@ int bsg_ksjsoncodec_i_appendEscapedString(
     }
 
     // Deal with complicated case (if any)
+    int result;
     for (; src < srcEnd; src++) {
+        
+        // If we add an escaped control character this may exceed the buffer by up to
+        // 6 characters: add this chunk now, reset the buffer and carry on
+        if (dst + 6 > workBuffer + BSG_KSJSONCODEC_WorkBufferSize) {
+            size_t encLength = (size_t)(dst - workBuffer);
+            unlikely_if((result = addJSONData(context, dst - encLength, encLength)) !=
+                        BSG_KSJSON_OK) {
+                return result;
+            }
+            dst = workBuffer;
+        }
+        
         switch (*src) {
         case '\\':
         case '\"':
@@ -175,8 +188,7 @@ int bsg_ksjsoncodec_i_appendEscapedString(
         }
     }
     size_t encLength = (size_t)(dst - workBuffer);
-    dst -= encLength;
-    return addJSONData(context, dst, encLength);
+    return addJSONData(context, dst - encLength, encLength);
 }
 
 /** Escape a string for use with JSON and send to data handler.
@@ -198,8 +210,8 @@ int bsg_ksjsoncodec_i_addEscapedString(BSG_KSJSONEncodeContext *const context,
     size_t offset = 0;
     while (offset < length) {
         size_t toAdd = length - offset;
-        unlikely_if(toAdd > BSG_KSJSONCODEC_WorkBufferSize / 2) {
-            toAdd = BSG_KSJSONCODEC_WorkBufferSize / 2;
+        unlikely_if(toAdd > BSG_KSJSONCODEC_WorkBufferSize) {
+            toAdd = BSG_KSJSONCODEC_WorkBufferSize;
         }
         result = bsg_ksjsoncodec_i_appendEscapedString(context, string + offset,
                                                        toAdd);

@@ -210,17 +210,6 @@ static BugsnagClient *bsg_g_bugsnag_client = NULL;
     }
 }
 
-+ (NSDateFormatter *)payloadDateFormatter {
-    static NSDateFormatter *formatter;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-      formatter = [NSDateFormatter new];
-      formatter.dateFormat = @"yyyy'-'MM'-'dd'T'HH':'mm':'ssZZZ";
-      formatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
-    });
-    return formatter;
-}
-
 + (void)addRuntimeVersionInfo:(NSString *)info
                       withKey:(NSString *)key {
     if ([self bugsnagStarted]) {

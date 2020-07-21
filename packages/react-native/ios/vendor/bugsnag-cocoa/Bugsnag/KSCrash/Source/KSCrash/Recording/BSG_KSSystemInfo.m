@@ -29,6 +29,7 @@
 #import "BSG_KSSystemInfo.h"
 #import "BSG_KSSystemInfoC.h"
 #import "BSG_KSDynamicLinker.h"
+#import "BSG_KSMachHeaders.h"
 #import "BSG_KSJSONCodecObjC.h"
 #import "BSG_KSMach.h"
 #import "BSG_KSSysCtl.h"
@@ -37,6 +38,7 @@
 #import "BSG_KSLogger.h"
 #import "BSG_KSCrashReportFields.h"
 #import "BSG_KSMach.h"
+#import "BSG_KSCrash.h"
 
 #import <CommonCrypto/CommonDigest.h>
 #if BSG_PLATFORM_IOS || BSG_PLATFORM_TVOS
@@ -259,7 +261,7 @@
  * @return YES if the device is jailbroken.
  */
 + (BOOL)isJailbroken {
-    return bsg_ksdlimageNamed("MobileSubstrate", false) != UINT32_MAX;
+    return bsg_mach_headers_image_named("MobileSubstrate", false) != NULL;
 }
 
 /** Check if the current build is a debug build.
@@ -415,6 +417,8 @@
     };
     BSGDictSetSafeObject(sysInfo, memory, @BSG_KSSystemField_Memory);
 
+    NSDictionary *statsInfo = [[BSG_KSCrash sharedInstance] captureAppStats];
+    BSGDictSetSafeObject(sysInfo, statsInfo, @BSG_KSCrashField_AppStats);
     return sysInfo;
 }
 

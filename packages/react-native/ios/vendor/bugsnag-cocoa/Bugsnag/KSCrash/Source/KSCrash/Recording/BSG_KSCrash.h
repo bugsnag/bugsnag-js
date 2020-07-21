@@ -99,8 +99,6 @@
  * @param eventOverrides the Bugsnag Error Payload, for handled errors only
  * @param metadata additional information to attach to the report
  * @param config delivery options
- * @param terminateProgram If true, do not return from this function call.
- * Terminate the program instead.
  */
 - (void)reportUserException:(NSString *)name
                      reason:(NSString *)reason
@@ -109,8 +107,7 @@
           callbackOverrides:(NSDictionary *)overrides
              eventOverrides:(NSDictionary *)eventOverrides
                    metadata:(NSDictionary *)metadata
-                     config:(NSDictionary *)config
-           terminateProgram:(BOOL)terminateProgram;
+                     config:(NSDictionary *)config;
 
 /**
  * Collects a trace of all the threads running in application, if the user has
@@ -122,13 +119,10 @@
  */
 - (NSArray<BugsnagThread *> *)captureThreads:(NSException *)exc depth:(int)depth;
 
-/** If YES, user reported exceptions will suspend all threads during report
- * generation. All threads will be suspended while generating a crash report for
- * a user reported exception.
- *
- * Default: YES
+/**
+ * Collects information about the application's foreground state (duration in foreground/background)
  */
-@property(nonatomic, readwrite, assign) BOOL suspendThreadsForUserReported;
+- (NSDictionary *)captureAppStats;
 
 /** If YES, reports will be sent even if a debugger is attached
  *
@@ -137,7 +131,8 @@
 @property(nonatomic, readwrite, assign) BOOL reportWhenDebuggerIsAttached;
 
 /**
- * If YES, thread traces will be collected with each report.
+* The methodology used for tracing threads.
+* The value will be equal to an enum value from BSGThreadSendPolicy
  */
 @property(nonatomic, readwrite, assign) int threadTracingEnabled;
 
