@@ -1,0 +1,104 @@
+@ios_only
+Feature: iOS Device data
+
+Scenario: Handled JS error
+  When I run "DeviceJsHandledScenario"
+  Then I wait to receive a request
+  And the exception "errorClass" equals "Error"
+  And the exception "message" equals "DeviceJsHandledScenario"
+  And the event "unhandled" is false
+
+  And the event "device.id" matches "^(\d|[abcdef]){40}$"
+  And the event "device.orientation" equals "portrait"
+  And the event "device.osName" equals "iOS"
+  And the event "device.jailbroken" is false
+  And the event "device.osVersion" matches "^\d+\.\d+(.\d+)?$"
+  And the event "device.time" matches "^\d{4}\-\d{2}\-\d{2}T\d{2}:\d{2}:[\d\.]+(\+\d+)?Z?$"
+  And the event "device.locale" is not null
+  And the event "device.runtimeVersions.reactNative" matches "^\d+\.\d+\.\d+$"
+  And the event "device.runtimeVersions.osBuild" is not null
+  And the event "device.runtimeVersions.clangVersion" matches "^\d+\.\d+\.\d+.+$"
+  And the event "device.runtimeVersions.reactNativeJsengine" is not null
+  And the payload field "events.0.device.freeMemory" is greater than 0
+  And the event "device.manufacturer" equals "Apple"
+  And the payload field "events.0.device.freeDisk" is greater than 0
+  And the event "device.modelNumber" is not null
+  And the event "device.model" matches "^iPhone(\d|[,\.])+$"
+  And the payload field "events.0.device.totalMemory" is greater than 0
+
+Scenario: Unhandled JS error
+  When I run "DeviceJsUnhandledScenario" and relaunch the app
+  And I configure Bugsnag for "DeviceJsUnhandledScenario"
+  Then I wait to receive a request
+  And the exception "errorClass" equals "Error"
+  And the exception "message" equals "DeviceJsUnhandledScenario"
+  And the event "unhandled" is true
+
+  And the event "device.id" matches "^(\d|[abcdef]){40}$"
+  And the event "device.orientation" equals "portrait"
+  And the event "device.osName" equals "iOS"
+  And the event "device.jailbroken" is false
+  And the event "device.osVersion" matches "^\d+\.\d+(.\d+)?$"
+  And the event "device.time" matches "^\d{4}\-\d{2}\-\d{2}T\d{2}:\d{2}:[\d\.]+(\+\d+)?Z?$"
+  And the event "device.locale" is not null
+  And the event "device.runtimeVersions.reactNative" matches "^\d+\.\d+\.\d+$"
+  And the event "device.runtimeVersions.osBuild" is not null
+  And the event "device.runtimeVersions.clangVersion" matches "^\d+\.\d+\.\d+.+$"
+  And the event "device.runtimeVersions.reactNativeJsengine" is not null
+  And the payload field "events.0.device.freeMemory" is greater than 0
+  And the event "device.manufacturer" equals "Apple"
+  And the payload field "events.0.device.freeDisk" is greater than 0
+  And the event "device.modelNumber" is not null
+  And the event "device.model" matches "^iPhone(\d|[,\.])+$"
+  And the payload field "events.0.device.totalMemory" is greater than 0
+
+Scenario: Handled native error
+  When I run "DeviceNativeHandledScenario"
+  Then I wait to receive a request
+  And the exception "errorClass" equals "NSException"
+  And the exception "message" equals "DeviceNativeHandledScenario"
+  And the event "unhandled" is false
+
+  And the event "device.id" matches "^(\d|[abcdef]){40}$"
+  And the event "device.orientation" equals "portrait"
+  And the event "device.osName" equals "iOS"
+  And the event "device.jailbroken" is false
+  And the event "device.osVersion" matches "^\d+\.\d+(.\d+)?$"
+  And the event "device.time" matches "^\d{4}\-\d{2}\-\d{2}T\d{2}:\d{2}:[\d\.]+(\+\d+)?Z?$"
+  And the event "device.locale" is not null
+  And the event "device.runtimeVersions.reactNative" matches "^\d+\.\d+\.\d+$"
+  And the event "device.runtimeVersions.osBuild" is not null
+  And the event "device.runtimeVersions.clangVersion" matches "^\d+\.\d+\.\d+.+$"
+  And the event "device.runtimeVersions.reactNativeJsengine" is not null
+  And the payload field "events.0.device.freeMemory" is greater than 0
+  And the event "device.manufacturer" equals "Apple"
+  And the payload field "events.0.device.freeDisk" is greater than 0
+  And the event "device.modelNumber" is not null
+  And the event "device.model" matches "^iPhone(\d|[,\.])+$"
+  And the payload field "events.0.device.totalMemory" is greater than 0
+
+Scenario: Unhandled native error
+  When I run "DeviceNativeUnhandledScenario" and relaunch the app
+  And I configure Bugsnag for "DeviceNativeUnhandledScenario"
+  Then I wait to receive a request
+  And the exception "errorClass" equals "NSException"
+  And the exception "message" equals "DeviceNativeUnhandledScenario"
+  And the event "unhandled" is true
+
+  And the event "device.id" matches "^(\d|[abcdef]){40}$"
+  And the event "device.osName" equals "iOS"
+  And the event "device.jailbroken" is false
+  And the event "device.osVersion" matches "^\d+\.\d+(.\d+)?$"
+  And the event "device.time" matches "^\d{4}\-\d{2}\-\d{2}T\d{2}:\d{2}:[\d\.]+(\+\d+)?Z?$"
+  And the event "device.locale" is not null
+  # Pending PLAT-4669
+  #And the event "device.runtimeVersions.reactNative" matches "^\d+\.\d+\.\d+$"
+  #And the event "device.runtimeVersions.reactNativeJsengine" is not null
+  And the event "device.runtimeVersions.osBuild" is not null
+  And the event "device.runtimeVersions.clangVersion" matches "^\d+\.\d+\.\d+.+$"
+  And the payload field "events.0.device.freeMemory" is greater than 0
+  And the event "device.manufacturer" equals "Apple"
+  And the payload field "events.0.device.freeDisk" is greater than 0
+  And the event "device.modelNumber" is not null
+  And the event "device.model" matches "^iPhone(\d|[,\.])+$"
+  And the payload field "events.0.device.totalMemory" is greater than 0

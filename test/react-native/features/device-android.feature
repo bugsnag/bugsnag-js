@@ -1,4 +1,5 @@
-Feature: Device data
+@android_only
+Feature: Android Device data
 
 Scenario: Handled JS error
   When I run "DeviceJsHandledScenario"
@@ -7,7 +8,6 @@ Scenario: Handled JS error
   And the exception "message" equals "DeviceJsHandledScenario"
   And the event "unhandled" is false
 
-  # Android
   And the event "device.id" is not null
   And the event "device.jailbroken" is false
   And the event "device.locale" equals "en_US"
@@ -32,7 +32,6 @@ Scenario: Unhandled JS error
   And the exception "message" equals "DeviceJsUnhandledScenario"
   And the event "unhandled" is true
 
-  # Android
   And the event "device.id" is not null
   And the event "device.jailbroken" is false
   And the event "device.locale" equals "en_US"
@@ -57,7 +56,6 @@ Scenario: Handled native error
   And the exception "message" equals "DeviceNativeHandledScenario"
   And the event "unhandled" is false
 
-  # Android
   And the event "device.id" is not null
   And the event "device.jailbroken" is false
   And the event "device.locale" equals "en_US"
@@ -82,7 +80,6 @@ Scenario: Unhandled native error
   And the exception "message" equals "DeviceNativeUnhandledScenario"
   And the event "unhandled" is true
 
-  # Android
   And the event "device.id" is not null
   And the event "device.jailbroken" is false
   And the event "device.locale" equals "en_US"
