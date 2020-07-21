@@ -1,5 +1,5 @@
-@androidOnly
-Feature: Device data
+@android_only
+Feature: Android Device data
 
 Scenario: Handled JS error
   When I run "DeviceJsHandledScenario"
