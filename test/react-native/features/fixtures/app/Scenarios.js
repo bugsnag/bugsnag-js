@@ -43,3 +43,4 @@ export { UserNativeClientScenario } from './scenarios/UserNativeClientScenario'
 // metadata.feature
 export { MetadataJsScenario } from './scenarios/MetadataJsScenario'
 export { MetadataNativeScenario } from './scenarios/MetadataNativeScenario'
+export { MetadataNativeUnhandledScenario } from './scenariosMetadataNativeUnhandledScenario'

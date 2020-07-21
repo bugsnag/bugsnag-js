@@ -9,7 +9,7 @@ Scenario: Setting metadata (JS)
   And the event "metaData.jsdata.some_more_data" equals "set via client"
   And the event "metaData.jsdata.even_more_data" equals "set via event"
 
-Scenario: Setting metadata (native)
+Scenario: Setting metadata (native handled) 
   When I run "MetadataNativeScenario"
   Then I wait to receive a request
   And the event "exceptions.0.errorClass" equals the platform-dependent string:
@@ -19,3 +19,18 @@ Scenario: Setting metadata (native)
   And the event "metaData.nativedata.some_data" equals "set via config"
   And the event "metaData.nativedata.some_more_data" equals "set via client"
   And the event "metaData.nativedata.even_more_data" equals "set via event"
+
+Scenario: Setting metadata (native unhandled) 
+  When I run "MetadataNativeUnhandledScenario" and relaunch the app
+  And I configure Bugsnag for "MetadataNativeUnhandledScenario"
+  Then I wait to receive a request
+  And the event "exceptions.0.errorClass" equals the platform-dependent string:
+  | android | java.lang.RuntimeException |
+  | ios     | NSException                |
+  And the exception "message" equals "MetadataNativeUnhandledScenario"
+  And the event "metaData.nativedata.some_data" equals "set via config"
+  And the event "metaData.nativedata.some_more_data" equals "set via client"
+  # Skipped on iOS as callbacks cannot be added outside of config
+  And the event "metaData.nativedata.even_more_data" equals the platform-dependent string:
+  | android | set via event |
+  | ios     | @skip         |
