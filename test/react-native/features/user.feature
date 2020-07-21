@@ -26,3 +26,15 @@ Scenario: Setting user in JS via event
   And the event "user.email" equals "bug@sn.ag"
   And the event "user.name" equals "Bug Snag"
   And the event "user.id" equals "123"
+
+Scenario: Setting user in native via client
+  When I run "UserNativeClientScenario" and relaunch the app
+  And I configure Bugsnag for "UserNativeClientScenario"
+  Then I wait to receive a request
+  And the event "exceptions.0.errorClass" equals the platform-dependent string:
+  | android | java.lang.RuntimeException |
+  | ios     | NSException                |
+  And the exception "message" equals "UserNativeClientScenario"
+  And the event "user.email" equals "bug@sn.ag"
+  And the event "user.name" equals "Bug Snag"
+  And the event "user.id" equals "123"
