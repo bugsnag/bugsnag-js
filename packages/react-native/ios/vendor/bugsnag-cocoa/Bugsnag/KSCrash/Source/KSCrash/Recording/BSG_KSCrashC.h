@@ -136,8 +136,6 @@ void bsg_kscrash_setCrashNotifyCallback(
  * @param overrides Report fields overridden by callbacks, collated in the
  *                  final report
  * @param metadata additional information to attach to the report
- * @param terminateProgram If true, do not return from this function call.
- * Terminate the program instead.
  */
 void bsg_kscrash_reportUserException(const char *name, const char *reason,
                                      const char *severity,
@@ -146,17 +144,7 @@ void bsg_kscrash_reportUserException(const char *name, const char *reason,
                                      const char *eventOverrides,
                                      const char *metadata,
                                      const char *appState,
-                                     const char *config,
-                                     bool terminateProgram);
-
-/** If YES, user reported exceptions will suspend all threads during report
- * generation. All threads will be suspended while generating a crash report for
- * a user reported exception.
- *
- * Default: YES
- */
-void bsg_kscrash_setSuspendThreadsForUserReported(
-    bool suspendThreadsForUserReported);
+                                     const char *config);
 
 /** If YES, user reported exceptions even if a debugger is attached
  *

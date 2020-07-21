@@ -60,8 +60,6 @@ void bsg_kscrashsentry_uninstallUserExceptionHandler(void);
  *                  final report
  * @param metadata additional information to attach to the report
  *
- * @param terminateProgram If true, do not return from this function call.
- * Terminate the program instead.
  */
 void bsg_kscrashsentry_reportUserException(const char *name, const char *reason,
         const char *severity,
@@ -70,8 +68,7 @@ void bsg_kscrashsentry_reportUserException(const char *name, const char *reason,
         const char *eventOverrides,
         const char *metadata,
         const char *appState,
-        const char *config,
-        bool terminateProgram);
+        const char *config);
 
 /**
  * Suspends execution of all threads, which is required to collect an

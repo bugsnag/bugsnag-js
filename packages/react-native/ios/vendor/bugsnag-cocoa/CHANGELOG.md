@@ -1,6 +1,37 @@
 Changelog
 =========
 
+## TBD
+
+### Bug fixes
+
+* Ensure foreground stats are recorded for handled errors
+  [#755](https://github.com/bugsnag/bugsnag-cocoa/pull/755)
+
+* Synchronize access to sessions being delivered in de-duplication code
+  [#756](https://github.com/bugsnag/bugsnag-cocoa/pull/756)
+
+* Removed non-thread safe date formatter
+  [#758](https://github.com/bugsnag/bugsnag-cocoa/pull/758)
+
+## 6.1.1 (2020-07-16)
+
+### Bug fixes
+
+* Improve performance of thread capture
+  [#723](https://github.com/bugsnag/bugsnag-cocoa/pull/723)
+  [#727](https://github.com/bugsnag/bugsnag-cocoa/pull/727)
+  [#728](https://github.com/bugsnag/bugsnag-cocoa/pull/728)
+
+* Improve thread-safety of breadcrumb count
+  [#743](https://github.com/bugsnag/bugsnag-cocoa/pull/743)
+
+* Fix JSON serialisation of strings with control characters
+  [#739](https://github.com/bugsnag/bugsnag-cocoa/pull/739)
+
+* Disable reporting of notable addresses from registers for handled errors
+  [#741](https://github.com/bugsnag/bugsnag-cocoa/pull/741)
+
 ## 6.1.0 (2020-07-06)
 
 ### Enhancements
@@ -9,6 +40,8 @@ Changelog
   [#729](https://github.com/bugsnag/bugsnag-cocoa/pull/729)
 
 ## 6.0.1 (2020-06-29)
+
+### Bug fixes
 
 * Move binary images store declaration from header file
   [#725](https://github.com/bugsnag/bugsnag-cocoa/pull/725)

@@ -83,11 +83,6 @@ NSString * const kBugsnagUserUserId = @"BugsnagUserUserId";
  *  Meta-information about the state of Bugsnag
  */
 @property(readwrite, retain, nullable) BugsnagMetadata *config;
-
-/**
- *  Rolling snapshots of user actions leading up to a crash report
- */
-@property(readonly, strong, nullable) BugsnagBreadcrumbs *breadcrumbs;
 @end
 
 // =============================================================================
@@ -122,7 +117,6 @@ NSString * const kBugsnagUserUserId = @"BugsnagUserUserId";
     [copy setAutoDetectErrors:self.autoDetectErrors];
     [copy setAutoTrackSessions:self.autoTrackSessions];
     [copy setBundleVersion:self.bundleVersion];
-    // Skip breadcrumbs - none should have been set
     [copy setConfig:[[BugsnagMetadata alloc] initWithDictionary:[[self.config toDictionary] mutableCopy]]];
     [copy setContext:self.context];
     [copy setEnabledBreadcrumbTypes:self.enabledBreadcrumbTypes];
@@ -220,7 +214,8 @@ NSString * const kBugsnagUserUserId = @"BugsnagUserUserId";
     _plugins = [NSMutableSet new];
     _enabledReleaseStages = nil;
     _redactedKeys = [NSSet setWithArray:@[@"password"]];
-    _breadcrumbs = [[BugsnagBreadcrumbs alloc] initWithConfiguration:self];
+    _enabledBreadcrumbTypes = BSGEnabledBreadcrumbTypeAll;
+    _maxBreadcrumbs = 25;
     _autoTrackSessions = YES;
     _sendThreads = BSGThreadSendPolicyAlways;
     // Default to recording all error types
@@ -455,16 +450,23 @@ NSString * const kBugsnagUserUserId = @"BugsnagUserUserId";
 // MARK: - Properties: Getters and Setters
 // -----------------------------------------------------------------------------
 
+@synthesize maxBreadcrumbs = _maxBreadcrumbs;
+
 - (NSUInteger)maxBreadcrumbs {
-    return self.breadcrumbs.capacity;
+    @synchronized (self) {
+        return _maxBreadcrumbs;
+    }
 }
 
-- (void)setMaxBreadcrumbs:(NSUInteger)capacity {
-    if (capacity <= 100) {
-        self.breadcrumbs.capacity = capacity;
-    } else {
-        bsg_log_err(@"Invalid configuration value detected. Option maxBreadcrumbs "
-                    "should be an integer between 0-100. Supplied value is %lu", (unsigned long) capacity);
+- (void)setMaxBreadcrumbs:(NSUInteger)maxBreadcrumbs {
+    @synchronized (self) {
+        if (maxBreadcrumbs <= 100) {
+            _maxBreadcrumbs = maxBreadcrumbs;
+        } else {
+            bsg_log_err(@"Invalid configuration value detected. Option maxBreadcrumbs "
+                        "should be an integer between 0-100. Supplied value is %lu",
+                        (unsigned long) maxBreadcrumbs);
+        }
     }
 }
 
@@ -547,12 +549,18 @@ NSString * const kBugsnagUserUserId = @"BugsnagUserUserId";
 
 // MARK: - enabledBreadcrumbTypes
 
+@synthesize enabledBreadcrumbTypes = _enabledBreadcrumbTypes;
+
 - (BSGEnabledBreadcrumbType)enabledBreadcrumbTypes {
-    return self.breadcrumbs.enabledBreadcrumbTypes;
+    @synchronized (self) {
+        return _enabledBreadcrumbTypes;
+    }
 }
 
 - (void)setEnabledBreadcrumbTypes:(BSGEnabledBreadcrumbType)enabledBreadcrumbTypes {
-    self.breadcrumbs.enabledBreadcrumbTypes = enabledBreadcrumbTypes;
+    @synchronized (self) {
+        _enabledBreadcrumbTypes = enabledBreadcrumbTypes;
+    }
 }
 
 // MARK: -

@@ -31,6 +31,14 @@ Before('@skip_ios_12') do |scenario|
   skip_this_scenario("Skipping scenario") if device_type == 'IOS_12'
 end
 
+Before('@androidOnly') do |scenario|
+  skip_this_scenario("Skipping scenario") if $driver.capabilities["os"] == 'ios'
+end
+
+Before('@iosOnly') do |scenario|
+  skip_this_scenario("Skipping scenario") if $driver.capabilities["os"] == 'android'
+end
+
 After do |_scenario|
   $driver.reset
 end

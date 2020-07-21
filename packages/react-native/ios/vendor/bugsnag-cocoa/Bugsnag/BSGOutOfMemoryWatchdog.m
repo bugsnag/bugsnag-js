@@ -16,6 +16,7 @@
 #import "BugsnagSessionTracker.h"
 #import "Private.h"
 #import "BugsnagErrorTypes.h"
+#import "BSG_RFC3339DateTool.h"
 
 @interface BSGOutOfMemoryWatchdog ()
 @property(nonatomic, getter=isWatching) BOOL watching;
@@ -24,10 +25,6 @@
 @property(nonatomic, strong, readwrite) NSMutableDictionary *cachedFileInfo;
 @property(nonatomic, strong, readwrite) NSDictionary *lastBootCachedFileInfo;
 @property(nonatomic) NSString *codeBundleId;
-@end
-
-@interface Bugsnag ()
-+ (NSDateFormatter *_Nonnull)payloadDateFormatter;
 @end
 
 @implementation BSGOutOfMemoryWatchdog
@@ -152,7 +149,7 @@
 }
 
 - (void)handleLowMemoryChange:(NSNotification *)note {
-    self.cachedFileInfo[@"device"][@"lowMemory"] = [[Bugsnag payloadDateFormatter]
+    self.cachedFileInfo[@"device"][@"lowMemory"] = [BSG_RFC3339DateTool
                                                     stringFromDate:[NSDate date]];
     [self writeSentinelFile];
 }
