@@ -43,13 +43,13 @@ steps:
       message: '${BUILDKITE_MESSAGE}'
     async: true
 
-  # - label: 'Lint'
-  #   timeout_in_minutes: 10
-  #   plugins:
-  #     docker-compose#v3.3.0:
-  #       run: ci
-  #   command: 'npm run test:lint'
-  #
+   - label: 'Lint'
+     timeout_in_minutes: 10
+     plugins:
+       docker-compose#v3.3.0:
+         run: ci
+     command: 'npm run test:lint'
+
   # - label: 'Unit tests'
   #   timeout_in_minutes: 10
   #   plugins:
