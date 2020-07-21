@@ -7,6 +7,7 @@
 //
 
 #import "BugsnagPlatformConditional.h"
+#import "BSG_RFC3339DateTool.h"
 
 #import "BugsnagDeviceWithState.h"
 #import "BugsnagCollections.h"
@@ -53,10 +54,6 @@ NSNumber *BSGDeviceFreeSpace(NSSearchPathDirectory directory) {
     return freeBytes;
 }
 
-@interface Bugsnag ()
-+ (NSDateFormatter *)payloadDateFormatter;
-@end
-
 @interface BugsnagDevice ()
 + (void)populateFields:(BugsnagDevice *)device
             dictionary:(NSDictionary *)event;
@@ -64,18 +61,7 @@ NSNumber *BSGDeviceFreeSpace(NSSearchPathDirectory directory) {
 - (NSDictionary *)toDictionary;
 @end
 
-@interface BugsnagDeviceWithState ()
-@property (nonatomic, readonly) NSDateFormatter *formatter;
-@end
-
 @implementation BugsnagDeviceWithState
-
-- (instancetype)init {
-    if (self = [super init]) {
-        _formatter = [Bugsnag payloadDateFormatter];
-    }
-    return self;
-}
 
 + (BugsnagDeviceWithState *) deviceFromJson:(NSDictionary *)json {
     BugsnagDeviceWithState *device = [BugsnagDeviceWithState new];
@@ -99,7 +85,7 @@ NSNumber *BSGDeviceFreeSpace(NSSearchPathDirectory directory) {
 
     id time = json[@"time"];
     if (time && [time isKindOfClass:[NSString class]]) {
-        device.time = [device.formatter dateFromString:time];
+        device.time = [BSG_RFC3339DateTool dateFromString:time];
     }
     return device;
 }
@@ -125,7 +111,7 @@ NSNumber *BSGDeviceFreeSpace(NSSearchPathDirectory directory) {
     NSString *val = [event valueForKeyPath:@"report.timestamp"];
 
     if (val != nil) {
-        device.time = [device.formatter dateFromString:val];
+        device.time = [BSG_RFC3339DateTool dateFromString:val];
     }
     return device;
 }
@@ -138,7 +124,7 @@ NSNumber *BSGDeviceFreeSpace(NSSearchPathDirectory directory) {
     BSGDictInsertIfNotNil(dict, self.orientation, @"orientation");
 
     if (self.time != nil) {
-        BSGDictInsertIfNotNil(dict, [self.formatter stringFromDate:self.time], @"time");
+        BSGDictInsertIfNotNil(dict, [BSG_RFC3339DateTool stringFromDate:self.time], @"time");
     }
     return dict;
 }

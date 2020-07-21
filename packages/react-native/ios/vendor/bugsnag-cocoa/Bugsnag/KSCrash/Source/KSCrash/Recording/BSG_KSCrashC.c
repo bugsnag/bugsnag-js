@@ -29,6 +29,7 @@
 #include "BSG_KSCrashReport.h"
 #include "BSG_KSCrashSentry_User.h"
 #include "BSG_KSMach.h"
+#include "BSG_KSMachHeaders.h"
 #include "BSG_KSObjC.h"
 #include "BSG_KSString.h"
 #include "BSG_KSSystemInfoC.h"
@@ -97,7 +98,12 @@ BSG_KSCrashType bsg_kscrash_install(const char *const crashReportFilePath,
     BSG_KSLOG_DEBUG("Installing crash reporter.");
 
     BSG_KSCrash_Context *context = crashContext();
-
+    
+    // Initialize local store of dynamically loaded libraries so that binary
+    // image information can be extracted for reports
+    bsg_mach_headers_initialize();
+    bsg_mach_headers_register_for_changes();
+    
     if (bsg_g_installed) {
         BSG_KSLOG_DEBUG("Crash reporter already installed.");
         return context->config.handlingCrashTypes;
@@ -187,20 +193,12 @@ void bsg_kscrash_reportUserException(const char *name, const char *reason,
         const char *eventOverrides,
         const char *metadata,
         const char *appState,
-        const char *config,
-        bool terminateProgram) {
+        const char *config) {
     bsg_kscrashsentry_reportUserException(name, reason,
             severity,
             handledState, overrides,
             eventOverrides,
-            metadata, appState, config,
-            terminateProgram);
-}
-
-void bsg_kscrash_setSuspendThreadsForUserReported(
-    bool suspendThreadsForUserReported) {
-    crashContext()->crash.suspendThreadsForUserReported =
-        suspendThreadsForUserReported;
+            metadata, appState, config);
 }
 
 void bsg_kscrash_setWriteBinaryImagesForUserReported(
@@ -220,7 +218,6 @@ void bsg_kscrash_setThreadTracingEnabled(int threadTracingEnabled) {
 }
 
 char *bsg_kscrash_captureThreadTrace(int discardDepth, int frameCount, uintptr_t *callstack) {
-    bsg_kscrashsentry_suspend_threads_user();
     BSG_KSCrash_Context *context = crashContext();
 
     // populate context with pre-recorded stacktrace/thread info
@@ -230,9 +227,20 @@ char *bsg_kscrash_captureThreadTrace(int discardDepth, int frameCount, uintptr_t
     context->crash.userException.discardDepth = discardDepth;
     context->crash.offendingThread = bsg_ksmachthread_self();
     context->crash.crashType = BSG_KSCrashTypeUserReported;
-    context->crash.suspendThreadsForUserReported = true;
 
+    // No need to gather notable addresses for handled errors
+    context->config.introspectionRules.enabled = false;
+    
+    // Only suspend threads if tracing is set to always
+    // (to ensure trace is captured at the same point in time)
+    if (context->crash.threadTracingEnabled == 0) {
+        bsg_kscrashsentry_suspend_threads_user();
+    }
+    
     char *trace = bsg_kscrw_i_captureThreadTrace(context);
-    bsg_kscrashsentry_resume_threads_user(false);
+    
+    if (context->crash.threadTracingEnabled == 0) {
+        bsg_kscrashsentry_resume_threads_user(false);
+    }
     return trace;
 }

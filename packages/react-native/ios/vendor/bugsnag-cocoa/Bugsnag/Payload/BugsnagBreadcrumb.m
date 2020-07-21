@@ -23,6 +23,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 //
+#import "BSG_RFC3339DateTool.h"
+
 #import "BugsnagBreadcrumb.h"
 #import "BugsnagBreadcrumbs.h"
 #import "Bugsnag.h"
@@ -72,10 +74,6 @@ BSGBreadcrumbType BSGBreadcrumbTypeFromString(NSString *value) {
     }
 }
 
-@interface Bugsnag ()
-+ (NSDateFormatter *_Nonnull)payloadDateFormatter;
-@end
-
 @implementation BugsnagBreadcrumb
 
 - (instancetype)init {
@@ -93,8 +91,7 @@ BSGBreadcrumbType BSGBreadcrumbTypeFromString(NSString *value) {
 
 - (NSDictionary *)objectValue {
     @synchronized (self) {
-        NSString *timestamp =
-        [[Bugsnag payloadDateFormatter] stringFromDate:_timestamp];
+        NSString *timestamp = [BSG_RFC3339DateTool stringFromDate:_timestamp];
         if (timestamp && _message.length > 0) {
             NSMutableDictionary *metadata = [NSMutableDictionary new];
             for (NSString *key in _metadata) {
@@ -212,7 +209,7 @@ BSGBreadcrumbType BSGBreadcrumbTypeFromString(NSString *value) {
         return [self breadcrumbWithBlock:^(BugsnagBreadcrumb *crumb) {
             crumb.message = dict[BSGKeyMessage] ?: dict[BSGKeyName];
             crumb.metadata = dict[BSGKeyMetadata] ?: dict[@"metadata"];
-            crumb.timestamp = [[Bugsnag payloadDateFormatter] dateFromString:dict[BSGKeyTimestamp]];
+            crumb.timestamp = [BSG_RFC3339DateTool dateFromString:dict[BSGKeyTimestamp]];
             crumb.type = BSGBreadcrumbTypeFromString(dict[BSGKeyType]);
         }];
     }

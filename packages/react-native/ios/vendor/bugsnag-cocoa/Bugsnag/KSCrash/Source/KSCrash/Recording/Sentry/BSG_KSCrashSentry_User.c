@@ -84,18 +84,13 @@ void bsg_kscrashsentry_reportUserException(const char *name, const char *reason,
         const char *eventOverrides,
         const char *metadata,
         const char *appState,
-        const char *config,
-        bool terminateProgram) {
+        const char *config) {
     if (bsg_g_context == NULL) {
         BSG_KSLOG_WARN("User-reported exception sentry is not installed. "
                        "Exception has not been recorded.");
     } else {
         BSG_KSCrash_Context *reportContext = bsg_kscrashsentry_generateReportContext();
         BSG_KSCrash_SentryContext *localContext = &reportContext->crash;
-
-        if (localContext->suspendThreadsForUserReported) {
-            bsg_kscrashsentry_suspend_threads_user();
-        }
 
         BSG_KSLOG_DEBUG("Filling out context.");
         localContext->stackTraceLength = 0;
@@ -114,10 +109,7 @@ void bsg_kscrashsentry_reportUserException(const char *name, const char *reason,
 
         BSG_KSLOG_DEBUG("Calling main crash handler.");
         localContext->onCrash(reportContext);
-
-        if (localContext->suspendThreadsForUserReported) {
-            bsg_kscrashsentry_resume_threads_user(terminateProgram);
-        }
+        
         bsg_kscrashsentry_freeReportContext(reportContext);
     }
 }
