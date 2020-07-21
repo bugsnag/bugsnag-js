@@ -50,12 +50,15 @@
     NSDictionary<NSString *, NSDictionary *> *filesWithIds = [store allFilesByName];
 
     for (NSString *fileId in [filesWithIds allKeys]) {
-        // skip dupe requests
-        if ([self isActiveRequest:fileId]) {
-            continue;
+
+        // De-duplicate files as deletion of the file is asynchronous and so multiple calls
+        // to this method will result in multiple send requests
+        @synchronized (self.activeIds) {
+            if ([self.activeIds containsObject:fileId]) {
+                continue;
+            }
+            [self.activeIds addObject:fileId];
         }
-        // add request
-        [self.activeIds addObject:fileId];
 
         BugsnagSession *session = [[BugsnagSession alloc] initWithDictionary:filesWithIds[fileId]];
 
@@ -64,7 +67,6 @@
                 initWithSessions:@[session]
                           config:[Bugsnag configuration]
                     codeBundleId:self.codeBundleId];
-            NSUInteger sessionCount = payload.sessions.count;
             NSMutableDictionary *data = [payload toJson];
             NSDictionary *HTTPHeaders = @{
                     @"Bugsnag-Payload-Version": @"1.0",
@@ -77,26 +79,19 @@
                     headers:HTTPHeaders
                onCompletion:^(NSUInteger sentCount, BOOL success, NSError *error) {
                    if (success && error == nil) {
-                       bsg_log_info(@"Sent %lu sessions to Bugsnag", (unsigned long) sessionCount);
+                       bsg_log_info(@"Sent session %@ to Bugsnag", session.id);
                        [store deleteFileWithId:fileId];
                    } else {
                        bsg_log_warn(@"Failed to send sessions to Bugsnag: %@", error);
                    }
 
                    // remove request
-                   [self.activeIds removeObject:fileId];
+                   @synchronized (self.activeIds) {
+                       [self.activeIds removeObject:fileId];
+                   }
                }];
         }];
     }
-}
-
-- (BOOL)isActiveRequest:(NSString *)fileId {
-    for (NSString *val in self.activeIds) {
-        if ([val isEqualToString:fileId]) {
-            return true;
-        }
-    }
-    return false;
 }
 
 @end

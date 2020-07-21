@@ -53,14 +53,11 @@ typedef struct BSG_KSCrash_SentryContext {
     /** Called by the crash handler when a crash is detected. */
     void (*onCrash)(void *);
 
-    /** If true, will suspend threads for user reported exceptions. */
-    bool suspendThreadsForUserReported;
-
     /** If true, will send reports even if debugger is attached. */
     bool reportWhenDebuggerIsAttached;
 
     /**
-     * The methodology used for tracing threads and report binary images.
+     * The methodology used for tracing threads.
      * The value will be equal to an enum value from BSGThreadSendPolicy
      */
     int threadTracingEnabled;

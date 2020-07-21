@@ -18,14 +18,6 @@ typedef void (^BSGBreadcrumbConfiguration)(BugsnagBreadcrumb *_Nonnull);
 - (instancetype _Nonnull)initWithConfiguration:(BugsnagConfiguration *_Nonnull)config;
 
 /**
- * The maximum number of breadcrumbs. Resizable.
- */
-@property(assign, readwrite) NSUInteger capacity;
-
-/** Number of breadcrumbs accumulated */
-@property(assign, readonly) NSUInteger count;
-
-/**
  * Path where breadcrumbs are persisted on disk
  */
 @property (nonatomic, readonly, strong, nullable) NSString *cachePath;
@@ -43,17 +35,10 @@ typedef void (^BSGBreadcrumbConfiguration)(BugsnagBreadcrumb *_Nonnull);
 - (void)addBreadcrumbWithBlock:
     (void (^_Nonnull)(BugsnagBreadcrumb *_Nonnull))block;
 
-/** Breadcrumb object for a particular index or nil */
-- (BugsnagBreadcrumb *_Nullable)objectAtIndexedSubscript:(NSUInteger)index;
-
 /**
- * Serializable array representation of breadcrumbs, represented as nested
- * strings in the format:
- * [[timestamp,message]...]
- *
- * returns nil if empty
+ * Generates an array of dictionaries representing the current buffer of breadcrumbs.
  */
-- (NSArray *_Nullable)arrayValue;
+- (NSArray *_Nonnull)arrayValue;
 
 /**
  * The types of breadcrumbs which will be automatically captured.

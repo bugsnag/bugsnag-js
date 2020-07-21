@@ -82,8 +82,7 @@ NSUInteger const BSG_MAX_STORED_REPORTS = 12;
                                     callbackOverrides:overrides
                                        eventOverrides:eventOverrides
                                              metadata:metadata
-                                               config:config
-                                     terminateProgram:NO];
+                                               config:config];
 }
 
 @end

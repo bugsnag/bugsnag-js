@@ -34,15 +34,7 @@ extern "C" {
 #include <dlfcn.h>
 #include <mach-o/dyld.h>
 
-/** Find a loaded binary image with the specified name.
- *
- * @param imageName The image name to look for.
- *
- * @param exactMatch If true, look for an exact match instead of a partial one.
- *
- * @return the index of the matched image, or UINT32_MAX if not found.
- */
-uint32_t bsg_ksdlimageNamed(const char *const imageName, bool exactMatch);
+#include "BSG_KSMachHeaders.h"
 
 /** Get the UUID of a loaded binary image with the specified name.
  *
@@ -54,32 +46,6 @@ uint32_t bsg_ksdlimageNamed(const char *const imageName, bool exactMatch);
  *         wasn't found.
  */
 const uint8_t *bsg_ksdlimageUUID(const char *const imageName, bool exactMatch);
-
-/** Get the address of the first command following a header (which will be of
- * type struct load_command).
- *
- * @param header The header to get commands for.
- *
- * @return The address of the first command, or NULL if none was found (which
- *         should not happen unless the header or image is corrupt).
- */
-uintptr_t bsg_ksdlfirstCmdAfterHeader(const struct mach_header *header);
-
-/** Get the image index that the specified address is part of.
- *
- * @param address The address to examine.
- * @return The index of the image it is part of, or UINT_MAX if none was found.
- */
-uint32_t bsg_ksdlimageIndexContainingAddress(const uintptr_t address);
-
-/** Get the segment base address of the specified image.
- *
- * This is required for any symtab command offsets.
- *
- * @param idx The image index.
- * @return The image's base address, or 0 if none was found.
- */
-uintptr_t bsg_ksdlsegmentBaseOfImageIndex(const uint32_t idx);
 
 /** async-safe version of dladdr.
  *
@@ -96,23 +62,6 @@ uintptr_t bsg_ksdlsegmentBaseOfImageIndex(const uint32_t idx);
  * @return true if at least some information was found.
  */
 bool bsg_ksdldladdr(const uintptr_t address, Dl_info *const info);
-
-/** Get the address of a symbol in the specified image.
- *
- * @param imageIdx The index of the image to search.
- * @param symbolName The symbol to search for.
- * @return The address of the symbol or NULL if not found.
- */
-const void *bsg_ksdlgetSymbolAddrInImage(uint32_t imageIdx,
-                                         const char *symbolName);
-
-/** Get the address of a symbol in any image.
- * Searches all images starting at index 0.
- *
- * @param symbolName The symbol to search for.
- * @return The address of the symbol or NULL if not found.
- */
-const void *bsg_ksdlgetSymbolAddrInAnyImage(const char *symbolName);
 
 #ifdef __cplusplus
 }

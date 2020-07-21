@@ -487,7 +487,7 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
     }
     NSString *deviceAppHash = [event valueForKeyPath:@"system.device_app_hash"];
     BugsnagDeviceWithState *device = [BugsnagDeviceWithState deviceWithDictionary:event];
-    BugsnagUser *user = [self parseUser:[metadata toDictionary] deviceAppHash:deviceAppHash deviceId:device.id];
+    BugsnagUser *user = [self parseUser:event deviceAppHash:deviceAppHash deviceId:device.id];
     BugsnagEvent *obj = [self initWithApp:[BugsnagAppWithState appWithDictionary:event config:config codeBundleId:self.codeBundleId]
                                    device:device
                              handledState:handledState
@@ -689,15 +689,19 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
 
 /**
  * Read the user from a persisted KSCrash report
- * @param metadata the KSCrash report metadata
+ * @param event the KSCrash report
  * @return the user, or nil if not available
  */
-- (BugsnagUser *)parseUser:(NSDictionary *)metadata
+- (BugsnagUser *)parseUser:(NSDictionary *)event
              deviceAppHash:(NSString *)deviceAppHash
                   deviceId:(NSString *)deviceId {
-    NSMutableDictionary *user = [metadata[BSGKeyUser] mutableCopy];
-    if (user == nil) {
-        user = [NSMutableDictionary dictionary];
+    NSMutableDictionary *user = [[event valueForKeyPath:@"user.state"][BSGKeyUser] mutableCopy];
+    
+    if (user == nil) { // fallback to legacy location
+        user = [[event valueForKeyPath:@"user.metaData"][BSGKeyUser] mutableCopy];
+    }
+    if (user == nil) { // fallback to empty dict
+        user = [NSMutableDictionary new];
     }
 
     if (!user[BSGKeyId] && deviceId) { // if device id is null, don't set user id to default
