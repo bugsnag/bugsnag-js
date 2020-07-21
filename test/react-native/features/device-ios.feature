@@ -14,6 +14,7 @@ Scenario: Handled JS error
   And the event "device.jailbroken" is false
   And the event "device.osVersion" matches "^\d+\.\d+(.\d+)?$"
   And the event "device.time" matches "^\d{4}\-\d{2}\-\d{2}T\d{2}:\d{2}:[\d\.]+(\+\d+)?Z?$"
+  And the event "device.locale" is not null
   And the event "device.runtimeVersions.reactNative" matches "^\d+\.\d+\.\d+$"
   And the event "device.runtimeVersions.osBuild" is not null
   And the event "device.runtimeVersions.clangVersion" matches "^\d+\.\d+\.\d+.+$"
