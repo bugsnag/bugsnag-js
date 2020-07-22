@@ -6,6 +6,7 @@
 
 - (plugin-vue): Ensure the `window.Vue` fallback does not throw in environments where `window` is undefined. [#928](https://github.com/bugsnag/bugsnag-js/pull/928)
 - (plugin-react): Ensure the `window.React` fallback does not throw in environments where `window` is undefined. [#930](https://github.com/bugsnag/bugsnag-js/pull/930)
+- (types): Improve typing of `Stackframe` interface. [#929](https://github.com/bugsnag/bugsnag-js/pull/929)
 
 ## 7.2.0 (2020-07-06)
 
