@@ -1,8 +1,6 @@
-const { describe, it, expect } = global
+import plugin from '../device'
+import Client from '@bugsnag/core/client'
 
-const plugin = require('../device')
-
-const Client = require('@bugsnag/core/client')
 const schema = {
   ...require('@bugsnag/core/config').schema,
   hostname: {
@@ -29,9 +27,10 @@ describe('plugin: node device', () => {
         expect(payload.events[0].device.freeMemory).toBeGreaterThan(0)
         expect(payload.events[0].device.totalMemory).toBeGreaterThan(payload.events[0].device.freeMemory)
         expect(payload.events[0].device.runtimeVersions).toBeDefined()
-        expect(payload.events[0].device.runtimeVersions.node).toEqual(process.versions.node)
+        expect(payload.events[0].device.runtimeVersions && payload.events[0].device.runtimeVersions.node).toEqual(process.versions.node)
         done()
-      }
+      },
+      sendSession: () => {}
     }))
     client.notify(new Error('noooo'))
   })
