@@ -48,6 +48,15 @@ steps:
     artifact_paths:
       - build/rn0.63.apk
 
+  - label: ':ios: Build React-native 0.63 ipa'
+    agents:
+      queue: "opensource-mac"
+    env:
+      REACT_NATIVE_VERSION: rn0.63
+    artifact_paths: build/rn0.63.ipa
+    commands:
+      - npm run test:build-react-native-ios
+
   - wait
 
   - label: ':android: React-native 0.60 Android 9'

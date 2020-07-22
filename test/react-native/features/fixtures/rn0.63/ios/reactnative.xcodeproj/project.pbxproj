@@ -29,6 +29,8 @@
 		A1F389EF24C875FF00C30B50 /* AppNativeUnhandledScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = A1F389E424C875FF00C30B50 /* AppNativeUnhandledScenario.m */; };
 		A1F389F024C875FF00C30B50 /* DeviceNativeHandledScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = A1F389E524C875FF00C30B50 /* DeviceNativeHandledScenario.m */; };
 		A1F389F124C875FF00C30B50 /* ContextNativeCustomScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = A1F389E724C875FF00C30B50 /* ContextNativeCustomScenario.m */; };
+		A1F389F624C87F5000C30B50 /* MetadataNativeUnhandledScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = A1F389F224C87F5000C30B50 /* MetadataNativeUnhandledScenario.m */; };
+		A1F389F724C87F5000C30B50 /* MetadataNativeScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = A1F389F524C87F5000C30B50 /* MetadataNativeScenario.m */; };
 		A48845946CE10D475458287A /* libPods-reactnative.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DDF1E3CA2428A1BE01BB3490 /* libPods-reactnative.a */; };
 		D703F83DAEA1B6045AFA0331 /* libPods-reactnative-reactnativeTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 694801F5210A1507D33D71F4 /* libPods-reactnative-reactnativeTests.a */; };
 /* End PBXBuildFile section */
@@ -97,6 +99,10 @@
 		A1F389E524C875FF00C30B50 /* DeviceNativeHandledScenario.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DeviceNativeHandledScenario.m; path = "../../ios-module/Scenarios/DeviceNativeHandledScenario.m"; sourceTree = "<group>"; };
 		A1F389E624C875FF00C30B50 /* UserNativeClientScenario.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UserNativeClientScenario.h; path = "../../ios-module/Scenarios/UserNativeClientScenario.h"; sourceTree = "<group>"; };
 		A1F389E724C875FF00C30B50 /* ContextNativeCustomScenario.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ContextNativeCustomScenario.m; path = "../../ios-module/Scenarios/ContextNativeCustomScenario.m"; sourceTree = "<group>"; };
+		A1F389F224C87F5000C30B50 /* MetadataNativeUnhandledScenario.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MetadataNativeUnhandledScenario.m; path = "../../ios-module/Scenarios/MetadataNativeUnhandledScenario.m"; sourceTree = "<group>"; };
+		A1F389F324C87F5000C30B50 /* MetadataNativeScenario.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MetadataNativeScenario.h; path = "../../ios-module/Scenarios/MetadataNativeScenario.h"; sourceTree = "<group>"; };
+		A1F389F424C87F5000C30B50 /* MetadataNativeUnhandledScenario.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MetadataNativeUnhandledScenario.h; path = "../../ios-module/Scenarios/MetadataNativeUnhandledScenario.h"; sourceTree = "<group>"; };
+		A1F389F524C87F5000C30B50 /* MetadataNativeScenario.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MetadataNativeScenario.m; path = "../../ios-module/Scenarios/MetadataNativeScenario.m"; sourceTree = "<group>"; };
 		DDF1E3CA2428A1BE01BB3490 /* libPods-reactnative.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-reactnative.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
@@ -236,6 +242,10 @@
 		A1F389D324C875E900C30B50 /* scenarios */ = {
 			isa = PBXGroup;
 			children = (
+				A1F389F324C87F5000C30B50 /* MetadataNativeScenario.h */,
+				A1F389F524C87F5000C30B50 /* MetadataNativeScenario.m */,
+				A1F389F424C87F5000C30B50 /* MetadataNativeUnhandledScenario.h */,
+				A1F389F224C87F5000C30B50 /* MetadataNativeUnhandledScenario.m */,
 				A1F389D924C875FF00C30B50 /* AppNativeHandledScenario.h */,
 				A1F389D424C875FF00C30B50 /* AppNativeHandledScenario.m */,
 				A1F389D824C875FF00C30B50 /* AppNativeUnhandledScenario.h */,
@@ -637,12 +647,14 @@
 				A1F389E924C875FF00C30B50 /* UserNativeClientScenario.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				A1F389ED24C875FF00C30B50 /* BreadcrumbsNativeManualScenario.m in Sources */,
+				A1F389F624C87F5000C30B50 /* MetadataNativeUnhandledScenario.m in Sources */,
 				A1F389E824C875FF00C30B50 /* AppNativeHandledScenario.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				A1F389D224C875E000C30B50 /* BugsnagModule.m in Sources */,
 				A1F389EF24C875FF00C30B50 /* AppNativeUnhandledScenario.m in Sources */,
 				A1F389F024C875FF00C30B50 /* DeviceNativeHandledScenario.m in Sources */,
 				A1F389F124C875FF00C30B50 /* ContextNativeCustomScenario.m in Sources */,
+				A1F389F724C87F5000C30B50 /* MetadataNativeScenario.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
