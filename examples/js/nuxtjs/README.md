@@ -41,3 +41,34 @@ npm run build
 npm start
 ```
 __Note__: remember to replace the API keys in [`nuxt.config.js`](nuxt.config.js) with your own!
+
+## BugsnagSourceMapUploaderPlugin
+
+Example configuration of the `BugsnagSourceMapUploaderPlugin` in `nuxt.config.js`:
+
+```
+build: {
+	/*
+	** You can extend webpack config here
+	*/
+
+	extend ( config, { isDev, isClient } ) {
+
+		if (!isDev && isClient) {
+
+			config.devtool = '#source-map'
+
+		 	config.plugins.push(
+				new BugsnagSourceMapUploaderPlugin({
+					apiKey: 'notifier-api-key',
+					appVersion: require('./package.json').version,
+					releaseStage: 'production',
+					overwrite: true
+				})
+			)
+		}
+	},
+	plugins: [
+	]
+}
+```
