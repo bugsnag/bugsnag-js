@@ -52,7 +52,7 @@ build: {
 	** You can extend webpack config here
 	*/
 
-	extend ( config, { isDev, isClient } ) {
+	extend (config, { isDev, isClient }) {
 
 		if (!isDev && isClient) {
 
