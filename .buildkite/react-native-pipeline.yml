@@ -88,3 +88,16 @@ steps:
       APP_LOCATION: "build/rn0.63.apk"
     concurrency: 10
     concurrency_group: 'browserstack-app'
+
+  - label: ':ios: React-native 0.63 iOS 12'
+    plugins:
+      artifacts#v1.2.0:
+        download: "build/rn0.63.ipa"
+      docker-compose#v3.1.0:
+        run: react-native-maze-runner
+        use-aliases: true
+    env:
+      DEVICE_TYPE: "IOS_12"
+      APP_LOCATION: "build/rn0.63.ipa"
+    concurrency: 10
+    concurrency_group: 'browserstack-app'
