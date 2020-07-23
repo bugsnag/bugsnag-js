@@ -10,16 +10,20 @@ export class SessionManualJsScenario extends Scenario {
     Bugsnag.startSession()
     setTimeout(() => {
       Bugsnag.notify(new Error('SessionManualJsScenarioA'), () => {}, () => {
-        Bugsnag.pauseSession()
         setTimeout(() => {
-          Bugsnag.notify(new Error('SessionManualJsScenarioB'), () => {}, () => {
-            Bugsnag.startSession()
-            setTimeout(() => {
-              Bugsnag.notify(new Error('SessionManualJsScenarioC'))
-            }, 1000)
-          })
-        }, 1000)
+          Bugsnag.pauseSession()
+          setTimeout(() => {
+            Bugsnag.notify(new Error('SessionManualJsScenarioB'), () => {}, () => {
+              setTimeout(() => {
+                Bugsnag.startSession()
+                setTimeout(() => {
+                  Bugsnag.notify(new Error('SessionManualJsScenarioC'))
+                }, 500)
+              }, 2500)
+            })
+          }, 500)
+        }, 500)
       })
-    }, 1000)
+    }, 500)
   }
 }
