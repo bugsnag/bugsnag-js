@@ -64,7 +64,7 @@ NSDictionary *BSGParseAppMetadata(NSDictionary *event) {
         ([config valueForKey:@"appVersion"] ?:
             system[@"CFBundleShortVersionString"]);
     app.releaseStage = [event valueForKeyPath:@"user.config.releaseStage"] ?: config.releaseStage;
-    app.codeBundleId = codeBundleId;
+    app.codeBundleId = [event valueForKeyPath:@"user.state.app.codeBundleId"] ?: codeBundleId;
     app.type = config.appType;
 }
 
