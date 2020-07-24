@@ -31,6 +31,12 @@ This project was bootstrapped with `react-native init`.
 
     The API key can be found in the Bugsnag settings for your project.
 
+1. For iOS only, install the project dependencies from the `ios/` directory using: 
+
+```
+pod install 
+```
+
 1. Run the app on either Android or iOS:
 
 ```
