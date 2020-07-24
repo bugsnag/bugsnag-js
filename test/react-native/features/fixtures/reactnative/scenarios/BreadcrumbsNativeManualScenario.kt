@@ -10,7 +10,7 @@ class BreadcrumbsNativeManualScenario(context: Context): Scenario(context) {
         val metadata = mapOf(
             "from" to "android"
         )
-        Bugsnag.leaveBreadcrumb("oh native crumbs", metadata)
+        Bugsnag.leaveBreadcrumb("oh native crumbs", metadata, BreadcrumbType.STATE)
         Bugsnag.notify(generateException())
     }
 }
