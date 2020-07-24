@@ -45,16 +45,11 @@
 - (NSDictionary *)toDict;
 @end
 
-@interface BugsnagClient ()
-@property (nonatomic) NSString *codeBundleId;
-@end
-
 @interface BugsnagEvent ()
 - (NSDictionary *_Nonnull)toJson;
 - (BOOL)shouldBeSent;
 - (instancetype _Nonnull)initWithKSReport:(NSDictionary *_Nonnull)report;
 @property NSSet<NSString *> *redactedKeys;
-@property (nonatomic) NSString *codeBundleId;
 @end
 
 @interface BugsnagConfiguration ()
@@ -123,7 +118,6 @@
     for (NSString *fileKey in keys) {
         NSDictionary *report = ksCrashReports[fileKey];
         BugsnagEvent *event = [[BugsnagEvent alloc] initWithKSReport:report];
-        event.codeBundleId = [Bugsnag client].codeBundleId;
         event.redactedKeys = configuration.redactedKeys;
 
         if ([event shouldBeSent] && [self runOnSendBlocks:configuration event:event]) {

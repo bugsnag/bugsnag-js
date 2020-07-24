@@ -57,7 +57,7 @@ NSNumber *BSGDeviceFreeSpace(NSSearchPathDirectory directory) {
 @interface BugsnagDevice ()
 + (void)populateFields:(BugsnagDevice *)device
             dictionary:(NSDictionary *)event;
-
+- (void)appendRuntimeInfo:(NSDictionary *)info;
 - (NSDictionary *)toDictionary;
 @end
 
@@ -113,6 +113,13 @@ NSNumber *BSGDeviceFreeSpace(NSSearchPathDirectory directory) {
     if (val != nil) {
         device.time = [BSG_RFC3339DateTool dateFromString:val];
     }
+
+    NSDictionary *extraRuntimeInfo = [event valueForKeyPath:@"user.state.device.extraRuntimeInfo"];
+
+    if (extraRuntimeInfo) {
+        [device appendRuntimeInfo:extraRuntimeInfo];
+    }
+
     return device;
 }
 

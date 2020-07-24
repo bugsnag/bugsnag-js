@@ -5,6 +5,9 @@ Changelog
 
 ### Bug fixes
 
+* Populate app/device metadata fields for RN errors
+  [#763](https://github.com/bugsnag/bugsnag-cocoa/pull/763)
+
 * Ensure foreground stats are recorded for handled errors
   [#755](https://github.com/bugsnag/bugsnag-cocoa/pull/755)
 

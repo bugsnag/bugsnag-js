@@ -13,7 +13,7 @@ Scenario: Handled JS error
   And the event "device.osName" equals "iOS"
   And the event "device.jailbroken" is false
   And the event "device.osVersion" matches "^\d+\.\d+(.\d+)?$"
-  And the event "device.time" matches "^\d{4}\-\d{2}\-\d{2}T\d{2}:\d{2}:[\d\.]+(\+\d+)?Z?$"
+  And the event "device.time" is a timestamp
   And the event "device.locale" is not null
   And the event "device.runtimeVersions.reactNative" matches "^\d+\.\d+\.\d+$"
   And the event "device.runtimeVersions.osBuild" is not null
@@ -39,7 +39,7 @@ Scenario: Unhandled JS error
   And the event "device.osName" equals "iOS"
   And the event "device.jailbroken" is false
   And the event "device.osVersion" matches "^\d+\.\d+(.\d+)?$"
-  And the event "device.time" matches "^\d{4}\-\d{2}\-\d{2}T\d{2}:\d{2}:[\d\.]+(\+\d+)?Z?$"
+  And the event "device.time" is a timestamp
   And the event "device.locale" is not null
   And the event "device.runtimeVersions.reactNative" matches "^\d+\.\d+\.\d+$"
   And the event "device.runtimeVersions.osBuild" is not null
@@ -64,7 +64,7 @@ Scenario: Handled native error
   And the event "device.osName" equals "iOS"
   And the event "device.jailbroken" is false
   And the event "device.osVersion" matches "^\d+\.\d+(.\d+)?$"
-  And the event "device.time" matches "^\d{4}\-\d{2}\-\d{2}T\d{2}:\d{2}:[\d\.]+(\+\d+)?Z?$"
+  And the event "device.time" is a timestamp
   And the event "device.locale" is not null
   And the event "device.runtimeVersions.reactNative" matches "^\d+\.\d+\.\d+$"
   And the event "device.runtimeVersions.osBuild" is not null
@@ -89,11 +89,10 @@ Scenario: Unhandled native error
   And the event "device.osName" equals "iOS"
   And the event "device.jailbroken" is false
   And the event "device.osVersion" matches "^\d+\.\d+(.\d+)?$"
-  And the event "device.time" matches "^\d{4}\-\d{2}\-\d{2}T\d{2}:\d{2}:[\d\.]+(\+\d+)?Z?$"
+  And the event "device.time" is a timestamp
   And the event "device.locale" is not null
-  # Pending PLAT-4669
-  #And the event "device.runtimeVersions.reactNative" matches "^\d+\.\d+\.\d+$"
-  #And the event "device.runtimeVersions.reactNativeJsengine" is not null
+  And the event "device.runtimeVersions.reactNative" matches "^\d+\.\d+\.\d+$"
+  And the event "device.runtimeVersions.reactNativeJsengine" is not null
   And the event "device.runtimeVersions.osBuild" is not null
   And the event "device.runtimeVersions.clangVersion" matches "^\d+\.\d+\.\d+.+$"
   And the payload field "events.0.device.freeMemory" is greater than 0

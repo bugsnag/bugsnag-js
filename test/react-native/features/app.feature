@@ -12,10 +12,7 @@ Scenario: Handled JS error
     | android | 1     |
     | ios     | @skip |
   And the event "app.releaseStage" equals "production"
-  # TODO: PLAT-4622
-  And the event "app.inForeground" equals the platform-dependent boolean:
-    | android | true  |
-    | ios     | @skip |
+  And the event "app.inForeground" is true
   And the event "app.duration" is not null
   And the event "app.durationInForeground" is not null
   And the event "app.codeBundleId" equals "1.2.3-r00110011"
@@ -39,10 +36,7 @@ Scenario: Unhandled JS error
     | android | 1     |
     | ios     | @skip |
   And the event "app.releaseStage" equals "production"
-  # TODO: PLAT-4622
-  And the event "app.inForeground" equals the platform-dependent boolean:
-    | android | true  |
-    | ios     | @skip |
+  And the event "app.inForeground" is true
   And the event "app.duration" is not null
   And the event "app.durationInForeground" is not null
   And the event "app.codeBundleId" equals "1.2.3-r00110011"
@@ -67,10 +61,7 @@ Scenario: Handled native error
     | android | 1     |
     | ios     | @skip |
   And the event "app.releaseStage" equals "production"
-  # TODO: PLAT-4622
-  And the event "app.inForeground" equals the platform-dependent boolean:
-    | android | true  |
-    | ios     | @skip |
+  And the event "app.inForeground" is true
   And the event "app.duration" is not null
   And the event "app.durationInForeground" is not null
   And the event "app.codeBundleId" equals "1.2.3-r00110011"
@@ -96,16 +87,10 @@ Scenario: Unhandled native error
     | android | 1     |
     | ios     | @skip |
   And the event "app.releaseStage" equals "production"
-  # TODO: PLAT-4622
-  And the event "app.inForeground" equals the platform-dependent boolean:
-    | android | true  |
-    | ios     | @skip |
+  And the event "app.inForeground" is true
   And the event "app.duration" is not null
   And the event "app.durationInForeground" is not null
-  # TODO: PLAT-4626
-  And the event "app.codeBundleId" equals the platform-dependent string:
-  | android | 1.2.3-r00110011 |
-  | ios     | @skip           |
+  And the event "app.codeBundleId" equals "1.2.3-r00110011"
   And the event "app.id" equals the platform-dependent string:
   | android | com.reactnative                        |
   | ios     | org.reactjs.native.example.reactnative |
