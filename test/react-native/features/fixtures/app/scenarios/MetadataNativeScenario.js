@@ -5,11 +5,15 @@ export class MetadataNativeScenario extends Scenario {
   constructor(configuration, extraData, jsConfig) {
     super()
     configuration.configMetaData = {
-      "some_data": "set via config"
+      "some_data": "set via config",
+      "cleared_data": "clear me"
     }
   }
 
   run() {
-    NativeModules.BugsnagTestInterface.runScenario('MetadataNativeScenario', () => {})
+    Bugsnag.clearMetadata('nativedata', 'cleared_data')
+    setTimeout(() => {
+      NativeModules.BugsnagTestInterface.runScenario('MetadataNativeScenario', () => {})
+    }, 500)
   }
 }

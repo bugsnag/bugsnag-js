@@ -20,6 +20,7 @@ Scenario: Setting metadata (native handled)
   And the event "metaData.nativedata.some_data" equals "set via config"
   And the event "metaData.nativedata.some_more_data" equals "set via client"
   And the event "metaData.nativedata.even_more_data" equals "set via event"
+  And the event "metaData.nativedata.cleared_data" is null
 
 Scenario: Setting metadata (native unhandled) 
   When I run "MetadataNativeUnhandledScenario" and relaunch the app
@@ -35,3 +36,4 @@ Scenario: Setting metadata (native unhandled)
   And the event "metaData.nativedata.even_more_data" equals the platform-dependent string:
   | android | set via event |
   | ios     | @skip         |
+  And the event "metaData.nativedata.cleared_data" is null
