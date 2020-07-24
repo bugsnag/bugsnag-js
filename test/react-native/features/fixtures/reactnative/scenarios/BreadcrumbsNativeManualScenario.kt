@@ -2,6 +2,7 @@ package com.reactnative.scenarios
 
 import android.content.Context
 import com.bugsnag.android.Bugsnag
+import com.bugsnag.android.BreadcrumbType
 
 class BreadcrumbsNativeManualScenario(context: Context): Scenario(context) {
 
