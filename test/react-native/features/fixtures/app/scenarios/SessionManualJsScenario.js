@@ -18,12 +18,12 @@ export class SessionManualJsScenario extends Scenario {
                 Bugsnag.startSession()
                 setTimeout(() => {
                   Bugsnag.notify(new Error('SessionManualJsScenarioC'))
-                }, 500)
+                }, 750)
               }, 2500)
             })
-          }, 500)
-        }, 500)
+          }, 750)
+        }, 750)
       })
-    }, 500)
+    }, 750)
   }
 }
