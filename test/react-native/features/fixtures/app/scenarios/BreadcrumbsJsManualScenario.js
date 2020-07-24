@@ -3,7 +3,10 @@ import Bugsnag from '@bugsnag/react-native'
 
 export class BreadcrumbsJsManualScenario extends Scenario {
   run() {
-    Bugsnag.leaveBreadcrumb('oh crumbs')
+    let metaData = {
+      from: 'javascript'
+    }
+    Bugsnag.leaveBreadcrumb('oh crumbs', metaData)
     Bugsnag.notify(new Error('BreadcrumbsJsManualScenario'))
   }
 }

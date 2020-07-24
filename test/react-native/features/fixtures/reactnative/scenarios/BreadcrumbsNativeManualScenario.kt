@@ -7,7 +7,10 @@ class BreadcrumbsNativeManualScenario(context: Context): Scenario(context) {
 
     override fun run() {
         super.run()
-        Bugsnag.leaveBreadcrumb("oh native crumbs")
+        val metadata = mapOf(
+            "from" to "android"
+        )
+        Bugsnag.leaveBreadcrumb("oh native crumbs", metadata)
         Bugsnag.notify(generateException())
     }
 }
