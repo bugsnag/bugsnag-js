@@ -40,10 +40,7 @@ Scenario: Setting user in native via client
   And the event "user.id" equals "123"
 
 Scenario: Setting user in JS via client and sending Native error
-  When I run "UserJsNativeScenario"
-  And I wait for 3 seconds
-  And I clear any error dialogue
-  And I relaunch the app
+  When I run "UserJsNativeScenario" and relaunch the app
   And I configure Bugsnag for "UserJsNativeScenario"
   Then I wait to receive a request
   And the event "exceptions.0.errorClass" equals the platform-dependent string:
