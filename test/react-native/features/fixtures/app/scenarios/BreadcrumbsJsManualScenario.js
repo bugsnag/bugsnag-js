@@ -6,7 +6,7 @@ export class BreadcrumbsJsManualScenario extends Scenario {
     let metaData = {
       from: 'javascript'
     }
-    Bugsnag.leaveBreadcrumb('oh crumbs', metaData)
+    Bugsnag.leaveBreadcrumb('oh crumbs', metaData, 'state')
     Bugsnag.notify(new Error('BreadcrumbsJsManualScenario'))
   }
 }

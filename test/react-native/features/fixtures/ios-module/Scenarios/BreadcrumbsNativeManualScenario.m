@@ -3,7 +3,7 @@
 @implementation BreadcrumbsNativeManualScenario
 
 - (void)run {
-  [Bugsnag leaveBreadcrumbWithMessage:@"Preference updated"
+  [Bugsnag leaveBreadcrumbWithMessage:@"oh native crumbs"
                            metadata:@{@"from": @"ios"}
                             andType:BSGBreadcrumbTypeState];
   NSException *exception = [[NSException alloc] initWithName:@"NSException" reason:@"BreadcrumbsNativeManualScenario" userInfo:nil];
