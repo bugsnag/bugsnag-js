@@ -10,7 +10,7 @@ Scenario: Setting metadata (JS)
   And the event "metaData.jsdata.even_more_data" equals "set via event"
   And the event "metaData.jsdata.redacted_data" equals "[REDACTED]"
 
-Scenario: Setting metadata (native handled) 
+Scenario: Setting metadata (native handled)
   When I run "MetadataNativeScenario"
   Then I wait to receive a request
   And the event "exceptions.0.errorClass" equals the platform-dependent string:
@@ -22,8 +22,11 @@ Scenario: Setting metadata (native handled)
   And the event "metaData.nativedata.even_more_data" equals "set via event"
   And the event "metaData.nativedata.cleared_data" is null
 
-Scenario: Setting metadata (native unhandled) 
-  When I run "MetadataNativeUnhandledScenario" and relaunch the app
+Scenario: Setting metadata (native unhandled)
+  When I run "MetadataNativeUnhandledScenario"
+  And I wait for 2 seconds
+  And I clear any error dialogue
+  And I relaunch the app
   And I configure Bugsnag for "MetadataNativeUnhandledScenario"
   Then I wait to receive a request
   And the event "exceptions.0.errorClass" equals the platform-dependent string:
