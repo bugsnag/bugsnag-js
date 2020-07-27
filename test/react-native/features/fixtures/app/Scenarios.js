@@ -48,5 +48,6 @@ export { MetadataNativeUnhandledScenario } from './scenarios/MetadataNativeUnhan
 // session.feature
 export { SessionAutoEnabledScenario } from './scenarios/SessionAutoEnabledScenario'
 export { SessionAutoDisabledScenario } from './scenarios/SessionAutoDisabledScenario'
-export { SessionManualJsScenario } from './scenarios/SessionManualJsScenario'
-// export { SessionManualNativeScenario } from './scenarios/SessionManualNativeScenario'
+export { SessionJsControlledManualJsScenario } from './scenarios/SessionJsControlledManualJsScenario'
+export { SessionJsControlledManualNativeScenario } from './scenarios/SessionJsControlledManualNativeScenario'
+export { SessionNativeControlledManualJsScenario } from './scenarios/SessionNativeControlledJsNativeScenario'
