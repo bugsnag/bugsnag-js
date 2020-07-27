@@ -4,6 +4,8 @@ Changelog
 ## TBD
 
 ### Bug fixes
+* Respect bundle version set from config
+  [#762](https://github.com/bugsnag/bugsnag-cocoa/pull/762)
 
 * Populate app/device metadata fields for RN errors
   [#763](https://github.com/bugsnag/bugsnag-cocoa/pull/763)
