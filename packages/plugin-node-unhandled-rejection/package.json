@@ -15,7 +15,6 @@
     "*.js"
   ],
   "scripts": {
-    "test": "nyc --reporter=lcov -- jasmine '!(node_modules)/**/*.test.js'"
   },
   "author": "Bugsnag",
   "license": "MIT",
