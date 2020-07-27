@@ -7,34 +7,26 @@ export class SessionJsControlledManualNativeScenario extends Scenario {
     super()
     configuration.autoTrackSessions = false
   }
-  run() {
+  async run() {
     Bugsnag.startSession()
-    setTimeout(() => {
-      NativeModules.BugsnagTestInterface.runScenario('HandledNativeErrorScenario', () => {
-        setTimeout(() => {
+    await this.timeout(1500)
+    NativeModules.BugsnagTestInterface.runScenario('HandledNativeErrorScenario', async () => {
+      await this.timeout(1500)
+      Bugsnag.pauseSession()
+      await this.timeout(1500)
+      NativeModules.BugsnagTestInterface.runScenario('HandledNativeErrorScenario', async () => {
+        await this.timeout(5000)
+        Bugsnag.resumeSession()
+        await this.timeout(1500)
+        NativeModules.BugsnagTestInterface.runScenario('HandledNativeErrorScenario', async () => {
+          await this.timeout(1500)
           Bugsnag.pauseSession()
-          setTimeout(() => {
-            NativeModules.BugsnagTestInterface.runScenario('HandledNativeErrorScenario', () => {
-              setTimeout(() => {
-                Bugsnag.resumeSession()
-                setTimeout(() => {
-                  NativeModules.BugsnagTestInterface.runScenario('HandledNativeErrorScenario', () => {
-                    setTimeout(() => {
-                      Bugsnag.pauseSession()
-                      setTimeout(() => {
-                        Bugsnag.startSession()
-                        setTimeout(() => {
-                          NativeModules.BugsnagTestInterface.runScenario('HandledNativeErrorScenario', () => {})
-                        }, 1500)
-                      }, 1500)
-                    }, 1500)
-                  })
-                }, 1500)
-              }, 5000)
-            })
-          }, 1500)
-        }, 1500)
+          await this.timeout(1500)
+          Bugsnag.startSession()
+          await this.timeout(1500)
+          NativeModules.BugsnagTestInterface.runScenario('HandledNativeErrorScenario', async () => {})
+        })
       })
-    }, 1500)
+    })
   }
 }

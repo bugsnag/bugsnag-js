@@ -6,34 +6,26 @@ export class SessionJsControlledManualJsScenario extends Scenario {
     super()
     configuration.autoTrackSessions = false
   }
-  run() {
+  async run() {
     Bugsnag.startSession()
-    setTimeout(() => {
-      Bugsnag.notify(new Error('SessionJsControlledManualJsScenarioA'), () => {}, () => {
-        setTimeout(() => {
+    await this.timeout(750)
+    Bugsnag.notify(new Error('SessionJsControlledManualJsScenarioA'), () => {}, async () => {
+      await this.timeout(750)
+      Bugsnag.pauseSession()
+      await this.timeout(750)
+      Bugsnag.notify(new Error('SessionJsControlledManualJsScenarioB'), () => {}, async () => {
+        await this.timeout(2500)
+        Bugsnag.resumeSession()
+        await this.timeout(750)
+        Bugsnag.notify(new Error('SessionJsControlledManualJsScenarioC'), () => {}, async () => {
+          await this.timeout(750)
           Bugsnag.pauseSession()
-          setTimeout(() => {
-            Bugsnag.notify(new Error('SessionJsControlledManualJsScenarioB'), () => {}, () => {
-              setTimeout(() => {
-                Bugsnag.resumeSession()
-                setTimeout(() => {
-                  Bugsnag.notify(new Error('SessionJsControlledManualJsScenarioC'), () => {}, () => {
-                    setTimeout(() => {
-                      Bugsnag.pauseSession()
-                      setTimeout(() => {
-                        Bugsnag.startSession()
-                        setTimeout(() => {
-                          Bugsnag.notify(new Error('SessionJsControlledManualJsScenarioD'))
-                        }, 750)
-                      }, 750)
-                    }, 750)
-                  })
-                }, 750)
-              }, 2500)
-            })
-          }, 750)
-        }, 750)
+          await this.timeout(750)
+          Bugsnag.startSession()
+          await this.timeout(750)
+          Bugsnag.notify(new Error('SessionJsControlledManualJsScenarioD'))
+        })
       })
-    }, 750)
+    })
   }
 }
