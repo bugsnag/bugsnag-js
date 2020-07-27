@@ -35,7 +35,8 @@ module.exports = {
       testMatch: [
         testsForPackage('react-native'),
         testsForPackage('plugin-react-native-app-state-breadcrumbs'),
-        testsForPackage('plugin-react-native-unhandled-rejection')
+        testsForPackage('plugin-react-native-unhandled-rejection'),
+        testsForPackage('plugin-react-native-hermes')
       ],
       setupFiles: [
         require.resolve('react-native/Libraries/Core/setUpGlobals.js'),

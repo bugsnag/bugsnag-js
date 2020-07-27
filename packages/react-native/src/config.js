@@ -63,7 +63,7 @@ const getPrefixedConsole = () => {
   }, {})
 }
 
-const getEngine = () => global.hermes ? 'hermes' : 'jsc'
+const getEngine = () => global.HermesInternal ? 'hermes' : 'jsc'
 const getReactNativeVersion = () => rnPackage.version
 
 module.exports.load = (
