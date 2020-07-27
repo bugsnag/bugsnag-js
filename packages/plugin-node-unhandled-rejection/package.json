@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-node-unhandled-rejection",
-  "version": "7.3.0-alpha.0",
+  "version": "7.3.0-alpha.5",
   "main": "unhandled-rejection.js",
   "description": "@bugsnag/js plugin to capture and report unhandled rejections",
   "homepage": "https://www.bugsnag.com/",
@@ -14,12 +14,11 @@
   "files": [
     "*.js"
   ],
-  "scripts": {
-  },
+  "scripts": {},
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^7.3.0-alpha.0",
+    "@bugsnag/core": "^7.3.0-alpha.5",
     "jasmine": "^3.1.0",
     "nyc": "^12.0.2"
   }
