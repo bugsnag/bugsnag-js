@@ -14,6 +14,7 @@ export class MetadataJsScenario extends Scenario {
     Bugsnag.addMetadata('jsdata', 'some_more_data', 'set via client')
     Bugsnag.notify(new Error('MetadataJsScenario'), (event) => {
       event.addMetadata('jsdata', 'even_more_data', 'set via event')
+      event.addMetadata('jsarraydata', 'items', [ 'a', 'b', 'c' ])
     })
   }
 }
