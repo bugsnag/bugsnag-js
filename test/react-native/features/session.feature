@@ -80,6 +80,7 @@ Scenario: Manual JS sessions (JS Controls)
 
 Scenario: Manual JS sessions (Native Controls)
   When I run "SessionNativeControlledManualJsScenario"
+  And I wait for 10 seconds
   Then I wait to receive 6 requests
   And the "bugsnag-api-key" header equals "12312312312312312312312312312312"
   And the "bugsnag-payload-version" header equals "1.0"
@@ -150,7 +151,9 @@ Scenario: Manual Native sessions (JS Controls)
 
   And I discard the oldest request
 
-  And the exception "errorClass" equals "Error"
+  And the event "exceptions.0.errorClass" equals the platform-dependent string:
+  | android | java.lang.RuntimeException |
+  | ios     | NSException                |
   And the exception "message" equals "HandledNativeErrorScenario"
   And the event "unhandled" is false
   And the event "session" is not null
@@ -159,14 +162,18 @@ Scenario: Manual Native sessions (JS Controls)
 
   And I discard the oldest request
 
-  And the exception "errorClass" equals "Error"
+  And the event "exceptions.0.errorClass" equals the platform-dependent string:
+  | android | java.lang.RuntimeException |
+  | ios     | NSException                |
   And the exception "message" equals "HandledNativeErrorScenario"
   And the event "unhandled" is false
   And the event "session" is null
 
   And I discard the oldest request
 
-  And the exception "errorClass" equals "Error"
+  And the event "exceptions.0.errorClass" equals the platform-dependent string:
+  | android | java.lang.RuntimeException |
+  | ios     | NSException                |
   And the exception "message" equals "HandledNativeErrorScenario"
   And the event "unhandled" is false
   And the event "session" is not null
@@ -181,7 +188,9 @@ Scenario: Manual Native sessions (JS Controls)
 
   And I discard the oldest request
 
-  And the exception "errorClass" equals "Error"
+  And the event "exceptions.0.errorClass" equals the platform-dependent string:
+  | android | java.lang.RuntimeException |
+  | ios     | NSException                |
   And the exception "message" equals "HandledNativeErrorScenario"
   And the event "unhandled" is false
   And the event "session" is not null
