@@ -50,4 +50,4 @@ export { SessionAutoEnabledScenario } from './scenarios/SessionAutoEnabledScenar
 export { SessionAutoDisabledScenario } from './scenarios/SessionAutoDisabledScenario'
 export { SessionJsControlledManualJsScenario } from './scenarios/SessionJsControlledManualJsScenario'
 export { SessionJsControlledManualNativeScenario } from './scenarios/SessionJsControlledManualNativeScenario'
-export { SessionNativeControlledManualJsScenario } from './scenarios/SessionNativeControlledJsNativeScenario'
+export { SessionNativeControlledManualJsScenario } from './scenarios/SessionNativeControlledManualJsScenario'
