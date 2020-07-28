@@ -148,7 +148,7 @@ Bugsnag.start(this /* app context */, config);
 
 ###### JS
 
-The JS interface has been updated to match our new notifier spec standard – that means it looks the same as our JS notifier, and uses the same names and concepts as our other platforms.
+As part of the `bugsnag-js monorepo`, the JS interface now looks the same as our JS notifier, and uses the same names and concepts as our other platforms.
 
 When the JS layer loads, __the native layers and notifiers must already have been configured__. It you attempt to initialize the JS layer without having first configured the native layer, it __will not work__. This is new behaviour – previously we allowed configuration of the native layer to be done lazily and automatically, but this meant native errors on startup could be missed.
 
