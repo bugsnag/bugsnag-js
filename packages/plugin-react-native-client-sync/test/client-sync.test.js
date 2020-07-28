@@ -27,7 +27,7 @@ describe('plugin: react native client sync', () => {
       c.setContext('1234')
     })
 
-    it('updates metaData', done => {
+    it('updates metadata', done => {
       const c = new Client({
         apiKey: 'api_key',
         plugins: [
@@ -45,6 +45,23 @@ describe('plugin: react native client sync', () => {
       })
       c.addMetadata('widget', { id: '14', count: 340 })
       expect(c.getMetadata('widget')).toEqual({ id: '14', count: 340 })
+    })
+
+    it('clears metadata', done => {
+      const c = new Client({
+        apiKey: 'api_key',
+        plugins: [
+          plugin({
+            updateMetadata: (key, updates) => {}
+          })
+        ]
+      })
+      c.addMetadata('widget', { id: '14', count: 340 })
+      c.clearMetadata('widget', 'count')
+      expect(c.getMetadata('widget', 'count')).toBeUndefined()
+      c.clearMetadata('widget')
+      expect(c.getMetadata('widget')).toBeUndefined()
+      done()
     })
 
     it('updates user', done => {
