@@ -150,7 +150,7 @@ Bugsnag.start(this /* app context */, config);
 
 As part of the `bugsnag-js monorepo`, the JS interface now looks the same as our JS notifier, and uses the same names and concepts as our other platforms.
 
-When the JS layer loads, __the native layers and notifiers must already have been configured__. It you attempt to initialize the JS layer without having first configured the native layer, it __will not work__. This is new behaviour – previously we allowed configuration of the native layer to be done lazily and automatically, but this meant native errors on startup could be missed.
+When the JS layer loads, __the native iOS/Android Bugsnag client must already have been configured__. If you attempt to initialize the JS layer without having first configured the native layer, it __will not work__. This is new behavior – previously we allowed configuration of the native layer to be done lazily and automatically, but this meant native errors on startup could be missed.
 
 Since the JS layer hooks in to an already running native layer, there are fewer configuration options available. Most configuration must be done in the native layer, with only a small subset of JS-specific options allowed in the JS layer.
 
