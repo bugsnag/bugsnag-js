@@ -39,6 +39,7 @@ const internalPlugins = [
   require('@bugsnag/plugin-react-native-unhandled-rejection'),
   require('@bugsnag/plugin-console-breadcrumbs'),
   require('@bugsnag/plugin-network-breadcrumbs')(),
+  require('@bugsnag/plugin-react-native-hermes')(),
   new BugsnagPluginReact(React)
 ]
 
