@@ -18,7 +18,7 @@ The oldest version of React Native supported by `@bugsnag/react-native@7.3` is `
 
 ### Removing `bugsnag-react-native`
 
-Since `@bugsnag/react-native` is an entirely new module, `bugsnag-react-native` should be removed first. It's not possible to run them both alongside one-another. So the replacement can't be done incrementally.
+Since `@bugsnag/react-native` is an entirely new module, `bugsnag-react-native` should be removed first. It's not possible to run them both alongside one-another, so the replacement can't be done incrementally.
 
 Firstly, remove the npm package with `npm` or `yarn`:
 
