@@ -4,7 +4,7 @@
 
 As of `v7.3` of the [`bugsnag-js` monorepo](https://github.com/bugsnag/bugsnag-js) it contains Bugsnag's SDK for React Native. This additional notifier joins `@bugsnag/js` and `@bugsnag/expo` in its unified version scheme, so the first version of `@bugsnag/react-native` is `v7.3.0`.
 
-The previous React Native SDK – [`bugsnag-react-native`](https://github.com/bugsnag/bugsnag-react-native) currently at `v2.23` – continues to be available and will receive critical bug fixes, but it is no longer under active development and won't receive new features.
+The previous React Native SDK – [`bugsnag-react-native`](https://github.com/bugsnag/bugsnag-react-native) – continues to be available and will receive critical bug fixes, but it is no longer under active development and won't receive new features.
 
 `@bugsnag/react-native` is a complete rewrite and has no backwards compatibility with `bugsnag-react-native`. Therefore, the upgrade steps essentially consist of these three steps:
 
