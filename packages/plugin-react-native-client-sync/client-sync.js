@@ -34,7 +34,7 @@ module.exports = (NativeClient) => ({
     const origClearMetadata = client.clearMetadata
     client.clearMetadata = function (key) {
       const ret = origClearMetadata.apply(this, arguments)
-      NativeClient.updateMetaData(key, client._metadata[key])
+      NativeClient.updateMetadata(key, client._metadata[key])
       return ret
     }
 
