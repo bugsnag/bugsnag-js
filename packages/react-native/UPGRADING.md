@@ -12,11 +12,9 @@ The previous React Native SDK – [`bugsnag-react-native`](https://github.com/bu
 2. adding `@bugsnag/react-native` to your project
 3. updating any usage of Bugsnag throughout your codebase
 
-#### A quick note on supported versions of React Native
-
 The oldest version of React Native supported by `@bugsnag/react-native@7.3` is `0.60`. If your project is running an older version than this, you should upgrade that first, or continue to use `bugsnag-react-native` until such time as you can upgrade.
 
-### Removing `bugsnag-react-native`
+## Removing `bugsnag-react-native`
 
 Since `@bugsnag/react-native` is an entirely new module, `bugsnag-react-native` should be removed first. It's not possible to run them both alongside one-another, so the replacement can't be done incrementally.
 
@@ -41,7 +39,7 @@ For iOS, open up the project in XCode `open ios/<ProjectName>.xcworkspace`, and 
 
 For Android, run `cd android && ./gradlew clean`.
 
-### Adding `@bugsnag/react-native`
+## Adding `@bugsnag/react-native`
 
 Full instructions are available at the [React Native integration guide](https://docs.bugsnag.com/platforms/react-native/react-native#installation) but here is a summary.
 
@@ -53,7 +51,7 @@ npm install --save @bugsnag/react-native
 yarn add @bugsnag/react-native
 ```
 
-#### Android
+### Android
 
 Add the following to your `android/app/build.gradle` to integrate Bugsnag into your Anroid project:
 
@@ -61,7 +59,7 @@ Add the following to your `android/app/build.gradle` to integrate Bugsnag into y
 apply from: "../../node_modules/@bugsnag/react-native/bugsnag-react-native.gradle"
 ```
 
-#### iOS
+### iOS
 
 Run cocoapods again so that it picks up the new local dependency:
 
@@ -70,13 +68,13 @@ cd ios
 pod install
 ```
 
-### Updating usage
+## Updating usage
 
 Full integration instructions are available on the [React Native integration guide](https://docs.bugsnag.com/platforms/react-native/react-native#installation). This section will focus on specific areas that have changed.
 
 Since this update involved a major bump to Bugsnag's JS, Android and iOS notifiers – bringing all of their APIs in sync, virtually every usage of Bugsnag's API in your application will need updating.
 
-#### Initialization
+### Initialization
 
 Previously in `bugsnag-react-native` it was possible to initialize in a variety of ways. Now there is one way to do it.
 
@@ -84,7 +82,7 @@ In each of your native projects you need to initialize Bugsnag. This was optiona
 
 To facilitate this, and to get Bugsnag started as early as possible, most configuration can only be done in the iOS and Android projects. Some JS-specific options are allowed in the JS layer.
 
-##### iOS
+#### iOS
 
 Update any of the following imports in. These will likely be in `AppDelegate.m` where it's recommended to configure Bugsnag, but may be in other locations too:
 
@@ -101,7 +99,19 @@ Inside your `application:didFinishLaunchingWithOptions` method, replace any Bugs
 + [Bugsnag start];
 ```
 
-Or if you need to customize your configuration:
+If you have set your API key in `Info.plist`, the format has changed from a top level string to a dictionary. You can now provide many other configuration options in the plist too:
+
+```
+- <key>BugsnagAPIKey</key>
+- <string>YOUR_API_KEY</string>
++ <key>bugsnag</key>
++ <dict>
++     <key>apiKey</key>
++     <string>YOUR_API_KEY</string>
++ </dict>
+```
+
+If you want or need to customize your configuration in code:
 
 ```diff
 - BugsnagConfiguration *config = [BugsnagConfiguration new];
@@ -114,19 +124,7 @@ Or if you need to customize your configuration:
 
 See the new [Bugsnag Cocoa configuration guide](https://docs.bugsnag.com/platforms/ios/configuration-options/) for all available configuration options.
 
-If you have set your API key in `Info.plist`, the format has changed from a top level string to a dictionary.
-
-```
-- <key>BugsnagAPIKey</key>
-- <string>YOUR_API_KEY</string>
-+ <key>bugsnag</key>
-+ <dict>
-+     <key>apiKey</key>
-+     <string>YOUR_API_KEY</string>
-+ </dict>
-```
-
-##### Android
+#### Android
 
 Replace the following import which will likely be in your `MainApplication.java` file:
 
@@ -138,15 +136,24 @@ Replace the following import which will likely be in your `MainApplication.java`
 Inside your application's `onCreate` method, replace any Bugsnag initialization code with the updated version:
 
 ```diff
+- BugsnagReactNative.start(this /* app context */);
++ Bugsnag.start(this /* app context */);
+```
+
+Along with your API key in `android-manifest.xml` you can now provide many other configuration options.
+
+Alternatively you can still configure in code:
+
+```diff
 - Configuration config = new Configuration();
 - config.setReleaseStage("beta");
 - BugsnagReactNative.startWithConfiguration(this /* app context */, config);
 + Configuration config = Configuration.load(this);
 + config.setReleaseStage("beta");
-Bugsnag.start(this /* app context */, config);
++ Bugsnag.start(this /* app context */, config);
 ```
 
-###### JS
+#### JS
 
 As part of the `bugsnag-js monorepo`, the JS interface now looks the same as our JS notifier, and uses the same names and concepts as our other platforms.
 
@@ -175,21 +182,21 @@ JS configuration options are now supplied directly to the `start` method:
 
 See the [React Native configuration options page](https//docs.bugsnag.com/platforms/react-native/react-native/configuration-options) for reference.
 
-#### General usage
+### General usage
 
-##### iOS
+#### iOS
 
 Bugsnag React Native vendors the `bugsnag-cocoa` library, so the usage is the same whether you are using `bugsnag-cocoa` directly, or whether you are using Bugsnag in the iOS side of your React Native project.
 
 See the [V5 to V6 section of the `bugsnag-cococa` upgrade guide](https://github.com/bugsnag/bugsnag-cocoa/blob/master/UPGRADING.md#upgrade-from-5x-to-6x) for examples of how to update the usage of Bugsnag's APIs.
 
-##### Android
+#### Android
 
 Bugsnag React Native vendors the `bugsnag-android` library, so the usage is the same whether you are using `bugsnag-android` directly, or whether you are using Bugsnag in the Android side of your React Native project.
 
 See the [V4 to V5 section of the `bugsnag-android` upgrade guide](https://github.com/bugsnag/bugsnag-android/blob/master/UPGRADING.md#upgrade-from-4x-to-5x) for examples of how to update the usage of Bugsnag's APIs.
 
-##### JS
+#### JS
 
 Previously initialization of Bugsnag would return a `Client` that you would need to hold a reference to and pass around your application. You can still do that if you want, but importing `Bugsnag` is a static namespace that you can import and use anywhere, provided `Bugsnag.start()` has been called somewhere first.
 
@@ -198,7 +205,7 @@ Previously initialization of Bugsnag would return a `Client` that you would need
 + Bugsnag.start()
 ```
 
-###### Handled errors
+##### Handled errors
 
 To report a handled error call the `notify()` method:
 
@@ -221,7 +228,7 @@ The second argument is an `onError` callback which will receive the error report
   })
 ```
 
-###### Adding/removing callbacks
+##### Adding/removing callbacks
 
 ```diff
 - configuration.registerBeforeSendCallback(fn)
@@ -232,7 +239,7 @@ The second argument is an `onError` callback which will receive the error report
 + Bugsnag.removeOnError(fn)
 ```
 
-###### Adding user information
+##### Adding user information
 
 ```diff
 - client.setUser('1234', 'Jessica Jones', 'jess@example.com')
@@ -241,7 +248,7 @@ The second argument is an `onError` callback which will receive the error report
 
 __Note: the argument order has changed__ from `id,name,email` to `id,email,name`
 
-###### Sessions
+##### Sessions
 
 ```diff
 - client.startSession()
@@ -252,7 +259,7 @@ __Note: the argument order has changed__ from `id,name,email` to `id,email,name`
 + Bugsnag.resumeSession()
 ```
 
-###### Configuring endpoints
+##### Configuring endpoints
 
 ```diff
 - config.setEndpoints(notify, session)
@@ -260,7 +267,7 @@ __Note: the argument order has changed__ from `id,name,email` to `id,email,name`
 
 This must now be done in native configuration. See the [`endpoints` configuration option](https://docs.bugsnag.com/platforms/react-native/react-native/configuration-options/#endpoints).
 
-###### Enabling/disabling different error types
+##### Enabling/disabling different error types
 
 ```diff
 - config.autoNotify = false
@@ -269,7 +276,7 @@ This must now be done in native configuration. See the [`endpoints` configuratio
 
 This must now be done in native configuration. See the [`enabledErrorTypes`](https://docs.bugsnag.com/platforms/react-native/react-native/configuration-options/#enablederrortypes) and [`autoDetectErrors`](https://docs.bugsnag.com/platforms/react-native/react-native/configuration-options/#autodetecterrors)  configuration options.
 
-###### Enabling/disabling different breadcrumb types
+##### Enabling/disabling different breadcrumb types
 
 ```diff
 - config.consoleBreadcrumbsEnabled = false
