@@ -69,6 +69,7 @@
     "packages/plugin-browser-device",
     "packages/plugin-react-native-app-state-breadcrumbs",
     "packages/plugin-react-native-unhandled-rejection",
+    "packages/plugin-react-native-hermes",
     "packages/plugin-server-session",
 
     "packages/plugin-react",
