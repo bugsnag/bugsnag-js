@@ -82,7 +82,7 @@ Previously in `bugsnag-react-native` it was possible to initialize in a variety 
 
 In each of your native projects you need to initialize Bugsnag. This was optional before, but it means that now crashes before the JS layer loads will always be caught.
 
-To facilitate this, and to get Bugsnag started as early as possible, most configuration can only be done in the native layer. Some JS-specific options are allowed in the JS layer.
+To facilitate this, and to get Bugsnag started as early as possible, most configuration can only be done in the iOS and Android projects. Some JS-specific options are allowed in the JS layer.
 
 ##### iOS
 
