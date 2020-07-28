@@ -9,6 +9,7 @@ Scenario: Setting metadata (JS)
   And the event "metaData.jsdata.some_more_data" equals "set via client"
   And the event "metaData.jsdata.even_more_data" equals "set via event"
   And the event "metaData.jsdata.redacted_data" equals "[REDACTED]"
+  And the payload field "events.0.metaData.jsarraydata.items" is an array with 3 elements
 
 Scenario: Setting metadata (native handled)
   When I run "MetadataNativeScenario"

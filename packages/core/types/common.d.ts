@@ -132,11 +132,11 @@ export interface Thread {
   stacktrace: Stackframe[]
 }
 
-interface Stackframe {
+export interface Stackframe {
   file: string
   method?: string
   lineNumber?: number
   columnNumber?: number
-  code?: object
+  code?: Record<string, string>
   inProject?: boolean
 }

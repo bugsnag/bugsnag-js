@@ -21,9 +21,12 @@ module.exports = {
         testsForPackage('plugin-vue'),
         testsForPackage('plugin-browser-context'),
         testsForPackage('plugin-browser-device'),
+        testsForPackage('plugin-browser-request'),
         testsForPackage('plugin-window-unhandled-rejection'),
         testsForPackage('plugin-window-onerror'),
-        testsForPackage('plugin-strip-query-string')
+        testsForPackage('plugin-strip-query-string'),
+        testsForPackage('plugin-interaction-breadcrumbs'),
+        testsForPackage('plugin-simple-throttle')
       ]
     },
     {
@@ -32,7 +35,8 @@ module.exports = {
       testMatch: [
         testsForPackage('react-native'),
         testsForPackage('plugin-react-native-app-state-breadcrumbs'),
-        testsForPackage('plugin-react-native-unhandled-rejection')
+        testsForPackage('plugin-react-native-unhandled-rejection'),
+        testsForPackage('plugin-react-native-hermes')
       ],
       setupFiles: [
         require.resolve('react-native/Libraries/Core/setUpGlobals.js'),
@@ -45,7 +49,13 @@ module.exports = {
       testEnvironment: 'node',
       testMatch: [
         testsForPackage('plugin-server-*'),
-        testsForPackage('packages/plugin-strip-project-root')
+        testsForPackage('plugin-strip-project-root'),
+        testsForPackage('plugin-intercept'),
+        testsForPackage('plugin-node-unhandled-rejection'),
+        testsForPackage('plugin-node-in-project'),
+        testsForPackage('plugin-node-device'),
+        testsForPackage('plugin-node-surrounding-code'),
+        testsForPackage('plugin-node-uncaught-exception')
       ]
     },
     {
