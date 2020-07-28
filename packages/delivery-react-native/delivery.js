@@ -13,7 +13,8 @@ module.exports = (client, NativeClient) => ({
       context: event.context,
       user: event._user,
       metadata: event._metadata,
-      groupingHash: event.groupingHash
+      groupingHash: event.groupingHash,
+      apiKey: event.apiKey
     }).then(() => cb()).catch(cb)
   },
   sendSession: () => {
