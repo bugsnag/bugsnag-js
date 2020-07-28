@@ -72,7 +72,7 @@ pod install
 
 Full integration instructions are available on the [React Native integration guide](https://docs.bugsnag.com/platforms/react-native/react-native#installation). This section will focus on specific areas that have changed.
 
-Since this update involved a major bump to Bugsnag's JS, Android and iOS notifiers – bringing all of their APIs in sync, virtually every usage of Bugsnag's API in your application will need updating.
+Since this update involved a major bump to Bugsnag's JS, Android and iOS notifiers, including lots of breaking changes to bring all of their APIs in sync, any usage of Bugsnag's API in your application will need updating.
 
 ### Initialization
 
@@ -159,14 +159,14 @@ As part of the `bugsnag-js monorepo`, the JS interface now looks the same as our
 
 When the JS layer loads, __the native iOS/Android Bugsnag client must already have been configured__. If you attempt to initialize the JS layer without having first configured the native layer, it __will not work__. This is new behavior – previously we allowed configuration of the native layer to be done lazily and automatically, but this meant native errors on startup could be missed.
 
-Since the JS layer hooks in to an already running native layer, there are fewer configuration options available. Most configuration must be done in the native layer, with only a small subset of JS-specific options allowed in the JS layer.
-
 ```diff
 - import { Client } from 'bugsnag-react-native';
 - const client = new Client();
 + import Bugsnag from '@bugsnag/react-native'
 + Bugsnag.start()
 ```
+
+Since the JS layer hooks in to an already running native layer, there are fewer configuration options available. Most configuration must be done in the native layer, with only a small subset of JS-specific options allowed in the JS layer.
 
 JS configuration options are now supplied directly to the `start` method:
 
@@ -214,7 +214,7 @@ To report a handled error call the `notify()` method:
 + Bugsnag.notify(new Error('uh oh'))
 ```
 
-The second argument is an `onError` callback which will receive the error report that will be sent to Bugsnag. This is similar, but previously the data structure was a `report` – now it is an `event`. See the [Customizing error reports](https://docs.bugsnag.com/platforms/react-native/react-native/customizing-error-reports/#updating-events-using-callbacks) for full information. An example of  adding metadata is shown below:
+The second argument is an `onError` callback which will receive the error report that will be sent to Bugsnag. This is similar to the previous interface, but previously the data structure was a `report` – now it is an `event`. See the [Customizing error reports](https://docs.bugsnag.com/platforms/react-native/react-native/customizing-error-reports/#updating-events-using-callbacks) for full information. An example of adding metadata to an event is shown below:
 
 ```diff
 - client.notify(err, (report, originalError) => {
