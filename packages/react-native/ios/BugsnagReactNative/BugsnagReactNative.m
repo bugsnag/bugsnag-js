@@ -9,7 +9,7 @@
 - (NSDictionary *)collectAppWithState;
 - (NSDictionary *)collectDeviceWithState;
 - (NSArray *)collectBreadcrumbs;
-- (NSArray *)collectThreads;
+- (NSArray *)collectThreads:(BOOL)unhandled;
 @property id notifier;
 @property id sessionTracker;
 @property BugsnagMetadata *metadata;
@@ -127,12 +127,14 @@ RCT_EXPORT_METHOD(resumeSession) {
 RCT_EXPORT_METHOD(getPayloadInfo:(NSDictionary *)options
                          resolve:(RCTPromiseResolveBlock)resolve
                           reject:(RCTPromiseRejectBlock)reject) {
+                              NSLog(@"payload info options: %@", options);
     BugsnagClient *client = [Bugsnag client];
     NSMutableDictionary *info = [NSMutableDictionary new];
     info[@"app"] = [client collectAppWithState];
     info[@"device"] = [client collectDeviceWithState];
     info[@"breadcrumbs"] = [client collectBreadcrumbs];
-    info[@"threads"] = [client collectThreads];
+    BOOL unhandled = [options[@"unhandled"] boolValue];
+    info[@"threads"] = [client collectThreads:unhandled];
     resolve(info);
 }
 
