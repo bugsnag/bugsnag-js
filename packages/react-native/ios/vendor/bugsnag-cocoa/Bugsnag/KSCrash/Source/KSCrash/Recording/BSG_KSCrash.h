@@ -117,7 +117,9 @@
  * @param depth the number of frames to discard from the main thread's stacktrace
  * @return an array of BugsnagThread
  */
-- (NSArray<BugsnagThread *> *)captureThreads:(NSException *)exc depth:(int)depth;
+- (NSArray<BugsnagThread *> *)captureThreads:(NSException *)exc
+                                       depth:(int)depth
+                                   unhandled:(BOOL)unhandled;
 
 /**
  * Collects information about the application's foreground state (duration in foreground/background)

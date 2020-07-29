@@ -171,7 +171,7 @@ BSG_KSCrash_Context *crashContext(void);
  *
  * @return a trace of all the threads as a JSON string.
  */
-char *bsg_kscrash_captureThreadTrace(int discardDepth, int frameCount, uintptr_t *callstack);
+char *bsg_kscrash_captureThreadTrace(int discardDepth, int frameCount, uintptr_t *callstack, const bool unhandled);
 
 #ifdef __cplusplus
 }
