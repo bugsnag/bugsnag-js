@@ -239,6 +239,8 @@ The second argument is an `onError` callback which will receive the error report
 + Bugsnag.removeOnError(fn)
 ```
 
+See the [callbacks](https://docs.bugsnag.com/platforms/react-native/react-native/customizing-error-reports/#updating-events-using-callbacks) section of the docs.
+
 ##### Adding user information
 
 ```diff
@@ -247,6 +249,8 @@ The second argument is an `onError` callback which will receive the error report
 ```
 
 __Note: the argument order has changed__ from `id,name,email` to `id,email,name`
+
+See the [adding user data](https://docs.bugsnag.com/platforms/react-native/react-native/customizing-error-reports/#adding-user-data) section of the docs.
 
 ##### Sessions
 
@@ -258,6 +262,8 @@ __Note: the argument order has changed__ from `id,name,email` to `id,email,name`
 + Bugsnag.pauseSession()
 + Bugsnag.resumeSession()
 ```
+
+See the [`startSession`](https://docs.bugsnag.com/platforms/react-native/react-native/capturing-sessions/#startsession), [`pauseSession`](https://docs.bugsnag.com/platforms/react-native/react-native/capturing-sessions/#pausesession) and [`resumeSession`](https://docs.bugsnag.com/platforms/react-native/react-native/capturing-sessions/#resumesession) docs.
 
 ##### Configuring endpoints
 
