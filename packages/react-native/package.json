@@ -23,18 +23,6 @@
   "publishConfig": {
     "access": "public"
   },
-  "rnpm": {
-    "ios": {
-      "project": "ios/BugsnagReactNative.xcodeproj",
-      "sharedLibraries": [
-        "libz"
-      ]
-    },
-    "android": {
-      "packageInstance": "new BugsnagPackage()",
-      "packageImportPath": "import com.bugsnag.android.BugsnagPackage;"
-    }
-  },
   "files": [
     "src",
     "android/build.gradle",
