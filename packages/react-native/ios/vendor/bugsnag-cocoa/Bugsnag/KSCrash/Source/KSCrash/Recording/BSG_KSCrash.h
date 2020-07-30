@@ -115,11 +115,13 @@
  *
  * @param exc the exception to record
  * @param depth the number of frames to discard from the main thread's stacktrace
+ * @param recordAllThreads whether all threads should be recorded or just the
+ * main thread's stacktrace
  * @return an array of BugsnagThread
  */
 - (NSArray<BugsnagThread *> *)captureThreads:(NSException *)exc
                                        depth:(int)depth
-                                   unhandled:(BOOL)unhandled;
+                            recordAllThreads:(BOOL)recordAllThreads;
 
 /**
  * Collects information about the application's foreground state (duration in foreground/background)
@@ -134,9 +136,8 @@
 
 /**
 * The methodology used for tracing threads.
-* The value will be equal to an enum value from BSGThreadSendPolicy
  */
-@property(nonatomic, readwrite, assign) int threadTracingEnabled;
+@property(nonatomic, readwrite, assign) BOOL threadTracingEnabled;
 
 /**
  * If YES, binary images will be collected for each report.

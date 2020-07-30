@@ -153,7 +153,7 @@ void bsg_kscrash_reportUserException(const char *name, const char *reason,
 void bsg_kscrash_setReportWhenDebuggerIsAttached(
     bool reportWhenDebuggerIsAttached);
 
-void bsg_kscrash_setThreadTracingEnabled(int threadTracingEnabled);
+void bsg_kscrash_setThreadTracingEnabled(bool threadTracingEnabled);
 
 void bsg_kscrash_setWriteBinaryImagesForUserReported(
     bool writeBinaryImagesForUserReported);
@@ -171,7 +171,7 @@ BSG_KSCrash_Context *crashContext(void);
  *
  * @return a trace of all the threads as a JSON string.
  */
-char *bsg_kscrash_captureThreadTrace(int discardDepth, int frameCount, uintptr_t *callstack, const bool unhandled);
+char *bsg_kscrash_captureThreadTrace(int discardDepth, int frameCount, uintptr_t *callstack, const bool recordAllThreads);
 
 #ifdef __cplusplus
 }

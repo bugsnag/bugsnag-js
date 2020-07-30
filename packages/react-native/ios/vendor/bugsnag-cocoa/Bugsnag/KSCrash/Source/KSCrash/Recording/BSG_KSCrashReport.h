@@ -69,11 +69,10 @@ void bsg_kscrashreport_logCrash(const BSG_KSCrash_Context *const crashContext);
  *
  * @param crashContext Contextual information about the crash and environment.
  *                     The caller must fill this out before passing it in.
- * @param unhandled whether the crash was considered unhandled or not
  *
  * @return the thread trace encoded as a JSON string
  */
-char *bsg_kscrw_i_captureThreadTrace(const BSG_KSCrash_Context *crashContext, const bool unhandled);
+char *bsg_kscrw_i_captureThreadTrace(const BSG_KSCrash_Context *crashContext);
 
 #ifdef __cplusplus
 }

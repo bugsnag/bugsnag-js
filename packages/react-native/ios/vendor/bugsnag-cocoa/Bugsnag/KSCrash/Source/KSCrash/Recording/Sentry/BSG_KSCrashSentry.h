@@ -58,9 +58,9 @@ typedef struct BSG_KSCrash_SentryContext {
 
     /**
      * The methodology used for tracing threads.
-     * The value will be equal to an enum value from BSGThreadSendPolicy
+     * If true, will capture traces for all running threads
      */
-    int threadTracingEnabled;
+    bool threadTracingEnabled;
 
     /** If true, will record binary images. */
     bool writeBinaryImagesForUserReported;

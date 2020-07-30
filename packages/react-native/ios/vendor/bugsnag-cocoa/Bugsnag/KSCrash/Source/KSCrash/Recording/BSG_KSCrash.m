@@ -38,7 +38,7 @@
 #import "BSG_KSLogger.h"
 #import "BugsnagThread.h"
 #import "BSGSerialization.h"
-#import "BugsnagErrorReportSink.h"
+#import "Bugsnag.h"
 #import "BugsnagCollections.h"
 #import "BSG_KSCrashReportFields.h"
 
@@ -147,7 +147,6 @@ IMPLEMENT_EXCLUSIVE_SHARED_INSTANCE(BSG_KSCrash)
         self.maxStoredReports = 5;
 
         self.reportWhenDebuggerIsAttached = NO;
-        self.threadTracingEnabled = BSGThreadSendPolicyAlways;
         self.writeBinaryImagesForUserReported = YES;
     }
     return self;
@@ -199,7 +198,7 @@ IMPLEMENT_EXCLUSIVE_SHARED_INSTANCE(BSG_KSCrash)
     bsg_kscrash_setReportWhenDebuggerIsAttached(reportWhenDebuggerIsAttached);
 }
 
-- (void)setThreadTracingEnabled:(int)threadTracingEnabled {
+- (void)setThreadTracingEnabled:(BOOL)threadTracingEnabled {
     _threadTracingEnabled = threadTracingEnabled;
     bsg_kscrash_setThreadTracingEnabled(threadTracingEnabled);
 }
@@ -284,7 +283,7 @@ IMPLEMENT_EXCLUSIVE_SHARED_INSTANCE(BSG_KSCrash)
 
 - (NSArray<BugsnagThread *> *)captureThreads:(NSException *)exc
                                        depth:(int)depth
-                                   unhandled:(BOOL)unhandled {
+                            recordAllThreads:(BOOL)recordAllThreads {
     NSArray *addresses = [exc callStackReturnAddresses];
     int numFrames = (int) [addresses count];
     uintptr_t *callstack;
@@ -310,7 +309,7 @@ IMPLEMENT_EXCLUSIVE_SHARED_INSTANCE(BSG_KSCrash)
         }
     }
 
-    char *trace = bsg_kscrash_captureThreadTrace(depth, numFrames, callstack, unhandled);
+    char *trace = bsg_kscrash_captureThreadTrace(depth, numFrames, callstack, recordAllThreads);
     free(callstack);
     NSDictionary *json = BSGDeserializeJson(trace);
     free(trace);

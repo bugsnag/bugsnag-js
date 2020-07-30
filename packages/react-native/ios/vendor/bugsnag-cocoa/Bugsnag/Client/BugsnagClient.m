@@ -975,7 +975,11 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
      * 4. -[BSG_KSCrash captureThreads:depth:]
      */
     int depth = (int)(BSGNotifierStackFrameCount);
-    NSArray *threads = [[BSG_KSCrash sharedInstance] captureThreads:exception depth:depth unhandled:false];
+
+    BOOL recordAllThreads = self.configuration.sendThreads == BSGThreadSendPolicyAlways;
+    NSArray *threads = [[BSG_KSCrash sharedInstance] captureThreads:exception
+                                                              depth:depth
+                                                   recordAllThreads:recordAllThreads];
     NSArray *errors = @[[self generateError:exception threads:threads]];
 
     BugsnagMetadata *metadata = [self.metadata deepCopy];
@@ -1571,9 +1575,12 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
     // 3. [BSG_KSCrash captureThreads:depth:unhandled:]
     int depth = 3;
     NSException *exc = [NSException exceptionWithName:@"Bugsnag" reason:@"" userInfo:nil];
+    BSGThreadSendPolicy sendThreads = self.configuration.sendThreads;
+    BOOL recordAllThreads = sendThreads == BSGThreadSendPolicyAlways
+            || (unhandled && sendThreads == BSGThreadSendPolicyUnhandledOnly);
     NSArray<BugsnagThread *> *threads = [[BSG_KSCrash sharedInstance] captureThreads:exc
                                                                                depth:depth
-                                                                           unhandled:unhandled];
+                                                                    recordAllThreads:recordAllThreads];
     return [BugsnagThread serializeThreads:threads];
 }
 
