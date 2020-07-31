@@ -627,7 +627,7 @@ void bsg_kscrw_i_writeMemoryContents(
     const BSG_KSCrashReportWriter *const writer, const char *const key,
     const uintptr_t address, int *limit);
 
-void bsg_kscrw_i_writeTraceInfo(const BSG_KSCrash_Context *crashContext, 
+void bsg_kscrw_i_writeTraceInfo(const BSG_KSCrash_Context *crashContext,
                                 const BSG_KSCrashReportWriter *writer);
 
 bool bsg_kscrw_i_exceedsBufferLen(const size_t length);
@@ -1048,17 +1048,13 @@ void bsg_kscrw_i_writeAllThreads(const BSG_KSCrashReportWriter *const writer,
         BSG_KSLOG_ERROR("task_threads: %s", mach_error_string(kr));
         return;
     }
-    
-    bool recordAllThreads = crash->threadTracingEnabled == 0 // Always
-                            || (crash->threadTracingEnabled == 1 // Unhandled Only
-                                && crash->crashType != BSG_KSCrashTypeUserReported);
 
     // Fetch info for all threads.
     writer->beginArray(writer, key);
     {
         for (mach_msg_type_number_t i = 0; i < numThreads; i++) {
             thread_t thread = threads[i];
-            if (recordAllThreads || thread == crash->offendingThread) {
+            if (crash->threadTracingEnabled || thread == crash->offendingThread) {
                 bsg_kscrw_i_writeThread(writer, NULL, crash, thread, (int) i, writeNotableAddresses);
             }
         }
@@ -1702,17 +1698,17 @@ char *bsg_kscrw_i_captureThreadTrace(const BSG_KSCrash_Context *crashContext) {
 
 void bsg_kscrw_i_writeTraceInfo(const BSG_KSCrash_Context *crashContext,
                                 const BSG_KSCrashReportWriter *writer) {
-    bool unhandledCrash = crashContext->crash.crashType != BSG_KSCrashTypeUserReported;
+    const BSG_KSCrash_SentryContext *crash = &crashContext->crash;
 
     // Don't write the binary images for user reported crashes to improve performance
-    if (crashContext->crash.writeBinaryImagesForUserReported == true || unhandledCrash) {
+    if (crash->writeBinaryImagesForUserReported == true || crash->crashType != BSG_KSCrashTypeUserReported) {
         bsg_kscrw_i_writeBinaryImages(writer, BSG_KSCrashField_BinaryImages);
     }
     writer->beginObject(writer, BSG_KSCrashField_Crash);
     {
-        bsg_kscrw_i_writeAllThreads(writer, BSG_KSCrashField_Threads, &crashContext->crash,
+        bsg_kscrw_i_writeAllThreads(writer, BSG_KSCrashField_Threads, crash,
                 crashContext->config.introspectionRules.enabled);
-        bsg_kscrw_i_writeError(writer, BSG_KSCrashField_Error,&crashContext->crash);
+        bsg_kscrw_i_writeError(writer, BSG_KSCrashField_Error,crash);
     }
     writer->endContainer(writer);
 }

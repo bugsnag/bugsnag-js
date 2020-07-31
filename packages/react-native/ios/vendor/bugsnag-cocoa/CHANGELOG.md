@@ -4,6 +4,10 @@ Changelog
 ## TBD
 
 ### Bug fixes
+
+* Record thread information for unhandled JS errors
+  [#766](https://github.com/bugsnag/bugsnag-cocoa/pull/766)
+
 * Respect bundle version set from config
   [#762](https://github.com/bugsnag/bugsnag-cocoa/pull/762)
 

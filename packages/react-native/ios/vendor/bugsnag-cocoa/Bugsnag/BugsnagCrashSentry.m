@@ -30,8 +30,11 @@ NSUInteger const BSG_MAX_STORED_REPORTS = 12;
     ksCrash.introspectMemory = YES;
     ksCrash.onCrash = onCrash;
     ksCrash.maxStoredReports = BSG_MAX_STORED_REPORTS;
-    ksCrash.threadTracingEnabled = (int) config.sendThreads;
-    
+
+    // overridden elsewhere for handled errors, so we can assume that this only
+    // applies to unhandled errors
+    ksCrash.threadTracingEnabled = config.sendThreads != BSGThreadSendPolicyNever;
+
     // User reported events are *always* handled
     BSG_KSCrashType crashTypes = BSG_KSCrashTypeUserReported;
     
