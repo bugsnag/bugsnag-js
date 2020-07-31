@@ -121,7 +121,8 @@ BSGSeverity BSGParseSeverity(NSString *severity);
         attrVal = [attrs allValues][0];
     }
 
-    NSUInteger reason = [BugsnagHandledState severityReasonFromString:payload[@"severityReason"]];
+    NSString *severityType = [payload valueForKeyPath:@"severityReason.type"];
+    NSUInteger reason = [BugsnagHandledState severityReasonFromString:severityType];
 
     BSGSeverity severity = BSGParseSeverity(payload[@"severity"]);
     BOOL unhandled = [payload[@"unhandled"] boolValue];
