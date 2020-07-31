@@ -458,6 +458,11 @@ NSString *_lastOrientation = nil;
     // sync the new observer with changes to metadata so far
     BugsnagStateEvent *event = [[BugsnagStateEvent alloc] initWithName:kStateEventMetadata data:self.metadata];
     observer(event);
+
+    NSDictionary *userJson = [self.user toJson];
+    observer([[BugsnagStateEvent alloc] initWithName:kStateEventUser data:userJson]);
+
+    observer([[BugsnagStateEvent alloc] initWithName:kStateEventContext data:self.context]);
 }
 
 - (void)removeObserverWithBlock:(BugsnagObserverBlock _Nonnull)observer {
