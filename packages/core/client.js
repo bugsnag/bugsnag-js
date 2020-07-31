@@ -215,8 +215,8 @@ class Client {
     this._cbs.s = filter(this._cbs.s, f => f !== fn)
   }
 
-  addOnBreadcrumb (fn) {
-    this._cbs.b.push(fn)
+  addOnBreadcrumb (fn, front = false) {
+    this._cbs.b[front ? 'unshift' : 'push'](fn)
   }
 
   removeOnBreadcrumb (fn) {
