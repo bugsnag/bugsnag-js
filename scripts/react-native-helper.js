@@ -57,9 +57,6 @@ module.exports = {
     const command = `npm install @bugsnag/react-native@${version} --registry ${registryUrl}`
     common.run(command, true)
 
-    // RN link (only needed <0.60)
-    common.run('node_modules/.bin/react-native link', true)
-
     // Native layer
     common.changeDir('android')
     common.run('./gradlew assembleRelease', true)
