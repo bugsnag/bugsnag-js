@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/react-native",
-  "version": "7.3.0-alpha.9",
+  "version": "7.3.0-alpha.10",
   "main": "src/notifier.js",
   "types": "types/bugsnag.d.ts",
   "description": "Bugsnag error reporter for React Native applications",
@@ -52,17 +52,17 @@
     "typescript": "^3.3.3"
   },
   "dependencies": {
-    "@bugsnag/core": "^7.3.0-alpha.5",
-    "@bugsnag/delivery-react-native": "^7.3.0-alpha.8",
-    "@bugsnag/plugin-console-breadcrumbs": "^7.3.0-alpha.5",
-    "@bugsnag/plugin-network-breadcrumbs": "^7.3.0-alpha.5",
-    "@bugsnag/plugin-react": "^7.3.0-alpha.5",
-    "@bugsnag/plugin-react-native-client-sync": "^7.3.0-alpha.8",
-    "@bugsnag/plugin-react-native-event-sync": "^7.3.0-alpha.5",
-    "@bugsnag/plugin-react-native-global-error-handler": "^7.3.0-alpha.5",
-    "@bugsnag/plugin-react-native-hermes": "^7.3.0-alpha.8",
-    "@bugsnag/plugin-react-native-session": "^7.3.0-alpha.5",
-    "@bugsnag/plugin-react-native-unhandled-rejection": "^7.3.0-alpha.5",
+    "@bugsnag/core": "^7.3.0-alpha.10",
+    "@bugsnag/delivery-react-native": "^7.3.0-alpha.10",
+    "@bugsnag/plugin-console-breadcrumbs": "^7.3.0-alpha.10",
+    "@bugsnag/plugin-network-breadcrumbs": "^7.3.0-alpha.10",
+    "@bugsnag/plugin-react": "^7.3.0-alpha.10",
+    "@bugsnag/plugin-react-native-client-sync": "^7.3.0-alpha.10",
+    "@bugsnag/plugin-react-native-event-sync": "^7.3.0-alpha.10",
+    "@bugsnag/plugin-react-native-global-error-handler": "^7.3.0-alpha.10",
+    "@bugsnag/plugin-react-native-hermes": "^7.3.0-alpha.10",
+    "@bugsnag/plugin-react-native-session": "^7.3.0-alpha.10",
+    "@bugsnag/plugin-react-native-unhandled-rejection": "^7.3.0-alpha.10",
     "iserror": "^0.0.2"
   }
 }
