@@ -8,7 +8,7 @@ module.exports = (NativeClient) => ({
       // bridge. This happens in the remote debugger and means the "message"
       // property is incorrectly named "name"
       NativeClient.leaveBreadcrumb({ ...breadcrumb })
-    })
+    }, true)
 
     const origSetUser = client.setUser
     client.setUser = function () {
