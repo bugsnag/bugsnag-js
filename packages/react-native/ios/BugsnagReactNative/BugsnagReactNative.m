@@ -147,7 +147,7 @@ RCT_EXPORT_METHOD(getPayloadInfo:(NSDictionary *)options
     NSString *reactNativeVersion = info[@"reactNativeVersion"];
     NSString *engine = info[@"engine"];
     [Bugsnag addRuntimeVersionInfo:reactNativeVersion withKey:@"reactNative"];
-    [Bugsnag addRuntimeVersionInfo:engine withKey:@"reactNativeJsengine"];
+    [Bugsnag addRuntimeVersionInfo:engine withKey:@"reactNativeJsEngine"];
 }
 
 - (BSGBreadcrumbType)breadcrumbTypeFromString:(NSString *)value {
