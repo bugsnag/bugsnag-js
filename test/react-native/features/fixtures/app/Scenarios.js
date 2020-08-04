@@ -5,6 +5,7 @@ export { HandledNativeErrorScenario } from './scenarios/HandledNativeErrorScenar
 // unhandled.feature
 export { UnhandledNativeErrorScenario } from './scenarios/UnhandledNativeErrorScenario'
 export { UnhandledJsErrorScenario } from './scenarios/UnhandledJsErrorScenario'
+export { UnhandledJsErrorSeverityScenario } from './scenarios/UnhandledJsErrorSeverityScenario'
 export { UnhandledJsPromiseRejectionScenario } from './scenarios/UnhandledJsPromiseRejectionScenario'
 
 // app.feature
