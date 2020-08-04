@@ -134,11 +134,20 @@ class BugsnagReactNative(private val reactContext: ReactApplicationContext) :
     }
 
     @ReactMethod
-    fun updateMetadata(section: String, data: ReadableMap?) {
+    fun addMetadata(section: String, data: ReadableMap?) {
         try {
-            plugin.updateMetadata(section, data?.toHashMap())
+          plugin.addMetadata(section, data?.toHashMap() as Map<String, Any?>?)
         } catch (exc: Throwable) {
-            logFailure("updateMetadata", exc)
+            logFailure("addMetadata", exc)
+        }
+    }
+
+    @ReactMethod
+    fun clearMetadata(section: String, key: String?) {
+        try {
+            plugin.clearMetadata(section, key)
+        } catch (exc: Throwable) {
+            logFailure("clearMetadata", exc)
         }
     }
 
