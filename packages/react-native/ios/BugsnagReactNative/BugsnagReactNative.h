@@ -15,8 +15,11 @@
 
 - (void)updateCodeBundleId:(NSString *)codeBundleId;
 
-- (void)updateMetadata:(NSString *)section
-              withData:(NSDictionary *)update;
+- (void)addMetadata:(NSString *)section
+           withData:(NSDictionary *)data;
+
+- (void)clearMetadata:(NSString *)section
+              withKey:(NSDictionary *)key;
 
 - (void)updateContext:(NSString *)context;
 

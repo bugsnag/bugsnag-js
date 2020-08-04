@@ -65,12 +65,17 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(configure:(NSDictionary *)readableMap) {
     return [self.configSerializer serialize:config];
 }
 
-RCT_EXPORT_METHOD(updateMetadata:(NSString *)section
-                        withData:(NSDictionary *)update) {
-    if (update == nil) {
+RCT_EXPORT_METHOD(addMetadata:(NSString *)section
+                     withData:(NSDictionary *)data) {
+    [Bugsnag addMetadata:data toSection:section];
+}
+
+RCT_EXPORT_METHOD(clearMetadata:(NSString *)section
+                     withKey:(NSString *)key) {
+    if (key == nil) {
         [Bugsnag clearMetadataFromSection:section];
     } else {
-        [Bugsnag addMetadata:update toSection:section];
+        [Bugsnag clearMetadataFromSection:section withKey:key];
     }
 }
 

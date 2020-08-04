@@ -32,7 +32,7 @@ describe('plugin: react native client sync', () => {
         apiKey: 'api_key',
         plugins: [
           plugin({
-            updateMetadata: (key, updates) => {
+            addMetadata: (key, updates) => {
               expect(key).toBe('widget')
               expect(updates).toEqual({
                 id: '14',
@@ -52,7 +52,8 @@ describe('plugin: react native client sync', () => {
         apiKey: 'api_key',
         plugins: [
           plugin({
-            updateMetadata: (key, updates) => {}
+            addMetadata: (key, updates) => {},
+            clearMetadata: (key, section) => {}
           })
         ]
       })
