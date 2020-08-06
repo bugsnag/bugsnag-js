@@ -85,8 +85,11 @@ BSGSeverity BSGParseSeverity(NSString *severity);
                                                     threads:[self deserializeThreads:payload[@"threads"]]
                                                     session:session];
     event.context = payload[@"context"];
-    event.apiKey = payload[@"apiKey"];
     event.groupingHash = payload[@"groupingHash"];
+
+    if (payload[@"apiKey"]) {
+        event.apiKey = payload[@"apiKey"];
+    }
 
     NSDictionary *error = payload[@"errors"][0];
 
