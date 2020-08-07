@@ -1,6 +1,13 @@
 Changelog
 =========
 
+## TBD
+
+### Bug fixes
+
+* Persist user when set on client
+  [#770](https://github.com/bugsnag/bugsnag-cocoa/pull/770)
+
 ## 6.1.2 (2020-07-21)
 
 ### Bug fixes

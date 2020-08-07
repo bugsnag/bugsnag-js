@@ -801,17 +801,22 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
 
 - (BugsnagUser *_Nonnull)user
 {
-    return _user;
+    return self.configuration.user;
 }
 
 - (void)setUser:(NSString *_Nullable)userId
       withEmail:(NSString *_Nullable)email
         andName:(NSString *_Nullable)name
 {
-    _user = [[BugsnagUser alloc] initWithUserId:userId name:name emailAddress:email];
+    [self.configuration setUser:userId withEmail:email andName:name];
     NSDictionary *userJson = [_user toJson];
     [self.state addMetadata:userJson toSection:BSGKeyUser];
-    [self notifyObservers:[[BugsnagStateEvent alloc] initWithName:kStateEventUser data:userJson]];
+
+    NSMutableDictionary *dict = [NSMutableDictionary new];
+    BSGDictInsertIfNotNil(dict, userId, @"id");
+    BSGDictInsertIfNotNil(dict, email, @"email");
+    BSGDictInsertIfNotNil(dict, name, @"name");
+    [self notifyObservers:[[BugsnagStateEvent alloc] initWithName:kStateEventUser data:dict]];
 }
 
 // =============================================================================
