@@ -8,7 +8,11 @@ const ruleOverrides = {
   // (Explicit) any has its valid use cases
   '@typescript-eslint/no-explicit-any': 'off',
 
+  // We use noop functions liberally (() => {})
   '@typescript-eslint/no-empty-function': 'off',
+
+  // This incorrectly fails on TypeScript method override signatures
+  'no-dupe-class-members': 'off',
 
   // Disable all rules that require parserServices (for now)
   '@typescript-eslint/no-floating-promises': 'off',
