@@ -1,11 +1,8 @@
 import { Plugin, Client, OnErrorCallback } from '@bugsnag/core'
 import React from 'react'
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface BugsnagPluginReact extends Plugin { }
-// eslint-disable-next-line @typescript-eslint/no-extraneous-class
-declare class BugsnagPluginReact {
-  constructor(react?: typeof React)
+declare class BugsnagPluginReact extends Plugin {
+  constructor(R?: typeof React)
 }
 
 type BugsnagErrorBoundary = React.ComponentType<{

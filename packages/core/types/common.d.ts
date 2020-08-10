@@ -25,8 +25,8 @@ export interface Config {
   maxBreadcrumbs?: number
   metadata?: { [key: string]: any }
   releaseStage?: string
-  user?: {} | null
   plugins?: Plugin[]
+  user?: User | null
 }
 
 export type OnErrorCallback = (event: Event, cb?: (err: null | Error) => void) => void | Promise<void> | boolean;
@@ -121,4 +121,22 @@ export interface User {
   id?: string
   email?: string
   name?: string
+}
+
+type ThreadType = 'cocoa' | 'android' | 'browserJs'
+export interface Thread {
+  id: string
+  name: string
+  errorReportingThread: boolean
+  type: ThreadType
+  stacktrace: Stackframe[]
+}
+
+export interface Stackframe {
+  file: string
+  method?: string
+  lineNumber?: number
+  columnNumber?: number
+  code?: Record<string, string>
+  inProject?: boolean
 }

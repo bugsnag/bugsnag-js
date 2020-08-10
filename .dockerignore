@@ -1,11 +1,6 @@
 node_modules
-.git
-examples
 **/node_modules
+!packages/plugin-node-surrounding-code/test/fixtures/node_modules/mock-module/index.js
 lerna-debug.log
 npm-debug.log
-Dockerfile
-Dockerfile*
-docker-compose.yml
 **/*.tgz
-.buildkite

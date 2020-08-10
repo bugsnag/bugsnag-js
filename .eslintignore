@@ -6,3 +6,4 @@ fixtures
 scratch
 coverage
 packages/core/types/test/*.js
+packages/react-native/android/build/reports
