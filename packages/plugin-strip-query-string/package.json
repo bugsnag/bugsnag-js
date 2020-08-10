@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-strip-query-string",
-  "version": "7.3.0-alpha.10",
+  "version": "7.3.0",
   "main": "strip-query-string.js",
   "description": "@bugsnag/js plugin to strip query string and document fragment from stackframe filenames",
   "homepage": "https://www.bugsnag.com/",
@@ -17,6 +17,6 @@
   "author": "Bugsnag",
   "license": "MIT",
   "dependencies": {
-    "@bugsnag/core": "^7.3.0-alpha.10"
+    "@bugsnag/core": "^7.3.0"
   }
 }
