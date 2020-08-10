@@ -1,5 +1,11 @@
 # Changelog
 
+## 7.3.0 (2020-08-10)
+
+As of this version, this repo contains our brand new notifier for React Native `@bugsnag/react-native`. See the [docs](https://docs.bugsnag.com/platforms/react-native/react-native) and [upgrade guide](packages/react-native/UPGRADING.md) for more info.
+
+Some minor internal changes to shared code were made to support the new notifier, but no external changes are required for existing `@bugsnag/js` or `@bugsnag/expo` users to upgrade to this version.
+
 ## 7.2.1 (2020-07-22)
 
 ### Fixed
