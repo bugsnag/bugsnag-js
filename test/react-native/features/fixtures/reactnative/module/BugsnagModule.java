@@ -132,7 +132,7 @@ public class BugsnagModule extends ReactContextBaseJavaModule {
         Set<String> redactedKeys = new HashSet<String>();
         ReadableArray rkAr = options.getArray("redactedKeys");
         for (int i = 0; i < rkAr.size(); i++) redactedKeys.add(rkAr.getString(i));
-        config.setEnabledReleaseStages(redactedKeys);
+        config.setRedactedKeys(redactedKeys);
       }
 
       try {
