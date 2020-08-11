@@ -87,6 +87,10 @@ BSGSeverity BSGParseSeverity(NSString *severity);
     event.context = payload[@"context"];
     event.groupingHash = payload[@"groupingHash"];
 
+    if (payload[@"apiKey"]) {
+        event.apiKey = payload[@"apiKey"];
+    }
+
     NSDictionary *error = payload[@"errors"][0];
 
     if (error != nil) {
@@ -121,7 +125,8 @@ BSGSeverity BSGParseSeverity(NSString *severity);
         attrVal = [attrs allValues][0];
     }
 
-    NSUInteger reason = [BugsnagHandledState severityReasonFromString:payload[@"severityReason"]];
+    NSString *severityType = [payload valueForKeyPath:@"severityReason.type"];
+    NSUInteger reason = [BugsnagHandledState severityReasonFromString:severityType];
 
     BSGSeverity severity = BSGParseSeverity(payload[@"severity"]);
     BOOL unhandled = [payload[@"unhandled"] boolValue];

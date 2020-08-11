@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-react-native-hermes",
-  "version": "7.3.0-alpha.8",
+  "version": "7.3.0",
   "main": "hermes.js",
   "description": "@bugsnag/react-native plugin to support Hermes",
   "homepage": "https://www.bugsnag.com/",
@@ -18,6 +18,6 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^7.3.0-alpha.5"
+    "@bugsnag/core": "^7.3.0"
   }
 }

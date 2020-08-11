@@ -213,12 +213,15 @@ void bsg_kscrash_setReportWhenDebuggerIsAttached(
         reportWhenDebuggerIsAttached;
 }
 
-void bsg_kscrash_setThreadTracingEnabled(int threadTracingEnabled) {
+void bsg_kscrash_setThreadTracingEnabled(bool threadTracingEnabled) {
     crashContext()->crash.threadTracingEnabled = threadTracingEnabled;
 }
 
-char *bsg_kscrash_captureThreadTrace(int discardDepth, int frameCount, uintptr_t *callstack) {
-    BSG_KSCrash_Context *context = crashContext();
+char *bsg_kscrash_captureThreadTrace(int discardDepth, int frameCount, uintptr_t *callstack, const bool recordAllThreads) {
+    BSG_KSCrash_Context *globalContext = crashContext();
+    BSG_KSCrash_Context localContext = {};
+    BSG_KSCrash_Context *context = &localContext;
+    memcpy(context, globalContext, sizeof(BSG_KSCrash_Context));
 
     // populate context with pre-recorded stacktrace/thread info
     // for KSCrash to serialize
@@ -227,19 +230,20 @@ char *bsg_kscrash_captureThreadTrace(int discardDepth, int frameCount, uintptr_t
     context->crash.userException.discardDepth = discardDepth;
     context->crash.offendingThread = bsg_ksmachthread_self();
     context->crash.crashType = BSG_KSCrashTypeUserReported;
+    context->crash.threadTracingEnabled = recordAllThreads;
 
     // No need to gather notable addresses for handled errors
     context->config.introspectionRules.enabled = false;
     
     // Only suspend threads if tracing is set to always
     // (to ensure trace is captured at the same point in time)
-    if (context->crash.threadTracingEnabled == 0) {
+    if (context->crash.threadTracingEnabled) {
         bsg_kscrashsentry_suspend_threads_user();
     }
-    
+
     char *trace = bsg_kscrw_i_captureThreadTrace(context);
     
-    if (context->crash.threadTracingEnabled == 0) {
+    if (context->crash.threadTracingEnabled) {
         bsg_kscrashsentry_resume_threads_user(false);
     }
     return trace;

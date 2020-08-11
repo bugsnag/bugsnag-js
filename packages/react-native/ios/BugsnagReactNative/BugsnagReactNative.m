@@ -9,7 +9,7 @@
 - (NSDictionary *)collectAppWithState;
 - (NSDictionary *)collectDeviceWithState;
 - (NSArray *)collectBreadcrumbs;
-- (NSArray *)collectThreads;
+- (NSArray *)collectThreads:(BOOL)unhandled;
 @property id notifier;
 @property id sessionTracker;
 @property BugsnagMetadata *metadata;
@@ -65,12 +65,17 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(configure:(NSDictionary *)readableMap) {
     return [self.configSerializer serialize:config];
 }
 
-RCT_EXPORT_METHOD(updateMetadata:(NSString *)section
-                        withData:(NSDictionary *)update) {
-    if (update == nil) {
+RCT_EXPORT_METHOD(addMetadata:(NSString *)section
+                     withData:(NSDictionary *)data) {
+    [Bugsnag addMetadata:data toSection:section];
+}
+
+RCT_EXPORT_METHOD(clearMetadata:(NSString *)section
+                     withKey:(NSString *)key) {
+    if (key == nil) {
         [Bugsnag clearMetadataFromSection:section];
     } else {
-        [Bugsnag addMetadata:update toSection:section];
+        [Bugsnag clearMetadataFromSection:section withKey:key];
     }
 }
 
@@ -127,12 +132,14 @@ RCT_EXPORT_METHOD(resumeSession) {
 RCT_EXPORT_METHOD(getPayloadInfo:(NSDictionary *)options
                          resolve:(RCTPromiseResolveBlock)resolve
                           reject:(RCTPromiseRejectBlock)reject) {
+                              NSLog(@"payload info options: %@", options);
     BugsnagClient *client = [Bugsnag client];
     NSMutableDictionary *info = [NSMutableDictionary new];
     info[@"app"] = [client collectAppWithState];
     info[@"device"] = [client collectDeviceWithState];
     info[@"breadcrumbs"] = [client collectBreadcrumbs];
-    info[@"threads"] = [client collectThreads];
+    BOOL unhandled = [options[@"unhandled"] boolValue];
+    info[@"threads"] = [client collectThreads:unhandled];
     resolve(info);
 }
 
@@ -140,7 +147,7 @@ RCT_EXPORT_METHOD(getPayloadInfo:(NSDictionary *)options
     NSString *reactNativeVersion = info[@"reactNativeVersion"];
     NSString *engine = info[@"engine"];
     [Bugsnag addRuntimeVersionInfo:reactNativeVersion withKey:@"reactNative"];
-    [Bugsnag addRuntimeVersionInfo:engine withKey:@"reactNativeJsengine"];
+    [Bugsnag addRuntimeVersionInfo:engine withKey:@"reactNativeJsEngine"];
 }
 
 - (BSGBreadcrumbType)breadcrumbTypeFromString:(NSString *)value {

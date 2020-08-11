@@ -8,7 +8,7 @@ module.exports = (NativeClient) => ({
       // bridge. This happens in the remote debugger and means the "message"
       // property is incorrectly named "name"
       NativeClient.leaveBreadcrumb({ ...breadcrumb })
-    })
+    }, true)
 
     const origSetUser = client.setUser
     client.setUser = function () {
@@ -25,16 +25,20 @@ module.exports = (NativeClient) => ({
     }
 
     const origAddMetadata = client.addMetadata
-    client.addMetadata = function (key) {
+    client.addMetadata = function (section, key, value) {
       const ret = origAddMetadata.apply(this, arguments)
-      NativeClient.updateMetadata(key, client._metadata[key])
+      if (typeof key === 'object') {
+        NativeClient.addMetadata(section, key)
+      } else {
+        NativeClient.addMetadata(section, { [key]: value })
+      }
       return ret
     }
 
     const origClearMetadata = client.clearMetadata
-    client.clearMetadata = function (key) {
+    client.clearMetadata = function (section, key) {
       const ret = origClearMetadata.apply(this, arguments)
-      NativeClient.updateMetadata(key, client._metadata[key])
+      NativeClient.clearMetadata(section, key)
       return ret
     }
 
@@ -61,9 +65,7 @@ module.exports = (NativeClient) => ({
           origSetUser.call(client, event.data.id, event.data.email, event.data.name)
           break
         case 'MetadataUpdate':
-          Object.keys(event.data).forEach(k => {
-            origAddMetadata.call(client, k, event.data[k])
-          })
+          client._metadata = event.data
           break
         case 'ContextUpdate':
           origSetContext.call(client, event.data)

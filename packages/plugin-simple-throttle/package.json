@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-simple-throttle",
-  "version": "7.3.0-alpha.5",
+  "version": "7.3.0",
   "main": "throttle.js",
   "description": "@bugsnag/js plugin to prevent too many events from being sent",
   "homepage": "https://www.bugsnag.com/",
@@ -18,7 +18,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "dependencies": {
-    "@bugsnag/core": "^7.3.0-alpha.5"
+    "@bugsnag/core": "^7.3.0"
   },
   "devDependencies": {
     "jasmine": "^3.1.0",

@@ -5,7 +5,11 @@ export { HandledNativeErrorScenario } from './scenarios/HandledNativeErrorScenar
 // unhandled.feature
 export { UnhandledNativeErrorScenario } from './scenarios/UnhandledNativeErrorScenario'
 export { UnhandledJsErrorScenario } from './scenarios/UnhandledJsErrorScenario'
+export { UnhandledJsErrorSeverityScenario } from './scenarios/UnhandledJsErrorSeverityScenario'
 export { UnhandledJsPromiseRejectionScenario } from './scenarios/UnhandledJsPromiseRejectionScenario'
+
+// api-key-ios.feature
+export { EventApiKeyOverrideScenario } from './scenarios/EventApiKeyOverrideScenario'
 
 // app.feature
 export { AppJsHandledScenario } from './scenarios/AppJsHandledScenario'

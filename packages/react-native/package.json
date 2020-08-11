@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/react-native",
-  "version": "7.3.0-alpha.8",
+  "version": "7.3.1",
   "main": "src/notifier.js",
   "types": "types/bugsnag.d.ts",
   "description": "Bugsnag error reporter for React Native applications",
@@ -22,18 +22,6 @@
   },
   "publishConfig": {
     "access": "public"
-  },
-  "rnpm": {
-    "ios": {
-      "project": "ios/BugsnagReactNative.xcodeproj",
-      "sharedLibraries": [
-        "libz"
-      ]
-    },
-    "android": {
-      "packageInstance": "new BugsnagPackage()",
-      "packageImportPath": "import com.bugsnag.android.BugsnagPackage;"
-    }
   },
   "files": [
     "src",
@@ -64,18 +52,17 @@
     "typescript": "^3.3.3"
   },
   "dependencies": {
-    "@bugsnag/core": "^7.3.0-alpha.5",
-    "@bugsnag/delivery-react-native": "^7.3.0-alpha.8",
-    "@bugsnag/plugin-console-breadcrumbs": "^7.3.0-alpha.5",
-    "@bugsnag/plugin-network-breadcrumbs": "^7.3.0-alpha.5",
-    "@bugsnag/plugin-react": "^7.3.0-alpha.5",
-    "@bugsnag/plugin-react-native-client-sync": "^7.3.0-alpha.8",
-    "@bugsnag/plugin-react-native-event-sync": "^7.3.0-alpha.5",
-    "@bugsnag/plugin-react-native-global-error-handler": "^7.3.0-alpha.5",
-    "@bugsnag/plugin-react-native-hermes": "^7.3.0-alpha.8",
-    "@bugsnag/plugin-react-native-session": "^7.3.0-alpha.5",
-    "@bugsnag/plugin-react-native-unhandled-rejection": "^7.3.0-alpha.5",
-    "iserror": "^0.0.2",
-    "proxy-polyfill": "^0.3.1"
+    "@bugsnag/core": "^7.3.0",
+    "@bugsnag/delivery-react-native": "^7.3.0",
+    "@bugsnag/plugin-console-breadcrumbs": "^7.3.0",
+    "@bugsnag/plugin-network-breadcrumbs": "^7.3.0",
+    "@bugsnag/plugin-react": "^7.3.1",
+    "@bugsnag/plugin-react-native-client-sync": "^7.3.0",
+    "@bugsnag/plugin-react-native-event-sync": "^7.3.0",
+    "@bugsnag/plugin-react-native-global-error-handler": "^7.3.0",
+    "@bugsnag/plugin-react-native-hermes": "^7.3.0",
+    "@bugsnag/plugin-react-native-session": "^7.3.0",
+    "@bugsnag/plugin-react-native-unhandled-rejection": "^7.3.0",
+    "iserror": "^0.0.2"
   }
 }

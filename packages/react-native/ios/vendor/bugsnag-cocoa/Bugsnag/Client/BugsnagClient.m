@@ -458,6 +458,11 @@ NSString *_lastOrientation = nil;
     // sync the new observer with changes to metadata so far
     BugsnagStateEvent *event = [[BugsnagStateEvent alloc] initWithName:kStateEventMetadata data:self.metadata];
     observer(event);
+
+    NSDictionary *userJson = [self.user toJson];
+    observer([[BugsnagStateEvent alloc] initWithName:kStateEventUser data:userJson]);
+
+    observer([[BugsnagStateEvent alloc] initWithName:kStateEventContext data:self.context]);
 }
 
 - (void)removeObserverWithBlock:(BugsnagObserverBlock _Nonnull)observer {
@@ -796,17 +801,22 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
 
 - (BugsnagUser *_Nonnull)user
 {
-    return _user;
+    return self.configuration.user;
 }
 
 - (void)setUser:(NSString *_Nullable)userId
       withEmail:(NSString *_Nullable)email
         andName:(NSString *_Nullable)name
 {
-    _user = [[BugsnagUser alloc] initWithUserId:userId name:name emailAddress:email];
+    [self.configuration setUser:userId withEmail:email andName:name];
     NSDictionary *userJson = [_user toJson];
     [self.state addMetadata:userJson toSection:BSGKeyUser];
-    [self notifyObservers:[[BugsnagStateEvent alloc] initWithName:kStateEventUser data:userJson]];
+
+    NSMutableDictionary *dict = [NSMutableDictionary new];
+    BSGDictInsertIfNotNil(dict, userId, @"id");
+    BSGDictInsertIfNotNil(dict, email, @"email");
+    BSGDictInsertIfNotNil(dict, name, @"name");
+    [self notifyObservers:[[BugsnagStateEvent alloc] initWithName:kStateEventUser data:dict]];
 }
 
 // =============================================================================
@@ -975,7 +985,11 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
      * 4. -[BSG_KSCrash captureThreads:depth:]
      */
     int depth = (int)(BSGNotifierStackFrameCount);
-    NSArray *threads = [[BSG_KSCrash sharedInstance] captureThreads:exception depth:depth];
+
+    BOOL recordAllThreads = self.configuration.sendThreads == BSGThreadSendPolicyAlways;
+    NSArray *threads = [[BSG_KSCrash sharedInstance] captureThreads:exception
+                                                              depth:depth
+                                                   recordAllThreads:recordAllThreads];
     NSArray *errors = @[[self generateError:exception threads:threads]];
 
     BugsnagMetadata *metadata = [self.metadata deepCopy];
@@ -1564,14 +1578,19 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
     return data;
 }
 
-- (NSArray *)collectThreads {
+- (NSArray *)collectThreads:(BOOL)unhandled {
     // discard the following
     // 1. [BugsnagReactNative getPayloadInfo:resolve:reject:]
     // 2. [BugsnagClient collectThreads:]
-    // 3. [BSG_KSCrash captureThreads:]
+    // 3. [BSG_KSCrash captureThreads:depth:unhandled:]
     int depth = 3;
     NSException *exc = [NSException exceptionWithName:@"Bugsnag" reason:@"" userInfo:nil];
-    NSArray<BugsnagThread *> *threads = [[BSG_KSCrash sharedInstance] captureThreads:exc depth:depth];
+    BSGThreadSendPolicy sendThreads = self.configuration.sendThreads;
+    BOOL recordAllThreads = sendThreads == BSGThreadSendPolicyAlways
+            || (unhandled && sendThreads == BSGThreadSendPolicyUnhandledOnly);
+    NSArray<BugsnagThread *> *threads = [[BSG_KSCrash sharedInstance] captureThreads:exc
+                                                                               depth:depth
+                                                                    recordAllThreads:recordAllThreads];
     return [BugsnagThread serializeThreads:threads];
 }
 
