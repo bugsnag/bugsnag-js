@@ -1,5 +1,11 @@
 # Changelog
 
+## 7.3.1 (2020-08-11)
+
+### Fixed
+
+- (plugin-react): Reinstate updated code after a bad merge on the type definitions. [#987](https://github.com/bugsnag/bugsnag-js/pull/987)
+
 ## 7.3.0 (2020-08-10)
 
 As of this version, this repo contains our brand new notifier for React Native `@bugsnag/react-native`. See the [docs](https://docs.bugsnag.com/platforms/react-native/react-native) and [upgrade guide](packages/react-native/UPGRADING.md) for more info.
