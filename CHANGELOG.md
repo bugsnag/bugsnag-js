@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- (plugin-angular): Update bundles and package entrypoints to support the Ivy renderer.
+
 ## 7.3.1 (2020-08-11)
 
 ### Fixed
