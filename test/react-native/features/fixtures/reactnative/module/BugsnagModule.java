@@ -128,6 +128,13 @@ public class BugsnagModule extends ReactContextBaseJavaModule {
         config.setEnabledReleaseStages(enabledReleaseStages);
       }
 
+      if (options.hasKey("redactedKeys")) {
+        Set<String> redactedKeys = new HashSet<String>();
+        ReadableArray rkAr = options.getArray("redactedKeys");
+        for (int i = 0; i < rkAr.size(); i++) redactedKeys.add(rkAr.getString(i));
+        config.setRedactedKeys(redactedKeys);
+      }
+
       try {
         ReadableMap configMetaData = options.getMap("configMetaData");
         config.addMetadata("nativedata", configMetaData.toHashMap());

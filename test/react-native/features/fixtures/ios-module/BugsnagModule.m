@@ -59,5 +59,9 @@ BugsnagConfiguration *createConfiguration(NSDictionary * options) {
     NSDictionary *configMetaData = options[@"configMetaData"];
     [config addMetadata:configMetaData toSection:@"nativedata"];
   }
+  if (options[@"redactedKeys"] != nil) {
+    NSArray * redactedKeys = options[@"redactedKeys"];
+    config.redactedKeys = [NSSet setWithArray:redactedKeys];
+  }
   return config;
 }
