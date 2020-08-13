@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- (plugin-angular): Update bundles and package entrypoints to support the Ivy renderer.
+- (plugin-angular): Update bundles and package entrypoints to support the Ivy renderer. [#994](https://github.com/bugsnag/bugsnag-js/pull/994)
 
 ## 7.3.1 (2020-08-11)
 
