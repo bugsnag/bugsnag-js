@@ -24,7 +24,7 @@ Scenario: Manual breadcrumbs (JS)
   Then I wait to receive a request
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "BreadcrumbsJsManualScenario"
-  And the event has a "manual" breadcrumb named "oh crumbs"
+  And the event contains a breadcrumb matching the JSON fixture in "features/fixtures/expected_breadcrumbs/JsManualScenario.json"
 
 Scenario: Manual breadcrumbs (Native)
   When I run "BreadcrumbsNativeManualScenario"
@@ -33,4 +33,4 @@ Scenario: Manual breadcrumbs (Native)
   | android | java.lang.RuntimeException |
   | ios     | NSException                |
   And the exception "message" equals "BreadcrumbsNativeManualScenario"
-  And the event has a "manual" breadcrumb named "oh native crumbs"
+  And the event contains a breadcrumb matching the JSON fixture in "features/fixtures/expected_breadcrumbs/NativeManualScenario.json"
