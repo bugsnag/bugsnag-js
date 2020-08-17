@@ -25,6 +25,7 @@
   },
   "files": [
     "src",
+    "types/bugsnag.d.ts",
     "android/build.gradle",
     "android/proguard-rules.pro",
     "android/src/main",
