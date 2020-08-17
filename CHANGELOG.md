@@ -1,5 +1,11 @@
 # Changelog
 
+## 7.3.2 (2020-08-17)
+
+### Fixed
+
+- (react-native): Ensure type definitions are included the @bugsnag/react-native package. [#1002](https://github.com/bugsnag/bugsnag-js/pull/1002)
+
 ## 7.3.1 (2020-08-11)
 
 ### Fixed
