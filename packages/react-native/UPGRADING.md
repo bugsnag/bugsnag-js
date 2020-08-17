@@ -101,7 +101,7 @@ Inside your `application:didFinishLaunchingWithOptions` method, replace any Bugs
 
 If you have set your API key in `Info.plist`, the format has changed from a top level string to a dictionary. You can now provide many other configuration options in the plist too:
 
-```
+```diff
 - <key>BugsnagAPIKey</key>
 - <string>YOUR_API_KEY</string>
 + <key>bugsnag</key>
