@@ -1,4 +1,3 @@
-import '../lib/bugsnag';
 import Bugsnag from "@bugsnag/js"
 
 export default function CustomErrorPage({ statusCode }) {

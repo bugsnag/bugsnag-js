@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { CrashyButton } from '../components/CrashyButton'
 import Bugsnag from '@bugsnag/js'
 
-export default () =>
+const Index = () =>
   <div>
     <Head>
       <title>Bugsnag Next.js Example</title>
@@ -25,6 +25,8 @@ export default () =>
       <button onClick={() => { throw new Error('bad!') }}>Send unhandled</button>
       <CrashyButton>Trigger a React render error</CrashyButton>
       <a className="button" href="borked">Send an error from the server</a>
-      <Link href="/bad-ssr">Go to /bad-ssr</Link>
+      <Link href="/bad-ssr"><a>Go to /bad-ssr</a></Link>
     </div>
   </div>
+
+  export default Index;
