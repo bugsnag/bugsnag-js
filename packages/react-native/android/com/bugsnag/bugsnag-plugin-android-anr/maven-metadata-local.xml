@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>com.bugsnag</groupId>
+  <artifactId>bugsnag-plugin-android-anr</artifactId>
+  <versioning>
+    <latest>5.0.1-react-native</latest>
+    <release>5.0.1-react-native</release>
+    <versions>
+      <version>5.0.1-react-native</version>
+    </versions>
+    <lastUpdated>20200807213741</lastUpdated>
+  </versioning>
+</metadata>

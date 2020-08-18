@@ -1,0 +1,22 @@
+{
+  "name": "@bugsnag/plugin-app-duration",
+  "version": "7.3.0",
+  "main": "app.js",
+  "description": "@bugsnag/js plugin to set app duration in browsers and node",
+  "homepage": "https://www.bugsnag.com/",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:bugsnag/bugsnag-js.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "*.js"
+  ],
+  "author": "Bugsnag",
+  "license": "MIT",
+  "devDependencies": {
+    "@bugsnag/core": "^7.3.0"
+  }
+}

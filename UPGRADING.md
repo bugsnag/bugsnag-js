@@ -1,6 +1,14 @@
 Upgrading
 =========
 
+## `bugsnag-react-native@*` to `@bugsnag/react-native@7.3`
+
+As of `v7.3` of the [`bugsnag-js` monorepo](https://github.com/bugsnag/bugsnag-js) it contains Bugsnag's SDK for React Native. This additional notifier joins `@bugsnag/js` and `@bugsnag/expo` in its unified version scheme, so the first version of `@bugsnag/react-native` is `v7.3.0`.
+
+The previous Bugsnag React Native SDK – [`bugsnag-react-native`](https://github.com/bugsnag/bugsnag-react-native) – continues to be available and will receive critical bug fixes, but it is no longer under active development and won't receive new features.
+
+See the [React Native upgrade guide](/packages/react-native/UPGRADING.md) for specific instructions on how to upgrade from `bugsnag-react-native` to `@bugsnag/react-native`.
+
 ## 7.0 to 7.1
 
 This release contains an update to the way the React and Vue plugins work, allowing the reference to the framework to be supplied after Bugsnag has been initialized.
@@ -360,9 +368,9 @@ Here are some examples:
 -   }
 - })
 + Bugsnag.notify(err, event => {
-+   event.addMetadata('component, {
++   event.addMetadata('component', {
 +     instanceId: component.instanceId
-+   }
++   })
 + })
 
   // preventing send

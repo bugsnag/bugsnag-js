@@ -1,9 +1,13 @@
 module.exports = class BugsnagPluginVue {
   constructor (...args) {
+    // Fetch Vue from the window object, if it exists
+    const globalVue = typeof window !== 'undefined' && window.Vue
+
     this.name = 'vue'
-    this.lazy = args.length === 0 && !window.Vue
+    this.lazy = args.length === 0 && !globalVue
+
     if (!this.lazy) {
-      this.Vue = args[0] || window.Vue
+      this.Vue = args[0] || globalVue
       if (!this.Vue) throw new Error('@bugsnag/plugin-vue reference to `Vue` was undefined')
     }
   }

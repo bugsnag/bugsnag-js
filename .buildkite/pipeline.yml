@@ -35,6 +35,14 @@ steps:
       message: '${BUILDKITE_MESSAGE}'
     async: true
 
+  - label: 'Trigger React-native pipeline'
+    trigger: 'at-bugsnag-react-native'
+    build:
+      branch: '${BUILDKITE_BRANCH}'
+      commit: '${BUILDKITE_COMMIT}'
+      message: '${BUILDKITE_MESSAGE}'
+    async: true
+
   - label: 'Lint'
     timeout_in_minutes: 10
     plugins:
