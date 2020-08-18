@@ -2,21 +2,20 @@
   "name": "nextjs-ts-example",
   "version": "0.0.0",
   "scripts": {
-    "dev": "node server.js",
+    "dev": "next dev",
     "build": "next build",
     "start": "NODE_ENV=production node server.js"
   },
   "dependencies": {
     "@zeit/next-source-maps": "0.0.4-canary.1",
-    "express": "^4.16.4",
     "next": "latest",
     "react": "^16.8.0",
     "react-dom": "^16.8.0"
   },
   "license": "ISC",
   "devDependencies": {
-    "@bugsnag/js": "^7.1.0",
-    "@bugsnag/plugin-express": "^7.1.0",
-    "@bugsnag/plugin-react": "^7.1.0"
+    "@bugsnag/js": "^7.3.0",
+    "@bugsnag/plugin-express": "^7.3.0",
+    "@bugsnag/plugin-react": "^7.3.1"
   }
 }
