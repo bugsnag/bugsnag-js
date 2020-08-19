@@ -61,6 +61,8 @@
   },
   "include": [
     "packages/core",
+    "packages/delivery-node",
+    "packages/delivery-x-domain-request",
     "packages/plugin-app-duration",
     "packages/plugin-browser-context",
     "packages/plugin-browser-device",

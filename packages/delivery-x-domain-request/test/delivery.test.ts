@@ -1,36 +1,66 @@
-const { describe, it, expect } = global
+import delivery from '../'
+import { Client } from '@bugsnag/core'
+import { SessionDeliveryPayload, EventDeliveryPayload } from '@bugsnag/core/client'
 
-const delivery = require('../')
+interface XDomainRequest {
+  method: string | null
+  url: string | null
+  data: string | null
+}
+
+// class XDomainRequest {
+//   method: string | null = null
+//   url: string | null = null
+//   data: string | null = null
+
+//   onload!: () => void;
+
+//   constructor () {
+//     requests.push(this)
+//   }
+
+//   static DONE = 4
+
+//   open (method: string, url: string) {
+//     this.method = method
+//     this.url = url
+//   }
+
+//   send (data: string) {
+//     this.data = data
+//     this.onload()
+//   }
+// }
 
 describe('delivery:XDomainRequest', () => {
   it('sends events successfully', done => {
-    const requests = []
+    const requests: XDomainRequest[] = []
 
     // mock XDomainRequest class
-    function XDomainRequest () {
+    function XDomainRequest (this: XDomainRequest) {
       this.method = null
       this.url = null
       this.data = null
       requests.push(this)
     }
     XDomainRequest.DONE = 4
-    XDomainRequest.prototype.open = function (method, url) {
+    XDomainRequest.prototype.open = function (method: string, url: string) {
       this.method = method
       this.url = url
     }
-    XDomainRequest.prototype.send = function (data) {
+    XDomainRequest.prototype.send = function (data: string) {
       this.data = data
       this.onload()
     }
 
-    const window = { XDomainRequest, location: { protocol: 'https://' } }
-    const payload = { sample: 'payload' }
+    const window = { XDomainRequest, location: { protocol: 'https://' } } as unknown as Window
+    const payload = { sample: 'payload' } as unknown as EventDeliveryPayload
     const config = {
       apiKey: 'aaaaaaaa',
       endpoints: { notify: '/echo/' },
       redactedKeys: []
     }
-    delivery({ logger: {}, _config: config }, window).sendEvent(payload, (err) => {
+    delivery({ logger: {}, _config: config } as unknown as Client, window).sendEvent(payload, (err) => {
       expect(err).toBe(null)
       expect(requests.length).toBe(1)
       expect(requests[0].method).toBe('POST')
@@ -45,55 +75,55 @@ describe('delivery:XDomainRequest', () => {
   it('calls back with an error when report sending fails', done => {
     // mock XDomainRequest class
     function XDomainRequest () {}
-    XDomainRequest.prototype.open = function (method, url) {
+    XDomainRequest.prototype.open = function (method: string, url: string) {
       this.method = method
       this.url = url
     }
-    XDomainRequest.prototype.send = function (method, url) {
+    XDomainRequest.prototype.send = function (method: string, url: string) {
       throw new Error('send error')
     }
-    const window = { XDomainRequest, location: { protocol: 'https://' } }
-    const payload = { sample: 'payload' }
+    const window = { XDomainRequest, location: { protocol: 'https://' } } as unknown as Window
+    const payload = { sample: 'payload' } as unknown as EventDeliveryPayload
     const config = {
       apiKey: 'aaaaaaaa',
       endpoints: { notify: '/echo/', sessions: '/sessions/' },
       redactedKeys: []
     }
-    delivery({ _logger: { error: () => {} }, _config: config }, window).sendEvent(payload, (err) => {
+    delivery({ _logger: { error: () => {} }, _config: config } as unknown as Client, window).sendEvent(payload, (err) => {
       expect(err).not.toBe(null)
-      expect(err.message).toBe('send error')
+      expect(err?.message).toBe('send error')
       done()
     })
   })
 
   it('sends sessions successfully', done => {
-    const requests = []
+    const requests: XDomainRequest[] = []
 
     // mock XDomainRequest class
-    function XDomainRequest () {
+    function XDomainRequest (this: XDomainRequest, t: typeof window) {
       this.method = null
       this.url = null
       this.data = null
       requests.push(this)
     }
     XDomainRequest.DONE = 4
-    XDomainRequest.prototype.open = function (method, url) {
+    XDomainRequest.prototype.open = function (method: string, url: string) {
       this.method = method
       this.url = url
     }
-    XDomainRequest.prototype.send = function (data) {
+    XDomainRequest.prototype.send = function (data: string) {
       this.data = data
       this.onload()
     }
 
-    const window = { XDomainRequest, location: { protocol: 'https://' } }
-    const payload = { sample: 'payload' }
+    const window = { XDomainRequest, location: { protocol: 'https://' } } as unknown as Window
+    const payload = { sample: 'payload' } as unknown as SessionDeliveryPayload
     const config = {
       apiKey: 'aaaaaaaa',
       endpoints: { notify: '/echo/', sessions: '/sessions/' },
       redactedKeys: []
     }
-    delivery({ logger: {}, _config: config }, window).sendSession(payload, (err) => {
+    delivery({ logger: {}, _config: config } as unknown as Client, window).sendSession(payload, (err) => {
       expect(err).toBe(null)
       expect(requests.length).toBe(1)
       expect(requests[0].method).toBe('POST')
@@ -108,23 +138,23 @@ describe('delivery:XDomainRequest', () => {
   it('calls back with an error when session sending fails', done => {
     // mock XDomainRequest class
     function XDomainRequest () {}
-    XDomainRequest.prototype.open = function (method, url) {
+    XDomainRequest.prototype.open = function (method: string, url: string) {
       this.method = method
       this.url = url
     }
-    XDomainRequest.prototype.send = function (method, url) {
+    XDomainRequest.prototype.send = function (method: string, url: string) {
       throw new Error('send error')
     }
-    const window = { XDomainRequest, location: { protocol: 'https://' } }
-    const payload = { sample: 'payload' }
+    const window = { XDomainRequest, location: { protocol: 'https://' } } as unknown as Window
+    const payload = { sample: 'payload' } as unknown as SessionDeliveryPayload
     const config = {
       apiKey: 'aaaaaaaa',
       endpoints: { notify: '/echo/', sessions: '/sessions/' },
       filters: []
     }
-    delivery({ _logger: { error: () => {} }, _config: config }, window).sendSession(payload, (err) => {
+    delivery({ _logger: { error: () => {} }, _config: config } as unknown as Client, window).sendSession(payload, (err) => {
       expect(err).not.toBe(null)
-      expect(err.message).toBe('send error')
+      expect(err?.message).toBe('send error')
       done()
     })
   })

@@ -8,7 +8,8 @@ module.exports = api => {
   if (api && api.env('test')) {
     presets.push('@babel/preset-typescript')
     plugins.push(['@babel/plugin-proposal-class-properties', { loose: true }])
-    plugins.push(['@babel/plugin-transform-modules-commonjs'])
+    plugins.push('@babel/plugin-transform-modules-commonjs')
+    plugins.push('@babel/plugin-proposal-optional-chaining')
     overrides.push({
       test: './node_modules/react-native/**/*',
       presets: ['module:metro-react-native-babel-preset']
