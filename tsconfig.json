@@ -93,6 +93,7 @@
     "packages/plugin-node-surrounding-code",
     "packages/plugin-node-uncaught-exception",
     "packages/plugin-console-breadcrumbs",
-    "packages/plugin-browser-session"
+    "packages/plugin-browser-session",
+    "packages/browser"
   ]
 }
