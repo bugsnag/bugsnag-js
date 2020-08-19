@@ -8,30 +8,6 @@ interface XDomainRequest {
   data: string | null
 }
 
-// class XDomainRequest {
-//   method: string | null = null
-//   url: string | null = null
-//   data: string | null = null
-
-//   onload!: () => void;
-
-//   constructor () {
-//     requests.push(this)
-//   }
-
-//   static DONE = 4
-
-//   open (method: string, url: string) {
-//     this.method = method
-//     this.url = url
-//   }
-
-//   send (data: string) {
-//     this.data = data
-//     this.onload()
-//   }
-// }
-
 describe('delivery:XDomainRequest', () => {
   it('sends events successfully', done => {
     const requests: XDomainRequest[] = []
