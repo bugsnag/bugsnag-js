@@ -1,0 +1,112 @@
+steps:
+  - label: ':docker: Build and publish JS packages'
+    plugins:
+      - docker-compose#v3.3.0:
+          build: publisher
+          image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
+
+  - wait
+
+  - label: ':docker: Build React-Native Android Builder image'
+    timeout_in_minutes: 30
+    plugins:
+      - improbable-eng/metahook:
+          post-checkout: scripts/gather-react-native-files.sh
+      - docker-compose#v3.3.0:
+          build: react-native-android-builder
+          image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
+          cache-from:  react-native-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
+      - docker-compose#v3.3.0:
+          push: react-native-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
+
+  - wait
+
+  - label: ':docker: Build React-native 0.60 apk'
+    env:
+      REACT_NATIVE_VERSION: "rn0.60"
+    plugins:
+      - docker-compose#v3.3.0:
+          run: react-native-android-builder
+    artifact_paths:
+      - build/rn0.60.apk
+
+  - label: ':ios: Build React-native 0.60 ipa'
+    agents:
+      queue: "opensource-mac"
+    env:
+      REACT_NATIVE_VERSION: rn0.60
+    artifact_paths: build/rn0.60.ipa
+    commands:
+      - npm run test:build-react-native-ios
+
+  - label: ':docker: Build React-native 0.63 apk'
+    env:
+      REACT_NATIVE_VERSION: "rn0.63"
+    plugins:
+      - docker-compose#v3.3.0:
+          run: react-native-android-builder
+    artifact_paths:
+      - build/rn0.63.apk
+
+  - label: ':ios: Build React-native 0.63 ipa'
+    agents:
+      queue: "opensource-mac"
+    env:
+      REACT_NATIVE_VERSION: rn0.63
+    artifact_paths: build/rn0.63.ipa
+    commands:
+      - npm run test:build-react-native-ios
+
+  - wait
+
+  - label: ':android: React-native 0.60 Android 9'
+    plugins:
+      artifacts#v1.2.0:
+        download: "build/rn0.60.apk"
+      docker-compose#v3.3.0:
+        run: react-native-maze-runner
+        use-aliases: true
+    env:
+      DEVICE_TYPE: "ANDROID_9"
+      APP_LOCATION: "build/rn0.60.apk"
+    concurrency: 10
+    concurrency_group: 'browserstack-app'
+
+  - label: ':ios: React-native 0.60 iOS 12'
+    plugins:
+      artifacts#v1.2.0:
+        download: "build/rn0.60.ipa"
+      docker-compose#v3.1.0:
+        run: react-native-maze-runner
+        use-aliases: true
+    env:
+      DEVICE_TYPE: "IOS_12"
+      APP_LOCATION: "build/rn0.60.ipa"
+    concurrency: 10
+    concurrency_group: 'browserstack-app'
+
+  - label: ':android: React-native 0.63 Android 9'
+    plugins:
+      artifacts#v1.2.0:
+        download: "build/rn0.63.apk"
+      docker-compose#v3.3.0:
+        run: react-native-maze-runner
+        use-aliases: true
+    env:
+      DEVICE_TYPE: "ANDROID_9"
+      APP_LOCATION: "build/rn0.63.apk"
+    concurrency: 10
+    concurrency_group: 'browserstack-app'
+
+  - label: ':ios: React-native 0.63 iOS 12'
+    plugins:
+      artifacts#v1.2.0:
+        download: "build/rn0.63.ipa"
+      docker-compose#v3.1.0:
+        run: react-native-maze-runner
+        use-aliases: true
+    env:
+      DEVICE_TYPE: "IOS_12"
+      APP_LOCATION: "build/rn0.63.ipa"
+    concurrency: 10
+    concurrency_group: 'browserstack-app'

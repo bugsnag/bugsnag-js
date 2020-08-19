@@ -1,0 +1,69 @@
+{
+  "name": "@bugsnag/react-native",
+  "version": "7.3.2",
+  "main": "src/notifier.js",
+  "types": "types/bugsnag.d.ts",
+  "description": "Bugsnag error reporter for React Native applications",
+  "keywords": [
+    "bugsnag",
+    "react native",
+    "exception",
+    "error",
+    "javascript",
+    "monitoring",
+    "reporting",
+    "stability",
+    "mobile"
+  ],
+  "homepage": "https://www.bugsnag.com/",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:bugsnag/bugsnag-js.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "src",
+    "types/bugsnag.d.ts",
+    "android/build.gradle",
+    "android/proguard-rules.pro",
+    "android/src/main",
+    "android/com/bugsnag",
+    "ios/BugsnagReactNative",
+    "ios/BugsnagReactNative.xcodeproj",
+    "ios/vendor/bugsnag-cocoa/Bugsnag/**/*.{h,m,mm,cpp,c}",
+    "ios/vendor/bugsnag-cocoa/Bugsnag.xcodeproj",
+    "ios/vendor/bugsnag-cocoa/Framework/{Info.plist,module.modulemap}",
+    "ios/vendor/bugsnag-cocoa/Bugsnag.podspec.json",
+    "BugsnagReactNative.podspec",
+    "react-native.config.js",
+    "bugsnag-react-native.gradle"
+  ],
+  "scripts": {
+    "test:types": "jasmine 'types/**/*.test.js'"
+  },
+  "author": "Bugsnag",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/cli": "^7.0.0",
+    "jasmine": "^3.5.0",
+    "nyc": "^12.0.2",
+    "tslint": "^5.12.1",
+    "typescript": "^3.3.3"
+  },
+  "dependencies": {
+    "@bugsnag/core": "^7.3.0",
+    "@bugsnag/delivery-react-native": "^7.3.0",
+    "@bugsnag/plugin-console-breadcrumbs": "^7.3.0",
+    "@bugsnag/plugin-network-breadcrumbs": "^7.3.0",
+    "@bugsnag/plugin-react": "^7.3.1",
+    "@bugsnag/plugin-react-native-client-sync": "^7.3.0",
+    "@bugsnag/plugin-react-native-event-sync": "^7.3.0",
+    "@bugsnag/plugin-react-native-global-error-handler": "^7.3.0",
+    "@bugsnag/plugin-react-native-hermes": "^7.3.0",
+    "@bugsnag/plugin-react-native-session": "^7.3.0",
+    "@bugsnag/plugin-react-native-unhandled-rejection": "^7.3.0",
+    "iserror": "^0.0.2"
+  }
+}

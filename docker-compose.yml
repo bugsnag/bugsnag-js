@@ -6,6 +6,18 @@ services:
       dockerfile: dockerfiles/Dockerfile.package
     volumes:
       - .:/app/build
+
+  publisher:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile.publisher
+      args:
+        - BUILDKITE=${BUILDKITE}
+        - REG_BASIC_CREDENTIAL
+        - REG_NPM_EMAIL
+        - PUBLISH_URL
+        - BRANCH_NAME
+
   ci:
     build:
       context: .
@@ -103,6 +115,50 @@ services:
           - maze-runner
     volumes:
       - ./build:/app/test/expo/features/fixtures/build
+
+  react-native-android-builder:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile.react-native-android-builder
+      args:
+        - REG_BASIC_CREDENTIAL
+        - REG_NPM_EMAIL
+    environment:
+      VERBOSE:
+      DEBUG:
+      BRANCH_NAME:
+      BUILDKITE:
+      REGISTRY_URL:
+      REACT_NATIVE_VERSION:
+      NOTIFIER_VERSION:
+    networks:
+      default:
+        aliases:
+          - maze-runner
+    volumes:
+      - ./build:/app/build
+      - ./test:/app/test
+
+  react-native-maze-runner:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile.react-native
+      args:
+        - BUILDKITE_BUILD_NUMBER
+    environment:
+      VERBOSE:
+      DEBUG:
+      BROWSER_STACK_USERNAME:
+      BROWSER_STACK_ACCESS_KEY:
+      BROWSER_STACK_LOCAL_IDENTIFIER: ${BUILDKITE_JOB_ID:-maze-runner}
+      APP_LOCATION:
+      DEVICE_TYPE:
+    networks:
+      default:
+        aliases:
+          - maze-runner
+    volumes:
+      - ./build:/app/test/react-native/build
 
 networks:
   default:

@@ -68,9 +68,14 @@
     "test:build-node-container": "docker-compose up --build minimal-packager && docker-compose build --pull node-maze-runner",
     "test:build-expo-android-container": "test/expo/scripts/build-android-locally.sh",
     "test:build-expo-ios-container": "EXPO_RELEASE_CHANNEL=localtest test/expo/scripts/build-ios-locally.sh",
+    "test:build-react-native-android-container": "test/react-native/scripts/build-android-locally.js",
+    "test:build-react-native-ios": "node -e 'require(\"./scripts/react-native-helper\").buildIOS()'",
+    "test:build-react-native-maze-runner": "docker-compose build --pull react-native-maze-runner",
     "test:browser": "npm run test:build-browser-container && docker-compose run --use-aliases browser-maze-runner",
     "test:node": "npm run test:build-node-container && docker-compose run --use-aliases node-maze-runner",
     "test:expo:android": "npm run test:build-expo-android-container && APP_LOCATION=build/output.apk docker-compose run --use-aliases expo-maze-runner",
-    "test:expo:ios": "npm run test:build-expo-ios-container && APP_LOCATION=build/output.ipa docker-compose run --use-aliases expo-maze-runner"
+    "test:expo:ios": "npm run test:build-expo-ios-container && APP_LOCATION=build/output.ipa docker-compose run --use-aliases expo-maze-runner",
+    "test:react-native:android": "npm run test:build-react-native-android-container && APP_LOCATION=build/$REACT_NATIVE_VERSION.apk docker-compose run --use-aliases react-native-maze-runner",
+    "test:react-native:ios": "npm run test:build-react-native-ios && npm run test:build-react-native-maze-runner && APP_LOCATION=build/$REACT_NATIVE_VERSION.ipa docker-compose run --use-aliases react-native-maze-runner"
   }
 }

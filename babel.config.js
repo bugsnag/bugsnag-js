@@ -11,7 +11,7 @@ module.exports = api => {
     plugins.push('@babel/plugin-transform-modules-commonjs')
     plugins.push('@babel/plugin-proposal-optional-chaining')
     overrides.push({
-      test: './node_modules/react-native/**/*',
+      test: 'node_modules/react-native/**/*',
       presets: ['module:metro-react-native-babel-preset']
     })
     overrides.push({
