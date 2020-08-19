@@ -35,8 +35,15 @@ module.exports = {
       displayName: 'react native',
       preset: 'react-native',
       testMatch: [
+        testsForPackage('react-native'),
         testsForPackage('plugin-react-native-app-state-breadcrumbs'),
-        testsForPackage('plugin-react-native-unhandled-rejection')
+        testsForPackage('plugin-react-native-unhandled-rejection'),
+        testsForPackage('plugin-react-native-hermes')
+      ],
+      setupFiles: [
+        require.resolve('react-native/Libraries/Core/setUpGlobals.js'),
+        require.resolve('react-native/Libraries/Core/setUpXHR.js'),
+        '<rootDir>/packages/react-native/src/test/setup.js'
       ]
     },
     {
@@ -51,6 +58,13 @@ module.exports = {
         testsForPackage('plugin-node-device'),
         testsForPackage('plugin-node-surrounding-code'),
         testsForPackage('plugin-node-uncaught-exception')
+      ]
+    },
+    {
+      displayName: 'node integration tests',
+      testEnvironment: 'node',
+      testMatch: [
+        '<rootDir>/packages/node/test/integration/**/*.test.[jt]s'
       ]
     }
   ]
