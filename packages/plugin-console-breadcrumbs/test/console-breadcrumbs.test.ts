@@ -1,8 +1,6 @@
-const { describe, it, expect } = global
+import plugin from '../'
 
-const plugin = require('../')
-
-const Client = require('@bugsnag/core/client')
+import Client from '@bugsnag/core/client'
 
 describe('plugin: console breadcrumbs', () => {
   it('should leave a breadcrumb when console.log() is called', () => {
