@@ -9,12 +9,6 @@ interface ReactNativeBugsnagStatic extends Client {
   start(jsOpts?: ReactNativeConfig): Client
 }
 
-// the config returned from Configuration.load() includes
-// all of the other configuration options, but they are readonly
-type NonConfigurable = Exclude<keyof Config, Configurable>
-// this utility is in typescript core but was only added in v3.5
-type Omit<T, K extends keyof any> = Pick<T, Exclude<keyof T, K>>
-
 declare const Bugsnag: ReactNativeBugsnagStatic
 
 export default Bugsnag
