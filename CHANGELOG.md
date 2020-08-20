@@ -3,6 +3,7 @@
 ## TBD
 
 - (plugin-angular): Update bundles and package entrypoints to support the Ivy renderer. [#994](https://github.com/bugsnag/bugsnag-js/pull/994)
+- (expo): Ensure type definitions allow config to be supplied without an `apiKey`, as it may be supplied in `app.json` instead. [#1010](https://github.com/bugsnag/bugsnag-js/pull/1010)
 
 ## 7.3.2 (2020-08-17)
 
