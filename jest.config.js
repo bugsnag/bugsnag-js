@@ -18,6 +18,7 @@ module.exports = {
       displayName: 'browser',
       testMatch: [
         testsForPackage('browser'),
+        testsForPackage('delivery-x-domain-request'),
         testsForPackage('plugin-react'),
         testsForPackage('plugin-vue'),
         testsForPackage('plugin-browser-context'),
@@ -51,6 +52,7 @@ module.exports = {
       displayName: 'node plugins',
       testEnvironment: 'node',
       testMatch: [
+        testsForPackage('delivery-node'),
         testsForPackage('plugin-server-*'),
         testsForPackage('plugin-strip-project-root'),
         testsForPackage('plugin-intercept'),
