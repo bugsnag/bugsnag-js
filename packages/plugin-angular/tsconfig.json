@@ -8,7 +8,7 @@
     "declaration": true,
     "inlineSourceMap": true,
     "inlineSources": true,
-    "outDir": "./dist/esm",
+    "outDir": "./dist/esm2015",
     "rootDir": "./src",
     "strict": true,
     "noUnusedLocals": true,
