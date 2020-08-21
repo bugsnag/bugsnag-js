@@ -32,3 +32,4 @@ Bugsnag.start({
 })
 
 Bugsnag.start()
+Bugsnag.start({ user: { id: 'jim' } })
