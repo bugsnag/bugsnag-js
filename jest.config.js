@@ -40,7 +40,8 @@ module.exports = {
         testsForPackage('react-native'),
         testsForPackage('plugin-react-native-app-state-breadcrumbs'),
         testsForPackage('plugin-react-native-unhandled-rejection'),
-        testsForPackage('plugin-react-native-hermes')
+        testsForPackage('plugin-react-native-hermes'),
+        testsForPackage('plugin-react-native-event-sync')
       ],
       setupFiles: [
         require.resolve('react-native/Libraries/Core/setUpGlobals.js'),
