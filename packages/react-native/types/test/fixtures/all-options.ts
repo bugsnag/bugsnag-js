@@ -11,3 +11,5 @@ Bugsnag.start({
   metadata: {},
   logger: undefined,
 })
+
+Bugsnag.start({ codeBundleId: '1.2.3-r908' })
