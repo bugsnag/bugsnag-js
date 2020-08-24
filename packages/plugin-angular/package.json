@@ -39,5 +39,8 @@
     "rxjs": "^5.5.8",
     "typescript": "^3.2.4",
     "zone.js": "^0.8.26"
+  },
+  "peerDependencies": {
+    "@bugsnag/js": "^7.0.0"
   }
 }

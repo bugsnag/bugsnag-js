@@ -19,5 +19,8 @@
   "devDependencies": {
     "@bugsnag/core": "^7.3.0",
     "promise": "^8.0.2"
+  },
+  "peerDependencies": {
+    "@bugsnag/core": "^7.0.0"
   }
 }

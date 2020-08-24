@@ -26,5 +26,8 @@
   },
   "dependencies": {
     "expo-constants": "^6.0.0"
+  },
+  "peerDependencies": {
+    "@bugsnag/core": "^7.0.0"
   }
 }

@@ -6,6 +6,7 @@
 - (plugin-react): Make type definitions `BugsnagErrorBoundary` and `BugsnagPluginReactResult` available for external use. [934](https://github.com/bugsnag/bugsnag-js/pull/934) / [#1009](https://github.com/bugsnag/bugsnag-js/pull/1009)
 - (expo): Ensure type definitions allow config to be supplied without an `apiKey`, as it may be supplied in `app.json` instead. [#1010](https://github.com/bugsnag/bugsnag-js/pull/1010)
 - (react-native): Add `codeBundleId` to config type definition. [#1011](https://github.com/bugsnag/bugsnag-js/pull/1011)
+- Use a peer dependency on @bugsnag/core in plugins [#1012](https://github.com/bugsnag/bugsnag-js/pull/1012)
 
 ## 7.3.2 (2020-08-17)
 
