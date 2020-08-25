@@ -1,16 +1,15 @@
-const { describe, it, expect } = global
-
-const Client = require('@bugsnag/core/client')
-const schema = require('@bugsnag/core/config').schema
-const plugin = require('../')
-const fs = require('fs')
+import Client from '@bugsnag/core/client'
+import { schema } from '@bugsnag/core/config'
+import plugin from '../'
+import fs from 'fs'
+import Event from '@bugsnag/core/event'
 
 // mock an async resource
 
 const items = ['a', 'b', 'c']
 
 // node-style error-first
-function load (index, cb) {
+function load (index: number, cb: (err: Error | null, res?: string) => void) {
   process.nextTick(() => {
     const item = items[index]
     if (item) return cb(null, item)
@@ -22,7 +21,7 @@ describe('plugin: contextualize', () => {
   it('should call the onUnhandledException callback when an error is captured', done => {
     const c = new Client({
       apiKey: 'api_key',
-      onUncaughtException: (err) => {
+      onUncaughtException: (err: Error) => {
         expect(err.message).toBe('no item available')
         done()
       },
@@ -30,7 +29,7 @@ describe('plugin: contextualize', () => {
     }, {
       ...schema,
       onUncaughtException: {
-        validate: val => typeof val === 'function',
+        validate: (val: unknown) => typeof val === 'function',
         message: 'should be a function',
         defaultValue: () => {}
       }
@@ -53,7 +52,7 @@ describe('plugin: contextualize', () => {
       load(8, (err) => {
         if (err) throw err
       })
-    }, (event) => {
+    }, (event: Event) => {
       event.setUser('1a2c3cd4', 'ben.gourley@bugsnag.com', 'Ben Gourley')
       event.severity = 'warning'
     })
@@ -69,7 +68,7 @@ describe('plugin: contextualize', () => {
     }, {
       ...schema,
       onUncaughtException: {
-        validate: val => typeof val === 'function',
+        validate: (val: unknown) => typeof val === 'function',
         message: 'should be a function',
         defaultValue: () => {}
       }
@@ -91,7 +90,7 @@ describe('plugin: contextualize', () => {
   it('should tolerate a failed event', done => {
     const c = new Client({
       apiKey: 'api_key',
-      onUncaughtException: (err) => {
+      onUncaughtException: (err: Error) => {
         expect(err.message).toBe('no item available')
         done()
       },
@@ -99,7 +98,7 @@ describe('plugin: contextualize', () => {
     }, {
       ...schema,
       onUncaughtException: {
-        validate: val => typeof val === 'function',
+        validate: (val: unknown) => typeof val === 'function',
         message: 'should be a function',
         defaultValue: () => {}
       }
