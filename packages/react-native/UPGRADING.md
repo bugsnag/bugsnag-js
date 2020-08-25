@@ -180,7 +180,7 @@ JS configuration options are now supplied directly to the `start` method:
 + })
 ```
 
-See the [React Native configuration options page](https//docs.bugsnag.com/platforms/react-native/react-native/configuration-options) for reference.
+See the [React Native configuration options page](https://docs.bugsnag.com/platforms/react-native/react-native/configuration-options) for reference.
 
 ### General usage
 
@@ -210,7 +210,7 @@ Previously initialization of Bugsnag would return a `Client` that you would need
 To report a handled error call the `notify()` method:
 
 ```diff
-+ client.notify(new Error('uh oh'))
+- client.notify(new Error('uh oh'))
 + Bugsnag.notify(new Error('uh oh'))
 ```
 
