@@ -1,13 +1,33 @@
-/* global describe, it, expect */
+import Client from '@bugsnag/core/client'
+import delivery from '../'
+import { App, Device, User, Breadcrumb } from '@bugsnag/core'
 
-const Client = require('@bugsnag/core/client')
-const delivery = require('../')
+interface NativeClientEvent {
+  errors: Array<{
+    errorMessage: string
+  }>
+  severity: string
+  severityReason: {
+    type: string
+    [key: string]: any
+  }
+  unhandled: boolean
+  app: App
+  device: Device
+  threads: unknown[]
+  breadcrumbs: Breadcrumb[]
+  context: string
+  user: User
+  metadata: { [key: string]: any }
+  groupingHash: string
+  apiKey: string
+}
 
 describe('delivery: react native', () => {
   it('sends the correct payload using the native client’s dispatch() method', done => {
-    const sent = []
+    const sent: NativeClientEvent[] = []
     const NativeClient = {
-      dispatch: (event) => {
+      dispatch: (event: NativeClientEvent) => {
         sent.push(event)
         return new Promise((resolve) => resolve(true))
       }

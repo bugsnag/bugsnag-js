@@ -38,6 +38,7 @@ module.exports = {
       preset: 'react-native',
       testMatch: [
         testsForPackage('react-native'),
+        testsForPackage('delivery-react-native'),
         testsForPackage('plugin-react-native-app-state-breadcrumbs'),
         testsForPackage('plugin-react-native-unhandled-rejection'),
         testsForPackage('plugin-react-native-hermes'),
