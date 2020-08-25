@@ -19,6 +19,7 @@ module.exports = {
       testMatch: [
         testsForPackage('browser'),
         testsForPackage('delivery-x-domain-request'),
+        testsForPackage('delivery-xml-http-request'),
         testsForPackage('plugin-react'),
         testsForPackage('plugin-vue'),
         testsForPackage('plugin-browser-context'),
