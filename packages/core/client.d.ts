@@ -1,4 +1,4 @@
-import { Client, OnErrorCallback, Config, Breadcrumb, Session, OnSessionCallback, OnBreadcrumbCallback, Plugin, Device, App } from './types'
+import { Client, OnErrorCallback, Config, Breadcrumb, Session, OnSessionCallback, OnBreadcrumbCallback, Plugin, Device, App, User } from './types'
 import EventWithInternals from './event'
 
 interface LoggerConfig {
@@ -45,6 +45,8 @@ export default class ClientWithInternals<T extends Config = Config> extends Clie
   _breadcrumbs: Breadcrumb[];
   _delivery: Delivery
   _setDelivery: (handler: (client: Client) => Delivery) => void
+
+  _user: User
 
   _metadata: { [key: string]: any }
 
