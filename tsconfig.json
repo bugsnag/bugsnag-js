@@ -72,6 +72,7 @@
     "packages/plugin-react-native-app-state-breadcrumbs",
     "packages/plugin-react-native-unhandled-rejection",
     "packages/plugin-react-native-hermes",
+    "packages/plugin-react-native-client-sync",
     "packages/plugin-react-native-event-sync",
     "packages/plugin-server-session",
 
