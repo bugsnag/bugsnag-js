@@ -20,7 +20,6 @@
     "clean": "rm -fr dist && mkdir dist",
     "build": "npm run clean && npm run build:dist",
     "build:dist": "../../bin/bundle src/restify.js --node --exclude=iserror --standalone=bugsnag-restify | ../../bin/extract-source-map dist/bugsnag-restify.js",
-    "test": "nyc --reporter=lcov -- jasmine '!(node_modules)/**/*.test.js'",
     "postversion": "npm run build"
   },
   "author": "Bugsnag",
@@ -30,9 +29,7 @@
   },
   "devDependencies": {
     "@bugsnag/core": "^7.3.0",
-    "@types/restify": "^8.4.2",
-    "jasmine": "^3.1.0",
-    "nyc": "^12.0.2"
+    "@types/restify": "^8.4.2"
   },
   "dependencies": {
     "iserror": "^0.0.2"
