@@ -1,6 +1,6 @@
 # Changelog
 
-## TBD
+## 7.3.3 (2020-08-26)
 
 - (plugin-angular): Update bundles and package entrypoints to support the Ivy renderer. [#994](https://github.com/bugsnag/bugsnag-js/pull/994)
 - (plugin-react): Make type definitions `BugsnagErrorBoundary` and `BugsnagPluginReactResult` available for external use. [934](https://github.com/bugsnag/bugsnag-js/pull/934) / [#1009](https://github.com/bugsnag/bugsnag-js/pull/1009)
