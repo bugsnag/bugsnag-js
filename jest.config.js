@@ -15,8 +15,10 @@ module.exports = {
       ]
     },
     {
-      displayName: 'browser plugins',
+      displayName: 'browser',
       testMatch: [
+        testsForPackage('browser'),
+        testsForPackage('delivery-x-domain-request'),
         testsForPackage('plugin-react'),
         testsForPackage('plugin-vue'),
         testsForPackage('plugin-browser-context'),
@@ -26,7 +28,9 @@ module.exports = {
         testsForPackage('plugin-window-onerror'),
         testsForPackage('plugin-strip-query-string'),
         testsForPackage('plugin-interaction-breadcrumbs'),
-        testsForPackage('plugin-simple-throttle')
+        testsForPackage('plugin-simple-throttle'),
+        testsForPackage('plugin-console-breadcrumbs'),
+        testsForPackage('plugin-browser-session')
       ]
     },
     {
@@ -36,7 +40,8 @@ module.exports = {
         testsForPackage('react-native'),
         testsForPackage('plugin-react-native-app-state-breadcrumbs'),
         testsForPackage('plugin-react-native-unhandled-rejection'),
-        testsForPackage('plugin-react-native-hermes')
+        testsForPackage('plugin-react-native-hermes'),
+        testsForPackage('plugin-react-native-event-sync')
       ],
       setupFiles: [
         require.resolve('react-native/Libraries/Core/setUpGlobals.js'),
@@ -48,6 +53,7 @@ module.exports = {
       displayName: 'node plugins',
       testEnvironment: 'node',
       testMatch: [
+        testsForPackage('delivery-node'),
         testsForPackage('plugin-server-*'),
         testsForPackage('plugin-strip-project-root'),
         testsForPackage('plugin-intercept'),

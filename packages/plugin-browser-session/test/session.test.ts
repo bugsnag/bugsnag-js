@@ -1,8 +1,8 @@
-const { describe, it, expect, spyOn } = global
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+import plugin from '../'
+import Client, { EventDeliveryPayload } from '@bugsnag/core/client'
+import EventWithInternals from '@bugsnag/core/event'
 
-const plugin = require('../')
-
-const Client = require('@bugsnag/core/client')
 const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
 describe('plugin: sessions', () => {
@@ -12,12 +12,13 @@ describe('plugin: sessions', () => {
       sendSession: (session, cb) => {
         expect(typeof session).toBe('object')
         expect(session.notifier).toEqual(VALID_NOTIFIER)
-        expect(session.sessions.length).toBe(1)
-        expect(session.sessions[0].id).toBeTruthy()
-        expect(session.sessions[0].id.length).toBeGreaterThan(10)
-        expect(session.sessions[0].startedAt).toBeTruthy()
+        expect(session.sessions!.length).toBe(1)
+        expect(session.sessions![0].id).toBeTruthy()
+        expect(session.sessions![0].id.length).toBeGreaterThan(10)
+        expect(session.sessions![0].startedAt).toBeTruthy()
         done()
-      }
+      },
+      sendEvent: () => {}
     }))
     c.startSession()
   })
@@ -37,16 +38,17 @@ describe('plugin: sessions', () => {
       }
     }))
     const sessionClient = c.startSession()
+    const Event = c.Event as unknown as typeof EventWithInternals
     sessionClient.notify(new Error('broke'))
-    sessionClient._notify(new c.Event('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
-    sessionClient.notify(new Error('broke'))
-    sessionClient.notify(new Error('broke'))
-    sessionClient._notify(new c.Event('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
+    sessionClient._notify(new Event('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
     sessionClient.notify(new Error('broke'))
     sessionClient.notify(new Error('broke'))
+    sessionClient._notify(new Event('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
     sessionClient.notify(new Error('broke'))
-    sessionClient._notify(new c.Event('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
-    sessionClient._notify(new c.Event('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
+    sessionClient.notify(new Error('broke'))
+    sessionClient.notify(new Error('broke'))
+    sessionClient._notify(new Event('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
+    sessionClient._notify(new Event('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
   })
 
   it('correctly infers releaseStage', (done) => {
@@ -55,9 +57,10 @@ describe('plugin: sessions', () => {
     c._setDelivery(client => ({
       sendSession: (session, cb) => {
         expect(typeof session).toBe('object')
-        expect(session.app.releaseStage).toBe('foo')
+        expect(session.app!.releaseStage).toBe('foo')
         done()
-      }
+      },
+      sendEvent: () => {}
     }))
     c.startSession()
   })
@@ -67,28 +70,29 @@ describe('plugin: sessions', () => {
     c._setDelivery(client => ({
       sendSession: (session, cb) => {
         expect(true).toBe(false)
-      }
+      },
+      sendEvent: () => {}
     }))
     c.startSession()
     setTimeout(done, 150)
   })
 
   it('uses default endpoints when session endpoint is not set', () => {
-    const logger = { debug: () => {}, info: () => {}, warn: () => {}, error: () => {} }
-    const warnSpy = spyOn(logger, 'warn')
+    const logger = { debug: () => {}, info: () => {}, warn: jest.fn(), error: () => {} }
     const c = new Client({
       apiKey: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
       releaseStage: 'foo',
+      // @ts-expect-error
       endpoints: { notify: '/foo' },
       autoTrackSessions: false,
       logger
     }, undefined, [plugin], VALID_NOTIFIER)
-    expect(c._config.endpoints.sessions).toBe('https://sessions.bugsnag.com')
-    expect(warnSpy.calls.first().args[0].message).toBe('Invalid configuration\n  - endpoints should be an object containing endpoint URLs { notify, sessions }, got {"notify":"/foo"}')
+    expect(c._config.endpoints!.sessions).toBe('https://sessions.bugsnag.com')
+    expect(logger.warn).toHaveBeenNthCalledWith(1, new Error('Invalid configuration\n  - endpoints should be an object containing endpoint URLs { notify, sessions }, got {"notify":"/foo"}'))
   })
 
   it('supports pausing and resuming sessions', (done) => {
-    const payloads = []
+    const payloads: EventDeliveryPayload[] = []
     const c = new Client({
       apiKey: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
     }, undefined, [plugin], VALID_NOTIFIER)
@@ -117,9 +121,9 @@ describe('plugin: sessions', () => {
       expect(payloads[0].events[0]._session).toBe(undefined)
       expect(payloads[1].events[0]._session).toBeDefined()
       expect(payloads[2].events[0]._session).toBe(undefined)
-      expect(payloads[3].events[0]._session.id).toBe(payloads[1].events[0]._session.id)
-      expect(payloads[4].events[0]._session.id).not.toBe(payloads[3].events[0]._session.id)
-      expect(payloads[5].events[0]._session.id).not.toBe(payloads[4].events[0]._session.id)
+      expect(payloads[3].events[0]._session!.id).toBe(payloads[1].events[0]._session!.id)
+      expect(payloads[4].events[0]._session!.id).not.toBe(payloads[3].events[0]._session!.id)
+      expect(payloads[5].events[0]._session!.id).not.toBe(payloads[4].events[0]._session!.id)
       done()
     }, 0)
   })

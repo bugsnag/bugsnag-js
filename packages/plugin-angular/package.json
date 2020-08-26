@@ -2,13 +2,13 @@
   "name": "@bugsnag/plugin-angular",
   "version": "7.3.0",
   "description": "Angular integration for bugsnag-js",
-  "main": "dist/es5/index.js",
-  "browser": "dist/es5/index.js",
-  "module": "dist/esm/index.js",
-  "es2015": "dist/esm/index.js",
-  "esm5": "dist/es5/index.js",
-  "types": "dist/esm/index.d.ts",
-  "typings": "dist/esm/index.d.ts",
+  "main": "dist/esm5/index.js",
+  "browser": "dist/esm5/index.js",
+  "module": "dist/esm5/index.js",
+  "es2015": "dist/esm2015/index.js",
+  "esm5": "dist/esm5/index.js",
+  "types": "dist/esm5/index.d.ts",
+  "typings": "dist/esm5/index.d.ts",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
     "type": "git",
@@ -22,8 +22,8 @@
   ],
   "scripts": {
     "clean": "rm -fr dist && mkdir dist",
-    "build": "npm run clean && npm run build:es2015 && npm run build:esm5",
-    "build:es2015": "ngc -p tsconfig.json",
+    "build": "npm run clean && npm run build:esm2015 && npm run build:esm5",
+    "build:esm2015": "ngc -p tsconfig.json",
     "build:esm5": "ngc -p tsconfig.esm5.json",
     "test": "npm run build",
     "postversion": "npm run build"
@@ -39,5 +39,8 @@
     "rxjs": "^5.5.8",
     "typescript": "^3.2.4",
     "zone.js": "^0.8.26"
+  },
+  "peerDependencies": {
+    "@bugsnag/js": "^7.0.0"
   }
 }

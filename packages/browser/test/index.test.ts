@@ -1,0 +1,148 @@
+import BugsnagBrowserStatic from '..'
+import { Breadcrumb, Session } from '../types/bugsnag'
+
+const DONE = window.XMLHttpRequest.DONE
+
+const API_KEY = '030bab153e7c2349be364d23b5ae93b5'
+
+function mockFetch () {
+  const makeMockXHR = () => ({
+    open: jest.fn(),
+    send: jest.fn(),
+    setRequestHeader: jest.fn(),
+    readyState: DONE,
+    onreadystatechange: () => {}
+  })
+
+  const session = makeMockXHR()
+  const notify = makeMockXHR()
+
+  // @ts-ignore
+  window.XMLHttpRequest = jest.fn()
+    .mockImplementationOnce(() => session)
+    .mockImplementationOnce(() => notify)
+    .mockImplementation(() => makeMockXHR())
+  // @ts-ignore
+  window.XMLHttpRequest.DONE = DONE
+
+  return { session, notify }
+}
+
+describe('browser notifier', () => {
+  beforeEach(() => {
+    jest.resetModules()
+    mockFetch()
+  })
+
+  function getBugsnag (): typeof BugsnagBrowserStatic {
+    const Bugsnag = require('..') as typeof BugsnagBrowserStatic
+    return Bugsnag
+  }
+
+  it('accepts plugins', () => {
+    const Bugsnag = getBugsnag()
+    Bugsnag.start({
+      apiKey: API_KEY,
+      plugins: [{
+        name: 'foobar',
+        load: client => 10
+      }]
+    })
+    expect(Bugsnag.getPlugin('foobar')).toBe(10)
+  })
+
+  it('notifies handled errors', (done) => {
+    const { session, notify } = mockFetch()
+    const Bugsnag = getBugsnag()
+    Bugsnag.start(API_KEY)
+    Bugsnag.notify(new Error('123'), undefined, (err, event) => {
+      if (err) {
+        done(err)
+      }
+      expect(event.breadcrumbs[0]).toStrictEqual(expect.objectContaining({
+        type: 'navigation',
+        message: 'Bugsnag loaded'
+      }))
+      expect(event.originalError.message).toBe('123')
+
+      expect(session.open).toHaveBeenCalledWith('POST', 'https://sessions.bugsnag.com')
+      expect(session.setRequestHeader).toHaveBeenCalledWith('Content-Type', 'application/json')
+      expect(session.setRequestHeader).toHaveBeenCalledWith('Bugsnag-Api-Key', '030bab153e7c2349be364d23b5ae93b5')
+      expect(session.setRequestHeader).toHaveBeenCalledWith('Bugsnag-Payload-Version', '1')
+      expect(session.send).toHaveBeenCalledWith(expect.any(String))
+
+      expect(notify.open).toHaveBeenCalledWith('POST', 'https://notify.bugsnag.com')
+      expect(notify.setRequestHeader).toHaveBeenCalledWith('Content-Type', 'application/json')
+      expect(notify.setRequestHeader).toHaveBeenCalledWith('Bugsnag-Api-Key', '030bab153e7c2349be364d23b5ae93b5')
+      expect(notify.setRequestHeader).toHaveBeenCalledWith('Bugsnag-Payload-Version', '4')
+      expect(notify.send).toHaveBeenCalledWith(expect.any(String))
+      done()
+    })
+
+    session.onreadystatechange()
+    notify.onreadystatechange()
+  })
+
+  it('does not send if false is returned in onError', (done) => {
+    const { session, notify } = mockFetch()
+    const Bugsnag = getBugsnag()
+    Bugsnag.start(API_KEY)
+    Bugsnag.notify(new Error('123'), (event) => {
+      return false
+    }, (err, event) => {
+      if (err) {
+        done(err)
+      }
+      expect(notify.open).not.toHaveBeenCalled()
+      done()
+    })
+
+    session.onreadystatechange()
+  })
+
+  it('accepts all config options', (done) => {
+    const Bugsnag = getBugsnag()
+    Bugsnag.start({
+      apiKey: API_KEY,
+      appVersion: '1.2.3',
+      appType: 'worker',
+      autoDetectErrors: true,
+      enabledErrorTypes: {
+        unhandledExceptions: true,
+        unhandledRejections: true
+      },
+      onError: [
+        event => true
+      ],
+      onBreadcrumb: (b: Breadcrumb) => {
+        return false
+      },
+      onSession: (s: Session) => {
+        return true
+      },
+      endpoints: { notify: 'https://notify.bugsnag.com', sessions: 'https://sessions.bugsnag.com' },
+      autoTrackSessions: true,
+      enabledReleaseStages: ['zzz'],
+      releaseStage: 'production',
+      maxBreadcrumbs: 20,
+      enabledBreadcrumbTypes: ['manual', 'log', 'request'],
+      user: null,
+      metadata: {},
+      logger: undefined,
+      redactedKeys: ['foo', /bar/],
+      collectUserIp: true,
+      maxEvents: 10
+    })
+
+    Bugsnag.notify(new Error('123'), (event) => {
+      return false
+    }, (err, event) => {
+      if (err) {
+        done(err)
+      }
+      expect(event.breadcrumbs.length).toBe(0)
+      expect(event.originalError.message).toBe('123')
+      done()
+    })
+  })
+})

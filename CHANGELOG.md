@@ -1,5 +1,21 @@
 # Changelog
 
+## 7.3.3 (2020-08-26)
+
+### Added
+
+- (plugin-react): Make type definitions `BugsnagErrorBoundary` and `BugsnagPluginReactResult` available for external use. [934](https://github.com/bugsnag/bugsnag-js/pull/934) / [#1009](https://github.com/bugsnag/bugsnag-js/pull/1009)
+
+### Changed
+
+- Use a peer dependency on @bugsnag/core in plugins [#1012](https://github.com/bugsnag/bugsnag-js/pull/1012)
+
+### Fixed
+
+- (expo): Ensure type definitions allow config to be supplied without an `apiKey`, as it may be supplied in `app.json` instead. [#1010](https://github.com/bugsnag/bugsnag-js/pull/1010)
+- (plugin-angular): Update bundles and package entrypoints to support the Ivy renderer. [#994](https://github.com/bugsnag/bugsnag-js/pull/994)
+- (react-native): Add `codeBundleId` to config type definition. [#1011](https://github.com/bugsnag/bugsnag-js/pull/1011)
+
 ## 7.3.2 (2020-08-17)
 
 ### Fixed

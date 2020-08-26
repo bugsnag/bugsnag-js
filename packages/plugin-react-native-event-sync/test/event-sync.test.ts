@@ -1,16 +1,12 @@
-/* global describe, it, expect */
+import Client from '@bugsnag/core/client'
+import plugin from '../'
 
-const Client = require('@bugsnag/core/client')
-const proxyquire = require('proxyquire').noCallThru()
+jest.mock('react-native', () => ({
+  Platform: { OS: 'Android' },
+  DeviceEventEmitter: { addListener: () => {} }
+}))
 
 describe('plugin: react native event sync', () => {
-  const plugin = proxyquire('../', {
-    'react-native': {
-      Platform: { OS: 'Android' },
-      DeviceEventEmitter: { addListener: () => {} }
-    }
-  })
-
   it('updates report state with native payload info', done => {
     const ts = new Date()
     const c = new Client({

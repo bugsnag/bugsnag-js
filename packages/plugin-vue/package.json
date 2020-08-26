@@ -24,15 +24,11 @@
   },
   "author": "Bugsnag",
   "license": "MIT",
-  "peerDependencies": {
-    "@bugsnag/js": "*"
-  },
   "devDependencies": {
-    "jasmine": "^3.1.0",
-    "nyc": "^12.0.2",
+    "@bugsnag/core": "^7.3.0",
     "vue": "^2.5.8"
   },
-  "dependencies": {
-    "@bugsnag/core": "^7.3.0"
+  "peerDependencies": {
+    "@bugsnag/core": "^7.0.0"
   }
 }

@@ -39,8 +39,8 @@ interface Delivery {
  * module itself once it is converted to TypeScript.
  */
 export default class ClientWithInternals<T extends Config = Config> extends Client {
-  public constructor(opts: T, schema?: {[key: string]: any}, internalPlugins?: Plugin[])
-  _config: { [key: string]: {} }
+  public constructor(opts: T, schema?: {[key: string]: any}, internalPlugins?: Plugin[], notifier?: Notifier)
+  _config: T
   _logger: LoggerConfig
   _breadcrumbs: Breadcrumb[];
   _delivery: Delivery
