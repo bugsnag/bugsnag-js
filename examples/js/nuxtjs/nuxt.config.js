@@ -57,7 +57,7 @@ module.exports = {
     extend (config, ctx) {
       if (!isDev && isClient) {
 
-        config.devtool = '#source-map'
+        config.devtool = 'source-map'
 
         config.plugins.push(
           new BugsnagSourceMapUploaderPlugin({
