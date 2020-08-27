@@ -55,7 +55,20 @@ module.exports = {
     ** You can extend webpack config here
     */
     extend (config, ctx) {
+      if (!isDev && isClient) {
 
+        config.devtool = '#source-map'
+
+        config.plugins.push(
+          new BugsnagSourceMapUploaderPlugin({
+            apiKey: 'YOUR_BROWSER_API_KEY',
+            appVersion: require('./package.json').version,
+            releaseStage: 'production',
+            overwrite: true,
+            publicPath: '*'
+          })
+        )
+      }
     }
   }
 }
