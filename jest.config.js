@@ -24,6 +24,7 @@ module.exports = {
         testsForPackage('plugin-browser-context'),
         testsForPackage('plugin-browser-device'),
         testsForPackage('plugin-browser-request'),
+        testsForPackage('plugin-client-ip'),
         testsForPackage('plugin-window-unhandled-rejection'),
         testsForPackage('plugin-window-onerror'),
         testsForPackage('plugin-strip-query-string'),
