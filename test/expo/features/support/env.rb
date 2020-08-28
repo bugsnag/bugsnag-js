@@ -32,7 +32,7 @@ Before('@skip_ios_12') do |scenario|
 end
 
 After do |_scenario|
-  $driver.reset
+  $driver.reset_with_timeout
 end
 
 AfterConfiguration do |config|
