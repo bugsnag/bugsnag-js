@@ -40,7 +40,7 @@ Before('@ios_only') do |scenario|
 end
 
 After do |_scenario|
-  $driver.reset
+  $driver.reset_with_timeout
 end
 
 AfterConfiguration do |config|
