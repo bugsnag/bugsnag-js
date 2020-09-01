@@ -1,5 +1,11 @@
 # Changelog
 
+## TBD
+
+### Fixed
+
+- (react-native): Suppress unchecked cast warnings for React Native Android [#1027](https://github.com/bugsnag/bugsnag-js/pull/1027)
+
 ## 7.3.3 (2020-08-26)
 
 ### Added
