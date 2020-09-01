@@ -2,7 +2,7 @@ import delivery from '../'
 import { Client } from '@bugsnag/core'
 import { EventDeliveryPayload } from '@bugsnag/core/client'
 
-interface XMLHttpRequest {
+interface MockXMLHttpRequest {
   method: string | null
   url: string | null
   data: string | null
@@ -12,10 +12,10 @@ interface XMLHttpRequest {
 
 describe('delivery:XMLHttpRequest', () => {
   it('sends events successfully', done => {
-    const requests: XMLHttpRequest[] = []
+    const requests: MockXMLHttpRequest[] = []
 
     // mock XMLHttpRequest class
-    function XMLHttpRequest (this: XMLHttpRequest) {
+    function XMLHttpRequest (this: MockXMLHttpRequest) {
       this.method = null
       this.url = null
       this.data = null
@@ -58,10 +58,10 @@ describe('delivery:XMLHttpRequest', () => {
   })
 
   it('sends sessions successfully', done => {
-    const requests: XMLHttpRequest[] = []
+    const requests: MockXMLHttpRequest[] = []
 
     // mock XMLHttpRequest class
-    function XMLHttpRequest (this: XMLHttpRequest) {
+    function XMLHttpRequest (this: MockXMLHttpRequest) {
       this.method = null
       this.url = null
       this.data = null
