@@ -1,13 +1,21 @@
-const { describe, it, expect } = global
+import delivery from '../'
+import { Client } from '@bugsnag/core'
+import { EventDeliveryPayload } from '@bugsnag/core/client'
 
-const delivery = require('../')
+interface MockXMLHttpRequest {
+  method: string | null
+  url: string | null
+  data: string | null
+  headers: { [key: string]: string }
+  readyState: string | null
+}
 
 describe('delivery:XMLHttpRequest', () => {
   it('sends events successfully', done => {
-    const requests = []
+    const requests: MockXMLHttpRequest[] = []
 
     // mock XMLHttpRequest class
-    function XMLHttpRequest () {
+    function XMLHttpRequest (this: MockXMLHttpRequest) {
       this.method = null
       this.url = null
       this.data = null
@@ -16,26 +24,26 @@ describe('delivery:XMLHttpRequest', () => {
       requests.push(this)
     }
     XMLHttpRequest.DONE = 4
-    XMLHttpRequest.prototype.open = function (method, url) {
+    XMLHttpRequest.prototype.open = function (method: string, url: string) {
       this.method = method
       this.url = url
     }
-    XMLHttpRequest.prototype.setRequestHeader = function (key, val) {
+    XMLHttpRequest.prototype.setRequestHeader = function (key: string, val: string) {
       this.headers[key] = val
     }
-    XMLHttpRequest.prototype.send = function (data) {
+    XMLHttpRequest.prototype.send = function (data: string) {
       this.data = data
       this.readyState = XMLHttpRequest.DONE
       this.onreadystatechange()
     }
 
-    const payload = { sample: 'payload' }
+    const payload = { sample: 'payload' } as unknown as EventDeliveryPayload
     const config = {
       apiKey: 'aaaaaaaa',
       endpoints: { notify: '/echo/' },
       redactedKeys: []
     }
-    delivery({ logger: {}, _config: config }, { XMLHttpRequest }).sendEvent(payload, (err) => {
+    delivery({ logger: {}, _config: config } as unknown as Client, { XMLHttpRequest } as unknown as Window).sendEvent(payload, (err: any) => {
       expect(err).toBe(null)
       expect(requests.length).toBe(1)
       expect(requests[0].method).toBe('POST')
@@ -50,10 +58,10 @@ describe('delivery:XMLHttpRequest', () => {
   })
 
   it('sends sessions successfully', done => {
-    const requests = []
+    const requests: MockXMLHttpRequest[] = []
 
     // mock XMLHttpRequest class
-    function XMLHttpRequest () {
+    function XMLHttpRequest (this: MockXMLHttpRequest) {
       this.method = null
       this.url = null
       this.data = null
@@ -62,26 +70,26 @@ describe('delivery:XMLHttpRequest', () => {
       requests.push(this)
     }
     XMLHttpRequest.DONE = 4
-    XMLHttpRequest.prototype.open = function (method, url) {
+    XMLHttpRequest.prototype.open = function (method: string, url: string) {
       this.method = method
       this.url = url
     }
-    XMLHttpRequest.prototype.setRequestHeader = function (key, val) {
+    XMLHttpRequest.prototype.setRequestHeader = function (key: string, val: string) {
       this.headers[key] = val
     }
-    XMLHttpRequest.prototype.send = function (data) {
+    XMLHttpRequest.prototype.send = function (data: string) {
       this.data = data
       this.readyState = XMLHttpRequest.DONE
       this.onreadystatechange()
     }
 
-    const payload = { sample: 'payload' }
+    const payload = { sample: 'payload' } as unknown as EventDeliveryPayload
     const config = {
       apiKey: 'aaaaaaaa',
       endpoints: { notify: '/', sessions: '/echo/' },
       redactedKeys: []
     }
-    delivery({ _config: config, logger: {} }, { XMLHttpRequest }).sendSession(payload, (err) => {
+    delivery({ _config: config, logger: {} } as unknown as Client, { XMLHttpRequest } as unknown as Window).sendSession(payload, (err) => {
       expect(err).toBe(null)
       expect(requests.length).toBe(1)
       expect(requests[0].method).toBe('POST')
