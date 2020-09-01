@@ -1,14 +1,23 @@
-/* global describe, it, expect */
+import Client from '@bugsnag/core/client'
+import plugin from '../'
+import { Breadcrumb } from '@bugsnag/core'
 
-const Client = require('@bugsnag/core/client')
-const proxyquire = require('proxyquire').noCallThru()
+// @types/react-native conflicts with lib dom so disable ts for
+// react-native imports until a better solution is found.
+// See DefinitelyTyped/DefinitelyTyped#33311
+// @ts-ignore
+import { DeviceEventEmitter } from 'react-native'
+
+jest.mock('react-native', () => ({
+  Platform: { OS: 'android' },
+  DeviceEventEmitter: { addListener: jest.fn() }
+}))
+
+const MockAddListener: jest.MockedFunction<any> = DeviceEventEmitter.addListener
 
 describe('plugin: react native client sync', () => {
-  const plugin = proxyquire('../', {
-    'react-native': {
-      Platform: { OS: 'android' },
-      DeviceEventEmitter: { addListener: () => {} }
-    }
+  beforeEach(() => {
+    MockAddListener.mockReset()
   })
 
   describe('js -> native', () => {
@@ -17,7 +26,7 @@ describe('plugin: react native client sync', () => {
         apiKey: 'api_key',
         plugins: [
           plugin({
-            updateContext: (update) => {
+            updateContext: (update: any) => {
               expect(update).toBe('1234')
               done()
             }
@@ -32,7 +41,7 @@ describe('plugin: react native client sync', () => {
         apiKey: 'api_key',
         plugins: [
           plugin({
-            addMetadata: (key, updates) => {
+            addMetadata: (key: string, updates: any) => {
               expect(key).toBe('widget')
               expect(updates).toEqual({
                 id: '14',
@@ -52,8 +61,8 @@ describe('plugin: react native client sync', () => {
         apiKey: 'api_key',
         plugins: [
           plugin({
-            addMetadata: (key, updates) => {},
-            clearMetadata: (key, section) => {}
+            addMetadata: () => {},
+            clearMetadata: () => {}
           })
         ]
       })
@@ -70,7 +79,7 @@ describe('plugin: react native client sync', () => {
         apiKey: 'api_key',
         plugins: [
           plugin({
-            updateUser: (id, email, name) => {
+            updateUser: (id: string, email: string, name: string) => {
               expect(id).toBe('1234')
               expect(name).toBe('Ben')
               expect(email).toBe('ben@bensnag.be')
@@ -88,7 +97,7 @@ describe('plugin: react native client sync', () => {
         apiKey: 'api_key',
         plugins: [
           plugin({
-            leaveBreadcrumb: ({ message, metadata, type, timestamp }) => {
+            leaveBreadcrumb: ({ message, metadata, type, timestamp }: Breadcrumb) => {
               expect(message).toBe('Spin')
               expect(metadata).toEqual({ direction: 'ccw', deg: '90' })
               done()
@@ -102,39 +111,25 @@ describe('plugin: react native client sync', () => {
 
   describe('native -> JS', () => {
     it('silently updates context when an update is received', () => {
-      const plugin = proxyquire('../', {
-        'react-native': {
-          Platform: { OS: 'android' },
-          DeviceEventEmitter: {
-            addListener: (event, listener) => {
-              expect(event).toBe('bugsnag::sync')
-              setTimeout(() => listener({ type: 'ContextUpdate', data: 'new context' }), 0)
-            }
-          }
-        }
+      MockAddListener.mockImplementation((event: any, listener: (payload: any) => void) => {
+        setTimeout(() => listener({ type: 'ContextUpdate', data: 'new context' }), 0)
       })
-
       const c = new Client({ apiKey: 'api_key', plugins: [plugin()] })
+      expect(MockAddListener).toHaveBeenCalledWith('bugsnag::sync', expect.any(Function))
       expect(c.getContext()).toBe(undefined)
+
       setTimeout(() => {
         expect(c.getContext()).toBe('new context')
       }, 1)
     })
 
     it('silently updates user when an update is received', () => {
-      const plugin = proxyquire('../', {
-        'react-native': {
-          Platform: { OS: 'android' },
-          DeviceEventEmitter: {
-            addListener: (event, listener) => {
-              expect(event).toBe('bugsnag::sync')
-              setTimeout(() => listener({ type: 'UserUpdate', data: { id: '1234', name: 'Ben', email: 'ben@bensnag.be' } }), 0)
-            }
-          }
-        }
+      MockAddListener.mockImplementation((event: any, listener: (payload: any) => void) => {
+        setTimeout(() => listener({ type: 'UserUpdate', data: { id: '1234', name: 'Ben', email: 'ben@bensnag.be' } }), 0)
       })
 
       const c = new Client({ apiKey: 'api_key', plugins: [plugin()] })
+      expect(MockAddListener).toHaveBeenCalledWith('bugsnag::sync', expect.any(Function))
       expect(c.getUser()).toEqual({})
       setTimeout(() => {
         expect(c.getUser()).toEqual({ id: '1234', name: 'Ben', email: 'ben@bensnag.be' })
@@ -142,42 +137,28 @@ describe('plugin: react native client sync', () => {
     })
 
     it('silently updates metadata when an update is received', () => {
-      const plugin = proxyquire('../', {
-        'react-native': {
-          Platform: { OS: 'android' },
-          DeviceEventEmitter: {
-            addListener: (event, listener) => {
-              expect(event).toBe('bugsnag::sync')
-              setTimeout(() => listener({
-                type: 'MetadataUpdate',
-                data: { extra: { apples: ['pink lady', 'braeburn', 'golden delicious'] } }
-              }), 0)
-            }
-          }
-        }
+      MockAddListener.mockImplementation((event: any, listener: (payload: any) => void) => {
+        setTimeout(() => listener({
+          type: 'MetadataUpdate',
+          data: { extra: { apples: ['pink lady', 'braeburn', 'golden delicious'] } }
+        }), 0)
       })
 
       const c = new Client({ apiKey: 'api_key', plugins: [plugin()] })
+      expect(MockAddListener).toHaveBeenCalledWith('bugsnag::sync', expect.any(Function))
       expect(c.getMetadata('extra')).toEqual(undefined)
       setTimeout(() => {
         expect(c.getMetadata('extra')).toEqual({ apples: ['pink lady', 'braeburn', 'golden delicious'] })
       }, 1)
     })
 
-    it('ignores upates it doesn’t understand', (done) => {
-      const plugin = proxyquire('../', {
-        'react-native': {
-          Platform: { OS: 'android' },
-          DeviceEventEmitter: {
-            addListener: (event, listener) => {
-              expect(event).toBe('bugsnag::sync')
-              setTimeout(() => listener({ type: 'UnknownUpdate', data: {} }), 0)
-            }
-          }
-        }
+    it('ignores updates it doesn’t understand', (done) => {
+      MockAddListener.mockImplementation((event: any, listener: (payload: any) => void) => {
+        setTimeout(() => listener({ type: 'UnknownUpdate', data: {} }), 0)
       })
 
       const c = new Client({ apiKey: 'api_key', plugins: [plugin()] })
+      expect(MockAddListener).toHaveBeenCalledWith('bugsnag::sync', expect.any(Function))
       expect(c).toBeTruthy()
       setTimeout(() => {
         done()

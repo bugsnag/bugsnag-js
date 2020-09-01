@@ -247,6 +247,6 @@ async function runTests (args) {
     `-v`, `${process.cwd()}/test/browser/:/app/test/browser`,
     `-w`, `/app/test/browser`,
     `-p`, `9020:9020`,
-    `855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner:latest-cli`
+    `855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner:latest-v2-cli`
   ].concat(args || []))
 }

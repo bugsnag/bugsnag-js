@@ -24,6 +24,7 @@ module.exports = {
         testsForPackage('plugin-browser-context'),
         testsForPackage('plugin-browser-device'),
         testsForPackage('plugin-browser-request'),
+        testsForPackage('plugin-client-ip'),
         testsForPackage('plugin-window-unhandled-rejection'),
         testsForPackage('plugin-window-onerror'),
         testsForPackage('plugin-strip-query-string'),
@@ -42,6 +43,7 @@ module.exports = {
         testsForPackage('plugin-react-native-app-state-breadcrumbs'),
         testsForPackage('plugin-react-native-unhandled-rejection'),
         testsForPackage('plugin-react-native-hermes'),
+        testsForPackage('plugin-react-native-client-sync'),
         testsForPackage('plugin-react-native-event-sync')
       ],
       setupFiles: [
@@ -55,6 +57,7 @@ module.exports = {
       testEnvironment: 'node',
       testMatch: [
         testsForPackage('delivery-node'),
+        testsForPackage('plugin-contextualize'),
         testsForPackage('plugin-server-*'),
         testsForPackage('plugin-strip-project-root'),
         testsForPackage('plugin-intercept'),
