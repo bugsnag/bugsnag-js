@@ -1,26 +1,22 @@
 import Client from '@bugsnag/core/client'
 import delivery from '../'
-import { App, Device, User, Breadcrumb } from '@bugsnag/core'
+import EventWithInternals from '@bugsnag/core/event'
 
-interface NativeClientEvent {
-  errors: Array<{
-    errorMessage: string
-  }>
-  severity: string
-  severityReason: {
-    type: string
-    [key: string]: any
-  }
-  unhandled: boolean
-  app: App
-  device: Device
-  threads: unknown[]
-  breadcrumbs: Breadcrumb[]
-  context: string
-  user: User
-  metadata: { [key: string]: any }
-  groupingHash: string
-  apiKey: string
+type NativeClientEvent = Pick<EventWithInternals,
+| 'errors'
+| 'severity'
+| 'unhandled'
+| 'app'
+| 'device'
+| 'threads'
+| 'breadcrumbs'
+| 'context'
+| 'groupingHash'
+| 'apiKey'
+> & {
+  severityReason: EventWithInternals['_handledState']['severityReason']
+  user: EventWithInternals['_user']
+  metadata: EventWithInternals['_metadata']
 }
 
 describe('delivery: react native', () => {
