@@ -1,5 +1,11 @@
 # Changelog
 
+## TBD
+
+### Fixed
+
+- (react-native): Provide proguard rules to ensure reflection works on minified/obfuscated Android builds [#1030](https://github.com/bugsnag/bugsnag-js/pull/1030)
+
 ## 7.3.3 (2020-08-26)
 
 ### Added
