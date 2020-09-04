@@ -4,6 +4,7 @@ import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.bridge.WritableNativeMap
 
+@Suppress("UNCHECKED_CAST")
 internal fun Map<String, Any?>.toWritableMap(): WritableMap {
     val nativeMap = WritableNativeMap()
 

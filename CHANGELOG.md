@@ -4,6 +4,7 @@
 
 ### Fixed
 
+- (react-native): Suppress unchecked cast warnings for React Native Android [#1027](https://github.com/bugsnag/bugsnag-js/pull/1027)
 - (react-native): Provide proguard rules to ensure reflection works on minified/obfuscated Android builds [#1030](https://github.com/bugsnag/bugsnag-js/pull/1030)
 
 ## 7.3.3 (2020-08-26)
