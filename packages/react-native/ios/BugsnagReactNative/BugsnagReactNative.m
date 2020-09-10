@@ -132,7 +132,6 @@ RCT_EXPORT_METHOD(resumeSession) {
 RCT_EXPORT_METHOD(getPayloadInfo:(NSDictionary *)options
                          resolve:(RCTPromiseResolveBlock)resolve
                           reject:(RCTPromiseRejectBlock)reject) {
-                              NSLog(@"payload info options: %@", options);
     BugsnagClient *client = [Bugsnag client];
     NSMutableDictionary *info = [NSMutableDictionary new];
     info[@"app"] = [client collectAppWithState];
