@@ -1,11 +1,6 @@
 import Client from '@bugsnag/core/client'
 import plugin from '../'
 
-jest.mock('react-native', () => ({
-  Platform: { OS: 'Android' },
-  DeviceEventEmitter: { addListener: () => {} }
-}))
-
 describe('plugin: react native event sync', () => {
   it('updates report state with native payload info', done => {
     const ts = new Date()

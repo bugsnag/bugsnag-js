@@ -1,5 +1,16 @@
 # Changelog
 
+## 7.3.4 (2020-09-10)
+
+### Fixed
+
+- (react-native): Suppress unchecked cast warnings for React Native Android [#1027](https://github.com/bugsnag/bugsnag-js/pull/1027)
+- (react-native): Provide proguard rules to ensure reflection works on minified/obfuscated Android builds [#1030](https://github.com/bugsnag/bugsnag-js/pull/1030)
+
+### Removed
+
+- (react-native): Remove unnecessary log on iOS [#1028](https://github.com/bugsnag/bugsnag-js/pull/1028)
+
 ## 7.3.3 (2020-08-26)
 
 ### Added

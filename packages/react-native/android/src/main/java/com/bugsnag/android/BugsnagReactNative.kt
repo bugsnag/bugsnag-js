@@ -64,6 +64,7 @@ class BugsnagReactNative(private val reactContext: ReactApplicationContext) :
     /**
      * Serializes a MessageEvent into a WritableMap and sends it across the React Bridge
      */
+    @Suppress("UNCHECKED_CAST")
     fun emitEvent(event: MessageEvent) {
         logger.d("Received MessageEvent: ${event.type}")
 

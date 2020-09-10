@@ -25,9 +25,20 @@ const headers = {
   'x-amz-acl': 'public-read'
 }
 
-const upload = (localPath, remotePath) => {
-  console.log(`uploading ${relative('..', localPath)} -> ${remotePath}`)
-  return promisify(s3Client.putFile.bind(s3Client))(localPath, remotePath, headers)
+const putFile = promisify(s3Client.putFile.bind(s3Client))
+
+const upload = async (localPath, remotePath) => {
+  const relativePath = relative('..', localPath)
+  console.log(`uploading ${relativePath} -> ${remotePath}`)
+
+  const response = await putFile(localPath, remotePath, headers)
+
+  // Knox doesn't error if the request fails, so we need to check if this was a successful upload
+  if (response.statusCode >= 400) {
+    throw new Error(`Failed to upload ${relativePath}: ${response.statusCode} ${response.statusMessage}`)
+  }
+
+  return response
 }
 
 const invalidate = (paths) => {
