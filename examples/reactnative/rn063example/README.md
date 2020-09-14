@@ -1,10 +1,10 @@
 # React Native
 
-For instructions on how to install and configure Bugsnag in your own application please consult our React Native [documentation](https://docs.bugsnag.com/platforms/react-native/react-native/). 
-
 This is an example project showing how to use `@bugsnag/react-native` with a React Native v0.63 project.
 
 This project was bootstrapped with `react-native init`.
+
+For instructions on how to install and configure Bugsnag in your own application please consult our React Native [documentation](https://docs.bugsnag.com/platforms/react-native/react-native/). 
 
 
 
