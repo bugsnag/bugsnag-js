@@ -2,7 +2,8 @@
 
 @implementation BreadcrumbsNativeManualScenario
 
-- (void)run {
+- (void)run: (RCTPromiseResolveBlock)resolve
+     reject:(RCTPromiseRejectBlock)reject {
   [Bugsnag leaveBreadcrumbWithMessage:@"oh native crumbs"
                            metadata:@{@"from": @"ios"}
                             andType:BSGBreadcrumbTypeState];

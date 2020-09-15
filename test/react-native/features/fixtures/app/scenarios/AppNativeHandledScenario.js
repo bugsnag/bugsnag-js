@@ -8,6 +8,6 @@ export class AppNativeHandledScenario extends Scenario {
     jsConfig.codeBundleId = '1.2.3-r00110011'
   }
   run() {
-    NativeModules.BugsnagTestInterface.runScenario('AppNativeHandledScenario', () => {})
+    NativeModules.BugsnagTestInterface.runScenario('AppNativeHandledScenario')
   }
 }

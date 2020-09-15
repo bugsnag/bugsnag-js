@@ -4,9 +4,9 @@ import android.content.Context
 import com.bugsnag.android.Bugsnag
 import com.facebook.react.bridge.Promise
 
-class HandledNativeErrorScenario(context: Context): Scenario(context) {
+class NativeStackHandledScenario(context: Context): Scenario(context) {
 
     override fun run(promise: Promise) {
-        Bugsnag.notify(generateException())
+        promise.reject(generateException())
     }
 }
