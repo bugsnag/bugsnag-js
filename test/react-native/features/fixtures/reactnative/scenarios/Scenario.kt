@@ -5,12 +5,13 @@ import android.app.Application
 import android.os.Bundle
 import android.content.Context
 
+import com.facebook.react.bridge.Promise;
+
 abstract class Scenario(
     protected val context: Context
 ): Application.ActivityLifecycleCallbacks {
 
-    open fun run() {
-
+    open fun run(promise: Promise) {
     }
 
     /**

@@ -16,7 +16,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableArray;
-import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.NoSuchKeyException;
 
 import com.reactnative.scenarios.Scenario;
@@ -37,14 +37,17 @@ public class BugsnagModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void runScenario(String scenarioName, Callback completeCallback) {
+  public void runScenario(String scenarioName, Promise promise) {
       Scenario testScenario = factory.testScenarioForName(scenarioName, reactContext);
-      testScenario.run();
-      completeCallback.invoke();
+      testScenario.run(promise);
+
+      // this is a no-op if the promise did not get resolved/rejected, but it means the scenarios
+      // don't have to do anything with the promise if they don't want.
+      promise.resolve(true);
   }
 
   @ReactMethod
-  public void startBugsnag(ReadableMap options, Callback readyCallback) {
+  public void startBugsnag(ReadableMap options, Promise promise) {
     Configuration bugsnagConfig = createConfiguration(options);
     bugsnagConfig.setLogger(new Logger() {
       private static final String TAG = "Bugsnag";
@@ -90,7 +93,7 @@ public class BugsnagModule extends ReactContextBaseJavaModule {
       }
     });
     Bugsnag.start(reactContext, bugsnagConfig);
-    readyCallback.invoke();
+    promise.resolve(true);
   }
 
   private Configuration createConfiguration(ReadableMap options) {

@@ -50,7 +50,7 @@ export default class App extends Component {
     this.setState(() => ({ manualApiKey: newApiKey }))
   }
 
-  startScenario = () => {
+  startScenario = async () => {
     console.log(`Running scenario: ${this.state.currentScenario}`)
     console.log(`  with MetaData: ${this.state.scenarioMetaData}`)
     let scenarioName = this.state.currentScenario
@@ -59,13 +59,12 @@ export default class App extends Component {
     let jsConfig = {}
     let scenario = new Scenarios[scenarioName](configuration, scenarioMetaData, jsConfig)
     console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${JSON.stringify(jsConfig)} (js)`)
-    NativeModules.BugsnagTestInterface.startBugsnag(configuration, () => {
-      Bugsnag.start(jsConfig)
-      scenario.run()
-    })
+    await NativeModules.BugsnagTestInterface.startBugsnag(configuration)
+    Bugsnag.start(jsConfig)
+    scenario.run()
   }
 
-  startBugsnag = () => {
+  startBugsnag = async () => {
     console.log(`Starting Bugsnag for scenario: ${this.state.currentScenario}`)
     console.log(`  with MetaData: ${this.state.scenarioMetaData}`)
     let scenarioName = this.state.currentScenario
@@ -80,9 +79,8 @@ export default class App extends Component {
     let jsConfig = {}
     let scenario = new Scenarios[scenarioName](configuration, scenarioMetaData, jsConfig)
     console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${JSON.stringify(jsConfig)} (js)`)
-    NativeModules.BugsnagTestInterface.startBugsnag(configuration, () => {
-      Bugsnag.start(jsConfig)
-    })
+    await NativeModules.BugsnagTestInterface.startBugsnag(configuration)
+    Bugsnag.start(jsConfig)
   }
 
   render () {

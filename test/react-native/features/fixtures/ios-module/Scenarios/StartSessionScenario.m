@@ -2,7 +2,8 @@
 
 @implementation StartSessionScenario
 
-- (void)run {
+- (void)run: (RCTPromiseResolveBlock)resolve
+     reject:(RCTPromiseRejectBlock)reject {
   [Bugsnag startSession];
 }
 
