@@ -58,6 +58,9 @@ module.exports = {
       testEnvironment: 'node',
       testMatch: [
         testsForPackage('delivery-node'),
+        testsForPackage('plugin-express'),
+        testsForPackage('plugin-koa'),
+        testsForPackage('plugin-restify'),
         testsForPackage('plugin-contextualize'),
         testsForPackage('plugin-server-*'),
         testsForPackage('plugin-strip-project-root'),

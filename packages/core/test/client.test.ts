@@ -545,7 +545,9 @@ describe('@bugsnag/core/client', () => {
           expect(c).toBe(client)
           ret = {}
           return ret
-        }
+        },
+        pauseSession: () => {},
+        resumeSession: () => {}
       }
       expect(client.startSession()).toBe(ret)
     })
@@ -557,7 +559,9 @@ describe('@bugsnag/core/client', () => {
         startSession: (client) => {
           client._session = new Session()
           return client
-        }
+        },
+        pauseSession: () => {},
+        resumeSession: () => {}
       }
       client._setDelivery(client => ({
         sendSession: () => {},

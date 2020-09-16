@@ -1,8 +1,5 @@
-const { describe, it, expect } = global
-
-// const express = require('express')
-const Client = require('@bugsnag/core/client')
-const plugin = require('../')
+import Client from '@bugsnag/core/client'
+import plugin from '../'
 
 describe('plugin: koa', () => {
   it('exports two middleware functions', () => {
@@ -12,7 +9,8 @@ describe('plugin: koa', () => {
       pauseSession: () => {},
       resumeSession: () => {}
     }
-    const middleware = c.getPlugin('koa')
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const middleware = c.getPlugin('koa')!
     expect(typeof middleware.requestHandler).toBe('function')
     expect(middleware.requestHandler.length).toBe(2)
     expect(typeof middleware.errorHandler).toBe('function')
@@ -28,15 +26,21 @@ describe('plugin: koa', () => {
         resumeSession: () => {}
       }
 
-      const middleware = c.getPlugin('koa')
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const middleware = c.getPlugin('koa')!
       const mockCtx = {
         req: { connection: { address: () => ({ port: 1234 }) }, headers: {} },
         request: { query: {} },
         res: {},
         response: { headerSent: false },
-        app: { onerror: () => done() }
-      }
-      middleware.requestHandler(mockCtx)
+        app: {
+          onerror: (err: Error) => {
+            expect(err).toStrictEqual(new Error('oops'))
+            done()
+          }
+        }
+      } as any
+      middleware.requestHandler(mockCtx, async () => { throw new Error('oops') })
     })
   })
 })
