@@ -156,7 +156,7 @@ NSString *BSGParseContext(NSDictionary *report) {
     if ([context isKindOfClass:[NSString class]]) {
         return context;
     }
-    context = BSGLoadConfigValue(report, @"context");
+    context = BSGLoadConfigValue(report, BSGKeyContext);
     if ([context isKindOfClass:[NSString class]]) {
         return context;
     }
@@ -392,8 +392,8 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
     }
     BugsnagMetadata *metadata = [BugsnagMetadata new];
     // Cocoa-specific, non-spec., device and app data
-    [metadata addMetadata:BSGParseDeviceMetadata(event) toSection:@"device"];
-    [metadata addMetadata:BSGParseAppMetadata(event) toSection:@"app"];
+    [metadata addMetadata:BSGParseDeviceMetadata(event) toSection:BSGKeyDevice];
+    [metadata addMetadata:BSGParseAppMetadata(event) toSection:BSGKeyApp];
 
     BugsnagEvent *obj = [self initWithApp:[BugsnagAppWithState appWithOomData:[event valueForKeyPath:@"user.state.oom.app"]]
                                    device:[BugsnagDeviceWithState deviceWithOomData:[event valueForKeyPath:@"user.state.oom.device"]]
@@ -433,8 +433,8 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
     }
 
     // Cocoa-specific, non-spec., device and app data
-    [metadata addMetadata:BSGParseDeviceMetadata(event) toSection:@"device"];
-    [metadata addMetadata:BSGParseAppMetadata(event) toSection:@"app"];
+    [metadata addMetadata:BSGParseDeviceMetadata(event) toSection:BSGKeyDevice];
+    [metadata addMetadata:BSGParseAppMetadata(event) toSection:BSGKeyApp];
 
     NSDictionary *recordedState = [event valueForKeyPath:@"user.handledState"];
 
@@ -445,8 +445,8 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
         depth = 0;
     }
     BugsnagSession *session;
-    if (event[@"user"][@"id"]) {
-         session = [[BugsnagSession alloc] initWithDictionary:event[@"user"]];
+    if (event[BSGKeyUser][@"id"]) {
+         session = [[BugsnagSession alloc] initWithDictionary:event[BSGKeyUser]];
     }
 
     // generate threads/error info
@@ -547,20 +547,20 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
             }
         }
     }
-    BugsnagSession *session = [BugsnagSession fromJson:bugsnagPayload[@"session"]];
+    BugsnagSession *session = [BugsnagSession fromJson:bugsnagPayload[BSGKeySession]];
 
-    BugsnagEvent *obj = [self initWithApp:[BugsnagAppWithState appFromJson:bugsnagPayload[@"app"]]
-                      device:[BugsnagDeviceWithState deviceFromJson:bugsnagPayload[@"device"]]
+    BugsnagEvent *obj = [self initWithApp:[BugsnagAppWithState appFromJson:bugsnagPayload[BSGKeyApp]]
+                      device:[BugsnagDeviceWithState deviceFromJson:bugsnagPayload[BSGKeyDevice]]
                 handledState:[BugsnagHandledState handledStateFromJson:bugsnagPayload]
-                        user:[[BugsnagUser alloc] initWithDictionary:bugsnagPayload[@"user"]]
-                    metadata:[[BugsnagMetadata alloc] initWithDictionary:bugsnagPayload[@"metaData"]]
-                 breadcrumbs:[BugsnagBreadcrumb breadcrumbArrayFromJson:bugsnagPayload[@"breadcrumbs"]]
+                        user:[[BugsnagUser alloc] initWithDictionary:bugsnagPayload[BSGKeyUser]]
+                    metadata:[[BugsnagMetadata alloc] initWithDictionary:bugsnagPayload[BSGKeyMetadata]]
+                 breadcrumbs:[BugsnagBreadcrumb breadcrumbArrayFromJson:bugsnagPayload[BSGKeyBreadcrumbs]]
                       errors:errors
                      threads:threads
                      session:session];
-    obj.apiKey = bugsnagPayload[@"apiKey"];
-    obj.context = bugsnagPayload[@"context"];
-    obj.groupingHash = bugsnagPayload[@"groupingHash"];
+    obj.apiKey = bugsnagPayload[BSGKeyApiKey];
+    obj.context = bugsnagPayload[BSGKeyContext];
+    obj.groupingHash = bugsnagPayload[BSGKeyGroupingHash];
     obj.error = [self getMetadataFromSection:BSGKeyError];
 
     if ([errors count] > 0) {
@@ -571,7 +571,7 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
 }
 
 - (NSMutableDictionary *)parseOnCrashData:(NSDictionary *)report {
-    NSMutableDictionary *userAtCrash = [report[@"user"] mutableCopy];
+    NSMutableDictionary *userAtCrash = [report[BSGKeyUser] mutableCopy];
     // avoid adding internal information to user-defined metadata
     NSArray *blacklistedKeys = @[
             @BSG_KSCrashField_Overrides,

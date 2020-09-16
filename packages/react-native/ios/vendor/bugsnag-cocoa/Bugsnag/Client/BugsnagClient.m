@@ -54,6 +54,7 @@
 #import "BugsnagCollections.h"
 #import "BSG_KSCrashReport.h"
 #import "BSG_KSCrash.h"
+#import "BSGJSONSerialization.h"
 
 #if BSG_PLATFORM_IOS
 #import <UIKit/UIKit.h>
@@ -239,13 +240,13 @@ NSString *BSGOrientationNameFromEnum(UIDeviceOrientation deviceOrientation)
  *  @param destination target location of the data
  */
 void BSSerializeJSONDictionary(NSDictionary *dictionary, char **destination) {
-    if (![NSJSONSerialization isValidJSONObject:dictionary]) {
+    if (![BSGJSONSerialization isValidJSONObject:dictionary]) {
         bsg_log_err(@"could not serialize metadata: is not valid JSON object");
         return;
     }
     @try {
         NSError *error;
-        NSData *json = [NSJSONSerialization dataWithJSONObject:dictionary
+        NSData *json = [BSGJSONSerialization dataWithJSONObject:dictionary
                                                        options:0
                                                          error:&error];
 

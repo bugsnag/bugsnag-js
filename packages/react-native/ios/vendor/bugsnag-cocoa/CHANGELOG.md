@@ -1,28 +1,53 @@
 Changelog
 =========
 
-## TBD
+## 6.1.4 (2020-09-11)
+
+### Bug fixes
+
+* Copy the metadata observer list rather than mutating it directly.
+  [796](https://github.com/bugsnag/bugsnag-cocoa/pull/796)
+
+* Reorganized the project file
+  [793](https://github.com/bugsnag/bugsnag-cocoa/pull/793)
+
+* Removed some magic values and used the const string references instead.
+  [#792](https://github.com/bugsnag/bugsnag-cocoa/pull/792)
+
+* Added BSGJSONSerializer, which ensures no exceptions get thrown (NSErrors get returned instead)
+  [791](https://github.com/bugsnag/bugsnag-cocoa/pull/791)
+
+* Guard against non-string metadata map keys
+  [#790](https://github.com/bugsnag/bugsnag-cocoa/pull/790)
+
+* Quiet some Analyzer false positives
+  [#789](https://github.com/bugsnag/bugsnag-cocoa/pull/789)
+
+* Avoid crash reporting OOMs if nil provided as codeBundleId
+  [#784](https://github.com/bugsnag/bugsnag-cocoa/pull/784)
+
+## 6.1.3 (2020-08-17)
 
 ### Bug fixes
 
 * Persist user when set on client
   [#770](https://github.com/bugsnag/bugsnag-cocoa/pull/770)
 
-## 6.1.2 (2020-07-21)
-
-### Bug fixes
-
-* Record thread information for unhandled JS errors
+* Avoid sharing global crash context when recording thread information for handled errors
   [#766](https://github.com/bugsnag/bugsnag-cocoa/pull/766)
-
-* Call react native observer with initial user/context values
-  [#768](https://github.com/bugsnag/bugsnag-cocoa/pull/768)
 
 * Respect bundle version set from config
   [#762](https://github.com/bugsnag/bugsnag-cocoa/pull/762)
 
-* Populate app/device metadata fields for RN errors
+* (React Native) Call react native observer with initial user/context values
+  [#768](https://github.com/bugsnag/bugsnag-cocoa/pull/768)
+
+* (React Native) Populate app/device metadata fields for RN errors
   [#763](https://github.com/bugsnag/bugsnag-cocoa/pull/763)
+
+## 6.1.2 (2020-07-21)
+
+### Bug fixes
 
 * Ensure foreground stats are recorded for handled errors
   [#755](https://github.com/bugsnag/bugsnag-cocoa/pull/755)
