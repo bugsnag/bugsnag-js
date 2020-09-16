@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 7.3.5 (2020-09-16)
 
 ### Fixed
 
