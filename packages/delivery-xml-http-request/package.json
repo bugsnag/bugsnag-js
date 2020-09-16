@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/delivery-xml-http-request",
-  "version": "7.3.0",
+  "version": "7.3.4",
   "main": "delivery.js",
   "description": "@bugsnag/js delivery mechanism for most browsers",
   "homepage": "https://www.bugsnag.com/",
@@ -14,15 +14,10 @@
   "files": [
     "*.js"
   ],
-  "scripts": {
-    "test": "nyc --reporter=lcov -- jasmine '!(node_modules)/**/*.test.js'"
-  },
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^7.3.0",
-    "jasmine": "^3.1.0",
-    "nyc": "^12.0.2"
+    "@bugsnag/core": "^7.3.4"
   },
   "peerDependencies": {
     "@bugsnag/core": "^7.0.0"
