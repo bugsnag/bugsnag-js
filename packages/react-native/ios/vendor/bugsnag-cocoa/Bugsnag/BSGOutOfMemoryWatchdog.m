@@ -17,6 +17,9 @@
 #import "Private.h"
 #import "BugsnagErrorTypes.h"
 #import "BSG_RFC3339DateTool.h"
+#import "BSGJSONSerialization.h"
+#import "BugsnagKeys.h"
+#import "BugsnagCollections.h"
 
 @interface BSGOutOfMemoryWatchdog ()
 @property(nonatomic, getter=isWatching) BOOL watching;
@@ -124,32 +127,32 @@
                       ofObject:(id)object
                         change:(NSDictionary<NSString *, id> *)change
                        context:(void *)context {
-    self.cachedFileInfo[@"app"][@"releaseStage"] = change[NSKeyValueChangeNewKey];
+    self.cachedFileInfo[BSGKeyApp][BSGKeyReleaseStage] = change[NSKeyValueChangeNewKey];
     [self writeSentinelFile];
 }
 
 - (void)handleTransitionToActive:(NSNotification *)note {
-    self.cachedFileInfo[@"app"][@"isActive"] = @YES;
+    self.cachedFileInfo[BSGKeyApp][@"isActive"] = @YES;
     [self writeSentinelFile];
 }
 
 - (void)handleTransitionToInactive:(NSNotification *)note {
-    self.cachedFileInfo[@"app"][@"isActive"] = @NO;
+    self.cachedFileInfo[BSGKeyApp][@"isActive"] = @NO;
     [self writeSentinelFile];
 }
 
 - (void)handleTransitionToForeground:(NSNotification *)note {
-    self.cachedFileInfo[@"app"][@"inForeground"] = @YES;
+    self.cachedFileInfo[BSGKeyApp][@"inForeground"] = @YES;
     [self writeSentinelFile];
 }
 
 - (void)handleTransitionToBackground:(NSNotification *)note {
-    self.cachedFileInfo[@"app"][@"inForeground"] = @NO;
+    self.cachedFileInfo[BSGKeyApp][@"inForeground"] = @NO;
     [self writeSentinelFile];
 }
 
 - (void)handleLowMemoryChange:(NSNotification *)note {
-    self.cachedFileInfo[@"device"][@"lowMemory"] = [BSG_RFC3339DateTool
+    self.cachedFileInfo[BSGKeyDevice][@"lowMemory"] = [BSG_RFC3339DateTool
                                                     stringFromDate:[NSDate date]];
     [self writeSentinelFile];
 }
@@ -158,16 +161,16 @@
     id session = [note object];
     NSMutableDictionary *cache = (id)self.cachedFileInfo;
     if (session) {
-        cache[@"session"] = session;
+        cache[BSGKeySession] = session;
     } else {
-        [cache removeObjectForKey:@"session"];
+        [cache removeObjectForKey:BSGKeySession];
     }
     [self writeSentinelFile];
 }
 
 - (void)setCodeBundleId:(NSString *)codeBundleId {
     _codeBundleId = codeBundleId;
-    self.cachedFileInfo[@"app"][@"codeBundleId"] = codeBundleId;
+    BSGDictInsertIfNotNil(self.cachedFileInfo[BSGKeyApp], codeBundleId, BSGKeyCodeBundleId);
 
     if ([self isWatching]) {
         [self writeSentinelFile];
@@ -224,7 +227,7 @@
         bsg_log_err(@"Failed to read oom watchdog file: %@", error);
         return nil;
     }
-    NSDictionary *contents = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+    NSDictionary *contents = [BSGJSONSerialization JSONObjectWithData:data options:0 error:&error];
     if (error) {
         bsg_log_err(@"Failed to read oom watchdog file: %@", error);
         return nil;
@@ -235,11 +238,11 @@
 
 - (void)writeSentinelFile {
     NSError *error = nil;
-    if (![NSJSONSerialization isValidJSONObject:self.cachedFileInfo]) {
+    if (![BSGJSONSerialization isValidJSONObject:self.cachedFileInfo]) {
         bsg_log_err(@"Cached oom watchdog data cannot be written as JSON");
         return;
     }
-    NSData *data = [NSJSONSerialization dataWithJSONObject:self.cachedFileInfo options:0 error:&error];
+    NSData *data = [BSGJSONSerialization dataWithJSONObject:self.cachedFileInfo options:0 error:&error];
     if (error) {
         bsg_log_err(@"Cached oom watchdog data cannot be written as JSON: %@", error);
         return;
@@ -252,13 +255,13 @@
     NSMutableDictionary *cache = [NSMutableDictionary new];
     NSMutableDictionary *app = [NSMutableDictionary new];
 
-    app[@"id"] = systemInfo[@BSG_KSSystemField_BundleID] ?: @"";
-    app[@"name"] = systemInfo[@BSG_KSSystemField_BundleName] ?: @"";
-    app[@"releaseStage"] = config.releaseStage;
-    app[@"version"] = systemInfo[@BSG_KSSystemField_BundleShortVersion] ?: @"";
-    app[@"bundleVersion"] = systemInfo[@BSG_KSSystemField_BundleVersion] ?: @"";
+    app[BSGKeyId] = systemInfo[@BSG_KSSystemField_BundleID] ?: @"";
+    app[BSGKeyName] = systemInfo[@BSG_KSSystemField_BundleName] ?: @"";
+    app[BSGKeyReleaseStage] = config.releaseStage;
+    app[BSGKeyVersion] = systemInfo[@BSG_KSSystemField_BundleShortVersion] ?: @"";
+    app[BSGKeyBundleVersion] = systemInfo[@BSG_KSSystemField_BundleVersion] ?: @"";
     // 'codeBundleId' only (optionally) exists for React Native clients and defaults otherwise to nil
-    app[@"codeBundleId"] = self.codeBundleId;
+    BSGDictInsertIfNotNil(app, self.codeBundleId, BSGKeyCodeBundleId);
 #if BSGOOMAvailable
     UIApplicationState state = [BSG_KSSystemInfo currentAppState];
     app[@"inForeground"] = @([BSG_KSSystemInfo isInForeground:state]);
@@ -267,11 +270,11 @@
     app[@"inForeground"] = @YES;
 #endif
 #if BSG_PLATFORM_TVOS
-    app[@"type"] = @"tvOS";
+    app[BSGKeyType] = @"tvOS";
 #elif BSG_PLATFORM_IOS
-    app[@"type"] = @"iOS";
+    app[BSGKeyType] = @"iOS";
 #endif
-    cache[@"app"] = app;
+    cache[BSGKeyApp] = app;
 
     NSMutableDictionary *device = [NSMutableDictionary new];
     device[@"id"] = systemInfo[@BSG_KSSystemField_DeviceAppHash];
@@ -289,7 +292,7 @@
 #else
     device[@"simulator"] = @NO;
 #endif
-    cache[@"device"] = device;
+    cache[BSGKeyDevice] = device;
 
     return cache;
 }

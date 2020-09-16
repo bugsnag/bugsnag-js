@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- (react-native): Update bugsnag-cocoa to 6.1.4. Fixes: Copy the metadata observer list rather than mutating it directly.
+
 ## 7.3.4 (2020-09-10)
 
 ### Fixed

@@ -347,6 +347,8 @@ bool bsg_ksmachsuspendAllThreadsExcept(thread_t *exceptThreads,
                 // Don't treat this as a fatal error.
                 BSG_KSLOG_DEBUG("thread_suspend (%08x): %s", thread,
                                 mach_error_string(kr));
+                // Suppress dead store warning when log level > debug
+                (void)kr;
             }
         }
     }
@@ -386,6 +388,8 @@ bool bsg_ksmachresumeAllThreadsExcept(thread_t *exceptThreads,
                 // Don't treat this as a fatal error.
                 BSG_KSLOG_DEBUG("thread_resume (%08x): %s", thread,
                                  mach_error_string(kr));
+                // Suppress dead store warning when log level > debug
+                (void)kr;
             }
         }
     }

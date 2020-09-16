@@ -11,6 +11,7 @@
 #import "BugsnagBreadcrumb.h"
 #import "BugsnagLogger.h"
 #import "Private.h"
+#import "BSGJSONSerialization.h"
 
 @interface BugsnagConfiguration ()
 @property(nonatomic) NSMutableArray *onBreadcrumbBlocks;
@@ -59,7 +60,6 @@
         return;
     }
     BugsnagBreadcrumb *crumb = [BugsnagBreadcrumb breadcrumbWithBlock:block];
-
     if (crumb != nil && [self shouldSendBreadcrumb:crumb]) {
         dispatch_barrier_sync(self.readWriteQueue, ^{
             if ((self.breadcrumbs.count > 0) &&
@@ -72,9 +72,9 @@
             if (self.cachePath != nil) {
                 static NSString *const arrayKeyPath = @"objectValue";
                 NSArray *items = [self.breadcrumbs valueForKeyPath:arrayKeyPath];
-                if ([NSJSONSerialization isValidJSONObject:items]) {
+                if ([BSGJSONSerialization isValidJSONObject:items]) {
                     NSError *error = nil;
-                    NSData *data = [NSJSONSerialization dataWithJSONObject:items
+                    NSData *data = [BSGJSONSerialization dataWithJSONObject:items
                                                                    options:0
                                                                      error:&error];
                     [data writeToFile:self.cachePath atomically:NO];
@@ -106,7 +106,7 @@
         NSError *error = nil;
         NSData *data = [NSData dataWithContentsOfFile:self.cachePath options:0 error:&error];
         if (error == nil) {
-            cache = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+            cache = [BSGJSONSerialization JSONObjectWithData:data options:0 error:&error];
         }
         if (error != nil) {
             bsg_log_err(@"Failed to read breadcrumbs from disk: %@", error);
@@ -123,7 +123,7 @@
             NSDictionary *objectValue = [crumb objectValue];
             NSError *error = nil;
             @try {
-                if (![NSJSONSerialization isValidJSONObject:objectValue]) {
+                if (![BSGJSONSerialization isValidJSONObject:objectValue]) {
                     bsg_log_err(@"Unable to serialize breadcrumb: Not a valid "
                                 @"JSON object");
                     continue;

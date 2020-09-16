@@ -15,7 +15,6 @@ extern NSString *const BSGDefaultNotifyUrl;
 extern NSString *const BSGKeyAction;
 extern NSString *const BSGKeyApiKey;
 extern NSString *const BSGKeyApp;
-extern NSString *const BSGKeyAppState;
 extern NSString *const BSGKeyAppType;
 extern NSString *const BSGKeyAppVersion;
 extern NSString *const BSGKeyAttributes;
