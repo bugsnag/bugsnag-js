@@ -1,12 +1,11 @@
-const { describe, it, expect } = global
+import Client from '@bugsnag/core/client'
+import plugin from '../'
 
-const Client = require('@bugsnag/core/client')
-const plugin = require('../')
-
-describe('plugin: restify', () => {
+describe('plugin: express', () => {
   it('exports two middleware functions', () => {
     const c = new Client({ apiKey: 'api_key', plugins: [plugin] })
-    const middleware = c.getPlugin('restify')
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const middleware = c.getPlugin('express')!
     expect(typeof middleware.requestHandler).toBe('function')
     expect(middleware.requestHandler.length).toBe(3)
     expect(typeof middleware.errorHandler).toBe('function')

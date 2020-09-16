@@ -40,6 +40,7 @@ module.exports = {
       preset: 'react-native',
       testMatch: [
         testsForPackage('react-native'),
+        testsForPackage('delivery-react-native'),
         testsForPackage('plugin-react-native-app-state-breadcrumbs'),
         testsForPackage('plugin-react-native-unhandled-rejection'),
         testsForPackage('plugin-react-native-hermes'),
@@ -57,6 +58,9 @@ module.exports = {
       testEnvironment: 'node',
       testMatch: [
         testsForPackage('delivery-node'),
+        testsForPackage('plugin-express'),
+        testsForPackage('plugin-koa'),
+        testsForPackage('plugin-restify'),
         testsForPackage('plugin-contextualize'),
         testsForPackage('plugin-server-*'),
         testsForPackage('plugin-strip-project-root'),

@@ -447,10 +447,12 @@ int bsg_ksjsoncodecobjc_i_encodeObject(BSG_KSJSONCodec *codec, id object,
             keys = [keys sortedArrayUsingSelector:@selector(compare:)];
         }
         for (id key in keys) {
-            if ((result = bsg_ksjsoncodecobjc_i_encodeObject(
-                     codec, [object valueForKey:key], key, context)) !=
-                BSG_KSJSON_OK) {
-                return result;
+            if([key isKindOfClass:[NSString class]]) {
+                if ((result = bsg_ksjsoncodecobjc_i_encodeObject(
+                         codec, [object valueForKey:key], key, context)) !=
+                    BSG_KSJSON_OK) {
+                    return result;
+                }
             }
         }
         return bsg_ksjsonendContainer(context);

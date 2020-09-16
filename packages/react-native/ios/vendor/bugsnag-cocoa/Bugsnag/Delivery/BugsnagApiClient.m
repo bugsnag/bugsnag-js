@@ -9,6 +9,7 @@
 #import "BugsnagKeys.h"
 #import "BugsnagLogger.h"
 #import "Private.h"
+#import "BSGJSONSerialization.h"
 
 @interface BSGDelayOperation : NSOperation
 @end
@@ -59,7 +60,7 @@
     @try {
         NSError *error = nil;
         NSData *jsonData =
-                [NSJSONSerialization dataWithJSONObject:payload
+                [BSGJSONSerialization dataWithJSONObject:payload
                                                 options:0
                                                   error:&error];
 
