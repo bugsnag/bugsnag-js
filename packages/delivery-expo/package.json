@@ -20,7 +20,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "dependencies": {
-    "@react-native-community/netinfo": "5.9.2",
+    "@react-native-community/netinfo": "5.9.6",
     "expo-file-system": "^6.0.2"
   },
   "devDependencies": {
