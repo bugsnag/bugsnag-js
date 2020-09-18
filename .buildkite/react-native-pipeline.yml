@@ -32,7 +32,7 @@ steps:
 
   - label: ':ios: Build React-native 0.60 ipa'
     agents:
-      queue: "opensource-macos-10.15"
+      queue: "opensource-mac-rn"
     env:
       REACT_NATIVE_VERSION: rn0.60
     artifact_paths: build/rn0.60.ipa
@@ -50,7 +50,7 @@ steps:
 
   - label: ':ios: Build React-native 0.63 ipa'
     agents:
-      queue: "opensource-macos-10.15"
+      queue: "opensource-mac-rn"
     env:
       REACT_NATIVE_VERSION: rn0.63
     artifact_paths: build/rn0.63.ipa
