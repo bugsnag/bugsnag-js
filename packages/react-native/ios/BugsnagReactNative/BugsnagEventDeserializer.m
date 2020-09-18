@@ -8,6 +8,8 @@
 
 #import "BugsnagEventDeserializer.h"
 
+#import "BugsnagStacktrace.h"
+
 BSGSeverity BSGParseSeverity(NSString *severity);
 
 @interface Bugsnag ()
@@ -98,6 +100,21 @@ BSGSeverity BSGParseSeverity(NSString *severity);
         event.errors[0].errorMessage = error[@"errorMessage"];
         [event attachCustomStacktrace:error[@"stacktrace"] withType:@"reactnativejs"];
     }
+    
+    id nativeStack = payload[@"nativeStack"];
+    if ([nativeStack isKindOfClass:[NSArray class]] &&
+        [nativeStack filteredArrayUsingPredicate:
+         [NSPredicate predicateWithFormat:@"NOT SELF isKindOfClass: %@", [NSString class]]].count == 0) {
+        NSArray<BugsnagStackframe *> *stackframes = [BugsnagStackframe stackframesWithCallStackSymbols:nativeStack];
+        if (stackframes != nil) {
+            BugsnagError *nativeError = [BugsnagError new];
+            nativeError.errorClass = error[@"errorClass"];
+            nativeError.errorMessage = error[@"errorMessage"];
+            nativeError.stacktrace = stackframes;
+            event.errors = [event.errors arrayByAddingObject:nativeError];
+        }
+    }
+    
     return event;
 }
 
