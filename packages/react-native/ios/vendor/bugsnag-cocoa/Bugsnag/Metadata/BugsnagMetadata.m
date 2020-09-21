@@ -31,7 +31,7 @@
 #import "BugsnagStateEvent.h"
 
 @interface BugsnagMetadata ()
-@property(nonatomic, readwrite, strong) NSMutableArray *stateEventBlocks;
+@property(atomic, readwrite, strong) NSMutableArray *stateEventBlocks;
 @end
 
 @implementation BugsnagMetadata
@@ -102,11 +102,17 @@
 }
 
 - (void)addObserverWithBlock:(BugsnagObserverBlock _Nonnull)block {
-    [self.stateEventBlocks addObject:[block copy]];
+    // Make a copy to avoid concurrency issues
+    NSMutableArray *newStateEventBlocks = [self.stateEventBlocks mutableCopy];
+    [newStateEventBlocks addObject:[block copy]];
+    self.stateEventBlocks = newStateEventBlocks;
 }
 
 - (void)removeObserverWithBlock:(BugsnagObserverBlock _Nonnull)block {
-    [self.stateEventBlocks removeObject:block];
+    // Make a copy to avoid concurrency issues
+    NSMutableArray *newStateEventBlocks = [self.stateEventBlocks mutableCopy];
+    [newStateEventBlocks removeObject:block];
+    self.stateEventBlocks = newStateEventBlocks;
 }
 
 // MARK: - <NSMutableCopying>

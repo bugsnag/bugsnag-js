@@ -1,5 +1,6 @@
 #import "BSGSerialization.h"
 #import "BugsnagLogger.h"
+#import "BSGJSONSerialization.h"
 
 BOOL BSGIsSanitizedType(id obj) {
     static dispatch_once_t onceToken;
@@ -66,7 +67,7 @@ NSDictionary *BSGDeserializeJson(char *json) {
             NSData *data = [str dataUsingEncoding:NSUTF8StringEncoding] ;
             if (data != nil) {
                 NSError *error;
-                NSDictionary *decode = [NSJSONSerialization JSONObjectWithData:data
+                NSDictionary *decode = [BSGJSONSerialization JSONObjectWithData:data
                                                                        options:0
                                                                          error:&error];
                 if (error != nil) {

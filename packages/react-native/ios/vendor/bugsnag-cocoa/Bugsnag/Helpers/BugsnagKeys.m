@@ -11,7 +11,6 @@ NSString *const BSGDefaultNotifyUrl = @"https://notify.bugsnag.com/";
 NSString *const BSGKeyAction = @"action";
 NSString *const BSGKeyApiKey = @"apiKey";
 NSString *const BSGKeyApp = @"app";
-NSString *const BSGKeyAppState = @"app";
 NSString *const BSGKeyAppType = @"appType";
 NSString *const BSGKeyAppVersion = @"appVersion";
 NSString *const BSGKeyAttributes = @"attributes";

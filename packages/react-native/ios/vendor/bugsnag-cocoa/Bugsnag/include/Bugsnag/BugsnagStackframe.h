@@ -58,4 +58,11 @@
  */
 @property BOOL isLr;
 
+/**
+ * Returns an array of stackframe objects representing the provided call stack strings.
+ *
+ * The call stack strings should follow the format used by `[NSThread callStackSymbols]` and `backtrace_symbols()`.
+ */
++ (NSArray<BugsnagStackframe *> *_Nullable)stackframesWithCallStackSymbols:(NSArray<NSString *> *_Nonnull)callStackSymbols;
+
 @end
