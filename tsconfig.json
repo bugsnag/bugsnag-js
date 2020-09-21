@@ -80,6 +80,8 @@
     "packages/plugin-react-native-hermes",
     "packages/plugin-react-native-client-sync",
     "packages/plugin-react-native-event-sync",
+    "packages/plugin-react-native-global-error-handler",
+    "packages/plugin-react-native-session",
     "packages/plugin-server-session",
     "packages/plugin-react",
     "packages/plugin-vue",
