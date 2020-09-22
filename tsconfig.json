@@ -78,6 +78,7 @@
     "packages/plugin-react-native-hermes",
     "packages/plugin-react-native-client-sync",
     "packages/plugin-react-native-event-sync",
+    "packages/plugin-react-native-navigation",
     "packages/plugin-server-session",
     "packages/plugin-react",
     "packages/plugin-vue",
