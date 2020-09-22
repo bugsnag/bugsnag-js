@@ -184,6 +184,7 @@ These should be set to the `REACT_NATIVE_VERSION` environment variable according
 | React native fixture | `REACT_NATIVE_VERSION` |
 |----------------------|------------------------|
 | 0.60                 | `rn0.60`               |
+| 0.63                 | `rn0.63`               |
 
 The following environment variables need to be set:
 
