@@ -74,7 +74,7 @@ steps:
   - label: ':docker: Build expo IPA'
     timeout_in_minutes: 20
     agents:
-      queue: "opensource-mac"
+      queue: "opensource-mac-expo"
     env:
       EXPO_RELEASE_CHANNEL: ${BUILDKITE_BUILD_ID}
     artifact_paths: build/output.ipa
