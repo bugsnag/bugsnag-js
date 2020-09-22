@@ -1,5 +1,12 @@
 import Plugin from '../react-native-navigation'
 import Client from '@bugsnag/core/client'
+import { Breadcrumb } from '@bugsnag/core'
+
+interface Event {
+  componentId: number
+  componentName: string
+  passProps: object
+}
 
 describe('plugin-react-native-navigation', () => {
   it('adds an event listener on load', () => {
@@ -22,12 +29,6 @@ describe('plugin-react-native-navigation', () => {
   })
 
   it('updates the client context when the listener is triggered', () => {
-    interface Event {
-      componentId: number
-      componentName: string
-      passProps: object
-    }
-
     // Setup a fake listener that should never be called - the plugin should
     // replace this on load by calling 'registerComponentDidAppearListener'
     let listener = (event: Event) => {
@@ -56,5 +57,82 @@ describe('plugin-react-native-navigation', () => {
     listener({ componentId: 2, componentName: 'xyz abc', passProps: {} })
 
     expect(client.getContext()).toBe('xyz abc')
+  })
+
+  it('leaves a breadcrumb when the listener is triggered', () => {
+    let listener = (event: Event) => {
+      throw new Error(`This function was not supposed to be called! ${event.componentName}`)
+    }
+
+    const Navigation = {
+      events () {
+        return {
+          registerComponentDidAppearListener (callback: (event: Event) => never) {
+            listener = callback
+          }
+        }
+      }
+    }
+
+    const breadcrumbs: Breadcrumb[] = []
+
+    const plugin = new Plugin(Navigation)
+    const client = new Client({ apiKey: 'API_KEY_YEAH', plugins: [plugin] })
+    client.addOnBreadcrumb(breadcrumb => { breadcrumbs.push(breadcrumb) })
+
+    expect(breadcrumbs.length).toBe(0)
+
+    listener({ componentId: 1, componentName: 'abc xyz', passProps: {} })
+
+    expect(breadcrumbs.length).toBe(1)
+    expect(breadcrumbs[0].message).toBe('React Native Navigation componentDidAppear')
+    expect(breadcrumbs[0].metadata).toStrictEqual({ to: 'abc xyz', from: undefined })
+    expect(breadcrumbs[0].type).toBe('navigation')
+
+    listener({ componentId: 2, componentName: 'xyz abc', passProps: {} })
+
+    expect(breadcrumbs.length).toBe(2)
+    expect(breadcrumbs[1].message).toBe('React Native Navigation componentDidAppear')
+    expect(breadcrumbs[1].metadata).toStrictEqual({ to: 'xyz abc', from: 'abc xyz' })
+    expect(breadcrumbs[1].type).toBe('navigation')
+  })
+
+  it('does not leave a breadcrumb when the component has not changed', () => {
+    let listener = (event: Event) => {
+      throw new Error(`This function was not supposed to be called! ${event.componentName}`)
+    }
+
+    const Navigation = {
+      events () {
+        return {
+          registerComponentDidAppearListener (callback: (event: Event) => never) {
+            listener = callback
+          }
+        }
+      }
+    }
+
+    const breadcrumbs: Breadcrumb[] = []
+
+    const plugin = new Plugin(Navigation)
+    const client = new Client({ apiKey: 'API_KEY_YEAH', plugins: [plugin] })
+    client.addOnBreadcrumb(breadcrumb => { breadcrumbs.push(breadcrumb) })
+
+    expect(breadcrumbs.length).toBe(0)
+
+    listener({ componentId: 1, componentName: 'abc xyz', passProps: {} })
+
+    expect(breadcrumbs.length).toBe(1)
+    expect(breadcrumbs[0].message).toBe('React Native Navigation componentDidAppear')
+    expect(breadcrumbs[0].metadata).toStrictEqual({ to: 'abc xyz', from: undefined })
+    expect(breadcrumbs[0].type).toBe('navigation')
+
+    listener({ componentId: 1, componentName: 'abc xyz', passProps: {} })
+
+    expect(breadcrumbs.length).toBe(1)
+
+    listener({ componentId: 1, componentName: 'abc xyz', passProps: {} })
+
+    expect(breadcrumbs.length).toBe(1)
   })
 })
