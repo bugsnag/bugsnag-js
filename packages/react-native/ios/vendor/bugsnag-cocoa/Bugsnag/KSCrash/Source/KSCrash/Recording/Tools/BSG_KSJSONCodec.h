@@ -158,6 +158,19 @@ int bsg_ksjsonaddBooleanElement(BSG_KSJSONEncodeContext *context,
 int bsg_ksjsonaddIntegerElement(BSG_KSJSONEncodeContext *context,
                                 const char *name, long long value);
 
+/** Add an unsigned integer element.
+ *
+ * @param context The encoding context.
+ *
+ * @param name The element's name.
+ *
+ * @param value The element's value.
+ *
+ * @return KSJSON_OK if the process was successful.
+ */
+int bsg_ksjsonaddUIntegerElement(BSG_KSJSONEncodeContext *context,
+                                 const char *name, unsigned long long value);
+
 /** Add a floating point element.
  *
  * @param context The encoding context.

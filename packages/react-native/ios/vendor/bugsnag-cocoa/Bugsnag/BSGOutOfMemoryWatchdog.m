@@ -17,14 +17,35 @@
 #import "Private.h"
 #import "BugsnagErrorTypes.h"
 #import "BSG_RFC3339DateTool.h"
+#import "BSGJSONSerialization.h"
+#import "BugsnagKeys.h"
+#import "BugsnagCollections.h"
+#import "BugsnagKVStoreObjC.h"
+
+#define KV_KEY_IS_MONITORING_OOM @"oom-isMonitoringOOM"
+#define KV_KEY_IS_ACTIVE @"oom-isActive"
+#define KV_KEY_IS_IN_FOREGROUND @"oom-isInForeground"
+#define KV_KEY_LAST_LOW_MEMORY_WARNING @"oom-lastLowMemoryWarning"
+#define KV_KEY_APP_VERSION @"oom-appVersion"
+#define KV_KEY_BUNDLE_VERSION @"oom-bundleVersion"
+
+#define APP_KEY_IS_MONITORING_OOM @"isMonitoringOOM"
+#define APP_KEY_IS_IN_FOREGROUND @"inForeground"
+#define APP_KEY_IS_ACTIVE @"isActive"
+#define DEVICE_KEY_LAST_LOW_MEMORY_WARNING @"lowMemory"
+#define APP_KEY_VERSION @"version"
+#define APP_KEY_BUNDLE_VERSION @"bundleVersion"
 
 @interface BSGOutOfMemoryWatchdog ()
 @property(nonatomic, getter=isWatching) BOOL watching;
 @property(nonatomic, strong) NSString *sentinelFilePath;
-@property(nonatomic, getter=didOOMLastLaunch) BOOL oomLastLaunch;
 @property(nonatomic, strong, readwrite) NSMutableDictionary *cachedFileInfo;
 @property(nonatomic, strong, readwrite) NSDictionary *lastBootCachedFileInfo;
 @property(nonatomic) NSString *codeBundleId;
+@property(nonatomic) BugsnagKVStore *kvStore;
+@property(nonatomic) NSDictionary *previousKeyValues;
+
+- (void)shutdown;
 @end
 
 @implementation BSGOutOfMemoryWatchdog
@@ -41,23 +62,75 @@
     }
     if (self = [super init]) {
         _sentinelFilePath = sentinelFilePath;
+
 #ifdef BSGOOMAvailable
-        _oomLastLaunch = [self computeDidOOMLastLaunchWithConfig:config];
+        _kvStore = [BugsnagKVStore new];
+
+        _previousKeyValues = getKeyValues(_kvStore);
+        _lastBootCachedFileInfo = [self readSentinelFile];
         _cachedFileInfo = [self generateCacheInfoWithConfig:config];
+
+        [_kvStore setBoolean:false forKey:KV_KEY_IS_MONITORING_OOM];
+        [_kvStore setString:@"" forKey:KV_KEY_LAST_LOW_MEMORY_WARNING];
+        NSDictionary *systemInfo = [BSG_KSSystemInfo systemInfo];
+        [_kvStore setString:systemInfo[@BSG_KSSystemField_BundleShortVersion] forKey:KV_KEY_APP_VERSION];
+        [_kvStore setString:systemInfo[@BSG_KSSystemField_BundleVersion] forKey:KV_KEY_BUNDLE_VERSION];
+
+        _didOOMLastLaunch = calculateDidOOM(_kvStore, _previousKeyValues);
 #endif
     }
     return self;
 }
 
-- (void)enable {
+static NSDictionary *getKeyValues(BugsnagKVStore *store) {
+    NSMutableDictionary *dict = [NSMutableDictionary new];
+    dict[APP_KEY_IS_MONITORING_OOM] = [store NSBooleanForKey:KV_KEY_IS_MONITORING_OOM defaultValue:false];
+    dict[APP_KEY_IS_ACTIVE] = [store NSBooleanForKey:KV_KEY_IS_ACTIVE defaultValue:false];
+    dict[APP_KEY_IS_IN_FOREGROUND] = [store NSBooleanForKey:KV_KEY_IS_IN_FOREGROUND defaultValue:false];
+    dict[APP_KEY_VERSION] = [store stringForKey:KV_KEY_APP_VERSION defaultValue:@""];
+    dict[APP_KEY_BUNDLE_VERSION] = [store stringForKey:KV_KEY_BUNDLE_VERSION defaultValue:@""];
+    dict[DEVICE_KEY_LAST_LOW_MEMORY_WARNING] = [store stringForKey:KV_KEY_LAST_LOW_MEMORY_WARNING defaultValue:@""];
+    return dict;
+}
+
+BOOL calculateDidOOM(BugsnagKVStore *store, NSDictionary *previousValues) {
+    BOOL wasMonitoring = [[previousValues valueForKey:APP_KEY_IS_MONITORING_OOM] boolValue];
+    if(!wasMonitoring) {
+        return NO;
+    }
+
+    BOOL wasActive = [[previousValues valueForKey:APP_KEY_IS_ACTIVE] boolValue];
+    BOOL wasInForeground = [[previousValues valueForKey:APP_KEY_IS_IN_FOREGROUND] boolValue];
+    if(!(wasActive && wasInForeground)) {
+        return NO;
+    }
+    
+    NSString *oldAppVersion = [previousValues valueForKey:APP_KEY_VERSION];
+    NSString *newAppVersion = [store stringForKey:KV_KEY_APP_VERSION defaultValue:@""];
+    NSString *oldBundleVersion = [previousValues valueForKey:APP_KEY_BUNDLE_VERSION];
+    NSString *newBundleVersion = [store stringForKey:KV_KEY_BUNDLE_VERSION defaultValue:@""];
+
+    if(![oldAppVersion isEqualToString:newAppVersion] || ![oldBundleVersion isEqualToString:newBundleVersion]) {
+        return NO;
+    }
+
+    return YES;
+}
+
+- (void)start {
 #if BSGOOMAvailable
     if ([self isWatching]) {
         return;
     }
+    UIApplicationState state = [BSG_KSSystemInfo currentAppState];
+    [self.kvStore setBoolean:true forKey:KV_KEY_IS_MONITORING_OOM];
+    [self.kvStore setBoolean:[BSG_KSSystemInfo isInForeground:state] forKey:KV_KEY_IS_IN_FOREGROUND];
+    [self.kvStore setBoolean:state == UIApplicationStateActive forKey:KV_KEY_IS_ACTIVE];
+
     [self writeSentinelFile];
     NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
     [center addObserver:self
-               selector:@selector(disable:)
+               selector:@selector(shutdown:)
                    name:UIApplicationWillTerminateNotification
                  object:nil];
     [center addObserver:self
@@ -93,11 +166,11 @@
 #endif
 }
 
-- (void)disable:(NSNotification *)note {
-    [self disable];
+- (void)shutdown:(NSNotification *)note {
+    [self shutdown];
 }
 
-- (void)disable {
+- (void)shutdown {
     if (![self isWatching]) {
         // Avoid unsubscribing from KVO when not observing
         // From the docs:
@@ -107,6 +180,7 @@
         // > corresponding call to `addObserver:forKeyPath:options:context:`
         return;
     }
+    [self.kvStore setBoolean:false forKey:KV_KEY_IS_MONITORING_OOM];
     self.watching = NO;
     [self deleteSentinelFile];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -124,33 +198,38 @@
                       ofObject:(id)object
                         change:(NSDictionary<NSString *, id> *)change
                        context:(void *)context {
-    self.cachedFileInfo[@"app"][@"releaseStage"] = change[NSKeyValueChangeNewKey];
+    self.cachedFileInfo[BSGKeyApp][BSGKeyReleaseStage] = change[NSKeyValueChangeNewKey];
     [self writeSentinelFile];
 }
 
 - (void)handleTransitionToActive:(NSNotification *)note {
-    self.cachedFileInfo[@"app"][@"isActive"] = @YES;
+    [self.kvStore setBoolean:true forKey:KV_KEY_IS_ACTIVE];
+    self.cachedFileInfo[BSGKeyApp][APP_KEY_IS_ACTIVE] = @YES;
     [self writeSentinelFile];
 }
 
 - (void)handleTransitionToInactive:(NSNotification *)note {
-    self.cachedFileInfo[@"app"][@"isActive"] = @NO;
+    [self.kvStore setBoolean:false forKey:KV_KEY_IS_ACTIVE];
+    self.cachedFileInfo[BSGKeyApp][APP_KEY_IS_ACTIVE] = @NO;
     [self writeSentinelFile];
 }
 
 - (void)handleTransitionToForeground:(NSNotification *)note {
-    self.cachedFileInfo[@"app"][@"inForeground"] = @YES;
+    [self.kvStore setBoolean:true forKey:KV_KEY_IS_IN_FOREGROUND];
+    self.cachedFileInfo[BSGKeyApp][APP_KEY_IS_IN_FOREGROUND] = @YES;
     [self writeSentinelFile];
 }
 
 - (void)handleTransitionToBackground:(NSNotification *)note {
-    self.cachedFileInfo[@"app"][@"inForeground"] = @NO;
+    [self.kvStore setBoolean:false forKey:KV_KEY_IS_IN_FOREGROUND];
+    self.cachedFileInfo[BSGKeyApp][APP_KEY_IS_IN_FOREGROUND] = @NO;
     [self writeSentinelFile];
 }
 
 - (void)handleLowMemoryChange:(NSNotification *)note {
-    self.cachedFileInfo[@"device"][@"lowMemory"] = [BSG_RFC3339DateTool
-                                                    stringFromDate:[NSDate date]];
+    NSString *date = [BSG_RFC3339DateTool stringFromDate:[NSDate date]];
+    [self.kvStore setString:date forKey:KV_KEY_LAST_LOW_MEMORY_WARNING];
+    self.cachedFileInfo[BSGKeyDevice][DEVICE_KEY_LAST_LOW_MEMORY_WARNING] = date;
     [self writeSentinelFile];
 }
 
@@ -158,53 +237,20 @@
     id session = [note object];
     NSMutableDictionary *cache = (id)self.cachedFileInfo;
     if (session) {
-        cache[@"session"] = session;
+        cache[BSGKeySession] = session;
     } else {
-        [cache removeObjectForKey:@"session"];
+        [cache removeObjectForKey:BSGKeySession];
     }
     [self writeSentinelFile];
 }
 
 - (void)setCodeBundleId:(NSString *)codeBundleId {
     _codeBundleId = codeBundleId;
-    self.cachedFileInfo[@"app"][@"codeBundleId"] = codeBundleId;
+    BSGDictInsertIfNotNil(self.cachedFileInfo[BSGKeyApp], codeBundleId, BSGKeyCodeBundleId);
 
     if ([self isWatching]) {
         [self writeSentinelFile];
     }
-}
-
-
-- (BOOL)computeDidOOMLastLaunchWithConfig:(BugsnagConfiguration *)config {
-    if ([[NSFileManager defaultManager] fileExistsAtPath:self.sentinelFilePath]) {
-        NSDictionary *lastBootInfo = [self readSentinelFile];
-        if (lastBootInfo != nil) {
-            self.lastBootCachedFileInfo = lastBootInfo;
-            NSString *lastBootBundleVersion =
-                [lastBootInfo valueForKeyPath:@"app.bundleVersion"];
-            NSString *lastBootAppVersion =
-                [lastBootInfo valueForKeyPath:@"app.version"];
-            NSString *lastBootOSVersion =
-                [lastBootInfo valueForKeyPath:@"device.osBuild"];
-            BOOL lastBootInForeground =
-                [[lastBootInfo valueForKeyPath:@"app.inForeground"] boolValue];
-            BOOL lastBootWasActive =
-                [[lastBootInfo valueForKeyPath:@"app.isActive"] boolValue];
-            NSString *osVersion = [BSG_KSSystemInfo osBuildVersion];
-            NSDictionary *appInfo = [[NSBundle mainBundle] infoDictionary];
-            NSString *bundleVersion =
-                [appInfo valueForKey:@BSG_KSSystemField_BundleVersion];
-            NSString *appVersion =
-                [appInfo valueForKey:@BSG_KSSystemField_BundleShortVersion];
-            BOOL sameVersions = [lastBootOSVersion isEqualToString:osVersion] &&
-                                [lastBootBundleVersion isEqualToString:bundleVersion] &&
-                                [lastBootAppVersion isEqualToString:appVersion];
-            BOOL shouldReport = (lastBootInForeground && lastBootWasActive);
-            [self deleteSentinelFile];
-            return sameVersions && shouldReport;
-        }
-    }
-    return NO;
 }
 
 - (void)deleteSentinelFile {
@@ -218,28 +264,38 @@
 }
 
 - (NSDictionary *)readSentinelFile {
+    if (![[NSFileManager defaultManager] fileExistsAtPath:self.sentinelFilePath]) {
+        return @{};
+    }
+
     NSError *error = nil;
     NSData *data = [NSData dataWithContentsOfFile:self.sentinelFilePath options:0 error:&error];
     if (error) {
         bsg_log_err(@"Failed to read oom watchdog file: %@", error);
         return nil;
     }
-    NSDictionary *contents = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+    NSDictionary *contents = [BSGJSONSerialization JSONObjectWithData:data options:0 error:&error];
     if (error) {
         bsg_log_err(@"Failed to read oom watchdog file: %@", error);
         return nil;
     }
+
+    // Override JSON data with KV store data
+    contents[BSGKeyApp][APP_KEY_IS_MONITORING_OOM] = [self.kvStore NSBooleanForKey:KV_KEY_IS_MONITORING_OOM defaultValue:false];
+    contents[BSGKeyApp][APP_KEY_IS_ACTIVE] = [self.kvStore NSBooleanForKey:KV_KEY_IS_ACTIVE defaultValue:false];
+    contents[BSGKeyApp][APP_KEY_IS_IN_FOREGROUND] = [self.kvStore NSBooleanForKey:KV_KEY_IS_IN_FOREGROUND defaultValue:false];
+    contents[BSGKeyDevice][DEVICE_KEY_LAST_LOW_MEMORY_WARNING] = [self.kvStore stringForKey:KV_KEY_LAST_LOW_MEMORY_WARNING defaultValue:@""];
+
     return contents;
 }
 
-
 - (void)writeSentinelFile {
     NSError *error = nil;
-    if (![NSJSONSerialization isValidJSONObject:self.cachedFileInfo]) {
+    if (![BSGJSONSerialization isValidJSONObject:self.cachedFileInfo]) {
         bsg_log_err(@"Cached oom watchdog data cannot be written as JSON");
         return;
     }
-    NSData *data = [NSJSONSerialization dataWithJSONObject:self.cachedFileInfo options:0 error:&error];
+    NSData *data = [BSGJSONSerialization dataWithJSONObject:self.cachedFileInfo options:0 error:&error];
     if (error) {
         bsg_log_err(@"Cached oom watchdog data cannot be written as JSON: %@", error);
         return;
@@ -252,13 +308,13 @@
     NSMutableDictionary *cache = [NSMutableDictionary new];
     NSMutableDictionary *app = [NSMutableDictionary new];
 
-    app[@"id"] = systemInfo[@BSG_KSSystemField_BundleID] ?: @"";
-    app[@"name"] = systemInfo[@BSG_KSSystemField_BundleName] ?: @"";
-    app[@"releaseStage"] = config.releaseStage;
-    app[@"version"] = systemInfo[@BSG_KSSystemField_BundleShortVersion] ?: @"";
-    app[@"bundleVersion"] = systemInfo[@BSG_KSSystemField_BundleVersion] ?: @"";
+    app[BSGKeyId] = systemInfo[@BSG_KSSystemField_BundleID] ?: @"";
+    app[BSGKeyName] = systemInfo[@BSG_KSSystemField_BundleName] ?: @"";
+    app[BSGKeyReleaseStage] = config.releaseStage;
+    app[BSGKeyVersion] = systemInfo[@BSG_KSSystemField_BundleShortVersion] ?: @"";
+    app[BSGKeyBundleVersion] = systemInfo[@BSG_KSSystemField_BundleVersion] ?: @"";
     // 'codeBundleId' only (optionally) exists for React Native clients and defaults otherwise to nil
-    app[@"codeBundleId"] = self.codeBundleId;
+    BSGDictInsertIfNotNil(app, self.codeBundleId, BSGKeyCodeBundleId);
 #if BSGOOMAvailable
     UIApplicationState state = [BSG_KSSystemInfo currentAppState];
     app[@"inForeground"] = @([BSG_KSSystemInfo isInForeground:state]);
@@ -267,11 +323,11 @@
     app[@"inForeground"] = @YES;
 #endif
 #if BSG_PLATFORM_TVOS
-    app[@"type"] = @"tvOS";
+    app[BSGKeyType] = @"tvOS";
 #elif BSG_PLATFORM_IOS
-    app[@"type"] = @"iOS";
+    app[BSGKeyType] = @"iOS";
 #endif
-    cache[@"app"] = app;
+    cache[BSGKeyApp] = app;
 
     NSMutableDictionary *device = [NSMutableDictionary new];
     device[@"id"] = systemInfo[@BSG_KSSystemField_DeviceAppHash];
@@ -289,7 +345,7 @@
 #else
     device[@"simulator"] = @NO;
 #endif
-    cache[@"device"] = device;
+    cache[BSGKeyDevice] = device;
 
     return cache;
 }

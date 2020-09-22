@@ -76,10 +76,10 @@
     // app/device data collection relies on KSCrash reports,
     // need to mimic the JSON structure here
     BugsnagApp *app = self.sessions[0].app;
-    BSGDictSetSafeObject(dict, [app toDict], @"app");
+    BSGDictSetSafeObject(dict, [app toDict], BSGKeyApp);
 
     BugsnagDevice *device = self.sessions[0].device;
-    BSGDictSetSafeObject(dict, [device toDictionary], @"device");
+    BSGDictSetSafeObject(dict, [device toDictionary], BSGKeyDevice);
     return dict;
 }
 

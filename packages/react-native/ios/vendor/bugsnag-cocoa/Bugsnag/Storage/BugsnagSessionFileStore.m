@@ -5,6 +5,7 @@
 
 #import "BugsnagSessionFileStore.h"
 #import "BSG_KSLogger.h"
+#import "BSGJSONSerialization.h"
 
 static NSString *const kSessionStoreSuffix = @"-Session-";
 
@@ -25,7 +26,7 @@ static NSString *const kSessionStoreSuffix = @"-Session-";
     NSDictionary *dict = [session toJson];
 
     NSError *error;
-    NSData *json = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
+    NSData *json = [BSGJSONSerialization dataWithJSONObject:dict options:0 error:&error];
 
     if (error != nil || ![json writeToFile:filepath atomically:YES]) {
         BSG_KSLOG_ERROR(@"Failed to write session %@", error);

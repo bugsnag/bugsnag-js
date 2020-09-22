@@ -8,6 +8,8 @@
 
 #import "BugsnagEventDeserializer.h"
 
+#import "BugsnagStacktrace.h"
+
 BSGSeverity BSGParseSeverity(NSString *severity);
 
 @interface Bugsnag ()
@@ -18,6 +20,15 @@ BSGSeverity BSGParseSeverity(NSString *severity);
 @interface BugsnagClient()
 @property id sessionTracker;
 @property BugsnagMetadata *metadata;
+@end
+
+@interface BugsnagError ()
+
+- (instancetype)initWithErrorClass:(NSString *)errorClass
+                      errorMessage:(NSString *)errorMessage
+                         errorType:(BSGErrorType)errorType
+                        stacktrace:(NSArray<BugsnagStackframe *> *)stacktrace;
+
 @end
 
 @interface BugsnagMetadata ()
@@ -98,6 +109,21 @@ BSGSeverity BSGParseSeverity(NSString *severity);
         event.errors[0].errorMessage = error[@"errorMessage"];
         [event attachCustomStacktrace:error[@"stacktrace"] withType:@"reactnativejs"];
     }
+    
+    id nativeStack = payload[@"nativeStack"];
+    if ([nativeStack isKindOfClass:[NSArray class]] &&
+        [nativeStack filteredArrayUsingPredicate:
+         [NSPredicate predicateWithFormat:@"NOT SELF isKindOfClass: %@", [NSString class]]].count == 0) {
+        NSArray<BugsnagStackframe *> *stackframes = [BugsnagStackframe stackframesWithCallStackSymbols:nativeStack];
+        if (stackframes != nil) {
+            BugsnagError *nativeError = [[BugsnagError alloc] initWithErrorClass:error[@"errorClass"]
+                                                                    errorMessage:error[@"errorMessage"]
+                                                                       errorType:BSGErrorTypeCocoa
+                                                                      stacktrace:stackframes];
+            event.errors = [event.errors arrayByAddingObject:nativeError];
+        }
+    }
+    
     return event;
 }
 
