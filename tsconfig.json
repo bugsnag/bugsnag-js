@@ -83,6 +83,7 @@
     "packages/plugin-react-native-event-sync",
     "packages/plugin-react-native-global-error-handler",
     "packages/plugin-react-native-session",
+    "packages/plugin-react-native-navigation",
     "packages/plugin-server-session",
     "packages/plugin-react",
     "packages/plugin-vue",
