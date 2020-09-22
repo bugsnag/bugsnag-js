@@ -73,7 +73,6 @@
     "test:browser": "npm run test:build-browser-container && docker-compose run --use-aliases browser-maze-runner",
     "test:node": "npm run test:build-node-container && docker-compose run --use-aliases node-maze-runner",
     "test:expo:android": "npm run test:build-expo-android-container && APP_LOCATION=build/output.apk docker-compose run --use-aliases expo-maze-runner",
-    "test:expo:ios": "npm run test:build-expo-ios-container && APP_LOCATION=build/output.ipa docker-compose run --use-aliases expo-maze-runner",
     "test:react-native:android": "npm run test:build-react-native-android-container && APP_LOCATION=build/$REACT_NATIVE_VERSION.apk docker-compose run --use-aliases react-native-maze-runner",
     "test:react-native:ios": "npm run test:build-react-native-ios && npm run test:build-react-native-maze-runner && APP_LOCATION=build/$REACT_NATIVE_VERSION.ipa docker-compose run --use-aliases react-native-maze-runner"
   }
