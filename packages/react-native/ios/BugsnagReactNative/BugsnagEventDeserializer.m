@@ -22,6 +22,15 @@ BSGSeverity BSGParseSeverity(NSString *severity);
 @property BugsnagMetadata *metadata;
 @end
 
+@interface BugsnagError ()
+
+- (instancetype)initWithErrorClass:(NSString *)errorClass
+                      errorMessage:(NSString *)errorMessage
+                         errorType:(BSGErrorType)errorType
+                        stacktrace:(NSArray<BugsnagStackframe *> *)stacktrace;
+
+@end
+
 @interface BugsnagMetadata ()
 @end
 
@@ -107,10 +116,10 @@ BSGSeverity BSGParseSeverity(NSString *severity);
          [NSPredicate predicateWithFormat:@"NOT SELF isKindOfClass: %@", [NSString class]]].count == 0) {
         NSArray<BugsnagStackframe *> *stackframes = [BugsnagStackframe stackframesWithCallStackSymbols:nativeStack];
         if (stackframes != nil) {
-            BugsnagError *nativeError = [BugsnagError new];
-            nativeError.errorClass = error[@"errorClass"];
-            nativeError.errorMessage = error[@"errorMessage"];
-            nativeError.stacktrace = stackframes;
+            BugsnagError *nativeError = [[BugsnagError alloc] initWithErrorClass:error[@"errorClass"]
+                                                                    errorMessage:error[@"errorMessage"]
+                                                                       errorType:BSGErrorTypeCocoa
+                                                                      stacktrace:stackframes];
             event.errors = [event.errors arrayByAddingObject:nativeError];
         }
     }
