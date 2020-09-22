@@ -1,5 +1,11 @@
 # Changelog
 
+## TBD
+
+### Changed
+
+- (react-native): Allow plugins to be set in the JS layer. [#1064](https://github.com/bugsnag/bugsnag-js/pull/1064)
+
 ## 7.3.5 (2020-09-16)
 
 ### Fixed
