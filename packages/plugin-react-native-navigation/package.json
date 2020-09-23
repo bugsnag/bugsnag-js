@@ -21,6 +21,6 @@
   },
   "peerDependencies": {
     "@bugsnag/core": "^7.0.0",
-    "react-native-navigation": "^7.0.0"
+    "react-native-navigation": "2 - 7"
   }
 }
