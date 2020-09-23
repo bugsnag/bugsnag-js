@@ -131,8 +131,56 @@ describe('plugin-react-native-navigation', () => {
 
     expect(breadcrumbs.length).toBe(1)
 
+    listener({ componentId: 1, componentName: 'xyz abc', passProps: {} })
+
+    expect(breadcrumbs.length).toBe(2)
+    expect(breadcrumbs[1].message).toBe('React Native Navigation componentDidAppear')
+    expect(breadcrumbs[1].metadata).toStrictEqual({ to: 'xyz abc', from: 'abc xyz' })
+    expect(breadcrumbs[1].type).toBe('navigation')
+
+    listener({ componentId: 1, componentName: 'xyz abc', passProps: {} })
+
+    expect(breadcrumbs.length).toBe(2)
+  })
+
+  it('does not leave a breadcrumb when the "navigation" breadcrumb type is disabled', () => {
+    let listener = (event: Event) => {
+      throw new Error(`This function was not supposed to be called! ${event.componentName}`)
+    }
+
+    const Navigation = {
+      events () {
+        return {
+          registerComponentDidAppearListener (callback: (event: Event) => never) {
+            listener = callback
+          }
+        }
+      }
+    }
+
+    const breadcrumbs: Breadcrumb[] = []
+
+    const plugin = new Plugin(Navigation)
+    const client = new Client({
+      apiKey: 'API_KEY_YEAH',
+      plugins: [plugin],
+      enabledBreadcrumbTypes: ['request', 'process', 'log', 'user', 'state', 'error', 'manual']
+    })
+
+    client.addOnBreadcrumb(breadcrumb => { breadcrumbs.push(breadcrumb) })
+
+    expect(breadcrumbs.length).toBe(0)
+
     listener({ componentId: 1, componentName: 'abc xyz', passProps: {} })
 
-    expect(breadcrumbs.length).toBe(1)
+    expect(breadcrumbs.length).toBe(0)
+
+    listener({ componentId: 1, componentName: 'abc xyz', passProps: {} })
+
+    expect(breadcrumbs.length).toBe(0)
+
+    listener({ componentId: 1, componentName: 'abc xyz', passProps: {} })
+
+    expect(breadcrumbs.length).toBe(0)
   })
 })
