@@ -79,7 +79,6 @@
     "packages/plugin-react-native-client-sync",
     "packages/plugin-react-native-event-sync",
     "packages/plugin-server-session",
-    "packages/plugin-react-navigation",
     "packages/plugin-react",
     "packages/plugin-vue",
     "packages/plugin-express",

@@ -14,13 +14,19 @@
   "files": [
     "*.js"
   ],
+  "scripts": {
+    "test:types": "tsc -p tsconfig.json"
+  },
   "types": "types/bugsnag-plugin-react-navigation.d.ts",
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
     "@bugsnag/core": "^7.3.5",
     "@react-navigation/native": "^5.7.3",
+    "@types/react": "^16.9.49",
     "@types/react-native": "^0.63.20",
+    "@types/react-test-renderer": "^16.9.3",
+    "react": "^16.13.1",
     "react-test-renderer": "^16.13.1"
   },
   "peerDependencies": {
