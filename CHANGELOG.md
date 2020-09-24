@@ -2,6 +2,10 @@
 
 ## TBD
 
+### Added
+
+- (browser): Attach an anonymous device ID to error reports and sessions when the new `generateAnonymousId` option is enabled. [#1072](https://github.com/bugsnag/bugsnag-js/pull/1072)
+
 ### Changed
 
 - (react-native): Allow plugins to be set in the JS layer. [#1064](https://github.com/bugsnag/bugsnag-js/pull/1064)
