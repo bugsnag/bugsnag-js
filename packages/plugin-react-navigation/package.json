@@ -12,7 +12,8 @@
     "access": "public"
   },
   "files": [
-    "*.js"
+    "*.js",
+    "types"
   ],
   "scripts": {
     "test:types": "tsc -p tsconfig.json"
