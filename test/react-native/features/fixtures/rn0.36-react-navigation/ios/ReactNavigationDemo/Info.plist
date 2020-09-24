@@ -56,7 +56,7 @@
 	<key>bugsnag</key>
 	<dict>
 		<key>apiKey</key>
-		<string>16f1cb5e2ab125f00b2f25b307d213a4</string>
+		<string>YOUR_API_KEY</string>
 	</dict>
 </dict>
 </plist>
