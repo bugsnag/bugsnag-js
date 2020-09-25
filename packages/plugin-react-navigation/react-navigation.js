@@ -1,6 +1,6 @@
 const React = require('react')
 
-class Plugin {
+class BugsnagPluginReactNavigation {
   constructor () {
     this.name = 'reactNavigation'
   }
@@ -54,4 +54,4 @@ class Plugin {
   }
 }
 
-module.exports = Plugin
+module.exports = BugsnagPluginReactNavigation
