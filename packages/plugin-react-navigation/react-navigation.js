@@ -26,7 +26,7 @@ class BugsnagPluginReactNavigation {
         if (currentRoute) {
           const currentRouteName = currentRoute.name
           client.setContext(currentRouteName)
-          leaveBreadcrumb(onReady, currentRouteName, undefined)
+          leaveBreadcrumb('onReady', currentRouteName, undefined)
           routeNameRef.current = currentRouteName
         }
         if (typeof onReady === 'function') onReady.apply(this, args)
