@@ -299,7 +299,6 @@ void BSGWriteSessionCrashData(BugsnagSession *session) {
 @property (nonatomic, strong) BugsnagPluginClient *pluginClient;
 @property (nonatomic) BOOL appDidCrashLastLaunch;
 @property (nonatomic, strong) BugsnagMetadata *metadata;
-@property(nonatomic, strong) BugsnagBreadcrumbs *breadcrumbs;
 @property (nonatomic) NSString *codeBundleId;
 @property(nonatomic, readwrite, strong) NSMutableArray *stateEventBlocks;
 #if BSG_PLATFORM_IOS

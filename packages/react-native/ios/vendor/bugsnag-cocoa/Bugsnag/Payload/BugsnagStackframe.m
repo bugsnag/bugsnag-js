@@ -108,8 +108,10 @@
             symbolName = [string substringWithRange:symbolNameRange];
         }
         
-        unsigned long long address = 0;
-        [[NSScanner scannerWithString:frameAddress] scanHexLongLong:&address];
+        uintptr_t address = 0;
+        if (frameAddress.UTF8String != NULL) {
+            sscanf(frameAddress.UTF8String, "%lx", &address);
+        }
         
         BugsnagStackframe *frame = [BugsnagStackframe new];
         frame.machoFile = imageName;
@@ -118,8 +120,7 @@
         frame.isPc = [frameNumber isEqualToString:@"0"];
         
         Dl_info dl_info;
-        uintptr_t address2 = address;
-        bsg_ksbt_symbolicate(&address2, &dl_info, 1, 0);
+        bsg_ksbt_symbolicate(&address, &dl_info, 1, 0);
         if (dl_info.dli_fname != NULL) {
             frame.machoFile = [NSString stringWithUTF8String:dl_info.dli_fname].lastPathComponent;
         }
