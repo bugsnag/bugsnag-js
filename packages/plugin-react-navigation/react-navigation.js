@@ -6,6 +6,16 @@ class BugsnagPluginReactNavigation {
   }
 
   load (client) {
+    const leaveBreadcrumb = (event, currentRouteName, previousRouteName) => {
+      if (client._config.enabledBreadcrumbTypes && client._config.enabledBreadcrumbTypes.includes('navigation')) {
+        client.leaveBreadcrumb(
+          `React Navigation ${event}`,
+          { to: currentRouteName, from: previousRouteName },
+          'navigation'
+        )
+      }
+    }
+
     const createNavigationContainer = (NavigationContainer) => React.forwardRef((props, ref) => {
       const { onReady, onStateChange, ...forwardProps } = props
       const navigationRef = ref || React.useRef(null)
@@ -14,8 +24,10 @@ class BugsnagPluginReactNavigation {
       const wrappedOnReady = (...args) => {
         const currentRoute = navigationRef.current ? navigationRef.current.getCurrentRoute() : null
         if (currentRoute) {
-          routeNameRef.current = currentRoute.name
-          client.setContext(currentRoute.name)
+          const currentRouteName = currentRoute.name
+          client.setContext(currentRouteName)
+          leaveBreadcrumb(onReady, currentRouteName, undefined)
+          routeNameRef.current = currentRouteName
         }
         if (typeof onReady === 'function') onReady.apply(this, args)
       }
@@ -29,13 +41,7 @@ class BugsnagPluginReactNavigation {
 
           if (previousRouteName !== currentRouteName) {
             client.setContext(currentRouteName)
-            if (client._config.enabledBreadcrumbTypes && client._config.enabledBreadcrumbTypes.includes('navigation')) {
-              client.leaveBreadcrumb(
-                'React Navigation onStateChange',
-                { to: currentRouteName, from: previousRouteName },
-                'navigation'
-              )
-            }
+            leaveBreadcrumb('onStateChange', currentRouteName, previousRouteName)
           }
 
           routeNameRef.current = currentRouteName

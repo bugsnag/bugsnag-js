@@ -120,19 +120,22 @@ describe('plugin: react navigation', () => {
     currentRouteName = 'details'
     navigationProps.onStateChange()
 
-    expect(c._breadcrumbs.length).toBe(3)
+    expect(c._breadcrumbs.length).toBe(4)
 
-    expect(c._breadcrumbs[0].message).toBe('React Navigation onStateChange')
-    expect(c._breadcrumbs[0].metadata.from).toBe('home')
-    expect(c._breadcrumbs[0].metadata.to).toBe('details')
+    expect(c._breadcrumbs[0].message).toBe('React Navigation onReady')
+    expect(c._breadcrumbs[0].metadata.to).toBe('home')
 
     expect(c._breadcrumbs[1].message).toBe('React Navigation onStateChange')
-    expect(c._breadcrumbs[1].metadata.from).toBe('details')
-    expect(c._breadcrumbs[1].metadata.to).toBe('settings')
+    expect(c._breadcrumbs[1].metadata.from).toBe('home')
+    expect(c._breadcrumbs[1].metadata.to).toBe('details')
 
     expect(c._breadcrumbs[2].message).toBe('React Navigation onStateChange')
-    expect(c._breadcrumbs[2].metadata.from).toBe('settings')
-    expect(c._breadcrumbs[2].metadata.to).toBe('details')
+    expect(c._breadcrumbs[2].metadata.from).toBe('details')
+    expect(c._breadcrumbs[2].metadata.to).toBe('settings')
+
+    expect(c._breadcrumbs[3].message).toBe('React Navigation onStateChange')
+    expect(c._breadcrumbs[3].metadata.from).toBe('settings')
+    expect(c._breadcrumbs[3].metadata.to).toBe('details')
   })
 
   it('should leave no breacrumbs when navigation breadcrumbs are disabled', () => {
