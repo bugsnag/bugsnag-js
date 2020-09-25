@@ -31,13 +31,16 @@ describe('plugin: react navigation', () => {
 
     expect(MockedNavigationContainerRender).toBeCalledTimes(1)
 
-    MockedNavigationContainerRender.mock.calls[0][0].onReady()
+    const navigationProps = MockedNavigationContainerRender.mock.calls[0][0]
+    const navigationRef = MockedNavigationContainerRender.mock.calls[0][1]
+
+    navigationProps.onReady()
     expect(onReady).toBeCalledTimes(1)
 
-    MockedNavigationContainerRender.mock.calls[0][0].onStateChange()
+    navigationProps.onStateChange()
     expect(onStateChange).toBeCalledTimes(1)
 
-    expect(MockedNavigationContainerRender.mock.calls[0][1]).toBe(ref)
+    expect(navigationRef).toBe(ref)
 
     done()
   })
@@ -68,14 +71,16 @@ describe('plugin: react navigation', () => {
 
     expect(c.getContext()).toBeUndefined()
 
-    MockedNavigationContainerRender.mock.calls[0][0].onReady()
+    const navigationProps = MockedNavigationContainerRender.mock.calls[0][0]
+
+    navigationProps.onReady()
     expect(c.getContext()).toBe('home')
 
-    MockedNavigationContainerRender.mock.calls[0][0].onStateChange()
+    navigationProps.onStateChange()
     expect(c.getContext()).toBe('home')
 
     currentRouteName = 'details'
-    MockedNavigationContainerRender.mock.calls[0][0].onStateChange()
+    navigationProps.onStateChange()
     expect(c.getContext()).toBe('details')
   })
 
@@ -105,13 +110,15 @@ describe('plugin: react navigation', () => {
 
     expect(c._breadcrumbs.length).toBe(0)
 
-    MockedNavigationContainerRender.mock.calls[0][0].onReady()
+    const navigationProps = MockedNavigationContainerRender.mock.calls[0][0]
+
+    navigationProps.onReady()
     currentRouteName = 'details'
-    MockedNavigationContainerRender.mock.calls[0][0].onStateChange()
+    navigationProps.onStateChange()
     currentRouteName = 'settings'
-    MockedNavigationContainerRender.mock.calls[0][0].onStateChange()
+    navigationProps.onStateChange()
     currentRouteName = 'details'
-    MockedNavigationContainerRender.mock.calls[0][0].onStateChange()
+    navigationProps.onStateChange()
 
     expect(c._breadcrumbs.length).toBe(3)
 
@@ -154,13 +161,15 @@ describe('plugin: react navigation', () => {
 
     expect(c._breadcrumbs.length).toBe(0)
 
-    MockedNavigationContainerRender.mock.calls[0][0].onReady()
+    const navigationProps = MockedNavigationContainerRender.mock.calls[0][0]
+
+    navigationProps.onReady()
     currentRouteName = 'details'
-    MockedNavigationContainerRender.mock.calls[0][0].onStateChange()
+    navigationProps.onStateChange()
     currentRouteName = 'settings'
-    MockedNavigationContainerRender.mock.calls[0][0].onStateChange()
+    navigationProps.onStateChange()
     currentRouteName = 'details'
-    MockedNavigationContainerRender.mock.calls[0][0].onStateChange()
+    navigationProps.onStateChange()
 
     expect(c._breadcrumbs.length).toBe(0)
   })
