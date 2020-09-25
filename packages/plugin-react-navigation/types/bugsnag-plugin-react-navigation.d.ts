@@ -1,11 +1,9 @@
-import { Plugin } from '@bugsnag/core'
+import { Plugin, Client } from '@bugsnag/core'
 import { NavigationContainer } from '@react-navigation/native'
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface BugsnagPluginReactNavigation extends Plugin { }
-// eslint-disable-next-line @typescript-eslint/no-extraneous-class
-declare class BugsnagPluginReactNavigation {
+declare class BugsnagPluginReactNavigation implements Plugin {
   constructor()
+  load(client: Client): BugsnagPluginReactNavigationResult
 }
 
 export interface BugsnagPluginReactNavigationResult {
