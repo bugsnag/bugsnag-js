@@ -1,9 +1,19 @@
 Changelog
 =========
 
-## TBD
+## 6.1.6 (2020-09-24)
+
+### Bug fixes
+
+* Fix crash-on-launch (attempt to insert into immutable dictionary).
+  [819](https://github.com/bugsnag/bugsnag-cocoa/pull/819)
+
+## 6.1.5 (2020-09-23)
 
 ### Enhancements
+
+* Add `+[Bugsnag breadcrumbs]` to allow apps to fetch the list of breadcrumbs.
+  [813](https://github.com/bugsnag/bugsnag-cocoa/pull/813)
 
 * Disable JSON pretty-printing in KSCrash reports to save disk space and bandwidth.
   [802](https://github.com/bugsnag/bugsnag-cocoa/pull/802)

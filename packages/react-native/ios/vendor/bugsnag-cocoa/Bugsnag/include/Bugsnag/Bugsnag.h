@@ -156,6 +156,13 @@
                            andType:(BSGBreadcrumbType)type
     NS_SWIFT_NAME(leaveBreadcrumb(_:metadata:type:));
 
+/**
+ * Returns the current buffer of breadcrumbs that will be sent with captured events. This
+ * ordered list represents the most recent breadcrumbs to be captured up to the limit
+ * set in `BugsnagConfiguration.maxBreadcrumbs`
+ */
++ (NSArray<BugsnagBreadcrumb *> *_Nonnull)breadcrumbs;
+
 // =============================================================================
 // MARK: - Session
 // =============================================================================

@@ -274,7 +274,7 @@ BOOL calculateDidOOM(BugsnagKVStore *store, NSDictionary *previousValues) {
         bsg_log_err(@"Failed to read oom watchdog file: %@", error);
         return nil;
     }
-    NSDictionary *contents = [BSGJSONSerialization JSONObjectWithData:data options:0 error:&error];
+    NSMutableDictionary *contents = [BSGJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
     if (error) {
         bsg_log_err(@"Failed to read oom watchdog file: %@", error);
         return nil;
