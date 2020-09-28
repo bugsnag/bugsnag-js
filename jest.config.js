@@ -44,6 +44,7 @@ module.exports = {
         testsForPackage('react-native'),
         testsForPackage('delivery-react-native'),
         testsForPackage('plugin-react-native-app-state-breadcrumbs'),
+        testsForPackage('plugin-react-native-connectivity-breadcrumbs'),
         testsForPackage('plugin-react-native-orientation-breadcrumbs'),
         testsForPackage('plugin-react-native-unhandled-rejection'),
         testsForPackage('plugin-react-native-hermes'),
