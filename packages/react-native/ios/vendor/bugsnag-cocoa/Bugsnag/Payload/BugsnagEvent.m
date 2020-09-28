@@ -739,18 +739,16 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
 - (NSDictionary *)toJson {
     NSMutableDictionary *event = [NSMutableDictionary dictionary];
 
-    event[BSGKeyExceptions] = ({
-        NSMutableArray *array = [NSMutableArray array];
-        [self.errors enumerateObjectsUsingBlock:^(BugsnagError *error, NSUInteger idx, BOOL *stop) {
-            if (self.customException != nil && idx == 0) {
-                [array addObject:self.customException];
-            } else {
-                [array addObject:[error toDictionary]];
-            }
-        }];
-        [NSArray arrayWithArray:array];
-    });
-    
+    if (self.customException) {
+        BSGDictSetSafeObject(event, @[ self.customException ], BSGKeyExceptions);
+    } else {
+        NSMutableArray *array = [NSMutableArray new];
+
+        for (BugsnagError *error in self.errors) {
+            BSGArrayAddSafeObject(array, [error toDictionary]);
+        }
+        BSGDictSetSafeObject(event, array, BSGKeyExceptions);
+    }
     BSGDictSetSafeObject(event, [BugsnagThread serializeThreads:self.threads], BSGKeyThreads);
 
     // Build Event
