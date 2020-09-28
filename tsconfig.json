@@ -72,6 +72,7 @@
     "packages/plugin-browser-context",
     "packages/plugin-browser-device",
     "packages/plugin-contextualize",
+    "packages/plugin-network-breadcrumbs",
     "packages/plugin-react-native-app-state-breadcrumbs",
     "packages/plugin-react-native-orientation-breadcrumbs",
     "packages/plugin-react-native-unhandled-rejection",
