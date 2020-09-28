@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-restify",
-  "version": "7.3.4",
+  "version": "7.3.5",
   "main": "dist/bugsnag-restify.js",
   "types": "types/bugsnag-restify.d.ts",
   "description": "@bugsnag/js error handling middleware for Restify web servers",
@@ -20,7 +20,6 @@
     "clean": "rm -fr dist && mkdir dist",
     "build": "npm run clean && npm run build:dist",
     "build:dist": "../../bin/bundle src/restify.js --node --exclude=iserror --standalone=bugsnag-restify | ../../bin/extract-source-map dist/bugsnag-restify.js",
-    "test": "nyc --reporter=lcov -- jasmine '!(node_modules)/**/*.test.js'",
     "postversion": "npm run build"
   },
   "author": "Bugsnag",
@@ -29,10 +28,8 @@
     "@bugsnag/core": "^7.0.0"
   },
   "devDependencies": {
-    "@bugsnag/core": "^7.3.4",
-    "@types/restify": "^8.4.2",
-    "jasmine": "^3.1.0",
-    "nyc": "^12.0.2"
+    "@bugsnag/core": "^7.3.5",
+    "@types/restify": "^8.4.2"
   },
   "dependencies": {
     "iserror": "^0.0.2"

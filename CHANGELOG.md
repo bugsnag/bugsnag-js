@@ -1,5 +1,17 @@
 # Changelog
 
+## TBD
+
+### Changed
+
+- (react-native): Allow plugins to be set in the JS layer. [#1064](https://github.com/bugsnag/bugsnag-js/pull/1064)
+
+## 7.3.5 (2020-09-16)
+
+### Fixed
+
+- (react-native): Update bugsnag-cocoa to 6.1.4. Fixes: Copy the metadata observer list rather than mutating it directly. [#1048](https://github.com/bugsnag/bugsnag-js/pull/1048)
+
 ## 7.3.4 (2020-09-10)
 
 ### Fixed

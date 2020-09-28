@@ -46,7 +46,9 @@ describe('plugin: device', () => {
     client._sessionDelegate = {
       startSession: (client, session) => {
         client._delivery.sendSession(session, () => {})
-      }
+      },
+      pauseSession: () => {},
+      resumeSession: () => {}
     }
 
     expect(client._cbs.s.length).toBe(1)
@@ -67,7 +69,9 @@ describe('plugin: device', () => {
     client._sessionDelegate = {
       startSession: (client, session) => {
         client._delivery.sendSession(session, () => {})
-      }
+      },
+      pauseSession: () => {},
+      resumeSession: () => {}
     }
 
     expect(client._cbs.s.length).toBe(1)

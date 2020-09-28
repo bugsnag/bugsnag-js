@@ -144,27 +144,7 @@ EXPO_PASSWORD=xxx \
   npm run test:expo:android
 ```
 
-To run against an iOS device, several additional details are required. In order to provision the app the `Expotest.mobileprovision` and its accompanying certificates need to be downloaded from the shared engineering document store and additional environment variables need to be set:
-
-- `APPLE_TEAM_ID`: The team ID to use when building the application
-- `EXPO_PROVISIONING_PROFILE_PATH`: The path to the `Expotest.mobileprovision` file as mentioned above
-- `EXPO_P12_PATH`: The path to the `Certificates.p12` file as mentioned above
-- `EXPO_IOS_DIST_P12_PASSWORD`: The password required for the above certificate
-
-To run against an iOS device:
-
-```sh
-DEVICE_TYPE=IOS_10 \
-BROWSER_STACK_USERNAME=xxx \
-BROWSER_STACK_ACCESS_KEY=xxx \
-EXPO_USERNAME=xxx \
-EXPO_PASSWORD=xxx \
-APPLE_TEAM_ID=xxx \
-EXPO_PROVISIONING_PROFILE_PATH=xxx \
-EXPO_P12_PATH=xxx \
-EXPO_IOS_DIST_P12_PASSWORD=xxx \
-  npm run test:expo:ios
-```
+Running tests against an iOS device locally is not currently supported.
 
 ### React-native
 
@@ -184,6 +164,7 @@ These should be set to the `REACT_NATIVE_VERSION` environment variable according
 | React native fixture | `REACT_NATIVE_VERSION` |
 |----------------------|------------------------|
 | 0.60                 | `rn0.60`               |
+| 0.63                 | `rn0.63`               |
 
 The following environment variables need to be set:
 
