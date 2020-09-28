@@ -70,7 +70,7 @@ module.exports = {
 
     // Install any required secondary files
     if (fs.existsSync('./install.sh')) {
-      console.log(`Installing secondary requirements`)
+      console.log('Installing secondary requirements')
       common.run('./install.sh', true)
     }
 
