@@ -1,15 +1,16 @@
-/* global describe, it, expect */
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+import plugin from '../'
 
-const plugin = require('../')
-
-const Client = require('@bugsnag/core/client')
+import Client from '@bugsnag/core/client'
 
 class MockErrorUtils {
+  _globalHandler: ((err: Error) => void) | null;
+
   constructor () {
     this._globalHandler = null
   }
 
-  setGlobalHandler (h) {
+  setGlobalHandler (h: (err: Error) => void) {
     this._globalHandler = h
   }
 
@@ -20,13 +21,16 @@ class MockErrorUtils {
 
 describe('plugin: react native global error handler', () => {
   it('should set a global error handler', () => {
-    const eu = new MockErrorUtils()
+    const eu = new MockErrorUtils() as any
     const client = new Client({ apiKey: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', plugins: [plugin(eu)] })
     expect(typeof eu.getGlobalHandler()).toBe('function')
     expect(client).toBe(client)
   })
 
   it('should warn if ErrorUtils is not defined', done => {
+    const errorUtils = global.ErrorUtils
+    // @ts-ignore
+    global.ErrorUtils = undefined
     const client = new Client({
       apiKey: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
       logger: {
@@ -34,6 +38,7 @@ describe('plugin: react native global error handler', () => {
         info: () => {},
         warn: msg => {
           expect(msg).toMatch(/ErrorUtils/)
+          global.ErrorUtils = errorUtils
           done()
         },
         error: () => {}
@@ -44,7 +49,7 @@ describe('plugin: react native global error handler', () => {
   })
 
   it('should not set a global error handler when autoDetectErrors=false', () => {
-    const eu = new MockErrorUtils()
+    const eu = new MockErrorUtils() as any
     const client = new Client({
       apiKey: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
       autoDetectErrors: false,
@@ -55,7 +60,7 @@ describe('plugin: react native global error handler', () => {
   })
 
   it('should not set a global error handler when enabledErrorTypes.unhandledExceptions=false', () => {
-    const eu = new MockErrorUtils()
+    const eu = new MockErrorUtils() as any
     const client = new Client({
       apiKey: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
       enabledErrorTypes: { unhandledExceptions: false, unhandledRejections: false },
@@ -66,14 +71,14 @@ describe('plugin: react native global error handler', () => {
   })
 
   it('should call through to an existing handler', done => {
-    const eu = new MockErrorUtils()
+    const eu = new MockErrorUtils() as any
     const client = new Client({ apiKey: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', plugins: [plugin(eu)] })
     client._setDelivery(client => ({
       sendSession: () => {},
-      sendEvent: (...args) => args[args.length - 1](null)
+      sendEvent: (payload, cb) => cb(null)
     }))
     const error = new Error('floop')
-    eu.setGlobalHandler(function (err, isFatal) {
+    eu.setGlobalHandler(function (err: Error, isFatal: boolean) {
       expect(err).toBe(error)
       expect(isFatal).toBe(true)
       done()
@@ -83,7 +88,7 @@ describe('plugin: react native global error handler', () => {
 
   it('should have the correct handled state', done => {
     const eu = new MockErrorUtils()
-    const client = new Client({ apiKey: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', plugins: [plugin(eu)] })
+    const client = new Client({ apiKey: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', plugins: [plugin(eu as any)] })
     client._setDelivery(client => ({
       sendSession: () => {},
       sendEvent: (payload, cb) => {
@@ -94,6 +99,6 @@ describe('plugin: react native global error handler', () => {
         done()
       }
     }))
-    eu._globalHandler(new Error('argh'))
+    eu._globalHandler!(new Error('argh'))
   })
 })

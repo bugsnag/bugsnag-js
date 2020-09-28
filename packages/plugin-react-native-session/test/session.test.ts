@@ -1,7 +1,5 @@
-const { describe, it, expect, spyOn } = global
-
-const plugin = require('../')
-const Client = require('@bugsnag/core/client')
+import plugin from '../'
+import Client from '@bugsnag/core/client'
 
 describe('plugin: react native session', () => {
   it('adds missing methods and forwards calls to native client', () => {
@@ -11,9 +9,9 @@ describe('plugin: react native session', () => {
       resumeSession: () => {}
     }
 
-    const startSpy = spyOn(NativeClient, 'startSession')
-    const pauseSpy = spyOn(NativeClient, 'pauseSession')
-    const resumeSpy = spyOn(NativeClient, 'resumeSession')
+    const startSpy = jest.spyOn(NativeClient, 'startSession')
+    const pauseSpy = jest.spyOn(NativeClient, 'pauseSession')
+    const resumeSpy = jest.spyOn(NativeClient, 'resumeSession')
 
     const c = new Client({ apiKey: 'api_key', plugins: [plugin(NativeClient)] })
     c.startSession()
