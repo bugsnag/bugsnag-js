@@ -5,6 +5,7 @@
 ### Changed
 
 - (react-native): Allow plugins to be set in the JS layer. [#1064](https://github.com/bugsnag/bugsnag-js/pull/1064)
+- (react-native): Include native stack trace in native promise rejections. [#1061](https://github.com/bugsnag/bugsnag-js/pull/1061)
 
 ## 7.3.5 (2020-09-16)
 
