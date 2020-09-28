@@ -42,10 +42,10 @@ module.exports = {
     const registryUrl = process.env.REGISTRY_URL
     const jsSourceDir = process.env.JS_SOURCE_DIR
 
+    let artefactName = rnVersion
+
     if (process.env.ARTEFACT_NAME) {
-      let artefactName = process.env.ARTEFACT_NAME
-    } else {
-      let artefactName = rnVersion
+      artefactName = process.env.ARTEFACT_NAME
     }
 
     console.log(`Installing notifier version: ${version}`)
@@ -90,10 +90,10 @@ module.exports = {
     const targetDir = `${fixtureDir}/${rnVersion}`
     const initialDir = process.cwd()
 
+    let artefactName = rnVersion
+
     if (process.env.ARTEFACT_NAME) {
-      let artefactName = process.env.ARTEFACT_NAME
-    } else {
-      let artefactName = rnVersion
+      artefactName = process.env.ARTEFACT_NAME
     }
 
     // We're not in docker so check the above are set
