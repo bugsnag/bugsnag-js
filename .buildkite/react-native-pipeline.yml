@@ -21,7 +21,7 @@ steps:
 
   - wait
 
-  - label: ':docker: Build React-native 0.60 apk'
+  - label: ':android: Build React-native 0.60 apk'
     env:
       REACT_NATIVE_VERSION: "rn0.60"
     plugins:
@@ -39,7 +39,7 @@ steps:
     commands:
       - npm run test:build-react-native-ios
 
-  - label: ':docker: Build React-native 0.63 apk'
+  - label: ':android: Build React-native 0.63 apk'
     env:
       REACT_NATIVE_VERSION: "rn0.63"
     plugins:
@@ -58,6 +58,28 @@ steps:
       - npm run test:build-react-native-ios
 
   - wait
+
+  - label: ':android: Build react-navigation 0.63 apk'
+    env:
+      REACT_NATIVE_VERSION: "rn0.63"
+      JS_SOURCE_DIR: "react_navigation_js"
+      ARTEFACT_NAME: "r_navigation_0.63"
+    plugins:
+      - docker-compose#v3.3.0:
+          run: react-native-android-builder
+    artifact_paths:
+      - build/r_navigation_0.63.apk
+
+  - label: ':ios: Build react-navigation 0.63 ipa'
+    agents:
+      queue: "opensource-mac-rn"
+    env:
+      REACT_NATIVE_VERSION: rn0.63
+      JS_SOURCE_DIR: "react_navigation_js"
+      ARTEFACT_NAME: "r_navigation_0.63"
+    artifact_paths: build/r_navigation_0.63.ipa
+    commands:
+      - npm run test:build-react-native-ios
 
   - label: ':android: React-native 0.60 Android 9'
     plugins:
