@@ -40,12 +40,19 @@ module.exports = {
     const version = process.env.NOTIFIER_VERSION || common.determineVersion()
     const rnVersion = process.env.REACT_NATIVE_VERSION
     const registryUrl = process.env.REGISTRY_URL
+    const jsSourceDir = process.env.JS_SOURCE_DIR
+
+    if (process.env.ARTEFACT_NAME) {
+      let artefactName = process.env.ARTEFACT_NAME
+    } else {
+      let artefactName = rnVersion
+    }
 
     console.log(`Installing notifier version: ${version}`)
 
     // Copy in files required
     common.run(`rsync -a ${sourceFixtures}/${rnVersion} ${destFixtures}`, true)
-    common.run(`rsync -a ${sourceFixtures}/app ${destFixtures}/${rnVersion}`, true)
+    common.run(`rsync -a ${sourceFixtures}/app/${jsSourceDir}/ ${destFixtures}/${rnVersion}`, true)
     common.run(`rsync -a ${sourceFixtures}/reactnative ${destFixtures}/${rnVersion}/android/app/src/main/java/com`, true)
 
     // JavaScript layer
@@ -54,23 +61,40 @@ module.exports = {
     common.run(`npm install --registry ${registryUrl}`, true)
 
     // Install notifier
-    const command = `npm install @bugsnag/react-native@${version} --registry ${registryUrl}`
+    let command = `npm install @bugsnag/react-native@${version}  --registry ${registryUrl}`
     common.run(command, true)
+
+    // Install navigation tracker
+    command = `npm install @bugsnag/plugin-react-navigation@${version} --registry ${registryUrl}`
+    common.run(command, true)
+
+    // Install any required secondary files
+    if (fs.existsSync('./install.sh')) {
+      console.log(`Installing secondary requirements`)
+      common.run('./install.sh', true)
+    }
 
     // Native layer
     common.changeDir('android')
     common.run('./gradlew assembleRelease', true)
 
     // Finally, copy the APK back to the host
-    fs.copyFileSync(`${destFixtures}/${rnVersion}/android/app/build/outputs/apk/release/app-release.apk`, `/app/build/${rnVersion}.apk`)
+    fs.copyFileSync(`${destFixtures}/${rnVersion}/android/app/build/outputs/apk/release/app-release.apk`, `/app/build/${artefactName}.apk`)
   },
   buildIOS: function buildIOS () {
     const version = process.env.NOTIFIER_VERSION || common.determineVersion()
     const rnVersion = process.env.REACT_NATIVE_VERSION
     const registryUrl = process.env.REGISTRY_URL
+    const jsSourceDir = process.env.JS_SOURCE_DIR
     const fixtureDir = 'test/react-native/features/fixtures'
     const targetDir = `${fixtureDir}/${rnVersion}`
     const initialDir = process.cwd()
+
+    if (process.env.ARTEFACT_NAME) {
+      let artefactName = process.env.ARTEFACT_NAME
+    } else {
+      let artefactName = rnVersion
+    }
 
     // We're not in docker so check the above are set
     if (rnVersion === undefined || registryUrl === undefined) {
@@ -79,7 +103,7 @@ module.exports = {
 
     // Copy the JS code into the test fixture
     console.log(`Copying JS app data from ${fixtureDir}/app to ${targetDir}`)
-    common.run(`cp -r ${fixtureDir}/app ${targetDir}/app`, true)
+    common.run(`cp -r ${fixtureDir}/app/${jsSourceDir}/ ${targetDir}`, true)
 
     // JavaScript layer
     console.log(`Changing directory to: ${targetDir} and running "npm install"`)
@@ -88,8 +112,17 @@ module.exports = {
 
     // Install notifier
     console.log(`Installing notifier: ${version}`)
-    const command = `npm install @bugsnag/react-native@${version} --registry ${registryUrl}`
+    let command = `npm install @bugsnag/react-native@${version}  --registry ${registryUrl}`
     common.run(command, true)
+
+    // Install navigation tracker
+    command = `npm install @bugsnag/plugin-react-navigation@${version} --registry ${registryUrl}`
+    common.run(command, true)
+
+    // Install any required secondary files
+    if (fs.existsSync('./install.sh')) {
+      common.run('./install.sh', true)
+    }
 
     // Performing local build steps
     console.log('Locating local build script')
@@ -103,6 +136,6 @@ module.exports = {
     if (!fs.existsSync('build')) {
       common.run('mkdir build')
     }
-    fs.copyFileSync(`${targetDir}/output/output.ipa`, `build/${rnVersion}.ipa`)
+    fs.copyFileSync(`${targetDir}/output/output.ipa`, `build/${artefactName}.ipa`)
   }
 }
