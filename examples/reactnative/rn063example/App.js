@@ -31,8 +31,12 @@ function triggerHandledException() {
   bogusHandledFunction(); // eslint-disable-line no-undef
 }
 
-function triggerPromiseRejection() {
-  NativeModules.CrashyCrashy.generatePromiseRejection();
+async function triggerPromiseRejection() {
+  try {
+    await NativeModules.CrashyCrashy.generatePromiseRejection();
+  } catch (e) {
+    Bugsnag.notify(e)
+  }
 }
 
 function triggerNativeException() {
@@ -101,7 +105,7 @@ const App: () => React$Node = () => {
                       }
                     }} />
                 <Text style={styles.info}>
-                  Tap this button to send a promise rejection to Bugsnag
+                  Tap this button to send a native promise rejection to Bugsnag
                 </Text>
 
                 <Button
