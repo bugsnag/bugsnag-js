@@ -40,10 +40,13 @@ module.exports = {
     const version = process.env.NOTIFIER_VERSION || common.determineVersion()
     const rnVersion = process.env.REACT_NATIVE_VERSION
     const registryUrl = process.env.REGISTRY_URL
-    const jsSourceDir = process.env.JS_SOURCE_DIR
+
+    let jsSourceDir = 'scenario_js'
+    if (process.env.JS_SOURCE_DIR) {
+      jsSourceDir = process.env.JS_SOURCE_DIR
+    }
 
     let artefactName = rnVersion
-
     if (process.env.ARTEFACT_NAME) {
       artefactName = process.env.ARTEFACT_NAME
     }
