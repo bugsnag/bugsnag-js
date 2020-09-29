@@ -1,20 +1,33 @@
 import * as React from 'react';
-import {View, Text, Button} from 'react-native';
+import {View, Text, Button, NativeModules} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import Bugsnag from '@bugsnag/react-native';
 import BugsnagReactNavigation from '@bugsnag/plugin-react-navigation';
 
-Bugsnag.start({
-  plugins: [new BugsnagReactNavigation()],
-});
+NativeModules.BugsnagTestInterface.startBugsnag({
+  apiKey: '12312312312312312312312312312312',
+  endpoint: 'http://bs-local.com:9339',
+  autoTrackSessions: false
+}, () => {
+  Bugsnag.start({
+    plugins: [new BugsnagReactNavigation()],
+  })
+})
 
 function HomeScreen({navigation}) {
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <Text>Home Screen</Text>
-      <Button title="Details" onPress={() => navigation.navigate('Details')} />
-      <Button title="Bugsnag" onPress={() => Bugsnag.notify(new Error('hi'))} />
+      <Button title='Navigate'
+        accessibilityLabel='navigate'
+        onPress={() => navigation.navigate('Details')} />
+      <Button title='Notify handled error'
+        accessibilityLabel='sendHandled'
+        onPress={() => Bugsnag.notify(new Error('HomeNavigationError'))} />
+      <Button title='Set context'
+        accessibilityLabel='setContext'
+        onPress={() => Bugsnag.setContext('homeSetContext')} />
     </View>
   );
 }
@@ -23,7 +36,15 @@ function DetailsScreen({navigation}) {
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <Text>Details Screen</Text>
-      <Button title="Home" onPress={() => navigation.navigate('Home')} />
+      <Button title='Navigate'
+        accessibilityLabel='navigate'
+        onPress={() => navigation.navigate('Details')} />
+      <Button title='Notify handled error'
+        accessibilityLabel='sendHandled'
+        onPress={() => Bugsnag.notify(new Error('DetailsNavigationError'))} />
+      <Button title='Set context'
+        accessibilityLabel='setContext'
+        onPress={() => Bugsnag.setContext('detailsSetContext')} />
     </View>
   );
 }
@@ -39,12 +60,12 @@ function App() {
         <Stack.Screen
           name="Home"
           component={HomeScreen}
-          options={{title: 'Awesome app home'}}
+          options={{title: 'HomeScreen'}}
         />
         <Stack.Screen
           name="Details"
           component={DetailsScreen}
-          options={{title: 'Awesome app details'}}
+          options={{title: 'DetailsScreen'}}
         />
       </Stack.Navigator>
     </BugsnagNavigationContainer>

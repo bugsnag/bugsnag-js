@@ -132,7 +132,7 @@ services:
       - REACT_NATIVE_VERSION
       - NOTIFIER_VERSION
       - ARTEFACT_NAME
-      - JS_SOURCE_DIR=scenario_js
+      - JS_SOURCE_DIR
     networks:
       default:
         aliases:
