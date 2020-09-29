@@ -75,6 +75,7 @@
     "packages/plugin-navigation-breadcrumbs",
     "packages/plugin-network-breadcrumbs",
     "packages/plugin-react-native-app-state-breadcrumbs",
+    "packages/plugin-react-native-connectivity-breadcrumbs",
     "packages/plugin-react-native-orientation-breadcrumbs",
     "packages/plugin-react-native-unhandled-rejection",
     "packages/plugin-react-native-hermes",

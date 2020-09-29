@@ -1,34 +1,34 @@
-const { describe, it, expect } = global
+import Client from '@bugsnag/core/client'
+import _NetInfo, { NetInfoState } from '@react-native-community/netinfo'
+import plugin from '../'
 
-const proxyquire = require('proxyquire').noCallThru().noPreserveCache()
+jest.mock('@react-native-community/netinfo', () => ({
+  addEventListener: jest.fn()
+}))
 
-const Client = require('@bugsnag/core/client')
+const NetInfo = _NetInfo as jest.Mocked<typeof _NetInfo>
 
 describe('plugin: react native connectivity breadcrumbs', () => {
-  it('should create a breadcrumb when NetInfo events happen', () => {
-    let _cb
-    const NetInfo = {
-      addEventListener: (fn) => {
-        _cb = fn
-      }
-    }
-    const plugin = proxyquire('../', {
-      '@react-native-community/netinfo': NetInfo
-    })
+  beforeEach(() => {
+    NetInfo.addEventListener.mockClear()
+  })
 
+  it('should create a breadcrumb when NetInfo events happen', () => {
     const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', plugins: [plugin] })
     expect(client).toBe(client)
 
-    expect(typeof _cb).toBe('function')
+    expect(NetInfo.addEventListener).toHaveBeenCalledWith(expect.any(Function))
     expect(client._breadcrumbs.length).toBe(0)
 
-    _cb({ type: 'wifi', isConnected: true, isInternetReachable: true })
+    const _cb = NetInfo.addEventListener.mock.calls[0][0]
+
+    _cb({ type: 'wifi', isConnected: true, isInternetReachable: true } as unknown as NetInfoState)
     expect(client._breadcrumbs.length).toBe(1)
     expect(client._breadcrumbs[0].type).toBe('state')
     expect(client._breadcrumbs[0].message).toBe('Connectivity changed')
     expect(client._breadcrumbs[0].metadata).toEqual({ type: 'wifi', isConnected: true, isInternetReachable: true })
 
-    _cb({ type: 'none', isConnected: false, isInternetReachable: false })
+    _cb({ type: 'none', isConnected: false, isInternetReachable: false } as unknown as NetInfoState)
     expect(client._breadcrumbs.length).toBe(2)
     expect(client._breadcrumbs[1].type).toBe('state')
     expect(client._breadcrumbs[1].message).toBe('Connectivity changed')
@@ -36,53 +36,23 @@ describe('plugin: react native connectivity breadcrumbs', () => {
   })
 
   it('should not be enabled when enabledBreadcrumbTypes=null', () => {
-    let _cb
-    const NetInfo = {
-      addEventListener: (type, fn) => {
-        _cb = fn
-      }
-    }
-    const plugin = proxyquire('../', {
-      '@react-native-community/netinfo': NetInfo
-    })
-
     const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: null, plugins: [plugin] })
     expect(client).toBe(client)
 
-    expect(_cb).toBe(undefined)
+    expect(NetInfo.addEventListener).not.toHaveBeenCalled()
   })
 
   it('should not be enabled when enabledBreadcrumbTypes=[]', () => {
-    let _cb
-    const NetInfo = {
-      addEventListener: (fn) => {
-        _cb = fn
-      }
-    }
-    const plugin = proxyquire('../', {
-      '@react-native-community/netinfo': NetInfo
-    })
-
     const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: [], plugins: [plugin] })
     expect(client).toBe(client)
 
-    expect(_cb).toBe(undefined)
+    expect(NetInfo.addEventListener).not.toHaveBeenCalled()
   })
 
   it('should be enabled when enabledBreadcrumbTypes=["state"]', () => {
-    let _cb
-    const NetInfo = {
-      addEventListener: (fn) => {
-        _cb = fn
-      }
-    }
-    const plugin = proxyquire('../', {
-      '@react-native-community/netinfo': NetInfo
-    })
-
     const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: ['state'], plugins: [plugin] })
     expect(client).toBe(client)
 
-    expect(typeof _cb).toBe('function')
+    expect(NetInfo.addEventListener).toHaveBeenCalledWith(expect.any(Function))
   })
 })
