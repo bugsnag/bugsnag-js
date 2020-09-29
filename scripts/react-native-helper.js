@@ -121,8 +121,10 @@ module.exports = {
     let command = `npm install @bugsnag/react-native@${version}  --registry ${registryUrl}`
     common.run(command, true)
 
-    // Install navigation tracker
+    // Install navigation trackers
     command = `npm install @bugsnag/plugin-react-navigation@${version} --registry ${registryUrl}`
+    common.run(command, true)
+    command = `npm install @bugsnag/plugin-react-native-navigation@${version} --registry ${registryUrl}`
     common.run(command, true)
 
     // Install any required secondary files
