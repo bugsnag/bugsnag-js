@@ -59,28 +59,6 @@ steps:
 
   - wait
 
-  - label: ':android: Build react-navigation 0.63 apk'
-    env:
-      REACT_NATIVE_VERSION: "rn0.63"
-      JS_SOURCE_DIR: "react_navigation_js"
-      ARTEFACT_NAME: "r_navigation_0.63"
-    plugins:
-      - docker-compose#v3.3.0:
-          run: react-native-android-builder
-    artifact_paths:
-      - build/r_navigation_0.63.apk
-
-  - label: ':ios: Build react-navigation 0.63 ipa'
-    agents:
-      queue: "opensource-mac-rn"
-    env:
-      REACT_NATIVE_VERSION: rn0.63
-      JS_SOURCE_DIR: "react_navigation_js"
-      ARTEFACT_NAME: "r_navigation_0.63"
-    artifact_paths: build/r_navigation_0.63.ipa
-    commands:
-      - npm run test:build-react-native-ios
-
   - label: ':android: React-native 0.60 Android 9'
     plugins:
       artifacts#v1.2.0:
@@ -130,5 +108,111 @@ steps:
     env:
       DEVICE_TYPE: "IOS_12"
       APP_LOCATION: "build/rn0.63.ipa"
+    concurrency: 10
+    concurrency_group: 'browserstack-app'
+
+  - label: ':android: Build react-navigation 0.60 apk'
+    env:
+      REACT_NATIVE_VERSION: "rn0.60"
+      JS_SOURCE_DIR: "react_navigation_js"
+      ARTEFACT_NAME: "r_navigation_0.60"
+    plugins:
+      - docker-compose#v3.3.0:
+          run: react-native-android-builder
+    artifact_paths:
+      - build/r_navigation_0.60.apk
+
+  - label: ':ios: Build react-navigation 0.60 ipa'
+    agents:
+      queue: "opensource-mac-rn"
+    env:
+      REACT_NATIVE_VERSION: rn0.60
+      JS_SOURCE_DIR: "react_navigation_js"
+      ARTEFACT_NAME: "r_navigation_0.60"
+    artifact_paths: build/r_navigation_0.60.ipa
+    commands:
+      - npm run test:build-react-native-ios
+
+  - label: ':android: Build react-navigation 0.63 apk'
+    env:
+      REACT_NATIVE_VERSION: "rn0.63"
+      JS_SOURCE_DIR: "react_navigation_js"
+      ARTEFACT_NAME: "r_navigation_0.63"
+    plugins:
+      - docker-compose#v3.3.0:
+          run: react-native-android-builder
+    artifact_paths:
+      - build/r_navigation_0.63.apk
+
+  - label: ':ios: Build react-navigation 0.63 ipa'
+    agents:
+      queue: "opensource-mac-rn"
+    env:
+      REACT_NATIVE_VERSION: rn0.63
+      JS_SOURCE_DIR: "react_navigation_js"
+      ARTEFACT_NAME: "r_navigation_0.63"
+    artifact_paths: build/r_navigation_0.63.ipa
+    commands:
+      - npm run test:build-react-native-ios
+
+  - wait
+
+  - label: ':android: React-navigation 0.60 Android 9'
+    plugins:
+      artifacts#v1.2.0:
+        download: "build/r_navigation_0.60.apk"
+      docker-compose#v3.3.0:
+        run: react-native-maze-runner
+        use-aliases: true
+    command: features/navigation.feature
+    env:
+      DEVICE_TYPE: "ANDROID_9"
+      APP_LOCATION: "build/r_navigation_0.60.apk"
+      RUN_NAVIGATION_SCENARIOS: "true"
+    concurrency: 10
+    concurrency_group: 'browserstack-app'
+
+  - label: ':ios: React-navigation 0.60 iOS 12'
+    plugins:
+      artifacts#v1.2.0:
+        download: "build/r_navigation_0.60.ipa"
+      docker-compose#v3.1.0:
+        run: react-native-maze-runner
+        use-aliases: true
+    command: features/navigation.feature
+    env:
+      DEVICE_TYPE: "IOS_12"
+      APP_LOCATION: "build/rn0.60.ipa"
+      RUN_NAVIGATION_SCENARIOS: "true"
+    concurrency: 10
+    concurrency_group: 'browserstack-app'
+
+  - label: ':android: React-navigation 0.63 Android 9'
+    plugins:
+      artifacts#v1.2.0:
+        download: "build/r_navigation_0.63.apk"
+      docker-compose#v3.3.0:
+        run: react-native-maze-runner
+        use-aliases: true
+    command: features/navigation.feature
+    env:
+      DEVICE_TYPE: "ANDROID_9"
+      APP_LOCATION: "build/r_navigation_0.63.apk"
+      RUN_NAVIGATION_SCENARIOS: "true"
+    concurrency: 10
+    concurrency_group: 'browserstack-app'
+
+  - label: ':ios: React-navigation 0.63 iOS 12'
+    plugins:
+      artifacts#v1.2.0:
+        download: "build/r_navigation_0.63.ipa"
+      docker-compose#v3.1.0:
+        run: react-native-maze-runner
+        use-aliases: true
+    command: features/navigation.feature
+    env:
+      DEVICE_TYPE: "IOS_12"
+      APP_LOCATION: "build/rn0.63.ipa"
+      RUN_NAVIGATION_SCENARIOS: "true"
     concurrency: 10
     concurrency_group: 'browserstack-app'
