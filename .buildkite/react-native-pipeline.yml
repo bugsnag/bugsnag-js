@@ -274,7 +274,7 @@ steps:
       docker-compose#v3.3.0:
         run: react-native-maze-runner
         use-aliases: true
-        command: features/navigation.feature
+        command: ["features/navigation.feature"]
     env:
       DEVICE_TYPE: "ANDROID_9"
       APP_LOCATION: "build/r_native_navigation_0.60.apk"
@@ -305,7 +305,7 @@ steps:
       docker-compose#v3.3.0:
         run: react-native-maze-runner
         use-aliases: true
-        command: features/navigation.feature
+        command: ["features/navigation.feature"]
     env:
       DEVICE_TYPE: "ANDROID_9"
       APP_LOCATION: "build/r_native_navigation_0.63.apk"
