@@ -1,3 +1,5 @@
+/* eslint-disable jest/no-disabled-tests */
+
 import Client from '@bugsnag/core/client'
 import delivery from '../'
 import EventWithInternals from '@bugsnag/core/event'
@@ -72,7 +74,7 @@ describe('delivery: react native', () => {
     })
   })
 
-  it('extracts nativeStackIOS', done => {
+  it.skip('extracts nativeStackIOS', done => {
     const sent: NativeClientEvent[] = []
     const NativeClient = {
       dispatch: (event: NativeClientEvent) => {
@@ -100,7 +102,7 @@ describe('delivery: react native', () => {
     })
   })
 
-  it('extracts nativeStackAndroid', done => {
+  it.skip('extracts nativeStackAndroid', done => {
     const sent: NativeClientEvent[] = []
     const NativeClient = {
       dispatch: (event: NativeClientEvent) => {
