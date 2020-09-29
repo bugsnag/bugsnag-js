@@ -1,5 +1,6 @@
 Feature: Native stacktrace is parsed for promise rejections
 
+@skip
 @android_only
 Scenario: Handled JS error with native stacktrace
   When I run "NativeStackHandledScenario"
@@ -34,6 +35,7 @@ Scenario: Handled JS error with native stacktrace
   And the payload field "events.0.exceptions.1.stacktrace.1.lineNumber" equals 1
   And the payload field "events.0.exceptions.1.stacktrace.2.lineNumber" equals 2
 
+@skip
 @android_only
 Scenario: Unhandled JS error with native stacktrace
   When I run "NativeStackUnhandledScenario"
@@ -67,6 +69,7 @@ Scenario: Unhandled JS error with native stacktrace
   And the payload field "events.0.exceptions.1.stacktrace.1.lineNumber" equals 1
   And the payload field "events.0.exceptions.1.stacktrace.2.lineNumber" equals 2
 
+@skip
 @ios_only
 Scenario: Handled JS error with native stacktrace
   When I run "NativeStackHandledScenario"
