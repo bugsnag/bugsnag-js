@@ -10,7 +10,6 @@ import {NativeModules} from 'react-native'
 
 import Bugsnag from '@bugsnag/react-native';
 import BugsnagReactNativeNavigation from '@bugsnag/plugin-react-native-navigation';
-import DetailsScreen from './screens/Details';
 
 NativeModules.BugsnagTestInterface.startBugsnag({
   apiKey: '12312312312312312312312312312312',
