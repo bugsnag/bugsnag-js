@@ -1,8 +1,6 @@
-const { describe, it, expect } = global
+import plugin from '../navigation-breadcrumbs'
 
-const plugin = require('../navigation-breadcrumbs')
-
-const Client = require('@bugsnag/core/client')
+import Client from '@bugsnag/core/client'
 
 describe('plugin: navigation breadcrumbs', () => {
   it('should drop breadcrumb for navigational activity', done => {
@@ -50,32 +48,35 @@ describe('plugin: navigation breadcrumbs', () => {
     expect(c._breadcrumbs.length).toBe(0)
   })
 
-  it('should start a new session if autoTrackSessions=true', (done) => {
+  it('should start a new session if autoTrackSessions=true', () => {
     const { winHandlers, docHandlers, window } = getMockWindow()
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', plugins: [plugin(window)] })
     c._sessionDelegate = {
-      startSession: client => {
-        done()
-      }
+      startSession: jest.fn(),
+      pauseSession: () => {},
+      resumeSession: () => {}
     }
     winHandlers.load.forEach((h) => h.call(window))
     docHandlers.DOMContentLoaded.forEach((h) => h.call(window.document))
     window.history.replaceState({}, 'bar', 'network-breadcrumb-test.html')
+    expect(c._sessionDelegate.startSession).toHaveBeenCalledWith(c, expect.objectContaining({
+      id: expect.any(String),
+      startedAt: expect.any(Date)
+    }))
   })
 
-  it('should not a new session if autoTrackSessions=false', (done) => {
+  it('should not start a new session if autoTrackSessions=false', () => {
     const { winHandlers, docHandlers, window } = getMockWindow()
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', autoTrackSessions: false, plugins: [plugin(window)] })
     c._sessionDelegate = {
-      startSession: client => {
-        expect('shouldn’t get here').toBe(false)
-        done()
-      }
+      startSession: jest.fn(),
+      pauseSession: () => {},
+      resumeSession: () => {}
     }
     winHandlers.load.forEach((h) => h.call(window))
     docHandlers.DOMContentLoaded.forEach((h) => h.call(window.document))
     window.history.replaceState({}, 'bar', 'network-breadcrumb-test.html')
-    setTimeout(() => done(), 1)
+    expect(c._sessionDelegate.startSession).not.toHaveBeenCalled()
   })
 
   it('should be enabled when enabledReleaseStages=["navigation"]', () => {
@@ -95,13 +96,13 @@ describe('plugin: navigation breadcrumbs', () => {
 })
 
 const getMockWindow = () => {
-  const winHandlers = { load: [] }
-  const docHandlers = { DOMContentLoaded: [] }
+  const winHandlers: { [eventName: string]: Array<() => void>} = { load: [] }
+  const docHandlers: { [eventName: string]: Array<() => void> } = { DOMContentLoaded: [] }
 
   // mock the window stuff this plugin uses
   const window = {
     document: {
-      createElement: function (tag) {
+      createElement: function (tag: string) {
         const el = { href: '' }
         Object.defineProperties(el, {
           pathname: {
@@ -125,7 +126,7 @@ const getMockWindow = () => {
         })
         return el
       },
-      addEventListener: function (evt, handler) {
+      addEventListener: function (evt: string, handler: () => void) {
         docHandlers[evt] = docHandlers[evt] ? docHandlers[evt].concat(handler) : [handler]
       }
     },
@@ -133,15 +134,15 @@ const getMockWindow = () => {
       href: 'https://app.bugsnag.com/errors'
     },
     history: {
-      replaceState: function (state, title, url) {
+      replaceState: function (state: {}, title: string, url: string) {
         window.location.href = `https://app.bugsnag.com/${url}`
       },
       pushState: function () {},
       popState: function () {}
     },
-    addEventListener: function (evt, handler) {
+    addEventListener: function (evt: string, handler: () => void) {
       winHandlers[evt] = winHandlers[evt] ? winHandlers[evt].concat(handler) : [handler]
     }
-  }
+  } as unknown as Window & typeof globalThis
   return { winHandlers, docHandlers, window }
 }
