@@ -5,6 +5,13 @@ When("I trigger a handled error") do
   }
 end
 
+When("I trigger an unhandled error") do
+  steps %Q{
+    Given the element "sendUnhandled" is present within 60 seconds
+    And I click the element "sendUnhandled"
+  }
+end
+
 When("I navigate to a different screen") do
   steps %Q{
     Given the element "navigate" is present within 30 seconds
