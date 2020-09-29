@@ -26,9 +26,7 @@ jest.mock('react-native', () => ({
   },
   Platform: {
     OS: 'android'
-  },
-  NativeEventEmitter: function () {},
-  DeviceEventEmitter: { addListener: () => {} }
+  }
 }))
 
 describe('react native notifier', () => {
