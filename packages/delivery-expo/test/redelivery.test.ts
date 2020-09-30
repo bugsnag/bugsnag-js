@@ -1,17 +1,15 @@
-/* global describe, it, expect, spyOn */
-
-const Redelivery = require('../redelivery')
+import Redelivery from '../redelivery'
 
 describe('delivery: expo -> redelivery', () => {
   it('should attempt to dequeue (almost) immediately', done => {
-    const send = (url, opts, cb) => {
+    const send = (url: string, opts: {}, cb: () => void) => {
       expect(url).toBe('https://notify.bugsnag.com')
       consumer.stop()
       cb()
       done()
     }
     const queue = {
-      remove: async id => {},
+      remove: async () => {},
       peek: async () => {
         return Promise.resolve({
           id: '/path/to/payload.json',
@@ -29,7 +27,7 @@ describe('delivery: expo -> redelivery', () => {
   })
 
   it('should clear the timeout if nothing is found on the queue', done => {
-    const send = (url, opts, cb) => {
+    const send = (url: string, opts: {}, cb: () => void) => {
       expect(url).toBe('https://notify.bugsnag.com')
       expect(nCalls).toBe(5)
       consumer.stop()
@@ -37,7 +35,7 @@ describe('delivery: expo -> redelivery', () => {
     }
     let nCalls = 0
     const queue = {
-      remove: async id => {},
+      remove: async () => {},
       enqueue: async () => {},
       peek: async () => {
         nCalls++
@@ -59,12 +57,12 @@ describe('delivery: expo -> redelivery', () => {
       }
     }
     const consumer = new Redelivery(send, queue, () => {}, 1, 5)
-    const stopSpy = spyOn(consumer, 'stop')
+    const stopSpy = jest.spyOn(consumer, 'stop')
     consumer.start()
   })
 
   it('should not remove something from the queue if it fails to send', done => {
-    const send = (url, opts, cb) => {
+    const send = (url: string, opts: {}, cb: (err?: Error) => void) => {
       cb(new Error('derp'))
     }
 
@@ -85,7 +83,7 @@ describe('delivery: expo -> redelivery', () => {
       }
     }
 
-    const removeSpy = spyOn(queue, 'remove')
+    const removeSpy = jest.spyOn(queue, 'remove')
     const consumer = new Redelivery(send, queue, () => {}, 1, 5)
     consumer.start()
     setTimeout(() => {
@@ -95,8 +93,8 @@ describe('delivery: expo -> redelivery', () => {
   })
 
   it('removes something from the queue if it fails in a non-retryable way', done => {
-    const send = (url, opts, cb) => {
-      const err = new Error('derp')
+    const send = (url: string, opts: {}, cb: (err?: Error) => void) => {
+      const err: Error & { isRetryable?: boolean } = new Error('derp')
       err.isRetryable = false
       cb(err)
     }
@@ -118,7 +116,7 @@ describe('delivery: expo -> redelivery', () => {
       }
     }
 
-    const removeSpy = spyOn(queue, 'remove')
+    const removeSpy = jest.spyOn(queue, 'remove')
     const consumer = new Redelivery(send, queue, () => {}, 1, 5)
     consumer.start()
     setTimeout(() => {
@@ -129,7 +127,7 @@ describe('delivery: expo -> redelivery', () => {
   })
 
   it('removes something from the queue if it reaches the maximum retries', done => {
-    const send = (url, opts, cb) => {
+    const send = (url: string, opts: {}, cb: (err?: Error) => void) => {
       const err = new Error('derp')
       cb(err)
     }
@@ -150,7 +148,7 @@ describe('delivery: expo -> redelivery', () => {
       }
     }
 
-    const removeSpy = spyOn(queue, 'remove')
+    const removeSpy = jest.spyOn(queue, 'remove')
     const consumer = new Redelivery(send, queue, () => {}, 1, 5)
     consumer.start()
     setTimeout(() => {
