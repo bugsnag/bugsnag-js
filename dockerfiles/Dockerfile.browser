@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 
-COPY babel.config.js lerna.json .eslintignore .eslintrc.js jest.config.js tsconfig.json ./
+COPY babel.config.js lerna.json .eslintignore .eslintrc.js jest.config.js tsconfig.json unimodules-core.d.ts ./
 ADD min_packages.tar .
 COPY bin ./bin
 RUN npx lerna bootstrap --concurrency 1
