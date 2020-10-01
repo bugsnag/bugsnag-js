@@ -131,7 +131,8 @@ describe('browser notifier', () => {
       logger: undefined,
       redactedKeys: ['foo', /bar/],
       collectUserIp: true,
-      maxEvents: 10
+      maxEvents: 10,
+      generateAnonymousId: false
     })
 
     Bugsnag.notify(new Error('123'), (event) => {

@@ -29,6 +29,35 @@ def get_error_message id
   ERRORS[ENV['BROWSER']][id]
 end
 
+# check if Selenium supports running javascript in the current browser
+def can_run_javascript
+  $driver.execute_script('return true')
+rescue Selenium::WebDriver::Error::UnsupportedOperationError
+  false
+end
+
+# check if the browser supports local storage, e.g. safari 10 on browserstack
+# does not have working local storage
+def has_local_storage
+  # Assume we can use local storage if we aren't able to verify by running JavaScript
+  return true unless can_run_javascript
+
+  $driver.execute_script <<-JAVASCRIPT
+  try {
+    window.localStorage.setItem('__localstorage_test__', 1234)
+    window.localStorage.removeItem('__localstorage_test__')
+
+    return true
+  } catch (err) {
+    return false
+  }
+  JAVASCRIPT
+end
+
+Before('@skip_if_local_storage_is_unavailable') do |scenario|
+  skip_this_scenario unless has_local_storage
+end
+
 AfterConfiguration do
   # Necessary as Appium removes any existing $driver instance on load
   bs_local_start
