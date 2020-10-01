@@ -45,12 +45,19 @@
 #define kThreadPrimary "KSCrash Exception Handler (Primary)"
 #define kThreadSecondary "KSCrash Exception Handler (Secondary)"
 
+#if __LP64__
+    #define MACH_ERROR_CODE_MASK 0xFFFFFFFFFFFFFFFF
+#else
+    #define MACH_ERROR_CODE_MASK 0xFFFFFFFF
+#endif
+
 // ============================================================================
 #pragma mark - Types -
 // ============================================================================
 
 /** A mach exception message (according to ux_exception.c, xnu-1699.22.81).
  */
+#pragma pack(4)
 typedef struct {
     /** Mach header. */
     mach_msg_header_t header;
@@ -87,9 +94,11 @@ typedef struct {
     /** Padding to avoid RCV_TOO_LARGE. */
     char padding[512];
 } MachExceptionMessage;
+#pragma pack()
 
 /** A mach reply message (according to ux_exception.c, xnu-1699.22.81).
  */
+#pragma pack(4)
 typedef struct {
     /** Mach header. */
     mach_msg_header_t header;
@@ -100,6 +109,7 @@ typedef struct {
     /** Return code. */
     kern_return_t returnCode;
 } MachReplyMessage;
+#pragma pack()
 
 // ============================================================================
 #pragma mark - Globals -
@@ -226,7 +236,7 @@ void *ksmachexc_i_handleExceptions(void *const userData) {
         BSG_KSLOG_ERROR("mach_msg: %s", mach_error_string(kr));
     }
 
-    BSG_KSLOG_DEBUG("Trapped mach exception code 0x%x, subcode 0x%x",
+    BSG_KSLOG_DEBUG("Trapped mach exception code 0x%llx, subcode 0x%llx",
                     exceptionMessage.code[0], exceptionMessage.code[1]);
     if (bsg_g_installed) {
         bool wasHandlingCrash = bsg_g_context->handlingCrash;
@@ -282,8 +292,8 @@ void *ksmachexc_i_handleExceptions(void *const userData) {
         bsg_g_context->offendingThread = exceptionMessage.thread.name;
         bsg_g_context->registersAreValid = true;
         bsg_g_context->mach.type = exceptionMessage.exception;
-        bsg_g_context->mach.code = exceptionMessage.code[0];
-        bsg_g_context->mach.subcode = exceptionMessage.code[1];
+        bsg_g_context->mach.code = exceptionMessage.code[0] & (int64_t)MACH_ERROR_CODE_MASK;
+        bsg_g_context->mach.subcode = exceptionMessage.code[1] & (int64_t)MACH_ERROR_CODE_MASK;
 
         BSG_KSLOG_DEBUG("Calling main crash handler.");
         bsg_g_context->onCrash(crashContext());
@@ -376,7 +386,8 @@ bool bsg_kscrashsentry_installMachHandler(
 
     BSG_KSLOG_DEBUG("Installing port as exception handler.");
     kr = task_set_exception_ports(thisTask, mask, bsg_g_exceptionPort,
-                                  EXCEPTION_DEFAULT, THREAD_STATE_NONE);
+                                  (int)(EXCEPTION_DEFAULT | MACH_EXCEPTION_CODES),
+                                  THREAD_STATE_NONE);
     if (kr != KERN_SUCCESS) {
         BSG_KSLOG_ERROR("task_set_exception_ports: %s", mach_error_string(kr));
         goto failed;

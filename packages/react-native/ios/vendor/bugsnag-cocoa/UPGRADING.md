@@ -224,6 +224,69 @@ The following properties/methods have been removed from the `BugsnagEvent` (prev
 | `shouldBeSent`                                                     | Deprecated - no longer public API.                                |
 | `toJson`                                                           | Deprecated - no longer public API.                                |
 
+#### Depth Replacement
+
+The `depth` property was removed in v6.x of the `bugsnag-cocoa` notifier. To reproduce this behaviour, you can use a [callback](https://docs.bugsnag.com/platforms/ios/customizing-error-reports/#updating-events-using-callbacks) to modify the stacktrace. The functions below will reproduce this behaviour:
+
+> :warning: This can only be achieved using `bugsnag-cocoa` v6.0.1 and above, as the stacktrace array was previously `readonly`.
+
+Using **Swift**, create a function as follows:
+
+```swift
+func bugsnagStacktraceDepth(event: BugsnagEvent, depth: Int) -> [BugsnagStackframe] {
+    if depth > 0 && depth <= event.errors[0].stacktrace.count { /// Check the depth is in a usable range
+        for _ in 0...(depth - 1) {
+            /// always trim from the top of the stacktrace (index 0),
+            /// `.stacktrace` is re-indexing on each iteration.
+            event.errors[0].stacktrace.remove(at: 0)
+        }
+    } else {
+        NSLog("[Bugsnag] Depth parameter was out of range, stacktrace was not trimmed.")
+    }
+    return event.errors[0].stacktrace
+}
+```
+
+Then, add a callback:
+
+```swift
+let config = BugsnagConfiguration.loadConfig()
+config.addOnSendError { (event) -> Bool in
+    event.errors[0].stacktrace = self.bugsnagStacktraceDepth(event: event, depth: 1);
+    return true
+}
+Bugsnag.start(with: config)
+```
+
+Using **Objective-C**, create a function as follows:
+
+```objc
+NSMutableArray<BugsnagStackframe *> * bugsnagStacktraceDepth(BugsnagEvent *event, int depth) {
+    NSMutableArray<BugsnagStackframe *> *newStacktrace = event.errors[0].stacktrace.mutableCopy;
+    if (depth > 0 && depth <= newStacktrace.count) { /// Check the depth is in a usable range
+        for (int index = 0; index < depth; index++) {
+            /// always trim from the top of the stacktrace (index 0),
+            /// `newStacktrace` is re-indexing on each iteration.
+            [newStacktrace removeObjectAtIndex:0];
+        }
+    } else {
+        NSLog(@"[Bugsnag] Depth parameter was out of range, stacktrace was not trimmed.");
+    }
+    return newStacktrace;
+}
+```
+
+Then, add a callback:
+
+```objc
+BugsnagConfiguration *config = [BugsnagConfiguration loadConfig];
+[config addOnSendErrorBlock:^BOOL (BugsnagEvent *event) {
+    event.errors[0].stacktrace = bugsnagStacktraceDepth(event, 1);
+    return YES;
+}];
+[Bugsnag startWithConfiguration:config];
+```
+
 ### Sessions
 
 #### Additions

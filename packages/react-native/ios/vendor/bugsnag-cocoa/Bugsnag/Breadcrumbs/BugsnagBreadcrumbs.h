@@ -41,6 +41,11 @@ typedef void (^BSGBreadcrumbConfiguration)(BugsnagBreadcrumb *_Nonnull);
 - (NSArray *_Nonnull)arrayValue;
 
 /**
+ * Returns an array containing the current buffer of breadcrumbs.
+ */
+- (NSArray<BugsnagBreadcrumb *> *_Nonnull)getBreadcrumbs;
+
+/**
  * The types of breadcrumbs which will be automatically captured.
  * By default, this is all types.
  */

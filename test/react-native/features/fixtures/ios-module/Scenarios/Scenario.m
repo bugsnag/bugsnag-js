@@ -33,7 +33,8 @@
     return self;
 }
 
-- (void)run {
+- (void)run: (RCTPromiseResolveBlock)resolve
+     reject:(RCTPromiseRejectBlock)reject {
 }
 
 @end

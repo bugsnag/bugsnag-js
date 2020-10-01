@@ -25,7 +25,9 @@
 //
 
 #import "Bugsnag.h"
+
 #import "BSG_KSCrash.h"
+#import "BugsnagBreadcrumbs.h"
 #import "BugsnagLogger.h"
 #import "BugsnagClient.h"
 #import "BugsnagClientInternal.h"
@@ -187,6 +189,14 @@ static BugsnagClient *bsg_g_bugsnag_client = NULL;
         [self.client leaveBreadcrumbWithMessage:message
                                        metadata:metadata
                                         andType:type];
+    }
+}
+
++ (NSArray<BugsnagBreadcrumb *> *_Nonnull)breadcrumbs {
+    if ([self bugsnagStarted]) {
+        return [self.client.breadcrumbs getBreadcrumbs];
+    } else {
+        return @[];
     }
 }
 
