@@ -1,5 +1,11 @@
 module.exports = class BugsnagPluginReactNativeNavigation {
   constructor (Navigation) {
+    if (!Navigation) {
+      throw new Error(
+        '@bugsnag/plugin-react-native-navigation reference to `Navigation` was undefined'
+      )
+    }
+
     this.Navigation = Navigation
   }
 

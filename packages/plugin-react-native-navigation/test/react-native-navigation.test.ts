@@ -9,6 +9,12 @@ interface Event {
 }
 
 describe('plugin-react-native-navigation', () => {
+  it('should throw when Navigation is not passed', () => {
+    const message = '@bugsnag/plugin-react-native-navigation reference to `Navigation` was undefined'
+
+    expect(() => new Plugin()).toThrow(new Error(message))
+  })
+
   it('adds an event listener on load', () => {
     const spy = jest.fn()
 
