@@ -151,7 +151,7 @@
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<BugsnagStackframe: %p { %@ %p %@ }>", self,
+    return [NSString stringWithFormat:@"<BugsnagStackframe: %p { %@ %p %@ }>", (void *)self,
             self.machoFile.lastPathComponent, (void *)self.frameAddress.unsignedLongLongValue, self.method];
 }
 
