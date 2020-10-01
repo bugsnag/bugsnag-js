@@ -54,8 +54,6 @@ module.exports = {
         testsForPackage('plugin-react-native-session')
       ],
       setupFiles: [
-        require.resolve('react-native/Libraries/Core/setUpGlobals.js'),
-        require.resolve('react-native/Libraries/Core/setUpXHR.js'),
         '<rootDir>/packages/react-native/src/test/setup.js'
       ]
     },
