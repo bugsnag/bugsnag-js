@@ -29,7 +29,7 @@ Scenario: Navigating screens causes breadcrumbs and context to be updated
   And the event contains a breadcrumb matching the JSON fixture in "features/fixtures/expected_breadcrumbs/HomeReadyNavigation.json"
   And the event contains a breadcrumb matching the JSON fixture in "features/fixtures/expected_breadcrumbs/HomeToDetailsNavigation.json"
 
-Scenario: Navigating when navgiation breadcrumbs are disabled only updates context
+Scenario: Navigating when navigation breadcrumbs are disabled only updates context
   When I run "ReactNavigationBreadcrumbsDisabledScenario"
   And I trigger a handled error
   And I wait to receive a request
