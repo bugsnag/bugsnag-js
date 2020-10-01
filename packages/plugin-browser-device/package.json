@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-browser-device",
-  "version": "7.3.5",
+  "version": "7.4.0",
   "main": "device.js",
   "description": "@bugsnag/js plugin to set device info in browsers",
   "homepage": "https://www.bugsnag.com/",
