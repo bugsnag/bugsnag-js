@@ -5,8 +5,15 @@ function publish (publishUrl) {
   const distTag = common.getCommitId()
 
   // Check for existing published packages
-  const allVersions = JSON.parse(common.run(`npm view @bugsnag/js versions --registry ${publishUrl} --json`).toString())
-  const myVersions = allVersions.filter(function (str) { return str.indexOf(version) !== -1 })
+  let myVersions = []
+  try {
+    const allVersions = JSON.parse(common.run(`npm view @bugsnag/js versions --registry ${publishUrl} --json`).toString())
+    myVersions = allVersions.filter(function (str) { return str.indexOf(version) !== -1 })
+  } catch (err) {
+    // Ignore any errors and assume we can just publish.  For example, the command will fail
+    // with a 404 when there are no @bugsnag/js at all, but that's fine here.
+  }
+
   if (myVersions.length === 0) {
     console.log(`Publishing as '${version}'`)
 

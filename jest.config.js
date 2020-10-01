@@ -26,6 +26,8 @@ module.exports = {
         testsForPackage('plugin-browser-device'),
         testsForPackage('plugin-browser-request'),
         testsForPackage('plugin-client-ip'),
+        testsForPackage('plugin-navigation-breadcrumbs'),
+        testsForPackage('plugin-network-breadcrumbs'),
         testsForPackage('plugin-window-unhandled-rejection'),
         testsForPackage('plugin-window-onerror'),
         testsForPackage('plugin-strip-query-string'),
@@ -42,10 +44,14 @@ module.exports = {
         testsForPackage('react-native'),
         testsForPackage('delivery-react-native'),
         testsForPackage('plugin-react-native-app-state-breadcrumbs'),
+        testsForPackage('plugin-react-native-connectivity-breadcrumbs'),
+        testsForPackage('plugin-react-native-orientation-breadcrumbs'),
         testsForPackage('plugin-react-native-unhandled-rejection'),
         testsForPackage('plugin-react-native-hermes'),
         testsForPackage('plugin-react-native-client-sync'),
-        testsForPackage('plugin-react-native-event-sync')
+        testsForPackage('plugin-react-native-global-error-handler'),
+        testsForPackage('plugin-react-native-event-sync'),
+        testsForPackage('plugin-react-native-session')
       ],
       setupFiles: [
         require.resolve('react-native/Libraries/Core/setUpGlobals.js'),

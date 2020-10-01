@@ -8,6 +8,7 @@
 #import "BSG_KSJSONCodecObjC.h"
 #import "NSError+BSG_SimpleConstructor.h"
 #import "BSG_KSLogger.h"
+#import "BSGCachesDirectory.h"
 
 #pragma mark - Meta Data
 
@@ -187,25 +188,11 @@
 + (NSString *)findReportStorePath:(NSString *)customDirectory  {
 
     NSString *bundleName = [[NSBundle mainBundle] infoDictionary][@"CFBundleName"];
-    NSArray *directories = NSSearchPathForDirectoriesInDomains(
-            NSCachesDirectory, NSUserDomainMask, YES);
-    if ([directories count] == 0) {
-        BSG_KSLOG_ERROR(@"Could not locate cache directory path.");
-        return nil;
-    }
-
-    NSString *cachePath = directories[0];
-
-    if ([cachePath length] == 0) {
-        BSG_KSLOG_ERROR(@"Could not locate cache directory path.");
-        return nil;
-    }
-
     NSString *storePathEnd = [customDirectory
             stringByAppendingPathComponent:bundleName];
 
     NSString *storePath =
-            [cachePath stringByAppendingPathComponent:storePathEnd];
+            [[BSGCachesDirectory cachesDirectory] stringByAppendingPathComponent:storePathEnd];
 
     if ([storePath length] == 0) {
         BSG_KSLOG_ERROR(@"Could not determine report files path.");

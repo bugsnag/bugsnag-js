@@ -299,7 +299,6 @@ void BSGWriteSessionCrashData(BugsnagSession *session) {
 @property (nonatomic, strong) BugsnagPluginClient *pluginClient;
 @property (nonatomic) BOOL appDidCrashLastLaunch;
 @property (nonatomic, strong) BugsnagMetadata *metadata;
-@property(nonatomic, strong) BugsnagBreadcrumbs *breadcrumbs;
 @property (nonatomic) NSString *codeBundleId;
 @property(nonatomic, readwrite, strong) NSMutableArray *stateEventBlocks;
 #if BSG_PLATFORM_IOS
@@ -617,7 +616,7 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
     BOOL notInAppExtension = ![BSG_KSSystemInfo isRunningInAppExtension];
 
     if (configuredToReportOOMs && noDebuggerEnabled && notInAppExtension) {
-        [self.oomWatchdog enable];
+        [self.oomWatchdog start];
     }
 
     [self.sessionTracker startNewSessionIfAutoCaptureEnabled];

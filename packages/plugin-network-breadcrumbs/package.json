@@ -14,15 +14,10 @@
   "files": [
     "*.js"
   ],
-  "scripts": {
-    "test": "nyc --reporter=lcov -- jasmine '!(node_modules)/**/*.test.js'"
-  },
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^7.3.5",
-    "jasmine": "^3.1.0",
-    "nyc": "^12.0.2"
+    "@bugsnag/core": "^7.3.5"
   },
   "peerDependencies": {
     "@bugsnag/core": "^7.0.0"

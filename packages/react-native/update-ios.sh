@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-IOS_REPO_DIR=../../../bugsnag-cocoa
+IOS_REPO_DIR=../../../cocoa
 IOS_DST=ios/vendor/bugsnag-cocoa
 
 echo "Clearing out ${IOS_DST}"

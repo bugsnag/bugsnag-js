@@ -27,16 +27,16 @@
 #import <Foundation/Foundation.h>
 
 /** Optional behavior when encoding JSON data */
-typedef enum {
+typedef NS_OPTIONS(NSUInteger, BSG_KSJSONEncodeOption) {
     /** Indent 4 spaces per object/array level */
     BSG_KSJSONEncodeOptionPretty = 1,
 
     /** Sort object contents by key name */
     BSG_KSJSONEncodeOptionSorted = 2,
-} BSG_KSJSONEncodeOption;
+};
 
 /** Optional behavior when decoding JSON data */
-typedef enum {
+typedef NS_OPTIONS(NSUInteger, BSG_KSJSONDecodeOption) {
     /** Normally, null elements get stored as [NSNull null].
      * If this option is set, do not store anything when a null element is
      * encountered inside an array.
@@ -54,7 +54,7 @@ typedef enum {
 
     /** If an error is encountered, return the partially decoded object. */
     BSG_KSJSONDecodeOptionKeepPartialObject = 4,
-} BSG_KSJSONDecodeOption;
+};
 
 /**
  * Encodes and decodes UTF-8 JSON data.

@@ -7,8 +7,12 @@
 //
 
 #import "BugsnagStackframe.h"
-#import "BugsnagKeys.h"
+
+#import "BSG_KSBacktrace.h"
+#import "BSG_KSDynamicLinker.h"
 #import "BugsnagCollections.h"
+#import "BugsnagKeys.h"
+#import "BugsnagLogger.h"
 
 @implementation BugsnagStackframe
 
@@ -64,6 +68,91 @@
     } else { // invalid frame, skip
         return nil;
     }
+}
+
++ (NSArray<BugsnagStackframe *> *)stackframesWithCallStackSymbols:(NSArray<NSString *> *)callStackSymbols {
+    NSString *pattern = (@"^(\\d+)"             // Capture the leading frame number
+                         @" +"                  // Skip whitespace
+                         @"(\\S+)"              // Image name
+                         @" +"                  // Skip whitespace
+                         @"(0x[0-9a-fA-F]+)"    // Capture the frame address
+                         @"("                   // Start optional group
+                         @" "                   // Skip whitespace
+                         @"(.+)"                // Capture symbol name
+                         @" \\+ "               // Skip " + "
+                         @"\\d+"                // Instruction offset
+                         @")?$"                 // End optional group
+                         );
+    
+    NSError *error;
+    NSRegularExpression *regex =
+    [NSRegularExpression regularExpressionWithPattern:pattern options:0 error:&error];
+    if (!regex) {
+        bsg_log_err(@"%@", error);
+        return nil;
+    }
+    
+    NSMutableArray<BugsnagStackframe *> *frames = [NSMutableArray array];
+    
+    for (NSString *string in callStackSymbols) {
+        NSTextCheckingResult *match = [regex firstMatchInString:string options:0 range:NSMakeRange(0, string.length)];
+        if (match.numberOfRanges != 6) {
+            continue;
+        }
+        NSString *frameNumber = [string substringWithRange:[match rangeAtIndex:1]];
+        NSString *imageName = [string substringWithRange:[match rangeAtIndex:2]];
+        NSString *frameAddress = [string substringWithRange:[match rangeAtIndex:3]];
+        NSRange symbolNameRange = [match rangeAtIndex:5];
+        NSString *symbolName = nil;
+        if (symbolNameRange.location != NSNotFound) {
+            symbolName = [string substringWithRange:symbolNameRange];
+        }
+        
+        uintptr_t address = 0;
+        if (frameAddress.UTF8String != NULL) {
+            sscanf(frameAddress.UTF8String, "%lx", &address);
+        }
+        
+        BugsnagStackframe *frame = [BugsnagStackframe new];
+        frame.machoFile = imageName;
+        frame.method = symbolName ?: frameAddress;
+        frame.frameAddress = [NSNumber numberWithUnsignedLongLong:address];
+        frame.isPc = [frameNumber isEqualToString:@"0"];
+        
+        Dl_info dl_info;
+        bsg_ksbt_symbolicate(&address, &dl_info, 1, 0);
+        if (dl_info.dli_fname != NULL) {
+            frame.machoFile = [NSString stringWithUTF8String:dl_info.dli_fname].lastPathComponent;
+        }
+        if (dl_info.dli_fbase != NULL) {
+            frame.machoLoadAddress = [NSNumber numberWithUnsignedLongLong:(uintptr_t)dl_info.dli_fbase];
+        }
+        if (dl_info.dli_saddr != NULL) {
+            frame.symbolAddress = [NSNumber numberWithUnsignedLongLong:(uintptr_t)dl_info.dli_saddr];
+        }
+        if (dl_info.dli_sname != NULL) {
+            frame.method = [NSString stringWithUTF8String:dl_info.dli_sname];
+        }
+        
+        BSG_Mach_Header_Info *header = bsg_mach_headers_image_at_address(address);
+        if (header != NULL) {
+            frame.machoVmAddress = [NSNumber numberWithUnsignedLongLong:header->imageVmAddr];
+            if (header->uuid != nil) {
+                CFUUIDRef uuidRef = CFUUIDCreateFromUUIDBytes(NULL, *(CFUUIDBytes *)header->uuid);
+                frame.machoUuid = (__bridge_transfer NSString *)CFUUIDCreateString(NULL, uuidRef);
+                CFRelease(uuidRef);
+            }
+        }
+        
+        [frames addObject:frame];
+    }
+    
+    return [NSArray arrayWithArray:frames];
+}
+
+- (NSString *)description {
+    return [NSString stringWithFormat:@"<BugsnagStackframe: %p { %@ %p %@ }>", (void *)self,
+            self.machoFile.lastPathComponent, (void *)self.frameAddress.unsignedLongLongValue, self.method];
 }
 
 - (NSDictionary *)toDictionary {

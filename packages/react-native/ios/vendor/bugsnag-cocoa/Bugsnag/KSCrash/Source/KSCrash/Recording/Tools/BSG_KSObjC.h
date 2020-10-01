@@ -34,14 +34,14 @@ extern "C" {
 #include <CoreFoundation/CoreFoundation.h>
 #include <mach/kern_return.h>
 
-typedef enum {
+typedef CF_ENUM(unsigned, BSG_KSObjCType) {
     BSG_KSObjCTypeUnknown = 0,
     BSG_KSObjCTypeClass,
     BSG_KSObjCTypeObject,
     BSG_KSObjCTypeBlock,
-} BSG_KSObjCType;
+};
 
-typedef enum {
+typedef CF_ENUM(unsigned, BSG_KSObjCClassType) {
     BSG_KSObjCClassTypeUnknown = 0,
     BSG_KSObjCClassTypeString,
     BSG_KSObjCClassTypeDate,
@@ -50,7 +50,7 @@ typedef enum {
     BSG_KSObjCClassTypeDictionary,
     BSG_KSObjCClassTypeNumber,
     BSG_KSObjCClassTypeException,
-} BSG_KSObjCClassType;
+};
 
 //======================================================================
 #pragma mark - Initialization -

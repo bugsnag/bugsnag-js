@@ -3,6 +3,7 @@ import { Client, Config, BugsnagStatic } from '@bugsnag/core'
 interface BrowserConfig extends Config {
   maxEvents?: number
   collectUserIp?: boolean
+  generateAnonymousId?: boolean
 }
 
 interface BrowserBugsnagStatic extends BugsnagStatic {
