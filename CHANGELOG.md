@@ -19,6 +19,13 @@
     - Fix reporting of Mach exception code and subcode. [bugsnag-cocoa#806](https://github.com/bugsnag/bugsnag-cocoa/pull/806)
     - Create date formatters at init time to avoid potential race conditions. [bugsnag-cocoa#807](https://github.com/bugsnag/bugsnag-cocoa/pull/807)
     - Refactor OOM handler to be less suceptible to data loss on crash. [bugsnag-cocoa#804](https://github.com/bugsnag/bugsnag-cocoa/pull/804)
+- (react-native): Update bugsnag-android to v5.2.1 [#1080](https://github.com/bugsnag/bugsnag-js/pull/1080)
+    - Support changing Event's api key in OnErrorCallback [bugsnag-android#928](https://github.com/bugsnag/bugsnag-android/pull/928)
+    - Ensure device ID is set separately to the user ID [bugsnag-android#939](https://github.com/bugsnag/bugsnag-android/pull/939)
+    - Improve stack traces and grouping for promise rejections on React Native < 0.63.2 [bugsnag-android#940](https://github.com/bugsnag/bugsnag-android/pull/940)
+    - Prevent ConcurrentModificationException thrown from Metadata class [bugsnag-android#935](https://github.com/bugsnag/bugsnag-android/pull/935)
+    - Prevent incorrect merge of nested maps in metadata [bugsnag-android#936](https://github.com/bugsnag/bugsnag-android/pull/936)
+    - Improve stack traces and grouping for React Native promise rejections [bugsnag-android#937](https://github.com/bugsnag/bugsnag-android/pull/937)
 
 ## 7.3.5 (2020-09-16)
 
