@@ -18,6 +18,10 @@ module.exports = api => {
       test: './packages/plugin-react/**/*',
       presets: ['@babel/preset-react']
     })
+    overrides.push({
+      test: './packages/plugin-react-navigation/**/*',
+      presets: ['@babel/preset-react', 'module:metro-react-native-babel-preset']
+    })
   }
 
   plugins.push(
