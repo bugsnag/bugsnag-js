@@ -10,18 +10,7 @@ const DetailsScreen = (props) => {
       <Button title='Navigate'
         accessibilityLabel='navigate'
         onPress={() =>
-          Navigation.push(props.componentId, {
-            component: {
-              name: 'Home',
-              options: {
-                topBar: {
-                  title: {
-                    text: 'Home',
-                  },
-                },
-              },
-            },
-          })
+          Navigation.pop(props.componentId)
         } />
       <Button title='Notify handled error'
         accessibilityLabel='sendHandled'
