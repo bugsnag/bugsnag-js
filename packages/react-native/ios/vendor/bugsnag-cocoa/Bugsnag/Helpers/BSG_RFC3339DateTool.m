@@ -24,66 +24,45 @@
 
 #import "BSG_RFC3339DateTool.h"
 
-@interface BSG_RFC3339DateTool ()
-+ (NSDateFormatter *)iosFormatterInstance;
-@end
+// New formatter: Everything is UTC
+static NSDateFormatter *g_utcDateFormatter;
+
+// Old formatter: Time zones can be specified
+static NSDateFormatter *g_timezoneAllowedDateFormatter;
 
 @implementation BSG_RFC3339DateTool
 
-static NSString *const kRfcDateFormatterKey = @"RfcDateFormatter";
-static NSString *const kIsoDateFormatterKey = @"IsoDateFormatter";
++ (void)initialize {
+    NSLocale *locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+    NSTimeZone *zone = [NSTimeZone timeZoneForSecondsFromGMT:0];
 
-+ (NSDateFormatter *)sharedInstance {
-    NSMutableDictionary *threadDict = [[NSThread currentThread] threadDictionary];
-    NSDateFormatter *formatter = threadDict[kRfcDateFormatterKey];
-    if (formatter == nil) {
-        formatter = [NSDateFormatter new];
-        NSLocale *locale =
-        [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
-        [formatter setLocale:locale];
-        [formatter setDateFormat:@"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"];
-        [formatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
-        threadDict[kRfcDateFormatterKey] = formatter;
-    }
+    g_utcDateFormatter = [NSDateFormatter new];
+    [g_utcDateFormatter setLocale:locale];
+    [g_utcDateFormatter setTimeZone:zone];
+    [g_utcDateFormatter setDateFormat:@"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"];
 
-    formatter = threadDict[kRfcDateFormatterKey];
-    return formatter;
+    g_timezoneAllowedDateFormatter = [NSDateFormatter new];
+    [g_timezoneAllowedDateFormatter setLocale:locale];
+    [g_timezoneAllowedDateFormatter setTimeZone:zone];
+    [g_timezoneAllowedDateFormatter setDateFormat:@"yyyy'-'MM'-'dd'T'HH':'mm':'ssZZZ"];
 }
 
-/**
-Used internally to convert any dates with timezones (from older notifier versions) to Zulu time
- */
-+ (NSDateFormatter *)iosFormatterInstance {
-    NSMutableDictionary *threadDict = [[NSThread currentThread] threadDictionary];
-    NSDateFormatter *formatter = threadDict[kIsoDateFormatterKey];
-    if (formatter == nil) {
-        formatter = [NSDateFormatter new];
-        NSLocale *locale =
-        [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
-        [formatter setLocale:locale];
-        [formatter setDateFormat:@"yyyy'-'MM'-'dd'T'HH':'mm':'ssZZZ"];
-        [formatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
-        threadDict[kIsoDateFormatterKey] = formatter;
-    }
-    
-    formatter = threadDict[kIsoDateFormatterKey];
-    return formatter;
-}
 
 + (NSString *)stringFromDate:(NSDate *)date {
     if (![date isKindOfClass:[NSDate class]]) {
         return nil;
     }
-    return [[self sharedInstance] stringFromDate:date];
+    return [g_utcDateFormatter stringFromDate:date];
 }
 
 + (NSDate *)dateFromString:(NSString *)string {
     if (![string isKindOfClass:[NSString class]]) {
         return nil;
     }
-    NSDate *date = [[self sharedInstance] dateFromString:string];
+    NSDate *date = [g_utcDateFormatter dateFromString:string];
     if (!date) {
-        date = [[self iosFormatterInstance] dateFromString:string];
+        // Fallback to older date format that included time zones
+        date = [g_timezoneAllowedDateFormatter dateFromString:string];
     }
     return date;
 }

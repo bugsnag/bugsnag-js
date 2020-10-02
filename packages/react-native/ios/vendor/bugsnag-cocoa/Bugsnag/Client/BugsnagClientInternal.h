@@ -10,6 +10,7 @@
 
 #import "BugsnagClient.h"
 
+@class BugsnagBreadcrumbs;
 @class BugsnagClient;
 @class BugsnagSessionTracker;
 @class BugsnagConfiguration;
@@ -18,6 +19,7 @@
 
 @interface BugsnagClient ()
 
+@property(nonatomic, readwrite, retain) BugsnagBreadcrumbs *_Nullable breadcrumbs;
 @property(nonatomic, readwrite, retain) BugsnagConfiguration *_Nullable configuration;
 @property(nonatomic, readwrite, strong) BugsnagMetadata *_Nonnull state;
 @property(nonatomic, readwrite, strong) BugsnagNotifier *_Nonnull notifier;

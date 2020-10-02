@@ -101,3 +101,21 @@ Then(/^the request is a valid browser payload for the session tracking API$/) do
     And the payload has a valid sessions array
   }
 end
+
+Then("the event device ID is valid") do
+  if has_local_storage
+    step('the event "device.id" matches "^c[a-z0-9]{20,32}$"')
+  else
+    $logger.info('Local storage is not supported in this browser, assuming device ID is null')
+    step('the event "device.id" is null')
+  end
+end
+
+Then("the event device ID is {string}") do |expected_id|
+  if has_local_storage
+    step("the event \"device.id\" equals \"#{expected_id}\"")
+  else
+    $logger.info('Local storage is not supported in this browser, assuming device ID is null')
+    step('the event "device.id" is null')
+  end
+end

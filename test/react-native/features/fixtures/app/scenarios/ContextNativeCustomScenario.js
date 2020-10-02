@@ -6,7 +6,7 @@ export class ContextNativeCustomScenario extends Scenario {
   run() {
     Bugsnag.setContext('context-js')
     setTimeout(() => {
-      NativeModules.BugsnagTestInterface.runScenario('ContextNativeCustomScenario', () => {})
+      NativeModules.BugsnagTestInterface.runScenario('ContextNativeCustomScenario')
     }, 100)
   }
 }

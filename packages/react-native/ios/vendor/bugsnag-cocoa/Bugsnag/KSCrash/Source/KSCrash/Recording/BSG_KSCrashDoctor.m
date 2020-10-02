@@ -12,13 +12,13 @@
 
 #define BSG_kUserCrashHandler "kscrw_i_callUserCrashHandler"
 
-typedef enum {
+typedef NS_ENUM(NSUInteger, BSG_CPUFamily) {
     BSG_CPUFamilyUnknown,
     BSG_CPUFamilyArm,
     BSG_CPUFamilyArm64,
     BSG_CPUFamilyX86,
     BSG_CPUFamilyX86_64
-} BSG_CPUFamily;
+};
 
 @interface BSG_KSCrashDoctorParam : NSObject
 

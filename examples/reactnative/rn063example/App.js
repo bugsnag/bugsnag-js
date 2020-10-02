@@ -31,6 +31,14 @@ function triggerHandledException() {
   bogusHandledFunction(); // eslint-disable-line no-undef
 }
 
+async function triggerPromiseRejection() {
+  try {
+    await NativeModules.CrashyCrashy.generatePromiseRejection();
+  } catch (e) {
+    Bugsnag.notify(e)
+  }
+}
+
 function triggerNativeException() {
   NativeModules.CrashyCrashy.generateCrash()
 }
@@ -85,6 +93,19 @@ const App: () => React$Node = () => {
                     }} />
                 <Text style={styles.info}>
                   Tap this button to send a handled error to Bugsnag
+                </Text>
+
+                <Button
+                    title="Trigger Promise Rejection"
+                    onPress={() => {
+                      try { // execute crashy code
+                        triggerPromiseRejection();
+                      } catch (error) {
+                        Bugsnag.notify(error);
+                      }
+                    }} />
+                <Text style={styles.info}>
+                  Tap this button to send a native promise rejection to Bugsnag
                 </Text>
 
                 <Button

@@ -37,15 +37,16 @@ extern "C" {
 #include "BSG_KSArchSpecific.h"
 #include "BSG_KSCrashType.h"
 
+#include <CoreFoundation/CoreFoundation.h>
 #include <mach/mach_types.h>
 #include <signal.h>
 #include <stdbool.h>
 
-typedef enum {
+typedef CF_ENUM(unsigned, BSG_KSCrashReservedTheadType) {
     BSG_KSCrashReservedThreadTypeMachPrimary,
     BSG_KSCrashReservedThreadTypeMachSecondary,
     BSG_KSCrashReservedThreadTypeCount
-} BSG_KSCrashReservedTheadType;
+};
 
 typedef struct BSG_KSCrash_SentryContext {
     // Caller defined values. Caller must fill these out prior to installation.

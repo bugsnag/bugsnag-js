@@ -143,8 +143,7 @@ void bsg_kscrw_i_addIntegerElement(const BSG_KSCrashReportWriter *const writer,
 void bsg_kscrw_i_addUIntegerElement(const BSG_KSCrashReportWriter *const writer,
                                     const char *const key,
                                     const unsigned long long value) {
-    bsg_ksjsonaddIntegerElement(bsg_getJsonContext(writer), key,
-                                (long long)value);
+    bsg_ksjsonaddUIntegerElement(bsg_getJsonContext(writer), key, value);
 }
 
 void bsg_kscrw_i_addStringElement(const BSG_KSCrashReportWriter *const writer,
@@ -1181,8 +1180,8 @@ void bsg_kscrw_i_writeError(const BSG_KSCrashReportWriter *const writer,
                             const char *const key,
                             const BSG_KSCrash_SentryContext *const crash) {
     int machExceptionType = 0;
-    kern_return_t machCode = 0;
-    kern_return_t machSubCode = 0;
+    int64_t machCode = 0;
+    int64_t machSubCode = 0;
     int sigNum = 0;
     int sigCode = 0;
     const char *exceptionName = NULL;
@@ -1192,14 +1191,14 @@ void bsg_kscrw_i_writeError(const BSG_KSCrashReportWriter *const writer,
     switch (crash->crashType) {
     case BSG_KSCrashTypeMachException:
         machExceptionType = crash->mach.type;
-        machCode = (kern_return_t)crash->mach.code;
+        machCode = crash->mach.code;
         if (machCode == KERN_PROTECTION_FAILURE && crash->isStackOverflow) {
             // A stack overflow should return KERN_INVALID_ADDRESS, but
             // when a stack blasts through the guard pages at the top of the
             // stack, it generates KERN_PROTECTION_FAILURE. Correct for this.
             machCode = KERN_INVALID_ADDRESS;
         }
-        machSubCode = (kern_return_t)crash->mach.subcode;
+        machSubCode = crash->mach.subcode;
 
         sigNum =
             bsg_kssignal_signalForMachException(machExceptionType, machCode);
@@ -1504,7 +1503,7 @@ void bsg_kscrashreport_writeMinimalReport(
     BSG_KSCrashReportWriter *writer = &concreteWriter;
     bsg_kscrw_i_prepareReportWriter(writer, &jsonContext);
 
-    bsg_ksjsonbeginEncode(bsg_getJsonContext(writer), true,
+    bsg_ksjsonbeginEncode(bsg_getJsonContext(writer), false,
                           bsg_kscrw_i_addJSONData, &fd);
 
     writer->beginObject(writer, BSG_KSCrashField_Report);
@@ -1551,7 +1550,7 @@ void bsg_kscrashreport_writeStandardReport(
     BSG_KSCrashReportWriter *writer = &concreteWriter;
     bsg_kscrw_i_prepareReportWriter(writer, &jsonContext);
 
-    bsg_ksjsonbeginEncode(bsg_getJsonContext(writer), true,
+    bsg_ksjsonbeginEncode(bsg_getJsonContext(writer), false,
                           bsg_kscrw_i_addJSONData, &fd);
 
     // KSCrash report fields are not required for handled errors as
