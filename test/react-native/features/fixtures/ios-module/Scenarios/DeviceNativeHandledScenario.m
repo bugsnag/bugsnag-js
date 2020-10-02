@@ -2,7 +2,8 @@
 
 @implementation DeviceNativeHandledScenario
 
-- (void)run {
+- (void)run: (RCTPromiseResolveBlock)resolve
+     reject:(RCTPromiseRejectBlock)reject {
   NSException *exception = [[NSException alloc] initWithName:@"NSException" reason:@"DeviceNativeHandledScenario" userInfo:nil];
   [Bugsnag notify:exception];
 }

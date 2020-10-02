@@ -332,6 +332,16 @@ int bsg_ksjsonaddIntegerElement(BSG_KSJSONEncodeContext *const context,
     return addJSONData(context, buff, strlen(buff));
 }
 
+int bsg_ksjsonaddUIntegerElement(BSG_KSJSONEncodeContext *const context,
+                                 const char *const name,
+                                 unsigned long long value) {
+    int result = bsg_ksjsonbeginElement(context, name);
+    unlikely_if(result != BSG_KSJSON_OK) { return result; }
+    char buff[30];
+    sprintf(buff, "%llu", value);
+    return addJSONData(context, buff, (int)strlen(buff));
+}
+
 int bsg_ksjsonaddJSONElement(BSG_KSJSONEncodeContext *const context,
                              const char *restrict const name,
                              const char *restrict const element,

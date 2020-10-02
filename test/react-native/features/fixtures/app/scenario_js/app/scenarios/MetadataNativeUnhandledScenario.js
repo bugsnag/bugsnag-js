@@ -14,7 +14,7 @@ export class MetadataNativeUnhandledScenario extends Scenario {
   run() {
     Bugsnag.clearMetadata('nativedata', 'cleared_data')
     setTimeout(() => {
-      NativeModules.BugsnagTestInterface.runScenario('MetadataNativeUnhandledScenario', () => {})
+      NativeModules.BugsnagTestInterface.runScenario('MetadataNativeUnhandledScenario')
     }, 500)
   }
 }

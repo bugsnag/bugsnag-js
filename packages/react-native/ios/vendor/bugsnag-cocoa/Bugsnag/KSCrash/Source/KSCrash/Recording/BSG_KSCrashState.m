@@ -224,7 +224,7 @@ bool bsg_kscrashstate_i_saveState(const BSG_KSCrash_State *const state,
     }
 
     BSG_KSJSONEncodeContext JSONContext;
-    bsg_ksjsonbeginEncode(&JSONContext, true, bsg_kscrashstate_i_addJSONData,
+    bsg_ksjsonbeginEncode(&JSONContext, false, bsg_kscrashstate_i_addJSONData,
                           &fd);
 
     int result;

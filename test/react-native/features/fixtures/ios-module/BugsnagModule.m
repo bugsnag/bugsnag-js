@@ -16,18 +16,22 @@
 
 RCT_EXPORT_MODULE(BugsnagTestInterface);
 
-RCT_EXPORT_METHOD(runScenario:(NSString *)scenario completeCallback:(RCTResponseSenderBlock)completeCallback)
+RCT_EXPORT_METHOD(runScenario:(NSString *)scenario
+                      resolve:(RCTPromiseResolveBlock)resolve
+                        reject:(RCTPromiseRejectBlock)reject)
 {
   Scenario *targetScenario = [Scenario createScenarioNamed:scenario];
-  [targetScenario run];
-  completeCallback(@[[NSNull null]]);
+  [targetScenario run:resolve reject:reject];
+  resolve(nil);
 }
 
-RCT_EXPORT_METHOD(startBugsnag:(NSDictionary *)options readyCallback:(RCTResponseSenderBlock)readyCallback)
+RCT_EXPORT_METHOD(startBugsnag:(NSDictionary *)options
+                       resolve:(RCTPromiseResolveBlock)resolve
+                        reject:(RCTPromiseRejectBlock)reject)
 {
   BugsnagConfiguration *scenarioConfig = createConfiguration(options);
   [Bugsnag startWithConfiguration:scenarioConfig];
-  readyCallback(@[[NSNull null]]);
+  resolve(nil);
 }
 
 @end

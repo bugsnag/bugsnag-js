@@ -5,6 +5,7 @@
 
 #import <Foundation/Foundation.h>
 #import <Bugsnag/Bugsnag.h>
+#import <React/RCTBridgeModule.h>
 
 @interface Scenario : NSObject
 
@@ -15,6 +16,6 @@
 /**
  * Executes the test case
  */
-- (void)run;
+- (void)run:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject;
 
 @end

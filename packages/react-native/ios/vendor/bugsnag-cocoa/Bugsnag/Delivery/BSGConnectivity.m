@@ -29,9 +29,11 @@
 #import "BSGConnectivity.h"
 #import "Bugsnag.h"
 
+static const SCNetworkReachabilityFlags kSCNetworkReachabilityFlagsUninitialized = UINT32_MAX;
+
 static SCNetworkReachabilityRef bsg_reachability_ref;
 BSGConnectivityChangeBlock bsg_reachability_change_block;
-SCNetworkReachabilityFlags bsg_current_reachability_state = -1;
+static SCNetworkReachabilityFlags bsg_current_reachability_state = kSCNetworkReachabilityFlagsUninitialized;
 
 NSString *const BSGConnectivityCellular = @"cellular";
 NSString *const BSGConnectivityWiFi = @"wifi";
@@ -57,7 +59,7 @@ BOOL BSGConnectivityShouldReportChange(SCNetworkReachabilityFlags flags) {
         // When first subscribing to be notified of changes, the callback is
         // invoked immmediately even if nothing has changed. So this block
         // ignores the very first check, reporting all others.
-        if (bsg_current_reachability_state == -1) {
+        if (bsg_current_reachability_state == kSCNetworkReachabilityFlagsUninitialized) {
             shouldReport = NO;
         }
         // Cache the reachability state to report the previous value representation
@@ -138,7 +140,7 @@ void BSGConnectivityCallback(SCNetworkReachabilityRef target,
         SCNetworkReachabilitySetCallback(bsg_reachability_ref, NULL, NULL);
         SCNetworkReachabilitySetDispatchQueue(bsg_reachability_ref, NULL);
     }
-    bsg_current_reachability_state = -1;
+    bsg_current_reachability_state = kSCNetworkReachabilityFlagsUninitialized;
 }
 
 @end

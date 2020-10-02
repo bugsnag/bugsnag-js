@@ -137,4 +137,12 @@
     return contents;
 }
 
+- (NSArray<BugsnagBreadcrumb *> *)getBreadcrumbs {
+    __block NSArray *result = nil;
+    dispatch_barrier_sync(self.readWriteQueue, ^{
+        result = [NSArray arrayWithArray:self.breadcrumbs];
+    });
+    return result;
+}
+
 @end
