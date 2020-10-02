@@ -160,6 +160,19 @@ struct dispatch_queue_s {
 #undef pthread_t
 #undef dispatch_queue_s
 
+// ======================================================================
+#pragma mark - xnu-6153.141.1/osfmk/mach/arm/exception.h -
+// ======================================================================
+
+/*
+ *      EXC_BAD_ACCESS
+ *      Note: do not conflict with kern_return_t values returned by vm_fault
+ */
+#define EXC_ARM_DA_ALIGN    0x101    /* Alignment Fault */
+#define EXC_ARM_DA_DEBUG    0x102    /* Debug (watch/break) Fault */
+#define EXC_ARM_SP_ALIGN    0x103    /* SP Alignment Fault */
+#define EXC_ARM_SWP            0x104    /* SWP instruction */
+
 #ifdef __cplusplus
 }
 #endif

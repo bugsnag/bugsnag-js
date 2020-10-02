@@ -3,6 +3,6 @@ import { NativeModules } from 'react-native'
 
 export class UserNativeClientScenario extends Scenario {
   run() {
-    NativeModules.BugsnagTestInterface.runScenario('UserNativeClientScenario', () => {})
+    NativeModules.BugsnagTestInterface.runScenario('UserNativeClientScenario')
   }
 }

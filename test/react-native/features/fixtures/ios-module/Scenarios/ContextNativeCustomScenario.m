@@ -2,7 +2,8 @@
 
 @implementation ContextNativeCustomScenario
 
-- (void)run {
+- (void)run: (RCTPromiseResolveBlock)resolve
+     reject:(RCTPromiseRejectBlock)reject {
   NSException *exception = [[NSException alloc] initWithName:@"NSException" reason:@"ContextNativeCustomScenario" userInfo:nil];
   [Bugsnag notify:exception];
   [NSThread sleepForTimeInterval:0.5];

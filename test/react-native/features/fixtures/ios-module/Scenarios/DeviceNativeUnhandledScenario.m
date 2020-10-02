@@ -2,7 +2,8 @@
 
 @implementation DeviceNativeUnhandledScenario
 
-- (void)run {
+- (void)run: (RCTPromiseResolveBlock)resolve
+     reject:(RCTPromiseRejectBlock)reject {
   @throw [[NSException alloc] initWithName:@"NSException" reason:@"DeviceNativeUnhandledScenario" userInfo:nil];
 }
 

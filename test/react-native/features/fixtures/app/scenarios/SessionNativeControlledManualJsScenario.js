@@ -8,28 +8,23 @@ export class SessionNativeControlledManualJsScenario extends Scenario {
     configuration.autoTrackSessions = false
   }
   async run() {
-    NativeModules.BugsnagTestInterface.runScenario('StartSessionScenario', async () => {
+    await NativeModules.BugsnagTestInterface.runScenario('StartSessionScenario')
+    await this.timeout(750)
+    Bugsnag.notify(new Error('SessionJsControlledManualJsScenarioA'), () => {}, async () => {
       await this.timeout(750)
-      Bugsnag.notify(new Error('SessionJsControlledManualJsScenarioA'), () => {}, async () => {
+      await NativeModules.BugsnagTestInterface.runScenario('PauseSessionScenario')
+      await this.timeout(750)
+      Bugsnag.notify(new Error('SessionJsControlledManualJsScenarioB'), () => {}, async () => {
+        await this.timeout(2500)
+        await NativeModules.BugsnagTestInterface.runScenario('ResumeSessionScenario')
         await this.timeout(750)
-        NativeModules.BugsnagTestInterface.runScenario('PauseSessionScenario', async () => {
+        Bugsnag.notify(new Error('SessionJsControlledManualJsScenarioC'), () => {}, async () => {
           await this.timeout(750)
-          Bugsnag.notify(new Error('SessionJsControlledManualJsScenarioB'), () => {}, async () => {
-            await this.timeout(2500)
-            NativeModules.BugsnagTestInterface.runScenario('ResumeSessionScenario', async () => {
-              await this.timeout(750)
-              Bugsnag.notify(new Error('SessionJsControlledManualJsScenarioC'), () => {}, async () => {
-                await this.timeout(750)
-                NativeModules.BugsnagTestInterface.runScenario('PauseSessionScenario', async () => {
-                  await this.timeout(750)
-                    NativeModules.BugsnagTestInterface.runScenario('StartSessionScenario', async () => {
-                      await this.timeout(750)
-                      Bugsnag.notify(new Error('SessionJsControlledManualJsScenarioD'))
-                  })
-                })
-              })
-            })
-          })
+          await NativeModules.BugsnagTestInterface.runScenario('PauseSessionScenario')
+          await this.timeout(750)
+          await NativeModules.BugsnagTestInterface.runScenario('StartSessionScenario')
+          await this.timeout(750)
+          Bugsnag.notify(new Error('SessionJsControlledManualJsScenarioD'))
         })
       })
     })
