@@ -20,6 +20,7 @@ Scenario: Navigating screens causes breadcrumbs and context to be updated
   And I discard the oldest request
 
   When I trigger an unhandled error
+  And I wait for 5 seconds
   And I relaunch the app
   And I configure Bugsnag for "ReactNavigationBreadcrumbsEnabledScenario"
   And I wait to receive a request
