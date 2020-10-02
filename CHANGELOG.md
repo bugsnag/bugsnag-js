@@ -1,18 +1,17 @@
 # Changelog
 
+## TBD
+
+### Added
+
+- (plugin-react-native-navigation): New plugin that integrates with React Native Navigation. [#1065](https://github.com/bugsnag/bugsnag-js/pull/1065)
+- (plugin-react-navigation): New plugin that integrates with React Navigation. [#1067](https://github.com/bugsnag/bugsnag-js/pull/1067)
+
 ## 7.4.0 (2020-10-01)
 
 ### Added
 
 - (browser): Attach an anonymous device ID to error reports and sessions when the new `generateAnonymousId` option is enabled. [#1072](https://github.com/bugsnag/bugsnag-js/pull/1072)
-
-### Added
-
-- (plugin-react-native-navigation): New plugin that integrates with React Native Navigation. [#1065](https://github.com/bugsnag/bugsnag-js/pull/1065)
-
-### Added
-
-- (plugin-react-navigation): New plugin that integrates with React Navigation. [#1067](https://github.com/bugsnag/bugsnag-js/pull/1067)
 
 ### Changed
 
