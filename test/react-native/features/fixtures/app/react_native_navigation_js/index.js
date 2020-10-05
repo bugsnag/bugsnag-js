@@ -13,7 +13,7 @@ NativeModules.BugsnagTestInterface.startBugsnag({
   apiKey: '12312312312312312312312312312312',
   endpoint: 'http://bs-local.com:9339',
   autoTrackSessions: false
-}, () => {
+}).then(() => {
   Bugsnag.start({
     plugins: [new BugsnagReactNativeNavigation(Navigation)],
   })
