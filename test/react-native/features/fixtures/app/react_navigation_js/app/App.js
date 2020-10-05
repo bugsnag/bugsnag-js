@@ -66,11 +66,12 @@ export default class App extends Component {
     let jsConfig = defaultJsConfig()
     let scenario = new Scenarios[scenarioName](configuration, scenarioMetaData, jsConfig)
     console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${JSON.stringify(jsConfig)} (js)`)
-    NativeModules.BugsnagTestInterface.startBugsnag(configuration, () => {
-      Bugsnag.start(jsConfig)
-      this.setState({ scenario })
-      scenario.run()
-    })
+    NativeModules.BugsnagTestInterface.startBugsnag(configuration)
+      .then(() => {
+        Bugsnag.start(jsConfig)
+        this.setState({ scenario: scenario })
+        scenario.run()
+      })
   }
 
   startBugsnag = () => {
@@ -88,9 +89,10 @@ export default class App extends Component {
     let jsConfig = defaultJsConfig()
     let scenario = new Scenarios[scenarioName](configuration, scenarioMetaData, jsConfig)
     console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${JSON.stringify(jsConfig)} (js)`)
-    NativeModules.BugsnagTestInterface.startBugsnag(configuration, () => {
+    NativeModules.BugsnagTestInterface.startBugsnag(configuration)
+    .then(() => {
       Bugsnag.start(jsConfig)
-      this.setState({ scenario })
+      this.setState({ scenario: scenario })
     })
   }
 
