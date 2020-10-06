@@ -64,7 +64,7 @@ module.exports = {
     common.run(`npm install --registry ${registryUrl}`, true)
 
     // Install notifier
-    let command = `npm install @bugsnag/react-native@${version}  --registry ${registryUrl}`
+    const command = `npm install @bugsnag/react-native@${version}  --registry ${registryUrl}`
     common.run(command, true)
 
     // Install any required secondary files
@@ -114,7 +114,7 @@ module.exports = {
 
     // Install notifier
     console.log(`Installing notifier: ${version}`)
-    let command = `npm install @bugsnag/react-native@${version}  --registry ${registryUrl}`
+    const command = `npm install @bugsnag/react-native@${version}  --registry ${registryUrl}`
     common.run(command, true)
 
     // Install any required secondary files
