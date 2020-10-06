@@ -5,7 +5,4 @@ export class ReactNavigationBreadcrumbsDisabledScenario extends Scenario {
     super()
     configuration.enabledBreadcrumbTypes = []
   }
-
-  run() {
-  }
 }

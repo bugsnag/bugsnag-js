@@ -93,8 +93,7 @@ const AppScreen = () => {
     let configuration
     if (state.manualApiKey) {
       configuration = getManualModeConfiguration(state.manualApiKey)
-    }
-    else {
+    } else {
       configuration = getDefaultConfiguration()
     }
     let jsConfig = defaultJsConfig()
