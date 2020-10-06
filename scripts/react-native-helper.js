@@ -64,17 +64,13 @@ module.exports = {
     common.run(`npm install --registry ${registryUrl}`, true)
 
     // Install notifier
-    let command = `npm install @bugsnag/react-native@${version}  --registry ${registryUrl}`
-    common.run(command, true)
-
-    // Install navigation tracker
-    command = `npm install @bugsnag/plugin-react-navigation@${version} --registry ${registryUrl}`
+    const command = `npm install @bugsnag/react-native@${version}  --registry ${registryUrl}`
     common.run(command, true)
 
     // Install any required secondary files
     if (fs.existsSync('./install.sh')) {
       console.log('Installing secondary requirements')
-      common.run('./install.sh', true)
+      common.run(`BUGSNAG_VERSION=${version} ./install.sh`, true)
     }
 
     // Native layer
@@ -118,16 +114,12 @@ module.exports = {
 
     // Install notifier
     console.log(`Installing notifier: ${version}`)
-    let command = `npm install @bugsnag/react-native@${version}  --registry ${registryUrl}`
-    common.run(command, true)
-
-    // Install navigation tracker
-    command = `npm install @bugsnag/plugin-react-navigation@${version} --registry ${registryUrl}`
+    const command = `npm install @bugsnag/react-native@${version}  --registry ${registryUrl}`
     common.run(command, true)
 
     // Install any required secondary files
     if (fs.existsSync('./install.sh')) {
-      common.run('./install.sh', true)
+      common.run(`BUGSNAG_VERSION=${version} ./install.sh`, true)
     }
 
     // Performing local build steps
