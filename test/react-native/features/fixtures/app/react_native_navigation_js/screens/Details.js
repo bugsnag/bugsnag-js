@@ -15,6 +15,9 @@ const DetailsScreen = (props) => {
       <Button title='Notify handled error'
         accessibilityLabel='sendHandled'
         onPress={() => Bugsnag.notify(new Error('DetailsNavigationError'))} />
+      <Button title='Notify unhandled error'
+        accessibilityLabel='sendUnhandled'
+        onPress={() => { throw new Error('DetailsNavigationUnhandledError') }} />
       <Button title='Set context'
         accessibilityLabel='setContext'
         onPress={() => Bugsnag.setContext('detailsSetContext')} />
