@@ -39,6 +39,10 @@ Before('@ios_only') do |scenario|
   skip_this_scenario("Skipping scenario") if $driver.capabilities["os"] == 'android'
 end
 
+Before('@navigation') do |scenario|
+  skip_this_scenario("Skipping scenario") unless ENV['RUN_NAVIGATION_SCENARIOS']
+end
+
 After do |_scenario|
   $driver.reset_with_timeout
 end
