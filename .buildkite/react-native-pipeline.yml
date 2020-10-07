@@ -221,7 +221,7 @@ steps:
     concurrency_group: 'browserstack-app'
 
   # See: PLAT-5173
-  # - label: ':ios: react-navigation 0.60 iOS 12 end-to-end tests'
+  # - label: ':ios: react-navigation 0.60 iOS 13 end-to-end tests'
   #   plugins:
   #     artifacts#v1.2.0:
   #       download: "build/r_navigation_0.60.ipa"
@@ -252,7 +252,7 @@ steps:
     concurrency_group: 'browserstack-app'
 
   # See: PLAT-5173
-  # - label: ':ios: react-navigation 0.63 iOS 12 end-to-end tests'
+  # - label: ':ios: react-navigation 0.63 iOS 13 end-to-end tests'
   #   plugins:
   #     artifacts#v1.2.0:
   #       download: "build/r_navigation_0.63.ipa"
@@ -283,7 +283,7 @@ steps:
     concurrency_group: 'browserstack-app'
 
   # See: PLAT-5173
-  # - label: ':ios: react-native-navigation 0.60 iOS 12 end-to-end tests'
+  # - label: ':ios: react-native-navigation 0.60 iOS 13 end-to-end tests'
   #   plugins:
   #     artifacts#v1.2.0:
   #       download: "build/r_native_navigation_0.60.ipa"
@@ -314,7 +314,7 @@ steps:
     concurrency_group: 'browserstack-app'
 
   # See: PLAT-5173
-  # - label: ':ios: react-native-navigation 0.63 iOS 12 end-to-end tests'
+  # - label: ':ios: react-native-navigation 0.63 iOS 13 end-to-end tests'
   #   plugins:
   #     artifacts#v1.2.0:
   #       download: "build/r_native_navigation_0.63.ipa"
