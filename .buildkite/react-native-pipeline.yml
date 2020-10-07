@@ -67,7 +67,7 @@ steps:
         run: react-native-maze-runner
         use-aliases: true
     env:
-      DEVICE_TYPE: "ANDROID_9"
+      DEVICE_TYPE: "ANDROID_9_0"
       APP_LOCATION: "build/rn0.60.apk"
       SKIP_NAVIGATION_SCENARIOS: "true"
     concurrency: 10
@@ -95,7 +95,7 @@ steps:
         run: react-native-maze-runner
         use-aliases: true
     env:
-      DEVICE_TYPE: "ANDROID_9"
+      DEVICE_TYPE: "ANDROID_9_0"
       APP_LOCATION: "build/rn0.63.apk"
       SKIP_NAVIGATION_SCENARIOS: "true"
     concurrency: 10
@@ -218,7 +218,7 @@ steps:
         use-aliases: true
         command: ["features/navigation.feature"]
     env:
-      DEVICE_TYPE: "ANDROID_9"
+      DEVICE_TYPE: "ANDROID_9_0"
       APP_LOCATION: "build/r_navigation_0.60.apk"
     concurrency: 10
     concurrency_group: 'browserstack-app'
@@ -247,7 +247,7 @@ steps:
         use-aliases: true
         command: ["features/navigation.feature"]
     env:
-      DEVICE_TYPE: "ANDROID_9"
+      DEVICE_TYPE: "ANDROID_9_0"
       APP_LOCATION: "build/r_navigation_0.63.apk"
     concurrency: 10
     concurrency_group: 'browserstack-app'
@@ -276,7 +276,7 @@ steps:
         use-aliases: true
         command: ["features/navigation.feature"]
     env:
-      DEVICE_TYPE: "ANDROID_9"
+      DEVICE_TYPE: "ANDROID_9_0"
       APP_LOCATION: "build/r_native_navigation_0.60.apk"
     concurrency: 10
     concurrency_group: 'browserstack-app'
@@ -305,7 +305,7 @@ steps:
         use-aliases: true
         command: ["features/navigation.feature"]
     env:
-      DEVICE_TYPE: "ANDROID_9"
+      DEVICE_TYPE: "ANDROID_9_0"
       APP_LOCATION: "build/r_native_navigation_0.63.apk"
     concurrency: 10
     concurrency_group: 'browserstack-app'

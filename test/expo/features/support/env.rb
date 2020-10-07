@@ -8,15 +8,15 @@ def device_type
 end
 
 Before('@skip_android_5') do |scenario|
-  skip_this_scenario("Skipping scenario") if device_type == 'ANDROID_5'
+  skip_this_scenario("Skipping scenario") if device_type == 'ANDROID_5_0'
 end
 
 Before('@skip_android_7') do |scenario|
-  skip_this_scenario("Skipping scenario") if device_type == 'ANDROID_7'
+  skip_this_scenario("Skipping scenario") if device_type == 'ANDROID_7_1'
 end
 
 Before('@skip_android_8') do |scenario|
-  skip_this_scenario("Skipping scenario") if device_type == 'ANDROID_8'
+  skip_this_scenario("Skipping scenario") if device_type == 'ANDROID_8_1'
 end
 
 Before('@skip_ios_10') do |scenario|
