@@ -7,7 +7,7 @@ steps:
 
   - wait
 
-  - label: ':docker: Build React-Native Android Builder image'
+  - label: ':docker: Build RN Android Builder image'
     timeout_in_minutes: 30
     plugins:
       - improbable-eng/metahook:
@@ -21,7 +21,7 @@ steps:
 
   - wait
 
-  - label: ':android: Build React-native 0.60 apk'
+  - label: ':android: Build RN 0.60 apk'
     env:
       REACT_NATIVE_VERSION: "rn0.60"
     plugins:
@@ -30,7 +30,7 @@ steps:
     artifact_paths:
       - build/rn0.60.apk
 
-  - label: ':ios: Build React-native 0.60 ipa'
+  - label: ':ios: Build RN 0.60 ipa'
     agents:
       queue: "opensource-mac-rn"
     env:
@@ -39,7 +39,7 @@ steps:
     commands:
       - npm run test:build-react-native-ios
 
-  - label: ':android: Build React-native 0.63 apk'
+  - label: ':android: Build RN 0.63 apk'
     env:
       REACT_NATIVE_VERSION: "rn0.63"
     plugins:
@@ -48,7 +48,7 @@ steps:
     artifact_paths:
       - build/rn0.63.apk
 
-  - label: ':ios: Build React-native 0.63 ipa'
+  - label: ':ios: Build RN 0.63 ipa'
     agents:
       queue: "opensource-mac-rn"
     env:
@@ -59,7 +59,7 @@ steps:
 
   - wait
 
-  - label: ':android: React-native 0.60 Android 9'
+  - label: ':android: RN 0.60 Android 9 end-to-end tests'
     plugins:
       artifacts#v1.2.0:
         download: "build/rn0.60.apk"
@@ -72,7 +72,7 @@ steps:
     concurrency: 10
     concurrency_group: 'browserstack-app'
 
-  - label: ':ios: React-native 0.60 iOS 12'
+  - label: ':ios: RN 0.60 iOS 12 end-to-end tests'
     plugins:
       artifacts#v1.2.0:
         download: "build/rn0.60.ipa"
@@ -85,7 +85,7 @@ steps:
     concurrency: 10
     concurrency_group: 'browserstack-app'
 
-  - label: ':android: React-native 0.63 Android 9'
+  - label: ':android: RN 0.63 Android 9 end-to-end tests'
     plugins:
       artifacts#v1.2.0:
         download: "build/rn0.63.apk"
@@ -98,7 +98,7 @@ steps:
     concurrency: 10
     concurrency_group: 'browserstack-app'
 
-  - label: ':ios: React-native 0.63 iOS 12'
+  - label: ':ios: RN 0.63 iOS 12 end-to-end tests'
     plugins:
       artifacts#v1.2.0:
         download: "build/rn0.63.ipa"
@@ -205,7 +205,7 @@ steps:
 
   - wait
 
-  - label: ':android: React-navigation 0.60 Android 9'
+  - label: ':android: react-navigation 0.60 Android 9 end-to-end tests'
     plugins:
       artifacts#v1.2.0:
         download: "build/r_navigation_0.60.apk"
@@ -221,7 +221,7 @@ steps:
     concurrency_group: 'browserstack-app'
 
   # See: PLAT-5173
-  # - label: ':ios: React-navigation 0.60 iOS 12'
+  # - label: ':ios: react-navigation 0.60 iOS 12 end-to-end tests'
   #   plugins:
   #     artifacts#v1.2.0:
   #       download: "build/r_navigation_0.60.ipa"
@@ -236,7 +236,7 @@ steps:
   #   concurrency: 10
   #   concurrency_group: 'browserstack-app'
 
-  - label: ':android: React-navigation 0.63 Android 9'
+  - label: ':android: react-navigation 0.63 Android 9 end-to-end tests'
     plugins:
       artifacts#v1.2.0:
         download: "build/r_navigation_0.63.apk"
@@ -252,7 +252,7 @@ steps:
     concurrency_group: 'browserstack-app'
 
   # See: PLAT-5173
-  # - label: ':ios: React-navigation 0.63 iOS 12'
+  # - label: ':ios: react-navigation 0.63 iOS 12 end-to-end tests'
   #   plugins:
   #     artifacts#v1.2.0:
   #       download: "build/r_navigation_0.63.ipa"
@@ -267,7 +267,7 @@ steps:
   #   concurrency: 10
   #   concurrency_group: 'browserstack-app'
 
-  - label: ':android: React-native-navigation 0.60 Android 9'
+  - label: ':android: react-native-navigation 0.60 Android 9 end-to-end tests'
     plugins:
       artifacts#v1.2.0:
         download: "build/r_native_navigation_0.60.apk"
@@ -283,7 +283,7 @@ steps:
     concurrency_group: 'browserstack-app'
 
   # See: PLAT-5173
-  # - label: ':ios: React-native-navigation 0.60 iOS 12'
+  # - label: ':ios: react-native-navigation 0.60 iOS 12 end-to-end tests'
   #   plugins:
   #     artifacts#v1.2.0:
   #       download: "build/r_native_navigation_0.60.ipa"
@@ -298,7 +298,7 @@ steps:
   #   concurrency: 10
   #   concurrency_group: 'browserstack-app'
 
-  - label: ':android: React-native-navigation 0.63 Android 9'
+  - label: ':android: react-native-navigation 0.63 Android 9 end-to-end tests'
     plugins:
       artifacts#v1.2.0:
         download: "build/r_native_navigation_0.63.apk"
@@ -314,7 +314,7 @@ steps:
     concurrency_group: 'browserstack-app'
 
   # See: PLAT-5173
-  # - label: ':ios: React-native-navigation 0.63 iOS 12'
+  # - label: ':ios: react-native-navigation 0.63 iOS 12 end-to-end tests'
   #   plugins:
   #     artifacts#v1.2.0:
   #       download: "build/r_native_navigation_0.63.ipa"
