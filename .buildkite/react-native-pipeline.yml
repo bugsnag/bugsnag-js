@@ -69,6 +69,7 @@ steps:
     env:
       DEVICE_TYPE: "ANDROID_9"
       APP_LOCATION: "build/rn0.60.apk"
+      SKIP_NAVIGATION_SCENARIOS: "true"
     concurrency: 10
     concurrency_group: 'browserstack-app'
 
@@ -82,6 +83,7 @@ steps:
     env:
       DEVICE_TYPE: "IOS_12"
       APP_LOCATION: "build/rn0.60.ipa"
+      SKIP_NAVIGATION_SCENARIOS: "true"
     concurrency: 10
     concurrency_group: 'browserstack-app'
 
@@ -95,6 +97,7 @@ steps:
     env:
       DEVICE_TYPE: "ANDROID_9"
       APP_LOCATION: "build/rn0.63.apk"
+      SKIP_NAVIGATION_SCENARIOS: "true"
     concurrency: 10
     concurrency_group: 'browserstack-app'
 
@@ -108,6 +111,7 @@ steps:
     env:
       DEVICE_TYPE: "IOS_12"
       APP_LOCATION: "build/rn0.63.ipa"
+      SKIP_NAVIGATION_SCENARIOS: "true"
     concurrency: 10
     concurrency_group: 'browserstack-app'
 
@@ -216,7 +220,6 @@ steps:
     env:
       DEVICE_TYPE: "ANDROID_9"
       APP_LOCATION: "build/r_navigation_0.60.apk"
-      RUN_NAVIGATION_SCENARIOS: "true"
     concurrency: 10
     concurrency_group: 'browserstack-app'
 
@@ -232,7 +235,6 @@ steps:
   #   env:
   #     DEVICE_TYPE: "IOS_12"
   #     APP_LOCATION: "build/r_navigation_0.60.ipa"
-  #     RUN_NAVIGATION_SCENARIOS: "true"
   #   concurrency: 10
   #   concurrency_group: 'browserstack-app'
 
@@ -247,7 +249,6 @@ steps:
     env:
       DEVICE_TYPE: "ANDROID_9"
       APP_LOCATION: "build/r_navigation_0.63.apk"
-      RUN_NAVIGATION_SCENARIOS: "true"
     concurrency: 10
     concurrency_group: 'browserstack-app'
 
@@ -263,7 +264,6 @@ steps:
   #   env:
   #     DEVICE_TYPE: "IOS_12"
   #     APP_LOCATION: "build/r_navigation_0.63.ipa"
-  #     RUN_NAVIGATION_SCENARIOS: "true"
   #   concurrency: 10
   #   concurrency_group: 'browserstack-app'
 
@@ -278,7 +278,6 @@ steps:
     env:
       DEVICE_TYPE: "ANDROID_9"
       APP_LOCATION: "build/r_native_navigation_0.60.apk"
-      RUN_NAVIGATION_SCENARIOS: "true"
     concurrency: 10
     concurrency_group: 'browserstack-app'
 
@@ -294,7 +293,6 @@ steps:
   #   env:
   #     DEVICE_TYPE: "IOS_12"
   #     APP_LOCATION: "build/r_native_navigation_0.60.ipa"
-  #     RUN_NAVIGATION_SCENARIOS: "true"
   #   concurrency: 10
   #   concurrency_group: 'browserstack-app'
 
@@ -309,7 +307,6 @@ steps:
     env:
       DEVICE_TYPE: "ANDROID_9"
       APP_LOCATION: "build/r_native_navigation_0.63.apk"
-      RUN_NAVIGATION_SCENARIOS: "true"
     concurrency: 10
     concurrency_group: 'browserstack-app'
 
@@ -325,6 +322,5 @@ steps:
   #   env:
   #     DEVICE_TYPE: "IOS_12"
   #     APP_LOCATION: "build/r_native_navigation_0.63.ipa"
-  #     RUN_NAVIGATION_SCENARIOS: "true"
   #   concurrency: 10
   #   concurrency_group: 'browserstack-app'
