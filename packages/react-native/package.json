@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/react-native",
-  "version": "7.4.0",
+  "version": "7.5.0-alpha.0",
   "main": "src/notifier.js",
   "types": "types/bugsnag.d.ts",
   "description": "Bugsnag error reporter for React Native applications",
@@ -40,15 +40,10 @@
     "react-native.config.js",
     "bugsnag-react-native.gradle"
   ],
-  "scripts": {
-    "test:types": "jasmine 'types/**/*.test.js'"
-  },
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
     "@babel/cli": "^7.0.0",
-    "jasmine": "^3.5.0",
-    "nyc": "^12.0.2",
     "tslint": "^5.12.1",
     "typescript": "^3.3.3"
   },

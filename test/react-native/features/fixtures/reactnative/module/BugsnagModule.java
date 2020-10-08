@@ -10,6 +10,7 @@ import com.bugsnag.android.Bugsnag;
 import com.bugsnag.android.Configuration;
 import com.bugsnag.android.EndpointConfiguration;
 import com.bugsnag.android.Logger;
+import com.bugsnag.android.BreadcrumbType;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -129,6 +130,13 @@ public class BugsnagModule extends ReactContextBaseJavaModule {
         ReadableArray ar = options.getArray("enabledReleaseStages");
         for (int i = 0; i < ar.size(); i++) enabledReleaseStages.add(ar.getString(i));
         config.setEnabledReleaseStages(enabledReleaseStages);
+      }
+
+      if (options.hasKey("enabledBreadcrumbTypes")) {
+        Set<BreadcrumbType> enabledBreadcrumbTypes = new HashSet<BreadcrumbType>();
+        ReadableArray ar = options.getArray("enabledBreadcrumbTypes");
+        for (int i = 0; i < ar.size(); i++) enabledBreadcrumbTypes.add(BreadcrumbType.valueOf(ar.getString(i)));
+        config.setEnabledBreadcrumbTypes(enabledBreadcrumbTypes);
       }
 
       if (options.hasKey("redactedKeys")) {

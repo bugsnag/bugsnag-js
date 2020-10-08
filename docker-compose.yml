@@ -124,13 +124,15 @@ services:
         - REG_BASIC_CREDENTIAL
         - REG_NPM_EMAIL
     environment:
-      VERBOSE:
-      DEBUG:
-      BRANCH_NAME:
-      BUILDKITE:
-      REGISTRY_URL:
-      REACT_NATIVE_VERSION:
-      NOTIFIER_VERSION:
+      - VERBOSE
+      - DEBUG
+      - BRANCH_NAME
+      - BUILDKITE
+      - REGISTRY_URL
+      - REACT_NATIVE_VERSION
+      - NOTIFIER_VERSION
+      - ARTEFACT_NAME
+      - JS_SOURCE_DIR
     networks:
       default:
         aliases:
@@ -153,6 +155,7 @@ services:
       BROWSER_STACK_LOCAL_IDENTIFIER: ${BUILDKITE_JOB_ID:-maze-runner}
       APP_LOCATION:
       DEVICE_TYPE:
+      RUN_NAVIGATION_SCENARIOS:
     networks:
       default:
         aliases:

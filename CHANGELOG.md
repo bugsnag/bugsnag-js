@@ -1,5 +1,12 @@
 # Changelog
 
+## 7.5.0 (2020-10-08)
+
+### Added
+
+- (plugin-react-native-navigation): New plugin that integrates with React Native Navigation. [#1065](https://github.com/bugsnag/bugsnag-js/pull/1065)
+- (plugin-react-navigation): New plugin that integrates with React Navigation. [#1067](https://github.com/bugsnag/bugsnag-js/pull/1067)
+
 ## 7.4.0 (2020-10-01)
 
 ### Added
