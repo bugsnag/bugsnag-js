@@ -40,7 +40,7 @@ Before('@ios_only') do |scenario|
 end
 
 Before('@navigation') do |scenario|
-  skip_this_scenario("Skipping scenario") if ENV['SKIP_NAVIGATION_SCENARIOS']
+  skip_this_scenario("Skipping scenario") if ENV['SKIP_NAVIGATION_SCENARIOS'] == 'true'
 end
 
 After do |_scenario|
