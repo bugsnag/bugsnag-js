@@ -155,7 +155,7 @@ services:
       BROWSER_STACK_LOCAL_IDENTIFIER: ${BUILDKITE_JOB_ID:-maze-runner}
       APP_LOCATION:
       DEVICE_TYPE:
-      RUN_NAVIGATION_SCENARIOS:
+      SKIP_NAVIGATION_SCENARIOS:
     networks:
       default:
         aliases:

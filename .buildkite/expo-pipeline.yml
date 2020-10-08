@@ -92,7 +92,7 @@ steps:
         run: expo-maze-runner
         use-aliases: true
     env:
-      DEVICE_TYPE: "ANDROID_9"
+      DEVICE_TYPE: "ANDROID_9_0"
       APP_LOCATION: "build/output.apk"
     concurrency: 10
     concurrency_group: 'browserstack-app'
@@ -122,7 +122,7 @@ steps:
         run: expo-maze-runner
         use-aliases: true
     env:
-      DEVICE_TYPE: "ANDROID_8"
+      DEVICE_TYPE: "ANDROID_8_1"
       APP_LOCATION: "build/output.apk"
     concurrency: 10
     concurrency_group: 'browserstack-app'
@@ -136,7 +136,7 @@ steps:
         run: expo-maze-runner
         use-aliases: true
     env:
-      DEVICE_TYPE: "ANDROID_7"
+      DEVICE_TYPE: "ANDROID_7_1"
       APP_LOCATION: "build/output.apk"
     concurrency: 10
     concurrency_group: 'browserstack-app'
@@ -150,7 +150,7 @@ steps:
         run: expo-maze-runner
         use-aliases: true
     env:
-      DEVICE_TYPE: "ANDROID_6"
+      DEVICE_TYPE: "ANDROID_6_0"
       APP_LOCATION: "build/output.apk"
     concurrency: 10
     concurrency_group: 'browserstack-app'
@@ -164,7 +164,7 @@ steps:
         run: expo-maze-runner
         use-aliases: true
     env:
-      DEVICE_TYPE: "ANDROID_5"
+      DEVICE_TYPE: "ANDROID_5_0"
       APP_LOCATION: "build/output.apk"
     concurrency: 10
     concurrency_group: 'browserstack-app'

@@ -127,7 +127,7 @@ They also require access to the Expo ecosystem in order to publish, then build, 
 
 The following environment variables need to be set:
 
-- `DEVICE_TYPE`: the mobile operating system you want to test on – one of ANDROID_5, ANDROID_6, ANDROID_7, ANDROID_8, ANDROID_9, IOS_10, IOS_11, IOS_12
+- `DEVICE_TYPE`: the mobile operating system you want to test on – one of ANDROID_5_0, ANDROID_6_0, ANDROID_7_1, ANDROID_8_1, ANDROID_9_0, IOS_10, IOS_11, IOS_12
 - `BROWSER_STACK_USERNAME`
 - `BROWSER_STACK_ACCESS_KEY`
 - `EXPO_USERNAME`
@@ -136,7 +136,7 @@ The following environment variables need to be set:
 To run against an android device:
 
 ```sh
-DEVICE_TYPE=ANDROID_9 \
+DEVICE_TYPE=ANDROID_9_0 \
 BROWSER_STACK_USERNAME=xxx \
 BROWSER_STACK_ACCESS_KEY=xxx \
 EXPO_USERNAME=xxx \
@@ -169,7 +169,7 @@ These should be set to the `REACT_NATIVE_VERSION` environment variable according
 The following environment variables need to be set:
 
 - `DEVICE_TYPE` - the mobile operating system you want to test on – one of:
-  - ANDROID_5
+  - ANDROID_5_0
   - ANDROID_6_0
   - ANDROID_7_1
   - ANDROID_8_1
@@ -191,7 +191,7 @@ This can be overridden using the environment variable NOTIFIER_VERSION and is us
 To run against an android device:
 
 ```sh
-DEVICE_TYPE=ANDROID_9.0 \
+DEVICE_TYPE=ANDROID_9_0 \
 REACT_NATIVE_VERSION=rn0.60 \
 REG_BASIC_CREDENTIAL=xxx \
 REG_NPM_EMAIL=xxx \
@@ -204,7 +204,7 @@ BROWSER_STACK_ACCESS_KEY=xxx \
 To run against an iOS device:
 
 ```
-DEVICE_TYPE=ANDROID_9.0 \
+DEVICE_TYPE=ANDROID_9_0 \
 REACT_NATIVE_VERSION=rn0.60 \
 REG_BASIC_CREDENTIAL=xxx \
 REG_NPM_EMAIL=xxx \
