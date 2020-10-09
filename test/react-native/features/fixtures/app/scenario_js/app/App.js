@@ -124,8 +124,8 @@ export default class App extends Component {
                      value={this.state.apiKey}
                      onChangeText={this.setApiKey} />
           <Button style={styles.clickyButton}
-                  accessibilityLabel='sendToDashboardButton'
-                  title='Send to dashboard'
+                  accessibilityLabel='useDashboardEndpointsButton'
+                  title='Use dashboard endpoints'
                   onPress={this.useRealEndpoints}/>
         </View>
       </View>
