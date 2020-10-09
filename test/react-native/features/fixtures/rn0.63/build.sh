@@ -1,4 +1,5 @@
-npm i
+rm -rf reactnative.xcarchive
+
 cd ios && pod install
 xcrun xcodebuild \
   -scheme reactnative \
@@ -18,3 +19,5 @@ xcrun xcodebuild -exportArchive \
   -exportOptionsPlist exportOptions.plist
 
 mv output/reactnative.ipa output/output.ipa
+
+rm -rf reactnative.xcarchive
