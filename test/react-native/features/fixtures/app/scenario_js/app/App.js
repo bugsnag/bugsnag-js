@@ -54,6 +54,11 @@ export default class App extends Component {
     this.setState(() => ({ sessionsEndpoint: newSessionsEndpoint }))
   }
 
+  useRealEndpoints = () => {
+    this.setState({ notifyEndpoint: 'https://notify.bugsnag.com' })
+    this.setState({ sessionsEndpoint: 'https://sessions.bugsnag.com' })
+  }
+
   startScenario = async () => {
     console.log(`Running scenario: ${this.state.currentScenario}`)
     console.log(`  with MetaData: ${this.state.scenarioMetaData}`)
@@ -118,6 +123,10 @@ export default class App extends Component {
                      style={styles.textInput}
                      value={this.state.apiKey}
                      onChangeText={this.setApiKey} />
+          <Button style={styles.clickyButton}
+                  accessibilityLabel='sendToDashboardButton'
+                  title='Send to dashboard'
+                  onPress={this.useRealEndpoints}/>
         </View>
       </View>
     );
