@@ -10,32 +10,28 @@ import {
   NativeModules
 } from 'react-native'
 
-let getDefaultConfiguration = () => { return {
-    apiKey: '12312312312312312312312312312312',
-    endpoint: 'http://bs-local.com:9339',
-    autoTrackSessions: false
-  }
-}
-
-let getManualModeConfiguration = (apiKey) => { return {
-  apiKey: apiKey,
-  endpoints: {
-    notify: 'https://notify.bugsnag.com',
-    sessions: 'https://sessions.bugsnag.com'
-  },
-  autoTrackSessions: false
-}
-}
-
 export default class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
       currentScenario: '',
       scenarioMetaData: '',
-      manualApiKey: null
+      apiKey: '12312312312312312312312312312312',
+      notifyEndpoint: 'http://bs-local.com:9339',
+      sessionsEndpoint: 'http://bs-local.com:9339'
     }
     console.log(`Available scenarios:\n  ${Object.keys(Scenarios).join('\n  ')}`)
+  }
+
+  getConfiguration = () => {
+    return {
+      apiKey: this.state.apiKey,
+      endpoints: {
+        notify: this.state.notifyEndpoint,
+        sessions: this.state.sessionsEndpoint
+      },
+      autoTrackSessions: false
+    }
   }
 
   setScenario = newScenario => {
@@ -46,8 +42,16 @@ export default class App extends Component {
     this.setState(() => ({ scenarioMetaData: newScenarioMetaData }))
   }
 
-  setManualApiKey = newApiKey => {
-    this.setState(() => ({ manualApiKey: newApiKey }))
+  setApiKey = newApiKey => {
+    this.setState(() => ({ apiKey: newApiKey }))
+  }
+
+  setNotifyEndpoint = newNotifyEndpoint => {
+    this.setState(() => ({ notifyEndpoint: newNotifyEndpoint }))
+  }
+
+  setSessionsEndpoint = newSessionsEndpoint => {
+    this.setState(() => ({ sessionsEndpoint: newSessionsEndpoint }))
   }
 
   startScenario = async () => {
@@ -55,7 +59,7 @@ export default class App extends Component {
     console.log(`  with MetaData: ${this.state.scenarioMetaData}`)
     let scenarioName = this.state.currentScenario
     let scenarioMetaData = this.state.scenarioMetaData
-    let configuration = getDefaultConfiguration()
+    let configuration = this.getConfiguration()
     let jsConfig = {}
     let scenario = new Scenarios[scenarioName](configuration, scenarioMetaData, jsConfig)
     console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${JSON.stringify(jsConfig)} (js)`)
@@ -69,15 +73,10 @@ export default class App extends Component {
     console.log(`  with MetaData: ${this.state.scenarioMetaData}`)
     let scenarioName = this.state.currentScenario
     let scenarioMetaData = this.state.scenarioMetaData
-    let configuration
-    if (this.state.manualApiKey) {
-      configuration = getManualModeConfiguration(this.state.manualApiKey)
-    }
-    else {
-      configuration = getDefaultConfiguration()
-    }
+    let configuration = this.getConfiguration()
+
     let jsConfig = {}
-    let scenario = new Scenarios[scenarioName](configuration, scenarioMetaData, jsConfig)
+    new Scenarios[scenarioName](configuration, scenarioMetaData, jsConfig)
     console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${JSON.stringify(jsConfig)} (js)`)
     await NativeModules.BugsnagTestInterface.startBugsnag(configuration)
     Bugsnag.start(jsConfig)
@@ -98,18 +97,27 @@ export default class App extends Component {
                      onChangeText={this.setScenarioMetaData} />
 
           <Button style={styles.clickyButton}
-                  accessibilityLabel='startScenarioButton'
-                  title='Start scenario'
-                  onPress={this.startScenario}/>
-          <Button style={styles.clickyButton}
                   accessibilityLabel='startBugsnagButton'
-                  title='Start Bugsnag'
+                  title='Start Bugsnag only'
                   onPress={this.startBugsnag}/>
+          <Button style={styles.clickyButton}
+                  accessibilityLabel='startScenarioButton'
+                  title='Start Bugsnag and run scenario'
+                  onPress={this.startScenario}/>
 
-          <Text>Manual testing mode</Text>
+          <Text>Configuration</Text>
+          <TextInput placeholder='Notify endpoint'
+                     style={styles.textInput}
+                     value={this.state.notifyEndpoint}
+                     onChangeText={this.setNotifyEndpoint} />
+          <TextInput placeholder='Sessions endpoint'
+                     style={styles.textInput}
+                     value={this.state.sessionsEndpoint}
+                     onChangeText={this.setSessionsEndpoint} />
           <TextInput placeholder='API key'
                      style={styles.textInput}
-                     onChangeText={this.setManualApiKey} />
+                     value={this.state.apiKey}
+                     onChangeText={this.setApiKey} />
         </View>
       </View>
     );
