@@ -65,6 +65,7 @@ steps:
     command: 'npm run test:types'
 
   - label:  ':docker: Build browser maze runner image'
+    key: "browser-maze-runner-image"
     timeout_in_minutes: 20
     plugins:
       - artifacts#v1.2.0:
@@ -77,6 +78,7 @@ steps:
             - browser-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-browser-${BRANCH_NAME}
 
   - label:  ':docker: Build node maze runner image'
+    key: "node-maze-runner-image"
     timeout_in_minutes: 20
     plugins:
       - artifacts#v1.2.0:
@@ -88,9 +90,8 @@ steps:
           cache-from:
             - node-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-node-${BRANCH_NAME}
 
-  - wait
-
   - label: ':chrome: v43 Browser tests'
+    depends_on: "browser-maze-runner-image"
     timeout_in_minutes: 10
     plugins:
       docker-compose#v3.3.0:
@@ -103,6 +104,7 @@ steps:
     concurrency_group: 'browserstack'
 
   - label: ':chrome: v61 Browser tests'
+    depends_on: "browser-maze-runner-image"
     timeout_in_minutes: 10
     plugins:
       docker-compose#v3.3.0:
@@ -115,6 +117,7 @@ steps:
     concurrency_group: 'browserstack'
 
   - label: ':ie: v8 Browser tests'
+    depends_on: "browser-maze-runner-image"
     timeout_in_minutes: 10
     plugins:
       docker-compose#v3.3.0:
@@ -127,6 +130,7 @@ steps:
     concurrency_group: 'browserstack'
 
   - label: ':ie: v9 Browser tests'
+    depends_on: "browser-maze-runner-image"
     timeout_in_minutes: 10
     plugins:
       docker-compose#v3.3.0:
@@ -139,6 +143,7 @@ steps:
     concurrency_group: 'browserstack'
 
   - label: ':ie: v10 Browser tests'
+    depends_on: "browser-maze-runner-image"
     timeout_in_minutes: 10
     plugins:
       docker-compose#v3.3.0:
@@ -151,6 +156,7 @@ steps:
     concurrency_group: 'browserstack'
 
   - label: ':ie: v11 Browser tests'
+    depends_on: "browser-maze-runner-image"
     timeout_in_minutes: 10
     plugins:
       docker-compose#v3.3.0:
@@ -164,6 +170,7 @@ steps:
     concurrency_group: 'browserstack'
 
   - label: ':edge: v14 Browser tests'
+    depends_on: "browser-maze-runner-image"
     timeout_in_minutes: 10
     plugins:
       docker-compose#v3.3.0:
@@ -176,6 +183,7 @@ steps:
     concurrency_group: 'browserstack'
 
   - label: ':edge: v15 Browser tests'
+    depends_on: "browser-maze-runner-image"
     timeout_in_minutes: 10
     plugins:
       docker-compose#v3.3.0:
@@ -188,6 +196,7 @@ steps:
     concurrency_group: 'browserstack'
 
   - label: ':safari: v6 Browser tests'
+    depends_on: "browser-maze-runner-image"
     timeout_in_minutes: 10
     plugins:
       docker-compose#v3.3.0:
@@ -200,6 +209,7 @@ steps:
     concurrency_group: 'browserstack'
 
   - label: ':safari: v10 Browser tests'
+    depends_on: "browser-maze-runner-image"
     timeout_in_minutes: 10
     plugins:
       docker-compose#v3.3.0:
@@ -212,6 +222,7 @@ steps:
     concurrency_group: 'browserstack'
 
   - label: ':desktop_computer: Opera v12 Browser tests'
+    depends_on: "browser-maze-runner-image"
     timeout_in_minutes: 10
     plugins:
       docker-compose#v3.3.0:
@@ -224,6 +235,7 @@ steps:
     concurrency_group: 'browserstack'
 
   - label: ':iphone: iOS 10.3 Browser tests'
+    depends_on: "browser-maze-runner-image"
     timeout_in_minutes: 20
     plugins:
       docker-compose#v3.3.0:
@@ -237,6 +249,7 @@ steps:
     concurrency_group: 'browserstack'
 
   - label: ':android: Samsung Galaxy S8 Browser tests'
+    depends_on: "browser-maze-runner-image"
     timeout_in_minutes: 10
     plugins:
       docker-compose#v3.3.0:
@@ -249,6 +262,7 @@ steps:
     concurrency_group: 'browserstack'
 
   - label: ':firefox: v30 Browser tests'
+    depends_on: "browser-maze-runner-image"
     timeout_in_minutes: 10
     plugins:
       docker-compose#v3.3.0:
@@ -261,6 +275,7 @@ steps:
     concurrency_group: 'browserstack'
 
   - label: ':firefox: v56 Browser tests'
+    depends_on: "browser-maze-runner-image"
     timeout_in_minutes: 10
     plugins:
       docker-compose#v3.3.0:
@@ -273,6 +288,7 @@ steps:
     concurrency_group: 'browserstack'
 
   - label: ':node: Node 4'
+    depends_on: "node-maze-runner-image"
     timeout_in_minutes: 30
     plugins:
       docker-compose#v3.3.0:
@@ -284,6 +300,7 @@ steps:
       NODE_VERSION: "4"
 
   - label: ':node: Node 6'
+    depends_on: "node-maze-runner-image"
     timeout_in_minutes: 30
     plugins:
       docker-compose#v3.3.0:
@@ -295,6 +312,7 @@ steps:
       NODE_VERSION: "6"
 
   - label: ':node: Node 8'
+    depends_on: "node-maze-runner-image"
     timeout_in_minutes: 30
     plugins:
       docker-compose#v3.3.0:
@@ -305,6 +323,7 @@ steps:
       NODE_VERSION: "8"
 
   - label: ':node: Node 10'
+    depends_on: "node-maze-runner-image"
     timeout_in_minutes: 30
     plugins:
       docker-compose#v3.3.0:
@@ -315,6 +334,7 @@ steps:
       NODE_VERSION: "10"
 
   - label: ':node: Node 12'
+    depends_on: "node-maze-runner-image"
     timeout_in_minutes: 30
     plugins:
       docker-compose#v3.3.0:
