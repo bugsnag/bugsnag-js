@@ -19,7 +19,7 @@ let getDefaultConfiguration = () => {
   }
 }
 
-let getManualModeConfiguration = (apiKey) => { 
+let getManualModeConfiguration = (apiKey) => {
   return {
     apiKey: apiKey,
     endpoints: {
@@ -112,7 +112,7 @@ const AppScreen = () => {
         <Text>React-native end-to-end test app</Text>
         <TextInput style={styles.textInput}
           placeholder='Scenario Name'
-          accessibilityLabel='scenarioInput'
+          accessibilityLabel='scenario_name'
           onChangeText={this.setScenario} />
         <TextInput style={styles.textInput}
           placeholder='Scenario Metadata'

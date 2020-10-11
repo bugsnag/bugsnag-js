@@ -94,37 +94,40 @@ export default class App extends Component {
           <Text>React-native end-to-end test app</Text>
           <TextInput style={styles.textInput}
                      placeholder='Scenario Name'
-                     accessibilityLabel='scenarioInput'
+                     accessibilityLabel='scenario_name'
                      onChangeText={this.setScenario} />
           <TextInput style={styles.textInput}
                      placeholder='Scenario Metadata'
-                     accessibilityLabel='scenarioMetaDataInput'
+                     accessibilityLabel='scenario_metadata'
                      onChangeText={this.setScenarioMetaData} />
 
           <Button style={styles.clickyButton}
-                  accessibilityLabel='startBugsnagButton'
+                  accessibilityLabel='start_bugsnag'
                   title='Start Bugsnag only'
                   onPress={this.startBugsnag}/>
           <Button style={styles.clickyButton}
-                  accessibilityLabel='startScenarioButton'
+                  accessibilityLabel='run_scenario'
                   title='Start Bugsnag and run scenario'
                   onPress={this.startScenario}/>
 
           <Text>Configuration</Text>
           <TextInput placeholder='Notify endpoint'
                      style={styles.textInput}
+                     accessibilityLabel='notify_endpoint'
                      value={this.state.notifyEndpoint}
                      onChangeText={this.setNotifyEndpoint} />
           <TextInput placeholder='Sessions endpoint'
                      style={styles.textInput}
+                     accessibilityLabel='sessions_endpoint'
                      value={this.state.sessionsEndpoint}
                      onChangeText={this.setSessionsEndpoint} />
           <TextInput placeholder='API key'
                      style={styles.textInput}
+                     accessibilityLabel='api_key'
                      value={this.state.apiKey}
                      onChangeText={this.setApiKey} />
           <Button style={styles.clickyButton}
-                  accessibilityLabel='useDashboardEndpointsButton'
+                  accessibilityLabel='use_dashboard_endpoints'
                   title='Use dashboard endpoints'
                   onPress={this.useRealEndpoints}/>
         </View>
