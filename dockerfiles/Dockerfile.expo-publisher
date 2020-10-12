@@ -7,7 +7,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 
-COPY babel.config.js lerna.json .eslintignore .eslintrc.js jest.config.js tsconfig.json ./
+COPY babel.config.js lerna.json .eslintignore .eslintrc.js jest.config.js tsconfig.json packages/expo/unimodules-core.d.ts ./
 COPY packages ./packages
 COPY bin ./bin
 RUN npx lerna bootstrap --concurrency 1

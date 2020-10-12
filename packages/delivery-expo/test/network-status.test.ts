@@ -1,16 +1,19 @@
-/* global describe, expect, it */
+import NetworkStatus from '../network-status'
 
-const proxyquire = require('proxyquire').noCallThru().noPreserveCache()
+import NetInfo from '@react-native-community/netinfo'
+
+jest.mock('@react-native-community/netinfo', () => ({
+  addEventListener: jest.fn(),
+  fetch: () => new Promise(resolve => setTimeout(() => resolve({ isConnected: true }), 1))
+}))
+
+type Handler = (payload: { isConnected: boolean }) => void
 
 describe('delivery: expo -> NetworkStatus', () => {
   it('should update the value of isConnected when it changes', done => {
-    const listeners = []
-    const NetworkStatus = proxyquire('../network-status', {
-      '@react-native-community/netinfo': {
-        addEventListener: (fn) => { listeners.push(fn) },
-        fetch: () => new Promise(resolve => setTimeout(() => resolve({ isConnected: true }), 1))
-      }
-    })
+    const listeners: Handler[] = []
+    NetInfo.addEventListener = ((fn: Handler) => { listeners.push(fn) }) as any
+
     const ns = new NetworkStatus()
     // initial value before first check should be false
     expect(ns.isConnected).toBe(false)
@@ -28,16 +31,13 @@ describe('delivery: expo -> NetworkStatus', () => {
   })
 
   it('should alert any _watchers when the value of isConnected changes', done => {
-    const listeners = []
-    const NetworkStatus = proxyquire('../network-status', {
-      '@react-native-community/netinfo': {
-        addEventListener: (fn) => { listeners.push(fn) },
-        fetch: () => new Promise(resolve => setTimeout(() => resolve({ isConnected: true }), 1))
-      }
-    })
+    const listeners: Handler[] = []
+    NetInfo.addEventListener = ((fn: Handler) => { listeners.push(fn) }) as any
+
     const ns = new NetworkStatus()
-    const changes = []
-    ns.watch(isConnected => {
+    const changes: boolean[] = []
+
+    ns.watch((isConnected: boolean) => {
       changes.push(isConnected)
       if (changes.length === 4) {
         expect(changes).toEqual([

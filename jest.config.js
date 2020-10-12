@@ -62,6 +62,12 @@ module.exports = {
       ]
     },
     {
+      displayName: 'expo',
+      testMatch: [
+        testsForPackage('delivery-expo')
+      ]
+    },
+    {
       displayName: 'node plugins',
       testEnvironment: 'node',
       testMatch: [

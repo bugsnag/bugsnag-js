@@ -1,8 +1,12 @@
-/* global describe, expect, it, spyOn */
-
-const fetch = require('node-fetch')
-const proxyquire = require('proxyquire').noCallThru().noPreserveCache()
-const http = require('http')
+import fetch from 'node-fetch'
+import http from 'http'
+import delivery from '../'
+import { EventDeliveryPayload } from '@bugsnag/core/client'
+import { Client } from '@bugsnag/core'
+import { AddressInfo } from 'net'
+import UndeliveredPayloadQueue from '../queue'
+import NetworkStatus from '../network-status'
+import RedeliveryLoop from '../redelivery'
 
 const noopLogger = {
   debug: () => {},
@@ -11,24 +15,35 @@ const noopLogger = {
   error: () => {}
 }
 
-class NoopQueue {
-  async init () {}
-  async enqueue () {}
-  async dequeue () {}
-}
+jest.mock('expo-file-system', () => ({
+  cacheDirectory: 'file://var/data/foo.bar.app/',
+  downloadAsync: jest.fn(() => Promise.resolve({ md5: 'md5', uri: 'uri' })),
+  getInfoAsync: jest.fn(() => Promise.resolve({ exists: true, md5: 'md5', uri: 'uri' })),
+  readAsStringAsync: jest.fn(() => Promise.resolve()),
+  writeAsStringAsync: jest.fn(() => Promise.resolve()),
+  deleteAsync: jest.fn(() => Promise.resolve()),
+  moveAsync: jest.fn(() => Promise.resolve()),
+  copyAsync: jest.fn(() => Promise.resolve()),
+  makeDirectoryAsync: jest.fn(() => Promise.resolve()),
+  readDirectoryAsync: jest.fn(() => Promise.resolve()),
+  createDownloadResumable: jest.fn(() => Promise.resolve())
+}))
 
-class NoopRedelivery {
-  start () {}
-  stop () {}
-}
+jest.mock('@react-native-community/netinfo', () => ({
+  addEventListener: jest.fn(),
+  fetch: () => new Promise(resolve => setTimeout(() => resolve({ isConnected: true }), 1))
+}))
 
-class MockNetworkStatus {
-  constructor () { this.isConnected = true }
-  watch (fn) { fn(true) }
-}
+jest.mock('../queue')
+jest.mock('../redelivery')
+jest.mock('../network-status')
+
+const UndeliveredPayloadQueueMock = UndeliveredPayloadQueue as jest.MockedClass<typeof UndeliveredPayloadQueue>
+const NetworkStatusMock = NetworkStatus as jest.MockedClass<typeof NetworkStatus>
+const RedeliveryLoopMock = RedeliveryLoop as jest.MockedClass<typeof RedeliveryLoop>
 
 const mockServer = (statusCode = 200) => {
-  const requests = []
+  const requests: Array<{ url?: string, method?: string, headers: http.IncomingHttpHeaders, body?: string }> = []
   return {
     requests,
     server: http.createServer((req, res) => {
@@ -49,26 +64,36 @@ const mockServer = (statusCode = 200) => {
 }
 
 describe('delivery: expo', () => {
-  it('sends events successfully', done => {
-    const delivery = proxyquire('../', {
-      './queue': NoopQueue,
-      './redelivery': NoopRedelivery,
-      './network-status': MockNetworkStatus
-    })
+  let enqueueSpy: jest.Mock
 
+  beforeEach(() => {
+    enqueueSpy = jest.fn().mockResolvedValue(true)
+
+    UndeliveredPayloadQueueMock.mockImplementation(() => ({
+      init: () => Promise.resolve(true),
+      enqueue: enqueueSpy
+    } as any))
+
+    NetworkStatusMock.mockImplementation(() => ({
+      isConnected: true,
+      watch: (fn: (isConnected: boolean) => void) => { fn(true) }
+    } as any))
+  })
+
+  it('sends events successfully', done => {
     const { requests, server } = mockServer()
-    server.listen((err) => {
+    server.listen((err: any) => {
       expect(err).toBeUndefined()
 
       const payload = {
         events: [{ errors: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }] }]
-      }
+      } as unknown as EventDeliveryPayload
       const config = {
         apiKey: 'aaaaaaaa',
-        endpoints: { notify: `http://0.0.0.0:${server.address().port}/notify/` },
+        endpoints: { notify: `http://0.0.0.0:${(server.address() as AddressInfo).port}/notify/` },
         redactedKeys: []
       }
-      delivery({ _config: config, _logger: noopLogger }, fetch).sendEvent(payload, (err) => {
+      delivery({ _config: config, _logger: noopLogger } as unknown as Client, fetch).sendEvent(payload, (err) => {
         expect(err).toBe(null)
         expect(requests.length).toBe(1)
         expect(requests[0].method).toBe('POST')
@@ -86,25 +111,19 @@ describe('delivery: expo', () => {
   })
 
   it('sends sessions successfully', done => {
-    const delivery = proxyquire('../', {
-      './queue': NoopQueue,
-      './redelivery': NoopRedelivery,
-      './network-status': MockNetworkStatus
-    })
-
     const { requests, server } = mockServer(202)
-    server.listen((err) => {
+    server.listen((err: any) => {
       expect(err).toBeUndefined()
 
       const payload = {
         events: [{ errors: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }] }]
-      }
+      } as unknown as EventDeliveryPayload
       const config = {
         apiKey: 'aaaaaaaa',
-        endpoints: { notify: 'blah', sessions: `http://0.0.0.0:${server.address().port}/sessions/` },
+        endpoints: { notify: 'blah', sessions: `http://0.0.0.0:${(server.address() as AddressInfo).port}/sessions/` },
         redactedKeys: []
       }
-      delivery({ _config: config, _logger: noopLogger }, fetch).sendSession(payload, (err) => {
+      delivery({ _config: config, _logger: noopLogger } as unknown as Client, fetch).sendSession(payload, (err) => {
         expect(err).toBe(null)
         expect(requests.length).toBe(1)
         expect(requests[0].method).toBe('POST')
@@ -122,21 +141,9 @@ describe('delivery: expo', () => {
   })
 
   it('handles errors gracefully (ECONNREFUSED)', done => {
-    class MockQueue {
-      async init () {}
-      async enqueue (req) {}
-      async dequeue () {}
-    }
-    const spiedEnqueue = spyOn(MockQueue.prototype, 'enqueue')
-    const delivery = proxyquire('../', {
-      './queue': MockQueue,
-      './redelivery': NoopRedelivery,
-      './network-status': MockNetworkStatus
-    })
-
     const payload = {
       events: [{ errors: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }] }]
-    }
+    } as unknown as EventDeliveryPayload
     const config = {
       apiKey: 'aaaaaaaa',
       endpoints: { notify: 'http://0.0.0.0:9999/notify/' },
@@ -144,45 +151,33 @@ describe('delivery: expo', () => {
     }
     let didLog = false
     const log = () => { didLog = true }
-    delivery({ _config: config, _logger: { error: log, info: () => {} } }, fetch).sendEvent(payload, (err) => {
+    delivery({ _config: config, _logger: { error: log, info: () => {} } } as unknown as Client, fetch).sendEvent(payload, (err) => {
       expect(didLog).toBe(true)
       expect(err).toBeTruthy()
-      expect(err.code).toBe('ECONNREFUSED')
-      expect(spiedEnqueue).toHaveBeenCalled()
+      expect((err as any).code).toBe('ECONNREFUSED')
+      expect(enqueueSpy).toHaveBeenCalled()
       done()
     })
   })
 
   it('handles errors gracefully (400)', done => {
-    class MockQueue {
-      async init () {}
-      async enqueue (req) {}
-      async dequeue () {}
-    }
-    const spiedEnqueue = spyOn(MockQueue.prototype, 'enqueue')
-    const delivery = proxyquire('../', {
-      './queue': MockQueue,
-      './redelivery': NoopRedelivery,
-      './network-status': MockNetworkStatus
-    })
-
     const { requests, server } = mockServer(400)
-    server.listen((err) => {
+    server.listen((err: any) => {
       expect(err).toBeUndefined()
 
       const payload = {
         events: [{ errors: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }] }]
-      }
+      } as unknown as EventDeliveryPayload
       const config = {
         apiKey: 'aaaaaaaa',
-        endpoints: { notify: `http://0.0.0.0:${server.address().port}/notify/` },
+        endpoints: { notify: `http://0.0.0.0:${(server.address() as AddressInfo).port}/notify/` },
         redactedKeys: []
       }
       let didLog = false
       const log = () => { didLog = true }
-      delivery({ _config: config, _logger: { error: log, info: () => {} } }, fetch).sendEvent(payload, (err) => {
+      delivery({ _config: config, _logger: { error: log, info: () => {} } } as unknown as Client, fetch).sendEvent(payload, (err) => {
         expect(didLog).toBe(true)
-        expect(spiedEnqueue).not.toHaveBeenCalled()
+        expect(enqueueSpy).not.toHaveBeenCalled()
         expect(err).toBeTruthy()
         expect(requests.length).toBe(1)
         server.close()
@@ -192,21 +187,9 @@ describe('delivery: expo', () => {
   })
 
   it('handles errors gracefully for sessions (ECONNREFUSED)', done => {
-    class MockQueue {
-      async init () {}
-      async enqueue (req) {}
-      async dequeue () {}
-    }
-    const spiedEnqueue = spyOn(MockQueue.prototype, 'enqueue')
-    const delivery = proxyquire('../', {
-      './queue': MockQueue,
-      './redelivery': NoopRedelivery,
-      './network-status': MockNetworkStatus
-    })
-
     const payload = {
       events: [{ errors: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }] }]
-    }
+    } as unknown as EventDeliveryPayload
     const config = {
       apiKey: 'aaaaaaaa',
       endpoints: { sessions: 'http://0.0.0.0:9999/sessions/' },
@@ -214,160 +197,117 @@ describe('delivery: expo', () => {
     }
     let didLog = false
     const log = () => { didLog = true }
-    delivery({ _config: config, _logger: { error: log, info: () => {} } }, fetch).sendSession(payload, (err) => {
+    delivery({ _config: config, _logger: { error: log, info: () => {} } } as unknown as Client, fetch).sendSession(payload, (err) => {
       expect(didLog).toBe(true)
       expect(err).toBeTruthy()
-      expect(err.code).toBe('ECONNREFUSED')
-      expect(spiedEnqueue).toHaveBeenCalled()
+      expect((err as any).code).toBe('ECONNREFUSED')
+      expect(enqueueSpy).toHaveBeenCalled()
       done()
     })
   })
 
   it('handles errors gracefully (socket hang up)', done => {
-    class MockQueue {
-      async init () {}
-      async enqueue (req) {}
-      async dequeue () {}
-    }
-    const spiedEnqueue = spyOn(MockQueue.prototype, 'enqueue')
-    const delivery = proxyquire('../', {
-      './queue': MockQueue,
-      './redelivery': NoopRedelivery,
-      './network-status': MockNetworkStatus
-    })
-
     const server = http.createServer((req, res) => {
       req.connection.destroy()
     })
 
-    server.listen((err) => {
+    server.listen((err: any) => {
       expect(err).toBeFalsy()
       const payload = {
         events: [{ errors: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }] }]
-      }
+      } as unknown as EventDeliveryPayload
       const config = {
         apiKey: 'aaaaaaaa',
-        endpoints: { notify: `http://0.0.0.0:${server.address().port}/notify/` },
+        endpoints: { notify: `http://0.0.0.0:${(server.address() as AddressInfo).port}/notify/` },
         redactedKeys: []
       }
       let didLog = false
       const log = () => { didLog = true }
-      delivery({ _config: config, _logger: { error: log, info: () => {} } }, fetch).sendEvent(payload, (err) => {
+      delivery({ _config: config, _logger: { error: log, info: () => {} } } as unknown as Client, fetch).sendEvent(payload, (err) => {
         expect(didLog).toBe(true)
         expect(err).toBeTruthy()
-        expect(err.code).toBe('ECONNRESET')
-        expect(spiedEnqueue).toHaveBeenCalled()
+        expect((err as any).code).toBe('ECONNRESET')
+        expect(enqueueSpy).toHaveBeenCalled()
         done()
       })
     })
   })
 
   it('handles errors gracefully (HTTP 503)', done => {
-    class MockQueue {
-      async init () {}
-      async enqueue (req) {}
-      async dequeue () {}
-    }
-    const spiedEnqueue = spyOn(MockQueue.prototype, 'enqueue')
-    const delivery = proxyquire('../', {
-      './queue': MockQueue,
-      './redelivery': NoopRedelivery,
-      './network-status': MockNetworkStatus
-    })
-
     const server = http.createServer((req, res) => {
       res.statusCode = 503
       res.end('NOT OK')
     })
 
-    server.listen((err) => {
+    server.listen((err: any) => {
       expect(err).toBeFalsy()
       const payload = {
         events: [{ errors: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }] }]
-      }
+      } as unknown as EventDeliveryPayload
       const config = {
         apiKey: 'aaaaaaaa',
-        endpoints: { notify: `http://0.0.0.0:${server.address().port}/notify/` },
+        endpoints: { notify: `http://0.0.0.0:${(server.address() as AddressInfo).port}/notify/` },
         redactedKeys: []
       }
       let didLog = false
       const log = () => { didLog = true }
-      delivery({ _config: config, _logger: { error: log, info: () => {} } }, fetch).sendEvent(payload, (err) => {
+      delivery({ _config: config, _logger: { error: log, info: () => {} } } as unknown as Client, fetch).sendEvent(payload, (err) => {
         expect(didLog).toBe(true)
         expect(err).toBeTruthy()
-        expect(spiedEnqueue).toHaveBeenCalled()
+        expect(enqueueSpy).toHaveBeenCalled()
         done()
       })
     })
   })
 
   it('does not send an event marked with event.attemptImmediateDelivery=false', done => {
-    class MockQueue {
-      async init () {}
-      async enqueue (req) {}
-      async dequeue () {}
-    }
-    const spiedEnqueue = spyOn(MockQueue.prototype, 'enqueue')
-    const delivery = proxyquire('../', {
-      './queue': MockQueue,
-      './redelivery': NoopRedelivery,
-      './network-status': MockNetworkStatus
-    })
-
     const payload = {
       events: [{ errors: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }] }],
       attemptImmediateDelivery: false
-    }
+    } as unknown as EventDeliveryPayload
     const config = {
       apiKey: 'aaaaaaaa',
       endpoints: { notify: 'https://some-address.com' },
       redactedKeys: []
     }
-    delivery({ _config: config, _logger: noopLogger }, fetch).sendEvent(payload, (err) => {
+    delivery({ _config: config, _logger: noopLogger } as unknown as Client, fetch).sendEvent(payload, (err) => {
       expect(err).not.toBeTruthy()
-      expect(spiedEnqueue).toHaveBeenCalled()
+      expect(enqueueSpy).toHaveBeenCalled()
       done()
     })
   })
 
+  // eslint-disable-next-line jest/expect-expect
   it('starts the redelivery loop if there is a connection', done => {
-    class MockDelivery {
-      start () {
+    RedeliveryLoopMock.mockImplementation(() => ({
+      start: () => {
         done()
       }
-    }
-    const delivery = proxyquire('../', {
-      './queue': NoopQueue,
-      './redelivery': MockDelivery,
-      './network-status': MockNetworkStatus
-    })
-    delivery({ _logger: noopLogger }, fetch)
+    } as any))
+
+    delivery({ _logger: noopLogger } as unknown as Client, fetch)
   })
 
   it('stops the redelivery loop if there is not a connection', done => {
-    class MockDelivery {
-      start () {}
-      stop () {}
-    }
-    const startSpy = spyOn(MockDelivery.prototype, 'start')
-    const stopSpy = spyOn(MockDelivery.prototype, 'stop')
-    let watcher
-    class MockNetworkStatus {
-      constructor () {
-        this.isConnected = false
-      }
+    const startSpy = jest.fn()
+    const stopSpy = jest.fn()
 
-      watch (fn) {
+    RedeliveryLoopMock.mockImplementation(() => ({
+      start: startSpy,
+      stop: stopSpy
+    } as any))
+
+    let watcher: (isConnected: boolean) => void
+
+    NetworkStatusMock.mockImplementation(() => ({
+      isConnected: false,
+      watch: (fn: (isConnected: boolean) => void) => {
         watcher = fn
         onWatch()
       }
-    }
-    const delivery = proxyquire('../', {
-      './queue': NoopQueue,
-      './redelivery': MockDelivery,
-      './network-status': MockNetworkStatus
-    })
-    delivery({ _logger: noopLogger }, fetch)
+    } as any))
+
+    delivery({ _logger: noopLogger } as unknown as Client, fetch)
 
     const onWatch = () => {
       expect(typeof watcher).toBe('function')
@@ -381,27 +321,16 @@ describe('delivery: expo', () => {
   })
 
   it('doesn’t attempt to send when not connected', done => {
-    class MockQueue {
-      async init () {}
-      async enqueue (req) { console.log('enqueue') }
-      async dequeue () {}
-    }
-    const spiedEnqueue = spyOn(MockQueue.prototype, 'enqueue')
     class MockNetworkStatus {
-      constructor () {
-        this.isConnected = false
-      }
-
+      isConnected = false
       watch () {}
     }
-    const delivery = proxyquire('../', {
-      './queue': MockQueue,
-      './redelivery': NoopRedelivery,
-      './network-status': MockNetworkStatus
-    })
+
+    NetworkStatusMock.mockImplementation(MockNetworkStatus as any)
+
     const payload = {
       events: [{ errors: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }] }]
-    }
+    } as unknown as EventDeliveryPayload
     const config = {
       apiKey: 'aaaaaaaa',
       endpoints: { notify: 'http://some-address.com' },
@@ -412,15 +341,15 @@ describe('delivery: expo', () => {
       n++
       if (n === 2) done()
     }
-    const d = delivery({ _config: config, _logger: noopLogger }, fetch)
+    const d = delivery({ _config: config, _logger: noopLogger } as unknown as Client, fetch)
     d.sendEvent(payload, (err) => {
       expect(err).not.toBeTruthy()
-      expect(spiedEnqueue).toHaveBeenCalledTimes(1)
+      expect(enqueueSpy).toHaveBeenCalledTimes(1)
       _done()
     })
     d.sendSession(payload, (err) => {
       expect(err).not.toBeTruthy()
-      expect(spiedEnqueue).toHaveBeenCalledTimes(2)
+      expect(enqueueSpy).toHaveBeenCalledTimes(2)
       _done()
     })
   })
