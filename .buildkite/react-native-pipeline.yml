@@ -8,6 +8,7 @@ steps:
   - wait
 
   - label: ':docker: Build RN Android Builder image'
+    key: "android-builder-image"
     timeout_in_minutes: 30
     plugins:
       - improbable-eng/metahook:
@@ -19,9 +20,9 @@ steps:
       - docker-compose#v3.3.0:
           push: react-native-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
 
-  - wait
-
   - label: ':android: Build RN 0.60 apk'
+    key: "rn-0-60-apk"
+    depends_on: "android-builder-image"
     env:
       REACT_NATIVE_VERSION: "rn0.60"
     plugins:
@@ -31,6 +32,7 @@ steps:
       - build/rn0.60.apk
 
   - label: ':ios: Build RN 0.60 ipa'
+    key: "rn-0-60-ipa"
     agents:
       queue: "opensource-mac-rn"
     env:
@@ -40,6 +42,8 @@ steps:
       - npm run test:build-react-native-ios
 
   - label: ':android: Build RN 0.63 apk'
+    key: "rn-0-63-apk"
+    depends_on: "android-builder-image"
     env:
       REACT_NATIVE_VERSION: "rn0.63"
     plugins:
@@ -49,6 +53,7 @@ steps:
       - build/rn0.63.apk
 
   - label: ':ios: Build RN 0.63 ipa'
+    key: "rn-0-63-ipa"
     agents:
       queue: "opensource-mac-rn"
     env:
@@ -57,9 +62,112 @@ steps:
     commands:
       - npm run test:build-react-native-ios
 
-  - wait
+  - label: ':android: Build react-navigation 0.60 apk'
+    key: "react-navigation-0-60-apk"
+    depends_on: "android-builder-image"
+    env:
+      REACT_NATIVE_VERSION: "rn0.60"
+      JS_SOURCE_DIR: "react_navigation_js"
+      ARTEFACT_NAME: "r_navigation_0.60"
+    plugins:
+      - docker-compose#v3.3.0:
+          run: react-native-android-builder
+    artifact_paths:
+      - build/r_navigation_0.60.apk
+
+  # See: PLAT-5173
+  # - label: ':ios: Build react-navigation 0.60 ipa'
+  #   key: "react-navigation-0-60-ipa"
+  #   agents:
+  #     queue: "opensource-mac-rn"
+  #   env:
+  #     REACT_NATIVE_VERSION: rn0.60
+  #     JS_SOURCE_DIR: "react_navigation_js"
+  #     ARTEFACT_NAME: "r_navigation_0.60"
+  #   artifact_paths: build/r_navigation_0.60.ipa
+  #   commands:
+  #     - npm run test:build-react-native-ios
+
+  - label: ':android: Build react-navigation 0.63 apk'
+    key: "react-navigation-0-63-apk"
+    depends_on: "android-builder-image"
+    env:
+      REACT_NATIVE_VERSION: "rn0.63"
+      JS_SOURCE_DIR: "react_navigation_js"
+      ARTEFACT_NAME: "r_navigation_0.63"
+    plugins:
+      - docker-compose#v3.3.0:
+          run: react-native-android-builder
+    artifact_paths:
+      - build/r_navigation_0.63.apk
+
+  # See: PLAT-5173
+  # - label: ':ios: Build react-navigation 0.63 ipa'
+  #   key: "react-navigation-0-63-ipa"
+  #   agents:
+  #     queue: "opensource-mac-rn"
+  #   env:
+  #     REACT_NATIVE_VERSION: rn0.63
+  #     JS_SOURCE_DIR: "react_navigation_js"
+  #     ARTEFACT_NAME: "r_navigation_0.63"
+  #   artifact_paths: build/r_navigation_0.63.ipa
+  #   commands:
+  #     - npm run test:build-react-native-ios
+
+  - label: ':android: Build react-native-navigation 0.60 apk'
+    key: "react-native-navigation-0-60-apk"
+    depends_on: "android-builder-image"
+    env:
+      REACT_NATIVE_VERSION: "rn0.60"
+      JS_SOURCE_DIR: "react_native_navigation_js"
+      ARTEFACT_NAME: "r_native_navigation_0.60"
+    plugins:
+      - docker-compose#v3.3.0:
+          run: react-native-android-builder
+    artifact_paths:
+      - build/r_native_navigation_0.60.apk
+
+  # See: PLAT-5173
+  # - label: ':ios: Build react-native-navigation 0.60 ipa'
+  #   key: "react-native-navigation-0-60-ipa"
+  #   agents:
+  #     queue: "opensource-mac-rn"
+  #   env:
+  #     REACT_NATIVE_VERSION: rn0.60
+  #     JS_SOURCE_DIR: "react_native_navigation_js"
+  #     ARTEFACT_NAME: "r_native_navigation_0.60"
+  #   artifact_paths: build/r_native_navigation_0.60.ipa
+  #   commands:
+  #     - npm run test:build-react-native-ios
+
+  - label: ':android: Build react-native-navigation 0.63 apk'
+    key: "react-native-navigation-0-63-apk"
+    depends_on: "android-builder-image"
+    env:
+      REACT_NATIVE_VERSION: "rn0.63"
+      JS_SOURCE_DIR: "react_native_navigation_js"
+      ARTEFACT_NAME: "r_native_navigation_0.63"
+    plugins:
+      - docker-compose#v3.3.0:
+          run: react-native-android-builder
+    artifact_paths:
+      - build/r_native_navigation_0.63.apk
+
+  # See: PLAT-5173
+  # - label: ':ios: Build react-native-navigation 0.63 ipa'
+  #   key: "react-native-navigation-0-63-ipa"
+  #   agents:
+  #     queue: "opensource-mac-rn"
+  #   env:
+  #     REACT_NATIVE_VERSION: rn0.63
+  #     JS_SOURCE_DIR: "react_native_navigation_js"
+  #     ARTEFACT_NAME: "r_native_navigation_0.63"
+  #   artifact_paths: build/r_native_navigation_0.63.ipa
+  #   commands:
+  #     - npm run test:build-react-native-ios
 
   - label: ':android: RN 0.60 Android 9 end-to-end tests'
+    depends_on: "rn-0-60-apk"
     plugins:
       artifacts#v1.2.0:
         download: "build/rn0.60.apk"
@@ -74,6 +182,7 @@ steps:
     concurrency_group: 'browserstack-app'
 
   - label: ':ios: RN 0.60 iOS 12 end-to-end tests'
+    depends_on: "rn-0-60-ipa"
     plugins:
       artifacts#v1.2.0:
         download: "build/rn0.60.ipa"
@@ -88,6 +197,7 @@ steps:
     concurrency_group: 'browserstack-app'
 
   - label: ':android: RN 0.63 Android 9 end-to-end tests'
+    depends_on: "rn-0-63-apk"
     plugins:
       artifacts#v1.2.0:
         download: "build/rn0.63.apk"
@@ -102,6 +212,7 @@ steps:
     concurrency_group: 'browserstack-app'
 
   - label: ':ios: RN 0.63 iOS 12 end-to-end tests'
+    depends_on: "rn-0-63-ipa"
     plugins:
       artifacts#v1.2.0:
         download: "build/rn0.63.ipa"
@@ -115,101 +226,8 @@ steps:
     concurrency: 10
     concurrency_group: 'browserstack-app'
 
-  - label: ':android: Build react-navigation 0.60 apk'
-    env:
-      REACT_NATIVE_VERSION: "rn0.60"
-      JS_SOURCE_DIR: "react_navigation_js"
-      ARTEFACT_NAME: "r_navigation_0.60"
-    plugins:
-      - docker-compose#v3.3.0:
-          run: react-native-android-builder
-    artifact_paths:
-      - build/r_navigation_0.60.apk
-
-  # See: PLAT-5173
-  # - label: ':ios: Build react-navigation 0.60 ipa'
-  #   agents:
-  #     queue: "opensource-mac-rn"
-  #   env:
-  #     REACT_NATIVE_VERSION: rn0.60
-  #     JS_SOURCE_DIR: "react_navigation_js"
-  #     ARTEFACT_NAME: "r_navigation_0.60"
-  #   artifact_paths: build/r_navigation_0.60.ipa
-  #   commands:
-  #     - npm run test:build-react-native-ios
-
-  - label: ':android: Build react-navigation 0.63 apk'
-    env:
-      REACT_NATIVE_VERSION: "rn0.63"
-      JS_SOURCE_DIR: "react_navigation_js"
-      ARTEFACT_NAME: "r_navigation_0.63"
-    plugins:
-      - docker-compose#v3.3.0:
-          run: react-native-android-builder
-    artifact_paths:
-      - build/r_navigation_0.63.apk
-
-  # See: PLAT-5173
-  # - label: ':ios: Build react-navigation 0.63 ipa'
-  #   agents:
-  #     queue: "opensource-mac-rn"
-  #   env:
-  #     REACT_NATIVE_VERSION: rn0.63
-  #     JS_SOURCE_DIR: "react_navigation_js"
-  #     ARTEFACT_NAME: "r_navigation_0.63"
-  #   artifact_paths: build/r_navigation_0.63.ipa
-  #   commands:
-  #     - npm run test:build-react-native-ios
-
-  - label: ':android: Build react-native-navigation 0.60 apk'
-    env:
-      REACT_NATIVE_VERSION: "rn0.60"
-      JS_SOURCE_DIR: "react_native_navigation_js"
-      ARTEFACT_NAME: "r_native_navigation_0.60"
-    plugins:
-      - docker-compose#v3.3.0:
-          run: react-native-android-builder
-    artifact_paths:
-      - build/r_native_navigation_0.60.apk
-
-  # See: PLAT-5173
-  # - label: ':ios: Build react-native-navigation 0.60 ipa'
-  #   agents:
-  #     queue: "opensource-mac-rn"
-  #   env:
-  #     REACT_NATIVE_VERSION: rn0.60
-  #     JS_SOURCE_DIR: "react_native_navigation_js"
-  #     ARTEFACT_NAME: "r_native_navigation_0.60"
-  #   artifact_paths: build/r_native_navigation_0.60.ipa
-  #   commands:
-  #     - npm run test:build-react-native-ios
-
-  - label: ':android: Build react-native-navigation 0.63 apk'
-    env:
-      REACT_NATIVE_VERSION: "rn0.63"
-      JS_SOURCE_DIR: "react_native_navigation_js"
-      ARTEFACT_NAME: "r_native_navigation_0.63"
-    plugins:
-      - docker-compose#v3.3.0:
-          run: react-native-android-builder
-    artifact_paths:
-      - build/r_native_navigation_0.63.apk
-
-  # See: PLAT-5173
-  # - label: ':ios: Build react-native-navigation 0.63 ipa'
-  #   agents:
-  #     queue: "opensource-mac-rn"
-  #   env:
-  #     REACT_NATIVE_VERSION: rn0.63
-  #     JS_SOURCE_DIR: "react_native_navigation_js"
-  #     ARTEFACT_NAME: "r_native_navigation_0.63"
-  #   artifact_paths: build/r_native_navigation_0.63.ipa
-  #   commands:
-  #     - npm run test:build-react-native-ios
-
-  - wait
-
   - label: ':android: react-navigation 0.60 Android 9 end-to-end tests'
+    depends_on: "react-navigation-0-60-apk"
     plugins:
       artifacts#v1.2.0:
         download: "build/r_navigation_0.60.apk"
@@ -225,6 +243,7 @@ steps:
 
   # See: PLAT-5173
   # - label: ':ios: react-navigation 0.60 iOS 13 end-to-end tests'
+  #   depends_on: "react-navigation-0-60-ipa"
   #   plugins:
   #     artifacts#v1.2.0:
   #       download: "build/r_navigation_0.60.ipa"
@@ -239,6 +258,7 @@ steps:
   #   concurrency_group: 'browserstack-app'
 
   - label: ':android: react-navigation 0.63 Android 9 end-to-end tests'
+    depends_on: "react-navigation-0-63-apk"
     plugins:
       artifacts#v1.2.0:
         download: "build/r_navigation_0.63.apk"
@@ -254,6 +274,7 @@ steps:
 
   # See: PLAT-5173
   # - label: ':ios: react-navigation 0.63 iOS 13 end-to-end tests'
+  #   depends_on: "react-navigation-0-63-ipa"
   #   plugins:
   #     artifacts#v1.2.0:
   #       download: "build/r_navigation_0.63.ipa"
@@ -268,6 +289,7 @@ steps:
   #   concurrency_group: 'browserstack-app'
 
   - label: ':android: react-native-navigation 0.60 Android 9 end-to-end tests'
+    depends_on: "react-native-navigation-0-60-apk"
     plugins:
       artifacts#v1.2.0:
         download: "build/r_native_navigation_0.60.apk"
@@ -283,7 +305,8 @@ steps:
 
   # See: PLAT-5173
   # - label: ':ios: react-native-navigation 0.60 iOS 13 end-to-end tests'
-  #   plugins:
+  #   depends_on: "react-native-navigation-0-60-ipa"
+  #    plugins:
   #     artifacts#v1.2.0:
   #       download: "build/r_native_navigation_0.60.ipa"
   #     docker-compose#v3.1.0:
@@ -297,6 +320,7 @@ steps:
   #   concurrency_group: 'browserstack-app'
 
   - label: ':android: react-native-navigation 0.63 Android 9 end-to-end tests'
+    depends_on: "react-native-navigation-0-63-apk"
     plugins:
       artifacts#v1.2.0:
         download: "build/r_native_navigation_0.63.apk"
@@ -312,6 +336,7 @@ steps:
 
   # See: PLAT-5173
   # - label: ':ios: react-native-navigation 0.63 iOS 13 end-to-end tests'
+  #   depends_on: "react-native-navigation-0-63-ipa"
   #   plugins:
   #     artifacts#v1.2.0:
   #       download: "build/r_native_navigation_0.63.ipa"
