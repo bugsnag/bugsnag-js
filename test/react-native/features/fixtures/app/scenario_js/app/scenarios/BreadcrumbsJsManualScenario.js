@@ -2,8 +2,8 @@ import Scenario from './Scenario'
 import Bugsnag from '@bugsnag/react-native'
 
 export class BreadcrumbsJsManualScenario extends Scenario {
-  run() {
-    let metaData = {
+  run () {
+    const metaData = {
       from: 'javascript'
     }
     Bugsnag.leaveBreadcrumb('oh crumbs', metaData, 'state')

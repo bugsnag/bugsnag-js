@@ -5,7 +5,7 @@ import { View, Text, Button } from 'react-native'
 import { createStackNavigator } from '@react-navigation/stack'
 
 export class ReactNavigationBreadcrumbsDisabledScenario extends Scenario {
-  constructor (configuration, extraData, jsConfig) {
+  constructor (configuration, _extraData, _jsConfig) {
     super()
     configuration.enabledBreadcrumbTypes = []
   }
@@ -52,19 +52,19 @@ function DetailsScreen ({ navigation }) {
     <View style={ { flex: 1, alignItems: 'center', justifyContent: 'center' } }>
       <Text>Details Screen</Text>
       <Button title='Navigate'
-              accessibilityLabel='navigate'
-              onPress={ () => navigation.navigate('Home') }/>
+        accessibilityLabel='navigate'
+        onPress={ () => navigation.navigate('Home') }/>
       <Button title='Notify handled error'
-              accessibilityLabel='sendHandled'
-              onPress={ () => Bugsnag.notify(new Error('DetailsNavigationError')) }/>
+        accessibilityLabel='sendHandled'
+        onPress={ () => Bugsnag.notify(new Error('DetailsNavigationError')) }/>
       <Button title='Notify unhandled error'
-              accessibilityLabel='sendUnhandled'
-              onPress={ () => {
-                throw new Error('DetailsNavigationUnhandledError')
-              } }/>
+        accessibilityLabel='sendUnhandled'
+        onPress={ () => {
+          throw new Error('DetailsNavigationUnhandledError')
+        } }/>
       <Button title='Set context'
-              accessibilityLabel='setContext'
-              onPress={ () => Bugsnag.setContext('detailsSetContext') }/>
+        accessibilityLabel='setContext'
+        onPress={ () => Bugsnag.setContext('detailsSetContext') }/>
     </View>
   )
 }

@@ -2,13 +2,14 @@ import Scenario from './Scenario'
 import Bugsnag from '@bugsnag/react-native'
 
 export class ContextJsCustomScenario extends Scenario {
-  constructor(configuration, extraData, jsConfig) {
+  constructor (configuration, extraData, jsConfig) {
     super()
     jsConfig.context = 'context-config'
   }
 
-  run() {
-    Bugsnag.notify(new Error('ContextJsCustomScenarioA'), () => {}, () => {
+  run () {
+    Bugsnag.notify(new Error('ContextJsCustomScenarioA'), () => {
+    }, () => {
       setTimeout(() => {
         Bugsnag.setContext('context-client')
         Bugsnag.notify(new Error('ContextJsCustomScenarioB'), () => {

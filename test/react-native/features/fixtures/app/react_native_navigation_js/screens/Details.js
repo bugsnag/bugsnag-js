@@ -5,7 +5,7 @@ import Bugsnag from '@bugsnag/react-native'
 
 const DetailsScreen = (props) => {
   return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text>Details Screen</Text>
       <Button title='Navigate'
         accessibilityLabel='navigate'

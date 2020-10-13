@@ -2,14 +2,14 @@ import Scenario from './Scenario'
 import Bugsnag from '@bugsnag/react-native'
 
 export class AppConfigEnabledReleaseStagesNoSendScenario extends Scenario {
-  constructor(configuration, extraData, jsConfig) {
+  constructor (configuration, extraData, jsConfig) {
     super()
     configuration.releaseStage = 'testing'
     configuration.enabledReleaseStages = ['preprod', 'production']
     configuration.autoTrackSessions = true
   }
 
-  run() {
+  run () {
     Bugsnag.notify(new Error('AppConfigEnabledReleaseStagesNoSendScenario'))
   }
 }

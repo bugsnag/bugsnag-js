@@ -1,7 +1,7 @@
 import Scenario from './Scenario'
 
 export class UnhandledJsErrorScenario extends Scenario {
-  run() {
+  run () {
     throw new Error('UnhandledJsErrorScenario')
   }
 }

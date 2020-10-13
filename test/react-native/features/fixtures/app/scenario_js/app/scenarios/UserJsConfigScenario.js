@@ -2,7 +2,7 @@ import Scenario from './Scenario'
 import Bugsnag from '@bugsnag/react-native'
 
 export class UserJsConfigScenario extends Scenario {
-  constructor(configuration, extraData, jsConfig) {
+  constructor (configuration, extraData, jsConfig) {
     super()
     jsConfig.user = {
       id: '123',
@@ -11,7 +11,7 @@ export class UserJsConfigScenario extends Scenario {
     }
   }
 
-  run() {
+  run () {
     Bugsnag.notify(new Error('UserJsConfigScenario'))
   }
 }
