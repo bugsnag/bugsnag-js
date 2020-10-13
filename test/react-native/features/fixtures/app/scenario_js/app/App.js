@@ -81,6 +81,7 @@ export default class App extends Component {
     const configuration = this.getConfiguration()
 
     const jsConfig = {}
+    // eslint-disable-next-line no-new
     new Scenarios[scenarioName](configuration, scenarioMetaData, jsConfig)
     console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${JSON.stringify(jsConfig)} (js)`)
     await NativeModules.BugsnagTestInterface.startBugsnag(configuration)
