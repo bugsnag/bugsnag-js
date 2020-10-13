@@ -1,7 +1,7 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import Bugsnag from '@bugsnag/react-native'
-import BugsnagPluginReactNavigation from '@bugsnag/plugin-react-navigation';
-import {NavigationContainer} from '@react-navigation/native';
+import BugsnagPluginReactNavigation from '@bugsnag/plugin-react-navigation'
+import { NavigationContainer } from '@react-navigation/native'
 import * as Scenarios from './Scenarios'
 import {
   View,
@@ -17,7 +17,7 @@ const defaultJsConfig = () => ({
 })
 
 export default class App extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       currentScenario: '',
@@ -107,11 +107,11 @@ export default class App extends Component {
           <TextInput style={styles.textInput}
             placeholder='Scenario Name'
             accessibilityLabel='scenario_name'
-            onChangeText={this.setScenario} />
+            onChangeText={this.setScenario}/>
           <TextInput style={styles.textInput}
             placeholder='Scenario Metadata'
             accessibilityLabel='scenario_metadata'
-            onChangeText={this.setScenarioMetaData} />
+            onChangeText={this.setScenarioMetaData}/>
 
           <Button style={styles.clickyButton}
             accessibilityLabel='start_bugsnag'
@@ -127,17 +127,17 @@ export default class App extends Component {
             style={styles.textInput}
             accessibilityLabel='notify_endpoint'
             value={this.state.notifyEndpoint}
-            onChangeText={this.setNotifyEndpoint} />
+            onChangeText={this.setNotifyEndpoint}/>
           <TextInput placeholder='Sessions endpoint'
             style={styles.textInput}
             accessibilityLabel='sessions_endpoint'
             value={this.state.sessionsEndpoint}
-            onChangeText={this.setSessionsEndpoint} />
+            onChangeText={this.setSessionsEndpoint}/>
           <TextInput placeholder='API key'
             style={styles.textInput}
             accessibilityLabel='api_key'
             value={this.state.apiKey}
-            onChangeText={this.setApiKey} />
+            onChangeText={this.setApiKey}/>
           <Button style={styles.clickyButton}
             accessibilityLabel='use_dashboard_endpoints'
             title='Use dashboard endpoints'
@@ -148,12 +148,12 @@ export default class App extends Component {
   }
 
   ready () {
-    const BugsnagNavigationContainer = Bugsnag.getPlugin('reactNavigation').createNavigationContainer(NavigationContainer);
+    const BugsnagNavigationContainer = Bugsnag.getPlugin('reactNavigation').createNavigationContainer(NavigationContainer)
     return (
       <BugsnagNavigationContainer>
         {this.state.scenario.view()}
       </BugsnagNavigationContainer>
-    );
+    )
   }
 
   render () {

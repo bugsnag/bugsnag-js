@@ -1,68 +1,69 @@
 import Scenario from './Scenario'
 import Bugsnag from '@bugsnag/react-native'
 import * as React from 'react'
-import {View, Text, Button} from 'react-native'
-import {createStackNavigator} from '@react-navigation/stack'
+import { View, Text, Button } from 'react-native'
+import { createStackNavigator } from '@react-navigation/stack'
 
 export class ReactNavigationBreadcrumbsEnabledScenario extends Scenario {
-  constructor(configuration, extraData, jsConfig) {
+  constructor (configuration, extraData, jsConfig) {
     super()
   }
 
   view () {
-    const Stack = createStackNavigator();
+    const Stack = createStackNavigator()
     return (
       <Stack.Navigator>
         <Stack.Screen
           name="Home"
-          component={HomeScreen}
+          component={ HomeScreen }
         />
         <Stack.Screen
           name="Details"
-          component={DetailsScreen}
+          component={ DetailsScreen }
         />
       </Stack.Navigator>
     )
   }
 
-  run() {
-    // Bugsnag.notify(new Error('ReactNavigationBreadcrumbsEnabledScenario'))
+  run () {
   }
 }
 
-function HomeScreen({navigation}) {
+function HomeScreen ({ navigation }) {
   return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+    <View style={ { flex: 1, alignItems: 'center', justifyContent: 'center' } }>
       <Text>Home Screen</Text>
       <Button title='Navigate'
         accessibilityLabel='navigate'
-        onPress={() => navigation.navigate('Details')} />
+        onPress={ () => navigation.navigate('Details') }/>
       <Button title='Notify handled error'
         accessibilityLabel='sendHandled'
-        onPress={() => Bugsnag.notify(new Error('HomeNavigationError'))} />
+        onPress={ () => Bugsnag.notify(new Error('HomeNavigationError')) }/>
       <Button title='Set context'
         accessibilityLabel='setContext'
-        onPress={() => Bugsnag.setContext('homeSetContext')} />
+        onPress={ () => Bugsnag.setContext('homeSetContext') }/>
     </View>
-  );
+  )
 }
 
-function DetailsScreen({navigation}) {
+function DetailsScreen ({ navigation }) {
   return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+    <View style={ { flex: 1, alignItems: 'center', justifyContent: 'center' } }>
       <Text>Details Screen</Text>
       <Button title='Navigate'
         accessibilityLabel='navigate'
-        onPress={() => navigation.navigate('Home')} />
+        onPress={ () => navigation.navigate('Home') }/>
       <Button title='Notify handled error'
         accessibilityLabel='sendHandled'
-        onPress={() => Bugsnag.notify(new Error('DetailsNavigationError'))} />
+        onPress={ () => Bugsnag.notify(new Error('DetailsNavigationError')) }/>
       <Button title='Notify unhandled error'
         accessibilityLabel='sendUnhandled'
-        onPress={() => { throw new Error('DetailsNavigationUnhandledError') }} />
+        onPress={ () => {
+          throw new Error('DetailsNavigationUnhandledError')
+        } }/>
       <Button title='Set context'
         accessibilityLabel='setContext'
-        onPress={() => Bugsnag.setContext('detailsSetContext')} />
+        onPress={ () => Bugsnag.setContext('detailsSetContext') }/>
     </View>
-  );
+  )
 }
