@@ -42,8 +42,10 @@ BugsnagConfiguration *createConfiguration(NSDictionary * options) {
       NSLog(@"key: %@, value: %@ \n", key, [options objectForKey:key]);
   }
   BugsnagConfiguration *config = [[BugsnagConfiguration alloc] initWithApiKey:options[@"apiKey"]];
-  NSString *endpoint = options[@"endpoint"];
-  BugsnagEndpointConfiguration *endpoints = [[BugsnagEndpointConfiguration alloc] initWithNotify:endpoint sessions:endpoint];
+  NSDictionary *endpointsIn = options[@"endpoints"];
+  NSString *notifyEndpoint = endpointsIn[@"notify"];
+  NSString *sessionsEndpoint = endpointsIn[@"sessions"];
+  BugsnagEndpointConfiguration *endpoints = [[BugsnagEndpointConfiguration alloc] initWithNotify:notifyEndpoint sessions:sessionsEndpoint];
   [config setEndpoints:endpoints];
   [config setAutoTrackSessions:[[options objectForKey:@"autoTrackSessions"]boolValue]];
   config.enabledErrorTypes.ooms = NO; // Set by default, will add an override as required

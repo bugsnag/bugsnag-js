@@ -1,8 +1,8 @@
 When("I run {string}") do |event_type|
   steps %Q{
-    Given the element "scenarioInput" is present within 60 seconds
-    When I clear and send the keys "#{event_type}" to the element "scenarioInput"
-    And I click the element "startScenarioButton"
+    Given the element "scenario_name" is present within 60 seconds
+    When I clear and send the keys "#{event_type}" to the element "scenario_name"
+    And I click the element "run_scenario"
   }
 end
 
@@ -31,16 +31,16 @@ end
 
 When("I configure Bugsnag for {string}") do |event_type|
   steps %Q{
-    Given the element "scenarioInput" is present within 60 seconds
-    When I clear and send the keys "#{event_type}" to the element "scenarioInput"
-    And I click the element "startBugsnagButton"
+    Given the element "scenario_name" is present within 60 seconds
+    When I clear and send the keys "#{event_type}" to the element "scenario_name"
+    And I click the element "start_bugsnag"
   }
 end
 
 When("I configure the app to run in the {string} state") do |event_metadata|
   steps %Q{
-    Given the element "scenarioMetaDataInput" is present
-    And I clear and send the keys "#{event_metadata}" to the element "scenarioMetaDataInput"
+    Given the element "scenario_metadata" is present
+    And I clear and send the keys "#{event_metadata}" to the element "scenario_metadata"
   }
 end
 
