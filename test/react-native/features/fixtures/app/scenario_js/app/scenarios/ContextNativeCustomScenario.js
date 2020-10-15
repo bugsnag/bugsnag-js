@@ -3,7 +3,7 @@ import Bugsnag from '@bugsnag/react-native'
 import { NativeModules } from 'react-native'
 
 export class ContextNativeCustomScenario extends Scenario {
-  run() {
+  run () {
     Bugsnag.setContext('context-js')
     setTimeout(() => {
       NativeModules.BugsnagTestInterface.runScenario('ContextNativeCustomScenario')

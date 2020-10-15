@@ -13,5 +13,6 @@ ADD min_packages.tar .
 COPY bin ./bin
 RUN npx lerna bootstrap --concurrency 1
 COPY scripts ./scripts
+COPY test ./test
 COPY packages ./packages
 RUN npm run build
