@@ -1,5 +1,11 @@
 # Changelog
 
+## TBD
+
+### Fixed
+
+- (browser): Added missing type definition for `trackInlineScripts` option [#1102](https://github.com/bugsnag/bugsnag-js/pull/1102) / [#1097](https://github.com/bugsnag/bugsnag-js/pull/1097)
+
 ## 7.5.0 (2020-10-08)
 
 ### Added

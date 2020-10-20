@@ -4,6 +4,7 @@ interface BrowserConfig extends Config {
   maxEvents?: number
   collectUserIp?: boolean
   generateAnonymousId?: boolean
+  trackInlineScripts?: boolean
 }
 
 interface BrowserBugsnagStatic extends BugsnagStatic {
