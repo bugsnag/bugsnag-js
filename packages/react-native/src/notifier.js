@@ -3,7 +3,7 @@ const NativeClient = NativeModules.BugsnagReactNative
 
 const REMOTE_DEBUGGING_WARNING = `Bugsnag cannot initialize synchronously when running in the remote debugger.
 
-Error reporting is still supported, but synchronous calls afted Bugsnag.start() will no-op. This means Bugsnag.leaveBreadcrumb(), Bugsnag.setUser() and all other methods will only begin to work after a short delay.
+Error reporting is still supported, but synchronous calls after Bugsnag.start() will no-op. This means Bugsnag.leaveBreadcrumb(), Bugsnag.setUser() and all other methods will only begin to work after a short delay.
 
 This only affects the remote debugger. Execution of JS in the normal way (on the device) is not affected.`
 
