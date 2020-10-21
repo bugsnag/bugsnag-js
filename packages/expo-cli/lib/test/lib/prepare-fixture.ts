@@ -9,7 +9,7 @@ export const prepareFixture = async (fixture: string) => {
 
   const target = `${tmp}/${fixture}`
 
-  // create target director
+  // create target directory
   await promisify(mkdir)(target, { recursive: true })
 
   // copy in the desired fixture
