@@ -1,5 +1,6 @@
 steps:
   - label: ':docker: Build and publish JS packages'
+    timeout_in_minutes: 30
     plugins:
       - docker-compose#v3.3.0:
           build: publisher
@@ -23,6 +24,7 @@ steps:
   - label: ':android: Build RN 0.60 apk'
     key: "rn-0-60-apk"
     depends_on: "android-builder-image"
+    timeout_in_minutes: 60
     env:
       REACT_NATIVE_VERSION: "rn0.60"
     plugins:
@@ -33,6 +35,7 @@ steps:
 
   - label: ':ios: Build RN 0.60 ipa'
     key: "rn-0-60-ipa"
+    timeout_in_minutes: 60
     agents:
       queue: "opensource-mac-rn"
     env:
@@ -44,6 +47,7 @@ steps:
   - label: ':android: Build RN 0.63 apk'
     key: "rn-0-63-apk"
     depends_on: "android-builder-image"
+    timeout_in_minutes: 60
     env:
       REACT_NATIVE_VERSION: "rn0.63"
     plugins:
@@ -54,6 +58,7 @@ steps:
 
   - label: ':ios: Build RN 0.63 ipa'
     key: "rn-0-63-ipa"
+    timeout_in_minutes: 60
     agents:
       queue: "opensource-mac-rn"
     env:
@@ -65,6 +70,7 @@ steps:
   - label: ':android: Build react-navigation 0.60 apk'
     key: "react-navigation-0-60-apk"
     depends_on: "android-builder-image"
+    timeout_in_minutes: 60
     env:
       REACT_NATIVE_VERSION: "rn0.60"
       JS_SOURCE_DIR: "react_navigation_js"
@@ -78,6 +84,7 @@ steps:
   # See: PLAT-5173
   # - label: ':ios: Build react-navigation 0.60 ipa'
   #   key: "react-navigation-0-60-ipa"
+  #     timeout_in_minutes: 60
   #   agents:
   #     queue: "opensource-mac-rn"
   #   env:
@@ -91,6 +98,7 @@ steps:
   - label: ':android: Build react-navigation 0.63 apk'
     key: "react-navigation-0-63-apk"
     depends_on: "android-builder-image"
+    timeout_in_minutes: 60
     env:
       REACT_NATIVE_VERSION: "rn0.63"
       JS_SOURCE_DIR: "react_navigation_js"
@@ -104,6 +112,7 @@ steps:
   # See: PLAT-5173
   # - label: ':ios: Build react-navigation 0.63 ipa'
   #   key: "react-navigation-0-63-ipa"
+  #    timeout_in_minutes: 60
   #   agents:
   #     queue: "opensource-mac-rn"
   #   env:
@@ -117,6 +126,7 @@ steps:
   - label: ':android: Build react-native-navigation 0.60 apk'
     key: "react-native-navigation-0-60-apk"
     depends_on: "android-builder-image"
+    timeout_in_minutes: 60
     env:
       REACT_NATIVE_VERSION: "rn0.60"
       JS_SOURCE_DIR: "react_native_navigation_js"
@@ -130,6 +140,7 @@ steps:
   # See: PLAT-5173
   # - label: ':ios: Build react-native-navigation 0.60 ipa'
   #   key: "react-native-navigation-0-60-ipa"
+  #     timeout_in_minutes: 60
   #   agents:
   #     queue: "opensource-mac-rn"
   #   env:
@@ -143,6 +154,7 @@ steps:
   - label: ':android: Build react-native-navigation 0.63 apk'
     key: "react-native-navigation-0-63-apk"
     depends_on: "android-builder-image"
+    timeout_in_minutes: 60
     env:
       REACT_NATIVE_VERSION: "rn0.63"
       JS_SOURCE_DIR: "react_native_navigation_js"
@@ -156,6 +168,7 @@ steps:
   # See: PLAT-5173
   # - label: ':ios: Build react-native-navigation 0.63 ipa'
   #   key: "react-native-navigation-0-63-ipa"
+  #     timeout_in_minutes: 60
   #   agents:
   #     queue: "opensource-mac-rn"
   #   env:
@@ -168,6 +181,7 @@ steps:
 
   - label: ':android: RN 0.60 Android 9 end-to-end tests'
     depends_on: "rn-0-60-apk"
+    timeout_in_minutes: 60
     plugins:
       artifacts#v1.2.0:
         download: "build/rn0.60.apk"
@@ -183,6 +197,7 @@ steps:
 
   - label: ':ios: RN 0.60 iOS 12 end-to-end tests'
     depends_on: "rn-0-60-ipa"
+    timeout_in_minutes: 60
     plugins:
       artifacts#v1.2.0:
         download: "build/rn0.60.ipa"
@@ -198,6 +213,7 @@ steps:
 
   - label: ':android: RN 0.63 Android 9 end-to-end tests'
     depends_on: "rn-0-63-apk"
+    timeout_in_minutes: 60
     plugins:
       artifacts#v1.2.0:
         download: "build/rn0.63.apk"
@@ -213,6 +229,7 @@ steps:
 
   - label: ':ios: RN 0.63 iOS 12 end-to-end tests'
     depends_on: "rn-0-63-ipa"
+    timeout_in_minutes: 60
     plugins:
       artifacts#v1.2.0:
         download: "build/rn0.63.ipa"
@@ -228,6 +245,7 @@ steps:
 
   - label: ':android: react-navigation 0.60 Android 9 end-to-end tests'
     depends_on: "react-navigation-0-60-apk"
+    timeout_in_minutes: 60
     plugins:
       artifacts#v1.2.0:
         download: "build/r_navigation_0.60.apk"
@@ -244,6 +262,7 @@ steps:
   # See: PLAT-5173
   # - label: ':ios: react-navigation 0.60 iOS 13 end-to-end tests'
   #   depends_on: "react-navigation-0-60-ipa"
+  #     timeout_in_minutes: 60
   #   plugins:
   #     artifacts#v1.2.0:
   #       download: "build/r_navigation_0.60.ipa"
@@ -259,6 +278,7 @@ steps:
 
   - label: ':android: react-navigation 0.63 Android 9 end-to-end tests'
     depends_on: "react-navigation-0-63-apk"
+    timeout_in_minutes: 60
     plugins:
       artifacts#v1.2.0:
         download: "build/r_navigation_0.63.apk"
@@ -275,6 +295,7 @@ steps:
   # See: PLAT-5173
   # - label: ':ios: react-navigation 0.63 iOS 13 end-to-end tests'
   #   depends_on: "react-navigation-0-63-ipa"
+  #     timeout_in_minutes: 60
   #   plugins:
   #     artifacts#v1.2.0:
   #       download: "build/r_navigation_0.63.ipa"
@@ -290,6 +311,7 @@ steps:
 
   - label: ':android: react-native-navigation 0.60 Android 9 end-to-end tests'
     depends_on: "react-native-navigation-0-60-apk"
+    timeout_in_minutes: 60
     plugins:
       artifacts#v1.2.0:
         download: "build/r_native_navigation_0.60.apk"
@@ -306,7 +328,8 @@ steps:
   # See: PLAT-5173
   # - label: ':ios: react-native-navigation 0.60 iOS 13 end-to-end tests'
   #   depends_on: "react-native-navigation-0-60-ipa"
-  #    plugins:
+  #     timeout_in_minutes: 60
+  #   plugins:
   #     artifacts#v1.2.0:
   #       download: "build/r_native_navigation_0.60.ipa"
   #     docker-compose#v3.1.0:
@@ -321,6 +344,7 @@ steps:
 
   - label: ':android: react-native-navigation 0.63 Android 9 end-to-end tests'
     depends_on: "react-native-navigation-0-63-apk"
+    timeout_in_minutes: 60
     plugins:
       artifacts#v1.2.0:
         download: "build/r_native_navigation_0.63.apk"
@@ -337,6 +361,7 @@ steps:
   # See: PLAT-5173
   # - label: ':ios: react-native-navigation 0.63 iOS 13 end-to-end tests'
   #   depends_on: "react-native-navigation-0-63-ipa"
+  #     timeout_in_minutes: 60
   #   plugins:
   #     artifacts#v1.2.0:
   #       download: "build/r_native_navigation_0.63.ipa"
