@@ -75,6 +75,7 @@
     "packages/plugin-browser-device",
     "packages/plugin-contextualize",
     "packages/plugin-expo-app",
+    "packages/plugin-expo-cli",
     "packages/plugin-expo-device",
     "packages/plugin-navigation-breadcrumbs",
     "packages/plugin-network-breadcrumbs",
