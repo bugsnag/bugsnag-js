@@ -63,6 +63,7 @@ module.exports = {
       displayName: 'expo',
       testMatch: [
         testsForPackage('delivery-expo'),
+        testsForPackage('plugin-expo-app'),
         testsForPackage('plugin-expo-device')
       ]
     },
