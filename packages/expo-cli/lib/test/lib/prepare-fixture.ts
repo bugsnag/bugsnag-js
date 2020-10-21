@@ -4,7 +4,7 @@ import rimraf from 'rimraf'
 import { promisify } from 'util'
 import { v4 as uuidv4 } from 'uuid'
 
-export const prepareFixture = async (fixture) => {
+export const prepareFixture = async (fixture: string) => {
   const tmp = `${__dirname}/../.tmp${uuidv4()}`
 
   const target = `${tmp}/${fixture}`
