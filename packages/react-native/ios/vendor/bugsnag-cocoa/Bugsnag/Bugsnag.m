@@ -34,6 +34,7 @@
 #import "BugsnagKeys.h"
 #import "BugsnagPlugin.h"
 #import "BugsnagHandledState.h"
+#import "BugsnagSystemState.h"
 
 static BugsnagClient *bsg_g_bugsnag_client = NULL;
 
@@ -91,6 +92,14 @@ static BugsnagClient *bsg_g_bugsnag_client = NULL;
         }
         return bsg_g_bugsnag_client;
     }
+}
+
+/**
+ * Purge the global client so that it will be regenerated on the next call to start.
+ * This is only used by the unit tests.
+ */
++ (void)purge {
+    bsg_g_bugsnag_client = nil;
 }
 
 + (BugsnagConfiguration *)configuration {

@@ -12,7 +12,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface BSGCachesDirectory : NSObject
 
-+ (NSString*) cachesDirectory;
++ (NSString *)cachesDirectory;
+
+/**
+ * Get a subdir relative to the caches directory. If the relative path doesn't exist, it will be created.
+ * This method will report errors but will not crash; if the path is invalid, it will return the caches path.
+ */
++ (NSString *)getSubdirPath:(NSString *)relativePath;
 
 @end
 

@@ -1252,20 +1252,25 @@ void bsg_kscrw_i_writeError(const BSG_KSCrashReportWriter *const writer,
         case BSG_KSCrashTypeMachException:
             writer->beginObject(writer, BSG_KSCrashField_Mach);
             {
+                char buffer[20] = {0};
+                
                 writer->addUIntegerElement(writer, BSG_KSCrashField_Exception,
                                            (unsigned)machExceptionType);
                 if (machExceptionName != NULL) {
                     writer->addStringElement(writer, BSG_KSCrashField_ExceptionName,
                                              machExceptionName);
                 }
-                writer->addUIntegerElement(writer, BSG_KSCrashField_Code,
-                                           (unsigned)machCode);
+                
+                snprintf(buffer, sizeof(buffer), "0x%llx", machCode);
+                writer->addStringElement(writer, BSG_KSCrashField_Code, buffer);
+                
                 if (machCodeName != NULL) {
                     writer->addStringElement(writer, BSG_KSCrashField_CodeName,
                                              machCodeName);
                 }
-                writer->addUIntegerElement(writer, BSG_KSCrashField_Subcode,
-                                           (unsigned)machSubCode);
+                
+                snprintf(buffer, sizeof(buffer), "0x%llx", machSubCode);
+                writer->addStringElement(writer, BSG_KSCrashField_Subcode, buffer);
             }
             writer->endContainer(writer);
             writer->addStringElement(writer, BSG_KSCrashField_Type,
@@ -1346,8 +1351,6 @@ void bsg_kscrw_i_writeAppStats(const BSG_KSCrashReportWriter *const writer,
                                BSG_KSCrash_State *state) {
     writer->beginObject(writer, key);
     {
-        writer->addBooleanElement(writer, BSG_KSCrashField_AppActive,
-                                  state->applicationIsActive);
         writer->addBooleanElement(writer, BSG_KSCrashField_AppInFG,
                                   state->applicationIsInForeground);
 
@@ -1357,7 +1360,7 @@ void bsg_kscrw_i_writeAppStats(const BSG_KSCrashReportWriter *const writer,
                                   state->sessionsSinceLastCrash);
         writer->addFloatingPointElement(writer,
                                         BSG_KSCrashField_ActiveTimeSinceCrash,
-                                        state->activeDurationSinceLastCrash);
+                                        state->foregroundDurationSinceLastCrash);
         writer->addFloatingPointElement(
             writer, BSG_KSCrashField_BGTimeSinceCrash,
             state->backgroundDurationSinceLastCrash);
@@ -1366,7 +1369,7 @@ void bsg_kscrw_i_writeAppStats(const BSG_KSCrashReportWriter *const writer,
                                   state->sessionsSinceLaunch);
         writer->addFloatingPointElement(writer,
                                         BSG_KSCrashField_ActiveTimeSinceLaunch,
-                                        state->activeDurationSinceLaunch);
+                                        state->foregroundDurationSinceLaunch);
         writer->addFloatingPointElement(writer,
                                         BSG_KSCrashField_BGTimeSinceLaunch,
                                         state->backgroundDurationSinceLaunch);
@@ -1654,45 +1657,24 @@ void bsg_kscrashreport_logCrash(const BSG_KSCrash_Context *const crashContext) {
     bsg_kscrw_i_logCrashThreadBacktrace(&crashContext->crash);
 }
 
-int bsg_kscrw_i_collectJsonData(const char *const data, const size_t length, void *const userData) {
-    BSG_ThreadDataBuffer *thread_data = (BSG_ThreadDataBuffer *)userData;
-    if (thread_data->data == NULL) {
-        // Allocate initial memory for JSON data
-        void *ptr = malloc(BSG_THREAD_DATA_SIZE_INITIAL);
-        if (ptr != NULL) {
-            thread_data->data = ptr;
-            *thread_data->data = '\0';
-            thread_data->allocated_size = BSG_THREAD_DATA_SIZE_INITIAL;
-        } else { // failed to allocate enough memory - abandon collection
-            return BSG_KSJSON_ERROR_CANNOT_ADD_DATA;
-        }
+void bsg_kscrw_i_captureThreadTrace(const BSG_KSCrash_Context *crashContext,
+                                    const char *path) {
+    int fd = open(path, O_RDWR | O_CREAT | O_EXCL, 0644);
+    if (fd < 0) {
+        BSG_KSLOG_ERROR("Could not open file %s: %s", path, strerror(errno));
+        return;
     }
-    while (strlen(thread_data->data) + length >= thread_data->allocated_size) {
-        // Expand memory to hold further data
-        void *ptr = realloc(thread_data->data, thread_data->allocated_size + BSG_THREAD_DATA_SIZE_INCREMENT);
-        if (ptr != NULL) {
-            thread_data->data = ptr;
-            thread_data->allocated_size += BSG_THREAD_DATA_SIZE_INCREMENT;
-        } else { // failed to allocate enough memory - abandon collection
-            return BSG_KSJSON_ERROR_CANNOT_ADD_DATA;
-        }
-    }
-    strncat(thread_data->data, data, length);
-    return BSG_KSJSON_OK;
-}
-
-char *bsg_kscrw_i_captureThreadTrace(const BSG_KSCrash_Context *crashContext) {
     BSG_KSJSONEncodeContext jsonContext;
     BSG_KSCrashReportWriter concreteWriter;
     BSG_KSCrashReportWriter *writer = &concreteWriter;
     bsg_kscrw_i_prepareReportWriter(writer, &jsonContext);
-    BSG_ThreadDataBuffer userData = { NULL, 0 };
-    bsg_ksjsonbeginEncode(bsg_getJsonContext(writer), false, bsg_kscrw_i_collectJsonData, &userData);
+    bsg_ksjsonbeginEncode(bsg_getJsonContext(writer), false,
+                          bsg_kscrw_i_addJSONData, &fd);
     writer->beginObject(writer, BSG_KSCrashField_Report);
     bsg_kscrw_i_writeTraceInfo(crashContext, writer);
     writer->endContainer(writer);
     bsg_ksjsonendEncode(bsg_getJsonContext(writer));
-    return userData.data;
+    close(fd);
 }
 
 void bsg_kscrw_i_writeTraceInfo(const BSG_KSCrash_Context *crashContext,

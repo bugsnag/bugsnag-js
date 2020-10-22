@@ -38,7 +38,7 @@
 
 /** Total active time elapsed since the last crash. */
 @property(nonatomic, readonly, assign)
-    NSTimeInterval activeDurationSinceLastCrash;
+    NSTimeInterval foregroundDurationSinceLastCrash;
 
 /** Total time backgrounded elapsed since the last crash. */
 @property(nonatomic, readonly, assign)
@@ -51,7 +51,7 @@
 @property(nonatomic, readonly, assign) int sessionsSinceLastCrash;
 
 /** Total active time elapsed since launch. */
-@property(nonatomic, readonly, assign) NSTimeInterval activeDurationSinceLaunch;
+@property(nonatomic, readonly, assign) NSTimeInterval foregroundDurationSinceLaunch;
 
 /** Total time backgrounded elapsed since launch. */
 @property(nonatomic, readonly, assign)
