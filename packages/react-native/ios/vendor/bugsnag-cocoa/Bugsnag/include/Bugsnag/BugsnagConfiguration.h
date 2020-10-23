@@ -37,6 +37,8 @@
 @class BugsnagEndpointConfiguration;
 @class BugsnagErrorTypes;
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  * Controls whether Bugsnag should capture and serialize the state of all threads at the time
  * of an error.
@@ -104,7 +106,17 @@ typedef BOOL (^BugsnagOnSessionBlock)(BugsnagSession *_Nonnull session);
  *
  * @return a BugsnagConfiguration containing the options set in the plist file
  */
-+ (instancetype _Nonnull)loadConfig;
++ (instancetype)loadConfig;
+
+/**
+ * Initializes a new configuration object with the provided API key.
+ */
+- (instancetype)initWithApiKey:(NSString *)apiKey NS_DESIGNATED_INITIALIZER NS_SWIFT_NAME(init(_:));
+
+/**
+ * Required declaration to suppress a superclass designated-initializer error
+ */
+- (instancetype)init NS_UNAVAILABLE NS_SWIFT_UNAVAILABLE("Use initWithApiKey:");
 
 // -----------------------------------------------------------------------------
 // MARK: - Properties
@@ -217,18 +229,6 @@ typedef BOOL (^BugsnagOnSessionBlock)(BugsnagSession *_Nonnull session);
 @property BugsnagErrorTypes *_Nonnull enabledErrorTypes;
 
 /**
- * Required declaration to suppress a superclass designated-initializer error
- */
-- (instancetype _Nonnull )init NS_UNAVAILABLE NS_SWIFT_UNAVAILABLE("Use initWithApiKey:");
-
-/**
- * The designated initializer.
- */
-- (instancetype _Nonnull)initWithApiKey:(NSString *_Nonnull)apiKey
-    NS_DESIGNATED_INITIALIZER
-    NS_SWIFT_NAME(init(_:));
-
-/**
  * Set the endpoints to send data to. By default we'll send error reports to
  * https://notify.bugsnag.com, and sessions to https://sessions.bugsnag.com, but you can
  * override this if you are using Bugsnag Enterprise to point to your own Bugsnag endpoint.
@@ -324,3 +324,5 @@ typedef BOOL (^BugsnagOnSessionBlock)(BugsnagSession *_Nonnull session);
 - (void)addPlugin:(id<BugsnagPlugin> _Nonnull)plugin;
 
 @end
+
+NS_ASSUME_NONNULL_END

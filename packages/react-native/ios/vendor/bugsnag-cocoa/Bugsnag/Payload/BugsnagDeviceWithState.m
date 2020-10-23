@@ -12,7 +12,7 @@
 #import "BugsnagDeviceWithState.h"
 #import "BugsnagCollections.h"
 #import "BugsnagLogger.h"
-#import "BSGOutOfMemoryWatchdog.h"
+#import "BugsnagSystemState.h"
 #import "Bugsnag.h"
 
 NSDictionary *BSGParseDeviceMetadata(NSDictionary *event) {

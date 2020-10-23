@@ -18,6 +18,13 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface BugsnagKVStore : NSObject
 
+/**
+ * Purge the KV store, deleting all values.
+ */
+- (void)purge;
+
+- (void)deleteKey:(NSString *)key;
+
 - (void)setBoolean:(bool)value forKey:(NSString*)key;
 
 - (bool)booleanForKey:(NSString*)key defaultValue:(bool)defaultValue;

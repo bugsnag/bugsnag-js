@@ -37,6 +37,7 @@
 //#define BSG_KSLogger_LocalLevel TRACE
 #import "BSG_KSLogger.h"
 #import "BugsnagThread.h"
+#import "BSGJSONSerialization.h"
 #import "BSGSerialization.h"
 #import "Bugsnag.h"
 #import "BugsnagCollections.h"
@@ -44,6 +45,9 @@
 
 #if BSG_HAS_UIKIT
 #import <UIKit/UIKit.h>
+#endif
+#if TARGET_OS_OSX
+#import <AppKit/AppKit.h>
 #endif
 
 // ============================================================================
@@ -234,8 +238,8 @@ IMPLEMENT_EXCLUSIVE_SHARED_INSTANCE(BSG_KSCrash)
         return false;
     }
     
-#if BSG_HAS_UIKIT
     NSNotificationCenter *nCenter = [NSNotificationCenter defaultCenter];
+#if BSG_HAS_UIKIT
     [nCenter addObserver:self
                 selector:@selector(applicationDidBecomeActive)
                     name:UIApplicationDidBecomeActiveNotification
@@ -255,6 +259,20 @@ IMPLEMENT_EXCLUSIVE_SHARED_INSTANCE(BSG_KSCrash)
     [nCenter addObserver:self
                 selector:@selector(applicationWillTerminate)
                     name:UIApplicationWillTerminateNotification
+                  object:nil];
+#elif TARGET_OS_OSX
+    // MacOS "active" serves the same purpose as "foreground" in iOS
+    [nCenter addObserver:self
+                selector:@selector(applicationDidEnterBackground)
+                    name:NSApplicationDidResignActiveNotification
+                  object:nil];
+    [nCenter addObserver:self
+                selector:@selector(applicationWillEnterForeground)
+                    name:NSApplicationDidBecomeActiveNotification
+                  object:nil];
+    [nCenter addObserver:self
+                selector:@selector(applicationWillTerminate)
+                    name:NSApplicationWillTerminateNotification
                   object:nil];
 #endif
 
@@ -308,17 +326,28 @@ IMPLEMENT_EXCLUSIVE_SHARED_INSTANCE(BSG_KSCrash)
             numFrames = 0;
         }
     }
-
-    char *trace = bsg_kscrash_captureThreadTrace(depth, numFrames, callstack, recordAllThreads);
+    
+    NSString *tracePath = [NSTemporaryDirectory() stringByAppendingPathComponent:
+                           [NSUUID UUID].UUIDString];
+    bsg_kscrash_captureThreadTrace(depth, numFrames, callstack, recordAllThreads,
+                                   tracePath.fileSystemRepresentation);
     free(callstack);
-    NSDictionary *json = BSGDeserializeJson(trace);
-    free(trace);
+    
+    NSData *jsonData = [NSData dataWithContentsOfFile:tracePath];
+    NSError *error = nil;
+    NSDictionary *json = [BSGJSONSerialization
+                          JSONObjectWithData:jsonData options:0 error:&error];
+    
+    [[NSFileManager defaultManager] removeItemAtPath:tracePath error:NULL];
     
     if (json) {	
         return [BugsnagThread threadsFromArray:[json valueForKeyPath:@"crash.threads"]
                                   binaryImages:json[@"binary_images"]
                                          depth:depth
                                      errorType:nil];
+    } else {
+        BSG_KSLOG_ERROR(@"Failed to decode thread trace JSON, error = %@",
+                        error);
     }
     return @[];
 }
@@ -327,7 +356,7 @@ IMPLEMENT_EXCLUSIVE_SHARED_INSTANCE(BSG_KSCrash)
     BSG_KSCrash_State state = crashContext()->state;
     bsg_kscrashstate_updateDurationStats(&state);
     NSMutableDictionary *dict = [NSMutableDictionary new];
-    BSGDictSetSafeObject(dict, @(state.activeDurationSinceLaunch), @BSG_KSCrashField_ActiveTimeSinceLaunch);
+    BSGDictSetSafeObject(dict, @(state.foregroundDurationSinceLaunch), @BSG_KSCrashField_ActiveTimeSinceLaunch);
     BSGDictSetSafeObject(dict, @(state.backgroundDurationSinceLaunch), @BSG_KSCrashField_BGTimeSinceLaunch);
     BSGDictSetSafeObject(dict, @(state.applicationIsInForeground), @BSG_KSCrashField_AppInFG);
     return dict;
@@ -364,12 +393,12 @@ IMPLEMENT_EXCLUSIVE_SHARED_INSTANCE(BSG_KSCrash)
     }
 
 BSG_SYNTHESIZE_CRASH_STATE_PROPERTY(NSTimeInterval,
-                                    activeDurationSinceLastCrash)
+                                    foregroundDurationSinceLastCrash)
 BSG_SYNTHESIZE_CRASH_STATE_PROPERTY(NSTimeInterval,
                                     backgroundDurationSinceLastCrash)
 BSG_SYNTHESIZE_CRASH_STATE_PROPERTY(int, launchesSinceLastCrash)
 BSG_SYNTHESIZE_CRASH_STATE_PROPERTY(int, sessionsSinceLastCrash)
-BSG_SYNTHESIZE_CRASH_STATE_PROPERTY(NSTimeInterval, activeDurationSinceLaunch)
+BSG_SYNTHESIZE_CRASH_STATE_PROPERTY(NSTimeInterval, foregroundDurationSinceLaunch)
 BSG_SYNTHESIZE_CRASH_STATE_PROPERTY(NSTimeInterval,
                                     backgroundDurationSinceLaunch)
 BSG_SYNTHESIZE_CRASH_STATE_PROPERTY(int, sessionsSinceLaunch)
@@ -464,11 +493,11 @@ BSG_SYNTHESIZE_CRASH_STATE_PROPERTY(BOOL, crashedLastLaunch)
 // ============================================================================
 
 - (void)applicationDidBecomeActive {
-    bsg_kscrashstate_notifyAppActive(true);
+    bsg_kscrashstate_notifyAppInForeground(true);
 }
 
 - (void)applicationWillResignActive {
-    bsg_kscrashstate_notifyAppActive(false);
+    bsg_kscrashstate_notifyAppInForeground(true);
 }
 
 - (void)applicationDidEnterBackground {

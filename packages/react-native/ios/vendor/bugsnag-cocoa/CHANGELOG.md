@@ -1,6 +1,50 @@
 Changelog
 =========
 
+## 6.2.2 (2020-10-21)
+
+## Enhancements
+
+* Support "foreground" duration in MacOS as well.
+  [848](https://github.com/bugsnag/bugsnag-cocoa/pull/848)
+
+* Timestamp accuracy in reports has been increased from seconds to milliseconds.
+  [847](https://github.com/bugsnag/bugsnag-cocoa/pull/847)
+
+* Calculation of "foreground" duration now also includes time in
+  UIApplicationStateActive and UIApplicationStateInactive states in order to
+  match Apple's definition of "foreground".
+  [839](https://github.com/bugsnag/bugsnag-cocoa/pull/839)
+
+## 6.2.1 (2020-10-15)
+
+## Bug fixes
+
+* Changed synchronization method when responding to dynamic library image events
+  to a dispatch queue, which is a more bulletproof and battle-hardened approach.
+  [837](https://github.com/bugsnag/bugsnag-cocoa/pull/837)
+
+* Fixed a deadlock which can occur when calling `notify`
+  [833](https://github.com/bugsnag/bugsnag-cocoa/pull/833)
+
+## 6.2.0 (2020-10-07)
+
+### Enhancements
+
+* An invalid or missing API key now causes an NSException to be thrown upon
+  calling [Bugsnag start]. This check used to occur during configuration,
+  and only for malformed API keys.
+  [828](https://github.com/bugsnag/bugsnag-cocoa/pull/828)
+
+* Exception Mach code and subcode are now written to the crash report as
+  stringified hex values instead of integers to avoid potential data loss from
+  JSON readers that lose the lower bits from unsigned 64-bit numbers.
+  [827](https://github.com/bugsnag/bugsnag-cocoa/pull/827)
+
+* Improved out-of-memory event detection by disabling reporting when a debugger
+  is attached. OOM reporting is now enabled by default in debug builds.
+  [820](https://github.com/bugsnag/bugsnag-cocoa/pull/820)
+
 ## 6.1.7 (2020-10-01)
 
 ## Bug fixes

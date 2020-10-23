@@ -151,6 +151,7 @@ void bsg_kscrash_reinstall(const char *const crashReportFilePath,
         BSG_KSLOG_ERROR("Failed to initialize persistent crash state");
     }
     context->state.appLaunchTime = mach_absolute_time();
+    context->state.appStateTransitionTime = mach_absolute_time();
 }
 
 BSG_KSCrashType bsg_kscrash_setHandlingCrashTypes(BSG_KSCrashType crashTypes) {
@@ -217,7 +218,10 @@ void bsg_kscrash_setThreadTracingEnabled(bool threadTracingEnabled) {
     crashContext()->crash.threadTracingEnabled = threadTracingEnabled;
 }
 
-char *bsg_kscrash_captureThreadTrace(int discardDepth, int frameCount, uintptr_t *callstack, const bool recordAllThreads) {
+void bsg_kscrash_captureThreadTrace(int discardDepth, int frameCount,
+                                    uintptr_t *callstack,
+                                    const bool recordAllThreads,
+                                    const char *path) {
     BSG_KSCrash_Context *globalContext = crashContext();
     BSG_KSCrash_Context localContext = {};
     BSG_KSCrash_Context *context = &localContext;
@@ -240,11 +244,13 @@ char *bsg_kscrash_captureThreadTrace(int discardDepth, int frameCount, uintptr_t
     if (context->crash.threadTracingEnabled) {
         bsg_kscrashsentry_suspend_threads_user();
     }
-
-    char *trace = bsg_kscrw_i_captureThreadTrace(context);
+    
+    // Threads may have been suspended while holding locks in malloc, the
+    // Objective-C runtime, or other subsystems, so we must only call
+    // async-signal-safe functions.
+    bsg_kscrw_i_captureThreadTrace(context, path);
     
     if (context->crash.threadTracingEnabled) {
         bsg_kscrashsentry_resume_threads_user(false);
     }
-    return trace;
 }

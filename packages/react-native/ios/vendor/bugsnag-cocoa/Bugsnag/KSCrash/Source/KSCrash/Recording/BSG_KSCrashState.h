@@ -40,10 +40,11 @@ extern "C" {
 #include "BSG_KSCrashType.h"
 
 typedef struct {
+
     // Saved data
 
-    /** Total active time elapsed since the last crash. */
-    double activeDurationSinceLastCrash;
+    /** Total time elapsed in the foreground since the last crash. */
+    double foregroundDurationSinceLastCrash;
 
     /** Total time backgrounded elapsed since the last crash. */
     double backgroundDurationSinceLastCrash;
@@ -54,8 +55,8 @@ typedef struct {
     /** Number of sessions (launch, resume from suspend) since last crash. */
     int sessionsSinceLastCrash;
 
-    /** Total active time elapsed since launch. */
-    double activeDurationSinceLaunch;
+    /** Total time elapsed in the foreground since launch. */
+    double foregroundDurationSinceLaunch;
 
     /** Total time backgrounded elapsed since launch. */
     double backgroundDurationSinceLaunch;
@@ -74,12 +75,9 @@ typedef struct {
     /** Timestamp for when the app was launched (mach_absolute_time()) */
     uint64_t appLaunchTime;
 
-    /** Timestamp for when the app state was last changed (active<-> inactive,
-     * background<->foreground) (mach_absolute_time()) */
+    /** Timestamp for when the app state was last changed
+     * (background<->foreground) (mach_absolute_time()) */
     uint64_t appStateTransitionTime;
-
-    /** If true, the application is currently active. */
-    bool applicationIsActive;
 
     /** If true, the application is currently in the foreground. */
     bool applicationIsInForeground;
@@ -95,12 +93,6 @@ typedef struct {
  * @return true if initialization was successful.
  */
 bool bsg_kscrashstate_init(const char *stateFilePath, BSG_KSCrash_State *state);
-
-/** Notify the crash reporter of the application active state.
- *
- * @param isActive true if the application is active, otherwise false.
- */
-void bsg_kscrashstate_notifyAppActive(bool isActive);
 
 /** Notify the crash reporter of the application foreground/background state.
  *

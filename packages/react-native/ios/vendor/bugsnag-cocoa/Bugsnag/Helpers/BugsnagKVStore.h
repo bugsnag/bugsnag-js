@@ -46,6 +46,11 @@ void bsgkv_open(const char* restrict path, int* restrict err);
 void bsgkv_close(void);
 
 /**
+ * Purge the KV store, deleting all values.
+ */
+void bsgkv_purge(int* err);
+
+/**
  * Delete the value associated with the specified key.
  * Deleting a non-existent key has no effect, and returns success.
  *
