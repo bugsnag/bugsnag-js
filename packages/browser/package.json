@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/browser",
-  "version": "7.5.1-alpha.0",
+  "version": "7.5.1",
   "main": "dist/bugsnag.js",
   "types": "types/bugsnag.d.ts",
   "description": "Bugsnag error reporter for browser JavaScript",
