@@ -27,7 +27,6 @@ export default class App extends Component {
       sessionsEndpoint: 'http://bs-local.com:9339',
       scenario: null
     }
-    console.log(`Available scenarios:\n  ${Object.keys(Scenarios).join('\n  ')}`)
   }
 
   getConfiguration = () => {
