@@ -24,10 +24,13 @@
 
 #import "BSG_RFC3339DateTool.h"
 
-// New formatter: Everything is UTC
+// New formatter: Everything is UTC with milliseconds
+static NSDateFormatter *g_currentDateFormatter;
+
+// Old formatter: Everything is UTC, no milliseconds
 static NSDateFormatter *g_utcDateFormatter;
 
-// Old formatter: Time zones can be specified
+// Oldx2 formatter: Time zones can be specified
 static NSDateFormatter *g_timezoneAllowedDateFormatter;
 
 @implementation BSG_RFC3339DateTool
@@ -35,6 +38,11 @@ static NSDateFormatter *g_timezoneAllowedDateFormatter;
 + (void)initialize {
     NSLocale *locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
     NSTimeZone *zone = [NSTimeZone timeZoneForSecondsFromGMT:0];
+
+    g_currentDateFormatter = [NSDateFormatter new];
+    [g_currentDateFormatter setLocale:locale];
+    [g_currentDateFormatter setTimeZone:zone];
+    [g_currentDateFormatter setDateFormat:@"yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'SSS'Z'"];
 
     g_utcDateFormatter = [NSDateFormatter new];
     [g_utcDateFormatter setLocale:locale];
@@ -52,19 +60,25 @@ static NSDateFormatter *g_timezoneAllowedDateFormatter;
     if (![date isKindOfClass:[NSDate class]]) {
         return nil;
     }
-    return [g_utcDateFormatter stringFromDate:date];
+    return [g_currentDateFormatter stringFromDate:date];
 }
 
 + (NSDate *)dateFromString:(NSString *)string {
     if (![string isKindOfClass:[NSString class]]) {
         return nil;
     }
-    NSDate *date = [g_utcDateFormatter dateFromString:string];
-    if (!date) {
-        // Fallback to older date format that included time zones
-        date = [g_timezoneAllowedDateFormatter dateFromString:string];
+    NSDate *date = nil;
+
+    if((date = [g_currentDateFormatter dateFromString:string]) != nil) {
+        return date;
     }
-    return date;
+
+    // Fallback to older date formats
+    if((date = [g_utcDateFormatter dateFromString:string]) != nil) {
+        return date;
+    }
+    
+    return [g_timezoneAllowedDateFormatter dateFromString:string];
 }
 
 + (NSString *)stringFromUNIXTimestamp:(unsigned long long)timestamp {

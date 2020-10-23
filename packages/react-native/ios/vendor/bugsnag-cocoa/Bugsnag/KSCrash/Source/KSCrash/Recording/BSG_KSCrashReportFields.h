@@ -145,7 +145,6 @@
 
 #define BSG_KSCrashField_ActiveTimeSinceCrash "active_time_since_last_crash"
 #define BSG_KSCrashField_ActiveTimeSinceLaunch "active_time_since_launch"
-#define BSG_KSCrashField_AppActive "application_active"
 #define BSG_KSCrashField_AppInFG "application_in_foreground"
 #define BSG_KSCrashField_BGTimeSinceCrash "background_time_since_last_crash"
 #define BSG_KSCrashField_BGTimeSinceLaunch "background_time_since_launch"

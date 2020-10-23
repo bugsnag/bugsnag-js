@@ -50,19 +50,28 @@
 
 /** Start listening for crashes.
  *
- * This method initializes Bugsnag with the configuration set in your PList. Any uncaught
- * NSExceptions, C++ exceptions, mach exceptions or signals will be logged to
- * disk before your app crashes. The next time your app boots, we send any such
- * reports to Bugsnag.
+ * This method initializes Bugsnag with the configuration set in your Info.plist.
+ *
+ * If a Bugsnag apiKey string has not been added to your Info.plist or is empty, an
+ * NSException will be thrown to indicate that the configuration is not valid.
+ *
+ * Once successfully initialized, NSExceptions, C++ exceptions, Mach exceptions and
+ * signals will be logged to disk before your app crashes. The next time your app
+ * launches, these reports will be sent to your Bugsnag dashboard.
  */
 + (BugsnagClient *_Nonnull)start;
 
 /** Start listening for crashes.
  *
- * This method initializes Bugsnag with the default configuration. Any uncaught
- * NSExceptions, C++ exceptions, mach exceptions or signals will be logged to
- * disk before your app crashes. The next time your app boots, we send any such
- * reports to Bugsnag.
+ * This method initializes Bugsnag with the default configuration and the provided
+ * apiKey.
+ *
+ * If apiKey is nil or is empty, an NSException will be thrown to indicate that the
+ * configuration is not valid.
+ *
+ * Once successfully initialized, NSExceptions, C++ exceptions, Mach exceptions and
+ * signals will be logged to disk before your app crashes. The next time your app
+ * launches, these reports will be sent to your Bugsnag dashboard.
  *
  * @param apiKey  The API key from your Bugsnag dashboard.
  */
@@ -70,10 +79,14 @@
 
 /** Start listening for crashes.
  *
- * This method initializes Bugsnag. Any uncaught NSExceptions, uncaught
- * C++ exceptions, mach exceptions or signals will be logged to disk before
- * your app crashes. The next time your app boots, we send any such
- * reports to Bugsnag.
+ * This method initializes Bugsnag with the provided configuration object.
+ *
+ * If the configuration's apiKey is nil or is empty, an NSException will be thrown
+ * to indicate that the configuration is not valid.
+ *
+ * Once successfully initialized, NSExceptions, C++ exceptions, Mach exceptions and
+ * signals will be logged to disk before your app crashes. The next time your app
+ * launches, these reports will be sent to your Bugsnag dashboard.
  *
  * @param configuration  The configuration to use.
  */

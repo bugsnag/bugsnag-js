@@ -56,9 +56,14 @@ module.exports = {
         testsForPackage('plugin-react-native-navigation')
       ],
       setupFiles: [
-        require.resolve('react-native/Libraries/Core/setUpGlobals.js'),
-        require.resolve('react-native/Libraries/Core/setUpXHR.js'),
         '<rootDir>/packages/react-native/src/test/setup.js'
+      ]
+    },
+    {
+      displayName: 'expo',
+      testMatch: [
+        testsForPackage('delivery-expo'),
+        testsForPackage('plugin-expo-device')
       ]
     },
     {

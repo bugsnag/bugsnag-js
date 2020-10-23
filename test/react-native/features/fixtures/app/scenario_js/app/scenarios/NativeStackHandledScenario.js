@@ -3,7 +3,7 @@ import Bugsnag from '@bugsnag/react-native'
 import { NativeModules } from 'react-native'
 
 export class NativeStackHandledScenario extends Scenario {
-  async run() {
+  async run () {
     try {
       await NativeModules.BugsnagTestInterface.runScenario('NativeStackHandledScenario')
     } catch (e) {

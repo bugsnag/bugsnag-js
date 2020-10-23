@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 
-COPY babel.config.js lerna.json .eslintignore .eslintrc.js jest.config.js tsconfig.json ./
+COPY babel.config.js lerna.json .eslintignore .eslintrc.js jest.config.js tsconfig.json packages/expo/unimodules-core.d.ts ./
 ADD min_packages.tar .
 COPY bin ./bin
 RUN npx lerna bootstrap --concurrency 1
@@ -45,7 +45,7 @@ RUN find . -name package.json -type f -mindepth 2 -maxdepth 3 ! -path "./node_mo
 RUN rm -fr **/*/node_modules/
 
 # The maze-runner browser tests
-FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner:latest-v2-cli as browser-maze-runner
+FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v2-cli as browser-maze-runner
 RUN apk add --no-cache ruby-dev build-base libffi-dev curl-dev
 ENV GLIBC_VERSION 2.23-r3
 

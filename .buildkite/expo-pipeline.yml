@@ -1,5 +1,6 @@
 steps:
   - label:  ':docker: Build expo publisher'
+    key: "expo-publisher"
     timeout_in_minutes: 30
     env:
       EXPO_RELEASE_CHANNEL: ${BUILDKITE_BUILD_ID}
@@ -15,7 +16,20 @@ steps:
             - expo-publisher:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-publisher-${BRANCH_NAME}
             - expo-publisher:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-publisher-latest
 
+  - label:  ':docker: Publish expo app'
+    key: "publish-expo-app"
+    depends_on: "expo-publisher"
+    timeout_in_minutes: 20
+    agents:
+      queue: "opensource-highpower"
+    env:
+      EXPO_RELEASE_CHANNEL: ${BUILDKITE_BUILD_ID}
+    plugins:
+      - docker-compose#v3.1.0:
+          run: expo-publisher
+
   - label: ':docker: Build expo maze runner image'
+    key: "expo-maze-runner-image"
     timeout_in_minutes: 10
     plugins:
       - docker-compose#v3.1.0:
@@ -29,6 +43,7 @@ steps:
             - expo-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-latest
 
   - label:  ':docker: Build expo APK builder'
+    key: "expo-android-builder"
     timeout_in_minutes: 40
     env:
       EXPO_RELEASE_CHANNEL: ${BUILDKITE_BUILD_ID}
@@ -44,21 +59,11 @@ steps:
             - expo-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-android-builder-${BRANCH_NAME}
             - expo-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-android-builder-latest
 
-  - wait
-
-  - label:  ':docker: Publish expo app'
-    timeout_in_minutes: 20
-    agents:
-      queue: "opensource-highpower"
-    env:
-      EXPO_RELEASE_CHANNEL: ${BUILDKITE_BUILD_ID}
-    plugins:
-      - docker-compose#v3.1.0:
-          run: expo-publisher
-
-  - wait
-
   - label:  ':docker: Build expo APK'
+    key: "build-expo-apk"
+    depends_on:
+      - "publish-expo-app"
+      - "expo-android-builder"
     timeout_in_minutes: 20
     agents:
       queue: "opensource-highpower"
@@ -72,6 +77,9 @@ steps:
             - expo-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-android-builder-latest
 
   - label: ':docker: Build expo IPA'
+    key: "build-expo-ipa"
+    depends_on:
+      - "publish-expo-app"
     timeout_in_minutes: 20
     agents:
       queue: "opensource-mac-expo"
@@ -81,9 +89,10 @@ steps:
     commands:
       - test/expo/scripts/build-ios.sh
 
-  - wait
-
   - label: 'expo Android 9'
+    depends_on:
+      - "build-expo-apk"
+      - "expo-maze-runner-image"
     timeout_in_minutes: 50
     plugins:
       artifacts#v1.2.0:
@@ -92,12 +101,15 @@ steps:
         run: expo-maze-runner
         use-aliases: true
     env:
-      DEVICE_TYPE: "ANDROID_9"
+      DEVICE_TYPE: "ANDROID_9_0"
       APP_LOCATION: "build/output.apk"
     concurrency: 10
     concurrency_group: 'browserstack-app'
 
   - label: 'expo iOS 12'
+    depends_on:
+      - "build-expo-ipa"
+      - "expo-maze-runner-image"
     timeout_in_minutes: 50
     plugins:
       artifacts#v1.2.0:
@@ -122,7 +134,7 @@ steps:
         run: expo-maze-runner
         use-aliases: true
     env:
-      DEVICE_TYPE: "ANDROID_8"
+      DEVICE_TYPE: "ANDROID_8_1"
       APP_LOCATION: "build/output.apk"
     concurrency: 10
     concurrency_group: 'browserstack-app'
@@ -136,7 +148,7 @@ steps:
         run: expo-maze-runner
         use-aliases: true
     env:
-      DEVICE_TYPE: "ANDROID_7"
+      DEVICE_TYPE: "ANDROID_7_1"
       APP_LOCATION: "build/output.apk"
     concurrency: 10
     concurrency_group: 'browserstack-app'
@@ -150,7 +162,7 @@ steps:
         run: expo-maze-runner
         use-aliases: true
     env:
-      DEVICE_TYPE: "ANDROID_6"
+      DEVICE_TYPE: "ANDROID_6_0"
       APP_LOCATION: "build/output.apk"
     concurrency: 10
     concurrency_group: 'browserstack-app'
@@ -164,7 +176,7 @@ steps:
         run: expo-maze-runner
         use-aliases: true
     env:
-      DEVICE_TYPE: "ANDROID_5"
+      DEVICE_TYPE: "ANDROID_5_0"
       APP_LOCATION: "build/output.apk"
     concurrency: 10
     concurrency_group: 'browserstack-app'

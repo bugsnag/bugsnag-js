@@ -16,9 +16,11 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <limits.h>
 
 static DIR* g_currentDir = NULL;
 static int g_currentDirFD = 0;
+static char g_path[PATH_MAX+1];
 
 static int openKeyRead(const char* name) {
     return openat(g_currentDirFD, name, O_RDONLY, 0);
@@ -55,6 +57,8 @@ void bsgkv_open(const char* path, int* err) {
         return;
     }
 
+    strncpy(g_path, path, sizeof(g_path));
+    g_path[sizeof(g_path)-1] = 0;
     *err = 0;
 }
 
@@ -67,6 +71,53 @@ void bsgkv_close(void) {
         closedir(g_currentDir);
         g_currentDir = NULL;
     }
+}
+
+void bsgkv_purge(int* err) {
+    // Set up a baseline path buffer to append the file names onto.
+    char path[sizeof(g_path)];
+    strcpy(path, g_path);
+    size_t basePathLength = strlen(path);
+    if(basePathLength >= PATH_MAX-2) {
+        *err = E2BIG;
+        return;
+    }
+    path[basePathLength++] = '/';
+    path[basePathLength] = 0;
+    char* const filename = path + basePathLength;
+    const size_t nameMaxLength = PATH_MAX - basePathLength;
+
+    *err = 0;
+
+    // Step through K-V store directory, deleting all regular files.
+    rewinddir(g_currentDir);
+    for(;;) {
+        errno = 0;
+        struct dirent* dent = readdir(g_currentDir);
+        if(dent == NULL) {
+            if(errno != 0) {
+                *err = errno;
+                return;
+            }
+            break;
+        }
+        if(dent->d_type != DT_REG) {
+            continue;
+        }
+        if(dent->d_namlen > nameMaxLength) {
+            // Set an error but don't stop purging
+            *err = E2BIG;
+        } else {
+            memcpy(filename, dent->d_name, dent->d_namlen);
+            filename[dent->d_namlen] = 0;
+            if(unlink(path) != 0) {
+                // Set an error but don't stop purging
+                *err = errno;
+            }
+        }
+    }
+
+    rewinddir(g_currentDir);
 }
 
 void bsgkv_delete(const char* key, int* err) {

@@ -13,8 +13,9 @@
 
 static NSString* g_cachesPath = nil;
 
-+ (NSString*) cachesDirectory {
-    static NSString* cachesPath = nil;
++ (NSString *)cachesDirectory {
+    // Default to an unusable location that will always fail.
+    static NSString* cachesPath = @"/";
 
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -32,6 +33,20 @@ static NSString* g_cachesPath = nil;
     });
 
     return cachesPath;
+}
+
++ (NSString *)getSubdirPath:(NSString *)relativePath {
+    NSString *cachesDir = [self cachesDirectory];
+    NSString *subdirPath = [cachesDir stringByAppendingPathComponent:relativePath];
+    
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSError *error = nil;
+    if(![fileManager createDirectoryAtPath:subdirPath withIntermediateDirectories:YES attributes:nil error:&error]) {
+        BSG_KSLOG_ERROR(@"Could not create caches subdir %@: %@", subdirPath, error);
+        // Make the best of it, just return the top-level caches dir.
+        return cachesDir;
+    }
+    return subdirPath;
 }
 
 @end

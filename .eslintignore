@@ -1,9 +1,12 @@
 dist
 examples
-features
 **/node_modules/**
-fixtures
 scratch
 coverage
 packages/core/types/test/*.js
 packages/react-native/android/build/reports
+packages/**/features
+packages/**/fixtures
+test/browser
+test/expo
+test/node

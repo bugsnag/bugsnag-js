@@ -1,5 +1,23 @@
 # Changelog
 
+## v7.5.1 (2020-10-23)
+
+### Fixed
+
+- (browser): Added missing type definition for `trackInlineScripts` option [#1102](https://github.com/bugsnag/bugsnag-js/pull/1102) / [#1097](https://github.com/bugsnag/bugsnag-js/pull/1097)
+
+### Changed
+
+- (expo): Bump expo dependency versions to keep in sync [#1103](https://github.com/bugsnag/bugsnag-js/pull/1103)
+- (react-native): Update bugsnag-cocoa to v6.2.2
+  - Support "foreground" duration in MacOS as well. [bugsnag-cocoa#848](https://github.com/bugsnag/bugsnag-cocoa/pull/848)
+  - Timestamp accuracy in reports has been increased from seconds to milliseconds. [bugsnag-cocoa#847](https://github.com/bugsnag/bugsnag-cocoa/pull/847)
+  - Calculation of "foreground" duration now also includes time in UIApplicationStateActive and UIApplicationStateInactive states in order to match Apple's definition of "foreground". [bugsnag-cocoa#839](https://github.com/bugsnag/bugsnag-cocoa/pull/839)
+- (react-native): Update bugsnag-android to v5.2.2
+  - Avoid crash when initializing bugsnag in attachBaseContext [bugsnag-android#953](https://github.com/bugsnag/bugsnag-android/pull/953)
+  - Prevent ConcurrentModificationException when setting redactedKeys [bugsnag-android#947](https://github.com/bugsnag/bugsnag-android/pull/947)
+
+
 ## 7.5.0 (2020-10-08)
 
 ### Added

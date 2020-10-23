@@ -1,139 +1,147 @@
-/**
- * @format
- */
-
-import {Navigation} from 'react-native-navigation';
-import HomeScreen from './screens/Home';
-import DetailsScreen from './screens/Details';
-import {NativeModules, View, Text, Button, TextInput, StyleSheet} from 'react-native';
-import * as React from 'react';
-import Bugsnag from '@bugsnag/react-native';
+import { Navigation } from 'react-native-navigation'
+import HomeScreen from './screens/Home'
+import DetailsScreen from './screens/Details'
+import { NativeModules, View, Text, Button, TextInput, StyleSheet } from 'react-native'
+import * as React from 'react'
+import Bugsnag from '@bugsnag/react-native'
 import * as Scenarios from './Scenarios'
-import BugsnagReactNativeNavigation from '@bugsnag/plugin-react-native-navigation';
-
-let getDefaultConfiguration = () => {
-  return {
-    apiKey: '12312312312312312312312312312312',
-    endpoint: 'http://bs-local.com:9339',
-    autoTrackSessions: false
-  }
-}
-
-let getManualModeConfiguration = (apiKey) => { 
-  return {
-    apiKey: apiKey,
-    endpoints: {
-      notify: 'https://notify.bugsnag.com',
-      sessions: 'https://sessions.bugsnag.com'
-    },
-    autoTrackSessions: false
-  }
-}
+import BugsnagReactNativeNavigation from '@bugsnag/plugin-react-native-navigation'
+import { Component } from 'react'
 
 const defaultJsConfig = () => ({
   plugins: [new BugsnagReactNativeNavigation(Navigation)]
 })
 
-const AppScreen = () => {
-  state = {
-    currentScenario: '',
-    scenarioMetaData: '',
-    manualApiKey: null,
-    scenario: null
+export default class AppScreen extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      currentScenario: '',
+      scenarioMetaData: '',
+      apiKey: '12312312312312312312312312312312',
+      notifyEndpoint: 'http://bs-local.com:9339',
+      sessionsEndpoint: 'http://bs-local.com:9339',
+      scenario: null
+    }
+    console.log(`Available scenarios:\n  ${Object.keys(Scenarios).join('\n  ')}`)
   }
-  console.log(`Available scenarios:\n  ${Object.keys(Scenarios).join('\n  ')}`)
+
+  getConfiguration = () => {
+    return {
+      apiKey: this.state.apiKey,
+      endpoints: {
+        notify: this.state.notifyEndpoint,
+        sessions: this.state.sessionsEndpoint
+      },
+      autoTrackSessions: false
+    }
+  }
 
   setScenario = newScenario => {
-    state.currentScenario = newScenario
+    this.state.currentScenario = newScenario
   }
 
   setScenarioMetaData = newScenarioMetaData => {
-    state.scenarioMetaData = newScenarioMetaData
-  }
-
-  setManualApiKey = newApiKey => {
-    setState.manualApiKey = newApiKey
+    this.state.scenarioMetaData = newScenarioMetaData
   }
 
   startScenario = () => {
-    console.log(`Running scenario: ${state.currentScenario}`)
-    console.log(`  with MetaData: ${state.scenarioMetaData}`)
-    let scenarioName = state.currentScenario
-    let scenarioMetaData = state.scenarioMetaData
-    let configuration = getDefaultConfiguration()
-    let jsConfig = defaultJsConfig()
-    let scenario = new Scenarios[scenarioName](configuration, scenarioMetaData, jsConfig)
+    console.log(`Running scenario: ${this.state.currentScenario}`)
+    console.log(`  with MetaData: ${this.state.scenarioMetaData}`)
+    const scenarioName = this.state.currentScenario
+    const scenarioMetaData = this.state.scenarioMetaData
+    const configuration = this.getConfiguration()
+    const jsConfig = defaultJsConfig()
+    const scenario = new Scenarios[scenarioName](configuration, scenarioMetaData, jsConfig)
     console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${jsConfig} (js)`)
     NativeModules.BugsnagTestInterface.startBugsnag(configuration)
-    .then(() => {
-      Navigation.setRoot({
-        root: {
-          stack: {
-            children: [
-              {
-                component: {
-                  name: 'Home',
-                },
-              },
-            ],
-          },
-        }
+      .then(() => {
+        Navigation.setRoot({
+          root: {
+            stack: {
+              children: [
+                {
+                  component: {
+                    name: 'Home'
+                  }
+                }
+              ]
+            }
+          }
+        })
+        Bugsnag.start(jsConfig)
+        this.state.scenario = scenario
+        scenario.run()
       })
-      Bugsnag.start(jsConfig)
-      state.scenario = scenario
-      scenario.run()
-    })
   }
 
   startBugsnag = () => {
-    console.log(`Starting Bugsnag for scenario: ${state.currentScenario}`)
-    console.log(`  with MetaData: ${state.scenarioMetaData}`)
-    let scenarioName = state.currentScenario
-    let scenarioMetaData = state.scenarioMetaData
-    let configuration
-    if (state.manualApiKey) {
-      configuration = getManualModeConfiguration(state.manualApiKey)
-    } else {
-      configuration = getDefaultConfiguration()
-    }
-    let jsConfig = defaultJsConfig()
-    let scenario = new Scenarios[scenarioName](configuration, scenarioMetaData, jsConfig)
+    console.log(`Starting Bugsnag for scenario: ${this.state.currentScenario}`)
+    console.log(`  with MetaData: ${this.state.scenarioMetaData}`)
+    const scenarioName = this.state.currentScenario
+    const scenarioMetaData = this.state.scenarioMetaData
+    const configuration = this.getConfiguration()
+    const jsConfig = defaultJsConfig()
+    const scenario = new Scenarios[scenarioName](configuration, scenarioMetaData, jsConfig)
     console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${jsConfig} (js)`)
     NativeModules.BugsnagTestInterface.startBugsnag(configuration)
-    .then(() => {
-      Bugsnag.start(jsConfig)
-      state.scenario = scenario
-    })
+      .then(() => {
+        Bugsnag.start(jsConfig)
+        this.state.scenario = scenario
+      })
   }
 
-  return (
-    <View style={styles.container}>
-      <View style={styles.child}>
-        <Text>React-native end-to-end test app</Text>
-        <TextInput style={styles.textInput}
-          placeholder='Scenario Name'
-          accessibilityLabel='scenarioInput'
-          onChangeText={this.setScenario} />
-        <TextInput style={styles.textInput}
-          placeholder='Scenario Metadata'
-          accessibilityLabel='scenarioMetaDataInput'
-          onChangeText={this.setScenarioMetaData} />
-        <Button style={styles.clickyButton}
-          accessibilityLabel='startScenarioButton'
-          title='Start scenario'
-          onPress={this.startScenario}/>
-        <Button style={styles.clickyButton}
-          accessibilityLabel='startBugsnagButton'
-          title='Start Bugsnag'
-          onPress={this.startBugsnag}/>
+  render () {
+    return (
+      <View style={styles.container}>
+        <View style={styles.child}>
+          <Text>React Native Navigation Test App</Text>
+          <TextInput style={styles.textInput}
+            placeholder='Scenario Name'
+            accessibilityLabel='scenario_name'
+            onChangeText={this.setScenario} />
+          <TextInput style={styles.textInput}
+            placeholder='Scenario Metadata'
+            accessibilityLabel='scenario_metadata'
+            onChangeText={this.setScenarioMetaData} />
+          <Button style={styles.clickyButton}
+            accessibilityLabel='start_bugsnag'
+            title='Start Bugsnag only'
+            onPress={this.startBugsnag}/>
+          <Button style={styles.clickyButton}
+            accessibilityLabel='run_scenario'
+            title='Start Bugsnag and run scenario'
+            onPress={this.startScenario}/>
+
+          <Text>Configuration</Text>
+          <TextInput placeholder='Notify endpoint'
+            style={styles.textInput}
+            accessibilityLabel='notify_endpoint'
+            value={this.state.notifyEndpoint}
+            onChangeText={this.setNotifyEndpoint} />
+          <TextInput placeholder='Sessions endpoint'
+            style={styles.textInput}
+            accessibilityLabel='sessions_endpoint'
+            value={this.state.sessionsEndpoint}
+            onChangeText={this.setSessionsEndpoint} />
+          <TextInput placeholder='API key'
+            style={styles.textInput}
+            accessibilityLabel='api_key'
+            value={this.state.apiKey}
+            onChangeText={this.setApiKey} />
+          <Button style={styles.clickyButton}
+            accessibilityLabel='use_dashboard_endpoints'
+            title='Use dashboard endpoints'
+            onPress={this.useRealEndpoints}/>
+        </View>
       </View>
-    </View>
-  )
+    )
+  }
 }
 
 Navigation.registerComponent('App', () => AppScreen)
-Navigation.registerComponent('Home', () => HomeScreen);
-Navigation.registerComponent('Details', () => DetailsScreen);
+Navigation.registerComponent('Home', () => HomeScreen)
+Navigation.registerComponent('Details', () => DetailsScreen)
 Navigation.events().registerAppLaunchedListener(async () => {
   Navigation.setRoot({
     root: {
@@ -141,12 +149,12 @@ Navigation.events().registerAppLaunchedListener(async () => {
         children: [
           {
             component: {
-              name: 'App',
-            },
-          },
-        ],
-      },
-    },
+              name: 'App'
+            }
+          }
+        ]
+      }
+    }
   })
 })
 
