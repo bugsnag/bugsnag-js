@@ -227,15 +227,14 @@ steps:
       docker-compose#v3.3.0:
         run: react-native-maze-runner
         use-aliases: true
+        command:
+        - --app=build/rn0.60.apk
+        - --farm=bs
+        - --device=ANDROID_9_0
+        - --username=$BROWSER_STACK_USERNAME
+        - --access-key=$BROWSER_STACK_ACCESS_KEY
     env:
       SKIP_NAVIGATION_SCENARIOS: "true"
-    command: >-
-      bundle exec bugsnag-maze-runner
-      --app=build/rn0.60.apk
-      --farm=bs
-      --device=ANDROID_9_0
-      --username=$BROWSER_STACK_USERNAME
-      --access-key=$BROWSER_STACK_ACCESS_KEY
     concurrency: 10
     concurrency_group: 'browserstack-app'
 
@@ -248,15 +247,14 @@ steps:
       docker-compose#v3.1.0:
         run: react-native-maze-runner
         use-aliases: true
+        command:
+        - --app=build/rn0.60.ipa
+        - --farm=bs
+        - --device=IOS_12
+        - --username=$BROWSER_STACK_USERNAME
+        - --access-key=$BROWSER_STACK_ACCESS_KEY
     env:
       SKIP_NAVIGATION_SCENARIOS: "true"
-    command: >-
-      bundle exec bugsnag-maze-runner
-      --app=build/rn0.60.ipa
-      --farm=bs
-      --device=IOS_12
-      --username=$BROWSER_STACK_USERNAME
-      --access-key=$BROWSER_STACK_ACCESS_KEY
     concurrency: 10
     concurrency_group: 'browserstack-app'
 
@@ -269,15 +267,14 @@ steps:
       docker-compose#v3.3.0:
         run: react-native-maze-runner
         use-aliases: true
+        command:
+        - --app=build/rn0.63.apk
+        - --farm=bs
+        - --device=ANDROID_9_0
+        - --username=$BROWSER_STACK_USERNAME
+        - --access-key=$BROWSER_STACK_ACCESS_KEY
     env:
       SKIP_NAVIGATION_SCENARIOS: "true"
-    command: >-
-      bundle exec bugsnag-maze-runner
-      --app=build/rn0.63.apk
-      --farm=bs
-      --device=ANDROID_9_0
-      --username=$BROWSER_STACK_USERNAME
-      --access-key=$BROWSER_STACK_ACCESS_KEY
     concurrency: 10
     concurrency_group: 'browserstack-app'
 
@@ -290,15 +287,14 @@ steps:
       docker-compose#v3.1.0:
         run: react-native-maze-runner
         use-aliases: true
+        command:
+        - --app=build/rn0.63.ipa
+        - --farm=bs
+        - --device=IOS_12
+        - --username=$BROWSER_STACK_USERNAME
+        - --access-key=$BROWSER_STACK_ACCESS_KEY
     env:
       SKIP_NAVIGATION_SCENARIOS: "true"
-    command: >-
-      bundle exec bugsnag-maze-runner
-      --app=build/rn0.63.ipa
-      --farm=bs
-      --device=IOS_12
-      --username=$BROWSER_STACK_USERNAME
-      --access-key=$BROWSER_STACK_ACCESS_KEY
     concurrency: 10
     concurrency_group: 'browserstack-app'
 
@@ -311,14 +307,13 @@ steps:
       docker-compose#v3.3.0:
         run: react-native-maze-runner
         use-aliases: true
-    command: >-
-      bundle exec bugsnag-maze-runner
-      --app=build/r_navigation_0.60.apk
-      --farm=bs
-      --device=ANDROID_9_0
-      --username=$BROWSER_STACK_USERNAME
-      --access-key=$BROWSER_STACK_ACCESS_KEY
-      features/navigation.feature
+        command:
+        - --app=build/r_navigation_0.60.apk
+        - --farm=bs
+        - --device=ANDROID_9_0
+        - --username=$BROWSER_STACK_USERNAME
+        - --access-key=$BROWSER_STACK_ACCESS_KEY
+        - features/navigation.feature
     concurrency: 10
     concurrency_group: 'browserstack-app'
 
@@ -332,14 +327,13 @@ steps:
   #     docker-compose#v3.1.0:
   #       run: react-native-maze-runner
   #       use-aliases: true
-  #   command: >-
-  #     bundle exec bugsnag-maze-runner
-  #     --app=build/r_navigation_0.60.ipa
-  #     --farm=bs
-  #     --device=IOS_12
-  #     --username=$BROWSER_STACK_USERNAME
-  #     --access-key=$BROWSER_STACK_ACCESS_KEY
-  #     features/navigation.feature
+  #       command:
+  #       - --app=build/r_navigation_0.60.ipa
+  #       - --farm=bs
+  #       - --device=IOS_12
+  #       - --username=$BROWSER_STACK_USERNAME
+  #       - --access-key=$BROWSER_STACK_ACCESS_KEY
+  #       - features/navigation.feature
   #   concurrency: 10
   #   concurrency_group: 'browserstack-app'
 
@@ -352,14 +346,13 @@ steps:
       docker-compose#v3.3.0:
         run: react-native-maze-runner
         use-aliases: true
-    command: >-
-      bundle exec bugsnag-maze-runner
-      --app=build/r_navigation_0.63.apk
-      --farm=bs
-      --device=ANDROID_9_0
-      --username=$BROWSER_STACK_USERNAME
-      --access-key=$BROWSER_STACK_ACCESS_KEY
-      features/navigation.feature
+        command:
+        - --app=build/r_navigation_0.63.apk
+        - --farm=bs
+        - --device=ANDROID_9_0
+        - --username=$BROWSER_STACK_USERNAME
+        - --access-key=$BROWSER_STACK_ACCESS_KEY
+        - features/navigation.feature
     concurrency: 10
     concurrency_group: 'browserstack-app'
 
@@ -373,14 +366,13 @@ steps:
   #     docker-compose#v3.1.0:
   #       run: react-native-maze-runner
   #       use-aliases: true
-  #   command: >-
-  #     bundle exec bugsnag-maze-runner
-  #     --app=build/r_navigation_0.63.ipa
-  #     --farm=bs
-  #     --device=IOS_12
-  #     --username=$BROWSER_STACK_USERNAME
-  #     --access-key=$BROWSER_STACK_ACCESS_KEY
-  #     features/navigation.feature
+  #       command:
+  #       - --app=build/r_navigation_0.63.ipa
+  #       - --farm=bs
+  #       - --device=IOS_13
+  #       - --username=$BROWSER_STACK_USERNAME
+  #       - --access-key=$BROWSER_STACK_ACCESS_KEY
+  #       - features/navigation.feature
   #   concurrency: 10
   #   concurrency_group: 'browserstack-app'
 
@@ -393,14 +385,13 @@ steps:
       docker-compose#v3.3.0:
         run: react-native-maze-runner
         use-aliases: true
-    command: >-
-      bundle exec bugsnag-maze-runner
-      --app=build/r_native_navigation_0.60.apk
-      --farm=bs
-      --device=ANDROID_9_0
-      --username=$BROWSER_STACK_USERNAME
-      --access-key=$BROWSER_STACK_ACCESS_KEY
-      features/navigation.feature
+        command:
+        - --app=build/r_native_navigation_0.60.apk
+        - --farm=bs
+        - --device=ANDROID_9_0
+        - --username=$BROWSER_STACK_USERNAME
+        - --access-key=$BROWSER_STACK_ACCESS_KEY
+        - features/navigation.feature
     concurrency: 10
     concurrency_group: 'browserstack-app'
 
@@ -414,14 +405,13 @@ steps:
   #     docker-compose#v3.1.0:
   #       run: react-native-maze-runner
   #       use-aliases: true
-  #   command: >-
-  #     bundle exec bugsnag-maze-runner
-  #     --app=build/r_native_navigation_0.60.ipa
-  #     --farm=bs
-  #     --device=IOS_12
-  #     --username=$BROWSER_STACK_USERNAME
-  #     --access-key=$BROWSER_STACK_ACCESS_KEY
-  #     features/navigation.feature
+  #       command:
+  #       - --app=build/r_native_navigation_0.60.ipa
+  #       - --farm=bs
+  #       - --device=IOS_13
+  #       - --username=$BROWSER_STACK_USERNAME
+  #       - --access-key=$BROWSER_STACK_ACCESS_KEY
+  #       - features/navigation.feature
   #   concurrency: 10
   #   concurrency_group: 'browserstack-app'
 
@@ -434,14 +424,13 @@ steps:
       docker-compose#v3.3.0:
         run: react-native-maze-runner
         use-aliases: true
-    command: >-
-      bundle exec bugsnag-maze-runner
-      --app=build/r_native_navigation_0.63.apk
-      --farm=bs
-      --device=ANDROID_9_0
-      --username=$BROWSER_STACK_USERNAME
-      --access-key=$BROWSER_STACK_ACCESS_KEY
-      features/navigation.feature
+        command:
+        - --app=build/r_native_navigation_0.63.apk
+        - --farm=bs
+        - --device=ANDROID_9_0
+        - --username=$BROWSER_STACK_USERNAME
+        - --access-key=$BROWSER_STACK_ACCESS_KEY
+        - features/navigation.feature
     concurrency: 10
     concurrency_group: 'browserstack-app'
 
@@ -455,13 +444,12 @@ steps:
   #     docker-compose#v3.1.0:
   #       run: react-native-maze-runner
   #       use-aliases: true
-  #   command: >-
-  #     bundle exec bugsnag-maze-runner
-  #     --app=build/r_native_navigation_0.63.ipa
-  #     --farm=bs
-  #     --device=IOS_12
-  #     --username=$BROWSER_STACK_USERNAME
-  #     --access-key=$BROWSER_STACK_ACCESS_KEY
-  #     features/navigation.feature
+  #       command:
+  #       - --app=build/r_native_navigation_0.63.ipa
+  #       - --farm=bs
+  #       - --device=IOS_13
+  #       - --username=$BROWSER_STACK_USERNAME
+  #       - --access-key=$BROWSER_STACK_ACCESS_KEY
+  #       - features/navigation.feature
   #   concurrency: 10
   #   concurrency_group: 'browserstack-app'
