@@ -109,9 +109,6 @@ describe('expo notifier', () => {
     jest.isolateModules(() => {
       Bugsnag = require('..')
     })
-
-    window.fetch = jest.fn()
-    window.XMLHttpRequest = jest.fn() as any
   })
 
   it('accepts plugins', () => {
