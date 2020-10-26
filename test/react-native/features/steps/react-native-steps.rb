@@ -23,11 +23,10 @@ When("I clear any error dialogue") do
   # Error dialogue is auto-cleared on IOS
   next unless MazeRunner.driver.capabilities["os"] == 'android'
 
-  sleep(3)
   driver = MazeRunner.driver
-  driver.click_element("android:id/button1") if driver.wait_for_element("android:id/button1", 1)
-  driver.click_element("android:id/aerr_close") if driver.wait_for_element("android:id/aerr_close", 1)
-  driver.click_element("android:id/aerr_restart") if driver.wait_for_element("android:id/aerr_restart", 1)
+  driver.click_element("android:id/button1") if driver.wait_for_element("android:id/button1", 3)
+  driver.click_element("android:id/aerr_close") if driver.wait_for_element("android:id/aerr_close", 3)
+  driver.click_element("android:id/aerr_restart") if driver.wait_for_element("android:id/aerr_restart", 3)
 end
 
 When("I configure Bugsnag for {string}") do |event_type|
