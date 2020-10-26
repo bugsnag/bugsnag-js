@@ -1,27 +1,30 @@
-/* global describe, it, expect */
+/* eslint-disable @typescript-eslint/no-var-requires */
+import Client, { EventDeliveryPayload } from '@bugsnag/core/client'
 
-const proxyquire = require('proxyquire').noPreserveCache().noCallThru()
-const Client = require('@bugsnag/core/client')
+jest.mock('react-native', () => ({
+  AppState: {
+    addEventListener: jest.fn(),
+    currentState: 'active'
+  }
+}))
 
 describe('plugin: expo app', () => {
+  beforeEach(() => {
+    jest.resetModules()
+  })
+
   it('should should use revisionId if defined (all platforms)', done => {
     const VERSION = '1.0.0'
     const REVISION_ID = '1.0.0-r132432'
-    const plugin = proxyquire('../', {
-      'expo-constants': {
-        default: {
-          platform: {
-          },
-          manifest: { version: VERSION, revisionId: REVISION_ID }
-        }
-      },
-      'react-native': {
-        AppState: {
-          addEventListener: () => {},
-          currentState: 'active'
-        }
+    jest.doMock('expo-constants', () => ({
+      default: {
+        platform: {},
+        manifest: { version: VERSION, revisionId: REVISION_ID }
       }
-    })
+    }))
+
+    const plugin = require('..')
+
     const c = new Client({ apiKey: 'api_key', plugins: [plugin] })
 
     c._setDelivery(client => ({
@@ -30,30 +33,27 @@ describe('plugin: expo app', () => {
         expect(r).toBeTruthy()
         expect(r.events[0].app.codeBundleId).toBe(REVISION_ID)
         done()
-      }
+      },
+      sendSession: () => {}
     }))
     c.notify(new Error('flip'))
   })
 
   it('should should use versionCode if defined (android)', done => {
     const VERSION_CODE = '1.0'
-    const plugin = proxyquire('../', {
-      'expo-constants': {
-        default: {
-          platform: {
-            android: { versionCode: VERSION_CODE }
-          },
-          manifest: { version: '1.0.0' },
-          appOwnership: 'standalone'
-        }
-      },
-      'react-native': {
-        AppState: {
-          addEventListener: () => {},
-          currentState: 'active'
-        }
+
+    jest.doMock('expo-constants', () => ({
+      default: {
+        platform: {
+          android: { versionCode: VERSION_CODE }
+        },
+        manifest: { version: '1.0.0' },
+        appOwnership: 'standalone'
       }
-    })
+    }))
+
+    const plugin = require('..')
+
     const c = new Client({ apiKey: 'api_key', plugins: [plugin] })
 
     c._setDelivery(client => ({
@@ -62,30 +62,27 @@ describe('plugin: expo app', () => {
         expect(r).toBeTruthy()
         expect(r.events[0].metaData.app.nativeVersionCode).toBe(VERSION_CODE)
         done()
-      }
+      },
+      sendSession: () => {}
     }))
     c.notify(new Error('flip'))
   })
 
   it('should should use bundleVersion if defined (ios)', done => {
     const BUNDLE_VERSION = '1.0'
-    const plugin = proxyquire('../', {
-      'expo-constants': {
-        default: {
-          platform: {
-            ios: { buildNumber: BUNDLE_VERSION }
-          },
-          manifest: { version: '1.0.0' },
-          appOwnership: 'standalone'
-        }
-      },
-      'react-native': {
-        AppState: {
-          addEventListener: () => {},
-          currentState: 'active'
-        }
+
+    jest.doMock('expo-constants', () => ({
+      default: {
+        platform: {
+          ios: { buildNumber: BUNDLE_VERSION }
+        },
+        manifest: { version: '1.0.0' },
+        appOwnership: 'standalone'
       }
-    })
+    }))
+
+    const plugin = require('..')
+
     const c = new Client({ apiKey: 'api_key', plugins: [plugin] })
 
     c._setDelivery(client => ({
@@ -94,32 +91,38 @@ describe('plugin: expo app', () => {
         expect(r).toBeTruthy()
         expect(r.events[0].metaData.app.nativeBundleVersion).toBe(BUNDLE_VERSION)
         done()
-      }
+      },
+      sendSession: () => {}
     }))
     c.notify(new Error('flip'))
   })
 
   it('detects whether the app is inForeground', done => {
     const AppState = {
-      addEventListener: (name, fn) => {
-        listener = fn
-      },
+      addEventListener: jest.fn(),
       currentState: 'active'
     }
-    let listener
-    const plugin = proxyquire('../', {
-      'expo-constants': {
-        default: {
-          platform: {},
-          manifest: {}
-        }
-      },
-      'react-native': { AppState }
-    })
+
+    jest.doMock('expo-constants', () => ({
+      default: {
+        platform: {},
+        manifest: {}
+      }
+    }))
+
+    jest.doMock('react-native', () => ({
+      AppState
+    }))
+
+    const plugin = require('..')
+
     const c = new Client({ apiKey: 'api_key', plugins: [plugin] })
 
-    expect(typeof listener).toBe('function')
-    const events = []
+    expect(AppState.addEventListener).toHaveBeenCalledWith('change', expect.any(Function))
+
+    const listener = AppState.addEventListener.mock.calls[0][1]
+
+    const events: EventDeliveryPayload[] = []
     c._setDelivery(client => ({
       sendEvent: (payload) => {
         const r = JSON.parse(JSON.stringify(payload))
@@ -130,7 +133,8 @@ describe('plugin: expo app', () => {
         expect(events[1].events[0].app.inForeground).toBe(false)
         expect(events[2].events[0].app.inForeground).toBe(true)
         done()
-      }
+      },
+      sendSession: () => {}
     }))
     c.notify(new Error('flip'))
     setTimeout(() => {
@@ -148,20 +152,14 @@ describe('plugin: expo app', () => {
   it('includes duration in event.app', done => {
     const start = Date.now()
 
-    const plugin = proxyquire('../', {
-      'expo-constants': {
-        default: {
-          platform: {},
-          manifest: {}
-        }
-      },
-      'react-native': {
-        AppState: {
-          addEventListener: (name, fn) => {},
-          currentState: 'active'
-        }
+    jest.doMock('expo-constants', () => ({
+      default: {
+        platform: {},
+        manifest: {}
       }
-    })
+    }))
+
+    const plugin = require('..')
 
     const client = new Client({ apiKey: 'api_key', plugins: [plugin] })
 
