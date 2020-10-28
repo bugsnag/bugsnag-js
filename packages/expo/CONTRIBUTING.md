@@ -19,7 +19,7 @@ To check what native module versions are bundled with Expo, check this file:
 
 https://github.com/expo/expo/blob/master/packages/expo/bundledNativeModules.json
 
-To check whan JS-only module versions are depended on by Expo, check this file:
+To check what JS-only module versions are depended on by Expo, check this file:
 
 https://github.com/expo/expo/blob/master/changelogVersions.json
 
