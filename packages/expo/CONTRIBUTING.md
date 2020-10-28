@@ -25,4 +25,4 @@ https://github.com/expo/expo/blob/master/changelogVersions.json
 
 ## Updating the CLI to install a compatible notifier version
 
-When the version of the bundled native modules changes, making the notifier incompatible with previous Expo SDKs we need to update the CLI using the established pattern. See `packages/expo-cli/commands/install.js` for details.
+When the version of the bundled native modules changes the notifier will be incompatible with previous Expo SDKs. To prevent installing the conflicting versions, we need to update the CLI using the established pattern in [`packages/expo-cli/commands/install.js`](../expo-cli/commands/install.js).
