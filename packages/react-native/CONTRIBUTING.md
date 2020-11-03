@@ -31,7 +31,7 @@ To update the version of the bundled artefacts:
 To update the version of the bundled notifier source:
 
 - Ensure `bugsnag-js` (this repo) is cloned in a sibling directory alongside `bugsnag-cocoa`
-- Checkout the tag of the release version to be vendored in `bugsnag-android` (e.g. `git checkout v5.2.2`)
+- Checkout the tag of the release version to be vendored in `bugsnag-cocoa` (e.g. `git checkout v5.2.2`)
 - From within the React Native package directory in this repo (`cd packages/react-native`), run the `./update-ios.sh` script. This will copy the Cocoa sources and headers into the correct locations.
 - Update the changelog according to the [contributing guide](../../CONTRIBUTING.md), creating a new `TBD` section if one doesn't exist. Under the section `### Changed` add a new entry: `- (react-native): Update bugsnag-cocoa to v{VERSION}`, indenting one level and including the entire changelog for the version that has been updated. If multiple releases have been made since the version bump, the changelog entries for the interim should be aggregated into one.
 
