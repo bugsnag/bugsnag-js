@@ -16,6 +16,7 @@
 #import <Foundation/Foundation.h>
 #import "BSGSerialization.h"
 #import "Bugsnag.h"
+#import "BugsnagBreadcrumbs.h"
 #import "BugsnagCollections.h"
 #import "BugsnagHandledState.h"
 #import "BugsnagLogger.h"
@@ -185,7 +186,10 @@ NSArray <BugsnagBreadcrumb *> *BSGParseBreadcrumbs(NSDictionary *report) {
         // then cached breadcrumbs from an OOM event
         ?: [report valueForKeyPath:@"user.state.oom.breadcrumbs"]
         // then cached breadcrumbs from a regular event
-        ?: [report valueForKeyPath:@"user.state.crash.breadcrumbs"];
+        // KSCrashReports from earlier versions of the notifier used this
+        ?: [report valueForKeyPath:@"user.state.crash.breadcrumbs"]
+        // breadcrumbs added to a KSCrashReport by BSSerializeDataCrashHandler
+        ?: [report valueForKeyPath:@"user.breadcrumbs"];
     NSMutableArray *breadcrumbs = [NSMutableArray arrayWithCapacity:cache.count];
     for (NSDictionary *data in cache) {
         if (![data isKindOfClass:[NSDictionary class]]) {
@@ -573,19 +577,20 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
 - (NSMutableDictionary *)parseOnCrashData:(NSDictionary *)report {
     NSMutableDictionary *userAtCrash = [report[BSGKeyUser] mutableCopy];
     // avoid adding internal information to user-defined metadata
-    NSArray *blacklistedKeys = @[
+    NSArray *keysToRemove = @[
             @BSG_KSCrashField_Overrides,
             @BSG_KSCrashField_HandledState,
             @BSG_KSCrashField_Metadata,
             @BSG_KSCrashField_State,
             @BSG_KSCrashField_Config,
             @BSG_KSCrashField_DiscardDepth,
+            @"breadcrumbs",
             @"startedAt",
             @"unhandledCount",
             @"handledCount",
             @"id",
     ];
-    [userAtCrash removeObjectsForKeys:blacklistedKeys];
+    [userAtCrash removeObjectsForKeys:keysToRemove];
 
     for (NSString *key in [userAtCrash allKeys]) { // remove any non-dictionary values
         if (![userAtCrash[key] isKindOfClass:[NSDictionary class]]) {

@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "BugsnagDevice.h"
+#import <Bugsnag/BugsnagDevice.h>
 
 /**
  * Stateful information set by the notifier about the device on which the event occurred can be
