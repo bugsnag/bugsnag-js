@@ -25,3 +25,6 @@ cp -r $MAVEN_REPO_DIR $AAR_DST
 echo "Recording version"
 rm -rf ./android/.bugsnag-android-version
 echo $(cd $ANDROID_REPO_DIR && git rev-parse HEAD) >> ./android/.bugsnag-android-version
+
+sed -i '' "s/api \"com.bugsnag:bugsnag-android:.*/api \"com.bugsnag:bugsnag-android:$AMENDED_VERSION\"/" android/build.gradle
+sed -i '' "s/api \"com.bugsnag:bugsnag-plugin-react-native:.*/api \"com.bugsnag:bugsnag-plugin-react-native:$AMENDED_VERSION\"/" android/build.gradle
