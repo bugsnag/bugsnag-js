@@ -28,5 +28,7 @@
 @property(readonly) BOOL started;
 
 - (void)start;
-@end
 
+- (BOOL)shouldReportOOM;
+
+@end

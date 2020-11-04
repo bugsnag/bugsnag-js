@@ -1571,7 +1571,7 @@ void bsg_kscrashreport_writeStandardReport(
         }
 
         if (crashContext->config.onCrashNotify != NULL) {
-            // NOTE: The blacklist for BSG_KSCrashField_UserAtCrash children in BugsnagEvent.m
+            // NOTE: The deny list for BSG_KSCrashField_UserAtCrash children in BugsnagEvent.m
             // should be updated when adding new fields here
 
             // Write handled exception report info

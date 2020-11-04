@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "BugsnagApp.h"
+#import <Bugsnag/BugsnagApp.h>
 
 /**
  * Stateful information set by the notifier about your app can be found on this class. These values

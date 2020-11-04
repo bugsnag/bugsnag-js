@@ -7,7 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "BugsnagMetadataStore.h"
+
+#import <Bugsnag/BugsnagMetadataStore.h>
 
 @class BugsnagConfiguration;
 @class BugsnagHandledState;

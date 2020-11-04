@@ -13,7 +13,7 @@ static BOOL BSGValueIsBoolean(id object) {
 @implementation BSGConfigurationBuilder
 
 + (BugsnagConfiguration *)configurationFromOptions:(NSDictionary *)options {
-    NSString *apiKey = options[@"apiKey"];
+    NSString *apiKey = options[BSGKeyApiKey];
     if (apiKey != nil && ![apiKey isKindOfClass:[NSString class]]) {
         @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"Bugsnag apiKey must be a string" userInfo:nil];
     }

@@ -1,31 +1,59 @@
 Changelog
 =========
 
+## 6.2.4 (2020-11-04)
+
+### Bug fixes
+
+* The `onCrashHandler` is no longer called in the event of an OOM.
+  [#874](https://github.com/bugsnag/bugsnag-cocoa/pull/874)
+
+## 6.2.3 (2020-10-28)
+
+### Enhancements
+
+* Use os_proc_available_memory() to get free memory, if available.
+  [#851](https://github.com/bugsnag/bugsnag-cocoa/pull/851)
+
+* Reduced the CPU and memory impact of leaving breadcrumbs.
+  [#853](https://github.com/bugsnag/bugsnag-cocoa/pull/853)
+  [#863](https://github.com/bugsnag/bugsnag-cocoa/pull/863)
+
+### Bug fixes
+
+* Fix for incorrect version info during edge case where version info is not
+  manually set, and app version is changed between crashing and reporting the error.
+  [#862](https://github.com/bugsnag/bugsnag-cocoa/pull/862)
+
+* Catch and report unexpected exceptions when (de)serializing JSON data rather
+  than crashing.
+  [#856](https://github.com/bugsnag/bugsnag-cocoa/pull/856)
+
 ## 6.2.2 (2020-10-21)
 
-## Enhancements
+### Enhancements
 
 * Support "foreground" duration in MacOS as well.
-  [848](https://github.com/bugsnag/bugsnag-cocoa/pull/848)
+  [#848](https://github.com/bugsnag/bugsnag-cocoa/pull/848)
 
 * Timestamp accuracy in reports has been increased from seconds to milliseconds.
-  [847](https://github.com/bugsnag/bugsnag-cocoa/pull/847)
+  [#847](https://github.com/bugsnag/bugsnag-cocoa/pull/847)
 
 * Calculation of "foreground" duration now also includes time in
   UIApplicationStateActive and UIApplicationStateInactive states in order to
   match Apple's definition of "foreground".
-  [839](https://github.com/bugsnag/bugsnag-cocoa/pull/839)
+  [#839](https://github.com/bugsnag/bugsnag-cocoa/pull/839)
 
 ## 6.2.1 (2020-10-15)
 
-## Bug fixes
+### Bug fixes
 
 * Changed synchronization method when responding to dynamic library image events
   to a dispatch queue, which is a more bulletproof and battle-hardened approach.
-  [837](https://github.com/bugsnag/bugsnag-cocoa/pull/837)
+  [#837](https://github.com/bugsnag/bugsnag-cocoa/pull/837)
 
 * Fixed a deadlock which can occur when calling `notify`
-  [833](https://github.com/bugsnag/bugsnag-cocoa/pull/833)
+  [#833](https://github.com/bugsnag/bugsnag-cocoa/pull/833)
 
 ## 6.2.0 (2020-10-07)
 
@@ -34,70 +62,70 @@ Changelog
 * An invalid or missing API key now causes an NSException to be thrown upon
   calling [Bugsnag start]. This check used to occur during configuration,
   and only for malformed API keys.
-  [828](https://github.com/bugsnag/bugsnag-cocoa/pull/828)
+  [#828](https://github.com/bugsnag/bugsnag-cocoa/pull/828)
 
 * Exception Mach code and subcode are now written to the crash report as
   stringified hex values instead of integers to avoid potential data loss from
   JSON readers that lose the lower bits from unsigned 64-bit numbers.
-  [827](https://github.com/bugsnag/bugsnag-cocoa/pull/827)
+  [#827](https://github.com/bugsnag/bugsnag-cocoa/pull/827)
 
 * Improved out-of-memory event detection by disabling reporting when a debugger
   is attached. OOM reporting is now enabled by default in debug builds.
-  [820](https://github.com/bugsnag/bugsnag-cocoa/pull/820)
+  [#820](https://github.com/bugsnag/bugsnag-cocoa/pull/820)
 
 ## 6.1.7 (2020-10-01)
 
-## Bug fixes
+### Bug fixes
 
 * Re-enabled the `Require Only App-Extension-Safe API` build setting
-  [823](https://github.com/bugsnag/bugsnag-cocoa/pull/823)
+  [#823](https://github.com/bugsnag/bugsnag-cocoa/pull/823)
 
 * Fix reporting of events with more than one error
-  [821](https://github.com/bugsnag/bugsnag-cocoa/pull/821)
+  [#821](https://github.com/bugsnag/bugsnag-cocoa/pull/821)
 
 ## 6.1.6 (2020-09-24)
 
 ### Bug fixes
 
 * Fix crash-on-launch (attempt to insert into immutable dictionary).
-  [819](https://github.com/bugsnag/bugsnag-cocoa/pull/819)
+  [#819](https://github.com/bugsnag/bugsnag-cocoa/pull/819)
 
 ## 6.1.5 (2020-09-23)
 
 ### Enhancements
 
 * Add `+[Bugsnag breadcrumbs]` to allow apps to fetch the list of breadcrumbs.
-  [813](https://github.com/bugsnag/bugsnag-cocoa/pull/813)
+  [#813](https://github.com/bugsnag/bugsnag-cocoa/pull/813)
 
 * Disable JSON pretty-printing in KSCrash reports to save disk space and bandwidth.
-  [802](https://github.com/bugsnag/bugsnag-cocoa/pull/802)
+  [#802](https://github.com/bugsnag/bugsnag-cocoa/pull/802)
 
 ### Bug fixes
 
 * Fix reporting of Mach exception code and subcode.
-  [806](https://github.com/bugsnag/bugsnag-cocoa/pull/806)
+  [#806](https://github.com/bugsnag/bugsnag-cocoa/pull/806)
 
 * Create date formatters at init time to avoid potential race conditions.
-  [807](https://github.com/bugsnag/bugsnag-cocoa/pull/807)
+  [#807](https://github.com/bugsnag/bugsnag-cocoa/pull/807)
 
 * Refactor OOM handler to be less suceptible to data loss on crash.
-  [804](https://github.com/bugsnag/bugsnag-cocoa/pull/804)
+  [#804](https://github.com/bugsnag/bugsnag-cocoa/pull/804)
 
 ## 6.1.4 (2020-09-11)
 
 ### Bug fixes
 
 * Copy the metadata observer list rather than mutating it directly.
-  [796](https://github.com/bugsnag/bugsnag-cocoa/pull/796)
+  [#796](https://github.com/bugsnag/bugsnag-cocoa/pull/796)
 
 * Reorganized the project file
-  [793](https://github.com/bugsnag/bugsnag-cocoa/pull/793)
+  [#793](https://github.com/bugsnag/bugsnag-cocoa/pull/793)
 
 * Removed some magic values and used the const string references instead.
   [#792](https://github.com/bugsnag/bugsnag-cocoa/pull/792)
 
 * Added BSGJSONSerializer, which ensures no exceptions get thrown (NSErrors get returned instead)
-  [791](https://github.com/bugsnag/bugsnag-cocoa/pull/791)
+  [#791](https://github.com/bugsnag/bugsnag-cocoa/pull/791)
 
 * Guard against non-string metadata map keys
   [#790](https://github.com/bugsnag/bugsnag-cocoa/pull/790)

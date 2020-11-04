@@ -26,9 +26,9 @@
 
 #import <Foundation/Foundation.h>
 
-#import "BugsnagConfiguration.h"
-#import "BugsnagMetadata.h"
-#import "BugsnagMetadataStore.h"
+#import <Bugsnag/BugsnagConfiguration.h>
+#import <Bugsnag/BugsnagMetadata.h>
+#import <Bugsnag/BugsnagMetadataStore.h>
 
 @class BugsnagSessionTracker;
 

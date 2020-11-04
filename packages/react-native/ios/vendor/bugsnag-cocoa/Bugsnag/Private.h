@@ -8,7 +8,6 @@
 #import "BSG_RFC3339DateTool.h"
 #import "Bugsnag.h"
 #import "BugsnagBreadcrumb.h"
-#import "BugsnagBreadcrumbs.h"
 #import "BugsnagKeys.h"
 #import "BugsnagLogger.h"
 #import "BugsnagMetadataInternal.h"
@@ -31,16 +30,6 @@
 @interface BugsnagBreadcrumb ()
 
 - (NSDictionary *_Nullable)objectValue;
-
-@end
-
-#pragma mark -
-
-@interface BugsnagBreadcrumbs ()
-/**
- * Reads and return breadcrumb data currently stored on disk
- */
-- (NSArray *_Nullable)cachedBreadcrumbs;
 
 @end
 

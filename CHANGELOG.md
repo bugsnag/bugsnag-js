@@ -4,6 +4,12 @@
 
 ### Changed
 
+- (react-native): Update bugsnag-cocoa to v6.2.4
+  - The `onCrashHandler` is no longer called in the event of an OOM. [bugsnag-cocoa#874](https://github.com/bugsnag/bugsnag-cocoa/pull/874)
+  - os_proc_available_memory() is now used to get free memory, if available. [bugsnag-cocoa#851](https://github.com/bugsnag/bugsnag-cocoa/pull/851)
+  - CPU and memory impact of leaving breadcrumbs has been reduced. [bugsnag-cocoa#851](https://github.com/bugsnag/bugsnag-cocoa/pull/851)
+  - Fix app version reported for crashes that occur before an upgrade. [bugsnag-cocoa#862](https://github.com/bugsnag/bugsnag-cocoa/pull/862)
+  - Catch exceptions when (de)serializing JSON. [bugsnag-cocoa#856](https://github.com/bugsnag/bugsnag-cocoa/pull/856)
 - (react-native): Update bugsnag-android to v5.2.3 [#1119](https://github.com/bugsnag/bugsnag-js/pull/1119)
 
   - Flush persisted sessions on launch and on connectivity changes
