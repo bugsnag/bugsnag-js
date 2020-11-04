@@ -13,15 +13,6 @@ To update the version of the bundled artefacts:
 - Ensure `bugsnag-js` (this repo) is cloned in a sibling directory alongside `bugsnag-android`
 - Checkout the tag of the release version to be vendored in `bugsnag-android` (e.g. `git checkout v5.2.2`)
 - From within the React Native package directory in this repo (`cd packages/react-native`), run the `./update-android.sh` script. This will build the Android notifier and copy the files in.
-- Update the version in `packages/react-native/android/build.gradle` to match the version that was included
-    ```
-    dependencies {
-      api "com.bugsnag:bugsnag-android:{VERSION}-react-native"
-      api "com.bugsnag:bugsnag-plugin-react-native:{VERSION}-react-native"
-      ...
-    }
-    ```
-    N.B. The version name included the string `-react-native`. It is necessary to build artefacts in this way to ensure the version name is distinct, and cannot clash with any value released on mavenCentral/jcenter.
 - Update the changelog according to the [contributing guide](../../CONTRIBUTING.md), creating a new `TBD` section if one doesn't exist. Under the section `### Changed` add a new entry: `- (react-native): Update bugsnag-android to v{VERSION}`, indenting one level and including the entire changelog for the version that has been updated. If multiple releases have been made since the version bump, the changelog entries for the interim should be aggregated into one.
 
 #### iOS
