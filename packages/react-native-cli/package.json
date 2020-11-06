@@ -1,0 +1,27 @@
+{
+  "name": "bugsnag-react-native-cli",
+  "version": "7.4.0",
+  "description": "A tool to help integrate Bugsnag with a React Native app",
+  "bin": "bin/cli",
+  "scripts": {
+    "clean": "rm -fr dist",
+    "build": "npm run clean && tsc -p tsconfig.build.json",
+    "preversion": "npm run build"
+  },
+  "files": [
+    "bin",
+    "dist",
+    "LICENSE.txt"
+  ],
+  "author": "Bugsnag",
+  "license": "MIT",
+  "dependencies": {
+    "command-line-args": "^5.1.1",
+    "command-line-usage": "^6.1.0",
+    "consola": "^2.15.0"
+  },
+  "devDependencies": {
+    "@types/command-line-args": "^5.0.0",
+    "@types/command-line-usage": "^5.0.1"
+  }
+}

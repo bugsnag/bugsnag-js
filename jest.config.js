@@ -60,6 +60,13 @@ module.exports = {
       ]
     },
     {
+      displayName: 'react native cli',
+      testEnvironment: 'node',
+      testMatch: [
+        testsForPackage('react-native-cli')
+      ]
+    },
+    {
       displayName: 'expo',
       testMatch: [
         testsForPackage('delivery-expo'),
