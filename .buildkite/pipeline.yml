@@ -1,4 +1,21 @@
 steps:
+
+  - label: 'Trigger Expo pipeline'
+    trigger: 'at-bugsnag-expo'
+    build:
+      branch: '${BUILDKITE_BRANCH}'
+      commit: '${BUILDKITE_COMMIT}'
+      message: '${BUILDKITE_MESSAGE}'
+    async: true
+
+  - label: 'Trigger React-native pipeline'
+    trigger: 'at-bugsnag-react-native'
+    build:
+      branch: '${BUILDKITE_BRANCH}'
+      commit: '${BUILDKITE_COMMIT}'
+      message: '${BUILDKITE_MESSAGE}'
+    async: true
+
   - label: ':docker: Prepare package.json'
     timeout_in_minutes: 3
     plugins:
@@ -26,22 +43,6 @@ steps:
             - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base
 
   - wait
-
-  - label: 'Trigger Expo pipeline'
-    trigger: 'at-bugsnag-expo'
-    build:
-      branch: '${BUILDKITE_BRANCH}'
-      commit: '${BUILDKITE_COMMIT}'
-      message: '${BUILDKITE_MESSAGE}'
-    async: true
-
-  - label: 'Trigger React-native pipeline'
-    trigger: 'at-bugsnag-react-native'
-    build:
-      branch: '${BUILDKITE_BRANCH}'
-      commit: '${BUILDKITE_COMMIT}'
-      message: '${BUILDKITE_MESSAGE}'
-    async: true
 
   - label: 'Lint'
     timeout_in_minutes: 10
