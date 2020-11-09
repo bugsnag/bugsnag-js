@@ -3,9 +3,6 @@
   "version": "7.4.0",
   "description": "A tool to help integrate Bugsnag with an Expo app",
   "bin": "cli.js",
-  "scripts": {
-    "test": "nyc --reporter=lcov -x lib/test/lib/* -x **/*.test.js -- jasmine '!(node_modules)/**/*.test.js'"
-  },
   "files": [
     "commands",
     "lib",
@@ -13,14 +10,13 @@
   ],
   "author": "Bugsnag",
   "license": "MIT",
-  "devDependencies": {
-    "jasmine": "3.1.0",
-    "nyc": "^12.0.2"
-  },
   "dependencies": {
     "command-line-args": "^5.0.2",
     "kleur": "^3.0.2",
     "prompts": "^2.0.4",
     "semver": "^6.3.0"
+  },
+  "devDependencies": {
+    "uuid": "^8.3.1"
   }
 }

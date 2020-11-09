@@ -29,6 +29,7 @@
 #import "BSG_KSJSONCodec.h"
 #import "BSG_RFC3339DateTool.h"
 #import "NSError+BSG_SimpleConstructor.h"
+#import "BSG_KSLogger.h"
 
 @interface BSG_KSJSONCodec ()
 
@@ -487,20 +488,28 @@ int bsg_ksjsoncodecobjc_i_encodeObject(BSG_KSJSONCodec *codec, id object,
 + (NSData *)encode:(id)object
            options:(BSG_KSJSONEncodeOption)encodeOptions
              error:(NSError *__autoreleasing *)error {
-    NSMutableData *data = [NSMutableData data];
-    BSG_KSJSONEncodeContext JSONContext;
-    bsg_ksjsonbeginEncode(
-        &JSONContext, encodeOptions & BSG_KSJSONEncodeOptionPretty,
-        bsg_ksjsoncodecobjc_i_addJSONData, (__bridge void *)data);
-    BSG_KSJSONCodec *codec =
-        [self codecWithEncodeOptions:encodeOptions decodeOptions:0];
+    @try {
+        NSMutableData *data = [NSMutableData data];
+        BSG_KSJSONEncodeContext JSONContext;
+        bsg_ksjsonbeginEncode(
+            &JSONContext, encodeOptions & BSG_KSJSONEncodeOptionPretty,
+            bsg_ksjsoncodecobjc_i_addJSONData, (__bridge void *)data);
+        BSG_KSJSONCodec *codec =
+            [self codecWithEncodeOptions:encodeOptions decodeOptions:0];
 
-    int result =
-        bsg_ksjsoncodecobjc_i_encodeObject(codec, object, NULL, &JSONContext);
-    if (error != nil) {
-        *error = codec.error;
+        int result =
+            bsg_ksjsoncodecobjc_i_encodeObject(codec, object, NULL, &JSONContext);
+        if (error != nil) {
+            *error = codec.error;
+        }
+        return result == BSG_KSJSON_OK ? data : nil;
+    } @catch (NSException *exception) {
+        BSG_KSLOG_ERROR(@"Could not encode JSON object: %@", exception.description);
+        if (error != nil) {
+            *error = [NSError bsg_errorWithDomain:@"KSJSONCodecObjC" code:0 description:exception.description];
+        }
+        return nil;
     }
-    return result == BSG_KSJSON_OK ? data : nil;
 }
 
 + (id)decode:(NSData *)JSONData
@@ -511,6 +520,10 @@ int bsg_ksjsoncodecobjc_i_encodeObject(BSG_KSJSONCodec *codec, id object,
     @try {
         result = [NSJSONSerialization JSONObjectWithData:JSONData options:0 error:error];
     } @catch (NSException *exception) {
+        BSG_KSLOG_ERROR(@"Could not decode JSON object: %@", exception.description);
+        if (error != nil) {
+            *error = [NSError bsg_errorWithDomain:@"KSJSONCodecObjC" code:0 description:exception.description];
+        }
         result = @{};
     }
     return result;

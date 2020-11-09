@@ -25,21 +25,21 @@
 //
 #import <Foundation/Foundation.h>
 
-#import "BugsnagConfiguration.h"
-#import "BugsnagMetadata.h"
-#import "BugsnagPlugin.h"
-#import "BugsnagClient.h"
-#import "BugsnagEvent.h"
-#import "BugsnagApp.h"
-#import "BugsnagAppWithState.h"
-#import "BugsnagDevice.h"
-#import "BugsnagDeviceWithState.h"
-#import "BugsnagEndpointConfiguration.h"
-#import "BugsnagError.h"
-#import "BugsnagErrorTypes.h"
-#import "BugsnagSession.h"
-#import "BugsnagStackframe.h"
-#import "BugsnagThread.h"
+#import <Bugsnag/BugsnagApp.h>
+#import <Bugsnag/BugsnagAppWithState.h>
+#import <Bugsnag/BugsnagClient.h>
+#import <Bugsnag/BugsnagConfiguration.h>
+#import <Bugsnag/BugsnagDevice.h>
+#import <Bugsnag/BugsnagDeviceWithState.h>
+#import <Bugsnag/BugsnagEndpointConfiguration.h>
+#import <Bugsnag/BugsnagError.h>
+#import <Bugsnag/BugsnagErrorTypes.h>
+#import <Bugsnag/BugsnagEvent.h>
+#import <Bugsnag/BugsnagMetadata.h>
+#import <Bugsnag/BugsnagPlugin.h>
+#import <Bugsnag/BugsnagSession.h>
+#import <Bugsnag/BugsnagStackframe.h>
+#import <Bugsnag/BugsnagThread.h>
 
 @interface Bugsnag : NSObject <BugsnagClassLevelMetadataStore>
 
