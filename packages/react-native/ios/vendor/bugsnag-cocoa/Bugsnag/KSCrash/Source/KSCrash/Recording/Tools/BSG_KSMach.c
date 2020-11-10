@@ -35,6 +35,9 @@
 #include <mach-o/arch.h>
 #include <mach/mach_time.h>
 #include <sys/sysctl.h>
+#if defined(__IPHONE_13_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_13_0
+#import <os/proc.h>
+#endif
 
 // Avoiding static functions due to linker issues.
 
@@ -56,6 +59,25 @@ static pthread_t bsg_g_topThread;
 // ============================================================================
 
 uint64_t bsg_ksmachfreeMemory(void) {
+    size_t mem = 0;
+
+#if BSG_PLATFORM_IOS &&  defined(__IPHONE_13_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_13_0
+    if (__builtin_available(iOS 13.0, *)) {
+        mem = os_proc_available_memory();
+    }
+#endif
+
+#if BSG_PLATFORM_TVOS &&  defined(__TVOS_13_0) && __TV_OS_VERSION_MAX_ALLOWED >= __TVOS_13_0
+    if (__builtin_available(tvOS 13.0, *)) {
+        mem = os_proc_available_memory();
+    }
+#endif
+
+    // Note: Some broken versions of iOS always return 0.
+    if(mem != 0) {
+        return mem;
+    }
+
     vm_statistics_data_t vmStats;
     vm_size_t pageSize;
     if (bsg_ksmachi_VMStats(&vmStats, &pageSize)) {

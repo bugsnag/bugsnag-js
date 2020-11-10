@@ -64,15 +64,17 @@ void bsg_kscrashreport_writeMinimalReport(
 void bsg_kscrashreport_logCrash(const BSG_KSCrash_Context *const crashContext);
 
 /**
- * Captures a thread trace for use by the Objective-C layer to append to handled errors.
- * This suspends all threads while the information is being gathered.
+ * Captures a thread trace for use by the Objective-C layer to append to handled
+ * errors. (async-safe).
  *
  * @param crashContext Contextual information about the crash and environment.
  *                     The caller must fill this out before passing it in.
  *
- * @return the thread trace encoded as a JSON string
+ * @param path the absolute path of the file where the thread trace should be
+ *             written. The file will be created if it does not exist.
  */
-char *bsg_kscrw_i_captureThreadTrace(const BSG_KSCrash_Context *crashContext);
+void bsg_kscrw_i_captureThreadTrace(const BSG_KSCrash_Context *crashContext,
+                                    const char *path);
 
 #ifdef __cplusplus
 }

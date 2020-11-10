@@ -17,12 +17,7 @@
         _cppExceptions = true;
         _machExceptions = true;
         _unhandledRejections = true;
-
-#if DEBUG
-        _ooms = false;
-#else
         _ooms = true;
-#endif
     }
     return self;
 }

@@ -58,25 +58,3 @@ NSArray *BSGSanitizeArray(NSArray *input) {
     }
     return output;
 }
-
-NSDictionary *BSGDeserializeJson(char *json) {
-    if (json != NULL) {
-        NSString *str = [NSString stringWithCString:json encoding:NSUTF8StringEncoding];
-
-        if (str != nil) {
-            NSData *data = [str dataUsingEncoding:NSUTF8StringEncoding] ;
-            if (data != nil) {
-                NSError *error;
-                NSDictionary *decode = [BSGJSONSerialization JSONObjectWithData:data
-                                                                       options:0
-                                                                         error:&error];
-                if (error != nil) {
-                    bsg_log_err(@"Failed to deserialize JSON: %@", error);
-                } else {
-                    return decode;
-                }
-            }
-        }
-    }
-    return nil;
-}

@@ -37,6 +37,4 @@ BOOL BSGIsSanitizedType(id _Nullable obj);
  */
 id _Nullable BSGSanitizeObject(id _Nullable obj);
 
-NSDictionary *_Nullable BSGDeserializeJson(char *_Nullable json);
-
 #endif

@@ -8,9 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-#import "BugsnagUser.h"
-#import "BugsnagApp.h"
-#import "BugsnagDevice.h"
+#import <Bugsnag/BugsnagApp.h>
+#import <Bugsnag/BugsnagDevice.h>
+#import <Bugsnag/BugsnagUser.h>
 
 @interface BugsnagSession : NSObject
 

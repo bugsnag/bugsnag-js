@@ -16,8 +16,7 @@
 static void bsgkv_init() {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        NSString *cachesDir = [BSGCachesDirectory cachesDirectory];
-        const char *kvstoreDir = [[cachesDir stringByAppendingPathComponent:KV_DIR] cStringUsingEncoding:NSUTF8StringEncoding];
+        const char *kvstoreDir = [[BSGCachesDirectory getSubdirPath:KV_DIR] UTF8String];
         int err = 0;
         bsgkv_open(kvstoreDir, &err);
         if(err != 0) {
@@ -30,6 +29,22 @@ static void bsgkv_init() {
 
 + (void)initialize {
     bsgkv_init();
+}
+
+- (void)purge {
+    int err = 0;
+    bsgkv_purge(&err);
+    if(err != 0) {
+        bsg_log_err(@"Error purging kv store. errno = %d", err);
+    }
+}
+
+- (void)deleteKey:(NSString *)key {
+    int err = 0;
+    bsgkv_delete([key UTF8String], &err);
+    if(err != 0) {
+        bsg_log_err(@"Error deleting key %@ from kv store. errno = %d", key, err);
+    }
 }
 
 - (void)setBoolean:(bool)value forKey:(NSString*)key {
@@ -57,10 +72,7 @@ static void bsgkv_init() {
 - (void)setString:(NSString*)value forKey:(NSString*)key {
     int err = 0;
     if(value == nil || (id)value == [NSNull null]) {
-        bsgkv_delete([key UTF8String], &err);
-        if(err != 0) {
-            bsg_log_err(@"Error deleting key %@ from kv store. errno = %d", key, err);
-        }
+        [self deleteKey:key];
     } else {
         bsgkv_setString([key UTF8String], [value UTF8String], &err);
         if(err != 0) {

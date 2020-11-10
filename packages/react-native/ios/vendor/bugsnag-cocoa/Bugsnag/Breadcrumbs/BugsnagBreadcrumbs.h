@@ -8,47 +8,61 @@
 
 #import <Foundation/Foundation.h>
 
-#import "BugsnagBreadcrumb.h"
-#import "BugsnagConfiguration.h"
+@class BugsnagBreadcrumb;
+@class BugsnagConfiguration;
+typedef struct BSG_KSCrashReportWriter BSG_KSCrashReportWriter;
 
 typedef void (^BSGBreadcrumbConfiguration)(BugsnagBreadcrumb *_Nonnull);
 
+#pragma mark -
+
+NS_ASSUME_NONNULL_BEGIN
+
 @interface BugsnagBreadcrumbs : NSObject
 
-- (instancetype _Nonnull)initWithConfiguration:(BugsnagConfiguration *_Nonnull)config;
+- (instancetype)initWithConfiguration:(BugsnagConfiguration *)config;
+
+/**
+ * The current breadcrumbs, loaded from disk.
+ */
+@property (readonly) NSArray<BugsnagBreadcrumb *> *breadcrumbs;
 
 /**
  * Path where breadcrumbs are persisted on disk
  */
-@property (nonatomic, readonly, strong, nullable) NSString *cachePath;
+@property (readonly) NSString *cachePath;
 
 /**
  * Store a new breadcrumb with a provided message.
  */
-- (void)addBreadcrumb:(NSString *_Nonnull)breadcrumbMessage;
+- (void)addBreadcrumb:(NSString *)breadcrumbMessage;
 
 /**
  *  Store a new breadcrumb configured via block.
  *
  *  @param block configuration block
  */
-- (void)addBreadcrumbWithBlock:
-    (void (^_Nonnull)(BugsnagBreadcrumb *_Nonnull))block;
+- (void)addBreadcrumbWithBlock:(BSGBreadcrumbConfiguration)block;
 
 /**
- * Generates an array of dictionaries representing the current buffer of breadcrumbs.
+ * Returns the breadcrumb JSON dictionaries stored on disk.
  */
-- (NSArray *_Nonnull)arrayValue;
+- (nullable NSArray<NSDictionary *> *)cachedBreadcrumbs;
 
 /**
- * Returns an array containing the current buffer of breadcrumbs.
+ * Removes breadcrumbs from disk.
  */
-- (NSArray<BugsnagBreadcrumb *> *_Nonnull)getBreadcrumbs;
-
-/**
- * The types of breadcrumbs which will be automatically captured.
- * By default, this is all types.
- */
-@property BSGEnabledBreadcrumbType enabledBreadcrumbTypes;
+- (void)removeAllBreadcrumbs;
 
 @end
+
+NS_ASSUME_NONNULL_END
+
+#pragma mark -
+
+/**
+ * Inserts the current breadcrumbs into a crash report.
+ *
+ * This function is async-signal-safe.
+ */
+void BugsnagBreadcrumbsWriteCrashReport(const BSG_KSCrashReportWriter * _Nonnull writer);

@@ -169,9 +169,13 @@ BSG_KSCrash_Context *crashContext(void);
  *
  * @param discardDepth - the number of stack frames to discard
  *
- * @return a trace of all the threads as a JSON string.
+ * @param path the absolute path of the file where the thread trace should be
+ *             written. The file will be created if it does not exist.
  */
-char *bsg_kscrash_captureThreadTrace(int discardDepth, int frameCount, uintptr_t *callstack, const bool recordAllThreads);
+void bsg_kscrash_captureThreadTrace(int discardDepth, int frameCount,
+                                    uintptr_t *callstack,
+                                    const bool recordAllThreads,
+                                    const char *path);
 
 #ifdef __cplusplus
 }

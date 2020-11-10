@@ -24,26 +24,11 @@
 // THE SOFTWARE.
 //
 
-#import "BugsnagPlatformConditional.h"
-
 #import "BugsnagConfiguration.h"
-#import "BugsnagKeys.h"
-#import "BSG_RFC3339DateTool.h"
-#import "BugsnagUser.h"
-#import "BugsnagSessionTracker.h"
-#import "BugsnagLogger.h"
-#import "BSGConfigurationBuilder.h"
-#import "BugsnagBreadcrumbs.h"
-#import "BugsnagMetadataStore.h"
-#import "BSGSerialization.h"
-#import "BugsnagEndpointConfiguration.h"
-#import "BugsnagErrorTypes.h"
-#import "BugsnagStateEvent.h"
-#import "BugsnagCollections.h"
-#import "BugsnagMetadataInternal.h"
 
-static NSString *const BSGApiKeyMissingError = @"No Bugsnag API Key set";
-static NSString *const BSGInitError = @"Init is unavailable.  Use [[BugsnagConfiguration alloc] initWithApiKey:] instead.";
+#import "BSGConfigurationBuilder.h"
+#import "Private.h"
+
 static const int BSGApiKeyLength = 32;
 
 // User info persistence keys
@@ -156,29 +141,12 @@ NSString * const kBugsnagUserUserId = @"BugsnagUserUserId";
  * @returns A boolean representing whether the apiKey is valid.
  */
 + (BOOL)isValidApiKey:(NSString *)apiKey {
-    if ([self isApiKeyMissing:apiKey]) {
-        return false;
-    }
-
     NSCharacterSet *chars = [[NSCharacterSet
         characterSetWithCharactersInString:@"0123456789ABCDEF"] invertedSet];
 
     BOOL isHex = (NSNotFound == [[apiKey uppercaseString] rangeOfCharacterFromSet:chars].location);
 
     return isHex && [apiKey length] == BSGApiKeyLength;
-}
-
-/**
- * Check if the API Key is missing, i.e. it's nil, not a string or is empty.
- *
- * This is distinct from 'isValidApiKey' to allow throwing an exception in this case, but not
- * if the API Key is in the wrong format.
- *
- * @param apiKey The API key.
- * @returns A boolean representing whether the API key is nil, of the wrong type or is an empty string
- */
-+ (BOOL)isApiKeyMissing:(NSString *)apiKey {
-    return apiKey == nil || ![apiKey isKindOfClass:[NSString class]] || [apiKey length] == 0;
 }
 
 // -----------------------------------------------------------------------------
@@ -189,21 +157,22 @@ NSString * const kBugsnagUserUserId = @"BugsnagUserUserId";
  * Should not be called, but if it _is_ then fail meaningfully rather than silently
  */
 - (instancetype)init {
-    @throw BSGInitError;
+    @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:
+            @"-[BugsnagConfiguration init] is unavailable.  Use -[BugsnagConfiguration initWithApiKey:] instead." userInfo:nil];
 }
 
 /**
  * The designated initializer.
  */
-- (instancetype _Nonnull)initWithApiKey:(NSString *_Nonnull)apiKey
-{
-    [self setApiKey:apiKey];
-
-    self = [super init];
-
+- (instancetype)initWithApiKey:(NSString *)apiKey {
+    if (!(self = [super init])) {
+        return nil;
+    }
+    if (apiKey) {
+        [self setApiKey:apiKey];
+    }
     _metadata = [[BugsnagMetadata alloc] init];
     _config = [[BugsnagMetadata alloc] init];
-    _bundleVersion = NSBundle.mainBundle.infoDictionary[@"CFBundleVersion"];
     _endpoints = [BugsnagEndpointConfiguration new];
     _sessionURL = [NSURL URLWithString:@"https://sessions.bugsnag.com"];
     _autoDetectErrors = YES;
@@ -234,19 +203,30 @@ NSString * const kBugsnagUserUserId = @"BugsnagUserUserId";
             sessionWithConfiguration:[NSURLSessionConfiguration
                                          defaultSessionConfiguration]];
     }
+    
+    NSString *releaseStage = nil;
     #if DEBUG
-        _releaseStage = BSGKeyDevelopment;
+        releaseStage = BSGKeyDevelopment;
     #else
-        _releaseStage = BSGKeyProduction;
+        releaseStage = BSGKeyProduction;
     #endif
 
+    NSString *appType = nil;
     #if BSG_PLATFORM_TVOS
-        _appType = @"tvOS";
+        appType = @"tvOS";
     #elif BSG_PLATFORM_IOS
-        _appType = @"iOS";
+        appType = @"iOS";
     #elif BSG_PLATFORM_OSX
-        _appType = @"macOS";
+        appType = @"macOS";
+    #else
+        appType = @"unknown";
     #endif
+
+    [self setAppType:appType];
+    [self setReleaseStage:releaseStage];
+    [self setAppVersion:NSBundle.mainBundle.infoDictionary[@"CFBundleShortVersionString"]];
+    [self setBundleVersion:NSBundle.mainBundle.infoDictionary[@"CFBundleVersion"]];
+
     return self;
 }
 
@@ -622,25 +602,18 @@ NSString * const kBugsnagUserUserId = @"BugsnagUserUserId";
 
 // MARK: -
 
-@synthesize apiKey = _apiKey;
-
-- (NSString *)apiKey {
-    return _apiKey;
-}
-
-- (void)setApiKey:(NSString *)apiKey {
-    if ([BugsnagConfiguration isApiKeyMissing:apiKey]) {
-        @throw BSGApiKeyMissingError;
+- (void)validate {
+    if (self.apiKey.length == 0) {
+        @throw [NSException exceptionWithName:NSInvalidArgumentException reason:
+                @"No Bugsnag API key has been provided" userInfo:nil];
     }
 
-    if (![BugsnagConfiguration isValidApiKey:apiKey]) {
-        bsg_log_warn(@"Invalid configuration. apiKey should be a 32-character hexademical string, got \"%@\"", apiKey);
+    if (![BugsnagConfiguration isValidApiKey:self.apiKey]) {
+        bsg_log_warn(@"Invalid Bugsnag apiKey: expected a 32-character hexademical string, got \"%@\"", self.apiKey);
     }
-
-    [self willChangeValueForKey:NSStringFromSelector(@selector(apiKey))];
-    _apiKey = apiKey;
-    [self didChangeValueForKey:NSStringFromSelector(@selector(apiKey))];
 }
+
+// MARK: -
 
 - (void)addPlugin:(id<BugsnagPlugin> _Nonnull)plugin {
     [_plugins addObject:plugin];

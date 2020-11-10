@@ -52,7 +52,7 @@
 
 #define BSG_kKeyFormatVersion "version"
 #define BSG_kKeyCrashedLastLaunch "crashedLastLaunch"
-#define BSG_kKeyActiveDurationSinceLastCrash "activeDurationSinceLastCrash"
+#define BSG_kKeyActiveDurationSinceLastCrash "foregroundDurationSinceLastCrash"
 #define BSG_kKeyBackgroundDurationSinceLastCrash                               \
     "backgroundDurationSinceLastCrash"
 #define BSG_kKeyLaunchesSinceLastCrash "launchesSinceLastCrash"
@@ -93,7 +93,7 @@ int bsg_kscrashstate_i_onFloatingPointElement(const char *const name,
     BSG_KSCrash_State *state = userData;
 
     if (strcmp(name, BSG_kKeyActiveDurationSinceLastCrash) == 0) {
-        state->activeDurationSinceLastCrash = value;
+        state->foregroundDurationSinceLastCrash = value;
     }
     if (strcmp(name, BSG_kKeyBackgroundDurationSinceLastCrash) == 0) {
         state->backgroundDurationSinceLastCrash = value;
@@ -189,8 +189,8 @@ bool bsg_kscrashstate_i_loadState(BSG_KSCrash_State *const context,
         return false;
     }
 
-    context->activeDurationSinceLastCrash = [objectContext[@"activeDurationSinceLastCrash"] doubleValue];
-    context->activeDurationSinceLaunch = [objectContext[@"activeDurationSinceLaunch"] doubleValue];
+    context->foregroundDurationSinceLastCrash = [objectContext[@"foregroundDurationSinceLastCrash"] doubleValue];
+    context->foregroundDurationSinceLaunch = [objectContext[@"foregroundDurationSinceLaunch"] doubleValue];
     context->appLaunchTime = [objectContext[@"appLaunchTime"] unsignedLongLongValue];
     context->appStateTransitionTime = [objectContext[@"appStateTransitionTime"] unsignedLongLongValue];
     context->launchesSinceLastCrash = [objectContext[@"launchesSinceLastCrash"] intValue];
@@ -198,7 +198,6 @@ bool bsg_kscrashstate_i_loadState(BSG_KSCrash_State *const context,
     context->sessionsSinceLaunch = [objectContext[@"sessionsSinceLaunch"] intValue];
     context->crashedLastLaunch = [objectContext[@"crashedLastLaunch"] boolValue];
     context->crashedThisLaunch = [objectContext[@"crashedThisLaunch"] boolValue];
-    context->applicationIsActive = [objectContext[@"applicationIsActive"] boolValue];
     context->applicationIsInForeground = [objectContext[@"applicationIsInForeground"] boolValue];
     context->backgroundDurationSinceLaunch = [objectContext[@"backgroundDurationSinceLaunch"] doubleValue];
     context->backgroundDurationSinceLastCrash = [objectContext[@"backgroundDurationSinceLastCrash"] doubleValue];
@@ -244,7 +243,7 @@ bool bsg_kscrashstate_i_saveState(const BSG_KSCrash_State *const state,
     }
     if ((result = bsg_ksjsonaddFloatingPointElement(
              &JSONContext, BSG_kKeyActiveDurationSinceLastCrash,
-             state->activeDurationSinceLastCrash)) != BSG_KSJSON_OK) {
+             state->foregroundDurationSinceLastCrash)) != BSG_KSJSON_OK) {
         goto done;
     }
     if ((result = bsg_ksjsonaddFloatingPointElement(
@@ -286,10 +285,10 @@ bool bsg_kscrashstate_init(const char *const stateFilePath,
     bsg_kscrashstate_i_loadState(state, stateFilePath);
 
     state->sessionsSinceLaunch = 1;
-    state->activeDurationSinceLaunch = 0;
+    state->foregroundDurationSinceLaunch = 0;
     state->backgroundDurationSinceLaunch = 0;
     if (state->crashedLastLaunch) {
-        state->activeDurationSinceLastCrash = 0;
+        state->foregroundDurationSinceLastCrash = 0;
         state->backgroundDurationSinceLastCrash = 0;
         state->launchesSinceLastCrash = 0;
         state->sessionsSinceLastCrash = 0;
@@ -311,36 +310,28 @@ bool bsg_kscrashstate_init(const char *const stateFilePath,
     return bsg_kscrashstate_i_saveState(state, stateFilePath);
 }
 
-void bsg_kscrashstate_notifyAppActive(const bool isActive) {
-    BSG_KSCrash_State *const state = bsg_g_state;
-
-    state->applicationIsActive = isActive;
-    if (isActive) {
-        state->appStateTransitionTime = mach_absolute_time();
-    } else {
-        double duration = bsg_ksmachtimeDifferenceInSeconds(
-            mach_absolute_time(), state->appStateTransitionTime);
-        state->activeDurationSinceLaunch += duration;
-        state->activeDurationSinceLastCrash += duration;
-    }
-}
-
 void bsg_kscrashstate_notifyAppInForeground(const bool isInForeground) {
     BSG_KSCrash_State *const state = bsg_g_state;
     const char *const stateFilePath = bsg_g_stateFilePath;
 
+    if (state->applicationIsInForeground == isInForeground) {
+        return;
+    }
     state->applicationIsInForeground = isInForeground;
+    uint64_t timeNow = mach_absolute_time();
+    double duration = bsg_ksmachtimeDifferenceInSeconds(
+        timeNow, state->appStateTransitionTime);
     if (isInForeground) {
-        double duration = bsg_ksmachtimeDifferenceInSeconds(
-            mach_absolute_time(), state->appStateTransitionTime);
         state->backgroundDurationSinceLaunch += duration;
         state->backgroundDurationSinceLastCrash += duration;
         state->sessionsSinceLastCrash++;
         state->sessionsSinceLaunch++;
     } else {
-        state->appStateTransitionTime = mach_absolute_time();
+        state->foregroundDurationSinceLaunch += duration;
+        state->foregroundDurationSinceLastCrash += duration;
         bsg_kscrashstate_i_saveState(state, stateFilePath);
     }
+    state->appStateTransitionTime = timeNow;
 }
 
 void bsg_kscrashstate_notifyAppTerminate(void) {
@@ -367,10 +358,10 @@ void bsg_kscrashstate_notifyAppCrash(BSG_KSCrashType type) {
 void bsg_kscrashstate_updateDurationStats(BSG_KSCrash_State *const state) {
     const double duration = bsg_ksmachtimeDifferenceInSeconds(
         mach_absolute_time(), state->appStateTransitionTime);
-    if (state->applicationIsActive) {
-        state->activeDurationSinceLaunch += duration;
-        state->activeDurationSinceLastCrash += duration;
-    } else if (!state->applicationIsInForeground) {
+    if (state->applicationIsInForeground) {
+        state->foregroundDurationSinceLaunch += duration;
+        state->foregroundDurationSinceLastCrash += duration;
+    } else {
         state->backgroundDurationSinceLaunch += duration;
         state->backgroundDurationSinceLastCrash += duration;
     }

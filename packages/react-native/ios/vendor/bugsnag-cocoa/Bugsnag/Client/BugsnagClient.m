@@ -27,6 +27,8 @@
 #import "BugsnagPlatformConditional.h"
 
 #import "BugsnagClient.h"
+
+#import "BugsnagBreadcrumbs.h"
 #import "BugsnagClientInternal.h"
 #import "BSGConnectivity.h"
 #import "Bugsnag.h"
@@ -38,7 +40,7 @@
 #import "BugsnagSessionTracker.h"
 #import "BugsnagSessionTrackingApiClient.h"
 #import "BugsnagPluginClient.h"
-#import "BSGOutOfMemoryWatchdog.h"
+#import "BugsnagSystemState.h"
 #import "BSG_RFC3339DateTool.h"
 #import "BSG_KSCrashC.h"
 #import "BSG_KSCrashType.h"
@@ -55,6 +57,12 @@
 #import "BSG_KSCrashReport.h"
 #import "BSG_KSCrash.h"
 #import "BSGJSONSerialization.h"
+
+#if BSG_PLATFORM_IOS || BSG_PLATFORM_TVOS
+#define BSGOOMAvailable 1
+#else
+#define BSGOOMAvailable 0
+#endif
 
 #if BSG_PLATFORM_IOS
 #import <UIKit/UIKit.h>
@@ -153,6 +161,7 @@ void BSSerializeDataCrashHandler(const BSG_KSCrashReportWriter *writer, int type
         if (bsg_g_bugsnag_data.stateJSON) {
             writer->addJSONElement(writer, "state", bsg_g_bugsnag_data.stateJSON);
         }
+        BugsnagBreadcrumbsWriteCrashReport(writer);
         if (bsg_g_bugsnag_data.metadataJSON) {
             // The API expects "metaData", capitalised as such.  Elsewhere is is one word.
             writer->addJSONElement(writer, "metaData", bsg_g_bugsnag_data.metadataJSON);
@@ -295,7 +304,7 @@ void BSGWriteSessionCrashData(BugsnagSession *session) {
 @interface BugsnagClient ()
 @property(nonatomic, strong) BugsnagCrashSentry *crashSentry;
 @property(nonatomic, strong) BugsnagErrorReportApiClient *errorReportApiClient;
-@property (nonatomic, strong) BSGOutOfMemoryWatchdog *oomWatchdog;
+@property (nonatomic, strong) BugsnagSystemState *systemState;
 @property (nonatomic, strong) BugsnagPluginClient *pluginClient;
 @property (nonatomic) BOOL appDidCrashLastLaunch;
 @property (nonatomic, strong) BugsnagMetadata *metadata;
@@ -342,10 +351,6 @@ void BSGWriteSessionCrashData(BugsnagSession *session) {
                         stacktrace:(NSArray<BugsnagStackframe *> *)stacktrace;
 @end
 
-@interface BSGOutOfMemoryWatchdog ()
-@property(nonatomic) NSString *codeBundleId;
-@end
-
 @interface BugsnagSessionTracker ()
 @property(nonatomic) NSString *codeBundleId;
 @end
@@ -354,10 +359,6 @@ void BSGWriteSessionCrashData(BugsnagSession *session) {
 - (instancetype)initWithDictionary:(NSDictionary *)dict;
 - (instancetype)initWithUserId:(NSString *)userId name:(NSString *)name emailAddress:(NSString *)emailAddress;
 - (NSDictionary *)toJson;
-@end
-
-@interface BugsnagBreadcrumbs ()
-@property(nonatomic, readwrite, strong) NSMutableArray *breadcrumbs;
 @end
 
 // =============================================================================
@@ -374,23 +375,19 @@ NSString *_lastOrientation = nil;
 @synthesize configuration;
 
 - (id)initWithConfiguration:(BugsnagConfiguration *)initConfiguration {
-    static NSString *const BSGWatchdogSentinelFileName = @"bugsnag_oom_watchdog.json";
     static NSString *const BSGCrashSentinelFileName = @"bugsnag_handled_crash.txt";
     if ((self = [super init])) {
         // Take a shallow copy of the configuration
         self.configuration = [initConfiguration copy];
         self.state = [[BugsnagMetadata alloc] init];
         self.notifier = [BugsnagNotifier new];
+        self.systemState = [[BugsnagSystemState alloc] initWithConfiguration:self.configuration];
 
         NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(
                                 NSCachesDirectory, NSUserDomainMask, YES) firstObject];
         if (cacheDir) {
-            NSString *sentinelPath = [cacheDir stringByAppendingPathComponent:BSGWatchdogSentinelFileName];
             NSString *crashPath = [cacheDir stringByAppendingPathComponent:BSGCrashSentinelFileName];
-            watchdogSentinelPath = strdup([sentinelPath UTF8String]);
             crashSentinelPath = strdup([crashPath UTF8String]);
-            self.oomWatchdog = [[BSGOutOfMemoryWatchdog alloc] initWithSentinelPath:sentinelPath
-                                                                      configuration:configuration];
         }
 
         self.stateEventBlocks = [NSMutableArray new];
@@ -548,10 +545,13 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
 }
 
 - (void)start {
+    [configuration validate];
+    
     [self.crashSentry install:self.configuration
                     apiClient:self.errorReportApiClient
                       onCrash:&BSSerializeDataCrashHandler];
     [self computeDidCrashLastLaunch];
+    [self.breadcrumbs removeAllBreadcrumbs];
     [self setupConnectivityListener];
     [self updateAutomaticBreadcrumbDetectionSettings];
 
@@ -603,21 +603,6 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
 #endif
 
     _started = YES;
-    // autoDetectErrors disables all unhandled event reporting
-    BOOL configuredToReportOOMs = self.configuration.autoDetectErrors && self.configuration.enabledErrorTypes.ooms;
-
-    // Disable if a debugger is enabled, since the development cycle of starting
-    // and restarting an app is also an uncatchable kill
-    BOOL noDebuggerEnabled = !bsg_ksmachisBeingTraced();
-
-    // Disable if in an app extension, since app extensions have a different
-    // app lifecycle and the heuristic used for finding app terminations rooted
-    // in fixable code does not apply
-    BOOL notInAppExtension = ![BSG_KSSystemInfo isRunningInAppExtension];
-
-    if (configuredToReportOOMs && noDebuggerEnabled && notInAppExtension) {
-        [self.oomWatchdog start];
-    }
 
     [self.sessionTracker startNewSessionIfAutoCaptureEnabled];
 
@@ -636,6 +621,72 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
     [self.metadata addMetadata:BSGParseDeviceMetadata(@{@"system": systemInfo}) toSection:BSGKeyDevice];
 }
 
+- (BOOL)shouldReportOOM {
+#if BSGOOMAvailable
+    // Disable if in an app extension, since app extensions have a different
+    // app lifecycle and the heuristic used for finding app terminations rooted
+    // in fixable code does not apply
+    if([BSG_KSSystemInfo isRunningInAppExtension]) {
+        return NO;
+    }
+
+    // autoDetectErrors disables all unhandled event reporting
+    if(!self.configuration.autoDetectErrors) {
+        return NO;
+    }
+
+    // Are OOMs enabled?
+    if(!self.configuration.enabledErrorTypes.ooms) {
+        return NO;
+    }
+
+    return [self didLikelyOOM];
+#else
+    return NO;
+#endif
+}
+
+/**
+ * These heuristics aren't 100% guaranteed to be correct, but they're correct often enough to be useful.
+ */
+- (BOOL)didLikelyOOM {
+#if BSGOOMAvailable
+    NSDictionary *currAppState = self.systemState.currentLaunchState[SYSTEMSTATE_KEY_APP];
+    NSDictionary *prevAppState = self.systemState.lastLaunchState[SYSTEMSTATE_KEY_APP];
+
+    // Disable if a debugger was active, since the development cycle of
+    // starting and restarting an app is also an uncatchable kill
+    if([prevAppState[SYSTEMSTATE_APP_DEBUGGER_IS_ACTIVE] boolValue]) {
+        return NO;
+    }
+
+    // If the app code changed between launches, assume no OOM.
+    if (![prevAppState[SYSTEMSTATE_APP_VERSION] isEqualToString:currAppState[SYSTEMSTATE_APP_VERSION]]) {
+        return NO;
+    }
+    if (![prevAppState[SYSTEMSTATE_APP_BUNDLE_VERSION] isEqualToString:currAppState[SYSTEMSTATE_APP_BUNDLE_VERSION]]) {
+        return NO;
+    }
+
+    // If the app was inactive or backgrounded, we can't determine if it was OOM or not.
+    if(![prevAppState[SYSTEMSTATE_APP_IS_ACTIVE] boolValue]) {
+        return NO;
+    }
+    if(![prevAppState[SYSTEMSTATE_APP_IS_IN_FOREGROUND] boolValue]) {
+        return NO;
+    }
+
+    // If the app terminated normally, it wasn't an OOM.
+    if([prevAppState[SYSTEMSTATE_APP_WAS_TERMINATED] boolValue]) {
+        return NO;
+    }
+
+    return YES;
+#else
+    return NO;
+#endif
+}
+
 - (void)addTerminationObserver:(NSString *)name {
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(unsubscribeFromNotifications:)
@@ -645,7 +696,7 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
 
 - (void)computeDidCrashLastLaunch {
     const BSG_KSCrash_State *crashState = bsg_kscrashstate_currentState();
-#if BSG_PLATFORM_TVOS || BSG_PLATFORM_IOS
+    BOOL didOOMLastLaunch = [self shouldReportOOM];
     NSFileManager *manager = [NSFileManager defaultManager];
     NSString *didCrashSentinelPath = [NSString stringWithUTF8String:crashSentinelPath];
     BOOL appCrashSentinelExists = [manager fileExistsAtPath:didCrashSentinelPath];
@@ -658,7 +709,7 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
             unlink(crashSentinelPath);
         }
     }
-    self.appDidCrashLastLaunch = handledCrashLastLaunch || [self.oomWatchdog didOOMLastLaunch];
+    self.appDidCrashLastLaunch = handledCrashLastLaunch || didOOMLastLaunch;
 
     // Ignore potential false positive OOM if previous session crashed and was
     // reported. There are two checks in place:
@@ -668,18 +719,19 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
     //     2. crash sentinel file exists: This file is written in the event of a crash
     //        and insures against the crash callback crashing
 
-    if (!handledCrashLastLaunch && [self.oomWatchdog didOOMLastLaunch]) {
+    if (!handledCrashLastLaunch && didOOMLastLaunch) {
+        void *onCrash = bsg_g_bugsnag_data.onCrash;
+        // onCrash should not be called for OOMs
+        bsg_g_bugsnag_data.onCrash = NULL;
         [self notifyOutOfMemoryEvent];
+        bsg_g_bugsnag_data.onCrash = onCrash;
     }
-#else
-    self.appDidCrashLastLaunch = crashState->crashedLastLaunch;
-#endif
 }
 
 - (void)setCodeBundleId:(NSString *)codeBundleId {
     _codeBundleId = codeBundleId;
     [self.state addMetadata:codeBundleId withKey:BSGKeyCodeBundleId toSection:BSGKeyApp];
-    self.oomWatchdog.codeBundleId = codeBundleId;
+    [self.systemState setCodeBundleID:codeBundleId];
     self.sessionTracker.codeBundleId = codeBundleId;
 }
 
@@ -929,7 +981,7 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
 - (void)notifyOutOfMemoryEvent {
     static NSString *const BSGOutOfMemoryErrorClass = @"Out Of Memory";
     static NSString *const BSGOutOfMemoryMessageFormat = @"The app was likely terminated by the operating system while in the %@";
-    NSMutableDictionary *lastLaunchInfo = [[self.oomWatchdog lastBootCachedFileInfo] mutableCopy];
+    NSMutableDictionary *lastLaunchInfo = [self.systemState.lastLaunchState mutableCopy];
     NSArray *crumbs = [self.breadcrumbs cachedBreadcrumbs];
     if (crumbs.count > 0) {
         lastLaunchInfo[@"breadcrumbs"] = crumbs;
@@ -1101,16 +1153,8 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
 
 // MARK: - Breadcrumbs
 
-- (void)addBreadcrumbWithBlock:
-    (void (^_Nonnull)(BugsnagBreadcrumb *_Nonnull))block {
+- (void)addBreadcrumbWithBlock:(void (^)(BugsnagBreadcrumb *))block {
     [self.breadcrumbs addBreadcrumbWithBlock:block];
-    [self serializeBreadcrumbs];
-}
-
-- (void)serializeBreadcrumbs {
-    [self.state addMetadata:[self.breadcrumbs arrayValue]
-                    withKey:BSGKeyBreadcrumbs
-                  toSection:BSTabCrash];
 }
 
 - (void)metadataChanged:(BugsnagMetadata *)metadata {
@@ -1563,10 +1607,9 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
 }
 
 - (NSArray *)collectBreadcrumbs {
-    NSMutableArray *crumbs = self.breadcrumbs.breadcrumbs;
     NSMutableArray *data = [NSMutableArray new];
 
-    for (BugsnagBreadcrumb *crumb in crumbs) {
+    for (BugsnagBreadcrumb *crumb in self.breadcrumbs.breadcrumbs) {
         NSMutableDictionary *crumbData = [[crumb objectValue] mutableCopy];
         // JSON is serialized as 'name', we want as 'message' when passing to RN
         crumbData[@"message"] = crumbData[@"name"];

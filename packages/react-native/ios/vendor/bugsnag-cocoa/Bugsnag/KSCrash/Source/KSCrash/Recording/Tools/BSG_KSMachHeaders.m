@@ -11,82 +11,12 @@
 #import <Foundation/Foundation.h>
 #import "BSG_KSDynamicLinker.h"
 #import "BSG_KSMachHeaders.h"
-#import "BugsnagPlatformConditional.h"
-
-// MARK: - Locking
-
-static const NSOperatingSystemVersion minSdkForUnfairLock =
-    #if BSG_PLATFORM_IOS
-    {10,0,0};
-    #elif BSG_PLATFORM_OSX
-    {10,12,0};
-    #elif BSG_PLATFORM_TVOS
-    {10,0,0};
-    #elif BSG_PLATFORM_WATCHOS
-    {3,0,0}
-    #endif
-
-// Pragma's hide unavoidable (and expected) deprecation/unavailable warnings
-_Pragma("clang diagnostic push")
-_Pragma("clang diagnostic ignored \"-Wunguarded-availability\"")
-static os_unfair_lock bsg_mach_binary_images_access_lock_unfair = OS_UNFAIR_LOCK_INIT;
-_Pragma("clang diagnostic pop")
-
-_Pragma("clang diagnostic push")
-_Pragma("clang diagnostic ignored \"-Wdeprecated-declarations\"")
-static OSSpinLock bsg_mach_binary_images_access_lock_spin = OS_SPINLOCK_INIT;
-_Pragma("clang diagnostic pop")
-
-// Lock helpers.  These use bulky Pragmas to hide warnings so are in their own functions for clarity.
-
-void bsg_spin_lock() {
-    _Pragma("clang diagnostic push")
-    _Pragma("clang diagnostic ignored \"-Wdeprecated-declarations\"")
-    OSSpinLockLock(&bsg_mach_binary_images_access_lock_spin);
-    _Pragma("clang diagnostic pop")
-}
-
-void bsg_spin_unlock() {
-    _Pragma("clang diagnostic push")
-    _Pragma("clang diagnostic ignored \"-Wdeprecated-declarations\"")
-    OSSpinLockUnlock(&bsg_mach_binary_images_access_lock_spin);
-    _Pragma("clang diagnostic pop")
-}
-
-void bsg_unfair_lock() {
-    _Pragma("clang diagnostic push")
-    _Pragma("clang diagnostic ignored \"-Wunguarded-availability\"")
-    os_unfair_lock_lock(&bsg_mach_binary_images_access_lock_unfair);
-    _Pragma("clang diagnostic pop")
-}
-
-void bsg_unfair_unlock() {
-    _Pragma("clang diagnostic push")
-    _Pragma("clang diagnostic ignored \"-Wunguarded-availability\"")
-    os_unfair_lock_unlock(&bsg_mach_binary_images_access_lock_unfair);
-    _Pragma("clang diagnostic pop")
-}
-
-void bsg_mach_headers_cache_lock() {
-    if ([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:minSdkForUnfairLock]) {
-        bsg_unfair_lock();
-    } else {
-        bsg_spin_lock();
-    }
-}
-
-void bsg_mach_headers_cache_unlock() {
-    if ([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:minSdkForUnfairLock]) {
-        bsg_unfair_unlock();
-    } else {
-        bsg_spin_unlock();
-    }
-}
 
 // MARK: - Mach Header Linked List
 
 static BSG_Mach_Header_Info *bsg_g_mach_headers_images_head;
 static BSG_Mach_Header_Info *bsg_g_mach_headers_images_tail;
+static dispatch_queue_t bsg_g_serial_queue;
 
 BSG_Mach_Header_Info *bsg_mach_headers_get_images() {
     return bsg_g_mach_headers_images_head;
@@ -103,6 +33,7 @@ void bsg_mach_headers_initialize() {
     
     bsg_g_mach_headers_images_head = NULL;
     bsg_g_mach_headers_images_tail = NULL;
+    bsg_g_serial_queue = dispatch_queue_create("com.bugsnag.mach-headers", DISPATCH_QUEUE_SERIAL);
 }
 
 void bsg_mach_headers_register_for_changes() {
@@ -190,24 +121,19 @@ bool bsg_mach_headers_populate_info(const struct mach_header *header, intptr_t s
 }
 
 void bsg_mach_headers_add_image(const struct mach_header *header, intptr_t slide) {
-    
     BSG_Mach_Header_Info *newImage = malloc(sizeof(BSG_Mach_Header_Info));
     if (newImage != NULL) {
         if (bsg_mach_headers_populate_info(header, slide, newImage)) {
-            
-            bsg_mach_headers_cache_lock();
-            
-            if (bsg_g_mach_headers_images_head == NULL) {
-                bsg_g_mach_headers_images_head = newImage;
-            } else {
-                bsg_g_mach_headers_images_tail->next = newImage;
-            }
-            bsg_g_mach_headers_images_tail = newImage;
-            
-            bsg_mach_headers_cache_unlock();
+            dispatch_sync(bsg_g_serial_queue, ^{
+                if (bsg_g_mach_headers_images_head == NULL) {
+                    bsg_g_mach_headers_images_head = newImage;
+                } else {
+                    bsg_g_mach_headers_images_tail->next = newImage;
+                }
+                bsg_g_mach_headers_images_tail = newImage;
+            });
         }
     }
-    
 }
 
 /**
