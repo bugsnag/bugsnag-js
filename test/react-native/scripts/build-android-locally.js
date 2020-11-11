@@ -14,9 +14,6 @@ requiredVars.forEach((envvar) => {
 })
 if (!allPresent) return
 
-common.run('rm -rf docker-temp')
-common.run('mkdir -p docker-temp/fixtures')
-helper.gather('test/react-native/features/fixtures', 'docker-temp/fixtures')
-common.run('docker-compose build react-native-android-builder', true)
-common.run('docker-compose run react-native-android-builder', true)
-common.run('docker-compose build --pull react-native-maze-runner', true)
+common.run('rm -rf test/react-native/features/fixtures/local-build')
+helper.buildAndroid('test/react-native/features/fixtures', 'test/react-native/features/fixtures/local-build')
+// common.run('docker-compose build --pull react-native-maze-runner', true)

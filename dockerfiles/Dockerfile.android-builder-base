@@ -3,8 +3,7 @@ FROM openjdk:8-jdk-stretch
 
 # OS setup
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
-RUN apt-get update
-RUN apt-get install -y gradle jq git-core build-essential openssl libssl-dev
+RUN apt-get update && apt-get install -y gradle jq git-core build-essential openssl libssl-dev
 
 # Android tools
 WORKDIR /sdk
@@ -21,6 +20,7 @@ ENV ANDROID_HOME="/sdk/"
 ENV GRADLE_OPTS="-Dorg.gradle.daemon=false"
 
 # Pre-download Gradle
+ENV GRADLE_USER_HOME="/app/gradle"
 WORKDIR /app/gradle
 
 RUN wget -q https://services.gradle.org/distributions/gradle-5.1.1-all.zip \
