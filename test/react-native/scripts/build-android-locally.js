@@ -15,9 +15,9 @@ requiredVars.forEach((envvar) => {
 })
 if (!allPresent) return
 
-// common.run('rm -rf test/react-native/features/fixtures/local-build')
+common.run('rm -rf test/react-native/features/fixtures/local-build')
 common.run('mkdir -p test/react-native/features/fixtures/local-build')
 common.run('mkdir -p build')
 helper.buildAndroid(resolve('test/react-native/features/fixtures'),
-                    resolve('test/react-native/features/fixtures/local-build'))
+  resolve('test/react-native/features/fixtures/local-build'))
 common.run('docker-compose build --pull react-native-maze-runner', true)
