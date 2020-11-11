@@ -2,6 +2,7 @@
 
 const common = require('../../../scripts/common.js')
 const helper = require('../../../scripts/react-native-helper.js')
+const { resolve } = require('path')
 
 // Check for required environment variables
 const requiredVars = ['REACT_NATIVE_VERSION', 'REGISTRY_URL']
@@ -14,6 +15,9 @@ requiredVars.forEach((envvar) => {
 })
 if (!allPresent) return
 
-common.run('rm -rf test/react-native/features/fixtures/local-build')
-helper.buildAndroid('test/react-native/features/fixtures', 'test/react-native/features/fixtures/local-build')
+// common.run('rm -rf test/react-native/features/fixtures/local-build')
+common.run('mkdir -p test/react-native/features/fixtures/local-build')
+common.run('mkdir -p build')
+helper.buildAndroid(resolve('test/react-native/features/fixtures'),
+                    resolve('test/react-native/features/fixtures/local-build'))
 // common.run('docker-compose build --pull react-native-maze-runner', true)

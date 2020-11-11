@@ -29,7 +29,6 @@ module.exports = {
     common.run(`rsync -a ${sourceFixtures}/reactnative ${destFixtures}/${rnVersion}/android/app/src/main/java/com`, true)
 
     // JavaScript layer
-    console.log(`Changing directory to: ${destFixtures}/${rnVersion}`)
     common.changeDir(`${destFixtures}/${rnVersion}`)
     common.run(`npm install --registry ${registryUrl}`, true)
 
@@ -48,7 +47,8 @@ module.exports = {
     common.run('./gradlew assembleRelease', true)
 
     // Finally, copy the APK back to the host
-    fs.copyFileSync(`${destFixtures}/${rnVersion}/android/app/build/outputs/apk/release/app-release.apk`, `/app/build/${artefactName}.apk`)
+    fs.copyFileSync(`${destFixtures}/${rnVersion}/android/app/build/outputs/apk/release/app-release.apk`,
+                    `${process.env.PWD}/build/${artefactName}.apk`)
   },
   buildIOS: function buildIOS () {
     const version = process.env.NOTIFIER_VERSION || common.determineVersion()
