@@ -20,4 +20,4 @@ common.run('mkdir -p test/react-native/features/fixtures/local-build')
 common.run('mkdir -p build')
 helper.buildAndroid(resolve('test/react-native/features/fixtures'),
                     resolve('test/react-native/features/fixtures/local-build'))
-// common.run('docker-compose build --pull react-native-maze-runner', true)
+common.run('docker-compose build --pull react-native-maze-runner', true)

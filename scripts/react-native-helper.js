@@ -23,6 +23,7 @@ module.exports = {
     console.log(`Installing notifier version: ${version}`)
 
     // Copy in files required
+    common.run(`mkdir -p ${destFixtures}/${rnVersion}`)
     common.run(`rsync -a --no-recursive ${sourceFixtures}/${rnVersion}/* ${destFixtures}/${rnVersion}`, true)
     common.run(`rsync -a ${sourceFixtures}/${rnVersion}/android ${destFixtures}/${rnVersion}`, true)
     common.run(`rsync -a ${sourceFixtures}/app/${jsSourceDir}/ ${destFixtures}/${rnVersion}`, true)
