@@ -16,6 +16,9 @@
   ],
   "author": "Bugsnag",
   "license": "MIT",
+  "dependencies": {
+    "@bugsnag/bytesize": "^7.5.2"
+  },
   "devDependencies": {
     "@bugsnag/core": "^7.3.5"
   },

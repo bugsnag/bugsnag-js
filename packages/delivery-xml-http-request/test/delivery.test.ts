@@ -50,6 +50,7 @@ describe('delivery:XMLHttpRequest', () => {
       expect(requests[0].url).toMatch('/echo/')
       expect(requests[0].headers['Content-Type']).toEqual('application/json')
       expect(requests[0].headers['Bugsnag-Api-Key']).toEqual('aaaaaaaa')
+      expect(requests[0].headers['Bugsnag-Integrity']).toEqual('simple 20')
       expect(requests[0].headers['Bugsnag-Payload-Version']).toEqual('4')
       expect(requests[0].headers['Bugsnag-Sent-At']).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/)
       expect(requests[0].data).toBe(JSON.stringify(payload))
@@ -83,7 +84,7 @@ describe('delivery:XMLHttpRequest', () => {
       this.onreadystatechange()
     }
 
-    const payload = { sample: 'payload' } as unknown as EventDeliveryPayload
+    const payload = { sample: 'session payload' } as unknown as EventDeliveryPayload
     const config = {
       apiKey: 'aaaaaaaa',
       endpoints: { notify: '/', sessions: '/echo/' },
@@ -96,6 +97,7 @@ describe('delivery:XMLHttpRequest', () => {
       expect(requests[0].url).toMatch('/echo/')
       expect(requests[0].headers['Content-Type']).toEqual('application/json')
       expect(requests[0].headers['Bugsnag-Api-Key']).toEqual('aaaaaaaa')
+      expect(requests[0].headers['Bugsnag-Integrity']).toEqual('simple 28')
       expect(requests[0].headers['Bugsnag-Payload-Version']).toEqual('1')
       expect(requests[0].headers['Bugsnag-Sent-At']).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/)
       expect(requests[0].data).toBe(JSON.stringify(payload))
