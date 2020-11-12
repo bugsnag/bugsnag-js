@@ -1,19 +1,28 @@
 steps:
   - label: ':docker: Build and publish JS packages'
+    key: "publish-js"
     timeout_in_minutes: 30
     plugins:
       - docker-compose#v3.3.0:
           build: publisher
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
 
-  - wait
+  - label: ':docker: Build Android Builder base image'
+    key: "android-builder-base"
+    timeout_in_minutes: 30
+    plugins:
+      - docker-compose#v3.3.0:
+          build: android-builder-base
+          image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
+          cache-from:  android-builder-base:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:android-builder-base
+      - docker-compose#v3.3.0:
+          push: android-builder-base:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:android-builder-base
 
   - label: ':docker: Build RN Android Builder image'
     key: "android-builder-image"
+    depends_on: "android-builder-base"
     timeout_in_minutes: 30
     plugins:
-      - improbable-eng/metahook:
-          post-checkout: scripts/gather-react-native-files.sh
       - docker-compose#v3.3.0:
           build: react-native-android-builder
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
@@ -23,7 +32,9 @@ steps:
 
   - label: ':android: Build RN 0.60 apk'
     key: "rn-0-60-apk"
-    depends_on: "android-builder-image"
+    depends_on:
+      - "android-builder-image"
+      - "publish-js"
     timeout_in_minutes: 60
     env:
       REACT_NATIVE_VERSION: "rn0.60"
@@ -35,6 +46,9 @@ steps:
 
   - label: ':ios: Build RN 0.60 ipa'
     key: "rn-0-60-ipa"
+    depends_on:
+      - "android-builder-image"
+      - "publish-js"
     timeout_in_minutes: 60
     agents:
       queue: "opensource-mac-rn"
@@ -46,7 +60,9 @@ steps:
 
   - label: ':android: Build RN 0.63 apk'
     key: "rn-0-63-apk"
-    depends_on: "android-builder-image"
+    depends_on:
+      - "android-builder-image"
+      - "publish-js"
     timeout_in_minutes: 60
     env:
       REACT_NATIVE_VERSION: "rn0.63"
@@ -58,6 +74,9 @@ steps:
 
   - label: ':ios: Build RN 0.63 ipa'
     key: "rn-0-63-ipa"
+    depends_on:
+      - "android-builder-image"
+      - "publish-js"
     timeout_in_minutes: 60
     agents:
       queue: "opensource-mac-rn"
@@ -69,7 +88,9 @@ steps:
 
   - label: ':android: Build react-navigation 0.60 apk'
     key: "react-navigation-0-60-apk"
-    depends_on: "android-builder-image"
+    depends_on:
+      - "android-builder-image"
+      - "publish-js"
     timeout_in_minutes: 60
     env:
       REACT_NATIVE_VERSION: "rn0.60"
@@ -84,7 +105,10 @@ steps:
   # See: PLAT-5173
   # - label: ':ios: Build react-navigation 0.60 ipa'
   #   key: "react-navigation-0-60-ipa"
-  #     timeout_in_minutes: 60
+  #   depends_on:
+  #     - "android-builder-image"
+  #     - "publish-js"
+  #   timeout_in_minutes: 60
   #   agents:
   #     queue: "opensource-mac-rn"
   #   env:
@@ -97,7 +121,9 @@ steps:
 
   - label: ':android: Build react-navigation 0.63 apk'
     key: "react-navigation-0-63-apk"
-    depends_on: "android-builder-image"
+    depends_on:
+      - "android-builder-image"
+      - "publish-js"
     timeout_in_minutes: 60
     env:
       REACT_NATIVE_VERSION: "rn0.63"
@@ -112,7 +138,10 @@ steps:
   # See: PLAT-5173
   # - label: ':ios: Build react-navigation 0.63 ipa'
   #   key: "react-navigation-0-63-ipa"
-  #    timeout_in_minutes: 60
+  #   depends_on:
+  #     - "android-builder-image"
+  #     - "publish-js"
+  #   timeout_in_minutes: 60
   #   agents:
   #     queue: "opensource-mac-rn"
   #   env:
@@ -125,7 +154,9 @@ steps:
 
   - label: ':android: Build react-native-navigation 0.60 apk'
     key: "react-native-navigation-0-60-apk"
-    depends_on: "android-builder-image"
+    depends_on:
+      - "android-builder-image"
+      - "publish-js"
     timeout_in_minutes: 60
     env:
       REACT_NATIVE_VERSION: "rn0.60"
@@ -140,7 +171,10 @@ steps:
   # See: PLAT-5173
   # - label: ':ios: Build react-native-navigation 0.60 ipa'
   #   key: "react-native-navigation-0-60-ipa"
-  #     timeout_in_minutes: 60
+  #   depends_on:
+  #     - "android-builder-image"
+  #     - "publish-js"
+  #   timeout_in_minutes: 60
   #   agents:
   #     queue: "opensource-mac-rn"
   #   env:
@@ -153,7 +187,9 @@ steps:
 
   - label: ':android: Build react-native-navigation 0.63 apk'
     key: "react-native-navigation-0-63-apk"
-    depends_on: "android-builder-image"
+    depends_on:
+      - "android-builder-image"
+      - "publish-js"
     timeout_in_minutes: 60
     env:
       REACT_NATIVE_VERSION: "rn0.63"
@@ -168,7 +204,10 @@ steps:
   # See: PLAT-5173
   # - label: ':ios: Build react-native-navigation 0.63 ipa'
   #   key: "react-native-navigation-0-63-ipa"
-  #     timeout_in_minutes: 60
+  #   depends_on:
+  #     - "android-builder-image"
+  #     - "publish-js"
+  #   timeout_in_minutes: 60
   #   agents:
   #     queue: "opensource-mac-rn"
   #   env:

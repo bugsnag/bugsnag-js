@@ -116,6 +116,11 @@ services:
     volumes:
       - ./build:/app/test/expo/features/fixtures/build
 
+  android-builder-base:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile.android-builder-base
+
   react-native-android-builder:
     build:
       context: .
@@ -140,6 +145,7 @@ services:
     volumes:
       - ./build:/app/build
       - ./test:/app/test
+      - ./features:/app/features
 
   react-native-maze-runner:
     build:
