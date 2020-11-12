@@ -11,6 +11,7 @@ module.exports = {
     {
       displayName: 'shared plugins',
       testMatch: [
+        testsForPackage('bytesize'),
         testsForPackage('plugin-app-duration')
       ]
     },

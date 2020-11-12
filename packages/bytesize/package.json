@@ -1,0 +1,19 @@
+{
+  "name": "@bugsnag/bytesize",
+  "version": "7.5.2",
+  "description": "Calculate the size of a string in bytes",
+  "author": "Bugsnag",
+  "homepage": "https://www.bugsnag.com/",
+  "license": "MIT",
+  "main": "bytesize.js",
+  "files": [
+    "*.js"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bugsnag/bugsnag-js.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
