@@ -253,6 +253,7 @@ steps:
         - --farm=bs
         - --device=IOS_12
         - --a11y-locator
+        - --appium-version=1.18.0
         - --username=$BROWSER_STACK_USERNAME
         - --access-key=$BROWSER_STACK_ACCESS_KEY
     env:
@@ -295,6 +296,7 @@ steps:
         - --farm=bs
         - --device=IOS_12
         - --a11y-locator
+        - --appium-version=1.18.0
         - --username=$BROWSER_STACK_USERNAME
         - --access-key=$BROWSER_STACK_ACCESS_KEY
     env:
@@ -337,6 +339,7 @@ steps:
   #       - --farm=bs
   #       - --device=IOS_12
   #       - --a11y-locator
+  #       - --appium-version=1.18.0
   #       - --username=$BROWSER_STACK_USERNAME
   #       - --access-key=$BROWSER_STACK_ACCESS_KEY
   #       - features/navigation.feature
@@ -378,6 +381,7 @@ steps:
   #       - --farm=bs
   #       - --device=IOS_13
   #       - --a11y-locator
+  #       - --appium-version=1.18.0
   #       - --username=$BROWSER_STACK_USERNAME
   #       - --access-key=$BROWSER_STACK_ACCESS_KEY
   #       - features/navigation.feature
@@ -418,6 +422,7 @@ steps:
   #       - --app=build/r_native_navigation_0.60.ipa
   #       - --farm=bs
   #       - --device=IOS_13
+  #       - --appium-version=1.18.0
   #       - --a11y-locator
   #       - --username=$BROWSER_STACK_USERNAME
   #       - --access-key=$BROWSER_STACK_ACCESS_KEY
@@ -460,6 +465,7 @@ steps:
   #       - --farm=bs
   #       - --device=IOS_13
   #       - --a11y-locator
+  #       - --appium-version=1.18.0
   #       - --username=$BROWSER_STACK_USERNAME
   #       - --access-key=$BROWSER_STACK_ACCESS_KEY
   #       - features/navigation.feature
