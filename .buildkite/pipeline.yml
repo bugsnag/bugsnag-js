@@ -77,6 +77,9 @@ steps:
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
           cache-from:
             - browser-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-browser-${BRANCH_NAME}
+      - docker-compose#v3.7.0:
+          push:
+            - browser-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-browser-${BRANCH_NAME}
 
   - label:  ':docker: Build node maze runner image'
     key: "node-maze-runner-image"
@@ -89,6 +92,9 @@ steps:
             - node-maze-runner
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
           cache-from:
+            - node-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-node-${BRANCH_NAME}
+      - docker-compose#v3.7.0:
+          push:
             - node-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-node-${BRANCH_NAME}
 
   - label: ':chrome: v43 Browser tests'
