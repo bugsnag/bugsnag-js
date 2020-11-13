@@ -221,11 +221,15 @@ See https://www.browserstack.com/local-testing/app-automate for details of the r
     bundle exec maze-runner --app=../../build/${REACT_NATIVE_VERSION}.ipa \
                             --farm=bs \
                             --device=IOS_13 \
+                            --appium-version=1.18.0 \
                             --a11y-locator \
                             --username=$BROWSER_STACK_USERNAME \
                             --access-key=$BROWSER_STACK_ACCESS_KEY \
                             --bs-local=~/BrowserStackLocal \
                             test/react-native/features/app.feature
     ```
+1. Note that different versions of iOS need different Appium versions to be set:
+- iOS 12, 13, 14 - Appium 1.18.0
+- iOS 10, 11 - Appium 1.15.0
 1. To run all features, omit the final argument.
 1. Maze Runner also supports all options that Cucumber does.  Run `bundle exec maze-runner --help` for full details.
