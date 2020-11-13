@@ -33,20 +33,3 @@ test.each([
 ])('it calculates the size of a string in bytes (%#)', (string, expected) => {
   expect(bytesize(string)).toBe(expected)
 })
-
-test.each([
-  [123, 'number'],
-  [123.456, 'number'],
-  [true, 'boolean'],
-  [[1, 'a', 2, 'b'], 'object'],
-  [{ a: 1, b: 2 }, 'object'],
-  [null, 'object'],
-  [undefined, 'undefined'],
-  [Symbol('abc'), 'symbol'],
-  [2n ** 64n, 'bigint'],
-  [() => {}, 'function']
-])('it throws when given an invalid type: %p', (input, expectedType) => {
-  const expected = new Error(`Invalid type given, expected string but got ${expectedType}`)
-
-  expect(() => bytesize(input)).toThrow(expected)
-})

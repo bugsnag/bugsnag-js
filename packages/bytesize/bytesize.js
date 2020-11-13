@@ -1,8 +1,4 @@
 export default function bytesize (string) {
-  if (typeof string !== 'string') {
-    throw new Error('Invalid type given, expected string but got ' + typeof string)
-  }
-
   let bytes = 0
 
   for (let i = 0; i < string.length; ++i) {
