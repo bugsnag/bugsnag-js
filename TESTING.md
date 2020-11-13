@@ -148,68 +148,84 @@ Running tests against an iOS device locally is not currently supported.
 
 ### React-native
 
-The React-native tests drive real, remote mobile devices using BrowserStack. As a Bugsnag employee you can access the necessary credentials in our shared password manager.
+The React-native tests drive real, remote mobile devices using BrowserStack. As a Bugsnag employee you can access the 
+necessary credentials in our shared password manager.
 
-In addition, the react-native test fixture requires the current version of the repo to be published to a locally owned NPM repository (! Not the official NPMJS repository !). This can be locally or remotely hosted, but should be versioned appropriately.  Three bits of information will need to be passed into the test run as environment variables in order to access this package:
+The test fixture (a React Native app) that tests are run against needs to be built with a published version of 
+@bugsnag/react-native.  By default, the build process will base this on the current branch/comment, 
+e.g. `7.2.0-my-branch.231f6ef7`.  This can be overridden using the environment variable NOTIFIER_VERSION, which is useful during development when 
+making test, but not notifier, changes.
 
+If building against the current branch/commit, the packages must be published to a locally owned NPM repository 
+(! Not the official NPMJS repository !). This can be locally or remotely hosted, but should be versioned appropriately.  
+
+Three bits of information will need to be passed into the test run as environment variables in order to 
+access this package:
 - `REG_BASIC_CREDENTIAL`: the basic auth credentials of an account able to access the repository
 - `REG_NPM_EMAIL`: the email of the user accessing the repository
 - `REGISTRY_URL`: the remote address of the repository
 
-The targeted release of `@bugsnag/react-native` must be tagged with the short hash of the current commit in order to be picked up by the gradle build process.
+The targeted release of `@bugsnag/react-native` must be tagged with the short hash of the current commit in order to be 
+picked up by the gradle build process.
 
-There may be several react-native versions that can be targeted.  
-These should be set to the `REACT_NATIVE_VERSION` environment variable according to the table below:
+There may be several react-native versions that can be targeted and the `REACT_NATIVE_VERSION` environment variable 
+should be set accordingly:
 
 | React native fixture | `REACT_NATIVE_VERSION` |
 |----------------------|------------------------|
 | 0.60                 | `rn0.60`               |
 | 0.63                 | `rn0.63`               |
 
-The following environment variables need to be set:
+#### Building the test fixture
 
-- `DEVICE_TYPE` - the mobile operating system you want to test on – one of:
-  - ANDROID_5_0
-  - ANDROID_6_0
-  - ANDROID_7_1
-  - ANDROID_8_1
-  - ANDROID_9_0
-  - ANDROID_10_0
-  - IOS_10
-  - IOS_11
-  - IOS_12
-- `BROWSER_STACK_USERNAME`
-- `BROWSER_STACK_ACCESS_KEY`
+Remember to set the following variables:
 - `REACT_NATIVE_VERSION`
-- `REG_BASIC_CREDENTIAL`
-- `REG_NPM_EMAIL`
 - `REGISTRY_URL`
+- `NOTIFIER_VERSION` (optionally)
 
-By default, the test fixture used to run tests against will be built with a version of @bugsnag/react-native for the current branch/commit, e.g. `7.2.0-my-branch.231f6ef7`.
-This can be overridden using the environment variable NOTIFIER_VERSION and is useful during development when making test, but not notifier, changes.
-
-To run against an android device:
-
-```sh
-DEVICE_TYPE=ANDROID_9_0 \
-REACT_NATIVE_VERSION=rn0.60 \
-REG_BASIC_CREDENTIAL=xxx \
-REG_NPM_EMAIL=xxx \
-REGISTRY_URL=xxx \
-BROWSER_STACK_USERNAME=xxx \
-BROWSER_STACK_ACCESS_KEY=xxx \
-  npm run test:react-native:android
+For iOS:
+```shell script
+npm run test:build-react-native-ios
 ```
 
-To run against an iOS device:
+Fnd Android:
+```shell script
+npm run test:build-react-native-ios
+```
+These will build a `.ipa` or `.apk` file respectively and copy into `./build`.
 
-```
-DEVICE_TYPE=ANDROID_9_0 \
-REACT_NATIVE_VERSION=rn0.60 \
-REG_BASIC_CREDENTIAL=xxx \
-REG_NPM_EMAIL=xxx \
-REGISTRY_URL=xxx \
-BROWSER_STACK_USERNAME=xxx \
-BROWSER_STACK_ACCESS_KEY=xxx \
-  npm run test:react-native:ios
-```
+
+#### Running the end-to-end tests
+
+Ensure that the following environment variables are set:
+- `BROWSER_STACK_USERNAME`: Your BrowserStack App Automate Username
+- `BROWSER_STACK_ACCESS_KEY`: You BrowserStack App Automate Access Key
+
+See https://www.browserstack.com/local-testing/app-automate for details of the required local testing binary.
+
+1. Check the contents of `Gemfile` to select the version of `maze-runner` to use.
+1. Change into the `test/react-native` directory
+1. To run a single feature on an Android device (as an example):
+    ```shell script
+    bundle exec maze-runner --app=../../build/${REACT_NATIVE_VERSION}.apk \
+                            --farm=bs \
+                            --device=ANDROID_9_0 \
+                            --a11y-locator \
+                            --username=$BROWSER_STACK_USERNAME \
+                            --access-key=$BROWSER_STACK_ACCESS_KEY \
+                            --bs-local=~/BrowserStackLocal \
+                            test/react-native/features/app.feature
+    ```
+1. Or on iOS:
+    ```shell script
+    bundle exec maze-runner --app=../../build/${REACT_NATIVE_VERSION}.ipa \
+                            --farm=bs \
+                            --device=IOS_13 \
+                            --a11y-locator \
+                            --username=$BROWSER_STACK_USERNAME \
+                            --access-key=$BROWSER_STACK_ACCESS_KEY \
+                            --bs-local=~/BrowserStackLocal \
+                            test/react-native/features/app.feature
+    ```
+1. To run all features, omit the final argument.
+1. Maze Runner also supports all options that Cucumber does.  Run `bundle exec maze-runner --help` for full details.
