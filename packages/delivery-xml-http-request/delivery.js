@@ -15,7 +15,7 @@ module.exports = (client, win = window) => ({
       req.open('POST', url)
       req.setRequestHeader('Content-Type', 'application/json')
       req.setRequestHeader('Bugsnag-Api-Key', event.apiKey || client._config.apiKey)
-      req.setRequestHeader('Bugsnag-Integrity', 'simple ' + bytesize(json))
+      req.setRequestHeader('Bugsnag-Integrity', `simple ${bytesize(json)}`)
       req.setRequestHeader('Bugsnag-Payload-Version', '4')
       req.setRequestHeader('Bugsnag-Sent-At', (new Date()).toISOString())
 
@@ -37,7 +37,7 @@ module.exports = (client, win = window) => ({
       req.open('POST', url)
       req.setRequestHeader('Content-Type', 'application/json')
       req.setRequestHeader('Bugsnag-Api-Key', client._config.apiKey)
-      req.setRequestHeader('Bugsnag-Integrity', 'simple ' + bytesize(json))
+      req.setRequestHeader('Bugsnag-Integrity', `simple ${bytesize(json)}`)
       req.setRequestHeader('Bugsnag-Payload-Version', '1')
       req.setRequestHeader('Bugsnag-Sent-At', (new Date()).toISOString())
 
