@@ -123,6 +123,19 @@ steps:
     concurrency: 5
     concurrency_group: 'browserstack'
 
+  - label: ':chrome: latest Browser tests'
+    depends_on: "browser-maze-runner-image"
+    timeout_in_minutes: 10
+    plugins:
+      docker-compose#v3.7.0:
+        run: browser-maze-runner
+        use-aliases: true
+        verbose: true
+    env:
+      BROWSER: "chrome_latest"
+    concurrency: 5
+    concurrency_group: 'browserstack'
+
   - label: ':ie: v8 Browser tests'
     depends_on: "browser-maze-runner-image"
     timeout_in_minutes: 10
@@ -228,6 +241,19 @@ steps:
     concurrency: 5
     concurrency_group: 'browserstack'
 
+  - label: ':safari: v13 Browser tests'
+    depends_on: "browser-maze-runner-image"
+    timeout_in_minutes: 10
+    plugins:
+      docker-compose#v3.7.0:
+        run: browser-maze-runner
+        use-aliases: true
+        verbose: true
+    env:
+      BROWSER: "safari_13"
+    concurrency: 5
+    concurrency_group: 'browserstack'
+
   - label: ':desktop_computer: Opera v12 Browser tests'
     depends_on: "browser-maze-runner-image"
     timeout_in_minutes: 10
@@ -294,6 +320,19 @@ steps:
     concurrency: 5
     concurrency_group: 'browserstack'
 
+  - label: ':firefox: latest Browser tests'
+    depends_on: "browser-maze-runner-image"
+    timeout_in_minutes: 10
+    plugins:
+      docker-compose#v3.7.0:
+        run: browser-maze-runner
+        use-aliases: true
+        verbose: true
+    env:
+      BROWSER: "firefox_latest"
+    concurrency: 5
+    concurrency_group: 'browserstack'
+
   - label: ':node: Node 4'
     depends_on: "node-maze-runner-image"
     timeout_in_minutes: 30
@@ -350,3 +389,14 @@ steps:
         verbose: true
     env:
       NODE_VERSION: "12"
+
+  - label: ':node: Node 14'
+    depends_on: "node-maze-runner-image"
+    timeout_in_minutes: 30
+    plugins:
+      docker-compose#v3.7.0:
+        run: node-maze-runner
+        use-aliases: true
+        verbose: true
+    env:
+      NODE_VERSION: "14"
