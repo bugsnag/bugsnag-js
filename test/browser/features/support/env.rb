@@ -58,6 +58,14 @@ Before('@skip_if_local_storage_is_unavailable') do |scenario|
   skip_this_scenario unless has_local_storage
 end
 
+# Skip tests for the Bugsnag-Integrity header on IE < 11 as those browsers do not
+# support arbitrary headers
+Before('@bugsnag_integrity') do
+  type, version = ENV['BROWSER'].split('_')
+
+  skip_this_scenario if type == 'ie' && version.to_i < 11
+end
+
 AfterConfiguration do
   # Necessary as Appium removes any existing $driver instance on load
   bs_local_start
