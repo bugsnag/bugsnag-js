@@ -13,6 +13,7 @@ Scenario: App data is included by default
   And the event "app.duration" is not null
   And the event "app.durationInForeground" is not null
   And the event "app.inForeground" is true
+  And the Bugsnag-Integrity header is valid
 
 Scenario: App data can be modified by a callback
   Given the element "enhancedAppButton" is present
@@ -23,4 +24,4 @@ Scenario: App data can be modified by a callback
   And the event "app.duration" is not null
   And the event "app.durationInForeground" is not null
   And the event "app.inForeground" is true
-
+  And the Bugsnag-Integrity header is valid

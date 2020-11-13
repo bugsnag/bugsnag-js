@@ -10,6 +10,7 @@ Scenario: Catching an Unhandled error
   Then I wait to receive a request
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "UnhandledError"
+  And the Bugsnag-Integrity header is valid
 
 Scenario: Catching an Unhandled promise rejection
   Given the element "unhandledPromiseRejectionButton" is present
@@ -17,3 +18,4 @@ Scenario: Catching an Unhandled promise rejection
   Then I wait to receive a request
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "UnhandledPromiseRejection"
+  And the Bugsnag-Integrity header is valid
