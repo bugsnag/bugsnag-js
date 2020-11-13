@@ -13,3 +13,12 @@ Then("the event does not have a {string} breadcrumb named {string}") do |type, n
   end
   fail("A breadcrumb was found matching: #{value}") if found
 end
+
+Then("the Bugsnag-Integrity header is valid") do
+  raw_request = Server.current_request[:request]
+
+  type, value = raw_request['Bugsnag-Integrity'].split(' ')
+
+  assert_equal('simple', type)
+  assert_equal(raw_request.body.bytesize, value.to_i)
+end
