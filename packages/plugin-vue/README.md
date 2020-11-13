@@ -35,4 +35,4 @@ Bugsnag.use(bugsnagVue, Vue)
 
 ## License
 
-The Bugsnag JS library and official plugins are free software released under the MIT License. See [LICENSE.txt](LICENSE.txt) for details.
+This package is free software released under the MIT License. See [LICENSE.txt](./LICENSE.txt) for details.

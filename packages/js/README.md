@@ -21,4 +21,5 @@ In various bundlers, importing `'@bugsnag/js'` will provide the [`@bugsnag/brows
 **Note**: by using this browser-specific entrypoint, none of the node-specific code will be included in your bundle.
 
 ## License
-MIT
+
+This package is free software released under the MIT License. See [LICENSE.txt](./LICENSE.txt) for details.
