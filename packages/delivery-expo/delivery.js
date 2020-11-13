@@ -1,3 +1,4 @@
+const bytesize = require('@bugsnag/bytesize')
 const payload = require('@bugsnag/core/lib/json-payload')
 const UndeliveredPayloadQueue = require('./queue')
 const NetworkStatus = require('./network-status')
@@ -45,6 +46,7 @@ module.exports = (client, fetch = global.fetch) => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Bugsnag-Integrity': `simple ${bytesize(body)}`,
             'Bugsnag-Api-Key': event.apiKey || client._config.apiKey,
             'Bugsnag-Payload-Version': '4',
             'Bugsnag-Sent-At': (new Date()).toISOString()
@@ -75,6 +77,7 @@ module.exports = (client, fetch = global.fetch) => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Bugsnag-Integrity': `simple ${bytesize(body)}`,
             'Bugsnag-Api-Key': client._config.apiKey,
             'Bugsnag-Payload-Version': '1',
             'Bugsnag-Sent-At': (new Date()).toISOString()

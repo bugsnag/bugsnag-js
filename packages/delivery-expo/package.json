@@ -17,6 +17,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "dependencies": {
+    "@bugsnag/bytesize": "^7.5.2",
     "@react-native-community/netinfo": "5.9.6",
     "expo-file-system": "~9.2"
   },

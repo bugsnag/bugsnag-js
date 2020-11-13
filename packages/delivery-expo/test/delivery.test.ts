@@ -100,6 +100,7 @@ describe('delivery: expo', () => {
         expect(requests[0].url).toMatch('/notify/')
         expect(requests[0].headers['content-type']).toEqual('application/json')
         expect(requests[0].headers['bugsnag-api-key']).toEqual('aaaaaaaa')
+        expect(requests[0].headers['bugsnag-integrity']).toEqual('simple 87')
         expect(requests[0].headers['bugsnag-payload-version']).toEqual('4')
         expect(requests[0].headers['bugsnag-sent-at']).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/)
         expect(requests[0].body).toBe(JSON.stringify(payload))
@@ -116,7 +117,7 @@ describe('delivery: expo', () => {
       expect(err).toBeUndefined()
 
       const payload = {
-        events: [{ errors: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }] }]
+        events: [{ errors: [{ errorClass: 'Error', errorMessage: 'undefined is not a function' }] }]
       } as unknown as EventDeliveryPayload
       const config = {
         apiKey: 'aaaaaaaa',
@@ -130,6 +131,7 @@ describe('delivery: expo', () => {
         expect(requests[0].url).toMatch('/sessions/')
         expect(requests[0].headers['content-type']).toEqual('application/json')
         expect(requests[0].headers['bugsnag-api-key']).toEqual('aaaaaaaa')
+        expect(requests[0].headers['bugsnag-integrity']).toEqual('simple 93')
         expect(requests[0].headers['bugsnag-payload-version']).toEqual('1')
         expect(requests[0].headers['bugsnag-sent-at']).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/)
         expect(requests[0].body).toBe(JSON.stringify(payload))
