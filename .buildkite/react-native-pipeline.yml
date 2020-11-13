@@ -1,4 +1,8 @@
 steps:
+
+  #
+  # Publish notifier
+  #
   - label: ':docker: Build and publish JS packages'
     key: "publish-js"
     timeout_in_minutes: 30
@@ -7,6 +11,9 @@ steps:
           build: publisher
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
 
+  #
+  # Android builder images
+  #
   - label: ':docker: Build Android Builder base image'
     key: "android-builder-base"
     timeout_in_minutes: 30
@@ -30,6 +37,9 @@ steps:
       - docker-compose#v3.3.0:
           push: react-native-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
 
+  #
+  # Test fixtures
+  #
   - label: ':android: Build RN 0.60 apk'
     key: "rn-0-60-apk"
     depends_on:
@@ -218,6 +228,9 @@ steps:
     commands:
       - npm run test:build-react-native-ios
 
+  #
+  # End-to-end tests
+  #
   - label: ':android: RN 0.60 Android 9 end-to-end tests'
     depends_on: "rn-0-60-apk"
     timeout_in_minutes: 60
@@ -234,6 +247,7 @@ steps:
         - --a11y-locator
         - --username=$BROWSER_STACK_USERNAME
         - --access-key=$BROWSER_STACK_ACCESS_KEY
+        - --fail-fast
     env:
       SKIP_NAVIGATION_SCENARIOS: "true"
     concurrency: 10
@@ -256,6 +270,7 @@ steps:
         - --appium-version=1.18.0
         - --username=$BROWSER_STACK_USERNAME
         - --access-key=$BROWSER_STACK_ACCESS_KEY
+        - --fail-fast
     env:
       SKIP_NAVIGATION_SCENARIOS: "true"
     concurrency: 10
@@ -277,6 +292,7 @@ steps:
         - --a11y-locator
         - --username=$BROWSER_STACK_USERNAME
         - --access-key=$BROWSER_STACK_ACCESS_KEY
+        - --fail-fast
     env:
       SKIP_NAVIGATION_SCENARIOS: "true"
     concurrency: 10
@@ -299,6 +315,7 @@ steps:
         - --appium-version=1.18.0
         - --username=$BROWSER_STACK_USERNAME
         - --access-key=$BROWSER_STACK_ACCESS_KEY
+        - --fail-fast
     env:
       SKIP_NAVIGATION_SCENARIOS: "true"
     concurrency: 10
@@ -320,6 +337,7 @@ steps:
         - --a11y-locator
         - --username=$BROWSER_STACK_USERNAME
         - --access-key=$BROWSER_STACK_ACCESS_KEY
+        - --fail-fast
         - features/navigation.feature
     concurrency: 10
     concurrency_group: 'browserstack-app'
@@ -343,6 +361,7 @@ steps:
           - --appium-version=1.18.0
           - --username=$BROWSER_STACK_USERNAME
           - --access-key=$BROWSER_STACK_ACCESS_KEY
+          - --fail-fast
           - features/navigation.feature
     concurrency: 10
     concurrency_group: 'browserstack-app'
@@ -363,6 +382,7 @@ steps:
         - --a11y-locator
         - --username=$BROWSER_STACK_USERNAME
         - --access-key=$BROWSER_STACK_ACCESS_KEY
+        - --fail-fast
         - features/navigation.feature
     concurrency: 10
     concurrency_group: 'browserstack-app'
@@ -386,6 +406,7 @@ steps:
           - --appium-version=1.18.0
           - --username=$BROWSER_STACK_USERNAME
           - --access-key=$BROWSER_STACK_ACCESS_KEY
+          - --fail-fast
           - features/navigation.feature
     concurrency: 10
     concurrency_group: 'browserstack-app'
@@ -406,6 +427,7 @@ steps:
         - --a11y-locator
         - --username=$BROWSER_STACK_USERNAME
         - --access-key=$BROWSER_STACK_ACCESS_KEY
+        - --fail-fast
         - features/navigation.feature
     concurrency: 10
     concurrency_group: 'browserstack-app'
@@ -429,6 +451,7 @@ steps:
           - --a11y-locator
           - --username=$BROWSER_STACK_USERNAME
           - --access-key=$BROWSER_STACK_ACCESS_KEY
+          - --fail-fast
           - features/navigation.feature
     concurrency: 10
     concurrency_group: 'browserstack-app'
@@ -449,6 +472,7 @@ steps:
         - --a11y-locator
         - --username=$BROWSER_STACK_USERNAME
         - --access-key=$BROWSER_STACK_ACCESS_KEY
+        - --fail-fast
         - features/navigation.feature
     concurrency: 10
     concurrency_group: 'browserstack-app'
@@ -472,6 +496,7 @@ steps:
           - --appium-version=1.18.0
           - --username=$BROWSER_STACK_USERNAME
           - --access-key=$BROWSER_STACK_ACCESS_KEY
+          - --fail-fast
           - features/navigation.feature
     concurrency: 10
     concurrency_group: 'browserstack-app'
