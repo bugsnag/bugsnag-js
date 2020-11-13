@@ -194,12 +194,11 @@ npm run test:build-react-native-ios
 ```
 These will build a `.ipa` or `.apk` file respectively and copy into `./build`.
 
-
 #### Running the end-to-end tests
 
 Ensure that the following environment variables are set:
-- `BROWSER_STACK_USERNAME`: Your BrowserStack App Automate Username
-- `BROWSER_STACK_ACCESS_KEY`: You BrowserStack App Automate Access Key
+- `BROWSER_STACK_USERNAME` - Your BrowserStack App Automate Username
+- `BROWSER_STACK_ACCESS_KEY` - Your BrowserStack App Automate Access Key
 
 See https://www.browserstack.com/local-testing/app-automate for details of the required local testing binary.
 
@@ -228,8 +227,5 @@ See https://www.browserstack.com/local-testing/app-automate for details of the r
                             --bs-local=~/BrowserStackLocal \
                             test/react-native/features/app.feature
     ```
-1. Note that different versions of iOS need different Appium versions to be set:
-- iOS 12, 13, 14 - Appium 1.18.0
-- iOS 10, 11 - Appium 1.15.0
 1. To run all features, omit the final argument.
 1. Maze Runner also supports all options that Cucumber does.  Run `bundle exec maze-runner --help` for full details.
