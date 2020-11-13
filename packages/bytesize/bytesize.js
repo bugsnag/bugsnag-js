@@ -1,4 +1,4 @@
-export default function bytesize (string) {
+module.exports = function bytesize (string) {
   let bytes = 0
 
   for (let i = 0; i < string.length; ++i) {
