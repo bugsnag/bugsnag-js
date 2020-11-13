@@ -5,4 +5,5 @@ This plugin adds a safety mechanism to prevent too many events being sent to Bug
 **Note:** to support long-lived browser applications, this plugin defines a `resetEventCount()` method on the client which gets called when the URL of the page changes. This resets the count, allowing new events to be sent.
 
 ## License
-MIT
+
+This package is free software released under the MIT License. See [LICENSE.txt](./LICENSE.txt) for details.

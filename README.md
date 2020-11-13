@@ -90,4 +90,4 @@ See [contributing](CONTRIBUTING.md) for more information.
 
 ## License
 
-All packages in this repository are released under the MIT License.
+All packages in this repository are released under the MIT License. See [LICENSE.txt](./LICENSE.txt) for details.
