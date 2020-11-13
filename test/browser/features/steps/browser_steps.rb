@@ -47,6 +47,7 @@ Then(/^the request is a valid browser payload for the error reporting API$/) do
   if !/^ie_(8|9|10)$/.match(ENV['BROWSER'])
     steps %Q{
       Then the "Bugsnag-API-Key" header is not null
+      And the Bugsnag-Integrity header is valid
       And the "Content-Type" header equals one of:
         | application/json |
         | application/json; charset=UTF-8 |
@@ -60,6 +61,7 @@ Then(/^the request is a valid browser payload for the error reporting API$/) do
       And the "sentAt" query parameter is a timestamp
     }
   end
+
   steps %Q{
     And the payload field "notifier.name" is not null
     And the payload field "notifier.url" is not null
@@ -79,6 +81,7 @@ Then(/^the request is a valid browser payload for the session tracking API$/) do
   if !/^ie_(8|9|10)$/.match(ENV['BROWSER'])
     steps %Q{
       Then the "Bugsnag-API-Key" header is not null
+      And the Bugsnag-Integrity header is valid
       And the "Content-Type" header equals one of:
         | application/json |
         | application/json; charset=UTF-8 |
@@ -92,6 +95,7 @@ Then(/^the request is a valid browser payload for the session tracking API$/) do
       And the "sentAt" query parameter is a timestamp
     }
   end
+
   steps %Q{
     And the payload field "app" is not null
     And the payload field "device" is not null
@@ -118,4 +122,13 @@ Then("the event device ID is {string}") do |expected_id|
     $logger.info('Local storage is not supported in this browser, assuming device ID is null')
     step('the event "device.id" is null')
   end
+end
+
+Then("the Bugsnag-Integrity header is valid") do
+  raw_request = Server.current_request[:request]
+
+  type, value = raw_request['Bugsnag-Integrity'].split(' ')
+
+  assert_equal('simple', type)
+  assert_equal(raw_request.body.bytesize, value.to_i)
 end
