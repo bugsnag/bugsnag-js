@@ -1,5 +1,6 @@
 import BugsnagExpoStatic, { Client, NotifiableError, OnErrorCallback, Event } from '..'
 import { Breadcrumb, Session } from '../types/bugsnag'
+import delivery from '@bugsnag/delivery-expo'
 
 jest.mock('expo-constants', () => ({
   default: {
@@ -22,10 +23,7 @@ jest.mock('../../plugin-expo-app/node_modules/expo-constants', () => ({
   }
 }))
 
-jest.mock('@bugsnag/delivery-expo', () => () => ({
-  sendSession: jest.fn((event, cb) => cb?.()),
-  sendEvent: jest.fn((event, cb) => cb?.())
-}))
+jest.mock('@bugsnag/delivery-expo')
 
 jest.mock('react-native', () => ({
   NativeModules: {
@@ -104,8 +102,17 @@ const API_KEY = '030bab153e7c2349be364d23b5ae93b5'
 
 describe('expo notifier', () => {
   let Bugsnag: typeof BugsnagExpoStatic
+  let _delivery
 
   beforeEach(() => {
+    (delivery as jest.MockedFunction<typeof delivery>).mockImplementation(() => {
+      _delivery = {
+        sendSession: jest.fn((p, cb?: () => void) => { cb?.() }),
+        sendEvent: jest.fn((p, cb?: () => void) => { cb?.() })
+      }
+      return _delivery
+    })
+
     jest.isolateModules(() => {
       Bugsnag = require('..')
     })
@@ -122,7 +129,7 @@ describe('expo notifier', () => {
     expect(Bugsnag.getPlugin('foobar')).toBe(10)
   })
 
-  it('notifies handled errors', () => {
+  it('notifies handled errors', (done) => {
     // Explicitly reference the public types to ensure they are exported correctly
     const error: NotifiableError = new Error('123')
     const onError: OnErrorCallback = (event: Event) => {}
@@ -157,7 +164,24 @@ describe('expo notifier', () => {
       redactedKeys: ['foo', /bar/]
     })
 
-    Bugsnag.notify(error, onError)
-    expect(true).toBe(true)
+    Bugsnag.notify(error, onError, () => {
+      expect(_delivery.sendSession).toHaveBeenCalledWith(expect.objectContaining({
+        app: expect.objectContaining({ releaseStage: 'production', version: '1.2.3' }),
+        device: expect.objectContaining({ manufacturer: 'Google', model: 'Pixel 4', modelNumber: undefined, osName: 'android', totalMemory: undefined }),
+        sessions: expect.arrayContaining([expect.objectContaining({ id: expect.any(String), startedAt: expect.any(Date) })])
+      }))
+      expect(_delivery.sendEvent).toHaveBeenCalledWith(expect.objectContaining({
+        apiKey: '030bab153e7c2349be364d23b5ae93b5',
+        events: expect.arrayContaining([
+          expect.objectContaining({
+            app: expect.objectContaining({ releaseStage: 'production', version: '1.2.3' }),
+            breadcrumbs: [],
+            device: expect.objectContaining({ manufacturer: 'Google', model: 'Pixel 4', modelNumber: undefined, osName: 'android', totalMemory: undefined })
+          })
+        ]),
+        notifier: { name: 'Bugsnag Expo', url: 'https://github.com/bugsnag/bugsnag-js', version: '7.5.2' }
+      }), expect.any(Function))
+      done()
+    })
   })
 })
