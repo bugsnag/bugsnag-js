@@ -1,6 +1,7 @@
 import BugsnagExpoStatic, { Client, NotifiableError, OnErrorCallback, Event } from '..'
 import { Breadcrumb, Session } from '../types/bugsnag'
 import delivery from '@bugsnag/delivery-expo'
+import { exception } from 'console'
 
 jest.mock('expo-constants', () => ({
   default: {
@@ -176,7 +177,14 @@ describe('expo notifier', () => {
           expect.objectContaining({
             app: expect.objectContaining({ releaseStage: 'production', version: '1.2.3' }),
             breadcrumbs: [],
-            device: expect.objectContaining({ manufacturer: 'Google', model: 'Pixel 4', modelNumber: undefined, osName: 'android', totalMemory: undefined })
+            device: expect.objectContaining({ manufacturer: 'Google', model: 'Pixel 4', modelNumber: undefined, osName: 'android', totalMemory: undefined }),
+            errors: expect.arrayContaining([
+              expect.objectContaining({
+                errorClass: 'Error',
+                errorMessage: '123',
+                stacktrace: expect.any(Array)
+              })
+            ])
           })
         ]),
         notifier: { name: 'Bugsnag Expo', url: 'https://github.com/bugsnag/bugsnag-js', version: '7.5.2' }
