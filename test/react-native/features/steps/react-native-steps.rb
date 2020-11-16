@@ -15,18 +15,20 @@ When("I run {string} and relaunch the app") do |event_type|
 end
 
 When("I relaunch the app") do
-  $driver.close_app
-  $driver.launch_app
+  # This step should only be used when the app has crashed, but the notifier needs a little
+  # time to write the crash report before being forced to reopen.  From trials, 1s was not enough.
+  sleep(2)
+  MazeRunner.driver.launch_app
 end
 
 When("I clear any error dialogue") do
-  sleep(3)
   # Error dialogue is auto-cleared on IOS
-  unless $driver.device_type.start_with?("IOS")
-    $driver.click_element("android:id/button1") if $driver.wait_for_element("android:id/button1", 1)
-    $driver.click_element("android:id/aerr_close") if $driver.wait_for_element("android:id/aerr_close", 1)
-    $driver.click_element("android:id/aerr_restart") if $driver.wait_for_element("android:id/aerr_restart", 1)
-  end
+  next unless MazeRunner.driver.capabilities["os"] == 'android'
+
+  driver = MazeRunner.driver
+  driver.click_element("android:id/button1") if driver.wait_for_element("android:id/button1", 3)
+  driver.click_element("android:id/aerr_close") if driver.wait_for_element("android:id/aerr_close", 3)
+  driver.click_element("android:id/aerr_restart") if driver.wait_for_element("android:id/aerr_restart", 3)
 end
 
 When("I configure Bugsnag for {string}") do |event_type|
