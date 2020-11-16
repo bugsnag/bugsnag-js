@@ -1,17 +1,6 @@
 steps:
 
   #
-  # Publish notifier
-  #
-  - label: ':docker: Build and publish JS packages'
-    key: "publish-js"
-    timeout_in_minutes: 30
-    plugins:
-      - docker-compose#v3.3.0:
-          build: publisher
-          image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
-
-  #
   # Android builder images
   #
   - label: ':docker: Build Android Builder base image'
