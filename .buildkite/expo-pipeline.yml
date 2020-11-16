@@ -5,13 +5,13 @@ steps:
     env:
       EXPO_RELEASE_CHANNEL: ${BUILDKITE_BUILD_ID}
     plugins:
-      - docker-compose#v3.1.0:
+      - docker-compose#v3.7.0:
           build: expo-publisher
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
           cache-from:
             - expo-publisher:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-publisher-${BRANCH_NAME}
             - expo-publisher:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-publisher-latest
-      - docker-compose#v3.1.0:
+      - docker-compose#v3.7.0:
           push:
             - expo-publisher:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-publisher-${BRANCH_NAME}
             - expo-publisher:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-publisher-latest
@@ -25,19 +25,19 @@ steps:
     env:
       EXPO_RELEASE_CHANNEL: ${BUILDKITE_BUILD_ID}
     plugins:
-      - docker-compose#v3.1.0:
+      - docker-compose#v3.7.0:
           run: expo-publisher
 
   - label: ':docker: Build expo maze runner image'
     key: "expo-maze-runner-image"
     timeout_in_minutes: 10
     plugins:
-      - docker-compose#v3.1.0:
+      - docker-compose#v3.7.0:
           build: expo-maze-runner
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
           cache-from:
             - expo-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
-      - docker-compose#v3.1.0:
+      - docker-compose#v3.7.0:
           push:
             - expo-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
             - expo-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-latest
@@ -48,13 +48,13 @@ steps:
     env:
       EXPO_RELEASE_CHANNEL: ${BUILDKITE_BUILD_ID}
     plugins:
-      - docker-compose#v3.1.0:
+      - docker-compose#v3.7.0:
           build: expo-android-builder
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
           cache-from:
             - expo-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-android-builder-${BRANCH_NAME}
             - expo-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-android-builder-latest
-      - docker-compose#v3.1.0:
+      - docker-compose#v3.7.0:
           push:
             - expo-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-android-builder-${BRANCH_NAME}
             - expo-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-android-builder-latest
@@ -71,7 +71,7 @@ steps:
       EXPO_RELEASE_CHANNEL: ${BUILDKITE_BUILD_ID}
     artifact_paths: build/output.apk
     plugins:
-      - docker-compose#v3.1.0:
+      - docker-compose#v3.7.0:
           run: expo-android-builder
           cache-from:
             - expo-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-android-builder-latest
@@ -89,7 +89,7 @@ steps:
     commands:
       - test/expo/scripts/build-ios.sh
 
-  - label: 'expo Android 9'
+  - label: ':runner: expo Android 9'
     depends_on:
       - "build-expo-apk"
       - "expo-maze-runner-image"
@@ -97,16 +97,22 @@ steps:
     plugins:
       artifacts#v1.2.0:
         download: "build/output.apk"
-      docker-compose#v3.1.0:
+      docker-compose#v3.7.0:
         run: expo-maze-runner
         use-aliases: true
-    env:
-      DEVICE_TYPE: "ANDROID_9_0"
-      APP_LOCATION: "build/output.apk"
+        command:
+          - --app=build/output.apk
+          - --farm=bs
+          - --device=ANDROID_9_0
+          - --a11y-locator
+          - --username=$BROWSER_STACK_USERNAME
+          - --access-key=$BROWSER_STACK_ACCESS_KEY
+          - --fail-fast
+          - --retry=2
     concurrency: 10
     concurrency_group: 'browserstack-app'
 
-  - label: 'expo iOS 12'
+  - label: ':runner: expo iOS 12'
     depends_on:
       - "build-expo-ipa"
       - "expo-maze-runner-image"
@@ -114,97 +120,145 @@ steps:
     plugins:
       artifacts#v1.2.0:
         download: "build/output.ipa"
-      docker-compose#v3.1.0:
+      docker-compose#v3.7.0:
         run: expo-maze-runner
         use-aliases: true
-    env:
-      DEVICE_TYPE: "IOS_12"
-      APP_LOCATION: "build/output.ipa"
+        command:
+          - --app=build/output.ipa
+          - --farm=bs
+          - --device=IOS_12
+          - --a11y-locator
+          - --appium-version=1.16.0
+          - --username=$BROWSER_STACK_USERNAME
+          - --access-key=$BROWSER_STACK_ACCESS_KEY
+          - --fail-fast
+          - --retry=2
     concurrency: 10
     concurrency_group: 'browserstack-app'
 
   - block: "Trigger full test suite"
 
-  - label: 'expo Android 8'
+  - label: ':runner: expo Android 8'
     timeout_in_minutes: 50
     plugins:
       artifacts#v1.2.0:
         download: "build/output.apk"
-      docker-compose#v3.1.0:
+      docker-compose#v3.7.0:
         run: expo-maze-runner
         use-aliases: true
-    env:
-      DEVICE_TYPE: "ANDROID_8_1"
-      APP_LOCATION: "build/output.apk"
+        command:
+          - --app=build/output.apk
+          - --farm=bs
+          - --device=ANDROID_8_1
+          - --a11y-locator
+          - --username=$BROWSER_STACK_USERNAME
+          - --access-key=$BROWSER_STACK_ACCESS_KEY
+          - --fail-fast
+          - --retry=2
     concurrency: 10
     concurrency_group: 'browserstack-app'
+    soft_fail:
+      - exit_status: "*"
 
-  - label: 'expo Android 7'
+  - label: ':runner: expo Android 7'
     timeout_in_minutes: 50
     plugins:
       artifacts#v1.2.0:
         download: "build/output.apk"
-      docker-compose#v3.1.0:
+      docker-compose#v3.7.0:
         run: expo-maze-runner
         use-aliases: true
-    env:
-      DEVICE_TYPE: "ANDROID_7_1"
-      APP_LOCATION: "build/output.apk"
+        command:
+          - --app=build/output.apk
+          - --farm=bs
+          - --device=ANDROID_7_1
+          - --a11y-locator
+          - --username=$BROWSER_STACK_USERNAME
+          - --access-key=$BROWSER_STACK_ACCESS_KEY
+          - --fail-fast
+          - --retry=2
     concurrency: 10
     concurrency_group: 'browserstack-app'
 
-  - label: 'expo Android 6'
+  - label: ':runner: expo Android 6'
     timeout_in_minutes: 50
     plugins:
       artifacts#v1.2.0:
         download: "build/output.apk"
-      docker-compose#v3.1.0:
+      docker-compose#v3.7.0:
         run: expo-maze-runner
         use-aliases: true
-    env:
-      DEVICE_TYPE: "ANDROID_6_0"
-      APP_LOCATION: "build/output.apk"
+        command:
+          - --app=build/output.apk
+          - --farm=bs
+          - --device=ANDROID_6_0
+          - --a11y-locator
+          - --username=$BROWSER_STACK_USERNAME
+          - --access-key=$BROWSER_STACK_ACCESS_KEY
+          - --fail-fast
+          - --retry=2
     concurrency: 10
     concurrency_group: 'browserstack-app'
 
-  - label: 'expo Android 5'
+  - label: ':runner: expo Android 5'
     timeout_in_minutes: 50
     plugins:
       artifacts#v1.2.0:
         download: "build/output.apk"
-      docker-compose#v3.1.0:
+      docker-compose#v3.7.0:
         run: expo-maze-runner
         use-aliases: true
-    env:
-      DEVICE_TYPE: "ANDROID_5_0"
-      APP_LOCATION: "build/output.apk"
+        command:
+          - --app=build/output.apk
+          - --farm=bs
+          - --device=ANDROID_5_0
+          - --a11y-locator
+          - --username=$BROWSER_STACK_USERNAME
+          - --access-key=$BROWSER_STACK_ACCESS_KEY
+          - --fail-fast
+          - --retry=2
     concurrency: 10
     concurrency_group: 'browserstack-app'
 
-  - label: 'expo iOS 10'
+  - label: ':runner: expo iOS 11'
     timeout_in_minutes: 50
     plugins:
       artifacts#v1.2.0:
         download: "build/output.ipa"
-      docker-compose#v3.1.0:
+      docker-compose#v3.7.0:
         run: expo-maze-runner
         use-aliases: true
-    env:
-      DEVICE_TYPE: "IOS_10"
-      APP_LOCATION: "build/output.ipa"
+        command:
+          - --app=build/output.ipa
+          - --farm=bs
+          - --device=IOS_11
+          - --a11y-locator
+          - --appium-version=1.16.0
+          - --username=$BROWSER_STACK_USERNAME
+          - --access-key=$BROWSER_STACK_ACCESS_KEY
+          - --fail-fast
+          - --retry=2
+          - --resilient
     concurrency: 10
     concurrency_group: 'browserstack-app'
 
-  - label: 'expo iOS 11'
+  - label: ':runner: expo iOS 10'
     timeout_in_minutes: 50
     plugins:
       artifacts#v1.2.0:
         download: "build/output.ipa"
-      docker-compose#v3.1.0:
+      docker-compose#v3.7.0:
         run: expo-maze-runner
         use-aliases: true
-    env:
-      DEVICE_TYPE: "IOS_11"
-      APP_LOCATION: "build/output.ipa"
+        command:
+          - --app=build/output.ipa
+          - --farm=bs
+          - --device=IOS_10
+          - --a11y-locator
+          - --username=$BROWSER_STACK_USERNAME
+          - --access-key=$BROWSER_STACK_ACCESS_KEY
+          - --fail-fast
+          - --retry=2
+          - --resilient
     concurrency: 10
     concurrency_group: 'browserstack-app'
