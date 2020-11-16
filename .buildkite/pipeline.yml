@@ -135,8 +135,6 @@ steps:
       BROWSER: "chrome_latest"
     concurrency: 5
     concurrency_group: 'browserstack'
-    soft_fail:
-      - exit_status: "*"
 
   - label: ':ie: v8 Browser tests'
     depends_on: "browser-maze-runner-image"
@@ -255,8 +253,6 @@ steps:
       BROWSER: "safari_13"
     concurrency: 5
     concurrency_group: 'browserstack'
-    soft_fail:
-      - exit_status: "*"
 
   - label: ':desktop_computer: Opera v12 Browser tests'
     depends_on: "browser-maze-runner-image"
@@ -336,8 +332,6 @@ steps:
       BROWSER: "firefox_latest"
     concurrency: 5
     concurrency_group: 'browserstack'
-    soft_fail:
-      - exit_status: "*"
 
   - label: ':node: Node 4'
     depends_on: "node-maze-runner-image"
