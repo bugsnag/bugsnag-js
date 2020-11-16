@@ -1,7 +1,6 @@
 import BugsnagExpoStatic, { Client, NotifiableError, OnErrorCallback, Event } from '..'
 import { Breadcrumb, Session } from '../types/bugsnag'
 import delivery from '@bugsnag/delivery-expo'
-import { exception } from 'console'
 
 jest.mock('expo-constants', () => ({
   default: {
