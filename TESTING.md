@@ -162,6 +162,7 @@ node ./scripts/publish.js http://localhost:4873
 This can also be overridden using the environment variable `NOTIFIER_VERSION`, which is useful during development when 
 making test, but not notifier, changes.
 
+
 If building against the current branch/commit, the packages must be published to a locally owned NPM repository 
 (! Not the official NPMJS repository !). This can be locally or remotely hosted, but should be versioned appropriately.  
 
