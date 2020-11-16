@@ -153,7 +153,13 @@ necessary credentials in our shared password manager.
 
 The test fixture (a React Native app) that tests are run against needs to be built with a published version of 
 @bugsnag/react-native.  By default, the build process will base this on the current branch/comment, 
-e.g. `7.2.0-my-branch.231f6ef7`.  This can be overridden using the environment variable NOTIFIER_VERSION, which is useful during development when 
+e.g. `7.5.2-my-branch.e8cbdad2f4`, which needs to be published first if building locally.  For example, if using 
+[Verdaccio](https://verdaccio.org/docs/en/docker.html):
+```
+node ./scripts/publish.js http://localhost:4873
+```
+
+This can also be overridden using the environment variable `NOTIFIER_VERSION`, which is useful during development when 
 making test, but not notifier, changes.
 
 If building against the current branch/commit, the packages must be published to a locally owned NPM repository 
@@ -168,8 +174,8 @@ access this package:
 The targeted release of `@bugsnag/react-native` must be tagged with the short hash of the current commit in order to be 
 picked up by the gradle build process.
 
-There may be several react-native versions that can be targeted and the `REACT_NATIVE_VERSION` environment variable 
-should be set accordingly:
+There are several react-native versions that can be targeted and the `REACT_NATIVE_VERSION` environment variable should 
+be set accordingly:
 
 | React native fixture | `REACT_NATIVE_VERSION` |
 |----------------------|------------------------|
@@ -200,7 +206,9 @@ Ensure that the following environment variables are set:
 - `BROWSER_STACK_USERNAME` - Your BrowserStack App Automate Username
 - `BROWSER_STACK_ACCESS_KEY` - Your BrowserStack App Automate Access Key
 
-See https://www.browserstack.com/local-testing/app-automate for details of the required local testing binary.
+See https://www.browserstack.com/local-testing/app-automate for details of the required local testing binary. In
+particular, these commands need the `BrowserStackLocal` binary (available 
+[here](https://www.browserstack.com/local-testing/releases) to reside in your home directory.  
 
 1. Check the contents of `Gemfile` to select the version of `maze-runner` to use.
 1. Change into the `test/react-native` directory
@@ -213,7 +221,7 @@ See https://www.browserstack.com/local-testing/app-automate for details of the r
                             --username=$BROWSER_STACK_USERNAME \
                             --access-key=$BROWSER_STACK_ACCESS_KEY \
                             --bs-local=~/BrowserStackLocal \
-                            test/react-native/features/app.feature
+                            features/app.feature
     ```
 1. Or on iOS:
     ```shell script
@@ -225,7 +233,7 @@ See https://www.browserstack.com/local-testing/app-automate for details of the r
                             --username=$BROWSER_STACK_USERNAME \
                             --access-key=$BROWSER_STACK_ACCESS_KEY \
                             --bs-local=~/BrowserStackLocal \
-                            test/react-native/features/app.feature
+                            features/app.feature
     ```
 1. To run all features, omit the final argument.
 1. Maze Runner also supports all options that Cucumber does.  Run `bundle exec maze-runner --help` for full details.
