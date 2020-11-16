@@ -19,7 +19,7 @@ steps:
   - label: ':docker: Prepare package.json'
     timeout_in_minutes: 3
     plugins:
-      - docker-compose#v3.3.0:
+      - docker-compose#v3.7.0:
           run: minimal-packager
     artifact_paths: min_packages.tar
 
@@ -30,14 +30,14 @@ steps:
     plugins:
       - artifacts#v1.2.0:
           download: min_packages.tar
-      - docker-compose#v3.3.0:
+      - docker-compose#v3.7.0:
           build:
             - ci
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
           cache-from:
             - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base-${BRANCH_NAME}
             - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base
-      - docker-compose#v3.3.0:
+      - docker-compose#v3.7.0:
           push:
             - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base-${BRANCH_NAME}
             - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base
@@ -47,21 +47,21 @@ steps:
   - label: 'Lint'
     timeout_in_minutes: 10
     plugins:
-      docker-compose#v3.3.0:
+      docker-compose#v3.7.0:
         run: ci
     command: 'npm run test:lint'
 
   - label: 'Unit tests'
     timeout_in_minutes: 10
     plugins:
-      docker-compose#v3.3.0:
+      docker-compose#v3.7.0:
         run: ci
     command: 'npm run test:unit'
 
   - label: 'Type checks/tests'
     timeout_in_minutes: 10
     plugins:
-      docker-compose#v3.3.0:
+      docker-compose#v3.7.0:
         run: ci
     command: 'npm run test:types'
 
@@ -71,11 +71,14 @@ steps:
     plugins:
       - artifacts#v1.2.0:
           download: min_packages.tar
-      - docker-compose#v3.3.0:
+      - docker-compose#v3.7.0:
           build:
             - browser-maze-runner
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
           cache-from:
+            - browser-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-browser-${BRANCH_NAME}
+      - docker-compose#v3.7.0:
+          push:
             - browser-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-browser-${BRANCH_NAME}
 
   - label:  ':docker: Build node maze runner image'
@@ -84,18 +87,21 @@ steps:
     plugins:
       - artifacts#v1.2.0:
           download: min_packages.tar
-      - docker-compose#v3.3.0:
+      - docker-compose#v3.7.0:
           build:
             - node-maze-runner
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
           cache-from:
+            - node-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-node-${BRANCH_NAME}
+      - docker-compose#v3.7.0:
+          push:
             - node-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-node-${BRANCH_NAME}
 
   - label: ':chrome: v43 Browser tests'
     depends_on: "browser-maze-runner-image"
     timeout_in_minutes: 10
     plugins:
-      docker-compose#v3.3.0:
+      docker-compose#v3.7.0:
         run: browser-maze-runner
         use-aliases: true
         verbose: true
@@ -108,7 +114,7 @@ steps:
     depends_on: "browser-maze-runner-image"
     timeout_in_minutes: 10
     plugins:
-      docker-compose#v3.3.0:
+      docker-compose#v3.7.0:
         run: browser-maze-runner
         use-aliases: true
         verbose: true
@@ -117,11 +123,24 @@ steps:
     concurrency: 5
     concurrency_group: 'browserstack'
 
+  - label: ':chrome: latest Browser tests'
+    depends_on: "browser-maze-runner-image"
+    timeout_in_minutes: 10
+    plugins:
+      docker-compose#v3.7.0:
+        run: browser-maze-runner
+        use-aliases: true
+        verbose: true
+    env:
+      BROWSER: "chrome_latest"
+    concurrency: 5
+    concurrency_group: 'browserstack'
+
   - label: ':ie: v8 Browser tests'
     depends_on: "browser-maze-runner-image"
     timeout_in_minutes: 10
     plugins:
-      docker-compose#v3.3.0:
+      docker-compose#v3.7.0:
         run: browser-maze-runner
         use-aliases: true
         verbose: true
@@ -134,7 +153,7 @@ steps:
     depends_on: "browser-maze-runner-image"
     timeout_in_minutes: 10
     plugins:
-      docker-compose#v3.3.0:
+      docker-compose#v3.7.0:
         run: browser-maze-runner
         use-aliases: true
         verbose: true
@@ -147,7 +166,7 @@ steps:
     depends_on: "browser-maze-runner-image"
     timeout_in_minutes: 10
     plugins:
-      docker-compose#v3.3.0:
+      docker-compose#v3.7.0:
         run: browser-maze-runner
         use-aliases: true
         verbose: true
@@ -160,7 +179,7 @@ steps:
     depends_on: "browser-maze-runner-image"
     timeout_in_minutes: 10
     plugins:
-      docker-compose#v3.3.0:
+      docker-compose#v3.7.0:
         run: browser-maze-runner
         use-aliases: true
         verbose: true
@@ -174,7 +193,7 @@ steps:
     depends_on: "browser-maze-runner-image"
     timeout_in_minutes: 10
     plugins:
-      docker-compose#v3.3.0:
+      docker-compose#v3.7.0:
         run: browser-maze-runner
         use-aliases: true
         verbose: true
@@ -187,7 +206,7 @@ steps:
     depends_on: "browser-maze-runner-image"
     timeout_in_minutes: 10
     plugins:
-      docker-compose#v3.3.0:
+      docker-compose#v3.7.0:
         run: browser-maze-runner
         use-aliases: true
         verbose: true
@@ -200,7 +219,7 @@ steps:
     depends_on: "browser-maze-runner-image"
     timeout_in_minutes: 10
     plugins:
-      docker-compose#v3.3.0:
+      docker-compose#v3.7.0:
         run: browser-maze-runner
         use-aliases: true
         verbose: true
@@ -213,7 +232,7 @@ steps:
     depends_on: "browser-maze-runner-image"
     timeout_in_minutes: 10
     plugins:
-      docker-compose#v3.3.0:
+      docker-compose#v3.7.0:
         run: browser-maze-runner
         use-aliases: true
         verbose: true
@@ -222,11 +241,24 @@ steps:
     concurrency: 5
     concurrency_group: 'browserstack'
 
+  - label: ':safari: v13 Browser tests'
+    depends_on: "browser-maze-runner-image"
+    timeout_in_minutes: 10
+    plugins:
+      docker-compose#v3.7.0:
+        run: browser-maze-runner
+        use-aliases: true
+        verbose: true
+    env:
+      BROWSER: "safari_13"
+    concurrency: 5
+    concurrency_group: 'browserstack'
+
   - label: ':desktop_computer: Opera v12 Browser tests'
     depends_on: "browser-maze-runner-image"
     timeout_in_minutes: 10
     plugins:
-      docker-compose#v3.3.0:
+      docker-compose#v3.7.0:
         run: browser-maze-runner
         use-aliases: true
         verbose: true
@@ -239,7 +271,7 @@ steps:
     depends_on: "browser-maze-runner-image"
     timeout_in_minutes: 20
     plugins:
-      docker-compose#v3.3.0:
+      docker-compose#v3.7.0:
         run: browser-maze-runner
         use-aliases: true
         verbose: true
@@ -253,7 +285,7 @@ steps:
     depends_on: "browser-maze-runner-image"
     timeout_in_minutes: 10
     plugins:
-      docker-compose#v3.3.0:
+      docker-compose#v3.7.0:
         run: browser-maze-runner
         use-aliases: true
         verbose: true
@@ -266,7 +298,7 @@ steps:
     depends_on: "browser-maze-runner-image"
     timeout_in_minutes: 10
     plugins:
-      docker-compose#v3.3.0:
+      docker-compose#v3.7.0:
         run: browser-maze-runner
         use-aliases: true
         verbose: true
@@ -279,7 +311,7 @@ steps:
     depends_on: "browser-maze-runner-image"
     timeout_in_minutes: 10
     plugins:
-      docker-compose#v3.3.0:
+      docker-compose#v3.7.0:
         run: browser-maze-runner
         use-aliases: true
         verbose: true
@@ -288,11 +320,24 @@ steps:
     concurrency: 5
     concurrency_group: 'browserstack'
 
+  - label: ':firefox: latest Browser tests'
+    depends_on: "browser-maze-runner-image"
+    timeout_in_minutes: 10
+    plugins:
+      docker-compose#v3.7.0:
+        run: browser-maze-runner
+        use-aliases: true
+        verbose: true
+    env:
+      BROWSER: "firefox_latest"
+    concurrency: 5
+    concurrency_group: 'browserstack'
+
   - label: ':node: Node 4'
     depends_on: "node-maze-runner-image"
     timeout_in_minutes: 30
     plugins:
-      docker-compose#v3.3.0:
+      docker-compose#v3.7.0:
         run: node-maze-runner
         use-aliases: true
         verbose: true
@@ -304,7 +349,7 @@ steps:
     depends_on: "node-maze-runner-image"
     timeout_in_minutes: 30
     plugins:
-      docker-compose#v3.3.0:
+      docker-compose#v3.7.0:
         run: node-maze-runner
         use-aliases: true
         verbose: true
@@ -316,7 +361,7 @@ steps:
     depends_on: "node-maze-runner-image"
     timeout_in_minutes: 30
     plugins:
-      docker-compose#v3.3.0:
+      docker-compose#v3.7.0:
         run: node-maze-runner
         use-aliases: true
         verbose: true
@@ -327,7 +372,7 @@ steps:
     depends_on: "node-maze-runner-image"
     timeout_in_minutes: 30
     plugins:
-      docker-compose#v3.3.0:
+      docker-compose#v3.7.0:
         run: node-maze-runner
         use-aliases: true
         verbose: true
@@ -338,9 +383,20 @@ steps:
     depends_on: "node-maze-runner-image"
     timeout_in_minutes: 30
     plugins:
-      docker-compose#v3.3.0:
+      docker-compose#v3.7.0:
         run: node-maze-runner
         use-aliases: true
         verbose: true
     env:
       NODE_VERSION: "12"
+
+  - label: ':node: Node 14'
+    depends_on: "node-maze-runner-image"
+    timeout_in_minutes: 30
+    plugins:
+      docker-compose#v3.7.0:
+        run: node-maze-runner
+        use-aliases: true
+        verbose: true
+    env:
+      NODE_VERSION: "14"

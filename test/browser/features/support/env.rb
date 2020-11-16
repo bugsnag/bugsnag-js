@@ -25,8 +25,12 @@ def get_test_url path
   "http://#{ENV['HOST']}:#{FIXTURES_SERVER_PORT}#{path}?ENDPOINT=#{URI::encode("http://#{ENV['API_HOST']}:#{MOCK_API_PORT}")}&API_KEY=#{URI::encode($api_key)}"
 end
 
+
 def get_error_message id
-  ERRORS[ENV['BROWSER']][id]
+  browser = ENV['BROWSER']
+  raise "The browser '#{browser}' does not exist in 'browser_errors.yml'" unless ERRORS.has_key?(browser)
+
+  ERRORS[browser][id]
 end
 
 # check if Selenium supports running javascript in the current browser

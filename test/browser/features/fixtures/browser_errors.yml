@@ -203,6 +203,32 @@ safari_10:
     lineNumber: 17
     columnNumber: 25
 
+safari_13:
+  handled:
+    errorClass: 'ReferenceError'
+    errorMessage: "Can't find variable: foo"
+  unhandled_syntax:
+    errorClass: 'SyntaxError'
+    errorMessage: "Unexpected token '!'. Parse error."
+    lineNumber: 17
+    columnNumber: 0
+    file: '/unhandled/script/a.html'
+  unhandled_thrown:
+    errorClass: 'Error'
+    errorMessage: "bad things"
+    lineNumber: 17
+    columnNumber: 22
+  unhandled_undefined_function:
+    errorClass: 'ReferenceError'
+    errorMessage: "Can't find variable: nevergoingtoexist_notinamillionyears"
+    lineNumber: 17
+    columnNumber: 43
+  unhandled_malformed_uri:
+    errorClass: 'URIError'
+    errorMessage: URI error
+    lineNumber: 17
+    columnNumber: 25
+
 opera_12:
   handled:
     errorClass: 'ReferenceError'
@@ -325,6 +351,32 @@ firefox_56:
     lineNumber: 17
     columnNumber: 7
 
+firefox_latest:
+  handled:
+    errorClass: 'ReferenceError'
+    errorMessage: 'foo is not defined'
+  unhandled_syntax:
+    errorClass: 'SyntaxError'
+    errorMessage: "unexpected token: '!'"
+    lineNumber: 17
+    columnNumber: 12
+    file: '/unhandled/script/a.html'
+  unhandled_thrown:
+    errorClass: 'Error'
+    errorMessage: "bad things"
+    lineNumber: 17
+    columnNumber: 13
+  unhandled_undefined_function:
+    errorClass: 'ReferenceError'
+    errorMessage: nevergoingtoexist_notinamillionyears is not defined
+    lineNumber: 17
+    columnNumber: 7
+  unhandled_malformed_uri:
+    errorClass: 'URIError'
+    errorMessage: malformed URI sequence
+    lineNumber: 17
+    columnNumber: 25
+
 chrome_43:
   handled:
     errorClass: 'ReferenceError'
@@ -358,6 +410,32 @@ chrome_61:
   unhandled_syntax:
     errorClass: 'SyntaxError'
     errorMessage: "Unexpected token !"
+    lineNumber: 17
+    columnNumber: 13
+    file: '/unhandled/script/a.html'
+  unhandled_thrown:
+    errorClass: 'Error'
+    errorMessage: "bad things"
+    lineNumber: 17
+    columnNumber: 13
+  unhandled_undefined_function:
+    errorClass: 'ReferenceError'
+    errorMessage: nevergoingtoexist_notinamillionyears is not defined
+    lineNumber: 17
+    columnNumber: 7
+  unhandled_malformed_uri:
+    errorClass: 'URIError'
+    errorMessage: URI malformed
+    lineNumber: 17
+    columnNumber: 7
+
+chrome_latest:
+  handled:
+    errorClass: 'ReferenceError'
+    errorMessage: 'foo is not defined'
+  unhandled_syntax:
+    errorClass: 'SyntaxError'
+    errorMessage: "Unexpected token '!'"
     lineNumber: 17
     columnNumber: 13
     file: '/unhandled/script/a.html'
