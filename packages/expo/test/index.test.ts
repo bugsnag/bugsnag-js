@@ -71,7 +71,7 @@ jest.mock('../../delivery-expo/node_modules/expo-file-system', () => ({
 
 jest.mock('../../delivery-expo/node_modules/@react-native-community/netinfo', () => ({
   addEventListener: jest.fn(),
-  fetch: () => Promise.resolve({ isConnected: true, dogger: 'tes' })
+  fetch: () => Promise.resolve({ isConnected: true })
 }))
 
 jest.mock('../../plugin-react-native-connectivity-breadcrumbs/node_modules/@react-native-community/netinfo', () => ({
