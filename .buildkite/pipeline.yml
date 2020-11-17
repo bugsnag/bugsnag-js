@@ -24,7 +24,7 @@ steps:
   #
   - label: 'Trigger Browser pipeline'
     depends_on: "package-js"
-    trigger: 'bugsnag-js-browsers'
+    trigger: 'bugsnag-js-browser'
     build:
       branch: '${BUILDKITE_BRANCH}'
       commit: '${BUILDKITE_COMMIT}'
@@ -61,7 +61,6 @@ steps:
   #
   # Core tests and checks
   #
-
   - label: ':docker: Build CI image'
     key: "ci-image"
     depends_on: "package-js"
