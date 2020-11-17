@@ -42,8 +42,7 @@ steps:
 
   - label: 'Trigger Expo pipeline'
     depends_on: "publish-js"
-    # TODO: Rename to bugsnag-js-expo
-    trigger: 'at-bugsnag-expo'
+    trigger: 'bugsnag-js-expo'
     build:
       branch: '${BUILDKITE_BRANCH}'
       commit: '${BUILDKITE_COMMIT}'
@@ -52,8 +51,7 @@ steps:
 
   - label: 'Trigger React Native pipeline'
     depends_on: "publish-js"
-    # TODO: Rename to bugsnag-js-react-native
-    trigger: 'at-bugsnag-react-native'
+    trigger: 'bugsnag-js-react-native'
     build:
       branch: '${BUILDKITE_BRANCH}'
       commit: '${BUILDKITE_COMMIT}'
