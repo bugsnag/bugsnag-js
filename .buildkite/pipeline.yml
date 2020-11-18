@@ -24,7 +24,7 @@ steps:
   #
   - label: 'Trigger Browser pipeline'
     depends_on: "package-js"
-    trigger: 'bugsnag-js-browsers'
+    trigger: 'bugsnag-js-browser'
     build:
       branch: '${BUILDKITE_BRANCH}'
       commit: '${BUILDKITE_COMMIT}'
@@ -58,10 +58,18 @@ steps:
       message: '${BUILDKITE_MESSAGE}'
     async: true
 
+  - label: 'Trigger React Native CLI pipeline'
+    depends_on: "publish-js"
+    trigger: 'bugsnag-js-react-native-cli'
+    build:
+      branch: '${BUILDKITE_BRANCH}'
+      commit: '${BUILDKITE_COMMIT}'
+      message: '${BUILDKITE_MESSAGE}'
+    async: true
+
   #
   # Core tests and checks
   #
-
   - label: ':docker: Build CI image'
     key: "ci-image"
     depends_on: "package-js"
