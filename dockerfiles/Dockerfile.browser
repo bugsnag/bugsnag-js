@@ -45,24 +45,7 @@ RUN find . -name package.json -type f -mindepth 2 -maxdepth 3 ! -path "./node_mo
 RUN rm -fr **/*/node_modules/
 
 # The maze-runner browser tests
-FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v2-cli as browser-maze-runner
-RUN apk add --no-cache ruby-dev build-base libffi-dev curl-dev
-ENV GLIBC_VERSION 2.23-r3
-
-RUN wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub \
-  && wget "https://github.com/sgerrand/alpine-pkg-glibc/releases/download/$GLIBC_VERSION/glibc-$GLIBC_VERSION.apk" \
-  && apk --no-cache add "glibc-$GLIBC_VERSION.apk" \
-  && rm "glibc-$GLIBC_VERSION.apk" \
-  && wget "https://github.com/sgerrand/alpine-pkg-glibc/releases/download/$GLIBC_VERSION/glibc-bin-$GLIBC_VERSION.apk" \
-  && apk --no-cache add "glibc-bin-$GLIBC_VERSION.apk" \
-  && rm "glibc-bin-$GLIBC_VERSION.apk" \
-  && wget "https://github.com/sgerrand/alpine-pkg-glibc/releases/download/$GLIBC_VERSION/glibc-i18n-$GLIBC_VERSION.apk" \
-  && apk --no-cache add "glibc-i18n-$GLIBC_VERSION.apk" \
-  && rm "glibc-i18n-$GLIBC_VERSION.apk"
-
-RUN wget -q https://www.browserstack.com/browserstack-local/BrowserStackLocal-linux-x64.zip \
-  && unzip BrowserStackLocal-linux-x64.zip \
-  && rm BrowserStackLocal-linux-x64.zip
+FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v3-cli as browser-maze-runner
 
 COPY --from=browser-feature-builder /app/test/browser /app/test/browser/
 WORKDIR /app/test/browser

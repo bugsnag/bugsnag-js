@@ -70,15 +70,9 @@ services:
       dockerfile: dockerfiles/Dockerfile.expo
       args:
         - BUILDKITE_BUILD_NUMBER
-    command: --fail-fast --retry 2
     environment:
       VERBOSE:
       DEBUG:
-      BROWSER_STACK_USERNAME:
-      BROWSER_STACK_ACCESS_KEY:
-      BROWSER_STACK_LOCAL_IDENTIFIER: ${BUILDKITE_JOB_ID:-maze-runner}
-      APP_LOCATION:
-      DEVICE_TYPE:
     networks:
       default:
         aliases:
@@ -116,6 +110,11 @@ services:
     volumes:
       - ./build:/app/test/expo/features/fixtures/build
 
+  android-builder-base:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile.android-builder-base
+
   react-native-android-builder:
     build:
       context: .
@@ -140,6 +139,7 @@ services:
     volumes:
       - ./build:/app/build
       - ./test:/app/test
+      - ./features:/app/features
 
   react-native-maze-runner:
     build:
@@ -150,11 +150,6 @@ services:
     environment:
       VERBOSE:
       DEBUG:
-      BROWSER_STACK_USERNAME:
-      BROWSER_STACK_ACCESS_KEY:
-      BROWSER_STACK_LOCAL_IDENTIFIER: ${BUILDKITE_JOB_ID:-maze-runner}
-      APP_LOCATION:
-      DEVICE_TYPE:
       SKIP_NAVIGATION_SCENARIOS:
     networks:
       default:

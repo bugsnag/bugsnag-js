@@ -1,46 +1,35 @@
-bs_username = ENV['BROWSER_STACK_USERNAME']
-bs_access_key = ENV['BROWSER_STACK_ACCESS_KEY']
-bs_local_id = ENV['BROWSER_STACK_LOCAL_IDENTIFIER'] || 'mazzzzeee'
-app_location = ENV['APP_LOCATION']
-
-def device_type
-  ENV['DEVICE_TYPE']
-end
-
 Before('@skip_android_5') do |scenario|
-  skip_this_scenario("Skipping scenario") if device_type == 'ANDROID_5_0'
+  if MazeRunner.driver.capabilities['os'] == 'android' and MazeRunner.config.os_version.floor == 5
+    skip_this_scenario("Skipping Android 5")
+  end
 end
 
 Before('@skip_android_7') do |scenario|
-  skip_this_scenario("Skipping scenario") if device_type == 'ANDROID_7_1'
+  if MazeRunner.driver.capabilities['os'] == 'android' and MazeRunner.config.os_version.floor == 7
+    skip_this_scenario("Skipping Android 7")
+  end
 end
 
 Before('@skip_android_8') do |scenario|
-  skip_this_scenario("Skipping scenario") if device_type == 'ANDROID_8_1'
+  if MazeRunner.driver.capabilities['os'] == 'android' and MazeRunner.config.os_version.floor == 8
+    skip_this_scenario("Skipping Android 8")
+  end
 end
 
 Before('@skip_ios_10') do |scenario|
-  skip_this_scenario("Skipping scenario") if device_type == 'IOS_10'
+  if MazeRunner.driver.capabilities['os'] == 'ios' and MazeRunner.config.os_version.floor == 10
+    skip_this_scenario("Skipping iOS 10")
+  end
 end
 
 Before('@skip_ios_11') do |scenario|
-  skip_this_scenario("Skipping scenario") if device_type == 'IOS_11'
+  if MazeRunner.driver.capabilities['os'] == 'ios' and MazeRunner.config.os_version.floor == 11
+    skip_this_scenario("Skipping iOS 11")
+  end
 end
 
 Before('@skip_ios_12') do |scenario|
-  skip_this_scenario("Skipping scenario") if device_type == 'IOS_12'
-end
-
-After do |_scenario|
-  $driver.reset_with_timeout
-end
-
-AfterConfiguration do |config|
-  AppAutomateDriver.new(bs_username, bs_access_key, bs_local_id, device_type, app_location, :accessibility_id)
-  $driver.start_driver
-end
-
-# Ensure the browserstack instance is stopped
-at_exit do
-  $driver.driver_quit if $driver
+  if MazeRunner.driver.capabilities['os'] == 'ios' and MazeRunner.config.os_version.floor == 12
+    skip_this_scenario("Skipping iOS 12")
+  end
 end

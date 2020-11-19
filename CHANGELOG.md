@@ -1,6 +1,6 @@
 # Changelog
 
-## TBD
+## v7.5.2 (2020-11-09)
 
 ### Changed
 
@@ -11,18 +11,14 @@
   - Fix app version reported for crashes that occur before an upgrade. [bugsnag-cocoa#862](https://github.com/bugsnag/bugsnag-cocoa/pull/862)
   - Catch exceptions when (de)serializing JSON. [bugsnag-cocoa#856](https://github.com/bugsnag/bugsnag-cocoa/pull/856)
 - (react-native): Update bugsnag-android to v5.2.3 [#1119](https://github.com/bugsnag/bugsnag-js/pull/1119)
-
   - Flush persisted sessions on launch and on connectivity changes
-    [#973](https://github.com/bugsnag/bugsnag-android/pull/973)
-
+    [bugsnag-android#973](https://github.com/bugsnag/bugsnag-android/pull/973)
   - Increase breadcrumb time precision to milliseconds
-    [#954](https://github.com/bugsnag/bugsnag-android/pull/954)
-
+    [bugsnag-android#954](https://github.com/bugsnag/bugsnag-android/pull/954)
   - Default to allowing requests when checking connectivity
-    [#970](https://github.com/bugsnag/bugsnag-android/pull/970)
-
+    [bugsnag-android#970](https://github.com/bugsnag/bugsnag-android/pull/970)
   - Support changing NDK Event's api key in OnErrorCallback
-    [#964](https://github.com/bugsnag/bugsnag-android/pull/964)
+    [bugsnag-android#964](https://github.com/bugsnag/bugsnag-android/pull/964)
 
 ## v7.5.1 (2020-10-23)
 
