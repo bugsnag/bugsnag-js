@@ -11,6 +11,7 @@ Scenario: Meta data can be set via the client
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "MetadataClientError"
   And the event "metaData.extra.reason" equals "metadataClientName"
+  And the Bugsnag-Integrity header is valid
 
 Scenario: Meta data can be set via a callback
   Given the element "metadataCallbackButton" is present
@@ -19,3 +20,4 @@ Scenario: Meta data can be set via a callback
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "MetadataCallbackError"
   And the event "metaData.extra.reason" equals "metadataCallbackName"
+  And the Bugsnag-Integrity header is valid
