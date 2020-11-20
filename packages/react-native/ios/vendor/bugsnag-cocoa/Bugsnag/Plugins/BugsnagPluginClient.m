@@ -42,7 +42,7 @@ static NSString *const kPluginReactNative = @"BugsnagReactNativePlugin";
 /**
  * Automagically instantiate plugins which Bugsnag uses via class name (e.g. BugsnagReactNativePlugin)
  */
-- (id)instantiateBugsnagPlugin:(NSString *)clzName {
+- (instancetype)instantiateBugsnagPlugin:(NSString *)clzName {
     Class clz = NSClassFromString(clzName);
     if (clz) {
         return [clz new];
