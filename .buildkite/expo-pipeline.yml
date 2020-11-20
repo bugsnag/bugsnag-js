@@ -136,7 +136,7 @@ steps:
     concurrency: 9
     concurrency_group: 'browserstack-app'
 
-  - block: "Trigger full test suite"
+#  - block: "Trigger full test suite"
 
   - label: ':runner: expo Android 8'
     timeout_in_minutes: 50
@@ -155,6 +155,8 @@ steps:
           - --access-key=$BROWSER_STACK_ACCESS_KEY
           - --fail-fast
           - --retry=2
+          - --appium-version=1.18.0
+          - --capabilities={"appWaitForLaunch":"false"}
     concurrency: 9
     concurrency_group: 'browserstack-app'
     soft_fail:
