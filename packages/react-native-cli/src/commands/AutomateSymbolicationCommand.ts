@@ -1,6 +1,7 @@
 import prompts from 'prompts'
 import logger from '../Logger'
 import { modifyRootBuildGradle, modifyAppBuildGradle } from '../lib/Gradle'
+import { updateXcodeProject } from '../lib/Xcode'
 import { install, detectInstalled, guessPackageManager } from '../lib/Npm'
 import onCancel from '../lib/OnCancel'
 
@@ -16,7 +17,8 @@ export default async function run (argv: string[], opts: Record<string, unknown>
     }, { onCancel })
 
     if (iosIntegration) {
-      logger.info('TODO lookup xcode project and mutate it')
+      logger.info('Modifying the Xcode project')
+      await updateXcodeProject(projectRoot, logger)
     }
 
     const { androidIntegration } = await prompts({
@@ -27,7 +29,7 @@ export default async function run (argv: string[], opts: Record<string, unknown>
     }, { onCancel })
 
     if (androidIntegration) {
-      logger.info('Adding Bugsnag Gradle build')
+      logger.info('Modifying the Gradle build')
       await modifyRootBuildGradle(projectRoot, logger)
       await modifyAppBuildGradle(projectRoot, logger)
     }
