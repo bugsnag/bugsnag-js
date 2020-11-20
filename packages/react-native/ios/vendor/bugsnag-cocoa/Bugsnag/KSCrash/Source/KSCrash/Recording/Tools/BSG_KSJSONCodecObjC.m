@@ -87,7 +87,7 @@ codecWithEncodeOptions:(BSG_KSJSONEncodeOption)encodeOptions
  *
  * @return The initialized codec.
  */
-- (id)initWithEncodeOptions:(BSG_KSJSONEncodeOption)encodeOptions
+- (instancetype)initWithEncodeOptions:(BSG_KSJSONEncodeOption)encodeOptions
               decodeOptions:(BSG_KSJSONDecodeOption)decodeOptions;
 
 #pragma mark Callbacks
@@ -188,7 +188,7 @@ codecWithEncodeOptions:(BSG_KSJSONEncodeOption)encodeOptions
                                  decodeOptions:decodeOptions];
 }
 
-- (id)initWithEncodeOptions:(BSG_KSJSONEncodeOption)encodeOptions
+- (instancetype)initWithEncodeOptions:(BSG_KSJSONEncodeOption)encodeOptions
               decodeOptions:(BSG_KSJSONDecodeOption)decodeOptions {
     if ((self = [super init])) {
         self.containerStack = [NSMutableArray array];

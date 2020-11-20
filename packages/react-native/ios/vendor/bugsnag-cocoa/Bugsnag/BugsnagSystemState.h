@@ -20,6 +20,8 @@
 #define SYSTEMSTATE_APP_BUNDLE_VERSION @"bundleVersion"
 #define SYSTEMSTATE_APP_DEBUGGER_IS_ACTIVE @"debuggerIsActive"
 
+#define SYSTEMSTATE_DEVICE_BOOT_TIME @"bootTime"
+
 #define PLATFORM_WORD_SIZE sizeof(void*)*8
 
 NS_ASSUME_NONNULL_BEGIN
@@ -27,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface BugsnagSystemState : NSObject
 
 @property(readonly,nonatomic) NSDictionary *lastLaunchState;
-@property(readonly,nonatomic) NSDictionary *currentLaunchState;
+@property(readonly,atomic) NSDictionary *currentLaunchState;
 
 - (instancetype)init NS_UNAVAILABLE;
 - (instancetype)initWithConfiguration:(BugsnagConfiguration *)config;

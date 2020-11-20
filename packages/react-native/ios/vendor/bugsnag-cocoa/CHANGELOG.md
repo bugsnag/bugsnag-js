@@ -1,6 +1,18 @@
 Changelog
 =========
 
+## 6.2.5 (2020-11-18)
+
+### Bug fixes
+
+* Fixed a rare crash due to a race condition in BugsnagSystemState.
+  [#893](https://github.com/bugsnag/bugsnag-cocoa/pull/893)
+  [#866](https://github.com/bugsnag/bugsnag-cocoa/issues/886)
+
+* Out Of Memory errors are no longer reported if a device reboot was detected.
+  [#822](https://github.com/bugsnag/bugsnag-cocoa/pull/882)
+  [#545](https://github.com/bugsnag/bugsnag-cocoa/issues/545)
+
 ## 6.2.4 (2020-11-04)
 
 ### Bug fixes
