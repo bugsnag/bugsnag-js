@@ -11,7 +11,6 @@ Scenario: User data can be set via the client
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "UserClientError"
   And the event "user.name" equals "userClientName"
-  And the Bugsnag-Integrity header is valid
 
 Scenario: User data can be set via a callback
   Given the element "userCallbackButton" is present
@@ -20,4 +19,3 @@ Scenario: User data can be set via a callback
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "UserCallbackError"
   And the event "user.name" equals "userCallbackName"
-  And the Bugsnag-Integrity header is valid

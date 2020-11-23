@@ -13,7 +13,6 @@ Scenario: App-state breadcrumbs are captured by default
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "defaultAppStateBreadcrumbsBehaviour"
   And the event has a "state" breadcrumb named "App state changed"
-  And the Bugsnag-Integrity header is valid
 
 @skip_android_5
 Scenario: App-state breadcrumbs can be disabled specifically
@@ -28,7 +27,6 @@ Scenario: App-state breadcrumbs can be disabled specifically
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "disabledAppStateBreadcrumbsBehaviour"
   And the event does not have a "state" breadcrumb named "App state changed"
-  And the Bugsnag-Integrity header is valid
 
 @skip_android_5
 Scenario: App-state breadcrumbs are disabled with other auto-breadcrumbs
@@ -43,7 +41,6 @@ Scenario: App-state breadcrumbs are disabled with other auto-breadcrumbs
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "disabledAllAppStateBreadcrumbsBehaviour"
   And the event does not have a "state" breadcrumb named "App state changed"
-  And the Bugsnag-Integrity header is valid
 
 @skip_android_5
 Scenario: App-state breadcrumbs overrides auto-breadcrumbs
@@ -58,7 +55,6 @@ Scenario: App-state breadcrumbs overrides auto-breadcrumbs
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "overrideAppStateBreadcrumbsBehaviour"
   And the event has a "state" breadcrumb named "App state changed"
-  And the Bugsnag-Integrity header is valid
 
 Scenario: Console breadcrumbs are captured by default
   Given the element "consoleBreadcrumbs" is present
@@ -69,7 +65,6 @@ Scenario: Console breadcrumbs are captured by default
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "defaultConsoleBreadcrumbsBehaviour"
   And the event has a "log" breadcrumb named "Console output"
-  And the Bugsnag-Integrity header is valid
 
 Scenario: Console breadcrumbs can be disabled explicitly
   Given the element "consoleBreadcrumbs" is present
@@ -80,7 +75,6 @@ Scenario: Console breadcrumbs can be disabled explicitly
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "disabledConsoleBreadcrumbsBehaviour"
   And the event does not have a "log" breadcrumb named "Console output"
-  And the Bugsnag-Integrity header is valid
 
 Scenario: Console breadcrumbs are disabled with other auto-breadcrumbs
   Given the element "consoleBreadcrumbs" is present
@@ -91,7 +85,6 @@ Scenario: Console breadcrumbs are disabled with other auto-breadcrumbs
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "disabledAllConsoleBreadcrumbsBehaviour"
   And the event does not have a "log" breadcrumb named "Console output"
-  And the Bugsnag-Integrity header is valid
 
 Scenario: Console breadcrumbs overrides auto-breadcrumbs
   Given the element "consoleBreadcrumbs" is present
@@ -102,7 +95,6 @@ Scenario: Console breadcrumbs overrides auto-breadcrumbs
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "overrideConsoleBreadcrumbsBehaviour"
   And the event has a "log" breadcrumb named "Console output"
-  And the Bugsnag-Integrity header is valid
 
 Scenario: Network breadcrumbs are captured by default
   Given the element "networkBreadcrumbs" is present
@@ -115,7 +107,6 @@ Scenario: Network breadcrumbs are captured by default
   And the event has a "request" breadcrumb named "XMLHttpRequest succeeded"
   And the event "breadcrumbs.1.metaData.status" equals 200
   And the event "breadcrumbs.1.metaData.request" equals "GET http://postman-echo.com/get"
-  And the Bugsnag-Integrity header is valid
 
 Scenario: Network breadcrumbs can be disabled explicitly
   Given the element "networkBreadcrumbs" is present
@@ -126,7 +117,6 @@ Scenario: Network breadcrumbs can be disabled explicitly
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "disabledNetworkBreadcrumbsBehaviour"
   And the event does not have a "request" breadcrumb named "XMLHttpRequest succeeded"
-  And the Bugsnag-Integrity header is valid
 
 Scenario: Network breadcrumbs are disabled with other auto-breadcrumbs
   Given the element "networkBreadcrumbs" is present
@@ -137,7 +127,6 @@ Scenario: Network breadcrumbs are disabled with other auto-breadcrumbs
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "disabledAllNetworkBreadcrumbsBehaviour"
   And the event does not have a "request" breadcrumb named "XMLHttpRequest succeeded"
-  And the Bugsnag-Integrity header is valid
 
 Scenario: Network breadcrumbs overrides auto-breadcrumbs
   Given the element "networkBreadcrumbs" is present
@@ -150,4 +139,3 @@ Scenario: Network breadcrumbs overrides auto-breadcrumbs
   And the event has a "request" breadcrumb named "XMLHttpRequest succeeded"
   And the event "breadcrumbs.0.metaData.status" equals 200
   And the event "breadcrumbs.0.metaData.request" equals "GET http://postman-echo.com/get"
-  And the Bugsnag-Integrity header is valid

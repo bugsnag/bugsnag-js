@@ -22,7 +22,6 @@ Scenario: Sessions can be automatically delivered
   And the payload field "app" is not null
   And the payload field "device" is not null
   And the payload has a valid sessions array
-  And the Bugsnag-Integrity header is valid
 
 Scenario: Sessions can be manually delivered
   Given the element "manualSessionButton" is present
@@ -42,4 +41,3 @@ Scenario: Sessions can be manually delivered
   And the payload field "app" is not null
   And the payload field "device" is not null
   And the payload has a valid sessions array
-  And the Bugsnag-Integrity header is valid

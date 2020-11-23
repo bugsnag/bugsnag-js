@@ -18,8 +18,7 @@
   "license": "MIT",
   "dependencies": {
     "@react-native-community/netinfo": "5.9.6",
-    "expo-file-system": "~9.2",
-    "expo-crypto": "~8.3.0"
+    "expo-file-system": "~9.2"
   },
   "devDependencies": {
     "@bugsnag/core": "^7.3.5"

@@ -24,7 +24,6 @@ jest.mock('../../plugin-expo-app/node_modules/expo-constants', () => ({
 }))
 
 jest.mock('@bugsnag/delivery-expo')
-jest.mock('../../delivery-expo/node_modules/expo-crypto', () => ({}))
 
 jest.mock('react-native', () => ({
   NativeModules: {

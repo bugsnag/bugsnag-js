@@ -2,7 +2,6 @@ const payload = require('@bugsnag/core/lib/json-payload')
 const UndeliveredPayloadQueue = require('./queue')
 const NetworkStatus = require('./network-status')
 const RedeliveryLoop = require('./redelivery')
-const Crypto = require('expo-crypto')
 
 module.exports = (client, fetch = global.fetch) => {
   const networkStatus = new NetworkStatus()
@@ -35,10 +34,8 @@ module.exports = (client, fetch = global.fetch) => {
 
   const { queues, queueConsumers } = initRedelivery(networkStatus, client._logger, send)
 
-  const hash = payload => Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA1, payload)
-
   return {
-    sendEvent: async (event, cb = () => {}) => {
+    sendEvent: (event, cb = () => {}) => {
       const url = client._config.endpoints.notify
 
       let body, opts
@@ -49,7 +46,6 @@ module.exports = (client, fetch = global.fetch) => {
           headers: {
             'Content-Type': 'application/json',
             'Bugsnag-Api-Key': event.apiKey || client._config.apiKey,
-            'Bugsnag-Integrity': `sha1 ${await hash(body)}`,
             'Bugsnag-Payload-Version': '4',
             'Bugsnag-Sent-At': (new Date()).toISOString()
           },
@@ -69,7 +65,7 @@ module.exports = (client, fetch = global.fetch) => {
       }
     },
 
-    sendSession: async (session, cb = () => {}) => {
+    sendSession: (session, cb = () => {}) => {
       const url = client._config.endpoints.sessions
 
       let body, opts
@@ -80,7 +76,6 @@ module.exports = (client, fetch = global.fetch) => {
           headers: {
             'Content-Type': 'application/json',
             'Bugsnag-Api-Key': client._config.apiKey,
-            'Bugsnag-Integrity': `sha1 ${await hash(body)}`,
             'Bugsnag-Payload-Version': '1',
             'Bugsnag-Sent-At': (new Date()).toISOString()
           },
