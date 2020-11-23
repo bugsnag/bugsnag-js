@@ -8,14 +8,6 @@ async function loadFixture (fixture: string) {
   return jest.requireActual('fs').promises.readFile(fixture, 'utf8')
 }
 
-async function generateNotFoundError () {
-  try {
-    await jest.requireActual('fs').promises.readFile(path.join(__dirname, 'does-not-exist.txt'))
-  } catch (e) {
-    return e
-  }
-}
-
 jest.mock('../../Logger')
 jest.mock('fs', () => {
   return { promises: { readFile: jest.fn(), writeFile: jest.fn(), readdir: jest.fn() }, readFileSync: jest.fn() }
