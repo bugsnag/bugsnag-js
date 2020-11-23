@@ -32,10 +32,10 @@ fi
 
 case "$CONFIGURATION" in
   *Debug*)
-    DEV=true
+    DEV=--dev
     ;;
   *)
-    DEV=false
+    DEV=
     ;;
 esac
 
@@ -44,6 +44,6 @@ esac
   --app-bundle-version "$BUNDLE_VERSION" \
   --app-version "$APP_VERSION" \
   --bundle "$BUNDLE_FILE" \
-  --dev "$DEV" \
   --platform "ios" \
-  --source-map "$MAP_FILE"
+  --source-map "$MAP_FILE" \
+  "$DEV"
