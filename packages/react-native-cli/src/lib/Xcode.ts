@@ -22,34 +22,30 @@ export async function updateXcodeProject (projectRoot: string, logger: Logger) {
   }
   const pbxProjPath = path.join(iosDir, xcodeprojDir, 'project.pbxproj')
   const proj = xcode.project(pbxProjPath)
-  try {
-    await new Promise((resolve, reject) => {
-      proj.parse((err) => {
-        if (err) return reject(err)
-        resolve()
-      })
+  await new Promise((resolve, reject) => {
+    proj.parse((err) => {
+      if (err) return reject(err)
+      resolve()
     })
-    const buildPhaseMap = proj?.hash?.project?.objects?.PBXShellScriptBuildPhase || []
-    logger.info('Ensuring React Native build phase outputs source maps')
-    const didUpdate = await updateBuildReactNativeTask(buildPhaseMap, logger)
-    logger.info('Adding build phase to upload source maps to Bugsnag')
-    const didAdd = await addUploadSourceMapsTask(proj, buildPhaseMap, logger)
-    const didChange = didUpdate || didAdd
-    if (!didChange) return
-    await fs.writeFile(pbxProjPath, proj.writeSync(), 'utf8')
-    logger.success('Written changes to Xcode project')
-  } catch (e) {
-    throw e
-  }
+  })
+  const buildPhaseMap = proj?.hash?.project?.objects?.PBXShellScriptBuildPhase || []
+  logger.info('Ensuring React Native build phase outputs source maps')
+  const didUpdate = await updateBuildReactNativeTask(buildPhaseMap, logger)
+  logger.info('Adding build phase to upload source maps to Bugsnag')
+  const didAdd = await addUploadSourceMapsTask(proj, buildPhaseMap, logger)
+  const didChange = didUpdate || didAdd
+  if (!didChange) return
+  await fs.writeFile(pbxProjPath, proj.writeSync(), 'utf8')
+  logger.success('Written changes to Xcode project')
 }
 
-async function updateBuildReactNativeTask (buildPhaseMap: Record<string,Record<string,unknown>>, logger: Logger): Promise<boolean> {
+async function updateBuildReactNativeTask (buildPhaseMap: Record<string, Record<string, unknown>>, logger: Logger): Promise<boolean> {
   let didAnythingUpdate = false
   for (const shellBuildPhaseKey in buildPhaseMap) {
     const phase = buildPhaseMap[shellBuildPhaseKey]
     if (typeof phase.shellScript === 'string' && phase.shellScript.includes('react-native/scripts/react-native-xcode.sh')) {
       let didThisUpdate
-      [ phase.shellScript, didThisUpdate ] = addExtraPackagerArgs(shellBuildPhaseKey, phase.shellScript, logger)
+      [phase.shellScript, didThisUpdate] = addExtraPackagerArgs(shellBuildPhaseKey, phase.shellScript, logger)
       if (didThisUpdate) {
         didAnythingUpdate = true
       }
@@ -58,7 +54,7 @@ async function updateBuildReactNativeTask (buildPhaseMap: Record<string,Record<s
   return didAnythingUpdate
 }
 
-async function addUploadSourceMapsTask (proj: Project, buildPhaseMap: Record<string,Record<string,unknown>>, logger: Logger): Promise<boolean> {
+async function addUploadSourceMapsTask (proj: Project, buildPhaseMap: Record<string, Record<string, unknown>>, logger: Logger): Promise<boolean> {
   for (const shellBuildPhaseKey in buildPhaseMap) {
     const phase = buildPhaseMap[shellBuildPhaseKey]
     if (typeof phase.shellScript === 'string' && phase.shellScript.includes('bugsnag-react-native-xcode.sh')) {
@@ -81,12 +77,12 @@ async function addUploadSourceMapsTask (proj: Project, buildPhaseMap: Record<str
   return true
 }
 
-function addExtraPackagerArgs(phaseId: string, existingShellScript: string, logger: Logger): [string, boolean] {
+function addExtraPackagerArgs (phaseId: string, existingShellScript: string, logger: Logger): [string, boolean] {
   const parsedExistingShellScript = JSON.parse(existingShellScript) as string
   if (parsedExistingShellScript.includes(EXTRA_PACKAGER_ARGS)) {
     logger.warn(`The "Bundle React Native Code and Images" build phase (${phaseId}) already includes the required arguments`)
-    return [ existingShellScript, false ]
+    return [existingShellScript, false]
   }
   const scriptLines = parsedExistingShellScript.split('\n')
-  return [ JSON.stringify([EXTRA_PACKAGER_ARGS].concat(scriptLines).join('\n')), true ]
+  return [JSON.stringify([EXTRA_PACKAGER_ARGS].concat(scriptLines).join('\n')), true]
 }
