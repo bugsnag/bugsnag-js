@@ -30,20 +30,19 @@ if [ ! -f "$MAP_FILE" ]; then
   exit 1
 fi
 
+ARGS=(
+    "--api-key" "$API_KEY"
+    "--app-bundle-version" "$BUNDLE_VERSION"
+    "--app-version" "$APP_VERSION"
+    "--bundle" "$BUNDLE_FILE"
+    "--platform" "ios"
+    "--source-map" "$MAP_FILE"
+    )
+
 case "$CONFIGURATION" in
   *Debug*)
-    DEV=--dev
-    ;;
-  *)
-    DEV=
+    ARGS+="--dev"
     ;;
 esac
 
-../node_modules/.bin/bugsnag-source-maps upload-react-native \
-  --api-key "$API_KEY" \
-  --app-bundle-version "$BUNDLE_VERSION" \
-  --app-version "$APP_VERSION" \
-  --bundle "$BUNDLE_FILE" \
-  --platform "ios" \
-  --source-map "$MAP_FILE" \
-  "$DEV"
+../node_modules/.bin/bugsnag-source-maps upload-react-native "${ARGS[@]}"
