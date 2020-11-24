@@ -13,7 +13,7 @@ export async function modifyRootBuildGradle (projectRoot: string, logger: Logger
   try {
     await insertValueAfterPattern(
       topLevelBuildGradlePath,
-      /[\r\n]\s*classpath\("com.android.tools.build:gradle:\d+\.\d+\.\d+"\)/,
+      /[\r\n]\s*classpath\(["']com.android.tools.build:gradle:.+["']\)/,
       GRADLE_PLUGIN_IMPORT,
       logger
     )
@@ -48,7 +48,7 @@ export async function modifyAppBuildGradle (projectRoot: string, logger: Logger)
   try {
     await insertValueAfterPattern(
       appBuildGradlePath,
-      /apply plugin: "com\.android\.application"/,
+      /apply plugin: ["']com\.android\.application["']/,
       GRADLE_PLUGIN_APPLY,
       logger
     )
