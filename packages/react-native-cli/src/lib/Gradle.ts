@@ -9,7 +9,7 @@ const DOCS_LINK = 'https://docs.bugsnag.com/build-integrations/gradle/#installat
 export async function modifyRootBuildGradle (projectRoot: string, logger: Logger): Promise<void> {
   logger.debug('Looking for android/build.gradle')
   const topLevelBuildGradlePath = path.join(projectRoot, 'android', 'build.gradle')
-  logger.debug('Importing com.bugsnag:bugsnag-android-gradle-plugin')
+  logger.debug('Adding \'bugsnag-android-gradle-plugin\' to the build script classpath')
   try {
     await insertValueAfterPattern(
       topLevelBuildGradlePath,
