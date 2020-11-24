@@ -82,7 +82,7 @@
 #pragma mark - Configuration -
 
 /** Init BSG_KSCrash instance with custom report files directory path. */
-- (id)initWithReportFilesDirectory:(NSString *)reportFilesDirectory;
+- (instancetype)initWithReportFilesDirectory:(NSString *)reportFilesDirectory;
 
 /** Store containing all crash reports. */
 @property(nonatomic, readwrite, retain)
