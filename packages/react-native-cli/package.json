@@ -20,6 +20,7 @@
     "command-line-usage": "^6.1.0",
     "consola": "^2.15.0",
     "prompts": "^2.4.0",
+    "plist": "^3.0.1",
     "xcode": "^3.0.1"
   },
   "devDependencies": {
