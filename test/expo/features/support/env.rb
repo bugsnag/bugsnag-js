@@ -1,3 +1,9 @@
+AfterConfiguration do |_config|
+  MazeRunner.config.receive_no_requests_wait = 15
+  # TODO: Remove once the Bugsnag-Integrity header has been implemented
+  MazeRunner.config.enforce_bugsnag_integrity = false
+end
+
 Before('@skip_android_5') do |scenario|
   if MazeRunner.driver.capabilities['os'] == 'android' and MazeRunner.config.os_version.floor == 5
     skip_this_scenario("Skipping Android 5")
