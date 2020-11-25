@@ -68,3 +68,12 @@ Scenario: using contextualize to add context to an error
   And the "lineNumber" of stack frame 0 equals 12
   And the event "metaData.subsystem.name" equals "fs reader"
   And the event "metaData.subsystem.widgetsAdded" equals "cat,dog,mouse"
+
+Scenario: overridden handled state in a callback
+  And I run the service "unhandled" with the command "node scenarios/modify-unhandled-callback"
+  And I wait to receive a request
+  Then the request is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
+  # The severity is "warning" because only the handled-ness has been changed
+  And event 0 is unhandled with the severity "warning"
+  And the "file" of stack frame 0 equals "scenarios/modify-unhandled-callback.js"
+  And the "lineNumber" of stack frame 0 equals 10
