@@ -53,3 +53,11 @@ Scenario: parsing stacks correctly with "@" in filename
   And the exception "message" ends with "at in filename"
   And the "file" of stack frame 0 ends with "unhandled/script/@dist/g.js"
   And event 0 is unhandled
+
+Scenario: overridden handled state in a callback
+  When I navigate to the URL "/unhandled/script/h.html"
+  Then I wait to receive a request
+  And the request is a valid browser payload for the error reporting API
+  And the exception "message" equals "hello"
+  # The severity is "warning" because only the handled-ness has been changed
+  And event 0 is unhandled with the severity "warning"

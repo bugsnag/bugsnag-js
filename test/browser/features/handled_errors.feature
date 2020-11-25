@@ -106,3 +106,11 @@ Scenario: calling window.client.notify() with a string, getting a generated stac
   And the payload field "events.0.exceptions.0.stacktrace.1.method" equals "b"
   And the payload field "events.0.exceptions.0.stacktrace.2.method" equals "c"
   And event 0 is handled
+
+Scenario: overridden handled state in a callback
+  When I navigate to the URL "/handled/script/h.html"
+  Then I wait to receive a request
+  And the request is a valid browser payload for the error reporting API
+  And the exception "message" ends with "hello"
+  # The severity is "error" because only the handled-ness has been changed
+  And event 0 is handled with the severity "error"
