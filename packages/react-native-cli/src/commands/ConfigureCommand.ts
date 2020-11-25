@@ -13,7 +13,7 @@ export default async function run (argv: string[], opts: Record<string, unknown>
       name: 'apiKey',
       message: 'What is your Bugsnag API key?',
       validate: value => {
-        return value.length > 1
+        return /[A-Fa-f0-9]{32}/.test(value)
           ? true
           : 'API key is required. You can find it by going to https://app.bugsnag.com/settings/ > Projects'
       }
