@@ -8,6 +8,7 @@ Scenario Outline: calling notify() with Error
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "bad things"
   And the exception "type" equals "browserjs"
+  And event 0 is handled
 
   Examples:
     | type       |
@@ -24,6 +25,7 @@ Scenario Outline: calling notify() with Error within try/catch
   And the request is a valid browser payload for the error reporting API
   And the exception matches the "handled" values for the current browser
   And the exception "type" equals "browserjs"
+  And event 0 is handled
 
   Examples:
     | type       |
@@ -42,6 +44,7 @@ Scenario Outline: calling notify() with Error within Promise catch
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "bad things"
   And the exception "type" equals "browserjs"
+  And event 0 is handled
 
   Examples:
     | type       |
@@ -62,6 +65,7 @@ Scenario: calling notify() with an object, getting a generated a stacktrace
 
   # this ensures the first generated stackframe doesn't come from bugsnag's source
   And the payload field "events.0.exceptions.0.stacktrace.0.method" equals "a"
+  And event 0 is handled
 
 Scenario: calling notify() with a string, getting a generated stacktrace
   When I navigate to the URL "/handled/script/e.html"
@@ -73,6 +77,7 @@ Scenario: calling notify() with a string, getting a generated stacktrace
 
   # this ensures the first generated stackframe doesn't come from bugsnag's source
   And the payload field "events.0.exceptions.0.stacktrace.0.method" equals "a"
+  And event 0 is handled
 
 Scenario: calling window.client.notify() with an object, getting a generated stacktrace
   When I navigate to the URL "/handled/script/f.html"
@@ -86,6 +91,7 @@ Scenario: calling window.client.notify() with an object, getting a generated sta
   And the payload field "events.0.exceptions.0.stacktrace.0.method" equals "a"
   And the payload field "events.0.exceptions.0.stacktrace.1.method" equals "b"
   And the payload field "events.0.exceptions.0.stacktrace.2.method" equals "c"
+  And event 0 is handled
 
 Scenario: calling window.client.notify() with a string, getting a generated stacktrace
   When I navigate to the URL "/handled/script/g.html"
@@ -99,3 +105,4 @@ Scenario: calling window.client.notify() with a string, getting a generated stac
   And the payload field "events.0.exceptions.0.stacktrace.0.method" equals "a"
   And the payload field "events.0.exceptions.0.stacktrace.1.method" equals "b"
   And the payload field "events.0.exceptions.0.stacktrace.2.method" equals "c"
+  And event 0 is handled

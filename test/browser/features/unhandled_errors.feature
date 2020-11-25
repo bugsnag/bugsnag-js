@@ -6,12 +6,14 @@ Scenario: syntax errors
   Then I wait to receive a request
   And the request is a valid browser payload for the error reporting API
   And the exception matches the "unhandled_syntax" values for the current browser
+  And event 0 is unhandled
 
 Scenario: thrown errors
   When I navigate to the URL "/unhandled/script/b.html"
   Then I wait to receive a request
   And the request is a valid browser payload for the error reporting API
   And the exception matches the "unhandled_thrown" values for the current browser
+  And event 0 is unhandled
 
 Scenario: unhandled promise rejections
   When I navigate to the URL "/unhandled/script/c.html"
@@ -20,18 +22,21 @@ Scenario: unhandled promise rejections
   And the request is a valid browser payload for the error reporting API
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "broken promises"
+  And event 0 is unhandled
 
 Scenario: undefined function invocation
   When I navigate to the URL "/unhandled/script/d.html"
   Then I wait to receive a request
   And the request is a valid browser payload for the error reporting API
   And the exception matches the "unhandled_undefined_function" values for the current browser
+  And event 0 is unhandled
 
 Scenario: decoding malformed URI component
   When I navigate to the URL "/unhandled/script/e.html"
   Then I wait to receive a request
   And the request is a valid browser payload for the error reporting API
   And the exception matches the "unhandled_malformed_uri" values for the current browser
+  And event 0 is unhandled
 
 Scenario: detecting unhandled promise rejections with bluebird
   When I navigate to the URL "/unhandled/script/f.html"
@@ -39,6 +44,7 @@ Scenario: detecting unhandled promise rejections with bluebird
   And the request is a valid browser payload for the error reporting API
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "broken bluebird promises"
+  And event 0 is unhandled
 
 Scenario: parsing stacks correctly with "@" in filename
   When I navigate to the URL "/unhandled/script/g.html"
@@ -46,3 +52,4 @@ Scenario: parsing stacks correctly with "@" in filename
   And the request is a valid browser payload for the error reporting API
   And the exception "message" ends with "at in filename"
   And the "file" of stack frame 0 ends with "unhandled/script/@dist/g.js"
+  And event 0 is unhandled
