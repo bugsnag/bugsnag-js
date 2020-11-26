@@ -5,6 +5,7 @@ import logger from '../Logger'
 import automateSymbolication from '../commands/AutomateSymbolicationCommand'
 import install from '../commands/InstallCommand'
 import configure from '../commands/ConfigureCommand'
+import insert from '../commands/InsertCommand'
 
 const topLevelDefs = [
   {
@@ -37,8 +38,10 @@ export default async function run (argv: string[]): Promise<void> {
     const remainingOpts = opts._unknown || []
     switch (opts.command) {
       case 'init':
-      case 'insert':
         logger.info(`TODO ${opts.command}`)
+        break
+      case 'insert':
+        await insert(remainingOpts, opts)
         break
       case 'configure':
         await configure(remainingOpts, opts)
