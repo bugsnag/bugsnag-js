@@ -1,7 +1,9 @@
 import commandLineArgs from 'command-line-args'
 import commandLineUsage from 'command-line-usage'
 import logger from '../Logger'
+
 import automateSymbolication from '../commands/AutomateSymbolicationCommand'
+import install from '../commands/InstallCommand'
 
 const topLevelDefs = [
   {
@@ -31,15 +33,18 @@ export default async function run (argv: string[]): Promise<void> {
       )
     }
 
+    const remainingOpts = opts._unknown || []
     switch (opts.command) {
       case 'init':
-      case 'install':
       case 'insert':
       case 'configure':
         logger.info(`TODO ${opts.command}`)
         break
+      case 'install':
+        await install(remainingOpts, opts)
+        break
       case 'automate-symbolication':
-        await automateSymbolication(opts._unknown || [], opts)
+        await automateSymbolication(remainingOpts, opts)
         break
       default:
         if (opts.help) return usage()
