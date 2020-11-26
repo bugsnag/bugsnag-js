@@ -1,22 +1,10 @@
 steps:
 
   #
-  # Android builder images
+  # Android builder
   #
-  - label: ':docker: Build Android Builder base image'
-    key: "android-builder-base"
-    timeout_in_minutes: 30
-    plugins:
-      - docker-compose#v3.3.0:
-          build: android-builder-base
-          image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
-          cache-from:  android-builder-base:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:android-builder-base
-      - docker-compose#v3.3.0:
-          push: android-builder-base:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:android-builder-base
-
   - label: ':docker: Build RN Android Builder image'
     key: "android-builder-image"
-    depends_on: "android-builder-base"
     timeout_in_minutes: 30
     plugins:
       - docker-compose#v3.3.0:
@@ -44,8 +32,6 @@ steps:
 
   - label: ':ios: Build RN 0.60 ipa'
     key: "rn-0-60-ipa"
-    depends_on:
-      - "android-builder-image"
     timeout_in_minutes: 60
     agents:
       queue: "opensource-mac-rn"
@@ -70,8 +56,6 @@ steps:
 
   - label: ':ios: Build RN 0.63 ipa'
     key: "rn-0-63-ipa"
-    depends_on:
-      - "android-builder-image"
     timeout_in_minutes: 60
     agents:
       queue: "opensource-mac-rn"
