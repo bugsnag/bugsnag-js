@@ -5,9 +5,7 @@ import { updateXcodeProject } from '../lib/Xcode'
 import { install, detectInstalled, guessPackageManager } from '../lib/Npm'
 import onCancel from '../lib/OnCancel'
 
-export default async function run (argv: string[], opts: Record<string, unknown>): Promise<void> {
-  const projectRoot = process.cwd()
-
+export default async function run (argv: string[], projectRoot: string, opts: Record<string, unknown>): Promise<void> {
   try {
     const { iosIntegration } = await prompts({
       type: 'confirm',
