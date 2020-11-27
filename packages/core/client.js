@@ -273,18 +273,9 @@ class Client {
     event._user = assign({}, event._user, this._user)
     event.breadcrumbs = this._breadcrumbs.slice()
 
-    const trackSession = event => {
-      if (this._session) {
-        this._session._track(event)
-        event._session = this._session
-      }
-    }
-
     // exit early if events should not be sent on the current releaseStage
     if (this._config.enabledReleaseStages !== null && !includes(this._config.enabledReleaseStages, this._config.releaseStage)) {
       this._logger.warn('Event not sent due to releaseStage/enabledReleaseStages configuration')
-      trackSession(event)
-
       return cb(null, event)
     }
 
@@ -302,8 +293,6 @@ class Client {
 
       if (!shouldSend) {
         this._logger.debug('Event not sent due to onError callback')
-        trackSession(event)
-
         return cb(null, event)
       }
 
@@ -325,7 +314,10 @@ class Client {
         event._handledState.unhandled = event.unhandled
       }
 
-      trackSession(event)
+      if (this._session) {
+        this._session._track(event)
+        event._session = this._session
+      }
 
       this._delivery.sendEvent({
         apiKey: event.apiKey || this._config.apiKey,

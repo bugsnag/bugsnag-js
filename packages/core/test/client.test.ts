@@ -446,9 +446,7 @@ describe('@bugsnag/core/client', () => {
         expect(err).toBe(null)
         expect(event).toBeTruthy()
         expect(event.errors[0].errorMessage).toBe('111')
-
-        expect((event as Event)._session).toBe(session)
-        expect(session.toJSON().events.handled).toBe(1)
+        expect((event as Event)._session).toBe(undefined)
         done()
       })
     })
@@ -469,9 +467,7 @@ describe('@bugsnag/core/client', () => {
         expect(err).toBe(null)
         expect(event).toBeTruthy()
         expect(event.errors[0].errorMessage).toBe('111')
-
-        expect((event as Event)._session).toBe(session)
-        expect(session.toJSON().events.handled).toBe(1)
+        expect((event as Event)._session).toBe(undefined)
         done()
       })
     })
