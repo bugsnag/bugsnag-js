@@ -5,6 +5,7 @@ steps:
   #
   - label: ':docker: Build RN Android Builder image'
     key: 'android-builder-image'
+    skip: 'Android builds still in development'
     timeout_in_minutes: 30
     plugins:
       - docker-compose#v3.3.0:
@@ -19,6 +20,7 @@ steps:
   #
   - label: ':android: Build RN 0.60 apk'
     key: 'rn-0-60-apk'
+    skip: 'Android builds still in development'
     depends_on:
       - 'android-builder-image'
     timeout_in_minutes: 60
@@ -28,7 +30,7 @@ steps:
       - docker-compose#v3.3.0:
           run: react-native-cli-android-builder
     artifact_paths:
-      - build/rn0.60.apk
+      - build/rn0_60.apk
 
   - label: ':ios: Build RN 0.60 ipa'
     key: 'rn-0-60-ipa'
@@ -37,6 +39,6 @@ steps:
       queue: 'opensource-mac-rn'
     env:
       REACT_NATIVE_VERSION: rn0_60
-    artifact_paths: build/rn0.60.ipa
+    artifact_paths: build/rn0_60.ipa
     commands:
       - npm run test:build-react-native-cli-ios
