@@ -34,6 +34,7 @@ steps:
 
   - label: ':ios: Build RN 0.60 ipa'
     key: 'rn-0-60-ipa'
+    skip: 'Builds successfully, but skipped until later steps are implemented.'
     timeout_in_minutes: 60
     agents:
       queue: 'opensource-mac-rn'
@@ -45,6 +46,7 @@ steps:
 
   - label: ':ios: Build RN 0.61 ipa'
     key: 'rn-0-61-ipa'
+    skip: 'Builds successfully, but skipped until later steps are implemented.'
     timeout_in_minutes: 60
     agents:
       queue: 'opensource-mac-rn'
@@ -56,6 +58,7 @@ steps:
 
   - label: ':ios: Build RN 0.62 ipa'
     key: 'rn-0-62-ipa'
+    skip: 'Builds successfully, but skipped until later steps are implemented.'
     timeout_in_minutes: 60
     agents:
       queue: 'opensource-mac-rn'
@@ -67,6 +70,7 @@ steps:
 
   - label: ':ios: Build RN 0.63 ipa'
     key: 'rn-0-63-ipa'
+    skip: 'Builds successfully, but skipped until later steps are implemented.'
     timeout_in_minutes: 60
     agents:
       queue: 'opensource-mac-rn'
