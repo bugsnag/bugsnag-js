@@ -39,7 +39,7 @@ module.exports = {
     const version = common.determineVersion()
     const rnVersion = process.env.REACT_NATIVE_VERSION
     const registryUrl = process.env.REGISTRY_URL
-    const fixturesDir = `test/react-native-cli/features/fixtures`
+    const fixturesDir = 'test/react-native-cli/features/fixtures'
     const targetDir = `${fixturesDir}/${rnVersion}`
     const initialDir = process.cwd()
 
