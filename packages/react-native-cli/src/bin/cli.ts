@@ -6,6 +6,7 @@ import automateSymbolication from '../commands/AutomateSymbolicationCommand'
 import install from '../commands/InstallCommand'
 import configure from '../commands/ConfigureCommand'
 import insert from '../commands/InsertCommand'
+import repoStatePreCommand from '../commands/RepoStatePreCommand'
 
 const topLevelDefs = [
   {
@@ -47,21 +48,26 @@ export default async function run (argv: string[]): Promise<void> {
     const remainingOpts = opts._unknown || []
     switch (opts.command) {
       case 'init':
+        await repoStatePreCommand(remainingOpts, projectRoot, opts)
         await install(remainingOpts, projectRoot, opts)
         await insert(remainingOpts, projectRoot, opts)
         await configure(remainingOpts, projectRoot, opts)
         await automateSymbolication(remainingOpts, projectRoot, opts)
         break
       case 'insert':
+        await repoStatePreCommand(remainingOpts, projectRoot, opts)
         await insert(remainingOpts, projectRoot, opts)
         break
       case 'configure':
+        await repoStatePreCommand(remainingOpts, projectRoot, opts)
         await configure(remainingOpts, projectRoot, opts)
         break
       case 'install':
+        await repoStatePreCommand(remainingOpts, projectRoot, opts)
         await install(remainingOpts, projectRoot, opts)
         break
       case 'automate-symbolication':
+        await repoStatePreCommand(remainingOpts, projectRoot, opts)
         await automateSymbolication(remainingOpts, projectRoot, opts)
         break
       default:
