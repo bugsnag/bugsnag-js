@@ -9,7 +9,7 @@ cd $1 || exit 1
 rm -rf "$1.xcarchive"
 
 cd ios || exit 1
-pod install
+pod install | pod install --repo-update
 xcrun xcodebuild \
   -scheme "$1" \
   -workspace "$1.xcworkspace" \
