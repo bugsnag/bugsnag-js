@@ -192,6 +192,29 @@ test('insertAndroid(): success', async () => {
   )
 })
 
+test('insertAndroid(): success, tolerates some differences in source', async () => {
+  type readdir = (path: string) => Promise<string[]>
+  const readdirMock = fs.readdir as unknown as jest.MockedFunction<readdir>
+  readdirMock.mockResolvedValue(['bugsnagreactnativeclitest'])
+
+  const mainApplication = await loadFixture(path.join(__dirname, 'fixtures', 'MainApplication-before-2.java'))
+  const readFileMock = fs.readFile as jest.MockedFunction<typeof fs.readFile>
+  readFileMock.mockResolvedValue(mainApplication)
+
+  const writeFileMock = fs.writeFile as jest.MockedFunction<typeof fs.writeFile>
+
+  await insertAndroid('/random/path', logger)
+  expect(readFileMock).toHaveBeenCalledWith(
+    '/random/path/android/app/src/main/java/com/bugsnagreactnativeclitest/MainApplication.java',
+    'utf8'
+  )
+  expect(writeFileMock).toHaveBeenCalledWith(
+    '/random/path/android/app/src/main/java/com/bugsnagreactnativeclitest/MainApplication.java',
+    await loadFixture(path.join(__dirname, 'fixtures', 'MainApplication-after-2.java')),
+    'utf8'
+  )
+})
+
 test('insertAndroid(): already present', async () => {
   type readdir = (path: string) => Promise<string[]>
   const readdirMock = fs.readdir as unknown as jest.MockedFunction<readdir>
