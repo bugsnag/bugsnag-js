@@ -1,0 +1,5 @@
+steps:
+
+  - label: 'Placeholder'
+    skip: "Placeholder"
+    command: "echo Placeholder"

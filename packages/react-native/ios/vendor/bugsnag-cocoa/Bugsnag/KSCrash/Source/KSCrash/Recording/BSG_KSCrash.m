@@ -128,12 +128,12 @@
 
 IMPLEMENT_EXCLUSIVE_SHARED_INSTANCE(BSG_KSCrash)
 
-- (id)init {
+- (instancetype)init {
     return [self
         initWithReportFilesDirectory:BSG_KSCRASH_DefaultReportFilesDirectory];
 }
 
-- (id)initWithReportFilesDirectory:(NSString *)reportFilesDirectory {
+- (instancetype)initWithReportFilesDirectory:(NSString *)reportFilesDirectory {
     if ((self = [super init])) {
         self.bundleName = [[NSBundle mainBundle] infoDictionary][@"CFBundleName"];
 
