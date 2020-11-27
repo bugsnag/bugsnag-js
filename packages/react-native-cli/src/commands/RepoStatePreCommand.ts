@@ -5,53 +5,20 @@ import onCancel from '../lib/OnCancel'
 
 export default async function run (argv: string[], projectRoot: string, opts: Record<string, unknown>): Promise<void> {
   logger.info('Detecting repo state')
+
   const state = detectState(projectRoot, logger)
-  switch (state) {
-    case RepoState.NONE: {
-      logger.warn(NONE_MSG)
-      const { confirm } = await prompts({
-        type: 'confirm',
-        name: 'confirm',
-        message: 'Do you want to continue anyway?',
-        initial: false
-      }, { onCancel })
-      if (!confirm) process.exit(0)
-      break
-    }
-    case RepoState.GIT_DIRTY: {
-      logger.warn(DIRTY_MSG)
-      const { confirm } = await prompts({
-        type: 'confirm',
-        name: 'confirm',
-        message: 'Do you want to continue anyway?',
-        initial: false
-      }, { onCancel })
-      if (!confirm) process.exit(0)
-      break
-    }
-    case RepoState.GIT_CLEAN: {
-      logger.warn(CLEAN_MSG)
-      const { confirm } = await prompts({
-        type: 'confirm',
-        name: 'confirm',
-        message: 'Do you want to continue?',
-        initial: true
-      }, { onCancel })
-      if (!confirm) process.exit(0)
-      break
-    }
-    default: {
-      logger.warn(UNKNOWN_MSG)
-      const { confirm } = await prompts({
-        type: 'confirm',
-        name: 'confirm',
-        message: 'Do you want to continue?',
-        initial: false
-      }, { onCancel })
-      if (!confirm) process.exit(0)
-      break
-    }
-  }
+  const continueByDefault = state === RepoState.GIT_CLEAN
+
+  logger.warn(messages[state])
+
+  const { confirm } = await prompts({
+    type: 'confirm',
+    name: 'confirm',
+    message: 'Do you want to continue anyway?',
+    initial: continueByDefault
+  }, { onCancel })
+
+  if (!confirm) process.exit(0)
 }
 
 const NONE_MSG = `No repo detected.
@@ -74,3 +41,10 @@ const UNKNOWN_MSG = `Unable to detect repo state.
 
 This command may make modifications to your project. It is recommended that you commit the
 current status of your code to a git repo before continuing.`
+
+const messages = {
+  [RepoState.NONE]: NONE_MSG,
+  [RepoState.GIT_DIRTY]: DIRTY_MSG,
+  [RepoState.GIT_CLEAN]: CLEAN_MSG,
+  [RepoState.UNKNOWN]: UNKNOWN_MSG
+}
