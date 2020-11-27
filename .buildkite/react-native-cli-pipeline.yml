@@ -1,5 +1,81 @@
 steps:
 
-  - label: 'Placeholder'
-    skip: "Placeholder"
-    command: "echo Placeholder"
+  #
+  # Android builder
+  #
+  - label: ':docker: Build RN Android Builder image'
+    key: 'android-builder-image'
+    skip: 'Android builds still in development'
+    timeout_in_minutes: 30
+    plugins:
+      - docker-compose#v3.3.0:
+          build: react-native-cli-android-builder
+          image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
+          cache-from:  react-native-cli-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
+      - docker-compose#v3.3.0:
+          push: react-native-cli-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
+
+  #
+  # Test fixtures
+  #
+  - label: ':android: Build RN 0.60 apk'
+    key: 'rn-0-60-apk'
+    skip: 'Android builds still in development'
+    depends_on:
+      - 'android-builder-image'
+    timeout_in_minutes: 60
+    env:
+      REACT_NATIVE_VERSION: rn0_60
+    plugins:
+      - docker-compose#v3.3.0:
+          run: react-native-cli-android-builder
+    artifact_paths:
+      - build/rn0_60.apk
+
+  - label: ':ios: Build RN 0.60 ipa'
+    key: 'rn-0-60-ipa'
+    skip: 'Builds successfully, but skipped until later steps are implemented.'
+    timeout_in_minutes: 60
+    agents:
+      queue: 'opensource-mac-rn'
+    env:
+      REACT_NATIVE_VERSION: rn0_60
+    artifact_paths: build/rn0_60.ipa
+    commands:
+      - npm run test:build-react-native-cli-ios
+
+  - label: ':ios: Build RN 0.61 ipa'
+    key: 'rn-0-61-ipa'
+    skip: 'Builds successfully, but skipped until later steps are implemented.'
+    timeout_in_minutes: 60
+    agents:
+      queue: 'opensource-mac-rn'
+    env:
+      REACT_NATIVE_VERSION: rn0_61
+    artifact_paths: build/rn0_61.ipa
+    commands:
+      - npm run test:build-react-native-cli-ios
+
+  - label: ':ios: Build RN 0.62 ipa'
+    key: 'rn-0-62-ipa'
+    skip: 'Builds successfully, but skipped until later steps are implemented.'
+    timeout_in_minutes: 60
+    agents:
+      queue: 'opensource-mac-rn'
+    env:
+      REACT_NATIVE_VERSION: rn0_62
+    artifact_paths: build/rn0_62.ipa
+    commands:
+      - npm run test:build-react-native-cli-ios
+
+  - label: ':ios: Build RN 0.63 ipa'
+    key: 'rn-0-63-ipa'
+    skip: 'Builds successfully, but skipped until later steps are implemented.'
+    timeout_in_minutes: 60
+    agents:
+      queue: 'opensource-mac-rn'
+    env:
+      REACT_NATIVE_VERSION: rn0_63
+    artifact_paths: build/rn0_63.ipa
+    commands:
+      - npm run test:build-react-native-cli-ios

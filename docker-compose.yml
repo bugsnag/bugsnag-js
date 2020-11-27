@@ -141,6 +141,29 @@ services:
       - ./test:/app/test
       - ./features:/app/features
 
+  react-native-cli-android-builder:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile.react-native-cli-android-builder
+      args:
+        - REG_BASIC_CREDENTIAL
+        - REG_NPM_EMAIL
+    environment:
+      - VERBOSE
+      - DEBUG
+      - BRANCH_NAME
+      - BUILDKITE
+      - REGISTRY_URL
+      - REACT_NATIVE_VERSION
+    networks:
+      default:
+        aliases:
+          - maze-runner
+    volumes:
+      - ./build:/app/build
+      - ./test:/app/test
+      - ./features:/app/features
+
   react-native-maze-runner:
     build:
       context: .
