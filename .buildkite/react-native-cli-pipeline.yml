@@ -42,3 +42,36 @@ steps:
     artifact_paths: build/rn0_60.ipa
     commands:
       - npm run test:build-react-native-cli-ios
+
+  - label: ':ios: Build RN 0.61 ipa'
+    key: 'rn-0-61-ipa'
+    timeout_in_minutes: 60
+    agents:
+      queue: 'opensource-mac-rn'
+    env:
+      REACT_NATIVE_VERSION: rn0_61
+    artifact_paths: build/rn0_61.ipa
+    commands:
+      - npm run test:build-react-native-cli-ios
+
+  - label: ':ios: Build RN 0.62 ipa'
+    key: 'rn-0-62-ipa'
+    timeout_in_minutes: 60
+    agents:
+      queue: 'opensource-mac-rn'
+    env:
+      REACT_NATIVE_VERSION: rn0_62
+    artifact_paths: build/rn0_62.ipa
+    commands:
+      - npm run test:build-react-native-cli-ios
+
+  - label: ':ios: Build RN 0.63 ipa'
+    key: 'rn-0-63-ipa'
+    timeout_in_minutes: 60
+    agents:
+      queue: 'opensource-mac-rn'
+    env:
+      REACT_NATIVE_VERSION: rn0_63
+    artifact_paths: build/rn0_63.ipa
+    commands:
+      - npm run test:build-react-native-cli-ios
