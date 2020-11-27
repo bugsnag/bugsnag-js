@@ -4,9 +4,7 @@ import { install as npmInstall, detectInstalled, guessPackageManager } from '../
 import { install as podInstall } from '../lib/Pod'
 import onCancel from '../lib/OnCancel'
 
-export default async function run (argv: string[], opts: Record<string, unknown>): Promise<void> {
-  const projectRoot = process.cwd()
-
+export default async function run (argv: string[], projectRoot: string, opts: Record<string, unknown>): Promise<void> {
   try {
     const alreadyInstalled = await detectInstalled('@bugsnag/react-native', projectRoot)
     if (alreadyInstalled) {

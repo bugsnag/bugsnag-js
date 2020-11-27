@@ -4,9 +4,7 @@ import onCancel from '../lib/OnCancel'
 import { addApiKey as addApiKeyAndroid } from '../lib/AndroidManifest'
 import { addApiKey as addApiKeyIos } from '../lib/InfoPlist'
 
-export default async function run (argv: string[], opts: Record<string, unknown>): Promise<void> {
-  const projectRoot = process.cwd()
-
+export default async function run (argv: string[], projectRoot: string, opts: Record<string, unknown>): Promise<void> {
   try {
     const { apiKey } = await prompts({
       type: 'text',

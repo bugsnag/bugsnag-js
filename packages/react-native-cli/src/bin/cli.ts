@@ -6,6 +6,7 @@ import automateSymbolication from '../commands/AutomateSymbolicationCommand'
 import install from '../commands/InstallCommand'
 import configure from '../commands/ConfigureCommand'
 import insert from '../commands/InsertCommand'
+import repoStatePreCommand from '../commands/RepoStatePreCommand'
 
 const topLevelDefs = [
   {
@@ -22,6 +23,11 @@ const topLevelDefs = [
     name: 'version',
     type: Boolean,
     description: 'output the version of the CLI module'
+  },
+  {
+    name: 'project-root',
+    type: String,
+    description: 'the top level directory of the React Native project. Defaults to the current directory.'
   }
 ]
 
@@ -35,25 +41,36 @@ export default async function run (argv: string[]): Promise<void> {
       )
     }
 
+    if (opts.help) return usage()
+
+    const projectRoot = opts.projectRoot || process.cwd()
+
     const remainingOpts = opts._unknown || []
     switch (opts.command) {
       case 'init':
-        logger.info(`TODO ${opts.command}`)
+        await repoStatePreCommand(remainingOpts, projectRoot, opts)
+        await install(remainingOpts, projectRoot, opts)
+        await insert(remainingOpts, projectRoot, opts)
+        await configure(remainingOpts, projectRoot, opts)
+        await automateSymbolication(remainingOpts, projectRoot, opts)
         break
       case 'insert':
-        await insert(remainingOpts, opts)
+        await repoStatePreCommand(remainingOpts, projectRoot, opts)
+        await insert(remainingOpts, projectRoot, opts)
         break
       case 'configure':
-        await configure(remainingOpts, opts)
+        await repoStatePreCommand(remainingOpts, projectRoot, opts)
+        await configure(remainingOpts, projectRoot, opts)
         break
       case 'install':
-        await install(remainingOpts, opts)
+        await repoStatePreCommand(remainingOpts, projectRoot, opts)
+        await install(remainingOpts, projectRoot, opts)
         break
       case 'automate-symbolication':
-        await automateSymbolication(remainingOpts, opts)
+        await repoStatePreCommand(remainingOpts, projectRoot, opts)
+        await automateSymbolication(remainingOpts, projectRoot, opts)
         break
       default:
-        if (opts.help) return usage()
         if (opts.command) {
           logger.error(`Unrecognized command "${opts.command}".`)
         } else {
