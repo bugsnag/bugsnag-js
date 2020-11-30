@@ -147,6 +147,7 @@ services:
       dockerfile: dockerfiles/Dockerfile.react-native-cli
     environment:
       DEBUG:
+      REACT_NATIVE_VERSION:
       NETWORK_NAME: "${BUILDKITE_JOB_ID:-react-native-cli-maze-runner}"
     networks:
       default:
