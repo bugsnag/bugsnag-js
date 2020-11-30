@@ -55,3 +55,7 @@ buck-out/
 
 # CocoaPods
 /ios/Pods/
+
+# Ignore lockfiles as they can influence test runs
+package-lock.json
+yarn.lock
