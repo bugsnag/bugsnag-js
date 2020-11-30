@@ -21,6 +21,8 @@ FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner:integration-intera
 WORKDIR /app
 
 COPY test/react-native-cli test/react-native-cli
+
+# TODO install this from Artifactory in future
 COPY --from=react-native-cli-feature-builder /app/bugsnag-react-native-cli-*.tgz ./
 RUN for d in test/react-native-cli/features/fixtures/*/; do cp /app/*.tgz "$d"; done
 
