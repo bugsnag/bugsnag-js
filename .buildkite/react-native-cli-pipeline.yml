@@ -57,14 +57,6 @@ steps:
     env:
       REACT_NATIVE_VERSION: "rn0_63"
 
-  - label: ':runner: Broken tests'
-    depends_on: "cli-maze-image"
-    timeout_in_minutes: 20
-    plugins:
-      docker-compose#v3.7.0:
-        run: react-native-cli-tool-maze-runner
-        use-aliases: true
-
   #
   # Built app test fixtures
   #
