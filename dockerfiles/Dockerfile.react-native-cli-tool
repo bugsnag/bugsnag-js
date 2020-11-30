@@ -27,3 +27,5 @@ COPY --from=react-native-cli-feature-builder /app/bugsnag-react-native-cli-*.tgz
 RUN for d in test/react-native-cli/features/fixtures/*/; do cp /app/*.tgz "$d"; done
 
 WORKDIR /app/test/react-native-cli
+
+ENTRYPOINT ["bundle", "exec", "maze-runner"]

@@ -141,10 +141,10 @@ services:
       - ./test:/app/test
       - ./features:/app/features
 
-  react-native-cli:
+  react-native-cli-tool-maze-runner:
     build:
       context: .
-      dockerfile: dockerfiles/Dockerfile.react-native-cli
+      dockerfile: dockerfiles/Dockerfile.react-native-cli-tool
     environment:
       DEBUG:
       REACT_NATIVE_VERSION:
