@@ -141,6 +141,20 @@ services:
       - ./test:/app/test
       - ./features:/app/features
 
+  react-native-cli:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile.react-native-cli
+    environment:
+      DEBUG:
+      NETWORK_NAME: "${BUILDKITE_JOB_ID:-react-native-cli-maze-runner}"
+    networks:
+      default:
+        aliases:
+          - maze-runner
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
   react-native-cli-android-builder:
     build:
       context: .
