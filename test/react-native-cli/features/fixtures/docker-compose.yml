@@ -3,7 +3,7 @@ services:
   rn0_60:
     build:
       context: rn0_60
-      dockerfile: Dockerfile
+      dockerfile: ../Dockerfile
     environment:
       DEBUG:
     networks:
@@ -14,7 +14,7 @@ services:
   rn0_61:
     build:
       context: rn0_61
-      dockerfile: Dockerfile
+      dockerfile: ../Dockerfile
     environment:
       DEBUG:
     networks:
@@ -25,7 +25,7 @@ services:
   rn0_62:
     build:
       context: rn0_62
-      dockerfile: Dockerfile
+      dockerfile: ../Dockerfile
     environment:
       DEBUG:
     networks:
@@ -36,7 +36,7 @@ services:
   rn0_63:
     build:
       context: rn0_63
-      dockerfile: Dockerfile
+      dockerfile: ../Dockerfile
     environment:
       DEBUG:
     networks:
