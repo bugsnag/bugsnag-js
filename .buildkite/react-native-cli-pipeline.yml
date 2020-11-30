@@ -24,6 +24,7 @@ steps:
       docker-compose#v3.7.0:
         run: react-native-cli-tool-maze-runner
         use-aliases: true
+        command: ["-e", "features/built_app.feature"]
     env:
       REACT_NATIVE_VERSION: "rn0_60"
 
@@ -34,6 +35,7 @@ steps:
       docker-compose#v3.7.0:
         run: react-native-cli-tool-maze-runner
         use-aliases: true
+        command: ["-e", "features/built_app.feature"]
     env:
       REACT_NATIVE_VERSION: "rn0_61"
 
@@ -44,6 +46,7 @@ steps:
       docker-compose#v3.7.0:
         run: react-native-cli-tool-maze-runner
         use-aliases: true
+        command: ["-e", "features/built_app.feature"]
     env:
       REACT_NATIVE_VERSION: "rn0_62"
 
@@ -54,6 +57,7 @@ steps:
       docker-compose#v3.7.0:
         run: react-native-cli-tool-maze-runner
         use-aliases: true
+        command: ["-e", "features/built_app.feature"]
     env:
       REACT_NATIVE_VERSION: "rn0_63"
 
