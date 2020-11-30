@@ -9,4 +9,6 @@ WORKDIR /app
 
 RUN npm i -g bugsnag-react-native-cli-*.tgz
 
+ENV COCOAPODS_ALLOW_ROOT=1
+
 ENTRYPOINT ["/bin/sh"]
