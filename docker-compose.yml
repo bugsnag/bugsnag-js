@@ -168,6 +168,7 @@ services:
         - REG_BASIC_CREDENTIAL
         - REG_NPM_EMAIL
     environment:
+      - GIT_DISCOVERY_ACROSS_FILESYSTEM=true
       - VERBOSE
       - DEBUG
       - BRANCH_NAME
