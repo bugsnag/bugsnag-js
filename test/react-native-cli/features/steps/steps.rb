@@ -1,3 +1,5 @@
+require 'securerandom'
+
 fixtures = Dir["#{__dir__}/../fixtures/rn0_*"].map { |dir| File.basename(dir) }.sort
 current_fixture = ENV['REACT_NATIVE_VERSION']
 
@@ -117,4 +119,104 @@ Then("bugsnag has not been added to the package.json file") do
 
   assert_includes(json, "dependencies")
   refute_includes(json["dependencies"], "@bugsnag/react-native")
+end
+
+Then("the file {string} contains {string}") do |filename, expected|
+  # grep's "-x" makes the pattern have to match an entire line
+  steps %Q{
+    When I input "fgrep '#{expected.gsub(/"/, '\\"')}' #{filename}" interactively
+    Then the last interactive command exited successfully
+  }
+end
+
+# A version of the above that allows multi-line strings
+Then("the file {string} contains") do |filename, expected|
+  expected.each_line do |line|
+    step("the file '#{filename}' contains '#{line.chomp}'")
+  end
+end
+
+Then("the file {string} does not contain {string}") do |filename, expected|
+  # grep's "-x" makes the pattern have to match an entire line
+  steps %Q{
+    When I input "fgrep '#{expected.gsub(/"/, '\\"')}' #{filename}" interactively
+    Then the last interactive command exited with an error code
+  }
+end
+
+# A version of the above that allows multi-line strings
+Then("the file {string} does not contain") do |filename, expected|
+  expected.each_line do |line|
+    step("the file '#{filename}' does not contain '#{line.chomp}'")
+  end
+end
+
+Then("the iOS app contains the bugsnag initialisation code") do
+  filename = "ios/#{current_fixture}/AppDelegate.m"
+
+  step("the file '#{filename}' contains '#import <Bugsnag/Bugsnag.h>'")
+  step("the file '#{filename}' contains '[Bugsnag start];'")
+end
+
+Then("the Android app contains the bugsnag initialisation code") do
+  filename = "android/app/src/main/java/com/#{current_fixture}/MainApplication.java"
+
+  step("the file '#{filename}' contains 'import com.bugsnag.android.Bugsnag;'")
+  step("the file '#{filename}' contains 'Bugsnag.start(this);'")
+end
+
+Then("the iOS app does not contain the bugsnag initialisation code") do
+  filename = "ios/#{current_fixture}/AppDelegate.m"
+
+  step("the file '#{filename}' does not contain '#import <Bugsnag/Bugsnag.h>'")
+  step("the file '#{filename}' does not contain '[Bugsnag start];'")
+end
+
+Then("the Android app does not contain the bugsnag initialisation code") do
+  filename = "android/app/src/main/java/com/#{current_fixture}/MainApplication.java"
+
+  step("the file '#{filename}' does not contain 'import com.bugsnag.android.Bugsnag;'")
+  step("the file '#{filename}' does not contain 'Bugsnag.start(this);'")
+end
+
+Then("the JavaScript layer contains the bugsnag initialisation code") do
+  steps %Q{
+    Then the file 'index.js' contains
+      """
+      import Bugsnag from "@bugsnag/react-native";
+      Bugsnag.start();
+      """
+  }
+end
+
+Then("the JavaScript layer does not contain the bugsnag initialisation code") do
+  steps %Q{
+    Then the file 'index.js' does not contain
+      """
+      import Bugsnag from "@bugsnag/react-native";
+      Bugsnag.start();
+      """
+  }
+end
+
+Then("the modified files are as expected after running the insert command") do
+  steps %Q{
+    When I input "git status --porcelain" interactively
+    Then I wait for the shell to output the following to stdout
+      """
+      M android/app/src/main/java/com/#{current_fixture}/MainApplication.java
+      M index.js
+      M ios/#{current_fixture}/AppDelegate.m
+      """
+  }
+end
+
+Then("there are no modified files in git") do
+  uuid = SecureRandom.uuid
+
+  steps %Q{
+    When I input "git status --porcelain" interactively
+    And I input "[ -z $(git status --porcelain) ] && echo '#{uuid} no changes' || echo '#{uuid} changes'" interactively
+    Then I wait for the shell to output "#{uuid} no changes" to stdout
+  }
 end
