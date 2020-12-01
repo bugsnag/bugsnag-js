@@ -5,7 +5,7 @@ services:
       context: ../../../..
       dockerfile: test/react-native-cli/features/fixtures/Dockerfile
       args:
-        REACT_NATIVE_VERSION: rn0_60
+        REACT_NATIVE_VERSION:
         REGISTRY_URL: ${REGISTRY_URL}
         REG_NPM_EMAIL: ${REG_NPM_EMAIL}
         REG_BASIC_CREDENTIAL: ${REG_BASIC_CREDENTIAL}
