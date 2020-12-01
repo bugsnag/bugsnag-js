@@ -2,8 +2,14 @@ version: '3.6'
 services:
   rn0_60:
     build:
-      context: rn0_60
-      dockerfile: ../Dockerfile
+      context: ../../../..
+      dockerfile: test/react-native-cli/features/fixtures/Dockerfile
+      args:
+        REACT_NATIVE_VERSION: rn0_60
+        REGISTRY_URL: ${REGISTRY_URL}
+        REG_NPM_EMAIL: ${REG_NPM_EMAIL}
+        REG_BASIC_CREDENTIAL: ${REG_BASIC_CREDENTIAL}
+        NOTIFIER_VERSION: ${NOTIFIER_VERSION}
     environment:
       DEBUG:
     networks:
@@ -17,6 +23,8 @@ services:
       dockerfile: ../Dockerfile
     environment:
       DEBUG:
+      REGISTRY_URL:
+      NOTIFIER_VERSION:
     networks:
       default:
         aliases:
@@ -28,6 +36,8 @@ services:
       dockerfile: ../Dockerfile
     environment:
       DEBUG:
+      REGISTRY_URL:
+      NOTIFIER_VERSION:
     networks:
       default:
         aliases:
@@ -39,6 +49,8 @@ services:
       dockerfile: ../Dockerfile
     environment:
       DEBUG:
+      REGISTRY_URL:
+      NOTIFIER_VERSION:
     networks:
       default:
         aliases:

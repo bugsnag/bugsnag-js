@@ -142,11 +142,11 @@ services:
       - ./features:/app/features
 
   react-native-cli-tool-maze-runner:
-    build:
-      context: .
-      dockerfile: dockerfiles/Dockerfile.react-native-cli-tool
+    # TODO Use Maze Runner release
+    image: 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner:integration-interactive_cli-cli
     environment:
       DEBUG:
+      VERBOSE:
       REACT_NATIVE_VERSION:
       NETWORK_NAME: "${BUILDKITE_JOB_ID:-react-native-cli-maze-runner}"
     networks:
@@ -155,6 +155,7 @@ services:
           - maze-runner
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - ./test/react-native-cli/features/:/app/features/
 
   react-native-cli-android-builder:
     build:
