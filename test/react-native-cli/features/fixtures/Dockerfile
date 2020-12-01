@@ -1,7 +1,6 @@
 FROM node:lts-alpine
 
 RUN apk add git
-RUN npm i -g run-func
 
 RUN git config --global user.email "noone@example.com"
 RUN git config --global user.name "No One"
@@ -36,6 +35,6 @@ COPY test/react-native-cli/features/fixtures/$REACT_NATIVE_VERSION $REACT_NATIVE
 # Install the CLI
 ARG NOTIFIER_VERSION
 ENV NOTIFIER_VERSION=$NOTIFIER_VERSION
-RUN run-func ../scripts/react-native-cli-helper.js installCli
+RUN node -e 'require("../scripts/react-native-cli-helper").installCli()'
 
 ENTRYPOINT ["/bin/sh"]
