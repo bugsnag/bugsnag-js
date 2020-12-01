@@ -21,9 +21,10 @@ module.exports = {
     common.changeDir(`${destFixtures}/${rnVersion}`)
     common.run(`npm install --registry ${registryUrl}`, true)
 
-    // TODO Install and run the CLI
+    // Install and run the CLI
     const installCommand = `npm install bugsnag-react-native-cli@${version} --registry ${registryUrl}`
     common.run(installCommand, true)
+    // TODO App will not build at present if init is run
     // const initCommand = './node-modules/bugsnag-react-native-cli/bin/react-native-cli init'
     // common.run(initCommand, true)
 
@@ -53,10 +54,11 @@ module.exports = {
     common.changeDir(`${targetDir}`)
     common.run(`npm install --registry ${registryUrl}`, true)
 
-    // TODO Install and run the CLI
+    // Install and run the CLI
     const installCommand = `npm install bugsnag-react-native-cli@${version} --registry ${registryUrl}`
     common.run(installCommand, true)
-    // const initCommand = './node-modules/bugsnag-react-native-cli/bin/react-native-cli init'
+    // TODO Need to provide an answers file for the init command
+    // const initCommand = './node_modules/bugsnag-react-native-cli/bin/cli init'
     // common.run(initCommand, true)
 
     // Performing local build steps

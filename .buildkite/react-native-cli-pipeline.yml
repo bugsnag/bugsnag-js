@@ -5,7 +5,7 @@ steps:
   #
   - label: ':docker: Build RN Android Builder image'
     key: 'android-builder-image'
-    skip: 'Android builds still in development'
+    skip: 'Builds successfully, but skipped until later steps are implemented.'
     timeout_in_minutes: 30
     plugins:
       - docker-compose#v3.3.0:
@@ -20,10 +20,10 @@ steps:
   #
   - label: ':android: Build RN 0.60 apk'
     key: 'rn-0-60-apk'
-    skip: 'Android builds still in development'
+    skip: 'Builds successfully, but skipped until later steps are implemented.'
     depends_on:
       - 'android-builder-image'
-    timeout_in_minutes: 60
+    timeout_in_minutes: 15
     env:
       REACT_NATIVE_VERSION: rn0_60
     plugins:
@@ -31,6 +31,48 @@ steps:
           run: react-native-cli-android-builder
     artifact_paths:
       - build/rn0_60.apk
+
+  - label: ':android: Build RN 0.61 apk'
+    key: 'rn-0-61-apk'
+    skip: 'Builds successfully, but skipped until later steps are implemented.'
+    depends_on:
+      - 'android-builder-image'
+    timeout_in_minutes: 15
+    env:
+      REACT_NATIVE_VERSION: rn0_61
+    plugins:
+      - docker-compose#v3.3.0:
+          run: react-native-cli-android-builder
+    artifact_paths:
+      - build/rn0_61.apk
+
+  - label: ':android: Build RN 0.62 apk'
+    key: 'rn-0-62-apk'
+    skip: 'Builds successfully, but skipped until later steps are implemented.'
+    depends_on:
+      - 'android-builder-image'
+    timeout_in_minutes: 15
+    env:
+      REACT_NATIVE_VERSION: rn0_62
+    plugins:
+      - docker-compose#v3.3.0:
+          run: react-native-cli-android-builder
+    artifact_paths:
+      - build/rn0_62.apk
+
+  - label: ':android: Build RN 0.63 apk'
+    key: 'rn-0-63-apk'
+    skip: 'Builds successfully, but skipped until later steps are implemented.'
+    depends_on:
+      - 'android-builder-image'
+    timeout_in_minutes: 15
+    env:
+      REACT_NATIVE_VERSION: rn0_63
+    plugins:
+      - docker-compose#v3.3.0:
+          run: react-native-cli-android-builder
+    artifact_paths:
+      - build/rn0_63.apk
 
   - label: ':ios: Build RN 0.60 ipa'
     key: 'rn-0-60-ipa'
