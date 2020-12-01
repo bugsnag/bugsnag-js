@@ -89,8 +89,12 @@ def parse_package_json
 
   difference = after - before
 
-  # Drop one line as it's the "cat package.json" command
-  JSON.parse(difference.drop(1).join("\n"))
+  # Drop lines that include the cat command above. This will sometimes appear
+  # once and sometimes appear twice, depending on if another command is running
+  # when it's input
+  json = difference.drop_while { |line| line.include?('cat package.json') }
+
+  JSON.parse(json.join("\n"))
 end
 
 Then("bugsnag has been added to the package.json file") do
@@ -98,6 +102,14 @@ Then("bugsnag has been added to the package.json file") do
 
   assert_includes(json, "dependencies")
   assert_includes(json["dependencies"], "@bugsnag/react-native")
+end
+
+Then("bugsnag version {string} has been added to the package.json file") do |expected|
+  json = parse_package_json
+
+  assert_includes(json, "dependencies")
+  assert_includes(json["dependencies"], "@bugsnag/react-native")
+  assert_equal(json["dependencies"]["@bugsnag/react-native"], expected)
 end
 
 Then("bugsnag has not been added to the package.json file") do
