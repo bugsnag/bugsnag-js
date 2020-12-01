@@ -2,8 +2,6 @@ FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/js:android-builder-base
 
 RUN apt-get install -y nodejs rsync
 
-RUN npm i -g run-func
-
 WORKDIR /app
 
 # npm auth
@@ -20,4 +18,4 @@ COPY lerna.json .
 COPY scripts/common.js scripts/react-native-cli-helper.js scripts/
 
 # Do a full build by running the container
-CMD run-func scripts/react-native-cli-helper.js buildAndroid "/app/test/react-native-cli/features/fixtures" "/app/features/fixtures"
+CMD node -e "require('scripts/react-native-cli-helper.js').buildAndroid('/app/test/react-native-cli/features/fixtures', '/app/features/fixtures')"

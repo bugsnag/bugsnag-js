@@ -35,6 +35,6 @@ COPY test/react-native-cli/features/fixtures/$REACT_NATIVE_VERSION $REACT_NATIVE
 # Install the CLI
 ARG NOTIFIER_VERSION
 ENV NOTIFIER_VERSION=$NOTIFIER_VERSION
-RUN node -e 'require("../scripts/react-native-cli-helper").installCli()'
+RUN node -e "require('../scripts/react-native-cli-helper').installCli()"
 
 ENTRYPOINT ["/bin/sh"]
