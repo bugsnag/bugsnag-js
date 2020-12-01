@@ -5,7 +5,7 @@ const common = require('./common')
 const fs = require('fs')
 
 module.exports = {
-  installCli: function installCli() {
+  installCli: function installCli () {
     const version = process.env.NOTIFIER_VERSION || common.determineVersion()
     const registryUrl = process.env.REGISTRY_URL
 
@@ -23,7 +23,7 @@ module.exports = {
 
     // JavaScript layer
     common.changeDir(`${destFixtures}/${rnVersion}`)
-    common.run(`npm install`, true)
+    common.run('npm install', true)
 
     // Install and run the CLI to integrate Bugsnag
     this.installCli()
@@ -58,8 +58,6 @@ module.exports = {
 
     // Install and run the CLI
     this.installCli()
-    const installCommand = `npm install bugsnag-react-native-cli@${version} --registry ${registryUrl}`
-    common.run(installCommand, true)
     // TODO Need to provide an answers file for the init command
     // const initCommand = './node_modules/bugsnag-react-native-cli/bin/cli init'
     // common.run(initCommand, true)
