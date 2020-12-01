@@ -28,9 +28,14 @@ COPY .git .git
 COPY lerna.json .
 COPY scripts/common.js scripts/react-native-cli-helper.js scripts/
 
+ARG REACT_NATIVE_VERSION
+WORKDIR /app/$REACT_NATIVE_VERSION
+
+COPY test/react-native-cli/features/fixtures/$REACT_NATIVE_VERSION $REACT_NATIVE_VERSION
+
 # Install the CLI
 ARG NOTIFIER_VERSION
 ENV NOTIFIER_VERSION=$NOTIFIER_VERSION
-RUN run-func scripts/react-native-cli-helper.js installCli
+RUN run-func ../scripts/react-native-cli-helper.js installCli
 
 ENTRYPOINT ["/bin/sh"]

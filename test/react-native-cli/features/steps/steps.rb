@@ -23,8 +23,8 @@ unless fixtures.include?(current_fixture)
   ERROR
 end
 
-When('I run the React Native service interactively') do
-  step("I run the service '#{current_fixture}' interactively")
+When('I run the React Native CLI service interactively') do
+  step("I run the service 'react_native_cli' interactively")
 end
 
 When('I press enter') do
