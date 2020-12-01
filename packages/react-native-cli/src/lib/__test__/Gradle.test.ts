@@ -28,7 +28,7 @@ test('modifyRootBuildGradle(): success', async () => {
   readFileMock.mockResolvedValue(rootBuildGradle)
   const writeFileMock = fs.writeFile as jest.MockedFunction<typeof fs.writeFile>
   writeFileMock.mockResolvedValue()
-  await modifyRootBuildGradle('/random/path', logger)
+  await modifyRootBuildGradle('/random/path', '5.+', logger)
   expect(readFileMock).toHaveBeenCalledWith('/random/path/android/build.gradle', 'utf8')
   expect(writeFileMock).toHaveBeenCalledWith(
     '/random/path/android/build.gradle',
@@ -42,7 +42,7 @@ test('modifyRootBuildGradle(): tolerates errors', async () => {
   readFileMock.mockResolvedValue('not a gradle file')
   const writeFileMock = fs.writeFile as jest.MockedFunction<typeof fs.writeFile>
   writeFileMock.mockResolvedValue()
-  await modifyRootBuildGradle('/random/path', logger)
+  await modifyRootBuildGradle('/random/path', '5.+', logger)
   expect(readFileMock).toHaveBeenCalledWith('/random/path/android/build.gradle', 'utf8')
   expect(writeFileMock).not.toHaveBeenCalled()
   expect(logger.warn).toHaveBeenCalledWith(
@@ -56,7 +56,7 @@ test('modifyRootBuildGradle(): skips when no changes are required', async () => 
   readFileMock.mockResolvedValue(rootBuildGradle)
   const writeFileMock = fs.writeFile as jest.MockedFunction<typeof fs.writeFile>
   writeFileMock.mockResolvedValue()
-  await modifyRootBuildGradle('/random/path', logger)
+  await modifyRootBuildGradle('/random/path', '5.+', logger)
   expect(readFileMock).toHaveBeenCalledWith('/random/path/android/build.gradle', 'utf8')
   expect(writeFileMock).not.toHaveBeenCalled()
   expect(logger.warn).toHaveBeenCalledWith(
@@ -70,7 +70,7 @@ test('modifyRootBuildGradle(): tolerates missing gradle file', async () => {
   readFileMock.mockRejectedValue(notFoundErr)
   const writeFileMock = fs.writeFile as jest.MockedFunction<typeof fs.writeFile>
   writeFileMock.mockResolvedValue()
-  await modifyRootBuildGradle('/random/path', logger)
+  await modifyRootBuildGradle('/random/path', '5.+', logger)
   expect(readFileMock).toHaveBeenCalledWith('/random/path/android/build.gradle', 'utf8')
   expect(writeFileMock).not.toHaveBeenCalled()
   expect(logger.warn).toHaveBeenCalledWith(
@@ -84,7 +84,7 @@ test('modifyRootBuildGradle(): passes on unknown errors', async () => {
   readFileMock.mockRejectedValue(unknownErr)
   const writeFileMock = fs.writeFile as jest.MockedFunction<typeof fs.writeFile>
   writeFileMock.mockResolvedValue()
-  await expect(modifyRootBuildGradle('/random/path', logger)).rejects.toThrowError('Unknown error')
+  await expect(modifyRootBuildGradle('/random/path', '5.+', logger)).rejects.toThrowError('Unknown error')
 })
 
 test('modifyAppBuildGradle(): success', async () => {
