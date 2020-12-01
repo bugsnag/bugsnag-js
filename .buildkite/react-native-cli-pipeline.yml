@@ -12,6 +12,7 @@ steps:
         command: ["-e", "features/built_app.feature"]
     env:
       REACT_NATIVE_VERSION: "rn0_60"
+      DEBUG: true
 
   - label: ':runner: RN 0.61 CLI tests'
     timeout_in_minutes: 20
