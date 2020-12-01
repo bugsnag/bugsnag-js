@@ -1,3 +1,4 @@
+require 'rexml/document'
 require 'securerandom'
 
 fixtures = Dir["#{__dir__}/../fixtures/rn0_*"].map { |dir| File.basename(dir) }.sort
@@ -264,6 +265,17 @@ Then("the modified files are as expected after running the insert command") do
   }
 end
 
+Then("the modified files are as expected after running the configure command") do
+  steps %Q{
+    When I input "git status --porcelain" interactively
+    Then I wait for the shell to output the following to stdout
+      """
+      M android/app/src/main/AndroidManifest.xml
+      M ios/#{current_fixture}/Info.plist
+      """
+  }
+end
+
 Then("there are no modified files in git") do
   uuid = SecureRandom.uuid
 
@@ -272,4 +284,66 @@ Then("there are no modified files in git") do
     And I input "[ -z $(git status --porcelain) ] && echo '#{uuid} no changes' || echo '#{uuid} changes'" interactively
     Then I wait for the shell to output "#{uuid} no changes" to stdout
   }
+end
+
+def parse_xml_file(path)
+  before = Runner.interactive_session.stdout_lines.dup
+  uuid = SecureRandom.uuid
+
+  steps %Q{
+    When I input "cat #{path}" interactively
+    And I input "echo #{uuid}" interactively
+    Then I wait for the shell to output '#{uuid}' to stdout
+  }
+
+  after = Runner.interactive_session.stdout_lines
+
+  difference = after - before
+
+  # Drop lines that include the cat command above. This will sometimes appear
+  # once and sometimes appear twice, depending on if another command is running
+  # when it's input
+  xml = difference.reject do |line|
+    line.include?("cat #{path}") || line.include?(uuid)
+  end
+
+  REXML::Document.new(xml.join("\n"))
+end
+
+Then("the iOS app contains the bugsnag API key {string}") do |expected|
+  xml = parse_xml_file("ios/#{current_fixture}/Info.plist")
+
+  # This XPath does the following:
+  #   1. find the '<key>' with the text 'bugsnag' (ignoring whitespace)
+  #   2. find the following '<dict>' element
+  #   3. within the dict, find any '<string>' elements
+  # 'get_text' will then fetch the text content of the first element
+  actual_api_key = xml.get_text('//key[text()[normalize-space()="bugsnag"]]/following-sibling::dict/string')
+
+  assert_equal(expected, actual_api_key.to_s)
+end
+
+Then("the Android app contains the bugsnag API key {string}") do |expected|
+  xml = parse_xml_file("android/app/src/main/AndroidManifest.xml")
+
+  element = xml.get_elements('//meta-data["com.bugsnag.android.API_KEY"]').first
+  actual_api_key = element["android:value"]
+
+  assert_equal(expected, actual_api_key.to_s)
+end
+
+Then("the iOS app does not contain a bugsnag API key") do
+  xml = parse_xml_file("ios/#{current_fixture}/Info.plist")
+
+  actual_api_key = xml.get_text('//key[text()[normalize-space()="bugsnag"]]/following-sibling::dict/string')
+
+  assert_nil(actual_api_key)
+end
+
+Then("the Android app does not contain a bugsnag API key") do
+  xml = parse_xml_file("android/app/src/main/AndroidManifest.xml")
+
+  element = xml.get_elements('//meta-data["com.bugsnag.android.API_KEY"]').first
+
+  assert_nil(element)
 end
