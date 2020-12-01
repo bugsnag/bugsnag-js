@@ -49,7 +49,7 @@ steps:
   #
   - label: ':docker: Build RN Android Builder image'
     key: 'android-builder-image'
-    skip: 'Builds successfully, but skipped until later steps are implemented.'
+#    skip: 'Builds successfully, but skipped until later steps are implemented.'
     timeout_in_minutes: 30
     plugins:
       - docker-compose#v3.7.0:
@@ -61,7 +61,7 @@ steps:
 
   - label: ':android: Build RN 0.60 apk'
     key: 'rn-0-60-apk'
-    skip: 'Builds successfully, but skipped until later steps are implemented.'
+#    skip: 'Builds successfully, but skipped until later steps are implemented.'
     depends_on:
       - 'android-builder-image'
     timeout_in_minutes: 15
