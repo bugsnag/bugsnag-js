@@ -18,4 +18,4 @@ COPY lerna.json .
 COPY scripts/common.js scripts/react-native-cli-helper.js scripts/
 
 # Do a full build by running the container
-CMD node -e "require('scripts/react-native-cli-helper.js').buildAndroid('/app/test/react-native-cli/features/fixtures', '/app/features/fixtures')"
+CMD node -e "require('/app/scripts/react-native-cli-helper.js').buildAndroid('/app/test/react-native-cli/features/fixtures', '/app/features/fixtures')"
