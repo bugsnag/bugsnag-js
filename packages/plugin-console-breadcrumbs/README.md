@@ -5,4 +5,5 @@ This plugin adds the ability to record console method calls as breadcrumbs by mo
 **Note:** enabling this plugin means that the line/col origin of console logs appear to come from within Bugsnag's code, so it is not recommended for use in dev environments.
 
 ## License
-MIT
+
+This package is free software released under the MIT License. See [LICENSE.txt](./LICENSE.txt) for details.

@@ -1,5 +1,11 @@
 # Changelog
 
+## v7.5.3 (2020-12-01)
+
+- (react-native): Update bugsnag-cocoa to v6.2.5
+  - Fixed a rare crash due to a race condition in BugsnagSystemState. [bugsnag-cocoa#893](https://github.com/bugsnag/bugsnag-cocoa/pull/893)
+  - Out Of Memory errors are no longer reported if a device reboot was detected. [bugsnag-cocoa#822](https://github.com/bugsnag/bugsnag-cocoa/pull/882)
+
 ## v7.5.2 (2020-11-09)
 
 ### Changed

@@ -13,4 +13,5 @@ This package contains the core classes and utilities common to the Bugsnag notif
 Unless you are writing your own notifier, it is unlikely that you want to install this module – for the universal error reporting client, see [@bugsnag/js](../js).
 
 ## License
-MIT
+
+This package is free software released under the MIT License. See [LICENSE.txt](./LICENSE.txt) for details.

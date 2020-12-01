@@ -1,345 +1,114 @@
 steps:
+
+  #
+  # Publish/package notifier
+  #
   - label: ':docker: Prepare package.json'
+    key: "package-js"
     timeout_in_minutes: 3
     plugins:
-      - docker-compose#v3.3.0:
+      - docker-compose#v3.7.0:
           run: minimal-packager
     artifact_paths: min_packages.tar
 
-  - wait
+  - label: ':docker: Build and publish JS packages'
+    key: "publish-js"
+    timeout_in_minutes: 30
+    plugins:
+      - docker-compose#v3.3.0:
+          build: publisher
+          image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
 
+  #
+  # Trigger individual pipelines
+  #
+  - label: 'Trigger Browser pipeline'
+    depends_on: "package-js"
+    trigger: 'bugsnag-js-browser'
+    build:
+      branch: '${BUILDKITE_BRANCH}'
+      commit: '${BUILDKITE_COMMIT}'
+      message: '${BUILDKITE_MESSAGE}'
+    async: true
+
+  - label: 'Trigger Node pipeline'
+    depends_on: "package-js"
+    trigger: 'bugsnag-js-node'
+    build:
+      branch: '${BUILDKITE_BRANCH}'
+      commit: '${BUILDKITE_COMMIT}'
+      message: '${BUILDKITE_MESSAGE}'
+    async: true
+
+  - label: 'Trigger Expo pipeline'
+    depends_on: "publish-js"
+    trigger: 'bugsnag-js-expo'
+    build:
+      branch: '${BUILDKITE_BRANCH}'
+      commit: '${BUILDKITE_COMMIT}'
+      message: '${BUILDKITE_MESSAGE}'
+    async: true
+
+  - label: 'Trigger React Native pipeline'
+    depends_on: "publish-js"
+    trigger: 'bugsnag-js-react-native'
+    build:
+      branch: '${BUILDKITE_BRANCH}'
+      commit: '${BUILDKITE_COMMIT}'
+      message: '${BUILDKITE_MESSAGE}'
+    async: true
+
+  - label: 'Trigger React Native CLI pipeline'
+    depends_on: "publish-js"
+    trigger: 'bugsnag-js-react-native-cli'
+    build:
+      branch: '${BUILDKITE_BRANCH}'
+      commit: '${BUILDKITE_COMMIT}'
+      message: '${BUILDKITE_MESSAGE}'
+    async: true
+
+  #
+  # Core tests and checks
+  #
   - label: ':docker: Build CI image'
+    key: "ci-image"
+    depends_on: "package-js"
     timeout_in_minutes: 20
     plugins:
       - artifacts#v1.2.0:
           download: min_packages.tar
-      - docker-compose#v3.3.0:
+      - docker-compose#v3.7.0:
           build:
             - ci
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
           cache-from:
             - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base-${BRANCH_NAME}
             - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base
-      - docker-compose#v3.3.0:
+      - docker-compose#v3.7.0:
           push:
             - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base-${BRANCH_NAME}
             - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base
 
-  - wait
-
-  - label: 'Trigger Expo pipeline'
-    trigger: 'at-bugsnag-expo'
-    build:
-      branch: '${BUILDKITE_BRANCH}'
-      commit: '${BUILDKITE_COMMIT}'
-      message: '${BUILDKITE_MESSAGE}'
-    async: true
-
-  - label: 'Trigger React-native pipeline'
-    trigger: 'at-bugsnag-react-native'
-    build:
-      branch: '${BUILDKITE_BRANCH}'
-      commit: '${BUILDKITE_COMMIT}'
-      message: '${BUILDKITE_MESSAGE}'
-    async: true
-
   - label: 'Lint'
+    depends_on: "ci-image"
     timeout_in_minutes: 10
     plugins:
-      docker-compose#v3.3.0:
+      docker-compose#v3.7.0:
         run: ci
     command: 'npm run test:lint'
 
   - label: 'Unit tests'
+    depends_on: "ci-image"
     timeout_in_minutes: 10
     plugins:
-      docker-compose#v3.3.0:
+      docker-compose#v3.7.0:
         run: ci
     command: 'npm run test:unit'
 
   - label: 'Type checks/tests'
+    depends_on: "ci-image"
     timeout_in_minutes: 10
     plugins:
-      docker-compose#v3.3.0:
+      docker-compose#v3.7.0:
         run: ci
     command: 'npm run test:types'
-
-  - label:  ':docker: Build browser maze runner image'
-    key: "browser-maze-runner-image"
-    timeout_in_minutes: 20
-    plugins:
-      - artifacts#v1.2.0:
-          download: min_packages.tar
-      - docker-compose#v3.3.0:
-          build:
-            - browser-maze-runner
-          image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
-          cache-from:
-            - browser-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-browser-${BRANCH_NAME}
-
-  - label:  ':docker: Build node maze runner image'
-    key: "node-maze-runner-image"
-    timeout_in_minutes: 20
-    plugins:
-      - artifacts#v1.2.0:
-          download: min_packages.tar
-      - docker-compose#v3.3.0:
-          build:
-            - node-maze-runner
-          image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
-          cache-from:
-            - node-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-node-${BRANCH_NAME}
-
-  - label: ':chrome: v43 Browser tests'
-    depends_on: "browser-maze-runner-image"
-    timeout_in_minutes: 10
-    plugins:
-      docker-compose#v3.3.0:
-        run: browser-maze-runner
-        use-aliases: true
-        verbose: true
-    env:
-      BROWSER: "chrome_43"
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':chrome: v61 Browser tests'
-    depends_on: "browser-maze-runner-image"
-    timeout_in_minutes: 10
-    plugins:
-      docker-compose#v3.3.0:
-        run: browser-maze-runner
-        use-aliases: true
-        verbose: true
-    env:
-      BROWSER: "chrome_61"
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':ie: v8 Browser tests'
-    depends_on: "browser-maze-runner-image"
-    timeout_in_minutes: 10
-    plugins:
-      docker-compose#v3.3.0:
-        run: browser-maze-runner
-        use-aliases: true
-        verbose: true
-    env:
-      BROWSER: "ie_8"
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':ie: v9 Browser tests'
-    depends_on: "browser-maze-runner-image"
-    timeout_in_minutes: 10
-    plugins:
-      docker-compose#v3.3.0:
-        run: browser-maze-runner
-        use-aliases: true
-        verbose: true
-    env:
-      BROWSER: "ie_9"
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':ie: v10 Browser tests'
-    depends_on: "browser-maze-runner-image"
-    timeout_in_minutes: 10
-    plugins:
-      docker-compose#v3.3.0:
-        run: browser-maze-runner
-        use-aliases: true
-        verbose: true
-    env:
-      BROWSER: "ie_10"
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':ie: v11 Browser tests'
-    depends_on: "browser-maze-runner-image"
-    timeout_in_minutes: 10
-    plugins:
-      docker-compose#v3.3.0:
-        run: browser-maze-runner
-        use-aliases: true
-        verbose: true
-    env:
-      BROWSER: "ie_11"
-      HOST: 'localhost' # IE11 needs the host set to localhost for some reason!ß
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':edge: v14 Browser tests'
-    depends_on: "browser-maze-runner-image"
-    timeout_in_minutes: 10
-    plugins:
-      docker-compose#v3.3.0:
-        run: browser-maze-runner
-        use-aliases: true
-        verbose: true
-    env:
-      BROWSER: "edge_14"
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':edge: v15 Browser tests'
-    depends_on: "browser-maze-runner-image"
-    timeout_in_minutes: 10
-    plugins:
-      docker-compose#v3.3.0:
-        run: browser-maze-runner
-        use-aliases: true
-        verbose: true
-    env:
-      BROWSER: "edge_15"
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':safari: v6 Browser tests'
-    depends_on: "browser-maze-runner-image"
-    timeout_in_minutes: 10
-    plugins:
-      docker-compose#v3.3.0:
-        run: browser-maze-runner
-        use-aliases: true
-        verbose: true
-    env:
-      BROWSER: "safari_6"
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':safari: v10 Browser tests'
-    depends_on: "browser-maze-runner-image"
-    timeout_in_minutes: 10
-    plugins:
-      docker-compose#v3.3.0:
-        run: browser-maze-runner
-        use-aliases: true
-        verbose: true
-    env:
-      BROWSER: "safari_10"
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':desktop_computer: Opera v12 Browser tests'
-    depends_on: "browser-maze-runner-image"
-    timeout_in_minutes: 10
-    plugins:
-      docker-compose#v3.3.0:
-        run: browser-maze-runner
-        use-aliases: true
-        verbose: true
-    env:
-      BROWSER: "opera_12"
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':iphone: iOS 10.3 Browser tests'
-    depends_on: "browser-maze-runner-image"
-    timeout_in_minutes: 20
-    plugins:
-      docker-compose#v3.3.0:
-        run: browser-maze-runner
-        use-aliases: true
-        verbose: true
-    env:
-      BROWSER: "iphone_7"
-      HOST: "bs-local.com"
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':android: Samsung Galaxy S8 Browser tests'
-    depends_on: "browser-maze-runner-image"
-    timeout_in_minutes: 10
-    plugins:
-      docker-compose#v3.3.0:
-        run: browser-maze-runner
-        use-aliases: true
-        verbose: true
-    env:
-      BROWSER: "android_s8"
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':firefox: v30 Browser tests'
-    depends_on: "browser-maze-runner-image"
-    timeout_in_minutes: 10
-    plugins:
-      docker-compose#v3.3.0:
-        run: browser-maze-runner
-        use-aliases: true
-        verbose: true
-    env:
-      BROWSER: "firefox_30"
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':firefox: v56 Browser tests'
-    depends_on: "browser-maze-runner-image"
-    timeout_in_minutes: 10
-    plugins:
-      docker-compose#v3.3.0:
-        run: browser-maze-runner
-        use-aliases: true
-        verbose: true
-    env:
-      BROWSER: "firefox_56"
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':node: Node 4'
-    depends_on: "node-maze-runner-image"
-    timeout_in_minutes: 30
-    plugins:
-      docker-compose#v3.3.0:
-        run: node-maze-runner
-        use-aliases: true
-        verbose: true
-        command: ["-e", "koa.feature", "-e", "koa-1x.feature", "-e", "webpack.feature"]
-    env:
-      NODE_VERSION: "4"
-
-  - label: ':node: Node 6'
-    depends_on: "node-maze-runner-image"
-    timeout_in_minutes: 30
-    plugins:
-      docker-compose#v3.3.0:
-        run: node-maze-runner
-        use-aliases: true
-        verbose: true
-        command: ["-e", "koa.feature", "-e", "koa-1x.feature"]
-    env:
-      NODE_VERSION: "6"
-
-  - label: ':node: Node 8'
-    depends_on: "node-maze-runner-image"
-    timeout_in_minutes: 30
-    plugins:
-      docker-compose#v3.3.0:
-        run: node-maze-runner
-        use-aliases: true
-        verbose: true
-    env:
-      NODE_VERSION: "8"
-
-  - label: ':node: Node 10'
-    depends_on: "node-maze-runner-image"
-    timeout_in_minutes: 30
-    plugins:
-      docker-compose#v3.3.0:
-        run: node-maze-runner
-        use-aliases: true
-        verbose: true
-    env:
-      NODE_VERSION: "10"
-
-  - label: ':node: Node 12'
-    depends_on: "node-maze-runner-image"
-    timeout_in_minutes: 30
-    plugins:
-      docker-compose#v3.3.0:
-        run: node-maze-runner
-        use-aliases: true
-        verbose: true
-    env:
-      NODE_VERSION: "12"

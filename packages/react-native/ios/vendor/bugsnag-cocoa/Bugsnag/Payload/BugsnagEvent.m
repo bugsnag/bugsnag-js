@@ -78,7 +78,7 @@ NSDictionary *_Nonnull BSGParseAppMetadata(NSDictionary *_Nonnull event);
 
 @interface BugsnagMetadata ()
 - (NSDictionary *)toDictionary;
-- (id)deepCopy;
+- (instancetype)deepCopy;
 @end
 
 @interface BugsnagStackframe ()
