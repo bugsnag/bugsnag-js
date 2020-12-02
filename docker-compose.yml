@@ -146,7 +146,6 @@ services:
     image: 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner:integration-interactive_cli-cli
     environment:
       DEBUG:
-      VERBOSE:
       REACT_NATIVE_VERSION:
       NETWORK_NAME: "${BUILDKITE_JOB_ID:-react-native-cli-maze-runner}"
       REGISTRY_URL:
@@ -169,7 +168,6 @@ services:
         - REG_NPM_EMAIL
     environment:
       - GIT_DISCOVERY_ACROSS_FILESYSTEM=true
-      - VERBOSE
       - DEBUG
       - BRANCH_NAME
       - BUILDKITE
