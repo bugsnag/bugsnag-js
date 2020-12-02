@@ -22,13 +22,19 @@ export default async function run (argv: string[], projectRoot: string, opts: Re
     const { androidIntegration } = await prompts({
       type: 'confirm',
       name: 'androidIntegration',
-      message: 'Do you want to automatically upload source maps as part of the gradle build?',
+      message: 'Do you want to automatically upload source maps as part of the Gradle build?',
       initial: true
     }, { onCancel })
 
     if (androidIntegration) {
       logger.info('Modifying the Gradle build')
-      await modifyRootBuildGradle(projectRoot, logger)
+      const { gradlePluginVersion } = await prompts({
+        type: 'text',
+        name: 'gradlePluginVersion',
+        message: 'If you want the latest version of the Bugsnag Android Gradle plugin hit enter, otherwise type the version you want',
+        initial: '5.+'
+      }, { onCancel })
+      await modifyRootBuildGradle(projectRoot, gradlePluginVersion, logger)
       await modifyAppBuildGradle(projectRoot, logger)
     }
 

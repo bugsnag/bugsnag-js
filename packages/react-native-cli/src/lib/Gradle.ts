@@ -2,11 +2,13 @@ import { Logger } from '../Logger'
 import { promises as fs } from 'fs'
 import path from 'path'
 
-const GRADLE_PLUGIN_IMPORT = 'classpath("com.bugsnag:bugsnag-android-gradle-plugin:5.+")'
+const GRADLE_PLUGIN_IMPORT = (version: string) => `classpath("com.bugsnag:bugsnag-android-gradle-plugin:${version}")`
+const GRADLE_PLUGIN_IMPORT_REGEX = /classpath\(["']com\.bugsnag:bugsnag-android-gradle-plugin:.*["']\)/
 const GRADLE_PLUGIN_APPLY = 'apply plugin: "com.bugsnag.android.gradle"'
+const GRADLE_PLUGIN_APPLY_REGEX = /apply plugin: ["']com\.bugsnag\.android\.gradle["']/
 const DOCS_LINK = 'https://docs.bugsnag.com/build-integrations/gradle/#installation'
 
-export async function modifyRootBuildGradle (projectRoot: string, logger: Logger): Promise<void> {
+export async function modifyRootBuildGradle (projectRoot: string, pluginVersion: string, logger: Logger): Promise<void> {
   logger.debug('Looking for android/build.gradle')
   const topLevelBuildGradlePath = path.join(projectRoot, 'android', 'build.gradle')
   logger.debug('Adding \'bugsnag-android-gradle-plugin\' to the build script classpath')
@@ -14,7 +16,8 @@ export async function modifyRootBuildGradle (projectRoot: string, logger: Logger
     await insertValueAfterPattern(
       topLevelBuildGradlePath,
       /[\r\n]\s*classpath\(["']com.android.tools.build:gradle:.+["']\)/,
-      GRADLE_PLUGIN_IMPORT,
+      GRADLE_PLUGIN_IMPORT(pluginVersion),
+      GRADLE_PLUGIN_IMPORT_REGEX,
       logger
     )
   } catch (e) {
@@ -22,7 +25,7 @@ export async function modifyRootBuildGradle (projectRoot: string, logger: Logger
       logger.warn(
         `The gradle file was in an unexpected format and so couldn't be updated automatically.
 
-Add '${GRADLE_PLUGIN_IMPORT}' to the 'buildscript.dependencies section of android/build.gradle
+Add '${GRADLE_PLUGIN_IMPORT(pluginVersion)}' to the 'buildscript.dependencies section of android/build.gradle
 
 See ${DOCS_LINK} for more information`
       )
@@ -30,7 +33,7 @@ See ${DOCS_LINK} for more information`
       logger.warn(
         `A gradle file was not found at the expected location and so couldn't be updated automatically.
 
-Add '${GRADLE_PLUGIN_IMPORT}' to the 'buildscript.dependencies section of your project's build.gradle
+Add '${GRADLE_PLUGIN_IMPORT(pluginVersion)}' to the 'buildscript.dependencies section of your project's build.gradle
 
 See ${DOCS_LINK} for more information`
       )
@@ -50,6 +53,7 @@ export async function modifyAppBuildGradle (projectRoot: string, logger: Logger)
       appBuildGradlePath,
       /apply plugin: ["']com\.android\.application["']/,
       GRADLE_PLUGIN_APPLY,
+      GRADLE_PLUGIN_APPLY_REGEX,
       logger
     )
   } catch (e) {
@@ -76,10 +80,10 @@ See ${DOCS_LINK} for more information`
   logger.success('Finished modifying android/app/build.gradle')
 }
 
-async function insertValueAfterPattern (file: string, pattern: RegExp, value: string, logger: Logger): Promise<void> {
+async function insertValueAfterPattern (file: string, pattern: RegExp, value: string, presencePattern: RegExp, logger: Logger): Promise<void> {
   const fileContents = await fs.readFile(file, 'utf8')
 
-  if (fileContents.includes(value)) {
+  if (presencePattern.test(fileContents)) {
     logger.warn('Value already found in file, skipping.')
     return
   }
