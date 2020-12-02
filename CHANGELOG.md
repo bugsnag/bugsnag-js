@@ -1,5 +1,10 @@
 # Changelog
 
+## TBD
+
+- (react-native): Update bugsnag-android to v5.3.0
+  - Add integrity header to verify Error and Session API payloads have not changed. [bugsnag-android#978](https://github.com/bugsnag/bugsnag-android/pull/978)
+
 ## v7.5.3 (2020-12-01)
 
 - (react-native): Update bugsnag-cocoa to v6.2.5
