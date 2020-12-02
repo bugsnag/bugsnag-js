@@ -34,7 +34,7 @@ export async function addApiKey (projectRoot: string, apiKey: string, logger: Lo
     const infoPlist = plist.parse(await fs.readFile(plistPath, 'utf8'))
     infoPlist.bugsnag = { apiKey }
     await fs.writeFile(plistPath, `${plist.build(infoPlist, { indent: '\t', indentSize: 1, offset: -1 })}\n`, 'utf8')
-    logger.success('Updating Info.plist')
+    logger.success('Updated Info.plist')
   } catch (e) {
     logger.warn(PLIST_FAIL_MSG)
   }
