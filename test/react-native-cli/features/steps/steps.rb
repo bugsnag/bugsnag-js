@@ -97,14 +97,14 @@ def parse_package_json
   JSON.parse(json.join("\n"))
 end
 
-Then("bugsnag has been added to the package.json file") do
+Then("bugsnag react-native is in the package.json file") do
   json = parse_package_json
 
   assert_includes(json, "dependencies")
   assert_includes(json["dependencies"], "@bugsnag/react-native")
 end
 
-Then("bugsnag version {string} has been added to the package.json file") do |expected|
+Then("bugsnag react-native version {string} is in the package.json file") do |expected|
   json = parse_package_json
 
   assert_includes(json, "dependencies")
@@ -112,7 +112,7 @@ Then("bugsnag version {string} has been added to the package.json file") do |exp
   assert_equal(json["dependencies"]["@bugsnag/react-native"], expected)
 end
 
-Then("bugsnag has not been added to the package.json file") do
+Then("bugsnag react-native is not in the package.json file") do
   json = parse_package_json
 
   assert_includes(json, "dependencies")

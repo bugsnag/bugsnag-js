@@ -12,7 +12,7 @@ Scenario: no git repo, do not run
     And I wait for the current stdout line to contain "Do you want to continue anyway?"
     When I press enter
     Then the last interactive command exited successfully
-    And bugsnag has not been added to the package.json file
+    And bugsnag react-native is not in the package.json file
 
 Scenario: dirty git repo, do not run
     When I run the React Native service interactively
@@ -30,7 +30,7 @@ Scenario: dirty git repo, do not run
     And I wait for the current stdout line to contain "Do you want to continue anyway?"
     When I press enter
     Then the last interactive command exited successfully
-    And bugsnag has not been added to the package.json file
+    And bugsnag react-native is not in the package.json file
 
 Scenario: clean git repo, do not run
     When I run the React Native service interactively
@@ -42,7 +42,7 @@ Scenario: clean git repo, do not run
     And I wait for the current stdout line to contain "Do you want to continue anyway?"
     When I input "n" interactively
     Then the last interactive command exited successfully
-    And bugsnag has not been added to the package.json file
+    And bugsnag react-native is not in the package.json file
 
 Scenario: no git repo, run anyway, default version
     When I run the React Native service interactively
@@ -62,7 +62,7 @@ Scenario: no git repo, run anyway, default version
     When I press enter
     Then I wait for the shell to output a line containing "+ @bugsnag/react-native" to stdout
     And the last interactive command exited successfully
-    And bugsnag has been added to the package.json file
+    And bugsnag react-native is in the package.json file
 
 Scenario: clean git repo, run, version 7.5.0
     When I run the React Native service interactively
@@ -80,14 +80,14 @@ Scenario: clean git repo, run, version 7.5.0
     When I input "7.5.0" interactively
     Then I wait for the shell to output a line containing "+ @bugsnag/react-native" to stdout
     And the last interactive command exited successfully
-    And bugsnag version "^7.5.0" has been added to the package.json file
+    And bugsnag react-native version "^7.5.0" is in the package.json file
 
 Scenario: no git repo, run anyway, already installed
     When I run the React Native service interactively
     And I input "npm install @bugsnag/react-native" interactively
     Then I wait for the shell to output a line containing "+ @bugsnag/react-native" to stdout
     And the last interactive command exited successfully
-    And bugsnag has been added to the package.json file
+    And bugsnag react-native is in the package.json file
     When I input "bugsnag-react-native-cli install" interactively
     And I wait for the shell to output the following to stdout
         """
