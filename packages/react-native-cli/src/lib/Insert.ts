@@ -11,7 +11,7 @@ const BUGSNAG_COCOA_INIT = '[Bugsnag start];'
 const COCOA_APP_LAUNCH_REGEX = /(-\s*\(BOOL\)\s*application:\s*\(UIApplication\s\*\)\s*application\s+didFinishLaunchingWithOptions:\s*\(NSDictionary\s*\*\)launchOptions\s*\{\s*)\S/
 
 const BUGSNAG_JAVA_IMPORT = 'import com.bugsnag.android.Bugsnag;'
-const BUGSNAG_JAVA_INIT = 'Bugsnag.start();'
+const BUGSNAG_JAVA_INIT = 'Bugsnag.start(this);'
 const JAVA_APP_ON_CREATE_REGEX = /(public void onCreate\s*\(\)\s*\{[^]*super\.onCreate\(\);(\s*))\S/
 
 const DOCS_LINK = 'https://docs.bugsnag.com/platforms/react-native/react-native/#basic-configuration'

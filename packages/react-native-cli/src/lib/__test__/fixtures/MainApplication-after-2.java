@@ -44,7 +44,7 @@ public class MainApplication extends Application implements ReactApplication {
   @Override public void onCreate() {
     // something between curly brace and super call
     super.onCreate();
-    Bugsnag.start();
+    Bugsnag.start(this);
     SoLoader.init(this, /* native exopackage */ false);
     initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
   }
