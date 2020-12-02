@@ -5,14 +5,28 @@
 
 #import <Foundation/Foundation.h>
 
-@class BugsnagConfiguration;
+NS_ASSUME_NONNULL_BEGIN
 
-typedef void (^RequestCompletion)(NSUInteger reportCount, BOOL success, NSError *error);
+typedef NSString * BugsnagHTTPHeaderName NS_TYPED_ENUM;
+
+extern BugsnagHTTPHeaderName const BugsnagHTTPHeaderNameApiKey;
+extern BugsnagHTTPHeaderName const BugsnagHTTPHeaderNameIntegrity;
+extern BugsnagHTTPHeaderName const BugsnagHTTPHeaderNamePayloadVersion;
+extern BugsnagHTTPHeaderName const BugsnagHTTPHeaderNameSentAt;
+extern BugsnagHTTPHeaderName const BugsnagHTTPHeaderNameStacktraceTypes;
+
+typedef NS_ENUM(NSInteger, BugsnagApiClientDeliveryStatus) {
+    /// The payload was delivered successfully and can be deleted.
+    BugsnagApiClientDeliveryStatusDelivered,
+    /// The payload was not delivered but can be retried, e.g. when there was a loss of connectivity.
+    BugsnagApiClientDeliveryStatusFailed,
+    /// The payload cannot be delivered and should be deleted without attempting to retry.
+    BugsnagApiClientDeliveryStatusUndeliverable,
+};
 
 @interface BugsnagApiClient : NSObject
 
-- (instancetype)initWithConfig:(BugsnagConfiguration *)configuration
-                     queueName:(NSString *)queueName;
+- (instancetype)initWithSession:(nullable NSURLSession *)session queueName:(NSString *)queueName;
 
 /**
  * Send outstanding reports
@@ -21,14 +35,15 @@ typedef void (^RequestCompletion)(NSUInteger reportCount, BOOL success, NSError 
 
 - (NSOperation *)deliveryOperation;
 
-- (void)sendItems:(NSUInteger)count
-      withPayload:(NSDictionary *)payload
-            toURL:(NSURL *)url
-          headers:(NSDictionary *)headers
-     onCompletion:(RequestCompletion)onCompletion;
+- (void)sendJSONPayload:(NSDictionary *)payload
+                headers:(NSDictionary<BugsnagHTTPHeaderName, NSString *> *)headers
+                  toURL:(NSURL *)url
+      completionHandler:(void (^)(BugsnagApiClientDeliveryStatus status, NSError * _Nullable error))completionHandler;
+
+- (NSString *)SHA1HashStringWithData:(NSData *)data;
 
 @property(readonly) NSOperationQueue *sendQueue;
-@property(readonly) BugsnagConfiguration *config;
-
 
 @end
+
+NS_ASSUME_NONNULL_END

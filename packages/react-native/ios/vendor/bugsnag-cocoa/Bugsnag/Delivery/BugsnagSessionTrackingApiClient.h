@@ -6,9 +6,12 @@
 #import <Foundation/Foundation.h>
 #import "BugsnagApiClient.h"
 
+@class BugsnagConfiguration;
 @class BugsnagSessionFileStore;
 
 @interface BugsnagSessionTrackingApiClient : BugsnagApiClient
+
+- (instancetype)initWithConfig:(BugsnagConfiguration *)configuration queueName:(NSString *)queueName;
 
 /**
  * Asynchronously delivers sessions written to the store

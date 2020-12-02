@@ -8,8 +8,7 @@
 
 #import "BugsnagSessionTrackingPayload.h"
 #import "BugsnagCollections.h"
-#import "BugsnagClient.h"
-#import "BugsnagClientInternal.h"
+#import "BugsnagClient+Private.h"
 #import "Bugsnag.h"
 #import "BugsnagKeys.h"
 #import "BugsnagNotifier.h"

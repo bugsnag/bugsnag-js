@@ -21,15 +21,16 @@
 @interface BugsnagSessionTrackingApiClient ()
 @property NSMutableSet *activeIds;
 @property(nonatomic) NSString *codeBundleId;
+@property(nonatomic) BugsnagConfiguration *config;
 @end
 
 
 @implementation BugsnagSessionTrackingApiClient
 
-- (instancetype)initWithConfig:(BugsnagConfiguration *)configuration
-                     queueName:(NSString *)queueName {
-    if (self = [super initWithConfig:configuration queueName:queueName]) {
+- (instancetype)initWithConfig:(BugsnagConfiguration *)configuration queueName:(NSString *)queueName {
+    if ((self = [super initWithSession:configuration.session queueName:queueName])) {
         _activeIds = [NSMutableSet new];
+        _config = configuration;
     }
     return self;
 }
@@ -69,27 +70,29 @@
                     codeBundleId:self.codeBundleId];
             NSMutableDictionary *data = [payload toJson];
             NSDictionary *HTTPHeaders = @{
-                    @"Bugsnag-Payload-Version": @"1.0",
-                    @"Bugsnag-API-Key": apiKey,
-                    @"Bugsnag-Sent-At": [BSG_RFC3339DateTool stringFromDate:[NSDate new]]
+                BugsnagHTTPHeaderNameApiKey: apiKey ?: @"",
+                BugsnagHTTPHeaderNamePayloadVersion: @"1.0",
+                BugsnagHTTPHeaderNameSentAt: [BSG_RFC3339DateTool stringFromDate:[NSDate date]]
             };
-            [self sendItems:1
-                withPayload:data
-                      toURL:sessionURL
-                    headers:HTTPHeaders
-               onCompletion:^(NSUInteger sentCount, BOOL success, NSError *error) {
-                   if (success && error == nil) {
-                       bsg_log_info(@"Sent session %@ to Bugsnag", session.id);
-                       [store deleteFileWithId:fileId];
-                   } else {
-                       bsg_log_warn(@"Failed to send sessions to Bugsnag: %@", error);
-                   }
-
-                   // remove request
-                   @synchronized (self.activeIds) {
-                       [self.activeIds removeObject:fileId];
-                   }
-               }];
+            [self sendJSONPayload:data headers:HTTPHeaders toURL:sessionURL
+                completionHandler:^(BugsnagApiClientDeliveryStatus status, NSError *error) {
+                switch (status) {
+                    case BugsnagApiClientDeliveryStatusDelivered:
+                        bsg_log_info(@"Sent session %@ to Bugsnag", session.id);
+                        [store deleteFileWithId:fileId];
+                        break;
+                    case BugsnagApiClientDeliveryStatusFailed:
+                        bsg_log_warn(@"Failed to send sessions to Bugsnag: %@", error);
+                        break;
+                    case BugsnagApiClientDeliveryStatusUndeliverable:
+                        bsg_log_warn(@"Failed to send sessions to Bugsnag: %@", error);
+                        [store deleteFileWithId:fileId];
+                        break;
+                }
+                @synchronized (self.activeIds) {
+                    [self.activeIds removeObject:fileId];
+                }
+            }];
         }];
     }
 }

@@ -25,14 +25,15 @@
 //
 
 #import "BugsnagErrorReportSink.h"
-#import "Bugsnag.h"
-#import "BugsnagLogger.h"
-#import "BugsnagCollections.h"
-#import "BugsnagClient.h"
-#import "BugsnagClientInternal.h"
-#import "BugsnagKeys.h"
-#import "BugsnagNotifier.h"
+
 #import "BSG_KSSystemInfo.h"
+#import "Bugsnag.h"
+#import "BugsnagClient+Private.h"
+#import "BugsnagCollections.h"
+#import "BugsnagEvent+Private.h"
+#import "BugsnagKeys.h"
+#import "BugsnagLogger.h"
+#import "BugsnagNotifier.h"
 #import "Private.h"
 
 // This is private in Bugsnag, but really we want package private so define
@@ -43,13 +44,6 @@
 
 @interface BugsnagNotifier ()
 - (NSDictionary *)toDict;
-@end
-
-@interface BugsnagEvent ()
-- (NSDictionary *_Nonnull)toJson;
-- (BOOL)shouldBeSent;
-- (instancetype _Nonnull)initWithKSReport:(NSDictionary *_Nonnull)report;
-@property NSSet<NSString *> *redactedKeys;
 @end
 
 @interface BugsnagConfiguration ()
@@ -92,10 +86,10 @@
 }
 
 - (void)finishActiveRequest:(NSString *)requestId
-                    success:(BOOL)success
+                  completed:(BOOL)completed
                       error:(NSError *)error
                       block:(BSGOnErrorSentBlock)block {
-    block(requestId, success, error);
+    block(requestId, completed, error);
     @synchronized (self.activeRequests) {
         [self.activeRequests removeObject:requestId];
     }
@@ -123,7 +117,7 @@
         if ([event shouldBeSent] && [self runOnSendBlocks:configuration event:event]) {
             storedEvents[fileKey] = event;
         } else { // delete the report as the user has discarded it
-            [self finishActiveRequest:fileKey success:true error:nil block:block];
+            [self finishActiveRequest:fileKey completed:YES error:nil block:block];
         }
     }
     [self deliverStoredEvents:storedEvents configuration:configuration block:block];
@@ -137,14 +131,13 @@
         NSDictionary *requestPayload = [self prepareEventPayload:event];
 
         NSMutableDictionary *apiHeaders = [[configuration errorApiHeaders] mutableCopy];
-        BSGDictSetSafeObject(apiHeaders, event.apiKey, BSGHeaderApiKey);
-        [self.apiClient sendItems:1
-                      withPayload:requestPayload
-                            toURL:configuration.notifyURL
-                          headers:apiHeaders
-                     onCompletion:^(NSUInteger reportCount, BOOL success, NSError *error) {
-                         [self finishActiveRequest:filename success:success error:error block:block];
-                     }];
+        apiHeaders[BugsnagHTTPHeaderNameApiKey] = event.apiKey;
+        apiHeaders[BugsnagHTTPHeaderNameStacktraceTypes] = [event.stacktraceTypes componentsJoinedByString:@","];
+        [self.apiClient sendJSONPayload:requestPayload headers:apiHeaders toURL:configuration.notifyURL
+                      completionHandler:^(BugsnagApiClientDeliveryStatus status, NSError *error) {
+            BOOL completed = status == BugsnagApiClientDeliveryStatusDelivered || status == BugsnagApiClientDeliveryStatusUndeliverable;
+            [self finishActiveRequest:filename completed:completed error:error block:block];
+        }];
     }
 }
 
