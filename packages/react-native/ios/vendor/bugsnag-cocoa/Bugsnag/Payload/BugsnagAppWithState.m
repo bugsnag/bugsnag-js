@@ -59,6 +59,7 @@
 {
     BugsnagAppWithState *app = [BugsnagAppWithState new];
     app.id = event[@"id"];
+    app.dsymUuid = event[BSGKeyMachoUUID];
     app.releaseStage = event[@"releaseStage"];
     app.version = event[@"version"];
     app.bundleVersion = event[@"bundleVersion"];

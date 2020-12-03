@@ -8,6 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
+typedef NSString * BugsnagStackframeType NS_TYPED_ENUM;
+
+FOUNDATION_EXPORT BugsnagStackframeType const BugsnagStackframeTypeCocoa;
+
 /**
  * Represents a single stackframe from a stacktrace.
  */
@@ -59,10 +65,17 @@
 @property BOOL isLr;
 
 /**
+ * The type of the stack frame, if it differs from that of the containing error or event.
+ */
+@property(nullable) BugsnagStackframeType type;
+
+/**
  * Returns an array of stackframe objects representing the provided call stack strings.
  *
  * The call stack strings should follow the format used by `[NSThread callStackSymbols]` and `backtrace_symbols()`.
  */
-+ (NSArray<BugsnagStackframe *> *_Nullable)stackframesWithCallStackSymbols:(NSArray<NSString *> *_Nonnull)callStackSymbols;
++ (nullable NSArray<BugsnagStackframe *> *)stackframesWithCallStackSymbols:(NSArray<NSString *> *)callStackSymbols;
 
 @end
+
+NS_ASSUME_NONNULL_END
