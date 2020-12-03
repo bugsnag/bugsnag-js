@@ -56,8 +56,6 @@ Scenario: no git repo, run anyway, default version
     And I wait for the current stdout line to contain "Do you want to continue anyway?"
     When I input "y" interactively
     Then I wait for the shell to output a line containing "Adding @bugsnag/react-native dependency" to stdout
-    And I wait for the shell to output a line containing "Using yarn or npm" to stdout
-    When I press enter
     Then I wait for the current stdout line to contain "If you want the latest version of @bugsnag/react-native hit enter, otherwise type the version you want"
     When I press enter
     Then I wait for the shell to output a line containing "+ @bugsnag/react-native" to stdout
@@ -74,8 +72,6 @@ Scenario: clean git repo, run, version 7.5.0
     And I wait for the current stdout line to contain "Do you want to continue anyway?"
     When I press enter
     Then I wait for the shell to output a line containing "Adding @bugsnag/react-native dependency" to stdout
-    And I wait for the shell to output a line containing "Using yarn or npm" to stdout
-    When I press enter
     Then I wait for the current stdout line to contain "If you want the latest version of @bugsnag/react-native hit enter, otherwise type the version you want"
     When I input "7.5.0" interactively
     Then I wait for the shell to output a line containing "+ @bugsnag/react-native" to stdout
