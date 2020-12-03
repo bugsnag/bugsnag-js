@@ -131,8 +131,11 @@ end
 Then("the iOS build has been modified to upload source maps") do
   filename = "ios/#{current_fixture}.xcodeproj/project.pbxproj"
 
-  step("the file '#{filename}' contains 'EXTRA_PACKAGER_ARGS=\"--sourcemap-output $CONFIGURATION_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/main.jsbundle.map\"'")
-  step("the file '#{filename}' contains 'Upload source maps to Bugsnag'")
+  steps %Q{
+    Then I input "./check-ios-build-script.sh" interactively
+    And the last interactive command exited successfully
+    And the file '#{filename}' contains 'Upload source maps to Bugsnag'
+  }
 end
 
 Then("the Android build has not been modified to upload source maps") do
@@ -174,9 +177,8 @@ Then("bugsnag react-native is not in the package.json file") do
 end
 
 Then("the file {string} contains {string}") do |filename, expected|
-  # grep's "-x" makes the pattern have to match an entire line
   steps %Q{
-    When I input "fgrep '#{expected.gsub(/"/, '\\"')}' #{filename}" interactively
+    When I input "fgrep '#{expected.gsub(/"/, '\"')}' #{filename}" interactively
     Then the last interactive command exited successfully
   }
 end
@@ -189,9 +191,8 @@ Then("the file {string} contains") do |filename, expected|
 end
 
 Then("the file {string} does not contain {string}") do |filename, expected|
-  # grep's "-x" makes the pattern have to match an entire line
   steps %Q{
-    When I input "fgrep '#{expected.gsub(/"/, '\\"')}' #{filename}" interactively
+    When I input "fgrep '#{expected.gsub(/"/, '\"')}' #{filename}" interactively
     Then the last interactive command exited with an error code
   }
 end

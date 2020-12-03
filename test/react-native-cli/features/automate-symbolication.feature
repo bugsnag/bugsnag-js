@@ -64,9 +64,7 @@ Scenario: opt not to modify the Android project
     And I wait for the current stdout line to contain "Do you want to automatically upload source maps as part of the Xcode build?"
     When I press enter
     And I wait for the current stdout line to contain "Do you want to automatically upload source maps as part of the Gradle build?"
-    When I input "y" interactively
-    And I wait for the current stdout line to contain "If you want the latest version of the Bugsnag Android Gradle plugin hit enter, otherwise type the version you want"
-    When I press enter
+    When I input "n" interactively
     And I wait for the current stdout line to contain "If you want the latest version of @bugsnag/source-maps hit enter, otherwise type the version you want"
     When I press enter
     Then I wait for the shell to output a line containing "@bugsnag/source-maps dependency is installed" to stdout
