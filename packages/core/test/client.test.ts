@@ -1,6 +1,6 @@
 import Client from '../client'
 import Event from '../event'
-import { Session } from '..'
+import Session from '../session'
 
 describe('@bugsnag/core/client', () => {
   describe('constructor', () => {
@@ -158,6 +158,41 @@ describe('@bugsnag/core/client', () => {
         event.severity = 'info'
       })
     })
+
+    it('supports setting unhandled via callback', done => {
+      const client = new Client({ apiKey: 'API_KEY_YEAH' })
+
+      const session = new Session()
+      // @ts-ignore
+      client._session = session
+
+      client._setDelivery(client => ({
+        sendEvent: (payload) => {
+          expect(payload).toBeTruthy()
+          expect(Array.isArray(payload.events)).toBe(true)
+
+          const event = payload.events[0].toJSON()
+
+          expect(event.unhandled).toBe(true)
+          expect(event.severityReason).toEqual({
+            type: 'handledException',
+            unhandledOverridden: true
+          })
+
+          expect(event.session).toEqual(session)
+          expect((event.session as Session)._handled).toBe(0)
+          expect((event.session as Session)._unhandled).toBe(1)
+
+          done()
+        },
+        sendSession: () => {}
+      }))
+
+      client.notify(new Error('oh em gee'), event => {
+        event.unhandled = true
+      })
+    })
+
     // eslint-disable-next-line jest/expect-expect
     it('supports preventing send by returning false in onError callback', done => {
       const client = new Client({
@@ -177,6 +212,7 @@ describe('@bugsnag/core/client', () => {
       // give the event loop a tick to see if the event gets sent
       process.nextTick(() => done())
     })
+
     // eslint-disable-next-line jest/expect-expect
     it('supports preventing send by returning false in notify callback', done => {
       const client = new Client({ apiKey: 'API_KEY_YEAH' })
@@ -355,11 +391,18 @@ describe('@bugsnag/core/client', () => {
         sendSession: () => {},
         sendEvent: (payload, cb) => cb(null)
       }))
+
+      const session = new Session()
       // @ts-ignore
-      client.notify(new Error('111'), {}, (err, event) => {
+      client._session = session
+
+      client.notify(new Error('111'), () => {}, (err, event) => {
         expect(err).toBe(null)
         expect(event).toBeTruthy()
         expect(event.errors[0].errorMessage).toBe('111')
+
+        expect((event as Event)._session).toBe(session)
+        expect(session.toJSON().events.handled).toBe(1)
         done()
       })
     })
@@ -370,12 +413,19 @@ describe('@bugsnag/core/client', () => {
         sendSession: () => {},
         sendEvent: (payload, cb) => cb(new Error('flerp'))
       }))
+
+      const session = new Session()
       // @ts-ignore
-      client.notify(new Error('111'), {}, (err, event) => {
+      client._session = session
+
+      client.notify(new Error('111'), () => {}, (err, event) => {
         expect(err).toBeTruthy()
         expect(err.message).toBe('flerp')
         expect(event).toBeTruthy()
         expect(event.errors[0].errorMessage).toBe('111')
+
+        expect((event as Event)._session).toBe(session)
+        expect(session.toJSON().events.handled).toBe(1)
         done()
       })
     })
@@ -388,11 +438,15 @@ describe('@bugsnag/core/client', () => {
         sendEvent: () => { done('sendEvent() should not be called') }
       }))
 
+      const session = new Session()
       // @ts-ignore
-      client.notify(new Error('111'), {}, (err, event) => {
+      client._session = session
+
+      client.notify(new Error('111'), () => {}, (err, event) => {
         expect(err).toBe(null)
         expect(event).toBeTruthy()
         expect(event.errors[0].errorMessage).toBe('111')
+        expect((event as Event)._session).toBe(undefined)
         done()
       })
     })
@@ -405,11 +459,15 @@ describe('@bugsnag/core/client', () => {
         sendEvent: () => { done('sendEvent() should not be called') }
       }))
 
+      const session = new Session()
       // @ts-ignore
-      client.notify(new Error('111'), {}, (err, event) => {
+      client._session = session
+
+      client.notify(new Error('111'), () => {}, (err, event) => {
         expect(err).toBe(null)
         expect(event).toBeTruthy()
         expect(event.errors[0].errorMessage).toBe('111')
+        expect((event as Event)._session).toBe(undefined)
         done()
       })
     })

@@ -29,8 +29,7 @@
 #import "BSG_KSCrash.h"
 #import "BugsnagBreadcrumbs.h"
 #import "BugsnagLogger.h"
-#import "BugsnagClient.h"
-#import "BugsnagClientInternal.h"
+#import "BugsnagClient+Private.h"
 #import "BugsnagKeys.h"
 #import "BugsnagPlugin.h"
 #import "BugsnagHandledState.h"
@@ -50,20 +49,6 @@ static BugsnagClient *bsg_g_bugsnag_client = NULL;
 
 @interface NSDictionary (BSGKSMerge)
 - (NSDictionary *)BSG_mergedInto:(NSDictionary *)dest;
-@end
-
-@interface BugsnagEvent ()
-@property(readwrite) NSUInteger depth;
-@end
-
-@interface BugsnagClient ()
-- (void)startListeningForStateChangeNotification:(NSString *_Nonnull)notificationName;
-- (void)addBreadcrumbWithBlock:(void (^_Nonnull)(BugsnagBreadcrumb *_Nonnull))block;
-- (void)notifyInternal:(BugsnagEvent *_Nonnull)event
-                 block:(BugsnagOnErrorBlock)block;
-- (void)addRuntimeVersionInfo:(NSString *)info
-                      withKey:(NSString *)key;
-@property (nonatomic) NSString *codeBundleId;
 @end
 
 @interface BugsnagMetadata ()

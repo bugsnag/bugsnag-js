@@ -7,8 +7,9 @@
 //
 
 #import "BugsnagThread.h"
+
 #import "BugsnagCollections.h"
-#import "BugsnagStackframe.h"
+#import "BugsnagStackframe+Private.h"
 #import "BugsnagStacktrace.h"
 #import "BugsnagKeys.h"
 
@@ -27,10 +28,6 @@ NSString *BSGSerializeThreadType(BSGThreadType type) {
 @interface BugsnagStacktrace ()
 + (instancetype)stacktraceFromJson:(NSDictionary *)json;
 @property NSMutableArray<BugsnagStackframe *> *trace;
-@end
-
-@interface BugsnagStackframe ()
-- (NSDictionary *)toDictionary;
 @end
 
 @implementation BugsnagThread

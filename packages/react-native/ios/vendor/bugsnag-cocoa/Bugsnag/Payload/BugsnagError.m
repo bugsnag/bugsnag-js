@@ -7,8 +7,9 @@
 //
 
 #import "BugsnagError.h"
+
 #import "BugsnagKeys.h"
-#import "BugsnagStackframe.h"
+#import "BugsnagStackframe+Private.h"
 #import "BugsnagStacktrace.h"
 #import "BugsnagCollections.h"
 #import "RegisterErrorData.h"
@@ -70,11 +71,6 @@ NSString *BSGParseErrorMessage(NSDictionary *report, NSDictionary *error, NSStri
     }
     return error[BSGKeyReason] ?: @"";
 }
-
-@interface BugsnagStackframe ()
-- (NSDictionary *)toDictionary;
-+ (BugsnagStackframe *)frameFromJson:(NSDictionary *)json;
-@end
 
 @interface BugsnagStacktrace ()
 @property NSMutableArray<BugsnagStackframe *> *trace;
