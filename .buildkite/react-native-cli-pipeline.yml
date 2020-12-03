@@ -66,7 +66,6 @@ steps:
   #
   - label: ':docker: Build RN Android Builder image'
     key: 'android-builder-image'
-    skip: 'Builds successfully, but skipped until later steps are implemented.'
     timeout_in_minutes: 30
     plugins:
       - docker-compose#v3.7.0:
@@ -78,7 +77,6 @@ steps:
 
   - label: ':android: Build RN 0.60 apk'
     key: 'rn-0-60-apk'
-    skip: 'Builds successfully, but skipped until later steps are implemented.'
     depends_on:
       - 'android-builder-image'
     timeout_in_minutes: 15
@@ -92,7 +90,6 @@ steps:
 
   - label: ':android: Build RN 0.61 apk'
     key: 'rn-0-61-apk'
-    skip: 'Builds successfully, but skipped until later steps are implemented.'
     depends_on:
       - 'android-builder-image'
     timeout_in_minutes: 15
@@ -106,7 +103,6 @@ steps:
 
   - label: ':android: Build RN 0.62 apk'
     key: 'rn-0-62-apk'
-    skip: 'Builds successfully, but skipped until later steps are implemented.'
     depends_on:
       - 'android-builder-image'
     timeout_in_minutes: 15
@@ -120,7 +116,6 @@ steps:
 
   - label: ':android: Build RN 0.63 apk'
     key: 'rn-0-63-apk'
-    skip: 'Builds successfully, but skipped until later steps are implemented.'
     depends_on:
       - 'android-builder-image'
     timeout_in_minutes: 15
@@ -134,7 +129,6 @@ steps:
 
   - label: ':ios: Build RN 0.60 ipa'
     key: 'rn-0-60-ipa'
-    skip: 'Builds successfully, but skipped until later steps are implemented.'
     timeout_in_minutes: 60
     agents:
       queue: 'opensource-mac-rn'
@@ -146,7 +140,6 @@ steps:
 
   - label: ':ios: Build RN 0.61 ipa'
     key: 'rn-0-61-ipa'
-    skip: 'Builds successfully, but skipped until later steps are implemented.'
     timeout_in_minutes: 60
     agents:
       queue: 'opensource-mac-rn'
@@ -158,7 +151,6 @@ steps:
 
   - label: ':ios: Build RN 0.62 ipa'
     key: 'rn-0-62-ipa'
-    skip: 'Builds successfully, but skipped until later steps are implemented.'
     timeout_in_minutes: 60
     agents:
       queue: 'opensource-mac-rn'
@@ -170,7 +162,6 @@ steps:
 
   - label: ':ios: Build RN 0.63 ipa'
     key: 'rn-0-63-ipa'
-    skip: 'Builds successfully, but skipped until later steps are implemented.'
     timeout_in_minutes: 60
     agents:
       queue: 'opensource-mac-rn'
