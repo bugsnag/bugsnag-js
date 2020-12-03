@@ -1,23 +1,81 @@
 steps:
 
   #
-  # Android builder
+  # CLI tests Maze Runner image
+  #
+  - label: ':docker: Build CLI test image'
+    key: 'cli-maze-image'
+    timeout_in_minutes: 30
+    plugins:
+      - docker-compose#v3.7.0:
+          build: react-native-cli-tool-maze-runner
+          image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
+          cache-from:  react-native-cli-tool-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:cli-maze-${BRANCH_NAME}
+      - docker-compose#v3.7.0:
+          push: react-native-cli-tool-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:cli-maze-${BRANCH_NAME}
+
+  #
+  # CLI tests
+  #
+  - label: ':runner: RN 0.60 CLI tests'
+    depends_on: "cli-maze-image"
+    timeout_in_minutes: 20
+    plugins:
+      docker-compose#v3.7.0:
+        run: react-native-cli-tool-maze-runner
+        use-aliases: true
+        command: ["-e", "features/built_app.feature"]
+    env:
+      REACT_NATIVE_VERSION: "rn0_60"
+
+  - label: ':runner: RN 0.61 CLI tests'
+    depends_on: "cli-maze-image"
+    timeout_in_minutes: 20
+    plugins:
+      docker-compose#v3.7.0:
+        run: react-native-cli-tool-maze-runner
+        use-aliases: true
+        command: ["-e", "features/built_app.feature"]
+    env:
+      REACT_NATIVE_VERSION: "rn0_61"
+
+  - label: ':runner: RN 0.62 CLI tests'
+    depends_on: "cli-maze-image"
+    timeout_in_minutes: 20
+    plugins:
+      docker-compose#v3.7.0:
+        run: react-native-cli-tool-maze-runner
+        use-aliases: true
+        command: ["-e", "features/built_app.feature"]
+    env:
+      REACT_NATIVE_VERSION: "rn0_62"
+
+  - label: ':runner: RN 0.63 CLI tests'
+    depends_on: "cli-maze-image"
+    timeout_in_minutes: 20
+    plugins:
+      docker-compose#v3.7.0:
+        run: react-native-cli-tool-maze-runner
+        use-aliases: true
+        command: ["-e", "features/built_app.feature"]
+    env:
+      REACT_NATIVE_VERSION: "rn0_63"
+
+  #
+  # Built app test fixtures
   #
   - label: ':docker: Build RN Android Builder image'
     key: 'android-builder-image'
     skip: 'Builds successfully, but skipped until later steps are implemented.'
     timeout_in_minutes: 30
     plugins:
-      - docker-compose#v3.3.0:
+      - docker-compose#v3.7.0:
           build: react-native-cli-android-builder
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
           cache-from:  react-native-cli-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
-      - docker-compose#v3.3.0:
+      - docker-compose#v3.7.0:
           push: react-native-cli-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
 
-  #
-  # Test fixtures
-  #
   - label: ':android: Build RN 0.60 apk'
     key: 'rn-0-60-apk'
     skip: 'Builds successfully, but skipped until later steps are implemented.'
@@ -27,7 +85,7 @@ steps:
     env:
       REACT_NATIVE_VERSION: rn0_60
     plugins:
-      - docker-compose#v3.3.0:
+      - docker-compose#v3.7.0:
           run: react-native-cli-android-builder
     artifact_paths:
       - build/rn0_60.apk
@@ -41,7 +99,7 @@ steps:
     env:
       REACT_NATIVE_VERSION: rn0_61
     plugins:
-      - docker-compose#v3.3.0:
+      - docker-compose#v3.7.0:
           run: react-native-cli-android-builder
     artifact_paths:
       - build/rn0_61.apk
@@ -55,7 +113,7 @@ steps:
     env:
       REACT_NATIVE_VERSION: rn0_62
     plugins:
-      - docker-compose#v3.3.0:
+      - docker-compose#v3.7.0:
           run: react-native-cli-android-builder
     artifact_paths:
       - build/rn0_62.apk
@@ -69,7 +127,7 @@ steps:
     env:
       REACT_NATIVE_VERSION: rn0_63
     plugins:
-      - docker-compose#v3.3.0:
+      - docker-compose#v3.7.0:
           run: react-native-cli-android-builder
     artifact_paths:
       - build/rn0_63.apk
@@ -121,3 +179,7 @@ steps:
     artifact_paths: build/rn0_63.ipa
     commands:
       - npm run test:build-react-native-cli-ios
+
+  #
+  # TODO Built app end-to-end tests
+  #
