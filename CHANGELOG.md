@@ -4,6 +4,7 @@
 
 ### Changed
 
+- (expo): Add integrity header to verify Error and Session API payloads have not changed. [#1172](https://github.com/bugsnag/bugsnag-js/pull/1172)
 - (react-native): Update bugsnag-android to v5.3.0
   - Add integrity header to verify Error and Session API payloads have not changed. [bugsnag-android#978](https://github.com/bugsnag/bugsnag-android/pull/978)
 - (react-native): Update bugsnag-cocoa to v6.3.0
