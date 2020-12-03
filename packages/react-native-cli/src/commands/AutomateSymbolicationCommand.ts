@@ -44,16 +44,7 @@ export default async function run (argv: string[], projectRoot: string, opts: Re
         logger.warn('@bugsnag/source-maps is already installed, skipping')
       } else {
         logger.info('Adding @bugsnag/source-maps dependency')
-        const { packageManager } = await prompts({
-          type: 'select',
-          name: 'packageManager',
-          message: 'Using yarn or npm?',
-          choices: [
-            { title: 'npm', value: 'npm' },
-            { title: 'yarn', value: 'yarn' }
-          ],
-          initial: await guessPackageManager(projectRoot) === 'npm' ? 0 : 1
-        })
+        const packageManager = await guessPackageManager(projectRoot)
 
         const { version } = await prompts({
           type: 'text',
