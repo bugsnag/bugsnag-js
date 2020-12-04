@@ -6,7 +6,7 @@ const fs = require('fs')
 
 module.exports = {
   buildAndroid: function buildAndroid (sourceFixtures, destFixtures) {
-    const version = common.determineVersion()
+    const version = process.env.NOTIFIER_VERSION || common.determineVersion()
     const rnVersion = process.env.REACT_NATIVE_VERSION
     const registryUrl = process.env.REGISTRY_URL
 
@@ -37,7 +37,7 @@ module.exports = {
                     `${process.env.PWD}/build/${rnVersion}.apk`)
   },
   buildIOS: function buildIOS () {
-    const version = common.determineVersion()
+    const version = process.env.NOTIFIER_VERSION || common.determineVersion()
     const rnVersion = process.env.REACT_NATIVE_VERSION
     const registryUrl = process.env.REGISTRY_URL
     const fixturesDir = 'test/react-native-cli/features/fixtures'
@@ -67,7 +67,7 @@ module.exports = {
     if (!fs.existsSync('./build-ios.sh')) {
       throw new Error('Local iOS build file at ./build-ios.sh not found')
     }
-    common.run(`./build-ios.sh ${rnVersion}`, true)
+    // common.run(`./build-ios.sh ${rnVersion}`, true)
 
     // Copy file to build directory
     common.changeDir(initialDir)

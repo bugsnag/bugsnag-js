@@ -14,14 +14,12 @@ import {
   View,
   Text,
   StatusBar,
+  Button
 } from 'react-native';
 
 import {
   Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
+  Colors
 } from 'react-native/Libraries/NewAppScreen';
 
 const App: () => React$Node = () => {
@@ -39,32 +37,15 @@ const App: () => React$Node = () => {
             </View>
           )}
           <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.js</Text> to change this
-                screen and then come back to see your edits.
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
+            <Text>React Native CLI end-to-end test app</Text>
+            <Button style={styles.clickyButton}
+                    accessibilityLabel='js_notify'
+                    title='JS Notify'
+                    onPress={this.jsNotify}/>
+            <Button style={styles.clickyButton}
+                    accessibilityLabel='native_notify'
+                    title='Native Notify'
+                    onPress={this.nativeNotify}/>
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -109,6 +90,14 @@ const styles = StyleSheet.create({
     paddingRight: 12,
     textAlign: 'right',
   },
+  clickyButton: {
+    backgroundColor: '#acbcef',
+    borderWidth: 0.5,
+    borderColor: '#000',
+    borderRadius: 4,
+    margin: 5,
+    padding: 5
+  }
 });
 
 export default App;
