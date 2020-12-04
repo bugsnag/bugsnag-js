@@ -73,8 +73,8 @@ export default class App extends Component {
     console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${JSON.stringify(jsConfig)} (js)`)
     await NativeModules.BugsnagTestInterface.startBugsnag(configuration)
     Bugsnag.start(jsConfig)
-    // TODO Comment this if it actually helps
-    await this.timeout(2000)
+    // The notifier needs a little time to synch to the native layer, otherwise flakes occur
+    await this.timeout(5000)
     scenario.run()
   }
 
