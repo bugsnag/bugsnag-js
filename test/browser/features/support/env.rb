@@ -13,7 +13,7 @@ ERRORS = YAML::load open 'features/fixtures/browser_errors.yml'
 FIXTURES_SERVER_PORT = "9020"
 
 # start a web server to serve fixtures
-if ENV['VERBOSE']
+if ENV['DEBUG']
   pid = Process.spawn({"PORT"=>FIXTURES_SERVER_PORT}, 'ruby features/lib/server.rb')
 else
   DEV_NULL = Gem.win_platform? ? 'NUL' : '/dev/null'
