@@ -10,6 +10,7 @@ Scenario: Calling notify() with an Error
   Then I wait to receive a request
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "HandledError"
+  And the Bugsnag-Integrity header is valid
 
 Scenario: Calling notify() with a caught Error
   Given the element "handledCaughtErrorButton" is present
@@ -17,3 +18,4 @@ Scenario: Calling notify() with a caught Error
   Then I wait to receive a request
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "HandledCaughtError"
+  And the Bugsnag-Integrity header is valid
