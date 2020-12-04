@@ -99,6 +99,61 @@ def parse_package_json
   JSON.parse(json.join("\n"))
 end
 
+Then("bugsnag source maps library is in the package.json file") do
+  json = parse_package_json
+
+  assert_includes(json, "devDependencies")
+  assert_includes(json["devDependencies"], "@bugsnag/source-maps")
+end
+
+Then("bugsnag source maps library version {string} is in the package.json file") do |expected|
+  json = parse_package_json
+
+  assert_includes(json, "devDependencies")
+  assert_includes(json["devDependencies"], "@bugsnag/source-maps")
+  assert_equal(json["devDependencies"]["@bugsnag/source-maps"], expected)
+end
+
+Then("bugsnag source maps library is not in the package.json file") do
+  json = parse_package_json
+
+  assert_includes(json, "devDependencies")
+  refute_includes(json["devDependencies"], "@bugsnag/source-maps")
+end
+
+Then("the iOS build has not been modified to upload source maps") do
+  filename = "ios/#{current_fixture}.xcodeproj/project.pbxproj"
+
+  step("the file '#{filename}' does not contain 'EXTRA_PACKAGER_ARGS=\"--sourcemap-output $CONFIGURATION_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/main.jsbundle.map\"'")
+  step("the file '#{filename}' does not contain 'Upload source maps to Bugsnag'")
+end
+
+Then("the iOS build has been modified to upload source maps") do
+  filename = "ios/#{current_fixture}.xcodeproj/project.pbxproj"
+
+  steps %Q{
+    Then I input "./check-ios-build-script.sh" interactively
+    And the last interactive command exited successfully
+    And the file '#{filename}' contains 'Upload source maps to Bugsnag'
+  }
+end
+
+Then("the Android build has not been modified to upload source maps") do
+  rootGradle = "android/build.gradle"
+  appGradle = "android/app/build.gradle"
+
+  step("the file '#{rootGradle}' does not contain 'classpath(\"com.bugsnag:bugsnag-android-gradle-plugin:'")
+  step("the file '#{appGradle}' does not contain 'apply plugin: \"com.bugsnag.android.gradle\"'")
+end
+
+Then("the Android build has been modified to upload source maps") do
+  rootGradle = "android/build.gradle"
+  appGradle = "android/app/build.gradle"
+
+  step("the file '#{rootGradle}' contains 'classpath(\"com.bugsnag:bugsnag-android-gradle-plugin:'")
+  step("the file '#{appGradle}' contains 'apply plugin: \"com.bugsnag.android.gradle\"'")
+end
+
 Then("bugsnag react-native is in the package.json file") do
   json = parse_package_json
 
@@ -122,9 +177,8 @@ Then("bugsnag react-native is not in the package.json file") do
 end
 
 Then("the file {string} contains {string}") do |filename, expected|
-  # grep's "-x" makes the pattern have to match an entire line
   steps %Q{
-    When I input "fgrep '#{expected.gsub(/"/, '\\"')}' #{filename}" interactively
+    When I input "fgrep '#{expected.gsub(/"/, '\"')}' #{filename}" interactively
     Then the last interactive command exited successfully
   }
 end
@@ -137,9 +191,8 @@ Then("the file {string} contains") do |filename, expected|
 end
 
 Then("the file {string} does not contain {string}") do |filename, expected|
-  # grep's "-x" makes the pattern have to match an entire line
   steps %Q{
-    When I input "fgrep '#{expected.gsub(/"/, '\\"')}' #{filename}" interactively
+    When I input "fgrep '#{expected.gsub(/"/, '\"')}' #{filename}" interactively
     Then the last interactive command exited with an error code
   }
 end
