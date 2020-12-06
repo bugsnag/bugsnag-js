@@ -14,8 +14,9 @@ module.exports = {
 
     // Copy in files required from the host (just the Android ones)
     common.run(`mkdir -p ${destFixtures}/${rnVersion}`)
-    common.run(`rsync -a --no-recursive ${sourceFixtures}/${rnVersion}/* ${destFixtures}/${rnVersion}`, true)
-    common.run(`rsync -a ${sourceFixtures}/${rnVersion}/android ${destFixtures}/${rnVersion}`, true)
+    common.run(`rsync -av --no-recursive ${sourceFixtures}/* ${destFixtures}`, true)
+    common.run(`rsync -av --no-recursive ${sourceFixtures}/${rnVersion}/* ${destFixtures}/${rnVersion}`, true)
+    common.run(`rsync -av ${sourceFixtures}/${rnVersion}/android ${destFixtures}/${rnVersion}`, true)
 
     // JavaScript layer
     common.changeDir(`${destFixtures}/${rnVersion}`)
@@ -24,12 +25,14 @@ module.exports = {
     // Install and run the CLI
     const installCommand = `npm install bugsnag-react-native-cli@${version} --registry ${registryUrl}`
     common.run(installCommand, true)
-    // TODO App will not build at present if init is run
-    // const initCommand = './node-modules/bugsnag-react-native-cli/bin/react-native-cli init'
-    // common.run(initCommand, true)
+
+    // Use Expect to run the init command interactively
+    common.changeDir(`${destFixtures}`)
+    const initCommand = `./rn-cli-init-android.sh ${version}`
+    common.run(initCommand, true)
 
     // Native layer
-    common.changeDir('android')
+    common.changeDir(`${destFixtures}/${rnVersion}/android`)
     common.run('./gradlew assembleRelease', true)
 
     // Finally, copy the APK back to the host
@@ -50,24 +53,22 @@ module.exports = {
     }
 
     // JavaScript layer
-    console.log(`Changing directory to: ${targetDir} and running "npm install"`)
     common.changeDir(`${targetDir}`)
     common.run(`npm install --registry ${registryUrl}`, true)
 
     // Install and run the CLI
     const installCommand = `npm install bugsnag-react-native-cli@${version} --registry ${registryUrl}`
     common.run(installCommand, true)
-    // TODO Need to provide an answers file for the init command
-    // const initCommand = './node_modules/bugsnag-react-native-cli/bin/cli init'
-    // common.run(initCommand, true)
+
+    // Use Expect to run the init command interactively
+    common.changeDir(`${initialDir}/${fixturesDir}`)
+    common.run(`./rn-cli-init-ios.sh ${version}`, true)
 
     // Performing local build steps
-    common.changeDir(`${initialDir}/${fixturesDir}`)
-    console.log('Locating local build script')
     if (!fs.existsSync('./build-ios.sh')) {
       throw new Error('Local iOS build file at ./build-ios.sh not found')
     }
-    // common.run(`./build-ios.sh ${rnVersion}`, true)
+    common.run(`./build-ios.sh ${rnVersion}`, true)
 
     // Copy file to build directory
     common.changeDir(initialDir)
