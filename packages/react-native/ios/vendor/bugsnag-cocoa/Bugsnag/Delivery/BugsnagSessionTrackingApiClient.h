@@ -20,4 +20,6 @@
  */
 - (void)deliverSessionsInStore:(BugsnagSessionFileStore *)store;
 
+@property (copy) NSString *codeBundleId;
+
 @end

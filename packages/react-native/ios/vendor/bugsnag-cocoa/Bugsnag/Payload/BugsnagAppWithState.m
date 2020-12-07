@@ -6,19 +6,12 @@
 //  Copyright © 2020 Bugsnag. All rights reserved.
 //
 
-#import "BugsnagAppWithState.h"
+#import "BugsnagAppWithState+Private.h"
+
+#import "BugsnagApp+Private.h"
 #import "BugsnagKeys.h"
 #import "BugsnagConfiguration.h"
 #import "BugsnagCollections.h"
-
-@interface BugsnagApp ()
-+ (void)populateFields:(BugsnagApp *)app
-            dictionary:(NSDictionary *)event
-                config:(BugsnagConfiguration *)config
-          codeBundleId:(NSString *)codeBundleId;
-
-- (NSDictionary *)toDict;
-@end
 
 @implementation BugsnagAppWithState
 
@@ -91,9 +84,9 @@
 - (NSDictionary *)toDict
 {
     NSMutableDictionary *dict = (NSMutableDictionary *) [super toDict];
-    BSGDictInsertIfNotNil(dict, self.duration, @"duration");
-    BSGDictInsertIfNotNil(dict, self.durationInForeground, @"durationInForeground");
-    BSGDictInsertIfNotNil(dict, @(self.inForeground), @"inForeground");
+    dict[@"duration"] = self.duration;
+    dict[@"durationInForeground"] = self.durationInForeground;
+    dict[@"inForeground"] = @(self.inForeground);
     return dict;
 }
 

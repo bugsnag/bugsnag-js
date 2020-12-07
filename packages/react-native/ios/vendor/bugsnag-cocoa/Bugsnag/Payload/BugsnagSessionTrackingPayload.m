@@ -7,40 +7,18 @@
 //
 
 #import "BugsnagSessionTrackingPayload.h"
+
+#import "BugsnagApp+Private.h"
 #import "BugsnagCollections.h"
 #import "BugsnagClient+Private.h"
-#import "Bugsnag.h"
+#import "BugsnagDevice+Private.h"
+#import "Bugsnag+Private.h"
 #import "BugsnagKeys.h"
 #import "BugsnagNotifier.h"
+#import "BugsnagSession+Private.h"
 #import "BSG_KSSystemInfo.h"
 #import "BugsnagConfiguration.h"
-#import "Private.h"
 #import "BugsnagApp.h"
-
-@interface BugsnagNotifier ()
-- (NSDictionary *)toDict;
-@end
-
-@interface BugsnagSession ()
-- (NSDictionary *)toDictionary;
-@end
-
-@interface Bugsnag ()
-+ (BugsnagClient *)client;
-@end
-
-@interface BugsnagDevice ()
-+ (BugsnagDevice *)deviceWithDictionary:(NSDictionary *)event;
-- (NSDictionary *)toDictionary;
-@end
-
-@interface BugsnagApp ()
-+ (BugsnagApp *)appWithDictionary:(NSDictionary *)event
-                           config:(BugsnagConfiguration *)config
-                     codeBundleId:(NSString *)codeBundleId;
-
-- (NSDictionary *)toDict;
-@end
 
 @interface BugsnagSessionTrackingPayload ()
 @property (nonatomic) BugsnagConfiguration *config;
@@ -69,16 +47,16 @@
     for (BugsnagSession *session in self.sessions) {
         [sessionData addObject:[session toDictionary]];
     }
-    BSGDictInsertIfNotNil(dict, sessionData, @"sessions");
-    BSGDictSetSafeObject(dict, [[Bugsnag client].notifier toDict], BSGKeyNotifier);
+    dict[@"sessions"] = sessionData;
+    dict[BSGKeyNotifier] = [[Bugsnag client].notifier toDict];
 
     // app/device data collection relies on KSCrash reports,
     // need to mimic the JSON structure here
     BugsnagApp *app = self.sessions[0].app;
-    BSGDictSetSafeObject(dict, [app toDict], BSGKeyApp);
+    dict[BSGKeyApp] = [app toDict];
 
     BugsnagDevice *device = self.sessions[0].device;
-    BSGDictSetSafeObject(dict, [device toDictionary], BSGKeyDevice);
+    dict[BSGKeyDevice] = [device toDictionary];
     return dict;
 }
 

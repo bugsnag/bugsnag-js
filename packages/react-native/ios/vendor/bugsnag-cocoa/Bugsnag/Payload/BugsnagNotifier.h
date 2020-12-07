@@ -17,6 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property NSString *url;
 @property NSMutableArray<BugsnagNotifier *> *dependencies;
 
+- (NSDictionary *)toDict;
+
 @end
 
 NS_ASSUME_NONNULL_END

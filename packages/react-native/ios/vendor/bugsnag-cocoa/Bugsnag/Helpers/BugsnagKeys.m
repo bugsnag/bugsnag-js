@@ -92,6 +92,7 @@ NSString *const BSGKeyThreads = @"threads";
 NSString *const BSGKeyTimestamp = @"timestamp";
 NSString *const BSGKeyType = @"type";
 NSString *const BSGKeyUnhandled = @"unhandled";
+NSString *const BSGKeyUnhandledOverridden = @"unhandledOverridden";
 NSString *const BSGKeyUrl = @"url";
 NSString *const BSGKeyUser = @"user";
 NSString *const BSGKeyUuid = @"uuid";

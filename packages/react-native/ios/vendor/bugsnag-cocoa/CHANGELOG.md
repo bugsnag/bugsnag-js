@@ -1,6 +1,19 @@
 Changelog
 =========
 
+## 6.4.0 (2020-12-08)
+
+### Enhancements
+
+* Allow overriding the "unhandled" flag in error callbacks.
+  [#921](https://github.com/bugsnag/bugsnag-cocoa/pull/921)
+  [#912](https://github.com/bugsnag/bugsnag-cocoa/pull/912)
+
+### Bug fixes
+
+* Fix unexpected exception behavior when started without an API key.
+  [#931](https://github.com/bugsnag/bugsnag-cocoa/pull/931)
+
 ## 6.3.0 (2020-12-02)
 
 ### Enhancements

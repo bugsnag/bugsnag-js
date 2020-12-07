@@ -6,14 +6,10 @@
 //  Copyright © 2020 Bugsnag. All rights reserved.
 //
 
-#import "BugsnagStacktrace.h"
+#import "BugsnagStacktrace+Private.h"
 
 #import "BugsnagKeys.h"
 #import "BugsnagStackframe+Private.h"
-
-@interface BugsnagStacktrace ()
-@property NSMutableArray<BugsnagStackframe *> *trace;
-@end
 
 @implementation BugsnagStacktrace
 
@@ -30,14 +26,14 @@
             }
         }
     }
-    trace.trace = data;
+    trace->_trace = data;
     return trace;
 }
 
 - (instancetype)initWithTrace:(NSArray<NSDictionary *> *)trace
                  binaryImages:(NSArray<NSDictionary *> *)binaryImages {
     if (self = [super init]) {
-        self.trace = [NSMutableArray new];
+        _trace = [NSMutableArray new];
 
         for (NSDictionary *obj in trace) {
             BugsnagStackframe *frame = [BugsnagStackframe frameFromDict:obj withImages:binaryImages];
