@@ -223,6 +223,7 @@ steps:
         - --fail-fast
     env:
       SKIP_NAVIGATION_SCENARIOS: "true"
+      DEBUG: "true"
     concurrency: 9
     concurrency_group: 'browserstack-app'
 
@@ -246,6 +247,7 @@ steps:
         - --fail-fast
     env:
       SKIP_NAVIGATION_SCENARIOS: "true"
+      DEBUG: "true"
     concurrency: 9
     concurrency_group: 'browserstack-app'
 
@@ -268,6 +270,7 @@ steps:
         - --fail-fast
     env:
       SKIP_NAVIGATION_SCENARIOS: "true"
+      DEBUG: "true"
     concurrency: 9
     concurrency_group: 'browserstack-app'
 

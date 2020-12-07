@@ -76,7 +76,7 @@ export default class App extends Component {
     // The notifier needs a little time to synch to the native layer, otherwise flakes occur - however it's also
     // important that the scenario waits longer than this period before relaunching the app (see the Cucumber step
     // 'I relaunch the app').
-    await this.timeout(2000)
+    await this.timeout(5000)
     scenario.run()
   }
 
