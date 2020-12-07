@@ -29,6 +29,7 @@ NSString *BSGFormatSeverity(BSGSeverity severity) {
 }
 
 static NSString *const kUnhandled = @"unhandled";
+static NSString *const kUnhandledOverridden = @"unhandledOverridden";
 static NSString *const kSeverityReasonType = @"severityReasonType";
 static NSString *const kOriginalSeverity = @"originalSeverity";
 static NSString *const kCurrentSeverity = @"currentSeverity";
@@ -49,6 +50,7 @@ static NSString *const kUserCallbackSetSeverity = @"userCallbackSetSeverity";
 
 + (instancetype)handledStateFromJson:(NSDictionary *)json {
     BOOL unhandled = [json[@"unhandled"] boolValue];
+    BOOL unhandledOverridden = [json[@"unhandledOverridden"] boolValue];
     NSDictionary *data = json[@"severityReason"];
     BSGSeverity severity = BSGParseSeverity(json[@"severity"]);
 
@@ -62,6 +64,7 @@ static NSString *const kUserCallbackSetSeverity = @"userCallbackSetSeverity";
     return [[BugsnagHandledState alloc] initWithSeverityReason:reason
                                                       severity:severity
                                                      unhandled:unhandled
+                                           unhandledOverridden:unhandledOverridden
                                                      attrValue:attrValue];
 }
 
@@ -77,6 +80,7 @@ static NSString *const kUserCallbackSetSeverity = @"userCallbackSetSeverity";
                                       severity:(BSGSeverity)severity
                                      attrValue:(NSString *)attrValue {
     BOOL unhandled = NO;
+    BOOL unhandledOverridden = NO;
 
     switch (severityReason) {
     case PromiseRejection:
@@ -107,18 +111,21 @@ static NSString *const kUserCallbackSetSeverity = @"userCallbackSetSeverity";
     return [[BugsnagHandledState alloc] initWithSeverityReason:severityReason
                                                       severity:severity
                                                      unhandled:unhandled
+                                           unhandledOverridden:unhandledOverridden
                                                      attrValue:attrValue];
 }
 
 - (instancetype)initWithSeverityReason:(SeverityReasonType)severityReason
                               severity:(BSGSeverity)severity
                              unhandled:(BOOL)unhandled
+                   unhandledOverridden:(BOOL)unhandledOverridden
                              attrValue:(NSString *)attrValue {
     if (self = [super init]) {
         _severityReasonType = severityReason;
         _currentSeverity = severity;
         _originalSeverity = severity;
         _unhandled = unhandled;
+        _unhandledOverridden = unhandledOverridden;
 
         if (severityReason == Signal) {
             _attrValue = attrValue;
@@ -199,6 +206,9 @@ static NSString *const kUserCallbackSetSeverity = @"userCallbackSetSeverity";
 - (NSDictionary *)toJson {
     NSMutableDictionary *dict = [NSMutableDictionary new];
     dict[kUnhandled] = @(self.unhandled);
+    if(self.unhandledOverridden) {
+        dict[kUnhandledOverridden] = @(self.unhandledOverridden);
+    }
     dict[kSeverityReasonType] =
         [BugsnagHandledState stringFromSeverityReason:self.severityReasonType];
     dict[kOriginalSeverity] = BSGFormatSeverity(self.originalSeverity);

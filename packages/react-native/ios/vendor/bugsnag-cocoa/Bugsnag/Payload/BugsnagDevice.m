@@ -56,16 +56,16 @@
 
 - (NSDictionary *)toDictionary {
     NSMutableDictionary *dict = [NSMutableDictionary new];
-    BSGDictInsertIfNotNil(dict, @(self.jailbroken), @"jailbroken");
-    BSGDictInsertIfNotNil(dict, self.id, @"id");
-    BSGDictInsertIfNotNil(dict, self.locale, @"locale");
-    BSGDictInsertIfNotNil(dict, self.manufacturer, @"manufacturer");
-    BSGDictInsertIfNotNil(dict, self.model, @"model");
-    BSGDictInsertIfNotNil(dict, self.modelNumber, @"modelNumber");
-    BSGDictInsertIfNotNil(dict, self.osName, @"osName");
-    BSGDictInsertIfNotNil(dict, self.osVersion, @"osVersion");
-    BSGDictInsertIfNotNil(dict, self.runtimeVersions, @"runtimeVersions");
-    BSGDictInsertIfNotNil(dict, self.totalMemory, @"totalMemory");
+    dict[@"jailbroken"] = @(self.jailbroken);
+    dict[@"id"] = self.id;
+    dict[@"locale"] = self.locale;
+    dict[@"manufacturer"] = self.manufacturer;
+    dict[@"model"] = self.model;
+    dict[@"modelNumber"] = self.modelNumber;
+    dict[@"osName"] = self.osName;
+    dict[@"osVersion"] = self.osVersion;
+    dict[@"runtimeVersions"] = self.runtimeVersions;
+    dict[@"totalMemory"] = self.totalMemory;
     return dict;
 }
 

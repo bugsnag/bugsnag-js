@@ -27,6 +27,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+NSString *BSGParseErrorClass(NSDictionary *error, NSString *errorType);
+
+NSString *BSGParseErrorMessage(NSDictionary *report, NSDictionary *error, NSString *errorType);
+
 BSGErrorType BSGParseErrorType(NSString *errorType);
 
 NSString *BSGSerializeErrorType(BSGErrorType errorType);
