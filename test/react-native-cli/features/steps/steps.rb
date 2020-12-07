@@ -28,10 +28,12 @@ When('I run the React Native service interactively') do
   step("I run the service '#{current_fixture}' interactively")
 end
 
+# TODO(PLAT-5566) migrate to Maze Runner (this step may need a bit more specific of a name)
 When('I press enter') do
   step('I input "" interactively')
 end
 
+# TODO(PLAT-5566) migrate to Maze Runner
 When('I wait for the shell to output the following to stdout') do |expected|
   wait = Maze::Wait.new(timeout: MazeRunner.config.receive_requests_wait)
 
@@ -52,6 +54,7 @@ When('I wait for the shell to output the following to stdout') do |expected|
   )
 end
 
+# TODO(PLAT-5566) migrate to Maze Runner
 Then("I wait for the shell to output a line containing {string} to stdout") do |expected|
   wait = Maze::Wait.new(timeout: MazeRunner.config.receive_requests_wait)
   success = wait.until do
@@ -71,6 +74,7 @@ Then("I wait for the shell to output a line containing {string} to stdout") do |
   )
 end
 
+# TODO(PLAT-5566) migrate to Maze Runner
 Then("I wait for the current stdout line to contain {string}") do |expected|
   wait = Maze::Wait.new(timeout: MazeRunner.config.receive_requests_wait)
   wait.until do
@@ -177,6 +181,7 @@ Then("bugsnag react-native is not in the package.json file") do
   refute_includes(json["dependencies"], "@bugsnag/react-native")
 end
 
+# TODO(PLAT-5566) migrate to Maze Runner (this step may need a bit more specific of a name)
 Then("the file {string} contains {string}") do |filename, expected|
   steps %Q{
     When I input "fgrep '#{expected.gsub(/"/, '\"')}' #{filename}" interactively
@@ -184,6 +189,7 @@ Then("the file {string} contains {string}") do |filename, expected|
   }
 end
 
+# TODO(PLAT-5566) migrate to Maze Runner (this step may need a bit more specific of a name)
 # A version of the above that allows multi-line strings
 Then("the file {string} contains") do |filename, expected|
   expected.each_line do |line|
@@ -191,6 +197,7 @@ Then("the file {string} contains") do |filename, expected|
   end
 end
 
+# TODO(PLAT-5566) migrate to Maze Runner (this step may need a bit more specific of a name)
 Then("the file {string} does not contain {string}") do |filename, expected|
   steps %Q{
     When I input "fgrep '#{expected.gsub(/"/, '\"')}' #{filename}" interactively
@@ -198,6 +205,7 @@ Then("the file {string} does not contain {string}") do |filename, expected|
   }
 end
 
+# TODO(PLAT-5566) migrate to Maze Runner (this step may need a bit more specific of a name)
 # A version of the above that allows multi-line strings
 Then("the file {string} does not contain") do |filename, expected|
   expected.each_line do |line|
