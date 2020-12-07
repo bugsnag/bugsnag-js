@@ -63,8 +63,8 @@ Before('@skip_if_local_storage_is_unavailable') do |scenario|
 end
 
 AfterConfiguration do
-  MazeRunner.config.receive_no_requests_wait = 15
-  MazeRunner.config.enforce_bugsnag_integrity = false
+  MazeRunner.config.receive_no_requests_wait = 15 if MazeRunner.config.respond_to? :receive_no_requests_wait=
+  MazeRunner.config.enforce_bugsnag_integrity = false if MazeRunner.config.respond_to? :enforce_bugsnag_integrity=
 
   # Necessary as Appium removes any existing $driver instance on load
   bs_local_start

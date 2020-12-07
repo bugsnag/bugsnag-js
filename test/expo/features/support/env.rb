@@ -1,7 +1,7 @@
 AfterConfiguration do |_config|
-  MazeRunner.config.receive_no_requests_wait = 15
+  MazeRunner.config.receive_no_requests_wait = 15 if MazeRunner.config.respond_to? :receive_no_requests_wait=
   # TODO: Remove once the Bugsnag-Integrity header has been implemented
-  MazeRunner.config.enforce_bugsnag_integrity = false
+  MazeRunner.config.enforce_bugsnag_integrity = false if MazeRunner.config.respond_to? :enforce_bugsnag_integrity=
 end
 
 Before('@skip_android_5') do |scenario|
