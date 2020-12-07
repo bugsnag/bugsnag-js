@@ -58,6 +58,10 @@ export default class App extends Component {
     this.setState({ sessionsEndpoint: 'https://sessions.bugsnag.com' })
   }
 
+  timeout (ms) {
+    return new Promise(resolve => setTimeout(resolve, ms))
+  }
+
   startScenario = async () => {
     console.log(`Running scenario: ${this.state.currentScenario}`)
     console.log(`  with MetaData: ${this.state.scenarioMetaData}`)
@@ -69,6 +73,10 @@ export default class App extends Component {
     console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${JSON.stringify(jsConfig)} (js)`)
     await NativeModules.BugsnagTestInterface.startBugsnag(configuration)
     Bugsnag.start(jsConfig)
+    // The notifier needs a little time to synch to the native layer, otherwise flakes occur - however it's also
+    // important that the scenario waits longer than this period before relaunching the app (see the Cucumber step
+    // 'I relaunch the app').
+    await this.timeout(2000)
     scenario.run()
   }
 
