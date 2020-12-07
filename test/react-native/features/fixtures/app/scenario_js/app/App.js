@@ -29,7 +29,8 @@ export default class App extends Component {
         notify: this.state.notifyEndpoint,
         sessions: this.state.sessionsEndpoint
       },
-      autoTrackSessions: false
+      autoTrackSessions: false,
+      sendThreads: false
     }
   }
 
