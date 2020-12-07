@@ -42,7 +42,7 @@
 
 #import <CommonCrypto/CommonDigest.h>
 #if BSG_PLATFORM_IOS || BSG_PLATFORM_TVOS
-#import <UIKit/UIKit.h>
+#import "BSGUIKit.h"
 #endif
 
 @implementation BSG_KSSystemInfo
@@ -176,10 +176,10 @@
     NSMutableData *data = nil;
 
 #if BSG_HAS_UIDEVICE
-    if ([[UIDevice currentDevice]
+    if ([[UIDEVICE currentDevice]
             respondsToSelector:@selector(identifierForVendor)]) {
         data = [NSMutableData dataWithLength:16];
-        [[UIDevice currentDevice].identifierForVendor
+        [[UIDEVICE currentDevice].identifierForVendor
             getUUIDBytes:data.mutableBytes];
     } else
 #endif
@@ -354,8 +354,8 @@
     BSGDictSetSafeObject(sysInfo, @__clang_version__, @BSG_KSSystemField_ClangVersion);
 #endif
 #if BSG_HAS_UIDEVICE
-    BSGDictSetSafeObject(sysInfo, [UIDevice currentDevice].systemName, @BSG_KSSystemField_SystemName);
-    BSGDictSetSafeObject(sysInfo, [UIDevice currentDevice].systemVersion, @BSG_KSSystemField_SystemVersion);
+    BSGDictSetSafeObject(sysInfo, [UIDEVICE currentDevice].systemName, @BSG_KSSystemField_SystemName);
+    BSGDictSetSafeObject(sysInfo, [UIDEVICE currentDevice].systemVersion, @BSG_KSSystemField_SystemVersion);
 #else
     BSGDictSetSafeObject(sysInfo, @"Mac OS", @BSG_KSSystemField_SystemName);
     NSOperatingSystemVersion version =
@@ -458,7 +458,7 @@
         // Calling this API indirectly to avoid a compile-time check that
         // [UIApplication sharedApplication] is not called from app extensions
         // (which is handled above)
-        UIApplication *app = [UIApplication performSelector:@selector(sharedApplication)];
+        UIApplication *app = [UIAPPLICATION performSelector:@selector(sharedApplication)];
         return [app applicationState];
     };
 

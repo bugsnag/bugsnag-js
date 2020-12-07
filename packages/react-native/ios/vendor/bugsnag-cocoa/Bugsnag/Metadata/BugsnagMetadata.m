@@ -36,12 +36,12 @@
 
 @implementation BugsnagMetadata
 
-- (id)init {
+- (instancetype)init {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     return [self initWithDictionary:dict];
 }
 
-- (id)initWithDictionary:(NSDictionary *)dict {
+- (instancetype)initWithDictionary:(NSDictionary *)dict {
     if (self = [super init]) {
         // Ensure that the instantiating dictionary is mutable.
         // Saves checks later.
@@ -117,7 +117,7 @@
 
 // MARK: - <NSMutableCopying>
 
-- (id)mutableCopyWithZone:(NSZone *)zone {
+- (instancetype)mutableCopyWithZone:(NSZone *)zone {
     @synchronized(self) {
         NSMutableDictionary *dict = [self.dictionary mutableCopy];
         return [[BugsnagMetadata alloc] initWithDictionary:dict];
@@ -138,7 +138,7 @@
     }
 }
 
-- (id)deepCopy {
+- (instancetype)deepCopy {
     @synchronized(self) {
         return [[BugsnagMetadata alloc] initWithDictionary:self.dictionary];
     }

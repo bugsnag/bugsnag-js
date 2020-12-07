@@ -24,6 +24,7 @@ Scenario: Device data is included by default
   And the event "device.totalMemory" is not null
   And the event "metaData.device.isDevice" is true
   And the event "metaData.device.appOwnership" equals "standalone"
+  And the Bugsnag-Integrity header is valid
 
 Scenario: Device data can be modified by a callback
   Given the element "deviceCallbackButton" is present
@@ -47,3 +48,4 @@ Scenario: Device data can be modified by a callback
   And the event "device.totalMemory" is not null
   And the event "metaData.device.isDevice" is true
   And the event "metaData.device.appOwnership" equals "standalone"
+  And the Bugsnag-Integrity header is valid

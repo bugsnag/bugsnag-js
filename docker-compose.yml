@@ -32,7 +32,6 @@ services:
         - BUILDKITE_BUILD_NUMBER
     command: --fail-fast --retry 2
     environment:
-      VERBOSE:
       DEBUG:
       BROWSER: "${BROWSER:-chrome_61}"
       BROWSER_STACK_USERNAME:
@@ -55,7 +54,6 @@ services:
       NODE_VERSION: "${NODE_VERSION:-10}"
       COMPOSE_PROJECT_NAME: "node${NODE_VERSION:-10}"
       NETWORK_NAME: "${BUILDKITE_JOB_ID:-js-maze-runner}"
-      VERBOSE:
       DEBUG:
     networks:
       default:
@@ -71,7 +69,6 @@ services:
       args:
         - BUILDKITE_BUILD_NUMBER
     environment:
-      VERBOSE:
       DEBUG:
     networks:
       default:
@@ -98,7 +95,6 @@ services:
       context: .
       dockerfile: dockerfiles/Dockerfile.expo-android-builder
     environment:
-      VERBOSE:
       DEBUG:
       EXPO_USERNAME:
       EXPO_PASSWORD:
@@ -123,7 +119,6 @@ services:
         - REG_BASIC_CREDENTIAL
         - REG_NPM_EMAIL
     environment:
-      - VERBOSE
       - DEBUG
       - BRANCH_NAME
       - BUILDKITE
@@ -186,7 +181,6 @@ services:
       args:
         - BUILDKITE_BUILD_NUMBER
     environment:
-      VERBOSE:
       DEBUG:
       SKIP_NAVIGATION_SCENARIOS:
     networks:

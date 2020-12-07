@@ -197,7 +197,7 @@ npm run test:build-react-native-ios
 
 Fnd Android:
 ```shell script
-npm run test:build-react-native-ios
+npm run test:build-react-native-android
 ```
 These will build a `.ipa` or `.apk` file respectively and copy into `./build`.
 

@@ -31,12 +31,11 @@
 
 #import "BSG_KSCrashC.h"
 #import "BSG_KSJSONCodecObjC.h"
-#import "BSG_KSSingleton.h"
 #import "NSError+BSG_SimpleConstructor.h"
 
 //#define BSG_KSLogger_LocalLevel TRACE
 #import "BSG_KSLogger.h"
-#import "BugsnagThread.h"
+#import "BugsnagThread+Private.h"
 #import "BSGJSONSerialization.h"
 #import "BSGSerialization.h"
 #import "Bugsnag.h"
@@ -44,7 +43,7 @@
 #import "BSG_KSCrashReportFields.h"
 
 #if BSG_HAS_UIKIT
-#import <UIKit/UIKit.h>
+#import "BSGUIKit.h"
 #endif
 #if TARGET_OS_OSX
 #import <AppKit/AppKit.h>
@@ -73,13 +72,6 @@
 // ============================================================================
 #pragma mark - Globals -
 // ============================================================================
-
-@interface BugsnagThread ()
-+ (NSMutableArray<BugsnagThread *> *)threadsFromArray:(NSArray *)threads
-                                         binaryImages:(NSArray *)binaryImages
-                                                depth:(NSUInteger)depth
-                                            errorType:(NSString *)errorType;
-@end
 
 @interface BSG_KSCrash ()
 
@@ -126,14 +118,21 @@
 #pragma mark - Lifecycle -
 // ============================================================================
 
-IMPLEMENT_EXCLUSIVE_SHARED_INSTANCE(BSG_KSCrash)
++ (BSG_KSCrash *)sharedInstance {
+    static id sharedInstance;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedInstance = [[self alloc] init];
+    });
+    return sharedInstance;
+}
 
-- (id)init {
+- (instancetype)init {
     return [self
         initWithReportFilesDirectory:BSG_KSCRASH_DefaultReportFilesDirectory];
 }
 
-- (id)initWithReportFilesDirectory:(NSString *)reportFilesDirectory {
+- (instancetype)initWithReportFilesDirectory:(NSString *)reportFilesDirectory {
     if ((self = [super init])) {
         self.bundleName = [[NSBundle mainBundle] infoDictionary][@"CFBundleName"];
 

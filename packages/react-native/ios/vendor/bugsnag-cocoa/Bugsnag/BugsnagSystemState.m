@@ -10,7 +10,7 @@
 #if TARGET_OS_OSX
 #import <AppKit/AppKit.h>
 #else
-#import <UIKit/UIKit.h>
+#import "BSGUIKit.h"
 #endif
 
 #import "BugsnagSystemState.h"
@@ -106,6 +106,7 @@ static NSMutableDictionary* initCurrentState(BugsnagKVStore *kvstore, BugsnagCon
     app[SYSTEMSTATE_APP_DEBUGGER_IS_ACTIVE] = @(isBeingDebugged);
 
     NSMutableDictionary *device = [NSMutableDictionary new];
+    device[SYSTEMSTATE_DEVICE_BOOT_TIME] = [BSG_RFC3339DateTool stringFromDate:systemInfo[@BSG_KSSystemField_BootTime]];
     device[@"id"] = systemInfo[@BSG_KSSystemField_DeviceAppHash];
     // device[@"lowMemory"] is initially unset
     device[@"osBuild"] = systemInfo[@BSG_KSSystemField_OSVersion];
@@ -116,11 +117,16 @@ static NSMutableDictionary* initCurrentState(BugsnagKVStore *kvstore, BugsnagCon
     device[@"modelNumber"] = systemInfo[@ BSG_KSSystemField_Model];
     device[@"wordSize"] = @(PLATFORM_WORD_SIZE);
     device[@"locale"] = [[NSLocale currentLocale] localeIdentifier];
+    device[@"runtimeVersions"] = @{
+        @"clangVersion": systemInfo[@BSG_KSSystemField_ClangVersion] ?: @"",
+        @"osBuild": systemInfo[@BSG_KSSystemField_OSVersion] ?: @""
+    };
 #if BSG_PLATFORM_SIMULATOR
     device[@"simulator"] = @YES;
 #else
     device[@"simulator"] = @NO;
 #endif
+    device[@"totalMemory"] = systemInfo[@BSG_KSSystemField_Memory][@"usable"];
 
     NSMutableDictionary *state = [NSMutableDictionary new];
     state[BSGKeyApp] = app;
@@ -138,10 +144,10 @@ NSDictionary *copyLaunchState(NSDictionary *launchState) {
 
 @interface BugsnagSystemState ()
 
-@property(readwrite,nonatomic) NSMutableDictionary *currentLaunchStateRW;
-@property(readwrite,nonatomic) NSDictionary *currentLaunchState;
+@property(readonly,nonatomic) NSMutableDictionary *currentLaunchStateRW;
+@property(readwrite,atomic) NSDictionary *currentLaunchState;
 @property(readonly,nonatomic) NSString *persistenceFilePath;
-@property(nonatomic) BugsnagKVStore *kvStore;
+@property(readonly,nonatomic) BugsnagKVStore *kvStore;
 
 @end
 
@@ -166,11 +172,11 @@ NSDictionary *copyLaunchState(NSDictionary *launchState) {
         // MacOS "active" serves the same purpose as "foreground" in iOS
         [center addObserverForName:NSApplicationDidBecomeActiveNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
             [weakSelf.kvStore setBoolean:YES forKey:SYSTEMSTATE_APP_IS_IN_FOREGROUND];
-            [weakSelf bgSetAppValue:@YES forKey:SYSTEMSTATE_APP_IS_IN_FOREGROUND];
+            [weakSelf setValue:@YES forAppKey:SYSTEMSTATE_APP_IS_IN_FOREGROUND];
         }];
         [center addObserverForName:NSApplicationDidResignActiveNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
             [weakSelf.kvStore setBoolean:NO forKey:SYSTEMSTATE_APP_IS_IN_FOREGROUND];
-            [weakSelf bgSetAppValue:@NO forKey:SYSTEMSTATE_APP_IS_IN_FOREGROUND];
+            [weakSelf setValue:@NO forAppKey:SYSTEMSTATE_APP_IS_IN_FOREGROUND];
         }];
 #else
         [center addObserverForName:UIApplicationWillTerminateNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
@@ -179,39 +185,48 @@ NSDictionary *copyLaunchState(NSDictionary *launchState) {
         }];
         [center addObserverForName:UIApplicationWillEnterForegroundNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
             [weakSelf.kvStore setBoolean:YES forKey:SYSTEMSTATE_APP_IS_IN_FOREGROUND];
-            [weakSelf bgSetAppValue:@YES forKey:SYSTEMSTATE_APP_IS_IN_FOREGROUND];
+            [weakSelf setValue:@YES forAppKey:SYSTEMSTATE_APP_IS_IN_FOREGROUND];
         }];
         [center addObserverForName:UIApplicationDidEnterBackgroundNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
             [weakSelf.kvStore setBoolean:NO forKey:SYSTEMSTATE_APP_IS_IN_FOREGROUND];
-            [weakSelf bgSetAppValue:@NO forKey:SYSTEMSTATE_APP_IS_IN_FOREGROUND];
+            [weakSelf setValue:@NO forAppKey:SYSTEMSTATE_APP_IS_IN_FOREGROUND];
         }];
         [center addObserverForName:UIApplicationDidBecomeActiveNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
             [weakSelf.kvStore setBoolean:YES forKey:SYSTEMSTATE_APP_IS_ACTIVE];
-            [weakSelf bgSetAppValue:@YES forKey:SYSTEMSTATE_APP_IS_ACTIVE];
+            [weakSelf setValue:@YES forAppKey:SYSTEMSTATE_APP_IS_ACTIVE];
         }];
         [center addObserverForName:UIApplicationWillResignActiveNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
             [weakSelf.kvStore setBoolean:NO forKey:SYSTEMSTATE_APP_IS_ACTIVE];
-            [weakSelf bgSetAppValue:@NO forKey:SYSTEMSTATE_APP_IS_ACTIVE];
+            [weakSelf setValue:@NO forAppKey:SYSTEMSTATE_APP_IS_ACTIVE];
         }];
         [center addObserverForName:UIApplicationDidReceiveMemoryWarningNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
             NSString *date = [BSG_RFC3339DateTool stringFromDate:[NSDate date]];
             [weakSelf.kvStore setString:date forKey:SYSTEMSTATE_APP_LAST_LOW_MEMORY_WARNING];
-            [weakSelf bgSetAppValue:date forKey:SYSTEMSTATE_APP_LAST_LOW_MEMORY_WARNING];
+            [weakSelf setValue:date forAppKey:SYSTEMSTATE_APP_LAST_LOW_MEMORY_WARNING];
         }];
 #endif
     }
     return self;
 }
 
-- (void)setCodeBundleID:(NSString*)codeBundleID {
-    [self bgSetAppValue:codeBundleID forKey:BSGKeyCodeBundleId];
+- (void)recordAppUUID {
+    // [BSG_KSSystemInfo appUUID] returns nil until we have called _dyld_register_func_for_add_image()
+    [self setValue:[BSG_KSSystemInfo appUUID] forAppKey:BSGKeyMachoUUID];
 }
 
-- (void)bgSetAppValue:(id)value forKey:(NSString*)key {
+- (void)setCodeBundleID:(NSString*)codeBundleID {
+    [self setValue:codeBundleID forAppKey:BSGKeyCodeBundleId];
+}
+
+- (void)setValue:(id)value forAppKey:(NSString *)key {
+    [self setValue:value forKey:key inSection:SYSTEMSTATE_KEY_APP];
+}
+
+- (void)setValue:(id)value forKey:(NSString *)key inSection:(NSString *)section {
     // Run on a BG thread so we don't monopolize the notification queue.
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         @synchronized (self) {
-            self.currentLaunchStateRW[SYSTEMSTATE_KEY_APP][key] = value;
+            self.currentLaunchStateRW[section][key] = value;
             // User-facing state should never mutate from under them.
             self.currentLaunchState = copyLaunchState(self.currentLaunchStateRW);
         }
@@ -219,10 +234,10 @@ NSDictionary *copyLaunchState(NSDictionary *launchState) {
     });
 }
 
-
 - (void)sync {
     NSDictionary *state = self.currentLaunchState;
     NSError *error = nil;
+    NSAssert([BSGJSONSerialization isValidJSONObject:state], @"BugsnagSystemState cannot be converted to JSON data");
     if (![BSGJSONSerialization isValidJSONObject:state]) {
         bsg_log_err(@"System state cannot be written as JSON");
         return;

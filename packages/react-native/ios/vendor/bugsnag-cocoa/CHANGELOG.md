@@ -1,6 +1,47 @@
 Changelog
 =========
 
+## 6.3.0 (2020-12-02)
+
+### Enhancements
+
+* Out Of Memory errors now include more information, including custom metadata and user information.
+  [#915](https://github.com/bugsnag/bugsnag-cocoa/pull/915)
+  [#908](https://github.com/bugsnag/bugsnag-cocoa/pull/908)
+
+* Bugsnag can now be used without UIKit, reducing memory usage in app extensions.
+  [#919](https://github.com/bugsnag/bugsnag-cocoa/pull/919)
+
+### Bug fixes
+
+* Fixed incorrect app version reported when sending crash reports from older versions of Bugsnag (before 6.2.3)
+  [#911](https://github.com/bugsnag/bugsnag-cocoa/pull/911)
+
+* Fixed a rare crash in -[BugsnagClient computeDidCrashLastLaunch]
+  [#917](https://github.com/bugsnag/bugsnag-cocoa/pull/917)
+
+## 6.2.6 (2020-11-25)
+
+### Bug fixes
+
+* Error and session deliveries that fail with an HTTP error status code will now be retried if appropriate.
+  [#895](https://github.com/bugsnag/bugsnag-cocoa/pull/895)
+
+* Fixed a rare crash in BugsnagClient's network connectivity observer block.
+  [#904](https://github.com/bugsnag/bugsnag-cocoa/pull/904)
+
+## 6.2.5 (2020-11-18)
+
+### Bug fixes
+
+* Fixed a rare crash due to a race condition in BugsnagSystemState.
+  [#893](https://github.com/bugsnag/bugsnag-cocoa/pull/893)
+  [#866](https://github.com/bugsnag/bugsnag-cocoa/issues/886)
+
+* Out Of Memory errors are no longer reported if a device reboot was detected.
+  [#822](https://github.com/bugsnag/bugsnag-cocoa/pull/882)
+  [#545](https://github.com/bugsnag/bugsnag-cocoa/issues/545)
+
 ## 6.2.4 (2020-11-04)
 
 ### Bug fixes

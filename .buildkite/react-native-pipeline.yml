@@ -207,7 +207,7 @@ steps:
         - --fail-fast
     env:
       SKIP_NAVIGATION_SCENARIOS: "true"
-    concurrency: 10
+    concurrency: 9
     concurrency_group: 'browserstack-app'
 
   - label: ':ios: RN 0.60 iOS 12 end-to-end tests'
@@ -230,7 +230,7 @@ steps:
         - --fail-fast
     env:
       SKIP_NAVIGATION_SCENARIOS: "true"
-    concurrency: 10
+    concurrency: 9
     concurrency_group: 'browserstack-app'
 
   - label: ':android: RN 0.63 Android 9 end-to-end tests'
@@ -252,7 +252,7 @@ steps:
         - --fail-fast
     env:
       SKIP_NAVIGATION_SCENARIOS: "true"
-    concurrency: 10
+    concurrency: 9
     concurrency_group: 'browserstack-app'
 
   - label: ':ios: RN 0.63 iOS 12 end-to-end tests'
@@ -275,7 +275,7 @@ steps:
         - --fail-fast
     env:
       SKIP_NAVIGATION_SCENARIOS: "true"
-    concurrency: 10
+    concurrency: 9
     concurrency_group: 'browserstack-app'
 
   - label: ':android: react-navigation 0.60 Android 9 end-to-end tests'
@@ -296,7 +296,7 @@ steps:
         - --access-key=$BROWSER_STACK_ACCESS_KEY
         - --fail-fast
         - features/navigation.feature
-    concurrency: 10
+    concurrency: 9
     concurrency_group: 'browserstack-app'
 
   # See: PLAT-5173
@@ -320,7 +320,7 @@ steps:
           - --access-key=$BROWSER_STACK_ACCESS_KEY
           - --fail-fast
           - features/navigation.feature
-    concurrency: 10
+    concurrency: 9
     concurrency_group: 'browserstack-app'
 
   - label: ':android: react-navigation 0.63 Android 9 end-to-end tests'
@@ -341,7 +341,7 @@ steps:
         - --access-key=$BROWSER_STACK_ACCESS_KEY
         - --fail-fast
         - features/navigation.feature
-    concurrency: 10
+    concurrency: 9
     concurrency_group: 'browserstack-app'
 
   # See: PLAT-5173
@@ -365,7 +365,7 @@ steps:
           - --access-key=$BROWSER_STACK_ACCESS_KEY
           - --fail-fast
           - features/navigation.feature
-    concurrency: 10
+    concurrency: 9
     concurrency_group: 'browserstack-app'
 
   - label: ':android: react-native-navigation 0.60 Android 9 end-to-end tests'
@@ -386,7 +386,7 @@ steps:
         - --access-key=$BROWSER_STACK_ACCESS_KEY
         - --fail-fast
         - features/navigation.feature
-    concurrency: 10
+    concurrency: 9
     concurrency_group: 'browserstack-app'
 
   # See: PLAT-5173
@@ -410,7 +410,7 @@ steps:
           - --access-key=$BROWSER_STACK_ACCESS_KEY
           - --fail-fast
           - features/navigation.feature
-    concurrency: 10
+    concurrency: 9
     concurrency_group: 'browserstack-app'
 
   - label: ':android: react-native-navigation 0.63 Android 9 end-to-end tests'
@@ -431,7 +431,7 @@ steps:
         - --access-key=$BROWSER_STACK_ACCESS_KEY
         - --fail-fast
         - features/navigation.feature
-    concurrency: 10
+    concurrency: 9
     concurrency_group: 'browserstack-app'
 
   # See: PLAT-5173
@@ -455,5 +455,5 @@ steps:
           - --access-key=$BROWSER_STACK_ACCESS_KEY
           - --fail-fast
           - features/navigation.feature
-    concurrency: 10
+    concurrency: 9
     concurrency_group: 'browserstack-app'

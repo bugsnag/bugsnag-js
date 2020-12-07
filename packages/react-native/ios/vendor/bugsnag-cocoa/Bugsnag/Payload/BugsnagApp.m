@@ -57,13 +57,10 @@ NSDictionary *BSGParseAppMetadata(NSDictionary *event) {
 {
     NSDictionary *system = event[BSGKeySystem];
     app.id = system[@"CFBundleIdentifier"];
-    app.bundleVersion = [event valueForKeyPath:@"user.config.bundleVersion"] ?:
-            (config.bundleVersion ?: system[@"CFBundleVersion"]);
+    app.bundleVersion = config.bundleVersion ?: system[@"CFBundleVersion"];
     app.dsymUuid = system[@"app_uuid"];
-    // Preferentially take App version values from the event, the config and the system
-    app.version = [event valueForKeyPath:@"user.config.appVersion"] ?:
-        (config.appVersion ?: system[@"CFBundleShortVersionString"]);
-    app.releaseStage = [event valueForKeyPath:@"user.config.releaseStage"] ?: config.releaseStage;
+    app.version = config.appVersion ?: system[@"CFBundleShortVersionString"];
+    app.releaseStage = config.releaseStage;
     app.codeBundleId = [event valueForKeyPath:@"user.state.app.codeBundleId"] ?: codeBundleId;
     app.type = config.appType;
 }

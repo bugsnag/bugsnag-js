@@ -109,7 +109,7 @@ steps:
           - --access-key=$BROWSER_STACK_ACCESS_KEY
           - --fail-fast
           - --retry=2
-    concurrency: 10
+    concurrency: 9
     concurrency_group: 'browserstack-app'
 
   - label: ':runner: expo iOS 12'
@@ -133,7 +133,7 @@ steps:
           - --access-key=$BROWSER_STACK_ACCESS_KEY
           - --fail-fast
           - --retry=2
-    concurrency: 10
+    concurrency: 9
     concurrency_group: 'browserstack-app'
 
   - block: "Trigger full test suite"
@@ -155,7 +155,7 @@ steps:
           - --access-key=$BROWSER_STACK_ACCESS_KEY
           - --fail-fast
           - --retry=2
-    concurrency: 10
+    concurrency: 9
     concurrency_group: 'browserstack-app'
     soft_fail:
       - exit_status: "*"
@@ -177,7 +177,7 @@ steps:
           - --access-key=$BROWSER_STACK_ACCESS_KEY
           - --fail-fast
           - --retry=2
-    concurrency: 10
+    concurrency: 9
     concurrency_group: 'browserstack-app'
 
   - label: ':runner: expo Android 6'
@@ -197,7 +197,7 @@ steps:
           - --access-key=$BROWSER_STACK_ACCESS_KEY
           - --fail-fast
           - --retry=2
-    concurrency: 10
+    concurrency: 9
     concurrency_group: 'browserstack-app'
 
   - label: ':runner: expo Android 5'
@@ -217,7 +217,7 @@ steps:
           - --access-key=$BROWSER_STACK_ACCESS_KEY
           - --fail-fast
           - --retry=2
-    concurrency: 10
+    concurrency: 9
     concurrency_group: 'browserstack-app'
 
   - label: ':runner: expo iOS 11'
@@ -239,7 +239,7 @@ steps:
           - --fail-fast
           - --retry=2
           - --resilient
-    concurrency: 10
+    concurrency: 9
     concurrency_group: 'browserstack-app'
 
   - label: ':runner: expo iOS 10'
@@ -260,5 +260,5 @@ steps:
           - --fail-fast
           - --retry=2
           - --resilient
-    concurrency: 10
+    concurrency: 9
     concurrency_group: 'browserstack-app'

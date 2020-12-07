@@ -24,9 +24,10 @@
 // THE SOFTWARE.
 //
 
-#import "BugsnagConfiguration.h"
+#import "BugsnagConfiguration+Private.h"
 
 #import "BSGConfigurationBuilder.h"
+#import "BugsnagApiClient.h"
 #import "Private.h"
 
 static const int BSGApiKeyLength = 32;
@@ -230,6 +231,18 @@ NSString * const kBugsnagUserUserId = @"BugsnagUserUserId";
     return self;
 }
 
+- (instancetype)initWithMetadata:(NSDictionary *)metadata {
+    if (!(self = [super init])) {
+        return nil;
+    }
+    _appVersion = metadata[BSGKeyAppVersion];
+    _context = metadata[BSGKeyContext];
+    _bundleVersion = metadata[BSGKeyBundleVersion];
+    _enabledReleaseStages = metadata[BSGKeyEnabledReleaseStages];
+    _releaseStage = metadata[BSGKeyReleaseStage];
+    return self;
+}
+
 // -----------------------------------------------------------------------------
 // MARK: - Instance Methods
 // -----------------------------------------------------------------------------
@@ -306,19 +319,17 @@ NSString * const kBugsnagUserUserId = @"BugsnagUserUserId";
 }
 
 - (NSDictionary *)errorApiHeaders {
-    return @{
-             BSGHeaderApiPayloadVersion: @"4.0",
-             BSGHeaderApiKey: self.apiKey,
-             BSGHeaderApiSentAt: [BSG_RFC3339DateTool stringFromDate:[NSDate new]]
+    return @{BugsnagHTTPHeaderNameApiKey: self.apiKey ?: @"",
+             BugsnagHTTPHeaderNamePayloadVersion: @"4.0",
+             BugsnagHTTPHeaderNameSentAt: [BSG_RFC3339DateTool stringFromDate:[NSDate date]]
     };
 }
 
 - (NSDictionary *)sessionApiHeaders {
-    return @{
-             BSGHeaderApiPayloadVersion: @"1.0",
-             BSGHeaderApiKey: self.apiKey,
-             BSGHeaderApiSentAt: [BSG_RFC3339DateTool stringFromDate:[NSDate new]]
-             };
+    return @{BugsnagHTTPHeaderNameApiKey: self.apiKey ?: @"",
+             BugsnagHTTPHeaderNamePayloadVersion: @"1.0",
+             BugsnagHTTPHeaderNameSentAt: [BSG_RFC3339DateTool stringFromDate:[NSDate date]]
+    };
 }
 
 - (void)setEndpoints:(BugsnagEndpointConfiguration *)endpoints {
