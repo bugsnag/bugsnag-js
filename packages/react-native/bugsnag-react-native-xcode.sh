@@ -41,8 +41,15 @@ ARGS=(
 
 case "$CONFIGURATION" in
   *Debug*)
-    ARGS+="--dev"
+    ARGS+=("--dev")
     ;;
 esac
+
+if [ ! -z "$ENDPOINT" ]; then
+  # Remove any trailing trailing '/'
+  ENDPOINT=$(echo $ENDPOINT | sed 's/\/$//')
+  ARGS+=("--endpoint")
+  ARGS+=("$ENDPOINT/sourcemap")
+fi
 
 ../node_modules/.bin/bugsnag-source-maps upload-react-native "${ARGS[@]}"
