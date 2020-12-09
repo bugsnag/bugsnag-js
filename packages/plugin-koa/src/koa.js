@@ -21,10 +21,10 @@ module.exports = {
       ctx.bugsnag = requestClient
 
       // extract request info and pass it to the relevant bugsnag properties
-      const { request, metadata } = getRequestAndMetadataFromCtx(ctx)
-      requestClient.addMetadata('request', metadata)
       requestClient.addOnError((event) => {
+        const { request, metadata } = getRequestAndMetadataFromCtx(ctx)
         event.request = { ...event.request, ...request }
+        requestClient.addMetadata('request', metadata)
       }, true)
 
       try {
