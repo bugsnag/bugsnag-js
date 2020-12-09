@@ -5,8 +5,9 @@
 ### Changed
 
 - (expo): Add integrity header to verify Error and Session API payloads have not changed. [#1172](https://github.com/bugsnag/bugsnag-js/pull/1172)
-- (react-native): Update bugsnag-android to v5.3.0
+- (react-native): Update bugsnag-android to v5.3.1
   - Add integrity header to verify Error and Session API payloads have not changed. [bugsnag-android#978](https://github.com/bugsnag/bugsnag-android/pull/978)
+  - Prevent potential SHA-1 hash mismatch in Bugsnag-Integrity header [#1028](https://github.com/bugsnag/bugsnag-android/pull/1028)
 - (react-native): Update bugsnag-cocoa to v6.3.0
   - Add integrity header to verify Error and Session API payloads have not changed. [bugsnag-cocoa#881](https://github.com/bugsnag/bugsnag-cocoa/pull/881)
   - Out Of Memory errors now include more information, including custom metadata and user information. [bugsnag-cocoa#915](https://github.com/bugsnag/bugsnag-cocoa/pull/915) [bugsnag-cocoa#908](https://github.com/bugsnag/bugsnag-cocoa/pull/908)
