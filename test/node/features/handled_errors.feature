@@ -95,3 +95,12 @@ Scenario: calling an assigned client.notify with an object
   And the "method" of stack frame 0 equals "a"
   And the "method" of stack frame 1 equals "b"
   And the "method" of stack frame 2 equals "c"
+
+Scenario: overridden handled state in a callback
+  And I run the service "handled" with the command "node scenarios/modify-unhandled-callback"
+  And I wait to receive a request
+  Then the request is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
+  # The severity is "error" because only the handled-ness has been changed
+  And event 0 is handled with the severity "error"
+  And the "file" of stack frame 0 equals "scenarios/modify-unhandled-callback.js"
+  And the "lineNumber" of stack frame 0 equals 13

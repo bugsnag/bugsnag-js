@@ -7,15 +7,9 @@
 //
 
 #import "BugsnagStacktrace.h"
-#import "BugsnagStackframe.h"
-#import "BugsnagKeys.h"
 
-@interface BugsnagStackframe ()
-+ (BugsnagStackframe *)frameFromDict:(NSDictionary *)dict
-                          withImages:(NSArray *)binaryImages;
-- (NSDictionary *)toDictionary;
-+ (instancetype)frameFromJson:(NSDictionary *)json;
-@end
+#import "BugsnagKeys.h"
+#import "BugsnagStackframe+Private.h"
 
 @interface BugsnagStacktrace ()
 @property NSMutableArray<BugsnagStackframe *> *trace;

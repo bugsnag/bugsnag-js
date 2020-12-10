@@ -6,13 +6,15 @@
 //  Copyright © 2020 Bugsnag. All rights reserved.
 //
 
-#import "BugsnagStackframe.h"
+#import "BugsnagStackframe+Private.h"
 
 #import "BSG_KSBacktrace.h"
 #import "BSG_KSDynamicLinker.h"
 #import "BugsnagCollections.h"
 #import "BugsnagKeys.h"
 #import "BugsnagLogger.h"
+
+BugsnagStackframeType const BugsnagStackframeTypeCocoa = @"cocoa";
 
 @implementation BugsnagStackframe
 
@@ -36,6 +38,7 @@
     frame.frameAddress = [self readInt:json key:BSGKeyFrameAddress];
     frame.symbolAddress = [self readInt:json key:BSGKeySymbolAddr];
     frame.machoLoadAddress = [self readInt:json key:BSGKeyMachoLoadAddr];
+    frame.type = json[BSGKeyType];
     return frame;
 }
 
@@ -183,6 +186,7 @@
     if (self.isLr) {
         BSGDictSetSafeObject(dict, @(self.isLr), BSGKeyIsLR);
     }
+    dict[BSGKeyType] = self.type;
     return dict;
 }
 

@@ -13,7 +13,7 @@ ERRORS = YAML::load open 'features/fixtures/browser_errors.yml'
 FIXTURES_SERVER_PORT = "9020"
 
 # start a web server to serve fixtures
-if ENV['VERBOSE']
+if ENV['DEBUG']
   pid = Process.spawn({"PORT"=>FIXTURES_SERVER_PORT}, 'ruby features/lib/server.rb')
 else
   DEV_NULL = Gem.win_platform? ? 'NUL' : '/dev/null'
@@ -63,6 +63,9 @@ Before('@skip_if_local_storage_is_unavailable') do |scenario|
 end
 
 AfterConfiguration do
+  MazeRunner.config.receive_no_requests_wait = 15 if MazeRunner.config.respond_to? :receive_no_requests_wait=
+  MazeRunner.config.enforce_bugsnag_integrity = false if MazeRunner.config.respond_to? :enforce_bugsnag_integrity=
+
   # Necessary as Appium removes any existing $driver instance on load
   bs_local_start
   $driver = driver_start

@@ -16,7 +16,7 @@
     BSGDictInsertIfNotNil(dict, config.apiKey, @"apiKey");
     BSGDictInsertIfNotNil(dict, @(config.autoDetectErrors), @"autoDetectErrors");
     BSGDictInsertIfNotNil(dict, @(config.autoTrackSessions), @"autoTrackSessions");
-    BSGDictInsertIfNotNil(dict, config.enabledReleaseStages, @"enabledReleaseStages");
+    BSGDictInsertIfNotNil(dict, config.enabledReleaseStages.allObjects, @"enabledReleaseStages");
     BSGDictInsertIfNotNil(dict, config.releaseStage, @"releaseStage");
     BSGDictInsertIfNotNil(dict, config.appVersion, @"appVersion");
     BSGDictInsertIfNotNil(dict, config.appType, @"appType");

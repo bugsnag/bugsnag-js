@@ -15,7 +15,7 @@
 #import "BugsnagSystemState.h"
 #import "Bugsnag.h"
 
-NSDictionary *BSGParseDeviceMetadata(NSDictionary *event) {
+NSMutableDictionary *BSGParseDeviceMetadata(NSDictionary *event) {
     NSMutableDictionary *device = [NSMutableDictionary new];
     NSDictionary *state = [event valueForKeyPath:@"user.state.deviceState"];
     [device addEntriesFromDictionary:state];
@@ -95,9 +95,13 @@ NSNumber *BSGDeviceFreeSpace(NSSearchPathDirectory directory) {
     device.id = data[@"id"];
     device.osVersion = data[@"osVersion"];
     device.osName = data[@"osName"];
+    device.manufacturer = @"Apple";
     device.model = data[@"model"];
     device.modelNumber = data[@"modelNumber"];
+    device.orientation = data[@"orientation"];
     device.locale = data[@"locale"];
+    device.runtimeVersions = data[@"runtimeVersions"];
+    device.totalMemory = data[@"totalMemory"];
     return device;
 }
 

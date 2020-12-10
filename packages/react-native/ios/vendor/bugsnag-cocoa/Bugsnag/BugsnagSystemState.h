@@ -34,6 +34,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)init NS_UNAVAILABLE;
 - (instancetype)initWithConfiguration:(BugsnagConfiguration *)config;
 
+- (void)recordAppUUID;
+
 - (void)setCodeBundleID:(NSString*)codeBundleID;
 
 /**

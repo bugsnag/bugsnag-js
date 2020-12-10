@@ -17,16 +17,6 @@
 
 #pragma mark -
 
-@interface BugsnagConfiguration ()
-
-/// Throws an NSInvalidArgumentException if the API key is empty or missing.
-/// Logs a warning message if the API key is not in the expected format.
-- (void)validate;
-
-@end
-
-#pragma mark -
-
 @interface BugsnagBreadcrumb ()
 
 - (NSDictionary *_Nullable)objectValue;

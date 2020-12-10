@@ -26,37 +26,40 @@
 
 #import "BugsnagPlatformConditional.h"
 
-#import "BugsnagClient.h"
+#import "BugsnagClient+Private.h"
 
-#import "BugsnagBreadcrumbs.h"
-#import "BugsnagClientInternal.h"
+#import "BSGCachesDirectory.h"
 #import "BSGConnectivity.h"
+#import "BSGJSONSerialization.h"
+#import "BSGSerialization.h"
+#import "BSG_KSCrash.h"
+#import "BSG_KSCrashC.h"
+#import "BSG_KSCrashReport.h"
+#import "BSG_KSCrashState.h"
+#import "BSG_KSCrashType.h"
+#import "BSG_KSMach.h"
+#import "BSG_KSSystemInfo.h"
+#import "BSG_RFC3339DateTool.h"
 #import "Bugsnag.h"
-#import "Private.h"
+#import "BugsnagBreadcrumbs.h"
+#import "BugsnagCollections.h"
+#import "BugsnagConfiguration+Private.h"
 #import "BugsnagCrashSentry.h"
+#import "BugsnagError+Private.h"
+#import "BugsnagErrorTypes.h"
+#import "BugsnagEvent+Private.h"
 #import "BugsnagHandledState.h"
-#import "BugsnagLogger.h"
 #import "BugsnagKeys.h"
+#import "BugsnagLogger.h"
+#import "BugsnagMetadataInternal.h"
+#import "BugsnagNotifier.h"
+#import "BugsnagPluginClient.h"
 #import "BugsnagSessionTracker.h"
 #import "BugsnagSessionTrackingApiClient.h"
-#import "BugsnagPluginClient.h"
-#import "BugsnagSystemState.h"
-#import "BSG_RFC3339DateTool.h"
-#import "BSG_KSCrashC.h"
-#import "BSG_KSCrashType.h"
-#import "BSG_KSCrashState.h"
-#import "BSG_KSSystemInfo.h"
-#import "BSG_KSMach.h"
-#import "BSGSerialization.h"
-#import "Bugsnag.h"
-#import "BugsnagErrorTypes.h"
-#import "BugsnagNotifier.h"
-#import "BugsnagMetadataInternal.h"
 #import "BugsnagStateEvent.h"
-#import "BugsnagCollections.h"
-#import "BSG_KSCrashReport.h"
-#import "BSG_KSCrash.h"
-#import "BSGJSONSerialization.h"
+#import "BugsnagSystemState.h"
+#import "BugsnagThread+Private.h"
+#import "Private.h"
 
 #if BSG_PLATFORM_IOS || BSG_PLATFORM_TVOS
 #define BSGOOMAvailable 1
@@ -65,7 +68,7 @@
 #endif
 
 #if BSG_PLATFORM_IOS
-#import <UIKit/UIKit.h>
+#import "BSGUIKit.h"
 #elif BSG_PLATFORM_OSX
 #import <AppKit/AppKit.h>
 #endif
@@ -76,31 +79,29 @@ NSString *const BSEventLowMemoryWarning = @"lowMemoryWarning";
 
 static NSInteger const BSGNotifierStackFrameCount = 4;
 
-struct bugsnag_data_t {
+static struct {
     // Contains the state of the event (handled/unhandled)
     char *handledState;
     // Contains the user-specified metadata, including the user tab from config.
-    char *metadataJSON;
+    char *metadataPath;
     // Contains the Bugsnag configuration, all under the "config" tab.
-    char *configJSON;
+    char *configPath;
     // Contains notifier state, under "deviceState" and crash-specific
     // information under "crash".
-    char *stateJSON;
+    char *statePath;
     // Contains properties in the Bugsnag payload overridden by the user before
     // it was sent
     char *userOverridesJSON;
     // User onCrash handler
     void (*onCrash)(const BSG_KSCrashReportWriter *writer);
-};
-
-static struct bugsnag_data_t bsg_g_bugsnag_data;
+} bsg_g_bugsnag_data;
 
 static NSDictionary *notificationNameMap;
 
 static char *sessionId[128];
 static char *sessionStartDate[128];
 static char *watchdogSentinelPath = NULL;
-static char *crashSentinelPath = NULL;
+static char *crashSentinelPath;
 static NSUInteger handledCount;
 static NSUInteger unhandledCount;
 static bool hasRecordedSessions;
@@ -119,10 +120,6 @@ NSDictionary *BSGParseDeviceMetadata(NSDictionary *event);
 @interface BugsnagSession ()
 @property NSUInteger unhandledCount;
 @property NSUInteger handledCount;
-@end
-
-@interface BugsnagThread ()
-+ (NSMutableArray *)serializeThreads:(NSArray<BugsnagThread *> *)threads;
 @end
 
 @interface BugsnagAppWithState ()
@@ -155,29 +152,20 @@ void BSSerializeDataCrashHandler(const BSG_KSCrashReportWriter *writer, int type
         writer->addUIntegerElement(writer, "unhandledCount", unhandledEvents);
     }
     if (isCrash) {
-        if (bsg_g_bugsnag_data.configJSON) {
-            writer->addJSONElement(writer, "config", bsg_g_bugsnag_data.configJSON);
-        }
-        if (bsg_g_bugsnag_data.stateJSON) {
-            writer->addJSONElement(writer, "state", bsg_g_bugsnag_data.stateJSON);
-        }
+        writer->addJSONFileElement(writer, "config", bsg_g_bugsnag_data.configPath);
+        writer->addJSONFileElement(writer, "metaData", bsg_g_bugsnag_data.metadataPath);
+        writer->addJSONFileElement(writer, "state", bsg_g_bugsnag_data.statePath);
         BugsnagBreadcrumbsWriteCrashReport(writer);
-        if (bsg_g_bugsnag_data.metadataJSON) {
-            // The API expects "metaData", capitalised as such.  Elsewhere is is one word.
-            writer->addJSONElement(writer, "metaData", bsg_g_bugsnag_data.metadataJSON);
-        }
         if (watchdogSentinelPath != NULL) {
             // Delete the file to indicate a handled termination
             unlink(watchdogSentinelPath);
         }
-        if (crashSentinelPath != NULL) {
-            // Create a file to indicate that the crash has been handled by
-            // the library. This exists in case the subsequent `onCrash` handler
-            // crashes or otherwise corrupts the crash report file.
-            int fd = open(crashSentinelPath, O_RDWR | O_CREAT, 0644);
-            if (fd > -1) {
-                close(fd);
-            }
+        // Create a file to indicate that the crash has been handled by
+        // the library. This exists in case the subsequent `onCrash` handler
+        // crashes or otherwise corrupts the crash report file.
+        int fd = open(crashSentinelPath, O_RDWR | O_CREAT, 0644);
+        if (fd > -1) {
+            close(fd);
         }
     }
 
@@ -243,37 +231,6 @@ NSString *BSGOrientationNameFromEnum(UIDeviceOrientation deviceOrientation)
 #endif
 
 /**
- *  Writes a dictionary to a destination using the BSG_KSCrash JSON encoding
- *
- *  @param dictionary  data to encode
- *  @param destination target location of the data
- */
-void BSSerializeJSONDictionary(NSDictionary *dictionary, char **destination) {
-    if (![BSGJSONSerialization isValidJSONObject:dictionary]) {
-        bsg_log_err(@"could not serialize metadata: is not valid JSON object");
-        return;
-    }
-    @try {
-        NSError *error;
-        NSData *json = [BSGJSONSerialization dataWithJSONObject:dictionary
-                                                       options:0
-                                                         error:&error];
-
-        if (!json) {
-            bsg_log_err(@"could not serialize metadata: %@", error);
-            return;
-        }
-        *destination = reallocf(*destination, [json length] + 1);
-        if (*destination) {
-            memcpy(*destination, [json bytes], [json length]);
-            (*destination)[[json length]] = '\0';
-        }
-    } @catch (NSException *exception) {
-        bsg_log_err(@"could not serialize metadata: %@", exception);
-    }
-}
-
-/**
  Save info about the current session to crash data. Ensures that session
  data is written to unhandled error reports.
 
@@ -301,54 +258,12 @@ void BSGWriteSessionCrashData(BugsnagSession *session) {
     hasRecordedSessions = true;
 }
 
-@interface BugsnagClient ()
-@property(nonatomic, strong) BugsnagCrashSentry *crashSentry;
-@property(nonatomic, strong) BugsnagErrorReportApiClient *errorReportApiClient;
-@property (nonatomic, strong) BugsnagSystemState *systemState;
-@property (nonatomic, strong) BugsnagPluginClient *pluginClient;
-@property (nonatomic) BOOL appDidCrashLastLaunch;
-@property (nonatomic, strong) BugsnagMetadata *metadata;
-@property (nonatomic) NSString *codeBundleId;
-@property(nonatomic, readwrite, strong) NSMutableArray *stateEventBlocks;
-#if BSG_PLATFORM_IOS
-// The previous device orientation - iOS only
-@property (nonatomic, strong) NSString *lastOrientation;
-#endif
-@property NSMutableDictionary *extraRuntimeInfo;
-@property (nonatomic) BugsnagUser *user;
-@end
-
 @interface BugsnagConfiguration ()
 @property(nonatomic, readwrite, strong) NSMutableSet *plugins;
 @property(readonly, retain, nullable) NSURL *notifyURL;
 @property(readwrite, retain, nullable) BugsnagMetadata *metadata;
 @property(readwrite, retain, nullable) BugsnagMetadata *config;
 - (BOOL)shouldRecordBreadcrumbType:(BSGBreadcrumbType)type;
-@end
-
-@interface BugsnagEvent ()
-@property(readonly, copy, nonnull) NSDictionary *overrides;
-@property(readwrite) NSUInteger depth;
-@property(readonly, nonnull) BugsnagHandledState *handledState;
-@property (nonatomic, strong) BugsnagMetadata *metadata;
-- (void)setOverrideProperty:(NSString *)key value:(id)value;
-- (NSDictionary *)toJson;
-- (instancetype)initWithApp:(BugsnagAppWithState *)app
-                     device:(BugsnagDeviceWithState *)device
-               handledState:(BugsnagHandledState *)handledState
-                       user:(BugsnagUser *)user
-                   metadata:(BugsnagMetadata *)metadata
-                breadcrumbs:(NSArray<BugsnagBreadcrumb *> *)breadcrumbs
-                     errors:(NSArray<BugsnagError *> *)errors
-                    threads:(NSArray<BugsnagThread *> *)threads
-                    session:(BugsnagSession *)session;
-@end
-
-@interface BugsnagError ()
-- (instancetype)initWithErrorClass:(NSString *)errorClass
-                      errorMessage:(NSString *)errorMessage
-                         errorType:(BSGErrorType)errorType
-                        stacktrace:(NSArray<BugsnagStackframe *> *)stacktrace;
 @end
 
 @interface BugsnagSessionTracker ()
@@ -375,7 +290,6 @@ NSString *_lastOrientation = nil;
 @synthesize configuration;
 
 - (instancetype)initWithConfiguration:(BugsnagConfiguration *)initConfiguration {
-    static NSString *const BSGCrashSentinelFileName = @"bugsnag_handled_crash.txt";
     if ((self = [super init])) {
         // Take a shallow copy of the configuration
         self.configuration = [initConfiguration copy];
@@ -383,19 +297,29 @@ NSString *_lastOrientation = nil;
         self.notifier = [BugsnagNotifier new];
         self.systemState = [[BugsnagSystemState alloc] initWithConfiguration:self.configuration];
 
-        NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(
-                                NSCachesDirectory, NSUserDomainMask, YES) firstObject];
-        if (cacheDir) {
-            NSString *crashPath = [cacheDir stringByAppendingPathComponent:BSGCrashSentinelFileName];
-            crashSentinelPath = strdup([crashPath UTF8String]);
-        }
+        NSString *cachesDir = [BSGCachesDirectory cachesDirectory];
+        NSString *bugsnagDir = [cachesDir stringByAppendingPathComponent:@"bugsnag"];
+        [[NSFileManager defaultManager] createDirectoryAtPath:bugsnagDir withIntermediateDirectories:YES attributes:nil error:nil];
+        
+        NSString *crashPath = [cachesDir stringByAppendingPathComponent:@"bugsnag_handled_crash.txt"];
+        crashSentinelPath = strdup(crashPath.fileSystemRepresentation);
+        
+        _configMetadataFile = [bugsnagDir stringByAppendingPathComponent:@"config.json"];
+        bsg_g_bugsnag_data.configPath = strdup(_configMetadataFile.fileSystemRepresentation);
+        _configMetadataFromLastLaunch = [BSGJSONSerialization JSONObjectWithContentsOfFile:_configMetadataFile options:0 error:nil];
+        
+        _metadataFile = [bugsnagDir stringByAppendingPathComponent:@"metadata.json"];
+        bsg_g_bugsnag_data.metadataPath = strdup(_metadataFile.fileSystemRepresentation);
+        _metadataFromLastLaunch = [BSGJSONSerialization JSONObjectWithContentsOfFile:_metadataFile options:0 error:nil];
+        
+        _stateMetadataFile = [bugsnagDir stringByAppendingPathComponent:@"state.json"];
+        bsg_g_bugsnag_data.statePath = strdup(_stateMetadataFile.fileSystemRepresentation);
+        _stateMetadataFromLastLaunch = [BSGJSONSerialization JSONObjectWithContentsOfFile:_stateMetadataFile options:0 error:nil];
 
         self.stateEventBlocks = [NSMutableArray new];
         self.extraRuntimeInfo = [NSMutableDictionary new];
-        self.metadataLock = [[NSLock alloc] init];
         self.crashSentry = [BugsnagCrashSentry new];
-        self.errorReportApiClient = [[BugsnagErrorReportApiClient alloc] initWithConfig:configuration
-                                                                              queueName:@"Error API queue"];
+        self.errorReportApiClient = [[BugsnagErrorReportApiClient alloc] initWithSession:configuration.session queueName:@"Error API queue"];
         bsg_g_bugsnag_data.onCrash = (void (*)(const BSG_KSCrashReportWriter *))self.configuration.onCrashHandler;
 
         static dispatch_once_t once_t;
@@ -435,7 +359,7 @@ NSString *_lastOrientation = nil;
                                                                   client:self];
 
 #if BSG_PLATFORM_IOS
-        _lastOrientation = BSGOrientationNameFromEnum([UIDevice currentDevice].orientation);
+        _lastOrientation = BSGOrientationNameFromEnum([UIDEVICE currentDevice].orientation);
 #endif
         _user = self.configuration.user;
 
@@ -550,6 +474,7 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
     [self.crashSentry install:self.configuration
                     apiClient:self.errorReportApiClient
                       onCrash:&BSSerializeDataCrashHandler];
+    [self.systemState recordAppUUID]; // Needs to be called after crashSentry installed but before -computeDidCrashLastLaunch
     [self computeDidCrashLastLaunch];
     [self.breadcrumbs removeAllBreadcrumbs];
     [self setupConnectivityListener];
@@ -582,10 +507,11 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
                    name:UIApplicationDidReceiveMemoryWarningNotification
                  object:nil];
 
-    [UIDevice currentDevice].batteryMonitoringEnabled = YES;
-    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+    [UIDEVICE currentDevice].batteryMonitoringEnabled = YES;
+    [[UIDEVICE currentDevice] beginGeneratingDeviceOrientationNotifications];
 
     [self batteryChanged:nil];
+    [self orientationChanged:nil];
     [self addTerminationObserver:UIApplicationWillTerminateNotification];
 
 #elif BSG_PLATFORM_OSX
@@ -712,8 +638,7 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
     BOOL handledCrashLastLaunch = appCrashSentinelExists || crashState->crashedLastLaunch;
     if (appCrashSentinelExists) {
         NSError *error = nil;
-        [manager removeItemAtPath:didCrashSentinelPath error:&error];
-        if (error) {
+        if (![manager removeItemAtPath:didCrashSentinelPath error:&error]) {
             bsg_log_err(@"Failed to remove crash sentinel file: %@", error);
             unlink(crashSentinelPath);
         }
@@ -735,6 +660,10 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
         [self notifyOutOfMemoryEvent];
         bsg_g_bugsnag_data.onCrash = onCrash;
     }
+    
+    self.configMetadataFromLastLaunch = nil;
+    self.metadataFromLastLaunch = nil;
+    self.stateMetadataFromLastLaunch = nil;
 }
 
 - (void)setCodeBundleId:(NSString *)codeBundleId {
@@ -752,8 +681,8 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
     [BSGConnectivity stopMonitoring];
 
 #if BSG_PLATFORM_IOS
-    [UIDevice currentDevice].batteryMonitoringEnabled = NO;
-    [[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
+    [UIDEVICE currentDevice].batteryMonitoringEnabled = NO;
+    [[UIDEVICE currentDevice] endGeneratingDeviceOrientationNotifications];
 #endif
 }
 
@@ -824,11 +753,9 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
             [strongSelf flushPendingReports];
         }
 
-        [self addAutoBreadcrumbOfType:BSGBreadcrumbTypeState
-                          withMessage:@"Connectivity changed"
-                          andMetadata:@{
-                              @"type"  :  connectionType
-                          }];
+        [strongSelf addAutoBreadcrumbOfType:BSGBreadcrumbTypeState
+                                withMessage:@"Connectivity changed"
+                                andMetadata:@{@"type": connectionType}];
     }];
 }
 
@@ -1014,15 +941,17 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
                                          handledStateWithSeverityReason:LikelyOutOfMemory
                                          severity:BSGSeverityError
                                          attrValue:nil];
-    NSDictionary *appState = @{@"oom": lastLaunchInfo, @"didOOM": @YES};
+    NSMutableDictionary *appState = [self.stateMetadataFromLastLaunch mutableCopy] ?: [NSMutableDictionary dictionary];
+    appState[@"didOOM"] = @YES;
+    appState[@"oom"] = lastLaunchInfo;
     [self.crashSentry reportUserException:BSGOutOfMemoryErrorClass
                                    reason:message
                              handledState:[handledState toJson]
                                  appState:appState
                         callbackOverrides:@{}
                            eventOverrides:nil
-                                 metadata:@{}
-                                   config:@{}];
+                                 metadata:self.metadataFromLastLaunch
+                                   config:self.configMetadataFromLastLaunch];
 }
 
 - (void)notify:(NSException *)exception
@@ -1169,17 +1098,11 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
 - (void)metadataChanged:(BugsnagMetadata *)metadata {
     @synchronized(metadata) {
         if (metadata == self.metadata) {
-            if ([self.metadataLock tryLock]) {
-                BSSerializeJSONDictionary([metadata toDictionary],
-                                          &bsg_g_bugsnag_data.metadataJSON);
-                [self.metadataLock unlock];
-            }
+            [BSGJSONSerialization writeJSONObject:[metadata toDictionary] toFile:self.metadataFile options:0 error:nil];
         } else if (metadata == self.configuration.config) {
-            BSSerializeJSONDictionary([metadata getMetadataFromSection:BSGKeyConfig],
-                                      &bsg_g_bugsnag_data.configJSON);
+            [BSGJSONSerialization writeJSONObject:[metadata getMetadataFromSection:BSGKeyConfig] toFile:self.configMetadataFile options:0 error:nil];
         } else if (metadata == self.state) {
-            BSSerializeJSONDictionary([metadata toDictionary],
-                                      &bsg_g_bugsnag_data.stateJSON);
+            [BSGJSONSerialization writeJSONObject:[metadata toDictionary] toFile:self.stateMetadataFile options:0 error:nil];
         }
     }
 }
@@ -1191,9 +1114,9 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
  */
 #if BSG_PLATFORM_IOS
 - (void)batteryChanged:(NSNotification *)notification {
-    NSNumber *batteryLevel = @([UIDevice currentDevice].batteryLevel);
-    BOOL charging = [UIDevice currentDevice].batteryState == UIDeviceBatteryStateCharging ||
-                    [UIDevice currentDevice].batteryState == UIDeviceBatteryStateFull;
+    NSNumber *batteryLevel = @([UIDEVICE currentDevice].batteryLevel);
+    BOOL charging = [UIDEVICE currentDevice].batteryState == UIDeviceBatteryStateCharging ||
+                    [UIDEVICE currentDevice].batteryState == UIDeviceBatteryStateFull;
 
     [self.state addMetadata:batteryLevel
                     withKey:BSGKeyBatteryLevel
@@ -1211,7 +1134,7 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
  * @param notification The orientation-change notification
  */
 - (void)orientationChanged:(NSNotification *)notification {
-    UIDeviceOrientation currentDeviceOrientation = [UIDevice currentDevice].orientation;
+    UIDeviceOrientation currentDeviceOrientation = [UIDEVICE currentDevice].orientation;
     NSString *orientation = BSGOrientationNameFromEnum(currentDeviceOrientation);
 
     // No orientation, nothing  to be done
