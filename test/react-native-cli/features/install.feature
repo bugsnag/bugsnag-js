@@ -13,6 +13,7 @@ Scenario: no git repo, do not run
     When I press enter
     Then the last interactive command exited successfully
     And bugsnag react-native is not in the package.json file
+    And the Bugsnag Android Gradle plugin is not installed
 
 Scenario: dirty git repo, do not run
     When I run the React Native service interactively
@@ -31,6 +32,7 @@ Scenario: dirty git repo, do not run
     When I press enter
     Then the last interactive command exited successfully
     And bugsnag react-native is not in the package.json file
+    And the Bugsnag Android Gradle plugin is not installed
 
 Scenario: clean git repo, do not run
     When I run the React Native service interactively
@@ -43,6 +45,7 @@ Scenario: clean git repo, do not run
     When I input "n" interactively
     Then the last interactive command exited successfully
     And bugsnag react-native is not in the package.json file
+    And the Bugsnag Android Gradle plugin is not installed
 
 Scenario: no git repo, run anyway, default version
     When I run the React Native service interactively
@@ -59,8 +62,11 @@ Scenario: no git repo, run anyway, default version
     Then I wait for the current stdout line to contain "If you want the latest version of @bugsnag/react-native hit enter, otherwise type the version you want"
     When I press enter
     Then I wait for the shell to output a line containing "+ @bugsnag/react-native" to stdout
-    And the last interactive command exited successfully
+    And I wait for the current stdout line to contain "If you want the latest version of the Bugsnag Android Gradle plugin hit enter, otherwise type the version you want"
+    When I press enter
+    Then the last interactive command exited successfully
     And bugsnag react-native is in the package.json file
+    And the Bugsnag Android Gradle plugin is installed
 
 Scenario: clean git repo, run, version 7.5.0
     When I run the React Native service interactively
@@ -75,8 +81,11 @@ Scenario: clean git repo, run, version 7.5.0
     Then I wait for the current stdout line to contain "If you want the latest version of @bugsnag/react-native hit enter, otherwise type the version you want"
     When I input "7.5.0" interactively
     Then I wait for the shell to output a line containing "+ @bugsnag/react-native" to stdout
+    And I wait for the current stdout line to contain "If you want the latest version of the Bugsnag Android Gradle plugin hit enter, otherwise type the version you want"
+    When I press enter
     And the last interactive command exited successfully
     And bugsnag react-native version "^7.5.0" is in the package.json file
+    And the Bugsnag Android Gradle plugin is installed
 
 Scenario: no git repo, run anyway, already installed
     When I run the React Native service interactively
@@ -93,4 +102,7 @@ Scenario: no git repo, run anyway, already installed
     And I wait for the current stdout line to contain "Do you want to continue anyway?"
     When I input "y" interactively
     Then I wait for the shell to output a line containing "@bugsnag/react-native is already installed, skipping" to stdout
+    And I wait for the current stdout line to contain "If you want the latest version of the Bugsnag Android Gradle plugin hit enter, otherwise type the version you want"
+    When I press enter
     And the last interactive command exited successfully
+    And the Bugsnag Android Gradle plugin is installed
