@@ -1,6 +1,6 @@
 # Changelog
 
-## TBD
+## v7.5.4 (2020-12-10)
 
 ### Changed
 
