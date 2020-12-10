@@ -129,7 +129,7 @@ steps:
 
   - label: ':ios: Build RN 0.60 ipa'
     key: 'rn-0-60-ipa'
-    timeout_in_minutes: 60
+    timeout_in_minutes: 30
     agents:
       queue: 'opensource-mac-rn'
     env:
@@ -140,7 +140,7 @@ steps:
 
   - label: ':ios: Build RN 0.61 ipa'
     key: 'rn-0-61-ipa'
-    timeout_in_minutes: 60
+    timeout_in_minutes: 30
     agents:
       queue: 'opensource-mac-rn'
     env:
@@ -151,7 +151,7 @@ steps:
 
   - label: ':ios: Build RN 0.62 ipa'
     key: 'rn-0-62-ipa'
-    timeout_in_minutes: 60
+    timeout_in_minutes: 30
     agents:
       queue: 'opensource-mac-rn'
     env:
@@ -162,7 +162,7 @@ steps:
 
   - label: ':ios: Build RN 0.63 ipa'
     key: 'rn-0-63-ipa'
-    timeout_in_minutes: 60
+    timeout_in_minutes: 30
     agents:
       queue: 'opensource-mac-rn'
     env:
