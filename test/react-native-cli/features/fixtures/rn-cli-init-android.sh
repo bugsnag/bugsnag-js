@@ -21,11 +21,12 @@ send -- n
 expect "Do you want to automatically upload source maps as part of the Gradle build?"
 send -- n
 
-# TODO Remove once BAGP is released for real
-expect "If you want the latest version of the Bugsnag Android Gradle plugin hit enter, otherwise type the version you want"
-send -- 5.5.0-alpha01\r
+# TODO: Use latest once BAGP is released for real
+#expect "If you want the latest version of the Bugsnag Android Gradle plugin hit enter, otherwise type the version you want"
+#send -- 5.5.0-alpha01\r
 
-expect "If you want the latest version of @bugsnag/source-maps hit enter, otherwise type the version you want"
-send -- latest\r
+# TODO: Disable source map uploads for now
+#expect "If you want the latest version of @bugsnag/source-maps hit enter, otherwise type the version you want"
+#send -- latest\r
 
 expect eof
