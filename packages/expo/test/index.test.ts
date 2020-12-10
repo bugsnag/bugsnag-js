@@ -105,6 +105,10 @@ describe('expo notifier', () => {
   let Bugsnag: typeof BugsnagExpoStatic
   let _delivery
 
+  beforeAll(() => {
+    jest.spyOn(console, 'debug').mockImplementation(() => {})
+  })
+
   beforeEach(() => {
     (delivery as jest.MockedFunction<typeof delivery>).mockImplementation(() => {
       _delivery = {

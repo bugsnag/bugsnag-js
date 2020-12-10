@@ -1,6 +1,7 @@
 const testsForPackage = (packageName) => `<rootDir>/packages/${packageName}/**/*.test.[jt]s?(x)`
 
 module.exports = {
+  roots: ['<rootDir>/packages'],
   projects: [
     {
       displayName: 'core',
