@@ -49,7 +49,7 @@ if [ ! -z "$ENDPOINT" ]; then
   # Remove any trailing trailing '/'
   ENDPOINT=$(echo $ENDPOINT | sed 's/\/$//')
   ARGS+=("--endpoint")
-  ARGS+=("$ENDPOINT/sourcemap")
+  ARGS+=("$ENDPOINT/react-native-source-map")
 fi
 
 ../node_modules/.bin/bugsnag-source-maps upload-react-native "${ARGS[@]}"
