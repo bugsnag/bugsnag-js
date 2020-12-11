@@ -6,7 +6,8 @@
 //  Copyright © 2020 Bugsnag Inc. All rights reserved.
 //
 
-#import <TargetConditionals.h>
+#import "BugsnagPlatformConditional.h"
+
 #if TARGET_OS_OSX
 #import <AppKit/AppKit.h>
 #else

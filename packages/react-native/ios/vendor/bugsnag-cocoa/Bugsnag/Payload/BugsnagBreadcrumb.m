@@ -25,7 +25,7 @@
 //
 #import "BSG_RFC3339DateTool.h"
 
-#import "BugsnagBreadcrumb.h"
+#import "BugsnagBreadcrumb+Private.h"
 #import "BugsnagBreadcrumbs.h"
 #import "Bugsnag.h"
 #import "BugsnagLogger.h"

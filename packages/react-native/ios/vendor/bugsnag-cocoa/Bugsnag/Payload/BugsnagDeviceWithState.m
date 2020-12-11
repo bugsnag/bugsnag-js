@@ -9,6 +9,7 @@
 #import "BugsnagPlatformConditional.h"
 #import "BSG_RFC3339DateTool.h"
 
+#import "BugsnagDevice+Private.h"
 #import "BugsnagDeviceWithState.h"
 #import "BugsnagCollections.h"
 #import "BugsnagLogger.h"
@@ -19,15 +20,15 @@ NSMutableDictionary *BSGParseDeviceMetadata(NSDictionary *event) {
     NSMutableDictionary *device = [NSMutableDictionary new];
     NSDictionary *state = [event valueForKeyPath:@"user.state.deviceState"];
     [device addEntriesFromDictionary:state];
-    BSGDictInsertIfNotNil(device, [event valueForKeyPath:@"system.time_zone"], @"timezone");
+    device[@"timezone"] = [event valueForKeyPath:@"system.time_zone"];
 
 #if BSG_PLATFORM_SIMULATOR
-    BSGDictSetSafeObject(device, @YES, @"simulator");
+    device[@"simulator"] = @YES;
 #else
-    BSGDictSetSafeObject(device, @NO, @"simulator");
+    device[@"simulator"] = @NO;
 #endif
 
-    BSGDictSetSafeObject(device, @(PLATFORM_WORD_SIZE), @"wordSize");
+    device[@"wordSize"] = @(PLATFORM_WORD_SIZE);
     return device;
 }
 
@@ -53,13 +54,6 @@ NSNumber *BSGDeviceFreeSpace(NSSearchPathDirectory directory) {
     }
     return freeBytes;
 }
-
-@interface BugsnagDevice ()
-+ (void)populateFields:(BugsnagDevice *)device
-            dictionary:(NSDictionary *)event;
-- (void)appendRuntimeInfo:(NSDictionary *)info;
-- (NSDictionary *)toDictionary;
-@end
 
 @implementation BugsnagDeviceWithState
 
@@ -128,15 +122,11 @@ NSNumber *BSGDeviceFreeSpace(NSSearchPathDirectory directory) {
 }
 
 - (NSDictionary *)toDictionary {
-    NSMutableDictionary *dict = (NSMutableDictionary *)
-    [super toDictionary];
-    BSGDictInsertIfNotNil(dict, self.freeDisk, @"freeDisk");
-    BSGDictInsertIfNotNil(dict, self.freeMemory, @"freeMemory");
-    BSGDictInsertIfNotNil(dict, self.orientation, @"orientation");
-
-    if (self.time != nil) {
-        BSGDictInsertIfNotNil(dict, [BSG_RFC3339DateTool stringFromDate:self.time], @"time");
-    }
+    NSMutableDictionary *dict = [[super toDictionary] mutableCopy];
+    dict[@"freeDisk"] = self.freeDisk;
+    dict[@"freeMemory"] = self.freeMemory;
+    dict[@"orientation"] = self.orientation;
+    dict[@"time"] = self.time ? [BSG_RFC3339DateTool stringFromDate:self.time] : nil;
     return dict;
 }
 

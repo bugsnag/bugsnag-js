@@ -13,20 +13,20 @@
 
 - (NSDictionary *)serialize:(BugsnagConfiguration *)config {
     NSMutableDictionary *dict = [NSMutableDictionary new];
-    BSGDictInsertIfNotNil(dict, config.apiKey, @"apiKey");
-    BSGDictInsertIfNotNil(dict, @(config.autoDetectErrors), @"autoDetectErrors");
-    BSGDictInsertIfNotNil(dict, @(config.autoTrackSessions), @"autoTrackSessions");
-    BSGDictInsertIfNotNil(dict, config.enabledReleaseStages.allObjects, @"enabledReleaseStages");
-    BSGDictInsertIfNotNil(dict, config.releaseStage, @"releaseStage");
-    BSGDictInsertIfNotNil(dict, config.appVersion, @"appVersion");
-    BSGDictInsertIfNotNil(dict, config.appType, @"appType");
-    BSGDictInsertIfNotNil(dict, @(config.persistUser), @"persistUser");
-    BSGDictInsertIfNotNil(dict, @(config.maxBreadcrumbs), @"maxBreadcrumbs");
+    dict[@"apiKey"] = config.apiKey;
+    dict[@"autoDetectErrors"] = @(config.autoDetectErrors);
+    dict[@"autoTrackSessions"] = @(config.autoTrackSessions);
+    dict[@"enabledReleaseStages"] = config.enabledReleaseStages.allObjects;
+    dict[@"releaseStage"] = config.releaseStage;
+    dict[@"appVersion"] = config.appVersion;
+    dict[@"appType"] = config.appType;
+    dict[@"persistUser"] = @(config.persistUser);
+    dict[@"maxBreadcrumbs"] = @(config.maxBreadcrumbs);
     
-    BSGDictInsertIfNotNil(dict, [self serializeThreadSendPolicy:config.sendThreads], @"sendThreads");
-    BSGDictInsertIfNotNil(dict, [self serializeBreadcrumbTypes:config], @"enabledBreadcrumbTypes");
-    BSGDictInsertIfNotNil(dict, [self serializeErrorTypes:config], @"enabledErrorTypes");
-    BSGDictInsertIfNotNil(dict, [self serializeEndpoints:config], @"endpoints");
+    dict[@"sendThreads"] = [self serializeThreadSendPolicy:config.sendThreads];
+    dict[@"enabledBreadcrumbTypes"] = [self serializeBreadcrumbTypes:config];
+    dict[@"enabledErrorTypes"] = [self serializeErrorTypes:config];
+    dict[@"endpoints"] = [self serializeEndpoints:config];
 
     return [NSDictionary dictionaryWithDictionary:dict];
 }

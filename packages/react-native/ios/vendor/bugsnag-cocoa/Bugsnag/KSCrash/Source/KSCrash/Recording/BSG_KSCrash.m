@@ -355,9 +355,9 @@
     BSG_KSCrash_State state = crashContext()->state;
     bsg_kscrashstate_updateDurationStats(&state);
     NSMutableDictionary *dict = [NSMutableDictionary new];
-    BSGDictSetSafeObject(dict, @(state.foregroundDurationSinceLaunch), @BSG_KSCrashField_ActiveTimeSinceLaunch);
-    BSGDictSetSafeObject(dict, @(state.backgroundDurationSinceLaunch), @BSG_KSCrashField_BGTimeSinceLaunch);
-    BSGDictSetSafeObject(dict, @(state.applicationIsInForeground), @BSG_KSCrashField_AppInFG);
+    dict[@BSG_KSCrashField_ActiveTimeSinceLaunch] = @(state.foregroundDurationSinceLaunch);
+    dict[@BSG_KSCrashField_BGTimeSinceLaunch] = @(state.backgroundDurationSinceLaunch);
+    dict[@BSG_KSCrashField_AppInFG] = @(state.applicationIsInForeground);
     return dict;
 }
 
