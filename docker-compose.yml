@@ -192,6 +192,16 @@ services:
     volumes:
       - ./build:/app/test/react-native/build
 
+  react-native-cli-maze-runner:
+    image: 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v3-cli
+    environment:
+      DEBUG:
+      MAZE_DEVICE_FARM_USERNAME:
+      MAZE_DEVICE_FARM_ACCESS_KEY:
+    volumes:
+      - ./build:/app/build
+      - ./test/react-native-cli/features/:/app/features/
+
 networks:
   default:
     name: ${BUILDKITE_JOB_ID:-js-maze-runner}

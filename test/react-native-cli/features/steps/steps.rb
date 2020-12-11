@@ -4,7 +4,8 @@ require 'securerandom'
 fixtures = Dir["#{__dir__}/../fixtures/rn0_*"].map { |dir| File.basename(dir) }.sort
 current_fixture = ENV['REACT_NATIVE_VERSION']
 
-unless fixtures.include?(current_fixture)
+# Ensure environment if set for the CLI tests (check not needed for device-based tests)
+if MazeRunner.config.farm == :none && !fixtures.include?(current_fixture)
   if current_fixture.nil?
     message = <<~ERROR.chomp
       \e[31;1mNo React Native fixture given!\e[0m
@@ -26,6 +27,20 @@ end
 
 When('I run the React Native service interactively') do
   step("I run the service '#{current_fixture}' interactively")
+end
+
+When("I cause a handled JavaScript error") do
+  steps %Q{
+    Given the element "js_notify" is present within 60 seconds
+    And I click the element "js_notify"
+  }
+end
+
+When("I cause a handled native error") do
+  steps %Q{
+    Given the element "native_notify" is present within 60 seconds
+    And I click the element "native_notify"
+  }
 end
 
 # TODO(PLAT-5566) migrate to Maze Runner (this step may need a bit more specific of a name)
