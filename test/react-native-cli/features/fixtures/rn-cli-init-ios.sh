@@ -12,8 +12,12 @@ send -- "Y\r"
 expect "If you want the latest version of @bugsnag/react-native hit enter, otherwise type the version you want"
 send -- "$notifierVersion\r"
 
+# TODO: Use latest once BAGP is released for real
+expect "If you want the latest version of the Bugsnag Android Gradle plugin hit enter, otherwise type the version you want"
+send -- 5.5.0-alpha01\r
+
 expect "What is your Bugsnag API key?"
-send -- 12312312312312312312312312312312\r
+send -- b161f2dbabe3204527bbe5ed4b9334a4\r
 
 expect "Do you want to automatically upload source maps as part of the Xcode build?"
 send -- y
