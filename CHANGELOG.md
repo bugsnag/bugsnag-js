@@ -1,5 +1,11 @@
 # Changelog
 
+## TBD
+
+### Changed
+
+- (expo): Update the `postPublish` hook to use the new `@bugsnag/source-maps` library. [#1124]
+
 ## v7.5.4 (2020-12-10)
 
 ### Changed
