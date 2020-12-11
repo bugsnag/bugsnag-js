@@ -8,7 +8,6 @@ module.exports = {
   buildAndroid: function buildAndroid (sourceFixtures, destFixtures) {
     const version = process.env.NOTIFIER_VERSION || common.determineVersion()
     const rnVersion = process.env.REACT_NATIVE_VERSION
-    const registryUrl = process.env.REGISTRY_URL
 
     console.log(`Installing CLI version: ${version}`)
 
@@ -20,10 +19,10 @@ module.exports = {
 
     // JavaScript layer
     common.changeDir(`${destFixtures}/${rnVersion}`)
-    common.run(`npm install --registry ${registryUrl}`, true)
+    common.run(`npm install`, true)
 
     // Install and run the CLI
-    const installCommand = `npm install bugsnag-react-native-cli@${version} --registry ${registryUrl}`
+    const installCommand = `npm install bugsnag-react-native-cli@${version}`
     common.run(installCommand, true)
 
     // Use Expect to run the init command interactively
@@ -42,22 +41,21 @@ module.exports = {
   buildIOS: function buildIOS () {
     const version = process.env.NOTIFIER_VERSION || common.determineVersion()
     const rnVersion = process.env.REACT_NATIVE_VERSION
-    const registryUrl = process.env.REGISTRY_URL
     const fixturesDir = 'test/react-native-cli/features/fixtures'
     const targetDir = `${fixturesDir}/${rnVersion}`
     const initialDir = process.cwd()
 
-    // We're not in docker so check the above are set
-    if (rnVersion === undefined || registryUrl === undefined) {
-      throw new Error('Both REACT_NATIVE_VERSION and REGISTRY_URL environment variables must be set')
+    // We're not in docker so check RN version is set
+    if (rnVersion === undefined) {
+      throw new Error('REACT_NATIVE_VERSION environment variable must be set')
     }
 
     // JavaScript layer
     common.changeDir(`${targetDir}`)
-    common.run(`npm install --registry ${registryUrl}`, true)
+    common.run(`npm install`, true)
 
     // Install and run the CLI
-    const installCommand = `npm install bugsnag-react-native-cli@${version} --registry ${registryUrl}`
+    const installCommand = `npm install bugsnag-react-native-cli@${version}`
     common.run(installCommand, true)
 
     // Use Expect to run the init command interactively
