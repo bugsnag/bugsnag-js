@@ -3,6 +3,8 @@
 set timeout -1
 set notifierVersion [lindex $argv 0];
 
+puts "Using notifier version: $notifierVersion"
+
 cd $env(REACT_NATIVE_VERSION)
 spawn ./node_modules/bugsnag-react-native-cli/bin/cli init
 
@@ -10,7 +12,7 @@ expect "Do you want to continue anyway?"
 send -- "Y\r"
 
 expect "If you want the latest version of @bugsnag/react-native hit enter, otherwise type the version you want"
-send -- "$notifierVersion\r"
+send -- $notifierVersion\r
 
 # TODO: Use latest once BAGP is released for real
 expect "If you want the latest version of the Bugsnag Android Gradle plugin hit enter, otherwise type the version you want"
