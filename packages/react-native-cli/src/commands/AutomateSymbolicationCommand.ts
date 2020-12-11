@@ -6,6 +6,8 @@ import onCancel from '../lib/OnCancel'
 import { enableReactNativeMappings } from '../lib/Gradle'
 
 export default async function run (argv: string[], projectRoot: string, opts: Record<string, unknown>): Promise<void> {
+  // TODO configure upload endpoint
+  //      goes in build.gradle & an environment variable in XCode build phase
   try {
     const { iosIntegration } = await prompts({
       type: 'confirm',

@@ -330,11 +330,11 @@ Then("the iOS app contains the bugsnag API key {string}") do |expected|
   xml = parse_xml_file("ios/#{current_fixture}/Info.plist")
 
   # This XPath does the following:
-  #   1. find the '<key>' with the text 'bugsnag' (ignoring whitespace)
+  #   1. find the '<key>' with the text 'bugsnag'
   #   2. find the following '<dict>' element
   #   3. within the dict, find any '<string>' elements
   # 'get_text' will then fetch the text content of the first element
-  actual_api_key = xml.get_text('//key[text()[normalize-space()="bugsnag"]]/following-sibling::dict/string')
+  actual_api_key = xml.get_text('//key[text()="bugsnag"]/following-sibling::dict/string')
 
   assert_equal(expected, actual_api_key.to_s)
 end
@@ -351,7 +351,7 @@ end
 Then("the iOS app does not contain a bugsnag API key") do
   xml = parse_xml_file("ios/#{current_fixture}/Info.plist")
 
-  actual_api_key = xml.get_text('//key[text()[normalize-space()="bugsnag"]]/following-sibling::dict/string')
+  actual_api_key = xml.get_text('//key[text()="bugsnag"]/following-sibling::dict/string')
 
   assert_nil(actual_api_key)
 end
@@ -360,6 +360,46 @@ Then("the Android app does not contain a bugsnag API key") do
   xml = parse_xml_file("android/app/src/main/AndroidManifest.xml")
 
   element = xml.get_elements('//meta-data["com.bugsnag.android.API_KEY"]').first
+
+  assert_nil(element)
+end
+
+Then("the iOS app does not contain a bugsnag notify URL") do
+  xml = parse_xml_file("ios/#{current_fixture}/Info.plist")
+
+  # This XPath does the following:
+  #   1. find the '<key>' with the text 'bugsnag'
+  #   2. find the following '<dict>' element
+  #   3. within the dict, find the key with text 'endpoints'
+  #   4. find the following '<dict>' element
+  #   5. within _that_ dict, find the key with the text 'notify'
+  #   6. find the following '<string>' element
+  # 'get_text' will then fetch the text content of the first element
+  actual_url = xml.get_text('//key[text()="bugsnag"]/following-sibling::dict/key[text()="endpoints"]/following-sibling::dict/key[text()="notify"]/following-sibling::string[1]')
+
+  assert_nil(actual_url)
+end
+
+Then("the Android app does not contain a bugsnag notify URL") do
+  xml = parse_xml_file("android/app/src/main/AndroidManifest.xml")
+
+  element = xml.get_elements('//meta-data["com.bugsnag.android.ENDPOINT_NOTIFY"]').first
+
+  assert_nil(element)
+end
+
+Then("the iOS app does not contain a bugsnag sessions URL") do
+  xml = parse_xml_file("ios/#{current_fixture}/Info.plist")
+
+  actual_url = xml.get_text('//key[text()="bugsnag"]/following-sibling::dict/key[text()="endpoints"]/following-sibling::dict/key[text()="sessions"]/following-sibling::string[1]')
+
+  assert_nil(actual_url)
+end
+
+Then("the Android app does not contain a bugsnag sessions URL") do
+  xml = parse_xml_file("android/app/src/main/AndroidManifest.xml")
+
+  element = xml.get_elements('//meta-data["com.bugsnag.android.ENDPOINT_SESSIONS"]').first
 
   assert_nil(element)
 end
