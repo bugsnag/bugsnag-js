@@ -1,5 +1,20 @@
 # Changelog
 
+## v7.5.5 (2020-12-14)
+
+### Changed
+
+- (react-native): Update bugsnag-cocoa to v6.4.1
+  - Place "unhandledOverridden" inside "severityReason" instead of at the top level. [#937](https://github.com/bugsnag/bugsnag-cocoa/pull/937)
+  - Allow overriding the "unhandled" flag in error callbacks. [#921](https://github.com/bugsnag/bugsnag-cocoa/pull/921) [#912](https://github.com/bugsnag/bugsnag-cocoa/pull/912)
+  - Fix unexpected exception behavior when started without an API key. [#931](https://github.com/bugsnag/bugsnag-cocoa/pull/931)
+- (react-native): Update bugsnag-android to v5.4.0
+  - Prevent potential SHA-1 hash mismatch in Bugsnag-Integrity header for session requests [#1043](https://github.com/bugsnag/bugsnag-android/pull/1043)
+  - Make `event.unhandled` overridable for NDK errors [#1037](https://github.com/bugsnag/bugsnag-android/pull/1037)
+  - Make `event.unhandled` overridable for React Native errors [#1039](https://github.com/bugsnag/bugsnag-android/pull/1039)
+  - Make `event.unhandled` overridable for JVM errors [#1025](https://github.com/bugsnag/bugsnag-android/pull/1025)
+- (expo): Update the `postPublish` hook to use the new `@bugsnag/source-maps` library. [#1124]
+
 ## v7.5.4 (2020-12-10)
 
 ### Changed

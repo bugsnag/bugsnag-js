@@ -4,14 +4,12 @@
 //
 
 #import "BugsnagSessionFileStore.h"
+
 #import "BSG_KSLogger.h"
 #import "BSGJSONSerialization.h"
+#import "BugsnagSession+Private.h"
 
 static NSString *const kSessionStoreSuffix = @"-Session-";
-
-@interface BugsnagSession ()
-- (NSDictionary *)toJson;
-@end
 
 @implementation BugsnagSessionFileStore
 

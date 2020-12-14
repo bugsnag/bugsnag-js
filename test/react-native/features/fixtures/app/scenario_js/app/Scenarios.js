@@ -60,3 +60,7 @@ export { SessionNativeControlledManualJsScenario } from './scenarios/SessionNati
 // native-stack.feature
 export { NativeStackHandledScenario } from './scenarios/NativeStackHandledScenario'
 export { NativeStackUnhandledScenario } from './scenarios/NativeStackUnhandledScenario'
+
+// override_unhandled.feature
+export { HandledOverrideJsErrorScenario } from './scenarios/HandledOverrideJsErrorScenario'
+export { UnhandledOverrideJsErrorScenario } from './scenarios/UnhandledOverrideJsErrorScenario'

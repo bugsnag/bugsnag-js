@@ -41,25 +41,30 @@
 #import "BSG_KSSystemInfo.h"
 #import "BSG_RFC3339DateTool.h"
 #import "Bugsnag.h"
+#import "BugsnagApp+Private.h"
+#import "BugsnagAppWithState+Private.h"
+#import "BugsnagBreadcrumb+Private.h"
 #import "BugsnagBreadcrumbs.h"
 #import "BugsnagCollections.h"
 #import "BugsnagConfiguration+Private.h"
 #import "BugsnagCrashSentry.h"
+#import "BugsnagDeviceWithState+Private.h"
 #import "BugsnagError+Private.h"
 #import "BugsnagErrorTypes.h"
 #import "BugsnagEvent+Private.h"
 #import "BugsnagHandledState.h"
 #import "BugsnagKeys.h"
 #import "BugsnagLogger.h"
-#import "BugsnagMetadataInternal.h"
+#import "BugsnagMetadata+Private.h"
 #import "BugsnagNotifier.h"
 #import "BugsnagPluginClient.h"
-#import "BugsnagSessionTracker.h"
+#import "BugsnagSession+Private.h"
+#import "BugsnagSessionTracker+Private.h"
 #import "BugsnagSessionTrackingApiClient.h"
 #import "BugsnagStateEvent.h"
 #import "BugsnagSystemState.h"
 #import "BugsnagThread+Private.h"
-#import "Private.h"
+#import "BugsnagUser+Private.h"
 
 #if BSG_PLATFORM_IOS || BSG_PLATFORM_TVOS
 #define BSGOOMAvailable 1
@@ -106,33 +111,8 @@ static NSUInteger handledCount;
 static NSUInteger unhandledCount;
 static bool hasRecordedSessions;
 
-NSDictionary *BSGParseAppMetadata(NSDictionary *event);
-NSDictionary *BSGParseDeviceMetadata(NSDictionary *event);
-
 @interface NSDictionary (BSGKSMerge)
 - (NSDictionary *)BSG_mergedInto:(NSDictionary *)dest;
-@end
-
-@interface Bugsnag ()
-+ (BugsnagClient *)client;
-@end
-
-@interface BugsnagSession ()
-@property NSUInteger unhandledCount;
-@property NSUInteger handledCount;
-@end
-
-@interface BugsnagAppWithState ()
-+ (BugsnagAppWithState *)appWithDictionary:(NSDictionary *)event
-                                    config:(BugsnagConfiguration *)config
-                              codeBundleId:(NSString *)codeBundleId;
-- (NSDictionary *)toDict;
-@end
-
-@interface BugsnagDeviceWithState ()
-+ (BugsnagDeviceWithState *)deviceWithDictionary:(NSDictionary *)event;
-- (NSDictionary *)toDictionary;
-- (void)appendRuntimeInfo:(NSDictionary *)info;
 @end
 
 /**
@@ -258,24 +238,6 @@ void BSGWriteSessionCrashData(BugsnagSession *session) {
     hasRecordedSessions = true;
 }
 
-@interface BugsnagConfiguration ()
-@property(nonatomic, readwrite, strong) NSMutableSet *plugins;
-@property(readonly, retain, nullable) NSURL *notifyURL;
-@property(readwrite, retain, nullable) BugsnagMetadata *metadata;
-@property(readwrite, retain, nullable) BugsnagMetadata *config;
-- (BOOL)shouldRecordBreadcrumbType:(BSGBreadcrumbType)type;
-@end
-
-@interface BugsnagSessionTracker ()
-@property(nonatomic) NSString *codeBundleId;
-@end
-
-@interface BugsnagUser ()
-- (instancetype)initWithDictionary:(NSDictionary *)dict;
-- (instancetype)initWithUserId:(NSString *)userId name:(NSString *)name emailAddress:(NSString *)emailAddress;
-- (NSDictionary *)toJson;
-@end
-
 // =============================================================================
 // MARK: - BugsnagClient
 // =============================================================================
@@ -287,12 +249,12 @@ void BSGWriteSessionCrashData(BugsnagSession *session) {
  */
 NSString *_lastOrientation = nil;
 
-@synthesize configuration;
+@dynamic user; // This computed property should not have a backing ivar
 
-- (instancetype)initWithConfiguration:(BugsnagConfiguration *)initConfiguration {
+- (instancetype)initWithConfiguration:(BugsnagConfiguration *)configuration {
     if ((self = [super init])) {
         // Take a shallow copy of the configuration
-        self.configuration = [initConfiguration copy];
+        _configuration = [configuration copy];
         self.state = [[BugsnagMetadata alloc] init];
         self.notifier = [BugsnagNotifier new];
         self.systemState = [[BugsnagSystemState alloc] initWithConfiguration:self.configuration];
@@ -337,6 +299,10 @@ NSString *_lastOrientation = nil;
 
         // Start with a copy of the configuration metadata
         self.metadata = [[configuration metadata] deepCopy];
+        // add metadata about app/device
+        NSDictionary *systemInfo = [BSG_KSSystemInfo systemInfo];
+        [self.metadata addMetadata:BSGParseAppMetadata(@{@"system": systemInfo}) toSection:BSGKeyApp];
+        [self.metadata addMetadata:BSGParseDeviceMetadata(@{@"system": systemInfo}) toSection:BSGKeyDevice];
         // sync initial state
         [self metadataChanged:self.metadata];
         [self metadataChanged:self.configuration.config];
@@ -350,7 +316,6 @@ NSString *_lastOrientation = nil;
         void (^observer)(BugsnagStateEvent *) = ^(BugsnagStateEvent *event) {
             [weakSelf metadataChanged:event.data];
         };
-        [self addObserverWithBlock:observer];
         [self.metadata addObserverWithBlock:observer];
         [self.configuration.config addObserverWithBlock:observer];
         [self.state addObserverWithBlock:observer];
@@ -361,10 +326,9 @@ NSString *_lastOrientation = nil;
 #if BSG_PLATFORM_IOS
         _lastOrientation = BSGOrientationNameFromEnum([UIDEVICE currentDevice].orientation);
 #endif
-        _user = self.configuration.user;
-
-        if (_user.id == nil) { // populate with an autogenerated ID if no value set
-            [self setUser:[BSG_KSSystemInfo deviceAndAppHash] withEmail:_user.email andName:_user.name];
+        
+        if (self.user.id == nil) { // populate with an autogenerated ID if no value set
+            [self setUser:[BSG_KSSystemInfo deviceAndAppHash] withEmail:configuration.user.email andName:configuration.user.name];
         }
     }
     return self;
@@ -469,7 +433,7 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
 }
 
 - (void)start {
-    [configuration validate];
+    [self.configuration validate];
     
     [self.crashSentry install:self.configuration
                     apiClient:self.errorReportApiClient
@@ -540,11 +504,6 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
     // notification not received in time on initial startup, so trigger manually
     [self willEnterForeground:self];
     [self.pluginClient loadPlugins];
-
-    // add metadata about app/device
-    NSDictionary *systemInfo = [BSG_KSSystemInfo systemInfo];
-    [self.metadata addMetadata:BSGParseAppMetadata(@{@"system": systemInfo}) toSection:BSGKeyApp];
-    [self.metadata addMetadata:BSGParseDeviceMetadata(@{@"system": systemInfo}) toSection:BSGKeyDevice];
 }
 
 - (BOOL)shouldReportOOM {
@@ -797,14 +756,9 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
         andName:(NSString *_Nullable)name
 {
     [self.configuration setUser:userId withEmail:email andName:name];
-    NSDictionary *userJson = [_user toJson];
+    NSDictionary *userJson = [self.user toJson];
     [self.state addMetadata:userJson toSection:BSGKeyUser];
-
-    NSMutableDictionary *dict = [NSMutableDictionary new];
-    BSGDictInsertIfNotNil(dict, userId, @"id");
-    BSGDictInsertIfNotNil(dict, email, @"email");
-    BSGDictInsertIfNotNil(dict, name, @"name");
-    [self notifyObservers:[[BugsnagStateEvent alloc] initWithName:kStateEventUser data:dict]];
+    [self notifyObservers:[[BugsnagStateEvent alloc] initWithName:kStateEventUser data:userJson]];
 }
 
 // =============================================================================
@@ -1017,12 +971,16 @@ NSString *const BSGBreadcrumbLoadedMessage = @"Bugsnag loaded";
         [event.metadata addMetadata:deviceFields toSection:BSGKeyDevice];
     }
 
+    BOOL originalUnhandledValue = event.unhandled;
     @try {
         if (block != nil && !block(event)) { // skip notifying if callback false
             return;
         }
     } @catch (NSException *exception) {
         bsg_log_err(@"Error from onError callback: %@", exception);
+    }
+    if (event.unhandled != originalUnhandledValue) {
+        [event notifyUnhandledOverridden];
     }
 
     if (event.handledState.unhandled) {
