@@ -6,14 +6,18 @@
 //  Copyright © 2017 Bugsnag. All rights reserved.
 //
 
+#import "BugsnagSessionTracker+Private.h"
+
+#import "BugsnagApp+Private.h"
 #import "BugsnagClient.h"
-#import "BugsnagSessionTracker.h"
+#import "BugsnagConfiguration+Private.h"
+#import "BugsnagDevice+Private.h"
 #import "BugsnagSessionFileStore.h"
 #import "BSG_KSLogger.h"
 #import "BugsnagSessionTrackingPayload.h"
 #import "BugsnagSessionTrackingApiClient.h"
 #import "BugsnagLogger.h"
-#import "BugsnagSessionInternal.h"
+#import "BugsnagSession+Private.h"
 #import "BSG_KSSystemInfo.h"
 #import "BugsnagCollections.h"
 
@@ -24,44 +28,12 @@ NSTimeInterval const BSGNewSessionBackgroundDuration = 30;
 
 NSString *const BSGSessionUpdateNotification = @"BugsnagSessionChanged";
 
-@interface BugsnagSession ()
-
-@property(readwrite, getter=isStopped) BOOL stopped;
-@property NSUInteger unhandledCount;
-@property NSUInteger handledCount;
-- (NSDictionary *_Nonnull)toDictionary;
-- (void)stop;
-- (void)resume;
-@end
-
-@interface BugsnagConfiguration ()
-@property(readonly, retain, nullable) NSURL *sessionURL;
-@property(nonatomic, readwrite, strong) NSMutableArray *onSessionBlocks;
-@end
-
-@interface BugsnagApp ()
-+ (BugsnagApp *)appWithDictionary:(NSDictionary *)event
-                           config:(BugsnagConfiguration *)config
-                     codeBundleId:(NSString *)codeBundleId;
-@end
-
-@interface BugsnagDevice ()
-+ (BugsnagDevice *)deviceWithDictionary:(NSDictionary *)event;
-- (void)appendRuntimeInfo:(NSDictionary *)info;
-@end
-
-@interface BugsnagSessionTrackingApiClient ()
-@property (nonatomic) NSString *codeBundleId;
-@end
-
 @interface BugsnagSessionTracker ()
 @property (weak, nonatomic) BugsnagConfiguration *config;
 @property (weak, nonatomic) BugsnagClient *client;
 @property (strong, nonatomic) BugsnagSessionFileStore *sessionStore;
 @property (strong, nonatomic) BugsnagSessionTrackingApiClient *apiClient;
 @property (strong, nonatomic) NSDate *backgroundStartTime;
-@property (nonatomic) NSString *codeBundleId;
-@property (strong, readwrite) BugsnagSession *currentSession;
 
 /**
  * Called when a session is altered

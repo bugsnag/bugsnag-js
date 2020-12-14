@@ -24,6 +24,8 @@
 // THE SOFTWARE.
 //
 
+#import "BugsnagPlatformConditional.h"
+
 #include "BSG_KSMach.h"
 
 #include "BSG_KSMachApple.h"

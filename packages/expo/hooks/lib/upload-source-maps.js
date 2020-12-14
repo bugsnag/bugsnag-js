@@ -1,4 +1,5 @@
-const { upload } = require('bugsnag-sourcemaps')
+const sourceMaps = require('@bugsnag/source-maps').reactNative
+const logger = require('@bugsnag/source-maps/dist/Logger').default
 const { promisify } = require('util')
 const { tmpdir } = require('os')
 const { sep, join } = require('path')
@@ -34,26 +35,28 @@ module.exports = async (
   const opts = { apiKey }
   if (endpoint) opts.endpoint = endpoint
 
+  logger.info('Uploading source maps to Bugsnag')
+
   // android
-  console.log('Uploading Android source map')
-  await upload({
+  await sourceMaps.uploadOne({
+    ...opts,
     appVersion: androidManifest.version,
-    minifiedUrl: '*/cached-bundle-experience-*',
-    minifiedFile: androidBundlePath,
     codeBundleId: androidManifest.revisionId,
+    bundle: androidBundlePath,
     sourceMap: androidSourceMapPath,
-    ...opts
+    platform: 'android',
+    logger
   })
 
   // ios
-  console.log('Uploading iOS source map')
-  await upload({
+  await sourceMaps.uploadOne({
+    ...opts,
     appVersion: iosManifest.version,
-    minifiedUrl: iosManifest.bundleUrl,
-    minifiedFile: iosBundlePath,
     codeBundleId: iosManifest.revisionId,
+    bundle: iosBundlePath,
     sourceMap: iosSourceMapPath,
-    ...opts
+    platform: 'ios',
+    logger
   })
 }
 

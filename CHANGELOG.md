@@ -4,6 +4,16 @@
 
 ### Changed
 
+- (react-native): Update bugsnag-cocoa to v6.4.1
+  - Place "unhandledOverridden" inside "severityReason" instead of at the top level. [#937](https://github.com/bugsnag/bugsnag-cocoa/pull/937)
+  - Allow overriding the "unhandled" flag in error callbacks. [#921](https://github.com/bugsnag/bugsnag-cocoa/pull/921) [#912](https://github.com/bugsnag/bugsnag-cocoa/pull/912)
+  - Fix unexpected exception behavior when started without an API key. [#931](https://github.com/bugsnag/bugsnag-cocoa/pull/931)
+- (expo): Update the `postPublish` hook to use the new `@bugsnag/source-maps` library. [#1124]
+
+## v7.5.4 (2020-12-10)
+
+### Changed
+
 - (expo): Add integrity header to verify Error and Session API payloads have not changed. [#1172](https://github.com/bugsnag/bugsnag-js/pull/1172)
 - (react-native): Update bugsnag-android to v5.4.0
   - Add integrity header to verify Error and Session API payloads have not changed. [bugsnag-android#978](https://github.com/bugsnag/bugsnag-android/pull/978)
@@ -17,13 +27,13 @@
   - Out Of Memory errors now include more information, including custom metadata and user information. [bugsnag-cocoa#915](https://github.com/bugsnag/bugsnag-cocoa/pull/915) [bugsnag-cocoa#908](https://github.com/bugsnag/bugsnag-cocoa/pull/908)
   - Fixed incorrect app version reported when sending crash reports from older versions of Bugsnag (before 6.2.3) [bugsnag-cocoa#911](https://github.com/bugsnag/bugsnag-cocoa/pull/911)
   - Fixed a rare crash in -[BugsnagClient computeDidCrashLastLaunch] [bugsnag-cocoa#917](https://github.com/bugsnag/bugsnag-cocoa/pull/917)
+- (core) The `event.unhandled` flag can now be changed in callbacks [#1148](https://github.com/bugsnag/bugsnag-js/pull/1148)
 
 ## v7.5.3 (2020-12-01)
 
 - (react-native): Update bugsnag-cocoa to v6.2.5
   - Fixed a rare crash due to a race condition in BugsnagSystemState. [bugsnag-cocoa#893](https://github.com/bugsnag/bugsnag-cocoa/pull/893)
   - Out Of Memory errors are no longer reported if a device reboot was detected. [bugsnag-cocoa#822](https://github.com/bugsnag/bugsnag-cocoa/pull/882)
-- (core) The `event.unhandled` flag can now be changed in callbacks [#1148](https://github.com/bugsnag/bugsnag-js/pull/1148)
 
 ## v7.5.2 (2020-11-09)
 
