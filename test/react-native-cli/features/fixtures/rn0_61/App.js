@@ -1,6 +1,5 @@
 import React from 'react';
 import Bugsnag from "@bugsnag/react-native";
-import { NativeModules } from 'react-native'
 import {
   SafeAreaView,
   StyleSheet,
@@ -8,7 +7,7 @@ import {
   View,
   Text,
   StatusBar,
-  Button
+  Button, NativeModules
 } from 'react-native';
 
 import {
