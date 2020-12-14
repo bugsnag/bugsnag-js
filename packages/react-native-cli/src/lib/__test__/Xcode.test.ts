@@ -49,7 +49,7 @@ test('updateXcodeProject(): success', async () => {
   const writeFileMock = fs.writeFile as jest.MockedFunction<typeof fs.writeFile>
   writeFileMock.mockResolvedValue()
 
-  await updateXcodeProject('/random/path', logger)
+  await updateXcodeProject('/random/path', null, logger)
 
   expect(readFileSyncMock).toHaveBeenCalledWith('/random/path/ios/BugsnagReactNativeCliTest.xcodeproj/project.pbxproj', 'utf8')
   expect(writeFileMock).toHaveBeenCalledTimes(1)
@@ -60,6 +60,45 @@ test('updateXcodeProject(): success', async () => {
   const generatedPhaseId = matches[1]
   const expectedOutput = (await loadFixture(path.join(__dirname, 'fixtures', 'project-after.pbxproj')))
     .replace(/43CF599E6AE1472FAF1EC029/g, generatedPhaseId)
+  expect(writeFileMock).toHaveBeenCalledWith(
+    '/random/path/ios/BugsnagReactNativeCliTest.xcodeproj/project.pbxproj',
+    expectedOutput,
+    'utf8'
+  )
+})
+
+test('updateXcodeProject(): success with custom endpoint', async () => {
+  inlineXcodeParser()
+
+  const pbxProj = await loadFixture(path.join(__dirname, 'fixtures', 'project-before.pbxproj'))
+
+  // xcode module calls readFileSync on the path provided
+  const readFileSyncMock = readFileSync as jest.MockedFunction<typeof readFileSync>
+  readFileSyncMock.mockReturnValue(pbxProj)
+
+  type readdir = (path: string) => Promise<string[]>
+  const readdirMock = fs.readdir as unknown as jest.MockedFunction<readdir>
+  readdirMock.mockResolvedValue(['BugsnagReactNativeCliTest.xcodeproj'])
+
+  const writeFileMock = fs.writeFile as jest.MockedFunction<typeof fs.writeFile>
+  writeFileMock.mockResolvedValue()
+
+  await updateXcodeProject('/random/path', 'https://upload.example.com', logger)
+
+  expect(readFileSyncMock).toHaveBeenCalledWith('/random/path/ios/BugsnagReactNativeCliTest.xcodeproj/project.pbxproj', 'utf8')
+  expect(writeFileMock).toHaveBeenCalledTimes(1)
+
+  // the added build phase gets a generated build ID, so we need to figure out what that is before doing an exact string match
+  const matches = /([A-Z0-9]{24}) \/\* Upload source maps to Bugsnag \*\/ = \{/.exec(writeFileMock.mock.calls[0][1] as string)
+
+  if (!matches) {
+    throw new Error('Failed to detect build ID')
+  }
+
+  const generatedPhaseId = matches[1]
+  const expectedOutput = (await loadFixture(path.join(__dirname, 'fixtures', 'project-after-with-endpoint.pbxproj')))
+    .replace(/43CF599E6AE1472FAF1EC029/g, generatedPhaseId)
+
   expect(writeFileMock).toHaveBeenCalledWith(
     '/random/path/ios/BugsnagReactNativeCliTest.xcodeproj/project.pbxproj',
     expectedOutput,
@@ -81,7 +120,7 @@ test('updateXcodeProject(): modifications already exist', async () => {
   readdirMock.mockResolvedValue(['BugsnagReactNativeCliTest.xcodeproj'])
 
   const writeFileMock = fs.writeFile as jest.MockedFunction<typeof fs.writeFile>
-  await updateXcodeProject('/random/path', logger)
+  await updateXcodeProject('/random/path', null, logger)
   expect(readFileSyncMock).toHaveBeenCalledWith('/random/path/ios/BugsnagReactNativeCliTest.xcodeproj/project.pbxproj', 'utf8')
   expect(writeFileMock).not.toHaveBeenCalled()
   expect(logger.warn).toHaveBeenCalledWith('An "Upload source maps to Bugsnag" build phase already exists')
@@ -104,7 +143,7 @@ test('updateXcodeProject(): can\'t find project', async () => {
   readdirMock.mockResolvedValue(['sdflkj'])
 
   const writeFileMock = fs.writeFile as jest.MockedFunction<typeof fs.writeFile>
-  await updateXcodeProject('/random/path', logger)
+  await updateXcodeProject('/random/path', null, logger)
   expect(readFileSyncMock).not.toHaveBeenCalled()
   expect(writeFileMock).not.toHaveBeenCalled()
 

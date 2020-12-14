@@ -143,12 +143,29 @@ Then("the iOS build has been modified to upload source maps") do
   }
 end
 
+Then("the iOS build has been modified to upload source maps to {string}") do |expected_endpoint|
+  filename = "ios/#{current_fixture}.xcodeproj/project.pbxproj"
+
+  steps %Q{
+    Then I input "./check-ios-build-script.sh #{expected_endpoint}" interactively
+    And the last interactive command exited successfully
+    And the file '#{filename}' contains 'Upload source maps to Bugsnag'
+  }
+end
+
 Then("the Android build has not been modified to upload source maps") do
   step("the file 'android/app/build.gradle' does not contain 'uploadReactNativeMappings = true'")
+  step("the file 'android/app/build.gradle' does not contain 'endpoint = '")
 end
 
 Then("the Android build has been modified to upload source maps") do
   step("the file 'android/app/build.gradle' contains 'uploadReactNativeMappings = true'")
+  step("the file 'android/app/build.gradle' does not contain 'endpoint = '")
+end
+
+Then("the Android build has been modified to upload source maps to {string}") do |expected_endpoint|
+  step("the file 'android/app/build.gradle' contains 'uploadReactNativeMappings = true'")
+  step("the file 'android/app/build.gradle' contains 'endpoint = \"#{expected_endpoint}\"'")
 end
 
 Then("the Bugsnag Android Gradle plugin is not installed") do
