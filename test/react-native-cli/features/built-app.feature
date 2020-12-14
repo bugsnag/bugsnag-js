@@ -3,3 +3,4 @@ Feature: Tests against a React Native app that was initialized using the Bugsnag
 Scenario: Build app sends JavaScript and Native handled errors
   When I cause a handled JavaScript error
   And I cause a handled native error
+  And I wait to receive 2 requests

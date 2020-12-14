@@ -21,12 +21,17 @@ send -- 5.5.0-alpha01\r
 expect "What is your Bugsnag API key?"
 send -- b161f2dbabe3204527bbe5ed4b9334a4\r
 
+expect "What is your Bugsnag notify endpoint?"
+send -- http://bs-local.com:9339\r
+
+expect "What is your Bugsnag sessions endpoint?"
+send -- http://bs-local.com:9339\r
+
 expect "Do you want to automatically upload source maps as part of the Xcode build?"
 send -- n
 
 expect "Do you want to automatically upload source maps as part of the Gradle build?"
 send -- n
-
 
 # TODO: Disable source map uploads for now
 #expect "If you want the latest version of @bugsnag/source-maps hit enter, otherwise type the version you want"
