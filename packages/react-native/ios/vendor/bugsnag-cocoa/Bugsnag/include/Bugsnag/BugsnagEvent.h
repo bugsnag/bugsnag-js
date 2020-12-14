@@ -81,7 +81,7 @@ typedef NS_ENUM(NSUInteger, BSGSeverity) {
  * Whether the event was a crash (i.e. unhandled) or handled error in which the system
  * continued running.
  */
-@property(readonly) BOOL unhandled;
+@property(readwrite) BOOL unhandled;
 
 /**
  * Thread traces for the error that occurred, if collection was enabled.

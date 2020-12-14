@@ -4,6 +4,10 @@
 
 ### Changed
 
+- (react-native): Update bugsnag-cocoa to v6.4.1
+  - Place "unhandledOverridden" inside "severityReason" instead of at the top level. [#937](https://github.com/bugsnag/bugsnag-cocoa/pull/937)
+  - Allow overriding the "unhandled" flag in error callbacks. [#921](https://github.com/bugsnag/bugsnag-cocoa/pull/921) [#912](https://github.com/bugsnag/bugsnag-cocoa/pull/912)
+  - Fix unexpected exception behavior when started without an API key. [#931](https://github.com/bugsnag/bugsnag-cocoa/pull/931)
 - (expo): Update the `postPublish` hook to use the new `@bugsnag/source-maps` library. [#1124]
 
 ## v7.5.4 (2020-12-10)

@@ -4,23 +4,18 @@
 //
 
 #import "BugsnagSessionTrackingApiClient.h"
-#import "BugsnagConfiguration.h"
+
+#import "Bugsnag+Private.h"
+#import "BugsnagConfiguration+Private.h"
 #import "BugsnagSessionTrackingPayload.h"
 #import "BugsnagSessionFileStore.h"
 #import "BugsnagLogger.h"
 #import "BugsnagSession.h"
-#import "BugsnagSessionInternal.h"
+#import "BugsnagSession+Private.h"
 #import "BSG_RFC3339DateTool.h"
-#import "Private.h"
-
-@interface BugsnagConfiguration ()
-@property(nonatomic, readwrite, strong) NSMutableArray *onSessionBlocks;
-@property(readonly, retain, nullable) NSURL *sessionURL;
-@end
 
 @interface BugsnagSessionTrackingApiClient ()
 @property NSMutableSet *activeIds;
-@property(nonatomic) NSString *codeBundleId;
 @property(nonatomic) BugsnagConfiguration *config;
 @end
 

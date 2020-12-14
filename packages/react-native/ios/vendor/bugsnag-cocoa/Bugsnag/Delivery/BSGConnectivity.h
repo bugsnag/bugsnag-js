@@ -27,13 +27,15 @@
 #import <Foundation/Foundation.h>
 #import <SystemConfiguration/SystemConfiguration.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  * Function signature to connectivity monitoring callback of BSGConnectivity
  *
  * @param connected YES if the monitored URL is reachable
  * @param typeDescription a textual representation of the connection type
  */
-typedef void (^BSGConnectivityChangeBlock)(BOOL connected, NSString *_Nonnull typeDescription);
+typedef void (^BSGConnectivityChangeBlock)(BOOL connected, NSString *typeDescription);
 
 /**
  * Monitors network connectivity using SCNetworkReachability callbacks,
@@ -48,11 +50,21 @@ typedef void (^BSGConnectivityChangeBlock)(BOOL connected, NSString *_Nonnull ty
  *              BugsnagConfiguration.notifyURL
  * @param block The block called when connectivity changes
  */
-+ (void)monitorURL:(NSURL *_Nonnull)URL
-     usingCallback:(BSGConnectivityChangeBlock _Nonnull)block;
++ (void)monitorURL:(NSURL *)URL usingCallback:(BSGConnectivityChangeBlock)block;
 
 /**
  * Stop monitoring the URL previously configured with monitorURL:usingCallback:
  */
 + (void)stopMonitoring;
+
++ (BOOL)isValidHostname:(nullable NSString *)host;
+
 @end
+
+void BSGConnectivityCallback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags flags, void * _Nullable);
+
+NSString *BSGConnectivityFlagRepresentation(SCNetworkReachabilityFlags flags);
+
+BOOL BSGConnectivityShouldReportChange(SCNetworkReachabilityFlags flags);
+
+NS_ASSUME_NONNULL_END

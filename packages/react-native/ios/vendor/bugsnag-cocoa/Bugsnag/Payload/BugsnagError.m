@@ -72,10 +72,6 @@ NSString *BSGParseErrorMessage(NSDictionary *report, NSDictionary *error, NSStri
     return error[BSGKeyReason] ?: @"";
 }
 
-@interface BugsnagStacktrace ()
-@property NSMutableArray<BugsnagStackframe *> *trace;
-@end
-
 @implementation BugsnagError
 
 - (instancetype)initWithErrorReportingThread:(BugsnagThread *)thread {
@@ -149,16 +145,16 @@ NSString *BSGParseErrorMessage(NSDictionary *report, NSDictionary *error, NSStri
 
 - (NSDictionary *)toDictionary {
     NSMutableDictionary *dict = [NSMutableDictionary new];
-    BSGDictInsertIfNotNil(dict, self.errorClass, BSGKeyErrorClass);
-    BSGDictInsertIfNotNil(dict, self.errorMessage, BSGKeyMessage);
-    BSGDictInsertIfNotNil(dict, BSGSerializeErrorType(self.type), BSGKeyType);
+    dict[BSGKeyErrorClass] = self.errorClass;
+    dict[BSGKeyMessage] = self.errorMessage;
+    dict[BSGKeyType] = BSGSerializeErrorType(self.type);
 
     NSMutableArray *frames = [NSMutableArray new];
     for (BugsnagStackframe *frame in self.stacktrace) {
         [frames addObject:[frame toDictionary]];
     }
 
-    BSGDictSetSafeObject(dict, frames, BSGKeyStacktrace);
+    dict[BSGKeyStacktrace] = frames;
     return dict;
 }
 
