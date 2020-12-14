@@ -1,100 +1,86 @@
 const testsForPackage = (packageName) => `<rootDir>/packages/${packageName}/**/*.test.[jt]s?(x)`
 
-module.exports = {
+const package = (displayName, packageNames, config = {}) => ({
   roots: ['<rootDir>/packages'],
+  displayName,
+  testMatch: packageNames.map(testsForPackage),
+  ...config
+})
+
+module.exports = {
   projects: [
-    {
-      displayName: 'core',
-      testMatch: [
-        testsForPackage('core')
-      ]
-    },
-    {
-      displayName: 'shared plugins',
-      testMatch: [
-        testsForPackage('plugin-app-duration')
-      ]
-    },
-    {
-      displayName: 'browser',
-      testMatch: [
-        testsForPackage('browser'),
-        testsForPackage('delivery-x-domain-request'),
-        testsForPackage('delivery-xml-http-request'),
-        testsForPackage('plugin-react'),
-        testsForPackage('plugin-vue'),
-        testsForPackage('plugin-browser-context'),
-        testsForPackage('plugin-browser-device'),
-        testsForPackage('plugin-browser-request'),
-        testsForPackage('plugin-client-ip'),
-        testsForPackage('plugin-navigation-breadcrumbs'),
-        testsForPackage('plugin-network-breadcrumbs'),
-        testsForPackage('plugin-window-unhandled-rejection'),
-        testsForPackage('plugin-window-onerror'),
-        testsForPackage('plugin-strip-query-string'),
-        testsForPackage('plugin-interaction-breadcrumbs'),
-        testsForPackage('plugin-simple-throttle'),
-        testsForPackage('plugin-console-breadcrumbs'),
-        testsForPackage('plugin-browser-session')
-      ]
-    },
-    {
-      displayName: 'react native',
+    package('core', ['core']),
+    package('shared plugins', ['plugin-app-duration']),
+    package('browser', [
+      'browser',
+      'delivery-x-domain-request',
+      'delivery-xml-http-request',
+      'plugin-react',
+      'plugin-vue',
+      'plugin-browser-context',
+      'plugin-browser-device',
+      'plugin-browser-request',
+      'plugin-client-ip',
+      'plugin-navigation-breadcrumbs',
+      'plugin-network-breadcrumbs',
+      'plugin-window-unhandled-rejection',
+      'plugin-window-onerror',
+      'plugin-strip-query-string',
+      'plugin-interaction-breadcrumbs',
+      'plugin-simple-throttle',
+      'plugin-console-breadcrumbs',
+      'plugin-browser-session'
+    ]),
+    package('react native', [
+      'react-native',
+      'delivery-react-native',
+      'plugin-react-native-app-state-breadcrumbs',
+      'plugin-react-native-connectivity-breadcrumbs',
+      'plugin-react-native-orientation-breadcrumbs',
+      'plugin-react-native-unhandled-rejection',
+      'plugin-react-native-hermes',
+      'plugin-react-native-client-sync',
+      'plugin-react-native-event-sync',
+      'plugin-react-native-global-error-handler',
+      'plugin-react-native-session',
+      'plugin-react-navigation',
+      'plugin-react-native-navigation'
+    ], {
       preset: 'react-native',
-      testMatch: [
-        testsForPackage('react-native'),
-        testsForPackage('delivery-react-native'),
-        testsForPackage('plugin-react-native-app-state-breadcrumbs'),
-        testsForPackage('plugin-react-native-connectivity-breadcrumbs'),
-        testsForPackage('plugin-react-native-orientation-breadcrumbs'),
-        testsForPackage('plugin-react-native-unhandled-rejection'),
-        testsForPackage('plugin-react-native-hermes'),
-        testsForPackage('plugin-react-native-client-sync'),
-        testsForPackage('plugin-react-native-event-sync'),
-        testsForPackage('plugin-react-native-global-error-handler'),
-        testsForPackage('plugin-react-native-session'),
-        testsForPackage('plugin-react-navigation'),
-        testsForPackage('plugin-react-native-navigation')
-      ],
       setupFiles: [
         '<rootDir>/packages/react-native/src/test/setup.js'
       ]
-    },
-    {
-      displayName: 'expo',
-      testMatch: [
-        testsForPackage('delivery-expo'),
-        testsForPackage('expo'),
-        testsForPackage('expo-cli'),
-        testsForPackage('plugin-expo-app'),
-        testsForPackage('plugin-expo-device')
-      ]
-    },
-    {
-      displayName: 'node plugins',
-      testEnvironment: 'node',
-      testMatch: [
-        testsForPackage('delivery-node'),
-        testsForPackage('plugin-express'),
-        testsForPackage('plugin-koa'),
-        testsForPackage('plugin-restify'),
-        testsForPackage('plugin-contextualize'),
-        testsForPackage('plugin-server-*'),
-        testsForPackage('plugin-strip-project-root'),
-        testsForPackage('plugin-intercept'),
-        testsForPackage('plugin-node-unhandled-rejection'),
-        testsForPackage('plugin-node-in-project'),
-        testsForPackage('plugin-node-device'),
-        testsForPackage('plugin-node-surrounding-code'),
-        testsForPackage('plugin-node-uncaught-exception')
-      ]
-    },
-    {
-      displayName: 'node integration tests',
+    }),
+    package('expo', [
+      'delivery-expo',
+      'expo',
+      'expo-cli',
+      'plugin-expo-app',
+      'plugin-expo-device'
+    ]),
+    package('node plugins', [
+      'delivery-node',
+      'plugin-express',
+      'plugin-koa',
+      'plugin-restify',
+      'plugin-contextualize',
+      'plugin-server-*',
+      'plugin-strip-project-root',
+      'plugin-intercept',
+      'plugin-node-unhandled-rejection',
+      'plugin-node-in-project',
+      'plugin-node-device',
+      'plugin-node-surrounding-code',
+      'plugin-node-uncaught-exception'
+    ], {
+      testEnvironment: 'node'
+    }),
+    package('node integration tests', [
+    ], {
       testEnvironment: 'node',
       testMatch: [
         '<rootDir>/packages/node/test/integration/**/*.test.[jt]s'
       ]
-    }
+    })
   ]
 }
