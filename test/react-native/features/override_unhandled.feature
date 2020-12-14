@@ -1,6 +1,5 @@
 Feature: Overriding unhandled state
 
-@android_only
 Scenario: Non-fatal error overridden to unhandled
     When I run "HandledOverrideJsErrorScenario"
     Then I wait to receive 2 requests
@@ -13,7 +12,6 @@ Scenario: Non-fatal error overridden to unhandled
     And the event "session.events.handled" equals 0
     And the event "session.events.unhandled" equals 1
 
-@android_only
 Scenario: Fatal error overridden to handled
     When I run "UnhandledOverrideJsErrorScenario" and relaunch the app
     And I configure Bugsnag for "UnhandledOverrideJsErrorScenario"
