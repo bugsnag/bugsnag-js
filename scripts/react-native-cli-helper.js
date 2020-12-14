@@ -19,7 +19,7 @@ module.exports = {
 
     // JavaScript layer
     common.changeDir(`${destFixtures}/${rnVersion}`)
-    common.run(`npm install`, true)
+    common.run('npm install', true)
 
     // Install and run the CLI
     const installCommand = `npm install bugsnag-react-native-cli@${version}`
@@ -52,7 +52,7 @@ module.exports = {
 
     // JavaScript layer
     common.changeDir(`${targetDir}`)
-    common.run(`npm install`, true)
+    common.run('npm install', true)
 
     // Install and run the CLI
     const installCommand = `npm install bugsnag-react-native-cli@${version}`
