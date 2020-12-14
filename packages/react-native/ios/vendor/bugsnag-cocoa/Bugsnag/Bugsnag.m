@@ -27,32 +27,21 @@
 #import "Bugsnag.h"
 
 #import "BSG_KSCrash.h"
+#import "Bugsnag+Private.h"
 #import "BugsnagBreadcrumbs.h"
 #import "BugsnagLogger.h"
 #import "BugsnagClient+Private.h"
+#import "BugsnagConfiguration+Private.h"
 #import "BugsnagKeys.h"
+#import "BugsnagMetadata+Private.h"
 #import "BugsnagPlugin.h"
 #import "BugsnagHandledState.h"
 #import "BugsnagSystemState.h"
 
 static BugsnagClient *bsg_g_bugsnag_client = NULL;
 
-@interface BugsnagConfiguration ()
-@property(readwrite, retain, nullable) BugsnagMetadata *metadata;
-@property(readwrite, retain, nullable) BugsnagMetadata *config;
-@end
-
-@interface Bugsnag ()
-+ (BugsnagClient *)client;
-+ (BOOL)bugsnagStarted;
-@end
-
 @interface NSDictionary (BSGKSMerge)
 - (NSDictionary *)BSG_mergedInto:(NSDictionary *)dest;
-@end
-
-@interface BugsnagMetadata ()
-- (NSDictionary *_Nonnull)toDictionary;
 @end
 
 @implementation Bugsnag

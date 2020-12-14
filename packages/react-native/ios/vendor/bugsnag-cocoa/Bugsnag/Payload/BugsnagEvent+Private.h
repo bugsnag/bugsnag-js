@@ -68,6 +68,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSDictionary *)toJson;
 
+- (void)notifyUnhandledOverridden;
+
 @end
 
 NS_ASSUME_NONNULL_END

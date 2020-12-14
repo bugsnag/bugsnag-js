@@ -27,4 +27,6 @@
                    metadata:(NSDictionary *)metadata
                      config:(NSDictionary *)config;
 
+- (BSG_KSCrashType)mapKSToBSGCrashTypes:(BugsnagErrorTypes *)errorTypes;
+
 @end

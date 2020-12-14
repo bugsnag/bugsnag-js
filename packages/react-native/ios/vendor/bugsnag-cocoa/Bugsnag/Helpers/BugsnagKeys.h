@@ -96,6 +96,7 @@ extern NSString *const BSGKeyThreads;
 extern NSString *const BSGKeyTimestamp;
 extern NSString *const BSGKeyType;
 extern NSString *const BSGKeyUnhandled;
+extern NSString *const BSGKeyUnhandledOverridden;
 extern NSString *const BSGKeyUrl;
 extern NSString *const BSGKeyUser;
 extern NSString *const BSGKeyUuid;
