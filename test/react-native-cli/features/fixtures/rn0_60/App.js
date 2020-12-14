@@ -1,12 +1,6 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flowx
- */
-
 import React, {Fragment} from 'react';
+import Bugsnag from "@bugsnag/react-native";
+import { NativeModules } from 'react-native'
 import {
   SafeAreaView,
   StyleSheet,
@@ -14,13 +8,26 @@ import {
   View,
   Text,
   StatusBar,
-  Button
-} from 'react-native';
+  Button, NativeModules
+} from 'react-native'
 
 import {
   Colors
 } from 'react-native/Libraries/NewAppScreen';
 
+function jsNotify() {
+  try { // execute crashy code
+    iMadeThisUp();
+  } catch (error) {
+    console.log('Bugsnag.notify JS error')
+    Bugsnag.notify(error);
+  }
+}
+
+function nativeNotify() {
+  console.log('Bugsnag.notify native error')
+  NativeModules.CrashyCrashy.handledError()
+}
 
 const App = () => {
   return (
@@ -40,11 +47,11 @@ const App = () => {
             <Button style={styles.clickyButton}
                     accessibilityLabel='js_notify'
                     title='JS Notify'
-                    onPress={this.jsNotify}/>
+                    onPress={jsNotify}/>
             <Button style={styles.clickyButton}
                     accessibilityLabel='native_notify'
                     title='Native Notify'
-                    onPress={this.nativeNotify}/>
+                    onPress={nativeNotify}/>
           </View>
         </ScrollView>
       </SafeAreaView>
