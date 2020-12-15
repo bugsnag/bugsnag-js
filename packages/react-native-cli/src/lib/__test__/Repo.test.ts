@@ -87,3 +87,27 @@ test('detectState(): unknown error', async () => {
   expect(spawnSyncMock).toHaveBeenCalledWith('git', ['status', '--porcelain'], { cwd: '/example/dir', encoding: 'utf8' })
   expect(logger.warn).toHaveBeenCalledWith(error)
 })
+
+test('detectState(): ENOENT error should not log a warning', async () => {
+  const spawnSyncMock = (spawnSync as unknown as jest.MockedFunction<spawnSyncFn>)
+  const error = new Error('fail')
+  error.code = 'ENOENT'
+
+  spawnSyncMock.mockReturnValue({
+    status: 0,
+    signal: null,
+    output: [
+      '',
+      '',
+      ''
+    ],
+    pid: 198,
+    stdout: '',
+    stderr: '',
+    error
+  })
+
+  expect(detectState('/example/dir', logger)).toBe(RepoState.UNKNOWN)
+  expect(spawnSyncMock).toHaveBeenCalledWith('git', ['status', '--porcelain'], { cwd: '/example/dir', encoding: 'utf8' })
+  expect(logger.warn).not.toHaveBeenCalled()
+})
