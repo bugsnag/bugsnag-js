@@ -18,6 +18,7 @@ send -- $notifierVersion\r
 expect "If you want the latest version of the Bugsnag Android Gradle plugin hit enter, otherwise type the version you want"
 send -- 5.5.0-alpha01\r
 
+# TODO: Use the usual 123123... test API key
 expect "What is your Bugsnag API key?"
 send -- b161f2dbabe3204527bbe5ed4b9334a4\r
 

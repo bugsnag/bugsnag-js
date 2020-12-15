@@ -4,7 +4,7 @@ require 'securerandom'
 fixtures = Dir["#{__dir__}/../fixtures/rn0_*"].map { |dir| File.basename(dir) }.sort
 current_fixture = ENV['REACT_NATIVE_VERSION']
 
-# Ensure environment if set for the CLI tests (check not needed for device-based tests)
+# Ensure environment is set for the CLI tests (check not needed for device-based tests)
 if MazeRunner.config.farm == :none && !fixtures.include?(current_fixture)
   if current_fixture.nil?
     message = <<~ERROR.chomp

@@ -172,7 +172,7 @@ steps:
       - npm run test:build-react-native-cli-ios
 
   #
-  # Built app end-to-end tests
+  # Init, build and notify end-to-end tests
   #
   - label: ':runner: RN 0.60 Android end-to-end tests'
     depends_on: "rn-0-60-apk"
