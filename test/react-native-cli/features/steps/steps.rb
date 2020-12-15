@@ -144,6 +144,14 @@ Then("the iOS build has been modified to upload source maps") do
 end
 
 Then("the Android build has not been modified to upload source maps") do
+  step("the file 'android/app/build.gradle' does not contain 'uploadReactNativeMappings = true'")
+end
+
+Then("the Android build has been modified to upload source maps") do
+  step("the file 'android/app/build.gradle' contains 'uploadReactNativeMappings = true'")
+end
+
+Then("the Bugsnag Android Gradle plugin is not installed") do
   rootGradle = "android/build.gradle"
   appGradle = "android/app/build.gradle"
 
@@ -151,7 +159,7 @@ Then("the Android build has not been modified to upload source maps") do
   step("the file '#{appGradle}' does not contain 'apply plugin: \"com.bugsnag.android.gradle\"'")
 end
 
-Then("the Android build has been modified to upload source maps") do
+Then("the Bugsnag Android Gradle plugin is installed") do
   rootGradle = "android/build.gradle"
   appGradle = "android/app/build.gradle"
 
