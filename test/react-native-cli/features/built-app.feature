@@ -13,4 +13,4 @@ Scenario: Build app sends JavaScript and Native handled errors
   And the event "unhandled" is false
   And the event "exceptions.0.errorClass" equals the platform-dependent string:
     | android | java.lang.Exception |
-    | ios     | NSException         |
+    | ios     | NSError             |
