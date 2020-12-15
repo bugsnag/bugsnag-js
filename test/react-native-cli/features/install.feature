@@ -64,6 +64,7 @@ Scenario: no git repo, run anyway, default version
     Then I wait for the shell to output a line containing "+ @bugsnag/react-native" to stdout
     And I wait for the current stdout line to contain "If you want the latest version of the Bugsnag Android Gradle plugin hit enter, otherwise type the version you want"
     When I press enter
+    And I wait for the shell to output a line containing "Detected platform is not macOS, skipping" to stdout
     Then the last interactive command exited successfully
     And bugsnag react-native is in the package.json file
     And the Bugsnag Android Gradle plugin is installed
@@ -83,6 +84,7 @@ Scenario: clean git repo, run, version 7.5.0
     Then I wait for the shell to output a line containing "+ @bugsnag/react-native" to stdout
     And I wait for the current stdout line to contain "If you want the latest version of the Bugsnag Android Gradle plugin hit enter, otherwise type the version you want"
     When I press enter
+    And I wait for the shell to output a line containing "Detected platform is not macOS, skipping" to stdout
     And the last interactive command exited successfully
     And bugsnag react-native version "^7.5.0" is in the package.json file
     And the Bugsnag Android Gradle plugin is installed

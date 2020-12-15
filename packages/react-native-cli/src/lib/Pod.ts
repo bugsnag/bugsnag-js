@@ -4,6 +4,11 @@ import { join } from 'path'
 import { Logger } from '../Logger'
 
 export async function install (projectRoot: string, logger: Logger): Promise<void> {
+  if (process.platform !== 'darwin') {
+    logger.warn('Detected platform is not macOS, skipping')
+    return
+  }
+
   try {
     const iosDirList = await fs.readdir(join(projectRoot, 'ios'))
     if (!iosDirList.includes('Podfile')) {
