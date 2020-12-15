@@ -2,9 +2,10 @@ import { spawn } from 'child_process'
 import { promises as fs } from 'fs'
 import { join } from 'path'
 import { Logger } from '../Logger'
+import { platform } from 'os'
 
 export async function install (projectRoot: string, logger: Logger): Promise<void> {
-  if (process.platform !== 'darwin') {
+  if (platform() !== 'darwin') {
     logger.warn('Detected platform is not macOS, skipping')
     return
   }

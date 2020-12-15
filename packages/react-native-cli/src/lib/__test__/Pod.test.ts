@@ -5,6 +5,10 @@ import { spawn, ChildProcess } from 'child_process'
 import { EventEmitter } from 'events'
 import logger from '../../Logger'
 
+jest.mock('os', () => ({
+  platform: () => 'darwin'
+}))
+
 async function generateNotFoundError () {
   try {
     await jest.requireActual('fs').promises.readdir(path.join(__dirname, 'does-not-exist'))
