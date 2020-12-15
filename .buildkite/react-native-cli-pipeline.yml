@@ -127,7 +127,7 @@ steps:
     artifact_paths:
       - build/rn0_63.apk
 
-  - label: ':ios: Build RN 0.60 ipa'
+  - label: ':ios: Init and build RN 0.60 ipa'
     key: 'rn-0-60-ipa'
     timeout_in_minutes: 30
     agents:
@@ -138,7 +138,7 @@ steps:
     commands:
       - npm run test:build-react-native-cli-ios
 
-  - label: ':ios: Build RN 0.61 ipa'
+  - label: ':ios: Init and build RN 0.61 ipa'
     key: 'rn-0-61-ipa'
     timeout_in_minutes: 30
     agents:
@@ -149,7 +149,7 @@ steps:
     commands:
       - npm run test:build-react-native-cli-ios
 
-  - label: ':ios: Build RN 0.62 ipa'
+  - label: ':ios: Init and build RN 0.62 ipa'
     key: 'rn-0-62-ipa'
     timeout_in_minutes: 30
     agents:
@@ -160,7 +160,7 @@ steps:
     commands:
       - npm run test:build-react-native-cli-ios
 
-  - label: ':ios: Build RN 0.63 ipa'
+  - label: ':ios: Init and build RN 0.63 ipa'
     key: 'rn-0-63-ipa'
     timeout_in_minutes: 30
     agents:
