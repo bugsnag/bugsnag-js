@@ -13,6 +13,16 @@ Scenario: successfully modify project
     When I input "y" interactively
     And I wait for the current stdout line to contain "Do you want to automatically upload source maps as part of the Xcode build?"
     When I press enter
+    And I wait for the shell to output the following to stdout
+        """
+        To configure your project to upload dSYMs, follow the iOS symbolication guide:
+
+            https://docs.bugsnag.com/platforms/ios/symbolication-guide/
+
+        This will enable you to see full native stacktraces. It can't be done automatically.
+        """
+    And I wait for the current stdout line to contain "Hit enter to continue"
+    When I press enter
     And I wait for the current stdout line to contain "Do you want to automatically upload source maps as part of the Gradle build?"
     When I press enter
     And I wait for the current stdout line to contain "If you want the latest version of the Bugsnag Android Gradle plugin hit enter, otherwise type the version you want"
@@ -37,6 +47,16 @@ Scenario: successfully modify project, choosing source-maps version
     And I wait for the current stdout line to contain "Do you want to continue anyway?"
     When I input "y" interactively
     And I wait for the current stdout line to contain "Do you want to automatically upload source maps as part of the Xcode build?"
+    When I press enter
+    And I wait for the shell to output the following to stdout
+        """
+        To configure your project to upload dSYMs, follow the iOS symbolication guide:
+
+            https://docs.bugsnag.com/platforms/ios/symbolication-guide/
+
+        This will enable you to see full native stacktraces. It can't be done automatically.
+        """
+    And I wait for the current stdout line to contain "Hit enter to continue"
     When I press enter
     And I wait for the current stdout line to contain "Do you want to automatically upload source maps as part of the Gradle build?"
     When I press enter
@@ -63,6 +83,16 @@ Scenario: opt not to modify the Android project
     When I input "y" interactively
     And I wait for the current stdout line to contain "Do you want to automatically upload source maps as part of the Xcode build?"
     When I press enter
+    And I wait for the shell to output the following to stdout
+        """
+        To configure your project to upload dSYMs, follow the iOS symbolication guide:
+
+            https://docs.bugsnag.com/platforms/ios/symbolication-guide/
+
+        This will enable you to see full native stacktraces. It can't be done automatically.
+        """
+    And I wait for the current stdout line to contain "Hit enter to continue"
+    When I press enter
     And I wait for the current stdout line to contain "Do you want to automatically upload source maps as part of the Gradle build?"
     When I input "n" interactively
     And I wait for the current stdout line to contain "If you want the latest version of @bugsnag/source-maps hit enter, otherwise type the version you want"
@@ -86,6 +116,16 @@ Scenario: opt not to modify the iOS project
     When I input "y" interactively
     And I wait for the current stdout line to contain "Do you want to automatically upload source maps as part of the Xcode build?"
     When I input "n" interactively
+    And I wait for the shell to output the following to stdout
+        """
+        To configure your project to upload dSYMs, follow the iOS symbolication guide:
+
+            https://docs.bugsnag.com/platforms/ios/symbolication-guide/
+
+        This will enable you to see full native stacktraces. It can't be done automatically.
+        """
+    And I wait for the current stdout line to contain "Hit enter to continue"
+    When I press enter
     And I wait for the current stdout line to contain "Do you want to automatically upload source maps as part of the Gradle build?"
     When I input "y" interactively
     And I wait for the current stdout line to contain "If you want the latest version of the Bugsnag Android Gradle plugin hit enter, otherwise type the version you want"
@@ -111,6 +151,16 @@ Scenario: opt not to modify either project
     When I input "y" interactively
     And I wait for the current stdout line to contain "Do you want to automatically upload source maps as part of the Xcode build?"
     When I input "n" interactively
+    And I wait for the shell to output the following to stdout
+        """
+        To configure your project to upload dSYMs, follow the iOS symbolication guide:
+
+            https://docs.bugsnag.com/platforms/ios/symbolication-guide/
+
+        This will enable you to see full native stacktraces. It can't be done automatically.
+        """
+    And I wait for the current stdout line to contain "Hit enter to continue"
+    When I press enter
     And I wait for the current stdout line to contain "Do you want to automatically upload source maps as part of the Gradle build?"
     When I input "n" interactively
     Then the last interactive command exited successfully

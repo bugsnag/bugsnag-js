@@ -5,6 +5,14 @@ import { updateXcodeProject } from '../lib/Xcode'
 import { install, detectInstalled, guessPackageManager } from '../lib/Npm'
 import onCancel from '../lib/OnCancel'
 
+const DSYM_INSTRUCTIONS = `To configure your project to upload dSYMs, follow the iOS symbolication guide:
+
+    https://docs.bugsnag.com/platforms/ios/symbolication-guide/
+
+  This will enable you to see full native stacktraces. It can't be done automatically.
+
+`
+
 export default async function run (argv: string[], projectRoot: string, opts: Record<string, unknown>): Promise<void> {
   try {
     const { iosIntegration } = await prompts({
@@ -18,6 +26,13 @@ export default async function run (argv: string[], projectRoot: string, opts: Re
       logger.info('Modifying the Xcode project')
       await updateXcodeProject(projectRoot, logger)
     }
+
+    await prompts({
+      type: 'text',
+      name: 'dsymUploadInstructions',
+      message: DSYM_INSTRUCTIONS,
+      initial: 'Hit enter to continue …'
+    }, { onCancel })
 
     const { androidIntegration } = await prompts({
       type: 'confirm',
