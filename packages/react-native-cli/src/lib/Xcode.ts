@@ -13,28 +13,36 @@ See ${DOCS_LINK} for more information`
 
 const EXTRA_PACKAGER_ARGS = 'export EXTRA_PACKAGER_ARGS="--sourcemap-output $CONFIGURATION_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/main.jsbundle.map"'
 
-export async function updateXcodeProject (projectRoot: string, logger: Logger) {
+export async function updateXcodeProject (projectRoot: string, endpoint: string|null, logger: Logger) {
   const iosDir = path.join(projectRoot, 'ios')
   const xcodeprojDir = (await fs.readdir(iosDir)).find(p => p.endsWith('.xcodeproj'))
+
   if (!xcodeprojDir) {
     logger.warn(UNLOCATED_PROJ_MSG)
     return
   }
+
   const pbxProjPath = path.join(iosDir, xcodeprojDir, 'project.pbxproj')
   const proj = xcode.project(pbxProjPath)
+
   await new Promise((resolve, reject) => {
     proj.parse((err) => {
       if (err) return reject(err)
       resolve()
     })
   })
+
   const buildPhaseMap = proj?.hash?.project?.objects?.PBXShellScriptBuildPhase || []
   logger.info('Ensuring React Native build phase outputs source maps')
+
   const didUpdate = await updateBuildReactNativeTask(buildPhaseMap, logger)
   logger.info('Adding build phase to upload source maps to Bugsnag')
-  const didAdd = await addUploadSourceMapsTask(proj, buildPhaseMap, logger)
+
+  const didAdd = await addUploadSourceMapsTask(proj, buildPhaseMap, endpoint, logger)
   const didChange = didUpdate || didAdd
+
   if (!didChange) return
+
   await fs.writeFile(pbxProjPath, proj.writeSync(), 'utf8')
   logger.success('Written changes to Xcode project')
 }
@@ -54,7 +62,12 @@ async function updateBuildReactNativeTask (buildPhaseMap: Record<string, Record<
   return didAnythingUpdate
 }
 
-async function addUploadSourceMapsTask (proj: Project, buildPhaseMap: Record<string, Record<string, unknown>>, logger: Logger): Promise<boolean> {
+async function addUploadSourceMapsTask (
+  proj: Project,
+  buildPhaseMap: Record<string, Record<string, unknown>>,
+  endpoint: string|null,
+  logger: Logger
+): Promise<boolean> {
   for (const shellBuildPhaseKey in buildPhaseMap) {
     const phase = buildPhaseMap[shellBuildPhaseKey]
     if (typeof phase.shellScript === 'string' && phase.shellScript.includes('bugsnag-react-native-xcode.sh')) {
@@ -63,15 +76,18 @@ async function addUploadSourceMapsTask (proj: Project, buildPhaseMap: Record<str
     }
   }
 
+  let shellScript = '../node_modules/@bugsnag/react-native/bugsnag-react-native-xcode.sh'
+
+  if (endpoint) {
+    shellScript = `export ENDPOINT='${endpoint}'\\n${shellScript}`
+  }
+
   proj.addBuildPhase(
     [],
     'PBXShellScriptBuildPhase',
     'Upload source maps to Bugsnag',
     null,
-    {
-      shellPath: '/bin/sh',
-      shellScript: '../node_modules/@bugsnag/react-native/bugsnag-react-native-xcode.sh'
-    }
+    { shellPath: '/bin/sh', shellScript }
   )
 
   return true

@@ -9,6 +9,7 @@ const GRADLE_PLUGIN_APPLY_REGEX = /apply plugin: ["']com\.bugsnag\.android\.grad
 const DOCS_LINK = 'https://docs.bugsnag.com/build-integrations/gradle/#installation'
 const ENABLE_REACT_NATIVE_MAPPINGS = 'bugsnag {\n  uploadReactNativeMappings = true\n}\n'
 const ENABLE_REACT_NATIVE_MAPPINGS_REGEX = /^\s*bugsnag {[^}]*uploadReactNativeMappings[^}]*?}/m
+const CUSTOM_ENDPOINT_REGEX = /^\s*bugsnag {[^}]*endpoint[^}]*?}/m
 
 export async function modifyRootBuildGradle (projectRoot: string, pluginVersion: string, logger: Logger): Promise<void> {
   logger.debug('Looking for android/build.gradle')
@@ -84,7 +85,7 @@ See ${DOCS_LINK} for more information`
   logger.success('Finished modifying android/app/build.gradle')
 }
 
-export async function enableReactNativeMappings (projectRoot: string, logger: Logger): Promise<void> {
+export async function enableReactNativeMappings (projectRoot: string, endpoint: string|null, logger: Logger): Promise<void> {
   logger.debug('Enabling Bugsnag Android Gradle plugin React Native mappings')
   const appBuildGradlePath = path.join(projectRoot, 'android', 'app', 'build.gradle')
 
@@ -117,7 +118,57 @@ export async function enableReactNativeMappings (projectRoot: string, logger: Lo
         `The gradle file was in an unexpected format and so couldn't be updated automatically.
 
 Enable React Native mappings to your app module's build.gradle:
+
 ${ENABLE_REACT_NATIVE_MAPPINGS}
+
+See ${DOCS_LINK} for more information`
+      )
+
+      return
+    }
+
+    if (e.code === 'ENOENT') {
+      logger.warn(
+        `A gradle file was not found at the expected location and so couldn't be updated automatically.
+
+Enable React Native mappings to your app module's build.gradle:
+
+${ENABLE_REACT_NATIVE_MAPPINGS}
+
+See ${DOCS_LINK} for more information`
+      )
+
+      return
+    }
+
+    throw e
+  }
+
+  // If there is no custom endpoint or editing the gradle file failed then we
+  // can stop here
+  if (endpoint === null) {
+    return
+  }
+
+  try {
+    // We know the 'bugsnag' section must exist after enabling RN mappings
+    await insertValueAfterPattern(
+      appBuildGradlePath,
+      /^\s*bugsnag {[^}]*?(?=})/m,
+      `  endpoint = "${endpoint}"\n`,
+      CUSTOM_ENDPOINT_REGEX,
+      logger
+    )
+  } catch (e) {
+    if (e.message === 'Pattern not found') {
+      logger.warn(
+        `The gradle file was in an unexpected format and so couldn't be updated automatically.
+
+Add your upload endpoint to your app module's build.gradle:
+
+bugsnag{
+  endpoint = "${endpoint}"
+}
 
 See ${DOCS_LINK} for more information`
       )
@@ -125,8 +176,11 @@ See ${DOCS_LINK} for more information`
       logger.warn(
         `A gradle file was not found at the expected location and so couldn't be updated automatically.
 
-Enable React Native mappings to your app module's build.gradle:
-${ENABLE_REACT_NATIVE_MAPPINGS}
+Add your upload endpoint to your app module's build.gradle:
+
+bugsnag{
+  endpoint = "${endpoint}"
+}
 
 See ${DOCS_LINK} for more information`
       )

@@ -5,8 +5,12 @@ import { install, detectInstalled, guessPackageManager } from '../lib/Npm'
 import onCancel from '../lib/OnCancel'
 import { enableReactNativeMappings } from '../lib/Gradle'
 
+const DEFAULT_UPLOAD_ENDPOINT = 'https://upload.bugsnag.com'
+
 export default async function run (argv: string[], projectRoot: string, opts: Record<string, unknown>): Promise<void> {
   try {
+    let uploadEndpoint: string|null = null
+
     const { iosIntegration } = await prompts({
       type: 'confirm',
       name: 'iosIntegration',
@@ -15,8 +19,10 @@ export default async function run (argv: string[], projectRoot: string, opts: Re
     }, { onCancel })
 
     if (iosIntegration) {
+      uploadEndpoint = await getUploadEndpoint(uploadEndpoint)
+
       logger.info('Modifying the Xcode project')
-      await updateXcodeProject(projectRoot, logger)
+      await updateXcodeProject(projectRoot, nullIfDefault(uploadEndpoint), logger)
     }
 
     const { androidIntegration } = await prompts({
@@ -27,7 +33,9 @@ export default async function run (argv: string[], projectRoot: string, opts: Re
     }, { onCancel })
 
     if (androidIntegration) {
-      await enableReactNativeMappings(projectRoot, logger)
+      uploadEndpoint = await getUploadEndpoint(uploadEndpoint)
+
+      await enableReactNativeMappings(projectRoot, nullIfDefault(uploadEndpoint), logger)
     }
 
     if (androidIntegration || iosIntegration) {
@@ -60,4 +68,27 @@ async function installJavaScriptPackage (projectRoot: string): Promise<void> {
   await install(packageManager, '@bugsnag/source-maps', version, true, projectRoot)
 
   logger.success('@bugsnag/source-maps dependency is installed')
+}
+
+async function getUploadEndpoint (maybeEndpoint: string|null): Promise<string> {
+  if (maybeEndpoint) {
+    return maybeEndpoint
+  }
+
+  const { endpoint } = await prompts({
+    type: 'text',
+    name: 'endpoint',
+    message: 'What is your Bugsnag upload endpoint?',
+    initial: DEFAULT_UPLOAD_ENDPOINT
+  }, { onCancel })
+
+  return endpoint
+}
+
+function nullIfDefault (maybeEndpoint: string|null): string|null {
+  if (maybeEndpoint === DEFAULT_UPLOAD_ENDPOINT) {
+    return null
+  }
+
+  return maybeEndpoint
 }

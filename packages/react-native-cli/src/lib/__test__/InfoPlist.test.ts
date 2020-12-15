@@ -1,4 +1,4 @@
-import { addApiKey } from '../InfoPlist'
+import { configure } from '../InfoPlist'
 import logger from '../../Logger'
 import path from 'path'
 import { promises as fs } from 'fs'
@@ -22,7 +22,7 @@ jest.mock('fs', () => {
 
 afterEach(() => jest.resetAllMocks())
 
-test('addApiKey(): success', async () => {
+test('configure(): success', async () => {
   type readdir = (path: string) => Promise<string[]>
   const readdirMock = fs.readdir as unknown as jest.MockedFunction<readdir>
   readdirMock.mockResolvedValue(['BugsnagReactNativeCliTest.xcodeproj'])
@@ -34,7 +34,7 @@ test('addApiKey(): success', async () => {
   const writeFileMock = fs.writeFile as jest.MockedFunction<typeof fs.writeFile>
   writeFileMock.mockResolvedValue()
 
-  await addApiKey('/random/path', 'API_KEY_GOES_HERE', logger)
+  await configure('/random/path', { apiKey: 'API_KEY_GOES_HERE' }, logger)
   expect(readFileMock).toHaveBeenCalledWith('/random/path/ios/BugsnagReactNativeCliTest/Info.plist', 'utf8')
   expect(writeFileMock).toHaveBeenCalledWith(
     '/random/path/ios/BugsnagReactNativeCliTest/Info.plist',
@@ -43,7 +43,7 @@ test('addApiKey(): success', async () => {
   )
 })
 
-test('addApiKey(): unlocated project', async () => {
+test('configure(): unlocated project', async () => {
   type readdir = (path: string) => Promise<string[]>
   const readdirMock = fs.readdir as unknown as jest.MockedFunction<readdir>
   readdirMock.mockResolvedValue(['floop'])
@@ -51,14 +51,14 @@ test('addApiKey(): unlocated project', async () => {
   const readFileMock = fs.readFile as jest.MockedFunction<typeof fs.readFile>
   const writeFileMock = fs.writeFile as jest.MockedFunction<typeof fs.writeFile>
 
-  await addApiKey('/random/path', 'API_KEY_GOES_HERE', logger)
+  await configure('/random/path', { apiKey: 'API_KEY_GOES_HERE' }, logger)
   expect(readFileMock).not.toHaveBeenCalled()
   expect(writeFileMock).not.toHaveBeenCalled()
 
   expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining('The Xcode configuration was not in the expected location'))
 })
 
-test('addApiKey(): unlocated project #2', async () => {
+test('configure(): unlocated project #2', async () => {
   type readdir = (path: string) => Promise<string[]>
   const readdirMock = fs.readdir as unknown as jest.MockedFunction<readdir>
   readdirMock.mockRejectedValue(await generateNotFoundError())
@@ -66,14 +66,14 @@ test('addApiKey(): unlocated project #2', async () => {
   const readFileMock = fs.readFile as jest.MockedFunction<typeof fs.readFile>
   const writeFileMock = fs.writeFile as jest.MockedFunction<typeof fs.writeFile>
 
-  await addApiKey('/random/path', 'API_KEY_GOES_HERE', logger)
+  await configure('/random/path', { apiKey: 'API_KEY_GOES_HERE' }, logger)
   expect(readFileMock).not.toHaveBeenCalled()
   expect(writeFileMock).not.toHaveBeenCalled()
 
   expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining('The Xcode configuration was not in the expected location'))
 })
 
-test('addApiKey(): bad xml', async () => {
+test('configure(): bad xml', async () => {
   type readdir = (path: string) => Promise<string[]>
   const readdirMock = fs.readdir as unknown as jest.MockedFunction<readdir>
   readdirMock.mockResolvedValue(['BugsnagReactNativeCliTest.xcodeproj'])
@@ -84,7 +84,7 @@ test('addApiKey(): bad xml', async () => {
 
   const writeFileMock = fs.writeFile as jest.MockedFunction<typeof fs.writeFile>
 
-  await addApiKey('/random/path', 'API_KEY_GOES_HERE', logger)
+  await configure('/random/path', { apiKey: 'API_KEY_GOES_HERE' }, logger)
   expect(writeFileMock).not.toHaveBeenCalled()
 
   expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining('The project\'s Info.plist couldn\'t be updated automatically.'))

@@ -85,21 +85,19 @@ Then("I wait for the current stdout line to contain {string}") do |expected|
 end
 
 def parse_package_json
-  before = Runner.interactive_session.stdout_lines.dup
+  length_before = Runner.interactive_session.stdout_lines.length
 
   steps %Q{
     When I input "cat package.json" interactively
     Then I wait for the shell to output '"dependencies": \{' to stdout
   }
 
-  after = Runner.interactive_session.stdout_lines
-
-  difference = after - before
+  after = Runner.interactive_session.stdout_lines[length_before..]
 
   # Drop lines that include the cat command above. This will sometimes appear
   # once and sometimes appear twice, depending on if another command is running
   # when it's input
-  json = difference.drop_while { |line| line.include?('cat package.json') }
+  json = after.drop_while { |line| line.include?('cat package.json') }
 
   JSON.parse(json.join("\n"))
 end
@@ -143,12 +141,29 @@ Then("the iOS build has been modified to upload source maps") do
   }
 end
 
+Then("the iOS build has been modified to upload source maps to {string}") do |expected_endpoint|
+  filename = "ios/#{current_fixture}.xcodeproj/project.pbxproj"
+
+  steps %Q{
+    Then I input "./check-ios-build-script.sh #{expected_endpoint}" interactively
+    And the last interactive command exited successfully
+    And the file '#{filename}' contains 'Upload source maps to Bugsnag'
+  }
+end
+
 Then("the Android build has not been modified to upload source maps") do
   step("the file 'android/app/build.gradle' does not contain 'uploadReactNativeMappings = true'")
+  step("the file 'android/app/build.gradle' does not contain 'endpoint = '")
 end
 
 Then("the Android build has been modified to upload source maps") do
   step("the file 'android/app/build.gradle' contains 'uploadReactNativeMappings = true'")
+  step("the file 'android/app/build.gradle' does not contain 'endpoint = '")
+end
+
+Then("the Android build has been modified to upload source maps to {string}") do |expected_endpoint|
+  step("the file 'android/app/build.gradle' contains 'uploadReactNativeMappings = true'")
+  step("the file 'android/app/build.gradle' contains 'endpoint = \"#{expected_endpoint}\"'")
 end
 
 Then("the Bugsnag Android Gradle plugin is not installed") do
@@ -303,7 +318,7 @@ Then("there are no modified files in git") do
 end
 
 def parse_xml_file(path)
-  before = Runner.interactive_session.stdout_lines.dup
+  length_before = Runner.interactive_session.stdout_lines.length
   uuid = SecureRandom.uuid
 
   steps %Q{
@@ -312,14 +327,12 @@ def parse_xml_file(path)
     Then I wait for the shell to output '#{uuid}' to stdout
   }
 
-  after = Runner.interactive_session.stdout_lines
-
-  difference = after - before
+  after = Runner.interactive_session.stdout_lines[length_before..]
 
   # Drop lines that include the cat command above. This will sometimes appear
   # once and sometimes appear twice, depending on if another command is running
   # when it's input
-  xml = difference.reject do |line|
+  xml = after.reject do |line|
     line.include?("cat #{path}") || line.include?(uuid)
   end
 
@@ -330,11 +343,11 @@ Then("the iOS app contains the bugsnag API key {string}") do |expected|
   xml = parse_xml_file("ios/#{current_fixture}/Info.plist")
 
   # This XPath does the following:
-  #   1. find the '<key>' with the text 'bugsnag' (ignoring whitespace)
+  #   1. find the '<key>' with the text 'bugsnag'
   #   2. find the following '<dict>' element
   #   3. within the dict, find any '<string>' elements
   # 'get_text' will then fetch the text content of the first element
-  actual_api_key = xml.get_text('//key[text()[normalize-space()="bugsnag"]]/following-sibling::dict/string')
+  actual_api_key = xml.get_text('//key[text()="bugsnag"]/following-sibling::dict/string')
 
   assert_equal(expected, actual_api_key.to_s)
 end
@@ -342,7 +355,7 @@ end
 Then("the Android app contains the bugsnag API key {string}") do |expected|
   xml = parse_xml_file("android/app/src/main/AndroidManifest.xml")
 
-  element = xml.get_elements('//meta-data["com.bugsnag.android.API_KEY"]').first
+  element = xml.get_elements('//meta-data[@android:name="com.bugsnag.android.API_KEY"]').first
   actual_api_key = element["android:value"]
 
   assert_equal(expected, actual_api_key.to_s)
@@ -351,7 +364,7 @@ end
 Then("the iOS app does not contain a bugsnag API key") do
   xml = parse_xml_file("ios/#{current_fixture}/Info.plist")
 
-  actual_api_key = xml.get_text('//key[text()[normalize-space()="bugsnag"]]/following-sibling::dict/string')
+  actual_api_key = xml.get_text('//key[text()="bugsnag"]/following-sibling::dict/string')
 
   assert_nil(actual_api_key)
 end
@@ -359,7 +372,81 @@ end
 Then("the Android app does not contain a bugsnag API key") do
   xml = parse_xml_file("android/app/src/main/AndroidManifest.xml")
 
-  element = xml.get_elements('//meta-data["com.bugsnag.android.API_KEY"]').first
+  element = xml.get_elements('//meta-data[@android:name="com.bugsnag.android.API_KEY"]').first
+
+  assert_nil(element)
+end
+
+Then("the iOS app contains the bugsnag notify URL {string}") do |expected|
+  xml = parse_xml_file("ios/#{current_fixture}/Info.plist")
+
+  # This XPath does the following:
+  #   1. find the '<key>' with the text 'bugsnag'
+  #   2. find the following '<dict>' element
+  #   3. within the dict, find the key with text 'endpoints'
+  #   4. find the following '<dict>' element
+  #   5. within _that_ dict, find the key with the text 'notify'
+  #   6. find the following '<string>' element
+  # 'get_text' will then fetch the text content of the first element
+  actual = xml.get_text('//key[text()="bugsnag"]/following-sibling::dict/key[text()="endpoints"]/following-sibling::dict/key[text()="notify"]/following-sibling::string[1]')
+
+  assert_equal(expected, actual.to_s)
+end
+
+Then("the Android app contains the bugsnag notify URL {string}") do |expected|
+  xml = parse_xml_file("android/app/src/main/AndroidManifest.xml")
+
+  element = xml.get_elements('//meta-data[@android:name="com.bugsnag.android.ENDPOINT_NOTIFY"]').first
+  actual = element["android:value"]
+
+  assert_equal(expected, actual.to_s)
+end
+
+Then("the iOS app does not contain a bugsnag notify URL") do
+  xml = parse_xml_file("ios/#{current_fixture}/Info.plist")
+
+  actual = xml.get_text('//key[text()="bugsnag"]/following-sibling::dict/key[text()="endpoints"]/following-sibling::dict/key[text()="notify"]/following-sibling::string[1]')
+
+  assert_nil(actual)
+end
+
+Then("the Android app does not contain a bugsnag notify URL") do
+  xml = parse_xml_file("android/app/src/main/AndroidManifest.xml")
+
+  element = xml.get_elements('//meta-data[@android:name="com.bugsnag.android.ENDPOINT_NOTIFY"]').first
+
+  assert_nil(element)
+end
+
+Then("the iOS app contains the bugsnag sessions URL {string}") do |expected|
+  xml = parse_xml_file("ios/#{current_fixture}/Info.plist")
+
+  actual = xml.get_text('//key[text()="bugsnag"]/following-sibling::dict/key[text()="endpoints"]/following-sibling::dict/key[text()="sessions"]/following-sibling::string[1]')
+
+  assert_equal(expected, actual.to_s)
+end
+
+Then("the Android app contains the bugsnag sessions URL {string}") do |expected|
+  xml = parse_xml_file("android/app/src/main/AndroidManifest.xml")
+
+  element = xml.get_elements('//meta-data[@android:name="com.bugsnag.android.ENDPOINT_SESSIONS"]').first
+  actual = element["android:value"]
+
+  assert_equal(expected, actual.to_s)
+end
+
+Then("the iOS app does not contain a bugsnag sessions URL") do
+  xml = parse_xml_file("ios/#{current_fixture}/Info.plist")
+
+  actual = xml.get_text('//key[text()="bugsnag"]/following-sibling::dict/key[text()="endpoints"]/following-sibling::dict/key[text()="sessions"]/following-sibling::string[1]')
+
+  assert_nil(actual)
+end
+
+Then("the Android app does not contain a bugsnag sessions URL") do
+  xml = parse_xml_file("android/app/src/main/AndroidManifest.xml")
+
+  element = xml.get_elements('//meta-data[@android:name="com.bugsnag.android.ENDPOINT_SESSIONS"]').first
 
   assert_nil(element)
 end
