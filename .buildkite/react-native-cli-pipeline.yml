@@ -75,7 +75,7 @@ steps:
       - docker-compose#v3.7.0:
           push: react-native-cli-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
 
-  - label: ':android: Build RN 0.60 apk'
+  - label: ':android: Init and build RN 0.60 apk'
     key: 'rn-0-60-apk'
     depends_on:
       - 'android-builder-image'
@@ -88,7 +88,7 @@ steps:
     artifact_paths:
       - build/rn0_60.apk
 
-  - label: ':android: Build RN 0.61 apk'
+  - label: ':android: Init and build RN 0.61 apk'
     key: 'rn-0-61-apk'
     depends_on:
       - 'android-builder-image'
@@ -101,7 +101,7 @@ steps:
     artifact_paths:
       - build/rn0_61.apk
 
-  - label: ':android: Build RN 0.62 apk'
+  - label: ':android: Init and build RN 0.62 apk'
     key: 'rn-0-62-apk'
     depends_on:
       - 'android-builder-image'
@@ -114,7 +114,7 @@ steps:
     artifact_paths:
       - build/rn0_62.apk
 
-  - label: ':android: Build RN 0.63 apk'
+  - label: ':android: Init and build RN 0.63 apk'
     key: 'rn-0-63-apk'
     depends_on:
       - 'android-builder-image'
@@ -174,13 +174,13 @@ steps:
   #
   # Built app end-to-end tests
   #
-  - label: ':android: React Native 0.60 end-to-end tests on Android 11'
+  - label: ':runner: RN 0.60 Android end-to-end tests'
     depends_on: "rn-0-60-apk"
     timeout_in_minutes: 10
     plugins:
       artifacts#v1.2.0:
         download: "build/rn0_60.apk"
-      docker-compose#v3.3.0:
+      docker-compose#v3.7.0:
         run: react-native-cli-maze-runner
         use-aliases: true
         command:
@@ -192,13 +192,13 @@ steps:
     concurrency: 9
     concurrency_group: 'browserstack-app'
 
-  - label: ':android: React Native 0.61 end-to-end tests on Android 11'
+  - label: ':runner: RN 0.61 Android end-to-end tests'
     depends_on: "rn-0-61-apk"
     timeout_in_minutes: 10
     plugins:
       artifacts#v1.2.0:
         download: "build/rn0_61.apk"
-      docker-compose#v3.3.0:
+      docker-compose#v3.7.0:
         run: react-native-cli-maze-runner
         use-aliases: true
         command:
@@ -210,13 +210,13 @@ steps:
     concurrency: 9
     concurrency_group: 'browserstack-app'
 
-  - label: ':android: React Native 0.62 end-to-end tests on Android 11'
+  - label: ':runner: RN 0.62 Android end-to-end tests'
     depends_on: "rn-0-62-apk"
     timeout_in_minutes: 10
     plugins:
       artifacts#v1.2.0:
         download: "build/rn0_62.apk"
-      docker-compose#v3.3.0:
+      docker-compose#v3.7.0:
         run: react-native-cli-maze-runner
         use-aliases: true
         command:
@@ -228,13 +228,13 @@ steps:
     concurrency: 9
     concurrency_group: 'browserstack-app'
 
-  - label: ':android: React Native 0.63 end-to-end tests on Android 11'
+  - label: ':runner: RN 0.63 Android end-to-end tests'
     depends_on: "rn-0-63-apk"
     timeout_in_minutes: 10
     plugins:
       artifacts#v1.2.0:
         download: "build/rn0_63.apk"
-      docker-compose#v3.3.0:
+      docker-compose#v3.7.0:
         run: react-native-cli-maze-runner
         use-aliases: true
         command:
@@ -246,13 +246,13 @@ steps:
     concurrency: 9
     concurrency_group: 'browserstack-app'
 
-  - label: ':ios: React Native 0.60 end-to-end tests on iOS 14'
+  - label: ':runner: RN 0.60 iOS end-to-end tests'
     depends_on: "rn-0-60-ipa"
     timeout_in_minutes: 10
     plugins:
       artifacts#v1.2.0:
         download: "build/rn0_60.ipa"
-      docker-compose#v3.3.0:
+      docker-compose#v3.7.0:
         run: react-native-cli-maze-runner
         use-aliases: true
         command:
@@ -264,13 +264,13 @@ steps:
     concurrency: 9
     concurrency_group: 'browserstack-app'
 
-  - label: ':ios: React Native 0.61 end-to-end tests on iOS 14'
+  - label: ':runner: RN 0.61 iOS end-to-end tests'
     depends_on: "rn-0-61-ipa"
     timeout_in_minutes: 10
     plugins:
       artifacts#v1.2.0:
         download: "build/rn0_61.ipa"
-      docker-compose#v3.3.0:
+      docker-compose#v3.7.0:
         run: react-native-cli-maze-runner
         use-aliases: true
         command:
@@ -282,13 +282,13 @@ steps:
     concurrency: 9
     concurrency_group: 'browserstack-app'
 
-  - label: ':ios: React Native 0.62 end-to-end tests on iOS 14'
+  - label: ':runner: RN 0.62 iOS end-to-end tests'
     depends_on: "rn-0-62-ipa"
     timeout_in_minutes: 10
     plugins:
       artifacts#v1.2.0:
         download: "build/rn0_62.ipa"
-      docker-compose#v3.3.0:
+      docker-compose#v3.7.0:
         run: react-native-cli-maze-runner
         use-aliases: true
         command:
@@ -300,13 +300,13 @@ steps:
     concurrency: 9
     concurrency_group: 'browserstack-app'
 
-  - label: ':ios: React Native 0.63 end-to-end tests on iOS 14'
+  - label: ':runner: RN 0.63 iOS end-to-end tests'
     depends_on: "rn-0-63-ipa"
     timeout_in_minutes: 10
     plugins:
       artifacts#v1.2.0:
         download: "build/rn0_63.ipa"
-      docker-compose#v3.3.0:
+      docker-compose#v3.7.0:
         run: react-native-cli-maze-runner
         use-aliases: true
         command:
