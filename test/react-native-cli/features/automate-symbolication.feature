@@ -17,7 +17,7 @@ Scenario: successfully modify project
         """
         To configure your project to upload dSYMs, follow the iOS symbolication guide:
 
-            https://docs.bugsnag.com/platforms/ios/symbolication-guide/
+        https://docs.bugsnag.com/platforms/ios/symbolication-guide/
 
         This will enable you to see full native stacktraces. It can't be done automatically.
         """
@@ -52,7 +52,7 @@ Scenario: successfully modify project, choosing source-maps version
         """
         To configure your project to upload dSYMs, follow the iOS symbolication guide:
 
-            https://docs.bugsnag.com/platforms/ios/symbolication-guide/
+        https://docs.bugsnag.com/platforms/ios/symbolication-guide/
 
         This will enable you to see full native stacktraces. It can't be done automatically.
         """
@@ -87,7 +87,7 @@ Scenario: opt not to modify the Android project
         """
         To configure your project to upload dSYMs, follow the iOS symbolication guide:
 
-            https://docs.bugsnag.com/platforms/ios/symbolication-guide/
+        https://docs.bugsnag.com/platforms/ios/symbolication-guide/
 
         This will enable you to see full native stacktraces. It can't be done automatically.
         """
@@ -120,7 +120,7 @@ Scenario: opt not to modify the iOS project
         """
         To configure your project to upload dSYMs, follow the iOS symbolication guide:
 
-            https://docs.bugsnag.com/platforms/ios/symbolication-guide/
+        https://docs.bugsnag.com/platforms/ios/symbolication-guide/
 
         This will enable you to see full native stacktraces. It can't be done automatically.
         """
@@ -155,7 +155,7 @@ Scenario: opt not to modify either project
         """
         To configure your project to upload dSYMs, follow the iOS symbolication guide:
 
-            https://docs.bugsnag.com/platforms/ios/symbolication-guide/
+        https://docs.bugsnag.com/platforms/ios/symbolication-guide/
 
         This will enable you to see full native stacktraces. It can't be done automatically.
         """
