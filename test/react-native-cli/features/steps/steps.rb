@@ -29,14 +29,14 @@ When('I run the React Native service interactively') do
   step("I run the service '#{current_fixture}' interactively")
 end
 
-When("I cause a handled JavaScript error") do
+When("I notify a handled JavaScript error") do
   steps %Q{
     Given the element "js_notify" is present within 60 seconds
     And I click the element "js_notify"
   }
 end
 
-When("I cause a handled native error") do
+When("I notify a handled native error") do
   steps %Q{
     Given the element "native_notify" is present within 60 seconds
     And I click the element "native_notify"
