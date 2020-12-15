@@ -1,4 +1,4 @@
-import { spawn } from 'child_process'
+import { spawnSync } from 'child_process'
 import { promises as fs } from 'fs'
 import { join } from 'path'
 import { Logger } from '../Logger'
@@ -17,18 +17,23 @@ export async function install (projectRoot: string, logger: Logger): Promise<voi
     }
     throw e
   }
-  return new Promise((resolve, reject) => {
-    const proc = spawn('pod', ['install'], { cwd: join(projectRoot, 'ios'), stdio: 'inherit' })
 
-    proc.on('error', err => reject(err))
+  const res = spawnSync('pod', ['install'], { cwd: join(projectRoot, 'ios'), stdio: 'inherit' })
 
-    proc.on('close', code => {
-      if (code === 0) return resolve()
-      reject(
-        new Error(
-          `Command exited with non-zero exit code (${code}) "pod install"`
-        )
-      )
-    })
-  })
+  if (res.error) {
+    if ((res.error as NodeJS.ErrnoException).code === 'ENOENT') {
+      logger.warn(COCOAPODS_NOT_FOUND)
+      return
+    }
+
+    throw res.error
+  }
+
+  if (res.status !== 0) {
+    throw new Error(`Command "pod install" exited with non-zero exit code (${res.status})`)
+  }
 }
+
+const COCOAPODS_NOT_FOUND = `Cocoapods does not appear to be installed.
+
+Install it and run "pod install" inside the "ios" directory manaully.`
