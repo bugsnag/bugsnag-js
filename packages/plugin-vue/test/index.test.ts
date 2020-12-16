@@ -3,6 +3,10 @@ import Client from '@bugsnag/core/client'
 import Vue from 'vue'
 
 describe('bugsnag vue', () => {
+  beforeAll(() => {
+    jest.spyOn(console, 'error').mockImplementation(() => {})
+  })
+
   it('throws when missing Vue', () => {
     expect(() => {
       new BugsnagVuePlugin(undefined).load(new Client({ apiKey: 'API_KEYYY' }))

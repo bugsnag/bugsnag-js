@@ -3,6 +3,10 @@ import plugin from '../'
 import Client from '@bugsnag/core/client'
 
 describe('plugin: console breadcrumbs', () => {
+  beforeAll(() => {
+    jest.spyOn(console, 'log').mockImplementation(() => {})
+  })
+
   it('should leave a breadcrumb when console.log() is called', () => {
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', plugins: [plugin] })
     console.log('check 1, 2')

@@ -16,6 +16,10 @@ type FallbackComponentType = React.ComponentType<FallbackComponentProps>
 // eslint-disable-next-line
 const ErrorBoundary = client.getPlugin('react')!.createErrorBoundary()
 
+beforeAll(() => {
+  jest.spyOn(console, 'error').mockImplementation(() => {})
+})
+
 beforeEach(() => (client._notify as jest.Mock).mockClear())
 
 test('formatComponentStack(str)', () => {

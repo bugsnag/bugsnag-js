@@ -125,6 +125,8 @@ describe('delivery:node', () => {
         expect(didLog).toBe(true)
         expect(err).toBeTruthy()
         expect(err.code).toBe('ECONNRESET')
+
+        server.close()
         done()
       })
     })
@@ -149,6 +151,8 @@ describe('delivery:node', () => {
       delivery({ _config: config, _logger: { error: log } } as unknown as Client).sendEvent(payload, (err) => {
         expect(didLog).toBe(true)
         expect(err).toBeTruthy()
+
+        server.close()
         done()
       })
     })

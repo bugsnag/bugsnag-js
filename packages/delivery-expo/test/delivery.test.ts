@@ -241,6 +241,8 @@ describe('delivery: expo', () => {
         expect(err).toBeTruthy()
         expect((err as any).code).toBe('ECONNRESET')
         expect(enqueueSpy).toHaveBeenCalled()
+
+        server.close()
         done()
       })
     })
@@ -268,6 +270,8 @@ describe('delivery: expo', () => {
         expect(didLog).toBe(true)
         expect(err).toBeTruthy()
         expect(enqueueSpy).toHaveBeenCalled()
+
+        server.close()
         done()
       })
     })
