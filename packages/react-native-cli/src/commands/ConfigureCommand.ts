@@ -1,8 +1,11 @@
 import prompts from 'prompts'
 import logger from '../Logger'
 import onCancel from '../lib/OnCancel'
-import { addApiKey as addApiKeyAndroid } from '../lib/AndroidManifest'
-import { addApiKey as addApiKeyIos } from '../lib/InfoPlist'
+import * as android from '../lib/AndroidManifest'
+import * as ios from '../lib/InfoPlist'
+
+const DEFAULT_NOTIFY_ENDPOINT = 'https://notify.bugsnag.com'
+const DEFAULT_SESSIONS_ENDPOINT = 'https://sessions.bugsnag.com'
 
 export default async function run (argv: string[], projectRoot: string, opts: Record<string, unknown>): Promise<void> {
   try {
@@ -17,11 +20,35 @@ export default async function run (argv: string[], projectRoot: string, opts: Re
       }
     }, { onCancel })
 
-    logger.info('Adding API key to AndroidManifest.xml')
-    await addApiKeyAndroid(projectRoot, apiKey, logger)
+    const { notifyEndpoint } = await prompts({
+      type: 'text',
+      name: 'notifyEndpoint',
+      message: 'What is your Bugsnag notify endpoint?',
+      initial: DEFAULT_NOTIFY_ENDPOINT
+    }, { onCancel })
 
-    logger.info('Adding API key to Info.plist')
-    await addApiKeyIos(projectRoot, apiKey, logger)
+    const { sessionsEndpoint } = await prompts({
+      type: 'text',
+      name: 'sessionsEndpoint',
+      message: 'What is your Bugsnag sessions endpoint?',
+      initial: DEFAULT_SESSIONS_ENDPOINT
+    }, { onCancel })
+
+    const options: ios.Options & android.Options = { apiKey }
+
+    if (notifyEndpoint !== DEFAULT_NOTIFY_ENDPOINT) {
+      options.notifyEndpoint = notifyEndpoint
+    }
+
+    if (sessionsEndpoint !== DEFAULT_SESSIONS_ENDPOINT) {
+      options.sessionsEndpoint = sessionsEndpoint
+    }
+
+    logger.info('Updating AndroidManifest.xml')
+    await android.configure(projectRoot, options, logger)
+
+    logger.info('Updating Info.plist')
+    await ios.configure(projectRoot, options, logger)
   } catch (e) {
     logger.error(e)
   }

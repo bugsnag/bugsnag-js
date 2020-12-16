@@ -7,6 +7,9 @@ const GRADLE_PLUGIN_IMPORT_REGEX = /classpath\(["']com\.bugsnag:bugsnag-android-
 const GRADLE_PLUGIN_APPLY = 'apply plugin: "com.bugsnag.android.gradle"'
 const GRADLE_PLUGIN_APPLY_REGEX = /apply plugin: ["']com\.bugsnag\.android\.gradle["']/
 const DOCS_LINK = 'https://docs.bugsnag.com/build-integrations/gradle/#installation'
+const ENABLE_REACT_NATIVE_MAPPINGS = 'bugsnag {\n  uploadReactNativeMappings = true\n}\n'
+const ENABLE_REACT_NATIVE_MAPPINGS_REGEX = /^\s*bugsnag {[^}]*uploadReactNativeMappings[^}]*?}/m
+const CUSTOM_ENDPOINT_REGEX = /^\s*bugsnag {[^}]*endpoint[^}]*?}/m
 
 export async function modifyRootBuildGradle (projectRoot: string, pluginVersion: string, logger: Logger): Promise<void> {
   logger.debug('Looking for android/build.gradle')
@@ -48,6 +51,7 @@ export async function modifyAppBuildGradle (projectRoot: string, logger: Logger)
   logger.debug('Looking for android/app/build.gradle')
   const appBuildGradlePath = path.join(projectRoot, 'android', 'app', 'build.gradle')
   logger.debug('Applying com.bugsnag.android.gradle plugin')
+
   try {
     await insertValueAfterPattern(
       appBuildGradlePath,
@@ -77,7 +81,115 @@ See ${DOCS_LINK} for more information`
       throw e
     }
   }
+
   logger.success('Finished modifying android/app/build.gradle')
+}
+
+export async function enableReactNativeMappings (projectRoot: string, endpoint: string|null, logger: Logger): Promise<void> {
+  logger.debug('Enabling Bugsnag Android Gradle plugin React Native mappings')
+  const appBuildGradlePath = path.join(projectRoot, 'android', 'app', 'build.gradle')
+
+  try {
+    const fileContents = await fs.readFile(appBuildGradlePath, 'utf8')
+
+    // If the file contains a 'bugsnag' configuration section already, add the
+    // 'uploadReactNativeMappings' flag to it
+    if (/^\s*bugsnag {/m.test(fileContents)) {
+      await insertValueAfterPattern(
+        appBuildGradlePath,
+        /^\s*bugsnag {[^}]*?(?=})/m,
+        '  uploadReactNativeMappings = true\n',
+        ENABLE_REACT_NATIVE_MAPPINGS_REGEX,
+        logger
+      )
+    } else {
+      // If the file doesn't contain bugsnag config already, add it now
+      await insertValueAfterPattern(
+        appBuildGradlePath,
+        /$/,
+        ENABLE_REACT_NATIVE_MAPPINGS,
+        ENABLE_REACT_NATIVE_MAPPINGS_REGEX,
+        logger
+      )
+    }
+  } catch (e) {
+    if (e.message === 'Pattern not found') {
+      logger.warn(
+        `The gradle file was in an unexpected format and so couldn't be updated automatically.
+
+Enable React Native mappings to your app module's build.gradle:
+
+${ENABLE_REACT_NATIVE_MAPPINGS}
+
+See ${DOCS_LINK} for more information`
+      )
+
+      return
+    }
+
+    if (e.code === 'ENOENT') {
+      logger.warn(
+        `A gradle file was not found at the expected location and so couldn't be updated automatically.
+
+Enable React Native mappings to your app module's build.gradle:
+
+${ENABLE_REACT_NATIVE_MAPPINGS}
+
+See ${DOCS_LINK} for more information`
+      )
+
+      return
+    }
+
+    throw e
+  }
+
+  // If there is no custom endpoint or editing the gradle file failed then we
+  // can stop here
+  if (endpoint === null) {
+    return
+  }
+
+  try {
+    // We know the 'bugsnag' section must exist after enabling RN mappings
+    await insertValueAfterPattern(
+      appBuildGradlePath,
+      /^\s*bugsnag {[^}]*?(?=})/m,
+      `  endpoint = "${endpoint}"\n`,
+      CUSTOM_ENDPOINT_REGEX,
+      logger
+    )
+  } catch (e) {
+    if (e.message === 'Pattern not found') {
+      logger.warn(
+        `The gradle file was in an unexpected format and so couldn't be updated automatically.
+
+Add your upload endpoint to your app module's build.gradle:
+
+bugsnag{
+  endpoint = "${endpoint}"
+}
+
+See ${DOCS_LINK} for more information`
+      )
+    } else if (e.code === 'ENOENT') {
+      logger.warn(
+        `A gradle file was not found at the expected location and so couldn't be updated automatically.
+
+Add your upload endpoint to your app module's build.gradle:
+
+bugsnag{
+  endpoint = "${endpoint}"
+}
+
+See ${DOCS_LINK} for more information`
+      )
+    } else {
+      throw e
+    }
+  }
+
+  logger.success('React Native mappings enabled in android/app/build.gradle')
 }
 
 async function insertValueAfterPattern (file: string, pattern: RegExp, value: string, presencePattern: RegExp, logger: Logger): Promise<void> {
