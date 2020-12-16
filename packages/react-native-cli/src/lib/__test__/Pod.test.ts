@@ -1,9 +1,12 @@
 import { install } from '../Pod'
 import path from 'path'
 import { promises as fs } from 'fs'
-import { spawn, ChildProcess } from 'child_process'
-import { EventEmitter } from 'events'
+import { spawnSync } from 'child_process'
 import logger from '../../Logger'
+
+jest.mock('os', () => ({
+  platform: () => 'darwin'
+}))
 
 async function generateNotFoundError () {
   try {
@@ -13,9 +16,9 @@ async function generateNotFoundError () {
   }
 }
 
-jest.mock('fs', () => {
-  return { promises: { readFile: jest.fn(), writeFile: jest.fn(), readdir: jest.fn() } }
-})
+jest.mock('fs', () => ({
+  promises: { readFile: jest.fn(), writeFile: jest.fn(), readdir: jest.fn() }
+}))
 jest.mock('child_process')
 jest.mock('../../Logger')
 
@@ -26,12 +29,8 @@ test('install(): success', async () => {
   const readdirMock = fs.readdir as unknown as jest.MockedFunction<readdir>
   readdirMock.mockResolvedValue(['Pods', 'MyProject', 'MyProject.xcodeproj', 'Podfile'])
 
-  const spawnMock = spawn as jest.MockedFunction<typeof spawn>
-  spawnMock.mockImplementation(() => {
-    const ee = new EventEmitter() as ChildProcess
-    process.nextTick(() => ee.emit('close', 0))
-    return ee
-  })
+  const spawnMock = spawnSync as jest.MockedFunction<typeof spawnSync>
+  spawnMock.mockReturnValue({ status: 0 })
 
   await install('/example/dir', logger)
   expect(spawnMock).toHaveBeenCalledWith('pod', ['install'], { cwd: '/example/dir/ios', stdio: 'inherit' })
@@ -42,12 +41,8 @@ test('install(): no podfile', async () => {
   const readdirMock = fs.readdir as unknown as jest.MockedFunction<readdir>
   readdirMock.mockResolvedValue(['Pods', 'MyProject', 'MyProject.xcodeproj'])
 
-  const spawnMock = spawn as jest.MockedFunction<typeof spawn>
-  spawnMock.mockImplementation(() => {
-    const ee = new EventEmitter() as ChildProcess
-    process.nextTick(() => ee.emit('close', 0))
-    return ee
-  })
+  const spawnMock = spawnSync as jest.MockedFunction<typeof spawnSync>
+  spawnMock.mockReturnValue({ status: 0 })
 
   await install('/example/dir', logger)
   expect(spawnMock).not.toHaveBeenCalled()
@@ -59,12 +54,8 @@ test('install(): no ios dir', async () => {
   const readdirMock = fs.readdir as unknown as jest.MockedFunction<readdir>
   readdirMock.mockRejectedValue(await generateNotFoundError())
 
-  const spawnMock = spawn as jest.MockedFunction<typeof spawn>
-  spawnMock.mockImplementation(() => {
-    const ee = new EventEmitter() as ChildProcess
-    process.nextTick(() => ee.emit('close', 0))
-    return ee
-  })
+  const spawnMock = spawnSync as jest.MockedFunction<typeof spawnSync>
+  spawnMock.mockReturnValue({ status: 0 })
 
   await install('/example/dir', logger)
   expect(spawnMock).not.toHaveBeenCalled()
@@ -76,15 +67,28 @@ test('install(): bad exit code', async () => {
   const readdirMock = fs.readdir as unknown as jest.MockedFunction<readdir>
   readdirMock.mockResolvedValue(['Pods', 'MyProject', 'MyProject.xcodeproj', 'Podfile'])
 
-  const spawnMock = spawn as jest.MockedFunction<typeof spawn>
-  spawnMock.mockImplementation(() => {
-    const ee = new EventEmitter() as ChildProcess
-    process.nextTick(() => ee.emit('close', 1))
-    return ee
-  })
+  const spawnMock = spawnSync as jest.MockedFunction<typeof spawnSync>
+  spawnMock.mockReturnValue({ status: 1 })
 
-  await expect(install('/example/dir', logger)).rejects.toThrow('Command exited with non-zero exit code (1) "pod install"')
+  await expect(install('/example/dir', logger)).rejects.toThrow('Command "pod install" exited with non-zero exit code (1)')
   expect(spawnMock).toHaveBeenCalledWith('pod', ['install'], { cwd: '/example/dir/ios', stdio: 'inherit' })
+})
+
+test('install(): ENOENT error from cocoapods', async () => {
+  type readdir = (path: string) => Promise<string[]>
+  const readdirMock = fs.readdir as unknown as jest.MockedFunction<readdir>
+  readdirMock.mockResolvedValue(['Pods', 'MyProject', 'MyProject.xcodeproj', 'Podfile'])
+
+  const error = new Error('oh dear')
+  error.code = 'ENOENT'
+
+  const spawnMock = spawnSync as jest.MockedFunction<typeof spawnSync>
+  spawnMock.mockImplementation(() => ({ error, status: 255 }))
+
+  await install('/example/dir', logger)
+
+  expect(spawnMock).toHaveBeenCalledWith('pod', ['install'], { cwd: '/example/dir/ios', stdio: 'inherit' })
+  expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining('Cocoapods does not appear to be installed.'))
 })
 
 test('install(): unknown child process error', async () => {
@@ -92,12 +96,8 @@ test('install(): unknown child process error', async () => {
   const readdirMock = fs.readdir as unknown as jest.MockedFunction<readdir>
   readdirMock.mockResolvedValue(['Pods', 'MyProject', 'MyProject.xcodeproj', 'Podfile'])
 
-  const spawnMock = spawn as jest.MockedFunction<typeof spawn>
-  spawnMock.mockImplementation(() => {
-    const ee = new EventEmitter() as ChildProcess
-    process.nextTick(() => ee.emit('error', new Error('uh oh')))
-    return ee
-  })
+  const spawnMock = spawnSync as jest.MockedFunction<typeof spawnSync>
+  spawnMock.mockImplementation(() => { throw new Error('uh oh') })
 
   await expect(install('/example/dir', logger)).rejects.toThrow('uh oh')
   expect(spawnMock).toHaveBeenCalledWith('pod', ['install'], { cwd: '/example/dir/ios', stdio: 'inherit' })
@@ -108,7 +108,7 @@ test('install(): unknown error', async () => {
   const readdirMock = fs.readdir as unknown as jest.MockedFunction<readdir>
   readdirMock.mockRejectedValue(new Error('uh oh'))
 
-  const spawnMock = spawn as jest.MockedFunction<typeof spawn>
+  const spawnMock = spawnSync as jest.MockedFunction<typeof spawnSync>
 
   await expect(install('/example/dir', logger)).rejects.toThrow('uh oh')
   expect(spawnMock).not.toHaveBeenCalled()
