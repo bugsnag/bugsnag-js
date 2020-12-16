@@ -7,6 +7,14 @@ import { enableReactNativeMappings } from '../lib/Gradle'
 
 const DEFAULT_UPLOAD_ENDPOINT = 'https://upload.bugsnag.com'
 
+const DSYM_INSTRUCTIONS = `To configure your project to upload dSYMs, follow the iOS symbolication guide:
+
+    https://docs.bugsnag.com/platforms/ios/symbolication-guide/
+
+  This will enable you to see full native stacktraces. It can't be done automatically.
+
+`
+
 export default async function run (argv: string[], projectRoot: string, opts: Record<string, unknown>): Promise<void> {
   try {
     let uploadEndpoint: string|null = null
@@ -24,6 +32,13 @@ export default async function run (argv: string[], projectRoot: string, opts: Re
       logger.info('Modifying the Xcode project')
       await updateXcodeProject(projectRoot, nullIfDefault(uploadEndpoint), logger)
     }
+
+    await prompts({
+      type: 'text',
+      name: 'dsymUploadInstructions',
+      message: DSYM_INSTRUCTIONS,
+      initial: 'Hit enter to continue …'
+    }, { onCancel })
 
     const { androidIntegration } = await prompts({
       type: 'confirm',
