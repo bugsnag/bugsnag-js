@@ -7,7 +7,7 @@ import { enableReactNativeMappings } from '../lib/Gradle'
 
 const DEFAULT_UPLOAD_ENDPOINT = 'https://upload.bugsnag.com'
 
-export default async function run (argv: string[], projectRoot: string, opts: Record<string, unknown>): Promise<void> {
+export default async function run (argv: string[], projectRoot: string, opts: Record<string, unknown>): Promise<boolean> {
   try {
     let uploadEndpoint: string|null = null
 
@@ -41,8 +41,10 @@ export default async function run (argv: string[], projectRoot: string, opts: Re
     if (androidIntegration || iosIntegration) {
       await installJavaScriptPackage(projectRoot)
     }
+    return true
   } catch (e) {
     logger.error(e)
+    return false
   }
 }
 

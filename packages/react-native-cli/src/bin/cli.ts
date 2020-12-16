@@ -49,10 +49,11 @@ export default async function run (argv: string[]): Promise<void> {
     switch (opts.command) {
       case 'init':
         await repoStatePreCommand(remainingOpts, projectRoot, opts)
-        await install(remainingOpts, projectRoot, opts)
-        await insert(remainingOpts, projectRoot, opts)
-        await configure(remainingOpts, projectRoot, opts)
-        await automateSymbolication(remainingOpts, projectRoot, opts)
+        if (!await install(remainingOpts, projectRoot, opts)) return
+        if (!await insert(remainingOpts, projectRoot, opts)) return
+        if (!await configure(remainingOpts, projectRoot, opts)) return
+        if (!await automateSymbolication(remainingOpts, projectRoot, opts)) return
+        logger.success('Finished')
         break
       case 'insert':
         await repoStatePreCommand(remainingOpts, projectRoot, opts)

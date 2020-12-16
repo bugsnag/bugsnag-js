@@ -5,15 +5,17 @@ import { install as podInstall } from '../lib/Pod'
 import onCancel from '../lib/OnCancel'
 import { modifyRootBuildGradle, modifyAppBuildGradle } from '../lib/Gradle'
 
-export default async function run (argv: string[], projectRoot: string, opts: Record<string, unknown>): Promise<void> {
+export default async function run (argv: string[], projectRoot: string, opts: Record<string, unknown>): Promise<boolean> {
   try {
     await installJavaScriptPackage(projectRoot)
     await addGradlePluginDependency(projectRoot)
 
     logger.info('Installing cocoapods')
     await podInstall(projectRoot, logger)
+    return true
   } catch (e) {
     logger.error(e)
+    return false
   }
 }
 
