@@ -7,7 +7,7 @@ import * as ios from '../lib/InfoPlist'
 const DEFAULT_NOTIFY_ENDPOINT = 'https://notify.bugsnag.com'
 const DEFAULT_SESSIONS_ENDPOINT = 'https://sessions.bugsnag.com'
 
-export default async function run (argv: string[], projectRoot: string, opts: Record<string, unknown>): Promise<void> {
+export default async function run (argv: string[], projectRoot: string, opts: Record<string, unknown>): Promise<boolean> {
   try {
     const { apiKey } = await prompts({
       type: 'text',
@@ -49,7 +49,9 @@ export default async function run (argv: string[], projectRoot: string, opts: Re
 
     logger.info('Updating Info.plist')
     await ios.configure(projectRoot, options, logger)
+    return true
   } catch (e) {
     logger.error(e)
+    return false
   }
 }
