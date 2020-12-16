@@ -4,6 +4,10 @@ import { promises as fs } from 'fs'
 import { spawnSync } from 'child_process'
 import logger from '../../Logger'
 
+jest.mock('os', () => ({
+  platform: () => 'darwin'
+}))
+
 async function generateNotFoundError () {
   try {
     await jest.requireActual('fs').promises.readdir(path.join(__dirname, 'does-not-exist'))

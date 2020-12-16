@@ -2,8 +2,14 @@ import { spawnSync } from 'child_process'
 import { promises as fs } from 'fs'
 import { join } from 'path'
 import { Logger } from '../Logger'
+import { platform } from 'os'
 
 export async function install (projectRoot: string, logger: Logger): Promise<void> {
+  if (platform() !== 'darwin') {
+    logger.warn('Detected platform is not macOS, skipping')
+    return
+  }
+
   try {
     const iosDirList = await fs.readdir(join(projectRoot, 'ios'))
     if (!iosDirList.includes('Podfile')) {
