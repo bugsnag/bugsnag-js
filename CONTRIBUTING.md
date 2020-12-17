@@ -106,6 +106,12 @@ Finally:
 - use the tag vX.Y.Z as the name of the release
 - copy the release notes from `CHANGELOG.md`
 - publish the release
+- update and push `next`:
+    ```
+    git checkout next
+    git merge master
+    git push
+    ```
 
 ### Prereleases
 

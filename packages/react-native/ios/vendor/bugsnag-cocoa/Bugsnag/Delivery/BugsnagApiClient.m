@@ -9,7 +9,6 @@
 #import "Bugsnag.h"
 #import "BugsnagKeys.h"
 #import "BugsnagLogger.h"
-#import "Private.h"
 #import "BSGJSONSerialization.h"
 
 #import <CommonCrypto/CommonCrypto.h>

@@ -24,35 +24,17 @@
 // THE SOFTWARE.
 //
 
-#import "BugsnagErrorReportSink.h"
+#import "BugsnagErrorReportSink+Private.h"
 
 #import "BSG_KSSystemInfo.h"
-#import "Bugsnag.h"
+#import "Bugsnag+Private.h"
 #import "BugsnagClient+Private.h"
 #import "BugsnagCollections.h"
+#import "BugsnagConfiguration+Private.h"
 #import "BugsnagEvent+Private.h"
 #import "BugsnagKeys.h"
 #import "BugsnagLogger.h"
 #import "BugsnagNotifier.h"
-#import "Private.h"
-
-// This is private in Bugsnag, but really we want package private so define
-// it here.
-@interface Bugsnag ()
-+ (BugsnagClient *)client;
-@end
-
-@interface BugsnagNotifier ()
-- (NSDictionary *)toDict;
-@end
-
-@interface BugsnagConfiguration ()
-@property(nonatomic, readwrite, strong) NSMutableArray *onSendBlocks;
-- (NSDictionary *_Nonnull)errorApiHeaders;
-- (NSDictionary *_Nonnull)sessionApiHeaders;
-@property(readonly, retain, nullable) NSURL *sessionURL;
-@property(readonly, retain, nullable) NSURL *notifyURL;
-@end
 
 @interface BugsnagErrorReportSink ()
 @property NSMutableSet<NSString *> *activeRequests;
@@ -162,10 +144,10 @@
  */
 - (NSDictionary *)prepareEventPayload:(BugsnagEvent *)event {
     NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
-    BSGDictSetSafeObject(data, [[Bugsnag client].notifier toDict], BSGKeyNotifier);
-    BSGDictSetSafeObject(data, event.apiKey, BSGKeyApiKey);
-    BSGDictSetSafeObject(data, @"4.0", @"payloadVersion");
-    BSGDictSetSafeObject(data, @[[event toJson]], BSGKeyEvents);
+    data[BSGKeyNotifier] = [[Bugsnag client].notifier toDict];
+    data[BSGKeyApiKey] = event.apiKey;
+    data[BSGKeyPayloadVersion] = @"4.0";
+    data[BSGKeyEvents] = @[[event toJson]];
     return data;
 }
 

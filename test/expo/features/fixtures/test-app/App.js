@@ -13,6 +13,7 @@ import ManualBreadcrumbs from './app/manual_breadcrumbs'
 import DeviceFeature from './app/device'
 import Sessions from './app/sessions'
 import NetworkBreadcrumbs from './app/network_breadcrumbs'
+import * as ScreenOrientation from 'expo-screen-orientation';
 
 const SCENARIOS = [
   'handled',
@@ -36,6 +37,7 @@ export default class App extends React.Component {
     this.state = {
       scenario: null
     }
+    ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
   }
 
   renderScenario() {

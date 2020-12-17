@@ -137,8 +137,13 @@ steps:
     concurrency_group: 'browserstack-app'
 
   - block: "Trigger full test suite"
+    key: "trigger-full-suite"
 
   - label: ':runner: expo Android 8'
+    depends_on:
+      - "trigger-full-suite"
+      - "build-expo-apk"
+      - "expo-maze-runner-image"
     timeout_in_minutes: 50
     plugins:
       artifacts#v1.2.0:
@@ -155,12 +160,18 @@ steps:
           - --access-key=$BROWSER_STACK_ACCESS_KEY
           - --fail-fast
           - --retry=2
+          - --appium-version=1.18.0
+          - --capabilities={"appWaitForLaunch":"false"}
     concurrency: 9
     concurrency_group: 'browserstack-app'
     soft_fail:
       - exit_status: "*"
 
   - label: ':runner: expo Android 7'
+    depends_on:
+      - "trigger-full-suite"
+      - "build-expo-apk"
+      - "expo-maze-runner-image"
     timeout_in_minutes: 50
     plugins:
       artifacts#v1.2.0:
@@ -181,6 +192,10 @@ steps:
     concurrency_group: 'browserstack-app'
 
   - label: ':runner: expo Android 6'
+    depends_on:
+      - "trigger-full-suite"
+      - "build-expo-apk"
+      - "expo-maze-runner-image"
     timeout_in_minutes: 50
     plugins:
       artifacts#v1.2.0:
@@ -201,6 +216,10 @@ steps:
     concurrency_group: 'browserstack-app'
 
   - label: ':runner: expo Android 5'
+    depends_on:
+      - "trigger-full-suite"
+      - "build-expo-apk"
+      - "expo-maze-runner-image"
     timeout_in_minutes: 50
     plugins:
       artifacts#v1.2.0:
@@ -221,6 +240,10 @@ steps:
     concurrency_group: 'browserstack-app'
 
   - label: ':runner: expo iOS 11'
+    depends_on:
+      - "trigger-full-suite"
+      - "build-expo-ipa"
+      - "expo-maze-runner-image"
     timeout_in_minutes: 50
     plugins:
       artifacts#v1.2.0:
@@ -243,6 +266,10 @@ steps:
     concurrency_group: 'browserstack-app'
 
   - label: ':runner: expo iOS 10'
+    depends_on:
+      - "trigger-full-suite"
+      - "build-expo-ipa"
+      - "expo-maze-runner-image"
     timeout_in_minutes: 50
     plugins:
       artifacts#v1.2.0:

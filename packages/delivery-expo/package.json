@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/delivery-expo",
-  "version": "7.5.3",
+  "version": "7.5.4",
   "main": "delivery.js",
   "description": "@bugsnag/js delivery mechanism to send events and sessions from Expo, using the FileSystem API to cache and retry sending failed payloads",
   "homepage": "https://www.bugsnag.com/",
@@ -18,11 +18,11 @@
   "license": "MIT",
   "dependencies": {
     "@react-native-community/netinfo": "5.9.6",
-    "expo-file-system": "~9.2",
-    "expo-crypto": "~8.3.0"
+    "expo-crypto": "~8.3.0",
+    "expo-file-system": "~9.2"
   },
   "devDependencies": {
-    "@bugsnag/core": "^7.5.3"
+    "@bugsnag/core": "^7.5.4"
   },
   "peerDependencies": {
     "@bugsnag/core": "^7.0.0"
