@@ -161,7 +161,7 @@ See ${DOCS_LINK} for more information`
   logger.success('React Native mappings enabled in android/app/build.gradle')
 }
 
-async function addUploadEndpoint(appBuildGradlePath: string, uploadEndpoint: string, logger: Logger): Promise<void> {
+async function addUploadEndpoint (appBuildGradlePath: string, uploadEndpoint: string, logger: Logger): Promise<void> {
   try {
     // We know the 'bugsnag' section must exist after enabling RN mappings
     await insertValueAfterPattern(
@@ -202,7 +202,7 @@ See ${DOCS_LINK} for more information`
   }
 }
 
-async function addBuildEndpoint(appBuildGradlePath: string, buildEndpoint: string, logger: Logger): Promise<void> {
+async function addBuildEndpoint (appBuildGradlePath: string, buildEndpoint: string, logger: Logger): Promise<void> {
   try {
     // We know the 'bugsnag' section must exist after enabling RN mappings
     await insertValueAfterPattern(
@@ -229,7 +229,7 @@ See ${DOCS_LINK} for more information`
       logger.warn(
         `A gradle file was not found at the expected location and so couldn't be updated automatically.
 
-Add your upload endpoint to your app module's build.gradle:
+Add your build endpoint to your app module's build.gradle:
 
 bugsnag {
   endpoint = "${buildEndpoint}"
