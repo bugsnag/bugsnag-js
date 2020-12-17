@@ -2,11 +2,14 @@ import commandLineArgs from 'command-line-args'
 import commandLineUsage from 'command-line-usage'
 import logger from '../Logger'
 
+import { UrlType } from '../lib/OnPremise'
+
 import automateSymbolication from '../commands/AutomateSymbolicationCommand'
 import install from '../commands/InstallCommand'
 import configure from '../commands/ConfigureCommand'
 import insert from '../commands/InsertCommand'
 import repoStatePreCommand from '../commands/RepoStatePreCommand'
+import getOnPremiseUrls from '../commands/OnPremiseUrlsCommand'
 
 const topLevelDefs = [
   {
@@ -47,37 +50,57 @@ export default async function run (argv: string[]): Promise<void> {
 
     const remainingOpts = opts._unknown || []
     switch (opts.command) {
-      case 'init':
+      case 'init': {
         await repoStatePreCommand(remainingOpts, projectRoot, opts)
+
+        const urls = await getOnPremiseUrls(UrlType.NOTIFY, UrlType.SESSIONS, UrlType.UPLOAD, UrlType.BUILD)
+
         if (!await install(remainingOpts, projectRoot, opts)) return
         if (!await insert(remainingOpts, projectRoot, opts)) return
-        if (!await configure(remainingOpts, projectRoot, opts)) return
-        if (!await automateSymbolication(remainingOpts, projectRoot, opts)) return
+        if (!await configure(projectRoot, urls)) return
+        if (!await automateSymbolication(projectRoot, urls)) return
         logger.success('Finished')
         break
-      case 'insert':
+      }
+
+      case 'insert': {
         await repoStatePreCommand(remainingOpts, projectRoot, opts)
         await insert(remainingOpts, projectRoot, opts)
         break
-      case 'configure':
+      }
+
+      case 'configure': {
         await repoStatePreCommand(remainingOpts, projectRoot, opts)
-        await configure(remainingOpts, projectRoot, opts)
+
+        const urls = await getOnPremiseUrls(UrlType.NOTIFY, UrlType.SESSIONS)
+
+        await configure(projectRoot, urls)
         break
-      case 'install':
+      }
+
+      case 'install': {
         await repoStatePreCommand(remainingOpts, projectRoot, opts)
         await install(remainingOpts, projectRoot, opts)
         break
-      case 'automate-symbolication':
+      }
+
+      case 'automate-symbolication': {
         await repoStatePreCommand(remainingOpts, projectRoot, opts)
-        await automateSymbolication(remainingOpts, projectRoot, opts)
+
+        const urls = await getOnPremiseUrls(UrlType.UPLOAD, UrlType.BUILD)
+
+        await automateSymbolication(projectRoot, urls)
         break
-      default:
+      }
+
+      default: {
         if (opts.command) {
           logger.error(`Unrecognized command "${opts.command}".`)
         } else {
           logger.error('Command expected, nothing provided.')
         }
         usage()
+      }
     }
   } catch (e) {
     logger.error(`Invalid options. ${e.message}`)

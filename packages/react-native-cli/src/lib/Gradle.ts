@@ -88,8 +88,8 @@ See ${DOCS_LINK} for more information`
 
 export async function enableReactNativeMappings (
   projectRoot: string,
-  uploadEndpoint: string|null,
-  buildEndpoint: string|null,
+  uploadEndpoint: string|undefined,
+  buildEndpoint: string|undefined,
   logger: Logger
 ): Promise<void> {
   logger.debug('Enabling Bugsnag Android Gradle plugin React Native mappings')
