@@ -76,8 +76,7 @@ steps:
 
   - label: 'Trigger React Native CLI pipeline'
     depends_on:
-# TODO: Reinstate once triggered pipeline has evolved to require the published artifact
-#      - 'publish-js'
+      - 'publish-js'
       - 'android-builder-base'
     trigger: 'bugsnag-js-react-native-cli'
     build:
