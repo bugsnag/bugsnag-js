@@ -232,7 +232,7 @@ See ${DOCS_LINK} for more information`
 Add your build endpoint to your app module's build.gradle:
 
 bugsnag {
-  endpoint = "${buildEndpoint}"
+  releasesEndpoint = "${buildEndpoint}"
 }
 
 See ${DOCS_LINK} for more information`
