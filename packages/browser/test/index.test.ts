@@ -29,6 +29,11 @@ function mockFetch () {
 }
 
 describe('browser notifier', () => {
+  beforeAll(() => {
+    jest.spyOn(console, 'debug').mockImplementation(() => {})
+    jest.spyOn(console, 'warn').mockImplementation(() => {})
+  })
+
   beforeEach(() => {
     jest.resetModules()
     mockFetch()

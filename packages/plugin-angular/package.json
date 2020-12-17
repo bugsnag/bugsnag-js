@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-angular",
-  "version": "7.5.3",
+  "version": "7.5.4",
   "description": "Angular integration for bugsnag-js",
   "main": "dist/esm5/index.js",
   "browser": "dist/esm5/index.js",
@@ -25,7 +25,7 @@
     "build": "npm run clean && npm run build:esm2015 && npm run build:esm5",
     "build:esm2015": "ngc -p tsconfig.json",
     "build:esm5": "ngc -p tsconfig.esm5.json",
-    "test": "npm run build",
+    "test:types": "npm run build",
     "postversion": "npm run build"
   },
   "author": "Bugsnag",
@@ -35,7 +35,7 @@
     "@angular/compiler": "^7.2.15",
     "@angular/compiler-cli": "^7.2.15",
     "@angular/core": "^7.2.15",
-    "@bugsnag/js": "^7.5.3",
+    "@bugsnag/js": "^7.5.4",
     "rxjs": "^5.5.8",
     "typescript": "^3.2.4",
     "zone.js": "^0.8.26"

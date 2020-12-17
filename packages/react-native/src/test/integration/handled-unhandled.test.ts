@@ -54,6 +54,8 @@ declare global {
 // we can only start bugsnag once per file, because it installs global handlers
 // and doesn't have a way to uninstall itself
 beforeAll(() => {
+  jest.spyOn(console, 'debug').mockImplementation(() => {})
+
   // leaving the default handler intact causes simulated unhandled errors to fail tests
   global.ErrorUtils.setGlobalHandler(() => {})
   Bugsnag.start()
@@ -94,7 +96,6 @@ describe('@bugsnag/react-native: handled and unhandled errors', () => {
       // @ts-ignore
       'sdf'.sdflkj()
     } catch (e) {
-      console.log(e)
       rnPromise.reject(e)
     }
     setTimeout(() => {
