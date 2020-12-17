@@ -1,12 +1,5 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
-
 import React, {Fragment} from 'react';
+import Bugsnag from "@bugsnag/react-native";
 import {
   SafeAreaView,
   StyleSheet,
@@ -14,15 +7,26 @@ import {
   View,
   Text,
   StatusBar,
-} from 'react-native';
+  Button, NativeModules
+} from 'react-native'
 
 import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
+  Colors
 } from 'react-native/Libraries/NewAppScreen';
+
+function jsNotify() {
+  try { // execute crashy code
+    iMadeThisUp();
+  } catch (error) {
+    console.log('Bugsnag.notify JS error')
+    Bugsnag.notify(error);
+  }
+}
+
+function nativeNotify() {
+  console.log('Bugsnag.notify native error')
+  NativeModules.CrashyCrashy.handledError()
+}
 
 const App = () => {
   return (
@@ -32,39 +36,21 @@ const App = () => {
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
           style={styles.scrollView}>
-          <Header />
           {global.HermesInternal == null ? null : (
             <View style={styles.engine}>
               <Text style={styles.footer}>Engine: Hermes</Text>
             </View>
           )}
           <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.js</Text> to change this
-                screen and then come back to see your edits.
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
+            <Text>React Native CLI end-to-end test app</Text>
+            <Button style={styles.clickyButton}
+                    accessibilityLabel='js_notify'
+                    title='JS Notify'
+                    onPress={jsNotify}/>
+            <Button style={styles.clickyButton}
+                    accessibilityLabel='native_notify'
+                    title='Native Notify'
+                    onPress={nativeNotify}/>
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -109,6 +95,14 @@ const styles = StyleSheet.create({
     paddingRight: 12,
     textAlign: 'right',
   },
+  clickyButton: {
+    backgroundColor: '#acbcef',
+    borderWidth: 0.5,
+    borderColor: '#000',
+    borderRadius: 4,
+    margin: 5,
+    padding: 5
+  }
 });
 
 export default App;

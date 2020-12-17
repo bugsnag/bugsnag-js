@@ -1,6 +1,6 @@
 FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/js:android-builder-base
 
-RUN apt-get install -y nodejs rsync
+RUN apt-get install -y nodejs rsync expect
 
 RUN npm i -g run-func
 
@@ -8,8 +8,10 @@ WORKDIR /app
 
 # npm auth
 RUN rm -f ~/.npmrc
+ARG REGISTRY_URL
 ARG REG_BASIC_CREDENTIAL
 ARG REG_NPM_EMAIL
+RUN echo "registry=$REGISTRY_URL" >> ~/.npmrc
 RUN echo "_auth=$REG_BASIC_CREDENTIAL" >> ~/.npmrc
 RUN echo "email=$REG_NPM_EMAIL" >> ~/.npmrc
 RUN echo "always-auth=true" >> ~/.npmrc

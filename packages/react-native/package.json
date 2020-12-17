@@ -38,7 +38,8 @@
     "ios/vendor/bugsnag-cocoa/Bugsnag.podspec.json",
     "BugsnagReactNative.podspec",
     "react-native.config.js",
-    "bugsnag-react-native.gradle"
+    "bugsnag-react-native.gradle",
+    "bugsnag-react-native-xcode.sh"
   ],
   "author": "Bugsnag",
   "license": "MIT",

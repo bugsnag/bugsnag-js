@@ -19,6 +19,7 @@
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		970AD54C972C4737F6F8FFB7 /* libPods-rn0_63-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C4D03E2F3C04CDCFDC1D2AC8 /* libPods-rn0_63-tvOS.a */; };
 		A8803100BCC0F7B6EE79CBA4 /* libPods-rn0_63-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 39F1958968D79114AC2C5ED2 /* libPods-rn0_63-tvOSTests.a */; };
+		AA578F1D2588C8CC006B3C61 /* CrashyCrashy.m in Sources */ = {isa = PBXBuildFile; fileRef = AA578F1B2588C8CC006B3C61 /* CrashyCrashy.m */; };
 		E7643CED6E8189C59AF7A360 /* libPods-rn0_63-rn0_63Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED996B2B64B976EC89A53BC4 /* libPods-rn0_63-rn0_63Tests.a */; };
 /* End PBXBuildFile section */
 
@@ -59,6 +60,8 @@
 		39F1958968D79114AC2C5ED2 /* libPods-rn0_63-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-rn0_63-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		76F8C8663ADAD62A49F15AC1 /* libPods-rn0_63.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-rn0_63.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = rn0_63/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		AA578F1B2588C8CC006B3C61 /* CrashyCrashy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CrashyCrashy.m; path = rn0_63/CrashyCrashy.m; sourceTree = "<group>"; };
+		AA578F1C2588C8CC006B3C61 /* CrashyCrashy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CrashyCrashy.h; path = rn0_63/CrashyCrashy.h; sourceTree = "<group>"; };
 		B4DDD653E237FD955A789C45 /* Pods-rn0_63-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-rn0_63-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-rn0_63-tvOSTests/Pods-rn0_63-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		BF054C5C0714A629C72AE373 /* Pods-rn0_63-rn0_63Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-rn0_63-rn0_63Tests.debug.xcconfig"; path = "Target Support Files/Pods-rn0_63-rn0_63Tests/Pods-rn0_63-rn0_63Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		C4D03E2F3C04CDCFDC1D2AC8 /* libPods-rn0_63-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-rn0_63-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -125,6 +128,8 @@
 		13B07FAE1A68108700A75B9A /* rn0_63 */ = {
 			isa = PBXGroup;
 			children = (
+				AA578F1C2588C8CC006B3C61 /* CrashyCrashy.h */,
+				AA578F1B2588C8CC006B3C61 /* CrashyCrashy.m */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -569,6 +574,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				AA578F1D2588C8CC006B3C61 /* CrashyCrashy.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

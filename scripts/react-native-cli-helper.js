@@ -6,30 +6,32 @@ const fs = require('fs')
 
 module.exports = {
   buildAndroid: function buildAndroid (sourceFixtures, destFixtures) {
-    const version = common.determineVersion()
+    const version = process.env.NOTIFIER_VERSION || common.determineVersion()
     const rnVersion = process.env.REACT_NATIVE_VERSION
-    const registryUrl = process.env.REGISTRY_URL
 
     console.log(`Installing CLI version: ${version}`)
 
     // Copy in files required from the host (just the Android ones)
     common.run(`mkdir -p ${destFixtures}/${rnVersion}`)
-    common.run(`rsync -a --no-recursive ${sourceFixtures}/${rnVersion}/* ${destFixtures}/${rnVersion}`, true)
-    common.run(`rsync -a ${sourceFixtures}/${rnVersion}/android ${destFixtures}/${rnVersion}`, true)
+    common.run(`rsync -av --no-recursive ${sourceFixtures}/* ${destFixtures}`, true)
+    common.run(`rsync -av --no-recursive ${sourceFixtures}/${rnVersion}/* ${destFixtures}/${rnVersion}`, true)
+    common.run(`rsync -av ${sourceFixtures}/${rnVersion}/android ${destFixtures}/${rnVersion}`, true)
 
     // JavaScript layer
     common.changeDir(`${destFixtures}/${rnVersion}`)
-    common.run(`npm install --registry ${registryUrl}`, true)
+    common.run('npm install', true)
 
     // Install and run the CLI
-    const installCommand = `npm install bugsnag-react-native-cli@${version} --registry ${registryUrl}`
+    const installCommand = `npm install bugsnag-react-native-cli@${version}`
     common.run(installCommand, true)
-    // TODO App will not build at present if init is run
-    // const initCommand = './node-modules/bugsnag-react-native-cli/bin/react-native-cli init'
-    // common.run(initCommand, true)
+
+    // Use Expect to run the init command interactively
+    common.changeDir(`${destFixtures}`)
+    const initCommand = `./rn-cli-init-android.sh ${version}`
+    common.run(initCommand, true)
 
     // Native layer
-    common.changeDir('android')
+    common.changeDir(`${destFixtures}/${rnVersion}/android`)
     common.run('./gradlew assembleRelease', true)
 
     // Finally, copy the APK back to the host
@@ -37,33 +39,30 @@ module.exports = {
                     `${process.env.PWD}/build/${rnVersion}.apk`)
   },
   buildIOS: function buildIOS () {
-    const version = common.determineVersion()
+    const version = process.env.NOTIFIER_VERSION || common.determineVersion()
     const rnVersion = process.env.REACT_NATIVE_VERSION
-    const registryUrl = process.env.REGISTRY_URL
     const fixturesDir = 'test/react-native-cli/features/fixtures'
     const targetDir = `${fixturesDir}/${rnVersion}`
     const initialDir = process.cwd()
 
-    // We're not in docker so check the above are set
-    if (rnVersion === undefined || registryUrl === undefined) {
-      throw new Error('Both REACT_NATIVE_VERSION and REGISTRY_URL environment variables must be set')
+    // We're not in docker so check RN version is set
+    if (rnVersion === undefined) {
+      throw new Error('REACT_NATIVE_VERSION environment variable must be set')
     }
 
     // JavaScript layer
-    console.log(`Changing directory to: ${targetDir} and running "npm install"`)
     common.changeDir(`${targetDir}`)
-    common.run(`npm install --registry ${registryUrl}`, true)
+    common.run('npm install', true)
 
     // Install and run the CLI
-    const installCommand = `npm install bugsnag-react-native-cli@${version} --registry ${registryUrl}`
+    const installCommand = `npm install bugsnag-react-native-cli@${version}`
     common.run(installCommand, true)
-    // TODO Need to provide an answers file for the init command
-    // const initCommand = './node_modules/bugsnag-react-native-cli/bin/cli init'
-    // common.run(initCommand, true)
+
+    // Use Expect to run the init command interactively
+    common.changeDir(`${initialDir}/${fixturesDir}`)
+    common.run(`./rn-cli-init-ios.sh ${version}`, true)
 
     // Performing local build steps
-    common.changeDir(`${initialDir}/${fixturesDir}`)
-    console.log('Locating local build script')
     if (!fs.existsSync('./build-ios.sh')) {
       throw new Error('Local iOS build file at ./build-ios.sh not found')
     }
