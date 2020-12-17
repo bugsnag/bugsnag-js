@@ -302,7 +302,7 @@ test('enableReactNativeMappings(): success without initial bugsnag config and cu
     expect(encoding).toBe('utf8')
   })
 
-  await enableReactNativeMappings('/random/path', 'https://example.com', null, logger)
+  await enableReactNativeMappings('/random/path', 'https://upload.example.com', null, logger)
 
   expect(readFileMock).toHaveBeenNthCalledWith(1, '/random/path/android/app/build.gradle', 'utf8')
   expect(readFileMock).toHaveBeenNthCalledWith(2, '/random/path/android/app/build.gradle', 'utf8')
@@ -333,13 +333,44 @@ test('enableReactNativeMappings(): success with initial bugsnag config and custo
     expect(encoding).toBe('utf8')
   })
 
-  await enableReactNativeMappings('/random/path', 'https://example.com', null, logger)
+  await enableReactNativeMappings('/random/path', 'https://upload.example.com', null, logger)
 
   expect(readFileMock).toHaveBeenNthCalledWith(1, '/random/path/android/app/build.gradle', 'utf8')
   expect(readFileMock).toHaveBeenNthCalledWith(2, '/random/path/android/app/build.gradle', 'utf8')
 
   expect(writeFileMock).toHaveBeenNthCalledWith(1, '/random/path/android/app/build.gradle', expectedMappings, 'utf8')
   expect(writeFileMock).toHaveBeenNthCalledWith(2, '/random/path/android/app/build.gradle', expectedUploadEndpoint, 'utf8')
+})
+
+test('enableReactNativeMappings(): success with initial bugsnag config and custom build endpoint', async () => {
+  const buildGradle = await loadFixture(path.join(__dirname, 'fixtures', 'app-build-before-with-bugsnag-config.gradle'))
+  const expectedMappings = await loadFixture(path.join(__dirname, 'fixtures', 'app-build-after-with-mappings-and-bugsnag-config.gradle'))
+  const expectedBuildEndpoint = await loadFixture(path.join(__dirname, 'fixtures', 'app-build-after-with-mappings-build-endpoint-and-bugsnag-config.gradle'))
+
+  const readFileMock = fs.readFile as jest.MockedFunction<typeof fs.readFile>
+  readFileMock
+    .mockResolvedValueOnce(buildGradle)
+    .mockResolvedValueOnce(buildGradle)
+    .mockResolvedValueOnce(expectedMappings)
+
+  const writeFileMock = fs.writeFile as jest.MockedFunction<typeof fs.writeFile>
+  writeFileMock.mockImplementationOnce((file, contents, encoding) => {
+    expect(file).toBe('/random/path/android/app/build.gradle')
+    expect(contents).toBe(expectedMappings)
+    expect(encoding).toBe('utf8')
+  }).mockImplementationOnce((file, contents, encoding) => {
+    expect(file).toBe('/random/path/android/app/build.gradle')
+    expect(contents).toBe(expectedBuildEndpoint)
+    expect(encoding).toBe('utf8')
+  })
+
+  await enableReactNativeMappings('/random/path', null, 'https://build.example.com', logger)
+
+  expect(readFileMock).toHaveBeenNthCalledWith(1, '/random/path/android/app/build.gradle', 'utf8')
+  expect(readFileMock).toHaveBeenNthCalledWith(2, '/random/path/android/app/build.gradle', 'utf8')
+
+  expect(writeFileMock).toHaveBeenNthCalledWith(1, '/random/path/android/app/build.gradle', expectedMappings, 'utf8')
+  expect(writeFileMock).toHaveBeenNthCalledWith(2, '/random/path/android/app/build.gradle', expectedBuildEndpoint, 'utf8')
 })
 
 test('enableReactNativeMappings(): success with empty initial bugsnag config and custom upload endpoint', async () => {
@@ -364,11 +395,120 @@ test('enableReactNativeMappings(): success with empty initial bugsnag config and
     expect(encoding).toBe('utf8')
   })
 
-  await enableReactNativeMappings('/random/path', 'https://example.com', null, logger)
+  await enableReactNativeMappings('/random/path', 'https://upload.example.com', null, logger)
 
   expect(readFileMock).toHaveBeenNthCalledWith(1, '/random/path/android/app/build.gradle', 'utf8')
   expect(readFileMock).toHaveBeenNthCalledWith(2, '/random/path/android/app/build.gradle', 'utf8')
 
   expect(writeFileMock).toHaveBeenNthCalledWith(1, '/random/path/android/app/build.gradle', expectedMappings, 'utf8')
   expect(writeFileMock).toHaveBeenNthCalledWith(2, '/random/path/android/app/build.gradle', expectedUploadEndpoint, 'utf8')
+})
+
+test('enableReactNativeMappings(): success with empty initial bugsnag config and custom build endpoint', async () => {
+  const buildGradle = await loadFixture(path.join(__dirname, 'fixtures', 'app-build-before-with-empty-bugsnag-config.gradle'))
+  const expectedMappings = await loadFixture(path.join(__dirname, 'fixtures', 'app-build-after-with-mappings-and-empty-bugsnag-config.gradle'))
+  const expectedBuildEndpoint = await loadFixture(path.join(__dirname, 'fixtures', 'app-build-after-with-mappings-build-endpoint-and-empty-bugsnag-config.gradle'))
+
+  const readFileMock = fs.readFile as jest.MockedFunction<typeof fs.readFile>
+  readFileMock
+    .mockResolvedValueOnce(buildGradle)
+    .mockResolvedValueOnce(buildGradle)
+    .mockResolvedValueOnce(expectedMappings)
+
+  const writeFileMock = fs.writeFile as jest.MockedFunction<typeof fs.writeFile>
+  writeFileMock.mockImplementationOnce((file, contents, encoding) => {
+    expect(file).toBe('/random/path/android/app/build.gradle')
+    expect(contents).toBe(expectedMappings)
+    expect(encoding).toBe('utf8')
+  }).mockImplementationOnce((file, contents, encoding) => {
+    expect(file).toBe('/random/path/android/app/build.gradle')
+    expect(contents).toBe(expectedBuildEndpoint)
+    expect(encoding).toBe('utf8')
+  })
+
+  await enableReactNativeMappings('/random/path', null, 'https://build.example.com', logger)
+
+  expect(readFileMock).toHaveBeenNthCalledWith(1, '/random/path/android/app/build.gradle', 'utf8')
+  expect(readFileMock).toHaveBeenNthCalledWith(2, '/random/path/android/app/build.gradle', 'utf8')
+
+  expect(writeFileMock).toHaveBeenNthCalledWith(1, '/random/path/android/app/build.gradle', expectedMappings, 'utf8')
+  expect(writeFileMock).toHaveBeenNthCalledWith(2, '/random/path/android/app/build.gradle', expectedBuildEndpoint, 'utf8')
+})
+
+test('enableReactNativeMappings(): success with initial bugsnag config and custom endpoints', async () => {
+  const buildGradle = await loadFixture(path.join(__dirname, 'fixtures', 'app-build-before-with-bugsnag-config.gradle'))
+  const expectedMappings = await loadFixture(path.join(__dirname, 'fixtures', 'app-build-after-with-mappings-and-bugsnag-config.gradle'))
+  const expectedUploadEndpoint = await loadFixture(path.join(__dirname, 'fixtures', 'app-build-after-with-mappings-upload-endpoint-and-bugsnag-config.gradle'))
+  const expectedFinal = await loadFixture(path.join(__dirname, 'fixtures', 'app-build-after-with-mappings-both-endpoints-and-bugsnag-config.gradle'))
+
+  const readFileMock = fs.readFile as jest.MockedFunction<typeof fs.readFile>
+  readFileMock
+    .mockResolvedValueOnce(buildGradle)
+    .mockResolvedValueOnce(buildGradle)
+    .mockResolvedValueOnce(expectedMappings)
+    .mockResolvedValueOnce(expectedUploadEndpoint)
+
+  const writeFileMock = fs.writeFile as jest.MockedFunction<typeof fs.writeFile>
+  writeFileMock.mockImplementationOnce((file, contents, encoding) => {
+    expect(file).toBe('/random/path/android/app/build.gradle')
+    expect(contents).toBe(expectedMappings)
+    expect(encoding).toBe('utf8')
+  }).mockImplementationOnce((file, contents, encoding) => {
+    expect(file).toBe('/random/path/android/app/build.gradle')
+    expect(contents).toBe(expectedUploadEndpoint)
+    expect(encoding).toBe('utf8')
+  }).mockImplementationOnce((file, contents, encoding) => {
+    expect(file).toBe('/random/path/android/app/build.gradle')
+    expect(contents).toBe(expectedFinal)
+    expect(encoding).toBe('utf8')
+  })
+
+  await enableReactNativeMappings('/random/path', 'https://upload.example.com', 'https://build.example.com', logger)
+
+  expect(readFileMock).toHaveBeenNthCalledWith(1, '/random/path/android/app/build.gradle', 'utf8')
+  expect(readFileMock).toHaveBeenNthCalledWith(2, '/random/path/android/app/build.gradle', 'utf8')
+  expect(readFileMock).toHaveBeenNthCalledWith(3, '/random/path/android/app/build.gradle', 'utf8')
+
+  expect(writeFileMock).toHaveBeenNthCalledWith(1, '/random/path/android/app/build.gradle', expectedMappings, 'utf8')
+  expect(writeFileMock).toHaveBeenNthCalledWith(2, '/random/path/android/app/build.gradle', expectedUploadEndpoint, 'utf8')
+  expect(writeFileMock).toHaveBeenNthCalledWith(3, '/random/path/android/app/build.gradle', expectedFinal, 'utf8')
+})
+
+test('enableReactNativeMappings(): success without initial bugsnag config and custom endpoints', async () => {
+  const buildGradle = await loadFixture(path.join(__dirname, 'fixtures', 'app-build-before.gradle'))
+  const expectedMappings = await loadFixture(path.join(__dirname, 'fixtures', 'app-build-after-with-mappings.gradle'))
+  const expectedUploadEndpoint = await loadFixture(path.join(__dirname, 'fixtures', 'app-build-after-with-mappings-and-upload-endpoint.gradle'))
+  const expectedFinal = await loadFixture(path.join(__dirname, 'fixtures', 'app-build-after-with-mappings-and-both-endpoints.gradle'))
+
+  const readFileMock = fs.readFile as jest.MockedFunction<typeof fs.readFile>
+  readFileMock
+    .mockResolvedValueOnce(buildGradle)
+    .mockResolvedValueOnce(buildGradle)
+    .mockResolvedValueOnce(expectedMappings)
+    .mockResolvedValueOnce(expectedUploadEndpoint)
+
+  const writeFileMock = fs.writeFile as jest.MockedFunction<typeof fs.writeFile>
+  writeFileMock.mockImplementationOnce((file, contents, encoding) => {
+    expect(file).toBe('/random/path/android/app/build.gradle')
+    expect(contents).toBe(expectedMappings)
+    expect(encoding).toBe('utf8')
+  }).mockImplementationOnce((file, contents, encoding) => {
+    expect(file).toBe('/random/path/android/app/build.gradle')
+    expect(contents).toBe(expectedUploadEndpoint)
+    expect(encoding).toBe('utf8')
+  }).mockImplementationOnce((file, contents, encoding) => {
+    expect(file).toBe('/random/path/android/app/build.gradle')
+    expect(contents).toBe(expectedFinal)
+    expect(encoding).toBe('utf8')
+  })
+
+  await enableReactNativeMappings('/random/path', 'https://upload.example.com', 'https://build.example.com', logger)
+
+  expect(readFileMock).toHaveBeenNthCalledWith(1, '/random/path/android/app/build.gradle', 'utf8')
+  expect(readFileMock).toHaveBeenNthCalledWith(2, '/random/path/android/app/build.gradle', 'utf8')
+  expect(readFileMock).toHaveBeenNthCalledWith(3, '/random/path/android/app/build.gradle', 'utf8')
+
+  expect(writeFileMock).toHaveBeenNthCalledWith(1, '/random/path/android/app/build.gradle', expectedMappings, 'utf8')
+  expect(writeFileMock).toHaveBeenNthCalledWith(2, '/random/path/android/app/build.gradle', expectedUploadEndpoint, 'utf8')
+  expect(writeFileMock).toHaveBeenNthCalledWith(3, '/random/path/android/app/build.gradle', expectedFinal, 'utf8')
 })
