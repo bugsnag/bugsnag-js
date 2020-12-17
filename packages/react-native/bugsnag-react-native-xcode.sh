@@ -46,10 +46,8 @@ case "$CONFIGURATION" in
 esac
 
 if [ ! -z "$ENDPOINT" ]; then
-  # Remove any trailing trailing '/'
-  ENDPOINT=$(echo $ENDPOINT | sed 's/\/$//')
   ARGS+=("--endpoint")
-  ARGS+=("$ENDPOINT/react-native-source-map")
+  ARGS+=("$ENDPOINT")
 fi
 
 ../node_modules/.bin/bugsnag-source-maps upload-react-native "${ARGS[@]}"
