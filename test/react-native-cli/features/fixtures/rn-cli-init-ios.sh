@@ -31,6 +31,9 @@ send -- http://bs-local.com:9339\r
 expect "Do you want to automatically upload source maps as part of the Xcode build?"
 send -- n
 
+expect "This will enable you to see full native stacktraces. It can't be done automatically."
+send -- \r
+
 expect "Do you want to automatically upload source maps as part of the Gradle build?"
 send -- n
 
