@@ -54,12 +54,6 @@ safari_13:
   os: "OS X"
   os_version: "Catalina"
 
-opera_12:
-  browser: "opera"
-  browser_version: "12.16"
-  os: "windows"
-  os_version: "8"
-
 iphone_7:
   browser: "iphone"
   device: "iPhone 7"
