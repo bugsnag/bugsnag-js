@@ -6,7 +6,7 @@ RUN apt-get update && apt-get install -y nodejs rsync expect \
                                          # Needed by nokogiri (a dependency of appium_lib)
                                          zlib1g libpng-dev zlibc zlib1g zlib1g-dev curl \
                                          # Needed by curb (a dependency of Cucumber)
-                                         libcurl4 libcurl4-openssl-dev
+#                                         libcurl4 libcurl4-openssl-dev
 
 RUN npm i -g run-func
 
