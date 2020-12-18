@@ -1,6 +1,7 @@
+#!/bin/sh
 SYSTEM=$(uname -s)
 
-if [[ $SYSTEM == *"Darwin"* ]]; then
+if [ "$SYSTEM" == "Darwin" ]; then
   echo "Building test fixture for iOS"
   node -e 'require("./scripts/react-native-cli-helper").buildIOS()'
 else
