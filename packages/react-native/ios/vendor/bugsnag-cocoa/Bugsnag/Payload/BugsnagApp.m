@@ -18,7 +18,7 @@
  */
 NSDictionary *BSGParseAppMetadata(NSDictionary *event) {
     NSMutableDictionary *app = [NSMutableDictionary new];
-    BSGDictSetSafeObject(app, [event valueForKeyPath:@"system.CFBundleExecutable"] , @"name");
+    app[@"name"] = [event valueForKeyPath:@"system.CFBundleExecutable"];
     return app;
 }
 
@@ -68,16 +68,13 @@ NSDictionary *BSGParseAppMetadata(NSDictionary *event) {
 - (NSDictionary *)toDict
 {
     NSMutableDictionary *dict = [NSMutableDictionary new];
-    BSGDictInsertIfNotNil(dict, self.bundleVersion, @"bundleVersion");
-    BSGDictInsertIfNotNil(dict, self.codeBundleId, @"codeBundleId");
-    BSGDictInsertIfNotNil(dict, self.id, @"id");
-    BSGDictInsertIfNotNil(dict, self.releaseStage, @"releaseStage");
-    BSGDictInsertIfNotNil(dict, self.type, @"type");
-    BSGDictInsertIfNotNil(dict, self.version, @"version");
-
-    if (self.dsymUuid != nil) {
-        BSGDictInsertIfNotNil(dict, @[self.dsymUuid], @"dsymUUIDs");
-    }
+    dict[@"bundleVersion"] = self.bundleVersion;
+    dict[@"codeBundleId"] = self.codeBundleId;
+    dict[@"dsymUUIDs"] = self.dsymUuid ? @[self.dsymUuid] : nil;
+    dict[@"id"] = self.id;
+    dict[@"releaseStage"] = self.releaseStage;
+    dict[@"type"] = self.type;
+    dict[@"version"] = self.version;
     return dict;
 }
 

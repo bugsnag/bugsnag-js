@@ -11,9 +11,9 @@ Reported errors will contain useful debugging info from Vue's internals, such as
 ## Installation
 
 ```sh
-npm i --save bugsnag-js @bugsnag/plugin-vue
+npm i --save @bugsnag/js @bugsnag/plugin-vue
 # or
-yarn add bugsnag-js @bugsnag/plugin-vue
+yarn add @bugsnag/js @bugsnag/plugin-vue
 ```
 
 ## Usage

@@ -16,8 +16,8 @@ end
 
 When("I relaunch the app") do
   # This step should only be used when the app has crashed, but the notifier needs a little
-  # time to write the crash report before being forced to reopen.  From trials, 1s was not enough.
-  sleep(2)
+  # time to write the crash report before being forced to reopen.  From trials, 2s was not enough.
+  sleep(5)
   MazeRunner.driver.launch_app
 end
 

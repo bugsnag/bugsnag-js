@@ -29,6 +29,17 @@ jest.mock('expo-file-system', () => ({
   createDownloadResumable: jest.fn(() => Promise.resolve())
 }))
 
+jest.mock('expo-crypto', () => ({
+  CryptoDigestAlgorithm: { SHA1: 'sha1' },
+  digestStringAsync: jest.fn((algorithm, input) => {
+    if (algorithm === 'sha1') {
+      return Promise.resolve(input)
+    }
+
+    return Promise.reject(new Error(`Invalid algorithm '${algorithm}'`))
+  })
+}))
+
 jest.mock('@react-native-community/netinfo', () => ({
   addEventListener: jest.fn(),
   fetch: () => new Promise(resolve => setTimeout(() => resolve({ isConnected: true }), 1))
@@ -100,6 +111,7 @@ describe('delivery: expo', () => {
         expect(requests[0].url).toMatch('/notify/')
         expect(requests[0].headers['content-type']).toEqual('application/json')
         expect(requests[0].headers['bugsnag-api-key']).toEqual('aaaaaaaa')
+        expect(requests[0].headers['bugsnag-integrity']).toEqual('sha1 {"events":[{"errors":[{"errorClass":"Error","errorMessage":"foo is not a function"}]}]}')
         expect(requests[0].headers['bugsnag-payload-version']).toEqual('4')
         expect(requests[0].headers['bugsnag-sent-at']).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/)
         expect(requests[0].body).toBe(JSON.stringify(payload))
@@ -130,6 +142,7 @@ describe('delivery: expo', () => {
         expect(requests[0].url).toMatch('/sessions/')
         expect(requests[0].headers['content-type']).toEqual('application/json')
         expect(requests[0].headers['bugsnag-api-key']).toEqual('aaaaaaaa')
+        expect(requests[0].headers['bugsnag-integrity']).toEqual('sha1 {"events":[{"errors":[{"errorClass":"Error","errorMessage":"foo is not a function"}]}]}')
         expect(requests[0].headers['bugsnag-payload-version']).toEqual('1')
         expect(requests[0].headers['bugsnag-sent-at']).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/)
         expect(requests[0].body).toBe(JSON.stringify(payload))
@@ -228,6 +241,8 @@ describe('delivery: expo', () => {
         expect(err).toBeTruthy()
         expect((err as any).code).toBe('ECONNRESET')
         expect(enqueueSpy).toHaveBeenCalled()
+
+        server.close()
         done()
       })
     })
@@ -255,6 +270,8 @@ describe('delivery: expo', () => {
         expect(didLog).toBe(true)
         expect(err).toBeTruthy()
         expect(enqueueSpy).toHaveBeenCalled()
+
+        server.close()
         done()
       })
     })
@@ -336,21 +353,17 @@ describe('delivery: expo', () => {
       endpoints: { notify: 'http://some-address.com' },
       redactedKeys: []
     }
-    let n = 0
-    const _done = () => {
-      n++
-      if (n === 2) done()
-    }
+
     const d = delivery({ _config: config, _logger: noopLogger } as unknown as Client, fetch)
     d.sendEvent(payload, (err) => {
       expect(err).not.toBeTruthy()
       expect(enqueueSpy).toHaveBeenCalledTimes(1)
-      _done()
-    })
-    d.sendSession(payload, (err) => {
-      expect(err).not.toBeTruthy()
-      expect(enqueueSpy).toHaveBeenCalledTimes(2)
-      _done()
+
+      d.sendSession(payload, (err) => {
+        expect(err).not.toBeTruthy()
+        expect(enqueueSpy).toHaveBeenCalledTimes(2)
+        done()
+      })
     })
   })
 })

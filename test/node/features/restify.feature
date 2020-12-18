@@ -58,9 +58,11 @@ Scenario: throwing non-Error error
   And the exception "type" equals "nodejs"
 
 Scenario: an explicit 404
-  Then I open the URL "http://restify/not-found"
-  And I wait for 1 second
-  Then I should receive no requests
+  When I open the URL "http://restify/not-found"
+  And I wait to receive a request
+  Then the request is valid for the session reporting API version "1" for the "Bugsnag Node" notifier
+  And the payload has a valid sessions array
+  And the sessionCount "sessionsStarted" equals 1
 
 Scenario: an explicit internal server error
   Then I open the URL "http://restify/internal"

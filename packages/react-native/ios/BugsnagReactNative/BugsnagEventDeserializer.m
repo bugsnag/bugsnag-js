@@ -39,6 +39,7 @@ BSGSeverity BSGParseSeverity(NSString *severity);
 - (instancetype)initWithSeverityReason:(NSUInteger)severityReason
                               severity:(BSGSeverity)severity
                              unhandled:(BOOL)unhandled
+                   unhandledOverridden:(BOOL)unhandledOverridden
                              attrValue:(NSString *)attrValue;
 + (NSUInteger)severityReasonFromString:(NSString *)string;
 @end
@@ -154,9 +155,11 @@ BSGSeverity BSGParseSeverity(NSString *severity);
 
     BSGSeverity severity = BSGParseSeverity(payload[@"severity"]);
     BOOL unhandled = [payload[@"unhandled"] boolValue];
+    BOOL unhandledOverridden = [severityReason[@"unhandledOverridden"] boolValue];
     return [[BugsnagHandledState alloc] initWithSeverityReason:reason
                                                       severity:severity
                                                      unhandled:unhandled
+                                           unhandledOverridden:unhandledOverridden
                                                      attrValue:attrVal];
 }
 

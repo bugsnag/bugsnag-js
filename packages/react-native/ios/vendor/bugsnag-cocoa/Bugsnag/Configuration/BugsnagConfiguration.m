@@ -24,11 +24,19 @@
 // THE SOFTWARE.
 //
 
+#import "BugsnagPlatformConditional.h"
+
 #import "BugsnagConfiguration+Private.h"
 
 #import "BSGConfigurationBuilder.h"
+#import "BSG_RFC3339DateTool.h"
 #import "BugsnagApiClient.h"
-#import "Private.h"
+#import "BugsnagEndpointConfiguration.h"
+#import "BugsnagErrorTypes.h"
+#import "BugsnagKeys.h"
+#import "BugsnagLogger.h"
+#import "BugsnagMetadata+Private.h"
+#import "BugsnagUser+Private.h"
 
 static const int BSGApiKeyLength = 32;
 
@@ -36,40 +44,6 @@ static const int BSGApiKeyLength = 32;
 NSString * const kBugsnagUserEmailAddress = @"BugsnagUserEmailAddress";
 NSString * const kBugsnagUserName = @"BugsnagUserName";
 NSString * const kBugsnagUserUserId = @"BugsnagUserUserId";
-
-@interface BugsnagUser ()
-- (instancetype)initWithDictionary:(NSDictionary *)dict;
-- (instancetype)initWithUserId:(NSString *)userId name:(NSString *)name emailAddress:(NSString *)emailAddress;
-- (NSDictionary *)toJson;
-@end
-
-@interface BugsnagConfiguration ()
-
-/**
- *  Hooks for modifying crash reports before it is sent to Bugsnag
- */
-@property(nonatomic, readwrite, strong) NSMutableArray *onSendBlocks;
-
-/**
- *  Hooks for modifying sessions before they are sent to Bugsnag. Intended for internal use only by React Native/Unity.
- */
-@property(nonatomic, readwrite, strong) NSMutableArray *onSessionBlocks;
-@property(nonatomic, readwrite, strong) NSMutableArray *onBreadcrumbBlocks;
-@property(nonatomic, readwrite, strong) NSMutableSet *plugins;
-@property(readonly, retain, nullable) NSURL *notifyURL;
-@property(readonly, retain, nullable) NSURL *sessionURL;
-
-/**
- *  Additional information about the state of the app or environment at the
- *  time the report was generated
- */
-@property(readwrite, retain, nullable) BugsnagMetadata *metadata;
-
-/**
- *  Meta-information about the state of Bugsnag
- */
-@property(readwrite, retain, nullable) BugsnagMetadata *config;
-@end
 
 // =============================================================================
 // MARK: - BugsnagConfiguration
@@ -96,7 +70,7 @@ NSString * const kBugsnagUserUserId = @"BugsnagUserUserId";
  * @param zone This parameter is ignored. Memory zones are no longer used by Objective-C.
  */
 - (nonnull id)copyWithZone:(nullable NSZone *)zone {
-    BugsnagConfiguration *copy = [[BugsnagConfiguration alloc] initWithApiKey:[NSMutableString stringWithString:self.apiKey]];
+    BugsnagConfiguration *copy = [[BugsnagConfiguration alloc] initWithApiKey:[self.apiKey copy]];
     // Omit apiKey - it's set explicitly in the line above
     [copy setAppType:self.appType];
     [copy setAppVersion:self.appVersion];
@@ -110,7 +84,7 @@ NSString * const kBugsnagUserUserId = @"BugsnagUserUserId";
     [copy setEnabledReleaseStages:self.enabledReleaseStages];
     [copy setRedactedKeys:self.redactedKeys];
     [copy setMaxBreadcrumbs:self.maxBreadcrumbs];
-    [copy setMetadata: [[BugsnagMetadata alloc] initWithDictionary:[[self.metadata toDictionary] mutableCopy]]];
+    copy->_metadata = [[BugsnagMetadata alloc] initWithDictionary:[[self.metadata toDictionary] mutableCopy]];
     [copy setEndpoints:self.endpoints];
     [copy setOnCrashHandler:self.onCrashHandler];
     [copy setPersistUser:self.persistUser];

@@ -12,3 +12,4 @@ Scenario: Manual breadcrumbs are enabled when automatic breadcrumbs are disabled
   And the exception "message" equals "ManualBreadcrumbError"
   And the event has a "manual" breadcrumb named "manualBreadcrumb"
   And the event "breadcrumbs.0.metaData.reason" equals "testing"
+  And the Bugsnag-Integrity header is valid

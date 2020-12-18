@@ -12,6 +12,7 @@ The following modules are currently used:
 - `expo-file-system`, `@react-native-community/netinfo` (`@bugsnag/delivery-expo`)
 - `expo-constants` (`@bugsnag/plugin-expo-app`)
 - `expo-device` (`@bugsnag/plugin-expo-device`)
+- `expo-crypto` (`@bugsnag/expo`, `@bugsnag/delivery-expo`)
 
 If you add a new dependency please add it to this list.
 

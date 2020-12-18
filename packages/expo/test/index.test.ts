@@ -24,6 +24,7 @@ jest.mock('../../plugin-expo-app/node_modules/expo-constants', () => ({
 }))
 
 jest.mock('@bugsnag/delivery-expo')
+jest.mock('../../delivery-expo/node_modules/expo-crypto', () => ({}))
 
 jest.mock('react-native', () => ({
   NativeModules: {
@@ -103,6 +104,10 @@ const API_KEY = '030bab153e7c2349be364d23b5ae93b5'
 describe('expo notifier', () => {
   let Bugsnag: typeof BugsnagExpoStatic
   let _delivery
+
+  beforeAll(() => {
+    jest.spyOn(console, 'debug').mockImplementation(() => {})
+  })
 
   beforeEach(() => {
     (delivery as jest.MockedFunction<typeof delivery>).mockImplementation(() => {

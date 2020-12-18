@@ -32,6 +32,10 @@ jest.mock('react-native', () => ({
 describe('react native notifier', () => {
   let Bugsnag: typeof BugsnagReactNativeStatic
 
+  beforeAll(() => {
+    jest.spyOn(console, 'debug').mockImplementation(() => {})
+  })
+
   beforeEach(() => {
     jest.isolateModules(() => {
       Bugsnag = require('..')

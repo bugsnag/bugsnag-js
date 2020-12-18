@@ -10,7 +10,7 @@
 
 #import "BugsnagCollections.h"
 #import "BugsnagStackframe+Private.h"
-#import "BugsnagStacktrace.h"
+#import "BugsnagStacktrace+Private.h"
 #import "BugsnagKeys.h"
 
 BSGThreadType BSGParseThreadType(NSString *type) {
@@ -20,15 +20,6 @@ BSGThreadType BSGParseThreadType(NSString *type) {
 NSString *BSGSerializeThreadType(BSGThreadType type) {
     return type == BSGThreadTypeCocoa ? @"cocoa" : @"reactnativejs";
 }
-
-@interface BugsnagStacktrace ()
-- (NSArray *)toArray;
-@end
-
-@interface BugsnagStacktrace ()
-+ (instancetype)stacktraceFromJson:(NSDictionary *)json;
-@property NSMutableArray<BugsnagStackframe *> *trace;
-@end
 
 @implementation BugsnagThread
 
@@ -78,17 +69,17 @@ NSString *BSGSerializeThreadType(BSGThreadType type) {
 
 - (NSDictionary *)toDictionary {
     NSMutableDictionary *dict = [NSMutableDictionary new];
-    BSGDictInsertIfNotNil(dict, self.id, @"id");
-    BSGDictInsertIfNotNil(dict, self.name, @"name");
-    BSGDictSetSafeObject(dict, @(self.errorReportingThread), @"errorReportingThread");
-    BSGDictSetSafeObject(dict, BSGSerializeThreadType(self.type), @"type");
-    BSGDictSetSafeObject(dict, @(self.errorReportingThread), @"errorReportingThread");
+    dict[@"id"] = self.id;
+    dict[@"name"] = self.name;
+    dict[@"errorReportingThread"] = @(self.errorReportingThread);
+    dict[@"type"] = BSGSerializeThreadType(self.type);
+    dict[@"errorReportingThread"] = @(self.errorReportingThread);
 
     NSMutableArray *array = [NSMutableArray new];
     for (BugsnagStackframe *frame in self.stacktrace) {
         [array addObject:[frame toDictionary]];
     }
-    BSGDictSetSafeObject(dict, array, @"stacktrace");
+    dict[@"stacktrace"] = array;
     return dict;
 }
 
@@ -150,12 +141,12 @@ NSString *BSGSerializeThreadType(BSGThreadType type) {
             if (seen++ >= depth) {
                 // Mark the frame so we know where it came from
                 if (seen == 1 && !stackOverflow) {
-                    BSGDictSetSafeObject(mutableFrame, @YES, BSGKeyIsPC);
+                    mutableFrame[BSGKeyIsPC] = @YES;
                 }
                 if (seen == 2 && !stackOverflow && [@[BSGKeySignal, BSGKeyMach] containsObject:errorType]) {
-                    BSGDictSetSafeObject(mutableFrame, @YES, BSGKeyIsLR);
+                    mutableFrame[BSGKeyIsLR] = @YES;
                 }
-                BSGArrayInsertIfNotNil(stacktrace, mutableFrame);
+                [stacktrace addObject:mutableFrame];
             }
         }
         NSMutableDictionary *copy = [NSMutableDictionary dictionaryWithDictionary:thread];
