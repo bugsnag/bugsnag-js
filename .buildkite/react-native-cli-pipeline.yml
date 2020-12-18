@@ -81,6 +81,7 @@ steps:
       - 'android-builder-image'
     timeout_in_minutes: 15
     env:
+      DEBUG: true
       REACT_NATIVE_VERSION: rn0_60
     plugins:
       - docker-compose#v3.7.0:
