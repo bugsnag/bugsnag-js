@@ -20,6 +20,9 @@ RUN echo "always-auth=true" >> ~/.npmrc
 COPY .git .git
 COPY lerna.json .
 COPY scripts/common.js scripts/react-native-cli-helper.js scripts/
+COPY Gemfile .
 
-# Do a full build by running the container
-CMD run-func scripts/react-native-cli-helper.js buildAndroid "/app/test/react-native-cli/features/fixtures" "/app/features/fixtures"
+RUN bundle install
+
+CMD bundle exec maze-runner /app/test/react-native-cli/features/build-app.feature
+
