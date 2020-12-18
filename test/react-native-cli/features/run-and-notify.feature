@@ -1,4 +1,4 @@
-Feature: Tests against a React Native app that was initialized using the Bugsnag React Native CLI
+Feature: Tests for running a React Native app that was initialized using the Bugsnag React Native CLI
 
 Scenario: A built, CLI initialized, app sends JavaScript and Native handled errors
   When I wait to receive a request

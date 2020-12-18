@@ -12,6 +12,10 @@ RUN npm i -g run-func
 
 WORKDIR /app
 
+# Install MazeRunner as a Gem
+COPY Gemfile .
+RUN bundle install
+
 # npm auth
 RUN rm -f ~/.npmrc
 ARG REGISTRY_URL
@@ -27,8 +31,6 @@ COPY .git .git
 COPY lerna.json .
 COPY scripts/common.js scripts/react-native-cli-helper.js scripts/
 
-# Install MazeRunner as a Gem
-COPY Gemfile .
-RUN bundle install
+RUN bundle exec maze-runner --version
 
 CMD bundle exec maze-runner /app/test/react-native-cli/features/build-app.feature
