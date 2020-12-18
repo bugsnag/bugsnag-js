@@ -4,9 +4,7 @@ import { updateXcodeProject } from '../lib/Xcode'
 import { install, detectInstalled, guessPackageManager } from '../lib/Npm'
 import onCancel from '../lib/OnCancel'
 import { enableReactNativeMappings } from '../lib/Gradle'
-
-const DEFAULT_UPLOAD_ENDPOINT = 'https://upload.bugsnag.com'
-const DEFAULT_BUILD_ENDPOINT = 'https://build.bugsnag.com'
+import { UrlType, OnPremiseUrls } from '../lib/OnPremise'
 
 const DSYM_INSTRUCTIONS = `To configure your project to upload dSYMs, follow the iOS symbolication guide:
 
@@ -16,10 +14,8 @@ const DSYM_INSTRUCTIONS = `To configure your project to upload dSYMs, follow the
 
 `
 
-export default async function run (argv: string[], projectRoot: string, opts: Record<string, unknown>): Promise<boolean> {
+export default async function run (projectRoot: string, urls: OnPremiseUrls): Promise<boolean> {
   try {
-    let uploadEndpoint: string|null = null
-
     const { iosIntegration } = await prompts({
       type: 'confirm',
       name: 'iosIntegration',
@@ -28,10 +24,8 @@ export default async function run (argv: string[], projectRoot: string, opts: Re
     }, { onCancel })
 
     if (iosIntegration) {
-      uploadEndpoint = await getUploadEndpoint(uploadEndpoint)
-
       logger.info('Modifying the Xcode project')
-      await updateXcodeProject(projectRoot, nullIfDefault(uploadEndpoint, DEFAULT_UPLOAD_ENDPOINT), logger)
+      await updateXcodeProject(projectRoot, urls[UrlType.UPLOAD], logger)
     }
 
     await prompts({
@@ -49,20 +43,7 @@ export default async function run (argv: string[], projectRoot: string, opts: Re
     }, { onCancel })
 
     if (androidIntegration) {
-      uploadEndpoint = await getUploadEndpoint(uploadEndpoint)
-      const { buildEndpoint } = await prompts({
-        type: 'text',
-        name: 'buildEndpoint',
-        message: 'What is your Bugsnag build endpoint?',
-        initial: DEFAULT_BUILD_ENDPOINT
-      }, { onCancel })
-
-      await enableReactNativeMappings(
-        projectRoot,
-        nullIfDefault(uploadEndpoint, DEFAULT_UPLOAD_ENDPOINT),
-        nullIfDefault(buildEndpoint, DEFAULT_BUILD_ENDPOINT),
-        logger
-      )
+      await enableReactNativeMappings(projectRoot, urls[UrlType.UPLOAD], urls[UrlType.BUILD], logger)
     }
 
     if (androidIntegration || iosIntegration) {
@@ -97,27 +78,4 @@ async function installJavaScriptPackage (projectRoot: string): Promise<void> {
   await install(packageManager, '@bugsnag/source-maps', version, true, projectRoot)
 
   logger.success('@bugsnag/source-maps dependency is installed')
-}
-
-async function getUploadEndpoint (maybeEndpoint: string|null): Promise<string> {
-  if (maybeEndpoint) {
-    return maybeEndpoint
-  }
-
-  const { endpoint } = await prompts({
-    type: 'text',
-    name: 'endpoint',
-    message: 'What is your Bugsnag upload endpoint?',
-    initial: DEFAULT_UPLOAD_ENDPOINT
-  }, { onCancel })
-
-  return endpoint
-}
-
-function nullIfDefault (maybeEndpoint: string|null, defaultEndpoint: string): string|null {
-  if (maybeEndpoint === defaultEndpoint) {
-    return null
-  }
-
-  return maybeEndpoint
 }

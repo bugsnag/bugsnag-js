@@ -13,7 +13,7 @@ See ${DOCS_LINK} for more information`
 
 const EXTRA_PACKAGER_ARGS = 'export EXTRA_PACKAGER_ARGS="--sourcemap-output $CONFIGURATION_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/main.jsbundle.map"'
 
-export async function updateXcodeProject (projectRoot: string, endpoint: string|null, logger: Logger) {
+export async function updateXcodeProject (projectRoot: string, endpoint: string|undefined, logger: Logger) {
   const iosDir = path.join(projectRoot, 'ios')
   const xcodeprojDir = (await fs.readdir(iosDir)).find(p => p.endsWith('.xcodeproj'))
 
@@ -65,7 +65,7 @@ async function updateBuildReactNativeTask (buildPhaseMap: Record<string, Record<
 async function addUploadSourceMapsTask (
   proj: Project,
   buildPhaseMap: Record<string, Record<string, unknown>>,
-  endpoint: string|null,
+  endpoint: string|undefined,
   logger: Logger
 ): Promise<boolean> {
   for (const shellBuildPhaseKey in buildPhaseMap) {

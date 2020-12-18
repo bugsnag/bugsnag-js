@@ -3,11 +3,9 @@ import logger from '../Logger'
 import onCancel from '../lib/OnCancel'
 import * as android from '../lib/AndroidManifest'
 import * as ios from '../lib/InfoPlist'
+import { UrlType, OnPremiseUrls } from '../lib/OnPremise'
 
-const DEFAULT_NOTIFY_ENDPOINT = 'https://notify.bugsnag.com'
-const DEFAULT_SESSIONS_ENDPOINT = 'https://sessions.bugsnag.com'
-
-export default async function run (argv: string[], projectRoot: string, opts: Record<string, unknown>): Promise<boolean> {
+export default async function run (projectRoot: string, urls: OnPremiseUrls): Promise<boolean> {
   try {
     const { apiKey } = await prompts({
       type: 'text',
@@ -20,28 +18,14 @@ export default async function run (argv: string[], projectRoot: string, opts: Re
       }
     }, { onCancel })
 
-    const { notifyEndpoint } = await prompts({
-      type: 'text',
-      name: 'notifyEndpoint',
-      message: 'What is your Bugsnag notify endpoint?',
-      initial: DEFAULT_NOTIFY_ENDPOINT
-    }, { onCancel })
-
-    const { sessionsEndpoint } = await prompts({
-      type: 'text',
-      name: 'sessionsEndpoint',
-      message: 'What is your Bugsnag sessions endpoint?',
-      initial: DEFAULT_SESSIONS_ENDPOINT
-    }, { onCancel })
-
     const options: ios.Options & android.Options = { apiKey }
 
-    if (notifyEndpoint !== DEFAULT_NOTIFY_ENDPOINT) {
-      options.notifyEndpoint = notifyEndpoint
+    if (urls[UrlType.NOTIFY]) {
+      options.notifyEndpoint = urls[UrlType.NOTIFY]
     }
 
-    if (sessionsEndpoint !== DEFAULT_SESSIONS_ENDPOINT) {
-      options.sessionsEndpoint = sessionsEndpoint
+    if (urls[UrlType.SESSIONS]) {
+      options.sessionsEndpoint = urls[UrlType.SESSIONS]
     }
 
     logger.info('Updating AndroidManifest.xml')
