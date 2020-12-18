@@ -229,28 +229,6 @@ safari_13:
     lineNumber: 17
     columnNumber: 25
 
-opera_12:
-  handled:
-    errorClass: 'ReferenceError'
-    errorMessage: 'Undefined variable: foo'
-  unhandled_syntax:
-    errorClass: 'Error'
-    errorMessage: "Syntax error at line 17 while loading: expected ';', got '!'"
-    lineNumber: 17
-    file: '/unhandled/script/a.html'
-  unhandled_thrown:
-    errorClass: 'Error'
-    errorMessage: "Uncaught exception: Error: bad things"
-    lineNumber: 17
-  unhandled_undefined_function:
-    errorClass: 'Error'
-    errorMessage: "Uncaught exception: ReferenceError: Undefined variable: nevergoingtoexist_notinamillionyears"
-    lineNumber: 17
-  unhandled_malformed_uri:
-    errorClass: 'Error'
-    errorMessage: "Uncaught exception: URIError: Malformed URI"
-    lineNumber: 17
-
 iphone_7:
   handled:
     errorClass: 'ReferenceError'
