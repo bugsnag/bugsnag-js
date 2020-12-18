@@ -167,18 +167,28 @@ Then("the iOS build has been modified to upload source maps to {string}") do |ex
 end
 
 Then("the Android build has not been modified to upload source maps") do
-  step("the file 'android/app/build.gradle' does not contain 'uploadReactNativeMappings = true'")
-  step("the file 'android/app/build.gradle' does not contain 'endpoint = '")
+  steps %Q{
+    Then the file 'android/app/build.gradle' does not contain 'uploadReactNativeMappings = true'
+    And the file 'android/app/build.gradle' does not contain 'endpoint = '
+    And the file 'android/app/build.gradle' does not contain 'releasesEndpoint = '
+  }
 end
 
 Then("the Android build has been modified to upload source maps") do
-  step("the file 'android/app/build.gradle' contains 'uploadReactNativeMappings = true'")
-  step("the file 'android/app/build.gradle' does not contain 'endpoint = '")
+  steps %Q{
+    Then the file 'android/app/build.gradle' contains 'uploadReactNativeMappings = true'
+    And the file 'android/app/build.gradle' does not contain 'endpoint = '
+    And the file 'android/app/build.gradle' does not contain 'releasesEndpoint = '
+  }
 end
 
 Then("the Android build has been modified to upload source maps to {string}") do |expected_endpoint|
   step("the file 'android/app/build.gradle' contains 'uploadReactNativeMappings = true'")
   step("the file 'android/app/build.gradle' contains 'endpoint = \"#{expected_endpoint}\"'")
+end
+
+Then("the Android build has been modified to upload builds to {string}") do |expected_endpoint|
+  step("the file 'android/app/build.gradle' contains 'releasesEndpoint = \"#{expected_endpoint}\"'")
 end
 
 Then("the Bugsnag Android Gradle plugin is not installed") do
