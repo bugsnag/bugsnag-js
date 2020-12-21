@@ -8,7 +8,7 @@ puts "Using notifier version: $notifierVersion"
 puts "Using React Native version: $rnVersion"
 
 cd $rnVersion
-spawn ./node_modules/bugsnag-react-native-cli/bin/cli init
+spawn ./node_modules/.bin/bugsnag-react-native-cli init
 
 expect "Do you want to continue anyway?"
 send -- "Y\r"
