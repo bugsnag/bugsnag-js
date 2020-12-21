@@ -56,7 +56,7 @@ export async function modifyAppBuildGradle (projectRoot: string, logger: Logger)
   try {
     await insertValueAfterPattern(
       appBuildGradlePath,
-      /apply plugin: ["']com\.android\.application["']/,
+      /^apply from: ["']\.\.\/\.\.\/node_modules\/react-native\/react\.gradle["']$/m,
       GRADLE_PLUGIN_APPLY,
       GRADLE_PLUGIN_APPLY_REGEX,
       logger
