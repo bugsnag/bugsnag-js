@@ -69,6 +69,11 @@ When('I wait for the shell to output the following to stdout') do |expected|
   )
 end
 
+When('I build the Android fixture') do
+  # TODO: Handle both Dockerized and local Maze Runner executions
+  `node -e 'require("./scripts/react-native-cli-helper").buildAndroid("/app/features/fixtures", "/app/fixture_build")'`
+end
+
 # TODO(PLAT-5566) migrate to Maze Runner
 Then("I wait for the shell to output a line containing {string} to stdout") do |expected|
   wait = Maze::Wait.new(timeout: MazeRunner.config.receive_requests_wait)
