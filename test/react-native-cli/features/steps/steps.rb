@@ -69,9 +69,9 @@ When('I wait for the shell to output the following to stdout') do |expected|
   )
 end
 
-When('I build the Android fixture') do
+When('I build the Android app') do
   # Handle both Dockerized and local Maze Runner executions
-  path = '../..' unless File.exist? 'scripts/react-native-cli-helper.js'
+  path = (File.exist? 'scripts/react-native-cli-helper.js') ? '.' : '../..'
   `node -e 'require("#{path}/scripts/react-native-cli-helper").buildAndroid("./features/fixtures", "./local-build")'`
 end
 

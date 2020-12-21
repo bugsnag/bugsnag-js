@@ -1,7 +1,7 @@
 Feature: Tests for building a React Native app (for Android only) that was initialized using the Bugsnag React Native CLI
 
   Scenario: A CLI initialized React Native Android app invokes a source map upload
-    When I build the Android fixture
+    When I build the Android app
     And I wait to receive 2 requests
 
     Then the request is valid for the build API
