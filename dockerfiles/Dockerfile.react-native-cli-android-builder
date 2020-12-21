@@ -33,4 +33,4 @@ COPY scripts/common.js scripts/react-native-cli-helper.js scripts/
 
 RUN bundle exec maze-runner --version
 
-CMD bundle exec maze-runner /app/test/react-native-cli/features/build-app.feature
+CMD bundle exec maze-runner /app/test/react-native-cli/features/build-android-app.feature
