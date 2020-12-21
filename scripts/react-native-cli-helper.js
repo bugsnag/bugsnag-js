@@ -5,7 +5,10 @@ const common = require('./common')
 const fs = require('fs')
 
 module.exports = {
-  buildAndroid: function buildAndroid (sourceFixtures, destFixtures) {
+  buildAndroid: function buildAndroid (sourceFixturesIn, destFixturesIn) {
+    const baseDir = process.env.PWD
+    const sourceFixtures = `${baseDir}/${sourceFixturesIn}`
+    const destFixtures = `${baseDir}/${destFixturesIn}`
     const version = process.env.NOTIFIER_VERSION || common.determineVersion()
     const rnVersion = process.env.REACT_NATIVE_VERSION
 
@@ -36,7 +39,7 @@ module.exports = {
 
     // Finally, copy the APK back to the host
     fs.copyFileSync(`${destFixtures}/${rnVersion}/android/app/build/outputs/apk/release/app-release.apk`,
-                    `${process.env.PWD}/build/${rnVersion}.apk`)
+                    `${baseDir}/build/${rnVersion}.apk`)
   },
   buildIOS: function buildIOS () {
     const version = process.env.NOTIFIER_VERSION || common.determineVersion()
