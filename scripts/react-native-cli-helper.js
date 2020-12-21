@@ -32,7 +32,7 @@ module.exports = {
 
     // Native layer
     common.changeDir(`${destFixtures}/${rnVersion}/android`)
-    common.run('./gradlew assembleRelease', true)
+    common.run('./gradlew assembleRelease --stacktrace --info', true)
 
     // Finally, copy the APK back to the host
     fs.copyFileSync(`${destFixtures}/${rnVersion}/android/app/build/outputs/apk/release/app-release.apk`,
