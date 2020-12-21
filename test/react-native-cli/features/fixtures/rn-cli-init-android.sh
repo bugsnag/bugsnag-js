@@ -44,10 +44,9 @@ expect "This will enable you to see full native stacktraces. It can't be done au
 send -- \r
 
 expect "Do you want to automatically upload source maps as part of the Gradle build?"
-send -- n
+send -- y
 
-# TODO: Disable source map uploads for now
-#expect "If you want the latest version of @bugsnag/source-maps hit enter, otherwise type the version you want"
-#send -- latest\r
+expect "If you want the latest version of @bugsnag/source-maps hit enter, otherwise type the version you want"
+send -- latest\r
 
 expect eof
