@@ -36,7 +36,7 @@ expect "If you want the latest version of the Bugsnag Android Gradle plugin hit 
 send -- 5.5.0-alpha01\r
 
 expect "What is your Bugsnag API key?"
-send -- 12312312312312312312312312312312\r
+send -- 1234567890ABCDEF1234567890ABCDEF\r
 
 expect "Do you want to automatically upload source maps as part of the Xcode build?"
 send -- n
