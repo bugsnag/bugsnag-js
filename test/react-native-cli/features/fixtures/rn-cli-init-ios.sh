@@ -39,7 +39,7 @@ expect "What is your Bugsnag API key?"
 send -- 1234567890ABCDEF1234567890ABCDEF\r
 
 expect "Do you want to automatically upload source maps as part of the Xcode build?"
-send -- y
+send -- n
 
 expect "This will enable you to see full native stacktraces. It can't be done automatically."
 send -- \r
@@ -47,7 +47,7 @@ send -- \r
 expect "Do you want to automatically upload source maps as part of the Gradle build?"
 send -- n
 
-expect "If you want the latest version of @bugsnag/source-maps hit enter, otherwise type the version you want"
-send -- latest\r
+#expect "If you want the latest version of @bugsnag/source-maps hit enter, otherwise type the version you want"
+#send -- latest\r
 
 expect eof
