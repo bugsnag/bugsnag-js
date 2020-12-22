@@ -71,8 +71,19 @@ end
 
 When('I build the Android app') do
   # Handle both Dockerized and local Maze Runner executions
-  path = (File.exist? 'scripts/react-native-cli-helper.js') ? '.' : '../..'
-  `node -e 'require("#{path}/scripts/react-native-cli-helper").buildAndroid("./features/fixtures", "./local-build")'`
+  script = 'react-native-cli-helper.js'
+  possible_locations = %W[
+    #{__dir__}/../../scripts/#{script}
+    #{__dir__}/../../../../scripts/#{script}
+  ]
+  path = possible_locations.find { |path| File.exist?(path) }
+  if path.nil?
+    raise <<~ERROR
+      The React Native CLI helper script was not found in any of the expected locations:
+        - #{possible_locations.join("\n  -")}
+    ERROR
+  end
+  `node -e 'require("#{path}").buildAndroid("./features/fixtures", "./local-build")'`
 end
 
 # TODO(PLAT-5566) migrate to Maze Runner
