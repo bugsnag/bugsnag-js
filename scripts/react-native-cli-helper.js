@@ -44,7 +44,7 @@ module.exports = {
   buildIOS: function buildIOS () {
     const version = process.env.NOTIFIER_VERSION || common.determineVersion()
     const rnVersion = process.env.REACT_NATIVE_VERSION
-    const fixturesDir = 'test/react-native-cli/features/fixtures'
+    const fixturesDir = 'features/fixtures'
     const targetDir = `${fixturesDir}/${rnVersion}`
     const initialDir = process.cwd()
 
