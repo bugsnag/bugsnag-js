@@ -1,5 +1,5 @@
 # TODO: Candidate for moving to its own repo for sharing across notifier repositories
-FROM openjdk:8-jdk-stretch
+FROM openjdk:8-jdk-buster
 
 # OS setup
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
@@ -23,6 +23,7 @@ ENV GRADLE_OPTS="-Dorg.gradle.daemon=false"
 ENV GRADLE_USER_HOME="/app/gradle"
 WORKDIR /app/gradle
 
+# TODO: Not convinced this is actually saving repeat downloads as it is intended to do
 RUN wget -q https://services.gradle.org/distributions/gradle-5.1.1-all.zip \
             https://services.gradle.org/distributions/gradle-5.4.1-all.zip \
             https://services.gradle.org/distributions/gradle-6.2-all.zip

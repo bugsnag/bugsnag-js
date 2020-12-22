@@ -5,7 +5,10 @@ const common = require('./common')
 const fs = require('fs')
 
 module.exports = {
-  buildAndroid: function buildAndroid (sourceFixtures, destFixtures) {
+  buildAndroid: function buildAndroid (sourceFixturesIn, destFixturesIn) {
+    const baseDir = process.env.PWD
+    const sourceFixtures = `${baseDir}/${sourceFixturesIn}`
+    const destFixtures = `${baseDir}/${destFixturesIn}`
     const version = process.env.NOTIFIER_VERSION || common.determineVersion()
     const rnVersion = process.env.REACT_NATIVE_VERSION
 
@@ -27,7 +30,7 @@ module.exports = {
 
     // Use Expect to run the init command interactively
     common.changeDir(`${destFixtures}`)
-    const initCommand = `./rn-cli-init-android.sh ${version}`
+    const initCommand = `./rn-cli-init-android.sh ${version} ${rnVersion}`
     common.run(initCommand, true)
 
     // Native layer
@@ -36,7 +39,7 @@ module.exports = {
 
     // Finally, copy the APK back to the host
     fs.copyFileSync(`${destFixtures}/${rnVersion}/android/app/build/outputs/apk/release/app-release.apk`,
-                    `${process.env.PWD}/build/${rnVersion}.apk`)
+                    `${baseDir}/build/${rnVersion}.apk`)
   },
   buildIOS: function buildIOS () {
     const version = process.env.NOTIFIER_VERSION || common.determineVersion()
@@ -60,7 +63,7 @@ module.exports = {
 
     // Use Expect to run the init command interactively
     common.changeDir(`${initialDir}/${fixturesDir}`)
-    common.run(`./rn-cli-init-ios.sh ${version}`, true)
+    common.run(`./rn-cli-init-ios.sh ${version} ${rnVersion}`, true)
 
     // Performing local build steps
     if (!fs.existsSync('./build-ios.sh')) {

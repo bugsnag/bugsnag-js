@@ -69,6 +69,12 @@ When('I wait for the shell to output the following to stdout') do |expected|
   )
 end
 
+When('I build the Android app') do
+  # Handle both Dockerized and local Maze Runner executions
+  path = (File.exist? 'scripts/react-native-cli-helper.js') ? '.' : '../..'
+  `node -e 'require("#{path}/scripts/react-native-cli-helper").buildAndroid("./features/fixtures", "./local-build")'`
+end
+
 # TODO(PLAT-5566) migrate to Maze Runner
 Then("I wait for the shell to output a line containing {string} to stdout") do |expected|
   wait = Maze::Wait.new(timeout: MazeRunner.config.receive_requests_wait)
@@ -100,14 +106,15 @@ Then("I wait for the current stdout line to contain {string}") do |expected|
 end
 
 def parse_package_json
-  length_before = Runner.interactive_session.stdout_lines.length
+  stdout_lines = Runner.interactive_session.stdout_lines
+  length_before = stdout_lines.length
 
   steps %Q{
     When I input "cat package.json" interactively
     Then I wait for the shell to output '"dependencies": \{' to stdout
   }
 
-  after = Runner.interactive_session.stdout_lines[length_before..]
+  after = stdout_lines[length_before..stdout_lines.length]
 
   # Drop lines that include the cat command above. This will sometimes appear
   # once and sometimes appear twice, depending on if another command is running
@@ -343,7 +350,8 @@ Then("there are no modified files in git") do
 end
 
 def parse_xml_file(path)
-  length_before = Runner.interactive_session.stdout_lines.length
+  stdout_lines = Runner.interactive_session.stdout_lines
+  length_before = stdout_lines.length
   uuid = SecureRandom.uuid
 
   steps %Q{
@@ -352,7 +360,7 @@ def parse_xml_file(path)
     Then I wait for the shell to output '#{uuid}' to stdout
   }
 
-  after = Runner.interactive_session.stdout_lines[length_before..]
+  after = stdout_lines[length_before..stdout_lines.length]
 
   # Drop lines that include the cat command above. This will sometimes appear
   # once and sometimes appear twice, depending on if another command is running
@@ -474,4 +482,24 @@ Then("the Android app does not contain a bugsnag sessions URL") do
   element = xml.get_elements('//meta-data[@android:name="com.bugsnag.android.ENDPOINT_SESSIONS"]').first
 
   assert_nil(element)
+end
+
+Then('the request is valid for the build API') do
+  request_body = Server.current_request[:body]
+  assert_equal($api_key, read_key_path(request_body, 'apiKey'))
+  assert_not_nil(read_key_path(request_body, 'appVersion'))
+  assert_not_nil(read_key_path(request_body, 'builderName'))
+  assert_not_nil(read_key_path(request_body, 'metadata.os_name'))
+  assert_not_nil(read_key_path(request_body, 'metadata.os_arch'))
+  assert_not_nil(read_key_path(request_body, 'metadata.os_version'))
+  assert_not_nil(read_key_path(request_body, 'metadata.java_version'))
+  assert_not_nil(read_key_path(request_body, 'metadata.gradle_version'))
+  assert_not_nil(read_key_path(request_body, 'metadata.git_version'))
+end
+
+Then('the Content-Type header is valid multipart form-data') do
+  expected = /^multipart\/form-data; boundary=--------------------------\d+$/
+  actual = Server.current_request[:request]["content-type"]
+
+  assert_match(expected, actual)
 end
