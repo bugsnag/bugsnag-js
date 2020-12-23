@@ -141,11 +141,12 @@ steps:
     agents:
       queue: 'opensource-mac-rn'
     env:
-      DEBUG: true
+      # TODO: Reinstate - MR currently causes the build to fail due to trying to JSON print uploads
+      # DEBUG: true
       REACT_NATIVE_VERSION: rn0_60
     artifact_paths: build/rn0_60.ipa
     commands:
-      - npm run test:build-react-native-cli-ios
+      - cd test/react-native-cli && bundle exec maze-runner features/build-app-tests/build-ios-app.feature
 
   - label: ':ios: Init and build RN 0.61 ipa'
     key: 'rn-0-61-ipa'
@@ -153,10 +154,12 @@ steps:
     agents:
       queue: 'opensource-mac-rn'
     env:
+      # TODO: Reinstate - MR currently causes the build to fail due to trying to JSON print uploads
+      # DEBUG: true
       REACT_NATIVE_VERSION: rn0_61
     artifact_paths: build/rn0_61.ipa
     commands:
-      - npm run test:build-react-native-cli-ios
+      - cd test/react-native-cli && bundle exec maze-runner features/build-app-tests/build-ios-app.feature
 
   - label: ':ios: Init and build RN 0.62 ipa'
     key: 'rn-0-62-ipa'
@@ -164,10 +167,12 @@ steps:
     agents:
       queue: 'opensource-mac-rn'
     env:
+      # TODO: Reinstate - MR currently causes the build to fail due to trying to JSON print uploads
+      # DEBUG: true
       REACT_NATIVE_VERSION: rn0_62
     artifact_paths: build/rn0_62.ipa
     commands:
-      - npm run test:build-react-native-cli-ios
+      - cd test/react-native-cli && bundle exec maze-runner features/build-app-tests/build-ios-app.feature
 
   - label: ':ios: Init and build RN 0.63 ipa'
     key: 'rn-0-63-ipa'
@@ -175,10 +180,12 @@ steps:
     agents:
       queue: 'opensource-mac-rn'
     env:
+      # TODO: Reinstate - MR currently causes the build to fail due to trying to JSON print uploads
+      # DEBUG: true
       REACT_NATIVE_VERSION: rn0_63
     artifact_paths: build/rn0_63.ipa
     commands:
-      - npm run test:build-react-native-cli-ios
+      - cd test/react-native-cli && bundle exec maze-runner features/build-app-tests/build-ios-app.feature
 
   #
   # Init, build and notify end-to-end tests
