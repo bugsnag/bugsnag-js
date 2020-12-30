@@ -1,3 +1,0 @@
-require 'selenium-webdriver'
-
-
