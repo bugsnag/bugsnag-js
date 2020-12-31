@@ -1,6 +1,5 @@
 When('I navigate to the test URL {string}') do |test_path|
   path = get_test_url test_path
-  $logger.info "Navigate to #{test_path}"
   step("I navigate to the URL \"#{path}\"")
 end
 
