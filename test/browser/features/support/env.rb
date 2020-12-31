@@ -20,16 +20,16 @@ Process.detach(pid)
 
 def get_test_url path
   host = ENV['HOST']
-  endpoint = URI::encode("http://#{ENV['API_HOST']}:#{Maze::Server::PORT}")
-  api_key = URI::encode($api_key)
-  "http://#{host}:#{FIXTURES_SERVER_PORT}#{path}?ENDPOINT=#{endpoint}&API_KEY=#{api_key}"
+  notify = "http://#{ENV['API_HOST']}:#{Maze::Server::PORT}/notify"
+  sessions = "http://#{ENV['API_HOST']}:#{Maze::Server::PORT}/sessions"
+  "http://#{host}:#{FIXTURES_SERVER_PORT}#{path}?NOTIFY=#{notify}&SESSIONS=#{sessions}&API_KEY=#{$api_key}"
 end
 
-When('I navigate to the test URL {string}') do |test_path|
-  path = get_test_url test_path
-  steps %Q{
-    I navigate to the URL "#{path}"
-  }
+def get_error_message id
+  browser = MazeRunner.config.bs_browser
+  raise "The browser '#{browser}' does not exist in 'browser_errors.yml'" unless ERRORS.has_key?(browser)
+
+  ERRORS[browser][id]
 end
 
 Before('@skip_if_local_storage_is_unavailable') do |scenario|
