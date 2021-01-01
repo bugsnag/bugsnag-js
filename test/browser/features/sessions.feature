@@ -3,7 +3,7 @@ Feature: Session tracking
 
 Scenario: tracking sessions by default
   When I navigate to the test URL "/sessions/script/a.html"
-  Then I wait to receive an error
+  Then I wait to receive a session
   And the request is a valid browser payload for the session tracking API
 
 Scenario: autoTrackSessions=false

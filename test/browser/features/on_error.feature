@@ -10,7 +10,7 @@ Scenario: modifying report via onError in config
 Scenario: ignoring report via onError in config (return false)
   When I navigate to the test URL "/on_error/script/b.html"
   And I wait for 1 second
-  Then I should receive no requests
+  Then I should receive no errors
 
 Scenario: setting onError in notify opts
   When I navigate to the test URL "/on_error/script/d.html"
@@ -21,4 +21,4 @@ Scenario: setting onError in notify opts
 Scenario: ignoring report via onError in notify opts (return false)
   When I navigate to the test URL "/on_error/script/e.html"
   And I wait for 1 second
-  Then I should receive no requests
+  Then I should receive no errors
