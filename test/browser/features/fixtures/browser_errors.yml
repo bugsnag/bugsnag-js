@@ -6,23 +6,23 @@ ie_8:
   unhandled_syntax:
     errorClass: 'Error'
     errorMessage: "Expected ';'"
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 13
     file: '/unhandled/script/a.html'
   unhandled_thrown:
     errorClass: 'Error'
     errorMessage: "bad things"
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 7
   unhandled_undefined_function:
     errorClass: 'Error'
     errorMessage: "Object expected"
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 7
   unhandled_malformed_uri:
     errorClass: 'Error'
     errorMessage: "The URI to be decoded is not a valid encoding"
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 7
 
 ie_9:
@@ -32,23 +32,23 @@ ie_9:
   unhandled_syntax:
     errorClass: 'Error'
     errorMessage: "Expected ';'"
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 13
     file: '/unhandled/script/a.html'
   unhandled_thrown:
     errorClass: 'Error'
     errorMessage: "bad things"
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 7
   unhandled_undefined_function:
     errorClass: 'Error'
     errorMessage: "'nevergoingtoexist_notinamillionyears' is undefined"
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 7
   unhandled_malformed_uri:
     errorClass: 'Error'
     errorMessage: "The URI to be decoded is not a valid encoding"
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 7
 
 ie_10:
@@ -58,23 +58,23 @@ ie_10:
   unhandled_syntax:
     errorClass: 'Error'
     errorMessage: "Expected ';'"
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 13
     file: '/unhandled/script/a.html'
   unhandled_thrown:
     errorClass: 'Error'
     errorMessage: "bad things"
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 7
   unhandled_undefined_function:
     errorClass: 'Error'
     errorMessage: "'nevergoingtoexist_notinamillionyears' is undefined"
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 7
   unhandled_malformed_uri:
     errorClass: 'Error'
     errorMessage: "The URI to be decoded is not a valid encoding"
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 7
 
 ie_11:
@@ -84,23 +84,23 @@ ie_11:
   unhandled_syntax:
     errorClass: 'Error'
     errorMessage: "Expected ';'"
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 13
     file: '/unhandled/script/a.html'
   unhandled_thrown:
     errorClass: 'Error'
     errorMessage: "bad things"
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 7
   unhandled_undefined_function:
     errorClass: 'ReferenceError'
     errorMessage: "'nevergoingtoexist_notinamillionyears' is undefined"
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 7
   unhandled_malformed_uri:
     errorClass: 'URIError'
     errorMessage: "The URI to be decoded is not a valid encoding"
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 7
 
 edge_14:
@@ -110,23 +110,23 @@ edge_14:
   unhandled_syntax:
     errorClass: 'Error'
     errorMessage: "Expected ';'"
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 13
     file: '/unhandled/script/a.html'
   unhandled_thrown:
     errorClass: 'Error'
     errorMessage: "bad things"
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 7
   unhandled_undefined_function:
     errorClass: 'ReferenceError'
     errorMessage: "'nevergoingtoexist_notinamillionyears' is undefined"
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 7
   unhandled_malformed_uri:
     errorClass: 'URIError'
     errorMessage: "The URI to be decoded is not a valid encoding"
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 7
 
 edge_15:
@@ -136,23 +136,23 @@ edge_15:
   unhandled_syntax:
     errorClass: 'Error'
     errorMessage: "Expected ';'"
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 13
     file: '/unhandled/script/a.html'
   unhandled_thrown:
     errorClass: 'Error'
     errorMessage: "bad things"
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 7
   unhandled_undefined_function:
     errorClass: 'ReferenceError'
     errorMessage: "'nevergoingtoexist_notinamillionyears' is undefined"
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 7
   unhandled_malformed_uri:
     errorClass: 'URIError'
     errorMessage: "The URI to be decoded is not a valid encoding"
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 7
 
 safari_6:
@@ -162,20 +162,20 @@ safari_6:
   unhandled_syntax:
     errorClass: 'Error'
     errorMessage: "SyntaxError: Unexpected token '!'"
-    lineNumber: 17
+    lineNumber: 18
     file: '/unhandled/script/a.html'
   unhandled_thrown:
     errorClass: 'Error'
     errorMessage: "Error: bad things"
-    lineNumber: 17
+    lineNumber: 18
   unhandled_undefined_function:
     errorClass: 'Error'
     errorMessage: "ReferenceError: Can't find variable: nevergoingtoexist_notinamillionyears"
-    lineNumber: 17
+    lineNumber: 18
   unhandled_malformed_uri:
     errorClass: 'Error'
     errorMessage: "URIError: URI error"
-    lineNumber: 17
+    lineNumber: 18
 
 safari_10:
   handled:
@@ -184,23 +184,23 @@ safari_10:
   unhandled_syntax:
     errorClass: 'SyntaxError'
     errorMessage: "Unexpected token '!'. Parse error."
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 0
     file: '/unhandled/script/a.html'
   unhandled_thrown:
     errorClass: 'Error'
     errorMessage: "bad things"
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 22
   unhandled_undefined_function:
     errorClass: 'ReferenceError'
     errorMessage: "Can't find variable: nevergoingtoexist_notinamillionyears"
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 43
   unhandled_malformed_uri:
     errorClass: 'URIError'
     errorMessage: URI error
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 25
 
 safari_13:
@@ -210,23 +210,23 @@ safari_13:
   unhandled_syntax:
     errorClass: 'SyntaxError'
     errorMessage: "Unexpected token '!'. Parse error."
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 0
     file: '/unhandled/script/a.html'
   unhandled_thrown:
     errorClass: 'Error'
     errorMessage: "bad things"
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 22
   unhandled_undefined_function:
     errorClass: 'ReferenceError'
     errorMessage: "Can't find variable: nevergoingtoexist_notinamillionyears"
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 43
   unhandled_malformed_uri:
     errorClass: 'URIError'
     errorMessage: URI error
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 25
 
 iphone_7:
@@ -236,23 +236,23 @@ iphone_7:
   unhandled_syntax:
     errorClass: 'SyntaxError'
     errorMessage: "Unexpected token '!'. Parse error."
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 0
     file: '/unhandled/script/a.html'
   unhandled_thrown:
     errorClass: 'Error'
     errorMessage: "bad things"
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 22
   unhandled_undefined_function:
     errorClass: 'ReferenceError'
     errorMessage: "Can't find variable: nevergoingtoexist_notinamillionyears"
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 43
   unhandled_malformed_uri:
     errorClass: 'URIError'
     errorMessage: URI error
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 25
 
 android_s8:
@@ -262,23 +262,23 @@ android_s8:
   unhandled_syntax:
     errorClass: 'SyntaxError'
     errorMessage: "Unexpected token '!'"
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 13
     file: '/unhandled/script/a.html'
   unhandled_thrown:
     errorClass: 'Error'
     errorMessage: "bad things"
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 13
   unhandled_undefined_function:
     errorClass: 'ReferenceError'
     errorMessage: nevergoingtoexist_notinamillionyears is not defined
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 7
   unhandled_malformed_uri:
     errorClass: 'URIError'
     errorMessage: URI malformed
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 7
 
 firefox_30:
@@ -288,20 +288,20 @@ firefox_30:
   unhandled_syntax:
     errorClass: 'Error'
     errorMessage: "SyntaxError: missing ; before statement"
-    lineNumber: 17
+    lineNumber: 18
     file: '/unhandled/script/a.html'
   unhandled_thrown:
     errorClass: 'Error'
     errorMessage: "Error: bad things"
-    lineNumber: 17
+    lineNumber: 18
   unhandled_undefined_function:
     errorClass: 'Error'
     errorMessage: "ReferenceError: nevergoingtoexist_notinamillionyears is not defined"
-    lineNumber: 17
+    lineNumber: 18
   unhandled_malformed_uri:
     errorClass: 'Error'
     errorMessage: "URIError: malformed URI sequence"
-    lineNumber: 17
+    lineNumber: 18
 
 firefox_56:
   handled:
@@ -310,23 +310,23 @@ firefox_56:
   unhandled_syntax:
     errorClass: 'SyntaxError'
     errorMessage: "missing ; before statement"
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 12
     file: '/unhandled/script/a.html'
   unhandled_thrown:
     errorClass: 'Error'
     errorMessage: "bad things"
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 13
   unhandled_undefined_function:
     errorClass: 'ReferenceError'
     errorMessage: nevergoingtoexist_notinamillionyears is not defined
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 7
   unhandled_malformed_uri:
     errorClass: 'URIError'
     errorMessage: malformed URI sequence
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 7
 
 firefox_latest:
@@ -336,23 +336,23 @@ firefox_latest:
   unhandled_syntax:
     errorClass: 'SyntaxError'
     errorMessage: "unexpected token: '!'"
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 12
     file: '/unhandled/script/a.html'
   unhandled_thrown:
     errorClass: 'Error'
     errorMessage: "bad things"
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 13
   unhandled_undefined_function:
     errorClass: 'ReferenceError'
     errorMessage: nevergoingtoexist_notinamillionyears is not defined
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 7
   unhandled_malformed_uri:
     errorClass: 'URIError'
     errorMessage: malformed URI sequence
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 25
 
 chrome_43:
@@ -362,23 +362,23 @@ chrome_43:
   unhandled_syntax:
     errorClass: 'SyntaxError'
     errorMessage: "Unexpected token !"
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 13
     file: '/unhandled/script/a.html'
   unhandled_thrown:
     errorClass: 'Error'
     errorMessage: "bad things"
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 13
   unhandled_undefined_function:
     errorClass: 'ReferenceError'
     errorMessage: nevergoingtoexist_notinamillionyears is not defined
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 7
   unhandled_malformed_uri:
     errorClass: 'URIError'
     errorMessage: URI malformed
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 7
 
 chrome_61:
@@ -388,23 +388,23 @@ chrome_61:
   unhandled_syntax:
     errorClass: 'SyntaxError'
     errorMessage: "Unexpected token !"
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 13
     file: '/unhandled/script/a.html'
   unhandled_thrown:
     errorClass: 'Error'
     errorMessage: "bad things"
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 13
   unhandled_undefined_function:
     errorClass: 'ReferenceError'
     errorMessage: nevergoingtoexist_notinamillionyears is not defined
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 7
   unhandled_malformed_uri:
     errorClass: 'URIError'
     errorMessage: URI malformed
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 7
 
 chrome_latest:
@@ -414,21 +414,21 @@ chrome_latest:
   unhandled_syntax:
     errorClass: 'SyntaxError'
     errorMessage: "Unexpected token '!'"
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 13
     file: '/unhandled/script/a.html'
   unhandled_thrown:
     errorClass: 'Error'
     errorMessage: "bad things"
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 13
   unhandled_undefined_function:
     errorClass: 'ReferenceError'
     errorMessage: nevergoingtoexist_notinamillionyears is not defined
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 7
   unhandled_malformed_uri:
     errorClass: 'URIError'
     errorMessage: URI malformed
-    lineNumber: 17
+    lineNumber: 18
     columnNumber: 7
