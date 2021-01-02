@@ -30,13 +30,12 @@ services:
       target: browser-maze-runner
       args:
         - BUILDKITE_BUILD_NUMBER
-    command: --fail-fast --retry 2
     environment:
       DEBUG:
       BROWSER: "${BROWSER:-chrome_61}"
-      BROWSER_STACK_USERNAME:
-      BROWSER_STACK_ACCESS_KEY:
-      BROWSER_STACK_LOCAL_IDENTIFIER: ${BUILDKITE_JOB_ID:-maze-runner}
+      BUILDKITE:
+      MAZE_DEVICE_FARM_USERNAME:
+      MAZE_DEVICE_FARM_ACCESS_KEY:
       HOST: "${HOST:-maze-runner}"
       API_HOST: "${API_HOST:-maze-runner}"
     networks:
