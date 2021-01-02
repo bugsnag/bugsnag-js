@@ -39,8 +39,9 @@ steps:
         run: browser-maze-runner
         use-aliases: true
         verbose: true
-    env:
-      BROWSER: "chrome_61"
+        command:
+          - --farm=bs
+          - --browser=chrome_61
     concurrency: 5
     concurrency_group: 'browserstack'
 
@@ -52,8 +53,9 @@ steps:
         run: browser-maze-runner
         use-aliases: true
         verbose: true
-    env:
-      BROWSER: "chrome_latest"
+        command:
+          - --farm=bs
+          - --browser=chrome_latest
     concurrency: 5
     concurrency_group: 'browserstack'
 
@@ -65,8 +67,9 @@ steps:
         run: browser-maze-runner
         use-aliases: true
         verbose: true
-    env:
-      BROWSER: "ie_8"
+        command:
+          - --farm=bs
+          - --browser=ie_8
     concurrency: 5
     concurrency_group: 'browserstack'
 
@@ -78,8 +81,9 @@ steps:
         run: browser-maze-runner
         use-aliases: true
         verbose: true
-    env:
-      BROWSER: "ie_9"
+        command:
+          - --farm=bs
+          - --browser=ie_9
     concurrency: 5
     concurrency_group: 'browserstack'
 
@@ -91,8 +95,9 @@ steps:
         run: browser-maze-runner
         use-aliases: true
         verbose: true
-    env:
-      BROWSER: "ie_10"
+        command:
+          - --farm=bs
+          - --browser=ie_10
     concurrency: 5
     concurrency_group: 'browserstack'
 
@@ -104,8 +109,10 @@ steps:
         run: browser-maze-runner
         use-aliases: true
         verbose: true
+        command:
+          - --farm=bs
+          - --browser=ie_!1
     env:
-      BROWSER: "ie_11"
       HOST: 'localhost' # IE11 needs the host set to localhost for some reason!ß
     concurrency: 5
     concurrency_group: 'browserstack'
@@ -118,8 +125,9 @@ steps:
         run: browser-maze-runner
         use-aliases: true
         verbose: true
-    env:
-      BROWSER: "edge_14"
+        command:
+          - --farm=bs
+          - --browser=edge_14
     concurrency: 5
     concurrency_group: 'browserstack'
 
@@ -131,8 +139,9 @@ steps:
         run: browser-maze-runner
         use-aliases: true
         verbose: true
-    env:
-      BROWSER: "edge_15"
+        command:
+          - --farm=bs
+          - --browser=edge_15
     concurrency: 5
     concurrency_group: 'browserstack'
 
@@ -144,8 +153,9 @@ steps:
         run: browser-maze-runner
         use-aliases: true
         verbose: true
-    env:
-      BROWSER: "safari_6"
+        command:
+          - --farm=bs
+          - --browser=safari_6
     concurrency: 5
     concurrency_group: 'browserstack'
 
@@ -157,8 +167,9 @@ steps:
         run: browser-maze-runner
         use-aliases: true
         verbose: true
-    env:
-      BROWSER: "safari_10"
+        command:
+          - --farm=bs
+          - --browser=safari_10
     concurrency: 5
     concurrency_group: 'browserstack'
 
@@ -170,8 +181,9 @@ steps:
         run: browser-maze-runner
         use-aliases: true
         verbose: true
-    env:
-      BROWSER: "safari_13"
+        command:
+          - --farm=bs
+          - --browser=safari_13
     concurrency: 5
     concurrency_group: 'browserstack'
 
@@ -183,8 +195,10 @@ steps:
         run: browser-maze-runner
         use-aliases: true
         verbose: true
+        command:
+          - --farm=bs
+          - --browser=iphone_7
     env:
-      BROWSER: "iphone_7"
       HOST: "bs-local.com"
     concurrency: 5
     concurrency_group: 'browserstack'
@@ -197,8 +211,9 @@ steps:
         run: browser-maze-runner
         use-aliases: true
         verbose: true
-    env:
-      BROWSER: "android_s8"
+        command:
+          - --farm=bs
+          - --browser=android_s8
     concurrency: 5
     concurrency_group: 'browserstack'
 
@@ -210,8 +225,9 @@ steps:
         run: browser-maze-runner
         use-aliases: true
         verbose: true
-    env:
-      BROWSER: "firefox_30"
+        command:
+          - --farm=bs
+          - --browser=firefox_30
     concurrency: 5
     concurrency_group: 'browserstack'
 
@@ -223,8 +239,9 @@ steps:
         run: browser-maze-runner
         use-aliases: true
         verbose: true
-    env:
-      BROWSER: "firefox_56"
+        command:
+          - --farm=bs
+          - --browser=firefox_56
     concurrency: 5
     concurrency_group: 'browserstack'
 
@@ -236,7 +253,8 @@ steps:
         run: browser-maze-runner
         use-aliases: true
         verbose: true
-    env:
-      BROWSER: "firefox_latest"
+        command:
+          - --farm=bs
+          - --browser=firefox_latest
     concurrency: 5
     concurrency_group: 'browserstack'
