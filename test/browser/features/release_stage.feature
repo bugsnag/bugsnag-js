@@ -16,7 +16,7 @@ Scenario: setting releaseStage=development
 Scenario: setting releaseStage=qa enabledReleaseStages=[production,staging]
   When I navigate to the test URL "/release_stage/script/c.html"
   And I wait for 2 seconds
-  Then I should receive no requests
+  Then I should receive no errors
 
 Scenario: setting releaseStage=staging enabledReleaseStages=[production,staging]
   When I navigate to the test URL "/release_stage/script/d.html"
@@ -33,4 +33,4 @@ Scenario: setting releaseStage=development enabledReleaseStages=null
 Scenario: setting enabledReleaseStages=[]
   When I navigate to the test URL "/release_stage/script/f.html"
   And I wait for 2 seconds
-  Then I should receive no requests
+  Then I should receive no errors

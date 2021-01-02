@@ -111,7 +111,7 @@ steps:
         verbose: true
         command:
           - --farm=bs
-          - --browser=ie_!1
+          - --browser=ie_11
     env:
       HOST: 'localhost' # IE11 needs the host set to localhost for some reason!ß
     concurrency: 5
