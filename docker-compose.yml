@@ -32,7 +32,6 @@ services:
         - BUILDKITE_BUILD_NUMBER
     environment:
       DEBUG:
-      BROWSER: "${BROWSER:-chrome_61}"
       BUILDKITE:
       MAZE_DEVICE_FARM_USERNAME:
       MAZE_DEVICE_FARM_ACCESS_KEY:
