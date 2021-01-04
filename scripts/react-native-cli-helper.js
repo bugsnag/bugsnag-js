@@ -25,7 +25,7 @@ module.exports = {
     common.run('npm install', true)
 
     // Install and run the CLI
-    const installCommand = `npm install bugsnag-react-native-cli@${version}`
+    const installCommand = `npm install @bugsnag/react-native-cli@${version}`
     common.run(installCommand, true)
 
     // Use Expect to run the init command interactively
@@ -58,7 +58,7 @@ module.exports = {
     common.run('npm install', true)
 
     // Install and run the CLI
-    const installCommand = `npm install bugsnag-react-native-cli@${version}`
+    const installCommand = `npm install @bugsnag/react-native-cli@${version}`
     common.run(installCommand, true)
 
     // Use Expect to run the init command interactively
