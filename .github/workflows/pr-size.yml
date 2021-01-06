@@ -18,6 +18,7 @@ jobs:
 
       - name: Record target branch size
         run: |
+          mkdir .size
           npm ci
           npx lerna bootstrap --ignore @bugsnag/expo --ignore @bugsnag/react-native
           npx lerna run build --scope @bugsnag/browser
@@ -40,7 +41,6 @@ jobs:
 
       - name: Record PR size
         run: |
-          mkdir .size
           npx lerna bootstrap --ignore @bugsnag/expo --ignore @bugsnag/react-native
           npx lerna run build --scope @bugsnag/browser
           cat packages/browser/dist/bugsnag.min.js | wc -c > .size/after-minified
