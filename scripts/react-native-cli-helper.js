@@ -68,7 +68,7 @@ module.exports = {
     // Clean and build the archive
     common.changeDir(`${initialDir}/${fixturesDir}/${rnVersion}/ios`)
     common.run(`rm -rf ../${rnVersion}.xcarchive`, true)
-    common.run(`pod install || pod install --repo-update`, true)
+    common.run('pod install || pod install --repo-update', true)
     const archiveCmd = `xcrun xcodebuild -scheme "${rnVersion}" -workspace "${rnVersion}.xcworkspace" -configuration Release -archivePath "../${rnVersion}.xcarchive" -allowProvisioningUpdates archive`
     common.run(archiveCmd, true)
   }
