@@ -20,8 +20,8 @@
     "@bugsnag/core": "^7.5.4"
   },
   "dependencies": {
-    "expo-constants": "~9.2",
-    "expo-device": "~2.3"
+    "expo-constants": "~9.3.3",
+    "expo-device": "~2.4.0"
   },
   "peerDependencies": {
     "@bugsnag/core": "^7.0.0"
