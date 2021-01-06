@@ -141,8 +141,7 @@ steps:
     agents:
       queue: 'opensource-mac-rn'
     env:
-      # TODO: Reinstate - MR currently causes the build to fail due to trying to JSON print uploads
-      # DEBUG: true
+      DEBUG: true
     artifact_paths: build/rn0_60.ipa
     commands:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_60
@@ -153,8 +152,7 @@ steps:
     agents:
       queue: 'opensource-mac-rn'
     env:
-      # TODO: Reinstate - MR currently causes the build to fail due to trying to JSON print uploads
-      # DEBUG: true
+      DEBUG: true
     artifact_paths: build/rn0_61.ipa
     commands:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_61
@@ -165,8 +163,7 @@ steps:
     agents:
       queue: 'opensource-mac-rn'
     env:
-      # TODO: Reinstate - MR currently causes the build to fail due to trying to JSON print uploads
-      # DEBUG: true
+      DEBUG: true
     artifact_paths: build/rn0_62.ipa
     commands:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_62
@@ -177,8 +174,7 @@ steps:
     agents:
       queue: 'opensource-mac-rn'
     env:
-      # TODO: Reinstate - MR currently causes the build to fail due to trying to JSON print uploads
-      REACT_NATIVE_VERSION: rn0_63
+      DEBUG: true
     artifact_paths: build/rn0_63.ipa
     commands:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_63
