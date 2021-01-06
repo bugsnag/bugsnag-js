@@ -41,7 +41,7 @@ jobs:
 
       - name: Run test coverage
         run: |
-          npm lerna bootstrap
+          npx lerna bootstrap
           npm run build
           npm run test:unit -- --coverage
 
