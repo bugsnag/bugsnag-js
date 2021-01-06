@@ -1,5 +1,11 @@
 # Changelog
 
+## TBD
+
+### Fixed
+
+- (core): the `OnErrorCallback` type definition now allows `Promise<boolean>` as a return type. [#1224](https://github.com/bugsnag/bugsnag-js/pull/1224)
+
 ## v7.5.6 (2021-01-11)
 
 ### Changed
@@ -21,7 +27,6 @@
   - Add persistenceDirectory config option for controlling event/session storage [bugsnag-android#998](https://github.com/bugsnag/bugsnag-android/pull/998)
   - Add configuration option to control maximum number of persisted events/sessions [bugsnag-android#980](https://github.com/bugsnag/bugsnag-android/pull/980)
   - Increase kotlin dependency version to 1.3.72 [bugsnag-android#1050](https://github.com/bugsnag/bugsnag-android/pull/1050)
-
 
 ## v7.5.5 (2020-12-14)
 
