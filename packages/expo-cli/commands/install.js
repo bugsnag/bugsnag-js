@@ -76,8 +76,8 @@ const selectVersion = async (dir) => {
       message = 'It looks like you’re using a version of Expo SDK <39. The last version of Bugsnag that supported your version of Expo is v7.3.5'
       defaultVersion = '7.3.5'
     } else if (isPre40) {
-      message = 'It looks like you’re using a version of Expo SDK <40. The last version of Bugsnag that supported your version of Expo is v7.6.0'
-      defaultVersion = '7.6.0'
+      message = 'It looks like you’re using a version of Expo SDK <40. The last version of Bugsnag that supported your version of Expo is v7.5.5'
+      defaultVersion = '7.5.5'
     }
 
     const { version } = await prompts({
