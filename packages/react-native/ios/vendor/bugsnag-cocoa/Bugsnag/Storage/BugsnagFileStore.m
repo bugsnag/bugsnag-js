@@ -4,11 +4,12 @@
 //
 
 #import "BugsnagFileStore.h"
+
+#import "BSGCachesDirectory.h"
 #import "BSG_KSCrashReportFields.h"
 #import "BSG_KSJSONCodecObjC.h"
+#import "BugsnagLogger.h"
 #import "NSError+BSG_SimpleConstructor.h"
-#import "BSG_KSLogger.h"
-#import "BSGCachesDirectory.h"
 
 #pragma mark - Meta Data
 
@@ -90,7 +91,7 @@
     NSFileManager *fm = [NSFileManager defaultManager];
     NSArray *filenames = [fm contentsOfDirectoryAtPath:self.path error:&error];
     if (filenames == nil) {
-        BSG_KSLOG_ERROR(@"Could not get contents of directory %@: %@",
+        bsg_log_err(@"Could not get contents of directory %@: %@",
                 self.path, error);
         return nil;
     }
@@ -105,7 +106,7 @@
             NSDictionary *fileAttribs =
                     [fm attributesOfItemAtPath:fullPath error:&error];
             if (fileAttribs == nil) {
-                BSG_KSLOG_ERROR(@"Could not read file attributes for %@: %@",
+                bsg_log_err(@"Could not read file attributes for %@: %@",
                         fullPath, error);
             } else {
                 FileStoreInfo *info = [FileStoreInfo fileStoreInfoWithId:fileId
@@ -165,11 +166,11 @@
     NSMutableDictionary *fileContents =
             [self readFile:[self pathToFileWithId:fileId] error:&error];
     if (error != nil) {
-        BSG_KSLOG_ERROR(@"Encountered error loading file %@: %@",
+        bsg_log_err(@"Encountered error loading file %@: %@",
                 fileId, error);
     }
     if (fileContents == nil) {
-        BSG_KSLOG_ERROR(@"Could not load file");
+        bsg_log_err(@"Could not load file");
         return nil;
     }
     return fileContents;
@@ -181,7 +182,7 @@
 
     [[NSFileManager defaultManager] removeItemAtPath:filename error:&error];
     if (error != nil) {
-        BSG_KSLOG_ERROR(@"Could not delete file %@: %@", filename, error);
+        bsg_log_err(@"Could not delete file %@: %@", filename, error);
     }
 }
 
@@ -195,11 +196,11 @@
             [[BSGCachesDirectory cachesDirectory] stringByAppendingPathComponent:storePathEnd];
 
     if ([storePath length] == 0) {
-        BSG_KSLOG_ERROR(@"Could not determine report files path.");
+        bsg_log_err(@"Could not determine report files path.");
         return nil;
     }
     if (![self ensureDirectoryExists:storePath]) {
-        BSG_KSLOG_ERROR(@"Store Directory does not exist.");
+        bsg_log_err(@"Store Directory does not exist.");
         return nil;
     }
     return storePath;
@@ -214,7 +215,7 @@
            withIntermediateDirectories:YES
                             attributes:nil
                                  error:&error]) {
-            BSG_KSLOG_ERROR(@"Could not create directory %@: %@.", path, error);
+            bsg_log_err(@"Could not create directory %@: %@.", path, error);
             return NO;
         }
     }
@@ -229,7 +230,7 @@
               operation:(void (^)(id parent, id field))operation
            okIfNotFound:(BOOL)isOkIfNotFound {
     if (fieldPath.count == 0) {
-        BSG_KSLOG_ERROR(@"Unexpected end of field path");
+        bsg_log_err(@"Unexpected end of field path");
         return;
     }
 
@@ -244,7 +245,7 @@
     id field = file[currentField];
     if (field == nil) {
         if (!isOkIfNotFound) {
-            BSG_KSLOG_ERROR(@"%@: No such field in file. Candidates are: %@",
+            bsg_log_err(@"%@: No such field in file. Candidates are: %@",
                     currentField, file.allKeys);
         }
         return;
@@ -300,7 +301,7 @@
                               error:error];
     if (error != nil && *error != nil) {
 
-        BSG_KSLOG_ERROR(@"Error decoding JSON data from %@: %@", path, *error);
+        bsg_log_err(@"Error decoding JSON data from %@: %@", path, *error);
         fileContents[@BSG_KSCrashField_Incomplete] = @YES;
     }
     return fileContents;

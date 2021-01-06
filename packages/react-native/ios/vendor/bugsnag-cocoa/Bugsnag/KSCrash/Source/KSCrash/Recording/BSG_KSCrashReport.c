@@ -965,6 +965,27 @@ void bsg_kscrw_i_writeNotableAddresses(
     writer->endContainer(writer);
 }
 
+/** Write the message from the `__crash_info` Mach section into the report.
+ *
+ * @param writer The writer.
+ *
+ * @param key The object key.
+ *
+ * @param address The address of the first frame in the backtrace.
+ */
+void bsg_kscrw_i_writeCrashInfoMessage(const BSG_KSCrashReportWriter *const writer,
+                                       const char *key, uintptr_t address) {
+    BSG_Mach_Header_Info *image = bsg_mach_headers_image_at_address(address);
+    if (!image) {
+        BSG_KSLOG_ERROR("Could not locate mach header info");
+        return;
+    }
+    const char *message = bsg_mach_headers_get_crash_info_message(image);
+    if (message) {
+        writer->addStringElement(writer, key, message);
+    }
+}
+
 /** Write information about a thread to the report.
  *
  * @param writer The writer.
@@ -1020,6 +1041,10 @@ void bsg_kscrw_i_writeThread(const BSG_KSCrashReportWriter *const writer,
                 bsg_kscrw_i_writeNotableAddresses(
                     writer, BSG_KSCrashField_NotableAddresses, machineContext);
             }
+        }
+        if (isCrashedThread && backtrace && backtraceLength) {
+            bsg_kscrw_i_writeCrashInfoMessage(writer, BSG_KSCrashField_CrashInfoMessage,
+                                              backtrace[0]);
         }
     }
     writer->endContainer(writer);

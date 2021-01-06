@@ -6,14 +6,16 @@
 //  Copyright © 2020 Bugsnag. All rights reserved.
 //
 
-#import "BugsnagError.h"
+#import "BugsnagError+Private.h"
 
+#import "BSG_KSCrashReportFields.h"
+#import "BugsnagCollections.h"
 #import "BugsnagKeys.h"
+#import "BugsnagLogger.h"
 #import "BugsnagStackframe+Private.h"
 #import "BugsnagStacktrace.h"
-#import "BugsnagCollections.h"
-#import "RegisterErrorData.h"
-#import "BugsnagThread.h"
+#import "BugsnagThread+Private.h"
+
 
 NSString *_Nonnull BSGSerializeErrorType(BSGErrorType errorType) {
     switch (errorType) {
@@ -87,12 +89,6 @@ NSString *BSGParseErrorMessage(NSDictionary *report, NSDictionary *error, NSStri
         _type = BSGErrorTypeCocoa;
 
         if (![[event valueForKeyPath:@"user.state.didOOM"] boolValue]) {
-            NSArray *threadDict = [event valueForKeyPath:@"crash.threads"];
-            RegisterErrorData *data = [RegisterErrorData errorDataFromThreads:threadDict];
-            if (data) {
-                _errorClass = data.errorClass;
-                _errorMessage = data.errorMessage;
-            }
             _stacktrace = thread.stacktrace;
         }
     }
@@ -130,6 +126,36 @@ NSString *BSGParseErrorMessage(NSDictionary *report, NSDictionary *error, NSStri
                                                          errorType:BSGParseErrorType(json[BSGKeyType])
                                                         stacktrace:data];
     return error;
+}
+
+- (void)updateWithCrashInfoMessage:(NSString *)crashInfoMessage {
+    @try {
+        // Messages that match this pattern should override the errorClass (and errorMessage if there is enough information.)
+        NSString *pattern = @"^(Assertion failed|Fatal error|Precondition failed): ((.+): )?file .+, line \\d+\n$";
+        NSRegularExpression *regex = [[NSRegularExpression alloc] initWithPattern:pattern options:NSRegularExpressionCaseInsensitive error:nil];
+        NSArray<NSTextCheckingResult *> *matches = [regex matchesInString:crashInfoMessage options:0 range:NSMakeRange(0, crashInfoMessage.length)];
+        if (matches.count != 1 || matches[0].numberOfRanges != 4) {
+            if (!self.errorMessage.length) {
+                // It's better to fall back to the raw string than have an empty errorMessage.
+                self.errorMessage = crashInfoMessage;
+            }
+            return;
+        }
+        NSRange errorClassRange = [matches[0] rangeAtIndex:1];
+        if (errorClassRange.location != NSNotFound) {
+            self.errorClass = [crashInfoMessage substringWithRange:errorClassRange];
+        }
+        NSRange errorMessageRange = [matches[0] rangeAtIndex:3];
+        if (errorMessageRange.location != NSNotFound) {
+            self.errorMessage = [crashInfoMessage substringWithRange:errorMessageRange];
+        }
+    } @catch (NSException *exception) {
+        bsg_log_err(@"Exception thrown while parsing crash info message: %@", exception);
+        if (!self.errorMessage.length) {
+            // It's better to fall back to the raw string than have an empty errorMessage.
+            self.errorMessage = crashInfoMessage;
+        }
+    }
 }
 
 - (NSDictionary *)findErrorReportingThread:(NSDictionary *)event {

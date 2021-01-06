@@ -8,6 +8,8 @@
 
 #import "BugsnagPlatformConditional.h"
 
+#import "BugsnagEvent+Private.h"
+
 #if BSG_PLATFORM_IOS
 #import "BSGUIKit.h"
 #include <sys/utsname.h>
@@ -27,7 +29,6 @@
 #import "BugsnagConfiguration+Private.h"
 #import "BugsnagDeviceWithState+Private.h"
 #import "BugsnagError+Private.h"
-#import "BugsnagEvent+Private.h"
 #import "BugsnagHandledState.h"
 #import "BugsnagKeys.h"
 #import "BugsnagMetadata+Private.h"
@@ -36,7 +37,7 @@
 #import "BugsnagStacktrace+Private.h"
 #import "BugsnagThread+Private.h"
 #import "BugsnagUser+Private.h"
-#import "RegisterErrorData.h"
+
 
 static NSString *const DEFAULT_EXCEPTION_TYPE = @"cocoa";
 
@@ -267,7 +268,7 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
  * @return a BugsnagEvent containing the parsed information
  */
 - (instancetype)initWithKSCrashData:(NSDictionary *)event {
-    NSDictionary *error = [event valueForKeyPath:@"crash.error"];
+    NSMutableDictionary *error = [[event valueForKeyPath:@"crash.error"] mutableCopy];
     NSString *errorType = error[BSGKeyType];
 
     // Always assume that a report coming from KSCrash is by default an unhandled error.
@@ -333,6 +334,11 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
 
     NSArray<BugsnagError *> *errors = @[[[BugsnagError alloc] initWithEvent:event errorReportingThread:errorReportingThread]];
 
+    if (errorReportingThread.crashInfoMessage) {
+        [errors[0] updateWithCrashInfoMessage:errorReportingThread.crashInfoMessage];
+        error[@"crashInfo"] = errorReportingThread.crashInfoMessage;
+    }
+    
     BugsnagHandledState *handledState;
     if (recordedState) {
         handledState = [[BugsnagHandledState alloc] initWithDictionary:recordedState];
@@ -356,11 +362,8 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
     NSString *deviceAppHash = [event valueForKeyPath:@"system.device_app_hash"];
     BugsnagDeviceWithState *device = [BugsnagDeviceWithState deviceWithDictionary:event];
     BugsnagUser *user = [self parseUser:event deviceAppHash:deviceAppHash deviceId:device.id];
-    BugsnagConfiguration *config = [[BugsnagConfiguration alloc] initWithMetadata:[event valueForKeyPath:@"user.config"]];
+    BugsnagConfiguration *config = [[BugsnagConfiguration alloc] initWithDictionaryRepresentation:[event valueForKeyPath:@"user.config"]];
     BugsnagAppWithState *app = [BugsnagAppWithState appWithDictionary:event config:config codeBundleId:self.codeBundleId];
-    if (!app.type) { // Configuration.type does not get stored in the crash report at the time of writing.
-        app.type = [Bugsnag configuration].appType;
-    }
     BugsnagEvent *obj = [self initWithApp:app
                                    device:device
                              handledState:handledState
@@ -475,12 +478,8 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
 @synthesize apiKey = _apiKey;
 
 - (NSString *)apiKey {
-    if (! _apiKey) {
-        _apiKey = Bugsnag.configuration.apiKey;
-    }
     return _apiKey;
 }
-
 
 - (void)setApiKey:(NSString *)apiKey {
     if ([BugsnagConfiguration isValidApiKey:apiKey]) {
@@ -496,8 +495,7 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
 
 - (BOOL)shouldBeSent {
     return [self.enabledReleaseStages containsObject:self.releaseStage] ||
-           (self.enabledReleaseStages.count == 0 &&
-            [[Bugsnag configuration] shouldSendReports]);
+           (self.enabledReleaseStages.count == 0);
 }
 
 - (NSArray *)serializeBreadcrumbs {

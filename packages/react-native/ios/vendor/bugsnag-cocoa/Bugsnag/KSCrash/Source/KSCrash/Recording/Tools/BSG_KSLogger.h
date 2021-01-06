@@ -356,6 +356,24 @@ bool bsg_kslog_setLogFilename(const char *filename, bool overwrite);
 #undef BSG_KSLOG_BAK_TRACE
 #endif
 
+#ifdef __OBJC__
+
+#pragma mark - Redirect BSG_KSLOG_* to bsg_log_* so that logging output has a unified format.
+
+#undef BSG_KSLOG_ERROR
+#undef BSG_KSLOG_WARN
+#undef BSG_KSLOG_INFO
+#undef BSG_KSLOG_DEBUG
+#undef BSG_KSLOG_TRACE
+
+#define BSG_KSLOG_ERROR bsg_log_err
+#define BSG_KSLOG_WARN  bsg_log_warn
+#define BSG_KSLOG_INFO  bsg_log_info
+#define BSG_KSLOG_DEBUG bsg_log_debug
+#define BSG_KSLOG_TRACE bsg_log_debug
+
+#endif // __OBJC__
+
 #ifdef __cplusplus
 }
 #endif
