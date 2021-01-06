@@ -39,7 +39,7 @@ module.exports = {
 
     // Finally, copy the APK back to the host
     fs.copyFileSync(`${destFixtures}/${rnVersion}/android/app/build/outputs/apk/release/app-release.apk`,
-                    `${baseDir}/build/${rnVersion}.apk`)
+      `${baseDir}/build/${rnVersion}.apk`)
   },
   buildIOS: function buildIOS () {
     const version = process.env.NOTIFIER_VERSION || common.determineVersion()
@@ -65,11 +65,20 @@ module.exports = {
     common.changeDir(`${initialDir}/${fixturesDir}`)
     common.run(`./rn-cli-init-ios.sh ${version} ${rnVersion}`, true)
 
-    // Performing local build steps
-    if (!fs.existsSync('./build-ios.sh')) {
-      throw new Error('Local iOS build file at ./build-ios.sh not found')
-    }
-    common.run(`./build-ios.sh ${rnVersion}`, true)
+    // Clean and build the archive
+    common.changeDir(`${initialDir}/${fixturesDir}/${rnVersion}/ios`)
+    common.run(`rm -rf ../${rnVersion}.xcarchive`, true)
+    common.run(`pod install || pod install --repo-update`, true)
+    const archiveCmd = `xcrun xcodebuild -scheme "${rnVersion}" -workspace "${rnVersion}.xcworkspace" -configuration Release -archivePath "../${rnVersion}.xcarchive" -allowProvisioningUpdates archive`
+    common.run(archiveCmd, true)
+
+    // Export the IPA
+    common.changeDir(`${initialDir}/${fixturesDir}`)
+    const exportCmd = `sh -c "xcrun --log xcodebuild -exportArchive -archivePath "${rnVersion}/${rnVersion}.xcarchive" -exportPath output -verbose -exportOptionsPlist exportOptions.plist"`
+    common.run(exportCmd, true)
+
+    // Clear the archive away
+    common.run(`rm -rf ${rnVersion}/${rnVersion}.xcarchive`, true)
 
     // Copy file to build directory
     common.changeDir(initialDir)
