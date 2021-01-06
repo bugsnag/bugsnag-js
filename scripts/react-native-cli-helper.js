@@ -71,20 +71,5 @@ module.exports = {
     common.run(`pod install || pod install --repo-update`, true)
     const archiveCmd = `xcrun xcodebuild -scheme "${rnVersion}" -workspace "${rnVersion}.xcworkspace" -configuration Release -archivePath "../${rnVersion}.xcarchive" -allowProvisioningUpdates archive`
     common.run(archiveCmd, true)
-
-    // Export the IPA
-    common.changeDir(`${initialDir}/${fixturesDir}`)
-    const exportCmd = `sh -c "xcrun --log xcodebuild -exportArchive -archivePath "${rnVersion}/${rnVersion}.xcarchive" -exportPath output -verbose -exportOptionsPlist exportOptions.plist"`
-    common.run(exportCmd, true)
-
-    // Clear the archive away
-    common.run(`rm -rf ${rnVersion}/${rnVersion}.xcarchive`, true)
-
-    // Copy file to build directory
-    common.changeDir(initialDir)
-    if (!fs.existsSync('build')) {
-      common.run('mkdir build')
-    }
-    fs.copyFileSync(`${fixturesDir}/output/${rnVersion}.ipa`, `build/${rnVersion}.ipa`)
   }
 }
