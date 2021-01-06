@@ -39,6 +39,9 @@ jobs:
           cat packages/browser/dist/bugsnag.min.js | wc -c > .size/before-minified
           cat packages/browser/dist/bugsnag.min.js | gzip | wc -c > .size/before-gzipped
 
+      - name: Run test coverage
+        run: npm run test:unit -- --coverage
+
       - name: Run danger
         uses: danger/danger-js@9.1.6
         env:

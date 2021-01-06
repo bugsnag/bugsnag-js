@@ -1,5 +1,8 @@
-/* global markdown */
+/* global markdown, schedule */
 
+const { istanbulCoverage } = require('danger-plugin-istanbul-coverage')
+
+const path = require('path')
 const { readFileSync } = require('fs')
 
 const before = {
@@ -31,3 +34,8 @@ markdown(`
 | After  | \`${formatKbs(after.minified)}\`  | \`${formatKbs(after.gzipped)}\`  |
 | ±      | ${showDiff(diffMinSize)}          | ${showDiff(diffZipSize)}         |
 `)
+
+schedule(istanbulCoverage({
+  coveragePath: { path: path.join(__dirname, 'coverage/lcov.info'), type: 'lcov' },
+  reportFileSet: 'createdOrModified'
+}))
