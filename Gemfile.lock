@@ -1,9 +1,9 @@
 GIT
   remote: https://github.com/bugsnag/maze-runner
-  revision: 1a422c295f323684c349d86dd469e76716654562
-  branch: tms/docker-compose-use
+  revision: 7f5dca67f077020b67e92ea35c5ef0c9bd72b558
+  tag: v3.7.1
   specs:
-    bugsnag-maze-runner (3.7.0)
+    bugsnag-maze-runner (3.7.1)
       appium_lib (~> 10.2)
       cucumber (~> 3.1.2)
       cucumber-expressions (~> 6.0.0)
@@ -123,7 +123,7 @@ GEM
     nanaimo (0.3.0)
     nap (1.1.0)
     netrc (0.11.0)
-    nokogiri (1.11.0)
+    nokogiri (1.11.1)
       mini_portile2 (~> 2.5.0)
       racc (~> 1.4)
     optimist (3.0.1)
