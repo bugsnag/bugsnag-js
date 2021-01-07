@@ -37,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// Property overrides.
 @property (readonly, copy) NSDictionary *overrides;
 
-@property NSSet<NSString *> *redactedKeys;
+@property NSSet<id> *redactedKeys;
 
 /// The release stage of the application
 @property (readwrite, copy, nullable) NSString *releaseStage;

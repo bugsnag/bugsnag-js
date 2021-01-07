@@ -7,7 +7,8 @@
 //
 
 #import "BSGCachesDirectory.h"
-#import "BSG_KSLogger.h"
+
+#import "BugsnagLogger.h"
 
 @implementation BSGCachesDirectory
 
@@ -21,12 +22,12 @@ static NSString* g_cachesPath = nil;
     dispatch_once(&onceToken, ^{
         NSArray *dirs = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
         if ([dirs count] == 0) {
-            BSG_KSLOG_ERROR(@"Could not locate cache directory path.");
+            bsg_log_err(@"Could not locate cache directory path.");
             return;
         }
 
         if ([dirs[0] length] == 0) {
-            BSG_KSLOG_ERROR(@"Could not locate cache directory path.");
+            bsg_log_err(@"Could not locate cache directory path.");
             return;
         }
         cachesPath = dirs[0];
@@ -42,7 +43,7 @@ static NSString* g_cachesPath = nil;
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSError *error = nil;
     if(![fileManager createDirectoryAtPath:subdirPath withIntermediateDirectories:YES attributes:nil error:&error]) {
-        BSG_KSLOG_ERROR(@"Could not create caches subdir %@: %@", subdirPath, error);
+        bsg_log_err(@"Could not create caches subdir %@: %@", subdirPath, error);
         // Make the best of it, just return the top-level caches dir.
         return cachesDir;
     }
