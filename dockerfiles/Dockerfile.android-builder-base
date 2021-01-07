@@ -1,4 +1,3 @@
-# TODO: Candidate for moving to its own repo for sharing across notifier repositories
 FROM openjdk:8-jdk-buster
 
 # OS setup

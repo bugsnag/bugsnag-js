@@ -39,12 +39,12 @@ module.exports = {
 
     // Finally, copy the APK back to the host
     fs.copyFileSync(`${destFixtures}/${rnVersion}/android/app/build/outputs/apk/release/app-release.apk`,
-                    `${baseDir}/build/${rnVersion}.apk`)
+      `${baseDir}/build/${rnVersion}.apk`)
   },
   buildIOS: function buildIOS () {
     const version = process.env.NOTIFIER_VERSION || common.determineVersion()
     const rnVersion = process.env.REACT_NATIVE_VERSION
-    const fixturesDir = 'test/react-native-cli/features/fixtures'
+    const fixturesDir = 'features/fixtures'
     const targetDir = `${fixturesDir}/${rnVersion}`
     const initialDir = process.cwd()
 
@@ -65,17 +65,11 @@ module.exports = {
     common.changeDir(`${initialDir}/${fixturesDir}`)
     common.run(`./rn-cli-init-ios.sh ${version} ${rnVersion}`, true)
 
-    // Performing local build steps
-    if (!fs.existsSync('./build-ios.sh')) {
-      throw new Error('Local iOS build file at ./build-ios.sh not found')
-    }
-    common.run(`./build-ios.sh ${rnVersion}`, true)
-
-    // Copy file to build directory
-    common.changeDir(initialDir)
-    if (!fs.existsSync('build')) {
-      common.run('mkdir build')
-    }
-    fs.copyFileSync(`${fixturesDir}/output/${rnVersion}.ipa`, `build/${rnVersion}.ipa`)
+    // Clean and build the archive
+    common.changeDir(`${initialDir}/${fixturesDir}/${rnVersion}/ios`)
+    common.run(`rm -rf ../${rnVersion}.xcarchive`, true)
+    common.run('pod install || pod install --repo-update', true)
+    const archiveCmd = `xcrun xcodebuild -scheme "${rnVersion}" -workspace "${rnVersion}.xcworkspace" -configuration Release -archivePath "../${rnVersion}.xcarchive" -allowProvisioningUpdates archive`
+    common.run(archiveCmd, true)
   }
 }
