@@ -212,6 +212,7 @@ Scenario: opt not to modify either project
     When I press enter
     And I wait for the current stdout line to contain "Do you want to automatically upload source maps as part of the Gradle build?"
     When I input "n" interactively
+    And I wait for the current stdout line to contain "/app #"
     Then the last interactive command exited successfully
     And bugsnag source maps library is not in the package.json file
     And the iOS build has not been modified to upload source maps
