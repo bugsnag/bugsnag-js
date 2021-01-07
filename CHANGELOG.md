@@ -5,6 +5,12 @@
 ### Changed
 
 - (expo): Add support for Expo SDK v40 [#1219](https://github.com/bugsnag/bugsnag-js/pull/1219)
+- (react-native): Update bugsnag-cocoa to v6.5.0
+  - Add `errorClass` configuration option. [bugsnag-cocoa#938](https://github.com/bugsnag/bugsnag-cocoa/pull/938)
+  - Add `maxPersistedEvents` configuration option. [bugsnag-cocoa#936](https://github.com/bugsnag/bugsnag-cocoa/pull/936)
+  - Add `maxPersistedSessions` configuration option. [bugsnag-cocoa#943](https://github.com/bugsnag/bugsnag-cocoa/pull/943)
+  - Add `[Bugsnag]` prefix to log messages. [bugsnag-cocoa#955](https://github.com/bugsnag/bugsnag-cocoa/pull/955)
+  - Fix reliability of Swift fatal error message reporting. [bugsnag-cocoa#948](https://github.com/bugsnag/bugsnag-cocoa/pull/948)
 
 ## v7.5.5 (2020-12-14)
 
