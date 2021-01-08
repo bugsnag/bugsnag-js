@@ -43,6 +43,72 @@ test('configure(): success', async () => {
   )
 })
 
+test('configure(): skips properties that are already present', async () => {
+  type readdir = (path: string) => Promise<string[]>
+  const readdirMock = fs.readdir as unknown as jest.MockedFunction<readdir>
+  readdirMock.mockResolvedValue(['BugsnagReactNativeCliTest.xcodeproj'])
+
+  const infoPlist = await loadFixture(path.join(__dirname, 'fixtures', 'Info-after.plist'))
+  const readFileMock = fs.readFile as jest.MockedFunction<typeof fs.readFile>
+  readFileMock.mockResolvedValue(infoPlist)
+
+  const writeFileMock = fs.writeFile as jest.MockedFunction<typeof fs.writeFile>
+  writeFileMock.mockResolvedValue()
+
+  await configure(
+    '/random/path',
+    {
+      apiKey: 'API key 2',
+      notifyEndpoint: 'notify.example.com',
+      sessionsEndpoint: 'sessions.example.com'
+    },
+    logger
+  )
+
+  expect(readFileMock).toHaveBeenCalledWith('/random/path/ios/BugsnagReactNativeCliTest/Info.plist', 'utf8')
+
+  expect(logger.warn).toHaveBeenCalledTimes(1)
+  expect(logger.warn).toHaveBeenCalledWith('API key is already present, skipping')
+
+  expect(writeFileMock).toHaveBeenCalledWith(
+    '/random/path/ios/BugsnagReactNativeCliTest/Info.plist',
+    await loadFixture(path.join(__dirname, 'fixtures', 'Info-after-with-endpoints.plist')),
+    'utf8'
+  )
+})
+
+test('configure(): does not write file if all properties are already present', async () => {
+  type readdir = (path: string) => Promise<string[]>
+  const readdirMock = fs.readdir as unknown as jest.MockedFunction<readdir>
+  readdirMock.mockResolvedValue(['BugsnagReactNativeCliTest.xcodeproj'])
+
+  const infoPlist = await loadFixture(path.join(__dirname, 'fixtures', 'Info-after-with-endpoints.plist'))
+  const readFileMock = fs.readFile as jest.MockedFunction<typeof fs.readFile>
+  readFileMock.mockResolvedValue(infoPlist)
+
+  const writeFileMock = fs.writeFile as jest.MockedFunction<typeof fs.writeFile>
+  writeFileMock.mockResolvedValue()
+
+  await configure(
+    '/random/path',
+    {
+      apiKey: 'API_KEY_GOES_HERE',
+      notifyEndpoint: 'notify.example.com',
+      sessionsEndpoint: 'sessions.example.com'
+    },
+    logger
+  )
+
+  expect(readFileMock).toHaveBeenCalledWith('/random/path/ios/BugsnagReactNativeCliTest/Info.plist', 'utf8')
+
+  expect(logger.warn).toHaveBeenCalledTimes(3)
+  expect(logger.warn).toHaveBeenCalledWith('API key is already present, skipping')
+  expect(logger.warn).toHaveBeenCalledWith('Notify endpoint is already present, skipping')
+  expect(logger.warn).toHaveBeenCalledWith('Sessions endpoint is already present, skipping')
+
+  expect(writeFileMock).not.toHaveBeenCalled()
+})
+
 test('configure(): unlocated project', async () => {
   type readdir = (path: string) => Promise<string[]>
   const readdirMock = fs.readdir as unknown as jest.MockedFunction<readdir>
