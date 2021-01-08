@@ -10,7 +10,7 @@ export default async function run (argv: string[], projectRoot: string, opts: Re
     await installJavaScriptPackage(projectRoot)
     await addGradlePluginDependency(projectRoot)
 
-    logger.info('Installing cocoapods')
+    logger.info('Installing CocoaPods')
     await podInstall(projectRoot, logger)
     return true
   } catch (e) {
