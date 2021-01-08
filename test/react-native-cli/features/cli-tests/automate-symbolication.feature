@@ -13,7 +13,7 @@ Scenario: successfully modify project
     When I input "y" interactively
     And I wait for the current stdout line to contain "Are you using Bugsnag on-premise?"
     When I press enter
-    And I wait for the current stdout line to contain "Do you want to automatically upload source maps as part of the Xcode build?"
+    And I wait for the current stdout line to contain "Do you want to automatically upload JavaScript source maps as part of the Xcode build?"
     When I press enter
     And I wait for the shell to output the following to stdout
         """
@@ -25,7 +25,7 @@ Scenario: successfully modify project
         """
     And I wait for the current stdout line to contain "Hit enter to continue"
     When I press enter
-    And I wait for the current stdout line to contain "Do you want to automatically upload source maps as part of the Gradle build?"
+    And I wait for the current stdout line to contain "Do you want to automatically upload JavaScript source maps as part of the Gradle build?"
     When I press enter
     And I wait for the current stdout line to contain "If you want the latest version of @bugsnag/source-maps hit enter, otherwise type the version you want"
     When I press enter
@@ -49,7 +49,7 @@ Scenario: successfully modify project, choosing source-maps version
     When I input "y" interactively
     And I wait for the current stdout line to contain "Are you using Bugsnag on-premise?"
     When I press enter
-    And I wait for the current stdout line to contain "Do you want to automatically upload source maps as part of the Xcode build?"
+    And I wait for the current stdout line to contain "Do you want to automatically upload JavaScript source maps as part of the Xcode build?"
     When I press enter
     And I wait for the shell to output the following to stdout
         """
@@ -61,7 +61,7 @@ Scenario: successfully modify project, choosing source-maps version
         """
     And I wait for the current stdout line to contain "Hit enter to continue"
     When I press enter
-    And I wait for the current stdout line to contain "Do you want to automatically upload source maps as part of the Gradle build?"
+    And I wait for the current stdout line to contain "Do you want to automatically upload JavaScript source maps as part of the Gradle build?"
     When I press enter
     And I wait for the current stdout line to contain "If you want the latest version of @bugsnag/source-maps hit enter, otherwise type the version you want"
     When I input "1.0.0-beta.1" interactively
@@ -89,7 +89,7 @@ Scenario: successfully modify project with custom endpoints
     When I input "https://upload.example.com" interactively
     And I wait for the current stdout line to contain "What is your Bugsnag build endpoint?"
     When I input "https://build.example.com" interactively
-    And I wait for the current stdout line to contain "Do you want to automatically upload source maps as part of the Xcode build?"
+    And I wait for the current stdout line to contain "Do you want to automatically upload JavaScript source maps as part of the Xcode build?"
     When I press enter
     And I wait for the shell to output the following to stdout
         """
@@ -101,7 +101,7 @@ Scenario: successfully modify project with custom endpoints
         """
     And I wait for the current stdout line to contain "Hit enter to continue"
     When I press enter
-    And I wait for the current stdout line to contain "Do you want to automatically upload source maps as part of the Gradle build?"
+    And I wait for the current stdout line to contain "Do you want to automatically upload JavaScript source maps as part of the Gradle build?"
     When I press enter
     And I wait for the current stdout line to contain "If you want the latest version of @bugsnag/source-maps hit enter, otherwise type the version you want"
     When I press enter
@@ -126,7 +126,7 @@ Scenario: opt not to modify the Android project
     When I input "y" interactively
     And I wait for the current stdout line to contain "Are you using Bugsnag on-premise?"
     When I press enter
-    And I wait for the current stdout line to contain "Do you want to automatically upload source maps as part of the Xcode build?"
+    And I wait for the current stdout line to contain "Do you want to automatically upload JavaScript source maps as part of the Xcode build?"
     When I press enter
     And I wait for the shell to output the following to stdout
         """
@@ -138,7 +138,7 @@ Scenario: opt not to modify the Android project
         """
     And I wait for the current stdout line to contain "Hit enter to continue"
     When I press enter
-    And I wait for the current stdout line to contain "Do you want to automatically upload source maps as part of the Gradle build?"
+    And I wait for the current stdout line to contain "Do you want to automatically upload JavaScript source maps as part of the Gradle build?"
     When I input "n" interactively
     And I wait for the current stdout line to contain "If you want the latest version of @bugsnag/source-maps hit enter, otherwise type the version you want"
     When I press enter
@@ -162,7 +162,7 @@ Scenario: opt not to modify the iOS project
     When I input "y" interactively
     And I wait for the current stdout line to contain "Are you using Bugsnag on-premise?"
     When I press enter
-    And I wait for the current stdout line to contain "Do you want to automatically upload source maps as part of the Xcode build?"
+    And I wait for the current stdout line to contain "Do you want to automatically upload JavaScript source maps as part of the Xcode build?"
     When I input "n" interactively
     And I wait for the shell to output the following to stdout
         """
@@ -174,7 +174,7 @@ Scenario: opt not to modify the iOS project
         """
     And I wait for the current stdout line to contain "Hit enter to continue"
     When I press enter
-    And I wait for the current stdout line to contain "Do you want to automatically upload source maps as part of the Gradle build?"
+    And I wait for the current stdout line to contain "Do you want to automatically upload JavaScript source maps as part of the Gradle build?"
     When I input "y" interactively
     And I wait for the current stdout line to contain "If you want the latest version of @bugsnag/source-maps hit enter, otherwise type the version you want"
     When I press enter
@@ -198,7 +198,7 @@ Scenario: opt not to modify either project
     When I input "y" interactively
     And I wait for the current stdout line to contain "Are you using Bugsnag on-premise?"
     When I press enter
-    And I wait for the current stdout line to contain "Do you want to automatically upload source maps as part of the Xcode build?"
+    And I wait for the current stdout line to contain "Do you want to automatically upload JavaScript source maps as part of the Xcode build?"
     When I input "n" interactively
     And I wait for the shell to output the following to stdout
         """
@@ -210,7 +210,7 @@ Scenario: opt not to modify either project
         """
     And I wait for the current stdout line to contain "Hit enter to continue"
     When I press enter
-    And I wait for the current stdout line to contain "Do you want to automatically upload source maps as part of the Gradle build?"
+    And I wait for the current stdout line to contain "Do you want to automatically upload JavaScript source maps as part of the Gradle build?"
     When I input "n" interactively
     Then the last interactive command exited successfully
     And bugsnag source maps library is not in the package.json file
