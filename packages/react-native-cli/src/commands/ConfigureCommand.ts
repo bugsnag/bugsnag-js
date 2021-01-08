@@ -10,7 +10,7 @@ export default async function run (projectRoot: string, urls: OnPremiseUrls): Pr
     const { apiKey } = await prompts({
       type: 'text',
       name: 'apiKey',
-      message: 'What is your Bugsnag API key?',
+      message: 'What is your Bugsnag project API key?',
       validate: value => {
         return /[A-Fa-f0-9]{32}/.test(value)
           ? true
