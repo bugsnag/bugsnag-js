@@ -5,3 +5,5 @@ allprojects {
         }
     }
 }
+
+logger.warn('[Bugsnag] "bugsnag-react-native.gradle" should not applied manually. Install the Bugsnag Android Gradle Plugin and remove this from your Gradle file.')
