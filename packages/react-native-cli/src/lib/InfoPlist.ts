@@ -38,17 +38,41 @@ export async function configure (projectRoot: string, options: Options, logger: 
   try {
     const infoPlist = plist.parse(await fs.readFile(plistPath, 'utf8'))
     const bugsnag = (infoPlist.bugsnag || {}) as BugsnagPlist
+    let hasChanged = false
 
-    bugsnag.apiKey = options.apiKey
+    if (options.apiKey) {
+      if (bugsnag.apiKey) {
+        logger.warn('API key is already present, skipping')
+      } else {
+        bugsnag.apiKey = options.apiKey
+        hasChanged = true
+      }
+    }
 
     if (options.notifyEndpoint) {
       bugsnag.endpoints = bugsnag.endpoints || {}
-      bugsnag.endpoints.notify = options.notifyEndpoint
+
+      if (bugsnag.endpoints.notify) {
+        logger.warn('Notify endpoint is already present, skipping')
+      } else {
+        bugsnag.endpoints.notify = options.notifyEndpoint
+        hasChanged = true
+      }
     }
 
     if (options.sessionsEndpoint) {
       bugsnag.endpoints = bugsnag.endpoints || {}
-      bugsnag.endpoints.sessions = options.sessionsEndpoint
+
+      if (bugsnag.endpoints.sessions) {
+        logger.warn('Sessions endpoint is already present, skipping')
+      } else {
+        bugsnag.endpoints.sessions = options.sessionsEndpoint
+        hasChanged = true
+      }
+    }
+
+    if (!hasChanged) {
+      return
     }
 
     infoPlist.bugsnag = bugsnag
