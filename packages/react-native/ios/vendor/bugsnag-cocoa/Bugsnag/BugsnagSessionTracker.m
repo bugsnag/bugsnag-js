@@ -8,18 +8,17 @@
 
 #import "BugsnagSessionTracker+Private.h"
 
+#import "BSG_KSSystemInfo.h"
 #import "BugsnagApp+Private.h"
-#import "BugsnagClient.h"
+#import "BugsnagClient+Private.h"
+#import "BugsnagCollections.h"
 #import "BugsnagConfiguration+Private.h"
 #import "BugsnagDevice+Private.h"
-#import "BugsnagSessionFileStore.h"
-#import "BSG_KSLogger.h"
-#import "BugsnagSessionTrackingPayload.h"
-#import "BugsnagSessionTrackingApiClient.h"
 #import "BugsnagLogger.h"
 #import "BugsnagSession+Private.h"
-#import "BSG_KSSystemInfo.h"
-#import "BugsnagCollections.h"
+#import "BugsnagSessionFileStore.h"
+#import "BugsnagSessionTrackingApiClient.h"
+#import "BugsnagSessionTrackingPayload.h"
 
 /**
  Number of seconds in background required to make a new session
@@ -51,14 +50,15 @@ NSString *const BSGSessionUpdateNotification = @"BugsnagSessionChanged";
     if (self = [super init]) {
         _config = config;
         _client = client;
-        _apiClient = [[BugsnagSessionTrackingApiClient alloc] initWithConfig:config queueName:@"Session API queue"];
+        _apiClient = [[BugsnagSessionTrackingApiClient alloc] initWithConfig:config queueName:@"Session API queue" notifier:client.notifier];
         _callback = callback;
 
         NSString *storePath = [BugsnagFileStore findReportStorePath:@"Sessions"];
         if (!storePath) {
-            BSG_KSLOG_ERROR(@"Failed to initialize session store.");
+            bsg_log_err(@"Failed to initialize session store.");
         }
-        _sessionStore = [BugsnagSessionFileStore storeWithPath:storePath];
+
+        _sessionStore = [BugsnagSessionFileStore storeWithPath:storePath maxPersistedSessions:config.maxPersistedSessions];
         _extraRuntimeInfo = [NSMutableDictionary new];
     }
     return self;

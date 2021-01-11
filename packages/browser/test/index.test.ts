@@ -1,5 +1,4 @@
-import BugsnagBrowserStatic from '..'
-import { Breadcrumb, Session } from '../types/bugsnag'
+import BugsnagBrowserStatic, { Breadcrumb, Session } from '../src/notifier'
 
 const DONE = window.XMLHttpRequest.DONE
 
@@ -29,13 +28,18 @@ function mockFetch () {
 }
 
 describe('browser notifier', () => {
+  beforeAll(() => {
+    jest.spyOn(console, 'debug').mockImplementation(() => {})
+    jest.spyOn(console, 'warn').mockImplementation(() => {})
+  })
+
   beforeEach(() => {
     jest.resetModules()
     mockFetch()
   })
 
   function getBugsnag (): typeof BugsnagBrowserStatic {
-    const Bugsnag = require('..') as typeof BugsnagBrowserStatic
+    const Bugsnag = require('../src/notifier') as typeof BugsnagBrowserStatic
     return Bugsnag
   }
 

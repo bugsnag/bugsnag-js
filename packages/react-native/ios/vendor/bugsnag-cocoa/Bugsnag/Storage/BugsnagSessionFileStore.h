@@ -9,7 +9,8 @@
 #import "BugsnagSession.h"
 
 @interface BugsnagSessionFileStore : BugsnagFileStore
-+ (BugsnagSessionFileStore *)storeWithPath:(NSString *)path;
++ (BugsnagSessionFileStore *)storeWithPath:(NSString *)path
+                      maxPersistedSessions:(NSUInteger)maxPersistedSessions;
 
 - (void)write:(BugsnagSession *)session;
 

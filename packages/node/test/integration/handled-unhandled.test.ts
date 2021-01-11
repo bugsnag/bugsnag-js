@@ -1,4 +1,4 @@
-import Bugsnag from '../..'
+import Bugsnag from '../../src/notifier'
 import https from 'https'
 
 // extend the https module type with the utilities added in mocks
@@ -34,6 +34,9 @@ jest.mock('https', () => {
 // we can only start bugsnag once per file, because it installs global handlers
 // and doesn't have a way to uninstall itself
 beforeAll(() => {
+  jest.spyOn(console, 'debug').mockImplementation(() => {})
+  jest.spyOn(console, 'error').mockImplementation(() => {})
+
   Bugsnag.start({
     apiKey: 'aaaabbbbccccdddd0000111122223333',
     // ordinarily after catching an uncaught exception we shut down the process,

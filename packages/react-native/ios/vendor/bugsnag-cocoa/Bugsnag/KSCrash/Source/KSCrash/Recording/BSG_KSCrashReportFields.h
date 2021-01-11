@@ -95,6 +95,7 @@
 #define BSG_KSCrashField_Backtrace "backtrace"
 #define BSG_KSCrashField_Basic "basic"
 #define BSG_KSCrashField_Crashed "crashed"
+#define BSG_KSCrashField_CrashInfoMessage "crash_info_message"
 #define BSG_KSCrashField_CurrentThread "current_thread"
 #define BSG_KSCrashField_DispatchQueue "dispatch_queue"
 #define BSG_KSCrashField_NotableAddresses "notable_addresses"

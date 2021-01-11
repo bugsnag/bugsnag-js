@@ -16,20 +16,19 @@
 #import "Bugsnag.h"
 #import "BugsnagErrorTypes.h"
 
-NSUInteger const BSG_MAX_STORED_REPORTS = 12;
-
 @implementation BugsnagCrashSentry
 
 - (void)install:(BugsnagConfiguration *)config
       apiClient:(BugsnagErrorReportApiClient *)apiClient
+       notifier:(BugsnagNotifier *)notifier
         onCrash:(BSGReportCallback)onCrash
 {
-    BugsnagErrorReportSink *sink = [[BugsnagErrorReportSink alloc] initWithApiClient:apiClient];
+    BugsnagErrorReportSink *sink = [[BugsnagErrorReportSink alloc] initWithApiClient:apiClient configuration:config notifier:notifier];
     BSG_KSCrash *ksCrash = [BSG_KSCrash sharedInstance];
     ksCrash.sink = sink;
-    ksCrash.introspectMemory = YES;
+    ksCrash.introspectMemory = NO;
     ksCrash.onCrash = onCrash;
-    ksCrash.maxStoredReports = BSG_MAX_STORED_REPORTS;
+    ksCrash.maxStoredReports = (int)config.maxPersistedEvents;
 
     // overridden elsewhere for handled errors, so we can assume that this only
     // applies to unhandled errors

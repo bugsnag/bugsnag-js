@@ -6,8 +6,9 @@
 //  Copyright © 2020 Bugsnag. All rights reserved.
 //
 
-#import "BugsnagThread.h"
+#import "BugsnagThread+Private.h"
 
+#import "BSG_KSCrashReportFields.h"
 #import "BugsnagCollections.h"
 #import "BugsnagStackframe+Private.h"
 #import "BugsnagStacktrace+Private.h"
@@ -56,13 +57,13 @@ NSString *BSGSerializeThreadType(BSGThreadType type) {
 
 - (instancetype)initWithThread:(NSDictionary *)thread binaryImages:(NSArray *)binaryImages {
     if (self = [super init]) {
-        _errorReportingThread = [thread[@"crashed"] boolValue];
-        self.id = [thread[@"index"] stringValue];
-        self.type = BSGThreadTypeCocoa;
-
-        NSArray *backtrace = thread[@"backtrace"][@"contents"];
+        _errorReportingThread = [thread[@(BSG_KSCrashField_Crashed)] boolValue];
+        _id = [thread[@(BSG_KSCrashField_Index)] stringValue];
+        _type = BSGThreadTypeCocoa;
+        _crashInfoMessage = [thread[@(BSG_KSCrashField_CrashInfoMessage)] copy];
+        NSArray *backtrace = thread[@(BSG_KSCrashField_Backtrace)][@(BSG_KSCrashField_Contents)];
         BugsnagStacktrace *frames = [[BugsnagStacktrace alloc] initWithTrace:backtrace binaryImages:binaryImages];
-        self.stacktrace = frames.trace;
+        _stacktrace = [frames.trace copy];
     }
     return self;
 }
