@@ -19,7 +19,7 @@ export default async function run (projectRoot: string, urls: OnPremiseUrls): Pr
     const { iosIntegration } = await prompts({
       type: 'confirm',
       name: 'iosIntegration',
-      message: 'Do you want to automatically upload source maps as part of the Xcode build?',
+      message: 'Do you want to automatically upload JavaScript source maps as part of the Xcode build?',
       initial: true
     }, { onCancel })
 
@@ -38,7 +38,7 @@ export default async function run (projectRoot: string, urls: OnPremiseUrls): Pr
     const { androidIntegration } = await prompts({
       type: 'confirm',
       name: 'androidIntegration',
-      message: 'Do you want to automatically upload source maps as part of the Gradle build?',
+      message: 'Do you want to automatically upload JavaScript source maps as part of the Gradle build?',
       initial: true
     }, { onCancel })
 

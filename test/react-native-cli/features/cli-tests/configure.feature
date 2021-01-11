@@ -32,7 +32,7 @@ Scenario: no git repo, run anyway
     When I input "y" interactively
     And I wait for the current stdout line to contain "Are you using Bugsnag on-premise?"
     When I press enter
-    Then I wait for the current stdout line to contain "What is your Bugsnag API key?"
+    Then I wait for the current stdout line to contain "What is your Bugsnag project API key?"
     When I input "abcdefabcdefabcdefabcdef12345678" interactively
     Then I wait for the shell to output a line containing "Updated AndroidManifest.xml" to stdout
     And I wait for the shell to output a line containing "Updated Info.plist" to stdout
@@ -57,7 +57,7 @@ Scenario: no git repo, run anyway, invalid API key
     When I input "y" interactively
     And I wait for the current stdout line to contain "Are you using Bugsnag on-premise?"
     When I press enter
-    Then I wait for the current stdout line to contain "What is your Bugsnag API key?"
+    Then I wait for the current stdout line to contain "What is your Bugsnag project API key?"
     When I press enter
     Then I wait for the current stdout line to contain "API key is required. You can find it by going to https://app.bugsnag.com/settings/ > Projects"
     When I input "abcd" interactively
@@ -84,7 +84,7 @@ Scenario: git repo, run
     When I press enter
     And I wait for the current stdout line to contain "Are you using Bugsnag on-premise?"
     When I press enter
-    Then I wait for the current stdout line to contain "What is your Bugsnag API key?"
+    Then I wait for the current stdout line to contain "What is your Bugsnag project API key?"
     When I input "abcdefabcdefabcdefabcdef12345678" interactively
     Then I wait for the shell to output a line containing "Updated AndroidManifest.xml" to stdout
     And I wait for the shell to output a line containing "Updated Info.plist" to stdout
@@ -128,7 +128,7 @@ Scenario: custom endpoints
     When I input "https://notify.example.com" interactively
     Then I wait for the current stdout line to contain "What is your Bugsnag sessions endpoint?"
     When I input "https://sessions.example.com" interactively
-    Then I wait for the current stdout line to contain "What is your Bugsnag API key?"
+    Then I wait for the current stdout line to contain "What is your Bugsnag project API key?"
     When I input "abcdefabcdefabcdefabcdef12345678" interactively
     Then I wait for the shell to output a line containing "Updated AndroidManifest.xml" to stdout
     And I wait for the shell to output a line containing "Updated Info.plist" to stdout

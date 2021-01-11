@@ -88,7 +88,7 @@ test('install(): ENOENT error from cocoapods', async () => {
   await install('/example/dir', logger)
 
   expect(spawnMock).toHaveBeenCalledWith('pod', ['install'], { cwd: '/example/dir/ios', stdio: 'inherit' })
-  expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining('Cocoapods does not appear to be installed.'))
+  expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining('CocoaPods does not appear to be installed.'))
 })
 
 test('install(): unknown child process error', async () => {

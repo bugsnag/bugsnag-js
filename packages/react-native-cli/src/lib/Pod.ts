@@ -40,6 +40,6 @@ export async function install (projectRoot: string, logger: Logger): Promise<voi
   }
 }
 
-const COCOAPODS_NOT_FOUND = `Cocoapods does not appear to be installed.
+const COCOAPODS_NOT_FOUND = `CocoaPods does not appear to be installed.
 
 Install it and run "pod install" inside the "ios" directory manaully.`
