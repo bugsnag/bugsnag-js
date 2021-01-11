@@ -79,6 +79,12 @@ npm run build
 # Run the unit tests
 npm run test:unit
 
+# Run tests for a specific package
+npm run test:unit -- --testPathPattern="packages/react-native"
+
+# Generate a code coverage report
+npm run test:unit -- --coverage
+
 # Run the linter
 npm run test:lint
 
