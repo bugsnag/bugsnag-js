@@ -11,6 +11,7 @@ Scenario: no git repo, do not run
         """
     And I wait for the current stdout line to contain "Do you want to continue anyway?"
     When I press enter
+    And I wait for the current stdout line to contain "/app #"
     Then the last interactive command exited successfully
     And the iOS app does not contain a bugsnag API key
     And the iOS app does not contain a bugsnag notify URL
@@ -105,6 +106,7 @@ Scenario: git repo, do not run
     And I wait for the shell to output "review the diff and commit them to your project." to stdout
     And I wait for the current stdout line to contain "Do you want to continue anyway?"
     When I input "n" interactively
+    And I wait for the current stdout line to contain "/app #"
     Then the last interactive command exited successfully
     And the iOS app does not contain a bugsnag API key
     And the iOS app does not contain a bugsnag notify URL

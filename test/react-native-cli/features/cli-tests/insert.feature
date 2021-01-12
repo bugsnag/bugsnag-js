@@ -11,6 +11,7 @@ Scenario: no git repo, do not run
         """
     And I wait for the current stdout line to contain "Do you want to continue anyway?"
     When I press enter
+    And I wait for the current stdout line to contain "/app #"
     Then the last interactive command exited successfully
     And the iOS app does not contain the bugsnag initialisation code
     And the Android app does not contain the bugsnag initialisation code

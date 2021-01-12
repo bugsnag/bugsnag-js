@@ -179,6 +179,7 @@ Then("the iOS build has been modified to upload source maps") do
 
   steps %Q{
     Then I input "./check-ios-build-script.sh" interactively
+    And I wait for the current stdout line to contain "/app #"
     And the last interactive command exited successfully
     And the file '#{filename}' contains 'Upload source maps to Bugsnag'
   }
@@ -189,6 +190,7 @@ Then("the iOS build has been modified to upload source maps to {string}") do |ex
 
   steps %Q{
     Then I input "./check-ios-build-script.sh #{expected_endpoint}" interactively
+    And I wait for the current stdout line to contain "/app #"
     And the last interactive command exited successfully
     And the file '#{filename}' contains 'Upload source maps to Bugsnag'
   }
@@ -261,6 +263,7 @@ end
 Then("the file {string} contains {string}") do |filename, expected|
   steps %Q{
     When I input "fgrep '#{expected.gsub(/"/, '\"')}' #{filename}" interactively
+    And I wait for the current stdout line to contain "/app #"
     Then the last interactive command exited successfully
   }
 end
@@ -277,6 +280,7 @@ end
 Then("the file {string} does not contain {string}") do |filename, expected|
   steps %Q{
     When I input "fgrep '#{expected.gsub(/"/, '\"')}' #{filename}" interactively
+    And I wait for the current stdout line to contain "/app #"
     Then the last interactive command exited with an error code
   }
 end
