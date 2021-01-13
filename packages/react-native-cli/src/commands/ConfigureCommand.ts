@@ -12,9 +12,9 @@ export default async function run (projectRoot: string, urls: OnPremiseUrls): Pr
       name: 'apiKey',
       message: 'What is your Bugsnag project API key?',
       validate: value => {
-        return /[A-Fa-f0-9]{32}/.test(value)
+        return /^[A-Fa-f0-9]{32}$/.test(value)
           ? true
-          : 'API key is required. You can find it by going to https://app.bugsnag.com/settings/ > Projects'
+          : 'API key is required. You can find it by going to https://app.bugsnag.com/settings/ > Projects > [your-project] > Notifier API key'
       }
     }, { onCancel })
 
