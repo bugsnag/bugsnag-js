@@ -9,11 +9,13 @@ import RnPromise from 'promise/setimmediate'
 beforeEach(() => {
   // @ts-ignore
   global.__DEV__ = true
-  jest.spyOn(console, 'warn')
+  jest.spyOn(console, 'warn').mockImplementation(() => {})
 })
 
 afterEach(() => {
   jest.restoreAllMocks()
+  // @ts-ignore
+  delete global.__DEV__
 })
 
 describe('plugin: react native rejection handler', () => {
