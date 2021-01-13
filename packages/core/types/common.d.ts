@@ -29,7 +29,7 @@ export interface Config {
   user?: User | null
 }
 
-export type OnErrorCallback = (event: Event, cb?: (err: null | Error, shouldSend?: boolean) => void) => void | boolean | Promise<void | boolean>
+export type OnErrorCallback = (event: Event, cb: (err: null | Error, shouldSend?: boolean) => void) => void | boolean | Promise<void | boolean>
 export type OnSessionCallback = (session: Session) => void | boolean;
 export type OnBreadcrumbCallback = (breadcrumb: Breadcrumb) => void | boolean;
 
