@@ -3,7 +3,7 @@ import { promises as fs } from 'fs'
 import path from 'path'
 import xcode, { Project } from 'xcode'
 
-const DOCS_LINK = 'https://docs.bugsnag.com/--TODO--'
+const DOCS_LINK = 'https://docs.bugsnag.com/platforms/react-native/react-native/showing-full-stacktraces/#ios'
 const UNLOCATED_PROJ_MSG = `The Xcode project was not in the expected location and so couldn't be updated automatically.
 
 Update the "Bundle React Native Code And Images" build phase with the following environment variables:
