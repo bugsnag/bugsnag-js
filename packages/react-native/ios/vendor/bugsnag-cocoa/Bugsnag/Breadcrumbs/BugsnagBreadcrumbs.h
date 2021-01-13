@@ -28,11 +28,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (readonly) NSArray<BugsnagBreadcrumb *> *breadcrumbs;
 
 /**
- * Path where breadcrumbs are persisted on disk
- */
-@property (readonly) NSString *cachePath;
-
-/**
  * Store a new breadcrumb with a provided message.
  */
 - (void)addBreadcrumb:(NSString *)breadcrumbMessage;

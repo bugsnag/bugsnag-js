@@ -57,6 +57,9 @@ void bsg_kscrashsentry_uninstallUserExceptionHandler(void) {
  */
 BSG_KSCrash_Context *bsg_kscrashsentry_generateReportContext() {
     BSG_KSCrash_Context *localContext = malloc(sizeof(BSG_KSCrash_Context));
+    if (!localContext) {
+        return NULL;
+    }
     memcpy(localContext, crashContext(), sizeof(BSG_KSCrash_Context));
     localContext->config.crashID = bsg_kscrash_generate_report_identifier();
     localContext->config.crashReportFilePath =

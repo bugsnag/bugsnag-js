@@ -2,6 +2,12 @@
 
 ## TBD
 
+### Changed
+
+- (react-native): Update bugsnag-cocoa to v6.5.1
+  - Fix a regression where OOM events were missing session information. [bugsnag-cocoa#963](https://github.com/bugsnag/bugsnag-cocoa/pull/963)
+  - Make `maxPersistedEvents` and `maxPersistedSessions` default to 32 and 128, respectively. [bugsnag-cocoa#966](https://github.com/bugsnag/bugsnag-cocoa/pull/966)
+
 ### Fixed
 
 - (react-native): Ensure unhandled promise warning is logged in development [#1235](https://github.com/bugsnag/bugsnag-js/pull/1235)
