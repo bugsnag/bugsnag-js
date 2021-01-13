@@ -4,6 +4,7 @@
 
 ### Fixed
 
+- (react-native): Ensure unhandled promise warning is logged in development [#1235](https://github.com/bugsnag/bugsnag-js/pull/1235)
 - (core): the `OnErrorCallback` type definition now allows `Promise<boolean>` as a return type. [#1224](https://github.com/bugsnag/bugsnag-js/pull/1224)
 
 ## v7.5.6 (2021-01-11)

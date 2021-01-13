@@ -55,6 +55,7 @@ declare global {
 // and doesn't have a way to uninstall itself
 beforeAll(() => {
   jest.spyOn(console, 'debug').mockImplementation(() => {})
+  jest.spyOn(console, 'warn').mockImplementation(() => {})
 
   // leaving the default handler intact causes simulated unhandled errors to fail tests
   global.ErrorUtils.setGlobalHandler(() => {})
