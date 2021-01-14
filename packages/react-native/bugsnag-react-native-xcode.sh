@@ -30,6 +30,9 @@ if [ ! -f "$MAP_FILE" ]; then
   exit 1
 fi
 
+# This script gets executed in the <project_root>/ios directory
+PROJECT_ROOT=${PWD%\/ios}
+
 ARGS=(
     "--api-key" "$API_KEY"
     "--app-bundle-version" "$BUNDLE_VERSION"
@@ -37,6 +40,7 @@ ARGS=(
     "--bundle" "$BUNDLE_FILE"
     "--platform" "ios"
     "--source-map" "$MAP_FILE"
+    "--project-root" "$PROJECT_ROOT"
     )
 
 case "$CONFIGURATION" in
