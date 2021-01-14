@@ -31,7 +31,7 @@ if [ ! -f "$MAP_FILE" ]; then
 fi
 
 # This script gets executed in the <project_root>/ios directory
-PROJECT_ROOT=$(echo $PWD | sed -e 's/\ios$//')
+PROJECT_ROOT=${PWD%\/ios}
 
 ARGS=(
     "--api-key" "$API_KEY"
