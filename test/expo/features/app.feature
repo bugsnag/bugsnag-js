@@ -13,6 +13,7 @@ Scenario: App data is included by default
   And the event "app.duration" is not null
   And the event "app.durationInForeground" is not null
   And the event "app.inForeground" is true
+  And the event "app.type" equals the current OS name
   And the Bugsnag-Integrity header is valid
 
 Scenario: App data can be modified by a callback
@@ -24,4 +25,5 @@ Scenario: App data can be modified by a callback
   And the event "app.duration" is not null
   And the event "app.durationInForeground" is not null
   And the event "app.inForeground" is true
+  And the event "app.type" equals "custom app type"
   And the Bugsnag-Integrity header is valid
