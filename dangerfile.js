@@ -44,6 +44,10 @@ codeCoverage([{
   coveragePath: path.resolve(__dirname, 'coverage/coverage-final.json')
 }])
 
+const diff = istanbulDiff.diff(before.coverage, after.coverage)
+
+markdown(JSON.stringify(diff, null, 2))
+
 markdown(`
 
-${istanbulDiff.print(istanbulDiff.diff(before.coverage, after.coverage)).msg}`)
+${istanbulDiff.print(diff).msg}`)
