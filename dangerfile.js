@@ -1,19 +1,21 @@
-/* global markdown, schedule */
+/* global markdown */
 
 const { codeCoverage } = require('danger-plugin-code-coverage')
-const { istanbulCoverage } = require('danger-plugin-istanbul-coverage')
 
 const path = require('path')
 const { readFileSync } = require('fs')
+const istanbulDiff = require('istanbul-diff')
 
 const before = {
-  minified: parseInt(readFileSync(`${__dirname}/.size/before-minified`, 'utf8').trim()),
-  gzipped: parseInt(readFileSync(`${__dirname}/.size/before-gzipped`, 'utf8').trim())
+  minified: parseInt(readFileSync(`${__dirname}/.diff/size-before-minified`, 'utf8').trim()),
+  gzipped: parseInt(readFileSync(`${__dirname}/.diff/size-before-gzipped`, 'utf8').trim()),
+  coverage: readFileSync(`${__dirname}/.diff/coverage-before.json`, 'utf8').trim()
 }
 
 const after = {
-  minified: parseInt(readFileSync(`${__dirname}/.size/after-minified`, 'utf8').trim()),
-  gzipped: parseInt(readFileSync(`${__dirname}/.size/after-gzipped`, 'utf8').trim())
+  minified: parseInt(readFileSync(`${__dirname}/.diff/size-after-minified`, 'utf8').trim()),
+  gzipped: parseInt(readFileSync(`${__dirname}/.diff/size-after-gzipped`, 'utf8').trim()),
+  coverage: readFileSync(`${__dirname}/.diff/coverage-after.json`, 'utf8').trim()
 }
 
 const formatKbs = (n) => `${(n / 1000).toFixed(2)} kB`
@@ -36,16 +38,12 @@ markdown(`
 | ±      | ${showDiff(diffMinSize)}          | ${showDiff(diffZipSize)}         |
 `)
 
-markdown(__dirname)
-markdown(`${path.resolve(__dirname, 'coverage/lcov.info')}`)
-
 codeCoverage([{
   title: '# Coverage',
   ignoreCoveragePattern: [],
   coveragePath: path.resolve(__dirname, 'coverage/coverage-final.json')
 }])
 
-schedule(istanbulCoverage({
-  coveragePath: { path: path.resolve(__dirname, 'coverage/lcov.info'), type: 'lcov' },
-  reportFileSet: 'createdOrModified'
-}))
+markdown(`
+
+${istanbulDiff.print(istanbulDiff.diff(before.coverage, after.coverage)).msg}`)
