@@ -6,9 +6,21 @@ import Client from '@bugsnag/core/client'
 // @ts-ignore
 import RnPromise from 'promise/setimmediate'
 
+beforeEach(() => {
+  // @ts-ignore
+  global.__DEV__ = true
+  jest.spyOn(console, 'warn').mockImplementation(() => {})
+})
+
+afterEach(() => {
+  jest.restoreAllMocks()
+  // @ts-ignore
+  delete global.__DEV__
+})
+
 describe('plugin: react native rejection handler', () => {
   it('should hook in to the promise rejection tracker', (done) => {
-    expect.assertions(4)
+    expect.assertions(5)
 
     const c = new Client({ apiKey: 'api_key' })
     c._setDelivery(client => ({
@@ -18,7 +30,10 @@ describe('plugin: react native rejection handler', () => {
         expect(r.events[0].severity).toBe('error')
         expect(r.events[0].severityReason).toEqual({ type: 'unhandledPromiseRejection' })
         expect(r.events[0].unhandled).toBe(true)
-        done()
+        setTimeout(() => {
+          expect(console.warn).toHaveBeenCalledWith(expect.stringContaining('Possible Unhandled Promise Rejection'))
+          done()
+        }, 0)
       },
       sendSession: () => {}
     }))

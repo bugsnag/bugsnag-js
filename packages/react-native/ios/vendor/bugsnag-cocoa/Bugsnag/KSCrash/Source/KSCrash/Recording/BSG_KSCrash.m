@@ -283,7 +283,7 @@
 
     NSDictionary *reports = [self allReportsByFilename];
 
-    BSG_KSLOG_INFO(@"Sending %d crash reports", [reports count]);
+    BSG_KSLOG_INFO(@"Sending %lu crash reports", (unsigned long)reports.count);
 
     [self sendReports:reports
             withBlock:^(NSString *filename, BOOL completed,

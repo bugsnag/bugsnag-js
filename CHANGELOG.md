@@ -1,5 +1,34 @@
 # Changelog
 
+## TBD
+
+### Fixed
+
+- (react-native): Ensure unhandled promise warning is logged in development [#1235](https://github.com/bugsnag/bugsnag-js/pull/1235)
+- (core): the `OnErrorCallback` type definition now allows `Promise<boolean>` as a return type. [#1224](https://github.com/bugsnag/bugsnag-js/pull/1224)
+
+## v7.5.6 (2021-01-11)
+
+### Changed
+
+- (expo): Add support for Expo SDK v40 [#1219](https://github.com/bugsnag/bugsnag-js/pull/1219)
+- (react-native): Update bugsnag-cocoa to v6.5.0
+  - Add `errorClass` configuration option. [bugsnag-cocoa#938](https://github.com/bugsnag/bugsnag-cocoa/pull/938)
+  - Add `maxPersistedEvents` configuration option. [bugsnag-cocoa#936](https://github.com/bugsnag/bugsnag-cocoa/pull/936)
+  - Add `maxPersistedSessions` configuration option. [bugsnag-cocoa#943](https://github.com/bugsnag/bugsnag-cocoa/pull/943)
+  - Add `[Bugsnag]` prefix to log messages. [bugsnag-cocoa#955](https://github.com/bugsnag/bugsnag-cocoa/pull/955)
+  - Fix reliability of Swift fatal error message reporting. [bugsnag-cocoa#948](https://github.com/bugsnag/bugsnag-cocoa/pull/948)
+- (react-native): Update bugsnag-android to v5.5.0
+
+  This release supports initializing Bugsnag in multi processes apps. If your app uses Bugsnag in multiple processes, you should initialize Bugsnag
+  with a unique `persistenceDirectory` value for each process. Please see [the docs](https://docs.bugsnag.com/platforms/android/faq/#does-bugsnag-support-multi-process-apps) for further information.
+  - Store user information in persistenceDirectory [bugsnag-android#1017](https://github.com/bugsnag/bugsnag-android/pull/1017)
+  - Use consistent device ID for multi process apps [bugsnag-android#1013](https://github.com/bugsnag/bugsnag-android/pull/1013)
+  - Create synchronized store for user information [bugsnag-android#1010](https://github.com/bugsnag/bugsnag-android/pull/1010)
+  - Add persistenceDirectory config option for controlling event/session storage [bugsnag-android#998](https://github.com/bugsnag/bugsnag-android/pull/998)
+  - Add configuration option to control maximum number of persisted events/sessions [bugsnag-android#980](https://github.com/bugsnag/bugsnag-android/pull/980)
+  - Increase kotlin dependency version to 1.3.72 [bugsnag-android#1050](https://github.com/bugsnag/bugsnag-android/pull/1050)
+
 ## v7.5.5 (2020-12-14)
 
 ### Changed

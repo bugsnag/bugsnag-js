@@ -17,9 +17,9 @@
   "author": "Bugsnag",
   "license": "MIT",
   "dependencies": {
-    "@react-native-community/netinfo": "5.9.6",
-    "expo-crypto": "~8.3.0",
-    "expo-file-system": "~9.2"
+    "@react-native-community/netinfo": "5.9.7",
+    "expo-crypto": "~8.4.0",
+    "expo-file-system": "~9.3.0"
   },
   "devDependencies": {
     "@bugsnag/core": "^7.6.0-rc.0"

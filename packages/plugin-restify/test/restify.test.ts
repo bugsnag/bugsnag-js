@@ -1,5 +1,5 @@
 import Client from '@bugsnag/core/client'
-import plugin from '../'
+import plugin from '../src/restify'
 
 describe('plugin: restify', () => {
   it('exports two middleware functions', () => {

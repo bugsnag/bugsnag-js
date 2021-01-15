@@ -150,6 +150,20 @@ typedef BOOL (^BugsnagOnSessionBlock)(BugsnagSession *_Nonnull session);
 @property(readwrite, retain, nullable) NSSet<id> *redactedKeys;
 
 /**
+ * A set of strings and / or NSRegularExpression objects that determine which errors should
+ * be discarded based on their `errorClass`.
+ *
+ * Comparisons are case sensitive.
+ *
+ * OnError / OnSendError blocks will not be called for discarded errors.
+ *
+ * Some examples of errorClass are: Objective-C exception names like "NSRangeException",
+ * signal names like "SIGABRT", mach exception names like "EXC_BREAKPOINT", and Swift
+ * error names like "Fatal error".
+ */
+@property(readwrite, copy, nullable) NSSet<id> *discardClasses;
+
+/**
  *  A general summary of what was occuring in the application
  */
 @property(readwrite, retain, nullable) NSString *context;
@@ -203,6 +217,22 @@ typedef BOOL (^BugsnagOnSessionBlock)(BugsnagSession *_Nonnull session);
 @property (readwrite, retain, nullable) NSString *bundleVersion;
 
 @property(retain, nullable) NSString *appType;
+
+/**
+ * Sets the maximum number of events which will be stored. Once the threshold is reached,
+ * the oldest events will be deleted.
+ *
+ * By default, 12 events are stored: this can be amended up to a maximum of 100.
+ */
+@property (nonatomic) NSUInteger maxPersistedEvents;
+
+/**
+ * Sets the maximum number of sessions which will be stored. Once the threshold is reached,
+ * the oldest sessions will be deleted.
+ *
+ * By default, 32 sessions are stored: this can be amended up to a maximum of 100.
+ */
+@property (nonatomic) NSUInteger maxPersistedSessions;
 
 /**
  * Sets the maximum number of breadcrumbs which will be stored. Once the threshold is reached,

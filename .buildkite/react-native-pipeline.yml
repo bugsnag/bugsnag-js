@@ -205,6 +205,7 @@ steps:
         - --username=$BROWSER_STACK_USERNAME
         - --access-key=$BROWSER_STACK_ACCESS_KEY
         - --fail-fast
+        - --resilient
     env:
       SKIP_NAVIGATION_SCENARIOS: "true"
     concurrency: 9
@@ -228,6 +229,7 @@ steps:
         - --username=$BROWSER_STACK_USERNAME
         - --access-key=$BROWSER_STACK_ACCESS_KEY
         - --fail-fast
+        - --resilient
     env:
       SKIP_NAVIGATION_SCENARIOS: "true"
     concurrency: 9
@@ -250,6 +252,7 @@ steps:
         - --username=$BROWSER_STACK_USERNAME
         - --access-key=$BROWSER_STACK_ACCESS_KEY
         - --fail-fast
+        - --resilient
     env:
       SKIP_NAVIGATION_SCENARIOS: "true"
     concurrency: 9
@@ -273,6 +276,7 @@ steps:
         - --username=$BROWSER_STACK_USERNAME
         - --access-key=$BROWSER_STACK_ACCESS_KEY
         - --fail-fast
+        - --resilient
     env:
       SKIP_NAVIGATION_SCENARIOS: "true"
     concurrency: 9
@@ -295,6 +299,7 @@ steps:
         - --username=$BROWSER_STACK_USERNAME
         - --access-key=$BROWSER_STACK_ACCESS_KEY
         - --fail-fast
+        - --resilient
         - features/navigation.feature
     concurrency: 9
     concurrency_group: 'browserstack-app'
@@ -319,6 +324,7 @@ steps:
           - --username=$BROWSER_STACK_USERNAME
           - --access-key=$BROWSER_STACK_ACCESS_KEY
           - --fail-fast
+          - --resilient
           - features/navigation.feature
     concurrency: 9
     concurrency_group: 'browserstack-app'
@@ -340,6 +346,7 @@ steps:
         - --username=$BROWSER_STACK_USERNAME
         - --access-key=$BROWSER_STACK_ACCESS_KEY
         - --fail-fast
+        - --resilient
         - features/navigation.feature
     concurrency: 9
     concurrency_group: 'browserstack-app'
@@ -364,6 +371,7 @@ steps:
           - --username=$BROWSER_STACK_USERNAME
           - --access-key=$BROWSER_STACK_ACCESS_KEY
           - --fail-fast
+          - --resilient
           - features/navigation.feature
     concurrency: 9
     concurrency_group: 'browserstack-app'
@@ -385,6 +393,7 @@ steps:
         - --username=$BROWSER_STACK_USERNAME
         - --access-key=$BROWSER_STACK_ACCESS_KEY
         - --fail-fast
+        - --resilient
         - features/navigation.feature
     concurrency: 9
     concurrency_group: 'browserstack-app'
@@ -409,6 +418,7 @@ steps:
           - --username=$BROWSER_STACK_USERNAME
           - --access-key=$BROWSER_STACK_ACCESS_KEY
           - --fail-fast
+          - --resilient
           - features/navigation.feature
     concurrency: 9
     concurrency_group: 'browserstack-app'
@@ -430,6 +440,7 @@ steps:
         - --username=$BROWSER_STACK_USERNAME
         - --access-key=$BROWSER_STACK_ACCESS_KEY
         - --fail-fast
+        - --resilient
         - features/navigation.feature
     concurrency: 9
     concurrency_group: 'browserstack-app'
@@ -454,6 +465,7 @@ steps:
           - --username=$BROWSER_STACK_USERNAME
           - --access-key=$BROWSER_STACK_ACCESS_KEY
           - --fail-fast
+          - --resilient
           - features/navigation.feature
     concurrency: 9
     concurrency_group: 'browserstack-app'

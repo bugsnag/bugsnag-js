@@ -1,5 +1,5 @@
 import Client from '@bugsnag/core/client'
-import plugin from '../'
+import plugin from '../src/koa'
 
 describe('plugin: koa', () => {
   it('exports two middleware functions', () => {

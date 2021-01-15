@@ -23,6 +23,7 @@
 @interface BugsnagSessionTrackingPayload ()
 @property (nonatomic) BugsnagConfiguration *config;
 @property(nonatomic, copy) NSString *codeBundleId;
+@property (nonatomic) BugsnagNotifier *notifier;
 @end
 
 @implementation BugsnagSessionTrackingPayload
@@ -30,11 +31,13 @@
 - (instancetype)initWithSessions:(NSArray<BugsnagSession *> *)sessions
                           config:(BugsnagConfiguration *)config
                     codeBundleId:(NSString *)codeBundleId
+                        notifier:(BugsnagNotifier *)notifier
 {
     if (self = [super init]) {
         _sessions = sessions;
         _config = config;
         _codeBundleId = codeBundleId;
+        _notifier = notifier;
     }
     return self;
 }
@@ -48,7 +51,7 @@
         [sessionData addObject:[session toDictionary]];
     }
     dict[@"sessions"] = sessionData;
-    dict[BSGKeyNotifier] = [[Bugsnag client].notifier toDict];
+    dict[BSGKeyNotifier] = [self.notifier toDict];
 
     // app/device data collection relies on KSCrash reports,
     // need to mimic the JSON structure here
