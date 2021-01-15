@@ -36,6 +36,6 @@ markdown(`
 `)
 
 schedule(istanbulCoverage({
-  coveragePath: { path: path.join(__dirname, 'coverage/lcov.info'), type: 'lcov' },
+  coveragePath: { path: path.resolve(__dirname, 'coverage/lcov.info'), type: 'lcov' },
   reportFileSet: 'createdOrModified'
 }))
