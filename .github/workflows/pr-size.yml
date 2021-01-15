@@ -33,7 +33,8 @@ jobs:
           clean: false
 
       - name: Record after stats
-        run: npm ci
+        run: |
+          npm ci
           npx lerna bootstrap
           npm run build
           npm run test:unit -- --coverage
