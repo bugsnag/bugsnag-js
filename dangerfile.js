@@ -1,5 +1,6 @@
 /* global markdown, schedule */
 
+const { codeCoverage } = require('danger-plugin-code-coverage')
 const { istanbulCoverage } = require('danger-plugin-istanbul-coverage')
 
 const path = require('path')
@@ -34,6 +35,15 @@ markdown(`
 | After  | \`${formatKbs(after.minified)}\`  | \`${formatKbs(after.gzipped)}\`  |
 | ±      | ${showDiff(diffMinSize)}          | ${showDiff(diffZipSize)}         |
 `)
+
+markdown(__dirname)
+markdown(`${path.resolve(__dirname, 'coverage/lcov.info')}`)
+
+codeCoverage([{
+  title: '# Coverage',
+  ignoreCoveragePattern: [],
+  coveragePath: path.resolve(__dirname, 'coverage/coverage-final.json')
+}])
 
 schedule(istanbulCoverage({
   coveragePath: { path: path.resolve(__dirname, 'coverage/lcov.info'), type: 'lcov' },
