@@ -89,7 +89,7 @@ Update any of the following imports in. These will likely be in `AppDelegate.m` 
 ```diff
 - #import <BugsnagReactNative/BugsnagReactNative.h>
 - #import "BugsnagConfiguration.h"
-+ import <Bugsnag/Bugsnag.h>
++ #import <Bugsnag/Bugsnag.h>
 ```
 
 Inside your `application:didFinishLaunchingWithOptions` method, replace any Bugsnag initialization code with the updated version:
