@@ -13,3 +13,10 @@ Then("the event does not have a {string} breadcrumb named {string}") do |type, n
   end
   fail("A breadcrumb was found matching: #{value}") if found
 end
+
+Then("the event {string} equals the current OS name") do |field|
+  expected = MazeRunner.driver.capabilities['os']
+  actual = read_key_path(Server.current_request[:body], "events.0.#{field}")
+
+  assert_equal(expected, actual)
+end
