@@ -46,6 +46,9 @@ codeCoverage([{
 
 const diff = istanbulDiff.diff(before.coverage, after.coverage)
 
+markdown(before.coverage)
+markdown(after.coverage)
+
 markdown(JSON.stringify(diff, null, 2))
 
 markdown(`
