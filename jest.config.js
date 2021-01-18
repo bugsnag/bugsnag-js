@@ -23,7 +23,7 @@ module.exports = {
     '!<rootDir>/packages/plugin-node-surrounding-code/test/fixtures/**/*'
   ],
   coverageReporters: [
-    'json-summary'
+    'json-summary', 'json', 'lcov', 'text', 'clover'
   ],
   projects: [
     project('core', ['core']),
