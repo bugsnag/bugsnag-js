@@ -4,7 +4,7 @@ const { codeCoverage } = require('danger-plugin-code-coverage')
 
 const path = require('path')
 const { readFileSync } = require('fs')
-const istanbulDiff = require('istanbul-diff')
+const coverageDiff = require('coverage-diff')
 
 const before = {
   minified: parseInt(readFileSync(`${__dirname}/.diff/size-before-minified`, 'utf8').trim()),
@@ -44,8 +44,4 @@ codeCoverage([{
   coveragePath: path.resolve(__dirname, 'coverage/coverage-final.json')
 }])
 
-const diff = istanbulDiff.diff(before.coverage, after.coverage)
-
-markdown(`
-
-${istanbulDiff.print(diff).msg}`)
+markdown(coverageDiff.diff(before.coverage, after.coverage).results)

@@ -25,7 +25,7 @@ jobs:
           npm run test:unit -- --coverage
           cat packages/browser/dist/bugsnag.min.js | wc -c > .diff/size-before-minified
           cat packages/browser/dist/bugsnag.min.js | gzip | wc -c > .diff/size-before-gzipped
-          cp coverage/coverage-final.json .diff/coverage-before.json
+          cp coverage/coverage-summary.json .diff/coverage-before.json
 
       - name: Checkout PR branch
         uses: actions/checkout@v1
@@ -40,7 +40,7 @@ jobs:
           npm run test:unit -- --coverage
           cat packages/browser/dist/bugsnag.min.js | wc -c > .diff/size-after-minified
           cat packages/browser/dist/bugsnag.min.js | gzip | wc -c > .diff/size-after-gzipped
-          cp coverage/coverage-final.json .diff/coverage-after.json
+          cp coverage/coverage-summary.json .diff/coverage-after.json
 
       - name: Run danger
         uses: danger/danger-js@9.1.6
