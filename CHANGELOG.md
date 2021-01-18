@@ -2,9 +2,17 @@
 
 ## v7.6.0 (2020-01-18)
 
+As of 7.6.0 the monorepo contains `@bugsnag/react-native-cli`, a new command line tool to help set up Bugsnag in React Native projects.
+
+### Added
+
+- (react-native-cli): New `@bugsnag/react-native-cli` package. [#1214](https://github.com/bugsnag/bugsnag-js/pull/1214)
+- (react-native): Source map upload script to be run as an Xcode build phase. [#1214](https://github.com/bugsnag/bugsnag-js/pull/1214)
+
 ### Changed
 
 - (expo): `app.type` will now default to 'ios' or 'android'. [1244](https://github.com/bugsnag/bugsnag-js/pull/1244)
+- (react-native): Deprecate use of `bugsnag-react-native.gradle` in favour of [Bugsnag Android Gradle Plugin](https://github.com/bugsnag/bugsnag-android-gradle-plugin/). [#1214](https://github.com/bugsnag/bugsnag-js/pull/1214)
 - (react-native): Update bugsnag-cocoa to v6.5.1
   - Fix a regression where OOM events were missing session information. [bugsnag-cocoa#963](https://github.com/bugsnag/bugsnag-cocoa/pull/963)
   - Make `maxPersistedEvents` and `maxPersistedSessions` default to 32 and 128, respectively. [bugsnag-cocoa#966](https://github.com/bugsnag/bugsnag-cocoa/pull/966)
