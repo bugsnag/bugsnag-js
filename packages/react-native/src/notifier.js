@@ -4,6 +4,7 @@ const NativeClient = NativeModules.BugsnagReactNative
 const REMOTE_DEBUGGING_WARNING = `Bugsnag cannot initialize synchronously when running in the remote debugger.
 
 Error reporting is still supported, but synchronous calls after Bugsnag.start() will no-op. This means Bugsnag.leaveBreadcrumb(), Bugsnag.setUser() and all other methods will only begin to work after a short delay.
+Plugins are also affected. Synchronous calls to Bugsnag.getPlugin() can be used as normal, but plugins may not report errors and set contextual data correctly in the debugger.
 
 This only affects the remote debugger. Execution of JS in the normal way (on the device) is not affected.`
 
@@ -97,32 +98,45 @@ const Bugsnag = {
       Bugsnag._client._logger.warn('Bugsnag.start() was called more than once. Ignoring.')
       return Bugsnag._client
     }
+
     if (!isDebuggingRemotely) {
       Bugsnag._client = createClient(opts)
       return Bugsnag._client
-    } else {
-      console.warn(REMOTE_DEBUGGING_WARNING)
-      let initialised = false
-      const stubClient = {}
-      CLIENT_METHODS.reduce((accum, m) => {
-        stubClient[m] = new Proxy(() => {
-          console.warn(
-            `This call to Bugsnag.${m}() is a no-op because remote debugging is enabled and Bugsnag has not yet initialized`
-          )
-        }, {
-          apply: (target, thisArg, argumentsList) => {
-            if (!initialised) return Reflect.apply(target, thisArg, argumentsList)
-            return Reflect.apply(Bugsnag._client[m], Bugsnag._client, argumentsList)
-          }
-        })
-      })
-      Bugsnag._client = stubClient
-      createClientAsync(opts).then(client => {
-        initialised = true
-        Bugsnag._client = client
-      })
-      return stubClient
     }
+
+    console.warn(REMOTE_DEBUGGING_WARNING)
+
+    let initialised = false
+
+    const stubSchema = { ...schema }
+    delete stubSchema.apiKey
+    const stubClient = new Client({
+      ...opts,
+      autoTrackSessions: false,
+      autoDetectErrors: false,
+      enabledBreadcrumbTypes: []
+    }, stubSchema, internalPlugins, { name, version, url })
+
+    CLIENT_METHODS.map((m) => {
+      if (/^_/.test(m)) return
+      stubClient[m] = new Proxy(stubClient[m], {
+        apply: (target, thisArg, args) => {
+          if (!initialised) {
+            console.log(`Synchronous call to Bugsnag.${m}()`)
+          }
+          return Reflect.apply(target, thisArg, args)
+        }
+      })
+    })
+
+    Bugsnag._client = stubClient
+
+    createClientAsync(opts).then(client => {
+      initialised = true
+      Bugsnag._client = client
+    })
+
+    return stubClient
   }
 }
 
