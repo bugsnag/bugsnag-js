@@ -19,6 +19,7 @@
 #import "BugsnagSessionFileStore.h"
 #import "BugsnagSessionTrackingApiClient.h"
 #import "BugsnagSessionTrackingPayload.h"
+#import "BSGFileLocations.h"
 
 /**
  Number of seconds in background required to make a new session
@@ -53,12 +54,7 @@ NSString *const BSGSessionUpdateNotification = @"BugsnagSessionChanged";
         _apiClient = [[BugsnagSessionTrackingApiClient alloc] initWithConfig:config queueName:@"Session API queue" notifier:client.notifier];
         _callback = callback;
 
-        NSString *storePath = [BugsnagFileStore findReportStorePath:@"Sessions"];
-        if (!storePath) {
-            bsg_log_err(@"Failed to initialize session store.");
-        }
-
-        _sessionStore = [BugsnagSessionFileStore storeWithPath:storePath maxPersistedSessions:config.maxPersistedSessions];
+        _sessionStore = [BugsnagSessionFileStore storeWithPath:[BSGFileLocations current].sessions maxPersistedSessions:config.maxPersistedSessions];
         _extraRuntimeInfo = [NSMutableDictionary new];
     }
     return self;

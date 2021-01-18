@@ -222,7 +222,7 @@ typedef BOOL (^BugsnagOnSessionBlock)(BugsnagSession *_Nonnull session);
  * Sets the maximum number of events which will be stored. Once the threshold is reached,
  * the oldest events will be deleted.
  *
- * By default, 12 events are stored: this can be amended up to a maximum of 100.
+ * By default, 32 events are persisted.
  */
 @property (nonatomic) NSUInteger maxPersistedEvents;
 
@@ -230,7 +230,7 @@ typedef BOOL (^BugsnagOnSessionBlock)(BugsnagSession *_Nonnull session);
  * Sets the maximum number of sessions which will be stored. Once the threshold is reached,
  * the oldest sessions will be deleted.
  *
- * By default, 32 sessions are stored: this can be amended up to a maximum of 100.
+ * By default, 128 sessions are persisted.
  */
 @property (nonatomic) NSUInteger maxPersistedSessions;
 
@@ -276,7 +276,7 @@ typedef BOOL (^BugsnagOnSessionBlock)(BugsnagSession *_Nonnull session);
 /**
  * The current user
  */
-@property(readonly, retain, nonnull) BugsnagUser *user;
+@property(readonly, retain, nonnull, nonatomic) BugsnagUser *user;
 
 /**
  *  Set user metadata

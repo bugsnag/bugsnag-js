@@ -41,6 +41,7 @@
 #import "Bugsnag.h"
 #import "BugsnagCollections.h"
 #import "BSG_KSCrashReportFields.h"
+#import "BSGFileLocations.h"
 
 #if BSG_HAS_UIKIT
 #import "BSGUIKit.h"
@@ -52,11 +53,6 @@
 // ============================================================================
 #pragma mark - Default Constants -
 // ============================================================================
-
-/** The directory under "Caches" to store the crash reports. */
-#ifndef BSG_KSCRASH_DefaultReportFilesDirectory
-#define BSG_KSCRASH_DefaultReportFilesDirectory @"KSCrashReports"
-#endif
 
 #ifndef BSG_INITIAL_MACH_BINARY_IMAGE_ARRAY_SIZE
 #define BSG_INITIAL_MACH_BINARY_IMAGE_ARRAY_SIZE 400
@@ -128,24 +124,10 @@
 }
 
 - (instancetype)init {
-    return [self
-        initWithReportFilesDirectory:BSG_KSCRASH_DefaultReportFilesDirectory];
-}
-
-- (instancetype)initWithReportFilesDirectory:(NSString *)reportFilesDirectory {
     if ((self = [super init])) {
         self.bundleName = [[NSBundle mainBundle] infoDictionary][@"CFBundleName"];
-
-        NSString *storePath = [BugsnagFileStore findReportStorePath:reportFilesDirectory];
-
-        if (!storePath) {
-            BSG_KSLOG_ERROR(
-                    @"Failed to initialize crash handler. Crash reporting disabled.");
-            return nil;
-        }
-
         self.nextCrashID = [NSUUID UUID].UUIDString;
-        self.crashReportStore = [BSG_KSCrashReportStore storeWithPath:storePath];
+        self.crashReportStore = [BSG_KSCrashReportStore storeWithPath:[BSGFileLocations current].kscrashReports];
         self.introspectMemory = YES;
         self.maxStoredReports = 5;
 
@@ -414,14 +396,18 @@ BSG_SYNTHESIZE_CRASH_STATE_PROPERTY(BOOL, crashedLastLaunch)
 - (void)sendReports:(NSDictionary <NSString *, NSDictionary *> *)reports
           withBlock:(BSGOnErrorSentBlock)block {
     if ([reports count] == 0) {
-        block(nil, YES, nil);
+        if (block) {
+            block(nil, YES, nil);
+        }
         return;
     }
 
     if (self.sink == nil) {
-        block(nil, NO, [NSError bsg_errorWithDomain:[[self class] description]
-                                               code:0
-                                        description:@"No sink set. Crash reports not sent."]);
+        if (block) {
+            block(nil, NO, [NSError bsg_errorWithDomain:[[self class] description]
+                                                   code:0
+                                            description:@"No sink set. Crash reports not sent."]);
+        }
         return;
     }
     [self.sink sendStoredReports:reports

@@ -11,6 +11,7 @@ export default class AppFeature extends Component {
     bugsnagClient.notify(new Error('HandledError'), event => {
       event.app.releaseStage = 'enhancedReleaseStage',
       event.app.version = '5.5.5'
+      event.app.type = 'custom app type'
     })
   }
 

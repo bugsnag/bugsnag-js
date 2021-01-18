@@ -35,7 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nonatomic) BugsnagMetadata *metadata;
 
 /// Property overrides.
-@property (readonly, copy) NSDictionary *overrides;
+@property (readonly, nonatomic) NSDictionary *overrides;
 
 @property NSSet<id> *redactedKeys;
 
