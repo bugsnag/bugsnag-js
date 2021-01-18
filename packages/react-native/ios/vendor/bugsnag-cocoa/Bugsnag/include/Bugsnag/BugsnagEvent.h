@@ -65,7 +65,7 @@ typedef NS_ENUM(NSUInteger, BSGSeverity) {
  * - The default value of nil results in the BugsnagConfiguration apiKey being used.
  * - Writes are not persisted to BugsnagConfiguration.
  */
-@property(readwrite, copy, nullable) NSString *apiKey;
+@property(readwrite, copy, nullable, nonatomic) NSString *apiKey;
 
 /**
  *  Device information such as OS name and version

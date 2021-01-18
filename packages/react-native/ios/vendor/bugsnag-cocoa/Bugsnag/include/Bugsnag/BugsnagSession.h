@@ -26,7 +26,7 @@
 /**
  * The current user
  */
-@property(readonly, retain, nonnull) BugsnagUser *user;
+@property (readonly, nonnull, nonatomic) BugsnagUser *user;
 
 /**
  *  Set user metadata

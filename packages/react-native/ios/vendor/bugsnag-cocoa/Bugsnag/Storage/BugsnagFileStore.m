@@ -5,7 +5,7 @@
 
 #import "BugsnagFileStore.h"
 
-#import "BSGCachesDirectory.h"
+#import "BSGFileLocations.h"
 #import "BSG_KSCrashReportFields.h"
 #import "BSG_KSJSONCodecObjC.h"
 #import "BugsnagLogger.h"
@@ -62,6 +62,7 @@
 @interface BugsnagFileStore ()
 
 @property(nonatomic, readwrite, retain) NSString *path;
+@property(nonatomic, readonly, retain) NSString *filenameSuffix;
 
 @end
 
@@ -147,12 +148,6 @@
     return files;
 }
 
-- (void)deleteAllFiles {
-    for (NSString *fileId in [self fileIds]) {
-        [self deleteFileWithId:fileId];
-    }
-}
-
 - (void)pruneFilesLeaving:(int)numFiles {
     NSArray *fileIds = [self fileIds];
     int deleteCount = (int) [fileIds count] - numFiles;
@@ -186,48 +181,11 @@
     }
 }
 
-+ (NSString *)findReportStorePath:(NSString *)customDirectory  {
-
-    NSString *bundleName = [[NSBundle mainBundle] infoDictionary][@"CFBundleName"];
-    NSString *storePathEnd = [customDirectory
-            stringByAppendingPathComponent:bundleName];
-
-    NSString *storePath =
-            [[BSGCachesDirectory cachesDirectory] stringByAppendingPathComponent:storePathEnd];
-
-    if ([storePath length] == 0) {
-        bsg_log_err(@"Could not determine report files path.");
-        return nil;
-    }
-    if (![self ensureDirectoryExists:storePath]) {
-        bsg_log_err(@"Store Directory does not exist.");
-        return nil;
-    }
-    return storePath;
-}
-
-+ (BOOL)ensureDirectoryExists:(NSString *)path {
-    NSError *error = nil;
-    NSFileManager *fm = [NSFileManager defaultManager];
-
-    if (![fm fileExistsAtPath:path]) {
-        if (![fm createDirectoryAtPath:path
-           withIntermediateDirectories:YES
-                            attributes:nil
-                                 error:&error]) {
-            bsg_log_err(@"Could not create directory %@: %@.", path, error);
-            return NO;
-        }
-    }
-
-    return YES;
-}
-
 #pragma mark Utility
 
 - (void)performOnFields:(NSArray *)fieldPath
                  inFile:(NSMutableDictionary *)file
-              operation:(void (^)(id parent, id field))operation
+              operation:(nonnull void (^)(id parent, id field))operation
            okIfNotFound:(BOOL)isOkIfNotFound {
     if (fieldPath.count == 0) {
         bsg_log_err(@"Unexpected end of field path");

@@ -190,7 +190,9 @@ BSGBreadcrumbType BSGBreadcrumbTypeFromString(NSString *value) {
 
     for (NSDictionary *dict in json) {
         BugsnagBreadcrumb *crumb = [BugsnagBreadcrumb breadcrumbFromDict:dict];
-        [data addObject:crumb];
+        if (crumb) {
+            [data addObject:crumb];
+        }
     }
     return data;
 }

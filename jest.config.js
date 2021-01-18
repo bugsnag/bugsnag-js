@@ -96,6 +96,7 @@ module.exports = {
       testMatch: [
         '<rootDir>/packages/node/test/integration/**/*.test.[jt]s'
       ]
-    })
+    }),
+    project('react native cli', ['react-native-cli'], { testEnvironment: 'node' })
   ]
 }

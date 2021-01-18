@@ -72,10 +72,10 @@
     return newRequests;
 }
 
-- (void)finishActiveRequest:(NSString *)requestId
+- (void)finishActiveRequest:(nonnull NSString *)requestId
                   completed:(BOOL)completed
                       error:(NSError *)error
-                      block:(BSGOnErrorSentBlock)block {
+                      block:(nonnull BSGOnErrorSentBlock)block {
     block(requestId, completed, error);
     @synchronized (self.activeRequests) {
         [self.activeRequests removeObject:requestId];

@@ -174,9 +174,9 @@ static NSUserDefaults *userDefaults;
     _enabledReleaseStages = nil;
     _redactedKeys = [NSSet setWithArray:@[@"password"]];
     _enabledBreadcrumbTypes = BSGEnabledBreadcrumbTypeAll;
-    _maxPersistedEvents = 12;
-    _maxPersistedSessions = 32;
     _maxBreadcrumbs = 25;
+    _maxPersistedEvents = 32;
+    _maxPersistedSessions = 128;
     _autoTrackSessions = YES;
     _sendThreads = BSGThreadSendPolicyAlways;
     // Default to recording all error types
@@ -266,8 +266,9 @@ static NSUserDefaults *userDefaults;
     _user = [[BugsnagUser alloc] initWithUserId:userId name:name emailAddress:email];
 
     // Persist the user
-    if (_persistUser)
+    if (self.persistUser) {
         [self persistUserData];
+    }
 
     // Add user info to the metadata
     [self setUserMetadataFromUser:self.user];
@@ -440,41 +441,25 @@ static NSUserDefaults *userDefaults;
 // MARK: - Properties: Getters and Setters
 // -----------------------------------------------------------------------------
 
-@synthesize maxPersistedEvents = _maxPersistedEvents;
-
-- (NSUInteger)maxPersistedEvents {
-    @synchronized (self) {
-        return _maxPersistedEvents;
-    }
-}
-
 - (void)setMaxPersistedEvents:(NSUInteger)maxPersistedEvents {
     @synchronized (self) {
-        if (maxPersistedEvents >= 1 && maxPersistedEvents <= 100) {
+        if (maxPersistedEvents >= 1) {
             _maxPersistedEvents = maxPersistedEvents;
         } else {
             bsg_log_err(@"Invalid configuration value detected. Option maxPersistedEvents "
-                        "should be an integer between 1-100. Supplied value is %lu",
+                        "should be a non-zero integer. Supplied value is %lu",
                         (unsigned long) maxPersistedEvents);
         }
     }
 }
 
-@synthesize maxPersistedSessions = _maxPersistedSessions;
-
-- (NSUInteger)maxPersistedSessions {
-    @synchronized (self) {
-        return _maxPersistedSessions;
-    }
-}
-
 - (void)setMaxPersistedSessions:(NSUInteger)maxPersistedSessions {
     @synchronized (self) {
-        if (maxPersistedSessions >= 1 && maxPersistedSessions <= 100) {
+        if (maxPersistedSessions >= 1) {
             _maxPersistedSessions = maxPersistedSessions;
         } else {
             bsg_log_err(@"Invalid configuration value detected. Option maxPersistedSessions "
-                        "should be an integer between 1-100. Supplied value is %lu",
+                        "should be a non-zero integer. Supplied value is %lu",
                         (unsigned long) maxPersistedSessions);
         }
     }
