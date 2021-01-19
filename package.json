@@ -37,7 +37,6 @@
     "browserify-versionify": "^1.0.6",
     "coverage-diff": "^1.6.0",
     "danger": "^10.6.0",
-    "danger-plugin-code-coverage": "^1.1.5",
     "envify": "^4.1.0",
     "eslint": "^6.8.0",
     "eslint-config-standard": "^14.1.0",
