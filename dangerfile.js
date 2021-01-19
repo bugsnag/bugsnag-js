@@ -1,8 +1,5 @@
 /* global markdown */
 
-const { codeCoverage } = require('danger-plugin-code-coverage')
-
-const path = require('path')
 const { readFileSync } = require('fs')
 const coverageDiff = require('coverage-diff')
 
@@ -36,12 +33,8 @@ markdown(`
 | Before | \`${formatKbs(before.minified)}\` | \`${formatKbs(before.gzipped)}\` |
 | After  | \`${formatKbs(after.minified)}\`  | \`${formatKbs(after.gzipped)}\`  |
 | ±      | ${showDiff(diffMinSize)}          | ${showDiff(diffZipSize)}         |
+
+### code coverage diff
+
+${coverageDiff.diff(before.coverage, after.coverage).results}
 `)
-
-codeCoverage([{
-  title: '# Coverage',
-  ignoreCoveragePattern: [],
-  coveragePath: path.resolve(__dirname, 'coverage/coverage-final.json')
-}])
-
-markdown(coverageDiff.diff(before.coverage, after.coverage).results)
