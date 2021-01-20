@@ -109,6 +109,8 @@ const Bugsnag = {
     let initialised = false
 
     const stubSchema = { ...schema }
+    // remove the api key from the schema so it doesn't get validated – we know we don't
+    // have one at this point, and the only other alternative is to use a fake (but valid) one
     delete stubSchema.apiKey
     const stubClient = new Client({
       ...opts,
@@ -117,7 +119,7 @@ const Bugsnag = {
       enabledBreadcrumbTypes: []
     }, stubSchema, internalPlugins, { name, version, url })
 
-    CLIENT_METHODS.map((m) => {
+    CLIENT_METHODS.forEach((m) => {
       if (/^_/.test(m)) return
       stubClient[m] = new Proxy(stubClient[m], {
         apply: (target, thisArg, args) => {
@@ -140,7 +142,7 @@ const Bugsnag = {
   }
 }
 
-CLIENT_METHODS.map((m) => {
+CLIENT_METHODS.forEach((m) => {
   if (/^_/.test(m)) return
   Bugsnag[m] = function () {
     if (!Bugsnag._client) return console.warn(`Bugsnag.${m}() was called before Bugsnag.start()`)
