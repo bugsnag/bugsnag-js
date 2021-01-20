@@ -14,19 +14,20 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark Initializers
 
-/// Initializes the configuration with values previously stored in metadata.
-- (instancetype)initWithMetadata:(NSDictionary *)JSONObject NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithDictionaryRepresentation:(NSDictionary<NSString *, id> *)JSONObject NS_DESIGNATED_INITIALIZER;
 
 #pragma mark Properties
 
-/// Meta-information about the state of Bugsnag
-@property (retain, nullable) BugsnagMetadata *config;
+/// The user defaults database to use for persistence of user information.
+@property (class, nonatomic) NSUserDefaults *userDefaults;
+
+@property (readonly) NSDictionary<NSString *, id> *dictionaryRepresentation;
 
 @property (readonly) NSDictionary<NSString *, id> *errorApiHeaders;
 
-@property (readonly, nullable) BugsnagMetadata *metadata;
+@property (readonly, nonatomic) BugsnagMetadata *metadata;
 
-@property (readonly, nullable) NSURL *notifyURL;
+@property (readonly, nullable, nonatomic) NSURL *notifyURL;
 
 @property (nonatomic) NSMutableArray<BugsnagOnBreadcrumbBlock> *onBreadcrumbBlocks;
 
@@ -41,13 +42,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (readonly) NSDictionary<NSString *, id> *sessionApiHeaders;
 
-@property (readonly, nullable) NSURL *sessionURL;
+@property (readonly, nullable, nonatomic) NSURL *sessionURL;
 
 #pragma mark Methods
 
 + (BOOL)isValidApiKey:(NSString *)apiKey;
 
 - (void)deletePersistedUserData;
+
+- (BOOL)shouldDiscardErrorClass:(NSString *)errorClass;
 
 - (BOOL)shouldRecordBreadcrumbType:(BSGBreadcrumbType)breadcrumbType;
 

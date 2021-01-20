@@ -1,6 +1,36 @@
 Changelog
 =========
 
+## 6.5.1 (2021-01-13)
+
+### Bug fixes
+
+* Fix a regression where OOM events were missing session information.
+  [#963](https://github.com/bugsnag/bugsnag-cocoa/pull/963)
+* Make `maxPersistedEvents` and `maxPersistedSessions` comply with the specification, with defaults of 32 and 128 respectively.
+  [#966](https://github.com/bugsnag/bugsnag-cocoa/pull/966)
+
+## 6.5.0 (2021-01-06)
+
+### Enhancements
+
+* Errors may now be discarded based on their `errorClass` using the new `discardClasses` configuration option.
+  [#938](https://github.com/bugsnag/bugsnag-cocoa/pull/938)
+
+* The maxiumum number of persisted errors / events may now be configured using the new  `maxPersistedEvents` configuration option.
+  [#936](https://github.com/bugsnag/bugsnag-cocoa/pull/936)
+
+* The maxiumum number of persisted sessions may now be configured using the new  `maxPersistedSessions` configuration option.
+  [#943](https://github.com/bugsnag/bugsnag-cocoa/pull/943)
+
+* Bugsnag log messages are now prefixed with `[Bugsnag]` for easier searching & filtering.
+  [#955](https://github.com/bugsnag/bugsnag-cocoa/pull/955)
+
+### Bug fixes
+
+* Fix reliability of Swift fatal error message reporting.
+  [#948](https://github.com/bugsnag/bugsnag-cocoa/pull/948)
+
 ## 6.4.1 (2020-12-14)
 
 ### Bug fixes

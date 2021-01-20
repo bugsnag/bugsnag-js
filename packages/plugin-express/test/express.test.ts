@@ -1,5 +1,5 @@
 import Client from '@bugsnag/core/client'
-import plugin from '../'
+import plugin from '../src/express'
 
 describe('plugin: express', () => {
   it('exports two middleware functions', () => {

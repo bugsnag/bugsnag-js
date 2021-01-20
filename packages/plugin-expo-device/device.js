@@ -44,6 +44,7 @@ module.exports = {
 
     client.addOnSession(session => {
       session.device = { ...session.device, ...device }
+      addDefaultAppType(session)
     })
 
     client.addOnError(event => {
@@ -52,6 +53,18 @@ module.exports = {
         isDevice: Constants.isDevice,
         appOwnership: Constants.appOwnership
       })
+      addDefaultAppType(event)
     }, true)
+  }
+}
+
+function addDefaultAppType (eventOrSession) {
+  // default app.type to device.osName
+  if (eventOrSession.device && eventOrSession.device.osName) {
+    eventOrSession.app = eventOrSession.app || {}
+
+    if (!eventOrSession.app.type) {
+      eventOrSession.app.type = eventOrSession.device.osName
+    }
   }
 }

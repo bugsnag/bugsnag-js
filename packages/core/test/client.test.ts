@@ -214,6 +214,26 @@ describe('@bugsnag/core/client', () => {
     })
 
     // eslint-disable-next-line jest/expect-expect
+    it('supports preventing send by returning a Promise that resolves to false in onError callback', done => {
+      const client = new Client({
+        apiKey: 'API_KEY_YEAH',
+        onError: () => Promise.resolve(false)
+      })
+
+      client._setDelivery(client => ({
+        sendEvent: (payload) => {
+          done('sendEvent() should not be called')
+        },
+        sendSession: () => {}
+      }))
+
+      client.notify(new Error('oh em gee'), () => {}, () => {
+        // give the event loop a tick to see if the event gets sent
+        process.nextTick(() => done())
+      })
+    })
+
+    // eslint-disable-next-line jest/expect-expect
     it('supports preventing send by returning false in notify callback', done => {
       const client = new Client({ apiKey: 'API_KEY_YEAH' })
 

@@ -8,6 +8,8 @@
 
 #import "BugsnagErrorReportSink.h"
 
+@class BugsnagEvent;
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface BugsnagErrorReportSink ()

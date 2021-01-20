@@ -99,4 +99,11 @@ uintptr_t bsg_mach_headers_first_cmd_after_header(const struct mach_header *head
  */
 uintptr_t bsg_mach_headers_image_at_base_of_image_index(const struct mach_header *header);
 
+/** Get the __crash_info message of the specified image.
+ *
+ * @param header The header to get commands for.
+ * @return The __crash_info message, or NULL if no readable message could be found.
+ */
+const char *bsg_mach_headers_get_crash_info_message(const BSG_Mach_Header_Info *header);
+
 #endif /* BSG_KSMachHeaders_h */
