@@ -11,7 +11,7 @@
   "createdBy": {
     "gradle": {
       "version": "6.7",
-      "buildId": "w6ywacghgze7pnni24xevplabi"
+      "buildId": "xfcu2ow6ivcsfpj7so4aoih2pm"
     }
   },
   "variants": [
@@ -50,11 +50,11 @@
         {
           "name": "bugsnag-plugin-android-anr-5.5.0-react-native.aar",
           "url": "bugsnag-plugin-android-anr-5.5.0-react-native.aar",
-          "size": 26527,
-          "sha512": "899774acc896cb3c73a1e191599bf5d1a2a0f17ff741c7e64c804c779d8662b7e1369ddbf63641957b68bc5c0b7c85c6b74b07d665b715f29f52b37b12cef80a",
-          "sha256": "bb564d1ed01a764fb8ba41d7d5de245853218c3455c3402d3d367396f39edc57",
-          "sha1": "73a8a3cca255146430af2daeba8f2a2a1b6390e3",
-          "md5": "e95028ec1d848ef74aeef0e5531a9652"
+          "size": 29890,
+          "sha512": "58709380b2489f8a2c25efa34bdbf50e72d59944c70d5aad96d0862fe637be5af23c6a008b204b3b84b2678535927ef22b5c6fed1d1eeb26d70d2fc91b7f5b56",
+          "sha256": "46a406cf404f76f0a7922a3fa93a0fe5a291cdc5e6783b4d2b45d2fa7783e548",
+          "sha1": "8fcd2336bd37a386294a902b1e6d88ea3fbc9707",
+          "md5": "b5cea189840657b255d9e5b9f6a9db71"
         }
       ]
     },
@@ -93,11 +93,11 @@
         {
           "name": "bugsnag-plugin-android-anr-5.5.0-react-native.aar",
           "url": "bugsnag-plugin-android-anr-5.5.0-react-native.aar",
-          "size": 26527,
-          "sha512": "899774acc896cb3c73a1e191599bf5d1a2a0f17ff741c7e64c804c779d8662b7e1369ddbf63641957b68bc5c0b7c85c6b74b07d665b715f29f52b37b12cef80a",
-          "sha256": "bb564d1ed01a764fb8ba41d7d5de245853218c3455c3402d3d367396f39edc57",
-          "sha1": "73a8a3cca255146430af2daeba8f2a2a1b6390e3",
-          "md5": "e95028ec1d848ef74aeef0e5531a9652"
+          "size": 29890,
+          "sha512": "58709380b2489f8a2c25efa34bdbf50e72d59944c70d5aad96d0862fe637be5af23c6a008b204b3b84b2678535927ef22b5c6fed1d1eeb26d70d2fc91b7f5b56",
+          "sha256": "46a406cf404f76f0a7922a3fa93a0fe5a291cdc5e6783b4d2b45d2fa7783e548",
+          "sha1": "8fcd2336bd37a386294a902b1e6d88ea3fbc9707",
+          "md5": "b5cea189840657b255d9e5b9f6a9db71"
         }
       ]
     }

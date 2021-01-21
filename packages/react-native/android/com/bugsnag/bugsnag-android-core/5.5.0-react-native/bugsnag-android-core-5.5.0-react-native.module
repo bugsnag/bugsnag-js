@@ -11,7 +11,7 @@
   "createdBy": {
     "gradle": {
       "version": "6.7",
-      "buildId": "w6ywacghgze7pnni24xevplabi"
+      "buildId": "xfcu2ow6ivcsfpj7so4aoih2pm"
     }
   },
   "variants": [
@@ -43,11 +43,11 @@
         {
           "name": "bugsnag-android-core-5.5.0-react-native.aar",
           "url": "bugsnag-android-core-5.5.0-react-native.aar",
-          "size": 259822,
-          "sha512": "447a57029c190a0cfea3604ac98fc3ceb525f9706599d6f160fe4bfae1227d331dbf01389d40c2fd3b581bdcf75814b4497e5b3fa295b20682e23db2cead9138",
-          "sha256": "56ddce1ae2e41510273865ba743c6c05eabb5755b3dbc70e35c4a6ec1db71e68",
-          "sha1": "3ff2df216ed8d956cc7a1354fe2328ec5e3bece8",
-          "md5": "9217195cea70e8e7b1db0e492d96f5cd"
+          "size": 271917,
+          "sha512": "459366a31c3730c016768abbb532f7dc4cf8cfc93d40946da464ca50d56eb5c8bd8590ae4ac5b5d8062d0f56d91317ef373329b7c5a284145a8c8c0e65a43c5c",
+          "sha256": "6276dd33e2e0dbdcfd2c9455ec601d29925d0f80fe763dc571fb9ccf2045e53b",
+          "sha1": "a7ab5154213500e48e494698aab4b5df9a50d9d5",
+          "md5": "af651f223920f0e72f54f5dd4256f15b"
         }
       ]
     },
@@ -79,11 +79,11 @@
         {
           "name": "bugsnag-android-core-5.5.0-react-native.aar",
           "url": "bugsnag-android-core-5.5.0-react-native.aar",
-          "size": 259822,
-          "sha512": "447a57029c190a0cfea3604ac98fc3ceb525f9706599d6f160fe4bfae1227d331dbf01389d40c2fd3b581bdcf75814b4497e5b3fa295b20682e23db2cead9138",
-          "sha256": "56ddce1ae2e41510273865ba743c6c05eabb5755b3dbc70e35c4a6ec1db71e68",
-          "sha1": "3ff2df216ed8d956cc7a1354fe2328ec5e3bece8",
-          "md5": "9217195cea70e8e7b1db0e492d96f5cd"
+          "size": 271917,
+          "sha512": "459366a31c3730c016768abbb532f7dc4cf8cfc93d40946da464ca50d56eb5c8bd8590ae4ac5b5d8062d0f56d91317ef373329b7c5a284145a8c8c0e65a43c5c",
+          "sha256": "6276dd33e2e0dbdcfd2c9455ec601d29925d0f80fe763dc571fb9ccf2045e53b",
+          "sha1": "a7ab5154213500e48e494698aab4b5df9a50d9d5",
+          "md5": "af651f223920f0e72f54f5dd4256f15b"
         }
       ]
     }
