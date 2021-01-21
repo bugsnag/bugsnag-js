@@ -61,6 +61,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithUserData:(NSDictionary *)event;
 
+- (void)attachCustomStacktrace:(NSArray *)frames withType:(NSString *)type; // Used in BugsnagReactNative
+
 /// Whether this report should be sent, based on release stage information cached at crash time and within the application currently.
 - (BOOL)shouldBeSent;
 

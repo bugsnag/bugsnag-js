@@ -2,6 +2,11 @@
 
 ## TBD
 
+## Changed
+
+- (react-native): Update bugsnag-cocoa to v6.6.0
+  - The NSError `userInfo` property is now included in reports. [bugsnag-cocoa#974](https://github.com/bugsnag/bugsnag-cocoa/pull/974)
+
 ### Fixed
 
 - (react-native):  Ensure plugin usage is compatible with running an app in a remote debugger [#1250](https://github.com/bugsnag/bugsnag-js/pull/1250)
