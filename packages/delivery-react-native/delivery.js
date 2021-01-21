@@ -1,14 +1,14 @@
 module.exports = (client, NativeClient) => ({
   sendEvent: (payload, cb = () => {}) => {
     const event = payload.events[0]
-    // let nativeStack
-    // if (event.originalError) {
-    //   if (event.originalError.nativeStackIOS) {
-    //     nativeStack = event.originalError.nativeStackIOS
-    //   } else if (event.originalError.nativeStackAndroid) {
-    //     nativeStack = event.originalError.nativeStackAndroid
-    //   }
-    // }
+    let nativeStack
+    if (event.originalError) {
+      if (event.originalError.nativeStackIOS) {
+        nativeStack = event.originalError.nativeStackIOS
+      } else if (event.originalError.nativeStackAndroid) {
+        nativeStack = event.originalError.nativeStackAndroid
+      }
+    }
     NativeClient.dispatch({
       errors: event.errors,
       severity: event.severity,
@@ -22,8 +22,8 @@ module.exports = (client, NativeClient) => ({
       user: event._user,
       metadata: event._metadata,
       groupingHash: event.groupingHash,
-      apiKey: event.apiKey//,
-      // nativeStack: nativeStack
+      apiKey: event.apiKey,
+      nativeStack: nativeStack
     }).then(() => cb()).catch(cb)
   },
   sendSession: () => {
