@@ -7,4 +7,4 @@ Feature: Tests for building a React Native app (for iOS only) that was initializ
     Then the Content-Type header is valid multipart form-data
     And the payload field "apiKey" equals "1234567890ABCDEF1234567890ABCDEF"
     And the payload field "platform" equals "ios"
-    And the payload field "overwrite" equals "false"
+    And the payload field "overwrite" equals "true"
