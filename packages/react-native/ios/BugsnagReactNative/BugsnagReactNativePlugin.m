@@ -1,12 +1,9 @@
-#import "Bugsnag.h"
-#import "BugsnagClient.h"
-#import "BugsnagConfiguration.h"
-#import "BugsnagError.h"
 #import "BugsnagReactNativePlugin.h"
 
-@interface BugsnagClient ()
-@property(nonatomic, readwrite, retain) BugsnagConfiguration * configuration;
-@end
+#import "Bugsnag.h"
+#import "BugsnagClient+Private.h"
+#import "BugsnagConfiguration.h"
+#import "BugsnagError.h"
 
 @interface BugsnagReactNativePlugin () <BugsnagPlugin>
 @end

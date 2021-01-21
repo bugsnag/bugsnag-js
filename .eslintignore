@@ -10,3 +10,4 @@ packages/**/fixtures
 test/browser
 test/expo
 test/node
+test/react-native-cli/features/fixtures

@@ -24,9 +24,6 @@
  *       That file includes this one.  No further configuration is required.
  */
 
-#ifndef BugsnagLogger_h
-#define BugsnagLogger_h
-
 #define BSG_LOGLEVEL_NONE 0
 #define BSG_LOGLEVEL_ERR 10
 #define BSG_LOGLEVEL_WARN 20
@@ -38,28 +35,32 @@
 #define BSG_LOG_LEVEL BSG_LOGLEVEL_INFO
 #endif
 
+#ifdef __OBJC__
+
+#import <Foundation/Foundation.h>
+
 #if BSG_LOG_LEVEL >= BSG_LOGLEVEL_ERR
-#define bsg_log_err NSLog
+#define bsg_log_err(...) NSLog(@"[Bugsnag] [ERROR] " __VA_ARGS__)
 #else
 #define bsg_log_err(format, ...)
 #endif
 
 #if BSG_LOG_LEVEL >= BSG_LOGLEVEL_WARN
-#define bsg_log_warn NSLog
+#define bsg_log_warn(...) NSLog(@"[Bugsnag] [WARN] " __VA_ARGS__)
 #else
 #define bsg_log_warn(format, ...)
 #endif
 
 #if BSG_LOG_LEVEL >= BSG_LOGLEVEL_INFO
-#define bsg_log_info NSLog
+#define bsg_log_info(...) NSLog(@"[Bugsnag] [INFO] " __VA_ARGS__)
 #else
 #define bsg_log_info(format, ...)
 #endif
 
 #if BSG_LOG_LEVEL >= BSG_LOGLEVEL_DEBUG
-#define bsg_log_debug NSLog
+#define bsg_log_debug(...) NSLog(@"[Bugsnag] [DEBUG] " __VA_ARGS__)
 #else
 #define bsg_log_debug(format, ...)
 #endif
 
-#endif /* BugsnagLogger_h */
+#endif

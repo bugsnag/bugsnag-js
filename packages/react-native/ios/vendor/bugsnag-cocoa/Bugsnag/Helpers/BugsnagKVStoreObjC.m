@@ -7,8 +7,8 @@
 //
 
 #import "BugsnagKVStoreObjC.h"
-#import "BSGCachesDirectory.h"
 #import "BugsnagKVStore.h"
+#import "BSGFileLocations.h"
 #import "BugsnagLogger.h"
 
 #define KV_DIR @"bsg_kvstore"
@@ -16,7 +16,7 @@
 static void bsgkv_init() {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        const char *kvstoreDir = [[BSGCachesDirectory getSubdirPath:KV_DIR] UTF8String];
+        const char *kvstoreDir = [[BSGFileLocations current].kvStore UTF8String];
         int err = 0;
         bsgkv_open(kvstoreDir, &err);
         if(err != 0) {

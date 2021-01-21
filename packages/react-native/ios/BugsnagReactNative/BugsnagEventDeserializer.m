@@ -8,80 +8,28 @@
 
 #import "BugsnagEventDeserializer.h"
 
+#import "Bugsnag+Private.h"
+#import "BugsnagAppWithState+Private.h"
+#import "BugsnagBreadcrumb+Private.h"
+#import "BugsnagClient+Private.h"
+#import "BugsnagDeviceWithState+Private.h"
+#import "BugsnagError+Private.h"
+#import "BugsnagEvent+Private.h"
+#import "BugsnagHandledState.h"
+#import "BugsnagSessionTracker+Private.h"
 #import "BugsnagStacktrace.h"
-
-BSGSeverity BSGParseSeverity(NSString *severity);
-
-@interface Bugsnag ()
-+ (id)client;
-+ (BugsnagConfiguration *)configuration;
-@end
-
-@interface BugsnagClient()
-@property id sessionTracker;
-@property BugsnagMetadata *metadata;
-@end
-
-@interface BugsnagError ()
-
-- (instancetype)initWithErrorClass:(NSString *)errorClass
-                      errorMessage:(NSString *)errorMessage
-                         errorType:(BSGErrorType)errorType
-                        stacktrace:(NSArray<BugsnagStackframe *> *)stacktrace;
-
-@end
-
-@interface BugsnagMetadata ()
-@end
-
-@interface BugsnagHandledState: NSObject
-- (instancetype)initWithSeverityReason:(NSUInteger)severityReason
-                              severity:(BSGSeverity)severity
-                             unhandled:(BOOL)unhandled
-                   unhandledOverridden:(BOOL)unhandledOverridden
-                             attrValue:(NSString *)attrValue;
-+ (NSUInteger)severityReasonFromString:(NSString *)string;
-@end
-
-@interface BugsnagAppWithState()
-+ (BugsnagAppWithState *)appFromJson:(NSDictionary *)json;
-@end
-
-@interface BugsnagDeviceWithState()
-+ (BugsnagDeviceWithState *)deviceFromJson:(NSDictionary *)json;
-@end
-
-@interface BugsnagUser()
-- (instancetype)initWithDictionary:(NSDictionary *)dict;
-@end
-
-@interface BugsnagThread ()
-+ (instancetype)threadFromJson:(NSDictionary *)json;
-@end
+#import "BugsnagThread+Private.h"
+#import "BugsnagUser+Private.h"
 
 @interface BugsnagEvent ()
-- (instancetype)initWithApp:(BugsnagAppWithState *)app
-                     device:(BugsnagDeviceWithState *)device
-               handledState:(BugsnagHandledState *)handledState
-                       user:(BugsnagUser *)user
-                   metadata:(BugsnagMetadata *)metadata
-                breadcrumbs:(NSArray<BugsnagBreadcrumb *> *)breadcrumbs
-                     errors:(NSArray<BugsnagError *> *)errors
-                    threads:(NSArray<BugsnagThread *> *)threads
-                    session:(BugsnagSession *)session;
-- (NSDictionary *)toJson;
 - (void)attachCustomStacktrace:(NSArray *)frames withType:(NSString *)type;
-@end
-
-@interface BugsnagBreadcrumb ()
-+ (instancetype)breadcrumbFromDict:(NSDictionary *)dict;
 @end
 
 @implementation BugsnagEventDeserializer
 
 - (BugsnagEvent *)deserializeEvent:(NSDictionary *)payload {
     BugsnagClient *client = [Bugsnag client];
-    BugsnagSession *session = [client.sessionTracker valueForKey:@"runningSession"];
+    BugsnagSession *session = client.sessionTracker.runningSession;
     BugsnagMetadata *metadata = [[BugsnagMetadata alloc] initWithDictionary:payload[@"metadata"]];
 
     BugsnagHandledState *handledState = [self deserializeHandledState:payload];

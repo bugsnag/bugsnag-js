@@ -171,7 +171,7 @@ describe('expo notifier', () => {
 
     Bugsnag.notify(error, onError, () => {
       expect(_delivery.sendSession).toHaveBeenCalledWith(expect.objectContaining({
-        app: expect.objectContaining({ releaseStage: 'production', version: '1.2.3' }),
+        app: expect.objectContaining({ releaseStage: 'production', version: '1.2.3', type: 'worker' }),
         device: expect.objectContaining({ manufacturer: 'Google', model: 'Pixel 4', modelNumber: undefined, osName: 'android', totalMemory: undefined }),
         sessions: expect.arrayContaining([expect.objectContaining({ id: expect.any(String), startedAt: expect.any(Date) })])
       }))
@@ -179,7 +179,7 @@ describe('expo notifier', () => {
         apiKey: '030bab153e7c2349be364d23b5ae93b5',
         events: expect.arrayContaining([
           expect.objectContaining({
-            app: expect.objectContaining({ releaseStage: 'production', version: '1.2.3' }),
+            app: expect.objectContaining({ releaseStage: 'production', version: '1.2.3', type: 'worker' }),
             breadcrumbs: [],
             device: expect.objectContaining({ manufacturer: 'Google', model: 'Pixel 4', modelNumber: undefined, osName: 'android', totalMemory: undefined }),
             errors: expect.arrayContaining([
@@ -193,6 +193,43 @@ describe('expo notifier', () => {
         ]),
         notifier: { name: 'Bugsnag Expo', url: 'https://github.com/bugsnag/bugsnag-js', version: expect.any(String) }
       }), expect.any(Function))
+      done()
+    })
+  })
+
+  it('sets a default value for app.type correctly (android)', (done) => {
+    Bugsnag.start({
+      apiKey: API_KEY,
+      appVersion: '1.2.3',
+      releaseStage: 'production'
+    })
+
+    Bugsnag.notify(new Error('123'), () => {}, () => {
+      expect(_delivery.sendSession).toHaveBeenCalledWith(expect.objectContaining({
+        app: expect.objectContaining({ releaseStage: 'production', version: '1.2.3', type: 'android' }),
+        device: expect.objectContaining({ manufacturer: 'Google', model: 'Pixel 4', modelNumber: undefined, osName: 'android', totalMemory: undefined }),
+        sessions: expect.arrayContaining([expect.objectContaining({ id: expect.any(String), startedAt: expect.any(Date) })])
+      }))
+
+      expect(_delivery.sendEvent).toHaveBeenCalledWith(expect.objectContaining({
+        apiKey: '030bab153e7c2349be364d23b5ae93b5',
+        events: expect.arrayContaining([
+          expect.objectContaining({
+            app: expect.objectContaining({ releaseStage: 'production', version: '1.2.3', type: 'android' }),
+            breadcrumbs: [],
+            device: expect.objectContaining({ manufacturer: 'Google', model: 'Pixel 4', modelNumber: undefined, osName: 'android', totalMemory: undefined }),
+            errors: expect.arrayContaining([
+              expect.objectContaining({
+                errorClass: 'Error',
+                errorMessage: '123',
+                stacktrace: expect.any(Array)
+              })
+            ])
+          })
+        ]),
+        notifier: { name: 'Bugsnag Expo', url: 'https://github.com/bugsnag/bugsnag-js', version: expect.any(String) }
+      }), expect.any(Function))
+
       done()
     })
   })

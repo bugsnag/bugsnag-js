@@ -31,6 +31,7 @@
 #import "BugsnagClient+Private.h"
 #import "BugsnagCollections.h"
 #import "BugsnagConfiguration+Private.h"
+#import "BugsnagErrorReportApiClient.h"
 #import "BugsnagEvent+Private.h"
 #import "BugsnagKeys.h"
 #import "BugsnagLogger.h"
@@ -42,10 +43,14 @@
 
 @implementation BugsnagErrorReportSink
 
-- (instancetype)initWithApiClient:(BugsnagErrorReportApiClient *)apiClient {
-    if (self = [super init]) {
-        self.apiClient = apiClient;
-        self.activeRequests = [NSMutableSet new];
+- (instancetype)initWithApiClient:(BugsnagErrorReportApiClient *)apiClient
+                    configuration:(BugsnagConfiguration *)configuration
+                         notifier:(BugsnagNotifier *)notifier {
+    if ((self = [super init])) {
+        _apiClient = apiClient;
+        _activeRequests = [NSMutableSet new];
+        _configuration = configuration;
+        _notifier = notifier;
     }
     return self;
 }
@@ -67,10 +72,10 @@
     return newRequests;
 }
 
-- (void)finishActiveRequest:(NSString *)requestId
+- (void)finishActiveRequest:(nonnull NSString *)requestId
                   completed:(BOOL)completed
                       error:(NSError *)error
-                      block:(BSGOnErrorSentBlock)block {
+                      block:(nonnull BSGOnErrorSentBlock)block {
     block(requestId, completed, error);
     @synchronized (self.activeRequests) {
         [self.activeRequests removeObject:requestId];
@@ -86,7 +91,6 @@
     // 4. When a request has completed and deleted the file, remove the files from the dictionary
     NSArray<NSString *> *keys = [self prepareNewRequests:[ksCrashReports allKeys]];
     NSMutableDictionary<NSString *, BugsnagEvent *>* storedEvents = [NSMutableDictionary new];
-    BugsnagConfiguration *configuration = [Bugsnag configuration];
 
     // run user callbacks on events before enqueueing any requests, as
     // this way events can be discarded quickly. This frees up disk
@@ -94,28 +98,33 @@
     for (NSString *fileKey in keys) {
         NSDictionary *report = ksCrashReports[fileKey];
         BugsnagEvent *event = [[BugsnagEvent alloc] initWithKSReport:report];
-        event.redactedKeys = configuration.redactedKeys;
-
-        if ([event shouldBeSent] && [self runOnSendBlocks:configuration event:event]) {
+        event.redactedKeys = self.configuration.redactedKeys;
+        
+        NSString *errorClass = event.errors.firstObject.errorClass;
+        if ([self.configuration shouldDiscardErrorClass:errorClass]) {
+            bsg_log_info(@"Discarding event because errorClass \"%@\" matched configuration.discardClasses", errorClass);
+            [self finishActiveRequest:fileKey completed:YES error:nil block:block];
+            continue;
+        }
+        
+        if (self.configuration.shouldSendReports && [event shouldBeSent] && [self runOnSendBlocksForEvent:event]) {
             storedEvents[fileKey] = event;
         } else { // delete the report as the user has discarded it
             [self finishActiveRequest:fileKey completed:YES error:nil block:block];
         }
     }
-    [self deliverStoredEvents:storedEvents configuration:configuration block:block];
+    [self deliverStoredEvents:storedEvents block:block];
 }
 
-- (void)deliverStoredEvents:(NSMutableDictionary<NSString *, BugsnagEvent *> *)storedEvents
-              configuration:(BugsnagConfiguration *)configuration
-                      block:(BSGOnErrorSentBlock)block {
+- (void)deliverStoredEvents:(NSMutableDictionary<NSString *, BugsnagEvent *> *)storedEvents block:(BSGOnErrorSentBlock)block {
     for (NSString *filename in storedEvents) {
         BugsnagEvent *event = storedEvents[filename];
         NSDictionary *requestPayload = [self prepareEventPayload:event];
 
-        NSMutableDictionary *apiHeaders = [[configuration errorApiHeaders] mutableCopy];
+        NSMutableDictionary *apiHeaders = [self.configuration.errorApiHeaders mutableCopy];
         apiHeaders[BugsnagHTTPHeaderNameApiKey] = event.apiKey;
         apiHeaders[BugsnagHTTPHeaderNameStacktraceTypes] = [event.stacktraceTypes componentsJoinedByString:@","];
-        [self.apiClient sendJSONPayload:requestPayload headers:apiHeaders toURL:configuration.notifyURL
+        [self.apiClient sendJSONPayload:requestPayload headers:apiHeaders toURL:self.configuration.notifyURL
                       completionHandler:^(BugsnagApiClientDeliveryStatus status, NSError *error) {
             BOOL completed = status == BugsnagApiClientDeliveryStatusDelivered || status == BugsnagApiClientDeliveryStatusUndeliverable;
             [self finishActiveRequest:filename completed:completed error:error block:block];
@@ -123,9 +132,8 @@
     }
 }
 
-- (BOOL)runOnSendBlocks:(BugsnagConfiguration *)configuration
-                  event:(BugsnagEvent *)event {
-    for (BugsnagOnSendErrorBlock onSendErrorBlock in configuration.onSendBlocks) {
+- (BOOL)runOnSendBlocksForEvent:(BugsnagEvent *)event {
+    for (BugsnagOnSendErrorBlock onSendErrorBlock in self.configuration.onSendBlocks) {
         @try {
             if (!onSendErrorBlock(event)) {
                 return false;
@@ -143,8 +151,15 @@
  * @return an Error Reporting API payload represented as a serializable dictionary
  */
 - (NSDictionary *)prepareEventPayload:(BugsnagEvent *)event {
+    if (!event.app.type) {
+        // Use current value for crashes from older notifier versions that didn't persist config.appType
+        event.app.type = self.configuration.appType;
+    }
+    if (!event.apiKey) {
+        event.apiKey = self.configuration.apiKey;
+    }
     NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
-    data[BSGKeyNotifier] = [[Bugsnag client].notifier toDict];
+    data[BSGKeyNotifier] = [self.notifier toDict];
     data[BSGKeyApiKey] = event.apiKey;
     data[BSGKeyPayloadVersion] = @"4.0";
     data[BSGKeyEvents] = @[[event toJson]];

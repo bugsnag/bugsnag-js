@@ -12,9 +12,7 @@ Scenario: Device data is included by default
   And the exception "message" equals "DeviceDefaultError"
   And the event "device.id" is not null
   And the event "device.manufacturer" is not null
-  And the event "device.osName" equals one of:
-    | android |
-    | ios     |
+  And the event "device.osName" equals the current OS name
   And the event "device.osVersion" is not null
   And the event "device.orientation" equals "portrait"
   And the event "device.time" is not null
@@ -35,9 +33,7 @@ Scenario: Device data can be modified by a callback
   And the event "device.id" is not null
   And the event "device.manufacturer" is not null
   And the event "device.osVersion" is not null
-  And the event "device.osName" equals one of:
-    | android |
-    | ios     |
+  And the event "device.osName" equals the current OS name
   And the event "device.model" equals "brandNewPhone"
   And the event "device.newThing" equals "another new thing"
   And the event "device.orientation" equals "portrait"
