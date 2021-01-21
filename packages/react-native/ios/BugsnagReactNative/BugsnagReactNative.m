@@ -1,41 +1,17 @@
-#import "Bugsnag.h"
-#import "BugsnagClient.h"
 #import "BugsnagReactNative.h"
+
+#import "Bugsnag+Private.h"
+#import "BugsnagClient+Private.h"
 #import "BugsnagReactNativeEmitter.h"
 #import "BugsnagConfigSerializer.h"
 #import "BugsnagEventDeserializer.h"
 
-@interface BugsnagClient ()
-- (NSDictionary *)collectAppWithState;
-- (NSDictionary *)collectDeviceWithState;
-- (NSArray *)collectBreadcrumbs;
-- (NSArray *)collectThreads:(BOOL)unhandled;
-@property id notifier;
-@property id sessionTracker;
-@property BugsnagMetadata *metadata;
-@end
-
 @interface Bugsnag ()
-+ (BugsnagClient *)client;
-+ (BOOL)bugsnagStarted;
-+ (BugsnagConfiguration *)configuration;
 + (void)updateCodeBundleId:(NSString *)codeBundleId;
 + (void)notifyInternal:(BugsnagEvent *_Nonnull)event
                  block:(BOOL (^_Nonnull)(BugsnagEvent *_Nonnull))block;
 + (void)addRuntimeVersionInfo:(NSString *)info
                       withKey:(NSString *)key;
-@end
-
-@interface BugsnagMetadata ()
-@end
-
-@interface BugsnagEvent ()
-- (instancetype _Nonnull)initWithErrorName:(NSString *_Nonnull)name
-                              errorMessage:(NSString *_Nonnull)message
-                             configuration:(BugsnagConfiguration *_Nonnull)config
-                                  metadata:(BugsnagMetadata *_Nullable)metadata
-                              handledState:(BugsnagHandledState *_Nonnull)handledState
-                                   session:(BugsnagSession *_Nullable)session;
 @end
 
 @interface BugsnagReactNative ()

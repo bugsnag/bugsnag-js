@@ -23,6 +23,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (BugsnagError *)errorFromJson:(NSDictionary *)json;
 
+/// Parses the `__crash_info` message and updates the `errorClass` and `errorMessage` as appropriate.
+- (void)updateWithCrashInfoMessage:(NSString *)crashInfoMessage;
+
 - (NSDictionary *)toDictionary;
 
 @end

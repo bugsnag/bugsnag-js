@@ -37,6 +37,7 @@
 #import "BugsnagPlugin.h"
 #import "BugsnagHandledState.h"
 #import "BugsnagSystemState.h"
+#import "BSGStorageMigratorV0V1.h"
 
 static BugsnagClient *bsg_g_bugsnag_client = NULL;
 
@@ -58,6 +59,7 @@ static BugsnagClient *bsg_g_bugsnag_client = NULL;
 
 + (BugsnagClient *_Nonnull)startWithConfiguration:(BugsnagConfiguration *_Nonnull)configuration {
     @synchronized(self) {
+        [BSGStorageMigratorV0V1 migrate];
         if (bsg_g_bugsnag_client == nil) {
             bsg_g_bugsnag_client = [[BugsnagClient alloc] initWithConfiguration:configuration];
             [bsg_g_bugsnag_client start];

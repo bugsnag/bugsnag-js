@@ -54,6 +54,7 @@ describe('plugin: expo device', () => {
         expect(r.events[0].device.model).toBe('Pixel 4')
         expect(r.events[0].device.modelNumber).toBe(undefined)
         expect(r.events[0].device.osName).toBe('android')
+        expect(r.events[0].app.type).toEqual('android')
         expect(r.events[0].device.osVersion).toBe(ANDROID_VERSION)
         expect(r.events[0].device.runtimeVersions).toEqual({
           reactNative: REACT_NATIVE_VERSION,
@@ -117,6 +118,7 @@ describe('plugin: expo device', () => {
         expect(r.events[0].device.model).toBe(IOS_MODEL)
         expect(r.events[0].device.modelNumber).toBe(IOS_PLATFORM)
         expect(r.events[0].device.osName).toBe('ios')
+        expect(r.events[0].app.type).toEqual('ios')
         expect(r.events[0].device.osVersion).toBe(IOS_VERSION)
         expect(r.events[0].device.runtimeVersions).toEqual({
           reactNative: REACT_NATIVE_VERSION,
@@ -125,6 +127,55 @@ describe('plugin: expo device', () => {
         })
         expect(r.events[0].metaData.device.isDevice).toBe(false)
         expect(r.events[0].metaData.device.appOwnership).toBe('expo')
+        done()
+      },
+      sendSession: () => {}
+
+    }))
+    c.notify(new Error('device testing'))
+  })
+
+  it('does not overwrite app.type when one is already set', done => {
+    const REACT_NATIVE_VERSION = '0.57.1'
+    const SDK_VERSION = '32.3.0'
+    const EXPO_VERSION = '2.10.4'
+    const IOS_MODEL = 'iPhone 7 Plus'
+    const IOS_PLATFORM = 'iPhone1,1'
+    const IOS_VERSION = '11.2'
+
+    jest.doMock('expo-constants', () => ({
+      default: {
+        platform: { ios: { model: IOS_MODEL, platform: IOS_PLATFORM, systemVersion: IOS_VERSION } },
+        manifest: { sdkVersion: SDK_VERSION },
+        expoVersion: EXPO_VERSION,
+        isDevice: false,
+        appOwnership: 'expo'
+      }
+    }))
+    jest.doMock('expo-device', () => ({
+      manufacturer: 'Apple'
+    }))
+    jest.doMock('react-native', () => ({
+      Dimensions: {
+        addEventListener: function () {},
+        get: function () {
+          return { width: 1024, height: 768 }
+        }
+      },
+      Platform: { OS: 'ios' }
+    }))
+    jest.doMock('react-native/package.json', () => ({ version: REACT_NATIVE_VERSION }))
+
+    const plugin = require('..')
+
+    const c = new Client({ apiKey: 'api_key', plugins: [plugin], appType: 'custom app type' })
+    c._setDelivery(client => ({
+      sendEvent: (payload) => {
+        const r = JSON.parse(JSON.stringify(payload))
+        expect(r).toBeTruthy()
+        expect(r.events[0].device).toBeTruthy()
+        expect(r.events[0].device.osName).toBe('ios')
+        expect(r.events[0].app.type).toEqual('custom app type')
         done()
       },
       sendSession: () => {}
