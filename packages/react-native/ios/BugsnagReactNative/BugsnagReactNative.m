@@ -6,14 +6,6 @@
 #import "BugsnagConfigSerializer.h"
 #import "BugsnagEventDeserializer.h"
 
-@interface Bugsnag ()
-+ (void)updateCodeBundleId:(NSString *)codeBundleId;
-+ (void)notifyInternal:(BugsnagEvent *_Nonnull)event
-                 block:(BOOL (^_Nonnull)(BugsnagEvent *_Nonnull))block;
-+ (void)addRuntimeVersionInfo:(NSString *)info
-                      withKey:(NSString *)key;
-@end
-
 @interface BugsnagReactNative ()
 @property (nonatomic) BugsnagConfigSerializer *configSerializer;
 @end
