@@ -1,9 +1,9 @@
-name: "PR size bot"
+name: "PR diff bot"
 on: [pull_request]
 
 jobs:
   build:
-    name: PR size bot
+    name: PR diff bot
     runs-on: ubuntu-latest
     steps:
       - name: Setup node
