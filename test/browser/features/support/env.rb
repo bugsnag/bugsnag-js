@@ -26,19 +26,19 @@ def get_test_url path
 end
 
 def get_error_message id
-  browser = MazeRunner.config.bs_browser
+  browser = Maze.config.bs_browser
   raise "The browser '#{browser}' does not exist in 'browser_errors.yml'" unless ERRORS.has_key?(browser)
 
   ERRORS[browser][id]
 end
 
 Before('@skip_if_local_storage_is_unavailable') do |scenario|
-  skip_this_scenario unless MazeRunner.driver.local_storage?
+  skip_this_scenario unless Maze.driver.local_storage?
 end
 
 AfterConfiguration do
-  MazeRunner.config.receive_no_requests_wait = 15
-  MazeRunner.config.enforce_bugsnag_integrity = false
+  Maze.config.receive_no_requests_wait = 15
+  Maze.config.enforce_bugsnag_integrity = false
 end
 
 at_exit do
