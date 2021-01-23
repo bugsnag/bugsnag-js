@@ -221,8 +221,8 @@ See https://www.browserstack.com/local-testing/app-automate for details of the r
 particular, these commands need the `BrowserStackLocal` binary (available 
 [here](https://www.browserstack.com/local-testing/releases) to reside in your home directory.  
 
-1. Check the contents of `Gemfile` to select the version of `maze-runner` to use.
 1. Change into the `test/react-native` directory
+1. Check the contents of `Gemfile` to select the version of `maze-runner` to use.
 1. To run a single feature on an Android device (as an example):
     ```shell script
     bundle exec maze-runner --app=../../build/${REACT_NATIVE_VERSION}.apk \
