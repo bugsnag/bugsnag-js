@@ -1,11 +1,10 @@
 GIT
   remote: https://github.com/bugsnag/maze-runner
-  revision: 30c86de0428a6a3ce8c95a338fd49e44350da8cb
-  tag: v4.2.0
+  revision: dfe41e657bbf40ad85661b193555bc59773302ba
+  tag: v3.7.0
   specs:
-    bugsnag-maze-runner (4.2.0)
+    bugsnag-maze-runner (3.7.0)
       appium_lib (~> 10.2)
-      boring (~> 0.1.0)
       cucumber (~> 3.1.2)
       cucumber-expressions (~> 6.0.0)
       curb (~> 0.9.6)
@@ -40,7 +39,6 @@ GEM
       selenium-webdriver (~> 3.14, >= 3.14.1)
     atomos (0.1.3)
     backports (3.20.1)
-    boring (0.1.0)
     builder (3.2.4)
     childprocess (3.0.0)
     claide (1.0.3)
@@ -130,7 +128,7 @@ GEM
       racc (~> 1.4)
     optimist (3.0.1)
     os (1.0.1)
-    power_assert (1.2.0)
+    power_assert (2.0.0)
     public_suffix (4.0.6)
     racc (1.5.2)
     rake (12.3.3)
