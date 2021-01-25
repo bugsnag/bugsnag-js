@@ -25,7 +25,7 @@ export async function updateXcodeProject (projectRoot: string, endpoint: string|
   const pbxProjPath = path.join(iosDir, xcodeprojDir, 'project.pbxproj')
   const proj = xcode.project(pbxProjPath)
 
-  await new Promise((resolve, reject) => {
+  await new Promise<void>((resolve, reject) => {
     proj.parse((err) => {
       if (err) return reject(err)
       resolve()
