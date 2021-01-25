@@ -21,6 +21,8 @@
 
 #import "BugsnagCollections.h"
 
+#import "BSGJSONSerialization.h"
+
 NSDictionary *BSGDictMerge(NSDictionary *source, NSDictionary *destination) {
     if ([destination count] == 0) {
         return source;
@@ -40,4 +42,28 @@ NSDictionary *BSGDictMerge(NSDictionary *source, NSDictionary *destination) {
         dict[key] = srcEntry;
     }
     return dict;
+}
+
+NSDictionary * BSGJSONDictionary(NSDictionary *dictionary) {
+    if (!dictionary) {
+        return nil;
+    }
+    if ([BSGJSONSerialization isValidJSONObject:dictionary]) {
+        return dictionary;
+    }
+    NSMutableDictionary *json = [NSMutableDictionary dictionary];
+    for (id key in dictionary) {
+        if (![key isKindOfClass:[NSString class]]) {
+            continue;
+        }
+        const id value = dictionary[key];
+        if ([BSGJSONSerialization isValidJSONObject:@{key: value}]) {
+            json[key] = value;
+        } else if ([value isKindOfClass:[NSDictionary class]]) {
+            json[key] = BSGJSONDictionary(value);
+        } else {
+            json[key] = ((NSObject *)value).description;
+        }
+    }
+    return json;
 }
