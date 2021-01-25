@@ -8,6 +8,6 @@ dist
 .DS_Store
 maze_output
 *.ngsummary.json
-.size
+.diff
 *.tgz
 min_packages.tar

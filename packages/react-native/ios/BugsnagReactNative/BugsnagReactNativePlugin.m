@@ -1,8 +1,6 @@
 #import "BugsnagReactNativePlugin.h"
 
-#import "Bugsnag.h"
 #import "BugsnagClient+Private.h"
-#import "BugsnagConfiguration.h"
 #import "BugsnagError.h"
 
 @interface BugsnagReactNativePlugin () <BugsnagPlugin>

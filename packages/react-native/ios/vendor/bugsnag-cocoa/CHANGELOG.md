@@ -1,12 +1,20 @@
 Changelog
 =========
 
+## 6.6.0 (2021-01-20)
+
+### Enhancements
+
+* The NSError's `userInfo` property is now included in reports.
+  [#974](https://github.com/bugsnag/bugsnag-cocoa/pull/974)
+
 ## 6.5.1 (2021-01-13)
 
 ### Bug fixes
 
 * Fix a regression where OOM events were missing session information.
   [#963](https://github.com/bugsnag/bugsnag-cocoa/pull/963)
+
 * Make `maxPersistedEvents` and `maxPersistedSessions` comply with the specification, with defaults of 32 and 128 respectively.
   [#966](https://github.com/bugsnag/bugsnag-cocoa/pull/966)
 

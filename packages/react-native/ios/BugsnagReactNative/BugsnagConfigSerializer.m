@@ -7,7 +7,6 @@
 //
 
 #import "BugsnagConfigSerializer.h"
-#import "BugsnagCollections.h"
 
 @implementation BugsnagConfigSerializer
 

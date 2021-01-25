@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #import "BSG_KSCrashReportWriter.h"
+#import "BSG_KSCrashType.h"
 #import "BugsnagConfiguration.h"
 #import "BugsnagErrorReportApiClient.h"
 
