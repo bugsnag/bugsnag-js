@@ -28,3 +28,8 @@
  *  @param destination a dictionary or nil
  */
 NSDictionary *BSGDictMerge(NSDictionary *source, NSDictionary *destination);
+
+/// Returns a representation of the dictionary that contains only valid JSON.
+/// Any dictionary keys that are not strings will be ignored.
+/// Any values that are not valid JSON will be replaced by a string description.
+NSDictionary * BSGJSONDictionary(NSDictionary *dictionary);

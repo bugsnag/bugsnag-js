@@ -23,9 +23,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark Methods
 
++ (void)addRuntimeVersionInfo:(NSString *)info withKey:(NSString *)key; // Used in BugsnagReactNative
+
++ (void)notifyInternal:(BugsnagEvent *)event block:(BOOL (^)(BugsnagEvent *))block; // Used in BugsnagReactNative
+
 + (void)purge;
 
 + (void)removeOnBreadcrumbBlock:(BugsnagOnBreadcrumbBlock)block;
+
++ (void)updateCodeBundleId:(NSString *)codeBundleId; // Used in BugsnagReactNative
 
 @end
 

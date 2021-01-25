@@ -53,7 +53,6 @@ static NSDictionary* loadPreviousState(BugsnagKVStore *kvstore, NSString *jsonPa
     NSMutableDictionary *app = state[SYSTEMSTATE_KEY_APP];
 
     // KV-store versions of these are authoritative
-    app[SYSTEMSTATE_APP_LAST_LOW_MEMORY_WARNING] = [kvstore stringForKey:SYSTEMSTATE_APP_LAST_LOW_MEMORY_WARNING defaultValue:@""];
     app[SYSTEMSTATE_APP_WAS_TERMINATED] = [kvstore NSBooleanForKey:SYSTEMSTATE_APP_WAS_TERMINATED defaultValue:false];
     app[SYSTEMSTATE_APP_IS_ACTIVE] = [kvstore NSBooleanForKey:SYSTEMSTATE_APP_IS_ACTIVE defaultValue:false];
     app[SYSTEMSTATE_APP_IS_IN_FOREGROUND] = [kvstore NSBooleanForKey:SYSTEMSTATE_APP_IS_IN_FOREGROUND defaultValue:false];
@@ -84,7 +83,6 @@ static NSMutableDictionary* initCurrentState(BugsnagKVStore *kvstore, BugsnagCon
     isActive = appState == UIApplicationStateActive;
 #endif
     
-    [kvstore deleteKey:SYSTEMSTATE_APP_LAST_LOW_MEMORY_WARNING];
     [kvstore deleteKey:SYSTEMSTATE_APP_WAS_TERMINATED];
     [kvstore setBoolean:isActive forKey:SYSTEMSTATE_APP_IS_ACTIVE];
     [kvstore setBoolean:isInForeground forKey:SYSTEMSTATE_APP_IS_IN_FOREGROUND];
@@ -110,7 +108,6 @@ static NSMutableDictionary* initCurrentState(BugsnagKVStore *kvstore, BugsnagCon
     NSMutableDictionary *device = [NSMutableDictionary new];
     device[SYSTEMSTATE_DEVICE_BOOT_TIME] = [BSG_RFC3339DateTool stringFromDate:systemInfo[@BSG_KSSystemField_BootTime]];
     device[@"id"] = systemInfo[@BSG_KSSystemField_DeviceAppHash];
-    // device[@"lowMemory"] is initially unset
     device[@"osBuild"] = systemInfo[@BSG_KSSystemField_OSVersion];
     device[@"osVersion"] = systemInfo[@BSG_KSSystemField_SystemVersion];
     device[@"osName"] = systemInfo[@BSG_KSSystemField_SystemName];
@@ -209,12 +206,6 @@ static NSDictionary *copyDictionary(NSDictionary *launchState) {
             __strong __typeof__(self) strongSelf = weakSelf;
             [strongSelf.kvStore setBoolean:NO forKey:SYSTEMSTATE_APP_IS_ACTIVE];
             [strongSelf setValue:@NO forAppKey:SYSTEMSTATE_APP_IS_ACTIVE];
-        }];
-        [center addObserverForName:UIApplicationDidReceiveMemoryWarningNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
-            __strong __typeof__(self) strongSelf = weakSelf;
-            NSString *date = [BSG_RFC3339DateTool stringFromDate:[NSDate date]];
-            [strongSelf.kvStore setString:date forKey:SYSTEMSTATE_APP_LAST_LOW_MEMORY_WARNING];
-            [strongSelf setValue:date forAppKey:SYSTEMSTATE_APP_LAST_LOW_MEMORY_WARNING];
         }];
 #endif
         [center addObserver:self selector:@selector(sessionUpdateNotification:) name:BSGSessionUpdateNotification object:nil];

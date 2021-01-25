@@ -46,9 +46,9 @@
 		008967122486D43700DC48C2 /* BugsnagEventTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 008966B32486D43500DC48C2 /* BugsnagEventTests.m */; };
 		008967132486D43700DC48C2 /* BugsnagEventTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 008966B32486D43500DC48C2 /* BugsnagEventTests.m */; };
 		008967142486D43700DC48C2 /* BugsnagEventTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 008966B32486D43500DC48C2 /* BugsnagEventTests.m */; };
-		008967152486D43700DC48C2 /* BugsnagCollectionsBSGDictMergeTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 008966B42486D43500DC48C2 /* BugsnagCollectionsBSGDictMergeTest.m */; };
-		008967162486D43700DC48C2 /* BugsnagCollectionsBSGDictMergeTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 008966B42486D43500DC48C2 /* BugsnagCollectionsBSGDictMergeTest.m */; };
-		008967172486D43700DC48C2 /* BugsnagCollectionsBSGDictMergeTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 008966B42486D43500DC48C2 /* BugsnagCollectionsBSGDictMergeTest.m */; };
+		008967152486D43700DC48C2 /* BugsnagCollectionsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 008966B42486D43500DC48C2 /* BugsnagCollectionsTests.m */; };
+		008967162486D43700DC48C2 /* BugsnagCollectionsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 008966B42486D43500DC48C2 /* BugsnagCollectionsTests.m */; };
+		008967172486D43700DC48C2 /* BugsnagCollectionsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 008966B42486D43500DC48C2 /* BugsnagCollectionsTests.m */; };
 		008967182486D43700DC48C2 /* BugsnagErrorTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 008966B52486D43500DC48C2 /* BugsnagErrorTest.m */; };
 		008967192486D43700DC48C2 /* BugsnagErrorTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 008966B52486D43500DC48C2 /* BugsnagErrorTest.m */; };
 		0089671A2486D43700DC48C2 /* BugsnagErrorTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 008966B52486D43500DC48C2 /* BugsnagErrorTest.m */; };
@@ -1056,7 +1056,7 @@
 		008966B02486D43500DC48C2 /* BugsnagSwiftPublicAPITests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BugsnagSwiftPublicAPITests.swift; sourceTree = "<group>"; };
 		008966B12486D43500DC48C2 /* BugsnagSwiftConfigurationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BugsnagSwiftConfigurationTests.swift; sourceTree = "<group>"; };
 		008966B32486D43500DC48C2 /* BugsnagEventTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BugsnagEventTests.m; sourceTree = "<group>"; };
-		008966B42486D43500DC48C2 /* BugsnagCollectionsBSGDictMergeTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BugsnagCollectionsBSGDictMergeTest.m; sourceTree = "<group>"; };
+		008966B42486D43500DC48C2 /* BugsnagCollectionsTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BugsnagCollectionsTests.m; sourceTree = "<group>"; };
 		008966B52486D43500DC48C2 /* BugsnagErrorTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BugsnagErrorTest.m; sourceTree = "<group>"; };
 		008966B62486D43500DC48C2 /* BugsnagSessionTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BugsnagSessionTest.m; sourceTree = "<group>"; };
 		008966B72486D43500DC48C2 /* report.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = report.json; sourceTree = "<group>"; };
@@ -1669,7 +1669,7 @@
 				008966CA2486D43600DC48C2 /* BugsnagClientMirrorTest.m */,
 				008966A52486D43400DC48C2 /* BugsnagClientPayloadInfoTest.m */,
 				008966BE2486D43500DC48C2 /* BugsnagClientTests.m */,
-				008966B42486D43500DC48C2 /* BugsnagCollectionsBSGDictMergeTest.m */,
+				008966B42486D43500DC48C2 /* BugsnagCollectionsTests.m */,
 				00896A432486DBF000DC48C2 /* BugsnagConfigurationTests.m */,
 				008966A42486D43400DC48C2 /* BugsnagDeviceTest.m */,
 				008966CB2486D43600DC48C2 /* BugsnagEnabledBreadcrumbTest.m */,
@@ -2619,7 +2619,7 @@
 				008967332486D43700DC48C2 /* BugsnagClientTests.m in Sources */,
 				004E353F2487B3BD007FBAE4 /* BugsnagSwiftConfigurationTests.swift in Sources */,
 				008967542486D43700DC48C2 /* BugsnagOnCrashTest.m in Sources */,
-				008967152486D43700DC48C2 /* BugsnagCollectionsBSGDictMergeTest.m in Sources */,
+				008967152486D43700DC48C2 /* BugsnagCollectionsTests.m in Sources */,
 				01E8765E256684E700F4B70A /* URLSessionMock.m in Sources */,
 				008967AB2486D43700DC48C2 /* KSMach_Tests.m in Sources */,
 				0089672A2486D43700DC48C2 /* BugsnagStacktraceTest.m in Sources */,
@@ -2754,7 +2754,7 @@
 				004E353D2487B3B8007FBAE4 /* BugsnagSwiftTests.swift in Sources */,
 				008967192486D43700DC48C2 /* BugsnagErrorTest.m in Sources */,
 				016875C7258D003200DFFF69 /* NSUserDefaultsStub.m in Sources */,
-				008967162486D43700DC48C2 /* BugsnagCollectionsBSGDictMergeTest.m in Sources */,
+				008967162486D43700DC48C2 /* BugsnagCollectionsTests.m in Sources */,
 				008967582486D43700DC48C2 /* BugsnagClientMirrorTest.m in Sources */,
 				0089676A2486D43700DC48C2 /* BugsnagSessionTrackerTest.m in Sources */,
 				008967792486D43700DC48C2 /* KSMachHeader_Tests.m in Sources */,
@@ -2913,7 +2913,7 @@
 				008967472486D43700DC48C2 /* BugsnagTests.m in Sources */,
 				008967A72486D43700DC48C2 /* KSString_Tests.m in Sources */,
 				0089671A2486D43700DC48C2 /* BugsnagErrorTest.m in Sources */,
-				008967172486D43700DC48C2 /* BugsnagCollectionsBSGDictMergeTest.m in Sources */,
+				008967172486D43700DC48C2 /* BugsnagCollectionsTests.m in Sources */,
 				008967532486D43700DC48C2 /* BSGOutOfMemoryTests.m in Sources */,
 				008967592486D43700DC48C2 /* BugsnagClientMirrorTest.m in Sources */,
 				0089676B2486D43700DC48C2 /* BugsnagSessionTrackerTest.m in Sources */,
