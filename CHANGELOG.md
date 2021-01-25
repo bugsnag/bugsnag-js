@@ -7,9 +7,9 @@
 - (react-native): Update bugsnag-cocoa to v6.6.0
   - The NSError `userInfo` property is now included in reports. [bugsnag-cocoa#974](https://github.com/bugsnag/bugsnag-cocoa/pull/974)
 - (react-native): Update bugsnag-android to v5.5.1
-  - Alter ANR SIGQUIT handler to stop interfering with Google's ANR reporting, and to avoid unsafe JNI calls from within a signal handler [bugsnag-android##1078](https://github.com/bugsnag/bugsnag-android/pull/1078)
-  - Alter HTTP requests to stop using chunked transfer encoding [bugsnag-android##1077](https://github.com/bugsnag/bugsnag-android/pull/1077)
-  - Allow null device IDs, preventing rare crash in Bugsnag initialization [bugsnag-android##1083](https://github.com/bugsnag/bugsnag-android/pull/1083)
+  - Alter ANR SIGQUIT handler to stop interfering with Google's ANR reporting, and to avoid unsafe JNI calls from within a signal handler [bugsnag-android#1078](https://github.com/bugsnag/bugsnag-android/pull/1078)
+  - Alter HTTP requests to stop using chunked transfer encoding [bugsnag-android#1077](https://github.com/bugsnag/bugsnag-android/pull/1077)
+  - Allow null device IDs, preventing rare crash in Bugsnag initialization [bugsnag-android#1083](https://github.com/bugsnag/bugsnag-android/pull/1083)
 
 ### Fixed
 
