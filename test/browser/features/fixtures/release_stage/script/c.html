@@ -4,11 +4,12 @@
     <meta charset="utf-8" />
     <script src="/node_modules/@bugsnag/browser/dist/bugsnag.min.js"></script>
     <script type="text/javascript">
-      var ENDPOINT = decodeURIComponent(window.location.search.match(/ENDPOINT=([^&]+)/)[1])
+      var NOTIFY = decodeURIComponent(window.location.search.match(/NOTIFY=([^&]+)/)[1])
+      var SESSIONS = decodeURIComponent(window.location.search.match(/SESSIONS=([^&]+)/)[1])
       var API_KEY = decodeURIComponent(window.location.search.match(/API_KEY=([^&]+)/)[1])
       Bugsnag.start({
         apiKey: API_KEY,
-        endpoints: { notify: ENDPOINT, sessions: '/noop' },
+        endpoints: { notify: NOTIFY, sessions: SESSIONS },
         releaseStage: 'qa',
         enabledReleaseStages: [ 'production', 'staging' ]
       })

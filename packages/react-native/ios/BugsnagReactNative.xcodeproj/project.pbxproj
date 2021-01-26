@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		01E5EA7D25B5F2950066EA8A /* BugsnagReactNativePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 65ED539523D86A45006E3DC2 /* BugsnagReactNativePlugin.m */; };
 		65AE6AA923D89BDD00301CC1 /* BugsnagReactNativeEmitter.m in Sources */ = {isa = PBXBuildFile; fileRef = 65AE6AA423D89BDC00301CC1 /* BugsnagReactNativeEmitter.m */; };
 		8AD256171D6DE5F600C7D842 /* BugsnagReactNative.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8AD256161D6DE5F600C7D842 /* BugsnagReactNative.h */; };
 		8AD256191D6DE5F600C7D842 /* BugsnagReactNative.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AD256181D6DE5F600C7D842 /* BugsnagReactNative.m */; };
@@ -19,6 +20,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		01E5EA5525B5F0920066EA8A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E72B3217241FC479005FB2CA /* React.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 83CBBA2D1A601D0E00E9B192;
+			remoteInfo = React;
+		};
 		E72B322A241FC479005FB2CA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = E72B3217241FC479005FB2CA /* React.xcodeproj */;
@@ -344,6 +352,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				01E5EA5625B5F0920066EA8A /* PBXTargetDependency */,
 			);
 			name = BugsnagReactNative;
 			productName = BugsnagReactNative;
@@ -562,6 +571,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E7A8E9D624602C9800CCBBD1 /* BugsnagEventDeserializer.m in Sources */,
+				01E5EA7D25B5F2950066EA8A /* BugsnagReactNativePlugin.m in Sources */,
 				65AE6AA923D89BDD00301CC1 /* BugsnagReactNativeEmitter.m in Sources */,
 				8AD256191D6DE5F600C7D842 /* BugsnagReactNative.m in Sources */,
 				E7819C5C2459C7A100A7EBDD /* BugsnagConfigSerializer.m in Sources */,
@@ -569,6 +579,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		01E5EA5625B5F0920066EA8A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = React;
+			targetProxy = 01E5EA5525B5F0920066EA8A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		8AD2561A1D6DE5F600C7D842 /* Debug */ = {

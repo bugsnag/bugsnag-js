@@ -11,12 +11,9 @@ const help = `
   commands for running end-to-end browser tests locally
   outside of docker for quicker iteration in development
 
-  * ensure docker is running *
-
   usage:
     ./bin/local-test-util init
     ./bin/local-test-util update
-    ./bin/local-test-util run <maze-args>
     ./bin/local-test-util update-notifier <name>
     ./bin/local-test-util update-fixture <name>
     ./bin/local-test-util clean
@@ -39,9 +36,6 @@ switch (cmd) {
     break
   case 'clean':
     clean()
-    break
-  case 'run':
-    run(process.argv.slice(3))
     break
   case 'help':
   default:
@@ -91,15 +85,6 @@ async function clean () {
   try {
     await cleanFixtures()
     await cleanNotifiers()
-  } catch (e) {
-    console.log(e)
-    process.exitCode = 1
-  }
-}
-
-async function run (args) {
-  try {
-    await runTests(args)
   } catch (e) {
     console.log(e)
     process.exitCode = 1
@@ -229,24 +214,4 @@ async function buildFixtures (fixture) {
     const cwd = join(process.cwd(), dirname(m))
     await ex('npm', [ `run`, `build` ], { cwd })
   }
-}
-
-async function runTests (args) {
-  trace('run tests')
-  if (!process.env.BROWSER_STACK_USERNAME || !process.env.BROWSER_STACK_ACCESS_KEY) {
-    throw new Error('BROWSER_STACK_USERNAME and BROWSER_STACK_ACCESS_KEY env vars must be set')
-  }
-  return ex(`docker`, [
-    `run`,
-    `-it`,
-    `-e`, `BROWSER_STACK_USERNAME`,
-    `-e`, `BROWSER_STACK_ACCESS_KEY`,
-    `-e`, `HOST=localhost`,
-    `-e`, `API_HOST=localhost`,
-    `-e`, `BROWSER=${process.env.BROWSER || 'chrome_61'}`,
-    `-v`, `${process.cwd()}/test/browser/:/app/test/browser`,
-    `-w`, `/app/test/browser`,
-    `-p`, `9020:9020`,
-    `855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v3-cli`
-  ].concat(args || []))
 }

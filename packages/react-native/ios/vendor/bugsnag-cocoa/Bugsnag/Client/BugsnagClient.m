@@ -741,12 +741,14 @@ NSString *_lastOrientation = nil;
                     block:(BugsnagOnErrorBlock)block
                     event:(BugsnagEvent *)event {
     event.originalError = error;
-    [event addMetadata:@{
-                            @"code" : @(error.code),
-                            @"domain" : error.domain,
-                            BSGKeyReason : error.localizedFailureReason ?: @""
-                        }
-             toSection:@"nserror"];
+
+    NSMutableDictionary *metadata = [NSMutableDictionary dictionary];
+    metadata[@"code"] = @(error.code);
+    metadata[@"domain"] = error.domain;
+    metadata[BSGKeyReason] = error.localizedFailureReason;
+    metadata[@"userInfo"] = BSGJSONDictionary(error.userInfo);
+    [event addMetadata:metadata toSection:@"nserror"];
+
     if (event.context == nil) { // set context as error domain
          event.context = [NSString stringWithFormat:@"%@ (%ld)", error.domain, (long)error.code];
     }
@@ -754,7 +756,7 @@ NSString *_lastOrientation = nil;
     if (block) {
         return block(event);
     }
-    return true;
+    return YES;
 }
 
 - (void)notify:(NSException *_Nonnull)exception {
