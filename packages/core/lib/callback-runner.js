@@ -16,13 +16,11 @@ module.exports = (callbacks, event, onCallbackError, cb) => {
         if (ret && typeof ret.then === 'function') {
           return ret.then(
             // resolve
-            val => setTimeout(() => cb(null, val)),
+            val => cb(null, val),
             // reject
             err => {
-              setTimeout(() => {
-                onCallbackError(err)
-                return cb(null, true)
-              })
+              onCallbackError(err)
+              return cb(null, true)
             }
           )
         }
