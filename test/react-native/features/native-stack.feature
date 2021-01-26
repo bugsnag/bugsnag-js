@@ -18,7 +18,7 @@ Scenario: Handled JS error with native stacktrace
     | com.reactnative.scenarios.Scenario.generateException |
     | generateException |
   And the payload field "events.0.exceptions.0.stacktrace.1.method" equals one of:
-    | com.reactnative.scenarios.NativeStackUnhandledScenario.run |
+    | com.reactnative.scenarios.NativeStackHandledScenario.run |
     | run |
   And the payload field "events.0.exceptions.0.stacktrace.2.method" equals one of:
     | com.reactnative.module.BugsnagModule.runScenario |
