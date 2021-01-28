@@ -22,6 +22,9 @@ module.exports = {
     '!<rootDir>/packages/react-native/src/test/setup.js',
     '!<rootDir>/packages/plugin-node-surrounding-code/test/fixtures/**/*'
   ],
+  coverageReporters: [
+    'json-summary', 'json', 'lcov', 'text', 'clover'
+  ],
   projects: [
     project('core', ['core']),
     project('shared plugins', ['plugin-app-duration']),
@@ -96,6 +99,7 @@ module.exports = {
       testMatch: [
         '<rootDir>/packages/node/test/integration/**/*.test.[jt]s'
       ]
-    })
+    }),
+    project('react native cli', ['react-native-cli'], { testEnvironment: 'node' })
   ]
 }

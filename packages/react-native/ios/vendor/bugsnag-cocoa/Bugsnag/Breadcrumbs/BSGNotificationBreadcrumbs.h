@@ -34,13 +34,13 @@ extern NSString * const BSGNotificationBreadcrumbsMessageAppWillTerminate;
 
 #pragma mark Properties
 
-@property BugsnagConfiguration *configuration;
+@property (nonatomic) BugsnagConfiguration *configuration;
 
-@property (weak) id<BSGBreadcrumbSink> breadcrumbSink;
+@property (weak, nonatomic) id<BSGBreadcrumbSink> breadcrumbSink;
 
-@property NSNotificationCenter *notificationCenter;
+@property (nonatomic) NSNotificationCenter *notificationCenter;
 
-@property NSNotificationCenter *workspaceNotificationCenter;
+@property (nonatomic) NSNotificationCenter *workspaceNotificationCenter;
 
 #pragma mark Methods
 

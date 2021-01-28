@@ -35,7 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nonatomic) BugsnagMetadata *metadata;
 
 /// Property overrides.
-@property (readonly, copy) NSDictionary *overrides;
+@property (readonly, nonatomic) NSDictionary *overrides;
 
 @property NSSet<id> *redactedKeys;
 
@@ -60,6 +60,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithKSReport:(NSDictionary *)KSReport;
 
 - (instancetype)initWithUserData:(NSDictionary *)event;
+
+- (void)attachCustomStacktrace:(NSArray *)frames withType:(NSString *)type; // Used in BugsnagReactNative
 
 /// Whether this report should be sent, based on release stage information cached at crash time and within the application currently.
 - (BOOL)shouldBeSent;

@@ -21,10 +21,6 @@
 #import "BugsnagThread+Private.h"
 #import "BugsnagUser+Private.h"
 
-@interface BugsnagEvent ()
-- (void)attachCustomStacktrace:(NSArray *)frames withType:(NSString *)type;
-@end
-
 @implementation BugsnagEventDeserializer
 
 - (BugsnagEvent *)deserializeEvent:(NSDictionary *)payload {

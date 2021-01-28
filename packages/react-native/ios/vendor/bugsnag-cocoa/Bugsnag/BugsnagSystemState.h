@@ -15,7 +15,6 @@
 #define SYSTEMSTATE_APP_WAS_TERMINATED @"wasTerminated"
 #define SYSTEMSTATE_APP_IS_ACTIVE @"isActive"
 #define SYSTEMSTATE_APP_IS_IN_FOREGROUND @"inForeground"
-#define SYSTEMSTATE_APP_LAST_LOW_MEMORY_WARNING @"lowMemory"
 #define SYSTEMSTATE_APP_VERSION @"version"
 #define SYSTEMSTATE_APP_BUNDLE_VERSION @"bundleVersion"
 #define SYSTEMSTATE_APP_DEBUGGER_IS_ACTIVE @"debuggerIsActive"

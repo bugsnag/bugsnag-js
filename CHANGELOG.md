@@ -1,5 +1,42 @@
 # Changelog
 
+## v7.6.1 (2020-01-26)
+
+## Changed
+
+- (react-native): Update bugsnag-cocoa to v6.6.0
+  - The NSError `userInfo` property is now included in reports. [bugsnag-cocoa#974](https://github.com/bugsnag/bugsnag-cocoa/pull/974)
+- (react-native): Update bugsnag-android to v5.5.1
+  - Alter ANR SIGQUIT handler to stop interfering with Google's ANR reporting, and to avoid unsafe JNI calls from within a signal handler [bugsnag-android#1078](https://github.com/bugsnag/bugsnag-android/pull/1078)
+  - Alter HTTP requests to stop using chunked transfer encoding [bugsnag-android#1077](https://github.com/bugsnag/bugsnag-android/pull/1077)
+  - Allow null device IDs, preventing rare crash in Bugsnag initialization [bugsnag-android#1083](https://github.com/bugsnag/bugsnag-android/pull/1083)
+
+### Fixed
+
+- (react-native):  Ensure plugin usage is compatible with running an app in a remote debugger [#1250](https://github.com/bugsnag/bugsnag-js/pull/1250)
+
+## v7.6.0 (2020-01-18)
+
+As of 7.6.0 the monorepo contains `@bugsnag/react-native-cli`, a new command line tool to help set up Bugsnag in React Native projects.
+
+### Added
+
+- (react-native-cli): New `@bugsnag/react-native-cli` package. [#1214](https://github.com/bugsnag/bugsnag-js/pull/1214)
+- (react-native): Source map upload script to be run as an Xcode build phase. [#1214](https://github.com/bugsnag/bugsnag-js/pull/1214)
+
+### Changed
+
+- (expo): `app.type` will now default to 'ios' or 'android'. [1244](https://github.com/bugsnag/bugsnag-js/pull/1244)
+- (react-native): Deprecate use of `bugsnag-react-native.gradle` in favour of [Bugsnag Android Gradle Plugin](https://github.com/bugsnag/bugsnag-android-gradle-plugin/). [#1214](https://github.com/bugsnag/bugsnag-js/pull/1214)
+- (react-native): Update bugsnag-cocoa to v6.5.1
+  - Fix a regression where OOM events were missing session information. [bugsnag-cocoa#963](https://github.com/bugsnag/bugsnag-cocoa/pull/963)
+  - Make `maxPersistedEvents` and `maxPersistedSessions` default to 32 and 128, respectively. [bugsnag-cocoa#966](https://github.com/bugsnag/bugsnag-cocoa/pull/966)
+
+### Fixed
+
+- (react-native): Ensure unhandled promise warning is logged in development [#1235](https://github.com/bugsnag/bugsnag-js/pull/1235)
+- (core): the `OnErrorCallback` type definition now allows `Promise<boolean>` as a return type. [#1224](https://github.com/bugsnag/bugsnag-js/pull/1224)
+
 ## v7.5.6 (2021-01-11)
 
 ### Changed
@@ -21,7 +58,6 @@
   - Add persistenceDirectory config option for controlling event/session storage [bugsnag-android#998](https://github.com/bugsnag/bugsnag-android/pull/998)
   - Add configuration option to control maximum number of persisted events/sessions [bugsnag-android#980](https://github.com/bugsnag/bugsnag-android/pull/980)
   - Increase kotlin dependency version to 1.3.72 [bugsnag-android#1050](https://github.com/bugsnag/bugsnag-android/pull/1050)
-
 
 ## v7.5.5 (2020-12-14)
 

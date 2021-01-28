@@ -30,6 +30,7 @@ const ruleOverrides = {
   '@typescript-eslint/no-implied-eval': 'off',
   '@typescript-eslint/no-unnecessary-boolean-literal-compare': 'off',
   '@typescript-eslint/prefer-includes': 'off',
+  '@typescript-eslint/no-for-in-array': 'off',
 }
 
 module.exports = {

@@ -30,13 +30,11 @@ services:
       target: browser-maze-runner
       args:
         - BUILDKITE_BUILD_NUMBER
-    command: --fail-fast --retry 2
     environment:
       DEBUG:
-      BROWSER: "${BROWSER:-chrome_61}"
-      BROWSER_STACK_USERNAME:
-      BROWSER_STACK_ACCESS_KEY:
-      BROWSER_STACK_LOCAL_IDENTIFIER: ${BUILDKITE_JOB_ID:-maze-runner}
+      BUILDKITE:
+      MAZE_DEVICE_FARM_USERNAME:
+      MAZE_DEVICE_FARM_ACCESS_KEY:
       HOST: "${HOST:-maze-runner}"
       API_HOST: "${API_HOST:-maze-runner}"
     networks:
@@ -116,6 +114,7 @@ services:
       context: .
       dockerfile: dockerfiles/Dockerfile.react-native-android-builder
       args:
+        - REGISTRY_URL
         - REG_BASIC_CREDENTIAL
         - REG_NPM_EMAIL
     environment:
@@ -136,6 +135,45 @@ services:
       - ./test:/app/test
       - ./features:/app/features
 
+  react-native-cli-tool-maze-runner:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile.react-native-cli-tool
+    environment:
+      DEBUG:
+      REACT_NATIVE_VERSION:
+      NETWORK_NAME: "${BUILDKITE_JOB_ID:-react-native-cli-maze-runner}"
+    networks:
+      default:
+        aliases:
+          - maze-runner
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  react-native-cli-android-builder:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile.react-native-cli-android-builder
+      args:
+        - REGISTRY_URL
+        - REG_BASIC_CREDENTIAL
+        - REG_NPM_EMAIL
+    environment:
+      - VERBOSE
+      - DEBUG
+      - BRANCH_NAME
+      - BUILDKITE
+      - REGISTRY_URL
+      - REACT_NATIVE_VERSION
+    networks:
+      default:
+        aliases:
+          - maze-runner
+    volumes:
+      - ./build:/app/build
+      - ./test:/app/test
+      - ./test/react-native-cli/features/:/app/features
+
   react-native-maze-runner:
     build:
       context: .
@@ -151,6 +189,18 @@ services:
           - maze-runner
     volumes:
       - ./build:/app/test/react-native/build
+
+  react-native-cli-maze-runner:
+    image: 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v3-cli
+    environment:
+      BUILDKITE:
+      BUILDKITE_PIPELINE_NAME:
+      DEBUG:
+      MAZE_DEVICE_FARM_USERNAME:
+      MAZE_DEVICE_FARM_ACCESS_KEY:
+    volumes:
+      - ./build:/app/build
+      - ./test/react-native-cli/features/:/app/features/
 
 networks:
   default:

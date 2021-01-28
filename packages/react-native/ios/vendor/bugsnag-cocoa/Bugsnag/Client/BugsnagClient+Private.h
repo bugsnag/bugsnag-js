@@ -8,6 +8,8 @@
 
 #import <Bugsnag/BugsnagClient.h>
 
+#import "BugsnagMetadata+Private.h" // For BugsnagObserverBlock
+
 @class BugsnagBreadcrumbs;
 @class BugsnagConfiguration;
 @class BugsnagCrashSentry;
@@ -58,7 +60,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (strong, nonatomic) BugsnagSessionTracker *sessionTracker; // Used in BugsnagReactNative
 
-@property (readonly) BOOL started;
+@property (readonly, nonatomic) BOOL started;
 
 @property (strong, nonatomic) BugsnagMetadata *state;
 
@@ -76,6 +78,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)addBreadcrumbWithBlock:(void (^)(BugsnagBreadcrumb *))block;
 
+- (void)addObserverWithBlock:(BugsnagObserverBlock)block; // Used in BugsnagReactNative
+
 - (void)addRuntimeVersionInfo:(NSString *)info withKey:(NSString *)key;
 
 - (NSDictionary *)collectAppWithState; // Used in BugsnagReactNative
@@ -87,6 +91,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSArray *)collectThreads:(BOOL)unhandled; // Used in BugsnagReactNative
 
 - (void)notifyInternal:(BugsnagEvent *)event block:(BugsnagOnErrorBlock)block;
+
+- (void)removeObserverWithBlock:(BugsnagObserverBlock)block; // Used in BugsnagReactNative
 
 - (BOOL)shouldReportOOM;
 
