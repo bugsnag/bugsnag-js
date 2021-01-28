@@ -54,7 +54,7 @@ Use the following plugins and guides to integrate Bugsnag with various framework
 
 * Check out the [FAQ](https://docs.bugsnag.com/platforms/javascript/faq) and [configuration options](https://docs.bugsnag.com/platforms/javascript/configuration-options)
 * [Search open and closed issues](https://github.com/bugsnag/bugsnag-js/issues?q=+) for similar problems
-* [Report a bug or request a feature](https://github.com/bugsnag/bugsnag-js/issues/new)
+* [Report a bug or request a feature](https://github.com/bugsnag/bugsnag-js/issues/new/choose)
 
 ## Contributing
 
