@@ -9,12 +9,13 @@
 #if defined(IS_WINDOWS)
 // https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/signal
 static const int bsg_native_signals[] = {SIGILL, SIGABRT, SIGFPE, SIGSEGV};
+#define SIGNAL_COUNT 4
 #else
 static const int bsg_native_signals[] = {SIGILL, SIGTRAP, SIGABRT,
                                          SIGBUS, SIGFPE,  SIGSEGV};
+#define SIGNAL_COUNT 6
 #endif
 
-static const int SIGNAL_COUNT = sizeof(bsg_native_signals) / sizeof(int);
 static void (*prev_handlers[SIGNAL_COUNT])(int);
 
 void becs_signal_install(void (*func)(int)) {
