@@ -150,10 +150,17 @@ void becs_set_metadata(const char *tab, const char *key, const char *val) {
     return;
   }
 
-  char *keypath;
-  asprintf(&keypath, "metadata.%s.%s", tab, key);
+  // 11 == 'metadata' + 2 * '.' + null byte at the end
+  size_t length = strnlen(tab, 256) + strnlen(key, 256) + 11;
+  char *keypath = calloc(length, sizeof(char));
+  size_t bytes_written = snprintf(keypath, length, "metadata.%s.%s", tab, key);
   if (!keypath) {
     // TODO: warn here that tab and key were invalid
+    return;
+  }
+  if (bytes_written != length - 1) {
+    // TODO: warn here that tab and key were invalid
+    free(keypath);
     return;
   }
 
