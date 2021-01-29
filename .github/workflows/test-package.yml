@@ -1,0 +1,16 @@
+name: Test
+
+on: push
+
+jobs:
+  test:
+
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+
+    steps:
+    - uses: actions/checkout@v2
+    - run: npm install
+    - run: ./node_modules/.bin/lerna bootstrap
+    - run: npm run test:unit

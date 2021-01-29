@@ -28,6 +28,6 @@
     "typescript": "^4.1.3"
   },
   "scripts": {
-    "test:unit": "jest && lerna run test"
+    "test:unit": "jest --color && lerna run test"
   }
 }
