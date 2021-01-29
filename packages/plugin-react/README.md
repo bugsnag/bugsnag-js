@@ -11,43 +11,20 @@ This package enables you to integrate Bugsnag's error reporting with React's [er
 
 Reported errors will contain useful debugging info from Reacts's internals such as the component name where the error originated, and the component stack.
 
-## Installation
+## Getting started
 
-```sh
-npm i --save @bugsnag/js @bugsnag/plugin-react
-# or
-yarn add @bugsnag/js @bugsnag/plugin-react
-```
-
-## Usage
-
-Depending on how your application is structured, usage differs slightly:
-
-```js
-// initialize bugsnag ASAP, before other imports
-import Bugsnag from '@bugsnag/js'
-Bugsnag.start('API_KEY')
-
-import ReactDOM from 'react-dom'
-import React from 'react'
-import bugsnagReact from '@bugsnag/plugin-react'
-Bugsnag.use(bugsnagReact, React)
-
-// wrap your entire app tree in the ErrorBoundary provided
-const ErrorBoundary = Bugsnag.getPlugin('react');
-ReactDOM.render(
-  <ErrorBoundary>
-    <YourApp />
-  </ErrorBoundary>,
-  document.getElementById('app')
-)
-```
+1. [Create a Bugsnag account](https://www.bugsnag.com)
+2. Complete the instructions in the [integration guide](https://docs.bugsnag.com/platforms/javascript/react/)
+3. Report handled exceptions using
+   [`Bugsnag.notify()`](https://docs.bugsnag.com/platforms/javascript/react/#reporting-handled-errors)
+4. Customize your integration using the
+   [configuration options](https://docs.bugsnag.com/platforms/javascript/react/configuration-options/)
 
 ## Support
 
 * Check out the [documentation](https://docs.bugsnag.com/platforms/javascript/react)
 * [Search open and closed issues](https://github.com/bugsnag/bugsnag-js/issues?q=is%3Aissue) for similar problems
-* [Report a bug or request a feature](https://github.com/bugsnag/bugsnag-js/issues/new)
+* [Report a bug or request a feature](https://github.com/bugsnag/bugsnag-js/issues/new/choose)
 
 ## License
 
