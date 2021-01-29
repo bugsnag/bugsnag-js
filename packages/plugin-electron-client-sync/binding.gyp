@@ -1,0 +1,14 @@
+{
+  "targets": [
+    {
+      "target_name": "bugsnag_plugin_electron_client_sync_bindings",
+      "sources": [
+        "src/api.c",
+        "src/bugsnag_electron_client_sync.c",
+        "src/signal_handler.c",
+        "src/deps/parson/parson.c",
+        "src/deps/tinycthread/tinycthread.c"
+      ]
+    }
+  ]
+}
