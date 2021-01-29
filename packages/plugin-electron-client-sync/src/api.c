@@ -49,6 +49,7 @@ static char *read_string_value(napi_env env, napi_value arg, bool allow_null) {
     if (allow_null) {
       return NULL;
     }
+    // fall through
   default:
     napi_throw_type_error(env, NULL, "Wrong argument type, expected string");
   }
