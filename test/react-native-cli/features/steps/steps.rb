@@ -5,7 +5,7 @@ fixtures = Dir["#{__dir__}/../fixtures/rn0_*"].map { |dir| File.basename(dir) }.
 current_fixture = ENV['REACT_NATIVE_VERSION']
 
 # Ensure environment is set for the CLI tests (check not needed for device-based tests)
-if MazeRunner.config.farm == :none && !fixtures.include?(current_fixture)
+if Maze.config.farm == :none && !fixtures.include?(current_fixture)
   if current_fixture.nil?
     message = <<~ERROR.chomp
       \e[31;1mNo React Native fixture given!\e[0m
@@ -50,10 +50,10 @@ end
 
 # TODO(PLAT-5566) migrate to Maze Runner
 When('I wait for the shell to output the following to stdout') do |expected|
-  wait = Maze::Wait.new(timeout: MazeRunner.config.receive_requests_wait)
+  wait = Maze::Wait.new(timeout: Maze.config.receive_requests_wait)
 
   success = wait.until do
-    stdout = Runner.interactive_session.stdout_lines.join("\n")
+    stdout = Maze::Runner.interactive_session.stdout_lines.join("\n")
 
     stdout.include?(expected)
   end
@@ -64,7 +64,7 @@ When('I wait for the shell to output the following to stdout') do |expected|
       Did not find the expected message in stdout
 
       stdout:
-      #{Runner.interactive_session.stdout_lines.inspect}
+      #{Maze::Runner.interactive_session.stdout_lines.inspect}
     ERROR
   )
 end
@@ -98,9 +98,9 @@ end
 
 # TODO(PLAT-5566) migrate to Maze Runner
 Then("I wait for the shell to output a line containing {string} to stdout") do |expected|
-  wait = Maze::Wait.new(timeout: MazeRunner.config.receive_requests_wait)
+  wait = Maze::Wait.new(timeout: Maze.config.receive_requests_wait)
   success = wait.until do
-    Runner.interactive_session.stdout_lines.any? do |line|
+    Maze::Runner.interactive_session.stdout_lines.any? do |line|
       line.include?(expected)
     end
   end
@@ -111,23 +111,23 @@ Then("I wait for the shell to output a line containing {string} to stdout") do |
       No stdout lines contained '#{expected}'
 
       stdout:
-      #{Runner.interactive_session.stdout_lines.inspect}
+      #{Maze::Runner.interactive_session.stdout_lines.inspect}
     ERROR
   )
 end
 
 # TODO(PLAT-5566) migrate to Maze Runner
 Then("I wait for the current stdout line to contain {string}") do |expected|
-  wait = Maze::Wait.new(timeout: MazeRunner.config.receive_requests_wait)
+  wait = Maze::Wait.new(timeout: Maze.config.receive_requests_wait)
   wait.until do
-    Runner.interactive_session.current_buffer.include?(expected)
+    Maze::Runner.interactive_session.current_buffer.include?(expected)
   end
 
-  assert_includes(Runner.interactive_session.current_buffer, expected)
+  assert_includes(Maze::Runner.interactive_session.current_buffer, expected)
 end
 
 def parse_package_json
-  stdout_lines = Runner.interactive_session.stdout_lines
+  stdout_lines = Maze::Runner.interactive_session.stdout_lines
   length_before = stdout_lines.length
 
   steps %Q{
@@ -375,7 +375,7 @@ Then("there are no modified files in git") do
 end
 
 def parse_xml_file(path)
-  stdout_lines = Runner.interactive_session.stdout_lines
+  stdout_lines = Maze::Runner.interactive_session.stdout_lines
   length_before = stdout_lines.length
   uuid = SecureRandom.uuid
 

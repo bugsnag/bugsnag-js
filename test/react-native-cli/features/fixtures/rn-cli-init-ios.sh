@@ -17,10 +17,10 @@ expect "Are you using Bugsnag on-premise?"
 send -- "Y"
 
 expect "What is your Bugsnag notify endpoint?"
-send -- http://bs-local.com:9339\r
+send -- http://bs-local.com:9339/notify\r
 
 expect "What is your Bugsnag sessions endpoint?"
-send -- http://bs-local.com:9339\r
+send -- http://bs-local.com:9339/sessions\r
 
 expect "What is your Bugsnag upload endpoint?"
 send -- http://localhost:9339\r
