@@ -69,6 +69,8 @@ Scenario: Manual JS sessions (JS Controls)
   And the error payload field "events.0.session.id" equals the stored value "initial_session_id"
   And the event "session.events.handled" equals 2
 
+  And I discard the oldest error
+
   # Second session
   And the session payload has a valid sessions array
   And the session payload field "sessions.0.id" does not equal the stored value "initial_session_id"
@@ -128,6 +130,8 @@ Scenario: Manual JS sessions (Native Controls)
   And the event "session" is not null
   And the error payload field "events.0.session.id" equals the stored value "initial_session_id"
   And the event "session.events.handled" equals 2
+
+  And I discard the oldest error
 
   # Second session
   And the session payload has a valid sessions array
@@ -193,6 +197,8 @@ Scenario: Manual Native sessions (JS Controls)
   And the event "session" is not null
   And the error payload field "events.0.session.id" equals the stored value "initial_session_id"
   And the event "session.events.handled" equals 2
+
+  And I discard the oldest error
 
   # Second session
   And the session payload has a valid sessions array
