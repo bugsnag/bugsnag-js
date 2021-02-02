@@ -248,3 +248,31 @@ particular, these commands need the `BrowserStackLocal` binary (available
     ```
 1. To run all features, omit the final argument.
 1. Maze Runner also supports all options that Cucumber does.  Run `bundle exec maze-runner --help` for full details.
+
+### React-native CLI
+
+The react-native CLI come in three parts:
+
+- CLI tests, that don't require any remote connections or special setup
+- Building an app, which requires your local machine to be set up for building iOS and Android applications
+- Running the app, which requires the built application from the previous test set to run
+
+#### CLI tests
+
+##### Setting up
+
+1. Run through the initial setup
+1. Run `npm pack packages/react-native-cli/` to pack the react-native-cli package
+1. Copy the resulting package, `bugsnag-react-native-cli-{VERSION}.tgz` into the target fixture, e.g.:
+    ```shell script
+    cp bugsnag-react-native-cli-*.tgz tests/react-native-cli/features/fixtures/rn0_60/
+    ```
+
+##### Running
+
+1. Perform a `bundle install` at the top level of the repository
+1. Check the contents of `Gemfile` to select the version of `maze-runner` to use.
+1. Run the full set of cli tests targeting a specific react-native version (`rn0_61` for example):
+  ```shell script
+  REACT_NATIVE_VERSION=rn0_61 bundle exec maze-runner
+  ```
