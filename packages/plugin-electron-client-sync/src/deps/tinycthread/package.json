@@ -1,0 +1,14 @@
+{
+  "name": "tinycthread",
+  "version": "6957fc8383d6c7db25b60b8c849b29caab1caaee",
+  "repo": "tinycthread/tinycthread",
+  "description": "Small, portable implementation of the C11 threads API ",
+  "keywords": [ "c", "cross-platform", "thread", "mutex" ],
+  "license": "MIT",
+  "src": [
+    "README.txt",
+    "tinycthread.c",
+    "tinycthread.h"
+  ]
+}
+
