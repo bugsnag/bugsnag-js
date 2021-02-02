@@ -40,13 +40,14 @@
     "lerna": "^3.22.1",
     "playwright": "^1.9.1-1614225150000",
     "ts-node": "^9.1.1",
-    "typescript": "^4.1.3"
+    "typescript": "^4.1.3",
+    "xvfb-maybe": "^0.2.1"
   },
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "build": "lerna exec node-gyp configure build --scope @bugsnag/plugin-electron-client-sync",
     "test:unit": "npm run build && jest --color && npx tsc --noEmit",
     "test:lint": "eslint --ext .ts,.js --report-unused-disable-directives --max-warnings=0 .",
-    "test:cucumber": "cucumber-js test/features"
+    "test:cucumber": "xvfb-maybe --auto-servernum -- cucumber-js test/features"
   }
 }

@@ -8,10 +8,19 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
+      matrix:
+        electron: [ '^11.2.0' ]
 
     steps:
     - uses: actions/checkout@v2
     - run: npm install
+      env:
+        PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
     - run: ./node_modules/.bin/lerna bootstrap
     - run: npm run test:lint
     - run: npm run test:unit
+    - name: install integration dependencies
+      run: |
+        npm install electron@${{ matrix.electron }}
+    - name: run integration tests
+      run: npm run test:cucumber
