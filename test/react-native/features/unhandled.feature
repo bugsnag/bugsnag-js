@@ -3,7 +3,7 @@ Feature: Reporting unhandled errors
 Scenario: Catching an Unhandled error
   When I run "UnhandledJsErrorScenario" and relaunch the app
   And I configure Bugsnag for "UnhandledJsErrorScenario"
-  Then I wait to receive a request
+  Then I wait to receive an error
   And the exception "errorClass" equals "Error"
   And the exception "type" equals "reactnativejs"
   And the event "unhandled" is true
@@ -12,7 +12,7 @@ Scenario: Catching an Unhandled error
 Scenario: Catching an Unhandled promise rejection
   When I run "UnhandledJsPromiseRejectionScenario" and relaunch the app
   And I configure Bugsnag for "UnhandledJsPromiseRejectionScenario"
-  Then I wait to receive a request
+  Then I wait to receive an error
   And the exception "errorClass" equals "Error"
   And the exception "type" equals "reactnativejs"
   And the event "unhandled" is true
@@ -21,7 +21,7 @@ Scenario: Catching an Unhandled promise rejection
 Scenario: Catching an Unhandled Native error
   When I run "UnhandledNativeErrorScenario" and relaunch the app
   And I configure Bugsnag for "UnhandledNativeErrorScenario"
-  Then I wait to receive a request
+  Then I wait to receive an error
   And the event "exceptions.0.errorClass" equals the platform-dependent string:
   | android | java.lang.RuntimeException |
   | ios     | NSException                |
@@ -34,7 +34,7 @@ Scenario: Catching an Unhandled Native error
 Scenario: Updating severity on an unhandled JS error
   When I run "UnhandledJsErrorSeverityScenario" and relaunch the app
   And I configure Bugsnag for "UnhandledJsErrorSeverityScenario"
-  Then I wait to receive a request
+  Then I wait to receive an error
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "UnhandledJsErrorSeverityScenario"
   And the event "unhandled" is true

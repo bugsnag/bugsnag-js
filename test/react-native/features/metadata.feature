@@ -2,18 +2,18 @@ Feature: Metadata
 
 Scenario: Setting metadata (JS)
   When I run "MetadataJsScenario"
-  Then I wait to receive a request
+  Then I wait to receive an error
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "MetadataJsScenario"
   And the event "metaData.jsdata.some_data" equals "set via config"
   And the event "metaData.jsdata.some_more_data" equals "set via client"
   And the event "metaData.jsdata.even_more_data" equals "set via event"
   And the event "metaData.jsdata.redacted_data" equals "[REDACTED]"
-  And the payload field "events.0.metaData.jsarraydata.items" is an array with 3 elements
+  And the error payload field "events.0.metaData.jsarraydata.items" is an array with 3 elements
 
 Scenario: Setting metadata (native handled)
   When I run "MetadataNativeScenario"
-  Then I wait to receive a request
+  Then I wait to receive an error
   And the event "exceptions.0.errorClass" equals the platform-dependent string:
   | android | java.lang.RuntimeException |
   | ios     | NSException                |
@@ -29,7 +29,7 @@ Scenario: Setting metadata (native unhandled)
   And I clear any error dialogue
   And I relaunch the app
   And I configure Bugsnag for "MetadataNativeUnhandledScenario"
-  Then I wait to receive a request
+  Then I wait to receive an error
   And the event "exceptions.0.errorClass" equals the platform-dependent string:
   | android | java.lang.RuntimeException |
   | ios     | NSException                |
