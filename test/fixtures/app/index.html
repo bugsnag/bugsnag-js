@@ -15,6 +15,8 @@
             reject(new TypeError("invalid"))
           })
         }
+        // prevent pop-up dialogs for exceptions
+        process.on('uncaughtException', () => {})
     </script>
 </head>
 <body style="background: white;">

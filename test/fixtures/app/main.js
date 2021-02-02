@@ -15,6 +15,9 @@ function createWindow () {
   win.loadFile('index.html')
 }
 
+// prevent pop-up dialogs for exceptions
+process.on('uncaughtException', () => {})
+
 app.whenReady().then(createWindow)
 
 app.on('window-all-closed', () => {
