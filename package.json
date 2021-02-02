@@ -28,6 +28,7 @@
     "typescript": "^4.1.3"
   },
   "scripts": {
-    "test:unit": "jest --color && lerna run test"
+    "build": "lerna exec node-gyp configure build --scope @bugsnag/plugin-electron-client-sync",
+    "test:unit": "npm run build && jest --color && lerna run test"
   }
 }
