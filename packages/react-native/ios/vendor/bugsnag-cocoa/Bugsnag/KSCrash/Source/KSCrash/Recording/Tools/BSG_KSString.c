@@ -111,31 +111,34 @@ static const unsigned int bsg_g_hexConversion[] = {
 
 bool bsg_ksstring_extractHexValue(const char *string, size_t stringLength,
                                   uint64_t *const result) {
-    if (stringLength > 0) {
-        const unsigned char *current = (const unsigned char *)string;
-        const unsigned char *const end = current + stringLength;
-        for (;;) {
-            current = (const unsigned char *)strnstr(
-                (const char *)current, "0x", (size_t)(end - current));
-            unlikely_if(!current) { return false; }
-            current += 2;
-
-            // Must have at least one valid digit after "0x".
-            unlikely_if(bsg_g_hexConversion[*current] == INV) { continue; }
-
-            uint64_t accum = 0;
-            unsigned int nybble = 0;
-            while (current < end) {
-                nybble = bsg_g_hexConversion[*current++];
-                unlikely_if(nybble == INV) { break; }
-                accum <<= 4;
-                accum += nybble;
-            }
-            *result = accum;
-            return true;
-        }
+    if (!stringLength) {
+        return false;
     }
-    return false;
+    
+    const char *value = strnstr(string, "0x", stringLength);
+    unlikely_if (!value) {
+        return false;
+    }
+    
+    value += 2;
+    
+    // Must have at least one valid digit after "0x".
+    unlikely_if (bsg_g_hexConversion[*(uint8_t *)value] == INV) {
+        return false;
+    }
+    
+    uint64_t accum = 0;
+    unsigned int nybble = 0;
+    while (value < string + stringLength) {
+        nybble = bsg_g_hexConversion[*(uint8_t *)value++];
+        unlikely_if (nybble == INV) {
+            break;
+        }
+        accum <<= 4;
+        accum += nybble;
+    }
+    *result = accum;
+    return true;
 }
 
 void bsg_ksstring_replace(const char **dest, const char *replacement) {

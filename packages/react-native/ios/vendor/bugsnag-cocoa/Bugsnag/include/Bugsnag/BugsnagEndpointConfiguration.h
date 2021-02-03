@@ -20,12 +20,12 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * Configures the endpoint to which events should be sent
  */
-@property NSString *notify;
+@property (copy, nonatomic) NSString *notify;
 
 /**
  * Configures the endpoint to which sessions should be sent
  */
-@property NSString *sessions;
+@property (copy, nonatomic) NSString *sessions;
 
 - (instancetype)initWithNotify:(NSString *)notify
                       sessions:(NSString *)sessions;

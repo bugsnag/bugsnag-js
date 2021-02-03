@@ -92,7 +92,7 @@ static NSUserDefaults *userDefaults;
     [copy setMaxPersistedEvents:self.maxPersistedEvents];
     [copy setMaxPersistedSessions:self.maxPersistedSessions];
     [copy setMaxBreadcrumbs:self.maxBreadcrumbs];
-    copy->_metadata = [[BugsnagMetadata alloc] initWithDictionary:[[self.metadata toDictionary] mutableCopy]];
+    [copy setMetadata:self.metadata];
     [copy setEndpoints:self.endpoints];
     [copy setOnCrashHandler:self.onCrashHandler];
     [copy setPersistUser:self.persistUser];
@@ -263,7 +263,7 @@ static NSUserDefaults *userDefaults;
 - (void)setUser:(NSString *_Nullable)userId
       withEmail:(NSString *_Nullable)email
         andName:(NSString *_Nullable)name {
-    _user = [[BugsnagUser alloc] initWithUserId:userId name:name emailAddress:email];
+    self.user = [[BugsnagUser alloc] initWithUserId:userId name:name emailAddress:email];
 
     // Persist the user
     if (self.persistUser) {
@@ -338,14 +338,14 @@ static NSUserDefaults *userDefaults;
 
 - (void)setEndpoints:(BugsnagEndpointConfiguration *)endpoints {
     _endpoints = endpoints;
-    _notifyURL = [NSURL URLWithString:endpoints.notify];
-    _sessionURL = [NSURL URLWithString:endpoints.sessions];
+    self.notifyURL = [NSURL URLWithString:endpoints.notify];
+    self.sessionURL = [NSURL URLWithString:endpoints.sessions];
 
     // This causes a crash under DEBUG but is ignored in production
     NSAssert([self isValidUrl:_notifyURL], @"Invalid URL supplied for notify endpoint");
 
     if (![self isValidUrl:_sessionURL]) {
-        _sessionURL = nil;
+        self.sessionURL = nil;
     }
 }
 
@@ -483,6 +483,18 @@ static NSUserDefaults *userDefaults;
                         (unsigned long) maxBreadcrumbs);
         }
     }
+}
+
+- (void)setMetadata:(BugsnagMetadata *)metadata {
+    _metadata = [metadata deepCopy];
+}
+
+- (void)setNotifyURL:(NSURL *)notifyURL {
+    _notifyURL = notifyURL;
+}
+
+- (void)setSessionURL:(NSURL *)sessionURL {
+    _sessionURL = sessionURL;
 }
 
 - (BOOL)shouldDiscardErrorClass:(NSString *)errorClass {

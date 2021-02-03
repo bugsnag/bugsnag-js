@@ -38,7 +38,6 @@ NSMutableDictionary *BSGParseDeviceMetadata(NSDictionary *event) {
  * @return free space in the number of bytes, or nil if this information could not be found
  */
 NSNumber *BSGDeviceFreeSpace(NSSearchPathDirectory directory) {
-    NSNumber *freeBytes = nil;
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSArray *searchPaths = NSSearchPathForDirectoriesInDomains(directory, NSUserDomainMask, true);
     NSString *path = [searchPaths lastObject];
@@ -47,12 +46,10 @@ NSNumber *BSGDeviceFreeSpace(NSSearchPathDirectory directory) {
     NSDictionary *fileSystemAttrs =
             [fileManager attributesOfFileSystemForPath:path error:&error];
 
-    if (error) {
+    if (!fileSystemAttrs) {
         bsg_log_warn(@"Failed to read free disk space: %@", error);
-    } else {
-        freeBytes = [fileSystemAttrs objectForKey:NSFileSystemFreeSize];
     }
-    return freeBytes;
+    return fileSystemAttrs[NSFileSystemFreeSize];
 }
 
 @implementation BugsnagDeviceWithState
@@ -78,7 +75,7 @@ NSNumber *BSGDeviceFreeSpace(NSSearchPathDirectory directory) {
     }
 
     id time = json[@"time"];
-    if (time && [time isKindOfClass:[NSString class]]) {
+    if ([time isKindOfClass:[NSString class]]) {
         device.time = [BSG_RFC3339DateTool dateFromString:time];
     }
     return device;

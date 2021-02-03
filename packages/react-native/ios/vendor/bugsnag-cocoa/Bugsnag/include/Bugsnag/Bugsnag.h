@@ -41,6 +41,9 @@
 #import <Bugsnag/BugsnagStackframe.h>
 #import <Bugsnag/BugsnagThread.h>
 
+/**
+ * Static access to a Bugsnag Client, the easiest way to use Bugsnag in your app.
+ */
 @interface Bugsnag : NSObject <BugsnagClassLevelMetadataStore>
 
 /**
@@ -48,7 +51,8 @@
  */
 - (instancetype _Nonnull )init NS_UNAVAILABLE NS_SWIFT_UNAVAILABLE("Use class methods to initialise Bugsnag.");
 
-/** Start listening for crashes.
+/**
+ * Start listening for crashes.
  *
  * This method initializes Bugsnag with the configuration set in your Info.plist.
  *
@@ -61,7 +65,8 @@
  */
 + (BugsnagClient *_Nonnull)start;
 
-/** Start listening for crashes.
+/**
+ * Start listening for crashes.
  *
  * This method initializes Bugsnag with the default configuration and the provided
  * apiKey.
@@ -77,7 +82,8 @@
  */
 + (BugsnagClient *_Nonnull)startWithApiKey:(NSString *_Nonnull)apiKey;
 
-/** Start listening for crashes.
+/**
+ * Start listening for crashes.
  *
  * This method initializes Bugsnag with the provided configuration object.
  *
@@ -101,7 +107,8 @@
 // MARK: - Notify
 // =============================================================================
 
-/** Send a custom or caught exception to Bugsnag.
+/**
+ * Send a custom or caught exception to Bugsnag.
  *
  * The exception will be sent to Bugsnag in the background allowing your
  * app to continue running.

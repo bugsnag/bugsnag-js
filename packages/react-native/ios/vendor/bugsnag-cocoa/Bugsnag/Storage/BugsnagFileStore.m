@@ -139,12 +139,8 @@
     NSMutableDictionary *files =
     [NSMutableDictionary dictionaryWithCapacity:[fileIds count]];
     for (NSString *fileId in fileIds) {
-        NSDictionary *fileContents = [self fileWithId:fileId];
-        if (fileContents != nil) {
-            [files setObject:fileContents forKey:fileId];
-        }
+        files[fileId] = [self fileWithId:fileId];
     }
-
     return files;
 }
 

@@ -26,7 +26,7 @@
             }
         }
     }
-    trace->_trace = data;
+    trace.trace = data;
     return trace;
 }
 
