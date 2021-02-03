@@ -8,6 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
+/**
+ * The types of error that should be reported.
+ */
 @interface BugsnagErrorTypes : NSObject
 
 /**
@@ -53,4 +56,3 @@
 @property BOOL unhandledRejections;
 
 @end
-

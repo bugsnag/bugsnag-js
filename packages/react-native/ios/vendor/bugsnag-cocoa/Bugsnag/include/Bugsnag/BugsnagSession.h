@@ -12,12 +12,20 @@
 #import <Bugsnag/BugsnagDevice.h>
 #import <Bugsnag/BugsnagUser.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
+/**
+ * Represents a session of user interaction with your app.
+ */
 @interface BugsnagSession : NSObject
 
-@property NSString *_Nonnull id;
-@property NSDate *_Nonnull startedAt;
-@property(readonly) BugsnagApp *_Nonnull app;
-@property(readonly) BugsnagDevice *_Nonnull device;
+@property (copy, nonatomic) NSString *id;
+
+@property (strong, nonatomic) NSDate *startedAt;
+
+@property (readonly, nonatomic) BugsnagApp *app;
+
+@property (readonly, nonatomic) BugsnagDevice *device;
 
 // =============================================================================
 // MARK: - User
@@ -35,8 +43,8 @@
  *  @param name   Name of the user
  *  @param email  Email address of the user
  */
-- (void)setUser:(NSString *_Nullable)userId
-      withEmail:(NSString *_Nullable)email
-        andName:(NSString *_Nullable)name;
+- (void)setUser:(nullable NSString *)userId withEmail:(nullable NSString *)email andName:(nullable NSString *)name;
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -17,36 +17,36 @@
 /**
  * The bundle version used by the application
  */
-@property(nonatomic) NSString *_Nullable bundleVersion;
+@property (copy, nullable, nonatomic) NSString *bundleVersion;
 
 /**
  * The revision ID from the manifest (React Native apps only)
  */
-@property(nonatomic) NSString *_Nullable codeBundleId;
+@property (copy, nullable, nonatomic) NSString *codeBundleId;
 
 /**
  * Unique identifier for the debug symbols file corresponding to the application
  */
-@property(nonatomic) NSString *_Nullable dsymUuid;
+@property (copy, nullable, nonatomic) NSString *dsymUuid;
 
 /**
  * The app identifier used by the application
  */
-@property(nonatomic) NSString *_Nullable id;
+@property (copy, nullable, nonatomic) NSString *id;
 
 /**
  * The release stage set in Configuration
  */
-@property(nonatomic) NSString *_Nullable releaseStage;
+@property (copy, nullable, nonatomic) NSString *releaseStage;
 
 /**
  * The application type set in Configuration
  */
-@property(nonatomic) NSString *_Nullable type;
+@property (copy, nullable, nonatomic) NSString *type;
 
 /**
  * The version of the application set in Configuration
  */
-@property(nonatomic) NSString *_Nullable version;
+@property (copy, nullable, nonatomic) NSString *version;
 
 @end

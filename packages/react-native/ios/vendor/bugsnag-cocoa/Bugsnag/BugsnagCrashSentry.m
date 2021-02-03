@@ -6,15 +6,16 @@
 //
 //
 
-#import "BSG_KSCrashAdvanced.h"
-#import "BSG_KSCrashC.h"
 
 #import "BugsnagCrashSentry.h"
-#import "BugsnagLogger.h"
-#import "BugsnagErrorReportSink.h"
-#import "BugsnagConfiguration.h"
+
+#import "BSG_KSCrashAdvanced.h"
+#import "BSG_KSCrashC.h"
 #import "Bugsnag.h"
+#import "BugsnagConfiguration.h"
+#import "BugsnagErrorReportSink.h"
 #import "BugsnagErrorTypes.h"
+#import "BugsnagLogger.h"
 
 @implementation BugsnagCrashSentry
 
@@ -85,6 +86,9 @@
                                        eventOverrides:eventOverrides
                                              metadata:metadata
                                                config:config];
+    
+    bsg_log_debug(@"Saved KSCrashReport for \"%@\" \"%@\"", handledState[@"severityReasonType"],
+                  [[eventOverrides[@"exceptions"] firstObject] valueForKey:@"errorClass"]);
 }
 
 @end

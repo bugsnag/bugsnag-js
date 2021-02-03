@@ -12,12 +12,9 @@
 @implementation BSGJSONSerialization
 
 static NSError* wrapException(NSException* exception) {
-    NSDictionary *userInfo = @{
-        NSLocalizedDescriptionKey: exception.description,
-        NSUnderlyingErrorKey: exception,
-    };
-
-    return [NSError errorWithDomain:@"BSGJSONSerializationErrorDomain" code:1 userInfo:userInfo];
+    return [NSError errorWithDomain:@"BSGJSONSerializationErrorDomain" code:1 userInfo:@{
+        NSLocalizedDescriptionKey: [NSString stringWithFormat:@"%@: %@", exception.name, exception.reason]
+    }];
 }
 
 + (BOOL)isValidJSONObject:(id)obj {

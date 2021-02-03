@@ -1,5 +1,13 @@
 # Changelog
 
+## TBD
+
+### Changed
+
+- (react-native): Update bugsnag-cocoa to v6.6.1
+  - Fix compiler warnings when importing Bugsnag from Objective-C sources that do not use ARC. [bugsnag-cocoa#985](https://github.com/bugsnag/bugsnag-cocoa/pull/985)
+  - Fix a rare crash that could occur in the event of JSON parsing failures. [bugsnag-cocoa#987](https://github.com/bugsnag/bugsnag-cocoa/pull/987)
+
 ## v7.6.1 (2021-01-26)
 
 ## Changed
