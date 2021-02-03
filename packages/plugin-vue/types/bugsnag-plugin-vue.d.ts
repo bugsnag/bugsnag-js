@@ -1,5 +1,19 @@
 import { Plugin, Client } from '@bugsnag/core'
-import { VueConstructor } from 'vue'
+
+interface VueConfig {
+  errorHandler?: VueErrorHandler | null
+}
+
+interface VueConstructor {
+  config: VueConfig
+}
+
+interface VueApp {
+  use: (plugin: { install: (app: VueApp) => void }) => void
+  config: VueConfig
+}
+
+type VueErrorHandler = (err: Error, vm: object, info: string | number) => void
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface BugsnagPluginVue extends Plugin { }
@@ -9,6 +23,7 @@ declare class BugsnagPluginVue {
 }
 
 interface BugsnagPluginVueResult {
+  install(app: VueApp): void
   installVueErrorHandler(vue?: VueConstructor): void
 }
 
