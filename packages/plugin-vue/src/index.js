@@ -19,7 +19,6 @@ module.exports = class BugsnagPluginVue {
     if (this.Vue) {
       installVue2(this.Vue, client)
       return {
-        install: (app) => { throw new Error('TODO do not call like this') },
         installVueErrorHandler: () => client._logger.warn('installVueErrorHandler() was called unnecessarily')
       }
     }

@@ -11,11 +11,11 @@ describe('bugsnag vue', () => {
   //
 
   interface Vue3App {
-    use: (plugin: { install: (app: Vue3App) => void }) => void
-    config: { errorHandler: Vue3ErrorHandler | null }
+    use: (plugin: { install: (app: Vue3App, ...options: any[]) => any }) => void
+    config: { errorHandler?: Vue3ErrorHandler }
   }
 
-  type Vue3ErrorHandler = (err: Error, vm: object, info: string | number) => void
+  type Vue3ErrorHandler = (err: unknown, vm: any, info: any) => void
 
   it('errors when missing vue app', () => {
     const client = new Client({ apiKey: 'API_KEYYY' })
@@ -32,7 +32,7 @@ describe('bugsnag vue', () => {
       use: (plugin) => {
         plugin.install(mockVueApp)
       },
-      config: { errorHandler: null }
+      config: { errorHandler: undefined }
     }
     const client = new Client({ apiKey: 'API_KEYYY', plugins: [new BugsnagVuePlugin()] })
     // eslint-disable-next-line
@@ -58,7 +58,7 @@ describe('bugsnag vue', () => {
       use: (plugin) => {
         plugin.install(mockVueApp)
       },
-      config: { errorHandler: null }
+      config: { errorHandler: undefined }
     }
     const client = new Client({ apiKey: 'API_KEYYY', plugins: [new BugsnagVuePlugin()] })
     // eslint-disable-next-line
@@ -76,7 +76,7 @@ describe('bugsnag vue', () => {
     }))
     expect(typeof mockVueApp.config.errorHandler).toBe('function')
     const errorHandler = mockVueApp.config.errorHandler as unknown as Vue3ErrorHandler
-    errorHandler(new Error('oops'), { $parent: null, $options: {} }, 1)
+    errorHandler(new Error('oops'), { $parent: undefined, $options: {} }, 1)
   })
 
   it('tolerates unmappable info paramater', done => {
@@ -84,7 +84,7 @@ describe('bugsnag vue', () => {
       use: (plugin) => {
         plugin.install(mockVueApp)
       },
-      config: { errorHandler: null }
+      config: { errorHandler: undefined }
     }
     const client = new Client({ apiKey: 'API_KEYYY', plugins: [new BugsnagVuePlugin()] })
     // eslint-disable-next-line
@@ -110,7 +110,7 @@ describe('bugsnag vue', () => {
       use: (plugin) => {
         plugin.install(mockVueApp)
       },
-      config: { errorHandler: null }
+      config: { errorHandler: undefined }
     }
     const client = new Client({ apiKey: 'API_KEYYY', plugins: [new BugsnagVuePlugin()] })
     // eslint-disable-next-line
@@ -144,7 +144,7 @@ describe('bugsnag vue', () => {
   })
 
   it('installs Vue.config.errorHandler', done => {
-    const mockVue = { config: { errorHandler: null } }
+    const mockVue = { config: { errorHandler: undefined } }
     const client = new Client({ apiKey: 'API_KEYYY', plugins: [new BugsnagVuePlugin(mockVue)] })
     client._setDelivery(client => ({
       sendEvent: (payload) => {
@@ -161,7 +161,7 @@ describe('bugsnag vue', () => {
   })
 
   it('supports Vue being passed later', done => {
-    const mockVue = { config: { errorHandler: null } }
+    const mockVue = { config: { errorHandler: undefined } }
     const client = new Client({ apiKey: 'API_KEYYY', plugins: [new BugsnagVuePlugin()] })
     // eslint-disable-next-line
     client.getPlugin('vue')!.installVueErrorHandler(mockVue)
@@ -191,7 +191,7 @@ describe('bugsnag vue', () => {
     })
 
     it('can pull Vue out of the window object', done => {
-      const mockVue = { config: { errorHandler: null } }
+      const mockVue = { config: { errorHandler: undefined } }
       globalReference.window.Vue = mockVue
 
       const client = new Client({ apiKey: 'API_KEYYY', plugins: [new BugsnagVuePlugin()] })
@@ -213,7 +213,7 @@ describe('bugsnag vue', () => {
     })
 
     it('checks for window.Vue safely', done => {
-      const mockVue = { config: { errorHandler: null } }
+      const mockVue = { config: { errorHandler: undefined } }
       // Delete the window object so that any unsafe check for 'window.Vue' will throw
       delete globalReference.window
 
