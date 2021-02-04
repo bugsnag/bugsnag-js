@@ -509,22 +509,8 @@ Then("the Android app does not contain a bugsnag sessions URL") do
   assert_nil(element)
 end
 
-Then('the request is valid for the build API') do
-  request_body = Server.current_request[:body]
-  assert_equal($api_key, read_key_path(request_body, 'apiKey'))
-  assert_not_nil(read_key_path(request_body, 'appVersion'))
-  assert_not_nil(read_key_path(request_body, 'builderName'))
-  assert_not_nil(read_key_path(request_body, 'metadata.os_name'))
-  assert_not_nil(read_key_path(request_body, 'metadata.os_arch'))
-  assert_not_nil(read_key_path(request_body, 'metadata.os_version'))
-  assert_not_nil(read_key_path(request_body, 'metadata.java_version'))
-  assert_not_nil(read_key_path(request_body, 'metadata.gradle_version'))
-  assert_not_nil(read_key_path(request_body, 'metadata.git_version'))
-end
-
 Then('the Content-Type header is valid multipart form-data') do
   expected = /^multipart\/form-data; boundary=--------------------------\d+$/
-  actual = Server.current_request[:request]["content-type"]
-
+  actual = Maze::Server.list_for('build').current[:request]['content-type']
   assert_match(expected, actual)
 end
