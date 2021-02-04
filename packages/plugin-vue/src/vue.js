@@ -6,7 +6,7 @@ module.exports = (app, client) => {
     const event = client.Event.create(err, true, handledState, 1)
 
     event.addMetadata('vue', {
-      errorInfo: ErrorTypeStrings[info] || 'unknown',
+      errorInfo: ErrorTypeStrings[info] || info,
       component: vm ? formatComponentName(vm, true) : undefined,
       props: vm ? vm.$options.propsData : undefined
     })
