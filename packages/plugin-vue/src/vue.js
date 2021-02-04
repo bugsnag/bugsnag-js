@@ -22,7 +22,7 @@ module.exports = (app, client) => {
 
 function formatComponentName (vm) {
   if (vm.$parent === null) return 'App'
-  return vm.$options && vm.$options.name ? vm.$options.name : 'Anonymous'
+  return (vm.$options && vm.$options.name) ? vm.$options.name : 'Anonymous'
 }
 
 // We copy in the following data structures from Vue's source so we can map the "info" parameter in the errorhandler

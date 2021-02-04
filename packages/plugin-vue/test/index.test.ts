@@ -76,7 +76,7 @@ describe('bugsnag vue', () => {
     }))
     expect(typeof mockVueApp.config.errorHandler).toBe('function')
     const errorHandler = mockVueApp.config.errorHandler as unknown as Vue3ErrorHandler
-    errorHandler(new Error('oops'), { $parent: undefined, $options: {} }, 1)
+    errorHandler(new Error('oops'), { $parent: null, $options: {} }, 1)
   })
 
   it('tolerates unmappable info paramater', done => {
@@ -95,14 +95,14 @@ describe('bugsnag vue', () => {
         expect(payload.events[0].errors[0].errorMessage).toBe('oops')
         expect(payload.events[0]._metadata.vue).toBeDefined()
         expect(payload.events[0]._metadata.vue.component).toBe('MyComponent')
-        expect(payload.events[0]._metadata.vue.errorInfo).toBe('unknown')
+        expect(payload.events[0]._metadata.vue.errorInfo).toBe('abcz')
         done()
       },
       sendSession: () => {}
     }))
     expect(typeof mockVueApp.config.errorHandler).toBe('function')
     const errorHandler = mockVueApp.config.errorHandler as unknown as Vue3ErrorHandler
-    errorHandler(new Error('oops'), { $options: { name: 'MyComponent' } }, 100)
+    errorHandler(new Error('oops'), { $options: { name: 'MyComponent' } }, 'abcz')
   })
 
   it('tolerates tolerates anonymous components', done => {
