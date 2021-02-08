@@ -32,8 +32,16 @@
 
 @class BugsnagSessionTracker;
 
+/**
+ * The BugsnagClient is not intended to be used directly.
+ * 
+ * Use the static access provided by the Bugsnag class instead.
+ */
 @interface BugsnagClient : NSObject<BugsnagMetadataStore>
 
+/**
+ * Initializes the client with the provided configuration.
+ */
 - (instancetype _Nonnull)initWithConfiguration:(BugsnagConfiguration *_Nonnull)configuration;
 
 // =============================================================================
@@ -196,7 +204,7 @@ NS_SWIFT_NAME(leaveBreadcrumb(_:metadata:type:));
 /**
  * Retrieves the context - a general summary of what was happening in the application
  */
- @property NSString *_Nullable context;
+ @property (copy, nullable) NSString *context;
 
 /**
  * @return YES if Bugsnag has been started and the previous launch crashed

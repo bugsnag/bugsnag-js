@@ -19,21 +19,21 @@
 /**
  * The number of free bytes of storage available on the device
  */
-@property(nonatomic, nullable) NSNumber *freeDisk;
+@property (strong, nullable, nonatomic) NSNumber *freeDisk;
 
 /**
  * The number of free bytes of memory available on the device
  */
-@property(nonatomic, nullable) NSNumber *freeMemory;
+@property (strong, nullable, nonatomic) NSNumber *freeMemory;
 
 /**
  * The orientation of the device when the event occurred
  */
-@property(nonatomic, nullable) NSString *orientation;
+@property (copy, nullable, nonatomic) NSString *orientation;
 
 /**
  * The timestamp on the device when the event occurred
  */
-@property(nonatomic, nullable) NSDate *time;
+@property (strong, nullable, nonatomic) NSDate *time;
 
 @end

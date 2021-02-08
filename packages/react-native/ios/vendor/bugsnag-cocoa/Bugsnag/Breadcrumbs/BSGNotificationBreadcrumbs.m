@@ -148,11 +148,12 @@ NSString * const BSGNotificationBreadcrumbsMessageAppWillTerminate = @"App Will 
         NSWindowWillMiniaturizeNotification,
     ];
 #endif
-    return nil;
 }
 
 - (NSArray<NSNotificationName> *)automaticBreadcrumbControlEvents {
-#if TARGET_OS_IOS
+#if TARGET_OS_TV
+    return nil;
+#elif TARGET_OS_IOS
     return @[
         UITextFieldTextDidBeginEditingNotification,
         UITextFieldTextDidEndEditingNotification,
@@ -165,7 +166,6 @@ NSString * const BSGNotificationBreadcrumbsMessageAppWillTerminate = @"App Will 
         NSControlTextDidEndEditingNotification
     ];
 #endif
-    return nil;
 }
 
 - (NSArray<NSNotificationName> *)automaticBreadcrumbTableItemEvents {
@@ -174,7 +174,6 @@ NSString * const BSGNotificationBreadcrumbsMessageAppWillTerminate = @"App Will 
 #elif TARGET_OS_OSX
     return @[ NSTableViewSelectionDidChangeNotification ];
 #endif
-    return nil;
 }
 
 - (NSArray<NSNotificationName> *)automaticBreadcrumbMenuItemEvents {

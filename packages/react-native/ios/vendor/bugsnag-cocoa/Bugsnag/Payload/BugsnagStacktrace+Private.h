@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)stacktraceFromJson:(NSDictionary *)json;
 
-@property (readonly, nonatomic) NSMutableArray<BugsnagStackframe *> *trace;
+@property (nonatomic) NSMutableArray<BugsnagStackframe *> *trace;
 
 @end
 

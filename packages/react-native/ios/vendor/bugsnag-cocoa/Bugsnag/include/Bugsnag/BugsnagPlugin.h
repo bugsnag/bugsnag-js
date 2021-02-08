@@ -7,7 +7,7 @@
 @class BugsnagClient;
 
 /**
- * Internal interface for adding custom behavior
+ * Internal interface for adding custom behavior :nodoc:
  */
 @protocol BugsnagPlugin <NSObject>
 

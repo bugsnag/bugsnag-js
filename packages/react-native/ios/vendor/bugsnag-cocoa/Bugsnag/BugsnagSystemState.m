@@ -146,6 +146,7 @@ static NSDictionary *copyDictionary(NSDictionary *launchState) {
 
 @property(readonly,nonatomic) NSMutableDictionary *currentLaunchStateRW;
 @property(readwrite,atomic) NSDictionary *currentLaunchState;
+@property(readwrite,nonatomic) NSDictionary *lastLaunchState;
 @property(readonly,nonatomic) NSString *persistenceFilePath;
 @property(readonly,nonatomic) BugsnagKVStore *kvStore;
 
@@ -215,7 +216,8 @@ static NSDictionary *copyDictionary(NSDictionary *launchState) {
 
 - (void)sessionUpdateNotification:(NSNotification *)notification {
     if (![BSGJSONSerialization isValidJSONObject:notification.object]) {
-        return bsg_log_err("Invalid session payload in notification");
+        bsg_log_err("Invalid session payload in notification");
+        return;
     }
     [self mutateLaunchState:^(NSMutableDictionary *state) {
         state[BSGKeySession] = notification.object;
@@ -276,7 +278,7 @@ static NSDictionary *copyDictionary(NSDictionary *launchState) {
         bsg_log_err(@"Could not remove persistence file: %@", error);
     }
     [self.kvStore purge];
-    self->_lastLaunchState = loadPreviousState(self.kvStore, self.persistenceFilePath);
+    self.lastLaunchState = loadPreviousState(self.kvStore, self.persistenceFilePath);
 }
 
 @end
