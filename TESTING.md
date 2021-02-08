@@ -254,10 +254,12 @@ particular, these commands need the `BrowserStackLocal` binary (available
 The react-native CLI come in three parts:
 
 - CLI tests, that don't require any remote connections or special setup
-- Building an app, which requires your local machine to be set up for building iOS and Android applications
-- Running the app, which requires the built application from the previous test set to run
+- Testing an app build, which requires your local machine to be set up for building iOS and Android applications
+- Testing the built app, which requires the built application from the previous test set to run
 
 #### CLI tests
+
+The CLI tests target the command line interface by providing a set of responses to expected queries, verifying that the CLI tool responds correctly and makes appropriate changes to the workspace.
 
 ##### Setting up
 
@@ -270,9 +272,42 @@ The react-native CLI come in three parts:
 
 ##### Running
 
-1. Perform a `bundle install` at the top level of the repository
-1. Check the contents of `Gemfile` to select the version of `maze-runner` to use.
+1. Change directory into `test/react-native-cli`
+1. Check the contents of `Gemfile` to select the version of `maze-runner` to use
+1. Install maze-runner with `bundle install`
 1. Run the full set of cli tests targeting a specific react-native version (`rn0_61` for example):
   ```shell script
-  REACT_NATIVE_VERSION=rn0_61 bundle exec maze-runner
+  REACT_NATIVE_VERSION=rn0_61 bundle exec maze-runner features/cli-tests
   ```
+
+#### Build tests
+
+The build tests come in two flavours, Android and iOS, and are required to run the subsequent tests using the resulting `.apk` and `.ipa` artefacts.  These tests ensure that the app can be built after Bugsnag is installed, and subsequent build messages are sent and contain the appropriate information.
+
+##### Setup
+
+1. Change directory into `tests/react-native-cli`
+1. Check the contents of `Gemfile` to select the version of `maze-runner` to use
+1. Install maze-runner with `bundle install`
+
+##### Running the Android variant
+
+- Run maze-runner targeting the specific Android build feature for a specific react-native version (`rn0_61` for example):
+  ```shell script
+  REACT_NATIVE_VERSION=rn0_61 bundle exec maze-runner features/build-app-tests/build-android-app.feature
+  ```
+
+##### Running the iOS variant (MacOS only)
+
+- Run the script to trigger the build for the specific react-native version (`rn0_62` for example):
+  ```shell script
+  ./scripts/init-and-build-test.sh rn0_62
+  ```
+
+#### App tests
+
+These tests ensure that Bugsnag has successfully been installed by the CLI, and errors and sessions are correctly reported.
+
+##### Setup
+
+1. 
