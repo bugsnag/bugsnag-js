@@ -30,9 +30,12 @@ static const int BECS_SERIALIZED_DATA_LEN = 1024 * 1024;
 // Local context for storing cached data
 static becs_context g_context = {0};
 // Field constants
+static const char *const key_app = "app";
 static const char *const key_breadcrumbs = "breadcrumbs";
 static const char *const key_context = "context";
+static const char *const key_device = "device";
 static const char *const key_metadata = "metadata";
+static const char *const key_session = "session";
 static const char *const key_user = "user";
 
 static void handle_crash_signal(int sig) {
@@ -181,6 +184,69 @@ void becs_set_metadata(const char *tab, const char *key, const char *val) {
   serialize_data();
   context_unlock();
   free(keypath);
+}
+
+void becs_set_app(const char *value) {
+  if (!g_context.data) {
+    return;
+  }
+  context_lock();
+  JSON_Object *obj = json_value_get_object(g_context.data);
+  if (value) {
+    JSON_Value *pairs = json_parse_string(value);
+    if (pairs) {
+      json_object_set_value(obj, key_app, pairs);
+    } else {
+      // TODO: warn invalid data
+    }
+  } else {
+    json_object_remove(obj, key_app);
+  }
+
+  serialize_data();
+  context_unlock();
+}
+
+void becs_set_device(const char *value) {
+  if (!g_context.data) {
+    return;
+  }
+  context_lock();
+  JSON_Object *obj = json_value_get_object(g_context.data);
+  if (value) {
+    JSON_Value *pairs = json_parse_string(value);
+    if (pairs) {
+      json_object_set_value(obj, key_device, pairs);
+    } else {
+      // TODO: warn invalid data
+    }
+  } else {
+    json_object_remove(obj, key_device);
+  }
+
+  serialize_data();
+  context_unlock();
+}
+
+void becs_set_session(const char *value) {
+  if (!g_context.data) {
+    return;
+  }
+  context_lock();
+  JSON_Object *obj = json_value_get_object(g_context.data);
+  if (value) {
+    JSON_Value *pairs = json_parse_string(value);
+    if (pairs) {
+      json_object_set_value(obj, key_session, pairs);
+    } else {
+      // TODO: warn invalid data
+    }
+  } else {
+    json_object_remove(obj, key_session);
+  }
+
+  serialize_data();
+  context_unlock();
 }
 
 void becs_set_user(const char *id, const char *email, const char *name) {

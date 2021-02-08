@@ -79,6 +79,28 @@ static char *read_json_string_value(napi_env env, napi_value arg,
   }
 }
 
+static void set_object_or_null(napi_env env, napi_value obj,
+                               void (*setter)(const char *)) {
+  napi_valuetype valuetype;
+  napi_status status = napi_typeof(env, obj, &valuetype);
+  assert(status == napi_ok);
+
+  switch (valuetype) {
+  case napi_null:
+    setter(NULL);
+    break;
+  case napi_object: {
+    char *value = read_string_value(env, json_stringify(env, obj), false);
+    if (value) {
+      setter(value);
+      free(value);
+    }
+  } break;
+  default:
+    napi_throw_type_error(env, NULL, "Wrong argument type, expected object");
+  }
+}
+
 static napi_value Uninstall(napi_env env, napi_callback_info info) {
   becs_uninstall();
   return NULL;
@@ -201,6 +223,54 @@ static napi_value AddMetadata(napi_env env, napi_callback_info info) {
   return NULL;
 }
 
+static napi_value SetApp(napi_env env, napi_callback_info info) {
+  size_t argc = 1;
+  napi_value args[1];
+  napi_status status = napi_get_cb_info(env, info, &argc, args, NULL, NULL);
+  assert(status == napi_ok);
+
+  if (argc < 1) {
+    napi_throw_type_error(env, NULL, "Wrong number of arguments, expected 1");
+    return NULL;
+  }
+
+  set_object_or_null(env, args[0], becs_set_app);
+
+  return NULL;
+}
+
+static napi_value SetDevice(napi_env env, napi_callback_info info) {
+  size_t argc = 1;
+  napi_value args[1];
+  napi_status status = napi_get_cb_info(env, info, &argc, args, NULL, NULL);
+  assert(status == napi_ok);
+
+  if (argc < 1) {
+    napi_throw_type_error(env, NULL, "Wrong number of arguments, expected 1");
+    return NULL;
+  }
+
+  set_object_or_null(env, args[0], becs_set_device);
+
+  return NULL;
+}
+
+static napi_value SetSession(napi_env env, napi_callback_info info) {
+  size_t argc = 1;
+  napi_value args[1];
+  napi_status status = napi_get_cb_info(env, info, &argc, args, NULL, NULL);
+  assert(status == napi_ok);
+
+  if (argc < 1) {
+    napi_throw_type_error(env, NULL, "Wrong number of arguments, expected 1");
+    return NULL;
+  }
+
+  set_object_or_null(env, args[0], becs_set_session);
+
+  return NULL;
+}
+
 static napi_value ClearMetadata(napi_env env, napi_callback_info info) {
   size_t argc = 2;
   napi_value args[2];
@@ -279,6 +349,18 @@ napi_value Init(napi_env env, napi_value exports) {
   assert(status == napi_ok);
 
   desc = DECLARE_NAPI_METHOD("persistState", PersistState);
+  status = napi_define_properties(env, exports, 1, &desc);
+  assert(status == napi_ok);
+
+  desc = DECLARE_NAPI_METHOD("setApp", SetApp);
+  status = napi_define_properties(env, exports, 1, &desc);
+  assert(status == napi_ok);
+
+  desc = DECLARE_NAPI_METHOD("setDevice", SetDevice);
+  status = napi_define_properties(env, exports, 1, &desc);
+  assert(status == napi_ok);
+
+  desc = DECLARE_NAPI_METHOD("setSession", SetSession);
   status = napi_define_properties(env, exports, 1, &desc);
   assert(status == napi_ok);
 

@@ -1,23 +1,20 @@
-import { mkdtemp, readFile, rmdir } from 'fs'
+import { mkdtemp, readFile, rmdir } from 'fs/promises'
 import { join } from 'path'
-import { promisify } from 'util'
 import * as bindings from 'bindings'
 
 describe('persisting changes to disk', () => {
   const NativeClient = bindings.default('bugsnag_plugin_electron_client_sync_bindings')
-  const createTempDir = promisify(mkdtemp)
-  const removeDir = promisify(rmdir)
 
   let tempdir: string = ''
   let filepath: string = ''
 
   const readTempFile = async () => {
-    const contents = await promisify(readFile)(filepath)
+    const contents = await readFile(filepath)
     return JSON.parse(contents.toString())
   }
 
   beforeEach(async (done) => {
-    tempdir = await createTempDir('client-sync-')
+    tempdir = await mkdtemp('client-sync-')
     filepath = join(tempdir, 'output.json')
     NativeClient.install(filepath, 5)
     done()
@@ -25,7 +22,7 @@ describe('persisting changes to disk', () => {
 
   afterEach(async (done) => {
     NativeClient.uninstall()
-    removeDir(tempdir, {recursive: true})
+    await rmdir(tempdir, {recursive: true})
     done()
   })
 
@@ -109,6 +106,74 @@ describe('persisting changes to disk', () => {
     expect(state['metadata']).toEqual({
       terrain: { current: 'cave' },
       device: { size: 256 }
+    })
+
+    done()
+  })
+
+  it('sets session', async (done) => {
+    NativeClient.setSession({
+      id: '9f65c975-8155-456f-91e5-c4c4b3db0555',
+      events: { handled: 1, unhandled: 0 },
+      startedAt: '2017-01-01T14:30:00.000Z',
+    })
+    NativeClient.persistState()
+
+    let state = await readTempFile()
+    expect(state['session']).toEqual({
+      id: '9f65c975-8155-456f-91e5-c4c4b3db0555',
+      events: { handled: 1, unhandled: 0 },
+      startedAt: '2017-01-01T14:30:00.000Z',
+    })
+
+    NativeClient.setSession(null)
+    NativeClient.persistState()
+
+    state = await readTempFile()
+    expect(state['session']).toBeUndefined()
+
+    done()
+  })
+
+  it('has no session by default', async (done) => {
+    NativeClient.persistState()
+    const state = await readTempFile()
+    expect(state['session']).toBeUndefined()
+
+    done()
+  })
+
+  it('sets app info', async (done) => {
+    NativeClient.setApp({
+      releaseStage: 'beta1',
+      version: '1.0.22',
+    })
+    NativeClient.persistState()
+
+    const state = await readTempFile()
+    expect(state['app']).toEqual({
+      releaseStage: 'beta1',
+      version: '1.0.22',
+    })
+
+    done()
+  })
+
+  it('sets device info', async (done) => {
+    NativeClient.setDevice({
+      online: true,
+      osName: 'beOS',
+      osVersion: 'R6',
+      totalMemory: 65536,
+    })
+    NativeClient.persistState()
+
+    const state = await readTempFile()
+    expect(state['device']).toEqual({
+      online: true,
+      osName: 'beOS',
+      osVersion: 'R6',
+      totalMemory: 65536,
     })
 
     done()

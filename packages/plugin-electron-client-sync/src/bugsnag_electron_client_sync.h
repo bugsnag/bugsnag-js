@@ -48,6 +48,27 @@ void becs_set_user(const char *id, const char *email, const char *name);
 void becs_set_metadata(const char *tab, const char *key, const char *val);
 
 /**
+ * Set cached top-level app value
+ *
+ * @param value JSON value serialized to string containing key/value pairs
+ */
+void becs_set_app(const char *value);
+
+/**
+ * Set cached top-level device value
+ *
+ * @param value JSON value serialized to string containing key/value pairs
+ */
+void becs_set_device(const char *value);
+
+/**
+ * Set the current session
+ *
+ * @param value JSON value serialized to string or NULL to remove session info
+ */
+void becs_set_session(const char *value);
+
+/**
  * Write cached event context to disk
  */
 void becs_persist_to_disk(void);
