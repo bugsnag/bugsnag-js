@@ -19,12 +19,12 @@
     BugsnagAppWithState *app = [BugsnagAppWithState new];
 
     id duration = json[@"duration"];
-    if (duration && [duration isKindOfClass:[NSNumber class]]) {
+    if ([duration isKindOfClass:[NSNumber class]]) {
         app.duration = duration;
     }
 
     id durationInForeground = json[@"durationInForeground"];
-    if (durationInForeground && [durationInForeground isKindOfClass:[NSNumber class]]) {
+    if ([durationInForeground isKindOfClass:[NSNumber class]]) {
         app.durationInForeground = durationInForeground;
     }
 
@@ -35,7 +35,7 @@
 
     NSArray *dsyms = json[@"dsymUUIDs"];
 
-    if (dsyms && [dsyms count] > 0) {
+    if (dsyms.count) {
         app.dsymUuid = dsyms[0];
     }
 

@@ -24,22 +24,22 @@ typedef NS_OPTIONS(NSUInteger, BSGThreadType) {
 /**
  * A unique ID which identifies this thread
  */
-@property(nullable) NSString *id;
+@property (copy, nullable, nonatomic) NSString *id;
 
 /**
  * The name which identifies this thread
  */
-@property(nullable) NSString *name;
+@property (copy, nullable, nonatomic) NSString *name;
 
 /**
  * Whether this thread was the thread that triggered the captured error
  */
-@property(readonly) BOOL errorReportingThread;
+@property (readonly, nonatomic) BOOL errorReportingThread;
 
 /**
  * Sets a representation of this thread's stacktrace
  */
-@property(nonnull) NSArray<BugsnagStackframe *> *stacktrace;
+@property (copy, nonnull, nonatomic) NSArray<BugsnagStackframe *> *stacktrace;
 
 /**
  * Determines the type of thread based on the originating platform
