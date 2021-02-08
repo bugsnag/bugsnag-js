@@ -2,7 +2,7 @@ Feature: Tests for running a React Native app that was initialized using the Bug
 
 Scenario: A built, CLI initialized, app sends JavaScript and Native handled errors
   When I wait to receive a session
-  Then the session request is valid for the session reporting API version "1.0" for the React Native notifier
+  Then the session is valid for the session reporting API version "1.0" for the React Native notifier
 
   And I notify a handled JavaScript error
   And I wait to receive an error

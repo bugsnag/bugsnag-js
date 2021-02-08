@@ -38,6 +38,7 @@ module.exports = {
     common.run('./gradlew assembleRelease', true)
 
     // Finally, copy the APK back to the host
+    common.run(`mkdir -p ${baseDir}/build`)
     fs.copyFileSync(`${destFixtures}/${rnVersion}/android/app/build/outputs/apk/release/app-release.apk`,
       `${baseDir}/build/${rnVersion}.apk`)
   },
