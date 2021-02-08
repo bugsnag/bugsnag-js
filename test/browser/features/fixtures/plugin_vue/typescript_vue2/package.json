@@ -1,5 +1,5 @@
 {
-  "name": "bugsnag-js-fixtures-vue3-typescript",
+  "name": "bugsnag-js-fixtures-vue2-typescript",
   "private": true,
   "scripts": {
     "build": "NODE_ENV=production browserify src/index.ts -p [ tsify ] -g envify -o dist/bundle.js"
