@@ -286,7 +286,7 @@ The build tests come in two flavours, Android and iOS, and are required to run t
 
 ##### Setup
 
-1. Change directory into `tests/react-native-cli`
+1. Change directory into `test/react-native-cli`
 1. Check the contents of `Gemfile` to select the version of `maze-runner` to use
 1. Install maze-runner with `bundle install`
 
@@ -310,4 +310,41 @@ These tests ensure that Bugsnag has successfully been installed by the CLI, and 
 
 ##### Setup
 
-1. 
+Before running these tests the previous tests, `Build Tests` must be run for the test fixtures to be present.
+
+1. Change directory into `test/react-native-cli`
+1. Check the contents of `Gemfile` to select the version of `maze-runner` to use
+1. Install maze-runner with `bundle install`
+
+##### Running
+
+Ensure that the following environment variables are set:
+- `BROWSER_STACK_USERNAME` - Your BrowserStack App Automate Username
+- `BROWSER_STACK_ACCESS_KEY` - Your BrowserStack App Automate Access Key
+
+See https://www.browserstack.com/local-testing/app-automate for details of the required local testing binary. In
+particular, these commands need the `BrowserStackLocal` binary (available 
+[here](https://www.browserstack.com/local-testing/releases) to reside in your home directory.
+
+1. To run on an Android device (`rn0_63` for example):
+    ```shell script
+    bundle exec maze-runner --app=./build/rn0_63.apk \
+                            --farm=bs \
+                            --device=ANDROID_9_0 \
+                            --a11y-locator \
+                            --username=$BROWSER_STACK_USERNAME \
+                            --access-key=$BROWSER_STACK_ACCESS_KEY \
+                            --bs-local=~/BrowserStackLocal \
+                            features/run-app-tests
+    ```
+1. Or on iOS:
+    ```shell script
+    bundle exec maze-runner --app=../../build/rn0_63.ipa \
+                            --farm=bs \
+                            --device=IOS_13 \
+                            --a11y-locator \
+                            --username=$BROWSER_STACK_USERNAME \
+                            --access-key=$BROWSER_STACK_ACCESS_KEY \
+                            --bs-local=~/BrowserStackLocal \
+                            features/run-app-tests
+    ```
