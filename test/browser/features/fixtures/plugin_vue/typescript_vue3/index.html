@@ -13,7 +13,12 @@
     </div>
     <script>
       var el = document.getElementById('bugsnag-test-should-run')
-      el.textContent = el.innerText = typeof Proxy !== 'undefined'
+      var isClassSupported = false
+      try {
+        eval('class Foo extends Object {}')
+        isClassSupported = true
+      } catch (e) {}
+      el.textContent = el.innerText = isClassSupported && typeof Proxy !== 'undefined'
         ? 'YES'
         : 'NO'
     </script>
