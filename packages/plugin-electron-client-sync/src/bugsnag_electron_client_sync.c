@@ -216,7 +216,7 @@ void becs_persist_to_disk() {
     return;
   }
   // Open save file path
-  int fd = open(g_context.save_file_path, O_WRONLY | O_CREAT, 0644);
+  int fd = open(g_context.save_file_path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
   if (fd == -1) {
     return;
   }
