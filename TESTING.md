@@ -214,8 +214,9 @@ These will build a `.ipa` or `.apk` file respectively and copy into `./build`.
 #### Running the end-to-end tests
 
 Ensure that the following environment variables are set:
-- `BROWSER_STACK_USERNAME` - Your BrowserStack App Automate Username
-- `BROWSER_STACK_ACCESS_KEY` - Your BrowserStack App Automate Access Key
+- `MAZE_DEVICE_FARM_USERNAME` - Your BrowserStack App Automate Username
+- `MAZE_DEVICE_FARM_ACCESS_KEY` - Your BrowserStack App Automate Access Key
+- `MAZE_BS_LOCAL` - Location of the BrowserStack local testing binary
 
 See https://www.browserstack.com/local-testing/app-automate for details of the required local testing binary. In
 particular, these commands need the `BrowserStackLocal` binary (available 
@@ -229,9 +230,6 @@ particular, these commands need the `BrowserStackLocal` binary (available
                             --farm=bs \
                             --device=ANDROID_9_0 \
                             --a11y-locator \
-                            --username=$BROWSER_STACK_USERNAME \
-                            --access-key=$BROWSER_STACK_ACCESS_KEY \
-                            --bs-local=~/BrowserStackLocal \
                             features/app.feature
     ```
 1. Or on iOS:
@@ -241,9 +239,6 @@ particular, these commands need the `BrowserStackLocal` binary (available
                             --device=IOS_13 \
                             --appium-version=1.18.0 \
                             --a11y-locator \
-                            --username=$BROWSER_STACK_USERNAME \
-                            --access-key=$BROWSER_STACK_ACCESS_KEY \
-                            --bs-local=~/BrowserStackLocal \
                             features/app.feature
     ```
 1. To run all features, omit the final argument.
@@ -319,8 +314,9 @@ Before running these tests the previous tests, `Build Tests` must be run for the
 ##### Running
 
 Ensure that the following environment variables are set:
-- `BROWSER_STACK_USERNAME` - Your BrowserStack App Automate Username
-- `BROWSER_STACK_ACCESS_KEY` - Your BrowserStack App Automate Access Key
+- `MAZE_DEVICE_FARM_USERNAME` - Your BrowserStack App Automate Username
+- `MAZE_DEVICE_FARM_ACCESS_KEY` - Your BrowserStack App Automate Access Key
+- `MAZE_BS_LOCAL` - Location of the BrowserStack local testing binary
 
 See https://www.browserstack.com/local-testing/app-automate for details of the required local testing binary. In
 particular, these commands need the `BrowserStackLocal` binary (available 
@@ -332,8 +328,6 @@ particular, these commands need the `BrowserStackLocal` binary (available
                             --farm=bs \
                             --device=ANDROID_9_0 \
                             --a11y-locator \
-                            --username=$BROWSER_STACK_USERNAME \
-                            --access-key=$BROWSER_STACK_ACCESS_KEY \
                             --bs-local=~/BrowserStackLocal \
                             features/run-app-tests
     ```
@@ -343,8 +337,6 @@ particular, these commands need the `BrowserStackLocal` binary (available
                             --farm=bs \
                             --device=IOS_13 \
                             --a11y-locator \
-                            --username=$BROWSER_STACK_USERNAME \
-                            --access-key=$BROWSER_STACK_ACCESS_KEY \
                             --bs-local=~/BrowserStackLocal \
                             features/run-app-tests
     ```
