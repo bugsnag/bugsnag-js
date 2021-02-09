@@ -3,6 +3,5 @@ FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v4
 COPY /test/react-native /app/test/react-native
 
 WORKDIR /app/test/react-native
-RUN rm Gemfile*
 
 ENTRYPOINT ["bundle", "exec", "maze-runner"]
