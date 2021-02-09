@@ -20,7 +20,8 @@ FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v4
 
 WORKDIR /app
 
-COPY test/react-native-cli test/react-native-cli
+COPY test/react-native-cli/features test/react-native-cli/features
+COPY test/react-native-cli/scripts test/react-native-cli/scripts
 
 # TODO install this from Artifactory in future
 COPY --from=react-native-cli-feature-builder /app/bugsnag-react-native-cli-*.tgz ./

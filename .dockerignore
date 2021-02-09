@@ -4,5 +4,3 @@ node_modules
 lerna-debug.log
 npm-debug.log
 **/*.tgz
-**/*/Gemfile
-**/*/Gemfile.lock
