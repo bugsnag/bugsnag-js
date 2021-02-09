@@ -1,6 +1,7 @@
 # CI test image for unit/lint/type tests
 FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v4-cli
-COPY /test/react-native /app/test/react-native
+COPY /test/react-native/features /app/test/react-native/features
+COPY /test/react-native/scripts /app/test/react-native/scripts
 
 WORKDIR /app/test/react-native
 
