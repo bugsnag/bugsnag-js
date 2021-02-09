@@ -16,11 +16,12 @@ RUN npx lerna run build --scope @bugsnag/react-native-cli
 RUN npm pack --verbose packages/react-native-cli/
 
 # The maze-runner test image
-FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v3-cli as react-native-cli-maze-runner
+FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v4-cli as react-native-cli-maze-runner
 
 WORKDIR /app
 
-COPY test/react-native-cli test/react-native-cli
+COPY test/react-native-cli/features test/react-native-cli/features
+COPY test/react-native-cli/scripts test/react-native-cli/scripts
 
 # TODO install this from Artifactory in future
 COPY --from=react-native-cli-feature-builder /app/bugsnag-react-native-cli-*.tgz ./

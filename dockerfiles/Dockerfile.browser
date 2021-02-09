@@ -22,8 +22,7 @@ RUN npm pack --verbose packages/plugin-angular/
 RUN npm pack --verbose packages/plugin-react/
 RUN npm pack --verbose packages/plugin-vue/
 
-COPY test/browser test/browser
-RUN rm test/browser/Gemfile*
+COPY test/browser/features test/browser/features
 
 WORKDIR /app/test/browser/features/fixtures
 RUN npm install --no-package-lock --no-save ../../../../bugsnag-browser-*.tgz

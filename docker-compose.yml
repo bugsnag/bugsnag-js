@@ -191,7 +191,7 @@ services:
       - ./build:/app/test/react-native/build
 
   react-native-cli-maze-runner:
-    image: 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v3-cli
+    image: 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v4-cli
     environment:
       BUILDKITE:
       BUILDKITE_PIPELINE_NAME:
