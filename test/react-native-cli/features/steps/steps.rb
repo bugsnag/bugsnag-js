@@ -511,6 +511,6 @@ end
 
 Then('the Content-Type header is valid multipart form-data') do
   expected = /^multipart\/form-data; boundary=--------------------------\d+$/
-  actual = Maze::Server.list_for('build').current[:request]['content-type']
+  actual = Maze::Server.builds.current[:request]['content-type']
   assert_match(expected, actual)
 end

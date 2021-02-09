@@ -47,7 +47,7 @@ When("I configure the app to run in the {string} state") do |event_metadata|
 end
 
 Then("the event {string} equals one of:") do |field_path, table|
-  payload = Maze::Server.list_for('error').current[:body]
+  payload = Maze::Server.errors.current[:body]
   actual_value = Maze::Helper.read_key_path(payload, "events.0.#{field_path}")
   valid_values = table.raw.flatten
   assert_true(valid_values.include?(actual_value), "#{field_path} value: #{actual_value} did not match the given list: #{valid_values}")
