@@ -13,7 +13,7 @@ RUN npm i -g run-func
 WORKDIR /app
 
 # Install MazeRunner as a Gem
-COPY Gemfile .
+COPY test/react-native-cli/Gemfile Gemfile
 RUN bundle install
 
 # npm auth
