@@ -195,6 +195,7 @@ steps:
       artifacts#v1.2.0:
         download: "build/rn0.60.apk"
       docker-compose#v3.3.0:
+        pull: react-native-maze-runner
         run: react-native-maze-runner
         use-aliases: true
         command:
@@ -215,7 +216,8 @@ steps:
     plugins:
       artifacts#v1.2.0:
         download: "build/rn0.60.ipa"
-      docker-compose#v3.1.0:
+      docker-compose#v3.7.0:
+        pull: react-native-maze-runner
         run: react-native-maze-runner
         use-aliases: true
         command:
@@ -238,6 +240,7 @@ steps:
       artifacts#v1.2.0:
         download: "build/rn0.63.apk"
       docker-compose#v3.3.0:
+        pull: react-native-maze-runner
         run: react-native-maze-runner
         use-aliases: true
         command:
@@ -258,7 +261,8 @@ steps:
     plugins:
       artifacts#v1.2.0:
         download: "build/rn0.63.ipa"
-      docker-compose#v3.1.0:
+      docker-compose#v3.7.0:
+        pull: react-native-maze-runner
         run: react-native-maze-runner
         use-aliases: true
         command:
@@ -281,6 +285,7 @@ steps:
       artifacts#v1.2.0:
         download: "build/r_navigation_0.60.apk"
       docker-compose#v3.3.0:
+        pull: react-native-maze-runner
         run: react-native-maze-runner
         use-aliases: true
         command:
@@ -302,7 +307,8 @@ steps:
     plugins:
       artifacts#v1.2.0:
         download: "build/r_navigation_0.60.ipa"
-      docker-compose#v3.1.0:
+      docker-compose#v3.7.0:
+        pull: react-native-maze-runner
         run: react-native-maze-runner
         use-aliases: true
         command:
@@ -324,6 +330,7 @@ steps:
       artifacts#v1.2.0:
         download: "build/r_navigation_0.63.apk"
       docker-compose#v3.3.0:
+        pull: react-native-maze-runner
         run: react-native-maze-runner
         use-aliases: true
         command:
@@ -345,7 +352,8 @@ steps:
     plugins:
       artifacts#v1.2.0:
         download: "build/r_navigation_0.63.ipa"
-      docker-compose#v3.1.0:
+      docker-compose#v3.7.0:
+        pull: react-native-maze-runner
         run: react-native-maze-runner
         use-aliases: true
         command:
@@ -367,6 +375,7 @@ steps:
       artifacts#v1.2.0:
         download: "build/r_native_navigation_0.60.apk"
       docker-compose#v3.3.0:
+        pull: react-native-maze-runner
         run: react-native-maze-runner
         use-aliases: true
         command:
@@ -388,7 +397,8 @@ steps:
     plugins:
       artifacts#v1.2.0:
         download: "build/r_native_navigation_0.60.ipa"
-      docker-compose#v3.1.0:
+      docker-compose#v3.7.0:
+        pull: react-native-maze-runner
         run: react-native-maze-runner
         use-aliases: true
         command:
@@ -410,6 +420,7 @@ steps:
       artifacts#v1.2.0:
         download: "build/r_native_navigation_0.63.apk"
       docker-compose#v3.3.0:
+        pull: react-native-maze-runner
         run: react-native-maze-runner
         use-aliases: true
         command:
@@ -431,7 +442,8 @@ steps:
     plugins:
       artifacts#v1.2.0:
         download: "build/r_native_navigation_0.63.ipa"
-      docker-compose#v3.1.0:
+      docker-compose#v3.7.0:
+        pull: react-native-maze-runner
         run: react-native-maze-runner
         use-aliases: true
         command:

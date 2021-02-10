@@ -180,11 +180,7 @@ services:
       - ./test/react-native-cli/features/:/app/features
 
   react-native-maze-runner:
-    build:
-      context: .
-      dockerfile: dockerfiles/Dockerfile.react-native
-      args:
-        - BUILDKITE_BUILD_NUMBER
+    image: 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v4-cli
     environment:
       BUILDKITE:
       BUILDKITE_PIPELINE_NAME:
@@ -197,7 +193,8 @@ services:
         aliases:
           - maze-runner
     volumes:
-      - ./build:/app/test/react-native/build
+      - ./build:/app/build
+      - ./test/react-native/features/:/app/features
 
   react-native-cli-maze-runner:
     image: 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v4-cli
