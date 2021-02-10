@@ -193,9 +193,8 @@ services:
         aliases:
           - maze-runner
     volumes:
-      - ./build:/app/test/react-native/build
-      - ./test/react-native/features/:/app/test/react-native/features
-      - ./test/react-native/features/:/app/test/react-native/scripts
+      - ./build:/app/build
+      - ./test/react-native/features/:/app/features
 
   react-native-cli-maze-runner:
     image: 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v4-cli
