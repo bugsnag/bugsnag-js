@@ -62,8 +62,11 @@ module.exports = (doc = document, win = window) => ({
 
       const frame = event.errors[0].stacktrace[0]
 
+      // if there are no frames, we can't tell whether this is an inline script
+      if (!frame) return
+
       // if frame.file exists and is not the original location of the page, this can't be an inline script
-      if (frame && frame.file && frame.file.replace(/#.*$/, '') !== originalLocation.replace(/#.*$/, '')) return
+      if ((frame.file && frame.file.replace(/#.*$/, '')) !== originalLocation.replace(/#.*$/, '')) return
 
       // grab the last script known to have run
       const currentScript = getCurrentScript()
@@ -77,7 +80,7 @@ module.exports = (doc = document, win = window) => ({
       }
 
       // only attempt to grab some surrounding code if we have a line number
-      if (!frame || !frame.lineNumber) return
+      if (!frame.lineNumber) return
       frame.code = addSurroundingCode(frame.lineNumber)
     }, true)
 
