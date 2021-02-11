@@ -11,7 +11,7 @@ module.exports = (doc = document, win = window) => ({
 
     const originalLocation = win.location.href
     let html = ''
-    let DOMContentLoaded = false
+    let DOMContentLoaded = doc.readyState !== 'loading'
     const getHtml = () => doc.documentElement.outerHTML
 
     // get whatever HTML exists at this point in time
@@ -66,7 +66,7 @@ module.exports = (doc = document, win = window) => ({
       if (!frame) return
 
       // if frame.file exists and is not the original location of the page, this can't be an inline script
-      if ((frame.file && frame.file.replace(/#.*$/, '')) !== originalLocation.replace(/#.*$/, '')) return
+      if (frame && (frame.file && frame.file.replace(/#.*$/, '')) !== originalLocation.replace(/#.*$/, '')) return
 
       // grab the last script known to have run
       const currentScript = getCurrentScript()
