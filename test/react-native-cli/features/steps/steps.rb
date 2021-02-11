@@ -170,7 +170,7 @@ end
 Then("the iOS build has not been modified to upload source maps") do
   filename = "ios/#{current_fixture}.xcodeproj/project.pbxproj"
 
-  step("the file '#{filename}' does not contain 'EXTRA_PACKAGER_ARGS=\"--sourcemap-output $CONFIGURATION_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/main.jsbundle.map\"'")
+  step("the file '#{filename}' does not contain 'EXTRA_PACKAGER_ARGS=\"--sourcemap-output $TMPDIR/$(md5 -qs \"$CONFIGURATION_BUILD_DIR\")-main.jsbundle.map\"'")
   step("the file '#{filename}' does not contain 'Upload source maps to Bugsnag'")
 end
 

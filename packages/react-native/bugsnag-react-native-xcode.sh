@@ -23,7 +23,14 @@ if [ ! -f "$BUNDLE_FILE" ]; then
   exit 0
 fi
 
-MAP_FILE="$BUNDLE_FILE.map"
+# Generate a stable unique path that does not contain spaces, for compatibility with react-native-xcode.sh
+UID=$(md5 -qs "$CONFIGURATION_BUILD_DIR")
+MAP_FILE="$TMPDIR/$UID-main.jsbundle.map"
+if [ ! -f "$MAP_FILE" ]; then
+  echo "Warning: $MAP_FILE could not be found, falling back to $BUNDLE_FILE.map"
+  # Older versions of the Xcode build phase used this location
+  MAP_FILE="$BUNDLE_FILE.map"
+fi
 if [ ! -f "$MAP_FILE" ]; then
   echo "Error: Source map main.jsbundle.map could not be found."
   echo "Ensure the --sourcemap-output option is passed to the react-native bundle command."
