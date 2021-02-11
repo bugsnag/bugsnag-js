@@ -242,11 +242,11 @@ Lorem ipsum dolor sit amet.
     expect(payloads[0].events[0]._metadata.script.content).toEqual(scriptContent)
   })
 
-  it('doesn’t add a "script" tab to errors with no stacktrace', () => {
+  it('doesn’t add a "script" tab to errors with no stacktrace when currentScript=null', () => {
     const scriptContent = 'throw new Error(\'oh\')\nconsole.log(\'next\')'
     const document = {
       scripts: [{ innerHTML: scriptContent }],
-      currentScript: { innerHTML: scriptContent },
+      currentScript: null,
       documentElement: {
         outerHTML: `<script>${scriptContent}</script>`
       }

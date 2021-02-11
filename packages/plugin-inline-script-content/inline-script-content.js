@@ -11,7 +11,11 @@ module.exports = (doc = document, win = window) => ({
 
     const originalLocation = win.location.href
     let html = ''
-    let DOMContentLoaded = doc.readyState !== 'loading'
+
+    // in IE8-10 the 'interactive' state can fire too soon (before scripts have finished executing), so in those
+    // we wait for the 'complete' state before assuming that synchronous scripts are no longer executing
+    const isOldIe = !!doc.attachEvent
+    let DOMContentLoaded = isOldIe ? doc.readyState === 'complete' : doc.readyState !== 'loading'
     const getHtml = () => doc.documentElement.outerHTML
 
     // get whatever HTML exists at this point in time
@@ -62,11 +66,8 @@ module.exports = (doc = document, win = window) => ({
 
       const frame = event.errors[0].stacktrace[0]
 
-      // if there are no frames, we can't tell whether this is an inline script
-      if (!frame) return
-
       // if frame.file exists and is not the original location of the page, this can't be an inline script
-      if (frame && (frame.file && frame.file.replace(/#.*$/, '')) !== originalLocation.replace(/#.*$/, '')) return
+      if (frame && frame.file && frame.file.replace(/#.*$/, '') !== originalLocation.replace(/#.*$/, '')) return
 
       // grab the last script known to have run
       const currentScript = getCurrentScript()
@@ -77,11 +78,12 @@ module.exports = (doc = document, win = window) => ({
           'content',
           content.length <= MAX_SCRIPT_LENGTH ? content : content.substr(0, MAX_SCRIPT_LENGTH)
         )
-      }
 
-      // only attempt to grab some surrounding code if we have a line number
-      if (!frame.lineNumber) return
-      frame.code = addSurroundingCode(frame.lineNumber)
+        // only attempt to grab some surrounding code if we have a line number
+        if (frame && frame.lineNumber) {
+          frame.code = addSurroundingCode(frame.lineNumber)
+        }
+      }
     }, true)
 
     // Proxy all the timer functions whose callback is their 0th argument.

@@ -1,8 +1,22 @@
 window.onload = function () {
   var bugsnagScript = document.createElement('SCRIPT')
   bugsnagScript.src = '/node_modules/@bugsnag/browser/dist/bugsnag.min.js'
-  document.body.appendChild(bugsnagScript)
-  bugsnagScript.onload = function () {
+  document.documentElement.appendChild(bugsnagScript)
+
+  if (!document.attachEvent) {
+    bugsnagScript.onload = onScriptLoad
+  } else {
+    // onload doesn't fire in old IE
+    if (/^loaded|complete$/.test(bugsnagScript.readyState)) {
+      onScriptLoad()
+    } else {
+      bugsnagScript.onreadystatechange = function () {
+        if (/^loaded|complete$/.test(bugsnagScript.readyState)) onScriptLoad()
+      }
+    }
+  }
+
+  function onScriptLoad () {
     Bugsnag.start({
       apiKey: API_KEY,
       endpoints: { notify: NOTIFY, sessions: SESSIONS }
