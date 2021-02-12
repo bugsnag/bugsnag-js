@@ -98,6 +98,7 @@ const getRequestAndMetadataFromCtx = ctx => {
       clientIp: requestInfo.clientIp,
       headers: requestInfo.headers,
       httpMethod: requestInfo.httpMethod,
+      httpVersion: requestInfo.httpVersion,
       url: requestInfo.url,
       referer: requestInfo.referer
     }
