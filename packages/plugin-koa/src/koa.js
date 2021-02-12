@@ -94,6 +94,7 @@ const getRequestAndMetadataFromCtx = ctx => {
   return {
     metadata: requestInfo,
     request: {
+      body: requestInfo.body,
       clientIp: requestInfo.clientIp,
       headers: requestInfo.headers,
       httpMethod: requestInfo.httpMethod,
