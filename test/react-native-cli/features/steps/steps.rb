@@ -233,7 +233,7 @@ end
 
 Then("the JavaScript layer contains the bugsnag initialisation code") do
   steps %Q{
-    Then the interactive file 'index.js' contains
+    Then the interactive file 'index.js' contains:
       """
       import Bugsnag from "@bugsnag/react-native";
       Bugsnag.start();
@@ -243,7 +243,7 @@ end
 
 Then("the JavaScript layer does not contain the bugsnag initialisation code") do
   steps %Q{
-    Then the interactive file 'index.js' does not contain
+    Then the interactive file 'index.js' does not contain:
       """
       import Bugsnag from "@bugsnag/react-native";
       Bugsnag.start();
