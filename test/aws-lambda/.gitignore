@@ -1,0 +1,3 @@
+.aws-sam
+node_modules/
+.tgz
