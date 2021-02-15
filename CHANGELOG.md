@@ -9,6 +9,10 @@
   - Fix a rare crash that could occur in the event of JSON parsing failures. [bugsnag-cocoa#987](https://github.com/bugsnag/bugsnag-cocoa/pull/987)
 - (plugin-vue): Add support for Vue 3 [#1280](https://github.com/bugsnag/bugsnag-js/pull/1280)
 
+### Fixed
+
+- (plugin-inline-script-content): Ensure inline script content isn't included when the DOM `onreadystatechange` `interactive` event is missed. [#1290](https://github.com/bugsnag/bugsnag-js/pull/1290)
+
 ## v7.6.1 (2021-01-26)
 
 ## Changed
