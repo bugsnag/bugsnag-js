@@ -24,7 +24,7 @@ RUN npm pack --verbose packages/plugin-restify/
 FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v3-cli as node-maze-runner
 WORKDIR /app/
 COPY packages/node/ .
-COPY test/node test/node
+COPY test/node/features test/node/features
 COPY --from=node-feature-builder /app/*.tgz ./
 RUN for d in test/node/features/fixtures/*/; do cp /app/*.tgz "$d"; done
 

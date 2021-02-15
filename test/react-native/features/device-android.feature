@@ -3,7 +3,7 @@ Feature: Android Device data
 
 Scenario: Handled JS error
   When I run "DeviceJsHandledScenario"
-  Then I wait to receive a request
+  Then I wait to receive an error
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "DeviceJsHandledScenario"
   And the event "unhandled" is false
@@ -27,7 +27,7 @@ Scenario: Handled JS error
 Scenario: Unhandled JS error
   When I run "DeviceJsUnhandledScenario" and relaunch the app
   And I configure Bugsnag for "DeviceJsUnhandledScenario"
-  Then I wait to receive a request
+  Then I wait to receive an error
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "DeviceJsUnhandledScenario"
   And the event "unhandled" is true
@@ -51,7 +51,7 @@ Scenario: Unhandled JS error
 Scenario: Handled native error
   When I run "DeviceNativeHandledScenario"
   And I configure Bugsnag for "DeviceNativeHandledScenario"
-  Then I wait to receive a request
+  Then I wait to receive an error
   And the exception "errorClass" equals "java.lang.RuntimeException"
   And the exception "message" equals "DeviceNativeHandledScenario"
   And the event "unhandled" is false
@@ -75,7 +75,7 @@ Scenario: Handled native error
 Scenario: Unhandled native error
   When I run "DeviceNativeUnhandledScenario" and relaunch the app
   And I configure Bugsnag for "DeviceNativeUnhandledScenario"
-  Then I wait to receive a request
+  Then I wait to receive an error
   And the exception "errorClass" equals "java.lang.RuntimeException"
   And the exception "message" equals "DeviceNativeUnhandledScenario"
   And the event "unhandled" is true

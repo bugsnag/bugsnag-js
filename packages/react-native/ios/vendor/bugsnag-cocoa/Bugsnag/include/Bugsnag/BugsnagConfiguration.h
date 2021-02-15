@@ -98,6 +98,9 @@ typedef BOOL (^BugsnagOnSessionBlock)(BugsnagSession *_Nonnull session);
 // MARK: - BugsnagConfiguration
 // =============================================================================
 
+/**
+ * Contains user-provided configuration, including API key and endpoints.
+ */
 @interface BugsnagConfiguration : NSObject <BugsnagMetadataStore>
 
 /**
@@ -125,18 +128,18 @@ typedef BOOL (^BugsnagOnSessionBlock)(BugsnagSession *_Nonnull session);
 /**
  *  The API key of a Bugsnag project
  */
-@property(readwrite, retain, nonnull) NSString *apiKey;
+@property (copy, nonatomic) NSString *apiKey;
 
 /**
  *  The release stage of the application, such as production, development, beta
  *  et cetera
  */
-@property(readwrite, retain, nullable) NSString *releaseStage;
+@property (copy, nullable, nonatomic) NSString *releaseStage;
 
 /**
  *  Release stages which are allowed to notify Bugsnag
  */
-@property(readwrite, retain, nullable) NSSet<NSString *> *enabledReleaseStages;
+@property (copy, nullable, nonatomic) NSSet<NSString *> *enabledReleaseStages;
 
 /**
  * Sets which values should be removed from any Metadata objects before
@@ -147,7 +150,7 @@ typedef BOOL (^BugsnagOnSessionBlock)(BugsnagSession *_Nonnull session);
  * By default, redactedKeys is set to ["password"]. Both string literals and regex
  * values can be supplied to this property.
  */
-@property(readwrite, retain, nullable) NSSet<id> *redactedKeys;
+@property (copy, nullable, nonatomic) NSSet<id> *redactedKeys;
 
 /**
  * A set of strings and / or NSRegularExpression objects that determine which errors should
@@ -161,17 +164,17 @@ typedef BOOL (^BugsnagOnSessionBlock)(BugsnagSession *_Nonnull session);
  * signal names like "SIGABRT", mach exception names like "EXC_BREAKPOINT", and Swift
  * error names like "Fatal error".
  */
-@property(readwrite, copy, nullable) NSSet<id> *discardClasses;
+@property (copy, nullable, nonatomic) NSSet<id> *discardClasses;
 
 /**
  *  A general summary of what was occuring in the application
  */
-@property(readwrite, retain, nullable) NSString *context;
+@property (copy, nullable, nonatomic) NSString *context;
 
 /**
  *  The version of the application
  */
-@property(readwrite, retain, nullable) NSString *appVersion;
+@property (copy, nullable, nonatomic) NSString *appVersion;
 
 /**
  *  The URL session used to send requests to Bugsnag.
@@ -214,9 +217,9 @@ typedef BOOL (^BugsnagOnSessionBlock)(BugsnagSession *_Nonnull session);
 /**
  * The app's bundleVersion, set from the CFBundleVersion.  Equivalent to `versionCode` on Android.
  */
-@property (readwrite, retain, nullable) NSString *bundleVersion;
+@property (copy, nullable, nonatomic) NSString *bundleVersion;
 
-@property(retain, nullable) NSString *appType;
+@property (copy, nullable, nonatomic) NSString *appType;
 
 /**
  * Sets the maximum number of events which will be stored. Once the threshold is reached,
@@ -256,7 +259,7 @@ typedef BOOL (^BugsnagOnSessionBlock)(BugsnagSession *_Nonnull session);
  * A class defining the types of error that are reported. By default,
  * all properties are true.
  */
-@property BugsnagErrorTypes *_Nonnull enabledErrorTypes;
+@property (strong, nonatomic) BugsnagErrorTypes *enabledErrorTypes;
 
 /**
  * Set the endpoints to send data to. By default we'll send error reports to
@@ -267,7 +270,7 @@ typedef BOOL (^BugsnagOnSessionBlock)(BugsnagSession *_Nonnull session);
  * missing, an assertion will be thrown. If the session endpoint is missing, a warning will be
  * logged and sessions will not be sent automatically.
  */
-@property(nonnull, nonatomic) BugsnagEndpointConfiguration *endpoints;
+@property (strong, nonatomic) BugsnagEndpointConfiguration *endpoints;
 
 // =============================================================================
 // MARK: - User

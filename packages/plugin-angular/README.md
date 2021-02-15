@@ -6,46 +6,20 @@ This package enables you to integrate Bugsnag's error reporting with an Angular 
 
 Reported errors will contain useful debugging info from Angular's internals, such as the component and context.
 
-## Installation
+## Getting started
 
-```sh
-npm i --save @bugsnag/js @bugsnag/plugin-angular
-# or
-yarn add @bugsnag/js @bugsnag/plugin-angular
-```
-
-## Usage
-
-In your the root of your angular app, typically `app.module.ts`:
-
-```typescript
-// Import bugsnag-js and @bugsnag/plugin-angular
-import { BugsnagErrorHandler } from '@bugsnag/plugin-angular'
-import Bugsnag from 'bugsnag-js'
-
-// configure Bugsnag ASAP, before any other imports
-Bugsnag.start('API_KEY')
-
-// create a factory which will return the Bugsnag error handler
-export function errorHandlerFactory() {
-  return new BugsnagErrorHandler()
-}
-
-import { ErrorHandler, NgModule } from '@angular/core'
-// ... other imports omitted for brevity
-
-@NgModule({
-  /* Pass the BugsnagErrorHandler class along to the providers for your module */
-  providers: [ { provide: ErrorHandler, useFactory: errorHandlerFactory } ]
-  /* other properties passed to the decorator omitted for brevity */
-})
-```
+1. [Create a Bugsnag account](https://www.bugsnag.com)
+2. Complete the instructions in the [integration guide](https://docs.bugsnag.com/platforms/javascript/angular/)
+3. Report handled exceptions using
+   [`Bugsnag.notify()`](https://docs.bugsnag.com/platforms/javascript/angular/#reporting-handled-errors)
+4. Customize your integration using the
+   [configuration options](https://docs.bugsnag.com/platforms/javascript/angular/configuration-options/)
 
 ## Support
 
-* Check out the [documentation](https://docs.bugsnag.com/platforms/browsers/)
+* Check out the [documentation](https://docs.bugsnag.com/platforms/javascript/angular/)
 * [Search open and closed issues](https://github.com/bugsnag/bugsnag-js/issues?q=is%3Aissue) for similar problems
-* [Report a bug or request a feature](https://github.com/bugsnag/bugsnag-js/issues/new)
+* [Report a bug or request a feature](https://github.com/bugsnag/bugsnag-js/issues/new/choose)
 
 ## License
 

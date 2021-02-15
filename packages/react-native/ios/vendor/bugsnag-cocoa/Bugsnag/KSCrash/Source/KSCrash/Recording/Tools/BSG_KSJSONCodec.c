@@ -185,6 +185,7 @@ int bsg_ksjsoncodec_i_appendEscapedString(
             } else {
                 *dst++ = *src;
             }
+            break;
         }
     }
     size_t encLength = (size_t)(dst - workBuffer);

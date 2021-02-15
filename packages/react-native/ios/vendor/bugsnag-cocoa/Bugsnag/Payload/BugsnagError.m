@@ -25,8 +25,6 @@ NSString *_Nonnull BSGSerializeErrorType(BSGErrorType errorType) {
             return @"c";
         case BSGErrorTypeReactNativeJs:
             return @"reactnativejs";
-        default:
-            return nil;
     }
 }
 

@@ -195,6 +195,7 @@ steps:
       artifacts#v1.2.0:
         download: "build/rn0.60.apk"
       docker-compose#v3.3.0:
+        pull: react-native-maze-runner
         run: react-native-maze-runner
         use-aliases: true
         command:
@@ -202,8 +203,6 @@ steps:
         - --farm=bs
         - --device=ANDROID_9_0
         - --a11y-locator
-        - --username=$BROWSER_STACK_USERNAME
-        - --access-key=$BROWSER_STACK_ACCESS_KEY
         - --fail-fast
         - --resilient
     env:
@@ -217,7 +216,8 @@ steps:
     plugins:
       artifacts#v1.2.0:
         download: "build/rn0.60.ipa"
-      docker-compose#v3.1.0:
+      docker-compose#v3.7.0:
+        pull: react-native-maze-runner
         run: react-native-maze-runner
         use-aliases: true
         command:
@@ -226,8 +226,6 @@ steps:
         - --device=IOS_12
         - --a11y-locator
         - --appium-version=1.18.0
-        - --username=$BROWSER_STACK_USERNAME
-        - --access-key=$BROWSER_STACK_ACCESS_KEY
         - --fail-fast
         - --resilient
     env:
@@ -242,6 +240,7 @@ steps:
       artifacts#v1.2.0:
         download: "build/rn0.63.apk"
       docker-compose#v3.3.0:
+        pull: react-native-maze-runner
         run: react-native-maze-runner
         use-aliases: true
         command:
@@ -249,8 +248,6 @@ steps:
         - --farm=bs
         - --device=ANDROID_9_0
         - --a11y-locator
-        - --username=$BROWSER_STACK_USERNAME
-        - --access-key=$BROWSER_STACK_ACCESS_KEY
         - --fail-fast
         - --resilient
     env:
@@ -264,7 +261,8 @@ steps:
     plugins:
       artifacts#v1.2.0:
         download: "build/rn0.63.ipa"
-      docker-compose#v3.1.0:
+      docker-compose#v3.7.0:
+        pull: react-native-maze-runner
         run: react-native-maze-runner
         use-aliases: true
         command:
@@ -273,8 +271,6 @@ steps:
         - --device=IOS_12
         - --a11y-locator
         - --appium-version=1.18.0
-        - --username=$BROWSER_STACK_USERNAME
-        - --access-key=$BROWSER_STACK_ACCESS_KEY
         - --fail-fast
         - --resilient
     env:
@@ -289,6 +285,7 @@ steps:
       artifacts#v1.2.0:
         download: "build/r_navigation_0.60.apk"
       docker-compose#v3.3.0:
+        pull: react-native-maze-runner
         run: react-native-maze-runner
         use-aliases: true
         command:
@@ -296,8 +293,6 @@ steps:
         - --farm=bs
         - --device=ANDROID_9_0
         - --a11y-locator
-        - --username=$BROWSER_STACK_USERNAME
-        - --access-key=$BROWSER_STACK_ACCESS_KEY
         - --fail-fast
         - --resilient
         - features/navigation.feature
@@ -312,7 +307,8 @@ steps:
     plugins:
       artifacts#v1.2.0:
         download: "build/r_navigation_0.60.ipa"
-      docker-compose#v3.1.0:
+      docker-compose#v3.7.0:
+        pull: react-native-maze-runner
         run: react-native-maze-runner
         use-aliases: true
         command:
@@ -321,8 +317,6 @@ steps:
           - --device=IOS_12
           - --a11y-locator
           - --appium-version=1.18.0
-          - --username=$BROWSER_STACK_USERNAME
-          - --access-key=$BROWSER_STACK_ACCESS_KEY
           - --fail-fast
           - --resilient
           - features/navigation.feature
@@ -336,6 +330,7 @@ steps:
       artifacts#v1.2.0:
         download: "build/r_navigation_0.63.apk"
       docker-compose#v3.3.0:
+        pull: react-native-maze-runner
         run: react-native-maze-runner
         use-aliases: true
         command:
@@ -343,8 +338,6 @@ steps:
         - --farm=bs
         - --device=ANDROID_9_0
         - --a11y-locator
-        - --username=$BROWSER_STACK_USERNAME
-        - --access-key=$BROWSER_STACK_ACCESS_KEY
         - --fail-fast
         - --resilient
         - features/navigation.feature
@@ -359,7 +352,8 @@ steps:
     plugins:
       artifacts#v1.2.0:
         download: "build/r_navigation_0.63.ipa"
-      docker-compose#v3.1.0:
+      docker-compose#v3.7.0:
+        pull: react-native-maze-runner
         run: react-native-maze-runner
         use-aliases: true
         command:
@@ -368,8 +362,6 @@ steps:
           - --device=IOS_13
           - --a11y-locator
           - --appium-version=1.18.0
-          - --username=$BROWSER_STACK_USERNAME
-          - --access-key=$BROWSER_STACK_ACCESS_KEY
           - --fail-fast
           - --resilient
           - features/navigation.feature
@@ -383,6 +375,7 @@ steps:
       artifacts#v1.2.0:
         download: "build/r_native_navigation_0.60.apk"
       docker-compose#v3.3.0:
+        pull: react-native-maze-runner
         run: react-native-maze-runner
         use-aliases: true
         command:
@@ -390,8 +383,6 @@ steps:
         - --farm=bs
         - --device=ANDROID_9_0
         - --a11y-locator
-        - --username=$BROWSER_STACK_USERNAME
-        - --access-key=$BROWSER_STACK_ACCESS_KEY
         - --fail-fast
         - --resilient
         - features/navigation.feature
@@ -406,7 +397,8 @@ steps:
     plugins:
       artifacts#v1.2.0:
         download: "build/r_native_navigation_0.60.ipa"
-      docker-compose#v3.1.0:
+      docker-compose#v3.7.0:
+        pull: react-native-maze-runner
         run: react-native-maze-runner
         use-aliases: true
         command:
@@ -415,8 +407,6 @@ steps:
           - --device=IOS_13
           - --appium-version=1.18.0
           - --a11y-locator
-          - --username=$BROWSER_STACK_USERNAME
-          - --access-key=$BROWSER_STACK_ACCESS_KEY
           - --fail-fast
           - --resilient
           - features/navigation.feature
@@ -430,6 +420,7 @@ steps:
       artifacts#v1.2.0:
         download: "build/r_native_navigation_0.63.apk"
       docker-compose#v3.3.0:
+        pull: react-native-maze-runner
         run: react-native-maze-runner
         use-aliases: true
         command:
@@ -437,8 +428,6 @@ steps:
         - --farm=bs
         - --device=ANDROID_9_0
         - --a11y-locator
-        - --username=$BROWSER_STACK_USERNAME
-        - --access-key=$BROWSER_STACK_ACCESS_KEY
         - --fail-fast
         - --resilient
         - features/navigation.feature
@@ -453,7 +442,8 @@ steps:
     plugins:
       artifacts#v1.2.0:
         download: "build/r_native_navigation_0.63.ipa"
-      docker-compose#v3.1.0:
+      docker-compose#v3.7.0:
+        pull: react-native-maze-runner
         run: react-native-maze-runner
         use-aliases: true
         command:
@@ -462,8 +452,6 @@ steps:
           - --device=IOS_13
           - --a11y-locator
           - --appium-version=1.18.0
-          - --username=$BROWSER_STACK_USERNAME
-          - --access-key=$BROWSER_STACK_ACCESS_KEY
           - --fail-fast
           - --resilient
           - features/navigation.feature

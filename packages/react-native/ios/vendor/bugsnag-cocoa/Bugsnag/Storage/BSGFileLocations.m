@@ -71,19 +71,23 @@ static NSString *getAndCreateSubdir(NSString *rootPath, NSString *relativePath) 
 }
 
 + (instancetype) v1 {
-    NSString *root = rootDirectory(@"v1");
-    BSGFileLocations *inst = [[BSGFileLocations alloc] init];
-    inst->_sessions = getAndCreateSubdir(root, @"sessions");
-    inst->_breadcrumbs = getAndCreateSubdir(root, @"breadcrumbs");
-    inst->_kscrashReports = getAndCreateSubdir(root, @"KSCrashReports");
-    inst->_kvStore = getAndCreateSubdir(root, @"kvstore");
-    inst->_flagHandledCrash = [root stringByAppendingPathComponent:@"bugsnag_handled_crash.txt"];
-    inst->_configuration = [root stringByAppendingPathComponent:@"config.json"];
-    inst->_metadata = [root stringByAppendingPathComponent:@"metadata.json"];
-    inst->_state = [root stringByAppendingPathComponent:@"state.json"];
-    inst->_systemState = [root stringByAppendingPathComponent:@"system_state.json"];
+    return [[BSGFileLocations alloc] initWithVersion1];
+}
 
-    return inst;
+- (instancetype)initWithVersion1 {
+    if (self = [super init]) {
+        NSString *root = rootDirectory(@"v1");
+        _sessions = getAndCreateSubdir(root, @"sessions");
+        _breadcrumbs = getAndCreateSubdir(root, @"breadcrumbs");
+        _kscrashReports = getAndCreateSubdir(root, @"KSCrashReports");
+        _kvStore = getAndCreateSubdir(root, @"kvstore");
+        _flagHandledCrash = [root stringByAppendingPathComponent:@"bugsnag_handled_crash.txt"];
+        _configuration = [root stringByAppendingPathComponent:@"config.json"];
+        _metadata = [root stringByAppendingPathComponent:@"metadata.json"];
+        _state = [root stringByAppendingPathComponent:@"state.json"];
+        _systemState = [root stringByAppendingPathComponent:@"system_state.json"];
+    }
+    return self;
 }
 
 @end

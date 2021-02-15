@@ -33,6 +33,9 @@
 #endif
 #endif
 
+/**
+ * Types of breadcrumbs
+ */
 typedef NS_ENUM(NSUInteger, BSGBreadcrumbType) {
     /**
      *  Any breadcrumb sent via Bugsnag.leaveBreadcrumb()
@@ -89,14 +92,33 @@ typedef NS_OPTIONS(NSUInteger, BSGEnabledBreadcrumbType) {
                                 | BSGEnabledBreadcrumbTypeError,
 };
 
+/**
+ * A short log message, representing an action that occurred in your app, to aid with debugging.
+ */
 @class BugsnagBreadcrumb;
 
 @interface BugsnagBreadcrumb : NSObject
 
+/**
+ * The date when the breadcrumb was left
+ */
 @property(readonly, nullable) NSDate *timestamp;
+
+/**
+ * The type of breadcrumb
+ */
 @property(readwrite) BSGBreadcrumbType type;
+
+/**
+ * The description of the breadcrumb
+ */
 @property(readwrite, copy, nonnull) NSString *message;
+
+/**
+ * Diagnostic data relating to the breadcrumb.
+ * 
+ * The dictionary should be a valid JSON object.
+ */
 @property(readwrite, copy, nonnull) NSDictionary *metadata;
+
 @end
-
-
