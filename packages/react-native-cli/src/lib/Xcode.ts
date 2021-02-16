@@ -76,7 +76,7 @@ async function addUploadSourceMapsTask (
     }
   }
 
-  let shellScript = '../node_modules/@bugsnag/react-native/bugsnag-react-native-xcode.sh'
+  let shellScript = 'SOURCE_MAP="$TMPDIR/$(md5 -qs "$CONFIGURATION_BUILD_DIR")-main.jsbundle.map" ../node_modules/@bugsnag/react-native/bugsnag-react-native-xcode.sh'
 
   if (endpoint) {
     shellScript = `export ENDPOINT='${endpoint}'\\n${shellScript}`
