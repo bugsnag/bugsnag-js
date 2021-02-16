@@ -80,7 +80,7 @@ static char *read_json_string_value(napi_env env, napi_value arg,
 }
 
 static void set_object_or_null(napi_env env, napi_value obj,
-                               void (*setter)(const char *)) {
+                               BECS_STATUS (*setter)(const char *)) {
   napi_valuetype valuetype;
   napi_status status = napi_typeof(env, obj, &valuetype);
   assert(status == napi_ok);
