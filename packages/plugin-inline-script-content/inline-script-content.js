@@ -11,7 +11,11 @@ module.exports = (doc = document, win = window) => ({
 
     const originalLocation = win.location.href
     let html = ''
-    let DOMContentLoaded = false
+
+    // in IE8-10 the 'interactive' state can fire too soon (before scripts have finished executing), so in those
+    // we wait for the 'complete' state before assuming that synchronous scripts are no longer executing
+    const isOldIe = !!doc.attachEvent
+    let DOMContentLoaded = isOldIe ? doc.readyState === 'complete' : doc.readyState !== 'loading'
     const getHtml = () => doc.documentElement.outerHTML
 
     // get whatever HTML exists at this point in time
@@ -74,11 +78,12 @@ module.exports = (doc = document, win = window) => ({
           'content',
           content.length <= MAX_SCRIPT_LENGTH ? content : content.substr(0, MAX_SCRIPT_LENGTH)
         )
-      }
 
-      // only attempt to grab some surrounding code if we have a line number
-      if (!frame || !frame.lineNumber) return
-      frame.code = addSurroundingCode(frame.lineNumber)
+        // only attempt to grab some surrounding code if we have a line number
+        if (frame && frame.lineNumber) {
+          frame.code = addSurroundingCode(frame.lineNumber)
+        }
+      }
     }, true)
 
     // Proxy all the timer functions whose callback is their 0th argument.
