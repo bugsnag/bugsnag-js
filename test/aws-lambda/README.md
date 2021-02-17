@@ -1,10 +1,12 @@
 ## Setup
 
-Install Maze Runner:
+1. [Install the AWS SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html)
 
-```sh
-$ bundle install
-```
+1. Install Maze Runner:
+
+    ```sh
+    $ bundle install
+    ```
 
 ## Running the tests
 
