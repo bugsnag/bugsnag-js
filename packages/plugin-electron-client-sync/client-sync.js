@@ -1,30 +1,46 @@
 module.exports = (NativeClient) => ({
   load: (client) => {
     client.addOnBreadcrumb(breadcrumb => {
-      NativeClient.leaveBreadcrumb(breadcrumb)
+      try {
+        NativeClient.leaveBreadcrumb(breadcrumb)
+      } catch (e) {
+        client._logger.error(e)
+      }
     }, true)
 
     const origSetUser = client.setUser
     client.setUser = function () {
       const ret = origSetUser.apply(this, arguments)
-      NativeClient.updateUser(this._user.id, this._user.email, this._user.name)
+      try {
+        NativeClient.updateUser(this._user.id, this._user.email, this._user.name)
+      } catch (e) {
+        client._logger.error(e)
+      }
       return ret
     }
 
     const origSetContext = client.setContext
     client.setContext = function (context) {
       const ret = origSetContext.apply(this, arguments)
-      NativeClient.updateContext(context)
+      try {
+        NativeClient.updateContext(context)
+      } catch (e) {
+        client._logger.error(e)
+      }
       return ret
     }
 
     const origAddMetadata = client.addMetadata
     client.addMetadata = function (section, key, value) {
       const ret = origAddMetadata.apply(this, arguments)
-      if (typeof key === 'object') {
-        NativeClient.addMetadata(section, key)
-      } else {
-        NativeClient.addMetadata(section, { [key]: value })
+      try {
+        if (typeof key === 'object') {
+          NativeClient.addMetadata(section, key)
+        } else {
+          NativeClient.addMetadata(section, { [key]: value })
+        }
+      } catch (e) {
+        client._logger.error(e)
       }
       return ret
     }
@@ -32,7 +48,11 @@ module.exports = (NativeClient) => ({
     const origClearMetadata = client.clearMetadata
     client.clearMetadata = function (section, key) {
       const ret = origClearMetadata.apply(this, arguments)
-      NativeClient.clearMetadata(section, key)
+      try {
+        NativeClient.clearMetadata(section, key)
+      } catch (e) {
+        client._logger.error(e)
+      }
       return ret
     }
   }
