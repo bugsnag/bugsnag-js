@@ -1,6 +1,27 @@
 Changelog
 =========
 
+## 6.6.3 (2021-02-17)
+
+### Bug fixes
+
+* Fix hang after receiving signals in some cases.
+  [1002](https://github.com/bugsnag/bugsnag-cocoa/pull/1002)
+
+* Improve performance of thread recording for handled errors.
+  [#992](https://github.com/bugsnag/bugsnag-cocoa/pull/992)
+
+## 6.6.2 (2021-02-10)
+
+### Bug fixes
+
+* Fix a tvOS file permission error that was introduced in 6.5.1
+  [#996](https://github.com/bugsnag/bugsnag-cocoa/pull/996)
+* Fix an analyzer warning.
+  [#994](https://github.com/bugsnag/bugsnag-cocoa/pull/994)
+* Stop Bugsnag unregistering other signal handlers when catching a mach exception.
+  [#976](https://github.com/bugsnag/bugsnag-cocoa/pull/976)
+
 ## 6.6.1 (2021-02-03)
 
 ### Bug fixes

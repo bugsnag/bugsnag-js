@@ -1,5 +1,13 @@
 # Changelog
 
+##TBD
+
+### Changed
+
+- (react-native): Update bugsnag-cocoa to v6.6.3
+  - Fix hang after receiving signals in some cases. [bugsnag-cocoa1002](https://github.com/bugsnag/bugsnag-cocoa/pull/1002)
+  - Improve performance of thread recording for handled errors. [bugsnag-cocoa#992](https://github.com/bugsnag/bugsnag-cocoa/pull/992)
+
 ## v7.7.0 (2021-02-15)
 
 ### Changed
