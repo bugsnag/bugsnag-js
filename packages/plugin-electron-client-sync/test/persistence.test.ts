@@ -22,7 +22,7 @@ describe('persisting changes to disk', () => {
 
   afterEach(async (done) => {
     NativeClient.uninstall()
-    await rmdir(tempdir, {recursive: true})
+    await rmdir(tempdir, { recursive: true })
     done()
   })
 
@@ -30,7 +30,7 @@ describe('persisting changes to disk', () => {
     NativeClient.updateContext('silverfish')
     NativeClient.persistState()
     const state = await readTempFile()
-    expect(state['context']).toBe('silverfish')
+    expect(state.context).toBe('silverfish')
     done()
   })
 
@@ -38,7 +38,7 @@ describe('persisting changes to disk', () => {
     NativeClient.updateUser('456', 'jo@example.com', 'jo')
     NativeClient.persistState()
     const state = await readTempFile()
-    expect(state['user']).toEqual({id: '456', name: 'jo', email: 'jo@example.com'})
+    expect(state.user).toEqual({ id: '456', name: 'jo', email: 'jo@example.com' })
     done()
   })
 
@@ -47,7 +47,7 @@ describe('persisting changes to disk', () => {
     NativeClient.updateUser('456', 'jo@example.com', null)
     NativeClient.persistState()
     const state = await readTempFile()
-    expect(state['user']).toEqual({id: '456', email: 'jo@example.com'})
+    expect(state.user).toEqual({ id: '456', email: 'jo@example.com' })
     done()
   })
 
@@ -56,26 +56,26 @@ describe('persisting changes to disk', () => {
     NativeClient.updateContext(null)
     NativeClient.persistState()
     const state = await readTempFile()
-    expect(state['context']).toBeUndefined()
+    expect(state.context).toBeUndefined()
     done()
   })
 
   it('adds breadcrumbs', async (done) => {
-    NativeClient.leaveBreadcrumb({name: 'launch app'})
-    NativeClient.leaveBreadcrumb({name: 'click start'})
-    NativeClient.leaveBreadcrumb({name: 'click pause'})
-    NativeClient.leaveBreadcrumb({name: 'go to background'})
-    NativeClient.leaveBreadcrumb({name: 'go to foreground'})
-    NativeClient.leaveBreadcrumb({name: 'resume'})
+    NativeClient.leaveBreadcrumb({ name: 'launch app' })
+    NativeClient.leaveBreadcrumb({ name: 'click start' })
+    NativeClient.leaveBreadcrumb({ name: 'click pause' })
+    NativeClient.leaveBreadcrumb({ name: 'go to background' })
+    NativeClient.leaveBreadcrumb({ name: 'go to foreground' })
+    NativeClient.leaveBreadcrumb({ name: 'resume' })
     NativeClient.persistState()
 
     const state = await readTempFile()
-    expect(state['breadcrumbs']).toEqual([
-      {'name': 'click start'},
-      {'name': 'click pause'},
-      {'name': 'go to background'},
-      {'name': 'go to foreground'},
-      {'name': 'resume'},
+    expect(state.breadcrumbs).toEqual([
+      { name: 'click start' },
+      { name: 'click pause' },
+      { name: 'go to background' },
+      { name: 'go to foreground' },
+      { name: 'resume' }
     ])
     done()
   })
@@ -86,10 +86,10 @@ describe('persisting changes to disk', () => {
     NativeClient.persistState()
 
     const state = await readTempFile()
-    expect(state['metadata']).toEqual({
+    expect(state.metadata).toEqual({
       terrain: {
         current: 'cave',
-        spawn: 'desert',
+        spawn: 'desert'
       }
     })
     done()
@@ -103,7 +103,7 @@ describe('persisting changes to disk', () => {
     NativeClient.persistState()
 
     const state = await readTempFile()
-    expect(state['metadata']).toEqual({
+    expect(state.metadata).toEqual({
       terrain: { current: 'cave' },
       device: { size: 256 }
     })
@@ -115,22 +115,22 @@ describe('persisting changes to disk', () => {
     NativeClient.setSession({
       id: '9f65c975-8155-456f-91e5-c4c4b3db0555',
       events: { handled: 1, unhandled: 0 },
-      startedAt: '2017-01-01T14:30:00.000Z',
+      startedAt: '2017-01-01T14:30:00.000Z'
     })
     NativeClient.persistState()
 
     let state = await readTempFile()
-    expect(state['session']).toEqual({
+    expect(state.session).toEqual({
       id: '9f65c975-8155-456f-91e5-c4c4b3db0555',
       events: { handled: 1, unhandled: 0 },
-      startedAt: '2017-01-01T14:30:00.000Z',
+      startedAt: '2017-01-01T14:30:00.000Z'
     })
 
     NativeClient.setSession(null)
     NativeClient.persistState()
 
     state = await readTempFile()
-    expect(state['session']).toBeUndefined()
+    expect(state.session).toBeUndefined()
 
     done()
   })
@@ -138,7 +138,7 @@ describe('persisting changes to disk', () => {
   it('has no session by default', async (done) => {
     NativeClient.persistState()
     const state = await readTempFile()
-    expect(state['session']).toBeUndefined()
+    expect(state.session).toBeUndefined()
 
     done()
   })
@@ -146,14 +146,14 @@ describe('persisting changes to disk', () => {
   it('sets app info', async (done) => {
     NativeClient.setApp({
       releaseStage: 'beta1',
-      version: '1.0.22',
+      version: '1.0.22'
     })
     NativeClient.persistState()
 
     const state = await readTempFile()
-    expect(state['app']).toEqual({
+    expect(state.app).toEqual({
       releaseStage: 'beta1',
-      version: '1.0.22',
+      version: '1.0.22'
     })
 
     done()
@@ -164,16 +164,16 @@ describe('persisting changes to disk', () => {
       online: true,
       osName: 'beOS',
       osVersion: 'R6',
-      totalMemory: 65536,
+      totalMemory: 65536
     })
     NativeClient.persistState()
 
     const state = await readTempFile()
-    expect(state['device']).toEqual({
+    expect(state.device).toEqual({
       online: true,
       osName: 'beOS',
       osVersion: 'R6',
-      totalMemory: 65536,
+      totalMemory: 65536
     })
 
     done()
