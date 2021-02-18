@@ -5,8 +5,11 @@
 ### Changed
 
 - (react-native): Update bugsnag-cocoa to v6.6.3
-  - Fix hang after receiving signals in some cases. [bugsnag-cocoa1002](https://github.com/bugsnag/bugsnag-cocoa/pull/1002)
-  - Improve performance of thread recording for handled errors. [bugsnag-cocoa#992](https://github.com/bugsnag/bugsnag-cocoa/pull/992)
+  - Improve performance of thread recording for handled errors [bugsnag-cocoa#992](https://github.com/bugsnag/bugsnag-cocoa/pull/992)
+  - Stop Bugsnag unregistering other signal handlers when catching a mach exception [bugsnag-cocoa#976](https://github.com/bugsnag/bugsnag-cocoa/pull/976)/[bugsnag-cocoa#1002](https://github.com/bugsnag/bugsnag-cocoa/pull/1002)
+  - Fix a tvOS file permission error that was introduced in 6.5.1 [bugsnag-cocoa#996](https://github.com/bugsnag/bugsnag-cocoa/pull/996)
+  - Fix an analyzer warning [bugsnag-cocoa#994](https://github.com/bugsnag/bugsnag-cocoa/pull/994)
+
 
 ## v7.7.0 (2021-02-15)
 
