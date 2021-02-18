@@ -310,20 +310,30 @@ static napi_value ClearMetadata(napi_env env, napi_callback_info info) {
   napi_status status = napi_get_cb_info(env, info, &argc, args, NULL, NULL);
   assert(status == napi_ok);
 
-  if (argc < 2) {
-    napi_throw_type_error(env, NULL, "Wrong number of arguments, expected 2");
+  if (argc < 1) {
+    napi_throw_type_error(env, NULL,
+                          "Wrong number of arguments, expected 1 or 2");
+
     return NULL;
   }
 
   char *tab = read_json_string_value(env, args[0], false);
-  char *key = read_json_string_value(env, args[1], false);
+  if (!tab) {
+    return NULL;
+  }
 
-  if (tab && key) {
-    throw_error_from_status(env, becs_set_metadata(tab, key, NULL));
+  if (argc == 1) {
+    throw_error_from_status(env, becs_set_metadata(tab, NULL, NULL));
+  } else {
+    char *key = read_json_string_value(env, args[1], false);
+
+    if (key) {
+      throw_error_from_status(env, becs_set_metadata(tab, key, NULL));
+    }
+    free(key);
   }
 
   free(tab);
-  free(key);
 
   return NULL;
 }

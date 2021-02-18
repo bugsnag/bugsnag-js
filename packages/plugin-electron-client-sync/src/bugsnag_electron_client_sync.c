@@ -157,18 +157,28 @@ BECS_STATUS becs_set_metadata(const char *tab, const char *key,
     return BECS_STATUS_NOT_INSTALLED;
   }
 
-  if (!tab || !key) {
+  if (!tab) {
     return BECS_STATUS_NULL_PARAM;
   }
-
-  // 11 == 'metadata' + 2 * '.' + null byte at the end
-  size_t length = strnlen(tab, 256) + strnlen(key, 256) + 11;
+  // Compute the length of the key, adding 1 for the '.' used to separate
+  // each component of keypath
+  size_t keylen = key ? strnlen(key, 256) + 1 : 0;
+  // Compute the nested route to inserting or removing the correct metadata,
+  // delimited by periods. This value ("keypath") can then be passed to the
+  // `dotset` and `dotremove` parson operators to set or remove the correct
+  // metadata value respectively.
+  // The keypath is in the format "metadata.tab(.key)", so the total length
+  // is `keylen` + the length of 'metadata.' + the length of tab + 1 for the
+  // trailing null byte
+  size_t length = strnlen(tab, 256) + keylen + 10;
   char *keypath = calloc(length, sizeof(char));
-  size_t bytes_written = snprintf(keypath, length, "metadata.%s.%s", tab, key);
-  if (!keypath) {
+  if (!keypath) { // failed to allocate the buffer length
     return BECS_STATUS_UNKNOWN_FAILURE;
   }
-  if (bytes_written != length - 1) {
+  size_t bytes_written =
+      key ? snprintf(keypath, length, "metadata.%s.%s", tab, key)
+          : snprintf(keypath, length, "metadata.%s", tab);
+  if (bytes_written != length - 1) { // failed to write the entire keypath
     free(keypath);
     return BECS_STATUS_UNKNOWN_FAILURE;
   }

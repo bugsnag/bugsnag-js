@@ -95,7 +95,7 @@ describe('persisting changes to disk', () => {
     done()
   })
 
-  it('clears metadata', async (done) => {
+  it('clears metadata key', async (done) => {
     NativeClient.addMetadata('terrain', 'spawn', 'desert')
     NativeClient.addMetadata('terrain', 'current', 'cave')
     NativeClient.addMetadata('device', 'size', 256)
@@ -105,6 +105,21 @@ describe('persisting changes to disk', () => {
     const state = await readTempFile()
     expect(state['metadata']).toEqual({
       terrain: { current: 'cave' },
+      device: { size: 256 }
+    })
+
+    done()
+  })
+
+  it('clears metadata tab', async (done) => {
+    NativeClient.addMetadata('terrain', 'spawn', 'desert')
+    NativeClient.addMetadata('terrain', 'current', 'cave')
+    NativeClient.addMetadata('device', 'size', 256)
+    NativeClient.clearMetadata('terrain')
+    NativeClient.persistState()
+
+    const state = await readTempFile()
+    expect(state['metadata']).toEqual({
       device: { size: 256 }
     })
 
