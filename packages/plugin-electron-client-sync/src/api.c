@@ -5,7 +5,6 @@
 #include <stdlib.h>
 
 #include "bugsnag_electron_client_sync.h"
-#include "js_native_api_types.h"
 
 static napi_value json_stringify(napi_env env, napi_value json_obj) {
   napi_value global;
@@ -79,8 +78,33 @@ static char *read_json_string_value(napi_env env, napi_value arg,
   }
 }
 
+static bool throw_error_from_status(napi_env env, BECS_STATUS status) {
+  const char *code = "BugsnagSyncError";
+  switch (status) {
+  case BECS_STATUS_SUCCESS:
+    return false;
+  case BECS_STATUS_INVALID_JSON:
+    napi_throw_error(env, code, "Failed to convert argument to JSON");
+    break;
+  case BECS_STATUS_EXPECTED_JSON_OBJECT:
+    napi_throw_type_error(env, code, "Wrong argument type, expected object");
+    break;
+  case BECS_STATUS_NULL_PARAM:
+    napi_throw_type_error(env, code, "Expected argument to be non-null");
+    break;
+  case BECS_STATUS_NOT_INSTALLED:
+    napi_throw_error(env, code,
+                     "Sync layer is not installed, first call install()");
+    break;
+  case BECS_STATUS_UNKNOWN_FAILURE:
+    napi_throw_error(env, code, "Failed to synchronize data");
+    break;
+  }
+  return true;
+}
+
 static void set_object_or_null(napi_env env, napi_value obj,
-                               void (*setter)(const char *)) {
+                               BECS_STATUS (*setter)(const char *)) {
   napi_valuetype valuetype;
   napi_status status = napi_typeof(env, obj, &valuetype);
   assert(status == napi_ok);
@@ -92,8 +116,10 @@ static void set_object_or_null(napi_env env, napi_value obj,
   case napi_object: {
     char *value = read_string_value(env, json_stringify(env, obj), false);
     if (value) {
-      setter(value);
+      throw_error_from_status(env, setter(value));
       free(value);
+    } else {
+      throw_error_from_status(env, BECS_STATUS_INVALID_JSON);
     }
   } break;
   default:
@@ -163,7 +189,7 @@ static napi_value UpdateContext(napi_env env, napi_callback_info info) {
 
   if (valuetype0 == napi_string) {
     char *context = read_string_value(env, args[0], false);
-    becs_set_context(context);
+    throw_error_from_status(env, becs_set_context(context));
     free(context);
   } else if (valuetype0 == napi_null) {
     becs_set_context(NULL);
@@ -189,7 +215,7 @@ static napi_value UpdateUser(napi_env env, napi_callback_info info) {
   char *id = read_string_value(env, args[0], true);
   char *email = read_string_value(env, args[1], true);
   char *name = read_string_value(env, args[2], true);
-  becs_set_user(id, email, name);
+  throw_error_from_status(env, becs_set_user(id, email, name));
 
   free(id);
   free(email);
@@ -210,10 +236,17 @@ static napi_value AddMetadata(napi_env env, napi_callback_info info) {
   }
 
   char *tab = read_string_value(env, args[0], false);
+  if (!tab) {
+    return NULL; // if null, error was thrown upstream
+  }
   char *key = read_string_value(env, args[1], false);
+  if (!key) {
+    free(tab);
+    return NULL;
+  }
   char *value = read_string_value(env, json_stringify(env, args[2]), true);
-  if (tab && key && value) {
-    becs_set_metadata(tab, key, value);
+  if (value) {
+    throw_error_from_status(env, becs_set_metadata(tab, key, value));
   }
 
   free(tab);
@@ -286,7 +319,7 @@ static napi_value ClearMetadata(napi_env env, napi_callback_info info) {
   char *key = read_json_string_value(env, args[1], false);
 
   if (tab && key) {
-    becs_set_metadata(tab, key, NULL);
+    throw_error_from_status(env, becs_set_metadata(tab, key, NULL));
   }
 
   free(tab);
@@ -308,7 +341,7 @@ static napi_value LeaveBreadcrumb(napi_env env, napi_callback_info info) {
 
   char *breadcrumb = read_json_string_value(env, args[0], false);
   if (breadcrumb) {
-    becs_add_breadcrumb(breadcrumb);
+    throw_error_from_status(env, becs_add_breadcrumb(breadcrumb));
     free(breadcrumb);
   }
 
