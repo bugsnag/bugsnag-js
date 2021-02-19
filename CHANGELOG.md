@@ -1,13 +1,20 @@
 # Changelog
 
-## TBD
+## v7.7.0 (2021-02-15)
 
 ### Changed
 
+- (react-native): Update bugsnag-android to v5.6.2
+  - Check additional JNI calls for pending exceptions and no-op [bugsnag-android#1133](https://github.com/bugsnag/bugsnag-android/pull/1133)
+  - Fix rare crash when loading device ID [bugsnag-android#1137](https://github.com/bugsnag/bugsnag-android/pull/1137)
 - (react-native): Update bugsnag-cocoa to v6.6.1
   - Fix compiler warnings when importing Bugsnag from Objective-C sources that do not use ARC. [bugsnag-cocoa#985](https://github.com/bugsnag/bugsnag-cocoa/pull/985)
   - Fix a rare crash that could occur in the event of JSON parsing failures. [bugsnag-cocoa#987](https://github.com/bugsnag/bugsnag-cocoa/pull/987)
 - (plugin-vue): Add support for Vue 3 [#1280](https://github.com/bugsnag/bugsnag-js/pull/1280)
+
+### Fixed
+
+- (plugin-inline-script-content): Ensure inline script content isn't included when the DOM `onreadystatechange` `interactive` event is missed. [#1290](https://github.com/bugsnag/bugsnag-js/pull/1290)
 
 ## v7.6.1 (2021-01-26)
 

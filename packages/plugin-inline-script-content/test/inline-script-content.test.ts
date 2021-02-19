@@ -241,4 +241,25 @@ Lorem ipsum dolor sit amet.
     expect(payloads[0].events[0]._metadata.script).toBeDefined()
     expect(payloads[0].events[0]._metadata.script.content).toEqual(scriptContent)
   })
+
+  it('doesn’t add a "script" tab to errors with no stacktrace when currentScript=null', () => {
+    const scriptContent = 'throw new Error(\'oh\')\nconsole.log(\'next\')'
+    const document = {
+      scripts: [{ innerHTML: scriptContent }],
+      currentScript: null,
+      documentElement: {
+        outerHTML: `<script>${scriptContent}</script>`
+      }
+    } as unknown as Document
+    const window = { location: { href: 'https://app.bugsnag.com/errors' } } as unknown as Window &typeof globalThis
+
+    const client = new Client({ apiKey: 'API_KEY_YEAH' }, undefined, [plugin(document, window)])
+    const payloads = []
+
+    expect(client._cbs.e.length).toBe(1)
+    client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload), sendSession: () => {} }))
+    client._notify(new Event('Error', 'oh', []))
+    expect(payloads.length).toEqual(1)
+    expect(payloads[0].events[0]._metadata.script).not.toBeDefined()
+  })
 })
