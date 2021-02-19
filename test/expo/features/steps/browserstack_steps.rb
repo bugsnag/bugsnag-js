@@ -17,7 +17,8 @@ end
 
 Then("the event {string} equals the current OS name") do |field_path|
   expected = Maze.driver.capabilities['os']
-  actual_value = Maze::Helper.read_key_path(Maze::Server.errors.current[:body], field_path)
+  key_path = "events.0.#{field_path}"
+  actual_value = Maze::Helper.read_key_path(Maze::Server.errors.current[:body], key_path)
 
   assert_equal(expected, actual_value)
 end
