@@ -1,0 +1,37 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: simple-app
+
+Globals:
+  Function:
+    Timeout: 30
+    Environment:
+      Variables:
+        BUGSNAG_API_KEY:
+
+Resources:
+  AsyncUnhandledExceptionFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: async/
+      Handler: unhandled-exception.lambdaHandler
+      Runtime: nodejs14.x
+      Events:
+        AsyncUnhandledException:
+          Type: Api
+          Properties:
+            Path: /async/unhandled/exception
+            Method: get
+
+  AsyncHandledExceptionFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: async/
+      Handler: handled-exception.lambdaHandler
+      Runtime: nodejs14.x
+      Events:
+        AsyncHandledException:
+          Type: Api
+          Properties:
+            Path: /async/handled/exception
+            Method: get
