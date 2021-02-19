@@ -1,5 +1,11 @@
 # Changelog
 
+## TBD
+
+### Changed
+
+- (plugin-koa): Ensure `ctx.request.body` is present on the event's request property by collecting it at the last possible moment [#1292](https://github.com/bugsnag/bugsnag-js/pull/1292)
+
 ## v7.7.0 (2021-02-15)
 
 ### Changed
