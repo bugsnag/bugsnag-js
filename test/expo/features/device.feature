@@ -7,7 +7,7 @@ Background:
 Scenario: Device data is included by default
   Given the element "deviceDefaultButton" is present
   When I click the element "deviceDefaultButton"
-  Then I wait to receive a request
+  Then I wait to receive an error
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "DeviceDefaultError"
   And the event "device.id" is not null
@@ -27,7 +27,7 @@ Scenario: Device data is included by default
 Scenario: Device data can be modified by a callback
   Given the element "deviceCallbackButton" is present
   When I click the element "deviceCallbackButton"
-  Then I wait to receive a request
+  Then I wait to receive an error
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "DeviceCallbackError"
   And the event "device.id" is not null
