@@ -90,3 +90,16 @@ Scenario: A handled error with ctx.bugsnag.notify()
   And the event "request.url" equals "http://koa/handled"
   And the event "request.httpMethod" equals "GET"
   And the event "request.clientIp" is not null
+
+Scenario: adding body to request metadata
+  When I POST the data "data=in_request_body" to the URL "http://koa/bodytest"
+  And I wait to receive a request
+  Then the request is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
+  And the event "unhandled" is true
+  And the event "severity" equals "error"
+  And the exception "errorClass" equals "Error"
+  And the exception "message" equals "request body"
+  And the exception "type" equals "nodejs"
+  And the "file" of stack frame 0 equals "scenarios/app.js"
+  And the event "metaData.request.body.data" equals "in_request_body"
+  And the event "request.httpMethod" equals "POST"

@@ -1,6 +1,7 @@
 const Bugsnag = require('@bugsnag/node')
 const bugsnagKoa = require('@bugsnag/plugin-koa')
 const Koa = require('koa')
+const bodyParser = require('koa-bodyparser');
 
 Bugsnag.start({
   apiKey: process.env.BUGSNAG_API_KEY,
@@ -36,6 +37,8 @@ app.use(async (ctx, next) => {
 
 app.use(middleware.requestHandler)
 
+app.use(bodyParser());
+
 const erroneous = () => new Promise((resolve, reject) => reject(new Error('async noooop')))
 
 app.use(async (ctx, next) => {
@@ -54,6 +57,8 @@ app.use(async (ctx, next) => {
   } else if (ctx.path === '/handled') {
     ctx.bugsnag.notify(new Error('handled'))
     await next()
+  } else if (ctx.path === '/bodytest') {
+    throw new Error('request body')
   } else {
     await next()
   }

@@ -1,6 +1,7 @@
 {
   "name": "bugsnag-test",
   "dependencies": {
-    "koa": "^2.5.2"
+    "koa": "^2.5.2",
+    "koa-bodyparser": "^4.3.0"
   }
 }

@@ -90,17 +90,19 @@ module.exports = {
 }
 
 const getRequestAndMetadataFromCtx = ctx => {
-  const requestInfo = extractRequestInfo(ctx)
+  // Exclude new mappings from metaData but keep existing ones to preserve backwards compatibility
+  const { body, ...requestInfo } = extractRequestInfo(ctx)
+
   return {
     metadata: requestInfo,
     request: {
-      body: requestInfo.body,
+      body,
       clientIp: requestInfo.clientIp,
       headers: requestInfo.headers,
       httpMethod: requestInfo.httpMethod,
       httpVersion: requestInfo.httpVersion,
       url: requestInfo.url,
-      referer: requestInfo.referer
+      referer: requestInfo.referer // Not part of the notifier spec for request but leaving for backwards compatibility
     }
   }
 }
