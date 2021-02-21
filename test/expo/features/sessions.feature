@@ -15,7 +15,7 @@ Scenario: Sessions can be automatically delivered
   And the session "Content-Type" header equals one of:
     | application/json |
     | application/json; charset=utf-8 |
-  And the "Bugsnag-Sent-At" header is a timestamp
+  And the session "Bugsnag-Sent-At" header is a timestamp
   And the session payload field "notifier.name" equals "Bugsnag Expo"
   And the session payload field "notifier.url" is not null
   And the session payload field "notifier.version" is not null
@@ -35,11 +35,11 @@ Scenario: Sessions can be manually delivered
   And the session "Content-Type" header equals one of:
     | application/json |
     | application/json; charset=utf-8 |
-  And the "Bugsnag-Sent-At" header is a timestamp
+  And the session "Bugsnag-Sent-At" header is a timestamp
   And the session payload field "notifier.name" equals "Bugsnag Expo"
   And the session payload field "notifier.url" is not null
   And the session payload field "notifier.version" is not null
   And the session payload field "app" is not null
   And the session payload field "device" is not null
-  And the payload has a valid sessions array
+  And the session payload has a valid sessions array
   And the session Bugsnag-Integrity header is valid
