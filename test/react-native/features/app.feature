@@ -2,7 +2,7 @@ Feature: App data
 
 Scenario: Handled JS error
   When I run "AppJsHandledScenario"
-  Then I wait to receive a request
+  Then I wait to receive an error
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "AppJsHandledScenario"
   And the event "unhandled" is false
@@ -26,7 +26,7 @@ Scenario: Handled JS error
 Scenario: Unhandled JS error
   When I run "AppJsUnhandledScenario" and relaunch the app
   And I configure Bugsnag for "AppJsUnhandledScenario"
-  Then I wait to receive a request
+  Then I wait to receive an error
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "AppJsUnhandledScenario"
   And the event "unhandled" is true
@@ -49,7 +49,7 @@ Scenario: Unhandled JS error
 
 Scenario: Handled native error
   When I run "AppNativeHandledScenario"
-  Then I wait to receive a request
+  Then I wait to receive an error
   And the event "exceptions.0.errorClass" equals the platform-dependent string:
   | android | java.lang.RuntimeException |
   | ios     | NSException                |
@@ -75,7 +75,7 @@ Scenario: Handled native error
 Scenario: Unhandled native error
   When I run "AppNativeUnhandledScenario" and relaunch the app
   And I configure Bugsnag for "AppNativeUnhandledScenario"
-  Then I wait to receive a request
+  Then I wait to receive an error
   And the event "exceptions.0.errorClass" equals the platform-dependent string:
   | android | java.lang.RuntimeException |
   | ios     | NSException                |
@@ -100,7 +100,7 @@ Scenario: Unhandled native error
 
 Scenario: Setting appType in configuration
   When I run "AppConfigAppTypeScenario"
-  Then I wait to receive a request
+  Then I wait to receive an error
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "AppConfigAppTypeScenario"
   And the event "unhandled" is false
@@ -108,7 +108,7 @@ Scenario: Setting appType in configuration
 
 Scenario: Setting releaseStage in configuration
   When I run "AppConfigReleaseStageScenario"
-  Then I wait to receive a request
+  Then I wait to receive an error
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "AppConfigReleaseStageScenario"
   And the event "unhandled" is false
@@ -116,7 +116,7 @@ Scenario: Setting releaseStage in configuration
 
 Scenario: Setting releaseStage and enabledReleaseStages to enable delivery
   When I run "AppConfigEnabledReleaseStagesScenario"
-  Then I wait to receive a request
+  Then I wait to receive an error
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "AppConfigEnabledReleaseStagesScenario"
   And the event "unhandled" is false

@@ -1,0 +1,141 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "com.bugsnag",
+    "module": "bugsnag-plugin-android-anr",
+<<<<<<< HEAD:packages/react-native/android/com/bugsnag/bugsnag-plugin-android-anr/5.5.2-react-native/bugsnag-plugin-android-anr-5.5.2-react-native.module
+    "version": "5.5.2-react-native",
+=======
+    "version": "5.6.2-react-native",
+>>>>>>> next:packages/react-native/android/com/bugsnag/bugsnag-plugin-android-anr/5.6.2-react-native/bugsnag-plugin-android-anr-5.6.2-react-native.module
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "6.7",
+<<<<<<< HEAD:packages/react-native/android/com/bugsnag/bugsnag-plugin-android-anr/5.5.2-react-native/bugsnag-plugin-android-anr-5.5.2-react-native.module
+      "buildId": "mydirhhbfbbsjotk5gtdtxl52m"
+=======
+      "buildId": "2ug2waretnhxlac6e7rxsipqle"
+>>>>>>> next:packages/react-native/android/com/bugsnag/bugsnag-plugin-android-anr/5.6.2-react-native/bugsnag-plugin-android-anr-5.6.2-react-native.module
+    }
+  },
+  "variants": [
+    {
+      "name": "releaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "com.bugsnag",
+          "module": "bugsnag-android-core",
+          "version": {
+<<<<<<< HEAD:packages/react-native/android/com/bugsnag/bugsnag-plugin-android-anr/5.5.2-react-native/bugsnag-plugin-android-anr-5.5.2-react-native.module
+            "requires": "5.5.2-react-native"
+=======
+            "requires": "5.6.2-react-native"
+>>>>>>> next:packages/react-native/android/com/bugsnag/bugsnag-plugin-android-anr/5.6.2-react-native/bugsnag-plugin-android-anr-5.6.2-react-native.module
+          }
+        },
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.1.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "1.3.72"
+          }
+        }
+      ],
+      "files": [
+        {
+<<<<<<< HEAD:packages/react-native/android/com/bugsnag/bugsnag-plugin-android-anr/5.5.2-react-native/bugsnag-plugin-android-anr-5.5.2-react-native.module
+          "name": "bugsnag-plugin-android-anr-5.5.2-react-native.aar",
+          "url": "bugsnag-plugin-android-anr-5.5.2-react-native.aar",
+          "size": 29232,
+          "sha512": "985162bc4df5e2840bb8092568678ee80649408484ba11582fa4d0a64827315964d39253b267d4544c47820ab019bf7e907297a7e551d3dc64bdeb6f3ba8c491",
+          "sha256": "23b968c0054c706993c4f5f80150a28cf1fcf5c3ef5316f89b9d72c6d474cd79",
+          "sha1": "ea7d6b0bcf164c9ad9ea604f00ab6c422297caea",
+          "md5": "d5f1267f8828b887350f0e34d4930e3f"
+=======
+          "name": "bugsnag-plugin-android-anr-5.6.2-react-native.aar",
+          "url": "bugsnag-plugin-android-anr-5.6.2-react-native.aar",
+          "size": 30501,
+          "sha512": "854afa1b7b2802abcc484073fc7440ddea95bac81d42b68fff3eb716783baada86acf35950a620c27ac4560d5906de4ec1fbf6f2cec163fec0f17c8a63afbbb7",
+          "sha256": "ea070e835068451444f98c608b37a7dc64a97e43024b4ca1a5c1a74ecb2ae283",
+          "sha1": "5fa6731b8f9acf6295d1217b4ee0f4e833855cdc",
+          "md5": "9521aa51a99e1a76286e9cb6998fc155"
+>>>>>>> next:packages/react-native/android/com/bugsnag/bugsnag-plugin-android-anr/5.6.2-react-native/bugsnag-plugin-android-anr-5.6.2-react-native.module
+        }
+      ]
+    },
+    {
+      "name": "releaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "com.bugsnag",
+          "module": "bugsnag-android-core",
+          "version": {
+<<<<<<< HEAD:packages/react-native/android/com/bugsnag/bugsnag-plugin-android-anr/5.5.2-react-native/bugsnag-plugin-android-anr-5.5.2-react-native.module
+            "requires": "5.5.2-react-native"
+=======
+            "requires": "5.6.2-react-native"
+>>>>>>> next:packages/react-native/android/com/bugsnag/bugsnag-plugin-android-anr/5.6.2-react-native/bugsnag-plugin-android-anr-5.6.2-react-native.module
+          }
+        },
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.1.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "1.3.72"
+          }
+        }
+      ],
+      "files": [
+        {
+<<<<<<< HEAD:packages/react-native/android/com/bugsnag/bugsnag-plugin-android-anr/5.5.2-react-native/bugsnag-plugin-android-anr-5.5.2-react-native.module
+          "name": "bugsnag-plugin-android-anr-5.5.2-react-native.aar",
+          "url": "bugsnag-plugin-android-anr-5.5.2-react-native.aar",
+          "size": 29232,
+          "sha512": "985162bc4df5e2840bb8092568678ee80649408484ba11582fa4d0a64827315964d39253b267d4544c47820ab019bf7e907297a7e551d3dc64bdeb6f3ba8c491",
+          "sha256": "23b968c0054c706993c4f5f80150a28cf1fcf5c3ef5316f89b9d72c6d474cd79",
+          "sha1": "ea7d6b0bcf164c9ad9ea604f00ab6c422297caea",
+          "md5": "d5f1267f8828b887350f0e34d4930e3f"
+=======
+          "name": "bugsnag-plugin-android-anr-5.6.2-react-native.aar",
+          "url": "bugsnag-plugin-android-anr-5.6.2-react-native.aar",
+          "size": 30501,
+          "sha512": "854afa1b7b2802abcc484073fc7440ddea95bac81d42b68fff3eb716783baada86acf35950a620c27ac4560d5906de4ec1fbf6f2cec163fec0f17c8a63afbbb7",
+          "sha256": "ea070e835068451444f98c608b37a7dc64a97e43024b4ca1a5c1a74ecb2ae283",
+          "sha1": "5fa6731b8f9acf6295d1217b4ee0f4e833855cdc",
+          "md5": "9521aa51a99e1a76286e9cb6998fc155"
+>>>>>>> next:packages/react-native/android/com/bugsnag/bugsnag-plugin-android-anr/5.6.2-react-native/bugsnag-plugin-android-anr-5.6.2-react-native.module
+        }
+      ]
+    }
+  ]
+}

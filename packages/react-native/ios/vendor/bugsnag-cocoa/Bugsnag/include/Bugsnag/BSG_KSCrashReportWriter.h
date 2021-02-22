@@ -42,7 +42,8 @@ extern "C" {
  * Encapsulates report writing functionality.
  */
 typedef struct BSG_KSCrashReportWriter {
-    /** Add a boolean element to the report.
+    /**
+     * Add a boolean element to the report.
      *
      * @param writer This writer.
      *
@@ -53,7 +54,8 @@ typedef struct BSG_KSCrashReportWriter {
     void (*addBooleanElement)(const struct BSG_KSCrashReportWriter *writer,
                               const char *name, bool value);
 
-    /** Add a floating point element to the report.
+    /**
+     * Add a floating point element to the report.
      *
      * @param writer This writer.
      *
@@ -65,7 +67,8 @@ typedef struct BSG_KSCrashReportWriter {
         const struct BSG_KSCrashReportWriter *writer, const char *name,
         double value);
 
-    /** Add an integer element to the report.
+    /**
+     * Add an integer element to the report.
      *
      * @param writer This writer.
      *
@@ -76,7 +79,8 @@ typedef struct BSG_KSCrashReportWriter {
     void (*addIntegerElement)(const struct BSG_KSCrashReportWriter *writer,
                               const char *name, long long value);
 
-    /** Add an unsigned integer element to the report.
+    /**
+     * Add an unsigned integer element to the report.
      *
      * @param writer This writer.
      *
@@ -87,7 +91,8 @@ typedef struct BSG_KSCrashReportWriter {
     void (*addUIntegerElement)(const struct BSG_KSCrashReportWriter *writer,
                                const char *name, unsigned long long value);
 
-    /** Add a string element to the report.
+    /**
+     * Add a string element to the report.
      *
      * @param writer This writer.
      *
@@ -98,7 +103,8 @@ typedef struct BSG_KSCrashReportWriter {
     void (*addStringElement)(const struct BSG_KSCrashReportWriter *writer,
                              const char *name, const char *value);
 
-    /** Add a string element from a text file to the report.
+    /**
+     * Add a string element from a text file to the report.
      *
      * @param writer This writer.
      *
@@ -109,7 +115,8 @@ typedef struct BSG_KSCrashReportWriter {
     void (*addTextFileElement)(const struct BSG_KSCrashReportWriter *writer,
                                const char *name, const char *filePath);
 
-    /** Add a JSON element from a text file to the report.
+    /**
+     * Add a JSON element from a text file to the report.
      *
      * @param writer This writer.
      *
@@ -120,7 +127,8 @@ typedef struct BSG_KSCrashReportWriter {
     void (*addJSONFileElement)(const struct BSG_KSCrashReportWriter *writer,
                                const char *name, const char *filePath);
 
-    /** Add a hex encoded data element to the report.
+    /**
+     * Add a hex encoded data element to the report.
      *
      * @param writer This writer.
      *
@@ -134,7 +142,8 @@ typedef struct BSG_KSCrashReportWriter {
                            const char *name, const char *value,
                            const size_t length);
 
-    /** Begin writing a hex encoded data element to the report.
+    /**
+     * Begin writing a hex encoded data element to the report.
      *
      * @param writer This writer.
      *
@@ -143,7 +152,8 @@ typedef struct BSG_KSCrashReportWriter {
     void (*beginDataElement)(const struct BSG_KSCrashReportWriter *writer,
                              const char *name);
 
-    /** Append hex encoded data to the current data element in the report.
+    /**
+     * Append hex encoded data to the current data element in the report.
      *
      * @param writer This writer.
      *
@@ -154,13 +164,15 @@ typedef struct BSG_KSCrashReportWriter {
     void (*appendDataElement)(const struct BSG_KSCrashReportWriter *writer,
                               const char *value, const size_t length);
 
-    /** Complete writing a hex encoded data element to the report.
+    /**
+     * Complete writing a hex encoded data element to the report.
      *
      * @param writer This writer.
      */
     void (*endDataElement)(const struct BSG_KSCrashReportWriter *writer);
 
-    /** Add a UUID element to the report.
+    /**
+     * Add a UUID element to the report.
      *
      * @param writer This writer.
      *
@@ -171,7 +183,8 @@ typedef struct BSG_KSCrashReportWriter {
     void (*addUUIDElement)(const struct BSG_KSCrashReportWriter *writer,
                            const char *name, const unsigned char *value);
 
-    /** Add a preformatted JSON element to the report.
+    /**
+     * Add a preformatted JSON element to the report.
      *
      * @param writer This writer.
      *
@@ -182,7 +195,8 @@ typedef struct BSG_KSCrashReportWriter {
     void (*addJSONElement)(const struct BSG_KSCrashReportWriter *writer,
                            const char *name, const char *jsonElement);
 
-    /** Begin a new object container.
+    /**
+     * Begin a new object container.
      *
      * @param writer This writer.
      *
@@ -191,7 +205,8 @@ typedef struct BSG_KSCrashReportWriter {
     void (*beginObject)(const struct BSG_KSCrashReportWriter *writer,
                         const char *name);
 
-    /** Begin a new array container.
+    /**
+     * Begin a new array container.
      *
      * @param writer This writer.
      *
@@ -200,7 +215,8 @@ typedef struct BSG_KSCrashReportWriter {
     void (*beginArray)(const struct BSG_KSCrashReportWriter *writer,
                        const char *name);
 
-    /** Leave the current container, returning to the next higher level
+    /**
+     * Leave the current container, returning to the next higher level
      *  container.
      *
      * @param writer This writer.

@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (readonly) NSDictionary<NSString *, id> *errorApiHeaders;
 
-@property (readonly, nonatomic) BugsnagMetadata *metadata;
+@property (readonly, copy, nonatomic) BugsnagMetadata *metadata;
 
 @property (readonly, nullable, nonatomic) NSURL *notifyURL;
 
@@ -43,6 +43,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (readonly) NSDictionary<NSString *, id> *sessionApiHeaders;
 
 @property (readonly, nullable, nonatomic) NSURL *sessionURL;
+
+@property (readwrite, retain, nonnull, nonatomic) BugsnagUser *user;
 
 #pragma mark Methods
 

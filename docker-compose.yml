@@ -30,13 +30,12 @@ services:
       target: browser-maze-runner
       args:
         - BUILDKITE_BUILD_NUMBER
-    command: --fail-fast --retry 2
     environment:
+      BUILDKITE:
+      BUILDKITE_PIPELINE_NAME:
       DEBUG:
-      BROWSER: "${BROWSER:-chrome_61}"
-      BROWSER_STACK_USERNAME:
-      BROWSER_STACK_ACCESS_KEY:
-      BROWSER_STACK_LOCAL_IDENTIFIER: ${BUILDKITE_JOB_ID:-maze-runner}
+      MAZE_DEVICE_FARM_USERNAME:
+      MAZE_DEVICE_FARM_ACCESS_KEY:
       HOST: "${HOST:-maze-runner}"
       API_HOST: "${API_HOST:-maze-runner}"
     networks:
@@ -69,7 +68,11 @@ services:
       args:
         - BUILDKITE_BUILD_NUMBER
     environment:
+      BUILDKITE:
+      BUILDKITE_PIPELINE_NAME:
       DEBUG:
+      MAZE_DEVICE_FARM_USERNAME:
+      MAZE_DEVICE_FARM_ACCESS_KEY:
     networks:
       default:
         aliases:
@@ -177,23 +180,24 @@ services:
       - ./test/react-native-cli/features/:/app/features
 
   react-native-maze-runner:
-    build:
-      context: .
-      dockerfile: dockerfiles/Dockerfile.react-native
-      args:
-        - BUILDKITE_BUILD_NUMBER
+    image: 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v4-cli
     environment:
+      BUILDKITE:
+      BUILDKITE_PIPELINE_NAME:
       DEBUG:
+      MAZE_DEVICE_FARM_USERNAME:
+      MAZE_DEVICE_FARM_ACCESS_KEY:
       SKIP_NAVIGATION_SCENARIOS:
     networks:
       default:
         aliases:
           - maze-runner
     volumes:
-      - ./build:/app/test/react-native/build
+      - ./build:/app/build
+      - ./test/react-native/features/:/app/features
 
   react-native-cli-maze-runner:
-    image: 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v3-cli
+    image: 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v4-cli
     environment:
       BUILDKITE:
       BUILDKITE_PIPELINE_NAME:

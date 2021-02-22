@@ -499,7 +499,7 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
 }
 
 - (NSArray *)serializeBreadcrumbs {
-    return [[self breadcrumbs] valueForKeyPath:NSStringFromSelector(@selector(objectValue))];;
+    return [[self breadcrumbs] valueForKeyPath:NSStringFromSelector(@selector(objectValue))];
 }
 
 @synthesize releaseStage = _releaseStage;
@@ -556,7 +556,7 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
 - (void)setUser:(NSString *_Nullable)userId
       withEmail:(NSString *_Nullable)email
         andName:(NSString *_Nullable)name {
-    _user = [[BugsnagUser alloc] initWithUserId:userId name:name emailAddress:email];
+    self.user = [[BugsnagUser alloc] initWithUserId:userId name:name emailAddress:email];
 }
 
 /**
@@ -604,7 +604,7 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
         } else {
             [metadata removeObjectForKey:key];
         }
-        _overrides = metadata;
+        self.overrides = metadata;
     }
 }
 

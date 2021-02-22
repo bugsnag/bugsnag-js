@@ -17,8 +17,8 @@ export default class App extends Component {
       currentScenario: '',
       scenarioMetaData: '',
       apiKey: '12312312312312312312312312312312',
-      notifyEndpoint: 'http://bs-local.com:9339',
-      sessionsEndpoint: 'http://bs-local.com:9339'
+      notifyEndpoint: 'http://bs-local.com:9339/notify',
+      sessionsEndpoint: 'http://bs-local.com:9339/sessions'
     }
   }
 

@@ -3,7 +3,7 @@ Feature: iOS Device data
 
 Scenario: Handled JS error
   When I run "DeviceJsHandledScenario"
-  Then I wait to receive a request
+  Then I wait to receive an error
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "DeviceJsHandledScenario"
   And the event "unhandled" is false
@@ -19,17 +19,17 @@ Scenario: Handled JS error
   And the event "device.runtimeVersions.osBuild" is not null
   And the event "device.runtimeVersions.clangVersion" matches "^\d+\.\d+\.\d+.+$"
   And the event "device.runtimeVersions.reactNativeJsEngine" equals "jsc"
-  And the payload field "events.0.device.freeMemory" is greater than 0
+  And the error payload field "events.0.device.freeMemory" is greater than 0
   And the event "device.manufacturer" equals "Apple"
-  And the payload field "events.0.device.freeDisk" is greater than 0
+  And the error payload field "events.0.device.freeDisk" is greater than 0
   And the event "device.modelNumber" is not null
   And the event "device.model" matches "^iPhone(\d|[,\.])+$"
-  And the payload field "events.0.device.totalMemory" is greater than 0
+  And the error payload field "events.0.device.totalMemory" is greater than 0
 
 Scenario: Unhandled JS error
   When I run "DeviceJsUnhandledScenario" and relaunch the app
   And I configure Bugsnag for "DeviceJsUnhandledScenario"
-  Then I wait to receive a request
+  Then I wait to receive an error
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "DeviceJsUnhandledScenario"
   And the event "unhandled" is true
@@ -45,16 +45,16 @@ Scenario: Unhandled JS error
   And the event "device.runtimeVersions.osBuild" is not null
   And the event "device.runtimeVersions.clangVersion" matches "^\d+\.\d+\.\d+.+$"
   And the event "device.runtimeVersions.reactNativeJsEngine" equals "jsc"
-  And the payload field "events.0.device.freeMemory" is greater than 0
+  And the error payload field "events.0.device.freeMemory" is greater than 0
   And the event "device.manufacturer" equals "Apple"
-  And the payload field "events.0.device.freeDisk" is greater than 0
+  And the error payload field "events.0.device.freeDisk" is greater than 0
   And the event "device.modelNumber" is not null
   And the event "device.model" matches "^iPhone(\d|[,\.])+$"
-  And the payload field "events.0.device.totalMemory" is greater than 0
+  And the error payload field "events.0.device.totalMemory" is greater than 0
 
 Scenario: Handled native error
   When I run "DeviceNativeHandledScenario"
-  Then I wait to receive a request
+  Then I wait to receive an error
   And the exception "errorClass" equals "NSException"
   And the exception "message" equals "DeviceNativeHandledScenario"
   And the event "unhandled" is false
@@ -70,17 +70,17 @@ Scenario: Handled native error
   And the event "device.runtimeVersions.osBuild" is not null
   And the event "device.runtimeVersions.clangVersion" matches "^\d+\.\d+\.\d+.+$"
   And the event "device.runtimeVersions.reactNativeJsEngine" equals "jsc"
-  And the payload field "events.0.device.freeMemory" is greater than 0
+  And the error payload field "events.0.device.freeMemory" is greater than 0
   And the event "device.manufacturer" equals "Apple"
-  And the payload field "events.0.device.freeDisk" is greater than 0
+  And the error payload field "events.0.device.freeDisk" is greater than 0
   And the event "device.modelNumber" is not null
   And the event "device.model" matches "^iPhone(\d|[,\.])+$"
-  And the payload field "events.0.device.totalMemory" is greater than 0
+  And the error payload field "events.0.device.totalMemory" is greater than 0
 
 Scenario: Unhandled native error
   When I run "DeviceNativeUnhandledScenario" and relaunch the app
   And I configure Bugsnag for "DeviceNativeUnhandledScenario"
-  Then I wait to receive a request
+  Then I wait to receive an error
   And the exception "errorClass" equals "NSException"
   And the exception "message" equals "DeviceNativeUnhandledScenario"
   And the event "unhandled" is true
@@ -95,9 +95,9 @@ Scenario: Unhandled native error
   And the event "device.runtimeVersions.reactNativeJsEngine" equals "jsc"
   And the event "device.runtimeVersions.osBuild" is not null
   And the event "device.runtimeVersions.clangVersion" matches "^\d+\.\d+\.\d+.+$"
-  And the payload field "events.0.device.freeMemory" is greater than 0
+  And the error payload field "events.0.device.freeMemory" is greater than 0
   And the event "device.manufacturer" equals "Apple"
-  And the payload field "events.0.device.freeDisk" is greater than 0
+  And the error payload field "events.0.device.freeDisk" is greater than 0
   And the event "device.modelNumber" is not null
   And the event "device.model" matches "^iPhone(\d|[,\.])+$"
-  And the payload field "events.0.device.totalMemory" is greater than 0
+  And the error payload field "events.0.device.totalMemory" is greater than 0

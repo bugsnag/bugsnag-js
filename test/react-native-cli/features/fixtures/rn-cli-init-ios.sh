@@ -17,16 +17,16 @@ expect "Are you using Bugsnag on-premise?"
 send -- "Y"
 
 expect "What is your Bugsnag notify endpoint?"
-send -- http://bs-local.com:9339\r
+send -- http://bs-local.com:9339/notify\r
 
 expect "What is your Bugsnag sessions endpoint?"
-send -- http://bs-local.com:9339\r
+send -- http://bs-local.com:9339/sessions\r
 
 expect "What is your Bugsnag upload endpoint?"
-send -- http://localhost:9339\r
+send -- http://localhost:9339/builds\r
 
 expect "What is your Bugsnag build endpoint?"
-send -- http://localhost:9339\r
+send -- http://localhost:9339/builds\r
 
 expect "If you want the latest version of @bugsnag/react-native hit enter, otherwise type the version you want"
 send -- $notifierVersion\r

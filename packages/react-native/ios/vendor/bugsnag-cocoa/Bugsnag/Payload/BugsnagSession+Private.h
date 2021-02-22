@@ -45,6 +45,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property NSUInteger unhandledCount;
 
+@property (readwrite, nonnull, nonatomic) BugsnagUser *user;
+
 #pragma mark Methods
 
 - (void)resume;

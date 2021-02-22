@@ -79,28 +79,38 @@ __Your session will periodically expire__, so you'll need to run this command to
 
 ### Browser
 
-The browser tests drive real, remote browsers using BrowserStack. As a Bugsnag employee you can access the necessary credentials in our shared password manager.
+The browser tests drive real, remote browsers using BrowserStack. As a Bugsnag employee you can access the necessary 
+credentials in our shared password manager.
+
+#### Building the test fixtures
+
+Use the `local-test-util` to build the test fixture, including the notifier from the current branch:
+
+```shell script
+./bin/local-test-util init
+```
+
+#### Running the end-to-end tests
 
 The following environment variables need to be set:
 
-- `BROWSER` (the browser you want to test on – choose a key from [`test/browser/features/browsers.yml`](/test/browser/features/browsers.yml))
-- `BROWSER_STACK_USERNAME`
-- `BROWSER_STACK_ACCESS_KEY`
+- `MAZE_DEVICE_FARM_USERNAME`
+- `MAZE_DEVICE_FARM_ACCESS_KEY`
+- `HOST` - the test fixture host, typically `localhost`
+- `API_HOST` - the MazeRunner mock server host, typically `localhost`
 
-```sh
-BROWSER=chrome_61 \
-BROWSER_STACK_USERNAME=xxx \
-BROWSER_STACK_ACCESS_KEY=xxx \
-  npm run test:browser
+The browsers available to test on are the keys in [`browsers.yml`](https://github.com/bugsnag/maze-runner/blob/master/lib/maze/browsers.yml).
+
+To run all the tests, run the following in `test/browser`:
+
+```shell script
+bundle exec maze-runner --farm=bs --browser=chrome_latest
 ```
 
-To run a single feature file:
+Or to run a single feature file:
 
-```sh
-BROWSER=chrome_61 \
-BROWSER_STACK_USERNAME=xxx \
-BROWSER_STACK_ACCESS_KEY=xxx \
-  npm run test:browser -- features/unhandled_errors.feature
+```shell script
+bundle exec maze-runner --farm=bs --browser=chrome_latest features/device.feature
 ```
 
 ### Node
@@ -128,8 +138,8 @@ They also require access to the Expo ecosystem in order to publish, then build, 
 The following environment variables need to be set:
 
 - `DEVICE_TYPE`: the mobile operating system you want to test on – one of ANDROID_5_0, ANDROID_6_0, ANDROID_7_1, ANDROID_8_1, ANDROID_9_0, IOS_10, IOS_11, IOS_12
-- `BROWSER_STACK_USERNAME`
-- `BROWSER_STACK_ACCESS_KEY`
+- `MAZE_DEVICE_FARM_USERNAME`
+- `MAZE_DEVICE_FARM_ACCESS_KEY`
 - `EXPO_USERNAME`
 - `EXPO_PASSWORD`
 
@@ -137,8 +147,6 @@ To run against an android device:
 
 ```sh
 DEVICE_TYPE=ANDROID_9_0 \
-BROWSER_STACK_USERNAME=xxx \
-BROWSER_STACK_ACCESS_KEY=xxx \
 EXPO_USERNAME=xxx \
 EXPO_PASSWORD=xxx \
   npm run test:expo:android
@@ -204,24 +212,22 @@ These will build a `.ipa` or `.apk` file respectively and copy into `./build`.
 #### Running the end-to-end tests
 
 Ensure that the following environment variables are set:
-- `BROWSER_STACK_USERNAME` - Your BrowserStack App Automate Username
-- `BROWSER_STACK_ACCESS_KEY` - Your BrowserStack App Automate Access Key
+- `MAZE_DEVICE_FARM_USERNAME` - Your BrowserStack App Automate Username
+- `MAZE_DEVICE_FARM_ACCESS_KEY` - Your BrowserStack App Automate Access Key
+- `MAZE_BS_LOCAL` - Location of the BrowserStack local testing binary
 
 See https://www.browserstack.com/local-testing/app-automate for details of the required local testing binary. In
 particular, these commands need the `BrowserStackLocal` binary (available 
 [here](https://www.browserstack.com/local-testing/releases) to reside in your home directory.  
 
-1. Check the contents of `Gemfile` to select the version of `maze-runner` to use.
 1. Change into the `test/react-native` directory
+1. Check the contents of `Gemfile` to select the version of `maze-runner` to use.
 1. To run a single feature on an Android device (as an example):
     ```shell script
     bundle exec maze-runner --app=../../build/${REACT_NATIVE_VERSION}.apk \
                             --farm=bs \
                             --device=ANDROID_9_0 \
                             --a11y-locator \
-                            --username=$BROWSER_STACK_USERNAME \
-                            --access-key=$BROWSER_STACK_ACCESS_KEY \
-                            --bs-local=~/BrowserStackLocal \
                             features/app.feature
     ```
 1. Or on iOS:
@@ -231,10 +237,104 @@ particular, these commands need the `BrowserStackLocal` binary (available
                             --device=IOS_13 \
                             --appium-version=1.18.0 \
                             --a11y-locator \
-                            --username=$BROWSER_STACK_USERNAME \
-                            --access-key=$BROWSER_STACK_ACCESS_KEY \
-                            --bs-local=~/BrowserStackLocal \
                             features/app.feature
     ```
 1. To run all features, omit the final argument.
 1. Maze Runner also supports all options that Cucumber does.  Run `bundle exec maze-runner --help` for full details.
+
+### React-native CLI
+
+The react-native CLI come in three parts:
+
+- CLI tests, that don't require any remote connections or special setup
+- Testing an app build, which requires your local machine to be set up for building iOS and Android applications
+- Testing the built app, which requires the built application from the previous test set to run
+
+#### CLI tests
+
+The CLI tests target the command line interface by providing a set of responses to expected queries, verifying that the CLI tool responds correctly and makes appropriate changes to the workspace.
+
+##### Setting up
+
+1. Run through the initial setup
+1. Run `npm pack packages/react-native-cli/` to pack the react-native-cli package
+1. Copy the resulting package, `bugsnag-react-native-cli-{VERSION}.tgz` into the target fixture, e.g.:
+    ```shell script
+    cp bugsnag-react-native-cli-*.tgz test/react-native-cli/features/fixtures/rn0_60/
+    ```
+
+##### Running
+
+1. Change directory into `test/react-native-cli`
+1. Check the contents of `Gemfile` to select the version of `maze-runner` to use
+1. Install maze-runner with `bundle install`
+1. Run the full set of cli tests targeting a specific react-native version (`rn0_61` for example):
+  ```shell script
+  REACT_NATIVE_VERSION=rn0_61 bundle exec maze-runner features/cli-tests
+  ```
+
+#### Build tests
+
+The build tests come in two flavours, Android and iOS, and are required to run the subsequent tests using the resulting `.apk` and `.ipa` artefacts.  These tests ensure that the app can be built after Bugsnag is installed, and subsequent build messages are sent and contain the appropriate information.
+
+##### Setup
+
+1. Change directory into `test/react-native-cli`
+1. Check the contents of `Gemfile` to select the version of `maze-runner` to use
+1. Install maze-runner with `bundle install`
+
+##### Running the Android variant
+
+- Run maze-runner targeting the specific Android build feature for a specific react-native version (`rn0_61` for example):
+  ```shell script
+  REACT_NATIVE_VERSION=rn0_61 bundle exec maze-runner features/build-app-tests/build-android-app.feature
+  ```
+
+##### Running the iOS variant (MacOS only)
+
+- Run the script to trigger the build for the specific react-native version (`rn0_62` for example):
+  ```shell script
+  ./scripts/init-and-build-test.sh rn0_62
+  ```
+
+#### App tests
+
+These tests ensure that Bugsnag has successfully been installed by the CLI, and errors and sessions are correctly reported.
+
+##### Setup
+
+Before running these tests the previous tests, `Build Tests` must be run for the test fixtures to be present.
+
+1. Change directory into `test/react-native-cli`
+1. Check the contents of `Gemfile` to select the version of `maze-runner` to use
+1. Install maze-runner with `bundle install`
+
+##### Running
+
+Ensure that the following environment variables are set:
+- `MAZE_DEVICE_FARM_USERNAME` - Your BrowserStack App Automate Username
+- `MAZE_DEVICE_FARM_ACCESS_KEY` - Your BrowserStack App Automate Access Key
+- `MAZE_BS_LOCAL` - Location of the BrowserStack local testing binary
+
+See https://www.browserstack.com/local-testing/app-automate for details of the required local testing binary. In
+particular, these commands need the `BrowserStackLocal` binary (available 
+[here](https://www.browserstack.com/local-testing/releases) to reside in your home directory.
+
+1. To run on an Android device (`rn0_63` for example):
+    ```shell script
+    bundle exec maze-runner --app=./build/rn0_63.apk \
+                            --farm=bs \
+                            --device=ANDROID_9_0 \
+                            --a11y-locator \
+                            --bs-local=~/BrowserStackLocal \
+                            features/run-app-tests
+    ```
+1. Or on iOS:
+    ```shell script
+    bundle exec maze-runner --app=../../build/rn0_63.ipa \
+                            --farm=bs \
+                            --device=IOS_13 \
+                            --a11y-locator \
+                            --bs-local=~/BrowserStackLocal \
+                            features/run-app-tests
+    ```

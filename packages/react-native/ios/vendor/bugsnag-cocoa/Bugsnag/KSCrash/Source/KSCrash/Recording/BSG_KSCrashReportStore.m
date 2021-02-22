@@ -136,7 +136,7 @@ static NSString *const kCrashReportSuffix = @"-CrashReport-";
 
     NSDictionary *dstDict = report[dstKey];
     if (dstDict == nil) {
-        dstDict = [NSDictionary dictionary];
+        dstDict = @{};
     }
     if (![dstDict isKindOfClass:[NSDictionary class]]) {
         BSG_KSLOG_ERROR(@"'%@' should be a dictionary, not %@", dstKey,

@@ -19,17 +19,17 @@
 /**
  * The number of milliseconds the application was running before the event occurred
  */
-@property(nonatomic, nullable) NSNumber *duration;
+@property (strong, nullable, nonatomic) NSNumber *duration;
 
 /**
  * The number of milliseconds the application was running in the foreground before the
  * event occurred
  */
-@property(nonatomic, nullable) NSNumber *durationInForeground;
+@property (strong, nullable, nonatomic) NSNumber *durationInForeground;
 
 /**
  * Whether the application was in the foreground when the event occurred
  */
-@property(nonatomic) BOOL inForeground;
+@property (nonatomic) BOOL inForeground;
 
 @end
