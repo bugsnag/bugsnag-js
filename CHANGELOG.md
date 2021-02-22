@@ -1,6 +1,6 @@
 # Changelog
 
-##TBD
+## TBD
 
 ### Changed
 
@@ -10,6 +10,9 @@
   - Fix a tvOS file permission error that was introduced in 6.5.1 [bugsnag-cocoa#996](https://github.com/bugsnag/bugsnag-cocoa/pull/996)
   - Fix an analyzer warning [bugsnag-cocoa#994](https://github.com/bugsnag/bugsnag-cocoa/pull/994)
 
+### Added
+
+- (react-native): Capture additional native stack for native promise rejections [#1253](https://github.com/bugsnag/bugsnag-js/pull/1253)
 
 ## v7.7.0 (2021-02-15)
 
