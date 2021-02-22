@@ -17,7 +17,7 @@ describe('handling poor inputs', () => {
     expect(update).toThrow('expected string')
   })
 
-  it('rejects invalid data type for breadcrumb', () => {
+  it('rejects invalid data type for breadcrumb (float)', () => {
     const update = () => NativeClient.leaveBreadcrumb(2.0)
     expect(update).toThrow('expected object or string')
   })
@@ -32,7 +32,7 @@ describe('handling poor inputs', () => {
     expect(update).toThrow('expected string')
   })
 
-  it('rejects invalid data type for breadcrumb', () => {
+  it('rejects invalid data type for breadcrumb (int)', () => {
     const update = () => NativeClient.leaveBreadcrumb(80)
     expect(update).toThrow('expected object or string')
   })
