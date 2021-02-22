@@ -110,20 +110,6 @@
                      config:(NSDictionary *)config;
 
 /**
- * Collects a trace of all the threads running in application, if the user has
- * configured this behaviour, and serializes them into an array of BugsnagThread.
- *
- * @param exc the exception to record
- * @param depth the number of frames to discard from the main thread's stacktrace
- * @param recordAllThreads whether all threads should be recorded or just the
- * main thread's stacktrace
- * @return an array of BugsnagThread
- */
-- (NSArray<BugsnagThread *> *)captureThreads:(NSException *)exc
-                                       depth:(int)depth
-                            recordAllThreads:(BOOL)recordAllThreads;
-
-/**
  * Collects information about the application's foreground state (duration in foreground/background)
  */
 - (NSDictionary *)captureAppStats;

@@ -14,7 +14,7 @@ echo "Clearing local maven repo"
 rm -rf $MAVEN_REPO_DIR
 
 echo "Building local copy of bugsnag-android $AMENDED_VERSION"
-./$ANDROID_REPO_DIR/gradlew -p $ANDROID_REPO_DIR assembleRelease publishToMavenLocal -PVERSION_NAME=$AMENDED_VERSION
+./$ANDROID_REPO_DIR/gradlew -p $ANDROID_REPO_DIR clean assembleRelease publishToMavenLocal -PVERSION_NAME=$AMENDED_VERSION
 
 echo "Removing previous AARs from bugsnag-js"
 rm -rf $AAR_DST

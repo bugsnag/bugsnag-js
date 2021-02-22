@@ -12,7 +12,7 @@
     Class clz = NSClassFromString(className);
 
     if (clz == nil) { // swift class
-        clz = NSClassFromString([NSString stringWithFormat:@"iOSTestApp.%@", className]);
+        clz = NSClassFromString([NSString stringWithFormat:@"reactnative.%@", className]);
     }
 
     NSAssert(clz != nil, @"Failed to find class named '%@'", className);
