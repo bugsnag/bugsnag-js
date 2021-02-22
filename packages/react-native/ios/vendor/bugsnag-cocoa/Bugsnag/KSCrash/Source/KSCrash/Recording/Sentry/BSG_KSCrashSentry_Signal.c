@@ -50,6 +50,14 @@
  */
 static volatile sig_atomic_t bsg_g_installed = 0;
 
+/** Flag noting if we should handle signals.
+ * When other signal handlers are registered after ours we can't remove our
+ * signal handlers without removing the others.
+ * It's not fully thread safe, but it's safer than locking and slightly better
+ * than nothing.
+ */
+static volatile sig_atomic_t bsg_g_enabled = 0;
+
 #if !TARGET_OS_TV
 /** Our custom signal stack. The signal handler will use this as its stack. */
 static stack_t bsg_g_signalStack = {0};
@@ -64,6 +72,17 @@ static BSG_KSCrash_SentryContext *bsg_g_context;
 // ============================================================================
 #pragma mark - Callbacks -
 // ============================================================================
+
+static struct sigaction *get_previous_sigaction(int sigNum) {
+    const int *fatalSignals = bsg_kssignal_fatalSignals();
+    int fatalSignalsCount = bsg_kssignal_numFatalSignals();
+    for (int i = 0; i < fatalSignalsCount; i++) {
+        if(fatalSignals[i] == sigNum) {
+            return &bsg_g_previousSignalHandlers[i];
+        }
+    }
+    return NULL;
+}
 
 // Avoiding static functions due to linker issues.
 
@@ -82,7 +101,7 @@ static BSG_KSCrash_SentryContext *bsg_g_context;
 void bsg_kssighndl_i_handleSignal(int sigNum, siginfo_t *signalInfo,
                                   void *userContext) {
     BSG_KSLOG_DEBUG("Trapped signal %d", sigNum);
-    if (bsg_g_installed) {
+    if (bsg_g_enabled) {
         bool wasHandlingCrash = bsg_g_context->handlingCrash;
         bsg_kscrashsentry_beginHandlingCrash(bsg_g_context);
 
@@ -116,9 +135,22 @@ void bsg_kssighndl_i_handleSignal(int sigNum, siginfo_t *signalInfo,
         bsg_kscrashsentry_resumeThreads();
     }
 
-    BSG_KSLOG_DEBUG("Re-raising signal for regular handlers to catch.");
-    // This is technically not allowed, but it works in OSX and iOS.
-    raise(sigNum);
+    BSG_KSLOG_DEBUG(
+        "Re-raising or chaining signal for regular handlers to catch.");
+    struct sigaction *previous = get_previous_sigaction(sigNum);
+    if(previous == NULL) {
+        BSG_KSLOG_ERROR("BUG: Could not find handler for signal %d", sigNum);
+        return;
+    }
+    if (previous->sa_flags & SA_SIGINFO) {
+        previous->sa_sigaction(sigNum, signalInfo, userContext);
+    } else if (previous->sa_handler == SIG_DFL) {
+        // This is technically not allowed, but it works in OSX and iOS.
+        signal(sigNum, SIG_DFL);
+        raise(sigNum);
+    } else if (previous->sa_handler != SIG_IGN) {
+        previous->sa_handler(sigNum);
+    }
 }
 
 // ============================================================================
@@ -129,6 +161,10 @@ bool bsg_kscrashsentry_installSignalHandler(
     BSG_KSCrash_SentryContext *context) {
     BSG_KSLOG_DEBUG("Installing signal handler.");
 
+    if (!bsg_g_enabled) {
+        bsg_g_enabled = 1;
+        BSG_KSLOG_DEBUG("Signal handlers enabled.");
+    }
     if (bsg_g_installed) {
         BSG_KSLOG_DEBUG("Signal handler already installed.");
         return true;
@@ -194,26 +230,29 @@ bool bsg_kscrashsentry_installSignalHandler(
 
 failed:
     BSG_KSLOG_DEBUG("Failed to install signal handlers.");
+    bsg_g_enabled = 0;
     bsg_g_installed = 0;
     return false;
 }
 
 void bsg_kscrashsentry_uninstallSignalHandler(void) {
     BSG_KSLOG_DEBUG("Uninstalling signal handlers.");
-    if (!bsg_g_installed) {
-        BSG_KSLOG_DEBUG("Signal handlers were already uninstalled.");
+    // We only disable signal handling but don't uninstall the signal handlers.
+    //
+    // The probblem is that we can safely uninstall signal handlers only when we
+    // are the last one registered. If we are not we can't know how many
+    // handlers were registered after us to re-register them. Also other
+    // handlers could save our handler to chain the signal and our handler will
+    // be called even when "uninstalled".
+    //
+    // Therefore keep the signal handlers installed and just disable the
+    // handling. The installed signal handlers still chains the signal even when
+    // not handling.
+    if (!bsg_g_enabled) {
+        BSG_KSLOG_DEBUG("Signal handlers were already disabled.");
         return;
     }
 
-    const int *fatalSignals = bsg_kssignal_fatalSignals();
-    int fatalSignalsCount = bsg_kssignal_numFatalSignals();
-
-    for (int i = 0; i < fatalSignalsCount; i++) {
-        BSG_KSLOG_DEBUG("Restoring original handler for signal %d",
-                        fatalSignals[i]);
-        sigaction(fatalSignals[i], &bsg_g_previousSignalHandlers[i], NULL);
-    }
-
-    BSG_KSLOG_DEBUG("Signal handlers uninstalled.");
-    bsg_g_installed = 0;
+    BSG_KSLOG_DEBUG("Signal handlers disabled.");
+    bsg_g_enabled = 0;
 }

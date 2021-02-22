@@ -105,7 +105,6 @@ void bsg_kscrashsentry_reportUserException(const char *name, const char *reason,
         localContext->userException.handledState = handledState;
         localContext->userException.overrides = overrides;
         localContext->userException.config = config;
-        localContext->userException.discardDepth = 0;
         localContext->userException.metadata = metadata;
         localContext->userException.state = appState;
         localContext->userException.eventOverrides = eventOverrides;
