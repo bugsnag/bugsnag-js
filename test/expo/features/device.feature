@@ -7,7 +7,7 @@ Background:
 Scenario: Device data is included by default
   Given the element "deviceDefaultButton" is present
   When I click the element "deviceDefaultButton"
-  Then I wait to receive a request
+  Then I wait to receive an error
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "DeviceDefaultError"
   And the event "device.id" is not null
@@ -22,12 +22,12 @@ Scenario: Device data is included by default
   And the event "device.totalMemory" is not null
   And the event "metaData.device.isDevice" is true
   And the event "metaData.device.appOwnership" equals "standalone"
-  And the Bugsnag-Integrity header is valid
+  And the error Bugsnag-Integrity header is valid
 
 Scenario: Device data can be modified by a callback
   Given the element "deviceCallbackButton" is present
   When I click the element "deviceCallbackButton"
-  Then I wait to receive a request
+  Then I wait to receive an error
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "DeviceCallbackError"
   And the event "device.id" is not null
@@ -44,4 +44,4 @@ Scenario: Device data can be modified by a callback
   And the event "device.totalMemory" is not null
   And the event "metaData.device.isDevice" is true
   And the event "metaData.device.appOwnership" equals "standalone"
-  And the Bugsnag-Integrity header is valid
+  And the error Bugsnag-Integrity header is valid
