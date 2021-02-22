@@ -3,11 +3,7 @@
   "component": {
     "group": "com.bugsnag",
     "module": "bugsnag-android-core",
-<<<<<<< HEAD:packages/react-native/android/com/bugsnag/bugsnag-android-core/5.5.2-react-native/bugsnag-android-core-5.5.2-react-native.module
-    "version": "5.5.2-react-native",
-=======
     "version": "5.6.2-react-native",
->>>>>>> next:packages/react-native/android/com/bugsnag/bugsnag-android-core/5.6.2-react-native/bugsnag-android-core-5.6.2-react-native.module
     "attributes": {
       "org.gradle.status": "release"
     }
@@ -15,11 +11,7 @@
   "createdBy": {
     "gradle": {
       "version": "6.7",
-<<<<<<< HEAD:packages/react-native/android/com/bugsnag/bugsnag-android-core/5.5.2-react-native/bugsnag-android-core-5.5.2-react-native.module
-      "buildId": "mydirhhbfbbsjotk5gtdtxl52m"
-=======
       "buildId": "2ug2waretnhxlac6e7rxsipqle"
->>>>>>> next:packages/react-native/android/com/bugsnag/bugsnag-android-core/5.6.2-react-native/bugsnag-android-core-5.6.2-react-native.module
     }
   },
   "variants": [
@@ -49,15 +41,6 @@
       ],
       "files": [
         {
-<<<<<<< HEAD:packages/react-native/android/com/bugsnag/bugsnag-android-core/5.5.2-react-native/bugsnag-android-core-5.5.2-react-native.module
-          "name": "bugsnag-android-core-5.5.2-react-native.aar",
-          "url": "bugsnag-android-core-5.5.2-react-native.aar",
-          "size": 270748,
-          "sha512": "5c0568c4a92bf97f06ce1a91ddbca0b0b43edb96cf809800bc561dc8c6705cdbd74807963dcb5f81d9b820d3cad8ff11322ddd71337323e23f83a4fa8c057935",
-          "sha256": "386009a17b3d02a2f4ca3219cea396b58ee8a850d41336e16ce4ca26ddd6e20e",
-          "sha1": "dc4a0ed51119403694b9a11c560ff486f27ecfd6",
-          "md5": "3f99fe64299121050b728db307030bb3"
-=======
           "name": "bugsnag-android-core-5.6.2-react-native.aar",
           "url": "bugsnag-android-core-5.6.2-react-native.aar",
           "size": 271147,
@@ -65,7 +48,6 @@
           "sha256": "5e85abcee03ff90c9b1967bc9eb3fbc01f6b246f130df3d090f41658b3e5659a",
           "sha1": "1f26075c31d5b6a21dfa7d53611ecbb0e8f5ef40",
           "md5": "f2e3845b36dadfa65ad972f9c2b210d4"
->>>>>>> next:packages/react-native/android/com/bugsnag/bugsnag-android-core/5.6.2-react-native/bugsnag-android-core-5.6.2-react-native.module
         }
       ]
     },
@@ -95,15 +77,6 @@
       ],
       "files": [
         {
-<<<<<<< HEAD:packages/react-native/android/com/bugsnag/bugsnag-android-core/5.5.2-react-native/bugsnag-android-core-5.5.2-react-native.module
-          "name": "bugsnag-android-core-5.5.2-react-native.aar",
-          "url": "bugsnag-android-core-5.5.2-react-native.aar",
-          "size": 270748,
-          "sha512": "5c0568c4a92bf97f06ce1a91ddbca0b0b43edb96cf809800bc561dc8c6705cdbd74807963dcb5f81d9b820d3cad8ff11322ddd71337323e23f83a4fa8c057935",
-          "sha256": "386009a17b3d02a2f4ca3219cea396b58ee8a850d41336e16ce4ca26ddd6e20e",
-          "sha1": "dc4a0ed51119403694b9a11c560ff486f27ecfd6",
-          "md5": "3f99fe64299121050b728db307030bb3"
-=======
           "name": "bugsnag-android-core-5.6.2-react-native.aar",
           "url": "bugsnag-android-core-5.6.2-react-native.aar",
           "size": 271147,
@@ -111,7 +84,6 @@
           "sha256": "5e85abcee03ff90c9b1967bc9eb3fbc01f6b246f130df3d090f41658b3e5659a",
           "sha1": "1f26075c31d5b6a21dfa7d53611ecbb0e8f5ef40",
           "md5": "f2e3845b36dadfa65ad972f9c2b210d4"
->>>>>>> next:packages/react-native/android/com/bugsnag/bugsnag-android-core/5.6.2-react-native/bugsnag-android-core-5.6.2-react-native.module
         }
       ]
     }

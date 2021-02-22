@@ -9,11 +9,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.bugsnag</groupId>
   <artifactId>bugsnag-plugin-react-native</artifactId>
-<<<<<<< HEAD:packages/react-native/android/com/bugsnag/bugsnag-plugin-react-native/5.5.2-react-native/bugsnag-plugin-react-native-5.5.2-react-native.pom
-  <version>5.5.2-react-native</version>
-=======
   <version>5.6.2-react-native</version>
->>>>>>> next:packages/react-native/android/com/bugsnag/bugsnag-plugin-react-native/5.6.2-react-native/bugsnag-plugin-react-native-5.6.2-react-native.pom
   <packaging>aar</packaging>
   <name>Bugsnag Android React Native</name>
   <description>Official Bugsnag notifier for Android applications</description>
@@ -40,11 +36,7 @@
     <dependency>
       <groupId>com.bugsnag</groupId>
       <artifactId>bugsnag-android-core</artifactId>
-<<<<<<< HEAD:packages/react-native/android/com/bugsnag/bugsnag-plugin-react-native/5.5.2-react-native/bugsnag-plugin-react-native-5.5.2-react-native.pom
-      <version>5.5.2-react-native</version>
-=======
       <version>5.6.2-react-native</version>
->>>>>>> next:packages/react-native/android/com/bugsnag/bugsnag-plugin-react-native/5.6.2-react-native/bugsnag-plugin-react-native-5.6.2-react-native.pom
       <scope>compile</scope>
     </dependency>
     <dependency>

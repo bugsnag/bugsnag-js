@@ -3,11 +3,7 @@
   "component": {
     "group": "com.bugsnag",
     "module": "bugsnag-plugin-react-native",
-<<<<<<< HEAD:packages/react-native/android/com/bugsnag/bugsnag-plugin-react-native/5.5.2-react-native/bugsnag-plugin-react-native-5.5.2-react-native.module
-    "version": "5.5.2-react-native",
-=======
     "version": "5.6.2-react-native",
->>>>>>> next:packages/react-native/android/com/bugsnag/bugsnag-plugin-react-native/5.6.2-react-native/bugsnag-plugin-react-native-5.6.2-react-native.module
     "attributes": {
       "org.gradle.status": "release"
     }
@@ -15,11 +11,7 @@
   "createdBy": {
     "gradle": {
       "version": "6.7",
-<<<<<<< HEAD:packages/react-native/android/com/bugsnag/bugsnag-plugin-react-native/5.5.2-react-native/bugsnag-plugin-react-native-5.5.2-react-native.module
-      "buildId": "mydirhhbfbbsjotk5gtdtxl52m"
-=======
       "buildId": "2ug2waretnhxlac6e7rxsipqle"
->>>>>>> next:packages/react-native/android/com/bugsnag/bugsnag-plugin-react-native/5.6.2-react-native/bugsnag-plugin-react-native-5.6.2-react-native.module
     }
   },
   "variants": [
@@ -36,11 +28,7 @@
           "group": "com.bugsnag",
           "module": "bugsnag-android-core",
           "version": {
-<<<<<<< HEAD:packages/react-native/android/com/bugsnag/bugsnag-plugin-react-native/5.5.2-react-native/bugsnag-plugin-react-native-5.5.2-react-native.module
-            "requires": "5.5.2-react-native"
-=======
             "requires": "5.6.2-react-native"
->>>>>>> next:packages/react-native/android/com/bugsnag/bugsnag-plugin-react-native/5.6.2-react-native/bugsnag-plugin-react-native-5.6.2-react-native.module
           }
         },
         {
@@ -60,13 +48,8 @@
       ],
       "files": [
         {
-<<<<<<< HEAD:packages/react-native/android/com/bugsnag/bugsnag-plugin-react-native/5.5.2-react-native/bugsnag-plugin-react-native-5.5.2-react-native.module
-          "name": "bugsnag-plugin-react-native-5.5.2-react-native.aar",
-          "url": "bugsnag-plugin-react-native-5.5.2-react-native.aar",
-=======
           "name": "bugsnag-plugin-react-native-5.6.2-react-native.aar",
           "url": "bugsnag-plugin-react-native-5.6.2-react-native.aar",
->>>>>>> next:packages/react-native/android/com/bugsnag/bugsnag-plugin-react-native/5.6.2-react-native/bugsnag-plugin-react-native-5.6.2-react-native.module
           "size": 36396,
           "sha512": "d30596a8ff8faf4712632b721a7d0e03642e9af57a40e11c6ea458e1dcecc06d9bb0df842b8d983babe95b28d4c40a5a98e294b584051c5e86f06bc31dade24c",
           "sha256": "85cb28a84d78a4d96c966671f093076d41d8b795de2b25f5a1abc33818be591e",
@@ -88,11 +71,7 @@
           "group": "com.bugsnag",
           "module": "bugsnag-android-core",
           "version": {
-<<<<<<< HEAD:packages/react-native/android/com/bugsnag/bugsnag-plugin-react-native/5.5.2-react-native/bugsnag-plugin-react-native-5.5.2-react-native.module
-            "requires": "5.5.2-react-native"
-=======
             "requires": "5.6.2-react-native"
->>>>>>> next:packages/react-native/android/com/bugsnag/bugsnag-plugin-react-native/5.6.2-react-native/bugsnag-plugin-react-native-5.6.2-react-native.module
           }
         },
         {
@@ -112,13 +91,8 @@
       ],
       "files": [
         {
-<<<<<<< HEAD:packages/react-native/android/com/bugsnag/bugsnag-plugin-react-native/5.5.2-react-native/bugsnag-plugin-react-native-5.5.2-react-native.module
-          "name": "bugsnag-plugin-react-native-5.5.2-react-native.aar",
-          "url": "bugsnag-plugin-react-native-5.5.2-react-native.aar",
-=======
           "name": "bugsnag-plugin-react-native-5.6.2-react-native.aar",
           "url": "bugsnag-plugin-react-native-5.6.2-react-native.aar",
->>>>>>> next:packages/react-native/android/com/bugsnag/bugsnag-plugin-react-native/5.6.2-react-native/bugsnag-plugin-react-native-5.6.2-react-native.module
           "size": 36396,
           "sha512": "d30596a8ff8faf4712632b721a7d0e03642e9af57a40e11c6ea458e1dcecc06d9bb0df842b8d983babe95b28d4c40a5a98e294b584051c5e86f06bc31dade24c",
           "sha256": "85cb28a84d78a4d96c966671f093076d41d8b795de2b25f5a1abc33818be591e",
