@@ -119,7 +119,7 @@ describe('persisting changes to disk', () => {
     NativeClient.persistState()
 
     const state = await readTempFile()
-    expect(state['metadata']).toEqual({
+    expect(state.metadata).toEqual({
       device: { size: 256 }
     })
 
