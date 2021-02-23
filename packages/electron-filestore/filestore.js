@@ -1,7 +1,7 @@
 const { rm, readdir, access, readFile, mkdir, writeFile } = require('fs/promises')
 const { F_OK } = require('fs').constants
 const { dirname, join } = require('path')
-const { getIdentifier, createIdentifier } = require('./lib/minidump-io')
+const { getIdentifier, createIdentifier, identifierKey } = require('./lib/minidump-io')
 
 class FileStore {
   constructor (apiKey, storageDir, crashDir) {
@@ -92,8 +92,8 @@ class FileStore {
     await writeFile(this._paths.device, JSON.stringify(device))
   }
 
-  createAppRunID () {
-    return createIdentifier()
+  createAppRunMetadata () {
+    return { [identifierKey]: createIdentifier() }
   }
 }
 
