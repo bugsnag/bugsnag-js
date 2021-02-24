@@ -32,34 +32,33 @@ static void backtrace_for_thread(thread_t thread, struct backtrace_t *output) {
     }
 }
 
-static void backtrace_for_callstack(NSArray<NSNumber *> *callStackReturnAddresses, struct backtrace_t *output) {
-    output->length = (int)MIN(callStackReturnAddresses.count, kMaxAddresses);
-    for (int i = 0; i < output->length; i++) {
-        output->addresses[i] = (uintptr_t)callStackReturnAddresses[i].unsignedLongLongValue;
-    }
-}
-
 
 // MARK: -
 
 @implementation BugsnagThread (Recording)
 
 + (NSArray<BugsnagThread *> *)allThreads:(BOOL)allThreads callStackReturnAddresses:(NSArray<NSNumber *> *)callStackReturnAddresses {
+    struct backtrace_t backtrace;
+    backtrace.length = (int)MIN(callStackReturnAddresses.count, kMaxAddresses);
+    for (int i = 0; i < backtrace.length; i++) {
+        backtrace.addresses[i] = (uintptr_t)callStackReturnAddresses[i].unsignedLongLongValue;
+    }
     if (allThreads) {
-        return [BugsnagThread allThreadsWithCallStackReturnAddresses:callStackReturnAddresses];
+        return [BugsnagThread allThreadsWithCurrentThreadBacktrace:&backtrace];
     } else {
-        return @[[BugsnagThread currentThreadWithCallStackReturnAddresses:callStackReturnAddresses]];
+        return @[[BugsnagThread currentThreadWithBacktrace:&backtrace]];
     }
 }
 
-+ (NSArray<BugsnagThread *> *)allThreadsWithCallStackReturnAddresses:(NSArray<NSNumber *> *)callStackReturnAddresses {
++ (NSArray<BugsnagThread *> *)allThreadsWithCurrentThreadBacktrace:(struct backtrace_t *)currentThreadBacktrace {
     thread_t *threads = NULL;
     mach_msg_type_number_t threadCount = 0;
     
     bsg_kscrashsentry_suspend_threads_user();
     
     // While threads are suspended only async-signal-safe functions should be used,
-    // as another threads may have been suspended while holding a lock.
+    // as another threads may have been suspended while holding a lock in malloc,
+    // the Objective-C runtime, or other subsystems.
     
     if (task_threads(mach_task_self(), &threads, &threadCount) != KERN_SUCCESS) {
         bsg_kscrashsentry_resume_threads_user(false);
@@ -71,7 +70,7 @@ static void backtrace_for_callstack(NSArray<NSNumber *> *callStackReturnAddresse
     for (int i = 0; i < threadCount; i++) {
         BOOL isCurrentThread = MACH_PORT_INDEX(threads[i]) == MACH_PORT_INDEX(bsg_ksmachthread_self());
         if (isCurrentThread) {
-            backtrace_for_callstack(callStackReturnAddresses, &backtraces[i]);
+            backtraces[i].length = 0; // currentThreadBacktrace will be used instead
         } else {
             backtrace_for_thread(threads[i], &backtraces[i]);
         }
@@ -83,9 +82,10 @@ static void backtrace_for_callstack(NSArray<NSNumber *> *callStackReturnAddresse
     
     for (int i = 0; i < threadCount; i++) {
         BOOL isCurrentThread = MACH_PORT_INDEX(threads[i]) == MACH_PORT_INDEX(bsg_ksmachthread_self());
+        struct backtrace_t *backtrace = isCurrentThread ? currentThreadBacktrace : &backtraces[i];
         [objects addObject:[[BugsnagThread alloc] initWithMachThread:threads[i]
-                                                  backtraceAddresses:backtraces[i].addresses
-                                                     backtraceLength:backtraces[i].length
+                                                  backtraceAddresses:backtrace->addresses
+                                                     backtraceLength:backtrace->length
                                                 errorReportingThread:isCurrentThread
                                                                index:i]];
     }
@@ -98,10 +98,8 @@ static void backtrace_for_callstack(NSArray<NSNumber *> *callStackReturnAddresse
     return objects;
 }
 
-+ (instancetype)currentThreadWithCallStackReturnAddresses:(NSArray<NSNumber *> *)callStackReturnAddresses {
++ (instancetype)currentThreadWithBacktrace:(struct backtrace_t *)backtrace {
     thread_t thread = mach_thread_self();
-    struct backtrace_t backtrace;
-    backtrace_for_callstack(callStackReturnAddresses, &backtrace);
     thread_t *threads = NULL;
     mach_msg_type_number_t threadCount = 0;
     int threadIndex = 0;
@@ -115,8 +113,8 @@ static void backtrace_for_callstack(NSArray<NSNumber *> *callStackReturnAddresse
         vm_deallocate(mach_task_self(), (vm_address_t)threads, sizeof(thread_t) * threadCount);
     }
     BugsnagThread *object = [[BugsnagThread alloc] initWithMachThread:thread
-                                                   backtraceAddresses:backtrace.addresses
-                                                      backtraceLength:backtrace.length
+                                                   backtraceAddresses:backtrace->addresses
+                                                      backtraceLength:backtrace->length
                                                  errorReportingThread:YES
                                                                 index:threadIndex];
     mach_port_deallocate(mach_task_self(), thread);
