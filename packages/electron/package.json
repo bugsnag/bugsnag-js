@@ -1,0 +1,20 @@
+{
+  "name": "@bugsnag/electron",
+  "version": "1.0.0",
+  "main": "src/notifier.js",
+  "description": "@bugsnag/electron notifier",
+  "homepage": "https://www.bugsnag.com/",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:bugsnag/bugsnag-electron.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {},
+  "author": "Bugsnag",
+  "license": "MIT",
+  "dependencies": {
+    "@bugsnag/core": "^7.7.0"
+  }
+}
