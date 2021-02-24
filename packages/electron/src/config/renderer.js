@@ -1,4 +1,5 @@
-const { schema } = require('@bugsnag/core/config')
+const { schema } = require('./main')
+
 const ALLOWED_IN_RENDERER = [
   // a list of config keys that are allowed to be supplied to the renderer client
   'onError', 'onBreadcrumb', 'logger', 'metadata', 'user', 'context', 'codeBundleId', 'plugins'
