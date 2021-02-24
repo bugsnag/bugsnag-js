@@ -45,20 +45,25 @@ module.exports = {
 
   flush (timeoutMs) {
     return new Promise(function (resolve, reject) {
-      const timeout = setTimeout(
-        () => { reject(new Error(`flush timed out after ${timeoutMs}ms`)) },
+      let resolveTimeout
+      const rejectTimeout = setTimeout(
+        () => {
+          if (resolveTimeout) clearTimeout(resolveTimeout)
+
+          reject(new Error(`flush timed out after ${timeoutMs}ms`))
+        },
         timeoutMs
       )
 
       const resolveIfNoRequests = function () {
         if (inFlightRequests.size === 0) {
-          clearTimeout(timeout)
+          clearTimeout(rejectTimeout)
           resolve()
 
           return
         }
 
-        setTimeout(resolveIfNoRequests, FLUSH_POLL_INTERVAL_MS)
+        resolveTimeout = setTimeout(resolveIfNoRequests, FLUSH_POLL_INTERVAL_MS)
       }
 
       resolveIfNoRequests()
