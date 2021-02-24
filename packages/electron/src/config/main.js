@@ -30,7 +30,7 @@ module.exports.schema = {
     defaultValue: () => ({
       notify: 'https://notify.bugsnag.com',
       sessions: 'https://sessions.bugsnag.com',
-      minidumps: 'https://minidumps.bugsnag.com'
+      minidumps: 'https://notify.bugsnag.com/minidumps'
     }),
     message: 'should be an object containing endpoint URLs { notify, sessions, minidumps }',
     validate: val =>
