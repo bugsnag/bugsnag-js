@@ -1,0 +1,16 @@
+{
+  "name": "@bugsnag/electron-filestore",
+  "version": "1.0.0",
+  "main": "filestore.js",
+  "description": "@bugsnag/electron plugin to add process info to events",
+  "author": "Bugsnag",
+  "license": "MIT",
+  "homepage": "https://www.bugsnag.com/",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:bugsnag/bugsnag-electron.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
