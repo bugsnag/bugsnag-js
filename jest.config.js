@@ -78,6 +78,7 @@ module.exports = {
     ]),
     project('node plugins', [
       'delivery-node',
+      'in-flight',
       'plugin-express',
       'plugin-koa',
       'plugin-restify',
