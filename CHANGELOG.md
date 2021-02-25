@@ -1,5 +1,14 @@
 # Changelog
 
+## v7.8.1 (2021-02-25)
+
+## Changed
+
+- (react-native): Update bugsnag-cocoa to v6.6.4
+  - Fix possible deadlock when recording thread information for handled errors [bugsnag-cocoa#1011](https://github.com/bugsnag/bugsnag-cocoa/pull/1011)
+  - Fix Swift 5.4 fatal error message parsing [bugsnag-cocoa#1010](https://github.com/bugsnag/bugsnag-cocoa/pull/1010)
+  - Improve accuracy of jailbreak detection [bugsnag-cocoa#1000](https://github.com/bugsnag/bugsnag-cocoa/pull/1000)
+
 ## v7.8.0 (2021-02-22)
 
 ### Changed
