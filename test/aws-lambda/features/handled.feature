@@ -19,3 +19,7 @@ Scenario: handled exception in an async lambda
     And the "file" of stack frame 0 equals "handled-exception.js"
     And the event "metaData.AWS Lambda context.functionName" equals "AsyncHandledExceptionFunction"
     And the event "metaData.AWS Lambda context.awsRequestId" is not null
+    When I wait to receive a session
+    Then the session is valid for the session reporting API version "1" for the "Bugsnag Node" notifier
+    And the session "id" is not null
+    And the session "startedAt" is a timestamp
