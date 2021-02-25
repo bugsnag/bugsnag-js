@@ -60,9 +60,9 @@ Scenario: no git repo, run anyway, invalid API key
     When I input a return interactively
     Then I wait for the current stdout line to match the regex "What is your Bugsnag project API key\?"
     When I input a return interactively
-    Then I wait for the current stdout line to match the regex "API key is required\. You can find it by going to https:\/\/app\.bugsnag\.com\/settings\/ > Projects"
+    Then I wait for the current stdout line to match the regex "API key is required\. You can find it by going to https://app\.bugsnag\.com/settings/ > Projects"
     When I input "abcd" interactively
-    Then I wait for the current stdout line to match the regex "API key is required\. You can find it by going to https:\/\/app\.bugsnag\.com\/settings\/ > Projects"
+    Then I wait for the current stdout line to match the regex "API key is required\. You can find it by going to https://app\.bugsnag\.com/settings/ > Projects"
     # Enter the last 28 characters of the API key as the previous input ("abcd") is still present
     When I input "efabcdefabcdefabcdef12345678" interactively
     Then I wait for the shell to output a match for the regex "Updated AndroidManifest\.xml" to stdout
