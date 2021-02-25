@@ -27,20 +27,35 @@ module.exports = {
       }
     }
 
-    const delivery = client._delivery
-    const originalSendSession = delivery.sendSession
+    const patchDelivery = (delivery) => {
+      const originalSendSession = delivery.sendSession
 
-    delivery.sendSession = function (session, callback = noop) {
-      const id = cuid()
-      inFlightRequests.set(id, true)
+      delivery.sendSession = function (session, callback = noop) {
+        const id = cuid()
+        inFlightRequests.set(id, true)
 
-      const _callback = function () {
-        inFlightRequests.delete(id)
-        callback.apply(null, arguments)
+        const _callback = function () {
+          inFlightRequests.delete(id)
+          callback.apply(null, arguments)
+        }
+
+        originalSendSession.call(delivery, session, _callback)
       }
-
-      originalSendSession.call(delivery, session, _callback)
     }
+
+    let delivery = client._delivery
+    patchDelivery(delivery)
+
+    // ensure we also monkey-patch any new delivery that might be set
+    Object.defineProperty(client, '_delivery', {
+      get () {
+        return delivery
+      },
+      set (newDeliviery) {
+        patchDelivery(newDeliviery)
+        delivery = newDeliviery
+      }
+    })
   },
 
   flush (timeoutMs) {

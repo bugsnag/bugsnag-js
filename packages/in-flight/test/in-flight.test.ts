@@ -216,4 +216,79 @@ describe('@bugsnag/in-flight', () => {
     expect(eventPayloads.length).toBe(1)
     expect(sessionPayloads.length).toBe(1)
   })
+
+  it('can track requests when delivery is changed', async () => {
+    const client = new Client({ apiKey: 'AN_API_KEY' })
+    const originalEventPayloads: EventDeliveryPayload[] = []
+    const originalSessionPayloads: SessionDeliveryPayload[] = []
+
+    client._sessionDelegate = {
+      startSession (client, session) {
+        client._delivery.sendSession(session, () => {})
+      },
+      pauseSession: () => {},
+      resumeSession: () => {}
+    }
+
+    client._setDelivery(() => ({
+      sendEvent (payload, cb) {
+        setTimeout(function () {
+          originalEventPayloads.push(payload)
+          cb()
+        }, 100)
+      },
+      sendSession (payload, cb) {
+        setTimeout(function () {
+          originalSessionPayloads.push(payload)
+          cb()
+        }, 100)
+      }
+    }))
+
+    bugsnagInFlight.trackInFlight(client)
+
+    client.notify(new Error('xyz'))
+    client.startSession()
+
+    expect(originalEventPayloads.length).toBe(0)
+    expect(originalSessionPayloads.length).toBe(0)
+
+    await bugsnagInFlight.flush(1000)
+
+    expect(originalEventPayloads.length).toBe(1)
+    expect(originalSessionPayloads.length).toBe(1)
+
+    const newEventPayloads: EventDeliveryPayload[] = []
+    const newSessionPayloads: SessionDeliveryPayload[] = []
+
+    client._setDelivery(() => ({
+      sendEvent (payload, cb) {
+        setTimeout(function () {
+          newEventPayloads.push(payload)
+          cb()
+        }, 100)
+      },
+      sendSession (payload, cb) {
+        setTimeout(function () {
+          newSessionPayloads.push(payload)
+          cb()
+        }, 100)
+      }
+    }))
+
+    client.notify(new Error('xyz'))
+    client.startSession()
+
+    expect(originalEventPayloads.length).toBe(1)
+    expect(originalSessionPayloads.length).toBe(1)
+    expect(newEventPayloads.length).toBe(0)
+    expect(newSessionPayloads.length).toBe(0)
+
+    await bugsnagInFlight.flush(1000)
+
+    expect(originalEventPayloads.length).toBe(1)
+    expect(originalSessionPayloads.length).toBe(1)
+    expect(newEventPayloads.length).toBe(1)
+    expect(newSessionPayloads.length).toBe(1)
+  })
 })
