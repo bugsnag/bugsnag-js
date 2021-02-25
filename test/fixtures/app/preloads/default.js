@@ -1,14 +1,13 @@
 const { contextBridge, ipcRenderer } = require('electron')
 
-
 contextBridge.exposeInMainWorld('RunnerAPI', {
-  mainProcessCrash: function() {
+  mainProcessCrash: () => {
     ipcRenderer.send('main-process-crash')
   },
-  mainProcessUnhandledPromiseRejection: function() {
+  mainProcessUnhandledPromiseRejection: () => {
     ipcRenderer.send('main-process-unhandled-promise-rejection')
   },
-  mainProcessUncaughtException: function() {
+  mainProcessUncaughtException: () => {
     ipcRenderer.send('main-process-uncaught-exception')
-  },
+  }
 })
