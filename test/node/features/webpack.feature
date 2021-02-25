@@ -7,8 +7,8 @@ Background:
 
 Scenario: calling notify() with an error
   And I run the service "webpack" with the command "node dist/index.bundle.js"
-  And I wait to receive a request
-  Then the request is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
+  And I wait to receive an error
+  Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is false
   And the event "severity" equals "warning"
   And the event "severityReason.type" equals "handledException"

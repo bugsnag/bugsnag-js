@@ -9,8 +9,8 @@ Background:
 
 Scenario: a synchronous thrown error in a route
   Then I open the URL "http://koa/err"
-  And I wait to receive a request
-  Then the request is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
+  And I wait to receive an error
+  Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is true
   And the event "severity" equals "error"
   And the event "severityReason.type" equals "unhandledErrorMiddleware"
@@ -24,8 +24,8 @@ Scenario: a synchronous thrown error in a route
 
 Scenario: an asynchronous thrown error in a route
   Then I open the URL "http://koa/async-err"
-  And I wait to receive a request
-  Then the request is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
+  And I wait to receive an error
+  Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is true
   And the event "severity" equals "error"
   And the event "severityReason.type" equals "unhandledErrorMiddleware"
@@ -36,8 +36,8 @@ Scenario: an asynchronous thrown error in a route
 
 Scenario: An error created with with ctx.throw()
   Then I open the URL "http://koa/ctx-throw"
-  And I wait to receive a request
-  Then the request is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
+  And I wait to receive an error
+  Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is true
   And the event "severity" equals "error"
   And the event "severityReason.type" equals "unhandledErrorMiddleware"
@@ -49,8 +49,8 @@ Scenario: An error created with with ctx.throw()
 
 Scenario: an error thrown before the requestHandler middleware
   Then I open the URL "http://koa/error-before-handler"
-  And I wait to receive a request
-  Then the request is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
+  And I wait to receive an error
+  Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is true
   And the event "severity" equals "error"
   And the event "severityReason.type" equals "unhandledErrorMiddleware"
@@ -61,8 +61,8 @@ Scenario: an error thrown before the requestHandler middleware
 
 Scenario: throwing non-Error error
   Then I open the URL "http://koa/throw-non-error"
-  And I wait to receive a request
-  Then the request is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
+  And I wait to receive an error
+  Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is true
   And the event "severity" equals "error"
   And the event "severityReason.type" equals "unhandledErrorMiddleware"
@@ -72,15 +72,15 @@ Scenario: throwing non-Error error
 
 Scenario: A non-5XX error created with ctx.throw()
   When I open the URL "http://koa/ctx-throw-400"
-  And I wait to receive a request
-  Then the request is valid for the session reporting API version "1" for the "Bugsnag Node" notifier
-  And the payload has a valid sessions array
+  And I wait to receive a session
+  Then the session is valid for the session reporting API version "1" for the "Bugsnag Node" notifier
+  And the session payload has a valid sessions array
   And the sessionCount "sessionsStarted" equals 1
 
 Scenario: A handled error with ctx.bugsnag.notify()
   Then I open the URL "http://koa/handled"
-  And I wait to receive a request
-  Then the request is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
+  And I wait to receive an error
+  Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is false
   And the event "severity" equals "warning"
   And the exception "errorClass" equals "Error"
