@@ -131,6 +131,74 @@ describe('plugin: aws lambda', () => {
     expect(payloads[0].events[0].errors[0].errorMessage).toBe(error.message)
   })
 
+  it('does not notify when "autoDetectErrors" is false (async)', async () => {
+    const client = new Client({ apiKey: 'AN_API_KEY', plugins: [BugsnagPluginAwsLambda], autoDetectErrors: false })
+    const payloads: EventDeliveryPayload[] = []
+
+    client._setDelivery(() => ({
+      sendEvent (payload, cb) {
+        payloads.push(payload)
+        cb()
+      },
+      sendSession: () => {}
+    }))
+
+    const error = new Error('oh no')
+    const handler = (event: any, context: any) => { throw error }
+
+    const event = { very: 'eventy' }
+    const context = { extremely: 'contextual' }
+
+    const plugin = client.getPlugin('awsLambda')
+
+    if (!plugin) {
+      throw new Error('Plugin was not loaded!')
+    }
+
+    const bugsnagHandler = plugin.createHandler()
+    const wrappedHandler = bugsnagHandler(handler)
+
+    expect(payloads).toHaveLength(0)
+
+    await expect(() => wrappedHandler(event, context)).rejects.toThrow(error)
+
+    expect(payloads).toHaveLength(0)
+  })
+
+  it('does not notify when "unhandledExceptions" are disabled (async)', async () => {
+    const client = new Client({ apiKey: 'AN_API_KEY', plugins: [BugsnagPluginAwsLambda], enabledErrorTypes: { unhandledExceptions: false } })
+    const payloads: EventDeliveryPayload[] = []
+
+    client._setDelivery(() => ({
+      sendEvent (payload, cb) {
+        payloads.push(payload)
+        cb()
+      },
+      sendSession: () => {}
+    }))
+
+    const error = new Error('oh no')
+    const handler = (event: any, context: any) => { throw error }
+
+    const event = { very: 'eventy' }
+    const context = { extremely: 'contextual' }
+
+    const plugin = client.getPlugin('awsLambda')
+
+    if (!plugin) {
+      throw new Error('Plugin was not loaded!')
+    }
+
+    const bugsnagHandler = plugin.createHandler()
+    const wrappedHandler = bugsnagHandler(handler)
+
+    expect(payloads).toHaveLength(0)
+
+    await expect(() => wrappedHandler(event, context)).rejects.toThrow(error)
+
+    expect(payloads).toHaveLength(0)
+  })
+
   it('returns a wrapped handler that resolves to the value passed to the callback (callback)', async () => {
     const client = new Client({ apiKey: 'AN_API_KEY', plugins: [BugsnagPluginAwsLambda] })
 
@@ -184,6 +252,74 @@ describe('plugin: aws lambda', () => {
 
     expect(payloads).toHaveLength(1)
     expect(payloads[0].events[0].errors[0].errorMessage).toBe(error.message)
+  })
+
+  it('does not notify when "autoDetectErrors" is false (callback)', async () => {
+    const client = new Client({ apiKey: 'AN_API_KEY', plugins: [BugsnagPluginAwsLambda], autoDetectErrors: false })
+    const payloads: EventDeliveryPayload[] = []
+
+    client._setDelivery(() => ({
+      sendEvent (payload, cb) {
+        payloads.push(payload)
+        cb()
+      },
+      sendSession: () => {}
+    }))
+
+    const error = new Error('uh oh')
+    const handler = (event: any, context: any, callback: any) => { callback(error, 'xyz') }
+
+    const event = { very: 'eventy' }
+    const context = { extremely: 'contextual' }
+
+    const plugin = client.getPlugin('awsLambda')
+
+    if (!plugin) {
+      throw new Error('Plugin was not loaded!')
+    }
+
+    const bugsnagHandler = plugin.createHandler()
+    const wrappedHandler = bugsnagHandler(handler)
+
+    expect(payloads).toHaveLength(0)
+
+    await expect(() => wrappedHandler(event, context)).rejects.toThrow(error)
+
+    expect(payloads).toHaveLength(0)
+  })
+
+  it('does not notify when "unhandledExceptions" are disabled (callback)', async () => {
+    const client = new Client({ apiKey: 'AN_API_KEY', plugins: [BugsnagPluginAwsLambda], enabledErrorTypes: { unhandledExceptions: false } })
+    const payloads: EventDeliveryPayload[] = []
+
+    client._setDelivery(() => ({
+      sendEvent (payload, cb) {
+        payloads.push(payload)
+        cb()
+      },
+      sendSession: () => {}
+    }))
+
+    const error = new Error('uh oh')
+    const handler = (event: any, context: any, callback: any) => { callback(error, 'xyz') }
+
+    const event = { very: 'eventy' }
+    const context = { extremely: 'contextual' }
+
+    const plugin = client.getPlugin('awsLambda')
+
+    if (!plugin) {
+      throw new Error('Plugin was not loaded!')
+    }
+
+    const bugsnagHandler = plugin.createHandler()
+    const wrappedHandler = bugsnagHandler(handler)
+
+    expect(payloads).toHaveLength(0)
+
+    await expect(() => wrappedHandler(event, context)).rejects.toThrow(error)
+
+    expect(payloads).toHaveLength(0)
   })
 
   it('works when an async handler has the callback parameter', async () => {

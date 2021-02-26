@@ -29,15 +29,17 @@ function wrapHandler (client, flushTimeoutMs, handler) {
     try {
       return await _handler(event, context)
     } catch (err) {
-      const handledState = {
-        severity: 'error',
-        unhandled: true,
-        severityReason: { type: 'unhandledException' }
+      if (client._config.autoDetectErrors && client._config.enabledErrorTypes.unhandledExceptions) {
+        const handledState = {
+          severity: 'error',
+          unhandled: true,
+          severityReason: { type: 'unhandledException' }
+        }
+
+        const event = client.Event.create(err, true, handledState, 1)
+
+        client._notify(event)
       }
-
-      const event = client.Event.create(err, true, handledState, 1)
-
-      client._notify(event)
 
       throw err
     } finally {
