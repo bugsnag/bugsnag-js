@@ -1,8 +1,18 @@
 const { join } = require('path')
+const Bugsnag = require('@bugsnag/electron')
 
 const configFile = process.env.BUGSNAG_CONFIG || 'default'
 const config = require(`./configs/${configFile}`)()
-console.log(config)
+
+Bugsnag.start({
+  apiKey: process.env.BUGSNAG_API_KEY,
+  endpoints: {
+    notify: process.env.BUGSNAG_ENDPOINT_NOTIFY,
+    sessions: process.env.BUGSNAG_ENDPOINT_SESSIONS,
+    minidumps: process.env.BUGSNAG_ENDPOINT_MINIDUMPS
+  },
+  ...config
+})
 
 const preloadFile = process.env.BUGSNAG_PRELOAD || 'default.js'
 

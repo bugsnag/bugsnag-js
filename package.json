@@ -41,6 +41,7 @@
     "playwright": "^1.9.1-1614225150000",
     "ts-node": "^9.1.1",
     "typescript": "^4.1.3",
+    "verdaccio": "^4.11.1",
     "xvfb-maybe": "^0.2.1"
   },
   "scripts": {
@@ -48,6 +49,9 @@
     "build": "lerna exec node-gyp configure build --scope @bugsnag/plugin-electron-client-sync",
     "test:unit": "npm run build && jest --color && npx tsc --noEmit",
     "test:lint": "eslint --ext .ts,.js --report-unused-disable-directives --max-warnings=0 .",
-    "test:cucumber": "xvfb-maybe --auto-servernum -- cucumber-js test/features"
+    "test:cucumber": "xvfb-maybe --auto-servernum -- cucumber-js test/features",
+    "local-npm:start": "verdaccio --listen 0.0.0.0:5539",
+    "local-npm:login": "bash scripts/local-npm-adduser.sh",
+    "local-npm:publish-all": "lerna publish \"$VERSION_IDENTIFIER\" --yes --exact --no-push --no-git-reset --no-git-tag-version --registry 'http://0.0.0.0:5539'"
   }
 }

@@ -28,7 +28,7 @@ JavaScript and TypeScript files in this repository are linted using [ESLint](htt
 
 Integration tests are written as [Cucumber](https://cucumber.io/) features, using the [cucumber.js](https://cucumber.io/docs/installation/javascript/) library. All features should be in the [`test/features`](features) directory. A [host application](fixtures/app) is packaged just once at the beginning of the test (using [electron-forge](https://www.electronforge.io/)) and includes the ability to change the Bugsnag configuration based on a file.
 
-Each test replicates the process of launching an app, triggering an error handling scenario using one or more click events, and terminating the app. The test can then validate the final app state and any web requests sent from the app to ensure correct behavior.
+Each test replicates the process of packaging `@bugsnag/electron`, installing it into an app, launching the app, triggering an error handling scenario using one or more click events, and terminating the app. The test can then validate the final app state and any web requests sent from the app to ensure correct behavior.
 
 ```
 {root}
@@ -44,6 +44,14 @@ Each test replicates the process of launching an app, triggering an error handli
         └── events
             └── {sample upload files}
 ```
+
+### Customizing test execution
+
+Run an individual test with `cucumber-js test/features/{a feature}.feature:{lineno}`
+
+Disable re-packaging `@bugsnag/electron` by setting `SKIP_INSTALL`
+
+Disable re-packaging the test app using `SKIP_PACKAGE_APP`
 
 ### Setting a custom configuration
 
