@@ -37,3 +37,29 @@ Resources:
           Properties:
             Path: /async/handled/exception
             Method: get
+
+  CallbackUnhandledExceptionFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: callback/
+      Handler: unhandled-exception.lambdaHandler
+      Runtime: nodejs14.x
+      Events:
+        CallbackUnhandledException:
+          Type: Api
+          Properties:
+            Path: /callback/unhandled/exception
+            Method: get
+
+  CallbackHandledExceptionFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: callback/
+      Handler: handled-exception.lambdaHandler
+      Runtime: nodejs14.x
+      Events:
+        CallbackHandledException:
+          Type: Api
+          Properties:
+            Path: /callback/handled/exception
+            Method: get
