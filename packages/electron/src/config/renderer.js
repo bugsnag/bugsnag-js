@@ -7,6 +7,10 @@ const ALLOWED_IN_RENDERER = [
 
 module.exports.schema = {
   ...schema,
+  releaseStage: {
+    ...schema.releaseStage,
+    defaultValue: () => null
+  },
   logger: Object.assign({}, schema.logger, {
     defaultValue: () => getPrefixedConsole()
   })

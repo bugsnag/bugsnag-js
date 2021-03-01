@@ -83,14 +83,6 @@ module.exports.schema = {
   }
 }
 
-const DO_NOT_SERIALIZE = ['logger', 'plugins']
-module.exports.serializeConfigForRenderer = opts => {
-  return JSON.stringify(Object.keys(module.exports.schema).reduce((accum, k) => {
-    if (!DO_NOT_SERIALIZE.includes(k)) return { ...accum, [k]: opts[k] }
-    return accum
-  }, {}))
-}
-
 const printError = err => err && err.stack ? err.stack : inspect(err)
 
 const getPrefixedConsole = () => {

@@ -2,29 +2,22 @@
 if (document.location.protocol === 'devtools:') return
 
 const { ipcRenderer, contextBridge } = require('electron')
+const BugsnagIpcRenderer = require('./bugsnag-ipc-renderer')
 
 // one sync call is required on startup to get the main process config
-const config = ipcRenderer.sendSync('bugsnag::sync', { method: 'configure', args: [] })
+const config = ipcRenderer.sendSync('bugsnag::configure', { method: 'configure', args: [] })
 if (!config) throw new Error('Bugsnag was not started in the main process before browser windows were created')
 
-const BugsnagIpcSender = {
-  config: JSON.parse(config)
+const bugsnagIpcRenderer = new BugsnagIpcRenderer()
 
-  // IPC methods will be defined here
-
-  // notify: () => {}
-  // leaveBreadcrumb: () => {}
-  // updateContext: (ctx) => {}
-  // updateUser: () => {}
-
-  /* etc. */
-}
+// attach config to the exposed interface
+bugsnagIpcRenderer.config = JSON.parse(config)
 
 // expose Bugsnag as a global object for the browser
 try {
   // assume contextIsolation=true
-  contextBridge.exposeInMainWorld('__bugsnag_ipc__', BugsnagIpcSender)
+  contextBridge.exposeInMainWorld('__bugsnag_ipc__', bugsnagIpcRenderer)
 } catch (e) {
   // fallback to directly assigning to the window
-  window.__bugsnag_ipc__ = BugsnagIpcSender
+  window.__bugsnag_ipc__ = bugsnagIpcRenderer
 }

@@ -1,12 +1,13 @@
 const Client = require('@bugsnag/core/client')
 const { schema, mergeOptions } = require('../config/renderer')
-const internalPlugins = [
-  // renderer internal plugins go here
-]
 
 module.exports = (rendererOpts) => {
   if (!window.__bugsnag_ipc__) throw new Error('Bugsnag was not loaded in the main process')
   const opts = mergeOptions(window.__bugsnag_ipc__.config, rendererOpts)
+
+  const internalPlugins = [
+    require('@bugsnag/plugin-electron-renderer-client-sync')(window.__bugsnag_ipc__)
+  ]
 
   const bugsnag = new Client(opts, schema, internalPlugins, require('../id'))
   // bugsnag._setDelivery(electron renderer)
