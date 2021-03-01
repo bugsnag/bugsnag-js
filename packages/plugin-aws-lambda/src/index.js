@@ -15,6 +15,23 @@ const BugsnagPluginAwsLambda = {
       appDurationPlugin.reset()
     }
 
+    // AWS add a default unhandledRejection listener that forcefully exits the
+    // process. This breaks reporting of unhandled rejections, so we have to
+    // remove all existing listeners and call them after we handle the rejection
+    if (client._config.autoDetectErrors && client._config.enabledErrorTypes.unhandledRejections) {
+      const listeners = process.listeners('unhandledRejection')
+      process.removeAllListeners('unhandledRejection')
+
+      const BugsnagPluginUnhandledRejection = require('@bugsnag/plugin-node-unhandled-rejection')
+      client._loadPlugin(BugsnagPluginUnhandledRejection)
+
+      const originalOnUnhandledRejection = client._config.onUnhandledRejection
+      client._config.onUnhandledRejection = (reason, event, logger) => {
+        originalOnUnhandledRejection(reason, event, logger)
+        listeners.forEach(listener => { listener(reason) })
+      }
+    }
+
     return {
       createHandler ({ flushTimeoutMs = 2000 } = {}) {
         return wrapHandler.bind(null, client, flushTimeoutMs)
