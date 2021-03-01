@@ -51,3 +51,15 @@ Scenario: unhandled exception in an callback lambda
     Then the session is valid for the session reporting API version "1" for the "Bugsnag Node" notifier
     And the session "id" is not null
     And the session "startedAt" is a timestamp
+
+Scenario: no error is sent when autoDetectErrors is false in an async lambda
+    Given I setup the environment
+    And I set environment variable "BUGSNAG_AUTO_DETECT_ERRORS" to "false"
+    When I invoke the "AsyncUnhandledExceptionFunction" lambda in "features/fixtures/simple-app" with the "events/async/unhandled-exception.json" event
+    Then I should receive no errors
+
+Scenario: no error is sent when autoDetectErrors is false in a callback lambda
+    Given I setup the environment
+    And I set environment variable "BUGSNAG_AUTO_DETECT_ERRORS" to "false"
+    When I invoke the "CallbackUnhandledExceptionFunction" lambda in "features/fixtures/simple-app" with the "events/callback/unhandled-exception.json" event
+    Then I should receive no errors

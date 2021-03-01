@@ -11,6 +11,7 @@ Globals:
         BUGSNAG_NOTIFY_ENDPOINT:
         BUGSNAG_SESSIONS_ENDPOINT:
         BUGSNAG_AUTO_TRACK_SESSIONS: true
+        BUGSNAG_AUTO_DETECT_ERRORS: true
 
 Resources:
   AsyncUnhandledExceptionFunction:

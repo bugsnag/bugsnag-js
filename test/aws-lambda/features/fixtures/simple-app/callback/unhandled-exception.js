@@ -8,6 +8,7 @@ Bugsnag.start({
     sessions: process.env.BUGSNAG_SESSIONS_ENDPOINT
   },
   plugins: [BugsnagPluginAwsLambda],
+  autoDetectErrors: process.env.BUGSNAG_AUTO_DETECT_ERRORS !== 'false',
   autoTrackSessions: process.env.BUGSNAG_AUTO_TRACK_SESSIONS !== 'false'
 })
 
