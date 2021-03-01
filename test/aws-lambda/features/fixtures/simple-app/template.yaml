@@ -14,7 +14,7 @@ Globals:
         BUGSNAG_AUTO_DETECT_ERRORS: true
 
 Resources:
-  AsyncUnhandledExceptionFunction:
+  AsyncUnhandledExceptionFunctionNode14:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: async/
@@ -27,7 +27,7 @@ Resources:
             Path: /async/unhandled/exception
             Method: get
 
-  AsyncHandledExceptionFunction:
+  AsyncHandledExceptionFunctionNode14:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: async/
@@ -40,7 +40,7 @@ Resources:
             Path: /async/handled/exception
             Method: get
 
-  CallbackUnhandledExceptionFunction:
+  CallbackUnhandledExceptionFunctionNode14:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: callback/
@@ -53,12 +53,64 @@ Resources:
             Path: /callback/unhandled/exception
             Method: get
 
-  CallbackHandledExceptionFunction:
+  CallbackHandledExceptionFunctionNode14:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: callback/
       Handler: handled-exception.lambdaHandler
       Runtime: nodejs14.x
+      Events:
+        CallbackHandledException:
+          Type: Api
+          Properties:
+            Path: /callback/handled/exception
+            Method: get
+
+  AsyncUnhandledExceptionFunctionNode12:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: async/
+      Handler: unhandled-exception.lambdaHandler
+      Runtime: nodejs12.x
+      Events:
+        AsyncUnhandledException:
+          Type: Api
+          Properties:
+            Path: /async/unhandled/exception
+            Method: get
+
+  AsyncHandledExceptionFunctionNode12:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: async/
+      Handler: handled-exception.lambdaHandler
+      Runtime: nodejs12.x
+      Events:
+        AsyncHandledException:
+          Type: Api
+          Properties:
+            Path: /async/handled/exception
+            Method: get
+
+  CallbackUnhandledExceptionFunctionNode12:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: callback/
+      Handler: unhandled-exception.lambdaHandler
+      Runtime: nodejs12.x
+      Events:
+        CallbackUnhandledException:
+          Type: Api
+          Properties:
+            Path: /callback/unhandled/exception
+            Method: get
+
+  CallbackHandledExceptionFunctionNode12:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: callback/
+      Handler: handled-exception.lambdaHandler
+      Runtime: nodejs12.x
       Events:
         CallbackHandledException:
           Type: Api
