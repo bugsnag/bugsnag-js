@@ -1,10 +1,12 @@
 const bugsnagInFlight = require('@bugsnag/in-flight')
+const BugsnagPluginBrowserSession = require('@bugsnag/plugin-browser-session')
 
 const BugsnagPluginAwsLambda = {
   name: 'awsLambda',
 
   load (client) {
     bugsnagInFlight.trackInFlight(client)
+    client._loadPlugin(BugsnagPluginBrowserSession)
 
     return {
       createHandler ({ flushTimeoutMs = 2000 } = {}) {
@@ -25,6 +27,10 @@ function wrapHandler (client, flushTimeoutMs, handler) {
 
   return async function (event, context) {
     client.addMetadata('AWS Lambda context', context)
+
+    if (client._config.autoTrackSessions) {
+      client.startSession()
+    }
 
     try {
       return await _handler(event, context)
