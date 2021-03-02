@@ -36,7 +36,7 @@ function wrapHandler (client, flushTimeoutMs, handler) {
           severityReason: { type: 'unhandledException' }
         }
 
-        const event = client.Event.create(err, true, handledState, 1)
+        const event = client.Event.create(err, true, handledState, 'aws lambda plugin', 1)
 
         client._notify(event)
       }
