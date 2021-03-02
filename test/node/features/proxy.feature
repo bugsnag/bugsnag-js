@@ -2,8 +2,8 @@ Feature: Proxy support
 
 Background:
   Given I store the api key in the environment variable "BUGSNAG_API_KEY"
-  And I store the endpoint in the environment variable "BUGSNAG_NOTIFY_ENDPOINT"
-  And I store the endpoint in the environment variable "BUGSNAG_SESSIONS_ENDPOINT"
+  And I store the notify endpoint in the environment variable "BUGSNAG_NOTIFY_ENDPOINT"
+  And I store the sessions endpoint in the environment variable "BUGSNAG_SESSIONS_ENDPOINT"
 
 Scenario: using options to configure a proxy
   And I run the service "proxy" with the command "node scenarios/config-proxy"

@@ -2,8 +2,8 @@ Feature: @bugsnag/plugin-restify
 
 Background:
   Given I store the api key in the environment variable "BUGSNAG_API_KEY"
-  And I store the endpoint in the environment variable "BUGSNAG_NOTIFY_ENDPOINT"
-  And I store the endpoint in the environment variable "BUGSNAG_SESSIONS_ENDPOINT"
+  And I store the notify endpoint in the environment variable "BUGSNAG_NOTIFY_ENDPOINT"
+  And I store the sessions endpoint in the environment variable "BUGSNAG_SESSIONS_ENDPOINT"
   And I start the service "restify"
   And I wait for the host "restify" to open port "80"
 

@@ -2,8 +2,8 @@ Feature: Reporting unhandled errors
 
 Background:
   Given I store the api key in the environment variable "BUGSNAG_API_KEY"
-  And I store the endpoint in the environment variable "BUGSNAG_NOTIFY_ENDPOINT"
-  And I store the endpoint in the environment variable "BUGSNAG_SESSIONS_ENDPOINT"
+  And I store the notify endpoint in the environment variable "BUGSNAG_NOTIFY_ENDPOINT"
+  And I store the sessions endpoint in the environment variable "BUGSNAG_SESSIONS_ENDPOINT"
 
 Scenario: reporting thrown exception which is not caught
   And I run the service "unhandled" with the command "node scenarios/thrown-error-not-caught"

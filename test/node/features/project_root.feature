@@ -2,8 +2,8 @@ Feature: Setting project root
 
 Background:
   Given I store the api key in the environment variable "BUGSNAG_API_KEY"
-  And I store the endpoint in the environment variable "BUGSNAG_NOTIFY_ENDPOINT"
-  And I store the endpoint in the environment variable "BUGSNAG_SESSIONS_ENDPOINT"
+  And I store the notify endpoint in the environment variable "BUGSNAG_NOTIFY_ENDPOINT"
+  And I store the sessions endpoint in the environment variable "BUGSNAG_SESSIONS_ENDPOINT"
 
 Scenario: project root should default to the current working directory
   And I run the service "project_root" with the command "node scenarios/project-root-default"
