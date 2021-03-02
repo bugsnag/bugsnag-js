@@ -22,6 +22,13 @@ describe('plugin-app-duration', () => {
     client.notify(new Error('acbd'))
   })
 
+  it('has a name', () => {
+    expect(plugin.name).toBe('appDuration')
+
+    const client = new Client({ apiKey: 'api_key', plugins: [plugin] })
+    expect(client.getPlugin('appDuration')).toBeDefined()
+  })
+
   it('can be restarted', async () => {
     let appDurationCallback = (event: Event) => { throw new Error('Should never be called') }
 
