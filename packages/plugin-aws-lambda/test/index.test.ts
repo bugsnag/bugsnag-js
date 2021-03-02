@@ -514,35 +514,4 @@ describe('plugin: aws lambda', () => {
     expect(events).toHaveLength(0)
     expect(sessions).toHaveLength(0)
   })
-
-  it('sets the app.duration field on events', async () => {
-    const events: EventDeliveryPayload[] = []
-    const sessions: SessionDeliveryPayload[] = []
-
-    const client = createClient(events, sessions)
-
-    const handler = () => { throw new Error('oh no') }
-
-    const event = { very: 'eventy' }
-    const context = { extremely: 'contextual' }
-
-    const plugin = client.getPlugin('awsLambda')
-
-    if (!plugin) {
-      throw new Error('Plugin was not loaded!')
-    }
-
-    const bugsnagHandler = plugin.createHandler()
-    const wrappedHandler = bugsnagHandler(handler)
-
-    await expect(() => wrappedHandler(event, context)).rejects.toThrow('oh no')
-
-    expect(events).toHaveLength(1)
-    expect(sessions).toHaveLength(1)
-
-    const duration = events[0].events[0].app.duration
-
-    expect(duration).toBeGreaterThanOrEqual(0)
-    expect(duration).toBeLessThan(500)
-  })
 })
