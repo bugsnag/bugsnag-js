@@ -1,4 +1,5 @@
-const appStart = new Date()
+let appStart = new Date()
+const reset = () => { appStart = new Date() }
 
 module.exports = {
   load: client => {
@@ -7,5 +8,7 @@ module.exports = {
 
       event.app.duration = now - appStart
     }, true)
+
+    return { reset }
   }
 }
