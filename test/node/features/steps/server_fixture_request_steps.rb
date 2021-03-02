@@ -7,3 +7,7 @@ require 'net/http'
 When("I POST the data {string} to the URL {string}") do |reqbody, url|
   Net::HTTP.post(URI(url), reqbody)
 end
+
+Then("I log the env var {string}") do |var|
+  pp ENV[var]
+end
