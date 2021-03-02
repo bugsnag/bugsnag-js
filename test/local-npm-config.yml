@@ -1,0 +1,18 @@
+storage: ../.verdaccio
+auth:
+  htpasswd:
+    file: ../.verdaccio/htpasswd
+uplinks:
+  npmjs:
+    url: https://registry.npmjs.org/
+packages:
+  '@bugsnag/*':
+    access: $anonymous
+    publish: $anonymous
+    proxy: npmjs
+  '@*/*':
+    access: $anonymous
+    proxy: npmjs
+  '**':
+    access: $anonymous
+    proxy: npmjs

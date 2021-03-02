@@ -50,8 +50,8 @@
     "test:unit": "npm run build && jest --color && npx tsc --noEmit",
     "test:lint": "eslint --ext .ts,.js --report-unused-disable-directives --max-warnings=0 .",
     "test:cucumber": "xvfb-maybe --auto-servernum -- cucumber-js test/features",
-    "local-npm:start": "verdaccio --listen 0.0.0.0:5539",
-    "local-npm:login": "bash scripts/local-npm-adduser.sh",
-    "local-npm:publish-all": "lerna publish \"$VERSION_IDENTIFIER\" --yes --exact --no-push --no-git-reset --no-git-tag-version --registry 'http://0.0.0.0:5539'"
+    "local-npm:start": "verdaccio --config test/local-npm-config.yml --listen 0.0.0.0:5539",
+    "local-npm:publish-all": "lerna publish \"$VERSION_IDENTIFIER\" --yes --exact --no-push --no-git-reset --no-git-tag-version --registry 'http://0.0.0.0:5539'",
+    "local-npm:publish-all-win32": "lerna publish %VERSION_IDENTIFIER% --yes --exact --no-push --no-git-reset --no-git-tag-version --registry 'http://0.0.0.0:5539'"
   }
 }

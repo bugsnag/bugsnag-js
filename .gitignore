@@ -7,6 +7,7 @@ build
 # testing
 docker-temp
 .cucumber-failures
+.verdaccio
 
 # general dev
 node_modules

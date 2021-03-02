@@ -3,6 +3,8 @@ const { spawn } = require('child_process')
 
 const defaultFixturePath = join(__dirname, '../../fixtures/app')
 
+const npmRunner = process.platform === 'win32' ? 'npm.cmd' : 'npm'
+
 class TestApp {
   constructor (pathToFixture = defaultFixturePath) {
     this.buildDir = pathToFixture
@@ -11,17 +13,17 @@ class TestApp {
 
   async installDeps () {
     // retry install commands to avoid intermittent failure in electron-rebuild
-    await this._exec('npm', ['install'], 1)
+    await this._exec(npmRunner, ['install'], 1)
   }
 
   async packageApp () {
-    await this._exec('npm', ['run', 'package'])
+    await this._exec(npmRunner, ['run', 'package'])
   }
 
   async installBugsnag (version) {
     // can't avoid altering the test app's package.json? :(
     // https://github.com/npm/npm/issues/17927
-    await this._exec('npm', ['install', `@bugsnag/electron@${version}`, '--registry', 'http://0.0.0.0:5539'], 1)
+    await this._exec(npmRunner, ['install', `@bugsnag/electron@${version}`, '--registry', 'http://0.0.0.0:5539'], 1)
   }
 
   packagedPath () {
@@ -33,6 +35,8 @@ class TestApp {
         return join(base, `${name}.app/Contents/MacOS/${name}`)
       case 'linux':
         return join(base, name)
+      case 'win32':
+        return join(base, `${name}.exe`)
 
       default:
         throw new Error(`No packaged app path configured for ${platform}`)
