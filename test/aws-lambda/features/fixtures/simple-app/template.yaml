@@ -53,6 +53,19 @@ Resources:
             Path: /callback/unhandled/exception
             Method: get
 
+  CallbackThrownUnhandledExceptionFunctionNode14:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: callback/
+      Handler: thrown-unhandled-exception.lambdaHandler
+      Runtime: nodejs14.x
+      Events:
+        CallbackThrownUnhandledException:
+          Type: Api
+          Properties:
+            Path: /callback/thrown/unhandled/exception
+            Method: get
+
   CallbackHandledExceptionFunctionNode14:
     Type: AWS::Serverless::Function
     Properties:
@@ -103,6 +116,19 @@ Resources:
           Type: Api
           Properties:
             Path: /callback/unhandled/exception
+            Method: get
+
+  CallbackThrownUnhandledExceptionFunctionNode12:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: callback/
+      Handler: thrown-unhandled-exception.lambdaHandler
+      Runtime: nodejs12.x
+      Events:
+        CallbackThrownUnhandledException:
+          Type: Api
+          Properties:
+            Path: /callback/thrown/unhandled/exception
             Method: get
 
   CallbackHandledExceptionFunctionNode12:

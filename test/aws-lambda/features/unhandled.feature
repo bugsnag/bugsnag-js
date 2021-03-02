@@ -18,7 +18,7 @@ Scenario Outline: unhandled exceptions are reported
     And the exception "errorClass" equals "Error"
     And the exception "message" equals "Oh no!"
     And the exception "type" equals "nodejs"
-    And the "file" of stack frame 0 equals "unhandled-exception.js"
+    And the "file" of stack frame 0 equals "<file>"
     And the event "metaData.AWS Lambda context.functionName" equals "<lambda>"
     And the event "metaData.AWS Lambda context.awsRequestId" is not null
     And the event "device.runtimeVersions.node" matches "^<node-version>\.\d+\.\d+$"
@@ -28,11 +28,13 @@ Scenario Outline: unhandled exceptions are reported
     And the session "startedAt" is a timestamp
 
     Examples:
-        | lambda                                   | type     | node-version | trace-length |
-        | AsyncUnhandledExceptionFunctionNode14    | async    | 14           | 4            |
-        | AsyncUnhandledExceptionFunctionNode12    | async    | 12           | 4            |
-        | CallbackUnhandledExceptionFunctionNode14 | callback | 14           | 7            |
-        | CallbackUnhandledExceptionFunctionNode12 | callback | 12           | 7            |
+        | lambda                                         | type     | file                          | node-version | trace-length |
+        | AsyncUnhandledExceptionFunctionNode14          | async    | unhandled-exception.js        | 14           | 4            |
+        | AsyncUnhandledExceptionFunctionNode12          | async    | unhandled-exception.js        | 12           | 4            |
+        | CallbackUnhandledExceptionFunctionNode14       | callback | unhandled-exception.js        | 14           | 7            |
+        | CallbackUnhandledExceptionFunctionNode12       | callback | unhandled-exception.js        | 12           | 7            |
+        | CallbackThrownUnhandledExceptionFunctionNode14 | callback | thrown-unhandled-exception.js | 14           | 7            |
+        | CallbackThrownUnhandledExceptionFunctionNode12 | callback | thrown-unhandled-exception.js | 12           | 7            |
 
 Scenario Outline: no error is reported when autoDetectErrors is false
     Given I setup the environment
@@ -41,8 +43,10 @@ Scenario Outline: no error is reported when autoDetectErrors is false
     Then I should receive no errors
 
     Examples:
-        | lambda                                   | type     |
-        | AsyncUnhandledExceptionFunctionNode14    | async    |
-        | AsyncUnhandledExceptionFunctionNode12    | async    |
-        | CallbackUnhandledExceptionFunctionNode14 | callback |
-        | CallbackUnhandledExceptionFunctionNode12 | callback |
+        | lambda                                         | type     |
+        | AsyncUnhandledExceptionFunctionNode14          | async    |
+        | AsyncUnhandledExceptionFunctionNode12          | async    |
+        | CallbackUnhandledExceptionFunctionNode14       | callback |
+        | CallbackUnhandledExceptionFunctionNode12       | callback |
+        | CallbackThrownUnhandledExceptionFunctionNode14 | callback |
+        | CallbackThrownUnhandledExceptionFunctionNode12 | callback |
