@@ -8,6 +8,8 @@ Globals:
     Environment:
       Variables:
         BUGSNAG_API_KEY:
+        BUGSNAG_NOTIFY_ENDPOINT:
+        BUGSNAG_SESSIONS_ENDPOINT:
 
 Resources:
   AsyncUnhandledExceptionFunction:

@@ -5,9 +5,11 @@
   "dependencies": {
     "@bugsnag/core": "bugsnag-core.tgz",
     "@bugsnag/delivery-node": "bugsnag-delivery-node.tgz",
+    "@bugsnag/in-flight": "bugsnag-in-flight.tgz",
     "@bugsnag/js": "bugsnag-js.tgz",
     "@bugsnag/node": "bugsnag-node.tgz",
     "@bugsnag/plugin-app-duration": "bugsnag-plugin-app-duration.tgz",
+    "@bugsnag/plugin-aws-lambda": "bugsnag-plugin-aws-lambda.tgz",
     "@bugsnag/plugin-contextualize": "bugsnag-plugin-contextualize.tgz",
     "@bugsnag/plugin-intercept": "bugsnag-plugin-intercept.tgz",
     "@bugsnag/plugin-node-device": "bugsnag-plugin-node-device.tgz",
