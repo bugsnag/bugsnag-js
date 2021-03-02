@@ -8,12 +8,22 @@ module.exports = {
         unhandled: true,
         severityReason: { type: 'unhandledPromiseRejection' }
       }, 'unhandledRejection handler', 1)
-      client._notify(event, () => {}, (e, event) => {
-        if (e) client._logger.error('Failed to send event to Bugsnag')
-        client._config.onUnhandledRejection(err, event, client._logger)
+
+      return new Promise(resolve => {
+        client._notify(event, () => {}, (e, event) => {
+          if (e) client._logger.error('Failed to send event to Bugsnag')
+          client._config.onUnhandledRejection(err, event, client._logger)
+          resolve()
+        })
       })
     }
-    process.on('unhandledRejection', _handler)
+
+    // Prepend the listener if we can (Node 6+)
+    if (process.prependListener) {
+      process.prependListener('unhandledRejection', _handler)
+    } else {
+      process.on('unhandledRejection', _handler)
+    }
   },
   destroy: () => {
     process.removeListener('unhandledRejection', _handler)

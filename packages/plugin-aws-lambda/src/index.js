@@ -22,14 +22,13 @@ const BugsnagPluginAwsLambda = {
       const listeners = process.listeners('unhandledRejection')
       process.removeAllListeners('unhandledRejection')
 
-      const BugsnagPluginUnhandledRejection = require('@bugsnag/plugin-node-unhandled-rejection')
-      client._loadPlugin(BugsnagPluginUnhandledRejection)
-
-      const originalOnUnhandledRejection = client._config.onUnhandledRejection
-      client._config.onUnhandledRejection = (reason, event, logger) => {
-        originalOnUnhandledRejection(reason, event, logger)
-        listeners.forEach(listener => { listener(reason) })
-      }
+      // This relies on our unhandled rejection plugin adding its listener first
+      // using process.prependListener, so we can call it first instead of AWS'
+      process.on('unhandledRejection', async (reason, promise) => {
+        for (const listener of listeners) {
+          await listener.call(process, reason, promise)
+        }
+      })
     }
 
     return {

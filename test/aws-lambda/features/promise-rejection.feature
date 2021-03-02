@@ -5,7 +5,7 @@ Scenario Outline: unhandled promise rejections are reported
     When I invoke the "<lambda>" lambda in "features/fixtures/simple-app" with the "events/<type>/promise-rejection.json" event
     Then the lambda response "errorMessage" equals "Error: yikes"
     And the lambda response "errorType" equals "Runtime.UnhandledPromiseRejection"
-    And the lambda response "trace" is an array with 11 elements
+    And the lambda response "trace" is an array with 4 elements
     And the lambda response "trace.0" equals "Runtime.UnhandledPromiseRejection: Error: yikes"
     And the lambda response "body" is null
     And the lambda response "statusCode" is null
