@@ -22,3 +22,5 @@ unless success
 end
 
 Maze.config.enforce_bugsnag_integrity = false
+Maze.config.receive_no_requests_wait = 10
+Maze.config.receive_requests_wait = 10
