@@ -123,7 +123,7 @@ Then("the iOS build has been modified to upload source maps") do
 
   steps %Q{
     Then I input "./check-ios-build-script.sh" interactively
-    And I wait for the current stdout line to match the regex "/app #"
+    And I wait for the current stdout line to match the regex "\/app #"
     And the last interactive command exited successfully
     And the interactive file '#{filename}' contains 'Upload source maps to Bugsnag'
   }
@@ -134,7 +134,7 @@ Then("the iOS build has been modified to upload source maps to {string}") do |ex
 
   steps %Q{
     Then I input "./check-ios-build-script.sh #{expected_endpoint}" interactively
-    And I wait for the current stdout line to match the regex "/app #"
+    And I wait for the current stdout line to match the regex "\/app #"
     And the last interactive command exited successfully
     And the interactive file '#{filename}' contains 'Upload source maps to Bugsnag'
   }
