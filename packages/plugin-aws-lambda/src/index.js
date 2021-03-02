@@ -8,6 +8,13 @@ const BugsnagPluginAwsLambda = {
     bugsnagInFlight.trackInFlight(client)
     client._loadPlugin(BugsnagPluginBrowserSession)
 
+    // Reset the app duration between invocations, if the plugin is loaded
+    const appDurationPlugin = client.getPlugin('appDuration')
+
+    if (appDurationPlugin) {
+      appDurationPlugin.reset()
+    }
+
     return {
       createHandler ({ flushTimeoutMs = 2000 } = {}) {
         return wrapHandler.bind(null, client, flushTimeoutMs)
