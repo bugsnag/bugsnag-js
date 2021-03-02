@@ -20,8 +20,8 @@ Process.detach(pid)
 
 def get_test_url path
   host = ENV['HOST']
-  notify = "http://#{ENV['API_HOST']}:#{Maze::Server::PORT}/notify"
-  sessions = "http://#{ENV['API_HOST']}:#{Maze::Server::PORT}/sessions"
+  notify = "http://#{ENV['API_HOST']}:#{Maze.config.port}/notify"
+  sessions = "http://#{ENV['API_HOST']}:#{Maze.config.port}/sessions"
   "http://#{host}:#{FIXTURES_SERVER_PORT}#{path}?NOTIFY=#{notify}&SESSIONS=#{sessions}&API_KEY=#{$api_key}"
 end
 
