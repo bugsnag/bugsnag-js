@@ -28,6 +28,7 @@ steps:
         command:
           - --farm=bs
           - --browser=chrome_43
+          - --bind-address=0.0.0.0
     concurrency: 5
     concurrency_group: 'browserstack'
 
@@ -42,6 +43,7 @@ steps:
         command:
           - --farm=bs
           - --browser=chrome_61
+          - --bind-address=0.0.0.0
     concurrency: 5
     concurrency_group: 'browserstack'
 
@@ -56,6 +58,7 @@ steps:
         command:
           - --farm=bs
           - --browser=chrome_latest
+          - --bind-address=0.0.0.0
     concurrency: 5
     concurrency_group: 'browserstack'
 
@@ -70,6 +73,7 @@ steps:
         command:
           - --farm=bs
           - --browser=ie_8
+          - --bind-address=0.0.0.0
     concurrency: 5
     concurrency_group: 'browserstack'
 
@@ -84,6 +88,7 @@ steps:
         command:
           - --farm=bs
           - --browser=ie_9
+          - --bind-address=0.0.0.0
     concurrency: 5
     concurrency_group: 'browserstack'
 
@@ -98,6 +103,7 @@ steps:
         command:
           - --farm=bs
           - --browser=ie_10
+          - --bind-address=0.0.0.0
     concurrency: 5
     concurrency_group: 'browserstack'
 
@@ -112,6 +118,7 @@ steps:
         command:
           - --farm=bs
           - --browser=ie_11
+          - --bind-address=0.0.0.0
     env:
       HOST: 'localhost' # IE11 needs the host set to localhost for some reason!ß
     concurrency: 5
@@ -128,6 +135,7 @@ steps:
         command:
           - --farm=bs
           - --browser=edge_14
+          - --bind-address=0.0.0.0
     concurrency: 5
     concurrency_group: 'browserstack'
 
@@ -142,6 +150,7 @@ steps:
         command:
           - --farm=bs
           - --browser=edge_15
+          - --bind-address=0.0.0.0
     concurrency: 5
     concurrency_group: 'browserstack'
 
@@ -156,6 +165,7 @@ steps:
         command:
           - --farm=bs
           - --browser=safari_6
+          - --bind-address=0.0.0.0
     concurrency: 5
     concurrency_group: 'browserstack'
 
@@ -170,6 +180,7 @@ steps:
         command:
           - --farm=bs
           - --browser=safari_10
+          - --bind-address=0.0.0.0
     concurrency: 5
     concurrency_group: 'browserstack'
 
@@ -184,6 +195,7 @@ steps:
         command:
           - --farm=bs
           - --browser=safari_13
+          - --bind-address=0.0.0.0
     concurrency: 5
     concurrency_group: 'browserstack'
 
@@ -198,6 +210,7 @@ steps:
         command:
           - --farm=bs
           - --browser=iphone_7
+          - --bind-address=0.0.0.0
     env:
       HOST: "bs-local.com"
     concurrency: 5
@@ -214,6 +227,7 @@ steps:
         command:
           - --farm=bs
           - --browser=android_s8
+          - --bind-address=0.0.0.0
     concurrency: 5
     concurrency_group: 'browserstack'
 
@@ -228,6 +242,7 @@ steps:
         command:
           - --farm=bs
           - --browser=firefox_30
+          - --bind-address=0.0.0.0
     concurrency: 5
     concurrency_group: 'browserstack'
 
@@ -242,6 +257,7 @@ steps:
         command:
           - --farm=bs
           - --browser=firefox_56
+          - --bind-address=0.0.0.0
     concurrency: 5
     concurrency_group: 'browserstack'
 
@@ -256,5 +272,6 @@ steps:
         command:
           - --farm=bs
           - --browser=firefox_latest
+          - --bind-address=0.0.0.0
     concurrency: 5
     concurrency_group: 'browserstack'
