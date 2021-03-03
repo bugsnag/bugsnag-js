@@ -10,6 +10,7 @@ export type BugsnagPluginAwsLambdaHandler = (handler: AsyncHandler|CallbackHandl
 
 export interface BugsnagPluginAwsLambdaConfiguration {
   flushTimeoutMs?: number
+  lambdaTimeoutNotifyMs?: number
 }
 
 export interface BugsnagPluginAwsLambdaResult {
