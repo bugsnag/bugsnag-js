@@ -46,19 +46,19 @@ describe('plugin-app-duration', () => {
     await sleep(50)
 
     appDurationCallback(event)
-    expect(event.app.duration).toBeGreaterThanOrEqual(50)
+    expect(event.app.duration).toBeGreaterThanOrEqual(45)
 
     await sleep(50)
 
     appDurationCallback(event)
-    expect(event.app.duration).toBeGreaterThanOrEqual(100)
+    expect(event.app.duration).toBeGreaterThanOrEqual(90)
 
     result.reset()
 
     await sleep(25)
 
     appDurationCallback(event)
-    expect(event.app.duration).toBeGreaterThanOrEqual(25)
-    expect(event.app.duration).toBeLessThanOrEqual(100)
+    expect(event.app.duration).toBeGreaterThanOrEqual(20)
+    expect(event.app.duration).toBeLessThanOrEqual(90)
   })
 })
