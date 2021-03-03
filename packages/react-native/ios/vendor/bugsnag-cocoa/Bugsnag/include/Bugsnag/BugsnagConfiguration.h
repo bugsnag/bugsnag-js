@@ -210,6 +210,30 @@ typedef BOOL (^BugsnagOnSessionBlock)(BugsnagSession *_Nonnull session);
 @property BOOL autoTrackSessions;
 
 /**
+ * The amount of time (in milliseconds) after starting Bugsnag that should be considered part of
+ * the app's launch.
+ *
+ * Events that occur during app launch will have the `BugsnagAppWithState.isLaunching` property
+ * set to true.
+ *
+ * By default this value is 5000 milliseconds.
+ *
+ * Setting this to `0` will cause Bugsnag to consider the app to be launching until
+ * `+[Bugsnag markLaunchCompleted]` or `-[BugsnagClient markLaunchCompleted]` has been called.
+ */
+@property (nonatomic) NSUInteger launchDurationMillis;
+
+/**
+ * Determines whether launch crashes should be sent synchronously during `+[Bugsnag start]`.
+ *
+ * If true and the previous run terminated due to a crash during app launch, `+[Bugsnag start]`
+ * will block the calling thread for up to 2 seconds while the crash report is sent.
+ *
+ * By default this value is true.
+ */
+@property (nonatomic) BOOL sendLaunchCrashesSynchronously;
+
+/**
  * The types of breadcrumbs which will be captured. By default, this is all types.
  */
 @property BSGEnabledBreadcrumbType enabledBreadcrumbTypes;

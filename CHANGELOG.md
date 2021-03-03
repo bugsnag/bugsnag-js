@@ -2,6 +2,13 @@
 
 ## TBD
 
+### Changed
+
+- (react-native): Update bugsnag-cocoa to v6.7.0
+  - Identify crashes that occur whilst your app is launching. [bugsnag-cocoa#1004](https://github.com/bugsnag/bugsnag-cocoa/pull/1004)
+  - Fix inaccurate `app.duration` after multiple calls to `notify()` [bugsnag-cocoa#1014](https://github.com/bugsnag/bugsnag-cocoa/pull/1014)
+  - Fix a possible deadlock when writing crash reports for unhandled errors. [bugsnag-cocoa#1013](https://github.com/bugsnag/bugsnag-cocoa/pull/1013)
+
 ## Fixed
 
 - (expo): Ensure Expo plugins depend on same version of NetInfo package [#1319](https://github.com/bugsnag/bugsnag-js/pull/1319)

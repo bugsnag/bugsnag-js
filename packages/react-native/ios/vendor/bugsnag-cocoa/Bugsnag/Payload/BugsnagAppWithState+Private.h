@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (BugsnagAppWithState *)appWithDictionary:(NSDictionary *)event config:(BugsnagConfiguration *)config codeBundleId:(NSString *)codeBundleId;
 
-+ (BugsnagAppWithState *)appWithOomData:(NSDictionary *)event;
++ (BugsnagAppWithState *)appWithKSCrashReportOOM:(NSDictionary *)event;
 
 - (NSDictionary *)toDict;
 

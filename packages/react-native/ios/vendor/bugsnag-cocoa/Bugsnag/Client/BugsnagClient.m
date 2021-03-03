@@ -55,6 +55,7 @@
 #import "BugsnagEvent+Private.h"
 #import "BugsnagHandledState.h"
 #import "BugsnagKeys.h"
+#import "BugsnagLastRunInfo+Private.h"
 #import "BugsnagLogger.h"
 #import "BugsnagMetadata+Private.h"
 #import "BugsnagNotifier.h"
@@ -220,9 +221,13 @@ void BSGWriteSessionCrashData(BugsnagSession *session) {
 @interface BugsnagClient () <BSGBreadcrumbSink>
 
 @property BSGNotificationBreadcrumbs *notificationBreadcrumbs;
+@property (weak) NSTimer *appLaunchTimer;
 
 @end
 
+#if __clang_major__ >= 11 // Xcode 10 does not like the following attribute
+__attribute__((annotate("oclint:suppress[long class]")))
+#endif
 @implementation BugsnagClient
 
 /**
@@ -236,7 +241,7 @@ NSString *_lastOrientation = nil;
     if ((self = [super init])) {
         // Take a shallow copy of the configuration
         _configuration = [configuration copy];
-        self.state = [[BugsnagMetadata alloc] init];
+        _state = [[BugsnagMetadata alloc] initWithDictionary:@{BSGKeyApp: @{BSGKeyIsLaunching: @YES}}];
         self.notifier = [BugsnagNotifier new];
         self.systemState = [[BugsnagSystemState alloc] initWithConfiguration:self.configuration];
 
@@ -405,6 +410,43 @@ NSString *_lastOrientation = nil;
     // notification not received in time on initial startup, so trigger manually
     [self willEnterForeground:self];
     [self.pluginClient loadPlugins];
+    
+    if (self.configuration.launchDurationMillis > 0) {
+        self.appLaunchTimer = [NSTimer scheduledTimerWithTimeInterval:self.configuration.launchDurationMillis / 1000.0
+                                                               target:self selector:@selector(appLaunchTimerFired:)
+                                                             userInfo:nil repeats:NO];
+    }
+    
+    if (self.lastRunInfo.crashedDuringLaunch && self.configuration.sendLaunchCrashesSynchronously) {
+        [self sendLaunchCrashSynchronously];
+    }
+}
+
+- (void)appLaunchTimerFired:(NSTimer *)timer {
+    [self markLaunchCompleted];
+}
+
+- (void)markLaunchCompleted {
+    bsg_log_debug(@"App has finished launching");
+    [self.appLaunchTimer invalidate];
+    [self.state addMetadata:@NO withKey:BSGKeyIsLaunching toSection:BSGKeyApp];
+}
+
+- (void)sendLaunchCrashSynchronously {
+    if (self.configuration.session.delegateQueue == NSOperationQueue.currentQueue) {
+        bsg_log_warn(@"Cannot send launch crash synchronously because session.delegateQueue is set to the current queue.");
+        return;
+    }
+    bsg_log_info(@"Sending launch crash synchronously.");
+    dispatch_time_t deadline = dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC);
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    [[BSG_KSCrash sharedInstance] sendLatestReport:^{
+        bsg_log_debug(@"Sent launch crash.");
+        dispatch_semaphore_signal(semaphore);
+    }];
+    if (dispatch_semaphore_wait(semaphore, deadline)) {
+        bsg_log_debug(@"Timed out waiting for launch crash to be sent.");
+    }
 }
 
 - (BOOL)shouldReportOOM {
@@ -503,8 +545,21 @@ NSString *_lastOrientation = nil;
             unlink(crashSentinelPath);
         }
     }
-    self.appDidCrashLastLaunch = handledCrashLastLaunch || didOOMLastLaunch;
-
+    BOOL didCrash = handledCrashLastLaunch || didOOMLastLaunch;
+    self.appDidCrashLastLaunch = didCrash;
+    
+    BOOL wasLaunching = [self.stateMetadataFromLastLaunch[BSGKeyApp][BSGKeyIsLaunching] boolValue];
+    BOOL didCrashDuringLaunch = didCrash && wasLaunching;
+    if (didCrashDuringLaunch) {
+        self.systemState.consecutiveLaunchCrashes++;
+    } else {
+        self.systemState.consecutiveLaunchCrashes = 0;
+    }
+    
+    self.lastRunInfo = [[BugsnagLastRunInfo alloc] initWithConsecutiveLaunchCrashes:self.systemState.consecutiveLaunchCrashes
+                                                                            crashed:didCrash
+                                                                crashedDuringLaunch:didCrashDuringLaunch];
+    
     // Ignore potential false positive OOM if previous session crashed and was
     // reported. There are two checks in place:
     //
@@ -531,6 +586,10 @@ NSString *_lastOrientation = nil;
     [self.state addMetadata:codeBundleId withKey:BSGKeyCodeBundleId toSection:BSGKeyApp];
     [self.systemState setCodeBundleID:codeBundleId];
     self.sessionTracker.codeBundleId = codeBundleId;
+}
+
+- (void)setLastRunInfo:(BugsnagLastRunInfo *)lastRunInfo {
+    _lastRunInfo = lastRunInfo;
 }
 
 - (void)setStarted:(BOOL)started {
@@ -1098,9 +1157,9 @@ NSString *_lastOrientation = nil;
 // MARK: - event data population
 
 - (BugsnagAppWithState *)generateAppWithState:(NSDictionary *)systemInfo {
-    return [BugsnagAppWithState appWithDictionary:@{@"system": systemInfo}
-                                           config:self.configuration
-                                     codeBundleId:self.codeBundleId];
+    // Replicate the parts of a KSCrashReport that +[BugsnagAppWithState appWithDictionary:config:codeBundleId:] examines
+    NSDictionary *kscrashDict = @{BSGKeySystem: systemInfo, @"user": @{@"state": [self.state deepCopy].dictionary}};
+    return [BugsnagAppWithState appWithDictionary:kscrashDict config:self.configuration codeBundleId:self.codeBundleId];
 }
 
 - (BugsnagDeviceWithState *)generateDeviceWithState:(NSDictionary *)systemInfo {

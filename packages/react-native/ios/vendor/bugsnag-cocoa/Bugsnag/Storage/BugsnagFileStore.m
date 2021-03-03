@@ -130,10 +130,6 @@
     return [self.fileIds count];
 }
 
-- (NSArray *)allFiles {
-    return [[self allFilesByName] allValues];
-}
-
 - (NSDictionary <NSString *, NSDictionary *> *)allFilesByName {
     NSArray *fileIds = [self fileIds];
     NSMutableDictionary *files =
