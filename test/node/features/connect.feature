@@ -8,8 +8,6 @@ Background:
   And I wait for the host "connect" to open port "80"
 
 Scenario: a synchronous thrown error in a route
-  When I log the env var "BUGSNAG_NOTIFY_ENDPOINT"
-  And I log the env var "BUGSNAG_SESSIONS_ENDPOINT"
   Then I open the URL "http://connect/sync"
   And I wait to receive an error
   Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
