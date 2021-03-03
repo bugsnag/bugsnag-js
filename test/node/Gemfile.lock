@@ -1,9 +1,9 @@
 GIT
   remote: https://github.com/bugsnag/maze-runner
-  revision: b12f25a65267a99162a40abf28fe02c3048a097f
-  tag: v4.10.1
+  revision: 8cd2154820620e1f5806e434466ed72914359f87
+  tag: v4.11.3
   specs:
-    bugsnag-maze-runner (4.10.1)
+    bugsnag-maze-runner (4.11.3)
       appium_lib (~> 11.2.0)
       boring (~> 0.1.0)
       cucumber (~> 3.1.2)
@@ -118,7 +118,7 @@ GEM
       concurrent-ruby (~> 1.0)
     json (2.5.1)
     mini_portile2 (2.5.0)
-    minitest (5.14.3)
+    minitest (5.14.4)
     molinillo (0.6.6)
     multi_json (1.15.0)
     multi_test (0.1.2)
