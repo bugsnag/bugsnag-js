@@ -1,13 +1,11 @@
 Feature: Unhandled exceptions are reported correctly in lambda functions
 
-Scenario: unhandled exception in an async lambda
-    Given I store the api key in the environment variable "BUGSNAG_API_KEY"
-    And I store the notify endpoint in the environment variable "BUGSNAG_NOTIFY_ENDPOINT"
-    And I store the sessions endpoint in the environment variable "BUGSNAG_SESSIONS_ENDPOINT"
-    When I invoke the "AsyncUnhandledExceptionFunction" lambda in "features/fixtures/simple-app" with the "events/async/unhandled-exception.json" event
+Scenario Outline: unhandled exceptions are reported
+    Given I setup the environment
+    When I invoke the "<lambda>" lambda in "features/fixtures/simple-app" with the "events/<type>/unhandled-exception.json" event
     Then the lambda response "errorMessage" equals "Oh no!"
     And the lambda response "errorType" equals "Error"
-    And the lambda response "trace" is an array with 4 elements
+    And the lambda response "trace" is an array with <trace-length> elements
     And the lambda response "trace.0" equals "Error: Oh no!"
     And the lambda response "body" is null
     And the lambda response "statusCode" is null
@@ -20,10 +18,35 @@ Scenario: unhandled exception in an async lambda
     And the exception "errorClass" equals "Error"
     And the exception "message" equals "Oh no!"
     And the exception "type" equals "nodejs"
-    And the "file" of stack frame 0 equals "unhandled-exception.js"
-    And the event "metaData.AWS Lambda context.functionName" equals "AsyncUnhandledExceptionFunction"
+    And the "file" of stack frame 0 equals "<file>"
+    And the event "metaData.AWS Lambda context.functionName" equals "<lambda>"
     And the event "metaData.AWS Lambda context.awsRequestId" is not null
+    And the event "device.runtimeVersions.node" matches "^<node-version>\.\d+\.\d+$"
     When I wait to receive a session
     Then the session is valid for the session reporting API version "1" for the "Bugsnag Node" notifier
     And the session "id" is not null
     And the session "startedAt" is a timestamp
+
+    Examples:
+        | lambda                                         | type     | file                          | node-version | trace-length |
+        | AsyncUnhandledExceptionFunctionNode14          | async    | unhandled-exception.js        | 14           | 4            |
+        | AsyncUnhandledExceptionFunctionNode12          | async    | unhandled-exception.js        | 12           | 4            |
+        | CallbackUnhandledExceptionFunctionNode14       | callback | unhandled-exception.js        | 14           | 7            |
+        | CallbackUnhandledExceptionFunctionNode12       | callback | unhandled-exception.js        | 12           | 7            |
+        | CallbackThrownUnhandledExceptionFunctionNode14 | callback | thrown-unhandled-exception.js | 14           | 7            |
+        | CallbackThrownUnhandledExceptionFunctionNode12 | callback | thrown-unhandled-exception.js | 12           | 7            |
+
+Scenario Outline: no error is reported when autoDetectErrors is false
+    Given I setup the environment
+    And I set environment variable "BUGSNAG_AUTO_DETECT_ERRORS" to "false"
+    When I invoke the "<lambda>" lambda in "features/fixtures/simple-app" with the "events/<type>/unhandled-exception.json" event
+    Then I should receive no errors
+
+    Examples:
+        | lambda                                         | type     |
+        | AsyncUnhandledExceptionFunctionNode14          | async    |
+        | AsyncUnhandledExceptionFunctionNode12          | async    |
+        | CallbackUnhandledExceptionFunctionNode14       | callback |
+        | CallbackUnhandledExceptionFunctionNode12       | callback |
+        | CallbackThrownUnhandledExceptionFunctionNode14 | callback |
+        | CallbackThrownUnhandledExceptionFunctionNode12 | callback |

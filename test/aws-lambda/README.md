@@ -10,10 +10,10 @@
 
 ## Running the tests
 
-Run Maze Runner:
+Run Maze Runner with the `--bind-address` option:
 
 ```sh
-$ bundle exec maze-runner
+$ bundle exec maze-runner --bind-address=0.0.0.0
 ```
 
 This will build all of the fixtures before running the tests

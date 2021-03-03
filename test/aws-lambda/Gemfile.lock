@@ -1,9 +1,9 @@
 GIT
   remote: https://github.com/bugsnag/maze-runner
-  revision: 8677bcf4c1ab27422084b19e7da8149ede954ded
-  tag: v4.9.1
+  revision: b5925737b0c3db49ac38a5a68e6bfe38026ef508
+  tag: v4.11.1
   specs:
-    bugsnag-maze-runner (4.9.1)
+    bugsnag-maze-runner (4.11.1)
       appium_lib (~> 11.2.0)
       boring (~> 0.1.0)
       cucumber (~> 3.1.2)
@@ -54,7 +54,7 @@ GEM
       eventmachine (>= 0.12.0)
       websocket-driver (>= 0.5.1)
     gherkin (5.1.0)
-    minitest (5.14.3)
+    minitest (5.14.4)
     multi_json (1.15.0)
     multi_test (0.1.2)
     nokogiri (1.11.1-x86_64-darwin)
@@ -82,4 +82,4 @@ DEPENDENCIES
   bugsnag-maze-runner!
 
 BUNDLED WITH
-   2.2.10
+   2.2.11

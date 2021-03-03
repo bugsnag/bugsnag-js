@@ -7,7 +7,9 @@ Bugsnag.start({
     notify: process.env.BUGSNAG_NOTIFY_ENDPOINT,
     sessions: process.env.BUGSNAG_SESSIONS_ENDPOINT
   },
-  plugins: [BugsnagPluginAwsLambda]
+  plugins: [BugsnagPluginAwsLambda],
+  autoDetectErrors: process.env.BUGSNAG_AUTO_DETECT_ERRORS !== 'false',
+  autoTrackSessions: process.env.BUGSNAG_AUTO_TRACK_SESSIONS !== 'false'
 })
 
 const bugsnagHandler = Bugsnag.getPlugin('awsLambda').createHandler()

@@ -14,8 +14,13 @@ Bugsnag.start({
 
 const bugsnagHandler = Bugsnag.getPlugin('awsLambda').createHandler()
 
-const handler = async (event, context) => {
-  throw new Error('Oh no!')
+const handler = (event, context, callback) => {
+  Bugsnag.notify(new Error('Hello!'))
+
+  callback(null, {
+    statusCode: 200,
+    body: JSON.stringify({ message: 'Did not crash!' })
+  })
 }
 
 module.exports.lambdaHandler = bugsnagHandler(handler)
