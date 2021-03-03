@@ -1,5 +1,11 @@
 # Changelog
 
+## TBD
+
+## Fixed
+
+- (expo): Ensure Expo plugins depend on same version of NetInfo package [#1319](https://github.com/bugsnag/bugsnag-js/pull/1319)
+
 ## v7.8.1 (2021-02-25)
 
 ## Changed
