@@ -69,7 +69,7 @@ describe('@bugsnag/node: handled and unhandled errors', () => {
       expect(https._requests[0].body.events[0].unhandled).toBe(true)
       expect(https._requests[0].body.events[0].severityReason).toEqual({ type: 'unhandledException' })
       done()
-    }, 100)
+    }, 200)
   })
 
   it('should send an unhandled rejection', (done) => {
@@ -84,6 +84,6 @@ describe('@bugsnag/node: handled and unhandled errors', () => {
       expect(https._requests[0].body.events[0].unhandled).toBe(true)
       expect(https._requests[0].body.events[0].severityReason).toEqual({ type: 'unhandledPromiseRejection' })
       done()
-    }, 100)
+    }, 200)
   })
 })

@@ -17,6 +17,7 @@
 #import "BugsnagEvent+Private.h"
 #import "BugsnagHandledState.h"
 #import "BugsnagSessionTracker+Private.h"
+#import "BugsnagStackframe+Private.h"
 #import "BugsnagStacktrace.h"
 #import "BugsnagThread+Private.h"
 #import "BugsnagUser+Private.h"
@@ -52,23 +53,20 @@
     if (error != nil) {
         event.errors[0].errorClass = error[@"errorClass"];
         event.errors[0].errorMessage = error[@"errorMessage"];
-        [event attachCustomStacktrace:error[@"stacktrace"] withType:@"reactnativejs"];
-    }
-    
-    id nativeStack = payload[@"nativeStack"];
-    if ([nativeStack isKindOfClass:[NSArray class]] &&
-        [nativeStack filteredArrayUsingPredicate:
-         [NSPredicate predicateWithFormat:@"NOT SELF isKindOfClass: %@", [NSString class]]].count == 0) {
-        NSArray<BugsnagStackframe *> *stackframes = [BugsnagStackframe stackframesWithCallStackSymbols:nativeStack];
-        if (stackframes != nil) {
-            BugsnagError *nativeError = [[BugsnagError alloc] initWithErrorClass:error[@"errorClass"]
-                                                                    errorMessage:error[@"errorMessage"]
-                                                                       errorType:BSGErrorTypeCocoa
-                                                                      stacktrace:stackframes];
-            event.errors = [event.errors arrayByAddingObject:nativeError];
+        NSArray<NSDictionary *> *stacktrace = error[@"stacktrace"];
+        NSArray<NSString *> *nativeStack = payload[@"nativeStack"];
+        if (nativeStack) {
+            NSMutableArray<NSDictionary *> *mixedStack = [NSMutableArray array];
+            for (BugsnagStackframe *frame in [BugsnagStackframe stackframesWithCallStackSymbols:nativeStack]) {
+                frame.type = BugsnagStackframeTypeCocoa;
+                [mixedStack addObject:[frame toDictionary]];
+            }
+            [mixedStack addObjectsFromArray:stacktrace];
+            stacktrace = mixedStack;
         }
+        [event attachCustomStacktrace:stacktrace withType:@"reactnativejs"];
     }
-    
+
     return event;
 }
 

@@ -21,6 +21,10 @@
 
 #import <Foundation/Foundation.h>
 
+/// Returns a new array containing the elements starting at position `index`, or
+/// an empty array if `index` is beyond the array's range range of elements.
+NSArray * BSGArraySubarrayFromIndex(NSArray *array, NSUInteger index);
+
 /**
  *  Merge values from source dictionary with destination
  *

@@ -44,6 +44,24 @@
 #if BSG_PLATFORM_IOS || BSG_PLATFORM_TVOS
 #import "BSGUIKit.h"
 #endif
+#import "BSG_Jailbreak.h"
+
+
+static inline bool is_jailbroken() {
+    static bool initialized_jb;
+    static bool is_jb;
+    if(!initialized_jb) {
+        get_jailbreak_status(&is_jb);
+
+        // Also keep using the old detection method.
+        if(bsg_mach_headers_image_named("MobileSubstrate", false) != NULL) {
+            is_jb = true;
+        }
+        initialized_jb = true;
+    }
+
+    return is_jb;
+}
 
 @implementation BSG_KSSystemInfo
 
@@ -261,7 +279,7 @@
  * @return YES if the device is jailbroken.
  */
 + (BOOL)isJailbroken {
-    return bsg_mach_headers_image_named("MobileSubstrate", false) != NULL;
+    return is_jailbroken();
 }
 
 /** Check if the current build is a debug build.
@@ -494,8 +512,11 @@
 
 const char *bsg_kssysteminfo_toJSON(void) {
     NSError *error;
-    NSDictionary *systemInfo = [NSMutableDictionary
-        dictionaryWithDictionary:[BSG_KSSystemInfo systemInfo]];
+    NSMutableDictionary *systemInfo = [[BSG_KSSystemInfo systemInfo] mutableCopy];
+
+    // Make sure the jailbroken status didn't get patched out.
+    systemInfo[@BSG_KSSystemField_Jailbroken] = @(is_jailbroken());
+
     NSMutableData *jsonData =
         (NSMutableData *)[BSG_KSJSONCodec encode:systemInfo
                                          options:BSG_KSJSONEncodeOptionSorted

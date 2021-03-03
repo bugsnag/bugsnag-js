@@ -146,7 +146,6 @@ typedef struct BSG_KSCrash_SentryContext {
         const char *metadata;
         const char *state; // breadcrumbs, other shared app state
         const char *config; // config options which affect report delivery
-        int discardDepth; // number of frames from the top to remove
     } userException;
 
 } BSG_KSCrash_SentryContext;

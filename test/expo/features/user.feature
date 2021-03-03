@@ -7,17 +7,17 @@ Background:
 Scenario: User data can be set via the client
   Given the element "userClientButton" is present
   When I click the element "userClientButton"
-  Then I wait to receive a request
+  Then I wait to receive an error
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "UserClientError"
   And the event "user.name" equals "userClientName"
-  And the Bugsnag-Integrity header is valid
+  And the error Bugsnag-Integrity header is valid
 
 Scenario: User data can be set via a callback
   Given the element "userCallbackButton" is present
   When I click the element "userCallbackButton"
-  Then I wait to receive a request
+  Then I wait to receive an error
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "UserCallbackError"
   And the event "user.name" equals "userCallbackName"
-  And the Bugsnag-Integrity header is valid
+  And the error Bugsnag-Integrity header is valid
