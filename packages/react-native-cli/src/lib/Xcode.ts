@@ -7,11 +7,11 @@ const DOCS_LINK = 'https://docs.bugsnag.com/platforms/react-native/react-native/
 const UNLOCATED_PROJ_MSG = `The Xcode project was not in the expected location and so couldn't be updated automatically.
 
 Update the "Bundle React Native Code And Images" build phase with the following environment variables:
-export EXTRA_PACKAGER_ARGS="--sourcemap-output $CONFIGURATION_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/main.jsbundle.map"
+export EXTRA_PACKAGER_ARGS="--sourcemap-output $TMPDIR/$(md5 -qs "$CONFIGURATION_BUILD_DIR")-main.jsbundle.map""
 
 See ${DOCS_LINK} for more information`
 
-const EXTRA_PACKAGER_ARGS = 'export EXTRA_PACKAGER_ARGS="--sourcemap-output $CONFIGURATION_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/main.jsbundle.map"'
+const EXTRA_PACKAGER_ARGS = 'export EXTRA_PACKAGER_ARGS="--sourcemap-output $TMPDIR/$(md5 -qs "$CONFIGURATION_BUILD_DIR")-main.jsbundle.map"'
 
 export async function updateXcodeProject (projectRoot: string, endpoint: string|undefined, logger: Logger) {
   const iosDir = path.join(projectRoot, 'ios')
@@ -25,7 +25,7 @@ export async function updateXcodeProject (projectRoot: string, endpoint: string|
   const pbxProjPath = path.join(iosDir, xcodeprojDir, 'project.pbxproj')
   const proj = xcode.project(pbxProjPath)
 
-  await new Promise((resolve, reject) => {
+  await new Promise<void>((resolve, reject) => {
     proj.parse((err) => {
       if (err) return reject(err)
       resolve()
@@ -76,7 +76,7 @@ async function addUploadSourceMapsTask (
     }
   }
 
-  let shellScript = '../node_modules/@bugsnag/react-native/bugsnag-react-native-xcode.sh'
+  let shellScript = 'SOURCE_MAP="$TMPDIR/$(md5 -qs "$CONFIGURATION_BUILD_DIR")-main.jsbundle.map" ../node_modules/@bugsnag/react-native/bugsnag-react-native-xcode.sh'
 
   if (endpoint) {
     shellScript = `export ENDPOINT='${endpoint}'\\n${shellScript}`
