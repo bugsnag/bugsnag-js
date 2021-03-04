@@ -2,6 +2,17 @@
 
 ## TBD
 
+### Changed
+
+- (react-native): Update bugsnag-android to v5.7.1
+  - Fix for bad pointer access crash in JNI deliverReportAtPath [bugsnag-android#1169](https://github.com/bugsnag/bugsnag-android/pull/1169)
+  - Check additional JNI calls for pending exceptions and no-op [bugsnag-android#1142](https://github.com/bugsnag/bugsnag-android/pull/1142)
+  - Move free() call to exit block [bugsnag-android#1140](https://github.com/bugsnag/bugsnag-android/pull/1140)
+  - Replace strncpy() usage with safe function call [bugsnag-android#1149](https://github.com/bugsnag/bugsnag-android/pull/1149)
+  - Prevent NPE when delivering internal error reports [bugsnag-android#1150](https://github.com/bugsnag/bugsnag-android/pull/1150)
+  - Further robustify string copying and JNI exception checks [bugsnag-android#1153](https://github.com/bugsnag/bugsnag-android/pull/1153)
+  - Support native stack traces in the ANR plugin [bugsnag-android#972](https://github.com/bugsnag/bugsnag-android/pull/972)
+
 ## Fixed
 
 - (expo): Ensure Expo plugins depend on same version of NetInfo package [#1319](https://github.com/bugsnag/bugsnag-js/pull/1319)
