@@ -5,7 +5,6 @@ module.exports = class LambdaTimeoutApproaching extends Error {
     super(message)
 
     this.name = 'LambdaTimeoutApproaching'
-    this.message = message
     this.stack = []
   }
 }
