@@ -60,16 +60,10 @@ function wrapHandler (client, flushTimeoutMs, lambdaTimeoutNotifyMs, handler) {
     // Guard against the "getRemainingTimeInMillis" being missing. This should
     // never happen but could when unit testing
     if (typeof context.getRemainingTimeInMillis === 'function' &&
-      lambdaTimeoutNotifyMs > 0
+      lambdaTimeoutNotifyMs > 0 &&
+      lambdaTimeoutNotifyMs <= MAX_TIMER_VALUE
     ) {
-      // Clamp the timeout value between 0 and MAX_TIMER_VALUE
-      const timeoutMs = Math.min(
-        Math.max(
-          context.getRemainingTimeInMillis() - lambdaTimeoutNotifyMs,
-          0
-        ),
-        MAX_TIMER_VALUE
-      )
+      const timeoutMs = context.getRemainingTimeInMillis() - lambdaTimeoutNotifyMs
 
       lambdaTimeout = setTimeout(function () {
         const handledState = {
