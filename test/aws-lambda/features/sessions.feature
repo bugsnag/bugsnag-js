@@ -1,5 +1,6 @@
 Feature: Sessions are reported correctly in lambda functions
 
+@simple-app
 Scenario Outline: sessions are reported
     Given I setup the environment
     When I invoke the "<lambda>" lambda in "features/fixtures/simple-app"
@@ -25,6 +26,7 @@ Scenario Outline: sessions are reported
         | CallbackHandledExceptionFunctionNode14         | 1             | 0               |
         | CallbackHandledExceptionFunctionNode12         | 1             | 0               |
 
+@simple-app
 Scenario Outline: no session is sent when autoTrackSessions is false
     Given I setup the environment
     And I set environment variable "BUGSNAG_AUTO_TRACK_SESSIONS" to "false"

@@ -1,0 +1,41 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: serverless-express-app
+
+Globals:
+  Function:
+    Timeout: 30
+    Environment:
+      Variables:
+        BUGSNAG_API_KEY:
+        BUGSNAG_NOTIFY_ENDPOINT:
+        BUGSNAG_SESSIONS_ENDPOINT:
+        BUGSNAG_AUTO_TRACK_SESSIONS: true
+        BUGSNAG_AUTO_DETECT_ERRORS: true
+
+Resources:
+  ExpressApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: prod
+      BinaryMediaTypes: ['*/*']
+
+  ExpressFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: app/
+      Handler: index.lambdaHandler
+      Runtime: nodejs14.x
+      Events:
+        ProxyApiRoot:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ExpressApi
+            Path: /
+            Method: ANY
+        ProxyApiGreedy:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ExpressApi
+            Path: /{proxy+}
+            Method: ANY
