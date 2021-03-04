@@ -2,15 +2,15 @@ Feature: @bugsnag/plugin-express
 
 Background:
   Given I store the api key in the environment variable "BUGSNAG_API_KEY"
-  And I store the endpoint in the environment variable "BUGSNAG_NOTIFY_ENDPOINT"
-  And I store the endpoint in the environment variable "BUGSNAG_SESSIONS_ENDPOINT"
+  And I store the notify endpoint in the environment variable "BUGSNAG_NOTIFY_ENDPOINT"
+  And I store the sessions endpoint in the environment variable "BUGSNAG_SESSIONS_ENDPOINT"
   And I start the service "express"
   And I wait for the host "express" to open port "80"
 
 Scenario: a synchronous thrown error in a route
   Then I open the URL "http://express/sync"
-  And I wait to receive a request
-  Then the request is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
+  And I wait to receive an error
+  Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is true
   And the event "severity" equals "error"
   And the event "severityReason.type" equals "unhandledErrorMiddleware"
@@ -24,8 +24,8 @@ Scenario: a synchronous thrown error in a route
 
 Scenario: an asynchronous thrown error in a route
   Then I open the URL "http://express/async"
-  And I wait to receive a request
-  Then the request is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
+  And I wait to receive an error
+  Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is true
   And the event "severity" equals "error"
   And the event "severityReason.type" equals "unhandledErrorMiddleware"
@@ -36,8 +36,8 @@ Scenario: an asynchronous thrown error in a route
 
 Scenario: an error passed to next(err)
   Then I open the URL "http://express/next"
-  And I wait to receive a request
-  Then the request is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
+  And I wait to receive an error
+  Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is true
   And the event "severity" equals "error"
   And the event "severityReason.type" equals "unhandledErrorMiddleware"
@@ -48,8 +48,8 @@ Scenario: an error passed to next(err)
 
 Scenario: a synchronous promise rejection in a route
   Then I open the URL "http://express/rejection-sync"
-  And I wait to receive a request
-  Then the request is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
+  And I wait to receive an error
+  Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is true
   And the event "severity" equals "error"
   And the event "severityReason.type" equals "unhandledErrorMiddleware"
@@ -60,8 +60,8 @@ Scenario: a synchronous promise rejection in a route
 
 Scenario: an asynchronous promise rejection in a route
   Then I open the URL "http://express/rejection-async"
-  And I wait to receive a request
-  Then the request is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
+  And I wait to receive an error
+  Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is true
   And the event "severity" equals "error"
   And the event "severityReason.type" equals "unhandledErrorMiddleware"
@@ -72,8 +72,8 @@ Scenario: an asynchronous promise rejection in a route
 
 Scenario: a string passed to next(err)
   Then I open the URL "http://express/string-as-error"
-  And I wait to receive a request
-  Then the request is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
+  And I wait to receive an error
+  Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is true
   And the event "severity" equals "error"
   And the event "severityReason.type" equals "unhandledErrorMiddleware"
@@ -83,8 +83,8 @@ Scenario: a string passed to next(err)
 
 Scenario: throwing non-Error error
   Then I open the URL "http://express/throw-non-error"
-  And I wait to receive a request
-  Then the request is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
+  And I wait to receive an error
+  Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is true
   And the event "severity" equals "error"
   And the event "severityReason.type" equals "unhandledErrorMiddleware"
@@ -94,8 +94,8 @@ Scenario: throwing non-Error error
 
 Scenario: a handled error passed to req.bugsnag.notify()
   Then I open the URL "http://express/handled"
-  And I wait to receive a request
-  Then the request is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
+  And I wait to receive an error
+  Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is false
   And the event "severity" equals "warning"
   And the exception "errorClass" equals "Error"
@@ -108,8 +108,8 @@ Scenario: a handled error passed to req.bugsnag.notify()
 
 Scenario: adding body to request metadata
   When I POST the data "data=in_request_body" to the URL "http://express/bodytest"
-  And I wait to receive a request
-  Then the request is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
+  And I wait to receive an error
+  Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is true
   And the event "severity" equals "error"
   And the exception "errorClass" equals "Error"

@@ -8,6 +8,14 @@
   - Identify crashes that occur whilst your app is launching. [bugsnag-cocoa#1004](https://github.com/bugsnag/bugsnag-cocoa/pull/1004)
   - Fix inaccurate `app.duration` after multiple calls to `notify()` [bugsnag-cocoa#1014](https://github.com/bugsnag/bugsnag-cocoa/pull/1014)
   - Fix a possible deadlock when writing crash reports for unhandled errors. [bugsnag-cocoa#1013](https://github.com/bugsnag/bugsnag-cocoa/pull/1013)
+- (react-native): Update bugsnag-android to v5.7.1
+  - Fix for bad pointer access crash in JNI deliverReportAtPath [bugsnag-android#1169](https://github.com/bugsnag/bugsnag-android/pull/1169)
+  - Check additional JNI calls for pending exceptions and no-op [bugsnag-android#1142](https://github.com/bugsnag/bugsnag-android/pull/1142)
+  - Move free() call to exit block [bugsnag-android#1140](https://github.com/bugsnag/bugsnag-android/pull/1140)
+  - Replace strncpy() usage with safe function call [bugsnag-android#1149](https://github.com/bugsnag/bugsnag-android/pull/1149)
+  - Prevent NPE when delivering internal error reports [bugsnag-android#1150](https://github.com/bugsnag/bugsnag-android/pull/1150)
+  - Further robustify string copying and JNI exception checks [bugsnag-android#1153](https://github.com/bugsnag/bugsnag-android/pull/1153)
+  - Support native stack traces in the ANR plugin [bugsnag-android#972](https://github.com/bugsnag/bugsnag-android/pull/972)
 
 ## Fixed
 
