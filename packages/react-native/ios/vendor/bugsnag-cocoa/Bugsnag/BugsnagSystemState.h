@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+
 #import "BugsnagConfiguration.h"
 
 #define SYSTEMSTATE_KEY_APP @"app"
@@ -36,6 +37,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)recordAppUUID;
 
 - (void)setCodeBundleID:(NSString*)codeBundleID;
+
+@property (nonatomic) NSUInteger consecutiveLaunchCrashes;
 
 /**
  * Purge all stored system state.

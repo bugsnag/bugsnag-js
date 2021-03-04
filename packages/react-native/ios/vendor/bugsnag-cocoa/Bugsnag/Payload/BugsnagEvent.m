@@ -236,7 +236,7 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
     [metadata addMetadata:BSGParseDeviceMetadata(event) toSection:BSGKeyDevice];
     [metadata addMetadata:BSGParseAppMetadata(event) toSection:BSGKeyApp];
 
-    BugsnagAppWithState *app = [BugsnagAppWithState appWithOomData:[event valueForKeyPath:@"user.state.oom.app"]];
+    BugsnagAppWithState *app = [BugsnagAppWithState appWithKSCrashReportOOM:event];
     BugsnagDeviceWithState *device = [BugsnagDeviceWithState deviceWithOomData:[event valueForKeyPath:@"user.state.oom.device"]];
     
     if (!user) {

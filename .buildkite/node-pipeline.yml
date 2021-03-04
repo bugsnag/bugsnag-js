@@ -25,7 +25,7 @@ steps:
         run: node-maze-runner
         use-aliases: true
         verbose: true
-        command: ["-e", "koa.feature", "-e", "koa-1x.feature", "-e", "webpack.feature"]
+        command: ["--bind-address=0.0.0.0", "-e", "koa.feature", "-e", "koa-1x.feature", "-e", "webpack.feature"]
     env:
       NODE_VERSION: "4"
 
@@ -37,7 +37,7 @@ steps:
         run: node-maze-runner
         use-aliases: true
         verbose: true
-        command: ["-e", "koa.feature", "-e", "koa-1x.feature"]
+        command: ["--bind-address=0.0.0.0", "-e", "koa.feature", "-e", "koa-1x.feature"]
     env:
       NODE_VERSION: "6"
 
@@ -49,6 +49,7 @@ steps:
         run: node-maze-runner
         use-aliases: true
         verbose: true
+        command: ["--bind-address=0.0.0.0"]
     env:
       NODE_VERSION: "8"
 
@@ -60,6 +61,7 @@ steps:
         run: node-maze-runner
         use-aliases: true
         verbose: true
+        command: ["--bind-address=0.0.0.0"]
     env:
       NODE_VERSION: "10"
 
@@ -71,6 +73,7 @@ steps:
         run: node-maze-runner
         use-aliases: true
         verbose: true
+        command: ["--bind-address=0.0.0.0"]
     env:
       NODE_VERSION: "12"
 
@@ -82,5 +85,6 @@ steps:
         run: node-maze-runner
         use-aliases: true
         verbose: true
+        command: ["--bind-address=0.0.0.0"]
     env:
       NODE_VERSION: "14"

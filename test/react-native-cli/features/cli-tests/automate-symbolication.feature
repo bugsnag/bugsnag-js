@@ -3,17 +3,17 @@ Feature: automate symbolication command
 Scenario: successfully modify project
     When I run the React Native service interactively
     And I input "bugsnag-react-native-cli automate-symbolication" interactively
-    Then I wait for the shell to output a match for the regex "No repo detected." to stdout
+    Then I wait for the shell to output a match for the regex "No repo detected\." to stdout
     And I wait for the interactive shell to output the following lines in stdout
         """
         This command may make modifications to your project. It is recommended that you commit the
         current status of your code to a git repo before continuing.
         """
-    And I wait for the current stdout line to match the regex "Do you want to continue anyway?"
+    And I wait for the current stdout line to match the regex "Do you want to continue anyway\?"
     When I input "y" interactively
-    And I wait for the current stdout line to match the regex "Are you using Bugsnag on-premise?"
+    And I wait for the current stdout line to match the regex "Are you using Bugsnag on-premise\?"
     When I input a return interactively
-    And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Xcode build?"
+    And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Xcode build\?"
     When I input a return interactively
     And I wait for the interactive shell to output the following lines in stdout
         """
@@ -25,7 +25,7 @@ Scenario: successfully modify project
         """
     And I wait for the current stdout line to match the regex "Hit enter to continue"
     When I input a return interactively
-    And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Gradle build?"
+    And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Gradle build\?"
     When I input a return interactively
     And I wait for the current stdout line to match the regex "If you want the latest version of @bugsnag/source-maps hit enter, otherwise type the version you want"
     When I input a return interactively
@@ -39,17 +39,17 @@ Scenario: successfully modify project
 Scenario: successfully modify project, choosing source-maps version
     When I run the React Native service interactively
     And I input "bugsnag-react-native-cli automate-symbolication" interactively
-    Then I wait for the shell to output a match for the regex "No repo detected." to stdout
+    Then I wait for the shell to output a match for the regex "No repo detected\." to stdout
     And I wait for the interactive shell to output the following lines in stdout
         """
         This command may make modifications to your project. It is recommended that you commit the
         current status of your code to a git repo before continuing.
         """
-    And I wait for the current stdout line to match the regex "Do you want to continue anyway?"
+    And I wait for the current stdout line to match the regex "Do you want to continue anyway\?"
     When I input "y" interactively
-    And I wait for the current stdout line to match the regex "Are you using Bugsnag on-premise?"
+    And I wait for the current stdout line to match the regex "Are you using Bugsnag on-premise\?"
     When I input a return interactively
-    And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Xcode build?"
+    And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Xcode build\?"
     When I input a return interactively
     And I wait for the interactive shell to output the following lines in stdout
         """
@@ -61,7 +61,7 @@ Scenario: successfully modify project, choosing source-maps version
         """
     And I wait for the current stdout line to match the regex "Hit enter to continue"
     When I input a return interactively
-    And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Gradle build?"
+    And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Gradle build\?"
     When I input a return interactively
     And I wait for the current stdout line to match the regex "If you want the latest version of @bugsnag/source-maps hit enter, otherwise type the version you want"
     When I input "1.0.0-beta.1" interactively
@@ -75,21 +75,21 @@ Scenario: successfully modify project, choosing source-maps version
 Scenario: successfully modify project with custom endpoints
     When I run the React Native service interactively
     And I input "bugsnag-react-native-cli automate-symbolication" interactively
-    Then I wait for the shell to output a match for the regex "No repo detected." to stdout
+    Then I wait for the shell to output a match for the regex "No repo detected\." to stdout
     And I wait for the interactive shell to output the following lines in stdout
         """
         This command may make modifications to your project. It is recommended that you commit the
         current status of your code to a git repo before continuing.
         """
-    And I wait for the current stdout line to match the regex "Do you want to continue anyway?"
+    And I wait for the current stdout line to match the regex "Do you want to continue anyway\?"
     When I input "y" interactively
-    And I wait for the current stdout line to match the regex "Are you using Bugsnag on-premise?"
+    And I wait for the current stdout line to match the regex "Are you using Bugsnag on-premise\?"
     When I input "y" interactively
-    And I wait for the current stdout line to match the regex "What is your Bugsnag upload endpoint?"
+    And I wait for the current stdout line to match the regex "What is your Bugsnag upload endpoint\?"
     When I input "https://upload.example.com" interactively
-    And I wait for the current stdout line to match the regex "What is your Bugsnag build endpoint?"
+    And I wait for the current stdout line to match the regex "What is your Bugsnag build endpoint\?"
     When I input "https://build.example.com" interactively
-    And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Xcode build?"
+    And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Xcode build\?"
     When I input a return interactively
     And I wait for the interactive shell to output the following lines in stdout
         """
@@ -101,7 +101,7 @@ Scenario: successfully modify project with custom endpoints
         """
     And I wait for the current stdout line to match the regex "Hit enter to continue"
     When I input a return interactively
-    And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Gradle build?"
+    And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Gradle build\?"
     When I input a return interactively
     And I wait for the current stdout line to match the regex "If you want the latest version of @bugsnag/source-maps hit enter, otherwise type the version you want"
     When I input a return interactively
@@ -116,17 +116,17 @@ Scenario: successfully modify project with custom endpoints
 Scenario: opt not to modify the Android project
     When I run the React Native service interactively
     And I input "bugsnag-react-native-cli automate-symbolication" interactively
-    Then I wait for the shell to output a match for the regex "No repo detected." to stdout
+    Then I wait for the shell to output a match for the regex "No repo detected\." to stdout
     And I wait for the interactive shell to output the following lines in stdout
         """
         This command may make modifications to your project. It is recommended that you commit the
         current status of your code to a git repo before continuing.
         """
-    And I wait for the current stdout line to match the regex "Do you want to continue anyway?"
+    And I wait for the current stdout line to match the regex "Do you want to continue anyway\?"
     When I input "y" interactively
-    And I wait for the current stdout line to match the regex "Are you using Bugsnag on-premise?"
+    And I wait for the current stdout line to match the regex "Are you using Bugsnag on-premise\?"
     When I input a return interactively
-    And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Xcode build?"
+    And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Xcode build\?"
     When I input a return interactively
     And I wait for the interactive shell to output the following lines in stdout
         """
@@ -138,7 +138,7 @@ Scenario: opt not to modify the Android project
         """
     And I wait for the current stdout line to match the regex "Hit enter to continue"
     When I input a return interactively
-    And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Gradle build?"
+    And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Gradle build\?"
     When I input "n" interactively
     And I wait for the current stdout line to match the regex "If you want the latest version of @bugsnag/source-maps hit enter, otherwise type the version you want"
     When I input a return interactively
@@ -152,17 +152,17 @@ Scenario: opt not to modify the Android project
 Scenario: opt not to modify the iOS project
     When I run the React Native service interactively
     And I input "bugsnag-react-native-cli automate-symbolication" interactively
-    Then I wait for the shell to output a match for the regex "No repo detected." to stdout
+    Then I wait for the shell to output a match for the regex "No repo detected\." to stdout
     And I wait for the interactive shell to output the following lines in stdout
         """
         This command may make modifications to your project. It is recommended that you commit the
         current status of your code to a git repo before continuing.
         """
-    And I wait for the current stdout line to match the regex "Do you want to continue anyway?"
+    And I wait for the current stdout line to match the regex "Do you want to continue anyway\?"
     When I input "y" interactively
-    And I wait for the current stdout line to match the regex "Are you using Bugsnag on-premise?"
+    And I wait for the current stdout line to match the regex "Are you using Bugsnag on-premise\?"
     When I input a return interactively
-    And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Xcode build?"
+    And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Xcode build\?"
     When I input "n" interactively
     And I wait for the interactive shell to output the following lines in stdout
         """
@@ -174,7 +174,7 @@ Scenario: opt not to modify the iOS project
         """
     And I wait for the current stdout line to match the regex "Hit enter to continue"
     When I input a return interactively
-    And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Gradle build?"
+    And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Gradle build\?"
     When I input "y" interactively
     And I wait for the current stdout line to match the regex "If you want the latest version of @bugsnag/source-maps hit enter, otherwise type the version you want"
     When I input a return interactively
@@ -188,17 +188,17 @@ Scenario: opt not to modify the iOS project
 Scenario: opt not to modify either project
     When I run the React Native service interactively
     And I input "bugsnag-react-native-cli automate-symbolication" interactively
-    Then I wait for the shell to output a match for the regex "No repo detected." to stdout
+    Then I wait for the shell to output a match for the regex "No repo detected\." to stdout
     And I wait for the interactive shell to output the following lines in stdout
         """
         This command may make modifications to your project. It is recommended that you commit the
         current status of your code to a git repo before continuing.
         """
-    And I wait for the current stdout line to match the regex "Do you want to continue anyway?"
+    And I wait for the current stdout line to match the regex "Do you want to continue anyway\?"
     When I input "y" interactively
-    And I wait for the current stdout line to match the regex "Are you using Bugsnag on-premise?"
+    And I wait for the current stdout line to match the regex "Are you using Bugsnag on-premise\?"
     When I input a return interactively
-    And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Xcode build?"
+    And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Xcode build\?"
     When I input "n" interactively
     And I wait for the interactive shell to output the following lines in stdout
         """
@@ -210,9 +210,9 @@ Scenario: opt not to modify either project
         """
     And I wait for the current stdout line to match the regex "Hit enter to continue"
     When I input a return interactively
-    And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Gradle build?"
+    And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Gradle build\?"
     When I input "n" interactively
-    And I wait for the current stdout line to match the regex "/app #"
+    And I wait for the current stdout line to match the regex "\/app #"
     Then the last interactive command exited successfully
     And bugsnag source maps library is not in the package.json file
     And the iOS build has not been modified to upload source maps
