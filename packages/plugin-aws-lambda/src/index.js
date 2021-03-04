@@ -60,30 +60,31 @@ function wrapHandler (client, flushTimeoutMs, lambdaTimeoutNotifyMs, handler) {
     // Guard against the "getRemainingTimeInMillis" being missing. This should
     // never happen but could when unit testing
     if (typeof context.getRemainingTimeInMillis === 'function' &&
-      lambdaTimeoutNotifyMs > 0 &&
-      lambdaTimeoutNotifyMs <= MAX_TIMER_VALUE
+      lambdaTimeoutNotifyMs > 0
     ) {
       const timeoutMs = context.getRemainingTimeInMillis() - lambdaTimeoutNotifyMs
 
-      lambdaTimeout = setTimeout(function () {
-        const handledState = {
-          severity: 'warning',
-          unhandled: true,
-          severityReason: { type: 'log' }
-        }
+      if (timeoutMs <= MAX_TIMER_VALUE) {
+        lambdaTimeout = setTimeout(function () {
+          const handledState = {
+            severity: 'warning',
+            unhandled: true,
+            severityReason: { type: 'log' }
+          }
 
-        const event = client.Event.create(
-          new LambdaTimeoutApproaching(context.getRemainingTimeInMillis()),
-          true,
-          handledState,
-          'aws lambda plugin',
-          0
-        )
+          const event = client.Event.create(
+            new LambdaTimeoutApproaching(context.getRemainingTimeInMillis()),
+            true,
+            handledState,
+            'aws lambda plugin',
+            0
+          )
 
-        event.context = context.functionName || 'Lambda timeout approaching'
+          event.context = context.functionName || 'Lambda timeout approaching'
 
-        client._notify(event)
-      }, timeoutMs)
+          client._notify(event)
+        }, timeoutMs)
+      }
     }
 
     client.addMetadata('AWS Lambda context', context)
