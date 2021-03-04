@@ -75,9 +75,9 @@ typedef struct {
     /** Timestamp for when the app was launched (mach_absolute_time()) */
     uint64_t appLaunchTime;
 
-    /** Timestamp for when the app state was last changed
-     * (background<->foreground) (mach_absolute_time()) */
-    uint64_t appStateTransitionTime;
+    /** Timestamp for when foregroundDurationSinceLastCrash or
+     * backgroundDurationSinceLastCrash was last updated (mach_absolute_time()) */
+    uint64_t lastUpdateDurationsTime;
 
     /** If true, the application is currently in the foreground. */
     bool applicationIsInForeground;

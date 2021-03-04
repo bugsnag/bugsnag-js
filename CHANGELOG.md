@@ -4,6 +4,10 @@
 
 ### Changed
 
+- (react-native): Update bugsnag-cocoa to v6.7.0
+  - Identify crashes that occur whilst your app is launching. [bugsnag-cocoa#1004](https://github.com/bugsnag/bugsnag-cocoa/pull/1004)
+  - Fix inaccurate `app.duration` after multiple calls to `notify()` [bugsnag-cocoa#1014](https://github.com/bugsnag/bugsnag-cocoa/pull/1014)
+  - Fix a possible deadlock when writing crash reports for unhandled errors. [bugsnag-cocoa#1013](https://github.com/bugsnag/bugsnag-cocoa/pull/1013)
 - (react-native): Update bugsnag-android to v5.7.1
   - Fix for bad pointer access crash in JNI deliverReportAtPath [bugsnag-android#1169](https://github.com/bugsnag/bugsnag-android/pull/1169)
   - Check additional JNI calls for pending exceptions and no-op [bugsnag-android#1142](https://github.com/bugsnag/bugsnag-android/pull/1142)

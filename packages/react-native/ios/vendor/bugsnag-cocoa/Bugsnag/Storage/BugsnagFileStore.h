@@ -31,11 +31,10 @@
  */
 - (NSDictionary *)fileWithId:(NSString *)fileId;
 
-/** Get a list of all files.
- *
- * @return A list of files in chronological order (oldest first).
+/**
+ * @return A list of all files IDs in chronological order (oldest first).
  */
-- (NSArray *)allFiles;
+- (NSArray *)fileIds;
 
 /** Get a list of all files by filename.
  *

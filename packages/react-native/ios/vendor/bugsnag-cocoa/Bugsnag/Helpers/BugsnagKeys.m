@@ -49,6 +49,7 @@ NSString *const BSGKeyImageVmAddress = @"image_vmaddr";
 NSString *const BSGKeyIncomplete = @"incomplete";
 NSString *const BSGKeyInfo = @"info";
 NSString *const BSGKeyInstructionAddress = @"instruction_addr";
+NSString *const BSGKeyIsLaunching = @"isLaunching";
 NSString *const BSGKeyIsLR = @"isLR";
 NSString *const BSGKeyIsPC = @"isPC";
 NSString *const BSGKeyLabel = @"label";

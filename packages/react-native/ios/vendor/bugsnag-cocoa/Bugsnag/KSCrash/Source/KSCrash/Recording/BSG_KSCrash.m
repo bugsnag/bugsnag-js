@@ -267,7 +267,34 @@
     if (!reports.count) {
         return;
     }
+    
+    [self sendReports:reports completionHander:nil];
+}
 
+- (void)sendLatestReport:(dispatch_block_t)completionHander {
+    [self.crashReportStore pruneFilesLeaving:self.maxStoredReports];
+    
+    NSString *fileId = [self.crashReportStore fileIds].lastObject;
+    if (!fileId) {
+        if (completionHander) {
+            completionHander();
+        }
+        return;
+    }
+    
+    NSDictionary *contents = [self.crashReportStore fileWithId:fileId];
+    if (!contents) {
+        if (completionHander) {
+            completionHander();
+        }
+        return;
+    }
+    
+    [self sendReports:@{fileId: contents} completionHander:completionHander];
+}
+
+- (void)sendReports:(NSDictionary<NSString *, NSDictionary *> *)reports
+   completionHander:(dispatch_block_t)completionHander {
     BSG_KSLOG_INFO(@"Sending %lu crash reports", (unsigned long)reports.count);
 
     [self sendReports:reports
@@ -280,6 +307,9 @@
                 if (completed && filename != nil) {
                     BSG_KSLOG_DEBUG(@"Deleting KSCrashReport %@", filename);
                     [self.crashReportStore deleteFileWithId:filename];
+                }
+                if (completionHander) {
+                    completionHander();
                 }
             }];
 }
@@ -363,10 +393,6 @@ BSG_SYNTHESIZE_CRASH_STATE_PROPERTY(BOOL, crashedLastLaunch)
     }
     [self.sink sendStoredReports:reports
                        withBlock:block];
-}
-
-- (NSArray *)allReports {
-    return [self.crashReportStore allFiles];
 }
 
 - (NSDictionary <NSString *, NSDictionary *> *)allReportsByFilename {
