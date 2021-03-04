@@ -1,6 +1,6 @@
 # Changelog
 
-## TBD
+## v7.8.2 (2021-03-04)
 
 ### Changed
 
@@ -17,13 +17,13 @@
   - Further robustify string copying and JNI exception checks [bugsnag-android#1153](https://github.com/bugsnag/bugsnag-android/pull/1153)
   - Support native stack traces in the ANR plugin [bugsnag-android#972](https://github.com/bugsnag/bugsnag-android/pull/972)
 
-## Fixed
+### Fixed
 
 - (expo): Ensure Expo plugins depend on same version of NetInfo package [#1319](https://github.com/bugsnag/bugsnag-js/pull/1319)
 
 ## v7.8.1 (2021-02-25)
 
-## Changed
+### Changed
 
 - (react-native): Update bugsnag-cocoa to v6.6.4
   - Fix possible deadlock when recording thread information for handled errors [bugsnag-cocoa#1011](https://github.com/bugsnag/bugsnag-cocoa/pull/1011)
