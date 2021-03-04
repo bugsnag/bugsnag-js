@@ -1,5 +1,11 @@
 const bugsnagInFlight = require('@bugsnag/in-flight')
 const BugsnagPluginBrowserSession = require('@bugsnag/plugin-browser-session')
+const LambdaTimeoutApproaching = require('./lambda-timeout-approaching')
+
+// JS timers use a signed 32 bit integer for the millisecond parameter. SAM's
+// "local invoke" has a bug that means it exceeds this amount, resulting in
+// warnings. See https://github.com/aws/aws-sam-cli/issues/2519
+const MAX_TIMER_VALUE = Math.pow(2, 31) - 1
 
 const BugsnagPluginAwsLambda = {
   name: 'awsLambda',
@@ -32,14 +38,14 @@ const BugsnagPluginAwsLambda = {
     }
 
     return {
-      createHandler ({ flushTimeoutMs = 2000 } = {}) {
-        return wrapHandler.bind(null, client, flushTimeoutMs)
+      createHandler ({ flushTimeoutMs = 2000, lambdaTimeoutNotifyMs = 1000 } = {}) {
+        return wrapHandler.bind(null, client, flushTimeoutMs, lambdaTimeoutNotifyMs)
       }
     }
   }
 }
 
-function wrapHandler (client, flushTimeoutMs, handler) {
+function wrapHandler (client, flushTimeoutMs, lambdaTimeoutNotifyMs, handler) {
   let _handler = handler
 
   if (handler.length > 2) {
@@ -49,6 +55,38 @@ function wrapHandler (client, flushTimeoutMs, handler) {
   }
 
   return async function (event, context) {
+    let lambdaTimeout
+
+    // Guard against the "getRemainingTimeInMillis" being missing. This should
+    // never happen but could when unit testing
+    if (typeof context.getRemainingTimeInMillis === 'function' &&
+      lambdaTimeoutNotifyMs > 0
+    ) {
+      const timeoutMs = context.getRemainingTimeInMillis() - lambdaTimeoutNotifyMs
+
+      if (timeoutMs <= MAX_TIMER_VALUE) {
+        lambdaTimeout = setTimeout(function () {
+          const handledState = {
+            severity: 'warning',
+            unhandled: true,
+            severityReason: { type: 'log' }
+          }
+
+          const event = client.Event.create(
+            new LambdaTimeoutApproaching(context.getRemainingTimeInMillis()),
+            true,
+            handledState,
+            'aws lambda plugin',
+            0
+          )
+
+          event.context = context.functionName || 'Lambda timeout approaching'
+
+          client._notify(event)
+        }, timeoutMs)
+      }
+    }
+
     client.addMetadata('AWS Lambda context', context)
 
     if (client._config.autoTrackSessions) {
@@ -72,6 +110,10 @@ function wrapHandler (client, flushTimeoutMs, handler) {
 
       throw err
     } finally {
+      if (lambdaTimeout) {
+        clearTimeout(lambdaTimeout)
+      }
+
       try {
         await bugsnagInFlight.flush(flushTimeoutMs)
       } catch (err) {

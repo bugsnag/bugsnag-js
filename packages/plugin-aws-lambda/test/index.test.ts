@@ -24,6 +24,16 @@ const createClient = (events: EventDeliveryPayload[], sessions: SessionDeliveryP
   return client
 }
 
+const DEFAULT_REMAINING_MS = 250
+let getRemainingTimeInMillis: jest.MockedFunction<() => number>
+
+beforeEach(() => {
+  getRemainingTimeInMillis = jest.fn()
+    .mockReturnValueOnce(DEFAULT_REMAINING_MS)
+    .mockReturnValueOnce(DEFAULT_REMAINING_MS / 2)
+    .mockImplementationOnce(() => { throw new Error('unexpected call to "getRemainingTimeInMillis"') })
+})
+
 describe('plugin: aws lambda', () => {
   it('has a name', () => {
     expect(BugsnagPluginAwsLambda.name).toBe('awsLambda')
@@ -513,5 +523,216 @@ describe('plugin: aws lambda', () => {
 
     expect(events).toHaveLength(0)
     expect(sessions).toHaveLength(0)
+  })
+
+  it('notifies when it is close to timing out (async)', async () => {
+    const events: EventDeliveryPayload[] = []
+    const sessions: SessionDeliveryPayload[] = []
+
+    const client = createClient(events, sessions)
+
+    const handler = async (event: any, context: any) => new Promise(resolve => {
+      setTimeout(() => resolve('xyz'), DEFAULT_REMAINING_MS + 100)
+    })
+
+    const event = { very: 'eventy' }
+    const context = { extremely: 'contextual', getRemainingTimeInMillis }
+
+    const plugin = client.getPlugin('awsLambda')
+
+    if (!plugin) {
+      throw new Error('Plugin was not loaded!')
+    }
+
+    const bugsnagHandler = plugin.createHandler()
+    const wrappedHandler = bugsnagHandler(handler)
+
+    expect(events).toHaveLength(0)
+    expect(sessions).toHaveLength(0)
+
+    expect(await wrappedHandler(event, context)).toBe('xyz')
+
+    expect(events).toHaveLength(1)
+    expect(events[0].events).toHaveLength(1)
+    expect(events[0].events[0].errors).toHaveLength(1)
+    expect(events[0].events[0].context).toBe('Lambda timeout approaching')
+
+    const expectedError = {
+      errorClass: 'LambdaTimeoutApproaching',
+      errorMessage: `Lambda will timeout in ${DEFAULT_REMAINING_MS / 2}ms`,
+      stacktrace: [],
+      type: 'nodejs'
+    }
+
+    expect(events[0].events[0].errors[0]).toEqual(expectedError)
+
+    expect(sessions).toHaveLength(1)
+  })
+
+  it('notifies when it is close to timing out (callback)', async () => {
+    const events: EventDeliveryPayload[] = []
+    const sessions: SessionDeliveryPayload[] = []
+
+    const client = createClient(events, sessions)
+
+    const handler = (event: any, context: any, callback: any) => new Promise(resolve => {
+      setTimeout(() => callback(null, 'xyz'), DEFAULT_REMAINING_MS + 100)
+    })
+
+    const event = { very: 'eventy' }
+    const context = { extremely: 'contextual', getRemainingTimeInMillis }
+
+    const plugin = client.getPlugin('awsLambda')
+
+    if (!plugin) {
+      throw new Error('Plugin was not loaded!')
+    }
+
+    const bugsnagHandler = plugin.createHandler()
+    const wrappedHandler = bugsnagHandler(handler)
+
+    expect(events).toHaveLength(0)
+    expect(sessions).toHaveLength(0)
+
+    expect(await wrappedHandler(event, context)).toBe('xyz')
+
+    expect(events).toHaveLength(1)
+    expect(events[0].events).toHaveLength(1)
+    expect(events[0].events[0].errors).toHaveLength(1)
+    expect(events[0].events[0].context).toBe('Lambda timeout approaching')
+
+    const expectedError = {
+      errorClass: 'LambdaTimeoutApproaching',
+      errorMessage: `Lambda will timeout in ${DEFAULT_REMAINING_MS / 2}ms`,
+      stacktrace: [],
+      type: 'nodejs'
+    }
+
+    expect(events[0].events[0].errors[0]).toEqual(expectedError)
+
+    expect(sessions).toHaveLength(1)
+  })
+
+  it('uses the function name as the event context when present', async () => {
+    const events: EventDeliveryPayload[] = []
+    const sessions: SessionDeliveryPayload[] = []
+
+    const client = createClient(events, sessions)
+
+    const handler = async (event: any, context: any) => new Promise(resolve => {
+      setTimeout(() => resolve('xyz'), DEFAULT_REMAINING_MS + 100)
+    })
+
+    const event = { very: 'eventy' }
+    const context = { functionName: 'MyCoolAndGoodLambdaFunction', getRemainingTimeInMillis }
+
+    const plugin = client.getPlugin('awsLambda')
+
+    if (!plugin) {
+      throw new Error('Plugin was not loaded!')
+    }
+
+    const bugsnagHandler = plugin.createHandler()
+    const wrappedHandler = bugsnagHandler(handler)
+
+    expect(events).toHaveLength(0)
+    expect(sessions).toHaveLength(0)
+
+    expect(await wrappedHandler(event, context)).toBe('xyz')
+
+    expect(events).toHaveLength(1)
+    expect(events[0].events[0].errors[0].errorClass).toBe('LambdaTimeoutApproaching')
+    expect(events[0].events[0].errors[0].errorMessage).toBe(`Lambda will timeout in ${DEFAULT_REMAINING_MS / 2}ms`)
+    expect(events[0].events[0].errors[0].stacktrace).toHaveLength(0)
+    expect(events[0].events[0].context).toBe('MyCoolAndGoodLambdaFunction')
+
+    expect(sessions).toHaveLength(1)
+  })
+
+  it('allows the "lambdaTimeoutNotifyMs" to be changed', async () => {
+    // With 6 seconds remaining and a resolve timeout of 500ms, the timeout
+    // warning will never be triggered unless the custom "lambdaTimeoutNotifyMs"
+    // takes effect
+    const superLongWaitMs = 6000
+    const resolveTimeoutMs = 500
+    const lambdaTimeoutNotifyMs = superLongWaitMs - (resolveTimeoutMs / 2)
+
+    getRemainingTimeInMillis = jest.fn()
+      .mockReturnValueOnce(superLongWaitMs)
+      .mockReturnValueOnce(superLongWaitMs - lambdaTimeoutNotifyMs)
+      .mockImplementationOnce(() => { throw new Error('unexpected call to "getRemainingTimeInMillis"') })
+
+    const events: EventDeliveryPayload[] = []
+    const sessions: SessionDeliveryPayload[] = []
+
+    const client = createClient(events, sessions)
+
+    const handler = async (event: any, context: any) => new Promise(resolve => {
+      setTimeout(() => resolve('xyz'), resolveTimeoutMs)
+    })
+
+    const event = { very: 'eventy' }
+    const context = { extremely: 'contextual', getRemainingTimeInMillis }
+
+    const plugin = client.getPlugin('awsLambda')
+
+    if (!plugin) {
+      throw new Error('Plugin was not loaded!')
+    }
+
+    const bugsnagHandler = plugin.createHandler({ lambdaTimeoutNotifyMs })
+    const wrappedHandler = bugsnagHandler(handler)
+
+    expect(events).toHaveLength(0)
+    expect(sessions).toHaveLength(0)
+
+    expect(await wrappedHandler(event, context)).toBe('xyz')
+
+    expect(events).toHaveLength(1)
+    expect(events[0].events).toHaveLength(1)
+    expect(events[0].events[0].errors).toHaveLength(1)
+    expect(events[0].events[0].context).toBe('Lambda timeout approaching')
+
+    const expectedError = {
+      errorClass: 'LambdaTimeoutApproaching',
+      errorMessage: `Lambda will timeout in ${resolveTimeoutMs / 2}ms`,
+      stacktrace: [],
+      type: 'nodejs'
+    }
+
+    expect(events[0].events[0].errors[0]).toEqual(expectedError)
+
+    expect(sessions).toHaveLength(1)
+  })
+
+  it('does not notify if "lambdaTimeoutNotifyMs" is 0', async () => {
+    const events: EventDeliveryPayload[] = []
+    const sessions: SessionDeliveryPayload[] = []
+
+    const client = createClient(events, sessions)
+
+    const handler = async (event: any, context: any) => new Promise(resolve => {
+      setTimeout(() => resolve('xyz'), 100)
+    })
+
+    const event = { very: 'eventy' }
+    const context = { extremely: 'contextual', getRemainingTimeInMillis }
+
+    const plugin = client.getPlugin('awsLambda')
+
+    if (!plugin) {
+      throw new Error('Plugin was not loaded!')
+    }
+
+    const bugsnagHandler = plugin.createHandler({ lambdaTimeoutNotifyMs: 0 })
+    const wrappedHandler = bugsnagHandler(handler)
+
+    expect(events).toHaveLength(0)
+    expect(sessions).toHaveLength(0)
+
+    expect(await wrappedHandler(event, context)).toBe('xyz')
+
+    expect(events).toHaveLength(0)
+    expect(sessions).toHaveLength(1)
   })
 })
