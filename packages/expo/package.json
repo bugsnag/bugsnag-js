@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/expo",
-  "version": "7.7.0",
+  "version": "7.8.2",
   "main": "src/notifier.js",
   "types": "types/bugsnag.d.ts",
   "description": "Bugsnag error reporter for Expo applications",
@@ -41,7 +41,7 @@
     "@bugsnag/plugin-network-breadcrumbs": "^7.7.0",
     "@bugsnag/plugin-react": "^7.7.0",
     "@bugsnag/plugin-react-native-app-state-breadcrumbs": "^7.7.0",
-    "@bugsnag/plugin-react-native-connectivity-breadcrumbs": "^7.7.0",
+    "@bugsnag/plugin-react-native-connectivity-breadcrumbs": "^7.8.2",
     "@bugsnag/plugin-react-native-global-error-handler": "^7.7.0",
     "@bugsnag/plugin-react-native-orientation-breadcrumbs": "^7.7.0",
     "@bugsnag/plugin-react-native-unhandled-rejection": "^7.7.0",
