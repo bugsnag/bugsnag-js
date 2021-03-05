@@ -1,9 +1,12 @@
 const { join } = require('path')
+const { mkdir } = require('fs').promises
 const { After, AfterAll, Before, BeforeAll, Status } = require('@cucumber/cucumber')
 const { MockServer } = require('./server')
 const { TestApp } = require('./app')
 const { Automator } = require('./automator')
 const { publishPackages } = require('./repo')
+
+const failureOutputDir = join(__dirname, '../../../.cucumber-failures')
 
 // Allow a longer timeout for this step, which packages the app to run the tests
 // The upper bound for timeouts is only really an issue on lower-resourced
@@ -55,11 +58,15 @@ Before(() => {
   global.server.start()
 })
 
-After(async ({ result }) => {
+After(async ({ result, pickle }) => {
+  await global.server.stop()
   if (result.status === Status.FAILED) {
     global.success = false
+    const time = Math.floor(new Date().getTime() / 1000)
+    const output = join(failureOutputDir, `${pickle.name}-${time}`)
+    await mkdir(output, { recursive: true })
+    await global.server.writeUploadsTo(output)
   }
-  await global.server.stop()
   global.server.clear()
   await global.automator.stop() // start the app fresh every scenario
 })

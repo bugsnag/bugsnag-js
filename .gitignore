@@ -6,6 +6,7 @@ build
 
 # testing
 docker-temp
+.cucumber-failures
 
 # general dev
 node_modules

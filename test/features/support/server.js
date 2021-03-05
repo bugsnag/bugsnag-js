@@ -1,6 +1,8 @@
 const http = require('http')
 const formidable = require('formidable')
-const { unlinkSync } = require('fs')
+const { readFile, open } = require('fs').promises
+const { basename, join } = require('path')
+const { promisify } = require('util')
 
 class MockServer {
   constructor () {
@@ -22,7 +24,8 @@ class MockServer {
   async uploadMinidump (req, res) {
     const form = formidable()
     form.parse(req, (_err, fields, files) => {
-      this.minidumpUploads.push({ headers: req.headers, fields, files })
+      const boundary = this.readBoundary(req.headers['content-type'])
+      this.minidumpUploads.push({ headers: req.headers, boundary, fields, files })
       res.writeHead(202)
       res.end()
     })
@@ -59,13 +62,61 @@ class MockServer {
   }
 
   async stop () {
-    this.minidumpUploads.forEach((upload) => {
-      unlinkSync(upload.files.minidump.path)
-      unlinkSync(upload.files.event.path)
-    })
-    return new Promise((resolve, reject) => {
-      this.server.close((err) => err ? reject(err) : resolve())
-    })
+    return promisify(this.server.close.bind(this.server))()
+  }
+
+  // write all requests to disk for later inspection
+  // useful on scenario failure
+  async writeUploadsTo (directory) {
+    for (let i = 0; i < this.sessionUploads.length; i++) {
+      const upload = this.sessionUploads[i]
+      const handle = await open(join(directory, `session-${i}.log`), 'w+')
+      await this.writeHeaders(handle, upload, '/sessions')
+      await handle.write(upload.body)
+      await handle.close()
+    }
+    for (let i = 0; i < this.eventUploads.length; i++) {
+      const upload = this.eventUploads[i]
+      const handle = await open(join(directory, `event-${i}.log`), 'w+')
+      await this.writeHeaders(handle, upload, '/events')
+      await handle.write(upload.body)
+      await handle.close()
+    }
+    for (let i = 0; i < this.minidumpUploads.length; i++) {
+      const upload = this.minidumpUploads[i]
+      const handle = await open(join(directory, `minidump-${i}.log`), 'w+')
+      await this.writeHeaders(handle, upload, '/minidumps')
+      for (const field in upload.fields) {
+        await handle.write(`${upload.boundary}\nContent-Disposition: form-data; name="${field}"\n\n${upload.fields[field]}`)
+      }
+      for (const file in upload.files) {
+        const filepath = upload.files[file].path
+        await handle.write(`${upload.boundary}\nContent-Disposition: form-data; name="${file}"; filename="${basename(filepath)}"\n\n`)
+        await handle.write(await readFile(filepath))
+      }
+      await handle.write(`${upload.boundary}\n`)
+      await handle.close()
+    }
+  }
+
+  async writeHeaders (handle, upload, url) {
+    await handle.write(`POST ${url} HTTP/1.1\n`)
+    for (const header in upload.headers) {
+      await handle.write(`${header}: ${upload.headers[header]}\n`)
+    }
+    await handle.write('\n')
+  }
+
+  readBoundary (contentType) {
+    if (!contentType) {
+      return null
+    }
+    const marker = 'boundary='
+    for (const component of contentType.split(';')) {
+      if (component.indexOf(marker) >= 0) {
+        return component.split(marker)[1]
+      }
+    }
   }
 }
 
