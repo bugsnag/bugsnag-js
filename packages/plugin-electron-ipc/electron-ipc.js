@@ -16,20 +16,49 @@ module.exports = {
 
     // synchronisation calls
     const bugsnagIpcMainMap = (new BugsnagIpcMain(client)).toMap()
-    ipcMain.handle('bugsnag::sync', (event, methodName, ...args) => {
-      console.log('bugsnag ipc call received')
+    ipcMain.handle('bugsnag::renderer-to-main-sync', (event, methodName, ...args) => {
+      client._logger.debug('IPC call received', methodName, args)
       const method = bugsnagIpcMainMap.get(methodName)
       if (!method) {
         client._logger.warn(`attempted to call IPC method named "${methodName}" which doesn't exist`)
         return
       }
       try {
-        console.log(method, ...args.map(arg => typeof arg === 'undefined' ? undefined : JSON.parse(arg)))
-        return method(...args.map(arg => typeof arg === 'undefined' ? undefined : JSON.parse(arg)))
+        method(...args.map(arg => typeof arg === 'undefined' ? undefined : JSON.parse(arg)))(event.sender)
       } catch (e) {
         client._logger.warn('IPC call failed', e)
       }
     })
+
+    // propagate changes out to renderers
+    client.getPlugin('stateSync').emitter.on('UserUpdate', (payload, source) => propagateEventToRenderers('UserUpdate', payload, source))
+    client.getPlugin('stateSync').emitter.on('ContextUpdate', (payload, source) => propagateEventToRenderers('ContextUpdate', payload, source))
+    client.getPlugin('stateSync').emitter.on('AddMetadata', (payload, source) => propagateEventToRenderers('AddMetadata', payload, source))
+    client.getPlugin('stateSync').emitter.on('ClearMetadata', (payload, source) => propagateEventToRenderers('ClearMetadata', payload, source))
+
+    // keep track of the renderers in existence
+    const renderers = new Set()
+    app.on('web-contents-created', (event, webContents) => {
+      client._logger.debug(`Renderer #${webContents.id} created`)
+      // if you send data to a webContents instance before it has emitted this event, it will crash
+      webContents.on('did-start-loading', () => renderers.add(webContents))
+      webContents.on('destroy', () => {
+        client._logger.debug(`Renderer #${webContents.id} destroyed`)
+        renderers.delete(webContents)
+      })
+    })
+
+    const propagateEventToRenderers = (type, payload, source) => {
+      client._logger.debug('Propagating change event to renderers')
+      for (const renderer of renderers) {
+        if (renderer.id !== source.id) {
+          client._logger.debug(`Sending change event to renderer #${renderer.id}`)
+          renderer.send('bugsnag::main-to-renderer-sync', { type, payload })
+        } else {
+          client._logger.debug(`Skipping renderer #${renderer.id} because it is the source of the event`)
+        }
+      }
+    }
 
     setPreload()
   }

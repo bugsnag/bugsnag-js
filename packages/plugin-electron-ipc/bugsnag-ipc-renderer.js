@@ -1,12 +1,18 @@
 const { ipcRenderer } = require('electron')
 const jsonStringify = require('@bugsnag/safe-json-stringify')
 
-const CHANNEL_NAME = 'bugsnag::sync'
+const OUTBOUND_CHANNEL_NAME = 'bugsnag::renderer-to-main-sync'
 const safeInvoke = (method, ...args) => {
-  return ipcRenderer.invoke(CHANNEL_NAME, method, ...args.map(arg => jsonStringify(arg)))
+  return ipcRenderer.invoke(OUTBOUND_CHANNEL_NAME, method, ...args.map(arg => jsonStringify(arg)))
 }
 
+const INBOUND_CHANNEL_NAME = 'bugsnag::main-to-renderer-sync'
+
 module.exports = class BugsnagIpcRenderer {
+  listen (cb) {
+    ipcRenderer.on(INBOUND_CHANNEL_NAME, cb)
+  }
+
   leaveBreadcrumb (breadcrumb) {
     return safeInvoke('leaveBreadcrumb', breadcrumb)
   }
@@ -27,8 +33,8 @@ module.exports = class BugsnagIpcRenderer {
     return safeInvoke('updateContext', ctx)
   }
 
-  updateMetadata (section, values) {
-    return safeInvoke('updateMetadata', section, values)
+  addMetadata (section, keyOrValues, value) {
+    return safeInvoke('addMetadata', section, keyOrValues, value)
   }
 
   clearMetadata (section, key) {

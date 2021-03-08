@@ -1,10 +1,11 @@
 module.exports = class BugsnagIpcMain {
   constructor (client) {
     this.client = client
+    this.stateSync = client.getPlugin('stateSync')
   }
 
   leaveBreadcrumb (breadcrumb) {
-    return this.client.leaveBreadcrumb(
+    return source => this.client.leaveBreadcrumb(
       breadcrumb.name /* this is "name" not "type" due to breadcrumb.js's toJSON() function */,
       breadcrumb.metadata,
       breadcrumb.type
@@ -12,31 +13,31 @@ module.exports = class BugsnagIpcMain {
   }
 
   startSession () {
-    return this.client.startSession()
+    return source => this.client.startSession()
   }
 
   pauseSession () {
-    return this.client.pauseSession()
+    return source => this.client.pauseSession()
   }
 
   resumeSession () {
-    return this.client.resumeSession()
+    return source => this.client.resumeSession()
   }
 
   updateContext (ctx) {
-    return this.client.setContext(ctx)
+    return source => this.stateSync.setContextFromSource(source)(ctx)
   }
 
-  updateMetadata (section, values) {
-    return this.client.addMetadata(section, values)
+  addMetadata (section, keyOrValues, value) {
+    return source => this.stateSync.addMetadataFromSource(source)(section, keyOrValues, value)
   }
 
   clearMetadata (section, key) {
-    return this.client.clearMetadata(section, key)
+    return source => this.stateSync.clearMetadataFromSource(source)(section, key)
   }
 
   updateUser (id, name, email) {
-    return this.client.setUser(id, name, email)
+    return source => this.stateSync.setUserFromSource(source)(id, name, email)
   }
 
   dispatch (event) {
@@ -54,7 +55,7 @@ module.exports = class BugsnagIpcMain {
       ['pauseSession', this.pauseSession.bind(this)],
       ['resumeSession', this.resumeSession.bind(this)],
       ['updateContext', this.updateContext.bind(this)],
-      ['updateMetadata', this.updateMetadata.bind(this)],
+      ['addMetadata', this.addMetadata.bind(this)],
       ['clearMetadata', this.clearMetadata.bind(this)],
       ['updateUser', this.updateUser.bind(this)],
       ['dispatch', this.dispatch.bind(this)],

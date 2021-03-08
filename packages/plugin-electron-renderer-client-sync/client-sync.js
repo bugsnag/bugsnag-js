@@ -31,10 +31,10 @@ module.exports = (BugsnagIpcRenderer = window.__bugsnag_ipc__) => ({
     }
 
     const origAddMetadata = client.addMetadata
-    client.addMetadata = function (section, key, value) {
+    client.addMetadata = function (section, keyOrValues, value) {
       const ret = origAddMetadata.apply(this, arguments)
       try {
-        BugsnagIpcRenderer.updateMetadata(section, client.getMetadata(section))
+        BugsnagIpcRenderer.addMetadata(section, section, keyOrValues, value)
       } catch (e) {
         client._logger.error(e)
       }
@@ -51,5 +51,14 @@ module.exports = (BugsnagIpcRenderer = window.__bugsnag_ipc__) => ({
       }
       return ret
     }
+
+    BugsnagIpcRenderer.listen((event, change) => {
+      switch (change.type) {
+        case 'ContextUpdate': return origSetContext.call(client, change.payload.context)
+        case 'UserUpdate': return origSetUser.call(client, change.payload.user.id, change.payload.user.email, change.payload.user.name)
+        case 'AddMetadata': return origAddMetadata.call(client, change.payload.section, change.payload.keyOrValues, change.payload.value)
+        case 'ClearMetadata': return origClearMetadata.call(client, change.payload.section, change.payload.key)
+      }
+    })
   }
 })

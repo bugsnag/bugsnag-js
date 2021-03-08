@@ -2,6 +2,7 @@ const Client = require('@bugsnag/core/client')
 const { schema } = require('../config/main')
 const internalPlugins = [
   // main internal plugins go here
+  require('@bugsnag/plugin-electron-state-sync'),
   require('@bugsnag/plugin-electron-ipc')
 ]
 
