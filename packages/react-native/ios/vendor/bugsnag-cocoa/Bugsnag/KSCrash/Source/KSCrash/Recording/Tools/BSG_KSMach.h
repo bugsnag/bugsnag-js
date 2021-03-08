@@ -46,8 +46,8 @@ extern "C" {
 // ============================================================================
 
 /** Initializes KSMach.
- * Some functions (currently only bsg_ksmachpthreadFromMachThread) require
- * initialization before use.
+ * Some functions (currently only bsg_ksmachpthreadFromMachThread and
+ * bsg_ksmachfreeMemory) require initialization before use.
  */
 void bsg_ksmach_init(void);
 

@@ -1,18 +1,38 @@
 Changelog
 =========
 
+## 6.7.0 (2021-03-03)
+
+### Enhancements
+
+* Bugsnag will now identify crashes that occur whilst your app is launching, allowing you to prioritize fixing high-impact launch crashes.
+  For more information see [the documentation](https://docs.bugsnag.com/platforms/ios/identifying-crashes-at-launch/).
+  [#1004](https://github.com/bugsnag/bugsnag-cocoa/pull/1004)
+
+### Bug fixes
+
+* Fix inaccurate `app.duration` after multiple calls to `notify()`
+  [#1014](https://github.com/bugsnag/bugsnag-cocoa/pull/1014)
+
+* Fix a possible deadlock when writing crash reports for unhandled errors.
+  [#1013](https://github.com/bugsnag/bugsnag-cocoa/pull/1013)
+
+### Deprecated
+
+* `Bugsnag.appDidCrashLastLaunch` has been deprecated in favour of `Bugsnag.lastRunInfo.crashed` and will be removed in the next major release.
+
 ## 6.6.4 (2021-02-24)
 
 ### Bug fixes
 
 * Fix possible deadlock when recording thread information for handled errors.
-  [1011](https://github.com/bugsnag/bugsnag-cocoa/pull/1011)
+  [#1011](https://github.com/bugsnag/bugsnag-cocoa/pull/1011)
 
 * Fix Swift 5.4 fatal error message parsing.
-  [1010](https://github.com/bugsnag/bugsnag-cocoa/pull/1010)
+  [#1010](https://github.com/bugsnag/bugsnag-cocoa/pull/1010)
 
 * Improve accuracy of jailbreak detection.
-  [1000](https://github.com/bugsnag/bugsnag-cocoa/pull/1000)
+  [#1000](https://github.com/bugsnag/bugsnag-cocoa/pull/1000)
 
 ## 6.6.3 (2021-02-17)
 

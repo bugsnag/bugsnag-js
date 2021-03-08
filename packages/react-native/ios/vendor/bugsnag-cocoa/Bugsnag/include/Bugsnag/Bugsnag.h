@@ -35,6 +35,7 @@
 #import <Bugsnag/BugsnagError.h>
 #import <Bugsnag/BugsnagErrorTypes.h>
 #import <Bugsnag/BugsnagEvent.h>
+#import <Bugsnag/BugsnagLastRunInfo.h>
 #import <Bugsnag/BugsnagMetadata.h>
 #import <Bugsnag/BugsnagPlugin.h>
 #import <Bugsnag/BugsnagSession.h>
@@ -101,7 +102,20 @@
 /**
  * @return YES if Bugsnag has been started and the previous launch crashed
  */
-+ (BOOL)appDidCrashLastLaunch;
++ (BOOL)appDidCrashLastLaunch __attribute__((deprecated("use 'lastRunInfo.crashed' instead")));
+
+/**
+ * Information about the last run of the app, and whether it crashed.
+ */
+@property (class, readonly, nullable) BugsnagLastRunInfo *lastRunInfo;
+
+/**
+ * Tells Bugsnag that your app has finished launching.
+ *
+ * Errors reported after calling this method will have the `BugsnagAppWithState.isLaunching`
+ * property set to false.
+ */
++ (void)markLaunchCompleted;
 
 // =============================================================================
 // MARK: - Notify
