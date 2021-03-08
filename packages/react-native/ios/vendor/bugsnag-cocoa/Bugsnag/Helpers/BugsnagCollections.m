@@ -23,6 +23,13 @@
 
 #import "BSGJSONSerialization.h"
 
+NSArray * BSGArraySubarrayFromIndex(NSArray *array, NSUInteger index) {
+    if (index >= array.count) {
+        return @[];
+    }
+    return [array subarrayWithRange:NSMakeRange(index, array.count - index)];
+}
+
 NSDictionary *BSGDictMerge(NSDictionary *source, NSDictionary *destination) {
     if ([destination count] == 0) {
         return source;

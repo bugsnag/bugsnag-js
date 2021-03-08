@@ -37,8 +37,9 @@
 #include <mach-o/arch.h>
 #include <mach/mach_time.h>
 #include <sys/sysctl.h>
-#if defined(__IPHONE_13_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_13_0
-#import <os/proc.h>
+
+#if __has_include(<os/proc.h>) && TARGET_OS_IPHONE
+#include <os/proc.h>
 #endif
 
 // Avoiding static functions due to linker issues.
@@ -60,26 +61,33 @@ static pthread_t bsg_g_topThread;
 #pragma mark - General Information -
 // ============================================================================
 
+/**
+ * A pointer to `os_proc_available_memory` if it is available and usable.
+ *
+ * We cannot use the `__builtin_available` check at runtime because its
+ * implementation uses malloc() which is not async-signal-safe and can result in
+ * a deadlock if called from a crash handler or while threads are suspended.
+ */
+static size_t (* get_available_memory)(void);
+
+static void bsg_ksmachfreeMemory_init(void) {
+#if __has_include(<os/proc.h>) && TARGET_OS_IPHONE
+    if (__builtin_available(iOS 13.0, tvOS 13.0, watchOS 6.0, *)) {
+        // Only use `os_proc_available_memory` if it appears to be working.
+        // 0 is returned if the calling process is not an app or is running
+        // on a Simulator, and may also erroneously be returned by some early
+        // implementations like iOS 13.0.
+        if (os_proc_available_memory()) {
+            get_available_memory = os_proc_available_memory;
+        }
+    }
+#endif
+}
+
 uint64_t bsg_ksmachfreeMemory(void) {
-    size_t mem = 0;
-
-#if BSG_PLATFORM_IOS &&  defined(__IPHONE_13_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_13_0
-    if (__builtin_available(iOS 13.0, *)) {
-        mem = os_proc_available_memory();
+    if (get_available_memory) {
+        return get_available_memory();
     }
-#endif
-
-#if BSG_PLATFORM_TVOS &&  defined(__TVOS_13_0) && __TV_OS_VERSION_MAX_ALLOWED >= __TVOS_13_0
-    if (__builtin_available(tvOS 13.0, *)) {
-        mem = os_proc_available_memory();
-    }
-#endif
-
-    // Note: Some broken versions of iOS always return 0.
-    if(mem != 0) {
-        return mem;
-    }
-
     vm_statistics_data_t vmStats;
     vm_size_t pageSize;
     if (bsg_ksmachi_VMStats(&vmStats, &pageSize)) {
@@ -198,6 +206,8 @@ bool bsg_ksmachfillState(const thread_t thread, const thread_state_t state,
 
     kr = thread_get_state(thread, flavor, state, &stateCountBuff);
     if (kr != KERN_SUCCESS) {
+        // When running under Rosetta 2, thread_get_state() sometimes fails
+        // with MACH_SEND_INVALID_DEST and returns no data.
         BSG_KSLOG_ERROR("thread_get_state: %s", mach_error_string(kr));
         return false;
     }
@@ -225,6 +235,9 @@ void bsg_ksmach_init(void) {
         }
         vm_deallocate(thisTask, (vm_address_t)threads,
                       sizeof(thread_t) * numThreads);
+        
+        bsg_ksmachfreeMemory_init();
+        
         initialized = true;
     }
 }

@@ -267,7 +267,34 @@
     if (!reports.count) {
         return;
     }
+    
+    [self sendReports:reports completionHander:nil];
+}
 
+- (void)sendLatestReport:(dispatch_block_t)completionHander {
+    [self.crashReportStore pruneFilesLeaving:self.maxStoredReports];
+    
+    NSString *fileId = [self.crashReportStore fileIds].lastObject;
+    if (!fileId) {
+        if (completionHander) {
+            completionHander();
+        }
+        return;
+    }
+    
+    NSDictionary *contents = [self.crashReportStore fileWithId:fileId];
+    if (!contents) {
+        if (completionHander) {
+            completionHander();
+        }
+        return;
+    }
+    
+    [self sendReports:@{fileId: contents} completionHander:completionHander];
+}
+
+- (void)sendReports:(NSDictionary<NSString *, NSDictionary *> *)reports
+   completionHander:(dispatch_block_t)completionHander {
     BSG_KSLOG_INFO(@"Sending %lu crash reports", (unsigned long)reports.count);
 
     [self sendReports:reports
@@ -281,60 +308,10 @@
                     BSG_KSLOG_DEBUG(@"Deleting KSCrashReport %@", filename);
                     [self.crashReportStore deleteFileWithId:filename];
                 }
+                if (completionHander) {
+                    completionHander();
+                }
             }];
-}
-
-- (NSArray<BugsnagThread *> *)captureThreads:(NSException *)exc
-                                       depth:(int)depth
-                            recordAllThreads:(BOOL)recordAllThreads {
-    NSArray *addresses = [exc callStackReturnAddresses];
-    int numFrames = (int) [addresses count];
-    uintptr_t *callstack;
-
-    if (numFrames > 0) {
-        depth = 0; // reset depth if the stack does not need to be generated
-        callstack = malloc(numFrames * sizeof(*callstack));
-
-        for (NSUInteger i = 0; i < numFrames; i++) {
-            callstack[i] = [addresses[i] unsignedLongValue];
-        }
-    } else {
-        // generate a backtrace. This is required for NSError for example,
-        // which does not have a useful stacktrace generated.
-        numFrames = 100;
-        callstack = malloc(numFrames * sizeof(*callstack));
-
-        BSG_KSLOG_DEBUG(@"Fetching call stack.");
-        numFrames = backtrace((void **)callstack, numFrames);
-        if (numFrames <= 0) {
-            BSG_KSLOG_ERROR(@"backtrace() returned call stack length of %d", numFrames);
-            numFrames = 0;
-        }
-    }
-    
-    NSString *tracePath = [NSTemporaryDirectory() stringByAppendingPathComponent:
-                           [NSUUID UUID].UUIDString];
-    bsg_kscrash_captureThreadTrace(depth, numFrames, callstack, recordAllThreads,
-                                   tracePath.fileSystemRepresentation);
-    free(callstack);
-    
-    NSData *jsonData = [NSData dataWithContentsOfFile:tracePath];
-    NSError *error = nil;
-    NSDictionary *json = [BSGJSONSerialization
-                          JSONObjectWithData:jsonData options:0 error:&error];
-    
-    [[NSFileManager defaultManager] removeItemAtPath:tracePath error:NULL];
-    
-    if (json) {	
-        return [BugsnagThread threadsFromArray:[json valueForKeyPath:@"crash.threads"]
-                                  binaryImages:json[@"binary_images"]
-                                         depth:depth
-                                     errorType:nil];
-    } else {
-        BSG_KSLOG_ERROR(@"Failed to decode thread trace JSON, error = %@",
-                        error);
-    }
-    return @[];
 }
 
 - (NSDictionary *)captureAppStats {
@@ -416,10 +393,6 @@ BSG_SYNTHESIZE_CRASH_STATE_PROPERTY(BOOL, crashedLastLaunch)
     }
     [self.sink sendStoredReports:reports
                        withBlock:block];
-}
-
-- (NSArray *)allReports {
-    return [self.crashReportStore allFiles];
 }
 
 - (NSDictionary <NSString *, NSDictionary *> *)allReportsByFilename {

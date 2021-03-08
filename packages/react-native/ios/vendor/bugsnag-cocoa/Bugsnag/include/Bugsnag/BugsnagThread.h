@@ -14,7 +14,6 @@ typedef NS_OPTIONS(NSUInteger, BSGThreadType) {
 };
 
 @class BugsnagStackframe;
-@class BugsnagStacktrace;
 
 /**
  * A representation of thread information recorded as part of a BugsnagEvent.
@@ -32,7 +31,7 @@ typedef NS_OPTIONS(NSUInteger, BSGThreadType) {
 @property (copy, nullable, nonatomic) NSString *name;
 
 /**
- * Whether this thread was the thread that triggered the captured error
+ * Whether the error being reported happened in this thread
  */
 @property (readonly, nonatomic) BOOL errorReportingThread;
 

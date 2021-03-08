@@ -32,4 +32,9 @@
  */
 @property (nonatomic) BOOL inForeground;
 
+/**
+ * Whether the app was still launching when the event occurred.
+ */
+@property (nonatomic) BOOL isLaunching;
+
 @end

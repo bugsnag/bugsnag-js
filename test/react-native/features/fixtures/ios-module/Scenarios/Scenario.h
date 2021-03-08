@@ -7,11 +7,13 @@
 #import <Bugsnag/Bugsnag.h>
 #import <React/RCTBridgeModule.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface Scenario : NSObject
 
-+ (Scenario *_Nonnull)createScenarioNamed:(NSString *_Nonnull)className;
++ (Scenario *)createScenarioNamed:(NSString *)className;
 
-- (instancetype _Nonnull)init;
+- (instancetype)init;
 
 /**
  * Executes the test case
@@ -19,3 +21,5 @@
 - (void)run:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject;
 
 @end
+
+NS_ASSUME_NONNULL_END

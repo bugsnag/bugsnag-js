@@ -26,18 +26,22 @@ static NSString *rootDirectory(NSString *fsVersion) {
 
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        NSArray *dirs = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
-        if ([dirs count] == 0) {
-            bsg_log_err(@"Could not locate directory path for NSApplicationSupportDirectory.");
+#if TARGET_OS_TV
+        // On tvOS, locations outside the caches directory are not writable, so fall back to using that.
+        // https://developer.apple.com/library/archive/documentation/General/Conceptual/AppleTV_PG/index.html#//apple_ref/doc/uid/TP40015241
+        NSSearchPathDirectory directory = NSCachesDirectory;
+#else
+        NSSearchPathDirectory directory = NSApplicationSupportDirectory;
+#endif
+        NSError *error = nil;
+        NSURL *url = [NSFileManager.defaultManager URLForDirectory:directory inDomain:NSUserDomainMask appropriateForURL:nil create:YES error:&error];
+        if (!url) {
+            bsg_log_err(@"Could not locate directory for storage: %@", error);
             return;
         }
 
-        if ([dirs[0] length] == 0) {
-            bsg_log_err(@"Directory path for NSApplicationSupportDirectory is empty!");
-            return;
-        }
         rootPath = [NSString stringWithFormat:@"%@/com.bugsnag.Bugsnag/%@/%@",
-                    dirs[0],
+                    url.path,
                     [NSBundle mainBundle].bundleIdentifier,
                     fsVersion];
 

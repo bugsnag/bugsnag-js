@@ -6,6 +6,50 @@
 
 - (plugin-koa): Ensure `ctx.request.body` is present on the event's request property by collecting it at the last possible moment [#1292](https://github.com/bugsnag/bugsnag-js/pull/1292)
 
+## v7.8.2 (2021-03-04)
+
+### Changed
+
+- (react-native): Update bugsnag-cocoa to v6.7.0
+  - Identify crashes that occur whilst your app is launching. [bugsnag-cocoa#1004](https://github.com/bugsnag/bugsnag-cocoa/pull/1004)
+  - Fix inaccurate `app.duration` after multiple calls to `notify()` [bugsnag-cocoa#1014](https://github.com/bugsnag/bugsnag-cocoa/pull/1014)
+  - Fix a possible deadlock when writing crash reports for unhandled errors. [bugsnag-cocoa#1013](https://github.com/bugsnag/bugsnag-cocoa/pull/1013)
+- (react-native): Update bugsnag-android to v5.7.1
+  - Fix for bad pointer access crash in JNI deliverReportAtPath [bugsnag-android#1169](https://github.com/bugsnag/bugsnag-android/pull/1169)
+  - Check additional JNI calls for pending exceptions and no-op [bugsnag-android#1142](https://github.com/bugsnag/bugsnag-android/pull/1142)
+  - Move free() call to exit block [bugsnag-android#1140](https://github.com/bugsnag/bugsnag-android/pull/1140)
+  - Replace strncpy() usage with safe function call [bugsnag-android#1149](https://github.com/bugsnag/bugsnag-android/pull/1149)
+  - Prevent NPE when delivering internal error reports [bugsnag-android#1150](https://github.com/bugsnag/bugsnag-android/pull/1150)
+  - Further robustify string copying and JNI exception checks [bugsnag-android#1153](https://github.com/bugsnag/bugsnag-android/pull/1153)
+  - Support native stack traces in the ANR plugin [bugsnag-android#972](https://github.com/bugsnag/bugsnag-android/pull/972)
+
+### Fixed
+
+- (expo): Ensure Expo plugins depend on same version of NetInfo package [#1319](https://github.com/bugsnag/bugsnag-js/pull/1319)
+
+## v7.8.1 (2021-02-25)
+
+### Changed
+
+- (react-native): Update bugsnag-cocoa to v6.6.4
+  - Fix possible deadlock when recording thread information for handled errors [bugsnag-cocoa#1011](https://github.com/bugsnag/bugsnag-cocoa/pull/1011)
+  - Fix Swift 5.4 fatal error message parsing [bugsnag-cocoa#1010](https://github.com/bugsnag/bugsnag-cocoa/pull/1010)
+  - Improve accuracy of jailbreak detection [bugsnag-cocoa#1000](https://github.com/bugsnag/bugsnag-cocoa/pull/1000)
+
+## v7.8.0 (2021-02-22)
+
+### Changed
+
+- (react-native): Update bugsnag-cocoa to v6.6.3
+  - Improve performance of thread recording for handled errors [bugsnag-cocoa#992](https://github.com/bugsnag/bugsnag-cocoa/pull/992)
+  - Stop Bugsnag unregistering other signal handlers when catching a mach exception [bugsnag-cocoa#976](https://github.com/bugsnag/bugsnag-cocoa/pull/976)/[bugsnag-cocoa#1002](https://github.com/bugsnag/bugsnag-cocoa/pull/1002)
+  - Fix a tvOS file permission error that was introduced in 6.5.1 [bugsnag-cocoa#996](https://github.com/bugsnag/bugsnag-cocoa/pull/996)
+  - Fix an analyzer warning [bugsnag-cocoa#994](https://github.com/bugsnag/bugsnag-cocoa/pull/994)
+
+### Added
+
+- (react-native): Capture additional native stack for native promise rejections [#1253](https://github.com/bugsnag/bugsnag-js/pull/1253)
+
 ## v7.7.0 (2021-02-15)
 
 ### Changed

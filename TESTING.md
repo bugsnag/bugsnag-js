@@ -260,7 +260,7 @@ The CLI tests target the command line interface by providing a set of responses 
 1. Run `npm pack packages/react-native-cli/` to pack the react-native-cli package
 1. Copy the resulting package, `bugsnag-react-native-cli-{VERSION}.tgz` into the target fixture, e.g.:
     ```shell script
-    cp bugsnag-react-native-cli-*.tgz tests/react-native-cli/features/fixtures/rn0_60/
+    cp bugsnag-react-native-cli-*.tgz test/react-native-cli/features/fixtures/rn0_60/
     ```
 
 ##### Running

@@ -29,6 +29,9 @@
 #import "BugsnagSessionTracker.h"
 #import "BugsnagSystemState.h"
 
+static NSString * const ConsecutiveLaunchCrashesKey = @"consecutiveLaunchCrashes";
+static NSString * const InternalKey = @"internal";
+
 static NSDictionary* loadPreviousState(BugsnagKVStore *kvstore, NSString *jsonPath) {
     NSData *data = [NSData dataWithContentsOfFile:jsonPath];
     if(data == nil) {
@@ -108,6 +111,7 @@ static NSMutableDictionary* initCurrentState(BugsnagKVStore *kvstore, BugsnagCon
     NSMutableDictionary *device = [NSMutableDictionary new];
     device[SYSTEMSTATE_DEVICE_BOOT_TIME] = [BSG_RFC3339DateTool stringFromDate:systemInfo[@BSG_KSSystemField_BootTime]];
     device[@"id"] = systemInfo[@BSG_KSSystemField_DeviceAppHash];
+    device[@"jailbroken"] = systemInfo[@BSG_KSSystemField_Jailbroken];
     device[@"osBuild"] = systemInfo[@BSG_KSSystemField_OSVersion];
     device[@"osVersion"] = systemInfo[@BSG_KSSystemField_SystemVersion];
     device[@"osName"] = systemInfo[@BSG_KSSystemField_SystemName];
@@ -161,6 +165,7 @@ static NSDictionary *copyDictionary(NSDictionary *launchState) {
         _lastLaunchState = loadPreviousState(_kvStore, _persistenceFilePath);
         _currentLaunchStateRW = initCurrentState(_kvStore, config);
         _currentLaunchState = [_currentLaunchStateRW copy];
+        _consecutiveLaunchCrashes = [_lastLaunchState[InternalKey][ConsecutiveLaunchCrashesKey] unsignedIntegerValue];
         [self sync];
 
         __weak __typeof__(self) weakSelf = self;
@@ -233,13 +238,21 @@ static NSDictionary *copyDictionary(NSDictionary *launchState) {
     [self setValue:codeBundleID forAppKey:BSGKeyCodeBundleId];
 }
 
+- (void)setConsecutiveLaunchCrashes:(NSUInteger)consecutiveLaunchCrashes {
+    [self setValue:@(_consecutiveLaunchCrashes = consecutiveLaunchCrashes) forKey:ConsecutiveLaunchCrashesKey inSection:InternalKey];
+}
+
 - (void)setValue:(id)value forAppKey:(NSString *)key {
     [self setValue:value forKey:key inSection:SYSTEMSTATE_KEY_APP];
 }
 
 - (void)setValue:(id)value forKey:(NSString *)key inSection:(NSString *)section {
     [self mutateLaunchState:^(NSMutableDictionary *state) {
-        state[section][key] = value;
+        if (state[section]) {
+            state[section][key] = value;
+        } else {
+            state[section] = [NSMutableDictionary dictionaryWithObjectsAndKeys:value, key, nil];
+        }
     }];
 }
 

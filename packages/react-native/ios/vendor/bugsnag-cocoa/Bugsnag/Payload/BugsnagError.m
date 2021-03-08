@@ -127,17 +127,25 @@ NSString *BSGParseErrorMessage(NSDictionary *report, NSDictionary *error, NSStri
 }
 
 - (void)updateWithCrashInfoMessage:(NSString *)crashInfoMessage {
-    @try {
-        // Messages that match this pattern should override the errorClass (and errorMessage if there is enough information.)
-        NSString *pattern = @"^(Assertion failed|Fatal error|Precondition failed): ((.+): )?file .+, line \\d+\n$";
-        NSRegularExpression *regex = [[NSRegularExpression alloc] initWithPattern:pattern options:NSRegularExpressionCaseInsensitive error:nil];
-        NSArray<NSTextCheckingResult *> *matches = [regex matchesInString:crashInfoMessage options:0 range:NSMakeRange(0, crashInfoMessage.length)];
+    NSArray<NSString *> *patterns = @[
+        // From Swift 2.2: https://github.com/apple/swift/blob/swift-2.2-RELEASE/stdlib/public/stubs/Assert.cpp#L24-L39
+        @"^(assertion failed|fatal error|precondition failed): ((.+): )?file .+, line \\d+\n$",
+        // From Swift 4.1: https://github.com/apple/swift/commit/d03a575279cf5c523779ef68f8d7903f09ba901e
+        @"^(Assertion failed|Fatal error|Precondition failed): ((.+): )?file .+, line \\d+\n$",
+        // From Swift 5.4: https://github.com/apple/swift/commit/1a051719e3b1b7c37a856684dd037d482fef8e59
+        @"^.+:\\d+: (Assertion failed|Fatal error|Precondition failed)(: (.+))?\n$",
+    ];
+    
+    for (NSString *pattern in patterns) {
+        NSArray<NSTextCheckingResult *> *matches = nil;
+        @try {
+            NSRegularExpression *regex = [[NSRegularExpression alloc] initWithPattern:pattern options:0 error:nil];
+            matches = [regex matchesInString:crashInfoMessage options:0 range:NSMakeRange(0, crashInfoMessage.length)];
+        } @catch (NSException *exception) {
+            bsg_log_err(@"Exception thrown while parsing crash info message: %@", exception);
+        }
         if (matches.count != 1 || matches[0].numberOfRanges != 4) {
-            if (!self.errorMessage.length) {
-                // It's better to fall back to the raw string than have an empty errorMessage.
-                self.errorMessage = crashInfoMessage;
-            }
-            return;
+            continue;
         }
         NSRange errorClassRange = [matches[0] rangeAtIndex:1];
         if (errorClassRange.location != NSNotFound) {
@@ -147,12 +155,12 @@ NSString *BSGParseErrorMessage(NSDictionary *report, NSDictionary *error, NSStri
         if (errorMessageRange.location != NSNotFound) {
             self.errorMessage = [crashInfoMessage substringWithRange:errorMessageRange];
         }
-    } @catch (NSException *exception) {
-        bsg_log_err(@"Exception thrown while parsing crash info message: %@", exception);
-        if (!self.errorMessage.length) {
-            // It's better to fall back to the raw string than have an empty errorMessage.
-            self.errorMessage = crashInfoMessage;
-        }
+        return; //!OCLint
+    }
+    
+    if (!self.errorMessage.length) {
+        // It's better to fall back to the raw string than have an empty errorMessage.
+        self.errorMessage = crashInfoMessage;
     }
 }
 

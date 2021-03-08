@@ -84,6 +84,7 @@ NSNumber *BSGDeviceFreeSpace(NSSearchPathDirectory directory) {
 + (BugsnagDeviceWithState *)deviceWithOomData:(NSDictionary *)data {
     BugsnagDeviceWithState *device = [BugsnagDeviceWithState new];
     device.id = data[@"id"];
+    device.jailbroken = [data[@"jailbroken"] boolValue];
     device.osVersion = data[@"osVersion"];
     device.osName = data[@"osName"];
     device.manufacturer = @"Apple";

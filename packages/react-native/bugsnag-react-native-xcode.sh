@@ -23,9 +23,12 @@ if [ ! -f "$BUNDLE_FILE" ]; then
   exit 0
 fi
 
-MAP_FILE="$BUNDLE_FILE.map"
-if [ ! -f "$MAP_FILE" ]; then
-  echo "Error: Source map main.jsbundle.map could not be found."
+if [ -z "$SOURCE_MAP" ]; then
+  echo "Warning: SOURCE_MAP was not specified, falling back to $BUNDLE_FILE.map"
+  SOURCE_MAP="$BUNDLE_FILE.map"
+fi
+if [ ! -f "$SOURCE_MAP" ]; then
+  echo "Error: SOURCE_MAP $SOURCE_MAP could not be found."
   echo "Ensure the --sourcemap-output option is passed to the react-native bundle command."
   exit 1
 fi
@@ -39,7 +42,7 @@ ARGS=(
     "--app-version" "$APP_VERSION"
     "--bundle" "$BUNDLE_FILE"
     "--platform" "ios"
-    "--source-map" "$MAP_FILE"
+    "--source-map" "$SOURCE_MAP"
     "--project-root" "$PROJECT_ROOT"
     )
 

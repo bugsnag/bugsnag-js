@@ -43,32 +43,6 @@ When("I notify a handled native error") do
   }
 end
 
-# TODO(PLAT-5566) migrate to Maze Runner (this step may need a bit more specific of a name)
-When('I press enter') do
-  step('I input "" interactively')
-end
-
-# TODO(PLAT-5566) migrate to Maze Runner
-When('I wait for the shell to output the following to stdout') do |expected|
-  wait = Maze::Wait.new(timeout: Maze.config.receive_requests_wait)
-
-  success = wait.until do
-    stdout = Maze::Runner.interactive_session.stdout_lines.join("\n")
-
-    stdout.include?(expected)
-  end
-
-  assert(
-    success,
-    <<~ERROR
-      Did not find the expected message in stdout
-
-      stdout:
-      #{Maze::Runner.interactive_session.stdout_lines.inspect}
-    ERROR
-  )
-end
-
 def find_cli_helper_script
   # Handle both Dockerized and local Maze Runner executions
   script = 'react-native-cli-helper.js'
@@ -94,36 +68,6 @@ end
 When('I build the iOS app') do
   path = find_cli_helper_script
   $logger.info `node -e 'require("#{path}").buildIOS()'`
-end
-
-# TODO(PLAT-5566) migrate to Maze Runner
-Then("I wait for the shell to output a line containing {string} to stdout") do |expected|
-  wait = Maze::Wait.new(timeout: Maze.config.receive_requests_wait)
-  success = wait.until do
-    Maze::Runner.interactive_session.stdout_lines.any? do |line|
-      line.include?(expected)
-    end
-  end
-
-  assert(
-    success,
-    <<~ERROR
-      No stdout lines contained '#{expected}'
-
-      stdout:
-      #{Maze::Runner.interactive_session.stdout_lines.inspect}
-    ERROR
-  )
-end
-
-# TODO(PLAT-5566) migrate to Maze Runner
-Then("I wait for the current stdout line to contain {string}") do |expected|
-  wait = Maze::Wait.new(timeout: Maze.config.receive_requests_wait)
-  wait.until do
-    Maze::Runner.interactive_session.current_buffer.include?(expected)
-  end
-
-  assert_includes(Maze::Runner.interactive_session.current_buffer, expected)
 end
 
 def parse_package_json
@@ -170,8 +114,8 @@ end
 Then("the iOS build has not been modified to upload source maps") do
   filename = "ios/#{current_fixture}.xcodeproj/project.pbxproj"
 
-  step("the file '#{filename}' does not contain 'EXTRA_PACKAGER_ARGS=\"--sourcemap-output $CONFIGURATION_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/main.jsbundle.map\"'")
-  step("the file '#{filename}' does not contain 'Upload source maps to Bugsnag'")
+  step("the interactive file '#{filename}' does not contain 'EXTRA_PACKAGER_ARGS=\"--sourcemap-output $TMPDIR/$(md5 -qs \"$CONFIGURATION_BUILD_DIR\")-main.jsbundle.map\"'")
+  step("the interactive file '#{filename}' does not contain 'Upload source maps to Bugsnag'")
 end
 
 Then("the iOS build has been modified to upload source maps") do
@@ -179,9 +123,9 @@ Then("the iOS build has been modified to upload source maps") do
 
   steps %Q{
     Then I input "./check-ios-build-script.sh" interactively
-    And I wait for the current stdout line to contain "/app #"
+    And I wait for the current stdout line to match the regex "\/app #"
     And the last interactive command exited successfully
-    And the file '#{filename}' contains 'Upload source maps to Bugsnag'
+    And the interactive file '#{filename}' contains 'Upload source maps to Bugsnag'
   }
 end
 
@@ -190,51 +134,51 @@ Then("the iOS build has been modified to upload source maps to {string}") do |ex
 
   steps %Q{
     Then I input "./check-ios-build-script.sh #{expected_endpoint}" interactively
-    And I wait for the current stdout line to contain "/app #"
+    And I wait for the current stdout line to match the regex "\/app #"
     And the last interactive command exited successfully
-    And the file '#{filename}' contains 'Upload source maps to Bugsnag'
+    And the interactive file '#{filename}' contains 'Upload source maps to Bugsnag'
   }
 end
 
 Then("the Android build has not been modified to upload source maps") do
   steps %Q{
-    Then the file 'android/app/build.gradle' does not contain 'uploadReactNativeMappings = true'
-    And the file 'android/app/build.gradle' does not contain 'endpoint = '
-    And the file 'android/app/build.gradle' does not contain 'releasesEndpoint = '
+    Then the interactive file 'android/app/build.gradle' does not contain 'uploadReactNativeMappings = true'
+    And the interactive file 'android/app/build.gradle' does not contain 'endpoint = '
+    And the interactive file 'android/app/build.gradle' does not contain 'releasesEndpoint = '
   }
 end
 
 Then("the Android build has been modified to upload source maps") do
   steps %Q{
-    Then the file 'android/app/build.gradle' contains 'uploadReactNativeMappings = true'
-    And the file 'android/app/build.gradle' does not contain 'endpoint = '
-    And the file 'android/app/build.gradle' does not contain 'releasesEndpoint = '
+    Then the interactive file 'android/app/build.gradle' contains 'uploadReactNativeMappings = true'
+    And the interactive file 'android/app/build.gradle' does not contain 'endpoint = '
+    And the interactive file 'android/app/build.gradle' does not contain 'releasesEndpoint = '
   }
 end
 
 Then("the Android build has been modified to upload source maps to {string}") do |expected_endpoint|
-  step("the file 'android/app/build.gradle' contains 'uploadReactNativeMappings = true'")
-  step("the file 'android/app/build.gradle' contains 'endpoint = \"#{expected_endpoint}\"'")
+  step("the interactive file 'android/app/build.gradle' contains 'uploadReactNativeMappings = true'")
+  step("the interactive file 'android/app/build.gradle' contains 'endpoint = \"#{expected_endpoint}\"'")
 end
 
 Then("the Android build has been modified to upload builds to {string}") do |expected_endpoint|
-  step("the file 'android/app/build.gradle' contains 'releasesEndpoint = \"#{expected_endpoint}\"'")
+  step("the interactive file 'android/app/build.gradle' contains 'releasesEndpoint = \"#{expected_endpoint}\"'")
 end
 
 Then("the Bugsnag Android Gradle plugin is not installed") do
   rootGradle = "android/build.gradle"
   appGradle = "android/app/build.gradle"
 
-  step("the file '#{rootGradle}' does not contain 'classpath(\"com.bugsnag:bugsnag-android-gradle-plugin:'")
-  step("the file '#{appGradle}' does not contain 'apply plugin: \"com.bugsnag.android.gradle\"'")
+  step("the interactive file '#{rootGradle}' does not contain 'classpath(\"com.bugsnag:bugsnag-android-gradle-plugin:'")
+  step("the interactive file '#{appGradle}' does not contain 'apply plugin: \"com.bugsnag.android.gradle\"'")
 end
 
 Then("the Bugsnag Android Gradle plugin is installed") do
   rootGradle = "android/build.gradle"
   appGradle = "android/app/build.gradle"
 
-  step("the file '#{rootGradle}' contains 'classpath(\"com.bugsnag:bugsnag-android-gradle-plugin:'")
-  step("the file '#{appGradle}' contains 'apply plugin: \"com.bugsnag.android.gradle\"'")
+  step("the interactive file '#{rootGradle}' contains 'classpath(\"com.bugsnag:bugsnag-android-gradle-plugin:'")
+  step("the interactive file '#{appGradle}' contains 'apply plugin: \"com.bugsnag.android.gradle\"'")
 end
 
 Then("bugsnag react-native is in the package.json file") do
@@ -259,71 +203,37 @@ Then("bugsnag react-native is not in the package.json file") do
   refute_includes(json["dependencies"], "@bugsnag/react-native")
 end
 
-# TODO(PLAT-5566) migrate to Maze Runner (this step may need a bit more specific of a name)
-Then("the file {string} contains {string}") do |filename, expected|
-  steps %Q{
-    When I input "fgrep '#{expected.gsub(/"/, '\"')}' #{filename}" interactively
-    And I wait for the current stdout line to contain "/app #"
-    Then the last interactive command exited successfully
-  }
-end
-
-# TODO(PLAT-5566) migrate to Maze Runner (this step may need a bit more specific of a name)
-# A version of the above that allows multi-line strings
-Then("the file {string} contains") do |filename, expected|
-  expected.each_line do |line|
-    step("the file '#{filename}' contains '#{line.chomp}'")
-  end
-end
-
-# TODO(PLAT-5566) migrate to Maze Runner (this step may need a bit more specific of a name)
-Then("the file {string} does not contain {string}") do |filename, expected|
-  steps %Q{
-    When I input "fgrep '#{expected.gsub(/"/, '\"')}' #{filename}" interactively
-    And I wait for the current stdout line to contain "/app #"
-    Then the last interactive command exited with an error code
-  }
-end
-
-# TODO(PLAT-5566) migrate to Maze Runner (this step may need a bit more specific of a name)
-# A version of the above that allows multi-line strings
-Then("the file {string} does not contain") do |filename, expected|
-  expected.each_line do |line|
-    step("the file '#{filename}' does not contain '#{line.chomp}'")
-  end
-end
-
 Then("the iOS app contains the bugsnag initialisation code") do
   filename = "ios/#{current_fixture}/AppDelegate.m"
 
-  step("the file '#{filename}' contains '#import <Bugsnag/Bugsnag.h>'")
-  step("the file '#{filename}' contains '[Bugsnag start];'")
+  step("the interactive file '#{filename}' contains '#import <Bugsnag/Bugsnag.h>'")
+  step("the interactive file '#{filename}' contains '[Bugsnag start];'")
 end
 
 Then("the Android app contains the bugsnag initialisation code") do
   filename = "android/app/src/main/java/com/#{current_fixture}/MainApplication.java"
 
-  step("the file '#{filename}' contains 'import com.bugsnag.android.Bugsnag;'")
-  step("the file '#{filename}' contains 'Bugsnag.start(this);'")
+  step("the interactive file '#{filename}' contains 'import com.bugsnag.android.Bugsnag;'")
+  step("the interactive file '#{filename}' contains 'Bugsnag.start(this);'")
 end
 
 Then("the iOS app does not contain the bugsnag initialisation code") do
   filename = "ios/#{current_fixture}/AppDelegate.m"
 
-  step("the file '#{filename}' does not contain '#import <Bugsnag/Bugsnag.h>'")
-  step("the file '#{filename}' does not contain '[Bugsnag start];'")
+  step("the interactive file '#{filename}' does not contain '#import <Bugsnag/Bugsnag.h>'")
+  step("the interactive file '#{filename}' does not contain '[Bugsnag start];'")
 end
 
 Then("the Android app does not contain the bugsnag initialisation code") do
   filename = "android/app/src/main/java/com/#{current_fixture}/MainApplication.java"
 
-  step("the file '#{filename}' does not contain 'import com.bugsnag.android.Bugsnag;'")
-  step("the file '#{filename}' does not contain 'Bugsnag.start(this);'")
+  step("the interactive file '#{filename}' does not contain 'import com.bugsnag.android.Bugsnag;'")
+  step("the interactive file '#{filename}' does not contain 'Bugsnag.start(this);'")
 end
 
 Then("the JavaScript layer contains the bugsnag initialisation code") do
   steps %Q{
-    Then the file 'index.js' contains
+    Then the interactive file 'index.js' contains:
       """
       import Bugsnag from "@bugsnag/react-native";
       Bugsnag.start();
@@ -333,7 +243,7 @@ end
 
 Then("the JavaScript layer does not contain the bugsnag initialisation code") do
   steps %Q{
-    Then the file 'index.js' does not contain
+    Then the interactive file 'index.js' does not contain:
       """
       import Bugsnag from "@bugsnag/react-native";
       Bugsnag.start();
@@ -344,7 +254,7 @@ end
 Then("the modified files are as expected after running the insert command") do
   steps %Q{
     When I input "git status --porcelain" interactively
-    Then I wait for the shell to output the following to stdout
+    Then I wait for the interactive shell to output the following lines in stdout
       """
       M android/app/src/main/java/com/#{current_fixture}/MainApplication.java
       M index.js
@@ -356,7 +266,7 @@ end
 Then("the modified files are as expected after running the configure command") do
   steps %Q{
     When I input "git status --porcelain" interactively
-    Then I wait for the shell to output the following to stdout
+    Then I wait for the interactive shell to output the following lines in stdout
       """
       M android/app/src/main/AndroidManifest.xml
       M ios/#{current_fixture}/Info.plist

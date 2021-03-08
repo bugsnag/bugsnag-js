@@ -73,6 +73,50 @@ BugsnagStackframeType const BugsnagStackframeTypeCocoa = @"cocoa";
     }
 }
 
++ (NSArray<BugsnagStackframe *> *)stackframesWithBacktrace:(uintptr_t *)backtrace length:(int)length {
+    NSMutableArray<BugsnagStackframe *> *frames = [NSMutableArray array];
+    
+    for (int i = 0; i < length; i++) {
+        uintptr_t address = backtrace[i];
+        if (address == 1) {
+            // We sometimes get a frame address of 0x1 at the bottom of the call stack.
+            // It's not a valid stack frame and causes E2E tests to fail, so should be ignored.
+            continue;
+        }
+
+        BugsnagStackframe *stackframes = [[BugsnagStackframe alloc] init];
+        stackframes.frameAddress = @(address);
+        stackframes.isPc = i == 0;
+        
+        Dl_info dl_info = {0};
+        if (dladdr((const void *)address, &dl_info)) {
+            stackframes.machoFile = dl_info.dli_fname ? @(dl_info.dli_fname) : nil;
+            stackframes.machoLoadAddress = @((uintptr_t)dl_info.dli_fbase);
+            stackframes.symbolAddress = dl_info.dli_saddr ? @((uintptr_t)dl_info.dli_saddr) : nil;
+            stackframes.method = dl_info.dli_sname ? @(dl_info.dli_sname) : nil;
+        }
+        
+        BSG_Mach_Header_Info *header = bsg_mach_headers_image_at_address(address);
+        if (header) {
+            stackframes.machoVmAddress = @(header->imageVmAddr);
+            stackframes.machoUuid = header->uuid ? [[NSUUID alloc] initWithUUIDBytes:header->uuid].UUIDString : nil;
+        }
+        
+        [frames addObject:stackframes];
+    }
+    
+    return frames;
+}
+
++ (NSArray<BugsnagStackframe *> *)stackframesWithCallStackReturnAddresses:(NSArray<NSNumber *> *)callStackReturnAddresses {
+    int length = (int)callStackReturnAddresses.count;
+    uintptr_t addresses[length];
+    for (int i = 0; i < length; i++) {
+        addresses[i] = (uintptr_t)callStackReturnAddresses[i].unsignedLongLongValue;
+    }
+    return [BugsnagStackframe stackframesWithBacktrace:addresses length:length];
+}
+
 + (NSArray<BugsnagStackframe *> *)stackframesWithCallStackSymbols:(NSArray<NSString *> *)callStackSymbols {
     NSString *pattern = (@"^(\\d+)"             // Capture the leading frame number
                          @" +"                  // Skip whitespace
