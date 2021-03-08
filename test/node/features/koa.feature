@@ -103,3 +103,4 @@ Scenario: adding body to request metadata
   And the "file" of stack frame 0 equals "scenarios/app.js"
   And the event "request.body.data" equals "in_request_body"
   And the event "request.httpMethod" equals "POST"
+  And the event "request.httpVersion" equals "1.1"
