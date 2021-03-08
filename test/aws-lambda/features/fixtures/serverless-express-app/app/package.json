@@ -1,0 +1,26 @@
+{
+    "name": "serverless-express-app",
+    "version": "1.2.3",
+    "dependencies": {
+        "@vendia/serverless-express": "^4.3.3",
+        "express": "^4.17.1",
+
+        "@bugsnag/core": "bugsnag-core.tgz",
+        "@bugsnag/delivery-node": "bugsnag-delivery-node.tgz",
+        "@bugsnag/in-flight": "bugsnag-in-flight.tgz",
+        "@bugsnag/js": "bugsnag-js.tgz",
+        "@bugsnag/node": "bugsnag-node.tgz",
+        "@bugsnag/plugin-app-duration": "bugsnag-plugin-app-duration.tgz",
+        "@bugsnag/plugin-aws-lambda": "bugsnag-plugin-aws-lambda.tgz",
+        "@bugsnag/plugin-contextualize": "bugsnag-plugin-contextualize.tgz",
+        "@bugsnag/plugin-express": "bugsnag-plugin-express.tgz",
+        "@bugsnag/plugin-intercept": "bugsnag-plugin-intercept.tgz",
+        "@bugsnag/plugin-node-device": "bugsnag-plugin-node-device.tgz",
+        "@bugsnag/plugin-node-in-project": "bugsnag-plugin-node-in-project.tgz",
+        "@bugsnag/plugin-node-surrounding-code": "bugsnag-plugin-node-surrounding-code.tgz",
+        "@bugsnag/plugin-node-uncaught-exception": "bugsnag-plugin-node-uncaught-exception.tgz",
+        "@bugsnag/plugin-node-unhandled-rejection": "bugsnag-plugin-node-unhandled-rejection.tgz",
+        "@bugsnag/plugin-server-session": "bugsnag-plugin-server-session.tgz",
+        "@bugsnag/plugin-strip-project-root": "bugsnag-plugin-strip-project-root.tgz"
+    }
+}

@@ -23,6 +23,7 @@ BUGSNAG_PACKAGES = [
   "plugin-app-duration",
   "plugin-aws-lambda",
   "plugin-contextualize",
+  "plugin-express",
   "plugin-intercept",
   "plugin-node-device",
   "plugin-node-in-project",
@@ -91,10 +92,12 @@ def install_and_build
 
     parsed_template = YAML.safe_load(File.read(template))
 
-    # Find all of the directories we need to install the packages in
-    destinations = parsed_template.fetch("Resources").values.map do |resource|
-      "#{fixture}/#{resource.fetch("Properties").fetch("CodeUri")}"
-    end.uniq
+    # Find all of the directories we need to install the packages in using the
+    # CodeUri of the "AWS::Serverless::Function" resources
+    destinations = parsed_template.fetch("Resources").values
+      .filter { |resource| resource["Type"] == "AWS::Serverless::Function" }
+      .map { |resource| "#{fixture}/#{resource.fetch("Properties").fetch("CodeUri")}" }
+      .uniq
 
     begin
       # Install the packages into each of the destination directories
@@ -115,7 +118,7 @@ def install_and_build
         raise "Failed to build #{fixture_name}" unless success
       end
     ensure
-      return if DEBUG
+      next if DEBUG
 
       # Remove the packages from the destination directories as they aren't
       # needed anymore. A built lambda has them in its node_modules directory
