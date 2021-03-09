@@ -1,3 +1,8 @@
 .aws-sam
 node_modules/
 .tgz
+
+# Ignore the gem lockfile due to Bundler version differences on CI
+# We don't really need this anyway because we have one dependency (MazeRunner)
+# and we pin it to a specific tag, so it's effectively locked
+/Gemfile.lock
