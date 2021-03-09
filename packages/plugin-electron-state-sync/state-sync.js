@@ -11,7 +11,7 @@ module.exports = {
       emitter.emit('UserUpdate', { user: client.getUser() }, source)
       return ret
     }
-    client.setUser = setUserFromSource('main')
+    client.setUser = setUserFromSource(null)
 
     const origSetContext = client.setContext
     const setContextFromSource = source => (...args) => {
@@ -19,7 +19,7 @@ module.exports = {
       emitter.emit('ContextUpdate', { context: client.getContext() }, source)
       return ret
     }
-    client.setContext = setContextFromSource('main')
+    client.setContext = setContextFromSource(null)
 
     const origAddMetadata = client.addMetadata
     const addMetadataFromSource = source => (...args) => {
@@ -28,7 +28,7 @@ module.exports = {
       emitter.emit('AddMetadata', { section, keyOrValues, value }, source)
       return ret
     }
-    client.addMetadata = addMetadataFromSource('main')
+    client.addMetadata = addMetadataFromSource(null)
 
     const origClearMetadata = client.clearMetadata
     const clearMetadataFromSource = (source) => (...args) => {
@@ -37,7 +37,7 @@ module.exports = {
       emitter.emit('ClearMetadata', { section, key }, source)
       return ret
     }
-    client.clearMetadata = clearMetadataFromSource('main')
+    client.clearMetadata = clearMetadataFromSource(null)
 
     return {
       emitter,

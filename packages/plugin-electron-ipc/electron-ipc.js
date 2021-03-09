@@ -51,7 +51,8 @@ module.exports = {
     const propagateEventToRenderers = (type, payload, source) => {
       client._logger.debug('Propagating change event to renderers')
       for (const renderer of renderers) {
-        if (renderer.id !== source.id) {
+        // source=null when the event was triggered by the main process
+        if (source === null || renderer.id !== source.id) {
           client._logger.debug(`Sending change event to renderer #${renderer.id}`)
           renderer.send('bugsnag::main-to-renderer-sync', { type, payload })
         } else {
