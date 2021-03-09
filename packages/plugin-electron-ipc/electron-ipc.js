@@ -2,39 +2,53 @@ const { resolve } = require('path')
 const { ipcMain, app } = require('electron')
 const BugsnagIpcMain = require('./bugsnag-ipc-main')
 const serializeConfigForRenderer = require('./lib/config-serializer')
+const { CHANNEL_CONFIG, CHANNEL_MAIN_TO_RENDERER, CHANNEL_RENDERER_TO_MAIN } = require('./lib/constants')
+const jsonStringify = require('@bugsnag/safe-json-stringify')
 
 module.exports = {
   load: (client) => {
+    /* configuration requests from renderers */
+
     // pre serialise config outside of the sync IPC call so we avoid
     // unnecessary computation while the process is blocked
     const configStr = serializeConfigForRenderer(client._config)
 
-    // configuration
-    ipcMain.on('bugsnag::configure', (event, data) => {
+    // this callback returns the main client's configuration to renderer so it can start its own client
+    ipcMain.on(CHANNEL_CONFIG, (event, data) => {
+      // the renderer blocks until this function returns a value
       event.returnValue = configStr
     })
 
-    // synchronisation calls
+    /* synchronisation from renderers */
+
+    // create a BugsnagIpcMain instance and convert it to a map for easy method lookup
     const bugsnagIpcMainMap = (new BugsnagIpcMain(client)).toMap()
-    ipcMain.handle('bugsnag::renderer-to-main-sync', (event, methodName, ...args) => {
+
+    // this callback handles a synchronisation call from a renderer
+    ipcMain.handle(CHANNEL_RENDERER_TO_MAIN, (event, methodName, ...args) => {
       client._logger.debug('IPC call received', methodName, args)
+      // lookup the method on the BugsnagIpcMain map
       const method = bugsnagIpcMainMap.get(methodName)
       if (!method) {
         client._logger.warn(`attempted to call IPC method named "${methodName}" which doesn't exist`)
         return
       }
       try {
-        method(...args.map(arg => typeof arg === 'undefined' ? undefined : JSON.parse(arg)))(event.sender)
+        // call the method, passing in the event sender (WebContents instance)
+        // so that change events only get propagated out to other renderers
+        method(event.sender)(...args.map(arg => typeof arg === 'undefined' ? undefined : JSON.parse(arg)))
       } catch (e) {
         client._logger.warn('IPC call failed', e)
       }
     })
 
-    // propagate changes out to renderers
-    client.getPlugin('stateSync').emitter.on('UserUpdate', (payload, source) => propagateEventToRenderers('UserUpdate', payload, source))
-    client.getPlugin('stateSync').emitter.on('ContextUpdate', (payload, source) => propagateEventToRenderers('ContextUpdate', payload, source))
-    client.getPlugin('stateSync').emitter.on('AddMetadata', (payload, source) => propagateEventToRenderers('AddMetadata', payload, source))
-    client.getPlugin('stateSync').emitter.on('ClearMetadata', (payload, source) => propagateEventToRenderers('ClearMetadata', payload, source))
+    /* synchronisation to renderers */
+
+    // listen to the state sync emitter and propagate changes out to renderers
+    const { events, emitter } = client.getPlugin('stateSync')
+    events.forEach(eventName => {
+      emitter.on(eventName, (payload, source) => propagateEventToRenderers(eventName, payload, source))
+    })
 
     // keep track of the renderers in existence
     const renderers = new Set()
@@ -48,13 +62,15 @@ module.exports = {
       })
     })
 
+    // converts a stateSync event to an IPC event and sends it to each renderer,
+    // unless that render was the source of the change
     const propagateEventToRenderers = (type, payload, source) => {
       client._logger.debug('Propagating change event to renderers')
       for (const renderer of renderers) {
-        // source=null when the event was triggered by the main process
+        // source=null when the event was triggered by the main process so all renders should be notified
         if (source === null || renderer.id !== source.id) {
           client._logger.debug(`Sending change event to renderer #${renderer.id}`)
-          renderer.send('bugsnag::main-to-renderer-sync', { type, payload })
+          renderer.send(CHANNEL_MAIN_TO_RENDERER, jsonStringify({ type, payload }))
         } else {
           client._logger.debug(`Skipping renderer #${renderer.id} because it is the source of the event`)
         }

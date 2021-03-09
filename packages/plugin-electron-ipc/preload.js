@@ -3,9 +3,10 @@ if (document.location.protocol === 'devtools:') return
 
 const { ipcRenderer, contextBridge } = require('electron')
 const BugsnagIpcRenderer = require('./bugsnag-ipc-renderer')
+const { CHANNEL_CONFIG } = require('./lib/constants')
 
 // one sync call is required on startup to get the main process config
-const config = ipcRenderer.sendSync('bugsnag::configure', { method: 'configure', args: [] })
+const config = ipcRenderer.sendSync(CHANNEL_CONFIG)
 if (!config) throw new Error('Bugsnag was not started in the main process before browser windows were created')
 
 const bugsnagIpcRenderer = new BugsnagIpcRenderer()

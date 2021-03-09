@@ -40,6 +40,7 @@ module.exports = {
     client.clearMetadata = clearMetadataFromSource(null)
 
     return {
+      events: ['UserUpdate', 'ContextUpdate', 'AddMetadata', 'ClearMetadata'],
       emitter,
       setUserFromSource,
       setContextFromSource,

@@ -1,16 +1,14 @@
 const { ipcRenderer } = require('electron')
 const jsonStringify = require('@bugsnag/safe-json-stringify')
+const { CHANNEL_MAIN_TO_RENDERER, CHANNEL_RENDERER_TO_MAIN } = require('./lib/constants')
 
-const OUTBOUND_CHANNEL_NAME = 'bugsnag::renderer-to-main-sync'
 const safeInvoke = (method, ...args) => {
-  return ipcRenderer.invoke(OUTBOUND_CHANNEL_NAME, method, ...args.map(arg => jsonStringify(arg)))
+  return ipcRenderer.invoke(CHANNEL_RENDERER_TO_MAIN, method, ...args.map(arg => jsonStringify(arg)))
 }
-
-const INBOUND_CHANNEL_NAME = 'bugsnag::main-to-renderer-sync'
 
 module.exports = class BugsnagIpcRenderer {
   listen (cb) {
-    ipcRenderer.on(INBOUND_CHANNEL_NAME, cb)
+    ipcRenderer.on(CHANNEL_MAIN_TO_RENDERER, (event, payload) => cb(event, JSON.parse(payload)))
   }
 
   leaveBreadcrumb (breadcrumb) {

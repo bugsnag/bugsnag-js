@@ -4,40 +4,40 @@ module.exports = class BugsnagIpcMain {
     this.stateSync = client.getPlugin('stateSync')
   }
 
-  leaveBreadcrumb (breadcrumb) {
-    return source => this.client.leaveBreadcrumb(
+  leaveBreadcrumb (source) {
+    return breadcrumb => this.client.leaveBreadcrumb(
       breadcrumb.name /* this is "name" not "type" due to breadcrumb.js's toJSON() function */,
       breadcrumb.metadata,
       breadcrumb.type
     )
   }
 
-  startSession () {
-    return source => this.client.startSession()
+  startSession (source) {
+    return () => this.client.startSession()
   }
 
-  pauseSession () {
-    return source => this.client.pauseSession()
+  pauseSession (source) {
+    return () => this.client.pauseSession()
   }
 
-  resumeSession () {
-    return source => this.client.resumeSession()
+  resumeSession (source) {
+    return () => this.client.resumeSession()
   }
 
-  updateContext (ctx) {
-    return source => this.stateSync.setContextFromSource(source)(ctx)
+  updateContext (source) {
+    return (...args) => this.stateSync.setContextFromSource(source)(...args)
   }
 
-  addMetadata (section, keyOrValues, value) {
-    return source => this.stateSync.addMetadataFromSource(source)(section, keyOrValues, value)
+  addMetadata (source) {
+    return (...args) => this.stateSync.addMetadataFromSource(source)(...args)
   }
 
-  clearMetadata (section, key) {
-    return source => this.stateSync.clearMetadataFromSource(source)(section, key)
+  clearMetadata (source) {
+    return (...args) => this.stateSync.clearMetadataFromSource(source)(...args)
   }
 
-  updateUser (id, name, email) {
-    return source => this.stateSync.setUserFromSource(source)(id, name, email)
+  updateUser (source) {
+    return (...args) => this.stateSync.setUserFromSource(source)(...args)
   }
 
   dispatch (event) {
