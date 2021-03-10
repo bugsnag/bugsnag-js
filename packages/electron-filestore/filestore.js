@@ -1,4 +1,4 @@
-const { unlink, readdir, access, readFile, mkdir, writeFile } = require('fs/promises')
+const { unlink, readdir, access, readFile, mkdir, writeFile } = require('fs').promises
 const { F_OK } = require('fs').constants
 const { dirname, join } = require('path')
 const { getIdentifier, createIdentifier, identifierKey } = require('./lib/minidump-io')
