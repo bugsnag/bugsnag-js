@@ -11,8 +11,8 @@ module.exports = class BugsnagIpcRenderer {
     ipcRenderer.on(CHANNEL_MAIN_TO_RENDERER, (event, payload) => cb(event, JSON.parse(payload)))
   }
 
-  leaveBreadcrumb (breadcrumb) {
-    return safeInvoke('leaveBreadcrumb', breadcrumb)
+  leaveBreadcrumb (...args) {
+    return safeInvoke('leaveBreadcrumb', ...args)
   }
 
   startSession () {
@@ -27,20 +27,20 @@ module.exports = class BugsnagIpcRenderer {
     return safeInvoke('resumeSession')
   }
 
-  updateContext (ctx) {
-    return safeInvoke('updateContext', ctx)
+  updateContext (...args) {
+    return safeInvoke('updateContext', ...args)
   }
 
-  addMetadata (section, keyOrValues, value) {
-    return safeInvoke('addMetadata', section, keyOrValues, value)
+  addMetadata (...args) {
+    return safeInvoke('addMetadata', ...args)
   }
 
-  clearMetadata (section, key) {
-    return safeInvoke('clearMetadata', section, key)
+  clearMetadata (...args) {
+    return safeInvoke('clearMetadata', ...args)
   }
 
-  updateUser (id, name, email) {
-    return safeInvoke('updateUser', id, name, email)
+  updateUser (...args) {
+    return safeInvoke('updateUser', ...args)
   }
 
   dispatch (event) {

@@ -16,7 +16,7 @@ const mockSetUser = jest.fn()
 const mockAddMetadata = jest.fn()
 const mockClearMetadata = jest.fn()
 
-afterEach(() => jest.resetAllMocks())
+afterEach(() => jest.clearAllMocks())
 
 describe('BugsnagIpcMain', () => {
   describe('constructor()', () => {

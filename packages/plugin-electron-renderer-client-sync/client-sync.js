@@ -9,10 +9,10 @@ module.exports = (BugsnagIpcRenderer = window.__bugsnag_ipc__) => ({
     }, true)
 
     const origSetUser = client.setUser
-    client.setUser = function () {
+    client.setUser = function (...args) {
       const ret = origSetUser.apply(this, arguments)
       try {
-        BugsnagIpcRenderer.updateUser(this._user.id, this._user.email, this._user.name)
+        BugsnagIpcRenderer.updateUser(...args)
       } catch (e) {
         client._logger.error(e)
       }
@@ -20,10 +20,10 @@ module.exports = (BugsnagIpcRenderer = window.__bugsnag_ipc__) => ({
     }
 
     const origSetContext = client.setContext
-    client.setContext = function (context) {
+    client.setContext = function (...args) {
       const ret = origSetContext.apply(this, arguments)
       try {
-        BugsnagIpcRenderer.updateContext(context)
+        BugsnagIpcRenderer.updateContext(...args)
       } catch (e) {
         client._logger.error(e)
       }
@@ -31,10 +31,10 @@ module.exports = (BugsnagIpcRenderer = window.__bugsnag_ipc__) => ({
     }
 
     const origAddMetadata = client.addMetadata
-    client.addMetadata = function (section, keyOrValues, value) {
-      const ret = origAddMetadata.apply(this, arguments)
+    client.addMetadata = function (...args) {
+      const ret = origAddMetadata.apply(this, args)
       try {
-        BugsnagIpcRenderer.addMetadata(section, section, keyOrValues, value)
+        BugsnagIpcRenderer.addMetadata(...args)
       } catch (e) {
         client._logger.error(e)
       }
@@ -42,10 +42,10 @@ module.exports = (BugsnagIpcRenderer = window.__bugsnag_ipc__) => ({
     }
 
     const origClearMetadata = client.clearMetadata
-    client.clearMetadata = function (section, key) {
+    client.clearMetadata = function (...args) {
       const ret = origClearMetadata.apply(this, arguments)
       try {
-        BugsnagIpcRenderer.clearMetadata(section, key)
+        BugsnagIpcRenderer.clearMetadata(...args)
       } catch (e) {
         client._logger.error(e)
       }
