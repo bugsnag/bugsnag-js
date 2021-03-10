@@ -1,4 +1,4 @@
-const { rm, readdir, access, readFile, mkdir, writeFile } = require('fs/promises')
+const { unlink, readdir, access, readFile, mkdir, writeFile } = require('fs/promises')
 const { F_OK } = require('fs').constants
 const { dirname, join } = require('path')
 const { getIdentifier, createIdentifier, identifierKey } = require('./lib/minidump-io')
@@ -61,9 +61,9 @@ class FileStore {
   }
 
   async deleteMinidump (minidump) {
-    await rm(minidump.minidumpPath)
+    await unlink(minidump.minidumpPath)
     if (minidump.eventPath) {
-      await rm(minidump.eventPath)
+      await unlink(minidump.eventPath)
     }
   }
 
@@ -73,7 +73,7 @@ class FileStore {
       .then(async entries => {
         await Promise.all(entries
           .filter(e => e.isFile())
-          .map(async e => await rm(join(base, e.name))))
+          .map(async e => await unlink(join(base, e.name))))
       })
       .catch(() => {})
   }
