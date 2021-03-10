@@ -117,7 +117,7 @@ describe('BugsnagIpcMain', () => {
       bugsnagIpcMain.handle({ sender: stubWebContents }, 'leaveBreadcrumb', JSON.stringify({ name: 'hi IPC', type: 'manual', metadata: { electron: 'has many processes' } }))
     })
 
-    it('is resiliant to unknown methods', () => {
+    it('is resilient to unknown methods', () => {
       const client = new Client({}, {}, [mockStateSyncPlugin], {})
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       const stubWebContents = { /* this would be a WebContents instance */ }
