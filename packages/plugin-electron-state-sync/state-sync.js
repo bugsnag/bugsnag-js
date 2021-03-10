@@ -31,7 +31,7 @@ module.exports = {
     client.addMetadata = addMetadataFromSource(null)
 
     const origClearMetadata = client.clearMetadata
-    const clearMetadataFromSource = (source) => (...args) => {
+    const clearMetadataFromSource = source => (...args) => {
       const ret = origClearMetadata.call(client, ...args)
       const [section, key] = args
       emitter.emit('ClearMetadata', { section, key }, source)
