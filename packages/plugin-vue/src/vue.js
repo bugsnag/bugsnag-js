@@ -3,7 +3,7 @@ module.exports = (app, client) => {
 
   const handler = (err, vm, info) => {
     const handledState = { severity: 'error', unhandled: true, severityReason: { type: 'unhandledException' } }
-    const event = client.Event.create(err, true, handledState, 1)
+    const event = client.Event.create(err, true, handledState, 'vue error handler', 1)
 
     event.addMetadata('vue', {
       errorInfo: ErrorTypeStrings[info] || info,
