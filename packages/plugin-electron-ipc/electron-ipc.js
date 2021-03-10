@@ -21,26 +21,8 @@ module.exports = {
 
     /* synchronisation from renderers */
 
-    // create a BugsnagIpcMain instance and convert it to a map for easy method lookup
-    const bugsnagIpcMainMap = (new BugsnagIpcMain(client)).toMap()
-
-    // this callback handles a synchronisation call from a renderer
-    ipcMain.handle(CHANNEL_RENDERER_TO_MAIN, (event, methodName, ...args) => {
-      client._logger.debug('IPC call received', methodName, args)
-      // lookup the method on the BugsnagIpcMain map
-      const method = bugsnagIpcMainMap.get(methodName)
-      if (!method) {
-        client._logger.warn(`attempted to call IPC method named "${methodName}" which doesn't exist`)
-        return
-      }
-      try {
-        // call the method, passing in the event sender (WebContents instance)
-        // so that change events only get propagated out to other renderers
-        method(event.sender)(...args.map(arg => typeof arg === 'undefined' ? undefined : JSON.parse(arg)))
-      } catch (e) {
-        client._logger.warn('IPC call failed', e)
-      }
-    })
+    // delegate all calls the BugsnagIpcMain class's handle method
+    ipcMain.handle(CHANNEL_RENDERER_TO_MAIN, new BugsnagIpcMain(client).handle())
 
     /* synchronisation to renderers */
 
