@@ -258,23 +258,21 @@ describe('plugin: electron device info', () => {
     expect(session.device).toEqual(expected)
   })
 
-  it('creates a new device.id when one has not been cached', async () => {
-    const filestore = makeFilestore(null)
+  it('does not add device.id when one is not created', async () => {
+    const filestore = { getDeviceInfo: jest.fn().mockResolvedValue({}) }
 
+    // @ts-expect-error
     const { sendEvent, sendSession } = makeClient({ filestore })
 
     await nextTick()
 
-    const expected = makeExpectedDevice({
-      // a regex that should always match any valid cuid
-      id: expect.stringMatching(/^c[a-z0-9]{20,32}$/)
-    })
-
     const event = await sendEvent()
-    expect(event.device).toEqual(expected)
+    expect(event.device).toEqual(makeExpectedEventDevice({ id: undefined }))
+    expect(event.device).not.toHaveProperty('id')
 
     const session = await sendSession()
-    expect(session.device).toEqual(expected)
+    expect(session.device).toEqual(makeExpectedSessionDevice({ id: undefined }))
+    expect(session.device).not.toHaveProperty('id')
   })
 
   it('handles filestore errors from getDeviceInfo()', async () => {
@@ -299,32 +297,6 @@ describe('plugin: electron device info', () => {
 
     expect(client._logger.error).toHaveBeenCalledTimes(1)
     expect(client._logger.error).toHaveBeenCalledWith(new Error('insert disk 2'))
-  })
-
-  it('handles filestore errors from setDeviceInfo()', async () => {
-    const filestore = {
-      async getDeviceInfo () {
-        return {}
-      },
-      async setDeviceInfo (info) {
-        throw new Error('no room on memory card')
-      }
-    }
-
-    const { client, sendEvent, sendSession } = makeClient({ filestore })
-
-    await nextTick()
-
-    const { id, ...expected } = makeExpectedDevice()
-
-    const event = await sendEvent()
-    expect(event.device).toEqual(expected)
-
-    const session = await sendSession()
-    expect(session.device).toEqual(expected)
-
-    expect(client._logger.error).toHaveBeenCalledTimes(1)
-    expect(client._logger.error).toHaveBeenCalledWith(new Error('no room on memory card'))
   })
 })
 

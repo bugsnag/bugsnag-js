@@ -13,9 +13,6 @@
   "files": [
     "device.js"
   ],
-  "dependencies": {
-    "@bugsnag/cuid": "^3.0.0"
-  },
   "devDependencies": {
     "@bugsnag/core": "^7.0.0"
   },

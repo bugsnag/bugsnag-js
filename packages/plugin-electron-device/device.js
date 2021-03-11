@@ -1,5 +1,3 @@
-const cuid = require('@bugsnag/cuid')
-
 const platformToOs = new Map([
   ['darwin', 'macOS'],
   ['linux', 'Linux'],
@@ -40,20 +38,14 @@ module.exports = (app, screen, process, filestore, NativeClient) => ({
       screenDensity: primaryDisplay.scaleFactor
     })
 
-    // fetch the device ID from the filestore or generate a new one if it does
-    // not exist yet
+    // fetch the device ID from the filestore - if one does not exist it will be
+    // created for us
     filestore.getDeviceInfo()
       .then(cachedDevice => {
+        // if _everything_ goes wrong this may be missing
         if (cachedDevice.id) {
           updateDevice({ id: cachedDevice.id })
-          return
         }
-
-        const id = cuid()
-
-        filestore.setDeviceInfo({ id })
-          .then(() => { updateDevice({ id: id }) })
-          .catch(err => { client._logger.error(err) })
       })
       .catch(err => { client._logger.error(err) })
 
