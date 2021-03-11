@@ -66,22 +66,24 @@ module.exports = (app, screen, process, filestore, NativeClient) => ({
       })
     })
 
-    // device properties that can only be added when an event/session is created
-    const justInTimeDeviceData = () => ({
-      freeMemory: kibibytesToBytes(process.getSystemMemoryInfo().free),
-      time: new Date()
-    })
-
-    const callback = eventOrSession => {
-      eventOrSession.device = Object.assign(
+    client.addOnError(event => {
+      event.device = Object.assign(
         {},
-        eventOrSession.device,
+        event.device,
         device,
-        justInTimeDeviceData()
+        {
+          freeMemory: kibibytesToBytes(process.getSystemMemoryInfo().free),
+          time: new Date()
+        }
       )
-    }
+    }, true)
 
-    client.addOnError(callback, true)
-    client.addOnSession(callback)
+    client.addOnSession(session => {
+      session.device = Object.assign(
+        {},
+        session.device,
+        device
+      )
+    })
   }
 })

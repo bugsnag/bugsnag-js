@@ -24,7 +24,7 @@ const DEFAULTS = {
   totalMemory: 100 // this is in KiB to match Electron's API
 }
 
-const makeExpectedDevice = (customisations = {}) => ({
+const makeExpectedSessionDevice = (customisations = {}) => ({
   totalMemory: DEFAULTS.totalMemory * 1024,
   id: DEFAULTS.id,
   locale: DEFAULTS.locale,
@@ -33,6 +33,11 @@ const makeExpectedDevice = (customisations = {}) => ({
   runtimeVersions: DEFAULTS.versions,
   screenDensity: DEFAULTS.screenDensity,
   screenResolution: DEFAULTS.screenResolution,
+  ...customisations
+})
+
+const makeExpectedEventDevice = (customisations = {}) => ({
+  ...makeExpectedSessionDevice(),
   time: DEFAULTS.time,
   freeMemory: DEFAULTS.freeMemory * 1024,
   ...customisations
@@ -44,7 +49,7 @@ describe('plugin: electron device info', () => {
 
     makeClient({ NativeClient })
 
-    const { id, time, freeMemory, ...expected } = makeExpectedDevice()
+    const { id, ...expected } = makeExpectedSessionDevice()
 
     expect(NativeClient.setDevice).toHaveBeenNthCalledWith(1, expected)
 
@@ -61,7 +66,7 @@ describe('plugin: electron device info', () => {
 
     makeClient({ NativeClient })
 
-    const { id, time, freeMemory, ...expected } = makeExpectedDevice()
+    const { id, ...expected } = makeExpectedSessionDevice()
 
     expect(NativeClient.setDevice).toHaveBeenNthCalledWith(1, expected)
 
@@ -77,14 +82,12 @@ describe('plugin: electron device info', () => {
     // give the filestore time to resolve the device ID
     await nextTick()
 
-    const expected = makeExpectedDevice()
-
     const event = await sendEvent()
-    expect(event.device).toEqual(expected)
+    expect(event.device).toEqual(makeExpectedEventDevice())
     expect(event._metadata.device).toBeUndefined()
 
     const session = await sendSession()
-    expect(session.device).toEqual(expected)
+    expect(session.device).toEqual(makeExpectedSessionDevice())
   })
 
   it('reports correct OS for macOS', async () => {
@@ -94,13 +97,11 @@ describe('plugin: electron device info', () => {
 
     await nextTick()
 
-    const expected = makeExpectedDevice({ osName: 'macOS' })
-
     const event = await sendEvent()
-    expect(event.device).toEqual(expected)
+    expect(event.device).toEqual(makeExpectedEventDevice({ osName: 'macOS' }))
 
     const session = await sendSession()
-    expect(session.device).toEqual(expected)
+    expect(session.device).toEqual(makeExpectedSessionDevice({ osName: 'macOS' }))
   })
 
   it('reports correct OS for Linux', async () => {
@@ -110,13 +111,11 @@ describe('plugin: electron device info', () => {
 
     await nextTick()
 
-    const expected = makeExpectedDevice({ osName: 'Linux' })
-
     const event = await sendEvent()
-    expect(event.device).toEqual(expected)
+    expect(event.device).toEqual(makeExpectedEventDevice({ osName: 'Linux' }))
 
     const session = await sendSession()
-    expect(session.device).toEqual(expected)
+    expect(session.device).toEqual(makeExpectedSessionDevice({ osName: 'Linux' }))
   })
 
   it('reports correct OS for Windows', async () => {
@@ -126,13 +125,11 @@ describe('plugin: electron device info', () => {
 
     await nextTick()
 
-    const expected = makeExpectedDevice({ osName: 'Windows' })
-
     const event = await sendEvent()
-    expect(event.device).toEqual(expected)
+    expect(event.device).toEqual(makeExpectedEventDevice({ osName: 'Windows' }))
 
     const session = await sendSession()
-    expect(session.device).toEqual(expected)
+    expect(session.device).toEqual(makeExpectedSessionDevice({ osName: 'Windows' }))
   })
 
   // in theory this is impossible as Chromium should always return a primary
@@ -145,13 +142,14 @@ describe('plugin: electron device info', () => {
 
     await nextTick()
 
-    const { screenResolution, screenDensity, ...expected } = makeExpectedDevice()
+    const expectedEvent = makeExpectedEventDevice({ screenResolution: undefined, screenDensity: undefined })
+    const expectedSession = makeExpectedSessionDevice({ screenResolution: undefined, screenDensity: undefined })
 
     const event = await sendEvent()
-    expect(event.device).toEqual(expected)
+    expect(event.device).toEqual(expectedEvent)
 
     const session = await sendSession()
-    expect(session.device).toEqual(expected)
+    expect(session.device).toEqual(expectedSession)
   })
 
   it('reports correct screen information if primary display is changed', async () => {
@@ -161,30 +159,32 @@ describe('plugin: electron device info', () => {
 
     await nextTick()
 
-    const expected = makeExpectedDevice()
-
     const event = await sendEvent()
-    expect(event.device).toEqual(expected)
+    expect(event.device).toEqual(makeExpectedEventDevice())
 
     const session = await sendSession()
-    expect(session.device).toEqual(expected)
+    expect(session.device).toEqual(makeExpectedSessionDevice())
 
     screen._emitDisplayMetricsChangedEvent({
       size: { width: 100, height: 200 },
       scaleFactor: 2.5
     })
 
-    const expected2 = {
-      ...expected,
+    const expectedEvent = makeExpectedEventDevice({
       screenDensity: 2.5,
       screenResolution: { width: 100, height: 200 }
-    }
+    })
+
+    const expectedSession = makeExpectedSessionDevice({
+      screenDensity: 2.5,
+      screenResolution: { width: 100, height: 200 }
+    })
 
     const event2 = await sendEvent()
-    expect(event2.device).toEqual(expected2)
+    expect(event2.device).toEqual(expectedEvent)
 
     const session2 = await sendSession()
-    expect(session2.device).toEqual(expected2)
+    expect(session2.device).toEqual(expectedSession)
   })
 
   it('does not update screen information if a secondary display is changed', async () => {
@@ -194,13 +194,14 @@ describe('plugin: electron device info', () => {
 
     await nextTick()
 
-    const expected = makeExpectedDevice()
+    const expectedEvent = makeExpectedEventDevice()
+    const expectedSession = makeExpectedSessionDevice()
 
     const event = await sendEvent()
-    expect(event.device).toEqual(expected)
+    expect(event.device).toEqual(expectedEvent)
 
     const session = await sendSession()
-    expect(session.device).toEqual(expected)
+    expect(session.device).toEqual(expectedSession)
 
     screen._emitDisplayMetricsChangedEvent({
       size: { width: 100, height: 200 },
@@ -209,10 +210,10 @@ describe('plugin: electron device info', () => {
     })
 
     const event2 = await sendEvent()
-    expect(event2.device).toEqual(expected)
+    expect(event2.device).toEqual(expectedEvent)
 
     const session2 = await sendSession()
-    expect(session2.device).toEqual(expected)
+    expect(session2.device).toEqual(expectedSession)
   })
 
   it('does not update screen information if the update is not relevant', async () => {
@@ -225,13 +226,11 @@ describe('plugin: electron device info', () => {
 
     await nextTick()
 
-    const expected = makeExpectedDevice()
-
     const event = await sendEvent()
-    expect(event.device).toEqual(expected)
+    expect(event.device).toEqual(makeExpectedEventDevice())
 
     const session = await sendSession()
-    expect(session.device).toEqual(expected)
+    expect(session.device).toEqual(makeExpectedSessionDevice())
 
     expect(NativeClient.setDevice).toHaveBeenCalledTimes(2)
 
@@ -249,13 +248,11 @@ describe('plugin: electron device info', () => {
 
     await nextTick()
 
-    const expected = makeExpectedDevice({ id })
-
     const event = await sendEvent()
-    expect(event.device).toEqual(expected)
+    expect(event.device).toEqual(makeExpectedEventDevice({ id }))
 
     const session = await sendSession()
-    expect(session.device).toEqual(expected)
+    expect(session.device).toEqual(makeExpectedSessionDevice({ id }))
   })
 
   it('does not add device.id when one is not created', async () => {
@@ -287,13 +284,14 @@ describe('plugin: electron device info', () => {
 
     await nextTick()
 
-    const { id, ...expected } = makeExpectedDevice()
+    const expectedEvent = makeExpectedEventDevice({ id: undefined })
+    const expectedSession = makeExpectedSessionDevice({ id: undefined })
 
     const event = await sendEvent()
-    expect(event.device).toEqual(expected)
+    expect(event.device).toEqual(expectedEvent)
 
     const session = await sendSession()
-    expect(session.device).toEqual(expected)
+    expect(session.device).toEqual(expectedSession)
 
     expect(client._logger.error).toHaveBeenCalledTimes(1)
     expect(client._logger.error).toHaveBeenCalledWith(new Error('insert disk 2'))
