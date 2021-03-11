@@ -78,18 +78,42 @@ class FileStore {
       .catch(() => {})
   }
 
+  /*
+   * Loads persisted device info. If none is present, it generates an identifier
+   * for the device and persists it prior to returning device info
+   */
   async getDeviceInfo () {
     try {
       const contents = await readFile(this._paths.device)
-      return JSON.parse(contents)
+      const device = JSON.parse(contents)
+      if (!device.id) {
+        device.id = createIdentifier()
+        await this.setDeviceInfo(device)
+      }
+      return device
     } catch (e) {
-      return {}
+      // either the file could not be read or wasn't valid JSON, which
+      // warrants creating a new one
+      try {
+        return await this._createAndSetDeviceInfo()
+      } catch (e) {
+        return {} // failed to write
+      }
     }
   }
 
   async setDeviceInfo (device) {
+    if (!device.id) {
+      device.id = createIdentifier()
+    }
     await mkdir(dirname(this._paths.device), { recursive: true })
     await writeFile(this._paths.device, JSON.stringify(device))
+  }
+
+  async _createAndSetDeviceInfo () {
+    const device = { id: createIdentifier() }
+    await this.setDeviceInfo(device)
+    return device
   }
 
   createAppRunMetadata () {
