@@ -53,6 +53,7 @@ extern NSString *const BSGKeyImageVmAddress;
 extern NSString *const BSGKeyIncomplete;
 extern NSString *const BSGKeyInfo;
 extern NSString *const BSGKeyInstructionAddress;
+extern NSString *const BSGKeyIsLaunching;
 extern NSString *const BSGKeyIsLR;
 extern NSString *const BSGKeyIsPC;
 extern NSString *const BSGKeyLabel;

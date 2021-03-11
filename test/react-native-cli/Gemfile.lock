@@ -1,9 +1,9 @@
 GIT
   remote: https://github.com/bugsnag/maze-runner
-  revision: 8f7c5f47fd06fcbbc458ba6fe6b9b58ac0eeda8f
-  tag: v4.9.0
+  revision: b12f25a65267a99162a40abf28fe02c3048a097f
+  tag: v4.10.1
   specs:
-    bugsnag-maze-runner (4.9.0)
+    bugsnag-maze-runner (4.10.1)
       appium_lib (~> 11.2.0)
       boring (~> 0.1.0)
       cucumber (~> 3.1.2)
@@ -35,7 +35,7 @@ GEM
       appium_lib_core (~> 4.1)
       nokogiri (~> 1.8, >= 1.8.1)
       tomlrb (~> 1.1)
-    appium_lib_core (4.4.0)
+    appium_lib_core (4.4.1)
       faye-websocket (~> 0.11.0)
       selenium-webdriver (~> 3.14, >= 3.14.1)
     atomos (0.1.3)

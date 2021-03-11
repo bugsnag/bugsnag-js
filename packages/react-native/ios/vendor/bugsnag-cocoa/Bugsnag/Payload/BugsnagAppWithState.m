@@ -10,8 +10,6 @@
 
 #import "BugsnagApp+Private.h"
 #import "BugsnagKeys.h"
-#import "BugsnagConfiguration.h"
-#import "BugsnagCollections.h"
 
 @implementation BugsnagAppWithState
 
@@ -45,12 +43,14 @@
     app.releaseStage = json[@"releaseStage"];
     app.type = json[@"type"];
     app.version = json[@"version"];
+    app.isLaunching = [json[@"isLaunching"] boolValue];
     return app;
 }
 
-+ (BugsnagAppWithState *)appWithOomData:(NSDictionary *)event
++ (BugsnagAppWithState *)appWithKSCrashReportOOM:(NSDictionary *)crashReport
 {
     BugsnagAppWithState *app = [BugsnagAppWithState new];
+    NSDictionary *event = [crashReport valueForKeyPath:@"user.state.oom.app"];
     app.id = event[@"id"];
     app.dsymUuid = event[BSGKeyMachoUUID];
     app.releaseStage = event[@"releaseStage"];
@@ -58,6 +58,7 @@
     app.bundleVersion = event[@"bundleVersion"];
     app.codeBundleId = event[@"codeBundleId"];
     app.inForeground = [event[@"inForeground"] boolValue];
+    app.isLaunching = [[crashReport valueForKeyPath:@"user.state.app.isLaunching"] boolValue];
     app.type = event[@"type"];
     return app;
 }
@@ -71,22 +72,24 @@
     NSDictionary *stats = system[@"application_stats"];
 
     // convert from seconds to milliseconds
-    NSNumber *activeTimeSinceLaunch = @([stats[@"active_time_since_launch"] longValue] * 1000);
-    NSNumber *backgroundTimeSinceLaunch = @([stats[@"background_time_since_launch"] longValue] * 1000);
+    NSNumber *activeTimeSinceLaunch = @((int)([stats[@"active_time_since_launch"] doubleValue] * 1000.0));
+    NSNumber *backgroundTimeSinceLaunch = @((int)([stats[@"background_time_since_launch"] doubleValue] * 1000.0));
 
     app.durationInForeground = activeTimeSinceLaunch;
     app.duration = @([activeTimeSinceLaunch longValue] + [backgroundTimeSinceLaunch longValue]);
     app.inForeground = [stats[@"application_in_foreground"] boolValue];
+    app.isLaunching = [[event valueForKeyPath:@"user.state.app.isLaunching"] boolValue];
     [BugsnagApp populateFields:app dictionary:event config:config codeBundleId:codeBundleId];
     return app;
 }
 
 - (NSDictionary *)toDict
 {
-    NSMutableDictionary *dict = (NSMutableDictionary *) [super toDict];
+    NSMutableDictionary *dict = [[super toDict] mutableCopy];
     dict[@"duration"] = self.duration;
     dict[@"durationInForeground"] = self.durationInForeground;
     dict[@"inForeground"] = @(self.inForeground);
+    dict[@"isLaunching"] = @(self.isLaunching);
     return dict;
 }
 
