@@ -39,25 +39,44 @@ const makeExpectedDevice = (customisations = {}) => ({
 })
 
 describe('plugin: electron device info', () => {
-  it('attaches device information to the client', async () => {
+  it('syncs device information to the NativeClient', async () => {
     const app = makeApp()
     const screen = makeScreen()
     const process = makeProcess()
     const filestore = makeFilestore()
+    const NativeClient = makeNativeClient()
 
-    const { client } = makeClient(app, screen, process, filestore)
+    makeClient(app, screen, process, filestore, NativeClient)
 
     const { id, time, freeMemory, ...expected } = makeExpectedDevice()
 
-    expect(client.getMetadata('device')).toEqual(expected)
+    expect(NativeClient.setDevice).toHaveBeenNthCalledWith(1, expected)
 
     // give the filestore time to resolve the device ID
     await nextTick()
 
-    // @ts-expect-error
-    expected.id = id
+    expect(NativeClient.setDevice).toHaveBeenNthCalledWith(2, { ...expected, id })
+  })
 
-    expect(client.getMetadata('device')).toEqual(expected)
+  it('handles exceptions thrown by the NativeClient', async () => {
+    const app = makeApp()
+    const screen = makeScreen()
+    const process = makeProcess()
+    const filestore = makeFilestore()
+    const NativeClient = {
+      setDevice: jest.fn().mockImplementation(() => { throw new Error('abc') })
+    }
+
+    makeClient(app, screen, process, filestore, NativeClient)
+
+    const { id, time, freeMemory, ...expected } = makeExpectedDevice()
+
+    expect(NativeClient.setDevice).toHaveBeenNthCalledWith(1, expected)
+
+    // give the filestore time to resolve the device ID
+    await nextTick()
+
+    expect(NativeClient.setDevice).toHaveBeenNthCalledWith(2, { ...expected, id })
   })
 
   it('reports basic device information', async () => {
@@ -65,8 +84,9 @@ describe('plugin: electron device info', () => {
     const screen = makeScreen()
     const process = makeProcess()
     const filestore = makeFilestore()
+    const NativeClient = makeNativeClient()
 
-    const { sendEvent, sendSession } = makeClient(app, screen, process, filestore)
+    const { sendEvent, sendSession } = makeClient(app, screen, process, filestore, NativeClient)
 
     // give the filestore time to resolve the device ID
     await nextTick()
@@ -75,6 +95,7 @@ describe('plugin: electron device info', () => {
 
     const event = await sendEvent()
     expect(event.device).toEqual(expected)
+    expect(event._metadata.device).toBeUndefined()
 
     const session = await sendSession()
     expect(session.device).toEqual(expected)
@@ -85,8 +106,9 @@ describe('plugin: electron device info', () => {
     const screen = makeScreen()
     const process = makeProcess({ platform: 'darwin' })
     const filestore = makeFilestore()
+    const NativeClient = makeNativeClient()
 
-    const { sendEvent, sendSession } = makeClient(app, screen, process, filestore)
+    const { sendEvent, sendSession } = makeClient(app, screen, process, filestore, NativeClient)
 
     await nextTick()
 
@@ -104,8 +126,9 @@ describe('plugin: electron device info', () => {
     const screen = makeScreen()
     const process = makeProcess({ platform: 'linux' })
     const filestore = makeFilestore()
+    const NativeClient = makeNativeClient()
 
-    const { sendEvent, sendSession } = makeClient(app, screen, process, filestore)
+    const { sendEvent, sendSession } = makeClient(app, screen, process, filestore, NativeClient)
 
     await nextTick()
 
@@ -123,8 +146,9 @@ describe('plugin: electron device info', () => {
     const screen = makeScreen()
     const process = makeProcess({ platform: 'win32' })
     const filestore = makeFilestore()
+    const NativeClient = makeNativeClient()
 
-    const { sendEvent, sendSession } = makeClient(app, screen, process, filestore)
+    const { sendEvent, sendSession } = makeClient(app, screen, process, filestore, NativeClient)
 
     await nextTick()
 
@@ -144,8 +168,9 @@ describe('plugin: electron device info', () => {
     const screen = { getPrimaryDisplay: () => undefined, on: () => {} }
     const process = makeProcess()
     const filestore = makeFilestore()
+    const NativeClient = makeNativeClient()
 
-    const { sendEvent, sendSession } = makeClient(app, screen, process, filestore)
+    const { sendEvent, sendSession } = makeClient(app, screen, process, filestore, NativeClient)
 
     await nextTick()
 
@@ -163,8 +188,9 @@ describe('plugin: electron device info', () => {
     const screen = makeScreen()
     const process = makeProcess()
     const filestore = makeFilestore()
+    const NativeClient = makeNativeClient()
 
-    const { sendEvent, sendSession } = makeClient(app, screen, process, filestore)
+    const { sendEvent, sendSession } = makeClient(app, screen, process, filestore, NativeClient)
 
     await nextTick()
 
@@ -199,8 +225,9 @@ describe('plugin: electron device info', () => {
     const screen = makeScreen()
     const process = makeProcess()
     const filestore = makeFilestore()
+    const NativeClient = makeNativeClient()
 
-    const { sendEvent, sendSession } = makeClient(app, screen, process, filestore)
+    const { sendEvent, sendSession } = makeClient(app, screen, process, filestore, NativeClient)
 
     await nextTick()
 
@@ -230,10 +257,11 @@ describe('plugin: electron device info', () => {
     const screen = makeScreen()
     const process = makeProcess()
     const filestore = makeFilestore()
+    const NativeClient = makeNativeClient()
 
-    const { client, sendEvent, sendSession } = makeClient(app, screen, process, filestore)
+    const { sendEvent, sendSession } = makeClient(app, screen, process, filestore, NativeClient)
 
-    client.addMetadata = jest.fn()
+    expect(NativeClient.setDevice).toHaveBeenCalledTimes(1)
 
     await nextTick()
 
@@ -245,11 +273,11 @@ describe('plugin: electron device info', () => {
     const session = await sendSession()
     expect(session.device).toEqual(expected)
 
-    expect(client.addMetadata).toHaveBeenCalledTimes(1)
+    expect(NativeClient.setDevice).toHaveBeenCalledTimes(2)
 
     screen._emitDisplayMetricsChangedEvent({ rotation: 270 })
 
-    expect(client.addMetadata).toHaveBeenCalledTimes(1)
+    expect(NativeClient.setDevice).toHaveBeenCalledTimes(2)
   })
 
   it('reports correct device.id when one has been cached', async () => {
@@ -259,8 +287,9 @@ describe('plugin: electron device info', () => {
     const screen = makeScreen()
     const process = makeProcess()
     const filestore = makeFilestore(id)
+    const NativeClient = makeNativeClient()
 
-    const { sendEvent, sendSession } = makeClient(app, screen, process, filestore)
+    const { sendEvent, sendSession } = makeClient(app, screen, process, filestore, NativeClient)
 
     await nextTick()
 
@@ -278,8 +307,9 @@ describe('plugin: electron device info', () => {
     const screen = makeScreen()
     const process = makeProcess()
     const filestore = makeFilestore(null)
+    const NativeClient = makeNativeClient()
 
-    const { sendEvent, sendSession } = makeClient(app, screen, process, filestore)
+    const { sendEvent, sendSession } = makeClient(app, screen, process, filestore, NativeClient)
 
     await nextTick()
 
@@ -304,8 +334,9 @@ describe('plugin: electron device info', () => {
         throw new Error('insert disk 2')
       }
     }
+    const NativeClient = makeNativeClient()
 
-    const { client, sendEvent, sendSession } = makeClient(app, screen, process, filestore)
+    const { client, sendEvent, sendSession } = makeClient(app, screen, process, filestore, NativeClient)
 
     await nextTick()
 
@@ -333,8 +364,9 @@ describe('plugin: electron device info', () => {
         throw new Error('no room on memory card')
       }
     }
+    const NativeClient = makeNativeClient()
 
-    const { client, sendEvent, sendSession } = makeClient(app, screen, process, filestore)
+    const { client, sendEvent, sendSession } = makeClient(app, screen, process, filestore, NativeClient)
 
     await nextTick()
 
@@ -493,5 +525,11 @@ function makeFilestore (id: string|null|undefined = DEFAULTS.id) {
     async setDeviceInfo (deviceInfo) {
       _deviceInfo = deviceInfo
     }
+  }
+}
+
+function makeNativeClient () {
+  return {
+    setDevice: jest.fn()
   }
 }

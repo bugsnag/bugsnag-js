@@ -9,15 +9,20 @@ const platformToOs = new Map([
 // electron memory APIs are documented as KB but are actually KiB
 const kibibytesToBytes = kibibytes => kibibytes * 1024
 
-const createDeviceUpdater = (client, device) => newProperties => {
+const createDeviceUpdater = (client, NativeClient, device) => newProperties => {
   Object.assign(device, newProperties)
-  client.addMetadata('device', device)
+
+  try {
+    NativeClient.setDevice(device)
+  } catch (err) {
+    client._logger.error(err)
+  }
 }
 
-module.exports = (app, screen, process, filestore) => ({
+module.exports = (app, screen, process, filestore, NativeClient) => ({
   load (client) {
     const device = {}
-    const updateDevice = createDeviceUpdater(client, device)
+    const updateDevice = createDeviceUpdater(client, NativeClient, device)
 
     const primaryDisplay = screen.getPrimaryDisplay() || {}
 
