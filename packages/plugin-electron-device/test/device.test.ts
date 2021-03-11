@@ -137,6 +137,27 @@ describe('plugin: electron device info', () => {
     expect(session.device).toEqual(expected)
   })
 
+  // in theory this is impossible as Chromium should always return a primary
+  // display even there is no display; we handle it anyway just to be safe
+  it('does not report screen information if there is no primary display', async () => {
+    const app = makeApp()
+    const screen = { getPrimaryDisplay: () => undefined, on: () => {} }
+    const process = makeProcess()
+    const filestore = makeFilestore()
+
+    const { sendEvent, sendSession } = makeClient(app, screen, process, filestore)
+
+    await nextTick()
+
+    const { screenResolution, screenDensity, ...expected } = makeExpectedDevice()
+
+    const event = await sendEvent()
+    expect(event.device).toEqual(expected)
+
+    const session = await sendSession()
+    expect(session.device).toEqual(expected)
+  })
+
   it('reports correct screen information if primary display is changed', async () => {
     const app = makeApp()
     const screen = makeScreen()

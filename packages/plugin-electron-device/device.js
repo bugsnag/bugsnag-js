@@ -19,7 +19,7 @@ module.exports = (app, screen, process, filestore) => ({
     const device = {}
     const updateDevice = createDeviceUpdater(client, device)
 
-    const primaryDisplay = screen.getPrimaryDisplay()
+    const primaryDisplay = screen.getPrimaryDisplay() || {}
 
     updateDevice({
       totalMemory: kibibytesToBytes(process.getSystemMemoryInfo().total),
