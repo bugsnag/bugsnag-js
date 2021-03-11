@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/in-flight",
-  "version": "7.7.0",
+  "version": "7.9.0-alpha.0",
   "main": "src/in-flight.js",
   "types": "types/bugsnag-in-flight.d.ts",
   "description": "Internal package to keep track of in-flight requests to Bugsnag",
@@ -22,7 +22,7 @@
     "@bugsnag/cuid": "^3.0.0"
   },
   "devDependencies": {
-    "@bugsnag/core": "^7.7.0"
+    "@bugsnag/core": "^7.9.0-alpha.0"
   },
   "peerDependencies": {
     "@bugsnag/core": "^7.0.0"
