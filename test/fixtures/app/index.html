@@ -5,37 +5,24 @@
     <title>Hello World!</title>
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
     <script>
-        const { ipcRenderer } = require('electron')
-
-        function sendRendererEvent(name) {
-            ipcRenderer.send(name)
-        }
         function rejectPromise() {
           new Promise((_, reject) => {
             reject(new TypeError("invalid"))
           })
         }
-        // prevent pop-up dialogs for exceptions
-        process.on('uncaughtException', () => {})
     </script>
 </head>
 <body style="background: white;">
     <h1>haha electron go brrr</h1>
     <h2>actions</h2>
     <ul>
-        <li><a href="#" id="main-process-crash" onclick="sendRendererEvent('main-process-crash')">Crash in main process</a></li>
-        <li><a href="#" id="main-process-uncaught-exception" onclick="sendRendererEvent('main-process-uncaught-exception')">Uncaught exception in main process</a></li>
-        <li><a href="#" id="main-process-unhandled-promise-rejection" onclick="sendRendererEvent('main-process-unhandled-promise-rejection')">Unhandled promise rejection in main process</a></li>
+        <li><a href="#" id="main-process-crash" onclick="RunnerAPI.mainProcessCrash()">Crash in main process</a></li>
+        <li><a href="#" id="main-process-uncaught-exception" onclick="RunnerAPI.mainProcessUncaughtException()">Uncaught exception in main process</a></li>
+        <li><a href="#" id="main-process-unhandled-promise-rejection" onclick="RunnerAPI.mainProcessUnhandledPromiseRejection()">Unhandled promise rejection in main process</a></li>
     </ul>
     <ul>
         <li><a href="#" id="renderer-uncaught-exception" onclick="foo()">Uncaught exception in renderer</a></li>
         <li><a href="#" id="renderer-unhandled-promise-rejection" onclick="rejectPromise()">Unhandled promise rejection in renderer</a></li>
     </ul>
-    <h2>build info</h2>
-    <p>
-        We are using node <script>document.write(process.versions.node)</script>,
-        Chrome <script>document.write(process.versions.chrome)</script>,
-        and Electron <script>document.write(process.versions.electron)</script>.
-    </p>
 </body>
 </html>
