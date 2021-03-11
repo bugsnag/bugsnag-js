@@ -40,13 +40,9 @@ const makeExpectedDevice = (customisations = {}) => ({
 
 describe('plugin: electron device info', () => {
   it('syncs device information to the NativeClient', async () => {
-    const app = makeApp()
-    const screen = makeScreen()
-    const process = makeProcess()
-    const filestore = makeFilestore()
     const NativeClient = makeNativeClient()
 
-    makeClient(app, screen, process, filestore, NativeClient)
+    makeClient({ NativeClient })
 
     const { id, time, freeMemory, ...expected } = makeExpectedDevice()
 
@@ -59,15 +55,11 @@ describe('plugin: electron device info', () => {
   })
 
   it('handles exceptions thrown by the NativeClient', async () => {
-    const app = makeApp()
-    const screen = makeScreen()
-    const process = makeProcess()
-    const filestore = makeFilestore()
     const NativeClient = {
       setDevice: jest.fn().mockImplementation(() => { throw new Error('abc') })
     }
 
-    makeClient(app, screen, process, filestore, NativeClient)
+    makeClient({ NativeClient })
 
     const { id, time, freeMemory, ...expected } = makeExpectedDevice()
 
@@ -80,13 +72,7 @@ describe('plugin: electron device info', () => {
   })
 
   it('reports basic device information', async () => {
-    const app = makeApp()
-    const screen = makeScreen()
-    const process = makeProcess()
-    const filestore = makeFilestore()
-    const NativeClient = makeNativeClient()
-
-    const { sendEvent, sendSession } = makeClient(app, screen, process, filestore, NativeClient)
+    const { sendEvent, sendSession } = makeClient()
 
     // give the filestore time to resolve the device ID
     await nextTick()
@@ -102,13 +88,9 @@ describe('plugin: electron device info', () => {
   })
 
   it('reports correct OS for macOS', async () => {
-    const app = makeApp()
-    const screen = makeScreen()
     const process = makeProcess({ platform: 'darwin' })
-    const filestore = makeFilestore()
-    const NativeClient = makeNativeClient()
 
-    const { sendEvent, sendSession } = makeClient(app, screen, process, filestore, NativeClient)
+    const { sendEvent, sendSession } = makeClient({ process })
 
     await nextTick()
 
@@ -122,13 +104,9 @@ describe('plugin: electron device info', () => {
   })
 
   it('reports correct OS for Linux', async () => {
-    const app = makeApp()
-    const screen = makeScreen()
     const process = makeProcess({ platform: 'linux' })
-    const filestore = makeFilestore()
-    const NativeClient = makeNativeClient()
 
-    const { sendEvent, sendSession } = makeClient(app, screen, process, filestore, NativeClient)
+    const { sendEvent, sendSession } = makeClient({ process })
 
     await nextTick()
 
@@ -142,13 +120,9 @@ describe('plugin: electron device info', () => {
   })
 
   it('reports correct OS for Windows', async () => {
-    const app = makeApp()
-    const screen = makeScreen()
     const process = makeProcess({ platform: 'win32' })
-    const filestore = makeFilestore()
-    const NativeClient = makeNativeClient()
 
-    const { sendEvent, sendSession } = makeClient(app, screen, process, filestore, NativeClient)
+    const { sendEvent, sendSession } = makeClient({ process })
 
     await nextTick()
 
@@ -164,13 +138,10 @@ describe('plugin: electron device info', () => {
   // in theory this is impossible as Chromium should always return a primary
   // display even there is no display; we handle it anyway just to be safe
   it('does not report screen information if there is no primary display', async () => {
-    const app = makeApp()
     const screen = { getPrimaryDisplay: () => undefined, on: () => {} }
-    const process = makeProcess()
-    const filestore = makeFilestore()
-    const NativeClient = makeNativeClient()
 
-    const { sendEvent, sendSession } = makeClient(app, screen, process, filestore, NativeClient)
+    // @ts-expect-error
+    const { sendEvent, sendSession } = makeClient({ screen })
 
     await nextTick()
 
@@ -184,13 +155,9 @@ describe('plugin: electron device info', () => {
   })
 
   it('reports correct screen information if primary display is changed', async () => {
-    const app = makeApp()
     const screen = makeScreen()
-    const process = makeProcess()
-    const filestore = makeFilestore()
-    const NativeClient = makeNativeClient()
 
-    const { sendEvent, sendSession } = makeClient(app, screen, process, filestore, NativeClient)
+    const { sendEvent, sendSession } = makeClient({ screen })
 
     await nextTick()
 
@@ -221,13 +188,9 @@ describe('plugin: electron device info', () => {
   })
 
   it('does not update screen information if a secondary display is changed', async () => {
-    const app = makeApp()
     const screen = makeScreen()
-    const process = makeProcess()
-    const filestore = makeFilestore()
-    const NativeClient = makeNativeClient()
 
-    const { sendEvent, sendSession } = makeClient(app, screen, process, filestore, NativeClient)
+    const { sendEvent, sendSession } = makeClient({ screen })
 
     await nextTick()
 
@@ -253,13 +216,10 @@ describe('plugin: electron device info', () => {
   })
 
   it('does not update screen information if the update is not relevant', async () => {
-    const app = makeApp()
     const screen = makeScreen()
-    const process = makeProcess()
-    const filestore = makeFilestore()
     const NativeClient = makeNativeClient()
 
-    const { sendEvent, sendSession } = makeClient(app, screen, process, filestore, NativeClient)
+    const { sendEvent, sendSession } = makeClient({ screen, NativeClient })
 
     expect(NativeClient.setDevice).toHaveBeenCalledTimes(1)
 
@@ -283,13 +243,9 @@ describe('plugin: electron device info', () => {
   it('reports correct device.id when one has been cached', async () => {
     const id = 'aoidjoahefodhadowhjoawjdopajp'
 
-    const app = makeApp()
-    const screen = makeScreen()
-    const process = makeProcess()
     const filestore = makeFilestore(id)
-    const NativeClient = makeNativeClient()
 
-    const { sendEvent, sendSession } = makeClient(app, screen, process, filestore, NativeClient)
+    const { sendEvent, sendSession } = makeClient({ filestore })
 
     await nextTick()
 
@@ -303,13 +259,9 @@ describe('plugin: electron device info', () => {
   })
 
   it('creates a new device.id when one has not been cached', async () => {
-    const app = makeApp()
-    const screen = makeScreen()
-    const process = makeProcess()
     const filestore = makeFilestore(null)
-    const NativeClient = makeNativeClient()
 
-    const { sendEvent, sendSession } = makeClient(app, screen, process, filestore, NativeClient)
+    const { sendEvent, sendSession } = makeClient({ filestore })
 
     await nextTick()
 
@@ -326,17 +278,14 @@ describe('plugin: electron device info', () => {
   })
 
   it('handles filestore errors from getDeviceInfo()', async () => {
-    const app = makeApp()
-    const screen = makeScreen()
-    const process = makeProcess()
     const filestore = {
       async getDeviceInfo () {
         throw new Error('insert disk 2')
-      }
+      },
+      async setDeviceInfo (deviceInfo) {}
     }
-    const NativeClient = makeNativeClient()
 
-    const { client, sendEvent, sendSession } = makeClient(app, screen, process, filestore, NativeClient)
+    const { client, sendEvent, sendSession } = makeClient({ filestore })
 
     await nextTick()
 
@@ -353,9 +302,6 @@ describe('plugin: electron device info', () => {
   })
 
   it('handles filestore errors from setDeviceInfo()', async () => {
-    const app = makeApp()
-    const screen = makeScreen()
-    const process = makeProcess()
     const filestore = {
       async getDeviceInfo () {
         return {}
@@ -364,9 +310,8 @@ describe('plugin: electron device info', () => {
         throw new Error('no room on memory card')
       }
     }
-    const NativeClient = makeNativeClient()
 
-    const { client, sendEvent, sendSession } = makeClient(app, screen, process, filestore, NativeClient)
+    const { client, sendEvent, sendSession } = makeClient({ filestore })
 
     await nextTick()
 
@@ -383,8 +328,18 @@ describe('plugin: electron device info', () => {
   })
 })
 
-function makeClient (...pluginArgs: any[]): Client {
-  const client = new Client({ apiKey: 'api_key' }, undefined, [plugin(...pluginArgs)])
+function makeClient ({
+  app = makeApp(),
+  screen = makeScreen(),
+  process = makeProcess(),
+  filestore = makeFilestore(),
+  NativeClient = makeNativeClient()
+} = {}): Client {
+  const client = new Client(
+    { apiKey: 'api_key' },
+    undefined,
+    [plugin(app, screen, process, filestore, NativeClient)]
+  )
 
   let lastSession
 
@@ -519,7 +474,7 @@ function makeFilestore (id: string|null|undefined = DEFAULTS.id) {
   let _deviceInfo = { id }
 
   return {
-    async getDeviceInfo () {
+    async getDeviceInfo (): Promise<{ id?: string|null }> {
       return _deviceInfo
     },
     async setDeviceInfo (deviceInfo) {
