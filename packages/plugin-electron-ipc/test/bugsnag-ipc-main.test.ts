@@ -107,6 +107,7 @@ describe('BugsnagIpcMain', () => {
     it('works for breadcrumbs', (done) => {
       const client = new Client({}, {}, [mockStateSyncPlugin], {})
       client.addOnBreadcrumb(b => {
+        console.log(b)
         expect(b.message).toBe('hi IPC')
         expect(b.type).toBe('manual')
         expect(b.metadata).toEqual({ electron: 'has many processes' })
@@ -114,7 +115,7 @@ describe('BugsnagIpcMain', () => {
       })
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       const stubWebContents = { /* this would be a WebContents instance */ }
-      bugsnagIpcMain.handle({ sender: stubWebContents }, 'leaveBreadcrumb', JSON.stringify({ name: 'hi IPC', type: 'manual', metadata: { electron: 'has many processes' } }))
+      bugsnagIpcMain.handle({ sender: stubWebContents }, 'leaveBreadcrumb', JSON.stringify({ name: 'hi IPC', type: 'manual', metaData: { electron: 'has many processes' } }))
     })
 
     it('is resilient to unknown methods', () => {

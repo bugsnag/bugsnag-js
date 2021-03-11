@@ -22,7 +22,7 @@ module.exports = {
     /* synchronisation from renderers */
 
     // delegate all calls the BugsnagIpcMain class's handle method
-    ipcMain.handle(CHANNEL_RENDERER_TO_MAIN, new BugsnagIpcMain(client).handle())
+    ipcMain.handle(CHANNEL_RENDERER_TO_MAIN, new BugsnagIpcMain(client).handle)
 
     /* synchronisation to renderers */
 
