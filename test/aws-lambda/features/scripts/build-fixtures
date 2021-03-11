@@ -66,7 +66,7 @@ def pack
 
   # Strip the version suffix from the packages
   Dir["#{FileUtils.pwd}/bugsnag-*.tgz"].each do |package|
-    package_with_no_version = package.gsub(/-\d+\.\d+\.\d+/, '')
+    package_with_no_version = package.gsub(/-\d+\.\d+\.\d+.*(?=\.tgz)/, '')
     File.rename(package, package_with_no_version)
   end
 end
