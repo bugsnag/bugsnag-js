@@ -1,4 +1,4 @@
-const { After, AfterAll, Before, BeforeAll } = require('@cucumber/cucumber')
+const { After, AfterAll, Before, BeforeAll, Status } = require('@cucumber/cucumber')
 const { MockServer } = require('./server')
 const { TestApp } = require('./app')
 const { Automator } = require('./automator')
@@ -39,12 +39,18 @@ Before(() => {
   global.server.start()
 })
 
-After(async () => {
+After(async ({ result }) => {
+  if (result.status === Status.FAILED) {
+    global.success = false
+  }
   await global.server.stop()
   global.server.clear()
   await global.automator.stop() // start the app fresh every scenario
 })
 
 AfterAll(async () => {
+  // force kill if the environment doesn't shut down cleanly
+  setTimeout(() => process.exit(global.success ? 0 : 1), 500)
+  // may hang due to failed tests / disconnected processes
   await global.automator.stop()
 })
