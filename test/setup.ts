@@ -1,4 +1,6 @@
-import { access } from 'fs/promises'
+import { promises } from 'fs'
+
+const { access } = promises
 
 /* eslint-disable @typescript-eslint/no-namespace */
 /* eslint-disable @typescript-eslint/no-unused-vars */

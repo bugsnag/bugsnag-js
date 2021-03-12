@@ -1,6 +1,8 @@
-import { mkdtemp, readFile, rmdir } from 'fs/promises'
+import { promises } from 'fs'
 import { join } from 'path'
 import * as bindings from 'bindings'
+
+const { mkdtemp, readFile, rmdir } = promises
 
 describe('persisting changes to disk', () => {
   const NativeClient = bindings.default('bugsnag_plugin_electron_client_sync_bindings')
