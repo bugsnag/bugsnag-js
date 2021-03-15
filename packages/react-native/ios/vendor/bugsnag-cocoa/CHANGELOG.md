@@ -1,6 +1,19 @@
 Changelog
 =========
 
+## 6.7.1 (2021-03-10)
+
+### Bug fixes
+
+* Fix `os_proc_available_memory` runtime link error on Mac Catalyst.
+  [#1025](https://github.com/bugsnag/bugsnag-cocoa/pull/1025)
+
+* Fix missing `osName` and `osVersion` for errors reported from app extensions that do not link against UIKit.
+  [#1022](https://github.com/bugsnag/bugsnag-cocoa/pull/1022)
+
+* Fix incorrect `freeMemory` for errors reported via `notify()`
+  [#1021](https://github.com/bugsnag/bugsnag-cocoa/pull/1021)
+
 ## 6.7.0 (2021-03-03)
 
 ### Enhancements

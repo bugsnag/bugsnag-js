@@ -97,11 +97,11 @@ NSNumber *BSGDeviceFreeSpace(NSSearchPathDirectory directory) {
     return device;
 }
 
-+ (BugsnagDeviceWithState *)deviceWithDictionary:(NSDictionary *)event {
++ (BugsnagDeviceWithState *)deviceWithKSCrashReport:(NSDictionary *)event {
     BugsnagDeviceWithState *device = [BugsnagDeviceWithState new];
     [self populateFields:device dictionary:event];
     device.orientation = [event valueForKeyPath:@"user.state.deviceState.orientation"];
-    device.freeMemory = [event valueForKeyPath:@"system.memory.free"] ?: [event valueForKeyPath:@"system.memory.usable"];
+    device.freeMemory = [event valueForKeyPath:@"system.memory.free"];
     device.freeDisk = BSGDeviceFreeSpace(NSCachesDirectory);
 
     NSString *val = [event valueForKeyPath:@"report.timestamp"];

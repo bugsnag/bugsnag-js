@@ -123,7 +123,7 @@ NSString *const BSGSessionUpdateNotification = @"BugsnagSessionChanged";
     BugsnagApp *app = [BugsnagApp appWithDictionary:@{@"system": systemInfo}
                                              config:self.config
                                        codeBundleId:self.codeBundleId];
-    BugsnagDevice *device = [BugsnagDevice deviceWithDictionary:@{@"system": systemInfo}];
+    BugsnagDevice *device = [BugsnagDevice deviceWithKSCrashReport:@{@"system": systemInfo}];
     [device appendRuntimeInfo:self.extraRuntimeInfo];
 
     BugsnagSession *newSession = [[BugsnagSession alloc] initWithId:[[NSUUID UUID] UUIDString]

@@ -360,7 +360,7 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
         }
     }
     NSString *deviceAppHash = [event valueForKeyPath:@"system.device_app_hash"];
-    BugsnagDeviceWithState *device = [BugsnagDeviceWithState deviceWithDictionary:event];
+    BugsnagDeviceWithState *device = [BugsnagDeviceWithState deviceWithKSCrashReport:event];
     BugsnagUser *user = [self parseUser:event deviceAppHash:deviceAppHash deviceId:device.id];
     BugsnagConfiguration *config = [[BugsnagConfiguration alloc] initWithDictionaryRepresentation:[event valueForKeyPath:@"user.config"]];
     BugsnagAppWithState *app = [BugsnagAppWithState appWithDictionary:event config:config codeBundleId:self.codeBundleId];
