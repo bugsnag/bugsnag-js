@@ -2,6 +2,10 @@
 
 ## TBD
 
+### Added
+
+- (plugin-aws-lambda): Add support for Node.js on AWS Lambda. See the [docs](https://docs.bugsnag.com/platforms/javascript/aws-lambda/) for usage. [#1334](https://github.com/bugsnag/bugsnag-js/pull/1334)
+
 ### Changed
 
 - (react-native): Update bugsnag-cocoa to v6.7.1
