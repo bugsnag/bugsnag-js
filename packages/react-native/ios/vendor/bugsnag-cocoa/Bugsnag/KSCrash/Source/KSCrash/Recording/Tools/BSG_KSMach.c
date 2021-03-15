@@ -38,7 +38,7 @@
 #include <mach/mach_time.h>
 #include <sys/sysctl.h>
 
-#if __has_include(<os/proc.h>) && TARGET_OS_IPHONE
+#if __has_include(<os/proc.h>) && TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST
 #include <os/proc.h>
 #endif
 
@@ -71,7 +71,7 @@ static pthread_t bsg_g_topThread;
 static size_t (* get_available_memory)(void);
 
 static void bsg_ksmachfreeMemory_init(void) {
-#if __has_include(<os/proc.h>) && TARGET_OS_IPHONE
+#if __has_include(<os/proc.h>) && TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST
     if (__builtin_available(iOS 13.0, tvOS 13.0, watchOS 6.0, *)) {
         // Only use `os_proc_available_memory` if it appears to be working.
         // 0 is returned if the calling process is not an app or is running
