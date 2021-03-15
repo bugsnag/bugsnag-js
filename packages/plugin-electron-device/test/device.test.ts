@@ -21,9 +21,12 @@ const DEFAULTS = {
     height: 5678
   },
   time: expect.any(Date),
-  totalMemory: 100 // this is in KiB to match Electron's API
+  totalMemory: 100, // this is in KiB to match Electron's API
+  usingBattery: false,
+  isLocked: false
 }
 
+// expected data for 'session.device'
 const makeExpectedSessionDevice = (customisations = {}) => ({
   totalMemory: DEFAULTS.totalMemory * 1024,
   id: DEFAULTS.id,
@@ -33,13 +36,21 @@ const makeExpectedSessionDevice = (customisations = {}) => ({
   runtimeVersions: DEFAULTS.versions,
   screenDensity: DEFAULTS.screenDensity,
   screenResolution: DEFAULTS.screenResolution,
+  usingBattery: DEFAULTS.usingBattery,
   ...customisations
 })
 
+// expected data for 'event.device'
 const makeExpectedEventDevice = (customisations = {}) => ({
   ...makeExpectedSessionDevice(),
   time: DEFAULTS.time,
   freeMemory: DEFAULTS.freeMemory * 1024,
+  ...customisations
+})
+
+// expected data for 'event.metadata.device'
+const makeExpectedMetadataDevice = (customisations = {}) => ({
+  isLocked: DEFAULTS.isLocked,
   ...customisations
 })
 
@@ -84,7 +95,7 @@ describe('plugin: electron device info', () => {
 
     const event = await sendEvent()
     expect(event.device).toEqual(makeExpectedEventDevice())
-    expect(event._metadata.device).toBeUndefined()
+    expect(event.getMetadata('device')).toEqual(makeExpectedMetadataDevice())
 
     const session = await sendSession()
     expect(session.device).toEqual(makeExpectedSessionDevice())
@@ -296,6 +307,76 @@ describe('plugin: electron device info', () => {
     expect(client._logger.error).toHaveBeenCalledTimes(1)
     expect(client._logger.error).toHaveBeenCalledWith(new Error('insert disk 2'))
   })
+
+  it('records initial battery and locked state', async () => {
+    const powerMonitor = makePowerMonitor({ usingBattery: true, isLocked: true })
+
+    const { sendEvent, sendSession } = makeClient({ powerMonitor })
+
+    await nextTick()
+
+    const expectedEvent = makeExpectedEventDevice({ usingBattery: true })
+    const expectedSession = makeExpectedSessionDevice({ usingBattery: true })
+    const expectedMetadata = makeExpectedMetadataDevice({ isLocked: true })
+
+    const event = await sendEvent()
+    expect(event.device).toEqual(expectedEvent)
+    expect(event.getMetadata('device')).toEqual(expectedMetadata)
+
+    const session = await sendSession()
+    expect(session.device).toEqual(expectedSession)
+  })
+
+  it('records changes to battery state', async () => {
+    const powerMonitor = makePowerMonitor()
+
+    const { sendEvent, sendSession } = makeClient({ powerMonitor })
+
+    await nextTick()
+
+    const event = await sendEvent()
+    expect(event.device).toEqual(makeExpectedEventDevice({ usingBattery: false }))
+
+    const session = await sendSession()
+    expect(session.device).toEqual(makeExpectedSessionDevice({ usingBattery: false }))
+
+    powerMonitor._unplug()
+
+    const event2 = await sendEvent()
+    expect(event2.device).toEqual(makeExpectedEventDevice({ usingBattery: true }))
+
+    const session2 = await sendSession()
+    expect(session2.device).toEqual(makeExpectedSessionDevice({ usingBattery: true }))
+
+    powerMonitor._plugIn()
+
+    const event3 = await sendEvent()
+    expect(event3.device).toEqual(makeExpectedEventDevice({ usingBattery: false }))
+
+    const session3 = await sendSession()
+    expect(session3.device).toEqual(makeExpectedSessionDevice({ usingBattery: false }))
+  })
+
+  it('records changes to locked state', async () => {
+    const powerMonitor = makePowerMonitor()
+
+    const { sendEvent } = makeClient({ powerMonitor })
+
+    await nextTick()
+
+    const event = await sendEvent()
+    expect(event.getMetadata('device')).toEqual(makeExpectedMetadataDevice({ isLocked: false }))
+
+    powerMonitor._lock()
+
+    const event2 = await sendEvent()
+    expect(event2.getMetadata('device')).toEqual(makeExpectedMetadataDevice({ isLocked: true }))
+
+    powerMonitor._unlock()
+
+    const event3 = await sendEvent()
+    expect(event3.getMetadata('device')).toEqual(makeExpectedMetadataDevice({ isLocked: false }))
+  })
 })
 
 function makeClient ({
@@ -303,12 +384,13 @@ function makeClient ({
   screen = makeScreen(),
   process = makeProcess(),
   filestore = makeFilestore(),
-  NativeClient = makeNativeClient()
+  NativeClient = makeNativeClient(),
+  powerMonitor = makePowerMonitor()
 } = {}): Client {
   const client = new Client(
     { apiKey: 'api_key' },
     undefined,
-    [plugin(app, screen, process, filestore, NativeClient)]
+    [plugin(app, screen, process, filestore, NativeClient, powerMonitor)]
   )
 
   let lastSession
@@ -456,5 +538,51 @@ function makeFilestore (id: string|null|undefined = DEFAULTS.id) {
 function makeNativeClient () {
   return {
     setDevice: jest.fn()
+  }
+}
+
+function makePowerMonitor ({
+  usingBattery = DEFAULTS.usingBattery,
+  isLocked = DEFAULTS.isLocked
+} = {}) {
+  const callbacks: { [event: string]: Function[] } = {
+    'on-ac': [],
+    'on-battery': [],
+    'lock-screen': [],
+    'unlock-screen': []
+  }
+
+  return {
+    on (event, callback) {
+      callbacks[event].push(callback)
+    },
+    getSystemIdleState (idleThreshold) {
+      if (idleThreshold > 0) {
+        return isLocked ? 'locked' : 'active'
+      }
+
+      // https://github.com/electron/electron/blob/a9924e1c32e8445887e3a6b5cdff445d93c2b18f/shell/browser/api/electron_api_power_monitor.cc#L129-L130
+      throw new TypeError('Invalid idle threshold, must be greater than 0')
+    },
+    get onBatteryPower () {
+      return usingBattery
+    },
+
+    _plugIn () {
+      usingBattery = false
+      callbacks['on-ac'].forEach(cb => { cb() })
+    },
+    _unplug () {
+      usingBattery = true
+      callbacks['on-battery'].forEach(cb => { cb() })
+    },
+    _lock () {
+      isLocked = true
+      callbacks['lock-screen'].forEach(cb => { cb() })
+    },
+    _unlock () {
+      isLocked = false
+      callbacks['unlock-screen'].forEach(cb => { cb() })
+    }
   }
 }
