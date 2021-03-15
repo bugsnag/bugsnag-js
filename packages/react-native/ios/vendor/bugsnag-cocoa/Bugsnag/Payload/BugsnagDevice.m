@@ -29,7 +29,7 @@
     return device;
 }
 
-+ (BugsnagDevice *)deviceWithDictionary:(NSDictionary *)event {
++ (BugsnagDevice *)deviceWithKSCrashReport:(NSDictionary *)event {
     BugsnagDevice *device = [BugsnagDevice new];
     [self populateFields:device dictionary:event];
     return device;

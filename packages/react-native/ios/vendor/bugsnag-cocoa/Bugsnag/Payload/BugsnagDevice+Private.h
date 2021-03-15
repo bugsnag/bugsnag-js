@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface BugsnagDevice ()
 
-+ (instancetype)deviceWithDictionary:(NSDictionary *)event;
++ (instancetype)deviceWithKSCrashReport:(NSDictionary *)event;
 
 + (instancetype)deserializeFromJson:(NSDictionary *)json;
 
