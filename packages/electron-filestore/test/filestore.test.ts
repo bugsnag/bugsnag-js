@@ -71,21 +71,45 @@ describe('FileStore', () => {
   })
 
   describe('getDeviceInfo()', () => {
-    it('returns an empty object before initialization', async () => {
+    it('returns an empty object if something goes wrong', async () => {
+      store = new FileStore('mykey', '/non/existent/dir', crashes)
       const contents = await store.getDeviceInfo()
       expect(contents).toEqual({})
     })
 
-    it('returns an empty object after initialization', async () => {
+    it('returns an ID after initialization', async () => {
       await store.init()
       const contents = await store.getDeviceInfo()
-      expect(contents).toEqual({})
+      expect(typeof contents.id).toBe('string')
+    })
+
+    it('returns an ID if device info is empty', async () => {
+      const base = join(fixtures, 'bugsnag', 'mykey')
+      await mkdir(base, { recursive: true })
+      await writeFile(join(base, 'device.json'), '')
+      const contents = await store.getDeviceInfo()
+      expect(typeof contents.id).toBe('string')
+    })
+
+    it('returns an ID if device info is invalid JSON', async () => {
+      const base = join(fixtures, 'bugsnag', 'mykey')
+      await mkdir(base, { recursive: true })
+      await writeFile(join(base, 'device.json'), '{"id":')
+      const contents = await store.getDeviceInfo()
+      expect(typeof contents.id).toBe('string')
     })
 
     it('returns the object sent to setDeviceInfo()', async () => {
       await store.setDeviceInfo({ id: 'a684c' })
       const contents = await store.getDeviceInfo()
       expect(contents).toEqual({ id: 'a684c' })
+    })
+
+    it('returns an object with an ID if none given to setDeviceInfo()', async () => {
+      await store.setDeviceInfo({ name: 'jeanne' })
+      const contents = await store.getDeviceInfo()
+      expect(contents.name).toEqual('jeanne')
+      expect(typeof contents.id).toBe('string')
     })
   })
 
@@ -95,6 +119,15 @@ describe('FileStore', () => {
       const base = join(fixtures, 'bugsnag', 'mykey')
       const contents = await readFile(join(base, 'device.json'))
       expect(JSON.parse(contents.toString())).toEqual({ id: 'df40a811e2' })
+    })
+
+    it('inserts a unique identifier if none given', async () => {
+      await store.setDeviceInfo({ color: 'cyan' })
+      const base = join(fixtures, 'bugsnag', 'mykey')
+      const contents = await readFile(join(base, 'device.json'))
+      const device = JSON.parse(contents.toString())
+      expect(device.color).toEqual('cyan')
+      expect(typeof device.id).toBe('string')
     })
   })
 
