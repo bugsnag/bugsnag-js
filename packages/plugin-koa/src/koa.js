@@ -21,10 +21,10 @@ module.exports = {
       ctx.bugsnag = requestClient
 
       // extract request info and pass it to the relevant bugsnag properties
-      const { request, metadata } = getRequestAndMetadataFromCtx(ctx)
-      requestClient.addMetadata('request', metadata)
       requestClient.addOnError((event) => {
+        const { request, metadata } = getRequestAndMetadataFromCtx(ctx)
         event.request = { ...event.request, ...request }
+        event.addMetadata('request', metadata)
       }, true)
 
       try {
@@ -90,15 +90,19 @@ module.exports = {
 }
 
 const getRequestAndMetadataFromCtx = ctx => {
-  const requestInfo = extractRequestInfo(ctx)
+  // Exclude new mappings from metaData but keep existing ones to preserve backwards compatibility
+  const { body, ...requestInfo } = extractRequestInfo(ctx)
+
   return {
     metadata: requestInfo,
     request: {
+      body,
       clientIp: requestInfo.clientIp,
       headers: requestInfo.headers,
       httpMethod: requestInfo.httpMethod,
+      httpVersion: requestInfo.httpVersion,
       url: requestInfo.url,
-      referer: requestInfo.referer
+      referer: requestInfo.referer // Not part of the notifier spec for request but leaving for backwards compatibility
     }
   }
 }

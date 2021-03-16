@@ -4,12 +4,11 @@
 
 ### Changed
 
+- (plugin-koa): Ensure `ctx.request.body` is present on the event's request property by collecting it at the last possible moment [#1292](https://github.com/bugsnag/bugsnag-js/pull/1292)
 - (react-native): Update bugsnag-cocoa to v6.7.1
   - Fix `os_proc_available_memory` runtime link error on Mac Catalyst. [bugsnag-cocoa#1025](https://github.com/bugsnag/bugsnag-cocoa/pull/1025)
   - Fix missing `osName` and `osVersion` for errors reported from app extensions that do not link against UIKit. [bugsnag-cocoa#1022](https://github.com/bugsnag/bugsnag-cocoa/pull/1022)
   - Fix incorrect `freeMemory` for errors reported via `notify()` [bugsnag-cocoa#1021](https://github.com/bugsnag/bugsnag-cocoa/pull/1021)
-
-
 
 ## v7.8.2 (2021-03-04)
 
