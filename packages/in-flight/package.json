@@ -1,0 +1,30 @@
+{
+  "name": "@bugsnag/in-flight",
+  "version": "7.9.0-alpha.0",
+  "main": "src/in-flight.js",
+  "types": "types/bugsnag-in-flight.d.ts",
+  "description": "Internal package to keep track of in-flight requests to Bugsnag",
+  "homepage": "https://www.bugsnag.com/",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:bugsnag/bugsnag-js.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "src",
+    "types"
+  ],
+  "author": "Bugsnag",
+  "license": "MIT",
+  "dependencies": {
+    "@bugsnag/cuid": "^3.0.0"
+  },
+  "devDependencies": {
+    "@bugsnag/core": "^7.9.0-alpha.0"
+  },
+  "peerDependencies": {
+    "@bugsnag/core": "^7.0.0"
+  }
+}

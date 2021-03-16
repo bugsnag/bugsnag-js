@@ -2,6 +2,10 @@
 
 ## TBD
 
+### Added
+
+- (plugin-aws-lambda): Add support for Node.js on AWS Lambda. See the [docs](https://docs.bugsnag.com/platforms/javascript/aws-lambda/) for usage. [#1334](https://github.com/bugsnag/bugsnag-js/pull/1334)
+
 ### Changed
 
 - (plugin-koa): Ensure `ctx.request.body` is present on the event's request property by collecting it at the last possible moment [#1292](https://github.com/bugsnag/bugsnag-js/pull/1292)
