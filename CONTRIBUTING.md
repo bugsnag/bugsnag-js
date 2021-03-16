@@ -102,11 +102,15 @@ npm run test:lint
 
 ### Integration tests
 
-Package the library and run tests which require launching a real Electron app.
+Configure a local NPM server (using verdaccio) by running `npm run local-npm:start` in a shell, and then log in to that server by running `npm run local-npm:login`.
+
+Then package the library and run tests which require launching a real Electron app.
 
 ```sh
 npm run test:cucumber
 ```
+
+**NOTE:** the integration tests alter the version numbers of the packages (and the dependency version in the test app), so care is needed when committing changes.
 
 ## Releases
 

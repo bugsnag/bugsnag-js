@@ -1,6 +1,5 @@
 const { join } = require('path')
-const { promisify } = require('util')
-const exec = promisify(require('child_process').exec)
+const { spawn } = require('child_process')
 
 const defaultFixturePath = join(__dirname, '../../fixtures/app')
 
@@ -10,9 +9,19 @@ class TestApp {
     this.appName = require(join(pathToFixture, 'package.json')).name
   }
 
+  async installDeps () {
+    // retry install commands to avoid intermittent failure in electron-rebuild
+    await this._exec('npm', ['install'], 1)
+  }
+
   async packageApp () {
-    await exec('npm install', { cwd: this.buildDir })
-    await exec('npm run package', { cwd: this.buildDir })
+    await this._exec('npm', ['run', 'package'])
+  }
+
+  async installBugsnag (version) {
+    // can't avoid altering the test app's package.json? :(
+    // https://github.com/npm/npm/issues/17927
+    await this._exec('npm', ['install', `@bugsnag/electron@${version}`, '--registry', 'http://0.0.0.0:5539'], 1)
   }
 
   packagedPath () {
@@ -39,6 +48,28 @@ class TestApp {
       default:
         return []
     }
+  }
+
+  async _exec (command, args = [], retries = 0) {
+    await new Promise((resolve, reject) => {
+      const proc = spawn(command, args, { cwd: this.buildDir })
+      // handy for debugging but otherwise annoying output
+      if (process.env.VERBOSE) {
+        proc.stderr.on('data', data => { console.log(`  stderr: ${data}`) })
+      }
+      proc.on('close', async (code) => {
+        if (code !== 0) {
+          if (retries > 0) {
+            await this._exec(command, args, retries - 1)
+            resolve()
+          } else {
+            reject(new Error(`Running '${command}' failed with code: ${code}`))
+          }
+        } else {
+          resolve()
+        }
+      })
+    })
   }
 }
 

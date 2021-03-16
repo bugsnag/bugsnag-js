@@ -5,12 +5,13 @@ on: push
 jobs:
   test:
 
-    runs-on: ubuntu-20.04
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         electron: [ '^11.2.0' ]
         node-version: [12, 14]
+        os: [ 'ubuntu-20.04' ]
 
     steps:
     - uses: actions/checkout@v2
@@ -27,5 +28,14 @@ jobs:
     - name: install integration dependencies
       run: |
         npm install electron@${{ matrix.electron }}
+    - name: install expect (for local npm server login)
+      if: contains(matrix.os, 'ubuntu')
+      run: sudo apt-get install expect --yes --no-install-recommends
+    - name: start local npm server
+      if: contains(matrix.os, 'macos') || contains(matrix.os, 'ubuntu')
+      run: |
+        npm run local-npm:start 1>/dev/null &
+        sleep 3
+        npm run local-npm:login
     - name: run integration tests
       run: npm run test:cucumber

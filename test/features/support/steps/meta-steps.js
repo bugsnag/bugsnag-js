@@ -4,7 +4,7 @@ const { When } = require('@cucumber/cucumber')
 const { fixturePath } = require('../utils')
 const FormData = require('form-data')
 
-When('I send a sample event', (done) => {
+const sendEvent = (done) => {
   const data = JSON.stringify({
     app: { version: '5.6.0' },
     device: { osName: 'beOS', osVersion: '11.0' },
@@ -16,6 +16,7 @@ When('I send a sample event', (done) => {
   const options = {
     method: 'POST',
     headers: {
+      'Bugsnag-API-Key': '100a2272bd2b0ac0ab0f52715bbdc659',
       'Content-Type': 'application/json',
       'Content-Length': data.length
     }
@@ -29,11 +30,19 @@ When('I send a sample event', (done) => {
 
   req.write(data)
   req.end()
-})
+}
 
-When('I send a sample minidump', (done) => {
+const sendMinidump = (done) => {
   const form = new FormData()
   form.append('event', createReadStream(fixturePath('meta-minidump-event.json')))
   form.append('minidump', createReadStream(fixturePath('minidump.dmp')))
   form.submit(process.env.META_MINIDUMP, (err) => done(err))
+}
+
+When('I send a sample event', sendEvent)
+
+When('I send a sample minidump', sendMinidump)
+
+When('I send a bunch of requests', (done) => {
+  sendEvent(() => sendEvent(() => sendMinidump(() => done())))
 })
