@@ -64,6 +64,20 @@ module.exports = (NativeClient, process, electronApp, BrowserWindow) => ({
       updateApp({ inForeground: BrowserWindow.getFocusedWindow() !== null })
     })
 
+    // the blur event doesn't fire for the last window to close so we have to
+    // use the window-all-closed event instead
+    electronApp.on('window-all-closed', () => {
+      updateApp({ inForeground: false })
+
+      // if there are no other listeners for 'window-all-closed' electron will
+      // quit the app so we replicate that behaviour here
+      // this is '2' because we add a listener and electron adds a listener:
+      // https://github.com/electron/electron/blob/5b205731f6ff77372656f0c85c52b703ec523e6f/lib/browser/init.ts#L168-L173
+      if (electronApp.listenerCount('window-all-closed') === 2) {
+        electronApp.quit()
+      }
+    })
+
     client.addOnError(event => {
       const now = Date.now()
 

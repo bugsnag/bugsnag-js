@@ -235,6 +235,42 @@ describe('plugin: electron app info', () => {
     expect(event3.app).toEqual(makeExpectedEventApp({ inForeground: false, durationInForeground: undefined }))
   })
 
+  it('handles "inForeground" when all windows are closed', async () => {
+    const electronApp = makeElectronApp()
+
+    const { sendEvent } = makeClient({ electronApp })
+
+    const event = await sendEvent()
+    expect(event.app).toEqual(makeExpectedEventApp({ inForeground: true }))
+
+    electronApp._emitWindowAllClosedEvent()
+
+    const event2 = await sendEvent()
+    expect(event2.app).toEqual(makeExpectedEventApp({ inForeground: false, durationInForeground: undefined }))
+  })
+
+  it('quits if there are no additional "window-all-closed" listeners', async () => {
+    const electronApp = makeElectronApp()
+    electronApp.quit = jest.fn()
+
+    // install a listener to act as electron's internal listener
+    electronApp.on('window-all-closed', () => {})
+
+    makeClient({ electronApp })
+
+    electronApp._emitWindowAllClosedEvent()
+    expect(electronApp.quit).toHaveBeenCalledTimes(1)
+
+    electronApp._emitWindowAllClosedEvent()
+    expect(electronApp.quit).toHaveBeenCalledTimes(2)
+
+    // add a new listener to prevent the quit
+    electronApp.on('window-all-closed', () => {})
+
+    electronApp._emitWindowAllClosedEvent()
+    expect(electronApp.quit).toHaveBeenCalledTimes(2)
+  })
+
   it('reports the app.duration and app.durationInForeground', async () => {
     jest.useFakeTimers('modern')
 
@@ -796,7 +832,8 @@ function makeElectronApp ({
 } = {}) {
   const callbacks: { [event: string]: Function[] } = {
     'browser-window-focus': [],
-    'browser-window-blur': []
+    'browser-window-blur': [],
+    'window-all-closed': []
   }
 
   return {
@@ -810,6 +847,12 @@ function makeElectronApp ({
     on (event, callback) {
       callbacks[event].push(callback)
     },
+    quit (): undefined {
+      throw new Error('bye!')
+    },
+    listenerCount (event) {
+      return callbacks[event].length
+    },
 
     _emitBlurEvent () {
       BrowserWindow._blur()
@@ -818,6 +861,9 @@ function makeElectronApp ({
     _emitFocusEvent () {
       BrowserWindow._focus()
       callbacks['browser-window-focus'].forEach(f => { f({}, BrowserWindow) })
+    },
+    _emitWindowAllClosedEvent () {
+      callbacks['window-all-closed'].forEach(f => { f() })
     }
   }
 }
