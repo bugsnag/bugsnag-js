@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)deviceFromJson:(NSDictionary *)json;
 
-+ (instancetype)deviceWithDictionary:(NSDictionary *)event;
++ (instancetype)deviceWithKSCrashReport:(NSDictionary *)event;
 
 + (instancetype)deviceWithOomData:(NSDictionary *)data;
 

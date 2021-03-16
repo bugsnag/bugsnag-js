@@ -1,0 +1,36 @@
+{
+  "name": "@bugsnag/plugin-aws-lambda",
+  "version": "7.9.0-alpha.0",
+  "main": "dist/bugsnag-aws-lambda.js",
+  "types": "types/bugsnag-plugin-aws-lambda.d.ts",
+  "description": "AWS Lambda support for @bugsnag/node",
+  "homepage": "https://www.bugsnag.com/",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:bugsnag/bugsnag-js.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist",
+    "types"
+  ],
+  "scripts": {
+    "clean": "rm -fr dist && mkdir dist",
+    "build": "npm run clean && ../../bin/bundle src/index.js --node --standalone=BugsnagPluginAwsLambda | ../../bin/extract-source-map dist/bugsnag-aws-lambda.js",
+    "postversion": "npm run build"
+  },
+  "author": "Bugsnag",
+  "license": "MIT",
+  "dependencies": {
+    "@bugsnag/in-flight": "^7.9.0-alpha.0",
+    "@bugsnag/plugin-browser-session": "^7.9.0-alpha.0"
+  },
+  "devDependencies": {
+    "@bugsnag/core": "^7.9.0-alpha.0"
+  },
+  "peerDependencies": {
+    "@bugsnag/core": "^7.0.0"
+  }
+}

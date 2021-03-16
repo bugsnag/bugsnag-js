@@ -15,16 +15,16 @@ module.exports = {
   load: client => {
     const requestHandler = async (ctx, next) => {
       // Get a client to be scoped to this request. If sessions are enabled, use the
-      // startSession() call to get a session client, otherwise, clone the existing client.
-      const requestClient = client._config.autoTrackSessions ? client.startSession() : clone(client)
+      // resumeSession() call to get a session client, otherwise, clone the existing client.
+      const requestClient = client._config.autoTrackSessions ? client.resumeSession() : clone(client)
 
       ctx.bugsnag = requestClient
 
       // extract request info and pass it to the relevant bugsnag properties
-      const { request, metadata } = getRequestAndMetadataFromCtx(ctx)
-      requestClient.addMetadata('request', metadata)
       requestClient.addOnError((event) => {
+        const { request, metadata } = getRequestAndMetadataFromCtx(ctx)
         event.request = { ...event.request, ...request }
+        event.addMetadata('request', metadata)
       }, true)
 
       try {
@@ -47,8 +47,8 @@ module.exports = {
 
     requestHandler.v1 = function * (next) {
       // Get a client to be scoped to this request. If sessions are enabled, use the
-      // startSession() call to get a session client, otherwise, clone the existing client.
-      const requestClient = client._config.autoTrackSessions ? client.startSession() : clone(client)
+      // resumeSession() call to get a session client, otherwise, clone the existing client.
+      const requestClient = client._config.autoTrackSessions ? client.resumeSession() : clone(client)
 
       this.bugsnag = requestClient
 
@@ -90,15 +90,19 @@ module.exports = {
 }
 
 const getRequestAndMetadataFromCtx = ctx => {
-  const requestInfo = extractRequestInfo(ctx)
+  // Exclude new mappings from metaData but keep existing ones to preserve backwards compatibility
+  const { body, ...requestInfo } = extractRequestInfo(ctx)
+
   return {
     metadata: requestInfo,
     request: {
+      body,
       clientIp: requestInfo.clientIp,
       headers: requestInfo.headers,
       httpMethod: requestInfo.httpMethod,
+      httpVersion: requestInfo.httpVersion,
       url: requestInfo.url,
-      referer: requestInfo.referer
+      referer: requestInfo.referer // Not part of the notifier spec for request but leaving for backwards compatibility
     }
   }
 }

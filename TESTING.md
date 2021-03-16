@@ -69,7 +69,7 @@ You'll need to set the credentials for the aws profile in order to access the pr
 aws configure --profile=opensource
 ```
 
-Subsequently you'll need to run the following commmand to authenticate with the registry:
+Subsequently you'll need to run the following command to authenticate with the registry:
 
 ```
 npm run test:test-container-registry-login

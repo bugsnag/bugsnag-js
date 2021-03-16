@@ -1,0 +1,149 @@
+#!/usr/bin/env ruby
+
+require "yaml"
+require "fileutils"
+
+# Allow specifying a specic fixture to build by passing it's name as an argument
+# e.g. ./build-fixtures simple-app
+SPECIFIC_FIXTURE = ARGV.first
+
+# Allow debugging by logging more verbosely and not tidying up packed packages
+DEBUG = ["1", "true", true].include?(ENV.fetch("DEBUG", false))
+
+# The root of bugsnag-js
+ROOT = File.realpath("#{__dir__}/../../../../")
+
+# Bugsnag packages that we need to pack & install into the fixtures
+BUGSNAG_PACKAGES = [
+  "core",
+  "delivery-node",
+  "in-flight",
+  "js",
+  "node",
+  "plugin-app-duration",
+  "plugin-aws-lambda",
+  "plugin-contextualize",
+  "plugin-express",
+  "plugin-intercept",
+  "plugin-node-device",
+  "plugin-node-in-project",
+  "plugin-node-surrounding-code",
+  "plugin-node-uncaught-exception",
+  "plugin-node-unhandled-rejection",
+  "plugin-server-session",
+  "plugin-strip-project-root",
+]
+
+def heading(message)
+  <<~HEADING
+  ====#{"=" * message.length}====
+  =   #{message}   =
+  ====#{"=" * message.length}====
+  HEADING
+end
+
+# Bootstrap and build Bugsnag packages so they're ready to install
+def bootstrap
+  Dir.chdir(ROOT) do
+    system("npm run bootstrap")
+    system("npm run build")
+  end
+end
+
+# Run "npm pack" on the required packages and strip the version suffix so they
+# can be depended on in a package.json file
+def pack
+  puts heading("Packing Bugsnag packages")
+
+  BUGSNAG_PACKAGES.each do |package|
+    path = "#{ROOT}/packages/#{package}"
+    flags = DEBUG ? "--verbose" : "--quiet"
+
+    success = system("npm pack #{flags} #{path}/")
+
+    raise "Failed to pack #{package}" unless success
+  end
+
+  # Strip the version suffix from the packages
+  Dir["#{FileUtils.pwd}/bugsnag-*.tgz"].each do |package|
+    package_with_no_version = package.gsub(/-\d+\.\d+\.\d+.*(?=\.tgz)/, '')
+    File.rename(package, package_with_no_version)
+  end
+end
+
+# Install the packed packages in each fixture and build the fixture
+def install_and_build
+  Dir["#{__dir__}/../fixtures/*"].each do |fixture|
+    fixture = File.realpath(fixture)
+    fixture_name = File.basename(fixture)
+
+    if SPECIFIC_FIXTURE && SPECIFIC_FIXTURE != fixture_name
+      puts heading("Not building #{fixture_name} because it's not '#{SPECIFIC_FIXTURE}'")
+      next
+    end
+
+    puts heading("Installing Bugsnag packages in #{fixture_name}")
+
+    # We have to parse the template file to find out where to put the packages as
+    # any file outside of the function's directory is unavailable when building
+    template = "#{fixture}/template.yaml"
+
+    raise "template.yaml does not exist!" unless File.exist?(template)
+
+    parsed_template = YAML.safe_load(File.read(template))
+
+    # Find all of the directories we need to install the packages in using the
+    # CodeUri of the "AWS::Serverless::Function" resources
+    destinations = parsed_template.fetch("Resources").values
+      .filter { |resource| resource["Type"] == "AWS::Serverless::Function" }
+      .map { |resource| "#{fixture}/#{resource.fetch("Properties").fetch("CodeUri")}" }
+      .uniq
+
+    begin
+      # Install the packages into each of the destination directories
+      destinations.each do |destination|
+        puts "Installing packages to #{fixture_name}/#{File.basename(destination)}"
+
+        FileUtils.copy(Dir["#{FileUtils.pwd}/bugsnag-*.tgz"], destination)
+      end
+
+      puts heading("Building #{fixture_name}")
+
+      # SAM builds projects in the PWD by default. This would mean we build all
+      # of the fixtures into the same directory so we change directories to
+      # build in the right place
+      Dir.chdir(fixture) do
+        success = system("sam build")
+
+        raise "Failed to build #{fixture_name}" unless success
+      end
+    ensure
+      next if DEBUG
+
+      # Remove the packages from the destination directories as they aren't
+      # needed anymore. A built lambda has them in its node_modules directory
+      destinations.each do |destination|
+        FileUtils.remove(Dir["#{destination}/bugsnag-*.tgz"])
+      end
+    end
+  end
+end
+
+# Tidy up PWD by removing all the packed packages created by "pack"
+def tidy_up
+  return if DEBUG
+
+  puts heading("Tidying up PWD")
+
+  FileUtils.remove(Dir["#{FileUtils.pwd}/bugsnag-*.tgz"])
+end
+
+begin
+  bootstrap
+  pack
+  install_and_build
+ensure
+  tidy_up
+
+  puts "Done!"
+end
