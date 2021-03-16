@@ -17,7 +17,7 @@ const createDeviceUpdater = (client, NativeClient, device) => newProperties => {
   }
 }
 
-module.exports = (app, screen, process, filestore, NativeClient) => ({
+module.exports = (app, screen, process, filestore, NativeClient, powerMonitor) => ({
   load (client) {
     const device = {}
     const updateDevice = createDeviceUpdater(client, NativeClient, device)
@@ -35,7 +35,17 @@ module.exports = (app, screen, process, filestore, NativeClient) => ({
         electron: process.versions.electron
       },
       screenResolution: primaryDisplay.size,
-      screenDensity: primaryDisplay.scaleFactor
+      screenDensity: primaryDisplay.scaleFactor,
+      // note: this is only available from Electron 12, earlier versions cannot
+      // read the battery state without 'on-ac'/'on-battery' events
+      usingBattery: powerMonitor.onBatteryPower
+    })
+
+    // 'isLocked' goes in metadata.device
+    client.addMetadata('device', {
+      // the value for 'idleThreshold' doesn't matter here because it is ignored
+      // if the system is locked and that's the only state we care about
+      isLocked: powerMonitor.getSystemIdleState(1) === 'locked'
     })
 
     // fetch the device ID from the filestore - if one does not exist it will be
@@ -64,6 +74,22 @@ module.exports = (app, screen, process, filestore, NativeClient) => ({
         screenResolution: display.size,
         screenDensity: display.scaleFactor
       })
+    })
+
+    powerMonitor.on('on-ac', () => {
+      updateDevice({ usingBattery: false })
+    })
+
+    powerMonitor.on('on-battery', () => {
+      updateDevice({ usingBattery: true })
+    })
+
+    powerMonitor.on('unlock-screen', () => {
+      client.addMetadata('device', { isLocked: false })
+    })
+
+    powerMonitor.on('lock-screen', () => {
+      client.addMetadata('device', { isLocked: true })
     })
 
     client.addOnError(event => {
