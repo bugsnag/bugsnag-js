@@ -10,9 +10,9 @@ module.exports = (BugsnagIpcRenderer = window.__bugsnag_ipc__) => ({
 
     const origSetUser = client.setUser
     client.setUser = function (...args) {
-      const ret = origSetUser.apply(this, arguments)
+      const ret = origSetUser.apply(this, args)
       try {
-        BugsnagIpcRenderer.updateUser(...args)
+        BugsnagIpcRenderer.updateUser(client.getUser())
       } catch (e) {
         client._logger.error(e)
       }
@@ -21,9 +21,9 @@ module.exports = (BugsnagIpcRenderer = window.__bugsnag_ipc__) => ({
 
     const origSetContext = client.setContext
     client.setContext = function (...args) {
-      const ret = origSetContext.apply(this, arguments)
+      const ret = origSetContext.apply(this, args)
       try {
-        BugsnagIpcRenderer.updateContext(...args)
+        BugsnagIpcRenderer.updateContext(client.getContext())
       } catch (e) {
         client._logger.error(e)
       }
@@ -34,7 +34,8 @@ module.exports = (BugsnagIpcRenderer = window.__bugsnag_ipc__) => ({
     client.addMetadata = function (...args) {
       const ret = origAddMetadata.apply(this, args)
       try {
-        BugsnagIpcRenderer.addMetadata(...args)
+        const [section] = args
+        BugsnagIpcRenderer.updateMetadata(section, client.getMetadata(section))
       } catch (e) {
         client._logger.error(e)
       }
@@ -43,9 +44,10 @@ module.exports = (BugsnagIpcRenderer = window.__bugsnag_ipc__) => ({
 
     const origClearMetadata = client.clearMetadata
     client.clearMetadata = function (...args) {
-      const ret = origClearMetadata.apply(this, arguments)
+      const ret = origClearMetadata.apply(this, args)
       try {
-        BugsnagIpcRenderer.clearMetadata(...args)
+        const [section] = args
+        BugsnagIpcRenderer.updateMetadata(section, client.getMetadata(section))
       } catch (e) {
         client._logger.error(e)
       }
@@ -54,10 +56,14 @@ module.exports = (BugsnagIpcRenderer = window.__bugsnag_ipc__) => ({
 
     BugsnagIpcRenderer.listen((event, change) => {
       switch (change.type) {
-        case 'ContextUpdate': return origSetContext.call(client, change.payload.context)
-        case 'UserUpdate': return origSetUser.call(client, change.payload.user.id, change.payload.user.email, change.payload.user.name)
-        case 'AddMetadata': return origAddMetadata.call(client, change.payload.section, change.payload.keyOrValues, change.payload.value)
-        case 'ClearMetadata': return origClearMetadata.call(client, change.payload.section, change.payload.key)
+        case 'ContextUpdate':
+          client._context = change.payload.context
+          break
+        case 'UserUpdate':
+          client._user = change.payload.user
+          break
+        case 'MetadataUpdate':
+          client._metadata[change.payload.section] = change.payload.values
       }
     })
   }

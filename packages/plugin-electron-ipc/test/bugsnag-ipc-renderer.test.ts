@@ -32,53 +32,41 @@ describe('BugsnagIpcRenderer', () => {
   it('should call ipcRenderer.invoke correctly for context', async () => {
     const bugsnagIpcRenderer = new BugsnagIpcRenderer()
     await bugsnagIpcRenderer.updateContext('ctx')
-    expect(electron.ipcRenderer.invoke).toHaveBeenCalledWith(CHANNEL_RENDERER_TO_MAIN, 'updateContext', JSON.stringify('ctx'))
+    expect(electron.ipcRenderer.invoke).toHaveBeenCalledWith(CHANNEL_RENDERER_TO_MAIN, 'updateContext', JSON.stringify({ context: 'ctx' }))
   })
 
   it('should call ipcRenderer.invoke correctly for user', async () => {
     const bugsnagIpcRenderer = new BugsnagIpcRenderer()
-    await bugsnagIpcRenderer.updateUser('123', 'jim@jim.com', 'Jim')
+    await bugsnagIpcRenderer.updateUser({ id: '123', email: 'jim@jim.com', name: 'Jim' })
     expect(electron.ipcRenderer.invoke).toHaveBeenCalledWith(
       CHANNEL_RENDERER_TO_MAIN,
       'updateUser',
-      JSON.stringify('123'),
-      JSON.stringify('jim@jim.com'),
-      JSON.stringify('Jim')
+      JSON.stringify({ user: { id: '123', email: 'jim@jim.com', name: 'Jim' } })
     )
   })
 
   it('should call ipcRenderer.invoke correctly for metadata', async () => {
     const bugsnagIpcRenderer = new BugsnagIpcRenderer()
 
-    await bugsnagIpcRenderer.addMetadata('section', 'key', { value: 123 })
+    await bugsnagIpcRenderer.updateMetadata('section', { key: 123 })
     expect(electron.ipcRenderer.invoke).toHaveBeenCalledWith(
       CHANNEL_RENDERER_TO_MAIN,
-      'addMetadata',
-      JSON.stringify('section'),
-      JSON.stringify('key'),
-      JSON.stringify({ value: 123 })
+      'updateMetadata',
+      JSON.stringify({ section: 'section', values: { key: 123 } })
     )
 
-    await bugsnagIpcRenderer.addMetadata('section', { valueA: 123, valueB: 234 })
+    await bugsnagIpcRenderer.updateMetadata('section', { valueA: 123, valueB: 234 })
     expect(electron.ipcRenderer.invoke).toHaveBeenCalledWith(
       CHANNEL_RENDERER_TO_MAIN,
-      'addMetadata',
-      JSON.stringify('section'),
-      JSON.stringify({ valueA: 123, valueB: 234 })
+      'updateMetadata',
+      JSON.stringify({ section: 'section', values: { valueA: 123, valueB: 234 } })
     )
 
-    await bugsnagIpcRenderer.clearMetadata('section', 'key')
+    await bugsnagIpcRenderer.updateMetadata('section', undefined)
     expect(electron.ipcRenderer.invoke).toHaveBeenCalledWith(
       CHANNEL_RENDERER_TO_MAIN,
-      'clearMetadata',
-      JSON.stringify('section'),
-      JSON.stringify('key')
-    )
-    await bugsnagIpcRenderer.clearMetadata('section')
-    expect(electron.ipcRenderer.invoke).toHaveBeenCalledWith(
-      CHANNEL_RENDERER_TO_MAIN,
-      'clearMetadata',
-      JSON.stringify('section')
+      'updateMetadata',
+      JSON.stringify({ section: 'section', values: undefined })
     )
   })
 

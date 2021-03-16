@@ -17,7 +17,7 @@ describe('@bugsnag/plugin-electron-state-sync', () => {
     const client = new Client({}, {}, [stateSyncPlugin], {})
     const { emitter } = client.getPlugin('stateSync')
     emitter.on('ContextUpdate', (payload, source) => {
-      expect(payload.context).toEqual('ctx')
+      expect(payload.context).toBe('ctx')
       expect(source).toBe(null)
       done()
     })
@@ -27,10 +27,9 @@ describe('@bugsnag/plugin-electron-state-sync', () => {
   it('should emit events when metadata is added', done => {
     const client = new Client({}, {}, [stateSyncPlugin], {})
     const { emitter } = client.getPlugin('stateSync')
-    emitter.on('AddMetadata', (payload, source) => {
-      expect(payload.section).toEqual('section')
-      expect(payload.keyOrValues).toEqual('key')
-      expect(payload.value).toEqual('value')
+    emitter.on('MetadataUpdate', (payload, source) => {
+      expect(payload.section).toBe('section')
+      expect(payload.values).toEqual({ key: 'value' })
       expect(source).toBe(null)
       done()
     })
@@ -40,9 +39,9 @@ describe('@bugsnag/plugin-electron-state-sync', () => {
   it('should emit events when metadata is cleared', done => {
     const client = new Client({}, {}, [stateSyncPlugin], {})
     const { emitter } = client.getPlugin('stateSync')
-    emitter.on('ClearMetadata', (payload, source) => {
-      expect(payload.section).toEqual('section')
-      expect(payload.key).toEqual('key')
+    emitter.on('MetadataUpdate', (payload, source) => {
+      expect(payload.section).toBe('section')
+      expect(payload.values).toBe(undefined)
       expect(source).toBe(null)
       done()
     })
@@ -52,26 +51,26 @@ describe('@bugsnag/plugin-electron-state-sync', () => {
   describe('triggering changes with a particular source', () => {
     it('should allow setting user, providing a custom source', done => {
       const client = new Client({}, {}, [stateSyncPlugin], {})
-      const { emitter, setUserFromSource } = client.getPlugin('stateSync')
+      const { emitter, updateUserFromSource } = client.getPlugin('stateSync')
       const mockSource = {}
       emitter.on('UserUpdate', (payload, source) => {
         expect(payload.user).toEqual({ id: '123', email: 'jim@jim.com', name: 'Jim' })
         expect(source).toBe(mockSource)
         done()
       })
-      setUserFromSource(mockSource)('123', 'jim@jim.com', 'Jim')
+      updateUserFromSource(mockSource)({ user: { id: '123', email: 'jim@jim.com', name: 'Jim' } })
     })
 
     it('should allow setting context, providing a custom source', done => {
       const client = new Client({}, {}, [stateSyncPlugin], {})
-      const { emitter, setContextFromSource } = client.getPlugin('stateSync')
+      const { emitter, updateContextFromSource } = client.getPlugin('stateSync')
       const mockSource = {}
       emitter.on('ContextUpdate', (payload, source) => {
         expect(payload.context).toEqual('ctx')
         expect(source).toBe(mockSource)
         done()
       })
-      setContextFromSource(mockSource)('ctx')
+      updateContextFromSource(mockSource)({ context: 'ctx' })
     })
   })
 })

@@ -11,7 +11,7 @@ module.exports = class BugsnagIpcMain {
     this.handle = this.handle.bind(this)
   }
 
-  leaveBreadcrumb (source) {
+  leaveBreadcrumb () {
     return breadcrumb => this.client.leaveBreadcrumb(
       breadcrumb.name /* this is "name" not "type" due to breadcrumb.js's toJSON() function */,
       breadcrumb.metaData, /* again, this "metaData" not "metadata" due to the fact this is serialised for API compatibility */
@@ -32,19 +32,15 @@ module.exports = class BugsnagIpcMain {
   }
 
   updateContext (source) {
-    return (...args) => this.stateSync.setContextFromSource(source)(...args)
-  }
-
-  addMetadata (source) {
-    return (...args) => this.stateSync.addMetadataFromSource(source)(...args)
-  }
-
-  clearMetadata (source) {
-    return (...args) => this.stateSync.clearMetadataFromSource(source)(...args)
+    return (update) => this.stateSync.updateContextFromSource(source)(update)
   }
 
   updateUser (source) {
-    return (...args) => this.stateSync.setUserFromSource(source)(...args)
+    return (update) => this.stateSync.updateUserFromSource(source)(update)
+  }
+
+  updateMetadata (source) {
+    return (update) => this.stateSync.updateMetadataFromSource(source)(update)
   }
 
   dispatch (event) {
@@ -81,8 +77,7 @@ module.exports = class BugsnagIpcMain {
       ['pauseSession', this.pauseSession.bind(this)],
       ['resumeSession', this.resumeSession.bind(this)],
       ['updateContext', this.updateContext.bind(this)],
-      ['addMetadata', this.addMetadata.bind(this)],
-      ['clearMetadata', this.clearMetadata.bind(this)],
+      ['updateMetadata', this.updateMetadata.bind(this)],
       ['updateUser', this.updateUser.bind(this)],
       ['dispatch', this.dispatch.bind(this)],
       ['getPayloadInfo', this.getPayloadInfo.bind(this)]

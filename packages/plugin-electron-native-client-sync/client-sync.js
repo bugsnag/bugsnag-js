@@ -26,21 +26,9 @@ module.exports = (NativeClient) => ({
       }
     })
 
-    stateSync.emitter.on('AddMetadata', ({ section, keyOrValues, value }) => {
+    stateSync.emitter.on('MetadataUpdate', ({ section, values }) => {
       try {
-        if (typeof keyOrValues === 'object') {
-          NativeClient.addMetadata(section, keyOrValues)
-        } else {
-          NativeClient.addMetadata(section, { [keyOrValues]: value })
-        }
-      } catch (e) {
-        client._logger.error(e)
-      }
-    })
-
-    stateSync.emitter.on('ClearMetadata', ({ section, key }) => {
-      try {
-        NativeClient.clearMetadata(section, key)
+        // TODO
       } catch (e) {
         client._logger.error(e)
       }

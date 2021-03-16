@@ -4,17 +4,15 @@ import Client from '@bugsnag/core/client'
 const mockStateSyncPlugin = {
   name: 'stateSync',
   load: () => ({
-    setContextFromSource: jest.fn(() => mockSetContext),
-    setUserFromSource: jest.fn(() => mockSetUser),
-    addMetadataFromSource: jest.fn(() => mockAddMetadata),
-    clearMetadataFromSource: jest.fn(() => mockClearMetadata)
+    updateContextFromSource: jest.fn(() => mockUpdateContext),
+    updateUserFromSource: jest.fn(() => mockUpdateUser),
+    updateMetadataFromSource: jest.fn(() => mockUpdateMetadata)
   })
 }
 
-const mockSetContext = jest.fn()
-const mockSetUser = jest.fn()
-const mockAddMetadata = jest.fn()
-const mockClearMetadata = jest.fn()
+const mockUpdateContext = jest.fn()
+const mockUpdateUser = jest.fn()
+const mockUpdateMetadata = jest.fn()
 
 afterEach(() => jest.clearAllMocks())
 
@@ -41,9 +39,9 @@ describe('BugsnagIpcMain', () => {
       const client = new Client({}, {}, [mockStateSyncPlugin], {})
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       const stubWebContents = { /* this would be a WebContents instance */ }
-      bugsnagIpcMain.handle({ sender: stubWebContents }, 'updateContext', JSON.stringify('new context'))
-      expect(client.getPlugin('stateSync').setContextFromSource).toHaveBeenCalledWith(stubWebContents)
-      expect(mockSetContext).toHaveBeenCalledWith('new context')
+      bugsnagIpcMain.handle({ sender: stubWebContents }, 'updateContext', JSON.stringify({ context: 'new context' }))
+      expect(client.getPlugin('stateSync').updateContextFromSource).toHaveBeenCalledWith(stubWebContents)
+      expect(mockUpdateContext).toHaveBeenCalledWith({ context: 'new context' })
     })
 
     it('works for updating user', () => {
@@ -51,41 +49,32 @@ describe('BugsnagIpcMain', () => {
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       const stubWebContents = { /* this would be a WebContents instance */ }
       // all fields set
-      bugsnagIpcMain.handle({ sender: stubWebContents }, 'updateUser', JSON.stringify('123'), JSON.stringify('jim@jim.com'), JSON.stringify('Jim'))
-      expect(client.getPlugin('stateSync').setUserFromSource).toHaveBeenCalledWith(stubWebContents)
-      expect(mockSetUser).toHaveBeenCalledWith('123', 'jim@jim.com', 'Jim')
+      bugsnagIpcMain.handle({ sender: stubWebContents }, 'updateUser', JSON.stringify({ user: { id: '123', email: 'jim@jim.com', name: 'Jim' } }))
+      expect(client.getPlugin('stateSync').updateUserFromSource).toHaveBeenCalledWith(stubWebContents)
+      expect(mockUpdateUser).toHaveBeenCalledWith({ user: { id: '123', email: 'jim@jim.com', name: 'Jim' } })
       // some fields not set
-      bugsnagIpcMain.handle({ sender: stubWebContents }, 'updateUser', JSON.stringify('123'), undefined, JSON.stringify('Jim'))
-      expect(client.getPlugin('stateSync').setUserFromSource).toHaveBeenCalledWith(stubWebContents)
-      expect(mockSetUser).toHaveBeenCalledWith('123', undefined, 'Jim')
+      bugsnagIpcMain.handle({ sender: stubWebContents }, 'updateUser', JSON.stringify({ user: { id: '123', email: undefined, name: 'Jim' } }))
+      expect(client.getPlugin('stateSync').updateUserFromSource).toHaveBeenCalledWith(stubWebContents)
+      expect(mockUpdateUser).toHaveBeenCalledWith({ user: { id: '123', email: undefined, name: 'Jim' } })
     })
 
     it('works for adding metadata', () => {
       const client = new Client({}, {}, [mockStateSyncPlugin], {})
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       const stubWebContents = { /* this would be a WebContents instance */ }
-      // a single value
-      bugsnagIpcMain.handle({ sender: stubWebContents }, 'addMetadata', JSON.stringify('section'), JSON.stringify('key'), JSON.stringify(123))
-      expect(client.getPlugin('stateSync').addMetadataFromSource).toHaveBeenCalledWith(stubWebContents)
-      expect(mockAddMetadata).toHaveBeenCalledWith('section', 'key', 123)
       // a whole tab
-      bugsnagIpcMain.handle({ sender: stubWebContents }, 'addMetadata', JSON.stringify('section'), JSON.stringify({ a: 123, b: 234 }))
-      expect(client.getPlugin('stateSync').addMetadataFromSource).toHaveBeenCalledWith(stubWebContents)
-      expect(mockAddMetadata).toHaveBeenCalledWith('section', { a: 123, b: 234 })
+      bugsnagIpcMain.handle({ sender: stubWebContents }, 'updateMetadata', JSON.stringify({ section: 'section', values: { a: 123, b: 234 } }))
+      expect(client.getPlugin('stateSync').updateMetadataFromSource).toHaveBeenCalledWith(stubWebContents)
+      expect(mockUpdateMetadata).toHaveBeenCalledWith({ section: 'section', values: { a: 123, b: 234 } })
     })
 
     it('works for removing metadata', () => {
       const client = new Client({}, {}, [mockStateSyncPlugin], {})
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       const stubWebContents = { /* this would be a WebContents instance */ }
-      // a single value
-      bugsnagIpcMain.handle({ sender: stubWebContents }, 'clearMetadata', JSON.stringify('section'), JSON.stringify('key'), JSON.stringify(123))
-      expect(client.getPlugin('stateSync').clearMetadataFromSource).toHaveBeenCalledWith(stubWebContents)
-      expect(mockClearMetadata).toHaveBeenCalledWith('section', 'key', 123)
-      // a whole tab
-      bugsnagIpcMain.handle({ sender: stubWebContents }, 'clearMetadata', JSON.stringify('section'))
-      expect(client.getPlugin('stateSync').clearMetadataFromSource).toHaveBeenCalledWith(stubWebContents)
-      expect(mockClearMetadata).toHaveBeenCalledWith('section')
+      bugsnagIpcMain.handle({ sender: stubWebContents }, 'updateMetadata', JSON.stringify({ section: 'section', values: undefined }))
+      expect(client.getPlugin('stateSync').updateMetadataFromSource).toHaveBeenCalledWith(stubWebContents)
+      expect(mockUpdateMetadata).toHaveBeenCalledWith({ section: 'section', values: undefined })
     })
 
     it('works for managing sessions', () => {
@@ -107,7 +96,6 @@ describe('BugsnagIpcMain', () => {
     it('works for breadcrumbs', (done) => {
       const client = new Client({}, {}, [mockStateSyncPlugin], {})
       client.addOnBreadcrumb(b => {
-        console.log(b)
         expect(b.message).toBe('hi IPC')
         expect(b.type).toBe('manual')
         expect(b.metadata).toEqual({ electron: 'has many processes' })
@@ -115,7 +103,11 @@ describe('BugsnagIpcMain', () => {
       })
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       const stubWebContents = { /* this would be a WebContents instance */ }
-      bugsnagIpcMain.handle({ sender: stubWebContents }, 'leaveBreadcrumb', JSON.stringify({ name: 'hi IPC', type: 'manual', metaData: { electron: 'has many processes' } }))
+      bugsnagIpcMain.handle(
+        { sender: stubWebContents },
+        'leaveBreadcrumb',
+        JSON.stringify({ name: 'hi IPC', type: 'manual', metaData: { electron: 'has many processes' } })
+      )
     })
 
     it('is resilient to unknown methods', () => {
@@ -125,7 +117,7 @@ describe('BugsnagIpcMain', () => {
       expect(() => bugsnagIpcMain.handle({ sender: stubWebContents }, 'explodePlease', JSON.stringify({ data: 123 }))).not.toThrowError()
     })
 
-    it('is resiliant to bad JSON', () => {
+    it('is resilient to bad JSON', () => {
       const client = new Client({}, {}, [mockStateSyncPlugin], {})
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       const stubWebContents = { /* this would be a WebContents instance */ }

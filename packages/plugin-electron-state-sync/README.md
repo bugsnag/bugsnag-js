@@ -31,10 +31,9 @@ interface BugsnagElectronStateSyncPlugin {
 
 interface StateSyncPluginResult {
   emitter: EventEmitter
-  setContextFromSource: (source: WebContents | null) => (...args: any[]) => void
-  setUserFromSource: (source: WebContents | null) => (...args: any[]) => void
-  addMetadataFromSource: (source: WebContents | null) => (...args: any[]) => void
-  clearMetadataFromSource: (source: WebContents | null) => (...args: any[]) => void
+  updateContextFromSource: (source: WebContents | null) => (...args: any[]) => void
+  updateUserFromSource: (source: WebContents | null) => (...args: any[]) => void
+  updateMetadataFromSource: (source: WebContents | null) => (...args: any[]) => void
 }
 
 // Event types and payloads
@@ -51,13 +50,7 @@ interface UserUpdatePayload {
 
 interface AddMetadataPayload {
   section: string
-  keyOrValues: string | Record<string,any>
-  value?: any
-}
-
-interface ClearMetadataPayload {
-  section: string
-  key?: string
+  values: Record<string,any> | undefined
 }
 ```
 
@@ -74,7 +67,7 @@ emitter.on('ContextUpdate', (event, source) => {
 // notifying a change from a renderer
 const { updateContextFromSource } = client.getPlugin('stateSync')
 ipcMain.handle('<event from renderer>', (event, methodName, ...args) => {
-  if (methodName === 'updateContext') updateContextFromSource(event.sender)(...args)
+  if (methodName === 'updateContext') updateContextFromSource(event.sender)({ context: args[0] })
   // etc.
 })
 

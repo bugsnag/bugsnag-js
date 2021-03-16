@@ -21,8 +21,10 @@ module.exports = {
 
     /* synchronisation from renderers */
 
-    // delegate all calls the BugsnagIpcMain class's handle method
-    ipcMain.handle(CHANNEL_RENDERER_TO_MAIN, new BugsnagIpcMain(client).handle)
+    const bugsnagIpcMain = new BugsnagIpcMain(client)
+
+    // delegate all method calls to the BugsnagIpcMain class's handle method
+    ipcMain.handle(CHANNEL_RENDERER_TO_MAIN, bugsnagIpcMain.handle)
 
     /* synchronisation to renderers */
 
@@ -35,9 +37,11 @@ module.exports = {
     // keep track of the renderers in existence
     const renderers = new Set()
     app.on('web-contents-created', (event, webContents) => {
-      client._logger.debug(`Renderer #${webContents.id} created`)
       // if you send data to a webContents instance before it has emitted this event, it will crash
-      webContents.on('did-start-loading', () => renderers.add(webContents))
+      webContents.on('did-start-loading', () => {
+        client._logger.debug(`Renderer #${webContents.id} created`)
+        renderers.add(webContents)
+      })
       webContents.on('destroy', () => {
         client._logger.debug(`Renderer #${webContents.id} destroyed`)
         renderers.delete(webContents)
@@ -48,11 +52,12 @@ module.exports = {
     // unless that render was the source of the change
     const propagateEventToRenderers = (type, payload, source) => {
       client._logger.debug('Propagating change event to renderers')
+      const event = jsonStringify({ type, payload })
       for (const renderer of renderers) {
         // source=null when the event was triggered by the main process so all renders should be notified
         if (source === null || renderer.id !== source.id) {
           client._logger.debug(`Sending change event to renderer #${renderer.id}`)
-          renderer.send(CHANNEL_MAIN_TO_RENDERER, jsonStringify({ type, payload }))
+          renderer.send(CHANNEL_MAIN_TO_RENDERER, event)
         } else {
           client._logger.debug(`Skipping renderer #${renderer.id} because it is the source of the event`)
         }

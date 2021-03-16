@@ -5,47 +5,69 @@ module.exports = {
   load: (client) => {
     const emitter = new EventEmitter()
 
+    // proxy all state updates from within the main process
+    // so that we can emit events for the changes
+
     const origSetUser = client.setUser
-    const setUserFromSource = source => (...args) => {
+    client.setUser = (...args) => {
       const ret = origSetUser.call(client, ...args)
-      emitter.emit('UserUpdate', { user: client.getUser() }, source)
+      emitter.emit('UserUpdate', { user: client.getUser() }, null)
       return ret
     }
-    client.setUser = setUserFromSource(null)
 
     const origSetContext = client.setContext
-    const setContextFromSource = source => (...args) => {
+    client.setContext = (...args) => {
       const ret = origSetContext.call(client, ...args)
-      emitter.emit('ContextUpdate', { context: client.getContext() }, source)
+      emitter.emit('ContextUpdate', { context: client.getContext() }, null)
       return ret
     }
-    client.setContext = setContextFromSource(null)
 
     const origAddMetadata = client.addMetadata
-    const addMetadataFromSource = source => (...args) => {
+    client.addMetadata = (...args) => {
       const ret = origAddMetadata.call(client, ...args)
-      const [section, keyOrValues, value] = args
-      emitter.emit('AddMetadata', { section, keyOrValues, value }, source)
+      const [section] = args
+      if (typeof section === 'string') {
+        const values = client.getMetadata(section)
+        emitter.emit('MetadataUpdate', { section, values }, null)
+      }
       return ret
     }
-    client.addMetadata = addMetadataFromSource(null)
 
     const origClearMetadata = client.clearMetadata
-    const clearMetadataFromSource = source => (...args) => {
+    client.clearMetadata = (...args) => {
       const ret = origClearMetadata.call(client, ...args)
-      const [section, key] = args
-      emitter.emit('ClearMetadata', { section, key }, source)
+      const [section] = args
+      if (typeof section === 'string') {
+        const values = client.getMetadata(section)
+        emitter.emit('MetadataUpdate', { section, values }, null)
+      }
       return ret
     }
-    client.clearMetadata = clearMetadataFromSource(null)
+
+    // apply inbound updates from another process, emitting an event
+    // containing the source so that we can notify _other_ processes
+
+    const updateUserFromSource = source => ({ user }) => {
+      client._user = user
+      emitter.emit('UserUpdate', { user }, source)
+    }
+
+    const updateContextFromSource = source => ({ context }) => {
+      client._context = context
+      emitter.emit('ContextUpdate', { context }, source)
+    }
+
+    const updateMetadataFromSource = source => ({ section, values }) => {
+      client._metadata[section] = values
+      emitter.emit('MetadataUpdate', { section, values }, source)
+    }
 
     return {
-      events: ['UserUpdate', 'ContextUpdate', 'AddMetadata', 'ClearMetadata'],
+      events: ['UserUpdate', 'ContextUpdate', 'MetadataUpdate'],
       emitter,
-      setUserFromSource,
-      setContextFromSource,
-      addMetadataFromSource,
-      clearMetadataFromSource
+      updateUserFromSource,
+      updateContextFromSource,
+      updateMetadataFromSource
     }
   }
 }

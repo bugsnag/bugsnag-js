@@ -20,11 +20,11 @@ describe('clientSyncPlugin', () => {
     expect(client.getUser()).toEqual({ id: '123', email: 'jim@jim.com' })
 
     // add metadata
-    listener({}, { type: 'AddMetadata', payload: { section: 'section', keyOrValues: 'key', value: 123 } })
+    listener({}, { type: 'MetadataUpdate', payload: { section: 'section', values: { key: 123 } } })
     expect(client.getMetadata('section')).toEqual({ key: 123 })
 
     // clear metadata
-    listener({}, { type: 'ClearMetadata', payload: { section: 'section' } })
+    listener({}, { type: 'MetadataUpdate', payload: { section: 'section' } })
     expect(client.getMetadata('section')).toEqual(undefined)
   })
 
@@ -52,27 +52,26 @@ describe('clientSyncPlugin', () => {
 
       client.setUser('123', 'jim@jim.com', 'Jim')
       expect(client.getUser()).toEqual({ id: '123', email: 'jim@jim.com', name: 'Jim' })
-      expect(mockBugsnagIpcRenderer.updateUser).toHaveBeenCalledWith('123', 'jim@jim.com', 'Jim')
+      expect(mockBugsnagIpcRenderer.updateUser).toHaveBeenCalledWith({ id: '123', email: 'jim@jim.com', name: 'Jim' })
     })
 
     it('propagates metadata changes', () => {
       const mockBugsnagIpcRenderer = {
         listen: jest.fn(),
-        addMetadata: jest.fn(),
-        clearMetadata: jest.fn()
+        updateMetadata: jest.fn()
       }
       const client = new Client({}, {}, [clientSyncPlugin(mockBugsnagIpcRenderer)], {})
 
-      client.addMetadata('section', 'key', 123)
-      expect(client.getMetadata('section')).toEqual({ key: 123 })
-      expect(mockBugsnagIpcRenderer.addMetadata).toHaveBeenCalledWith('section', 'key', 123)
+      client.addMetadata('section', { key0: 123, key1: 234 })
+      expect(client.getMetadata('section')).toEqual({ key0: 123, key1: 234 })
+      expect(mockBugsnagIpcRenderer.updateMetadata).toHaveBeenCalledWith('section', { key0: 123, key1: 234 })
 
-      client.clearMetadata('section', 'key')
-      expect(client.getMetadata('section')).toEqual({})
-      expect(mockBugsnagIpcRenderer.clearMetadata).toHaveBeenCalledWith('section', 'key')
+      client.clearMetadata('section', 'key0')
+      expect(client.getMetadata('section')).toEqual({ key1: 234 })
+      expect(mockBugsnagIpcRenderer.updateMetadata).toHaveBeenCalledWith('section', { key1: 234 })
       client.clearMetadata('section')
       expect(client.getMetadata('section')).toEqual(undefined)
-      expect(mockBugsnagIpcRenderer.clearMetadata).toHaveBeenCalledWith('section')
+      expect(mockBugsnagIpcRenderer.updateMetadata).toHaveBeenCalledWith('section', undefined)
     })
 
     it('propagates breadcrumb changes', () => {
