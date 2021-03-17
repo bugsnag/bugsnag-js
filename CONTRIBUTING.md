@@ -102,7 +102,7 @@ npm run test:lint
 
 ### Integration tests
 
-Configure a local NPM server (using verdaccio) by running `npm run local-npm:start` in a shell, and then log in to that server by running `npm run local-npm:login`.
+Configure a local NPM server (using verdaccio) by running `npm run local-npm:start` in a shell, or set `START_LOCAL_NPM=1` to have the integration tests automatically start one.
 
 Then package the library and run tests which require launching a real Electron app.
 
