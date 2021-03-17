@@ -9,16 +9,14 @@ const { CHANNEL_CONFIG } = require('./lib/constants')
 const config = ipcRenderer.sendSync(CHANNEL_CONFIG)
 if (!config) throw new Error('Bugsnag was not started in the main process before browser windows were created')
 
-const bugsnagIpcRenderer = new BugsnagIpcRenderer()
-
 // attach config to the exposed interface
-bugsnagIpcRenderer.config = JSON.parse(config)
+BugsnagIpcRenderer.config = JSON.parse(config)
 
 // expose Bugsnag as a global object for the browser
 try {
   // assume contextIsolation=true
-  contextBridge.exposeInMainWorld('__bugsnag_ipc__', bugsnagIpcRenderer)
+  contextBridge.exposeInMainWorld('__bugsnag_ipc__', BugsnagIpcRenderer)
 } catch (e) {
   // fallback to directly assigning to the window
-  window.__bugsnag_ipc__ = bugsnagIpcRenderer
+  window.__bugsnag_ipc__ = BugsnagIpcRenderer
 }
