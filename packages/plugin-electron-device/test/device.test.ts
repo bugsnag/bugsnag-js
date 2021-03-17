@@ -34,9 +34,6 @@ const makeExpectedSessionDevice = (customisations = {}) => ({
   osName: DEFAULTS.platform,
   osVersion: DEFAULTS.osVersion,
   runtimeVersions: DEFAULTS.versions,
-  screenDensity: DEFAULTS.screenDensity,
-  screenResolution: DEFAULTS.screenResolution,
-  usingBattery: DEFAULTS.usingBattery,
   ...customisations
 })
 
@@ -51,6 +48,9 @@ const makeExpectedEventDevice = (customisations = {}) => ({
 // expected data for 'event.metadata.device'
 const makeExpectedMetadataDevice = (customisations = {}) => ({
   isLocked: DEFAULTS.isLocked,
+  screenDensity: DEFAULTS.screenDensity,
+  screenResolution: DEFAULTS.screenResolution,
+  usingBattery: DEFAULTS.usingBattery,
   ...customisations
 })
 
@@ -172,6 +172,7 @@ describe('plugin: electron device info', () => {
 
     const event = await sendEvent()
     expect(event.device).toEqual(makeExpectedEventDevice())
+    expect(event.getMetadata('device')).toEqual(makeExpectedMetadataDevice())
 
     const session = await sendSession()
     expect(session.device).toEqual(makeExpectedSessionDevice())
@@ -181,21 +182,15 @@ describe('plugin: electron device info', () => {
       scaleFactor: 2.5
     })
 
-    const expectedEvent = makeExpectedEventDevice({
-      screenDensity: 2.5,
-      screenResolution: { width: 100, height: 200 }
-    })
-
-    const expectedSession = makeExpectedSessionDevice({
-      screenDensity: 2.5,
-      screenResolution: { width: 100, height: 200 }
-    })
-
     const event2 = await sendEvent()
-    expect(event2.device).toEqual(expectedEvent)
+    expect(event2.device).toEqual(makeExpectedEventDevice())
+    expect(event2.getMetadata('device')).toEqual(makeExpectedMetadataDevice({
+      screenDensity: 2.5,
+      screenResolution: { width: 100, height: 200 }
+    }))
 
     const session2 = await sendSession()
-    expect(session2.device).toEqual(expectedSession)
+    expect(session2.device).toEqual(makeExpectedSessionDevice())
   })
 
   it('does not update screen information if a secondary display is changed', async () => {
@@ -315,46 +310,35 @@ describe('plugin: electron device info', () => {
 
     await nextTick()
 
-    const expectedEvent = makeExpectedEventDevice({ usingBattery: true })
-    const expectedSession = makeExpectedSessionDevice({ usingBattery: true })
-    const expectedMetadata = makeExpectedMetadataDevice({ isLocked: true })
+    const expectedMetadata = makeExpectedMetadataDevice({ usingBattery: true, isLocked: true })
 
     const event = await sendEvent()
-    expect(event.device).toEqual(expectedEvent)
+    expect(event.device).toEqual(makeExpectedEventDevice())
     expect(event.getMetadata('device')).toEqual(expectedMetadata)
 
     const session = await sendSession()
-    expect(session.device).toEqual(expectedSession)
+    expect(session.device).toEqual(makeExpectedSessionDevice())
   })
 
   it('records changes to battery state', async () => {
     const powerMonitor = makePowerMonitor()
 
-    const { sendEvent, sendSession } = makeClient({ powerMonitor })
+    const { sendEvent } = makeClient({ powerMonitor })
 
     await nextTick()
 
     const event = await sendEvent()
-    expect(event.device).toEqual(makeExpectedEventDevice({ usingBattery: false }))
-
-    const session = await sendSession()
-    expect(session.device).toEqual(makeExpectedSessionDevice({ usingBattery: false }))
+    expect(event.getMetadata('device')).toEqual(makeExpectedMetadataDevice({ usingBattery: false }))
 
     powerMonitor._unplug()
 
     const event2 = await sendEvent()
-    expect(event2.device).toEqual(makeExpectedEventDevice({ usingBattery: true }))
-
-    const session2 = await sendSession()
-    expect(session2.device).toEqual(makeExpectedSessionDevice({ usingBattery: true }))
+    expect(event2.getMetadata('device')).toEqual(makeExpectedMetadataDevice({ usingBattery: true }))
 
     powerMonitor._plugIn()
 
     const event3 = await sendEvent()
-    expect(event3.device).toEqual(makeExpectedEventDevice({ usingBattery: false }))
-
-    const session3 = await sendSession()
-    expect(session3.device).toEqual(makeExpectedSessionDevice({ usingBattery: false }))
+    expect(event3.getMetadata('device')).toEqual(makeExpectedMetadataDevice({ usingBattery: false }))
   })
 
   it('records changes to locked state', async () => {
