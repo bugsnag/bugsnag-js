@@ -371,25 +371,34 @@ static inline bool is_jailbroken() {
 #ifdef __clang_version__
     sysInfo[@BSG_KSSystemField_ClangVersion] = @__clang_version__;
 #endif
-#if BSG_HAS_UIDEVICE
-    sysInfo[@BSG_KSSystemField_SystemName] = [UIDEVICE currentDevice].systemName;
-    sysInfo[@BSG_KSSystemField_SystemVersion] = [UIDEVICE currentDevice].systemVersion;
-#else
+#if TARGET_OS_IOS
+    // Note: This does not match UIDevice.currentDevice.systemName for versions
+    // prior to (and some versions of) iOS 9 where the systemName was reported
+    // as "iPhone OS". UIDevice gets its data from MobileGestalt which is a
+    // private API. /System/Library/CoreServices/SystemVersion.plist contains
+    // the information we need but will contain the macOS information when
+    // running on the Simulator.
+    sysInfo[@BSG_KSSystemField_SystemName] = @"iOS";
+#elif TARGET_OS_OSX
     sysInfo[@BSG_KSSystemField_SystemName] = @"Mac OS";
+#elif TARGET_OS_TV
+    sysInfo[@BSG_KSSystemField_SystemName] = @"tvOS";
+#endif
     NSOperatingSystemVersion version =
         [NSProcessInfo processInfo].operatingSystemVersion;
     NSString *systemVersion;
     if (version.patchVersion == 0) {
         systemVersion =
-            [NSString stringWithFormat:@"%ld.%ld", version.majorVersion,
-                                       version.minorVersion];
+        [NSString stringWithFormat:@"%ld.%ld",
+         (long)version.majorVersion, (long)version.minorVersion];
     } else {
-        systemVersion = [NSString
-            stringWithFormat:@"%ld.%ld.%ld", version.majorVersion,
-                             version.minorVersion, version.patchVersion];
+        systemVersion =
+        [NSString stringWithFormat:@"%ld.%ld.%ld",
+         (long)version.majorVersion, (long)version.minorVersion,
+         (long)version.patchVersion];
     }
     sysInfo[@BSG_KSSystemField_SystemVersion] = systemVersion;
-#endif
+
     if ([self isSimulatorBuild]) {
         NSString *model = [NSProcessInfo processInfo]
                               .environment[BSGKeySimulatorModelId];
@@ -429,11 +438,11 @@ static inline bool is_jailbroken() {
     sysInfo[@BSG_KSSystemField_DeviceAppHash] = [self deviceAndAppHash];
     sysInfo[@BSG_KSSystemField_BuildType] = [BSG_KSSystemInfo buildType];
 
-    NSDictionary *memory = @{
-            @BSG_KSSystemField_Size: [self int64Sysctl:@"hw.memsize"],
-            @BSG_KSCrashField_Usable: @(bsg_ksmachusableMemory())
+    sysInfo[@(BSG_KSSystemField_Memory)] = @{
+        @(BSG_KSCrashField_Free): @(bsg_ksmachfreeMemory()),
+        @(BSG_KSCrashField_Usable): @(bsg_ksmachusableMemory()),
+        @(BSG_KSSystemField_Size): [self int64Sysctl:@"hw.memsize"]
     };
-    sysInfo[@BSG_KSSystemField_Memory] = memory;
 
     NSDictionary *statsInfo = [[BSG_KSCrash sharedInstance] captureAppStats];
     sysInfo[@BSG_KSCrashField_AppStats] = statsInfo;

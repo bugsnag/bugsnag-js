@@ -31,13 +31,21 @@ const sessionDelegate = {
     return sessionClient
   },
   resumeSession: (client) => {
+    // Do nothing if there's already an active session
+    if (client._session) {
+      return client
+    }
+
+    // If we have a paused session then make it the active session
     if (client._pausedSession) {
       client._session = client._pausedSession
       client._pausedSession = null
+
       return client
-    } else {
-      return client.startSession()
     }
+
+    // Otherwise start a new session
+    return client.startSession()
   },
   pauseSession: (client) => {
     client._pausedSession = client._session

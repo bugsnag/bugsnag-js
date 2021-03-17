@@ -13,6 +13,8 @@ xcrun --log xcodebuild -exportArchive -archivePath "${VERSION}/${VERSION}.xcarch
 # Clear the archive away
 rm -rf ${VERSION}/${VERSION}.xcarchive
 
-# Copy file to build directory0
+# Copy file to build directory, ensuring the exit code bubbles up
 cp output/${VERSION}.ipa ../../../../build
+STATUS=$?
 popd
+exit $STATUS

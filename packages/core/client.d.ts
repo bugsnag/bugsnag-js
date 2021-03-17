@@ -41,6 +41,7 @@ interface Delivery {
 export default class ClientWithInternals<T extends Config = Config> extends Client {
   public constructor(opts: T, schema?: {[key: string]: any}, internalPlugins?: Plugin[], notifier?: Notifier)
   _config: T
+  _depth: number
   _logger: LoggerConfig
   _breadcrumbs: Breadcrumb[];
   _delivery: Delivery

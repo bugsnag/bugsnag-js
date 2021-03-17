@@ -7,7 +7,7 @@ describe('plugin: koa', () => {
     c._sessionDelegate = {
       startSession: () => c,
       pauseSession: () => {},
-      resumeSession: () => {}
+      resumeSession: () => c
     }
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const middleware = c.getPlugin('koa')!
@@ -23,7 +23,7 @@ describe('plugin: koa', () => {
       c._sessionDelegate = {
         startSession: () => c,
         pauseSession: () => {},
-        resumeSession: () => {}
+        resumeSession: () => c
       }
 
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
