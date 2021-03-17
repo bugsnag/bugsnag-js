@@ -16,10 +16,10 @@ const makeExpectedSessionApp = (customisations = {}) => ({
 // expected data for 'event.app'
 const makeExpectedEventApp = (customisations = {}) => ({
   ...makeExpectedSessionApp(),
-  inForeground: true,
+  inForeground: false,
   isLaunching: true,
   duration: expect.any(Number),
-  durationInForeground: expect.any(Number),
+  durationInForeground: undefined,
   ...customisations
 })
 
@@ -178,17 +178,8 @@ describe('plugin: electron app info', () => {
     expect(session.app).toEqual(makeExpectedSessionApp())
   })
 
-  it('reports when the app is not in the foreground', async () => {
-    const BrowserWindow = makeBrowserWindow({ focusedWindow: null })
-
-    const { sendEvent } = makeClient({ BrowserWindow })
-
-    const event = await sendEvent()
-    expect(event.app).toEqual(makeExpectedEventApp({ inForeground: false, durationInForeground: undefined }))
-  })
-
   it('tracks focus and blur events for inForeground', async () => {
-    const BrowserWindow = makeBrowserWindow({ focusedWindow: null })
+    const BrowserWindow = makeBrowserWindow()
     const electronApp = makeElectronApp({ BrowserWindow })
 
     const { sendEvent } = makeClient({ BrowserWindow, electronApp })
@@ -196,10 +187,11 @@ describe('plugin: electron app info', () => {
     const event = await sendEvent()
     expect(event.app).toEqual(makeExpectedEventApp({ inForeground: false, durationInForeground: undefined }))
 
+    electronApp._createWindow()
     electronApp._emitFocusEvent()
 
     const event2 = await sendEvent()
-    expect(event2.app).toEqual(makeExpectedEventApp({ inForeground: true }))
+    expect(event2.app).toEqual(makeExpectedEventApp({ inForeground: true, durationInForeground: expect.any(Number) }))
 
     electronApp._emitBlurEvent()
 
@@ -208,26 +200,24 @@ describe('plugin: electron app info', () => {
   })
 
   it('tracks multiple browser windows correctly for inForeground', async () => {
-    let windowCount = 2
-
-    const BrowserWindow = {
-      getFocusedWindow: () => windowCount === 0 ? null : true,
-      _blur: () => { --windowCount },
-      _focus: () => {}
-    }
-
+    const BrowserWindow = makeBrowserWindow()
     const electronApp = makeElectronApp({ BrowserWindow })
+
+    // create 2 windows before loading the plugin
+    electronApp._createWindow()
+    electronApp._createWindow()
 
     const { sendEvent } = makeClient({ BrowserWindow, electronApp })
 
     const event = await sendEvent()
-    expect(event.app).toEqual(makeExpectedEventApp({ inForeground: true }))
+    expect(event.app).toEqual(makeExpectedEventApp({ inForeground: true, durationInForeground: expect.any(Number) }))
 
-    // we still have a focused window after this event so 'inForeground' is true
+    // blur the current window and focus the other window
     electronApp._emitBlurEvent()
+    electronApp._emitFocusEvent()
 
     const event2 = await sendEvent()
-    expect(event2.app).toEqual(makeExpectedEventApp({ inForeground: true }))
+    expect(event2.app).toEqual(makeExpectedEventApp({ inForeground: true, durationInForeground: expect.any(Number) }))
 
     electronApp._emitBlurEvent()
 
@@ -236,39 +226,23 @@ describe('plugin: electron app info', () => {
   })
 
   it('handles "inForeground" when all windows are closed', async () => {
-    const electronApp = makeElectronApp()
+    const BrowserWindow = makeBrowserWindow()
+    const electronApp = makeElectronApp({ BrowserWindow })
 
-    const { sendEvent } = makeClient({ electronApp })
+    electronApp._createWindow()
+    electronApp._createWindow()
+    electronApp._createWindow()
+
+    const { sendEvent } = makeClient({ BrowserWindow, electronApp })
 
     const event = await sendEvent()
-    expect(event.app).toEqual(makeExpectedEventApp({ inForeground: true }))
+    expect(event.app).toEqual(makeExpectedEventApp({ inForeground: true, durationInForeground: expect.any(Number) }))
 
-    electronApp._emitWindowAllClosedEvent()
+    // close all of the windows
+    BrowserWindow.getAllWindows().forEach(window => { electronApp._closeWindow(window) })
 
     const event2 = await sendEvent()
     expect(event2.app).toEqual(makeExpectedEventApp({ inForeground: false, durationInForeground: undefined }))
-  })
-
-  it('quits if there are no additional "window-all-closed" listeners', async () => {
-    const electronApp = makeElectronApp()
-    electronApp.quit = jest.fn()
-
-    // install a listener to act as electron's internal listener
-    electronApp.on('window-all-closed', () => {})
-
-    makeClient({ electronApp })
-
-    electronApp._emitWindowAllClosedEvent()
-    expect(electronApp.quit).toHaveBeenCalledTimes(1)
-
-    electronApp._emitWindowAllClosedEvent()
-    expect(electronApp.quit).toHaveBeenCalledTimes(2)
-
-    // add a new listener to prevent the quit
-    electronApp.on('window-all-closed', () => {})
-
-    electronApp._emitWindowAllClosedEvent()
-    expect(electronApp.quit).toHaveBeenCalledTimes(2)
   })
 
   it('reports the app.duration and app.durationInForeground', async () => {
@@ -280,11 +254,16 @@ describe('plugin: electron app info', () => {
     const creationTime = now - ONE_HOUR_IN_MS
 
     const process = makeProcess({ creationTime })
+    const BrowserWindow = makeBrowserWindow()
+    const electronApp = makeElectronApp({ BrowserWindow })
 
-    const { sendEvent } = makeClient({ process })
+    electronApp._createWindow()
+
+    const { sendEvent } = makeClient({ process, BrowserWindow, electronApp })
 
     const event = await sendEvent()
     expect(event.app).toEqual(makeExpectedEventApp({
+      inForeground: true,
       duration: now - creationTime,
       durationInForeground: now - creationTime
     }))
@@ -294,6 +273,7 @@ describe('plugin: electron app info', () => {
 
     const event2 = await sendEvent()
     expect(event2.app).toEqual(makeExpectedEventApp({
+      inForeground: true,
       duration: now - creationTime + sleepDurationMs,
       durationInForeground: now - creationTime + sleepDurationMs
     }))
@@ -306,11 +286,16 @@ describe('plugin: electron app info', () => {
     jest.setSystemTime(now)
 
     const process = makeProcess({ creationTime: null })
+    const BrowserWindow = makeBrowserWindow()
+    const electronApp = makeElectronApp({ BrowserWindow })
 
-    const { sendEvent } = makeClient({ process })
+    electronApp._createWindow()
+
+    const { sendEvent } = makeClient({ process, BrowserWindow, electronApp })
 
     const event = await sendEvent()
     expect(event.app).toEqual(makeExpectedEventApp({
+      inForeground: true,
       duration: 0,
       durationInForeground: 0
     }))
@@ -320,6 +305,7 @@ describe('plugin: electron app info', () => {
 
     const event2 = await sendEvent()
     expect(event2.app).toEqual(makeExpectedEventApp({
+      inForeground: true,
       duration: sleepDurationMs,
       durationInForeground: sleepDurationMs
     }))
@@ -334,7 +320,7 @@ describe('plugin: electron app info', () => {
     const creationTime = now - ONE_HOUR_IN_MS
 
     const process = makeProcess({ creationTime })
-    const BrowserWindow = makeBrowserWindow({ focusedWindow: null })
+    const BrowserWindow = makeBrowserWindow()
     const electronApp = makeElectronApp({ BrowserWindow })
 
     const { sendEvent } = makeClient({ process, BrowserWindow, electronApp })
@@ -345,7 +331,7 @@ describe('plugin: electron app info', () => {
       durationInForeground: undefined
     }))
 
-    electronApp._emitFocusEvent()
+    electronApp._createWindow()
 
     const sleepDurationMs = 500
     jest.advanceTimersByTime(sleepDurationMs)
@@ -384,7 +370,7 @@ describe('plugin: electron app info', () => {
     jest.setSystemTime(now)
 
     const process = makeProcess({ creationTime: null })
-    const BrowserWindow = makeBrowserWindow({ focusedWindow: null })
+    const BrowserWindow = makeBrowserWindow()
     const electronApp = makeElectronApp({ BrowserWindow })
 
     const { sendEvent } = makeClient({ process, BrowserWindow, electronApp })
@@ -395,7 +381,7 @@ describe('plugin: electron app info', () => {
       durationInForeground: undefined
     }))
 
-    electronApp._emitFocusEvent()
+    electronApp._createWindow()
 
     const sleepDurationMs = 500
     jest.advanceTimersByTime(sleepDurationMs)
@@ -433,18 +419,14 @@ describe('plugin: electron app info', () => {
     const now = Date.now()
     jest.setSystemTime(now)
 
-    let windowCount = 2
-
-    const BrowserWindow = {
-      getFocusedWindow: () => windowCount === 0 ? null : true,
-      _blur: () => { --windowCount },
-      _focus: () => { ++windowCount }
-    }
-
-    const electronApp = makeElectronApp({ BrowserWindow })
     const process = makeProcess({ creationTime: null })
+    const BrowserWindow = makeBrowserWindow()
+    const electronApp = makeElectronApp({ BrowserWindow })
 
-    const { sendEvent } = makeClient({ BrowserWindow, electronApp, process })
+    electronApp._createWindow()
+    electronApp._createWindow()
+
+    const { sendEvent } = makeClient({ process, BrowserWindow, electronApp })
 
     const event = await sendEvent()
     expect(event.app).toEqual(makeExpectedEventApp({
@@ -452,9 +434,9 @@ describe('plugin: electron app info', () => {
       durationInForeground: 0
     }))
 
-    // we still have a focused window after this event so 'inForeground' is true
-    // and durationInForeground should still be defined
+    // blur the current window and focus the other one
     electronApp._emitBlurEvent()
+    electronApp._emitFocusEvent()
 
     const sleepDurationMs = 500
     jest.advanceTimersByTime(sleepDurationMs)
@@ -517,7 +499,7 @@ describe('plugin: electron app info', () => {
   })
 
   it('syncs inForeground to NativeClient after focus/blur events', () => {
-    const BrowserWindow = makeBrowserWindow({ focusedWindow: null })
+    const BrowserWindow = makeBrowserWindow()
     const electronApp = makeElectronApp({ BrowserWindow })
     const NativeClient = makeNativeClient()
 
@@ -526,7 +508,7 @@ describe('plugin: electron app info', () => {
     expect(NativeClient.setApp).toHaveBeenCalledTimes(1)
     expect(NativeClient.setApp).toHaveBeenCalledWith(makeExpectedNativeClientApp({ inForeground: false }))
 
-    electronApp._emitFocusEvent()
+    electronApp._createWindow()
 
     expect(NativeClient.setApp).toHaveBeenCalledTimes(2)
     expect(NativeClient.setApp).toHaveBeenNthCalledWith(2, makeExpectedNativeClientApp({ inForeground: true }))
@@ -543,16 +525,18 @@ describe('plugin: electron app info', () => {
     const NativeClient = makeNativeClient()
     NativeClient.setApp.mockImplementation(() => { throw new Error('uh oh') })
 
+    electronApp._createWindow()
+
     const { client, sendEvent, sendSession } = makeClient({ BrowserWindow, electronApp, NativeClient })
 
     expect(NativeClient.setApp).toHaveBeenCalledTimes(1)
-    expect(NativeClient.setApp).toHaveBeenCalledWith(makeExpectedNativeClientApp())
+    expect(NativeClient.setApp).toHaveBeenCalledWith(makeExpectedNativeClientApp({ inForeground: true }))
 
     expect(client._logger.error).toHaveBeenCalledTimes(1)
     expect(client._logger.error).toHaveBeenCalledWith(new Error('uh oh'))
 
     const event = await sendEvent()
-    expect(event.app).toEqual(makeExpectedEventApp())
+    expect(event.app).toEqual(makeExpectedEventApp({ inForeground: true, durationInForeground: expect.any(Number) }))
     expect(event.getMetadata('app')).toEqual(makeExpectedMetadataApp())
 
     const session = await sendSession()
@@ -573,7 +557,7 @@ describe('plugin: electron app info', () => {
     electronApp._emitFocusEvent()
 
     expect(NativeClient.setApp).toHaveBeenCalledTimes(3)
-    expect(NativeClient.setApp).toHaveBeenNthCalledWith(3, makeExpectedNativeClientApp())
+    expect(NativeClient.setApp).toHaveBeenNthCalledWith(3, makeExpectedNativeClientApp({ inForeground: true }))
 
     expect(client._logger.error).toHaveBeenCalledTimes(3)
     expect(client._logger.error).toHaveBeenNthCalledWith(3, new Error('uh oh'))
@@ -833,7 +817,7 @@ function makeElectronApp ({
   const callbacks: { [event: string]: Function[] } = {
     'browser-window-focus': [],
     'browser-window-blur': [],
-    'window-all-closed': []
+    'browser-window-created': []
   }
 
   return {
@@ -854,16 +838,27 @@ function makeElectronApp ({
       return callbacks[event].length
     },
 
+    _createWindow () {
+      const newWindow = BrowserWindow._create()
+      callbacks['browser-window-created'].forEach(f => { f(null, newWindow) })
+
+      this._emitFocusEvent(newWindow._index)
+    },
+    _closeWindow (window) {
+      // electron doesn't blur the very last window to close
+      if (BrowserWindow.getAllWindows().length > 1) {
+        this._emitBlurEvent()
+      }
+
+      BrowserWindow._close(window)
+    },
     _emitBlurEvent () {
       BrowserWindow._blur()
-      callbacks['browser-window-blur'].forEach(f => { f({}, BrowserWindow) })
+      callbacks['browser-window-blur'].forEach(f => { f() })
     },
-    _emitFocusEvent () {
-      BrowserWindow._focus()
-      callbacks['browser-window-focus'].forEach(f => { f({}, BrowserWindow) })
-    },
-    _emitWindowAllClosedEvent () {
-      callbacks['window-all-closed'].forEach(f => { f() })
+    _emitFocusEvent (index = 0) {
+      BrowserWindow._focus(index)
+      callbacks['browser-window-focus'].forEach(f => { f() })
     }
   }
 }
@@ -875,24 +870,74 @@ function makeNativeClient () {
 }
 
 interface BrowserWindowOptions {
-  focusedWindow?: boolean|null
+  windows?: any[]
+  focusedWindow?: number|null
 }
 
-function makeBrowserWindow ({ focusedWindow = true }: BrowserWindowOptions = {}) {
-  let _focusedWindow: boolean|null = focusedWindow
+function makeBrowserWindow ({ windows = [], focusedWindow = null }: BrowserWindowOptions = {}) {
+  let _windows = windows
+  let _focusedWindow = focusedWindow
 
-  return {
-    getFocusedWindow () {
-      return _focusedWindow
-    },
+  class FakeBrowserWindow {
+    public _index
+    public _callbacks
 
-    _blur () {
+    constructor (index) {
+      this._index = index
+      this._callbacks = {
+        closed: []
+      }
+    }
+
+    static getAllWindows () {
+      return _windows
+    }
+
+    static getFocusedWindow () {
+      if (_focusedWindow === null || _windows[_focusedWindow] === undefined) {
+        return null
+      }
+
+      return _windows[_focusedWindow]
+    }
+
+    on (event, callback) {
+      this._callbacks[event].push(callback)
+    }
+
+    static _blur () {
       _focusedWindow = null
-    },
-    _focus () {
-      _focusedWindow = true
+    }
+
+    static _focus (index: number) {
+      if (_windows[index] === undefined) {
+        throw new Error(`Index ${index} out of range`)
+      }
+
+      _focusedWindow = index
+    }
+
+    static _create () {
+      const newWindow = new FakeBrowserWindow(_windows.length)
+      _windows.push(newWindow)
+
+      return newWindow
+    }
+
+    static _close (window) {
+      _windows = _windows.filter(w => w !== window)
+
+      if (_focusedWindow === window._index) {
+        _focusedWindow = null
+      } else {
+        _focusedWindow = _windows.indexOf(window)
+      }
+
+      window._callbacks.closed.forEach(f => { f() })
     }
   }
+
+  return FakeBrowserWindow
 }
 
 interface ProcessOptions {

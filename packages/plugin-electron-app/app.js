@@ -67,27 +67,40 @@ module.exports = (NativeClient, process, electronApp, BrowserWindow) => ({
     electronApp.on('browser-window-focus', () => {
       if (app.inForeground === false) {
         lastEnteredForeground = Date.now()
-      }
 
-      updateApp({ inForeground: true })
+        updateApp({ inForeground: true })
+      }
     })
 
     electronApp.on('browser-window-blur', () => {
-      updateApp({ inForeground: BrowserWindow.getFocusedWindow() !== null })
+      // switching focus between windows will result in both a blur & focus event
+      // but the focused window will always be set when this happens
+      if (BrowserWindow.getFocusedWindow() === null) {
+        updateApp({ inForeground: false })
+      }
     })
 
-    // the blur event doesn't fire for the last window to close so we have to
-    // use the window-all-closed event instead
-    electronApp.on('window-all-closed', () => {
-      updateApp({ inForeground: false })
+    // keep track of the number of windows that exist so we can mark the app as
+    // in the background when there are no windows left
+    const allWindows = BrowserWindow.getAllWindows()
+    let numberOfWindows = allWindows.length
 
-      // if there are no other listeners for 'window-all-closed' electron will
-      // quit the app so we replicate that behaviour here
-      // this is '2' because we add a listener and electron adds a listener:
-      // https://github.com/electron/electron/blob/5b205731f6ff77372656f0c85c52b703ec523e6f/lib/browser/init.ts#L168-L173
-      if (electronApp.listenerCount('window-all-closed') === 2) {
-        electronApp.quit()
+    const onBrowserWindowClosed = () => {
+      --numberOfWindows
+
+      if (numberOfWindows === 0) {
+        updateApp({ inForeground: false })
       }
+    }
+
+    allWindows.forEach(window => { window.on('closed', onBrowserWindowClosed) })
+
+    electronApp.on('browser-window-created', (_event, newWindow) => {
+      // the focus event will fire for the new window so we don't need to update
+      // inForeground here
+      ++numberOfWindows
+
+      newWindow.on('closed', onBrowserWindowClosed)
     })
 
     client.addOnError(event => {
