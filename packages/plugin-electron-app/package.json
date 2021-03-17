@@ -1,0 +1,24 @@
+{
+  "name": "@bugsnag/plugin-electron-app",
+  "version": "1.0.0",
+  "main": "app.js",
+  "description": "@bugsnag/electron plugin to collect app information",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:bugsnag/bugsnag-electron.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "app.js"
+  ],
+  "devDependencies": {
+    "@bugsnag/core": "^7.0.0"
+  },
+  "peerDependencies": {
+    "@bugsnag/core": "^7.0.0"
+  },
+  "author": "Bugsnag",
+  "license": "MIT"
+}
