@@ -7,18 +7,24 @@
     "type": "git",
     "url": "git@github.com:bugsnag/bugsnag-electron.git"
   },
+  "scripts": {
+    "build": "browserify preload.js --exclude electron -o dist/preload.bundle.js",
+    "postversion": "npm run build"
+  },
   "publishConfig": {
     "access": "public"
   },
   "files": [
     "*.js",
-    "lib/*.js"
+    "lib/*.js",
+    "dist/preload.bundle.js"
   ],
   "devDependencies": {
     "@bugsnag/core": "^7.0.0"
   },
   "dependencies": {
-    "@bugsnag/safe-json-stringify": "^6.0.0"
+    "@bugsnag/safe-json-stringify": "^6.0.0",
+    "browserify": "^17.0.0"
   },
   "author": "Bugsnag",
   "license": "MIT"
