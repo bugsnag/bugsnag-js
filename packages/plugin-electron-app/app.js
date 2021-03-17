@@ -14,6 +14,18 @@ const createAppUpdater = (client, NativeClient, app) => newProperties => {
   }
 }
 
+const getInstalledFromStore = process => {
+  if (process.mas) {
+    return 'mac'
+  }
+
+  if (process.windowsStore) {
+    return 'windows'
+  }
+
+  return undefined
+}
+
 module.exports = (NativeClient, process, electronApp, BrowserWindow) => ({
   name: 'electronApp',
   load (client) {
@@ -48,7 +60,7 @@ module.exports = (NativeClient, process, electronApp, BrowserWindow) => ({
     })
 
     client.addMetadata('app', {
-      installedFromStore: !!(process.mas || process.windowsStore),
+      installedFromStore: getInstalledFromStore(process),
       name: electronApp.getName()
     })
 

@@ -33,7 +33,7 @@ const makeExpectedNativeClientApp = (customisations = {}) => ({
 
 // expected data for 'event.metadata.app'
 const makeExpectedMetadataApp = (customisations = {}) => ({
-  installedFromStore: false,
+  installedFromStore: undefined,
   name: 'my cool app :^)',
   ...customisations
 })
@@ -159,7 +159,7 @@ describe('plugin: electron app info', () => {
 
     const event = await sendEvent()
     expect(event.app).toEqual(makeExpectedEventApp())
-    expect(event.getMetadata('app')).toEqual(makeExpectedMetadataApp({ installedFromStore: true }))
+    expect(event.getMetadata('app')).toEqual(makeExpectedMetadataApp({ installedFromStore: 'mac' }))
 
     const session = await sendSession()
     expect(session.app).toEqual(makeExpectedSessionApp())
@@ -172,7 +172,7 @@ describe('plugin: electron app info', () => {
 
     const event = await sendEvent()
     expect(event.app).toEqual(makeExpectedEventApp())
-    expect(event.getMetadata('app')).toEqual(makeExpectedMetadataApp({ installedFromStore: true }))
+    expect(event.getMetadata('app')).toEqual(makeExpectedMetadataApp({ installedFromStore: 'windows' }))
 
     const session = await sendSession()
     expect(session.app).toEqual(makeExpectedSessionApp())
