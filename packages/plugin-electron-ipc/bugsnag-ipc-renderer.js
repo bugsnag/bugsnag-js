@@ -43,10 +43,6 @@ module.exports = class BugsnagIpcRenderer {
     return safeInvoke('dispatch', event)
   }
 
-  getCurrentState () {
-    return safeInvoke('getCurrentState')
-  }
-
   getPayloadInfo () {
     return safeInvoke('getPayloadInfo')
   }

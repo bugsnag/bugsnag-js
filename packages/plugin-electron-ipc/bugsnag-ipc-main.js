@@ -47,14 +47,6 @@ module.exports = class BugsnagIpcMain {
     // TODO
   }
 
-  getCurrentState (source) {
-    return () => ({
-      metadata: this.client._metadata,
-      user: this.client.getUser(),
-      context: this.client.getContext()
-    })
-  }
-
   getPayloadInfo () {
     // TODO
   }
@@ -88,7 +80,6 @@ module.exports = class BugsnagIpcMain {
       ['updateMetadata', this.updateMetadata.bind(this)],
       ['updateUser', this.updateUser.bind(this)],
       ['dispatch', this.dispatch.bind(this)],
-      ['getCurrentState', this.getCurrentState.bind(this)],
       ['getPayloadInfo', this.getPayloadInfo.bind(this)]
     ])
   }

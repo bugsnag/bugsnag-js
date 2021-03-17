@@ -9,9 +9,12 @@ module.exports = {
   load: (client) => {
     /* configuration requests from renderers */
 
-    // pre serialise config outside of the sync IPC call so we avoid
-    // unnecessary computation while the process is blocked
-    const configStr = serializeConfigForRenderer(client._config)
+    // pre serialise config outside of the sync IPC call so we avoid unnecessary computation while the process is blocked
+    let configStr
+    const updateConfigStr = () => {
+      configStr = serializeConfigForRenderer(client._config, client._metadata, client.getUser(), client.getContext())
+    }
+    updateConfigStr()
 
     // this callback returns the main client's configuration to renderer so it can start its own client
     ipcMain.on(CHANNEL_CONFIG, (event, data) => {
@@ -32,6 +35,7 @@ module.exports = {
     const { events, emitter } = client.getPlugin('stateSync')
     events.forEach(eventName => {
       emitter.on(eventName, (payload, source) => propagateEventToRenderers(eventName, payload, source))
+      updateConfigStr()
     })
 
     // keep track of the renderers in existence

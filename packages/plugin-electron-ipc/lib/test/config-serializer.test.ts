@@ -10,4 +10,17 @@ describe('serializeConfigForRenderer() method', () => {
       apiKey: '123'
     })
   })
+  it('overrides config with current state for metadata, user and context', () => {
+    expect(JSON.parse(serializeConfigForRenderer({
+      apiKey: '123',
+      metadata: { foo: { bar: 'baz' } },
+      user: { id: '123' },
+      context: 'initial'
+    }, { foo: { bar: 'biz' } }, { id: '456' }, 'secondary'))).toEqual({
+      apiKey: '123',
+      metadata: { foo: { bar: 'biz' } },
+      user: { id: '456' },
+      context: 'secondary'
+    })
+  })
 })
