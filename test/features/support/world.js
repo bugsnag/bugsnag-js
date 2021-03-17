@@ -4,7 +4,7 @@ const { After, AfterAll, Before, BeforeAll, Status } = require('@cucumber/cucumb
 const { MockServer } = require('./server')
 const { TestApp } = require('./app')
 const { Automator } = require('./automator')
-const { publishPackages } = require('./repo')
+const { publishPackages, startServer } = require('./repo')
 
 const failureOutputDir = join(__dirname, '../../../.cucumber-failures')
 
@@ -26,6 +26,11 @@ BeforeAll({ timeout: 180 * 1000 }, async () => {
   // is working as expected)
   process.env.META_NOTIFY = endpoints.notify
   process.env.META_MINIDUMP = endpoints.minidumps
+
+  if (process.env.START_LOCAL_NPM) {
+    console.log('[BeforeAll] Launching local NPM server ...')
+    global.local_npm = startServer()
+  }
 
   // App used for test automation
   const app = new TestApp(join(__dirname, '../../fixtures/app'))
@@ -72,6 +77,9 @@ After(async ({ result, pickle }) => {
 })
 
 AfterAll(async () => {
+  if (global.local_npm) {
+    global.local_npm.kill()
+  }
   // force kill if the environment doesn't shut down cleanly
   setTimeout(() => process.exit(global.success ? 0 : 1), 500)
   // may hang due to failed tests / disconnected processes
