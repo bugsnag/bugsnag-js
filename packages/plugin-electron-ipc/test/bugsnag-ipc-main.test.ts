@@ -123,5 +123,21 @@ describe('BugsnagIpcMain', () => {
       const stubWebContents = { /* this would be a WebContents instance */ }
       expect(() => bugsnagIpcMain.handle({ sender: stubWebContents }, 'leaveBreadcrumb', 'not json')).not.toThrowError()
     })
+
+    it('retrieves current state', async () => {
+      const client = new Client({
+        apiKey: 'api_key',
+        metadata: { section: { key: 123 } },
+        context: 'initial c',
+        user: { id: '123' }
+      }, undefined, [mockStateSyncPlugin], {})
+      const bugsnagIpcMain = new BugsnagIpcMain(client)
+      const stubWebContents = { /* this would be a WebContents instance */ }
+      expect(await bugsnagIpcMain.handle({ sender: stubWebContents }, 'getCurrentState')).toEqual({
+        metadata: { section: { key: 123 } },
+        context: 'initial c',
+        user: { id: '123' }
+      })
+    })
   })
 })

@@ -107,5 +107,25 @@ describe('clientSyncPlugin', () => {
         client.leaveBreadcrumb('hi')
       }).not.toThrow()
     })
+
+    it('gets its initial state from the main process', (done) => {
+      const mockBugsnagIpcRenderer = {
+        listen: jest.fn(),
+        getCurrentState: jest.fn(async () => ({
+          metadata: { section: { key: 123 } },
+          user: { id: '123' },
+          context: 'initial c'
+        }))
+      }
+      const client = new Client({}, {}, [clientSyncPlugin(mockBugsnagIpcRenderer)], {})
+      expect(mockBugsnagIpcRenderer.getCurrentState).toHaveBeenCalled()
+      // intial state is retrieved async'ly so wait for that to be resolved before checking
+      process.nextTick(() => {
+        expect(client.getContext()).toBe('initial c')
+        expect(client.getUser()).toEqual({ id: '123' })
+        expect(client.getMetadata('section')).toEqual({ key: 123 })
+        done()
+      })
+    })
   })
 })

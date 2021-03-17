@@ -47,6 +47,14 @@ module.exports = class BugsnagIpcMain {
     // TODO
   }
 
+  getCurrentState (source) {
+    return () => ({
+      metadata: this.client._metadata,
+      user: this.client.getUser(),
+      context: this.client.getContext()
+    })
+  }
+
   getPayloadInfo () {
     // TODO
   }
@@ -64,7 +72,7 @@ module.exports = class BugsnagIpcMain {
     try {
       // call the method, passing in the event sender (WebContents instance)
       // so that change events only get propagated out to other renderers
-      method(event.sender)(...args.map(arg => typeof arg === 'undefined' ? undefined : JSON.parse(arg)))
+      return method(event.sender)(...args.map(arg => typeof arg === 'undefined' ? undefined : JSON.parse(arg)))
     } catch (e) {
       this.client._logger.warn('IPC call failed', e)
     }
@@ -80,6 +88,7 @@ module.exports = class BugsnagIpcMain {
       ['updateMetadata', this.updateMetadata.bind(this)],
       ['updateUser', this.updateUser.bind(this)],
       ['dispatch', this.dispatch.bind(this)],
+      ['getCurrentState', this.getCurrentState.bind(this)],
       ['getPayloadInfo', this.getPayloadInfo.bind(this)]
     ])
   }
