@@ -76,7 +76,7 @@ describe('plugin: electron app breadcrumbs', () => {
       const breadcrumb = new Breadcrumb(
         'peppa (Pepper Plugin) child process unexpectedly disappeared',
         { reason: 'oom', exitCode: 255 },
-        'error'
+        'state'
       )
 
       expect(client._breadcrumbs[0]).toMatchBreadcrumb(breadcrumb)
@@ -95,7 +95,7 @@ describe('plugin: electron app breadcrumbs', () => {
       const breadcrumb = new Breadcrumb(
         'GPU child process unexpectedly disappeared',
         { reason: 'abnormal-exit', exitCode: 127 },
-        'error'
+        'state'
       )
 
       expect(client._breadcrumbs[0]).toMatchBreadcrumb(breadcrumb)
@@ -110,7 +110,7 @@ describe('plugin: electron app breadcrumbs', () => {
       const breadcrumb = new Breadcrumb(
         'Renderer process unexpectedly disappeared',
         { webContentsId: 19, reason: 'killed', exitCode: 1 },
-        'error'
+        'state'
       )
 
       expect(client._breadcrumbs[0]).toMatchBreadcrumb(breadcrumb)
