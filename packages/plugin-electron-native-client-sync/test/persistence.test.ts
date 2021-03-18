@@ -15,11 +15,9 @@ describe('persisting changes to disk', () => {
     return JSON.parse(contents.toString())
   }
 
-  beforeEach(async (done) => {
+  beforeEach(async () => {
     tempdir = await mkdtemp('client-sync-')
     filepath = join(tempdir, 'output.json')
-    NativeClient.install(filepath, 5)
-    done()
   })
 
   afterEach(async (done) => {
@@ -29,6 +27,7 @@ describe('persisting changes to disk', () => {
   })
 
   it('sets context', async (done) => {
+    NativeClient.install(filepath, 5)
     NativeClient.updateContext('silverfish')
     NativeClient.persistState()
     const state = await readTempFile()
@@ -37,6 +36,7 @@ describe('persisting changes to disk', () => {
   })
 
   it('sets user fields', async (done) => {
+    NativeClient.install(filepath, 5)
     NativeClient.updateUser('456', 'jo@example.com', 'jo')
     NativeClient.persistState()
     const state = await readTempFile()
@@ -45,6 +45,7 @@ describe('persisting changes to disk', () => {
   })
 
   it('clears user fields', async (done) => {
+    NativeClient.install(filepath, 5)
     NativeClient.updateUser('456', 'jo@example.com', 'jo')
     NativeClient.updateUser('456', 'jo@example.com', null)
     NativeClient.persistState()
@@ -54,6 +55,7 @@ describe('persisting changes to disk', () => {
   })
 
   it('clears context', async (done) => {
+    NativeClient.install(filepath, 5)
     NativeClient.updateContext('silverfish')
     NativeClient.updateContext(null)
     NativeClient.persistState()
@@ -63,6 +65,7 @@ describe('persisting changes to disk', () => {
   })
 
   it('adds breadcrumbs', async (done) => {
+    NativeClient.install(filepath, 5)
     NativeClient.leaveBreadcrumb({ name: 'launch app' })
     NativeClient.leaveBreadcrumb({ name: 'click start' })
     NativeClient.leaveBreadcrumb({ name: 'click pause' })
@@ -82,7 +85,23 @@ describe('persisting changes to disk', () => {
     done()
   })
 
+  it('sets metadata', async () => {
+    NativeClient.install(filepath, 5)
+    NativeClient.updateMetadata({
+      terrain: { spawn: 'desert', current: 'cave' },
+      location: { x: 4, y: 12 }
+    })
+    NativeClient.persistState()
+
+    const state = await readTempFile()
+    expect(state.metadata).toEqual({
+      terrain: { spawn: 'desert', current: 'cave' },
+      location: { x: 4, y: 12 }
+    })
+  })
+
   it('set metadata tab contents', async (done) => {
+    NativeClient.install(filepath, 5)
     NativeClient.updateMetadata('terrain', { spawn: 'desert', current: 'cave' })
     NativeClient.persistState()
 
@@ -97,6 +116,7 @@ describe('persisting changes to disk', () => {
   })
 
   it('clears metadata tab', async (done) => {
+    NativeClient.install(filepath, 5)
     NativeClient.updateMetadata('terrain', { spawn: 'desert', current: 'cave' })
     NativeClient.updateMetadata('device', { size: 256 })
     NativeClient.updateMetadata('terrain')
@@ -111,6 +131,7 @@ describe('persisting changes to disk', () => {
   })
 
   it('sets session', async (done) => {
+    NativeClient.install(filepath, 5)
     NativeClient.setSession({
       id: '9f65c975-8155-456f-91e5-c4c4b3db0555',
       events: { handled: 1, unhandled: 0 },
@@ -135,6 +156,7 @@ describe('persisting changes to disk', () => {
   })
 
   it('has no session by default', async (done) => {
+    NativeClient.install(filepath, 5)
     NativeClient.persistState()
     const state = await readTempFile()
     expect(state.session).toBeUndefined()
@@ -143,6 +165,7 @@ describe('persisting changes to disk', () => {
   })
 
   it('sets app info', async (done) => {
+    NativeClient.install(filepath, 5)
     NativeClient.setApp({
       releaseStage: 'beta1',
       version: '1.0.22'
@@ -159,6 +182,7 @@ describe('persisting changes to disk', () => {
   })
 
   it('sets device info', async (done) => {
+    NativeClient.install(filepath, 5)
     NativeClient.setDevice({
       online: true,
       osName: 'beOS',
@@ -176,5 +200,90 @@ describe('persisting changes to disk', () => {
     })
 
     done()
+  })
+
+  it('initializes with provided state', async () => {
+    NativeClient.install(filepath, 5, {
+      metadata: { colors: { main: ['yellow', 'green'] } },
+      context: 'color picker view',
+      title: 'double double, toil and …'
+    })
+    NativeClient.persistState()
+
+    const state = await readTempFile()
+    expect(state).toEqual({
+      metadata: { colors: { main: ['yellow', 'green'] } },
+      context: 'color picker view',
+      title: 'double double, toil and …'
+    })
+  })
+
+  it('overrides initial state with new values', async () => {
+    NativeClient.install(filepath, 5, {
+      metadata: { colors: { main: ['yellow', 'green'] } },
+      context: 'color picker view',
+      title: 'double double, toil and …'
+    })
+    NativeClient.updateMetadata('colors', { ancilliary: ['grey', 'magenta'] })
+    NativeClient.persistState()
+
+    const state = await readTempFile()
+    expect(state).toEqual({
+      metadata: { colors: { ancilliary: ['grey', 'magenta'] } },
+      context: 'color picker view',
+      title: 'double double, toil and …'
+    })
+  })
+
+  it('gracefully handles invalid initial breadcrumb state', async () => {
+    NativeClient.install(filepath, 5, {
+      metadata: { colors: { main: ['yellow', 'green'] } },
+      context: 'color picker view',
+      breadcrumbs: 'oy'
+    })
+    NativeClient.persistState()
+
+    const state = await readTempFile()
+    expect(state).toEqual({
+      metadata: { colors: { main: ['yellow', 'green'] } },
+      context: 'color picker view'
+    })
+  })
+
+  it('gracefully handles invalid initial context', async () => {
+    NativeClient.install(filepath, 5, {
+      metadata: { colors: { main: ['yellow', 'green'] } },
+      context: 20
+    })
+    NativeClient.persistState()
+
+    const state = await readTempFile()
+    expect(state).toEqual({
+      metadata: { colors: { main: ['yellow', 'green'] } }
+    })
+  })
+
+  it('gracefully handles invalid initial metadata', async () => {
+    NativeClient.install(filepath, 5, {
+      metadata: 'things',
+      context: 'side'
+    })
+    NativeClient.persistState()
+
+    const state = await readTempFile()
+    expect(state).toEqual({ context: 'side' })
+  })
+
+  it('gracefully handles invalid initial user info', async () => {
+    NativeClient.install(filepath, 5, {
+      metadata: { colors: { main: ['yellow', 'green'] } },
+      user: ['foo']
+    })
+    NativeClient.persistState()
+
+    const state = await readTempFile()
+    expect(state).toEqual({
+      metadata: { colors: { main: ['yellow', 'green'] } }
+    })
   })
 })

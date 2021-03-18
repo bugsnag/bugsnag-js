@@ -22,9 +22,12 @@ describe('handling poor inputs', () => {
     expect(update).toThrow('expected object or string')
   })
 
-  it('rejects invalid data type for metadata tab field', () => {
-    const update = () => NativeClient.updateMetadata([], { key: 'value' })
-    expect(update).toThrow('expected string')
+  it('rejects invalid data type for metadata', () => {
+    let update = () => NativeClient.updateMetadata([], { key: 'value' })
+    expect(update).toThrow('expected object')
+
+    update = () => NativeClient.updateMetadata(null)
+    expect(update).toThrow('expected (object) or (string, object?)')
   })
 
   it('rejects invalid data type for breadcrumb (int)', () => {
