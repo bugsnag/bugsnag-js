@@ -1,5 +1,5 @@
 module.exports = (BugsnagIpcRenderer = window.__bugsnag_ipc__) => ({
-  load: async (client) => {
+  load: (client) => {
     client.addOnBreadcrumb(breadcrumb => {
       try {
         BugsnagIpcRenderer.leaveBreadcrumb(breadcrumb)
@@ -66,5 +66,32 @@ module.exports = (BugsnagIpcRenderer = window.__bugsnag_ipc__) => ({
           client._metadata[change.payload.section] = change.payload.values
       }
     })
+
+    // sync any client state that was set in the renderer config
+    if (client._config.metadata && Object.keys(client._config.metadata).length) {
+      try {
+        Object.keys(client._metadata).forEach(section => {
+          BugsnagIpcRenderer.updateMetadata(section, client.getMetadata(section))
+        })
+      } catch (e) {
+        client._logger.error(e)
+      }
+    }
+
+    if (client._config.context) {
+      try {
+        BugsnagIpcRenderer.updateContext(client.getContext())
+      } catch (e) {
+        client._logger.error(e)
+      }
+    }
+
+    if (client._config.metadata && Object.keys(client._config.user).length) {
+      try {
+        BugsnagIpcRenderer.updateUser(client.getUser())
+      } catch (e) {
+        client._logger.error(e)
+      }
+    }
   }
 })

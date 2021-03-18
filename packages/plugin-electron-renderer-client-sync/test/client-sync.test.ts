@@ -28,7 +28,7 @@ describe('clientSyncPlugin', () => {
     expect(client.getMetadata('section')).toEqual(undefined)
   })
 
-  describe('propagates changes to the IPC layer', () => {
+  describe('propagation of changes to the IPC layer', () => {
     it('propagates context changes', () => {
       const mockBugsnagIpcRenderer = {
         listen: jest.fn(),
@@ -106,6 +106,27 @@ describe('clientSyncPlugin', () => {
         client.clearMetadata('section')
         client.leaveBreadcrumb('hi')
       }).not.toThrow()
+    })
+
+    it('propagates state set in renderer config', () => {
+      const mockBugsnagIpcRenderer = {
+        listen: jest.fn(),
+        updateMetadata: jest.fn(),
+        updateUser: jest.fn(),
+        updateContext: jest.fn()
+      }
+      const client = new Client({
+        apiKey: '123',
+        metadata: { section: { key: 'value' } },
+        context: 'renderer config',
+        user: { id: 'ab23' }
+      }, undefined, [clientSyncPlugin(mockBugsnagIpcRenderer)])
+      expect(client.getMetadata('section')).toEqual({ key: 'value' })
+      expect(mockBugsnagIpcRenderer.updateMetadata).toHaveBeenCalledWith('section', { key: 'value' })
+      expect(client.getUser()).toEqual({ id: 'ab23' })
+      expect(mockBugsnagIpcRenderer.updateUser).toHaveBeenCalledWith({ id: 'ab23' })
+      expect(client.getContext()).toEqual('renderer config')
+      expect(mockBugsnagIpcRenderer.updateContext).toHaveBeenCalledWith('renderer config')
     })
   })
 })
