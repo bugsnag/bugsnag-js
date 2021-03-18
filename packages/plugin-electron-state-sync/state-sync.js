@@ -62,12 +62,25 @@ module.exports = {
       emitter.emit('MetadataUpdate', { section, values }, source)
     }
 
+    const replaceMetadataFromSource = source => ({ metadata }) => {
+      client._metadata = metadata
+      emitter.emit('MetadataReplace', { metadata }, source)
+    }
+
+    // handle a bulk update of initial values from a new renderer
+    const updateFromSource = source => ({ user, context, metadata }) => {
+      updateUserFromSource(source)({ user })
+      updateContextFromSource(source)({ context })
+      replaceMetadataFromSource(source)({ metadata })
+    }
+
     return {
-      events: ['UserUpdate', 'ContextUpdate', 'MetadataUpdate'],
+      events: ['UserUpdate', 'ContextUpdate', 'MetadataUpdate', 'MetadataReplace'],
       emitter,
       updateUserFromSource,
       updateContextFromSource,
-      updateMetadataFromSource
+      updateMetadataFromSource,
+      updateFromSource
     }
   }
 }

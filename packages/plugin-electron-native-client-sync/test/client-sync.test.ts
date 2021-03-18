@@ -20,23 +20,6 @@ describe('plugin: electron client sync', () => {
     c.setContext('1234')
   })
 
-  it('sets initial context', done => {
-    // eslint-disable-next-line no-new
-    new Client({
-      apiKey: 'api_key',
-      context: 'config_context',
-      plugins: [
-        stateSyncPlugin,
-        plugin({
-          updateContext: (update: any) => {
-            expect(update).toBe('config_context')
-            done()
-          }
-        })
-      ]
-    })
-  })
-
   it('updates metadata', done => {
     const c = new Client({
       apiKey: 'api_key',
@@ -95,25 +78,6 @@ describe('plugin: electron client sync', () => {
     })
     c.setUser('1234', 'user@example.com', 'Ben')
     expect(c.getUser()).toEqual({ id: '1234', name: 'Ben', email: 'user@example.com' })
-  })
-
-  it('sets initial user', done => {
-    // eslint-disable-next-line no-new
-    new Client({
-      apiKey: 'api_key',
-      user: { id: '1234', email: 'user@example.com', name: 'Ben' },
-      plugins: [
-        stateSyncPlugin,
-        plugin({
-          updateUser: (id: string, email: string, name: string) => {
-            expect(id).toBe('1234')
-            expect(name).toBe('Ben')
-            expect(email).toBe('user@example.com')
-            done()
-          }
-        })
-      ]
-    })
   })
 
   it('syncs breadcrumbs', (done) => {

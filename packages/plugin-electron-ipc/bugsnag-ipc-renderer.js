@@ -11,6 +11,10 @@ const BugsnagIpcRenderer = {
     ipcRenderer.on(CHANNEL_MAIN_TO_RENDERER, (event, payload) => cb(event, JSON.parse(payload)))
   },
 
+  update ({ context, user, metadata }) {
+    return safeInvoke({ context, user, metadata })
+  },
+
   updateContext (context) {
     return safeInvoke('updateContext', { context })
   },

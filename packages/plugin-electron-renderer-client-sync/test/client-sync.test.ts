@@ -111,9 +111,7 @@ describe('clientSyncPlugin', () => {
     it('propagates state set in renderer config', () => {
       const mockBugsnagIpcRenderer = {
         listen: jest.fn(),
-        updateMetadata: jest.fn(),
-        updateUser: jest.fn(),
-        updateContext: jest.fn()
+        update: jest.fn()
       }
       const client = new Client({
         apiKey: '123',
@@ -122,11 +120,13 @@ describe('clientSyncPlugin', () => {
         user: { id: 'ab23' }
       }, undefined, [clientSyncPlugin(mockBugsnagIpcRenderer)])
       expect(client.getMetadata('section')).toEqual({ key: 'value' })
-      expect(mockBugsnagIpcRenderer.updateMetadata).toHaveBeenCalledWith('section', { key: 'value' })
       expect(client.getUser()).toEqual({ id: 'ab23' })
-      expect(mockBugsnagIpcRenderer.updateUser).toHaveBeenCalledWith({ id: 'ab23' })
       expect(client.getContext()).toEqual('renderer config')
-      expect(mockBugsnagIpcRenderer.updateContext).toHaveBeenCalledWith('renderer config')
+      expect(mockBugsnagIpcRenderer.update).toHaveBeenCalledWith({
+        metadata: { section: { key: 'value' } },
+        user: { id: 'ab23' },
+        context: 'renderer config'
+      })
     })
   })
 })

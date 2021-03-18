@@ -34,25 +34,12 @@ module.exports = (NativeClient) => ({
       }
     })
 
-    // set initial state (if it was set in config)
-
-    try {
-      if (client._user && Object.keys(client._user).length) {
-        const { id, email, name } = client.getUser()
-        NativeClient.updateUser(id, email, name)
+    stateSync.emitter.on('MetadataReplace', ({ metadata }) => {
+      try {
+        NativeClient.updateMetadata(metadata)
+      } catch (e) {
+        client._logger.error(e)
       }
-
-      if (client._context) {
-        NativeClient.updateContext(client.getContext())
-      }
-
-      if (client._metadata && Object.keys(client._metadata).length) {
-        Object.keys(client._metadata).forEach((key) => {
-          // TODO
-        })
-      }
-    } catch (e) {
-      client._logger.error(e)
-    }
+    })
   }
 })

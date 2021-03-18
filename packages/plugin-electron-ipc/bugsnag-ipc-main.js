@@ -31,6 +31,12 @@ module.exports = class BugsnagIpcMain {
     return () => this.client.resumeSession()
   }
 
+  update (source) {
+    return ({ context, user, metadata }) => {
+      this.stateSync.updateFromSource(source)({ context, user, metadata })
+    }
+  }
+
   updateContext (source) {
     return (update) => this.stateSync.updateContextFromSource(source)(update)
   }
