@@ -67,13 +67,13 @@ BECS_STATUS becs_set_context(const char *context);
 BECS_STATUS becs_set_user(const char *id, const char *email, const char *name);
 
 /**
- * Set cached metadata value
+ * Set cached metadata value for an entire tab
  *
  * @param tab Metadata tab name
- * @param key Metadata key name
- * @param val Metadata JSON value serialized to string
+ * @param val Metadata JSON key/value pairs serialized to string or NULL to
+ * clear
  */
-BECS_STATUS becs_set_metadata(const char *tab, const char *key, const char *val);
+BECS_STATUS becs_update_metadata(const char *tab, const char *val);
 
 /**
  * Set cached top-level app value

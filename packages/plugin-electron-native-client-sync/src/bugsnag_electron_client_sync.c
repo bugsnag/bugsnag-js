@@ -151,8 +151,7 @@ BECS_STATUS becs_set_context(const char *context) {
   return BECS_STATUS_SUCCESS;
 }
 
-BECS_STATUS becs_set_metadata(const char *tab, const char *key,
-                              const char *val) {
+BECS_STATUS becs_update_metadata(const char *tab, const char *val) {
   if (!g_context.data) {
     return BECS_STATUS_NOT_INSTALLED;
   }
@@ -160,47 +159,34 @@ BECS_STATUS becs_set_metadata(const char *tab, const char *key,
   if (!tab) {
     return BECS_STATUS_NULL_PARAM;
   }
-  // Compute the length of the key, adding 1 for the '.' used to separate
-  // each component of keypath
-  size_t keylen = key ? strnlen(key, 256) + 1 : 0;
-  // Compute the nested route to inserting or removing the correct metadata,
-  // delimited by periods. This value ("keypath") can then be passed to the
-  // `dotset` and `dotremove` parson operators to set or remove the correct
-  // metadata value respectively.
-  // The keypath is in the format "metadata.tab(.key)", so the total length
-  // is `keylen` + the length of 'metadata.' + the length of tab + 1 for the
-  // trailing null byte
-  size_t length = strnlen(tab, 256) + keylen + 10;
-  char *keypath = calloc(length, sizeof(char));
-  if (!keypath) { // failed to allocate the buffer length
-    return BECS_STATUS_UNKNOWN_FAILURE;
-  }
-  size_t bytes_written =
-      key ? snprintf(keypath, length, "metadata.%s.%s", tab, key)
-          : snprintf(keypath, length, "metadata.%s", tab);
-  if (bytes_written != length - 1) { // failed to write the entire keypath
-    free(keypath);
-    return BECS_STATUS_UNKNOWN_FAILURE;
-  }
 
   context_lock();
   BECS_STATUS status = BECS_STATUS_SUCCESS;
 
   JSON_Object *obj = json_value_get_object(g_context.data);
-  if (val) {
-    JSON_Value *metadata_value = json_parse_string(val);
-    if (metadata_value) {
-      json_object_dotset_value(obj, keypath, metadata_value);
+  JSON_Value *metadata_value = json_object_get_value(obj, "metadata");
+  // In the case that something has gone wrong, and metadata does not exist
+  // or is the wrong type, replace it with an object. The old resource will be
+  // freed automatically if needed.
+  if (!metadata_value || json_value_get_type(metadata_value) != JSONObject) {
+    metadata_value = json_value_init_object();
+    json_object_set_value(obj, "metadata", metadata_value);
+  }
+  JSON_Object *metadata = json_value_get_object(metadata_value);
+
+  if (val) { // Update the tab contents
+    JSON_Value *tab_values = json_parse_string(val);
+    if (tab_values) {
+      json_object_set_value(metadata, tab, tab_values);
     } else {
       status = BECS_STATUS_INVALID_JSON;
     }
-  } else {
-    json_object_dotremove(obj, keypath);
+  } else { // Clear the tab contents
+    json_object_remove(metadata, tab);
   }
 
   serialize_data();
   context_unlock();
-  free(keypath);
   return status;
 }
 

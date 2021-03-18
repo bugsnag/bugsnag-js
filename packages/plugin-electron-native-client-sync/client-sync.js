@@ -28,7 +28,7 @@ module.exports = (NativeClient) => ({
 
     stateSync.emitter.on('MetadataUpdate', ({ section, values }) => {
       try {
-        // TODO
+        NativeClient.updateMetadata(section, values)
       } catch (e) {
         client._logger.error(e)
       }

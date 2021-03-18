@@ -224,14 +224,15 @@ static napi_value UpdateUser(napi_env env, napi_callback_info info) {
   return NULL;
 }
 
-static napi_value AddMetadata(napi_env env, napi_callback_info info) {
-  size_t argc = 3;
-  napi_value args[3];
+static napi_value UpdateMetadata(napi_env env, napi_callback_info info) {
+  size_t argc = 2;
+  napi_value args[2];
   napi_status status = napi_get_cb_info(env, info, &argc, args, NULL, NULL);
   assert(status == napi_ok);
 
-  if (argc < 3) {
-    napi_throw_type_error(env, NULL, "Wrong number of arguments, expected 3");
+  if (argc < 1) {
+    napi_throw_type_error(env, NULL,
+                          "Wrong number of arguments, expected 1 or 2");
     return NULL;
   }
 
@@ -239,19 +240,28 @@ static napi_value AddMetadata(napi_env env, napi_callback_info info) {
   if (!tab) {
     return NULL; // if null, error was thrown upstream
   }
-  char *key = read_string_value(env, args[1], false);
-  if (!key) {
-    free(tab);
-    return NULL;
+
+  bool should_clear = false;
+  if (argc == 1) {
+    should_clear = true;
+  } else {
+    napi_valuetype valuetype1;
+    status = napi_typeof(env, args[1], &valuetype1);
+    assert(status == napi_ok);
+    should_clear = valuetype1 == napi_null;
   }
-  char *value = read_string_value(env, json_stringify(env, args[2]), true);
-  if (value) {
-    throw_error_from_status(env, becs_set_metadata(tab, key, value));
+
+  if (should_clear) { // clearing the tab
+    throw_error_from_status(env, becs_update_metadata(tab, NULL));
+  } else {
+    char *values = read_string_value(env, json_stringify(env, args[1]), true);
+    if (values) {
+      throw_error_from_status(env, becs_update_metadata(tab, values));
+      free(values);
+    }
   }
 
   free(tab);
-  free(key);
-  free(value);
 
   return NULL;
 }
@@ -304,40 +314,6 @@ static napi_value SetSession(napi_env env, napi_callback_info info) {
   return NULL;
 }
 
-static napi_value ClearMetadata(napi_env env, napi_callback_info info) {
-  size_t argc = 2;
-  napi_value args[2];
-  napi_status status = napi_get_cb_info(env, info, &argc, args, NULL, NULL);
-  assert(status == napi_ok);
-
-  if (argc < 1) {
-    napi_throw_type_error(env, NULL,
-                          "Wrong number of arguments, expected 1 or 2");
-
-    return NULL;
-  }
-
-  char *tab = read_json_string_value(env, args[0], false);
-  if (!tab) {
-    return NULL;
-  }
-
-  if (argc == 1) {
-    throw_error_from_status(env, becs_set_metadata(tab, NULL, NULL));
-  } else {
-    char *key = read_json_string_value(env, args[1], false);
-
-    if (key) {
-      throw_error_from_status(env, becs_set_metadata(tab, key, NULL));
-    }
-    free(key);
-  }
-
-  free(tab);
-
-  return NULL;
-}
-
 static napi_value LeaveBreadcrumb(napi_env env, napi_callback_info info) {
   size_t argc = 1;
   napi_value args[1];
@@ -371,11 +347,7 @@ napi_value Init(napi_env env, napi_value exports) {
   napi_status status = napi_define_properties(env, exports, 1, &desc);
   assert(status == napi_ok);
 
-  desc = DECLARE_NAPI_METHOD("addMetadata", AddMetadata);
-  status = napi_define_properties(env, exports, 1, &desc);
-  assert(status == napi_ok);
-
-  desc = DECLARE_NAPI_METHOD("clearMetadata", ClearMetadata);
+  desc = DECLARE_NAPI_METHOD("updateMetadata", UpdateMetadata);
   status = napi_define_properties(env, exports, 1, &desc);
   assert(status == napi_ok);
 
