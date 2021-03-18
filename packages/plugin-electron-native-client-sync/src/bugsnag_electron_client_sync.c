@@ -63,7 +63,38 @@ static void context_lock() { mtx_lock(&g_context.lock); }
 
 static void context_unlock() { mtx_unlock(&g_context.lock); }
 
-void becs_install(const char *save_file_path, uint8_t max_crumbs) {
+static JSON_Value *initialize_context(const char *state) {
+  static const char *object_keys[] = {key_metadata, key_session, key_device,
+                                      key_app, key_user};
+  static size_t key_count = sizeof(object_keys) / sizeof(const char *);
+  if (state) {
+    JSON_Value *state_values = json_parse_string(state);
+    if (state_values && json_value_get_type(state_values) == JSONObject) {
+      JSON_Object *obj = json_value_get_object(state_values);
+      // validate known keys for the correct types
+      JSON_Value *context = json_object_get_value(obj, key_context);
+      if (context && json_value_get_type(context) != JSONString) {
+        json_object_remove(obj, key_context);
+      }
+      JSON_Value *breadcrumbs = json_object_get_value(obj, key_breadcrumbs);
+      if (breadcrumbs && json_value_get_type(breadcrumbs) != JSONArray) {
+        json_object_remove(obj, key_breadcrumbs);
+      }
+      for (size_t index = 0; index < key_count; index++) {
+        const char *key = object_keys[index];
+        JSON_Value *value = json_object_get_value(obj, key);
+        if (value && json_value_get_type(value) != JSONObject) {
+          json_object_remove(obj, key);
+        }
+      }
+      return state_values;
+    }
+  }
+  return json_value_init_object();
+}
+
+void becs_install(const char *save_file_path, uint8_t max_crumbs,
+                  const char *state) {
   if (g_context.data != NULL) {
     return;
   }
@@ -75,15 +106,7 @@ void becs_install(const char *save_file_path, uint8_t max_crumbs) {
   g_context.max_crumbs = max_crumbs;
 
   // Create the initial JSON object for storing cached metadata/breadcrumbs
-  g_context.data = json_value_init_object();
-  JSON_Object *obj = json_value_get_object(g_context.data);
-
-  // Initialize the breadcrumb array
-  json_object_set_value(obj, key_breadcrumbs, json_value_init_array());
-  // Initialize metadata object
-  json_object_set_value(obj, key_metadata, json_value_init_object());
-  // Initialize user object
-  json_object_set_value(obj, key_user, json_value_init_object());
+  g_context.data = initialize_context(state);
 
   // Allocate a buffer for the serialized JSON string
   g_context.serialized_data = calloc(BECS_SERIALIZED_DATA_LEN, sizeof(char));
@@ -124,6 +147,13 @@ BECS_STATUS becs_add_breadcrumb(const char *val) {
     json_value_free(breadcrumb);
   } else {
     JSON_Value *breadcrumbs_value = json_object_get_value(obj, key_breadcrumbs);
+    if (!breadcrumbs_value ||
+        json_value_get_type(breadcrumbs_value) != JSONArray) {
+      // Initialize the breadcrumb array if not yet present or is an invalid
+      // type
+      json_object_set_value(obj, key_breadcrumbs, json_value_init_array());
+    }
+
     JSON_Array *breadcrumbs = json_value_get_array(breadcrumbs_value);
     json_array_append_value(breadcrumbs, breadcrumb);
     while (json_array_get_count(breadcrumbs) > g_context.max_crumbs) {

@@ -133,13 +133,14 @@ static napi_value Uninstall(napi_env env, napi_callback_info info) {
 }
 
 static napi_value Install(napi_env env, napi_callback_info info) {
-  size_t argc = 2;
-  napi_value args[2];
+  size_t argc = 3;
+  napi_value args[3];
   napi_status status = napi_get_cb_info(env, info, &argc, args, NULL, NULL);
   assert(status == napi_ok);
 
   if (argc < 2) {
-    napi_throw_type_error(env, NULL, "Wrong number of arguments, expected 2");
+    napi_throw_type_error(env, NULL,
+                          "Wrong number of arguments, expected 2 or 3");
     return NULL;
   }
 
@@ -152,8 +153,8 @@ static napi_value Install(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if (valuetype0 != napi_string || valuetype1 != napi_number) {
-    napi_throw_type_error(env, NULL,
-                          "Wrong argument types, expected (string, number)");
+    napi_throw_type_error(
+        env, NULL, "Wrong argument types, expected (string, number, object?)");
     return NULL;
   }
 
@@ -166,7 +167,24 @@ static napi_value Install(napi_env env, napi_callback_info info) {
   status = napi_get_value_double(env, args[1], &max_crumbs);
   assert(status == napi_ok);
 
-  becs_install(filepath, max_crumbs);
+  if (argc > 2) {
+    napi_valuetype valuetype2;
+    status = napi_typeof(env, args[2], &valuetype2);
+    assert(status == napi_ok);
+
+    if (valuetype2 == napi_object) {
+      char *state = read_string_value(env, json_stringify(env, args[2]), true);
+      becs_install(filepath, max_crumbs, state);
+      free(state);
+    } else {
+      napi_throw_type_error(
+          env, NULL,
+          "Wrong argument types, expected (string, number, object?)");
+    }
+  } else {
+    becs_install(filepath, max_crumbs, NULL);
+  }
+
   free(filepath);
 
   return NULL;

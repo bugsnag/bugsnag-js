@@ -40,8 +40,10 @@ typedef enum {
  * @param save_file_path  The path to write in the event of a crash. The
  *                        enclosing directory must exist.
  * @param max_crumbs      The maximum number of breadcrumbs to save
+ * @param state           Stringified JSON of the initial cached state
  */
-void becs_install(const char *save_file_path, uint8_t max_crumbs);
+void becs_install(const char *save_file_path, uint8_t max_crumbs,
+                  const char *state);
 
 void becs_uninstall(void);
 
