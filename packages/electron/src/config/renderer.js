@@ -1,4 +1,4 @@
-const { schema } = require('./main')
+const { schema } = require('./common')
 
 const ALLOWED_IN_RENDERER = [
   // a list of config keys that are allowed to be supplied to the renderer client

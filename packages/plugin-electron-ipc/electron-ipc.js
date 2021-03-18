@@ -73,7 +73,7 @@ module.exports = {
 }
 
 const setPreload = () => {
-  const bugsnagPreload = resolve(__dirname, 'preload.js')
+  const bugsnagPreload = resolve(__dirname, 'dist', 'preload.bundle.js')
 
   // for every session created, insert Bugsnag's preload script
   app.on('session-created', session => {
