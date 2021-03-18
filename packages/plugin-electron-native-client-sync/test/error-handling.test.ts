@@ -22,14 +22,12 @@ describe('handling poor inputs', () => {
     expect(update).toThrow('expected object or string')
   })
 
-  it('rejects invalid data type for metadata tab field', () => {
-    const update = () => NativeClient.addMetadata([], 'key', 'value')
-    expect(update).toThrow('expected string')
-  })
+  it('rejects invalid data type for metadata', () => {
+    let update = () => NativeClient.updateMetadata([], { key: 'value' })
+    expect(update).toThrow('expected object')
 
-  it('rejects invalid data type for metadata key field', () => {
-    const update = () => NativeClient.addMetadata('tab', 2, 'value')
-    expect(update).toThrow('expected string')
+    update = () => NativeClient.updateMetadata(null)
+    expect(update).toThrow('expected (object) or (string, object?)')
   })
 
   it('rejects invalid data type for breadcrumb (int)', () => {
@@ -62,9 +60,9 @@ describe('handling poor inputs', () => {
     expect(update).toThrow('Wrong number of arguments, expected 1')
   })
 
-  it('rejects missing parameters in addMetadata()', () => {
-    const update = () => NativeClient.addMetadata('meals', 'breakfast')
-    expect(update).toThrow('Wrong number of arguments, expected 3')
+  it('rejects missing parameters in updateMetadata()', () => {
+    const update = () => NativeClient.updateMetadata()
+    expect(update).toThrow('Wrong number of arguments, expected 1 or 2')
   })
 
   it('rejects missing parameters in updateContext()', () => {

@@ -1,5 +1,5 @@
 {
-  "name": "@bugsnag/plugin-electron-client-sync",
+  "name": "@bugsnag/plugin-electron-native-client-sync",
   "version": "1.0.0",
   "main": "client-sync.js",
   "description": "@bugsnag/electron plugin to sync information between JS and native layer",
@@ -38,7 +38,8 @@
   },
   "devDependencies": {
     "@bugsnag/core": "^7.3.5",
-    "@types/bindings": "^1.5.0"
+    "@types/bindings": "^1.5.0",
+    "@bugsnag/plugin-electron-state-sync": "^1.0.0"
   },
   "peerDependencies": {
     "@bugsnag/core": "^7.0.0"

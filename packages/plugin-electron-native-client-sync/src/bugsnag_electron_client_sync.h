@@ -40,8 +40,10 @@ typedef enum {
  * @param save_file_path  The path to write in the event of a crash. The
  *                        enclosing directory must exist.
  * @param max_crumbs      The maximum number of breadcrumbs to save
+ * @param state           Stringified JSON of the initial cached state
  */
-void becs_install(const char *save_file_path, uint8_t max_crumbs);
+void becs_install(const char *save_file_path, uint8_t max_crumbs,
+                  const char *state);
 
 void becs_uninstall(void);
 
@@ -67,13 +69,21 @@ BECS_STATUS becs_set_context(const char *context);
 BECS_STATUS becs_set_user(const char *id, const char *email, const char *name);
 
 /**
- * Set cached metadata value
+ * Set cached metadata value for an entire tab
  *
  * @param tab Metadata tab name
- * @param key Metadata key name
- * @param val Metadata JSON value serialized to string
+ * @param val Metadata JSON key/value pairs serialized to string or NULL to
+ * clear
  */
-BECS_STATUS becs_set_metadata(const char *tab, const char *key, const char *val);
+BECS_STATUS becs_update_metadata(const char *tab, const char *val);
+
+/**
+ * Set cached metadata
+ *
+ * @param tab Metadata object serialized as JSON
+ * clear
+ */
+BECS_STATUS becs_set_metadata(const char *metadata);
 
 /**
  * Set cached top-level app value

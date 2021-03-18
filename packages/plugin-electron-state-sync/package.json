@@ -1,0 +1,30 @@
+{
+  "name": "@bugsnag/plugin-electron-state-sync",
+  "version": "1.0.0",
+  "main": "state-sync.js",
+  "description": "@bugsnag/electron plugin to sync state between various processes",
+  "homepage": "https://www.bugsnag.com/",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:bugsnag/bugsnag-electron.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+  },
+  "author": "Bugsnag",
+  "license": "MIT",
+  "gypfile": true,
+  "files": [
+    "state-sync.js"
+  ],
+  "dependencies": {
+  },
+  "devDependencies": {
+    "@bugsnag/core": "^7.3.5"
+  },
+  "peerDependencies": {
+    "@bugsnag/core": "^7.0.0"
+  }
+}

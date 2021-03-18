@@ -1,12 +1,14 @@
 import Client from '@bugsnag/core/client'
 import plugin from '../'
 import { Breadcrumb, Logger } from '@bugsnag/core'
+import stateSyncPlugin from '@bugsnag/plugin-electron-state-sync'
 
 describe('plugin: electron client sync', () => {
   it('updates context', done => {
     const c = new Client({
       apiKey: 'api_key',
       plugins: [
+        stateSyncPlugin,
         plugin({
           updateContext: (update: any) => {
             expect(update).toBe('1234')
@@ -22,8 +24,9 @@ describe('plugin: electron client sync', () => {
     const c = new Client({
       apiKey: 'api_key',
       plugins: [
+        stateSyncPlugin,
         plugin({
-          addMetadata: (key: string, updates: any) => {
+          updateMetadata: (key: string, updates: any) => {
             expect(key).toBe('widget')
             expect(updates).toEqual({
               id: '14',
@@ -42,6 +45,7 @@ describe('plugin: electron client sync', () => {
     const c = new Client({
       apiKey: 'api_key',
       plugins: [
+        stateSyncPlugin,
         plugin({
           addMetadata: () => {},
           clearMetadata: () => {}
@@ -61,6 +65,7 @@ describe('plugin: electron client sync', () => {
     const c = new Client({
       apiKey: 'api_key',
       plugins: [
+        stateSyncPlugin,
         plugin({
           updateUser: (id: string, email: string, name: string) => {
             expect(id).toBe('1234')
@@ -79,6 +84,7 @@ describe('plugin: electron client sync', () => {
     const c = new Client({
       apiKey: 'api_key',
       plugins: [
+        stateSyncPlugin,
         plugin({
           leaveBreadcrumb: ({ message, metadata, type, timestamp }: Breadcrumb) => {
             expect(message).toBe('Spin')
@@ -102,7 +108,7 @@ describe('plugin: electron client sync', () => {
     }
     const client = new Client({
       apiKey: 'api_key',
-      plugins: [plugin(NativeClient)],
+      plugins: [stateSyncPlugin, plugin(NativeClient)],
       logger
     })
     return [client, logger]
@@ -130,7 +136,7 @@ describe('plugin: electron client sync', () => {
 
   it('logs errors thrown from adding metadata', () => {
     const [client, logger] = loggingClient({
-      addMetadata: () => { throw new Error('wrong thing') }
+      updateMetadata: () => { throw new Error('wrong thing') }
     })
     client.addMetadata('widget', { id: '14', count: 340 })
     const error = logger.error as jest.Mock<Function>
@@ -140,7 +146,7 @@ describe('plugin: electron client sync', () => {
 
   it('logs errors thrown from clearing metadata', () => {
     const [client, logger] = loggingClient({
-      clearMetadata: () => { throw new Error('wrong thing') }
+      updateMetadata: () => { throw new Error('wrong thing') }
     })
     client.clearMetadata('widget')
     const error = logger.error as jest.Mock<Function>

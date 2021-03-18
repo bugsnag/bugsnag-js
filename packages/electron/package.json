@@ -15,6 +15,9 @@
   "author": "Bugsnag",
   "license": "MIT",
   "dependencies": {
-    "@bugsnag/core": "^7.7.0"
+    "@bugsnag/core": "^7.7.0",
+    "@bugsnag/plugin-electron-ipc": "1.0.0",
+    "@bugsnag/plugin-electron-renderer-client-sync": "1.0.0",
+    "@bugsnag/plugin-electron-state-sync": "1.0.0"
   }
 }
