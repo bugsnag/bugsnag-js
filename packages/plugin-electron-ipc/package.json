@@ -20,11 +20,11 @@
     "dist/preload.bundle.js"
   ],
   "devDependencies": {
-    "@bugsnag/core": "^7.0.0"
+    "@bugsnag/core": "^7.0.0",
+    "browserify": "^17.0.0"
   },
   "dependencies": {
-    "@bugsnag/safe-json-stringify": "^6.0.0",
-    "browserify": "^17.0.0"
+    "@bugsnag/safe-json-stringify": "^6.0.0"
   },
   "author": "Bugsnag",
   "license": "MIT"
