@@ -12,7 +12,7 @@ const BugsnagIpcRenderer = {
   },
 
   update ({ context, user, metadata }) {
-    return safeInvoke({ context, user, metadata })
+    return safeInvoke('update', { context, user, metadata })
   },
 
   updateContext (context) {

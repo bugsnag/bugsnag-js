@@ -82,6 +82,7 @@ module.exports = class BugsnagIpcMain {
       ['startSession', this.startSession.bind(this)],
       ['pauseSession', this.pauseSession.bind(this)],
       ['resumeSession', this.resumeSession.bind(this)],
+      ['update', this.update.bind(this)],
       ['updateContext', this.updateContext.bind(this)],
       ['updateMetadata', this.updateMetadata.bind(this)],
       ['updateUser', this.updateUser.bind(this)],
