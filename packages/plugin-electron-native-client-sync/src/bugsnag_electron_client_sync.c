@@ -37,6 +37,9 @@ static const char *const key_device = "device";
 static const char *const key_metadata = "metadata";
 static const char *const key_session = "session";
 static const char *const key_user = "user";
+static const char *const keypath_user_id = "user.id";
+static const char *const keypath_user_name = "user.name";
+static const char *const keypath_user_email = "user.email";
 
 static void handle_crash_signal(int sig) {
   becs_persist_to_disk();
@@ -164,13 +167,13 @@ BECS_STATUS becs_update_metadata(const char *tab, const char *val) {
   BECS_STATUS status = BECS_STATUS_SUCCESS;
 
   JSON_Object *obj = json_value_get_object(g_context.data);
-  JSON_Value *metadata_value = json_object_get_value(obj, "metadata");
+  JSON_Value *metadata_value = json_object_get_value(obj, key_metadata);
   // In the case that something has gone wrong, and metadata does not exist
   // or is the wrong type, replace it with an object. The old resource will be
   // freed automatically if needed.
   if (!metadata_value || json_value_get_type(metadata_value) != JSONObject) {
     metadata_value = json_value_init_object();
-    json_object_set_value(obj, "metadata", metadata_value);
+    json_object_set_value(obj, key_metadata, metadata_value);
   }
   JSON_Object *metadata = json_value_get_object(metadata_value);
 
@@ -276,19 +279,19 @@ BECS_STATUS becs_set_user(const char *id, const char *email, const char *name) {
 
   JSON_Object *obj = json_value_get_object(g_context.data);
   if (id) {
-    json_object_dotset_string(obj, "user.id", id);
+    json_object_dotset_string(obj, keypath_user_id, id);
   } else {
-    json_object_dotremove(obj, "user.id");
+    json_object_dotremove(obj, keypath_user_id);
   }
   if (email) {
-    json_object_dotset_string(obj, "user.email", email);
+    json_object_dotset_string(obj, keypath_user_email, email);
   } else {
-    json_object_dotremove(obj, "user.email");
+    json_object_dotremove(obj, keypath_user_email);
   }
   if (name) {
-    json_object_dotset_string(obj, "user.name", name);
+    json_object_dotset_string(obj, keypath_user_name, name);
   } else {
-    json_object_dotremove(obj, "user.name");
+    json_object_dotremove(obj, keypath_user_name);
   }
 
   serialize_data();
