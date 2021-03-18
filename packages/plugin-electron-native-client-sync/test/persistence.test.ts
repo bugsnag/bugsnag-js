@@ -85,6 +85,21 @@ describe('persisting changes to disk', () => {
     done()
   })
 
+  it('sets metadata', async () => {
+    NativeClient.install(filepath, 5)
+    NativeClient.updateMetadata({
+      terrain: { spawn: 'desert', current: 'cave' },
+      location: { x: 4, y: 12 }
+    })
+    NativeClient.persistState()
+
+    const state = await readTempFile()
+    expect(state.metadata).toEqual({
+      terrain: { spawn: 'desert', current: 'cave' },
+      location: { x: 4, y: 12 }
+    })
+  })
+
   it('set metadata tab contents', async (done) => {
     NativeClient.install(filepath, 5)
     NativeClient.updateMetadata('terrain', { spawn: 'desert', current: 'cave' })

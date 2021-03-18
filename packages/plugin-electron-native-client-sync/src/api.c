@@ -242,21 +242,10 @@ static napi_value UpdateUser(napi_env env, napi_callback_info info) {
   return NULL;
 }
 
-static napi_value UpdateMetadata(napi_env env, napi_callback_info info) {
-  size_t argc = 2;
-  napi_value args[2];
-  napi_status status = napi_get_cb_info(env, info, &argc, args, NULL, NULL);
-  assert(status == napi_ok);
-
-  if (argc < 1) {
-    napi_throw_type_error(env, NULL,
-                          "Wrong number of arguments, expected 1 or 2");
-    return NULL;
-  }
-
+static void UpdateMetadataTab(napi_env env, size_t argc, napi_value *args) {
   char *tab = read_string_value(env, args[0], false);
   if (!tab) {
-    return NULL; // if null, error was thrown upstream
+    return; // if null, error was thrown upstream
   }
 
   bool should_clear = false;
@@ -264,7 +253,7 @@ static napi_value UpdateMetadata(napi_env env, napi_callback_info info) {
     should_clear = true;
   } else {
     napi_valuetype valuetype1;
-    status = napi_typeof(env, args[1], &valuetype1);
+    napi_status status = napi_typeof(env, args[1], &valuetype1);
     assert(status == napi_ok);
     should_clear = valuetype1 == napi_null;
   }
@@ -280,6 +269,39 @@ static napi_value UpdateMetadata(napi_env env, napi_callback_info info) {
   }
 
   free(tab);
+}
+
+static napi_value UpdateMetadata(napi_env env, napi_callback_info info) {
+  size_t argc = 2;
+  napi_value args[2];
+  napi_status status = napi_get_cb_info(env, info, &argc, args, NULL, NULL);
+  assert(status == napi_ok);
+
+  if (argc < 1) {
+    napi_throw_type_error(env, NULL,
+                          "Wrong number of arguments, expected 1 or 2");
+    return NULL;
+  }
+
+  napi_valuetype valuetype0;
+  status = napi_typeof(env, args[0], &valuetype0);
+  assert(status == napi_ok);
+
+  switch (valuetype0) {
+  case napi_object: { // setting all metadata
+    char *metadata = read_string_value(env, json_stringify(env, args[0]), true);
+    throw_error_from_status(env, becs_set_metadata(metadata));
+    free(metadata);
+  }; break;
+  case napi_string: { // setting / clearing a single tab
+    UpdateMetadataTab(env, argc, args);
+  }; break;
+  default:
+    napi_throw_type_error(
+        env, NULL,
+        "Wrong argument types, expected (object) or (string, object?)");
+    break;
+  }
 
   return NULL;
 }

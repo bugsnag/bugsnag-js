@@ -78,6 +78,14 @@ BECS_STATUS becs_set_user(const char *id, const char *email, const char *name);
 BECS_STATUS becs_update_metadata(const char *tab, const char *val);
 
 /**
+ * Set cached metadata
+ *
+ * @param tab Metadata object serialized as JSON
+ * clear
+ */
+BECS_STATUS becs_set_metadata(const char *metadata);
+
+/**
  * Set cached top-level app value
  *
  * @param value JSON value serialized to string containing key/value pairs

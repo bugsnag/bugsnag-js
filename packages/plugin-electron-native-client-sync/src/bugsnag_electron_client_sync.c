@@ -184,6 +184,36 @@ BECS_STATUS becs_set_context(const char *context) {
   return BECS_STATUS_SUCCESS;
 }
 
+BECS_STATUS becs_set_metadata(const char *values) {
+  if (!g_context.data) {
+    return BECS_STATUS_NOT_INSTALLED;
+  }
+
+  context_lock();
+  BECS_STATUS status = BECS_STATUS_SUCCESS;
+  JSON_Object *obj = json_value_get_object(g_context.data);
+
+  if (values) {
+    JSON_Value *metadata = json_parse_string(values);
+    if (metadata) {
+      if (json_value_get_type(metadata) == JSONObject) {
+        json_object_set_value(obj, key_metadata, metadata);
+      } else {
+        status = BECS_STATUS_EXPECTED_JSON_OBJECT;
+        json_value_free(metadata);
+      }
+    } else {
+      status = BECS_STATUS_INVALID_JSON;
+    }
+  } else {
+    json_object_remove(obj, key_metadata);
+  }
+
+  serialize_data();
+  context_unlock();
+  return status;
+}
+
 BECS_STATUS becs_update_metadata(const char *tab, const char *val) {
   if (!g_context.data) {
     return BECS_STATUS_NOT_INSTALLED;
