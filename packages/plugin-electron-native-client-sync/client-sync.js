@@ -33,5 +33,13 @@ module.exports = (NativeClient) => ({
         client._logger.error(e)
       }
     })
+
+    stateSync.emitter.on('MetadataReplace', ({ metadata }) => {
+      try {
+        NativeClient.updateMetadata(metadata)
+      } catch (e) {
+        client._logger.error(e)
+      }
+    })
   }
 })

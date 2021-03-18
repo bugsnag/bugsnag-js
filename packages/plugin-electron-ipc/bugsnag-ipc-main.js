@@ -31,6 +31,12 @@ module.exports = class BugsnagIpcMain {
     return () => this.client.resumeSession()
   }
 
+  update (source) {
+    return ({ context, user, metadata }) => {
+      this.stateSync.updateFromSource(source)({ context, user, metadata })
+    }
+  }
+
   updateContext (source) {
     return (update) => this.stateSync.updateContextFromSource(source)(update)
   }
@@ -64,7 +70,7 @@ module.exports = class BugsnagIpcMain {
     try {
       // call the method, passing in the event sender (WebContents instance)
       // so that change events only get propagated out to other renderers
-      method(event.sender)(...args.map(arg => typeof arg === 'undefined' ? undefined : JSON.parse(arg)))
+      return method(event.sender)(...args.map(arg => typeof arg === 'undefined' ? undefined : JSON.parse(arg)))
     } catch (e) {
       this.client._logger.warn('IPC call failed', e)
     }
@@ -76,6 +82,7 @@ module.exports = class BugsnagIpcMain {
       ['startSession', this.startSession.bind(this)],
       ['pauseSession', this.pauseSession.bind(this)],
       ['resumeSession', this.resumeSession.bind(this)],
+      ['update', this.update.bind(this)],
       ['updateContext', this.updateContext.bind(this)],
       ['updateMetadata', this.updateMetadata.bind(this)],
       ['updateUser', this.updateUser.bind(this)],

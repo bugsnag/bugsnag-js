@@ -133,13 +133,14 @@ static napi_value Uninstall(napi_env env, napi_callback_info info) {
 }
 
 static napi_value Install(napi_env env, napi_callback_info info) {
-  size_t argc = 2;
-  napi_value args[2];
+  size_t argc = 3;
+  napi_value args[3];
   napi_status status = napi_get_cb_info(env, info, &argc, args, NULL, NULL);
   assert(status == napi_ok);
 
   if (argc < 2) {
-    napi_throw_type_error(env, NULL, "Wrong number of arguments, expected 2");
+    napi_throw_type_error(env, NULL,
+                          "Wrong number of arguments, expected 2 or 3");
     return NULL;
   }
 
@@ -152,8 +153,8 @@ static napi_value Install(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if (valuetype0 != napi_string || valuetype1 != napi_number) {
-    napi_throw_type_error(env, NULL,
-                          "Wrong argument types, expected (string, number)");
+    napi_throw_type_error(
+        env, NULL, "Wrong argument types, expected (string, number, object?)");
     return NULL;
   }
 
@@ -166,7 +167,24 @@ static napi_value Install(napi_env env, napi_callback_info info) {
   status = napi_get_value_double(env, args[1], &max_crumbs);
   assert(status == napi_ok);
 
-  becs_install(filepath, max_crumbs);
+  if (argc > 2) {
+    napi_valuetype valuetype2;
+    status = napi_typeof(env, args[2], &valuetype2);
+    assert(status == napi_ok);
+
+    if (valuetype2 == napi_object) {
+      char *state = read_string_value(env, json_stringify(env, args[2]), true);
+      becs_install(filepath, max_crumbs, state);
+      free(state);
+    } else {
+      napi_throw_type_error(
+          env, NULL,
+          "Wrong argument types, expected (string, number, object?)");
+    }
+  } else {
+    becs_install(filepath, max_crumbs, NULL);
+  }
+
   free(filepath);
 
   return NULL;
@@ -224,21 +242,10 @@ static napi_value UpdateUser(napi_env env, napi_callback_info info) {
   return NULL;
 }
 
-static napi_value UpdateMetadata(napi_env env, napi_callback_info info) {
-  size_t argc = 2;
-  napi_value args[2];
-  napi_status status = napi_get_cb_info(env, info, &argc, args, NULL, NULL);
-  assert(status == napi_ok);
-
-  if (argc < 1) {
-    napi_throw_type_error(env, NULL,
-                          "Wrong number of arguments, expected 1 or 2");
-    return NULL;
-  }
-
+static void UpdateMetadataTab(napi_env env, size_t argc, napi_value *args) {
   char *tab = read_string_value(env, args[0], false);
   if (!tab) {
-    return NULL; // if null, error was thrown upstream
+    return; // if null, error was thrown upstream
   }
 
   bool should_clear = false;
@@ -246,7 +253,7 @@ static napi_value UpdateMetadata(napi_env env, napi_callback_info info) {
     should_clear = true;
   } else {
     napi_valuetype valuetype1;
-    status = napi_typeof(env, args[1], &valuetype1);
+    napi_status status = napi_typeof(env, args[1], &valuetype1);
     assert(status == napi_ok);
     should_clear = valuetype1 == napi_null;
   }
@@ -262,6 +269,39 @@ static napi_value UpdateMetadata(napi_env env, napi_callback_info info) {
   }
 
   free(tab);
+}
+
+static napi_value UpdateMetadata(napi_env env, napi_callback_info info) {
+  size_t argc = 2;
+  napi_value args[2];
+  napi_status status = napi_get_cb_info(env, info, &argc, args, NULL, NULL);
+  assert(status == napi_ok);
+
+  if (argc < 1) {
+    napi_throw_type_error(env, NULL,
+                          "Wrong number of arguments, expected 1 or 2");
+    return NULL;
+  }
+
+  napi_valuetype valuetype0;
+  status = napi_typeof(env, args[0], &valuetype0);
+  assert(status == napi_ok);
+
+  switch (valuetype0) {
+  case napi_object: { // setting all metadata
+    char *metadata = read_string_value(env, json_stringify(env, args[0]), true);
+    throw_error_from_status(env, becs_set_metadata(metadata));
+    free(metadata);
+  }; break;
+  case napi_string: { // setting / clearing a single tab
+    UpdateMetadataTab(env, argc, args);
+  }; break;
+  default:
+    napi_throw_type_error(
+        env, NULL,
+        "Wrong argument types, expected (object) or (string, object?)");
+    break;
+  }
 
   return NULL;
 }

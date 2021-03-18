@@ -37,6 +37,9 @@ static const char *const key_device = "device";
 static const char *const key_metadata = "metadata";
 static const char *const key_session = "session";
 static const char *const key_user = "user";
+static const char *const keypath_user_id = "user.id";
+static const char *const keypath_user_name = "user.name";
+static const char *const keypath_user_email = "user.email";
 
 static void handle_crash_signal(int sig) {
   becs_persist_to_disk();
@@ -60,7 +63,38 @@ static void context_lock() { mtx_lock(&g_context.lock); }
 
 static void context_unlock() { mtx_unlock(&g_context.lock); }
 
-void becs_install(const char *save_file_path, uint8_t max_crumbs) {
+static JSON_Value *initialize_context(const char *state) {
+  static const char *object_keys[] = {key_metadata, key_session, key_device,
+                                      key_app, key_user};
+  static size_t key_count = sizeof(object_keys) / sizeof(const char *);
+  if (state) {
+    JSON_Value *state_values = json_parse_string(state);
+    if (state_values && json_value_get_type(state_values) == JSONObject) {
+      JSON_Object *obj = json_value_get_object(state_values);
+      // validate known keys for the correct types
+      JSON_Value *context = json_object_get_value(obj, key_context);
+      if (context && json_value_get_type(context) != JSONString) {
+        json_object_remove(obj, key_context);
+      }
+      JSON_Value *breadcrumbs = json_object_get_value(obj, key_breadcrumbs);
+      if (breadcrumbs && json_value_get_type(breadcrumbs) != JSONArray) {
+        json_object_remove(obj, key_breadcrumbs);
+      }
+      for (size_t index = 0; index < key_count; index++) {
+        const char *key = object_keys[index];
+        JSON_Value *value = json_object_get_value(obj, key);
+        if (value && json_value_get_type(value) != JSONObject) {
+          json_object_remove(obj, key);
+        }
+      }
+      return state_values;
+    }
+  }
+  return json_value_init_object();
+}
+
+void becs_install(const char *save_file_path, uint8_t max_crumbs,
+                  const char *state) {
   if (g_context.data != NULL) {
     return;
   }
@@ -72,15 +106,7 @@ void becs_install(const char *save_file_path, uint8_t max_crumbs) {
   g_context.max_crumbs = max_crumbs;
 
   // Create the initial JSON object for storing cached metadata/breadcrumbs
-  g_context.data = json_value_init_object();
-  JSON_Object *obj = json_value_get_object(g_context.data);
-
-  // Initialize the breadcrumb array
-  json_object_set_value(obj, key_breadcrumbs, json_value_init_array());
-  // Initialize metadata object
-  json_object_set_value(obj, key_metadata, json_value_init_object());
-  // Initialize user object
-  json_object_set_value(obj, key_user, json_value_init_object());
+  g_context.data = initialize_context(state);
 
   // Allocate a buffer for the serialized JSON string
   g_context.serialized_data = calloc(BECS_SERIALIZED_DATA_LEN, sizeof(char));
@@ -121,6 +147,13 @@ BECS_STATUS becs_add_breadcrumb(const char *val) {
     json_value_free(breadcrumb);
   } else {
     JSON_Value *breadcrumbs_value = json_object_get_value(obj, key_breadcrumbs);
+    if (!breadcrumbs_value ||
+        json_value_get_type(breadcrumbs_value) != JSONArray) {
+      // Initialize the breadcrumb array if not yet present or is an invalid
+      // type
+      json_object_set_value(obj, key_breadcrumbs, json_value_init_array());
+    }
+
     JSON_Array *breadcrumbs = json_value_get_array(breadcrumbs_value);
     json_array_append_value(breadcrumbs, breadcrumb);
     while (json_array_get_count(breadcrumbs) > g_context.max_crumbs) {
@@ -151,6 +184,36 @@ BECS_STATUS becs_set_context(const char *context) {
   return BECS_STATUS_SUCCESS;
 }
 
+BECS_STATUS becs_set_metadata(const char *values) {
+  if (!g_context.data) {
+    return BECS_STATUS_NOT_INSTALLED;
+  }
+
+  context_lock();
+  BECS_STATUS status = BECS_STATUS_SUCCESS;
+  JSON_Object *obj = json_value_get_object(g_context.data);
+
+  if (values) {
+    JSON_Value *metadata = json_parse_string(values);
+    if (metadata) {
+      if (json_value_get_type(metadata) == JSONObject) {
+        json_object_set_value(obj, key_metadata, metadata);
+      } else {
+        status = BECS_STATUS_EXPECTED_JSON_OBJECT;
+        json_value_free(metadata);
+      }
+    } else {
+      status = BECS_STATUS_INVALID_JSON;
+    }
+  } else {
+    json_object_remove(obj, key_metadata);
+  }
+
+  serialize_data();
+  context_unlock();
+  return status;
+}
+
 BECS_STATUS becs_update_metadata(const char *tab, const char *val) {
   if (!g_context.data) {
     return BECS_STATUS_NOT_INSTALLED;
@@ -164,13 +227,13 @@ BECS_STATUS becs_update_metadata(const char *tab, const char *val) {
   BECS_STATUS status = BECS_STATUS_SUCCESS;
 
   JSON_Object *obj = json_value_get_object(g_context.data);
-  JSON_Value *metadata_value = json_object_get_value(obj, "metadata");
+  JSON_Value *metadata_value = json_object_get_value(obj, key_metadata);
   // In the case that something has gone wrong, and metadata does not exist
   // or is the wrong type, replace it with an object. The old resource will be
   // freed automatically if needed.
   if (!metadata_value || json_value_get_type(metadata_value) != JSONObject) {
     metadata_value = json_value_init_object();
-    json_object_set_value(obj, "metadata", metadata_value);
+    json_object_set_value(obj, key_metadata, metadata_value);
   }
   JSON_Object *metadata = json_value_get_object(metadata_value);
 
@@ -276,19 +339,19 @@ BECS_STATUS becs_set_user(const char *id, const char *email, const char *name) {
 
   JSON_Object *obj = json_value_get_object(g_context.data);
   if (id) {
-    json_object_dotset_string(obj, "user.id", id);
+    json_object_dotset_string(obj, keypath_user_id, id);
   } else {
-    json_object_dotremove(obj, "user.id");
+    json_object_dotremove(obj, keypath_user_id);
   }
   if (email) {
-    json_object_dotset_string(obj, "user.email", email);
+    json_object_dotset_string(obj, keypath_user_email, email);
   } else {
-    json_object_dotremove(obj, "user.email");
+    json_object_dotremove(obj, keypath_user_email);
   }
   if (name) {
-    json_object_dotset_string(obj, "user.name", name);
+    json_object_dotset_string(obj, keypath_user_name, name);
   } else {
-    json_object_dotremove(obj, "user.name");
+    json_object_dotremove(obj, keypath_user_name);
   }
 
   serialize_data();

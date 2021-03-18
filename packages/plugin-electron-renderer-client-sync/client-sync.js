@@ -64,7 +64,23 @@ module.exports = (BugsnagIpcRenderer = window.__bugsnag_ipc__) => ({
           break
         case 'MetadataUpdate':
           client._metadata[change.payload.section] = change.payload.values
+          break
+        case 'MetadataReplace':
+          client._metadata = change.payload.metadata
+          break
       }
     })
+
+    // sync any client state that was set in the renderer config
+
+    try {
+      BugsnagIpcRenderer.update({
+        metadata: client._metadata,
+        context: client.getContext(),
+        user: client.getUser()
+      })
+    } catch (e) {
+      client._logger.error(e)
+    }
   }
 })
