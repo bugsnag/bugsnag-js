@@ -49,10 +49,17 @@
 extern char **environ;
 
 static inline bool bsg_local_is_insert_libraries_env_var(const char* str) {
+    if (str == NULL) {
+        return false;
+    }
+
     // DYLD_INSERT_LIBRARIES lets you override functions by loading other libraries first.
     // This is a common technique used for defeating detection.
     // See: https://opensource.apple.com/source/dyld/dyld-832.7.3/doc/man/man1/dyld.1
     const char insert[] = "DYLD_INSERT_LIBRARIES";
+    if (strlen(str) < sizeof(insert)) {
+        return false;
+    }
     return __builtin_memcmp(str, insert, sizeof(insert)) == 0;
 }
 

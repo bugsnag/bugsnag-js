@@ -1,5 +1,15 @@
 # Changelog
 
+## TBD
+
+### Changed
+
+- (react-native): Update bugsnag-cocoa to v6.8.0
+  - Detect app hangs that make your app unresponsive. [bugsnag-cocoa#1039](https://github.com/bugsnag/bugsnag-cocoa/pull/1039)
+  - Fix a heap buffer overflow reported by Address Sanitizer. [bugsnag-cocoa#1043](https://github.com/bugsnag/bugsnag-cocoa/pull/1043)
+  - Fix parsing of `callStackSymbols` where the image name contains spaces. [bugsnag-cocoa#1036](https://github.com/bugsnag/bugsnag-cocoa/pull/1036)
+  - Fix a possible deadlock when writing crash reports for unhandled errors. [bugsnag-cocoa#1034](https://github.com/bugsnag/bugsnag-cocoa/pull/1034)
+
 ## v7.9.0 (2021-03-16)
 
 ### Added

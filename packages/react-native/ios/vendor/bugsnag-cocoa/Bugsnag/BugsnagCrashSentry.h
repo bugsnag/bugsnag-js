@@ -11,14 +11,12 @@
 #import "BSG_KSCrashReportWriter.h"
 #import "BSG_KSCrashType.h"
 #import "BugsnagConfiguration.h"
-#import "BugsnagErrorReportApiClient.h"
 
 @class BugsnagNotifier;
 
 @interface BugsnagCrashSentry : NSObject
 
 - (void)install:(BugsnagConfiguration *)config
-      apiClient:(BugsnagErrorReportApiClient *)apiClient
        notifier:(BugsnagNotifier *)notifier
         onCrash:(BSGReportCallback)onCrash;
 

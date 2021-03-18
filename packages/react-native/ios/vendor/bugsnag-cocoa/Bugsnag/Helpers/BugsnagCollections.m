@@ -23,6 +23,17 @@
 
 #import "BSGJSONSerialization.h"
 
+NSArray * BSGArrayMap(NSArray *array, id (^ transform)(id)) {
+    NSMutableArray *mappedArray = [NSMutableArray array];
+    for (id object in array) {
+        id mapped = transform(object);
+        if (mapped) {
+            [mappedArray addObject:mapped];
+        }
+    }
+    return mappedArray;
+}
+
 NSArray * BSGArraySubarrayFromIndex(NSArray *array, NSUInteger index) {
     if (index >= array.count) {
         return @[];

@@ -40,8 +40,8 @@
 #import "BSGSerialization.h"
 #import "Bugsnag.h"
 #import "BugsnagCollections.h"
+#import "BSG_KSCrashIdentifier.h"
 #import "BSG_KSCrashReportFields.h"
-#import "BSGFileLocations.h"
 
 #if BSG_HAS_UIKIT
 #import "BSGUIKit.h"
@@ -73,15 +73,9 @@
 
 @property(nonatomic, readwrite, retain) NSString *bundleName;
 @property(nonatomic, readwrite, retain) NSString *nextCrashID;
-@property(nonatomic, readonly, retain) NSString *crashReportPath;
-@property(nonatomic, readonly, retain) NSString *recrashReportPath;
-@property(nonatomic, readonly, retain) NSString *stateFilePath;
 
 // Mirrored from BSG_KSCrashAdvanced.h to provide ivars
-@property(nonatomic, readwrite, retain) BugsnagErrorReportSink *sink;
 @property(nonatomic, readwrite, retain) NSString *logFilePath;
-@property(nonatomic, readwrite, retain)
-    BSG_KSCrashReportStore *crashReportStore;
 @property(nonatomic, readwrite, assign) BSGReportCallback onCrash;
 @property(nonatomic, readwrite, assign) bool printTraceToStdout;
 @property(nonatomic, readwrite, assign) int maxStoredReports;
@@ -94,12 +88,10 @@
 #pragma mark - Properties -
 // ============================================================================
 
-@synthesize sink = _sink;
 @synthesize userInfo = _userInfo;
 @synthesize handlingCrashTypes = _handlingCrashTypes;
 @synthesize printTraceToStdout = _printTraceToStdout;
 @synthesize onCrash = _onCrash;
-@synthesize crashReportStore = _crashReportStore;
 @synthesize bundleName = _bundleName;
 @synthesize logFilePath = _logFilePath;
 @synthesize nextCrashID = _nextCrashID;
@@ -127,7 +119,6 @@
     if ((self = [super init])) {
         self.bundleName = [[NSBundle mainBundle] infoDictionary][@"CFBundleName"];
         self.nextCrashID = [NSUUID UUID].UUIDString;
-        self.crashReportStore = [BSG_KSCrashReportStore storeWithPath:[BSGFileLocations current].kscrashReports];
         self.introspectMemory = YES;
         self.maxStoredReports = 5;
 
@@ -195,26 +186,20 @@
         writeBinaryImagesForUserReported);
 }
 
-- (NSString *)crashReportPath {
-    return [self.crashReportStore pathToFileWithId:self.nextCrashID];
-}
-
-- (NSString *)recrashReportPath {
-    return [self.crashReportStore pathToRecrashReportWithID:self.nextCrashID];
-}
-
-- (NSString *)stateFilePath {
-    NSString *stateFilename = [NSString
-        stringWithFormat:@"%@" BSG_kCrashStateFilenameSuffix, self.bundleName];
-    return [self.crashReportStore.path
-        stringByAppendingPathComponent:stateFilename];
-}
-
-- (BOOL)install {
-
+- (BOOL)install:(NSString *)directory {
+    bsg_kscrash_generate_report_initialize(directory.fileSystemRepresentation, self.bundleName.UTF8String);
+    char *crashReportPath = (char *)bsg_kscrash_generate_report_path(self.nextCrashID.UTF8String, false);
+    char *recrashReportPath = (char *)bsg_kscrash_generate_report_path(self.nextCrashID.UTF8String, true);
+    NSString *stateFilePath = [directory stringByAppendingPathComponent:
+                               [self.bundleName stringByAppendingString:@BSG_kCrashStateFilenameSuffix]];
+    
     self.handlingCrashTypes = bsg_kscrash_install(
-        [self.crashReportPath UTF8String], [self.recrashReportPath UTF8String],
-        [self.stateFilePath UTF8String], [self.nextCrashID UTF8String]);
+        crashReportPath, recrashReportPath,
+        [stateFilePath UTF8String], [self.nextCrashID UTF8String]);
+    
+    free(crashReportPath);
+    free(recrashReportPath);
+    
     if (self.handlingCrashTypes == 0) {
         return false;
     }
@@ -258,60 +243,6 @@
 #endif
 
     return true;
-}
-
-- (void)sendAllReports {
-    [self.crashReportStore pruneFilesLeaving:self.maxStoredReports];
-
-    NSDictionary *reports = [self allReportsByFilename];
-    if (!reports.count) {
-        return;
-    }
-    
-    [self sendReports:reports completionHander:nil];
-}
-
-- (void)sendLatestReport:(dispatch_block_t)completionHander {
-    [self.crashReportStore pruneFilesLeaving:self.maxStoredReports];
-    
-    NSString *fileId = [self.crashReportStore fileIds].lastObject;
-    if (!fileId) {
-        if (completionHander) {
-            completionHander();
-        }
-        return;
-    }
-    
-    NSDictionary *contents = [self.crashReportStore fileWithId:fileId];
-    if (!contents) {
-        if (completionHander) {
-            completionHander();
-        }
-        return;
-    }
-    
-    [self sendReports:@{fileId: contents} completionHander:completionHander];
-}
-
-- (void)sendReports:(NSDictionary<NSString *, NSDictionary *> *)reports
-   completionHander:(dispatch_block_t)completionHander {
-    BSG_KSLOG_INFO(@"Sending %lu crash reports", (unsigned long)reports.count);
-
-    [self sendReports:reports
-            withBlock:^(NSString *filename, BOOL completed,
-                    NSError *error) {
-                BSG_KSLOG_DEBUG(@"Sending finished with completion: %d", completed);
-                if (error != nil) {
-                    BSG_KSLOG_ERROR(@"Failed to send reports: %@", error);
-                }
-                if (completed && filename != nil) {
-                    BSG_KSLOG_DEBUG(@"Deleting KSCrashReport %@", filename);
-                    [self.crashReportStore deleteFileWithId:filename];
-                }
-                if (completionHander) {
-                    completionHander();
-                }
-            }];
 }
 
 - (NSDictionary *)captureAppStats {
@@ -366,39 +297,6 @@ BSG_SYNTHESIZE_CRASH_STATE_PROPERTY(NSTimeInterval,
 BSG_SYNTHESIZE_CRASH_STATE_PROPERTY(int, sessionsSinceLaunch)
 BSG_SYNTHESIZE_CRASH_STATE_PROPERTY(BOOL, crashedLastLaunch)
 
-- (NSUInteger)reportCount {
-    return [self.crashReportStore fileCount];
-}
-
-- (NSString *)crashReportsPath {
-    return self.crashReportStore.path;
-}
-
-- (void)sendReports:(NSDictionary <NSString *, NSDictionary *> *)reports
-          withBlock:(BSGOnErrorSentBlock)block {
-    if ([reports count] == 0) {
-        if (block) {
-            block(nil, YES, nil);
-        }
-        return;
-    }
-
-    if (self.sink == nil) {
-        if (block) {
-            block(nil, NO, [NSError bsg_errorWithDomain:[[self class] description]
-                                                   code:0
-                                            description:@"No sink set. Crash reports not sent."]);
-        }
-        return;
-    }
-    [self.sink sendStoredReports:reports
-                       withBlock:block];
-}
-
-- (NSDictionary <NSString *, NSDictionary *> *)allReportsByFilename {
-    return [self.crashReportStore allFilesByName];
-}
-
 - (BOOL)redirectConsoleLogsToFile:(NSString *)fullPath
                         overwrite:(BOOL)overwrite {
     if (bsg_kslog_setLogFilename([fullPath UTF8String], overwrite)) {
@@ -406,18 +304,6 @@ BSG_SYNTHESIZE_CRASH_STATE_PROPERTY(BOOL, crashedLastLaunch)
         return YES;
     }
     return NO;
-}
-
-- (BOOL)redirectConsoleLogsToDefaultFile {
-    NSString *logFilename = [NSString
-        stringWithFormat:@"%@" BSG_kCrashLogFilenameSuffix, self.bundleName];
-    NSString *logFilePath =
-        [self.crashReportStore.path stringByAppendingPathComponent:logFilename];
-    if (![self redirectConsoleLogsToFile:logFilePath overwrite:YES]) {
-        BSG_KSLOG_ERROR(@"Could not redirect logs to %@", logFilePath);
-        return NO;
-    }
-    return YES;
 }
 
 // ============================================================================

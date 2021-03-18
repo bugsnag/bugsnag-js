@@ -141,7 +141,6 @@ bool bsg_kscrashsentry_installNSExceptionHandler(
     BSG_KSCrash_SentryContext *const context) {
     BSG_KSLOG_DEBUG(@"Installing NSException handler.");
     if (bsg_g_installed) {
-        BSG_KSLOG_DEBUG(@"NSException handler already installed.");
         return true;
     }
     bsg_g_installed = 1;
@@ -160,7 +159,6 @@ bool bsg_kscrashsentry_installNSExceptionHandler(
 void bsg_kscrashsentry_uninstallNSExceptionHandler(void) {
     BSG_KSLOG_DEBUG(@"Uninstalling NSException handler.");
     if (!bsg_g_installed) {
-        BSG_KSLOG_DEBUG(@"NSException handler was already uninstalled.");
         return;
     }
 

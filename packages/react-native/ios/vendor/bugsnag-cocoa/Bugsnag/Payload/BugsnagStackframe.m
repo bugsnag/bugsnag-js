@@ -120,7 +120,7 @@ BugsnagStackframeType const BugsnagStackframeTypeCocoa = @"cocoa";
 + (NSArray<BugsnagStackframe *> *)stackframesWithCallStackSymbols:(NSArray<NSString *> *)callStackSymbols {
     NSString *pattern = (@"^(\\d+)"             // Capture the leading frame number
                          @" +"                  // Skip whitespace
-                         @"(\\S+)"              // Image name
+                         @"([\\S ]+?)"          // Image name (may contain spaces)
                          @" +"                  // Skip whitespace
                          @"(0x[0-9a-fA-F]+)"    // Capture the frame address
                          @"("                   // Start optional group

@@ -18,26 +18,26 @@
  * Metadata class to hold name and creation date for a file, with
  * default comparison based on the creation date (ascending).
  */
-@interface FileStoreInfo : NSObject
+@interface BSGFileStoreInfo : NSObject
 
 @property(nonatomic, readonly, retain) NSString *fileId;
 @property(nonatomic, readonly, retain) NSDate *creationDate;
 
-+ (FileStoreInfo *)fileStoreInfoWithId:(NSString *)fileId
++ (BSGFileStoreInfo *)fileStoreInfoWithId:(NSString *)fileId
                           creationDate:(NSDate *)creationDate;
 
 - (instancetype)initWithId:(NSString *)fileId creationDate:(NSDate *)creationDate;
 
-- (NSComparisonResult)compare:(FileStoreInfo *)other;
+- (NSComparisonResult)compare:(BSGFileStoreInfo *)other;
 
 @end
 
-@implementation FileStoreInfo
+@implementation BSGFileStoreInfo
 
 @synthesize fileId = _fileId;
 @synthesize creationDate = _creationDate;
 
-+ (FileStoreInfo *)fileStoreInfoWithId:(NSString *)fileId
++ (BSGFileStoreInfo *)fileStoreInfoWithId:(NSString *)fileId
                           creationDate:(NSDate *)creationDate {
     return [[self alloc] initWithId:fileId creationDate:creationDate];
 }
@@ -50,7 +50,7 @@
     return self;
 }
 
-- (NSComparisonResult)compare:(FileStoreInfo *)other {
+- (NSComparisonResult)compare:(BSGFileStoreInfo *)other {
     return [_creationDate compare:other->_creationDate];
 }
 
@@ -110,7 +110,7 @@
                 bsg_log_err(@"Could not read file attributes for %@: %@",
                         fullPath, error);
             } else {
-                FileStoreInfo *info = [FileStoreInfo fileStoreInfoWithId:fileId
+                BSGFileStoreInfo *info = [BSGFileStoreInfo fileStoreInfoWithId:fileId
                                                             creationDate:[fileAttribs valueForKey:NSFileCreationDate]];
                 [files addObject:info];
             }
@@ -120,7 +120,7 @@
 
     NSMutableArray *sortedIDs =
             [NSMutableArray arrayWithCapacity:[files count]];
-    for (FileStoreInfo *info in files) {
+    for (BSGFileStoreInfo *info in files) {
         [sortedIDs addObject:info.fileId];
     }
     return sortedIDs;

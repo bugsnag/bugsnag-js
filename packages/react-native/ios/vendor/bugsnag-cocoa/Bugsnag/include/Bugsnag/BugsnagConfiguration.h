@@ -62,6 +62,12 @@ typedef NS_ENUM(NSInteger, BSGThreadSendPolicy) {
 };
 
 /**
+ * Setting `BugsnagConfiguration.appHangThresholdMillis` to this value disables the reporting of
+ * app hangs that ended before the app was terminated.
+ */
+extern const NSUInteger BugsnagAppHangThresholdFatalOnly;
+
+/**
  *  A configuration block for modifying an error report
  *
  *  @param event the error report to be modified
@@ -201,6 +207,18 @@ typedef BOOL (^BugsnagOnSessionBlock)(BugsnagSession *_Nonnull session);
  *  YES if uncaught exceptions and other crashes should be reported automatically
  */
 @property BOOL autoDetectErrors;
+
+/**
+ * The minimum number of milliseconds of main thread unresponsiveness that will trigger the
+ * detection and reporting of an app hang.
+ *
+ * Set to `BugsnagAppHangThresholdFatalOnly` to disable reporting of app hangs that did not
+ * end with the app being force quit by the user or terminated by the system watchdog.
+ *
+ * By default this is `BugsnagAppHangThresholdFatalOnly`, and can be set to a minimum of 250
+ * milliseconds.
+ */
+@property (nonatomic) NSUInteger appHangThresholdMillis;
 
 /**
  * Determines whether app sessions should be tracked automatically. By default this value is true.

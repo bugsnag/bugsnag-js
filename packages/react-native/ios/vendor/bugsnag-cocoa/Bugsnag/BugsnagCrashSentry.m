@@ -9,24 +9,21 @@
 
 #import "BugsnagCrashSentry.h"
 
+#import "BSGFileLocations.h"
 #import "BSG_KSCrashAdvanced.h"
 #import "BSG_KSCrashC.h"
 #import "Bugsnag.h"
 #import "BugsnagConfiguration.h"
-#import "BugsnagErrorReportSink.h"
 #import "BugsnagErrorTypes.h"
 #import "BugsnagLogger.h"
 
 @implementation BugsnagCrashSentry
 
 - (void)install:(BugsnagConfiguration *)config
-      apiClient:(BugsnagErrorReportApiClient *)apiClient
        notifier:(BugsnagNotifier *)notifier
         onCrash:(BSGReportCallback)onCrash
 {
-    BugsnagErrorReportSink *sink = [[BugsnagErrorReportSink alloc] initWithApiClient:apiClient configuration:config notifier:notifier];
     BSG_KSCrash *ksCrash = [BSG_KSCrash sharedInstance];
-    ksCrash.sink = sink;
     ksCrash.introspectMemory = NO;
     ksCrash.onCrash = onCrash;
     ksCrash.maxStoredReports = (int)config.maxPersistedEvents;
@@ -47,11 +44,9 @@
     
     bsg_kscrash_setHandlingCrashTypes(crashTypes);
     
-    if ((![ksCrash install])) {
+    if ((![ksCrash install:[BSGFileLocations current].kscrashReports])) {
         bsg_log_err(@"Failed to install crash handler. No exceptions will be reported!");
     }
-
-    [sink.apiClient flushPendingData];
 }
 
 /**
