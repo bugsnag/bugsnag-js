@@ -6,6 +6,8 @@
 extern "C" {
 #endif
 
+void bsg_kscrash_generate_report_initialize(const char *directory, const char *bundleName);
+
 /**
  * Generates a new UUID. Not async signal safe. Caller responsible for
  * freeing allocated string.

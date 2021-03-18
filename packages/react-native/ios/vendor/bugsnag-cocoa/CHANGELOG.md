@@ -1,6 +1,27 @@
 Changelog
 =========
 
+## 6.8.0 (2021-03-18)
+
+### Enhancements
+
+* Bugsnag now detects app hangs (when the main thread is unresponsive for a period of time), alerting you of issues with your app’s responsiveness.
+  By default, only fatal app hangs (those that end with termination by the system watchdog or being force-quit by the user) will be reported.
+  This behaviour can be configured using the new  `appHangThresholdMillis` configuration option.
+  For more information see [the documentation](https://docs.bugsnag.com/platforms/ios/reporting-app-hangs/).
+  [#1039](https://github.com/bugsnag/bugsnag-cocoa/pull/1039)
+
+### Bug fixes
+
+* Fix a heap buffer overflow reported by Address Sanitizer.
+  [#1043](https://github.com/bugsnag/bugsnag-cocoa/pull/1043)
+
+* Fix parsing of `callStackSymbols` where the image name contains spaces.
+  [#1036](https://github.com/bugsnag/bugsnag-cocoa/pull/1036)
+
+* Fix a possible deadlock when writing crash reports for unhandled errors.
+  [#1034](https://github.com/bugsnag/bugsnag-cocoa/pull/1034)
+
 ## 6.7.1 (2021-03-10)
 
 ### Bug fixes

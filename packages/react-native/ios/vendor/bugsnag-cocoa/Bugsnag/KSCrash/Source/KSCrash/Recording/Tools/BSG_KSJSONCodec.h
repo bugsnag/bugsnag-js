@@ -35,7 +35,6 @@ extern "C" {
 #endif
 
 #include <stdbool.h>
-#include <stdio.h>
 #include <sys/types.h>
 
 /* Tells the encoder to automatically determine the length of a field value.
