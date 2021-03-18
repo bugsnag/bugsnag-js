@@ -10,34 +10,29 @@ afterEach(() => jest.clearAllMocks())
 
 describe('BugsnagIpcRenderer', () => {
   it('should call ipcRenderer.invoke correctly for breadcrumbs', async () => {
-    const bugsnagIpcRenderer = new BugsnagIpcRenderer()
     const breadcrumb = { message: 'hi IPC', type: 'manual', metadata: { electron: 'has many processes' } }
-    await bugsnagIpcRenderer.leaveBreadcrumb(breadcrumb)
+    await BugsnagIpcRenderer.leaveBreadcrumb(breadcrumb)
     expect(electron.ipcRenderer.invoke).toHaveBeenCalledWith(CHANNEL_RENDERER_TO_MAIN, 'leaveBreadcrumb', JSON.stringify(breadcrumb))
   })
 
   it('should call ipcRenderer.invoke correctly for sessions', async () => {
-    const bugsnagIpcRenderer = new BugsnagIpcRenderer()
-
-    await bugsnagIpcRenderer.startSession()
+    await BugsnagIpcRenderer.startSession()
     expect(electron.ipcRenderer.invoke).toHaveBeenCalledWith(CHANNEL_RENDERER_TO_MAIN, 'startSession')
 
-    await bugsnagIpcRenderer.resumeSession()
+    await BugsnagIpcRenderer.resumeSession()
     expect(electron.ipcRenderer.invoke).toHaveBeenCalledWith(CHANNEL_RENDERER_TO_MAIN, 'resumeSession')
 
-    await bugsnagIpcRenderer.pauseSession()
+    await BugsnagIpcRenderer.pauseSession()
     expect(electron.ipcRenderer.invoke).toHaveBeenCalledWith(CHANNEL_RENDERER_TO_MAIN, 'pauseSession')
   })
 
   it('should call ipcRenderer.invoke correctly for context', async () => {
-    const bugsnagIpcRenderer = new BugsnagIpcRenderer()
-    await bugsnagIpcRenderer.updateContext('ctx')
+    await BugsnagIpcRenderer.updateContext('ctx')
     expect(electron.ipcRenderer.invoke).toHaveBeenCalledWith(CHANNEL_RENDERER_TO_MAIN, 'updateContext', JSON.stringify({ context: 'ctx' }))
   })
 
   it('should call ipcRenderer.invoke correctly for user', async () => {
-    const bugsnagIpcRenderer = new BugsnagIpcRenderer()
-    await bugsnagIpcRenderer.updateUser({ id: '123', email: 'jim@jim.com', name: 'Jim' })
+    await BugsnagIpcRenderer.updateUser({ id: '123', email: 'jim@jim.com', name: 'Jim' })
     expect(electron.ipcRenderer.invoke).toHaveBeenCalledWith(
       CHANNEL_RENDERER_TO_MAIN,
       'updateUser',
@@ -46,23 +41,21 @@ describe('BugsnagIpcRenderer', () => {
   })
 
   it('should call ipcRenderer.invoke correctly for metadata', async () => {
-    const bugsnagIpcRenderer = new BugsnagIpcRenderer()
-
-    await bugsnagIpcRenderer.updateMetadata('section', { key: 123 })
+    await BugsnagIpcRenderer.updateMetadata('section', { key: 123 })
     expect(electron.ipcRenderer.invoke).toHaveBeenCalledWith(
       CHANNEL_RENDERER_TO_MAIN,
       'updateMetadata',
       JSON.stringify({ section: 'section', values: { key: 123 } })
     )
 
-    await bugsnagIpcRenderer.updateMetadata('section', { valueA: 123, valueB: 234 })
+    await BugsnagIpcRenderer.updateMetadata('section', { valueA: 123, valueB: 234 })
     expect(electron.ipcRenderer.invoke).toHaveBeenCalledWith(
       CHANNEL_RENDERER_TO_MAIN,
       'updateMetadata',
       JSON.stringify({ section: 'section', values: { valueA: 123, valueB: 234 } })
     )
 
-    await bugsnagIpcRenderer.updateMetadata('section', undefined)
+    await BugsnagIpcRenderer.updateMetadata('section', undefined)
     expect(electron.ipcRenderer.invoke).toHaveBeenCalledWith(
       CHANNEL_RENDERER_TO_MAIN,
       'updateMetadata',
@@ -71,16 +64,14 @@ describe('BugsnagIpcRenderer', () => {
   })
 
   it('should call ipcRenderer.invoke correctly for events', async () => {
-    const bugsnagIpcRenderer = new BugsnagIpcRenderer()
     const event = { fakeEvent: true }
-    await bugsnagIpcRenderer.dispatch(event)
+    await BugsnagIpcRenderer.dispatch(event)
     expect(electron.ipcRenderer.invoke).toHaveBeenCalledWith(CHANNEL_RENDERER_TO_MAIN, 'dispatch', JSON.stringify(event))
   })
 
   it('should provide the return value for getPayloadInfo', async () => {
-    const bugsnagIpcRenderer = new BugsnagIpcRenderer()
     electron.ipcRenderer.invoke.mockResolvedValue({ payloadInfo: {} })
-    const returnValue = await bugsnagIpcRenderer.getPayloadInfo()
+    const returnValue = await BugsnagIpcRenderer.getPayloadInfo()
     expect(electron.ipcRenderer.invoke).toHaveBeenCalledWith(CHANNEL_RENDERER_TO_MAIN, 'getPayloadInfo')
     expect(returnValue).toEqual({ payloadInfo: {} })
   })
@@ -92,8 +83,7 @@ describe('BugsnagIpcRenderer', () => {
       expect(eventName).toBe(CHANNEL_MAIN_TO_RENDERER)
       callback(event, JSON.stringify(payload))
     })
-    const bugsnagIpcRenderer = new BugsnagIpcRenderer()
-    bugsnagIpcRenderer.listen((event, payload) => {
+    BugsnagIpcRenderer.listen((event, payload) => {
       expect(event).toEqual(event)
       expect(payload).toEqual(payload)
       done()
