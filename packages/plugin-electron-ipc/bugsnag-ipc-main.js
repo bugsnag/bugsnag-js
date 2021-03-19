@@ -1,3 +1,5 @@
+const Event = require('@bugsnag/core/event')
+
 module.exports = class BugsnagIpcMain {
   constructor (client) {
     this.client = client
@@ -49,12 +51,17 @@ module.exports = class BugsnagIpcMain {
     return (update) => this.stateSync.updateMetadataFromSource(source)(update)
   }
 
-  dispatch (event) {
-    // TODO
-  }
+  dispatch (source) {
+    return (eventObject) => {
+      const event = new Event()
 
-  getPayloadInfo () {
-    // TODO
+      // copy all properties from 'eventObject' to 'event'
+      Object.keys(event)
+        .filter(Object.hasOwnProperty.bind(event))
+        .forEach(key => { event[key] = eventObject[key] })
+
+      this.client._notify(event)
+    }
   }
 
   handle (event, methodName, ...args) {
@@ -86,8 +93,7 @@ module.exports = class BugsnagIpcMain {
       ['updateContext', this.updateContext.bind(this)],
       ['updateMetadata', this.updateMetadata.bind(this)],
       ['updateUser', this.updateUser.bind(this)],
-      ['dispatch', this.dispatch.bind(this)],
-      ['getPayloadInfo', this.getPayloadInfo.bind(this)]
+      ['dispatch', this.dispatch.bind(this)]
     ])
   }
 }

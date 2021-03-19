@@ -69,13 +69,6 @@ describe('BugsnagIpcRenderer', () => {
     expect(electron.ipcRenderer.invoke).toHaveBeenCalledWith(CHANNEL_RENDERER_TO_MAIN, 'dispatch', JSON.stringify(event))
   })
 
-  it('should provide the return value for getPayloadInfo', async () => {
-    electron.ipcRenderer.invoke.mockResolvedValue({ payloadInfo: {} })
-    const returnValue = await BugsnagIpcRenderer.getPayloadInfo()
-    expect(electron.ipcRenderer.invoke).toHaveBeenCalledWith(CHANNEL_RENDERER_TO_MAIN, 'getPayloadInfo')
-    expect(returnValue).toEqual({ payloadInfo: {} })
-  })
-
   it('should support listening for events from main and parse the event payload', done => {
     const event = { event: 1 }
     const payload = { payload: 1 }
