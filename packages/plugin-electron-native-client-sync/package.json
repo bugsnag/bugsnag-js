@@ -12,6 +12,7 @@
     "access": "public"
   },
   "scripts": {
+    "build": "node-gyp configure build",
     "clangd-gen": "node-gyp configure --release -- -f gyp.generator.compile_commands_json.py; mv Release/compile_commands.json .; rm -rf Debug Release"
   },
   "author": "Bugsnag",

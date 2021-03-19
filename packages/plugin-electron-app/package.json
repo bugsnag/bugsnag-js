@@ -20,6 +20,9 @@
     "src/get_version-win.c",
     "app.js"
   ],
+  "scripts": {
+    "build": "node-gyp configure build"
+  },
   "devDependencies": {
     "@bugsnag/core": "^7.0.0"
   },
