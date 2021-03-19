@@ -11,7 +11,7 @@ module.exports.schema = {
     ...schema.logger,
     defaultValue: () => getPrefixedConsole()
   },
-  onSend: {
+  onSendError: {
     defaultValue: () => [],
     message: 'should be a function or array of functions',
     validate: listOfFunctions
