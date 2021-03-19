@@ -1,3 +1,5 @@
+const NativeApp = require('bindings')('bugsnag_plugin_electron_app_bindings')
+
 const osToAppType = new Map([
   ['darwin', 'macOS'],
   ['linux', 'Linux'],
@@ -55,8 +57,7 @@ module.exports = (NativeClient, process, electronApp, BrowserWindow) => ({
       releaseStage: electronApp.isPackaged ? 'production' : 'development',
       type: osToAppType.get(process.platform),
       version: electronApp.getVersion(),
-      // TODO: get the full bundle version on macOS and windows, getVersion() on linux
-      versionCode: electronApp.getVersion()
+      versionCode: NativeApp.getPackageVersion() || electronApp.getVersion()
     })
 
     client.addMetadata('app', {

@@ -40,7 +40,7 @@
   },
   "scripts": {
     "bootstrap": "lerna bootstrap",
-    "build": "lerna exec node-gyp configure build --scope @bugsnag/plugin-electron-native-client-sync",
+    "build": "lerna exec node-gyp configure build --scope @bugsnag/plugin-electron-app --scope @bugsnag/plugin-electron-native-client-sync",
     "test:unit": "npm run build && jest --color && npx tsc --noEmit",
     "test:lint": "eslint --ext .ts,.js --report-unused-disable-directives --max-warnings=0 ."
   }
