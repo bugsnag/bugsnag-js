@@ -1,3 +1,18 @@
+const { join } = require('path')
+const Bugsnag = require('@bugsnag/electron')
+const configFile = process.env.BUGSNAG_CONFIG || 'default'
+// eslint-disable-next-line no-undef
+const bugsnagConfig = __non_webpack_require__(`./${configFile}`)
+const preloadFile = process.env.BUGSNAG_PRELOAD || 'default.js'
+
+Bugsnag.start({
+  // Base test server / automation config
+  // eslint-disable-next-line no-undef
+  ...baseBugsnagConfig,
+  // Bugsnag config loaded from ./configs/<selection>
+  ...bugsnagConfig()
+})
+
 const { app, BrowserWindow, ipcMain } = require('electron')
 
 function createWindow () {
@@ -5,14 +20,17 @@ function createWindow () {
     width: 800,
     height: 600,
     webPreferences: {
-      nodeIntegration: true,
-      // https://github.com/electron-userland/spectron/issues/720
-      // https://github.com/electron/electron/blob/a75cd89d2a64adccf46d6b8e0ae4eb59ba245c8b/docs/breaking-changes.md#default-changed-enableremotemodule-defaults-to-false
-      enableRemoteModule: true
+      contextIsolation: true,
+      sandbox: true,
+      // eslint-disable-next-line no-undef
+      preload: join(__dirname, preloadRelativeDir, preloadFile),
+      nodeIntegration: false
     }
   })
+  // win.webContents.openDevTools()
 
-  win.loadFile('index.html')
+  // eslint-disable-next-line no-undef
+  win.loadFile(join(__dirname, htmlRelativePath))
 }
 
 // prevent pop-up dialogs for exceptions

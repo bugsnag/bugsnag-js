@@ -3,7 +3,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#if defined(_WIN32) || defined(__WIN32__) || defined(__WINDOWS__)
+#include <io.h>
+#else
 #include <unistd.h>
+#endif
 
 #include "bugsnag_electron_client_sync.h"
 #include "deps/parson/parson.h"

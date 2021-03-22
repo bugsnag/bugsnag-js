@@ -6,6 +6,9 @@ build
 
 # testing
 docker-temp
+.cucumber-failures
+.verdaccio
+.webpack
 
 # general dev
 node_modules
