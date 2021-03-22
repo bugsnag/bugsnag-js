@@ -16,7 +16,7 @@ BugsnagIpcRenderer.config = JSON.parse(config)
 try {
   // assume contextIsolation=true
   contextBridge.exposeInMainWorld('__bugsnag_ipc__', BugsnagIpcRenderer)
-} catch (e) {
-  // fallback to directly assigning to the window
-  window.__bugsnag_ipc__ = BugsnagIpcRenderer
-}
+} catch (e) {}
+
+// expose for other preload scripts to use, this also covers contextIsolation=false
+window.__bugsnag_ipc__ = BugsnagIpcRenderer
