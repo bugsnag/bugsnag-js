@@ -13,7 +13,7 @@ const NativeClient = {
 module.exports = (opts) => {
   const filestore = new FileStore(
     opts.apiKey,
-    electron.app.getPath('cache'),
+    electron.app.getPath('userCache'),
     electron.app.getPath('crashDumps')
   )
 
