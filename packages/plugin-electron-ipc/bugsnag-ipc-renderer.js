@@ -45,10 +45,6 @@ const BugsnagIpcRenderer = {
 
   dispatch (event) {
     return safeInvoke('dispatch', event)
-  },
-
-  getPayloadInfo () {
-    return safeInvoke('getPayloadInfo')
   }
 }
 
