@@ -2,6 +2,7 @@
   "name": "@bugsnag/electron",
   "version": "1.0.0",
   "main": "src/notifier.js",
+  "types": "types/notifier.d.ts",
   "description": "@bugsnag/electron notifier",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
@@ -15,6 +16,9 @@
   "author": "Bugsnag",
   "license": "MIT",
   "dependencies": {
-    "@bugsnag/core": "^7.7.0"
+    "@bugsnag/core": "^7.7.0",
+    "@bugsnag/plugin-electron-ipc": "1.0.0",
+    "@bugsnag/plugin-electron-renderer-client-sync": "1.0.0",
+    "@bugsnag/plugin-electron-state-sync": "1.0.0"
   }
 }

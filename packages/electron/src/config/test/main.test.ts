@@ -1,4 +1,4 @@
-import { schema, serializeConfigForRenderer } from '../main'
+import { schema } from '../main'
 // @ts-expect-error TS doesn't like the following line because electron is not installed
 import * as electron from 'electron'
 
@@ -58,18 +58,6 @@ describe('main process client config schema', () => {
       expect(schema.releaseStage.defaultValue()).toBe('production')
       electron.app.isPackaged = false
       expect(schema.releaseStage.defaultValue()).toBe('development')
-    })
-  })
-})
-
-describe('serializeConfigForRenderer() method', () => {
-  it('doesn’t serialize unwanted config options', () => {
-    expect(JSON.parse(serializeConfigForRenderer({
-      apiKey: '123',
-      logger: schema.logger.defaultValue(),
-      plugins: [{ load: () => {} }]
-    }))).toEqual({
-      apiKey: '123'
     })
   })
 })

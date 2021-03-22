@@ -1,0 +1,34 @@
+{
+  "name": "@bugsnag/plugin-electron-app",
+  "version": "1.0.0",
+  "main": "app.js",
+  "description": "@bugsnag/electron plugin to collect app information",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:bugsnag/bugsnag-electron.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "gypfile": true,
+  "files": [
+    "binding.gyp",
+    "src/api.c",
+    "src/get_version.h",
+    "src/get_version-mac.m",
+    "src/get_version-linux.c",
+    "src/get_version-win.c",
+    "app.js"
+  ],
+  "devDependencies": {
+    "@bugsnag/core": "^7.0.0"
+  },
+  "dependencies": {
+    "bindings": "^1.5.0"
+  },
+  "peerDependencies": {
+    "@bugsnag/core": "^7.0.0"
+  },
+  "author": "Bugsnag",
+  "license": "MIT"
+}
