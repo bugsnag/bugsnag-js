@@ -4,7 +4,7 @@ const { Given, When, Then } = require('@cucumber/cucumber')
 const expect = require('expect')
 const { fixturePath } = require('../utils')
 
-Given('I launch an app', { timeout: 10 * 1000 }, async () => {
+Given('I launch an app', { timeout: 30 * 1000 }, async () => {
   return global.automator.start()
 })
 

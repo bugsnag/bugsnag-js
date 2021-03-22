@@ -47,16 +47,16 @@ BeforeAll({ timeout: 180 * 1000 }, async () => {
   if (!process.env.SKIP_PACKAGE_APP) {
     console.log('[BeforeAll] Building test app ...')
     await app.installDeps()
-    await app.packageApp()
+    await app.packageApp({
+      BUGSNAG_API_KEY: '6425093c6530f554a9897d2d7d38e248',
+      BUGSNAG_ENDPOINT_MINIDUMPS: endpoints.minidumps,
+      BUGSNAG_ENDPOINT_NOTIFY: endpoints.notify,
+      BUGSNAG_ENDPOINT_SESSIONS: endpoints.sessions
+    })
     console.log('[BeforeAll] Done!')
   }
 
-  global.automator = new Automator(app, {
-    BUGSNAG_API_KEY: '6425093c6530f554a9897d2d7d38e248',
-    BUGSNAG_ENDPOINT_MINIDUMPS: endpoints.minidumps,
-    BUGSNAG_ENDPOINT_NOTIFY: endpoints.notify,
-    BUGSNAG_ENDPOINT_SESSIONS: endpoints.sessions
-  })
+  global.automator = new Automator(app)
 })
 
 Before(() => {

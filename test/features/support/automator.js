@@ -1,9 +1,8 @@
 const { _electron: electron } = require('playwright')
 
 class Automator {
-  constructor (app, env) {
+  constructor (app) {
     this.app = app
-    this.env = env
     this.crashed = false
   }
 
@@ -50,7 +49,7 @@ class Automator {
       return await electron.launch({
         args: this.app.launchArgs(),
         executablePath: this.app.packagedPath(),
-        env: { ...process.env, ...this.env, ...env }
+        env: { ...process.env, ...env }
       })
     } catch (e) {
       if (retries > 0) {

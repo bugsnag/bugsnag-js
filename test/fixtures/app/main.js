@@ -1,20 +1,17 @@
 const { join } = require('path')
 const Bugsnag = require('@bugsnag/electron')
-
 const configFile = process.env.BUGSNAG_CONFIG || 'default'
-const config = require(`./configs/${configFile}`)()
+// eslint-disable-next-line no-undef
+const bugsnagConfig = __non_webpack_require__(`./${configFile}`)
+const preloadFile = process.env.BUGSNAG_PRELOAD || 'default.js'
 
 Bugsnag.start({
-  apiKey: process.env.BUGSNAG_API_KEY,
-  endpoints: {
-    notify: process.env.BUGSNAG_ENDPOINT_NOTIFY,
-    sessions: process.env.BUGSNAG_ENDPOINT_SESSIONS,
-    minidumps: process.env.BUGSNAG_ENDPOINT_MINIDUMPS
-  },
-  ...config
+  // Base test server / automation config
+  // eslint-disable-next-line no-undef
+  ...baseBugsnagConfig,
+  // Bugsnag config loaded from ./configs/<selection>
+  ...bugsnagConfig()
 })
-
-const preloadFile = process.env.BUGSNAG_PRELOAD || 'default.js'
 
 const { app, BrowserWindow, ipcMain } = require('electron')
 
@@ -25,13 +22,15 @@ function createWindow () {
     webPreferences: {
       contextIsolation: true,
       sandbox: true,
-      preload: join(app.getAppPath(), 'preloads', preloadFile),
+      // eslint-disable-next-line no-undef
+      preload: join(__dirname, preloadRelativeDir, preloadFile),
       nodeIntegration: false
     }
   })
   // win.webContents.openDevTools()
 
-  win.loadFile('index.html')
+  // eslint-disable-next-line no-undef
+  win.loadFile(join(__dirname, htmlRelativePath))
 }
 
 // prevent pop-up dialogs for exceptions

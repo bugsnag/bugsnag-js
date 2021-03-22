@@ -16,8 +16,8 @@ class TestApp {
     await this._exec(npmRunner, ['install'], 1)
   }
 
-  async packageApp () {
-    await this._exec(npmRunner, ['run', 'package'])
+  async packageApp (env) {
+    await this._exec(npmRunner, ['run', 'package'], 0, env)
   }
 
   async installBugsnag (version) {
@@ -54,12 +54,16 @@ class TestApp {
     }
   }
 
-  async _exec (command, args = [], retries = 0) {
+  async _exec (command, args = [], retries = 0, env = {}) {
     await new Promise((resolve, reject) => {
-      const proc = spawn(command, args, { cwd: this.buildDir })
+      const proc = spawn(command, args, { cwd: this.buildDir, env: { ...process.env, ...env } })
       // handy for debugging but otherwise annoying output
       if (process.env.VERBOSE) {
         proc.stderr.on('data', data => { console.log(`  stderr: ${data}`) })
+      } else {
+        // webpack will hang if *something* doesn't read from stderr, even when
+        // everything is fine
+        proc.stderr.on('data', () => {})
       }
       proc.on('close', async (code) => {
         if (code !== 0) {
