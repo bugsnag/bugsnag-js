@@ -424,7 +424,10 @@ function makeClient ({
 
 // create a stub of electron's 'app'
 function makeApp (locale = DEFAULTS.locale) {
-  return { getLocale: () => locale }
+  return {
+    getLocale: () => locale,
+    async whenReady () { /* this doesn't need to do anything! */ }
+  }
 }
 
 // create a stub of electron's 'screen'
