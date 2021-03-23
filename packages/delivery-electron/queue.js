@@ -5,6 +5,8 @@ const { randomBytes } = require('crypto')
 
 const MAX_ITEMS = 64
 const filenameRe = /^bugsnag-.*\.json$/
+// using custom format over toISOString to avoid windows path issues around ':'
+const formatDate = (date) => date.toISOString().replace(/[^0-9]/g, '')
 
 module.exports = class PayloadQueue {
   constructor (path, resource, onerror = () => {}) {
@@ -12,7 +14,7 @@ module.exports = class PayloadQueue {
     this._path = path
     this._truncating = false
     this._generateFilename = () =>
-      `bugsnag-${resource}-${(new Date()).toISOString()}-${uid()}.json`
+      `bugsnag-${resource}-${formatDate(new Date())}-${uid()}.json`
     this._init = null
   }
 
