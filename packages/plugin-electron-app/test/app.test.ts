@@ -1,5 +1,10 @@
 import Client from '@bugsnag/core/client'
-import Event from '@bugsnag/core/event'
+import {
+  makeApp as makeElectronApp,
+  makeBrowserWindow,
+  makeClientForPlugin,
+  makeProcess
+} from '@bugsnag/electron-test-helpers'
 import plugin from '../'
 
 const ONE_HOUR_IN_MS = 60 * 60 * 1000
@@ -747,216 +752,29 @@ describe('plugin: electron app info', () => {
   })
 })
 
+interface MakeClientOptions {
+  BrowserWindow?: any
+  electronApp?: any
+  NativeClient?: any
+  process?: any
+  config?: { launchDurationMillis: number|undefined }
+}
+
 function makeClient ({
   BrowserWindow = makeBrowserWindow(),
   electronApp = makeElectronApp({ BrowserWindow }),
   NativeClient = makeNativeClient(),
   process = makeProcess(),
-  config = {}
-} = {}): Client {
-  const client = new Client(
-    {
-      apiKey: 'abcabcabcabcabcabcabc1234567890f',
-      launchDurationMillis: 0,
-      logger: { debug: jest.fn(), info: jest.fn(), warn: jest.fn(), error: jest.fn() },
-      ...config
-    },
-    undefined,
-    [plugin(NativeClient, process, electronApp, BrowserWindow)]
-  )
-
-  let lastSession
-
-  client._setDelivery(() => ({
-    sendEvent (payload, cb) {
-      expect(payload.events).toHaveLength(1)
-      cb(payload.events[0])
-    },
-    sendSession (session) {
-      expect(session).toBeTruthy()
-      lastSession = session
-    }
-  }))
-
-  client._sessionDelegate = {
-    startSession (client, session) {
-      client._delivery.sendSession(session)
-    }
-  }
-
-  const sendEvent = async () => await new Promise(resolve => {
-    client._notify(new Event('Error', 'incorrect lambda type'), () => {}, resolve)
+  config = { launchDurationMillis: 0 }
+}: MakeClientOptions = {}): Client {
+  return makeClientForPlugin({
+    config,
+    plugin: plugin(NativeClient, process, electronApp, BrowserWindow)
   })
-
-  const sendSession = async () => await new Promise(resolve => {
-    const lastSessionBefore = lastSession
-
-    const resolveIfSessionSent = () => {
-      if (lastSession !== lastSessionBefore) {
-        resolve(lastSession)
-        return
-      }
-
-      setTimeout(resolveIfSessionSent, 1)
-    }
-
-    resolveIfSessionSent()
-
-    client.startSession()
-  })
-
-  return { client, sendEvent, sendSession }
-}
-
-function makeElectronApp ({
-  BrowserWindow = makeBrowserWindow(),
-  isPackaged = true,
-  version = '1.2.3',
-  name = 'my cool app :^)'
-} = {}) {
-  const callbacks: { [event: string]: Function[] } = {
-    'browser-window-focus': [],
-    'browser-window-blur': [],
-    'browser-window-created': []
-  }
-
-  return {
-    isPackaged,
-    getVersion () {
-      return version
-    },
-    getName () {
-      return name
-    },
-    on (event, callback) {
-      callbacks[event].push(callback)
-    },
-    quit (): undefined {
-      throw new Error('bye!')
-    },
-    listenerCount (event) {
-      return callbacks[event].length
-    },
-
-    _createWindow () {
-      const newWindow = BrowserWindow._create()
-      callbacks['browser-window-created'].forEach(f => { f(null, newWindow) })
-
-      this._emitFocusEvent(newWindow._index)
-    },
-    _closeWindow (window) {
-      // electron doesn't blur the very last window to close
-      if (BrowserWindow.getAllWindows().length > 1) {
-        this._emitBlurEvent()
-      }
-
-      BrowserWindow._close(window)
-    },
-    _emitBlurEvent () {
-      BrowserWindow._blur()
-      callbacks['browser-window-blur'].forEach(f => { f() })
-    },
-    _emitFocusEvent (index = 0) {
-      BrowserWindow._focus(index)
-      callbacks['browser-window-focus'].forEach(f => { f() })
-    }
-  }
 }
 
 function makeNativeClient () {
   return {
     setApp: jest.fn()
-  }
-}
-
-interface BrowserWindowOptions {
-  windows?: any[]
-  focusedWindow?: number|null
-}
-
-function makeBrowserWindow ({ windows = [], focusedWindow = null }: BrowserWindowOptions = {}) {
-  let _windows = windows
-  let _focusedWindow = focusedWindow
-
-  class FakeBrowserWindow {
-    public _index
-    public _callbacks
-
-    constructor (index) {
-      this._index = index
-      this._callbacks = {
-        closed: []
-      }
-    }
-
-    static getAllWindows () {
-      return _windows
-    }
-
-    static getFocusedWindow () {
-      if (_focusedWindow === null || _windows[_focusedWindow] === undefined) {
-        return null
-      }
-
-      return _windows[_focusedWindow]
-    }
-
-    on (event, callback) {
-      this._callbacks[event].push(callback)
-    }
-
-    static _blur () {
-      _focusedWindow = null
-    }
-
-    static _focus (index: number) {
-      if (_windows[index] === undefined) {
-        throw new Error(`Index ${index} out of range`)
-      }
-
-      _focusedWindow = index
-    }
-
-    static _create () {
-      const newWindow = new FakeBrowserWindow(_windows.length)
-      _windows.push(newWindow)
-
-      return newWindow
-    }
-
-    static _close (window) {
-      _windows = _windows.filter(w => w !== window)
-
-      if (_focusedWindow === window._index) {
-        _focusedWindow = null
-      } else {
-        _focusedWindow = _windows.indexOf(window)
-      }
-
-      window._callbacks.closed.forEach(f => { f() })
-    }
-  }
-
-  return FakeBrowserWindow
-}
-
-interface ProcessOptions {
-  platform?: string
-  mas?: boolean
-  windowsStore?: boolean
-  creationTime?: number|null
-}
-
-function makeProcess ({
-  platform = 'serenity',
-  mas = false,
-  windowsStore = false,
-  creationTime = Date.now()
-}: ProcessOptions = {}) {
-  return {
-    platform,
-    mas,
-    windowsStore,
-    getCreationTime: () => creationTime
   }
 }

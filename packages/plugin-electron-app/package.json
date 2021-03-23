@@ -24,6 +24,7 @@
     "build": "node-gyp configure build"
   },
   "devDependencies": {
+    "@bugsnag/electron-test-helpers": "^1.0.0",
     "@bugsnag/core": "^7.0.0"
   },
   "dependencies": {

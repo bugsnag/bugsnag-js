@@ -1,0 +1,21 @@
+{
+  "name": "@bugsnag/electron-test-helpers",
+  "version": "1.0.0",
+  "main": "helpers.ts",
+  "description": "Test helpers for @bugsnag/electron",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:bugsnag/bugsnag-electron.git"
+  },
+  "publishConfig": {
+    "private": true
+  },
+  "files": [
+    "helpers.ts"
+  ],
+  "devDependencies": {
+    "@bugsnag/core": "^7.0.0"
+  },
+  "author": "Bugsnag",
+  "license": "MIT"
+}
