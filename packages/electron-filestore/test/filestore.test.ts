@@ -72,7 +72,8 @@ describe('FileStore', () => {
 
   describe('getDeviceInfo()', () => {
     it('returns an empty object if something goes wrong', async () => {
-      store = new FileStore('mykey', '/non/existent/dir', crashes)
+      const dir = process.platform === 'win32' ? '6:\\non\\existent' : '/non/existent'
+      store = new FileStore('mykey', dir, crashes)
       const contents = await store.getDeviceInfo()
       expect(contents).toEqual({})
     })

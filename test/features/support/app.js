@@ -59,7 +59,7 @@ class TestApp {
       const proc = spawn(command, args, { cwd: this.buildDir, env: { ...process.env, ...env } })
       // handy for debugging but otherwise annoying output
       if (process.env.VERBOSE) {
-        proc.stderr.on('data', data => { console.log(`  stderr: ${data}`) })
+        proc.stderr.on('data', data => { process.stdout.write(data) })
       } else {
         // webpack will hang if *something* doesn't read from stderr, even when
         // everything is fine
