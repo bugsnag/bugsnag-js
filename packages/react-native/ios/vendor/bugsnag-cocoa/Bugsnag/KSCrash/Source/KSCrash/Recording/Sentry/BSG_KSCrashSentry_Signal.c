@@ -166,7 +166,6 @@ bool bsg_kscrashsentry_installSignalHandler(
         BSG_KSLOG_DEBUG("Signal handlers enabled.");
     }
     if (bsg_g_installed) {
-        BSG_KSLOG_DEBUG("Signal handler already installed.");
         return true;
     }
     bsg_g_installed = 1;
@@ -249,7 +248,6 @@ void bsg_kscrashsentry_uninstallSignalHandler(void) {
     // handling. The installed signal handlers still chains the signal even when
     // not handling.
     if (!bsg_g_enabled) {
-        BSG_KSLOG_DEBUG("Signal handlers were already disabled.");
         return;
     }
 

@@ -201,7 +201,6 @@ extern "C" bool bsg_kscrashsentry_installCPPExceptionHandler(
     BSG_KSLOG_DEBUG(@"Installing C++ exception handler.");
 
     if (bsg_g_installed) {
-        BSG_KSLOG_DEBUG(@"C++ exception handler already installed.");
         return true;
     }
     bsg_g_installed = 1;
@@ -216,7 +215,6 @@ extern "C" bool bsg_kscrashsentry_installCPPExceptionHandler(
 extern "C" void bsg_kscrashsentry_uninstallCPPExceptionHandler(void) {
     BSG_KSLOG_DEBUG(@"Uninstalling C++ exception handler.");
     if (!bsg_g_installed) {
-        BSG_KSLOG_DEBUG(@"C++ exception handler already uninstalled.");
         return;
     }
 

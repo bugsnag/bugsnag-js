@@ -336,7 +336,6 @@ bool bsg_kscrashsentry_installMachHandler(
                             EXC_MASK_BREAKPOINT;
 
     if (bsg_g_installed) {
-        BSG_KSLOG_DEBUG("Exception handler already installed.");
         return true;
     }
     bsg_g_installed = 1;
@@ -435,7 +434,6 @@ void bsg_kscrashsentry_uninstallMachHandler(void) {
     BSG_KSLOG_DEBUG("Uninstalling mach exception handler.");
 
     if (!bsg_g_installed) {
-        BSG_KSLOG_DEBUG("Mach exception handler was already uninstalled.");
         return;
     }
 

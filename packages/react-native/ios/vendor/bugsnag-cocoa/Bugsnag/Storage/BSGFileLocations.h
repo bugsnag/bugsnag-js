@@ -14,8 +14,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (readonly, nonatomic) NSString *kvStore;
 @property (readonly, nonatomic) NSString *breadcrumbs;
+@property (readonly, nonatomic) NSString *events;
 @property (readonly, nonatomic) NSString *kscrashReports;
 @property (readonly, nonatomic) NSString *sessions;
+
+/**
+ * File containing details of the current app hang (if the app is hung)
+ */
+@property (readonly, nonatomic) NSString *appHangEvent;
 
 /**
  * File whose presence indicates that the libary at least attempted to handle the last

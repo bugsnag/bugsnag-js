@@ -81,10 +81,12 @@ static NSString *getAndCreateSubdir(NSString *rootPath, NSString *relativePath) 
 - (instancetype)initWithVersion1 {
     if (self = [super init]) {
         NSString *root = rootDirectory(@"v1");
+        _events = getAndCreateSubdir(root, @"events");
         _sessions = getAndCreateSubdir(root, @"sessions");
         _breadcrumbs = getAndCreateSubdir(root, @"breadcrumbs");
         _kscrashReports = getAndCreateSubdir(root, @"KSCrashReports");
         _kvStore = getAndCreateSubdir(root, @"kvstore");
+        _appHangEvent = [root stringByAppendingPathComponent:@"app_hang.json"];
         _flagHandledCrash = [root stringByAppendingPathComponent:@"bugsnag_handled_crash.txt"];
         _configuration = [root stringByAppendingPathComponent:@"config.json"];
         _metadata = [root stringByAppendingPathComponent:@"metadata.json"];

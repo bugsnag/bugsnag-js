@@ -26,11 +26,8 @@
 
 #import <Foundation/Foundation.h>
 
-#import "BugsnagErrorReportSink.h"
-#import "BSGOnErrorSentBlock.h"
 #import "BSG_KSCrashReportWriter.h"
 #import "BSG_KSCrashType.h"
-#import "BugsnagConfiguration.h"
 
 /**
  * Reports any crashes that occur in the application.
@@ -72,22 +69,7 @@
  *
  * @return YES if the reporter successfully installed.
  */
-- (BOOL)install;
-
-/** Send any outstanding crash reports to the current sink.
- * It will only attempt to send the most recent 5 reports. All others will be
- * deleted. Once the reports are successfully sent to the server, they may be
- * deleted locally.
- *
- * Note: property "sink" MUST be set or else this method will call the block
- *       with an error.
- */
-- (void)sendAllReports;
-
-/**
- * Send the most recent crash report to the current sink.
- */
-- (void)sendLatestReport:(dispatch_block_t)completionHander;
+- (BOOL)install:(NSString *)directory;
 
 /** Report a custom, user defined exception.
  * This can be useful when dealing with scripting languages.

@@ -30,14 +30,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (readwrite, copy, nullable) NSDictionary *error;
 
 /// The event state (whether the error is handled/unhandled.)
-@property (readonly) BugsnagHandledState *handledState;
+@property (readwrite, nonatomic) BugsnagHandledState *handledState;
 
 @property (strong, nonatomic) BugsnagMetadata *metadata;
 
 /// Property overrides.
 @property (readonly, nonatomic) NSDictionary *overrides;
-
-@property NSSet<id> *redactedKeys;
 
 /// The release stage of the application
 @property (readwrite, copy, nullable) NSString *releaseStage;
@@ -59,6 +57,8 @@ NS_ASSUME_NONNULL_BEGIN
                     threads:(NSArray<BugsnagThread *> *)threads
                     session:(nullable BugsnagSession *)session;
 
+- (instancetype)initWithJson:(NSDictionary *)json;
+
 - (instancetype)initWithKSReport:(NSDictionary *)KSReport;
 
 - (instancetype)initWithUserData:(NSDictionary *)event;
@@ -70,7 +70,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setOverrideProperty:(NSString *)key value:(id)value;
 
-- (NSDictionary *)toJson;
+- (NSDictionary *)toJsonWithRedactedKeys:(nullable NSSet *)redactedKeys;
 
 - (void)notifyUnhandledOverridden;
 

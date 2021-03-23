@@ -19,6 +19,7 @@ typedef NS_ENUM(NSUInteger, SeverityReasonType) {
     PromiseRejection,
     LogMessage,
     LikelyOutOfMemory,
+    AppHang,
 };
 
 /**
