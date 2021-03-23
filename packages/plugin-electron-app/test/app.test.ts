@@ -19,26 +19,25 @@ const makeExpectedSessionApp = (customisations = {}) => ({
 })
 
 // expected data for 'event.app'
-const makeExpectedEventApp = (customisations = {}) => ({
-  ...makeExpectedSessionApp(),
-  inForeground: false,
-  isLaunching: true,
-  duration: expect.any(Number),
-  durationInForeground: undefined,
-  ...customisations
-})
-
+const makeExpectedEventApp = (customisations = {}) => {
+  const app = makeExpectedSessionApp()
+  return {
+    ...app,
+    inForeground: false,
+    isLaunching: true,
+    duration: expect.any(Number),
+    ...customisations
+  }
+}
 // expected data synced to NativeClient
-const makeExpectedNativeClientApp = (customisations = {}) => ({
-  ...makeExpectedEventApp(),
-  duration: undefined,
-  durationInForeground: undefined,
-  ...customisations
-})
+const makeExpectedNativeClientApp = (customisations = {}) => {
+  const app = makeExpectedEventApp()
+  delete app.duration
+  return { ...app, ...customisations }
+}
 
 // expected data for 'event.metadata.app'
 const makeExpectedMetadataApp = (customisations = {}) => ({
-  installedFromStore: undefined,
   name: 'my cool app :^)',
   ...customisations
 })
