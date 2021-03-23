@@ -1,4 +1,4 @@
-const NativeApp = require('bindings')('bugsnag_plugin_electron_app_bindings')
+const native = require('bindings')('bugsnag_plugin_electron_app_bindings')
 
 const osToAppType = new Map([
   ['darwin', 'macOS'],
@@ -28,7 +28,7 @@ const getInstalledFromStore = process => {
   return undefined
 }
 
-module.exports = (NativeClient, process, electronApp, BrowserWindow) => ({
+module.exports = (NativeClient, process, electronApp, BrowserWindow, NativeApp = native) => ({
   name: 'electronApp',
   load (client) {
     const app = {}

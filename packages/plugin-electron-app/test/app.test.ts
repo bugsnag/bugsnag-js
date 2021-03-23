@@ -756,6 +756,7 @@ interface MakeClientOptions {
   BrowserWindow?: any
   electronApp?: any
   NativeClient?: any
+  NativeApp?: any
   process?: any
   config?: { launchDurationMillis: number|undefined }
 }
@@ -765,11 +766,12 @@ function makeClient ({
   electronApp = makeElectronApp({ BrowserWindow }),
   NativeClient = makeNativeClient(),
   process = makeProcess(),
-  config = { launchDurationMillis: 0 }
+  config = { launchDurationMillis: 0 },
+  NativeApp = makeNativeApp()
 }: MakeClientOptions = {}): Client {
   return makeClientForPlugin({
     config,
-    plugin: plugin(NativeClient, process, electronApp, BrowserWindow)
+    plugin: plugin(NativeClient, process, electronApp, BrowserWindow, NativeApp)
   })
 }
 
@@ -777,4 +779,8 @@ function makeNativeClient () {
   return {
     setApp: jest.fn()
   }
+}
+
+function makeNativeApp () {
+  return { getPackageVersion: () => null }
 }
