@@ -1,5 +1,6 @@
 import Client from '@bugsnag/core/client'
 import Breadcrumb from '@bugsnag/core/breadcrumb'
+import { makeApp, makeBrowserWindow } from '@bugsnag/electron-test-helpers'
 import plugin from '../'
 
 describe('plugin: electron app breadcrumbs', () => {
@@ -29,8 +30,8 @@ describe('plugin: electron app breadcrumbs', () => {
     })
 
     it('browser-window-blur', () => {
-      const app = makeApp()
       const BrowserWindow = makeBrowserWindow()
+      const app = makeApp({ BrowserWindow })
       const client = makeClient({ app, BrowserWindow })
 
       const window = new BrowserWindow(123, 'beep boop')
@@ -46,8 +47,8 @@ describe('plugin: electron app breadcrumbs', () => {
     })
 
     it('browser-window-focus', () => {
-      const app = makeApp()
       const BrowserWindow = makeBrowserWindow()
+      const app = makeApp({ BrowserWindow })
       const client = makeClient({ app, BrowserWindow })
 
       const window = new BrowserWindow(456, 'bee boo')
@@ -117,8 +118,8 @@ describe('plugin: electron app breadcrumbs', () => {
     })
 
     it('browser-window-created', () => {
-      const app = makeApp()
       const BrowserWindow = makeBrowserWindow()
+      const app = makeApp({ BrowserWindow })
       const client = makeClient({ app, BrowserWindow })
 
       const window = new BrowserWindow(789, 'be bo')
@@ -610,84 +611,4 @@ function makeClient ({
     undefined,
     [plugin(app, BrowserWindow)]
   )
-}
-
-function makeApp () {
-  const callbacks = {
-    ready: [],
-    'will-quit': [],
-    'browser-window-blur': [],
-    'browser-window-focus': [],
-    'browser-window-created': [],
-    'child-process-gone': [],
-    'render-process-gone': []
-  }
-
-  return {
-    on (event, callback) {
-      callbacks[event].push(callback)
-    },
-
-    _emit (event, ...args) {
-      callbacks[event].forEach(cb => { cb(null, ...args) })
-    }
-  }
-}
-
-function makeBrowserWindow () {
-  const defaultSize = { width: 16, height: 9 }
-  const defaultPosition = { top: 2, left: 5 }
-
-  return class FakeBrowserWindow {
-    private readonly callbacks: { [event: string]: Function[] } = {
-      close: [],
-      closed: [],
-      unresponsive: [],
-      responsive: [],
-      show: [],
-      hide: [],
-      maximize: [],
-      minimize: [],
-      resized: [],
-      moved: [],
-      'enter-full-screen': [],
-      'leave-full-screen': []
-    }
-
-    public title: string
-    private readonly id: number
-    private readonly size: [number, number]
-    private readonly position: [number, number]
-
-    private static readonly _browserWindows: FakeBrowserWindow[] = []
-
-    constructor (id: number, title: string, { size = defaultSize, position = defaultPosition } = {}) {
-      this.id = id
-      this.title = title
-      this.size = [size.width, size.height]
-      this.position = [position.left, position.top]
-
-      FakeBrowserWindow._browserWindows.push(this)
-    }
-
-    static getAllWindows (): FakeBrowserWindow[] {
-      return FakeBrowserWindow._browserWindows
-    }
-
-    on (event: string, callback: Function) {
-      this.callbacks[event].push(callback)
-    }
-
-    getSize (): [number, number] {
-      return this.size
-    }
-
-    getPosition (): [number, number] {
-      return this.position
-    }
-
-    _emit (event: string, ...args: any[]): void {
-      this.callbacks[event].forEach(cb => { cb(null, ...args) })
-    }
-  }
 }

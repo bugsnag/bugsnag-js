@@ -1,9 +1,10 @@
-import Client from '@bugsnag/core/client'
 import Breadcrumb from '@bugsnag/core/breadcrumb'
+import { PowerMonitorEvent } from '@bugsnag/electron-test-helpers/src/PowerMonitor'
+import { makePowerMonitor, makeClientForPlugin } from '@bugsnag/electron-test-helpers'
 import plugin from '../'
 
 describe('plugin: electron power monitor breadcrumbs', () => {
-  const events = [
+  const events: Array<[PowerMonitorEvent, string]> = [
     ['suspend', 'Device suspended'],
     ['resume', 'Device resumed from suspension'],
     ['on-ac', 'Device connected to mains power source'],
@@ -15,7 +16,7 @@ describe('plugin: electron power monitor breadcrumbs', () => {
 
   it.each(events)('leaves a breadcrumb for the "%s" event', (event, expectedMessage) => {
     const powerMonitor = makePowerMonitor()
-    const client = makeClient({ powerMonitor })
+    const { client } = makeClientForPlugin({ plugin: plugin(powerMonitor) })
 
     powerMonitor._emit(event)
 
@@ -26,42 +27,13 @@ describe('plugin: electron power monitor breadcrumbs', () => {
 
   it.each(events)('honours enabledBreadcrumbTypes for "%s"', (event, expectedMessage) => {
     const powerMonitor = makePowerMonitor()
-    const client = makeClient({ powerMonitor, config: { enabledBreadcrumbTypes: [] } })
+    const { client } = makeClientForPlugin({
+      plugin: plugin(powerMonitor),
+      config: { enabledBreadcrumbTypes: [] }
+    })
 
     powerMonitor._emit(event)
 
     expect(client._breadcrumbs).toHaveLength(0)
   })
 })
-
-function makeClient ({
-  powerMonitor = makePowerMonitor(),
-  config = {}
-} = {}) {
-  return new Client(
-    { apiKey: 'api_key', ...config },
-    undefined,
-    [plugin(powerMonitor)]
-  )
-}
-
-function makePowerMonitor () {
-  const callbacks: { [event: string]: Function[] } = {
-    suspend: [],
-    resume: [],
-    'on-ac': [],
-    'on-battery': [],
-    shutdown: [],
-    'lock-screen': [],
-    'unlock-screen': []
-  }
-
-  return {
-    on (event, callback) {
-      callbacks[event].push(callback)
-    },
-    _emit (event) {
-      callbacks[event].forEach(cb => { cb() })
-    }
-  }
-}
