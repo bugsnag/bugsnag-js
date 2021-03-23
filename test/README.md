@@ -145,7 +145,11 @@ Using this step performs some transformations on fixture file:
 * Each breadcrumb in the fixture file must be present and in order, but other breadcrumbs may be present in the received request.
 * Instances of `{BUGSNAG_VERSION}` in the fixture file is replaced with the current version of `@bugsnag/electron`
 * Use `{ANY}` to check for the presence of a field but not the value
-* Use `{REGEX:^foo$}` to validate a string field against a regular expression
+* Use `{REGEX:foo}` to validate a string field against a regular expression
+* Use `{TYPE:something}` to check that `typeof value === something`
+* Arrays validate that all elements in the expectation are included and in the correct order, though they may contain other values
+* Objects validate that all keys in the expectation are included and in the correct order
+* All other values are treated as literals
 
 #### Sessions
 
@@ -159,8 +163,12 @@ The fixture path is resolved to `test/fixtures/sessions/{file name}`.
 Using this step performs some transformations on fixture file:
 
 * `startedAt` is ignored for the purposes of matching, though can be validated separately
+* Instances of `{BUGSNAG_VERSION}` in the fixture file is replaced with the current version of `@bugsnag/electron`
 * Use `{ANY}` to check for the presence of a field but not the value
-* USe `{REGEX:^foo$}` to validate a string field against a regular expression
+* Use `{REGEX:^foo$}` to validate a string field against a regular expression
+* Arrays validate that all elements in the expectation are included and in the correct order, though they may contain other values
+* Objects validate that all keys in the expectation are included and in the correct order
+* All other values are treated as literals
 
 #### Minidumps
 

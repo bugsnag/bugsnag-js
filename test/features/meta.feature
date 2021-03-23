@@ -6,7 +6,7 @@ Feature: Functioning test infrastructure
         When I send a sample event
         Then I received 1 event upload
         Then I received 0 minidump uploads
-        And the contents of event request 0 matches "meta-event.json"
+        And the contents of event request 0 matches "sample-event2.json"
 
     Scenario: Sending a minidump
         When I send a sample minidump
@@ -27,4 +27,4 @@ Feature: Functioning test infrastructure
         Then the headers of every event request contains:
             | Bugsnag-API-Key | 100a2272bd2b0ac0ab0f52715bbdc659 |
             | Content-Type    | application/json                 |
-        Then the contents of an event request matches "renderer-handled-event.json"
+        Then the contents of an event request matches "sample-event.json"

@@ -1,8 +1,11 @@
 const { readFile } = require('fs').promises
-const { deepStrictEqual: deepEqual } = require('assert')
 const { Given, When, Then } = require('@cucumber/cucumber')
-const expect = require('expect')
-const { fixturePath } = require('../utils')
+const { readFixtureFile } = require('../utils')
+const expect = require('../utils/expect')
+
+const readPayloads = (requests) => {
+  return requests.map(req => JSON.parse(req.body.trim()))
+}
 
 Given('I launch an app', { timeout: 30 * 1000 }, async () => {
   return global.automator.start()
@@ -26,16 +29,12 @@ Then(/^I received (\d+) minidump uploads?$/, (count) => {
 
 Then('the contents of event request {int} matches {string}', async (index, fixture) => {
   const req = global.server.eventUploads[index]
-  const data = await readFile(fixturePath(fixture))
-  const expected = JSON.parse(data.toString('utf8'))
-  const actual = JSON.parse(req.body)
-  expect(actual).toEqual(expected)
+  expect(readPayloads([req])).toContainPayload(await readFixtureFile(fixture))
 })
 
 Then('minidump request {int} contains a file form field named {string} matching {string}', async (index, field, fixture) => {
   const req = global.server.minidumpUploads[index]
-  const data = await readFile(fixturePath(fixture))
-  const expected = JSON.parse(data.toString('utf8'))
+  const expected = await readFixtureFile(fixture)
   const upload = await readFile(req.files[field].path)
   const actual = JSON.parse(upload.toString('utf8'))
   expect(actual).toEqual(expected)
@@ -90,26 +89,9 @@ Then('the headers of every event request contains:', (data) => {
 })
 
 Then('the contents of an event request matches {string}', async (fixture) => {
-  const data = await readFile(fixturePath(fixture))
-  const expected = JSON.parse(data.toString('utf8'))
-  // TODO: check received "notifier" contents match latest version
-  delete expected.notifier
-  // TODO: stack trace validation (for when a stack is expected) - ensure all
-  // frames in `expected` are present in an actual request and in-project
-  // TODO: breadcrumbs validation - ensure all crumbs in `expected` are present
-  // in an actual request
-  const matches = global.server.eventUploads.filter(req => {
-    try {
-      deepEqual(expected, JSON.parse(req.body.trim()))
-      return true
-    } catch (e) {
-      return false
-    }
-  })
-  expect(matches.length).toBeGreaterThan(0)
+  expect(readPayloads(global.server.eventUploads)).toContainPayload(await readFixtureFile(fixture))
 })
 
-Then('the contents of a session request matches {string}', (string) => {
-  // Write code here that turns the phrase above into concrete actions
-  return 'pending'
+Then('the contents of a session request matches {string}', async (fixture) => {
+  expect(readPayloads(global.server.sessionUploads)).toContainPayload(await readFixtureFile(fixture))
 })

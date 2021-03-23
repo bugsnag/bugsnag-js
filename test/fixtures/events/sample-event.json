@@ -1,0 +1,1 @@
+{"events":[{"app":{"version":"5.6.0"},"context":"sale","device":{"osName":"beOS","osVersion":"{REGEX:\\d+\\.\\d+}"},"metadata":{"counters":{"trees":"{TYPE:number}","carrots":9}}}]}
