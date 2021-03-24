@@ -13,12 +13,5 @@ module.exports = {
   },
   plugins: [
     new webpack.ProgressPlugin()
-  ],
-  module: {
-    rules: [{
-      test: /\.(js|jsx)$/,
-      include: [],
-      loader: 'babel-loader'
-    }]
-  }
+  ]
 }
