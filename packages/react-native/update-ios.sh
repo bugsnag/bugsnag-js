@@ -6,7 +6,7 @@
 
 set -euo pipefail
 
-SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 SCRIPT_NAME="${0##*/}"
 TEMP_DIR=
 
@@ -24,6 +24,7 @@ print_help() {
     echo "    --version <version> (example: $SCRIPT_NAME --version 6.7.0)"
     echo "    --local <path>      (example: $SCRIPT_NAME --local ../../../bugsnag-cocoa)"
     echo "    --sha <version>     (example: $SCRIPT_NAME --sha c8210a3)"
+    echo "    --list-versions     (lists all versions available and exits)"
 }
 
 error_bad_opt(){
@@ -49,6 +50,9 @@ while [ $# -gt 0 ]; do
     case $1 in
         --) shift; break;;
         -*) case $1 in
+            --list-versions)
+                MODE=list-versions
+                ;;
             --version)
 				if [ $# -lt 2 ]; then error_missing_field $1; fi
 				MODE=version
@@ -57,7 +61,7 @@ while [ $# -gt 0 ]; do
             --local)
 				if [ $# -lt 2 ]; then error_missing_field $1; fi
 				MODE=local
-				BUGSNAG_COCOA_REPO_DIR="$2"
+				BUGSNAG_COCOA_REPO_DIR="$(cd "$2" && pwd)"
 				shift;;
             --sha)
 				if [ $# -lt 2 ]; then error_missing_field $1; fi
@@ -115,9 +119,7 @@ revendor_from_clean_repo() {
 	echo "Checking out https://github.com/bugsnag/bugsnag-cocoa.git with tag $tag"
 	TEMP_DIR="$(mktemp -d)"
 	pushd "$TEMP_DIR" >/dev/null
-	git clone https://github.com/bugsnag/bugsnag-cocoa.git
-	cd bugsnag-cocoa
-	git checkout $tag || exit 1
+	git clone https://github.com/bugsnag/bugsnag-cocoa.git --depth 1 --branch $tag
 	popd >/dev/null
 	revendor_from_dir "$TEMP_DIR/bugsnag-cocoa"
 }
@@ -127,6 +129,11 @@ case $MODE in
 		print_help
 		exit 1
 		;;
+    list-versions)
+        git ls-remote --tags https://github.com/bugsnag/bugsnag-cocoa.git | \
+            grep -v "{}" | awk "{print \$2}" | sed 's/refs\/tags\/v//g' | sed 's/refs\/tags\///g'
+        exit 0
+        ;;
 	version)
 		revendor_from_clean_repo $GIT_TAG
 		;;

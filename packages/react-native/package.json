@@ -61,5 +61,8 @@
     "@bugsnag/plugin-react-native-session": "^7.9.0",
     "@bugsnag/plugin-react-native-unhandled-rejection": "^7.9.0",
     "iserror": "^0.0.2"
+  },
+  "scripts": {
+    "prepare": "./prepare-android-vendor.sh"
   }
 }
