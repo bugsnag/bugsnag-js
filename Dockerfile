@@ -15,11 +15,11 @@ workdir /src
 # avoid downloading web browsers for testing during npm install
 env PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
 
-run npm install
+run npm ci --no-audit --progress=false
 
 run npm run bootstrap
 
-arg ELECTRON_VERSION
-run npm install electron@$ELECTRON_VERSION
+# start local NPM server during the integration tests
+env START_LOCAL_NPM=1
 
 cmd npm run test:unit && npm run test:cucumber
