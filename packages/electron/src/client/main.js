@@ -21,6 +21,7 @@ module.exports = (opts) => {
     // main internal plugins go here
     require('@bugsnag/plugin-electron-state-sync'),
     require('@bugsnag/plugin-electron-ipc'),
+    require('@bugsnag/plugin-node-uncaught-exception'),
     require('@bugsnag/plugin-electron-app')(NativeClient, process, electron.app, electron.BrowserWindow),
     require('@bugsnag/plugin-electron-app-breadcrumbs')(electron.app, electron.BrowserWindow),
     require('@bugsnag/plugin-electron-device')(electron.app, electron.screen, process, filestore, NativeClient, electron.powerMonitor)
