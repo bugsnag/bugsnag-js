@@ -56,19 +56,6 @@ describe('plugin: electron app info', () => {
     expect(session.app).toEqual(makeExpectedSessionApp())
   })
 
-  it('reports correct release stage for non-packaged builds', async () => {
-    const electronApp = makeElectronApp({ isPackaged: false })
-
-    const { sendEvent, sendSession } = makeClient({ electronApp })
-
-    const event = await sendEvent()
-    expect(event.app).toEqual(makeExpectedEventApp({ releaseStage: 'development' }))
-    expect(event.getMetadata('app')).toEqual(makeExpectedMetadataApp())
-
-    const session = await sendSession()
-    expect(session.app).toEqual(makeExpectedSessionApp({ releaseStage: 'development' }))
-  })
-
   it('reports app.type for macOS', async () => {
     const process = makeProcess({ platform: 'darwin' })
 

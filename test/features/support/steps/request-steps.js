@@ -1,14 +1,32 @@
 const { readFile } = require('fs').promises
+const { createHash } = require('crypto')
 const { Given, When, Then } = require('@cucumber/cucumber')
 const { readFixtureFile } = require('../utils')
 const expect = require('../utils/expect')
 
+const REQUEST_RESOLUTION_TIMEOUT = 3000
+const launchConfig = { timeout: 30 * 1000 }
+const requestDelay = (callback) => new Promise((resolve, reject) => {
+  setTimeout(() => callback(resolve), REQUEST_RESOLUTION_TIMEOUT)
+})
 const readPayloads = (requests) => {
   return requests.map(req => JSON.parse(req.body.trim()))
 }
 
-Given('I launch an app', { timeout: 30 * 1000 }, async () => {
+Given('I launch an app', launchConfig, async () => {
   return global.automator.start()
+})
+
+Given('I launch an app with configuration:', launchConfig, (data) => {
+  const setup = { bugsnag: 'default', preload: 'default.js' }
+  data.raw().forEach(row => {
+    const [key, config] = row
+    setup[key] = config
+  })
+  return global.automator.start({
+    BUGSNAG_CONFIG: setup.bugsnag,
+    BUGSNAG_PRELOAD: setup.preload
+  })
 })
 
 When('I click {string}', async (link) => {
@@ -45,27 +63,38 @@ Then('minidump request {int} contains a file form field named {string}', (index,
   expect(req.files[field]).not.toBeUndefined()
 })
 
-Then('the total requests received by the server matches:', (data) => {
-  data.raw().forEach(row => {
-    const [key, count] = row
-    switch (key) {
-      case 'minidumps':
-        expect(global.server.minidumpUploads.length).toEqual(parseInt(count))
-        break
-      case 'sessions':
-        expect(global.server.sessionUploads.length).toEqual(parseInt(count))
-        break
-      case 'events':
-        expect(global.server.eventUploads.length).toEqual(parseInt(count))
-        break
-      default:
-        throw new Error(`no endpoint registered for ${key}`)
-    }
+Then('the total requests received by the server matches:', async (data) => {
+  return requestDelay((done) => {
+    data.raw().forEach(row => {
+      const [key, count] = row
+      switch (key) {
+        case 'minidumps':
+          expect(global.server.minidumpUploads.length).toEqual(parseInt(count))
+          break
+        case 'sessions':
+          expect(global.server.sessionUploads.length).toEqual(parseInt(count))
+          break
+        case 'events':
+          expect(global.server.eventUploads.length).toEqual(parseInt(count))
+          break
+        default:
+          throw new Error(`no endpoint registered for ${key}`)
+      }
+    })
+    done()
   })
 })
 
-const matchValue = (expected, value) => {
-  return value === expected || (expected === '{ANY}' && !!value)
+const computeSha1 = (value) => {
+  const hash = createHash('sha1')
+  hash.update(value)
+  return hash.digest('hex')
+}
+
+const matchValue = (req, expected, value) => {
+  return value === expected ||
+    (expected === '{ANY}' && !!value) ||
+    (expected === '{BODY_SHA1}' && value === computeSha1(req.body.trim()))
 }
 
 const eventsMatchingHeaders = (data) => {
@@ -75,7 +104,7 @@ const eventsMatchingHeaders = (data) => {
   return global.server.eventUploads.filter((e) => {
     return headers.filter(header => {
       const [key, value] = header
-      return key in e.headers && matchValue(value, e.headers[key])
+      return key in e.headers && matchValue(e, value, e.headers[key])
     }).length === headers.length
   })
 }
