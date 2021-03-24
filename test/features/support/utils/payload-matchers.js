@@ -4,6 +4,8 @@ const { red, green } = require('chalk')
 const anyMatcher = '{ANY}'
 const regexMatcher = /^{REGEX:(.*)}$/
 const typeMatcher = /^{TYPE:(.*)}$/
+const timestampMatcher = /^{TIMESTAMP}$/
+const timestampPattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/
 
 /* Assert value is a string and matches a regular expression */
 const compareRegex = (pattern, actual, path) => {
@@ -102,6 +104,8 @@ const compare = (expected, actual, path = '') => {
       } else if (expected.match(typeMatcher)) {
         const type = expected.match(typeMatcher)[1]
         return compareType(type, actual, path)
+      } else if (expected.match(timestampMatcher)) {
+        return compareRegex(timestampPattern, actual, path)
       } else if (expected.match(regexMatcher)) {
         const pattern = expected.match(regexMatcher)[1]
         return compareRegex(pattern, actual, path)

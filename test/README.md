@@ -147,6 +147,7 @@ Using this step performs some transformations on fixture file:
 * Use `{ANY}` to check for the presence of a field but not the value
 * Use `{REGEX:foo}` to validate a string field against a regular expression
 * Use `{TYPE:something}` to check that `typeof value === something`
+* Use `{TIMESTAMP}` to check that a value is a string containing an ISO 8601 timestamp
 * Arrays validate that all elements in the expectation are included and in the correct order, though they may contain other values
 * Objects validate that all keys in the expectation are included and in the correct order
 * All other values are treated as literals
