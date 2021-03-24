@@ -1,4 +1,4 @@
-import { makeApp, makeClientForPlugin, makePowerMonitor, makeProcess, makeScreen } from '@bugsnag/electron-test-helpers'
+import { makeApp, makeClientForPlugin, makeDisplay, makePowerMonitor, makeProcess, makeScreen } from '@bugsnag/electron-test-helpers'
 import plugin from '../'
 
 const nextTick = async () => await new Promise(process.nextTick)
@@ -174,7 +174,9 @@ describe('plugin: electron device info', () => {
   })
 
   it('reports correct screen information if primary display is changed', async () => {
-    const screen = makeScreen()
+    const primaryDisplay = makeDisplay()
+
+    const screen = makeScreen({ primaryDisplay })
 
     const { sendEvent, sendSession } = makeClient({ screen })
 
@@ -187,10 +189,10 @@ describe('plugin: electron device info', () => {
     const session = await sendSession()
     expect(session.device).toEqual(makeExpectedSessionDevice())
 
-    screen._emit('display-metrics-changed', {
-      size: { width: 100, height: 200 },
-      scaleFactor: 2.5
-    })
+    primaryDisplay.size = { width: 100, height: 200 }
+    primaryDisplay.scaleFactor = 2.5
+
+    screen._emit('display-metrics-changed', primaryDisplay, ['bounds', 'scaleFactor'])
 
     const event2 = await sendEvent()
     expect(event2.device).toEqual(makeExpectedEventDevice())
@@ -204,7 +206,10 @@ describe('plugin: electron device info', () => {
   })
 
   it('does not update screen information if a secondary display is changed', async () => {
-    const screen = makeScreen()
+    const primaryDisplay = makeDisplay({ size: { width: 222, height: 3333 }, scaleFactor: 1000 })
+    const secondaryDisplay = makeDisplay({ size: { width: 100, height: 200 }, scaleFactor: 2.5 })
+
+    const screen = makeScreen({ primaryDisplay })
 
     const { sendEvent, sendSession } = makeClient({ screen })
 
@@ -219,11 +224,7 @@ describe('plugin: electron device info', () => {
     const session = await sendSession()
     expect(session.device).toEqual(expectedSession)
 
-    screen._emit('display-metrics-changed', {
-      size: { width: 100, height: 200 },
-      scaleFactor: 2.5,
-      primaryDisplay: false
-    })
+    screen._emit('display-metrics-changed', secondaryDisplay, ['bounds', 'scaleFactor'])
 
     const event2 = await sendEvent()
     expect(event2.device).toEqual(expectedEvent)
@@ -250,7 +251,7 @@ describe('plugin: electron device info', () => {
 
     expect(NativeClient.setDevice).toHaveBeenCalledTimes(2)
 
-    screen._emit('display-metrics-changed', { rotation: 270 })
+    screen._emit('display-metrics-changed', makeDisplay({ rotation: 270 }), ['rotation'])
 
     expect(NativeClient.setDevice).toHaveBeenCalledTimes(2)
   })
