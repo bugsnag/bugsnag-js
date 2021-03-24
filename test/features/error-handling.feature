@@ -16,8 +16,9 @@ Feature: Detecting and reporting errors
         Then the total requests received by the server matches:
             | events  | 1        |
         Then the headers of every event request contains:
-            | Bugsnag-API-Key | 100a2272bd2b0ac0ab0f52715bbdc659 |
-            | Content-Type    | application/json                 |
+            | Bugsnag-API-Key   | 100a2272bd2b0ac0ab0f52715bbdc659 |
+            | Content-Type      | application/json                 |
+            | Bugsnag-Integrity | {BODY_SHA1}                      |
         Then the contents of an event request matches "main/uncaught-exception/<config>.json"
 
         Examples:

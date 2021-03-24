@@ -1,4 +1,5 @@
 const { readFile } = require('fs').promises
+const { createHash } = require('crypto')
 const { Given, When, Then } = require('@cucumber/cucumber')
 const { readFixtureFile } = require('../utils')
 const expect = require('../utils/expect')
@@ -84,8 +85,16 @@ Then('the total requests received by the server matches:', async (data) => {
   })
 })
 
-const matchValue = (expected, value) => {
-  return value === expected || (expected === '{ANY}' && !!value)
+const computeSha1 = (value) => {
+  const hash = createHash('sha1')
+  hash.update(value)
+  return hash.digest('hex')
+}
+
+const matchValue = (req, expected, value) => {
+  return value === expected ||
+    (expected === '{ANY}' && !!value) ||
+    (expected === '{BODY_SHA1}' && value === computeSha1(req.body.trim()))
 }
 
 const eventsMatchingHeaders = (data) => {
@@ -95,7 +104,7 @@ const eventsMatchingHeaders = (data) => {
   return global.server.eventUploads.filter((e) => {
     return headers.filter(header => {
       const [key, value] = header
-      return key in e.headers && matchValue(value, e.headers[key])
+      return key in e.headers && matchValue(e, value, e.headers[key])
     }).length === headers.length
   })
 }
