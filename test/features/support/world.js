@@ -39,14 +39,13 @@ BeforeAll({ timeout: 240 * 1000 }, async () => {
   if (!process.env.SKIP_INSTALL) {
     console.log('[BeforeAll] Packaging packages ...')
     const packageVersion = await publishPackages()
-    console.log(`[BeforeAll] Installing @bugsnag/electron@${packageVersion} ...`)
-    await app.installBugsnag(packageVersion)
+    console.log('[BeforeAll] Installing dependencies ...')
+    await app.installDeps(packageVersion, process.env.ELECTRON_VERSION)
   }
 
   // build fixture app, logging as it may take a few seconds
   if (!process.env.SKIP_PACKAGE_APP) {
     console.log('[BeforeAll] Building test app ...')
-    await app.installDeps()
     await app.packageApp({
       BUGSNAG_API_KEY: '6425093c6530f554a9897d2d7d38e248',
       BUGSNAG_ENDPOINT_MINIDUMPS: endpoints.minidumps,
