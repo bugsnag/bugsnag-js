@@ -1,11 +1,32 @@
 const { readFile } = require('fs').promises
-const { deepStrictEqual: deepEqual } = require('assert')
+const { createHash } = require('crypto')
 const { Given, When, Then } = require('@cucumber/cucumber')
-const expect = require('expect')
-const { fixturePath } = require('../utils')
+const { readFixtureFile } = require('../utils')
+const expect = require('../utils/expect')
 
-Given('I launch an app', { timeout: 30 * 1000 }, async () => {
+const REQUEST_RESOLUTION_TIMEOUT = 3000
+const launchConfig = { timeout: 30 * 1000 }
+const requestDelay = (callback) => new Promise((resolve, reject) => {
+  setTimeout(() => callback(resolve), REQUEST_RESOLUTION_TIMEOUT)
+})
+const readPayloads = (requests) => {
+  return requests.map(req => JSON.parse(req.body.trim()))
+}
+
+Given('I launch an app', launchConfig, async () => {
   return global.automator.start()
+})
+
+Given('I launch an app with configuration:', launchConfig, (data) => {
+  const setup = { bugsnag: 'default', preload: 'default.js' }
+  data.raw().forEach(row => {
+    const [key, config] = row
+    setup[key] = config
+  })
+  return global.automator.start({
+    BUGSNAG_CONFIG: setup.bugsnag,
+    BUGSNAG_PRELOAD: setup.preload
+  })
 })
 
 When('I click {string}', async (link) => {
@@ -26,16 +47,12 @@ Then(/^I received (\d+) minidump uploads?$/, (count) => {
 
 Then('the contents of event request {int} matches {string}', async (index, fixture) => {
   const req = global.server.eventUploads[index]
-  const data = await readFile(fixturePath(fixture))
-  const expected = JSON.parse(data.toString('utf8'))
-  const actual = JSON.parse(req.body)
-  expect(actual).toEqual(expected)
+  expect(readPayloads([req])).toContainPayload(await readFixtureFile(fixture))
 })
 
 Then('minidump request {int} contains a file form field named {string} matching {string}', async (index, field, fixture) => {
   const req = global.server.minidumpUploads[index]
-  const data = await readFile(fixturePath(fixture))
-  const expected = JSON.parse(data.toString('utf8'))
+  const expected = await readFixtureFile(fixture)
   const upload = await readFile(req.files[field].path)
   const actual = JSON.parse(upload.toString('utf8'))
   expect(actual).toEqual(expected)
@@ -46,27 +63,38 @@ Then('minidump request {int} contains a file form field named {string}', (index,
   expect(req.files[field]).not.toBeUndefined()
 })
 
-Then('the total requests received by the server matches:', (data) => {
-  data.raw().forEach(row => {
-    const [key, count] = row
-    switch (key) {
-      case 'minidumps':
-        expect(global.server.minidumpUploads.length).toEqual(parseInt(count))
-        break
-      case 'sessions':
-        expect(global.server.sessionUploads.length).toEqual(parseInt(count))
-        break
-      case 'events':
-        expect(global.server.eventUploads.length).toEqual(parseInt(count))
-        break
-      default:
-        throw new Error(`no endpoint registered for ${key}`)
-    }
+Then('the total requests received by the server matches:', async (data) => {
+  return requestDelay((done) => {
+    data.raw().forEach(row => {
+      const [key, count] = row
+      switch (key) {
+        case 'minidumps':
+          expect(global.server.minidumpUploads.length).toEqual(parseInt(count))
+          break
+        case 'sessions':
+          expect(global.server.sessionUploads.length).toEqual(parseInt(count))
+          break
+        case 'events':
+          expect(global.server.eventUploads.length).toEqual(parseInt(count))
+          break
+        default:
+          throw new Error(`no endpoint registered for ${key}`)
+      }
+    })
+    done()
   })
 })
 
-const matchValue = (expected, value) => {
-  return value === expected || (expected === '{ANY}' && !!value)
+const computeSha1 = (value) => {
+  const hash = createHash('sha1')
+  hash.update(value)
+  return hash.digest('hex')
+}
+
+const matchValue = (req, expected, value) => {
+  return value === expected ||
+    (expected === '{ANY}' && !!value) ||
+    (expected === '{BODY_SHA1}' && value === computeSha1(req.body.trim()))
 }
 
 const eventsMatchingHeaders = (data) => {
@@ -76,7 +104,7 @@ const eventsMatchingHeaders = (data) => {
   return global.server.eventUploads.filter((e) => {
     return headers.filter(header => {
       const [key, value] = header
-      return key in e.headers && matchValue(value, e.headers[key])
+      return key in e.headers && matchValue(e, value, e.headers[key])
     }).length === headers.length
   })
 }
@@ -90,26 +118,9 @@ Then('the headers of every event request contains:', (data) => {
 })
 
 Then('the contents of an event request matches {string}', async (fixture) => {
-  const data = await readFile(fixturePath(fixture))
-  const expected = JSON.parse(data.toString('utf8'))
-  // TODO: check received "notifier" contents match latest version
-  delete expected.notifier
-  // TODO: stack trace validation (for when a stack is expected) - ensure all
-  // frames in `expected` are present in an actual request and in-project
-  // TODO: breadcrumbs validation - ensure all crumbs in `expected` are present
-  // in an actual request
-  const matches = global.server.eventUploads.filter(req => {
-    try {
-      deepEqual(expected, JSON.parse(req.body.trim()))
-      return true
-    } catch (e) {
-      return false
-    }
-  })
-  expect(matches.length).toBeGreaterThan(0)
+  expect(readPayloads(global.server.eventUploads)).toContainPayload(await readFixtureFile(fixture))
 })
 
-Then('the contents of a session request matches {string}', (string) => {
-  // Write code here that turns the phrase above into concrete actions
-  return 'pending'
+Then('the contents of a session request matches {string}', async (fixture) => {
+  expect(readPayloads(global.server.sessionUploads)).toContainPayload(await readFixtureFile(fixture))
 })

@@ -68,9 +68,9 @@ static void context_lock() { mtx_lock(&g_context.lock); }
 static void context_unlock() { mtx_unlock(&g_context.lock); }
 
 static JSON_Value *initialize_context(const char *state) {
-  static const char *object_keys[] = {key_metadata, key_session, key_device,
-                                      key_app, key_user};
-  static size_t key_count = sizeof(object_keys) / sizeof(const char *);
+  const char *object_keys[] = {key_metadata, key_session, key_device, key_app,
+                               key_user};
+  size_t key_count = sizeof(object_keys) / sizeof(const char *);
   if (state) {
     JSON_Value *state_values = json_parse_string(state);
     if (state_values && json_value_get_type(state_values) == JSONObject) {

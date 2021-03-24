@@ -1,4 +1,4 @@
-const NativeApp = require('bindings')('bugsnag_plugin_electron_app_bindings')
+const native = require('bindings')('bugsnag_plugin_electron_app_bindings')
 
 const osToAppType = new Map([
   ['darwin', 'macOS'],
@@ -28,7 +28,7 @@ const getInstalledFromStore = process => {
   return undefined
 }
 
-module.exports = (NativeClient, process, electronApp, BrowserWindow) => ({
+module.exports = (NativeClient, process, electronApp, BrowserWindow, NativeApp = native) => ({
   name: 'electronApp',
   load (client) {
     const app = {}
@@ -51,13 +51,14 @@ module.exports = (NativeClient, process, electronApp, BrowserWindow) => ({
     const appStart = Math.round(process.getCreationTime() || Date.now())
     let lastEnteredForeground = appStart
 
+    const version = client._config.appVersion || electronApp.getVersion()
     updateApp({
       inForeground: BrowserWindow.getFocusedWindow() !== null,
       isLaunching: true,
-      releaseStage: electronApp.isPackaged ? 'production' : 'development',
+      releaseStage: client._config.releaseStage,
       type: osToAppType.get(process.platform),
-      version: electronApp.getVersion(),
-      versionCode: NativeApp.getPackageVersion() || electronApp.getVersion()
+      version: version,
+      versionCode: NativeApp.getPackageVersion() || version
     })
 
     client.addMetadata('app', {

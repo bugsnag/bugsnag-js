@@ -33,9 +33,6 @@ function createWindow () {
   win.loadFile(join(__dirname, htmlRelativePath))
 }
 
-// prevent pop-up dialogs for exceptions
-process.on('uncaughtException', () => {})
-
 app.whenReady().then(createWindow)
 
 app.on('window-all-closed', () => {

@@ -6,13 +6,21 @@ class Automator {
     this.crashed = false
   }
 
-  async start (env = {}) {
+  async start (env = {}, retries = 2) {
     this.crashed = false
-    this.runner = await this._launchApp(env)
-    this.window = await this.runner.firstWindow()
+    try {
+      this.runner = await this._launchApp(env)
+      this.window = await this.runner.firstWindow()
 
-    // pipe app logs into the console
-    this.window.on('console', console.log)
+      // pipe app logs into the console
+      this.window.on('console', console.log)
+    } catch (e) {
+      if (retries > 0) {
+        this.start(env, retries - 1)
+      } else {
+        throw e
+      }
+    }
   }
 
   async stop () {

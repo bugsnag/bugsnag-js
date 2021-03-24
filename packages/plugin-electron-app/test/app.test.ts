@@ -19,26 +19,25 @@ const makeExpectedSessionApp = (customisations = {}) => ({
 })
 
 // expected data for 'event.app'
-const makeExpectedEventApp = (customisations = {}) => ({
-  ...makeExpectedSessionApp(),
-  inForeground: false,
-  isLaunching: true,
-  duration: expect.any(Number),
-  durationInForeground: undefined,
-  ...customisations
-})
-
+const makeExpectedEventApp = (customisations = {}) => {
+  const app = makeExpectedSessionApp()
+  return {
+    ...app,
+    inForeground: false,
+    isLaunching: true,
+    duration: expect.any(Number),
+    ...customisations
+  }
+}
 // expected data synced to NativeClient
-const makeExpectedNativeClientApp = (customisations = {}) => ({
-  ...makeExpectedEventApp(),
-  duration: undefined,
-  durationInForeground: undefined,
-  ...customisations
-})
+const makeExpectedNativeClientApp = (customisations = {}) => {
+  const app = makeExpectedEventApp()
+  delete app.duration
+  return { ...app, ...customisations }
+}
 
 // expected data for 'event.metadata.app'
 const makeExpectedMetadataApp = (customisations = {}) => ({
-  installedFromStore: undefined,
   name: 'my cool app :^)',
   ...customisations
 })
@@ -55,19 +54,6 @@ describe('plugin: electron app info', () => {
 
     const session = await sendSession()
     expect(session.app).toEqual(makeExpectedSessionApp())
-  })
-
-  it('reports correct release stage for non-packaged builds', async () => {
-    const electronApp = makeElectronApp({ isPackaged: false })
-
-    const { sendEvent, sendSession } = makeClient({ electronApp })
-
-    const event = await sendEvent()
-    expect(event.app).toEqual(makeExpectedEventApp({ releaseStage: 'development' }))
-    expect(event.getMetadata('app')).toEqual(makeExpectedMetadataApp())
-
-    const session = await sendSession()
-    expect(session.app).toEqual(makeExpectedSessionApp({ releaseStage: 'development' }))
   })
 
   it('reports app.type for macOS', async () => {
@@ -756,6 +742,7 @@ interface MakeClientOptions {
   BrowserWindow?: any
   electronApp?: any
   NativeClient?: any
+  NativeApp?: any
   process?: any
   config?: { launchDurationMillis: number|undefined }
 }
@@ -765,11 +752,12 @@ function makeClient ({
   electronApp = makeElectronApp({ BrowserWindow }),
   NativeClient = makeNativeClient(),
   process = makeProcess(),
-  config = { launchDurationMillis: 0 }
+  config = { launchDurationMillis: 0 },
+  NativeApp = makeNativeApp()
 }: MakeClientOptions = {}): Client {
   return makeClientForPlugin({
     config,
-    plugin: plugin(NativeClient, process, electronApp, BrowserWindow)
+    plugin: plugin(NativeClient, process, electronApp, BrowserWindow, NativeApp)
   })
 }
 
@@ -777,4 +765,8 @@ function makeNativeClient () {
   return {
     setApp: jest.fn()
   }
+}
+
+function makeNativeApp () {
+  return { getPackageVersion: () => null }
 }

@@ -4,6 +4,8 @@ import PayloadQueue from '../queue'
 const { access, mkdtemp, readdir, readFile, rmdir, writeFile } = promises
 const { F_OK } = constants
 
+const invalidDir = () => process.platform === 'win32' ? '6:\\non\\existent' : '/non/existent'
+
 describe('delivery: electron -> queue', () => {
   let tempdir = ''
 
@@ -26,7 +28,7 @@ describe('delivery: electron -> queue', () => {
     })
 
     it('throws an error when the directory was not succesfully created', async (done) => {
-      const storagePath = join('/invalidpath', 'foooo')
+      const storagePath = join(invalidDir(), 'foooo')
       const queue = new PayloadQueue(storagePath, 'stuff')
       let didErr = false
 
@@ -42,7 +44,7 @@ describe('delivery: electron -> queue', () => {
     })
 
     it('rejects all pending promises', async () => {
-      const storagePath = join('/invalidpath', 'foooo')
+      const storagePath = join(invalidDir(), 'foooo')
       const queue = new PayloadQueue(storagePath, 'stuff')
       const errs: any[] = []
 
@@ -80,7 +82,7 @@ describe('delivery: electron -> queue', () => {
     })
 
     it('calls the onerror callback and returns null if there is an error', async (done) => {
-      const queue = new PayloadQueue('/non/existent/path', 'stuff', err => {
+      const queue = new PayloadQueue(invalidDir(), 'stuff', err => {
         expect(err).not.toBe(null)
         done()
       })
@@ -105,6 +107,7 @@ describe('delivery: electron -> queue', () => {
       const queue = new PayloadQueue(path, 'stuff')
       await queue.enqueue({ color: 'yellow' })
 
+      await expect(path).toBeAFile()
       const items = await readdir(path)
       expect(items.length).toEqual(1)
 
@@ -113,7 +116,7 @@ describe('delivery: electron -> queue', () => {
     })
 
     it('calls the onerror callback if there is an error', async (done) => {
-      const queue = new PayloadQueue('/non/existent/path', 'stuff', (err) => {
+      const queue = new PayloadQueue(invalidDir(), 'stuff', (err) => {
         expect(err).toBeTruthy()
         done()
       })
@@ -153,7 +156,7 @@ describe('delivery: electron -> queue', () => {
         expect(err).toBeTruthy()
         done()
       })
-      await queue.remove('/non/existent/file')
+      await queue.remove(join(invalidDir(), 'somefile'))
     })
   })
 })

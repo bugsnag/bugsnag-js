@@ -4,13 +4,16 @@ const { When } = require('@cucumber/cucumber')
 const { fixturePath } = require('../utils')
 const FormData = require('form-data')
 
-const sendEvent = (done) => {
+const sendEvent = (context, done) => {
   const data = JSON.stringify({
-    app: { version: '5.6.0' },
-    device: { osName: 'beOS', osVersion: '11.0' },
-    metadata: {
-      counters: { trees: 3, carrots: 9 }
-    }
+    events: [{
+      context: context,
+      app: { version: '5.6.0' },
+      device: { osName: 'beOS', osVersion: '11.0', manufacturer: null },
+      metadata: {
+        counters: { trees: 3, carrots: 9 }
+      }
+    }]
   })
 
   const options = {
@@ -39,10 +42,12 @@ const sendMinidump = (done) => {
   form.submit(process.env.META_MINIDUMP, (err) => done(err))
 }
 
-When('I send a sample event', sendEvent)
+When('I send a sample event', done => { sendEvent('home', done) })
 
 When('I send a sample minidump', sendMinidump)
 
 When('I send a bunch of requests', (done) => {
-  sendEvent(() => sendEvent(() => sendMinidump(() => done())))
+  sendEvent('shopping cart',
+    () => sendEvent('sale',
+      () => sendMinidump(() => done())))
 })

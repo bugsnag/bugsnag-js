@@ -11,7 +11,7 @@ jobs:
       matrix:
         electron: [ '^11.2.0' ]
         node-version: [12, 14]
-        os: [ 'ubuntu-20.04' ]
+        os: [ ubuntu-20.04, windows-2019 ] # macOS is minute-intensive at 10 minutes per build minute!
 
     steps:
     - uses: actions/checkout@v2
@@ -34,3 +34,4 @@ jobs:
       run: npm run test:cucumber
       env:
         START_LOCAL_NPM: 1
+        VERBOSE: 1
