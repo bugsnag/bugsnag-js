@@ -93,7 +93,7 @@ const delivery = (client, filestore, net) => {
         }
         client._logger.info('Sending session')
         send(opts, body, err => {
-          if (err) return onerror(err, { url, opts }, 'session', cb)
+          if (err) return onerror(err, { opts, body }, 'session', cb)
           cb(null)
         })
       } catch (e) {

@@ -19,7 +19,6 @@ const netMock = {
   request: (opts: any, callback?: (response: any) => void): any => {
   // electron net.request handles `url` automatically
     const { hostname, port, pathname, protocol } = new URL(opts.url)
-    delete opts.url
     const req = request({ protocol, hostname, port, path: pathname, ...opts }, callback)
 
     return req
@@ -161,7 +160,24 @@ describe('delivery: electron', () => {
       expect(didLog).toBe(true)
       expect(err).toBeTruthy()
       expect((err).code).toBe('ECONNREFUSED')
-      expect(enqueueSpy).toHaveBeenCalled()
+      expect(enqueueSpy).toHaveBeenCalledWith(
+
+        {
+          opts: {
+            url: 'http://0.0.0.0:9999/notify/',
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Bugsnag-Api-Key': 'aaaaaaaa',
+              'Bugsnag-Integrity': expect.stringContaining('sha1 '),
+              'Bugsnag-Payload-Version': '4',
+              'Bugsnag-Sent-At': expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/)
+            }
+          },
+          body: expect.stringContaining('foo is not a function')
+        },
+        expect.any(Function)
+      )
       done()
     })
   })
@@ -207,7 +223,23 @@ describe('delivery: electron', () => {
       expect(didLog).toBe(true)
       expect(err).toBeTruthy()
       expect((err).code).toBe('ECONNREFUSED')
-      expect(enqueueSpy).toHaveBeenCalled()
+      expect(enqueueSpy).toHaveBeenCalledWith(
+        {
+          opts: {
+            url: 'http://0.0.0.0:9999/sessions/',
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Bugsnag-Api-Key': 'aaaaaaaa',
+              'Bugsnag-Integrity': expect.stringContaining('sha1 '),
+              'Bugsnag-Payload-Version': '1',
+              'Bugsnag-Sent-At': expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/)
+            }
+          },
+          body: expect.stringContaining('foo is not a function')
+        },
+        expect.any(Function)
+      )
       done()
     })
   })
