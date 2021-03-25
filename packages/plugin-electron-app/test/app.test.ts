@@ -14,7 +14,7 @@ const makeExpectedSessionApp = (customisations = {}) => ({
   releaseStage: 'production',
   type: undefined,
   version: '1.2.3',
-  versionCode: '1.2.3',
+  bundleVersion: '1.2.3',
   ...customisations
 })
 
@@ -95,13 +95,13 @@ describe('plugin: electron app info', () => {
     expect(session.app).toEqual(makeExpectedSessionApp({ type: 'Linux' }))
   })
 
-  it('reports app.version and app.versionCode for macOS', async () => {
+  it('reports app.version and app.bundleVersion for macOS', async () => {
     const process = makeProcess({ platform: 'darwin' })
     const electronApp = makeElectronApp({ version: '5.4.6' })
 
     const { sendEvent, sendSession } = makeClient({ electronApp, process })
 
-    const expected = { type: 'macOS', version: '5.4.6', versionCode: '5.4.6' }
+    const expected = { type: 'macOS', version: '5.4.6', bundleVersion: '5.4.6' }
 
     const event = await sendEvent()
     expect(event.app).toEqual(makeExpectedEventApp(expected))
@@ -111,13 +111,13 @@ describe('plugin: electron app info', () => {
     expect(session.app).toEqual(makeExpectedSessionApp(expected))
   })
 
-  it('reports app.version and app.versionCode for Windows', async () => {
+  it('reports app.version and app.bundleVersion for Windows', async () => {
     const process = makeProcess({ platform: 'win32' })
     const electronApp = makeElectronApp({ version: '1.3.4' })
 
     const { sendEvent, sendSession } = makeClient({ electronApp, process })
 
-    const expected = { type: 'Windows', version: '1.3.4', versionCode: '1.3.4' }
+    const expected = { type: 'Windows', version: '1.3.4', bundleVersion: '1.3.4' }
 
     const event = await sendEvent()
     expect(event.app).toEqual(makeExpectedEventApp(expected))
@@ -127,13 +127,13 @@ describe('plugin: electron app info', () => {
     expect(session.app).toEqual(makeExpectedSessionApp(expected))
   })
 
-  it('reports app.version and app.versionCode for Linux', async () => {
+  it('reports app.version and app.bundleVersion for Linux', async () => {
     const process = makeProcess({ platform: 'linux' })
     const electronApp = makeElectronApp({ version: '9.8.7' })
 
     const { sendEvent, sendSession } = makeClient({ electronApp, process })
 
-    const expected = { type: 'Linux', version: '9.8.7', versionCode: '9.8.7' }
+    const expected = { type: 'Linux', version: '9.8.7', bundleVersion: '9.8.7' }
 
     const event = await sendEvent()
     expect(event.app).toEqual(makeExpectedEventApp(expected))
