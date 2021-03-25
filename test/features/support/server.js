@@ -55,6 +55,25 @@ class MockServer {
     this.server.listen(this.port)
   }
 
+  uploadsForType (type) {
+    switch (type) {
+      case 'event':
+      case 'events':
+        return this.eventUploads
+
+      case 'session':
+      case 'sessions':
+        return this.sessionUploads
+
+      case 'minidump':
+      case 'minidumps':
+        return this.minidumpUploads
+
+      default:
+        throw new Error(`Unknown upload type '${type}'`)
+    }
+  }
+
   clear () {
     this.minidumpUploads = []
     this.eventUploads = []

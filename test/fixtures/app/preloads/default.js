@@ -9,5 +9,8 @@ contextBridge.exposeInMainWorld('RunnerAPI', {
   },
   mainProcessUncaughtException: () => {
     ipcRenderer.send('main-process-uncaught-exception')
+  },
+  mainProcessStartSession: () => {
+    ipcRenderer.send('main-process-start-session')
   }
 })
