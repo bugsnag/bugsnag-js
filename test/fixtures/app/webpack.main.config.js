@@ -7,6 +7,7 @@ readdirSync('./configs').forEach(name => {
 })
 
 module.exports = {
+  devtool: false,
   entry: entrypoints,
   output: {
     filename: '[name].js'

@@ -4,6 +4,8 @@ const { spawn } = require('child_process')
 const defaultFixturePath = join(__dirname, '../../fixtures/app')
 
 const npmRunner = process.platform === 'win32' ? 'npm.cmd' : 'npm'
+const installArgs = ['install', '--progress=false', '--no-audit', '--no-optional', '--no-save']
+const log = (msg, ...args) => console.log(`  [TestApp] ${msg}`, ...args)
 
 class TestApp {
   constructor (pathToFixture = defaultFixturePath) {
@@ -11,19 +13,17 @@ class TestApp {
     this.appName = require(join(pathToFixture, 'package.json')).name
   }
 
-  async installDeps () {
-    // retry install commands to avoid intermittent failure in electron-rebuild
-    await this._exec(npmRunner, ['install'], 1)
-  }
-
   async packageApp (env) {
-    await this._exec(npmRunner, ['run', 'package'], 0, env)
+    await this._exec(npmRunner, ['run', 'package'], env)
   }
 
-  async installBugsnag (version) {
-    // can't avoid altering the test app's package.json? :(
-    // https://github.com/npm/npm/issues/17927
-    await this._exec(npmRunner, ['install', `@bugsnag/electron@${version}`, '--registry', 'http://0.0.0.0:5539'], 1)
+  async installDeps (bugsnagVersion, electronVersion = '^11.4.0') {
+    // install this first. electron has a lengthy postinstall script, and doing
+    // a bare `npm install` first will wildcard to the latest / last version
+    // installed, doubling the install time
+    await this._exec(npmRunner, [...installArgs, `electron@${electronVersion}`])
+    await this._exec(npmRunner, [...installArgs], {}, 100)
+    await this._exec(npmRunner, [...installArgs, '--registry', 'http://0.0.0.0:5539', `@bugsnag/electron@${bugsnagVersion}`])
   }
 
   packagedPath () {
@@ -54,29 +54,42 @@ class TestApp {
     }
   }
 
-  async _exec (command, args = [], retries = 0, env = {}) {
-    await new Promise((resolve, reject) => {
-      const proc = spawn(command, args, { cwd: this.buildDir, env: { ...process.env, ...env } })
-      // handy for debugging but otherwise annoying output
-      if (process.env.VERBOSE) {
-        proc.stderr.on('data', data => { process.stdout.write(data) })
-      } else {
-        // webpack will hang if *something* doesn't read from stderr, even when
-        // everything is fine
-        proc.stderr.on('data', () => {})
-      }
-      proc.on('close', async (code) => {
-        if (code !== 0) {
-          if (retries > 0) {
-            await this._exec(command, args, retries - 1)
-            resolve()
-          } else {
-            reject(new Error(`Running '${command}' failed with code: ${code}`))
-          }
-        } else {
-          resolve()
+  async _exec (command, args = [], env = {}, timeout = 60, retries = 1) {
+    log(`exec: ${command} ${args.join(' ')}`)
+    let proc
+    return Promise.race([
+      new Promise((resolve, reject) => setTimeout(() => {
+        if (proc) {
+          proc.kill()
         }
+        reject(new Error(`Command timed out (${timeout}s)`))
+      }, timeout * 1000)),
+      new Promise((resolve, reject) => {
+        proc = spawn(command, args, { cwd: this.buildDir, env: { ...process.env, ...env } })
+        // handy for debugging but otherwise annoying output
+        if (process.env.VERBOSE) {
+          proc.stderr.on('data', data => { process.stdout.write(data) })
+        } else {
+          // webpack will hang if *something* doesn't read from stderr, even when
+          // everything is fine
+          proc.stderr.on('data', () => {})
+        }
+        proc.stdout.on('data', () => {})
+        proc.on('close', async (code) => {
+          if (code !== 0) {
+            reject(new Error(`Running '${command}' failed with code: ${code}`))
+          } else {
+            resolve()
+          }
+        })
       })
+    ]).catch(async (err) => {
+      if (retries > 0) {
+        log(`retrying ${command} command - ${err}`)
+        return await this._exec(command, args, env, timeout, retries - 1)
+      } else {
+        throw err
+      }
     })
   }
 }

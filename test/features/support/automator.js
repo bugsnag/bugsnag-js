@@ -1,26 +1,22 @@
 const { _electron: electron } = require('playwright')
 
+const log = process.env.VERBOSE
+  ? (msg, ...args) => console.log(`[Automator] ${msg}`, ...args)
+  : () => {}
+
 class Automator {
   constructor (app) {
     this.app = app
     this.crashed = false
   }
 
-  async start (env = {}, retries = 2) {
+  async start (env = {}) {
     this.crashed = false
-    try {
-      this.runner = await this._launchApp(env)
-      this.window = await this.runner.firstWindow()
+    this.runner = await this._launchApp(env)
+    this.window = await this._getFirstWindow(env)
 
-      // pipe app logs into the console
-      this.window.on('console', console.log)
-    } catch (e) {
-      if (retries > 0) {
-        this.start(env, retries - 1)
-      } else {
-        throw e
-      }
-    }
+    // pipe app logs into the console
+    this.window.on('console', console.log)
   }
 
   async stop () {
@@ -47,25 +43,46 @@ class Automator {
     }
   }
 
+  async _getFirstWindow (env = {}, retries = 2, timeout = 5) {
+    return Promise.race([
+      new Promise((resolve, reject) => setTimeout(() => {
+        reject(new Error(`window load timed out (${timeout}s)`))
+      }, timeout * 1000)),
+      this.runner.firstWindow()
+    ]).catch(async (err) => {
+      if (retries > 0) {
+        log(`first window did not load, retrying app launch - ${err}`)
+        await this.stop()
+        return await this.start(env, retries - 1)
+      } else {
+        throw err
+      }
+    })
+  }
+
   // Launch the test app with potential retries, as there may be difficulty
   // connecting
   //
   // Playwright debugging tools, for when the launch process is too opaque:
   // https://playwright.dev/docs/debug
-  async _launchApp (env, retries = 2) {
-    try {
-      return await electron.launch({
+  async _launchApp (env, retries = 2, timeout = 5) {
+    return Promise.race([
+      new Promise((resolve, reject) => setTimeout(() => {
+        reject(new Error(`launch timed out (${timeout}s)`))
+      }, timeout * 1000)),
+      electron.launch({
         args: this.app.launchArgs(),
         executablePath: this.app.packagedPath(),
         env: { ...process.env, ...env }
       })
-    } catch (e) {
+    ]).catch(async (err) => {
       if (retries > 0) {
-        return await this._launchApp(env, retries - 1)
+        log(`launch failed, retrying - ${err}`)
+        return await this._launchApp(env, retries - 1, timeout)
       } else {
-        throw e
+        throw err
       }
-    }
+    })
   }
 }
 

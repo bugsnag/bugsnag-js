@@ -7,26 +7,22 @@ jobs:
 
     runs-on: ${{ matrix.os }}
     strategy:
-      fail-fast: false
       matrix:
         electron: [ '^11.2.0' ]
         node-version: [12, 14]
-        os: [ ubuntu-20.04, windows-2019 ] # macOS is minute-intensive at 10 minutes per build minute!
+        os: [ ubuntu-20.04, windows-2019, macos-10.15 ]
 
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm install
+    - run: npm ci --no-audit --progress=false
       env:
         PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
     - run: npx lerna bootstrap
     - run: npm run test:lint
     - run: npm run test:unit
-    - name: install integration dependencies
-      run: |
-        npm install electron@${{ matrix.electron }}
     - name: (macOS) disable crash dialog
       if: contains(matrix.os, 'macos')
       run: defaults write com.apple.CrashReporter DialogType none
@@ -35,3 +31,4 @@ jobs:
       env:
         START_LOCAL_NPM: 1
         VERBOSE: 1
+        ELECTRON_VERSION: ${{ matrix.electron }}
