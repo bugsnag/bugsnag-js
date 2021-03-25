@@ -164,13 +164,29 @@ static BugsnagBreadcrumbsContext g_context;
         return nil;
     }
     
+    // We cannot use NSString's -localizedStandardCompare: because its sorting may vary by locale.
+    filenames = [filenames sortedArrayUsingComparator:^NSComparisonResult(NSString *name1, NSString *name2) {
+        long long value1 = [[name1 stringByDeletingPathExtension] longLongValue];
+        long long value2 = [[name2 stringByDeletingPathExtension] longLongValue];
+        if (value1 < value2) { return NSOrderedAscending; }
+        if (value1 > value2) { return NSOrderedDescending; }
+        return NSOrderedSame;
+    }];
+    
     NSMutableArray<NSDictionary *> *breadcrumbs = [NSMutableArray array];
     
-    for (NSString *file in [filenames sortedArrayUsingSelector:@selector(compare:)]) {
+    for (NSString *file in filenames) {
+        if ([file hasPrefix:@"."] || ![file.pathExtension isEqual:@"json"]) {
+            // Ignore partially written files, which have names like ".dat.nosync43c9.RZFc3z"
+            continue;
+        }
         NSString *path = [self.breadcrumbsPath stringByAppendingPathComponent:file];
-        NSData *data = [NSData dataWithContentsOfFile:path];
+        NSData *data = [NSData dataWithContentsOfFile:path options:0 error:&error];
         if (!data) {
-            bsg_log_err(@"Unable to read breadcrumb from %@", path);
+            // If a high volume of breadcrumbs is being logged, it is normal for older files to be deleted before this thread can read them.
+            if (!(error.domain == NSCocoaErrorDomain && error.code == NSFileReadNoSuchFileError)) {
+                bsg_log_err(@"Unable to read breadcrumb: %@", error);
+            }
             continue;
         }
         id JSONObject = [BSGJSONSerialization JSONObjectWithData:data options:0 error:&error];

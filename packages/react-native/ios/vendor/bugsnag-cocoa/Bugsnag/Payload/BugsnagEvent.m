@@ -215,63 +215,12 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
         return nil; // report is empty
     }
     if ([[event valueForKeyPath:@"user.state.didOOM"] boolValue]) {
-        return [self initWithOOMData:event];
+        return nil; // OOMs are no longer stored as KSCrashReports
     } else if ([event valueForKeyPath:@"user.event"] != nil) {
         return [self initWithUserData:event];
     } else {
         return [self initWithKSCrashData:event];
     }
-}
-
-/**
- * Creates a BugsnagEvent from OutOfMemory JSON. OOMs contain less information
- * than a regular crash report - notably they have no stacktrace or thread information.
- *
- * @param event a KSCrash report
- *
- * @return a BugsnagEvent containing the parsed information
- */
-- (instancetype)initWithOOMData:(NSDictionary *)event {
-    NSDictionary *sessionData = [event valueForKeyPath:@"user.state.oom.session"];
-    BugsnagSession *session;
-    BugsnagUser *user;
-    if (sessionData) {
-        session = [[BugsnagSession alloc] initWithDictionary:sessionData];
-        session.unhandledCount += 1; // include own event
-        if (session.user) {
-            user = session.user;
-        }
-    }
-    
-    NSDictionary *metaData = [event valueForKeyPath:@"user.metaData"];
-    if (!metaData) {
-        bsg_log_err(@"user.metaData was missing from the OOM KSCrashReport");
-    }
-    BugsnagMetadata *metadata = [[BugsnagMetadata alloc] initWithDictionary:metaData ?: @{}];
-    // Cocoa-specific, non-spec., device and app data
-    [metadata addMetadata:BSGParseDeviceMetadata(event) toSection:BSGKeyDevice];
-    [metadata addMetadata:BSGParseAppMetadata(event) toSection:BSGKeyApp];
-
-    BugsnagAppWithState *app = [BugsnagAppWithState appWithKSCrashReportOOM:event];
-    BugsnagDeviceWithState *device = [BugsnagDeviceWithState deviceWithOomData:[event valueForKeyPath:@"user.state.oom.device"]];
-    
-    if (!user) {
-        NSString *deviceAppHash = [event valueForKeyPath:@"system.device_app_hash"];
-        user = [self parseUser:event deviceAppHash:deviceAppHash deviceId:device.id];
-    }
-    
-    BugsnagEvent *obj = [self initWithApp:app
-                                   device:device
-                             handledState:[BugsnagHandledState handledStateWithSeverityReason:LikelyOutOfMemory]
-                                     user:user
-                                 metadata:metadata
-                              breadcrumbs:BSGParseBreadcrumbs(event)
-                                   errors:@[[[BugsnagError alloc] initWithEvent:event errorReportingThread:nil]]
-                                  threads:@[]
-                                  session:session];
-    obj.releaseStage = [event valueForKeyPath:@"user.state.oom.app.releaseStage"];
-    obj.deviceAppHash = [event valueForKeyPath:@"user.state.oom.device.id"];
-    return obj;
 }
 
 /**

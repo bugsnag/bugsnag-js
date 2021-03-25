@@ -54,7 +54,7 @@ NS_ASSUME_NONNULL_BEGIN
                    metadata:(nullable BugsnagMetadata *)metadata
                 breadcrumbs:(NSArray<BugsnagBreadcrumb *> *)breadcrumbs
                      errors:(NSArray<BugsnagError *> *)errors
-                    threads:(NSArray<BugsnagThread *> *)threads
+                    threads:(nullable NSArray<BugsnagThread *> *)threads
                     session:(nullable BugsnagSession *)session;
 
 - (instancetype)initWithJson:(NSDictionary *)json;

@@ -81,22 +81,6 @@ NSNumber *BSGDeviceFreeSpace(NSSearchPathDirectory directory) {
     return device;
 }
 
-+ (BugsnagDeviceWithState *)deviceWithOomData:(NSDictionary *)data {
-    BugsnagDeviceWithState *device = [BugsnagDeviceWithState new];
-    device.id = data[@"id"];
-    device.jailbroken = [data[@"jailbroken"] boolValue];
-    device.osVersion = data[@"osVersion"];
-    device.osName = data[@"osName"];
-    device.manufacturer = @"Apple";
-    device.model = data[@"model"];
-    device.modelNumber = data[@"modelNumber"];
-    device.orientation = data[@"orientation"];
-    device.locale = data[@"locale"];
-    device.runtimeVersions = data[@"runtimeVersions"];
-    device.totalMemory = data[@"totalMemory"];
-    return device;
-}
-
 + (BugsnagDeviceWithState *)deviceWithKSCrashReport:(NSDictionary *)event {
     BugsnagDeviceWithState *device = [BugsnagDeviceWithState new];
     [self populateFields:device dictionary:event];
