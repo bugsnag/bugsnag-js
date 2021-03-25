@@ -14,6 +14,13 @@
 @interface BugsnagErrorTypes : NSObject
 
 /**
+ * Determines whether App Hang events should be reported to bugsnag.
+ *
+ * This flag is true by default.
+ */
+@property BOOL appHangs;
+
+/**
  * Determines whether Out of Memory events should be reported to bugsnag.
  *
  * This flag is true by default.

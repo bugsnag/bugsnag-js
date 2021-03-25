@@ -10,10 +10,13 @@
 
 #import "BugsnagMetadata+Private.h" // For BugsnagObserverBlock
 
+@class BSGAppHangDetector;
+@class BSGEventUploader;
+@class BugsnagAppWithState;
 @class BugsnagBreadcrumbs;
 @class BugsnagConfiguration;
 @class BugsnagCrashSentry;
-@class BugsnagErrorReportApiClient;
+@class BugsnagDeviceWithState;
 @class BugsnagMetadata;
 @class BugsnagNotifier;
 @class BugsnagPluginClient;
@@ -28,6 +31,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic) BOOL appDidCrashLastLaunch;
 
+@property (nonatomic) BSGAppHangDetector *appHangDetector;
+
+@property (nullable, nonatomic) BugsnagEvent *appHangEvent;
+
 @property (nullable, retain, nonatomic) BugsnagBreadcrumbs *breadcrumbs;
 
 @property (nullable, nonatomic) NSString *codeBundleId;
@@ -40,7 +47,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (strong, nonatomic) BugsnagCrashSentry *crashSentry;
 
-@property (strong, nonatomic) BugsnagErrorReportApiClient *errorReportApiClient;
+@property (strong, nonatomic) BSGEventUploader *eventUploader;
 
 @property NSMutableDictionary *extraRuntimeInfo;
 
@@ -90,7 +97,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSArray *)collectThreads:(BOOL)unhandled; // Used in BugsnagReactNative
 
-- (void)notifyInternal:(BugsnagEvent *)event block:(BugsnagOnErrorBlock)block;
+- (BugsnagAppWithState *)generateAppWithState:(NSDictionary *)systemInfo;
+
+- (BugsnagDeviceWithState *)generateDeviceWithState:(NSDictionary *)systemInfo;
+
+- (void)notifyInternal:(BugsnagEvent *)event block:(nullable BugsnagOnErrorBlock)block;
 
 - (void)removeObserverWithBlock:(BugsnagObserverBlock)block; // Used in BugsnagReactNative
 

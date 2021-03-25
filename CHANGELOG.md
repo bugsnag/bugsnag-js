@@ -1,5 +1,28 @@
 # Changelog
 
+## v7.9.1 (2021-03-25)
+
+### Changed
+
+- (react-native): Update bugsnag-cocoa to v6.8.0
+  - Detect app hangs that make your app unresponsive. [bugsnag-cocoa#1039](https://github.com/bugsnag/bugsnag-cocoa/pull/1039)
+  - Fix a heap buffer overflow reported by Address Sanitizer. [bugsnag-cocoa#1043](https://github.com/bugsnag/bugsnag-cocoa/pull/1043)
+  - Fix parsing of `callStackSymbols` where the image name contains spaces. [bugsnag-cocoa#1036](https://github.com/bugsnag/bugsnag-cocoa/pull/1036)
+  - Fix a possible deadlock when writing crash reports for unhandled errors. [bugsnag-cocoa#1034](https://github.com/bugsnag/bugsnag-cocoa/pull/1034)
+- (react-native): Update bugsnag-android to v5.8.0
+  - `Configuration#launchCrashThresholdMs` is deprecated in favour of `Configuration#launchDurationMillis`
+  - Add public API for crash-on-launch detection. [bugsnag-android#1157](https://github.com/bugsnag/bugsnag-android/pull/1157)
+  [bugsnag-android#1159](https://github.com/bugsnag/bugsnag-android/pull/1159)
+  [bugsnag-android#1165](https://github.com/bugsnag/bugsnag-android/pull/1165)
+  [bugsnag-android#1164](https://github.com/bugsnag/bugsnag-android/pull/1164)
+  [bugsnag-android#1182](https://github.com/bugsnag/bugsnag-android/pull/1182)
+  [bugsnag-android#1184](https://github.com/bugsnag/bugsnag-android/pull/1184)
+  [bugsnag-android#1185](https://github.com/bugsnag/bugsnag-android/pull/1185)
+  [bugsnag-android#1186](https://github.com/bugsnag/bugsnag-android/pull/1186)
+  [bugsnag-android#1180](https://github.com/bugsnag/bugsnag-android/pull/1180)
+  [bugsnag-android#1188](https://github.com/bugsnag/bugsnag-android/pull/1188)
+  [bugsnag-android#1191](https://github.com/bugsnag/bugsnag-android/pull/1191)
+
 ## v7.9.0 (2021-03-16)
 
 ### Added

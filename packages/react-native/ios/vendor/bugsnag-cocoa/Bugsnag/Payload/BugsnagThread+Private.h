@@ -24,6 +24,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (readonly) NSString *crashInfoMessage;
 
+@property (readwrite, nonatomic) BOOL errorReportingThread;
+
 + (NSDictionary *)enhanceThreadInfo:(NSDictionary *)thread
                               depth:(NSUInteger)depth
                           errorType:(nullable NSString *)errorType;
