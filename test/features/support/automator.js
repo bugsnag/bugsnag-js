@@ -52,8 +52,8 @@ class Automator {
   }
 
   async click (elementID) {
-    if (this.crashed) {
-      throw new Error('app is no longer running')
+    if (this.crashed || !this.runner) {
+      throw new Error('the app is not running')
     }
     try {
       await this.window.click(`id=${elementID}`)

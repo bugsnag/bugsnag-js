@@ -58,8 +58,8 @@ BeforeAll({ timeout: 240 * 1000 }, async () => {
   global.automator = new Automator(app)
 })
 
-Before(() => {
-  global.server.start()
+Before(async () => {
+  await global.server.start()
 })
 
 // allow a few seconds to terminate the app, including retries

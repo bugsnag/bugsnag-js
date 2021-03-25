@@ -33,6 +33,10 @@ When('I click {string}', async (link) => {
   return global.automator.click(link)
 })
 
+When('I close the app', async () => {
+  await global.automator.stop()
+})
+
 Then('the app crashed', async () => {
   expect(global.automator.crashed).toBeTruthy()
 })
@@ -61,22 +65,14 @@ Then('minidump request {int} contains a file form field named {string}', (index,
 
 Then('the total requests received by the server matches:', async (data) => {
   return requestDelay((done) => {
+    const expected = {}
+    const actual = {}
     data.raw().forEach(row => {
-      const [key, count] = row
-      switch (key) {
-        case 'minidumps':
-          expect(global.server.minidumpUploads.length).toEqual(parseInt(count))
-          break
-        case 'sessions':
-          expect(global.server.sessionUploads.length).toEqual(parseInt(count))
-          break
-        case 'events':
-          expect(global.server.eventUploads.length).toEqual(parseInt(count))
-          break
-        default:
-          throw new Error(`no endpoint registered for ${key}`)
-      }
+      const [requestType, count] = row
+      expected[requestType] = parseInt(count)
+      actual[requestType] = global.server.uploadsForType(requestType).length
     })
+    expect(actual).toEqual(expected)
     done()
   })
 })

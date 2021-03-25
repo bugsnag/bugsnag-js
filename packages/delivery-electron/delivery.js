@@ -2,6 +2,7 @@ const { createHash } = require('crypto')
 const payload = require('@bugsnag/core/lib/json-payload')
 const PayloadQueue = require('./queue')
 const PayloadDeliveryLoop = require('./payload-loop')
+const NetworkStatus = require('./network-status')
 
 const delivery = (client, filestore, net) => {
   const send = (opts, body, cb) => {
@@ -24,7 +25,6 @@ const delivery = (client, filestore, net) => {
   const enqueue = async (payloadKind, failedPayload) => {
     client._logger.info(`Writing ${payloadKind} payload to cache`)
     await queues[payloadKind].enqueue(failedPayload, logError)
-    queueConsumers[payloadKind].start()
   }
 
   const onerror = async (err, failedPayload, payloadKind, cb) => {
@@ -33,7 +33,9 @@ const delivery = (client, filestore, net) => {
     cb(err)
   }
 
-  const { queues, queueConsumers } = initRedelivery(filestore.getPaths(), client._logger, send)
+  const syncPlugin = client.getPlugin('stateSync')
+  const statusUpdater = new NetworkStatus(syncPlugin, net)
+  const { queues } = initRedelivery(filestore.getPaths(), statusUpdater, client._logger, send)
 
   const hash = payload => {
     const h = createHash('sha1')
@@ -103,7 +105,7 @@ const delivery = (client, filestore, net) => {
   }
 }
 
-const initRedelivery = (paths, logger, send) => {
+const initRedelivery = (paths, updater, logger, send) => {
   const onQueueError = e => logger.error('PayloadQueue error', e)
   const queues = {
     event: new PayloadQueue(paths.events, 'event', onQueueError),
@@ -118,7 +120,15 @@ const initRedelivery = (paths, logger, send) => {
 
   for (const queue in queues) {
     queues[queue].init()
-      .then(() => queueConsumers[queue].start())
+      .then(() => {
+        updater.watch((isConnected) => {
+          if (isConnected) {
+            queueConsumers[queue].start()
+          } else {
+            queueConsumers[queue].stop()
+          }
+        })
+      })
       .catch(onQueueError)
   }
 

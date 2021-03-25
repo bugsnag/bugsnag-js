@@ -4,25 +4,6 @@
     <meta charset="UTF-8">
     <title>Runner</title>
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
-    <script>
-        function rejectPromise() {
-          new Promise((_, reject) => {
-            reject(new TypeError("invalid"))
-          })
-        }
-
-        function handledError() {
-          try {
-            throw new Error('ALERT!')
-          } catch (e) {
-            window.Bugsnag.notify(e)
-          }
-        }
-
-        function leaveCrumb() {
-          window.Bugsnag.leaveBreadcrumb('missing auth token', { session: 'two-two' })
-        }
-    </script>
 </head>
 <body style="background: white;">
     <h1>haha electron go brrr</h1>
@@ -48,5 +29,33 @@
         <li><a href="#" id="main-process-console-log" onclick="RunnerAPI.mainProcessLog('abc', 123)">console.log in main process</a></li>
         <li><a href="#" id="renderer-process-console-log" onclick="console.log('xyz', 456)">console.log in renderer process</a></li>
     </ul>
+    <ul>
+        <li><a href="#" id="emulate-offline" onclick="emulateOnlineStatus(false)">Emulate being offline</a></li>
+        <li><a href="#" id="emulate-online" onclick="emulateOnlineStatus(true)">Emulate being online</a></li>
+    </ul>
+    <script>
+        function rejectPromise() {
+          new Promise((_, reject) => {
+            reject(new TypeError("invalid"))
+          })
+        }
+
+        function handledError() {
+          try {
+            throw new Error('ALERT!')
+          } catch (e) {
+            window.Bugsnag.notify(e)
+          }
+        }
+
+        function leaveCrumb() {
+          window.Bugsnag.leaveBreadcrumb('missing auth token', { session: 'two-two' })
+        }
+
+        function emulateOnlineStatus(online) {
+          Object.defineProperty(window.navigator, 'onLine', {value: online, configurable: true})
+          window.dispatchEvent(new Event(online ? 'online' : 'offline'))
+        }
+    </script>
 </body>
 </html>
