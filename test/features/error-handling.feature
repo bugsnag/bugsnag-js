@@ -4,13 +4,17 @@ Feature: Detecting and reporting errors
         Given I launch an app
         When I click "main-process-crash"
         Then the app crashed
+        And the total requests received by the server matches:
+            | events   | 0        |
+            | sessions | 1        |
 
     Scenario Outline: An unhandled promise rejection in the main process
         Given I launch an app with configuration:
             | bugsnag | <config> |
         When I click "main-process-unhandled-promise-rejection"
         Then the total requests received by the server matches:
-            | events  | 1        |
+            | events   | 1        |
+            | sessions | 1        |
         Then the headers of every event request contains:
             | Bugsnag-API-Key   | 100a2272bd2b0ac0ab0f52715bbdc659 |
             | Content-Type      | application/json                 |
@@ -27,7 +31,8 @@ Feature: Detecting and reporting errors
             | bugsnag | <config> |
         When I click "main-process-uncaught-exception"
         Then the total requests received by the server matches:
-            | events  | 1        |
+            | events   | 1        |
+            | sessions | 1        |
         Then the headers of every event request contains:
             | Bugsnag-API-Key   | 100a2272bd2b0ac0ab0f52715bbdc659 |
             | Content-Type      | application/json                 |
@@ -44,7 +49,8 @@ Feature: Detecting and reporting errors
             | bugsnag | <config> |
         When I click "<link>"
         Then the total requests received by the server matches:
-            | events  | 0        |
+            | events   | 0        |
+            | sessions | 1        |
 
         Examples:
             | config                       | link                                     |
@@ -54,7 +60,13 @@ Feature: Detecting and reporting errors
     Scenario: An uncaught exception in the renderer
         Given I launch an app
         When I click "renderer-uncaught-exception"
+        Then the total requests received by the server matches:
+            | events   | 0        |
+            | sessions | 1        |
 
     Scenario: An unhandled promise rejection in the renderer
         Given I launch an app
         When I click "renderer-unhandled-promise-rejection"
+        Then the total requests received by the server matches:
+            | events   | 0        |
+            | sessions | 1        |
