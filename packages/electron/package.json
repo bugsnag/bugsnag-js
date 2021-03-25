@@ -18,6 +18,7 @@
   "dependencies": {
     "@bugsnag/core": "^7.7.0",
     "@bugsnag/plugin-node-uncaught-exception": "^7.7.0",
+    "@bugsnag/plugin-node-unhandled-rejection": "^7.7.0",
     "@bugsnag/delivery-electron": "^1.0.0",
     "@bugsnag/electron-filestore": "^1.0.0",
     "@bugsnag/plugin-electron-ipc": "1.0.0",
