@@ -2,8 +2,7 @@ const { resolve } = require('path')
 const { ipcMain, app } = require('electron')
 const BugsnagIpcMain = require('./bugsnag-ipc-main')
 const serializeConfigForRenderer = require('./lib/config-serializer')
-const { CHANNEL_CONFIG, CHANNEL_MAIN_TO_RENDERER, CHANNEL_RENDERER_TO_MAIN } = require('./lib/constants')
-const jsonStringify = require('@bugsnag/safe-json-stringify')
+const { CHANNEL_CONFIG, CHANNEL_RENDERER_TO_MAIN, CHANNEL_RENDERER_TO_MAIN_SYNC } = require('./lib/constants')
 
 module.exports = {
   load: (client) => {
@@ -28,45 +27,7 @@ module.exports = {
 
     // delegate all method calls to the BugsnagIpcMain class's handle method
     ipcMain.handle(CHANNEL_RENDERER_TO_MAIN, bugsnagIpcMain.handle)
-
-    /* synchronisation to renderers */
-
-    // listen to the state sync emitter and propagate changes out to renderers
-    const { events, emitter } = client.getPlugin('stateSync')
-    events.forEach(eventName => {
-      emitter.on(eventName, (payload, source) => propagateEventToRenderers(eventName, payload, source))
-      updateConfigStr()
-    })
-
-    // keep track of the renderers in existence
-    const renderers = new Set()
-    app.on('web-contents-created', (event, webContents) => {
-      // if you send data to a webContents instance before it has emitted this event, it will crash
-      webContents.on('did-start-loading', () => {
-        client._logger.debug(`Renderer #${webContents.id} created`)
-        renderers.add(webContents)
-      })
-      webContents.on('destroy', () => {
-        client._logger.debug(`Renderer #${webContents.id} destroyed`)
-        renderers.delete(webContents)
-      })
-    })
-
-    // converts a stateSync event to an IPC event and sends it to each renderer,
-    // unless that render was the source of the change
-    const propagateEventToRenderers = (type, payload, source) => {
-      client._logger.debug('Propagating change event to renderers')
-      const event = jsonStringify({ type, payload })
-      for (const renderer of renderers) {
-        // source=null when the event was triggered by the main process so all renders should be notified
-        if (source === null || renderer.id !== source.id) {
-          client._logger.debug(`Sending change event to renderer #${renderer.id}`)
-          renderer.send(CHANNEL_MAIN_TO_RENDERER, event)
-        } else {
-          client._logger.debug(`Skipping renderer #${renderer.id} because it is the source of the event`)
-        }
-      }
-    }
+    ipcMain.on(CHANNEL_RENDERER_TO_MAIN_SYNC, bugsnagIpcMain.handleSync)
 
     setPreload()
   }

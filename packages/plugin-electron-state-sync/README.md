@@ -14,9 +14,7 @@ The plugin runs in the main Electron process, and patches each of the client mut
 Any call to these methods (which will be from a developer or a plugin calling `Bugsnag.<method>()` in the main process) will emit an event signifying the change and updated value and what the "source" of the change was (in this case the main process).
 
 Separately, we maintain handles to the mutators to manage state changes that were initiated in renderer processes. An inbound
-change from a renderer process must call `setXFromSource(renderer)(args)` causing that change to be applied to the main client
-and an event to be emitted, with the "source" set to the renderer where the change was initiated (this is used later to avoid
-sending an event to the renderer that caused the change).
+change from a renderer process must call `setX(args)` causing that change to be applied to the main client.
 
 ## API
 
@@ -31,21 +29,22 @@ interface BugsnagElectronStateSyncPlugin {
 
 interface StateSyncPluginResult {
   emitter: EventEmitter
-  updateContextFromSource: (source: WebContents | null) => (...args: any[]) => void
-  updateUserFromSource: (source: WebContents | null) => (...args: any[]) => void
-  updateMetadataFromSource: (source: WebContents | null) => (...args: any[]) => void
+  setContext: (...args: any[]) => void
+  setUser: (...args: any[]) => void
+  addMetadata: (...args: any[]) => void
+  clearMetadata:(...args: any[]) => void
 }
 
 // Event types and payloads
 
 type EVENT_TYPES = 'ContextUpdate' | 'UserUpdate' | 'AddMetadata' | 'ClearMetadata'
 
-interface ContextUpdatePayload {
-  context: string
-}
+interface ContextUpdatePayload: string
 
 interface UserUpdatePayload {
-  user: { id?: string, email?: string, name?: string }
+  id?: string
+  email?: string
+  name?: string
 }
 
 interface AddMetadataPayload {
@@ -59,24 +58,14 @@ interface AddMetadataPayload {
 ```js
 // listening for changes
 const { emitter } = client.getPlugin('stateSync')
-emitter.on('ContextUpdate', (event, source) => {
-  console.log(event.context) // the new value
-  console.log(source) // the WebContents instance that created the change (or null)
+emitter.on('ContextUpdate', (event, context) => {
+  console.log(context) // the new value
 })
 
-// notifying a change from a renderer
-const { updateContextFromSource } = client.getPlugin('stateSync')
+const { setContext } = client.getPlugin('stateSync')
 ipcMain.handle('<event from renderer>', (event, methodName, ...args) => {
-  if (methodName === 'updateContext') updateContextFromSource(event.sender)({ context: args[0] })
+  if (methodName === 'setContext') setContext(args[0])
   // etc.
-})
-
-// notifying a change from a main
-// .setContext() etc. is wrapped to trigger a new event automatically
-const { emitter } = client.getPlugin('stateSync')
-emitter.on('ContextUpdate', (event, source) => {
-  event.context === 'new context'
-  event.source === null
 })
 client.setContext('new context')
 ```

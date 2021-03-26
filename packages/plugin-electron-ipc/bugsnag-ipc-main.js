@@ -11,60 +11,52 @@ module.exports = class BugsnagIpcMain {
 
     // handle is used as a callback so ensure it is bound with the correct "this"
     this.handle = this.handle.bind(this)
+    this.handleSync = this.handleSync.bind(this)
   }
 
-  leaveBreadcrumb () {
-    return breadcrumb => this.client.leaveBreadcrumb(
+  leaveBreadcrumb (breadcrumb) {
+    return this.client.leaveBreadcrumb(
       breadcrumb.name /* this is "name" not "type" due to breadcrumb.js's toJSON() function */,
       breadcrumb.metaData, /* again, this "metaData" not "metadata" due to the fact this is serialised for API compatibility */
       breadcrumb.type
     )
   }
 
-  startSession (source) {
-    return () => this.client.startSession()
+  update ({ context, user, metadata }) {
+    return this.stateSync.bulkUpdate({ context, user, metadata })
   }
 
-  pauseSession (source) {
-    return () => this.client.pauseSession()
+  dispatch (eventObject) {
+    const event = new Event()
+
+    // copy all properties from 'eventObject' to 'event'
+    Object.keys(event)
+      .filter(Object.hasOwnProperty.bind(event))
+      .forEach(key => { event[key] = eventObject[key] })
+
+    this.client._notify(event)
   }
 
-  resumeSession (source) {
-    return () => this.client.resumeSession()
-  }
-
-  update (source) {
-    return ({ context, user, metadata }) => {
-      this.stateSync.updateFromSource(source)({ context, user, metadata })
+  getPayloadInfo () {
+    return {
+      app: this.client._app || {},
+      breadcrumbs: this.client._breadcrumbs,
+      context: this.client._context,
+      device: this.client._device || {},
+      metadata: this.client._metadata,
+      user: this.client._user
     }
   }
 
-  updateContext (source) {
-    return (update) => this.stateSync.updateContextFromSource(source)(update)
+  handle (_event, methodName, ...args) {
+    return this.resolve(methodName, ...args)
   }
 
-  updateUser (source) {
-    return (update) => this.stateSync.updateUserFromSource(source)(update)
+  handleSync (event, methodName, ...args) {
+    event.returnValue = this.resolve(methodName, ...args)
   }
 
-  updateMetadata (source) {
-    return (update) => this.stateSync.updateMetadataFromSource(source)(update)
-  }
-
-  dispatch (source) {
-    return (eventObject) => {
-      const event = new Event()
-
-      // copy all properties from 'eventObject' to 'event'
-      Object.keys(event)
-        .filter(Object.hasOwnProperty.bind(event))
-        .forEach(key => { event[key] = eventObject[key] })
-
-      this.client._notify(event)
-    }
-  }
-
-  handle (event, methodName, ...args) {
+  resolve (methodName, ...args) {
     this.client._logger.debug('IPC call received', methodName, args)
 
     // lookup the method on the BugsnagIpcMain map
@@ -77,7 +69,7 @@ module.exports = class BugsnagIpcMain {
     try {
       // call the method, passing in the event sender (WebContents instance)
       // so that change events only get propagated out to other renderers
-      return method(event.sender)(...args.map(arg => typeof arg === 'undefined' ? undefined : JSON.parse(arg)))
+      return method(...args.map(arg => typeof arg === 'undefined' ? undefined : JSON.parse(arg)))
     } catch (e) {
       this.client._logger.warn('IPC call failed', e)
     }
@@ -86,14 +78,19 @@ module.exports = class BugsnagIpcMain {
   toMap () {
     return new Map([
       ['leaveBreadcrumb', this.leaveBreadcrumb.bind(this)],
-      ['startSession', this.startSession.bind(this)],
-      ['pauseSession', this.pauseSession.bind(this)],
-      ['resumeSession', this.resumeSession.bind(this)],
+      ['startSession', this.client.startSession.bind(this.client)],
+      ['pauseSession', this.client.pauseSession.bind(this.client)],
+      ['resumeSession', this.client.resumeSession.bind(this.client)],
       ['update', this.update.bind(this)],
-      ['updateContext', this.updateContext.bind(this)],
-      ['updateMetadata', this.updateMetadata.bind(this)],
-      ['updateUser', this.updateUser.bind(this)],
-      ['dispatch', this.dispatch.bind(this)]
+      ['getContext', this.client.getContext.bind(this.client)],
+      ['setContext', this.client.setContext.bind(this.client)],
+      ['addMetadata', this.client.addMetadata.bind(this.client)],
+      ['clearMetadata', this.client.clearMetadata.bind(this.client)],
+      ['getMetadata', this.client.getMetadata.bind(this.client)],
+      ['getUser', this.client.getUser.bind(this.client)],
+      ['setUser', this.client.setUser.bind(this.client)],
+      ['dispatch', this.dispatch.bind(this)],
+      ['getPayloadInfo', this.getPayloadInfo.bind(this)]
     ])
   }
 }

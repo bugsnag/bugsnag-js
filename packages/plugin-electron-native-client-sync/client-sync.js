@@ -10,7 +10,7 @@ module.exports = (NativeClient) => ({
 
     const stateSync = client.getPlugin('stateSync')
 
-    stateSync.emitter.on('UserUpdate', ({ user }) => {
+    stateSync.emitter.on('UserUpdate', user => {
       try {
         NativeClient.updateUser(user.id, user.email, user.name)
       } catch (e) {
@@ -18,7 +18,7 @@ module.exports = (NativeClient) => ({
       }
     })
 
-    stateSync.emitter.on('ContextUpdate', ({ context }) => {
+    stateSync.emitter.on('ContextUpdate', context => {
       try {
         NativeClient.updateContext(context)
       } catch (e) {
