@@ -18,8 +18,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)deviceWithKSCrashReport:(NSDictionary *)event;
 
-+ (instancetype)deviceWithOomData:(NSDictionary *)data;
-
 #pragma mark Methods
 
 - (void)appendRuntimeInfo:(NSDictionary *)info;

@@ -610,6 +610,13 @@
 		010FF28825ED2A8D00E4F2B0 /* BSGAppHangDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = 010FF28325ED2A8D00E4F2B0 /* BSGAppHangDetector.m */; };
 		010FF28925ED2A8D00E4F2B0 /* BSGAppHangDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = 010FF28325ED2A8D00E4F2B0 /* BSGAppHangDetector.m */; };
 		010FF28A25ED2A8D00E4F2B0 /* BSGAppHangDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = 010FF28325ED2A8D00E4F2B0 /* BSGAppHangDetector.m */; };
+		011ADCE326049A3600B20D72 /* BugsnagClient+OutOfMemory.h in Headers */ = {isa = PBXBuildFile; fileRef = 011ADCE126049A3600B20D72 /* BugsnagClient+OutOfMemory.h */; };
+		011ADCE426049A3600B20D72 /* BugsnagClient+OutOfMemory.h in Headers */ = {isa = PBXBuildFile; fileRef = 011ADCE126049A3600B20D72 /* BugsnagClient+OutOfMemory.h */; };
+		011ADCE526049A3600B20D72 /* BugsnagClient+OutOfMemory.h in Headers */ = {isa = PBXBuildFile; fileRef = 011ADCE126049A3600B20D72 /* BugsnagClient+OutOfMemory.h */; };
+		011ADCE626049A3600B20D72 /* BugsnagClient+OutOfMemory.m in Sources */ = {isa = PBXBuildFile; fileRef = 011ADCE226049A3600B20D72 /* BugsnagClient+OutOfMemory.m */; };
+		011ADCE726049A3600B20D72 /* BugsnagClient+OutOfMemory.m in Sources */ = {isa = PBXBuildFile; fileRef = 011ADCE226049A3600B20D72 /* BugsnagClient+OutOfMemory.m */; };
+		011ADCE826049A3600B20D72 /* BugsnagClient+OutOfMemory.m in Sources */ = {isa = PBXBuildFile; fileRef = 011ADCE226049A3600B20D72 /* BugsnagClient+OutOfMemory.m */; };
+		011ADCE926049A3600B20D72 /* BugsnagClient+OutOfMemory.m in Sources */ = {isa = PBXBuildFile; fileRef = 011ADCE226049A3600B20D72 /* BugsnagClient+OutOfMemory.m */; };
 		01210B8825CD665000D683BB /* BugsnagThread+Recording.m in Sources */ = {isa = PBXBuildFile; fileRef = 01210B8725CD665000D683BB /* BugsnagThread+Recording.m */; };
 		01210B8925CD665000D683BB /* BugsnagThread+Recording.m in Sources */ = {isa = PBXBuildFile; fileRef = 01210B8725CD665000D683BB /* BugsnagThread+Recording.m */; };
 		01210B8A25CD665000D683BB /* BugsnagThread+Recording.m in Sources */ = {isa = PBXBuildFile; fileRef = 01210B8725CD665000D683BB /* BugsnagThread+Recording.m */; };
@@ -1291,6 +1298,8 @@
 		00E636C324878FFC006CBF1A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		010FF28225ED2A8D00E4F2B0 /* BSGAppHangDetector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BSGAppHangDetector.h; sourceTree = "<group>"; };
 		010FF28325ED2A8D00E4F2B0 /* BSGAppHangDetector.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BSGAppHangDetector.m; sourceTree = "<group>"; };
+		011ADCE126049A3600B20D72 /* BugsnagClient+OutOfMemory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BugsnagClient+OutOfMemory.h"; sourceTree = "<group>"; };
+		011ADCE226049A3600B20D72 /* BugsnagClient+OutOfMemory.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "BugsnagClient+OutOfMemory.m"; sourceTree = "<group>"; };
 		01210B7C25CD661800D683BB /* BugsnagThread+Recording.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BugsnagThread+Recording.h"; sourceTree = "<group>"; };
 		01210B8725CD665000D683BB /* BugsnagThread+Recording.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "BugsnagThread+Recording.m"; sourceTree = "<group>"; };
 		012482A225627B51003F7243 /* UIKitTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UIKitTests.m; sourceTree = "<group>"; };
@@ -1786,6 +1795,8 @@
 				008967BB2486DA1900DC48C2 /* BugsnagClient.m */,
 				0127149025F6171000D3500A /* BugsnagClient+AppHangs.h */,
 				0127149125F6171000D3500A /* BugsnagClient+AppHangs.m */,
+				011ADCE126049A3600B20D72 /* BugsnagClient+OutOfMemory.h */,
+				011ADCE226049A3600B20D72 /* BugsnagClient+OutOfMemory.m */,
 				008967BC2486DA1900DC48C2 /* BugsnagClient+Private.h */,
 			);
 			path = Client;
@@ -2042,6 +2053,7 @@
 				0126F7BB25DD512B008483C2 /* BSGEventUploadKSCrashReportOperation.h in Headers */,
 				008968DE2486DAA700DC48C2 /* BugsnagPluginClient.h in Headers */,
 				008969EA2486DAD100DC48C2 /* BSG_KSCrashReport.h in Headers */,
+				011ADCE326049A3600B20D72 /* BugsnagClient+OutOfMemory.h in Headers */,
 				008969F02486DAD100DC48C2 /* BSG_KSCrashReportFields.h in Headers */,
 				00896A2F2486DAD100DC48C2 /* BSG_KSCrashIdentifier.h in Headers */,
 				008969FC2486DAD100DC48C2 /* BSG_KSCrashAdvanced.h in Headers */,
@@ -2145,6 +2157,7 @@
 				0126F7BC25DD512B008483C2 /* BSGEventUploadKSCrashReportOperation.h in Headers */,
 				008968DF2486DAA700DC48C2 /* BugsnagPluginClient.h in Headers */,
 				008969EB2486DAD100DC48C2 /* BSG_KSCrashReport.h in Headers */,
+				011ADCE426049A3600B20D72 /* BugsnagClient+OutOfMemory.h in Headers */,
 				008969F12486DAD100DC48C2 /* BSG_KSCrashReportFields.h in Headers */,
 				00896A302486DAD100DC48C2 /* BSG_KSCrashIdentifier.h in Headers */,
 				008969FD2486DAD100DC48C2 /* BSG_KSCrashAdvanced.h in Headers */,
@@ -2248,6 +2261,7 @@
 				0126F7BD25DD512B008483C2 /* BSGEventUploadKSCrashReportOperation.h in Headers */,
 				008968E02486DAA700DC48C2 /* BugsnagPluginClient.h in Headers */,
 				008969EC2486DAD100DC48C2 /* BSG_KSCrashReport.h in Headers */,
+				011ADCE526049A3600B20D72 /* BugsnagClient+OutOfMemory.h in Headers */,
 				008969F22486DAD100DC48C2 /* BSG_KSCrashReportFields.h in Headers */,
 				00896A312486DAD100DC48C2 /* BSG_KSCrashIdentifier.h in Headers */,
 				008969FE2486DAD100DC48C2 /* BSG_KSCrashAdvanced.h in Headers */,
@@ -2620,6 +2634,7 @@
 				008969C02486DAD100DC48C2 /* BSG_KSString.c in Sources */,
 				0126F79E25DD510E008483C2 /* BSGEventUploadObjectOperation.m in Sources */,
 				0089682B2486DA5600DC48C2 /* BSGSerialization.m in Sources */,
+				011ADCE626049A3600B20D72 /* BugsnagClient+OutOfMemory.m in Sources */,
 				008968E92486DAB800DC48C2 /* BugsnagSessionFileStore.m in Sources */,
 				00896A172486DAD100DC48C2 /* BSG_KSCrashSentry_CPPException.mm in Sources */,
 				008969CF2486DAD100DC48C2 /* BSG_KSCrashState.m in Sources */,
@@ -2790,6 +2805,7 @@
 				008969C12486DAD100DC48C2 /* BSG_KSString.c in Sources */,
 				0126F79F25DD510E008483C2 /* BSGEventUploadObjectOperation.m in Sources */,
 				0089682C2486DA5600DC48C2 /* BSGSerialization.m in Sources */,
+				011ADCE726049A3600B20D72 /* BugsnagClient+OutOfMemory.m in Sources */,
 				008968EA2486DAB800DC48C2 /* BugsnagSessionFileStore.m in Sources */,
 				00896A182486DAD100DC48C2 /* BSG_KSCrashSentry_CPPException.mm in Sources */,
 				008969D02486DAD100DC48C2 /* BSG_KSCrashState.m in Sources */,
@@ -2958,6 +2974,7 @@
 				008969C22486DAD100DC48C2 /* BSG_KSString.c in Sources */,
 				0126F7A025DD510E008483C2 /* BSGEventUploadObjectOperation.m in Sources */,
 				0089682D2486DA5600DC48C2 /* BSGSerialization.m in Sources */,
+				011ADCE826049A3600B20D72 /* BugsnagClient+OutOfMemory.m in Sources */,
 				008968EB2486DAB800DC48C2 /* BugsnagSessionFileStore.m in Sources */,
 				00896A192486DAD100DC48C2 /* BSG_KSCrashSentry_CPPException.mm in Sources */,
 				008969D12486DAD100DC48C2 /* BSG_KSCrashState.m in Sources */,
@@ -3085,6 +3102,7 @@
 				E7462911248907E500F92D67 /* BSG_KSSysCtl.c in Sources */,
 				E7462912248907E500F92D67 /* BSG_KSMach_x86_64.c in Sources */,
 				CBCF77A925010648004AF22A /* BSGJSONSerialization.m in Sources */,
+				011ADCE926049A3600B20D72 /* BugsnagClient+OutOfMemory.m in Sources */,
 				E7462913248907E500F92D67 /* BSG_KSSignalInfo.c in Sources */,
 				E7462914248907E500F92D67 /* BSG_KSString.c in Sources */,
 				E7462915248907E500F92D67 /* BSG_KSObjC.c in Sources */,

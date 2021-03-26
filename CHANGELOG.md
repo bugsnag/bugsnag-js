@@ -1,5 +1,12 @@
 # Changelog
 
+## TBD
+
+### Changed
+
+- (react-native): Update bugsnag-cocoa to v6.8.1
+  - Fix unreliable ordering of breadcrumbs. [bugsnag-cocoa#1049](https://github.com/bugsnag/bugsnag-cocoa/pull/1049)
+
 ## v7.9.1 (2021-03-25)
 
 ### Changed

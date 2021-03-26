@@ -47,22 +47,6 @@
     return app;
 }
 
-+ (BugsnagAppWithState *)appWithKSCrashReportOOM:(NSDictionary *)crashReport
-{
-    BugsnagAppWithState *app = [BugsnagAppWithState new];
-    NSDictionary *event = [crashReport valueForKeyPath:@"user.state.oom.app"];
-    app.id = event[@"id"];
-    app.dsymUuid = event[BSGKeyMachoUUID];
-    app.releaseStage = event[@"releaseStage"];
-    app.version = event[@"version"];
-    app.bundleVersion = event[@"bundleVersion"];
-    app.codeBundleId = event[@"codeBundleId"];
-    app.inForeground = [event[@"inForeground"] boolValue];
-    app.isLaunching = [[crashReport valueForKeyPath:@"user.state.app.isLaunching"] boolValue];
-    app.type = event[@"type"];
-    return app;
-}
-
 + (BugsnagAppWithState *)appWithDictionary:(NSDictionary *)event
                                     config:(BugsnagConfiguration *)config
                               codeBundleId:(NSString *)codeBundleId

@@ -47,6 +47,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (strong, nonatomic) BugsnagCrashSentry *crashSentry;
 
+/// The App hang or OOM event that caused the last launch to crash.
+@property (nullable, nonatomic) BugsnagEvent *eventFromLastLaunch;
+
 @property (strong, nonatomic) BSGEventUploader *eventUploader;
 
 @property NSMutableDictionary *extraRuntimeInfo;
