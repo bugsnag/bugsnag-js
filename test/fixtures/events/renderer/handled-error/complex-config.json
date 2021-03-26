@@ -1,0 +1,100 @@
+{
+  "apiKey": "6425093c6530f554a9897d2d7d38e248",
+  "notifier": {
+    "name": "Bugsnag Electron",
+    "url": "https://github.com/bugsnag/bugsnag-electron",
+    "version": "{REGEX:^200\\.1\\.0-canary\\.[0-9a-f]{24}$}"
+  },
+  "events": [
+    {
+      "payloadVersion": "4",
+      "app": {
+        "duration": "{TYPE:number}",
+        "releaseStage": "beta",
+        "inForeground": "{TYPE:boolean}",
+        "isLaunching": true,
+        "version": "2.0.83-beta3"
+      },
+      "context": "shopping cart",
+      "device": {
+        "runtimeVersions": {
+          "node": "{TYPE:string}",
+          "chrome": "{TYPE:string}",
+          "electron": "{TYPE:string}"
+        },
+        "id": "{REGEX:[0-9a-f]{64}}",
+        "freeMemory": "{TYPE:number}",
+        "time": "{TIMESTAMP}",
+        "totalMemory": "{TYPE:number}",
+        "osVersion": "{REGEX:\\d+\\.\\d+}"
+      },
+      "metaData": {
+        "account": {
+          "type": "pro"
+        },
+        "app": {
+          "name": "Runner",
+          "part": 3
+        },
+        "device": {
+          "screenResolution": {
+            "width": "{TYPE:number}",
+            "height": "{TYPE:number}"
+          }
+        },
+        "site": {
+          "name": "shop co"
+        }
+      },
+      "severity": "warning",
+      "unhandled": false,
+      "severityReason": {
+        "type": "handledException"
+      },
+      "user": {
+        "id": "3",
+        "email": "elia@example.com",
+        "name": "Elia"
+      },
+      "breadcrumbs": [
+        {
+          "type": "state",
+          "name": "App became ready",
+          "timestamp": "{TIMESTAMP}"
+        },
+        {
+          "type": "state",
+          "name": "Browser window 1 created",
+          "timestamp": "{TIMESTAMP}",
+          "metaData": {
+            "id": 1
+          }
+        },
+        {
+          "type": "state",
+          "name": "Browser window 1 was shown",
+          "timestamp": "{TIMESTAMP}",
+          "metaData": {
+            "id": 1,
+            "title": "Runner"
+          }
+        },
+        {
+          "type": "manual",
+          "name": "missing auth token",
+          "timestamp": "{TIMESTAMP}",
+          "metaData": {
+            "session": "two-two"
+          }
+        }
+      ],
+      "exceptions": [
+        {
+          "errorMessage": "Uncaught Error: ALERT!",
+          "errorClass": "Error",
+          "stacktrace": []
+        }
+      ]
+    }
+  ]
+}

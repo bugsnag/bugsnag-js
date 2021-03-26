@@ -56,6 +56,10 @@ ipcMain.on('main-process-uncaught-exception', () => {
   foo()
 })
 
+ipcMain.on('main-process-notify', () => {
+  Bugsnag.notify(new ReferenceError('something bad'))
+})
+
 ipcMain.on('main-process-crash', () => {
   process.crash()
 })
