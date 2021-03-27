@@ -62,7 +62,8 @@ Before(() => {
   global.server.start()
 })
 
-After(async ({ result, pickle }) => {
+// allow a few seconds to terminate the app, including retries
+After({ timeout: 15_000 }, async ({ result, pickle }) => {
   await global.server.stop()
   if (result.status === Status.FAILED) {
     global.success = false
@@ -71,8 +72,8 @@ After(async ({ result, pickle }) => {
     await mkdir(output, { recursive: true })
     await global.server.writeUploadsTo(output)
   }
-  global.server.clear()
   await global.automator.stop() // start the app fresh every scenario
+  global.server.clear()
 })
 
 AfterAll(async () => {
