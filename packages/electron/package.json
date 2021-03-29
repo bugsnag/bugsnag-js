@@ -21,11 +21,12 @@
     "@bugsnag/plugin-node-unhandled-rejection": "^7.7.0",
     "@bugsnag/delivery-electron": "^1.0.0",
     "@bugsnag/electron-filestore": "^1.0.0",
-    "@bugsnag/plugin-electron-ipc": "1.0.0",
-    "@bugsnag/plugin-electron-renderer-client-sync": "1.0.0",
-    "@bugsnag/plugin-electron-state-sync": "1.0.0",
     "@bugsnag/plugin-electron-app": "1.0.0",
     "@bugsnag/plugin-electron-app-breadcrumbs": "1.0.0",
-    "@bugsnag/plugin-electron-device": "1.0.0"
+    "@bugsnag/plugin-electron-device": "1.0.0",
+    "@bugsnag/plugin-electron-ipc": "1.0.0",
+    "@bugsnag/plugin-electron-renderer-client-sync": "1.0.0",
+    "@bugsnag/plugin-electron-session": "^1.0.0",
+    "@bugsnag/plugin-electron-state-sync": "1.0.0"
   }
 }

@@ -1,0 +1,35 @@
+{
+  "notifier": {
+    "name": "Bugsnag Electron",
+    "version": "{REGEX:^200\\.1\\.0-canary\\.[0-9a-f]{24}$}",
+    "url": "https://github.com/bugsnag/bugsnag-electron"
+  },
+  "device": {
+    "totalMemory": "{TYPE:number}",
+    "locale": "",
+    "osName": "{REGEX:^Linux|macOS|Windows$}",
+    "osVersion": "{REGEX:\\d+\\.\\d+}",
+    "runtimeVersions": {
+      "node": "{TYPE:string}",
+      "chrome": "{TYPE:string}",
+      "electron": "{TYPE:string}"
+    }
+  },
+  "app": {
+    "releaseStage": "beta",
+    "version": "2.0.83-beta3",
+    "type": "{REGEX:^Linux|macOS|Windows$}",
+    "bundleVersion": "{TYPE:string}"
+  },
+  "sessions": [
+    {
+      "id": "{TYPE:string}",
+      "startedAt": "{REGEX:^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$}",
+      "user": {
+        "id": "3",
+        "email": "elia@example.com",
+        "name": "Elia"
+      }
+    }
+  ]
+}

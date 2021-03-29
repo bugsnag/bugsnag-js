@@ -59,3 +59,7 @@ ipcMain.on('main-process-uncaught-exception', () => {
 ipcMain.on('main-process-crash', () => {
   process.crash()
 })
+
+ipcMain.on('main-process-start-session', () => {
+  Bugsnag.startSession()
+})

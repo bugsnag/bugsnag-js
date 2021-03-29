@@ -25,15 +25,13 @@ module.exports = (opts) => {
     require('@bugsnag/plugin-node-unhandled-rejection'),
     require('@bugsnag/plugin-electron-app')(NativeClient, process, electron.app, electron.BrowserWindow),
     require('@bugsnag/plugin-electron-app-breadcrumbs')(electron.app, electron.BrowserWindow),
-    require('@bugsnag/plugin-electron-device')(electron.app, electron.screen, process, filestore, NativeClient, electron.powerMonitor)
+    require('@bugsnag/plugin-electron-device')(electron.app, electron.screen, process, filestore, NativeClient, electron.powerMonitor),
+    require('@bugsnag/plugin-electron-session')(electron.app, electron.BrowserWindow)
   ]
 
   const bugsnag = new Client(opts, schema, internalPlugins, require('../id'))
 
   bugsnag._setDelivery(makeDelivery(filestore, electron.net))
-
-  // noop session delegate for now
-  bugsnag._sessionDelegate = { startSession: () => bugsnag, resumeSession: () => {}, pauseSession: () => {} }
 
   bugsnag._logger.debug('Loaded! In main process.')
 

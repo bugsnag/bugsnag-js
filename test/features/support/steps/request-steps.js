@@ -37,16 +37,12 @@ Then('the app crashed', async () => {
   expect(global.automator.crashed).toBeTruthy()
 })
 
-Then(/^I received (\d+) event uploads?$/, (count) => {
-  expect(global.server.eventUploads.length).toEqual(count)
+Then('I received {int} {word} upload(s)', (count, requestType) => {
+  expect(global.server.uploadsForType(requestType).length).toEqual(count)
 })
 
-Then(/^I received (\d+) minidump uploads?$/, (count) => {
-  expect(global.server.minidumpUploads.length).toEqual(count)
-})
-
-Then('the contents of event request {int} matches {string}', async (index, fixture) => {
-  const req = global.server.eventUploads[index]
+Then('the contents of {word} request {int} matches {string}', async (requestType, index, fixture) => {
+  const req = global.server.uploadsForType(requestType)[index]
   expect(readPayloads([req])).toContainPayload(await readFixtureFile(fixture))
 })
 
@@ -97,11 +93,12 @@ const matchValue = (req, expected, value) => {
     (expected === '{BODY_SHA1}' && value === computeSha1(req.body.trim()))
 }
 
-const eventsMatchingHeaders = (data) => {
+const requestsMatchingHeaders = (requestType, data) => {
   const headers = data.raw().map(row => {
     return [row[0].toLowerCase(), row[1]]
   })
-  return global.server.eventUploads.filter((e) => {
+
+  return global.server.uploadsForType(requestType).filter((e) => {
     return headers.filter(header => {
       const [key, value] = header
       return key in e.headers && matchValue(e, value, e.headers[key])
@@ -109,18 +106,15 @@ const eventsMatchingHeaders = (data) => {
   })
 }
 
-Then('the headers of an event request contains:', (data) => {
-  expect(eventsMatchingHeaders(data).length).toBeGreaterThan(0)
+Then('the headers of a(n) {word} request contains:', (requestType, data) => {
+  expect(requestsMatchingHeaders(requestType, data).length).toBeGreaterThan(0)
 })
 
-Then('the headers of every event request contains:', (data) => {
-  expect(eventsMatchingHeaders(data).length).toEqual(eventsMatchingHeaders(data).length)
+Then('the headers of every {word} request contains:', (requestType, data) => {
+  // TODO isn't this always true?
+  expect(requestsMatchingHeaders(requestType, data).length).toEqual(requestsMatchingHeaders(requestType, data).length)
 })
 
-Then('the contents of an event request matches {string}', async (fixture) => {
-  expect(readPayloads(global.server.eventUploads)).toContainPayload(await readFixtureFile(fixture))
-})
-
-Then('the contents of a session request matches {string}', async (fixture) => {
-  expect(readPayloads(global.server.sessionUploads)).toContainPayload(await readFixtureFile(fixture))
+Then('the contents of a(n) {word} request matches {string}', async (requestType, fixture) => {
+  expect(readPayloads(global.server.uploadsForType(requestType))).toContainPayload(await readFixtureFile(fixture))
 })
