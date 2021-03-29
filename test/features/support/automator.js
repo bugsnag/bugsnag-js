@@ -22,6 +22,8 @@ class Automator {
 
     // pipe app logs into the console
     this.window.on('console', console.log)
+
+    return this.window
   }
 
   async stop () {
