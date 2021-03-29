@@ -24,6 +24,7 @@
         },
         "id": "{REGEX:[0-9a-f]{64}}",
         "freeMemory": "{TYPE:number}",
+        "locale": "{REGEX:^[a-z]{2}(-[A-Z]{2})?$}",
         "time": "{TIMESTAMP}",
         "totalMemory": "{TYPE:number}",
         "osVersion": "{REGEX:\\d+\\.\\d+}"

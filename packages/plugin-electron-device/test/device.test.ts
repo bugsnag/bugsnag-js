@@ -111,43 +111,68 @@ describe('plugin: electron device info', () => {
     expect(session.device).toEqual(makeExpectedSessionDevice())
   })
 
-  it('reports correct OS for macOS', async () => {
+  it('reports correct locale and OS for macOS', async () => {
     const process = makeProcess({ platform: 'darwin' })
 
     const { sendEvent, sendSession } = makeClient({ process })
 
-    await nextTick()
+    const expectedBeforeNextTick = makeExpectedEventDevice({ osName: 'macOS' })
+    delete (expectedBeforeNextTick as any).id
 
     const event = await sendEvent()
-    expect(event.device).toEqual(makeExpectedEventDevice({ osName: 'macOS' }))
+    expect(event.device).toEqual(expectedBeforeNextTick)
+
+    await nextTick()
+
+    const event2 = await sendEvent()
+    expect(event2.device).toEqual(makeExpectedEventDevice({ osName: 'macOS' }))
 
     const session = await sendSession()
     expect(session.device).toEqual(makeExpectedSessionDevice({ osName: 'macOS' }))
   })
 
-  it('reports correct OS for Linux', async () => {
+  it('reports correct locale and OS for Linux', async () => {
     const process = makeProcess({ platform: 'linux' })
 
     const { sendEvent, sendSession } = makeClient({ process })
 
-    await nextTick()
+    const expectedBeforeNextTick = makeExpectedEventDevice({ osName: 'Linux' })
+    delete (expectedBeforeNextTick as any).id
 
     const event = await sendEvent()
-    expect(event.device).toEqual(makeExpectedEventDevice({ osName: 'Linux' }))
+    expect(event.device).toEqual(expectedBeforeNextTick)
+
+    await nextTick()
+
+    const event2 = await sendEvent()
+    expect(event2.device).toEqual(makeExpectedEventDevice({ osName: 'Linux' }))
 
     const session = await sendSession()
     expect(session.device).toEqual(makeExpectedSessionDevice({ osName: 'Linux' }))
   })
 
-  it('reports correct OS for Windows', async () => {
+  it('reports correct locale and OS for Windows', async () => {
+    // on windows, app.getLocale will return an empty string until the app is ready
+    const app = makeApp()
+    app.getLocale = jest.fn()
+      .mockImplementationOnce(() => '')
+      .mockImplementation(() => 'en-GB')
+
     const process = makeProcess({ platform: 'win32' })
 
-    const { sendEvent, sendSession } = makeClient({ process })
+    const { sendEvent, sendSession } = makeClient({ app, process })
+
+    const expectedBeforeNextTick = makeExpectedEventDevice({ osName: 'Windows' })
+    delete (expectedBeforeNextTick as any).id
+    expectedBeforeNextTick.locale = ''
+
+    const event = await sendEvent()
+    expect(event.device).toEqual(expectedBeforeNextTick)
 
     await nextTick()
 
-    const event = await sendEvent()
-    expect(event.device).toEqual(makeExpectedEventDevice({ osName: 'Windows' }))
+    const event2 = await sendEvent()
+    expect(event2.device).toEqual(makeExpectedEventDevice({ osName: 'Windows' }))
 
     const session = await sendSession()
     expect(session.device).toEqual(makeExpectedSessionDevice({ osName: 'Windows' }))

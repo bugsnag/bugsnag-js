@@ -6,7 +6,7 @@
   },
   "device": {
     "totalMemory": "{TYPE:number}",
-    "locale": "",
+    "locale": "{REGEX:^[a-z]{2}(-[A-Z]{2})?$}",
     "osName": "{REGEX:^Linux|macOS|Windows$}",
     "osVersion": "{REGEX:\\d+\\.\\d+}",
     "runtimeVersions": {

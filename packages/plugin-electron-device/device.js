@@ -43,8 +43,15 @@ module.exports = (app, screen, process, filestore, NativeClient, powerMonitor) =
       usingBattery: powerMonitor.onBatteryPower
     })
 
-    // the screen module can't be used until the app is ready
     app.whenReady().then(() => {
+      // on windows, app.getLocale won't return the locale until the app is ready
+      const locale = app.getLocale()
+
+      if (device.locale !== locale) {
+        updateDevice({ locale })
+      }
+
+      // the screen module can't be used until the app is ready
       const primaryDisplay = screen.getPrimaryDisplay() || {}
 
       client.addMetadata('device', {
