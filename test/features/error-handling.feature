@@ -6,7 +6,6 @@ Feature: Detecting and reporting errors
         Then the app crashed
         And the total requests received by the server matches:
             | events   | 0        |
-            | sessions | 1        |
 
     Scenario Outline: An unhandled promise rejection in the main process
         Given I launch an app with configuration:

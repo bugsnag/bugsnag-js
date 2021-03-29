@@ -1,8 +1,12 @@
 const { _electron: electron } = require('playwright')
+const psList = require('ps-list')
 
 const log = process.env.VERBOSE
   ? (msg, ...args) => console.log(`[Automator] ${msg}`, ...args)
   : () => {}
+
+// returns true if a process' name or cmd does not contain a value
+const procNotMatching = (p, value) => p.name.indexOf(value) === -1 && (!p.cmd || p.cmd.indexOf(value) === -1)
 
 class Automator {
   constructor (app) {
@@ -13,6 +17,7 @@ class Automator {
   async start (env = {}) {
     this.crashed = false
     this.runner = await this._launchApp(env)
+    this.runner.context().setDefaultTimeout(10_000)
     this.window = await this._getFirstWindow(env)
 
     // pipe app logs into the console
@@ -20,12 +25,22 @@ class Automator {
   }
 
   async stop () {
-    if (!this.crashed) {
-      try {
-        await this.runner.close()
-      } catch (e) {
-      }
-    }
+    return Promise.race([
+      new Promise((resolve, reject) => setTimeout(() => {
+        reject(new Error('closing app timed out (5s)'))
+      }, 5_000)),
+      this.runner.close()
+    ]).catch(async () => {
+      const list = await psList()
+      list
+        .filter(p => p.ppid === process.pid && procNotMatching(p, 'npm'))
+        .forEach(p => {
+          try {
+            process.kill(p.pid)
+          } catch (e) {
+          }
+        })
+    })
   }
 
   async click (elementID) {
@@ -66,16 +81,12 @@ class Automator {
   // Playwright debugging tools, for when the launch process is too opaque:
   // https://playwright.dev/docs/debug
   async _launchApp (env, retries = 2, timeout = 5) {
-    return Promise.race([
-      new Promise((resolve, reject) => setTimeout(() => {
-        reject(new Error(`launch timed out (${timeout}s)`))
-      }, timeout * 1000)),
-      electron.launch({
-        args: this.app.launchArgs(),
-        executablePath: this.app.packagedPath(),
-        env: { ...process.env, ...env }
-      })
-    ]).catch(async (err) => {
+    return electron.launch({
+      args: this.app.launchArgs(),
+      executablePath: this.app.packagedPath(),
+      env: { ...process.env, ...env },
+      timeout: timeout * 1000
+    }).catch(async (err) => {
       if (retries > 0) {
         log(`launch failed, retrying - ${err}`)
         return await this._launchApp(env, retries - 1, timeout)
