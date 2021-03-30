@@ -25,6 +25,8 @@ const Event = require('@bugsnag/core/event')
 const Session = require('@bugsnag/core/session')
 const Breadcrumb = require('@bugsnag/core/breadcrumb')
 
+Event.__type = 'reactnativejs'
+
 const delivery = require('@bugsnag/delivery-react-native')
 
 const BugsnagPluginReact = require('@bugsnag/plugin-react')
