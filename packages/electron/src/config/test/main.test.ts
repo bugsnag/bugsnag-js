@@ -1,5 +1,4 @@
 import { schema } from '../main'
-// @ts-expect-error TS doesn't like the following line because electron is not installed
 import * as electron from 'electron'
 
 jest.mock('electron', () => ({
@@ -53,10 +52,13 @@ describe('main process client config schema', () => {
   })
 
   describe('releaseStage', () => {
-    it('sets the correct default based on the value of electron.app.isPackaged', () => {
-      electron.app.isPackaged = true
+    it('is "production" when the app is packaged', () => {
+      (electron.app as unknown as any).isPackaged = true
       expect(schema.releaseStage.defaultValue()).toBe('production')
-      electron.app.isPackaged = false
+    })
+
+    it('is "development" when the app is not packaged', () => {
+      (electron.app as unknown as any).isPackaged = false
       expect(schema.releaseStage.defaultValue()).toBe('development')
     })
   })

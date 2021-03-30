@@ -1,7 +1,6 @@
 import BugsnagIpcRenderer from '../bugsnag-ipc-renderer'
 import { CHANNEL_RENDERER_TO_MAIN, CHANNEL_RENDERER_TO_MAIN_SYNC } from '../lib/constants'
 
-// @ts-expect-error TS doesn't like the following line because electron is not installed
 import * as electron from 'electron'
 
 jest.mock('electron', () => ({ ipcRenderer: { invoke: jest.fn(), sendSync: jest.fn() } }), { virtual: true })
