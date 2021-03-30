@@ -17,29 +17,29 @@ steps:
   #
   # Test fixtures
   #
-  - label: ':android: Build RN 0.60 apk'
-    key: "rn-0-60-apk"
-    depends_on:
-      - "android-builder-image"
-    timeout_in_minutes: 60
-    env:
-      REACT_NATIVE_VERSION: "rn0.60"
-    plugins:
-      - docker-compose#v3.3.0:
-          run: react-native-android-builder
-    artifact_paths:
-      - build/rn0.60.apk
+  # - label: ':android: Build RN 0.60 apk'
+  #   key: "rn-0-60-apk"
+  #   depends_on:
+  #     - "android-builder-image"
+  #   timeout_in_minutes: 60
+  #   env:
+  #     REACT_NATIVE_VERSION: "rn0.60"
+  #   plugins:
+  #     - docker-compose#v3.3.0:
+  #         run: react-native-android-builder
+  #   artifact_paths:
+  #     - build/rn0.60.apk
 
-  - label: ':ios: Build RN 0.60 ipa'
-    key: "rn-0-60-ipa"
-    timeout_in_minutes: 60
-    agents:
-      queue: "opensource-mac-rn"
-    env:
-      REACT_NATIVE_VERSION: rn0.60
-    artifact_paths: build/rn0.60.ipa
-    commands:
-      - npm run test:build-react-native-ios
+  # - label: ':ios: Build RN 0.60 ipa'
+  #   key: "rn-0-60-ipa"
+  #   timeout_in_minutes: 60
+  #   agents:
+  #     queue: "opensource-mac-rn"
+  #   env:
+  #     REACT_NATIVE_VERSION: rn0.60
+  #   artifact_paths: build/rn0.60.ipa
+  #   commands:
+  #     - npm run test:build-react-native-ios
 
   - label: ':android: Build RN 0.63 apk'
     key: "rn-0-63-apk"
@@ -65,173 +65,173 @@ steps:
     commands:
       - npm run test:build-react-native-ios
 
-  - label: ':android: Build react-navigation 0.60 apk'
-    key: "react-navigation-0-60-apk"
-    depends_on:
-      - "android-builder-image"
-    timeout_in_minutes: 60
-    env:
-      REACT_NATIVE_VERSION: "rn0.60"
-      JS_SOURCE_DIR: "react_navigation_js"
-      ARTEFACT_NAME: "r_navigation_0.60"
-    plugins:
-      - docker-compose#v3.3.0:
-          run: react-native-android-builder
-    artifact_paths:
-      - build/r_navigation_0.60.apk
+  # - label: ':android: Build react-navigation 0.60 apk'
+  #   key: "react-navigation-0-60-apk"
+  #   depends_on:
+  #     - "android-builder-image"
+  #   timeout_in_minutes: 60
+  #   env:
+  #     REACT_NATIVE_VERSION: "rn0.60"
+  #     JS_SOURCE_DIR: "react_navigation_js"
+  #     ARTEFACT_NAME: "r_navigation_0.60"
+  #   plugins:
+  #     - docker-compose#v3.3.0:
+  #         run: react-native-android-builder
+  #   artifact_paths:
+  #     - build/r_navigation_0.60.apk
+
+  # # See: PLAT-5173
+  # - label: ':ios: Build react-navigation 0.60 ipa'
+  #   skip: "See PLAT-5173"
+  #   key: "react-navigation-0-60-ipa"
+  #   timeout_in_minutes: 60
+  #   agents:
+  #     queue: "opensource-mac-rn"
+  #   env:
+  #     REACT_NATIVE_VERSION: rn0.60
+  #     JS_SOURCE_DIR: "react_navigation_js"
+  #     ARTEFACT_NAME: "r_navigation_0.60"
+  #   artifact_paths: build/r_navigation_0.60.ipa
+  #   commands:
+  #     - npm run test:build-react-native-ios
+
+  # - label: ':android: Build react-navigation 0.63 apk'
+  #   key: "react-navigation-0-63-apk"
+  #   depends_on:
+  #     - "android-builder-image"
+  #   timeout_in_minutes: 60
+  #   env:
+  #     REACT_NATIVE_VERSION: "rn0.63"
+  #     JS_SOURCE_DIR: "react_navigation_js"
+  #     ARTEFACT_NAME: "r_navigation_0.63"
+  #   plugins:
+  #     - docker-compose#v3.3.0:
+  #         run: react-native-android-builder
+  #   artifact_paths:
+  #     - build/r_navigation_0.63.apk
+
+  # # See: PLAT-5173
+  # - label: ':ios: Build react-navigation 0.63 ipa'
+  #   skip: "See PLAT-5173"
+  #   key: "react-navigation-0-63-ipa"
+  #   timeout_in_minutes: 60
+  #   agents:
+  #     queue: "opensource-mac-rn"
+  #   env:
+  #     REACT_NATIVE_VERSION: rn0.63
+  #     JS_SOURCE_DIR: "react_navigation_js"
+  #     ARTEFACT_NAME: "r_navigation_0.63"
+  #   artifact_paths: build/r_navigation_0.63.ipa
+  #   commands:
+  #     - npm run test:build-react-native-ios
+
+  # - label: ':android: Build react-native-navigation 0.60 apk'
+  #   key: "react-native-navigation-0-60-apk"
+  #   depends_on:
+  #     - "android-builder-image"
+  #   timeout_in_minutes: 60
+  #   env:
+  #     REACT_NATIVE_VERSION: "rn0.60"
+  #     JS_SOURCE_DIR: "react_native_navigation_js"
+  #     ARTEFACT_NAME: "r_native_navigation_0.60"
+  #   plugins:
+  #     - docker-compose#v3.3.0:
+  #         run: react-native-android-builder
+  #   artifact_paths:
+  #     - build/r_native_navigation_0.60.apk
 
   # See: PLAT-5173
-  - label: ':ios: Build react-navigation 0.60 ipa'
-    skip: "See PLAT-5173"
-    key: "react-navigation-0-60-ipa"
-    timeout_in_minutes: 60
-    agents:
-      queue: "opensource-mac-rn"
-    env:
-      REACT_NATIVE_VERSION: rn0.60
-      JS_SOURCE_DIR: "react_navigation_js"
-      ARTEFACT_NAME: "r_navigation_0.60"
-    artifact_paths: build/r_navigation_0.60.ipa
-    commands:
-      - npm run test:build-react-native-ios
+  # - label: ':ios: Build react-native-navigation 0.60 ipa'
+  #   skip: "See PLAT-5173"
+  #   key: "react-native-navigation-0-60-ipa"
+  #   timeout_in_minutes: 60
+  #   agents:
+  #     queue: "opensource-mac-rn"
+  #   env:
+  #     REACT_NATIVE_VERSION: rn0.60
+  #     JS_SOURCE_DIR: "react_native_navigation_js"
+  #     ARTEFACT_NAME: "r_native_navigation_0.60"
+  #   artifact_paths: build/r_native_navigation_0.60.ipa
+  #   commands:
+  #     - npm run test:build-react-native-ios
 
-  - label: ':android: Build react-navigation 0.63 apk'
-    key: "react-navigation-0-63-apk"
-    depends_on:
-      - "android-builder-image"
-    timeout_in_minutes: 60
-    env:
-      REACT_NATIVE_VERSION: "rn0.63"
-      JS_SOURCE_DIR: "react_navigation_js"
-      ARTEFACT_NAME: "r_navigation_0.63"
-    plugins:
-      - docker-compose#v3.3.0:
-          run: react-native-android-builder
-    artifact_paths:
-      - build/r_navigation_0.63.apk
+  # - label: ':android: Build react-native-navigation 0.63 apk'
+  #   key: "react-native-navigation-0-63-apk"
+  #   depends_on:
+  #     - "android-builder-image"
+  #   timeout_in_minutes: 60
+  #   env:
+  #     REACT_NATIVE_VERSION: "rn0.63"
+  #     JS_SOURCE_DIR: "react_native_navigation_js"
+  #     ARTEFACT_NAME: "r_native_navigation_0.63"
+  #   plugins:
+  #     - docker-compose#v3.3.0:
+  #         run: react-native-android-builder
+  #   artifact_paths:
+  #     - build/r_native_navigation_0.63.apk
 
-  # See: PLAT-5173
-  - label: ':ios: Build react-navigation 0.63 ipa'
-    skip: "See PLAT-5173"
-    key: "react-navigation-0-63-ipa"
-    timeout_in_minutes: 60
-    agents:
-      queue: "opensource-mac-rn"
-    env:
-      REACT_NATIVE_VERSION: rn0.63
-      JS_SOURCE_DIR: "react_navigation_js"
-      ARTEFACT_NAME: "r_navigation_0.63"
-    artifact_paths: build/r_navigation_0.63.ipa
-    commands:
-      - npm run test:build-react-native-ios
-
-  - label: ':android: Build react-native-navigation 0.60 apk'
-    key: "react-native-navigation-0-60-apk"
-    depends_on:
-      - "android-builder-image"
-    timeout_in_minutes: 60
-    env:
-      REACT_NATIVE_VERSION: "rn0.60"
-      JS_SOURCE_DIR: "react_native_navigation_js"
-      ARTEFACT_NAME: "r_native_navigation_0.60"
-    plugins:
-      - docker-compose#v3.3.0:
-          run: react-native-android-builder
-    artifact_paths:
-      - build/r_native_navigation_0.60.apk
-
-  # See: PLAT-5173
-  - label: ':ios: Build react-native-navigation 0.60 ipa'
-    skip: "See PLAT-5173"
-    key: "react-native-navigation-0-60-ipa"
-    timeout_in_minutes: 60
-    agents:
-      queue: "opensource-mac-rn"
-    env:
-      REACT_NATIVE_VERSION: rn0.60
-      JS_SOURCE_DIR: "react_native_navigation_js"
-      ARTEFACT_NAME: "r_native_navigation_0.60"
-    artifact_paths: build/r_native_navigation_0.60.ipa
-    commands:
-      - npm run test:build-react-native-ios
-
-  - label: ':android: Build react-native-navigation 0.63 apk'
-    key: "react-native-navigation-0-63-apk"
-    depends_on:
-      - "android-builder-image"
-    timeout_in_minutes: 60
-    env:
-      REACT_NATIVE_VERSION: "rn0.63"
-      JS_SOURCE_DIR: "react_native_navigation_js"
-      ARTEFACT_NAME: "r_native_navigation_0.63"
-    plugins:
-      - docker-compose#v3.3.0:
-          run: react-native-android-builder
-    artifact_paths:
-      - build/r_native_navigation_0.63.apk
-
-  # See: PLAT-5173
-  - label: ':ios: Build react-native-navigation 0.63 ipa'
-    skip: "See PLAT-5173"
-    key: "react-native-navigation-0-63-ipa"
-    timeout_in_minutes: 60
-    agents:
-      queue: "opensource-mac-rn"
-    env:
-      REACT_NATIVE_VERSION: rn0.63
-      JS_SOURCE_DIR: "react_native_navigation_js"
-      ARTEFACT_NAME: "r_native_navigation_0.63"
-    artifact_paths: build/r_native_navigation_0.63.ipa
-    commands:
-      - npm run test:build-react-native-ios
+  # # See: PLAT-5173
+  # - label: ':ios: Build react-native-navigation 0.63 ipa'
+  #   skip: "See PLAT-5173"
+  #   key: "react-native-navigation-0-63-ipa"
+  #   timeout_in_minutes: 60
+  #   agents:
+  #     queue: "opensource-mac-rn"
+  #   env:
+  #     REACT_NATIVE_VERSION: rn0.63
+  #     JS_SOURCE_DIR: "react_native_navigation_js"
+  #     ARTEFACT_NAME: "r_native_navigation_0.63"
+  #   artifact_paths: build/r_native_navigation_0.63.ipa
+  #   commands:
+  #     - npm run test:build-react-native-ios
 
   #
   # End-to-end tests
   #
-  - label: ':android: RN 0.60 Android 9 end-to-end tests'
-    depends_on: "rn-0-60-apk"
-    timeout_in_minutes: 60
-    plugins:
-      artifacts#v1.2.0:
-        download: "build/rn0.60.apk"
-      docker-compose#v3.3.0:
-        pull: react-native-maze-runner
-        run: react-native-maze-runner
-        use-aliases: true
-        command:
-        - --app=build/rn0.60.apk
-        - --farm=bs
-        - --device=ANDROID_9_0
-        - --a11y-locator
-        - --fail-fast
-        - --resilient
-    env:
-      SKIP_NAVIGATION_SCENARIOS: "true"
-    concurrency: 9
-    concurrency_group: 'browserstack-app'
+  # - label: ':android: RN 0.60 Android 9 end-to-end tests'
+  #   depends_on: "rn-0-60-apk"
+  #   timeout_in_minutes: 60
+  #   plugins:
+  #     artifacts#v1.2.0:
+  #       download: "build/rn0.60.apk"
+  #     docker-compose#v3.3.0:
+  #       pull: react-native-maze-runner
+  #       run: react-native-maze-runner
+  #       use-aliases: true
+  #       command:
+  #       - --app=build/rn0.60.apk
+  #       - --farm=bs
+  #       - --device=ANDROID_9_0
+  #       - --a11y-locator
+  #       - --fail-fast
+  #       - --resilient
+  #   env:
+  #     SKIP_NAVIGATION_SCENARIOS: "true"
+  #   concurrency: 9
+  #   concurrency_group: 'browserstack-app'
 
-  - label: ':ios: RN 0.60 iOS 12 end-to-end tests'
-    depends_on: "rn-0-60-ipa"
-    timeout_in_minutes: 60
-    plugins:
-      artifacts#v1.2.0:
-        download: "build/rn0.60.ipa"
-      docker-compose#v3.7.0:
-        pull: react-native-maze-runner
-        run: react-native-maze-runner
-        use-aliases: true
-        command:
-        - --app=build/rn0.60.ipa
-        - --farm=bs
-        - --device=IOS_12
-        - --a11y-locator
-        - --appium-version=1.18.0
-        - --fail-fast
-        - --resilient
-    env:
-      SKIP_NAVIGATION_SCENARIOS: "true"
-    concurrency: 9
-    concurrency_group: 'browserstack-app'
+  # - label: ':ios: RN 0.60 iOS 12 end-to-end tests'
+  #   depends_on: "rn-0-60-ipa"
+  #   timeout_in_minutes: 60
+  #   plugins:
+  #     artifacts#v1.2.0:
+  #       download: "build/rn0.60.ipa"
+  #     docker-compose#v3.7.0:
+  #       pull: react-native-maze-runner
+  #       run: react-native-maze-runner
+  #       use-aliases: true
+  #       command:
+  #       - --app=build/rn0.60.ipa
+  #       - --farm=bs
+  #       - --device=IOS_12
+  #       - --a11y-locator
+  #       - --appium-version=1.18.0
+  #       - --fail-fast
+  #       - --resilient
+  #   env:
+  #     SKIP_NAVIGATION_SCENARIOS: "true"
+  #   concurrency: 9
+  #   concurrency_group: 'browserstack-app'
 
   - label: ':android: RN 0.63 Android 9 end-to-end tests'
     depends_on: "rn-0-63-apk"
@@ -278,182 +278,241 @@ steps:
     concurrency: 9
     concurrency_group: 'browserstack-app'
 
-  - label: ':android: react-navigation 0.60 Android 9 end-to-end tests'
-    depends_on: "react-navigation-0-60-apk"
+  - label: ':android: RN 0.63 Sauce-labs Android end-to-end tests'
+    depends_on: "rn-0-63-apk"
     timeout_in_minutes: 60
     plugins:
       artifacts#v1.2.0:
-        download: "build/r_navigation_0.60.apk"
+        download: "build/rn0.63.apk"
       docker-compose#v3.3.0:
         pull: react-native-maze-runner
         run: react-native-maze-runner
         use-aliases: true
         command:
-        - --app=build/r_navigation_0.60.apk
-        - --farm=bs
-        - --device=ANDROID_9_0
+        - --app=build/rn0.63.apk
+        - --farm=sl
+        - --os=iOS
+        - "--device=.*Pixel 3.*"
         - --a11y-locator
         - --fail-fast
         - --resilient
-        - features/navigation.feature
-    concurrency: 9
-    concurrency_group: 'browserstack-app'
+    env:
+      SKIP_NAVIGATION_SCENARIOS: "true"
+    concurrency: 2
+    concurrency_group: sl-app
+    retry:
+      automatic:
+        - exit_status: -1  # Agent was lost
+          limit: 2
+    soft_fail:
+      - exit_status: "*"
 
-  # See: PLAT-5173
-  - label: ':ios: react-navigation 0.60 iOS 13 end-to-end tests'
-    skip: "See PLAT-5173"
-    depends_on: "react-navigation-0-60-ipa"
+  - label: ':ios: RN 0.63 Sauce-labs iOS end-to-end tests'
+    depends_on: "rn-0-63-ipa"
     timeout_in_minutes: 60
     plugins:
       artifacts#v1.2.0:
-        download: "build/r_navigation_0.60.ipa"
+        download: "build/rn0.63.ipa"
       docker-compose#v3.7.0:
         pull: react-native-maze-runner
         run: react-native-maze-runner
         use-aliases: true
         command:
-          - --app=build/r_navigation_0.60.ipa
-          - --farm=bs
-          - --device=IOS_12
-          - --a11y-locator
-          - --appium-version=1.18.0
-          - --fail-fast
-          - --resilient
-          - features/navigation.feature
-    concurrency: 9
-    concurrency_group: 'browserstack-app'
-
-  - label: ':android: react-navigation 0.63 Android 9 end-to-end tests'
-    depends_on: "react-navigation-0-63-apk"
-    timeout_in_minutes: 60
-    plugins:
-      artifacts#v1.2.0:
-        download: "build/r_navigation_0.63.apk"
-      docker-compose#v3.3.0:
-        pull: react-native-maze-runner
-        run: react-native-maze-runner
-        use-aliases: true
-        command:
-        - --app=build/r_navigation_0.63.apk
-        - --farm=bs
-        - --device=ANDROID_9_0
+        - --app=build/rn0.63.ipa
+        - --farm=sl
+        - --os=iOS
+        - "--device=iPhone 6.*"
         - --a11y-locator
-        - --fail-fast
+        - --appium-version=1.18.0
         - --resilient
-        - features/navigation.feature
-    concurrency: 9
-    concurrency_group: 'browserstack-app'
+    env:
+      SKIP_NAVIGATION_SCENARIOS: "true"
+    concurrency: 2
+    concurrency_group: sl-app
+    retry:
+      automatic:
+        - exit_status: -1  # Agent was lost
+          limit: 2
+    soft_fail:
+      - exit_status: "*"
 
-  # See: PLAT-5173
-  - label: ':ios: react-navigation 0.63 iOS 13 end-to-end tests'
-    skip: "See PLAT-5173"
-    depends_on: "react-navigation-0-63-ipa"
-    timeout_in_minutes: 60
-    plugins:
-      artifacts#v1.2.0:
-        download: "build/r_navigation_0.63.ipa"
-      docker-compose#v3.7.0:
-        pull: react-native-maze-runner
-        run: react-native-maze-runner
-        use-aliases: true
-        command:
-          - --app=build/r_navigation_0.63.ipa
-          - --farm=bs
-          - --device=IOS_13
-          - --a11y-locator
-          - --appium-version=1.18.0
-          - --fail-fast
-          - --resilient
-          - features/navigation.feature
-    concurrency: 9
-    concurrency_group: 'browserstack-app'
 
-  - label: ':android: react-native-navigation 0.60 Android 9 end-to-end tests'
-    depends_on: "react-native-navigation-0-60-apk"
-    timeout_in_minutes: 60
-    plugins:
-      artifacts#v1.2.0:
-        download: "build/r_native_navigation_0.60.apk"
-      docker-compose#v3.3.0:
-        pull: react-native-maze-runner
-        run: react-native-maze-runner
-        use-aliases: true
-        command:
-        - --app=build/r_native_navigation_0.60.apk
-        - --farm=bs
-        - --device=ANDROID_9_0
-        - --a11y-locator
-        - --fail-fast
-        - --resilient
-        - features/navigation.feature
-    concurrency: 9
-    concurrency_group: 'browserstack-app'
+  # - label: ':android: react-navigation 0.60 Android 9 end-to-end tests'
+  #   depends_on: "react-navigation-0-60-apk"
+  #   timeout_in_minutes: 60
+  #   plugins:
+  #     artifacts#v1.2.0:
+  #       download: "build/r_navigation_0.60.apk"
+  #     docker-compose#v3.3.0:
+  #       pull: react-native-maze-runner
+  #       run: react-native-maze-runner
+  #       use-aliases: true
+  #       command:
+  #       - --app=build/r_navigation_0.60.apk
+  #       - --farm=bs
+  #       - --device=ANDROID_9_0
+  #       - --a11y-locator
+  #       - --fail-fast
+  #       - --resilient
+  #       - features/navigation.feature
+  #   concurrency: 9
+  #   concurrency_group: 'browserstack-app'
 
-  # See: PLAT-5173
-  - label: ':ios: react-native-navigation 0.60 iOS 13 end-to-end tests'
-    skip: "See PLAT-5173"
-    depends_on: "react-native-navigation-0-60-ipa"
-    timeout_in_minutes: 60
-    plugins:
-      artifacts#v1.2.0:
-        download: "build/r_native_navigation_0.60.ipa"
-      docker-compose#v3.7.0:
-        pull: react-native-maze-runner
-        run: react-native-maze-runner
-        use-aliases: true
-        command:
-          - --app=build/r_native_navigation_0.60.ipa
-          - --farm=bs
-          - --device=IOS_13
-          - --appium-version=1.18.0
-          - --a11y-locator
-          - --fail-fast
-          - --resilient
-          - features/navigation.feature
-    concurrency: 9
-    concurrency_group: 'browserstack-app'
+  # # See: PLAT-5173
+  # - label: ':ios: react-navigation 0.60 iOS 13 end-to-end tests'
+  #   skip: "See PLAT-5173"
+  #   depends_on: "react-navigation-0-60-ipa"
+  #   timeout_in_minutes: 60
+  #   plugins:
+  #     artifacts#v1.2.0:
+  #       download: "build/r_navigation_0.60.ipa"
+  #     docker-compose#v3.7.0:
+  #       pull: react-native-maze-runner
+  #       run: react-native-maze-runner
+  #       use-aliases: true
+  #       command:
+  #         - --app=build/r_navigation_0.60.ipa
+  #         - --farm=bs
+  #         - --device=IOS_12
+  #         - --a11y-locator
+  #         - --appium-version=1.18.0
+  #         - --fail-fast
+  #         - --resilient
+  #         - features/navigation.feature
+  #   concurrency: 9
+  #   concurrency_group: 'browserstack-app'
 
-  - label: ':android: react-native-navigation 0.63 Android 9 end-to-end tests'
-    depends_on: "react-native-navigation-0-63-apk"
-    timeout_in_minutes: 60
-    plugins:
-      artifacts#v1.2.0:
-        download: "build/r_native_navigation_0.63.apk"
-      docker-compose#v3.3.0:
-        pull: react-native-maze-runner
-        run: react-native-maze-runner
-        use-aliases: true
-        command:
-        - --app=build/r_native_navigation_0.63.apk
-        - --farm=bs
-        - --device=ANDROID_9_0
-        - --a11y-locator
-        - --fail-fast
-        - --resilient
-        - features/navigation.feature
-    concurrency: 9
-    concurrency_group: 'browserstack-app'
+  # - label: ':android: react-navigation 0.63 Android 9 end-to-end tests'
+  #   depends_on: "react-navigation-0-63-apk"
+  #   timeout_in_minutes: 60
+  #   plugins:
+  #     artifacts#v1.2.0:
+  #       download: "build/r_navigation_0.63.apk"
+  #     docker-compose#v3.3.0:
+  #       pull: react-native-maze-runner
+  #       run: react-native-maze-runner
+  #       use-aliases: true
+  #       command:
+  #       - --app=build/r_navigation_0.63.apk
+  #       - --farm=bs
+  #       - --device=ANDROID_9_0
+  #       - --a11y-locator
+  #       - --fail-fast
+  #       - --resilient
+  #       - features/navigation.feature
+  #   concurrency: 9
+  #   concurrency_group: 'browserstack-app'
 
-  # See: PLAT-5173
-  - label: ':ios: react-native-navigation 0.63 iOS 13 end-to-end tests'
-    skip: "See PLAT-5173"
-    depends_on: "react-native-navigation-0-63-ipa"
-    timeout_in_minutes: 60
-    plugins:
-      artifacts#v1.2.0:
-        download: "build/r_native_navigation_0.63.ipa"
-      docker-compose#v3.7.0:
-        pull: react-native-maze-runner
-        run: react-native-maze-runner
-        use-aliases: true
-        command:
-          - --app=build/r_native_navigation_0.63.ipa
-          - --farm=bs
-          - --device=IOS_13
-          - --a11y-locator
-          - --appium-version=1.18.0
-          - --fail-fast
-          - --resilient
-          - features/navigation.feature
-    concurrency: 9
-    concurrency_group: 'browserstack-app'
+  # # See: PLAT-5173
+  # - label: ':ios: react-navigation 0.63 iOS 13 end-to-end tests'
+  #   skip: "See PLAT-5173"
+  #   depends_on: "react-navigation-0-63-ipa"
+  #   timeout_in_minutes: 60
+  #   plugins:
+  #     artifacts#v1.2.0:
+  #       download: "build/r_navigation_0.63.ipa"
+  #     docker-compose#v3.7.0:
+  #       pull: react-native-maze-runner
+  #       run: react-native-maze-runner
+  #       use-aliases: true
+  #       command:
+  #         - --app=build/r_navigation_0.63.ipa
+  #         - --farm=bs
+  #         - --device=IOS_13
+  #         - --a11y-locator
+  #         - --appium-version=1.18.0
+  #         - --fail-fast
+  #         - --resilient
+  #         - features/navigation.feature
+  #   concurrency: 9
+  #   concurrency_group: 'browserstack-app'
+
+  # - label: ':android: react-native-navigation 0.60 Android 9 end-to-end tests'
+  #   depends_on: "react-native-navigation-0-60-apk"
+  #   timeout_in_minutes: 60
+  #   plugins:
+  #     artifacts#v1.2.0:
+  #       download: "build/r_native_navigation_0.60.apk"
+  #     docker-compose#v3.3.0:
+  #       pull: react-native-maze-runner
+  #       run: react-native-maze-runner
+  #       use-aliases: true
+  #       command:
+  #       - --app=build/r_native_navigation_0.60.apk
+  #       - --farm=bs
+  #       - --device=ANDROID_9_0
+  #       - --a11y-locator
+  #       - --fail-fast
+  #       - --resilient
+  #       - features/navigation.feature
+  #   concurrency: 9
+  #   concurrency_group: 'browserstack-app'
+
+  # # See: PLAT-5173
+  # - label: ':ios: react-native-navigation 0.60 iOS 13 end-to-end tests'
+  #   skip: "See PLAT-5173"
+  #   depends_on: "react-native-navigation-0-60-ipa"
+  #   timeout_in_minutes: 60
+  #   plugins:
+  #     artifacts#v1.2.0:
+  #       download: "build/r_native_navigation_0.60.ipa"
+  #     docker-compose#v3.7.0:
+  #       pull: react-native-maze-runner
+  #       run: react-native-maze-runner
+  #       use-aliases: true
+  #       command:
+  #         - --app=build/r_native_navigation_0.60.ipa
+  #         - --farm=bs
+  #         - --device=IOS_13
+  #         - --appium-version=1.18.0
+  #         - --a11y-locator
+  #         - --fail-fast
+  #         - --resilient
+  #         - features/navigation.feature
+  #   concurrency: 9
+  #   concurrency_group: 'browserstack-app'
+
+  # - label: ':android: react-native-navigation 0.63 Android 9 end-to-end tests'
+  #   depends_on: "react-native-navigation-0-63-apk"
+  #   timeout_in_minutes: 60
+  #   plugins:
+  #     artifacts#v1.2.0:
+  #       download: "build/r_native_navigation_0.63.apk"
+  #     docker-compose#v3.3.0:
+  #       pull: react-native-maze-runner
+  #       run: react-native-maze-runner
+  #       use-aliases: true
+  #       command:
+  #       - --app=build/r_native_navigation_0.63.apk
+  #       - --farm=bs
+  #       - --device=ANDROID_9_0
+  #       - --a11y-locator
+  #       - --fail-fast
+  #       - --resilient
+  #       - features/navigation.feature
+  #   concurrency: 9
+  #   concurrency_group: 'browserstack-app'
+
+  # # See: PLAT-5173
+  # - label: ':ios: react-native-navigation 0.63 iOS 13 end-to-end tests'
+  #   skip: "See PLAT-5173"
+  #   depends_on: "react-native-navigation-0-63-ipa"
+  #   timeout_in_minutes: 60
+  #   plugins:
+  #     artifacts#v1.2.0:
+  #       download: "build/r_native_navigation_0.63.ipa"
+  #     docker-compose#v3.7.0:
+  #       pull: react-native-maze-runner
+  #       run: react-native-maze-runner
+  #       use-aliases: true
+  #       command:
+  #         - --app=build/r_native_navigation_0.63.ipa
+  #         - --farm=bs
+  #         - --device=IOS_13
+  #         - --a11y-locator
+  #         - --appium-version=1.18.0
+  #         - --fail-fast
+  #         - --resilient
+  #         - features/navigation.feature
+  #   concurrency: 9
+  #   concurrency_group: 'browserstack-app'

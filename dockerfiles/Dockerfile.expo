@@ -1,5 +1,5 @@
 # CI test image for unit/lint/type tests
-FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v4-cli as expo-maze-runner
+FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner:integration-sauce-labs-cli as expo-maze-runner
 COPY /test/expo/features /app/test/expo/features
 COPY /test/expo/scripts /app/test/expo/scripts
 WORKDIR /app/test/expo

@@ -67,12 +67,16 @@ services:
       dockerfile: dockerfiles/Dockerfile.expo
       args:
         - BUILDKITE_BUILD_NUMBER
+    extra_hosts:
+      - "maze-local:127.0.0.1"
     environment:
       BUILDKITE:
       BUILDKITE_PIPELINE_NAME:
       DEBUG:
       MAZE_DEVICE_FARM_USERNAME:
       MAZE_DEVICE_FARM_ACCESS_KEY:
+      SAUCE_LABS_USERNAME:
+      SAUCE_LABS_ACCESS_KEY:
     networks:
       default:
         aliases:
@@ -180,7 +184,9 @@ services:
       - ./test/react-native-cli/features/:/app/features
 
   react-native-maze-runner:
-    image: 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v4-cli
+    image: 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner:integration-sauce-labs-cli
+    extra_hosts:
+      - "maze-local:127.0.0.1"
     environment:
       BUILDKITE:
       BUILDKITE_PIPELINE_NAME:
@@ -188,6 +194,8 @@ services:
       MAZE_DEVICE_FARM_USERNAME:
       MAZE_DEVICE_FARM_ACCESS_KEY:
       SKIP_NAVIGATION_SCENARIOS:
+      SAUCE_LABS_USERNAME:
+      SAUCE_LABS_ACCESS_KEY:
     networks:
       default:
         aliases:
