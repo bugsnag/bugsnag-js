@@ -22,7 +22,7 @@ class TestApp {
     // a bare `npm install` first will wildcard to the latest / last version
     // installed, doubling the install time
     await this._exec(npmRunner, [...installArgs, `electron@${electronVersion}`])
-    await this._exec(npmRunner, [...installArgs], {}, 200)
+    await this._exec(npmRunner, [...installArgs], {}, 300)
     await this._exec(npmRunner, [...installArgs, '--registry', 'http://0.0.0.0:5539', `@bugsnag/electron@${bugsnagVersion}`])
   }
 
