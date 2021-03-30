@@ -12,7 +12,7 @@
         "duration": "{TYPE:number}",
         "releaseStage": "beta",
         "inForeground": "{TYPE:boolean}",
-        "isLaunching": "{TYPE:boolean}",
+        "isLaunching": true,
         "version": "2.0.83-beta3"
       },
       "context": "shopping cart",
@@ -38,7 +38,6 @@
           "part": 3
         },
         "device": {
-          "online": "{TYPE:boolean}",
           "screenResolution": {
             "width": "{TYPE:number}",
             "height": "{TYPE:number}"
@@ -51,7 +50,7 @@
       "severity": "error",
       "unhandled": true,
       "severityReason": {
-        "type": "unhandledPromiseRejection"
+        "type": "unhandledException"
       },
       "user": {
         "id": "3",
@@ -62,41 +61,71 @@
         {
           "type": "state",
           "name": "App became ready",
-          "timestamp": "{TIMESTAMP}"
+          "timestamp": "{TIMESTAMP}",
+          "metaData": {}
         },
         {
           "type": "state",
           "name": "Browser window 1 created",
           "timestamp": "{TIMESTAMP}",
           "metaData": {
-            "id": 1
+            "id": 1,
+            "title": ""
           }
         },
         {
-          "type": "state",
-          "name": "Browser window 1 was shown",
+          "type": "user",
+          "name": "UI click",
           "timestamp": "{TIMESTAMP}",
           "metaData": {
-            "id": 1,
-            "title": "Runner"
+            "targetText": "console.log in main process",
+            "targetSelector": "A#main-process-console-log"
           }
         },
         {
-            "type": "user",
-            "name": "UI click",
-            "timestamp": "{TIMESTAMP}",
-            "metaData": {
-                "targetText": "Unhandled promise rejection in main process",
-                "targetSelector": "A#main-process-unhandled-promise-rejection"
-            }
+          "type": "log",
+          "name": "Console output",
+          "timestamp": "{TIMESTAMP}",
+          "metaData": {
+            "severity": "log",
+            "[0]": "abc",
+            "[1]": "123"
+          }
+        },
+        {
+          "type": "user",
+          "name": "UI click",
+          "timestamp": "{TIMESTAMP}",
+          "metaData": {
+            "targetText": "console.log in renderer process",
+            "targetSelector": "A#renderer-process-console-log"
+          }
+        },
+        {
+          "type": "log",
+          "name": "Console output",
+          "timestamp": "{TIMESTAMP}",
+          "metaData": {
+            "severity": "log",
+            "[0]": "xyz",
+            "[1]": "456"
+          }
+        },
+        {
+          "type": "user",
+          "name": "UI click",
+          "timestamp": "{TIMESTAMP}",
+          "metaData": {
+            "targetText": "Uncaught exception in main process",
+            "targetSelector": "A#main-process-uncaught-exception"
+          }
         }
       ],
       "exceptions": [
         {
-          "errorClass": "TypeError",
-          "errorMessage": "invalid",
-          "stacktrace": [],
-          "type": "electronnodejs"
+          "errorClass": "ReferenceError",
+          "errorMessage": "foo is not defined",
+          "stacktrace": []
         }
       ]
     }

@@ -12,7 +12,7 @@
         "duration": "{TYPE:number}",
         "releaseStage": "production",
         "inForeground": "{TYPE:boolean}",
-        "isLaunching": "{TYPE:boolean}",
+        "isLaunching": true,
         "version": "1.0.2"
       },
       "device": {
@@ -33,7 +33,6 @@
           "name": "Runner"
         },
         "device": {
-          "online": "{TYPE:boolean}",
           "screenResolution": {
             "width": "{TYPE:number}",
             "height": "{TYPE:number}"
@@ -49,41 +48,71 @@
         {
           "type": "state",
           "name": "App became ready",
-          "timestamp": "{TIMESTAMP}"
+          "timestamp": "{TIMESTAMP}",
+          "metaData": {}
         },
         {
           "type": "state",
           "name": "Browser window 1 created",
           "timestamp": "{TIMESTAMP}",
           "metaData": {
-            "id": 1
+            "id": 1,
+            "title": ""
           }
         },
         {
-          "type": "state",
-          "name": "Browser window 1 was shown",
+          "type": "user",
+          "name": "UI click",
           "timestamp": "{TIMESTAMP}",
           "metaData": {
-            "id": 1,
-            "title": "Runner"
+            "targetText": "console.log in main process",
+            "targetSelector": "A#main-process-console-log"
           }
         },
         {
-            "type": "user",
-            "name": "UI click",
-            "timestamp": "{TIMESTAMP}",
-            "metaData": {
-                "targetText": "Uncaught exception in main process",
-                "targetSelector": "A#main-process-uncaught-exception"
-            }
+          "type": "log",
+          "name": "Console output",
+          "timestamp": "{TIMESTAMP}",
+          "metaData": {
+            "severity": "log",
+            "[0]": "abc",
+            "[1]": "123"
+          }
+        },
+        {
+          "type": "user",
+          "name": "UI click",
+          "timestamp": "{TIMESTAMP}",
+          "metaData": {
+            "targetText": "console.log in renderer process",
+            "targetSelector": "A#renderer-process-console-log"
+          }
+        },
+        {
+          "type": "log",
+          "name": "Console output",
+          "timestamp": "{TIMESTAMP}",
+          "metaData": {
+            "severity": "log",
+            "[0]": "xyz",
+            "[1]": "456"
+          }
+        },
+        {
+          "type": "user",
+          "name": "UI click",
+          "timestamp": "{TIMESTAMP}",
+          "metaData": {
+            "targetText": "Uncaught exception in main process",
+            "targetSelector": "A#main-process-uncaught-exception"
+          }
         }
       ],
       "exceptions": [
         {
           "errorClass": "ReferenceError",
           "errorMessage": "foo is not defined",
-          "stacktrace": [],
-          "type": "electronnodejs"
+          "stacktrace": []
         }
       ]
     }
