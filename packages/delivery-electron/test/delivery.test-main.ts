@@ -1,4 +1,5 @@
-import { createServer, IncomingHttpHeaders, request, STATUS_CODES } from 'http'
+import { createServer, IncomingHttpHeaders, STATUS_CODES } from 'http'
+import { net } from 'electron'
 import { AddressInfo } from 'net'
 import delivery from '../'
 import { EventDeliveryPayload } from '@bugsnag/core/client'
@@ -13,16 +14,6 @@ const noopLogger = {
   info: () => {},
   warn: () => {},
   error: () => {}
-}
-
-const netMock = {
-  request: (opts: any, callback?: (response: any) => void): any => {
-  // electron net.request handles `url` automatically
-    const { hostname, port, pathname, protocol } = new URL(opts.url)
-    const req = request({ protocol, hostname, port, path: pathname, ...opts }, callback)
-
-    return req
-  }
 }
 
 const makeClient = (config: any = {}, logger: any = noopLogger) => {
@@ -93,10 +84,10 @@ describe('delivery: electron', () => {
       } as unknown as EventDeliveryPayload
       const config = {
         apiKey: 'aaaaaaaa',
-        endpoints: { notify: `http://0.0.0.0:${(server.address() as AddressInfo).port}/notify/` },
+        endpoints: { notify: `http://localhost:${(server.address() as AddressInfo).port}/notify/` },
         redactedKeys: []
       }
-      delivery(filestore, netMock)(makeClient(config)).sendEvent(payload, (err: any) => {
+      delivery(filestore, net)(makeClient(config)).sendEvent(payload, (err: any) => {
         expect(err).toBe(null)
         expect(requests.length).toBe(1)
         expect(requests[0].method).toBe('POST')
@@ -124,10 +115,10 @@ describe('delivery: electron', () => {
       } as unknown as EventDeliveryPayload
       const config = {
         apiKey: 'aaaaaaaa',
-        endpoints: { notify: 'blah', sessions: `http://0.0.0.0:${(server.address() as AddressInfo).port}/sessions/` },
+        endpoints: { notify: 'blah', sessions: `http://localhost:${(server.address() as AddressInfo).port}/sessions/` },
         redactedKeys: []
       }
-      delivery(filestore, netMock)(makeClient(config)).sendSession(payload, (err: any) => {
+      delivery(filestore, net)(makeClient(config)).sendSession(payload, (err: any) => {
         expect(err).toBe(null)
         expect(requests.length).toBe(1)
         expect(requests[0].method).toBe('POST')
@@ -151,20 +142,19 @@ describe('delivery: electron', () => {
     } as unknown as EventDeliveryPayload
     const config = {
       apiKey: 'aaaaaaaa',
-      endpoints: { notify: 'http://0.0.0.0:9999/notify/' },
+      endpoints: { notify: 'http://localhost:9999/notify/' },
       redactedKeys: []
     }
     let didLog = false
     const logger = { error: () => { didLog = true }, info: () => {} }
-    delivery(filestore, netMock)(makeClient(config, logger)).sendEvent(payload, (err: any) => {
+    delivery(filestore, net)(makeClient(config, logger)).sendEvent(payload, (err: any) => {
       expect(didLog).toBe(true)
       expect(err).toBeTruthy()
-      expect((err).code).toBe('ECONNREFUSED')
       expect(enqueueSpy).toHaveBeenCalledWith(
 
         {
           opts: {
-            url: 'http://0.0.0.0:9999/notify/',
+            url: 'http://localhost:9999/notify/',
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -192,12 +182,12 @@ describe('delivery: electron', () => {
       } as unknown as EventDeliveryPayload
       const config = {
         apiKey: 'aaaaaaaa',
-        endpoints: { notify: `http://0.0.0.0:${(server.address() as AddressInfo).port}/notify/` },
+        endpoints: { notify: `http://localhost:${(server.address() as AddressInfo).port}/notify/` },
         redactedKeys: []
       }
       let didLog = false
       const logger = { error: () => { didLog = true }, info: () => {} }
-      delivery(filestore, netMock)(makeClient(config, logger)).sendEvent(payload, (err: any) => {
+      delivery(filestore, net)(makeClient(config, logger)).sendEvent(payload, (err: any) => {
         expect(didLog).toBe(true)
         expect(enqueueSpy).not.toHaveBeenCalled()
         expect(err).toBeTruthy()
@@ -214,19 +204,18 @@ describe('delivery: electron', () => {
     } as unknown as EventDeliveryPayload
     const config = {
       apiKey: 'aaaaaaaa',
-      endpoints: { sessions: 'http://0.0.0.0:9999/sessions/' },
+      endpoints: { sessions: 'http://localhost:9999/sessions/' },
       redactedKeys: []
     }
     let didLog = false
     const logger = { error: () => { didLog = true }, info: () => {} }
-    delivery(filestore, netMock)(makeClient(config, logger)).sendSession(payload, (err: any) => {
+    delivery(filestore, net)(makeClient(config, logger)).sendSession(payload, (err: any) => {
       expect(didLog).toBe(true)
       expect(err).toBeTruthy()
-      expect((err).code).toBe('ECONNREFUSED')
       expect(enqueueSpy).toHaveBeenCalledWith(
         {
           opts: {
-            url: 'http://0.0.0.0:9999/sessions/',
+            url: 'http://localhost:9999/sessions/',
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -256,15 +245,14 @@ describe('delivery: electron', () => {
       } as unknown as EventDeliveryPayload
       const config = {
         apiKey: 'aaaaaaaa',
-        endpoints: { notify: `http://0.0.0.0:${(server.address() as AddressInfo).port}/notify/` },
+        endpoints: { notify: `http://localhost:${(server.address() as AddressInfo).port}/notify/` },
         redactedKeys: []
       }
       let didLog = false
       const logger = { error: () => { didLog = true }, info: () => {} }
-      delivery(filestore, netMock)(makeClient(config, logger)).sendEvent(payload, (err: any) => {
+      delivery(filestore, net)(makeClient(config, logger)).sendEvent(payload, (err: any) => {
         expect(didLog).toBe(true)
         expect(err).toBeTruthy()
-        expect((err).code).toBe('ECONNRESET')
         expect(enqueueSpy).toHaveBeenCalled()
 
         server.close()
@@ -286,12 +274,12 @@ describe('delivery: electron', () => {
       } as unknown as EventDeliveryPayload
       const config = {
         apiKey: 'aaaaaaaa',
-        endpoints: { notify: `http://0.0.0.0:${(server.address() as AddressInfo).port}/notify/` },
+        endpoints: { notify: `http://localhost:${(server.address() as AddressInfo).port}/notify/` },
         redactedKeys: []
       }
       let didLog = false
       const logger = { error: () => { didLog = true }, info: () => {} }
-      delivery(filestore, netMock)(makeClient(config, logger)).sendEvent(payload, (err: any) => {
+      delivery(filestore, net)(makeClient(config, logger)).sendEvent(payload, (err: any) => {
         expect(didLog).toBe(true)
         expect(err).toBeTruthy()
         expect(enqueueSpy).toHaveBeenCalled()
@@ -312,14 +300,13 @@ describe('delivery: electron', () => {
       endpoints: { notify: 'https://some-address.com' },
       redactedKeys: []
     }
-    delivery(filestore, netMock)(makeClient(config)).sendEvent(payload, (err: any) => {
+    delivery(filestore, net)(makeClient(config)).sendEvent(payload, (err: any) => {
       expect(err).not.toBeTruthy()
       expect(enqueueSpy).toHaveBeenCalled()
       done()
     })
   })
 
-  // eslint-disable-next-line jest/expect-expect
   it('starts the redelivery loop if there is a connection', done => {
     PayloadDeliveryLoopMock.mockImplementation(() => ({
       start: () => {
@@ -327,6 +314,6 @@ describe('delivery: electron', () => {
       }
     } as any))
 
-    delivery(filestore, netMock)(makeClient())
+    delivery(filestore, net)(makeClient())
   })
 })
