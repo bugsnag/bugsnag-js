@@ -28,12 +28,15 @@ jobs:
         key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
         restore-keys: |
           ${{ runner.os }}-node-
+    - run: npm install electron@${{ matrix.electron }} --no-audit --progress=false --no-save
     - run: npm ci --no-audit --progress=false
       env:
         PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
     - run: npx lerna bootstrap
     - run: npm run test:lint
     - run: npm run test:unit
+      env:
+        ELECTRON_DISABLE_SANDBOX: 1
     - name: (macOS) disable crash dialog
       if: contains(matrix.os, 'macos')
       run: defaults write com.apple.CrashReporter DialogType none
