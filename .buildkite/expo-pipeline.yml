@@ -89,6 +89,197 @@ steps:
     commands:
       - test/expo/scripts/build-ios.sh
 
+  # - label: ':runner: expo Android 9'
+  #   depends_on:
+  #     - "build-expo-apk"
+  #     - "expo-maze-runner-image"
+  #   timeout_in_minutes: 50
+  #   plugins:
+  #     artifacts#v1.2.0:
+  #       download: "build/output.apk"
+  #     docker-compose#v3.7.0:
+  #       run: expo-maze-runner
+  #       use-aliases: true
+  #       command:
+  #         - --app=build/output.apk
+  #         - --farm=bs
+  #         - --device=ANDROID_9_0
+  #         - --a11y-locator
+  #         - --fail-fast
+  #         - --retry=2
+  #         - --resilient
+  #   concurrency: 9
+  #   concurrency_group: 'browserstack-app'
+
+  # - label: ':runner: expo iOS 12'
+  #   depends_on:
+  #     - "build-expo-ipa"
+  #     - "expo-maze-runner-image"
+  #   timeout_in_minutes: 50
+  #   plugins:
+  #     artifacts#v1.2.0:
+  #       download: "build/output.ipa"
+  #     docker-compose#v3.7.0:
+  #       run: expo-maze-runner
+  #       use-aliases: true
+  #       command:
+  #         - --app=build/output.ipa
+  #         - --farm=bs
+  #         - --device=IOS_12
+  #         - --a11y-locator
+  #         - --appium-version=1.16.0
+  #         - --fail-fast
+  #         - --retry=2
+  #         - --resilient
+  #   concurrency: 9
+  #   concurrency_group: 'browserstack-app'
+
+  # - block: "Trigger full test suite"
+  #   key: "trigger-full-suite"
+
+  # - label: ':runner: expo Android 8'
+  #   depends_on:
+  #     - "trigger-full-suite"
+  #     - "build-expo-apk"
+  #     - "expo-maze-runner-image"
+  #   timeout_in_minutes: 50
+  #   plugins:
+  #     artifacts#v1.2.0:
+  #       download: "build/output.apk"
+  #     docker-compose#v3.7.0:
+  #       run: expo-maze-runner
+  #       use-aliases: true
+  #       command:
+  #         - --app=build/output.apk
+  #         - --farm=bs
+  #         - --device=ANDROID_8_1
+  #         - --a11y-locator
+  #         - --fail-fast
+  #         - --retry=2
+  #         - --appium-version=1.18.0
+  #         - --capabilities={"appWaitForLaunch":"false"}
+  #         - --resilient
+  #   concurrency: 9
+  #   concurrency_group: 'browserstack-app'
+  #   soft_fail:
+  #     - exit_status: "*"
+
+  # - label: ':runner: expo Android 7'
+  #   depends_on:
+  #     - "trigger-full-suite"
+  #     - "build-expo-apk"
+  #     - "expo-maze-runner-image"
+  #   timeout_in_minutes: 50
+  #   plugins:
+  #     artifacts#v1.2.0:
+  #       download: "build/output.apk"
+  #     docker-compose#v3.7.0:
+  #       run: expo-maze-runner
+  #       use-aliases: true
+  #       command:
+  #         - --app=build/output.apk
+  #         - --farm=bs
+  #         - --device=ANDROID_7_1
+  #         - --a11y-locator
+  #         - --fail-fast
+  #         - --retry=2
+  #         - --resilient
+  #   concurrency: 9
+  #   concurrency_group: 'browserstack-app'
+
+  # - label: ':runner: expo Android 6'
+  #   depends_on:
+  #     - "trigger-full-suite"
+  #     - "build-expo-apk"
+  #     - "expo-maze-runner-image"
+  #   timeout_in_minutes: 50
+  #   plugins:
+  #     artifacts#v1.2.0:
+  #       download: "build/output.apk"
+  #     docker-compose#v3.7.0:
+  #       run: expo-maze-runner
+  #       use-aliases: true
+  #       command:
+  #         - --app=build/output.apk
+  #         - --farm=bs
+  #         - --device=ANDROID_6_0
+  #         - --a11y-locator
+  #         - --fail-fast
+  #         - --retry=2
+  #         - --resilient
+  #   concurrency: 9
+  #   concurrency_group: 'browserstack-app'
+
+  # - label: ':runner: expo Android 5'
+  #   depends_on:
+  #     - "trigger-full-suite"
+  #     - "build-expo-apk"
+  #     - "expo-maze-runner-image"
+  #   timeout_in_minutes: 50
+  #   plugins:
+  #     artifacts#v1.2.0:
+  #       download: "build/output.apk"
+  #     docker-compose#v3.7.0:
+  #       run: expo-maze-runner
+  #       use-aliases: true
+  #       command:
+  #         - --app=build/output.apk
+  #         - --farm=bs
+  #         - --device=ANDROID_5_0
+  #         - --a11y-locator
+  #         - --fail-fast
+  #         - --retry=2
+  #         - --resilient
+  #   concurrency: 9
+  #   concurrency_group: 'browserstack-app'
+
+  # - label: ':runner: expo iOS 11'
+  #   depends_on:
+  #     - "trigger-full-suite"
+  #     - "build-expo-ipa"
+  #     - "expo-maze-runner-image"
+  #   timeout_in_minutes: 50
+  #   plugins:
+  #     artifacts#v1.2.0:
+  #       download: "build/output.ipa"
+  #     docker-compose#v3.7.0:
+  #       run: expo-maze-runner
+  #       use-aliases: true
+  #       command:
+  #         - --app=build/output.ipa
+  #         - --farm=bs
+  #         - --device=IOS_11
+  #         - --a11y-locator
+  #         - --appium-version=1.16.0
+  #         - --fail-fast
+  #         - --retry=2
+  #         - --resilient
+  #   concurrency: 9
+  #   concurrency_group: 'browserstack-app'
+
+  # - label: ':runner: expo iOS 10'
+  #   depends_on:
+  #     - "trigger-full-suite"
+  #     - "build-expo-ipa"
+  #     - "expo-maze-runner-image"
+  #   timeout_in_minutes: 50
+  #   plugins:
+  #     artifacts#v1.2.0:
+  #       download: "build/output.ipa"
+  #     docker-compose#v3.7.0:
+  #       run: expo-maze-runner
+  #       use-aliases: true
+  #       command:
+  #         - --app=build/output.ipa
+  #         - --farm=bs
+  #         - --device=IOS_10
+  #         - --a11y-locator
+  #         - --fail-fast
+  #         - --retry=2
+  #         - --resilient
+  #   concurrency: 9
+  #   concurrency_group: 'browserstack-app'
+
   - label: ':runner: expo Android 9'
     depends_on:
       - "build-expo-apk"
@@ -101,15 +292,20 @@ steps:
         run: expo-maze-runner
         use-aliases: true
         command:
+          - features/handled.feature
+          - features/unhandled.feature
           - --app=build/output.apk
-          - --farm=bs
-          - --device=ANDROID_9_0
+          - --farm=sl
+          - --os=Android
+          - "--device=.*Pixel 3.*"
           - --a11y-locator
           - --fail-fast
           - --retry=2
           - --resilient
-    concurrency: 9
-    concurrency_group: 'browserstack-app'
+    concurrency: 2
+    concurrency_group: sl-app
+    soft_fail:
+      - exit_status: "*"
 
   - label: ':runner: expo iOS 12'
     depends_on:
@@ -124,158 +320,15 @@ steps:
         use-aliases: true
         command:
           - --app=build/output.ipa
-          - --farm=bs
-          - --device=IOS_12
+          - --farm=sl
+          - --os=iOS
+          - "--device=iPhone 6.*"
           - --a11y-locator
           - --appium-version=1.16.0
           - --fail-fast
           - --retry=2
           - --resilient
-    concurrency: 9
-    concurrency_group: 'browserstack-app'
-
-  - block: "Trigger full test suite"
-    key: "trigger-full-suite"
-
-  - label: ':runner: expo Android 8'
-    depends_on:
-      - "trigger-full-suite"
-      - "build-expo-apk"
-      - "expo-maze-runner-image"
-    timeout_in_minutes: 50
-    plugins:
-      artifacts#v1.2.0:
-        download: "build/output.apk"
-      docker-compose#v3.7.0:
-        run: expo-maze-runner
-        use-aliases: true
-        command:
-          - --app=build/output.apk
-          - --farm=bs
-          - --device=ANDROID_8_1
-          - --a11y-locator
-          - --fail-fast
-          - --retry=2
-          - --appium-version=1.18.0
-          - --capabilities={"appWaitForLaunch":"false"}
-          - --resilient
-    concurrency: 9
-    concurrency_group: 'browserstack-app'
+    concurrency: 2
+    concurrency_group: sl-app
     soft_fail:
       - exit_status: "*"
-
-  - label: ':runner: expo Android 7'
-    depends_on:
-      - "trigger-full-suite"
-      - "build-expo-apk"
-      - "expo-maze-runner-image"
-    timeout_in_minutes: 50
-    plugins:
-      artifacts#v1.2.0:
-        download: "build/output.apk"
-      docker-compose#v3.7.0:
-        run: expo-maze-runner
-        use-aliases: true
-        command:
-          - --app=build/output.apk
-          - --farm=bs
-          - --device=ANDROID_7_1
-          - --a11y-locator
-          - --fail-fast
-          - --retry=2
-          - --resilient
-    concurrency: 9
-    concurrency_group: 'browserstack-app'
-
-  - label: ':runner: expo Android 6'
-    depends_on:
-      - "trigger-full-suite"
-      - "build-expo-apk"
-      - "expo-maze-runner-image"
-    timeout_in_minutes: 50
-    plugins:
-      artifacts#v1.2.0:
-        download: "build/output.apk"
-      docker-compose#v3.7.0:
-        run: expo-maze-runner
-        use-aliases: true
-        command:
-          - --app=build/output.apk
-          - --farm=bs
-          - --device=ANDROID_6_0
-          - --a11y-locator
-          - --fail-fast
-          - --retry=2
-          - --resilient
-    concurrency: 9
-    concurrency_group: 'browserstack-app'
-
-  - label: ':runner: expo Android 5'
-    depends_on:
-      - "trigger-full-suite"
-      - "build-expo-apk"
-      - "expo-maze-runner-image"
-    timeout_in_minutes: 50
-    plugins:
-      artifacts#v1.2.0:
-        download: "build/output.apk"
-      docker-compose#v3.7.0:
-        run: expo-maze-runner
-        use-aliases: true
-        command:
-          - --app=build/output.apk
-          - --farm=bs
-          - --device=ANDROID_5_0
-          - --a11y-locator
-          - --fail-fast
-          - --retry=2
-          - --resilient
-    concurrency: 9
-    concurrency_group: 'browserstack-app'
-
-  - label: ':runner: expo iOS 11'
-    depends_on:
-      - "trigger-full-suite"
-      - "build-expo-ipa"
-      - "expo-maze-runner-image"
-    timeout_in_minutes: 50
-    plugins:
-      artifacts#v1.2.0:
-        download: "build/output.ipa"
-      docker-compose#v3.7.0:
-        run: expo-maze-runner
-        use-aliases: true
-        command:
-          - --app=build/output.ipa
-          - --farm=bs
-          - --device=IOS_11
-          - --a11y-locator
-          - --appium-version=1.16.0
-          - --fail-fast
-          - --retry=2
-          - --resilient
-    concurrency: 9
-    concurrency_group: 'browserstack-app'
-
-  - label: ':runner: expo iOS 10'
-    depends_on:
-      - "trigger-full-suite"
-      - "build-expo-ipa"
-      - "expo-maze-runner-image"
-    timeout_in_minutes: 50
-    plugins:
-      artifacts#v1.2.0:
-        download: "build/output.ipa"
-      docker-compose#v3.7.0:
-        run: expo-maze-runner
-        use-aliases: true
-        command:
-          - --app=build/output.ipa
-          - --farm=bs
-          - --device=IOS_10
-          - --a11y-locator
-          - --fail-fast
-          - --retry=2
-          - --resilient
-    concurrency: 9
-    concurrency_group: 'browserstack-app'

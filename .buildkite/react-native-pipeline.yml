@@ -289,6 +289,8 @@ steps:
         run: react-native-maze-runner
         use-aliases: true
         command:
+        - features/handled.feature
+        - features/unhandled.feature
         - --app=build/rn0.63.apk
         - --farm=sl
         - --os=iOS
@@ -318,6 +320,8 @@ steps:
         run: react-native-maze-runner
         use-aliases: true
         command:
+        - features/handled.feature
+        - features/unhandled.feature
         - --app=build/rn0.63.ipa
         - --farm=sl
         - --os=iOS
