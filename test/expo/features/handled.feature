@@ -10,6 +10,7 @@ Scenario: Calling notify() with an Error
   Then I wait to receive an error
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "HandledError"
+  And the exception "type" equals "expojs"
   And the error Bugsnag-Integrity header is valid
 
 Scenario: Calling notify() with a caught Error
@@ -18,4 +19,5 @@ Scenario: Calling notify() with a caught Error
   Then I wait to receive an error
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "HandledCaughtError"
+  And the exception "type" equals "expojs"
   And the error Bugsnag-Integrity header is valid

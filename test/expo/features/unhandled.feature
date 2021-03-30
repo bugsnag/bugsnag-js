@@ -10,6 +10,7 @@ Scenario: Catching an Unhandled error
   Then I wait to receive an error
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "UnhandledError"
+  And the exception "type" equals "expojs"
   And the error Bugsnag-Integrity header is valid
 
 Scenario: Catching an Unhandled promise rejection
@@ -18,4 +19,5 @@ Scenario: Catching an Unhandled promise rejection
   Then I wait to receive an error
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "UnhandledPromiseRejection"
+  And the exception "type" equals "expojs"
   And the error Bugsnag-Integrity header is valid
