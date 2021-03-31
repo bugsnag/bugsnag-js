@@ -4,7 +4,7 @@ import PayloadQueue from '../queue'
 const { access, mkdtemp, readdir, readFile, rmdir, writeFile } = promises
 const { F_OK } = constants
 
-const invalidDir = () => process.platform === 'win32' ? '6:\\non\\existent' : '/non/existent'
+const invalidDir = () => process.platform === 'win32' ? '6:\\non\\existent' : '/dev/null/non/existent'
 
 describe('delivery: electron -> queue', () => {
   let tempdir = ''
