@@ -35,6 +35,15 @@ describe('BugsnagIpcMain', () => {
       expect(client.setContext).toHaveBeenCalledWith('new context')
     })
 
+    it('returns the current context', () => {
+      const client = new Client({}, {}, [mockStateSyncPlugin], {})
+      client.setContext('today')
+      const bugsnagIpcMain = new BugsnagIpcMain(client)
+      const event = { returnValue: undefined }
+      bugsnagIpcMain.handleSync(event, 'getContext')
+      expect(event.returnValue).toEqual('today')
+    })
+
     it('works for updating user', () => {
       const client = new Client({}, {}, [mockStateSyncPlugin], {})
       client.setUser = jest.fn()
@@ -45,6 +54,15 @@ describe('BugsnagIpcMain', () => {
       // some fields not set
       bugsnagIpcMain.handle({}, 'setUser', JSON.stringify('123'), undefined, JSON.stringify('Jim'))
       expect(client.setUser).toHaveBeenCalledWith('123', undefined, 'Jim')
+    })
+
+    it('returns the current user', () => {
+      const client = new Client({}, {}, [mockStateSyncPlugin], {})
+      client.setUser('81676', null, 'Cal')
+      const bugsnagIpcMain = new BugsnagIpcMain(client)
+      const event = { returnValue: undefined }
+      bugsnagIpcMain.handleSync(event, 'getUser')
+      expect(event.returnValue).toEqual({ id: '81676', email: null, name: 'Cal' })
     })
 
     it('works for adding metadata', () => {
@@ -63,6 +81,20 @@ describe('BugsnagIpcMain', () => {
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       bugsnagIpcMain.handle({}, 'clearMetadata', JSON.stringify('section'))
       expect(client.clearMetadata).toHaveBeenCalledWith('section')
+    })
+
+    it('returns metadata content', () => {
+      const client = new Client({}, {}, [mockStateSyncPlugin], {})
+      client.addMetadata('section', 'content', 'X')
+      const bugsnagIpcMain = new BugsnagIpcMain(client)
+      const event = { returnValue: undefined }
+
+      bugsnagIpcMain.handleSync(event, 'getMetadata', JSON.stringify('section'))
+      expect(event.returnValue).toEqual({ content: 'X' })
+
+      event.returnValue = undefined
+      bugsnagIpcMain.handleSync(event, 'getMetadata', JSON.stringify('section'), JSON.stringify('content'))
+      expect(event.returnValue).toEqual('X')
     })
 
     it('works for managing sessions', () => {
