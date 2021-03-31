@@ -27,6 +27,7 @@ class Automator {
   }
 
   async stop () {
+    if (!this.runner) return
     return Promise.race([
       new Promise((resolve, reject) => setTimeout(() => {
         reject(new Error('closing app timed out (5s)'))
