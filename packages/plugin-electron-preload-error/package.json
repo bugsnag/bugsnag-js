@@ -1,0 +1,26 @@
+{
+  "name": "@bugsnag/plugin-electron-preload-error",
+  "version": "1.0.0",
+  "main": "preload-error.js",
+  "description": "@bugsnag/electron plugin to handle errors in preload scripts",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:bugsnag/bugsnag-electron.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "gypfile": true,
+  "files": [
+    "preload-error.js"
+  ],
+  "devDependencies": {
+    "@bugsnag/electron-test-helpers": "^1.0.0",
+    "@bugsnag/core": "^7.0.0"
+  },
+  "peerDependencies": {
+    "@bugsnag/core": "^7.0.0"
+  },
+  "author": "Bugsnag",
+  "license": "MIT"
+}
