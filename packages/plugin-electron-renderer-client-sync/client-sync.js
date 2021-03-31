@@ -49,10 +49,16 @@ module.exports = (BugsnagIpcRenderer = window.__bugsnag_ipc__) => ({
     client.setContext = safeExec(client, BugsnagIpcRenderer, 'setContext')
     client.addMetadata = safeExec(client, BugsnagIpcRenderer, 'addMetadata')
     client.clearMetadata = safeExec(client, BugsnagIpcRenderer, 'clearMetadata')
-    client.startSession = safeExec(client, BugsnagIpcRenderer, 'startSession')
+    client.startSession = () => {
+      safeExec(client, BugsnagIpcRenderer, 'startSession')()
+      return client
+    }
     client.stopSession = safeExec(client, BugsnagIpcRenderer, 'stopSession')
     client.pauseSession = safeExec(client, BugsnagIpcRenderer, 'pauseSession')
-    client.resumeSession = safeExec(client, BugsnagIpcRenderer, 'resumeSession')
+    client.resumeSession = () => {
+      safeExec(client, BugsnagIpcRenderer, 'resumeSession')()
+      return client
+    }
 
     // sync any client state that was set in the renderer config
 

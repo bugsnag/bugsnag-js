@@ -137,5 +137,39 @@ describe('clientSyncPlugin', () => {
         metadata: { section: { key: 'value' } }
       })
     })
+
+    it('starts sessions', () => {
+      const mockBugsnagIpcRenderer = { startSession: jest.fn() }
+
+      const client = new Client({}, {}, [clientSyncPlugin(mockBugsnagIpcRenderer)], {})
+      const returnValue = client.startSession()
+      expect(mockBugsnagIpcRenderer.startSession).toHaveBeenCalled()
+      expect(returnValue).toBe(client)
+    })
+
+    it('stops sessions', () => {
+      const mockBugsnagIpcRenderer = { stopSession: jest.fn() }
+
+      const client = new Client({}, {}, [clientSyncPlugin(mockBugsnagIpcRenderer)], {})
+      client.stopSession()
+      expect(mockBugsnagIpcRenderer.stopSession).toHaveBeenCalled()
+    })
+
+    it('pauses sessions', () => {
+      const mockBugsnagIpcRenderer = { pauseSession: jest.fn() }
+
+      const client = new Client({}, {}, [clientSyncPlugin(mockBugsnagIpcRenderer)], {})
+      client.pauseSession()
+      expect(mockBugsnagIpcRenderer.pauseSession).toHaveBeenCalled()
+    })
+
+    it('resumes sessions', () => {
+      const mockBugsnagIpcRenderer = { resumeSession: jest.fn() }
+
+      const client = new Client({}, {}, [clientSyncPlugin(mockBugsnagIpcRenderer)], {})
+      const returnValue = client.resumeSession()
+      expect(mockBugsnagIpcRenderer.resumeSession).toHaveBeenCalled()
+      expect(returnValue).toBe(client)
+    })
   })
 })
