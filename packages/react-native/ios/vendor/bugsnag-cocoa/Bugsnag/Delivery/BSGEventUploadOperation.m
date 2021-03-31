@@ -114,7 +114,9 @@ typedef NS_ENUM(NSUInteger, BSGEventUploadOperationState) {
                 
             case BugsnagApiClientDeliveryStatusFailed:
                 bsg_log_debug(@"Upload failed; will retry event %@", self.name);
-                [self storeEventPayload:eventPayload inDirectory:[BSGFileLocations current].events];
+                if (self.shouldStoreEventPayloadForRetry) {
+                    [delegate storeEventPayload:eventPayload];
+                }
                 break;
                 
             case BugsnagApiClientDeliveryStatusUndeliverable:
@@ -136,9 +138,6 @@ typedef NS_ENUM(NSUInteger, BSGEventUploadOperationState) {
 }
 
 - (void)deleteEvent {
-}
-
-- (void)storeEventPayload:(NSDictionary *)eventPayload inDirectory:(NSString *)directory {
 }
 
 // MARK: Asynchronous NSOperation implementation

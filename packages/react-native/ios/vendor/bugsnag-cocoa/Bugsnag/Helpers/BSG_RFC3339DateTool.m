@@ -86,4 +86,28 @@ static NSDateFormatter *g_timezoneAllowedDateFormatter;
         [self stringFromDate:[NSDate dateWithTimeIntervalSince1970:timestamp]];
 }
 
++ (BOOL)isLikelyDateString:(NSString *)string {
+    const char *ptr = string.UTF8String;
+    return (string.length >= 19 &&
+            isdigit(ptr[0]) &&
+            isdigit(ptr[1]) &&
+            isdigit(ptr[2]) &&
+            isdigit(ptr[3]) &&
+            '-' == (ptr[4]) &&
+            isdigit(ptr[5]) &&
+            isdigit(ptr[6]) &&
+            '-' == (ptr[7]) &&
+            isdigit(ptr[8]) &&
+            isdigit(ptr[9]) &&
+            'T' ==  ptr[10] &&
+            isdigit(ptr[11]) &&
+            isdigit(ptr[12]) &&
+            ':' == (ptr[13]) &&
+            isdigit(ptr[14]) &&
+            isdigit(ptr[15]) &&
+            ':' == (ptr[16]) &&
+            isdigit(ptr[17]) &&
+            isdigit(ptr[18]));
+}
+
 @end

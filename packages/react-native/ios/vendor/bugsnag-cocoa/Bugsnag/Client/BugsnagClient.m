@@ -124,7 +124,7 @@ static bool hasRecordedSessions;
  *  @param writer report writer which will receive updated metadata
  */
 void BSSerializeDataCrashHandler(const BSG_KSCrashReportWriter *writer, int type) {
-    BOOL isCrash = BSG_KSCrashTypeUserReported != type;
+    BOOL isCrash = YES;
     if (hasRecordedSessions) { // a session is available
         // persist session info
         writer->addStringElement(writer, "id", (const char *) sessionId);
@@ -564,15 +564,18 @@ NSString *_lastOrientation = nil;
     
     // Did the app crash in a way that was detected by KSCrash?
     if (bsg_kscrashstate_currentState()->crashedLastLaunch || !access(crashSentinelPath, F_OK)) {
+        bsg_log_info(@"Last run terminated due to a crash.");
         unlink(crashSentinelPath);
         didCrash = YES;
     }
     // Was the app terminated while the main thread was hung?
     else if ((self.eventFromLastLaunch = [self loadFatalAppHangEvent])) {
+        bsg_log_info(@"Last run terminated during an app hang.");
         didCrash = YES;
     }
     // Was the app terminated while in the foreground? (probably an OOM)
     else if ([self shouldReportOOM]) {
+        bsg_log_info(@"Last run terminated abnormally; likely Out Of Memory.");
         self.eventFromLastLaunch = [self generateOutOfMemoryEvent];
         didCrash = YES;
     }
@@ -776,6 +779,7 @@ NSString *_lastOrientation = nil;
 // see notify:handledState:block for further info
 
 - (void)notifyError:(NSError *_Nonnull)error {
+    bsg_log_debug(@"Notify called with %@", error);
     BugsnagHandledState *state = [BugsnagHandledState handledStateWithSeverityReason:HandledError
                                                                             severity:BSGSeverityWarning
                                                                            attrValue:error.domain];
@@ -789,6 +793,7 @@ NSString *_lastOrientation = nil;
 - (void)notifyError:(NSError *)error
               block:(BugsnagOnErrorBlock)block
 {
+    bsg_log_debug(@"Notify called with %@", error);
     BugsnagHandledState *state = [BugsnagHandledState handledStateWithSeverityReason:HandledError
                                                                             severity:BSGSeverityWarning
                                                                            attrValue:error.domain];
@@ -828,6 +833,7 @@ NSString *_lastOrientation = nil;
 }
 
 - (void)notify:(NSException *_Nonnull)exception {
+    bsg_log_debug(@"Notify called with %@", exception);
     BugsnagHandledState *state =
             [BugsnagHandledState handledStateWithSeverityReason:HandledException];
     [self notify:exception handledState:state block:nil];
@@ -836,6 +842,7 @@ NSString *_lastOrientation = nil;
 - (void)notify:(NSException *)exception
          block:(BugsnagOnErrorBlock)block
 {
+    bsg_log_debug(@"Notify called with %@", exception);
     BugsnagHandledState *state =
         [BugsnagHandledState handledStateWithSeverityReason:HandledException];
     [self notify:exception handledState:state block:block];
@@ -899,7 +906,7 @@ NSString *_lastOrientation = nil;
 }
 
 /**
- *  Notify Bugsnag of an exception. Only intended for React Native/Unity use.
+ *  Notify Bugsnag of an exception. Used for user-reported (handled) errors, React Native, and Unity.
  *
  *  @param event    the event
  *  @param block     Configuration block for adding additional report information
@@ -907,17 +914,10 @@ NSString *_lastOrientation = nil;
 - (void)notifyInternal:(BugsnagEvent *_Nonnull)event
                  block:(BugsnagOnErrorBlock)block
 {
-    if ([self shouldNotifyEvent:event withOnErrorBlock:block]) {
-        [self deliverEvent:event];
-        [self addAutoBreadcrumbForEvent:event];
-    }
-}
-
-- (BOOL)shouldNotifyEvent:(nonnull BugsnagEvent *)event withOnErrorBlock:(nullable BugsnagOnErrorBlock)block {
     NSString *errorClass = event.errors.firstObject.errorClass;
     if ([self.configuration shouldDiscardErrorClass:errorClass]) {
         bsg_log_info(@"Discarding event because errorClass \"%@\" matched configuration.discardClasses", errorClass);
-        return NO;
+        return;
     }
     
     // enhance device information with additional metadata
@@ -930,7 +930,7 @@ NSString *_lastOrientation = nil;
     BOOL originalUnhandledValue = event.unhandled;
     @try {
         if (block != nil && !block(event)) { // skip notifying if callback false
-            return NO;
+            return;
         }
     } @catch (NSException *exception) {
         bsg_log_err(@"Error from onError callback: %@", exception);
@@ -939,40 +939,26 @@ NSString *_lastOrientation = nil;
         [event notifyUnhandledOverridden];
     }
 
-    return YES;
-}
-
-- (void)deliverEvent:(BugsnagEvent *)event {
     if (event.handledState.unhandled) {
         [self.sessionTracker handleUnhandledErrorEvent];
     } else {
         [self.sessionTracker handleHandledErrorEvent];
     }
 
-    // Temporary conditional until all (non-crash) events can be sent via -uploadEvent:
-    if (event == self.appHangEvent) {
+    if (event.unhandled) {
+        // Unhandled Javscript exceptions from React Native result in the app being terminated shortly after the
+        // call to notifyInternal, so the event needs to be persisted to disk for sending in the next session.
+        // The fatal "RCTFatalException" / "Unhandled JS Exception" is explicitly ignored by
+        // BugsnagReactNativePlugin's OnSendErrorBlock.
+        [self.eventUploader storeEvent:event];
+        // Replicate previous delivery mechanism's behaviour of waiting 1 second before delivering the event.
+        // This should prevent potential duplicate uploads of unhandled errors where the app subsequently terminates.
+        [self.eventUploader performSelector:@selector(uploadStoredEvents) withObject:nil afterDelay:1];
+    } else {
         [self.eventUploader uploadEvent:event completionHandler:nil];
-        return;
     }
 
-    // apiKey not added to event JSON by default, need to add it here
-    // for when it is read next
-    NSMutableDictionary *eventOverrides = [[event toJsonWithRedactedKeys:self.configuration.redactedKeys] mutableCopy];
-    eventOverrides[BSGKeyApiKey] = event.apiKey;
-
-    // handled errors should persist any information edited by the user
-    // in a section within the KSCrash report so it can be read
-    // when the error is delivered
-    [self.crashSentry reportUserException:@""
-                                   reason:@""
-                             handledState:[event.handledState toJson]
-                                 appState:[self.state toDictionary]
-                        callbackOverrides:event.overrides
-                           eventOverrides:eventOverrides
-                                 metadata:[event.metadata toDictionary]
-                                   config:self.configuration.dictionaryRepresentation];
-
-    [self.eventUploader uploadStoredEvents];
+    [self addAutoBreadcrumbForEvent:event];
 }
 
 // MARK: - Breadcrumbs

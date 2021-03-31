@@ -99,8 +99,6 @@
 @synthesize maxStoredReports = _maxStoredReports;
 @synthesize reportWhenDebuggerIsAttached = _reportWhenDebuggerIsAttached;
 @synthesize threadTracingEnabled = _threadTracingEnabled;
-@synthesize writeBinaryImagesForUserReported =
-    _writeBinaryImagesForUserReported;
 
 // ============================================================================
 #pragma mark - Lifecycle -
@@ -121,9 +119,7 @@
         self.nextCrashID = [NSUUID UUID].UUIDString;
         self.introspectMemory = YES;
         self.maxStoredReports = 5;
-
         self.reportWhenDebuggerIsAttached = NO;
-        self.writeBinaryImagesForUserReported = YES;
     }
     return self;
 }
@@ -177,13 +173,6 @@
 - (void)setThreadTracingEnabled:(BOOL)threadTracingEnabled {
     _threadTracingEnabled = threadTracingEnabled;
     bsg_kscrash_setThreadTracingEnabled(threadTracingEnabled);
-}
-
-- (void)setWriteBinaryImagesForUserReported:
-    (BOOL)writeBinaryImagesForUserReported {
-    _writeBinaryImagesForUserReported = writeBinaryImagesForUserReported;
-    bsg_kscrash_setWriteBinaryImagesForUserReported(
-        writeBinaryImagesForUserReported);
 }
 
 - (BOOL)install:(NSString *)directory {
@@ -253,27 +242,6 @@
     dict[@BSG_KSCrashField_BGTimeSinceLaunch] = @(state.backgroundDurationSinceLaunch);
     dict[@BSG_KSCrashField_AppInFG] = @(state.applicationIsInForeground);
     return dict;
-}
-
-- (void)reportUserException:(NSString *)name
-                     reason:(NSString *)reason
-               handledState:(NSDictionary *)handledState
-                   appState:(NSDictionary *)appState
-          callbackOverrides:(NSDictionary *)overrides
-             eventOverrides:(NSDictionary *)eventOverrides
-                   metadata:(NSDictionary *)metadata
-                     config:(NSDictionary *)config {
-    const char *cName = [name cStringUsingEncoding:NSUTF8StringEncoding];
-    const char *cReason = [reason cStringUsingEncoding:NSUTF8StringEncoding];
-
-    bsg_kscrash_reportUserException(cName, cReason,
-            [handledState[@"currentSeverity"] UTF8String],
-            [self encodeAsJSONString:handledState],
-            [self encodeAsJSONString:overrides],
-            [self encodeAsJSONString:eventOverrides],
-            [self encodeAsJSONString:metadata],
-            [self encodeAsJSONString:appState],
-            [self encodeAsJSONString:config]);
 }
 
 // ============================================================================

@@ -11,7 +11,9 @@
 #import "BSGEventUploadKSCrashReportOperation.h"
 #import "BSGEventUploadObjectOperation.h"
 #import "BSGFileLocations.h"
+#import "BSGJSONSerialization.h"
 #import "BugsnagConfiguration.h"
+#import "BugsnagEvent+Private.h"
 #import "BugsnagLogger.h"
 
 
@@ -60,7 +62,16 @@
 
 // MARK: - Public API
 
+- (void)storeEvent:(BugsnagEvent *)event {
+    [self storeEventPayload:[event toJsonWithRedactedKeys:self.configuration.redactedKeys]];
+}
+
 - (void)uploadEvent:(BugsnagEvent *)event completionHandler:(nullable void (^)(void))completionHandler {
+    NSUInteger operationCount = self.uploadQueue.operationCount;
+    if (operationCount >= self.configuration.maxPersistedEvents) {
+        bsg_log_warn(@"Dropping notification, %lu outstanding requests", (unsigned long)operationCount);
+        return;
+    }
     BSGEventUploadObjectOperation *operation = [[BSGEventUploadObjectOperation alloc] initWithEvent:event delegate:self];
     operation.completionBlock = completionHandler;
     [self.uploadQueue addOperation:operation];
@@ -170,7 +181,13 @@
 
 // MARK: - BSGEventUploadOperationDelegate
 
-- (void)uploadOperationDidStoreEventPayload:(BSGEventUploadOperation *)uploadOperation {
+- (void)storeEventPayload:(NSDictionary *)eventPayload {
+    NSString *file = [[self.eventsDirectory stringByAppendingPathComponent:[NSUUID UUID].UUIDString] stringByAppendingPathExtension:@"json"];
+    NSError *error = nil;
+    if (![BSGJSONSerialization writeJSONObject:eventPayload toFile:file options:0 error:&error]) {
+        bsg_log_err(@"Error encountered while saving event payload for retry: %@", error);
+        return;
+    }
     [self deleteExcessFiles:[self sortedEventFiles]];
 }
 

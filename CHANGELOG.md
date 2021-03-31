@@ -4,8 +4,12 @@
 
 ### Changed
 
-- (react-native): Update bugsnag-cocoa to v6.8.1
+- (react-native): Update bugsnag-cocoa to v6.8.2
   - Fix unreliable ordering of breadcrumbs. [bugsnag-cocoa#1049](https://github.com/bugsnag/bugsnag-cocoa/pull/1049)
+  - Improve support for Mac Catalyst and iOS apps running on macOS. 
+  [bugsnag-cocoa#1056](https://github.com/bugsnag/bugsnag-cocoa/pull/1056)
+  [bugsnag-cocoa#1055](https://github.com/bugsnag/bugsnag-cocoa/pull/1055)
+  [bugsnag-cocoa#1053](https://github.com/bugsnag/bugsnag-cocoa/pull/1053)
 
 ## v7.9.1 (2021-03-25)
 

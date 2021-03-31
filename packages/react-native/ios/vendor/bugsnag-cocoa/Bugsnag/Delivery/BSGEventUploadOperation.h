@@ -41,10 +41,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// To be implemented by subclasses that load their data from a file.
 - (void)deleteEvent;
 
-/// Called if the event upload failed but should be retried later.
-///
-/// To be implemented by subclasses that need to persist the payload for a future retry.
-- (void)storeEventPayload:(NSDictionary *)eventPayload inDirectory:(NSString *)directory;
+/// Whether the payload should be stored so that it can be retried later.
+@property (readonly, nonatomic) BOOL shouldStoreEventPayloadForRetry;
 
 @end
 
@@ -58,7 +56,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (readonly, nonatomic) BugsnagNotifier *notifier;
 
-- (void)uploadOperationDidStoreEventPayload:(BSGEventUploadOperation *)uploadOperation;
+- (void)storeEventPayload:(NSDictionary *)eventPayload;
 
 @end
 
