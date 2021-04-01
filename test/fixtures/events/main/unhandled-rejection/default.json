@@ -72,7 +72,8 @@
         {
           "errorClass": "TypeError",
           "errorMessage": "invalid",
-          "stacktrace": []
+          "stacktrace": [],
+          "type": "electronnodejs"
         }
       ]
     }

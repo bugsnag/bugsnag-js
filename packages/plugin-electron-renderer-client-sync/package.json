@@ -22,9 +22,9 @@
   "dependencies": {
   },
   "devDependencies": {
-    "@bugsnag/core": "^7.3.5"
+    "@bugsnag/core": "^7.9.2-alpha.0"
   },
   "peerDependencies": {
-    "@bugsnag/core": "^7.0.0"
+    "@bugsnag/core": "^7.9.2-alpha.0"
   }
 }

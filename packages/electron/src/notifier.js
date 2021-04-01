@@ -5,6 +5,8 @@ if (typeof process !== 'undefined' && process.type === 'browser') {
   createClient = require('./client/renderer')
 }
 
+const { Client, Event, Breadcrumb, Session } = createClient
+
 const Bugsnag = {
   _client: null,
   start: (opts) => {
@@ -25,7 +27,6 @@ const Bugsnag = {
 }
 
 // Forward on all Bugsnag.* facade method calls to the underlying client
-const Client = require('@bugsnag/core/client')
 Object.getOwnPropertyNames(Client.prototype).forEach((m) => {
   if (/^_/.test(m)) return
   Bugsnag[m] = function () {
@@ -39,5 +40,11 @@ Object.getOwnPropertyNames(Client.prototype).forEach((m) => {
 
 // commonjs
 module.exports = Bugsnag
+
+module.exports.Client = Client
+module.exports.Event = Event
+module.exports.Breadcrumb = Breadcrumb
+module.exports.Session = Session
+
 // ESM
 module.exports.default = Bugsnag

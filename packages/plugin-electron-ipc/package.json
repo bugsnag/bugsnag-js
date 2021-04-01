@@ -20,10 +20,10 @@
     "dist/preload.bundle.js"
   ],
   "peerDependencies": {
-    "@bugsnag/core": "^7.0.0"
+    "@bugsnag/core": "^7.9.2-alpha.0"
   },
   "devDependencies": {
-    "@bugsnag/core": "^7.0.0",
+    "@bugsnag/core": "^7.9.2-alpha.0",
     "browserify": "^17.0.0"
   },
   "dependencies": {
