@@ -65,8 +65,6 @@ module.exports = class BugsnagIpcMain {
     }
 
     try {
-      // call the method, passing in the event sender (WebContents instance)
-      // so that change events only get propagated out to other renderers
       return method(...args.map(arg => typeof arg === 'undefined' ? undefined : JSON.parse(arg)))
     } catch (e) {
       this.client._logger.warn('IPC call failed', e)
