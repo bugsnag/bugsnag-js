@@ -80,7 +80,8 @@
         {
           "errorMessage": "something bad",
           "errorClass": "ReferenceError",
-          "stacktrace": []
+          "stacktrace": [],
+          "type": "electronnodejs"
         }
       ]
     }

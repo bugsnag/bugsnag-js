@@ -93,7 +93,8 @@
         {
           "errorMessage": "{REGEX:ALERT!$}",
           "errorClass": "Error",
-          "stacktrace": []
+          "stacktrace": [],
+          "type": "electronrendererjs"
         }
       ]
     }
