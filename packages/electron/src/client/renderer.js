@@ -1,5 +1,11 @@
 const Client = require('@bugsnag/core/client')
+const Event = require('@bugsnag/core/event')
+const Breadcrumb = require('@bugsnag/core/breadcrumb')
+const Session = require('@bugsnag/core/session')
+
 const { schema, mergeOptions } = require('../config/renderer')
+
+Event.__type = 'electronrendererjs'
 
 module.exports = (rendererOpts) => {
   if (!window.__bugsnag_ipc__) throw new Error('Bugsnag was not loaded in the main process')
@@ -10,7 +16,8 @@ module.exports = (rendererOpts) => {
   opts.enabledBreadcrumbTypes = opts.enabledBreadcrumbTypes.filter(type => type !== 'error')
 
   const internalPlugins = [
-    require('@bugsnag/plugin-electron-renderer-client-sync')(window.__bugsnag_ipc__)
+    require('@bugsnag/plugin-electron-renderer-client-sync')(window.__bugsnag_ipc__),
+    require('@bugsnag/plugin-electron-network-status')(window)
   ]
 
   const bugsnag = new Client(opts, schema, internalPlugins, require('../id'))
@@ -47,3 +54,8 @@ module.exports = (rendererOpts) => {
 
   return bugsnag
 }
+
+module.exports.Client = Client
+module.exports.Event = Event
+module.exports.Session = Session
+module.exports.Breadcrumb = Breadcrumb

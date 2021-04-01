@@ -24,7 +24,6 @@
         },
         "id": "{REGEX:[0-9a-f]{64}}",
         "freeMemory": "{TYPE:number}",
-        "locale": "{REGEX:^[a-z]{2}(-[A-Z]{2})?$}",
         "time": "{TIMESTAMP}",
         "totalMemory": "{TYPE:number}",
         "osVersion": "{REGEX:\\d+\\.\\d+}"
@@ -48,10 +47,10 @@
           "name": "shop co"
         }
       },
-      "severity": "error",
-      "unhandled": true,
+      "severity": "warning",
+      "unhandled": false,
       "severityReason": {
-        "type": "unhandledException"
+        "type": "handledException"
       },
       "user": {
         "id": "3",
@@ -80,12 +79,20 @@
             "id": 1,
             "title": "Runner"
           }
+        },
+        {
+          "type": "manual",
+          "name": "missing auth token",
+          "timestamp": "{TIMESTAMP}",
+          "metaData": {
+            "session": "two-two"
+          }
         }
       ],
       "exceptions": [
         {
+          "errorMessage": "something bad",
           "errorClass": "ReferenceError",
-          "errorMessage": "foo is not defined",
           "stacktrace": [],
           "type": "electronnodejs"
         }

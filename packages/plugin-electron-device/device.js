@@ -123,5 +123,7 @@ module.exports = (app, screen, process, filestore, NativeClient, powerMonitor) =
         device
       )
     })
+
+    client._device = device
   }
 })

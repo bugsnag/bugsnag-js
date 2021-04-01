@@ -11,14 +11,14 @@ module.exports = {
     const origSetUser = client.setUser
     client.setUser = (...args) => {
       const ret = origSetUser.call(client, ...args)
-      emitter.emit('UserUpdate', { user: client.getUser() }, null)
+      emitter.emit('UserUpdate', client.getUser(), null)
       return ret
     }
 
     const origSetContext = client.setContext
     client.setContext = (...args) => {
       const ret = origSetContext.call(client, ...args)
-      emitter.emit('ContextUpdate', { context: client.getContext() }, null)
+      emitter.emit('ContextUpdate', client.getContext(), null)
       return ret
     }
 
@@ -44,43 +44,26 @@ module.exports = {
       return ret
     }
 
-    // apply inbound updates from another process, emitting an event
-    // containing the source so that we can notify _other_ processes
-
-    const updateUserFromSource = source => ({ user }) => {
-      client._user = user
-      emitter.emit('UserUpdate', { user }, source)
-    }
-
-    const updateContextFromSource = source => ({ context }) => {
-      client._context = context
-      emitter.emit('ContextUpdate', { context }, source)
-    }
-
-    const updateMetadataFromSource = source => ({ section, values }) => {
-      client._metadata[section] = values
-      emitter.emit('MetadataUpdate', { section, values }, source)
-    }
-
-    const replaceMetadataFromSource = source => ({ metadata }) => {
-      client._metadata = metadata
-      emitter.emit('MetadataReplace', { metadata }, source)
-    }
-
     // handle a bulk update of initial values from a new renderer
-    const updateFromSource = source => ({ user, context, metadata }) => {
-      updateUserFromSource(source)({ user })
-      updateContextFromSource(source)({ context })
-      replaceMetadataFromSource(source)({ metadata })
+    const bulkUpdate = ({ user, context, metadata }) => {
+      if (user) {
+        client.setUser(user.id, user.email, user.name)
+      }
+      if (context) {
+        client.setContext(context)
+      }
+      if (metadata) {
+        for (const section in metadata) {
+          origAddMetadata.call(client, section, metadata[section])
+        }
+        emitter.emit('MetadataReplace', { metadata: client._metadata })
+      }
     }
 
     return {
       events: ['UserUpdate', 'ContextUpdate', 'MetadataUpdate', 'MetadataReplace'],
       emitter,
-      updateUserFromSource,
-      updateContextFromSource,
-      updateMetadataFromSource,
-      updateFromSource
+      bulkUpdate
     }
   }
 }

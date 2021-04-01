@@ -1,50 +1,68 @@
 const { ipcRenderer } = require('electron')
 const jsonStringify = require('@bugsnag/safe-json-stringify')
-const { CHANNEL_MAIN_TO_RENDERER, CHANNEL_RENDERER_TO_MAIN } = require('./lib/constants')
+const { CHANNEL_RENDERER_TO_MAIN, CHANNEL_RENDERER_TO_MAIN_SYNC } = require('./lib/constants')
 
-const safeInvoke = (method, ...args) => {
-  return ipcRenderer.invoke(CHANNEL_RENDERER_TO_MAIN, method, ...args.map(arg => jsonStringify(arg)))
+const safeInvoke = (runSynchronous, method, ...args) => {
+  const bridge = runSynchronous ? 'sendSync' : 'invoke'
+  const channel = runSynchronous ? CHANNEL_RENDERER_TO_MAIN_SYNC : CHANNEL_RENDERER_TO_MAIN
+  return ipcRenderer[bridge](channel, method, ...args.map(arg => jsonStringify(arg)))
 }
 
 const BugsnagIpcRenderer = {
-  listen (cb) {
-    ipcRenderer.on(CHANNEL_MAIN_TO_RENDERER, (event, payload) => cb(event, JSON.parse(payload)))
-  },
-
   update ({ context, user, metadata }) {
-    return safeInvoke('update', { context, user, metadata })
+    return safeInvoke(false, 'update', { context, user, metadata })
   },
 
-  updateContext (context) {
-    return safeInvoke('updateContext', { context })
+  getContext () {
+    return safeInvoke(true, 'getContext')
   },
 
-  updateMetadata (section, values) {
-    return safeInvoke('updateMetadata', { section, values })
+  setContext (context) {
+    return safeInvoke(false, 'setContext', context)
   },
 
-  updateUser (user) {
-    return safeInvoke('updateUser', { user })
+  addMetadata (...args) {
+    return safeInvoke(false, 'addMetadata', ...args)
+  },
+
+  clearMetadata (...args) {
+    return safeInvoke(false, 'clearMetadata', ...args)
+  },
+
+  getMetadata (...args) {
+    return safeInvoke(true, 'getMetadata', ...args)
+  },
+
+  getUser () {
+    return safeInvoke(true, 'getUser')
+  },
+
+  setUser (...args) {
+    return safeInvoke(false, 'setUser', ...args)
   },
 
   leaveBreadcrumb (...args) {
-    return safeInvoke('leaveBreadcrumb', ...args)
+    return safeInvoke(false, 'leaveBreadcrumb', ...args)
   },
 
   startSession () {
-    return safeInvoke('startSession')
+    return safeInvoke(false, 'startSession')
   },
 
   pauseSession () {
-    return safeInvoke('pauseSession')
+    return safeInvoke(false, 'pauseSession')
   },
 
   resumeSession () {
-    return safeInvoke('resumeSession')
+    return safeInvoke(false, 'resumeSession')
   },
 
   dispatch (event) {
-    return safeInvoke('dispatch', event)
+    return safeInvoke(false, 'dispatch', event)
+  },
+
+  getPayloadInfo () {
+    return safeInvoke(false, 'getPayloadInfo')
   }
 }
 

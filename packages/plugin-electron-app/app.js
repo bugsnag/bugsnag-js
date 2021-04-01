@@ -129,6 +129,8 @@ module.exports = (NativeClient, process, electronApp, BrowserWindow, NativeApp =
       )
     })
 
+    client._app = app
+
     return { markLaunchComplete }
   },
   configSchema: {

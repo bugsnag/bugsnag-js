@@ -1,5 +1,25 @@
 Feature: Detecting and reporting errors
 
+    Scenario Outline: Sending a handled error
+        Given I launch an app with configuration:
+            | bugsnag | <config> |
+        When I click "custom-breadcrumb"
+        And I click "<type>-notify"
+        Then the total requests received by the server matches:
+            | events  | 1        |
+        Then the headers of every event request contains:
+            | Bugsnag-API-Key   | 100a2272bd2b0ac0ab0f52715bbdc659 |
+            | Content-Type      | application/json                 |
+            | Bugsnag-Integrity | {BODY_SHA1}                      |
+        Then the contents of an event request matches "<type>/handled-error/<config>.json"
+
+        Examples:
+            | config          | type     |
+            | default         | renderer |
+            | complex-config  | renderer |
+            | default         | main     |
+            | complex-config  | main     |
+
     Scenario: A crash in the main process
         Given I launch an app
         When I click "main-process-crash"

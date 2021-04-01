@@ -33,6 +33,7 @@
           "name": "Runner"
         },
         "device": {
+          "online": "{TYPE:boolean}",
           "screenResolution": {
             "width": "{TYPE:number}",
             "height": "{TYPE:number}"
@@ -72,7 +73,8 @@
         {
           "errorClass": "ReferenceError",
           "errorMessage": "foo is not defined",
-          "stacktrace": []
+          "stacktrace": [],
+          "type": "electronnodejs"
         }
       ]
     }
