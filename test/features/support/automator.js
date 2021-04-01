@@ -21,7 +21,13 @@ class Automator {
     this.window = await this._getFirstWindow(env)
 
     // pipe app logs into the console
-    this.window.on('console', console.log)
+    this.window.on('console', async message => {
+      // some values don't log correctly if they're passed straight to console.log
+      // e.g. Error instances show up as 'JSHandle@error' - jsonValue() fixes this
+      const args = await Promise.all(message.args().map(arg => arg.jsonValue()))
+
+      console.log(...args)
+    })
 
     return this.window
   }
