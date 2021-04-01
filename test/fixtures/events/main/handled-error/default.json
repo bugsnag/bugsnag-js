@@ -10,12 +10,11 @@
       "payloadVersion": "4",
       "app": {
         "duration": "{TYPE:number}",
-        "releaseStage": "beta",
+        "releaseStage": "production",
         "inForeground": "{TYPE:boolean}",
         "isLaunching": true,
-        "version": "2.0.83-beta3"
+        "version": "1.0.2"
       },
-      "context": "shopping cart",
       "device": {
         "runtimeVersions": {
           "node": "{TYPE:string}",
@@ -24,18 +23,13 @@
         },
         "id": "{REGEX:[0-9a-f]{64}}",
         "freeMemory": "{TYPE:number}",
-        "locale": "{REGEX:^[a-z]{2}(-[A-Z]{2})?$}",
         "time": "{TIMESTAMP}",
         "totalMemory": "{TYPE:number}",
         "osVersion": "{REGEX:\\d+\\.\\d+}"
       },
       "metaData": {
-        "account": {
-          "type": "pro"
-        },
         "app": {
-          "name": "Runner",
-          "part": 3
+          "name": "Runner"
         },
         "device": {
           "online": "{TYPE:boolean}",
@@ -43,20 +37,12 @@
             "width": "{TYPE:number}",
             "height": "{TYPE:number}"
           }
-        },
-        "site": {
-          "name": "shop co"
         }
       },
-      "severity": "error",
-      "unhandled": true,
+      "severity": "warning",
+      "unhandled": false,
       "severityReason": {
-        "type": "unhandledException"
-      },
-      "user": {
-        "id": "3",
-        "email": "elia@example.com",
-        "name": "Elia"
+        "type": "handledException"
       },
       "breadcrumbs": [
         {
@@ -80,14 +66,21 @@
             "id": 1,
             "title": "Runner"
           }
+        },
+        {
+          "type": "manual",
+          "name": "missing auth token",
+          "timestamp": "{TIMESTAMP}",
+          "metaData": {
+            "session": "two-two"
+          }
         }
       ],
       "exceptions": [
         {
+          "errorMessage": "something bad",
           "errorClass": "ReferenceError",
-          "errorMessage": "foo is not defined",
-          "stacktrace": [],
-          "type": "electronnodejs"
+          "stacktrace": []
         }
       ]
     }

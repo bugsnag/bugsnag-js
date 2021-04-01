@@ -33,6 +33,7 @@
           "name": "Runner"
         },
         "device": {
+          "online": "{TYPE:boolean}",
           "screenResolution": {
             "width": "{TYPE:number}",
             "height": "{TYPE:number}"

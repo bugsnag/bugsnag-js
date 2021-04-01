@@ -38,6 +38,7 @@
           "part": 3
         },
         "device": {
+          "online": "{TYPE:boolean}",
           "screenResolution": {
             "width": "{TYPE:number}",
             "height": "{TYPE:number}"
