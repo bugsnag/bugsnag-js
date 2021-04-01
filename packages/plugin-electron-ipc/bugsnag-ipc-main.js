@@ -16,8 +16,8 @@ module.exports = class BugsnagIpcMain {
 
   leaveBreadcrumb (breadcrumb) {
     return this.client.leaveBreadcrumb(
-      breadcrumb.name /* this is "name" not "type" due to breadcrumb.js's toJSON() function */,
-      breadcrumb.metaData, /* again, this "metaData" not "metadata" due to the fact this is serialised for API compatibility */
+      breadcrumb.message,
+      breadcrumb.metadata,
       breadcrumb.type
     )
   }

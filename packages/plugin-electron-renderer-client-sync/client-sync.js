@@ -10,7 +10,7 @@ module.exports = (BugsnagIpcRenderer = window.__bugsnag_ipc__) => ({
   load: (client) => {
     client.addOnBreadcrumb(breadcrumb => {
       try {
-        BugsnagIpcRenderer.leaveBreadcrumb(breadcrumb)
+        BugsnagIpcRenderer.leaveBreadcrumb(Object.assign({}, breadcrumb))
       } catch (e) {
         client._logger.error(e)
       }
