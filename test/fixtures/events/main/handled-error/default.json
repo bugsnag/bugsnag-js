@@ -12,7 +12,7 @@
         "duration": "{TYPE:number}",
         "releaseStage": "production",
         "inForeground": "{TYPE:boolean}",
-        "isLaunching": true,
+        "isLaunching": "{TYPE:boolean}",
         "version": "1.0.2"
       },
       "device": {
