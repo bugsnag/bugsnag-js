@@ -1,8 +1,15 @@
 const electron = require('electron')
+
 const Client = require('@bugsnag/core/client')
+const Event = require('@bugsnag/core/event')
+const Breadcrumb = require('@bugsnag/core/breadcrumb')
+const Session = require('@bugsnag/core/session')
+
 const makeDelivery = require('@bugsnag/delivery-electron')
 const { FileStore } = require('@bugsnag/electron-filestore')
 const { schema } = require('../config/main')
+
+Event.__type = 'electronnodejs'
 
 // noop native client for now
 const NativeClient = {
@@ -37,3 +44,8 @@ module.exports = (opts) => {
 
   return bugsnag
 }
+
+module.exports.Client = Client
+module.exports.Event = Event
+module.exports.Session = Session
+module.exports.Breadcrumb = Breadcrumb
