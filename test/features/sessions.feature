@@ -6,7 +6,7 @@ Feature: Reporting sessions
             | events   | 0        |
             | sessions | 1        |
         And the headers of every session request contains:
-            | Bugsnag-API-Key   | 100a2272bd2b0ac0ab0f52715bbdc659 |
+            | Bugsnag-API-Key   | 6425093c6530f554a9897d2d7d38e248 |
             | Content-Type      | application/json                 |
             | Bugsnag-Integrity | {BODY_SHA1}                      |
         And the contents of a session request matches "sessions/<config>.json"
@@ -34,7 +34,7 @@ Feature: Reporting sessions
             | events   | 0        |
             | sessions | 2        |
         And the headers of every session request contains:
-            | Bugsnag-API-Key   | 100a2272bd2b0ac0ab0f52715bbdc659 |
+            | Bugsnag-API-Key   | 6425093c6530f554a9897d2d7d38e248 |
             | Content-Type      | application/json                 |
             | Bugsnag-Integrity | {BODY_SHA1}                      |
         And the contents of session request 0 matches "sessions/<config>.json"
@@ -56,7 +56,7 @@ Feature: Reporting sessions
             | events   | 0        |
             | sessions | 1        |
         And the headers of every event request contains:
-            | Bugsnag-API-Key   | 100a2272bd2b0ac0ab0f52715bbdc659 |
+            | Bugsnag-API-Key   | 6425093c6530f554a9897d2d7d38e248 |
             | Content-Type      | application/json                 |
             | Bugsnag-Integrity | {BODY_SHA1}                      |
         And the contents of a session request matches "sessions/default.json"

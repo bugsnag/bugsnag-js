@@ -84,7 +84,7 @@ Then('the total requests received by the server matches:', async (data) => {
 const computeSha1 = (value) => {
   const hash = createHash('sha1')
   hash.update(value)
-  return hash.digest('hex')
+  return `sha1 ${hash.digest('hex')}`
 }
 
 const matchValue = (req, expected, value) => {
@@ -93,12 +93,12 @@ const matchValue = (req, expected, value) => {
     (expected === '{BODY_SHA1}' && value === computeSha1(req.body.trim()))
 }
 
-const requestsMatchingHeaders = (requestType, data) => {
+const requestsMatchingHeaders = (requests, data) => {
   const headers = data.raw().map(row => {
     return [row[0].toLowerCase(), row[1]]
   })
 
-  return global.server.uploadsForType(requestType).filter((e) => {
+  return requests.filter((e) => {
     return headers.filter(header => {
       const [key, value] = header
       return key in e.headers && matchValue(e, value, e.headers[key])
@@ -107,12 +107,13 @@ const requestsMatchingHeaders = (requestType, data) => {
 }
 
 Then('the headers of a(n) {word} request contains:', (requestType, data) => {
-  expect(requestsMatchingHeaders(requestType, data).length).toBeGreaterThan(0)
+  const requests = global.server.uploadsForType(requestType)
+  expect(requestsMatchingHeaders(requests, data).length).toBeGreaterThan(0)
 })
 
 Then('the headers of every {word} request contains:', (requestType, data) => {
-  // TODO isn't this always true?
-  expect(requestsMatchingHeaders(requestType, data).length).toEqual(requestsMatchingHeaders(requestType, data).length)
+  const requests = global.server.uploadsForType(requestType)
+  expect(requestsMatchingHeaders(requests, data).length).toEqual(requests.length)
 })
 
 Then('the contents of a(n) {word} request matches {string}', async (requestType, fixture) => {
