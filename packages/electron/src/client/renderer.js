@@ -10,7 +10,8 @@ module.exports = (rendererOpts) => {
   opts.enabledBreadcrumbTypes = opts.enabledBreadcrumbTypes.filter(type => type !== 'error')
 
   const internalPlugins = [
-    require('@bugsnag/plugin-electron-renderer-client-sync')(window.__bugsnag_ipc__)
+    require('@bugsnag/plugin-electron-renderer-client-sync')(window.__bugsnag_ipc__),
+    require('@bugsnag/plugin-electron-network-status')(window)
   ]
 
   const bugsnag = new Client(opts, schema, internalPlugins, require('../id'))
