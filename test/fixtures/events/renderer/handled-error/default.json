@@ -77,7 +77,7 @@
       ],
       "exceptions": [
         {
-          "errorMessage": "Uncaught Error: ALERT!",
+          "errorMessage": "{REGEX:ALERT!$}",
           "errorClass": "Error",
           "stacktrace": []
         }
