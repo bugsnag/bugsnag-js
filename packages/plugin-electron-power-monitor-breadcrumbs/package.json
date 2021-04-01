@@ -14,11 +14,11 @@
     "power-monitor-breadcrumbs.js"
   ],
   "devDependencies": {
-    "@bugsnag/core": "^7.0.0",
+    "@bugsnag/core": "^7.9.2-alpha.0",
     "@bugsnag/electron-test-helpers": "*"
   },
   "peerDependencies": {
-    "@bugsnag/core": "^7.0.0"
+    "@bugsnag/core": "^7.9.2-alpha.0"
   },
   "author": "Bugsnag",
   "license": "MIT"
