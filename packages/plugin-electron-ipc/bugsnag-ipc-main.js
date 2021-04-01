@@ -57,8 +57,6 @@ module.exports = class BugsnagIpcMain {
   }
 
   resolve (methodName, ...args) {
-    this.client._logger.debug('IPC call received', methodName, args)
-
     // lookup the method on the BugsnagIpcMain map
     const method = this.methodMap.get(methodName)
     if (!method) {
