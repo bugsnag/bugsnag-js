@@ -15,8 +15,12 @@
           try {
             throw new Error('ALERT!')
           } catch (e) {
-            RunnerAPI.notify(e)
+            window.Bugsnag.notify(e)
           }
+        }
+
+        function leaveCrumb() {
+          window.Bugsnag.leaveBreadcrumb('missing auth token', { session: 'two-two' })
         }
     </script>
 </head>
@@ -35,7 +39,7 @@
         <li><a href="#" id="renderer-notify" onclick="handledError()">Handled error in renderer</a></li>
     </ul>
     <ul>
-        <li><a href="#" id="custom-breadcrumb" onclick="RunnerAPI.leaveCrumb()">Leave a custom breadcrumb</a>
+        <li><a href="#" id="custom-breadcrumb" onclick="leaveCrumb()">Leave a custom breadcrumb</a>
     </ul>
     <ul>
         <li><a href="#" id="main-process-start-session" onclick="RunnerAPI.mainProcessStartSession()">Start session in main process</a></li>

@@ -76,16 +76,38 @@ Feature: Detecting and reporting errors
             | disable-uncaught-exceptions  | main-process-uncaught-exception          |
             | disable-unhandled-rejections | main-process-unhandled-promise-rejection |
 
-    Scenario: An uncaught exception in the renderer
-        Given I launch an app
+    Scenario Outline: An uncaught exception in the renderer
+        Given I launch an app with configuration:
+            | bugsnag | <config> |
         When I click "renderer-uncaught-exception"
         Then the total requests received by the server matches:
-            | events   | 0        |
+            | events   | 1        |
             | sessions | 1        |
+        Then the headers of every event request contains:
+            | Bugsnag-API-Key   | 6425093c6530f554a9897d2d7d38e248 |
+            | Content-Type      | application/json                 |
+            | Bugsnag-Integrity | {BODY_SHA1}                      |
+        Then the contents of an event request matches "renderer/uncaught-exception/<config>.json"
 
-    Scenario: An unhandled promise rejection in the renderer
-        Given I launch an app
+        Examples:
+            | config          |
+            | default         |
+            | complex-config  |
+
+    Scenario Outline: An unhandled promise rejection in the renderer
+        Given I launch an app with configuration:
+            | bugsnag | <config> |
         When I click "renderer-unhandled-promise-rejection"
         Then the total requests received by the server matches:
-            | events   | 0        |
+            | events   | 1        |
             | sessions | 1        |
+        Then the headers of every event request contains:
+            | Bugsnag-API-Key   | 6425093c6530f554a9897d2d7d38e248 |
+            | Content-Type      | application/json                 |
+            | Bugsnag-Integrity | {BODY_SHA1}                      |
+        Then the contents of an event request matches "renderer/unhandled-rejection/<config>.json"
+
+        Examples:
+            | config          |
+            | default         |
+            | complex-config  |
