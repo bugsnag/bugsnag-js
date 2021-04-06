@@ -17,9 +17,11 @@ env PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
 
 run npm ci --no-audit --progress=false
 
-run npm run bootstrap
+arg ELECTRON_VERSION
+run npm install --no-save electron@${ELECTRON_VERSION}
 
 # start local NPM server during the integration tests
 env START_LOCAL_NPM=1
+run npm run bootstrap
 
 cmd npm run test:unit && npm run test:cucumber
