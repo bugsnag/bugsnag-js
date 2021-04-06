@@ -124,7 +124,7 @@ describe('BugsnagIpcMain', () => {
       bugsnagIpcMain.handle(
         {},
         'leaveBreadcrumb',
-        JSON.stringify({ name: 'hi IPC', type: 'manual', metaData: { electron: 'has many processes' } })
+        JSON.stringify({ message: 'hi IPC', type: 'manual', metadata: { electron: 'has many processes' } })
       )
     })
 
