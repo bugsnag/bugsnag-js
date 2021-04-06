@@ -60,8 +60,10 @@
 
 // MARK: - Public API
 
-- (void)uploadEvent:(BugsnagEvent *)event {
-    [self.uploadQueue addOperation:[[BSGEventUploadObjectOperation alloc] initWithEvent:event delegate:self]];
+- (void)uploadEvent:(BugsnagEvent *)event completionHandler:(nullable void (^)(void))completionHandler {
+    BSGEventUploadObjectOperation *operation = [[BSGEventUploadObjectOperation alloc] initWithEvent:event delegate:self];
+    operation.completionBlock = completionHandler;
+    [self.uploadQueue addOperation:operation];
 }
 
 - (void)uploadStoredEvents {

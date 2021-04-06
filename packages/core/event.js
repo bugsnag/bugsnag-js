@@ -5,7 +5,6 @@ const map = require('./lib/es-utils/map')
 const reduce = require('./lib/es-utils/reduce')
 const filter = require('./lib/es-utils/filter')
 const assign = require('./lib/es-utils/assign')
-const jsRuntime = require('./lib/js-runtime')
 const metadataDelegate = require('./lib/metadata-delegate')
 const isError = require('./lib/iserror')
 
@@ -35,7 +34,7 @@ class Event {
       {
         errorClass: ensureString(errorClass),
         errorMessage: ensureString(errorMessage),
-        type: jsRuntime,
+        type: Event.__type,
         stacktrace: reduce(stacktrace, (accum, frame) => {
           const f = formatStackframe(frame)
           // don't include a stackframe if none of its properties are defined
@@ -245,6 +244,9 @@ const normaliseError = (maybeError, tolerateNonErrors, component, logger) => {
 
   return [error, internalFrames]
 }
+
+// default value for stacktrace.type
+Event.__type = 'browserjs'
 
 const hasNecessaryFields = error =>
   (typeof error.name === 'string' || typeof error.errorClass === 'string') &&

@@ -1,6 +1,13 @@
 Changelog
 =========
 
+## 6.8.1 (2021-03-24)
+
+### Bug fixes
+
+* Fix unreliable ordering of breadcrumbs.
+  [#1049](https://github.com/bugsnag/bugsnag-cocoa/pull/1049)
+
 ## 6.8.0 (2021-03-18)
 
 ### Enhancements

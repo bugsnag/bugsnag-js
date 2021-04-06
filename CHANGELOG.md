@@ -1,5 +1,20 @@
 # Changelog
 
+## v7.9.2 (2021-04-06)
+
+### Changed
+
+- (react-native): Update bugsnag-cocoa to v6.8.1
+  - Fix unreliable ordering of breadcrumbs. [bugsnag-cocoa#1049](https://github.com/bugsnag/bugsnag-cocoa/pull/1049)
+- (react-native): Update bugsnag-android to v5.9.0
+  - Bump compileSdkVersion to apiLevel 30 [bugsnag-android#1202](https://github.com/bugsnag/bugsnag-android/pull/1202)
+  - Collect whether the system has restricted background work for the app [bugsnag-android#1211](https://github.com/bugsnag/bugsnag-android/pull/1211)
+  - Improve detection of rooted devices [bugsnag-android#1194](https://github.com/bugsnag/bugsnag-android/pull/1194)
+  [bugsnag-android#1195](https://github.com/bugsnag/bugsnag-android/pull/1195)
+  [bugsnag-android#1198](https://github.com/bugsnag/bugsnag-android/pull/1198)
+  [bugsnag-android#1200](https://github.com/bugsnag/bugsnag-android/pull/1200)
+  [bugsnag-android#1201](https://github.com/bugsnag/bugsnag-android/pull/1201)
+
 ## v7.9.1 (2021-03-25)
 
 ### Changed

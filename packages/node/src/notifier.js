@@ -7,6 +7,8 @@ const Event = require('@bugsnag/core/event')
 const Session = require('@bugsnag/core/session')
 const Breadcrumb = require('@bugsnag/core/breadcrumb')
 
+Event.__type = 'nodejs'
+
 const delivery = require('@bugsnag/delivery-node')
 
 // extend the base config schema with some node-specific options

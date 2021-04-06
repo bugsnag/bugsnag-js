@@ -48,6 +48,7 @@
 #import "BugsnagBreadcrumb+Private.h"
 #import "BugsnagBreadcrumbs.h"
 #import "BugsnagClient+AppHangs.h"
+#import "BugsnagClient+OutOfMemory.h"
 #import "BugsnagCollections.h"
 #import "BugsnagConfiguration+Private.h"
 #import "BugsnagCrashSentry.h"
@@ -422,11 +423,13 @@ NSString *_lastOrientation = nil;
                                                              userInfo:nil repeats:NO];
     }
     
-    if (self.appHangEvent) {
-        [self.eventUploader uploadEvent:self.appHangEvent];
-        self.appHangEvent = nil;
-    } else if (self.lastRunInfo.crashedDuringLaunch && self.configuration.sendLaunchCrashesSynchronously) {
+    if (self.lastRunInfo.crashedDuringLaunch && self.configuration.sendLaunchCrashesSynchronously) {
         [self sendLaunchCrashSynchronously];
+    }
+    
+    if (self.eventFromLastLaunch) {
+        [self.eventUploader uploadEvent:self.eventFromLastLaunch completionHandler:nil];
+        self.eventFromLastLaunch = nil;
     }
     
     [self.eventUploader uploadStoredEvents];
@@ -459,10 +462,16 @@ NSString *_lastOrientation = nil;
     bsg_log_info(@"Sending launch crash synchronously.");
     dispatch_time_t deadline = dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC);
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-    [self.eventUploader uploadLatestStoredEvent:^{
+    dispatch_block_t completionHandler = ^{
         bsg_log_debug(@"Sent launch crash.");
         dispatch_semaphore_signal(semaphore);
-    }];
+    };
+    if (self.eventFromLastLaunch) {
+        [self.eventUploader uploadEvent:self.eventFromLastLaunch completionHandler:completionHandler];
+        self.eventFromLastLaunch = nil;
+    } else {
+        [self.eventUploader uploadLatestStoredEvent:completionHandler];
+    }
     if (dispatch_semaphore_wait(semaphore, deadline)) {
         bsg_log_debug(@"Timed out waiting for launch crash to be sent.");
     }
@@ -553,29 +562,19 @@ NSString *_lastOrientation = nil;
 - (void)computeDidCrashLastLaunch {
     BOOL didCrash = NO;
     
-    const BSG_KSCrash_State *crashState = bsg_kscrashstate_currentState();
-    NSFileManager *manager = [NSFileManager defaultManager];
-    NSString *didCrashSentinelPath = [NSString stringWithUTF8String:crashSentinelPath];
-    BOOL appCrashSentinelExists = [manager fileExistsAtPath:didCrashSentinelPath];
-    didCrash = appCrashSentinelExists || crashState->crashedLastLaunch;
-    if (appCrashSentinelExists) {
-        NSError *error = nil;
-        if (![manager removeItemAtPath:didCrashSentinelPath error:&error]) {
-            bsg_log_err(@"Failed to remove crash sentinel file: %@", error);
-            unlink(crashSentinelPath);
-        }
+    // Did the app crash in a way that was detected by KSCrash?
+    if (bsg_kscrashstate_currentState()->crashedLastLaunch || !access(crashSentinelPath, F_OK)) {
+        unlink(crashSentinelPath);
+        didCrash = YES;
     }
-    
-    // App hangs take precedence over OOMs.
-    if (!didCrash) {
-        // Avoid calling -lastRunEndedWithAppHang if the app crashed, to prevent self.appHangEvent being set and the hang being reported.
-        didCrash = [self lastRunEndedWithAppHang];
+    // Was the app terminated while the main thread was hung?
+    else if ((self.eventFromLastLaunch = [self loadFatalAppHangEvent])) {
+        didCrash = YES;
     }
-    
-    BOOL shouldReportOOM = NO;
-    if (!didCrash) {
-        shouldReportOOM = [self shouldReportOOM];
-        didCrash = shouldReportOOM;
+    // Was the app terminated while in the foreground? (probably an OOM)
+    else if ([self shouldReportOOM]) {
+        self.eventFromLastLaunch = [self generateOutOfMemoryEvent];
+        didCrash = YES;
     }
     
     self.appDidCrashLastLaunch = didCrash;
@@ -591,10 +590,6 @@ NSString *_lastOrientation = nil;
     self.lastRunInfo = [[BugsnagLastRunInfo alloc] initWithConsecutiveLaunchCrashes:self.systemState.consecutiveLaunchCrashes
                                                                             crashed:didCrash
                                                                 crashedDuringLaunch:didCrashDuringLaunch];
-    
-    if (shouldReportOOM) {
-        [self notifyOutOfMemoryEvent];
-    }
 }
 
 - (void)setCodeBundleId:(NSString *)codeBundleId {
@@ -846,53 +841,6 @@ NSString *_lastOrientation = nil;
     [self notify:exception handledState:state block:block];
 }
 
-- (void)notifyOutOfMemoryEvent {
-    static NSString *const BSGOutOfMemoryErrorClass = @"Out Of Memory";
-    static NSString *const BSGOutOfMemoryMessageFormat = @"The app was likely terminated by the operating system while in the %@";
-    NSMutableDictionary *lastLaunchInfo = [self.systemState.lastLaunchState mutableCopy];
-    NSArray *crumbs = [self.breadcrumbs cachedBreadcrumbs];
-    if (crumbs.count > 0) {
-        lastLaunchInfo[@"breadcrumbs"] = crumbs;
-    }
-    for (NSDictionary *crumb in crumbs) {
-        if ([crumb isKindOfClass:[NSDictionary class]]
-            && [crumb[@"name"] isKindOfClass:[NSString class]]) {
-            NSString *name = crumb[@"name"];
-            // If the termination breadcrumb is set, the app entered a normal
-            // termination flow but expired before the watchdog sentinel could
-            // be updated. In this case, no report should be sent.
-            if ([name isEqualToString:BSGNotificationBreadcrumbsMessageAppWillTerminate]) {
-                return;
-            }
-        }
-    }
-
-    BOOL wasInForeground = [[lastLaunchInfo valueForKeyPath:@"app.inForeground"] boolValue];
-    NSString *message = [NSString stringWithFormat:BSGOutOfMemoryMessageFormat, wasInForeground ? @"foreground" : @"background"];
-    BugsnagHandledState *handledState = [BugsnagHandledState
-                                         handledStateWithSeverityReason:LikelyOutOfMemory
-                                         severity:BSGSeverityError
-                                         attrValue:nil];
-    NSMutableDictionary *appState = [self.stateMetadataFromLastLaunch mutableCopy] ?: [NSMutableDictionary dictionary];
-    appState[@"didOOM"] = @YES;
-    appState[@"oom"] = lastLaunchInfo;
-    
-    // onCrash should not be called for OOMs
-    void *onCrash = bsg_g_bugsnag_data.onCrash;
-    bsg_g_bugsnag_data.onCrash = NULL;
-    
-    [self.crashSentry reportUserException:BSGOutOfMemoryErrorClass
-                                   reason:message
-                             handledState:[handledState toJson]
-                                 appState:appState
-                        callbackOverrides:@{}
-                           eventOverrides:nil
-                                 metadata:self.metadataFromLastLaunch
-                                   config:self.configMetadataFromLastLaunch];
-    
-    bsg_g_bugsnag_data.onCrash = onCrash;
-}
-
 - (void)notify:(NSException *)exception
   handledState:(BugsnagHandledState *_Nonnull)handledState
          block:(BugsnagOnErrorBlock)block
@@ -1003,7 +951,7 @@ NSString *_lastOrientation = nil;
 
     // Temporary conditional until all (non-crash) events can be sent via -uploadEvent:
     if (event == self.appHangEvent) {
-        [self.eventUploader uploadEvent:event];
+        [self.eventUploader uploadEvent:event completionHandler:nil];
         return;
     }
 
