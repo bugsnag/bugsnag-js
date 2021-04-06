@@ -17,10 +17,9 @@
   "license": "MIT",
   "dependencies": {
     "@bugsnag/core": "^7.9.2-alpha.0",
-    "@bugsnag/plugin-node-uncaught-exception": "^7.7.0",
-    "@bugsnag/plugin-node-unhandled-rejection": "^7.7.0",
     "@bugsnag/delivery-electron": "^1.0.0",
     "@bugsnag/electron-filestore": "^1.0.0",
+    "@bugsnag/plugin-console-breadcrumbs": "^7.9.0",
     "@bugsnag/plugin-electron-app": "1.0.0",
     "@bugsnag/plugin-electron-app-breadcrumbs": "1.0.0",
     "@bugsnag/plugin-electron-device": "1.0.0",
@@ -30,6 +29,10 @@
     "@bugsnag/plugin-electron-session": "^1.0.0",
     "@bugsnag/plugin-electron-state-sync": "1.0.0",
     "@bugsnag/plugin-window-onerror": "^7.9.0",
-    "@bugsnag/plugin-window-unhandled-rejection": "^7.9.0"
+    "@bugsnag/plugin-window-unhandled-rejection": "^7.9.0",
+    "@bugsnag/plugin-interaction-breadcrumbs": "^7.9.0",
+    "@bugsnag/plugin-network-breadcrumbs": "^7.9.0",
+    "@bugsnag/plugin-node-uncaught-exception": "^7.7.0",
+    "@bugsnag/plugin-node-unhandled-rejection": "^7.7.0"
   }
 }

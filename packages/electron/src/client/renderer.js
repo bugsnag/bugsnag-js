@@ -19,7 +19,10 @@ module.exports = (rendererOpts) => {
     require('@bugsnag/plugin-electron-renderer-client-sync')(window.__bugsnag_ipc__),
     require('@bugsnag/plugin-electron-network-status')(),
     require('@bugsnag/plugin-window-onerror')(),
-    require('@bugsnag/plugin-window-unhandled-rejection')()
+    require('@bugsnag/plugin-window-unhandled-rejection')(),
+    require('@bugsnag/plugin-network-breadcrumbs')(),
+    require('@bugsnag/plugin-interaction-breadcrumbs')(),
+    require('@bugsnag/plugin-console-breadcrumbs')
   ]
 
   const bugsnag = new Client(opts, schema, internalPlugins, require('../id'))
