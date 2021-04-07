@@ -20,7 +20,7 @@ module.exports = {
           version: client._config.appVersion,
           type: client._config.appType
         }
-        event.context = event.context || this._context
+        event.context = event.context || client._context
         event._metadata = { ...event._metadata, ...client._metadata }
         event._user = { ...event._user, ...client._user }
         event.breadcrumbs = client._breadcrumbs.slice()
