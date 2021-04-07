@@ -26,7 +26,7 @@ module.exports = {
         event.breadcrumbs = client._breadcrumbs.slice()
 
         // run the event through just the internal onError callbacks
-        const callbacks = [].concat(client._cbs.e.filter(e => !!e._internal))
+        const callbacks = client._cbs.e.filter(e => e._internal)
         runCallbacks(callbacks, event, onCallbackError, (err, shouldSend) => {
           if (err) onCallbackError(err)
           if (!shouldSend) return reject(new Error('Event not sent due to onError callback'))
