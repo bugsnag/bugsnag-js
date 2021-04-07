@@ -1,4 +1,5 @@
 const Event = require('@bugsnag/core/event')
+const Breadcrumb = require('@bugsnag/core/breadcrumb')
 
 module.exports = class BugsnagIpcMain {
   constructor (client) {
@@ -6,6 +7,9 @@ module.exports = class BugsnagIpcMain {
 
     this.stateSync = client.getPlugin('stateSync')
     if (!this.stateSync) throw new Error('Expected @bugsnag/plugin-electron-state-sync to be loaded first')
+
+    this.mainEventSync = client.getPlugin('mainEventSync')
+    if (!this.stateSync) throw new Error('Expected @bugsnag/plugin-electron-main-event-sync to be loaded first')
 
     this.methodMap = this.toMap()
 
@@ -34,18 +38,13 @@ module.exports = class BugsnagIpcMain {
       .filter(Object.hasOwnProperty.bind(event))
       .forEach(key => { event[key] = eventObject[key] })
 
-    this.client._notify(event)
+    event.breadcrumbs = event.breadcrumbs.map(b => new Breadcrumb(b.message, b.metadata, b.type, b.timestamp))
+
+    this.mainEventSync.dispatch(event)
   }
 
   getPayloadInfo () {
-    return {
-      app: this.client._app || {},
-      breadcrumbs: this.client._breadcrumbs,
-      context: this.client._context,
-      device: this.client._device || {},
-      metadata: this.client._metadata,
-      user: this.client._user
-    }
+    return this.mainEventSync.getPayloadInfo()
   }
 
   handle (_event, methodName, ...args) {
