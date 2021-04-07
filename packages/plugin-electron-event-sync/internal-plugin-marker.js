@@ -4,7 +4,7 @@ module.exports.firstPlugin = {
     const _origAddOnError = client.addOnError
     client.addOnError = function (fn) {
       fn._internal = true
-      _origAddOnError.call(client, ...arguments)
+      _origAddOnError.apply(client, arguments)
     }
     client.addOnError._restore = () => {
       client.addOnError = _origAddOnError
