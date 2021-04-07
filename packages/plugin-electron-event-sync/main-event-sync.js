@@ -42,7 +42,7 @@ module.exports = {
       return new Promise((resolve, reject) => {
         const originalSeverity = event.severity
 
-        const callbacks = [].concat(client._cbs.e.filter(e => !e._internal))
+        const callbacks = client._cbs.e.filter(e => !e._internal)
         runCallbacks(callbacks, event, onCallbackError, (err, shouldSend) => {
           if (err) onCallbackError(err)
 
