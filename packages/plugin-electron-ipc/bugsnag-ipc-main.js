@@ -9,7 +9,7 @@ module.exports = class BugsnagIpcMain {
     if (!this.stateSync) throw new Error('Expected @bugsnag/plugin-electron-state-sync to be loaded first')
 
     this.mainEventSync = client.getPlugin('mainEventSync')
-    if (!this.mainEventSync) throw new Error('Expected @bugsnag/plugin-electron-main-event-sync to be loaded first')
+    if (!this.mainEventSync) throw new Error('Expected @bugsnag/plugin-electron-event-sync to be loaded first')
 
     this.methodMap = this.toMap()
 

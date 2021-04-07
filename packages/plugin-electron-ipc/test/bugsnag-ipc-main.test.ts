@@ -6,6 +6,11 @@ const mockStateSyncPlugin = {
   load: () => ({})
 }
 
+const mockEventSyncPlugin = {
+  name: 'mainEventSync',
+  load: () => ({})
+}
+
 afterEach(() => jest.clearAllMocks())
 
 describe('BugsnagIpcMain', () => {
@@ -17,8 +22,15 @@ describe('BugsnagIpcMain', () => {
         const bugsnagIpcMain = new BugsnagIpcMain(client)
       }).toThrowError('Expected @bugsnag/plugin-electron-state-sync to be loaded first')
     })
-    it('should work when the state sync plugin is loaded first', () => {
+    it('should throw if the main event sync plugin is not loaded first', () => {
       const client = new Client({}, {}, [mockStateSyncPlugin], {})
+      expect(() => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const bugsnagIpcMain = new BugsnagIpcMain(client)
+      }).toThrowError('Expected @bugsnag/plugin-electron-event-sync to be loaded first')
+    })
+    it('should work when the state sync plugin is loaded first', () => {
+      const client = new Client({}, {}, [mockStateSyncPlugin, mockEventSyncPlugin], {})
       expect(() => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const bugsnagIpcMain = new BugsnagIpcMain(client)
@@ -28,7 +40,7 @@ describe('BugsnagIpcMain', () => {
 
   describe('handle()', () => {
     it('works for updating context', () => {
-      const client = new Client({}, {}, [mockStateSyncPlugin], {})
+      const client = new Client({}, {}, [mockStateSyncPlugin, mockEventSyncPlugin], {})
       client.setContext = jest.fn()
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       bugsnagIpcMain.handle({}, 'setContext', JSON.stringify('new context'))
@@ -36,7 +48,7 @@ describe('BugsnagIpcMain', () => {
     })
 
     it('returns the current context', () => {
-      const client = new Client({}, {}, [mockStateSyncPlugin], {})
+      const client = new Client({}, {}, [mockStateSyncPlugin, mockEventSyncPlugin], {})
       client.setContext('today')
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       const event = { returnValue: undefined }
@@ -45,7 +57,7 @@ describe('BugsnagIpcMain', () => {
     })
 
     it('works for updating user', () => {
-      const client = new Client({}, {}, [mockStateSyncPlugin], {})
+      const client = new Client({}, {}, [mockStateSyncPlugin, mockEventSyncPlugin], {})
       client.setUser = jest.fn()
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       // all fields set
@@ -57,7 +69,7 @@ describe('BugsnagIpcMain', () => {
     })
 
     it('returns the current user', () => {
-      const client = new Client({}, {}, [mockStateSyncPlugin], {})
+      const client = new Client({}, {}, [mockStateSyncPlugin, mockEventSyncPlugin], {})
       client.setUser('81676', null, 'Cal')
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       const event = { returnValue: undefined }
@@ -66,7 +78,7 @@ describe('BugsnagIpcMain', () => {
     })
 
     it('works for adding metadata', () => {
-      const client = new Client({}, {}, [mockStateSyncPlugin], {})
+      const client = new Client({}, {}, [mockStateSyncPlugin, mockEventSyncPlugin], {})
       client.addMetadata = jest.fn()
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       const stubWebContents = { /* this would be a WebContents instance */ }
@@ -76,7 +88,7 @@ describe('BugsnagIpcMain', () => {
     })
 
     it('works for removing metadata', () => {
-      const client = new Client({}, {}, [mockStateSyncPlugin], {})
+      const client = new Client({}, {}, [mockStateSyncPlugin, mockEventSyncPlugin], {})
       client.clearMetadata = jest.fn()
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       bugsnagIpcMain.handle({}, 'clearMetadata', JSON.stringify('section'))
@@ -84,7 +96,7 @@ describe('BugsnagIpcMain', () => {
     })
 
     it('returns metadata content', () => {
-      const client = new Client({}, {}, [mockStateSyncPlugin], {})
+      const client = new Client({}, {}, [mockStateSyncPlugin, mockEventSyncPlugin], {})
       client.addMetadata('section', 'content', 'X')
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       const event = { returnValue: undefined }
@@ -98,7 +110,7 @@ describe('BugsnagIpcMain', () => {
     })
 
     it('works for managing sessions', () => {
-      const client = new Client({}, {}, [mockStateSyncPlugin], {})
+      const client = new Client({}, {}, [mockStateSyncPlugin, mockEventSyncPlugin], {})
       client._sessionDelegate = { startSession: jest.fn(), resumeSession: jest.fn(), pauseSession: jest.fn() }
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       // start
@@ -113,7 +125,7 @@ describe('BugsnagIpcMain', () => {
     })
 
     it('works for breadcrumbs', (done) => {
-      const client = new Client({}, {}, [mockStateSyncPlugin], {})
+      const client = new Client({}, {}, [mockStateSyncPlugin, mockEventSyncPlugin], {})
       client.addOnBreadcrumb(b => {
         expect(b.message).toBe('hi IPC')
         expect(b.type).toBe('manual')
@@ -139,7 +151,7 @@ describe('BugsnagIpcMain', () => {
             done()
           }
         })
-      }], {})
+      }, mockEventSyncPlugin], {})
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       bugsnagIpcMain.handle(
         {},
@@ -149,13 +161,13 @@ describe('BugsnagIpcMain', () => {
     })
 
     it('is resilient to unknown methods', () => {
-      const client = new Client({}, {}, [mockStateSyncPlugin], {})
+      const client = new Client({}, {}, [mockStateSyncPlugin, mockEventSyncPlugin], {})
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       expect(() => bugsnagIpcMain.handle({}, 'explodePlease', JSON.stringify({ data: 123 }))).not.toThrowError()
     })
 
     it('is resilient to bad JSON', () => {
-      const client = new Client({}, {}, [mockStateSyncPlugin], {})
+      const client = new Client({}, {}, [mockStateSyncPlugin, mockEventSyncPlugin], {})
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       expect(() => bugsnagIpcMain.handle({}, 'leaveBreadcrumb', 'not json')).not.toThrowError()
     })
