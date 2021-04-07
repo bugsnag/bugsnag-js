@@ -29,7 +29,7 @@ module.exports = {
         const callbacks = client._cbs.e.filter(e => e._internal)
         runCallbacks(callbacks, event, onCallbackError, (err, shouldSend) => {
           if (err) onCallbackError(err)
-          if (!shouldSend) return reject(new Error('Event not sent due to onError callback'))
+          if (!shouldSend) return resolve({ shouldSend: false })
 
           // extract just the properties we want from the event
           const { app, breadcrumbs, context, device, _metadata, user } = event
@@ -39,48 +39,43 @@ module.exports = {
     }
 
     const dispatch = (event) => {
-      return new Promise((resolve, reject) => {
-        const originalSeverity = event.severity
+      const originalSeverity = event.severity
 
-        const callbacks = client._cbs.e.filter(e => !e._internal)
-        runCallbacks(callbacks, event, onCallbackError, (err, shouldSend) => {
-          if (err) onCallbackError(err)
+      const callbacks = client._cbs.e.filter(e => !e._internal)
+      runCallbacks(callbacks, event, onCallbackError, (err, shouldSend) => {
+        if (err) onCallbackError(err)
 
-          if (!shouldSend) {
-            client._logger.debug('Event not sent due to onError callback')
-          }
+        if (!shouldSend) {
+          client._logger.debug('Event not sent due to onError callback')
+        }
 
-          if (client._config.enabledBreadcrumbTypes.includes('error')) {
-            // only leave a crumb for the error if actually got sent
-            Client.prototype.leaveBreadcrumb.call(client, event.errors[0].errorClass, {
-              errorClass: event.errors[0].errorClass,
-              errorMessage: event.errors[0].errorMessage,
-              severity: event.severity
-            }, 'error')
-          }
+        if (client._config.enabledBreadcrumbTypes.includes('error')) {
+          // only leave a crumb for the error if actually got sent
+          Client.prototype.leaveBreadcrumb.call(client, event.errors[0].errorClass, {
+            errorClass: event.errors[0].errorClass,
+            errorMessage: event.errors[0].errorMessage,
+            severity: event.severity
+          }, 'error')
+        }
 
-          if (originalSeverity !== event.severity) {
-            event._handledState.severityReason = { type: 'userCallbackSetSeverity' }
-          }
+        if (originalSeverity !== event.severity) {
+          event._handledState.severityReason = { type: 'userCallbackSetSeverity' }
+        }
 
-          if (event.unhandled !== event._handledState.unhandled) {
-            event._handledState.severityReason.unhandledOverridden = true
-            event._handledState.unhandled = event.unhandled
-          }
+        if (event.unhandled !== event._handledState.unhandled) {
+          event._handledState.severityReason.unhandledOverridden = true
+          event._handledState.unhandled = event.unhandled
+        }
 
-          if (client._session) {
-            client._session._track(event)
-            event._session = client._session
-          }
+        if (client._session) {
+          client._session._track(event)
+          event._session = client._session
+        }
 
-          client._delivery.sendEvent({
-            apiKey: event.apiKey || client._config.apiKey,
-            notifier: client._notifier,
-            events: [event]
-          }, (err) => {
-            if (err) return reject(err)
-            resolve(event)
-          })
+        client._delivery.sendEvent({
+          apiKey: event.apiKey || client._config.apiKey,
+          notifier: client._notifier,
+          events: [event]
         })
       })
     }

@@ -7,8 +7,11 @@ module.exports = (BugsnagIpcRenderer = window.__bugsnag_ipc__) => ({
         context,
         device,
         metadata,
-        user
+        user,
+        shouldSend
       } = await BugsnagIpcRenderer.getPayloadInfo()
+
+      if (shouldSend === false) return false
 
       event.context = event.context || context
       event.breadcrumbs = breadcrumbs
