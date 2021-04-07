@@ -20,13 +20,6 @@ Feature: Detecting and reporting errors
             | default         | main     |
             | complex-config  | main     |
 
-    Scenario: A crash in the main process
-        Given I launch an app
-        When I click "main-process-crash"
-        Then the app crashed
-        And the total requests received by the server matches:
-            | events   | 0        |
-
     Scenario Outline: An unhandled promise rejection in the main process
         Given I launch an app with configuration:
             | bugsnag | <config> |

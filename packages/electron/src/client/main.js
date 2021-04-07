@@ -36,6 +36,7 @@ module.exports = (opts) => {
     require('@bugsnag/plugin-electron-app-breadcrumbs')(electron.app, electron.BrowserWindow),
     require('@bugsnag/plugin-electron-device')(electron.app, electron.screen, process, filestore, NativeClient, electron.powerMonitor),
     require('@bugsnag/plugin-electron-session')(electron.app, electron.BrowserWindow),
+    require('@bugsnag/plugin-console-breadcrumbs'),
     require('@bugsnag/plugin-electron-event-sync/internal-plugin-marker').lastPlugin
   ]
 

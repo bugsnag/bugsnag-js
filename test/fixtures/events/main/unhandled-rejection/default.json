@@ -67,6 +67,15 @@
             "id": 1,
             "title": "Runner"
           }
+        },
+        {
+            "type": "user",
+            "name": "UI click",
+            "timestamp": "{TIMESTAMP}",
+            "metaData": {
+                "targetText": "Unhandled promise rejection in main process",
+                "targetSelector": "A#main-process-unhandled-promise-rejection"
+            }
         }
       ],
       "exceptions": [

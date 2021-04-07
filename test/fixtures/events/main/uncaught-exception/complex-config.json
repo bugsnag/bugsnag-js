@@ -80,6 +80,15 @@
             "id": 1,
             "title": "Runner"
           }
+        },
+        {
+            "type": "user",
+            "name": "UI click",
+            "timestamp": "{TIMESTAMP}",
+            "metaData": {
+                "targetText": "Uncaught exception in main process",
+                "targetSelector": "A#main-process-uncaught-exception"
+            }
         }
       ],
       "exceptions": [

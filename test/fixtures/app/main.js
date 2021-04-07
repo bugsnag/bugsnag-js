@@ -67,3 +67,7 @@ ipcMain.on('main-process-crash', () => {
 ipcMain.on('main-process-start-session', () => {
   Bugsnag.startSession()
 })
+
+ipcMain.on('main-process-console-log', (_event, ...args) => {
+  console.log(...args)
+})

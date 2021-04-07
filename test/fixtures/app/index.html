@@ -44,5 +44,9 @@
     <ul>
         <li><a href="#" id="main-process-start-session" onclick="RunnerAPI.mainProcessStartSession()">Start session in main process</a></li>
     </ul>
+    <ul>
+        <li><a href="#" id="main-process-console-log" onclick="RunnerAPI.mainProcessLog('abc', 123)">console.log in main process</a></li>
+        <li><a href="#" id="renderer-process-console-log" onclick="console.log('xyz', 456)">console.log in renderer process</a></li>
+    </ul>
 </body>
 </html>
