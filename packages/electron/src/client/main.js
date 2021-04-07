@@ -24,8 +24,9 @@ module.exports = (opts) => {
     electron.app.getPath('crashDumps')
   )
 
+  // main internal plugins go here
   const internalPlugins = [
-    // main internal plugins go here
+    // THIS PLUGIN MUST BE FIRST!
     require('@bugsnag/plugin-electron-event-sync/internal-plugin-marker').firstPlugin,
     require('@bugsnag/plugin-electron-event-sync/main-event-sync.js'),
     require('@bugsnag/plugin-electron-state-sync'),
@@ -37,6 +38,7 @@ module.exports = (opts) => {
     require('@bugsnag/plugin-electron-device')(electron.app, electron.screen, process, filestore, NativeClient, electron.powerMonitor),
     require('@bugsnag/plugin-electron-session')(electron.app, electron.BrowserWindow),
     require('@bugsnag/plugin-console-breadcrumbs'),
+    // THIS PLUGIN MUST BE LAST!
     require('@bugsnag/plugin-electron-event-sync/internal-plugin-marker').lastPlugin
   ]
 
