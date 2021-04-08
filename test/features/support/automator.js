@@ -1,3 +1,4 @@
+const { rmdir } = require('fs').promises
 const { _electron: electron } = require('playwright')
 const psList = require('ps-list')
 
@@ -62,6 +63,13 @@ class Automator {
       } else {
         throw e
       }
+    }
+  }
+
+  async clearCache () {
+    try {
+      await rmdir(this.app.cachePath(), { recursive: true })
+    } catch (e) {
     }
   }
 
