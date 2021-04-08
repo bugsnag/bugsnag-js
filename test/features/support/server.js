@@ -81,7 +81,11 @@ class MockServer {
   }
 
   async stop () {
-    return promisify(this.server.close.bind(this.server))()
+    // silence potential failures due to double stops
+    const stopping = this.stopServer().catch(() => {})
+    // terminate open connections immediately
+    setImmediate(() => this.server.emit('close'))
+    return stopping
   }
 
   // write all requests to disk for later inspection
