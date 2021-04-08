@@ -25,6 +25,7 @@ Feature: Retrying failed requests
         And the contents of an event request matches "main/handled-error/default.json"
         And the contents of a session request matches "sessions/default.json"
 
+    @not_windows
     Scenario: Retrying failed requests at launch
         Given the server is unreachable
         And I launch an app
