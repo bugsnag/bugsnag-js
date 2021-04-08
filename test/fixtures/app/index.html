@@ -22,6 +22,20 @@
         function leaveCrumb() {
           window.Bugsnag.leaveBreadcrumb('missing auth token', { session: 'two-two' })
         }
+
+        function notifyWithOnError() {
+          window.Bugsnag.notify(new Error('hi'), event => {
+            event.addMetadata('onError', 'renderer', {
+              // the payload assertion will check this value to ensure the onError callback did indeed run
+              didRun: true,
+              // these will be true if the render successfully got the app/device data in getPayloadData()
+              didFindMainAppData: !!event.app && !!event.app.version && !!event.app.type && !!event.app.duration,
+              didFindMainDeviceData: !!event.device && !!event.device.locale && !!event.device.freeMemory,
+              // this should always be false because the main onError callbacks should run afterwards
+              didFindMainOnErrorMetadata: event.getMetadata('app', 'part') === 3
+            })
+          })
+        }
     </script>
 </head>
 <body style="background: white;">
@@ -47,6 +61,9 @@
     <ul>
         <li><a href="#" id="main-process-console-log" onclick="RunnerAPI.mainProcessLog('abc', 123)">console.log in main process</a></li>
         <li><a href="#" id="renderer-process-console-log" onclick="console.log('xyz', 456)">console.log in renderer process</a></li>
+    </ul>
+    <ul>
+        <li><a href="#" id="render-notify-on-error" onclick="notifyWithOnError()">notify with onError in renderer</a></li>
     </ul>
 </body>
 </html>
