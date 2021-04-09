@@ -34,11 +34,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (strong, nonatomic) BugsnagMetadata *metadata;
 
-/// Property overrides.
-@property (readonly, nonatomic) NSDictionary *overrides;
-
 /// The release stage of the application
-@property (readwrite, copy, nullable) NSString *releaseStage;
+@property (readwrite, copy, nullable, nonatomic) NSString *releaseStage;
 
 @property (strong, nullable, nonatomic) BugsnagSession *session;
 
@@ -67,8 +64,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// Whether this report should be sent, based on release stage information cached at crash time and within the application currently.
 - (BOOL)shouldBeSent;
-
-- (void)setOverrideProperty:(NSString *)key value:(id)value;
 
 - (NSDictionary *)toJsonWithRedactedKeys:(nullable NSSet *)redactedKeys;
 

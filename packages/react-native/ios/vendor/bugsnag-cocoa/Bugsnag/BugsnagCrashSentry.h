@@ -20,15 +20,6 @@
        notifier:(BugsnagNotifier *)notifier
         onCrash:(BSGReportCallback)onCrash;
 
-- (void)reportUserException:(NSString *)reportName
-                     reason:(NSString *)reportMessage
-               handledState:(NSDictionary *)handledState
-                   appState:(NSDictionary *)appState
-          callbackOverrides:(NSDictionary *)overrides
-             eventOverrides:(NSDictionary *)eventOverrides
-                   metadata:(NSDictionary *)metadata
-                     config:(NSDictionary *)config;
-
 - (BSG_KSCrashType)mapKSToBSGCrashTypes:(BugsnagErrorTypes *)errorTypes;
 
 @end

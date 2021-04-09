@@ -11,7 +11,7 @@
 #import "BSG_KSCrashReportFields.h"
 #import "BugsnagCollections.h"
 #import "BugsnagStackframe+Private.h"
-#import "BugsnagStacktrace+Private.h"
+#import "BugsnagStacktrace.h"
 #import "BugsnagKeys.h"
 
 BSGThreadType BSGParseThreadType(NSString *type) {

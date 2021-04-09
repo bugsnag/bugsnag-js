@@ -104,7 +104,7 @@ static inline bool bsg_local_is_insert_libraries_env_var(const char* str) {
     } \
 } while(0)
 
-#elif TARGET_CPU_X86_64
+#elif TARGET_CPU_X86_64 && __GCC_ASM_FLAG_OUTPUTS__
 #define BSG_HAS_CUSTOM_SYSCALL 1
 
 // X86_64 3-parameter syscall
@@ -114,6 +114,8 @@ static inline bool bsg_local_is_insert_libraries_env_var(const char* str) {
 // - Syscall# is in RAX, params in RDI, RSI, RDX, and return in RAX.
 // - Carry bit is cleared on success, set on failure.
 // - We must also inform the compiler that memory, rcx, r11 may get clobbered.
+// The "=@ccc" constraint requires __GCC_ASM_FLAG_OUTPUTS__, not available in Xcode 10
+// https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html#index-asm-flag-output-operands
 #define bsg_syscall3(call_num, param0, param1, param2, pResult) do { \
     register uintptr_t rax = (uintptr_t)(call_num) | (2<<24); \
     register uintptr_t p0 = (uintptr_t)(param0); \
