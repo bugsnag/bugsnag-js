@@ -8,7 +8,6 @@
 
 #import "BSGEventUploadObjectOperation.h"
 
-#import "BSGJSONSerialization.h"
 #import "BugsnagEvent.h"
 #import "BugsnagLogger.h"
 
@@ -25,14 +24,8 @@
     return self.event;
 }
 
-- (void)storeEventPayload:(NSDictionary *)eventPayload inDirectory:(NSString *)directory {
-    NSString *file = [[directory stringByAppendingPathComponent:[NSUUID UUID].UUIDString] stringByAppendingPathExtension:@"json"];
-    NSError *error = nil;
-    if ([BSGJSONSerialization writeJSONObject:eventPayload toFile:file options:0 error:&error]) {
-        [self.delegate uploadOperationDidStoreEventPayload:self];
-    } else {
-        bsg_log_err(@"Error encountered while saving event payload for retry: %@", error);
-    }
+- (BOOL)shouldStoreEventPayloadForRetry {
+    return YES;
 }
 
 - (NSString *)name {

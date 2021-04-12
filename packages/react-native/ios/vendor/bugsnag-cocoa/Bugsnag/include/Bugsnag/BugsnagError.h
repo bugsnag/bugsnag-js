@@ -42,6 +42,6 @@ typedef NS_OPTIONS(NSUInteger, BSGErrorType) {
 /**
  * The type of the captured error
  */
-@property BSGErrorType type;
+@property (nonatomic) BSGErrorType type;
 
 @end

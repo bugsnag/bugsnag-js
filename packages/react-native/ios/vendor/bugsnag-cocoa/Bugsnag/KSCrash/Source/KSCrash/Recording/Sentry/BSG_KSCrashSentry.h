@@ -63,9 +63,6 @@ typedef struct BSG_KSCrash_SentryContext {
      */
     bool threadTracingEnabled;
 
-    /** If true, will record binary images. */
-    bool writeBinaryImagesForUserReported;
-
     // Implementation defined values. Caller does not initialize these.
 
     /** Threads reserved by the crash handlers, which must not be suspended. */
@@ -134,19 +131,6 @@ typedef struct BSG_KSCrash_SentryContext {
         /** Signal information. */
         const siginfo_t *signalInfo;
     } signal;
-
-    struct {
-        /** The exception name. */
-        const char *name;
-
-        /** Handled exception report info: */
-        const char *overrides; // info set in callbacks
-        const char *eventOverrides; // Bugsnag Error API JSON payload for handled events
-        const char *handledState;
-        const char *metadata;
-        const char *state; // breadcrumbs, other shared app state
-        const char *config; // config options which affect report delivery
-    } userException;
 
 } BSG_KSCrash_SentryContext;
 

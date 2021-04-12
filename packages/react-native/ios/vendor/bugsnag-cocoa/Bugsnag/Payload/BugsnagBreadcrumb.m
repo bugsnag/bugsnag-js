@@ -74,6 +74,15 @@ BSGBreadcrumbType BSGBreadcrumbTypeFromString(NSString *value) {
     }
 }
 
+
+@interface BugsnagBreadcrumb ()
+
+/// String representation of `timestamp` used to avoid unnecessary date <--> string conversions
+@property (copy, nonatomic) NSString *timestampString;
+
+@end
+
+
 @implementation BugsnagBreadcrumb
 
 - (instancetype)init {
@@ -86,12 +95,12 @@ BSGBreadcrumbType BSGBreadcrumbTypeFromString(NSString *value) {
 }
 
 - (BOOL)isValid {
-    return self.message.length > 0 && self.timestamp != nil;
+    return self.message.length > 0 && (self.timestampString || self.timestamp);
 }
 
 - (NSDictionary *)objectValue {
     @synchronized (self) {
-        NSString *timestamp = [BSG_RFC3339DateTool stringFromDate:_timestamp];
+        NSString *timestamp = self.timestampString ?: [BSG_RFC3339DateTool stringFromDate:self.timestamp];
         if (timestamp && _message.length > 0) {
             NSMutableDictionary *metadata = [NSMutableDictionary new];
             for (NSString *key in _metadata) {
@@ -112,17 +121,24 @@ BSGBreadcrumbType BSGBreadcrumbTypeFromString(NSString *value) {
 
 @synthesize timestamp = _timestamp;
 
+// The timestamp is lazily computed from the timestampString to avoid unnecessary
+// calls to -dateFromString: (which is expensive) when loading breadcrumbs from disk.
+
 - (NSDate *)timestamp {
     @synchronized (self) {
+        if (!_timestamp) {
+            _timestamp = [BSG_RFC3339DateTool dateFromString:self.timestampString];
+        }
         return _timestamp;
     }
 }
 
-- (void)setTimestamp:(NSDate * _Nullable)timestamp {
+@synthesize timestampString = _timestampString;
+
+- (void)setTimestampString:(NSString *)timestampString {
     @synchronized (self) {
-        [self willChangeValueForKey:NSStringFromSelector(@selector(timestamp))];
-        _timestamp = timestamp;
-        [self didChangeValueForKey:NSStringFromSelector(@selector(timestamp))];
+        _timestampString = [timestampString copy];
+        _timestamp = nil; //!OCLint
     }
 }
 
@@ -200,6 +216,7 @@ BSGBreadcrumbType BSGBreadcrumbTypeFromString(NSString *value) {
 + (instancetype)breadcrumbFromDict:(NSDictionary *)dict {
     BOOL isValidCrumb = [dict[BSGKeyType] isKindOfClass:[NSString class]]
         && [dict[BSGKeyTimestamp] isKindOfClass:[NSString class]]
+        && [BSG_RFC3339DateTool isLikelyDateString:dict[BSGKeyTimestamp]]
         && (
             [dict[BSGKeyMetadata] isKindOfClass:[NSDictionary class]]
             || [dict[@"metadata"] isKindOfClass:[NSDictionary class]] // react-native uses lowercase key
@@ -211,7 +228,7 @@ BSGBreadcrumbType BSGBreadcrumbTypeFromString(NSString *value) {
         return [self breadcrumbWithBlock:^(BugsnagBreadcrumb *crumb) {
             crumb.message = dict[BSGKeyMessage] ?: dict[BSGKeyName];
             crumb.metadata = dict[BSGKeyMetadata] ?: dict[@"metadata"];
-            crumb.timestamp = [BSG_RFC3339DateTool dateFromString:dict[BSGKeyTimestamp]];
+            crumb.timestampString = dict[BSGKeyTimestamp];
             crumb.type = BSGBreadcrumbTypeFromString(dict[BSGKeyType]);
         }];
     }

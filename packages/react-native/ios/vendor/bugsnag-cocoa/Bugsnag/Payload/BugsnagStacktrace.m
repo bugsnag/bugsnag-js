@@ -6,14 +6,14 @@
 //  Copyright © 2020 Bugsnag. All rights reserved.
 //
 
-#import "BugsnagStacktrace+Private.h"
+#import "BugsnagStacktrace.h"
 
 #import "BugsnagKeys.h"
 #import "BugsnagStackframe+Private.h"
 
 @implementation BugsnagStacktrace
 
-+ (instancetype)stacktraceFromJson:(NSDictionary *)json {
++ (instancetype)stacktraceFromJson:(NSArray<NSDictionary *> *)json {
     BugsnagStacktrace *trace = [BugsnagStacktrace new];
     NSMutableArray *data = [NSMutableArray new];
 
