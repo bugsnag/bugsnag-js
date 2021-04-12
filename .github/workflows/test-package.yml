@@ -11,6 +11,9 @@ jobs:
         electron: [ '^11.2.0' ]
         node-version: [12, 14]
         os: [ ubuntu-20.04, windows-2019, macos-10.15 ]
+        exclude:
+          - os: macos-10.15
+            node-version: 14
 
     steps:
     - uses: actions/checkout@v2
