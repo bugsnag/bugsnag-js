@@ -42,8 +42,16 @@ module.exports = net => ({
 
       request.on('abort', () => {
         client.leaveBreadcrumb(
-          'net.request error',
+          'net.request aborted',
           { request: `${method} ${url}` },
+          BREADCRUMB_REQUEST
+        )
+      })
+
+      request.on('error', (error) => {
+        client.leaveBreadcrumb(
+          'net.request error',
+          { request: `${method} ${url}`, error: error.message },
           BREADCRUMB_REQUEST
         )
       })

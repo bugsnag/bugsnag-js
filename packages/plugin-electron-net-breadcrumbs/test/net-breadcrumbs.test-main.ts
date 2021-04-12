@@ -103,7 +103,7 @@ describe('plugin: electron net breadcrumbs', () => {
     expect(breadcrumb.metadata).toEqual({ request: `GET http://localhost:${currentServer.port}/`, status })
   })
 
-  it('it leaves an error breadcrumb when the request is aborted', async () => {
+  it('it leaves a breadcrumb when the request is aborted', async () => {
     const client = makeClient()
 
     currentServer = await startServer(200)
@@ -120,8 +120,38 @@ describe('plugin: electron net breadcrumbs', () => {
 
     const breadcrumb = client._breadcrumbs[0]
     expect(breadcrumb.type).toBe('request')
-    expect(breadcrumb.message).toBe('net.request error')
+    expect(breadcrumb.message).toBe('net.request aborted')
     expect(breadcrumb.metadata).toEqual({ request: `GET ${url}/` })
+  })
+
+  it('it leaves a breadcrumb when the request errors', async () => {
+    const client = makeClient()
+
+    currentServer = await startServer(0, (req, res) => {
+      req.on('data', () => {})
+      req.on('end', () => {
+        res.writeHead(302, { Location: '/a/b/c' })
+        res.end(STATUS_CODES[302])
+      })
+    })
+
+    const url = `http://localhost:${currentServer.port}`
+    const request = net.request({ url, redirect: 'error' })
+
+    await new Promise(resolve => {
+      request.on('error', resolve)
+      request.end()
+    })
+
+    expect(client._breadcrumbs).toHaveLength(1)
+
+    const breadcrumb = client._breadcrumbs[0]
+    expect(breadcrumb.type).toBe('request')
+    expect(breadcrumb.message).toBe('net.request error')
+    expect(breadcrumb.metadata).toEqual({
+      request: `GET ${url}`,
+      error: "Attempted to redirect, but redirect policy was 'error'"
+    })
   })
 
   it.each([
@@ -189,14 +219,16 @@ function makeClient ({ config = {}, schema = {} } = {}) {
   return makeClientForPlugin({ config, schema, plugin: plugin(net) }).client
 }
 
-async function startServer (statusCode): Promise<ServerWithPort> {
-  const server = createServer((req, res) => {
-    req.on('data', () => {})
-    req.on('end', () => {
-      res.statusCode = statusCode
-      res.end(STATUS_CODES[statusCode])
-    })
+const defaultRequestHandler = statusCode => (req, res) => {
+  req.on('data', () => {})
+  req.on('end', () => {
+    res.statusCode = statusCode
+    res.end(STATUS_CODES[statusCode])
   })
+}
+
+async function startServer (statusCode, handler = defaultRequestHandler(statusCode)): Promise<ServerWithPort> {
+  const server = createServer(handler)
 
   // add a getter for the server port because we need it _everywhere_
   Object.defineProperty(server, 'port', { get: () => (server.address() as AddressInfo).port })
