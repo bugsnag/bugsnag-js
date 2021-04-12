@@ -1,5 +1,6 @@
 import { net } from 'electron'
 import { AddressInfo } from 'net'
+import Breadcrumb from '@bugsnag/core/breadcrumb'
 import { createServer, STATUS_CODES, Server } from 'http'
 import { makeClientForPlugin } from '@bugsnag/electron-test-helpers'
 import plugin from '..'
@@ -36,12 +37,14 @@ describe('plugin: electron net breadcrumbs', () => {
       request.end()
     })
 
-    expect(client._breadcrumbs).toHaveLength(1)
+    const expected = new Breadcrumb(
+      `net.request ${successOrFailure}`,
+      { request: `GET ${url}/`, status },
+      'request'
+    )
 
-    const breadcrumb = client._breadcrumbs[0]
-    expect(breadcrumb.type).toBe('request')
-    expect(breadcrumb.message).toBe(`net.request ${successOrFailure}`)
-    expect(breadcrumb.metadata).toEqual({ request: `GET ${url}/`, status })
+    expect(client._breadcrumbs).toHaveLength(1)
+    expect(client._breadcrumbs[0]).toMatchBreadcrumb(expected)
   })
 
   it.each([
@@ -64,12 +67,14 @@ describe('plugin: electron net breadcrumbs', () => {
       request.end()
     })
 
-    expect(client._breadcrumbs).toHaveLength(1)
+    const expected = new Breadcrumb(
+      `net.request ${successOrFailure}`,
+      { request: `${method} ${url}`, status },
+      'request'
+    )
 
-    const breadcrumb = client._breadcrumbs[0]
-    expect(breadcrumb.type).toBe('request')
-    expect(breadcrumb.message).toBe(`net.request ${successOrFailure}`)
-    expect(breadcrumb.metadata).toEqual({ request: `${method} ${url}`, status })
+    expect(client._breadcrumbs).toHaveLength(1)
+    expect(client._breadcrumbs[0]).toMatchBreadcrumb(expected)
   })
 
   it.each([
@@ -95,12 +100,14 @@ describe('plugin: electron net breadcrumbs', () => {
       request.end()
     })
 
-    expect(client._breadcrumbs).toHaveLength(1)
+    const expected = new Breadcrumb(
+      `net.request ${successOrFailure}`,
+      { request: `GET http://localhost:${currentServer.port}/`, status },
+      'request'
+    )
 
-    const breadcrumb = client._breadcrumbs[0]
-    expect(breadcrumb.type).toBe('request')
-    expect(breadcrumb.message).toBe(`net.request ${successOrFailure}`)
-    expect(breadcrumb.metadata).toEqual({ request: `GET http://localhost:${currentServer.port}/`, status })
+    expect(client._breadcrumbs).toHaveLength(1)
+    expect(client._breadcrumbs[0]).toMatchBreadcrumb(expected)
   })
 
   it('it leaves a breadcrumb when the request is aborted', async () => {
@@ -116,12 +123,14 @@ describe('plugin: electron net breadcrumbs', () => {
       request.abort()
     })
 
-    expect(client._breadcrumbs).toHaveLength(1)
+    const expected = new Breadcrumb(
+      'net.request aborted',
+      { request: `GET ${url}/` },
+      'request'
+    )
 
-    const breadcrumb = client._breadcrumbs[0]
-    expect(breadcrumb.type).toBe('request')
-    expect(breadcrumb.message).toBe('net.request aborted')
-    expect(breadcrumb.metadata).toEqual({ request: `GET ${url}/` })
+    expect(client._breadcrumbs).toHaveLength(1)
+    expect(client._breadcrumbs[0]).toMatchBreadcrumb(expected)
   })
 
   it('it leaves a breadcrumb when the request errors', async () => {
@@ -143,15 +152,14 @@ describe('plugin: electron net breadcrumbs', () => {
       request.end()
     })
 
-    expect(client._breadcrumbs).toHaveLength(1)
+    const expected = new Breadcrumb(
+      'net.request error',
+      { request: `GET ${url}`, error: "Attempted to redirect, but redirect policy was 'error'" },
+      'request'
+    )
 
-    const breadcrumb = client._breadcrumbs[0]
-    expect(breadcrumb.type).toBe('request')
-    expect(breadcrumb.message).toBe('net.request error')
-    expect(breadcrumb.metadata).toEqual({
-      request: `GET ${url}`,
-      error: "Attempted to redirect, but redirect policy was 'error'"
-    })
+    expect(client._breadcrumbs).toHaveLength(1)
+    expect(client._breadcrumbs[0]).toMatchBreadcrumb(expected)
   })
 
   it.each([
