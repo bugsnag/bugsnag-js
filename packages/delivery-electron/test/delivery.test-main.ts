@@ -295,6 +295,74 @@ describe('delivery: electron', () => {
     })
   })
 
+  it('handles uncaught exceptions during event delivery', done => {
+    const payload = {
+      events: [{ errors: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }] }]
+    } as unknown as EventDeliveryPayload
+    const net = { request: () => { throw new Error('bad day') } }
+    let didLog = false
+    const logger = { error: () => { didLog = true }, info: () => {} }
+    const config = {
+      apiKey: 'aaaaaaaa',
+      endpoints: { notify: 'http://localhost:9999/events/' },
+      redactedKeys: []
+    }
+    delivery(filestore, net)(makeClient(config, logger)).sendEvent(payload, (err: any) => {
+      expect(didLog).toBe(true)
+      expect(err).toBeTruthy()
+      expect(enqueueSpy).toHaveBeenCalledWith(
+        {
+          opts: {
+            url: 'http://localhost:9999/events/',
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Bugsnag-Api-Key': 'aaaaaaaa',
+              'Bugsnag-Integrity': expect.stringContaining('sha1 '),
+              'Bugsnag-Payload-Version': '4',
+              'Bugsnag-Sent-At': expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/)
+            }
+          },
+          body: expect.stringContaining('foo is not a function')
+        },
+        expect.any(Function))
+      done()
+    })
+  })
+
+  it('handles uncaught exceptions during session delivery', done => {
+    const payload = { sessions: [{}] } as unknown as EventDeliveryPayload
+    const net = { request: () => { throw new Error('bad day') } }
+    let didLog = false
+    const logger = { error: () => { didLog = true }, info: () => {} }
+    const config = {
+      apiKey: 'aaaaaaaa',
+      endpoints: { sessions: 'http://localhost:9999/sessions/' },
+      redactedKeys: []
+    }
+    delivery(filestore, net)(makeClient(config, logger)).sendSession(payload, (err: any) => {
+      expect(didLog).toBe(true)
+      expect(err).toBeTruthy()
+      expect(enqueueSpy).toHaveBeenCalledWith(
+        {
+          opts: {
+            url: 'http://localhost:9999/sessions/',
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Bugsnag-Api-Key': 'aaaaaaaa',
+              'Bugsnag-Integrity': expect.stringContaining('sha1 '),
+              'Bugsnag-Payload-Version': '1',
+              'Bugsnag-Sent-At': expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/)
+            }
+          },
+          body: expect.stringContaining('{"sessions"')
+        },
+        expect.any(Function))
+      done()
+    })
+  })
+
   it('does not send an event marked with event.attemptImmediateDelivery=false', done => {
     const payload = {
       events: [{ errors: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }] }],

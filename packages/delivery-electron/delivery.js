@@ -72,7 +72,7 @@ const delivery = (client, filestore, net) => {
           cb(null)
         })
       } catch (e) {
-        onerror(e, { url, opts }, 'event', cb)
+        onerror(e, { opts, body }, 'event', cb)
       }
     },
 
@@ -99,7 +99,7 @@ const delivery = (client, filestore, net) => {
           cb(null)
         })
       } catch (e) {
-        onerror(e, { url, opts }, 'session', cb)
+        onerror(e, { opts, body }, 'session', cb)
       }
     }
   }
