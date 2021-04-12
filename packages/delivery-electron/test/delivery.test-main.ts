@@ -7,6 +7,7 @@ import { Client } from '@bugsnag/core'
 import PayloadQueue from '../queue'
 import PayloadDeliveryLoop from '../payload-loop'
 import { promises } from 'fs'
+import EventEmitter from 'events'
 const { mkdtemp, rmdir } = promises
 
 const noopLogger = {
@@ -17,7 +18,11 @@ const noopLogger = {
 }
 
 const makeClient = (config: any = {}, logger: any = noopLogger) => {
-  return { _config: config, _logger: logger } as unknown as Client
+  return {
+    _config: config,
+    _logger: logger,
+    getPlugin: () => { return { emitter: new EventEmitter() } }
+  } as unknown as Client
 }
 
 jest.mock('../queue')
@@ -309,11 +314,51 @@ describe('delivery: electron', () => {
 
   it('starts the redelivery loop if there is a connection', done => {
     PayloadDeliveryLoopMock.mockImplementation(() => ({
-      start: () => {
-        done()
-      }
+      start: done,
+      stop: () => {}
     } as any))
 
+    const net = { online: true }
     delivery(filestore, net)(makeClient())
+  })
+
+  it('does not start the redelivery loop if there is no connection', done => {
+    PayloadDeliveryLoopMock.mockImplementation(() => ({
+      start: done.fail,
+      stop: done
+    } as any))
+
+    const net = { online: false }
+    delivery(filestore, net)(makeClient())
+  })
+
+  it('starts the redelivery loop when a connection becomes available', done => {
+    PayloadDeliveryLoopMock.mockImplementation(() => ({
+      start: done,
+      stop: () => {}
+    } as any))
+
+    const net = { online: false }
+    const client = makeClient()
+    const emitter = new EventEmitter()
+    client.getPlugin = (_name: string) => { return { emitter } }
+    delivery(filestore, net)(client)
+
+    emitter.emit('MetadataUpdate', { section: 'device', values: { online: true } }, null)
+  })
+
+  it('stops the redelivery loop when a connection is lost', done => {
+    PayloadDeliveryLoopMock.mockImplementation(() => ({
+      start: () => {},
+      stop: done
+    } as any))
+
+    const net = { online: true }
+    const client = makeClient()
+    const emitter = new EventEmitter()
+    client.getPlugin = (_name: string) => { return { emitter } }
+    delivery(filestore, net)(client)
+
+    emitter.emit('MetadataUpdate', { section: 'device', values: { online: false } }, null)
   })
 })

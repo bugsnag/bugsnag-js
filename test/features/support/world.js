@@ -58,8 +58,12 @@ BeforeAll({ timeout: 240 * 1000 }, async () => {
   global.automator = new Automator(app)
 })
 
-Before(() => {
-  global.server.start()
+Before('@not_windows', () => {
+  if (process.platform === 'win32') return 'skipped'
+})
+
+Before(async () => {
+  await global.server.start()
 })
 
 // allow a few seconds to terminate the app, including retries
@@ -73,7 +77,10 @@ After({ timeout: 15_000 }, async ({ result, pickle }) => {
     await global.server.writeUploadsTo(output)
   }
   await global.automator.stop() // start the app fresh every scenario
+  // clear caches once the app stops running, to avoid sneaky requests in
+  // future tests
   global.server.clear()
+  await global.automator.clearCache()
 })
 
 AfterAll(async () => {
