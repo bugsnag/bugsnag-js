@@ -1,13 +1,13 @@
 # Changelog
 
-## TBD
+## v7.9.3 (2021-04-12)
 
 ### Changed
 
 - (react-native): Update bugsnag-cocoa to v6.8.3
   - Catch exceptions thrown while preparing JSON for upload rather than crashing. [bugsnag-cocoa#1063](https://github.com/bugsnag/bugsnag-cocoa/pull/1063)
   - Prevent app hangs being reported if a debugger is attached. [bugsnag-cocoa#1058](https://github.com/bugsnag/bugsnag-cocoa/pull/1058)
-  - Improve support for Mac Catalyst and iOS apps running on macOS. 
+  - Improve support for Mac Catalyst and iOS apps running on macOS.
   [bugsnag-cocoa#1056](https://github.com/bugsnag/bugsnag-cocoa/pull/1056)
   [bugsnag-cocoa#1055](https://github.com/bugsnag/bugsnag-cocoa/pull/1055)
   [bugsnag-cocoa#1053](https://github.com/bugsnag/bugsnag-cocoa/pull/1053)
