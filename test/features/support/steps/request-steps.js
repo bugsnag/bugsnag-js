@@ -116,6 +116,10 @@ Then('the headers of every {word} request contains:', (requestType, data) => {
   expect(requestsMatchingHeaders(requests, data).length).toEqual(requests.length)
 })
 
+Then('the contents of every {word} request matches {string}', async (requestType, fixture) => {
+  expect(readPayloads(global.server.uploadsForType(requestType))).toContainPayload(await readFixtureFile(fixture), { allowMultipleMatches: true })
+})
+
 Then('the contents of a(n) {word} request matches {string}', async (requestType, fixture) => {
   expect(readPayloads(global.server.uploadsForType(requestType))).toContainPayload(await readFixtureFile(fixture))
 })
