@@ -1,6 +1,18 @@
 module.exports = class NetworkStatus {
-  constructor ({ emitter }, net = {}) {
-    this.isConnected = typeof net.online === 'boolean' ? net.online : true
+  constructor ({ emitter }, net, app) {
+    this.isReady = app.isReady()
+
+    // if the app isn't ready, emit an update when it is
+    if (!this.isReady) {
+      app.whenReady().then(() => {
+        this.isReady = true
+        this._update(net.online)
+      })
+    }
+
+    // the net module can't be used if the app is ready, so act as if we're
+    // offline until then
+    this.isConnected = this.isReady ? net.online : false
     this._watchers = []
 
     emitter.on('MetadataUpdate', ({ section, values }) => {
@@ -22,7 +34,11 @@ module.exports = class NetworkStatus {
   }
 
   _update (isConnected) {
-    if (typeof isConnected !== 'boolean' || isConnected === this.isConnected) return
+    // ignore the update if the app is not ready or this is a duplicate
+    if (typeof isConnected !== 'boolean' || isConnected === this.isConnected || this.isReady === false) {
+      return
+    }
+
     this.isConnected = isConnected
     this._watchers.forEach(w => w(this.isConnected))
   }

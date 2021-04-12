@@ -41,7 +41,7 @@ module.exports = (opts) => {
 
   const bugsnag = new Client(opts, schema, internalPlugins, require('../id'))
 
-  bugsnag._setDelivery(makeDelivery(filestore, electron.net))
+  bugsnag._setDelivery(makeDelivery(filestore, electron.net, electron.app))
 
   bugsnag._logger.debug('Loaded! In main process.')
 

@@ -4,7 +4,7 @@ const PayloadQueue = require('./queue')
 const PayloadDeliveryLoop = require('./payload-loop')
 const NetworkStatus = require('./network-status')
 
-const delivery = (client, filestore, net) => {
+const delivery = (client, filestore, net, app) => {
   const send = (opts, body, cb) => {
     const req = net.request(opts, response => {
       if (isOk(response)) {
@@ -34,7 +34,7 @@ const delivery = (client, filestore, net) => {
   }
 
   const syncPlugin = client.getPlugin('stateSync')
-  const statusUpdater = new NetworkStatus(syncPlugin, net)
+  const statusUpdater = new NetworkStatus(syncPlugin, net, app)
   const { queues } = initRedelivery(filestore.getPaths(), statusUpdater, client._logger, send)
 
   const hash = payload => {
@@ -61,12 +61,15 @@ const delivery = (client, filestore, net) => {
             'Bugsnag-Sent-At': (new Date()).toISOString()
           }
         }
-        if (event.attemptImmediateDelivery === false) {
+
+        if (event.attemptImmediateDelivery === false || statusUpdater.isConnected === false) {
           enqueue('event', { opts, body })
           return cb(null)
         }
+
         const { errorClass, errorMessage } = event.events[0].errors[0]
         client._logger.info(`Sending event ${errorClass}: ${errorMessage}`)
+
         send(opts, body, err => {
           if (err) return onerror(err, { opts, body }, 'event', cb)
           cb(null)
@@ -93,7 +96,14 @@ const delivery = (client, filestore, net) => {
             'Bugsnag-Sent-At': (new Date()).toISOString()
           }
         }
+
+        if (statusUpdater.isConnected === false) {
+          enqueue('session', { opts, body })
+          return cb(null)
+        }
+
         client._logger.info('Sending session')
+
         send(opts, body, err => {
           if (err) return onerror(err, { opts, body }, 'session', cb)
           cb(null)
@@ -149,4 +159,4 @@ const isRetryable = status => {
 
 const isOk = response => [200, 202].includes(response.statusCode)
 
-module.exports = (filestore, net) => client => delivery(client, filestore, net)
+module.exports = (filestore, net, app) => client => delivery(client, filestore, net, app)
