@@ -11,6 +11,7 @@
 #import <Bugsnag/BugsnagConfiguration.h>
 #import <Bugsnag/BugsnagErrorTypes.h>
 
+#import "BSG_KSMach.h"
 #import "BugsnagLogger.h"
 #import "BugsnagThread+Recording.h"
 #import "BugsnagThread+Private.h"
@@ -74,6 +75,12 @@
             dispatch_time_t timeout = dispatch_time(now, (int64_t)(threshold * NSEC_PER_SEC));
             dispatch_after(after, backgroundQueue, ^{
                 if (dispatch_semaphore_wait(semaphore, timeout) != 0) {
+                    if (bsg_ksmachisBeingTraced()) {
+                        bsg_log_debug("Ignoring app hang because debugger is attached");
+                        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+                        return;
+                    }
+                    
                     bsg_log_info("App hang detected");
                     
                     NSArray<BugsnagThread *> *threads = nil;

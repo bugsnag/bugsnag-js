@@ -71,31 +71,6 @@
  */
 - (BOOL)install:(NSString *)directory;
 
-/** Report a custom, user defined exception.
- * This can be useful when dealing with scripting languages.
- *
- * If terminateProgram is true, all sentries will be uninstalled and the
- * application will terminate with an abort().
- *
- * @param name The exception name (for namespacing exception types).
- * @param reason A description of why the exception occurred
- * @param handledState The severity, reason, and handled-ness of the report
- * @param appState breadcrumbs and other app environmental info
- * @param overrides Report fields overridden by callbacks, collated in the
- *        final report
- * @param eventOverrides the Bugsnag Error Payload, for handled errors only
- * @param metadata additional information to attach to the report
- * @param config delivery options
- */
-- (void)reportUserException:(NSString *)name
-                     reason:(NSString *)reason
-               handledState:(NSDictionary *)handledState
-                   appState:(NSDictionary *)appState
-          callbackOverrides:(NSDictionary *)overrides
-             eventOverrides:(NSDictionary *)eventOverrides
-                   metadata:(NSDictionary *)metadata
-                     config:(NSDictionary *)config;
-
 /**
  * Collects information about the application's foreground state (duration in foreground/background)
  */
@@ -111,11 +86,6 @@
 * The methodology used for tracing threads.
  */
 @property(nonatomic, readwrite, assign) BOOL threadTracingEnabled;
-
-/**
- * If YES, binary images will be collected for each report.
- */
-@property(nonatomic, readwrite, assign) BOOL writeBinaryImagesForUserReported;
 
 @end
 
