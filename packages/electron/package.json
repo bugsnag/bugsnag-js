@@ -24,6 +24,7 @@
     "@bugsnag/plugin-electron-app-breadcrumbs": "1.0.0",
     "@bugsnag/plugin-electron-device": "1.0.0",
     "@bugsnag/plugin-electron-ipc": "1.0.0",
+    "@bugsnag/plugin-electron-net-breadcrumbs": "^1.0.0",
     "@bugsnag/plugin-electron-network-status": "1.0.0",
     "@bugsnag/plugin-electron-preload-error": "^1.0.0",
     "@bugsnag/plugin-electron-renderer-client-sync": "1.0.0",
