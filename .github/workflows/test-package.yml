@@ -58,3 +58,8 @@ jobs:
         START_LOCAL_NPM: 1
         VERBOSE: 1
         ELECTRON_VERSION: ${{ matrix.electron }}
+    - uses: actions/upload-artifact@v2
+      if: failure()
+      with:
+        name: cucumber-failures
+        path: .cucumber-failures/
