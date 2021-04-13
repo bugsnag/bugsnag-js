@@ -19,6 +19,7 @@ module.exports = class RedeliveryLoop {
     this._timer = null
     this._stopped = true
     this._redeliver = this._redeliver.bind(this)
+    this._sending = false
   }
 
   stop () {
@@ -40,6 +41,10 @@ module.exports = class RedeliveryLoop {
 
   async _redeliver () {
     try {
+      if (this._sending) {
+        return
+      }
+
       // pop a failed request off of the queue
       const res = await this._queue.peek()
 
@@ -48,6 +53,8 @@ module.exports = class RedeliveryLoop {
         this.stop()
         return
       }
+
+      this._sending = true
 
       const { path, payload } = res
 
@@ -72,10 +79,13 @@ module.exports = class RedeliveryLoop {
         } catch (e) {
           this._onerror(e)
           this._schedule(0)
+        } finally {
+          this._sending = false
         }
       })
     } catch (e) {
       this._onerror(e)
+      this._sending = false
     }
   }
 }
