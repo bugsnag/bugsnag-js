@@ -432,8 +432,7 @@ uintptr_t *bsg_kscrw_i_getBacktrace(
     if (thread == crash->offendingThread) {
         if (crash->stackTrace != NULL && crash->stackTraceLength > 0 &&
             (crash->crashType &
-             (BSG_KSCrashTypeCPPException | BSG_KSCrashTypeNSException |
-              BSG_KSCrashTypeUserReported))) {
+             (BSG_KSCrashTypeCPPException | BSG_KSCrashTypeNSException))) {
             *backtraceLength = crash->stackTraceLength;
             return crash->stackTrace;
         }
@@ -521,11 +520,6 @@ void bsg_kscrw_i_logCrashType(
         const char *sigCodeName = bsg_kssignal_signalCodeName(sigNum, sigCode);
         BSG_KSLOGBASIC_INFO("App crashed due to signal: [%s, %s] at %08x",
                             sigName, sigCodeName, sentryContext->faultAddress);
-        break;
-    }
-    case BSG_KSCrashTypeUserReported: {
-        BSG_KSLOG_INFO("App crashed due to user specified exception: %s",
-                       sentryContext->crashReason);
         break;
     }
     }
@@ -632,10 +626,6 @@ void bsg_kscrw_i_writeTraceInfo(const BSG_KSCrash_Context *crashContext,
 bool bsg_kscrw_i_exceedsBufferLen(const size_t length);
 
 void bsg_kscrashreport_writeKSCrashFields(BSG_KSCrash_Context *crashContext, BSG_KSCrashReportWriter *writer);
-
-void bsg_kscrashreport_writeBugsnagPayload(const BSG_KSCrash_Context *crashContext, const BSG_KSCrashReportWriter *writer);
-
-void bsg_kscrashreport_writeOverrides(const BSG_KSCrash_Context *crashContext, const BSG_KSCrashReportWriter *writer);
 
 /** Write the contents of a memory location.
  * Also writes meta information about the data.
@@ -1245,11 +1235,6 @@ void bsg_kscrw_i_writeError(const BSG_KSCrashReportWriter *const writer,
         sigCode = crash->signal.signalInfo->si_code;
         machExceptionType = bsg_kssignal_machExceptionForSignal(sigNum);
         break;
-    case BSG_KSCrashTypeUserReported:
-        machExceptionType = EXC_CRASH;
-        sigNum = SIGABRT;
-        crashReason = crash->crashReason;
-        break;
     }
 
     const char *machExceptionName = bsg_ksmachexceptionName(machExceptionType);
@@ -1260,11 +1245,8 @@ void bsg_kscrw_i_writeError(const BSG_KSCrashReportWriter *const writer,
 
     writer->beginObject(writer, key);
     {
-
-        if (BSG_KSCrashTypeUserReported != crash->crashType) {
-            writer->addUIntegerElement(writer, BSG_KSCrashField_Address,
-                                       crash->faultAddress);
-        }
+        writer->addUIntegerElement(writer, BSG_KSCrashField_Address,
+                                   crash->faultAddress);
 
         if (crashReason != NULL) {
             writer->addStringElement(writer, BSG_KSCrashField_Reason,
@@ -1346,18 +1328,6 @@ void bsg_kscrw_i_writeError(const BSG_KSCrashReportWriter *const writer,
             writer->addStringElement(writer, BSG_KSCrashField_Type,
                                      BSG_KSCrashExcType_Signal);
             break;
-
-        case BSG_KSCrashTypeUserReported: {
-            writer->addStringElement(writer, BSG_KSCrashField_Type,
-                                     BSG_KSCrashExcType_User);
-            writer->beginObject(writer, BSG_KSCrashField_UserReported);
-            {
-                writer->addStringElement(writer, BSG_KSCrashField_Name,
-                                         crash->userException.name);
-            }
-            writer->endContainer(writer);
-            break;
-        }
         }
     }
     writer->endContainer(writer);
@@ -1581,19 +1551,13 @@ void bsg_kscrashreport_writeStandardReport(
     bsg_ksjsonbeginEncode(bsg_getJsonContext(writer), false,
                           bsg_kscrw_i_addJSONData, &fd);
 
-    // KSCrash report fields are not required for handled errors as
-    // they serialize info in the bugsnag payload JSON schema instead.
-    bool recordKSCrashFields = crashContext->crash.userException.eventOverrides == NULL;
-
     writer->beginObject(writer, BSG_KSCrashField_Report);
     {
         bsg_kscrw_i_writeReportInfo(
                 writer, BSG_KSCrashField_Report, BSG_KSCrashReportType_Standard,
                 crashContext->config.crashID, crashContext->config.processName);
 
-        if (recordKSCrashFields) {
-            bsg_kscrashreport_writeKSCrashFields(crashContext, writer);
-        }
+        bsg_kscrashreport_writeKSCrashFields(crashContext, writer);
 
         if (crashContext->config.onCrashNotify != NULL) {
             // NOTE: The deny list for BSG_KSCrashField_UserAtCrash children in BugsnagEvent.m
@@ -1601,17 +1565,6 @@ void bsg_kscrashreport_writeStandardReport(
 
             // Write handled exception report info
             writer->beginObject(writer, BSG_KSCrashField_UserAtCrash);
-            if (crashContext->crash.crashType == BSG_KSCrashTypeUserReported) {
-                if (crashContext->crash.userException.overrides != NULL) {
-                    writer->addJSONElement(writer, BSG_KSCrashField_Overrides,
-                            crashContext->crash.userException.overrides);
-                }
-                if (recordKSCrashFields) {
-                    bsg_kscrashreport_writeOverrides(crashContext, writer);
-                } else {
-                    bsg_kscrashreport_writeBugsnagPayload(crashContext, writer);
-                }
-            }
             { bsg_kscrw_i_callUserCrashHandler(crashContext, writer); }
             writer->endContainer(writer);
         }
@@ -1621,34 +1574,6 @@ void bsg_kscrashreport_writeStandardReport(
     bsg_ksjsonendEncode(bsg_getJsonContext(writer));
 
     close(fd);
-}
-
-void bsg_kscrashreport_writeBugsnagPayload(const BSG_KSCrash_Context *crashContext,
-                                           const BSG_KSCrashReportWriter *writer) {
-    if (crashContext->crash.userException.eventOverrides != NULL) {
-        writer->addJSONElement(writer, BSG_KSCrashField_EventJson,
-                crashContext->crash.userException.eventOverrides);
-    }
-}
-
-void bsg_kscrashreport_writeOverrides(const BSG_KSCrash_Context *crashContext,
-                                      const BSG_KSCrashReportWriter *writer) {
-    if (crashContext->crash.userException.handledState != NULL) {
-        writer->addJSONElement(writer, BSG_KSCrashField_HandledState,
-                crashContext->crash.userException.handledState);
-    }
-    if (crashContext->crash.userException.metadata != NULL) {
-        writer->addJSONElement(writer, BSG_KSCrashField_Metadata,
-                crashContext->crash.userException.metadata);
-    }
-    if (crashContext->crash.userException.state != NULL) {
-        writer->addJSONElement(writer, BSG_KSCrashField_State,
-                crashContext->crash.userException.state);
-    }
-    if (crashContext->crash.userException.config != NULL) {
-        writer->addJSONElement(writer, BSG_KSCrashField_Config,
-                crashContext->crash.userException.config);
-    }
 }
 
 void bsg_kscrashreport_writeKSCrashFields(BSG_KSCrash_Context *crashContext, BSG_KSCrashReportWriter *writer) {
@@ -1684,10 +1609,7 @@ void bsg_kscrw_i_writeTraceInfo(const BSG_KSCrash_Context *crashContext,
                                 const BSG_KSCrashReportWriter *writer) {
     const BSG_KSCrash_SentryContext *crash = &crashContext->crash;
 
-    // Don't write the binary images for user reported crashes to improve performance
-    if (crash->writeBinaryImagesForUserReported == true || crash->crashType != BSG_KSCrashTypeUserReported) {
-        bsg_kscrw_i_writeBinaryImages(writer, BSG_KSCrashField_BinaryImages);
-    }
+    bsg_kscrw_i_writeBinaryImages(writer, BSG_KSCrashField_BinaryImages);
     writer->beginObject(writer, BSG_KSCrashField_Crash);
     {
         bsg_kscrw_i_writeAllThreads(writer, BSG_KSCrashField_Threads, crash,

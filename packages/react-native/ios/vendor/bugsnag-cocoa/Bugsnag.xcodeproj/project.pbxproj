@@ -530,9 +530,6 @@
 		00896A082486DAD100DC48C2 /* BSG_KSCrashSentry_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 0089693D2486DAD000DC48C2 /* BSG_KSCrashSentry_Private.h */; };
 		00896A092486DAD100DC48C2 /* BSG_KSCrashSentry_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 0089693D2486DAD000DC48C2 /* BSG_KSCrashSentry_Private.h */; };
 		00896A0A2486DAD100DC48C2 /* BSG_KSCrashSentry_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 0089693D2486DAD000DC48C2 /* BSG_KSCrashSentry_Private.h */; };
-		00896A0B2486DAD100DC48C2 /* BSG_KSCrashSentry_User.c in Sources */ = {isa = PBXBuildFile; fileRef = 0089693E2486DAD000DC48C2 /* BSG_KSCrashSentry_User.c */; };
-		00896A0C2486DAD100DC48C2 /* BSG_KSCrashSentry_User.c in Sources */ = {isa = PBXBuildFile; fileRef = 0089693E2486DAD000DC48C2 /* BSG_KSCrashSentry_User.c */; };
-		00896A0D2486DAD100DC48C2 /* BSG_KSCrashSentry_User.c in Sources */ = {isa = PBXBuildFile; fileRef = 0089693E2486DAD000DC48C2 /* BSG_KSCrashSentry_User.c */; };
 		00896A0E2486DAD100DC48C2 /* BSG_KSCrashSentry.h in Headers */ = {isa = PBXBuildFile; fileRef = 0089693F2486DAD000DC48C2 /* BSG_KSCrashSentry.h */; };
 		00896A0F2486DAD100DC48C2 /* BSG_KSCrashSentry.h in Headers */ = {isa = PBXBuildFile; fileRef = 0089693F2486DAD000DC48C2 /* BSG_KSCrashSentry.h */; };
 		00896A102486DAD100DC48C2 /* BSG_KSCrashSentry.h in Headers */ = {isa = PBXBuildFile; fileRef = 0089693F2486DAD000DC48C2 /* BSG_KSCrashSentry.h */; };
@@ -554,9 +551,6 @@
 		00896A202486DAD100DC48C2 /* BSG_KSCrashSentry.c in Sources */ = {isa = PBXBuildFile; fileRef = 008969452486DAD000DC48C2 /* BSG_KSCrashSentry.c */; };
 		00896A212486DAD100DC48C2 /* BSG_KSCrashSentry.c in Sources */ = {isa = PBXBuildFile; fileRef = 008969452486DAD000DC48C2 /* BSG_KSCrashSentry.c */; };
 		00896A222486DAD100DC48C2 /* BSG_KSCrashSentry.c in Sources */ = {isa = PBXBuildFile; fileRef = 008969452486DAD000DC48C2 /* BSG_KSCrashSentry.c */; };
-		00896A232486DAD100DC48C2 /* BSG_KSCrashSentry_User.h in Headers */ = {isa = PBXBuildFile; fileRef = 008969462486DAD000DC48C2 /* BSG_KSCrashSentry_User.h */; };
-		00896A242486DAD100DC48C2 /* BSG_KSCrashSentry_User.h in Headers */ = {isa = PBXBuildFile; fileRef = 008969462486DAD000DC48C2 /* BSG_KSCrashSentry_User.h */; };
-		00896A252486DAD100DC48C2 /* BSG_KSCrashSentry_User.h in Headers */ = {isa = PBXBuildFile; fileRef = 008969462486DAD000DC48C2 /* BSG_KSCrashSentry_User.h */; };
 		00896A262486DAD100DC48C2 /* BSG_KSCrashSentry_Signal.h in Headers */ = {isa = PBXBuildFile; fileRef = 008969472486DAD000DC48C2 /* BSG_KSCrashSentry_Signal.h */; };
 		00896A272486DAD100DC48C2 /* BSG_KSCrashSentry_Signal.h in Headers */ = {isa = PBXBuildFile; fileRef = 008969472486DAD000DC48C2 /* BSG_KSCrashSentry_Signal.h */; };
 		00896A282486DAD100DC48C2 /* BSG_KSCrashSentry_Signal.h in Headers */ = {isa = PBXBuildFile; fileRef = 008969472486DAD000DC48C2 /* BSG_KSCrashSentry_Signal.h */; };
@@ -884,7 +878,6 @@
 		E7462914248907E500F92D67 /* BSG_KSString.c in Sources */ = {isa = PBXBuildFile; fileRef = 008969242486DAD000DC48C2 /* BSG_KSString.c */; };
 		E7462915248907E500F92D67 /* BSG_KSObjC.c in Sources */ = {isa = PBXBuildFile; fileRef = 008969252486DAD000DC48C2 /* BSG_KSObjC.c */; };
 		E7462916248907E500F92D67 /* BSG_KSCrashType.c in Sources */ = {isa = PBXBuildFile; fileRef = 0089692B2486DAD000DC48C2 /* BSG_KSCrashType.c */; };
-		E7462917248907E500F92D67 /* BSG_KSCrashSentry_User.c in Sources */ = {isa = PBXBuildFile; fileRef = 0089693E2486DAD000DC48C2 /* BSG_KSCrashSentry_User.c */; };
 		E7462918248907E500F92D67 /* BSG_KSCrashSentry_Signal.c in Sources */ = {isa = PBXBuildFile; fileRef = 008969412486DAD000DC48C2 /* BSG_KSCrashSentry_Signal.c */; };
 		E7462919248907E500F92D67 /* BSG_KSCrashSentry_MachException.c in Sources */ = {isa = PBXBuildFile; fileRef = 008969432486DAD000DC48C2 /* BSG_KSCrashSentry_MachException.c */; };
 		E746291A248907E500F92D67 /* BSG_KSCrashSentry.c in Sources */ = {isa = PBXBuildFile; fileRef = 008969452486DAD000DC48C2 /* BSG_KSCrashSentry.c */; };
@@ -958,7 +951,6 @@
 		E746298A24890D3200F92D67 /* BSG_KSCrashSentry.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0089693F2486DAD000DC48C2 /* BSG_KSCrashSentry.h */; };
 		E746298B24890D3200F92D67 /* BSG_KSCrashSentry_CPPException.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 008969402486DAD000DC48C2 /* BSG_KSCrashSentry_CPPException.h */; };
 		E746298C24890D3200F92D67 /* BSG_KSCrashSentry_NSException.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 008969442486DAD000DC48C2 /* BSG_KSCrashSentry_NSException.h */; };
-		E746298D24890D3200F92D67 /* BSG_KSCrashSentry_User.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 008969462486DAD000DC48C2 /* BSG_KSCrashSentry_User.h */; };
 		E746298E24890D3200F92D67 /* BSG_KSCrashSentry_Signal.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 008969472486DAD000DC48C2 /* BSG_KSCrashSentry_Signal.h */; };
 		E746298F24890D3200F92D67 /* BSG_KSCrashType.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 008969482486DAD000DC48C2 /* BSG_KSCrashType.h */; };
 		E746299024890D3200F92D67 /* BSG_KSCrashIdentifier.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0089694A2486DAD000DC48C2 /* BSG_KSCrashIdentifier.h */; };
@@ -1071,7 +1063,6 @@
 				E746298A24890D3200F92D67 /* BSG_KSCrashSentry.h in CopyFiles */,
 				E746298B24890D3200F92D67 /* BSG_KSCrashSentry_CPPException.h in CopyFiles */,
 				E746298C24890D3200F92D67 /* BSG_KSCrashSentry_NSException.h in CopyFiles */,
-				E746298D24890D3200F92D67 /* BSG_KSCrashSentry_User.h in CopyFiles */,
 				E746298E24890D3200F92D67 /* BSG_KSCrashSentry_Signal.h in CopyFiles */,
 				E746298F24890D3200F92D67 /* BSG_KSCrashType.h in CopyFiles */,
 				E746299024890D3200F92D67 /* BSG_KSCrashIdentifier.h in CopyFiles */,
@@ -1254,7 +1245,6 @@
 		0089693B2486DAD000DC48C2 /* BSG_KSCrashSentry_NSException.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BSG_KSCrashSentry_NSException.m; sourceTree = "<group>"; };
 		0089693C2486DAD000DC48C2 /* BSG_KSCrashSentry_MachException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSG_KSCrashSentry_MachException.h; sourceTree = "<group>"; };
 		0089693D2486DAD000DC48C2 /* BSG_KSCrashSentry_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSG_KSCrashSentry_Private.h; sourceTree = "<group>"; };
-		0089693E2486DAD000DC48C2 /* BSG_KSCrashSentry_User.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BSG_KSCrashSentry_User.c; sourceTree = "<group>"; };
 		0089693F2486DAD000DC48C2 /* BSG_KSCrashSentry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSG_KSCrashSentry.h; sourceTree = "<group>"; };
 		008969402486DAD000DC48C2 /* BSG_KSCrashSentry_CPPException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSG_KSCrashSentry_CPPException.h; sourceTree = "<group>"; };
 		008969412486DAD000DC48C2 /* BSG_KSCrashSentry_Signal.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BSG_KSCrashSentry_Signal.c; sourceTree = "<group>"; };
@@ -1262,7 +1252,6 @@
 		008969432486DAD000DC48C2 /* BSG_KSCrashSentry_MachException.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BSG_KSCrashSentry_MachException.c; sourceTree = "<group>"; };
 		008969442486DAD000DC48C2 /* BSG_KSCrashSentry_NSException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSG_KSCrashSentry_NSException.h; sourceTree = "<group>"; };
 		008969452486DAD000DC48C2 /* BSG_KSCrashSentry.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BSG_KSCrashSentry.c; sourceTree = "<group>"; };
-		008969462486DAD000DC48C2 /* BSG_KSCrashSentry_User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSG_KSCrashSentry_User.h; sourceTree = "<group>"; };
 		008969472486DAD000DC48C2 /* BSG_KSCrashSentry_Signal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSG_KSCrashSentry_Signal.h; sourceTree = "<group>"; };
 		008969482486DAD000DC48C2 /* BSG_KSCrashType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSG_KSCrashType.h; sourceTree = "<group>"; };
 		008969492486DAD000DC48C2 /* BSG_KSCrashReport.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BSG_KSCrashReport.c; sourceTree = "<group>"; };
@@ -1308,7 +1297,6 @@
 		0126DEE7257A8B0F0031A70C /* BugsnagDevice+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BugsnagDevice+Private.h"; sourceTree = "<group>"; };
 		0126DEEF257A8C3D0031A70C /* BugsnagDeviceWithState+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BugsnagDeviceWithState+Private.h"; sourceTree = "<group>"; };
 		0126DF1A257A92860031A70C /* BugsnagSession+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "BugsnagSession+Private.h"; sourceTree = "<group>"; };
-		0126DF2C257A92D70031A70C /* BugsnagStacktrace+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BugsnagStacktrace+Private.h"; sourceTree = "<group>"; };
 		0126DF34257A94740031A70C /* BugsnagUser+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BugsnagUser+Private.h"; sourceTree = "<group>"; };
 		0126F78925DD508C008483C2 /* BSGEventUploadOperation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BSGEventUploadOperation.h; sourceTree = "<group>"; };
 		0126F78A25DD508C008483C2 /* BSGEventUploadOperation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BSGEventUploadOperation.m; sourceTree = "<group>"; };
@@ -1644,8 +1632,6 @@
 				0089693D2486DAD000DC48C2 /* BSG_KSCrashSentry_Private.h */,
 				008969412486DAD000DC48C2 /* BSG_KSCrashSentry_Signal.c */,
 				008969472486DAD000DC48C2 /* BSG_KSCrashSentry_Signal.h */,
-				0089693E2486DAD000DC48C2 /* BSG_KSCrashSentry_User.c */,
-				008969462486DAD000DC48C2 /* BSG_KSCrashSentry_User.h */,
 				008969452486DAD000DC48C2 /* BSG_KSCrashSentry.c */,
 				0089693F2486DAD000DC48C2 /* BSG_KSCrashSentry.h */,
 			);
@@ -1903,7 +1889,6 @@
 				0198762E2567D5AB000A7AF3 /* BugsnagStackframe+Private.h */,
 				0089684F2486DA9400DC48C2 /* BugsnagStacktrace.h */,
 				0089685C2486DA9500DC48C2 /* BugsnagStacktrace.m */,
-				0126DF2C257A92D70031A70C /* BugsnagStacktrace+Private.h */,
 				008968552486DA9400DC48C2 /* BugsnagStateEvent.h */,
 				008968582486DA9500DC48C2 /* BugsnagStateEvent.m */,
 				008968612486DA9500DC48C2 /* BugsnagThread.m */,
@@ -2092,7 +2077,6 @@
 				008969D22486DAD100DC48C2 /* BSG_KSCrashContext.h in Headers */,
 				008967D72486DA2D00DC48C2 /* BSGConfigurationBuilder.h in Headers */,
 				008969812486DAD100DC48C2 /* BSG_KSObjC.h in Headers */,
-				00896A232486DAD100DC48C2 /* BSG_KSCrashSentry_User.h in Headers */,
 				008969A22486DAD100DC48C2 /* BSG_KSDynamicLinker.h in Headers */,
 				008969B42486DAD100DC48C2 /* BSG_KSObjCApple.h in Headers */,
 				CBE9062A25A34DAB0045B965 /* BSGStorageMigratorV0V1.h in Headers */,
@@ -2196,7 +2180,6 @@
 				008969D32486DAD100DC48C2 /* BSG_KSCrashContext.h in Headers */,
 				008967D82486DA2D00DC48C2 /* BSGConfigurationBuilder.h in Headers */,
 				008969822486DAD100DC48C2 /* BSG_KSObjC.h in Headers */,
-				00896A242486DAD100DC48C2 /* BSG_KSCrashSentry_User.h in Headers */,
 				008969A32486DAD100DC48C2 /* BSG_KSDynamicLinker.h in Headers */,
 				008969B52486DAD100DC48C2 /* BSG_KSObjCApple.h in Headers */,
 				008969942486DAD100DC48C2 /* BSG_KSLogger.h in Headers */,
@@ -2300,7 +2283,6 @@
 				008969D42486DAD100DC48C2 /* BSG_KSCrashContext.h in Headers */,
 				008967D92486DA2D00DC48C2 /* BSGConfigurationBuilder.h in Headers */,
 				008969832486DAD100DC48C2 /* BSG_KSObjC.h in Headers */,
-				00896A252486DAD100DC48C2 /* BSG_KSCrashSentry_User.h in Headers */,
 				008969A42486DAD100DC48C2 /* BSG_KSDynamicLinker.h in Headers */,
 				008969B62486DAD100DC48C2 /* BSG_KSObjCApple.h in Headers */,
 				008969952486DAD100DC48C2 /* BSG_KSLogger.h in Headers */,
@@ -2662,7 +2644,6 @@
 				00896A202486DAD100DC48C2 /* BSG_KSCrashSentry.c in Sources */,
 				00AD1F272486A17900A27979 /* BugsnagCrashSentry.m in Sources */,
 				008968B22486DA9600DC48C2 /* BugsnagDeviceWithState.m in Sources */,
-				00896A0B2486DAD100DC48C2 /* BSG_KSCrashSentry_User.c in Sources */,
 				0089682F2486DA5600DC48C2 /* BugsnagCollections.m in Sources */,
 				0089698D2486DAD100DC48C2 /* BSG_KSMach.c in Sources */,
 			);
@@ -2833,7 +2814,6 @@
 				00896A212486DAD100DC48C2 /* BSG_KSCrashSentry.c in Sources */,
 				00AD1F282486A17900A27979 /* BugsnagCrashSentry.m in Sources */,
 				008968B32486DA9600DC48C2 /* BugsnagDeviceWithState.m in Sources */,
-				00896A0C2486DAD100DC48C2 /* BSG_KSCrashSentry_User.c in Sources */,
 				008968302486DA5600DC48C2 /* BugsnagCollections.m in Sources */,
 				0089698E2486DAD100DC48C2 /* BSG_KSMach.c in Sources */,
 			);
@@ -3002,7 +2982,6 @@
 				00896A222486DAD100DC48C2 /* BSG_KSCrashSentry.c in Sources */,
 				00AD1F292486A17900A27979 /* BugsnagCrashSentry.m in Sources */,
 				008968B42486DA9600DC48C2 /* BugsnagDeviceWithState.m in Sources */,
-				00896A0D2486DAD100DC48C2 /* BSG_KSCrashSentry_User.c in Sources */,
 				008968312486DA5600DC48C2 /* BugsnagCollections.m in Sources */,
 				0089698F2486DAD100DC48C2 /* BSG_KSMach.c in Sources */,
 			);
@@ -3108,7 +3087,6 @@
 				E7462915248907E500F92D67 /* BSG_KSObjC.c in Sources */,
 				01CCAEF025D414D60057268D /* BugsnagLastRunInfo.m in Sources */,
 				E7462916248907E500F92D67 /* BSG_KSCrashType.c in Sources */,
-				E7462917248907E500F92D67 /* BSG_KSCrashSentry_User.c in Sources */,
 				E7462918248907E500F92D67 /* BSG_KSCrashSentry_Signal.c in Sources */,
 				E7462919248907E500F92D67 /* BSG_KSCrashSentry_MachException.c in Sources */,
 				E746291A248907E500F92D67 /* BSG_KSCrashSentry.c in Sources */,
@@ -3245,6 +3223,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
+				GCC_TREAT_INCOMPATIBLE_POINTER_TYPE_WARNINGS_AS_ERRORS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -3267,6 +3246,7 @@
 				SDKROOT = iphoneos;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
+				WARNING_CFLAGS = "-Werror=incomplete-implementation";
 			};
 			name = Debug;
 		};
@@ -3312,6 +3292,7 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_TREAT_INCOMPATIBLE_POINTER_TYPE_WARNINGS_AS_ERRORS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -3334,6 +3315,7 @@
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
+				WARNING_CFLAGS = "-Werror=incomplete-implementation";
 			};
 			name = Release;
 		};
@@ -3341,6 +3323,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_MODULES_AUTOLINK = NO;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -3355,7 +3338,6 @@
 				);
 				MODULEMAP_FILE = "$(PROJECT_DIR)/Framework/module.modulemap";
 				SKIP_INSTALL = YES;
-				SUPPORTS_MACCATALYST = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -3364,6 +3346,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_MODULES_AUTOLINK = NO;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -3378,7 +3361,6 @@
 				);
 				MODULEMAP_FILE = "$(PROJECT_DIR)/Framework/module.modulemap";
 				SKIP_INSTALL = YES;
-				SUPPORTS_MACCATALYST = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -3596,7 +3578,6 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SUPPORTS_MACCATALYST = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -3608,7 +3589,6 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SUPPORTS_MACCATALYST = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

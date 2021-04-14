@@ -12,9 +12,23 @@
 #import "BugsnagThread+Private.h"
 
 #include "BSG_KSBacktrace_Private.h"
-#include "BSG_KSCrashSentry_User.h"
+#include "BSG_KSCrashSentry_Private.h"
 #include "BSG_KSMach.h"
 
+#include <pthread.h>
+
+// Protect access to thread-unsafe bsg_kscrashsentry_suspendThreads()
+static pthread_mutex_t bsg_suspend_threads_mutex = PTHREAD_MUTEX_INITIALIZER;
+
+static void suspend_threads() {
+    pthread_mutex_lock(&bsg_suspend_threads_mutex);
+    bsg_kscrashsentry_suspendThreads();
+}
+
+static void resume_threads() {
+    bsg_kscrashsentry_resumeThreads();
+    pthread_mutex_unlock(&bsg_suspend_threads_mutex);
+}
 
 #define kMaxAddresses 150 // same as BSG_kMaxBacktraceDepth
 
@@ -54,14 +68,14 @@ static void backtrace_for_thread(thread_t thread, struct backtrace_t *output) {
     thread_t *threads = NULL;
     mach_msg_type_number_t threadCount = 0;
     
-    bsg_kscrashsentry_suspend_threads_user();
+    suspend_threads();
     
     // While threads are suspended only async-signal-safe functions should be used,
     // as another threads may have been suspended while holding a lock in malloc,
     // the Objective-C runtime, or other subsystems.
     
     if (task_threads(mach_task_self(), &threads, &threadCount) != KERN_SUCCESS) {
-        bsg_kscrashsentry_resume_threads_user(false);
+        resume_threads();
         return @[];
     }
     
@@ -76,7 +90,7 @@ static void backtrace_for_thread(thread_t thread, struct backtrace_t *output) {
         }
     }
     
-    bsg_kscrashsentry_resume_threads_user(false);
+    resume_threads();
     
     NSMutableArray *objects = [NSMutableArray arrayWithCapacity:threadCount];
     

@@ -34,7 +34,7 @@
 #import "BugsnagMetadata+Private.h"
 #import "BugsnagLogger.h"
 #import "BugsnagSession+Private.h"
-#import "BugsnagStacktrace+Private.h"
+#import "BugsnagStacktrace.h"
 #import "BugsnagThread+Private.h"
 #import "BugsnagUser+Private.h"
 
@@ -186,9 +186,11 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
     if (self = [super init]) {
         _app = [BugsnagAppWithState appFromJson:json[BSGKeyApp]];
         _breadcrumbs = BSGArrayMap(json[BSGKeyBreadcrumbs], ^id (NSDictionary *json) { return [BugsnagBreadcrumb breadcrumbFromDict:json]; });
+        _context = json[BSGKeyContext];
         _device = [BugsnagDeviceWithState deviceFromJson:json[BSGKeyDevice]];
         _error = json[BSGKeyMetadata][BSGKeyError];
         _errors = BSGArrayMap(json[BSGKeyExceptions], ^id (NSDictionary *json) { return [BugsnagError errorFromJson:json]; });
+        _groupingHash = json[BSGKeyGroupingHash];
         _handledState = [BugsnagHandledState handledStateFromJson:json];
         _metadata = [[BugsnagMetadata alloc] initWithDictionary:json[BSGKeyMetadata]];
         _session = [BugsnagSession fromJson:json[BSGKeySession]];
@@ -340,7 +342,6 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
                                   session:session];
     obj.context = BSGParseContext(event);
     obj.groupingHash = BSGParseGroupingHash(event);
-    obj.overrides = [event valueForKeyPath:@"user.overrides"];
     obj.enabledReleaseStages = BSGLoadConfigValue(event, BSGKeyEnabledReleaseStages);
     obj.releaseStage = BSGParseReleaseStage(event);
     obj.deviceAppHash = deviceAppHash;
@@ -467,24 +468,10 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
     return [[self breadcrumbs] valueForKeyPath:NSStringFromSelector(@selector(objectValue))];
 }
 
-@synthesize releaseStage = _releaseStage;
-
-- (NSString *)releaseStage {
-    @synchronized (self) {
-        return _releaseStage;
-    }
-}
-
-- (void)setReleaseStage:(NSString *)releaseStage {
-    [self setOverrideProperty:BSGKeyReleaseStage value:releaseStage];
-    @synchronized (self) {
-        _releaseStage = releaseStage;
-    }
-}
-
 - (void)attachCustomStacktrace:(NSArray *)frames withType:(NSString *)type {
-    [self setOverrideProperty:@"customStacktraceFrames" value:frames];
-    [self setOverrideProperty:@"customStacktraceType" value:type];
+    BugsnagError *error = self.errors.firstObject;
+    error.stacktrace = [BugsnagStacktrace stacktraceFromJson:frames].trace;
+    error.typeString = type;
 }
 
 - (BSGSeverity)severity {
@@ -549,30 +536,6 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
 
 // MARK: - Callback overrides
 
-@synthesize overrides = _overrides;
-
-- (NSDictionary *)overrides {
-    NSMutableDictionary *values = [_overrides mutableCopy] ?: [NSMutableDictionary new];
-    values[BSGKeyBreadcrumbs] = [self serializeBreadcrumbs];
-    return values;
-}
-
-- (void)setOverrides:(NSDictionary * _Nonnull)overrides {
-    _overrides = overrides;
-}
-
-- (void)setOverrideProperty:(NSString *)key value:(id)value {
-    @synchronized (self) {
-        NSMutableDictionary *metadata = [self.overrides mutableCopy];
-        if (value) {
-            metadata[key] = value;
-        } else {
-            [metadata removeObjectForKey:key];
-        }
-        self.overrides = metadata;
-    }
-}
-
 - (void)notifyUnhandledOverridden {
     self.handledState.unhandledOverridden = YES;
 }
@@ -600,7 +563,11 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
 
     // add metadata
     NSMutableDictionary *metadata = [[[self metadata] toDictionary] mutableCopy];
-    event[BSGKeyMetadata] = [self sanitiseMetadata:metadata redactedKeys:redactedKeys];
+    @try {
+        event[BSGKeyMetadata] = [self sanitiseMetadata:metadata redactedKeys:redactedKeys];
+    } @catch (NSException *exception) {
+        bsg_log_err(@"An exception was thrown while sanitising metadata: %@", exception);
+    }
 
     event[BSGKeyDevice] = [self.device toDictionary];
     event[BSGKeyApp] = [self.app toDict];
@@ -642,7 +609,15 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
 
 - (NSMutableDictionary *)sanitiseMetadata:(NSMutableDictionary *)metadata redactedKeys:(NSSet *)redactedKeys {
     for (NSString *sectionKey in [metadata allKeys]) {
-        metadata[sectionKey] = [metadata[sectionKey] mutableCopy];
+        if ([metadata[sectionKey] isKindOfClass:[NSDictionary class]]) {
+            metadata[sectionKey] = [metadata[sectionKey] mutableCopy];
+        } else {
+            NSString *message = [NSString stringWithFormat:@"Expected an NSDictionary but got %@ %@",
+                                 NSStringFromClass([metadata[sectionKey] class]), metadata[sectionKey]];
+            bsg_log_err(@"%@", message);
+            // Leave an indication of the error in the payload for diagnosis
+            metadata[sectionKey] = [@{@"bugsnag.error": message} mutableCopy];
+        }
         NSMutableDictionary *section = metadata[sectionKey];
 
         if (section != nil) { // redact sensitive metadata values

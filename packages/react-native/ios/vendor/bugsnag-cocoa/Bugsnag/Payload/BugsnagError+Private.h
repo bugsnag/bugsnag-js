@@ -23,6 +23,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (BugsnagError *)errorFromJson:(NSDictionary *)json;
 
+/// The string representation of the BSGErrorType
+@property (copy, nonatomic) NSString *typeString;
+
 /// Parses the `__crash_info` message and updates the `errorClass` and `errorMessage` as appropriate.
 - (void)updateWithCrashInfoMessage:(NSString *)crashInfoMessage;
 

@@ -33,7 +33,6 @@
 #include "BSG_KSCrashSentry_NSException.h"
 #include "BSG_KSCrashSentry_MachException.h"
 #include "BSG_KSCrashSentry_Signal.h"
-#include "BSG_KSCrashSentry_User.h"
 #include "BSG_KSLogger.h"
 #include "BSG_KSMach.h"
 
@@ -67,11 +66,6 @@ static BSG_CrashSentry bsg_g_sentries[] = {
         BSG_KSCrashTypeNSException, bsg_kscrashsentry_installNSExceptionHandler,
         bsg_kscrashsentry_uninstallNSExceptionHandler,
     },
-    {
-        BSG_KSCrashTypeUserReported,
-        bsg_kscrashsentry_installUserExceptionHandler,
-        bsg_kscrashsentry_uninstallUserExceptionHandler,
-    },
 };
 static size_t bsg_g_sentriesCount =
     sizeof(bsg_g_sentries) / sizeof(*bsg_g_sentries);
@@ -102,7 +96,7 @@ bsg_kscrashsentry_installWithContext(BSG_KSCrash_SentryContext *context,
         } else {
             BSG_KSLOG_WARN("App is running in a debugger. Only handled "
                            "events will be sent to Bugsnag.");
-            crashTypes = BSG_KSCrashTypeUserReported;
+            crashTypes = 0;
         }
     } else {
         BSG_KSLOG_DEBUG(
@@ -204,16 +198,12 @@ void bsg_kscrashsentry_clearContext(BSG_KSCrash_SentryContext *context) {
     void (*onCrash)(void *) = context->onCrash;
     bool threadTracingEnabled = context->threadTracingEnabled;
     bool reportWhenDebuggerIsAttached = context->reportWhenDebuggerIsAttached;
-    bool writeBinaryImagesForUserReported =
-        context->writeBinaryImagesForUserReported;
 
     memset(context, 0, sizeof(*context));
     context->onCrash = onCrash;
 
     context->threadTracingEnabled = threadTracingEnabled;
     context->reportWhenDebuggerIsAttached = reportWhenDebuggerIsAttached;
-    context->writeBinaryImagesForUserReported =
-        writeBinaryImagesForUserReported;
 }
 
 void bsg_kscrashsentry_beginHandlingCrash(BSG_KSCrash_SentryContext *context) {
