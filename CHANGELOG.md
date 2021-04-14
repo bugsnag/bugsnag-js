@@ -1,5 +1,11 @@
 # Changelog
 
+## TBD
+
+### Fixed
+
+- (plugin-aws-lambda): Change Typescript definitions for compatibility with `@types/aws-lambda` [#1353](https://github.com/bugsnag/bugsnag-js/pull/1353) ([k-ish](https://github.com/h-kishi))
+
 ## v7.9.3 (2021-04-12)
 
 ### Changed
