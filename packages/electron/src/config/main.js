@@ -1,7 +1,6 @@
 const { schema } = require('./common')
 const stringWithLength = require('@bugsnag/core/lib/validators/string-with-length')
 const listOfFunctions = require('@bugsnag/core/lib/validators/list-of-functions')
-const process = require('process')
 const { inspect } = require('util')
 const { app } = require('electron')
 
