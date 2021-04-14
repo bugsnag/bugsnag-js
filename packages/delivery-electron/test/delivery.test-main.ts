@@ -428,7 +428,7 @@ describe('delivery: electron', () => {
     expect(stop).not.toHaveBeenCalled()
   })
 
-  fit('stops the redelivery loop when a connection is lost', async () => {
+  it('stops the redelivery loop when a connection is lost', async () => {
     const start = jest.fn()
     const stop = jest.fn()
 
