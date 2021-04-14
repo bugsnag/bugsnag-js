@@ -32,7 +32,7 @@ module.exports.schema = {
     validate: value => typeof value === 'function'
   },
   projectRoot: {
-    defaultValue: () => process.cwd(),
+    defaultValue: () => app.getAppPath(),
     validate: value => value === null || stringWithLength(value),
     message: 'should be string'
   },
