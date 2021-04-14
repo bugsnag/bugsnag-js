@@ -20,6 +20,7 @@ ARG=$(tail -1 "$CONFIG_FILE")
 MAVEN_REPO_DIR="$HOME/.m2/repository/com/bugsnag"
 
 revendor_from_dir() {
+    echo "Bugsnag: revendoring from dir"
     local src_dir="$(cd "$1" && pwd)"
     if [ ! -f "$src_dir/gradlew" ]; then
         echo "Source directory doesn't look like the bugsnag-android repo: $src_dir"
@@ -57,6 +58,7 @@ use_bugsnag_version() {
     local version=$1
     local dst_dir="$SCRIPT_DIR/android"
     local com_dir="$dst_dir/com"
+    echo "Bugsnag: using bugsnag version=$version"
 
     rm -rf "$com_dir"
 
