@@ -52,6 +52,11 @@ static BSG_KSCrash_SentryContext *bsg_g_context;
 
 static NSException *bsg_lastHandledException = NULL;
 
+static char * CopyUTF8String(NSString *string) {
+    const char *UTF8String = [string UTF8String];
+    return UTF8String ? strdup(UTF8String) : NULL;
+}
+
 // ============================================================================
 #pragma mark - Callbacks -
 // ============================================================================
@@ -118,17 +123,19 @@ void bsg_recordException(NSException *exception) {
         NSArray *addresses = [exception callStackReturnAddresses];
         NSUInteger numFrames = [addresses count];
         uintptr_t *callstack = malloc(numFrames * sizeof(*callstack));
-        for (NSUInteger i = 0; i < numFrames; i++) {
-            callstack[i] = [addresses[i] unsignedLongValue];
+        if (callstack) {
+            for (NSUInteger i = 0; i < numFrames; i++) {
+                callstack[i] = [addresses[i] unsignedLongValue];
+            }
         }
 
         bsg_g_context->crashType = BSG_KSCrashTypeNSException;
         bsg_g_context->offendingThread = bsg_ksmachthread_self();
         bsg_g_context->registersAreValid = false;
-        bsg_g_context->NSException.name = strdup([[exception name] UTF8String]);
-        bsg_g_context->crashReason = strdup([[exception reason] UTF8String]);
+        bsg_g_context->NSException.name = CopyUTF8String([exception name]);
+        bsg_g_context->crashReason = CopyUTF8String([exception reason]);
         bsg_g_context->stackTrace = callstack;
-        bsg_g_context->stackTraceLength = (int)numFrames;
+        bsg_g_context->stackTraceLength = callstack ? (int)numFrames : 0;
 
         BSG_KSLOG_DEBUG(@"Calling main crash handler.");
         bsg_g_context->onCrash(crashContext());

@@ -1,5 +1,15 @@
 # Changelog
 
+## TBD
+
+### Changed
+
+- (react-native): Update bugsnag-cocoa to v6.8.4
+  - `macCatalystiOSVersion` is now reported for apps built with Mac Catalyst and iOS app running on Apple silicon. [bugsnag-cocoa#1066](https://github.com/bugsnag/bugsnag-cocoa/pull/1066)
+  - Fix crashes that could occur in `bsg_recordException` in low memory conditions. [bugsnag-cocoa#1068](https://github.com/bugsnag/bugsnag-cocoa/pull/1068)
+  - Fix a crash in `bsg_ksmachgetThreadQueueName`. [bugsnag-cocoa#1065](https://github.com/bugsnag/bugsnag-cocoa/pull/1065)
+  - Improve timestamp accuracy to fix breadcrumbs that are reported to occur after the error. [bugsnag-cocoa#1062](https://github.com/bugsnag/bugsnag-cocoa/pull/1062)
+
 ## v7.9.3 (2021-04-12)
 
 ### Changed

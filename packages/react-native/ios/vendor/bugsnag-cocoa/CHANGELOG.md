@@ -1,6 +1,24 @@
 Changelog
 =========
 
+## 6.8.4 (2021-04-14)
+
+### Enhancements
+
+* `macCatalystiOSVersion` is now reported for apps built with Mac Catalyst and iOS app running on Apple silicon.
+  [#1066](https://github.com/bugsnag/bugsnag-cocoa/pull/1066)
+
+### Bug fixes
+
+* Fix crashes that could occur in `bsg_recordException` in low memory conditions.
+  [#1068](https://github.com/bugsnag/bugsnag-cocoa/pull/1068)
+
+* Fix a crash in `bsg_ksmachgetThreadQueueName`.
+  [#1065](https://github.com/bugsnag/bugsnag-cocoa/pull/1065)
+
+* Improve timestamp accuracy to fix breadcrumbs that are reported to occur after the error.
+  [#1062](https://github.com/bugsnag/bugsnag-cocoa/pull/1062)
+
 ## 6.8.3 (2021-04-07)
 
 ### Bug fixes
