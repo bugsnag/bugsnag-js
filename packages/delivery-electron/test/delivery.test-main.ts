@@ -1,5 +1,5 @@
 import { createServer, IncomingHttpHeaders, STATUS_CODES } from 'http'
-import { net } from 'electron'
+import { app, net } from 'electron'
 import { AddressInfo } from 'net'
 import delivery from '../'
 import { EventDeliveryPayload } from '@bugsnag/core/client'
@@ -24,6 +24,8 @@ const makeClient = (config: any = {}, logger: any = noopLogger) => {
     getPlugin: () => { return { emitter: new EventEmitter() } }
   } as unknown as Client
 }
+
+const nextTick = async () => await new Promise(resolve => process.nextTick(resolve))
 
 jest.mock('../queue')
 jest.mock('../payload-loop')
@@ -81,7 +83,8 @@ describe('delivery: electron', () => {
 
   it('sends events successfully', done => {
     const { requests, server } = mockServer()
-    server.listen((err: any) => {
+    // @ts-expect-error the types for 'listen' don't include this overload
+    server.listen(0, 'localhost', (err: any) => {
       expect(err).toBeUndefined()
 
       const payload = {
@@ -92,7 +95,7 @@ describe('delivery: electron', () => {
         endpoints: { notify: `http://localhost:${(server.address() as AddressInfo).port}/notify/` },
         redactedKeys: []
       }
-      delivery(filestore, net)(makeClient(config)).sendEvent(payload, (err: any) => {
+      delivery(filestore, net, app)(makeClient(config)).sendEvent(payload, (err: any) => {
         expect(err).toBe(null)
         expect(requests.length).toBe(1)
         expect(requests[0].method).toBe('POST')
@@ -112,7 +115,8 @@ describe('delivery: electron', () => {
 
   it('sends sessions successfully', done => {
     const { requests, server } = mockServer(202)
-    server.listen((err: any) => {
+    // @ts-expect-error the types for 'listen' don't include this overload
+    server.listen(0, 'localhost', (err: any) => {
       expect(err).toBeUndefined()
 
       const payload = {
@@ -123,7 +127,7 @@ describe('delivery: electron', () => {
         endpoints: { notify: 'blah', sessions: `http://localhost:${(server.address() as AddressInfo).port}/sessions/` },
         redactedKeys: []
       }
-      delivery(filestore, net)(makeClient(config)).sendSession(payload, (err: any) => {
+      delivery(filestore, net, app)(makeClient(config)).sendSession(payload, (err: any) => {
         expect(err).toBe(null)
         expect(requests.length).toBe(1)
         expect(requests[0].method).toBe('POST')
@@ -152,7 +156,7 @@ describe('delivery: electron', () => {
     }
     let didLog = false
     const logger = { error: () => { didLog = true }, info: () => {} }
-    delivery(filestore, net)(makeClient(config, logger)).sendEvent(payload, (err: any) => {
+    delivery(filestore, net, app)(makeClient(config, logger)).sendEvent(payload, (err: any) => {
       expect(didLog).toBe(true)
       expect(err).toBeTruthy()
       expect(enqueueSpy).toHaveBeenCalledWith(
@@ -179,7 +183,8 @@ describe('delivery: electron', () => {
 
   it('handles errors gracefully (400)', done => {
     const { requests, server } = mockServer(400)
-    server.listen((err: any) => {
+    // @ts-expect-error the types for 'listen' don't include this overload
+    server.listen(0, 'localhost', (err: any) => {
       expect(err).toBeUndefined()
 
       const payload = {
@@ -192,7 +197,7 @@ describe('delivery: electron', () => {
       }
       let didLog = false
       const logger = { error: () => { didLog = true }, info: () => {} }
-      delivery(filestore, net)(makeClient(config, logger)).sendEvent(payload, (err: any) => {
+      delivery(filestore, net, app)(makeClient(config, logger)).sendEvent(payload, (err: any) => {
         expect(didLog).toBe(true)
         expect(enqueueSpy).not.toHaveBeenCalled()
         expect(err).toBeTruthy()
@@ -214,7 +219,7 @@ describe('delivery: electron', () => {
     }
     let didLog = false
     const logger = { error: () => { didLog = true }, info: () => {} }
-    delivery(filestore, net)(makeClient(config, logger)).sendSession(payload, (err: any) => {
+    delivery(filestore, net, app)(makeClient(config, logger)).sendSession(payload, (err: any) => {
       expect(didLog).toBe(true)
       expect(err).toBeTruthy()
       expect(enqueueSpy).toHaveBeenCalledWith(
@@ -243,7 +248,8 @@ describe('delivery: electron', () => {
       req.connection.destroy()
     })
 
-    server.listen((err: any) => {
+    // @ts-expect-error the types for 'listen' don't include this overload
+    server.listen(0, 'localhost', (err: any) => {
       expect(err).toBeFalsy()
       const payload = {
         events: [{ errors: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }] }]
@@ -255,7 +261,7 @@ describe('delivery: electron', () => {
       }
       let didLog = false
       const logger = { error: () => { didLog = true }, info: () => {} }
-      delivery(filestore, net)(makeClient(config, logger)).sendEvent(payload, (err: any) => {
+      delivery(filestore, net, app)(makeClient(config, logger)).sendEvent(payload, (err: any) => {
         expect(didLog).toBe(true)
         expect(err).toBeTruthy()
         expect(enqueueSpy).toHaveBeenCalled()
@@ -272,7 +278,8 @@ describe('delivery: electron', () => {
       res.end('NOT OK')
     })
 
-    server.listen((err: any) => {
+    // @ts-expect-error the types for 'listen' don't include this overload
+    server.listen(0, 'localhost', (err: any) => {
       expect(err).toBeFalsy()
       const payload = {
         events: [{ errors: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }] }]
@@ -284,7 +291,7 @@ describe('delivery: electron', () => {
       }
       let didLog = false
       const logger = { error: () => { didLog = true }, info: () => {} }
-      delivery(filestore, net)(makeClient(config, logger)).sendEvent(payload, (err: any) => {
+      delivery(filestore, net, app)(makeClient(config, logger)).sendEvent(payload, (err: any) => {
         expect(didLog).toBe(true)
         expect(err).toBeTruthy()
         expect(enqueueSpy).toHaveBeenCalled()
@@ -307,7 +314,7 @@ describe('delivery: electron', () => {
       endpoints: { notify: 'http://localhost:9999/events/' },
       redactedKeys: []
     }
-    delivery(filestore, net)(makeClient(config, logger)).sendEvent(payload, (err: any) => {
+    delivery(filestore, net, app)(makeClient(config, logger)).sendEvent(payload, (err: any) => {
       expect(didLog).toBe(true)
       expect(err).toBeTruthy()
       expect(enqueueSpy).toHaveBeenCalledWith(
@@ -340,7 +347,7 @@ describe('delivery: electron', () => {
       endpoints: { sessions: 'http://localhost:9999/sessions/' },
       redactedKeys: []
     }
-    delivery(filestore, net)(makeClient(config, logger)).sendSession(payload, (err: any) => {
+    delivery(filestore, net, app)(makeClient(config, logger)).sendSession(payload, (err: any) => {
       expect(didLog).toBe(true)
       expect(err).toBeTruthy()
       expect(enqueueSpy).toHaveBeenCalledWith(
@@ -373,7 +380,7 @@ describe('delivery: electron', () => {
       endpoints: { notify: 'https://some-address.com' },
       redactedKeys: []
     }
-    delivery(filestore, net)(makeClient(config)).sendEvent(payload, (err: any) => {
+    delivery(filestore, net, app)(makeClient(config)).sendEvent(payload, (err: any) => {
       expect(err).not.toBeTruthy()
       expect(enqueueSpy).toHaveBeenCalled()
       done()
@@ -387,7 +394,7 @@ describe('delivery: electron', () => {
     } as any))
 
     const net = { online: true }
-    delivery(filestore, net)(makeClient())
+    delivery(filestore, net, app)(makeClient())
   })
 
   it('does not start the redelivery loop if there is no connection', done => {
@@ -397,36 +404,53 @@ describe('delivery: electron', () => {
     } as any))
 
     const net = { online: false }
-    delivery(filestore, net)(makeClient())
+    delivery(filestore, net, app)(makeClient())
   })
 
-  it('starts the redelivery loop when a connection becomes available', done => {
-    PayloadDeliveryLoopMock.mockImplementation(() => ({
-      start: done,
-      stop: () => {}
-    } as any))
+  it('starts the redelivery loop when a connection becomes available', async () => {
+    const start = jest.fn()
+    const stop = jest.fn()
+
+    PayloadDeliveryLoopMock.mockImplementation(() => ({ start, stop } as any))
 
     const net = { online: false }
     const client = makeClient()
     const emitter = new EventEmitter()
     client.getPlugin = (_name: string) => { return { emitter } }
-    delivery(filestore, net)(client)
+
+    delivery(filestore, net, app)(client)
 
     emitter.emit('MetadataUpdate', { section: 'device', values: { online: true } }, null)
+
+    await nextTick()
+
+    expect(start).toHaveBeenCalled()
+    expect(stop).not.toHaveBeenCalled()
   })
 
-  it('stops the redelivery loop when a connection is lost', done => {
-    PayloadDeliveryLoopMock.mockImplementation(() => ({
-      start: () => {},
-      stop: done
-    } as any))
+  it('stops the redelivery loop when a connection is lost', async () => {
+    const start = jest.fn()
+    const stop = jest.fn()
+
+    PayloadDeliveryLoopMock.mockImplementation(() => ({ start, stop } as any))
 
     const net = { online: true }
     const client = makeClient()
     const emitter = new EventEmitter()
     client.getPlugin = (_name: string) => { return { emitter } }
-    delivery(filestore, net)(client)
+
+    delivery(filestore, net, app)(client)
+
+    await nextTick()
+
+    expect(start).toHaveBeenCalled()
+    expect(stop).not.toHaveBeenCalled()
 
     emitter.emit('MetadataUpdate', { section: 'device', values: { online: false } }, null)
+
+    await nextTick()
+
+    expect(start).toHaveBeenCalled()
+    expect(stop).toHaveBeenCalled()
   })
 })
