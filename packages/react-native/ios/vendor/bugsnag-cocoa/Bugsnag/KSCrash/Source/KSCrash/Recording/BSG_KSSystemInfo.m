@@ -466,6 +466,10 @@ static NSDictionary * bsg_systemversion() {
     sysInfo[@(BSG_KSSystemField_SystemName)] = systemName;
     sysInfo[@(BSG_KSSystemField_SystemVersion)] = sysVersion[@"ProductVersion"];
 
+#if TARGET_OS_IOS
+    sysInfo[@(BSG_KSSystemField_iOSSupportVersion)] = sysVersion[@"iOSSupportVersion"];
+#endif
+
     // Bugsnag payload mapping:
     //
     // BSG_KSSystemField_Machine => device.model

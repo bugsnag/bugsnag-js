@@ -56,7 +56,14 @@
     mutableReport[@BSG_KSCrashField_Report] = mutableInfo;
 
     // Timestamp gets stored as a unix timestamp. Convert it to rfc3339.
-    [self convertTimestamp:@BSG_KSCrashField_Timestamp inReport:mutableInfo];
+    NSNumber *timestampMillis = mutableInfo[@(BSG_KSCrashField_Timestamp_Millis)];
+    if ([timestampMillis isKindOfClass:[NSNumber class]]) {
+        NSTimeInterval timeInterval = timestampMillis.unsignedLongLongValue / 1000.0;
+        NSDate *date = [NSDate dateWithTimeIntervalSince1970:timeInterval];
+        mutableInfo[@(BSG_KSCrashField_Timestamp)] = [BSG_RFC3339DateTool stringFromDate:date];
+    } else {
+        [self convertTimestamp:@BSG_KSCrashField_Timestamp inReport:mutableInfo];
+    }
 
     [self mergeDictWithKey:@BSG_KSCrashField_SystemAtCrash
            intoDictWithKey:@BSG_KSCrashField_System

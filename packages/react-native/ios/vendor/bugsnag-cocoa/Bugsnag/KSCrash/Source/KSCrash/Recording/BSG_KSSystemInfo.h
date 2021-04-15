@@ -55,6 +55,7 @@
 #define BSG_KSSystemField_ClangVersion "clang_version"
 #define BSG_KSSystemField_TimeZone "time_zone"
 #define BSG_KSSystemField_BuildType "build_type"
+#define BSG_KSSystemField_iOSSupportVersion "iOSSupportVersion"
 
 #import <Foundation/Foundation.h>
 #import "BugsnagPlatformConditional.h"

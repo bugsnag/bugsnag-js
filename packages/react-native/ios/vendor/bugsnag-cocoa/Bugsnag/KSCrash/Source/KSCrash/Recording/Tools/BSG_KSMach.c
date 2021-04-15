@@ -307,19 +307,20 @@ bool bsg_ksmachgetThreadQueueName(const thread_t thread, char *const buffer,
     }
 
     thread_identifier_info_t idInfo = (thread_identifier_info_t)info;
-    dispatch_queue_t *dispatch_queue_ptr =
-        (dispatch_queue_t *)idInfo->dispatch_qaddr;
+    dispatch_queue_t dispatch_queue = NULL;
     // thread_handle shouldn't be 0 also, because
     // identifier_info->dispatch_qaddr =  identifier_info->thread_handle +
     // get_dispatchqueue_offset_from_proc(thread->task->bsd_info);
-    if (dispatch_queue_ptr == NULL || idInfo->thread_handle == 0 ||
-        *dispatch_queue_ptr == NULL) {
+    if (!idInfo->dispatch_qaddr || !idInfo->thread_handle ||
+        // sometimes the queue address is invalid, so avoid dereferencing
+        bsg_ksmachcopyMem((const void *)idInfo->dispatch_qaddr, &dispatch_queue,
+                          sizeof(dispatch_queue)) != KERN_SUCCESS ||
+        !dispatch_queue) {
         BSG_KSLOG_TRACE(
             "This thread doesn't have a dispatch queue attached : %p", thread);
         return false;
     }
 
-    dispatch_queue_t dispatch_queue = *dispatch_queue_ptr;
     const char *queue_name = dispatch_queue_get_label(dispatch_queue);
     if (queue_name == NULL) {
         BSG_KSLOG_TRACE("Error while getting dispatch queue name : %p",

@@ -161,6 +161,7 @@
 #define BSG_KSCrashField_ProcessName "process_name"
 #define BSG_KSCrashField_Report "report"
 #define BSG_KSCrashField_Timestamp "timestamp"
+#define BSG_KSCrashField_Timestamp_Millis "timestamp_millis"
 #define BSG_KSCrashField_Version "version"
 
 #pragma mark Minimal
