@@ -44,7 +44,7 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
     client.clearMetadata('section', 'key')
   })
 
-  it('should support bulk updates', () => {
+  it('should support bulk updates (all values)', () => {
     const client = new Client({}, {}, [stateManager], {})
     const { emitter, bulkUpdate } = client.getPlugin('clientStateManager')
 
@@ -70,8 +70,19 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
     expect(metadataCb).toHaveBeenCalledWith({ section: { key: 'value' } })
     expect(contextCb).toHaveBeenCalledWith('ctx')
     expect(userCb).toHaveBeenCalledWith({ id: '123', name: 'Jim', email: 'jim@jim.com' })
+  })
 
-    jest.resetAllMocks()
+  it('should support bulk updates (only context)', () => {
+    const client = new Client({}, {}, [stateManager], {})
+    const { emitter, bulkUpdate } = client.getPlugin('clientStateManager')
+
+    const metadataCb = jest.fn()
+    const contextCb = jest.fn()
+    const userCb = jest.fn()
+
+    emitter.on('MetadataReplace', metadataCb)
+    emitter.on('ContextUpdate', contextCb)
+    emitter.on('UserUpdate', userCb)
 
     // update just context
     bulkUpdate({
@@ -81,8 +92,19 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
     expect(metadataCb).not.toHaveBeenCalled()
     expect(contextCb).toHaveBeenCalledWith('ctx')
     expect(userCb).not.toHaveBeenCalled()
+  })
 
-    jest.resetAllMocks()
+  it('should support bulk updates (only user)', () => {
+    const client = new Client({}, {}, [stateManager], {})
+    const { emitter, bulkUpdate } = client.getPlugin('clientStateManager')
+
+    const metadataCb = jest.fn()
+    const contextCb = jest.fn()
+    const userCb = jest.fn()
+
+    emitter.on('MetadataReplace', metadataCb)
+    emitter.on('ContextUpdate', contextCb)
+    emitter.on('UserUpdate', userCb)
 
     // update just user
     bulkUpdate({
@@ -92,8 +114,19 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
     expect(metadataCb).not.toHaveBeenCalled()
     expect(contextCb).not.toHaveBeenCalledWith()
     expect(userCb).toHaveBeenCalledWith({ id: '123', name: 'Jim', email: 'jim@jim.com' })
+  })
 
-    jest.resetAllMocks()
+  it('should support bulk updates (only metadata)', () => {
+    const client = new Client({}, {}, [stateManager], {})
+    const { emitter, bulkUpdate } = client.getPlugin('clientStateManager')
+
+    const metadataCb = jest.fn()
+    const contextCb = jest.fn()
+    const userCb = jest.fn()
+
+    emitter.on('MetadataReplace', metadataCb)
+    emitter.on('ContextUpdate', contextCb)
+    emitter.on('UserUpdate', userCb)
 
     // update just metadata
     bulkUpdate({

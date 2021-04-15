@@ -63,7 +63,7 @@ module.exports = class BugsnagIpcMain {
 
       if (this.client._config.enabledBreadcrumbTypes.includes('error')) {
         // only leave a crumb for the error if actually got sent
-        Client.prototype.leaveBreadcrumb.call(this.client, event.errors[0].errorClass, {
+        this.client.leaveBreadcrumb(event.errors[0].errorClass, {
           errorClass: event.errors[0].errorClass,
           errorMessage: event.errors[0].errorMessage,
           severity: event.severity
