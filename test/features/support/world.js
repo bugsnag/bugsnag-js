@@ -60,6 +60,7 @@ BeforeAll({ timeout: 240 * 1000 }, async () => {
   await loadSourcemaps(join(app.electronAppPath(), '.webpack'))
   console.log('[BeforeAll] Done!')
 
+  global.app = app
   global.automator = new Automator(app)
 })
 
