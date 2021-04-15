@@ -1,8 +1,8 @@
 {
-  "name": "@bugsnag/plugin-electron-state-sync",
+  "name": "@bugsnag/plugin-internal-callback-marker",
   "version": "1.0.0",
-  "main": "state-sync.js",
-  "description": "@bugsnag/electron plugin to sync state between various processes",
+  "main": "internal-callback-marker.js",
+  "description": "@bugsnag/js plugin to annotate all OnError callbacks added by internal plugins",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
     "type": "git",
@@ -15,9 +15,8 @@
   },
   "author": "Bugsnag",
   "license": "MIT",
-  "gypfile": true,
   "files": [
-    "state-sync.js"
+    "internal-callback-marker.js"
   ],
   "dependencies": {
   },

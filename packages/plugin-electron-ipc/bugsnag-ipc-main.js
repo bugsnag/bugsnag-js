@@ -1,15 +1,14 @@
 const Event = require('@bugsnag/core/event')
+const Client = require('@bugsnag/core/client')
 const Breadcrumb = require('@bugsnag/core/breadcrumb')
+const runCallbacks = require('@bugsnag/core/lib/callback-runner')
 
 module.exports = class BugsnagIpcMain {
   constructor (client) {
     this.client = client
 
-    this.stateSync = client.getPlugin('stateSync')
-    if (!this.stateSync) throw new Error('Expected @bugsnag/plugin-electron-state-sync to be loaded first')
-
-    this.mainEventSync = client.getPlugin('mainEventSync')
-    if (!this.mainEventSync) throw new Error('Expected @bugsnag/plugin-electron-event-sync to be loaded first')
+    this.clientStateManager = client.getPlugin('clientStateManager')
+    if (!this.clientStateManager) throw new Error('Expected @bugsnag/plugin-electron-client-state-manager to be loaded first')
 
     this.methodMap = this.toMap()
 
@@ -27,24 +26,97 @@ module.exports = class BugsnagIpcMain {
   }
 
   update ({ context, user, metadata }) {
-    return this.stateSync.bulkUpdate({ context, user, metadata })
+    return this.clientStateManager.bulkUpdate({ context, user, metadata })
   }
 
   dispatch (eventObject) {
-    const event = new Event()
+    try {
+      const event = new Event()
 
-    // copy all properties from 'eventObject' to 'event'
-    Object.keys(event)
-      .filter(Object.hasOwnProperty.bind(event))
-      .forEach(key => { event[key] = eventObject[key] })
+      // copy all properties from 'eventObject' to 'event'
+      Object.keys(event)
+        .filter(Object.hasOwnProperty.bind(event))
+        .forEach(key => { event[key] = eventObject[key] })
 
-    event.breadcrumbs = event.breadcrumbs.map(b => new Breadcrumb(b.message, b.metadata, b.type, b.timestamp))
+      // rehydrate breadcrumbs so they get serialised properly (Breadcrumb class has a .toJSON() method)
+      event.breadcrumbs = event.breadcrumbs.map(b =>
+        new Breadcrumb(b.message, b.metadata, b.type, b.timestamp)
+      )
 
-    this.mainEventSync.dispatch(event)
+      this._dispatch(event)
+    } catch (e) {
+      this.client._logger.error('Error dispatching event from renderer', e)
+    }
+  }
+
+  _dispatch (event) {
+    const originalSeverity = event.severity
+
+    const callbacks = this.client._cbs.e.filter(e => !e._internal)
+    runCallbacks(callbacks, event, this._onCallbackError, (err, shouldSend) => {
+      if (err) this._onCallbackError(err)
+
+      if (!shouldSend) {
+        this.client._logger.debug('Event not sent due to onError callback')
+        return
+      }
+
+      if (this.client._config.enabledBreadcrumbTypes.includes('error')) {
+        // only leave a crumb for the error if actually got sent
+        Client.prototype.leaveBreadcrumb.call(this.client, event.errors[0].errorClass, {
+          errorClass: event.errors[0].errorClass,
+          errorMessage: event.errors[0].errorMessage,
+          severity: event.severity
+        }, 'error')
+      }
+
+      if (originalSeverity !== event.severity) {
+        event._handledState.severityReason = { type: 'userCallbackSetSeverity' }
+      }
+
+      if (event.unhandled !== event._handledState.unhandled) {
+        event._handledState.severityReason.unhandledOverridden = true
+        event._handledState.unhandled = event.unhandled
+      }
+
+      if (this.client._session) {
+        this.client._session._track(event)
+        event._session = this.client._session
+      }
+
+      this.client._delivery.sendEvent({
+        apiKey: event.apiKey || this.client._config.apiKey,
+        notifier: this.client._notifier,
+        events: [event]
+      })
+    })
   }
 
   getPayloadInfo () {
-    return this.mainEventSync.getPayloadInfo()
+    return new Promise((resolve, reject) => {
+      const event = new Event('BugsnagInternalError', 'Extracting event info from main process for event in renderer')
+      event.app = {
+        ...event.app,
+        releaseStage: this.client._config.releaseStage,
+        version: this.client._config.appVersion,
+        type: this.client._config.appType
+      }
+      event.context = event.context || this.client._context
+      event._metadata = { ...event._metadata, ...this.client._metadata }
+      event._user = { ...event._user, ...this.client._user }
+      event.breadcrumbs = this.client._breadcrumbs.slice()
+
+      // run the event through just the internal onError callbacks
+      const callbacks = this.client._cbs.e.filter(e => e._internal)
+      runCallbacks(callbacks, event, this._onCallbackError, (err, shouldSend) => {
+        if (err) this._onCallbackError(err)
+        if (!shouldSend) return resolve({ shouldSend: false })
+
+        // extract just the properties we want from the event
+        const { app, breadcrumbs, context, device, _metadata, _user } = event
+        resolve({ app, breadcrumbs, context, device, metadata: _metadata, user: _user })
+      })
+    })
   }
 
   handle (_event, methodName, ...args) {
@@ -68,6 +140,12 @@ module.exports = class BugsnagIpcMain {
     } catch (e) {
       this.client._logger.warn('IPC call failed', e)
     }
+  }
+
+  _onCallbackError (err) {
+    // errors in callbacks are tolerated but we want to log them out
+    this.client._logger.error('Error occurred in onError callback, continuing anyway…')
+    this.client._logger.error(err)
   }
 
   toMap () {

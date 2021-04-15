@@ -1,4 +1,4 @@
-module.exports.firstPlugin = {
+module.exports.FirstPlugin = {
   load: (client) => {
     // patch onError so we can track which onError callbacks are added by internal plugins
     const _origAddOnError = client.addOnError
@@ -12,7 +12,7 @@ module.exports.firstPlugin = {
   }
 }
 
-module.exports.lastPlugin = {
+module.exports.LastPlugin = {
   load: (client) => {
     client.addOnError._restore()
   }

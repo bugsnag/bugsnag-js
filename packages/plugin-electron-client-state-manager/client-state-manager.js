@@ -1,7 +1,7 @@
 const EventEmitter = require('events')
 
 module.exports = {
-  name: 'stateSync',
+  name: 'clientStateManager',
   load: (client) => {
     const emitter = new EventEmitter()
 
@@ -11,14 +11,14 @@ module.exports = {
     const origSetUser = client.setUser
     client.setUser = (...args) => {
       const ret = origSetUser.call(client, ...args)
-      emitter.emit('UserUpdate', client.getUser(), null)
+      emitter.emit('UserUpdate', client.getUser())
       return ret
     }
 
     const origSetContext = client.setContext
     client.setContext = (...args) => {
       const ret = origSetContext.call(client, ...args)
-      emitter.emit('ContextUpdate', client.getContext(), null)
+      emitter.emit('ContextUpdate', client.getContext())
       return ret
     }
 
@@ -28,7 +28,7 @@ module.exports = {
       const [section] = args
       if (typeof section === 'string') {
         const values = client.getMetadata(section)
-        emitter.emit('MetadataUpdate', { section, values }, null)
+        emitter.emit('MetadataUpdate', { section, values })
       }
       return ret
     }
@@ -39,7 +39,7 @@ module.exports = {
       const [section] = args
       if (typeof section === 'string') {
         const values = client.getMetadata(section)
-        emitter.emit('MetadataUpdate', { section, values }, null)
+        emitter.emit('MetadataUpdate', { section, values })
       }
       return ret
     }
@@ -56,14 +56,10 @@ module.exports = {
         for (const section in metadata) {
           origAddMetadata.call(client, section, metadata[section])
         }
-        emitter.emit('MetadataReplace', { metadata: client._metadata })
+        emitter.emit('MetadataReplace', client._metadata)
       }
     }
 
-    return {
-      events: ['UserUpdate', 'ContextUpdate', 'MetadataUpdate', 'MetadataReplace'],
-      emitter,
-      bulkUpdate
-    }
+    return { emitter, bulkUpdate }
   }
 }

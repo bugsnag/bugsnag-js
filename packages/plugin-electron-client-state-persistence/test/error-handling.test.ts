@@ -1,7 +1,7 @@
 import * as bindings from 'bindings'
 
 describe('handling poor inputs', () => {
-  const NativeClient = bindings.default('bugsnag_plugin_electron_client_sync_bindings')
+  const NativeClient = bindings.default('bugsnag_plugin_electron_client_state_persistence_bindings')
 
   beforeAll(() => NativeClient.install('/tmp/file.json', 10))
 
