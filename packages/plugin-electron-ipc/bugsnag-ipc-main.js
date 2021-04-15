@@ -1,5 +1,4 @@
 const Event = require('@bugsnag/core/event')
-const Client = require('@bugsnag/core/client')
 const Breadcrumb = require('@bugsnag/core/breadcrumb')
 const runCallbacks = require('@bugsnag/core/lib/callback-runner')
 
