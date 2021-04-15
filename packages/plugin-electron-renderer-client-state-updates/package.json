@@ -1,8 +1,8 @@
 {
-  "name": "@bugsnag/plugin-electron-event-sync",
+  "name": "@bugsnag/plugin-electron-renderer-client-state-updates",
   "version": "1.0.0",
-  "main": "client-sync.js",
-  "description": "@bugsnag/electron plugin to sync event information between JS renderers and the main process",
+  "main": "client-state-updates.js",
+  "description": "@bugsnag/electron plugin to sync information between JS renderers",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
     "type": "git",
@@ -17,9 +17,7 @@
   "license": "MIT",
   "gypfile": true,
   "files": [
-    "main-event-sync.js",
-    "internal-plugin-marker.js",
-    "renderer-event-sync.js"
+    "client-state-updates.js"
   ],
   "dependencies": {
   },

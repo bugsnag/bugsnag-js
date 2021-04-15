@@ -1,14 +1,14 @@
 import Client from '@bugsnag/core/client'
 import plugin from '../'
 import { Breadcrumb, Logger } from '@bugsnag/core'
-import stateSyncPlugin from '@bugsnag/plugin-electron-state-sync'
+import stateManager from '@bugsnag/plugin-electron-client-state-manager'
 
 describe('plugin: electron client sync', () => {
   it('updates context', done => {
     const c = new Client({
       apiKey: 'api_key',
       plugins: [
-        stateSyncPlugin,
+        stateManager,
         plugin({
           updateContext: (update: any) => {
             expect(update).toBe('1234')
@@ -24,7 +24,7 @@ describe('plugin: electron client sync', () => {
     const c = new Client({
       apiKey: 'api_key',
       plugins: [
-        stateSyncPlugin,
+        stateManager,
         plugin({
           updateMetadata: (key: string, updates: any) => {
             expect(key).toBe('widget')
@@ -45,7 +45,7 @@ describe('plugin: electron client sync', () => {
     const c = new Client({
       apiKey: 'api_key',
       plugins: [
-        stateSyncPlugin,
+        stateManager,
         plugin({
           addMetadata: () => {},
           clearMetadata: () => {}
@@ -65,7 +65,7 @@ describe('plugin: electron client sync', () => {
     const c = new Client({
       apiKey: 'api_key',
       plugins: [
-        stateSyncPlugin,
+        stateManager,
         plugin({
           updateUser: (id: string, email: string, name: string) => {
             expect(id).toBe('1234')
@@ -84,7 +84,7 @@ describe('plugin: electron client sync', () => {
     const c = new Client({
       apiKey: 'api_key',
       plugins: [
-        stateSyncPlugin,
+        stateManager,
         plugin({
           leaveBreadcrumb: ({ message, metadata, type, timestamp }: Breadcrumb) => {
             expect(message).toBe('Spin')
@@ -108,7 +108,7 @@ describe('plugin: electron client sync', () => {
     }
     const client = new Client({
       apiKey: 'api_key',
-      plugins: [stateSyncPlugin, plugin(NativeClient)],
+      plugins: [stateManager, plugin(NativeClient)],
       logger
     })
     return [client, logger]

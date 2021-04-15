@@ -1,8 +1,8 @@
 {
-  "name": "@bugsnag/plugin-electron-renderer-client-sync",
+  "name": "@bugsnag/plugin-electron-client-state-manager",
   "version": "1.0.0",
-  "main": "client-sync.js",
-  "description": "@bugsnag/electron plugin to sync information between JS renderers",
+  "main": "client-state-manager.js",
+  "description": "@bugsnag/electron plugin to sync state between various processes",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
     "type": "git",
@@ -17,7 +17,7 @@
   "license": "MIT",
   "gypfile": true,
   "files": [
-    "client-sync.js"
+    "client-state-manager.js"
   ],
   "dependencies": {
   },

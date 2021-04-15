@@ -5,7 +5,7 @@ import * as bindings from 'bindings'
 const { mkdtemp, readFile, rmdir } = promises
 
 describe('persisting changes to disk', () => {
-  const NativeClient = bindings.default('bugsnag_plugin_electron_client_sync_bindings')
+  const NativeClient = bindings.default('bugsnag_plugin_electron_client_state_persistence_bindings')
 
   let tempdir: string = ''
   let filepath: string = ''

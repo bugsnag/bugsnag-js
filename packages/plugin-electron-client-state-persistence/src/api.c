@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-#include "bugsnag_electron_client_sync.h"
+#include "bugsnag_electron_client_state_persistence.h"
 
 static napi_value json_stringify(napi_env env, napi_value json_obj) {
   napi_value global;
@@ -78,25 +78,25 @@ static char *read_json_string_value(napi_env env, napi_value arg,
   }
 }
 
-static bool throw_error_from_status(napi_env env, BECS_STATUS status) {
+static bool throw_error_from_status(napi_env env, BECSP_STATUS status) {
   const char *code = "BugsnagSyncError";
   switch (status) {
-  case BECS_STATUS_SUCCESS:
+  case BECSP_STATUS_SUCCESS:
     return false;
-  case BECS_STATUS_INVALID_JSON:
+  case BECSP_STATUS_INVALID_JSON:
     napi_throw_error(env, code, "Failed to convert argument to JSON");
     break;
-  case BECS_STATUS_EXPECTED_JSON_OBJECT:
+  case BECSP_STATUS_EXPECTED_JSON_OBJECT:
     napi_throw_type_error(env, code, "Wrong argument type, expected object");
     break;
-  case BECS_STATUS_NULL_PARAM:
+  case BECSP_STATUS_NULL_PARAM:
     napi_throw_type_error(env, code, "Expected argument to be non-null");
     break;
-  case BECS_STATUS_NOT_INSTALLED:
+  case BECSP_STATUS_NOT_INSTALLED:
     napi_throw_error(env, code,
                      "Sync layer is not installed, first call install()");
     break;
-  case BECS_STATUS_UNKNOWN_FAILURE:
+  case BECSP_STATUS_UNKNOWN_FAILURE:
     napi_throw_error(env, code, "Failed to synchronize data");
     break;
   }
@@ -104,7 +104,7 @@ static bool throw_error_from_status(napi_env env, BECS_STATUS status) {
 }
 
 static void set_object_or_null(napi_env env, napi_value obj,
-                               BECS_STATUS (*setter)(const char *)) {
+                               BECSP_STATUS (*setter)(const char *)) {
   napi_valuetype valuetype;
   napi_status status = napi_typeof(env, obj, &valuetype);
   assert(status == napi_ok);
@@ -119,7 +119,7 @@ static void set_object_or_null(napi_env env, napi_value obj,
       throw_error_from_status(env, setter(value));
       free(value);
     } else {
-      throw_error_from_status(env, BECS_STATUS_INVALID_JSON);
+      throw_error_from_status(env, BECSP_STATUS_INVALID_JSON);
     }
   } break;
   default:
@@ -128,7 +128,7 @@ static void set_object_or_null(napi_env env, napi_value obj,
 }
 
 static napi_value Uninstall(napi_env env, napi_callback_info info) {
-  becs_uninstall();
+  becsp_uninstall();
   return NULL;
 }
 
@@ -174,7 +174,7 @@ static napi_value Install(napi_env env, napi_callback_info info) {
 
     if (valuetype2 == napi_object) {
       char *state = read_string_value(env, json_stringify(env, args[2]), true);
-      becs_install(filepath, max_crumbs, state);
+      becsp_install(filepath, max_crumbs, state);
       free(state);
     } else {
       napi_throw_type_error(
@@ -182,7 +182,7 @@ static napi_value Install(napi_env env, napi_callback_info info) {
           "Wrong argument types, expected (string, number, object?)");
     }
   } else {
-    becs_install(filepath, max_crumbs, NULL);
+    becsp_install(filepath, max_crumbs, NULL);
   }
 
   free(filepath);
@@ -207,10 +207,10 @@ static napi_value UpdateContext(napi_env env, napi_callback_info info) {
 
   if (valuetype0 == napi_string) {
     char *context = read_string_value(env, args[0], false);
-    throw_error_from_status(env, becs_set_context(context));
+    throw_error_from_status(env, becsp_set_context(context));
     free(context);
   } else if (valuetype0 == napi_null) {
-    becs_set_context(NULL);
+    becsp_set_context(NULL);
   } else {
     napi_throw_type_error(env, NULL,
                           "Wrong argument type, expected string or null");
@@ -233,7 +233,7 @@ static napi_value UpdateUser(napi_env env, napi_callback_info info) {
   char *id = read_string_value(env, args[0], true);
   char *email = read_string_value(env, args[1], true);
   char *name = read_string_value(env, args[2], true);
-  throw_error_from_status(env, becs_set_user(id, email, name));
+  throw_error_from_status(env, becsp_set_user(id, email, name));
 
   free(id);
   free(email);
@@ -259,11 +259,11 @@ static void UpdateMetadataTab(napi_env env, size_t argc, napi_value *args) {
   }
 
   if (should_clear) { // clearing the tab
-    throw_error_from_status(env, becs_update_metadata(tab, NULL));
+    throw_error_from_status(env, becsp_update_metadata(tab, NULL));
   } else {
     char *values = read_string_value(env, json_stringify(env, args[1]), true);
     if (values) {
-      throw_error_from_status(env, becs_update_metadata(tab, values));
+      throw_error_from_status(env, becsp_update_metadata(tab, values));
       free(values);
     }
   }
@@ -290,7 +290,7 @@ static napi_value UpdateMetadata(napi_env env, napi_callback_info info) {
   switch (valuetype0) {
   case napi_object: { // setting all metadata
     char *metadata = read_string_value(env, json_stringify(env, args[0]), true);
-    throw_error_from_status(env, becs_set_metadata(metadata));
+    throw_error_from_status(env, becsp_set_metadata(metadata));
     free(metadata);
   }; break;
   case napi_string: { // setting / clearing a single tab
@@ -317,7 +317,7 @@ static napi_value SetApp(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  set_object_or_null(env, args[0], becs_set_app);
+  set_object_or_null(env, args[0], becsp_set_app);
 
   return NULL;
 }
@@ -333,7 +333,7 @@ static napi_value SetDevice(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  set_object_or_null(env, args[0], becs_set_device);
+  set_object_or_null(env, args[0], becsp_set_device);
 
   return NULL;
 }
@@ -349,7 +349,7 @@ static napi_value SetSession(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  set_object_or_null(env, args[0], becs_set_session);
+  set_object_or_null(env, args[0], becsp_set_session);
 
   return NULL;
 }
@@ -367,7 +367,7 @@ static napi_value LeaveBreadcrumb(napi_env env, napi_callback_info info) {
 
   char *breadcrumb = read_json_string_value(env, args[0], false);
   if (breadcrumb) {
-    throw_error_from_status(env, becs_add_breadcrumb(breadcrumb));
+    throw_error_from_status(env, becsp_add_breadcrumb(breadcrumb));
     free(breadcrumb);
   }
 
@@ -375,7 +375,7 @@ static napi_value LeaveBreadcrumb(napi_env env, napi_callback_info info) {
 }
 
 static napi_value PersistState(napi_env env, napi_callback_info info) {
-  becs_persist_to_disk();
+  becsp_persist_to_disk();
   return NULL;
 }
 

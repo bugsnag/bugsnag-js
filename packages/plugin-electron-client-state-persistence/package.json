@@ -1,7 +1,7 @@
 {
-  "name": "@bugsnag/plugin-electron-native-client-sync",
+  "name": "@bugsnag/plugin-electron-client-state-persistence",
   "version": "1.0.0",
-  "main": "client-sync.js",
+  "main": "client-state-persistence.js",
   "description": "@bugsnag/electron plugin to sync information between JS and native layer",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
@@ -20,10 +20,10 @@
   "gypfile": true,
   "files": [
     "binding.gyp",
-    "client-sync.js",
+    "client-state-persistence.js",
     "src/api.c",
-    "src/bugsnag_electron_client_sync.c",
-    "src/bugsnag_electron_client_sync.h",
+    "src/bugsnag_electron_client_state_persistence.c",
+    "src/bugsnag_electron_client_state_persistence.h",
     "src/signal_handler.c",
     "src/signal_handler.h",
     "src/deps/parson/package.json",
@@ -40,7 +40,7 @@
   "devDependencies": {
     "@bugsnag/core": "^7.9.2-alpha.0",
     "@types/bindings": "^1.5.0",
-    "@bugsnag/plugin-electron-state-sync": "^1.0.0"
+    "@bugsnag/plugin-electron-client-state-manager": "^1.0.0"
   },
   "peerDependencies": {
     "@bugsnag/core": "^7.9.2-alpha.0"

@@ -27,9 +27,8 @@ module.exports = (opts) => {
   // main internal plugins go here
   const internalPlugins = [
     // THIS PLUGIN MUST BE FIRST!
-    require('@bugsnag/plugin-electron-event-sync/internal-plugin-marker').firstPlugin,
-    require('@bugsnag/plugin-electron-event-sync/main-event-sync.js'),
-    require('@bugsnag/plugin-electron-state-sync'),
+    require('@bugsnag/plugin-internal-callback-marker').FirstPlugin,
+    require('@bugsnag/plugin-electron-client-state-manager'),
     require('@bugsnag/plugin-electron-ipc'),
     require('@bugsnag/plugin-node-uncaught-exception'),
     require('@bugsnag/plugin-node-unhandled-rejection'),
@@ -39,7 +38,7 @@ module.exports = (opts) => {
     require('@bugsnag/plugin-electron-session')(electron.app, electron.BrowserWindow),
     require('@bugsnag/plugin-console-breadcrumbs'),
     // THIS PLUGIN MUST BE LAST!
-    require('@bugsnag/plugin-electron-event-sync/internal-plugin-marker').lastPlugin
+    require('@bugsnag/plugin-internal-callback-marker').LastPlugin
   ]
 
   const bugsnag = new Client(opts, schema, internalPlugins, require('../id'))
