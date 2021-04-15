@@ -33,8 +33,8 @@ const delivery = (client, filestore, net, app) => {
     cb(err)
   }
 
-  const syncPlugin = client.getPlugin('stateSync')
-  const statusUpdater = new NetworkStatus(syncPlugin, net, app)
+  const stateManagerPlugin = client.getPlugin('clientStateManager')
+  const statusUpdater = new NetworkStatus(stateManagerPlugin, net, app)
   const { queues } = initRedelivery(filestore.getPaths(), statusUpdater, client._logger, send)
 
   const hash = payload => {
