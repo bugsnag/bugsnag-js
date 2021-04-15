@@ -7,6 +7,7 @@ readdirSync('./preloads').forEach(name => {
 })
 
 module.exports = {
+  devtool: 'hidden-source-map',
   entry: entrypoints,
   output: {
     filename: '[name].js'
