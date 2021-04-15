@@ -11,7 +11,7 @@ interface ClientTestHelpers {
 export function makeClientForPlugin ({
   config = {},
   schema = {},
-  plugin = null
+  plugin = { load: (_client: Client): any => {} }
 } = {}): ClientTestHelpers {
   const client = new Client(
     {
