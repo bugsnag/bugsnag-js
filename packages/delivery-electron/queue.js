@@ -35,6 +35,10 @@ module.exports = class PayloadQueue {
    */
   async enqueue (item) {
     try {
+      if (!isValidPayload(item)) {
+        throw new Error('Invalid payload!')
+      }
+
       await this.init()
       const data = JSON.stringify(item)
       await writeFile(join(this._path, this._generateFilename()), data)
@@ -54,12 +58,18 @@ module.exports = class PayloadQueue {
       for (const filepath of payloads) {
         try {
           const payload = JSON.parse(await readFile(filepath))
+
+          if (!isValidPayload(payload)) {
+            throw new Error('Invalid payload!')
+          }
+
           return { path: filepath, payload }
         } catch (e) {
           // if we got here it's because
-          // a) JSON.parse failed or
+          // a) JSON.parse failed
           // b) the file can no longer be read (maybe it was truncated?)
-          // in both cases we want to speculatively remove it and try the next result
+          // c) the contents of the parsed file isn't a valid payload
+          // in any case we want to speculatively remove it and try the next result
           await this.remove(filepath)
         }
       }
@@ -124,3 +134,9 @@ module.exports = class PayloadQueue {
 }
 
 const uid = () => randomBytes(8).toString('hex')
+const isValidPayload = payload =>
+  payload.opts && typeof payload.opts === 'object' &&
+    typeof payload.opts.url === 'string' &&
+    typeof payload.opts.method === 'string' &&
+    payload.opts.headers && typeof payload.opts.headers === 'object' &&
+    typeof payload.body === 'string'
