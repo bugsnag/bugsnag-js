@@ -738,4 +738,36 @@ describe('plugin: aws lambda', () => {
     expect(events).toHaveLength(0)
     expect(sessions).toHaveLength(1)
   })
+
+  it('notifies when an string is passed (callback)', async () => {
+    const events: EventDeliveryPayload[] = []
+    const sessions: SessionDeliveryPayload[] = []
+
+    const client = createClient(events, sessions)
+
+    const message = 'uh oh'
+    const handler = (event: any, context: any, callback: any) => { callback(message, 'xyz') }
+
+    const event = { very: 'eventy' }
+    const context = { extremely: 'contextual' }
+
+    const plugin = client.getPlugin('awsLambda')
+
+    if (!plugin) {
+      throw new Error('Plugin was not loaded!')
+    }
+
+    const bugsnagHandler = plugin.createHandler()
+    const wrappedHandler = bugsnagHandler(handler)
+
+    expect(events).toHaveLength(0)
+    expect(sessions).toHaveLength(0)
+
+    await expect(() => wrappedHandler(event, context)).rejects.toBe(message)
+
+    expect(events).toHaveLength(1)
+    expect(events[0].events[0].errors[0].errorMessage).toBe(message)
+
+    expect(sessions).toHaveLength(1)
+  })
 })

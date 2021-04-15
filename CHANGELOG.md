@@ -10,6 +10,10 @@
   - Fix a crash in `bsg_ksmachgetThreadQueueName`. [bugsnag-cocoa#1065](https://github.com/bugsnag/bugsnag-cocoa/pull/1065)
   - Improve timestamp accuracy to fix breadcrumbs that are reported to occur after the error. [bugsnag-cocoa#1062](https://github.com/bugsnag/bugsnag-cocoa/pull/1062)
 
+### Fixed
+
+- (plugin-aws-lambda): Change Typescript definitions for compatibility with `@types/aws-lambda` [#1353](https://github.com/bugsnag/bugsnag-js/pull/1353) ([k-ish](https://github.com/h-kishi))
+
 ## v7.9.3 (2021-04-12)
 
 ### Changed

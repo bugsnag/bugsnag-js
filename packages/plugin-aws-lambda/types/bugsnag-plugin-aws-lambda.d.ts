@@ -4,7 +4,7 @@ declare const BugsnagPluginAwsLambda: Plugin
 export default BugsnagPluginAwsLambda
 
 type AsyncHandler = (event: any, context: any) => Promise<any>
-type CallbackHandler = (event: any, context: any, callback: (err: Error|null, response: any) => void) => void
+type CallbackHandler = (event: any, context: any, callback: (err?: Error|string|null, response?: any) => void) => void
 
 export type BugsnagPluginAwsLambdaHandler = (handler: AsyncHandler|CallbackHandler) => AsyncHandler
 
