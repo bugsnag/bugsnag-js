@@ -1,3 +1,4 @@
+const { rmdir } = require('fs').promises
 const { _electron: electron } = require('playwright')
 const psList = require('ps-list')
 
@@ -34,27 +35,25 @@ class Automator {
 
   async stop () {
     if (!this.runner) return
-    return Promise.race([
-      new Promise((resolve, reject) => setTimeout(() => {
-        reject(new Error('closing app timed out (5s)'))
-      }, 5_000)),
-      this.runner.close()
-    ]).catch(async () => {
-      const list = await psList()
-      list
-        .filter(p => p.ppid === process.pid && procNotMatching(p, 'npm'))
-        .forEach(p => {
-          try {
-            process.kill(p.pid)
-          } catch (e) {
-          }
-        })
-    })
+    try {
+      // going to kill the app, terminate connection to node
+      this.runner._nodeConnection.close()
+    } catch (e) {
+    }
+    const list = await psList()
+    list
+      .filter(p => p.ppid === process.pid && procNotMatching(p, 'npm'))
+      .forEach(p => {
+        try {
+          process.kill(p.pid)
+        } catch (e) {
+        }
+      })
   }
 
   async click (elementID) {
-    if (this.crashed) {
-      throw new Error('app is no longer running')
+    if (this.crashed || !this.runner) {
+      throw new Error('the app is not running')
     }
     try {
       await this.window.click(`id=${elementID}`)
@@ -64,6 +63,13 @@ class Automator {
       } else {
         throw e
       }
+    }
+  }
+
+  async clearCache () {
+    try {
+      await rmdir(this.app.cachePath(), { recursive: true })
+    } catch (e) {
     }
   }
 

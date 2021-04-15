@@ -1,4 +1,5 @@
 import Client from '@bugsnag/core/client'
+import { schema as defaultSchema } from '@bugsnag/core/config'
 import { Event, Session } from '@bugsnag/core'
 
 interface ClientTestHelpers {
@@ -9,6 +10,7 @@ interface ClientTestHelpers {
 
 export function makeClientForPlugin ({
   config = {},
+  schema = {},
   plugin = null
 } = {}): ClientTestHelpers {
   const client = new Client(
@@ -17,7 +19,7 @@ export function makeClientForPlugin ({
       logger: { debug: jest.fn(), info: jest.fn(), warn: jest.fn(), error: jest.fn() },
       ...config
     },
-    undefined,
+    { ...defaultSchema, ...schema },
     [plugin]
   )
 

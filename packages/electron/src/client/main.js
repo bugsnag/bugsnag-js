@@ -37,13 +37,15 @@ module.exports = (opts) => {
     require('@bugsnag/plugin-electron-device')(electron.app, electron.screen, process, filestore, NativeClient, electron.powerMonitor),
     require('@bugsnag/plugin-electron-session')(electron.app, electron.BrowserWindow),
     require('@bugsnag/plugin-console-breadcrumbs'),
+    require('@bugsnag/plugin-electron-preload-error')(electron.app),
+    require('@bugsnag/plugin-electron-net-breadcrumbs')(electron.net),
     // THIS PLUGIN MUST BE LAST!
     require('@bugsnag/plugin-internal-callback-marker').LastPlugin
   ]
 
   const bugsnag = new Client(opts, schema, internalPlugins, require('../id'))
 
-  bugsnag._setDelivery(makeDelivery(filestore, electron.net))
+  bugsnag._setDelivery(makeDelivery(filestore, electron.net, electron.app))
 
   bugsnag._logger.debug('Loaded! In main process.')
 

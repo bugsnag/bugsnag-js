@@ -43,6 +43,22 @@ class TestApp {
     }
   }
 
+  cachePath () {
+    const home = process.env.HOME
+    const name = this.appName
+    switch (process.platform) {
+      case 'darwin':
+        return join(home, `Library/Caches/${name}`)
+      case 'linux':
+        return join(process.env.XDG_CACHE_HOME || join(home, '.cache'), name)
+      case 'win32':
+        return join(process.env.APPDATA, name)
+
+      default:
+        throw new Error(`No caches known for ${process.platform}`)
+    }
+  }
+
   launchArgs () {
     switch (process.platform) {
       case 'linux':

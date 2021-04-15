@@ -19,6 +19,8 @@ class MockServer {
     this.router = router
     // random number between 8000-9999
     this.port = Math.floor(Math.random() * 1999 + 8000)
+    this.stopServer = promisify(this.server.close.bind(this.server))
+    this.startServer = promisify(this.server.listen.bind(this.server))
   }
 
   async uploadMinidump (req, res) {
@@ -51,8 +53,8 @@ class MockServer {
     })
   }
 
-  start () {
-    this.server.listen(this.port)
+  async start () {
+    await this.startServer(this.port)
   }
 
   uploadsForType (type) {
@@ -81,7 +83,11 @@ class MockServer {
   }
 
   async stop () {
-    return promisify(this.server.close.bind(this.server))()
+    // silence potential failures due to double stops
+    const stopping = this.stopServer().catch(() => {})
+    // terminate open connections immediately
+    setImmediate(() => this.server.emit('close'))
+    return stopping
   }
 
   // write all requests to disk for later inspection

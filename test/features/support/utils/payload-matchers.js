@@ -118,13 +118,14 @@ const compare = (expected, actual, path = '') => {
 }
 
 module.exports = {
-  toContainPayload (payloads, expected) {
+  toContainPayload (payloads, expected, matchOptions = {}) {
+    const { allowMultipleMatches = false } = matchOptions
     const results = payloads.map(actual => compare(expected, actual))
     // make the nearest match (least differences) be at the head of the array
     results.sort((a, b) => a.length - b.length)
 
     const exactMatches = results.filter(r => r.length === 0)
-    if (exactMatches.length === 1) {
+    if (exactMatches.length === 1 || (exactMatches.length === payloads.length && allowMultipleMatches)) {
       return {
         message: () => 'Expected no payloads to match but one did',
         pass: true

@@ -1,7 +1,6 @@
 const { schema } = require('./common')
 const stringWithLength = require('@bugsnag/core/lib/validators/string-with-length')
 const listOfFunctions = require('@bugsnag/core/lib/validators/list-of-functions')
-const process = require('process')
 const { inspect } = require('util')
 const { app } = require('electron')
 
@@ -18,8 +17,7 @@ module.exports.schema = {
   },
   onUncaughtException: {
     defaultValue: () => (err, event, logger) => {
-      logger.error(`Uncaught exception, the process will now terminate…\n${printError(err)}`)
-      process.exit(1)
+      logger.error(`Uncaught exception…\n${printError(err)}`)
     },
     message: 'should be a function',
     validate: value => typeof value === 'function'
@@ -32,7 +30,7 @@ module.exports.schema = {
     validate: value => typeof value === 'function'
   },
   projectRoot: {
-    defaultValue: () => process.cwd(),
+    defaultValue: () => app.getAppPath(),
     validate: value => value === null || stringWithLength(value),
     message: 'should be string'
   },
