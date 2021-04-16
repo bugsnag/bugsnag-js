@@ -370,6 +370,70 @@ describe('delivery: electron', () => {
     })
   })
 
+  it('will not retry exceptions caused by req.write during event delivery', done => {
+    const payload = {
+      events: [{ errors: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }] }]
+    } as unknown as EventDeliveryPayload
+
+    const writeError = new TypeError('no thanks')
+
+    const net = {
+      request: () => ({
+        on (_event, _cb) {},
+        write (_body) { throw writeError },
+        end () {}
+      })
+    }
+
+    const logger = { error: jest.fn(), info: jest.fn() }
+    const config = {
+      apiKey: 'aaaaaaaa',
+      endpoints: { notify: 'http://localhost:9999/events/' },
+      redactedKeys: []
+    }
+
+    delivery(filestore, net, app)(makeClient(config, logger)).sendEvent(payload, (err: any) => {
+      expect(err).toBe(writeError)
+      expect(err.isRetryable).toBe(false)
+      expect(logger.error).toHaveBeenCalledWith('event failed to send…\n', writeError.stack)
+      expect(enqueueSpy).not.toHaveBeenCalled()
+
+      done()
+    })
+  })
+
+  it('will not retry exceptions caused by req.write during session delivery', done => {
+    const payload = {
+      events: [{ errors: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }] }]
+    } as unknown as EventDeliveryPayload
+
+    const writeError = new TypeError('no thanks')
+
+    const net = {
+      request: () => ({
+        on (_event, _cb) {},
+        write (_body) { throw writeError },
+        end () {}
+      })
+    }
+
+    const logger = { error: jest.fn(), info: jest.fn() }
+    const config = {
+      apiKey: 'aaaaaaaa',
+      endpoints: { sessions: 'http://localhost:9999/sessions/' },
+      redactedKeys: []
+    }
+
+    delivery(filestore, net, app)(makeClient(config, logger)).sendSession(payload, (err: any) => {
+      expect(err).toBe(writeError)
+      expect(err.isRetryable).toBe(false)
+      expect(logger.error).toHaveBeenCalledWith('session failed to send…\n', writeError.stack)
+      expect(enqueueSpy).not.toHaveBeenCalled()
+
+      done()
+    })
+  })
+
   it('does not send an event marked with event.attemptImmediateDelivery=false', done => {
     const payload = {
       events: [{ errors: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }] }],

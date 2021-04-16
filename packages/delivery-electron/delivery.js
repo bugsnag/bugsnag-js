@@ -15,8 +15,20 @@ const delivery = (client, filestore, net, app) => {
         cb(err)
       }
     })
+
     req.on('error', cb)
-    req.write(body)
+
+    try {
+      req.write(body)
+    } catch (err) {
+      // if we can't write this body to the request, it's likely impossible to
+      // ever send it successfully
+      err.isRetryable = false
+
+      cb(err)
+      return
+    }
+
     req.end()
   }
 
