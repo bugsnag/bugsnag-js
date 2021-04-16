@@ -99,6 +99,42 @@ describe('plugin: electron client sync', () => {
     c.leaveBreadcrumb('Spin', { direction: 'ccw', deg: '90' })
   })
 
+  it('does not sync breadcrumbs that are cancelled by an onBreadcrumb callback', () => {
+    const NativeClient = { leaveBreadcrumb: jest.fn() }
+
+    const client = new Client({
+      apiKey: 'api_key',
+      plugins: [
+        stateManager,
+        plugin(NativeClient)
+      ]
+    })
+
+    client.addOnBreadcrumb(breadcrumb => {
+      if (breadcrumb.message === 'skip me') {
+        return false
+      }
+    })
+
+    // this onBreadcrumb is added last so it should always be called as it runs first
+    const alwaysCalledOnBreadcrumb = jest.fn()
+    client.addOnBreadcrumb(alwaysCalledOnBreadcrumb)
+
+    client.leaveBreadcrumb('skip me')
+
+    expect(alwaysCalledOnBreadcrumb).toHaveBeenCalled()
+    expect(NativeClient.leaveBreadcrumb).not.toHaveBeenCalled()
+
+    client.leaveBreadcrumb('this should be synced!')
+
+    expect(alwaysCalledOnBreadcrumb).toHaveBeenCalled()
+    expect(NativeClient.leaveBreadcrumb).toHaveBeenCalledWith(expect.objectContaining({
+      message: 'this should be synced!',
+      metadata: {},
+      type: 'manual'
+    }))
+  })
+
   function loggingClient (NativeClient: object): [Client, Logger] {
     const logger = {
       debug: jest.fn(),
