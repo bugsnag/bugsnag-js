@@ -51,7 +51,7 @@ while [ $# -gt 0 ]; do
             --version)
                 if [ $# -lt 2 ]; then error_missing_field $1; fi
                 echo "version" >"$CONFIG_FILE"
-                echo "v$2" >>"$CONFIG_FILE"
+                echo "$2" >>"$CONFIG_FILE"
                 exit 0
                 ;;
             --local)
