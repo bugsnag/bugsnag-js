@@ -82,6 +82,38 @@ describe('clientStateUpdatesPlugin', () => {
       }))
     })
 
+    it('does not propagate breadcrumb if it is cancelled by an onBreadcrumb callback', () => {
+      const mockBugsnagIpcRenderer = {
+        leaveBreadcrumb: jest.fn()
+      }
+
+      const client = new Client({}, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], {})
+
+      client.addOnBreadcrumb(breadcrumb => {
+        if (breadcrumb.message === 'skip me') {
+          return false
+        }
+      })
+
+      // this onBreadcrumb is added last so it should always be called as it runs first
+      const alwaysCalledOnBreadcrumb = jest.fn()
+      client.addOnBreadcrumb(alwaysCalledOnBreadcrumb)
+
+      client.leaveBreadcrumb('skip me')
+
+      expect(alwaysCalledOnBreadcrumb).toHaveBeenCalled()
+      expect(mockBugsnagIpcRenderer.leaveBreadcrumb).not.toHaveBeenCalled()
+
+      client.leaveBreadcrumb('this should be synced!')
+
+      expect(alwaysCalledOnBreadcrumb).toHaveBeenCalled()
+      expect(mockBugsnagIpcRenderer.leaveBreadcrumb).toHaveBeenCalledWith(expect.objectContaining({
+        message: 'this should be synced!',
+        metadata: {},
+        type: 'manual'
+      }))
+    })
+
     it('tolerates errors', () => {
       const throwError = () => { throw new Error('oops') }
       const mockBugsnagIpcRenderer = {
