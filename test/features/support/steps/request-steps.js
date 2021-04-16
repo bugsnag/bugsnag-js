@@ -133,3 +133,13 @@ Then('the contents of an event request matches {string}', async fixture => {
   }
   expect(payloads).toContainPayload(await readFixtureFile(fixture))
 })
+
+Then('exactly {int} breadcrumb(s) in event request {int} matches:', async (expectedMatches, requestIndex, data) => {
+  const payloads = readPayloads(global.server.eventUploads)
+  const breadcrumbs = payloads.flatMap(payload => payload.events.flatMap(event => event.breadcrumbs))
+
+  const expectedBreadcrumb = Object.fromEntries(data.raw())
+  const matches = breadcrumbs.filter(({ type, name }) => type === expectedBreadcrumb.type && name === expectedBreadcrumb.name)
+
+  expect(matches).toHaveLength(expectedMatches)
+})
