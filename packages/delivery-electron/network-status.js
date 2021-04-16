@@ -21,7 +21,7 @@ module.exports = class NetworkStatus {
       }
     })
 
-    emitter.on('MetadataReplace', ({ metadata }) => {
+    emitter.on('MetadataReplace', metadata => {
       if (metadata.device && typeof metadata.device.online === 'boolean') {
         this._update(metadata.device.online)
       }
