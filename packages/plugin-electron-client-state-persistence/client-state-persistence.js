@@ -8,9 +8,9 @@ module.exports = (NativeClient) => ({
       }
     }, true)
 
-    const stateSync = client.getPlugin('stateSync')
+    const clientStateManager = client.getPlugin('clientStateManager')
 
-    stateSync.emitter.on('UserUpdate', user => {
+    clientStateManager.emitter.on('UserUpdate', user => {
       try {
         NativeClient.updateUser(user.id, user.email, user.name)
       } catch (e) {
@@ -18,7 +18,7 @@ module.exports = (NativeClient) => ({
       }
     })
 
-    stateSync.emitter.on('ContextUpdate', context => {
+    clientStateManager.emitter.on('ContextUpdate', context => {
       try {
         NativeClient.updateContext(context)
       } catch (e) {
@@ -26,7 +26,7 @@ module.exports = (NativeClient) => ({
       }
     })
 
-    stateSync.emitter.on('MetadataUpdate', ({ section, values }) => {
+    clientStateManager.emitter.on('MetadataUpdate', ({ section, values }) => {
       try {
         NativeClient.updateMetadata(section, values)
       } catch (e) {
@@ -34,7 +34,7 @@ module.exports = (NativeClient) => ({
       }
     })
 
-    stateSync.emitter.on('MetadataReplace', ({ metadata }) => {
+    clientStateManager.emitter.on('MetadataReplace', (metadata) => {
       try {
         NativeClient.updateMetadata(metadata)
       } catch (e) {

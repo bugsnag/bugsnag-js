@@ -9,7 +9,7 @@
 #include <unistd.h>
 #endif
 
-#include "bugsnag_electron_client_sync.h"
+#include "bugsnag_electron_client_state_persistence.h"
 #include "deps/parson/parson.h"
 #include "deps/tinycthread/tinycthread.h"
 #include "signal_handler.h"
@@ -27,12 +27,12 @@ typedef struct {
   size_t serialized_data_len;
   // A lock for synchronizing access to the JSON object
   mtx_t lock;
-} becs_context;
+} becsp_context;
 
 // Maximum size for all serialized data
-static const int BECS_SERIALIZED_DATA_LEN = 1024 * 1024;
+static const int BECSP_SERIALIZED_DATA_LEN = 1024 * 1024;
 // Local context for storing cached data
-static becs_context g_context = {0};
+static becsp_context g_context = {0};
 // Field constants
 static const char *const key_app = "app";
 static const char *const key_breadcrumbs = "breadcrumbs";
@@ -46,11 +46,11 @@ static const char *const keypath_user_name = "user.name";
 static const char *const keypath_user_email = "user.email";
 
 static void handle_crash_signal(int sig) {
-  becs_persist_to_disk();
+  becsp_persist_to_disk();
   // Uninstall handlers
-  becs_signal_uninstall();
+  becsp_signal_uninstall();
   // Invoke previous handler
-  becs_signal_raise(sig);
+  becsp_signal_raise(sig);
 }
 
 static void serialize_data() {
@@ -59,7 +59,7 @@ static void serialize_data() {
     g_context.serialized_data_len = json_serialization_size(g_context.data) - 1;
     // Serialize object to buffer
     json_serialize_to_buffer(g_context.data, g_context.serialized_data,
-                             BECS_SERIALIZED_DATA_LEN);
+                             BECSP_SERIALIZED_DATA_LEN);
   }
 }
 
@@ -97,7 +97,7 @@ static JSON_Value *initialize_context(const char *state) {
   return json_value_init_object();
 }
 
-void becs_install(const char *save_file_path, uint8_t max_crumbs,
+void becsp_install(const char *save_file_path, uint8_t max_crumbs,
                   const char *state) {
   if (g_context.data != NULL) {
     return;
@@ -113,18 +113,18 @@ void becs_install(const char *save_file_path, uint8_t max_crumbs,
   g_context.data = initialize_context(state);
 
   // Allocate a buffer for the serialized JSON string
-  g_context.serialized_data = calloc(BECS_SERIALIZED_DATA_LEN, sizeof(char));
+  g_context.serialized_data = calloc(BECSP_SERIALIZED_DATA_LEN, sizeof(char));
   // Cache the empty objects as a JSON string
   serialize_data();
   // Install signal handler
-  becs_signal_install(handle_crash_signal);
+  becsp_signal_install(handle_crash_signal);
 }
 
-void becs_uninstall() {
+void becsp_uninstall() {
   if (!g_context.data) {
     return;
   }
-  becs_signal_uninstall();
+  becsp_signal_uninstall();
   free((void *)g_context.save_file_path);
   free(g_context.serialized_data);
   json_value_free(g_context.data);
@@ -135,19 +135,19 @@ void becs_uninstall() {
   g_context.serialized_data = NULL;
 }
 
-BECS_STATUS becs_add_breadcrumb(const char *val) {
+BECSP_STATUS becsp_add_breadcrumb(const char *val) {
   if (!g_context.data) {
-    return BECS_STATUS_NOT_INSTALLED;
+    return BECSP_STATUS_NOT_INSTALLED;
   }
   context_lock();
-  BECS_STATUS status = BECS_STATUS_SUCCESS;
+  BECSP_STATUS status = BECSP_STATUS_SUCCESS;
 
   JSON_Object *obj = json_value_get_object(g_context.data);
   JSON_Value *breadcrumb = json_parse_string(val);
   if (!breadcrumb) {
-    status = BECS_STATUS_INVALID_JSON;
+    status = BECSP_STATUS_INVALID_JSON;
   } else if (json_value_get_type(breadcrumb) != JSONObject) {
-    status = BECS_STATUS_EXPECTED_JSON_OBJECT;
+    status = BECSP_STATUS_EXPECTED_JSON_OBJECT;
     json_value_free(breadcrumb);
   } else {
     JSON_Value *breadcrumbs_value = json_object_get_value(obj, key_breadcrumbs);
@@ -170,9 +170,9 @@ BECS_STATUS becs_add_breadcrumb(const char *val) {
   return status;
 }
 
-BECS_STATUS becs_set_context(const char *context) {
+BECSP_STATUS becsp_set_context(const char *context) {
   if (!g_context.data) {
-    return BECS_STATUS_NOT_INSTALLED;
+    return BECSP_STATUS_NOT_INSTALLED;
   }
   context_lock();
 
@@ -185,16 +185,16 @@ BECS_STATUS becs_set_context(const char *context) {
 
   serialize_data();
   context_unlock();
-  return BECS_STATUS_SUCCESS;
+  return BECSP_STATUS_SUCCESS;
 }
 
-BECS_STATUS becs_set_metadata(const char *values) {
+BECSP_STATUS becsp_set_metadata(const char *values) {
   if (!g_context.data) {
-    return BECS_STATUS_NOT_INSTALLED;
+    return BECSP_STATUS_NOT_INSTALLED;
   }
 
   context_lock();
-  BECS_STATUS status = BECS_STATUS_SUCCESS;
+  BECSP_STATUS status = BECSP_STATUS_SUCCESS;
   JSON_Object *obj = json_value_get_object(g_context.data);
 
   if (values) {
@@ -203,11 +203,11 @@ BECS_STATUS becs_set_metadata(const char *values) {
       if (json_value_get_type(metadata) == JSONObject) {
         json_object_set_value(obj, key_metadata, metadata);
       } else {
-        status = BECS_STATUS_EXPECTED_JSON_OBJECT;
+        status = BECSP_STATUS_EXPECTED_JSON_OBJECT;
         json_value_free(metadata);
       }
     } else {
-      status = BECS_STATUS_INVALID_JSON;
+      status = BECSP_STATUS_INVALID_JSON;
     }
   } else {
     json_object_remove(obj, key_metadata);
@@ -218,17 +218,17 @@ BECS_STATUS becs_set_metadata(const char *values) {
   return status;
 }
 
-BECS_STATUS becs_update_metadata(const char *tab, const char *val) {
+BECSP_STATUS becsp_update_metadata(const char *tab, const char *val) {
   if (!g_context.data) {
-    return BECS_STATUS_NOT_INSTALLED;
+    return BECSP_STATUS_NOT_INSTALLED;
   }
 
   if (!tab) {
-    return BECS_STATUS_NULL_PARAM;
+    return BECSP_STATUS_NULL_PARAM;
   }
 
   context_lock();
-  BECS_STATUS status = BECS_STATUS_SUCCESS;
+  BECSP_STATUS status = BECSP_STATUS_SUCCESS;
 
   JSON_Object *obj = json_value_get_object(g_context.data);
   JSON_Value *metadata_value = json_object_get_value(obj, key_metadata);
@@ -246,7 +246,7 @@ BECS_STATUS becs_update_metadata(const char *tab, const char *val) {
     if (tab_values) {
       json_object_set_value(metadata, tab, tab_values);
     } else {
-      status = BECS_STATUS_INVALID_JSON;
+      status = BECSP_STATUS_INVALID_JSON;
     }
   } else { // Clear the tab contents
     json_object_remove(metadata, tab);
@@ -257,19 +257,19 @@ BECS_STATUS becs_update_metadata(const char *tab, const char *val) {
   return status;
 }
 
-BECS_STATUS becs_set_app(const char *value) {
+BECSP_STATUS becsp_set_app(const char *value) {
   if (!g_context.data) {
-    return BECS_STATUS_NOT_INSTALLED;
+    return BECSP_STATUS_NOT_INSTALLED;
   }
   context_lock();
-  BECS_STATUS status = BECS_STATUS_SUCCESS;
+  BECSP_STATUS status = BECSP_STATUS_SUCCESS;
   JSON_Object *obj = json_value_get_object(g_context.data);
   if (value) {
     JSON_Value *pairs = json_parse_string(value);
     if (!pairs) {
-      status = BECS_STATUS_INVALID_JSON;
+      status = BECSP_STATUS_INVALID_JSON;
     } else if (json_value_get_type(pairs) != JSONObject) {
-      status = BECS_STATUS_EXPECTED_JSON_OBJECT;
+      status = BECSP_STATUS_EXPECTED_JSON_OBJECT;
       json_value_free(pairs);
     } else {
       json_object_set_value(obj, key_app, pairs);
@@ -283,19 +283,19 @@ BECS_STATUS becs_set_app(const char *value) {
   return status;
 }
 
-BECS_STATUS becs_set_device(const char *value) {
+BECSP_STATUS becsp_set_device(const char *value) {
   if (!g_context.data) {
-    return BECS_STATUS_NOT_INSTALLED;
+    return BECSP_STATUS_NOT_INSTALLED;
   }
   context_lock();
-  BECS_STATUS status = BECS_STATUS_SUCCESS;
+  BECSP_STATUS status = BECSP_STATUS_SUCCESS;
   JSON_Object *obj = json_value_get_object(g_context.data);
   if (value) {
     JSON_Value *pairs = json_parse_string(value);
     if (!pairs) {
-      status = BECS_STATUS_INVALID_JSON;
+      status = BECSP_STATUS_INVALID_JSON;
     } else if (json_value_get_type(pairs) != JSONObject) {
-      status = BECS_STATUS_EXPECTED_JSON_OBJECT;
+      status = BECSP_STATUS_EXPECTED_JSON_OBJECT;
       json_value_free(pairs);
     } else {
       json_object_set_value(obj, key_device, pairs);
@@ -309,19 +309,19 @@ BECS_STATUS becs_set_device(const char *value) {
   return status;
 }
 
-BECS_STATUS becs_set_session(const char *value) {
+BECSP_STATUS becsp_set_session(const char *value) {
   if (!g_context.data) {
-    return BECS_STATUS_NOT_INSTALLED;
+    return BECSP_STATUS_NOT_INSTALLED;
   }
   context_lock();
-  BECS_STATUS status = BECS_STATUS_SUCCESS;
+  BECSP_STATUS status = BECSP_STATUS_SUCCESS;
   JSON_Object *obj = json_value_get_object(g_context.data);
   if (value) {
     JSON_Value *pairs = json_parse_string(value);
     if (!pairs) {
-      status = BECS_STATUS_INVALID_JSON;
+      status = BECSP_STATUS_INVALID_JSON;
     } else if (json_value_get_type(pairs) != JSONObject) {
-      status = BECS_STATUS_EXPECTED_JSON_OBJECT;
+      status = BECSP_STATUS_EXPECTED_JSON_OBJECT;
       json_value_free(pairs);
     } else {
       json_object_set_value(obj, key_session, pairs);
@@ -335,9 +335,9 @@ BECS_STATUS becs_set_session(const char *value) {
   return status;
 }
 
-BECS_STATUS becs_set_user(const char *id, const char *email, const char *name) {
+BECSP_STATUS becsp_set_user(const char *id, const char *email, const char *name) {
   if (!g_context.data) {
-    return BECS_STATUS_NOT_INSTALLED;
+    return BECSP_STATUS_NOT_INSTALLED;
   }
   context_lock();
 
@@ -360,24 +360,24 @@ BECS_STATUS becs_set_user(const char *id, const char *email, const char *name) {
 
   serialize_data();
   context_unlock();
-  return BECS_STATUS_SUCCESS;
+  return BECSP_STATUS_SUCCESS;
 }
 
 // Must be async-signal-safe
-BECS_STATUS becs_persist_to_disk() {
+BECSP_STATUS becsp_persist_to_disk() {
   if (!g_context.save_file_path) {
-    return BECS_STATUS_NOT_INSTALLED;
+    return BECSP_STATUS_NOT_INSTALLED;
   }
   // Open save file path
   int fd = open(g_context.save_file_path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
   if (fd == -1) {
-    return BECS_STATUS_UNKNOWN_FAILURE;
+    return BECSP_STATUS_UNKNOWN_FAILURE;
   }
   // Write serialized_data
   size_t len =
       write(fd, g_context.serialized_data, g_context.serialized_data_len);
   // Close save file path
   close(fd);
-  return len == g_context.serialized_data_len ? BECS_STATUS_SUCCESS
-                                              : BECS_STATUS_UNKNOWN_FAILURE;
+  return len == g_context.serialized_data_len ? BECSP_STATUS_SUCCESS
+                                              : BECSP_STATUS_UNKNOWN_FAILURE;
 }

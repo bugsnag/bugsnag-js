@@ -18,21 +18,21 @@ static const int bsg_native_signals[] = {SIGILL, SIGTRAP, SIGABRT,
 
 static void (*prev_handlers[SIGNAL_COUNT])(int);
 
-void becs_signal_install(void (*func)(int)) {
+void becsp_signal_install(void (*func)(int)) {
   for (int i = 0; i < SIGNAL_COUNT; i++) {
     const int sig = bsg_native_signals[i];
     prev_handlers[i] = signal(sig, func);
   }
 }
 
-void becs_signal_uninstall() {
+void becsp_signal_uninstall() {
   for (int i = 0; i < SIGNAL_COUNT; i++) {
     const int sig = bsg_native_signals[i];
     signal(sig, prev_handlers[i]);
   }
 }
 
-void becs_signal_raise(int _sig) {
+void becsp_signal_raise(int _sig) {
   for (int i = 0; i < SIGNAL_COUNT; i++) {
     const int sig = bsg_native_signals[i];
     if (sig == _sig) {

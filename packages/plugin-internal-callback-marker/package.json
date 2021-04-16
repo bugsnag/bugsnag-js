@@ -1,0 +1,29 @@
+{
+  "name": "@bugsnag/plugin-internal-callback-marker",
+  "version": "1.0.0",
+  "main": "internal-callback-marker.js",
+  "description": "@bugsnag/js plugin to annotate all OnError callbacks added by internal plugins",
+  "homepage": "https://www.bugsnag.com/",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:bugsnag/bugsnag-electron.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+  },
+  "author": "Bugsnag",
+  "license": "MIT",
+  "files": [
+    "internal-callback-marker.js"
+  ],
+  "dependencies": {
+  },
+  "devDependencies": {
+    "@bugsnag/core": "^7.9.2-alpha.0"
+  },
+  "peerDependencies": {
+    "@bugsnag/core": "^7.9.2-alpha.0"
+  }
+}

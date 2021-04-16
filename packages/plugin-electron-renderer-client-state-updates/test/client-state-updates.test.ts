@@ -1,13 +1,13 @@
-import clientSyncPlugin from '../client-sync'
+import clientStateUpdatesPlugin from '../client-state-updates'
 import Client from '@bugsnag/core/client'
 
-describe('clientSyncPlugin', () => {
+describe('clientStateUpdatesPlugin', () => {
   describe('propagation of changes to the IPC layer', () => {
     it('propagates context changes', () => {
       const mockBugsnagIpcRenderer = {
         setContext: jest.fn()
       }
-      const client = new Client({}, {}, [clientSyncPlugin(mockBugsnagIpcRenderer)], {})
+      const client = new Client({}, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], {})
 
       client.setContext('ctx')
       expect(mockBugsnagIpcRenderer.setContext).toHaveBeenCalledWith('ctx')
@@ -17,7 +17,7 @@ describe('clientSyncPlugin', () => {
       const mockBugsnagIpcRenderer = {
         getContext: () => 'ctx'
       }
-      const client = new Client({}, {}, [clientSyncPlugin(mockBugsnagIpcRenderer)], {})
+      const client = new Client({}, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], {})
       expect(client.getContext()).toBe('ctx')
     })
 
@@ -25,7 +25,7 @@ describe('clientSyncPlugin', () => {
       const mockBugsnagIpcRenderer = {
         setUser: jest.fn()
       }
-      const client = new Client({}, {}, [clientSyncPlugin(mockBugsnagIpcRenderer)], {})
+      const client = new Client({}, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], {})
 
       client.setUser('123', 'jim@jim.com', 'Jim')
       expect(mockBugsnagIpcRenderer.setUser).toHaveBeenCalledWith('123', 'jim@jim.com', 'Jim')
@@ -35,7 +35,7 @@ describe('clientSyncPlugin', () => {
       const mockBugsnagIpcRenderer = {
         getUser: () => { return { id: '123', email: 'jim@jim.com', name: 'Jim' } }
       }
-      const client = new Client({}, {}, [clientSyncPlugin(mockBugsnagIpcRenderer)], {})
+      const client = new Client({}, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], {})
 
       expect(client.getUser()).toEqual({ id: '123', email: 'jim@jim.com', name: 'Jim' })
     })
@@ -45,7 +45,7 @@ describe('clientSyncPlugin', () => {
         addMetadata: jest.fn(),
         clearMetadata: jest.fn()
       }
-      const client = new Client({}, {}, [clientSyncPlugin(mockBugsnagIpcRenderer)], {})
+      const client = new Client({}, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], {})
 
       client.addMetadata('section', { key0: 123, key1: 234 })
       expect(mockBugsnagIpcRenderer.addMetadata).toHaveBeenCalledWith('section', { key0: 123, key1: 234 })
@@ -65,7 +65,7 @@ describe('clientSyncPlugin', () => {
           done()
         }
       }
-      const client = new Client({}, {}, [clientSyncPlugin(mockBugsnagIpcRenderer)], {})
+      const client = new Client({}, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], {})
       client.getMetadata('layers', 'strawberry')
     })
 
@@ -73,7 +73,7 @@ describe('clientSyncPlugin', () => {
       const mockBugsnagIpcRenderer = {
         leaveBreadcrumb: jest.fn()
       }
-      const client = new Client({}, {}, [clientSyncPlugin(mockBugsnagIpcRenderer)], {})
+      const client = new Client({}, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], {})
       client.leaveBreadcrumb('hi')
       expect(mockBugsnagIpcRenderer.leaveBreadcrumb).toHaveBeenCalledWith(expect.objectContaining({
         message: 'hi',
@@ -91,7 +91,7 @@ describe('clientSyncPlugin', () => {
         clearMetadata: jest.fn().mockImplementation(throwError),
         leaveBreadcrumb: jest.fn().mockImplementation(throwError)
       }
-      const client = new Client({}, {}, [clientSyncPlugin(mockBugsnagIpcRenderer)], {})
+      const client = new Client({}, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], {})
       expect(() => {
         client.setContext('ctx')
         client.setUser('123')
@@ -112,7 +112,7 @@ describe('clientSyncPlugin', () => {
         metadata: { section: { key: 'value' } },
         context: 'renderer config',
         user: { id: 'ab23' }
-      }, undefined, [clientSyncPlugin(mockBugsnagIpcRenderer)])
+      }, undefined, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)])
 
       expect(mockBugsnagIpcRenderer.update).toHaveBeenCalledWith({
         metadata: { section: { key: 'value' } },
@@ -131,7 +131,7 @@ describe('clientSyncPlugin', () => {
         apiKey: '123',
         metadata: { section: { key: 'value' } },
         user: {}
-      }, undefined, [clientSyncPlugin(mockBugsnagIpcRenderer)])
+      }, undefined, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)])
 
       expect(mockBugsnagIpcRenderer.update).toHaveBeenCalledWith({
         metadata: { section: { key: 'value' } }
@@ -141,7 +141,7 @@ describe('clientSyncPlugin', () => {
     it('starts sessions', () => {
       const mockBugsnagIpcRenderer = { startSession: jest.fn() }
 
-      const client = new Client({}, {}, [clientSyncPlugin(mockBugsnagIpcRenderer)], {})
+      const client = new Client({}, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], {})
       const returnValue = client.startSession()
       expect(mockBugsnagIpcRenderer.startSession).toHaveBeenCalled()
       expect(returnValue).toBe(client)
@@ -150,7 +150,7 @@ describe('clientSyncPlugin', () => {
     it('stops sessions', () => {
       const mockBugsnagIpcRenderer = { stopSession: jest.fn() }
 
-      const client = new Client({}, {}, [clientSyncPlugin(mockBugsnagIpcRenderer)], {})
+      const client = new Client({}, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], {})
       client.stopSession()
       expect(mockBugsnagIpcRenderer.stopSession).toHaveBeenCalled()
     })
@@ -158,7 +158,7 @@ describe('clientSyncPlugin', () => {
     it('pauses sessions', () => {
       const mockBugsnagIpcRenderer = { pauseSession: jest.fn() }
 
-      const client = new Client({}, {}, [clientSyncPlugin(mockBugsnagIpcRenderer)], {})
+      const client = new Client({}, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], {})
       client.pauseSession()
       expect(mockBugsnagIpcRenderer.pauseSession).toHaveBeenCalled()
     })
@@ -166,7 +166,7 @@ describe('clientSyncPlugin', () => {
     it('resumes sessions', () => {
       const mockBugsnagIpcRenderer = { resumeSession: jest.fn() }
 
-      const client = new Client({}, {}, [clientSyncPlugin(mockBugsnagIpcRenderer)], {})
+      const client = new Client({}, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], {})
       const returnValue = client.resumeSession()
       expect(mockBugsnagIpcRenderer.resumeSession).toHaveBeenCalled()
       expect(returnValue).toBe(client)
