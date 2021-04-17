@@ -1,7 +1,7 @@
 # CI test image for unit/lint/type tests
 FROM node:lts-alpine
 
-RUN apk add --update bash git curl
+RUN apk add --update bash git curl rsync
 
 RUN rm -f ~/.npmrc
 
