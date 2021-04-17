@@ -17,7 +17,7 @@ services:
         - REG_NPM_EMAIL
         - PUBLISH_URL
         - BRANCH_NAME
-
+        - RN_INTEGRATION
   ci:
     build:
       context: .

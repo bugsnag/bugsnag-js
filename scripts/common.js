@@ -30,12 +30,19 @@ module.exports = {
       branchName = this.run('git rev-parse --abbrev-ref HEAD').replace(regex, '-')
     }
 
-    // Distinguish from local use
-    const ciIndicator = (process.env.BUILDKITE ? 'ci-' : '')
-
     // Get the current version from lerna.json
     const lernaVersion = lerna.version.match(/^[1-9][0-9]*\.[0-9]+\.[0-9]+/)[0]
 
-    return `${lernaVersion}-${ciIndicator}${branchName}.${commitId}`
+    // Base version for RN integration builds on the current time
+    if (process.env.RN_INTEGRATION) {
+      const timestamp = Math.round(Date.now() / 1000)
+
+      return `${lernaVersion}-rn-integration.${timestamp}`
+    } else {
+      // Distinguish from local use
+      const ciIndicator = (process.env.BUILDKITE ? 'ci-' : '')
+
+      return `${lernaVersion}-${ciIndicator}${branchName}.${commitId}`
+    }
   }
 }
