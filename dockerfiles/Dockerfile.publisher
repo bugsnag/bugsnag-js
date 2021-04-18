@@ -1,5 +1,27 @@
 # CI test image for unit/lint/type tests
-FROM node:lts-alpine
+#FROM node:lts-alpine
+#
+#RUN apk add --update bash git rsync
+
+FROM openjdk:8-jdk-buster
+
+# OS setup
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
+RUN apt-get update && apt-get install -y gradle jq git-core build-essential openssl libssl-dev bash git rsync nodejs
+
+# Android tools
+WORKDIR /sdk
+RUN wget https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip -q \
+    && unzip -q sdk-tools-linux-4333796.zip \
+    && rm sdk-tools-linux-4333796.zip
+
+ENV PATH="${PATH}:/sdk/tools:/sdk/tools/bin"
+
+RUN yes | sdkmanager "platform-tools" "build-tools;28.0.3"
+ENV PATH="${PATH}:/sdk/platform-tools"
+
+ENV ANDROID_HOME="/sdk/"
+ENV GRADLE_OPTS="-Dorg.gradle.daemon=false"
 
 RUN apk add --update bash git curl rsync
 
