@@ -1,4 +1,3 @@
-import { Breadcrumb } from '@bugsnag/core'
 import { makeClientForPlugin, makeDisplay, makeScreen } from '@bugsnag/electron-test-helpers'
 import plugin from '../'
 
