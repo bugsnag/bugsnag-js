@@ -21,6 +21,7 @@ NSMutableDictionary *BSGParseDeviceMetadata(NSDictionary *event) {
     NSDictionary *state = [event valueForKeyPath:@"user.state.deviceState"];
     [device addEntriesFromDictionary:state];
     device[@"timezone"] = [event valueForKeyPath:@"system.time_zone"];
+    device[@"macCatalystiOSVersion"] = [event valueForKeyPath:@"system.iOSSupportVersion"];
 
 #if BSG_PLATFORM_SIMULATOR
     device[@"simulator"] = @YES;
