@@ -150,7 +150,8 @@ export function makeBrowserWindow ({ windows = [], focusedWindow = null } = {}):
         this._focusedWindow = this._browserWindows.indexOf(window)
       }
 
-      // @ts-expect-error TODO I couldn't resolve this (BG)
+      // eslint-disable-next-line
+      // @ts-ignore TODO I couldn't resolve this (BG)
       window.callbacks.closed.forEach(f => { f() })
     }
   }

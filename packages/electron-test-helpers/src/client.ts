@@ -1,5 +1,6 @@
 import Client from '@bugsnag/core/client'
-// @ts-expect-error TODO the config file needs internal types adding
+// eslint-disable-next-line
+// @ts-ignore TODO the config file needs internal types adding
 import { schema as defaultSchema } from '@bugsnag/core/config'
 import { Event, Session, SessionPayload, EventPayload, Plugin } from '@bugsnag/core'
 
