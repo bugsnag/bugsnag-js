@@ -1,5 +1,12 @@
 version: '3.6'
 services:
+  license_finder:
+    build:
+      dockerfile: dockerfiles/Dockerfile.audit
+      context: .
+    volumes:
+      - ./:/scan
+
   minimal-packager:
     build:
       context: .
