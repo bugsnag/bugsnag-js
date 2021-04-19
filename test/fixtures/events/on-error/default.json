@@ -79,7 +79,12 @@
         {
           "errorMessage": "hi",
           "errorClass": "Error",
-          "stacktrace": [],
+          "stacktrace": [
+            {
+              "lineNumber": 32,
+              "file": "./renderer.js"
+            }
+          ],
           "type": "electronrendererjs"
         }
       ]

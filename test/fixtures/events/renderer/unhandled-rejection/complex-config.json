@@ -86,7 +86,12 @@
         {
           "errorClass": "TypeError",
           "errorMessage": "invalid",
-          "stacktrace": [],
+          "stacktrace": [
+            {
+              "file": "./renderer.js",
+              "lineNumber": 11
+            }
+          ],
           "type": "electronrendererjs"
         }
       ]

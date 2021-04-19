@@ -93,7 +93,12 @@
         {
           "errorMessage": "{REGEX:ALERT!$}",
           "errorClass": "Error",
-          "stacktrace": [],
+          "stacktrace": [
+            {
+              "lineNumber": 19,
+              "file": "./renderer.js"
+            }
+          ],
           "type": "electronrendererjs"
         }
       ]

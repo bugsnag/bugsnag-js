@@ -5,13 +5,14 @@ const { MockServer } = require('./server')
 const { TestApp } = require('./app')
 const { Automator } = require('./automator')
 const { publishPackages, startServer } = require('./repo')
+const { loadSourcemaps } = require('./utils/source-mapper')
 
 const failureOutputDir = join(__dirname, '../../../.cucumber-failures')
 
 // Allow a longer timeout for this step, which packages the app to run the tests
 // The upper bound for timeouts is only really an issue on lower-resourced
 // containers, and should otherwise complete in a few seconds.
-BeforeAll({ timeout: 240 * 1000 }, async () => {
+BeforeAll({ timeout: 420 * 1000 }, async () => {
   global.success = true
   global.server = new MockServer()
 
@@ -52,9 +53,14 @@ BeforeAll({ timeout: 240 * 1000 }, async () => {
       BUGSNAG_ENDPOINT_NOTIFY: endpoints.notify,
       BUGSNAG_ENDPOINT_SESSIONS: endpoints.sessions
     })
-    console.log('[BeforeAll] Done!')
   }
 
+  // cache source maps for faster event validation
+  console.log('[BeforeAll] Reading source maps ...')
+  await loadSourcemaps(join(app.electronAppPath(), '.webpack'))
+  console.log('[BeforeAll] Done!')
+
+  global.app = app
   global.automator = new Automator(app)
 })
 
