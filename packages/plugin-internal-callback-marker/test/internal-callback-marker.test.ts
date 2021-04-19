@@ -1,5 +1,6 @@
 import { FirstPlugin, LastPlugin } from '../internal-callback-marker'
-import Client from '@bugsnag/core/client'
+import InternalClient from '@bugsnag/core/client'
+import { Plugin, Client } from '@bugsnag/core'
 
 describe('@bugsnag/plugin-internal-callback-marker', () => {
   it('should annotate callbacks added by internal plugins with _internal:true', () => {
@@ -13,23 +14,23 @@ describe('@bugsnag/plugin-internal-callback-marker', () => {
     const externalOnErrorViaMethod: OnErrorCallback = () => {}
     const externalOnErrorViaPlugin: OnErrorCallback = () => {}
 
-    const internalPlugins = [
+    const internalPlugins: Plugin[] = [
       {
-        load: (client) => {
+        load: (client: Client) => {
           client.addOnError(internalOnError)
         }
       }
     ]
 
-    const externalPlugins = [
+    const externalPlugins: Plugin[] = [
       {
-        load: (client) => {
+        load: (client: Client) => {
           client.addOnError(externalOnErrorViaPlugin)
         }
       }
     ]
 
-    const client = new Client({
+    const client = new InternalClient({
       apiKey: '123',
       onError: externalOnErrorViaConfig,
       plugins: externalPlugins

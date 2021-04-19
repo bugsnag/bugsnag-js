@@ -39,7 +39,7 @@ class PowerMonitor {
     this.callbacks[event].push(callback)
   }
 
-  getSystemIdleState (idleThreshold) {
+  getSystemIdleState (idleThreshold: number) {
     if (idleThreshold > 0) {
       return this.isLocked ? 'locked' : 'active'
     }
@@ -79,6 +79,6 @@ class PowerMonitor {
   }
 }
 
-export function makePowerMonitor (...args): PowerMonitor {
+export function makePowerMonitor (...args: any[]): PowerMonitor {
   return new PowerMonitor(...args)
 }

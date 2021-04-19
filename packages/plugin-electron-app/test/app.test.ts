@@ -1,4 +1,3 @@
-import Client from '@bugsnag/core/client'
 import {
   makeApp as makeElectronApp,
   makeBrowserWindow,
@@ -731,7 +730,7 @@ describe('plugin: electron app info', () => {
 
     const { client } = makeClient({ config })
 
-    expect(client._config.launchDurationMillis).toBe(5000)
+    expect((client._config as (typeof client._config & { launchDurationMillis: string })).launchDurationMillis).toBe(5000)
     expect(client._logger.warn).toHaveBeenCalledWith(new Error(
       'Invalid configuration\n  - launchDurationMillis should be a number ≥0, got -1234567890'
     ))
@@ -754,7 +753,7 @@ function makeClient ({
   process = makeProcess(),
   config = { launchDurationMillis: 0 },
   NativeApp = makeNativeApp()
-}: MakeClientOptions = {}): Client {
+}: MakeClientOptions = {}): ReturnType<typeof makeClientForPlugin> {
   return makeClientForPlugin({
     config,
     plugin: plugin(NativeClient, process, electronApp, BrowserWindow, NativeApp)

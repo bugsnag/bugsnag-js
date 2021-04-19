@@ -319,7 +319,7 @@ describe('plugin: electron device info', () => {
       async getDeviceInfo () {
         throw new Error('insert disk 2')
       },
-      async setDeviceInfo (deviceInfo) {}
+      async setDeviceInfo (deviceInfo: Record<string, unknown>) {}
     }
 
     const { client, sendEvent, sendSession } = makeClient({ filestore })
@@ -401,13 +401,13 @@ describe('plugin: electron device info', () => {
 
 // create a stub of '@bugsnag/electron-filestore'
 function makeFilestore (id: string|null|undefined = DEFAULTS.id) {
-  let _deviceInfo = { id }
+  let _deviceInfo: Record<string, unknown> = { id }
 
   return {
     async getDeviceInfo (): Promise<{ id?: string|null }> {
       return _deviceInfo
     },
-    async setDeviceInfo (deviceInfo) {
+    async setDeviceInfo (deviceInfo: Record<string, unknown>) {
       _deviceInfo = deviceInfo
     }
   }

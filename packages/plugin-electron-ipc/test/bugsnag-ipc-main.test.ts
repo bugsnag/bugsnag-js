@@ -1,6 +1,7 @@
 import BugsnagIpcMain from '../bugsnag-ipc-main'
 import Client from '@bugsnag/core/client'
-import Event from '@bugsnag/core/event'
+import InternalEvent from '@bugsnag/core/event'
+import { User, Plugin, Event } from '@bugsnag/core'
 
 const mockClientStateManagerPlugin = {
   name: 'clientStateManager',
@@ -9,17 +10,23 @@ const mockClientStateManagerPlugin = {
 
 afterEach(() => jest.clearAllMocks())
 
+const Notifier = {
+  name: 'Bugsnag Electron Test',
+  version: '0.0.0',
+  url: 'https://github.com/bugsnag/bugsnag-js'
+}
+
 describe('BugsnagIpcMain', () => {
   describe('constructor()', () => {
     it('should throw if the state manager plugin is not loaded first', () => {
-      const client = new Client({}, {}, [], {})
+      const client = new Client({ apiKey: '123' }, {}, [], Notifier)
       expect(() => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const bugsnagIpcMain = new BugsnagIpcMain(client)
       }).toThrowError('Expected @bugsnag/plugin-electron-client-state-manager to be loaded first')
     })
     it('should work when the state manager plugin is loaded first', () => {
-      const client = new Client({}, {}, [mockClientStateManagerPlugin], {})
+      const client = new Client({ apiKey: '123' }, {}, [mockClientStateManagerPlugin], Notifier)
       expect(() => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const bugsnagIpcMain = new BugsnagIpcMain(client)
@@ -29,7 +36,7 @@ describe('BugsnagIpcMain', () => {
 
   describe('handle()', () => {
     it('works for updating context', () => {
-      const client = new Client({}, {}, [mockClientStateManagerPlugin], {})
+      const client = new Client({ apiKey: '123' }, {}, [mockClientStateManagerPlugin], Notifier)
       client.setContext = jest.fn()
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       bugsnagIpcMain.handle({}, 'setContext', JSON.stringify('new context'))
@@ -37,7 +44,7 @@ describe('BugsnagIpcMain', () => {
     })
 
     it('returns the current context', () => {
-      const client = new Client({}, {}, [mockClientStateManagerPlugin], {})
+      const client = new Client({ apiKey: '123' }, {}, [mockClientStateManagerPlugin], Notifier)
       client.setContext('today')
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       const event = { returnValue: undefined }
@@ -46,7 +53,7 @@ describe('BugsnagIpcMain', () => {
     })
 
     it('works for updating user', () => {
-      const client = new Client({}, {}, [mockClientStateManagerPlugin], {})
+      const client = new Client({ apiKey: '123' }, {}, [mockClientStateManagerPlugin], Notifier)
       client.setUser = jest.fn()
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       // all fields set
@@ -58,16 +65,16 @@ describe('BugsnagIpcMain', () => {
     })
 
     it('returns the current user', () => {
-      const client = new Client({}, {}, [mockClientStateManagerPlugin], {})
-      client.setUser('81676', null, 'Cal')
+      const client = new Client({ apiKey: '123' }, {}, [mockClientStateManagerPlugin], Notifier)
+      client.setUser('81676', undefined, 'Cal')
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       const event = { returnValue: undefined }
       bugsnagIpcMain.handleSync(event, 'getUser')
-      expect(event.returnValue).toEqual({ id: '81676', email: null, name: 'Cal' })
+      expect(event.returnValue).toEqual({ id: '81676', email: undefined, name: 'Cal' })
     })
 
     it('works for adding metadata', () => {
-      const client = new Client({}, {}, [mockClientStateManagerPlugin], {})
+      const client = new Client({ apiKey: '123' }, {}, [mockClientStateManagerPlugin], Notifier)
       client.addMetadata = jest.fn()
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       const stubWebContents = { /* this would be a WebContents instance */ }
@@ -77,7 +84,7 @@ describe('BugsnagIpcMain', () => {
     })
 
     it('works for removing metadata', () => {
-      const client = new Client({}, {}, [mockClientStateManagerPlugin], {})
+      const client = new Client({ apiKey: '123' }, {}, [mockClientStateManagerPlugin], Notifier)
       client.clearMetadata = jest.fn()
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       bugsnagIpcMain.handle({}, 'clearMetadata', JSON.stringify('section'))
@@ -85,7 +92,7 @@ describe('BugsnagIpcMain', () => {
     })
 
     it('returns metadata content', () => {
-      const client = new Client({}, {}, [mockClientStateManagerPlugin], {})
+      const client = new Client({ apiKey: '123' }, {}, [mockClientStateManagerPlugin], Notifier)
       client.addMetadata('section', 'content', 'X')
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       const event = { returnValue: undefined }
@@ -99,7 +106,7 @@ describe('BugsnagIpcMain', () => {
     })
 
     it('works for managing sessions', () => {
-      const client = new Client({}, {}, [mockClientStateManagerPlugin], {})
+      const client = new Client({ apiKey: '123' }, {}, [mockClientStateManagerPlugin], Notifier)
       client._sessionDelegate = { startSession: jest.fn(), resumeSession: jest.fn(), pauseSession: jest.fn() }
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       // start
@@ -114,7 +121,7 @@ describe('BugsnagIpcMain', () => {
     })
 
     it('works for breadcrumbs', (done) => {
-      const client = new Client({}, {}, [mockClientStateManagerPlugin], {})
+      const client = new Client({ apiKey: '123' }, {}, [mockClientStateManagerPlugin], Notifier)
       client.addOnBreadcrumb(b => {
         expect(b.message).toBe('hi IPC')
         expect(b.type).toBe('manual')
@@ -130,17 +137,17 @@ describe('BugsnagIpcMain', () => {
     })
 
     it('works for bulk updates', done => {
-      const client = new Client({}, {}, [{
+      const client = new Client({ apiKey: '123' }, {}, [{
         name: 'clientStateManager',
         load: () => ({
-          bulkUpdate: ({ context, user, metadata }) => {
+          bulkUpdate: ({ context, user, metadata }: { context?: string, user?: User, metadata: Record<string, unknown>}) => {
             expect(context).toEqual('current context')
             expect(user).toEqual({ name: 'merrich' })
             expect(metadata).toEqual({ electron: { procs: 3 } })
             done()
           }
         })
-      }], {})
+      }], Notifier)
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       bugsnagIpcMain.handle(
         {},
@@ -150,13 +157,13 @@ describe('BugsnagIpcMain', () => {
     })
 
     it('is resilient to unknown methods', () => {
-      const client = new Client({}, {}, [mockClientStateManagerPlugin], {})
+      const client = new Client({ apiKey: '123' }, {}, [mockClientStateManagerPlugin], Notifier)
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       expect(() => bugsnagIpcMain.handle({}, 'explodePlease', JSON.stringify({ data: 123 }))).not.toThrowError()
     })
 
     it('is resilient to bad JSON', () => {
-      const client = new Client({}, {}, [mockClientStateManagerPlugin], {})
+      const client = new Client({ apiKey: '123' }, {}, [mockClientStateManagerPlugin], Notifier)
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       expect(() => bugsnagIpcMain.handle({}, 'leaveBreadcrumb', 'not json')).not.toThrowError()
     })
@@ -164,11 +171,11 @@ describe('BugsnagIpcMain', () => {
 
   describe('getPayloadInfo()', () => {
     it('should run an event through internal callbacks and return its properties', async () => {
-      const internalPlugins = [
+      const internalPlugins: Plugin[] = [
         {
           load: (client) => {
             // mock an internal plugin that adds app data
-            const cb = (event) => {
+            const cb = (event: Event) => {
               event.app = { ...event.app, name: 'testApp', type: 'test' }
               event.addMetadata('app', 'testingMode', 'unit')
             }
@@ -179,7 +186,7 @@ describe('BugsnagIpcMain', () => {
         {
           load: (client) => {
             // mock an internal plugin that adds device data
-            const cb = (event) => {
+            const cb = (event: Event) => {
               event.device = { ...event.device, id: '123' }
               event.addMetadata('device', 'isOutdated', true)
             }
@@ -191,7 +198,7 @@ describe('BugsnagIpcMain', () => {
 
       const client = new Client({
         apiKey: '123'
-      }, undefined, [...internalPlugins, mockClientStateManagerPlugin], {})
+      }, undefined, [...internalPlugins, mockClientStateManagerPlugin], Notifier)
 
       // add a non-internal callback and ensure it does not run
       const nonInternalCb = jest.fn((event) => {
@@ -227,7 +234,7 @@ describe('BugsnagIpcMain', () => {
       // set it on the callback and then wrap it, it isn't accessible
       cb._internal = true
       // plugin that returns false for all events
-      const preventAllPlugin = {
+      const preventAllPlugin: Plugin = {
         load: (client) => {
           client.addOnError(cb)
         }
@@ -237,7 +244,7 @@ describe('BugsnagIpcMain', () => {
       }, undefined, [
         preventAllPlugin,
         mockClientStateManagerPlugin
-      ], {})
+      ], Notifier)
 
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       const payloadInfo = await bugsnagIpcMain.getPayloadInfo()
@@ -252,7 +259,7 @@ describe('BugsnagIpcMain', () => {
         apiKey: '123'
       }, undefined, [
         mockClientStateManagerPlugin
-      ], {})
+      ], Notifier)
 
       // add an internal callback and ensure it does not run
       const internalCb = jest.fn((event) => {
@@ -272,7 +279,7 @@ describe('BugsnagIpcMain', () => {
       client._setDelivery(client => mockDelivery)
 
       const bugsnagIpcMain = new BugsnagIpcMain(client)
-      const event = new Event('Error', 'Something bad happened', [])
+      const event = new InternalEvent('Error', 'Something bad happened', [])
       bugsnagIpcMain.dispatch(Object.assign({}, event))
 
       expect(mockDelivery.sendEvent).toHaveBeenCalledWith(expect.objectContaining({

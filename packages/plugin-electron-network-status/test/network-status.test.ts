@@ -34,10 +34,11 @@ describe('plugin: electron network status', () => {
   it('does not update online status when nothing changes', () => {
     const client = new Client({ apiKey: 'api_key' })
 
-    client.addMetadata = jest.spyOn(client, 'addMetadata')
+    jest.spyOn(client, 'addMetadata')
 
     const window = makeWindow({ online: true })
-    client._loadPlugin(plugin(window))
+    // @ts-expect-error TODO add _loadPlugin to the internal client types
+    client._loadPlugin(plugin(window as unknown as (Window & typeof globalThis)))
 
     expect(client.getMetadata('device')).toEqual({ online: true })
     expect(client.addMetadata).toHaveBeenCalledTimes(1)
@@ -59,17 +60,26 @@ describe('plugin: electron network status', () => {
   })
 })
 
-function makeClient (window) {
+function makeClient (window: MockWindow) {
   const client = new Client(
     { apiKey: 'api_key' },
     undefined,
-    [plugin(window)]
+    [plugin(window as unknown as (Window & typeof globalThis))]
   )
 
   return client
 }
 
-function makeWindow ({ online }) {
+interface MockWindow {
+  navigator: {
+    onLine: boolean
+  }
+  addEventListener: (event: string, callback: (...args: any[]) => void) => void
+  _turnOffInternet: () => void
+  _turnOnInternet: () => void
+}
+
+function makeWindow ({ online }: { online: boolean}): MockWindow {
   let _online = online
   const callbacks: { [event: string]: Function[] } = {
     online: [],

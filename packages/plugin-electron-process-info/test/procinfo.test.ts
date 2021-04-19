@@ -1,12 +1,13 @@
-import Client from '@bugsnag/core/client'
+import Client, { Delivery } from '@bugsnag/core/client'
 import Event from '@bugsnag/core/event'
 import plugin from '../'
 
 describe('plugin: electron process info', () => {
-  const makeClient = (sendEvent: Function, source: any): Client => {
+  const makeClient = (sendEvent: Delivery['sendEvent'], source: any): Client => {
     const client = new Client({ apiKey: 'api_key' }, undefined, [plugin(source)])
     client._setDelivery(() => ({
-      sendEvent: sendEvent
+      sendEvent: sendEvent,
+      sendSession: () => {}
     }))
     return client
   }
@@ -18,7 +19,7 @@ describe('plugin: electron process info', () => {
       expect(metadata.process.type).toEqual('worker')
       done()
     }, processInfo)
-    client._notify(new Event('Error', 'incorrect lambda type'))
+    client._notify(new Event('Error', 'incorrect lambda type', []))
   })
 
   it('attaches heap stats', (done) => {
@@ -32,7 +33,7 @@ describe('plugin: electron process info', () => {
       expect(metadata.process.heapStatistics).toEqual({ malloced: 80, free: 431 })
       done()
     }, processInfo)
-    client._notify(new Event('Error', 'incorrect lambda type'))
+    client._notify(new Event('Error', 'incorrect lambda type', []))
   })
 
   it('attaches sandboxed status when unset', (done) => {
@@ -42,7 +43,7 @@ describe('plugin: electron process info', () => {
       expect(metadata.process.sandboxed).toBe(false)
       done()
     }, processInfo)
-    client._notify(new Event('Error', 'incorrect lambda type'))
+    client._notify(new Event('Error', 'incorrect lambda type', []))
   })
 
   it('attaches sandboxed status when set', (done) => {
@@ -52,7 +53,7 @@ describe('plugin: electron process info', () => {
       expect(metadata.process.sandboxed).toBe(true)
       done()
     }, processInfo)
-    client._notify(new Event('Error', 'incorrect lambda type'))
+    client._notify(new Event('Error', 'incorrect lambda type', []))
   })
 
   it('attaches main frame status when unset', (done) => {
@@ -62,7 +63,7 @@ describe('plugin: electron process info', () => {
       expect(metadata.process.isMainFrame).toBe(false)
       done()
     }, processInfo)
-    client._notify(new Event('Error', 'incorrect lambda type'))
+    client._notify(new Event('Error', 'incorrect lambda type', []))
   })
 
   it('attaches main frame status when set', (done) => {
@@ -72,6 +73,6 @@ describe('plugin: electron process info', () => {
       expect(metadata.process.isMainFrame).toBe(true)
       done()
     }, processInfo)
-    client._notify(new Event('Error', 'incorrect lambda type'))
+    client._notify(new Event('Error', 'incorrect lambda type', []))
   })
 })

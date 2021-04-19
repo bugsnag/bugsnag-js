@@ -8,6 +8,12 @@ const appNotReady = { isReady: () => false, whenReady: async () => await new Pro
 
 const nextTick = async () => await new Promise(resolve => process.nextTick(resolve))
 
+const Notifier = {
+  name: 'Bugsnag Electron Test',
+  version: '0.0.0',
+  url: 'https://github.com/bugsnag/bugsnag-js'
+}
+
 describe('delivery: electron -> NetworkStatus', () => {
   it('should use the value of `net.online` on construction', () => {
     let checker = new NetworkStatus({ emitter: new EventEmitter() }, { online: true }, appReady)
@@ -18,7 +24,7 @@ describe('delivery: electron -> NetworkStatus', () => {
   })
 
   it('alerts watchers when the connection value changes', async () => {
-    const client = new Client({}, {}, [stateManager], {})
+    const client = new Client({ apiKey: '123' }, {}, [stateManager], Notifier)
     const { emitter, bulkUpdate } = client.getPlugin('clientStateManager')
     const checker = new NetworkStatus({ emitter }, { online: true }, appReady)
     const updates: boolean[] = []

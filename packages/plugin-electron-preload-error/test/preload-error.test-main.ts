@@ -21,7 +21,7 @@ describe('plugin: preload-error', () => {
 
     expect(client._delivery.sendEvent).toHaveBeenCalledTimes(1)
 
-    const [payload] = client._delivery.sendEvent.mock.calls[0]
+    const [payload] = (client._delivery.sendEvent as jest.MockedFunction<typeof client._delivery.sendEvent>).mock.calls[0]
 
     expect(payload.events).toHaveLength(1)
 
@@ -42,7 +42,7 @@ describe('plugin: preload-error', () => {
       schema: {
         projectRoot: {
           defaultValue: () => null,
-          validate: value => value === null || typeof value === 'string',
+          validate: (value: unknown) => value === null || typeof value === 'string',
           message: 'should be string'
         }
       }
@@ -57,7 +57,7 @@ describe('plugin: preload-error', () => {
 
     expect(client._delivery.sendEvent).toHaveBeenCalledTimes(1)
 
-    const [payload] = client._delivery.sendEvent.mock.calls[0]
+    const [payload] = (client._delivery.sendEvent as jest.MockedFunction<typeof client._delivery.sendEvent>).mock.calls[0]
 
     expect(payload.events).toHaveLength(1)
 
@@ -118,7 +118,7 @@ describe('plugin: preload-error', () => {
 
 function makeClient ({ config = {}, schema = {}, _app = app } = {}) {
   const { client } = makeClientForPlugin({ config, schema, plugin: plugin(_app) })
-  client._setDelivery(() => ({ sendEvent: jest.fn() }))
+  client._setDelivery(() => ({ sendEvent: jest.fn(), sendSession: () => {} }))
 
   return client
 }

@@ -29,7 +29,7 @@ export interface BrowserWindowStatic {
   _blur: () => void
   _focus: (index: number) => void
   _create: () => BrowserWindow
-  _close: (window) => void
+  _close: (window: BrowserWindow) => void
 }
 
 type Size = [number, number]
@@ -118,7 +118,7 @@ export function makeBrowserWindow ({ windows = [], focusedWindow = null } = {}):
     }
 
     _emit (event: string, ...args: any[]): void {
-      this.callbacks[event].forEach(cb => { cb(null, ...args) })
+      this.callbacks[event as BrowserWindowEvent].forEach(cb => { cb(null, ...args) })
     }
 
     static _blur (): void {
@@ -141,7 +141,7 @@ export function makeBrowserWindow ({ windows = [], focusedWindow = null } = {}):
       return newWindow
     }
 
-    static _close (window): void {
+    static _close (window: BrowserWindow): void {
       this._browserWindows = this._browserWindows.filter(w => w !== window)
 
       if (this._focusedWindow === window.index) {
@@ -150,6 +150,7 @@ export function makeBrowserWindow ({ windows = [], focusedWindow = null } = {}):
         this._focusedWindow = this._browserWindows.indexOf(window)
       }
 
+      // @ts-expect-error TODO I couldn't resolve this (BG)
       window.callbacks.closed.forEach(f => { f() })
     }
   }

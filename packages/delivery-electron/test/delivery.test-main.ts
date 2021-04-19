@@ -379,8 +379,8 @@ describe('delivery: electron', () => {
 
     const net = {
       request: () => ({
-        on (_event, _cb) {},
-        write (_body) { throw writeError },
+        on (_event: any, _cb: any) {},
+        write (_body: any) { throw writeError },
         end () {}
       })
     }
@@ -411,8 +411,8 @@ describe('delivery: electron', () => {
 
     const net = {
       request: () => ({
-        on (_event, _cb) {},
-        write (_body) { throw writeError },
+        on (_event: any, _cb: any) {},
+        write (_body: any) { throw writeError },
         end () {}
       })
     }

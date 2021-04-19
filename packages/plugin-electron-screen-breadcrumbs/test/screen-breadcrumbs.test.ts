@@ -1,4 +1,4 @@
-import Breadcrumb from '@bugsnag/core/breadcrumb'
+import { Breadcrumb } from '@bugsnag/core'
 import { makeClientForPlugin, makeDisplay, makeScreen } from '@bugsnag/electron-test-helpers'
 import plugin from '../'
 
@@ -14,7 +14,7 @@ describe('plugin: electron screen breadcrumbs', () => {
     // the display ID in the message & metadata should not be the actual ID as
     // this could be a privacy concern
     const metadata = { ...display, id: 0 }
-    const breadcrumb = new Breadcrumb('Display 0 added', metadata, 'state')
+    const breadcrumb = { message: 'Display 0 added', metadata, type: 'state' }
 
     expect(client._breadcrumbs[0]).toMatchBreadcrumb(breadcrumb)
   })
@@ -28,7 +28,7 @@ describe('plugin: electron screen breadcrumbs', () => {
     screen._emit('display-removed', display)
 
     const metadata = { ...display, id: 0 }
-    const breadcrumb = new Breadcrumb('Display 0 removed', metadata, 'state')
+    const breadcrumb = { message: 'Display 0 removed', metadata, type: 'state' }
 
     expect(client._breadcrumbs[0]).toMatchBreadcrumb(breadcrumb)
   })
@@ -53,7 +53,7 @@ describe('plugin: electron screen breadcrumbs', () => {
     screen._emit('display-metrics-changed', display, changedMetrics)
 
     const metadata = { ...display, id: 0 }
-    const breadcrumb = new Breadcrumb(message, metadata, 'state')
+    const breadcrumb = { message, metadata, type: 'state' }
 
     expect(client._breadcrumbs[0]).toMatchBreadcrumb(breadcrumb)
   })
@@ -83,7 +83,7 @@ describe('plugin: electron screen breadcrumbs', () => {
     screen._emit('display-added', display)
 
     const metadata = { ...display, id: 0 }
-    const breadcrumb = new Breadcrumb('Display 0 added', metadata, 'state')
+    const breadcrumb = { message: 'Display 0 added', metadata, type: 'state' }
 
     expect(client._breadcrumbs.pop()).toMatchBreadcrumb(breadcrumb)
 
@@ -92,7 +92,7 @@ describe('plugin: electron screen breadcrumbs', () => {
     screen._emit('display-added', display2)
 
     const metadata2 = { ...display2, id: 1 }
-    const breadcrumb2 = new Breadcrumb('Display 1 added', metadata2, 'state')
+    const breadcrumb2 = { message: 'Display 1 added', metadata: metadata2, type: 'state' }
     expect(client._breadcrumbs.pop()).toMatchBreadcrumb(breadcrumb2)
 
     const displayWithSameIdAsFirstDisplay = makeDisplay({ id: 1234 })
@@ -110,7 +110,7 @@ describe('plugin: electron screen breadcrumbs', () => {
     screen._emit('display-added', display3)
 
     const metadata3 = { ...display3, id: 2 }
-    const breadcrumb3 = new Breadcrumb('Display 2 added', metadata3, 'state')
+    const breadcrumb3 = { message: 'Display 2 added', metadata: metadata3, type: 'state' }
     expect(client._breadcrumbs.pop()).toMatchBreadcrumb(breadcrumb3)
   })
 })

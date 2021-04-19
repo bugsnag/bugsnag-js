@@ -1,4 +1,3 @@
-import Breadcrumb from '@bugsnag/core/breadcrumb'
 import { PowerMonitorEvent } from '@bugsnag/electron-test-helpers/src/PowerMonitor'
 import { makePowerMonitor, makeClientForPlugin } from '@bugsnag/electron-test-helpers'
 import plugin from '../'
@@ -20,7 +19,7 @@ describe('plugin: electron power monitor breadcrumbs', () => {
 
     powerMonitor._emit(event)
 
-    const breadcrumb = new Breadcrumb(expectedMessage, {}, 'state')
+    const breadcrumb = { message: expectedMessage, metadata: {}, type: 'state' }
 
     expect(client._breadcrumbs[0]).toMatchBreadcrumb(breadcrumb)
   })
