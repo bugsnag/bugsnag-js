@@ -3,6 +3,7 @@ const { createHash } = require('crypto')
 const { Given, When, Then } = require('@cucumber/cucumber')
 const { readFixtureFile } = require('../utils')
 const expect = require('../utils/expect')
+const { applySourcemaps } = require('../utils/source-mapper')
 
 const REQUEST_RESOLUTION_TIMEOUT = 3000
 const launchConfig = { timeout: 30 * 1000 }
@@ -116,6 +117,29 @@ Then('the contents of every {word} request matches {string}', async (requestType
   expect(readPayloads(global.server.uploadsForType(requestType))).toContainPayload(await readFixtureFile(fixture), { allowMultipleMatches: true })
 })
 
-Then('the contents of a(n) {word} request matches {string}', async (requestType, fixture) => {
-  expect(readPayloads(global.server.uploadsForType(requestType))).toContainPayload(await readFixtureFile(fixture))
+Then('the contents of a session request matches {string}', async (fixture) => {
+  expect(readPayloads(global.server.uploadsForType('session'))).toContainPayload(await readFixtureFile(fixture))
+})
+
+Then('the contents of an event request matches {string}', async fixture => {
+  const basePath = global.app.electronAppPath()
+  const payloads = readPayloads(global.server.uploadsForType('event'))
+  for await (const payload of payloads) {
+    for (const event of payload.events) {
+      for (const exception of event.exceptions) {
+        exception.stacktrace = await applySourcemaps(basePath, exception.stacktrace)
+      }
+    }
+  }
+  expect(payloads).toContainPayload(await readFixtureFile(fixture))
+})
+
+Then('exactly {int} breadcrumb(s) in event request {int} matches:', async (expectedMatches, requestIndex, data) => {
+  const payloads = readPayloads(global.server.eventUploads)
+  const breadcrumbs = payloads.flatMap(payload => payload.events.flatMap(event => event.breadcrumbs))
+
+  const expectedBreadcrumb = Object.fromEntries(data.raw())
+  const matches = breadcrumbs.filter(({ type, name }) => type === expectedBreadcrumb.type && name === expectedBreadcrumb.name)
+
+  expect(matches).toHaveLength(expectedMatches)
 })

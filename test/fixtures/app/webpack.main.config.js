@@ -7,7 +7,7 @@ readdirSync('./configs').forEach(name => {
 })
 
 module.exports = {
-  devtool: false,
+  devtool: 'hidden-source-map',
   entry: entrypoints,
   output: {
     filename: '[name].js'

@@ -3,7 +3,7 @@ Feature: OnError callbacks
     Scenario Outline: All callbacks run
         Given I launch an app with configuration:
             | bugsnag | <config> |
-        When I click "render-notify-on-error"
+        When I click "renderer-notify-on-error"
         Then the total requests received by the server matches:
             | events  | 1        |
         Then the headers of every event request contains:

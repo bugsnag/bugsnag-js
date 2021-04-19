@@ -36,6 +36,8 @@
     "@bugsnag/plugin-network-breadcrumbs": "^7.9.0",
     "@bugsnag/plugin-node-uncaught-exception": "^7.7.0",
     "@bugsnag/plugin-node-unhandled-rejection": "^7.7.0",
+    "@bugsnag/plugin-electron-renderer-strip-project-root": "1.0.0",
+    "@bugsnag/plugin-strip-project-root": "^7.9.0",
     "@bugsnag/plugin-window-onerror": "^7.9.0",
     "@bugsnag/plugin-window-unhandled-rejection": "^7.9.0"
   }

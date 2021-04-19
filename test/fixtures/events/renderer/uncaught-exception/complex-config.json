@@ -86,7 +86,12 @@
         {
           "errorClass": "ReferenceError",
           "errorMessage": "foo is not defined",
-          "stacktrace": [],
+          "stacktrace": [
+            {
+              "file": "./renderer.js",
+              "lineNumber": 15
+            }
+          ],
           "type": "electronrendererjs"
         }
       ]

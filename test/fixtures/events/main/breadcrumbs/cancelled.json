@@ -12,7 +12,7 @@
         "duration": "{TYPE:number}",
         "releaseStage": "production",
         "inForeground": "{TYPE:boolean}",
-        "isLaunching": "{TYPE:boolean}",
+        "isLaunching": true,
         "version": "1.0.2"
       },
       "device": {
@@ -23,6 +23,7 @@
         },
         "id": "{REGEX:[0-9a-f]{64}}",
         "freeMemory": "{TYPE:number}",
+        "locale": "{REGEX:^[a-z]{2}(-[A-Z]{2})?$}",
         "time": "{TIMESTAMP}",
         "totalMemory": "{TYPE:number}",
         "osVersion": "{REGEX:\\d+\\.\\d+}"
@@ -38,34 +39,12 @@
           }
         }
       },
-      "severity": "warning",
-      "unhandled": false,
+      "severity": "error",
+      "unhandled": true,
       "severityReason": {
-        "type": "handledException"
+        "type": "unhandledException"
       },
       "breadcrumbs": [
-        {
-          "type": "state",
-          "name": "App became ready",
-          "timestamp": "{TIMESTAMP}"
-        },
-        {
-          "type": "state",
-          "name": "Browser window 1 created",
-          "timestamp": "{TIMESTAMP}",
-          "metaData": {
-            "id": 1
-          }
-        },
-        {
-          "type": "state",
-          "name": "Browser window 1 was shown",
-          "timestamp": "{TIMESTAMP}",
-          "metaData": {
-            "id": 1,
-            "title": "Runner"
-          }
-        },
         {
           "type": "manual",
           "name": "missing auth token",
@@ -77,15 +56,9 @@
       ],
       "exceptions": [
         {
-          "errorMessage": "{REGEX:ALERT!$}",
-          "errorClass": "Error",
-          "stacktrace": [
-            {
-              "lineNumber": 19,
-              "file": "./renderer.js"
-            }
-          ],
-          "type": "electronrendererjs"
+          "errorClass": "ReferenceError",
+          "errorMessage": "foo is not defined",
+          "stacktrace": []
         }
       ]
     }

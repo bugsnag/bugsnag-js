@@ -1,4 +1,5 @@
 const { schema } = require('./common')
+const stringWithLength = require('@bugsnag/core/lib/validators/string-with-length')
 
 const ALLOWED_IN_RENDERER = [
   // a list of config keys that are allowed to be supplied to the renderer client
@@ -7,6 +8,11 @@ const ALLOWED_IN_RENDERER = [
 
 module.exports.schema = {
   ...schema,
+  projectRoot: {
+    defaultValue: () => null,
+    validate: value => value === null || stringWithLength(value),
+    message: 'should be string'
+  },
   releaseStage: {
     ...schema.releaseStage,
     defaultValue: () => null

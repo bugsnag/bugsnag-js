@@ -41,6 +41,8 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-node-
     - run: npm install electron@${{ matrix.electron }} --no-audit --progress=false --no-save
+      env:
+        PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
     - run: npm ci --no-audit --progress=false
       env:
         PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1

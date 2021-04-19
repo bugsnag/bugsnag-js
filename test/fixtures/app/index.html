@@ -15,12 +15,13 @@
         <li><a href="#" id="main-notify" onclick="RunnerAPI.mainProcessNotify()">Handled error in main process</a></li>
     </ul>
     <ul>
-        <li><a href="#" id="renderer-uncaught-exception" onclick="foo()">Uncaught exception in renderer</a></li>
-        <li><a href="#" id="renderer-unhandled-promise-rejection" onclick="rejectPromise()">Unhandled promise rejection in renderer</a></li>
-        <li><a href="#" id="renderer-notify" onclick="handledError()">Handled error in renderer</a></li>
+        <li><a href="#" id="renderer-uncaught-exception">Uncaught exception in renderer</a></li>
+        <li><a href="#" id="renderer-unhandled-promise-rejection">Unhandled promise rejection in renderer</a></li>
+        <li><a href="#" id="renderer-notify">Handled error in renderer</a></li>
+        <li><a href="#" id="renderer-notify-on-error">notify with onError in renderer</a></li>
     </ul>
     <ul>
-        <li><a href="#" id="custom-breadcrumb" onclick="leaveCrumb()">Leave a custom breadcrumb</a>
+        <li><a href="#" id="custom-breadcrumb">Leave a custom breadcrumb</a>
     </ul>
     <ul>
         <li><a href="#" id="main-process-start-session" onclick="RunnerAPI.mainProcessStartSession()">Start session in main process</a></li>
@@ -30,49 +31,11 @@
         <li><a href="#" id="renderer-process-console-log" onclick="console.log('xyz', 456)">console.log in renderer process</a></li>
     </ul>
     <ul>
-        <li><a href="#" id="render-notify-on-error" onclick="notifyWithOnError()">notify with onError in renderer</a></li>
+        <li><a href="#" id="emulate-offline">Emulate being offline</a></li>
+        <li><a href="#" id="emulate-online">Emulate being online</a></li>
     </ul>
     <ul>
-        <li><a href="#" id="emulate-offline" onclick="emulateOnlineStatus(false)">Emulate being offline</a></li>
-        <li><a href="#" id="emulate-online" onclick="emulateOnlineStatus(true)">Emulate being online</a></li>
+        <li><a href="#" id="renderer-cancel-breadcrumbs">Add onBreadcrumb to cancel future renderer breadcrumbs</a></li>
     </ul>
-    <script>
-        function rejectPromise() {
-          new Promise((_, reject) => {
-            reject(new TypeError("invalid"))
-          })
-        }
-
-        function handledError() {
-          try {
-            throw new Error('ALERT!')
-          } catch (e) {
-            window.Bugsnag.notify(e)
-          }
-        }
-
-        function leaveCrumb() {
-          window.Bugsnag.leaveBreadcrumb('missing auth token', { session: 'two-two' })
-        }
-
-        function emulateOnlineStatus(online) {
-          Object.defineProperty(window.navigator, 'onLine', {value: online, configurable: true})
-          window.dispatchEvent(new Event(online ? 'online' : 'offline'))
-        }
-
-        function notifyWithOnError() {
-          window.Bugsnag.notify(new Error('hi'), event => {
-            event.addMetadata('onError', 'renderer', {
-              // the payload assertion will check this value to ensure the onError callback did indeed run
-              didRun: true,
-              // these will be true if the render successfully got the app/device data in getPayloadData()
-              didFindMainAppData: !!event.app && !!event.app.version && !!event.app.type && !!event.app.duration,
-              didFindMainDeviceData: !!event.device && !!event.device.locale && !!event.device.freeMemory,
-              // this should always be false because the main onError callbacks should run afterwards
-              didFindMainOnErrorMetadata: event.getMetadata('app', 'part') === 3
-            })
-          })
-        }
-    </script>
 </body>
 </html>

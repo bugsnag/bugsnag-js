@@ -26,11 +26,28 @@ class TestApp {
     await this._exec(npmRunner, [...installArgs, '--registry', 'http://0.0.0.0:5539', `@bugsnag/electron@${bugsnagVersion}`])
   }
 
+  buildPath () {
+    return join(this.buildDir, 'out', `${this.appName}-${process.platform}-${process.arch}`)
+  }
+
+  electronAppPath () {
+    const base = this.buildPath()
+    switch (process.platform) {
+      case 'darwin':
+        return join(base, `${this.appName}.app/Contents/Resources/app`)
+      case 'linux':
+      case 'win32':
+        return join(base, 'resources', 'app')
+
+      default:
+        throw new Error(`No electron app path configured for ${process.platform}`)
+    }
+  }
+
   packagedPath () {
-    const platform = process.platform
     const name = this.appName
-    const base = join(this.buildDir, 'out', `${name}-${platform}-${process.arch}`)
-    switch (platform) {
+    const base = this.buildPath()
+    switch (process.platform) {
       case 'darwin':
         return join(base, `${name}.app/Contents/MacOS/${name}`)
       case 'linux':
@@ -39,7 +56,7 @@ class TestApp {
         return join(base, `${name}.exe`)
 
       default:
-        throw new Error(`No packaged app path configured for ${platform}`)
+        throw new Error(`No packaged app path configured for ${process.platform}`)
     }
   }
 

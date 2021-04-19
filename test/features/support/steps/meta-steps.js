@@ -12,7 +12,11 @@ const sendEvent = (context, done) => {
       device: { osName: 'beOS', osVersion: '11.0', manufacturer: null },
       metadata: {
         counters: { trees: 3, carrots: 9 }
-      }
+      },
+      exceptions: [{
+        errorClass: 'Error',
+        stacktrace: []
+      }]
     }]
   })
 
