@@ -114,14 +114,29 @@ revendor_from_dir() {
 	echo $(cd "$src_dir" && git rev-parse HEAD) >> "$SCRIPT_DIR/ios/.bugsnag-cocoa-version"
 }
 
-revendor_from_clean_repo() {
+revendor_from_tag() {
 	local tag=$1
 	echo "Checking out https://github.com/bugsnag/bugsnag-cocoa.git with tag $tag"
 	TEMP_DIR="$(mktemp -d)"
 	pushd "$TEMP_DIR" >/dev/null
 	git clone https://github.com/bugsnag/bugsnag-cocoa.git --depth 1 --branch $tag
+    cd bugsnag-cocoa
+    git submodule update --init --recursive
 	popd >/dev/null
 	revendor_from_dir "$TEMP_DIR/bugsnag-cocoa"
+}
+
+revendor_from_sha() {
+    local tag=$1
+    echo "Checking out https://github.com/bugsnag/bugsnag-cocoa.git with tag $tag"
+    TEMP_DIR="$(mktemp -d)"
+    pushd "$TEMP_DIR" >/dev/null
+    git clone https://github.com/bugsnag/bugsnag-cocoa.git
+    cd bugsnag-cocoa
+    git checkout $tag
+    git submodule update --init --recursive
+    popd >/dev/null
+    revendor_from_dir "$TEMP_DIR/bugsnag-cocoa"
 }
 
 case $MODE in
@@ -135,10 +150,10 @@ case $MODE in
         exit 0
         ;;
 	version)
-		revendor_from_clean_repo $GIT_TAG
+		revendor_from_tag $GIT_TAG
 		;;
 	sha)
-		revendor_from_clean_repo $GIT_TAG
+		revendor_from_sha $GIT_TAG
 		;;
 	local)
 		revendor_from_dir "$BUGSNAG_COCOA_REPO_DIR"

@@ -18,6 +18,24 @@ MODE=$(head -1 "$CONFIG_FILE")
 ARG=$(tail -1 "$CONFIG_FILE")
 
 MAVEN_REPO_DIR="$HOME/.m2/repository/com/bugsnag"
+ARTIFACT_NAMES=(
+    bugsnag-android
+    bugsnag-android-core
+    bugsnag-android-ndk
+    bugsnag-plugin-android-ndk
+    bugsnag-plugin-android-anr
+    bugsnag-plugin-react-native
+    )
+REPO_FILE_VARIANTS=(
+    '-sources.jar'
+    '-sources.jar.asc'
+    '.aar'
+    '.aar.asc'
+    '.module'
+    '.module.asc'
+    '.pom'
+    '.pom.asc'
+    )
 
 sed_in_place() {
     local script="$1"
@@ -67,21 +85,31 @@ revendor_from_dir() {
 use_bugsnag_version() {
     local version=$1
     local dst_dir="$SCRIPT_DIR/android"
-    local com_dir="$dst_dir/com"
+    local bugsnag_dir="$dst_dir/com/bugsnag"
 
-    rm -rf "$com_dir"
+    rm -rf "$bugsnag_dir"
+
+    for name in ${ARTIFACT_NAMES[@]}; do
+        local dstdir="$bugsnag_dir/$name"
+        mkdir -p "$dstdir"
+        pushd "$dstdir"
+        for variant in ${REPO_FILE_VARIANTS[@]}; do
+            curl https://repo1.maven.org/maven2/com/bugsnag/$name/$version/$name-$version$variant >>$name-$version$variant
+        done
+    done
 
     sed_in_place "s/api \"com.bugsnag:bugsnag-android:.*/api \"com.bugsnag:bugsnag-android:$version\"/" "$dst_dir/build.gradle"
     sed_in_place "s/api \"com.bugsnag:bugsnag-plugin-react-native:.*/api \"com.bugsnag:bugsnag-plugin-react-native:$version\"/" "$dst_dir/build.gradle"
 }
 
-revendor_from_clean_repo() {
+revendor_from_sha() {
     local tag=$1
     echo "Checking out https://github.com/bugsnag/bugsnag-android.git with tag $tag"
     TEMP_DIR="$(mktemp -d)"
     pushd "$TEMP_DIR" >/dev/null
-    git clone https://github.com/bugsnag/bugsnag-android.git --depth 1 --branch $tag
+    git clone https://github.com/bugsnag/bugsnag-android.git
     cd bugsnag-android
+    git checkout $tag
     git submodule update --init --recursive
     popd >/dev/null
     revendor_from_dir "$TEMP_DIR/bugsnag-android"
@@ -92,7 +120,7 @@ case $MODE in
         use_bugsnag_version $ARG
         ;;
 	sha)
-        revendor_from_clean_repo $ARG
+        revendor_from_sha $ARG
         ;;
 	local)
         revendor_from_dir "$ARG"

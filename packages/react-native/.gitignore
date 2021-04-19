@@ -31,4 +31,4 @@ DerivedData
 *.ipa
 *.xcuserstate
 project.xcworkspace
-android
+android/com/bugsnag
