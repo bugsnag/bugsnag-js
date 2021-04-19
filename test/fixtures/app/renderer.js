@@ -41,3 +41,5 @@ document.getElementById('renderer-notify-on-error').onclick = () => {
     })
   })
 }
+
+document.getElementById('renderer-cancel-breadcrumbs').onclick = () => Bugsnag.addOnBreadcrumb(() => false)
