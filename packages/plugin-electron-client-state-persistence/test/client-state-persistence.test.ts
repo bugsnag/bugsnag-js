@@ -1,5 +1,5 @@
 import Client from '@bugsnag/core/client'
-import plugin from '../'
+import { plugin } from '../'
 import { Breadcrumb, Logger } from '@bugsnag/core'
 import stateManager from '@bugsnag/plugin-electron-client-state-manager'
 

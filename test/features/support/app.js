@@ -23,7 +23,13 @@ class TestApp {
     // installed, doubling the install time
     await this._exec(npmRunner, [...installArgs, `electron@${electronVersion}`])
     await this._exec(npmRunner, [...installArgs], {}, 500)
-    await this._exec(npmRunner, [...installArgs, '--registry', 'http://0.0.0.0:5539', `@bugsnag/electron@${bugsnagVersion}`])
+    await this._exec(npmRunner, [
+      ...installArgs,
+      '--registry',
+      'http://0.0.0.0:5539',
+      `@bugsnag/electron@${bugsnagVersion}`,
+      `@bugsnag/plugin-electron-client-state-persistence@${bugsnagVersion}`
+    ])
   }
 
   buildPath () {
