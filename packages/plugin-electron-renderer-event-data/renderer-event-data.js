@@ -17,9 +17,11 @@ module.exports = (BugsnagIpcRenderer = window.__bugsnag_ipc__) => ({
       event.breadcrumbs = breadcrumbs
       event.app = { ...event.app, ...app }
       event.device = { ...event.device, ...device }
-      if (!event.user || Object.keys(event.user).length === 0) {
-        event.user = user
+
+      if (!event._user || Object.keys(event._user).length === 0) {
+        event._user = user
       }
+
       for (const section in metadata) {
         if (event._metadata[section]) {
           event._metadata[section] = { ...metadata[section], ...event._metadata[section] }
