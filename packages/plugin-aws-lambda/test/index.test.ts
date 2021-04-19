@@ -739,7 +739,7 @@ describe('plugin: aws lambda', () => {
     expect(sessions).toHaveLength(1)
   })
 
-  it('notifies when an string is passed (callback)', async () => {
+  it('supports a string as the error argument in a lambda callback', async () => {
     const events: EventDeliveryPayload[] = []
     const sessions: SessionDeliveryPayload[] = []
 
