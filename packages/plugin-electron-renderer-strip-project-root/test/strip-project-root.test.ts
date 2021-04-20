@@ -46,7 +46,6 @@ async function sendEvent (initialStackframe: any, projectRoot: string|null = nul
   const { client, sendEvent } = makeClientForPlugin({ config, schema, plugin })
   client.addOnError((event: Event) => {
     event.errors[0].stacktrace = [initialStackframe]
-    // @ts-expect-error the second param is private
   }, true)
   return await sendEvent()
 }
