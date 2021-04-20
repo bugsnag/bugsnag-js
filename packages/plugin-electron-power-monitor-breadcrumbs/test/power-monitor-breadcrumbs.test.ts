@@ -1,6 +1,8 @@
 import { PowerMonitorEvent } from '@bugsnag/electron-test-helpers/src/PowerMonitor'
 import { makePowerMonitor, makeClientForPlugin } from '@bugsnag/electron-test-helpers'
 import plugin from '../'
+// TODO add internal types for @bugsnag/core/breadcrumb once merged with bugsnag-js
+import Breadcrumb from '@bugsnag/core/breadcrumb'
 
 describe('plugin: electron power monitor breadcrumbs', () => {
   const events: Array<[PowerMonitorEvent, string]> = [
@@ -19,7 +21,7 @@ describe('plugin: electron power monitor breadcrumbs', () => {
 
     powerMonitor._emit(event)
 
-    const breadcrumb = { message: expectedMessage, metadata: {}, type: 'state' }
+    const breadcrumb = new Breadcrumb(expectedMessage, {}, 'state')
 
     expect(client._breadcrumbs[0]).toMatchBreadcrumb(breadcrumb)
   })

@@ -1,3 +1,5 @@
+// TODO add internal types for @bugsnag/core/breadcrumb once merged with bugsnag-js
+import Breadcrumb from '@bugsnag/core/breadcrumb'
 import { makeClientForPlugin, makeDisplay, makeScreen } from '@bugsnag/electron-test-helpers'
 import plugin from '../'
 
@@ -13,7 +15,7 @@ describe('plugin: electron screen breadcrumbs', () => {
     // the display ID in the message & metadata should not be the actual ID as
     // this could be a privacy concern
     const metadata = { ...display, id: 0 }
-    const breadcrumb = { message: 'Display 0 added', metadata, type: 'state' }
+    const breadcrumb = new Breadcrumb('Display 0 added', metadata, 'state')
 
     expect(client._breadcrumbs[0]).toMatchBreadcrumb(breadcrumb)
   })
@@ -27,7 +29,7 @@ describe('plugin: electron screen breadcrumbs', () => {
     screen._emit('display-removed', display)
 
     const metadata = { ...display, id: 0 }
-    const breadcrumb = { message: 'Display 0 removed', metadata, type: 'state' }
+    const breadcrumb = new Breadcrumb('Display 0 removed', metadata, 'state')
 
     expect(client._breadcrumbs[0]).toMatchBreadcrumb(breadcrumb)
   })
@@ -52,7 +54,7 @@ describe('plugin: electron screen breadcrumbs', () => {
     screen._emit('display-metrics-changed', display, changedMetrics)
 
     const metadata = { ...display, id: 0 }
-    const breadcrumb = { message, metadata, type: 'state' }
+    const breadcrumb = new Breadcrumb(message, metadata, 'state')
 
     expect(client._breadcrumbs[0]).toMatchBreadcrumb(breadcrumb)
   })
@@ -82,7 +84,7 @@ describe('plugin: electron screen breadcrumbs', () => {
     screen._emit('display-added', display)
 
     const metadata = { ...display, id: 0 }
-    const breadcrumb = { message: 'Display 0 added', metadata, type: 'state' }
+    const breadcrumb = new Breadcrumb('Display 0 added', metadata, 'state')
 
     expect(client._breadcrumbs.pop()).toMatchBreadcrumb(breadcrumb)
 

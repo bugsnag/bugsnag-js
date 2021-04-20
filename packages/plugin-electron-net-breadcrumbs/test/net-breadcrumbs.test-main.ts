@@ -1,3 +1,5 @@
+// TODO add internal types for @bugsnag/core/breadcrumb once merged with bugsnag-js
+import Breadcrumb from '@bugsnag/core/breadcrumb'
 import { net } from 'electron'
 import { AddressInfo } from 'net'
 import { createServer, STATUS_CODES, Server, IncomingMessage, ServerResponse } from 'http'
@@ -36,11 +38,11 @@ describe('plugin: electron net breadcrumbs', () => {
       request.end()
     })
 
-    const expected = {
-      message: `net.request ${successOrFailure}`,
-      metadata: { request: `GET ${url}/`, status },
-      type: 'request'
-    }
+    const expected = new Breadcrumb(
+      `net.request ${successOrFailure}`,
+      { request: `GET ${url}/`, status },
+      'request'
+    )
 
     expect(client._breadcrumbs).toHaveLength(1)
     expect(client._breadcrumbs[0]).toMatchBreadcrumb(expected)
@@ -66,11 +68,11 @@ describe('plugin: electron net breadcrumbs', () => {
       request.end()
     })
 
-    const expected = {
-      message: `net.request ${successOrFailure}`,
-      metadata: { request: `${method} ${url}`, status },
-      type: 'request'
-    }
+    const expected = new Breadcrumb(
+      `net.request ${successOrFailure}`,
+      { request: `${method} ${url}`, status },
+      'request'
+    )
 
     expect(client._breadcrumbs).toHaveLength(1)
     expect(client._breadcrumbs[0]).toMatchBreadcrumb(expected)
@@ -99,11 +101,11 @@ describe('plugin: electron net breadcrumbs', () => {
       request.end()
     })
 
-    const expected = {
-      message: `net.request ${successOrFailure}`,
-      metadata: { request: `GET http://localhost:${currentServer.port}/`, status },
-      type: 'request'
-    }
+    const expected = new Breadcrumb(
+      `net.request ${successOrFailure}`,
+      { request: `GET http://localhost:${currentServer.port}/`, status },
+      'request'
+    )
 
     expect(client._breadcrumbs).toHaveLength(1)
     expect(client._breadcrumbs[0]).toMatchBreadcrumb(expected)
@@ -122,11 +124,11 @@ describe('plugin: electron net breadcrumbs', () => {
       request.abort()
     })
 
-    const expected = {
-      message: 'net.request aborted',
-      metadata: { request: `GET ${url}/` },
-      type: 'request'
-    }
+    const expected = new Breadcrumb(
+      'net.request aborted',
+      { request: `GET ${url}/` },
+      'request'
+    )
 
     expect(client._breadcrumbs).toHaveLength(1)
     expect(client._breadcrumbs[0]).toMatchBreadcrumb(expected)
@@ -151,11 +153,11 @@ describe('plugin: electron net breadcrumbs', () => {
       request.end()
     })
 
-    const expected = {
-      message: 'net.request error',
-      metadata: { request: `GET ${url}`, error: "Attempted to redirect, but redirect policy was 'error'" },
-      type: 'request'
-    }
+    const expected = new Breadcrumb(
+      'net.request error',
+      { request: `GET ${url}`, error: "Attempted to redirect, but redirect policy was 'error'" },
+      'request'
+    )
 
     expect(client._breadcrumbs).toHaveLength(1)
     expect(client._breadcrumbs[0]).toMatchBreadcrumb(expected)
