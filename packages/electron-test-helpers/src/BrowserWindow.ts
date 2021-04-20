@@ -42,6 +42,7 @@ export interface BrowserWindow {
   getPosition: () => Position
 
   _emit: (event: string, ...args: any[]) => void
+  readonly callbacks: { [event in BrowserWindowEvent]: Function[] }
 
   index: number
   id: number
@@ -61,7 +62,7 @@ export function makeBrowserWindow ({ windows = [], focusedWindow = null } = {}):
     private readonly size: Size
     private readonly position: Position
 
-    private readonly callbacks: { [event in BrowserWindowEvent]: Function[] } = {
+    readonly callbacks: { [event in BrowserWindowEvent]: Function[] } = {
       close: [],
       closed: [],
       unresponsive: [],
@@ -150,8 +151,6 @@ export function makeBrowserWindow ({ windows = [], focusedWindow = null } = {}):
         this._focusedWindow = this._browserWindows.indexOf(window)
       }
 
-      // eslint-disable-next-line
-      // @ts-ignore TODO I couldn't resolve this (BG)
       window.callbacks.closed.forEach(f => { f() })
     }
   }

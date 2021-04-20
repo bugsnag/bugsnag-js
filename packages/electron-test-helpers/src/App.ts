@@ -67,7 +67,7 @@ export class App {
     return this.callbacks[event].length
   }
 
-  _emit (event: AppEvent, ...args: any[]): void {
+  _emit (event: string, ...args: any[]): void {
     switch (event) {
       case 'browser-window-blur':
         return this._emitBlurEvent(...args)
@@ -76,7 +76,7 @@ export class App {
         return this._emitFocusEvent(...args)
     }
 
-    this.callbacks[event].forEach(cb => { cb(null, ...args) })
+    this.callbacks[event as AppEvent].forEach(cb => { cb(null, ...args) })
   }
 
   _emitBlurEvent (maybeWindow?: BrowserWindow) {

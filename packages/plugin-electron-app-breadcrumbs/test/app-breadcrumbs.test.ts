@@ -579,21 +579,23 @@ describe('plugin: electron app breadcrumbs', () => {
   })
 
   it('honours enabledBreadcrumbTypes', () => {
-    const appEvents = ['ready', 'will-quit', 'browser-window-blur', 'browser-window-focus', 'child-process-gone', 'render-process-gone']
+    const appEvents = ['ready', 'will-quit', 'child-process-gone', 'render-process-gone']
     const browserWindowEvents = ['closed', 'unresponsive', 'responsive', 'show', 'hide', 'maximize', 'minimize', 'resized', 'moved', 'enter-full-screen', 'leave-full-screen']
 
-    const app = makeApp()
     const BrowserWindow = makeBrowserWindow()
+    const app = makeApp({ BrowserWindow })
 
     const client = makeClient({ app, BrowserWindow, config: { enabledBreadcrumbTypes: [] } })
 
     const window = new BrowserWindow(412, 'hhh')
 
-    appEvents.forEach(appEvent => app._emit.bind(app))
+    appEvents.forEach(appEvent => app._emit(appEvent, {}))
+
+    app._emit('browser-window-blur', window)
+    app._emit('browser-window-focus', window)
     app._emit('browser-window-created', window)
 
-    browserWindowEvents.forEach(window._emit.bind(window))
-
+    browserWindowEvents.forEach(windowEvent => window._emit(windowEvent, window))
     expect(client._breadcrumbs).toHaveLength(0)
   })
 })
