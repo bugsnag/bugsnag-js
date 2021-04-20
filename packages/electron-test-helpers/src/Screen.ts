@@ -33,6 +33,6 @@ class Screen {
   }
 }
 
-export function makeScreen (...args) {
+export function makeScreen (...args: any[]) {
   return new Screen(...args)
 }

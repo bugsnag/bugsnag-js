@@ -1,13 +1,19 @@
 import clientStateUpdatesPlugin from '../client-state-updates'
 import Client from '@bugsnag/core/client'
 
+const Notifier = {
+  name: 'Bugsnag Electron Test',
+  version: '0.0.0',
+  url: 'https://github.com/bugsnag/bugsnag-js'
+}
+
 describe('clientStateUpdatesPlugin', () => {
   describe('propagation of changes to the IPC layer', () => {
     it('propagates context changes', () => {
       const mockBugsnagIpcRenderer = {
         setContext: jest.fn()
       }
-      const client = new Client({}, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], {})
+      const client = new Client({ apiKey: '123' }, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], Notifier)
 
       client.setContext('ctx')
       expect(mockBugsnagIpcRenderer.setContext).toHaveBeenCalledWith('ctx')
@@ -17,7 +23,7 @@ describe('clientStateUpdatesPlugin', () => {
       const mockBugsnagIpcRenderer = {
         getContext: () => 'ctx'
       }
-      const client = new Client({}, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], {})
+      const client = new Client({ apiKey: '123' }, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], Notifier)
       expect(client.getContext()).toBe('ctx')
     })
 
@@ -25,7 +31,7 @@ describe('clientStateUpdatesPlugin', () => {
       const mockBugsnagIpcRenderer = {
         setUser: jest.fn()
       }
-      const client = new Client({}, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], {})
+      const client = new Client({ apiKey: '123' }, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], Notifier)
 
       client.setUser('123', 'jim@jim.com', 'Jim')
       expect(mockBugsnagIpcRenderer.setUser).toHaveBeenCalledWith('123', 'jim@jim.com', 'Jim')
@@ -35,7 +41,7 @@ describe('clientStateUpdatesPlugin', () => {
       const mockBugsnagIpcRenderer = {
         getUser: () => { return { id: '123', email: 'jim@jim.com', name: 'Jim' } }
       }
-      const client = new Client({}, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], {})
+      const client = new Client({ apiKey: '123' }, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], Notifier)
 
       expect(client.getUser()).toEqual({ id: '123', email: 'jim@jim.com', name: 'Jim' })
     })
@@ -45,7 +51,7 @@ describe('clientStateUpdatesPlugin', () => {
         addMetadata: jest.fn(),
         clearMetadata: jest.fn()
       }
-      const client = new Client({}, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], {})
+      const client = new Client({ apiKey: '123' }, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], Notifier)
 
       client.addMetadata('section', { key0: 123, key1: 234 })
       expect(mockBugsnagIpcRenderer.addMetadata).toHaveBeenCalledWith('section', { key0: 123, key1: 234 })
@@ -65,7 +71,7 @@ describe('clientStateUpdatesPlugin', () => {
           done()
         }
       }
-      const client = new Client({}, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], {})
+      const client = new Client({ apiKey: '123' }, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], Notifier)
       client.getMetadata('layers', 'strawberry')
     })
 
@@ -73,7 +79,7 @@ describe('clientStateUpdatesPlugin', () => {
       const mockBugsnagIpcRenderer = {
         leaveBreadcrumb: jest.fn()
       }
-      const client = new Client({}, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], {})
+      const client = new Client({ apiKey: '123' }, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], Notifier)
       client.leaveBreadcrumb('hi')
       expect(mockBugsnagIpcRenderer.leaveBreadcrumb).toHaveBeenCalledWith(expect.objectContaining({
         message: 'hi',
@@ -87,7 +93,7 @@ describe('clientStateUpdatesPlugin', () => {
         leaveBreadcrumb: jest.fn()
       }
 
-      const client = new Client({}, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], {})
+      const client = new Client({ apiKey: '123' }, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], Notifier)
 
       client.addOnBreadcrumb(breadcrumb => {
         if (breadcrumb.message === 'skip me') {
@@ -123,7 +129,7 @@ describe('clientStateUpdatesPlugin', () => {
         clearMetadata: jest.fn().mockImplementation(throwError),
         leaveBreadcrumb: jest.fn().mockImplementation(throwError)
       }
-      const client = new Client({}, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], {})
+      const client = new Client({ apiKey: '123' }, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], Notifier)
       expect(() => {
         client.setContext('ctx')
         client.setUser('123')
@@ -173,24 +179,16 @@ describe('clientStateUpdatesPlugin', () => {
     it('starts sessions', () => {
       const mockBugsnagIpcRenderer = { startSession: jest.fn() }
 
-      const client = new Client({}, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], {})
+      const client = new Client({ apiKey: '123' }, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], Notifier)
       const returnValue = client.startSession()
       expect(mockBugsnagIpcRenderer.startSession).toHaveBeenCalled()
       expect(returnValue).toBe(client)
     })
 
-    it('stops sessions', () => {
-      const mockBugsnagIpcRenderer = { stopSession: jest.fn() }
-
-      const client = new Client({}, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], {})
-      client.stopSession()
-      expect(mockBugsnagIpcRenderer.stopSession).toHaveBeenCalled()
-    })
-
     it('pauses sessions', () => {
       const mockBugsnagIpcRenderer = { pauseSession: jest.fn() }
 
-      const client = new Client({}, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], {})
+      const client = new Client({ apiKey: '123' }, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], Notifier)
       client.pauseSession()
       expect(mockBugsnagIpcRenderer.pauseSession).toHaveBeenCalled()
     })
@@ -198,7 +196,7 @@ describe('clientStateUpdatesPlugin', () => {
     it('resumes sessions', () => {
       const mockBugsnagIpcRenderer = { resumeSession: jest.fn() }
 
-      const client = new Client({}, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], {})
+      const client = new Client({ apiKey: '123' }, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], Notifier)
       const returnValue = client.resumeSession()
       expect(mockBugsnagIpcRenderer.resumeSession).toHaveBeenCalled()
       expect(returnValue).toBe(client)

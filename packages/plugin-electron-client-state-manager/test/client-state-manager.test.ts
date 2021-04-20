@@ -1,11 +1,18 @@
 import stateManager from '../client-state-manager'
 import Client from '@bugsnag/core/client'
+import { User } from '@bugsnag/core'
+
+const Notifier = {
+  name: 'Bugsnag Electron Test',
+  version: '0.0.0',
+  url: 'https://github.com/bugsnag/bugsnag-js'
+}
 
 describe('@bugsnag/plugin-electron-client-state-manager', () => {
   it('should emit events when user changes', done => {
-    const client = new Client({}, {}, [stateManager], {})
+    const client = new Client({ apiKey: '123' }, {}, [stateManager], Notifier)
     const { emitter } = client.getPlugin('clientStateManager')
-    emitter.on('UserUpdate', user => {
+    emitter.on('UserUpdate', (user: User) => {
       expect(user).toEqual({ id: '123', email: 'jim@jim.com', name: 'Jim' })
       done()
     })
@@ -13,19 +20,24 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
   })
 
   it('should emit events when context changes', done => {
-    const client = new Client({}, {}, [stateManager], {})
+    const client = new Client({ apiKey: '123' }, {}, [stateManager], Notifier)
     const { emitter } = client.getPlugin('clientStateManager')
-    emitter.on('ContextUpdate', (context) => {
+    emitter.on('ContextUpdate', (context: string) => {
       expect(context).toBe('ctx')
       done()
     })
     client.setContext('ctx')
   })
 
+  interface MetadataUpdatePayload {
+    section: string
+    values?: Record<string, unknown>
+  }
+
   it('should emit events when metadata is added', done => {
-    const client = new Client({}, {}, [stateManager], {})
+    const client = new Client({ apiKey: '123' }, {}, [stateManager], Notifier)
     const { emitter } = client.getPlugin('clientStateManager')
-    emitter.on('MetadataUpdate', (payload) => {
+    emitter.on('MetadataUpdate', (payload: MetadataUpdatePayload) => {
       expect(payload.section).toBe('section')
       expect(payload.values).toEqual({ key: 'value' })
       done()
@@ -34,9 +46,9 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
   })
 
   it('should emit events when metadata is cleared', done => {
-    const client = new Client({}, {}, [stateManager], {})
+    const client = new Client({ apiKey: '123' }, {}, [stateManager], Notifier)
     const { emitter } = client.getPlugin('clientStateManager')
-    emitter.on('MetadataUpdate', (payload) => {
+    emitter.on('MetadataUpdate', (payload: MetadataUpdatePayload) => {
       expect(payload.section).toBe('section')
       expect(payload.values).toBe(undefined)
       done()
@@ -45,7 +57,7 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
   })
 
   it('should support bulk updates (all values)', () => {
-    const client = new Client({}, {}, [stateManager], {})
+    const client = new Client({ apiKey: '123' }, {}, [stateManager], Notifier)
     const { emitter, bulkUpdate } = client.getPlugin('clientStateManager')
 
     const metadataCb = jest.fn()
@@ -73,7 +85,7 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
   })
 
   it('should support bulk updates (only context)', () => {
-    const client = new Client({}, {}, [stateManager], {})
+    const client = new Client({ apiKey: '123' }, {}, [stateManager], Notifier)
     const { emitter, bulkUpdate } = client.getPlugin('clientStateManager')
 
     const metadataCb = jest.fn()
@@ -95,7 +107,7 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
   })
 
   it('should support bulk updates (only user)', () => {
-    const client = new Client({}, {}, [stateManager], {})
+    const client = new Client({ apiKey: '123' }, {}, [stateManager], Notifier)
     const { emitter, bulkUpdate } = client.getPlugin('clientStateManager')
 
     const metadataCb = jest.fn()
@@ -117,7 +129,7 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
   })
 
   it('should support bulk updates (only metadata)', () => {
-    const client = new Client({}, {}, [stateManager], {})
+    const client = new Client({ apiKey: '123' }, {}, [stateManager], Notifier)
     const { emitter, bulkUpdate } = client.getPlugin('clientStateManager')
 
     const metadataCb = jest.fn()

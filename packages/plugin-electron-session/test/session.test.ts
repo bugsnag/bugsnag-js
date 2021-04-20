@@ -1,4 +1,4 @@
-import Client from '@bugsnag/core/client'
+import Client, { EventDeliveryPayload } from '@bugsnag/core/client'
 import { SessionPayload } from '@bugsnag/core'
 import { makeApp, makeBrowserWindow } from '@bugsnag/electron-test-helpers'
 import plugin from '../'
@@ -67,7 +67,9 @@ describe('plugin: electron sessions', () => {
     const payloads: SessionPayload[] = []
 
     client._setDelivery(() => ({
-      sendSession (payload, cb = () => {}) {
+      sendEvent (payload: EventDeliveryPayload, cb = () => {}) {
+      },
+      sendSession (payload: SessionPayload, cb = () => {}) {
         payloads.push(payload)
         cb()
       }
@@ -115,7 +117,9 @@ describe('plugin: electron sessions', () => {
     const payloads: SessionPayload[] = []
 
     client._setDelivery(() => ({
-      sendSession (payload, cb = () => {}) {
+      sendEvent (payload: EventDeliveryPayload, cb = () => {}) {
+      },
+      sendSession (payload: SessionPayload, cb = () => {}) {
         payloads.push(payload)
         cb()
       }
@@ -169,7 +173,9 @@ describe('plugin: electron sessions', () => {
     const payloads: SessionPayload[] = []
 
     client._setDelivery(() => ({
-      sendSession (payload, cb = () => {}) {
+      sendEvent (payload: EventDeliveryPayload, cb = () => {}) {
+      },
+      sendSession (payload: SessionPayload, cb = () => {}) {
         payloads.push(payload)
         cb()
       }
@@ -185,10 +191,12 @@ describe('plugin: electron sessions', () => {
   })
 })
 
-async function createSession (client): Promise<SessionPayload> {
+async function createSession (client: Client): Promise<SessionPayload> {
   return await new Promise(resolve => {
     client._setDelivery(() => ({
-      sendSession (payload, cb = () => {}) {
+      sendEvent (payload: EventDeliveryPayload, cb = () => {}) {
+      },
+      sendSession (payload: SessionPayload, cb = () => {}) {
         cb()
         resolve(payload)
       }

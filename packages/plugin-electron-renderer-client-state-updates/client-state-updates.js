@@ -24,7 +24,6 @@ module.exports = (BugsnagIpcRenderer = window.__bugsnag_ipc__) => ({
       safeExec(client, BugsnagIpcRenderer, 'startSession')()
       return client
     }
-    client.stopSession = safeExec(client, BugsnagIpcRenderer, 'stopSession')
     client.pauseSession = safeExec(client, BugsnagIpcRenderer, 'pauseSession')
     client.resumeSession = () => {
       safeExec(client, BugsnagIpcRenderer, 'resumeSession')()

@@ -1,6 +1,8 @@
 import Client from '@bugsnag/core/client'
+// eslint-disable-next-line
+// @ts-ignore TODO the config file needs internal types adding
 import { schema as defaultSchema } from '@bugsnag/core/config'
-import { Event, Session } from '@bugsnag/core'
+import { Event, Session, SessionPayload, EventPayload, Plugin } from '@bugsnag/core'
 
 interface ClientTestHelpers {
   client: Client
@@ -11,8 +13,8 @@ interface ClientTestHelpers {
 export function makeClientForPlugin ({
   config = {},
   schema = {},
-  plugin = { load: (_client: Client): any => {} }
-} = {}): ClientTestHelpers {
+  plugin = undefined
+}: { config?: object, schema?: object, plugin?: Plugin } = {}): ClientTestHelpers {
   const client = new Client(
     {
       apiKey: 'abcabcabcabcabcabcabc1234567890f',
@@ -20,31 +22,38 @@ export function makeClientForPlugin ({
       ...config
     },
     { ...defaultSchema, ...schema },
-    [plugin]
+    plugin !== undefined ? [plugin] : []
   )
 
-  let lastSession
+  let lastSession: SessionPayload
 
   client._setDelivery(() => ({
-    sendEvent (payload, cb) {
+    sendEvent (payload: EventPayload, cb: (err: Error|null, obj: unknown) => void) {
       expect(payload.events).toHaveLength(1)
-      cb(payload.events[0])
+      cb(null, payload.events[0])
     },
-    sendSession (session) {
+    sendSession (session: SessionPayload) {
       expect(session).toBeTruthy()
       lastSession = session
     }
   }))
 
   client._sessionDelegate = {
-    startSession (client, session) {
-      client._delivery.sendSession(session)
+    startSession (client: Client, session: Session) {
+      client._delivery.sendSession(session, () => {})
+    },
+    resumeSession () {
+    },
+    pauseSession () {
     }
   }
 
-  const sendEvent = async () => await new Promise(resolve => {
+  const sendEvent = async () => await new Promise((resolve, reject) => {
     // @ts-expect-error - we don't have Client internals to correctly type this
-    client._notify(new Event('Error', 'incorrect lambda type'), () => {}, resolve)
+    client._notify(new Event('Error', 'incorrect lambda type'), () => {}, (err: Error|null, obj) => {
+      if (err !== null) return reject(err)
+      resolve(obj)
+    })
   })
 
   const sendSession = async () => await new Promise((resolve, reject) => {

@@ -7,7 +7,7 @@ const { mkdir, readFile, rmdir, writeFile } = promises
 describe('FileStore', () => {
   const fixtures = join(__dirname, 'fixtures', 'storage')
   const crashes = join(__dirname, 'fixtures', 'crashes')
-  let store: FileStore | null = null
+  let store: FileStore
 
   beforeEach(async () => {
     await mkdir(join(crashes, 'reports'), { recursive: true })

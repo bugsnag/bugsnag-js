@@ -29,7 +29,7 @@ export interface BrowserWindowStatic {
   _blur: () => void
   _focus: (index: number) => void
   _create: () => BrowserWindow
-  _close: (window) => void
+  _close: (window: BrowserWindow) => void
 }
 
 type Size = [number, number]
@@ -42,6 +42,7 @@ export interface BrowserWindow {
   getPosition: () => Position
 
   _emit: (event: string, ...args: any[]) => void
+  readonly callbacks: { [event in BrowserWindowEvent]: Function[] }
 
   index: number
   id: number
@@ -61,7 +62,7 @@ export function makeBrowserWindow ({ windows = [], focusedWindow = null } = {}):
     private readonly size: Size
     private readonly position: Position
 
-    private readonly callbacks: { [event in BrowserWindowEvent]: Function[] } = {
+    readonly callbacks: { [event in BrowserWindowEvent]: Function[] } = {
       close: [],
       closed: [],
       unresponsive: [],
@@ -118,7 +119,7 @@ export function makeBrowserWindow ({ windows = [], focusedWindow = null } = {}):
     }
 
     _emit (event: string, ...args: any[]): void {
-      this.callbacks[event].forEach(cb => { cb(null, ...args) })
+      this.callbacks[event as BrowserWindowEvent].forEach(cb => { cb(null, ...args) })
     }
 
     static _blur (): void {
@@ -141,7 +142,7 @@ export function makeBrowserWindow ({ windows = [], focusedWindow = null } = {}):
       return newWindow
     }
 
-    static _close (window): void {
+    static _close (window: BrowserWindow): void {
       this._browserWindows = this._browserWindows.filter(w => w !== window)
 
       if (this._focusedWindow === window.index) {

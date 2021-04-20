@@ -1,7 +1,8 @@
+// TODO add internal types for @bugsnag/core/breadcrumb once merged with bugsnag-js
+import Breadcrumb from '@bugsnag/core/breadcrumb'
 import { net } from 'electron'
 import { AddressInfo } from 'net'
-import Breadcrumb from '@bugsnag/core/breadcrumb'
-import { createServer, STATUS_CODES, Server } from 'http'
+import { createServer, STATUS_CODES, Server, IncomingMessage, ServerResponse } from 'http'
 import { makeClientForPlugin } from '@bugsnag/electron-test-helpers'
 import plugin from '..'
 
@@ -227,7 +228,7 @@ function makeClient ({ config = {}, schema = {} } = {}) {
   return makeClientForPlugin({ config, schema, plugin: plugin(net) }).client
 }
 
-const defaultRequestHandler = statusCode => (req, res) => {
+const defaultRequestHandler = (statusCode: number) => (req: IncomingMessage, res: ServerResponse) => {
   req.on('data', () => {})
   req.on('end', () => {
     res.statusCode = statusCode
@@ -235,7 +236,7 @@ const defaultRequestHandler = statusCode => (req, res) => {
   })
 }
 
-async function startServer (statusCode, handler = defaultRequestHandler(statusCode)): Promise<ServerWithPort> {
+async function startServer (statusCode: number, handler = defaultRequestHandler(statusCode)): Promise<ServerWithPort> {
   const server = createServer(handler)
 
   // add a getter for the server port because we need it _everywhere_

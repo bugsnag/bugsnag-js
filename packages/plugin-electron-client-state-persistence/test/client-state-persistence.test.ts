@@ -194,7 +194,7 @@ describe('plugin: electron client sync', () => {
     const [client, logger] = loggingClient({
       updateUser: () => { throw new Error('wrong thing') }
     })
-    client.setUser('404', 'tim@example.com', null)
+    client.setUser('404', 'tim@example.com', undefined)
     const error = logger.error as jest.Mock<Function>
     expect(error.mock.calls.length).toBe(1)
     expect(error.mock.calls[0][0].message).toContain('wrong thing')

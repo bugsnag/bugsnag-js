@@ -30,11 +30,11 @@ export class App {
   public readonly isPackaged: boolean
 
   constructor (
-    locale,
-    BrowserWindow,
-    isPackaged,
-    version,
-    name
+    locale: string,
+    BrowserWindow: BrowserWindowStatic,
+    isPackaged: boolean,
+    version: string,
+    name: string
   ) {
     this.locale = locale
     this.BrowserWindow = BrowserWindow
@@ -67,7 +67,7 @@ export class App {
     return this.callbacks[event].length
   }
 
-  _emit (event: AppEvent, ...args: any[]): void {
+  _emit (event: string, ...args: any[]): void {
     switch (event) {
       case 'browser-window-blur':
         return this._emitBlurEvent(...args)
@@ -76,7 +76,7 @@ export class App {
         return this._emitFocusEvent(...args)
     }
 
-    this.callbacks[event].forEach(cb => { cb(null, ...args) })
+    this.callbacks[event as AppEvent].forEach(cb => { cb(null, ...args) })
   }
 
   _emitBlurEvent (maybeWindow?: BrowserWindow) {
@@ -100,7 +100,7 @@ export class App {
     this._emitFocusEvent(newWindow)
   }
 
-  _closeWindow (window) {
+  _closeWindow (window: BrowserWindow) {
     // electron doesn't blur the very last window to close
     if (this.BrowserWindow.getAllWindows().length > 1) {
       this._emitBlurEvent()

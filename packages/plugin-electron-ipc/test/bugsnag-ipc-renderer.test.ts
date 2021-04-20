@@ -1,5 +1,7 @@
 import BugsnagIpcRenderer from '../bugsnag-ipc-renderer'
 import { CHANNEL_RENDERER_TO_MAIN, CHANNEL_RENDERER_TO_MAIN_SYNC } from '../lib/constants'
+// TODO add internal types for @bugsnag/core/breadcrumb once merged with bugsnag-js
+import Breadcrumb from '@bugsnag/core/breadcrumb'
 
 import * as electron from 'electron'
 
@@ -9,7 +11,7 @@ afterEach(() => jest.clearAllMocks())
 
 describe('BugsnagIpcRenderer', () => {
   it('should call ipcRenderer.invoke correctly for breadcrumbs', async () => {
-    const breadcrumb = { message: 'hi IPC', type: 'manual', metadata: { electron: 'has many processes' } }
+    const breadcrumb = new Breadcrumb('hi IPC', { electron: 'has many processes' })
     await BugsnagIpcRenderer.leaveBreadcrumb(breadcrumb)
     expect(electron.ipcRenderer.invoke).toHaveBeenCalledWith(CHANNEL_RENDERER_TO_MAIN, 'leaveBreadcrumb', JSON.stringify(breadcrumb))
   })
