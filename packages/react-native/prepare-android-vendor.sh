@@ -37,17 +37,6 @@ REPO_FILE_VARIANTS=(
     '.pom.asc'
     )
 
-sed_in_place() {
-    local script="$1"
-    local file="$2"
-
-    if [[ "$OSTYPE" == linux* ]]; then
-        sed -i "$script" "$file"
-    else
-        sed -i '' "$script" "$file"
-    fi
-}
-
 revendor_from_dir() {
     local src_dir="$(cd "$1" && pwd)"
     if [ ! -f "$src_dir/gradlew" ]; then
@@ -73,13 +62,6 @@ revendor_from_dir() {
     rm -rf "$com_dir"
     mkdir -p "$com_dir"
     cp -r "$MAVEN_REPO_DIR" "$com_dir/"
-
-    echo "Recording version"
-    rm -rf "$dst_dir/.bugsnag-android-version"
-    echo $(cd "$src_dir" && git rev-parse HEAD) >> "$dst_dir/.bugsnag-android-version"
-
-    sed_in_place "s/api \"com.bugsnag:bugsnag-android:.*/api \"com.bugsnag:bugsnag-android:$bugsnag_version_rn\"/" "$dst_dir/build.gradle"
-    sed_in_place "s/api \"com.bugsnag:bugsnag-plugin-react-native:.*/api \"com.bugsnag:bugsnag-plugin-react-native:$bugsnag_version_rn\"/" "$dst_dir/build.gradle"
 }
 
 use_bugsnag_version() {
@@ -97,9 +79,6 @@ use_bugsnag_version() {
             curl https://repo1.maven.org/maven2/com/bugsnag/$name/$version/$name-$version$variant >>$name-$version$variant
         done
     done
-
-    sed_in_place "s/api \"com.bugsnag:bugsnag-android:.*/api \"com.bugsnag:bugsnag-android:$version\"/" "$dst_dir/build.gradle"
-    sed_in_place "s/api \"com.bugsnag:bugsnag-plugin-react-native:.*/api \"com.bugsnag:bugsnag-plugin-react-native:$version\"/" "$dst_dir/build.gradle"
 }
 
 revendor_from_sha() {
