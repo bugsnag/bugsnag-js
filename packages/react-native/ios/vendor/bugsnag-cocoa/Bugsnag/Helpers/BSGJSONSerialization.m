@@ -17,15 +17,15 @@ static NSError* wrapException(NSException* exception) {
     }];
 }
 
-+ (BOOL)isValidJSONObject:(id)obj {
++ (BOOL)isValidJSONObject:(nullable id)obj {
     @try {
-        return [NSJSONSerialization isValidJSONObject:obj];
+        return obj && [NSJSONSerialization isValidJSONObject:(id _Nonnull)obj];
     } @catch (NSException *exception) {
         return NO;
     }
 }
 
-+ (nullable NSData *)dataWithJSONObject:(id)obj options:(NSJSONWritingOptions)opt error:(NSError **)error {
++ (nullable NSData *)dataWithJSONObject:(id)obj options:(NSJSONWritingOptions)opt error:(NSError * __autoreleasing *)error {
     @try {
         return [NSJSONSerialization dataWithJSONObject:obj options:opt error:error];
     } @catch (NSException *exception) {
@@ -36,7 +36,7 @@ static NSError* wrapException(NSException* exception) {
     }
 }
 
-+ (nullable id)JSONObjectWithData:(NSData *)data options:(NSJSONReadingOptions)opt error:(NSError **)error {
++ (nullable id)JSONObjectWithData:(NSData *)data options:(NSJSONReadingOptions)opt error:(NSError * __autoreleasing *)error {
     @try {
         return [NSJSONSerialization JSONObjectWithData:data options:opt error:error];
     } @catch (NSException *exception) {
@@ -47,7 +47,7 @@ static NSError* wrapException(NSException* exception) {
     }
 }
 
-+ (NSInteger)writeJSONObject:(id)obj toStream:(NSOutputStream *)stream options:(NSJSONWritingOptions)opt error:(NSError **)error {
++ (NSInteger)writeJSONObject:(id)obj toStream:(NSOutputStream *)stream options:(NSJSONWritingOptions)opt error:(NSError * __autoreleasing *)error {
     @try {
         return [NSJSONSerialization writeJSONObject:obj toStream:stream options:opt error:error];
     } @catch (NSException *exception) {
@@ -58,7 +58,7 @@ static NSError* wrapException(NSException* exception) {
     }
 }
 
-+ (nullable id)JSONObjectWithStream:(NSInputStream *)stream options:(NSJSONReadingOptions)opt error:(NSError **)error {
++ (nullable id)JSONObjectWithStream:(NSInputStream *)stream options:(NSJSONReadingOptions)opt error:(NSError * __autoreleasing *)error {
     @try {
         return [NSJSONSerialization JSONObjectWithStream:stream options:opt error:error];
     } @catch (NSException *exception) {
@@ -69,7 +69,7 @@ static NSError* wrapException(NSException* exception) {
     }
 }
 
-+ (BOOL)writeJSONObject:(id)JSONObject toFile:(NSString *)file options:(NSJSONWritingOptions)options error:(NSError **)errorPtr {
++ (BOOL)writeJSONObject:(id)JSONObject toFile:(NSString *)file options:(NSJSONWritingOptions)options error:(NSError * __autoreleasing *)errorPtr {
     if (![BSGJSONSerialization isValidJSONObject:JSONObject]) {
         if (errorPtr) {
             *errorPtr = [NSError errorWithDomain:@"BSGJSONSerializationErrorDomain" code:0 userInfo:@{
@@ -81,7 +81,7 @@ static NSError* wrapException(NSException* exception) {
     return [data writeToFile:file options:NSDataWritingAtomic error:errorPtr];
 }
 
-+ (nullable id)JSONObjectWithContentsOfFile:(NSString *)file options:(NSJSONReadingOptions)options error:(NSError **)errorPtr {
++ (nullable id)JSONObjectWithContentsOfFile:(NSString *)file options:(NSJSONReadingOptions)options error:(NSError * __autoreleasing *)errorPtr {
     NSData *data = [NSData dataWithContentsOfFile:file options:0 error:errorPtr];
     if (!data) {
         return nil;

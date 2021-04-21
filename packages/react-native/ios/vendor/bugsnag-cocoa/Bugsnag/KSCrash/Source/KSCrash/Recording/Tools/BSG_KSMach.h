@@ -87,7 +87,7 @@ const char *bsg_ksmachexceptionName(exception_type_t exceptionType);
  *
  * @return The code's name or NULL if not found.
  */
-const char *bsg_ksmachkernelReturnCodeName(unsigned long long returnCode);
+const char *bsg_ksmachkernelReturnCodeName(const kern_return_t returnCode);
 
 // ============================================================================
 #pragma mark - Thread State Info -

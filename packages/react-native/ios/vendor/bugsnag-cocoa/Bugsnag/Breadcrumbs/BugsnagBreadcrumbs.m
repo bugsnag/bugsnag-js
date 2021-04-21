@@ -31,11 +31,11 @@ static BugsnagBreadcrumbsContext g_context;
 
 @interface BugsnagBreadcrumbs ()
 
-@property (readonly) NSString *breadcrumbsPath;
+@property (readonly, nonatomic) NSString *breadcrumbsPath;
 
-@property BugsnagConfiguration *config;
-@property unsigned int nextFileNumber;
-@property unsigned int maxBreadcrumbs;
+@property (nonatomic) BugsnagConfiguration *config;
+@property (nonatomic) unsigned int nextFileNumber;
+@property (nonatomic) unsigned int maxBreadcrumbs;
 
 @end
 
@@ -144,8 +144,8 @@ static BugsnagBreadcrumbsContext g_context;
     }
     
     if (fileNumber >= self.maxBreadcrumbs) {
-        NSString *path = [self pathForFileNumber:fileNumber - self.maxBreadcrumbs];
-        if (![[NSFileManager defaultManager] removeItemAtPath:path error:&error]) {
+        NSString *oldPath = [self pathForFileNumber:fileNumber - self.maxBreadcrumbs];
+        if (![[NSFileManager defaultManager] removeItemAtPath:oldPath error:&error]) {
             bsg_log_err(@"Unable to delete old breadcrumb: %@", error);
         }
     }
@@ -224,7 +224,7 @@ void BugsnagBreadcrumbsWriteCrashReport(const BSG_KSCrashReportWriter *writer) {
     writer->beginArray(writer, "breadcrumbs");
     for (unsigned int i = g_context.firstFileNumber; i < g_context.nextFileNumber; i++) {
         int result = snprintf(path, sizeof(path), "%s/%u.json", g_context.directoryPath, i);
-        if (result < 0 || result >= sizeof(path)) {
+        if (result < 0 || result >= (int)sizeof(path)) {
             bsg_log_err(@"Breadcrumb path is too long");
             continue;
         }

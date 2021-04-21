@@ -14,7 +14,7 @@
 
 @interface BugsnagSessionTrackingPayload : NSObject
 
-@property NSArray<BugsnagSession *> *sessions;
+@property (nonatomic) NSArray<BugsnagSession *> *sessions;
 
 - (instancetype)initWithSessions:(NSArray<BugsnagSession *> *)sessions
                           config:(BugsnagConfiguration *)config

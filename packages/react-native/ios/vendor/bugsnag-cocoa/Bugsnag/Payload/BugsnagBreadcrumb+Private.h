@@ -12,8 +12,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface BugsnagBreadcrumb ()
 
-+ (NSArray<BugsnagBreadcrumb *> *)breadcrumbArrayFromJson:(NSArray<NSDictionary *> *)json;
-
 + (nullable instancetype)breadcrumbFromDict:(NSDictionary *)dict;
 
 + (nullable instancetype)breadcrumbWithBlock:(void (^)(BugsnagBreadcrumb *))block;

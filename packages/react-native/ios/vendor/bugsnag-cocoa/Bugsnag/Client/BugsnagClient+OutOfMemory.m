@@ -33,7 +33,10 @@
     device.orientation = self.stateMetadataFromLastLaunch[BSGKeyDeviceState][BSGKeyOrientation];
     
     BugsnagMetadata *metadata = [[BugsnagMetadata alloc] initWithDictionary:self.metadataFromLastLaunch ?: @{}];
-    [metadata addMetadata:self.stateMetadataFromLastLaunch[BSGKeyDeviceState] toSection:BSGKeyDevice];
+    NSDictionary *deviceState = self.stateMetadataFromLastLaunch[BSGKeyDeviceState];
+    if ([deviceState isKindOfClass:[NSDictionary class]]) {
+        [metadata addMetadata:deviceState toSection:BSGKeyDevice];
+    }
     
     NSDictionary *sessionDict = self.systemState.lastLaunchState[BSGKeySession];
     BugsnagSession *session = sessionDict ? [[BugsnagSession alloc] initWithDictionary:sessionDict] : nil;
@@ -49,11 +52,11 @@
     [[BugsnagEvent alloc] initWithApp:app
                                device:device
                          handledState:[BugsnagHandledState handledStateWithSeverityReason:LikelyOutOfMemory]
-                                 user:session.user
+                                 user:session.user ?: [[BugsnagUser alloc] init]
                              metadata:metadata
-                          breadcrumbs:self.breadcrumbs.breadcrumbs
+                          breadcrumbs:self.breadcrumbs.breadcrumbs ?: @[]
                                errors:@[error]
-                              threads:nil
+                              threads:@[]
                               session:session];
     
     return event;

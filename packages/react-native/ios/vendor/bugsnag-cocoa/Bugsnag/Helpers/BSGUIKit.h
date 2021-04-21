@@ -11,6 +11,7 @@
 // When used in some memory constrained contexts such as a file provider extension, linking to UIKit is problematic.
 // These macros exist to allow the use of UIKit without adding a link-time dependency on it.
 
+// Calling code should be prepared for classes to not be found when UIKit is not linked.
 #define UIAPPLICATION                                       NSClassFromString(@"UIApplication")
 #define UIDEVICE                                            NSClassFromString(@"UIDevice")
 

@@ -14,8 +14,8 @@
 static NSString *const kPluginReactNative = @"BugsnagReactNativePlugin";
 
 @interface BugsnagPluginClient ()
-@property NSSet<id<BugsnagPlugin>> *plugins;
-@property BugsnagClient *client;
+@property (nonatomic) NSSet<id<BugsnagPlugin>> *plugins;
+@property (nonatomic) BugsnagClient *client;
 @end
 
 @implementation BugsnagPluginClient

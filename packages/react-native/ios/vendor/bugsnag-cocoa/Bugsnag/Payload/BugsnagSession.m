@@ -23,12 +23,12 @@ static NSString *const kBugsnagUser = @"user";
 
 @implementation BugsnagSession
 
-- (instancetype)initWithId:(NSString *_Nonnull)sessionId
-                 startDate:(NSDate *_Nonnull)startDate
-                      user:(BugsnagUser *_Nullable)user
+- (instancetype)initWithId:(NSString *)sessionId
+                 startDate:(NSDate *)startDate
+                      user:(BugsnagUser *)user
               autoCaptured:(BOOL)autoCaptured
-                       app:(BugsnagApp *_Nonnull)app
-                       device:(BugsnagDevice *_Nonnull)device {
+                       app:(BugsnagApp *)app
+                    device:(BugsnagDevice *)device {
     if (self = [super init]) {
         _id = sessionId;
         _startedAt = [startDate copy];
@@ -40,48 +40,58 @@ static NSString *const kBugsnagUser = @"user";
     return self;
 }
 
-+ (instancetype)fromJson:(NSDictionary *)json {
++ (nullable instancetype)fromJson:(NSDictionary *)json {
     if (!json) {
         return nil;
     }
-    BugsnagSession *session = [BugsnagSession new];
-    session.id = json[kBugsnagSessionId];
-
-    NSString *timestamp = json[kBugsnagStartedAt];
-
-    if (timestamp != nil) {
-        session.startedAt = [BSG_RFC3339DateTool dateFromString:timestamp];
+    NSString *sessionId = BSGDeserializeString(json[kBugsnagSessionId]);
+    if (!sessionId) {
+        return nil;
     }
     NSDictionary *events = json[@"events"];
-
-    if (events != nil) {
-        session.unhandledCount = [events[@"unhandled"] unsignedIntegerValue];
-        session.handledCount = [events[@"handled"] unsignedIntegerValue];
-    }
-    return session;
+    return [[BugsnagSession alloc] initWithId:sessionId
+                                    startDate:BSGDeserializeDate(json[kBugsnagStartedAt]) ?: [NSDate date]
+                                         user:[[BugsnagUser alloc] init]
+                                 handledCount:[events[@"handled"] unsignedIntegerValue]
+                               unhandledCount:[events[@"unhandled"] unsignedIntegerValue]
+                                          app:[[BugsnagApp alloc] init]
+                                       device:[[BugsnagDevice alloc] init]];
 }
 
-- (instancetype)initWithDictionary:(NSDictionary *_Nonnull)dict {
+- (nullable instancetype)initWithDictionary:(NSDictionary *)dict {
+    NSString *sessionId = BSGDeserializeString(dict[kBugsnagSessionId]);
+    if (!sessionId) {
+        return nil;
+    }
     if (self = [super init]) {
-        _id = dict[kBugsnagSessionId];
+        _id = sessionId;
         _unhandledCount = [dict[kBugsnagUnhandledCount] unsignedIntegerValue];
         _handledCount = [dict[kBugsnagHandledCount] unsignedIntegerValue];
-        _startedAt = [BSG_RFC3339DateTool dateFromString:dict[kBugsnagStartedAt]];
 
-        _user = [[BugsnagUser alloc] initWithDictionary:dict[kBugsnagUser]];
-        _app = [BugsnagApp deserializeFromJson:dict[BSGKeyApp]];
-        _device = [BugsnagDevice deserializeFromJson:dict[BSGKeyDevice]];
+        _startedAt = BSGDeserializeDate(dict[kBugsnagStartedAt]) ?: [NSDate date];
+
+        _user = BSGDeserializeObject(dict[kBugsnagUser], ^id _Nullable(NSDictionary * _Nonnull json) {
+            return [[BugsnagUser alloc] initWithDictionary:json];
+        }) ?: [[BugsnagUser alloc] initWithDictionary:@{}];
+
+        _app = BSGDeserializeObject(dict[BSGKeyApp], ^id _Nullable(NSDictionary * _Nonnull json) {
+            return [BugsnagApp deserializeFromJson:json];
+        }) ?: [[BugsnagApp alloc] init];
+
+        _device = BSGDeserializeObject(dict[BSGKeyDevice], ^id _Nullable(NSDictionary * _Nonnull json) {
+            return [BugsnagDevice deserializeFromJson:json];
+        }) ?: [[BugsnagDevice alloc] init];
     }
     return self;
 }
 
-- (_Nonnull instancetype)initWithId:(NSString *_Nonnull)sessionId
-                          startDate:(NSDate *_Nonnull)startDate
-                               user:(BugsnagUser *_Nullable)user
+- (_Nonnull instancetype)initWithId:(NSString *)sessionId
+                          startDate:(NSDate *)startDate
+                               user:(BugsnagUser *)user
                        handledCount:(NSUInteger)handledCount
                      unhandledCount:(NSUInteger)unhandledCount
-                                app:(BugsnagApp *_Nonnull)app
-                             device:(BugsnagDevice *_Nonnull)device {
+                                app:(BugsnagApp *)app
+                             device:(BugsnagDevice *)device {
     if (self = [super init]) {
         _id = sessionId;
         _startedAt = startDate;

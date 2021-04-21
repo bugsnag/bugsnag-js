@@ -80,8 +80,6 @@ typedef NS_OPTIONS(NSUInteger, BSG_KSJSONDecodeOption) {
  *
  * @param JSONData The UTF-8 data to decode.
  *
- * @param options Options for how to decode the data.
- *
  * @param error Place to store any error that occurs (nil = ignore). Will be
  *              set to nil on success.
  *
@@ -89,7 +87,6 @@ typedef NS_OPTIONS(NSUInteger, BSG_KSJSONDecodeOption) {
  *         option is not set, nil when an error occurs.
  */
 + (id)decode:(NSData *)JSONData
-     options:(BSG_KSJSONDecodeOption)options
        error:(NSError **)error;
 
 @end

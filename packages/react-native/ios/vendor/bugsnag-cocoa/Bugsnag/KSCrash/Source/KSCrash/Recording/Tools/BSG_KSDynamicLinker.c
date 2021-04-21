@@ -62,9 +62,13 @@ bool bsg_ksdldladdr(const uintptr_t address, Dl_info *const info) {
     if (image == NULL) {
         return false;
     }
-    const uintptr_t addressWithSlide = address - image->slide;
+    if (address < (uintptr_t)image->slide) {
+        return false;
+    }
+    const uintptr_t addressWithSlide = address - (uintptr_t)image->slide;
     const uintptr_t segmentBase =
-        bsg_mach_headers_image_at_base_of_image_index(image->header) + image->slide;
+        bsg_mach_headers_image_at_base_of_image_index(image->header) +
+        (uintptr_t)image->slide;
     if (segmentBase == 0) {
         return false;
     }
@@ -102,7 +106,7 @@ bool bsg_ksdldladdr(const uintptr_t address, Dl_info *const info) {
             }
             if (bestMatch != NULL) {
                 info->dli_saddr =
-                    (void *)(bestMatch->n_value + image->slide);
+                    (void *)(bestMatch->n_value + (uintptr_t)image->slide);
                 info->dli_sname = (char *)((intptr_t)stringTable +
                                            (intptr_t)bestMatch->n_un.n_strx);
                 if (*info->dli_sname == '_') {

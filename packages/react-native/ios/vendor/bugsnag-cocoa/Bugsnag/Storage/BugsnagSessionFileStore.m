@@ -13,7 +13,7 @@ static NSString *const kSessionStoreSuffix = @"-Session-";
 
 @interface BugsnagSessionFileStore ()
 
-@property NSUInteger maxPersistedSessions;
+@property (nonatomic) NSUInteger maxPersistedSessions;
 
 @end
 

@@ -39,7 +39,7 @@ NSDictionary *_Nonnull BSGSanitizeDict(NSDictionary *input) {
     __block NSMutableDictionary *output =
         [NSMutableDictionary dictionaryWithCapacity:[input count]];
     [input enumerateKeysAndObjectsUsingBlock:^(id _Nonnull key, id _Nonnull obj,
-                                               BOOL *_Nonnull stop) {
+                                               __attribute__((unused)) BOOL *_Nonnull stop) {
       if ([key isKindOfClass:[NSString class]]) {
           id cleanedObject = BSGSanitizeObject(obj);
           if (cleanedObject)

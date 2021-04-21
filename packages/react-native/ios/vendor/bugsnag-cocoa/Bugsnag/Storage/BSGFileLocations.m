@@ -42,7 +42,8 @@ static NSString *rootDirectory(NSString *fsVersion) {
 
         rootPath = [NSString stringWithFormat:@"%@/com.bugsnag.Bugsnag/%@/%@",
                     url.path,
-                    [NSBundle mainBundle].bundleIdentifier,
+                    // Processes that don't have an Info.plist have no bundleIdentifier
+                    NSBundle.mainBundle.bundleIdentifier ?: NSProcessInfo.processInfo.processName,
                     fsVersion];
 
         // If we can't even create the root dir, all is lost, and no file ops can be allowed.

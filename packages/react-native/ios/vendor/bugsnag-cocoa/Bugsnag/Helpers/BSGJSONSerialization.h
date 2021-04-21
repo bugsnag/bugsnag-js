@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
     - NSNumbers are not NaN or infinity
  Other rules may apply. Calling this method or attempting a conversion are the definitive ways to tell if a given object can be converted to JSON data.
  */
-+ (BOOL)isValidJSONObject:(id)obj;
++ (BOOL)isValidJSONObject:(nullable id)obj;
 
 /* Generate JSON data from a Foundation object. If the object will not produce valid JSON then an error will be returned. Setting the NSJSONWritingPrettyPrinted option will generate JSON with whitespace designed to make the output more readable. If that option is not set, the most compact possible JSON will be generated. If an error occurs, the error parameter will be set and the return value will be nil. The resulting data is a encoded in UTF-8.
  */

@@ -111,8 +111,15 @@ typedef NS_ENUM(NSUInteger, BSGEventUploadOperationState) {
     requestHeaders[BugsnagHTTPHeaderNameSentAt] = [BSG_RFC3339DateTool stringFromDate:[NSDate date]];
     requestHeaders[BugsnagHTTPHeaderNameStacktraceTypes] = [event.stacktraceTypes componentsJoinedByString:@","];
     
-    [delegate.apiClient sendJSONPayload:requestPayload headers:requestHeaders toURL:configuration.notifyURL
-                      completionHandler:^(BugsnagApiClientDeliveryStatus status, NSError *error) {
+    NSURL *notifyURL = configuration.notifyURL;
+    if (!notifyURL) {
+        bsg_log_err(@"Could not upload event %@ because notifyURL was nil", self.name);
+        completionHandler();
+        return;
+    }
+    
+    [delegate.apiClient sendJSONPayload:requestPayload headers:requestHeaders toURL:notifyURL
+                      completionHandler:^(BugsnagApiClientDeliveryStatus status, __attribute__((unused)) NSError *deliveryError) {
         
         switch (status) {
             case BugsnagApiClientDeliveryStatusDelivered:
@@ -139,7 +146,7 @@ typedef NS_ENUM(NSUInteger, BSGEventUploadOperationState) {
 
 // MARK: Subclassing
 
-- (BugsnagEvent *)loadEventAndReturnError:(NSError **)errorPtr {
+- (BugsnagEvent *)loadEventAndReturnError:(__attribute__((unused)) NSError * __autoreleasing *)errorPtr {
     // Must be implemented by all subclasses
     [self doesNotRecognizeSelector:_cmd];
     return nil;

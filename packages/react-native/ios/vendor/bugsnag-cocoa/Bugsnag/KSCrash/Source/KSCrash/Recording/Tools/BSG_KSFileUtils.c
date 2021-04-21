@@ -54,7 +54,7 @@ bool bsg_ksfuwriteBytesToFD(const int fd, const char *const bytes,
     // function retries with the remaining bytes until all bytes are written,
     // handling potential error cases as needed.
     while (bytesRemaining > 0) {
-      bytesWritten = write(fd, unwrittenBytes, bytesRemaining);
+      bytesWritten = write(fd, unwrittenBytes, (size_t)bytesRemaining);
       if (bytesWritten == -1) {
         // Retry as-is if a signal interrupt occurred, as its a recoverable
         // error. Otherwise exit early as the file descriptor cannot be written

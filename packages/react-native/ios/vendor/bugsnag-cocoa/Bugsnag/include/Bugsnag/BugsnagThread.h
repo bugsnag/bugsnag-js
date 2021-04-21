@@ -44,6 +44,6 @@ typedef NS_OPTIONS(NSUInteger, BSGThreadType) {
  * Determines the type of thread based on the originating platform
  * (intended for internal use only)
  */
-@property BSGThreadType type;
+@property (nonatomic) BSGThreadType type;
 
 @end

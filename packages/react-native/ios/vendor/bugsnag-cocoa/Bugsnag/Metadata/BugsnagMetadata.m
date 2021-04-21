@@ -117,7 +117,7 @@
 
 // MARK: - <NSMutableCopying>
 
-- (instancetype)mutableCopyWithZone:(NSZone *)zone {
+- (instancetype)mutableCopyWithZone:(__attribute__((unused)) NSZone *)zone {
     @synchronized(self) {
         NSMutableDictionary *dict = [self.dictionary mutableCopy];
         return [[BugsnagMetadata alloc] initWithDictionary:dict];
@@ -216,9 +216,7 @@
                          withKey:(NSString *)key
 {
     @synchronized(self) {
-        if ([[[self dictionary] objectForKey:section] objectForKey:key]) {
-            [[[self dictionary] objectForKey:section] removeObjectForKey:key];
-        }
+        [(NSMutableDictionary *)self.dictionary[section] removeObjectForKey:key];
     }
     [self notifyObservers];
 }

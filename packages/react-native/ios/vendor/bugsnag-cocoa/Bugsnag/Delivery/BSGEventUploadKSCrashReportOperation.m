@@ -21,7 +21,7 @@
 
 @implementation BSGEventUploadKSCrashReportOperation
 
-- (BugsnagEvent *)loadEventAndReturnError:(NSError **)errorPtr {
+- (BugsnagEvent *)loadEventAndReturnError:(NSError * __autoreleasing *)errorPtr {
     id json = [BSGJSONSerialization JSONObjectWithContentsOfFile:self.file options:0 error:errorPtr];
     if (!json) {
         return nil;
@@ -56,11 +56,11 @@
     mutableReport[@BSG_KSCrashField_Report] = mutableInfo;
 
     // Timestamp gets stored as a unix timestamp. Convert it to rfc3339.
-    NSNumber *timestampMillis = mutableInfo[@(BSG_KSCrashField_Timestamp_Millis)];
+    NSNumber *timestampMillis = mutableInfo[@BSG_KSCrashField_Timestamp_Millis];
     if ([timestampMillis isKindOfClass:[NSNumber class]]) {
-        NSTimeInterval timeInterval = timestampMillis.unsignedLongLongValue / 1000.0;
+        NSTimeInterval timeInterval = (double)timestampMillis.unsignedLongLongValue / 1000.0;
         NSDate *date = [NSDate dateWithTimeIntervalSince1970:timeInterval];
-        mutableInfo[@(BSG_KSCrashField_Timestamp)] = [BSG_RFC3339DateTool stringFromDate:date];
+        mutableInfo[@BSG_KSCrashField_Timestamp] = [BSG_RFC3339DateTool stringFromDate:date];
     } else {
         [self convertTimestamp:@BSG_KSCrashField_Timestamp inReport:mutableInfo];
     }
@@ -114,7 +114,7 @@
     }
     [report
             setValue:[BSG_RFC3339DateTool
-                    stringFromUNIXTimestamp:[timestamp unsignedLongLongValue]]
+                    stringFromUNIXTimestamp:[timestamp doubleValue]]
               forKey:key];
 }
 
