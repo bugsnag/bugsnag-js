@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # Download decision files
-curl https://raw.githubusercontent.com/bugsnag/license-audit/tms/for-js/config/decision_files/global.yml -o config/decisions.yml
+curl https://raw.githubusercontent.com/bugsnag/license-audit/master/config/decision_files/global.yml -o config/decisions.yml
 curl https://raw.githubusercontent.com/bugsnag/license-audit/master/config/decision_files/common-js.yml >> config/decisions.yml
-curl https://raw.githubusercontent.com/bugsnag/license-audit/tms/for-js/config/decision_files/bugsnag-js.yml >> config/decisions.yml
+curl https://raw.githubusercontent.com/bugsnag/license-audit/master/config/decision_files/bugsnag-js.yml >> config/decisions.yml
 
 ruby -v
 
