@@ -4,7 +4,6 @@ import diff from 'jest-diff'
 const { access } = promises
 
 /* eslint-disable @typescript-eslint/no-namespace */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 declare global {
   namespace jest {
     interface Matchers<R> {

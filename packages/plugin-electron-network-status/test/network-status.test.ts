@@ -37,8 +37,6 @@ describe('plugin: electron network status', () => {
     jest.spyOn(client, 'addMetadata')
 
     const window = makeWindow({ online: true })
-    // eslint-disable-next-line
-    // @ts-ignore TODO add _loadPlugin to the internal client types
     client._loadPlugin(plugin(window as unknown as (Window & typeof globalThis)))
 
     expect(client.getMetadata('device')).toEqual({ online: true })

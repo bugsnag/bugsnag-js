@@ -1,4 +1,3 @@
-// TODO add internal types for @bugsnag/core/breadcrumb once merged with bugsnag-js
 import Breadcrumb from '@bugsnag/core/breadcrumb'
 import { makeClientForPlugin, makeDisplay, makeScreen } from '@bugsnag/electron-test-helpers'
 import plugin from '../'
