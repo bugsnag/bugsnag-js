@@ -7,7 +7,7 @@
     <key>EXUpdatesURL</key>
     <string>https://exp.host/@bengourley-bugsnag/rn0_63_expo_ejected</string>
     <key>EXUpdatesEnabled</key>
-    <true/>
+    <false/>
     <key>EXUpdatesCheckOnLaunch</key>
     <string>ALWAYS</string>
     <key>EXUpdatesLaunchWaitMs</key>
