@@ -2,7 +2,7 @@
 # the Android notifier as part of a React Native integration test run.
 FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/android:latest as android
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y rsync nodejs
+RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y rsync npm nodejs
 
 # OS setup
 #RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
