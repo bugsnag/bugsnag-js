@@ -214,7 +214,7 @@ def get_android_main_application_path()
   if $current_fixture.include? 'expo_ejected'
      "android/app/src/main/java/com/bugsnag/#{$current_fixture}/MainApplication.java"
   else
-    "android/app/src/main/java/com/bugsnag/#{$current_fixture}/MainApplication.java"
+    "android/app/src/main/java/com/#{$current_fixture}/MainApplication.java"
   end
 end
 
