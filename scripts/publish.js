@@ -15,8 +15,7 @@ function publish (publishUrl) {
   }
 
   if (myVersions.length === 0) {
-    // TODO if (process.env.RN_INTEGRATION) {
-    if (true) {
+    if (process.env.RN_INTEGRATION) {
       // For RN integration builds, dynamically update the native notifiers
       common.changeDir('packages/react-native')
       common.run('./update-android.sh --sha next', true)

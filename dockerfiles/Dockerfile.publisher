@@ -4,10 +4,6 @@ FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/android:latest as android
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y rsync npm nodejs
 
-# OS setup
-#RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
-#RUN apt-get update && apt-get install -y gradle jq git-core build-essential openssl libssl-dev bash curl git rsync nodejs
-
 # Android setup
 ENV ANDROID_HOME="/sdk/"
 ENV GRADLE_OPTS="-Dorg.gradle.daemon=false"
