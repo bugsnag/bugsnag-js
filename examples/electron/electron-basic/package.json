@@ -45,7 +45,7 @@
     }
   },
   "dependencies": {
-    "@bugsnag/electron": "^99.99.99-canary.a3a2b31ff0fb7425fa3a918fffa5c9c69a829ce8",
+    "@bugsnag/electron": "*",
     "electron-squirrel-startup": "^1.0.0"
   },
   "devDependencies": {
