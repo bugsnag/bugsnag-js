@@ -4,7 +4,7 @@ steps:
   # License audit
   #
   - label: ':copyright: License Audit'
-    timeout_in_minutes: 10
+    timeout_in_minutes: 20
     agents:
       queue: opensource-mac-cocoa-11
     command: scripts/license_finder.sh
