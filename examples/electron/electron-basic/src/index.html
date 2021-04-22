@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Hello World!</title>
+    <link rel="stylesheet" href="index.css">
+  </head>
+  <body>
+    <img width="200" src="bugsnag.png"/>
+    <h1>Basic Electron example</h1>
+    <p>
+      This page is a basic example of how to include <code>@bugsnag/electron</code> in an Electron app.
+    </p>
+    <div id="buttons">
+      <h3>Send some errors by clicking below:</h3>
+      <h4>Renderer process</h4>
+      <button type="button" id="rendererHandled">Send handled error</button>
+      <button type="button" id="rendererUnhandled">Send unhandled error</button>
+      <button type="button" id="rendererRejection">Send unhandled promise rejection</button>
+      <h4>Main process</h4>
+      <button type="button" id="mainHandled">Send handled error</button>
+      <button type="button" id="mainUnhandled">Send unhandled error</button>
+      <button type="button" id="mainRejection">Send unhandled promise rejection</button>
+    </div>
+
+    <script src="renderer/app.js"></script>
+  </body>
+</html>
