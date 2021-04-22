@@ -27,7 +27,7 @@ steps:
   # Publish/package notifier
   #
   - label: ':docker: Prepare package.json'
-    if: build.env("RN_INTEGRATION") != null
+    if: build.env("RN_INTEGRATION") != "true"
     key: 'package-js'
     timeout_in_minutes: 3
     plugins:
@@ -50,7 +50,7 @@ steps:
   # Trigger individual pipelines
   #
   - label: 'Trigger Browser pipeline'
-    if: build.env("RN_INTEGRATION") == null
+    if: build.env("RN_INTEGRATION") != "true"
     depends_on: 'package-js'
     trigger: 'bugsnag-js-browser'
     build:
@@ -60,7 +60,7 @@ steps:
     async: true
 
   - label: 'Trigger Node pipeline'
-    if: build.env("RN_INTEGRATION") == null
+    if: build.env("RN_INTEGRATION") != "true"
     depends_on: 'package-js'
     trigger: 'bugsnag-js-node'
     build:
@@ -70,7 +70,7 @@ steps:
     async: true
 
   - label: 'Trigger Expo pipeline'
-    if: build.env("RN_INTEGRATION") == null
+    if: build.env("RN_INTEGRATION") != "true"
     depends_on: 'publish-js'
     trigger: 'bugsnag-js-expo'
     build:
@@ -91,7 +91,7 @@ steps:
     async: true
 
   - label: 'Trigger React Native CLI pipeline'
-    if: build.env("RN_INTEGRATION") == null
+    if: build.env("RN_INTEGRATION") != "true"
     depends_on:
       - 'publish-js'
       - 'android-builder-base'
@@ -103,7 +103,7 @@ steps:
     async: true
 
   - label: ':aws-lambda: AWS Lambda tests'
-    if: build.env("RN_INTEGRATION") == null
+    if: build.env("RN_INTEGRATION") != "true"
     timeout_in_minutes: 35
     agents:
       queue: 'opensource-mac-aws-sam'
@@ -119,7 +119,7 @@ steps:
   # Core tests and checks
   #
   - label: ':docker: Build CI image'
-    if: build.env("RN_INTEGRATION") == null
+    if: build.env("RN_INTEGRATION") != "true"
     key: 'ci-image'
     depends_on: 'package-js'
     timeout_in_minutes: 20
@@ -139,7 +139,7 @@ steps:
             - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base
 
   - label: 'Lint'
-    if: build.env("RN_INTEGRATION") == null
+    if: build.env("RN_INTEGRATION") != "true"
     depends_on: 'ci-image'
     timeout_in_minutes: 10
     plugins:
@@ -148,7 +148,7 @@ steps:
     command: 'npm run test:lint'
 
   - label: 'Unit tests'
-    if: build.env("RN_INTEGRATION") == null
+    if: build.env("RN_INTEGRATION") != "true"
     depends_on: 'ci-image'
     timeout_in_minutes: 10
     plugins:
@@ -157,7 +157,7 @@ steps:
     command: 'npm run test:unit'
 
   - label: 'Type checks/tests'
-    if: build.env("RN_INTEGRATION") == null
+    if: build.env("RN_INTEGRATION") != "true"
     depends_on: 'ci-image'
     timeout_in_minutes: 10
     plugins:
