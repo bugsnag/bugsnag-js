@@ -155,6 +155,7 @@
 				LastUpgradeCheck = 1130;
 				TargetAttributes = {
 					13B07F861A680F5B00A75B9A = {
+						DevelopmentTeam = 372ZUL2ZB7;
 						LastSwiftMigration = 1120;
 					};
 				};
@@ -318,6 +319,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = rn0_63_expo_ejected/rn0_63_expo_ejected.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 372ZUL2ZB7;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -332,7 +334,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.bugsnag.rn0_63_expo_ejected;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.bugsnag.rn0-63-expo-ejected";
 				PRODUCT_NAME = rn0_63_expo_ejected;
 				SWIFT_OBJC_BRIDGING_HEADER = "rn0_63_expo_ejected/rn0_63_expo_ejected-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -350,6 +352,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = rn0_63_expo_ejected/rn0_63_expo_ejected.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 372ZUL2ZB7;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				INFOPLIST_FILE = rn0_63_expo_ejected/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
@@ -359,7 +362,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.bugsnag.rn0_63_expo_ejected;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.bugsnag.rn0-63-expo-ejected";
 				PRODUCT_NAME = rn0_63_expo_ejected;
 				SWIFT_OBJC_BRIDGING_HEADER = "rn0_63_expo_ejected/rn0_63_expo_ejected-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
