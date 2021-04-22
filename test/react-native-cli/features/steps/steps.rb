@@ -85,6 +85,8 @@ def parse_package_json
   # once and sometimes appear twice, depending on if another command is running
   # when it's input
   json = after.drop_while { |line| line.include?('cat package.json') }
+  # Drop lines until we get to the start of the JSON
+  json = after.drop_while { |line| line != '{' }
 
   JSON.parse(json.join("\n"))
 end
@@ -296,7 +298,7 @@ def parse_xml_file(path)
   uuid = SecureRandom.uuid
 
   steps %Q{
-    When I input "cat #{path}" interactively
+    When I input "cat #{path} && echo ''" interactively
     And I input "echo #{uuid}" interactively
     Then I wait for the shell to output '#{uuid}' to stdout
   }
