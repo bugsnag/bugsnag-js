@@ -1,25 +1,18 @@
 # CI test image for unit/lint/type tests, but also needs to be capable of building
 # the Android notifier as part of a React Native integration test run.
-FROM openjdk:8-jdk-buster
+FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/android:latest as android
+
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y rsync nodejs
 
 # OS setup
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
-RUN apt-get update && apt-get install -y gradle jq git-core build-essential openssl libssl-dev bash curl git rsync nodejs
+#RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
+#RUN apt-get update && apt-get install -y gradle jq git-core build-essential openssl libssl-dev bash curl git rsync nodejs
 
-# Android tools
-WORKDIR /sdk
-RUN wget https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip -q \
-    && unzip -q sdk-tools-linux-4333796.zip \
-    && rm sdk-tools-linux-4333796.zip
-
-ENV PATH="${PATH}:/sdk/tools:/sdk/tools/bin"
-
-RUN yes | sdkmanager "platform-tools" "build-tools;28.0.3"
-ENV PATH="${PATH}:/sdk/platform-tools"
-
+# Android setup
 ENV ANDROID_HOME="/sdk/"
 ENV GRADLE_OPTS="-Dorg.gradle.daemon=false"
 
+# NPM setup
 RUN rm -f ~/.npmrc
 
 ARG REG_BASIC_CREDENTIAL
