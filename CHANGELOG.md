@@ -1,5 +1,13 @@
 # Changelog
 
+## TBD
+
+### Changed
+
+- (react-native): Update bugsnag-android to v5.9.1
+  - Add projectPackages field to error payloads [bugsnag-android#1226](https://github.com/bugsnag/bugsnag-android/pull/1226)
+  - Fix deserialization bug in persisted NDK errors [bugsnag-android#1220](https://github.com/bugsnag/bugsnag-android/pull/1220)
+
 ## v7.9.4 (2021-04-19)
 
 ### Changed
