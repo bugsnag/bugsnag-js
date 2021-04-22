@@ -1,19 +1,25 @@
 const { join } = require('path')
 const Bugsnag = require('@bugsnag/electron')
+const { plugin: PluginClientStatePersistence, NativeClient } = require('@bugsnag/plugin-electron-client-state-persistence')
 const configFile = process.env.BUGSNAG_CONFIG || 'default'
 // eslint-disable-next-line no-undef
 const bugsnagConfig = __non_webpack_require__(`./${configFile}`)
 const preloadFile = process.env.BUGSNAG_PRELOAD || 'default.js'
 
-Bugsnag.start({
-  // Base test server / automation config
-  // eslint-disable-next-line no-undef
-  ...baseBugsnagConfig,
-  // Bugsnag config loaded from ./configs/<selection>
-  ...bugsnagConfig()
-})
+// eslint-disable-next-line no-undef
+const config = { ...baseBugsnagConfig, ...bugsnagConfig() }
+
+// enable the client state persistence plugin to ensure it doesn't crash
+config.plugins = (config.plugins || []).concat(PluginClientStatePersistence(NativeClient))
+
+Bugsnag.start(config)
 
 const { app, BrowserWindow, ipcMain } = require('electron')
+
+NativeClient.install(
+  join(app.getPath('userCache'), 'bugsnag', Bugsnag._client._config.apiKey, 'native'),
+  Bugsnag._client._config.maxBreadcrumbs
+)
 
 function createWindow () {
   const win = new BrowserWindow({

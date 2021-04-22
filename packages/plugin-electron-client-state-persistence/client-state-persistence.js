@@ -1,45 +1,48 @@
-module.exports = (NativeClient) => ({
-  load: (client) => {
-    client.addOnBreadcrumb(breadcrumb => {
-      try {
-        NativeClient.leaveBreadcrumb(breadcrumb)
-      } catch (e) {
-        client._logger.error(e)
-      }
-    }, true)
+module.exports = {
+  NativeClient: require('bindings')('bugsnag_plugin_electron_client_state_persistence_bindings'),
+  plugin: (NativeClient) => ({
+    load: (client) => {
+      client.addOnBreadcrumb(breadcrumb => {
+        try {
+          NativeClient.leaveBreadcrumb(breadcrumb)
+        } catch (e) {
+          client._logger.error(e)
+        }
+      }, true)
 
-    const clientStateManager = client.getPlugin('clientStateManager')
+      const clientStateManager = client.getPlugin('clientStateManager')
 
-    clientStateManager.emitter.on('UserUpdate', user => {
-      try {
-        NativeClient.updateUser(user.id, user.email, user.name)
-      } catch (e) {
-        client._logger.error(e)
-      }
-    })
+      clientStateManager.emitter.on('UserUpdate', user => {
+        try {
+          NativeClient.updateUser(user.id, user.email, user.name)
+        } catch (e) {
+          client._logger.error(e)
+        }
+      })
 
-    clientStateManager.emitter.on('ContextUpdate', context => {
-      try {
-        NativeClient.updateContext(context)
-      } catch (e) {
-        client._logger.error(e)
-      }
-    })
+      clientStateManager.emitter.on('ContextUpdate', context => {
+        try {
+          NativeClient.updateContext(context)
+        } catch (e) {
+          client._logger.error(e)
+        }
+      })
 
-    clientStateManager.emitter.on('MetadataUpdate', ({ section, values }) => {
-      try {
-        NativeClient.updateMetadata(section, values)
-      } catch (e) {
-        client._logger.error(e)
-      }
-    })
+      clientStateManager.emitter.on('MetadataUpdate', ({ section, values }) => {
+        try {
+          NativeClient.updateMetadata(section, values)
+        } catch (e) {
+          client._logger.error(e)
+        }
+      })
 
-    clientStateManager.emitter.on('MetadataReplace', (metadata) => {
-      try {
-        NativeClient.updateMetadata(metadata)
-      } catch (e) {
-        client._logger.error(e)
-      }
-    })
-  }
-})
+      clientStateManager.emitter.on('MetadataReplace', (metadata) => {
+        try {
+          NativeClient.updateMetadata(metadata)
+        } catch (e) {
+          client._logger.error(e)
+        }
+      })
+    }
+  })
+}
