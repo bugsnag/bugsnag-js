@@ -2,18 +2,18 @@ require 'rexml/document'
 require 'securerandom'
 
 fixtures = Dir["#{__dir__}/../fixtures/rn0_*"].map { |dir| File.basename(dir) }.sort
-current_fixture = ENV['REACT_NATIVE_VERSION']
+$current_fixture = ENV['REACT_NATIVE_VERSION']
 
 # Ensure environment is set for the CLI tests (check not needed for device-based tests)
-if Maze.config.farm == :none && !fixtures.include?(current_fixture)
-  if current_fixture.nil?
+if Maze.config.farm == :none && !fixtures.include?($current_fixture)
+  if $current_fixture.nil?
     message = <<~ERROR.chomp
       \e[31;1mNo React Native fixture given!\e[0m
 
       Set the 'REACT_NATIVE_VERSION' environment variable to one of the React Native fixtures
     ERROR
   else
-    message = "\e[31;1mInvalid fixture: #{current_fixture.inspect}!\e[0m"
+    message = "\e[31;1mInvalid fixture: #{$current_fixture.inspect}!\e[0m"
   end
 
   raise <<~ERROR
@@ -26,7 +26,7 @@ if Maze.config.farm == :none && !fixtures.include?(current_fixture)
 end
 
 When('I run the React Native service interactively') do
-  step("I run the service '#{current_fixture}' interactively")
+  step("I run the service '#{$current_fixture}' interactively")
 end
 
 When("I notify a handled JavaScript error") do
@@ -112,14 +112,14 @@ Then("bugsnag source maps library is not in the package.json file") do
 end
 
 Then("the iOS build has not been modified to upload source maps") do
-  filename = "ios/#{current_fixture}.xcodeproj/project.pbxproj"
+  filename = "ios/#{$current_fixture}.xcodeproj/project.pbxproj"
 
   step("the interactive file '#{filename}' does not contain 'EXTRA_PACKAGER_ARGS=\"--sourcemap-output $TMPDIR/$(md5 -qs \"$CONFIGURATION_BUILD_DIR\")-main.jsbundle.map\"'")
   step("the interactive file '#{filename}' does not contain 'Upload source maps to Bugsnag'")
 end
 
 Then("the iOS build has been modified to upload source maps") do
-  filename = "ios/#{current_fixture}.xcodeproj/project.pbxproj"
+  filename = "ios/#{$current_fixture}.xcodeproj/project.pbxproj"
 
   steps %Q{
     Then I input "./check-ios-build-script.sh" interactively
@@ -130,7 +130,7 @@ Then("the iOS build has been modified to upload source maps") do
 end
 
 Then("the iOS build has been modified to upload source maps to {string}") do |expected_endpoint|
-  filename = "ios/#{current_fixture}.xcodeproj/project.pbxproj"
+  filename = "ios/#{$current_fixture}.xcodeproj/project.pbxproj"
 
   steps %Q{
     Then I input "./check-ios-build-script.sh #{expected_endpoint}" interactively
@@ -204,29 +204,35 @@ Then("bugsnag react-native is not in the package.json file") do
 end
 
 Then("the iOS app contains the bugsnag initialisation code") do
-  filename = "ios/#{current_fixture}/AppDelegate.m"
+  filename = "ios/#{$current_fixture}/AppDelegate.m"
 
   step("the interactive file '#{filename}' contains '#import <Bugsnag/Bugsnag.h>'")
   step("the interactive file '#{filename}' contains '[Bugsnag start];'")
 end
 
-Then("the Android app contains the bugsnag initialisation code") do
-  filename = "android/app/src/main/java/com/#{current_fixture}/MainApplication.java"
+def get_android_main_application_path()
+  if $current_fixture.include? 'expo_ejected'
+     "android/app/src/main/java/com/bugsnag/#{$current_fixture}/MainApplication.java"
+  else
+    "android/app/src/main/java/com/bugsnag/#{$current_fixture}/MainApplication.java"
+  end
+end
 
+Then("the Android app contains the bugsnag initialisation code") do
+  filename = get_android_main_application_path
   step("the interactive file '#{filename}' contains 'import com.bugsnag.android.Bugsnag;'")
   step("the interactive file '#{filename}' contains 'Bugsnag.start(this);'")
 end
 
 Then("the iOS app does not contain the bugsnag initialisation code") do
-  filename = "ios/#{current_fixture}/AppDelegate.m"
+  filename = "ios/#{$current_fixture}/AppDelegate.m"
 
   step("the interactive file '#{filename}' does not contain '#import <Bugsnag/Bugsnag.h>'")
   step("the interactive file '#{filename}' does not contain '[Bugsnag start];'")
 end
 
 Then("the Android app does not contain the bugsnag initialisation code") do
-  filename = "android/app/src/main/java/com/#{current_fixture}/MainApplication.java"
-
+  filename = get_android_main_application_path
   step("the interactive file '#{filename}' does not contain 'import com.bugsnag.android.Bugsnag;'")
   step("the interactive file '#{filename}' does not contain 'Bugsnag.start(this);'")
 end
@@ -256,9 +262,9 @@ Then("the modified files are as expected after running the insert command") do
     When I input "git status --porcelain" interactively
     Then I wait for the interactive shell to output the following lines in stdout
       """
-      M android/app/src/main/java/com/#{current_fixture}/MainApplication.java
+      M #{get_android_main_application_path}
       M index.js
-      M ios/#{current_fixture}/AppDelegate.m
+      M ios/#{$current_fixture}/AppDelegate.m
       """
   }
 end
@@ -269,7 +275,7 @@ Then("the modified files are as expected after running the configure command") d
     Then I wait for the interactive shell to output the following lines in stdout
       """
       M android/app/src/main/AndroidManifest.xml
-      M ios/#{current_fixture}/Info.plist
+      M ios/#{$current_fixture}/Info.plist
       """
   }
 end
@@ -308,7 +314,7 @@ def parse_xml_file(path)
 end
 
 Then("the iOS app contains the bugsnag API key {string}") do |expected|
-  xml = parse_xml_file("ios/#{current_fixture}/Info.plist")
+  xml = parse_xml_file("ios/#{$current_fixture}/Info.plist")
 
   # This XPath does the following:
   #   1. find the '<key>' with the text 'bugsnag'
@@ -330,7 +336,7 @@ Then("the Android app contains the bugsnag API key {string}") do |expected|
 end
 
 Then("the iOS app does not contain a bugsnag API key") do
-  xml = parse_xml_file("ios/#{current_fixture}/Info.plist")
+  xml = parse_xml_file("ios/#{$current_fixture}/Info.plist")
 
   actual_api_key = xml.get_text('//key[text()="bugsnag"]/following-sibling::dict/string')
 
@@ -346,7 +352,7 @@ Then("the Android app does not contain a bugsnag API key") do
 end
 
 Then("the iOS app contains the bugsnag notify URL {string}") do |expected|
-  xml = parse_xml_file("ios/#{current_fixture}/Info.plist")
+  xml = parse_xml_file("ios/#{$current_fixture}/Info.plist")
 
   # This XPath does the following:
   #   1. find the '<key>' with the text 'bugsnag'
@@ -371,7 +377,7 @@ Then("the Android app contains the bugsnag notify URL {string}") do |expected|
 end
 
 Then("the iOS app does not contain a bugsnag notify URL") do
-  xml = parse_xml_file("ios/#{current_fixture}/Info.plist")
+  xml = parse_xml_file("ios/#{$current_fixture}/Info.plist")
 
   actual = xml.get_text('//key[text()="bugsnag"]/following-sibling::dict/key[text()="endpoints"]/following-sibling::dict/key[text()="notify"]/following-sibling::string[1]')
 
@@ -387,7 +393,7 @@ Then("the Android app does not contain a bugsnag notify URL") do
 end
 
 Then("the iOS app contains the bugsnag sessions URL {string}") do |expected|
-  xml = parse_xml_file("ios/#{current_fixture}/Info.plist")
+  xml = parse_xml_file("ios/#{$current_fixture}/Info.plist")
 
   actual = xml.get_text('//key[text()="bugsnag"]/following-sibling::dict/key[text()="endpoints"]/following-sibling::dict/key[text()="sessions"]/following-sibling::string[1]')
 
@@ -404,7 +410,7 @@ Then("the Android app contains the bugsnag sessions URL {string}") do |expected|
 end
 
 Then("the iOS app does not contain a bugsnag sessions URL") do
-  xml = parse_xml_file("ios/#{current_fixture}/Info.plist")
+  xml = parse_xml_file("ios/#{$current_fixture}/Info.plist")
 
   actual = xml.get_text('//key[text()="bugsnag"]/following-sibling::dict/key[text()="endpoints"]/following-sibling::dict/key[text()="sessions"]/following-sibling::string[1]')
 
