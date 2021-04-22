@@ -5,7 +5,7 @@ const path = require('path')
 Bugsnag.start('YOUR_API_KEY')
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
-if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
+if (require('electron-squirrel-startup')) {
   app.quit()
 }
 
