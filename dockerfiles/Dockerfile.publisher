@@ -1,13 +1,10 @@
-# CI test image for unit/lint/type tests
-#FROM node:lts-alpine
-#
-#RUN apk add --update bash git rsync
-
+# CI test image for unit/lint/type tests, but also needs to be capable of building
+# the Android notifier as part of a React Native integration test run.
 FROM openjdk:8-jdk-buster
 
 # OS setup
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
-RUN apt-get update && apt-get install -y gradle jq git-core build-essential openssl libssl-dev bash git rsync nodejs
+RUN apt-get update && apt-get install -y gradle jq git-core build-essential openssl libssl-dev bash curl git rsync nodejs
 
 # Android tools
 WORKDIR /sdk
@@ -22,8 +19,6 @@ ENV PATH="${PATH}:/sdk/platform-tools"
 
 ENV ANDROID_HOME="/sdk/"
 ENV GRADLE_OPTS="-Dorg.gradle.daemon=false"
-
-RUN apk add --update bash git curl rsync
 
 RUN rm -f ~/.npmrc
 
