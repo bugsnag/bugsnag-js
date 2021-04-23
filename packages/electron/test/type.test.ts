@@ -73,7 +73,6 @@ describe.skip('@bugsnag/electron types', () => {
           notify: 'notify.example.com',
           sessions: 'sessions.example.com'
         },
-        idleThreshold: 123,
         logger: {
           debug: () => {},
           info: () => {},

@@ -1,6 +1,5 @@
 const { schema } = require('@bugsnag/core/config')
 const stringWithLength = require('@bugsnag/core/lib/validators/string-with-length')
-const intRange = require('@bugsnag/core/lib/validators/int-range')
 
 const defaultErrorTypes = () => ({ unhandledExceptions: true, unhandledRejections: true, nativeCrashes: true })
 
@@ -38,11 +37,6 @@ module.exports.schema = {
       ) &&
       // ensure no keys other than notify/session are set on endpoints object
       Object.keys(val).filter(k => !['notify', 'sessions', 'minidumps'].includes(k)).length === 0
-  },
-  idleThreshold: {
-    defaultValue: () => 60,
-    message: 'should be an integer > 0',
-    validate: value => intRange(0, Infinity)(value)
   },
   logger: {
     ...schema.logger,

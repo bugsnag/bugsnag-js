@@ -19,7 +19,6 @@ interface MainConfig extends Config {
     notify: string
     sessions: string
   }
-  idleThreshold?: number
   onSendError?: OnSendErrorCallback | OnSendErrorCallback[]
   onUncaughtException?: AfterErrorCallback
   onUnhandledRejection?: AfterErrorCallback
