@@ -18,7 +18,6 @@ interface MainConfig extends Config {
   endpoints?: {
     notify: string
     sessions: string
-    minidumps: string
   }
   idleThreshold?: number
   onSendError?: OnSendErrorCallback | OnSendErrorCallback[]

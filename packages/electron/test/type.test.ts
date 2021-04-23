@@ -71,8 +71,7 @@ describe.skip('@bugsnag/electron types', () => {
         enabledReleaseStages: ['vOv', 'VoV'],
         endpoints: {
           notify: 'notify.example.com',
-          sessions: 'sessions.example.com',
-          minidumps: 'minidumps.example.com'
+          sessions: 'sessions.example.com'
         },
         idleThreshold: 123,
         logger: {

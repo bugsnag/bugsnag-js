@@ -32,21 +32,18 @@ describe('main process client config schema', () => {
     it('allows valid config', () => {
       expect(schema.endpoints.validate({
         notify: 'http://fakeurl.xyz/n',
-        sessions: 'http://fakeurl.xyz/s',
-        minidumps: 'http://fakeurl.xyz/m'
+        sessions: 'http://fakeurl.xyz/s'
       })).toBe(true)
     })
 
     it('rejects invalid values', () => {
       expect(schema.endpoints.validate({
-        notify: 'http://fakeurl.xyz/n',
-        minidumps: 'http://fakeurl.xyz/m'
+        notify: 'http://fakeurl.xyz/n'
       })).toBe(false)
 
       expect(schema.endpoints.validate({
         notify: 'http://fakeurl.xyz/n',
-        sessions: 'http://fakeurl.xyz/s',
-        minidumps: ''
+        sessions: ''
       })).toBe(false)
     })
   })

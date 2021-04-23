@@ -175,7 +175,6 @@ describe('plugin: electron net breadcrumbs', () => {
         endpoints: {
           notify: 'https://example.com/notify',
           sessions: 'https://example.com/sessions',
-          minidumps: 'https://example.com/minidumps',
           [endpointName]: url
         }
       },
