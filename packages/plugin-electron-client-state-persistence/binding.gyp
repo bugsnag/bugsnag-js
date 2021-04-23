@@ -1,7 +1,7 @@
 {
   "targets": [
     {
-      "target_name": "bugsnag_plugin_electron_client_state_persistence_bindings",
+      "target_name": "bugsnag_pecsp_bindings",
       "sources": [
         "src/api.c",
         "src/bugsnag_electron_client_state_persistence.c",

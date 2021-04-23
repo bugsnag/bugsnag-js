@@ -1,5 +1,5 @@
 module.exports = {
-  NativeClient: require('bindings')('bugsnag_plugin_electron_client_state_persistence_bindings'),
+  NativeClient: require('bindings')('bugsnag_pecsp_bindings'),
   plugin: (NativeClient) => ({
     load: (client) => {
       client.addOnBreadcrumb(breadcrumb => {
