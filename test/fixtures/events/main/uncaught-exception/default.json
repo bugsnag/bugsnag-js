@@ -82,7 +82,10 @@
         {
           "errorClass": "ReferenceError",
           "errorMessage": "foo is not defined",
-          "stacktrace": [],
+          "stacktrace": [{
+            "file": "./src/errors.js",
+            "lineNumber": 6
+          }],
           "type": "electronnodejs"
         }
       ]

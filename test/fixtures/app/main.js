@@ -1,4 +1,10 @@
 const { join } = require('path')
+const {
+  uncaughtException,
+  unhandledRejection,
+  crash,
+  notify
+} = require('./src/errors')
 const Bugsnag = require('@bugsnag/electron')
 const { plugin: PluginClientStatePersistence, NativeClient } = require('@bugsnag/plugin-electron-client-state-persistence')
 const configFile = process.env.BUGSNAG_CONFIG || 'default'
@@ -53,22 +59,13 @@ app.on('activate', () => {
   }
 })
 
-ipcMain.on('main-process-unhandled-promise-rejection', () => {
-  Promise.reject(new TypeError('invalid'))
-})
+ipcMain.on('main-process-unhandled-promise-rejection', unhandledRejection)
 
-ipcMain.on('main-process-uncaught-exception', () => {
-  // eslint-disable-next-line
-  foo()
-})
+ipcMain.on('main-process-uncaught-exception', uncaughtException)
 
-ipcMain.on('main-process-notify', () => {
-  Bugsnag.notify(new ReferenceError('something bad'))
-})
+ipcMain.on('main-process-notify', notify)
 
-ipcMain.on('main-process-crash', () => {
-  process.crash()
-})
+ipcMain.on('main-process-crash', crash)
 
 ipcMain.on('main-process-start-session', () => {
   Bugsnag.startSession()

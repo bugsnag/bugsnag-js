@@ -82,7 +82,10 @@
         {
           "errorClass": "TypeError",
           "errorMessage": "invalid",
-          "stacktrace": [],
+          "stacktrace": [{
+            "file": "./src/errors.js",
+            "lineNumber": 10
+          }],
           "type": "electronnodejs"
         }
       ]

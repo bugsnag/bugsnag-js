@@ -80,7 +80,10 @@
         {
           "errorMessage": "something bad",
           "errorClass": "ReferenceError",
-          "stacktrace": [],
+          "stacktrace": [{
+            "file": "./src/errors.js",
+            "lineNumber": 18
+          }],
           "type": "electronnodejs"
         }
       ]
