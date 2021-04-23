@@ -1,3 +1,4 @@
+const { EOL } = require('os')
 const { rmdir } = require('fs').promises
 const { _electron: electron } = require('playwright')
 const psList = require('ps-list')
@@ -13,6 +14,7 @@ class Automator {
   constructor (app) {
     this.app = app
     this.crashed = false
+    this.rendererLogs = ''
   }
 
   async start (env = {}) {
@@ -20,14 +22,16 @@ class Automator {
     this.runner = await this._launchApp(env)
     this.runner.context().setDefaultTimeout(10_000)
     this.window = await this._getFirstWindow(env)
+    this.rendererLogs = ''
 
-    // pipe app logs into the console
+    // pipe app logs into a cache
     this.window.on('console', async message => {
+      const date = new Date().toISOString()
       // some values don't log correctly if they're passed straight to console.log
       // e.g. Error instances show up as 'JSHandle@error' - jsonValue() fixes this
       const args = await Promise.all(message.args().map(arg => arg.jsonValue()))
 
-      console.log(...args)
+      this.rendererLogs += `${date} ${args.join(' ')}${EOL}`
     })
 
     return this.window

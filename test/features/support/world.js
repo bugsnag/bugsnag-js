@@ -1,5 +1,5 @@
 const { join } = require('path')
-const { mkdir } = require('fs').promises
+const { mkdir, writeFile } = require('fs').promises
 const { After, AfterAll, Before, BeforeAll, Status } = require('@cucumber/cucumber')
 const { MockServer } = require('./server')
 const { TestApp } = require('./app')
@@ -81,6 +81,7 @@ After({ timeout: 15_000 }, async ({ result, pickle }) => {
     const output = join(failureOutputDir, `${pickle.name}-${time}`)
     await mkdir(output, { recursive: true })
     await global.server.writeUploadsTo(output)
+    await writeFile(join(output, 'renderer.log'), global.automator.rendererLogs)
   }
   await global.automator.stop() // start the app fresh every scenario
   // clear caches once the app stops running, to avoid sneaky requests in
