@@ -5,7 +5,7 @@
   "description": "@bugsnag/electron plugin for sessions",
   "repository": {
     "type": "git",
-    "url": "git@github.com:bugsnag/bugsnag-electron.git"
+    "url": "git@github.com:bugsnag/bugsnag-js.git"
   },
   "publishConfig": {
     "access": "public"

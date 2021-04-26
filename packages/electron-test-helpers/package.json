@@ -5,7 +5,7 @@
   "description": "Test helpers for @bugsnag/electron",
   "repository": {
     "type": "git",
-    "url": "git@github.com:bugsnag/bugsnag-electron.git"
+    "url": "git@github.com:bugsnag/bugsnag-js.git"
   },
   "private": true,
   "publishConfig": {

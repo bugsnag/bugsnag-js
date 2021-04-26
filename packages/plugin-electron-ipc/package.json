@@ -5,7 +5,7 @@
   "description": "@bugsnag/electron plugin to create the IPC layer between main and renderer processes",
   "repository": {
     "type": "git",
-    "url": "git@github.com:bugsnag/bugsnag-electron.git"
+    "url": "git@github.com:bugsnag/bugsnag-js.git"
   },
   "scripts": {
     "build": "browserify preload.js --exclude electron -o dist/preload.bundle.js",
