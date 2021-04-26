@@ -1,7 +1,7 @@
 # CI test image for unit/lint/type tests
 FROM node:lts-alpine
 
-RUN apk add --update bash
+RUN apk add --update bash python3 make gcc g++ musl-dev
 
 WORKDIR /app
 
