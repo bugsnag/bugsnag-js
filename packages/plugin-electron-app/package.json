@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-electron-app",
-  "version": "7.9.4",
+  "version": "7.10.0-alpha.0",
   "main": "app.js",
   "description": "@bugsnag/electron plugin to collect app information",
   "repository": {
@@ -24,8 +24,8 @@
     "build": "node-gyp configure build"
   },
   "devDependencies": {
-    "@bugsnag/electron-test-helpers": "^7.9.4",
-    "@bugsnag/core": "^7.9.2"
+    "@bugsnag/core": "^7.10.0-alpha.0",
+    "@bugsnag/electron-test-helpers": "^7.10.0-alpha.0"
   },
   "dependencies": {
     "bindings": "^1.5.0"
