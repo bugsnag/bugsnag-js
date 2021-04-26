@@ -1,6 +1,6 @@
 # Changelog
 
-## TBD
+## v7.9.5 (2021-04-26)
 
 ### Changed
 
