@@ -1,0 +1,24 @@
+{
+  "name": "@bugsnag/plugin-electron-network-status",
+  "version": "7.9.4",
+  "main": "network-status.js",
+  "description": "@bugsnag/electron plugin to monitor the network status",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:bugsnag/bugsnag-electron.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "network-status.js"
+  ],
+  "devDependencies": {
+    "@bugsnag/core": "^7.9.2"
+  },
+  "peerDependencies": {
+    "@bugsnag/core": "^7.9.2"
+  },
+  "author": "Bugsnag",
+  "license": "MIT"
+}

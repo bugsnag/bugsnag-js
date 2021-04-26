@@ -1,0 +1,120 @@
+{
+  "apiKey": "6425093c6530f554a9897d2d7d38e248",
+  "notifier": {
+    "name": "Bugsnag Electron",
+    "url": "https://github.com/bugsnag/bugsnag-electron",
+    "version": "{REGEX:^200\\.1\\.0-canary\\.[0-9a-f]{24}$}"
+  },
+  "events": [
+    {
+      "payloadVersion": "4",
+      "app": {
+        "duration": "{TYPE:number}",
+        "releaseStage": "production",
+        "inForeground": "{TYPE:boolean}",
+        "isLaunching": true,
+        "version": "1.0.2"
+      },
+      "device": {
+        "runtimeVersions": {
+          "node": "{TYPE:string}",
+          "chrome": "{TYPE:string}",
+          "electron": "{TYPE:string}"
+        },
+        "id": "{REGEX:[0-9a-f]{64}}",
+        "freeMemory": "{TYPE:number}",
+        "locale": "{REGEX:^[a-z]{2}(-[A-Z]{2})?$}",
+        "time": "{TIMESTAMP}",
+        "totalMemory": "{TYPE:number}",
+        "osVersion": "{REGEX:\\d+\\.\\d+}"
+      },
+      "metaData": {
+        "app": {
+          "name": "Runner"
+        },
+        "device": {
+          "screenResolution": {
+            "width": "{TYPE:number}",
+            "height": "{TYPE:number}"
+          }
+        }
+      },
+      "severity": "error",
+      "unhandled": true,
+      "severityReason": {
+        "type": "unhandledException"
+      },
+      "breadcrumbs": [
+        {
+          "type": "state",
+          "name": "App became ready",
+          "timestamp": "{TIMESTAMP}",
+          "metaData": {}
+        },
+        {
+          "type": "state",
+          "name": "Browser window 1 created",
+          "timestamp": "{TIMESTAMP}",
+          "metaData": {
+            "id": 1,
+            "title": ""
+          }
+        },
+        {
+          "type": "user",
+          "name": "UI click",
+          "timestamp": "{TIMESTAMP}",
+          "metaData": {
+            "targetText": "console.log in main process",
+            "targetSelector": "A#main-process-console-log"
+          }
+        },
+        {
+          "type": "log",
+          "name": "Console output",
+          "timestamp": "{TIMESTAMP}",
+          "metaData": {
+            "severity": "log",
+            "[0]": "abc",
+            "[1]": "123"
+          }
+        },
+        {
+          "type": "user",
+          "name": "UI click",
+          "timestamp": "{TIMESTAMP}",
+          "metaData": {
+            "targetText": "console.log in renderer process",
+            "targetSelector": "A#renderer-process-console-log"
+          }
+        },
+        {
+          "type": "log",
+          "name": "Console output",
+          "timestamp": "{TIMESTAMP}",
+          "metaData": {
+            "severity": "log",
+            "[0]": "xyz",
+            "[1]": "456"
+          }
+        },
+        {
+          "type": "user",
+          "name": "UI click",
+          "timestamp": "{TIMESTAMP}",
+          "metaData": {
+            "targetText": "Uncaught exception in main process",
+            "targetSelector": "A#main-process-uncaught-exception"
+          }
+        }
+      ],
+      "exceptions": [
+        {
+          "errorClass": "ReferenceError",
+          "errorMessage": "foo is not defined",
+          "stacktrace": []
+        }
+      ]
+    }
+  ]
+}

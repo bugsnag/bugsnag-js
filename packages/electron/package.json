@@ -1,0 +1,44 @@
+{
+  "name": "@bugsnag/electron",
+  "version": "7.9.4",
+  "main": "src/notifier.js",
+  "types": "types/notifier.d.ts",
+  "description": "@bugsnag/electron notifier",
+  "homepage": "https://www.bugsnag.com/",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:bugsnag/bugsnag-electron.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {},
+  "author": "Bugsnag",
+  "license": "MIT",
+  "dependencies": {
+    "@bugsnag/core": "^7.9.2",
+    "@bugsnag/delivery-electron": "^7.9.4",
+    "@bugsnag/electron-filestore": "^7.9.4",
+    "@bugsnag/plugin-console-breadcrumbs": "^7.9.2",
+    "@bugsnag/plugin-electron-app": "^7.9.4",
+    "@bugsnag/plugin-electron-app-breadcrumbs": "^7.9.4",
+    "@bugsnag/plugin-electron-client-state-manager": "^7.9.4",
+    "@bugsnag/plugin-electron-device": "^7.9.4",
+    "@bugsnag/plugin-electron-ipc": "^7.9.4",
+    "@bugsnag/plugin-electron-net-breadcrumbs": "^7.9.4",
+    "@bugsnag/plugin-electron-network-status": "^7.9.4",
+    "@bugsnag/plugin-electron-preload-error": "^7.9.4",
+    "@bugsnag/plugin-electron-renderer-client-state-updates": "^7.9.4",
+    "@bugsnag/plugin-electron-renderer-event-data": "^7.9.4",
+    "@bugsnag/plugin-electron-session": "^7.9.4",
+    "@bugsnag/plugin-internal-callback-marker": "^7.9.4",
+    "@bugsnag/plugin-interaction-breadcrumbs": "^7.9.2",
+    "@bugsnag/plugin-network-breadcrumbs": "^7.9.2",
+    "@bugsnag/plugin-node-uncaught-exception": "^7.9.2",
+    "@bugsnag/plugin-node-unhandled-rejection": "^7.9.2",
+    "@bugsnag/plugin-electron-renderer-strip-project-root": "^7.9.4",
+    "@bugsnag/plugin-strip-project-root": "^7.9.2",
+    "@bugsnag/plugin-window-onerror": "^7.9.2",
+    "@bugsnag/plugin-window-unhandled-rejection": "^7.9.2"
+  }
+}

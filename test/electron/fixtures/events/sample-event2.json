@@ -1,0 +1,1 @@
+{"events":[{"app":{"version":"{REGEX:^\\d+\\.\\d+\\.\\d+$}"},"context":"{TYPE:string}","device":{"manufacturer": null, "osName":"beOS","osVersion":"{REGEX:\\d+\\.\\d+}"},"metadata":{"counters":{"trees":"{TYPE:number}","carrots":9}},"exceptions":[{"stacktrace":[],"errorClass":"Error"}]}]}

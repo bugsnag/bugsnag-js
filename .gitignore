@@ -11,3 +11,7 @@ maze_output
 .diff
 *.tgz
 min_packages.tar
+.verdaccio
+.cucumber-failures
+.webpack
+out

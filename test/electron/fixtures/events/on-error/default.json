@@ -1,0 +1,93 @@
+{
+  "apiKey": "6425093c6530f554a9897d2d7d38e248",
+  "notifier": {
+    "name": "Bugsnag Electron",
+    "url": "https://github.com/bugsnag/bugsnag-electron",
+    "version": "{REGEX:^200\\.1\\.0-canary\\.[0-9a-f]{24}$}"
+  },
+  "events": [
+    {
+      "payloadVersion": "4",
+      "app": {
+        "duration": "{TYPE:number}",
+        "releaseStage": "production",
+        "inForeground": "{TYPE:boolean}",
+        "isLaunching": "{TYPE:boolean}",
+        "version": "1.0.2"
+      },
+      "device": {
+        "runtimeVersions": {
+          "node": "{TYPE:string}",
+          "chrome": "{TYPE:string}",
+          "electron": "{TYPE:string}"
+        },
+        "id": "{REGEX:[0-9a-f]{64}}",
+        "freeMemory": "{TYPE:number}",
+        "time": "{TIMESTAMP}",
+        "totalMemory": "{TYPE:number}",
+        "osVersion": "{REGEX:\\d+\\.\\d+}"
+      },
+      "metaData": {
+        "app": {
+          "name": "Runner"
+        },
+        "device": {
+          "screenResolution": {
+            "width": "{TYPE:number}",
+            "height": "{TYPE:number}"
+          }
+        },
+        "onError": {
+          "renderer": {
+            "didRun": true,
+            "didFindMainAppData": true,
+            "didFindMainDeviceData": true,
+            "didFindMainOnErrorMetadata": false
+          }
+        }
+      },
+      "severity": "warning",
+      "unhandled": false,
+      "severityReason": {
+        "type": "handledException"
+      },
+      "breadcrumbs": [
+        {
+          "type": "state",
+          "name": "App became ready",
+          "timestamp": "{TIMESTAMP}"
+        },
+        {
+          "type": "state",
+          "name": "Browser window 1 created",
+          "timestamp": "{TIMESTAMP}",
+          "metaData": {
+            "id": 1
+          }
+        },
+        {
+          "type": "state",
+          "name": "Browser window 1 was shown",
+          "timestamp": "{TIMESTAMP}",
+          "metaData": {
+            "id": 1,
+            "title": "Runner"
+          }
+        }
+      ],
+      "exceptions": [
+        {
+          "errorMessage": "hi",
+          "errorClass": "Error",
+          "stacktrace": [
+            {
+              "lineNumber": 32,
+              "file": "./renderer.js"
+            }
+          ],
+          "type": "electronrendererjs"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "name": "@bugsnag/plugin-electron-ipc",
+  "version": "7.9.4",
+  "main": "electron-ipc.js",
+  "description": "@bugsnag/electron plugin to create the IPC layer between main and renderer processes",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:bugsnag/bugsnag-electron.git"
+  },
+  "scripts": {
+    "build": "browserify preload.js --exclude electron -o dist/preload.bundle.js",
+    "postversion": "npm run build"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "*.js",
+    "lib/*.js",
+    "dist/preload.bundle.js"
+  ],
+  "peerDependencies": {
+    "@bugsnag/core": "^7.9.2"
+  },
+  "devDependencies": {
+    "@bugsnag/core": "^7.9.2",
+    "browserify": "^17.0.0"
+  },
+  "dependencies": {
+    "@bugsnag/safe-json-stringify": "^6.0.0"
+  },
+  "author": "Bugsnag",
+  "license": "MIT"
+}
