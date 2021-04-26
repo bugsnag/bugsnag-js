@@ -10,7 +10,7 @@ Clone the repo and `cd` into the directory of this example:
 
 ```
 git clone git@github.com:bugsnag/bugsnag-js.git
-cd bugsnag-js/examples/electron/electron-basic
+cd bugsnag-js/examples/electron/electron-bundled
 ```
 
 Firstly, replace the `YOUR_API_KEY` placeholder in [src/main.js](src/main.js) with your own, then run the application using `npm start`.
