@@ -92,10 +92,10 @@ BugsnagStackframeType const BugsnagStackframeTypeCocoa = @"cocoa";
     }
 }
 
-+ (NSArray<BugsnagStackframe *> *)stackframesWithBacktrace:(uintptr_t *)backtrace length:(int)length {
++ (NSArray<BugsnagStackframe *> *)stackframesWithBacktrace:(uintptr_t *)backtrace length:(NSUInteger)length {
     NSMutableArray<BugsnagStackframe *> *frames = [NSMutableArray array];
     
-    for (int i = 0; i < length; i++) {
+    for (NSUInteger i = 0; i < length; i++) {
         uintptr_t address = backtrace[i];
         if (address == 1) {
             // We sometimes get a frame address of 0x1 at the bottom of the call stack.
@@ -128,9 +128,9 @@ BugsnagStackframeType const BugsnagStackframeTypeCocoa = @"cocoa";
 }
 
 + (NSArray<BugsnagStackframe *> *)stackframesWithCallStackReturnAddresses:(NSArray<NSNumber *> *)callStackReturnAddresses {
-    int length = (int)callStackReturnAddresses.count;
+    NSUInteger length = callStackReturnAddresses.count;
     uintptr_t addresses[length];
-    for (int i = 0; i < length; i++) {
+    for (NSUInteger i = 0; i < length; i++) {
         addresses[i] = (uintptr_t)callStackReturnAddresses[i].unsignedLongLongValue;
     }
     return [BugsnagStackframe stackframesWithBacktrace:addresses length:length];

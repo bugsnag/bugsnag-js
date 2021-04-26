@@ -21,8 +21,8 @@
  */
 - (void)deliverSessionsInStore:(BugsnagSessionFileStore *)store;
 
-@property (copy) NSString *codeBundleId;
+@property (copy, nonatomic) NSString *codeBundleId;
 
-@property BugsnagNotifier *notifier;
+@property (nonatomic) BugsnagNotifier *notifier;
 
 @end

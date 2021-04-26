@@ -192,7 +192,7 @@ static BugsnagClient *bsg_g_bugsnag_client = NULL;
 
 + (NSArray<BugsnagBreadcrumb *> *_Nonnull)breadcrumbs {
     if ([self bugsnagStarted]) {
-        return self.client.breadcrumbs.breadcrumbs;
+        return self.client.breadcrumbs.breadcrumbs ?: @[];
     } else {
         return @[];
     }

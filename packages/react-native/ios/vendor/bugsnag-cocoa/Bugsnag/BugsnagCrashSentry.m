@@ -19,9 +19,7 @@
 
 @implementation BugsnagCrashSentry
 
-- (void)install:(BugsnagConfiguration *)config
-       notifier:(BugsnagNotifier *)notifier
-        onCrash:(BSGReportCallback)onCrash
+- (void)install:(BugsnagConfiguration *)config onCrash:(BSGReportCallback)onCrash
 {
     BSG_KSCrash *ksCrash = [BSG_KSCrash sharedInstance];
     ksCrash.introspectMemory = NO;

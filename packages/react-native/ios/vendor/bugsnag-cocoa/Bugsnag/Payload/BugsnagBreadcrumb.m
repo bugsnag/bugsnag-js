@@ -201,18 +201,6 @@ BSGBreadcrumbType BSGBreadcrumbTypeFromString(NSString *value) {
     return nil;
 }
 
-+ (NSArray<BugsnagBreadcrumb *> *)breadcrumbArrayFromJson:(NSArray *)json {
-    NSMutableArray *data = [NSMutableArray new];
-
-    for (NSDictionary *dict in json) {
-        BugsnagBreadcrumb *crumb = [BugsnagBreadcrumb breadcrumbFromDict:dict];
-        if (crumb) {
-            [data addObject:crumb];
-        }
-    }
-    return data;
-}
-
 + (instancetype)breadcrumbFromDict:(NSDictionary *)dict {
     BOOL isValidCrumb = [dict[BSGKeyType] isKindOfClass:[NSString class]]
         && [dict[BSGKeyTimestamp] isKindOfClass:[NSString class]]

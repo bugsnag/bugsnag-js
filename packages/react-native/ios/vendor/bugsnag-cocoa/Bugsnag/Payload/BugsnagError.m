@@ -132,7 +132,7 @@ NSString *BSGParseErrorMessage(NSDictionary *report, NSDictionary *error, NSStri
     error.errorClass = json[BSGKeyErrorClass];
     error.errorMessage = json[BSGKeyMessage];
     error.stacktrace = data;
-    error.typeString = json[BSGKeyType];
+    error.typeString = json[BSGKeyType] ?: BSGErrorTypeStringCocoa;
     return error;
 }
 

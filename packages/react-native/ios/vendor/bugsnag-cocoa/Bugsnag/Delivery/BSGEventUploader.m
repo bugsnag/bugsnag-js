@@ -140,7 +140,11 @@
     }
     
     [files sortUsingComparator:^NSComparisonResult(NSString *lhs, NSString *rhs) {
-        return [creationDates[lhs] compare:creationDates[rhs]];
+        NSDate *rhsDate = creationDates[rhs];
+        if (!rhsDate) {
+            return NSOrderedDescending;
+        }
+        return [creationDates[lhs] compare:rhsDate];
     }];
     
     return files;

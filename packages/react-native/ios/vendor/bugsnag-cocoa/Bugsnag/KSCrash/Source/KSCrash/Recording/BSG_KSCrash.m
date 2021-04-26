@@ -47,7 +47,7 @@
 #import "BSGUIKit.h"
 #endif
 #if TARGET_OS_OSX
-#import <AppKit/AppKit.h>
+#import "BSGAppKit.h"
 #endif
 
 // ============================================================================

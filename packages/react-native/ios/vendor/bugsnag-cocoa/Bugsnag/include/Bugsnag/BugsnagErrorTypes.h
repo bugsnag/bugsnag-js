@@ -18,48 +18,48 @@
  *
  * This flag is true by default.
  */
-@property BOOL appHangs;
+@property (nonatomic) BOOL appHangs;
 
 /**
  * Determines whether Out of Memory events should be reported to bugsnag.
  *
  * This flag is true by default.
  */
-@property BOOL ooms;
+@property (nonatomic) BOOL ooms;
 
 /**
  * Determines whether NSExceptions should be reported to bugsnag.
  *
  * This flag is true by default.
  */
-@property BOOL unhandledExceptions;
+@property (nonatomic) BOOL unhandledExceptions;
 
 /**
  * Determines whether signals should be reported to bugsnag.
  *
  * This flag is true by default.
  */
-@property BOOL signals;
+@property (nonatomic) BOOL signals;
 
 /**
  * Determines whether C errors should be reported to bugsnag.
  *
  * This flag is true by default.
  */
-@property BOOL cppExceptions;
+@property (nonatomic) BOOL cppExceptions;
 
 /**
  * Determines whether Mach Exceptions should be reported to bugsnag.
  *
  * This flag is true by default.
  */
-@property BOOL machExceptions;
+@property (nonatomic) BOOL machExceptions;
 
 /**
  * Sets whether Bugsnag should automatically capture and report unhandled promise rejections.
  * This only applies to React Native apps.
  * By default, this value is true.
  */
-@property BOOL unhandledRejections;
+@property (nonatomic) BOOL unhandledRejections;
 
 @end

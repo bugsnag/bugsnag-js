@@ -4,6 +4,10 @@
 
 ### Changed
 
+- (react-native): Update bugsnag-cocoa to v6.9.0
+  - App hangs that occur while an app is in the background will no longer be reported. [bugsnag-cocoa#1075](https://github.com/bugsnag/bugsnag-cocoa/pull/1075)
+  - Add `binaryArch` and `runningOnRosetta` to the `app` metadata tab. [bugsnag-cocoa#1073](https://github.com/bugsnag/bugsnag-cocoa/pull/1073)
+  - Bugsnag can now be used without AppKit, allowing use in daemons and other processes running in non-UI sessions. [bugsnag-cocoa#1072](https://github.com/bugsnag/bugsnag-cocoa/pull/1072)
 - (react-native): Update bugsnag-android to v5.9.1
   - Add projectPackages field to error payloads [bugsnag-android#1226](https://github.com/bugsnag/bugsnag-android/pull/1226)
   - Fix deserialization bug in persisted NDK errors [bugsnag-android#1220](https://github.com/bugsnag/bugsnag-android/pull/1220)

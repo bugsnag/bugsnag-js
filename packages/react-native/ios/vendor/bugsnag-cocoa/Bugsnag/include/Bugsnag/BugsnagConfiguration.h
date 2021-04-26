@@ -185,7 +185,7 @@ typedef BOOL (^BugsnagOnSessionBlock)(BugsnagSession *_Nonnull session);
 /**
  *  The URL session used to send requests to Bugsnag.
  */
-@property(readwrite, strong, nonnull) NSURLSession *session;
+@property (readwrite, strong, nonnull, nonatomic) NSURLSession *session;
 
 /**
  * Controls whether Bugsnag should capture and serialize the state of all threads at the time
@@ -195,18 +195,17 @@ typedef BOOL (^BugsnagOnSessionBlock)(BugsnagSession *_Nonnull session);
  * BSGThreadSendPolicyNever to disable or BSGThreadSendPolicyUnhandledOnly
  * to only do so for unhandled errors.
  */
-@property BSGThreadSendPolicy sendThreads;
+@property (nonatomic) BSGThreadSendPolicy sendThreads;
 
 /**
  *  Optional handler invoked when an error or crash occurs
  */
-@property void (*_Nullable onCrashHandler)
-    (const BSG_KSCrashReportWriter *_Nonnull writer);
+@property (nullable, nonatomic) void (* onCrashHandler)(const BSG_KSCrashReportWriter *);
 
 /**
  *  YES if uncaught exceptions and other crashes should be reported automatically
  */
-@property BOOL autoDetectErrors;
+@property (nonatomic) BOOL autoDetectErrors;
 
 /**
  * The minimum number of milliseconds of main thread unresponsiveness that will trigger the
@@ -225,7 +224,7 @@ typedef BOOL (^BugsnagOnSessionBlock)(BugsnagSession *_Nonnull session);
  * If this value is updated after +[Bugsnag start] is called, only subsequent automatic sessions
  * will be captured.
  */
-@property BOOL autoTrackSessions;
+@property (nonatomic) BOOL autoTrackSessions;
 
 /**
  * The amount of time (in milliseconds) after starting Bugsnag that should be considered part of
@@ -254,7 +253,7 @@ typedef BOOL (^BugsnagOnSessionBlock)(BugsnagSession *_Nonnull session);
 /**
  * The types of breadcrumbs which will be captured. By default, this is all types.
  */
-@property BSGEnabledBreadcrumbType enabledBreadcrumbTypes;
+@property (nonatomic) BSGEnabledBreadcrumbType enabledBreadcrumbTypes;
 
 /**
  * The app's bundleVersion, set from the CFBundleVersion.  Equivalent to `versionCode` on Android.
@@ -285,13 +284,13 @@ typedef BOOL (^BugsnagOnSessionBlock)(BugsnagSession *_Nonnull session);
  *
  * By default, 25 breadcrumbs are stored: this can be amended up to a maximum of 100.
  */
-@property NSUInteger maxBreadcrumbs;
+@property (nonatomic) NSUInteger maxBreadcrumbs;
 
 /**
  * Whether User information should be persisted to disk between application runs.
  * Defaults to True.
  */
-@property BOOL persistUser;
+@property (nonatomic) BOOL persistUser;
 
 // -----------------------------------------------------------------------------
 // MARK: - Methods
