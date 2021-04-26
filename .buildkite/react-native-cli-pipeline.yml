@@ -160,6 +160,7 @@ steps:
           command: ["features/build-app-tests/build-android-app.feature"]
     artifact_paths:
       - build/rn0_63_expo_ejected.apk
+    skip: To be fixed and enabled via PLAT-6449
 
   - label: ':ios: Init and build RN 0.60 ipa'
     key: 'rn-0-60-ipa'
@@ -215,6 +216,7 @@ steps:
     artifact_paths: build/rn0_63_expo_ejected.ipa
     commands:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_63_expo_ejected
+    skip: To be fixed and enabled via PLAT-6449
 
   #
   # Init, build and notify end-to-end tests
@@ -313,6 +315,7 @@ steps:
           - features/run-app-tests
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    skip: To be fixed and enabled via PLAT-6449
 
   - label: ':runner: RN 0.60 iOS end-to-end tests'
     depends_on: "rn-0-60-ipa"
@@ -408,3 +411,4 @@ steps:
           - features/run-app-tests
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    skip: To be fixed and enabled via PLAT-6449
