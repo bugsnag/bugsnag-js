@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)threadFromJson:(NSDictionary *)json;
 
-@property (readonly) NSString *crashInfoMessage;
+@property (readonly, nullable, nonatomic) NSString *crashInfoMessage;
 
 @property (readwrite, nonatomic) BOOL errorReportingThread;
 
@@ -30,7 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
                               depth:(NSUInteger)depth
                           errorType:(nullable NSString *)errorType;
 
-+ (NSMutableArray *)serializeThreads:(NSArray<BugsnagThread *> *)threads;
++ (NSMutableArray *)serializeThreads:(nullable NSArray<BugsnagThread *> *)threads;
 
 + (NSMutableArray<BugsnagThread *> *)threadsFromArray:(NSArray *)threads
                                          binaryImages:(NSArray *)binaryImages

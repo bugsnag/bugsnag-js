@@ -735,19 +735,21 @@ void bsg_kscrw_i_writeBacktraceEntry(
     const uintptr_t address, const Dl_info *const info) {
     writer->beginObject(writer, key);
     {
-        if (info->dli_fname != NULL) {
-            writer->addStringElement(writer, BSG_KSCrashField_ObjectName,
-                                     bsg_ksfulastPathEntry(info->dli_fname));
+        if (info->dli_saddr != NULL) {
+            if (info->dli_fname != NULL) {
+                writer->addStringElement(writer, BSG_KSCrashField_ObjectName,
+                                         bsg_ksfulastPathEntry(info->dli_fname));
+            }
+            writer->addUIntegerElement(writer, BSG_KSCrashField_ObjectAddr,
+                                       (uintptr_t)info->dli_fbase);
+            if (info->dli_sname != NULL) {
+                const char *sname = info->dli_sname;
+                writer->addStringElement(writer, BSG_KSCrashField_SymbolName,
+                                         sname);
+            }
+            writer->addUIntegerElement(writer, BSG_KSCrashField_SymbolAddr,
+                                       (uintptr_t)info->dli_saddr);
         }
-        writer->addUIntegerElement(writer, BSG_KSCrashField_ObjectAddr,
-                                   (uintptr_t)info->dli_fbase);
-        if (info->dli_sname != NULL) {
-            const char *sname = info->dli_sname;
-            writer->addStringElement(writer, BSG_KSCrashField_SymbolName,
-                                     sname);
-        }
-        writer->addUIntegerElement(writer, BSG_KSCrashField_SymbolAddr,
-                                   (uintptr_t)info->dli_saddr);
         writer->addUIntegerElement(writer, BSG_KSCrashField_InstructionAddr,
                                    address);
     }
@@ -1240,8 +1242,8 @@ void bsg_kscrw_i_writeError(const BSG_KSCrashReportWriter *const writer,
     }
 
     const char *machExceptionName = bsg_ksmachexceptionName(machExceptionType);
-    const char *machCodeName =
-        machCode == 0 ? NULL : bsg_ksmachkernelReturnCodeName(machCode);
+    const char *machCodeName = machCode == 0 ? NULL :
+        bsg_ksmachkernelReturnCodeName((kern_return_t)machCode);
     const char *sigName = bsg_kssignal_signalName(sigNum);
     const char *sigCodeName = bsg_kssignal_signalCodeName(sigNum, sigCode);
 
@@ -1485,7 +1487,7 @@ void bsg_kscrw_i_updateStackOverflowStatus(
 void bsg_kscrw_i_callUserCrashHandler(BSG_KSCrash_Context *const crashContext,
                                       BSG_KSCrashReportWriter *writer) {
     BSG_KSCrashType type = crashContext->crash.crashType;
-    crashContext->config.onCrashNotify(writer, type);
+    crashContext->config.onCrashNotify(writer, (int)type);
 }
 
 // ============================================================================

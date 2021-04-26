@@ -1,6 +1,19 @@
 Changelog
 =========
 
+## 6.9.0 (2021-04-21)
+
+### Enhancements
+
+* App hangs that occur while the app is in the background will no longer be reported.
+  [#1075](https://github.com/bugsnag/bugsnag-cocoa/pull/1075)
+
+* Add `binaryArch` and `runningOnRosetta` to the `app` metadata tab.
+  [#1073](https://github.com/bugsnag/bugsnag-cocoa/pull/1073)
+
+* Bugsnag can now be used without AppKit, allowing use in daemons and other processes running in non-UI sessions.
+  [#1072](https://github.com/bugsnag/bugsnag-cocoa/pull/1072)
+
 ## 6.8.4 (2021-04-14)
 
 ### Enhancements

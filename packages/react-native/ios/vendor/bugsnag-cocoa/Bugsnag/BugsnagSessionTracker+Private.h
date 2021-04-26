@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (copy, nonatomic) NSString *codeBundleId;
 
-@property (nullable) BugsnagSession *currentSession;
+@property (nullable, nonatomic) BugsnagSession *currentSession;
 
 @end
 

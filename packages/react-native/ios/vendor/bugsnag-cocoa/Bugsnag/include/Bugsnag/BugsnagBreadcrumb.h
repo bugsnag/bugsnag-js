@@ -102,23 +102,23 @@ typedef NS_OPTIONS(NSUInteger, BSGEnabledBreadcrumbType) {
 /**
  * The date when the breadcrumb was left
  */
-@property(readonly, nullable) NSDate *timestamp;
+@property (readonly, nullable, nonatomic) NSDate *timestamp;
 
 /**
  * The type of breadcrumb
  */
-@property(readwrite) BSGBreadcrumbType type;
+@property (readwrite, nonatomic) BSGBreadcrumbType type;
 
 /**
  * The description of the breadcrumb
  */
-@property(readwrite, copy, nonnull) NSString *message;
+@property (readwrite, copy, nonnull, nonatomic) NSString *message;
 
 /**
  * Diagnostic data relating to the breadcrumb.
  * 
  * The dictionary should be a valid JSON object.
  */
-@property(readwrite, copy, nonnull) NSDictionary *metadata;
+@property (readwrite, copy, nonnull, nonatomic) NSDictionary *metadata;
 
 @end

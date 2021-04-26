@@ -29,7 +29,7 @@ NSTimeInterval const BSGNewSessionBackgroundDuration = 30;
 NSString *const BSGSessionUpdateNotification = @"BugsnagSessionChanged";
 
 @interface BugsnagSessionTracker ()
-@property (weak, nonatomic) BugsnagConfiguration *config;
+@property (strong, nonatomic) BugsnagConfiguration *config;
 @property (weak, nonatomic) BugsnagClient *client;
 @property (strong, nonatomic) BugsnagSessionFileStore *sessionStore;
 @property (strong, nonatomic) BugsnagSessionTrackingApiClient *apiClient;
@@ -40,7 +40,7 @@ NSString *const BSGSessionUpdateNotification = @"BugsnagSessionChanged";
  */
 @property (nonatomic, strong, readonly) SessionTrackerCallback callback;
 
-@property NSMutableDictionary *extraRuntimeInfo;
+@property (nonatomic) NSMutableDictionary *extraRuntimeInfo;
 @end
 
 @implementation BugsnagSessionTracker
@@ -111,7 +111,7 @@ NSString *const BSGSessionUpdateNotification = @"BugsnagSessionChanged";
 
 - (void)startNewSessionWithAutoCaptureValue:(BOOL)isAutoCaptured {
     NSSet<NSString *> *releaseStages = self.config.enabledReleaseStages;
-    if (releaseStages != nil && ![releaseStages containsObject:self.config.releaseStage]) {
+    if (releaseStages != nil && ![releaseStages containsObject:self.config.releaseStage ?: @""]) {
         return;
     }
     if (self.config.sessionURL == nil) {
