@@ -91,8 +91,8 @@
     "test:expo:android": "npm run test:build-expo-android-container && APP_LOCATION=build/output.apk docker-compose run --use-aliases expo-maze-runner",
     "test:react-native:ios": "npm run test:build-react-native-ios && npm run test:build-react-native-maze-runner && APP_LOCATION=build/$REACT_NATIVE_VERSION.ipa docker-compose run --use-aliases react-native-maze-runner",
     "local-npm:start": "verdaccio --config test/electron/local-npm-config.yml --listen 0.0.0.0:5539",
-    "local-npm:publish-all": "lerna publish \"$VERSION_IDENTIFIER\" --yes --exact --no-push --no-git-reset --no-git-tag-version --registry 'http://0.0.0.0:5539'",
-    "local-npm:publish-all-win32": "lerna publish %VERSION_IDENTIFIER% --yes --exact --no-push --no-git-reset --no-git-tag-version --registry 'http://0.0.0.0:5539'",
+    "local-npm:publish-all": "lerna publish \"$VERSION_IDENTIFIER\" --yes --force-publish --exact --no-push --no-git-reset --no-git-tag-version --registry 'http://0.0.0.0:5539'",
+    "local-npm:publish-all-win32": "lerna publish %VERSION_IDENTIFIER% --yes --force-publish --exact --no-push --no-git-reset --no-git-tag-version --registry 'http://0.0.0.0:5539'",
     "test:electron": "xvfb-maybe --auto-servernum -- cucumber-js test/electron/features"
   }
 }
