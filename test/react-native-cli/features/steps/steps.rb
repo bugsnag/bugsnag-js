@@ -81,10 +81,6 @@ def parse_package_json
 
   after = stdout_lines[length_before..stdout_lines.length]
 
-  # Drop lines that include the cat command above. This will sometimes appear
-  # once and sometimes appear twice, depending on if another command is running
-  # when it's input
-  json = after.drop_while { |line| line.include?('cat package.json') }
   # Drop lines until we get to the start of the JSON
   json = after.drop_while { |line| line != '{' }
 
