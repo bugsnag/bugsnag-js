@@ -1,6 +1,7 @@
 const Bugsnag = require('@bugsnag/electron')
 
 Bugsnag.start()
+const startupTimestamp = Date.now()
 
 function emulateOnlineStatus (online) {
   Object.defineProperty(window.navigator, 'onLine', { value: online, configurable: true })
@@ -43,3 +44,7 @@ document.getElementById('renderer-notify-on-error').onclick = () => {
 }
 
 document.getElementById('renderer-cancel-breadcrumbs').onclick = () => Bugsnag.addOnBreadcrumb(() => false)
+
+document.getElementById('performance-metrics').onclick = () => Bugsnag.notify(new Error('startup perf budget'), (event) => {
+  event.addMetadata('performance', 'startupTime', startupTimestamp - window.RunnerAPI.preloadStart)
+})

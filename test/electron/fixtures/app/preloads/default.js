@@ -18,5 +18,6 @@ contextBridge.exposeInMainWorld('RunnerAPI', {
   },
   mainProcessLog: (...args) => {
     ipcRenderer.send('main-process-console-log', ...args)
-  }
+  },
+  preloadStart: Date.now()
 })
