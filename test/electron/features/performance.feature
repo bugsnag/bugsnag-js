@@ -15,3 +15,4 @@ Feature: Startup performance
         Examples:
             | config          |
             | default         |
+            | complex-config  |
