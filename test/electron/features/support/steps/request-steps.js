@@ -143,3 +143,13 @@ Then('exactly {int} breadcrumb(s) in event request {int} matches:', async (expec
 
   expect(matches).toHaveLength(expectedMatches)
 })
+
+Then('the event metadata {string} is less than {int}', async (field, max) => {
+  const payloads = readPayloads(global.server.eventUploads)
+  const metadata = payloads[0].events[0].metaData
+  const [section, key] = field.split('.')
+  expect(metadata).toBeDefined()
+  expect(metadata[section]).toBeDefined()
+  expect(metadata[section][key]).toBeDefined()
+  expect(metadata[section][key]).toBeLessThan(max)
+})
