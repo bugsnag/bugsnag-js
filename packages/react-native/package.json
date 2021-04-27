@@ -63,6 +63,6 @@
     "iserror": "^0.0.2"
   },
   "scripts": {
-    "prepare": "./prepare-android-vendor.sh"
+    "prepare": "bash prepare-android-vendor.sh"
   }
 }

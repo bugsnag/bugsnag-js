@@ -47,12 +47,14 @@ jobs:
       env:
         PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
     - run: npx lerna bootstrap
-    - run: npm run build
+    - run: npm run build:electron
+      shell: bash
     - name: (macOS) disable crash dialog
       if: contains(matrix.os, 'macos')
       run: defaults write com.apple.CrashReporter DialogType none
     - name: run integration tests
       run: npm run test:electron
+      shell: bash
       env:
         START_LOCAL_NPM: 1
         VERBOSE: 1
