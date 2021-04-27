@@ -10,9 +10,8 @@ Both [`bugsnag-android`](https://github.com/bugnsag/bugsnag-android) and [`bugsn
 
 To update the version of the bundled artefacts:
 
-- Ensure `bugsnag-js` (this repo) is cloned in a sibling directory alongside `bugsnag-android`
-- Checkout the tag of the release version to be vendored in `bugsnag-android` (e.g. `git checkout v5.2.2`)
-- From within the React Native package directory in this repo (`cd packages/react-native`), run the `./update-android.sh` script. This will build the Android notifier and copy the files in.
+- Run the script `packages/react-native/update-android.sh`. This script accepts version tags, sha, or a local directory, but for releases specify a version (e.g. `packages/react-native/update-android.sh --version 5.2.2`).
+- To install the new artifacts locally (for local testing only), run `packages/react-native/prepare-android-vendor.sh`.
 - Update the changelog according to the [contributing guide](../../CONTRIBUTING.md), creating a new `TBD` section if one doesn't exist. Under the section `### Changed` add a new entry: `- (react-native): Update bugsnag-android to v{VERSION}`, indenting one level and including the entire changelog for the version that has been updated. If multiple releases have been made since the version bump, the changelog entries for the interim should be aggregated into one.
 
 #### iOS
@@ -21,9 +20,7 @@ To update the version of the bundled artefacts:
 
 To update the version of the bundled notifier source:
 
-- Ensure `bugsnag-js` (this repo) is cloned in a sibling directory alongside `bugsnag-cocoa`
-- Checkout the tag of the release version to be vendored in `bugsnag-cocoa` (e.g. `git checkout v5.2.2`)
-- From within the React Native package directory in this repo (`cd packages/react-native`), run the `./update-ios.sh` script. This will copy the Cocoa sources and headers into the correct locations.
+- Run the script `packages/react-native/update-ios.sh`. This script accepts version tags, sha, or a local directory, but for releases specify a version (e.g. `packages/react-native/update-ios.sh --version 6.6.2`). This will copy the Cocoa sources and headers into the correct locations.
 - Update the changelog according to the [contributing guide](../../CONTRIBUTING.md), creating a new `TBD` section if one doesn't exist. Under the section `### Changed` add a new entry: `- (react-native): Update bugsnag-cocoa to v{VERSION}`, indenting one level and including the entire changelog for the version that has been updated. If multiple releases have been made since the version bump, the changelog entries for the interim should be aggregated into one.
 
 ## Development

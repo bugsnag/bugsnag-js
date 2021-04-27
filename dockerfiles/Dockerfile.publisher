@@ -1,7 +1,7 @@
 # CI test image for unit/lint/type tests
 FROM node:lts-alpine
 
-RUN apk add --update bash git
+RUN apk add --update bash git curl
 
 RUN rm -f ~/.npmrc
 
@@ -10,6 +10,7 @@ ARG REG_NPM_EMAIL
 RUN echo "_auth=$REG_BASIC_CREDENTIAL" >> ~/.npmrc
 RUN echo "email=$REG_NPM_EMAIL" >> ~/.npmrc
 RUN echo "always-auth=true" >> ~/.npmrc
+RUN echo "unsafe-perm=true" >> ~/.npmrc
 
 WORKDIR /app
 

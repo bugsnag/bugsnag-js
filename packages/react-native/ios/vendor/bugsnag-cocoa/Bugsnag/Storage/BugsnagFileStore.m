@@ -245,9 +245,6 @@
 
     NSMutableDictionary *fileContents =
             [BSG_KSJSONCodec decode:jsonData
-                            options:BSG_KSJSONDecodeOptionIgnoreNullInArray |
-                                    BSG_KSJSONDecodeOptionIgnoreNullInObject |
-                                    BSG_KSJSONDecodeOptionKeepPartialObject
                               error:error];
     if (error != nil && *error != nil) {
 

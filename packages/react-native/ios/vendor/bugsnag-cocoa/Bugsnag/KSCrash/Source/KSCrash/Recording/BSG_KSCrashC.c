@@ -72,7 +72,7 @@ BSG_KSCrash_Context *crashContext(void) {
 void bsg_kscrash_i_onCrash(BSG_KSCrash_Context *context) {
     BSG_KSLOG_DEBUG("Updating application state to note crash.");
 
-    bsg_kscrashstate_notifyAppCrash(context->crash.crashType);
+    bsg_kscrashstate_notifyAppCrash();
 
     if (context->config.printTraceToStdout) {
         bsg_kscrashreport_logCrash(context);

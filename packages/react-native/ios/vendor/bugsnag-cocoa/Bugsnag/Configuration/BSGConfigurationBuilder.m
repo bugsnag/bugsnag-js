@@ -98,11 +98,13 @@ static BOOL BSGValueIsBoolean(id object) {
     if (options[BSGKeyEndpoints] && [options[BSGKeyEndpoints] isKindOfClass:[NSDictionary class]]) {
         NSDictionary *endpoints = options[BSGKeyEndpoints];
 
-        if ([endpoints[BSGKeyNotifyEndpoint] isKindOfClass:[NSString class]]) {
-            config.endpoints.notify = endpoints[BSGKeyNotifyEndpoint];
+        NSString *notify = endpoints[BSGKeyNotifyEndpoint];
+        if ([notify isKindOfClass:[NSString class]]) {
+            config.endpoints.notify = notify;
         }
-        if ([endpoints[BSGKeySessionsEndpoint] isKindOfClass:[NSString class]]) {
-            config.endpoints.sessions = endpoints[BSGKeySessionsEndpoint];
+        NSString *sessions = endpoints[BSGKeySessionsEndpoint];
+        if ([sessions isKindOfClass:[NSString class]]) {
+            config.endpoints.sessions = sessions;
         }
     }
 }

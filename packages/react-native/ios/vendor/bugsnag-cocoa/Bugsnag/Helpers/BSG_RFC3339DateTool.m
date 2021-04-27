@@ -81,7 +81,7 @@ static NSDateFormatter *g_timezoneAllowedDateFormatter;
     return [g_timezoneAllowedDateFormatter dateFromString:string];
 }
 
-+ (NSString *)stringFromUNIXTimestamp:(unsigned long long)timestamp {
++ (NSString *)stringFromUNIXTimestamp:(NSTimeInterval)timestamp {
     return
         [self stringFromDate:[NSDate dateWithTimeIntervalSince1970:timestamp]];
 }

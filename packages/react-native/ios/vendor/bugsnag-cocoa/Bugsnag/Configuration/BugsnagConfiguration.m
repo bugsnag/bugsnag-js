@@ -77,7 +77,7 @@ static NSUserDefaults *userDefaults;
  *
  * @param zone This parameter is ignored. Memory zones are no longer used by Objective-C.
  */
-- (nonnull id)copyWithZone:(nullable NSZone *)zone {
+- (nonnull id)copyWithZone:(nullable __attribute__((unused)) NSZone *)zone {
     BugsnagConfiguration *copy = [[BugsnagConfiguration alloc] initWithApiKey:[self.apiKey copy]];
     // Omit apiKey - it's set explicitly in the line above
     [copy setAppHangThresholdMillis:self.appHangThresholdMillis];
@@ -265,7 +265,7 @@ static NSUserDefaults *userDefaults;
  */
 - (BOOL)shouldSendReports {
     return self.enabledReleaseStages.count == 0 ||
-           [self.enabledReleaseStages containsObject:self.releaseStage];
+           [self.enabledReleaseStages containsObject:self.releaseStage ?: @""];
 }
 
 - (void)setUser:(NSString *_Nullable)userId
@@ -540,19 +540,19 @@ static NSUserDefaults *userDefaults;
         case BSGBreadcrumbTypeManual:
             return YES;
         case BSGBreadcrumbTypeError :
-            return self.enabledBreadcrumbTypes & BSGEnabledBreadcrumbTypeError;
+            return (self.enabledBreadcrumbTypes & BSGEnabledBreadcrumbTypeError) != 0;
         case BSGBreadcrumbTypeLog:
-            return self.enabledBreadcrumbTypes & BSGEnabledBreadcrumbTypeLog;
+            return (self.enabledBreadcrumbTypes & BSGEnabledBreadcrumbTypeLog) != 0;
         case BSGBreadcrumbTypeNavigation:
-            return self.enabledBreadcrumbTypes & BSGEnabledBreadcrumbTypeNavigation;
+            return (self.enabledBreadcrumbTypes & BSGEnabledBreadcrumbTypeNavigation) != 0;
         case BSGBreadcrumbTypeProcess:
-            return self.enabledBreadcrumbTypes & BSGEnabledBreadcrumbTypeProcess;
+            return (self.enabledBreadcrumbTypes & BSGEnabledBreadcrumbTypeProcess) != 0;
         case BSGBreadcrumbTypeRequest:
-            return self.enabledBreadcrumbTypes & BSGEnabledBreadcrumbTypeRequest;
+            return (self.enabledBreadcrumbTypes & BSGEnabledBreadcrumbTypeRequest) != 0;
         case BSGBreadcrumbTypeState:
-            return self.enabledBreadcrumbTypes & BSGEnabledBreadcrumbTypeState;
+            return (self.enabledBreadcrumbTypes & BSGEnabledBreadcrumbTypeState) != 0;
         case BSGBreadcrumbTypeUser:
-            return self.enabledBreadcrumbTypes & BSGEnabledBreadcrumbTypeUser;
+            return (self.enabledBreadcrumbTypes & BSGEnabledBreadcrumbTypeUser) != 0;
     }
     return NO;
 }

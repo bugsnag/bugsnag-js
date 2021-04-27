@@ -105,7 +105,7 @@ static size_t uint64_to_string(uint64_t value, char* dst) {
 
     char buff[MAX_UINT64_DIGITS+1];
     buff[sizeof(buff)-1] = 0;
-    int index = sizeof(buff) - 2;
+    size_t index = sizeof(buff) - 2;
     for(;;) {
         buff[index] = (value%10) + '0';
         value /= 10;
@@ -129,9 +129,9 @@ static size_t uint64_to_string(uint64_t value, char* dst) {
 static size_t int64_to_string(int64_t value, char* dst) {
     if (value < 0) {
         dst[0] = '-';
-        return uint64_to_string(-value, dst+1) + 1;
+        return uint64_to_string((uint64_t)-value, dst+1) + 1;
     }
-    return uint64_to_string(value, dst);
+    return uint64_to_string((uint64_t)value, dst);
 }
 
 /**
@@ -170,7 +170,7 @@ static size_t positive_double_to_string(const double value, char* dst, const int
     }
 
     // log10() is a compiler intrinsic.
-    int exponent = log10(value);
+    int exponent = (int)log10(value);
     // Values < 1.0 must subtract 1 from exponent to handle zero wraparound.
     if (value < 1.0) {
         exponent--;
@@ -187,9 +187,9 @@ static size_t positive_double_to_string(const double value, char* dst, const int
 
     // Put all of the digits we'll use into an integer.
     double digits_and_remainder = normalized * pow(10, max_sig_digits-1);
-    uint64_t digits = digits_and_remainder;
+    uint64_t digits = (uint64_t)digits_and_remainder;
     // Also round up if necessary (note: 0.5 is exact in both binary and decimal).
-    if (digits_and_remainder - digits >= 0.5) {
+    if (digits_and_remainder - (double)digits >= 0.5) {
         digits++;
         // Special case: Adding one bumps us to next magnitude.
         if (digits >= (uint64_t)pow(10, max_sig_digits)) {
@@ -204,7 +204,7 @@ static size_t positive_double_to_string(const double value, char* dst, const int
         digits /= 10;
     }
     // Extract the single-digit whole part.
-    dst[0] = digits + '0';
+    dst[0] = (char)digits + '0';
     dst[1] = '.';
 
     // Strip off trailing zeroes, and also the '.' if there is no fractional part.
@@ -232,7 +232,7 @@ static size_t positive_double_to_string(const double value, char* dst, const int
         *dst = 0;
     }
 
-    return dst - orig_dst;
+    return (size_t)(dst - orig_dst);
 }
 
 /**
@@ -346,7 +346,7 @@ int bsg_ksjsoncodec_i_appendEscapedString(
 
             if ((unsigned char)*src < ' ') {
                 unsigned int last = *src % 16;
-                unsigned int first = (*src - last) / 16;
+                unsigned int first = ((unsigned int)*src - last) / 16;
 
                 *dst++ = '\\';
                 *dst++ = 'u';
@@ -512,7 +512,7 @@ int bsg_ksjsonaddUIntegerElement(BSG_KSJSONEncodeContext *const context,
     unlikely_if(result != BSG_KSJSON_OK) { return result; }
     char buff[30];
     uint64_to_string(value, buff);
-    return addJSONData(context, buff, (int)strlen(buff));
+    return addJSONData(context, buff, strlen(buff));
 }
 
 int bsg_ksjsonaddJSONElement(BSG_KSJSONEncodeContext *const context,

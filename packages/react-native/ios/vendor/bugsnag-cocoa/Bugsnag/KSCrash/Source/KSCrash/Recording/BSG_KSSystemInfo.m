@@ -91,7 +91,7 @@ static NSDictionary * bsg_systemversion() {
         }
         NSData *data = [NSData
                         dataWithBytesNoCopy:buffer
-                        length:length freeWhenDone:NO];
+                        length:(NSUInteger)length freeWhenDone:NO];
         if (!data) {
             BSG_KSLOG_ERROR("Could not read SystemVersion.plist");
             return;
@@ -299,8 +299,18 @@ static NSDictionary * bsg_systemversion() {
         case CPU_SUBTYPE_ARM_V7S:
             return @"armv7s";
 #endif
+        case CPU_SUBTYPE_ARM_V8:
+            return @"armv8";
         }
         break;
+    }
+    case CPU_TYPE_ARM64: {
+        switch (subType) {
+        case CPU_SUBTYPE_ARM64E:
+            return @"arm64e";
+        default:
+            return @"arm64";
+        }
     }
     case CPU_TYPE_X86:
         return @"x86";
@@ -436,9 +446,9 @@ static NSDictionary * bsg_systemversion() {
 #endif // TARGET_OS_IOS
 
     NSDictionary *env = NSProcessInfo.processInfo.environment;
-    sysInfo[@(BSG_KSSystemField_SystemVersion)] = env[@"SIMULATOR_RUNTIME_VERSION"];
-    sysInfo[@(BSG_KSSystemField_Machine)] = env[@"SIMULATOR_MODEL_IDENTIFIER"];
-    sysInfo[@(BSG_KSSystemField_Model)] = @"simulator";
+    sysInfo[@BSG_KSSystemField_SystemVersion] = env[@"SIMULATOR_RUNTIME_VERSION"];
+    sysInfo[@BSG_KSSystemField_Machine] = env[@"SIMULATOR_MODEL_IDENTIFIER"];
+    sysInfo[@BSG_KSSystemField_Model] = @"simulator";
 
 #else // !TARGET_OS_SIMULATOR
 
@@ -463,11 +473,11 @@ static NSDictionary * bsg_systemversion() {
     NSString *systemName = @"tvOS";
 #endif
 
-    sysInfo[@(BSG_KSSystemField_SystemName)] = systemName;
-    sysInfo[@(BSG_KSSystemField_SystemVersion)] = sysVersion[@"ProductVersion"];
+    sysInfo[@BSG_KSSystemField_SystemName] = systemName;
+    sysInfo[@BSG_KSSystemField_SystemVersion] = sysVersion[@"ProductVersion"];
 
 #if TARGET_OS_IOS
-    sysInfo[@(BSG_KSSystemField_iOSSupportVersion)] = sysVersion[@"iOSSupportVersion"];
+    sysInfo[@BSG_KSSystemField_iOSSupportVersion] = sysVersion[@"iOSSupportVersion"];
 #endif
 
     // Bugsnag payload mapping:
@@ -477,15 +487,15 @@ static NSDictionary * bsg_systemversion() {
 
     if ([systemName isEqual:@"Mac OS"]) {
         // On macOS hw.model contains the "Model Identifier" e.g. MacBookPro16,1
-        sysInfo[@(BSG_KSSystemField_Machine)] = [self stringSysctl:@"hw.model"];
+        sysInfo[@BSG_KSSystemField_Machine] = [self stringSysctl:@"hw.model"];
         // and hw.machine contains the instruction set - e.g. "arm64" or "x86_64"
         // we omit this since it doesn't match what we're expecting or want.
     } else {
         // On iOS & tvOS hw.machine contains the "Model Identifier" or
         // "ProductType" - e.g. "iPhone6,1"
-        sysInfo[@(BSG_KSSystemField_Machine)] = [self stringSysctl:@"hw.machine"];
+        sysInfo[@BSG_KSSystemField_Machine] = [self stringSysctl:@"hw.machine"];
         // and hw.model contains the "Internal Name" or "Board ID" - e.g. "D79AP"
-        sysInfo[@(BSG_KSSystemField_Model)] = [self stringSysctl:@"hw.model"];
+        sysInfo[@BSG_KSSystemField_Model] = [self stringSysctl:@"hw.model"];
     }
 
 #endif // TARGET_OS_SIMULATOR
@@ -506,8 +516,7 @@ static NSDictionary * bsg_systemversion() {
     sysInfo[@BSG_KSSystemField_CPUArch] = [self currentCPUArch];
     sysInfo[@BSG_KSSystemField_CPUType] = [self int32Sysctl:@BSGKeyHwCputype];
     sysInfo[@BSG_KSSystemField_CPUSubType] = [self int32Sysctl:@BSGKeyHwCpusubtype];
-    sysInfo[@BSG_KSSystemField_BinaryCPUType] = @(header->cputype);
-    sysInfo[@BSG_KSSystemField_BinaryCPUSubType] = @(header->cpusubtype);
+    sysInfo[@BSG_KSSystemField_BinaryArch] = [self CPUArchForCPUType:header->cputype subType:header->cpusubtype];
     sysInfo[@BSG_KSSystemField_TimeZone] = [[NSTimeZone localTimeZone] abbreviation];
     sysInfo[@BSG_KSSystemField_ProcessName] = [NSProcessInfo processInfo].processName;
     sysInfo[@BSG_KSSystemField_ProcessID] = @([NSProcessInfo processInfo].processIdentifier);
@@ -515,11 +524,20 @@ static NSDictionary * bsg_systemversion() {
     sysInfo[@BSG_KSSystemField_DeviceAppHash] = [self deviceAndAppHash];
     sysInfo[@BSG_KSSystemField_BuildType] = [BSG_KSSystemInfo buildType];
 
-    sysInfo[@(BSG_KSSystemField_Memory)] = @{
-        @(BSG_KSCrashField_Free): @(bsg_ksmachfreeMemory()),
-        @(BSG_KSCrashField_Usable): @(bsg_ksmachusableMemory()),
-        @(BSG_KSSystemField_Size): [self int64Sysctl:@"hw.memsize"]
+    sysInfo[@BSG_KSSystemField_Memory] = @{
+        @BSG_KSCrashField_Free: @(bsg_ksmachfreeMemory()),
+        @BSG_KSCrashField_Usable: @(bsg_ksmachusableMemory()),
+        @BSG_KSSystemField_Size: [self int64Sysctl:@"hw.memsize"]
     };
+
+#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
+    // https://developer.apple.com/documentation/apple-silicon/about-the-rosetta-translation-environment
+    int proc_translated = 0;
+    size_t size = sizeof(proc_translated);
+    if (!sysctlbyname("sysctl.proc_translated", &proc_translated, &size, NULL, 0) && proc_translated) {
+        sysInfo[@BSG_KSSystemField_Translated] = @YES;
+    }
+#endif
 
     NSDictionary *statsInfo = [[BSG_KSCrash sharedInstance] captureAppStats];
     sysInfo[@BSG_KSCrashField_AppStats] = statsInfo;

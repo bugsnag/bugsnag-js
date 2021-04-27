@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (BugsnagAppWithState *)appFromJson:(NSDictionary *)json;
 
-+ (BugsnagAppWithState *)appWithDictionary:(NSDictionary *)event config:(BugsnagConfiguration *)config codeBundleId:(NSString *)codeBundleId;
++ (BugsnagAppWithState *)appWithDictionary:(NSDictionary *)event config:(BugsnagConfiguration *)config codeBundleId:(nullable NSString *)codeBundleId;
 
 - (NSDictionary *)toDict;
 

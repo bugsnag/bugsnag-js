@@ -18,7 +18,7 @@ typedef void (^BugsnagObserverBlock)(BugsnagStateEvent *event);
 
 #pragma mark Properties
 
-@property (readonly) NSMutableDictionary *dictionary;
+@property (readonly, nonatomic) NSMutableDictionary *dictionary;
 
 #pragma mark Methods
 

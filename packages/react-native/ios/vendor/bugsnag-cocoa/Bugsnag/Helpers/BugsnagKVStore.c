@@ -138,7 +138,7 @@ void bsgkv_setBytes(const char* key, const uint8_t* value, int length, int* err)
     }
 
 retry_after_eintr:
-    if(write(fd, value, length) == length) {
+    if (write(fd, value, (size_t)length) == length) {
         goto cleanup_success;
     }
 
@@ -173,7 +173,8 @@ void bsgkv_getBytes(const char* key, uint8_t* value, int* length, int* err) {
         *err = errno;
         return;
     }
-    ssize_t bytesRead = read(fd, value, *length);
+    size_t bytesRequested = (size_t)*length;
+    ssize_t bytesRead = read(fd, value, bytesRequested);
     if(bytesRead < 0) {
         *err = errno;
         return;

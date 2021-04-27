@@ -26,6 +26,7 @@
 
 #define BSG_KSSystemField_AppStartTime "app_start_time"
 #define BSG_KSSystemField_AppUUID "app_uuid"
+#define BSG_KSSystemField_BinaryArch "binary_arch"
 #define BSG_KSSystemField_BootTime "boot_time"
 #define BSG_KSSystemField_BundleID "CFBundleIdentifier"
 #define BSG_KSSystemField_BundleName "CFBundleName"
@@ -35,8 +36,6 @@
 #define BSG_KSSystemField_CPUArch "cpu_arch"
 #define BSG_KSSystemField_CPUType "cpu_type"
 #define BSG_KSSystemField_CPUSubType "cpu_subtype"
-#define BSG_KSSystemField_BinaryCPUType "binary_cpu_type"
-#define BSG_KSSystemField_BinaryCPUSubType "binary_cpu_subtype"
 #define BSG_KSSystemField_DeviceAppHash "device_app_hash"
 #define BSG_KSSystemField_Executable "CFBundleExecutable"
 #define BSG_KSSystemField_ExecutablePath "CFBundleExecutablePath"
@@ -54,6 +53,7 @@
 #define BSG_KSSystemField_SystemVersion "system_version"
 #define BSG_KSSystemField_ClangVersion "clang_version"
 #define BSG_KSSystemField_TimeZone "time_zone"
+#define BSG_KSSystemField_Translated "proc_translated"
 #define BSG_KSSystemField_BuildType "build_type"
 #define BSG_KSSystemField_iOSSupportVersion "iOSSupportVersion"
 

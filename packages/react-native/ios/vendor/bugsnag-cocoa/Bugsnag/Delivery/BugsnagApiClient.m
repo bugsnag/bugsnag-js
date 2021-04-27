@@ -95,10 +95,11 @@ typedef NS_ENUM(NSInteger, HTTPStatusCode) {
     NSMutableURLRequest *request = [self prepareRequest:url headers:mutableHeaders];
     bsg_log_debug(@"Sending %lu byte payload to %@", (unsigned long)data.length, url);
     
-    [[self.session uploadTaskWithRequest:request fromData:data completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+    [[self.session uploadTaskWithRequest:request fromData:data completionHandler:^(__attribute__((unused)) NSData *responseData,
+                                                                                   NSURLResponse *response, NSError *connectionError) {
         if (![response isKindOfClass:[NSHTTPURLResponse class]]) {
             bsg_log_debug(@"Request to %@ completed with error %@", url, error);
-            completionHandler(BugsnagApiClientDeliveryStatusFailed, error ?:
+            completionHandler(BugsnagApiClientDeliveryStatusFailed, connectionError ?:
                               [NSError errorWithDomain:@"BugsnagApiClientErrorDomain" code:0 userInfo:@{
                                   NSLocalizedDescriptionKey: @"Request failed: no response was received",
                                   NSURLErrorFailingURLErrorKey: url }]);
@@ -113,7 +114,7 @@ typedef NS_ENUM(NSInteger, HTTPStatusCode) {
             return;
         }
         
-        error = [NSError errorWithDomain:@"BugsnagApiClientErrorDomain" code:1 userInfo:@{
+        connectionError = [NSError errorWithDomain:@"BugsnagApiClientErrorDomain" code:1 userInfo:@{
             NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Request failed: unacceptable status code %ld (%@)",
                                         (long)statusCode, [NSHTTPURLResponse localizedStringForStatusCode:statusCode]],
             NSURLErrorFailingURLErrorKey: url }];
@@ -126,11 +127,11 @@ typedef NS_ENUM(NSInteger, HTTPStatusCode) {
             statusCode != HTTPStatusCodeProxyAuthenticationRequired &&
             statusCode != HTTPStatusCodeClientTimeout &&
             statusCode != HTTPStatusCodeTooManyRequests) {
-            completionHandler(BugsnagApiClientDeliveryStatusUndeliverable, error);
+            completionHandler(BugsnagApiClientDeliveryStatusUndeliverable, connectionError);
             return;
         }
         
-        completionHandler(BugsnagApiClientDeliveryStatusFailed, error);
+        completionHandler(BugsnagApiClientDeliveryStatusFailed, connectionError);
     }] resume];
 }
 

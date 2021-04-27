@@ -107,7 +107,7 @@ void bsg_kscrashstate_notifyAppTerminate(void);
 
 /** Notify the crash reporter that the application has crashed.
  */
-void bsg_kscrashstate_notifyAppCrash(BSG_KSCrashType type);
+void bsg_kscrashstate_notifyAppCrash(void);
 
 /** Read-only access into the current state.
  */

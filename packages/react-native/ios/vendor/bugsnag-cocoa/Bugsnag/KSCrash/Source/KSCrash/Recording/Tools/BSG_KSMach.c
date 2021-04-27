@@ -132,7 +132,7 @@ const char *bsg_ksmachexceptionName(const exception_type_t exceptionType) {
     return NULL;
 }
 
-const char *bsg_ksmachkernelReturnCodeName(const unsigned long long returnCode) {
+const char *bsg_ksmachkernelReturnCodeName(const kern_return_t returnCode) {
     switch (returnCode) {
         RETURN_NAME_FOR_ENUM(KERN_SUCCESS);
         RETURN_NAME_FOR_ENUM(KERN_INVALID_ADDRESS);
@@ -510,7 +510,7 @@ double bsg_ksmachtimeDifferenceInSeconds(const uint64_t endTime,
         conversion = 1e-9 * (double)info.numer / (double)info.denom;
     }
 
-    return conversion * (endTime - startTime);
+    return conversion * (double)(endTime - startTime);
 }
 
 /** Check if the current process is being traced or not.

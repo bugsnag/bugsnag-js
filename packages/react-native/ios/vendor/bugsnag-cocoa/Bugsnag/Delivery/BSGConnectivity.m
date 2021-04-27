@@ -74,7 +74,7 @@ BOOL BSGConnectivityShouldReportChange(SCNetworkReachabilityFlags flags) {
  * Textual representation of a connection type
  */
 NSString *BSGConnectivityFlagRepresentation(SCNetworkReachabilityFlags flags) {
-    BOOL connected = (flags & kSCNetworkReachabilityFlagsReachable);
+    BOOL connected = (flags & kSCNetworkReachabilityFlagsReachable) != 0;
     #if BSG_PLATFORM_IOS || BSG_PLATFORM_TVOS
         return connected
             ? ((flags & kSCNetworkReachabilityFlagsIsWWAN) ? BSGConnectivityCellular : BSGConnectivityWiFi)
@@ -88,12 +88,12 @@ NSString *BSGConnectivityFlagRepresentation(SCNetworkReachabilityFlags flags) {
  * Callback invoked by SCNetworkReachability, which calls an Objective-C block
  * that handles the connection change.
  */
-void BSGConnectivityCallback(SCNetworkReachabilityRef target,
+void BSGConnectivityCallback(__attribute__((unused)) SCNetworkReachabilityRef target,
                              SCNetworkReachabilityFlags flags,
-                             void *info)
+                             __attribute__((unused)) void *info)
 {
     if (bsg_reachability_change_block && BSGConnectivityShouldReportChange(flags)) {
-        BOOL connected = (flags & kSCNetworkReachabilityFlagsReachable);
+        BOOL connected = (flags & kSCNetworkReachabilityFlagsReachable) != 0;
         bsg_reachability_change_block(connected, BSGConnectivityFlagRepresentation(flags));
     }
 }
@@ -109,12 +109,12 @@ void BSGConnectivityCallback(SCNetworkReachabilityRef target,
 
     bsg_reachability_change_block = block;
 
-    NSString *host = [URL host];
-    if (![self isValidHostname:host]) {
+    const char *nodename = URL.host.UTF8String;
+    if (!nodename || ![self isValidHostname:@(nodename)]) {
         return;
     }
 
-    bsg_reachability_ref = SCNetworkReachabilityCreateWithName(NULL, [host UTF8String]);
+    bsg_reachability_ref = SCNetworkReachabilityCreateWithName(NULL, nodename);
     if (bsg_reachability_ref) { // Can be null if a bad hostname was specified
         SCNetworkReachabilitySetCallback(bsg_reachability_ref, BSGConnectivityCallback, NULL);
         SCNetworkReachabilitySetDispatchQueue(bsg_reachability_ref, reachabilityQueue);

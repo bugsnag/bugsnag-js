@@ -42,7 +42,7 @@ typedef NS_ENUM(NSInteger, BugsnagApiClientDeliveryStatus) {
 
 - (NSString *)SHA1HashStringWithData:(NSData *)data;
 
-@property(readonly) NSOperationQueue *sendQueue;
+@property (readonly, nonatomic) NSOperationQueue *sendQueue;
 
 @end
 

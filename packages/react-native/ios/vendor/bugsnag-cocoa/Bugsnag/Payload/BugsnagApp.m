@@ -7,6 +7,8 @@
 //
 
 #import "BugsnagApp.h"
+
+#import "BSG_KSSystemInfo.h"
 #import "BugsnagKeys.h"
 #import "BugsnagConfiguration.h"
 #import "BugsnagCollections.h"
@@ -18,7 +20,9 @@
  */
 NSDictionary *BSGParseAppMetadata(NSDictionary *event) {
     NSMutableDictionary *app = [NSMutableDictionary new];
-    app[@"name"] = [event valueForKeyPath:@"system.CFBundleExecutable"];
+    app[@"name"] = [event valueForKeyPath:@"system." BSG_KSSystemField_BundleExecutable];
+    app[@"binaryArch"] = [event valueForKeyPath:@"system." BSG_KSSystemField_BinaryArch];
+    app[@"runningOnRosetta"] = [event valueForKeyPath:@"system." BSG_KSSystemField_Translated];
     return app;
 }
 
@@ -70,7 +74,7 @@ NSDictionary *BSGParseAppMetadata(NSDictionary *event) {
     NSMutableDictionary *dict = [NSMutableDictionary new];
     dict[@"bundleVersion"] = self.bundleVersion;
     dict[@"codeBundleId"] = self.codeBundleId;
-    dict[@"dsymUUIDs"] = self.dsymUuid ? @[self.dsymUuid] : nil;
+    dict[@"dsymUUIDs"] = BSGArrayWithObject(self.dsymUuid);
     dict[@"id"] = self.id;
     dict[@"releaseStage"] = self.releaseStage;
     dict[@"type"] = self.type;

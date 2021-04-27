@@ -12,19 +12,49 @@
 #import <Bugsnag/BugsnagErrorTypes.h>
 
 #import "BSG_KSMach.h"
+#import "BugsnagCollections.h"
 #import "BugsnagLogger.h"
 #import "BugsnagThread+Recording.h"
 #import "BugsnagThread+Private.h"
+
+#if TARGET_OS_IOS
+#import "BSGUIKit.h"
+#endif
 
 
 @interface BSGAppHangDetector ()
 
 @property (nonatomic) CFRunLoopObserverRef observer;
 
+@property (nonatomic) BOOL isInBackground;
+
 @end
 
 
 @implementation BSGAppHangDetector
+
+#if TARGET_OS_IOS
+
+- (instancetype)init {
+    if (self = [super init]) {
+        [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(applicationDidEnterBackground)
+                                                   name:UIApplicationDidEnterBackgroundNotification object:nil];
+
+        [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(applicationWillEnterForeground)
+                                                   name:UIApplicationWillEnterForegroundNotification object:nil];
+    }
+    return self;
+}
+
+- (void)applicationDidEnterBackground {
+    self.isInBackground = YES;
+}
+
+- (void)applicationWillEnterForeground {
+    self.isInBackground = NO;
+}
+
+#endif
 
 - (void)dealloc {
     if (_observer) {
@@ -52,17 +82,19 @@
     
     const BOOL fatalOnly = configuration.appHangThresholdMillis == BugsnagAppHangThresholdFatalOnly;
     const BOOL recordAllThreads = configuration.sendThreads == BSGThreadSendPolicyAlways;
-    const NSTimeInterval threshold = fatalOnly ? 2 : configuration.appHangThresholdMillis / 1000.0;
+    const NSTimeInterval threshold = fatalOnly ? 2.0 : (double)configuration.appHangThresholdMillis / 1000.0;
     
     bsg_log_debug(@"Starting App Hang detector with threshold = %g seconds", threshold);
     
     dispatch_queue_t backgroundQueue;
     __block dispatch_semaphore_t semaphore;
     __weak typeof(delegate) weakDelegate = delegate;
+    __weak typeof(self) weakSelf = self;
     
     backgroundQueue = dispatch_queue_create("com.bugsnag.app-hang-detector", DISPATCH_QUEUE_SERIAL);
     
-    void (^ observerBlock)(CFRunLoopObserverRef, CFRunLoopActivity) = ^(CFRunLoopObserverRef observer, CFRunLoopActivity activity) {
+    void (^ observerBlock)(CFRunLoopObserverRef, CFRunLoopActivity) =
+    ^(__attribute__((unused)) CFRunLoopObserverRef observer, CFRunLoopActivity activity) {
         // "Inside the event processing loop after the run loop wakes up, but before processing the event that woke it up"
         if (activity == kCFRunLoopAfterWaiting) {
             if (!semaphore) {
@@ -75,6 +107,12 @@
             dispatch_time_t timeout = dispatch_time(now, (int64_t)(threshold * NSEC_PER_SEC));
             dispatch_after(after, backgroundQueue, ^{
                 if (dispatch_semaphore_wait(semaphore, timeout) != 0) {
+                    if (weakSelf.isInBackground) {
+                        bsg_log_debug(@"Ignoring app hang because app is in the background");
+                        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+                        return;
+                    }
+                    
                     if (bsg_ksmachisBeingTraced()) {
                         bsg_log_debug("Ignoring app hang because debugger is attached");
                         dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
@@ -87,19 +125,22 @@
                     if (recordAllThreads) {
                         threads = [BugsnagThread allThreads:YES callStackReturnAddresses:NSThread.callStackReturnAddresses];
                         // By default the calling thread is marked as "Error reported from this thread", which is not correct case for app hangs.
-                        [threads enumerateObjectsUsingBlock:^(BugsnagThread * _Nonnull thread, NSUInteger idx, BOOL * _Nonnull stop) {
+                        [threads enumerateObjectsUsingBlock:^(BugsnagThread * _Nonnull thread, NSUInteger idx,
+                                                              __attribute__((unused)) BOOL * _Nonnull stop) {
                             thread.errorReportingThread = idx == 0;
                         }];
                     } else {
-                        threads = [NSArray arrayWithObjects:[BugsnagThread mainThread], nil]; //!OCLint
+                        threads = BSGArrayWithObject([BugsnagThread mainThread]);
                     }
                     
-                    [weakDelegate appHangDetectedWithThreads:threads];
+                    __strong typeof(weakDelegate) strongDelegate = weakDelegate;
+                    
+                    [strongDelegate appHangDetectedWithThreads:threads];
                     
                     dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
                     bsg_log_info("App hang has ended");
                     
-                    [weakDelegate appHangEnded];
+                    [strongDelegate appHangEnded];
                 }
             });
         }

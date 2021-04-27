@@ -55,7 +55,7 @@
                          handledState:handledState
                                  user:self.configuration.user
                              metadata:[self.metadata deepCopy]
-                          breadcrumbs:self.breadcrumbs.breadcrumbs
+                          breadcrumbs:self.breadcrumbs.breadcrumbs ?: @[]
                                errors:@[error]
                               threads:threads
                               session:self.sessionTracker.runningSession];
@@ -75,7 +75,7 @@
     
     const BOOL fatalOnly = self.configuration.appHangThresholdMillis == BugsnagAppHangThresholdFatalOnly;
     if (!fatalOnly && self.appHangEvent) {
-        [self notifyInternal:self.appHangEvent block:nil];
+        [self notifyInternal:(BugsnagEvent * _Nonnull)self.appHangEvent block:nil];
     }
     self.appHangEvent = nil;
 }
