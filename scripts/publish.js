@@ -15,6 +15,15 @@ function publish (publishUrl) {
   }
 
   if (myVersions.length === 0) {
+    if (process.env.BUILD_RN_WITH_LATEST_NATIVES) {
+      // For RN integration builds, dynamically update the native notifiers
+      common.changeDir('packages/react-native')
+      common.run('./update-android.sh --sha next', true)
+      common.run('./update-ios.sh --sha next', true)
+      common.changeDir('../..')
+    }
+
+    // Build and publish packages
     console.log(`Publishing as '${version}'`)
 
     common.run('npm install', true)

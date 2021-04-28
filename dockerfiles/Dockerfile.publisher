@@ -1,8 +1,14 @@
-# CI test image for unit/lint/type tests
-FROM node:lts-alpine
+# CI test image for unit/lint/type tests, but also needs to be capable of building
+# the Android notifier as part of a React Native integration test run.
+FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/android:latest as android
 
-RUN apk add --update bash git curl
+RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y rsync npm nodejs
 
+# Android setup
+ENV ANDROID_HOME="/sdk/"
+ENV GRADLE_OPTS="-Dorg.gradle.daemon=false"
+
+# NPM setup
 RUN rm -f ~/.npmrc
 
 ARG REG_BASIC_CREDENTIAL
@@ -21,4 +27,5 @@ COPY scripts/ scripts/
 ARG PUBLISH_URL
 ARG BUILDKITE
 ARG BRANCH_NAME
-RUN BUILDKITE=${BUILDKITE} BRANCH_NAME=${BRANCH_NAME} node scripts/publish.js $PUBLISH_URL
+ARG BUILD_RN_WITH_LATEST_NATIVES
+RUN BUILDKITE=${BUILDKITE} BRANCH_NAME=${BRANCH_NAME} BUILD_RN_WITH_LATEST_NATIVES=${BUILD_RN_WITH_LATEST_NATIVES} node scripts/publish.js $PUBLISH_URL
