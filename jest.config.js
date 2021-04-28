@@ -129,22 +129,6 @@ module.exports = {
       clearMocks: true,
       modulePathIgnorePatterns: ['.verdaccio', 'fixtures']
     }),
-    {
-      setupFilesAfterEnv: ['<rootDir>/test/electron/setup.ts'],
-      clearMocks: true,
-      modulePathIgnorePatterns: ['.verdaccio', 'fixtures'],
-      displayName: 'electron main',
-      runner: '@jest-runner/electron/main',
-      testMatch: ['**/test/**/*.test-main.ts']
-    },
-    {
-      setupFilesAfterEnv: ['<rootDir>/test/electron/setup.ts'],
-      clearMocks: true,
-      modulePathIgnorePatterns: ['.verdaccio', 'fixtures'],
-      displayName: 'electron renderer',
-      runner: '@jest-runner/electron',
-      testMatch: ['**/test/**/*.test-renderer.ts']
-    },
     project('react native cli', ['react-native-cli'], { testEnvironment: 'node' })
   ]
 }
