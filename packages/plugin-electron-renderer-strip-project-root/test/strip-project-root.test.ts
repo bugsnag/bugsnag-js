@@ -25,7 +25,7 @@ describe('plugin: stack frame file trimmer', () => {
 
   it('strips projectRoot from file URLs', async () => {
     const file = isWindows ? 'file:///D:/path/to/index.js' : 'file:///path/to/index.js'
-    const expected = isWindows ? 'to/index.js' : 'to/index.js'
+    const expected = 'to/index.js'
     const projectRoot = isWindows ? 'D:\\path\\' : '/path/'
     const event = await sendEvent({ file }, projectRoot)
     expect(event.errors[0].stacktrace[0]).toEqual({ file: expected })
@@ -33,7 +33,7 @@ describe('plugin: stack frame file trimmer', () => {
 
   it('strips project root from file paths', async () => {
     const file = isWindows ? 'D:/path/to/index.js' : '/path/to/index.js'
-    const expected = isWindows ? 'to/index.js' : 'to/index.js'
+    const expected = 'to/index.js'
     const projectRoot = isWindows ? 'D:\\path\\' : '/path/'
     const event = await sendEvent({ file }, projectRoot)
     expect(event.errors[0].stacktrace[0]).toEqual({ file: expected })
