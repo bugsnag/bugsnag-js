@@ -34,7 +34,7 @@ module.exports = {
     const lernaVersion = lerna.version.match(/^[1-9][0-9]*\.[0-9]+\.[0-9]+/)[0]
 
     // Base version for RN integration builds on the current time
-    if (process.env.RN_INTEGRATION) {
+    if (process.env.BUILD_RN_WITH_LATEST_NATIVES) {
       const timestamp = Math.round(Date.now() / 1000)
 
       return `${lernaVersion}-rn-integration.${timestamp}`
