@@ -79,6 +79,7 @@
     "cdn-upload": "lerna run cdn-upload --stream",
     "build": "lerna run build --scope '@bugsnag/node' --scope '@bugsnag/browser' --scope '@bugsnag/expo' && lerna run build --ignore '@bugsnag/node' --ignore '@bugsnag/browser' --ignore '@bugsnag/expo'",
     "build:electron": "lerna run build --scope '@bugsnag/plugin-electron-ipc' --scope '@bugsnag/plugin-electron-app' --scope '@bugsnag/plugin-electron-client-state-persistence'",
+    "test:coverage": "xvfb-maybe --auto-servernum -- jest -c config/full-suite-jest.config.js --rootDir . --coverage",
     "test:lint": "eslint --ext .ts,.js --report-unused-disable-directives --max-warnings=0 .",
     "test:lint-native": "bash scripts/cppcheck.sh",
     "test:unit": "jest",

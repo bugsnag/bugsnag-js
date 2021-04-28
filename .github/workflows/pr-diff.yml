@@ -22,7 +22,7 @@ jobs:
           npm ci
           npx lerna bootstrap
           npm run build
-          npm run test:unit -- --coverage
+          npm run test:coverage
           cat packages/browser/dist/bugsnag.min.js | wc -c > .diff/size-before-minified
           cat packages/browser/dist/bugsnag.min.js | gzip | wc -c > .diff/size-before-gzipped
           cp coverage/coverage-summary.json .diff/coverage-before.json
@@ -37,7 +37,7 @@ jobs:
           npm ci
           npx lerna bootstrap
           npm run build
-          npm run test:unit -- --coverage
+          npm run test:coverage
           cat packages/browser/dist/bugsnag.min.js | wc -c > .diff/size-after-minified
           cat packages/browser/dist/bugsnag.min.js | gzip | wc -c > .diff/size-after-gzipped
           cp coverage/coverage-summary.json .diff/coverage-after.json

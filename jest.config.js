@@ -13,6 +13,7 @@ module.exports = {
   collectCoverageFrom: [
     `**/packages/*/**/*.{${extensions}}`,
     `!**/*.test.{${extensions}}`,
+    `!**/*.test-*.{${extensions}}`,
     '!**/*.d.ts',
     '!**/dist/**',
     '!**/packages/js/**',
