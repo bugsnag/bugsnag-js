@@ -38,6 +38,18 @@ describe('plugin: stack frame file trimmer', () => {
     const event = await sendEvent({ file }, projectRoot)
     expect(event.errors[0].stacktrace[0]).toEqual({ file: expected })
   })
+
+  it('decodes escaped URI characters', async () => {
+    const file = isWindows
+      ? 'file:///D:/Program%20Files/electron%20app/electron-app-win-32/app.js'
+      : 'file:///Applications/electron%20app/electron-app-darwin-x64/app.js'
+    const expected = 'app.js'
+    const projectRoot = isWindows
+      ? 'D:\\Program Files\\electron app\\electron-app-win-32\\'
+      : '/Applications/electron app/electron-app-darwin-x64/'
+    const event = await sendEvent({ file }, projectRoot)
+    expect(event.errors[0].stacktrace[0]).toEqual({ file: expected })
+  })
 })
 
 async function sendEvent (initialStackframe: any, projectRoot: string|null = null) {
