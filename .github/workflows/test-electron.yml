@@ -1,4 +1,4 @@
-name: Test
+name: '@bugsnag/electron'
 
 on: push
 
