@@ -1,6 +1,10 @@
 import { Logger } from '../Logger'
 import path from 'path'
 import { promises as fs } from 'fs'
+import { promisify } from 'util'
+import glob from 'glob'
+
+const asyncGlob = promisify(glob)
 
 const BUGSNAG_JS_IMPORT_INIT =
 `import Bugsnag from "@bugsnag/react-native";
@@ -76,20 +80,21 @@ export async function insertIos (projectRoot: string, logger: Logger): Promise<v
 
 export async function insertAndroid (projectRoot: string, logger: Logger): Promise<void> {
   logger.info('Adding Bugsnag to the Android layer')
-  const comDir = path.join(projectRoot, 'android', 'app', 'src', 'main', 'java', 'com')
-  let appPackagePath
+
+  let mainApplicationPath
   try {
-    appPackagePath = (await fs.readdir(comDir))[0]
-    if (!appPackagePath) {
-      logger.warn(FAIL_MSG('MainApplication.java'))
-      return
-    }
+    const comDir = path.join(projectRoot, 'android', 'app', 'src', 'main', 'java', 'com')
+    const relativeMainApplicationPath = (await asyncGlob('**/*/MainApplication.java', {
+      cwd: comDir
+    }))[0]
+    if (!relativeMainApplicationPath) return logger.warn(FAIL_MSG('MainApplication.java'))
+    mainApplicationPath = path.join(comDir, relativeMainApplicationPath)
   } catch (e) {
-    logger.error(FAIL_MSG('MainApplication.java'))
+    logger.warn(FAIL_MSG('MainApplication.java'))
     return
   }
+
   try {
-    const mainApplicationPath = path.join(comDir, appPackagePath, 'MainApplication.java')
     const mainApplication = await fs.readFile(mainApplicationPath, 'utf8')
 
     if (mainApplication.includes(BUGSNAG_JAVA_IMPORT) || mainApplication.includes(BUGSNAG_JAVA_INIT)) {

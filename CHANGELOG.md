@@ -1,5 +1,11 @@
 # Changelog
 
+## TBD
+
+### Added
+
+- (react-native-cli): Add support for ejected Expo apps [#1365](https://github.com/bugsnag/bugsnag-js/pull/1365)
+
 ## v7.9.5 (2021-04-26)
 
 ### Changed
