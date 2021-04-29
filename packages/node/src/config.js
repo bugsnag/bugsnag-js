@@ -1,7 +1,6 @@
 const { schema } = require('@bugsnag/core/config')
 const stringWithLength = require('@bugsnag/core/lib/validators/string-with-length')
 const os = require('os')
-const process = require('process')
 const { inspect } = require('util')
 
 module.exports = {
