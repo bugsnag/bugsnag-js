@@ -36,11 +36,11 @@ describe('plugin: electron process info', () => {
     client._notify(new Event('Error', 'incorrect lambda type', []))
   })
 
-  it('attaches sandboxed status when unset', (done) => {
+  it('does not attach sandboxed status when unset', (done) => {
     const processInfo = {}
     const client = makeClient((payload: any) => {
       const metadata = payload.events[0]._metadata
-      expect(metadata.process.sandboxed).toBe(false)
+      expect(metadata.process.sandboxed).toBe(undefined)
       done()
     }, processInfo)
     client._notify(new Event('Error', 'incorrect lambda type', []))
@@ -56,11 +56,11 @@ describe('plugin: electron process info', () => {
     client._notify(new Event('Error', 'incorrect lambda type', []))
   })
 
-  it('attaches main frame status when unset', (done) => {
+  it('does not attach main frame status when unset', (done) => {
     const processInfo = {}
     const client = makeClient((payload: any) => {
       const metadata = payload.events[0]._metadata
-      expect(metadata.process.isMainFrame).toBe(false)
+      expect(metadata.process.isMainFrame).toBe(undefined)
       done()
     }, processInfo)
     client._notify(new Event('Error', 'incorrect lambda type', []))

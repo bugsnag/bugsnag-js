@@ -23,6 +23,7 @@ module.exports = (rendererOpts) => {
     require('@bugsnag/plugin-network-breadcrumbs')(),
     require('@bugsnag/plugin-interaction-breadcrumbs')(),
     require('@bugsnag/plugin-console-breadcrumbs'),
+    require('@bugsnag/plugin-electron-process-info')(window.__bugsnag_ipc__.process),
     require('@bugsnag/plugin-electron-renderer-strip-project-root'),
     require('@bugsnag/plugin-electron-renderer-event-data')(window.__bugsnag_ipc__)
   ]
