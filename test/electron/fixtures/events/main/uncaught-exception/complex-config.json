@@ -46,6 +46,10 @@
         },
         "site": {
           "name": "shop co"
+        },
+        "process": {
+          "type": "browser",
+          "heapStatistics": {}
         }
       },
       "severity": "error",
