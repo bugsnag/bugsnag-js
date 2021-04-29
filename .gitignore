@@ -15,3 +15,6 @@ min_packages.tar
 .cucumber-failures
 .webpack
 out
+compile_commands.json
+.cache
+.clangd

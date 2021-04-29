@@ -1,4 +1,4 @@
-name: Test
+name: '@bugsnag/electron'
 
 on: push
 
@@ -49,6 +49,12 @@ jobs:
     - run: npx lerna bootstrap
     - run: npm run build:electron
       shell: bash
+    - run: sudo apt-get install cppcheck --assume-yes
+      name: Install cppcheck
+      if: contains(matrix.os, 'ubuntu')
+    - run: npm run test:lint-native
+      name: Lint C/C++ extensions
+      if: contains(matrix.os, 'ubuntu')
     - name: (macOS) disable crash dialog
       if: contains(matrix.os, 'macos')
       run: defaults write com.apple.CrashReporter DialogType none

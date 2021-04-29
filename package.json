@@ -80,6 +80,7 @@
     "build": "lerna run build --scope '@bugsnag/node' --scope '@bugsnag/browser' --scope '@bugsnag/expo' && lerna run build --ignore '@bugsnag/node' --ignore '@bugsnag/browser' --ignore '@bugsnag/expo'",
     "build:electron": "lerna run build --scope '@bugsnag/plugin-electron-ipc' --scope '@bugsnag/plugin-electron-app' --scope '@bugsnag/plugin-electron-client-state-persistence'",
     "test:lint": "eslint --ext .ts,.js --report-unused-disable-directives --max-warnings=0 .",
+    "test:lint-native": "bash scripts/cppcheck.sh",
     "test:unit": "xvfb-maybe --auto-servernum -- jest",
     "test:types": "tsc -p tsconfig.json && lerna run test:types",
     "test:test-container-registry-login": "aws ecr get-login-password --profile=opensource | docker login --username AWS --password-stdin 855461928731.dkr.ecr.us-west-1.amazonaws.com",
