@@ -43,6 +43,17 @@ module.exports = (app, screen, process, filestore, NativeClient, powerMonitor) =
       usingBattery: powerMonitor.onBatteryPower
     })
 
+    // fetch the device ID from the filestore - if one does not exist it will be
+    // created for us
+    filestore.getDeviceInfo()
+      .then(cachedDevice => {
+        // if _everything_ goes wrong this may be missing
+        if (cachedDevice.id) {
+          updateDevice({ id: cachedDevice.id })
+        }
+      })
+      .catch(err => { client._logger.error(err) })
+
     app.whenReady().then(() => {
       // on windows, app.getLocale won't return the locale until the app is ready
       const locale = app.getLocale()
@@ -77,17 +88,6 @@ module.exports = (app, screen, process, filestore, NativeClient, powerMonitor) =
       })
     })
 
-    // fetch the device ID from the filestore - if one does not exist it will be
-    // created for us
-    filestore.getDeviceInfo()
-      .then(cachedDevice => {
-        // if _everything_ goes wrong this may be missing
-        if (cachedDevice.id) {
-          updateDevice({ id: cachedDevice.id })
-        }
-      })
-      .catch(err => { client._logger.error(err) })
-
     powerMonitor.on('on-ac', () => {
       client.addMetadata('device', { usingBattery: false })
     })
@@ -114,6 +114,8 @@ module.exports = (app, screen, process, filestore, NativeClient, powerMonitor) =
           time: new Date()
         }
       )
+
+      setDefaultUserId(event)
     }, true)
 
     client.addOnSession(session => {
@@ -122,7 +124,16 @@ module.exports = (app, screen, process, filestore, NativeClient, powerMonitor) =
         session.device,
         device
       )
+      setDefaultUserId(session)
     })
+
+    const setDefaultUserId = (eventOrSession) => {
+      // device id is also used to populate the user id field, if it's not already set
+      const user = eventOrSession.getUser()
+      if (!user || !user.id) {
+        eventOrSession.setUser(eventOrSession.device.id)
+      }
+    }
 
     client._device = device
   }

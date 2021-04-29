@@ -5,6 +5,7 @@
     "url": "https://github.com/bugsnag/bugsnag-electron"
   },
   "device": {
+    "id": "{REGEX:[0-9a-f]{64}}",
     "totalMemory": "{TYPE:number}",
     "locale": "{REGEX:^[a-z]{2}(-[A-Z]{2})?$}",
     "osName": "{REGEX:^Linux|macOS|Windows$}",
