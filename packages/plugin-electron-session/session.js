@@ -12,9 +12,9 @@ module.exports = (app, BrowserWindow, filestore) => ({
     }
 
     // jump through hoops to ensure the session gets started _after_ we have a device id
-    filestore.getDeviceInfo().then(() => {
-      app.whenReady().then(() => { setTimeout(() => client.startSession(), 10) })
-    }).catch(() => {})
+    Promise.all([filestore.getDeviceInfo(), app.whenReady()])
+      .then(() => { setTimeout(() => client.startSession(), 10) })
+      .catch(() => {})
 
     let lastInBackground = null
 
