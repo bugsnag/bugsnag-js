@@ -397,6 +397,26 @@ describe('plugin: electron device info', () => {
     const event3 = await sendEvent()
     expect(event3.getMetadata('device')).toEqual(makeExpectedMetadataDevice({ isLocked: false }))
   })
+
+  it('sets user id to device id if no user id is set', async () => {
+    const { sendEvent, sendSession } = makeClient()
+    await nextTick()
+    const event = await sendEvent()
+    expect(event.getUser().id).toBe(DEFAULTS.id)
+    const session = await sendSession()
+    expect(session.getUser().id).toBe(DEFAULTS.id)
+  })
+
+  it('doesn’t override user id if user id is already set', async () => {
+    const expectedId = '912837'
+    const { client, sendEvent, sendSession } = makeClient()
+    client.setUser(expectedId, 'tommy@testun.it', 'Tommy T. Unit')
+    await nextTick()
+    const event = await sendEvent()
+    expect(event.getUser().id).toBe(expectedId)
+    const session = await sendSession()
+    expect(session.getUser().id).toBe(expectedId)
+  })
 })
 
 // create a stub of '@bugsnag/electron-filestore'
