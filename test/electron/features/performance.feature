@@ -10,7 +10,7 @@ Feature: Startup performance
             | Bugsnag-API-Key   | 6425093c6530f554a9897d2d7d38e248 |
             | Content-Type      | application/json                 |
             | Bugsnag-Integrity | {BODY_SHA1}                      |
-        Then the event metadata "performance.startupTime" is less than 100
+        Then the event metadata "performance.startupTime" is less than 150
 
         Examples:
             | config          |
