@@ -29,6 +29,10 @@ module.exports = (BugsnagIpcRenderer = window.__bugsnag_ipc__) => ({
           event._metadata[section] = metadata[section]
         }
       }
+
+      if (client._config.appType) {
+        event.app.type = client._config.appType
+      }
     }, true)
   }
 })

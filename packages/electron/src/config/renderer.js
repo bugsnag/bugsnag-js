@@ -3,7 +3,8 @@ const stringWithLength = require('@bugsnag/core/lib/validators/string-with-lengt
 
 const ALLOWED_IN_RENDERER = [
   // a list of config keys that are allowed to be supplied to the renderer client
-  'onError', 'onBreadcrumb', 'logger', 'metadata', 'user', 'context', 'codeBundleId', 'plugins'
+  // this must be kept in sync with the typescript "AllowedRendererConfig" type
+  'onError', 'onBreadcrumb', 'logger', 'metadata', 'user', 'context', 'codeBundleId', 'plugins', 'appType'
 ]
 
 module.exports.schema = {
