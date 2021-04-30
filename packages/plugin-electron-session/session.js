@@ -2,7 +2,7 @@ const sessionDelegate = require('@bugsnag/plugin-browser-session')
 
 const SESSION_TIMEOUT_MS = 60 * 1000
 
-module.exports = (app, BrowserWindow) => ({
+module.exports = (app, BrowserWindow, filestore) => ({
   load (client) {
     // load the actual session delegate from plugin-browser-session
     sessionDelegate.load(client)
@@ -11,7 +11,10 @@ module.exports = (app, BrowserWindow) => ({
       return
     }
 
-    app.whenReady().then(() => { client.startSession() })
+    // jump through hoops to ensure the session gets started _after_ we have a device id
+    Promise.all([filestore.getDeviceInfo(), app.whenReady()])
+      .then(() => { setTimeout(() => client.startSession(), 10) })
+      .catch(() => {})
 
     let lastInBackground = null
 

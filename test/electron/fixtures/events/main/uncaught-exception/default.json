@@ -28,6 +28,9 @@
         "totalMemory": "{TYPE:number}",
         "osVersion": "{REGEX:\\d+\\.\\d+}"
       },
+      "user": {
+        "id": "{REGEX:[0-9a-f]{64}}"
+      },
       "metaData": {
         "app": {
           "name": "Runner"
@@ -38,6 +41,10 @@
             "width": "{TYPE:number}",
             "height": "{TYPE:number}"
           }
+        },
+        "process": {
+          "type": "browser",
+          "heapStatistics": {}
         }
       },
       "severity": "error",

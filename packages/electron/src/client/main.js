@@ -35,9 +35,10 @@ module.exports = (opts) => {
     require('@bugsnag/plugin-electron-app')(NativeClient, process, electron.app, electron.BrowserWindow),
     require('@bugsnag/plugin-electron-app-breadcrumbs')(electron.app, electron.BrowserWindow),
     require('@bugsnag/plugin-electron-device')(electron.app, electron.screen, process, filestore, NativeClient, electron.powerMonitor),
-    require('@bugsnag/plugin-electron-session')(electron.app, electron.BrowserWindow),
+    require('@bugsnag/plugin-electron-session')(electron.app, electron.BrowserWindow, filestore),
     require('@bugsnag/plugin-console-breadcrumbs'),
     require('@bugsnag/plugin-strip-project-root'),
+    require('@bugsnag/plugin-electron-process-info')(),
     require('@bugsnag/plugin-electron-preload-error')(electron.app),
     require('@bugsnag/plugin-electron-net-breadcrumbs')(electron.net),
     // THIS PLUGIN MUST BE LAST!

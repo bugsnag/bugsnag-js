@@ -7,7 +7,7 @@ module.exports = {
       const allFrames = event.errors.reduce((accum, er) => accum.concat(er.stacktrace), [])
       allFrames.forEach(stackframe => {
         if (typeof stackframe.file !== 'string') return
-        stackframe.file = stackframe.file.replace(/^file:\/\//, '')
+        stackframe.file = decodeURI(stackframe.file).replace(/^file:\/\//, '')
         if (stackframe.file.match('^/[A-Z]:/')) {
           stackframe.file = stackframe.file.slice(1) // strip extra leading slash on windows
         }

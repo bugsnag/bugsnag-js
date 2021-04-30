@@ -45,6 +45,12 @@
         },
         "site": {
           "name": "shop co"
+        },
+        "process": {
+          "type": "renderer",
+          "sandboxed": true,
+          "isMainFrame": true,
+          "heapStatistics": {}
         }
       },
       "severity": "warning",
