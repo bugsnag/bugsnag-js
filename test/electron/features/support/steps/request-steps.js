@@ -19,14 +19,16 @@ Given('I launch an app', launchConfig, async () => {
 })
 
 Given('I launch an app with configuration:', launchConfig, (data) => {
-  const setup = { bugsnag: 'default', preload: 'default.js' }
+  const setup = { bugsnag: 'default', preload: 'default.js', renderer_config: '{}' }
   data.raw().forEach(row => {
     const [key, config] = row
     setup[key] = config
   })
+
   return global.automator.start({
     BUGSNAG_CONFIG: setup.bugsnag,
-    BUGSNAG_PRELOAD: setup.preload
+    BUGSNAG_PRELOAD: setup.preload,
+    BUGSNAG_RENDERER_CONFIG: setup.renderer_config
   })
 })
 
