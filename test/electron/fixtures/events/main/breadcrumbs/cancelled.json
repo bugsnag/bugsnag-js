@@ -13,6 +13,7 @@
         "releaseStage": "production",
         "inForeground": "{TYPE:boolean}",
         "isLaunching": true,
+        "type": "{REGEX:^Linux|macOS|Windows$}",
         "version": "1.0.2"
       },
       "device": {
