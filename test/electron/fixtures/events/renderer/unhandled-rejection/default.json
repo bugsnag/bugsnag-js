@@ -41,6 +41,12 @@
             "width": "{TYPE:number}",
             "height": "{TYPE:number}"
           }
+        },
+        "process": {
+          "type": "renderer",
+          "sandboxed": true,
+          "isMainFrame": true,
+          "heapStatistics": {}
         }
       },
       "severity": "error",

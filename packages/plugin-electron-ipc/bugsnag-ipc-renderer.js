@@ -9,6 +9,10 @@ const safeInvoke = (runSynchronous, method, ...args) => {
 }
 
 const BugsnagIpcRenderer = {
+  // these static values are populated by preload.js
+  config: null,
+  process: null,
+
   update ({ context, user, metadata }) {
     return safeInvoke(false, 'update', { context, user, metadata })
   },

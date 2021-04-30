@@ -40,6 +40,10 @@
             "width": "{TYPE:number}",
             "height": "{TYPE:number}"
           }
+        },
+        "process": {
+          "type": "browser",
+          "heapStatistics": {}
         }
       },
       "severity": "warning",

@@ -12,6 +12,10 @@ if (!config) throw new Error('Bugsnag was not started in the main process before
 // attach config to the exposed interface
 BugsnagIpcRenderer.config = JSON.parse(config)
 
+// attach process info to the exposed interface
+const { isMainFrame, sandboxed, type } = process
+BugsnagIpcRenderer.process = { isMainFrame, sandboxed, type }
+
 // expose Bugsnag as a global object for the browser
 try {
   // assume contextIsolation=true
