@@ -83,11 +83,7 @@ NSString *BSGParseErrorMessage(NSDictionary *report, NSDictionary *error, NSStri
 
 @dynamic type;
 
-- (instancetype)initWithErrorReportingThread:(BugsnagThread *)thread {
-    return [self initWithEvent:@{} errorReportingThread:thread];
-}
-
-- (instancetype)initWithEvent:(NSDictionary *)event errorReportingThread:(BugsnagThread *)thread {
+- (instancetype)initWithKSCrashReport:(NSDictionary *)event stacktrace:(NSArray<BugsnagStackframe *> *)stacktrace {
     if (self = [super init]) {
         NSDictionary *error = [event valueForKeyPath:@"crash.error"];
         NSString *errorType = error[BSGKeyType];
@@ -96,7 +92,7 @@ NSString *BSGParseErrorMessage(NSDictionary *report, NSDictionary *error, NSStri
         _typeString = BSGSerializeErrorType(BSGErrorTypeCocoa);
 
         if (![[event valueForKeyPath:@"user.state.didOOM"] boolValue]) {
-            _stacktrace = thread.stacktrace;
+            _stacktrace = stacktrace;
         }
     }
     return self;

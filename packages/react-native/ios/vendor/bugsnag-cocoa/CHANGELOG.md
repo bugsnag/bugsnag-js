@@ -1,6 +1,22 @@
 Changelog
 =========
 
+## 6.9.1 (2021-04-28)
+
+### Bug fixes
+
+* Fix a possible deadlock when writing crash reports for uncaught Objective-C exceptions.
+  [#1082](https://github.com/bugsnag/bugsnag-cocoa/pull/1082)
+
+* Fix missing `context` for crash, OOM, and app hang errors.
+  [#1079](https://github.com/bugsnag/bugsnag-cocoa/pull/1079)
+
+* Fix `app` properties in OOMs for apps that override `appType`, `appVersion`, `bundleVersion` or `releaseStage` in their config.
+  [#1078](https://github.com/bugsnag/bugsnag-cocoa/pull/1078)
+
+* `event.threads` will now be empty, rather than containing a single thread, if `sendThreads` dictates that threads should not be sent.
+  [#1077](https://github.com/bugsnag/bugsnag-cocoa/pull/1077)
+
 ## 6.9.0 (2021-04-21)
 
 ### Enhancements

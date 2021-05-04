@@ -11,6 +11,7 @@
 #import "BugsnagAppWithState+Private.h"
 #import "BugsnagBreadcrumbs.h"
 #import "BugsnagClient+Private.h"
+#import "BugsnagConfiguration+Private.h"
 #import "BugsnagDeviceWithState+Private.h"
 #import "BugsnagError+Private.h"
 #import "BugsnagEvent+Private.h"
@@ -26,6 +27,12 @@
     BugsnagAppWithState *app = [BugsnagAppWithState appFromJson:appDict];
     app.dsymUuid = appDict[BSGKeyMachoUUID];
     app.isLaunching = [self.stateMetadataFromLastLaunch[BSGKeyApp][BSGKeyIsLaunching] boolValue];
+    
+    if (self.configMetadataFromLastLaunch) {
+        [app setValuesFromConfiguration:
+         [[BugsnagConfiguration alloc] initWithDictionaryRepresentation:
+          (NSDictionary * _Nonnull)self.configMetadataFromLastLaunch]];
+    }
     
     NSDictionary *deviceDict = self.systemState.lastLaunchState[SYSTEMSTATE_KEY_DEVICE];
     BugsnagDeviceWithState *device = [BugsnagDeviceWithState deviceFromJson:deviceDict];
@@ -58,6 +65,8 @@
                                errors:@[error]
                               threads:@[]
                               session:session];
+    
+    event.context = self.stateMetadataFromLastLaunch[BSGKeyClient][BSGKeyContext];
     
     return event;
 }
