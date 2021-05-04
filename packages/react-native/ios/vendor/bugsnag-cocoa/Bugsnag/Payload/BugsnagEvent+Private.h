@@ -18,40 +18,37 @@ NS_ASSUME_NONNULL_BEGIN
 @property (readwrite, copy, nullable, nonatomic) NSDictionary *customException;
 
 /// Number of frames to discard at the top of the generated stacktrace. Stacktraces from raised exceptions are unaffected.
-@property NSUInteger depth;
+@property (nonatomic) NSUInteger depth;
 
 /// A unique hash identifying this device for the application or vendor.
 @property (readwrite, copy, nullable, nonatomic) NSString *deviceAppHash;
 
 /// The release stages used to notify at the time this report is captured.
-@property (readwrite, copy, nullable) NSArray *enabledReleaseStages;
+@property (readwrite, copy, nullable, nonatomic) NSArray *enabledReleaseStages;
 
 /// Raw error data added to metadata.
-@property (readwrite, copy, nullable) NSDictionary *error;
+@property (readwrite, copy, nullable, nonatomic) NSDictionary *error;
 
 /// The event state (whether the error is handled/unhandled.)
 @property (readwrite, nonatomic) BugsnagHandledState *handledState;
 
-@property (strong, nonatomic) BugsnagMetadata *metadata;
-
-/// Property overrides.
-@property (readonly, nonatomic) NSDictionary *overrides;
+@property (strong, nullable, nonatomic) BugsnagMetadata *metadata;
 
 /// The release stage of the application
-@property (readwrite, copy, nullable) NSString *releaseStage;
+@property (readwrite, copy, nullable, nonatomic) NSString *releaseStage;
 
 @property (strong, nullable, nonatomic) BugsnagSession *session;
 
 /// An array of string representations of BSGErrorType describing the types of stackframe / stacktrace in this error.
 @property (readonly, nonatomic) NSArray<NSString *> *stacktraceTypes;
 
-@property (readwrite, nonatomic, nonnull) BugsnagUser *user;
+@property (readwrite, nonnull, nonatomic) BugsnagUser *user;
 
-- (instancetype)initWithApp:(nullable BugsnagAppWithState *)app
-                     device:(nullable BugsnagDeviceWithState *)device
+- (instancetype)initWithApp:(BugsnagAppWithState *)app
+                     device:(BugsnagDeviceWithState *)device
                handledState:(BugsnagHandledState *)handledState
-                       user:(nullable BugsnagUser *)user
-                   metadata:(nullable BugsnagMetadata *)metadata
+                       user:(BugsnagUser *)user
+                   metadata:(BugsnagMetadata *)metadata
                 breadcrumbs:(NSArray<BugsnagBreadcrumb *> *)breadcrumbs
                      errors:(NSArray<BugsnagError *> *)errors
                     threads:(NSArray<BugsnagThread *> *)threads
@@ -67,8 +64,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// Whether this report should be sent, based on release stage information cached at crash time and within the application currently.
 - (BOOL)shouldBeSent;
-
-- (void)setOverrideProperty:(NSString *)key value:(id)value;
 
 - (NSDictionary *)toJsonWithRedactedKeys:(nullable NSSet *)redactedKeys;
 

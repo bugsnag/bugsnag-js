@@ -5,6 +5,9 @@ import Client, { EventDeliveryPayload, SessionDeliveryPayload } from '@bugsnag/c
 const createClient = (events: EventDeliveryPayload[], sessions: SessionDeliveryPayload[], config = {}) => {
   const client = new Client({ apiKey: 'AN_API_KEY', plugins: [BugsnagPluginAwsLambda], ...config })
 
+  // @ts-ignore the following property is not defined on the public Event interface
+  client.Event.__type = 'nodejs'
+
   // a flush failure won't throw as we don't want to crash apps if delivery takes
   // too long. To avoid the unit tests passing when this happens, we make the logger
   // throw on any 'error' log call
@@ -733,6 +736,38 @@ describe('plugin: aws lambda', () => {
     expect(await wrappedHandler(event, context)).toBe('xyz')
 
     expect(events).toHaveLength(0)
+    expect(sessions).toHaveLength(1)
+  })
+
+  it('supports a string as the error argument in a lambda callback', async () => {
+    const events: EventDeliveryPayload[] = []
+    const sessions: SessionDeliveryPayload[] = []
+
+    const client = createClient(events, sessions)
+
+    const message = 'uh oh'
+    const handler = (event: any, context: any, callback: any) => { callback(message, 'xyz') }
+
+    const event = { very: 'eventy' }
+    const context = { extremely: 'contextual' }
+
+    const plugin = client.getPlugin('awsLambda')
+
+    if (!plugin) {
+      throw new Error('Plugin was not loaded!')
+    }
+
+    const bugsnagHandler = plugin.createHandler()
+    const wrappedHandler = bugsnagHandler(handler)
+
+    expect(events).toHaveLength(0)
+    expect(sessions).toHaveLength(0)
+
+    await expect(() => wrappedHandler(event, context)).rejects.toBe(message)
+
+    expect(events).toHaveLength(1)
+    expect(events[0].events[0].errors[0].errorMessage).toBe(message)
+
     expect(sessions).toHaveLength(1)
   })
 })

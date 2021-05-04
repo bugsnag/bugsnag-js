@@ -232,7 +232,8 @@ static inline NSString *stringFromCString(const char *const string) {
 
 int bsg_ksjsoncodecobjc_i_onElement(BSG_KSJSONCodec *codec, NSString *name,
                                     id element) {
-    if (codec->_currentContainer == nil) {
+    id currentContainer = codec->_currentContainer;
+    if (!currentContainer) {
         codec.error = [NSError
             bsg_errorWithDomain:@"KSJSONCodecObjC"
                            code:0
@@ -241,11 +242,10 @@ int bsg_ksjsoncodecobjc_i_onElement(BSG_KSJSONCodec *codec, NSString *name,
         return BSG_KSJSON_ERROR_INVALID_DATA;
     }
 
-    if ([codec->_currentContainer isKindOfClass:[NSMutableDictionary class]]) {
-        [(NSMutableDictionary *)codec->_currentContainer setValue:element
-                                                           forKey:name];
+    if ([currentContainer isKindOfClass:[NSMutableDictionary class]]) {
+        [(NSMutableDictionary *)currentContainer setValue:element forKey:name];
     } else {
-        [(NSMutableArray *)codec->_currentContainer addObject:element];
+        [(NSMutableArray *)currentContainer addObject:element];
     }
     return BSG_KSJSON_OK;
 }
@@ -297,10 +297,11 @@ int bsg_ksjsoncodecobjc_i_onNullElement(const char *const cName,
     NSString *name = stringFromCString(cName);
     BSG_KSJSONCodec *codec = (__bridge BSG_KSJSONCodec *)userData;
 
+    id currentContainer = codec->_currentContainer;
     if ((codec->_ignoreNullsInArrays &&
-         [codec->_currentContainer isKindOfClass:[NSArray class]]) ||
+         [currentContainer isKindOfClass:[NSArray class]]) ||
         (codec->_ignoreNullsInObjects &&
-         [codec->_currentContainer isKindOfClass:[NSDictionary class]])) {
+         [currentContainer isKindOfClass:[NSDictionary class]])) {
         return BSG_KSJSON_OK;
     }
 
@@ -513,7 +514,6 @@ int bsg_ksjsoncodecobjc_i_encodeObject(BSG_KSJSONCodec *codec, id object,
 }
 
 + (id)decode:(NSData *)JSONData
-     options:(BSG_KSJSONDecodeOption)decodeOptions
        error:(NSError *__autoreleasing *)error {
     *error = nil;
     id result = nil;

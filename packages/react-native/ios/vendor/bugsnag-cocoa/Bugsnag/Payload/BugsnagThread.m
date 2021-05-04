@@ -11,7 +11,7 @@
 #import "BSG_KSCrashReportFields.h"
 #import "BugsnagCollections.h"
 #import "BugsnagStackframe+Private.h"
-#import "BugsnagStacktrace+Private.h"
+#import "BugsnagStacktrace.h"
 #import "BugsnagKeys.h"
 
 BSGThreadType BSGParseThreadType(NSString *type) {
@@ -57,11 +57,11 @@ NSString *BSGSerializeThreadType(BSGThreadType type) {
 
 - (instancetype)initWithThread:(NSDictionary *)thread binaryImages:(NSArray *)binaryImages {
     if (self = [super init]) {
-        _errorReportingThread = [thread[@(BSG_KSCrashField_Crashed)] boolValue];
-        _id = [thread[@(BSG_KSCrashField_Index)] stringValue];
+        _errorReportingThread = [thread[@BSG_KSCrashField_Crashed] boolValue];
+        _id = [thread[@BSG_KSCrashField_Index] stringValue];
         _type = BSGThreadTypeCocoa;
-        _crashInfoMessage = [thread[@(BSG_KSCrashField_CrashInfoMessage)] copy];
-        NSArray *backtrace = thread[@(BSG_KSCrashField_Backtrace)][@(BSG_KSCrashField_Contents)];
+        _crashInfoMessage = [thread[@BSG_KSCrashField_CrashInfoMessage] copy];
+        NSArray *backtrace = thread[@BSG_KSCrashField_Backtrace][@BSG_KSCrashField_Contents];
         BugsnagStacktrace *frames = [[BugsnagStacktrace alloc] initWithTrace:backtrace binaryImages:binaryImages];
         _stacktrace = [frames.trace copy];
     }
@@ -138,7 +138,7 @@ NSString *BSGSerializeThreadType(BSGThreadType type) {
         NSMutableArray *stacktrace = [NSMutableArray array];
 
         for (NSDictionary *frame in backtrace) {
-            NSMutableDictionary *mutableFrame = (NSMutableDictionary *) [frame mutableCopy];
+            NSMutableDictionary *mutableFrame = [frame mutableCopy];
             if (seen++ >= depth) {
                 // Mark the frame so we know where it came from
                 if (seen == 1 && !stackOverflow) {
@@ -150,10 +150,11 @@ NSString *BSGSerializeThreadType(BSGThreadType type) {
                 [stacktrace addObject:mutableFrame];
             }
         }
-        NSMutableDictionary *copy = [NSMutableDictionary dictionaryWithDictionary:thread];
-        copy[@"backtrace"] = [NSMutableDictionary dictionaryWithDictionary:copy[@"backtrace"]];
-        copy[@"backtrace"][@"contents"] = stacktrace;
-        return copy;
+        NSMutableDictionary *mutableBacktrace = [thread[@"backtrace"] mutableCopy];
+        mutableBacktrace[@"contents"] = stacktrace;
+        NSMutableDictionary *mutableThread = [thread mutableCopy];
+        mutableThread[@"backtrace"] = mutableBacktrace;
+        return mutableThread;
     }
     return thread;
 }

@@ -18,6 +18,10 @@
 - (instancetype)initWithTrace:(NSArray<NSDictionary *> *)trace
                  binaryImages:(NSArray<NSDictionary *> *)binaryImages;
 
++ (instancetype)stacktraceFromJson:(NSArray<NSDictionary *> *)json;
+
+@property (nonatomic) NSMutableArray<BugsnagStackframe *> *trace;
+
 - (NSArray *)toArray;
 
 @end

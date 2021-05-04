@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-window-unhandled-rejection",
-  "version": "7.9.0",
+  "version": "7.9.2",
   "main": "unhandled-rejection.js",
   "description": "@bugsnag/js plugin to report unhandled promise rejections in browsers",
   "homepage": "https://www.bugsnag.com/",
@@ -17,7 +17,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^7.9.0"
+    "@bugsnag/core": "^7.9.2"
   },
   "peerDependencies": {
     "@bugsnag/core": "^7.0.0"

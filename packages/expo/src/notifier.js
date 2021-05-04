@@ -10,6 +10,8 @@ const Event = require('@bugsnag/core/event')
 const Session = require('@bugsnag/core/session')
 const Breadcrumb = require('@bugsnag/core/breadcrumb')
 
+Event.__type = 'expojs'
+
 const delivery = require('@bugsnag/delivery-expo')
 
 const schema = { ...require('@bugsnag/core/config').schema, ...require('./config') }

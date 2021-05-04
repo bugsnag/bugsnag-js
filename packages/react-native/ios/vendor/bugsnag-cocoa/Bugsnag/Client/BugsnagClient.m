@@ -48,6 +48,7 @@
 #import "BugsnagBreadcrumb+Private.h"
 #import "BugsnagBreadcrumbs.h"
 #import "BugsnagClient+AppHangs.h"
+#import "BugsnagClient+OutOfMemory.h"
 #import "BugsnagCollections.h"
 #import "BugsnagConfiguration+Private.h"
 #import "BugsnagCrashSentry.h"
@@ -80,7 +81,7 @@
 #if BSG_PLATFORM_IOS
 #import "BSGUIKit.h"
 #elif BSG_PLATFORM_OSX
-#import <AppKit/AppKit.h>
+#import "BSGAppKit.h"
 #endif
 
 NSString *const BSTabCrash = @"crash";
@@ -122,8 +123,8 @@ static bool hasRecordedSessions;
  *
  *  @param writer report writer which will receive updated metadata
  */
-void BSSerializeDataCrashHandler(const BSG_KSCrashReportWriter *writer, int type) {
-    BOOL isCrash = BSG_KSCrashTypeUserReported != type;
+void BSSerializeDataCrashHandler(const BSG_KSCrashReportWriter *writer, __attribute__((unused)) int type) {
+    BOOL isCrash = YES;
     if (hasRecordedSessions) { // a session is available
         // persist session info
         writer->addStringElement(writer, "id", (const char *) sessionId);
@@ -222,9 +223,9 @@ void BSGWriteSessionCrashData(BugsnagSession *session) {
 
 @interface BugsnagClient () <BSGBreadcrumbSink>
 
-@property BSGNotificationBreadcrumbs *notificationBreadcrumbs;
+@property (nonatomic) BSGNotificationBreadcrumbs *notificationBreadcrumbs;
 
-@property (weak) NSTimer *appLaunchTimer;
+@property (weak, nonatomic) NSTimer *appLaunchTimer;
 
 @end
 
@@ -248,7 +249,7 @@ NSString *_lastOrientation = nil;
         _configuration = [configuration copy];
         _state = [[BugsnagMetadata alloc] initWithDictionary:@{BSGKeyApp: @{BSGKeyIsLaunching: @YES}}];
         self.notifier = [BugsnagNotifier new];
-        self.systemState = [[BugsnagSystemState alloc] initWithConfiguration:self.configuration];
+        self.systemState = [[BugsnagSystemState alloc] initWithConfiguration:configuration];
 
         BSGFileLocations *fileLocations = [BSGFileLocations current];
         
@@ -351,7 +352,7 @@ NSString *_lastOrientation = nil;
 
 - (void)start {
     [self.configuration validate];
-    [self.crashSentry install:self.configuration notifier:self.notifier onCrash:&BSSerializeDataCrashHandler];
+    [self.crashSentry install:self.configuration onCrash:&BSSerializeDataCrashHandler];
     [self.systemState recordAppUUID]; // Needs to be called after crashSentry installed but before -computeDidCrashLastLaunch
     [self computeDidCrashLastLaunch];
     [self.breadcrumbs removeAllBreadcrumbs];
@@ -417,16 +418,18 @@ NSString *_lastOrientation = nil;
     [self.pluginClient loadPlugins];
     
     if (self.configuration.launchDurationMillis > 0) {
-        self.appLaunchTimer = [NSTimer scheduledTimerWithTimeInterval:self.configuration.launchDurationMillis / 1000.0
+        self.appLaunchTimer = [NSTimer scheduledTimerWithTimeInterval:(double)self.configuration.launchDurationMillis / 1000.0
                                                                target:self selector:@selector(appLaunchTimerFired:)
                                                              userInfo:nil repeats:NO];
     }
     
-    if (self.appHangEvent) {
-        [self.eventUploader uploadEvent:self.appHangEvent];
-        self.appHangEvent = nil;
-    } else if (self.lastRunInfo.crashedDuringLaunch && self.configuration.sendLaunchCrashesSynchronously) {
+    if (self.lastRunInfo.crashedDuringLaunch && self.configuration.sendLaunchCrashesSynchronously) {
         [self sendLaunchCrashSynchronously];
+    }
+    
+    if (self.eventFromLastLaunch) {
+        [self.eventUploader uploadEvent:(BugsnagEvent * _Nonnull)self.eventFromLastLaunch completionHandler:nil];
+        self.eventFromLastLaunch = nil;
     }
     
     [self.eventUploader uploadStoredEvents];
@@ -441,7 +444,7 @@ NSString *_lastOrientation = nil;
     self.stateMetadataFromLastLaunch = nil;
 }
 
-- (void)appLaunchTimerFired:(NSTimer *)timer {
+- (void)appLaunchTimerFired:(__attribute__((unused)) NSTimer *)timer {
     [self markLaunchCompleted];
 }
 
@@ -459,10 +462,16 @@ NSString *_lastOrientation = nil;
     bsg_log_info(@"Sending launch crash synchronously.");
     dispatch_time_t deadline = dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC);
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-    [self.eventUploader uploadLatestStoredEvent:^{
+    dispatch_block_t completionHandler = ^{
         bsg_log_debug(@"Sent launch crash.");
         dispatch_semaphore_signal(semaphore);
-    }];
+    };
+    if (self.eventFromLastLaunch) {
+        [self.eventUploader uploadEvent:(BugsnagEvent * _Nonnull)self.eventFromLastLaunch completionHandler:completionHandler];
+        self.eventFromLastLaunch = nil;
+    } else {
+        [self.eventUploader uploadLatestStoredEvent:completionHandler];
+    }
     if (dispatch_semaphore_wait(semaphore, deadline)) {
         bsg_log_debug(@"Timed out waiting for launch crash to be sent.");
     }
@@ -510,10 +519,12 @@ NSString *_lastOrientation = nil;
     }
 
     // If the app code changed between launches, assume no OOM.
-    if (![prevAppState[SYSTEMSTATE_APP_VERSION] isEqualToString:currAppState[SYSTEMSTATE_APP_VERSION]]) {
+    NSString *currentAppVersion = currAppState[SYSTEMSTATE_APP_VERSION];
+    if (!currentAppVersion || ![prevAppState[SYSTEMSTATE_APP_VERSION] isEqualToString:currentAppVersion]) {
         return NO;
     }
-    if (![prevAppState[SYSTEMSTATE_APP_BUNDLE_VERSION] isEqualToString:currAppState[SYSTEMSTATE_APP_BUNDLE_VERSION]]) {
+    NSString *currentAppBundleVersion = currAppState[SYSTEMSTATE_APP_BUNDLE_VERSION];
+    if (!currentAppBundleVersion || ![prevAppState[SYSTEMSTATE_APP_BUNDLE_VERSION] isEqualToString:currentAppBundleVersion]) {
         return NO;
     }
 
@@ -553,29 +564,22 @@ NSString *_lastOrientation = nil;
 - (void)computeDidCrashLastLaunch {
     BOOL didCrash = NO;
     
-    const BSG_KSCrash_State *crashState = bsg_kscrashstate_currentState();
-    NSFileManager *manager = [NSFileManager defaultManager];
-    NSString *didCrashSentinelPath = [NSString stringWithUTF8String:crashSentinelPath];
-    BOOL appCrashSentinelExists = [manager fileExistsAtPath:didCrashSentinelPath];
-    didCrash = appCrashSentinelExists || crashState->crashedLastLaunch;
-    if (appCrashSentinelExists) {
-        NSError *error = nil;
-        if (![manager removeItemAtPath:didCrashSentinelPath error:&error]) {
-            bsg_log_err(@"Failed to remove crash sentinel file: %@", error);
-            unlink(crashSentinelPath);
-        }
+    // Did the app crash in a way that was detected by KSCrash?
+    if (bsg_kscrashstate_currentState()->crashedLastLaunch || !access(crashSentinelPath, F_OK)) {
+        bsg_log_info(@"Last run terminated due to a crash.");
+        unlink(crashSentinelPath);
+        didCrash = YES;
     }
-    
-    // App hangs take precedence over OOMs.
-    if (!didCrash) {
-        // Avoid calling -lastRunEndedWithAppHang if the app crashed, to prevent self.appHangEvent being set and the hang being reported.
-        didCrash = [self lastRunEndedWithAppHang];
+    // Was the app terminated while the main thread was hung?
+    else if ((self.eventFromLastLaunch = [self loadFatalAppHangEvent])) {
+        bsg_log_info(@"Last run terminated during an app hang.");
+        didCrash = YES;
     }
-    
-    BOOL shouldReportOOM = NO;
-    if (!didCrash) {
-        shouldReportOOM = [self shouldReportOOM];
-        didCrash = shouldReportOOM;
+    // Was the app terminated while in the foreground? (probably an OOM)
+    else if ([self shouldReportOOM]) {
+        bsg_log_info(@"Last run terminated abnormally; likely Out Of Memory.");
+        self.eventFromLastLaunch = [self generateOutOfMemoryEvent];
+        didCrash = YES;
     }
     
     self.appDidCrashLastLaunch = didCrash;
@@ -591,10 +595,6 @@ NSString *_lastOrientation = nil;
     self.lastRunInfo = [[BugsnagLastRunInfo alloc] initWithConsecutiveLaunchCrashes:self.systemState.consecutiveLaunchCrashes
                                                                             crashed:didCrash
                                                                 crashedDuringLaunch:didCrashDuringLaunch];
-    
-    if (shouldReportOOM) {
-        [self notifyOutOfMemoryEvent];
-    }
 }
 
 - (void)setCodeBundleId:(NSString *)codeBundleId {
@@ -615,7 +615,7 @@ NSString *_lastOrientation = nil;
 /**
  * Removes observers and listeners to prevent allocations when the app is terminated
  */
-- (void)unsubscribeFromNotifications:(id)sender {
+- (void)unsubscribeFromNotifications:(__attribute__((unused)) id)sender {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [BSGConnectivity stopMonitoring];
 
@@ -648,11 +648,11 @@ NSString *_lastOrientation = nil;
                  object:nil];
 }
 
-- (void)willEnterForeground:(id)sender {
+- (void)willEnterForeground:(__attribute__((unused)) id)sender {
     [self.sessionTracker handleAppForegroundEvent];
 }
 
-- (void)willEnterBackground:(id)sender {
+- (void)willEnterBackground:(__attribute__((unused)) id)sender {
     [self.sessionTracker handleAppBackgroundEvent];
 }
 
@@ -713,7 +713,7 @@ NSString *_lastOrientation = nil;
                            andType:(BSGBreadcrumbType)type {
     [self addBreadcrumbWithBlock:^(BugsnagBreadcrumb *_Nonnull crumbs) {
         crumbs.message = message;
-        crumbs.metadata = metadata;
+        crumbs.metadata = metadata ?: @{};
         crumbs.type = type;
     }];
 }
@@ -765,7 +765,7 @@ NSString *_lastOrientation = nil;
 // MARK: - Other methods
 // =============================================================================
 
-- (void)setContext:(NSString *_Nullable)context {
+- (void)setContext:(nullable NSString *)context {
     self.configuration.context = context;
     [self notifyObservers:[[BugsnagStateEvent alloc] initWithName:kStateEventContext data:context]];
 }
@@ -781,6 +781,7 @@ NSString *_lastOrientation = nil;
 // see notify:handledState:block for further info
 
 - (void)notifyError:(NSError *_Nonnull)error {
+    bsg_log_debug(@"Notify called with %@", error);
     BugsnagHandledState *state = [BugsnagHandledState handledStateWithSeverityReason:HandledError
                                                                             severity:BSGSeverityWarning
                                                                            attrValue:error.domain];
@@ -794,6 +795,7 @@ NSString *_lastOrientation = nil;
 - (void)notifyError:(NSError *)error
               block:(BugsnagOnErrorBlock)block
 {
+    bsg_log_debug(@"Notify called with %@", error);
     BugsnagHandledState *state = [BugsnagHandledState handledStateWithSeverityReason:HandledError
                                                                             severity:BSGSeverityWarning
                                                                            attrValue:error.domain];
@@ -833,6 +835,7 @@ NSString *_lastOrientation = nil;
 }
 
 - (void)notify:(NSException *_Nonnull)exception {
+    bsg_log_debug(@"Notify called with %@", exception);
     BugsnagHandledState *state =
             [BugsnagHandledState handledStateWithSeverityReason:HandledException];
     [self notify:exception handledState:state block:nil];
@@ -841,56 +844,10 @@ NSString *_lastOrientation = nil;
 - (void)notify:(NSException *)exception
          block:(BugsnagOnErrorBlock)block
 {
+    bsg_log_debug(@"Notify called with %@", exception);
     BugsnagHandledState *state =
         [BugsnagHandledState handledStateWithSeverityReason:HandledException];
     [self notify:exception handledState:state block:block];
-}
-
-- (void)notifyOutOfMemoryEvent {
-    static NSString *const BSGOutOfMemoryErrorClass = @"Out Of Memory";
-    static NSString *const BSGOutOfMemoryMessageFormat = @"The app was likely terminated by the operating system while in the %@";
-    NSMutableDictionary *lastLaunchInfo = [self.systemState.lastLaunchState mutableCopy];
-    NSArray *crumbs = [self.breadcrumbs cachedBreadcrumbs];
-    if (crumbs.count > 0) {
-        lastLaunchInfo[@"breadcrumbs"] = crumbs;
-    }
-    for (NSDictionary *crumb in crumbs) {
-        if ([crumb isKindOfClass:[NSDictionary class]]
-            && [crumb[@"name"] isKindOfClass:[NSString class]]) {
-            NSString *name = crumb[@"name"];
-            // If the termination breadcrumb is set, the app entered a normal
-            // termination flow but expired before the watchdog sentinel could
-            // be updated. In this case, no report should be sent.
-            if ([name isEqualToString:BSGNotificationBreadcrumbsMessageAppWillTerminate]) {
-                return;
-            }
-        }
-    }
-
-    BOOL wasInForeground = [[lastLaunchInfo valueForKeyPath:@"app.inForeground"] boolValue];
-    NSString *message = [NSString stringWithFormat:BSGOutOfMemoryMessageFormat, wasInForeground ? @"foreground" : @"background"];
-    BugsnagHandledState *handledState = [BugsnagHandledState
-                                         handledStateWithSeverityReason:LikelyOutOfMemory
-                                         severity:BSGSeverityError
-                                         attrValue:nil];
-    NSMutableDictionary *appState = [self.stateMetadataFromLastLaunch mutableCopy] ?: [NSMutableDictionary dictionary];
-    appState[@"didOOM"] = @YES;
-    appState[@"oom"] = lastLaunchInfo;
-    
-    // onCrash should not be called for OOMs
-    void *onCrash = bsg_g_bugsnag_data.onCrash;
-    bsg_g_bugsnag_data.onCrash = NULL;
-    
-    [self.crashSentry reportUserException:BSGOutOfMemoryErrorClass
-                                   reason:message
-                             handledState:[handledState toJson]
-                                 appState:appState
-                        callbackOverrides:@{}
-                           eventOverrides:nil
-                                 metadata:self.metadataFromLastLaunch
-                                   config:self.configMetadataFromLastLaunch];
-    
-    bsg_g_bugsnag_data.onCrash = onCrash;
 }
 
 - (void)notify:(NSException *)exception
@@ -909,7 +866,7 @@ NSString *_lastOrientation = nil;
      * 2. -[BugsnagClient notifyError:block:]
      * 3. -[BugsnagClient notify:handledState:block:]
      */
-    int depth = 3;
+    NSUInteger depth = 3;
 
     NSArray<NSNumber *> *callStack = exception.callStackReturnAddresses;
     if (!callStack.count) {
@@ -939,7 +896,7 @@ NSString *_lastOrientation = nil;
                                                handledState:handledState
                                                        user:self.user
                                                    metadata:metadata
-                                                breadcrumbs:self.breadcrumbs.breadcrumbs
+                                                breadcrumbs:self.breadcrumbs.breadcrumbs ?: @[]
                                                      errors:@[error]
                                                     threads:threads
                                                     session:self.sessionTracker.runningSession];
@@ -951,7 +908,7 @@ NSString *_lastOrientation = nil;
 }
 
 /**
- *  Notify Bugsnag of an exception. Only intended for React Native/Unity use.
+ *  Notify Bugsnag of an exception. Used for user-reported (handled) errors, React Native, and Unity.
  *
  *  @param event    the event
  *  @param block     Configuration block for adding additional report information
@@ -959,17 +916,10 @@ NSString *_lastOrientation = nil;
 - (void)notifyInternal:(BugsnagEvent *_Nonnull)event
                  block:(BugsnagOnErrorBlock)block
 {
-    if ([self shouldNotifyEvent:event withOnErrorBlock:block]) {
-        [self deliverEvent:event];
-        [self addAutoBreadcrumbForEvent:event];
-    }
-}
-
-- (BOOL)shouldNotifyEvent:(nonnull BugsnagEvent *)event withOnErrorBlock:(nullable BugsnagOnErrorBlock)block {
     NSString *errorClass = event.errors.firstObject.errorClass;
     if ([self.configuration shouldDiscardErrorClass:errorClass]) {
         bsg_log_info(@"Discarding event because errorClass \"%@\" matched configuration.discardClasses", errorClass);
-        return NO;
+        return;
     }
     
     // enhance device information with additional metadata
@@ -982,7 +932,7 @@ NSString *_lastOrientation = nil;
     BOOL originalUnhandledValue = event.unhandled;
     @try {
         if (block != nil && !block(event)) { // skip notifying if callback false
-            return NO;
+            return;
         }
     } @catch (NSException *exception) {
         bsg_log_err(@"Error from onError callback: %@", exception);
@@ -991,40 +941,26 @@ NSString *_lastOrientation = nil;
         [event notifyUnhandledOverridden];
     }
 
-    return YES;
-}
-
-- (void)deliverEvent:(BugsnagEvent *)event {
     if (event.handledState.unhandled) {
         [self.sessionTracker handleUnhandledErrorEvent];
     } else {
         [self.sessionTracker handleHandledErrorEvent];
     }
 
-    // Temporary conditional until all (non-crash) events can be sent via -uploadEvent:
-    if (event == self.appHangEvent) {
-        [self.eventUploader uploadEvent:event];
-        return;
+    if (event.unhandled) {
+        // Unhandled Javscript exceptions from React Native result in the app being terminated shortly after the
+        // call to notifyInternal, so the event needs to be persisted to disk for sending in the next session.
+        // The fatal "RCTFatalException" / "Unhandled JS Exception" is explicitly ignored by
+        // BugsnagReactNativePlugin's OnSendErrorBlock.
+        [self.eventUploader storeEvent:event];
+        // Replicate previous delivery mechanism's behaviour of waiting 1 second before delivering the event.
+        // This should prevent potential duplicate uploads of unhandled errors where the app subsequently terminates.
+        [self.eventUploader uploadStoredEventsAfterDelay:1];
+    } else {
+        [self.eventUploader uploadEvent:event completionHandler:nil];
     }
 
-    // apiKey not added to event JSON by default, need to add it here
-    // for when it is read next
-    NSMutableDictionary *eventOverrides = [[event toJsonWithRedactedKeys:self.configuration.redactedKeys] mutableCopy];
-    eventOverrides[BSGKeyApiKey] = event.apiKey;
-
-    // handled errors should persist any information edited by the user
-    // in a section within the KSCrash report so it can be read
-    // when the error is delivered
-    [self.crashSentry reportUserException:@""
-                                   reason:@""
-                             handledState:[event.handledState toJson]
-                                 appState:[self.state toDictionary]
-                        callbackOverrides:event.overrides
-                           eventOverrides:eventOverrides
-                                 metadata:[event.metadata toDictionary]
-                                   config:self.configuration.dictionaryRepresentation];
-
-    [self.eventUploader uploadStoredEvents];
+    [self addAutoBreadcrumbForEvent:event];
 }
 
 // MARK: - Breadcrumbs
@@ -1043,7 +979,7 @@ NSString *_lastOrientation = nil;
     }
 
     [self addAutoBreadcrumbOfType:BSGBreadcrumbTypeError
-                      withMessage:event.errors[0].errorClass
+                      withMessage:event.errors[0].errorClass ?: @""
                       andMetadata:metadata];
 }
 
@@ -1067,7 +1003,7 @@ NSString *_lastOrientation = nil;
  * @param notification The change notification
  */
 #if BSG_PLATFORM_IOS
-- (void)batteryChanged:(NSNotification *)notification {
+- (void)batteryChanged:(__attribute__((unused)) NSNotification *)notification {
     if (![UIDEVICE currentDevice]) {
         return;
     }
@@ -1125,7 +1061,7 @@ NSString *_lastOrientation = nil;
     self.lastOrientation = orientation;
 }
 
-- (void)lowMemoryWarning:(NSNotification *)notif {
+- (void)lowMemoryWarning:(__attribute__((unused)) NSNotification *)notif {
     [self.state addMetadata:[BSG_RFC3339DateTool stringFromDate:[NSDate date]]
                       withKey:BSEventLowMemoryWarning
                     toSection:BSGKeyDeviceState];
@@ -1245,7 +1181,7 @@ NSString *_lastOrientation = nil;
     // discard the following
     // 1. [BugsnagReactNative getPayloadInfo:resolve:reject:]
     // 2. [BugsnagClient collectThreads:]
-    int depth = 2;
+    NSUInteger depth = 2;
     NSArray<NSNumber *> *callStack = BSGArraySubarrayFromIndex(NSThread.callStackReturnAddresses, depth);
     BSGThreadSendPolicy sendThreads = self.configuration.sendThreads;
     BOOL recordAllThreads = sendThreads == BSGThreadSendPolicyAlways

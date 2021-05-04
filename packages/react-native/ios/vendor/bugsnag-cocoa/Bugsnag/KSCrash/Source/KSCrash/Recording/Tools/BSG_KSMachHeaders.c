@@ -206,7 +206,10 @@ BSG_Mach_Header_Info *bsg_mach_headers_image_at_address(const uintptr_t address)
         if (cmdPtr == 0) {
             continue;
         }
-        uintptr_t addressWSlide = address - img->slide;
+        if (address < (uintptr_t)img->slide) {
+            continue;
+        }
+        uintptr_t addressWSlide = address - (uintptr_t)img->slide;
         for (uint32_t iCmd = 0; iCmd < img->header->ncmds; iCmd++) {
             const struct load_command *loadCmd =
                 (struct load_command *)cmdPtr;
@@ -285,20 +288,20 @@ static uintptr_t bsg_mach_header_info_get_section_addr_named(const BSG_Mach_Head
         if (loadCmd->cmd == LC_SEGMENT) {
             const struct segment_command *segment = (void *)cmdPtr;
             char *sectionPtr = (void *)(cmdPtr + sizeof(*segment));
-            for (uint32_t i = 0; i < segment->nsects; i++) {
+            for (uint32_t j = 0; j < segment->nsects; j++) {
                 struct section *section = (void *)sectionPtr;
                 if (strcmp(name, section->sectname) == 0) {
-                    return section->addr + header->slide;
+                    return section->addr + (uintptr_t)header->slide;
                 }
                 sectionPtr += sizeof(*section);
             }
         } else if (loadCmd->cmd == LC_SEGMENT_64) {
             const struct segment_command_64 *segment = (void *)cmdPtr;
             char *sectionPtr = (void *)(cmdPtr + sizeof(*segment));
-            for (uint32_t i = 0; i < segment->nsects; i++) {
+            for (uint32_t j = 0; j < segment->nsects; j++) {
                 struct section_64 *section = (void *)sectionPtr;
                 if (strcmp(name, section->sectname) == 0) {
-                    return (uintptr_t)section->addr + header->slide;
+                    return (uintptr_t)section->addr + (uintptr_t)header->slide;
                 }
                 sectionPtr += sizeof(*section);
             }

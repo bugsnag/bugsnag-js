@@ -63,6 +63,51 @@ static inline bool is_jailbroken() {
     return is_jb;
 }
 
+/**
+ * Returns the content of /System/Library/CoreServices/SystemVersion.plist
+ * bypassing the open syscall shim that would normally redirect access to this
+ * file for iOS apps running on macOS.
+ *
+ * https://opensource.apple.com/source/xnu/xnu-7195.81.3/libsyscall/wrappers/system-version-compat.c.auto.html
+ */
+#if !BSG_PLATFORM_SIMULATOR
+static NSDictionary * bsg_systemversion() {
+    static NSDictionary *systemVersion;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        int fd = -1;
+        char buffer[1024] = {0};
+        const char *file = "/System/Library/CoreServices/SystemVersion.plist";
+        bsg_syscall_open(file, O_RDONLY, 0, &fd);
+        if (fd < 0) {
+            BSG_KSLOG_ERROR("Could not open SystemVersion.plist");
+            return;
+        }
+        ssize_t length = read(fd, buffer, sizeof(buffer));
+        close(fd);
+        if (length < 0 || length == sizeof(buffer)) {
+            BSG_KSLOG_ERROR("Could not read SystemVersion.plist");
+            return;
+        }
+        NSData *data = [NSData
+                        dataWithBytesNoCopy:buffer
+                        length:(NSUInteger)length freeWhenDone:NO];
+        if (!data) {
+            BSG_KSLOG_ERROR("Could not read SystemVersion.plist");
+            return;
+        }
+        NSError *error = nil;
+        systemVersion = [NSPropertyListSerialization
+                         propertyListWithData:data
+                         options:0 format:NULL error:&error];
+        if (!systemVersion) {
+            BSG_KSLOG_ERROR("Could not read SystemVersion.plist: %@", error);
+        }
+    });
+    return systemVersion;
+}
+#endif
+
 @implementation BSG_KSSystemInfo
 
 // ============================================================================
@@ -207,9 +252,9 @@ static inline bool is_jailbroken() {
     }
 
     // Append some device-specific data.
-    [data appendData:(NSData * _Nonnull)[[self stringSysctl:BSGKeyHwMachine]
+    [data appendData:(NSData * _Nonnull)[[self stringSysctl:@"hw.machine"]
                          dataUsingEncoding:NSUTF8StringEncoding]];
-    [data appendData:(NSData * _Nonnull)[[self stringSysctl:BSGKeyHwModel]
+    [data appendData:(NSData * _Nonnull)[[self stringSysctl:@"hw.model"]
                          dataUsingEncoding:NSUTF8StringEncoding]];
     [data appendData:(NSData * _Nonnull)[[self currentCPUArch]
                          dataUsingEncoding:NSUTF8StringEncoding]];
@@ -254,8 +299,18 @@ static inline bool is_jailbroken() {
         case CPU_SUBTYPE_ARM_V7S:
             return @"armv7s";
 #endif
+        case CPU_SUBTYPE_ARM_V8:
+            return @"armv8";
         }
         break;
+    }
+    case CPU_TYPE_ARM64: {
+        switch (subType) {
+        case CPU_SUBTYPE_ARM64E:
+            return @"arm64e";
+        default:
+            return @"arm64";
+        }
     }
     case CPU_TYPE_X86:
         return @"x86";
@@ -371,6 +426,13 @@ static inline bool is_jailbroken() {
 #ifdef __clang_version__
     sysInfo[@BSG_KSSystemField_ClangVersion] = @__clang_version__;
 #endif
+
+#if TARGET_OS_SIMULATOR
+    //
+    // When running on the simulator, we want to report the name and version of
+    // the simlated OS.
+    //
+
 #if TARGET_OS_IOS
     // Note: This does not match UIDevice.currentDevice.systemName for versions
     // prior to (and some versions of) iOS 9 where the systemName was reported
@@ -379,40 +441,65 @@ static inline bool is_jailbroken() {
     // the information we need but will contain the macOS information when
     // running on the Simulator.
     sysInfo[@BSG_KSSystemField_SystemName] = @"iOS";
-#elif TARGET_OS_OSX
-    sysInfo[@BSG_KSSystemField_SystemName] = @"Mac OS";
 #elif TARGET_OS_TV
     sysInfo[@BSG_KSSystemField_SystemName] = @"tvOS";
-#endif
-    NSOperatingSystemVersion version =
-        [NSProcessInfo processInfo].operatingSystemVersion;
-    NSString *systemVersion;
-    if (version.patchVersion == 0) {
-        systemVersion =
-        [NSString stringWithFormat:@"%ld.%ld",
-         (long)version.majorVersion, (long)version.minorVersion];
-    } else {
-        systemVersion =
-        [NSString stringWithFormat:@"%ld.%ld.%ld",
-         (long)version.majorVersion, (long)version.minorVersion,
-         (long)version.patchVersion];
-    }
-    sysInfo[@BSG_KSSystemField_SystemVersion] = systemVersion;
+#endif // TARGET_OS_IOS
 
-    if ([self isSimulatorBuild]) {
-        NSString *model = [NSProcessInfo processInfo]
-                              .environment[BSGKeySimulatorModelId];
-        sysInfo[@BSG_KSSystemField_Machine] = model;
-        sysInfo[@BSG_KSSystemField_Model] = @"simulator";
-    } else {
-#if BSG_PLATFORM_OSX
-        // MacOS has the machine in the model field, and no model
-        sysInfo[@BSG_KSSystemField_Machine] = [self stringSysctl:BSGKeyHwModel];
-#else
-        sysInfo[@BSG_KSSystemField_Machine] = [self stringSysctl:BSGKeyHwMachine];
-        sysInfo[@BSG_KSSystemField_Model] = [self stringSysctl:BSGKeyHwModel];
-#endif
+    NSDictionary *env = NSProcessInfo.processInfo.environment;
+    sysInfo[@BSG_KSSystemField_SystemVersion] = env[@"SIMULATOR_RUNTIME_VERSION"];
+    sysInfo[@BSG_KSSystemField_Machine] = env[@"SIMULATOR_MODEL_IDENTIFIER"];
+    sysInfo[@BSG_KSSystemField_Model] = @"simulator";
+
+#else // !TARGET_OS_SIMULATOR
+
+    //
+    // Report the name and version of the underlying OS the app is running on.
+    // For Mac Catalyst and iOS apps running on macOS, this means macOS rather
+    // than the version of iOS it emulates ("iOSSupportVersion")
+    //
+    NSDictionary *sysVersion = bsg_systemversion();
+
+#if TARGET_OS_IOS || TARGET_OS_OSX
+    NSString *systemName = sysVersion[@"ProductName"];
+    if ([systemName isEqual:@"iPhone OS"]) {
+        systemName = @"iOS";
+    } else if
+        // "ProductName" changed from "Mac OS X" to "macOS" in 11.0
+        ([systemName isEqual:@"macOS"] || [systemName isEqual:@"Mac OS X"]) {
+        // KSCrash had the name hard-coded this way when we forked it.
+        systemName = @"Mac OS";
     }
+#elif TARGET_OS_TV
+    NSString *systemName = @"tvOS";
+#endif
+
+    sysInfo[@BSG_KSSystemField_SystemName] = systemName;
+    sysInfo[@BSG_KSSystemField_SystemVersion] = sysVersion[@"ProductVersion"];
+
+#if TARGET_OS_IOS
+    sysInfo[@BSG_KSSystemField_iOSSupportVersion] = sysVersion[@"iOSSupportVersion"];
+#endif
+
+    // Bugsnag payload mapping:
+    //
+    // BSG_KSSystemField_Machine => device.model
+    // BSG_KSSystemField_Model   => device.modelNumber
+
+    if ([systemName isEqual:@"Mac OS"]) {
+        // On macOS hw.model contains the "Model Identifier" e.g. MacBookPro16,1
+        sysInfo[@BSG_KSSystemField_Machine] = [self stringSysctl:@"hw.model"];
+        // and hw.machine contains the instruction set - e.g. "arm64" or "x86_64"
+        // we omit this since it doesn't match what we're expecting or want.
+    } else {
+        // On iOS & tvOS hw.machine contains the "Model Identifier" or
+        // "ProductType" - e.g. "iPhone6,1"
+        sysInfo[@BSG_KSSystemField_Machine] = [self stringSysctl:@"hw.machine"];
+        // and hw.model contains the "Internal Name" or "Board ID" - e.g. "D79AP"
+        sysInfo[@BSG_KSSystemField_Model] = [self stringSysctl:@"hw.model"];
+    }
+
+#endif // TARGET_OS_SIMULATOR
+
     sysInfo[@BSG_KSSystemField_KernelVersion] = [self stringSysctl:@"kern.version"];
     sysInfo[@BSG_KSSystemField_OSVersion] = [self osBuildVersion];
     sysInfo[@BSG_KSSystemField_Jailbroken] = @([self isJailbroken]);
@@ -429,8 +516,7 @@ static inline bool is_jailbroken() {
     sysInfo[@BSG_KSSystemField_CPUArch] = [self currentCPUArch];
     sysInfo[@BSG_KSSystemField_CPUType] = [self int32Sysctl:@BSGKeyHwCputype];
     sysInfo[@BSG_KSSystemField_CPUSubType] = [self int32Sysctl:@BSGKeyHwCpusubtype];
-    sysInfo[@BSG_KSSystemField_BinaryCPUType] = @(header->cputype);
-    sysInfo[@BSG_KSSystemField_BinaryCPUSubType] = @(header->cpusubtype);
+    sysInfo[@BSG_KSSystemField_BinaryArch] = [self CPUArchForCPUType:header->cputype subType:header->cpusubtype];
     sysInfo[@BSG_KSSystemField_TimeZone] = [[NSTimeZone localTimeZone] abbreviation];
     sysInfo[@BSG_KSSystemField_ProcessName] = [NSProcessInfo processInfo].processName;
     sysInfo[@BSG_KSSystemField_ProcessID] = @([NSProcessInfo processInfo].processIdentifier);
@@ -438,11 +524,20 @@ static inline bool is_jailbroken() {
     sysInfo[@BSG_KSSystemField_DeviceAppHash] = [self deviceAndAppHash];
     sysInfo[@BSG_KSSystemField_BuildType] = [BSG_KSSystemInfo buildType];
 
-    sysInfo[@(BSG_KSSystemField_Memory)] = @{
-        @(BSG_KSCrashField_Free): @(bsg_ksmachfreeMemory()),
-        @(BSG_KSCrashField_Usable): @(bsg_ksmachusableMemory()),
-        @(BSG_KSSystemField_Size): [self int64Sysctl:@"hw.memsize"]
+    sysInfo[@BSG_KSSystemField_Memory] = @{
+        @BSG_KSCrashField_Free: @(bsg_ksmachfreeMemory()),
+        @BSG_KSCrashField_Usable: @(bsg_ksmachusableMemory()),
+        @BSG_KSSystemField_Size: [self int64Sysctl:@"hw.memsize"]
     };
+
+#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
+    // https://developer.apple.com/documentation/apple-silicon/about-the-rosetta-translation-environment
+    int proc_translated = 0;
+    size_t size = sizeof(proc_translated);
+    if (!sysctlbyname("sysctl.proc_translated", &proc_translated, &size, NULL, 0) && proc_translated) {
+        sysInfo[@BSG_KSSystemField_Translated] = @YES;
+    }
+#endif
 
     NSDictionary *statsInfo = [[BSG_KSCrash sharedInstance] captureAppStats];
     sysInfo[@BSG_KSCrashField_AppStats] = statsInfo;

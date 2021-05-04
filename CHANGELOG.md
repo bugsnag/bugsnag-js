@@ -2,6 +2,65 @@
 
 ## TBD
 
+### Added
+
+- (react-native-cli): Add support for ejected Expo apps [#1365](https://github.com/bugsnag/bugsnag-js/pull/1365)
+
+## v7.9.5 (2021-04-26)
+
+### Changed
+
+- (react-native): Update bugsnag-cocoa to v6.9.0
+  - App hangs that occur while an app is in the background will no longer be reported. [bugsnag-cocoa#1075](https://github.com/bugsnag/bugsnag-cocoa/pull/1075)
+  - Add `binaryArch` and `runningOnRosetta` to the `app` metadata tab. [bugsnag-cocoa#1073](https://github.com/bugsnag/bugsnag-cocoa/pull/1073)
+  - Bugsnag can now be used without AppKit, allowing use in daemons and other processes running in non-UI sessions. [bugsnag-cocoa#1072](https://github.com/bugsnag/bugsnag-cocoa/pull/1072)
+- (react-native): Update bugsnag-android to v5.9.1
+  - Add projectPackages field to error payloads [bugsnag-android#1226](https://github.com/bugsnag/bugsnag-android/pull/1226)
+  - Fix deserialization bug in persisted NDK errors [bugsnag-android#1220](https://github.com/bugsnag/bugsnag-android/pull/1220)
+
+## v7.9.4 (2021-04-19)
+
+### Changed
+
+- (react-native): Update bugsnag-cocoa to v6.8.4
+  - `macCatalystiOSVersion` is now reported for apps built with Mac Catalyst and iOS app running on Apple silicon. [bugsnag-cocoa#1066](https://github.com/bugsnag/bugsnag-cocoa/pull/1066)
+  - Fix crashes that could occur in `bsg_recordException` in low memory conditions. [bugsnag-cocoa#1068](https://github.com/bugsnag/bugsnag-cocoa/pull/1068)
+  - Fix a crash in `bsg_ksmachgetThreadQueueName`. [bugsnag-cocoa#1065](https://github.com/bugsnag/bugsnag-cocoa/pull/1065)
+  - Improve timestamp accuracy to fix breadcrumbs that are reported to occur after the error. [bugsnag-cocoa#1062](https://github.com/bugsnag/bugsnag-cocoa/pull/1062)
+
+### Fixed
+
+- (plugin-aws-lambda): Change Typescript definitions for compatibility with `@types/aws-lambda` [#1353](https://github.com/bugsnag/bugsnag-js/pull/1353) ([k-ish](https://github.com/h-kishi))
+
+## v7.9.3 (2021-04-12)
+
+### Changed
+
+- (react-native): Update bugsnag-cocoa to v6.8.3
+  - Catch exceptions thrown while preparing JSON for upload rather than crashing. [bugsnag-cocoa#1063](https://github.com/bugsnag/bugsnag-cocoa/pull/1063)
+  - Prevent app hangs being reported if a debugger is attached. [bugsnag-cocoa#1058](https://github.com/bugsnag/bugsnag-cocoa/pull/1058)
+  - Improve support for Mac Catalyst and iOS apps running on macOS.
+  [bugsnag-cocoa#1056](https://github.com/bugsnag/bugsnag-cocoa/pull/1056)
+  [bugsnag-cocoa#1055](https://github.com/bugsnag/bugsnag-cocoa/pull/1055)
+  [bugsnag-cocoa#1053](https://github.com/bugsnag/bugsnag-cocoa/pull/1053)
+
+## v7.9.2 (2021-04-06)
+
+### Changed
+
+- (react-native): Update bugsnag-cocoa to v6.8.1
+  - Fix unreliable ordering of breadcrumbs. [bugsnag-cocoa#1049](https://github.com/bugsnag/bugsnag-cocoa/pull/1049)
+- (react-native): Update bugsnag-android to v5.9.0
+  - Bump compileSdkVersion to apiLevel 30 [bugsnag-android#1202](https://github.com/bugsnag/bugsnag-android/pull/1202)
+  - Collect whether the system has restricted background work for the app [bugsnag-android#1211](https://github.com/bugsnag/bugsnag-android/pull/1211)
+  - Improve detection of rooted devices [bugsnag-android#1194](https://github.com/bugsnag/bugsnag-android/pull/1194)
+  [bugsnag-android#1195](https://github.com/bugsnag/bugsnag-android/pull/1195)
+  [bugsnag-android#1198](https://github.com/bugsnag/bugsnag-android/pull/1198)
+  [bugsnag-android#1200](https://github.com/bugsnag/bugsnag-android/pull/1200)
+  [bugsnag-android#1201](https://github.com/bugsnag/bugsnag-android/pull/1201)
+
+## v7.9.1 (2021-03-25)
+
 ### Changed
 
 - (react-native): Update bugsnag-cocoa to v6.8.0
@@ -9,6 +68,19 @@
   - Fix a heap buffer overflow reported by Address Sanitizer. [bugsnag-cocoa#1043](https://github.com/bugsnag/bugsnag-cocoa/pull/1043)
   - Fix parsing of `callStackSymbols` where the image name contains spaces. [bugsnag-cocoa#1036](https://github.com/bugsnag/bugsnag-cocoa/pull/1036)
   - Fix a possible deadlock when writing crash reports for unhandled errors. [bugsnag-cocoa#1034](https://github.com/bugsnag/bugsnag-cocoa/pull/1034)
+- (react-native): Update bugsnag-android to v5.8.0
+  - `Configuration#launchCrashThresholdMs` is deprecated in favour of `Configuration#launchDurationMillis`
+  - Add public API for crash-on-launch detection. [bugsnag-android#1157](https://github.com/bugsnag/bugsnag-android/pull/1157)
+  [bugsnag-android#1159](https://github.com/bugsnag/bugsnag-android/pull/1159)
+  [bugsnag-android#1165](https://github.com/bugsnag/bugsnag-android/pull/1165)
+  [bugsnag-android#1164](https://github.com/bugsnag/bugsnag-android/pull/1164)
+  [bugsnag-android#1182](https://github.com/bugsnag/bugsnag-android/pull/1182)
+  [bugsnag-android#1184](https://github.com/bugsnag/bugsnag-android/pull/1184)
+  [bugsnag-android#1185](https://github.com/bugsnag/bugsnag-android/pull/1185)
+  [bugsnag-android#1186](https://github.com/bugsnag/bugsnag-android/pull/1186)
+  [bugsnag-android#1180](https://github.com/bugsnag/bugsnag-android/pull/1180)
+  [bugsnag-android#1188](https://github.com/bugsnag/bugsnag-android/pull/1188)
+  [bugsnag-android#1191](https://github.com/bugsnag/bugsnag-android/pull/1191)
 
 ## v7.9.0 (2021-03-16)
 

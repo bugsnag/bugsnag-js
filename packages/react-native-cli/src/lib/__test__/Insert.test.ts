@@ -2,6 +2,7 @@ import { insertJs, insertAndroid, insertIos } from '../Insert'
 import logger from '../../Logger'
 import path from 'path'
 import { promises as fs } from 'fs'
+import glob from 'glob'
 
 async function loadFixture (fixture: string) {
   return jest.requireActual('fs').promises.readFile(fixture, 'utf8')
@@ -18,6 +19,9 @@ async function generateNotFoundError () {
 jest.mock('../../Logger')
 jest.mock('fs', () => {
   return { promises: { readFile: jest.fn(), writeFile: jest.fn(), readdir: jest.fn() } }
+})
+jest.mock('glob', () => {
+  return jest.fn()
 })
 
 afterEach(() => jest.resetAllMocks())
@@ -170,9 +174,8 @@ test('insertIos(): no identifiable app launch method', async () => {
 })
 
 test('insertAndroid(): success', async () => {
-  type readdir = (path: string) => Promise<string[]>
-  const readdirMock = fs.readdir as unknown as jest.MockedFunction<readdir>
-  readdirMock.mockResolvedValue(['bugsnagreactnativeclitest'])
+  const globMock = glob as unknown as jest.MockedFunction<typeof glob>
+  globMock.mockImplementation((glob, opts, cb) => cb(null, ['bugsnagreactnativeclitest/MainApplication.java']))
 
   const mainApplication = await loadFixture(path.join(__dirname, 'fixtures', 'MainApplication-before.java'))
   const readFileMock = fs.readFile as jest.MockedFunction<typeof fs.readFile>
@@ -193,9 +196,8 @@ test('insertAndroid(): success', async () => {
 })
 
 test('insertAndroid(): success, tolerates some differences in source', async () => {
-  type readdir = (path: string) => Promise<string[]>
-  const readdirMock = fs.readdir as unknown as jest.MockedFunction<readdir>
-  readdirMock.mockResolvedValue(['bugsnagreactnativeclitest'])
+  const globMock = glob as unknown as jest.MockedFunction<typeof glob>
+  globMock.mockImplementation((glob, opts, cb) => cb(null, ['bugsnagreactnativeclitest/MainApplication.java']))
 
   const mainApplication = await loadFixture(path.join(__dirname, 'fixtures', 'MainApplication-before-2.java'))
   const readFileMock = fs.readFile as jest.MockedFunction<typeof fs.readFile>
@@ -216,9 +218,8 @@ test('insertAndroid(): success, tolerates some differences in source', async () 
 })
 
 test('insertAndroid(): already present', async () => {
-  type readdir = (path: string) => Promise<string[]>
-  const readdirMock = fs.readdir as unknown as jest.MockedFunction<readdir>
-  readdirMock.mockResolvedValue(['bugsnagreactnativeclitest'])
+  const globMock = glob as unknown as jest.MockedFunction<typeof glob>
+  globMock.mockImplementation((glob, opts, cb) => cb(null, ['bugsnagreactnativeclitest/MainApplication.java']))
 
   const mainApplication = await loadFixture(path.join(__dirname, 'fixtures', 'MainApplication-after.java'))
   const readFileMock = fs.readFile as jest.MockedFunction<typeof fs.readFile>
@@ -237,9 +238,8 @@ test('insertAndroid(): already present', async () => {
 })
 
 test('insertAndroid(): failure to locate file', async () => {
-  type readdir = (path: string) => Promise<string[]>
-  const readdirMock = fs.readdir as unknown as jest.MockedFunction<readdir>
-  readdirMock.mockResolvedValue(['bugsnagreactnativeclitest'])
+  const globMock = glob as unknown as jest.MockedFunction<typeof glob>
+  globMock.mockImplementation((glob, opts, cb) => cb(null, ['bugsnagreactnativeclitest/MainApplication.java']))
 
   const readFileMock = fs.readFile as jest.MockedFunction<typeof fs.readFile>
   readFileMock.mockRejectedValue(await generateNotFoundError())
@@ -257,9 +257,8 @@ test('insertAndroid(): failure to locate file', async () => {
 })
 
 test('insertAndroid(): failure to locate package directory', async () => {
-  type readdir = (path: string) => Promise<string[]>
-  const readdirMock = fs.readdir as unknown as jest.MockedFunction<readdir>
-  readdirMock.mockResolvedValue([])
+  const globMock = glob as unknown as jest.MockedFunction<typeof glob>
+  globMock.mockImplementation((glob, opts, cb) => cb(null, []))
 
   const readFileMock = fs.readFile as jest.MockedFunction<typeof fs.readFile>
   const writeFileMock = fs.writeFile as jest.MockedFunction<typeof fs.writeFile>
@@ -272,9 +271,8 @@ test('insertAndroid(): failure to locate package directory', async () => {
 })
 
 test('insertAndroid(): project directory error', async () => {
-  type readdir = (path: string) => Promise<string[]>
-  const readdirMock = fs.readdir as unknown as jest.MockedFunction<readdir>
-  readdirMock.mockRejectedValue(await generateNotFoundError())
+  const globMock = glob as unknown as jest.MockedFunction<typeof glob>
+  globMock.mockImplementation((glob, opts, cb) => cb(new Error('oh no'), []))
 
   const readFileMock = fs.readFile as jest.MockedFunction<typeof fs.readFile>
   const writeFileMock = fs.writeFile as jest.MockedFunction<typeof fs.writeFile>
@@ -283,13 +281,12 @@ test('insertAndroid(): project directory error', async () => {
   expect(readFileMock).not.toHaveBeenCalled()
   expect(writeFileMock).not.toHaveBeenCalled()
 
-  expect(logger.error).toHaveBeenCalledWith(expect.stringContaining('Failed to update "MainApplication.java" automatically.'))
+  expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining('Failed to update "MainApplication.java" automatically.'))
 })
 
 test('insertAndroid(): no identifiable onCreate method', async () => {
-  type readdir = (path: string) => Promise<string[]>
-  const readdirMock = fs.readdir as unknown as jest.MockedFunction<readdir>
-  readdirMock.mockResolvedValue(['bugsnagreactnativeclitest'])
+  const globMock = glob as unknown as jest.MockedFunction<typeof glob>
+  globMock.mockImplementation((glob, opts, cb) => cb(null, ['bugsnagreactnativeclitest/MainApplication.java']))
 
   const readFileMock = fs.readFile as jest.MockedFunction<typeof fs.readFile>
   readFileMock.mockResolvedValue('not good java')

@@ -16,20 +16,20 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark Initializers
 
-+ (instancetype)fromJson:(NSDictionary *)json;
++ (nullable instancetype)fromJson:(NSDictionary *)json;
 
-- (instancetype)initWithDictionary:(NSDictionary *)dict;
+- (nullable instancetype)initWithDictionary:(NSDictionary *)dict;
 
 - (instancetype)initWithId:(NSString *)sessionId
                  startDate:(NSDate *)startDate
-                      user:(nullable BugsnagUser *)user
+                      user:(BugsnagUser *)user
               autoCaptured:(BOOL)autoCaptured
                        app:(BugsnagApp *)app
                     device:(BugsnagDevice *)device;
 
 - (instancetype)initWithId:(NSString *)sessionId
                  startDate:(NSDate *)startDate
-                      user:(nullable BugsnagUser *)user
+                      user:(BugsnagUser *)user
               handledCount:(NSUInteger)handledCount
             unhandledCount:(NSUInteger)unhandledCount
                        app:(BugsnagApp *)app
@@ -37,13 +37,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark Properties
 
-@property (readonly) BOOL autoCaptured;
+@property (readonly, nonatomic) BOOL autoCaptured;
 
-@property NSUInteger handledCount;
+@property (nonatomic) NSUInteger handledCount;
 
-@property (getter=isStopped) BOOL stopped;
+@property (getter=isStopped, nonatomic) BOOL stopped;
 
-@property NSUInteger unhandledCount;
+@property (nonatomic) NSUInteger unhandledCount;
 
 @property (readwrite, nonnull, nonatomic) BugsnagUser *user;
 

@@ -55,7 +55,7 @@
                          handledState:handledState
                                  user:self.configuration.user
                              metadata:[self.metadata deepCopy]
-                          breadcrumbs:self.breadcrumbs.breadcrumbs
+                          breadcrumbs:self.breadcrumbs.breadcrumbs ?: @[]
                                errors:@[error]
                               threads:threads
                               session:self.sessionTracker.runningSession];
@@ -75,25 +75,25 @@
     
     const BOOL fatalOnly = self.configuration.appHangThresholdMillis == BugsnagAppHangThresholdFatalOnly;
     if (!fatalOnly && self.appHangEvent) {
-        [self notifyInternal:self.appHangEvent block:nil];
+        [self notifyInternal:(BugsnagEvent * _Nonnull)self.appHangEvent block:nil];
     }
     self.appHangEvent = nil;
 }
 
-- (BOOL)lastRunEndedWithAppHang {
+- (nullable BugsnagEvent *)loadFatalAppHangEvent {
     NSError *error = nil;
     NSDictionary *json = [BSGJSONSerialization JSONObjectWithContentsOfFile:BSGFileLocations.current.appHangEvent options:0 error:&error];
     if (!json) {
         if (!(error.domain == NSCocoaErrorDomain && error.code == NSFileReadNoSuchFileError)) {
             bsg_log_err(@"Could not read app_hang.json: %@", error);
         }
-        return NO;
+        return nil;
     }
     
     BugsnagEvent *event = [[BugsnagEvent alloc] initWithJson:json];
     if (!event) {
         bsg_log_err(@"Could not parse app_hang.json");
-        return NO;
+        return nil;
     }
     
     // Update event to reflect that the app hang was fatal.
@@ -106,8 +106,7 @@
                                                                    attrValue:nil];
     event.session.unhandledCount++;
     
-    self.appHangEvent = event;
-    return YES;
+    return event;
 }
 
 @end

@@ -87,8 +87,16 @@ typedef NS_ENUM(NSUInteger, BSGEventUploadOperationState) {
         }
     }
     
-    NSDictionary *eventPayload = [event toJsonWithRedactedKeys:configuration.redactedKeys];
-
+    NSDictionary *eventPayload;
+    @try {
+        eventPayload = [event toJsonWithRedactedKeys:configuration.redactedKeys];
+    } @catch (NSException *exception) {
+        bsg_log_err(@"Discarding event %@ because an exception was thrown by -toJsonWithRedactedKeys: %@", self.name, exception);
+        [self deleteEvent];
+        completionHandler();
+        return;
+    }
+    
     NSString *apiKey = event.apiKey ?: configuration.apiKey;
     
     NSMutableDictionary *requestPayload = [NSMutableDictionary dictionary];
@@ -103,8 +111,15 @@ typedef NS_ENUM(NSUInteger, BSGEventUploadOperationState) {
     requestHeaders[BugsnagHTTPHeaderNameSentAt] = [BSG_RFC3339DateTool stringFromDate:[NSDate date]];
     requestHeaders[BugsnagHTTPHeaderNameStacktraceTypes] = [event.stacktraceTypes componentsJoinedByString:@","];
     
-    [delegate.apiClient sendJSONPayload:requestPayload headers:requestHeaders toURL:configuration.notifyURL
-                      completionHandler:^(BugsnagApiClientDeliveryStatus status, NSError *error) {
+    NSURL *notifyURL = configuration.notifyURL;
+    if (!notifyURL) {
+        bsg_log_err(@"Could not upload event %@ because notifyURL was nil", self.name);
+        completionHandler();
+        return;
+    }
+    
+    [delegate.apiClient sendJSONPayload:requestPayload headers:requestHeaders toURL:notifyURL
+                      completionHandler:^(BugsnagApiClientDeliveryStatus status, __attribute__((unused)) NSError *deliveryError) {
         
         switch (status) {
             case BugsnagApiClientDeliveryStatusDelivered:
@@ -114,7 +129,9 @@ typedef NS_ENUM(NSUInteger, BSGEventUploadOperationState) {
                 
             case BugsnagApiClientDeliveryStatusFailed:
                 bsg_log_debug(@"Upload failed; will retry event %@", self.name);
-                [self storeEventPayload:eventPayload inDirectory:[BSGFileLocations current].events];
+                if (self.shouldStoreEventPayloadForRetry) {
+                    [delegate storeEventPayload:eventPayload];
+                }
                 break;
                 
             case BugsnagApiClientDeliveryStatusUndeliverable:
@@ -129,16 +146,13 @@ typedef NS_ENUM(NSUInteger, BSGEventUploadOperationState) {
 
 // MARK: Subclassing
 
-- (BugsnagEvent *)loadEventAndReturnError:(NSError **)errorPtr {
+- (BugsnagEvent *)loadEventAndReturnError:(__attribute__((unused)) NSError * __autoreleasing *)errorPtr {
     // Must be implemented by all subclasses
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
 
 - (void)deleteEvent {
-}
-
-- (void)storeEventPayload:(NSDictionary *)eventPayload inDirectory:(NSString *)directory {
 }
 
 // MARK: Asynchronous NSOperation implementation

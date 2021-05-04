@@ -27,7 +27,6 @@
 #include "BSG_KSCrashC.h"
 
 #include "BSG_KSCrashReport.h"
-#include "BSG_KSCrashSentry_User.h"
 #include "BSG_KSMach.h"
 #include "BSG_KSMachHeaders.h"
 #include "BSG_KSObjC.h"
@@ -73,7 +72,7 @@ BSG_KSCrash_Context *crashContext(void) {
 void bsg_kscrash_i_onCrash(BSG_KSCrash_Context *context) {
     BSG_KSLOG_DEBUG("Updating application state to note crash.");
 
-    bsg_kscrashstate_notifyAppCrash(context->crash.crashType);
+    bsg_kscrashstate_notifyAppCrash();
 
     if (context->config.printTraceToStdout) {
         bsg_kscrashreport_logCrash(context);
@@ -186,27 +185,6 @@ void bsg_kscrash_setCrashNotifyCallback(
     const BSGReportCallback onCrashNotify) {
     BSG_KSLOG_TRACE("Set onCrashNotify to %p", onCrashNotify);
     crashContext()->config.onCrashNotify = onCrashNotify;
-}
-
-void bsg_kscrash_reportUserException(const char *name, const char *reason,
-        const char *severity,
-        const char *handledState,
-        const char *overrides,
-        const char *eventOverrides,
-        const char *metadata,
-        const char *appState,
-        const char *config) {
-    bsg_kscrashsentry_reportUserException(name, reason,
-            severity,
-            handledState, overrides,
-            eventOverrides,
-            metadata, appState, config);
-}
-
-void bsg_kscrash_setWriteBinaryImagesForUserReported(
-    bool writeBinaryImagesForUserReported) {
-    crashContext()->crash.writeBinaryImagesForUserReported =
-        writeBinaryImagesForUserReported;
 }
 
 void bsg_kscrash_setReportWhenDebuggerIsAttached(

@@ -12,10 +12,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface BugsnagNotifier : NSObject
 
-@property NSString *name;
-@property NSString *version;
-@property NSString *url;
-@property NSMutableArray<BugsnagNotifier *> *dependencies;
+@property (copy, nonatomic) NSString *name;
+@property (copy, nonatomic) NSString *version;
+@property (copy, nonatomic) NSString *url;
+@property (nonatomic) NSMutableArray<BugsnagNotifier *> *dependencies;
 
 - (NSDictionary *)toDict;
 

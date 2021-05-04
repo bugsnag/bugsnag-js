@@ -36,7 +36,6 @@ static const struct {
     BSG_CRASHTYPE(BSG_KSCrashTypeSignal),
     BSG_CRASHTYPE(BSG_KSCrashTypeCPPException),
     BSG_CRASHTYPE(BSG_KSCrashTypeNSException),
-    BSG_CRASHTYPE(BSG_KSCrashTypeUserReported),
 };
 static const int bsg_g_crashTypesCount =
     sizeof(bsg_g_crashTypes) / sizeof(*bsg_g_crashTypes);

@@ -19,9 +19,7 @@
 
 @implementation BugsnagCrashSentry
 
-- (void)install:(BugsnagConfiguration *)config
-       notifier:(BugsnagNotifier *)notifier
-        onCrash:(BSGReportCallback)onCrash
+- (void)install:(BugsnagConfiguration *)config onCrash:(BSGReportCallback)onCrash
 {
     BSG_KSCrash *ksCrash = [BSG_KSCrash sharedInstance];
     ksCrash.introspectMemory = NO;
@@ -32,8 +30,8 @@
     // applies to unhandled errors
     ksCrash.threadTracingEnabled = config.sendThreads != BSGThreadSendPolicyNever;
 
-    // User reported events are *always* handled
-    BSG_KSCrashType crashTypes = BSG_KSCrashTypeUserReported;
+    // User reported events do not go through KSCrash
+    BSG_KSCrashType crashTypes = 0;
     
     // If Bugsnag is autodetecting errors then the types of event detected is configurable
     // (otherwise it's just the user reported events)
@@ -63,27 +61,6 @@
                     | (errorTypes.cppExceptions ? BSG_KSCrashTypeCPPException : 0)
                     | (errorTypes.signals ? BSG_KSCrashTypeSignal : 0)
                     | (errorTypes.machExceptions ? BSG_KSCrashTypeMachException : 0));
-}
-
-- (void)reportUserException:(NSString *)reportName
-                     reason:(NSString *)reportMessage
-               handledState:(NSDictionary *)handledState
-                   appState:(NSDictionary *)appState
-          callbackOverrides:(NSDictionary *)overrides
-             eventOverrides:(NSDictionary *)eventOverrides
-                   metadata:(NSDictionary *)metadata
-                     config:(NSDictionary *)config {
-    [[BSG_KSCrash sharedInstance] reportUserException:reportName
-                                               reason:reportMessage
-                                         handledState:handledState
-                                             appState:appState
-                                    callbackOverrides:overrides
-                                       eventOverrides:eventOverrides
-                                             metadata:metadata
-                                               config:config];
-    
-    bsg_log_debug(@"Saved KSCrashReport for \"%@\" \"%@\"", handledState[@"severityReasonType"],
-                  [[eventOverrides[@"exceptions"] firstObject] valueForKey:@"errorClass"]);
 }
 
 @end

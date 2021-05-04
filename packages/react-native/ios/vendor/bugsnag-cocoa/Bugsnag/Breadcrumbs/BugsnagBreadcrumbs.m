@@ -31,11 +31,11 @@ static BugsnagBreadcrumbsContext g_context;
 
 @interface BugsnagBreadcrumbs ()
 
-@property (readonly) NSString *breadcrumbsPath;
+@property (readonly, nonatomic) NSString *breadcrumbsPath;
 
-@property BugsnagConfiguration *config;
-@property unsigned int nextFileNumber;
-@property unsigned int maxBreadcrumbs;
+@property (nonatomic) BugsnagConfiguration *config;
+@property (nonatomic) unsigned int nextFileNumber;
+@property (nonatomic) unsigned int maxBreadcrumbs;
 
 @end
 
@@ -144,8 +144,8 @@ static BugsnagBreadcrumbsContext g_context;
     }
     
     if (fileNumber >= self.maxBreadcrumbs) {
-        NSString *path = [self pathForFileNumber:fileNumber - self.maxBreadcrumbs];
-        if (![[NSFileManager defaultManager] removeItemAtPath:path error:&error]) {
+        NSString *oldPath = [self pathForFileNumber:fileNumber - self.maxBreadcrumbs];
+        if (![[NSFileManager defaultManager] removeItemAtPath:oldPath error:&error]) {
             bsg_log_err(@"Unable to delete old breadcrumb: %@", error);
         }
     }
@@ -164,13 +164,29 @@ static BugsnagBreadcrumbsContext g_context;
         return nil;
     }
     
+    // We cannot use NSString's -localizedStandardCompare: because its sorting may vary by locale.
+    filenames = [filenames sortedArrayUsingComparator:^NSComparisonResult(NSString *name1, NSString *name2) {
+        long long value1 = [[name1 stringByDeletingPathExtension] longLongValue];
+        long long value2 = [[name2 stringByDeletingPathExtension] longLongValue];
+        if (value1 < value2) { return NSOrderedAscending; }
+        if (value1 > value2) { return NSOrderedDescending; }
+        return NSOrderedSame;
+    }];
+    
     NSMutableArray<NSDictionary *> *breadcrumbs = [NSMutableArray array];
     
-    for (NSString *file in [filenames sortedArrayUsingSelector:@selector(compare:)]) {
+    for (NSString *file in filenames) {
+        if ([file hasPrefix:@"."] || ![file.pathExtension isEqual:@"json"]) {
+            // Ignore partially written files, which have names like ".dat.nosync43c9.RZFc3z"
+            continue;
+        }
         NSString *path = [self.breadcrumbsPath stringByAppendingPathComponent:file];
-        NSData *data = [NSData dataWithContentsOfFile:path];
+        NSData *data = [NSData dataWithContentsOfFile:path options:0 error:&error];
         if (!data) {
-            bsg_log_err(@"Unable to read breadcrumb from %@", path);
+            // If a high volume of breadcrumbs is being logged, it is normal for older files to be deleted before this thread can read them.
+            if (!(error.domain == NSCocoaErrorDomain && error.code == NSFileReadNoSuchFileError)) {
+                bsg_log_err(@"Unable to read breadcrumb: %@", error);
+            }
             continue;
         }
         id JSONObject = [BSGJSONSerialization JSONObjectWithData:data options:0 error:&error];
@@ -208,7 +224,7 @@ void BugsnagBreadcrumbsWriteCrashReport(const BSG_KSCrashReportWriter *writer) {
     writer->beginArray(writer, "breadcrumbs");
     for (unsigned int i = g_context.firstFileNumber; i < g_context.nextFileNumber; i++) {
         int result = snprintf(path, sizeof(path), "%s/%u.json", g_context.directoryPath, i);
-        if (result < 0 || result >= sizeof(path)) {
+        if (result < 0 || result >= (int)sizeof(path)) {
             bsg_log_err(@"Breadcrumb path is too long");
             continue;
         }

@@ -23,7 +23,7 @@
     return self;
 }
 
-- (BugsnagEvent *)loadEventAndReturnError:(NSError **)errorPtr {
+- (BugsnagEvent *)loadEventAndReturnError:(NSError * __autoreleasing *)errorPtr {
     id json = [BSGJSONSerialization JSONObjectWithContentsOfFile:self.file options:0 error:errorPtr];
     if (![json isKindOfClass:[NSDictionary class]]) {
         return nil;
@@ -40,7 +40,7 @@
     }
 }
 
-- (void)storeEventPayload:(NSDictionary *)eventPayload {
+- (void)storeEventPayload:(__attribute__((unused)) NSDictionary *)eventPayload {
     // This event was loaded from disk, so nothing needs to be saved.
 }
 

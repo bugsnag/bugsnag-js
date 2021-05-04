@@ -51,6 +51,13 @@
  *
  * @return The RFC3339 date string.
  */
-+ (NSString *)stringFromUNIXTimestamp:(unsigned long long)timestamp;
++ (NSString *)stringFromUNIXTimestamp:(NSTimeInterval)timestamp;
+
+/**
+ * Determines whether a string might contain an RFC3339 formatted date.
+ *
+ * Useful if the overhead of -dateFromString: needs to be avoided.
+ */
++ (BOOL)isLikelyDateString:(NSString *)string;
 
 @end

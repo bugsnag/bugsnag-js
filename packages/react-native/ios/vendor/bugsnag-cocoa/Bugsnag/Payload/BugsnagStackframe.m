@@ -16,6 +16,21 @@
 
 BugsnagStackframeType const BugsnagStackframeTypeCocoa = @"cocoa";
 
+
+// MARK: - Properties not used for Cocoa stack frames, but used by React Native and Unity.
+
+@interface BugsnagStackframe ()
+
+@property (strong, nullable, nonatomic) NSNumber *columnNumber;
+@property (copy, nullable, nonatomic) NSString *file;
+@property (strong, nullable, nonatomic) NSNumber *inProject;
+@property (strong, nullable, nonatomic) NSNumber *lineNumber;
+
+@end
+
+
+// MARK: -
+
 @implementation BugsnagStackframe
 
 + (NSDictionary *_Nullable)findImageAddr:(unsigned long)addr inImages:(NSArray *)images {
@@ -39,6 +54,10 @@ BugsnagStackframeType const BugsnagStackframeTypeCocoa = @"cocoa";
     frame.symbolAddress = [self readInt:json key:BSGKeySymbolAddr];
     frame.machoLoadAddress = [self readInt:json key:BSGKeyMachoLoadAddr];
     frame.type = json[BSGKeyType];
+    frame.columnNumber = json[@"columnNumber"];
+    frame.file = json[@"file"];
+    frame.inProject = json[@"inProject"];
+    frame.lineNumber = json[@"lineNumber"];
     return frame;
 }
 
@@ -73,10 +92,10 @@ BugsnagStackframeType const BugsnagStackframeTypeCocoa = @"cocoa";
     }
 }
 
-+ (NSArray<BugsnagStackframe *> *)stackframesWithBacktrace:(uintptr_t *)backtrace length:(int)length {
++ (NSArray<BugsnagStackframe *> *)stackframesWithBacktrace:(uintptr_t *)backtrace length:(NSUInteger)length {
     NSMutableArray<BugsnagStackframe *> *frames = [NSMutableArray array];
     
-    for (int i = 0; i < length; i++) {
+    for (NSUInteger i = 0; i < length; i++) {
         uintptr_t address = backtrace[i];
         if (address == 1) {
             // We sometimes get a frame address of 0x1 at the bottom of the call stack.
@@ -109,9 +128,9 @@ BugsnagStackframeType const BugsnagStackframeTypeCocoa = @"cocoa";
 }
 
 + (NSArray<BugsnagStackframe *> *)stackframesWithCallStackReturnAddresses:(NSArray<NSNumber *> *)callStackReturnAddresses {
-    int length = (int)callStackReturnAddresses.count;
+    NSUInteger length = callStackReturnAddresses.count;
     uintptr_t addresses[length];
-    for (int i = 0; i < length; i++) {
+    for (NSUInteger i = 0; i < length; i++) {
         addresses[i] = (uintptr_t)callStackReturnAddresses[i].unsignedLongLongValue;
     }
     return [BugsnagStackframe stackframesWithBacktrace:addresses length:length];
@@ -231,6 +250,10 @@ BugsnagStackframeType const BugsnagStackframeTypeCocoa = @"cocoa";
         dict[BSGKeyIsLR] = @(self.isLr);
     }
     dict[BSGKeyType] = self.type;
+    dict[@"columnNumber"] = self.columnNumber;
+    dict[@"file"] = self.file;
+    dict[@"inProject"] = self.inProject;
+    dict[@"lineNumber"] = self.lineNumber;
     return dict;
 }
 

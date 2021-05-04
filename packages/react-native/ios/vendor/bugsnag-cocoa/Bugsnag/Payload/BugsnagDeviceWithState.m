@@ -21,6 +21,7 @@ NSMutableDictionary *BSGParseDeviceMetadata(NSDictionary *event) {
     NSDictionary *state = [event valueForKeyPath:@"user.state.deviceState"];
     [device addEntriesFromDictionary:state];
     device[@"timezone"] = [event valueForKeyPath:@"system.time_zone"];
+    device[@"macCatalystiOSVersion"] = [event valueForKeyPath:@"system.iOSSupportVersion"];
 
 #if BSG_PLATFORM_SIMULATOR
     device[@"simulator"] = @YES;
@@ -78,22 +79,6 @@ NSNumber *BSGDeviceFreeSpace(NSSearchPathDirectory directory) {
     if ([time isKindOfClass:[NSString class]]) {
         device.time = [BSG_RFC3339DateTool dateFromString:time];
     }
-    return device;
-}
-
-+ (BugsnagDeviceWithState *)deviceWithOomData:(NSDictionary *)data {
-    BugsnagDeviceWithState *device = [BugsnagDeviceWithState new];
-    device.id = data[@"id"];
-    device.jailbroken = [data[@"jailbroken"] boolValue];
-    device.osVersion = data[@"osVersion"];
-    device.osName = data[@"osName"];
-    device.manufacturer = @"Apple";
-    device.model = data[@"model"];
-    device.modelNumber = data[@"modelNumber"];
-    device.orientation = data[@"orientation"];
-    device.locale = data[@"locale"];
-    device.runtimeVersions = data[@"runtimeVersions"];
-    device.totalMemory = data[@"totalMemory"];
     return device;
 }
 

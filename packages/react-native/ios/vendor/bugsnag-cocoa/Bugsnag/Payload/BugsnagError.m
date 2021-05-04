@@ -17,23 +17,30 @@
 #import "BugsnagThread+Private.h"
 
 
+typedef NSString * BSGErrorTypeString NS_TYPED_ENUM;
+
+BSGErrorTypeString const BSGErrorTypeStringCocoa = @"cocoa";
+BSGErrorTypeString const BSGErrorTypeStringC = @"c";
+BSGErrorTypeString const BSGErrorTypeStringReactNativeJs = @"reactnativejs";
+
+
 NSString *_Nonnull BSGSerializeErrorType(BSGErrorType errorType) {
     switch (errorType) {
         case BSGErrorTypeCocoa:
-            return @"cocoa";
+            return BSGErrorTypeStringCocoa;
         case BSGErrorTypeC:
-            return @"c";
+            return BSGErrorTypeStringC;
         case BSGErrorTypeReactNativeJs:
-            return @"reactnativejs";
+            return BSGErrorTypeStringReactNativeJs;
     }
 }
 
 BSGErrorType BSGParseErrorType(NSString *errorType) {
-    if ([@"cocoa" isEqualToString:errorType]) {
+    if ([BSGErrorTypeStringCocoa isEqualToString:errorType]) {
         return BSGErrorTypeCocoa;
-    } else if ([@"c" isEqualToString:errorType]) {
+    } else if ([BSGErrorTypeStringC isEqualToString:errorType]) {
         return BSGErrorTypeC;
-    } else if ([@"reactnativejs" isEqualToString:errorType]) {
+    } else if ([BSGErrorTypeStringReactNativeJs isEqualToString:errorType]) {
         return BSGErrorTypeReactNativeJs;
     } else {
         return BSGErrorTypeCocoa;
@@ -74,6 +81,8 @@ NSString *BSGParseErrorMessage(NSDictionary *report, NSDictionary *error, NSStri
 
 @implementation BugsnagError
 
+@dynamic type;
+
 - (instancetype)initWithErrorReportingThread:(BugsnagThread *)thread {
     return [self initWithEvent:@{} errorReportingThread:thread];
 }
@@ -84,7 +93,7 @@ NSString *BSGParseErrorMessage(NSDictionary *report, NSDictionary *error, NSStri
         NSString *errorType = error[BSGKeyType];
         _errorClass = BSGParseErrorClass(error, errorType);
         _errorMessage = BSGParseErrorMessage(event, error, errorType);
-        _type = BSGErrorTypeCocoa;
+        _typeString = BSGSerializeErrorType(BSGErrorTypeCocoa);
 
         if (![[event valueForKeyPath:@"user.state.didOOM"] boolValue]) {
             _stacktrace = thread.stacktrace;
@@ -100,7 +109,7 @@ NSString *BSGParseErrorMessage(NSDictionary *report, NSDictionary *error, NSStri
     if (self = [super init]) {
         _errorClass = errorClass;
         _errorMessage = errorMessage;
-        _type = errorType;
+        _typeString = BSGSerializeErrorType(errorType);
         _stacktrace = stacktrace;
     }
     return self;
@@ -119,11 +128,20 @@ NSString *BSGParseErrorMessage(NSDictionary *report, NSDictionary *error, NSStri
             }
         }
     }
-    BugsnagError *error = [[BugsnagError alloc] initWithErrorClass:json[BSGKeyErrorClass]
-                                                      errorMessage:json[BSGKeyMessage]
-                                                         errorType:BSGParseErrorType(json[BSGKeyType])
-                                                        stacktrace:data];
+    BugsnagError *error = [[BugsnagError alloc] init];
+    error.errorClass = json[BSGKeyErrorClass];
+    error.errorMessage = json[BSGKeyMessage];
+    error.stacktrace = data;
+    error.typeString = json[BSGKeyType] ?: BSGErrorTypeStringCocoa;
     return error;
+}
+
+- (BSGErrorType)type {
+    return BSGParseErrorType(self.typeString);
+}
+
+- (void)setType:(BSGErrorType)type {
+    self.typeString = BSGSerializeErrorType(type);
 }
 
 - (void)updateWithCrashInfoMessage:(NSString *)crashInfoMessage {
@@ -179,7 +197,7 @@ NSString *BSGParseErrorMessage(NSDictionary *report, NSDictionary *error, NSStri
     NSMutableDictionary *dict = [NSMutableDictionary new];
     dict[BSGKeyErrorClass] = self.errorClass;
     dict[BSGKeyMessage] = self.errorMessage;
-    dict[BSGKeyType] = BSGSerializeErrorType(self.type);
+    dict[BSGKeyType] = self.typeString;
 
     NSMutableArray *frames = [NSMutableArray new];
     for (BugsnagStackframe *frame in self.stacktrace) {

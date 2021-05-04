@@ -119,7 +119,7 @@ int bsg_kscrashstate_i_onIntegerElement(const char *const name,
     }
 
     // FP value might have been written as a whole number.
-    return bsg_kscrashstate_i_onFloatingPointElement(name, value, userData);
+    return bsg_kscrashstate_i_onFloatingPointElement(name, (double)value, userData);
 }
 
 int bsg_kscrashstate_i_onNullElement(__unused const char *const name,
@@ -177,15 +177,20 @@ bool bsg_kscrashstate_i_loadState(BSG_KSCrash_State *const context,
     if (path == NULL) {
         return false;
     }
+    NSString *file = [NSFileManager.defaultManager stringWithFileSystemRepresentation:path length:strlen(path)];
+    if (!file) {
+        BSG_KSLOG_ERROR(@"Invalid path: %s", path);
+        return false;
+    }
     NSError *error = nil;
-    NSData *data = [NSData dataWithContentsOfFile:[NSString stringWithUTF8String:path] options:0 error:&error];
+    NSData *data = [NSData dataWithContentsOfFile:file options:0 error:&error];
     if (error != nil) {
         if (!(error.domain == NSCocoaErrorDomain && error.code == NSFileReadNoSuchFileError)) {
             BSG_KSLOG_ERROR(@"%s: Could not load file: %@", path, error);
         }
         return false;
     }
-    id objectContext = [BSG_KSJSONCodec decode:data options:0 error:&error];
+    id objectContext = [BSG_KSJSONCodec decode:data error:&error];
     if (error != nil) {
         BSG_KSLOG_ERROR(@"%s: Could not load file: %@", path, error);
         return false;
@@ -346,15 +351,12 @@ void bsg_kscrashstate_notifyAppTerminate(void) {
     bsg_kscrashstate_i_saveState(state, stateFilePath);
 }
 
-void bsg_kscrashstate_notifyAppCrash(BSG_KSCrashType type) {
+void bsg_kscrashstate_notifyAppCrash(void) {
     BSG_KSCrash_State *const state = bsg_g_state;
     const char *const stateFilePath = bsg_g_stateFilePath;
     bsg_kscrashstate_updateDurationStats(state);
-    BOOL didCrash = type != BSG_KSCrashTypeUserReported;
-    state->crashedThisLaunch |= didCrash;
-    if (didCrash) {
-        bsg_kscrashstate_i_saveState(state, stateFilePath);
-    }
+    state->crashedThisLaunch = YES;
+    bsg_kscrashstate_i_saveState(state, stateFilePath);
 }
 
 void bsg_kscrashstate_updateDurationStats(BSG_KSCrash_State *const state) {

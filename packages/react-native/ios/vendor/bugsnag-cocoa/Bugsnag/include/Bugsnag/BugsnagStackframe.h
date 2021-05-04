@@ -57,12 +57,12 @@ FOUNDATION_EXPORT BugsnagStackframeType const BugsnagStackframeTypeCocoa;
 /**
  * Whether the frame was within the program counter
  */
-@property BOOL isPc;
+@property (nonatomic) BOOL isPc;
 
 /**
  * Whether the frame was within the link register
  */
-@property BOOL isLr;
+@property (nonatomic) BOOL isLr;
 
 /**
  * The type of the stack frame, if it differs from that of the containing error or event.

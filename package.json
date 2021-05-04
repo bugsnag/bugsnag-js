@@ -67,6 +67,7 @@
     "build": "lerna run build --scope '@bugsnag/node' --scope '@bugsnag/browser' --scope '@bugsnag/expo' && lerna run build --ignore '@bugsnag/node' --ignore '@bugsnag/browser' --ignore '@bugsnag/expo'",
     "test:lint": "eslint --ext .ts,.js --report-unused-disable-directives --max-warnings=0 .",
     "test:unit": "jest",
+    "test:coverage": "jest --coverage",
     "test:types": "tsc -p tsconfig.json && lerna run test:types",
     "test:test-container-registry-login": "aws ecr get-login-password --profile=opensource | docker login --username AWS --password-stdin 855461928731.dkr.ecr.us-west-1.amazonaws.com",
     "test:build-browser-container": "docker-compose up --build minimal-packager && docker-compose build --pull browser-maze-runner",

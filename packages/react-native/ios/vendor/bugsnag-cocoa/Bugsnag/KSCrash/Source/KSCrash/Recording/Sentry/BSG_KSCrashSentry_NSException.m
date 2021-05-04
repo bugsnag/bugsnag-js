@@ -32,6 +32,8 @@
 //#define BSG_KSLogger_LocalLevel TRACE
 #import "BSG_KSLogger.h"
 
+#import <objc/runtime.h>
+
 // ============================================================================
 #pragma mark - Globals -
 // ============================================================================
@@ -49,6 +51,11 @@ static NSUncaughtExceptionHandler *bsg_g_previousUncaughtExceptionHandler;
 static BSG_KSCrash_SentryContext *bsg_g_context;
 
 static NSException *bsg_lastHandledException = NULL;
+
+static char * CopyUTF8String(NSString *string) {
+    const char *UTF8String = [string UTF8String];
+    return UTF8String ? strdup(UTF8String) : NULL;
+}
 
 // ============================================================================
 #pragma mark - Callbacks -
@@ -116,22 +123,69 @@ void bsg_recordException(NSException *exception) {
         NSArray *addresses = [exception callStackReturnAddresses];
         NSUInteger numFrames = [addresses count];
         uintptr_t *callstack = malloc(numFrames * sizeof(*callstack));
-        for (NSUInteger i = 0; i < numFrames; i++) {
-            callstack[i] = [addresses[i] unsignedLongValue];
+        if (callstack) {
+            for (NSUInteger i = 0; i < numFrames; i++) {
+                callstack[i] = [addresses[i] unsignedLongValue];
+            }
         }
 
         bsg_g_context->crashType = BSG_KSCrashTypeNSException;
         bsg_g_context->offendingThread = bsg_ksmachthread_self();
         bsg_g_context->registersAreValid = false;
-        bsg_g_context->NSException.name = strdup([[exception name] UTF8String]);
-        bsg_g_context->crashReason = strdup([[exception reason] UTF8String]);
+        bsg_g_context->NSException.name = CopyUTF8String([exception name]);
+        bsg_g_context->crashReason = CopyUTF8String([exception reason]);
         bsg_g_context->stackTrace = callstack;
-        bsg_g_context->stackTraceLength = (int)numFrames;
+        bsg_g_context->stackTraceLength = callstack ? (int)numFrames : 0;
 
         BSG_KSLOG_DEBUG(@"Calling main crash handler.");
         bsg_g_context->onCrash(crashContext());
+        
+        bsg_kscrashsentry_resumeThreads();
     }
 }
+
+// ============================================================================
+#pragma mark - iOS apps on macOS -
+// ============================================================================
+
+// iOS apps behave a little differently when running on macOS via Catalyst or
+// on Apple Silicon. Uncaught NSExceptions raised while handling UI events get
+// caught by AppKit and are not propagated to NSUncaughtExceptionHandler or
+// std::terminate_handler (reported to Apple: FB8901200) therefore we need
+// another way to detect them...
+
+#if TARGET_OS_IOS
+
+static Method NSApplication_reportException;
+
+/// Pointer to the real implementation of -[NSApplication reportException:]
+static void (* NSApplication_reportException_imp)(id, SEL, NSException *);
+
+/// Overrides -[NSApplication reportException:]
+static void bsg_reportException(id self, SEL _cmd, NSException *exception) {
+    BSG_KSLOG_DEBUG(@"reportException: %@", exception);
+
+    bsg_kscrashsentry_beginHandlingCrash(bsg_g_context);
+
+    bsg_recordException(exception);
+
+#if TARGET_OS_MACCATALYST
+    // Mac Catalyst apps continue to run after an uncaught exception is thrown
+    // while handling a UI event. Our crash sentries should remain installed to
+    // catch any subsequent unhandled exceptions or crashes.
+#else
+    // iOS apps running on Apple Silicon Macs terminate with an EXC_BREAKPOINT
+    // mach exception. We don't want to catch that because its stack trace will
+    // not point to where the exception was raised (its top frame will be
+    // -[NSApplication _crashOnException:]) so we should uninstall our crash
+    // sentries.
+    bsg_kscrashsentry_uninstall(BSG_KSCrashTypeAll);
+#endif
+
+    NSApplication_reportException_imp(self, _cmd, exception);
+}
+
+#endif
 
 // ============================================================================
 #pragma mark - API -
@@ -153,6 +207,18 @@ bool bsg_kscrashsentry_installNSExceptionHandler(
     BSG_KSLOG_DEBUG(@"Setting new handler.");
     NSSetUncaughtExceptionHandler(&bsg_ksnsexc_i_handleException);
 
+#if TARGET_OS_IOS
+    NSApplication_reportException =
+    class_getInstanceMethod(NSClassFromString(@"NSApplication"),
+                            NSSelectorFromString(@"reportException:"));
+    if (NSApplication_reportException) {
+        BSG_KSLOG_DEBUG(@"Overriding -[NSApplication reportException:]");
+        NSApplication_reportException_imp = (void *)
+        method_setImplementation(NSApplication_reportException,
+                                 (IMP)bsg_reportException);
+    }
+#endif
+
     return true;
 }
 
@@ -164,5 +230,14 @@ void bsg_kscrashsentry_uninstallNSExceptionHandler(void) {
 
     BSG_KSLOG_DEBUG(@"Restoring original handler.");
     NSSetUncaughtExceptionHandler(bsg_g_previousUncaughtExceptionHandler);
+
+#if TARGET_OS_IOS
+    if (NSApplication_reportException && NSApplication_reportException_imp) {
+        BSG_KSLOG_DEBUG(@"Restoring original -[NSApplication reportException:]");
+        method_setImplementation(NSApplication_reportException,
+                                 (IMP)NSApplication_reportException_imp);
+    }
+#endif
+
     bsg_g_installed = 0;
 }

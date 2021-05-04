@@ -21,9 +21,22 @@
 
 #import "BugsnagCollections.h"
 
+#import "BSG_RFC3339DateTool.h"
 #import "BSGJSONSerialization.h"
 
-NSArray * BSGArrayMap(NSArray *array, id (^ transform)(id)) {
+// MARK: NSArray
+
+NSArray * BSGArrayWithObject(id _Nullable object) {
+    return object ? @[(id _Nonnull)object] : @[];
+}
+
+void BSGArrayAddIfNonnull(NSMutableArray *array, id _Nullable object) {
+    if (object) {
+        [array addObject:(id _Nonnull)object];
+    }
+}
+
+NSArray * BSGArrayMap(NSArray *array, id _Nullable (^ transform)(id)) {
     NSMutableArray *mappedArray = [NSMutableArray array];
     for (id object in array) {
         id mapped = transform(object);
@@ -40,6 +53,8 @@ NSArray * BSGArraySubarrayFromIndex(NSArray *array, NSUInteger index) {
     }
     return [array subarrayWithRange:NSMakeRange(index, array.count - index)];
 }
+
+// MARK: - NSDictionary
 
 NSDictionary *BSGDictMerge(NSDictionary *source, NSDictionary *destination) {
     if ([destination count] == 0) {
@@ -84,4 +99,51 @@ NSDictionary * BSGJSONDictionary(NSDictionary *dictionary) {
         }
     }
     return json;
+}
+
+// MARK: - NSSet
+
+void BSGSetAddIfNonnull(NSMutableSet *set, id _Nullable object) {
+    if (object) {
+        [set addObject:(id _Nonnull)object];
+    }
+}
+
+// MARK: - Deserialization
+
+NSDictionary * _Nullable BSGDeserializeDict(id _Nullable rawValue) {
+    if (![rawValue isKindOfClass:[NSDictionary class]]) {
+        return nil;
+    }
+    return (NSDictionary *)rawValue;
+}
+
+id _Nullable BSGDeserializeObject(id _Nullable rawValue, id _Nullable (^ deserializer)(NSDictionary * _Nonnull dict)) {
+    if (![rawValue isKindOfClass:[NSDictionary class]]) {
+        return nil;
+    }
+    return deserializer((NSDictionary *)rawValue);
+}
+
+id _Nullable BSGDeserializeArrayOfObjects(id _Nullable rawValue, id _Nullable (^ deserializer)(NSDictionary * _Nonnull dict)) {
+    if (![rawValue isKindOfClass:[NSArray class]]) {
+        return nil;
+    }
+    return BSGArrayMap((NSArray *)rawValue, ^id _Nullable(id _Nonnull value) {
+        return BSGDeserializeObject(value, deserializer);
+    });
+}
+
+NSString * _Nullable BSGDeserializeString(id _Nullable rawValue) {
+    if (![rawValue isKindOfClass:[NSString class]]) {
+        return nil;
+    }
+    return (NSString *)rawValue;
+}
+
+NSDate * _Nullable BSGDeserializeDate(id _Nullable rawValue) {
+    if (![rawValue isKindOfClass:[NSString class]]) {
+        return nil;
+    }
+    return [BSG_RFC3339DateTool dateFromString:(NSString *)rawValue];
 }

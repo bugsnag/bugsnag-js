@@ -1,6 +1,68 @@
 Changelog
 =========
 
+## 6.9.0 (2021-04-21)
+
+### Enhancements
+
+* App hangs that occur while the app is in the background will no longer be reported.
+  [#1075](https://github.com/bugsnag/bugsnag-cocoa/pull/1075)
+
+* Add `binaryArch` and `runningOnRosetta` to the `app` metadata tab.
+  [#1073](https://github.com/bugsnag/bugsnag-cocoa/pull/1073)
+
+* Bugsnag can now be used without AppKit, allowing use in daemons and other processes running in non-UI sessions.
+  [#1072](https://github.com/bugsnag/bugsnag-cocoa/pull/1072)
+
+## 6.8.4 (2021-04-14)
+
+### Enhancements
+
+* `macCatalystiOSVersion` is now reported for apps built with Mac Catalyst and iOS app running on Apple silicon.
+  [#1066](https://github.com/bugsnag/bugsnag-cocoa/pull/1066)
+
+### Bug fixes
+
+* Fix crashes that could occur in `bsg_recordException` in low memory conditions.
+  [#1068](https://github.com/bugsnag/bugsnag-cocoa/pull/1068)
+
+* Fix a crash in `bsg_ksmachgetThreadQueueName`.
+  [#1065](https://github.com/bugsnag/bugsnag-cocoa/pull/1065)
+
+* Improve timestamp accuracy to fix breadcrumbs that are reported to occur after the error.
+  [#1062](https://github.com/bugsnag/bugsnag-cocoa/pull/1062)
+
+## 6.8.3 (2021-04-07)
+
+### Bug fixes
+
+* Catch exceptions thrown while preparing JSON for upload rather than crashing.
+  [#1063](https://github.com/bugsnag/bugsnag-cocoa/pull/1063)
+
+* Prevent app hangs being reported if a debugger is attached.
+  [#1058](https://github.com/bugsnag/bugsnag-cocoa/pull/1058)
+
+## 6.8.2 (2021-03-31)
+
+### Bug fixes
+
+* Enable `SUPPORTS_MACCATALYST` in main Xcode project.
+  [#1056](https://github.com/bugsnag/bugsnag-cocoa/pull/1056)
+
+* `osName` and `osVersion` now reflect the Mac's OS when running Mac Catalyst apps or iOS apps running on macOS.
+  Fix reporting of `model` for Mac Catalyst apps or iOS apps running on macOS.
+  [#1055](https://github.com/bugsnag/bugsnag-cocoa/pull/1055)
+
+* Uncaught exceptions thrown while handing UI events in iOS apps running on macOS are now detected.
+  [#1053](https://github.com/bugsnag/bugsnag-cocoa/pull/1053)
+
+## 6.8.1 (2021-03-24)
+
+### Bug fixes
+
+* Fix unreliable ordering of breadcrumbs.
+  [#1049](https://github.com/bugsnag/bugsnag-cocoa/pull/1049)
+
 ## 6.8.0 (2021-03-18)
 
 ### Enhancements
