@@ -1,5 +1,6 @@
 module.exports = () => {
   return {
+    appType: 'complicated',
     appVersion: '2.0.83-beta3',
     context: 'shopping cart',
     user: {

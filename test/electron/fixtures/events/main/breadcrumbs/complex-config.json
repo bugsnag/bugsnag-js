@@ -13,6 +13,7 @@
         "releaseStage": "beta",
         "inForeground": "{TYPE:boolean}",
         "isLaunching": true,
+        "type": "complicated",
         "version": "2.0.83-beta3"
       },
       "context": "shopping cart",
