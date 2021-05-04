@@ -26,13 +26,16 @@ class PowerMonitor {
 
   private usingBattery: boolean
   private isLocked: boolean
+  private idleTime: number
 
   constructor ({
     usingBattery = false,
-    isLocked = false
+    isLocked = false,
+    idleTime = 0
   } = {}) {
     this.usingBattery = usingBattery
     this.isLocked = isLocked
+    this.idleTime = idleTime
   }
 
   on (event: PowerMonitorEvent, callback: Function): void {
@@ -46,6 +49,10 @@ class PowerMonitor {
 
     // https://github.com/electron/electron/blob/a9924e1c32e8445887e3a6b5cdff445d93c2b18f/shell/browser/api/electron_api_power_monitor.cc#L129-L130
     throw new TypeError('Invalid idle threshold, must be greater than 0')
+  }
+
+  getSystemIdleTime () {
+    return this.idleTime
   }
 
   get onBatteryPower () {

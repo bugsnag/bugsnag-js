@@ -115,6 +115,8 @@ module.exports = (app, screen, process, filestore, NativeClient, powerMonitor) =
         }
       )
 
+      event.addMetadata('device', { idleTime: powerMonitor.getSystemIdleTime() })
+
       setDefaultUserId(event)
     }, true)
 

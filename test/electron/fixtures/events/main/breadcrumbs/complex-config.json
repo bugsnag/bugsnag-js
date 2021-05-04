@@ -39,6 +39,8 @@
           "part": 3
         },
         "device": {
+          "online": "{TYPE:boolean}",
+          "idleTime": "{TYPE:number}",
           "screenResolution": {
             "width": "{TYPE:number}",
             "height": "{TYPE:number}"

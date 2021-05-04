@@ -33,7 +33,8 @@ const DEFAULTS = {
   time: expect.any(Date),
   totalMemory: 100, // this is in KiB to match Electron's API
   usingBattery: false,
-  isLocked: false
+  isLocked: false,
+  idleTime: 0
 }
 
 // expected data for 'session.device'
@@ -61,6 +62,7 @@ const makeExpectedMetadataDevice = (customisations = {}) => ({
   screenDensity: DEFAULTS.screenDensity,
   screenResolution: DEFAULTS.screenResolution,
   usingBattery: DEFAULTS.usingBattery,
+  idleTime: DEFAULTS.idleTime,
   ...customisations
 })
 
@@ -396,6 +398,17 @@ describe('plugin: electron device info', () => {
 
     const event3 = await sendEvent()
     expect(event3.getMetadata('device')).toEqual(makeExpectedMetadataDevice({ isLocked: false }))
+  })
+
+  it('records the system idle time', async () => {
+    const powerMonitor = makePowerMonitor({ idleTime: 1234 })
+
+    const { sendEvent } = makeClient({ powerMonitor })
+
+    await nextTick()
+
+    const event = await sendEvent()
+    expect(event.getMetadata('device')).toEqual(makeExpectedMetadataDevice({ idleTime: 1234 }))
   })
 
   it('sets user id to device id if no user id is set', async () => {
