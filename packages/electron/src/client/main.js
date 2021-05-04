@@ -51,6 +51,13 @@ module.exports = (opts) => {
 
   bugsnag._logger.debug('Loaded! In main process.')
 
+  // Normalise the project root upfront so renderers have a fully resolved path
+  // The renderers can't do this themselves as they cannot access the 'path' module
+  if (bugsnag._config.projectRoot) {
+    const normalizePath = require('@bugsnag/core/lib/path-normalizer')
+    bugsnag._config.projectRoot = normalizePath(bugsnag._config.projectRoot)
+  }
+
   return bugsnag
 }
 
