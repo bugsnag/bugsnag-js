@@ -9,19 +9,19 @@ steps:
   #     queue: opensource-mac-cocoa-11
   #   command: scripts/license_finder.sh
 
-  # #
-  # # Android builder base - used by React Native and React Native CLI
-  # #
-  # - label: ':docker: Build Android Builder base image'
-  #   key: 'android-builder-base'
-  #   timeout_in_minutes: 30
-  #   plugins:
-  #     - docker-compose#v3.3.0:
-  #         build: android-builder-base
-  #         image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
-  #         cache-from:  android-builder-base:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:android-builder-base
-  #     - docker-compose#v3.3.0:
-  #         push: android-builder-base:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:android-builder-base
+  #
+  # Android builder base - used by React Native and React Native CLI
+  #
+  - label: ':docker: Build Android Builder base image'
+    key: 'android-builder-base'
+    timeout_in_minutes: 30
+    plugins:
+      - docker-compose#v3.3.0:
+          build: android-builder-base
+          image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
+          cache-from:  android-builder-base:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:android-builder-base
+      - docker-compose#v3.3.0:
+          push: android-builder-base:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:android-builder-base
 
   #
   # Publish/package notifier
