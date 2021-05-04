@@ -30,7 +30,9 @@ describe.skip('@bugsnag/electron types', () => {
         onError: (event: Event) => {},
         onBreadcrumb: (breadcrumb: Breadcrumb) => {},
         plugins: [],
-        user: { id: '1234-abcd' }
+        user: { id: '1234-abcd' },
+        appType: 'good',
+        codeBundleId: '1245'
       })
     })
   })

@@ -56,7 +56,7 @@ module.exports = (NativeClient, process, electronApp, BrowserWindow, NativeApp =
       inForeground: BrowserWindow.getFocusedWindow() !== null,
       isLaunching: true,
       releaseStage: client._config.releaseStage,
-      type: osToAppType.get(process.platform),
+      type: client._config.appType || osToAppType.get(process.platform),
       version: version,
       bundleVersion: NativeApp.getPackageVersion() || version
     })

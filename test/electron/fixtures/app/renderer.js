@@ -1,6 +1,6 @@
 const Bugsnag = require('@bugsnag/electron')
 
-Bugsnag.start()
+Bugsnag.start(window.RunnerAPI.rendererConfig)
 const startupTimestamp = Date.now()
 
 function emulateOnlineStatus (online) {
