@@ -58,6 +58,8 @@ jobs:
     - name: (macOS) disable crash dialog
       if: contains(matrix.os, 'macos')
       run: defaults write com.apple.CrashReporter DialogType none
+    - name: run unit tests
+      run: npm run test:unit:electron-runner
     - name: run integration tests
       run: npm run test:electron
       shell: bash
