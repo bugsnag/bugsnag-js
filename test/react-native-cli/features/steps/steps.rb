@@ -81,10 +81,8 @@ def parse_package_json
 
   after = stdout_lines[length_before..stdout_lines.length]
 
-  # Drop lines that include the cat command above. This will sometimes appear
-  # once and sometimes appear twice, depending on if another command is running
-  # when it's input
-  json = after.drop_while { |line| line.include?('cat package.json') }
+  # Drop lines until we get to the start of the JSON
+  json = after.drop_while { |line| line != '{' }
 
   JSON.parse(json.join("\n"))
 end
@@ -210,9 +208,16 @@ Then("the iOS app contains the bugsnag initialisation code") do
   step("the interactive file '#{filename}' contains '[Bugsnag start];'")
 end
 
-Then("the Android app contains the bugsnag initialisation code") do
-  filename = "android/app/src/main/java/com/#{current_fixture}/MainApplication.java"
+def get_android_main_application_path(current_fixture)
+  if current_fixture.include? 'expo_ejected'
+    "android/app/src/main/java/com/bugsnag/#{current_fixture}/MainApplication.java"
+  else
+    "android/app/src/main/java/com/#{current_fixture}/MainApplication.java"
+  end
+end
 
+Then("the Android app contains the bugsnag initialisation code") do
+  filename = get_android_main_application_path current_fixture
   step("the interactive file '#{filename}' contains 'import com.bugsnag.android.Bugsnag;'")
   step("the interactive file '#{filename}' contains 'Bugsnag.start(this);'")
 end
@@ -225,8 +230,7 @@ Then("the iOS app does not contain the bugsnag initialisation code") do
 end
 
 Then("the Android app does not contain the bugsnag initialisation code") do
-  filename = "android/app/src/main/java/com/#{current_fixture}/MainApplication.java"
-
+  filename = get_android_main_application_path current_fixture
   step("the interactive file '#{filename}' does not contain 'import com.bugsnag.android.Bugsnag;'")
   step("the interactive file '#{filename}' does not contain 'Bugsnag.start(this);'")
 end
@@ -256,7 +260,7 @@ Then("the modified files are as expected after running the insert command") do
     When I input "git status --porcelain" interactively
     Then I wait for the interactive shell to output the following lines in stdout
       """
-      M android/app/src/main/java/com/#{current_fixture}/MainApplication.java
+      M #{get_android_main_application_path current_fixture}
       M index.js
       M ios/#{current_fixture}/AppDelegate.m
       """
@@ -290,7 +294,7 @@ def parse_xml_file(path)
   uuid = SecureRandom.uuid
 
   steps %Q{
-    When I input "cat #{path}" interactively
+    When I input "cat #{path} && echo ''" interactively
     And I input "echo #{uuid}" interactively
     Then I wait for the shell to output '#{uuid}' to stdout
   }
