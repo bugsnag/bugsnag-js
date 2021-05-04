@@ -1,8 +1,8 @@
 steps:
 
-  
-  Android builder
-  
+  #
+  # Android builder
+  #
   - label: ':docker: Build RN Android Builder image'
     key: "android-builder-image"
     timeout_in_minutes: 30
