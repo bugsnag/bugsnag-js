@@ -246,7 +246,7 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
     } else if ([event valueForKeyPath:@"user.event"] != nil) {
         return [self initWithUserData:event];
     } else {
-        return [self initWithKSCrashData:event];
+        return [self initWithKSCrashReport:event];
     }
 }
 
@@ -259,7 +259,7 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
  *
  * @return a BugsnagEvent containing the parsed information
  */
-- (instancetype)initWithKSCrashData:(NSDictionary *)event {
+- (instancetype)initWithKSCrashReport:(NSDictionary *)event {
     NSMutableDictionary *error = [[event valueForKeyPath:@"crash.error"] mutableCopy];
     NSString *errorType = error[BSGKeyType];
 
@@ -310,12 +310,9 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
     // generate threads/error info
     NSArray *binaryImages = event[@"binary_images"];
     NSArray *threadDict = [event valueForKeyPath:@"crash.threads"];
-    NSMutableArray<BugsnagThread *> *threads = [BugsnagThread threadsFromArray:threadDict
-                                                                  binaryImages:binaryImages
-                                                                         depth:depth
-                                                                     errorType:errorType];
+    NSArray<BugsnagThread *> *threads = [BugsnagThread threadsFromArray:threadDict binaryImages:binaryImages depth:depth errorType:errorType];
 
-    BugsnagThread *errorReportingThread;
+    BugsnagThread *errorReportingThread = nil;
     for (BugsnagThread *thread in threads) {
         if (thread.errorReportingThread) {
             errorReportingThread = thread;
@@ -323,7 +320,13 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
         }
     }
 
-    NSArray<BugsnagError *> *errors = @[[[BugsnagError alloc] initWithEvent:event errorReportingThread:errorReportingThread]];
+    NSArray<BugsnagError *> *errors = @[[[BugsnagError alloc] initWithKSCrashReport:event stacktrace:errorReportingThread.stacktrace ?: @[]]];
+
+    // KSCrash captures only the offending thread when sendThreads = BSGThreadSendPolicyNever.
+    // The BugsnagEvent should not contain threads in this case, only the stacktrace.
+    if (threads.count == 1) {
+        threads = @[];
+    }
 
     if (errorReportingThread.crashInfoMessage) {
         [errors[0] updateWithCrashInfoMessage:(NSString * _Nonnull)errorReportingThread.crashInfoMessage];
@@ -374,6 +377,7 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
     obj.enabledReleaseStages = BSGLoadConfigValue(event, BSGKeyEnabledReleaseStages);
     obj.releaseStage = BSGParseReleaseStage(event);
     obj.deviceAppHash = deviceAppHash;
+    obj.context = [event valueForKeyPath:@"user.state.client.context"];
     obj.customException = BSGParseCustomException(event, [errors[0].errorClass copy], [errors[0].errorMessage copy]);
     obj.error = error;
     obj.depth = depth;

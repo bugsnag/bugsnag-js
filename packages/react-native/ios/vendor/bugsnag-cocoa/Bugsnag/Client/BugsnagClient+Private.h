@@ -72,6 +72,32 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (readonly, nonatomic) BOOL started;
 
+/// State related metadata
+///
+/// Upon change this is automatically persisted to disk, making it available when contructing OOM payloads.
+/// Is it also added to KSCrashReports under `user.state` by `BSSerializeDataCrashHandler()`.
+///
+/// Example contents:
+///
+/// {
+///     "app": {
+///         "codeBundleId": "com.example.app",
+///         "isLaunching": true
+///     },
+///     "client": {
+///         "context": "MyViewController",
+///     },
+///     "deviceState": {
+///         "batteryLevel": 0.5,
+///         "charging": false,
+///         "lowMemoryWarning": "2021-01-01T15:29:02.170Z",
+///         "orientation": "portrait"
+///     },
+///     "user": {
+///         "id": "abc123",
+///         "name": "bob"
+///     }
+/// }
 @property (strong, nonatomic) BugsnagMetadata *state;
 
 @property (strong, nonatomic) NSMutableArray *stateEventBlocks;

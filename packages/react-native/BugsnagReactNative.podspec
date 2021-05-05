@@ -18,5 +18,5 @@ Pod::Spec.new do |s|
   s.public_header_files = "ios/vendor/bugsnag-cocoa/{#{bugsnag_cocoa_public_header_files.join(',')}}"
   s.header_dir = 'Bugsnag'
   s.requires_arc = true
-  s.dependency "React"
+  s.dependency "React-Core"
 end

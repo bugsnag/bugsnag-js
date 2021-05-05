@@ -1,5 +1,20 @@
 # Changelog
 
+## v7.9.6 (2021-05-05)
+
+### Added
+
+- (react-native-cli): Add support for ejected Expo apps [#1365](https://github.com/bugsnag/bugsnag-js/pull/1365)
+- (react-native): Add support for Xcode 12 [#1314](https://github.com/bugsnag/bugsnag-js/pull/1314)
+
+### Changed
+
+- (react-native): Update bugsnag-cocoa to v6.9.1
+  - Fix a possible deadlock when writing crash reports for uncaught Objective-C exceptions. [bugsnag-cocoa#1082](https://github.com/bugsnag/bugsnag-cocoa/pull/1082)
+  - Fix missing `context` for crash, OOM, and app hang errors. [bugsnag-cocoa#1079](https://github.com/bugsnag/bugsnag-cocoa/pull/1079)
+  - Fix `app` properties in OOMs for apps that override `appType`, `appVersion`, `bundleVersion` or `releaseStage` in their config. [bugsnag-cocoa#1078](https://github.com/bugsnag/bugsnag-cocoa/pull/1078)
+  - `event.threads` will now be empty, rather than containing a single thread, if `sendThreads` dictates that threads should not be sent. [bugsnag-cocoa#1077](https://github.com/bugsnag/bugsnag-cocoa/pull/1077)
+
 ## v7.9.5 (2021-04-26)
 
 ### Changed

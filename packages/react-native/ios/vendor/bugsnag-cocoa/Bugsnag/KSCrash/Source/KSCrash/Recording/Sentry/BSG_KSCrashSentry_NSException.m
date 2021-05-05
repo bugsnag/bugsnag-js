@@ -116,9 +116,6 @@ void bsg_recordException(NSException *exception) {
         bsg_lastHandledException = exception;
         BSG_KSLOG_DEBUG(@"Writing exception info into a new report");
 
-        BSG_KSLOG_DEBUG(@"Suspending all threads.");
-        bsg_kscrashsentry_suspendThreads();
-
         BSG_KSLOG_DEBUG(@"Filling out context.");
         NSArray *addresses = [exception callStackReturnAddresses];
         NSUInteger numFrames = [addresses count];
@@ -136,6 +133,9 @@ void bsg_recordException(NSException *exception) {
         bsg_g_context->crashReason = CopyUTF8String([exception reason]);
         bsg_g_context->stackTrace = callstack;
         bsg_g_context->stackTraceLength = callstack ? (int)numFrames : 0;
+
+        BSG_KSLOG_DEBUG(@"Suspending all threads.");
+        bsg_kscrashsentry_suspendThreads();
 
         BSG_KSLOG_DEBUG(@"Calling main crash handler.");
         bsg_g_context->onCrash(crashContext());

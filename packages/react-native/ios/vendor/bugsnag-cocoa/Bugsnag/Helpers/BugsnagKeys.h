@@ -24,6 +24,7 @@ extern NSString *const BSGKeyBatteryLevel;
 extern NSString *const BSGKeyBreadcrumbs;
 extern NSString *const BSGKeyBundleVersion;
 extern NSString *const BSGKeyCharging;
+extern NSString *const BSGKeyClient;
 extern NSString *const BSGKeyCodeBundleId;
 extern NSString *const BSGKeyConfig;
 extern NSString *const BSGKeyContext;
