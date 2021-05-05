@@ -1,6 +1,6 @@
 # Changelog
 
-## TBD
+## v7.10.0 (2021-05-05)
 
 ### Added
 
