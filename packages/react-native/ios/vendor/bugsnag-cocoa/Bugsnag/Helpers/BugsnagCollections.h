@@ -39,6 +39,9 @@ NSArray * BSGArraySubarrayFromIndex(NSArray *array, NSUInteger index);
 
 // MARK: - NSDictionary
 
+/// Returns a dictionary containing the key and object, or an empty dictionary if the object is nil.
+NSDictionary * BSGDictionaryWithKeyAndObject(NSString *key, id _Nullable object);
+
 /**
  *  Merge values from source dictionary with destination
  *

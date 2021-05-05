@@ -20,6 +20,7 @@ NSString *const BSGKeyBatteryLevel = @"batteryLevel";
 NSString *const BSGKeyBreadcrumbs = @"breadcrumbs";
 NSString *const BSGKeyBundleVersion = @"bundleVersion";
 NSString *const BSGKeyCharging = @"charging";
+NSString *const BSGKeyClient = @"client";
 NSString *const BSGKeyCodeBundleId = @"codeBundleId";
 NSString *const BSGKeyConfig = @"config";
 NSString *const BSGKeyContext = @"context";

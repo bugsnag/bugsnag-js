@@ -11,26 +11,12 @@
 #import "BSGFileLocations.h"
 #import "BugsnagLogger.h"
 
-static NSString *getCachesDir() {
-    NSArray *dirs = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-    if ([dirs count] == 0) {
-        bsg_log_err(@"Could not locate cache directory path.");
-        return nil;
-    }
-
-    if ([dirs[0] length] == 0) {
-        bsg_log_err(@"Cache directory path is empty!");
-        return nil;
-    }
-    return dirs[0];
-}
-
 @implementation BSGStorageMigratorV0V1
 
 + (BOOL) migrate {
     NSString *bundleName = [[NSBundle mainBundle] infoDictionary][@"CFBundleName"];
-    NSString *cachesDir = getCachesDir();
-    if(cachesDir == nil) {
+    NSString *cachesDir = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).firstObject;
+    if (!cachesDir.length) {
         bsg_log_err(@"Could not migrate v0 data to v1.");
         return false;
     }

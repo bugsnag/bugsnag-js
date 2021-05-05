@@ -20,6 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)populateFields:(BugsnagApp *)app dictionary:(NSDictionary *)event config:(BugsnagConfiguration *)config codeBundleId:(NSString *)codeBundleId;
 
+- (void)setValuesFromConfiguration:(BugsnagConfiguration *)configuration;
+
 - (NSDictionary *)toDict;
 
 @end

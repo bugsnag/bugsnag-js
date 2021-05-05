@@ -56,6 +56,10 @@ NSArray * BSGArraySubarrayFromIndex(NSArray *array, NSUInteger index) {
 
 // MARK: - NSDictionary
 
+NSDictionary * BSGDictionaryWithKeyAndObject(NSString *key, id _Nullable object) {
+    return object ? @{key: (id _Nonnull)object} : @{};
+}
+
 NSDictionary *BSGDictMerge(NSDictionary *source, NSDictionary *destination) {
     if ([destination count] == 0) {
         return source;

@@ -61,12 +61,27 @@ NSDictionary *BSGParseAppMetadata(NSDictionary *event) {
 {
     NSDictionary *system = event[BSGKeySystem];
     app.id = system[@"CFBundleIdentifier"];
-    app.bundleVersion = config.bundleVersion ?: system[@"CFBundleVersion"];
+    app.bundleVersion = system[@"CFBundleVersion"];
     app.dsymUuid = system[@"app_uuid"];
-    app.version = config.appVersion ?: system[@"CFBundleShortVersionString"];
-    app.releaseStage = config.releaseStage;
+    app.version = system[@"CFBundleShortVersionString"];
     app.codeBundleId = [event valueForKeyPath:@"user.state.app.codeBundleId"] ?: codeBundleId;
-    app.type = config.appType;
+    [app setValuesFromConfiguration:config];
+}
+
+- (void)setValuesFromConfiguration:(BugsnagConfiguration *)configuration
+{
+    if (configuration.appType) {
+        self.type = configuration.appType;
+    }
+    if (configuration.appVersion) {
+        self.version = configuration.appVersion;
+    }
+    if (configuration.bundleVersion) {
+        self.bundleVersion = configuration.bundleVersion;
+    }
+    if (configuration.releaseStage) {
+        self.releaseStage = configuration.releaseStage;
+    }
 }
 
 - (NSDictionary *)toDict
