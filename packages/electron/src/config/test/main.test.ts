@@ -1,9 +1,17 @@
 import { schema } from '../main'
 import * as electron from 'electron'
+import bindings from 'bindings'
 
 jest.mock('electron', () => ({
-  app: {}
+  app: {
+    getVersion: () => '1.2.3'
+  }
 }), { virtual: true })
+
+jest.mock('bindings', () => {
+  const bindingsObj = {}
+  return () => (bindingsObj)
+})
 
 afterEach(() => jest.resetAllMocks())
 
@@ -57,6 +65,20 @@ describe('main process client config schema', () => {
     it('is "development" when the app is not packaged', () => {
       (electron.app as unknown as any).isPackaged = false
       expect(schema.releaseStage.defaultValue()).toBe('development')
+    })
+  })
+
+  describe('appVersion', () => {
+    it('should pick up the default app version from native code', () => {
+      bindings().getPackageVersion = jest.fn(() => '4.5.6')
+      expect(schema.appVersion.defaultValue()).toBe('4.5.6')
+      expect(bindings().getPackageVersion).toHaveBeenCalledTimes(1)
+    })
+
+    it('should pick up the pick up the verson from app.getVersion() if native version is undefined', () => {
+      bindings().getPackageVersion = jest.fn(() => undefined)
+      expect(schema.appVersion.defaultValue()).toBe('1.2.3')
+      expect(bindings().getPackageVersion).toHaveBeenCalledTimes(1)
     })
   })
 })

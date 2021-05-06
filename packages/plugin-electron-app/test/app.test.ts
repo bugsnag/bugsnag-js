@@ -13,7 +13,6 @@ const makeExpectedSessionApp = (customisations = {}) => ({
   releaseStage: 'production',
   type: undefined,
   version: '1.2.3',
-  bundleVersion: '1.2.3',
   ...customisations
 })
 
@@ -25,6 +24,7 @@ const makeExpectedEventApp = (customisations = {}) => {
     inForeground: false,
     isLaunching: true,
     duration: expect.any(Number),
+    version: '1.2.3',
     ...customisations
   }
 }
@@ -92,54 +92,6 @@ describe('plugin: electron app info', () => {
 
     const session = await sendSession()
     expect(session.app).toEqual(makeExpectedSessionApp({ type: 'Linux' }))
-  })
-
-  it('reports app.version and app.bundleVersion for macOS', async () => {
-    const process = makeProcess({ platform: 'darwin' })
-    const electronApp = makeElectronApp({ version: '5.4.6' })
-
-    const { sendEvent, sendSession } = makeClient({ electronApp, process })
-
-    const expected = { type: 'macOS', version: '5.4.6', bundleVersion: '5.4.6' }
-
-    const event = await sendEvent()
-    expect(event.app).toEqual(makeExpectedEventApp(expected))
-    expect(event.getMetadata('app')).toEqual(makeExpectedMetadataApp())
-
-    const session = await sendSession()
-    expect(session.app).toEqual(makeExpectedSessionApp(expected))
-  })
-
-  it('reports app.version and app.bundleVersion for Windows', async () => {
-    const process = makeProcess({ platform: 'win32' })
-    const electronApp = makeElectronApp({ version: '1.3.4' })
-
-    const { sendEvent, sendSession } = makeClient({ electronApp, process })
-
-    const expected = { type: 'Windows', version: '1.3.4', bundleVersion: '1.3.4' }
-
-    const event = await sendEvent()
-    expect(event.app).toEqual(makeExpectedEventApp(expected))
-    expect(event.getMetadata('app')).toEqual(makeExpectedMetadataApp())
-
-    const session = await sendSession()
-    expect(session.app).toEqual(makeExpectedSessionApp(expected))
-  })
-
-  it('reports app.version and app.bundleVersion for Linux', async () => {
-    const process = makeProcess({ platform: 'linux' })
-    const electronApp = makeElectronApp({ version: '9.8.7' })
-
-    const { sendEvent, sendSession } = makeClient({ electronApp, process })
-
-    const expected = { type: 'Linux', version: '9.8.7', bundleVersion: '9.8.7' }
-
-    const event = await sendEvent()
-    expect(event.app).toEqual(makeExpectedEventApp(expected))
-    expect(event.getMetadata('app')).toEqual(makeExpectedMetadataApp())
-
-    const session = await sendSession()
-    expect(session.app).toEqual(makeExpectedSessionApp(expected))
   })
 
   it('reports if the app was installed from the macOS App Store', async () => {
@@ -604,7 +556,7 @@ describe('plugin: electron app info', () => {
     jest.setSystemTime(now)
 
     const process = makeProcess({ creationTime: null })
-    const config = { launchDurationMillis: undefined }
+    const config = { appVersion: '1.2.3', launchDurationMillis: undefined }
 
     const { sendEvent } = makeClient({ process, config })
 
@@ -634,7 +586,7 @@ describe('plugin: electron app info', () => {
     jest.setSystemTime(now)
 
     const process = makeProcess({ creationTime: null })
-    const config = { launchDurationMillis: 250 }
+    const config = { appVersion: '1.2.3', launchDurationMillis: 250 }
 
     const { sendEvent } = makeClient({ process, config })
 
@@ -657,7 +609,7 @@ describe('plugin: electron app info', () => {
 
     const NativeClient = makeNativeClient()
     const process = makeProcess({ creationTime: null })
-    const config = { launchDurationMillis: 250 }
+    const config = { appVersion: '1.2.3', launchDurationMillis: 250 }
 
     const { client, sendEvent } = makeClient({ NativeClient, process, config })
 
@@ -695,7 +647,7 @@ describe('plugin: electron app info', () => {
 
     const NativeClient = makeNativeClient()
     const process = makeProcess({ creationTime: null })
-    const config = { launchDurationMillis: 250 }
+    const config = { appVersion: '1.2.3', launchDurationMillis: 250 }
 
     const { client, sendEvent } = makeClient({ NativeClient, process, config })
 
@@ -743,7 +695,7 @@ interface MakeClientOptions {
   NativeClient?: any
   NativeApp?: any
   process?: any
-  config?: { launchDurationMillis: number|undefined }
+  config?: { launchDurationMillis: number|undefined, appVersion?: string }
 }
 
 function makeClient ({
@@ -751,12 +703,11 @@ function makeClient ({
   electronApp = makeElectronApp({ BrowserWindow }),
   NativeClient = makeNativeClient(),
   process = makeProcess(),
-  config = { launchDurationMillis: 0 },
-  NativeApp = makeNativeApp()
+  config = { launchDurationMillis: 0, appVersion: '1.2.3' }
 }: MakeClientOptions = {}): ReturnType<typeof makeClientForPlugin> {
   return makeClientForPlugin({
     config,
-    plugin: plugin(NativeClient, process, electronApp, BrowserWindow, NativeApp)
+    plugin: plugin(NativeClient, process, electronApp, BrowserWindow)
   })
 }
 
@@ -764,8 +715,4 @@ function makeNativeClient () {
   return {
     setApp: jest.fn()
   }
-}
-
-function makeNativeApp () {
-  return { getPackageVersion: () => null }
 }

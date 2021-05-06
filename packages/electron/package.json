@@ -12,7 +12,20 @@
   "publishConfig": {
     "access": "public"
   },
-  "scripts": {},
+  "gypfile": true,
+  "files": [
+    "binding.gyp",
+    "src/native_package_version/api.c",
+    "src/native_package_version/get_version.h",
+    "src/native_package_version/get_version-mac.m",
+    "src/native_package_version/get_version-linux.c",
+    "src/native_package_version/get_version-win.c",
+    "src/**/*.js"
+  ],
+  "scripts": {
+    "build": "node-gyp configure build",
+    "generate-compile-commands": "node-gyp configure --release -- -f gyp.generator.compile_commands_json.py; mv Release/compile_commands.json .; rm -rf Debug Release"
+  },
   "author": "Bugsnag",
   "license": "MIT",
   "dependencies": {
@@ -40,6 +53,7 @@
     "@bugsnag/plugin-node-unhandled-rejection": "^7.10.0-alpha.0",
     "@bugsnag/plugin-strip-project-root": "^7.10.0-alpha.0",
     "@bugsnag/plugin-window-onerror": "^7.10.0-alpha.0",
-    "@bugsnag/plugin-window-unhandled-rejection": "^7.10.0-alpha.0"
+    "@bugsnag/plugin-window-unhandled-rejection": "^7.10.0-alpha.0",
+    "bindings": "^1.5.0"
   }
 }
