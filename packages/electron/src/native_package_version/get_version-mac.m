@@ -7,7 +7,7 @@ const char *bugsnag_plugin_app_get_package_version() {
   // if any of the intermediate values (mainBundle, infoDictionary, etc) are
   // nil, the entire chain evaluates to nil
   const char *value =
-      [[[NSBundle mainBundle] infoDictionary][@"CFBundleVersion"] UTF8String];
+      [[[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"] UTF8String];
   if (value) {
     // copy the value as the existing reference will likely be invalidated in
     // the immediate future
