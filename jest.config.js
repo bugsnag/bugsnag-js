@@ -28,7 +28,7 @@ module.exports = {
   ],
   projects: [
     project('core', ['core']),
-    project('shared plugins', ['plugin-app-duration']),
+    project('shared plugins', ['plugin-app-duration', 'plugin-stackframe-path-normaliser']),
     project('browser', [
       'browser',
       'delivery-x-domain-request',
