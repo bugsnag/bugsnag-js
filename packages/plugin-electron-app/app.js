@@ -1,5 +1,5 @@
 const native = require('bindings')('bugsnag_plugin_electron_app_bindings')
-const schema = require('@bugsnag/core/config')
+const { schema } = require('@bugsnag/core/config')
 
 const osToAppType = new Map([
   ['darwin', 'macOS'],
