@@ -1,7 +1,7 @@
 {
   "targets": [
     {
-      "target_name": "bugsnag_plugin_electron_app_bindings",
+      "target_name": "bugsnag_pea_bindings",
       "sources": [
         "src/api.c",
         "src/get_version.h",
