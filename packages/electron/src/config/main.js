@@ -3,14 +3,9 @@ const stringWithLength = require('@bugsnag/core/lib/validators/string-with-lengt
 const listOfFunctions = require('@bugsnag/core/lib/validators/list-of-functions')
 const { inspect } = require('util')
 const { app } = require('electron')
-const NativeApp = require('bindings')('bugsnag_e_bindings')
 
 module.exports.schema = {
   ...schema,
-  appVersion: {
-    ...schema.appVersion,
-    defaultValue: () => NativeApp.getPackageVersion() || app.getVersion() || undefined
-  },
   logger: {
     ...schema.logger,
     defaultValue: () => getPrefixedConsole()

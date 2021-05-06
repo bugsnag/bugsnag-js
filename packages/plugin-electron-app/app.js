@@ -1,3 +1,6 @@
+const native = require('bindings')('bugsnag_plugin_electron_app_bindings')
+const schema = require('@bugsnag/core/config')
+
 const osToAppType = new Map([
   ['darwin', 'macOS'],
   ['linux', 'Linux'],
@@ -26,7 +29,7 @@ const getInstalledFromStore = process => {
   return undefined
 }
 
-module.exports = (NativeClient, process, electronApp, BrowserWindow) => ({
+module.exports = (NativeClient, process, electronApp, BrowserWindow, NativeApp = native) => ({
   name: 'electronApp',
   load (client) {
     const app = {}
@@ -130,6 +133,10 @@ module.exports = (NativeClient, process, electronApp, BrowserWindow) => ({
     return { markLaunchComplete }
   },
   configSchema: {
+    appVersion: {
+      ...schema.appVersion,
+      defaultValue: () => NativeApp.getPackageVersion() || electronApp.getVersion() || undefined
+    },
     launchDurationMillis: {
       defaultValue: () => 5000,
       message: 'should be a number ≥0',

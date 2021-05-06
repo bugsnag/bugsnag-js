@@ -21,12 +21,15 @@
     "app.js"
   ],
   "scripts": {
+    "build": "node-gyp configure build",
+    "generate-compile-commands": "node-gyp configure --release -- -f gyp.generator.compile_commands_json.py; mv Release/compile_commands.json .; rm -rf Debug Release"
   },
   "devDependencies": {
     "@bugsnag/core": "^7.10.0-alpha.0",
     "@bugsnag/electron-test-helpers": "^7.10.0-alpha.1"
   },
   "dependencies": {
+    "bindings": "^1.5.0"
   },
   "peerDependencies": {
     "@bugsnag/core": "^7.9.2"
