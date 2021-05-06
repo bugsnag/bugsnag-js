@@ -1,4 +1,4 @@
-const native = require('bindings')('bugsnag_plugin_electron_app_bindings')
+const native = require('bindings')('bugsnag_pea_bindings')
 
 const osToAppType = new Map([
   ['darwin', 'macOS'],
