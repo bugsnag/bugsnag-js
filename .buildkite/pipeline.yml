@@ -3,11 +3,11 @@ steps:
   #
   # License audit
   #
-  # - label: ':copyright: License Audit'
-  #   timeout_in_minutes: 20
-  #   agents:
-  #     queue: opensource-mac-cocoa-11
-  #   command: scripts/license_finder.sh
+  - label: ':copyright: License Audit'
+    timeout_in_minutes: 20
+    agents:
+      queue: opensource-mac-cocoa-11
+    command: scripts/license_finder.sh
 
   #
   # Android builder base - used by React Native and React Native CLI
@@ -49,35 +49,35 @@ steps:
   #
   # Trigger individual pipelines
   #
-  # - label: 'Trigger Browser pipeline'
-  #   if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
-  #   depends_on: 'package-js'
-  #   trigger: 'bugsnag-js-browser'
-  #   build:
-  #     branch: '${BUILDKITE_BRANCH}'
-  #     commit: '${BUILDKITE_COMMIT}'
-  #     message: '${BUILDKITE_MESSAGE}'
-  #   async: true
+  - label: 'Trigger Browser pipeline'
+    if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
+    depends_on: 'package-js'
+    trigger: 'bugsnag-js-browser'
+    build:
+      branch: '${BUILDKITE_BRANCH}'
+      commit: '${BUILDKITE_COMMIT}'
+      message: '${BUILDKITE_MESSAGE}'
+    async: true
 
-  # - label: 'Trigger Node pipeline'
-  #   if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
-  #   depends_on: 'package-js'
-  #   trigger: 'bugsnag-js-node'
-  #   build:
-  #     branch: '${BUILDKITE_BRANCH}'
-  #     commit: '${BUILDKITE_COMMIT}'
-  #     message: '${BUILDKITE_MESSAGE}'
-  #   async: true
+  - label: 'Trigger Node pipeline'
+    if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
+    depends_on: 'package-js'
+    trigger: 'bugsnag-js-node'
+    build:
+      branch: '${BUILDKITE_BRANCH}'
+      commit: '${BUILDKITE_COMMIT}'
+      message: '${BUILDKITE_MESSAGE}'
+    async: true
 
-  # - label: 'Trigger Expo pipeline'
-  #   if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
-  #   depends_on: 'publish-js'
-  #   trigger: 'bugsnag-js-expo'
-  #   build:
-  #     branch: '${BUILDKITE_BRANCH}'
-  #     commit: '${BUILDKITE_COMMIT}'
-  #     message: '${BUILDKITE_MESSAGE}'
-  #   async: true
+  - label: 'Trigger Expo pipeline'
+    if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
+    depends_on: 'publish-js'
+    trigger: 'bugsnag-js-expo'
+    build:
+      branch: '${BUILDKITE_BRANCH}'
+      commit: '${BUILDKITE_COMMIT}'
+      message: '${BUILDKITE_MESSAGE}'
+    async: true
 
   - label: 'Trigger React Native pipeline'
     depends_on:
@@ -90,77 +90,77 @@ steps:
       message: '${BUILDKITE_MESSAGE}'
     async: true
 
-  # - label: 'Trigger React Native CLI pipeline'
-  #   if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
-  #   depends_on:
-  #     - 'publish-js'
-  #     - 'android-builder-base'
-  #   trigger: 'bugsnag-js-react-native-cli'
-  #   build:
-  #     branch: '${BUILDKITE_BRANCH}'
-  #     commit: '${BUILDKITE_COMMIT}'
-  #     message: '${BUILDKITE_MESSAGE}'
-  #   async: true
+  - label: 'Trigger React Native CLI pipeline'
+    if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
+    depends_on:
+      - 'publish-js'
+      - 'android-builder-base'
+    trigger: 'bugsnag-js-react-native-cli'
+    build:
+      branch: '${BUILDKITE_BRANCH}'
+      commit: '${BUILDKITE_COMMIT}'
+      message: '${BUILDKITE_MESSAGE}'
+    async: true
 
-  # - label: ':aws-lambda: AWS Lambda tests'
-  #   if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
-  #   timeout_in_minutes: 35
-  #   agents:
-  #     queue: 'opensource-mac-aws-sam'
-  #   commands:
-  #     # force the NPM registry as the default on CI is artifactory, which can't
-  #     # currently install from our lockfile
-  #     - npm ci --registry https://registry.npmjs.org
-  #     - cd test/aws-lambda
-  #     - bundle install
-  #     - bundle exec maze-runner
+  - label: ':aws-lambda: AWS Lambda tests'
+    if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
+    timeout_in_minutes: 35
+    agents:
+      queue: 'opensource-mac-aws-sam'
+    commands:
+      # force the NPM registry as the default on CI is artifactory, which can't
+      # currently install from our lockfile
+      - npm ci --registry https://registry.npmjs.org
+      - cd test/aws-lambda
+      - bundle install
+      - bundle exec maze-runner
 
-  # #
-  # # Core tests and checks
-  # #
-  # - label: ':docker: Build CI image'
-  #   if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
-  #   key: 'ci-image'
-  #   depends_on: 'package-js'
-  #   timeout_in_minutes: 20
-  #   plugins:
-  #     - artifacts#v1.2.0:
-  #         download: min_packages.tar
-  #     - docker-compose#v3.7.0:
-  #         build:
-  #           - ci
-  #         image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
-  #         cache-from:
-  #           - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base-${BRANCH_NAME}
-  #           - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base
-  #     - docker-compose#v3.7.0:
-  #         push:
-  #           - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base-${BRANCH_NAME}
-  #           - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base
+  #
+  # Core tests and checks
+  #
+  - label: ':docker: Build CI image'
+    if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
+    key: 'ci-image'
+    depends_on: 'package-js'
+    timeout_in_minutes: 20
+    plugins:
+      - artifacts#v1.2.0:
+          download: min_packages.tar
+      - docker-compose#v3.7.0:
+          build:
+            - ci
+          image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
+          cache-from:
+            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base-${BRANCH_NAME}
+            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base
+      - docker-compose#v3.7.0:
+          push:
+            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base-${BRANCH_NAME}
+            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base
 
-  # - label: 'Lint'
-  #   if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
-  #   depends_on: 'ci-image'
-  #   timeout_in_minutes: 10
-  #   plugins:
-  #     docker-compose#v3.7.0:
-  #       run: ci
-  #   command: 'npm run test:lint'
+  - label: 'Lint'
+    if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
+    depends_on: 'ci-image'
+    timeout_in_minutes: 10
+    plugins:
+      docker-compose#v3.7.0:
+        run: ci
+    command: 'npm run test:lint'
 
-  # - label: 'Unit tests'
-  #   if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
-  #   depends_on: 'ci-image'
-  #   timeout_in_minutes: 10
-  #   plugins:
-  #     docker-compose#v3.7.0:
-  #       run: ci
-  #   command: 'npm run test:unit'
+  - label: 'Unit tests'
+    if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
+    depends_on: 'ci-image'
+    timeout_in_minutes: 10
+    plugins:
+      docker-compose#v3.7.0:
+        run: ci
+    command: 'npm run test:unit'
 
-  # - label: 'Type checks/tests'
-  #   if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
-  #   depends_on: 'ci-image'
-  #   timeout_in_minutes: 10
-  #   plugins:
-  #     docker-compose#v3.7.0:
-  #       run: ci
-  #   command: 'npm run test:types'
+  - label: 'Type checks/tests'
+    if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
+    depends_on: 'ci-image'
+    timeout_in_minutes: 10
+    plugins:
+      docker-compose#v3.7.0:
+        run: ci
+    command: 'npm run test:types'
