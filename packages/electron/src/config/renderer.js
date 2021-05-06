@@ -20,7 +20,12 @@ module.exports.schema = {
   },
   logger: Object.assign({}, schema.logger, {
     defaultValue: () => getPrefixedConsole()
-  })
+  }),
+  codeBundleId: {
+    defaultValue: () => null,
+    message: 'should be a string',
+    validate: val => (val === null || stringWithLength(val))
+  }
 }
 
 module.exports.mergeOptions = (mainOpts, rendererOpts) => {
