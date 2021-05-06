@@ -27,7 +27,7 @@ describe('plugin: electron renderer event data', () => {
 
     expect(event.context).toBe(context)
     expect(event.breadcrumbs).toStrictEqual(breadcrumbs)
-    expect(event.app).toStrictEqual({ ...app, releaseStage: 'production', type: undefined, version: undefined })
+    expect(event.app).toStrictEqual({ ...app, releaseStage: 'production', type: undefined, version: undefined, codeBundleId: undefined })
     expect(event.device).toStrictEqual(device)
     expect(event.getUser()).toStrictEqual(user)
     expect(event.getMetadata('meta')).toStrictEqual(metadata.meta)
