@@ -93,7 +93,7 @@ describe('plugin: electron app info', () => {
     expect(session.app).toEqual(makeExpectedSessionApp({ type: 'Linux' }))
   })
 
-  it('reports app.version and app.bundleVersion for macOS', async () => {
+  it('reports app.version and metadata.app.CFBundleVersion for macOS', async () => {
     const process = makeProcess({ platform: 'darwin' })
     const electronApp = makeElectronApp({ version: '5.4.6' })
 
@@ -101,7 +101,8 @@ describe('plugin: electron app info', () => {
       electronApp,
       process,
       NativeApp: {
-        getPackageVersion: () => '5.4.6'
+        getPackageVersion: () => '5.4.6',
+        getBundleVersion: () => '8.7.9'
       }
     })
 
@@ -109,13 +110,13 @@ describe('plugin: electron app info', () => {
 
     const event = await sendEvent()
     expect(event.app).toEqual(makeExpectedEventApp(expected))
-    expect(event.getMetadata('app')).toEqual(makeExpectedMetadataApp())
+    expect(event.getMetadata('app')).toEqual(makeExpectedMetadataApp({ CFBundleVersion: '8.7.9' }))
 
     const session = await sendSession()
     expect(session.app).toEqual(makeExpectedSessionApp(expected))
   })
 
-  it('reports app.version and app.bundleVersion for Windows', async () => {
+  it('reports app.version for Windows', async () => {
     const process = makeProcess({ platform: 'win32' })
     const electronApp = makeElectronApp({ version: '1.0.0' })
 
@@ -123,7 +124,8 @@ describe('plugin: electron app info', () => {
       electronApp,
       process,
       NativeApp: {
-        getPackageVersion: () => '1.3.4'
+        getPackageVersion: () => '1.3.4',
+        getBundleVersion: () => null
       }
     })
 
@@ -778,5 +780,5 @@ function makeNativeClient () {
 }
 
 function makeNativeApp () {
-  return { getPackageVersion: () => null }
+  return { getPackageVersion: () => null, getBundleVersion: () => null }
 }
