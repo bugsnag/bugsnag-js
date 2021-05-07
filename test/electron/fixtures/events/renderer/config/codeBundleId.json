@@ -14,7 +14,7 @@
         "inForeground": "{TYPE:boolean}",
         "isLaunching": "{TYPE:boolean}",
         "version": "1.0.2",
-        "type": "{REGEX:^Linux|macOS|Windows$}",
+        "type": "{PLATFORM_LINUX:Linux|PLATFORM_MACOS:macOS|PLATFORM_WINDOWS:Windows}",
         "codeBundleId": "1.0.0-r0123"
       },
       "device": {
@@ -34,7 +34,8 @@
       },
       "metaData": {
         "app": {
-          "name": "Runner"
+          "name": "Runner",
+          "CFBundleVersion": "{PLATFORM_MACOS:1.0.2}"
         },
         "device": {
           "online": "{TYPE:boolean}",

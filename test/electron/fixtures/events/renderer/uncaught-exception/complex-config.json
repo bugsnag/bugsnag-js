@@ -36,7 +36,8 @@
         },
         "app": {
           "name": "Runner",
-          "part": 3
+          "part": 3,
+          "CFBundleVersion": "{PLATFORM_MACOS:1.0.2}"
         },
         "device": {
           "online": "{TYPE:boolean}",
