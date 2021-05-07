@@ -35,6 +35,7 @@
     "@bugsnag/plugin-node-uncaught-exception": "^7.10.0-alpha.0",
     "@bugsnag/plugin-node-unhandled-rejection": "^7.10.0-alpha.0",
     "@bugsnag/plugin-server-session": "^7.10.0-alpha.0",
+    "@bugsnag/plugin-stackframe-path-normaliser": "^7.10.0-alpha.1",
     "@bugsnag/plugin-strip-project-root": "^7.10.0-alpha.0"
   },
   "dependencies": {

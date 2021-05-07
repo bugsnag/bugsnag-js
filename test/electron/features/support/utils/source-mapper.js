@@ -1,11 +1,13 @@
 const { access, readFile } = require('fs').promises
 const { F_OK } = require('fs').constants
 const { SourceMapConsumer } = require('source-map')
-const { join, normalize } = require('path')
+const { join, normalize: pathNormalize } = require('path')
 const { promisify } = require('util')
 const glob = promisify(require('glob'))
 
 const cache = {} // source map consumers are expensive
+
+const normalize = path => pathNormalize(path).replace(/\\/g, '/')
 
 const sourceMapFor = async (file) => {
   try {

@@ -41,6 +41,7 @@ module.exports = (opts) => {
     require('@bugsnag/plugin-electron-process-info')(),
     require('@bugsnag/plugin-electron-preload-error')(electron.app),
     require('@bugsnag/plugin-electron-net-breadcrumbs')(electron.net),
+    require('@bugsnag/plugin-stackframe-path-normaliser'),
     // THIS PLUGIN MUST BE LAST!
     require('@bugsnag/plugin-internal-callback-marker').LastPlugin
   ]
