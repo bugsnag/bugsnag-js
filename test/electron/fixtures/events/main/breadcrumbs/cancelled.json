@@ -13,7 +13,7 @@
         "releaseStage": "production",
         "inForeground": "{TYPE:boolean}",
         "isLaunching": true,
-        "type": "{REGEX:^Linux|macOS|Windows$}",
+        "type": "{PLATFORM_LINUX:Linux|PLATFORM_MACOS:macOS|PLATFORM_WINDOWS:Windows}",
         "version": "1.0.2"
       },
       "device": {
@@ -31,7 +31,8 @@
       },
       "metaData": {
         "app": {
-          "name": "Runner"
+          "name": "Runner",
+          "CFBundleVersion": "{PLATFORM_MACOS:1.0.2}"
         },
         "device": {
           "online": "{TYPE:boolean}",

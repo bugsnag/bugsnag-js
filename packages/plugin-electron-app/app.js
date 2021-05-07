@@ -62,7 +62,8 @@ module.exports = (NativeClient, process, electronApp, BrowserWindow, NativeApp =
 
     client.addMetadata('app', {
       installedFromStore: getInstalledFromStore(process),
-      name: electronApp.getName()
+      name: electronApp.getName(),
+      CFBundleVersion: NativeApp.getBundleVersion() || undefined
     })
 
     electronApp.on('browser-window-focus', () => {

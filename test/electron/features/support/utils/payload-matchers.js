@@ -6,6 +6,15 @@ const regexMatcher = /^{REGEX:(.*)}$/
 const typeMatcher = /^{TYPE:(.*)}$/
 const timestampMatcher = /^{TIMESTAMP}$/
 const timestampPattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/
+const platformMatcher = /PLATFORM_(?<platform>MACOS|LINUX|WINDOWS):(?<expected>[^|}]+)/g
+
+const platforms = {
+  darwin: 'MACOS',
+  win32: 'WINDOWS',
+  linux: 'LINUX'
+}
+
+const currentPlatform = platforms[process.platform] || process.platform
 
 /* Assert value is a string and matches a regular expression */
 const compareRegex = (pattern, actual, path) => {
@@ -84,7 +93,9 @@ const compareArray = (expected, actual, path) => {
 
 /* Assert some variety of value matches an expected thing (of some variety) */
 const compare = (expected, actual, path = '') => {
-  if (typeof actual === 'undefined') {
+  // Ensure there's an actual value, unless this is a platform specific matcher
+  // Some platforms may not have values for fields that are specific to other platforms
+  if (typeof actual === 'undefined' && !expected.match(platformMatcher)) {
     return [{ path, expected, actual, message: 'Expected a value but was undefined' }]
   }
   switch (typeof expected) {
@@ -109,6 +120,21 @@ const compare = (expected, actual, path = '') => {
       } else if (expected.match(regexMatcher)) {
         const pattern = expected.match(regexMatcher)[1]
         return compareRegex(pattern, actual, path)
+      } else if (expected.match(platformMatcher)) {
+        const matches = Array.from(expected.matchAll(platformMatcher))
+        const groups = matches.map(match => match.groups)
+        const platformToExpected = new Map(groups.map(group => [group.platform, group.expected]))
+        const platformSpecificExpected = platformToExpected.get(currentPlatform)
+
+        if (platformSpecificExpected === undefined) {
+          if (actual === undefined) {
+            return []
+          }
+
+          return [{ path, expected, actual, message: `Expected no value for ${currentPlatform}` }]
+        }
+
+        return compare(platformSpecificExpected, actual, path)
       } else {
         return compareExact(expected, actual, path)
       }
