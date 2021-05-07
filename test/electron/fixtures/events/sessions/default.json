@@ -19,8 +19,7 @@
   "app": {
     "releaseStage": "production",
     "version": "1.0.2",
-    "type": "{REGEX:^Linux|macOS|Windows$}",
-    "bundleVersion": "1.0.2"
+    "type": "{REGEX:^Linux|macOS|Windows$}"
   },
   "sessions": [
     {

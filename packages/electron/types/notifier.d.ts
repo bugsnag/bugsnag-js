@@ -27,7 +27,7 @@ interface MainConfig extends Config {
 
 // a renderer is only allowed a subset of properties from Config
 // this must match the "ALLOWED_IN_RENDERER" list in the renderer config
-type AllowedRendererConfig = Pick<Config, 'onError'|'onBreadcrumb'|'logger'|'metadata'|'user'|'context'|'codeBundleId'|'plugins'|'appType'>
+type AllowedRendererConfig = Pick<Config, 'onError'|'onBreadcrumb'|'logger'|'metadata'|'user'|'context'|'plugins'|'appType'>
 
 interface RendererConfig extends AllowedRendererConfig {
   codeBundleId?: string

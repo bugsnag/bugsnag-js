@@ -15,3 +15,4 @@ Feature: Setting config options in renderers
         Examples:
             | property | config                      |
             | appType  | { "appType": "real great" } |
+            | codeBundleId  | { "codeBundleId": "1.0.0-r0123" } |

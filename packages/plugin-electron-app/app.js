@@ -1,4 +1,5 @@
-const native = require('bindings')('bugsnag_pea_bindings')
+const native = require('bindings')('bugsnag_plugin_electron_app_bindings')
+const { schema } = require('@bugsnag/core/config')
 
 const osToAppType = new Map([
   ['darwin', 'macOS'],
@@ -51,14 +52,12 @@ module.exports = (NativeClient, process, electronApp, BrowserWindow, NativeApp =
     const appStart = Math.round(process.getCreationTime() || Date.now())
     let lastEnteredForeground = appStart
 
-    const version = client._config.appVersion || electronApp.getVersion()
     updateApp({
       inForeground: BrowserWindow.getFocusedWindow() !== null,
       isLaunching: true,
       releaseStage: client._config.releaseStage,
       type: client._config.appType || osToAppType.get(process.platform),
-      version: version,
-      bundleVersion: NativeApp.getPackageVersion() || version
+      version: client._config.appVersion
     })
 
     client.addMetadata('app', {
@@ -134,6 +133,10 @@ module.exports = (NativeClient, process, electronApp, BrowserWindow, NativeApp =
     return { markLaunchComplete }
   },
   configSchema: {
+    appVersion: {
+      ...schema.appVersion,
+      defaultValue: () => NativeApp.getPackageVersion() || electronApp.getVersion() || undefined
+    },
     launchDurationMillis: {
       defaultValue: () => 5000,
       message: 'should be a number ≥0',
