@@ -3,6 +3,7 @@ const stringWithLength = require('@bugsnag/core/lib/validators/string-with-lengt
 const listOfFunctions = require('@bugsnag/core/lib/validators/list-of-functions')
 const { inspect } = require('util')
 const { app } = require('electron')
+const normalizePath = require('@bugsnag/core/lib/path-normalizer')
 
 module.exports.schema = {
   ...schema,
@@ -30,7 +31,7 @@ module.exports.schema = {
     validate: value => typeof value === 'function'
   },
   projectRoot: {
-    defaultValue: () => app.getAppPath(),
+    defaultValue: () => normalizePath(app.getAppPath()),
     validate: value => value === null || stringWithLength(value),
     message: 'should be string'
   },

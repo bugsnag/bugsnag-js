@@ -24,6 +24,13 @@ module.exports = (opts) => {
     electron.app.getPath('crashDumps')
   )
 
+  // Normalise the project root upfront so renderers have a fully resolved path
+  // The renderers can't do this themselves as they cannot access the 'path' module
+  if (opts.projectRoot) {
+    const normalizePath = require('@bugsnag/core/lib/path-normalizer')
+    opts.projectRoot = normalizePath(opts.projectRoot)
+  }
+
   // main internal plugins go here
   const internalPlugins = [
     // THIS PLUGIN MUST BE FIRST!
@@ -51,13 +58,6 @@ module.exports = (opts) => {
   bugsnag._setDelivery(makeDelivery(filestore, electron.net, electron.app))
 
   bugsnag._logger.debug('Loaded! In main process.')
-
-  // Normalise the project root upfront so renderers have a fully resolved path
-  // The renderers can't do this themselves as they cannot access the 'path' module
-  if (bugsnag._config.projectRoot) {
-    const normalizePath = require('@bugsnag/core/lib/path-normalizer')
-    bugsnag._config.projectRoot = normalizePath(bugsnag._config.projectRoot)
-  }
 
   return bugsnag
 }
