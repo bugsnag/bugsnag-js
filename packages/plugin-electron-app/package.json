@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-electron-app",
-  "version": "7.10.0-alpha.1",
+  "version": "7.10.0-alpha.2",
   "main": "app.js",
   "description": "@bugsnag/electron plugin to collect app information",
   "repository": {
