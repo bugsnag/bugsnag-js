@@ -58,7 +58,7 @@ steps:
     key: "rn-0-63-ipa"
     timeout_in_minutes: 60
     agents:
-      queue: "opensource-mac-rn"
+      queue: "opensource-mac-cocoa-11"
     env:
       REACT_NATIVE_VERSION: rn0.63
     artifact_paths: build/rn0.63.ipa
@@ -116,7 +116,7 @@ steps:
     key: "react-navigation-0-63-ipa"
     timeout_in_minutes: 60
     agents:
-      queue: "opensource-mac-rn"
+      queue: "opensource-mac-cocoa-11"
     env:
       REACT_NATIVE_VERSION: rn0.63
       JS_SOURCE_DIR: "react_navigation_js"
@@ -176,7 +176,7 @@ steps:
     key: "react-native-navigation-0-63-ipa"
     timeout_in_minutes: 60
     agents:
-      queue: "opensource-mac-rn"
+      queue: "opensource-mac-cocoa-11"
     env:
       REACT_NATIVE_VERSION: rn0.63
       JS_SOURCE_DIR: "react_native_navigation_js"
