@@ -89,8 +89,10 @@ describe.skip('@bugsnag/electron types', () => {
         plugins: [],
         redactedKeys: ['b'],
         releaseStage: 'vOv',
-        user: { id: '1234-abcd' }
+        user: { id: '1234-abcd' },
+        launchDurationMillis: 100
       })
+      Bugsnag.markLaunchComplete()
     })
   })
 })

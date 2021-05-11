@@ -59,6 +59,11 @@ module.exports = (rendererOpts) => {
   // noop session delegate for now
   bugsnag._sessionDelegate = { startSession: () => bugsnag, resumeSession: () => {}, pauseSession: () => {} }
 
+  // the types will show that the renderer has this method, but it only works in main
+  bugsnag.markLaunchComplete = () => {
+    bugsnag._logger.warn('Bugsnag.markLaunchComplete() can only be called in the main process')
+  }
+
   bugsnag._logger.debug('Loaded! In renderer process.')
 
   return bugsnag

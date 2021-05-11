@@ -23,6 +23,7 @@ interface MainConfig extends Config {
   onUncaughtException?: AfterErrorCallback
   onUnhandledRejection?: AfterErrorCallback
   projectRoot?: string
+  launchDurationMillis?: number
 }
 
 // a renderer is only allowed a subset of properties from Config
@@ -33,7 +34,11 @@ interface RendererConfig extends AllowedRendererConfig {
   codeBundleId?: string
 }
 
-interface ElectronBugsnagStatic extends Client {
+declare class ElectronClient extends Client {
+  markLaunchComplete: () => void
+}
+
+interface ElectronBugsnagStatic extends ElectronClient {
   start: (apiKeyOrOpts?: string | MainConfig | RendererConfig) => Client
   createClient: (apiKeyOrOpts?: string | MainConfig | RendererConfig) => Client
 }
@@ -42,4 +47,4 @@ declare const Bugsnag: ElectronBugsnagStatic
 
 export default Bugsnag
 export * from '@bugsnag/core'
-export { MainConfig, RendererConfig }
+export { ElectronClient as Client, MainConfig, RendererConfig }
