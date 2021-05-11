@@ -1,5 +1,6 @@
 const native = require('bindings')('bugsnag_plugin_electron_app_bindings')
 const { schema } = require('@bugsnag/core/config')
+const intRange = require('@bugsnag/core/lib/validators/int-range')
 
 const osToAppType = new Map([
   ['darwin', 'macOS'],
@@ -140,8 +141,8 @@ module.exports = (NativeClient, process, electronApp, BrowserWindow, NativeApp =
     },
     launchDurationMillis: {
       defaultValue: () => 5000,
-      message: 'should be a number ≥0',
-      validate: value => value >= 0
+      message: 'should be an integer ≥0',
+      validate: intRange(0)
     }
   }
 })

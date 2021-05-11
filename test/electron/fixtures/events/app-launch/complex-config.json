@@ -12,7 +12,7 @@
         "duration": "{TYPE:number}",
         "releaseStage": "beta",
         "inForeground": "{TYPE:boolean}",
-        "isLaunching": "{TYPE:boolean}",
+        "isLaunching": false,
         "type": "complicated",
         "version": "2.0.83-beta3"
       },
@@ -25,7 +25,6 @@
         },
         "id": "{REGEX:[0-9a-f]{64}}",
         "freeMemory": "{TYPE:number}",
-        "locale": "{REGEX:^[a-z]{2}(-[A-Z]{2})?$}",
         "time": "{TIMESTAMP}",
         "totalMemory": "{TYPE:number}",
         "osVersion": "{REGEX:\\d+\\.\\d+}"
@@ -65,71 +64,37 @@
         {
           "type": "state",
           "name": "App became ready",
-          "timestamp": "{TIMESTAMP}",
-          "metaData": {}
+          "timestamp": "{TIMESTAMP}"
         },
         {
           "type": "state",
           "name": "Browser window 1 created",
           "timestamp": "{TIMESTAMP}",
           "metaData": {
+            "id": 1
+          }
+        },
+        {
+          "type": "state",
+          "name": "Browser window 1 was shown",
+          "timestamp": "{TIMESTAMP}",
+          "metaData": {
             "id": 1,
-            "title": ""
-          }
-        },
-        {
-          "type": "user",
-          "name": "UI click",
-          "timestamp": "{TIMESTAMP}",
-          "metaData": {
-            "targetText": "console.log in main process",
-            "targetSelector": "A#main-process-console-log"
-          }
-        },
-        {
-          "type": "log",
-          "name": "Console output",
-          "timestamp": "{TIMESTAMP}",
-          "metaData": {
-            "severity": "log",
-            "[0]": "abc",
-            "[1]": "123"
-          }
-        },
-        {
-          "type": "user",
-          "name": "UI click",
-          "timestamp": "{TIMESTAMP}",
-          "metaData": {
-            "targetText": "console.log in renderer process",
-            "targetSelector": "A#renderer-process-console-log"
-          }
-        },
-        {
-          "type": "log",
-          "name": "Console output",
-          "timestamp": "{TIMESTAMP}",
-          "metaData": {
-            "severity": "log",
-            "[0]": "xyz",
-            "[1]": "456"
-          }
-        },
-        {
-          "type": "user",
-          "name": "UI click",
-          "timestamp": "{TIMESTAMP}",
-          "metaData": {
-            "targetText": "Uncaught exception in main process",
-            "targetSelector": "A#main-process-uncaught-exception"
+            "title": "Runner"
           }
         }
       ],
       "exceptions": [
         {
-          "errorClass": "ReferenceError",
           "errorMessage": "foo is not defined",
-          "stacktrace": []
+          "errorClass": "ReferenceError",
+          "stacktrace": [
+            {
+              "lineNumber": 315,
+              "file": "events.js"
+            }
+          ],
+          "type": "electronnodejs"
         }
       ]
     }

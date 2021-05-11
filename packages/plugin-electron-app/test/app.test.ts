@@ -745,7 +745,7 @@ describe('plugin: electron app info', () => {
 
     expect((client._config as (typeof client._config & { launchDurationMillis: string })).launchDurationMillis).toBe(5000)
     expect(client._logger.warn).toHaveBeenCalledWith(new Error(
-      'Invalid configuration\n  - launchDurationMillis should be a number ≥0, got -1234567890'
+      'Invalid configuration\n  - launchDurationMillis should be an integer ≥0, got -1234567890'
     ))
   })
 })

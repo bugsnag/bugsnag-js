@@ -17,6 +17,7 @@ module.exports = () => {
         name: 'shop co'
       }
     },
-    releaseStage: 'beta'
+    releaseStage: 'beta',
+    launchDurationMillis: 1
   }
 }

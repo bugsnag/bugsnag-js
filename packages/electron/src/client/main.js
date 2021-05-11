@@ -57,6 +57,11 @@ module.exports = (opts) => {
 
   bugsnag._setDelivery(makeDelivery(filestore, electron.net, electron.app))
 
+  // expose markLaunchComplete as a method on the Bugsnag client/facade
+  const electronApp = bugsnag.getPlugin('electronApp')
+  const { markLaunchComplete } = electronApp
+  bugsnag.markLaunchComplete = markLaunchComplete
+
   bugsnag._logger.debug('Loaded! In main process.')
 
   return bugsnag

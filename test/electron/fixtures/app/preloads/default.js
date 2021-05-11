@@ -20,5 +20,8 @@ contextBridge.exposeInMainWorld('RunnerAPI', {
   mainProcessLog: (...args) => {
     ipcRenderer.send('main-process-console-log', ...args)
   },
+  markLaunchComplete: () => {
+    ipcRenderer.send('mark-launch-complete')
+  },
   preloadStart: Date.now()
 })

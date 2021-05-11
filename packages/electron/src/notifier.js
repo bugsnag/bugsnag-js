@@ -1,5 +1,6 @@
 let createClient
-if (typeof process !== 'undefined' && process.type === 'browser') {
+const isMain = typeof process !== 'undefined' && process.type === 'browser'
+if (isMain) {
   createClient = require('./client/main')
 } else {
   createClient = require('./client/renderer')
@@ -27,7 +28,9 @@ const Bugsnag = {
 }
 
 // Forward on all Bugsnag.* facade method calls to the underlying client
-Object.getOwnPropertyNames(Client.prototype).forEach((m) => {
+const methods = Object.getOwnPropertyNames(Client.prototype).concat(['markLaunchComplete'])
+
+methods.forEach((m) => {
   if (/^_/.test(m)) return
   Bugsnag[m] = function () {
     if (!Bugsnag._client) return console.error(`Bugsnag.${m}() was called before Bugsnag.start()`)
