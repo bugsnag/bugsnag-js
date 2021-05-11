@@ -71,11 +71,11 @@ describe('FileStore', () => {
   })
 
   describe('getDeviceInfo()', () => {
-    it('returns an empty object if something goes wrong', async () => {
+    it('returns a device id even if something goes wrong', async () => {
       const dir = process.platform === 'win32' ? '6:\\non\\existent' : '/dev/null/non/existent'
       store = new FileStore('mykey', dir, crashes)
       const contents = await store.getDeviceInfo()
-      expect(contents).toEqual({})
+      expect(typeof contents.id).toBe('string')
     })
 
     it('returns an ID after initialization', async () => {

@@ -1,5 +1,7 @@
-const { unlink, readdir, access, readFile, mkdir, writeFile } = require('fs').promises
-const { F_OK } = require('fs').constants
+const fs = require('fs')
+const { readFileSync } = fs
+const { unlink, readdir, access, mkdir, writeFile } = fs.promises
+const { F_OK } = fs.constants
 const { dirname, join } = require('path')
 const { getIdentifier, createIdentifier, identifierKey } = require('./lib/minidump-io')
 
@@ -82,24 +84,37 @@ class FileStore {
    * Loads persisted device info. If none is present, it generates an identifier
    * for the device and persists it prior to returning device info
    */
-  async getDeviceInfo () {
-    try {
-      const contents = await readFile(this._paths.device)
-      const device = JSON.parse(contents)
-      if (!device.id) {
-        device.id = createIdentifier()
-        await this.setDeviceInfo(device)
+  getDeviceInfo () {
+    return new Promise((resolve, reject) => {
+      const ensureDeviceId = async (device = {}) => {
+        if (!device.id) {
+          device.id = createIdentifier()
+        }
+        // this intentionally resolves the device field before async'ly persisting device info
+        // – it means the getDeviceInfo() function returns device info as soon as it's available,
+        // rather than having to wait until it's been persisted to disk
+        resolve(device)
+        try {
+          await this.setDeviceInfo(device)
+        } catch (e) {
+          // it's too late to do anything with this error, so just swallow it
+        }
       }
-      return device
-    } catch (e) {
-      // either the file could not be read or wasn't valid JSON, which
-      // warrants creating a new one
+
       try {
-        return await this._createAndSetDeviceInfo()
+        // Do this one sync call upon startup because if we use the async readFile,
+        // it doesn't get scheduled until at least 500ms after the process has started.
+        // Bugsnag needs the device ID before sending any events or sessions so it's
+        // important we get it in a timely manner
+        const contents = readFileSync(this._paths.device)
+        const device = JSON.parse(contents)
+        ensureDeviceId(device)
       } catch (e) {
-        return {} // failed to write
+        // either the file could not be read or wasn't valid JSON, which
+        // warrants creating a new one
+        ensureDeviceId()
       }
-    }
+    })
   }
 
   async setDeviceInfo (device) {
@@ -108,12 +123,6 @@ class FileStore {
     }
     await mkdir(dirname(this._paths.device), { recursive: true })
     await writeFile(this._paths.device, JSON.stringify(device))
-  }
-
-  async _createAndSetDeviceInfo () {
-    const device = { id: createIdentifier() }
-    await this.setDeviceInfo(device)
-    return device
   }
 
   createAppRunMetadata () {
