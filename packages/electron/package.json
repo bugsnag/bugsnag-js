@@ -33,6 +33,7 @@
     "@bugsnag/plugin-electron-renderer-event-data": "^7.10.0-alpha.2",
     "@bugsnag/plugin-electron-renderer-strip-project-root": "^7.10.0-alpha.1",
     "@bugsnag/plugin-electron-session": "^7.10.0-alpha.1",
+    "@bugsnag/plugin-inline-script-content": "^7.10.0-alpha.0",
     "@bugsnag/plugin-interaction-breadcrumbs": "^7.10.0-alpha.0",
     "@bugsnag/plugin-internal-callback-marker": "^7.10.0-alpha.1",
     "@bugsnag/plugin-network-breadcrumbs": "^7.10.0-alpha.0",

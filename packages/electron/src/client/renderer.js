@@ -26,7 +26,11 @@ module.exports = (rendererOpts) => {
     require('@bugsnag/plugin-electron-process-info')(window.__bugsnag_ipc__.process),
     require('@bugsnag/plugin-electron-renderer-strip-project-root'),
     require('@bugsnag/plugin-stackframe-path-normaliser'),
-    require('@bugsnag/plugin-electron-renderer-event-data')(window.__bugsnag_ipc__)
+    require('@bugsnag/plugin-electron-renderer-event-data')(window.__bugsnag_ipc__),
+
+    // plugin-inline-script-content must be the last plugin in order for it to
+    // be able to grab the currently executing script's contents
+    require('@bugsnag/plugin-inline-script-content')()
   ]
 
   const bugsnag = new Client(opts, schema, internalPlugins, require('../id'))
