@@ -93,9 +93,10 @@ const compareArray = (expected, actual, path) => {
 
 /* Assert some variety of value matches an expected thing (of some variety) */
 const compare = (expected, actual, path = '') => {
-  // Ensure there's an actual value, unless this is a platform specific matcher
-  // Some platforms may not have values for fields that are specific to other platforms
-  if (typeof actual === 'undefined' && !expected.match(platformMatcher)) {
+  // Ensure there's an actual value unless this is a platform specific matcher
+  // or the expected value is "undefined". Some platforms may not have values
+  // for fields that are specific to other platforms
+  if (typeof actual === 'undefined' && !expected.match(platformMatcher) && expected !== '{TYPE:undefined}') {
     return [{ path, expected, actual, message: 'Expected a value but was undefined' }]
   }
   switch (typeof expected) {
