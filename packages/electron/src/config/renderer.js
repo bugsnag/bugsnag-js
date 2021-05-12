@@ -30,7 +30,7 @@ module.exports.schema = {
 
 module.exports.mergeOptions = (mainOpts, rendererOpts) => {
   return Object.keys(module.exports.schema).reduce((accum, k) => {
-    if (rendererOpts[k]) {
+    if (Object.prototype.hasOwnProperty.call(rendererOpts, k)) {
       if (ALLOWED_IN_RENDERER.includes(k)) {
         if (k === 'metadata') {
           // ensure that metadata set in renderer config doesn't blow away all preexisting metadata
