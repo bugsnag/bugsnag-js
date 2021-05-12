@@ -1,5 +1,21 @@
 # Changelog
 
+## TBD
+
+- (react-native): Update bugsnag-android to v5.9.2
+  - Guard against exceptions with null stack traces
+    [bugsnag-android#1239](https://github.com/bugsnag/bugsnag-android/pull/1239)
+  - Fix bug that terminated the app when multiple ANRs occur
+    [bugsnag-android#1235](https://github.com/bugsnag/bugsnag-android/pull/1235)
+  - Prevent rare NPE in log message
+    [bugsnag-android#1238](https://github.com/bugsnag/bugsnag-android/pull/1238)
+  - Prevent rare NPE when capturing thread traces
+    [bugsnag-android#1237](https://github.com/bugsnag/bugsnag-android/pull/1237)
+  - Catch exceptions thrown by Context.registerReceiver to prevent rare crashes
+    [bugsnag-android#1240](https://github.com/bugsnag/bugsnag-android/pull/1240)
+  - Fix possible NegativeArraySizeException in crash report deserialization
+    [bugsnag-android#1245](https://github.com/bugsnag/bugsnag-android/pull/1245)
+
 ## v7.9.6 (2021-05-05)
 
 ### Added
