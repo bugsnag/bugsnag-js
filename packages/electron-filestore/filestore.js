@@ -16,7 +16,6 @@ class FileStore {
       device: join(base, 'device.json'),
       minidumps: join(crashDir, isMac ? 'completed' : 'reports')
     }
-    this._deviceInfoPromise = null
   }
 
   // Create directory layout
@@ -103,8 +102,7 @@ class FileStore {
       // attempt to create or update the device.json file with
       // a) the device data we retrieved or
       // b) a new auto generated id
-      device = this.setDeviceInfo(device)
-      return device
+      return this.setDeviceInfo(device)
     } catch (e) {
       // in the event of a failure we don't want to return the device
       // id we have in memory because it won't have been persisted,
