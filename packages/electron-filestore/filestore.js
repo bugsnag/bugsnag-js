@@ -1,5 +1,7 @@
-const { unlink, readdir, access, readFile, mkdir, writeFile } = require('fs').promises
-const { F_OK } = require('fs').constants
+const fs = require('fs')
+const { readFileSync, writeFileSync, mkdirSync } = fs
+const { unlink, readdir, access, mkdir } = fs.promises
+const { F_OK } = fs.constants
 const { dirname, join } = require('path')
 const { getIdentifier, createIdentifier, identifierKey } = require('./lib/minidump-io')
 
@@ -80,39 +82,41 @@ class FileStore {
 
   /*
    * Loads persisted device info. If none is present, it generates an identifier
-   * for the device and persists it prior to returning device info
+   * for the device and persists it prior to returning device info.
    */
-  async getDeviceInfo () {
+  getDeviceInfo () {
+    let device
+
     try {
-      const contents = await readFile(this._paths.device)
-      const device = JSON.parse(contents)
-      if (!device.id) {
-        device.id = createIdentifier()
-        await this.setDeviceInfo(device)
-      }
-      return device
+      // Do this one sync routine upon startup because if we use the async fs operations,
+      // it doesn't get scheduled until at least 500ms after the process has started.
+      // Bugsnag needs the device ID before sending any events or sessions so it's
+      // important we get it in a timely manner
+      const contents = readFileSync(this._paths.device)
+      device = JSON.parse(contents)
     } catch (e) {
-      // either the file could not be read or wasn't valid JSON, which
-      // warrants creating a new one
-      try {
-        return await this._createAndSetDeviceInfo()
-      } catch (e) {
-        return {} // failed to write
-      }
+      // either the file could not be read or wasn't valid JSON
+    }
+
+    try {
+      // attempt to create or update the device.json file with
+      // a) the device data we retrieved or
+      // b) a new auto generated id
+      return this.setDeviceInfo(device)
+    } catch (e) {
+      // in the event of a failure we don't want to return the device
+      // id we have in memory because it won't have been persisted,
+      // and so won't be stable across app launches
+      return {}
     }
   }
 
-  async setDeviceInfo (device) {
+  setDeviceInfo (device = {}) {
     if (!device.id) {
       device.id = createIdentifier()
     }
-    await mkdir(dirname(this._paths.device), { recursive: true })
-    await writeFile(this._paths.device, JSON.stringify(device))
-  }
-
-  async _createAndSetDeviceInfo () {
-    const device = { id: createIdentifier() }
-    await this.setDeviceInfo(device)
+    mkdirSync(dirname(this._paths.device), { recursive: true })
+    writeFileSync(this._paths.device, JSON.stringify(device))
     return device
   }
 

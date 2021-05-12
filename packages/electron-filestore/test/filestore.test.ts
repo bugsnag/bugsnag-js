@@ -74,13 +74,13 @@ describe('FileStore', () => {
     it('returns an empty object if something goes wrong', async () => {
       const dir = process.platform === 'win32' ? '6:\\non\\existent' : '/dev/null/non/existent'
       store = new FileStore('mykey', dir, crashes)
-      const contents = await store.getDeviceInfo()
+      const contents = store.getDeviceInfo()
       expect(contents).toEqual({})
     })
 
     it('returns an ID after initialization', async () => {
       await store.init()
-      const contents = await store.getDeviceInfo()
+      const contents = store.getDeviceInfo()
       expect(typeof contents.id).toBe('string')
     })
 
@@ -88,7 +88,7 @@ describe('FileStore', () => {
       const base = join(fixtures, 'bugsnag', 'mykey')
       await mkdir(base, { recursive: true })
       await writeFile(join(base, 'device.json'), '')
-      const contents = await store.getDeviceInfo()
+      const contents = store.getDeviceInfo()
       expect(typeof contents.id).toBe('string')
     })
 
@@ -96,19 +96,19 @@ describe('FileStore', () => {
       const base = join(fixtures, 'bugsnag', 'mykey')
       await mkdir(base, { recursive: true })
       await writeFile(join(base, 'device.json'), '{"id":')
-      const contents = await store.getDeviceInfo()
+      const contents = store.getDeviceInfo()
       expect(typeof contents.id).toBe('string')
     })
 
     it('returns the object sent to setDeviceInfo()', async () => {
-      await store.setDeviceInfo({ id: 'a684c' })
-      const contents = await store.getDeviceInfo()
+      store.setDeviceInfo({ id: 'a684c' })
+      const contents = store.getDeviceInfo()
       expect(contents).toEqual({ id: 'a684c' })
     })
 
     it('returns an object with an ID if none given to setDeviceInfo()', async () => {
-      await store.setDeviceInfo({ name: 'jeanne' })
-      const contents = await store.getDeviceInfo()
+      store.setDeviceInfo({ name: 'jeanne' })
+      const contents = store.getDeviceInfo()
       expect(contents.name).toEqual('jeanne')
       expect(typeof contents.id).toBe('string')
     })
@@ -116,14 +116,14 @@ describe('FileStore', () => {
 
   describe('setDeviceInfo()', () => {
     it('serializes device info to disk', async () => {
-      await store.setDeviceInfo({ id: 'df40a811e2' })
+      store.setDeviceInfo({ id: 'df40a811e2' })
       const base = join(fixtures, 'bugsnag', 'mykey')
       const contents = await readFile(join(base, 'device.json'))
       expect(JSON.parse(contents.toString())).toEqual({ id: 'df40a811e2' })
     })
 
     it('inserts a unique identifier if none given', async () => {
-      await store.setDeviceInfo({ color: 'cyan' })
+      store.setDeviceInfo({ color: 'cyan' })
       const base = join(fixtures, 'bugsnag', 'mykey')
       const contents = await readFile(join(base, 'device.json'))
       const device = JSON.parse(contents.toString())

@@ -20,9 +20,20 @@ const createDeviceUpdater = (client, NativeClient, device) => newProperties => {
 module.exports = (app, screen, process, filestore, NativeClient, powerMonitor) => ({
   load (client) {
     const device = {}
+    let cachedDevice = {}
+
+    try {
+      // fetch the device ID from the filestore - if one does not exist it will be created for us
+      cachedDevice = filestore.getDeviceInfo()
+    } catch (e) {
+      // swallow errors
+      client._logger.error(e)
+    }
+
     const updateDevice = createDeviceUpdater(client, NativeClient, device)
 
     updateDevice({
+      ...cachedDevice,
       totalMemory: kibibytesToBytes(process.getSystemMemoryInfo().total),
       locale: app.getLocale(),
       osName: platformToOs.get(process.platform) || process.platform,
@@ -42,17 +53,6 @@ module.exports = (app, screen, process, filestore, NativeClient, powerMonitor) =
       // read the battery state without 'on-ac'/'on-battery' events
       usingBattery: powerMonitor.onBatteryPower
     })
-
-    // fetch the device ID from the filestore - if one does not exist it will be
-    // created for us
-    filestore.getDeviceInfo()
-      .then(cachedDevice => {
-        // if _everything_ goes wrong this may be missing
-        if (cachedDevice.id) {
-          updateDevice({ id: cachedDevice.id })
-        }
-      })
-      .catch(err => { client._logger.error(err) })
 
     app.whenReady().then(() => {
       // on windows, app.getLocale won't return the locale until the app is ready

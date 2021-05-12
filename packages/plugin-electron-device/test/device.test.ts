@@ -72,14 +72,8 @@ describe('plugin: electron device info', () => {
 
     makeClient({ NativeClient })
 
-    const { id, ...expected } = makeExpectedSessionDevice()
-
+    const expected = makeExpectedSessionDevice()
     expect(NativeClient.setDevice).toHaveBeenNthCalledWith(1, expected)
-
-    // give the filestore time to resolve the device ID
-    await nextTick()
-
-    expect(NativeClient.setDevice).toHaveBeenNthCalledWith(2, { ...expected, id })
   })
 
   it('handles exceptions thrown by the NativeClient', async () => {
@@ -89,14 +83,8 @@ describe('plugin: electron device info', () => {
 
     makeClient({ NativeClient })
 
-    const { id, ...expected } = makeExpectedSessionDevice()
-
+    const expected = makeExpectedSessionDevice()
     expect(NativeClient.setDevice).toHaveBeenNthCalledWith(1, expected)
-
-    // give the filestore time to resolve the device ID
-    await nextTick()
-
-    expect(NativeClient.setDevice).toHaveBeenNthCalledWith(2, { ...expected, id })
   })
 
   it('reports basic device information', async () => {
@@ -119,7 +107,6 @@ describe('plugin: electron device info', () => {
     const { sendEvent, sendSession } = makeClient({ process })
 
     const expectedBeforeNextTick = makeExpectedEventDevice({ osName: 'macOS' })
-    delete (expectedBeforeNextTick as any).id
 
     const event = await sendEvent()
     expect(event.device).toEqual(expectedBeforeNextTick)
@@ -139,7 +126,6 @@ describe('plugin: electron device info', () => {
     const { sendEvent, sendSession } = makeClient({ process })
 
     const expectedBeforeNextTick = makeExpectedEventDevice({ osName: 'Linux' })
-    delete (expectedBeforeNextTick as any).id
 
     const event = await sendEvent()
     expect(event.device).toEqual(expectedBeforeNextTick)
@@ -165,7 +151,6 @@ describe('plugin: electron device info', () => {
     const { sendEvent, sendSession } = makeClient({ app, process })
 
     const expectedBeforeNextTick = makeExpectedEventDevice({ osName: 'Windows' })
-    delete (expectedBeforeNextTick as any).id
     expectedBeforeNextTick.locale = ''
 
     const event = await sendEvent()
@@ -268,19 +253,15 @@ describe('plugin: electron device info', () => {
 
     expect(NativeClient.setDevice).toHaveBeenCalledTimes(1)
 
-    await nextTick()
-
     const event = await sendEvent()
     expect(event.device).toEqual(makeExpectedEventDevice())
 
     const session = await sendSession()
     expect(session.device).toEqual(makeExpectedSessionDevice())
 
-    expect(NativeClient.setDevice).toHaveBeenCalledTimes(2)
-
     screen._emit('display-metrics-changed', makeDisplay({ rotation: 270 }), ['rotation'])
 
-    expect(NativeClient.setDevice).toHaveBeenCalledTimes(2)
+    expect(NativeClient.setDevice).toHaveBeenCalledTimes(1)
   })
 
   it('reports correct device.id when one has been cached', async () => {
@@ -300,7 +281,7 @@ describe('plugin: electron device info', () => {
   })
 
   it('does not add device.id when one is not created', async () => {
-    const filestore = { getDeviceInfo: jest.fn().mockResolvedValue({}) }
+    const filestore = { getDeviceInfo: jest.fn().mockReturnValue({}) }
 
     // @ts-expect-error
     const { sendEvent, sendSession } = makeClient({ filestore })
@@ -318,10 +299,10 @@ describe('plugin: electron device info', () => {
 
   it('handles filestore errors from getDeviceInfo()', async () => {
     const filestore = {
-      async getDeviceInfo () {
+      getDeviceInfo () {
         throw new Error('insert disk 2')
       },
-      async setDeviceInfo (deviceInfo: Record<string, unknown>) {}
+      setDeviceInfo (deviceInfo: Record<string, unknown>) {}
     }
 
     const { client, sendEvent, sendSession } = makeClient({ filestore })
@@ -437,10 +418,10 @@ function makeFilestore (id: string|null|undefined = DEFAULTS.id) {
   let _deviceInfo: Record<string, unknown> = { id }
 
   return {
-    async getDeviceInfo (): Promise<{ id?: string|null }> {
+    getDeviceInfo (): { id?: string|null } {
       return _deviceInfo
     },
-    async setDeviceInfo (deviceInfo: Record<string, unknown>) {
+    setDeviceInfo (deviceInfo: Record<string, unknown>) {
       _deviceInfo = deviceInfo
     }
   }

@@ -22,9 +22,9 @@ module.exports.schema = {
     defaultValue: () => getPrefixedConsole()
   }),
   codeBundleId: {
-    defaultValue: () => null,
+    defaultValue: () => undefined,
     message: 'should be a string',
-    validate: val => (val === null || stringWithLength(val))
+    validate: val => (val === undefined || stringWithLength(val))
   }
 }
 

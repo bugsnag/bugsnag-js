@@ -4,9 +4,6 @@ import { makeApp, makeBrowserWindow } from '@bugsnag/electron-test-helpers'
 import plugin from '../'
 
 const expectCuid = expect.stringMatching(/^c[a-z0-9]{20,30}$/)
-const mockFileStore = {
-  getDeviceInfo: () => Promise.resolve()
-}
 
 describe('plugin: electron sessions', () => {
   beforeEach(() => { jest.useRealTimers() })
@@ -18,7 +15,7 @@ describe('plugin: electron sessions', () => {
     const client = new Client(
       { apiKey: 'abcabcabcabcabcabcabc1234567890f' },
       undefined,
-      [plugin(app, BrowserWindow, mockFileStore)]
+      [plugin(app, BrowserWindow)]
     )
 
     const payload = await createSession(client)
@@ -63,7 +60,7 @@ describe('plugin: electron sessions', () => {
     const client = new Client(
       { apiKey: 'abcabcabcabcabcabcabc1234567890f' },
       undefined,
-      [plugin(app, BrowserWindow, mockFileStore)]
+      [plugin(app, BrowserWindow)]
     )
 
     const window = new BrowserWindow(123, 'hello world')
@@ -113,7 +110,7 @@ describe('plugin: electron sessions', () => {
     const client = new Client(
       { apiKey: 'abcabcabcabcabcabcabc1234567890f' },
       undefined,
-      [plugin(app, BrowserWindow, mockFileStore)]
+      [plugin(app, BrowserWindow)]
     )
 
     const window = new BrowserWindow(123, 'hello world')
@@ -169,7 +166,7 @@ describe('plugin: electron sessions', () => {
     const client = new Client(
       { apiKey: 'abcabcabcabcabcabcabc1234567890f', autoTrackSessions: false },
       undefined,
-      [plugin(app, BrowserWindow, mockFileStore)]
+      [plugin(app, BrowserWindow)]
     )
 
     const window = new BrowserWindow(123, 'hello world')
