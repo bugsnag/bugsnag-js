@@ -2,7 +2,7 @@ const sessionDelegate = require('@bugsnag/plugin-browser-session')
 
 const SESSION_TIMEOUT_MS = 60 * 1000
 
-module.exports = (app, BrowserWindow, filestore) => ({
+module.exports = (app, BrowserWindow) => ({
   load (client) {
     // load the actual session delegate from plugin-browser-session
     sessionDelegate.load(client)
@@ -10,7 +10,7 @@ module.exports = (app, BrowserWindow, filestore) => ({
     if (!client._config.autoTrackSessions) {
       return
     }
-
+    // ensure the session gets started _after_ we have a device id
     app.whenReady()
       .then(() => client.startSession())
       .catch(() => {})

@@ -1,6 +1,6 @@
 const fs = require('fs')
-const { readFileSync } = fs
-const { unlink, readdir, access, mkdir, writeFile } = fs.promises
+const { readFileSync, writeFileSync, mkdirSync } = fs
+const { unlink, readdir, access, mkdir } = fs.promises
 const { F_OK } = fs.constants
 const { dirname, join } = require('path')
 const { getIdentifier, createIdentifier, identifierKey } = require('./lib/minidump-io')
@@ -16,6 +16,7 @@ class FileStore {
       device: join(base, 'device.json'),
       minidumps: join(crashDir, isMac ? 'completed' : 'reports')
     }
+    this._deviceInfoPromise = null
   }
 
   // Create directory layout
@@ -82,47 +83,43 @@ class FileStore {
 
   /*
    * Loads persisted device info. If none is present, it generates an identifier
-   * for the device and persists it prior to returning device info
+   * for the device and persists it prior to returning device info.
    */
   getDeviceInfo () {
-    return new Promise((resolve, reject) => {
-      const ensureDeviceId = async (device = {}) => {
-        if (!device.id) {
-          device.id = createIdentifier()
-        }
-        // this intentionally resolves the device field before async'ly persisting device info
-        // – it means the getDeviceInfo() function returns device info as soon as it's available,
-        // rather than having to wait until it's been persisted to disk
-        resolve(device)
-        try {
-          await this.setDeviceInfo(device)
-        } catch (e) {
-          // it's too late to do anything with this error, so just swallow it
-        }
-      }
+    let device
 
-      try {
-        // Do this one sync call upon startup because if we use the async readFile,
-        // it doesn't get scheduled until at least 500ms after the process has started.
-        // Bugsnag needs the device ID before sending any events or sessions so it's
-        // important we get it in a timely manner
-        const contents = readFileSync(this._paths.device)
-        const device = JSON.parse(contents)
-        ensureDeviceId(device)
-      } catch (e) {
-        // either the file could not be read or wasn't valid JSON, which
-        // warrants creating a new one
-        ensureDeviceId()
-      }
-    })
+    try {
+      // Do this one sync routine upon startup because if we use the async fs operations,
+      // it doesn't get scheduled until at least 500ms after the process has started.
+      // Bugsnag needs the device ID before sending any events or sessions so it's
+      // important we get it in a timely manner
+      const contents = readFileSync(this._paths.device)
+      device = JSON.parse(contents)
+    } catch (e) {
+      // either the file could not be read or wasn't valid JSON
+    }
+
+    try {
+      // attempt to create or update the device.json file with
+      // a) the device data we retrieved or
+      // b) a new auto generated id
+      device = this.setDeviceInfo(device)
+      return device
+    } catch (e) {
+      // in the event of a failure we don't want to return the device
+      // id we have in memory because it won't have been persisted,
+      // and so won't be stable across app launches
+      return {}
+    }
   }
 
-  async setDeviceInfo (device) {
+  setDeviceInfo (device = {}) {
     if (!device.id) {
       device.id = createIdentifier()
     }
-    await mkdir(dirname(this._paths.device), { recursive: true })
-    await writeFile(this._paths.device, JSON.stringify(device))
+    mkdirSync(dirname(this._paths.device), { recursive: true })
+    writeFileSync(this._paths.device, JSON.stringify(device))
+    return device
   }
 
   createAppRunMetadata () {
