@@ -32,7 +32,8 @@ describe.skip('@bugsnag/electron types', () => {
         plugins: [],
         user: { id: '1234-abcd' },
         appType: 'good',
-        codeBundleId: '1245'
+        codeBundleId: '1245',
+        trackInlineScripts: true
       })
     })
   })

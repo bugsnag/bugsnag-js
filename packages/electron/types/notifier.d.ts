@@ -32,6 +32,7 @@ type AllowedRendererConfig = Pick<Config, 'onError'|'onBreadcrumb'|'logger'|'met
 
 interface RendererConfig extends AllowedRendererConfig {
   codeBundleId?: string
+  trackInlineScripts?: boolean
 }
 
 declare class ElectronClient extends Client {
