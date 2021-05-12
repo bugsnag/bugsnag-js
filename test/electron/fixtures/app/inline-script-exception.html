@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Runner</title>
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+</head>
+<body style="background: white;">
+    <p style="font-family: 'Comic Sans MS'; font-size: 72px">sample text</p>
+
+    <script src="../inline_script_exception.js"></script>
+
+    <script>
+        const someCode = 'goes here'
+
+        throw new Error('inline script broke!')
+        let moreCode = 'here'
+
+        moreCode += ' also here'
+    </script>
+</body>
+</html>
