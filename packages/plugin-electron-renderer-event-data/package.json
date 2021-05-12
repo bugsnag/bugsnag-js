@@ -20,9 +20,11 @@
   ],
   "devDependencies": {
     "@bugsnag/core": "^7.10.0-alpha.0",
-    "@bugsnag/electron-test-helpers": "^7.10.0-alpha.1"
+    "@bugsnag/electron-test-helpers": "^7.10.0-alpha.1",
+    "@bugsnag/plugin-electron-renderer-strip-project-root": "^7.10.0-alpha.1"
   },
   "peerDependencies": {
-    "@bugsnag/core": "^7.9.2"
+    "@bugsnag/core": "^7.9.2",
+    "@bugsnag/plugin-electron-renderer-strip-project-root": "^7.10.0-alpha.1"
   }
 }

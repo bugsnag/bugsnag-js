@@ -41,7 +41,12 @@
         <li><a href="#" id="performance-metrics">Send an error with performance metrics</a></li>
     </ul>
     <ul>
-        <li><a href="#" id="mark-launch-complete" onclick="RunnerAPI.markLaunchComplete()"> Call Bugsnag.markLaunchCompolete() in the main process</a></li>
+        <li><a href="#" id="mark-launch-complete" onclick="RunnerAPI.markLaunchComplete()">Call Bugsnag.markLaunchCompolete() in the main process</a></li>
+    </ul>
+    <ul>
+        <li><a href="#" id="page-title-update" onclick="document.title = 'A different title'">Update the page title</a></li>
+        <li><a href="#" id="page-title-clear" onclick="document.title = ''">Clear the page title</a></li>
+        <li><a href="#" id="set-context">Manually call setContext() in renderer</a></li>
     </ul>
 </body>
 </html>

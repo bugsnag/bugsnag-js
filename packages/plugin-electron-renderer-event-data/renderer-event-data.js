@@ -1,3 +1,5 @@
+const { stripProjectRoot } = require('@bugsnag/plugin-electron-renderer-strip-project-root')
+
 module.exports = (BugsnagIpcRenderer = window.__bugsnag_ipc__) => ({
   load: client => {
     client.addOnError(async (event) => {
@@ -13,7 +15,7 @@ module.exports = (BugsnagIpcRenderer = window.__bugsnag_ipc__) => ({
 
       if (shouldSend === false) return false
 
-      event.context = event.context || context
+      event.context = event.context || context || getDefaultContext()
       event.breadcrumbs = breadcrumbs
       event.app = { ...event.app, ...app, codeBundleId: client._config.codeBundleId }
       event.device = { ...event.device, ...device }
@@ -34,5 +36,9 @@ module.exports = (BugsnagIpcRenderer = window.__bugsnag_ipc__) => ({
         event.app.type = client._config.appType
       }
     }, true)
+
+    const getDefaultContext = () => {
+      return window.document.title || stripProjectRoot(client._config.projectRoot, window.location.pathname)
+    }
   }
 })

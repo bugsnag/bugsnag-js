@@ -48,3 +48,5 @@ document.getElementById('renderer-cancel-breadcrumbs').onclick = () => Bugsnag.a
 document.getElementById('performance-metrics').onclick = () => Bugsnag.notify(new Error('startup perf budget'), (event) => {
   event.addMetadata('performance', 'startupTime', startupTimestamp - window.RunnerAPI.preloadStart)
 })
+
+document.getElementById('set-context').onclick = () => Bugsnag.setContext('Another context')
