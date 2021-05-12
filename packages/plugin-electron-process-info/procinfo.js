@@ -1,3 +1,6 @@
+// eslint-disable-next-line no-eval
+const isPreload = !!eval('typeof global !== "undefined"') && !!eval('typeof window !== "undefined"')
+
 module.exports = (source = process) => ({
   load: (client) => {
     client.addOnError(function (event) {
@@ -7,7 +10,9 @@ module.exports = (source = process) => ({
         info.heapStatistics = source.getHeapStatistics()
       }
 
-      if (typeof source.type === 'string') {
+      if (isPreload || event._isPreloadError) {
+        info.type = 'preload'
+      } else if (typeof source.type === 'string') {
         // type should always be available
         info.type = source.type
       }
