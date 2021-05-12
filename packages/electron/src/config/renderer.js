@@ -28,8 +28,8 @@ module.exports.schema = {
   }
 }
 
-module.exports.mergeOptions = (mainOpts, rendererOpts) => {
-  return Object.keys(module.exports.schema).reduce((accum, k) => {
+module.exports.mergeOptions = (additionalSchemaKeys, mainOpts, rendererOpts) => {
+  return Object.keys(module.exports.schema).concat(additionalSchemaKeys).reduce((accum, k) => {
     if (Object.prototype.hasOwnProperty.call(rendererOpts, k)) {
       if (ALLOWED_IN_RENDERER.includes(k)) {
         if (k === 'metadata') {
