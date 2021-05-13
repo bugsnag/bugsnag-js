@@ -1,5 +1,9 @@
-// eslint-disable-next-line no-eval
-const isPreload = !!eval('typeof global !== "undefined"') && !!eval('typeof window !== "undefined"')
+const isPreload =
+  // is the process actually node-like (webpack defines a "global" variable when bundling, but node's
+  // global contains a circular reference to itself global.global)
+  typeof global !== 'undefined' && typeof global.global !== 'undefined' && global.global === global &&
+  // AND is the process browser-like (does the process have a window and a document?)
+  typeof window !== 'undefined' && typeof document !== 'undefined'
 
 module.exports = (source = process) => ({
   load: (client) => {
