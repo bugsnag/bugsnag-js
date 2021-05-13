@@ -14,9 +14,9 @@ module.exports = (source = process) => ({
         info.heapStatistics = source.getHeapStatistics()
       }
 
-      if (isPreload || event._isPreloadError) {
+      if (isPreload) {
         info.type = 'preload'
-      } else if (typeof source.type === 'string') {
+      } else if (event.getMetadata('process', 'type') !== 'preload' && typeof source.type === 'string') {
         // type should always be available
         info.type = source.type
       }

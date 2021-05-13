@@ -27,7 +27,7 @@ module.exports = app => ({
 
         event.context = context
 
-        event._isPreloadError = true
+        event.addMetadata('process', 'type', 'preload')
 
         client._notify(event)
       })

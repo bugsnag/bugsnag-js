@@ -22,6 +22,18 @@ describe('plugin: electron process info', () => {
     client._notify(new Event('Error', 'incorrect lambda type', []))
   })
 
+  it('does not overwrite process type if already set to preload', (done) => {
+    const processInfo = { type: 'worker' }
+    const client = makeClient((payload: any) => {
+      const metadata = payload.events[0]._metadata
+      expect(metadata.process.type).toEqual('preload')
+      done()
+    }, processInfo)
+    const event = new Event('Error', 'incorrect lambda type', [])
+    event.addMetadata('process', 'type', 'preload')
+    client._notify(event)
+  })
+
   it('attaches heap stats', (done) => {
     const processInfo = {
       getHeapStatistics: () => {
