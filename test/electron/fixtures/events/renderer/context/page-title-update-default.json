@@ -13,8 +13,8 @@
         "releaseStage": "production",
         "inForeground": "{TYPE:boolean}",
         "isLaunching": "{TYPE:boolean}",
-        "type": "{PLATFORM_LINUX:Linux|PLATFORM_MACOS:macOS|PLATFORM_WINDOWS:Windows}",
-        "version": "1.0.2"
+        "version": "1.0.2",
+        "type": "{PLATFORM_LINUX:Linux|PLATFORM_MACOS:macOS|PLATFORM_WINDOWS:Windows}"
       },
       "device": {
         "runtimeVersions": {
@@ -28,10 +28,10 @@
         "totalMemory": "{TYPE:number}",
         "osVersion": "{REGEX:\\d+\\.\\d+}"
       },
+      "context": "A different title",
       "user": {
         "id": "{REGEX:[0-9a-f]{64}}"
       },
-      "context": "Runner",
       "metaData": {
         "app": {
           "name": "Runner",
@@ -44,12 +44,6 @@
             "width": "{TYPE:number}",
             "height": "{TYPE:number}"
           }
-        },
-        "process": {
-          "type": "renderer",
-          "sandboxed": true,
-          "isMainFrame": true,
-          "heapStatistics": {}
         }
       },
       "severity": "warning",
@@ -78,14 +72,6 @@
           "metaData": {
             "id": 1,
             "title": "Runner"
-          }
-        },
-        {
-          "type": "manual",
-          "name": "missing auth token",
-          "timestamp": "{TIMESTAMP}",
-          "metaData": {
-            "session": "two-two"
           }
         }
       ],
