@@ -5,6 +5,7 @@ const { createReadStream } = require('fs')
 const { Writable } = require('stream')
 const pump = require('pump')
 const byline = require('byline')
+const path = require('path')
 
 module.exports = {
   load: client => {
@@ -13,12 +14,13 @@ module.exports = {
     const loadSurroundingCode = (stackframe, cache) => new Promise((resolve, reject) => {
       try {
         if (!stackframe.lineNumber || !stackframe.file) return resolve(stackframe)
-        const cacheKey = `${stackframe.file}@${stackframe.lineNumber}`
+        const file = path.resolve(client._config.projectRoot, stackframe.file)
+        const cacheKey = `${file}@${stackframe.lineNumber}`
         if (cacheKey in cache) {
           stackframe.code = cache[cacheKey]
           return resolve(stackframe)
         }
-        getSurroundingCode(stackframe.file, stackframe.lineNumber, (err, code) => {
+        getSurroundingCode(file, stackframe.lineNumber, (err, code) => {
           if (err) return resolve(stackframe)
           stackframe.code = cache[cacheKey] = code
           return resolve(stackframe)

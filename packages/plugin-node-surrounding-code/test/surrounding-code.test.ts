@@ -4,6 +4,7 @@ import plugin from '../'
 import { join } from 'path'
 import Event from '@bugsnag/core/event'
 import Client from '@bugsnag/core/client'
+import { schema as defaultSchema } from '@bugsnag/core/config'
 
 let createReadStreamCount = 0
 const originalReadStream = fs.createReadStream
@@ -52,6 +53,60 @@ describe('plugin: node surrounding code', () => {
         lineNumber: 118,
         columnNumber: 28,
         fileName: join(__dirname, 'fixtures', '03.js')
+      }
+    ]))
+  })
+
+  it('should load code successfully for stackframes whose files are relative to the project root', done => {
+    const client = new Client(
+      { apiKey: 'api_key', projectRoot: __dirname },
+      {
+        ...defaultSchema,
+        projectRoot: {
+          defaultValue: () => null,
+          validate: () => true,
+          message: 'should be a directory'
+        }
+      },
+      [plugin]
+    )
+
+    client._setDelivery(client => ({
+      sendEvent: (payload) => {
+        const evt = payload.events[0]
+        expect(Object.keys(evt.errors[0].stacktrace[0].code!))
+          .toEqual(['19', '20', '21', '22', '23', '24', '25'])
+        expect(evt.errors[0].stacktrace[0].code!['22'])
+          .toBe('    if (cb) this.on(\'finish\', () => cb(this.output()))')
+
+        expect(Object.keys(evt.errors[0].stacktrace[1].code!))
+          .toEqual(['28', '29', '30', '31', '32', '33', '34'])
+        expect(evt.errors[0].stacktrace[1].code!['31'])
+          .toBe('      return nextLevelUp()')
+
+        expect(Object.keys(evt.errors[0].stacktrace[2].code!))
+          .toEqual(['115', '116', '117', '118', '119', '120', '121'])
+        expect(evt.errors[0].stacktrace[2].code!['118'])
+          .toBe('  \'Ķ\': \'k\', \'Ļ\': \'L\', \'Ņ\': \'N\', \'Ū\': \'u\'')
+
+        done()
+      },
+      sendSession: () => {}
+    }))
+
+    client._notify(new Event('Error', 'surrounding code loading test', [
+      {
+        lineNumber: 22,
+        columnNumber: 18,
+        fileName: join('fixtures', '01.js')
+      }, {
+        lineNumber: 31,
+        columnNumber: 7,
+        fileName: join('fixtures', '02.js')
+      }, {
+        lineNumber: 118,
+        columnNumber: 28,
+        fileName: join('fixtures', '03.js')
       }
     ]))
   })
