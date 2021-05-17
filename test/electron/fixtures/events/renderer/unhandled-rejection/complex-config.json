@@ -70,6 +70,12 @@
       "breadcrumbs": [
         {
           "type": "state",
+          "name": "Bugsnag loaded",
+          "timestamp": "{TIMESTAMP}",
+          "metaData": {}
+        },
+        {
+          "type": "state",
           "name": "App became ready",
           "timestamp": "{TIMESTAMP}"
         },
