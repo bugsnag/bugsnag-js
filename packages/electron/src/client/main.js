@@ -63,6 +63,9 @@ module.exports = (opts) => {
   bugsnag.markLaunchComplete = markLaunchComplete
 
   bugsnag._logger.debug('Loaded! In main process.')
+  if (bugsnag._config.enabledBreadcrumbTypes && bugsnag._config.enabledBreadcrumbTypes.includes('navigation')) {
+    bugsnag.leaveBreadcrumb('Bugsnag loaded', {}, 'navigation')
+  }
 
   return bugsnag
 }
