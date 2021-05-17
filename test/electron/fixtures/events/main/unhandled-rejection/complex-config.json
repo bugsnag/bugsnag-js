@@ -104,7 +104,10 @@
           "errorMessage": "invalid",
           "stacktrace": [{
             "file": "./src/errors.js",
-            "lineNumber": 10
+            "lineNumber": 10,
+            "code": {
+              "1": "{TYPE:string}"
+            }
           }],
           "type": "electronnodejs"
         }
