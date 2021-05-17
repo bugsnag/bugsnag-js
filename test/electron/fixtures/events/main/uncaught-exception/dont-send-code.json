@@ -1,0 +1,105 @@
+{
+  "apiKey": "6425093c6530f554a9897d2d7d38e248",
+  "notifier": {
+    "name": "Bugsnag Electron",
+    "url": "https://github.com/bugsnag/bugsnag-electron",
+    "version": "{REGEX:^200\\.1\\.0-canary\\.[0-9a-f]{24}$}"
+  },
+  "events": [
+    {
+      "payloadVersion": "4",
+      "app": {
+        "duration": "{TYPE:number}",
+        "releaseStage": "production",
+        "inForeground": "{TYPE:boolean}",
+        "isLaunching": "{TYPE:boolean}",
+        "type": "{PLATFORM_LINUX:Linux|PLATFORM_MACOS:macOS|PLATFORM_WINDOWS:Windows}",
+        "version": "1.0.2"
+      },
+      "device": {
+        "runtimeVersions": {
+          "node": "{TYPE:string}",
+          "chrome": "{TYPE:string}",
+          "electron": "{TYPE:string}"
+        },
+        "id": "{REGEX:[0-9a-f]{64}}",
+        "freeMemory": "{TYPE:number}",
+        "locale": "{REGEX:^[a-z]{2}(-[A-Z]{2})?$}",
+        "time": "{TIMESTAMP}",
+        "totalMemory": "{TYPE:number}",
+        "osVersion": "{REGEX:\\d+\\.\\d+}"
+      },
+      "user": {
+        "id": "{REGEX:[0-9a-f]{64}}"
+      },
+      "metaData": {
+        "app": {
+          "name": "Runner",
+          "CFBundleVersion": "{PLATFORM_MACOS:1.0.2}"
+        },
+        "device": {
+          "online": "{TYPE:boolean}",
+          "idleTime": "{TYPE:number}",
+          "screenResolution": {
+            "width": "{TYPE:number}",
+            "height": "{TYPE:number}"
+          }
+        },
+        "process": {
+          "type": "browser",
+          "heapStatistics": {}
+        }
+      },
+      "severity": "error",
+      "unhandled": true,
+      "severityReason": {
+        "type": "unhandledException"
+      },
+      "breadcrumbs": [
+        {
+          "type": "state",
+          "name": "App became ready",
+          "timestamp": "{TIMESTAMP}"
+        },
+        {
+          "type": "state",
+          "name": "Browser window 1 created",
+          "timestamp": "{TIMESTAMP}",
+          "metaData": {
+            "id": 1
+          }
+        },
+        {
+          "type": "state",
+          "name": "Browser window 1 was shown",
+          "timestamp": "{TIMESTAMP}",
+          "metaData": {
+            "id": 1,
+            "title": "Runner"
+          }
+        },
+        {
+            "type": "user",
+            "name": "UI click",
+            "timestamp": "{TIMESTAMP}",
+            "metaData": {
+                "targetText": "Uncaught exception in main process",
+                "targetSelector": "A#main-process-uncaught-exception"
+            }
+        }
+      ],
+      "exceptions": [
+        {
+          "errorClass": "ReferenceError",
+          "errorMessage": "foo is not defined",
+          "stacktrace": [{
+            "file": "./src/errors.js",
+            "lineNumber": 6,
+            "code": "{TYPE:undefined}"
+          }],
+          "type": "electronnodejs"
+        }
+      ]
+    }
+  ]
+}

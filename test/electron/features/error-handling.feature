@@ -55,6 +55,7 @@ Feature: Detecting and reporting errors
             | config          |
             | default         |
             | complex-config  |
+            | dont-send-code  |
 
     Scenario Outline: An event occurs when reporting is disabled
         Given I launch an app with configuration:
