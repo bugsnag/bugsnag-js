@@ -56,7 +56,7 @@
       },
       "breadcrumbs": [
         {
-          "type": "navigation",
+          "type": "state",
           "name": "Bugsnag loaded",
           "timestamp": "{TIMESTAMP}",
           "metaData": {}
