@@ -90,7 +90,8 @@ describe.skip('@bugsnag/electron types', () => {
         redactedKeys: ['b'],
         releaseStage: 'vOv',
         user: { id: '1234-abcd' },
-        launchDurationMillis: 100
+        launchDurationMillis: 100,
+        sendCode: false
       })
       Bugsnag.markLaunchComplete()
     })

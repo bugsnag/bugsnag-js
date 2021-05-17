@@ -36,6 +36,7 @@
     "@bugsnag/plugin-interaction-breadcrumbs": "^7.10.0-alpha.0",
     "@bugsnag/plugin-internal-callback-marker": "^7.10.0-alpha.1",
     "@bugsnag/plugin-network-breadcrumbs": "^7.10.0-alpha.0",
+    "@bugsnag/plugin-node-surrounding-code": "^7.10.0-alpha.0",
     "@bugsnag/plugin-node-uncaught-exception": "^7.10.0-alpha.0",
     "@bugsnag/plugin-node-unhandled-rejection": "^7.10.0-alpha.0",
     "@bugsnag/plugin-stackframe-path-normaliser": "^7.10.0-alpha.2",
