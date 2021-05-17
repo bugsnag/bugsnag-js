@@ -10,13 +10,12 @@
       "payloadVersion": "4",
       "app": {
         "duration": "{TYPE:number}",
-        "releaseStage": "beta",
+        "releaseStage": "production",
         "inForeground": "{TYPE:boolean}",
         "isLaunching": "{TYPE:boolean}",
-        "type": "complicated",
-        "version": "2.0.83-beta3"
+        "type": "{PLATFORM_LINUX:Linux|PLATFORM_MACOS:macOS|PLATFORM_WINDOWS:Windows}",
+        "version": "1.0.2"
       },
-      "context": "shopping cart",
       "device": {
         "runtimeVersions": {
           "node": "{TYPE:string}",
@@ -30,13 +29,12 @@
         "totalMemory": "{TYPE:number}",
         "osVersion": "{REGEX:\\d+\\.\\d+}"
       },
+      "user": {
+        "id": "{REGEX:[0-9a-f]{64}}"
+      },
       "metaData": {
-        "account": {
-          "type": "pro"
-        },
         "app": {
           "name": "Runner",
-          "part": 3,
           "CFBundleVersion": "{PLATFORM_MACOS:1.0.2}"
         },
         "device": {
@@ -46,9 +44,6 @@
             "width": "{TYPE:number}",
             "height": "{TYPE:number}"
           }
-        },
-        "site": {
-          "name": "shop co"
         },
         "process": {
           "type": "browser",
@@ -60,18 +55,7 @@
       "severityReason": {
         "type": "unhandledException"
       },
-      "user": {
-        "id": "3",
-        "email": "elia@example.com",
-        "name": "Elia"
-      },
       "breadcrumbs": [
-        {
-          "type": "state",
-          "name": "Bugsnag loaded",
-          "timestamp": "{TIMESTAMP}",
-          "metaData": {}
-        },
         {
           "type": "state",
           "name": "App became ready",
@@ -111,9 +95,7 @@
           "stacktrace": [{
             "file": "./src/errors.js",
             "lineNumber": 6,
-            "code": {
-              "1": "{TYPE:string}"
-            }
+            "code": "{TYPE:undefined}"
           }],
           "type": "electronnodejs"
         }

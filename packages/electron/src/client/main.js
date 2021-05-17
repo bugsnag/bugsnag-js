@@ -33,7 +33,8 @@ module.exports = (opts) => {
 
   // main internal plugins go here
   const internalPlugins = [
-    // THIS PLUGIN MUST BE FIRST!
+    // Plugins after the "FirstPlugin" will run in the main process for renderer
+    // errors before any renderer onError callbacks are called
     require('@bugsnag/plugin-internal-callback-marker').FirstPlugin,
     require('@bugsnag/plugin-electron-client-state-manager'),
     require('@bugsnag/plugin-electron-ipc'),
@@ -49,8 +50,12 @@ module.exports = (opts) => {
     require('@bugsnag/plugin-electron-preload-error')(electron.app),
     require('@bugsnag/plugin-electron-net-breadcrumbs')(electron.net),
     require('@bugsnag/plugin-stackframe-path-normaliser'),
-    // THIS PLUGIN MUST BE LAST!
-    require('@bugsnag/plugin-internal-callback-marker').LastPlugin
+    // Plugins after the "LastPlugin" will run in the main process for renderer
+    // errors after all renderer onError callbacks have been called
+    require('@bugsnag/plugin-internal-callback-marker').LastPlugin,
+    // The surrounding code plugin must run here because the stacktrace is not
+    // present on renderer errors in the first round of callbacks
+    require('@bugsnag/plugin-node-surrounding-code')
   ]
 
   const bugsnag = new Client(opts, schema, internalPlugins, require('../id'))

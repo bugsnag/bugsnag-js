@@ -94,7 +94,10 @@
           "stacktrace": [
             {
               "file": "./renderer.js",
-              "lineNumber": 16
+              "lineNumber": 16,
+              "code": {
+                "1": "{TYPE:string}"
+              }
             }
           ],
           "type": "electronrendererjs"

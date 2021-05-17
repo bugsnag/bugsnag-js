@@ -100,7 +100,10 @@
           "errorMessage": "foo is not defined",
           "stacktrace": [{
             "file": "./src/errors.js",
-            "lineNumber": 6
+            "lineNumber": 6,
+            "code": {
+              "1": "{TYPE:string}"
+            }
           }],
           "type": "electronnodejs"
         }

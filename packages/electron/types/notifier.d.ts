@@ -24,6 +24,7 @@ interface MainConfig extends Config {
   onUnhandledRejection?: AfterErrorCallback
   projectRoot?: string
   launchDurationMillis?: number
+  sendCode?: boolean
 }
 
 // a renderer is only allowed a subset of properties from Config
