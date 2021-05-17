@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-electron-process-info",
-  "version": "7.10.0-alpha.1",
+  "version": "7.10.0-alpha.3",
   "main": "procinfo.js",
   "description": "@bugsnag/electron plugin to collect process information for errors",
   "repository": {

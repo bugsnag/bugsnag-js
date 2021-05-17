@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-electron-renderer-event-data",
-  "version": "7.10.0-alpha.2",
+  "version": "7.10.0-alpha.3",
   "main": "renderer-event-data.js",
   "description": "@bugsnag/electron plugin to get fully populated event data in renderer callbacks",
   "homepage": "https://www.bugsnag.com/",
@@ -21,7 +21,7 @@
   "devDependencies": {
     "@bugsnag/core": "^7.10.0-alpha.0",
     "@bugsnag/electron-test-helpers": "^7.10.0-alpha.1",
-    "@bugsnag/plugin-electron-renderer-strip-project-root": "^7.10.0-alpha.1"
+    "@bugsnag/plugin-electron-renderer-strip-project-root": "^7.10.0-alpha.3"
   },
   "peerDependencies": {
     "@bugsnag/core": "^7.9.2",

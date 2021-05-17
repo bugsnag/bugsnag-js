@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-electron-device",
-  "version": "7.10.0-alpha.1",
+  "version": "7.10.0-alpha.3",
   "main": "device.js",
   "description": "@bugsnag/electron plugin to collect device information",
   "repository": {

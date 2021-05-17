@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-node-surrounding-code",
-  "version": "7.10.0-alpha.0",
+  "version": "7.10.0-alpha.3",
   "main": "surrounding-code.js",
   "description": "@bugsnag/js plugin to load surrounding code in Node stacktraces",
   "homepage": "https://www.bugsnag.com/",
