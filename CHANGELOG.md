@@ -2,6 +2,16 @@
 
 ## TBD
 
+This release adds [`@bugsnag/electron`](http://docs.bugsnag.com/platforms/electron), a notifier for use on apps that are built using Electron.
+
+### Added
+
+- (electron): a new top-level notifier `@bugsnag/electron` and related plugins
+
+### Changed
+
+- (node): File paths in stacktraces now always use `/` as the path separator
+- (node): Surrounding code can be fetched from file paths that are relative to the project root
 - (react-native): Update bugsnag-android to v5.9.2
   - Guard against exceptions with null stack traces
     [bugsnag-android#1239](https://github.com/bugsnag/bugsnag-android/pull/1239)
