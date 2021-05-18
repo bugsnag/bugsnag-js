@@ -9,11 +9,6 @@ Event.__type = 'electronrendererjs'
 
 module.exports = (rendererOpts) => {
   if (!window.__bugsnag_ipc__) throw new Error('Bugsnag was not loaded in the main process')
-  const opts = mergeOptions(window.__bugsnag_ipc__.config, rendererOpts)
-
-  // automatic error breadcrumbs will always be duplicates if created in renderers
-  // because both the renderers and main process create them for the same Event
-  opts.enabledBreadcrumbTypes = opts.enabledBreadcrumbTypes.filter(type => type !== 'error')
 
   const internalPlugins = [
     require('@bugsnag/plugin-electron-renderer-client-state-updates')(window.__bugsnag_ipc__),
@@ -28,6 +23,20 @@ module.exports = (rendererOpts) => {
     require('@bugsnag/plugin-stackframe-path-normaliser'),
     require('@bugsnag/plugin-electron-renderer-event-data')(window.__bugsnag_ipc__)
   ]
+
+  const additionalSchemaKeys = internalPlugins.reduce((schemaKeys, plugin) => {
+    if (plugin.configSchema) {
+      return schemaKeys.concat(Object.keys(plugin.configSchema))
+    }
+
+    return schemaKeys
+  }, [])
+
+  const opts = mergeOptions(additionalSchemaKeys, window.__bugsnag_ipc__.config, rendererOpts)
+
+  // automatic error breadcrumbs will always be duplicates if created in renderers
+  // because both the renderers and main process create them for the same Event
+  opts.enabledBreadcrumbTypes = opts.enabledBreadcrumbTypes.filter(type => type !== 'error')
 
   const bugsnag = new Client(opts, schema, internalPlugins, require('../id'))
 
