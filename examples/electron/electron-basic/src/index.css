@@ -1,0 +1,29 @@
+body {
+  font-family: monospace;
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 0 20px;
+  background-color: #fff;
+}
+
+button {
+  font-size: 16px;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: rgba(73, 73, 228, 1);
+  color: #FFF;
+  border: none;
+  border-radius: 2px;
+  margin: .5rem .125rem .5rem 0;
+  padding: .5rem 1rem;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: rgba(73, 73, 228, .8);
+}
+
+h1,h3 {
+  margin-top: 30px;
+}

@@ -1,0 +1,24 @@
+{
+  "name": "@bugsnag/plugin-electron-process-info",
+  "version": "7.10.0-alpha.3",
+  "main": "procinfo.js",
+  "description": "@bugsnag/electron plugin to collect process information for errors",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:bugsnag/bugsnag-js.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "procinfo.js"
+  ],
+  "devDependencies": {
+    "@bugsnag/core": "^7.10.0-alpha.0"
+  },
+  "peerDependencies": {
+    "@bugsnag/core": "^7.9.2"
+  },
+  "author": "Bugsnag",
+  "license": "MIT"
+}

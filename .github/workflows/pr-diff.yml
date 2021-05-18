@@ -17,12 +17,14 @@ jobs:
           ref: ${{ github.base_ref }}
 
       - name: Record before stats
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
         run: |
           mkdir .diff
           npm ci
           npx lerna bootstrap
           npm run build
-          npm run test:unit -- --coverage
+          npm run test:coverage
           cat packages/browser/dist/bugsnag.min.js | wc -c > .diff/size-before-minified
           cat packages/browser/dist/bugsnag.min.js | gzip | wc -c > .diff/size-before-gzipped
           cp coverage/coverage-summary.json .diff/coverage-before.json
@@ -33,11 +35,13 @@ jobs:
           clean: false
 
       - name: Record after stats
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
         run: |
           npm ci
           npx lerna bootstrap
           npm run build
-          npm run test:unit -- --coverage
+          npm run test:coverage
           cat packages/browser/dist/bugsnag.min.js | wc -c > .diff/size-after-minified
           cat packages/browser/dist/bugsnag.min.js | gzip | wc -c > .diff/size-after-gzipped
           cp coverage/coverage-summary.json .diff/coverage-after.json
