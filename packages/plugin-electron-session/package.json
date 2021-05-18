@@ -1,0 +1,28 @@
+{
+  "name": "@bugsnag/plugin-electron-session",
+  "version": "7.10.0-alpha.3",
+  "main": "session.js",
+  "description": "@bugsnag/electron plugin for sessions",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:bugsnag/bugsnag-js.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "session.js"
+  ],
+  "dependencies": {
+    "@bugsnag/plugin-browser-session": "^7.10.0-alpha.0"
+  },
+  "devDependencies": {
+    "@bugsnag/core": "^7.10.0-alpha.0",
+    "@bugsnag/electron-test-helpers": "^7.10.0-alpha.1"
+  },
+  "peerDependencies": {
+    "@bugsnag/core": "^7.9.2"
+  },
+  "author": "Bugsnag",
+  "license": "MIT"
+}

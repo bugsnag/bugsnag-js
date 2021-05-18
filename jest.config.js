@@ -13,6 +13,7 @@ module.exports = {
   collectCoverageFrom: [
     `**/packages/*/**/*.{${extensions}}`,
     `!**/*.test.{${extensions}}`,
+    `!**/*.test-*.{${extensions}}`,
     '!**/*.d.ts',
     '!**/dist/**',
     '!**/packages/js/**',
@@ -27,7 +28,7 @@ module.exports = {
   ],
   projects: [
     project('core', ['core']),
-    project('shared plugins', ['plugin-app-duration']),
+    project('shared plugins', ['plugin-app-duration', 'plugin-stackframe-path-normaliser']),
     project('browser', [
       'browser',
       'delivery-x-domain-request',
@@ -101,6 +102,33 @@ module.exports = {
       testMatch: [
         '<rootDir>/packages/node/test/integration/**/*.test.[jt]s'
       ]
+    }),
+    project('electron', [
+      'delivery-electron',
+      'electron',
+      'electron-filestore',
+      'electron-test-helpers',
+      'plugin-electron-app',
+      'plugin-electron-app-breadcrumbs',
+      'plugin-electron-client-state-manager',
+      'plugin-electron-client-state-persistence',
+      'plugin-electron-device',
+      'plugin-electron-ipc',
+      'plugin-electron-net-breadcrumbs',
+      'plugin-electron-network-status',
+      'plugin-electron-power-monitor-breadcrumbs',
+      'plugin-electron-preload-error',
+      'plugin-electron-process-info',
+      'plugin-electron-renderer-client-state-updates',
+      'plugin-electron-renderer-event-data',
+      'plugin-electron-renderer-strip-project-root',
+      'plugin-electron-screen-breadcrumbs',
+      'plugin-electron-session',
+      'plugin-internal-callback-marker'
+    ], {
+      setupFilesAfterEnv: ['<rootDir>/test/electron/setup.ts'],
+      clearMocks: true,
+      modulePathIgnorePatterns: ['.verdaccio', 'fixtures']
     }),
     project('react native cli', ['react-native-cli'], { testEnvironment: 'node' })
   ]

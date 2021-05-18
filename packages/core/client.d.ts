@@ -70,4 +70,6 @@ export default class ClientWithInternals<T extends Config = Config> extends Clie
     sp: any[]
     b: OnBreadcrumbCallback[]
   }
+
+  _loadPlugin(plugin: Plugin): void
 }

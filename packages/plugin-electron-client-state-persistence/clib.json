@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "kgabis/parson": "1.1.0",
+    "tinycthread/tinycthread": "6957fc8383d6c7db25b60b8c849b29caab1caaee"
+  }
+}
