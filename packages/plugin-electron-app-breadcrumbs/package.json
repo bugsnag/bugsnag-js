@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-electron-app-breadcrumbs",
-  "version": "7.10.0-alpha.1",
+  "version": "7.10.0",
   "main": "app-breadcrumbs.js",
   "description": "@bugsnag/electron plugin to collect breadcrumbs for app lifecycle events",
   "repository": {
@@ -17,8 +17,8 @@
     "lodash.debounce": "^4.0.8"
   },
   "devDependencies": {
-    "@bugsnag/core": "^7.10.0-alpha.0",
-    "@bugsnag/electron-test-helpers": "^7.10.0-alpha.1"
+    "@bugsnag/core": "^7.10.0",
+    "@bugsnag/electron-test-helpers": "^7.10.0"
   },
   "peerDependencies": {
     "@bugsnag/core": "^7.9.2"

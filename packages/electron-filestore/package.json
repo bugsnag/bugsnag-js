@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/electron-filestore",
-  "version": "7.10.0-alpha.3",
+  "version": "7.10.0",
   "main": "filestore.js",
   "description": "@bugsnag/electron package for storing events, sessions and crash dumps on the file system",
   "author": "Bugsnag",
