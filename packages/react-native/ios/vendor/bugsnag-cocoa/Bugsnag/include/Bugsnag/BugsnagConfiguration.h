@@ -175,7 +175,7 @@ typedef BOOL (^BugsnagOnSessionBlock)(BugsnagSession *_Nonnull session);
 /**
  *  A general summary of what was occuring in the application
  */
-@property (copy, nullable, nonatomic) NSString *context;
+@property (copy, nullable, atomic) NSString *context;
 
 /**
  *  The version of the application

@@ -7,6 +7,7 @@
 //
 
 #import "BugsnagAppWithState.h"
+#import "BugsnagApp+Private.h"
 
 @class BugsnagConfiguration;
 
