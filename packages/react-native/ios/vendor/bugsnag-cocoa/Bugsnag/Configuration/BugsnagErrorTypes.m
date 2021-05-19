@@ -11,7 +11,7 @@
 @implementation BugsnagErrorTypes
 
 - (instancetype)init {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _appHangs = YES;
         _unhandledExceptions = YES;
         _signals = YES;

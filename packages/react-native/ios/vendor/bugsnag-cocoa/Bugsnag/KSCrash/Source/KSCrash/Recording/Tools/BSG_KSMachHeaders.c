@@ -245,7 +245,7 @@ uintptr_t bsg_mach_headers_first_cmd_after_header(const struct mach_header *cons
         return (uintptr_t)(header + 1);
     case MH_MAGIC_64:
     case MH_CIGAM_64:
-        return (uintptr_t)(((struct mach_header_64 *)header) + 1);
+        return (uintptr_t)(((const struct mach_header_64 *)header) + 1);
     default:
         // Header is corrupt
         return 0;

@@ -9,9 +9,9 @@
 #ifndef BSG_KSMachHeaders_h
 #define BSG_KSMachHeaders_h
 
-#import <mach/machine.h>
-#import <os/lock.h>
-#import <libkern/OSAtomic.h>
+#include <mach/machine.h>
+#include <os/lock.h>
+#include <libkern/OSAtomic.h>
 
 /* Maintaining our own list of framework Mach headers means that we avoid potential
  * deadlock situations where we try and suspend lock-holding threads prior to

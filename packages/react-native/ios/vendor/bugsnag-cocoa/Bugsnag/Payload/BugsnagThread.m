@@ -45,7 +45,7 @@ NSString *BSGSerializeThreadType(BSGThreadType type) {
       errorReportingThread:(BOOL)errorReportingThread
                       type:(BSGThreadType)type
                 stacktrace:(NSArray<BugsnagStackframe *> *)stacktrace {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _id = id;
         _name = name;
         _errorReportingThread = errorReportingThread;
@@ -56,7 +56,7 @@ NSString *BSGSerializeThreadType(BSGThreadType type) {
 }
 
 - (instancetype)initWithThread:(NSDictionary *)thread binaryImages:(NSArray *)binaryImages {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _errorReportingThread = [thread[@BSG_KSCrashField_Crashed] boolValue];
         _id = [thread[@BSG_KSCrashField_Index] stringValue];
         _type = BSGThreadTypeCocoa;

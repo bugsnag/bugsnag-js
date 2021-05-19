@@ -8,6 +8,7 @@
 
 #import "BSGEventUploadKSCrashReportOperation.h"
 
+#import "BSGInternalErrorReporter.h"
 #import "BSGJSONSerialization.h"
 #import "BSG_KSCrashDoctor.h"
 #import "BSG_KSCrashReportFields.h"
@@ -22,17 +23,41 @@
 @implementation BSGEventUploadKSCrashReportOperation
 
 - (BugsnagEvent *)loadEventAndReturnError:(NSError * __autoreleasing *)errorPtr {
-    id json = [BSGJSONSerialization JSONObjectWithContentsOfFile:self.file options:0 error:errorPtr];
-    if (!json) {
+    NSError *error = nil;
+    
+    NSData *data = [NSData dataWithContentsOfFile:self.file options:0 error:&error];
+    if (!data) {
+        [BSGInternalErrorReporter.sharedInstance reportErrorWithClass:@"File reading error"
+                                                              message:BSGErrorDescription(error)
+                                                          diagnostics:error.userInfo];
+        if (errorPtr) {
+            *errorPtr = error;
+        }
         return nil;
     }
     
-    json = [self fixupCrashReport:json];
+    id json = [BSGJSONSerialization JSONObjectWithData:data options:0 error:&error];
     if (!json) {
+        NSMutableDictionary *diagnostics = [NSMutableDictionary dictionary];
+        diagnostics[@"data"] = [data base64EncodedStringWithOptions:0];
+        [BSGInternalErrorReporter.sharedInstance reportErrorWithClass:@"JSON parsing error"
+                                                              message:BSGErrorDescription(error)
+                                                          diagnostics:diagnostics];
+        if (errorPtr) {
+            *errorPtr = error;
+        }
         return nil;
     }
     
-    BugsnagEvent *event = [[BugsnagEvent alloc] initWithKSReport:json];
+    NSDictionary *crashReport = [self fixupCrashReport:json];
+    if (!crashReport) {
+        [BSGInternalErrorReporter.sharedInstance reportErrorWithClass:@"Unexpected JSON payload"
+                                                              message:@"-fixupCrashReport: returned nil"
+                                                          diagnostics:@{@"json": json}];
+        return nil;
+    }
+    
+    BugsnagEvent *event = [[BugsnagEvent alloc] initWithKSReport:crashReport];
     
     if (!event.app.type) {
         // Use current value for crashes from older notifier versions that didn't persist config.appType

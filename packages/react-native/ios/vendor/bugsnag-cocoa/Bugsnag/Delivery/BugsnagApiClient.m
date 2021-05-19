@@ -43,7 +43,7 @@ typedef NS_ENUM(NSInteger, HTTPStatusCode) {
 @implementation BugsnagApiClient
 
 - (instancetype)initWithSession:(nullable NSURLSession *)session queueName:(NSString *)queueName {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _sendQueue = [NSOperationQueue new];
         _sendQueue.maxConcurrentOperationCount = 1;
         if ([_sendQueue respondsToSelector:@selector(qualityOfService)]) {
@@ -90,7 +90,7 @@ typedef NS_ENUM(NSInteger, HTTPStatusCode) {
     }
     
     NSMutableDictionary<BugsnagHTTPHeaderName, NSString *> *mutableHeaders = [headers mutableCopy];
-    mutableHeaders[BugsnagHTTPHeaderNameIntegrity] = [NSString stringWithFormat:@"sha1 %@", [self SHA1HashStringWithData:data]];
+    mutableHeaders[BugsnagHTTPHeaderNameIntegrity] = [NSString stringWithFormat:@"sha1 %@", [BugsnagApiClient SHA1HashStringWithData:data]];
     
     NSMutableURLRequest *request = [self prepareRequest:url headers:mutableHeaders];
     bsg_log_debug(@"Sending %lu byte payload to %@", (unsigned long)data.length, url);
@@ -120,7 +120,7 @@ typedef NS_ENUM(NSInteger, HTTPStatusCode) {
             NSURLErrorFailingURLErrorKey: url }];
         
         bsg_log_debug(@"Response headers: %@", ((NSHTTPURLResponse *)response).allHeaderFields);
-        bsg_log_debug(@"Response body: %.*s", (int)data.length, data.bytes);
+        bsg_log_debug(@"Response body: %.*s", (int)data.length, (const char *)data.bytes);
         
         if (statusCode / 100 == 4 &&
             statusCode != HTTPStatusCodePaymentRequired &&
@@ -150,7 +150,7 @@ typedef NS_ENUM(NSInteger, HTTPStatusCode) {
     return request;
 }
 
-- (NSString *)SHA1HashStringWithData:(NSData *)data {
++ (NSString *)SHA1HashStringWithData:(NSData *)data {
     if (!data) {
         return nil;
     }

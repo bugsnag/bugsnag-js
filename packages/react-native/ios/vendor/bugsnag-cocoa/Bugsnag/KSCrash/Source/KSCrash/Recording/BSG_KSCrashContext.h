@@ -52,16 +52,16 @@ typedef struct {
 
 typedef struct {
     /** A unique identifier (UUID). */
-    const char *crashID;
+    char *crashID;
 
     /** Name of this process. */
-    const char *processName;
+    char *processName;
 
     /** System information in JSON format (to be written to the report). */
-    const char *systemInfoJSON;
+    char *systemInfoJSON;
 
     /** User information in JSON format (to be written to the report). */
-    const char *userInfoJSON;
+    char *userInfoJSON;
 
     /** When writing the crash report, print a stack trace to STDOUT as well. */
     bool printTraceToStdout;
@@ -80,12 +80,12 @@ typedef struct {
     /**
      * File path to write the crash report
      */
-    const char *crashReportFilePath;
+    char *crashReportFilePath;
 
     /**
      * File path to write the recrash report, if the crash reporter crashes
      */
-    const char *recrashReportFilePath;
+    char *recrashReportFilePath;
 } BSG_KSCrash_Configuration;
 
 /** Contextual data used by the crash report writer.

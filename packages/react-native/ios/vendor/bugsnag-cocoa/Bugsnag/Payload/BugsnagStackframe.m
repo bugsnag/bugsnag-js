@@ -17,6 +17,11 @@
 BugsnagStackframeType const BugsnagStackframeTypeCocoa = @"cocoa";
 
 
+static NSString * _Nullable FormatMemoryAddress(NSNumber * _Nullable address) {
+    return address == nil ? nil : [NSString stringWithFormat:@"0x%" PRIxPTR, address.unsignedLongValue];
+}
+
+
 // MARK: - Properties not used for Cocoa stack frames, but used by React Native and Unity.
 
 @interface BugsnagStackframe ()
@@ -226,23 +231,10 @@ BugsnagStackframeType const BugsnagStackframeTypeCocoa = @"cocoa";
     dict[BSGKeyMachoFile] = self.machoFile;
     dict[BSGKeyMethod] = self.method;
     dict[BSGKeyMachoUUID] = self.machoUuid;
-
-    if (self.frameAddress != nil) {
-        NSString *frameAddr = [NSString stringWithFormat:BSGKeyFrameAddrFormat, [self.frameAddress unsignedLongValue]];
-        dict[BSGKeyFrameAddress] = frameAddr;
-    }
-    if (self.symbolAddress != nil) {
-        NSString *symbolAddr = [NSString stringWithFormat:BSGKeyFrameAddrFormat, [self.symbolAddress unsignedLongValue]];
-        dict[BSGKeySymbolAddr] = symbolAddr;
-    }
-    if (self.machoLoadAddress != nil) {
-        NSString *imageAddr = [NSString stringWithFormat:BSGKeyFrameAddrFormat, [self.machoLoadAddress unsignedLongValue]];
-        dict[BSGKeyMachoLoadAddr] = imageAddr;
-    }
-    if (self.machoVmAddress != nil) {
-        NSString *vmAddr = [NSString stringWithFormat:BSGKeyFrameAddrFormat, [self.machoVmAddress unsignedLongValue]];
-        dict[BSGKeyMachoVMAddress] = vmAddr;
-    }
+    dict[BSGKeyFrameAddress] = FormatMemoryAddress(self.frameAddress);
+    dict[BSGKeySymbolAddr] = FormatMemoryAddress(self.symbolAddress);
+    dict[BSGKeyMachoLoadAddr] = FormatMemoryAddress(self.machoLoadAddress);
+    dict[BSGKeyMachoVMAddress] = FormatMemoryAddress(self.machoVmAddress);
     if (self.isPc) {
         dict[BSGKeyIsPC] = @(self.isPc);
     }

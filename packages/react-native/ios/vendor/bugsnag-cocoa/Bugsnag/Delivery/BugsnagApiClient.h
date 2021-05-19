@@ -40,7 +40,7 @@ typedef NS_ENUM(NSInteger, BugsnagApiClientDeliveryStatus) {
                   toURL:(NSURL *)url
       completionHandler:(void (^)(BugsnagApiClientDeliveryStatus status, NSError * _Nullable error))completionHandler;
 
-- (NSString *)SHA1HashStringWithData:(NSData *)data;
++ (NSString *)SHA1HashStringWithData:(NSData *)data;
 
 @property (readonly, nonatomic) NSOperationQueue *sendQueue;
 

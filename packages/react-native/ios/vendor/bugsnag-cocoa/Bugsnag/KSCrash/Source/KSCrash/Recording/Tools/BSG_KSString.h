@@ -69,7 +69,7 @@ bool bsg_ksstring_extractHexValue(const char *string, size_t stringLength,
  *
  * @param replacement The string to replace with.
  */
-void bsg_ksstring_replace(const char **dest, const char *replacement);
+void bsg_ksstring_replace(char **dest, const char *replacement);
 
 #ifdef __cplusplus
 }

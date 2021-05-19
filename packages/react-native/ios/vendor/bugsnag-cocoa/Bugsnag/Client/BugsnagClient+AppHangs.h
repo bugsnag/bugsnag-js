@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface BugsnagClient (AppHangs) <BSGAppHangDetectorDelegate>
 
-/// @Returns A `BugsnagEvent` if the last run ended with a fatal app hang, `nil` otherwise.
+/// @return A `BugsnagEvent` if the last run ended with a fatal app hang, `nil` otherwise.
 - (nullable BugsnagEvent *)loadFatalAppHangEvent;
 
 - (void)startAppHangDetector;

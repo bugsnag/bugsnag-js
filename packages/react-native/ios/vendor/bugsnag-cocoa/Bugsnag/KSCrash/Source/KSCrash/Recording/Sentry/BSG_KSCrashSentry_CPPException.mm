@@ -42,7 +42,6 @@
 #define DESCRIPTION_BUFFER_LENGTH 1000
 
 // Compiler hints for "if" statements
-#define likely_if(x) if (__builtin_expect(x, 1))
 #define unlikely_if(x) if (__builtin_expect(x, 0))
 
 #ifdef __cplusplus

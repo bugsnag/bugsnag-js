@@ -136,7 +136,7 @@ typedef struct BSG_KSCrashReportWriter {
      *
      * @param value A pointer to the binary data.
      *
-     * @paramn length The length of the data.
+     * @param length The length of the data.
      */
     void (*addDataElement)(const struct BSG_KSCrashReportWriter *writer,
                            const char *name, const char *value,
@@ -159,7 +159,7 @@ typedef struct BSG_KSCrashReportWriter {
      *
      * @param value A pointer to the binary data.
      *
-     * @paramn length The length of the data.
+     * @param length The length of the data.
      */
     void (*appendDataElement)(const struct BSG_KSCrashReportWriter *writer,
                               const char *value, const size_t length);

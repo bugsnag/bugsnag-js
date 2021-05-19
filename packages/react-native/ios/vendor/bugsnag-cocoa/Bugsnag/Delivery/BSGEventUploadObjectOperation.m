@@ -14,7 +14,7 @@
 @implementation BSGEventUploadObjectOperation
 
 - (instancetype)initWithEvent:(BugsnagEvent *)event delegate:(id<BSGEventUploadOperationDelegate>)delegate {
-    if (self = [super initWithDelegate:delegate]) {
+    if ((self = [super initWithDelegate:delegate])) {
         _event = event;
     }
     return self;

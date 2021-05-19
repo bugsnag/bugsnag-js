@@ -107,7 +107,7 @@
 /**
  * Information about the last run of the app, and whether it crashed.
  */
-@property (class, readonly, nullable) BugsnagLastRunInfo *lastRunInfo;
+@property (class, readonly, nullable, nonatomic) BugsnagLastRunInfo *lastRunInfo;
 
 /**
  * Tells Bugsnag that your app has finished launching.

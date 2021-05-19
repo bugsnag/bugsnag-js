@@ -10,8 +10,6 @@
 #import "BSG_KSCrashReportFields.h"
 #import "BSG_KSSystemInfo.h"
 
-#define BSG_kUserCrashHandler "kscrw_i_callUserCrashHandler"
-
 typedef NS_ENUM(NSUInteger, BSG_CPUFamily) {
     BSG_CPUFamilyUnknown,
     BSG_CPUFamilyArm,

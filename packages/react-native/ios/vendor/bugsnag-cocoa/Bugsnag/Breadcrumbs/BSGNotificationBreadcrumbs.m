@@ -205,7 +205,7 @@ NSString * const BSGNotificationBreadcrumbsMessageAppWillTerminate = @"App Will 
 
 - (void)start {
     // State events
-    if ([_configuration shouldRecordBreadcrumbType:BSGBreadcrumbTypeState]) {
+    if ([self.configuration shouldRecordBreadcrumbType:BSGBreadcrumbTypeState]) {
         // Generic state events
         for (NSNotificationName name in [self automaticBreadcrumbStateEvents]) {
             [self startListeningForStateChangeNotification:name];
@@ -214,7 +214,7 @@ NSString * const BSGNotificationBreadcrumbsMessageAppWillTerminate = @"App Will 
 #if TARGET_OS_OSX
         // Workspace-specific events - macOS only
         for (NSNotificationName name in [self workspaceBreadcrumbStateEvents]) {
-            [_workspaceNotificationCenter addObserver:self
+            [self.workspaceNotificationCenter addObserver:self
                                              selector:@selector(addBreadcrumbForNotification:)
                                                  name:name
                                                object:nil];
@@ -222,7 +222,7 @@ NSString * const BSGNotificationBreadcrumbsMessageAppWillTerminate = @"App Will 
         
         // NSMenu events (macOS only)
         for (NSNotificationName name in [self automaticBreadcrumbMenuItemEvents]) {
-            [_notificationCenter addObserver:self
+            [self.notificationCenter addObserver:self
                                     selector:@selector(addBreadcrumbForMenuItemNotification:)
                                         name:name
                                       object:nil];
@@ -231,10 +231,10 @@ NSString * const BSGNotificationBreadcrumbsMessageAppWillTerminate = @"App Will 
     }
     
     // Navigation events
-    if ([_configuration shouldRecordBreadcrumbType:BSGBreadcrumbTypeNavigation]) {
+    if ([self.configuration shouldRecordBreadcrumbType:BSGBreadcrumbTypeNavigation]) {
         // UI/NSTableView events
         for (NSNotificationName name in [self automaticBreadcrumbTableItemEvents]) {
-            [_notificationCenter addObserver:self
+            [self.notificationCenter addObserver:self
                                     selector:@selector(addBreadcrumbForTableViewNotification:)
                                         name:name
                                       object:nil];
@@ -242,10 +242,10 @@ NSString * const BSGNotificationBreadcrumbsMessageAppWillTerminate = @"App Will 
     }
     
     // User events
-    if ([_configuration shouldRecordBreadcrumbType:BSGBreadcrumbTypeUser]) {
+    if ([self.configuration shouldRecordBreadcrumbType:BSGBreadcrumbTypeUser]) {
         // UITextField/NSControl events (text editing)
         for (NSNotificationName name in [self automaticBreadcrumbControlEvents]) {
-            [_notificationCenter addObserver:self
+            [self.notificationCenter addObserver:self
                                     selector:@selector(addBreadcrumbForControlNotification:)
                                         name:name
                                       object:nil];
@@ -254,7 +254,7 @@ NSString * const BSGNotificationBreadcrumbsMessageAppWillTerminate = @"App Will 
 }
 
 - (void)startListeningForStateChangeNotification:(NSNotificationName)notificationName {
-    [_notificationCenter addObserver:self selector:@selector(addBreadcrumbForNotification:) name:notificationName object:nil];
+    [self.notificationCenter addObserver:self selector:@selector(addBreadcrumbForNotification:) name:notificationName object:nil];
 }
 
 - (void)addBreadcrumbForNotification:(NSNotification *)notification {

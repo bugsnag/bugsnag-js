@@ -44,12 +44,6 @@
  */
 @property(nonatomic, readwrite, retain) NSDictionary *userInfo;
 
-/** The crash types that are being handled.
- * Note: This value may change once BSG_KSCrash is installed if some handlers
- *       fail to install.
- */
-@property(nonatomic, readwrite, assign) BSG_KSCrashType handlingCrashTypes;
-
 /** If YES, introspect memory contents during a crash.
  * Any Objective-C objects or C strings near the stack pointer or referenced by
  * cpu registers or exceptions will be recorded in the crash report, along with
@@ -63,13 +57,13 @@
  */
 + (BSG_KSCrash *)sharedInstance;
 
-/** Install the crash reporter.
- * The reporter will record crashes, but will not send any crash reports unless
- * sink is set.
+/**
+ * Install the crash reporter.
  *
- * @return YES if the reporter successfully installed.
+ * @return The crash types that are now behing handled, representing the crash
+ *         sentries that were successfully installed.
  */
-- (BOOL)install:(NSString *)directory;
+- (BSG_KSCrashType)install:(BSG_KSCrashType)crashTypes directory:(NSString *)directory;
 
 /**
  * Collects information about the application's foreground state (duration in foreground/background)

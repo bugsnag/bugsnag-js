@@ -32,7 +32,7 @@
 
 - (instancetype)initWithTrace:(NSArray<NSDictionary *> *)trace
                  binaryImages:(NSArray<NSDictionary *> *)binaryImages {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _trace = [NSMutableArray new];
 
         for (NSDictionary *obj in trace) {
