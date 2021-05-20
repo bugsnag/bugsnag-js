@@ -4,6 +4,10 @@ const os = require('os')
 const { inspect } = require('util')
 
 module.exports = {
+  appType: {
+    ...schema.appType,
+    defaultValue: () => 'node'
+  },
   projectRoot: {
     defaultValue: () => process.cwd(),
     validate: value => value === null || stringWithLength(value),

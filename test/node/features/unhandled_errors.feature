@@ -9,6 +9,7 @@ Scenario: reporting thrown exception which is not caught
   And I run the service "unhandled" with the command "node scenarios/thrown-error-not-caught"
   And I wait to receive an error
   Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
+  And the error payload field "events.0.app.type" equals "node"
   And the event "unhandled" is true
   And the event "severity" equals "error"
   And the event "severityReason.type" equals "unhandledException"
