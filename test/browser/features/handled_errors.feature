@@ -8,6 +8,7 @@ Scenario Outline: calling notify() with Error
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "bad things"
   And the exception "type" equals "browserjs"
+  And the error payload field "events.0.app.type" equals "browser"
   And event 0 is handled
 
   Examples:
