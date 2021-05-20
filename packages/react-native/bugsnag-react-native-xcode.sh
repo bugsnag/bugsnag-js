@@ -15,8 +15,6 @@ if [ -z "$API_KEY" ]; then
   exit 1
 fi
 
-DEST="$CONFIGURATION_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH"
-
 BUNDLE_FILE="$CONFIGURATION_BUILD_DIR/main.jsbundle"
 if [ ! -f "$BUNDLE_FILE" ]; then
   echo "Skipping source map upload because app has not been bundled."
