@@ -39,7 +39,7 @@
 @synthesize notifier = _notifier;
 
 - (instancetype)initWithConfiguration:(BugsnagConfiguration *)configuration notifier:(BugsnagNotifier *)notifier {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _apiClient = [[BugsnagApiClient alloc] initWithSession:configuration.session queueName:@""];
         _configuration = configuration;
         _eventsDirectory = [BSGFileLocations current].events;

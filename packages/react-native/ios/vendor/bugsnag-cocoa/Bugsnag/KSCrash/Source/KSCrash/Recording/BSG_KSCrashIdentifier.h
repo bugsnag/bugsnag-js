@@ -12,13 +12,12 @@ void bsg_kscrash_generate_report_initialize(const char *directory, const char *b
  * Generates a new UUID. Not async signal safe. Caller responsible for
  * freeing allocated string.
  */
-const char *bsg_kscrash_generate_report_identifier(void);
+char *bsg_kscrash_generate_report_identifier(void);
 /**
  * Generates a new path string. Not async signal safe. Caller responsible
  * for freeing allocated string.
  */
-const char *bsg_kscrash_generate_report_path(const char *identifier,
-                                             bool is_recrash_report);
+char *bsg_kscrash_generate_report_path(const char *identifier, bool is_recrash_report);
 
 #ifdef __cplusplus
 }

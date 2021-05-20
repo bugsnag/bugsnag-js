@@ -33,16 +33,6 @@
 #include <CoreGraphics/CGBase.h>
 #include <objc/runtime.h>
 
-#define kMaxNameLength 128
-
-//======================================================================
-#pragma mark - Macros -
-//======================================================================
-
-// Compiler hints for "if" statements
-#define likely_if(x) if (__builtin_expect(x, 1))
-#define unlikely_if(x) if (__builtin_expect(x, 0))
-
 //======================================================================
 #pragma mark - Utility -
 //======================================================================

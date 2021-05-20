@@ -125,7 +125,7 @@ static NSString *const kUserCallbackSetSeverity = @"userCallbackSetSeverity";
                              unhandled:(BOOL)unhandled
                    unhandledOverridden:(BOOL)unhandledOverridden
                              attrValue:(NSString *)attrValue {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _severityReasonType = severityReason;
         _currentSeverity = severity;
         _originalSeverity = severity;
@@ -144,7 +144,7 @@ static NSString *const kUserCallbackSetSeverity = @"userCallbackSetSeverity";
 }
 
 - (instancetype)initWithDictionary:(NSDictionary *)dict {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _unhandled = [dict[kUnhandled] boolValue];
         _severityReasonType = [BugsnagHandledState
             severityReasonFromString:dict[kSeverityReasonType]];
@@ -157,7 +157,7 @@ static NSString *const kUserCallbackSetSeverity = @"userCallbackSetSeverity";
 }
 
 - (SeverityReasonType)calculateSeverityReasonType {
-    return _originalSeverity == _currentSeverity ? _severityReasonType
+    return self.originalSeverity == self.currentSeverity ? self.severityReasonType
                                                  : UserCallbackSetSeverity;
 }
 

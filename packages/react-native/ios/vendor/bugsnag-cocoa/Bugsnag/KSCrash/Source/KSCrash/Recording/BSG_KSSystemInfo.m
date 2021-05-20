@@ -190,7 +190,7 @@ static NSDictionary * bsg_systemversion() {
  */
 + (NSString *)uuidBytesToString:(const uint8_t *)uuidBytes {
     CFUUIDRef uuidRef =
-        CFUUIDCreateFromUUIDBytes(NULL, *((CFUUIDBytes *)uuidBytes));
+        CFUUIDCreateFromUUIDBytes(NULL, *((const CFUUIDBytes *)uuidBytes));
     NSString *str =
         (__bridge_transfer NSString *)CFUUIDCreateString(NULL, uuidRef);
     CFRelease(uuidRef);
@@ -614,7 +614,7 @@ static NSDictionary * bsg_systemversion() {
 
 @end
 
-const char *bsg_kssysteminfo_toJSON(void) {
+char *bsg_kssysteminfo_toJSON(void) {
     NSError *error;
     NSMutableDictionary *systemInfo = [[BSG_KSSystemInfo systemInfo] mutableCopy];
 

@@ -311,7 +311,7 @@ typedef BOOL (^BugsnagOnSessionBlock)(BugsnagSession *_Nonnull session);
  * missing, an assertion will be thrown. If the session endpoint is missing, a warning will be
  * logged and sessions will not be sent automatically.
  */
-@property (strong, nonatomic) BugsnagEndpointConfiguration *endpoints;
+@property (copy, nonatomic) BugsnagEndpointConfiguration *endpoints;
 
 // =============================================================================
 // MARK: - User

@@ -74,7 +74,8 @@ bool bsg_ksdldladdr(const uintptr_t address, Dl_info *const info) {
     }
 
     info->dli_fname = image->name;
-    info->dli_fbase = (void *)image->header;
+    // Cast away constness because dli_fbase is not :'(
+    info->dli_fbase = (void *)(uintptr_t)image->header;
 
     // Find symbol tables and get whichever symbol is closest to the address.
     const BSG_STRUCT_NLIST *bestMatch = NULL;

@@ -17,7 +17,7 @@
 @implementation BSGEventUploadFileOperation
 
 - (instancetype)initWithFile:(NSString *)file delegate:(id<BSGEventUploadOperationDelegate>)delegate {
-    if (self = [super initWithDelegate:delegate]) {
+    if ((self = [super initWithDelegate:delegate])) {
         _file = [file copy];
     }
     return self;

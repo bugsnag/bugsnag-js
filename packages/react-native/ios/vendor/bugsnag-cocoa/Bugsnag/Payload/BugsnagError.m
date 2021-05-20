@@ -19,9 +19,9 @@
 
 typedef NSString * BSGErrorTypeString NS_TYPED_ENUM;
 
-BSGErrorTypeString const BSGErrorTypeStringCocoa = @"cocoa";
-BSGErrorTypeString const BSGErrorTypeStringC = @"c";
-BSGErrorTypeString const BSGErrorTypeStringReactNativeJs = @"reactnativejs";
+static BSGErrorTypeString const BSGErrorTypeStringCocoa = @"cocoa";
+static BSGErrorTypeString const BSGErrorTypeStringC = @"c";
+static BSGErrorTypeString const BSGErrorTypeStringReactNativeJs = @"reactnativejs";
 
 
 NSString *_Nonnull BSGSerializeErrorType(BSGErrorType errorType) {
@@ -84,7 +84,7 @@ NSString *BSGParseErrorMessage(NSDictionary *report, NSDictionary *error, NSStri
 @dynamic type;
 
 - (instancetype)initWithKSCrashReport:(NSDictionary *)event stacktrace:(NSArray<BugsnagStackframe *> *)stacktrace {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         NSDictionary *error = [event valueForKeyPath:@"crash.error"];
         NSString *errorType = error[BSGKeyType];
         _errorClass = BSGParseErrorClass(error, errorType);
@@ -102,7 +102,7 @@ NSString *BSGParseErrorMessage(NSDictionary *report, NSDictionary *error, NSStri
                       errorMessage:(NSString *)errorMessage
                          errorType:(BSGErrorType)errorType
                         stacktrace:(NSArray<BugsnagStackframe *> *)stacktrace {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _errorClass = errorClass;
         _errorMessage = errorMessage;
         _typeString = BSGSerializeErrorType(errorType);

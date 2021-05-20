@@ -21,9 +21,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// The user defaults database to use for persistence of user information.
 @property (class, nonatomic) NSUserDefaults *userDefaults;
 
-@property (readonly) NSDictionary<NSString *, id> *dictionaryRepresentation;
+@property (readonly, nonatomic) NSDictionary<NSString *, id> *dictionaryRepresentation;
 
-@property (readonly, copy, nonatomic) BugsnagMetadata *metadata;
+@property (copy, nonatomic) BugsnagMetadata *metadata;
 
 @property (readonly, nullable, nonatomic) NSURL *notifyURL;
 
@@ -36,9 +36,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic) NSMutableSet *plugins;
 
-@property (readonly) BOOL shouldSendReports;
+@property (readonly, nonatomic) BOOL shouldSendReports;
 
-@property (readonly) NSDictionary<NSString *, id> *sessionApiHeaders;
+@property (readonly, nonatomic) NSDictionary<NSString *, id> *sessionApiHeaders;
 
 @property (readonly, nullable, nonatomic) NSURL *sessionURL;
 

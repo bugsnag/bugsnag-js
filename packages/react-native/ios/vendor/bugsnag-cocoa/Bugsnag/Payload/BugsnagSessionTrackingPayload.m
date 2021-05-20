@@ -33,7 +33,7 @@
                     codeBundleId:(NSString *)codeBundleId
                         notifier:(BugsnagNotifier *)notifier
 {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _sessions = sessions;
         _config = config;
         _codeBundleId = codeBundleId;

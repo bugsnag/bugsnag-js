@@ -42,7 +42,7 @@
 }
 
 - (instancetype)initWithDictionary:(NSDictionary *)dict {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         // Ensure that the instantiating dictionary is mutable.
         // Saves checks later.
         _dictionary = [self sanitizeDictionary:dict];
@@ -113,6 +113,12 @@
     NSMutableArray *newStateEventBlocks = [self.stateEventBlocks mutableCopy];
     [newStateEventBlocks removeObject:block];
     self.stateEventBlocks = newStateEventBlocks;
+}
+
+// MARK: - <NSCopying>
+
+- (id)copyWithZone:(__attribute__((unused)) NSZone *)zone {
+    return [self deepCopy];
 }
 
 // MARK: - <NSMutableCopying>

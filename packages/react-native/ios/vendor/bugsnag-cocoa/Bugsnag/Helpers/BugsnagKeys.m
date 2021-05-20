@@ -5,9 +5,8 @@
 //  Created by Robin Macharg on 22/05/2020.
 //
 
-#import <Foundation/Foundation.h>
+#import "BugsnagKeys.h"
 
-NSString *const BSGDefaultNotifyUrl = @"https://notify.bugsnag.com/";
 NSString *const BSGKeyAction = @"action";
 NSString *const BSGKeyApiKey = @"apiKey";
 NSString *const BSGKeyApp = @"app";
@@ -40,7 +39,6 @@ NSString *const BSGKeyExceptions = @"exceptions";
 NSString *const BSGKeyExecutableName = @"CFBundleExecutable";
 NSString *const BSGKeyExtraRuntimeInfo = @"extraRuntimeInfo";
 NSString *const BSGKeyFrameAddress = @"frameAddress";
-NSString *const BSGKeyFrameAddrFormat = @"0x%lx";
 NSString *const BSGKeyGroupingHash = @"groupingHash";
 NSString *const BSGKeyId = @"id";
 NSString *const BSGKeyImageAddress = @"image_addr";

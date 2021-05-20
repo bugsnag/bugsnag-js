@@ -24,7 +24,7 @@
 // THE SOFTWARE.
 //
 
-#import "BugsnagLogger.h"
+#include "BugsnagLogger.h"
 
 /**
  * BSG_KSLogger
@@ -159,9 +159,10 @@ extern "C" {
 #import <Foundation/Foundation.h>
 
 void bsg_i_kslog_logObjC(const char *level, const char *file, int line,
-                         const char *function, NSString *fmt, ...);
+                         const char *function, NSString *fmt, ...)
+                                                NS_FORMAT_FUNCTION(5, 6);
 
-void bsg_i_kslog_logObjCBasic(NSString *fmt, ...);
+void bsg_i_kslog_logObjCBasic(NSString *fmt, ...) NS_FORMAT_FUNCTION(1, 2);
 
 #define i_KSLOG_FULL bsg_i_kslog_logObjC
 #define i_KSLOG_BASIC bsg_i_kslog_logObjCBasic
@@ -169,9 +170,10 @@ void bsg_i_kslog_logObjCBasic(NSString *fmt, ...);
 #else // __OBJC__
 
 void bsg_i_kslog_logC(const char *level, const char *file, int line,
-                      const char *function, const char *fmt, ...);
+                      const char *function, const char *fmt, ...)
+                                                __printflike(5, 6);
 
-void bsg_i_kslog_logCBasic(const char *fmt, ...);
+void bsg_i_kslog_logCBasic(const char *fmt, ...) __printflike(1, 2);
 
 #define i_KSLOG_FULL bsg_i_kslog_logC
 #define i_KSLOG_BASIC bsg_i_kslog_logCBasic

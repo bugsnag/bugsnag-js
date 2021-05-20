@@ -22,7 +22,7 @@ static NSString *const kPluginReactNative = @"BugsnagReactNativePlugin";
 
 - (instancetype _Nonnull)initWithPlugins:(NSMutableSet<id<BugsnagPlugin>> *_Nonnull)plugins
                                   client:(BugsnagClient *)client {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         NSMutableSet *instantiatedPlugins = [plugins mutableCopy];
         id rnPlugin = [self instantiateBugsnagPlugin:kPluginReactNative];
 

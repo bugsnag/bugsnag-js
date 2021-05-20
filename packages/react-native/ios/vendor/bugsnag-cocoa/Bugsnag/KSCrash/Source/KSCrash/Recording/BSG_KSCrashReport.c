@@ -80,13 +80,6 @@ typedef ucontext_t SignalUserContext;
 /** The minimum length for a valid string. */
 #define BSG_kMinStringLength 4
 
-// ============================================================================
-#pragma mark - Thread Data Buffer -
-// ============================================================================
-
-#define BSG_THREAD_DATA_SIZE_INITIAL 128 * 1024
-#define BSG_THREAD_DATA_SIZE_INCREMENT 8 * 1024
-
 typedef struct {
     char *data;
     size_t allocated_size;
@@ -329,7 +322,7 @@ int bsg_kscrw_i_addJSONData(const char *const data, const size_t length,
  * @return true if the address points to a string.
  */
 bool bsg_kscrw_i_isValidString(const void *const address) {
-    if ((void *)address == NULL) {
+    if (!address) {
         return false;
     }
 
@@ -386,7 +379,7 @@ BSG_STRUCT_MCONTEXT_L *bsg_kscrw_i_getMachineContext(
     BSG_STRUCT_MCONTEXT_L *const machineContextBuffer) {
     if (thread == crash->offendingThread) {
         if (crash->crashType == BSG_KSCrashTypeSignal) {
-            return ((SignalUserContext *)crash->signal.userContext)
+            return ((const SignalUserContext *)crash->signal.userContext)
                 ->BSG_UC_MCONTEXT;
         }
     }
@@ -498,7 +491,7 @@ void bsg_kscrw_i_logCrashType(
             bsg_ksmachexceptionName(machExceptionType);
         const char *machCodeName =
             machCode == 0 ? NULL : bsg_ksmachkernelReturnCodeName(machCode);
-        BSG_KSLOGBASIC_INFO("App crashed due to mach exception: [%s: %s] at %p",
+        BSG_KSLOGBASIC_INFO("App crashed due to mach exception: [%s: %s] at %lu",
                             machExceptionName, machCodeName,
                             sentryContext->faultAddress);
         break;
@@ -520,7 +513,7 @@ void bsg_kscrw_i_logCrashType(
         int sigCode = sentryContext->signal.signalInfo->si_code;
         const char *sigName = bsg_kssignal_signalName(sigNum);
         const char *sigCodeName = bsg_kssignal_signalCodeName(sigNum, sigCode);
-        BSG_KSLOGBASIC_INFO("App crashed due to signal: [%s, %s] at %08x",
+        BSG_KSLOGBASIC_INFO("App crashed due to signal: [%s, %s] at %08lx",
                             sigName, sigCodeName, sentryContext->faultAddress);
         break;
     }
@@ -1430,7 +1423,7 @@ void bsg_kscrw_i_writeReportInfo(const BSG_KSCrashReportWriter *const writer,
 
 /** Prepare a report writer for use.
  *
- * @oaram writer The writer to prepare.
+ * @param writer The writer to prepare.
  *
  * @param context JSON writer contextual information.
  */

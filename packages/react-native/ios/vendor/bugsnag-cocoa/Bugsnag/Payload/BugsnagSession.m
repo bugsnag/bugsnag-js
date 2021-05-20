@@ -29,7 +29,7 @@ static NSString *const kBugsnagUser = @"user";
               autoCaptured:(BOOL)autoCaptured
                        app:(BugsnagApp *)app
                     device:(BugsnagDevice *)device {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _id = sessionId;
         _startedAt = [startDate copy];
         _user = user;
@@ -63,7 +63,7 @@ static NSString *const kBugsnagUser = @"user";
     if (!sessionId) {
         return nil;
     }
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _id = sessionId;
         _unhandledCount = [dict[kBugsnagUnhandledCount] unsignedIntegerValue];
         _handledCount = [dict[kBugsnagHandledCount] unsignedIntegerValue];
@@ -92,7 +92,7 @@ static NSString *const kBugsnagUser = @"user";
                      unhandledCount:(NSUInteger)unhandledCount
                                 app:(BugsnagApp *)app
                              device:(BugsnagDevice *)device {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _id = sessionId;
         _startedAt = startDate;
         _unhandledCount = unhandledCount;

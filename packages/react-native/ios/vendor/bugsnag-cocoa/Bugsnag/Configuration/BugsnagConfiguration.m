@@ -43,9 +43,9 @@ const NSUInteger BugsnagAppHangThresholdFatalOnly = INT_MAX;
 static const int BSGApiKeyLength = 32;
 
 // User info persistence keys
-NSString * const kBugsnagUserEmailAddress = @"BugsnagUserEmailAddress";
-NSString * const kBugsnagUserName = @"BugsnagUserName";
-NSString * const kBugsnagUserUserId = @"BugsnagUserUserId";
+static NSString * const kBugsnagUserEmailAddress = @"BugsnagUserEmailAddress";
+static NSString * const kBugsnagUserName = @"BugsnagUserName";
+static NSString * const kBugsnagUserUserId = @"BugsnagUserUserId";
 
 // =============================================================================
 // MARK: - BugsnagConfiguration
@@ -169,10 +169,8 @@ static NSUserDefaults *userDefaults;
     }
     _metadata = [[BugsnagMetadata alloc] init];
     _endpoints = [BugsnagEndpointConfiguration new];
-    _sessionURL = [NSURL URLWithString:@"https://sessions.bugsnag.com"];
     _autoDetectErrors = YES;
     _appHangThresholdMillis = BugsnagAppHangThresholdFatalOnly;
-    _notifyURL = [NSURL URLWithString:BSGDefaultNotifyUrl];
     _onSendBlocks = [NSMutableArray new];
     _onSessionBlocks = [NSMutableArray new];
     _onBreadcrumbBlocks = [NSMutableArray new];
@@ -338,19 +336,23 @@ static NSUserDefaults *userDefaults;
 }
 
 - (void)setEndpoints:(BugsnagEndpointConfiguration *)endpoints {
-    _endpoints = endpoints;
-    self.notifyURL = [NSURL URLWithString:endpoints.notify];
-    self.sessionURL = [NSURL URLWithString:endpoints.sessions];
-
-    // This causes a crash under DEBUG but is ignored in production
-    NSAssert([self isValidUrl:_notifyURL], @"Invalid URL supplied for notify endpoint");
-
-    if (![self isValidUrl:_sessionURL]) {
-        self.sessionURL = nil;
+    if ([self isValidURLString:endpoints.notify]) {
+        _endpoints.notify = [endpoints.notify copy];
+    } else {
+        // This causes a crash under DEBUG but is ignored in production
+        NSAssert(NO, @"Invalid URL supplied for notify endpoint");
+        _endpoints.notify = @"";
+    }
+    if ([self isValidURLString:endpoints.sessions]) {
+        _endpoints.sessions = [endpoints.sessions copy];
+    } else {
+        bsg_log_err(@"Invalid URL supplied for session endpoint");
+        _endpoints.sessions = @"";
     }
 }
 
-- (BOOL)isValidUrl:(NSURL *)url {
+- (BOOL)isValidURLString:(NSString *)URLString {
+    NSURL *url = [NSURL URLWithString:URLString];
     return url != nil && url.scheme != nil && url.host != nil;
 }
 
@@ -399,26 +401,26 @@ static NSUserDefaults *userDefaults;
  */
 - (void)persistUserData {
     @synchronized(self) {
-        if (_user) {
+        if (self.user) {
             // Email
-            if (_user.email) {
-                [userDefaults setObject:_user.email forKey:kBugsnagUserEmailAddress];
+            if (self.user.email) {
+                [userDefaults setObject:self.user.email forKey:kBugsnagUserEmailAddress];
             }
             else {
                 [userDefaults removeObjectForKey:kBugsnagUserEmailAddress];
             }
 
             // Name
-            if (_user.name) {
-                [userDefaults setObject:_user.name forKey:kBugsnagUserName];
+            if (self.user.name) {
+                [userDefaults setObject:self.user.name forKey:kBugsnagUserName];
             }
             else {
                 [userDefaults removeObjectForKey:kBugsnagUserName];
             }
 
             // UserId
-            if (_user.id) {
-                [userDefaults setObject:_user.id forKey:kBugsnagUserUserId];
+            if (self.user.id) {
+                [userDefaults setObject:self.user.id forKey:kBugsnagUserUserId];
             }
             else {
                 [userDefaults removeObjectForKey:kBugsnagUserUserId];
@@ -496,16 +498,12 @@ static NSUserDefaults *userDefaults;
     }
 }
 
-- (void)setMetadata:(BugsnagMetadata *)metadata {
-    _metadata = [metadata deepCopy];
+- (NSURL *)notifyURL {
+    return self.endpoints.notify.length ? [NSURL URLWithString:self.endpoints.notify] : nil;
 }
 
-- (void)setNotifyURL:(NSURL *)notifyURL {
-    _notifyURL = notifyURL;
-}
-
-- (void)setSessionURL:(NSURL *)sessionURL {
-    _sessionURL = sessionURL;
+- (NSURL *)sessionURL {
+    return self.endpoints.sessions.length ? [NSURL URLWithString:self.endpoints.sessions] : nil;
 }
 
 - (BOOL)shouldDiscardErrorClass:(NSString *)errorClass {
@@ -589,7 +587,7 @@ static NSUserDefaults *userDefaults;
 // MARK: -
 
 - (void)addPlugin:(id<BugsnagPlugin> _Nonnull)plugin {
-    [_plugins addObject:plugin];
+    [self.plugins addObject:plugin];
 }
 
 // MARK: - <MetadataStore>
@@ -613,7 +611,7 @@ static NSUserDefaults *userDefaults;
     return [self.metadata getMetadataFromSection:sectionName withKey:key];
 }
 
-- (NSDictionary *_Nullable)getMetadataFromSection:(NSString *_Nonnull)sectionName
+- (NSMutableDictionary *)getMetadataFromSection:(NSString *_Nonnull)sectionName
 {
     return [self.metadata getMetadataFromSection:sectionName];
 }

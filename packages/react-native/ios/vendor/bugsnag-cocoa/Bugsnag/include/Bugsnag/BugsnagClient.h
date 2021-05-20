@@ -205,7 +205,7 @@ NS_SWIFT_NAME(leaveBreadcrumb(_:metadata:type:));
 /**
  * Retrieves the context - a general summary of what was happening in the application
  */
- @property (copy, nullable) NSString *context;
+ @property (copy, nullable, atomic) NSString *context;
 
 /**
  * @return YES if Bugsnag has been started and the previous launch crashed

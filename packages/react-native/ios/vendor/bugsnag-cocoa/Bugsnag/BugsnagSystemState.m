@@ -159,7 +159,7 @@ static NSDictionary *copyDictionary(NSDictionary *launchState) {
 @implementation BugsnagSystemState
 
 - (instancetype)initWithConfiguration:(BugsnagConfiguration *)config {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _kvStore = [BugsnagKVStore new];
         _persistenceFilePath = [BSGFileLocations current].systemState;
         _lastLaunchState = loadPreviousState(_kvStore, _persistenceFilePath);

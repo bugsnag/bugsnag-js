@@ -13,7 +13,7 @@
 - (instancetype)initWithConsecutiveLaunchCrashes:(NSUInteger)consecutiveLaunchCrashes
                                          crashed:(BOOL)crashed
                              crashedDuringLaunch:(BOOL)crashedDuringLaunch {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _consecutiveLaunchCrashes = consecutiveLaunchCrashes;
         _crashed = crashed;
         _crashedDuringLaunch = crashedDuringLaunch;

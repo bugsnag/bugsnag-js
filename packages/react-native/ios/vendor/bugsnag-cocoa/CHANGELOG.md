@@ -1,6 +1,19 @@
 Changelog
 =========
 
+## 6.9.2 (2021-05-19)
+
+### Enhancements
+
+* Add a mechanism for reporting errors that occur within the notifier.
+  [#1089](https://github.com/bugsnag/bugsnag-cocoa/pull/1089)
+
+### Bug fixes
+
+* Fix compiler warnings when additional warning flags are enabled.
+  [#1092](https://github.com/bugsnag/bugsnag-cocoa/pull/1092)
+  [#1094](https://github.com/bugsnag/bugsnag-cocoa/pull/1094)
+
 ## 6.9.1 (2021-04-28)
 
 ### Bug fixes

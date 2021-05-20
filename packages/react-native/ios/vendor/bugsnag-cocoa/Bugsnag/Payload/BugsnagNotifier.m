@@ -13,7 +13,7 @@
 @implementation BugsnagNotifier
 
 - (instancetype)init {
-    if (self = [super init]) {
+    if ((self = [super init])) {
 #if BSG_PLATFORM_TVOS
         self.name = @"tvOS Bugsnag Notifier";
 #elif BSG_PLATFORM_IOS
@@ -23,7 +23,7 @@
 #else
         self.name = @"Bugsnag Objective-C";
 #endif
-        self.version = @"6.9.1";
+        self.version = @"6.9.2";
         self.url = @"https://github.com/bugsnag/bugsnag-cocoa";
         self.dependencies = [NSMutableArray new];
     }

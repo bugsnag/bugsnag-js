@@ -10,7 +10,9 @@
 
 #import "BSG_KSCrashReportWriter.h"
 #import "BSG_KSCrashType.h"
-#import "BugsnagConfiguration.h"
+
+@class BugsnagConfiguration;
+@class BugsnagErrorTypes;
 
 @interface BugsnagCrashSentry : NSObject
 

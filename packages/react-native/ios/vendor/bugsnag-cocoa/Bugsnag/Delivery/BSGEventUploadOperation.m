@@ -38,7 +38,7 @@ typedef NS_ENUM(NSUInteger, BSGEventUploadOperationState) {
 @implementation BSGEventUploadOperation
 
 - (instancetype)initWithDelegate:(id<BSGEventUploadOperationDelegate>)delegate {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _delegate = delegate;
     }
     return self;
