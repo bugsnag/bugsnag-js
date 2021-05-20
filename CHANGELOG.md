@@ -1,5 +1,11 @@
 # Changelog
 
+## TBD
+
+### Fixed
+
+- (react-native): Always upload JS bundle (rather than .hbc bundle) during Xcode source map upload build phase
+
 ## v7.10.0 (2021-05-18)
 
 This release adds [`@bugsnag/electron`](http://docs.bugsnag.com/platforms/electron), a notifier for use on apps that are built using Electron.
