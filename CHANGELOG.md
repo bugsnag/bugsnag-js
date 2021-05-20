@@ -8,6 +8,10 @@
   - Add a mechanism for reporting errors that occur within the notifier. [bugsnag-cocoa#1089](https://github.com/bugsnag/bugsnag-cocoa/pull/1089)
   - Fix compiler warnings when additional warning flags are enabled. [bugsnag-cocoa#1092](https://github.com/bugsnag/bugsnag-cocoa/pull/1092) [bugsnag-cocoa#1094](https://github.com/bugsnag/bugsnag-cocoa/pull/1094)
 
+### Fixed
+
+- (react-native): Always upload JS bundle (rather than .hbc bundle) during Xcode source map upload build phase
+
 ## v7.10.0 (2021-05-18)
 
 This release adds [`@bugsnag/electron`](http://docs.bugsnag.com/platforms/electron), a notifier for use on apps that are built using Electron.
