@@ -7,7 +7,7 @@ const includes = require('@bugsnag/core/lib/es-utils/includes')
  * Leaves breadcrumbs when console log methods are called
  */
 exports.load = (client) => {
-  const isDev = /^dev(elopment)?$/.test(client._config.releaseStage)
+  const isDev = !/^prod(uction)?$/.test(client._config.releaseStage.toLowerCase())
 
   if (!client._config.enabledBreadcrumbTypes || !includes(client._config.enabledBreadcrumbTypes, 'log') || isDev) return
 
