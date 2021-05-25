@@ -25,6 +25,7 @@ class TestApp {
     await this._exec(npmRunner, [...installArgs], {}, 500)
     await this._exec(npmRunner, [
       ...installArgs,
+      '--no-package-lock',
       '--registry',
       'http://0.0.0.0:5539',
       `@bugsnag/electron@${bugsnagVersion}`,
