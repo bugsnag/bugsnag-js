@@ -14,12 +14,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark Properties
 
-@property (class, readonly) BOOL bugsnagStarted;
+@property (class, readonly, nonatomic) BOOL bugsnagStarted;
 
-@property (class, readonly) BugsnagClient *client;
+@property (class, readonly, nonatomic) BugsnagClient *client;
 
 /// Will be nil until +startWithApiKey: or +startWithConfiguration: has been called.
-@property (class, readonly, nullable) BugsnagConfiguration *configuration;
+@property (class, readonly, nullable, nonatomic) BugsnagConfiguration *configuration;
 
 #pragma mark Methods
 

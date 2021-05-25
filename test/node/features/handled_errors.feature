@@ -9,6 +9,7 @@ Scenario: calling notify() with an error
   And I run the service "handled" with the command "node scenarios/notify"
   And I wait to receive an error
   Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
+  And the error payload field "events.0.app.type" equals "node"
   And the event "unhandled" is false
   And the event "severity" equals "warning"
   And the event "severityReason.type" equals "handledException"

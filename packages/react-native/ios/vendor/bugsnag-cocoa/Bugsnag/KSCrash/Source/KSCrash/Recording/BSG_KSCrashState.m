@@ -57,7 +57,6 @@
     "backgroundDurationSinceLastCrash"
 #define BSG_kKeyLaunchesSinceLastCrash "launchesSinceLastCrash"
 #define BSG_kKeySessionsSinceLastCrash "sessionsSinceLastCrash"
-#define BSG_kKeySessionsSinceLaunch "sessionsSinceLaunch"
 
 // ============================================================================
 #pragma mark - Globals -

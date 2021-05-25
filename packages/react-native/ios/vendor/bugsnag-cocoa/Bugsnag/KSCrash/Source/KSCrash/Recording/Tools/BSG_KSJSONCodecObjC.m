@@ -232,7 +232,7 @@ static inline NSString *stringFromCString(const char *const string) {
 
 int bsg_ksjsoncodecobjc_i_onElement(BSG_KSJSONCodec *codec, NSString *name,
                                     id element) {
-    id currentContainer = codec->_currentContainer;
+    id currentContainer = codec.currentContainer;
     if (!currentContainer) {
         codec.error = [NSError
             bsg_errorWithDomain:@"KSJSONCodecObjC"
@@ -252,16 +252,16 @@ int bsg_ksjsoncodecobjc_i_onElement(BSG_KSJSONCodec *codec, NSString *name,
 
 int bsg_ksjsoncodecobjc_i_onBeginContainer(BSG_KSJSONCodec *codec,
                                            NSString *name, id container) {
-    if (codec->_topLevelContainer == nil) {
-        codec->_topLevelContainer = container;
+    if (codec.topLevelContainer == nil) {
+        codec.topLevelContainer = container;
     } else {
         int result = bsg_ksjsoncodecobjc_i_onElement(codec, name, container);
         if (result != BSG_KSJSON_OK) {
             return result;
         }
     }
-    codec->_currentContainer = container;
-    [codec->_containerStack addObject:container];
+    codec.currentContainer = container;
+    [codec.containerStack addObject:container];
     return BSG_KSJSON_OK;
 }
 
@@ -297,10 +297,10 @@ int bsg_ksjsoncodecobjc_i_onNullElement(const char *const cName,
     NSString *name = stringFromCString(cName);
     BSG_KSJSONCodec *codec = (__bridge BSG_KSJSONCodec *)userData;
 
-    id currentContainer = codec->_currentContainer;
-    if ((codec->_ignoreNullsInArrays &&
+    id currentContainer = codec.currentContainer;
+    if ((codec.ignoreNullsInArrays &&
          [currentContainer isKindOfClass:[NSArray class]]) ||
-        (codec->_ignoreNullsInObjects &&
+        (codec.ignoreNullsInObjects &&
          [currentContainer isKindOfClass:[NSDictionary class]])) {
         return BSG_KSJSON_OK;
     }
@@ -337,7 +337,7 @@ int bsg_ksjsoncodecobjc_i_onBeginArray(const char *const cName,
 int bsg_ksjsoncodecobjc_i_onEndContainer(void *const userData) {
     BSG_KSJSONCodec *codec = (__bridge BSG_KSJSONCodec *)userData;
 
-    if ([codec->_containerStack count] == 0) {
+    if ([codec.containerStack count] == 0) {
         codec.error = [NSError
             bsg_errorWithDomain:@"KSJSONCodecObjC"
                            code:0
@@ -345,13 +345,13 @@ int bsg_ksjsoncodecobjc_i_onEndContainer(void *const userData) {
                            @"Already at the top level; no container left to end"];
         return BSG_KSJSON_ERROR_INVALID_DATA;
     }
-    [codec->_containerStack removeLastObject];
-    NSUInteger count = [codec->_containerStack count];
+    [codec.containerStack removeLastObject];
+    NSUInteger count = [codec.containerStack count];
     if (count > 0) {
-        codec->_currentContainer =
-                codec->_containerStack[count - 1];
+        codec.currentContainer =
+                codec.containerStack[count - 1];
     } else {
-        codec->_currentContainer = nil;
+        codec.currentContainer = nil;
     }
     return BSG_KSJSON_OK;
 }
@@ -398,7 +398,16 @@ int bsg_ksjsoncodecobjc_i_encodeObject(BSG_KSJSONCodec *codec, id object,
         case kCFNumberCharType:
             return bsg_ksjsonaddBooleanElement(context, cName,
                                                [object boolValue]);
-        default:
+        case kCFNumberSInt8Type:
+        case kCFNumberSInt16Type:
+        case kCFNumberSInt32Type:
+        case kCFNumberSInt64Type:
+        case kCFNumberShortType:
+        case kCFNumberIntType:
+        case kCFNumberLongType:
+        case kCFNumberLongLongType:
+        case kCFNumberCFIndexType:
+        case kCFNumberNSIntegerType:
             return bsg_ksjsonaddIntegerElement(context, cName,
                                                [object longLongValue]);
         }
@@ -408,7 +417,7 @@ int bsg_ksjsoncodecobjc_i_encodeObject(BSG_KSJSONCodec *codec, id object,
         if ((result = bsg_ksjsonbeginArray(context, cName)) != BSG_KSJSON_OK) {
             return result;
         }
-        if (codec->_sorted) {
+        if (codec.sorted) {
             object = [object sortedArrayUsingComparator:^NSComparisonResult(
                                  id obj1, id obj2) {
               Class cls1 = [obj1 class];
@@ -445,7 +454,7 @@ int bsg_ksjsoncodecobjc_i_encodeObject(BSG_KSJSONCodec *codec, id object,
             return result;
         }
         NSArray *keys = [object allKeys];
-        if (codec->_sorted) {
+        if (codec.sorted) {
             keys = [keys sortedArrayUsingSelector:@selector(compare:)];
         }
         for (id key in keys) {
@@ -507,7 +516,7 @@ int bsg_ksjsoncodecobjc_i_encodeObject(BSG_KSJSONCodec *codec, id object,
     } @catch (NSException *exception) {
         BSG_KSLOG_ERROR(@"Could not encode JSON object: %@", exception.description);
         if (error != nil) {
-            *error = [NSError bsg_errorWithDomain:@"KSJSONCodecObjC" code:0 description:exception.description];
+            *error = [NSError bsg_errorWithDomain:@"KSJSONCodecObjC" code:0 description:@"%@", exception.description];
         }
         return nil;
     }
@@ -522,7 +531,7 @@ int bsg_ksjsoncodecobjc_i_encodeObject(BSG_KSJSONCodec *codec, id object,
     } @catch (NSException *exception) {
         BSG_KSLOG_ERROR(@"Could not decode JSON object: %@", exception.description);
         if (error != nil) {
-            *error = [NSError bsg_errorWithDomain:@"KSJSONCodecObjC" code:0 description:exception.description];
+            *error = [NSError bsg_errorWithDomain:@"KSJSONCodecObjC" code:0 description:@"%@", exception.description];
         }
         result = @{};
     }

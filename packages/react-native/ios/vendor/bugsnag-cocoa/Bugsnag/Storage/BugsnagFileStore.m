@@ -51,7 +51,7 @@
 }
 
 - (NSComparisonResult)compare:(BSGFileStoreInfo *)other {
-    return [_creationDate compare:other->_creationDate];
+    return [self.creationDate compare:other.creationDate];
 }
 
 @end

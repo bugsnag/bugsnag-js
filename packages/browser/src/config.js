@@ -9,6 +9,10 @@ module.exports = {
       return 'production'
     }
   }),
+  appType: {
+    ...schema.appType,
+    defaultValue: () => 'browser'
+  },
   logger: assign({}, schema.logger, {
     defaultValue: () =>
       // set logger based on browser capability

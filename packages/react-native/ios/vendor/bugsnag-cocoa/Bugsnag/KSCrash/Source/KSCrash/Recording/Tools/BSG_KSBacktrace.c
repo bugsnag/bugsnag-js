@@ -34,7 +34,9 @@
  * devices. Example usage, assuming the usage is guarded for __arm64__:
  *     uintptr_t ptr_address = ptr & BSG_PACStrippingMaskArm64e;
  */
+#if defined(__arm64__)
 #define BSG_PACStrippingMaskArm64e 0x0000000fffffffff
+#endif
 
 /** Remove any pointer tagging from an instruction address
  * On armv7 the least significant bit of the pointer distinguishes

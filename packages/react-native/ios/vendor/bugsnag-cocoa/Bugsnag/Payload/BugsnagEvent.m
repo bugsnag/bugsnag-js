@@ -163,7 +163,7 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
                      errors:(NSArray<BugsnagError *> *)errors
                     threads:(NSArray<BugsnagThread *> *)threads
                     session:(BugsnagSession *)session {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _app = app;
         _device = device;
         _handledState = handledState;
@@ -181,7 +181,7 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
 }
 
 - (instancetype)initWithJson:(NSDictionary *)json {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _app = BSGDeserializeObject(json[BSGKeyApp], ^id _Nullable(NSDictionary * _Nonnull dict) {
             return [BugsnagAppWithState appFromJson:dict];
         }) ?: [[BugsnagAppWithState alloc] init];
@@ -474,13 +474,13 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
 
 - (BSGSeverity)severity {
     @synchronized (self) {
-        return _handledState.currentSeverity;
+        return self.handledState.currentSeverity;
     }
 }
 
 - (void)setSeverity:(BSGSeverity)severity {
     @synchronized (self) {
-        _handledState.currentSeverity = severity;
+        self.handledState.currentSeverity = severity;
     }
 }
 

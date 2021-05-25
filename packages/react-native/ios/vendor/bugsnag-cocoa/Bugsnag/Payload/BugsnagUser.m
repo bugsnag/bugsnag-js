@@ -13,7 +13,7 @@
 @implementation BugsnagUser
 
 - (instancetype)initWithDictionary:(NSDictionary *)dict {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _id = dict[@"id"];
         _email = dict[@"email"];
         _name = dict[@"name"];

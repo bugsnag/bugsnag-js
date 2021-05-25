@@ -32,12 +32,12 @@
 static const SCNetworkReachabilityFlags kSCNetworkReachabilityFlagsUninitialized = UINT32_MAX;
 
 static SCNetworkReachabilityRef bsg_reachability_ref;
-BSGConnectivityChangeBlock bsg_reachability_change_block;
+static BSGConnectivityChangeBlock bsg_reachability_change_block;
 static SCNetworkReachabilityFlags bsg_current_reachability_state = kSCNetworkReachabilityFlagsUninitialized;
 
-NSString *const BSGConnectivityCellular = @"cellular";
-NSString *const BSGConnectivityWiFi = @"wifi";
-NSString *const BSGConnectivityNone = @"none";
+static NSString *const BSGConnectivityCellular = @"cellular";
+static NSString *const BSGConnectivityWiFi = @"wifi";
+static NSString *const BSGConnectivityNone = @"none";
 
 /**
  * Check whether the connectivity change should be noted or ignored.

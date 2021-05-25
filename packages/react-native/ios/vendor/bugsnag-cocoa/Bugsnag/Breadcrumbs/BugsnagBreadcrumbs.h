@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * The current breadcrumbs, loaded from disk.
  */
-@property (readonly) NSArray<BugsnagBreadcrumb *> *breadcrumbs;
+@property (readonly, nonatomic) NSArray<BugsnagBreadcrumb *> *breadcrumbs;
 
 /**
  * Store a new breadcrumb with a provided message.

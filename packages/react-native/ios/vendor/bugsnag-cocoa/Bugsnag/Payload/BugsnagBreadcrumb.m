@@ -77,6 +77,8 @@ BSGBreadcrumbType BSGBreadcrumbTypeFromString(NSString *value) {
 
 @interface BugsnagBreadcrumb ()
 
+@property (readwrite, nullable, nonatomic) NSDate *timestamp;
+
 /// String representation of `timestamp` used to avoid unnecessary date <--> string conversions
 @property (copy, nonatomic) NSString *timestampString;
 
@@ -86,7 +88,7 @@ BSGBreadcrumbType BSGBreadcrumbTypeFromString(NSString *value) {
 @implementation BugsnagBreadcrumb
 
 - (instancetype)init {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _timestamp = [NSDate date];
         _type = BSGBreadcrumbTypeManual;
         _metadata = @{};
@@ -101,25 +103,23 @@ BSGBreadcrumbType BSGBreadcrumbTypeFromString(NSString *value) {
 - (NSDictionary *)objectValue {
     @synchronized (self) {
         NSString *timestamp = self.timestampString ?: [BSG_RFC3339DateTool stringFromDate:self.timestamp];
-        if (timestamp && _message.length > 0) {
+        if (timestamp && self.message.length > 0) {
             NSMutableDictionary *metadata = [NSMutableDictionary new];
-            for (NSString *key in _metadata) {
-                metadata[[key copy]] = [_metadata[key] copy];
+            for (NSString *key in self.metadata) {
+                metadata[[key copy]] = [self.metadata[key] copy];
             }
             return @{
                 // Note: The Bugsnag Error Reporting API specifies that the breadcrumb "message"
                 // field should be delivered in as a "name" field.  This comment notes that variance.
-                BSGKeyName : [_message copy],
+                BSGKeyName : [self.message copy],
                 BSGKeyTimestamp : timestamp,
-                BSGKeyType : BSGBreadcrumbTypeValue(_type),
+                BSGKeyType : BSGBreadcrumbTypeValue(self.type),
                 BSGKeyMetadata : metadata
             };
         }
         return nil;
     }
 }
-
-@synthesize timestamp = _timestamp;
 
 // The timestamp is lazily computed from the timestampString to avoid unnecessary
 // calls to -dateFromString: (which is expensive) when loading breadcrumbs from disk.
@@ -138,7 +138,7 @@ BSGBreadcrumbType BSGBreadcrumbTypeFromString(NSString *value) {
 - (void)setTimestampString:(NSString *)timestampString {
     @synchronized (self) {
         _timestampString = [timestampString copy];
-        _timestamp = nil; //!OCLint
+        self.timestamp = nil;
     }
 }
 

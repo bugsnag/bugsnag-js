@@ -38,7 +38,7 @@ extern "C" {
  *
  * @return System info as JSON. Caller is responsible for calling free().
  */
-const char *bsg_kssysteminfo_toJSON(void);
+char *bsg_kssysteminfo_toJSON(void);
 
 /** Create a copy of the current process name.
  *

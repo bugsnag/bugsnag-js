@@ -1,5 +1,29 @@
 # Changelog
 
+## 7.10.1 (2021-05-25)
+
+### Changed
+
+- (react-native): Update bugsnag-cocoa to v6.9.2
+  - Add a mechanism for reporting errors that occur within the notifier. [bugsnag-cocoa#1089](https://github.com/bugsnag/bugsnag-cocoa/pull/1089)
+  - Fix compiler warnings when additional warning flags are enabled. [bugsnag-cocoa#1092](https://github.com/bugsnag/bugsnag-cocoa/pull/1092) [bugsnag-cocoa#1094](https://github.com/bugsnag/bugsnag-cocoa/pull/1094)
+- (react-native): Update bugsnag-android to v5.9.3
+  - Avoid unnecessary collection of Thread stacktraces
+    [bugsnag-android#1249](https://github.com/bugsnag/bugsnag-android/pull/1249)
+  - Prevent errors in rare cases where either ConnectivityManager or StorageManager is not available
+    [bugsnag-android#1251](https://github.com/bugsnag/bugsnag-android/pull/1251)
+  - Change the Bugsnag-Internal-Error header to "bugsnag-android"
+    [bugsnag-android#1252](https://github.com/bugsnag/bugsnag-android/pull/1252)
+  - Prevent resource exhaustion when Throwable cause chains are recursive
+    [bugsnag-android#1255](https://github.com/bugsnag/bugsnag-android/pull/1255)
+  - Added Date support to ObjectJsonStreamer
+    [bugsnag-android#1256](https://github.com/bugsnag/bugsnag-android/pull/1256)
+- (browser,node): Add default `appType` [#1415](https://github.com/bugsnag/bugsnag-js/pull/1415)
+
+### Fixed
+
+- (react-native): Always upload JS bundle (rather than .hbc bundle) during Xcode source map upload build phase
+
 ## v7.10.0 (2021-05-18)
 
 This release adds [`@bugsnag/electron`](http://docs.bugsnag.com/platforms/electron), a notifier for use on apps that are built using Electron.

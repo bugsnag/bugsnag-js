@@ -20,4 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+FOUNDATION_EXPORT NSString *BSGBreadcrumbTypeValue(BSGBreadcrumbType type);
+FOUNDATION_EXPORT BSGBreadcrumbType BSGBreadcrumbTypeFromString( NSString * _Nullable value);
+
 NS_ASSUME_NONNULL_END

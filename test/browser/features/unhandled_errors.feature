@@ -6,6 +6,7 @@ Scenario: syntax errors
   Then I wait to receive an error
   And the error is a valid browser payload for the error reporting API
   And the exception matches the "unhandled_syntax" values for the current browser
+  And the error payload field "events.0.app.type" equals "browser"
   And event 0 is unhandled
 
 Scenario: thrown errors

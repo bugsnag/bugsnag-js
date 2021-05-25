@@ -31,7 +31,6 @@
 // ===========================================================================
 
 // Compiler hints for "if" statements
-#define likely_if(x) if (__builtin_expect(x, 1))
 #define unlikely_if(x) if (__builtin_expect(x, 0))
 
 /** The buffer size to use when writing log entries.
@@ -66,7 +65,7 @@ static void writeToLog(const char *const str);
  *
  * @param fmt The format string, followed by its arguments.
  */
-static void writeFmtToLog(const char *fmt, ...);
+static void writeFmtToLog(const char *fmt, ...) __printflike(1, 2);
 
 /** Write a formatted string to the log using a vararg list.
  *
@@ -74,7 +73,7 @@ static void writeFmtToLog(const char *fmt, ...);
  *
  * @param args The variable arguments.
  */
-static void writeFmtArgsToLog(const char *fmt, va_list args);
+static void writeFmtArgsToLog(const char *fmt, va_list args) __printflike(1, 0);
 
 /** Flush the log stream.
  */
@@ -203,6 +202,7 @@ bool bsg_kslog_setLogFilename(const char *filename, bool overwrite) {
 #pragma mark - C -
 // ===========================================================================
 
+__printflike(1, 2)
 void bsg_i_kslog_logCBasic(const char *const fmt, ...) {
     va_list args;
     va_start(args, fmt);
@@ -212,6 +212,7 @@ void bsg_i_kslog_logCBasic(const char *const fmt, ...) {
     flushLog();
 }
 
+__printflike(5, 6)
 void bsg_i_kslog_logC(const char *const level, const char *const file,
                       const int line, const char *const function,
                       const char *const fmt, ...) {

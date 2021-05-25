@@ -15,12 +15,11 @@ void bsg_kscrash_generate_report_initialize(const char *directory, const char *b
     bundle_name = bundleName ? strdup(bundleName) : NULL;
 }
 
-const char *bsg_kscrash_generate_report_identifier(void) {
+char *bsg_kscrash_generate_report_identifier(void) {
     return strdup([[[NSUUID UUID] UUIDString] UTF8String]);
 }
 
-const char *bsg_kscrash_generate_report_path(const char *identifier,
-                                             bool is_recrash_report) {
+char *bsg_kscrash_generate_report_path(const char *identifier, bool is_recrash_report) {
     if (identifier == NULL) {
         return NULL;
     }

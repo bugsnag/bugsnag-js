@@ -11,7 +11,7 @@
 @implementation BugsnagEndpointConfiguration
 
 - (instancetype)init {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _notify = @"https://notify.bugsnag.com";
         _sessions = @"https://sessions.bugsnag.com";
     }
@@ -19,7 +19,7 @@
 }
 
 - (instancetype)initWithNotify:(NSString *)notify sessions:(NSString *)sessions {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _notify = notify;
         _sessions = sessions;
     }

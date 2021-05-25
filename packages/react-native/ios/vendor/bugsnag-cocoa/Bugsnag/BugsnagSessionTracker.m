@@ -24,7 +24,7 @@
 /**
  Number of seconds in background required to make a new session
  */
-NSTimeInterval const BSGNewSessionBackgroundDuration = 30;
+static NSTimeInterval const BSGNewSessionBackgroundDuration = 30;
 
 NSString *const BSGSessionUpdateNotification = @"BugsnagSessionChanged";
 
@@ -48,7 +48,7 @@ NSString *const BSGSessionUpdateNotification = @"BugsnagSessionChanged";
 - (instancetype)initWithConfig:(BugsnagConfiguration *)config
                         client:(BugsnagClient *)client
             postRecordCallback:(void(^)(BugsnagSession *))callback {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         _config = config;
         _client = client;
         _apiClient = [[BugsnagSessionTrackingApiClient alloc] initWithConfig:config queueName:@"Session API queue" notifier:client.notifier];
@@ -62,7 +62,7 @@ NSString *const BSGSessionUpdateNotification = @"BugsnagSessionChanged";
 
 - (void)setCodeBundleId:(NSString *)codeBundleId {
     _codeBundleId = codeBundleId;
-    _apiClient.codeBundleId = codeBundleId;
+    self.apiClient.codeBundleId = codeBundleId;
 }
 
 #pragma mark - Creating and sending a new session

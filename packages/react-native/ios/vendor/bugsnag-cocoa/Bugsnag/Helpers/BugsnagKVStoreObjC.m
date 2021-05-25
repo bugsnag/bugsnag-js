@@ -11,8 +11,6 @@
 #import "BSGFileLocations.h"
 #import "BugsnagLogger.h"
 
-#define KV_DIR @"bsg_kvstore"
-
 static void bsgkv_init() {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
