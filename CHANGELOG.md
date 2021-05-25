@@ -18,7 +18,7 @@
     [bugsnag-android#1255](https://github.com/bugsnag/bugsnag-android/pull/1255)
   - Added Date support to ObjectJsonStreamer
     [bugsnag-android#1256](https://github.com/bugsnag/bugsnag-android/pull/1256)
-- (browser,node): Add default `appType` [#1415](https://github.com/bugsnag/bugsnag-android/pull/1415)
+- (browser,node): Add default `appType` [#1415](https://github.com/bugsnag/bugsnag-js/pull/1415)
 
 ### Fixed
 
