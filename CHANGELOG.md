@@ -1,5 +1,12 @@
 # Changelog
 
+## TBD
+
+### Changed
+
+- (react-native): Update bugsnag-cocoa to v6.9.3
+  - Remove need for `-ObjC` linker flag if linking Bugsnag as a static library. [bugsnag-cocoa#1098](https://github.com/bugsnag/bugsnag-cocoa/pull/1098)
+
 ## 7.10.1 (2021-05-25)
 
 ### Changed

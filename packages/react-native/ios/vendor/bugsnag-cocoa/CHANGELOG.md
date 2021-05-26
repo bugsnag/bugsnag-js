@@ -1,6 +1,13 @@
 Changelog
 =========
 
+## 6.9.3 (2021-05-26)
+
+### Bug fixes
+
+* Remove need for `-ObjC` linker flag if linking Bugsnag as a static library.
+  [#1098](https://github.com/bugsnag/bugsnag-cocoa/pull/1098)
+
 ## 6.9.2 (2021-05-19)
 
 ### Enhancements
