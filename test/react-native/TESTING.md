@@ -84,3 +84,65 @@ particular, these commands need the `BrowserStackLocal` binary (available
     ```
 1. To run all features, omit the final argument.
 1. Maze Runner also supports all options that Cucumber does.  Run `bundle exec maze-runner --help` for full details.
+
+#### Creating a new test fixture
+
+When each new version of React Native is released, a new test fixture project "shell" should be created.  The inner
+workings of the app (that exercise the test scenarios) are then copied in dynamically by the build process.  There are
+several steps to follow to create the project shell:
+
+1. Create a new React Native project of the desired version.  E.g:
+    ```
+    npx react-native init reactnative --directory rn0.64 --version 0.64
+    ```
+1. Remove the following files/folders, if they exist:
+Remove 
+- \_\_tests\_\_
+- .eslintrc.js
+- App.js
+- index.js
+
+1. Create a `.dockerignore` file:
+    ```
+    ./node_modules/
+    ./app/
+    ```
+
+1. Add the following to `.gitignore`:
+    ```
+    /app/
+    /output/
+    /reactnative.xcarchive/
+    ```
+
+1. Copy the following files from an existing test fixture directory:
+    - build.sh
+    - exportOptions.plist
+
+1. Android (using existing test fixtures as a guide):
+    1. In build.gradle:
+        - add Kotlin
+        - add Bugsnag
+        - remove mavenLocal
+    1. In app/build.gradle:
+        - add Kotlin
+        - add Bugsnag
+        - add NDK `abiFilters "arm64-v8a", "x86"`
+    1. In gradle.properties, set org.gradle.jvmargs=-Xmx4096m  
+    1. In app/proguard-rules.pro, add:
+        ```
+        -keep class com.reactnative.** {*;}
+        ```
+    1.  In app/src/main/AndroidManifest.xml, add:
+        ```
+        android:usesCleartextTraffic="true"
+        ```
+    1.  In MainApplication.java, add:
+        ```
+        import com.reactnative.module.BugsnagModulePackage;
+        ```
+        and
+        ```
+        packages.add(new BugsnagModulePackage());
+        ```
+
