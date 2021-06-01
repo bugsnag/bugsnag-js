@@ -145,4 +145,17 @@ Remove
         ```
         packages.add(new BugsnagModulePackage());
         ```
-
+1. Similarly, on iOS:
+    1. Add to reactnative/Info.plist:
+    ```
+    <key>NSAllowsArbitraryLoads</key>
+    <true/>
+    ```
+    and
+    ```
+    <key>bs-local.com</key>
+    <dict>
+        <key>NSExceptionAllowsInsecureHTTPLoads</key>
+        <true/>
+    </dict>
+    ```
