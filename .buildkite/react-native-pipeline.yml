@@ -346,6 +346,10 @@ steps:
       SKIP_NAVIGATION_SCENARIOS: "true"
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    # TODO: Soft fail pending PLAT-6696
+    soft_fail:
+      - exit_status: "*"
+
 
   - label: ':android: react-navigation 0.60 Android 9 end-to-end tests'
     depends_on: "react-navigation-0-60-apk"
