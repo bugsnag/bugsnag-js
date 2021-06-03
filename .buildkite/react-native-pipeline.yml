@@ -65,18 +65,18 @@ steps:
     commands:
       - npm run test:build-react-native-ios
 
-  - label: ':android: Build RN 0.64 apk'
-    key: "rn-0-64-apk"
+  - label: ':android: Build RN 0.64 (Hermes) apk'
+    key: "rn-0-64-hermes-apk"
     depends_on:
       - "android-builder-image"
     timeout_in_minutes: 60
     env:
-      REACT_NATIVE_VERSION: "rn0.64"
+      REACT_NATIVE_VERSION: "rn0.64-hermes"
     plugins:
       - docker-compose#v3.3.0:
           run: react-native-android-builder
     artifact_paths:
-      - build/rn0.64.apk
+      - build/rn0.64-hermes.apk
 
   - label: ':ios: Build RN 0.64 ipa'
     key: "rn-0-64-ipa"
@@ -84,7 +84,7 @@ steps:
     agents:
       queue: "opensource-mac-cocoa-11"
     env:
-      REACT_NATIVE_VERSION: rn0.64
+      REACT_NATIVE_VERSION: rn0.64-hermes
     artifact_paths: build/rn0.64.ipa
     commands:
       - npm run test:build-react-native-ios
@@ -279,18 +279,18 @@ steps:
     concurrency: 9
     concurrency_group: 'browserstack-app'
 
-  - label: ':android: RN 0.64 Android 11 end-to-end tests'
-    depends_on: "rn-0-64-apk"
+  - label: ':android: RN 0.64 (Hermes) Android 11 end-to-end tests'
+    depends_on: "rn-0-64-hermes-apk"
     timeout_in_minutes: 60
     plugins:
       artifacts#v1.2.0:
-        download: "build/rn0.64.apk"
+        download: "build/rn0.64-hermes.apk"
       docker-compose#v3.3.0:
         pull: react-native-maze-runner
         run: react-native-maze-runner
         use-aliases: true
         command:
-          - --app=build/rn0.64.apk
+          - --app=build/rn0.64-hermes.apk
           - --farm=bs
           - --device=ANDROID_11_0
           - --a11y-locator
