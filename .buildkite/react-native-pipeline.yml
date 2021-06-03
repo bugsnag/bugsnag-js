@@ -65,6 +65,30 @@ steps:
     commands:
       - npm run test:build-react-native-ios
 
+  - label: ':android: Build RN 0.64 apk'
+    key: "rn-0-64-apk"
+    depends_on:
+      - "android-builder-image"
+    timeout_in_minutes: 60
+    env:
+      REACT_NATIVE_VERSION: "rn0.64"
+    plugins:
+      - docker-compose#v3.3.0:
+          run: react-native-android-builder
+    artifact_paths:
+      - build/rn0.64.apk
+
+  - label: ':ios: Build RN 0.64 ipa'
+    key: "rn-0-64-ipa"
+    timeout_in_minutes: 60
+    agents:
+      queue: "opensource-mac-cocoa-11"
+    env:
+      REACT_NATIVE_VERSION: rn0.64
+    artifact_paths: build/rn0.64.ipa
+    commands:
+      - npm run test:build-react-native-ios
+
   - label: ':android: Build react-navigation 0.60 apk'
     key: "react-navigation-0-60-apk"
     depends_on:
@@ -255,6 +279,28 @@ steps:
     concurrency: 9
     concurrency_group: 'browserstack-app'
 
+  - label: ':android: RN 0.64 Android 11 end-to-end tests'
+    depends_on: "rn-0-64-apk"
+    timeout_in_minutes: 60
+    plugins:
+      artifacts#v1.2.0:
+        download: "build/rn0.64.apk"
+      docker-compose#v3.3.0:
+        pull: react-native-maze-runner
+        run: react-native-maze-runner
+        use-aliases: true
+        command:
+          - --app=build/rn0.64.apk
+          - --farm=bs
+          - --device=ANDROID_11_0
+          - --a11y-locator
+          - --fail-fast
+          - --resilient
+    env:
+      SKIP_NAVIGATION_SCENARIOS: "true"
+    concurrency: 9
+    concurrency_group: 'browserstack-app'
+
   - label: ':ios: RN 0.63 iOS 12 end-to-end tests'
     depends_on: "rn-0-63-ipa"
     timeout_in_minutes: 60
@@ -277,6 +323,33 @@ steps:
       SKIP_NAVIGATION_SCENARIOS: "true"
     concurrency: 9
     concurrency_group: 'browserstack-app'
+
+  - label: ':ios: RN 0.64 iOS 14 end-to-end tests'
+    depends_on: "rn-0-64-ipa"
+    timeout_in_minutes: 60
+    plugins:
+      artifacts#v1.2.0:
+        download: "build/rn0.64.ipa"
+      docker-compose#v3.7.0:
+        pull: react-native-maze-runner
+        run: react-native-maze-runner
+        use-aliases: true
+        command:
+          - --app=build/rn0.64.ipa
+          - --farm=bs
+          - --device=IOS_14
+          - --a11y-locator
+          - --appium-version=1.18.0
+          - --fail-fast
+          - --resilient
+    env:
+      SKIP_NAVIGATION_SCENARIOS: "true"
+    concurrency: 9
+    concurrency_group: 'browserstack-app'
+    # TODO: Soft fail pending PLAT-6696
+    soft_fail:
+      - exit_status: "*"
+
 
   - label: ':android: react-navigation 0.60 Android 9 end-to-end tests'
     depends_on: "react-navigation-0-60-apk"
