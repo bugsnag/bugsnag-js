@@ -18,7 +18,7 @@ Scenario: Handled JS error
   And the event "device.runtimeVersions.reactNative" matches "^\d+\.\d+\.\d+$"
   And the event "device.runtimeVersions.osBuild" is not null
   And the event "device.runtimeVersions.clangVersion" matches "^\d+\.\d+\.\d+.+$"
-  And the event "device.runtimeVersions.reactNativeJsEngine" equals "jsc"
+  And the event "device.runtimeVersions.reactNativeJsEngine" matches "^jsc|hermes$"
   And the error payload field "events.0.device.freeMemory" is greater than 0
   And the event "device.manufacturer" equals "Apple"
   And the error payload field "events.0.device.freeDisk" is greater than 0
@@ -44,7 +44,7 @@ Scenario: Unhandled JS error
   And the event "device.runtimeVersions.reactNative" matches "^\d+\.\d+\.\d+$"
   And the event "device.runtimeVersions.osBuild" is not null
   And the event "device.runtimeVersions.clangVersion" matches "^\d+\.\d+\.\d+.+$"
-  And the event "device.runtimeVersions.reactNativeJsEngine" equals "jsc"
+  And the event "device.runtimeVersions.reactNativeJsEngine" matches "^jsc|hermes$"
   And the error payload field "events.0.device.freeMemory" is greater than 0
   And the event "device.manufacturer" equals "Apple"
   And the error payload field "events.0.device.freeDisk" is greater than 0
@@ -69,7 +69,7 @@ Scenario: Handled native error
   And the event "device.runtimeVersions.reactNative" matches "^\d+\.\d+\.\d+$"
   And the event "device.runtimeVersions.osBuild" is not null
   And the event "device.runtimeVersions.clangVersion" matches "^\d+\.\d+\.\d+.+$"
-  And the event "device.runtimeVersions.reactNativeJsEngine" equals "jsc"
+  And the event "device.runtimeVersions.reactNativeJsEngine" matches "^jsc|hermes$"
   And the error payload field "events.0.device.freeMemory" is greater than 0
   And the event "device.manufacturer" equals "Apple"
   And the error payload field "events.0.device.freeDisk" is greater than 0
@@ -92,7 +92,7 @@ Scenario: Unhandled native error
   And the event "device.time" is a timestamp
   And the event "device.locale" is not null
   And the event "device.runtimeVersions.reactNative" matches "^\d+\.\d+\.\d+$"
-  And the event "device.runtimeVersions.reactNativeJsEngine" equals "jsc"
+  And the event "device.runtimeVersions.reactNativeJsEngine" matches "^jsc|hermes$"
   And the event "device.runtimeVersions.osBuild" is not null
   And the event "device.runtimeVersions.clangVersion" matches "^\d+\.\d+\.\d+.+$"
   And the error payload field "events.0.device.freeMemory" is greater than 0
