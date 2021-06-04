@@ -29,7 +29,7 @@
 /**
  * Simpler interface for constructing NSError objects.
  */
-@interface NSError (BSG_SimpleConstructor)
+@interface NSErrorBSG: NSError
 
 /** Convenience constructor to make an error with the specified localized
  * description.

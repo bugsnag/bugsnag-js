@@ -35,6 +35,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nullable, nonatomic) BugsnagEvent *appHangEvent;
 
+/// Alters whether error detection should be enabled or not after Bugsnag has been initialized.
+/// Intended for internal use only by Unity.
+@property (nonatomic) BOOL autoNotify;
+
 @property (nullable, retain, nonatomic) BugsnagBreadcrumbs *breadcrumbs;
 
 @property (nullable, nonatomic) NSString *codeBundleId;

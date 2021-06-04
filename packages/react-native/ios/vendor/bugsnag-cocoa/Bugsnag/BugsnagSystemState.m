@@ -97,6 +97,7 @@ static NSMutableDictionary* initCurrentState(BugsnagKVStore *kvstore, BugsnagCon
     app[BSGKeyReleaseStage] = config.releaseStage;
     app[BSGKeyVersion] = blankIfNil(systemInfo[@BSG_KSSystemField_BundleShortVersion]);
     app[BSGKeyBundleVersion] = blankIfNil(systemInfo[@BSG_KSSystemField_BundleVersion]);
+    app[BSGKeyMachoUUID] = [BSG_KSSystemInfo appUUID];
     app[@"inForeground"] = @(isInForeground);
     app[@"isActive"] = @(isActive);
 #if BSG_PLATFORM_TVOS
@@ -235,11 +236,6 @@ static NSDictionary *copyDictionary(NSDictionary *launchState) {
     [self mutateLaunchState:^(NSMutableDictionary *state) {
         state[BSGKeySession] = notification.object;
     }];
-}
-
-- (void)recordAppUUID {
-    // [BSG_KSSystemInfo appUUID] returns nil until we have called _dyld_register_func_for_add_image()
-    [self setValue:[BSG_KSSystemInfo appUUID] forAppKey:BSGKeyMachoUUID];
 }
 
 - (void)setCodeBundleID:(NSString*)codeBundleID {
