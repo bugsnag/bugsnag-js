@@ -1,5 +1,14 @@
 # Changelog
 
+## TBD
+
+### Changed
+
+- (react-native): Update bugsnag-cocoa to v6.9.4
+  - Improve performance of `notify()`. [bugsnag-cocoa#1102](https://github.com/bugsnag/bugsnag-cocoa/pull/1102) [bugsnag-cocoa#1104](https://github.com/bugsnag/bugsnag-cocoa/pull/1104) [bugsnag-cocoa#1105](https://github.com/bugsnag/bugsnag-cocoa/pull/1105)
+  - Fix a crash in `-[BugsnagApp deserializeFromJson:]` if main Mach-O image could not be identified, and improve reliability of identification. [bugsnag-cocoa#1097](https://github.com/bugsnag/bugsnag-cocoa/issues/1097) [bugsnag-cocoa#1101](https://github.com/bugsnag/bugsnag-cocoa/pull/1101)
+  - Remove need for `-ObjC` linker flag if linking Bugsnag as a static library. [bugsnag-cocoa#1098](https://github.com/bugsnag/bugsnag-cocoa/pull/1098)
+
 ## 7.10.1 (2021-05-25)
 
 ### Changed

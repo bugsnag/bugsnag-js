@@ -34,6 +34,7 @@
 #import "BugsnagMetadata+Private.h"
 #import "BugsnagLogger.h"
 #import "BugsnagSession+Private.h"
+#import "BugsnagStackframe+Private.h"
 #import "BugsnagStacktrace.h"
 #import "BugsnagThread+Private.h"
 #import "BugsnagUser+Private.h"
@@ -175,7 +176,7 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
         _breadcrumbs = breadcrumbs;
         _errors = errors;
         _threads = threads;
-        _session = session;
+        _session = [session copy];
     }
     return self;
 }
@@ -524,8 +525,6 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
     return [[BugsnagUser alloc] initWithDictionary:user];
 }
 
-// MARK: - Callback overrides
-
 - (void)notifyUnhandledOverridden {
     self.handledState.unhandledOverridden = YES;
 }
@@ -657,6 +656,19 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
         }
     }
     return false;
+}
+
+- (void)symbolicateIfNeeded {
+    for (BugsnagError *error in self.errors) {
+        for (BugsnagStackframe *stackframe in error.stacktrace) {
+            [stackframe symbolicateIfNeeded];
+        }
+    }
+    for (BugsnagThread *thread in self.threads) {
+        for (BugsnagStackframe *stackframe in thread.stacktrace) {
+            [stackframe symbolicateIfNeeded];
+        }
+    }
 }
 
 - (BOOL)unhandled {

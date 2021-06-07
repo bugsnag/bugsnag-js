@@ -234,7 +234,7 @@ int bsg_ksjsoncodecobjc_i_onElement(BSG_KSJSONCodec *codec, NSString *name,
                                     id element) {
     id currentContainer = codec.currentContainer;
     if (!currentContainer) {
-        codec.error = [NSError
+        codec.error = [NSErrorBSG
             bsg_errorWithDomain:@"KSJSONCodecObjC"
                            code:0
                     description:@"Type %@ not allowed as top level container",
@@ -338,7 +338,7 @@ int bsg_ksjsoncodecobjc_i_onEndContainer(void *const userData) {
     BSG_KSJSONCodec *codec = (__bridge BSG_KSJSONCodec *)userData;
 
     if ([codec.containerStack count] == 0) {
-        codec.error = [NSError
+        codec.error = [NSErrorBSG
             bsg_errorWithDomain:@"KSJSONCodecObjC"
                            code:0
                     description:
@@ -379,7 +379,7 @@ int bsg_ksjsoncodecobjc_i_encodeObject(BSG_KSJSONCodec *codec, id object,
                                             [data length]);
         if (result == BSG_KSJSON_ERROR_INVALID_CHARACTER) {
             codec.error =
-                [NSError bsg_errorWithDomain:@"KSJSONCodecObjC"
+                [NSErrorBSG bsg_errorWithDomain:@"KSJSONCodecObjC"
                                         code:0
                                  description:@"Invalid character in %@", object];
         }
@@ -486,7 +486,7 @@ int bsg_ksjsoncodecobjc_i_encodeObject(BSG_KSJSONCodec *codec, id object,
                                         [data length]);
     }
 
-    codec.error = [NSError
+    codec.error = [NSErrorBSG
         bsg_errorWithDomain:@"KSJSONCodecObjC"
                        code:0
                 description:@"Could not determine type of %@", [object class]];
@@ -516,7 +516,7 @@ int bsg_ksjsoncodecobjc_i_encodeObject(BSG_KSJSONCodec *codec, id object,
     } @catch (NSException *exception) {
         BSG_KSLOG_ERROR(@"Could not encode JSON object: %@", exception.description);
         if (error != nil) {
-            *error = [NSError bsg_errorWithDomain:@"KSJSONCodecObjC" code:0 description:@"%@", exception.description];
+            *error = [NSErrorBSG bsg_errorWithDomain:@"KSJSONCodecObjC" code:0 description:@"%@", exception.description];
         }
         return nil;
     }
@@ -531,7 +531,7 @@ int bsg_ksjsoncodecobjc_i_encodeObject(BSG_KSJSONCodec *codec, id object,
     } @catch (NSException *exception) {
         BSG_KSLOG_ERROR(@"Could not decode JSON object: %@", exception.description);
         if (error != nil) {
-            *error = [NSError bsg_errorWithDomain:@"KSJSONCodecObjC" code:0 description:@"%@", exception.description];
+            *error = [NSErrorBSG bsg_errorWithDomain:@"KSJSONCodecObjC" code:0 description:@"%@", exception.description];
         }
         result = @{};
     }

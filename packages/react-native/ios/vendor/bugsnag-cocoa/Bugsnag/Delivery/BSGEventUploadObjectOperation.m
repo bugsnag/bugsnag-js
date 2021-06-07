@@ -8,7 +8,7 @@
 
 #import "BSGEventUploadObjectOperation.h"
 
-#import "BugsnagEvent.h"
+#import "BugsnagEvent+Private.h"
 #import "BugsnagLogger.h"
 
 @implementation BSGEventUploadObjectOperation
@@ -21,6 +21,7 @@
 }
 
 - (BugsnagEvent *)loadEventAndReturnError:(__attribute__((unused)) NSError * __autoreleasing *)errorPtr {
+    [self.event symbolicateIfNeeded];
     return self.event;
 }
 

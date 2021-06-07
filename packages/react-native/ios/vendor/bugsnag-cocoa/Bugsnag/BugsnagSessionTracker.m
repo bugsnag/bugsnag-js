@@ -202,7 +202,7 @@ NSString *const BSGSessionUpdateNotification = @"BugsnagSessionChanged";
     self.backgroundStartTime = nil;
 }
 
-- (void)handleHandledErrorEvent {
+- (void)incrementEventCountUnhandled:(BOOL)unhandled {
     BugsnagSession *session = [self runningSession];
 
     if (session == nil) {
@@ -210,23 +210,11 @@ NSString *const BSGSessionUpdateNotification = @"BugsnagSessionChanged";
     }
 
     @synchronized (session) {
-        session.handledCount++;
-        if (self.callback) {
-            self.callback(session);
+        if (unhandled) {
+            session.unhandledCount++;
+        } else {
+            session.handledCount++;
         }
-        [self postUpdateNotice];
-    }
-}
-
-- (void)handleUnhandledErrorEvent {
-    BugsnagSession *session = [self runningSession];
-
-    if (session == nil) {
-        return;
-    }
-
-    @synchronized (session) {
-        session.unhandledCount++;
         if (self.callback) {
             self.callback(session);
         }
