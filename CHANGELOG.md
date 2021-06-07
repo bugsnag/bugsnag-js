@@ -1,6 +1,10 @@
 # Changelog
 
-## TBD
+## 7.10.2 (2021-06-07)
+
+### Fixed
+
+- (react-native): Prevent unhandled promise rejections being split into multiple log calls [#1419](https://github.com/bugsnag/bugsnag-js/pull/1419)
 
 ### Changed
 
@@ -19,6 +23,7 @@
     [bugsnag-android#1262](https://github.com/bugsnag/bugsnag-android/pull/1262)
   - Don't include loglog.so in ndk plugin builds performed on Linux
     [bugsnag-android#1263](https://github.com/bugsnag/bugsnag-android/pull/1263)
+- (react-native): Only include `codeBundleId` in payload if it has a value [#1426](https://github.com/bugsnag/bugsnag-js/pull/1426)
 
 ## 7.10.1 (2021-05-25)
 
