@@ -59,6 +59,7 @@
             NSMutableArray<NSDictionary *> *mixedStack = [NSMutableArray array];
             for (BugsnagStackframe *frame in [BugsnagStackframe stackframesWithCallStackSymbols:nativeStack]) {
                 frame.type = BugsnagStackframeTypeCocoa;
+                [frame symbolicateIfNeeded];
                 [mixedStack addObject:[frame toDictionary]];
             }
             [mixedStack addObjectsFromArray:stacktrace];
