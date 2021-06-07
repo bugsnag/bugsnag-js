@@ -8,6 +8,17 @@
   - Improve performance of `notify()`. [bugsnag-cocoa#1102](https://github.com/bugsnag/bugsnag-cocoa/pull/1102) [bugsnag-cocoa#1104](https://github.com/bugsnag/bugsnag-cocoa/pull/1104) [bugsnag-cocoa#1105](https://github.com/bugsnag/bugsnag-cocoa/pull/1105)
   - Fix a crash in `-[BugsnagApp deserializeFromJson:]` if main Mach-O image could not be identified, and improve reliability of identification. [bugsnag-cocoa#1097](https://github.com/bugsnag/bugsnag-cocoa/issues/1097) [bugsnag-cocoa#1101](https://github.com/bugsnag/bugsnag-cocoa/pull/1101)
   - Remove need for `-ObjC` linker flag if linking Bugsnag as a static library. [bugsnag-cocoa#1098](https://github.com/bugsnag/bugsnag-cocoa/pull/1098)
+- (react-native): Update bugsnag-android to v5.9.4
+  - Unity: add methods for setting autoNotify and autoDetectAnrs
+    [bugsnag-android#1233](https://github.com/bugsnag/bugsnag-android/pull/1233)
+  - Including bugsnag.h in C++ code will no longer cause writable-strings warnings
+    [bugsnag-android#1260](https://github.com/bugsnag/bugsnag-android/pull/1260)
+  - Small performance improvements to device and app state collection
+    [bugsnag-android#1258](https://github.com/bugsnag/bugsnag-android/pull/1258)
+  - NDK: lowMemory attribute is now reported as expected
+    [bugsnag-android#1262](https://github.com/bugsnag/bugsnag-android/pull/1262)
+  - Don't include loglog.so in ndk plugin builds performed on Linux
+    [bugsnag-android#1263](https://github.com/bugsnag/bugsnag-android/pull/1263)
 
 ## 7.10.1 (2021-05-25)
 
