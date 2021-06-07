@@ -36,17 +36,6 @@ extern "C" {
 
 #include "BSG_KSMachHeaders.h"
 
-/** Get the UUID of a loaded binary image with the specified name.
- *
- * @param imageName The image name to look for.
- *
- * @param exactMatch If true, look for an exact match instead of a partial one.
- *
- * @return A pointer to the binary (16 byte) UUID of the image, or NULL if it
- *         wasn't found.
- */
-const uint8_t *bsg_ksdlimageUUID(const char *const imageName, bool exactMatch);
-
 /** async-safe version of dladdr.
  *
  * This method searches the dynamic loader for information about any image

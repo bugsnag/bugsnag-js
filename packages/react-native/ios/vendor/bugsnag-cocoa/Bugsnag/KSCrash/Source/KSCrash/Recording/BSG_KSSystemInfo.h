@@ -24,7 +24,6 @@
 // THE SOFTWARE.
 //
 
-#define BSG_KSSystemField_AppStartTime "app_start_time"
 #define BSG_KSSystemField_AppUUID "app_uuid"
 #define BSG_KSSystemField_BinaryArch "binary_arch"
 #define BSG_KSSystemField_BootTime "boot_time"
@@ -34,27 +33,18 @@
 #define BSG_KSSystemField_BundleShortVersion "CFBundleShortVersionString"
 #define BSG_KSSystemField_BundleVersion "CFBundleVersion"
 #define BSG_KSSystemField_CPUArch "cpu_arch"
-#define BSG_KSSystemField_CPUType "cpu_type"
-#define BSG_KSSystemField_CPUSubType "cpu_subtype"
 #define BSG_KSSystemField_DeviceAppHash "device_app_hash"
-#define BSG_KSSystemField_Executable "CFBundleExecutable"
-#define BSG_KSSystemField_ExecutablePath "CFBundleExecutablePath"
 #define BSG_KSSystemField_Jailbroken "jailbroken"
-#define BSG_KSSystemField_KernelVersion "kernel_version"
 #define BSG_KSSystemField_Machine "machine"
 #define BSG_KSSystemField_Memory "memory"
 #define BSG_KSSystemField_Model "model"
 #define BSG_KSSystemField_OSVersion "os_version"
-#define BSG_KSSystemField_ParentProcessID "parent_process_id"
-#define BSG_KSSystemField_ProcessID "process_id"
-#define BSG_KSSystemField_ProcessName "process_name"
 #define BSG_KSSystemField_Size "size"
 #define BSG_KSSystemField_SystemName "system_name"
 #define BSG_KSSystemField_SystemVersion "system_version"
 #define BSG_KSSystemField_ClangVersion "clang_version"
 #define BSG_KSSystemField_TimeZone "time_zone"
 #define BSG_KSSystemField_Translated "proc_translated"
-#define BSG_KSSystemField_BuildType "build_type"
 #define BSG_KSSystemField_iOSSupportVersion "iOSSupportVersion"
 
 #import <Foundation/Foundation.h>

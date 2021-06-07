@@ -104,6 +104,16 @@ static NSString *const kBugsnagUser = @"user";
     return self;
 }
 
+- (nonnull id)copyWithZone:(nullable __attribute__((unused)) NSZone *)zone {
+    return [[BugsnagSession alloc] initWithId:self.id
+                                    startDate:self.startedAt
+                                         user:self.user
+                                 handledCount:self.handledCount
+                               unhandledCount:self.unhandledCount
+                                          app:self.app
+                                       device:self.device];
+}
+
 - (NSDictionary *)toJson {
     NSMutableDictionary *dict = [NSMutableDictionary new];
     dict[kBugsnagSessionId] = self.id;

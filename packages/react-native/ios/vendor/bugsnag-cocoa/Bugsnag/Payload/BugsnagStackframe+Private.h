@@ -22,8 +22,14 @@ NS_ASSUME_NONNULL_BEGIN
 /// Constructs a stackframe object from a JSON object (typically loaded from disk.)
 + (instancetype)frameFromJson:(NSDictionary<NSString *, id> *)json;
 
+/// Populates the method and symbolAddress via `dladdr()` if this object was created from a backtrace or callstack.
+/// This can be a slow operation, so should be performed on a background thread.
+- (void)symbolicateIfNeeded;
+
 /// Returns a JSON compatible representation of the stackframe.
 - (NSDictionary *)toDictionary;
+
+@property (nonatomic) BOOL needsSymbolication;
 
 @end
 

@@ -63,6 +63,7 @@
 // MARK: - Public API
 
 - (void)storeEvent:(BugsnagEvent *)event {
+    [event symbolicateIfNeeded];
     [self storeEventPayload:[event toJsonWithRedactedKeys:self.configuration.redactedKeys]];
 }
 

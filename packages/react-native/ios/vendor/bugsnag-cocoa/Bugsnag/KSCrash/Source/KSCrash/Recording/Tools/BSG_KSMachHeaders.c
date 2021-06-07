@@ -9,6 +9,7 @@
 #include "BSG_KSMachHeaders.h"
 
 #include "BSG_KSDynamicLinker.h"
+#include "BSG_KSLogger.h"
 #include "BSG_KSMach.h"
 
 #include <dispatch/dispatch.h>
@@ -39,7 +40,19 @@ static BSG_Mach_Header_Info *bsg_g_mach_headers_images_tail;
 static dispatch_queue_t bsg_g_serial_queue;
 
 BSG_Mach_Header_Info *bsg_mach_headers_get_images() {
+    if (!bsg_g_mach_headers_images_head) {
+        bsg_mach_headers_initialize();
+        bsg_mach_headers_register_for_changes();
+    }
     return bsg_g_mach_headers_images_head;
+}
+
+BSG_Mach_Header_Info *bsg_mach_headers_get_main_image() {
+    BSG_Mach_Header_Info *img = bsg_mach_headers_get_images();
+    while (img && !img->isMain) {
+        img = img->next;
+    }
+    return img;
 }
 
 void bsg_mach_headers_initialize() {
@@ -123,11 +136,22 @@ bool bsg_mach_headers_populate_info(const struct mach_header *header, intptr_t s
             uuid = uuidCmd->uuid;
             break;
         }
+        case LC_MAIN:
+        case LC_UNIXTHREAD:
+            info->isMain = true;
+            break;
         }
         cmdPtr += loadCmd->cmdsize;
     }
     
-    // Save these values
+    // Sanity checks that should never fail
+    if (((uintptr_t)imageVmAddr + (uintptr_t)slide) != (uintptr_t)header) {
+        BSG_KSLOG_ERROR("Mach header != (vmaddr + slide) for %s; symbolication will be compromised.", imageName);
+    }
+    if ((uintptr_t)DlInfo.dli_fbase != (uintptr_t)header) {
+        BSG_KSLOG_ERROR("Mach header != dli_fbase for %s", imageName);
+    }
+    
     info->header = header;
     info->imageSize = imageSize;
     info->imageVmAddr = imageVmAddr;
@@ -152,6 +176,8 @@ void bsg_mach_headers_add_image(const struct mach_header *header, intptr_t slide
                 }
                 bsg_g_mach_headers_images_tail = newImage;
             });
+        } else {
+            free(newImage);
         }
     }
 }
@@ -196,42 +222,16 @@ BSG_Mach_Header_Info *bsg_mach_headers_image_named(const char *const imageName, 
 }
 
 BSG_Mach_Header_Info *bsg_mach_headers_image_at_address(const uintptr_t address) {
-        
-    for (BSG_Mach_Header_Info *img = bsg_g_mach_headers_images_head; img != NULL; img = img->next) {
+    for (BSG_Mach_Header_Info *img = bsg_mach_headers_get_images(); img; img = img->next) {
         if (img->unloaded == true) {
             continue;
         }
-        // Look for a segment command with this address within its range.
-        uintptr_t cmdPtr = bsg_mach_headers_first_cmd_after_header(img->header);
-        if (cmdPtr == 0) {
-            continue;
-        }
-        if (address < (uintptr_t)img->slide) {
-            continue;
-        }
-        uintptr_t addressWSlide = address - (uintptr_t)img->slide;
-        for (uint32_t iCmd = 0; iCmd < img->header->ncmds; iCmd++) {
-            const struct load_command *loadCmd =
-                (struct load_command *)cmdPtr;
-            if (loadCmd->cmd == LC_SEGMENT) {
-                const struct segment_command *segCmd =
-                    (struct segment_command *)cmdPtr;
-                if (addressWSlide >= segCmd->vmaddr &&
-                    addressWSlide < segCmd->vmaddr + segCmd->vmsize) {
-                    return img;
-                }
-            } else if (loadCmd->cmd == LC_SEGMENT_64) {
-                const struct segment_command_64 *segCmd =
-                    (struct segment_command_64 *)cmdPtr;
-                if (addressWSlide >= segCmd->vmaddr &&
-                    addressWSlide < segCmd->vmaddr + segCmd->vmsize) {
-                    return img;
-                }
-            }
-            cmdPtr += loadCmd->cmdsize;
+        uintptr_t imageAddress = (uintptr_t)img->header;
+        if (address >= imageAddress &&
+            address < (imageAddress + img->imageSize)) {
+            return img;
         }
     }
-    
     return NULL;
 }
 

@@ -7,8 +7,10 @@
 //
 
 #import "BugsnagPlatformConditional.h"
-#import "BSG_RFC3339DateTool.h"
 
+#import "BSG_KSCrashReportFields.h"
+#import "BSG_KSSystemInfo.h"
+#import "BSG_RFC3339DateTool.h"
 #import "BugsnagDevice+Private.h"
 #import "BugsnagDeviceWithState.h"
 #import "BugsnagCollections.h"
@@ -20,8 +22,8 @@ NSMutableDictionary *BSGParseDeviceMetadata(NSDictionary *event) {
     NSMutableDictionary *device = [NSMutableDictionary new];
     NSDictionary *state = [event valueForKeyPath:@"user.state.deviceState"];
     [device addEntriesFromDictionary:state];
-    device[@"timezone"] = [event valueForKeyPath:@"system.time_zone"];
-    device[@"macCatalystiOSVersion"] = [event valueForKeyPath:@"system.iOSSupportVersion"];
+    device[@"timezone"] = [event valueForKeyPath:@"system." BSG_KSSystemField_TimeZone];
+    device[@"macCatalystiOSVersion"] = [event valueForKeyPath:@"system." BSG_KSSystemField_iOSSupportVersion];
 
 #if BSG_PLATFORM_SIMULATOR
     device[@"simulator"] = @YES;
@@ -86,7 +88,7 @@ NSNumber *BSGDeviceFreeSpace(NSSearchPathDirectory directory) {
     BugsnagDeviceWithState *device = [BugsnagDeviceWithState new];
     [self populateFields:device dictionary:event];
     device.orientation = [event valueForKeyPath:@"user.state.deviceState.orientation"];
-    device.freeMemory = [event valueForKeyPath:@"system.memory.free"];
+    device.freeMemory = [event valueForKeyPath:@"system." BSG_KSSystemField_Memory "." BSG_KSCrashField_Free];
     device.freeDisk = BSGDeviceFreeSpace(NSCachesDirectory);
 
     NSString *val = [event valueForKeyPath:@"report.timestamp"];
