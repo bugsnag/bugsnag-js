@@ -85,7 +85,7 @@ steps:
       queue: "opensource-mac-cocoa-11"
     env:
       REACT_NATIVE_VERSION: rn0.64-hermes
-    artifact_paths: build/rn0.64.ipa
+    artifact_paths: build/rn0.64-hermes.ipa
     commands:
       - npm run test:build-react-native-ios
 
@@ -329,13 +329,13 @@ steps:
     timeout_in_minutes: 60
     plugins:
       artifacts#v1.2.0:
-        download: "build/rn0.64.ipa"
+        download: "build/rn0.64-hermes.ipa"
       docker-compose#v3.7.0:
         pull: react-native-maze-runner
         run: react-native-maze-runner
         use-aliases: true
         command:
-          - --app=build/rn0.64.ipa
+          - --app=build/rn0.64-hermes.ipa
           - --farm=bs
           - --device=IOS_14
           - --a11y-locator
