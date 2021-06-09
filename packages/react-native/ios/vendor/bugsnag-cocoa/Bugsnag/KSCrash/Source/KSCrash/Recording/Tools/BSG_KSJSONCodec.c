@@ -345,7 +345,7 @@ int bsg_ksjsoncodec_i_appendEscapedString(
             // see https://www.ietf.org/rfc/rfc4627.txt
 
             if ((unsigned char)*src < ' ') {
-                unsigned int last = *src % 16;
+                unsigned int last = (unsigned int)*src % 16;
                 unsigned int first = ((unsigned int)*src - last) / 16;
 
                 *dst++ = '\\';

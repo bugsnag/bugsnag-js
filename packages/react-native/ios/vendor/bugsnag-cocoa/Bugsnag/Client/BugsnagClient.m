@@ -403,13 +403,15 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
 
     self.started = YES;
 
-    [self.sessionTracker startNewSessionIfAutoCaptureEnabled];
+    if (bsg_kscrashstate_currentState()->applicationIsInForeground) {
+        [self.sessionTracker startNewSessionIfAutoCaptureEnabled];
+    } else {
+        bsg_log_debug(@"Not starting session because app is not in the foreground");
+    }
 
     // Record a "Bugsnag Loaded" message
     [self addAutoBreadcrumbOfType:BSGBreadcrumbTypeState withMessage:@"Bugsnag loaded" andMetadata:nil];
 
-    // notification not received in time on initial startup, so trigger manually
-    [self willEnterForeground:self];
     [self.pluginClient loadPlugins];
     
     if (self.configuration.launchDurationMillis > 0) {
@@ -993,12 +995,8 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
     BOOL charging = [UIDEVICE currentDevice].batteryState == UIDeviceBatteryStateCharging ||
                     [UIDEVICE currentDevice].batteryState == UIDeviceBatteryStateFull;
 
-    [self.state addMetadata:batteryLevel
-                    withKey:BSGKeyBatteryLevel
-                  toSection:BSGKeyDeviceState];
-
-    [self.state addMetadata:charging ? @YES : @NO
-                    withKey:BSGKeyCharging
+    [self.state addMetadata:@{BSGKeyBatteryLevel: batteryLevel,
+                              BSGKeyCharging: charging ? @YES : @NO}
                   toSection:BSGKeyDeviceState];
 }
 

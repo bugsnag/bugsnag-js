@@ -8,11 +8,9 @@
 #include <string.h>
 
 static char *report_directory;
-static char *bundle_name;
 
-void bsg_kscrash_generate_report_initialize(const char *directory, const char *bundleName) {
+void bsg_kscrash_generate_report_initialize(const char *directory) {
     report_directory = directory ? strdup(directory) : NULL;
-    bundle_name = bundleName ? strdup(bundleName) : NULL;
 }
 
 char *bsg_kscrash_generate_report_identifier(void) {
@@ -25,6 +23,6 @@ char *bsg_kscrash_generate_report_path(const char *identifier, bool is_recrash_r
     }
     char *type = is_recrash_report ? "RecrashReport" : "CrashReport";
     char *path = NULL;
-    asprintf(&path, "%s/%s-%s-%s.json", report_directory, bundle_name, type, identifier);
+    asprintf(&path, "%s/%s-%s.json", report_directory, type, identifier);
     return path;
 }

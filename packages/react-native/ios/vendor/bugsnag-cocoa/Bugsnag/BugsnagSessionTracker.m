@@ -195,8 +195,8 @@ NSString *const BSGSessionUpdateNotification = @"BugsnagSessionChanged";
 }
 
 - (void)handleAppForegroundEvent {
-    if (self.backgroundStartTime
-        && [[NSDate date] timeIntervalSinceDate:self.backgroundStartTime] >= BSGNewSessionBackgroundDuration) {
+    if (!self.currentSession ||
+        (self.backgroundStartTime && [[NSDate date] timeIntervalSinceDate:self.backgroundStartTime] >= BSGNewSessionBackgroundDuration)) {
         [self startNewSessionIfAutoCaptureEnabled];
     }
     self.backgroundStartTime = nil;

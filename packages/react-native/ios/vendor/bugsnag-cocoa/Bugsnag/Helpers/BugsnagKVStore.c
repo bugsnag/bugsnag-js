@@ -53,6 +53,8 @@ void bsgkv_open(const char* path, int* err) {
 
     g_currentDirFD = dirfd(g_currentDir);
     if(g_currentDirFD < 0) {
+        closedir(g_currentDir);
+        g_currentDir = NULL;
         *err = errno;
         return;
     }
@@ -63,13 +65,12 @@ void bsgkv_open(const char* path, int* err) {
 }
 
 void bsgkv_close(void) {
-    if(g_currentDirFD != 0) {
-        close(g_currentDirFD);
-        g_currentDirFD = 0;
-    }
     if(g_currentDir != NULL) {
         closedir(g_currentDir);
         g_currentDir = NULL;
+        // Note: closedir() closes the underlying file descriptor.
+        // Attempting to close it again is a programming error.
+        g_currentDirFD = 0;
     }
 }
 
