@@ -163,5 +163,5 @@ Remove
 1. Open `ios/reactnative.xcworkspace` in Xcode
     1. Add a new Group called `Scenarios` beneath `reactnative/reactnative`
     1. Add all files in `../../ios-modules/Scenarios` to the new group
-    1. Xcode may promt to add a bridging header for Swift.  Cancel this and instead:
+    1. Xcode may prompt to add a bridging header for Swift.  Cancel this and instead:
     1. Set Build Settings -> Swift Compiler - General -> Objective-C Bridging Header to `../../ios-module/Scenarios/Scenario.h`
