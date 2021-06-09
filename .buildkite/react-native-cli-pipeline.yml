@@ -211,7 +211,7 @@ steps:
     skip: PLAT-6449
     timeout_in_minutes: 30
     agents:
-      queue: 'opensource-mac-rn'
+      queue: 'opensource-mac-cocoa-11'
     env:
       DEBUG: true
     artifact_paths: build/rn0_63_expo_ejected.ipa
