@@ -55,8 +55,8 @@ These will build a `.ipa` or `.apk` file respectively and copy into `./build`.
 #### Running the end-to-end tests
 
 Ensure that the following environment variables are set:
-- `MAZE_DEVICE_FARM_USERNAME` - Your BrowserStack App Automate Username
-- `MAZE_DEVICE_FARM_ACCESS_KEY` - Your BrowserStack App Automate Access Key
+- `BROWSER_STACK_USERNAME` - Your BrowserStack App Automate Username
+- `BROWSER_STACK_ACCESS_KEY` - Your BrowserStack App Automate Access Key
 - `MAZE_BS_LOCAL` - Location of the BrowserStack local testing binary
 
 See https://www.browserstack.com/local-testing/app-automate for details of the required local testing binary. In
