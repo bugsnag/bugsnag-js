@@ -1,6 +1,19 @@
 Changelog
 =========
 
+## 6.9.5 (2021-06-09)
+
+### Bug fixes
+
+* Stop app hangs being reported if app is launched in the background.
+  [#1112](https://github.com/bugsnag/bugsnag-cocoa/pull/1112)
+
+* Stop session being reported if app is launched in the background.
+  [#1107](https://github.com/bugsnag/bugsnag-cocoa/pull/1107)
+
+* Fix KSCrash state storage for apps with no CFBundleName.
+  [#1103](https://github.com/bugsnag/bugsnag-cocoa/pull/1103)
+
 ## 6.9.4 (2021-06-02)
 
 ### Bug fixes

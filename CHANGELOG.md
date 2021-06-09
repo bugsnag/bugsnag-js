@@ -1,5 +1,14 @@
 # Changelog
 
+## TBD
+
+### Changed
+
+- (react-native): Update bugsnag-cocoa to v6.9.5
+  - Stop app hangs being reported if app is launched in the background. [bugsnag-cocoa#1112](https://github.com/bugsnag/bugsnag-cocoa/pull/1112)
+  - Stop session being reported if app is launched in the background. [bugsnag-cocoa#1107](https://github.com/bugsnag/bugsnag-cocoa/pull/1107)
+  - Fix KSCrash state storage for apps with no CFBundleName. [bugsnag-cocoa#1103](https://github.com/bugsnag/bugsnag-cocoa/pull/1103)
+
 ## 7.10.2 (2021-06-07)
 
 ### Fixed

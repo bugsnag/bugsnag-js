@@ -62,7 +62,6 @@
 
 @interface BSG_KSCrash ()
 
-@property(nonatomic, readwrite, retain) NSString *bundleName;
 @property(nonatomic, readwrite, retain) NSString *nextCrashID;
 
 // Mirrored from BSG_KSCrashAdvanced.h to provide ivars
@@ -82,7 +81,6 @@
 @synthesize userInfo = _userInfo;
 @synthesize printTraceToStdout = _printTraceToStdout;
 @synthesize onCrash = _onCrash;
-@synthesize bundleName = _bundleName;
 @synthesize logFilePath = _logFilePath;
 @synthesize nextCrashID = _nextCrashID;
 @synthesize introspectMemory = _introspectMemory;
@@ -105,7 +103,6 @@
 
 - (instancetype)init {
     if ((self = [super init])) {
-        self.bundleName = [[NSBundle mainBundle] infoDictionary][@"CFBundleName"];
         self.nextCrashID = [NSUUID UUID].UUIDString;
         self.introspectMemory = YES;
         self.maxStoredReports = 5;
@@ -162,11 +159,13 @@
 }
 
 - (BSG_KSCrashType)install:(BSG_KSCrashType)crashTypes directory:(NSString *)directory {
-    bsg_kscrash_generate_report_initialize(directory.fileSystemRepresentation, self.bundleName.UTF8String);
+    bsg_kscrash_generate_report_initialize(directory.fileSystemRepresentation);
     char *crashReportPath = bsg_kscrash_generate_report_path(self.nextCrashID.UTF8String, false);
     char *recrashReportPath = bsg_kscrash_generate_report_path(self.nextCrashID.UTF8String, true);
+    NSString *stateFilePrefix = [[NSBundle mainBundle] infoDictionary][@"CFBundleName"]
+    /* Not all processes have an Info.plist */ ?: NSProcessInfo.processInfo.processName;
     NSString *stateFilePath = [directory stringByAppendingPathComponent:
-                               [self.bundleName stringByAppendingString:@BSG_kCrashStateFilenameSuffix]];
+                               [stateFilePrefix stringByAppendingString:@BSG_kCrashStateFilenameSuffix]];
     
     bsg_kscrash_setHandlingCrashTypes(crashTypes);
     
@@ -176,10 +175,6 @@
     
     free(crashReportPath);
     free(recrashReportPath);
-    
-    if (!installedCrashTypes) {
-        return 0;
-    }
     
     NSNotificationCenter *nCenter = [NSNotificationCenter defaultCenter];
 #if BSG_HAS_UIKIT
