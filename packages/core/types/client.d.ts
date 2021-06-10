@@ -74,4 +74,4 @@ declare class Client {
   public Session: typeof Session;
 }
 
-export default Client
+export default Client & { _client?: Client }
