@@ -163,6 +163,8 @@ steps:
     skip: To be fixed and enabled via PLAT-6449
 
   - label: ':ios: Init and build RN 0.60 ipa'
+    # TODO: Skip pending PLAT-6764
+    skip: Pending PLAT-6764
     key: 'rn-0-60-ipa'
     timeout_in_minutes: 30
     agents:
@@ -172,11 +174,10 @@ steps:
     artifact_paths: build/rn0_60.ipa
     commands:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_60
-    # TODO: Soft fail pending PLAT-6764
-    soft_fail:
-      - exit_status: "*"
 
   - label: ':ios: Init and build RN 0.61 ipa'
+    # TODO: Skip pending PLAT-6764
+    skip: Pending PLAT-6764
     key: 'rn-0-61-ipa'
     timeout_in_minutes: 30
     agents:
@@ -186,11 +187,10 @@ steps:
     artifact_paths: build/rn0_61.ipa
     commands:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_61
-    # TODO: Soft fail pending PLAT-6764
-    soft_fail:
-      - exit_status: "*"
 
   - label: ':ios: Init and build RN 0.62 ipa'
+    # TODO: Skip pending PLAT-6764
+    skip: Pending PLAT-6764
     key: 'rn-0-62-ipa'
     timeout_in_minutes: 30
     agents:
@@ -200,11 +200,10 @@ steps:
     artifact_paths: build/rn0_62.ipa
     commands:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_62
-    # TODO: Soft fail pending PLAT-6764
-    soft_fail:
-      - exit_status: "*"
 
   - label: ':ios: Init and build RN 0.63 ipa'
+    # TODO: Skip pending PLAT-6764
+    skip: Pending PLAT-6764
     key: 'rn-0-63-ipa'
     timeout_in_minutes: 30
     agents:
@@ -214,11 +213,10 @@ steps:
     artifact_paths: build/rn0_63.ipa
     commands:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_63
-    # TODO: Soft fail pending PLAT-6764
-    soft_fail:
-      - exit_status: "*"
 
   - label: ':ios: Init and build RN 0.63 Expo (ejected) ipa'
+    # TODO: Skip pending PLAT-6764
+    skip: Pending PLAT-6764
     key: 'rn-0-63-expo-ejected-ipa'
     timeout_in_minutes: 30
     agents:
@@ -228,7 +226,6 @@ steps:
     artifact_paths: build/rn0_63_expo_ejected.ipa
     commands:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_63_expo_ejected
-    skip: To be fixed and enabled via PLAT-6449
 
   #
   # Init, build and notify end-to-end tests
@@ -330,6 +327,8 @@ steps:
     skip: To be fixed and enabled via PLAT-6449
 
   - label: ':runner: RN 0.60 iOS end-to-end tests'
+    # TODO: Skip pending PLAT-6764
+    skip: Pending PLAT-6764
     depends_on: "rn-0-60-ipa"
     timeout_in_minutes: 10
     plugins:
@@ -349,6 +348,8 @@ steps:
     concurrency_group: 'browserstack-app'
 
   - label: ':runner: RN 0.61 iOS end-to-end tests'
+    # TODO: Skip pending PLAT-6764
+    skip: Pending PLAT-6764
     depends_on: "rn-0-61-ipa"
     timeout_in_minutes: 10
     plugins:
@@ -368,6 +369,8 @@ steps:
     concurrency_group: 'browserstack-app'
 
   - label: ':runner: RN 0.62 iOS end-to-end tests'
+    # TODO: Skip pending PLAT-6764
+    skip: Pending PLAT-6764
     depends_on: "rn-0-62-ipa"
     timeout_in_minutes: 10
     plugins:
@@ -387,6 +390,8 @@ steps:
     concurrency_group: 'browserstack-app'
 
   - label: ':runner: RN 0.63 iOS end-to-end tests'
+    # TODO: Skip pending PLAT-6764
+    skip: Pending PLAT-6764
     depends_on: "rn-0-63-ipa"
     timeout_in_minutes: 10
     plugins:
@@ -406,6 +411,8 @@ steps:
     concurrency_group: 'browserstack-app'
 
   - label: ':runner: RN 0.63 Expo (ejected) iOS end-to-end tests'
+    # TODO: Skip pending PLAT-6764
+    skip: Pending PLAT-6764
     depends_on: "rn-0-63-expo-ejected-ipa"
     timeout_in_minutes: 10
     plugins:
