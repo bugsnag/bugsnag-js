@@ -172,6 +172,9 @@ steps:
     artifact_paths: build/rn0_60.ipa
     commands:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_60
+    # TODO: Soft fail pending PLAT-6764
+    soft_fail:
+      - exit_status: "*"
 
   - label: ':ios: Init and build RN 0.61 ipa'
     key: 'rn-0-61-ipa'
@@ -183,6 +186,9 @@ steps:
     artifact_paths: build/rn0_61.ipa
     commands:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_61
+    # TODO: Soft fail pending PLAT-6764
+    soft_fail:
+      - exit_status: "*"
 
   - label: ':ios: Init and build RN 0.62 ipa'
     key: 'rn-0-62-ipa'
@@ -194,6 +200,9 @@ steps:
     artifact_paths: build/rn0_62.ipa
     commands:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_62
+    # TODO: Soft fail pending PLAT-6764
+    soft_fail:
+      - exit_status: "*"
 
   - label: ':ios: Init and build RN 0.63 ipa'
     key: 'rn-0-63-ipa'
@@ -205,6 +214,9 @@ steps:
     artifact_paths: build/rn0_63.ipa
     commands:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_63
+    # TODO: Soft fail pending PLAT-6764
+    soft_fail:
+      - exit_status: "*"
 
   - label: ':ios: Init and build RN 0.63 Expo (ejected) ipa'
     key: 'rn-0-63-expo-ejected-ipa'
