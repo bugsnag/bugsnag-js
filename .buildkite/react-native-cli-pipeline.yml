@@ -208,6 +208,8 @@ steps:
 
   - label: ':ios: Init and build RN 0.63 Expo (ejected) ipa'
     key: 'rn-0-63-expo-ejected-ipa'
+    # TODO: Skip pending PLAT-6449
+    skip: PLAT-6449
     timeout_in_minutes: 30
     agents:
       queue: 'opensource-mac-rn'
