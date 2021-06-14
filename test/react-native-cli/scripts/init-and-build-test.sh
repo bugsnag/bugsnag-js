@@ -12,7 +12,9 @@ mkdir -p build
 pushd test/react-native-cli
 bundle install
 REACT_NATIVE_VERSION=$VERSION bundle exec maze-runner features/build-app-tests/build-ios-app.feature
-check_status $?
+
+# TODO: Reinstate as part of PLAT-6764
+#check_status $?
 
 # Export the IPA separately from MazeRunner (running it inside failed for an unknown reason)
 cd features/fixtures

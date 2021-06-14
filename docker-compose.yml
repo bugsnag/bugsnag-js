@@ -180,13 +180,13 @@ services:
       - ./test/react-native-cli/features/:/app/features
 
   react-native-maze-runner:
-    image: 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v4-cli
+    image: 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v5-cli
     environment:
       BUILDKITE:
       BUILDKITE_PIPELINE_NAME:
       DEBUG:
-      MAZE_DEVICE_FARM_USERNAME:
-      MAZE_DEVICE_FARM_ACCESS_KEY:
+      BROWSER_STACK_USERNAME:
+      BROWSER_STACK_ACCESS_KEY:
       SKIP_NAVIGATION_SCENARIOS:
     networks:
       default:

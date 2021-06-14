@@ -55,8 +55,8 @@ These will build a `.ipa` or `.apk` file respectively and copy into `./build`.
 #### Running the end-to-end tests
 
 Ensure that the following environment variables are set:
-- `MAZE_DEVICE_FARM_USERNAME` - Your BrowserStack App Automate Username
-- `MAZE_DEVICE_FARM_ACCESS_KEY` - Your BrowserStack App Automate Access Key
+- `BROWSER_STACK_USERNAME` - Your BrowserStack App Automate Username
+- `BROWSER_STACK_ACCESS_KEY` - Your BrowserStack App Automate Access Key
 - `MAZE_BS_LOCAL` - Location of the BrowserStack local testing binary
 
 See https://www.browserstack.com/local-testing/app-automate for details of the required local testing binary. In
@@ -163,5 +163,5 @@ Remove
 1. Open `ios/reactnative.xcworkspace` in Xcode
     1. Add a new Group called `Scenarios` beneath `reactnative/reactnative`
     1. Add all files in `../../ios-modules/Scenarios` to the new group
-    1. Xcode may promt to add a bridging header for Swift.  Cancel this and instead:
+    1. Xcode may prompt to add a bridging header for Swift.  Cancel this and instead:
     1. Set Build Settings -> Swift Compiler - General -> Objective-C Bridging Header to `../../ios-module/Scenarios/Scenario.h`
