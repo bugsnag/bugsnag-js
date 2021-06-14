@@ -15,9 +15,14 @@ if [ -z "$API_KEY" ]; then
   exit 1
 fi
 
+# in RN 0.64+ the JS bundle is in this location
 BUNDLE_FILE="$CONFIGURATION_BUILD_DIR/main.jsbundle"
 if [ ! -f "$BUNDLE_FILE" ]; then
-  echo "Skipping source map upload because app has not been bundled."
+  # in RN <0.64 it's in this location
+  BUNDLE_FILE="$CONFIGURATION_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/main.jsbundle"
+fi
+if [ ! -f "$BUNDLE_FILE" ]; then
+  echo "Skipping source map upload because app bundle could not be found."
   exit 0
 fi
 
