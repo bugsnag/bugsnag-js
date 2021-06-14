@@ -207,8 +207,6 @@ steps:
 
   - label: ':ios: Init and build RN 0.63 Expo (ejected) ipa'
     key: 'rn-0-63-expo-ejected-ipa'
-    # TODO: Skip pending PLAT-6449
-    skip: PLAT-6449
     timeout_in_minutes: 30
     agents:
       queue: 'opensource-mac-cocoa-11'
@@ -217,9 +215,6 @@ steps:
     artifact_paths: build/rn0_63_expo_ejected.ipa
     commands:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_63_expo_ejected
-    # TODO: Soft fail pending PLAT-6764 (the app still needs to be built for a later step)
-    soft_fail:
-      - exit_status: "*"
 
   #
   # Init, build and notify end-to-end tests
