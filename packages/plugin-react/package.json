@@ -26,8 +26,5 @@
   "license": "MIT",
   "devDependencies": {
     "@bugsnag/core": "^7.10.0"
-  },
-  "peerDependencies": {
-    "@bugsnag/core": "^7.0.0"
   }
 }
