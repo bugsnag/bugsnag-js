@@ -2,6 +2,10 @@
 
 ## TBD
 
+### Fixed
+
+- (react-native): Ensure source maps are uploaded correctly in Xcode for RN <0.64 [#1438](https://github.com/bugsnag/bugsnag-js/pull/1438)
+
 ### Changed
 
 - (react-native): Update bugsnag-cocoa to v6.9.5
