@@ -28,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (readonly) BugsnagConfiguration *configuration;
 
-- (void)appHangDetectedWithThreads:(NSArray<BugsnagThread *> *)threads;
+- (void)appHangDetectedAtDate:(NSDate *)date withThreads:(NSArray<BugsnagThread *> *)threads systemInfo:(NSDictionary *)systemInfo;
 
 - (void)appHangEnded;
 

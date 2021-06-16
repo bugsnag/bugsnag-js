@@ -79,9 +79,6 @@ BSGBreadcrumbType BSGBreadcrumbTypeFromString(NSString *value) {
 
 @property (readwrite, nullable, nonatomic) NSDate *timestamp;
 
-/// String representation of `timestamp` used to avoid unnecessary date <--> string conversions
-@property (copy, nonatomic) NSString *timestampString;
-
 @end
 
 

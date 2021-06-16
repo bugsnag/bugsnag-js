@@ -1,5 +1,12 @@
 # Changelog
 
+## TBD
+
+### Changed
+
+- (react-native): Update bugsnag-cocoa to v6.9.6
+  - Improve accuracy of app hang event information to better reflect state at time of detection. [bugsnag-cocoa#1118](https://github.com/bugsnag/bugsnag-cocoa/pull/1118)
+
 ## 7.10.3 (2021-06-15)
 
 ### Fixed
