@@ -60,7 +60,7 @@ module.exports = (_ignoredUrls = [], win = window) => {
       }
 
       function handleXHRLoad () {
-        if (includes(ignoredUrls, this[REQUEST_URL_KEY])) {
+        if (includes(ignoredUrls, this[REQUEST_URL_KEY].replace(/\?.*$/, ''))) {
           // don't leave a network breadcrumb from bugsnag notify calls
           return
         }
@@ -77,7 +77,7 @@ module.exports = (_ignoredUrls = [], win = window) => {
       }
 
       function handleXHRError () {
-        if (includes(ignoredUrls, this[REQUEST_URL_KEY])) {
+        if (includes(ignoredUrls, this[REQUEST_URL_KEY].replace(/\?.*$/, ''))) {
           // don't leave a network breadcrumb from bugsnag notify calls
           return
         }
