@@ -1,5 +1,9 @@
 # Changelog
 
+## TBD
+
+- (expo): Prevent internal NetInfo connectivy requests from showing as breadcrumbs [#1443](https://github.com/bugsnag/bugsnag-js/pull/1443)
+
 ## 7.10.3 (2021-06-15)
 
 ### Fixed
