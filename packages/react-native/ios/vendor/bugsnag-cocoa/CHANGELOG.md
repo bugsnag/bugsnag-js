@@ -1,6 +1,13 @@
 Changelog
 =========
 
+## 6.9.6 (2021-06-16)
+
+### Bug fixes
+
+* Improve accuracy of app hang event information to better reflect state at time of detection.
+  [#1118](https://github.com/bugsnag/bugsnag-cocoa/pull/1118)
+
 ## 6.9.5 (2021-06-09)
 
 ### Bug fixes

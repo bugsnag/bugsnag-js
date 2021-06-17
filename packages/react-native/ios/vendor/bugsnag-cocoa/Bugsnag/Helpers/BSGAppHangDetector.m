@@ -13,9 +13,9 @@
 
 #import "BSG_KSCrashState.h"
 #import "BSG_KSMach.h"
+#import "BSG_KSSystemInfo.h"
 #import "BugsnagCollections.h"
 #import "BugsnagLogger.h"
-#import "BugsnagThread+Recording.h"
 #import "BugsnagThread+Private.h"
 
 #if TARGET_OS_IOS
@@ -82,19 +82,25 @@
             dispatch_time_t timeout = dispatch_time(now, (int64_t)(threshold * NSEC_PER_SEC));
             dispatch_after(after, backgroundQueue, ^{
                 if (dispatch_semaphore_wait(semaphore, timeout) != 0) {
-                    if (!bsg_kscrashstate_currentState()->applicationIsInForeground) {
-                        bsg_log_debug(@"Ignoring app hang because app is in the background");
-                        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-                        return;
-                    }
-                    
                     if (bsg_ksmachisBeingTraced()) {
                         bsg_log_debug("Ignoring app hang because debugger is attached");
                         dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
                         return;
                     }
                     
+                    if (!bsg_kscrashstate_currentState()->applicationIsInForeground) {
+                        bsg_log_debug(@"Ignoring app hang because app is in the background");
+                        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+                        return;
+                    }
+                    
                     bsg_log_info("App hang detected");
+                    
+                    // Record the date and state before performing any operations like symbolication or loading
+                    // breadcrumbs from disk that could introduce delays and lead to misleading event contents.
+                    
+                    NSDate *date = [NSDate date];
+                    NSDictionary *systemInfo = [BSG_KSSystemInfo systemInfo];
                     
                     NSArray<BugsnagThread *> *threads = nil;
                     if (recordAllThreads) {
@@ -110,7 +116,7 @@
                     
                     __strong typeof(weakDelegate) strongDelegate = weakDelegate;
                     
-                    [strongDelegate appHangDetectedWithThreads:threads];
+                    [strongDelegate appHangDetectedAtDate:date withThreads:threads systemInfo:systemInfo];
                     
                     dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
                     bsg_log_info("App hang has ended");

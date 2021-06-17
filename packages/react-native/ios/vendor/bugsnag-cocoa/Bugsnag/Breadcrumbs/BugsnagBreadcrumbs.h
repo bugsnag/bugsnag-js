@@ -39,6 +39,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)addBreadcrumbWithBlock:(BSGBreadcrumbConfiguration)block;
 
+- (NSArray<BugsnagBreadcrumb *> *)breadcrumbsBeforeDate:(NSDate *)date;
+
 /**
  * Returns the breadcrumb JSON dictionaries stored on disk.
  */

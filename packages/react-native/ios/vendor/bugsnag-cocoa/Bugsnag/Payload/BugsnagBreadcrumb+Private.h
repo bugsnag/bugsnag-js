@@ -18,6 +18,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (nullable NSDictionary *)objectValue;
 
+/// String representation of `timestamp` used to avoid unnecessary date <--> string conversions
+@property (copy, nullable, nonatomic) NSString *timestampString;
+
 @end
 
 FOUNDATION_EXPORT NSString *BSGBreadcrumbTypeValue(BSGBreadcrumbType type);

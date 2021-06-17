@@ -28,6 +28,7 @@
 
 #import "BugsnagClient+Private.h"
 
+#import "BSGAppHangDetector.h"
 #import "BSGConnectivity.h"
 #import "BSGEventUploader.h"
 #import "BSGFileLocations.h"
@@ -48,8 +49,6 @@
 #import "BugsnagAppWithState+Private.h"
 #import "BugsnagBreadcrumb+Private.h"
 #import "BugsnagBreadcrumbs.h"
-#import "BugsnagClient+AppHangs.h"
-#import "BugsnagClient+OutOfMemory.h"
 #import "BugsnagCollections.h"
 #import "BugsnagConfiguration+Private.h"
 #import "BugsnagCrashSentry.h"
@@ -71,7 +70,6 @@
 #import "BugsnagStateEvent.h"
 #import "BugsnagSystemState.h"
 #import "BugsnagThread+Private.h"
-#import "BugsnagThread+Recording.h"
 #import "BugsnagUser+Private.h"
 
 #if BSG_PLATFORM_IOS || BSG_PLATFORM_TVOS
@@ -111,10 +109,6 @@ static char *crashSentinelPath;
 static NSUInteger handledCount;
 static NSUInteger unhandledCount;
 static bool hasRecordedSessions;
-
-@interface NSDictionary (BSGKSMerge)
-- (NSDictionary *)BSG_mergedInto:(NSDictionary *)dest;
-@end
 
 /**
  *  Handler executed when the application crashes. Writes information about the
@@ -213,7 +207,7 @@ void BSGWriteSessionCrashData(BugsnagSession *session) {
 
 // MARK: -
 
-@interface BugsnagClient () <BSGBreadcrumbSink, BSGInternalErrorReporterDataSource>
+@interface BugsnagClient () <BSGAppHangDetectorDelegate, BSGBreadcrumbSink, BSGInternalErrorReporterDataSource>
 
 @property (nonatomic) BSGNotificationBreadcrumbs *notificationBreadcrumbs;
 
@@ -1215,7 +1209,7 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
     // OOMs are controlled by config.autoDetectErrors so don't require any further action
 }
 
-#pragma mark BugsnagClient+AppHangs
+// MARK: - App Hangs
 
 - (void)startAppHangDetector {
     [NSFileManager.defaultManager removeItemAtPath:BSGFileLocations.current.appHangEvent error:nil];
@@ -1224,9 +1218,7 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
     [self.appHangDetector startWithDelegate:self];
 }
 
-- (void)appHangDetectedWithThreads:(nonnull NSArray<BugsnagThread *> *)threads {
-    NSDictionary *systemInfo = [BSG_KSSystemInfo systemInfo];
-
+- (void)appHangDetectedAtDate:(NSDate *)date withThreads:(NSArray<BugsnagThread *> *)threads systemInfo:(NSDictionary *)systemInfo {
     NSString *message = [NSString stringWithFormat:@"The app's main thread failed to respond to an event within %d milliseconds",
                          (int)self.configuration.appHangThresholdMillis];
 
@@ -1243,13 +1235,20 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
                                     unhandledOverridden:NO
                                               attrValue:nil];
 
+    BugsnagAppWithState *app = [self generateAppWithState:systemInfo];
+
+    BugsnagDeviceWithState *device = [self generateDeviceWithState:systemInfo];
+    device.time = date;
+
+    NSArray<BugsnagBreadcrumb *> *breadcrumbs = [self.breadcrumbs breadcrumbsBeforeDate:date];
+
     self.appHangEvent =
-    [[BugsnagEvent alloc] initWithApp:[self generateAppWithState:systemInfo]
-                               device:[self generateDeviceWithState:systemInfo]
+    [[BugsnagEvent alloc] initWithApp:app
+                               device:device
                          handledState:handledState
                                  user:self.configuration.user
                              metadata:[self.metadata deepCopy]
-                          breadcrumbs:self.breadcrumbs.breadcrumbs ?: @[]
+                          breadcrumbs:breadcrumbs
                                errors:@[error]
                               threads:threads
                               session:self.sessionTracker.runningSession];
@@ -1305,7 +1304,7 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
     return event;
 }
 
-#pragma mark BugsnagClient+OutOfMemory
+// MARK: - OOMs
 
 - (BugsnagEvent *)generateOutOfMemoryEvent {
     NSDictionary *appDict = self.systemState.lastLaunchState[SYSTEMSTATE_KEY_APP];
