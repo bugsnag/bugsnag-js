@@ -2,6 +2,10 @@
 
 ## TBD
 
+### Fixed
+
+- (expo): Prevent internal NetInfo connectivy requests from showing as breadcrumbs [#1443](https://github.com/bugsnag/bugsnag-js/pull/1443)
+
 ### Changed
 
 - (react-native): Update bugsnag-cocoa to v6.9.6
