@@ -523,7 +523,7 @@ test('findAndroidPluginVersion(): success', async () => {
   expect(version).toBe('3.5.3')
 })
 
-test('findAndroidPluginVersion(): wrong file', async () => {
+test('findAndroidPluginVersion(): null with wrong file', async () => {
   const buildGradle = await loadFixture(path.join(__dirname, 'fixtures', 'app-build-before.gradle'))
 
   const readFileMock = fs.readFile as jest.MockedFunction<typeof fs.readFile>
@@ -531,4 +531,14 @@ test('findAndroidPluginVersion(): wrong file', async () => {
 
   const version = await findAndroidPluginVersion('/random/path')
   expect(version).toBeNull()
+})
+
+test('findAndroidPluginVersion(): success with bracketed AGP version', async () => {
+  const buildGradle = await loadFixture(path.join(__dirname, 'fixtures', 'root-build-before-with-prefixed-agp-version.gradle'))
+
+  const readFileMock = fs.readFile as jest.MockedFunction<typeof fs.readFile>
+  readFileMock.mockResolvedValueOnce(buildGradle)
+
+  const version = await findAndroidPluginVersion('/random/path')
+  expect(version).toBe('7.0.0-alpha01')
 })
