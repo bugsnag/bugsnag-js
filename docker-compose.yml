@@ -208,6 +208,14 @@ services:
       - ./build:/app/build
       - ./test/react-native-cli/features/:/app/features/
 
+  release:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile.release
+    volumes:
+      - ~/.gitconfig:/home/releaser/.gitconfig
+      - ~/.npmrc:/home/releaser/.npmrc
+
 networks:
   default:
     name: ${BUILDKITE_JOB_ID:-js-maze-runner}

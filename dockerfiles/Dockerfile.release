@@ -1,0 +1,21 @@
+FROM node:lts-alpine
+RUN apk add --update git bash python3 make gcc g++ openssh-client
+
+RUN addgroup -S admins
+RUN adduser -S releaser -G admins
+
+WORKDIR /app
+
+COPY . ./
+
+ARG GITHUB_ACCESS_TOKEN
+RUN git remote set-url origin https://bengourley:$GITHUB_ACCESS_TOKEN@github.com/bugsnag/bugsnag-js.git
+
+# "ci" rather than "install" ensures the process doesn't make the work tree dirty by modifying lockfiles
+RUN npm ci
+RUN npm run bootstrap -- --ci
+
+RUN chown -R releaser:admins /app
+USER releaser
+
+CMD npx lerna publish prerelease --dist-tag next
