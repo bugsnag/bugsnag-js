@@ -16,7 +16,8 @@
     "@bugsnag/plugin-vue": "^7.0.0",
     "cross-env": "^5.2.0",
     "event-stream": "^3.3.4",
-    "nuxt": "^2.0.0"
+    "nuxt": "^2.0.0",
+    "webpack-bugsnag-plugins": "^1.7.0"
   },
   "devDependencies": {
     "nodemon": "^1.11.0"
