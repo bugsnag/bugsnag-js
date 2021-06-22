@@ -1,4 +1,5 @@
 const pkg = require('./package')
+const { BugsnagSourceMapUploaderPlugin } = require('webpack-bugsnag-plugins')
 
 module.exports = {
   mode: 'universal',
@@ -54,7 +55,7 @@ module.exports = {
     /*
     ** You can extend webpack config here
     */
-    extend (config, ctx) {
+    extend (config, { isDev, isClient }) {
       if (!isDev && isClient) {
 
         config.devtool = 'source-map'
