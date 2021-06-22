@@ -6,11 +6,22 @@ const GRADLE_PLUGIN_IMPORT = (version: string) => `classpath("com.bugsnag:bugsna
 const GRADLE_PLUGIN_IMPORT_REGEX = /classpath\(["']com\.bugsnag:bugsnag-android-gradle-plugin:.*["']\)/
 const GRADLE_PLUGIN_APPLY = 'apply plugin: "com.bugsnag.android.gradle"'
 const GRADLE_PLUGIN_APPLY_REGEX = /apply plugin: ["']com\.bugsnag\.android\.gradle["']/
+const GRADLE_ANDROID_PLUGIN_REGEX = /classpath\(["']com.android.tools.build:gradle:[^0-9]*([^'"]+)["']\)/
 const DOCS_LINK = 'https://docs.bugsnag.com/build-integrations/gradle/#installation'
 const ENABLE_REACT_NATIVE_MAPPINGS = 'bugsnag {\n  uploadReactNativeMappings = true\n}\n'
 const ENABLE_REACT_NATIVE_MAPPINGS_REGEX = /^\s*bugsnag {[^}]*uploadReactNativeMappings[^}]*?}/m
 const UPLOAD_ENDPOINT_REGEX = /^\s*bugsnag {[^}]*endpoint[^}]*?}/m
 const BUILD_ENDPOINT_REGEX = /^\s*bugsnag {[^}]*releasesEndpoint[^}]*?}/m
+
+export async function findAndroidPluginVersion (projectRoot: string): Promise<string | null> {
+  try {
+    const fileContents = await fs.readFile(path.join(projectRoot, 'android', 'build.gradle'), 'utf8')
+    const versionMatchResult = fileContents.match(GRADLE_ANDROID_PLUGIN_REGEX)
+    return versionMatchResult?.[1] ?? null
+  } catch (e) {
+    return null
+  }
+}
 
 export async function modifyRootBuildGradle (projectRoot: string, pluginVersion: string, logger: Logger): Promise<void> {
   logger.debug('Looking for android/build.gradle')
