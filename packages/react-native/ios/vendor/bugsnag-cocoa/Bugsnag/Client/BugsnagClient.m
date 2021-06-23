@@ -1254,7 +1254,9 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
                               session:self.sessionTracker.runningSession];
 
     self.appHangEvent.context = self.context;
-
+    
+    [self.appHangEvent symbolicateIfNeeded];
+    
     NSError *writeError = nil;
     NSDictionary *json = [self.appHangEvent toJsonWithRedactedKeys:self.configuration.redactedKeys];
     if (![BSGJSONSerialization writeJSONObject:json toFile:BSGFileLocations.current.appHangEvent options:0 error:&writeError]) {

@@ -8,7 +8,8 @@
 
 ### Changed
 
-- (react-native): Update bugsnag-cocoa to v6.9.6
+- (react-native): Update bugsnag-cocoa to v6.9.7
+  - Prevent some potential false positive detection of app hangs. [bugsnag-cocoa#1122](https://github.com/bugsnag/bugsnag-cocoa/pull/1122)
   - Improve accuracy of app hang event information to better reflect state at time of detection. [bugsnag-cocoa#1118](https://github.com/bugsnag/bugsnag-cocoa/pull/1118)
 
 ## 7.10.3 (2021-06-15)

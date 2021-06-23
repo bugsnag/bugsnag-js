@@ -21,6 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)startWithDelegate:(id<BSGAppHangDetectorDelegate>)delegate;
 
+- (void)stop;
+
 @end
 
 

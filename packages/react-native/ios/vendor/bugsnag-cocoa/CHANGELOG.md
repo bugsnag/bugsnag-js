@@ -1,6 +1,13 @@
 Changelog
 =========
 
+## 6.9.7 (2021-06-23)
+
+### Bug fixes
+
+* Prevent some potential false positive detection of app hangs.
+  [#1122](https://github.com/bugsnag/bugsnag-cocoa/pull/1122)
+
 ## 6.9.6 (2021-06-16)
 
 ### Bug fixes
