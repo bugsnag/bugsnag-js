@@ -13,13 +13,27 @@ const ENABLE_REACT_NATIVE_MAPPINGS_REGEX = /^\s*bugsnag {[^}]*uploadReactNativeM
 const UPLOAD_ENDPOINT_REGEX = /^\s*bugsnag {[^}]*endpoint[^}]*?}/m
 const BUILD_ENDPOINT_REGEX = /^\s*bugsnag {[^}]*releasesEndpoint[^}]*?}/m
 
-export async function findAndroidPluginVersion (projectRoot: string): Promise<string | null> {
+export async function getSuggestedBugsnagGradleVersion (projectRoot: string, logger: Logger): Promise<string> {
+  let fileContents: string
   try {
-    const fileContents = await fs.readFile(path.join(projectRoot, 'android', 'build.gradle'), 'utf8')
-    const versionMatchResult = fileContents.match(GRADLE_ANDROID_PLUGIN_REGEX)
-    return versionMatchResult?.[1] ?? null
+    fileContents = await fs.readFile(path.join(projectRoot, 'android', 'build.gradle'), 'utf8')
   } catch (e) {
-    return null
+    return '5+'
+  }
+
+  const versionMatchResult = fileContents.match(GRADLE_ANDROID_PLUGIN_REGEX)
+  const value = versionMatchResult?.[1]
+  const major = parseInt(value?.match(/^([0-9]+)/)?.[1] ?? '', 10)
+
+  if (major < 7) {
+    return '5.+'
+  } else if (major === 7) {
+    return '7.+'
+  } else {
+    logger.warn(`Cannot determine an appropriate version of the Bugsnag Android Gradle plugin for use in this project.
+
+Please see ${DOCS_LINK} for information on Gradle and the Android Gradle Plugin (AGP) compatibility`)
+    return ''
   }
 }
 

@@ -1,4 +1,4 @@
-import { findAndroidPluginVersion, modifyAppBuildGradle, modifyRootBuildGradle, enableReactNativeMappings } from '../Gradle'
+import { getSuggestedBugsnagGradleVersion, modifyAppBuildGradle, modifyRootBuildGradle, enableReactNativeMappings } from '../Gradle'
 import logger from '../../Logger'
 import path from 'path'
 import { promises as fs } from 'fs'
@@ -513,32 +513,32 @@ test('enableReactNativeMappings(): success without initial bugsnag config and cu
   expect(writeFileMock).toHaveBeenNthCalledWith(3, '/random/path/android/app/build.gradle', expectedFinal, 'utf8')
 })
 
-test('findAndroidPluginVersion(): success', async () => {
+test('getSuggestedBugsnagGradleVersion(): success', async () => {
   const buildGradle = await loadFixture(path.join(__dirname, 'fixtures', 'root-build-before.gradle'))
 
   const readFileMock = fs.readFile as jest.MockedFunction<typeof fs.readFile>
   readFileMock.mockResolvedValueOnce(buildGradle)
 
-  const version = await findAndroidPluginVersion('/random/path')
-  expect(version).toBe('3.5.3')
+  const version = await getSuggestedBugsnagGradleVersion('/random/path', logger)
+  expect(version).toBe('5.+')
 })
 
-test('findAndroidPluginVersion(): null with wrong file', async () => {
+test('getSuggestedBugsnagGradleVersion(): null with wrong file', async () => {
   const buildGradle = await loadFixture(path.join(__dirname, 'fixtures', 'app-build-before.gradle'))
 
   const readFileMock = fs.readFile as jest.MockedFunction<typeof fs.readFile>
   readFileMock.mockResolvedValueOnce(buildGradle)
 
-  const version = await findAndroidPluginVersion('/random/path')
-  expect(version).toBeNull()
+  const version = await getSuggestedBugsnagGradleVersion('/random/path', logger)
+  expect(version).toBe('')
 })
 
-test('findAndroidPluginVersion(): success with bracketed AGP version', async () => {
+test('getSuggestedBugsnagGradleVersion(): success with bracketed AGP version', async () => {
   const buildGradle = await loadFixture(path.join(__dirname, 'fixtures', 'root-build-before-with-prefixed-agp-version.gradle'))
 
   const readFileMock = fs.readFile as jest.MockedFunction<typeof fs.readFile>
   readFileMock.mockResolvedValueOnce(buildGradle)
 
-  const version = await findAndroidPluginVersion('/random/path')
-  expect(version).toBe('7.0.0-alpha01')
+  const version = await getSuggestedBugsnagGradleVersion('/random/path', logger)
+  expect(version).toBe('7.+')
 })

@@ -3,7 +3,7 @@ import logger from '../Logger'
 import { install as npmInstall, detectInstalled, guessPackageManager } from '../lib/Npm'
 import { install as podInstall } from '../lib/Pod'
 import onCancel from '../lib/OnCancel'
-import { findAndroidPluginVersion, modifyRootBuildGradle, modifyAppBuildGradle } from '../lib/Gradle'
+import { getSuggestedBugsnagGradleVersion, modifyRootBuildGradle, modifyAppBuildGradle } from '../lib/Gradle'
 
 export default async function run (argv: string[], projectRoot: string, opts: Record<string, unknown>): Promise<boolean> {
   try {
@@ -44,13 +44,12 @@ async function installJavaScriptPackage (projectRoot: string): Promise<void> {
 async function addGradlePluginDependency (projectRoot: string): Promise<void> {
   logger.info('Adding the Bugsnag Android Gradle Plugin')
 
-  const androidPluginVersion = await findAndroidPluginVersion(projectRoot)
-  const suggestedPluginVersion = androidPluginVersion?.startsWith('7.') ? '7+' : '5+'
+  const suggestedPluginVersion = await getSuggestedBugsnagGradleVersion(projectRoot, logger)
 
   const { gradlePluginVersion } = await prompts({
     type: 'text',
     name: 'gradlePluginVersion',
-    message: 'If you want the latest version of the Bugsnag Android Gradle plugin hit enter, otherwise type the version you want',
+    message: 'Enter version of the Bugsnag Android Gradle plugin you want to use',
     initial: suggestedPluginVersion
   }, { onCancel })
 
