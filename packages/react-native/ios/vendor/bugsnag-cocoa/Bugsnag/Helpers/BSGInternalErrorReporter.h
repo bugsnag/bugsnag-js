@@ -49,15 +49,18 @@ FOUNDATION_EXPORT NSString *BSGErrorDescription(NSError *error);
 /// @param message The error message associated with the error. Usually this will contain some information about this specific instance of the error
 /// and is not used to group the errors.
 /// @param diagnostics JSON compatible information to include in the `BugsnagDiagnostics` metadata section.
+/// @param groupingHash String to override Bugsnag's default event grouping. Events sharing the same grouping hash will be grouped together.
 - (void)reportErrorWithClass:(NSString *)errorClass
                      message:(nullable NSString *)message
-                 diagnostics:(nullable NSDictionary<NSString *, id> *)diagnostics;
+                 diagnostics:(nullable NSDictionary<NSString *, id> *)diagnostics
+                groupingHash:(nullable NSString *)groupingHash;
 
 // Private
 
 - (nullable BugsnagEvent *)eventWithErrorClass:(NSString *)errorClass
                                        message:(nullable NSString *)message
-                                   diagnostics:(nullable NSDictionary<NSString *, id> *)diagnostics;
+                                   diagnostics:(nullable NSDictionary<NSString *, id> *)diagnostics
+                                  groupingHash:(nullable NSString *)groupingHash;
 
 - (nullable NSURLRequest *)requestForEvent:(BugsnagEvent *)event error:(NSError * __autoreleasing *)errorPtr;
 
