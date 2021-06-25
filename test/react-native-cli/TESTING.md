@@ -101,6 +101,8 @@ When each new version of React Native is released, a new test fixture project "s
 workings of the app (that exercise the test scenarios) are then copied in dynamically by the build process.  There are
 several steps to follow to create the project shell:
 
+1. Add a new service to docker-compose.yml for the new fixture
+
 1. Create a new React Native project of the desired version.  E.g:
     ```
     npx react-native init rn0_64 --version 0.64
