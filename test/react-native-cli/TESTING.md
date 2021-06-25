@@ -12,11 +12,11 @@ The CLI tests target the command line interface by providing a set of responses 
 
 ##### Setting up
 
-1. Run through the initial setup
+1. Run through the initial setup in [TESTING.md](../../TESTING.md)
 1. Run `npm pack packages/react-native-cli/` to pack the react-native-cli package
 1. Copy the resulting package, `bugsnag-react-native-cli-{VERSION}.tgz` into the target fixture, e.g.:
     ```shell script
-    cp bugsnag-react-native-cli-*.tgz test/react-native-cli/features/fixtures/rn0_60/
+    cp bugsnag-react-native-cli-*.tgz test/react-native-cli/features/fixtures/rn0_64
     ```
 
 ##### Running
@@ -26,7 +26,7 @@ The CLI tests target the command line interface by providing a set of responses 
 1. Install maze-runner with `bundle install`
 1. Run the full set of cli tests targeting a specific react-native version (`rn0_61` for example):
   ```shell script
-  REACT_NATIVE_VERSION=rn0_61 bundle exec maze-runner features/cli-tests
+  REACT_NATIVE_VERSION=rn0_64 bundle exec maze-runner features/cli-tests
   ```
 
 #### Build tests
