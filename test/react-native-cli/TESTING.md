@@ -1,6 +1,6 @@
 ### React-native CLI testing
 
-The react-native CLI come in three parts:
+The react-native CLI tests come in three parts:
 
 - CLI tests, that don't require any remote connections or special setup
 - Testing an app build, which requires your local machine to be set up for building iOS and Android applications
@@ -93,4 +93,53 @@ particular, these commands need the `BrowserStackLocal` binary (available
                             --a11y-locator \
                             --bs-local=~/BrowserStackLocal \
                             features/run-app-tests
+    ```
+
+#### Creating a new test fixture
+
+When each new version of React Native is released, a new test fixture project "shell" should be created.  The inner
+workings of the app (that exercise the test scenarios) are then copied in dynamically by the build process.  There are
+several steps to follow to create the project shell:
+
+1. Create a new React Native project of the desired version.  E.g:
+    ```
+    npx react-native init rn0_64 --version 0.64
+    ```
+1. Remove the following files/folders, if they exist:
+Remove 
+- \_\_tests\_\_
+- .eslintrc.js
+
+1. Create a `.dockerignore` file:
+    ```
+    # Ignore lockfiles as they can influence test runs
+    package-lock.json
+    yarn.lock
+    ```
+
+1. Add the following to `.gitignore`:
+    ```
+    # Ignore lockfiles as they can influence test runs
+    package-lock.json
+    yarn.lock
+    ```
+
+1. Android (using existing test fixtures as a guide):
+
+    1.  In app/src/main/AndroidManifest.xml, add:
+        ```
+        android:usesCleartextTraffic="true"
+        ```
+    1.  Add CrashyModule.java and CrashyPackage.java from an existing test fixture, updating the package name
+
+    1.  In MainApplication.java, add:
+        ```
+        packages.add(new CrashyPackage());
+        ```
+
+1. Similarly, on iOS:
+    1. Add to `rn_0_xx/Info.plist`:
+    ```
+    <key>NSAllowsArbitraryLoads</key>
+    <true/>
     ```
