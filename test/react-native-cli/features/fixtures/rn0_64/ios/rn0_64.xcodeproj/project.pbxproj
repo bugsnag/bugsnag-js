@@ -13,6 +13,7 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		7F3CFAE3665031A121C45023 /* libPods-rn0_64.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E8F2B365990DF5F2A577786 /* libPods-rn0_64.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		AA42488E268935410037638B /* CrashyCrashy.m in Sources */ = {isa = PBXBuildFile; fileRef = AA42488D268935410037638B /* CrashyCrashy.m */; };
 		D1B1F9F8BF0AA43AD88CB1A1 /* libPods-rn0_64-rn0_64Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AD329FED69203D9BEDE5659B /* libPods-rn0_64-rn0_64Tests.a */; };
 /* End PBXBuildFile section */
 
@@ -41,6 +42,8 @@
 		24EDF4908D88A84B2DDF8B32 /* Pods-rn0_64-rn0_64Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-rn0_64-rn0_64Tests.release.xcconfig"; path = "Target Support Files/Pods-rn0_64-rn0_64Tests/Pods-rn0_64-rn0_64Tests.release.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = rn0_64/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		84361AA9B2EC3E2E17C1D001 /* Pods-rn0_64.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-rn0_64.debug.xcconfig"; path = "Target Support Files/Pods-rn0_64/Pods-rn0_64.debug.xcconfig"; sourceTree = "<group>"; };
+		AA42488C268935410037638B /* CrashyCrashy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CrashyCrashy.h; path = rn0_64/CrashyCrashy.h; sourceTree = "<group>"; };
+		AA42488D268935410037638B /* CrashyCrashy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CrashyCrashy.m; path = rn0_64/CrashyCrashy.m; sourceTree = "<group>"; };
 		AD329FED69203D9BEDE5659B /* libPods-rn0_64-rn0_64Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-rn0_64-rn0_64Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D8FC8928B33DF4F5F4EF73BA /* Pods-rn0_64.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-rn0_64.release.xcconfig"; path = "Target Support Files/Pods-rn0_64/Pods-rn0_64.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -86,6 +89,8 @@
 		13B07FAE1A68108700A75B9A /* rn0_64 */ = {
 			isa = PBXGroup;
 			children = (
+				AA42488C268935410037638B /* CrashyCrashy.h */,
+				AA42488D268935410037638B /* CrashyCrashy.m */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -145,7 +150,6 @@
 				014A9BBDB3B90987A064A56B /* Pods-rn0_64-rn0_64Tests.debug.xcconfig */,
 				24EDF4908D88A84B2DDF8B32 /* Pods-rn0_64-rn0_64Tests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -376,6 +380,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				AA42488E268935410037638B /* CrashyCrashy.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
