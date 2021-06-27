@@ -1,11 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
 import React from 'react';
 import Bugsnag from "@bugsnag/react-native";
 import {
@@ -14,15 +6,12 @@ import {
   ScrollView,
   View,
   Text,
-  StatusBar, Button, NativeModules
-} from 'react-native'
+  StatusBar,
+  Button, NativeModules
+} from 'react-native';
 
 import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
+  Colors
 } from 'react-native/Libraries/NewAppScreen';
 
 function jsNotify() {
@@ -39,62 +28,46 @@ function nativeNotify() {
   NativeModules.CrashyCrashy.handledError()
 }
 
-const Section = ({children, title}): Node => {
-  const isDarkMode = useColorScheme() === 'dark';
+const App: () => React$Node = () => {
   return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-};
-
-const App: () => Node = () => {
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <ScrollView
+    <>
+      <StatusBar barStyle="dark-content" />
+      <SafeAreaView>
+        <ScrollView
           contentInsetAdjustmentBehavior="automatic"
           style={styles.scrollView}>
-        {global.HermesInternal == null ? null : (
+          {global.HermesInternal == null ? null : (
             <View style={styles.engine}>
               <Text style={styles.footer}>Engine: Hermes</Text>
             </View>
-        )}
-        <View style={styles.body}>
-          <Text>React Native CLI end-to-end test app</Text>
-          <Button style={styles.clickyButton}
-                  accessibilityLabel='js_notify'
-                  title='JS Notify'
-                  onPress={jsNotify}/>
-          <Button style={styles.clickyButton}
-                  accessibilityLabel='native_notify'
-                  title='Native Notify'
-                  onPress={nativeNotify}/>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+          )}
+          <View style={styles.body}>
+            <Text>React Native CLI end-to-end test app</Text>
+            <Button style={styles.clickyButton}
+                    accessibilityLabel='js_notify'
+                    title='JS Notify'
+                    onPress={jsNotify}/>
+            <Button style={styles.clickyButton}
+                    accessibilityLabel='native_notify'
+                    title='Native Notify'
+                    onPress={nativeNotify}/>
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
   scrollView: {
     backgroundColor: Colors.lighter,
+  },
+  engine: {
+    position: 'absolute',
+    right: 0,
+  },
+  body: {
+    backgroundColor: Colors.white,
   },
   sectionContainer: {
     marginTop: 32,
@@ -103,15 +76,33 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 24,
     fontWeight: '600',
+    color: Colors.black,
   },
   sectionDescription: {
     marginTop: 8,
     fontSize: 18,
     fontWeight: '400',
+    color: Colors.dark,
   },
   highlight: {
     fontWeight: '700',
   },
+  footer: {
+    color: Colors.dark,
+    fontSize: 12,
+    fontWeight: '600',
+    padding: 4,
+    paddingRight: 12,
+    textAlign: 'right',
+  },
+  clickyButton: {
+    backgroundColor: '#acbcef',
+    borderWidth: 0.5,
+    borderColor: '#000',
+    borderRadius: 4,
+    margin: 5,
+    padding: 5
+  }
 });
 
 export default App;
