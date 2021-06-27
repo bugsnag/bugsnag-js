@@ -126,6 +126,11 @@ Remove
     yarn.lock
     ```
 
+1. Copy the following files from an existing fixture:
+    - `App.js` (overwriting)
+    - `ios/rn0_xx/CrashyCrashy.h`
+    - `ios/rn0_xx/CrashyCrashy.m`
+
 1. Android (using existing test fixtures as a guide):
 
     1.  In app/src/main/AndroidManifest.xml, add:
@@ -138,6 +143,11 @@ Remove
         ```
         packages.add(new CrashyPackage());
         ```
+
+1. Disable Flipper by removing the following from the `Podfile` and running `pod install`
+    ```
+    use_flipper!()
+    ```
 
 1. Similarly, on iOS:
     1. Add to `rn_0_xx/Info.plist`:
