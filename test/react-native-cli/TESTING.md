@@ -144,14 +144,17 @@ Remove
         packages.add(new CrashyPackage());
         ```
 
-1. Disable Flipper by removing the following from the `Podfile` and running `pod install`
+1. Disable Flipper by removing the following from the `Podfile` and running `pod install`.
+   Flipper doesn't benefit the test fixture and removing it significantly speeds up the build.
     ```
     use_flipper!()
     ```
 
-1. Similarly, on iOS:
+1. For iOS:
     1. Add to `rn_0_xx/Info.plist`:
     ```
     <key>NSAllowsArbitraryLoads</key>
     <true/>
     ```
+    1. Open the workspace and add `CrashyCrashy.h` and `CrashyCrashy.m` to the project.
+    1. Set the Bugsnag development team on the project.
