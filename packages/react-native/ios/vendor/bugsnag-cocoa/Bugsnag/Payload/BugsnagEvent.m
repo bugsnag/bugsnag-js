@@ -129,12 +129,7 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
     return nil;
 }
 
-// MARK: - BugsnagEvent implementation
-
-@interface NSDictionary (BSGKSMerge)
-- (NSDictionary *)BSG_mergedInto:(NSDictionary *)dest;
-@end
-
+// MARK: -
 
 @implementation BugsnagEvent
 

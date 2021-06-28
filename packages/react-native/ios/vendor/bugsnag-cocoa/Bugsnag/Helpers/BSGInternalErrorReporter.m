@@ -72,9 +72,10 @@ static BSGInternalErrorReporter *sharedInstance_;
 
 - (void)reportErrorWithClass:(NSString *)errorClass
                      message:(nullable NSString *)message
-                 diagnostics:(nullable NSDictionary<NSString *, id> *)diagnostics {
+                 diagnostics:(nullable NSDictionary<NSString *, id> *)diagnostics
+                groupingHash:(nullable NSString *)groupingHash {
     @try {
-        BugsnagEvent *event = [self eventWithErrorClass:errorClass message:message diagnostics:diagnostics];
+        BugsnagEvent *event = [self eventWithErrorClass:errorClass message:message diagnostics:diagnostics groupingHash:groupingHash];
         if (event) {
             [self sendEvent:event];
         }
@@ -87,7 +88,8 @@ static BSGInternalErrorReporter *sharedInstance_;
 
 - (nullable BugsnagEvent *)eventWithErrorClass:(NSString *)errorClass
                                        message:(nullable NSString *)message
-                                   diagnostics:(nullable NSDictionary<NSString *, id> *)diagnostics {
+                                   diagnostics:(nullable NSDictionary<NSString *, id> *)diagnostics
+                                  groupingHash:(nullable NSString *)groupingHash {
     id<BSGInternalErrorReporterDataSource> dataSource = self.dataSource;
     if (!dataSource) {
         return nil;
@@ -120,6 +122,8 @@ static BSGInternalErrorReporter *sharedInstance_;
                                errors:@[error]
                               threads:@[]
                               session:nil];
+    
+    event.groupingHash = groupingHash;
     
     return event;
 }

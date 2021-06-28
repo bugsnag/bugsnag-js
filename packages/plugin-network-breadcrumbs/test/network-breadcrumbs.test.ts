@@ -446,4 +446,25 @@ describe('plugin: network breadcrumbs', () => {
 
     expect(client._breadcrumbs.length).toBe(1)
   })
+
+  it('should strip query string data before checking a url is ignored', () => {
+    const window = { XMLHttpRequest } as unknown as Window & typeof globalThis
+
+    p = plugin(['/ignoreme'], window)
+    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', plugins: [p] })
+
+    const request0 = new XMLHttpRequest()
+    request0.open('GET', '/')
+    request0.send(false, 200)
+
+    const request1 = new XMLHttpRequest()
+    request1.open('GET', '/ignoreme?123')
+    request1.send(false, 200)
+
+    const request2 = new XMLHttpRequest()
+    request2.open('GET', '/ignoremeno')
+    request2.send(false, 200)
+
+    expect(client._breadcrumbs.length).toBe(2)
+  })
 })

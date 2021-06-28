@@ -20,6 +20,22 @@
 #import "BugsnagLogger.h"
 
 
+static void ReportInternalError(NSString *errorClass, NSString *message, NSDictionary *diagnostics) {
+    //
+    // NSJSONSerialization deserialization errors unhelpfully all have the same error domain & code - NSCocoaErrorDomain 3840.
+    // Therefore it's more useful to group based on the error description - but some of the descriptions contain character
+    // offsets which would lead to some types of errors not being grouped at all; e.g.
+    // - "Invalid value around character 229194."
+    // - "No string key for value in object around character 94208."
+    // - "Unable to convert data to string around character 158259."
+    // - "Unterminated string around character 22568."
+    //
+    NSString *groupingMessage = [message componentsSeparatedByString:@" around character "].firstObject;
+    NSString *groupingHash = [NSString stringWithFormat:@"BSGEventUploadKSCrashReportOperation.m: %@: %@", errorClass, groupingMessage];
+    [BSGInternalErrorReporter.sharedInstance reportErrorWithClass:errorClass message:message diagnostics:diagnostics groupingHash:groupingHash];
+}
+
+
 @implementation BSGEventUploadKSCrashReportOperation
 
 - (BugsnagEvent *)loadEventAndReturnError:(NSError * __autoreleasing *)errorPtr {
@@ -27,9 +43,7 @@
     
     NSData *data = [NSData dataWithContentsOfFile:self.file options:0 error:&error];
     if (!data) {
-        [BSGInternalErrorReporter.sharedInstance reportErrorWithClass:@"File reading error"
-                                                              message:BSGErrorDescription(error)
-                                                          diagnostics:error.userInfo];
+        ReportInternalError(@"File reading error", BSGErrorDescription(error), error.userInfo);
         if (errorPtr) {
             *errorPtr = error;
         }
@@ -40,9 +54,7 @@
     if (!json) {
         NSMutableDictionary *diagnostics = [NSMutableDictionary dictionary];
         diagnostics[@"data"] = [data base64EncodedStringWithOptions:0];
-        [BSGInternalErrorReporter.sharedInstance reportErrorWithClass:@"JSON parsing error"
-                                                              message:BSGErrorDescription(error)
-                                                          diagnostics:diagnostics];
+        ReportInternalError(@"JSON parsing error", BSGErrorDescription(error), diagnostics);
         if (errorPtr) {
             *errorPtr = error;
         }
@@ -51,9 +63,7 @@
     
     NSDictionary *crashReport = [self fixupCrashReport:json];
     if (!crashReport) {
-        [BSGInternalErrorReporter.sharedInstance reportErrorWithClass:@"Unexpected JSON payload"
-                                                              message:@"-fixupCrashReport: returned nil"
-                                                          diagnostics:@{@"json": json}];
+        ReportInternalError(@"Unexpected JSON payload", @"-fixupCrashReport: returned nil", @{@"json": json});
         return nil;
     }
     

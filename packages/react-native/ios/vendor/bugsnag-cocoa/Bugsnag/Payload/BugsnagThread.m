@@ -8,16 +8,15 @@
 
 #import "BugsnagThread+Private.h"
 
+#import "BSG_KSBacktrace_Private.h"
 #import "BSG_KSCrashReportFields.h"
+#import "BSG_KSCrashSentry_Private.h"
+#import "BSG_KSMach.h"
 #import "BugsnagCollections.h"
+#import "BugsnagKeys.h"
 #import "BugsnagStackframe+Private.h"
 #import "BugsnagStacktrace.h"
-#import "BugsnagKeys.h"
-#import "BugsnagThread+Recording.h"
 #import "BugsnagThread+Private.h"
-#include "BSG_KSBacktrace_Private.h"
-#include "BSG_KSCrashSentry_Private.h"
-#include "BSG_KSMach.h"
 
 #include <pthread.h>
 
@@ -195,7 +194,7 @@ NSString *BSGSerializeThreadType(BSGThreadType type) {
     return thread;
 }
 
-#pragma mark BugsnagThread+Recording
+// MARK: - Recording
 
 + (NSArray<BugsnagThread *> *)allThreads:(BOOL)allThreads callStackReturnAddresses:(NSArray<NSNumber *> *)callStackReturnAddresses {
     struct backtrace_t backtrace;

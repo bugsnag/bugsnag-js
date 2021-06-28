@@ -165,7 +165,7 @@ bool bsg_mach_headers_populate_info(const struct mach_header *header, intptr_t s
 }
 
 void bsg_mach_headers_add_image(const struct mach_header *header, intptr_t slide) {
-    BSG_Mach_Header_Info *newImage = malloc(sizeof(BSG_Mach_Header_Info));
+    BSG_Mach_Header_Info *newImage = calloc(1, sizeof(BSG_Mach_Header_Info));
     if (newImage != NULL) {
         if (bsg_mach_headers_populate_info(header, slide, newImage)) {
             dispatch_sync(bsg_g_serial_queue, ^{
