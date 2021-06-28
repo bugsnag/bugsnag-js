@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/expo",
-  "version": "7.10.4-alpha.1",
+  "version": "7.10.4-alpha.2",
   "main": "src/notifier.js",
   "types": "types/bugsnag.d.ts",
   "description": "Bugsnag error reporter for Expo applications",
@@ -38,7 +38,7 @@
     "@bugsnag/plugin-console-breadcrumbs": "^7.10.0",
     "@bugsnag/plugin-expo-app": "^7.10.0",
     "@bugsnag/plugin-expo-device": "^7.10.0",
-    "@bugsnag/plugin-network-breadcrumbs": "^7.10.4-alpha.1",
+    "@bugsnag/plugin-network-breadcrumbs": "^7.10.4-alpha.2",
     "@bugsnag/plugin-react": "^7.10.0",
     "@bugsnag/plugin-react-native-app-state-breadcrumbs": "^7.10.0",
     "@bugsnag/plugin-react-native-connectivity-breadcrumbs": "^7.10.0",
