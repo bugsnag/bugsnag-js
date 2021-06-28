@@ -108,9 +108,8 @@ several steps to follow to create the project shell:
     npx react-native init rn0_64 --version 0.64
     ```
 1. Remove the following files/folders, if they exist:
-Remove 
-- \_\_tests\_\_
-- .eslintrc.js
+    - \_\_tests\_\_
+    - .eslintrc.js
 
 1. Create a `.dockerignore` file:
     ```
@@ -126,14 +125,11 @@ Remove
     yarn.lock
     ```
 
-1. Copy the following files from an existing fixture:
-    - `App.js` (overwriting)
-    - `ios/rn0_xx/CrashyCrashy.h`
-    - `ios/rn0_xx/CrashyCrashy.m`
+1. Copy `App.js` from an existing fixture (overwriting that created by React Native)
 
-1. Android (using existing test fixtures as a guide):
+1. For Android:
 
-    1.  In app/src/main/AndroidManifest.xml, add:
+    1.  In the `application` tag in app/src/main/AndroidManifest.xml, add:
         ```
         android:usesCleartextTraffic="true"
         ```
@@ -144,14 +140,18 @@ Remove
         packages.add(new CrashyPackage());
         ```
 
-1. Disable Flipper by removing the following from the `Podfile` and running `pod install`.
-   Flipper doesn't benefit the test fixture and removing it significantly speeds up the build.
-    ```
-    use_flipper!()
-    ```
-
 1. For iOS:
-    1. Add to `rn_0_xx/Info.plist`:
+    1. Disable Flipper by removing the following from the `Podfile` and run `pod install` to regenerate `Podfile.lock`.
+       Flipper doesn't benefit the test fixture and removing it significantly speeds up the build.
+        ```
+        use_flipper!()
+        ```
+
+    1. Copy the following files from an existing fixture:
+        - `ios/rn0_xx/CrashyCrashy.h`
+        - `ios/rn0_xx/CrashyCrashy.m`
+
+    1. Add to `rn_0_xx/Info.plist` (to the same `<dict>` as `NSExceptionDomains`):
     ```
     <key>NSAllowsArbitraryLoads</key>
     <true/>
