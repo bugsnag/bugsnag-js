@@ -13,6 +13,7 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		A552859D06DFFCE4DA8A4242 /* libPods-rn0_64_hermes.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BDFA0FE29BE98B7E42C75E42 /* libPods-rn0_64_hermes.a */; };
+		AA066F56268A322F00FFD70A /* CrashyCrashy.m in Sources */ = {isa = PBXBuildFile; fileRef = AA066F55268A322F00FFD70A /* CrashyCrashy.m */; };
 		DD5CA871CABCE94834C801EA /* libPods-rn0_64_hermes-rn0_64_hermesTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 35B677F0A39C12AC9086D704 /* libPods-rn0_64_hermes-rn0_64_hermesTests.a */; };
 /* End PBXBuildFile section */
 
@@ -42,6 +43,8 @@
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = rn0_64_hermes/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8A882CC8A78A5F231B3C3028 /* Pods-rn0_64_hermes.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-rn0_64_hermes.release.xcconfig"; path = "Target Support Files/Pods-rn0_64_hermes/Pods-rn0_64_hermes.release.xcconfig"; sourceTree = "<group>"; };
 		9F93211D47A75EE8CB92F029 /* Pods-rn0_64_hermes-rn0_64_hermesTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-rn0_64_hermes-rn0_64_hermesTests.release.xcconfig"; path = "Target Support Files/Pods-rn0_64_hermes-rn0_64_hermesTests/Pods-rn0_64_hermes-rn0_64_hermesTests.release.xcconfig"; sourceTree = "<group>"; };
+		AA066F54268A322F00FFD70A /* CrashyCrashy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CrashyCrashy.h; path = rn0_64_hermes/CrashyCrashy.h; sourceTree = "<group>"; };
+		AA066F55268A322F00FFD70A /* CrashyCrashy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CrashyCrashy.m; path = rn0_64_hermes/CrashyCrashy.m; sourceTree = "<group>"; };
 		BDFA0FE29BE98B7E42C75E42 /* libPods-rn0_64_hermes.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-rn0_64_hermes.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -86,6 +89,8 @@
 		13B07FAE1A68108700A75B9A /* rn0_64_hermes */ = {
 			isa = PBXGroup;
 			children = (
+				AA066F54268A322F00FFD70A /* CrashyCrashy.h */,
+				AA066F55268A322F00FFD70A /* CrashyCrashy.m */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -145,7 +150,6 @@
 				75553BFD8EFDDDA0F9C3A0EF /* Pods-rn0_64_hermes-rn0_64_hermesTests.debug.xcconfig */,
 				9F93211D47A75EE8CB92F029 /* Pods-rn0_64_hermes-rn0_64_hermesTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -160,7 +164,6 @@
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				9C8E3B26C75E6ED939496BB9 /* [CP] Embed Pods Frameworks */,
 				286497E6B5F0C8B2D397DCCB /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
@@ -183,7 +186,6 @@
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				384266DC77580853D42D6C07 /* [CP] Embed Pods Frameworks */,
 				2DF1B3D61968EF653F7171BB /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
@@ -321,23 +323,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		384266DC77580853D42D6C07 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-rn0_64_hermes/Pods-rn0_64_hermes-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-rn0_64_hermes/Pods-rn0_64_hermes-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-rn0_64_hermes/Pods-rn0_64_hermes-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		420D9D5E1258EFF6FDA81F66 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -358,23 +343,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		9C8E3B26C75E6ED939496BB9 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-rn0_64_hermes-rn0_64_hermesTests/Pods-rn0_64_hermes-rn0_64_hermesTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-rn0_64_hermes-rn0_64_hermesTests/Pods-rn0_64_hermes-rn0_64_hermesTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-rn0_64_hermes-rn0_64_hermesTests/Pods-rn0_64_hermes-rn0_64_hermesTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
@@ -412,6 +380,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				AA066F56268A322F00FFD70A /* CrashyCrashy.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -485,6 +454,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 372ZUL2ZB7;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = rn0_64_hermes/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -511,6 +481,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 372ZUL2ZB7;
 				INFOPLIST_FILE = rn0_64_hermes/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
