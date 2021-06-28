@@ -212,6 +212,10 @@ services:
     build:
       context: .
       dockerfile: dockerfiles/Dockerfile.release
+    environment:
+      GITHUB_USER:
+      GITHUB_ACCESS_TOKEN:
+      RELEASE_BRANCH:
     volumes:
       - ~/.gitconfig:/home/releaser/.gitconfig
       - ~/.npmrc:/home/releaser/.npmrc

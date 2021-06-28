@@ -9,15 +9,6 @@ WORKDIR /app
 RUN chown -R releaser:admins /app
 USER releaser
 
-ARG GITHUB_ACCESS_TOKEN
-RUN git clone https://bengourley:$GITHUB_ACCESS_TOKEN@github.com/bugsnag/bugsnag-js.git
+COPY ./scripts/release.sh ./
 
-WORKDIR /app/bugsnag-js
-ARG RELEASE_BRANCH
-RUN git checkout $RELEASE_BRANCH
-
-# "ci" rather than "install" ensures the process doesn't make the work tree dirty by modifying lockfiles
-RUN npm ci
-RUN npm run bootstrap -- --ci
-
-CMD npx lerna publish prerelease --dist-tag next
+RUN ./release.sh
