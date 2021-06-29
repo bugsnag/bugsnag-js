@@ -40,8 +40,8 @@ android {
 }
 
 dependencies {
-    api "com.bugsnag:bugsnag-android:5.9.4"
-    api "com.bugsnag:bugsnag-plugin-react-native:5.9.4"
+    api "com.bugsnag:bugsnag-android:5.9.5"
+    api "com.bugsnag:bugsnag-plugin-react-native:5.9.5"
     implementation 'com.facebook.react:react-native:+'
 
     testImplementation "junit:junit:4.12"
