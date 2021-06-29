@@ -76,7 +76,7 @@ Once the release PR has been approved:
 
 - merge the PR into master
 
-You are now ready to make the release. Releases are done using a Docker and Docker compose. You do not need to have the release branch checked out on your local machine to make a release – the container pulls a fresh clone of the repo down from GitHub. Prerequesites:
+You are now ready to make the release. Releases are done using Docker and Docker compose. You do not need to have the release branch checked out on your local machine to make a release – the container pulls a fresh clone of the repo down from GitHub. Prerequisites:
 
 - You will need to clone the repository and have Docker running on your local machine.
 - Ensure you are logged in to npm and that you have access to publish to the following on npm
@@ -143,8 +143,8 @@ GITHUB_ACCESS_TOKEN=<generate a personal access token> \
 AWS_ACCESS_KEY_ID=xxx \
 AWS_SECRET_ACCESS_KEY=xxx \
 RELEASE_BRANCH=master \
-VERSION=patch \
-  docker-compose run preminor
+VERSION=preminor \
+  docker-compose run
 ```
 
 Prereleases will automatically be published to npm with the dist tag `next` and browser bundles are automatically uploaded to the CDN.
