@@ -14,6 +14,10 @@ export default class User extends Component {
     })
   }
 
+  userDefault = () => {
+    bugsnagClient.notify(new Error('UserDefaultError'))
+  }
+
   render() {
     return (
       <View>
@@ -24,6 +28,10 @@ export default class User extends Component {
         <Button accessibilityLabel="userCallbackButton"
           title="userCallback"
           onPress={this.userCallback}
+        />
+        <Button accessibilityLabel="userDefaultButton"
+          title="userDefault"
+          onPress={this.userDefault}
         />
       </View>
     )

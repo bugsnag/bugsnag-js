@@ -21,3 +21,12 @@ Scenario: User data can be set via a callback
   And the exception "message" equals "UserCallbackError"
   And the event "user.name" equals "userCallbackName"
   And the error Bugsnag-Integrity header is valid
+
+Scenario: User id defaults to device id
+  Given the element "userDefaultButton" is present
+  When I click the element "userDefaultButton"
+  Then I wait to receive an error
+  And the exception "errorClass" equals "Error"
+  And the exception "message" equals "UserDefaultError"
+  And the event "user.id" is not null
+  And the error Bugsnag-Integrity header is valid
