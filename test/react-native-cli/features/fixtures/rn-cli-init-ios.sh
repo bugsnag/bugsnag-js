@@ -31,9 +31,8 @@ send -- http://localhost:9339/builds\r
 expect "If you want the latest version of @bugsnag/react-native hit enter, otherwise type the version you want"
 send -- $notifierVersion\r
 
-# TODO: Use latest once BAGP is released for real
-expect "If you want the latest version of the Bugsnag Android Gradle plugin hit enter, otherwise type the version you want"
-send -- "5.5.0-alpha01\r"
+expect "Enter version of the Bugsnag Android Gradle plugin you want to use"
+send -- \r
 
 expect "What is your Bugsnag project API key?"
 send -- "1234567890ABCDEF1234567890ABCDEF\r"
