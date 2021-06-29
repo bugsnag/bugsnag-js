@@ -13,3 +13,10 @@ end
 Before('@navigation') do |scenario|
   skip_this_scenario("Skipping scenario") if ENV['SKIP_NAVIGATION_SCENARIOS'] == 'true'
 end
+
+Before do |scenario|
+  driver = Maze.driver
+  driver.click_element_if_present("android:id/button1")
+  driver.click_element_if_present("android:id/aerr_close")
+  driver.click_element_if_present("android:id/aerr_restart")
+end

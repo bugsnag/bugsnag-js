@@ -1,5 +1,6 @@
 When("I run {string}") do |event_type|
   steps %Q{
+    When I instantly clear any error dialogue
     Given the element "scenario_name" is present within 60 seconds
     When I clear and send the keys "#{event_type}" to the element "scenario_name"
     And I click the element "run_scenario"
@@ -29,6 +30,16 @@ When("I clear any error dialogue") do
   driver.click_element("android:id/button1") if driver.wait_for_element("android:id/button1", 3)
   driver.click_element("android:id/aerr_close") if driver.wait_for_element("android:id/aerr_close", 3)
   driver.click_element("android:id/aerr_restart") if driver.wait_for_element("android:id/aerr_restart", 3)
+end
+
+When("I instantly clear any error dialogue") do
+  # Error dialogue is auto-cleared on IOS
+  next unless Maze.driver.capabilities["os"] == 'android'
+
+  driver = Maze.driver
+  driver.click_element_if_present("android:id/button1")
+  driver.click_element_if_present("android:id/aerr_close")
+  driver.click_element_if_present("android:id/aerr_restart")
 end
 
 When("I configure Bugsnag for {string}") do |event_type|
