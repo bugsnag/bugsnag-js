@@ -45,6 +45,7 @@ module.exports = {
     client.addOnSession(session => {
       session.device = { ...session.device, ...device }
       addDefaultAppType(session)
+      addDefaultUserId(session)
     })
 
     client.addOnError(event => {
@@ -54,6 +55,7 @@ module.exports = {
         appOwnership: Constants.appOwnership
       })
       addDefaultAppType(event)
+      addDefaultUserId(event)
     }, true)
   }
 }
@@ -66,5 +68,13 @@ function addDefaultAppType (eventOrSession) {
     if (!eventOrSession.app.type) {
       eventOrSession.app.type = eventOrSession.device.osName
     }
+  }
+}
+
+function addDefaultUserId (eventOrSession) {
+  // device id is also used to populate the user id field, if it's not already set
+  const user = eventOrSession.getUser()
+  if (!user || !user.id) {
+    eventOrSession.setUser(eventOrSession.device.id)
   }
 }
