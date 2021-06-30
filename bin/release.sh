@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+set -euxo pipefail
 
 error_missing_field () {
   echo "Missing required env var: $1"
@@ -26,7 +26,7 @@ npm ci
 npm run bootstrap -- --ci
 
 # check if the browser package changed – if it didn't we don't need to upload to the CDN
-BROWSER_PACKAGE_CHANGED=`npx lerna changed --parseable | grep -c packages/js$`
+BROWSER_PACKAGE_CHANGED=$(npx lerna changed --parseable | { grep -c packages/js$ || test $? = 1; })
 
 case $VERSION in
   "prerelease" | "prepatch" | "preminor" | "premajor")
