@@ -28,7 +28,19 @@
 
 #import <Bugsnag/BugsnagMetadataStore.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /// :nodoc:
 @interface BugsnagMetadata : NSObject <BugsnagMetadataStore>
-- (instancetype _Nonnull)initWithDictionary:(NSDictionary *_Nonnull)dict;
+
+- (instancetype)initWithDictionary:(NSDictionary *)dict;
+
+/// Configures the metadata object to serialize itself to the provided buffer and file immediately, and upon each change.
+- (void)setStorageBuffer:(char *_Nullable *_Nullable)buffer file:(nullable NSString *)file;
+
+/// Exposed to facilitate unit testing.
+- (void)writeData:(NSData *)data toBuffer:(char *_Nullable *_Nonnull)buffer;
+
 @end
+
+NS_ASSUME_NONNULL_END

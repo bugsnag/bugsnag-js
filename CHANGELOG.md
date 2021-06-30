@@ -6,6 +6,13 @@
 
 - (plugin-console-breadcrumbs): Ensure console breadcrumbs do not run in Expo's dev environment and obscure log line numbers [#1453](https://github.com/bugsnag/bugsnag-js/pull/1453)
 
+### Changed
+
+- (react-native): Update bugsnag-cocoa to v6.10.0
+  - Fix an issue that could cause C++ exceptions with very long descriptions to not be reported. [bugsnag-cocoa#1137](https://github.com/bugsnag/bugsnag-cocoa/pull/1137)
+  - Improve performance of adding metadata by using async file I/O. [bugsnag-cocoa#1133](https://github.com/bugsnag/bugsnag-cocoa/pull/1133)
+  - Improve performance of leaving breadcrumbs by using async file I/O. [bugsnag-cocoa#1124](https://github.com/bugsnag/bugsnag-cocoa/pull/1124)
+
 ## 7.10.4 (2021-06-28)
 
 ### Fixed

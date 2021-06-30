@@ -11,6 +11,7 @@
 #import "BSGEventUploadKSCrashReportOperation.h"
 #import "BSGEventUploadObjectOperation.h"
 #import "BSGFileLocations.h"
+#import "BSGGlobals.h"
 #import "BSGJSONSerialization.h"
 #import "BugsnagConfiguration.h"
 #import "BugsnagEvent+Private.h"
@@ -197,13 +198,15 @@
 // MARK: - BSGEventUploadOperationDelegate
 
 - (void)storeEventPayload:(NSDictionary *)eventPayload {
-    NSString *file = [[self.eventsDirectory stringByAppendingPathComponent:[NSUUID UUID].UUIDString] stringByAppendingPathExtension:@"json"];
-    NSError *error = nil;
-    if (![BSGJSONSerialization writeJSONObject:eventPayload toFile:file options:0 error:&error]) {
-        bsg_log_err(@"Error encountered while saving event payload for retry: %@", error);
-        return;
-    }
-    [self deleteExcessFiles:[self sortedEventFiles]];
+    dispatch_sync(BSGGlobalsFileSystemQueue(), ^{
+        NSString *file = [[self.eventsDirectory stringByAppendingPathComponent:[NSUUID UUID].UUIDString] stringByAppendingPathExtension:@"json"];
+        NSError *error = nil;
+        if (![BSGJSONSerialization writeJSONObject:eventPayload toFile:file options:0 error:&error]) {
+            bsg_log_err(@"Error encountered while saving event payload for retry: %@", error);
+            return;
+        }
+        [self deleteExcessFiles:[self sortedEventFiles]];
+    });
 }
 
 @end

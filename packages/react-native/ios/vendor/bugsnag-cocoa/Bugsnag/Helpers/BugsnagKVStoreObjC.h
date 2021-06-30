@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (bool)booleanForKey:(NSString*)key defaultValue:(bool)defaultValue;
 
-- (NSNumber*)NSBooleanForKey:(NSString*)key defaultValue:(bool)defaultValue;
+- (nullable NSNumber*)NSBooleanForKey:(NSString*)key defaultValue:(nullable NSNumber*)defaultValue;
 
 - (void)setString:(NSString*)value forKey:(NSString*)key;
 

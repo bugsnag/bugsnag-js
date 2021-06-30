@@ -63,8 +63,13 @@ static void bsgkv_init() {
     return value;
 }
 
-- (NSNumber*)NSBooleanForKey:(NSString*)key defaultValue:(bool)defaultValue {
-    return [NSNumber numberWithBool:[self booleanForKey:key defaultValue:defaultValue]];
+- (nullable NSNumber*)NSBooleanForKey:(NSString*)key defaultValue:(nullable NSNumber*)defaultValue {
+    int err = 0;
+    bool boolValue = bsgkv_getBoolean([key UTF8String], &err);
+    if (err != 0) {
+        return defaultValue;
+    }
+    return [NSNumber numberWithBool:boolValue];
 }
 
 - (void)setString:(NSString*)value forKey:(NSString*)key {
