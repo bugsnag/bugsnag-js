@@ -6,6 +6,10 @@
 
 - (plugin-console-breadcrumbs): Ensure console breadcrumbs do not run in Expo's dev environment and obscure log line numbers [#1453](https://github.com/bugsnag/bugsnag-js/pull/1453)
 
+### Added
+
+- (expo): User ID now defaults to `device.id` if no user is set [#1454](https://github.com/bugsnag/bugsnag-js/pull/1454)
+
 ## 7.10.4 (2021-06-28)
 
 ### Fixed
