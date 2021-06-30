@@ -6,6 +6,7 @@ import Client, {
 } from '@bugsnag/core/client'
 import { Device, Session } from '@bugsnag/core'
 import EventWithInternals from '@bugsnag/core/event'
+import { schema } from '@bugsnag/core/config'
 
 declare class SessionWithDevice extends Session { public device: Device }
 
@@ -456,6 +457,97 @@ describe('plugin: device', () => {
 
       expect(sessions).toHaveLength(1)
       expect(sessions[0].device.id).toBe(events[0].device.id)
+    })
+
+    it('should not set device.id as user.id when collectUserIp=true', () => {
+      const client = new Client(
+        { apiKey: 'API_KEY_YEAH' },
+        {
+          ...schema,
+          collectUserIp: {
+            defaultValue: () => true,
+            validate: () => true,
+            message: ''
+          }
+        },
+        [plugin(navigator)]
+      )
+      const events: EventWithInternals[] = []
+      const sessions: SessionWithDevice[] = []
+
+      expect(client._cbs.e).toHaveLength(1)
+
+      mockDelivery(client, events, sessions)
+      client.notify(new Error('noooo'))
+
+      expect(events.length).toEqual(1)
+      expect(events[0]._user.id).toBe(undefined)
+
+      client.startSession()
+
+      expect(sessions).toHaveLength(1)
+      expect(sessions[0].getUser().id).toBe(undefined)
+    })
+
+    it('should set device.id as user.id when collectUserIp=false', () => {
+      const client = new Client(
+        { apiKey: 'API_KEY_YEAH', collectUserIp: false },
+        {
+          ...schema,
+          collectUserIp: {
+            defaultValue: () => true,
+            validate: () => true,
+            message: ''
+          }
+        },
+        [plugin(navigator)]
+      )
+      const events: EventWithInternals[] = []
+      const sessions: SessionWithDevice[] = []
+
+      expect(client._cbs.e).toHaveLength(1)
+
+      mockDelivery(client, events, sessions)
+      client.notify(new Error('noooo'))
+
+      expect(events.length).toEqual(1)
+      expect(events[0]._user.id).toBe(events[0].device.id)
+
+      client.startSession()
+
+      expect(sessions).toHaveLength(1)
+      expect(sessions[0].getUser().id).toBe(events[0].device.id)
+    })
+
+    it('should not replace an existing user.id with device.id', () => {
+      const client = new Client(
+        { apiKey: 'API_KEY_YEAH', collectUserIp: false },
+        {
+          ...schema,
+          collectUserIp: {
+            defaultValue: () => true,
+            validate: () => true,
+            message: ''
+          }
+        },
+        [plugin(navigator)]
+      )
+      const events: EventWithInternals[] = []
+      const sessions: SessionWithDevice[] = []
+
+      expect(client._cbs.e).toHaveLength(1)
+
+      mockDelivery(client, events, sessions)
+      client.setUser('123', 'user@ema.il', 'User Email')
+      client.notify(new Error('noooo'))
+
+      expect(events.length).toEqual(1)
+      expect(events[0]._user.id).toBe('123')
+
+      client.startSession()
+
+      expect(sessions).toHaveLength(1)
+      expect(sessions[0].getUser().id).toBe('123')
     })
   })
 })

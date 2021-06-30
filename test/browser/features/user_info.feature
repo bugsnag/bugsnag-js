@@ -24,3 +24,15 @@ Scenario: not setting user
   Then I wait to receive an error
   And the error is a valid browser payload for the error reporting API
   And the event "user.id" is null
+
+Scenario: defaulting to device.id
+  When I navigate to the test URL "/user_info/script/f.html"
+  Then I wait to receive an error
+  And the error is a valid browser payload for the error reporting API
+  And the event "user.id" is not null
+
+Scenario: default device.id does not override user.id
+  When I navigate to the test URL "/user_info/script/g.html"
+  Then I wait to receive an error
+  And the error is a valid browser payload for the error reporting API
+  And the event "user.id" equals "123"
