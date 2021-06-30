@@ -34,10 +34,10 @@ case $VERSION in
     ;;
 
   *)
-    npx lerna publish $VERSION
+    npx lerna publish "$VERSION"
     ;;
 esac
 
-if [ $BROWSER_PACKAGE_CHANGED -eq 1 ]; then
+if [ "$BROWSER_PACKAGE_CHANGED" -eq 1 ]; then
   npm run cdn-upload
 fi
