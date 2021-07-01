@@ -9,6 +9,7 @@
 ### Added
 
 - (expo): User ID now defaults to `device.id` if no user is set [#1454](https://github.com/bugsnag/bugsnag-js/pull/1454)
+- (browser): User ID now defaults to `device.id` if no user is set (when `collectUserIp=false`) [#1456](https://github.com/bugsnag/bugsnag-js/pull/1456)
 
 ### Changed
 
