@@ -480,7 +480,7 @@ describe('plugin: device', () => {
       mockDelivery(client, events, sessions)
       client.notify(new Error('noooo'))
 
-      expect(events.length).toEqual(1)
+      expect(events).toHaveLength(1)
       expect(events[0]._user.id).toBe(undefined)
 
       client.startSession()
@@ -510,12 +510,14 @@ describe('plugin: device', () => {
       mockDelivery(client, events, sessions)
       client.notify(new Error('noooo'))
 
-      expect(events.length).toEqual(1)
+      expect(events).toHaveLength(1)
+      expect(events[0]._user.id).toBeTruthy()
       expect(events[0]._user.id).toBe(events[0].device.id)
 
       client.startSession()
 
       expect(sessions).toHaveLength(1)
+      expect(sessions[0].getUser().id).toBeTruthy()
       expect(sessions[0].getUser().id).toBe(events[0].device.id)
     })
 
@@ -541,7 +543,7 @@ describe('plugin: device', () => {
       client.setUser('123', 'user@ema.il', 'User Email')
       client.notify(new Error('noooo'))
 
-      expect(events.length).toEqual(1)
+      expect(events).toHaveLength(1)
       expect(events[0]._user.id).toBe('123')
 
       client.startSession()
