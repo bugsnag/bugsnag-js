@@ -1,6 +1,19 @@
 Changelog
 =========
 
+## 6.10.0 (2021-06-30)
+
+### Bug fixes
+
+* Fix an issue that could cause C++ exceptions with very long descriptions to not be reported.
+  [#1137](https://github.com/bugsnag/bugsnag-cocoa/pull/1137)
+
+* Improve performance of adding metadata by using async file I/O.
+  [#1133](https://github.com/bugsnag/bugsnag-cocoa/pull/1133)
+
+* Improve performance of leaving breadcrumbs by using async file I/O.
+  [#1124](https://github.com/bugsnag/bugsnag-cocoa/pull/1124)
+
 ## 6.9.7 (2021-06-23)
 
 ### Bug fixes

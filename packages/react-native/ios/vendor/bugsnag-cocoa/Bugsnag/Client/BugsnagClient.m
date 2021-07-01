@@ -32,6 +32,7 @@
 #import "BSGConnectivity.h"
 #import "BSGEventUploader.h"
 #import "BSGFileLocations.h"
+#import "BSGGlobals.h"
 #import "BSGInternalErrorReporter.h"
 #import "BSGJSONSerialization.h"
 #import "BSGNotificationBreadcrumbs.h"
@@ -92,12 +93,12 @@ static struct {
     // Contains the state of the event (handled/unhandled)
     char *handledState;
     // Contains the user-specified metadata, including the user tab from config.
-    char *metadataPath;
+    char *metadataJSON;
     // Contains the Bugsnag configuration, all under the "config" tab.
     char *configPath;
-    // Contains notifier state, under "deviceState" and crash-specific
+    // Contains notifier state under "deviceState", and crash-specific
     // information under "crash".
-    char *statePath;
+    char *stateJSON;
     // User onCrash handler
     void (*onCrash)(const BSG_KSCrashReportWriter *writer);
 } bsg_g_bugsnag_data;
@@ -128,8 +129,8 @@ void BSSerializeDataCrashHandler(const BSG_KSCrashReportWriter *writer, __attrib
     }
     if (isCrash) {
         writer->addJSONFileElement(writer, "config", bsg_g_bugsnag_data.configPath);
-        writer->addJSONFileElement(writer, "metaData", bsg_g_bugsnag_data.metadataPath);
-        writer->addJSONFileElement(writer, "state", bsg_g_bugsnag_data.statePath);
+        writer->addJSONElement(writer, "metaData", bsg_g_bugsnag_data.metadataJSON);
+        writer->addJSONElement(writer, "state", bsg_g_bugsnag_data.stateJSON);
         BugsnagBreadcrumbsWriteCrashReport(writer);
         if (watchdogSentinelPath != NULL) {
             // Delete the file to indicate a handled termination
@@ -249,11 +250,9 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
         _configMetadataFromLastLaunch = [BSGJSONSerialization JSONObjectWithContentsOfFile:_configMetadataFile options:0 error:nil];
         
         _metadataFile = fileLocations.metadata;
-        bsg_g_bugsnag_data.metadataPath = strdup(_metadataFile.fileSystemRepresentation);
         _metadataFromLastLaunch = [BSGJSONSerialization JSONObjectWithContentsOfFile:_metadataFile options:0 error:nil];
         
         _stateMetadataFile = fileLocations.state;
-        bsg_g_bugsnag_data.statePath = strdup(_stateMetadataFile.fileSystemRepresentation);
         _stateMetadataFromLastLaunch = [BSGJSONSerialization JSONObjectWithContentsOfFile:_stateMetadataFile options:0 error:nil];
 
         self.stateEventBlocks = [NSMutableArray new];
@@ -284,20 +283,8 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
         _lastOrientation = BSGOrientationNameFromEnum([UIDEVICE currentDevice].orientation);
         [self.state addMetadata:_lastOrientation withKey:BSGKeyOrientation toSection:BSGKeyDeviceState];
 #endif
-        // sync initial state
-        [self metadataChanged:self.metadata];
-        [self metadataChanged:self.state];
-
-        // add observers for future metadata changes
-        // weakSelf is used as the BugsnagClient will always be instantiated
-        // for the entire lifecycle of an application, and there is therefore
-        // no need to check for strong self
-        __weak __typeof__(self) weakSelf = self;
-        void (^observer)(BugsnagStateEvent *) = ^(BugsnagStateEvent *event) {
-            [weakSelf metadataChanged:event.data];
-        };
-        [self.metadata addObserverWithBlock:observer];
-        [self.state addObserverWithBlock:observer];
+        [self.metadata setStorageBuffer:&bsg_g_bugsnag_data.metadataJSON file:_metadataFile];
+        [self.state setStorageBuffer:&bsg_g_bugsnag_data.stateJSON file:_stateMetadataFile];
 
         self.pluginClient = [[BugsnagPluginClient alloc] initWithPlugins:self.configuration.plugins
                                                                   client:self];
@@ -443,6 +430,7 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
     bsg_log_debug(@"App has finished launching");
     [self.appLaunchTimer invalidate];
     [self.state addMetadata:@NO withKey:BSGKeyIsLaunching toSection:BSGKeyApp];
+    [self.systemState markLaunchCompleted];
 }
 
 - (void)sendLaunchCrashSynchronously {
@@ -575,8 +563,14 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
     
     self.appDidCrashLastLaunch = didCrash;
     
-    BOOL wasLaunching = [self.stateMetadataFromLastLaunch[BSGKeyApp][BSGKeyIsLaunching] boolValue];
-    BOOL didCrashDuringLaunch = didCrash && wasLaunching;
+    NSNumber *wasLaunching = ({
+        // BugsnagSystemState's KV-store is now the reliable source of the isLaunching status.
+        self.systemState.lastLaunchState[SYSTEMSTATE_KEY_APP][SYSTEMSTATE_APP_IS_LAUNCHING] ?:
+        // Earlier notifier versions stored it only in state.json - but due to async I/O this is no longer accurate.
+        self.stateMetadataFromLastLaunch[BSGKeyApp][BSGKeyIsLaunching];
+    });
+    
+    BOOL didCrashDuringLaunch = didCrash && wasLaunching.boolValue;
     if (didCrashDuringLaunch) {
         self.systemState.consecutiveLaunchCrashes++;
     } else {
@@ -964,16 +958,6 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
     [self.breadcrumbs addBreadcrumbWithBlock:block];
 }
 
-- (void)metadataChanged:(BugsnagMetadata *)metadata {
-    @synchronized(metadata) {
-        if (metadata == self.metadata) {
-            [BSGJSONSerialization writeJSONObject:[metadata toDictionary] toFile:self.metadataFile options:0 error:nil];
-        } else if (metadata == self.state) {
-            [BSGJSONSerialization writeJSONObject:[metadata toDictionary] toFile:self.stateMetadataFile options:0 error:nil];
-        }
-    }
-}
-
 /**
  * Update the device status in response to a battery change notification
  *
@@ -1347,7 +1331,7 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
                          handledState:[BugsnagHandledState handledStateWithSeverityReason:LikelyOutOfMemory]
                                  user:session.user ?: [[BugsnagUser alloc] init]
                              metadata:metadata
-                          breadcrumbs:self.breadcrumbs.breadcrumbs ?: @[]
+                          breadcrumbs:[self.breadcrumbs cachedBreadcrumbs] ?: @[]
                                errors:@[error]
                               threads:@[]
                               session:session];

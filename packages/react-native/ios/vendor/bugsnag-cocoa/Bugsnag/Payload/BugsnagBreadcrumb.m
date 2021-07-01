@@ -98,93 +98,39 @@ BSGBreadcrumbType BSGBreadcrumbTypeFromString(NSString *value) {
 }
 
 - (NSDictionary *)objectValue {
-    @synchronized (self) {
-        NSString *timestamp = self.timestampString ?: [BSG_RFC3339DateTool stringFromDate:self.timestamp];
-        if (timestamp && self.message.length > 0) {
-            NSMutableDictionary *metadata = [NSMutableDictionary new];
-            for (NSString *key in self.metadata) {
-                metadata[[key copy]] = [self.metadata[key] copy];
-            }
-            return @{
-                // Note: The Bugsnag Error Reporting API specifies that the breadcrumb "message"
-                // field should be delivered in as a "name" field.  This comment notes that variance.
-                BSGKeyName : [self.message copy],
-                BSGKeyTimestamp : timestamp,
-                BSGKeyType : BSGBreadcrumbTypeValue(self.type),
-                BSGKeyMetadata : metadata
-            };
+    NSString *timestamp = self.timestampString ?: [BSG_RFC3339DateTool stringFromDate:self.timestamp];
+    if (timestamp && self.message.length > 0) {
+        NSMutableDictionary *metadata = [NSMutableDictionary new];
+        for (NSString *key in self.metadata) {
+            metadata[[key copy]] = [self.metadata[key] copy];
         }
-        return nil;
+        return @{
+            // Note: The Bugsnag Error Reporting API specifies that the breadcrumb "message"
+            // field should be delivered in as a "name" field.  This comment notes that variance.
+            BSGKeyName : [self.message copy],
+            BSGKeyTimestamp : timestamp,
+            BSGKeyType : BSGBreadcrumbTypeValue(self.type),
+            BSGKeyMetadata : metadata
+        };
     }
+    return nil;
 }
 
 // The timestamp is lazily computed from the timestampString to avoid unnecessary
 // calls to -dateFromString: (which is expensive) when loading breadcrumbs from disk.
 
 - (NSDate *)timestamp {
-    @synchronized (self) {
-        if (!_timestamp) {
-            _timestamp = [BSG_RFC3339DateTool dateFromString:self.timestampString];
-        }
-        return _timestamp;
+    if (!_timestamp) {
+        _timestamp = [BSG_RFC3339DateTool dateFromString:self.timestampString];
     }
+    return _timestamp;
 }
 
 @synthesize timestampString = _timestampString;
 
 - (void)setTimestampString:(NSString *)timestampString {
-    @synchronized (self) {
-        _timestampString = [timestampString copy];
-        self.timestamp = nil;
-    }
-}
-
-@synthesize message = _message;
-
-- (NSString *)message {
-    @synchronized (self) {
-        return _message;
-    }
-}
-
-@synthesize type = _type;
-
-- (BSGBreadcrumbType)type {
-    @synchronized (self) {
-        return _type;
-    }
-}
-
-- (void)setType:(BSGBreadcrumbType)type {
-    @synchronized (self) {
-        [self willChangeValueForKey:NSStringFromSelector(@selector(type))];
-        _type = type;
-        [self didChangeValueForKey:NSStringFromSelector(@selector(type))];
-    }
-}
-
-- (void)setMessage:(NSString *)message {
-    @synchronized (self) {
-        [self willChangeValueForKey:NSStringFromSelector(@selector(message))];
-        _message = message;
-        [self didChangeValueForKey:NSStringFromSelector(@selector(message))];
-    }
-}
-
-@synthesize metadata = _metadata;
-
-- (NSDictionary *)metadata {
-    @synchronized (self) {
-        return _metadata;
-    }
-}
-
-- (void)setMetadata:(NSDictionary *)metadata {
-    @synchronized (self) {
-        [self willChangeValueForKey:NSStringFromSelector(@selector(metadata))];
-        _metadata = metadata;
-        [self didChangeValueForKey:NSStringFromSelector(@selector(metadata))];
-    }
+    _timestampString = [timestampString copy];
+    self.timestamp = nil;
 }
 
 + (instancetype)breadcrumbWithBlock:(BSGBreadcrumbConfiguration)block {

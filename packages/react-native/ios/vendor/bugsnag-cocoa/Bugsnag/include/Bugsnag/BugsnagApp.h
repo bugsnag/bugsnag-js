@@ -15,6 +15,11 @@
 @interface BugsnagApp : NSObject
 
 /**
+ * The architecture of the running binary
+ */
+@property (copy, nullable, nonatomic) NSString *binaryArch;
+
+/**
  * The bundle version used by the application
  */
 @property (copy, nullable, nonatomic) NSString *bundleVersion;
