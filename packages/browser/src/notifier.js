@@ -69,6 +69,7 @@ const Bugsnag = {
     bugsnag._setDelivery(window.XDomainRequest ? dXDomainRequest : dXMLHttpRequest)
 
     bugsnag._logger.debug('Loaded!')
+    bugsnag.leaveBreadcrumb('Bugsnag loaded', {}, 'state')
 
     return bugsnag._config.autoTrackSessions
       ? bugsnag.startSession()
