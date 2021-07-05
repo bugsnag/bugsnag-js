@@ -33,8 +33,6 @@ module.exports = (win = window) => {
 
       if (win.history.replaceState) wrapHistoryFn(client, win.history, 'replaceState', win)
       if (win.history.pushState) wrapHistoryFn(client, win.history, 'pushState', win)
-
-      client.leaveBreadcrumb('Bugsnag loaded', {}, 'navigation')
     }
   }
 

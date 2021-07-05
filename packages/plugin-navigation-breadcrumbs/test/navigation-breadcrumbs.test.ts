@@ -28,7 +28,7 @@ describe('plugin: navigation breadcrumbs', () => {
     // then ensure that it works with `undefined` as the url parameter (IE11-specific issue)
     expect(c._breadcrumbs[c._breadcrumbs.length - 1].metadata.to).toMatch(/^\/?network-breadcrumb-test\.html$/)
 
-    expect(c._breadcrumbs.length).toBe(6)
+    expect(c._breadcrumbs.length).toBe(5)
 
     done()
   })
@@ -91,7 +91,7 @@ describe('plugin: navigation breadcrumbs', () => {
     docHandlers.DOMContentLoaded.forEach((h) => h.call(window.document))
     window.history.replaceState({}, 'bar', 'network-breadcrumb-test.html')
     window.history.replaceState({}, 'bar')
-    expect(c._breadcrumbs.length).toBe(5)
+    expect(c._breadcrumbs.length).toBe(4)
   })
 })
 

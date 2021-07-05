@@ -5,6 +5,7 @@
 ### Fixed
 
 - (plugin-console-breadcrumbs): Ensure console breadcrumbs do not run in Expo's dev environment and obscure log line numbers [#1453](https://github.com/bugsnag/bugsnag-js/pull/1453)
+- (browser): "Bugsnag" loaded breadcrumb now has the type "state" rather than "navigation" [#1460](https://github.com/bugsnag/bugsnag-js/pull/1460)
 
 ### Added
 
