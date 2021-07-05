@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-react-native-unhandled-rejection",
-  "version": "7.10.2",
+  "version": "7.10.5",
   "main": "rejection-handler.js",
   "description": "@bugsnag/js plugin to report unhandled promise rejections in React Native",
   "homepage": "https://www.bugsnag.com/",

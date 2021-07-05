@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-console-breadcrumbs",
-  "version": "7.10.0",
+  "version": "7.10.5",
   "main": "console-breadcrumbs.js",
   "description": "@bugsnag/js plugin to record console log method calls as breadcrumbs",
   "homepage": "https://www.bugsnag.com/",
