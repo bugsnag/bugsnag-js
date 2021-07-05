@@ -1,11 +1,12 @@
 # Changelog
 
-## TBC
+## 7.10.5 (2021-07-05)
 
 ### Fixed
 
 - (plugin-console-breadcrumbs): Ensure console breadcrumbs do not run in Expo's dev environment and obscure log line numbers [#1453](https://github.com/bugsnag/bugsnag-js/pull/1453)
 - (browser): "Bugsnag" loaded breadcrumb now has the type "state" rather than "navigation" [#1460](https://github.com/bugsnag/bugsnag-js/pull/1460)
+- (plugin-react-native-unhandled-rejections): Remove flow syntax [#1461](https://github.com/bugsnag/bugsnag-js/pull/1461)
 
 ### Added
 
