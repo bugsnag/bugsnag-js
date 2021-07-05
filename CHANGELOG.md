@@ -1,5 +1,25 @@
 # Changelog
 
+## 7.10.5 (2021-07-05)
+
+### Fixed
+
+- (plugin-console-breadcrumbs): Ensure console breadcrumbs do not run in Expo's dev environment and obscure log line numbers [#1453](https://github.com/bugsnag/bugsnag-js/pull/1453)
+- (browser): "Bugsnag" loaded breadcrumb now has the type "state" rather than "navigation" [#1460](https://github.com/bugsnag/bugsnag-js/pull/1460)
+- (plugin-react-native-unhandled-rejections): Remove flow syntax [#1461](https://github.com/bugsnag/bugsnag-js/pull/1461)
+
+### Added
+
+- (expo): User ID now defaults to `device.id` if no user is set [#1454](https://github.com/bugsnag/bugsnag-js/pull/1454)
+- (browser): User ID now defaults to `device.id` if no user is set (when `collectUserIp=false`) [#1456](https://github.com/bugsnag/bugsnag-js/pull/1456)
+
+### Changed
+
+- (react-native): Update bugsnag-cocoa to v6.10.0
+  - Fix an issue that could cause C++ exceptions with very long descriptions to not be reported. [bugsnag-cocoa#1137](https://github.com/bugsnag/bugsnag-cocoa/pull/1137)
+  - Improve performance of adding metadata by using async file I/O. [bugsnag-cocoa#1133](https://github.com/bugsnag/bugsnag-cocoa/pull/1133)
+  - Improve performance of leaving breadcrumbs by using async file I/O. [bugsnag-cocoa#1124](https://github.com/bugsnag/bugsnag-cocoa/pull/1124)
+
 ## 7.10.4 (2021-06-28)
 
 ### Fixed

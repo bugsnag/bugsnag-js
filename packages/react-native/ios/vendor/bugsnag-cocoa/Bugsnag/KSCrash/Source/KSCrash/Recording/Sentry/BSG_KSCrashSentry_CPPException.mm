@@ -129,7 +129,9 @@ static void CPPExceptionTerminate(void) {
         isNSException = true;
         bsg_recordException(exception);
     } catch (std::exception &exc) {
-        strncpy(descriptionBuff, exc.what(), sizeof(descriptionBuff));
+        strlcpy(descriptionBuff, exc.what(), sizeof(descriptionBuff));
+    } catch (std::exception *exc) {
+        strlcpy(descriptionBuff, exc->what(), sizeof(descriptionBuff));
     }
 #define CATCH_VALUE(TYPE, PRINTFTYPE)                                          \
     catch (TYPE value) {                                                       \

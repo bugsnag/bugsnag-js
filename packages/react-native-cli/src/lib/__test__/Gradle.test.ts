@@ -1,4 +1,4 @@
-import { modifyAppBuildGradle, modifyRootBuildGradle, enableReactNativeMappings } from '../Gradle'
+import { getSuggestedBugsnagGradleVersion, modifyAppBuildGradle, modifyRootBuildGradle, enableReactNativeMappings } from '../Gradle'
 import logger from '../../Logger'
 import path from 'path'
 import { promises as fs } from 'fs'
@@ -511,4 +511,34 @@ test('enableReactNativeMappings(): success without initial bugsnag config and cu
   expect(writeFileMock).toHaveBeenNthCalledWith(1, '/random/path/android/app/build.gradle', expectedMappings, 'utf8')
   expect(writeFileMock).toHaveBeenNthCalledWith(2, '/random/path/android/app/build.gradle', expectedUploadEndpoint, 'utf8')
   expect(writeFileMock).toHaveBeenNthCalledWith(3, '/random/path/android/app/build.gradle', expectedFinal, 'utf8')
+})
+
+test('getSuggestedBugsnagGradleVersion(): success', async () => {
+  const buildGradle = await loadFixture(path.join(__dirname, 'fixtures', 'root-build-before.gradle'))
+
+  const readFileMock = fs.readFile as jest.MockedFunction<typeof fs.readFile>
+  readFileMock.mockResolvedValueOnce(buildGradle)
+
+  const version = await getSuggestedBugsnagGradleVersion('/random/path', logger)
+  expect(version).toBe('5.+')
+})
+
+test('getSuggestedBugsnagGradleVersion(): null with wrong file', async () => {
+  const buildGradle = await loadFixture(path.join(__dirname, 'fixtures', 'app-build-before.gradle'))
+
+  const readFileMock = fs.readFile as jest.MockedFunction<typeof fs.readFile>
+  readFileMock.mockResolvedValueOnce(buildGradle)
+
+  const version = await getSuggestedBugsnagGradleVersion('/random/path', logger)
+  expect(version).toBe('')
+})
+
+test('getSuggestedBugsnagGradleVersion(): success with bracketed AGP version', async () => {
+  const buildGradle = await loadFixture(path.join(__dirname, 'fixtures', 'root-build-before-with-prefixed-agp-version.gradle'))
+
+  const readFileMock = fs.readFile as jest.MockedFunction<typeof fs.readFile>
+  readFileMock.mockResolvedValueOnce(buildGradle)
+
+  const version = await getSuggestedBugsnagGradleVersion('/random/path', logger)
+  expect(version).toBe('7.+')
 })

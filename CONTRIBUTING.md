@@ -62,14 +62,6 @@ CI runs on Buildkite. Tests are run automatically on any branch from within this
 
 ## Releases
 
-Before creating any release:
-
-- run `npm install` in the root of the project and `npm run bootstrap` to ensure the top-level node_modules and leaf node_modules are all correct for the branch you have checked out.
-- ensure you are logged in to npm and that you have access to publish to the following on npm
-  - any packages in the `@bugsnag` namespace
-  - the `bugsnag-expo-cli` package
-- ensure you have an AWS key pair with access to our S3 bucket and cloudfront distribution. Export these in your environment as `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` (if you're going to publish to the CDN)
-
 To start a release:
 
 - decide on a version number
@@ -83,22 +75,38 @@ To start a release:
 Once the release PR has been approved:
 
 - merge the PR into master
-- `git checkout master` and `git pull`
 
-You are now ready to make the release:
+You are now ready to make the release. Releases are done using Docker and Docker compose. You do not need to have the release branch checked out on your local machine to make a release – the container pulls a fresh clone of the repo down from GitHub. Prerequisites:
+
+- You will need to clone the repository and have Docker running on your local machine.
+- Ensure you are logged in to npm and that you have access to publish to the following on npm
+  - any packages in the `@bugsnag` namespace
+  - the `bugsnag-expo-cli` package
+- Ensure you have an AWS key pair with access to our S3 bucket and cloudfront distribution. Export these in your environment as `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` (if you're going to publish to the CDN)
+- Ensure your `.gitconfig` file in your home directory is configured to contain your name and email address
+- Generate a [personal access token](https://github.com/settings/tokens/new) on GitHub and store it somewhere secure
+
+Build the release container:
+
+`docker-compose build release`
+
+Then make the release:
 
 ```
-lerna version [major | minor | patch]
-lerna publish from-git
+GITHUB_USER=<your github username> \
+GITHUB_ACCESS_TOKEN=<generate a personal access token> \
+AWS_ACCESS_KEY_ID=xxx \
+AWS_SECRET_ACCESS_KEY=xxx \
+RELEASE_BRANCH=master \
+VERSION=patch \
+  docker-compose run release
 ```
+
+This process is interactive and will require you to confirm that you want to publish the changed packages. It will also prompt for 2FA.
+
+Browser bundles are automatically uploaded to the CDN if they have changed.
 
 <small>Note: if a prerelease was made, to graduate it into a normal release you will want to use `patch` as the version.</small>
-
-At this point it is sensible to perform some manual smoke tests to ensure the new version on npm works as expected. Only then publish to the CDN:
-
-```
-npm run cdn-upload
-```
 
 Finally:
 
@@ -115,28 +123,30 @@ Finally:
 
 ### Prereleases
 
-If you are starting a new prerelease, use one of the following commands:
+If you are starting a new prerelease, use one of the following values for the `VERSION` variable in the release command:
 
 ```
-lerna version [premajor | preminor | prepatch]
+VERSION=[premajor | preminor | prepatch]
 ```
 
-For subsequent iterations on that release, run:
+For subsequent iterations on that release, use:
 
 ```
-lerna version prerelease
+VERSION=prerelease
 ```
 
-If you want to publish the release to npm, use the following command:
+For example:
 
 ```
-lerna publish from-git --dist-tag next
+GITHUB_USER=<your github username> \
+GITHUB_ACCESS_TOKEN=<generate a personal access token> \
+AWS_ACCESS_KEY_ID=xxx \
+AWS_SECRET_ACCESS_KEY=xxx \
+RELEASE_BRANCH=master \
+VERSION=preminor \
+  docker-compose run
 ```
 
-The `--dist-tag next` part ensures that it is not installed by unsuspecting users who do not specify a version – npm automatically adds the `latest` tag to a published module unless one is specified.
+Prereleases will automatically be published to npm with the dist tag `next` and browser bundles are automatically uploaded to the CDN.
 
-If you want to publish the release to the CDN, use the following command:
-
-```
-lerna run cdn-upload
-```
+The dist tag ensures that prereleases are not installed by unsuspecting users who do not specify a version – npm automatically adds the `latest` tag to a published module unless one is specified.

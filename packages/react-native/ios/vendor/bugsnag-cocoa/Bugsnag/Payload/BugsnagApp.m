@@ -21,7 +21,6 @@
 NSDictionary *BSGParseAppMetadata(NSDictionary *event) {
     NSMutableDictionary *app = [NSMutableDictionary new];
     app[@"name"] = [event valueForKeyPath:@"system." BSG_KSSystemField_BundleExecutable];
-    app[@"binaryArch"] = [event valueForKeyPath:@"system." BSG_KSSystemField_BinaryArch];
     app[@"runningOnRosetta"] = [event valueForKeyPath:@"system." BSG_KSSystemField_Translated];
     return app;
 }
@@ -31,6 +30,7 @@ NSDictionary *BSGParseAppMetadata(NSDictionary *event) {
 + (BugsnagApp *)deserializeFromJson:(NSDictionary *)json {
     BugsnagApp *app = [BugsnagApp new];
     if (json != nil) {
+        app.binaryArch = json[@"binaryArch"];
         app.bundleVersion = json[@"bundleVersion"];
         app.codeBundleId = json[@"codeBundleId"];
         app.id = json[@"id"];
@@ -61,6 +61,7 @@ NSDictionary *BSGParseAppMetadata(NSDictionary *event) {
 {
     NSDictionary *system = event[BSGKeySystem];
     app.id = system[@BSG_KSSystemField_BundleID];
+    app.binaryArch = system[@BSG_KSSystemField_BinaryArch];
     app.bundleVersion = system[@BSG_KSSystemField_BundleVersion];
     app.dsymUuid = system[@BSG_KSSystemField_AppUUID];
     app.version = system[@BSG_KSSystemField_BundleShortVersion];
@@ -87,6 +88,7 @@ NSDictionary *BSGParseAppMetadata(NSDictionary *event) {
 - (NSDictionary *)toDict
 {
     NSMutableDictionary *dict = [NSMutableDictionary new];
+    dict[@"binaryArch"] = self.binaryArch;
     dict[@"bundleVersion"] = self.bundleVersion;
     dict[@"codeBundleId"] = self.codeBundleId;
     dict[@"dsymUUIDs"] = BSGArrayWithObject(self.dsymUuid);

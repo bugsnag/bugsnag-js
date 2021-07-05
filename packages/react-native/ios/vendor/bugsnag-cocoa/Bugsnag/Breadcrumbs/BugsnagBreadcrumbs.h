@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithConfiguration:(BugsnagConfiguration *)config;
 
 /**
- * The current breadcrumbs, loaded from disk.
+ * The breadcrumbs stored in memory.
  */
 @property (readonly, nonatomic) NSArray<BugsnagBreadcrumb *> *breadcrumbs;
 
@@ -39,12 +39,19 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)addBreadcrumbWithBlock:(BSGBreadcrumbConfiguration)block;
 
+/**
+ * Store a new serialized breadcrumb.
+ *
+ * This method is not intended to be used from other classes, it is exposed to facilitate unit testing.
+ */
+- (void)addBreadcrumbWithData:(NSData *)data writeToDisk:(BOOL)writeToDisk;
+
 - (NSArray<BugsnagBreadcrumb *> *)breadcrumbsBeforeDate:(NSDate *)date;
 
 /**
- * Returns the breadcrumb JSON dictionaries stored on disk.
+ * The breadcrumb stored on disk.
  */
-- (nullable NSArray<NSDictionary *> *)cachedBreadcrumbs;
+- (NSArray<BugsnagBreadcrumb *> *)cachedBreadcrumbs;
 
 /**
  * Removes breadcrumbs from disk.
@@ -60,6 +67,7 @@ NS_ASSUME_NONNULL_END
 /**
  * Inserts the current breadcrumbs into a crash report.
  *
- * This function is async-signal-safe.
+ * This function is async-signal-safe, but requires that any threads that could be adding
+ * breadcrumbs are suspended.
  */
 void BugsnagBreadcrumbsWriteCrashReport(const BSG_KSCrashReportWriter * _Nonnull writer);

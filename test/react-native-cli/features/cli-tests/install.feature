@@ -65,7 +65,7 @@ Scenario: no git repo, run anyway, default version
     Then I wait for the current stdout line to match the regex "If you want the latest version of @bugsnag/react-native hit enter, otherwise type the version you want"
     When I input a return interactively
     Then I wait for the shell to output a match for the regex "\+ @bugsnag/react-native" to stdout
-    And I wait for the current stdout line to match the regex "If you want the latest version of the Bugsnag Android Gradle plugin hit enter\, otherwise type the version you want"
+    And I wait for the current stdout line to match the regex "Enter version of the Bugsnag Android Gradle plugin you want to use"
     When I input a return interactively
     And I wait for the shell to output a match for the regex "Detected platform is not macOS\, skipping" to stdout
     Then the last interactive command exited successfully
@@ -85,7 +85,7 @@ Scenario: clean git repo, run, version 7.5.0
     Then I wait for the current stdout line to match the regex "If you want the latest version of @bugsnag/react-native hit enter, otherwise type the version you want"
     When I input "7.5.0" interactively
     Then I wait for the shell to output a match for the regex "\+ @bugsnag/react-native" to stdout
-    And I wait for the current stdout line to match the regex "If you want the latest version of the Bugsnag Android Gradle plugin hit enter, otherwise type the version you want"
+    And I wait for the current stdout line to match the regex "Enter version of the Bugsnag Android Gradle plugin you want to use"
     When I input a return interactively
     And I wait for the shell to output a match for the regex "Detected platform is not macOS, skipping" to stdout
     And the last interactive command exited successfully
@@ -107,7 +107,7 @@ Scenario: no git repo, run anyway, already installed
     And I wait for the current stdout line to match the regex "Do you want to continue anyway\?"
     When I input "y" interactively
     Then I wait for the shell to output a match for the regex "@bugsnag/react-native is already installed, skipping" to stdout
-    And I wait for the current stdout line to match the regex "If you want the latest version of the Bugsnag Android Gradle plugin hit enter, otherwise type the version you want"
+    And I wait for the current stdout line to match the regex "Enter version of the Bugsnag Android Gradle plugin you want to use"
     When I input a return interactively
     And I wait for the current stdout line to match the regex "\/app #"
     And the last interactive command exited successfully

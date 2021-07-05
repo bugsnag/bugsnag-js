@@ -15,6 +15,7 @@ describe('plugin: expo device', () => {
 
     jest.doMock('expo-constants', () => ({
       default: {
+        installationId: '123',
         platform: { android: {} },
         manifest: { sdkVersion: SDK_VERSION },
         expoVersion: EXPO_VERSION,
@@ -64,6 +65,8 @@ describe('plugin: expo device', () => {
         })
         expect(r.events[0].metaData.device.isDevice).toBe(true)
         expect(r.events[0].metaData.device.appOwnership).toBe('standalone')
+        expect(r.events[0].device.id).toBe('123')
+        expect(r.events[0].user.id).toBe('123')
         done()
       },
       sendSession: () => {}
@@ -176,6 +179,57 @@ describe('plugin: expo device', () => {
         expect(r.events[0].device).toBeTruthy()
         expect(r.events[0].device.osName).toBe('ios')
         expect(r.events[0].app.type).toEqual('custom app type')
+        done()
+      },
+      sendSession: () => {}
+
+    }))
+    c.notify(new Error('device testing'))
+  })
+
+  it('does not overwrite user.id when one is already set', done => {
+    const REACT_NATIVE_VERSION = '0.57.1'
+    const SDK_VERSION = '32.3.0'
+    const EXPO_VERSION = '2.10.4'
+    const IOS_MODEL = 'iPhone 7 Plus'
+    const IOS_PLATFORM = 'iPhone1,1'
+    const IOS_VERSION = '11.2'
+
+    jest.doMock('expo-constants', () => ({
+      default: {
+        installationId: '123',
+        platform: { ios: { model: IOS_MODEL, platform: IOS_PLATFORM, systemVersion: IOS_VERSION } },
+        manifest: { sdkVersion: SDK_VERSION },
+        expoVersion: EXPO_VERSION,
+        isDevice: false,
+        appOwnership: 'expo'
+      }
+    }))
+    jest.doMock('expo-device', () => ({
+      manufacturer: 'Apple'
+    }))
+    jest.doMock('react-native', () => ({
+      Dimensions: {
+        addEventListener: function () {},
+        get: function () {
+          return { width: 1024, height: 768 }
+        }
+      },
+      Platform: { OS: 'ios' }
+    }))
+    jest.doMock('react-native/package.json', () => ({ version: REACT_NATIVE_VERSION }))
+
+    const plugin = require('..')
+
+    const c = new Client({ apiKey: 'api_key', plugins: [plugin] })
+    c.setUser('345')
+    c._setDelivery(client => ({
+      sendEvent: (payload) => {
+        const r = JSON.parse(JSON.stringify(payload))
+        expect(r).toBeTruthy()
+        expect(r.events[0].device).toBeTruthy()
+        expect(r.events[0].device.osName).toBe('ios')
+        expect(r.events[0].user.id).toBe('345')
         done()
       },
       sendSession: () => {}

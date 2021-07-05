@@ -19,12 +19,12 @@
 #import <Bugsnag/Bugsnag.h>
 
 #import "BSGFileLocations.h"
+#import "BSGGlobals.h"
 #import "BSGJSONSerialization.h"
 #import "BSG_KSMach.h"
 #import "BSG_KSSystemInfo.h"
 #import "BSG_RFC3339DateTool.h"
 #import "BugsnagKVStoreObjC.h"
-#import "BugsnagKeys.h"
 #import "BugsnagLogger.h"
 #import "BugsnagSessionTracker.h"
 #import "BugsnagSystemState.h"
@@ -56,10 +56,16 @@ static NSDictionary* loadPreviousState(BugsnagKVStore *kvstore, NSString *jsonPa
     NSMutableDictionary *app = state[SYSTEMSTATE_KEY_APP];
 
     // KV-store versions of these are authoritative
-    app[SYSTEMSTATE_APP_WAS_TERMINATED] = [kvstore NSBooleanForKey:SYSTEMSTATE_APP_WAS_TERMINATED defaultValue:false];
-    app[SYSTEMSTATE_APP_IS_ACTIVE] = [kvstore NSBooleanForKey:SYSTEMSTATE_APP_IS_ACTIVE defaultValue:false];
-    app[SYSTEMSTATE_APP_IS_IN_FOREGROUND] = [kvstore NSBooleanForKey:SYSTEMSTATE_APP_IS_IN_FOREGROUND defaultValue:false];
-    app[SYSTEMSTATE_APP_DEBUGGER_IS_ACTIVE] = [kvstore NSBooleanForKey:SYSTEMSTATE_APP_DEBUGGER_IS_ACTIVE defaultValue:false];
+    for (NSString *key in @[SYSTEMSTATE_APP_DEBUGGER_IS_ACTIVE,
+                            SYSTEMSTATE_APP_IS_ACTIVE,
+                            SYSTEMSTATE_APP_IS_IN_FOREGROUND,
+                            SYSTEMSTATE_APP_IS_LAUNCHING,
+                            SYSTEMSTATE_APP_WAS_TERMINATED]) {
+        NSNumber *value = [kvstore NSBooleanForKey:key defaultValue:nil];
+        if (value != nil) {
+            app[key] = value;
+        }
+    }
 
     return state;
 }
@@ -89,6 +95,7 @@ static NSMutableDictionary* initCurrentState(BugsnagKVStore *kvstore, BugsnagCon
     [kvstore deleteKey:SYSTEMSTATE_APP_WAS_TERMINATED];
     [kvstore setBoolean:isActive forKey:SYSTEMSTATE_APP_IS_ACTIVE];
     [kvstore setBoolean:isInForeground forKey:SYSTEMSTATE_APP_IS_IN_FOREGROUND];
+    [kvstore setBoolean:true forKey:SYSTEMSTATE_APP_IS_LAUNCHING];
     [kvstore setBoolean:isBeingDebugged forKey:SYSTEMSTATE_APP_DEBUGGER_IS_ACTIVE];
 
     NSMutableDictionary *app = [NSMutableDictionary new];
@@ -98,6 +105,7 @@ static NSMutableDictionary* initCurrentState(BugsnagKVStore *kvstore, BugsnagCon
     app[BSGKeyVersion] = blankIfNil(systemInfo[@BSG_KSSystemField_BundleShortVersion]);
     app[BSGKeyBundleVersion] = blankIfNil(systemInfo[@BSG_KSSystemField_BundleVersion]);
     app[BSGKeyMachoUUID] = [BSG_KSSystemInfo appUUID];
+    app[@"binaryArch"] = systemInfo[@BSG_KSSystemField_BinaryArch];
     app[@"inForeground"] = @(isInForeground);
     app[@"isActive"] = @(isActive);
 #if BSG_PLATFORM_TVOS
@@ -167,7 +175,7 @@ static NSDictionary *copyDictionary(NSDictionary *launchState) {
         _currentLaunchStateRW = initCurrentState(_kvStore, config);
         _currentLaunchState = [_currentLaunchStateRW copy];
         _consecutiveLaunchCrashes = [_lastLaunchState[InternalKey][ConsecutiveLaunchCrashesKey] unsignedIntegerValue];
-        [self sync];
+        [self syncState:_currentLaunchState];
 
         __weak __typeof__(self) weakSelf = self;
         NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
@@ -246,6 +254,10 @@ static NSDictionary *copyDictionary(NSDictionary *launchState) {
     [self setValue:@(_consecutiveLaunchCrashes = consecutiveLaunchCrashes) forKey:ConsecutiveLaunchCrashesKey inSection:InternalKey];
 }
 
+- (void)markLaunchCompleted {
+    [self.kvStore setBoolean:false forKey:SYSTEMSTATE_APP_IS_LAUNCHING];
+}
+
 - (void)setValue:(id)value forAppKey:(NSString *)key {
     [self setValue:value forKey:key inSection:SYSTEMSTATE_KEY_APP];
 }
@@ -260,32 +272,26 @@ static NSDictionary *copyDictionary(NSDictionary *launchState) {
     }];
 }
 
-- (void)mutateLaunchState:(void (^)(NSMutableDictionary *state))block {
+- (void)mutateLaunchState:(nonnull void (^)(NSMutableDictionary *state))block {
+    NSDictionary *state = nil;
+    @synchronized (self) {
+        block(self.currentLaunchStateRW);
+        // User-facing state should never mutate from under them.
+        self.currentLaunchState = copyDictionary(self.currentLaunchStateRW);
+        state = self.currentLaunchState;
+    }
     // Run on a BG thread so we don't monopolize the notification queue.
-    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        @synchronized (self) {
-            block(self.currentLaunchStateRW);
-            // User-facing state should never mutate from under them.
-            self.currentLaunchState = copyDictionary(self.currentLaunchStateRW);
-        }
-        [self sync];
+    dispatch_async(BSGGlobalsFileSystemQueue(), ^(void){
+        [self syncState:state];
     });
 }
 
-- (void)sync {
-    NSDictionary *state = self.currentLaunchState;
-    NSError *error = nil;
+- (void)syncState:(NSDictionary *)state {
     NSAssert([BSGJSONSerialization isValidJSONObject:state], @"BugsnagSystemState cannot be converted to JSON data");
-    if (![BSGJSONSerialization isValidJSONObject:state]) {
-        bsg_log_err(@"System state cannot be written as JSON");
-        return;
-    }
-    NSData *data = [BSGJSONSerialization dataWithJSONObject:state options:0 error:&error];
-    if (error) {
+    NSError *error = nil;
+    if (![BSGJSONSerialization writeJSONObject:state toFile:self.persistenceFilePath options:0 error:&error]) {
         bsg_log_err(@"System state cannot be written as JSON: %@", error);
-        return;
     }
-    [data writeToFile:self.persistenceFilePath atomically:YES];
 }
 
 - (void)purge {

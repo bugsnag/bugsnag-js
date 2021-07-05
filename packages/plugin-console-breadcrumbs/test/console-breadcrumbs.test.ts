@@ -59,4 +59,18 @@ describe('plugin: console breadcrumbs', () => {
     expect(c._breadcrumbs.length).toBe(0)
     plugin.destroy()
   })
+
+  it('should be not enabled by default when releaseStage=dev', () => {
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', releaseStage: 'dev', plugins: [plugin] })
+    console.log(123)
+    expect(c._breadcrumbs.length).toBe(0)
+    plugin.destroy()
+  })
+
+  it('should be not enabled by default when releaseStage=local-dev', () => {
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', releaseStage: 'local-dev', plugins: [plugin] })
+    console.log(123)
+    expect(c._breadcrumbs.length).toBe(0)
+    plugin.destroy()
+  })
 })

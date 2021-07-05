@@ -38,6 +38,7 @@
         app.dsymUuid = dsyms[0];
     }
 
+    app.binaryArch = json[@"binaryArch"];
     app.bundleVersion = json[@"bundleVersion"];
     app.codeBundleId = json[@"codeBundleId"];
     app.id = json[@"id"];

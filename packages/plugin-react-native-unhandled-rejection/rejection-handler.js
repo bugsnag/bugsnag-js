@@ -51,7 +51,7 @@ const rnInternalOnUnhandled = (id, rejection) => {
 
   const warning =
     `Possible Unhandled Promise Rejection (id: ${id}):\n` +
-    `${message ?? ''}\n` +
+    `${message || ''}\n` +
     (stack == null ? '' : stack)
   console.warn(warning)
 }
