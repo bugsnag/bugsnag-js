@@ -9,37 +9,30 @@ Background:
 
 Scenario: a synchronous thrown error in a route
   Then I open the URL "http://express-disabled/sync"
-  And I wait for 5 seconds
   And I should receive no errors
 
 Scenario: an asynchronous thrown error in a route
-  Then I open the URL "http://express-disabled/sync"
-  And I wait for 5 seconds
+  Then I open the URL "http://express-disabled/async"
   And I should receive no errors
 
 Scenario: an error passed to next(err)
   Then I open the URL "http://express-disabled/next"
-  And I wait for 5 seconds
   And I should receive no errors
 
 Scenario: a synchronous promise rejection in a route
   Then I open the URL "http://express-disabled/rejection-sync"
-  And I wait for 5 seconds
   And I should receive no errors
 
 Scenario: an asynchronous promise rejection in a route
   Then I open the URL "http://express-disabled/rejection-async"
-  And I wait for 5 seconds
   And I should receive no errors
 
 Scenario: a string passed to next(err)
   Then I open the URL "http://express-disabled/string-as-error"
-  And I wait for 5 seconds
   And I should receive no errors
 
 Scenario: throwing non-Error error
   Then I open the URL "http://express-disabled/throw-non-error"
-  And I wait for 5 seconds
   And I should receive no errors
 
 Scenario: a handled error passed to req.bugsnag.notify()
@@ -58,5 +51,4 @@ Scenario: a handled error passed to req.bugsnag.notify()
 
 Scenario: adding body to request metadata
   When I POST the data "data=in_request_body" to the URL "http://express-disabled/bodytest"
-  And I wait for 5 seconds
   And I should receive no errors

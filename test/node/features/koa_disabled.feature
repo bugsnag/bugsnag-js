@@ -9,32 +9,26 @@ Background:
 
 Scenario: a synchronous thrown error in a route
   Then I open the URL "http://koa-disabled/err"
-  And I wait for 5 seconds
   And I should receive no errors
 
 Scenario: an asynchronous thrown error in a route
   Then I open the URL "http://koa-disabled/async-err"
-  And I wait for 5 seconds
   And I should receive no errors
 
 Scenario: An error created with with ctx.throw()
   Then I open the URL "http://koa-disabled/ctx-throw"
-  And I wait for 5 seconds
   And I should receive no errors
 
 Scenario: an error thrown before the requestHandler middleware
   Then I open the URL "http://koa-disabled/error-before-handler"
-  And I wait for 5 seconds
   And I should receive no errors
 
 Scenario: throwing non-Error error
   Then I open the URL "http://koa-disabled/throw-non-error"
-  And I wait for 5 seconds
   And I should receive no errors
 
 Scenario: A non-5XX error created with ctx.throw()
   When I open the URL "http://koa-disabled/ctx-throw-400"
-  And I wait for 5 seconds
   And I should receive no errors
 
 Scenario: A handled error with ctx.bugsnag.notify()
@@ -53,5 +47,4 @@ Scenario: A handled error with ctx.bugsnag.notify()
 
 Scenario: adding body to request metadata
   When I POST the data "data=in_request_body" to the URL "http://koa-disabled/bodytest"
-  And I wait for 5 seconds
   And I should receive no errors

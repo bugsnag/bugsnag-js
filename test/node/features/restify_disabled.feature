@@ -9,22 +9,18 @@ Background:
 
 Scenario: a synchronous thrown error in a route
   Then I open the URL "http://restify-disabled/sync" tolerating any error
-  And I wait for 5 seconds
   And I should receive no errors
 
 Scenario: an asynchronous thrown error in a route
   Then I open the URL "http://restify-disabled/async" tolerating any error
-  And I wait for 5 seconds
   And I should receive no errors
 
 Scenario: an error passed to next(err)
   Then I open the URL "http://restify-disabled/next"
-  And I wait for 5 seconds
   And I should receive no errors
 
 Scenario: throwing non-Error error
   Then I open the URL "http://restify-disabled/throw-non-error" tolerating any error
-  And I wait for 5 seconds
   And I should receive no errors
 
 Scenario: an explicit 404
@@ -36,7 +32,6 @@ Scenario: an explicit 404
 
 Scenario: an explicit internal server error
   Then I open the URL "http://restify-disabled/internal"
-  And I wait for 5 seconds
   And I should receive no errors
 
 Scenario: a handled error passed to req.bugsnag.notify()
