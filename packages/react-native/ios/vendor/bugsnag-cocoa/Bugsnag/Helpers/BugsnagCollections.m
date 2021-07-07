@@ -151,3 +151,10 @@ NSDate * _Nullable BSGDeserializeDate(id _Nullable rawValue) {
     }
     return [BSG_RFC3339DateTool dateFromString:(NSString *)rawValue];
 }
+
+NSNumber * _Nullable BSGDeserializeNumber(id  _Nullable rawValue) {
+    if (![rawValue isKindOfClass:[NSNumber class]]) {
+        return nil;
+    }
+    return (NSNumber *)rawValue;
+}
