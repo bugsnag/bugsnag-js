@@ -91,6 +91,22 @@ services:
           - express
     restart: "no"
 
+  express-disabled:
+    build:
+      context: express
+      args:
+        - NODE_VERSION
+    environment:
+      - BUGSNAG_API_KEY
+      - BUGSNAG_NOTIFY_ENDPOINT
+      - BUGSNAG_SESSIONS_ENDPOINT
+    networks:
+      default:
+        aliases:
+          - express-disabled
+    restart: "no"
+    entrypoint: "node scenarios/app-disabled"
+
   restify:
     build:
       context: restify
@@ -106,6 +122,22 @@ services:
           - restify
     restart: "no"
 
+  restify-disabled:
+    build:
+      context: restify
+      args:
+        - NODE_VERSION
+    environment:
+      - BUGSNAG_API_KEY
+      - BUGSNAG_NOTIFY_ENDPOINT
+      - BUGSNAG_SESSIONS_ENDPOINT
+    networks:
+      default:
+        aliases:
+          - restify-disabled
+    restart: "no"
+    entrypoint: "node scenarios/app-disabled"
+
   koa:
     build:
       context: koa
@@ -120,6 +152,22 @@ services:
         aliases:
           - koa
     restart: "no"
+
+  koa-disabled:
+    build:
+      context: koa
+      args:
+        - NODE_VERSION
+    environment:
+      - BUGSNAG_API_KEY
+      - BUGSNAG_NOTIFY_ENDPOINT
+      - BUGSNAG_SESSIONS_ENDPOINT
+    networks:
+      default:
+        aliases:
+          - koa-disabled
+    restart: "no"
+    entrypoint: "node scenarios/app-disabled"
 
   koa-1x:
     build:
