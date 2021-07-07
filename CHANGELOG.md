@@ -1,5 +1,11 @@
 # Changelog
 
+## TBC
+
+### Added
+
+- Server framework plugins now honour the `autoDetectErrors` configuration option [#1464](https://github.com/bugsnag/bugsnag-js/pull/1464)
+
 ## 7.10.5 (2021-07-05)
 
 ### Fixed
