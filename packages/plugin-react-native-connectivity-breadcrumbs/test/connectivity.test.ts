@@ -35,11 +35,11 @@ describe('plugin: react native connectivity breadcrumbs', () => {
     expect(client._breadcrumbs[1].metadata).toEqual({ type: 'none', isConnected: false, isInternetReachable: false })
   })
 
-  it('should not be enabled when enabledBreadcrumbTypes=null', () => {
+  it('should be enabled when enabledBreadcrumbTypes=null', () => {
     const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: null, plugins: [plugin] })
     expect(client).toBe(client)
 
-    expect(NetInfo.addEventListener).not.toHaveBeenCalled()
+    expect(NetInfo.addEventListener).toHaveBeenCalledWith(expect.any(Function))
   })
 
   it('should not be enabled when enabledBreadcrumbTypes=[]', () => {

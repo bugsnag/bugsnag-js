@@ -9,7 +9,7 @@ const includes = require('@bugsnag/core/lib/es-utils/includes')
 exports.load = (client) => {
   const isDev = /^(local-)?dev(elopment)?$/.test(client._config.releaseStage)
 
-  if (!client._config.enabledBreadcrumbTypes || !includes(client._config.enabledBreadcrumbTypes, 'log') || isDev) return
+  if (isDev || (client._config.enabledBreadcrumbTypes && !includes(client._config.enabledBreadcrumbTypes, 'log'))) return
 
   map(CONSOLE_LOG_METHODS, method => {
     const original = console[method]

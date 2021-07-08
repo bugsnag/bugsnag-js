@@ -46,10 +46,12 @@ describe('plugin: react native orientation breadcrumbs', () => {
     expect(client._breadcrumbs[1].metadata).toEqual({ from: 'portrait', to: 'landscape' })
   })
 
-  it('should not be enabled when enabledBreadcrumbTypes=null', () => {
+  it('should be enabled when enabledBreadcrumbTypes=null', () => {
+    MockDimensions.get = () => ({ height: 100, width: 200 })
+
     const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: null, plugins: [plugin] })
 
-    expect(MockDimensions.addEventListener).not.toHaveBeenCalled()
+    expect(MockDimensions.addEventListener).toHaveBeenCalledWith('change', expect.any(Function))
     expect(client).toBe(client)
   })
 

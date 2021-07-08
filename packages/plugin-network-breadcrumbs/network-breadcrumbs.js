@@ -14,7 +14,7 @@ module.exports = (_ignoredUrls = [], win = window) => {
   let restoreFunctions = []
   const plugin = {
     load: client => {
-      if (!client._config.enabledBreadcrumbTypes || !includes(client._config.enabledBreadcrumbTypes, 'request')) return
+      if (client._config.enabledBreadcrumbTypes && !includes(client._config.enabledBreadcrumbTypes, 'request')) return
 
       const ignoredUrls = [
         client._config.endpoints.notify,

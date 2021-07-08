@@ -8,7 +8,7 @@ module.exports = (win = window) => {
     load: (client) => {
       if (!('addEventListener' in win)) return
 
-      if (!client._config.enabledBreadcrumbTypes || !includes(client._config.enabledBreadcrumbTypes, 'navigation')) return
+      if (client._config.enabledBreadcrumbTypes && !includes(client._config.enabledBreadcrumbTypes, 'navigation')) return
 
       // returns a function that will drop a breadcrumb with a given name
       const drop = name => () => client.leaveBreadcrumb(name, {}, 'navigation')

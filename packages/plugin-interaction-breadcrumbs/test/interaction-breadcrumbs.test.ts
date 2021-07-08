@@ -23,6 +23,13 @@ describe('plugin: interaction breadcrumbs', () => {
     winHandlers.click.forEach(fn => fn.call(window, { target: els[0] }))
     expect(c._breadcrumbs.length).toBe(1)
   })
+
+  it('should be enabled when enabledBreadcrumbTypes=null', () => {
+    const { window, winHandlers, els } = getMockWindow()
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: null, plugins: [plugin(window)] })
+    winHandlers.click.forEach(fn => fn.call(window, { target: els[0] }))
+    expect(c._breadcrumbs.length).toBe(1)
+  })
 })
 
 const getMockWindow = () => {
