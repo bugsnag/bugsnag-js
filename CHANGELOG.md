@@ -16,6 +16,7 @@
 ### Fixed
 
 - Breadcrumbs will now be left when `enabledBreadcrumbTypes` is `null` [#1466](https://github.com/bugsnag/bugsnag-js/pull/1466)
+- Avoid crash when `enabledBreadcrumbTypes` is `null` [#1467](https://github.com/bugsnag/bugsnag-js/pull/1467)
 
 ## 7.10.5 (2021-07-05)
 
