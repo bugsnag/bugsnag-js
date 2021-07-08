@@ -213,18 +213,22 @@ NSString *BSGSerializeThreadType(BSGThreadType type) {
     thread_t *threads = NULL;
     mach_msg_type_number_t threadCount = 0;
 
+    if (task_threads(mach_task_self(), &threads, &threadCount) != KERN_SUCCESS) {
+        return @[];
+    }
+
+    NSMutableArray *objects = [NSMutableArray arrayWithCapacity:threadCount];
+
+    struct backtrace_t *backtraces = calloc(threadCount, sizeof(struct backtrace_t));
+    if (!backtraces) {
+        goto cleanup;
+    }
+
     suspend_threads();
 
     // While threads are suspended only async-signal-safe functions should be used,
     // as another threads may have been suspended while holding a lock in malloc,
     // the Objective-C runtime, or other subsystems.
-
-    if (task_threads(mach_task_self(), &threads, &threadCount) != KERN_SUCCESS) {
-        resume_threads();
-        return @[];
-    }
-
-    struct backtrace_t backtraces[threadCount];
 
     for (mach_msg_type_number_t i = 0; i < threadCount; i++) {
         BOOL isCurrentThread = MACH_PORT_INDEX(threads[i]) == MACH_PORT_INDEX(bsg_ksmachthread_self());
@@ -237,8 +241,6 @@ NSString *BSGSerializeThreadType(BSGThreadType type) {
 
     resume_threads();
 
-    NSMutableArray *objects = [NSMutableArray arrayWithCapacity:threadCount];
-
     for (mach_msg_type_number_t i = 0; i < threadCount; i++) {
         BOOL isCurrentThread = MACH_PORT_INDEX(threads[i]) == MACH_PORT_INDEX(bsg_ksmachthread_self());
         struct backtrace_t *backtrace = isCurrentThread ? currentThreadBacktrace : &backtraces[i];
@@ -249,11 +251,13 @@ NSString *BSGSerializeThreadType(BSGThreadType type) {
                                                                index:i]];
     }
 
+cleanup:
     for (mach_msg_type_number_t i = 0; i < threadCount; i++) {
         mach_port_deallocate(mach_task_self(), threads[i]);
     }
     vm_deallocate(mach_task_self(), (vm_address_t)threads, sizeof(thread_t) * threadCount);
 
+    free(backtraces);
     return objects;
 }
 

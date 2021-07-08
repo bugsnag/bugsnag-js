@@ -9,6 +9,7 @@
 #import "BSGEventUploadOperation.h"
 
 #import "BSGFileLocations.h"
+#import "BSGInternalErrorReporter.h"
 #import "BSG_RFC3339DateTool.h"
 #import "BugsnagAppWithState+Private.h"
 #import "BugsnagConfiguration+Private.h"
@@ -174,9 +175,16 @@ typedef NS_ENUM(NSUInteger, BSGEventUploadOperationState) {
     self.state = BSGEventUploadOperationStateExecuting;
     [self didChangeValueForKey:NSStringFromSelector(@selector(isExecuting))];
     
-    [self runWithDelegate:delegate completionHandler:^{
+    @try {
+        [self runWithDelegate:delegate completionHandler:^{
+            [self setFinished];
+        }];
+    } @catch (NSException *exception) {
+        [BSGInternalErrorReporter.sharedInstance reportException:exception diagnostics:nil groupingHash:
+         [NSString stringWithFormat:@"BSGEventUploadOperation -[runWithDelegate:completionHandler:] %@ %@",
+          exception.name, exception.reason]];
         [self setFinished];
-    }];
+    }
 }
 
 - (void)setFinished {

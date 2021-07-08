@@ -55,12 +55,20 @@ FOUNDATION_EXPORT NSString *BSGErrorDescription(NSError *error);
                  diagnostics:(nullable NSDictionary<NSString *, id> *)diagnostics
                 groupingHash:(nullable NSString *)groupingHash;
 
+- (void)reportException:(NSException *)exception
+            diagnostics:(nullable NSDictionary<NSString *, id> *)diagnostics
+           groupingHash:(nullable NSString *)groupingHash;
+
 // Private
 
 - (nullable BugsnagEvent *)eventWithErrorClass:(NSString *)errorClass
                                        message:(nullable NSString *)message
                                    diagnostics:(nullable NSDictionary<NSString *, id> *)diagnostics
                                   groupingHash:(nullable NSString *)groupingHash;
+
+- (nullable BugsnagEvent *)eventWithException:(NSException *)exception
+                                  diagnostics:(nullable NSDictionary<NSString *, id> *)diagnostics
+                                 groupingHash:(nullable NSString *)groupingHash;
 
 - (nullable NSURLRequest *)requestForEvent:(BugsnagEvent *)event error:(NSError * __autoreleasing *)errorPtr;
 
