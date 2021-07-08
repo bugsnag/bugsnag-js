@@ -66,7 +66,9 @@ const _createClient = (opts, jsOpts) => {
   const bugsnag = new Client(opts, schema, internalPlugins, { name, version, url })
 
   // if we let JS keep error breadcrumbs, it results in an error containing itself as a breadcrumb
-  bugsnag._config.enabledBreadcrumbTypes = bugsnag._config.enabledBreadcrumbTypes.filter(t => t !== 'error')
+  if (bugsnag._config.enabledBreadcrumbTypes !== null) {
+    bugsnag._config.enabledBreadcrumbTypes = bugsnag._config.enabledBreadcrumbTypes.filter(t => t !== 'error')
+  }
 
   bugsnag._setDelivery(client => delivery(client, NativeClient))
 

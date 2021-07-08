@@ -36,7 +36,9 @@ module.exports = (rendererOpts) => {
 
   // automatic error breadcrumbs will always be duplicates if created in renderers
   // because both the renderers and main process create them for the same Event
-  opts.enabledBreadcrumbTypes = opts.enabledBreadcrumbTypes.filter(type => type !== 'error')
+  if (opts.enabledBreadcrumbTypes !== null) {
+    opts.enabledBreadcrumbTypes = opts.enabledBreadcrumbTypes.filter(type => type !== 'error')
+  }
 
   const bugsnag = new Client(opts, schema, internalPlugins, require('../id'))
 

@@ -396,6 +396,19 @@ describe('@bugsnag/core/client', () => {
       expect(payloads[0].events[0].breadcrumbs.length).toBe(0)
     })
 
+    it('leaves a breadcrumb of the error when enabledBreadcrumbTypes=null', () => {
+      const payloads: any[] = []
+      const client = new Client({ apiKey: 'API_KEY_YEAH', enabledBreadcrumbTypes: null })
+      client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload), sendSession: () => {} }))
+      client.notify(new Error('foobar'))
+      expect(client._breadcrumbs).toHaveLength(1)
+      expect(client._breadcrumbs[0].type).toBe('error')
+      expect(client._breadcrumbs[0].message).toBe('Error')
+      expect(client._breadcrumbs[0].metadata.stacktrace).toBe(undefined)
+      // the error shouldn't appear as a breadcrumb for itself
+      expect(payloads[0].events[0].breadcrumbs).toHaveLength(0)
+    })
+
     it('doesn’t modify global client.metadata when using addMetadata() method', () => {
       const client = new Client({ apiKey: 'API_KEY_YEAH' })
       client.addMetadata('foo', 'bar', [1, 2, 3])

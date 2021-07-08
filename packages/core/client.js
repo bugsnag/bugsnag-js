@@ -296,7 +296,9 @@ class Client {
         return cb(null, event)
       }
 
-      if (includes(this._config.enabledBreadcrumbTypes, 'error')) {
+      const types = this._config.enabledBreadcrumbTypes
+
+      if (!types || includes(types, 'error')) {
         // only leave a crumb for the error if actually got sent
         Client.prototype.leaveBreadcrumb.call(this, event.errors[0].errorClass, {
           errorClass: event.errors[0].errorClass,

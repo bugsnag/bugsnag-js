@@ -74,6 +74,22 @@ describe('plugin: electron screen breadcrumbs', () => {
     expect(client._breadcrumbs).toHaveLength(0)
   })
 
+  it('works when enabledBreadcrumbTypes=null', () => {
+    const screen = makeScreen()
+    const { client } = makeClientForPlugin({
+      plugin: plugin(screen),
+      config: { enabledBreadcrumbTypes: null }
+    })
+
+    const display = makeDisplay({ id: 1234 })
+
+    screen._emit('display-added', display)
+    screen._emit('display-removed', display)
+    screen._emit('display-metrics-changed', display, ['bounds'])
+
+    expect(client._breadcrumbs).toHaveLength(3)
+  })
+
   it('anonymises IDs correctly', () => {
     const screen = makeScreen()
     const { client } = makeClientForPlugin({ plugin: plugin(screen) })

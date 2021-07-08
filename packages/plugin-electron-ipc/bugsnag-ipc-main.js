@@ -60,7 +60,7 @@ module.exports = class BugsnagIpcMain {
         return
       }
 
-      if (this.client._config.enabledBreadcrumbTypes.includes('error')) {
+      if (this.client._config.enabledBreadcrumbTypes && this.client._config.enabledBreadcrumbTypes.includes('error')) {
         // only leave a crumb for the error if actually got sent
         this.client.leaveBreadcrumb(event.errors[0].errorClass, {
           errorClass: event.errors[0].errorClass,
