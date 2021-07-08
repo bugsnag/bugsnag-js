@@ -112,23 +112,13 @@ NSString *BSGParseErrorMessage(NSDictionary *report, NSDictionary *error, NSStri
 }
 
 + (BugsnagError *)errorFromJson:(NSDictionary *)json {
-    NSArray *trace = json[BSGKeyStacktrace];
-    NSMutableArray *data = [NSMutableArray new];
-
-    if (trace != nil) {
-        for (NSDictionary *dict in trace) {
-            BugsnagStackframe *frame = [BugsnagStackframe frameFromJson:dict];
-
-            if (frame != nil) {
-                [data addObject:frame];
-            }
-        }
-    }
     BugsnagError *error = [[BugsnagError alloc] init];
-    error.errorClass = json[BSGKeyErrorClass];
-    error.errorMessage = json[BSGKeyMessage];
-    error.stacktrace = data;
-    error.typeString = json[BSGKeyType] ?: BSGErrorTypeStringCocoa;
+    error.errorClass = BSGDeserializeString(json[BSGKeyErrorClass]);
+    error.errorMessage = BSGDeserializeString(json[BSGKeyMessage]);
+    error.stacktrace = BSGDeserializeArrayOfObjects(json[BSGKeyStacktrace], ^id _Nullable(NSDictionary * _Nonnull dict) {
+        return [BugsnagStackframe frameFromJson:dict];
+    }) ?: @[];
+    error.typeString = BSGDeserializeString(json[BSGKeyType]) ?: BSGErrorTypeStringCocoa;
     return error;
 }
 
