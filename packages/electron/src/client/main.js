@@ -32,6 +32,7 @@ module.exports = (opts) => {
     // Plugins after the "FirstPlugin" will run in the main process for renderer
     // errors before any renderer onError callbacks are called
     require('@bugsnag/plugin-internal-callback-marker').FirstPlugin,
+    require('@bugsnag/plugin-electron-deliver-minidumps')(electron.app, filestore, electron.net),
     require('@bugsnag/plugin-electron-client-state-manager'),
     PluginClientStatePersistence(NativeClient),
     require('@bugsnag/plugin-electron-deliver-minidumps')(electron.app, electron.net, filestore, NativeClient),

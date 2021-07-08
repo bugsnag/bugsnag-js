@@ -2,12 +2,13 @@ import { createServer, IncomingHttpHeaders, STATUS_CODES } from 'http'
 import { app, net } from 'electron'
 import { AddressInfo } from 'net'
 import delivery from '../'
-import { EventDeliveryPayload } from '@bugsnag/core/client'
+import { Delivery, EventDeliveryPayload } from '@bugsnag/core/client'
 import { Client } from '@bugsnag/core'
 import PayloadQueue from '../queue'
 import PayloadDeliveryLoop from '../payload-loop'
-import { promises } from 'fs'
+import { promises, writeFileSync } from 'fs'
 import EventEmitter from 'events'
+import { join } from 'path'
 const { mkdtemp, rmdir } = promises
 
 const noopLogger = {
@@ -32,6 +33,10 @@ jest.mock('../payload-loop')
 
 const PayloadQueueMock = PayloadQueue as jest.MockedClass<typeof PayloadQueue>
 const PayloadDeliveryLoopMock = PayloadDeliveryLoop as jest.MockedClass<typeof PayloadDeliveryLoop>
+
+type ElectronDelivery = Delivery & {
+  sendMinidump: (minidumpPath: string, event: EventDeliveryPayload | undefined, cb: (Error?) => any) => void
+}
 
 const mockServer = (statusCode = 200) => {
   const requests: Array<{ url?: string, method?: string, headers: IncomingHttpHeaders, body?: string }> = []
@@ -61,9 +66,10 @@ describe('delivery: electron', () => {
   beforeEach(async () => {
     const events = await mkdtemp('delivery-events-')
     const sessions = await mkdtemp('delivery-sessions-')
+    const minidumps = await mkdtemp('delivery-minidumps-')
     filestore = {
       getPaths () {
-        return { events: events, sessions: sessions }
+        return { events, sessions, minidumps }
       }
     }
 
@@ -79,6 +85,7 @@ describe('delivery: electron', () => {
     const paths = filestore.getPaths()
     await rmdir(paths.events, { recursive: true })
     await rmdir(paths.sessions, { recursive: true })
+    await rmdir(paths.minidumps, { recursive: true })
   })
 
   it('sends events successfully', done => {
@@ -138,6 +145,38 @@ describe('delivery: electron', () => {
         expect(requests[0].headers['bugsnag-payload-version']).toEqual('1')
         expect(requests[0].headers['bugsnag-sent-at']).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/)
         expect(requests[0].body).toBe(JSON.stringify(payload))
+
+        server.close()
+        done()
+      })
+    })
+  })
+
+  it('sends minidump successfully', done => {
+    const { requests, server } = mockServer(202)
+    // @ts-expect-error the types for 'listen' don't include this overload
+    server.listen(0, 'localhost', (err: any) => {
+      expect(err).toBeUndefined()
+
+      const minidumpPath = join(filestore.getPaths().minidumps, 'test-minidump.dmp')
+      writeFileSync(minidumpPath, 'testing1234', 'utf8')
+
+      const eventPayload = {
+        events: [{ errors: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }] }]
+      } as unknown as EventDeliveryPayload
+      const config = {
+        apiKey: 'aaaaaaaa',
+        endpoints: { notify: 'blah', sessions: 'blah', minidumps: `http://localhost:${(server.address() as AddressInfo).port}/minidumps/` },
+        redactedKeys: []
+      }
+      const electronDelivery = delivery(filestore, net, app)(makeClient(config)) as ElectronDelivery
+      electronDelivery.sendMinidump(minidumpPath, eventPayload, (err: any) => {
+        expect(err).toBe(null)
+        expect(requests.length).toBe(1)
+        expect(requests[0].method).toBe('POST')
+        expect(requests[0].url).toMatch(/minidumps\/\?api_key/)
+        expect(requests[0].headers['content-type']).toMatch(/^multipart\/form-data/)
+        expect(requests[0].headers['bugsnag-sent-at']).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/)
 
         server.close()
         done()
