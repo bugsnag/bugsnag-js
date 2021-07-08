@@ -2,6 +2,10 @@
 
 ## TBC
 
+### Added
+
+- Server framework plugins now honour the `autoDetectErrors` configuration option [#1464](https://github.com/bugsnag/bugsnag-js/pull/1464)
+
 ### Changed
 
 - (react-native): Update bugsnag-cocoa to v6.10.1

@@ -30,6 +30,8 @@ module.exports = {
         event.request = { ...event.request, ...request }
       }, true)
 
+      if (!client._config.autoDetectErrors) return next()
+
       // unhandled errors caused by this request
       dom.on('error', (err) => {
         const event = client.Event.create(err, false, handledState, 'restify middleware', 1)
@@ -51,6 +53,7 @@ module.exports = {
     }
 
     const errorHandler = (req, res, err, cb) => {
+      if (!client._config.autoDetectErrors) return cb()
       if (err.statusCode && err.statusCode < 500) return cb()
 
       const event = client.Event.create(err, false, handledState, 'restify middleware', 1)

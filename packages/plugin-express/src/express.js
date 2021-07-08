@@ -31,6 +31,8 @@ module.exports = {
         requestClient.addMetadata('request', metadata)
       }, true)
 
+      if (!client._config.autoDetectErrors) return next()
+
       // unhandled errors caused by this request
       dom.on('error', (err) => {
         const event = client.Event.create(err, false, handledState, 'express middleware', 1)
@@ -48,6 +50,8 @@ module.exports = {
     }
 
     const errorHandler = (err, req, res, next) => {
+      if (!client._config.autoDetectErrors) return next(err)
+
       const event = client.Event.create(err, false, handledState, 'express middleware', 1)
 
       const { metadata, request } = getRequestAndMetadataFromReq(req)

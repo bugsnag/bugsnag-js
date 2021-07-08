@@ -27,6 +27,8 @@ module.exports = {
         event.addMetadata('request', metadata)
       }, true)
 
+      if (!client._config.autoDetectErrors) return next()
+
       try {
         await next()
       } catch (err) {
@@ -59,6 +61,8 @@ module.exports = {
         event.request = { ...event.request, ...request }
       }, true)
 
+      if (!client._config.autoDetectErrors) return next()
+
       try {
         yield next
       } catch (err) {
@@ -71,6 +75,8 @@ module.exports = {
     }
 
     const errorHandler = (err, ctx) => {
+      if (!client._config.autoDetectErrors) return
+
       const event = client.Event.create(err, false, handledState, 'koa middleware', 1)
 
       const { metadata, request } = getRequestAndMetadataFromCtx(ctx)
