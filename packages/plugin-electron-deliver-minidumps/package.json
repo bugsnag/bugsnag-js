@@ -14,7 +14,8 @@
   "files": [
     "deliver-minidumps.js",
     "minidump-loop.js",
-    "minidump-queue.js"
+    "minidump-queue.js",
+    "send-minidump.js"
   ],
   "dependencies": {
     "form-data": "^4.0.0"

@@ -15,7 +15,7 @@ const createQueue = (...minidumps) => ({
   remove: jest.fn().mockResolvedValue(true)
 })
 
-const createSendMinidump = () => jest.fn().mockImplementation((mb, ev, cb) => cb())
+const createSendMinidump = () => jest.fn().mockResolvedValue(true)
 
 describe('electron-minidump-delivery: minidump-loop', () => {
   const onSend = () => {}

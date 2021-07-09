@@ -39,17 +39,12 @@ module.exports = class MinidumpDeliveryLoop {
       this._scheduleSelf()
     } else {
       try {
-        this._sendMinidump(minidump.minidumpPath, event, async (err) => {
-          this._scheduleSelf()
-
-          if (err) {
-            this._onerror(err, minidump)
-          }
-
-          this._minidumpQueue.remove(minidump)
-        })
+        await this._sendMinidump(minidump.minidumpPath, event)
       } catch (e) {
         this._onerror(e, minidump)
+      } finally {
+        this._minidumpQueue.remove(minidump)
+        this._scheduleSelf()
       }
     }
   }
