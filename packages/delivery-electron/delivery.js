@@ -1,12 +1,8 @@
 const { createHash } = require('crypto')
-const { createReadStream } = require('fs')
-const { basename } = require('path')
-const { createGzip } = require('zlib')
 const payload = require('@bugsnag/core/lib/json-payload')
 const PayloadQueue = require('./queue')
 const PayloadDeliveryLoop = require('./payload-loop')
 const NetworkStatus = require('./network-status')
-const FormData = require('form-data')
 
 const delivery = (client, filestore, net, app) => {
   const send = (opts, body, cb) => {
@@ -23,12 +19,8 @@ const delivery = (client, filestore, net, app) => {
     req.on('error', cb)
 
     try {
-      if (typeof body === 'function') {
-        body(req)
-      } else {
-        req.write(body)
-        req.end()
-      }
+      req.write(body)
+      req.end()
     } catch (err) {
       // if we can't write this body to the request, it's likely impossible to
       // ever send it successfully
@@ -128,39 +120,6 @@ const delivery = (client, filestore, net, app) => {
         })
       } catch (e) {
         onerror(e, { opts, body }, 'session', cb)
-      }
-    },
-
-    sendMinidump: (minidumpPath, event, cb = () => {}) => {
-      try {
-        const url = new URL(client._config.endpoints.minidumps)
-        url.searchParams.set('api_key', client._config.apiKey)
-
-        const minidumpStream = createReadStream(minidumpPath).pipe(createGzip())
-
-        const formData = new FormData()
-        formData.append('upload_file_minidump', minidumpStream, {
-          filename: basename(minidumpPath)
-        })
-
-        if (event) {
-          const eventBody = payload.event(event, client._config.redactedKeys)
-          formData.append('event', eventBody)
-        }
-
-        const opts = {
-          url: url.toString(),
-          method: 'POST',
-          headers: {
-            'Bugsnag-Sent-At': (new Date()).toISOString(),
-            ...formData.getHeaders()
-          }
-        }
-
-        send(opts, req => formData.pipe(req), cb)
-      } catch (err) {
-        // ensure cb is always called asynchronously to avoid side-effect surprises
-        process.nextTick(() => cb(err))
       }
     }
   }
