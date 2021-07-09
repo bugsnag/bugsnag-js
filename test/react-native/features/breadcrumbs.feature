@@ -19,6 +19,19 @@ Scenario: Automatic breadcrumb for errors
   And the exception "message" equals "BreadcrumbsAutomaticErrorScenarioB"
   And the event has a "error" breadcrumb named "Error"
 
+Scenario: Automatic breadcrumbs when enabledBreadcrumbTypes is null
+  When I run "BreadcrumbsNullEnabledBreadcrumbTypesScenario"
+  Then I wait to receive 2 errors
+  And the exception "errorClass" equals "Error"
+  And the exception "message" equals "BreadcrumbsNullEnabledBreadcrumbTypesScenarioA"
+  And the event has a "state" breadcrumb named "Bugsnag loaded"
+  And the event does not have a "error" breadcrumb
+  And I discard the oldest error
+  And the exception "errorClass" equals "Error"
+  And the exception "message" equals "BreadcrumbsNullEnabledBreadcrumbTypesScenarioB"
+  And the event has a "state" breadcrumb named "Bugsnag loaded"
+  And the event has a "error" breadcrumb named "Error"
+
 Scenario: Manual breadcrumbs (JS)
   When I run "BreadcrumbsJsManualScenario"
   Then I wait to receive an error
