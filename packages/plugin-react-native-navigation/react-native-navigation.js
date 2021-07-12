@@ -15,13 +15,7 @@ module.exports = class BugsnagPluginReactNativeNavigation {
     this.Navigation.events().registerComponentDidAppearListener(event => {
       client.setContext(event.componentName)
 
-      if (
-        lastComponent !== event.componentName &&
-        (
-          client._config.enabledBreadcrumbTypes === null ||
-          client._config.enabledBreadcrumbTypes.includes('navigation')
-        )
-      ) {
+      if (lastComponent !== event.componentName && client._isBreadcrumbTypeEnabled('navigation')) {
         client.leaveBreadcrumb(
           'React Native Navigation componentDidAppear',
           { to: event.componentName, from: lastComponent },

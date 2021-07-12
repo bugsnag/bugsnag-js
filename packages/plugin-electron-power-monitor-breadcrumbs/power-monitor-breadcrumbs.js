@@ -2,7 +2,7 @@ const BREADCRUMB_STATE = 'state'
 
 module.exports = (powerMonitor) => ({
   load (client) {
-    if (client._config.enabledBreadcrumbTypes && !client._config.enabledBreadcrumbTypes.includes(BREADCRUMB_STATE)) {
+    if (!client._isBreadcrumbTypeEnabled(BREADCRUMB_STATE)) {
       return
     }
 
