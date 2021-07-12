@@ -447,6 +447,19 @@ describe('plugin: network breadcrumbs', () => {
     expect(client._breadcrumbs.length).toBe(1)
   })
 
+  it('should be enabled when enabledBreadcrumbTypes=null', () => {
+    const window = { XMLHttpRequest } as unknown as Window & typeof globalThis
+
+    p = plugin([], window)
+    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: null, plugins: [p] })
+
+    const request = new XMLHttpRequest()
+    request.open('GET', '/')
+    request.send(false, 200)
+
+    expect(client._breadcrumbs.length).toBe(1)
+  })
+
   it('should strip query string data before checking a url is ignored', () => {
     const window = { XMLHttpRequest } as unknown as Window & typeof globalThis
 

@@ -7,7 +7,7 @@ module.exports = (win = window) => ({
   load: (client) => {
     if (!('addEventListener' in win)) return
 
-    if (!client._config.enabledBreadcrumbTypes || !includes(client._config.enabledBreadcrumbTypes, 'user')) return
+    if (client._config.enabledBreadcrumbTypes && !includes(client._config.enabledBreadcrumbTypes, 'user')) return
 
     win.addEventListener('click', (event) => {
       let targetText, targetSelector
