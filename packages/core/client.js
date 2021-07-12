@@ -257,6 +257,12 @@ class Client {
     }
   }
 
+  _isBreadcrumbTypeEnabled (type) {
+    const types = this._config.enabledBreadcrumbTypes
+
+    return types === null || includes(types, type)
+  }
+
   notify (maybeError, onError, cb = noop) {
     const event = Event.create(maybeError, true, undefined, 'notify()', this._depth + 1, this._logger)
     this._notify(event, onError, cb)
