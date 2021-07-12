@@ -7,7 +7,7 @@ class BugsnagPluginReactNavigation {
 
   load (client) {
     const leaveBreadcrumb = (event, currentRouteName, previousRouteName) => {
-      if (client._config.enabledBreadcrumbTypes && !client._config.enabledBreadcrumbTypes.includes('navigation')) return
+      if (!client._isBreadcrumbTypeEnabled('navigation')) return
 
       client.leaveBreadcrumb(
         `React Navigation ${event}`,

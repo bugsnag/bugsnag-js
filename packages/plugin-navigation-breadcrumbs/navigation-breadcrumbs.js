@@ -1,5 +1,3 @@
-const includes = require('@bugsnag/core/lib/es-utils/includes')
-
 /*
 * Leaves breadcrumbs when navigation methods are called or events are emitted
 */
@@ -7,8 +5,7 @@ module.exports = (win = window) => {
   const plugin = {
     load: (client) => {
       if (!('addEventListener' in win)) return
-
-      if (client._config.enabledBreadcrumbTypes && !includes(client._config.enabledBreadcrumbTypes, 'navigation')) return
+      if (!client._isBreadcrumbTypeEnabled('navigation')) return
 
       // returns a function that will drop a breadcrumb with a given name
       const drop = name => () => client.leaveBreadcrumb(name, {}, 'navigation')

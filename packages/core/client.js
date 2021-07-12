@@ -257,6 +257,12 @@ class Client {
     }
   }
 
+  _isBreadcrumbTypeEnabled (type) {
+    const types = this._config.enabledBreadcrumbTypes
+
+    return types === null || includes(types, type)
+  }
+
   notify (maybeError, onError, cb = noop) {
     const event = Event.create(maybeError, true, undefined, 'notify()', this._depth + 1, this._logger)
     this._notify(event, onError, cb)
@@ -296,9 +302,7 @@ class Client {
         return cb(null, event)
       }
 
-      const types = this._config.enabledBreadcrumbTypes
-
-      if (!types || includes(types, 'error')) {
+      if (this._isBreadcrumbTypeEnabled('error')) {
         // only leave a crumb for the error if actually got sent
         Client.prototype.leaveBreadcrumb.call(this, event.errors[0].errorClass, {
           errorClass: event.errors[0].errorClass,
