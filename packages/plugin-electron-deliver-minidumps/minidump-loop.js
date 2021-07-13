@@ -44,7 +44,12 @@ module.exports = class MinidumpDeliveryLoop {
         // if we had a successful delivery - remove the minidump from the queue, and schedule the next
         this._minidumpQueue.remove(minidump)
       } catch (e) {
-        this._onerror(e, minidump)
+        // if the error is not retryable: remove the minidump from the queue and signal the error
+        if (!e.isRetryable) {
+          this._minidumpQueue.remove(minidump)
+          this._onerror(e, minidump)
+        }
+        // if the error is retryable: leave things as-is and we will attempt a redelivery
       } finally {
         this._scheduleSelf()
       }
