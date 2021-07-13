@@ -20,14 +20,16 @@ const delivery = (client, filestore, net, app) => {
 
     try {
       req.write(body)
-      req.end()
     } catch (err) {
       // if we can't write this body to the request, it's likely impossible to
       // ever send it successfully
       err.isRetryable = false
 
       cb(err)
+      return
     }
+
+    req.end()
   }
 
   const logError = e => client._logger.error('Error delivering payload', e)

@@ -31,6 +31,7 @@
     "@bugsnag/plugin-electron-preload-error": "^7.10.0",
     "@bugsnag/plugin-electron-process-info": "^7.10.0",
     "@bugsnag/plugin-electron-renderer-client-state-updates": "^7.10.0",
+    "@bugsnag/plugin-electron-client-state-persistence": "^7.10.0",
     "@bugsnag/plugin-electron-renderer-event-data": "^7.10.0",
     "@bugsnag/plugin-electron-renderer-strip-project-root": "^7.10.0",
     "@bugsnag/plugin-electron-session": "^7.10.0",

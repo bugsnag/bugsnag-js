@@ -1,7 +1,7 @@
 const { readFile } = require('fs').promises
 
 module.exports = class MinidumpDeliveryLoop {
-  constructor (sendMinidump, onSend, minidumpQueue, logger) {
+  constructor (sendMinidump, onSend = () => true, minidumpQueue, logger) {
     this._sendMinidump = sendMinidump
     this._onSend = onSend
     this._minidumpQueue = minidumpQueue
