@@ -14,7 +14,7 @@ class FileStore {
       sessions: join(base, 'sessions'),
       runinfo: join(base, 'runinfo'),
       device: join(base, 'device.json'),
-      minidumps: join(crashDir, isMac ? 'completed' : 'reports')
+      minidumps: join(crashDir, isMac ? 'pending' : 'reports')
     }
   }
 
