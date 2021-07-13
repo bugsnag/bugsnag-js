@@ -26,7 +26,9 @@ const runDeliveryLoop = async (times: number = 1) => {
 
 describe('electron-minidump-delivery: minidump-loop', () => {
   const onSend = () => true
-  const logger = {}
+  const logger = {
+    error: () => {}
+  }
 
   describe('delivers minidumps', () => {
     it('delivers minidumps', async () => {

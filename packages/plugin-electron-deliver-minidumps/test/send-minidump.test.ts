@@ -59,7 +59,7 @@ describe('electron-minidump-delivery: sendMinidump', () => {
     await expect(sendMinidump(minidumpFile, null)).rejects.toHaveProperty('isRetryable', true)
   })
 
-  it('marks server error as no-retry', async () => {
+  it('marks bad request as no-retry', async () => {
     const net = {
       request: jest.fn().mockImplementation((opts, handle) => {
         handle({ statusCode: 400 })

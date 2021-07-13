@@ -1,5 +1,4 @@
 const { crashReporter } = require('electron')
-const { join } = require('path')
 const MinidumpDeliveryLoop = require('./minidump-loop')
 const MinidumpQueue = require('./minidump-queue')
 const sendMinidumpFactory = require('./send-minidump')
@@ -22,7 +21,7 @@ module.exports = (app, net, filestore, nativeClient) => ({
     })
 
     nativeClient.install(
-      join(filestore.getPaths().runinfo, metadata.bugsnag_crash_id),
+      filestore.getEventInfoPath(metadata.bugsnag_crash_id),
       client._config.maxBreadcrumbs
     )
 
