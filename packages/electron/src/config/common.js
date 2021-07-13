@@ -27,7 +27,7 @@ module.exports.schema = {
       sessions: 'https://sessions.bugsnag.com',
       minidumps: 'https://notify.bugsnag.com/minidumps'
     }),
-    message: 'should be an object containing endpoint URLs { notify, sessions }',
+    message: 'should be an object containing endpoint URLs { notify, sessions, minidumps }',
     validate: val =>
       // first, ensure it's an object
       (val && typeof val === 'object') &&
@@ -35,7 +35,7 @@ module.exports.schema = {
         // notify and sessions must always be set
         stringWithLength(val.notify) && stringWithLength(val.sessions)
       ) &&
-      // ensure no keys other than notify/session are set on endpoints object
+      // ensure no keys other than notify/session/minidumps are set on endpoints object
       Object.keys(val).filter(k => !['notify', 'sessions', 'minidumps'].includes(k)).length === 0
   },
   logger: {

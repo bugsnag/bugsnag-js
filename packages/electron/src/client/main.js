@@ -11,12 +11,6 @@ const { schema } = require('../config/main')
 
 Event.__type = 'electronnodejs'
 
-// noop native client for now
-const NativeClient = {
-  setApp () {},
-  setDevice () {}
-}
-
 module.exports = (opts) => {
   const filestore = new FileStore(
     opts.apiKey,
@@ -31,12 +25,16 @@ module.exports = (opts) => {
     opts.projectRoot = normalizePath(opts.projectRoot)
   }
 
+  const { plugin: PluginClientStatePersistence, NativeClient } = require('@bugsnag/plugin-electron-client-state-persistence')
+
   // main internal plugins go here
   const internalPlugins = [
     // Plugins after the "FirstPlugin" will run in the main process for renderer
     // errors before any renderer onError callbacks are called
     require('@bugsnag/plugin-internal-callback-marker').FirstPlugin,
     require('@bugsnag/plugin-electron-client-state-manager'),
+    PluginClientStatePersistence(NativeClient),
+    require('@bugsnag/plugin-electron-deliver-minidumps')(electron.app, electron.net, filestore, NativeClient),
     require('@bugsnag/plugin-electron-ipc'),
     require('@bugsnag/plugin-node-uncaught-exception'),
     require('@bugsnag/plugin-node-unhandled-rejection'),
@@ -61,6 +59,8 @@ module.exports = (opts) => {
   const bugsnag = new Client(opts, schema, internalPlugins, require('../id'))
 
   bugsnag._setDelivery(makeDelivery(filestore, electron.net, electron.app))
+
+  filestore.init().catch(err => bugsnag._logger.warn('Failed to init crash FileStore directories', err))
 
   // expose markLaunchComplete as a method on the Bugsnag client/facade
   const electronApp = bugsnag.getPlugin('electronApp')

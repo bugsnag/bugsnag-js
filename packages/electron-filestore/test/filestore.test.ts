@@ -11,7 +11,7 @@ describe('FileStore', () => {
 
   beforeEach(async () => {
     await mkdir(join(crashes, 'reports'), { recursive: true })
-    await mkdir(join(crashes, 'completed'), { recursive: true })
+    await mkdir(join(crashes, 'pending'), { recursive: true })
     store = new FileStore('mykey', fixtures, crashes)
   })
 
