@@ -108,6 +108,7 @@ module.exports = {
       'electron',
       'electron-filestore',
       'electron-test-helpers',
+      'electron-network-status',
       'plugin-electron-app',
       'plugin-electron-app-breadcrumbs',
       'plugin-electron-client-state-manager',

@@ -2,7 +2,7 @@ const { createHash } = require('crypto')
 const payload = require('@bugsnag/core/lib/json-payload')
 const PayloadQueue = require('./queue')
 const PayloadDeliveryLoop = require('./payload-loop')
-const NetworkStatus = require('./network-status')
+const NetworkStatus = require('@bugsnag/electron-network-status')
 
 const delivery = (client, filestore, net, app) => {
   const send = (opts, body, cb) => {
