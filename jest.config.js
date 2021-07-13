@@ -112,6 +112,7 @@ module.exports = {
       'plugin-electron-app-breadcrumbs',
       'plugin-electron-client-state-manager',
       'plugin-electron-client-state-persistence',
+      'plugin-electron-deliver-minidumps',
       'plugin-electron-device',
       'plugin-electron-ipc',
       'plugin-electron-net-breadcrumbs',

@@ -155,7 +155,9 @@ class Router {
   }
 
   async dispatch (req, res) {
-    const resource = this.resources.find(r => r.path === req.url)
+    // trim the query-string off, if there is one
+    const reqPath = req.url.indexOf('?') !== -1 ? req.url.substring(0, req.url.indexOf('?')) : req.url
+    const resource = this.resources.find(r => r.path === reqPath)
     if (resource) {
       if (resource.method === req.method) {
         await resource.handle(req, res)

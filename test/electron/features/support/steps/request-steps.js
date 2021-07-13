@@ -66,6 +66,11 @@ Then('minidump request {int} contains a file form field named {string}', (index,
   expect(req.files[field]).not.toBeUndefined()
 })
 
+Then('minidump request {int} contains a form field named {string}', (index, field) => {
+  const req = global.server.minidumpUploads[index]
+  expect(req.fields[field]).not.toBeUndefined()
+})
+
 Then('the total requests received by the server matches:', async (data) => {
   return requestDelay((done) => {
     const expected = {}
