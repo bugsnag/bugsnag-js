@@ -17,8 +17,15 @@ const createQueue = (...minidumps) => ({
 
 const createSendMinidump = () => jest.fn().mockResolvedValue(true)
 
+const runDeliveryLoop = async (times: number = 1) => {
+  for (let i = 0; i < times; i++) {
+    jest.runOnlyPendingTimers()
+    await flushPromises()
+  }
+}
+
 describe('electron-minidump-delivery: minidump-loop', () => {
-  const onSend = () => {}
+  const onSend = () => true
   const logger = {}
 
   describe('delivers minidumps', () => {
@@ -32,8 +39,7 @@ describe('electron-minidump-delivery: minidump-loop', () => {
       const loop = new MinidumpDeliveryLoop(sendMinidump, onSend, minidumpQueue, logger)
       loop.start()
 
-      jest.runOnlyPendingTimers()
-      await flushPromises()
+      await runDeliveryLoop()
 
       expect(sendMinidump).toBeCalledTimes(1)
       expect(minidumpQueue.remove).toBeCalledTimes(1)
@@ -49,8 +55,7 @@ describe('electron-minidump-delivery: minidump-loop', () => {
       const loop = new MinidumpDeliveryLoop(sendMinidump, onSend, minidumpQueue, logger)
       loop.start()
 
-      jest.runOnlyPendingTimers()
-      await flushPromises()
+      await runDeliveryLoop()
 
       expect(sendMinidump).toBeCalledTimes(1)
       expect(minidumpQueue.remove).toBeCalledTimes(1)
@@ -67,10 +72,7 @@ describe('electron-minidump-delivery: minidump-loop', () => {
     const loop = new MinidumpDeliveryLoop(sendMinidump, () => false, minidumpQueue, logger)
     loop.start()
 
-    for (let i = 0; i < 2; i++) {
-      jest.runOnlyPendingTimers()
-      await flushPromises()
-    }
+    await runDeliveryLoop(2)
 
     expect(sendMinidump).toBeCalledTimes(0)
     expect(minidumpQueue.remove).toBeCalledTimes(2)
@@ -86,14 +88,32 @@ describe('electron-minidump-delivery: minidump-loop', () => {
     const loop = new MinidumpDeliveryLoop(sendMinidump, onSend, minidumpQueue, logger)
     loop.start()
 
-    for (let i = 0; i < 3; i++) {
-      jest.runOnlyPendingTimers()
-      await flushPromises()
-    }
+    await runDeliveryLoop(3)
 
     expect(sendMinidump).toBeCalledTimes(2)
     expect(minidumpQueue.remove).toBeCalledTimes(2)
 
     expect(jest.getTimerCount()).toBe(0)
+  })
+
+  it('attempts redlivery', async () => {
+    const retryError: any = new Error()
+    retryError.isRetryable = true
+    const sendMinidump = jest.fn()
+      .mockRejectedValueOnce(retryError)
+      .mockResolvedValueOnce(true)
+
+    const minidumpQueue = createQueue(
+      { minidumpPath: 'minidump-path1', eventPath: 'event-path1' },
+      { minidumpPath: 'minidump-path2', eventPath: 'event-path2' }
+    )
+
+    const loop = new MinidumpDeliveryLoop(sendMinidump, onSend, minidumpQueue, logger)
+    loop.start()
+
+    await runDeliveryLoop(2)
+
+    expect(sendMinidump).toBeCalledTimes(2)
+    expect(minidumpQueue.remove).toBeCalledTimes(1)
   })
 })

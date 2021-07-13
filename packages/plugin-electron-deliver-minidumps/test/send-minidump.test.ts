@@ -58,4 +58,18 @@ describe('electron-minidump-delivery: sendMinidump', () => {
     const { sendMinidump } = sendMinidumpFactory(net, client)
     await expect(sendMinidump(minidumpFile, null)).rejects.toHaveProperty('isRetryable', true)
   })
+
+  it('marks server error as no-retry', async () => {
+    const net = {
+      request: jest.fn().mockImplementation((opts, handle) => {
+        handle({ statusCode: 400 })
+      })
+    }
+
+    const minidumpFile = join(minidumpsPath, 'test-minidump.dmp')
+    await writeFile(minidumpFile, '{}', 'utf8')
+
+    const { sendMinidump } = sendMinidumpFactory(net, client)
+    await expect(sendMinidump(minidumpFile, null)).rejects.toHaveProperty('isRetryable', false)
+  })
 })
