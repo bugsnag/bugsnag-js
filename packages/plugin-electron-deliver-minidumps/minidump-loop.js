@@ -85,4 +85,11 @@ module.exports = class MinidumpDeliveryLoop {
     this._running = false
     clearTimeout(this._timerId)
   }
+
+  watchNetworkStatus (statusUpdater) {
+    statusUpdater.watch(connected => {
+      if (connected) this.start()
+      else this.stop()
+    })
+  }
 }

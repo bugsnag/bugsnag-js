@@ -1,3 +1,5 @@
+import EventEmitter from 'events'
+import NetworkStatus from '@bugsnag/electron-network-status'
 import MinidumpDeliveryLoop from '../minidump-loop'
 
 const flushPromises = () => new Promise(setImmediate)
@@ -117,5 +119,58 @@ describe('electron-minidump-delivery: minidump-loop', () => {
 
     expect(sendMinidump).toBeCalledTimes(2)
     expect(minidumpQueue.remove).toBeCalledTimes(1)
+  })
+
+  describe('watchNetworkStatus', () => {
+    const app = { isReady: () => true }
+    const emitter = new EventEmitter()
+
+    it('should start delivery only when connected', async () => {
+      const statusWatcher = new NetworkStatus({ emitter }, { online: false }, app)
+
+      const sendMinidump = createSendMinidump()
+      const minidumpQueue = createQueue(
+        { minidumpPath: 'minidump-path1', eventPath: 'event-path1' },
+        { minidumpPath: 'minidump-path2', eventPath: 'event-path2' }
+      )
+
+      const loop = new MinidumpDeliveryLoop(sendMinidump, onSend, minidumpQueue, logger)
+      loop.watchNetworkStatus(statusWatcher)
+
+      // ensure that nothing is delivered while disconnected
+      await runDeliveryLoop(1)
+      expect(sendMinidump).toBeCalledTimes(0)
+
+      // connect the network
+      emitter.emit('MetadataUpdate', { section: 'device', values: { online: true } }, null)
+
+      // check that we've started delivering minidumps
+      await runDeliveryLoop(1)
+      expect(sendMinidump).toBeCalledTimes(1)
+    })
+
+    it('should stop delivery when disconnected', async () => {
+      const statusWatcher = new NetworkStatus({ emitter }, { online: true }, app)
+
+      const sendMinidump = createSendMinidump()
+      const minidumpQueue = createQueue(
+        { minidumpPath: 'minidump-path1', eventPath: 'event-path1' },
+        { minidumpPath: 'minidump-path2', eventPath: 'event-path2' }
+      )
+
+      const loop = new MinidumpDeliveryLoop(sendMinidump, onSend, minidumpQueue, logger)
+      loop.watchNetworkStatus(statusWatcher)
+
+      // ensure that the first minidump is delivered
+      await runDeliveryLoop(1)
+      expect(sendMinidump).toBeCalledTimes(1)
+
+      // disconnect the network
+      emitter.emit('MetadataUpdate', { section: 'device', values: { online: false } }, null)
+
+      // check that no more minidumps are delivered
+      await runDeliveryLoop(2)
+      expect(sendMinidump).toBeCalledTimes(1)
+    })
   })
 })
