@@ -8,7 +8,9 @@
 
 ### Changed
 
-- (react-native): Update bugsnag-cocoa to v6.10.1
+- (react-native): Update bugsnag-cocoa to v6.10.2
+  - Fix ThreadSanitizer data race warning in `BSGAppHangDetector`. [bugsnag-cocoa#1153](https://github.com/bugsnag/bugsnag-cocoa/pull/1153)
+  - Remove (duplicated) `user` information from `metaData`. [bugsnag-cocoa#1151](https://github.com/bugsnag/bugsnag-cocoa/pull/1151)
   - Fix a potential stack overflow in `+[BugsnagThread allThreadsWithCurrentThreadBacktrace:]`. [bugsnag-cocoa#1148](https://github.com/bugsnag/bugsnag-cocoa/pull/1148)
   - Fix `NSNull` handling in `+[BugsnagError errorFromJson:]` and `+[BugsnagStackframe frameFromJson:]`. [bugsnag-cocoa#1143](https://github.com/bugsnag/bugsnag-cocoa/pull/1143)
   - Fix a rare crash in `bsg_ksmachgetThreadQueueName`. [bugsnag-cocoa#1147](https://github.com/bugsnag/bugsnag-cocoa/pull/1147)
