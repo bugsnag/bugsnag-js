@@ -18,14 +18,15 @@
     "send-minidump.js"
   ],
   "dependencies": {
-    "form-data": "^4.0.0",
-    "@bugsnag/electron-network-status": "^7.10.0"
+    "form-data": "^4.0.0"
   },
   "devDependencies": {
-    "@bugsnag/core": "^7.10.0"
+    "@bugsnag/core": "^7.10.0",
+    "@bugsnag/electron-network-status": "^7.10.0"
   },
   "peerDependencies": {
-    "@bugsnag/core": "^7.9.2"
+    "@bugsnag/core": "^7.9.2",
+    "@bugsnag/electron-network-status": "^7.10.0"
   },
   "author": "Bugsnag",
   "license": "MIT"

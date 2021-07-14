@@ -19,6 +19,7 @@
     "@bugsnag/core": "^7.10.0",
     "@bugsnag/delivery-electron": "^7.10.0",
     "@bugsnag/electron-filestore": "^7.10.0",
+    "@bugsnag/electron-network-status": "^7.10.0",
     "@bugsnag/plugin-console-breadcrumbs": "^7.10.5",
     "@bugsnag/plugin-electron-app": "^7.10.0",
     "@bugsnag/plugin-electron-app-breadcrumbs": "^7.10.0",
