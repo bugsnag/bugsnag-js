@@ -5,16 +5,21 @@ const { F_OK } = fs.constants
 const { dirname, join } = require('path')
 const { getIdentifier, createIdentifier, identifierKey } = require('./lib/minidump-io')
 
+const minidumpPaths = {
+  darwin: 'pending',
+  win32: 'reports'
+}
+
 class FileStore {
   constructor (apiKey, storageDir, crashDir) {
     const base = join(storageDir, 'bugsnag', apiKey)
-    const isMac = process.platform === 'darwin'
+    const minidmumpSubpath = minidumpPaths[process.platform]
     this._paths = {
       events: join(base, 'events'),
       sessions: join(base, 'sessions'),
       runinfo: join(base, 'runinfo'),
       device: join(base, 'device.json'),
-      minidumps: join(crashDir, isMac ? 'pending' : 'reports')
+      minidumps: minidmumpSubpath ? join(crashDir, minidmumpSubpath) : crashDir
     }
   }
 
