@@ -30,13 +30,10 @@ describe('FileStore', () => {
       expect(paths.device).toEqual(join(base, 'device.json'))
       expect(paths.runinfo).toEqual(join(base, 'runinfo'))
 
-      switch (process.platform) {
-        case 'darwin':
-        case 'win32':
-          expect(dirname(paths.minidumps)).toEqual(crashes)
-          break
-        default:
-          expect(paths.minidumps).toEqual(crashes)
+      if (process.platform === 'darwin' || process.platform === 'win32') {
+        expect(dirname(paths.minidumps)).toEqual(crashes)
+      } else {
+        expect(paths.minidumps).toEqual(crashes)
       }
     })
   })

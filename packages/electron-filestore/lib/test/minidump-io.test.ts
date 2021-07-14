@@ -59,6 +59,22 @@ describe('minidump i/o', () => {
       expect(identifier).toMatch(fakeId)
     })
 
+    it('finds a pre-set key encoded in a multipart form (crlf)', async () => {
+      const sequence = `name="bugsnag_crash_id"\r\n\r\n${fakeId}\r\n------`
+      const contents = Buffer.from(`${'\0'.repeat(442)}${sequence}c\0\0\0`)
+      await write(filepath, contents)
+      const identifier = await getIdentifier(filepath)
+      expect(identifier).toMatch(fakeId)
+    })
+
+    it('finds a pre-set key encoded in a multipart form (lf)', async () => {
+      const sequence = `name="bugsnag_crash_id"\n\n${fakeId}\n------`
+      const contents = Buffer.from(`${'\0'.repeat(442)}${sequence}c\0\0\0`)
+      await write(filepath, contents)
+      const identifier = await getIdentifier(filepath)
+      expect(identifier).toMatch(fakeId)
+    })
+
     it('fails without the key being present in the file', async () => {
       const sequence = `${fakeId}`
       const contents = Buffer.from(`${'\0'.repeat(300)}${sequence}c\0\0\0`)

@@ -27,7 +27,12 @@ const getIdentifier = (filepath) => {
     let keyIndex = -1
 
     const extractValue = () => {
-      const start = keyIndex + byteOffset
+      // in this case we have a key embedded in an multipart form field (0x22 === '\"')
+      const formEncoded = data[keyIndex - 1] === 0x22 || data[keyIndex + lookupKeyLength] === 0x22
+      // check for \rn\n vs \n line-terminators in the case of form-encoding (0x0d === '\r')
+      const valueOffset = formEncoded && data[keyIndex + lookupKeyLength + 1] === 0x0d ? 5 : 3
+
+      const start = formEncoded ? keyIndex + lookupKeyLength + valueOffset : keyIndex + byteOffset
       const end = start + lookupValueLength
 
       if (data.length < end) {
@@ -73,7 +78,7 @@ const getIdentifier = (filepath) => {
 }
 
 const validate = (id) => {
-  const format = new RegExp(`^[a-z0-9]{${lookupValueLength}}$`)
+  const format = new RegExp(`^[a-f0-9]{${lookupValueLength}}$`)
   return format.test(id)
 }
 

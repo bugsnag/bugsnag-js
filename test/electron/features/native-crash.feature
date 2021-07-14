@@ -3,7 +3,6 @@ Feature: Native Errors
     Scenario: A minidump is uploaded on native error
         When I launch an app
         And I click "main-process-crash"
-        Given the app crashed
         Then I launch an app
         Then the total requests received by the server matches:
             | minidumps | 1        |
