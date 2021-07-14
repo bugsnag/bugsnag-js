@@ -142,11 +142,11 @@ describe('electron-minidump-delivery: minidump-loop', () => {
       expect(sendMinidump).toBeCalledTimes(0)
 
       // connect the network
-      emitter.emit('MetadataReplace', { metadata: { device: { online: true } } })
+      emitter.emit('MetadataUpdate', { section: 'device', values: { online: true } }, null)
 
       // check that we've started delivering minidumps
       await runDeliveryLoop(1)
-      expect(sendMinidump).toBeCalledTimes(0)
+      expect(sendMinidump).toBeCalledTimes(1)
     })
 
     it('should stop delivery when disconnected', async () => {
@@ -168,7 +168,7 @@ describe('electron-minidump-delivery: minidump-loop', () => {
       // disconnect the network
       emitter.emit('MetadataUpdate', { section: 'device', values: { online: false } }, null)
 
-      // check that we've started delivering minidumps
+      // check that no more minidumps are delivered
       await runDeliveryLoop(2)
       expect(sendMinidump).toBeCalledTimes(1)
     })
