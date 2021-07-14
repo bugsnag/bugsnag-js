@@ -1,6 +1,16 @@
 Changelog
 =========
 
+## 6.10.2 (2021-07-14)
+
+### Bug fixes
+
+* Fix ThreadSanitizer data race warning in `BSGAppHangDetector`.
+  [#1153](https://github.com/bugsnag/bugsnag-cocoa/pull/1153)
+
+* Remove (duplicated) `user` information from `metaData`.
+  [#1151](https://github.com/bugsnag/bugsnag-cocoa/pull/1151)
+
 ## 6.10.1 (2021-07-07)
 
 ### Bug fixes
