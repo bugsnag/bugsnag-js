@@ -32,6 +32,7 @@ module.exports = (net, client) => {
 
   const sendMinidump = async (minidumpPath, event) => {
     const url = new URL(client._config.endpoints.minidumps)
+    url.pathname = `${url.pathname.replace(/\/$/, '')}/minidump`
     url.searchParams.set('api_key', client._config.apiKey)
 
     const minidumpStream = createReadStream(minidumpPath).pipe(createGzip())
