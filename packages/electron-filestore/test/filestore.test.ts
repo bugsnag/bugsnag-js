@@ -29,7 +29,7 @@ describe('FileStore', () => {
       expect(paths.sessions).toEqual(join(base, 'sessions'))
       expect(paths.device).toEqual(join(base, 'device.json'))
       expect(paths.runinfo).toEqual(join(base, 'runinfo'))
-      expect(dirname(paths.minidumps)).toEqual(crashes)
+      expect(paths.minidumps).toEqual(crashes)
     })
   })
 
@@ -147,6 +147,21 @@ describe('FileStore', () => {
       expect(dumps[0].eventPath).toBeNull()
       expect(dumps[1].minidumpPath).toEqual(join(base, 'report02.dmp'))
       expect(dumps[1].eventPath).toEqual(join(store.getPaths().runinfo, id))
+    })
+
+    it('scans subdirectories', async () => {
+      const base = store.getPaths().minidumps
+
+      await writeFile(join(base, 'some-other-thing.ps'), 'not a crash')
+      await createMinidump('report01.dmp', '')
+      await createMinidump(join('reports', 'report02.dmp'), id)
+      await createMinidump(join('pending', 'report03.dmp'), id)
+
+      const dumps = await store.listMinidumps() as any[]
+      const dumpPaths = dumps.map(d => d.minidumpPath)
+      expect(dumpPaths).toContain(join(base, 'report01.dmp'))
+      expect(dumpPaths).toContain(join(base, 'reports', 'report02.dmp'))
+      expect(dumpPaths).toContain(join(base, 'pending', 'report03.dmp'))
     })
   })
 
