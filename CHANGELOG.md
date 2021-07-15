@@ -14,7 +14,11 @@
   - Fix a potential stack overflow in `+[BugsnagThread allThreadsWithCurrentThreadBacktrace:]`. [bugsnag-cocoa#1148](https://github.com/bugsnag/bugsnag-cocoa/pull/1148)
   - Fix `NSNull` handling in `+[BugsnagError errorFromJson:]` and `+[BugsnagStackframe frameFromJson:]`. [bugsnag-cocoa#1143](https://github.com/bugsnag/bugsnag-cocoa/pull/1143)
   - Fix a rare crash in `bsg_ksmachgetThreadQueueName`. [bugsnag-cocoa#1147](https://github.com/bugsnag/bugsnag-cocoa/pull/1147)
-- (react-native): Update bugsnag-android to v5.10.0
+- (react-native): Update bugsnag-android to v5.10.1
+  - Prefer `calloc()` to `malloc()` in NDK code
+    [bugsnag-android#1320](https://github.com/bugsnag/bugsnag-android/pull/1320)
+  - Ensure correct value always collected for activeScreen
+    [bugsnag-android#1322](https://github.com/bugsnag/bugsnag-android/pull/1322)
   - Capture process name in Event payload
     [bugsnag-android#1318](https://github.com/bugsnag/bugsnag-android/pull/1318)
   - Avoid unnecessary BroadcastReceiver registration for monitoring device orientation
