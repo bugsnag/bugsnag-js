@@ -14,6 +14,53 @@
   - Fix a potential stack overflow in `+[BugsnagThread allThreadsWithCurrentThreadBacktrace:]`. [bugsnag-cocoa#1148](https://github.com/bugsnag/bugsnag-cocoa/pull/1148)
   - Fix `NSNull` handling in `+[BugsnagError errorFromJson:]` and `+[BugsnagStackframe frameFromJson:]`. [bugsnag-cocoa#1143](https://github.com/bugsnag/bugsnag-cocoa/pull/1143)
   - Fix a rare crash in `bsg_ksmachgetThreadQueueName`. [bugsnag-cocoa#1147](https://github.com/bugsnag/bugsnag-cocoa/pull/1147)
+- (react-native): Update bugsnag-android to v5.10.0
+  - Capture process name in Event payload
+    [bugsnag-android#1318](https://github.com/bugsnag/bugsnag-android/pull/1318)
+  - Avoid unnecessary BroadcastReceiver registration for monitoring device orientation
+    [bugsnag-android#1303](https://github.com/bugsnag/bugsnag-android/pull/1303)
+  - Register system callbacks on background thread
+    [bugsnag-android#1292](https://github.com/bugsnag/bugsnag-android/pull/1292)
+  - Fix rare NullPointerExceptions from ConnectivityManager
+    [bugsnag-android#1311](https://github.com/bugsnag/bugsnag-android/pull/1311)
+  - Respect manual setting of context
+    [bugsnag-android#1310](https://github.com/bugsnag/bugsnag-android/pull/1310)
+  - Handle interrupt when shutting down executors
+    [bugsnag-android#1315](https://github.com/bugsnag/bugsnag-android/pull/1315)
+  - React Native: allow serializing enabledBreadcrumbTypes as null
+    [bugsnag-android#1316](https://github.com/bugsnag/bugsnag-android/pull/1316)
+  - Unity: Properly handle ANRs after multiple calls to autoNotify and autoDetectAnrs
+    [bugsnag-android#1265](https://github.com/bugsnag/bugsnag-android/pull/1265)
+  - Cache value of app.backgroundWorkRestricted
+    [bugsnag-android#1275](https://github.com/bugsnag/bugsnag-android/pull/1275)
+  - Optimize execution of callbacks
+    [bugsnag-android#1276](https://github.com/bugsnag/bugsnag-android/pull/1276)
+  - Optimize implementation of internal state change observers
+    [bugsnag-android#1274](https://github.com/bugsnag/bugsnag-android/pull/1274)
+  - Optimize metadata implementation by reducing type casts
+    [bugsnag-android#1277](https://github.com/bugsnag/bugsnag-android/pull/1277)
+  - Trim stacktraces to <200 frames before attempting to construct POJOs
+    [bugsnag-android#1281](https://github.com/bugsnag/bugsnag-android/pull/1281)
+  - Use direct field access when adding breadcrumbs and state updates
+    [bugsnag-android#1279](https://github.com/bugsnag/bugsnag-android/pull/1279)
+  - Avoid using regex to validate api key
+    [bugsnag-android#1282](https://github.com/bugsnag/bugsnag-android/pull/1282)
+  - Discard unwanted automatic data earlier where possible
+    [bugsnag-android#1280](https://github.com/bugsnag/bugsnag-android/pull/1280)
+  - Enable ANR handling on immediately if started from the main thread
+    [bugsnag-android#1283](https://github.com/bugsnag/bugsnag-android/pull/1283)
+  - Include `app.binaryArch` in all events
+    [bugsnag-android#1287](https://github.com/bugsnag/bugsnag-android/pull/1287)
+  - Cache results from PackageManager
+    [bugsnag-android#1288](https://github.com/bugsnag/bugsnag-android/pull/1288)
+  - Use ring buffer to store breadcrumbs
+    [bugsnag-android#1286](https://github.com/bugsnag/bugsnag-android/pull/1286)
+  - Avoid expensive set construction in Config constructor
+    [bugsnag-android#1289](https://github.com/bugsnag/bugsnag-android/pull/1289)
+  - Replace calls to String.format() with concatenation
+    [bugsnag-android#1293](https://github.com/bugsnag/bugsnag-android/pull/1293)
+  - Optimize capture of thread traces
+    [bugsnag-android#1300](https://github.com/bugsnag/bugsnag-android/pull/1300)
 
 ### Fixed
 
