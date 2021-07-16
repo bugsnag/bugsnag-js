@@ -13,6 +13,10 @@ document.getElementById('rendererRejection').onclick = () => {
   Promise.reject(new Error('unhandled promise rejection in renderer'))
 }
 
+document.getElementById('rendererProcessCrash').onclick = () => {
+  process.crash()
+}
+
 const { ipcRenderer } = require('electron')
 
 document.getElementById('mainHandled').onclick = () => {
@@ -25,4 +29,8 @@ document.getElementById('mainUnhandled').onclick = () => {
 
 document.getElementById('mainRejection').onclick = () => {
   ipcRenderer.send('bugsnag-promise-rejection')
+}
+
+document.getElementById('mainProcessCrash').onclick = () => {
+  ipcRenderer.send('bugsnag-process-crash')
 }

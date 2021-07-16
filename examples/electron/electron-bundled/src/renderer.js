@@ -45,6 +45,10 @@ document.getElementById('rendererRejection').onclick = () => {
   Promise.reject(new Error('unhandled promise rejection in renderer'))
 }
 
+document.getElementById('rendererProcessCrash').onclick = () => {
+  process.crash()
+}
+
 document.getElementById('mainHandled').onclick = () => {
   __bugsnag_example_ipc__.sendMainHandled()
 }
@@ -55,4 +59,8 @@ document.getElementById('mainUnhandled').onclick = () => {
 
 document.getElementById('mainRejection').onclick = () => {
   __bugsnag_example_ipc__.sendMainRejection()
+}
+
+document.getElementById('mainProcessCrash').onclick = () => {
+  __bugsnag_example_ipc__.sendMainProcessCrash()
 }

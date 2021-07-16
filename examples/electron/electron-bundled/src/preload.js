@@ -9,5 +9,8 @@ contextBridge.exposeInMainWorld('__bugsnag_example_ipc__', {
   },
   sendMainRejection: () => {
     ipcRenderer.send('bugsnag-promise-rejection')
+  },
+  sendMainProcessCrash: () => {
+    ipcRenderer.send('bugsnag-process-crash')
   }
 })

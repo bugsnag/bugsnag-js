@@ -62,3 +62,7 @@ ipcMain.on('bugsnag-unhandled-error', () => {
 ipcMain.on('bugsnag-promise-rejection', () => {
   Promise.reject(new Error('unhandled promise rejection in main'))
 })
+
+ipcMain.on('bugsnag-process-crash', () => {
+  process.crash()
+})
