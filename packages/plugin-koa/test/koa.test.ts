@@ -243,4 +243,147 @@ describe('plugin: koa', () => {
       expect(context.bugsnag).toBeInstanceOf(Client)
     })
   })
+
+  describe('errorHandler', () => {
+    it('should notify using "ctx.bugsnag" when it is defined', async () => {
+      const client = new Client({ apiKey: 'api_key', plugins: [plugin] })
+      client._notify = jest.fn()
+
+      const middleware = client.getPlugin('koa')
+
+      if (!middleware) {
+        throw new Error('getPlugin("koa") failed')
+      }
+
+      // create a separate client so we can tell which one was used by the errorHandler
+      const client2 = new Client({ apiKey: 'different_api_key' })
+      client2._logger = logger()
+
+      const events: Event[] = []
+
+      client2._setDelivery(() => ({
+        sendEvent (payload: EventPayload, cb: (err: Error|null, obj: unknown) => void) {
+          expect(payload.events).toHaveLength(1)
+          events.push(payload.events[0] as Event)
+        },
+        sendSession: noop
+      }))
+
+      const error = new Error('oh no!!')
+      const context = { req: { headers: {} }, request: {}, bugsnag: client2 } as any
+
+      middleware.errorHandler(error, context)
+
+      expect(client._notify).not.toHaveBeenCalled()
+      expect(client2._logger.warn).not.toHaveBeenCalled()
+      expect(client2._logger.error).not.toHaveBeenCalled()
+
+      expect(events).toHaveLength(1)
+
+      const event = events[0]
+      expect(event.originalError).toBe(error)
+      expect(event.errors).toHaveLength(1)
+      expect(event.errors[0].errorMessage).toBe('oh no!!')
+
+      // these values should come from the requestHandler's onError callback, so we
+      // expect them to be undefined in this test as we never call the requestHandler
+      expect(event.request).toEqual({})
+      expect(event._metadata.request).toBeUndefined()
+    })
+
+    it('should notify using the initial client when "ctx.bugsnag" is not defined', async () => {
+      const client = new Client({ apiKey: 'api_key', plugins: [plugin] })
+      client._logger = logger()
+
+      const events: Event[] = []
+
+      client._setDelivery(() => ({
+        sendEvent (payload: EventPayload, cb: (err: Error|null, obj: unknown) => void) {
+          expect(payload.events).toHaveLength(1)
+          events.push(payload.events[0] as Event)
+        },
+        sendSession: noop
+      }))
+
+      const middleware = client.getPlugin('koa')
+
+      if (!middleware) {
+        throw new Error('getPlugin("koa") failed')
+      }
+
+      // create a separate client so we can tell which one was used by the errorHandler
+      const client2 = new Client({ apiKey: 'different_api_key' })
+      client2._notify = jest.fn()
+
+      const error = new Error('oh no!!')
+      const context = { req: { headers: {} }, request: {} } as any // no bugsnag!
+
+      middleware.errorHandler(error, context)
+
+      expect(client2._notify).not.toHaveBeenCalled()
+      expect(client._logger.warn).toHaveBeenCalledTimes(1)
+      expect(client._logger.warn).toHaveBeenCalledWith(
+        'ctx.bugsnag is not defined. Make sure the @bugsnag/plugin-koa requestHandler middleware is added first.'
+      )
+      expect(client._logger.error).not.toHaveBeenCalled()
+
+      expect(events).toHaveLength(1)
+
+      const event = events[0]
+      expect(event.originalError).toBe(error)
+      expect(event.errors).toHaveLength(1)
+      expect(event.errors[0].errorMessage).toBe('oh no!!')
+
+      expect(event.request).toEqual({
+        body: undefined,
+        clientIp: undefined,
+        headers: {},
+        httpMethod: undefined,
+        httpVersion: undefined,
+        url: 'undefined',
+        referer: undefined
+      })
+
+      expect(event._metadata.request).toEqual({
+        clientIp: undefined,
+        connection: undefined,
+        headers: {},
+        httpMethod: undefined,
+        httpVersion: undefined,
+        path: undefined,
+        query: undefined,
+        url: 'undefined',
+        referer: undefined
+      })
+    })
+
+    it('should do nothing when "autoDetectErrors" is disabled', async () => {
+      const client = new Client({ apiKey: 'api_key', plugins: [plugin], autoDetectErrors: false })
+      client._notify = jest.fn()
+
+      const middleware = client.getPlugin('koa')
+
+      if (!middleware) {
+        throw new Error('getPlugin("koa") failed')
+      }
+
+      const client2 = new Client({ apiKey: 'different_api_key', autoDetectErrors: false })
+      client2._notify = jest.fn()
+
+      const error = new Error('oh no!!')
+      const context = { req: { headers: {} }, request: {}, bugsnag: client2 } as any
+
+      middleware.errorHandler(error, context)
+
+      expect(client._notify).not.toHaveBeenCalled()
+      expect(client2._notify).not.toHaveBeenCalled()
+
+      // ensure notify is not called when using the other client
+      delete context.bugsnag
+      middleware.errorHandler(error, context)
+
+      expect(client._notify).not.toHaveBeenCalled()
+      expect(client2._notify).not.toHaveBeenCalled()
+    })
+  })
 })
