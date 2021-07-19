@@ -159,9 +159,11 @@ describe('FileStore', () => {
 
       const dumps = await store.listMinidumps() as any[]
       const dumpPaths = dumps.map(d => d.minidumpPath)
-      expect(dumpPaths).toContain(join(base, 'report01.dmp'))
-      expect(dumpPaths).toContain(join(base, 'reports', 'report02.dmp'))
-      expect(dumpPaths).toContain(join(base, 'pending', 'report03.dmp'))
+      expect(dumpPaths.sort()).toEqual([
+        join(base, 'report01.dmp'),
+        join(base, 'reports', 'report02.dmp'),
+        join(base, 'pending', 'report03.dmp')
+      ].sort())
     })
   })
 
