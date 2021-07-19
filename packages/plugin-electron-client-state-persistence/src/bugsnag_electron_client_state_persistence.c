@@ -1,5 +1,4 @@
 #include <fcntl.h>
-#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -12,7 +11,7 @@
 #include "bugsnag_electron_client_state_persistence.h"
 #include "deps/parson/parson.h"
 #include "deps/tinycthread/tinycthread.h"
-#include "signal_handler.h"
+#include "crash_handler.h"
 
 typedef struct {
   // Path to the serialized file on disk
@@ -45,12 +44,12 @@ static const char *const keypath_user_id = "user.id";
 static const char *const keypath_user_name = "user.name";
 static const char *const keypath_user_email = "user.email";
 
-static void handle_crash_signal(int sig) {
+static void handle_crash(int context) {
   becsp_persist_to_disk();
   // Uninstall handlers
-  becsp_signal_uninstall();
+  becsp_crash_handler_uninstall();
   // Invoke previous handler
-  becsp_signal_raise(sig);
+  becsp_crash_handler_continue(context);
 }
 
 static void serialize_data() {
@@ -116,15 +115,15 @@ void becsp_install(const char *save_file_path, uint8_t max_crumbs,
   g_context.serialized_data = calloc(BECSP_SERIALIZED_DATA_LEN, sizeof(char));
   // Cache the empty objects as a JSON string
   serialize_data();
-  // Install signal handler
-  becsp_signal_install(handle_crash_signal);
+  // Install crash handler
+  becsp_crash_handler_install(handle_crash);
 }
 
 void becsp_uninstall() {
   if (!g_context.data) {
     return;
   }
-  becsp_signal_uninstall();
+  becsp_crash_handler_uninstall();
   free((void *)g_context.save_file_path);
   free(g_context.serialized_data);
   json_value_free(g_context.data);
