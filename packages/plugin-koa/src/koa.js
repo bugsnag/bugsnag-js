@@ -27,24 +27,7 @@ module.exports = {
         event.addMetadata('request', metadata)
       }, true)
 
-      if (!client._config.autoDetectErrors) return next()
-
-      try {
-        await next()
-      } catch (err) {
-        if (err.status === undefined || err.status >= 500) {
-          const event = client.Event.create(err, false, handledState, 'koa middleware', 1)
-          ctx.bugsnag._notify(event)
-        }
-        if (!ctx.response.headerSent) ctx.response.status = err.status || 500
-        try {
-          // this function will throw if you give it a non-error, but we still want
-          // to output that, so if it throws, pass it back what it threw (a TypeError)
-          ctx.app.onerror(err)
-        } catch (e) {
-          ctx.app.onerror(e)
-        }
-      }
+      await next()
     }
 
     requestHandler.v1 = function * (next) {
