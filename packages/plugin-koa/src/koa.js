@@ -62,14 +62,17 @@ module.exports = {
 
       const event = client.Event.create(err, false, handledState, 'koa middleware', 1)
 
-      const { metadata, request } = getRequestAndMetadataFromCtx(ctx)
-      event.request = { ...event.request, ...request }
-      event.addMetadata('request', metadata)
-
       if (ctx.bugsnag) {
         ctx.bugsnag._notify(event)
       } else {
         client._logger.warn('ctx.bugsnag is not defined. Make sure the @bugsnag/plugin-koa requestHandler middleware is added first.')
+
+        // the request metadata should be added by the requestHandler, but as there's
+        // no "ctx.bugsnag" we have to assume the requestHandler has not run
+        const { metadata, request } = getRequestAndMetadataFromCtx(ctx)
+        event.request = { ...event.request, ...request }
+        event.addMetadata('request', metadata)
+
         client._notify(event)
       }
     }
