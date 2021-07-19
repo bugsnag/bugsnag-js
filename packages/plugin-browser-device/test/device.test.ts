@@ -12,6 +12,8 @@ declare class SessionWithDevice extends Session { public device: Device }
 
 const navigator = { language: 'en-GB', userAgent: 'testing browser 1.2.3' } as unknown as Navigator
 const screen = { orientation: { type: 'landscape-primary' } } as unknown as Screen
+const noop = () => {}
+const id = <T>(a: T) => a
 
 describe('plugin: device', () => {
   it('should add an onError callback which captures device information', () => {
@@ -56,9 +58,11 @@ describe('plugin: device', () => {
     client._sessionDelegate = {
       startSession: (client, session) => {
         client._delivery.sendSession(session, () => {})
+
+        return client
       },
-      pauseSession: () => {},
-      resumeSession: () => {}
+      pauseSession: noop,
+      resumeSession: id
     }
 
     expect(client._cbs.s).toHaveLength(1)
@@ -80,9 +84,11 @@ describe('plugin: device', () => {
     client._sessionDelegate = {
       startSession: (client, session) => {
         client._delivery.sendSession(session, () => {})
+
+        return client
       },
-      pauseSession: () => {},
-      resumeSession: () => {}
+      pauseSession: noop,
+      resumeSession: id
     }
 
     expect(client._cbs.s).toHaveLength(1)
@@ -119,9 +125,11 @@ describe('plugin: device', () => {
             { sessions: [session] },
             (err) => { if (err) throw err }
           )
+
+          return client
         },
-        pauseSession: () => {},
-        resumeSession: () => {}
+        pauseSession: noop,
+        resumeSession: id
       }
 
       client._setDelivery((client) => ({

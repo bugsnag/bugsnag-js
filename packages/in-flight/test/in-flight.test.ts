@@ -7,6 +7,8 @@ import BugsnagInFlightJustForTypescript from '../types/bugsnag-in-flight'
 
 let bugsnagInFlight: BugsnagInFlightJustForTypescript
 jest.isolateModules(() => { bugsnagInFlight = require('../src/in-flight') })
+const noop = () => {}
+const id = <T>(a: T) => a
 
 describe('@bugsnag/in-flight', () => {
   it('tracks in-flight events', () => {
@@ -50,6 +52,8 @@ describe('@bugsnag/in-flight', () => {
     client._sessionDelegate = {
       startSession: jest.fn(function (client, session) {
         client._delivery.sendSession(session, callback)
+
+        return client
       }),
       pauseSession: jest.fn(),
       resumeSession: jest.fn()
@@ -89,6 +93,8 @@ describe('@bugsnag/in-flight', () => {
     client._sessionDelegate = {
       startSession: jest.fn(function (client, session) {
         client._delivery.sendSession(session, sessionCallback)
+
+        return client
       }),
       pauseSession: jest.fn(),
       resumeSession: jest.fn()
@@ -135,9 +141,11 @@ describe('@bugsnag/in-flight', () => {
     client._sessionDelegate = {
       startSession (client, session) {
         client._delivery.sendSession(session, () => {})
+
+        return client
       },
-      pauseSession: () => {},
-      resumeSession: () => {}
+      pauseSession: noop,
+      resumeSession: id
     }
 
     client._setDelivery(() => ({
@@ -177,9 +185,11 @@ describe('@bugsnag/in-flight', () => {
     client._sessionDelegate = {
       startSession: (client, session) => {
         client._delivery.sendSession(session, () => {})
+
+        return client
       },
-      pauseSession: () => {},
-      resumeSession: () => {}
+      pauseSession: noop,
+      resumeSession: id
     }
 
     client._setDelivery(() => ({
@@ -225,9 +235,11 @@ describe('@bugsnag/in-flight', () => {
     client._sessionDelegate = {
       startSession (client, session) {
         client._delivery.sendSession(session, () => {})
+
+        return client
       },
-      pauseSession: () => {},
-      resumeSession: () => {}
+      pauseSession: noop,
+      resumeSession: id
     }
 
     client._setDelivery(() => ({
