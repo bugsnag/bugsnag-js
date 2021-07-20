@@ -21,6 +21,8 @@ Scenario: a synchronous thrown error in a route
   And the event "request.url" equals "http://koa/err"
   And the event "request.httpMethod" equals "GET"
   And the event "request.clientIp" is not null
+  And the event "metaData.error_handler.before" is true
+  And the event "metaData.error_handler.after" is null
 
 Scenario: an asynchronous thrown error in a route
   Then I open the URL "http://koa/async-err" and get a 500 response
@@ -33,6 +35,8 @@ Scenario: an asynchronous thrown error in a route
   And the exception "message" equals "async noooop"
   And the exception "type" equals "nodejs"
   And the "file" of stack frame 0 equals "scenarios/app.js"
+  And the event "metaData.error_handler.before" is true
+  And the event "metaData.error_handler.after" is null
 
 Scenario: An error created with with ctx.throw()
   Then I open the URL "http://koa/ctx-throw" and get a 500 response
@@ -46,6 +50,8 @@ Scenario: An error created with with ctx.throw()
   And the exception "type" equals "nodejs"
   And the "file" of stack frame 0 equals "node_modules/koa/lib/context.js"
   And the "file" of stack frame 1 equals "scenarios/app.js"
+  And the event "metaData.error_handler.before" is true
+  And the event "metaData.error_handler.after" is null
 
 Scenario: an error thrown before the requestHandler middleware
   Then I open the URL "http://koa/error-before-handler" and get a 500 response
@@ -58,6 +64,8 @@ Scenario: an error thrown before the requestHandler middleware
   And the exception "message" equals "nope"
   And the exception "type" equals "nodejs"
   And the "file" of stack frame 0 equals "scenarios/app.js"
+  And the event "metaData.error_handler.before" is true
+  And the event "metaData.error_handler.after" is null
 
 Scenario: throwing non-Error error
   Then I open the URL "http://koa/throw-non-error" and get a 500 response
@@ -69,6 +77,8 @@ Scenario: throwing non-Error error
   And the exception "errorClass" equals "Error"
   And the exception "message" equals 'non-error thrown: \\"error\\"'
   And the exception "type" equals "nodejs"
+  And the event "metaData.error_handler.before" is true
+  And the event "metaData.error_handler.after" is null
 
 Scenario: A non-5XX error created with ctx.throw()
   When I open the URL "http://koa/ctx-throw-400" and get a 400 response
@@ -90,6 +100,8 @@ Scenario: A handled error with ctx.bugsnag.notify()
   And the event "request.url" equals "http://koa/handled"
   And the event "request.httpMethod" equals "GET"
   And the event "request.clientIp" is not null
+  And the event "metaData.error_handler.before" is null
+  And the event "metaData.error_handler.after" is null
 
 Scenario: adding body to request metadata
   When I POST the data "data=in_request_body" to the URL "http://koa/bodytest"
@@ -104,3 +116,5 @@ Scenario: adding body to request metadata
   And the event "request.body.data" equals "in_request_body"
   And the event "request.httpMethod" equals "POST"
   And the event "request.httpVersion" equals "1.1"
+  And the event "metaData.error_handler.before" is true
+  And the event "metaData.error_handler.after" is null
