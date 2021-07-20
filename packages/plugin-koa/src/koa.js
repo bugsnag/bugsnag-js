@@ -38,23 +38,13 @@ module.exports = {
       this.bugsnag = requestClient
 
       // extract request info and pass it to the relevant bugsnag properties
-      const { request, metadata } = getRequestAndMetadataFromCtx(this)
-      requestClient.addMetadata('request', metadata)
       requestClient.addOnError((event) => {
+        const { request, metadata } = getRequestAndMetadataFromCtx(this)
         event.request = { ...event.request, ...request }
+        requestClient.addMetadata('request', metadata)
       }, true)
 
-      if (!client._config.autoDetectErrors) return next()
-
-      try {
-        yield next
-      } catch (err) {
-        if (err.status === undefined || err.status >= 500) {
-          const event = client.Event.create(err, false, handledState, 'koa middleware', 1)
-          this.bugsnag._notify(event)
-        }
-        if (!this.headerSent) this.status = err.status || 500
-      }
+      yield next
     }
 
     const errorHandler = (err, ctx) => {
