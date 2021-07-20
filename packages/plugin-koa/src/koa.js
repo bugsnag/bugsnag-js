@@ -58,22 +58,28 @@ module.exports = {
     }
 
     const errorHandler = (err, ctx) => {
-      if (!client._config.autoDetectErrors) return
+      // don't notify if "autoDetectErrors" is disabled OR the error was triggered
+      // by ctx.throw with a non 5xx status
+      const shouldNotify =
+        client._config.autoDetectErrors &&
+        (err.status === undefined || err.status >= 500)
 
-      const event = client.Event.create(err, false, handledState, 'koa middleware', 1)
+      if (shouldNotify) {
+        const event = client.Event.create(err, false, handledState, 'koa middleware', 1)
 
-      if (ctx.bugsnag) {
-        ctx.bugsnag._notify(event)
-      } else {
-        client._logger.warn('ctx.bugsnag is not defined. Make sure the @bugsnag/plugin-koa requestHandler middleware is added first.')
+        if (ctx.bugsnag) {
+          ctx.bugsnag._notify(event)
+        } else {
+          client._logger.warn('ctx.bugsnag is not defined. Make sure the @bugsnag/plugin-koa requestHandler middleware is added first.')
 
-        // the request metadata should be added by the requestHandler, but as there's
-        // no "ctx.bugsnag" we have to assume the requestHandler has not run
-        const { metadata, request } = getRequestAndMetadataFromCtx(ctx)
-        event.request = { ...event.request, ...request }
-        event.addMetadata('request', metadata)
+          // the request metadata should be added by the requestHandler, but as there's
+          // no "ctx.bugsnag" we have to assume the requestHandler has not run
+          const { metadata, request } = getRequestAndMetadataFromCtx(ctx)
+          event.request = { ...event.request, ...request }
+          event.addMetadata('request', metadata)
 
-        client._notify(event)
+          client._notify(event)
+        }
       }
 
       const app = ctx.app

@@ -81,8 +81,9 @@ Scenario: throwing non-Error error
   And the event "metaData.error_handler.after" is null
 
 Scenario: A non-5XX error created with ctx.throw()
-  When I open the URL "http://koa/ctx-throw-400" and get a 400 response
-  And I wait to receive a session
+  Given I open the URL "http://koa/ctx-throw-400" and get a 400 response
+  Then I should receive no errors
+  When I wait to receive a session
   Then the session is valid for the session reporting API version "1" for the "Bugsnag Node" notifier
   And the session payload has a valid sessions array
   And the sessionCount "sessionsStarted" equals 1
