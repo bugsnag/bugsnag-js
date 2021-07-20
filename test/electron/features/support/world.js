@@ -18,7 +18,7 @@ BeforeAll({ timeout: 420 * 1000 }, async () => {
 
   const address = `http://localhost:${global.server.port}`
   const endpoints = {
-    minidumps: `${address}/minidump`,
+    minidumps: address,
     notify: `${address}/events`,
     sessions: `${address}/sessions`
   }
@@ -26,7 +26,7 @@ BeforeAll({ timeout: 420 * 1000 }, async () => {
   // exposed for server health check scenario (makes sure the test infra
   // is working as expected)
   process.env.META_NOTIFY = endpoints.notify
-  process.env.META_MINIDUMP = endpoints.minidumps
+  process.env.META_MINIDUMP = `${endpoints.minidumps}/minidump`
 
   if (process.env.START_LOCAL_NPM) {
     console.log('[BeforeAll] Launching local NPM server ...')
