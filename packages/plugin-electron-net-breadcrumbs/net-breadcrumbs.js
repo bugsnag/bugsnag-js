@@ -2,7 +2,7 @@ const BREADCRUMB_REQUEST = 'request'
 
 module.exports = net => ({
   load (client) {
-    if (!client._config.enabledBreadcrumbTypes.includes(BREADCRUMB_REQUEST)) {
+    if (!client._isBreadcrumbTypeEnabled(BREADCRUMB_REQUEST)) {
       return
     }
 

@@ -64,7 +64,7 @@ describe('browser notifier', () => {
         done(err)
       }
       expect(event.breadcrumbs[0]).toStrictEqual(expect.objectContaining({
-        type: 'navigation',
+        type: 'state',
         message: 'Bugsnag loaded'
       }))
       expect(event.originalError.message).toBe('123')

@@ -36,4 +36,16 @@ describe('plugin: electron power monitor breadcrumbs', () => {
 
     expect(client._breadcrumbs).toHaveLength(0)
   })
+
+  it.each(events)('works when enabledBreadcrumbTypes=null for "%s"', (event, expectedMessage) => {
+    const powerMonitor = makePowerMonitor()
+    const { client } = makeClientForPlugin({
+      plugin: plugin(powerMonitor),
+      config: { enabledBreadcrumbTypes: null }
+    })
+
+    powerMonitor._emit(event)
+
+    expect(client._breadcrumbs).toHaveLength(1)
+  })
 })

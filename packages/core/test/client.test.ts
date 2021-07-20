@@ -1,6 +1,8 @@
 import Client from '../client'
 import Event from '../event'
 import Session from '../session'
+import breadcrumbTypes from '../lib/breadcrumb-types'
+import { BreadcrumbType } from '../types/common'
 
 describe('@bugsnag/core/client', () => {
   describe('constructor', () => {
@@ -396,6 +398,19 @@ describe('@bugsnag/core/client', () => {
       expect(payloads[0].events[0].breadcrumbs.length).toBe(0)
     })
 
+    it('leaves a breadcrumb of the error when enabledBreadcrumbTypes=null', () => {
+      const payloads: any[] = []
+      const client = new Client({ apiKey: 'API_KEY_YEAH', enabledBreadcrumbTypes: null })
+      client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload), sendSession: () => {} }))
+      client.notify(new Error('foobar'))
+      expect(client._breadcrumbs).toHaveLength(1)
+      expect(client._breadcrumbs[0].type).toBe('error')
+      expect(client._breadcrumbs[0].message).toBe('Error')
+      expect(client._breadcrumbs[0].metadata.stacktrace).toBe(undefined)
+      // the error shouldn't appear as a breadcrumb for itself
+      expect(payloads[0].events[0].breadcrumbs).toHaveLength(0)
+    })
+
     it('doesn’t modify global client.metadata when using addMetadata() method', () => {
       const client = new Client({ apiKey: 'API_KEY_YEAH' })
       client.addMetadata('foo', 'bar', [1, 2, 3])
@@ -611,6 +626,43 @@ describe('@bugsnag/core/client', () => {
         expect(client._breadcrumbs.length).toBe(0)
         done()
       })
+    })
+  })
+
+  describe('_isBreadcrumbTypeEnabled()', () => {
+    it.each(breadcrumbTypes)('returns true for "%s" when enabledBreadcrumbTypes is not configured', (type) => {
+      const client = new Client({ apiKey: 'API_KEY_YEAH' })
+
+      expect(client._isBreadcrumbTypeEnabled(type)).toBe(true)
+    })
+
+    it.each(breadcrumbTypes)('returns true for "%s" when enabledBreadcrumbTypes=null', (type) => {
+      const client = new Client({ apiKey: 'API_KEY_YEAH', enabledBreadcrumbTypes: null })
+
+      expect(client._isBreadcrumbTypeEnabled(type)).toBe(true)
+    })
+
+    it.each(breadcrumbTypes)('returns false for "%s" when enabledBreadcrumbTypes=[]', (type) => {
+      const client = new Client({ apiKey: 'API_KEY_YEAH', enabledBreadcrumbTypes: [] })
+
+      expect(client._isBreadcrumbTypeEnabled(type)).toBe(false)
+    })
+
+    it.each(breadcrumbTypes)('returns true for "%s" when enabledBreadcrumbTypes only contains it', (type) => {
+      const client = new Client({ apiKey: 'API_KEY_YEAH', enabledBreadcrumbTypes: [type as BreadcrumbType] })
+
+      expect(client._isBreadcrumbTypeEnabled(type)).toBe(true)
+    })
+
+    it.each(breadcrumbTypes)('returns false for "%s" when enabledBreadcrumbTypes does not contain it', (type) => {
+      const enabledBreadcrumbTypes = breadcrumbTypes.filter(enabledType => enabledType !== type)
+
+      const client = new Client({
+        apiKey: 'API_KEY_YEAH',
+        enabledBreadcrumbTypes: enabledBreadcrumbTypes as BreadcrumbType[]
+      })
+
+      expect(client._isBreadcrumbTypeEnabled(type)).toBe(false)
     })
   })
 

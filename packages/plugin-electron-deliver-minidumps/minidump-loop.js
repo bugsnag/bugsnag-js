@@ -40,10 +40,12 @@ module.exports = class MinidumpDeliveryLoop {
     } else {
       try {
         await this._sendMinidump(minidump.minidumpPath, event)
+
+        // if we had a successful delivery - remove the minidump from the queue, and schedule the next
+        this._minidumpQueue.remove(minidump)
       } catch (e) {
         this._onerror(e, minidump)
       } finally {
-        this._minidumpQueue.remove(minidump)
         this._scheduleSelf()
       }
     }
@@ -82,5 +84,12 @@ module.exports = class MinidumpDeliveryLoop {
   stop () {
     this._running = false
     clearTimeout(this._timerId)
+  }
+
+  watchNetworkStatus (statusUpdater) {
+    statusUpdater.watch(connected => {
+      if (connected) this.start()
+      else this.stop()
+    })
   }
 }

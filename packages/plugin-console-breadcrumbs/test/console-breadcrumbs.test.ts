@@ -46,6 +46,13 @@ describe('plugin: console breadcrumbs', () => {
     plugin.destroy()
   })
 
+  it('should be enabled when enabledBreadcrumbTypes=null', () => {
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: null, plugins: [plugin] })
+    console.log(123)
+    expect(c._breadcrumbs).toHaveLength(1)
+    plugin.destroy()
+  })
+
   it('should be enabled when enabledBreadcrumbTypes=["log"]', () => {
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: ['log'], plugins: [plugin] })
     console.log(123)

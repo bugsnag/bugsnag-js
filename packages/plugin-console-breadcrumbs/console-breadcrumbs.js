@@ -1,7 +1,6 @@
 const map = require('@bugsnag/core/lib/es-utils/map')
 const reduce = require('@bugsnag/core/lib/es-utils/reduce')
 const filter = require('@bugsnag/core/lib/es-utils/filter')
-const includes = require('@bugsnag/core/lib/es-utils/includes')
 
 /*
  * Leaves breadcrumbs when console log methods are called
@@ -9,7 +8,7 @@ const includes = require('@bugsnag/core/lib/es-utils/includes')
 exports.load = (client) => {
   const isDev = /^(local-)?dev(elopment)?$/.test(client._config.releaseStage)
 
-  if (!client._config.enabledBreadcrumbTypes || !includes(client._config.enabledBreadcrumbTypes, 'log') || isDev) return
+  if (isDev || !client._isBreadcrumbTypeEnabled('log')) return
 
   map(CONSOLE_LOG_METHODS, method => {
     const original = console[method]

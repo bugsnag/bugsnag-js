@@ -84,12 +84,57 @@ static BSGInternalErrorReporter *sharedInstance_;
     }
 }
 
+- (void)reportException:(NSException *)exception
+            diagnostics:(nullable NSDictionary<NSString *, id> *)diagnostics
+           groupingHash:(nullable NSString *)groupingHash {
+    @try {
+        BugsnagEvent *event = [self eventWithException:exception diagnostics:diagnostics groupingHash:groupingHash];
+        if (event) {
+            [self sendEvent:event];
+        }
+    } @catch (NSException *exception) {
+        bsg_log_err(@"%@", exception);
+    }
+}
+
 // MARK: Private API
 
 - (nullable BugsnagEvent *)eventWithErrorClass:(NSString *)errorClass
                                        message:(nullable NSString *)message
                                    diagnostics:(nullable NSDictionary<NSString *, id> *)diagnostics
                                   groupingHash:(nullable NSString *)groupingHash {
+    
+    NSArray<BugsnagStackframe *> *stacktrace = [BugsnagStackframe stackframesWithCallStackReturnAddresses:
+                                                BSGArraySubarrayFromIndex(NSThread.callStackReturnAddresses, 2)];
+    
+    BugsnagError *error =
+    [[BugsnagError alloc] initWithErrorClass:errorClass
+                                errorMessage:message
+                                   errorType:BSGErrorTypeCocoa
+                                  stacktrace:stacktrace];
+    
+    return [self eventWithError:error diagnostics:diagnostics groupingHash:groupingHash];
+}
+
+- (nullable BugsnagEvent *)eventWithException:(NSException *)exception
+                                  diagnostics:(nullable NSDictionary<NSString *, id> *)diagnostics
+                                 groupingHash:(nullable NSString *)groupingHash {
+    
+    NSArray<BugsnagStackframe *> *stacktrace = [BugsnagStackframe stackframesWithCallStackReturnAddresses:exception.callStackReturnAddresses];
+    
+    BugsnagError *error =
+    [[BugsnagError alloc] initWithErrorClass:exception.name
+                                errorMessage:exception.reason
+                                   errorType:BSGErrorTypeCocoa
+                                  stacktrace:stacktrace];
+    
+    return [self eventWithError:error diagnostics:diagnostics groupingHash:groupingHash];
+}
+
+- (nullable BugsnagEvent *)eventWithError:(BugsnagError *)error
+                              diagnostics:(nullable NSDictionary<NSString *, id> *)diagnostics
+                             groupingHash:(nullable NSString *)groupingHash {
+    
     id<BSGInternalErrorReporterDataSource> dataSource = self.dataSource;
     if (!dataSource) {
         return nil;
@@ -100,15 +145,6 @@ static BSGInternalErrorReporter *sharedInstance_;
         [metadata addMetadata:(NSDictionary * _Nonnull)diagnostics toSection:BugsnagDiagnosticsKey];
     }
     [metadata addMetadata:dataSource.configuration.apiKey withKey:BSGKeyApiKey toSection:BugsnagDiagnosticsKey];
-    
-    NSArray<BugsnagStackframe *> *stacktrace = [BugsnagStackframe stackframesWithCallStackReturnAddresses:
-                                                BSGArraySubarrayFromIndex(NSThread.callStackReturnAddresses, 2)];
-    
-    BugsnagError *error =
-    [[BugsnagError alloc] initWithErrorClass:errorClass
-                                errorMessage:message
-                                   errorType:BSGErrorTypeCocoa
-                                  stacktrace:stacktrace];
     
     NSDictionary *systemInfo = [BSG_KSSystemInfo systemInfo];
     
@@ -127,6 +163,8 @@ static BSGInternalErrorReporter *sharedInstance_;
     
     return event;
 }
+
+// MARK: Delivery
 
 - (NSURLRequest *)requestForEvent:(nonnull BugsnagEvent *)event error:(NSError * __autoreleasing *)errorPtr {
     id<BSGInternalErrorReporterDataSource> dataSource = self.dataSource;

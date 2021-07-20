@@ -49,6 +49,8 @@ module.exports = (nav = navigator, screen = window.screen) => ({
 
     client.addOnSession(session => {
       session.device = assign({}, session.device, device)
+      // only set device id if collectUserIp is false
+      if (!client._config.collectUserIp) setDefaultUserId(session)
     })
 
     // add time just as the event is sent
@@ -58,6 +60,7 @@ module.exports = (nav = navigator, screen = window.screen) => ({
         device,
         { time: new Date() }
       )
+      if (!client._config.collectUserIp) setDefaultUserId(event)
     }, true)
   },
   configSchema: {
@@ -68,3 +71,11 @@ module.exports = (nav = navigator, screen = window.screen) => ({
     }
   }
 })
+
+const setDefaultUserId = (eventOrSession) => {
+  // device id is also used to populate the user id field, if it's not already set
+  const user = eventOrSession.getUser()
+  if (!user || !user.id) {
+    eventOrSession.setUser(eventOrSession.device.id)
+  }
+}

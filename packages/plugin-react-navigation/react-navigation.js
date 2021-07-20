@@ -7,13 +7,13 @@ class BugsnagPluginReactNavigation {
 
   load (client) {
     const leaveBreadcrumb = (event, currentRouteName, previousRouteName) => {
-      if (client._config.enabledBreadcrumbTypes && client._config.enabledBreadcrumbTypes.includes('navigation')) {
-        client.leaveBreadcrumb(
-          `React Navigation ${event}`,
-          { to: currentRouteName, from: previousRouteName },
-          'navigation'
-        )
-      }
+      if (!client._isBreadcrumbTypeEnabled('navigation')) return
+
+      client.leaveBreadcrumb(
+        `React Navigation ${event}`,
+        { to: currentRouteName, from: previousRouteName },
+        'navigation'
+      )
     }
 
     const createNavigationContainer = (NavigationContainer) => React.forwardRef((props, ref) => {

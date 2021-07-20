@@ -5,21 +5,15 @@ const { F_OK } = fs.constants
 const { dirname, join } = require('path')
 const { getIdentifier, createIdentifier, identifierKey } = require('./lib/minidump-io')
 
-const minidumpPaths = {
-  darwin: 'pending',
-  win32: 'reports'
-}
-
 class FileStore {
   constructor (apiKey, storageDir, crashDir) {
     const base = join(storageDir, 'bugsnag', apiKey)
-    const minidmumpSubpath = minidumpPaths[process.platform]
     this._paths = {
       events: join(base, 'events'),
       sessions: join(base, 'sessions'),
       runinfo: join(base, 'runinfo'),
       device: join(base, 'device.json'),
-      minidumps: minidmumpSubpath ? join(crashDir, minidmumpSubpath) : crashDir
+      minidumps: crashDir
     }
   }
 
@@ -35,13 +29,10 @@ class FileStore {
   }
 
   async listMinidumps () {
-    const basepath = this._paths.minidumps
-    return readdir(basepath, { withFileTypes: true })
-      .then(async entries => {
-        const minidumps = entries
-          .filter(entry => entry.isFile() && entry.name.match(/\.dmp$/))
-          .map(async entry => {
-            const minidumpPath = join(basepath, entry.name)
+    return this._listMinidumpFiles()
+      .then(minidumpPaths => {
+        const minidumps = minidumpPaths
+          .map(async minidumpPath => {
             const eventPath = await getIdentifier(minidumpPath)
               .then(async id => {
                 const path = this.getEventInfoPath(id)
@@ -57,6 +48,24 @@ class FileStore {
         console.log(e)
         return []
       })
+  }
+
+  async _listMinidumpFiles () {
+    const dirs = [this._paths.minidumps]
+    const minidumpFiles = []
+    while (dirs.length) {
+      const dir = dirs.pop()
+      const entries = await readdir(dir, { withFileTypes: true })
+      for (const entry of entries) {
+        if (entry.isFile() && entry.name.match(/\.dmp$/)) {
+          minidumpFiles.push(join(dir, entry.name))
+        } else if (entry.isDirectory()) {
+          dirs.push(join(dir, entry.name))
+        }
+      }
+    }
+
+    return minidumpFiles
   }
 
   getEventInfoPath (appRunID) {

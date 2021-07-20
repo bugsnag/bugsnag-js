@@ -483,6 +483,18 @@ describe('plugin: electron app breadcrumbs', () => {
     browserWindowEvents.forEach(windowEvent => window._emit(windowEvent, window))
     expect(client._breadcrumbs).toHaveLength(0)
   })
+
+  it('leaves a breadcrumb when enabledBreadcrumbTypes=null', () => {
+    const BrowserWindow = makeBrowserWindow()
+    const app = makeApp({ BrowserWindow })
+
+    const client = makeClient({ app, BrowserWindow, config: { enabledBreadcrumbTypes: null } })
+
+    const appEvents = ['ready', 'will-quit']
+    appEvents.forEach(appEvent => app._emit(appEvent, {}))
+
+    expect(client._breadcrumbs).toHaveLength(2)
+  })
 })
 
 function makeClient ({

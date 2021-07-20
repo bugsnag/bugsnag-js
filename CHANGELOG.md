@@ -2,13 +2,34 @@
 
 ## TBC
 
+### Added
+
+- Server framework plugins now honour the `autoDetectErrors` configuration option [#1464](https://github.com/bugsnag/bugsnag-js/pull/1464)
+
+### Changed
+
+- (react-native): Update bugsnag-cocoa to v6.10.1
+  - Fix a potential stack overflow in `+[BugsnagThread allThreadsWithCurrentThreadBacktrace:]`. [bugsnag-cocoa#1148](https://github.com/bugsnag/bugsnag-cocoa/pull/1148)
+  - Fix `NSNull` handling in `+[BugsnagError errorFromJson:]` and `+[BugsnagStackframe frameFromJson:]`. [bugsnag-cocoa#1143](https://github.com/bugsnag/bugsnag-cocoa/pull/1143)
+  - Fix a rare crash in `bsg_ksmachgetThreadQueueName`. [bugsnag-cocoa#1147](https://github.com/bugsnag/bugsnag-cocoa/pull/1147)
+
+### Fixed
+
+- Breadcrumbs will now be left when `enabledBreadcrumbTypes` is `null` [#1466](https://github.com/bugsnag/bugsnag-js/pull/1466)
+- Avoid crash when `enabledBreadcrumbTypes` is `null` [#1467](https://github.com/bugsnag/bugsnag-js/pull/1467)
+
+## 7.10.5 (2021-07-05)
+
 ### Fixed
 
 - (plugin-console-breadcrumbs): Ensure console breadcrumbs do not run in Expo's dev environment and obscure log line numbers [#1453](https://github.com/bugsnag/bugsnag-js/pull/1453)
+- (browser): "Bugsnag" loaded breadcrumb now has the type "state" rather than "navigation" [#1460](https://github.com/bugsnag/bugsnag-js/pull/1460)
+- (plugin-react-native-unhandled-rejections): Remove flow syntax [#1461](https://github.com/bugsnag/bugsnag-js/pull/1461)
 
 ### Added
 
 - (expo): User ID now defaults to `device.id` if no user is set [#1454](https://github.com/bugsnag/bugsnag-js/pull/1454)
+- (browser): User ID now defaults to `device.id` if no user is set (when `collectUserIp=false`) [#1456](https://github.com/bugsnag/bugsnag-js/pull/1456)
 
 ### Changed
 

@@ -208,6 +208,22 @@ services:
       - ./build:/app/build
       - ./test/react-native-cli/features/:/app/features/
 
+  release:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile.release
+    environment:
+      GITHUB_USER:
+      GITHUB_ACCESS_TOKEN:
+      RELEASE_BRANCH:
+      AWS_ACCESS_KEY_ID:
+      AWS_SECRET_ACCESS_KEY:
+      VERSION:
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+    volumes:
+      - ~/.gitconfig:/home/releaser/.gitconfig
+      - ~/.npmrc:/home/releaser/.npmrc
+
 networks:
   default:
     name: ${BUILDKITE_JOB_ID:-js-maze-runner}

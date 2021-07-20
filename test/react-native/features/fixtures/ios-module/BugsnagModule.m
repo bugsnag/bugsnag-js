@@ -61,7 +61,7 @@ BugsnagConfiguration *createConfiguration(NSDictionary * options) {
   if (options[@"enabledReleaseStages"] != nil) {
     [config setEnabledReleaseStages:[NSSet setWithArray:options[@"enabledReleaseStages"]]];
   }
-  if (options[@"enabledBreadcrumbTypes"] != nil) {
+  if (options[@"enabledBreadcrumbTypes"] && ![options[@"enabledBreadcrumbTypes"] isEqual:[NSNull null]]) {
     [config setEnabledBreadcrumbTypes:[NSSet setWithArray:options[@"enabledBreadcrumbTypes"]]];
   }
   if (options[@"configMetaData"] != nil) {

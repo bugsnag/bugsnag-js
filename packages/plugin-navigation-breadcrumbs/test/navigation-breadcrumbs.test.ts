@@ -28,7 +28,7 @@ describe('plugin: navigation breadcrumbs', () => {
     // then ensure that it works with `undefined` as the url parameter (IE11-specific issue)
     expect(c._breadcrumbs[c._breadcrumbs.length - 1].metadata.to).toMatch(/^\/?network-breadcrumb-test\.html$/)
 
-    expect(c._breadcrumbs.length).toBe(6)
+    expect(c._breadcrumbs.length).toBe(5)
 
     done()
   })
@@ -79,9 +79,9 @@ describe('plugin: navigation breadcrumbs', () => {
     expect(c._sessionDelegate.startSession).not.toHaveBeenCalled()
   })
 
-  it('should be enabled when enabledReleaseStages=["navigation"]', () => {
+  it('should be enabled when enabledBreadcrumbTypes=["navigation"]', () => {
     const { winHandlers, docHandlers, window } = getMockWindow()
-    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledReleaseStages: ['navigation'], plugins: [plugin(window)] })
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: ['navigation'], plugins: [plugin(window)] })
     c._sessionDelegate = {
       startSession: () => {},
       pauseSession: () => {},
@@ -91,7 +91,22 @@ describe('plugin: navigation breadcrumbs', () => {
     docHandlers.DOMContentLoaded.forEach((h) => h.call(window.document))
     window.history.replaceState({}, 'bar', 'network-breadcrumb-test.html')
     window.history.replaceState({}, 'bar')
-    expect(c._breadcrumbs.length).toBe(5)
+    expect(c._breadcrumbs.length).toBe(4)
+  })
+
+  it('should be enabled when enabledBreadcrumbTypes=null', () => {
+    const { winHandlers, docHandlers, window } = getMockWindow()
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: null, plugins: [plugin(window)] })
+    c._sessionDelegate = {
+      startSession: () => {},
+      pauseSession: () => {},
+      resumeSession: () => {}
+    }
+    winHandlers.load.forEach((h) => h.call(window))
+    docHandlers.DOMContentLoaded.forEach((h) => h.call(window.document))
+    window.history.replaceState({}, 'bar', 'network-breadcrumb-test.html')
+    window.history.replaceState({}, 'bar')
+    expect(c._breadcrumbs.length).toBe(4)
   })
 })
 

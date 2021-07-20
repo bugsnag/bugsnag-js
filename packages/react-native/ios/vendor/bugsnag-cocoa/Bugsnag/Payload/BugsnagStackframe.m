@@ -22,18 +22,6 @@ static NSString * _Nullable FormatMemoryAddress(NSNumber * _Nullable address) {
 }
 
 
-// MARK: - Properties not used for Cocoa stack frames, but used by React Native and Unity.
-
-@interface BugsnagStackframe ()
-
-@property (strong, nullable, nonatomic) NSNumber *columnNumber;
-@property (copy, nullable, nonatomic) NSString *file;
-@property (strong, nullable, nonatomic) NSNumber *inProject;
-@property (strong, nullable, nonatomic) NSNumber *lineNumber;
-
-@end
-
-
 // MARK: -
 
 @implementation BugsnagStackframe
@@ -49,26 +37,26 @@ static NSString * _Nullable FormatMemoryAddress(NSNumber * _Nullable address) {
 
 + (BugsnagStackframe *)frameFromJson:(NSDictionary *)json {
     BugsnagStackframe *frame = [BugsnagStackframe new];
-    frame.machoFile = json[BSGKeyMachoFile];
-    frame.method = json[BSGKeyMethod];
-    frame.isPc = [json[BSGKeyIsPC] boolValue];
-    frame.isLr = [json[BSGKeyIsLR] boolValue];
-    frame.machoUuid = json[BSGKeyMachoUUID];
+    frame.machoFile = BSGDeserializeString(json[BSGKeyMachoFile]);
+    frame.method = BSGDeserializeString(json[BSGKeyMethod]);
+    frame.isPc = BSGDeserializeNumber(json[BSGKeyIsPC]).boolValue;
+    frame.isLr = BSGDeserializeNumber(json[BSGKeyIsLR]).boolValue;
+    frame.machoUuid = BSGDeserializeString(json[BSGKeyMachoUUID]);
     frame.machoVmAddress = [self readInt:json key:BSGKeyMachoVMAddress];
     frame.frameAddress = [self readInt:json key:BSGKeyFrameAddress];
     frame.symbolAddress = [self readInt:json key:BSGKeySymbolAddr];
     frame.machoLoadAddress = [self readInt:json key:BSGKeyMachoLoadAddr];
-    frame.type = json[BSGKeyType];
-    frame.columnNumber = json[@"columnNumber"];
-    frame.file = json[@"file"];
-    frame.inProject = json[@"inProject"];
-    frame.lineNumber = json[@"lineNumber"];
+    frame.type = BSGDeserializeString(json[BSGKeyType]);
+    frame.columnNumber = BSGDeserializeNumber(json[@"columnNumber"]);
+    frame.file = BSGDeserializeString(json[@"file"]);
+    frame.inProject = BSGDeserializeNumber(json[@"inProject"]);
+    frame.lineNumber = BSGDeserializeNumber(json[@"lineNumber"]);
     return frame;
 }
 
 + (NSNumber *)readInt:(NSDictionary *)json key:(NSString *)key {
-    NSString *obj = json[key];
-    if (obj) {
+    id obj = json[key];
+    if ([obj isKindOfClass:[NSString class]]) {
         return @(strtoul([obj UTF8String], NULL, 16));
     }
     return nil;
