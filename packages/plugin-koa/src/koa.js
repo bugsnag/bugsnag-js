@@ -75,6 +75,16 @@ module.exports = {
 
         client._notify(event)
       }
+
+      const app = ctx.app
+
+      // call Koa's built in onerror if we're the only registered error handler
+      // Koa will not add its own error handler if one has already been added,
+      // but we want to ensure the default handler still runs after adding Bugsnag
+      // unless another handler has also been added
+      if (app && typeof app.listenerCount === 'function' && app.listenerCount('error') === 1) {
+        app.onerror(err)
+      }
     }
 
     return { requestHandler, errorHandler }

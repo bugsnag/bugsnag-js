@@ -385,5 +385,53 @@ describe('plugin: koa', () => {
       expect(client._notify).not.toHaveBeenCalled()
       expect(client2._notify).not.toHaveBeenCalled()
     })
+
+    it('should call the app error handler when there are no other listeners', async () => {
+      const client = new Client({ apiKey: 'api_key', plugins: [plugin] })
+      client._notify = jest.fn()
+
+      const middleware = client.getPlugin('koa')
+
+      if (!middleware) {
+        throw new Error('getPlugin("koa") failed')
+      }
+
+      const app = {
+        listenerCount: () => 1,
+        onerror: jest.fn()
+      }
+
+      const error = new Error('oh no!!')
+      const context = { req: { headers: {} }, request: {}, bugsnag: client, app } as any
+
+      middleware.errorHandler(error, context)
+
+      expect(client._notify).toHaveBeenCalled()
+      expect(app.onerror).toHaveBeenCalledWith(error)
+    })
+
+    it('should not call the app error handler when there are other listeners', async () => {
+      const client = new Client({ apiKey: 'api_key', plugins: [plugin] })
+      client._notify = jest.fn()
+
+      const middleware = client.getPlugin('koa')
+
+      if (!middleware) {
+        throw new Error('getPlugin("koa") failed')
+      }
+
+      const app = {
+        listenerCount: () => 2,
+        onerror: jest.fn()
+      }
+
+      const error = new Error('oh no!!')
+      const context = { req: { headers: {} }, request: {}, bugsnag: client, app } as any
+
+      middleware.errorHandler(error, context)
+
+      expect(client._notify).toHaveBeenCalled()
+      expect(app.onerror).not.toHaveBeenCalled()
+    })
   })
 })
