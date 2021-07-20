@@ -11,7 +11,7 @@ class MockServer {
     this.minidumpUploads = []
 
     const router = new Router()
-    router.register('/minidumps', 'POST', this.uploadMinidump.bind(this))
+    router.register('/minidump', 'POST', this.uploadMinidump.bind(this))
     router.register('/events', 'POST', this.sendEvent.bind(this))
     router.register('/sessions', 'POST', this.sendSession.bind(this))
 
@@ -110,7 +110,7 @@ class MockServer {
     for (let i = 0; i < this.minidumpUploads.length; i++) {
       const upload = this.minidumpUploads[i]
       const handle = await open(join(directory, `minidump-${i}.log`), 'w+')
-      await this.writeHeaders(handle, upload, '/minidumps')
+      await this.writeHeaders(handle, upload, '/minidump')
       for (const field in upload.fields) {
         await handle.write(`${upload.boundary}\nContent-Disposition: form-data; name="${field}"\n\n${upload.fields[field]}`)
       }

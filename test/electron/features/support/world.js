@@ -18,7 +18,7 @@ BeforeAll({ timeout: 420 * 1000 }, async () => {
 
   const address = `http://localhost:${global.server.port}`
   const endpoints = {
-    minidumps: `${address}/minidumps`,
+    minidumps: `${address}/minidump`,
     notify: `${address}/events`,
     sessions: `${address}/sessions`
   }

@@ -9,7 +9,7 @@ const client = {
     apiKey: 'test-api-key',
     redactedKeys: [],
     endpoints: {
-      minidumps: 'http://localhost/test-minidump-endpoint'
+      minidumps: 'http://localhost/test-minidump-endpoint/'
     }
   }
 }
@@ -39,7 +39,9 @@ describe('electron-minidump-delivery: sendMinidump', () => {
     expect(net.request).toBeCalledTimes(1)
 
     const { url, method, headers } = net.request.mock.calls[0][0]
-    expect(url).toMatch(/\?api_key=test-api-key/)
+    const parsedUrl = new URL(url)
+    expect(parsedUrl.pathname).toBe('/test-minidump-endpoint/minidump')
+    expect(parsedUrl.searchParams.get('api_key')).toBe('test-api-key')
     expect(method).toBe('POST')
     expect(headers['content-type']).toMatch(/^multipart\/form-data/)
     expect(headers['Bugsnag-Sent-At']).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/)
