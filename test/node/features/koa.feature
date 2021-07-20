@@ -8,7 +8,7 @@ Background:
   And I wait for the host "koa" to open port "80"
 
 Scenario: a synchronous thrown error in a route
-  Then I open the URL "http://koa/err"
+  Then I open the URL "http://koa/err" and get a 500 response
   And I wait to receive an error
   Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is true
@@ -23,7 +23,7 @@ Scenario: a synchronous thrown error in a route
   And the event "request.clientIp" is not null
 
 Scenario: an asynchronous thrown error in a route
-  Then I open the URL "http://koa/async-err"
+  Then I open the URL "http://koa/async-err" and get a 500 response
   And I wait to receive an error
   Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is true
@@ -35,7 +35,7 @@ Scenario: an asynchronous thrown error in a route
   And the "file" of stack frame 0 equals "scenarios/app.js"
 
 Scenario: An error created with with ctx.throw()
-  Then I open the URL "http://koa/ctx-throw"
+  Then I open the URL "http://koa/ctx-throw" and get a 500 response
   And I wait to receive an error
   Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is true
@@ -48,7 +48,7 @@ Scenario: An error created with with ctx.throw()
   And the "file" of stack frame 1 equals "scenarios/app.js"
 
 Scenario: an error thrown before the requestHandler middleware
-  Then I open the URL "http://koa/error-before-handler"
+  Then I open the URL "http://koa/error-before-handler" and get a 500 response
   And I wait to receive an error
   Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is true
@@ -60,7 +60,7 @@ Scenario: an error thrown before the requestHandler middleware
   And the "file" of stack frame 0 equals "scenarios/app.js"
 
 Scenario: throwing non-Error error
-  Then I open the URL "http://koa/throw-non-error"
+  Then I open the URL "http://koa/throw-non-error" and get a 500 response
   And I wait to receive an error
   Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is true
@@ -71,14 +71,14 @@ Scenario: throwing non-Error error
   And the exception "type" equals "nodejs"
 
 Scenario: A non-5XX error created with ctx.throw()
-  When I open the URL "http://koa/ctx-throw-400"
+  When I open the URL "http://koa/ctx-throw-400" and get a 400 response
   And I wait to receive a session
   Then the session is valid for the session reporting API version "1" for the "Bugsnag Node" notifier
   And the session payload has a valid sessions array
   And the sessionCount "sessionsStarted" equals 1
 
 Scenario: A handled error with ctx.bugsnag.notify()
-  Then I open the URL "http://koa/handled"
+  Then I open the URL "http://koa/handled" and get a 404 response
   And I wait to receive an error
   Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is false
