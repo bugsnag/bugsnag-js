@@ -184,6 +184,22 @@ services:
           - koa-1x
     restart: "no"
 
+  koa-1x-disabled:
+    build:
+      context: koa-1x
+      args:
+        - NODE_VERSION
+    environment:
+      - BUGSNAG_API_KEY
+      - BUGSNAG_NOTIFY_ENDPOINT
+      - BUGSNAG_SESSIONS_ENDPOINT
+    networks:
+      default:
+        aliases:
+          - koa-1x-disabled
+    restart: "no"
+    entrypoint: "node scenarios/app-disabled"
+
   proxy:
     build:
       context: proxy
