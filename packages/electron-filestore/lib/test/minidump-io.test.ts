@@ -75,6 +75,13 @@ describe('minidump i/o', () => {
       expect(identifier).toMatch(fakeId)
     })
 
+    it('does not find an identifier in a malformed mulipart form', async () => {
+      const sequence = `name=bugsnag_crash_id\n\n${fakeId}\n------`
+      const contents = Buffer.from(`${'\0'.repeat(442)}${sequence}c\0\0\0`)
+      await write(filepath, contents)
+      await expect(getIdentifier(filepath)).rejects.toThrowError(/^detected invalid identifier/)
+    })
+
     it('fails without the key being present in the file', async () => {
       const sequence = `${fakeId}`
       const contents = Buffer.from(`${'\0'.repeat(300)}${sequence}c\0\0\0`)
