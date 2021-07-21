@@ -70,6 +70,7 @@
 
 - Breadcrumbs will now be left when `enabledBreadcrumbTypes` is `null` [#1466](https://github.com/bugsnag/bugsnag-js/pull/1466)
 - Avoid crash when `enabledBreadcrumbTypes` is `null` [#1467](https://github.com/bugsnag/bugsnag-js/pull/1467)
+- (plugin-koa): Fix the Koa plugin suppressing other error handlers [#1482](https://github.com/bugsnag/bugsnag-js/pull/1482)
 
 ## 7.10.5 (2021-07-05)
 

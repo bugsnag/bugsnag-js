@@ -53,8 +53,8 @@ Scenario: throwing non-Error error
   And the event "unhandled" is true
   And the event "severity" equals "error"
   And the event "severityReason.type" equals "unhandledErrorMiddleware"
-  And the exception "errorClass" equals "InvalidError"
-  And the exception "message" matches "^koa middleware received a non-error\."
+  And the exception "errorClass" equals "Error"
+  And the exception "message" equals "non-error thrown: error"
   And the exception "type" equals "nodejs"
 
 Scenario: A non-5XX error created with ctx.throw()
