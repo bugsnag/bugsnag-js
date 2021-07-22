@@ -66,6 +66,18 @@ Then('minidump request {int} contains a file form field named {string}', (index,
   expect(req.files[field]).not.toBeUndefined()
 })
 
+Then('minidump request {int} contains a form field named {string}', (index, field) => {
+  const req = global.server.minidumpUploads[index]
+  expect(req.fields[field]).not.toBeUndefined()
+})
+
+Then('minidump request {int} contains a form field named {string} matching {string}', async (index, field, fixture) => {
+  const req = global.server.minidumpUploads[index]
+  const expected = await readFixtureFile(fixture)
+  const actual = JSON.parse(req.fields[field])
+  expect([actual]).toContainPayload(expected)
+})
+
 Then('the total requests received by the server matches:', async (data) => {
   return requestDelay((done) => {
     const expected = {}
