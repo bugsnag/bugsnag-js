@@ -9,6 +9,7 @@ Bugsnag.start({
     notify: process.env.BUGSNAG_NOTIFY_ENDPOINT,
     sessions: process.env.BUGSNAG_SESSIONS_ENDPOINT
   },
+  autoDetectErrors: false,
   plugins: [bugsnagKoa]
 })
 
@@ -64,23 +65,6 @@ app.use(async (ctx, next) => {
   }
 })
 
-app.on('error', (err, ctx) => {
-  // in the "error-before-handler" test ctx.bugsnag won't exist
-  const bugsnag = ctx.bugsnag || Bugsnag
-
-  bugsnag.addMetadata('error_handler', 'before', true)
-})
-
 app.on('error', middleware.errorHandler)
-
-app.on('error', (err, ctx) => {
-  // in the "error-before-handler" test ctx.bugsnag won't exist
-  const bugsnag = ctx.bugsnag || Bugsnag
-
-  // this should not be added to events as error handlers run in the order they
-  // were added, so at this point the event has already been sent by the Bugsnag
-  // errorHandler
-  bugsnag.addMetadata('error_handler', 'after', true)
-})
 
 app.listen(80)

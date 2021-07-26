@@ -71,4 +71,6 @@ NSString * _Nullable BSGDeserializeString(id _Nullable rawValue);
 
 NSDate * _Nullable BSGDeserializeDate(id _Nullable rawValue);
 
+NSNumber * _Nullable BSGDeserializeNumber(id  _Nullable rawValue);
+
 NS_ASSUME_NONNULL_END

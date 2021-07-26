@@ -1,13 +1,10 @@
-const includes = require('@bugsnag/core/lib/es-utils/includes')
-
 /*
  * Leaves breadcrumbs when the user interacts with the DOM
  */
 module.exports = (win = window) => ({
   load: (client) => {
     if (!('addEventListener' in win)) return
-
-    if (!client._config.enabledBreadcrumbTypes || !includes(client._config.enabledBreadcrumbTypes, 'user')) return
+    if (!client._isBreadcrumbTypeEnabled('user')) return
 
     win.addEventListener('click', (event) => {
       let targetText, targetSelector

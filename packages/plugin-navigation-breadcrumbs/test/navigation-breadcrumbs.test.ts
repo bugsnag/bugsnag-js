@@ -2,14 +2,17 @@ import plugin from '../navigation-breadcrumbs'
 
 import Client from '@bugsnag/core/client'
 
+const noop = () => {}
+const id = <T>(a: T) => a
+
 describe('plugin: navigation breadcrumbs', () => {
   it('should drop breadcrumb for navigational activity', done => {
     const { winHandlers, docHandlers, window } = getMockWindow()
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', plugins: [plugin(window)] })
     c._sessionDelegate = {
-      startSession: () => {},
-      pauseSession: () => {},
-      resumeSession: () => {}
+      startSession: id,
+      pauseSession: noop,
+      resumeSession: id
     }
 
     winHandlers.load.forEach((h) => h.call(window))
@@ -37,9 +40,9 @@ describe('plugin: navigation breadcrumbs', () => {
     const { winHandlers, docHandlers, window } = getMockWindow()
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: [], plugins: [plugin(window)] })
     c._sessionDelegate = {
-      startSession: () => {},
-      pauseSession: () => {},
-      resumeSession: () => {}
+      startSession: id,
+      pauseSession: noop,
+      resumeSession: id
     }
     winHandlers.load.forEach((h) => h.call(window))
     docHandlers.DOMContentLoaded.forEach((h) => h.call(window.document))
@@ -53,8 +56,8 @@ describe('plugin: navigation breadcrumbs', () => {
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', plugins: [plugin(window)] })
     c._sessionDelegate = {
       startSession: jest.fn(),
-      pauseSession: () => {},
-      resumeSession: () => {}
+      pauseSession: noop,
+      resumeSession: id
     }
     winHandlers.load.forEach((h) => h.call(window))
     docHandlers.DOMContentLoaded.forEach((h) => h.call(window.document))
@@ -70,8 +73,8 @@ describe('plugin: navigation breadcrumbs', () => {
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', autoTrackSessions: false, plugins: [plugin(window)] })
     c._sessionDelegate = {
       startSession: jest.fn(),
-      pauseSession: () => {},
-      resumeSession: () => {}
+      pauseSession: noop,
+      resumeSession: id
     }
     winHandlers.load.forEach((h) => h.call(window))
     docHandlers.DOMContentLoaded.forEach((h) => h.call(window.document))
@@ -79,13 +82,28 @@ describe('plugin: navigation breadcrumbs', () => {
     expect(c._sessionDelegate.startSession).not.toHaveBeenCalled()
   })
 
-  it('should be enabled when enabledReleaseStages=["navigation"]', () => {
+  it('should be enabled when enabledBreadcrumbTypes=["navigation"]', () => {
     const { winHandlers, docHandlers, window } = getMockWindow()
-    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledReleaseStages: ['navigation'], plugins: [plugin(window)] })
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: ['navigation'], plugins: [plugin(window)] })
     c._sessionDelegate = {
-      startSession: () => {},
-      pauseSession: () => {},
-      resumeSession: () => {}
+      startSession: id,
+      pauseSession: noop,
+      resumeSession: id
+    }
+    winHandlers.load.forEach((h) => h.call(window))
+    docHandlers.DOMContentLoaded.forEach((h) => h.call(window.document))
+    window.history.replaceState({}, 'bar', 'network-breadcrumb-test.html')
+    window.history.replaceState({}, 'bar')
+    expect(c._breadcrumbs.length).toBe(4)
+  })
+
+  it('should be enabled when enabledBreadcrumbTypes=null', () => {
+    const { winHandlers, docHandlers, window } = getMockWindow()
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: null, plugins: [plugin(window)] })
+    c._sessionDelegate = {
+      startSession: id,
+      pauseSession: noop,
+      resumeSession: id
     }
     winHandlers.load.forEach((h) => h.call(window))
     docHandlers.DOMContentLoaded.forEach((h) => h.call(window.document))

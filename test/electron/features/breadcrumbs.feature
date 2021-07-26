@@ -13,12 +13,13 @@ Feature: Automatic breadcrumbs
             | Bugsnag-API-Key   | 6425093c6530f554a9897d2d7d38e248 |
             | Content-Type      | application/json                 |
             | Bugsnag-Integrity | {BODY_SHA1}                      |
-        Then the contents of an event request matches "main/breadcrumbs/<config>.json"
+        Then the contents of an event request matches "main/breadcrumbs/<expected>.json"
 
         Examples:
-            | config          |
-            | default         |
-            | complex-config  |
+            | config                        | expected       |
+            | default                       | default        |
+            | null-enabled-breadcrumb-types | default        |
+            | complex-config                | complex-config |
 
     Scenario: Breadcrumbs can be cancelled in renderer and not synced to main
         Given I launch an app with configuration:

@@ -41,10 +41,10 @@ describe('plugin: react native app state breadcrumbs', () => {
     expect(client._breadcrumbs[1].metadata).toEqual({ state: 'active' })
   })
 
-  it('should not be enabled when enabledBreadcrumbTypes=null', () => {
+  it('should be enabled when enabledBreadcrumbTypes=null', () => {
     const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: null, plugins: [plugin] })
     expect(client).toBe(client)
-    expect(AppState.addEventListener).not.toHaveBeenCalled()
+    expect(AppState.addEventListener).toHaveBeenCalledWith('change', expect.any(Function))
   })
 
   it('should not be enabled when enabledBreadcrumbTypes=[]', () => {

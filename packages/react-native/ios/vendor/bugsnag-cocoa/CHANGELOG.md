@@ -1,6 +1,30 @@
 Changelog
 =========
 
+## 6.10.2 (2021-07-14)
+
+### Bug fixes
+
+* Fix ThreadSanitizer data race warning in `BSGAppHangDetector`.
+  [#1153](https://github.com/bugsnag/bugsnag-cocoa/pull/1153)
+
+* Remove (duplicated) `user` information from `metaData`.
+  [#1151](https://github.com/bugsnag/bugsnag-cocoa/pull/1151)
+
+## 6.10.1 (2021-07-07)
+
+### Bug fixes
+
+* Fix a potential stack overflow in `+[BugsnagThread allThreadsWithCurrentThreadBacktrace:]`.
+  [#1148](https://github.com/bugsnag/bugsnag-cocoa/pull/1148)
+
+* Fix `NSNull` handling in `+[BugsnagError errorFromJson:]` and `+[BugsnagStackframe frameFromJson:]`.
+  [#1143](https://github.com/bugsnag/bugsnag-cocoa/pull/1143)
+  [#1138](https://github.com/bugsnag/bugsnag-cocoa/issues/1138)
+
+* Fix a rare crash in `bsg_ksmachgetThreadQueueName`.
+  [#1147](https://github.com/bugsnag/bugsnag-cocoa/pull/1147)
+
 ## 6.10.0 (2021-06-30)
 
 ### Bug fixes

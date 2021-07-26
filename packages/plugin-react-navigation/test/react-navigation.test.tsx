@@ -138,6 +138,45 @@ describe('plugin: react navigation', () => {
     expect(c._breadcrumbs[3].metadata.to).toBe('details')
   })
 
+  it('should leave breacrumbs when enabledBreadcrumbTypes=null', () => {
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', plugins: [new Plugin()], enabledBreadcrumbTypes: null })
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const BugsnagNavigationContainer = c.getPlugin('reactNavigation')!.createNavigationContainer(NavigationContainer)
+    let ref
+    let currentRouteName = 'home'
+    const App = () => {
+      ref = React.useRef({
+        getCurrentRoute: () => {
+          return { name: currentRouteName }
+        }
+      })
+      return (
+        <BugsnagNavigationContainer ref={ref as unknown as React.RefObject<NavigationContainerRef>}>
+          Testing 123
+        </BugsnagNavigationContainer>
+      )
+    }
+
+    const MockedNavigationContainerRender = (NavigationContainer as any).render as jest.MockedFunction<React.ForwardRefRenderFunction<any, any>>
+    TestRenderer.create(<App/>)
+
+    expect(MockedNavigationContainerRender).toBeCalledTimes(1)
+
+    expect(c._breadcrumbs).toHaveLength(0)
+
+    const navigationProps = MockedNavigationContainerRender.mock.calls[0][0]
+
+    navigationProps.onReady()
+    currentRouteName = 'details'
+    navigationProps.onStateChange()
+    currentRouteName = 'settings'
+    navigationProps.onStateChange()
+    currentRouteName = 'details'
+    navigationProps.onStateChange()
+
+    expect(c._breadcrumbs).toHaveLength(4)
+  })
+
   it('should leave no breacrumbs when navigation breadcrumbs are disabled', () => {
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', plugins: [new Plugin()], enabledBreadcrumbTypes: [] })
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

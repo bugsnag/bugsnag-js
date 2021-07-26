@@ -133,6 +133,29 @@ describe('plugin: electron net breadcrumbs', () => {
     expect(client._breadcrumbs[0]).toMatchBreadcrumb(expected)
   })
 
+  it('it leaves breadcrumbs when enabledBreadcrumbTypes=null', async () => {
+    const client = makeClient({ enabledBreadcrumbTypes: null })
+
+    currentServer = await startServer(200)
+
+    const url = `http://localhost:${currentServer.port}`
+    const request = net.request(url)
+
+    await new Promise(resolve => {
+      request.on('close', resolve)
+      request.abort()
+    })
+
+    const expected = new Breadcrumb(
+      'net.request aborted',
+      { request: `GET ${url}/` },
+      'request'
+    )
+
+    expect(client._breadcrumbs).toHaveLength(1)
+    expect(client._breadcrumbs[0]).toMatchBreadcrumb(expected)
+  })
+
   it('it leaves a breadcrumb when the request errors', async () => {
     const client = makeClient()
 

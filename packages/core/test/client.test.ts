@@ -1,6 +1,11 @@
 import Client from '../client'
 import Event from '../event'
 import Session from '../session'
+import breadcrumbTypes from '../lib/breadcrumb-types'
+import { BreadcrumbType } from '../types/common'
+
+const noop = () => {}
+const id = <T>(a: T) => a
 
 describe('@bugsnag/core/client', () => {
   describe('constructor', () => {
@@ -396,6 +401,19 @@ describe('@bugsnag/core/client', () => {
       expect(payloads[0].events[0].breadcrumbs.length).toBe(0)
     })
 
+    it('leaves a breadcrumb of the error when enabledBreadcrumbTypes=null', () => {
+      const payloads: any[] = []
+      const client = new Client({ apiKey: 'API_KEY_YEAH', enabledBreadcrumbTypes: null })
+      client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload), sendSession: () => {} }))
+      client.notify(new Error('foobar'))
+      expect(client._breadcrumbs).toHaveLength(1)
+      expect(client._breadcrumbs[0].type).toBe('error')
+      expect(client._breadcrumbs[0].message).toBe('Error')
+      expect(client._breadcrumbs[0].metadata.stacktrace).toBe(undefined)
+      // the error shouldn't appear as a breadcrumb for itself
+      expect(payloads[0].events[0].breadcrumbs).toHaveLength(0)
+    })
+
     it('doesn’t modify global client.metadata when using addMetadata() method', () => {
       const client = new Client({ apiKey: 'API_KEY_YEAH' })
       client.addMetadata('foo', 'bar', [1, 2, 3])
@@ -614,20 +632,55 @@ describe('@bugsnag/core/client', () => {
     })
   })
 
+  describe('_isBreadcrumbTypeEnabled()', () => {
+    it.each(breadcrumbTypes)('returns true for "%s" when enabledBreadcrumbTypes is not configured', (type) => {
+      const client = new Client({ apiKey: 'API_KEY_YEAH' })
+
+      expect(client._isBreadcrumbTypeEnabled(type)).toBe(true)
+    })
+
+    it.each(breadcrumbTypes)('returns true for "%s" when enabledBreadcrumbTypes=null', (type) => {
+      const client = new Client({ apiKey: 'API_KEY_YEAH', enabledBreadcrumbTypes: null })
+
+      expect(client._isBreadcrumbTypeEnabled(type)).toBe(true)
+    })
+
+    it.each(breadcrumbTypes)('returns false for "%s" when enabledBreadcrumbTypes=[]', (type) => {
+      const client = new Client({ apiKey: 'API_KEY_YEAH', enabledBreadcrumbTypes: [] })
+
+      expect(client._isBreadcrumbTypeEnabled(type)).toBe(false)
+    })
+
+    it.each(breadcrumbTypes)('returns true for "%s" when enabledBreadcrumbTypes only contains it', (type) => {
+      const client = new Client({ apiKey: 'API_KEY_YEAH', enabledBreadcrumbTypes: [type as BreadcrumbType] })
+
+      expect(client._isBreadcrumbTypeEnabled(type)).toBe(true)
+    })
+
+    it.each(breadcrumbTypes)('returns false for "%s" when enabledBreadcrumbTypes does not contain it', (type) => {
+      const enabledBreadcrumbTypes = breadcrumbTypes.filter(enabledType => enabledType !== type)
+
+      const client = new Client({
+        apiKey: 'API_KEY_YEAH',
+        enabledBreadcrumbTypes: enabledBreadcrumbTypes as BreadcrumbType[]
+      })
+
+      expect(client._isBreadcrumbTypeEnabled(type)).toBe(false)
+    })
+  })
+
   describe('startSession()', () => {
     it('calls the provided session delegate and return delegate’s return value', () => {
       const client = new Client({ apiKey: 'API_KEY' })
-      let ret
       client._sessionDelegate = {
         startSession: c => {
           expect(c).toBe(client)
-          ret = {}
-          return ret
+          return c
         },
-        pauseSession: () => {},
-        resumeSession: () => {}
+        pauseSession: noop,
+        resumeSession: id
       }
-      expect(client.startSession()).toBe(ret)
+      expect(client.startSession()).toBe(client)
     })
 
     it('tracks error counts using the session delegate and sends them in error payloads', (done) => {
@@ -638,8 +691,8 @@ describe('@bugsnag/core/client', () => {
           client._session = new Session()
           return client
         },
-        pauseSession: () => {},
-        resumeSession: () => {}
+        pauseSession: noop,
+        resumeSession: id
       }
       client._setDelivery(client => ({
         sendSession: () => {},
@@ -668,9 +721,9 @@ describe('@bugsnag/core/client', () => {
     it('does not start the session if onSession returns false', () => {
       const client = new Client({ apiKey: 'API_KEY', onSession: () => false })
       const sessionDelegate = {
-        startSession: () => {},
-        pauseSession: () => {},
-        resumeSession: () => {}
+        startSession: id,
+        pauseSession: noop,
+        resumeSession: id
       }
       client._sessionDelegate = sessionDelegate
 
@@ -688,9 +741,9 @@ describe('@bugsnag/core/client', () => {
         }
       })
       const sessionDelegate = {
-        startSession: () => {},
-        pauseSession: () => {},
-        resumeSession: () => {}
+        startSession: id,
+        pauseSession: noop,
+        resumeSession: id
       }
       client._sessionDelegate = sessionDelegate
 
@@ -707,9 +760,9 @@ describe('@bugsnag/core/client', () => {
       c._setDelivery(client => ({ sendEvent: (p, cb) => cb(null), sendSession: (s: any, cb: any) => cb(null) }))
       c._logger = console
       const sessionDelegate = {
-        startSession: () => {},
-        pauseSession: () => {},
-        resumeSession: () => {}
+        startSession: id,
+        pauseSession: noop,
+        resumeSession: id
       }
       c._sessionDelegate = sessionDelegate
       const eSpy = jest.fn()
@@ -787,9 +840,9 @@ describe('@bugsnag/core/client', () => {
     it('forwards on calls to the session delegate', () => {
       const client = new Client({ apiKey: 'API_KEY' })
       const sessionDelegate = {
-        startSession: () => {},
-        pauseSession: () => {},
-        resumeSession: () => {}
+        startSession: id,
+        pauseSession: noop,
+        resumeSession: id
       }
       client._sessionDelegate = sessionDelegate
 

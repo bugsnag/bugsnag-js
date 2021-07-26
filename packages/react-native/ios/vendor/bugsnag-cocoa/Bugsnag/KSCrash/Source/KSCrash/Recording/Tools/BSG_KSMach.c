@@ -308,6 +308,7 @@ bool bsg_ksmachgetThreadQueueName(const thread_t thread, char *const buffer,
 
     thread_identifier_info_t idInfo = (thread_identifier_info_t)info;
     dispatch_queue_t dispatch_queue = NULL;
+    uintptr_t junk = 0;
     // thread_handle shouldn't be 0 also, because
     // identifier_info->dispatch_qaddr =  identifier_info->thread_handle +
     // get_dispatchqueue_offset_from_proc(thread->task->bsd_info);
@@ -315,7 +316,11 @@ bool bsg_ksmachgetThreadQueueName(const thread_t thread, char *const buffer,
         // sometimes the queue address is invalid, so avoid dereferencing
         bsg_ksmachcopyMem((const void *)idInfo->dispatch_qaddr, &dispatch_queue,
                           sizeof(dispatch_queue)) != KERN_SUCCESS ||
-        !dispatch_queue) {
+        // Sometimes dispatch_queue is invalid which causes an EXC_BAD_ACCESS
+        // crash in dispatch_queue_get_label(). Check that dispatch_queue can
+        // be dereferenced to work around this.
+        bsg_ksmachcopyMem((const void *)dispatch_queue, &junk,
+                          sizeof(junk)) != KERN_SUCCESS) {
         BSG_KSLOG_TRACE(
             "This thread doesn't have a dispatch queue attached : %p", thread);
         return false;
