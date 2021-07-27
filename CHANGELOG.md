@@ -336,6 +336,7 @@ This release adds [`@bugsnag/electron`](http://docs.bugsnag.com/platforms/electr
   - Stop Bugsnag unregistering other signal handlers when catching a mach exception [bugsnag-cocoa#976](https://github.com/bugsnag/bugsnag-cocoa/pull/976)/[bugsnag-cocoa#1002](https://github.com/bugsnag/bugsnag-cocoa/pull/1002)
   - Fix a tvOS file permission error that was introduced in 6.5.1 [bugsnag-cocoa#996](https://github.com/bugsnag/bugsnag-cocoa/pull/996)
   - Fix an analyzer warning [bugsnag-cocoa#994](https://github.com/bugsnag/bugsnag-cocoa/pull/994)
+- (react-native): Store source maps in a temporary directory during Xcode build phases to support source map filenames with whitespace. See [source map upload docs](https://docs.bugsnag.com/platforms/react-native/react-native/showing-full-stacktraces/#source-maps) for info on how to change your build script to utilize this. [#1289](https://github.com/bugsnag/bugsnag-js/pull/1289) 
 
 ### Added
 
