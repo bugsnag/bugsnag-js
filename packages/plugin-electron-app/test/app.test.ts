@@ -576,8 +576,7 @@ describe('plugin: electron app info', () => {
     const session = await sendSession()
     expect(session.app).toEqual(makeExpectedSessionApp())
 
-    const pluginInstance = client.getPlugin('electronApp')
-    pluginInstance.markLaunchComplete()
+    client.markLaunchComplete()
 
     const event2 = await sendEvent()
     expect(event2.app).toEqual(makeExpectedEventApp({ isLaunching: false }))
@@ -595,17 +594,16 @@ describe('plugin: electron app info', () => {
     expect(NativeClient.setApp).toHaveBeenCalledTimes(1)
     expect(NativeClient.setApp).toHaveBeenCalledWith(makeExpectedNativeClientApp())
 
-    const pluginInstance = client.getPlugin('electronApp')
-    pluginInstance.markLaunchComplete()
+    client.markLaunchComplete()
 
     expect(NativeClient.setApp).toHaveBeenCalledTimes(2)
     expect(NativeClient.setApp).toHaveBeenNthCalledWith(2, makeExpectedNativeClientApp({ isLaunching: false }))
 
     // as the app is already not launching, calling "markLaunchComplete" again
     // should do nothing
-    pluginInstance.markLaunchComplete()
-    pluginInstance.markLaunchComplete()
-    pluginInstance.markLaunchComplete()
+    client.markLaunchComplete()
+    client.markLaunchComplete()
+    client.markLaunchComplete()
 
     expect(NativeClient.setApp).toHaveBeenCalledTimes(2)
   })
@@ -692,10 +690,9 @@ describe('plugin: electron app info', () => {
     expect(NativeClient.setApp).toHaveBeenNthCalledWith(2, makeExpectedNativeClientApp({ isLaunching: false }))
 
     // calling markLaunchComplete should do nothing as we're no longer launching
-    const pluginInstance = client.getPlugin('electronApp')
-    pluginInstance.markLaunchComplete()
-    pluginInstance.markLaunchComplete()
-    pluginInstance.markLaunchComplete()
+    client.markLaunchComplete()
+    client.markLaunchComplete()
+    client.markLaunchComplete()
 
     expect(NativeClient.setApp).toHaveBeenCalledTimes(2)
   })
@@ -719,8 +716,7 @@ describe('plugin: electron app info', () => {
     expect(event.app).toEqual(makeExpectedEventApp({ isLaunching: true }))
     expect(event.getMetadata('app')).toEqual(makeExpectedMetadataApp())
 
-    const pluginInstance = client.getPlugin('electronApp')
-    pluginInstance.markLaunchComplete()
+    client.markLaunchComplete()
 
     const event2 = await sendEvent()
     expect(event2.app).toEqual(makeExpectedEventApp({ isLaunching: false }))
@@ -757,6 +753,7 @@ interface MakeClientOptions {
   NativeApp?: any
   process?: any
   config?: { launchDurationMillis: number|undefined }
+  filestore?: any
 }
 
 function makeClient ({
@@ -765,17 +762,27 @@ function makeClient ({
   NativeClient = makeNativeClient(),
   process = makeProcess(),
   config = { launchDurationMillis: 0 },
-  NativeApp = makeNativeApp()
+  NativeApp = makeNativeApp(),
+  filestore = makeFileStore()
 }: MakeClientOptions = {}): ReturnType<typeof makeClientForPlugin> {
   return makeClientForPlugin({
     config,
-    plugin: plugin(NativeClient, process, electronApp, BrowserWindow, NativeApp)
+    plugin: plugin(NativeClient, process, electronApp, BrowserWindow, filestore, NativeApp)
   })
 }
 
 function makeNativeClient () {
   return {
-    setApp: jest.fn()
+    install: jest.fn(),
+    setApp: jest.fn(),
+    setLastRunInfo: jest.fn()
+  }
+}
+
+function makeFileStore () {
+  return {
+    getLastRunInfo: jest.fn().mockReturnValue({ crashed: false, crashedDuringLaunch: false, consecutiveLaunchCrashes: 0 }),
+    setLastRunInfo: jest.fn()
   }
 }
 

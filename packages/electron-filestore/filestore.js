@@ -13,6 +13,7 @@ class FileStore {
       sessions: join(base, 'sessions'),
       runinfo: join(base, 'runinfo'),
       device: join(base, 'device.json'),
+      lastRunInfo: join(base, 'last-run-info.json'),
       minidumps: crashDir
     }
   }
@@ -132,6 +133,24 @@ class FileStore {
     mkdirSync(dirname(this._paths.device), { recursive: true })
     writeFileSync(this._paths.device, JSON.stringify(device))
     return device
+  }
+
+  getLastRunInfo () {
+    try {
+      // similar to getDeviceInfo - the lastRunInfo must be available during tha app-launch phase
+      // as such we use readFileSync to ensure that the data is loaded immediately
+      const contents = readFileSync(this._paths.lastRunInfo)
+      return JSON.parse(contents)
+    } catch (e) {
+    }
+
+    return { crashed: false, crashedDuringLaunch: false, consecutiveLaunchCrashes: 0 }
+  }
+
+  setLastRunInfo (lastRunInfo = {}) {
+    mkdirSync(dirname(this._paths.lastRunInfo), { recursive: true })
+    writeFileSync(this._paths.lastRunInfo, JSON.stringify(lastRunInfo))
+    return lastRunInfo
   }
 
   createAppRunMetadata () {

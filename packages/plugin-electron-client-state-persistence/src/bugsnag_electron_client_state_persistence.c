@@ -24,6 +24,12 @@ typedef struct {
   char *serialized_data;
   // Length of serialized data in bytes
   size_t serialized_data_len;
+  // Path to the serialized file on disk
+  char *last_run_info_file_path;
+  // The cached serialized lastRunInfo JSON object
+  char *last_run_info_data;
+  // Length of lastRunInfo serialized data in bytes
+  size_t last_run_info_data_len;
   // A lock for synchronizing access to the JSON object
   mtx_t lock;
 } becsp_context;
@@ -46,6 +52,7 @@ static const char *const keypath_user_email = "user.email";
 
 static void handle_crash(int context) {
   becsp_persist_to_disk();
+  bescp_persist_last_run_info_if_required();
   // Uninstall handlers
   becsp_crash_handler_uninstall();
   // Invoke previous handler
@@ -96,7 +103,9 @@ static JSON_Value *initialize_context(const char *state) {
   return json_value_init_object();
 }
 
-void becsp_install(const char *save_file_path, uint8_t max_crumbs,
+void becsp_install(const char *save_file_path,
+                  const char *last_run_info_file_path,
+                  uint8_t max_crumbs,
                   const char *state) {
   if (g_context.data != NULL) {
     return;
@@ -105,6 +114,8 @@ void becsp_install(const char *save_file_path, uint8_t max_crumbs,
   mtx_init(&g_context.lock, mtx_plain);
   // Cache the save path
   g_context.save_file_path = strdup(save_file_path);
+  // Cache the lastRunInfo save path
+  g_context.last_run_info_file_path = strdup(last_run_info_file_path);
   // Set breadcrumb limit
   g_context.max_crumbs = max_crumbs;
 
@@ -362,6 +373,25 @@ BECSP_STATUS becsp_set_user(const char *id, const char *email, const char *name)
   return BECSP_STATUS_SUCCESS;
 }
 
+BECSP_STATUS becsp_set_last_run_info(const char *encoded_json) {
+  if (!g_context.data) {
+    return BECSP_STATUS_NOT_INSTALLED;
+  }
+  context_lock();
+
+  // release the previously cached lastRunInfo string (if there is one)
+  if(g_context.last_run_info_data) {
+    g_context.last_run_info_data_len = 0;
+    free(g_context.last_run_info_data);
+  }
+
+  g_context.last_run_info_data = encoded_json;
+  g_context.last_run_info_data_len = strlen(encoded_json);
+
+  context_unlock();
+  return BECSP_STATUS_SUCCESS;
+}
+
 // Must be async-signal-safe
 BECSP_STATUS becsp_persist_to_disk() {
   if (!g_context.save_file_path) {
@@ -379,4 +409,26 @@ BECSP_STATUS becsp_persist_to_disk() {
   close(fd);
   return len == g_context.serialized_data_len ? BECSP_STATUS_SUCCESS
                                               : BECSP_STATUS_UNKNOWN_FAILURE;
+}
+
+// Must be async-signal-safe - save the lastRunInfo set for a crash
+BECSP_STATUS bescp_persist_last_run_info_if_required() {
+  if(!g_context.last_run_info_file_path) {
+    return BECSP_STATUS_NOT_INSTALLED;
+  }
+
+  if(!g_context.last_run_info_data || g_context.last_run_info_data_len == 0) {
+    return BECSP_STATUS_SUCCESS;
+  }
+
+  int fd = open(g_context.last_run_info_file_path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+  if (fd == -1) {
+    return BECSP_STATUS_UNKNOWN_FAILURE;
+  }
+  // Write last_run_info
+  write(fd, g_context.last_run_info_data, g_context.last_run_info_data_len);
+  // Close last_run_info file
+  close(fd);
+
+  return BECSP_STATUS_SUCCESS;
 }

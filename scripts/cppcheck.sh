@@ -19,7 +19,7 @@ SUPPRESSED_ERRORS=(\
     --suppress='ConfigurationNotChecked:*/deps/parson/parson.c:1425' \
     --suppress='knownConditionTrueFalse:*/deps/parson/parson.c:692' \
     --suppress='memleak:*/plugin-electron-client-state-persistence/src/deps/tinycthread/tinycthread.c:620' \
-    --suppress='unusedFunction:*/plugin-electron-client-state-persistence/src/api.c:429' \
+    --suppress='unusedFunction:*/plugin-electron-client-state-persistence/src/api.c:469' \
     --suppress='unusedFunction:*/plugin-electron-app/src/api.c:60')
 
 # Shared arguments:

@@ -3,6 +3,17 @@ import { plugin } from '../'
 import { Breadcrumb, Logger } from '@bugsnag/core'
 import stateManager from '@bugsnag/plugin-electron-client-state-manager'
 
+const filestore = {
+  getEventInfoPath: jest.fn(),
+  getPaths: () => ({
+    lastRunInfo: ''
+  })
+}
+
+const appRunMetadata = {
+  bugsnag_crash_id: 'abc123'
+}
+
 describe('plugin: electron client sync', () => {
   it('updates context', done => {
     const c = new Client({
@@ -10,11 +21,12 @@ describe('plugin: electron client sync', () => {
       plugins: [
         stateManager,
         plugin({
+          install: jest.fn(),
           updateContext: (update: any) => {
             expect(update).toBe('1234')
             done()
           }
-        })
+        }, filestore, appRunMetadata)
       ]
     })
     c.setContext('1234')
@@ -26,6 +38,7 @@ describe('plugin: electron client sync', () => {
       plugins: [
         stateManager,
         plugin({
+          install: jest.fn(),
           updateMetadata: (key: string, updates: any) => {
             expect(key).toBe('widget')
             expect(updates).toEqual({
@@ -34,7 +47,7 @@ describe('plugin: electron client sync', () => {
             })
             done()
           }
-        })
+        }, filestore, appRunMetadata)
       ]
     })
     c.addMetadata('widget', { id: '14', count: 340 })
@@ -47,9 +60,10 @@ describe('plugin: electron client sync', () => {
       plugins: [
         stateManager,
         plugin({
+          install: () => {},
           addMetadata: () => {},
           clearMetadata: () => {}
-        })
+        }, filestore, appRunMetadata)
       ]
     })
     c.addMetadata('widget', { id: '14', count: 340 })
@@ -67,13 +81,14 @@ describe('plugin: electron client sync', () => {
       plugins: [
         stateManager,
         plugin({
+          install: jest.fn(),
           updateUser: (id: string, email: string, name: string) => {
             expect(id).toBe('1234')
             expect(name).toBe('Ben')
             expect(email).toBe('user@example.com')
             done()
           }
-        })
+        }, filestore, appRunMetadata)
       ]
     })
     c.setUser('1234', 'user@example.com', 'Ben')
@@ -86,6 +101,7 @@ describe('plugin: electron client sync', () => {
       plugins: [
         stateManager,
         plugin({
+          install: jest.fn(),
           leaveBreadcrumb: ({ message, metadata, type, timestamp }: Breadcrumb) => {
             expect(message).toBe('Spin')
             expect(type).toBe('manual')
@@ -93,20 +109,20 @@ describe('plugin: electron client sync', () => {
             expect(timestamp).toBeTruthy()
             done()
           }
-        })
+        }, filestore, appRunMetadata)
       ]
     })
     c.leaveBreadcrumb('Spin', { direction: 'ccw', deg: '90' })
   })
 
   it('does not sync breadcrumbs that are cancelled by an onBreadcrumb callback', () => {
-    const NativeClient = { leaveBreadcrumb: jest.fn() }
+    const NativeClient = { install: jest.fn(), leaveBreadcrumb: jest.fn() }
 
     const client = new Client({
       apiKey: 'api_key',
       plugins: [
         stateManager,
-        plugin(NativeClient)
+        plugin(NativeClient, filestore, appRunMetadata)
       ]
     })
 
@@ -142,9 +158,20 @@ describe('plugin: electron client sync', () => {
       info: jest.fn(),
       error: jest.fn()
     }
+    const filestore = {
+      getEventInfoPath: () => '/tmp/event-info',
+      getPaths: () => ({
+        lastRunInfo: '/tmp/last-run-info.json'
+      })
+    }
+    const appRunMetadata = {
+      bugsnag_crash_id: 'abc123'
+    }
     const client = new Client({
       apiKey: 'api_key',
-      plugins: [stateManager, plugin(NativeClient)],
+      plugins: [stateManager, plugin(
+        { install: jest.fn(), ...NativeClient }, filestore, appRunMetadata
+      )],
       logger
     })
     return [client, logger]
@@ -152,7 +179,9 @@ describe('plugin: electron client sync', () => {
 
   it('logs errors thrown from updating context', () => {
     const [client, logger] = loggingClient({
-      updateContext: () => { throw new Error('wrong thing') }
+      updateContext: () => {
+        throw new Error('wrong thing')
+      }
     })
     client.setContext('some invalid context')
     const error = logger.error as jest.Mock<Function>
@@ -162,7 +191,9 @@ describe('plugin: electron client sync', () => {
 
   it('logs errors thrown from adding breadcrumbs', () => {
     const [client, logger] = loggingClient({
-      leaveBreadcrumb: () => { throw new Error('wrong thing') }
+      leaveBreadcrumb: () => {
+        throw new Error('wrong thing')
+      }
     })
     client.leaveBreadcrumb('Spin', { direction: 'ccw', deg: '90' })
     const error = logger.error as jest.Mock<Function>
@@ -172,7 +203,9 @@ describe('plugin: electron client sync', () => {
 
   it('logs errors thrown from adding metadata', () => {
     const [client, logger] = loggingClient({
-      updateMetadata: () => { throw new Error('wrong thing') }
+      updateMetadata: () => {
+        throw new Error('wrong thing')
+      }
     })
     client.addMetadata('widget', { id: '14', count: 340 })
     const error = logger.error as jest.Mock<Function>
@@ -182,7 +215,9 @@ describe('plugin: electron client sync', () => {
 
   it('logs errors thrown from clearing metadata', () => {
     const [client, logger] = loggingClient({
-      updateMetadata: () => { throw new Error('wrong thing') }
+      updateMetadata: () => {
+        throw new Error('wrong thing')
+      }
     })
     client.clearMetadata('widget')
     const error = logger.error as jest.Mock<Function>
@@ -192,7 +227,9 @@ describe('plugin: electron client sync', () => {
 
   it('logs errors thrown from updating user info', () => {
     const [client, logger] = loggingClient({
-      updateUser: () => { throw new Error('wrong thing') }
+      updateUser: () => {
+        throw new Error('wrong thing')
+      }
     })
     client.setUser('404', 'tim@example.com', undefined)
     const error = logger.error as jest.Mock<Function>

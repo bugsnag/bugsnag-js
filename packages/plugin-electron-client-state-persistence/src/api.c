@@ -133,14 +133,14 @@ static napi_value Uninstall(napi_env env, napi_callback_info info) {
 }
 
 static napi_value Install(napi_env env, napi_callback_info info) {
-  size_t argc = 3;
-  napi_value args[3];
+  size_t argc = 4;
+  napi_value args[4];
   napi_status status = napi_get_cb_info(env, info, &argc, args, NULL, NULL);
   assert(status == napi_ok);
 
-  if (argc < 2) {
+  if (argc < 3) {
     napi_throw_type_error(env, NULL,
-                          "Wrong number of arguments, expected 2 or 3");
+                          "Wrong number of arguments, expected 3 or 4");
     return NULL;
   }
 
@@ -152,9 +152,13 @@ static napi_value Install(napi_env env, napi_callback_info info) {
   status = napi_typeof(env, args[1], &valuetype1);
   assert(status == napi_ok);
 
-  if (valuetype0 != napi_string || valuetype1 != napi_number) {
+  napi_valuetype valuetype2;
+  status = napi_typeof(env, args[2], &valuetype2);
+  assert(status == napi_ok);
+
+  if (valuetype0 != napi_string || valuetype1 != napi_string || valuetype2 != napi_number) {
     napi_throw_type_error(
-        env, NULL, "Wrong argument types, expected (string, number, object?)");
+        env, NULL, "Wrong argument types, expected (string, string, number, object?)");
     return NULL;
   }
 
@@ -163,26 +167,31 @@ static napi_value Install(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
+  char *lastRunInfoFilePath = read_string_value(env, args[1], false);
+  if (!lastRunInfoFilePath) {
+    return NULL;
+  }
+
   double max_crumbs;
-  status = napi_get_value_double(env, args[1], &max_crumbs);
+  status = napi_get_value_double(env, args[2], &max_crumbs);
   assert(status == napi_ok);
 
-  if (argc > 2) {
-    napi_valuetype valuetype2;
-    status = napi_typeof(env, args[2], &valuetype2);
+  if (argc > 3) {
+    napi_valuetype valuetype3;
+    status = napi_typeof(env, args[3], &valuetype3);
     assert(status == napi_ok);
 
-    if (valuetype2 == napi_object) {
-      char *state = read_string_value(env, json_stringify(env, args[2]), true);
-      becsp_install(filepath, max_crumbs, state);
+    if (valuetype3 == napi_object) {
+      char *state = read_string_value(env, json_stringify(env, args[3]), true);
+      becsp_install(filepath, lastRunInfoFilePath, max_crumbs, state);
       free(state);
     } else {
       napi_throw_type_error(
           env, NULL,
-          "Wrong argument types, expected (string, number, object?)");
+          "Wrong argument types, expected (string, string, number, object?)");
     }
   } else {
-    becsp_install(filepath, max_crumbs, NULL);
+    becsp_install(filepath, lastRunInfoFilePath, max_crumbs, NULL);
   }
 
   free(filepath);
@@ -379,6 +388,29 @@ static napi_value PersistState(napi_env env, napi_callback_info info) {
   return NULL;
 }
 
+static napi_value SetLastRunInfo(napi_env env, napi_callback_info info) {
+  char *lastRunInfo;
+  size_t argc = 1;
+  napi_value args[1];
+  napi_status status = napi_get_cb_info(env, info, &argc, args, NULL, NULL);
+  assert(status == napi_ok);
+
+  if (argc < 1) {
+    napi_throw_type_error(env, NULL, "Wrong number of arguments, expected 1");
+    return NULL;
+  }
+
+  lastRunInfo = read_string_value(env, args[0], false);
+
+  becsp_set_last_run_info(lastRunInfo);
+  return NULL;
+}
+
+static napi_value PersistLastRunInfo(napi_env env, napi_callback_info info) {
+  bescp_persist_last_run_info_if_required();
+  return NULL;
+}
+
 #define DECLARE_NAPI_METHOD(name, func)                                        \
   (napi_property_descriptor) { name, 0, func, 0, 0, 0, napi_default, 0 }
 
@@ -416,6 +448,14 @@ napi_value Init(napi_env env, napi_value exports) {
   assert(status == napi_ok);
 
   desc = DECLARE_NAPI_METHOD("setSession", SetSession);
+  status = napi_define_properties(env, exports, 1, &desc);
+  assert(status == napi_ok);
+
+  desc = DECLARE_NAPI_METHOD("setLastRunInfo", SetLastRunInfo);
+  status = napi_define_properties(env, exports, 1, &desc);
+  assert(status == napi_ok);
+
+  desc = DECLARE_NAPI_METHOD("persistLstRunInfo", PersistLastRunInfo);
   status = napi_define_properties(env, exports, 1, &desc);
   assert(status == napi_ok);
 

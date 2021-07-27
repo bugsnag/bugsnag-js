@@ -41,6 +41,12 @@ methods.forEach((m) => {
   }
 })
 
+Object.defineProperty(Bugsnag, 'lastRunInfo', {
+  get: isMain
+    ? () => Bugsnag._client.lastRunInfo
+    : () => { Bugsnag._client._logger.warn('Bugsnag.lastRunInfo can only be accessed in the main process') }
+})
+
 // commonjs
 module.exports = Bugsnag
 

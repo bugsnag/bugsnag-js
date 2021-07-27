@@ -35,8 +35,15 @@ interface RendererConfig extends AllowedRendererConfig {
   codeBundleId?: string
 }
 
+interface LastRunInfo {
+  crashed: boolean
+  crashedDuringLaunch: boolean
+  consecutiveLaunchCrashes: number
+}
+
 declare class ElectronClient extends Client {
   markLaunchComplete: () => void
+  readonly lastRunInfo?: LastRunInfo
 }
 
 interface ElectronBugsnagStatic extends ElectronClient {

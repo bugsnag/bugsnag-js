@@ -21,22 +21,6 @@ describe('electron-minidump-delivery: load', () => {
 
   const plugin = createPlugin(app, net, filestore, nativeClient)
 
-  it('should install when configured', () => {
-    const client = {
-      _config: {
-        autoDetectErrors: true,
-        enabledErrorTypes: {
-          nativeCrashes: true
-        },
-        maxBreadcrumbs: 16
-      }
-    }
-
-    plugin.load(client)
-
-    expect(nativeClient.install).toBeCalledTimes(1)
-  })
-
   it('should not install when autoDetectErrors disabled', () => {
     const client = {
       _config: {

@@ -6,7 +6,7 @@ const NetworkStatus = require('@bugsnag/electron-network-status')
 
 const isEnabledFor = client => client._config.autoDetectErrors && client._config.enabledErrorTypes.nativeCrashes
 
-module.exports = (app, net, filestore, nativeClient) => ({
+module.exports = (app, net, filestore, appRunMetadata, NativeClient) => ({
   name: 'deliverMinidumps',
   load: (client) => {
     if (!isEnabledFor(client)) {
@@ -14,15 +14,15 @@ module.exports = (app, net, filestore, nativeClient) => ({
     }
 
     // make sure that the Electron CrashReporter is configured
-    const metadata = filestore.createAppRunMetadata()
     crashReporter.start({
       submitURL: '',
       uploadToServer: false,
-      extra: metadata
+      extra: appRunMetadata
     })
 
-    nativeClient.install(
-      filestore.getEventInfoPath(metadata.bugsnag_crash_id),
+    NativeClient.install(
+      filestore.getEventInfoPath(appRunMetadata.bugsnag_crash_id),
+      filestore.getPaths().lastRunInfo,
       client._config.maxBreadcrumbs
     )
 

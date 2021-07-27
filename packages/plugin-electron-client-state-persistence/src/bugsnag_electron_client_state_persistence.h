@@ -37,12 +37,15 @@ typedef enum {
 /**
  * Install a handler which will write to disk in the event of a crash
  *
- * @param save_file_path  The path to write in the event of a crash. The
- *                        enclosing directory must exist.
- * @param max_crumbs      The maximum number of breadcrumbs to save
- * @param state           Stringified JSON of the initial cached state
+ * @param save_file_path          The path to write in the event of a crash. The
+ *                                enclosing directory must exist.
+ * @param last_run_info_file_path The path to write the lastRunInfo to in the event of a crash.
+ * @param max_crumbs              The maximum number of breadcrumbs to save
+ * @param state                   Stringified JSON of the initial cached state
  */
-void becsp_install(const char *save_file_path, uint8_t max_crumbs,
+void becsp_install(const char *save_file_path,
+                  const char *last_run_info_file_path,
+                  uint8_t max_crumbs,
                   const char *state);
 
 void becsp_uninstall(void);
@@ -107,9 +110,21 @@ BECSP_STATUS becsp_set_device(const char *value);
 BECSP_STATUS becsp_set_session(const char *value);
 
 /**
+ * Set the value of the lastRunInfo field
+ *
+ * @param encoded_json the JSON encoded content of the lastRunInfo object
+ */
+BECSP_STATUS becsp_set_last_run_info(const char *encoded_json);
+
+/**
  * Write cached event context to disk
  */
 BECSP_STATUS becsp_persist_to_disk(void);
+
+/**
+ * Write the lastRunInfo blob to disk
+ */
+BECSP_STATUS bescp_persist_last_run_info_if_required(void);
 #ifdef __cplusplus
 }
 #endif
