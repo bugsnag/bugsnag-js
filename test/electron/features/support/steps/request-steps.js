@@ -167,3 +167,7 @@ Then('the event metadata {string} is less than {int}', async (field, max) => {
   expect(metadata[section][key]).toBeDefined()
   expect(metadata[section][key]).toBeLessThan(max)
 })
+
+Then('I wait {int} seconds', delay => {
+  return new Promise(resolve => setTimeout(resolve, delay * 1000))
+})
