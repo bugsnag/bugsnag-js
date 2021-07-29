@@ -1,5 +1,11 @@
 # Changelog
 
+## TBD
+
+### Changed
+
+- (expo): Add support for Expo SDK v42 [#1488](https://github.com/bugsnag/bugsnag-js/pull/1488)
+
 ## 7.11.0 (2021-07-26)
 
 ### Added
