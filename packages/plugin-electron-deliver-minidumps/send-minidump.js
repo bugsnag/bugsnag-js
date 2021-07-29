@@ -43,7 +43,12 @@ module.exports = (net, client) => {
     })
 
     if (event) {
-      const eventBody = payload.event(event, client._config.redactedKeys)
+      const eventPayload = {
+        notifier: client._notifier,
+        payloadVersion: '5',
+        events: [event]
+      }
+      const eventBody = payload.event(eventPayload, client._config.redactedKeys)
       formData.append('event', eventBody)
     }
 
