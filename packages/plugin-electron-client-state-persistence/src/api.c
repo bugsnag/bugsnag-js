@@ -169,6 +169,7 @@ static napi_value Install(napi_env env, napi_callback_info info) {
 
   char *lastRunInfoFilePath = read_string_value(env, args[1], false);
   if (!lastRunInfoFilePath) {
+    free(filepath);
     return NULL;
   }
 
@@ -195,6 +196,7 @@ static napi_value Install(napi_env env, napi_callback_info info) {
   }
 
   free(filepath);
+  free(lastRunInfoFilePath);
 
   return NULL;
 }

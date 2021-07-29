@@ -136,6 +136,10 @@ void becsp_uninstall() {
   }
   becsp_crash_handler_uninstall();
   free((void *)g_context.save_file_path);
+  free((void *)g_context.last_run_info_file_path);
+  if(g_context.last_run_info_data_len) {
+    free((void *)g_context.last_run_info_data);
+  }
   free(g_context.serialized_data);
   json_value_free(g_context.data);
 
@@ -143,6 +147,9 @@ void becsp_uninstall() {
   g_context.data = NULL;
   g_context.save_file_path = NULL;
   g_context.serialized_data = NULL;
+  g_context.last_run_info_data_len = 0;
+  g_context.last_run_info_data = NULL;
+  g_context.last_run_info_file_path = NULL;
 }
 
 BECSP_STATUS becsp_add_breadcrumb(const char *val) {
@@ -382,7 +389,7 @@ BECSP_STATUS becsp_set_last_run_info(const char *encoded_json) {
   // release the previously cached lastRunInfo string (if there is one)
   if(g_context.last_run_info_data) {
     g_context.last_run_info_data_len = 0;
-    free(g_context.last_run_info_data);
+    free((void*)g_context.last_run_info_data);
   }
 
   g_context.last_run_info_data = encoded_json;
