@@ -1,5 +1,7 @@
 package com.reactnative;
 
+import android.os.Bundle;
+
 import com.facebook.react.ReactActivity;
 
 public class MainActivity extends ReactActivity {
@@ -11,5 +13,12 @@ public class MainActivity extends ReactActivity {
   @Override
   protected String getMainComponentName() {
     return "reactnative";
+  }
+
+  @Override
+  protected void onSaveInstanceState(Bundle SavedInstanceState) {
+    // Do not write any state, to avoid crashes on relaunch after a crash.  If Android keeps the state Bundle from
+    // before the crash, passing it back into the application it can do so with a Drawable that does not implement
+    // the getConstantState method, causing another crash.
   }
 }
