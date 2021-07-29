@@ -45,7 +45,7 @@ RUN find . -name package.json -type f -mindepth 2 -maxdepth 3 ! -path "./node_mo
 RUN rm -fr **/*/node_modules/
 
 # The maze-runner browser tests
-FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v4-cli as browser-maze-runner
+FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v5-cli as browser-maze-runner
 
 COPY --from=browser-feature-builder /app/test/browser /app/test/browser/
 WORKDIR /app/test/browser
