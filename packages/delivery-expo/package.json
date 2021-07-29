@@ -19,7 +19,7 @@
   "dependencies": {
     "@react-native-community/netinfo": "5.9.7",
     "expo-crypto": "~8.4.0",
-    "expo-file-system": "~9.3.0"
+    "expo-file-system": "~11.1.0"
   },
   "devDependencies": {
     "@bugsnag/core": "^7.11.0"
