@@ -1,5 +1,6 @@
 package com.bugsnag.rn0_63_expo_ejected;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.facebook.react.ReactActivity;
@@ -11,14 +12,18 @@ import expo.modules.splashscreen.singletons.SplashScreen;
 import expo.modules.splashscreen.SplashScreenImageResizeMode;
 
 public class MainActivity extends ReactActivity {
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(null);
     // SplashScreen.show(...) has to be called after super.onCreate(...)
     // Below line is handled by '@expo/configure-splash-screen' command and it's discouraged to modify it manually
     SplashScreen.show(this, SplashScreenImageResizeMode.CONTAIN, ReactRootView.class, false);
-  }
 
+    // Attempt to dismiss any system dialogs (such as "MazeRunner crashed")
+    Intent closeDialog = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+    sendBroadcast(closeDialog);
+  }
 
   /**
    * Returns the name of the main component registered from JavaScript.
