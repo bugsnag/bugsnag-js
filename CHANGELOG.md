@@ -5,7 +5,6 @@
 ### Added
 
 - Server framework plugins now honour the `autoDetectErrors` configuration option [#1464](https://github.com/bugsnag/bugsnag-js/pull/1464)
-- (electron): `Bugsnag.lastRunInfo` exposes the crash state of the previous run
 
 ### Changed
 

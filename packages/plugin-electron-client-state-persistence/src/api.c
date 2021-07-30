@@ -457,7 +457,7 @@ napi_value Init(napi_env env, napi_value exports) {
   status = napi_define_properties(env, exports, 1, &desc);
   assert(status == napi_ok);
 
-  desc = DECLARE_NAPI_METHOD("persistLstRunInfo", PersistLastRunInfo);
+  desc = DECLARE_NAPI_METHOD("persistLastRunInfo", PersistLastRunInfo);
   status = napi_define_properties(env, exports, 1, &desc);
   assert(status == napi_ok);
 

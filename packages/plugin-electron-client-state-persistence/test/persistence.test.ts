@@ -293,7 +293,7 @@ describe('persisting changes to disk', () => {
     NativeClient.install(filepath, lastRunInfoFilePath, 5)
 
     NativeClient.setLastRunInfo(JSON.stringify(runInfo))
-    NativeClient.persistLstRunInfo()
+    NativeClient.persistLastRunInfo()
 
     const loadedRunInfo = JSON.parse(await readFile(lastRunInfoFilePath, 'utf8'))
     expect(runInfo).toEqual(loadedRunInfo)

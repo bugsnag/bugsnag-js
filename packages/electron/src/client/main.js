@@ -22,8 +22,6 @@ module.exports = (opts) => {
     electron.app.getPath('crashDumps')
   )
 
-  const appRunMetadata = filestore.createAppRunMetadata()
-
   // Normalise the project root upfront so renderers have a fully resolved path
   // The renderers can't do this themselves as they cannot access the 'path' module
   if (opts.projectRoot) {
@@ -38,7 +36,7 @@ module.exports = (opts) => {
     require('@bugsnag/plugin-internal-callback-marker').FirstPlugin,
     require('@bugsnag/plugin-electron-client-state-manager'),
     PluginClientStatePersistence(NativeClient),
-    require('@bugsnag/plugin-electron-deliver-minidumps')(electron.app, electron.net, filestore, appRunMetadata, NativeClient),
+    require('@bugsnag/plugin-electron-deliver-minidumps')(electron.app, electron.net, filestore, NativeClient),
     require('@bugsnag/plugin-electron-ipc'),
     require('@bugsnag/plugin-node-uncaught-exception'),
     require('@bugsnag/plugin-node-unhandled-rejection'),
@@ -64,6 +62,10 @@ module.exports = (opts) => {
 
   filestore.init().catch(err => bugsnag._logger.warn('Failed to init crash FileStore directories', err))
 
+  // expose markLaunchComplete as a method on the Bugsnag client/facade
+  const electronApp = bugsnag.getPlugin('electronApp')
+  const { markLaunchComplete } = electronApp
+  bugsnag.markLaunchComplete = markLaunchComplete
   bugsnag._setDelivery(makeDelivery(filestore, electron.net, electron.app))
 
   bugsnag._logger.debug('Loaded! In main process.')

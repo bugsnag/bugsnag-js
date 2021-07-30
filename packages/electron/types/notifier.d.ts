@@ -43,7 +43,7 @@ interface LastRunInfo {
 
 declare class ElectronClient extends Client {
   markLaunchComplete: () => void
-  readonly lastRunInfo?: LastRunInfo
+  readonly lastRunInfo: LastRunInfo | null
 }
 
 interface ElectronBugsnagStatic extends ElectronClient {

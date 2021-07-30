@@ -216,9 +216,9 @@ describe('FileStore', () => {
     })
   })
 
-  describe('createAppRunMetadata()', () => {
+  describe('getAppRunMetadata()', () => {
     it('generates a key in an expected format', () => {
-      const metadata = store.createAppRunMetadata()
+      const metadata = store.getAppRunMetadata()
       expect(metadata.bugsnag_crash_id).toMatch(/^[0-9a-z]{64}$/)
     })
   })

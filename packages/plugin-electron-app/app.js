@@ -51,7 +51,9 @@ module.exports = (NativeClient, process, electronApp, BrowserWindow, filestore, 
     updateNextCrashLastRunInfo({
       crashed: true,
       crashedDuringLaunch: true,
-      consecutiveLaunchCrashes: lastRunInfo.consecutiveLaunchCrashes + 1
+      consecutiveLaunchCrashes: lastRunInfo && lastRunInfo.consecutiveLaunchCrashes
+        ? lastRunInfo.consecutiveLaunchCrashes + 1
+        : 1
     })
 
     const markLaunchComplete = () => {
@@ -74,7 +76,7 @@ module.exports = (NativeClient, process, electronApp, BrowserWindow, filestore, 
 
     // mark the launch complete after the configured time
     if (client._config.launchDurationMillis > 0) {
-      setTimeout(() => client.markLaunchComplete(), client._config.launchDurationMillis)
+      setTimeout(markLaunchComplete, client._config.launchDurationMillis)
     }
 
     // 'getCreationTime' can return null so fallback to the current time
@@ -126,9 +128,7 @@ module.exports = (NativeClient, process, electronApp, BrowserWindow, filestore, 
       }
     }
 
-    allWindows.forEach(window => {
-      window.on('closed', onBrowserWindowClosed)
-    })
+    allWindows.forEach(window => { window.on('closed', onBrowserWindowClosed) })
 
     electronApp.on('browser-window-created', (_event, newWindow) => {
       // the focus event will fire for the new window so we don't need to update
@@ -163,7 +163,7 @@ module.exports = (NativeClient, process, electronApp, BrowserWindow, filestore, 
     })
 
     client._app = app
-    client.markLaunchComplete = markLaunchComplete
+    return { markLaunchComplete }
   },
   configSchema: {
     appVersion: {
