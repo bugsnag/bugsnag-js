@@ -1,6 +1,6 @@
 package com.rn063example;
 
-import android.content.Intent
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.facebook.react.ReactActivity;

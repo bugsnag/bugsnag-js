@@ -1,6 +1,6 @@
 package com.rn0_64_hermes;
 
-import android.content.Intent
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.facebook.react.ReactActivity;
