@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.12.0-rc.0 (2021-08-05)
+
+- (electron) `@bugsnag/electron` will now deliver minidump files from native crashes to Bugsnag
+
 ## 7.11.0 (2021-07-26)
 
 ### Added
