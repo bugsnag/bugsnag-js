@@ -144,7 +144,7 @@ AWS_ACCESS_KEY_ID=xxx \
 AWS_SECRET_ACCESS_KEY=xxx \
 RELEASE_BRANCH=master \
 VERSION=preminor \
-  docker-compose run
+  docker-compose run release
 ```
 
 Prereleases will automatically be published to npm with the dist tag `next` and browser bundles are automatically uploaded to the CDN.
