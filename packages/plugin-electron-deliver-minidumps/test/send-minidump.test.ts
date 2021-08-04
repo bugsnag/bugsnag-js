@@ -74,4 +74,32 @@ describe('electron-minidump-delivery: sendMinidump', () => {
     const { sendMinidump } = sendMinidumpFactory(net, client)
     await expect(sendMinidump(minidumpFile, null)).rejects.toHaveProperty('isRetryable', false)
   })
+
+  describe('apiKey in events', () => {
+    let minidumpFile
+    const net = {
+      request: jest.fn().mockImplementation((_, handle) => {
+        handle({ statusCode: 200 })
+      })
+    }
+
+    beforeEach(async () => {
+      minidumpFile = join(minidumpsPath, 'test-minidump.dmp')
+      await writeFile(minidumpFile, '{}', 'utf8')
+    })
+
+    it('can be set by the event', async () => {
+      const { sendMinidump } = sendMinidumpFactory(net, client)
+      await sendMinidump(minidumpFile, {
+        apiKey: 'c0ffeec0ffeec0ffeec0ffeec0ffeec0'
+      })
+
+      expect(net.request).toBeCalledTimes(1)
+
+      const { url } = net.request.mock.calls[0][0]
+      const parsedUrl = new URL(url)
+      expect(parsedUrl.pathname).toBe('/test-minidump-endpoint/minidump')
+      expect(parsedUrl.searchParams.get('api_key')).toBe('c0ffeec0ffeec0ffeec0ffeec0ffeec0')
+    })
+  })
 })
