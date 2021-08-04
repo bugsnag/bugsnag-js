@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-window-onerror",
-  "version": "7.10.0",
+  "version": "7.11.0",
   "main": "onerror.js",
   "description": "@bugsnag/js plugin to report unhandled exceptions in browsers",
   "homepage": "https://www.bugsnag.com/",
@@ -17,7 +17,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^7.10.0"
+    "@bugsnag/core": "^7.11.0"
   },
   "peerDependencies": {
     "@bugsnag/core": "^7.0.0"

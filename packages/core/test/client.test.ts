@@ -4,6 +4,9 @@ import Session from '../session'
 import breadcrumbTypes from '../lib/breadcrumb-types'
 import { BreadcrumbType } from '../types/common'
 
+const noop = () => {}
+const id = <T>(a: T) => a
+
 describe('@bugsnag/core/client', () => {
   describe('constructor', () => {
     it('can handle bad input', () => {
@@ -669,17 +672,15 @@ describe('@bugsnag/core/client', () => {
   describe('startSession()', () => {
     it('calls the provided session delegate and return delegate’s return value', () => {
       const client = new Client({ apiKey: 'API_KEY' })
-      let ret
       client._sessionDelegate = {
         startSession: c => {
           expect(c).toBe(client)
-          ret = {}
-          return ret
+          return c
         },
-        pauseSession: () => {},
-        resumeSession: () => {}
+        pauseSession: noop,
+        resumeSession: id
       }
-      expect(client.startSession()).toBe(ret)
+      expect(client.startSession()).toBe(client)
     })
 
     it('tracks error counts using the session delegate and sends them in error payloads', (done) => {
@@ -690,8 +691,8 @@ describe('@bugsnag/core/client', () => {
           client._session = new Session()
           return client
         },
-        pauseSession: () => {},
-        resumeSession: () => {}
+        pauseSession: noop,
+        resumeSession: id
       }
       client._setDelivery(client => ({
         sendSession: () => {},
@@ -720,9 +721,9 @@ describe('@bugsnag/core/client', () => {
     it('does not start the session if onSession returns false', () => {
       const client = new Client({ apiKey: 'API_KEY', onSession: () => false })
       const sessionDelegate = {
-        startSession: () => {},
-        pauseSession: () => {},
-        resumeSession: () => {}
+        startSession: id,
+        pauseSession: noop,
+        resumeSession: id
       }
       client._sessionDelegate = sessionDelegate
 
@@ -740,9 +741,9 @@ describe('@bugsnag/core/client', () => {
         }
       })
       const sessionDelegate = {
-        startSession: () => {},
-        pauseSession: () => {},
-        resumeSession: () => {}
+        startSession: id,
+        pauseSession: noop,
+        resumeSession: id
       }
       client._sessionDelegate = sessionDelegate
 
@@ -759,9 +760,9 @@ describe('@bugsnag/core/client', () => {
       c._setDelivery(client => ({ sendEvent: (p, cb) => cb(null), sendSession: (s: any, cb: any) => cb(null) }))
       c._logger = console
       const sessionDelegate = {
-        startSession: () => {},
-        pauseSession: () => {},
-        resumeSession: () => {}
+        startSession: id,
+        pauseSession: noop,
+        resumeSession: id
       }
       c._sessionDelegate = sessionDelegate
       const eSpy = jest.fn()
@@ -839,9 +840,9 @@ describe('@bugsnag/core/client', () => {
     it('forwards on calls to the session delegate', () => {
       const client = new Client({ apiKey: 'API_KEY' })
       const sessionDelegate = {
-        startSession: () => {},
-        pauseSession: () => {},
-        resumeSession: () => {}
+        startSession: id,
+        pauseSession: noop,
+        resumeSession: id
       }
       client._sessionDelegate = sessionDelegate
 

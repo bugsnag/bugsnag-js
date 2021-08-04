@@ -24,7 +24,7 @@
 @property (weak, nonatomic) id<BSGAppHangDetectorDelegate> delegate;
 @property (nonatomic) BOOL recordAllThreads;
 @property (nonatomic) CFRunLoopObserverRef observer;
-@property (nonatomic) dispatch_time_t processingDeadline;
+@property (atomic) dispatch_time_t processingDeadline;
 @property (nonatomic) dispatch_semaphore_t processingStarted;
 @property (nonatomic) dispatch_semaphore_t processingFinished;
 @property (weak, nonatomic) NSThread *thread;

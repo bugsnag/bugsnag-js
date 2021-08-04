@@ -273,7 +273,7 @@ steps:
 
   - label: ':ios: Init and build RN 0.64 ipa (Hermes)'
     key: 'rn-0-64-hermes-ipa'
-    timeout_in_minutes: 30
+    timeout_in_minutes: 60
     agents:
       queue: 'opensource-mac-cocoa-11'
     env:
