@@ -11,9 +11,6 @@ const client = {
     endpoints: {
       minidumps: 'http://localhost/test-minidump-endpoint/'
     }
-  },
-  _logger: {
-    warn: jest.fn()
   }
 }
 
@@ -103,21 +100,6 @@ describe('electron-minidump-delivery: sendMinidump', () => {
       const parsedUrl = new URL(url)
       expect(parsedUrl.pathname).toBe('/test-minidump-endpoint/minidump')
       expect(parsedUrl.searchParams.get('api_key')).toBe('c0ffeec0ffeec0ffeec0ffeec0ffeec0')
-    })
-
-    it('is rejected when invalid', async () => {
-      const { sendMinidump } = sendMinidumpFactory(net, client)
-      await sendMinidump(minidumpFile, {
-        apiKey: 'not a valid key'
-      })
-
-      expect(net.request).toBeCalledTimes(1)
-
-      const { url } = net.request.mock.calls[0][0]
-      const parsedUrl = new URL(url)
-      expect(parsedUrl.pathname).toBe('/test-minidump-endpoint/minidump')
-      expect(parsedUrl.searchParams.get('api_key')).toBe('test-api-key')
-      expect(client._logger.warn).toBeCalledTimes(1)
     })
   })
 })
