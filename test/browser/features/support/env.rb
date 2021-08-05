@@ -26,7 +26,7 @@ def get_test_url path
 end
 
 def get_error_message id
-  browser = Maze.config.bs_browser
+  browser = Maze.config.browser
   raise "The browser '#{browser}' does not exist in 'browser_errors.yml'" unless ERRORS.has_key?(browser)
 
   ERRORS[browser][id]
