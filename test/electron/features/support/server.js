@@ -9,6 +9,7 @@ class MockServer {
     this.eventUploads = []
     this.sessionUploads = []
     this.minidumpUploads = []
+    this.awaitingUploads = []
 
     const router = new Router()
     router.register('/minidump', 'POST', this.uploadMinidump.bind(this))
@@ -23,6 +24,20 @@ class MockServer {
     this.startServer = promisify(this.server.listen.bind(this.server))
   }
 
+  awaitUpload() {
+    return Promise.race([
+      new Promise(resolve => {
+        this.awaitingUploads.push(resolve)
+      }),
+      new Promise((_, reject) => setTimeout(reject, 4000))
+    ])
+  }
+
+  _notifyUploads() {
+    this.awaitingUploads.forEach(resolve => resolve())
+    this.awaitingUploads = []
+  }
+
   async uploadMinidump (req, res) {
     const form = formidable()
     form.parse(req, (_err, fields, files) => {
@@ -30,6 +45,7 @@ class MockServer {
       this.minidumpUploads.push({ headers: req.headers, boundary, fields, files })
       res.writeHead(202)
       res.end()
+      this._notifyUploads()
     })
   }
 
@@ -40,6 +56,7 @@ class MockServer {
     req.on('end', () => {
       this.eventUploads.push({ headers: req.headers, body })
       res.end()
+      this._notifyUploads()
     })
   }
 
@@ -50,6 +67,7 @@ class MockServer {
     req.on('end', () => {
       this.sessionUploads.push({ headers: req.headers, body })
       res.end()
+      this._notifyUploads()
     })
   }
 

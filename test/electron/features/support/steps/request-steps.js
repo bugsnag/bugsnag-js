@@ -48,6 +48,16 @@ Then('I received {int} {word} upload(s)', (count, requestType) => {
   expect(global.server.uploadsForType(requestType).length).toEqual(count)
 })
 
+Then('I wait for {int} {word} upload(s)', async (count, requestType) => {
+  try {
+    while (global.server.uploadsForType(requestType).length < count) {
+      await global.server.awaitUpload()
+    }
+  } catch (e) {
+    throw new Error(`timeout waiting for ${count} ${requestType} - received ${global.server.uploadsForType(requestType).length}`)
+  }
+})
+
 Then('the contents of {word} request {int} matches {string}', async (requestType, index, fixture) => {
   const req = global.server.uploadsForType(requestType)[index]
   expect(readPayloads([req])).toContainPayload(await readFixtureFile(fixture))
