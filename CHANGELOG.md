@@ -1,5 +1,15 @@
 # Changelog
 
+## TBD
+
+### Changed
+
+- (react-native): Update bugsnag-android to v5.11.0
+  - Add Bugsnag listeners for StrictMode violation detection
+    [bugsnag-android#1331](https://github.com/bugsnag/bugsnag-android/pull/1331)
+  - Address pre-existing StrictMode violations
+  [bugsnag-android#1328](https://github.com/bugsnag/bugsnag-android/pull/1328)
+
 ## 7.11.0 (2021-07-26)
 
 ### Added
