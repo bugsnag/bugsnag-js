@@ -57,9 +57,9 @@ export default class ClientWithInternals<T extends Config = Config> extends Clie
   _pausedSession: Session | null
 
   _sessionDelegate: {
-    startSession: (client: ClientWithInternals, session: Session) => any
-    pauseSession: () => void
-    resumeSession: () => void
+    startSession: (client: ClientWithInternals, session: Session) => ClientWithInternals
+    pauseSession: (client: ClientWithInternals) => void
+    resumeSession: (client: ClientWithInternals) => ClientWithInternals
   }
 
   _addOnSessionPayload: (cb: (sessionPayload: Session) => void) => void
