@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-electron-network-status",
-  "version": "7.11.0",
+  "version": "7.12.0-rc.0",
   "main": "network-status.js",
   "description": "@bugsnag/electron plugin to monitor the network status",
   "repository": {
@@ -14,7 +14,7 @@
     "network-status.js"
   ],
   "devDependencies": {
-    "@bugsnag/core": "^7.11.0"
+    "@bugsnag/core": "^7.12.0-rc.0"
   },
   "peerDependencies": {
     "@bugsnag/core": "^7.9.2"

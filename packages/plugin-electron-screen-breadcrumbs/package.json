@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-electron-screen-breadcrumbs",
-  "version": "7.11.0",
+  "version": "7.12.0-rc.0",
   "main": "screen-breadcrumbs.js",
   "description": "@bugsnag/electron plugin to collect screen breadcrumbs",
   "repository": {
@@ -14,8 +14,8 @@
     "screen-breadcrumbs.js"
   ],
   "devDependencies": {
-    "@bugsnag/core": "^7.11.0",
-    "@bugsnag/electron-test-helpers": "^7.11.0"
+    "@bugsnag/core": "^7.12.0-rc.0",
+    "@bugsnag/electron-test-helpers": "^7.12.0-rc.0"
   },
   "peerDependencies": {
     "@bugsnag/core": "^7.9.2"
