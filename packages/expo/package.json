@@ -47,7 +47,7 @@
     "@bugsnag/plugin-react-native-unhandled-rejection": "^7.11.0",
     "@bugsnag/source-maps": "^1.0.1",
     "bugsnag-build-reporter": "^1.0.1",
-    "expo-constants": "~11.0.0"
+    "expo-constants": "~11.0.1"
   },
   "peerDependencies": {
     "expo": ">=33.0.0",
