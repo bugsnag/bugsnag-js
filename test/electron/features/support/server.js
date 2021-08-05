@@ -24,16 +24,16 @@ class MockServer {
     this.startServer = promisify(this.server.listen.bind(this.server))
   }
 
-  awaitUpload() {
+  awaitUpload () {
     return Promise.race([
       new Promise(resolve => {
         this.awaitingUploads.push(resolve)
       }),
-      new Promise((_, reject) => setTimeout(reject, 4000))
+      new Promise((resolve, reject) => setTimeout(reject, 4900))
     ])
   }
 
-  _notifyUploads() {
+  _notifyUploads () {
     this.awaitingUploads.forEach(resolve => resolve())
     this.awaitingUploads = []
   }
