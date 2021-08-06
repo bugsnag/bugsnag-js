@@ -16,7 +16,10 @@ const delivery = (client, filestore, net, app) => {
       }
     })
 
-    req.on('error', cb)
+    req.on('error', err => {
+      err.isRetryable = true
+      cb(err)
+    })
 
     try {
       req.write(body)
