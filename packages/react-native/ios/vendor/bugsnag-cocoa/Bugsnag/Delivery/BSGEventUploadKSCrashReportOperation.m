@@ -54,6 +54,7 @@ static void ReportInternalError(NSString *errorClass, NSString *message, NSDicti
     if (!json) {
         NSMutableDictionary *diagnostics = [NSMutableDictionary dictionary];
         diagnostics[@"data"] = [data base64EncodedStringWithOptions:0];
+        diagnostics[@"file"] = self.file;
         ReportInternalError(@"JSON parsing error", BSGErrorDescription(error), diagnostics);
         if (errorPtr) {
             *errorPtr = error;
