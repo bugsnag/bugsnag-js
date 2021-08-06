@@ -6,7 +6,13 @@ const NetworkStatus = require('@bugsnag/electron-network-status')
 
 const delivery = (client, filestore, net, app) => {
   const send = (opts, body, cb) => {
+    const errorHandler = err => {
+      err.isRetryable = true
+      cb(err)
+    }
+
     const req = net.request(opts, response => {
+      req.removeListener('error', errorHandler)
       if (isOk(response)) {
         cb(null)
       } else {
@@ -16,10 +22,7 @@ const delivery = (client, filestore, net, app) => {
       }
     })
 
-    req.on('error', err => {
-      err.isRetryable = true
-      cb(err)
-    })
+    req.on('error', errorHandler)
 
     try {
       req.write(body)
