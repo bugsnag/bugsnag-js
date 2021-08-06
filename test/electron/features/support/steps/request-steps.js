@@ -32,12 +32,6 @@ Given('I launch an app with configuration:', launchConfig, (data) => {
   })
 })
 
-Given('I launch an app with no network', () => {
-  return global.automator.start({
-    BUGSNAG_RENDERER_OFFLINE: 'true'
-  })
-})
-
 When('I click {string}', async (link) => {
   return global.automator.click(link)
 })
