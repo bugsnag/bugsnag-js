@@ -7,13 +7,26 @@
 //
 
 #import "BSGFileLocations.h"
+
+#import "BSGInternalErrorReporter.h"
 #import "BugsnagLogger.h"
+
+static void ReportInternalError(NSString *errorClass, NSError *error) {
+    NSString *file = @(__FILE__).lastPathComponent;
+    NSString *message = BSGErrorDescription(error);
+    NSString *groupingHash = [NSString stringWithFormat:@"%@: %@: %@ %ld", file, errorClass, error.domain, (long)error.code];
+    [BSGInternalErrorReporter.sharedInstance reportErrorWithClass:errorClass message:message diagnostics:error.userInfo groupingHash:groupingHash];
+}
 
 static BOOL ensureDirExists(NSString *path) {
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSError *error = nil;
     if(![fileManager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:&error]) {
         bsg_log_err(@"Could not create directory %@: %@", path, error);
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            ReportInternalError(@"Could not create directory", error);
+        });
         return NO;
     }
     return YES;

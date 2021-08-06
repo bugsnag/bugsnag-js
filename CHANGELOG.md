@@ -10,6 +10,8 @@
     [bugsnag-android#1331](https://github.com/bugsnag/bugsnag-android/pull/1331)
   - Address pre-existing StrictMode violations
   [bugsnag-android#1328](https://github.com/bugsnag/bugsnag-android/pull/1328)
+- (react-native): Update bugsnag-cocoa to v6.10.3
+  - Fix another rare crash in `bsg_ksmachgetThreadQueueName`. [bugsnag-cocoa#1157](https://github.com/bugsnag/bugsnag-cocoa/pull/1157)
 
 ## 7.11.0 (2021-07-26)
 
