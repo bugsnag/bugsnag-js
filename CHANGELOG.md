@@ -4,6 +4,7 @@
 
 ### Changed
 
+- (expo): Add support for Expo SDK v42 [#1488](https://github.com/bugsnag/bugsnag-js/pull/1488)
 - (react-native): Update bugsnag-android to v5.11.0
   - Add Bugsnag listeners for StrictMode violation detection
     [bugsnag-android#1331](https://github.com/bugsnag/bugsnag-android/pull/1331)
