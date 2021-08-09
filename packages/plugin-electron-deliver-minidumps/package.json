@@ -15,6 +15,7 @@
     "deliver-minidumps.js",
     "minidump-loop.js",
     "minidump-queue.js",
+    "minidump-watcher.js",
     "send-minidump.js"
   ],
   "dependencies": {

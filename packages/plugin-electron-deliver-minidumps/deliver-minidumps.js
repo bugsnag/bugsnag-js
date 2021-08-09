@@ -1,6 +1,7 @@
 const { crashReporter } = require('electron')
 const MinidumpDeliveryLoop = require('./minidump-loop')
 const MinidumpQueue = require('./minidump-queue')
+const MinidumpWatcher = require('./minidump-watcher')
 const sendMinidumpFactory = require('./send-minidump')
 const NetworkStatus = require('@bugsnag/electron-network-status')
 
@@ -36,7 +37,9 @@ module.exports = (app, net, filestore, NativeClient) => ({
 
       const minidumpQueue = new MinidumpQueue(filestore)
       const minidumpLoop = new MinidumpDeliveryLoop(sendMinidump, client._config.onSend, minidumpQueue, client._logger)
+      const minidumpWatcher = new MinidumpWatcher(minidumpLoop, filestore.getPaths().minidumps)
       minidumpLoop.watchNetworkStatus(statusUpdater)
+      minidumpWatcher.watchNetworkStatus(statusUpdater)
     })
   }
 })
