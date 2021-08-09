@@ -69,3 +69,7 @@ ipcMain.on('main-process-console-log', (_event, ...args) => {
 ipcMain.on('mark-launch-complete', () => {
   Bugsnag.markLaunchComplete()
 })
+
+ipcMain.on('last-run-info-breadcrumb', () => {
+  Bugsnag.leaveBreadcrumb('last-run-info', Bugsnag.lastRunInfo)
+})

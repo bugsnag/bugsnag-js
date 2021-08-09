@@ -11,8 +11,9 @@ describe('electron-minidump-delivery: load', () => {
   const net = {}
 
   const filestore = {
-    createAppRunMetadata: () => ({ bugsnag_crash_id: 'abc123' }),
-    getEventInfoPath: () => 'test-run-info-dir'
+    getAppRunMetadata: () => ({ bugsnag_crash_id: 'abc123' }),
+    getEventInfoPath: () => 'test-run-info-dir',
+    getPaths: () => ({ lastRunInfo: 'last-run-info.json' })
   }
 
   const nativeClient = {

@@ -13,8 +13,11 @@ class FileStore {
       sessions: join(base, 'sessions'),
       runinfo: join(base, 'runinfo'),
       device: join(base, 'device.json'),
+      lastRunInfo: join(base, 'last-run-info.json'),
       minidumps: crashDir
     }
+
+    this._appRunMetadata = { [identifierKey]: createIdentifier() }
   }
 
   // Create directory layout
@@ -134,8 +137,35 @@ class FileStore {
     return device
   }
 
-  createAppRunMetadata () {
-    return { [identifierKey]: createIdentifier() }
+  getLastRunInfo () {
+    try {
+      // similar to getDeviceInfo - the lastRunInfo must be available during tha app-launch phase
+      // as such we use readFileSync to ensure that the data is loaded immediately
+      const contents = readFileSync(this._paths.lastRunInfo)
+      const lastRunInfo = JSON.parse(contents)
+
+      if (typeof lastRunInfo.crashed === 'boolean' &&
+        typeof lastRunInfo.crashedDuringLaunch === 'boolean' &&
+        typeof lastRunInfo.consecutiveLaunchCrashes === 'number') {
+        return lastRunInfo
+      }
+    } catch (e) {
+    }
+
+    return null
+  }
+
+  setLastRunInfo (lastRunInfo = { crashed: false, crashedDuringLaunch: false, consecutiveLaunchCrashes: 0 }) {
+    try {
+      mkdirSync(dirname(this._paths.lastRunInfo), { recursive: true })
+      writeFileSync(this._paths.lastRunInfo, JSON.stringify(lastRunInfo))
+    } catch (e) {
+    }
+    return lastRunInfo
+  }
+
+  getAppRunMetadata () {
+    return this._appRunMetadata
   }
 }
 
