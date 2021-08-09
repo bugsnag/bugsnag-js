@@ -10,6 +10,7 @@ const { Client, Event, Breadcrumb, Session } = createClient
 
 const Bugsnag = {
   _client: null,
+  lastRunInfo: null,
   start: (opts) => {
     if (Bugsnag._client) {
       Bugsnag._client._logger.warn('Bugsnag.start() was called more than once. Ignoring.')
@@ -22,6 +23,15 @@ const Bugsnag = {
 
     // create the relevant client for the detected environment
     Bugsnag._client = createClient(opts)
+
+    Object.defineProperty(Bugsnag, 'lastRunInfo', {
+      get: isMain
+        ? () => Bugsnag._client.lastRunInfo
+        : () => {
+          Bugsnag._client._logger.warn('Bugsnag.lastRunInfo can only be accessed in the main process')
+          return null
+        }
+    })
 
     return Bugsnag._client
   }

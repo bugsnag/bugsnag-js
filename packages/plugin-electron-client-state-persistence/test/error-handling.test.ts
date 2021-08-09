@@ -1,7 +1,7 @@
 import { NativeClient } from '..'
 
 describe('handling poor inputs', () => {
-  beforeAll(() => NativeClient.install('/tmp/file.json', 10))
+  beforeAll(() => NativeClient.install('/tmp/file.json', '/tmp/last-run-info.json', 10))
 
   afterAll(() => NativeClient.uninstall())
 

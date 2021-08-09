@@ -4,6 +4,10 @@ const Client = require('@bugsnag/core/client')
 const Event = require('@bugsnag/core/event')
 const Breadcrumb = require('@bugsnag/core/breadcrumb')
 const Session = require('@bugsnag/core/session')
+const {
+  plugin: PluginClientStatePersistence,
+  NativeClient
+} = require('@bugsnag/plugin-electron-client-state-persistence')
 
 const makeDelivery = require('@bugsnag/delivery-electron')
 const { FileStore } = require('@bugsnag/electron-filestore')
@@ -25,8 +29,6 @@ module.exports = (opts) => {
     opts.projectRoot = normalizePath(opts.projectRoot)
   }
 
-  const { plugin: PluginClientStatePersistence, NativeClient } = require('@bugsnag/plugin-electron-client-state-persistence')
-
   // main internal plugins go here
   const internalPlugins = [
     // Plugins after the "FirstPlugin" will run in the main process for renderer
@@ -38,7 +40,7 @@ module.exports = (opts) => {
     require('@bugsnag/plugin-electron-ipc'),
     require('@bugsnag/plugin-node-uncaught-exception'),
     require('@bugsnag/plugin-node-unhandled-rejection'),
-    require('@bugsnag/plugin-electron-app')(NativeClient, process, electron.app, electron.BrowserWindow),
+    require('@bugsnag/plugin-electron-app')(NativeClient, process, electron.app, electron.BrowserWindow, filestore),
     require('@bugsnag/plugin-electron-app-breadcrumbs')(electron.app, electron.BrowserWindow),
     require('@bugsnag/plugin-electron-device')(electron.app, electron.screen, process, filestore, NativeClient, electron.powerMonitor),
     require('@bugsnag/plugin-electron-session')(electron.app, electron.BrowserWindow, filestore),
@@ -58,14 +60,13 @@ module.exports = (opts) => {
 
   const bugsnag = new Client(opts, schema, internalPlugins, require('../id'))
 
-  bugsnag._setDelivery(makeDelivery(filestore, electron.net, electron.app))
-
   filestore.init().catch(err => bugsnag._logger.warn('Failed to init crash FileStore directories', err))
 
   // expose markLaunchComplete as a method on the Bugsnag client/facade
   const electronApp = bugsnag.getPlugin('electronApp')
   const { markLaunchComplete } = electronApp
   bugsnag.markLaunchComplete = markLaunchComplete
+  bugsnag._setDelivery(makeDelivery(filestore, electron.net, electron.app))
 
   bugsnag._logger.debug('Loaded! In main process.')
   if (bugsnag._isBreadcrumbTypeEnabled('state')) {
