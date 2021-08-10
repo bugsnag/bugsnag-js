@@ -15,3 +15,9 @@ Given('the app lacks network connectivity', async () => {
 When('the app gains network connectivity', async () => {
   await global.automator.click('emulate-online')
 })
+
+When('I launch an app with no network', () => {
+  return global.automator.start({
+    BUGSNAG_RENDERER_OFFLINE: 'true'
+  })
+})

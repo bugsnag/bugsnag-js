@@ -1,3 +1,7 @@
+if (window.RunnerAPI.startOffline) {
+  emulateOnlineStatus(false)
+}
+
 const Bugsnag = require('@bugsnag/electron')
 
 Bugsnag.start(window.RunnerAPI.rendererConfig)
