@@ -94,7 +94,7 @@
           "stacktrace": [
             {
               "file": "./renderer.js",
-              "lineNumber": 16,
+              "lineNumber": 22,
               "code": {
                 "1": "{TYPE:string}"
               }

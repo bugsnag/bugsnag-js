@@ -1,7 +1,7 @@
 Feature: Native Errors
 
   Scenario: A minidump is uploaded on native error
-    When I launch an app
+    Given I launch an app
     Then the total requests received by the server matches:
       | events    | 0 |
       | minidumps | 0 |
@@ -13,8 +13,15 @@ Feature: Native Errors
       | events    | 0 |
       | minidumps | 1 |
       | sessions  | 2 |
-    And minidump request 0 contains a file form field named "upload_file_minidump"
-    And minidump request 0 contains a form field named "event" matching "minidump-event.json"
+    Then minidump request 0 contains a file form field named "upload_file_minidump"
+    Then minidump request 0 contains a form field named "event" matching "minidump-event.json"
+
+  Scenario: Non-fatal minidumps are detected and uploaded
+    Given I launch an app
+    And I click "renderer-process-crash"
+    Then the total requests received by the server matches:
+      | minidumps | 1 |
+    Then minidump request 0 contains a file form field named "upload_file_minidump"
 
   Scenario: Minidumps are retried when the network becomes available
     When I launch an app

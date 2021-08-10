@@ -3,6 +3,9 @@ const { contextBridge, ipcRenderer } = require('electron')
 contextBridge.exposeInMainWorld('RunnerAPI', {
   rendererConfig: JSON.parse(process.env.BUGSNAG_RENDERER_CONFIG || '{}'),
   startOffline: process.env.BUGSNAG_RENDERER_OFFLINE,
+  renderProcessCrash: () => {
+    process.crash()
+  },
   mainProcessCrash: () => {
     ipcRenderer.send('main-process-crash')
   },

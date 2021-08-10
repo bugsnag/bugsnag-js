@@ -6,16 +6,19 @@ module.exports = class MinidumpWatcher {
     this._mindumpLoop = mindumpLoop
     this._minidumpsPath = minidumpsPath
     this._watchers = []
+    this._started = false
   }
 
   start () {
-    if (this._watchers.length) {
+    if (this._started) {
       return
     }
 
+    this._started = true
     this._watch(this._minidumpsPath)
     readdir(this._minidumpsPath, { withFileTypes: true }, (err, children) => {
-      if (err) return
+      // handle cases when stop() was called before this callback
+      if (err || !this._started) return
 
       children
         .filter(dirent => dirent.isDirectory())
@@ -36,6 +39,7 @@ module.exports = class MinidumpWatcher {
   stop () {
     this._watchers.forEach(watcher => watcher.close())
     this._watchers = []
+    this._started = false
   }
 
   watchNetworkStatus (statusUpdater) {

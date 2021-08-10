@@ -7,9 +7,15 @@ const Bugsnag = require('@bugsnag/electron')
 Bugsnag.start(window.RunnerAPI.rendererConfig)
 const startupTimestamp = Date.now()
 
-function emulateOnlineStatus (online) {
+function emulateOnlineStatus(online) {
   Object.defineProperty(window.navigator, 'onLine', { value: online, configurable: true })
   window.dispatchEvent(new window.Event(online ? 'online' : 'offline'))
+}
+
+document.getElementById('renderer-process-crash').onclick = () => {
+  setTimeout(() => {
+    window.RunnerAPI.renderProcessCrash()
+  }, 10)
 }
 
 document.getElementById('renderer-unhandled-promise-rejection').onclick = () => {
