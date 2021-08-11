@@ -28,8 +28,11 @@ const runDeliveryLoop = async (times: number = 1) => {
 
 describe('electron-minidump-delivery: minidump-loop', () => {
   const onSend = () => true
-  const logger = {
-    error: () => {}
+  const client = {
+    _logger: {
+      error: () => {
+      }
+    }
   }
 
   describe('delivers minidumps', () => {
@@ -40,7 +43,7 @@ describe('electron-minidump-delivery: minidump-loop', () => {
         { minidumpPath: 'minidump-path2', eventPath: 'event-path2' }
       )
 
-      const loop = new MinidumpDeliveryLoop(sendMinidump, onSend, minidumpQueue, logger)
+      const loop = new MinidumpDeliveryLoop(client, sendMinidump, onSend, minidumpQueue)
       loop.start()
 
       await runDeliveryLoop()
@@ -56,7 +59,7 @@ describe('electron-minidump-delivery: minidump-loop', () => {
         { minidumpPath: 'minidump-path2' }
       )
 
-      const loop = new MinidumpDeliveryLoop(sendMinidump, onSend, minidumpQueue, logger)
+      const loop = new MinidumpDeliveryLoop(client, sendMinidump, onSend, minidumpQueue)
       loop.start()
 
       await runDeliveryLoop()
@@ -73,7 +76,7 @@ describe('electron-minidump-delivery: minidump-loop', () => {
       { minidumpPath: 'minidump-path2', eventPath: 'event-path2' }
     )
 
-    const loop = new MinidumpDeliveryLoop(sendMinidump, () => false, minidumpQueue, logger)
+    const loop = new MinidumpDeliveryLoop(client, sendMinidump, () => false, minidumpQueue)
     loop.start()
 
     await runDeliveryLoop(2)
@@ -89,7 +92,7 @@ describe('electron-minidump-delivery: minidump-loop', () => {
       { minidumpPath: 'minidump-path2', eventPath: 'event-path2' }
     )
 
-    const loop = new MinidumpDeliveryLoop(sendMinidump, onSend, minidumpQueue, logger)
+    const loop = new MinidumpDeliveryLoop(client, sendMinidump, onSend, minidumpQueue)
     loop.start()
 
     await runDeliveryLoop(3)
@@ -112,7 +115,7 @@ describe('electron-minidump-delivery: minidump-loop', () => {
       { minidumpPath: 'minidump-path2', eventPath: 'event-path2' }
     )
 
-    const loop = new MinidumpDeliveryLoop(sendMinidump, onSend, minidumpQueue, logger)
+    const loop = new MinidumpDeliveryLoop(client, sendMinidump, onSend, minidumpQueue)
     loop.start()
 
     await runDeliveryLoop(2)
@@ -134,7 +137,7 @@ describe('electron-minidump-delivery: minidump-loop', () => {
         { minidumpPath: 'minidump-path2', eventPath: 'event-path2' }
       )
 
-      const loop = new MinidumpDeliveryLoop(sendMinidump, onSend, minidumpQueue, logger)
+      const loop = new MinidumpDeliveryLoop(client, sendMinidump, onSend, minidumpQueue)
       loop.watchNetworkStatus(statusWatcher)
 
       // ensure that nothing is delivered while disconnected
@@ -158,7 +161,7 @@ describe('electron-minidump-delivery: minidump-loop', () => {
         { minidumpPath: 'minidump-path2', eventPath: 'event-path2' }
       )
 
-      const loop = new MinidumpDeliveryLoop(sendMinidump, onSend, minidumpQueue, logger)
+      const loop = new MinidumpDeliveryLoop(client, sendMinidump, onSend, minidumpQueue)
       loop.watchNetworkStatus(statusWatcher)
 
       // ensure that the first minidump is delivered

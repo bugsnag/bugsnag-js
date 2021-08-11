@@ -36,8 +36,8 @@ module.exports = (app, net, filestore, NativeClient) => ({
       const { sendMinidump } = sendMinidumpFactory(net, client)
 
       const minidumpQueue = new MinidumpQueue(filestore)
-      const minidumpLoop = new MinidumpDeliveryLoop(sendMinidump, client._config.onSend, minidumpQueue, client._logger)
-      const minidumpWatcher = new MinidumpWatcher(minidumpLoop, filestore.getPaths().minidumps)
+      const minidumpLoop = new MinidumpDeliveryLoop(client, sendMinidump, client._config.onSend, minidumpQueue)
+      const minidumpWatcher = new MinidumpWatcher(minidumpLoop, filestore.getPaths().minidumps, client._logger)
       minidumpLoop.watchNetworkStatus(statusUpdater)
       minidumpWatcher.watchNetworkStatus(statusUpdater)
     })

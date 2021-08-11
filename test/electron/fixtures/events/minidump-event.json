@@ -53,6 +53,12 @@
             "height": "{TYPE:number}"
           }
         }
+      },
+      "session": {
+        "events": {
+          "unhandled": 1,
+          "handled": 0
+        }
       }
     }
   ]
