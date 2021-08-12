@@ -6,7 +6,11 @@ import plugin from '../'
 const expectCuid = expect.stringMatching(/^c[a-z0-9]{20,30}$/)
 
 describe('plugin: electron sessions', () => {
-  beforeEach(() => { jest.useRealTimers() })
+  let NativeClient
+  beforeEach(() => {
+    jest.useRealTimers()
+    NativeClient = { setSession: jest.fn() }
+  })
 
   it('calls session delivery', async () => {
     const BrowserWindow = makeBrowserWindow()
@@ -15,7 +19,7 @@ describe('plugin: electron sessions', () => {
     const client = new Client(
       { apiKey: 'abcabcabcabcabcabcabc1234567890f' },
       undefined,
-      [plugin(app, BrowserWindow)]
+      [plugin(app, BrowserWindow, NativeClient)]
     )
 
     const payload = await createSession(client)
@@ -49,6 +53,11 @@ describe('plugin: electron sessions', () => {
     }
 
     expect(session).toEqual(expectedSession)
+    expect(NativeClient.setSession).toBeCalledWith({
+      id: expectCuid,
+      startedAt: expect.any(Date),
+      events: { handled: 0, unhandled: 1 }
+    })
   })
 
   it('starts a session when the app returns to the foreground after being in the background for 60 seconds', () => {
@@ -60,7 +69,7 @@ describe('plugin: electron sessions', () => {
     const client = new Client(
       { apiKey: 'abcabcabcabcabcabcabc1234567890f' },
       undefined,
-      [plugin(app, BrowserWindow)]
+      [plugin(app, BrowserWindow, NativeClient)]
     )
 
     const window = new BrowserWindow(123, 'hello world')
@@ -110,7 +119,7 @@ describe('plugin: electron sessions', () => {
     const client = new Client(
       { apiKey: 'abcabcabcabcabcabcabc1234567890f' },
       undefined,
-      [plugin(app, BrowserWindow)]
+      [plugin(app, BrowserWindow, NativeClient)]
     )
 
     const window = new BrowserWindow(123, 'hello world')
@@ -166,7 +175,7 @@ describe('plugin: electron sessions', () => {
     const client = new Client(
       { apiKey: 'abcabcabcabcabcabcabc1234567890f', autoTrackSessions: false },
       undefined,
-      [plugin(app, BrowserWindow)]
+      [plugin(app, BrowserWindow, NativeClient)]
     )
 
     const window = new BrowserWindow(123, 'hello world')
@@ -188,6 +197,67 @@ describe('plugin: electron sessions', () => {
     app._emit('browser-window-focus', window)
 
     expect(payloads).toHaveLength(0)
+  })
+
+  it('updates the native session when new events are tracked', async () => {
+    const BrowserWindow = makeBrowserWindow()
+    const app = makeApp({ BrowserWindow })
+
+    const client = new Client(
+      { apiKey: 'abcabcabcabcabcabcabc1234567890f' },
+      undefined,
+      [plugin(app, BrowserWindow, NativeClient)]
+    )
+
+    await createSession(client)
+    expect(NativeClient.setSession).toBeCalledWith({
+      id: expectCuid,
+      startedAt: expect.any(Date),
+      events: { handled: 0, unhandled: 1 }
+    })
+    client.notify(new Error('oh no'))
+    expect(NativeClient.setSession).toBeCalledWith({
+      id: expectCuid,
+      startedAt: expect.any(Date),
+      events: { handled: 1, unhandled: 1 }
+    })
+  })
+
+  it('clears the native session on pause', async () => {
+    const BrowserWindow = makeBrowserWindow()
+    const app = makeApp({ BrowserWindow })
+
+    const client = new Client(
+      { apiKey: 'abcabcabcabcabcabcabc1234567890f' },
+      undefined,
+      [plugin(app, BrowserWindow, NativeClient)]
+    )
+
+    await createSession(client)
+    client.pauseSession()
+    expect(NativeClient.setSession).toBeCalledWith(null)
+  })
+
+  it('restores the native session on resume', async () => {
+    const BrowserWindow = makeBrowserWindow()
+    const app = makeApp({ BrowserWindow })
+
+    const client = new Client(
+      { apiKey: 'abcabcabcabcabcabcabc1234567890f' },
+      undefined,
+      [plugin(app, BrowserWindow, NativeClient)]
+    )
+
+    await createSession(client)
+    client.pauseSession()
+    expect(NativeClient.setSession).toBeCalledWith(null)
+
+    client.resumeSession()
+    expect(NativeClient.setSession).toBeCalledWith({
+      id: expectCuid,
+      startedAt: expect.any(Date),
+      events: { handled: 0, unhandled: 1 }
+    })
   })
 })
 
