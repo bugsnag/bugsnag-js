@@ -13,12 +13,15 @@
         <li><a href="#" id="main-process-uncaught-exception" onclick="RunnerAPI.mainProcessUncaughtException()">Uncaught exception in main process</a></li>
         <li><a href="#" id="main-process-unhandled-promise-rejection" onclick="RunnerAPI.mainProcessUnhandledPromiseRejection()">Unhandled promise rejection in main process</a></li>
         <li><a href="#" id="main-notify" onclick="RunnerAPI.mainProcessNotify()">Handled error in main process</a></li>
+        <li><a href="#" id="child-process-crash" onclick="RunnerAPI.childProcessCrash()">Crash in child process</a></li>
     </ul>
     <ul>
         <li><a href="#" id="renderer-uncaught-exception">Uncaught exception in renderer</a></li>
         <li><a href="#" id="renderer-unhandled-promise-rejection">Unhandled promise rejection in renderer</a></li>
         <li><a href="#" id="renderer-notify">Handled error in renderer</a></li>
         <li><a href="#" id="renderer-notify-on-error">notify with onError in renderer</a></li>
+        <li><a href="#" id="renderer-process-crash">Crash in renderer process</a></li>
+        <li><a href="#" id="renderer-and-main-process-crashes">Crash in renderer process followed by a main process crash</a></li>
     </ul>
     <ul>
         <li><a href="#" id="custom-breadcrumb">Leave a custom breadcrumb</a>

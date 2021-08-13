@@ -64,6 +64,8 @@ BeforeAll({ timeout: 420 * 1000 }, async () => {
   global.automator = new Automator(app)
 })
 
+Before(`@not_${process.platform}`, () => 'skipped')
+
 Before('@not_windows', () => {
   if (process.platform === 'win32') return 'skipped'
 })
