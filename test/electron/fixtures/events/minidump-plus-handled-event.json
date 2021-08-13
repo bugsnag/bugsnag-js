@@ -58,7 +58,7 @@
         "id": "{TYPE:string}",
         "startedAt": "{TIMESTAMP}",
         "events": {
-          "handled": 0,
+          "handled": 1,
           "unhandled": 1
         }
       }

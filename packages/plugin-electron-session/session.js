@@ -1,11 +1,40 @@
 const sessionDelegate = require('@bugsnag/plugin-browser-session')
+const Session = require('@bugsnag/core/session')
 
 const SESSION_TIMEOUT_MS = 60 * 1000
 
-module.exports = (app, BrowserWindow) => ({
+module.exports = (app, BrowserWindow, NativeClient) => ({
   load (client) {
+    // Ensure native session kept in sync with session changes
+    const oldTrack = Session.prototype._track
+    Session.prototype._track = function (...args) {
+      const result = oldTrack.apply(this, args)
+      NativeClient.setSession(serializeForNativeEvent(this))
+      return result
+    }
+
     // load the actual session delegate from plugin-browser-session
     sessionDelegate.load(client)
+
+    // Override the delegate to perform electron-specific synchronization
+    const defaultDelegate = client._sessionDelegate
+    client._sessionDelegate = {
+      startSession: (client, session) => {
+        const result = defaultDelegate.startSession(client, session)
+        NativeClient.setSession(serializeForNativeEvent(client._session))
+        return result
+      },
+      resumeSession: (client) => {
+        const result = defaultDelegate.resumeSession(client)
+        NativeClient.setSession(serializeForNativeEvent(client._session))
+        return result
+      },
+      pauseSession: (client) => {
+        const result = defaultDelegate.pauseSession(client)
+        NativeClient.setSession(serializeForNativeEvent(client._session))
+        return result
+      }
+    }
 
     if (!client._config.autoTrackSessions) {
       return
@@ -37,3 +66,13 @@ module.exports = (app, BrowserWindow) => ({
     })
   }
 })
+
+const serializeForNativeEvent = session => {
+  if (session) {
+    const nativeSession = session.toJSON()
+    // increment to account for future native crash
+    nativeSession.events.unhandled += 1
+    return nativeSession
+  }
+  return null
+}
