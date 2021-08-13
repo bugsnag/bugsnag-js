@@ -54,3 +54,12 @@ document.getElementById('performance-metrics').onclick = () => Bugsnag.notify(ne
 })
 
 document.getElementById('set-context').onclick = () => Bugsnag.setContext('Another context')
+
+// Includes a delay to avoid the testing framework from interpreting the crash
+// as a failure to successfully click the element
+document.getElementById('renderer-process-crash').onclick = () => setTimeout(() => window.RunnerAPI.renderProcessCrash(), 10)
+
+document.getElementById('renderer-and-main-process-crashes').onclick = () => {
+  window.RunnerAPI.delayedMainProcessCrash()
+  setTimeout(() => window.RunnerAPI.renderProcessCrash(), 10)
+}

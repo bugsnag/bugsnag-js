@@ -40,22 +40,16 @@ When('I close the app', async () => {
   await global.automator.stop()
 })
 
+When('I wait for {int} second(s)', async (seconds) => {
+  return new Promise((resolve, reject) => { setTimeout(() => resolve(), seconds * 1000) })
+})
+
 Then('the app crashed', async () => {
   expect(global.automator.crashed).toBeTruthy()
 })
 
 Then('I received {int} {word} upload(s)', (count, requestType) => {
   expect(global.server.uploadsForType(requestType).length).toEqual(count)
-})
-
-Then('I wait for {int} {word} upload(s)', async (count, requestType) => {
-  try {
-    while (global.server.uploadsForType(requestType).length < count) {
-      await global.server.awaitUpload()
-    }
-  } catch (e) {
-    throw new Error(`timeout waiting for ${count} ${requestType} - received ${global.server.uploadsForType(requestType).length}`)
-  }
 })
 
 Then('the contents of {word} request {int} matches {string}', async (requestType, index, fixture) => {
@@ -84,8 +78,13 @@ Then('minidump request {int} contains a form field named {string}', (index, fiel
 Then('minidump request {int} contains a form field named {string} matching {string}', async (index, field, fixture) => {
   const req = global.server.minidumpUploads[index]
   const expected = await readFixtureFile(fixture)
-  const actual = JSON.parse(req.fields[field])
-  expect([actual]).toContainPayload(expected)
+  expect(req.fields).toHaveProperty(field)
+  try {
+    const actual = JSON.parse(req.fields[field])
+    expect([actual]).toContainPayload(expected)
+  } catch (e) {
+    throw new Error(`Could not parse ${field} as JSON: ${e} -- ${req.fields[field]}`)
+  }
 })
 
 Then('the total requests received by the server matches:', async (data) => {
