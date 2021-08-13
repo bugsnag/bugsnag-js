@@ -16,6 +16,25 @@ Feature: Native Errors
     And minidump request 0 contains a file form field named "upload_file_minidump"
     And minidump request 0 contains a form field named "event" matching "minidump-event.json"
 
+  Scenario: A native error occurs after a handled event
+    When I launch an app
+    And I click "custom-breadcrumb"
+    And I click "main-notify"
+    Then the total requests received by the server matches:
+      | events    | 1 |
+      | minidumps | 0 |
+      | sessions  | 1 |
+
+    When I click "main-process-crash"
+    And I launch an app
+    Then the total requests received by the server matches:
+      | events    | 1 |
+      | minidumps | 1 |
+      | sessions  | 2 |
+    And the contents of an event request matches "main/handled-error/default.json"
+    And minidump request 0 contains a file form field named "upload_file_minidump"
+    And minidump request 0 contains a form field named "event" matching "minidump-plus-handled-event.json"
+
   Scenario: Minidumps are retried when the network becomes available
     When I launch an app
     Then the total requests received by the server matches:
