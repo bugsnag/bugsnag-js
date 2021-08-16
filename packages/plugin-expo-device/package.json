@@ -20,8 +20,11 @@
     "@bugsnag/core": "^7.11.0"
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "~1.15.0",
+    "expo-application": "^3.2.0",
     "expo-constants": "~11.0.1",
-    "expo-device": "~3.3.0"
+    "expo-device": "~3.3.0",
+    "uuid": "^8.3.2"
   },
   "peerDependencies": {
     "@bugsnag/core": "^7.0.0"

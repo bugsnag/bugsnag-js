@@ -38,6 +38,10 @@ describe('plugin: expo device', () => {
       Platform: { OS: 'android', Version: ANDROID_API_LEVEL }
     }))
     jest.doMock('react-native/package.json', () => ({ version: REACT_NATIVE_VERSION }))
+    jest.doMock('expo-application', () => ({ default: {} }))
+
+    const AsyncStorage = { setItem: jest.fn().mockResolvedValue(null), getItem: jest.fn() }
+    jest.doMock('@react-native-async-storage/async-storage', () => AsyncStorage)
 
     const plugin = require('..')
 
@@ -67,6 +71,10 @@ describe('plugin: expo device', () => {
         expect(r.events[0].metaData.device.appOwnership).toBe('standalone')
         expect(r.events[0].device.id).toBe('123')
         expect(r.events[0].user.id).toBe('123')
+
+        expect(AsyncStorage.setItem).toHaveBeenCalledWith('bugsnag-device-id', '123')
+        expect(AsyncStorage.setItem).toHaveBeenCalledTimes(1)
+
         done()
       },
       sendSession: () => {}
@@ -104,6 +112,11 @@ describe('plugin: expo device', () => {
       Platform: { OS: 'ios' }
     }))
     jest.doMock('react-native/package.json', () => ({ version: REACT_NATIVE_VERSION }))
+    jest.doMock('expo-application', () => ({ default: {} }))
+    jest.doMock('@react-native-async-storage/async-storage', () => ({
+      setItem: () => Promise.resolve(),
+      getItem: () => {}
+    }))
 
     const plugin = require('..')
 
@@ -168,6 +181,11 @@ describe('plugin: expo device', () => {
       Platform: { OS: 'ios' }
     }))
     jest.doMock('react-native/package.json', () => ({ version: REACT_NATIVE_VERSION }))
+    jest.doMock('expo-application', () => ({ default: {} }))
+    jest.doMock('@react-native-async-storage/async-storage', () => ({
+      setItem: () => Promise.resolve(),
+      getItem: () => {}
+    }))
 
     const plugin = require('..')
 
@@ -218,6 +236,11 @@ describe('plugin: expo device', () => {
       Platform: { OS: 'ios' }
     }))
     jest.doMock('react-native/package.json', () => ({ version: REACT_NATIVE_VERSION }))
+    jest.doMock('expo-application', () => ({ default: {} }))
+    jest.doMock('@react-native-async-storage/async-storage', () => ({
+      setItem: () => Promise.resolve(),
+      getItem: () => {}
+    }))
 
     const plugin = require('..')
 
@@ -292,6 +315,11 @@ describe('plugin: expo device', () => {
     }))
 
     jest.doMock('react-native/package.json', () => ({ version: REACT_NATIVE_VERSION }))
+    jest.doMock('expo-application', () => ({ default: {} }))
+    jest.doMock('@react-native-async-storage/async-storage', () => ({
+      setItem: () => Promise.resolve(),
+      getItem: () => {}
+    }))
 
     const plugin = require('..')
 

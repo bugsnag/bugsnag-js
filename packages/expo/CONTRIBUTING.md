@@ -8,7 +8,9 @@ When a new version of the Expo SDK is released, the dependencies we use must be 
 
 The following modules are currently used:
 
+- `@react-native-async-storage/async-storage` (`@bugsnag/plugin-expo-device`)
 - `@react-native-community/netinfo` (`@bugsnag/delivery-expo`, `@bugsnsag/plugin-react-native-connectivity-breadcrumbs`)
+- `expo-application` (`@bugsnag/plugin-expo-device`)
 - `expo-constants` (`@bugsnag/expo`, `@bugsnag/plugin-expo-app`, `@bugsnag/plugin-expo-device`)
 - `expo-crypto` (`@bugsnag/expo`, `@bugsnag/delivery-expo`)
 - `expo-device` (`@bugsnag/plugin-expo-device`)

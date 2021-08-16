@@ -1,7 +1,10 @@
+const Application = require('expo-application').default
+const AsyncStorage = require('@react-native-async-storage/async-storage')
 const Device = require('expo-device')
 const Constants = require('expo-constants').default
 const { Dimensions, Platform } = require('react-native')
 const rnVersion = require('react-native/package.json').version
+const DeviceId = require('./device-id')
 
 module.exports = {
   load: client => {
@@ -22,7 +25,6 @@ module.exports = {
     updateOrientation()
 
     const device = {
-      id: Constants.installationId,
       manufacturer: Device.manufacturer,
       // On a real device these two seem equivalent, however on a simulator
       // 'Constants' is a bit more useful as it returns 'Simulator' whereas
@@ -41,6 +43,15 @@ module.exports = {
       },
       totalMemory: Device.totalMemory
     }
+
+    const deviceId = new DeviceId(Platform.OS, Constants, Application, AsyncStorage)
+    deviceId.get((error, id) => {
+      if (error) {
+        client._logger.error('Failed to get a Bugsnag device ID:', error)
+      } else {
+        device.id = id
+      }
+    })
 
     client.addOnSession(session => {
       session.device = { ...session.device, ...device }
