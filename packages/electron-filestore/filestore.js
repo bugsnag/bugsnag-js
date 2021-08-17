@@ -2,7 +2,7 @@ const fs = require('fs')
 const { readFileSync, writeFileSync, mkdirSync } = fs
 const { unlink, readdir, access, mkdir } = fs.promises
 const { F_OK } = fs.constants
-const { dirname, join } = require('path')
+const { dirname, join, basename } = require('path')
 const { getIdentifier, createIdentifier, identifierKey } = require('./lib/minidump-io')
 
 class FileStore {
@@ -38,7 +38,11 @@ class FileStore {
           .map(async minidumpPath => {
             const eventPath = await getIdentifier(minidumpPath)
               .then(async id => {
-                const path = this.getEventInfoPath(id)
+                let path = this.getEventInfoPath(id)
+                if (await fileExists(path)) {
+                  return path
+                }
+                path = this.getBackgroundEventInfoPath(minidumpPath)
                 return await fileExists(path) ? path : null
               })
               .catch(() => null)
@@ -73,6 +77,10 @@ class FileStore {
 
   getEventInfoPath (appRunID) {
     return join(this._paths.runinfo, appRunID)
+  }
+
+  getBackgroundEventInfoPath (minidumpPath) {
+    return join(this._paths.runinfo, `${basename(minidumpPath)}.info`)
   }
 
   async getAppRunID (minidumpPath) {
