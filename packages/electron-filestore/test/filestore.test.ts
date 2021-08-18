@@ -70,6 +70,14 @@ describe('FileStore', () => {
     })
   })
 
+  describe('getBackgroundEventInfoPath()', () => {
+    it('joins runinfo with a filename and an extension', () => {
+      const minidumpPath = process.platform === 'win32' ? 'E:\\some\\path\\myfile.dmp' : '/some/path/myfile.dmp'
+      const path = store.getBackgroundEventInfoPath(minidumpPath)
+      expect(path).toEqual(join(store.getPaths().runinfo, 'myfile.dmp.info'))
+    })
+  })
+
   describe('getDeviceInfo()', () => {
     it('returns an empty object if something goes wrong', async () => {
       const dir = process.platform === 'win32' ? '6:\\non\\existent' : '/dev/null/non/existent'
