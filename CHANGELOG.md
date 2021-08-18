@@ -1,6 +1,6 @@
 # Changelog
 
-## TBD
+## 7.12.0 (2021-08-18)
 
 ### Changed
 
