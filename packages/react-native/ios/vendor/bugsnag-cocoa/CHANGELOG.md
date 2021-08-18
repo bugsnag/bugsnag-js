@@ -1,6 +1,20 @@
 Changelog
 =========
 
+## 6.10.4 (2021-08-11)
+
+### Bug fixes
+
+* Fix ThreadSanitizer data race in `BugsnagBreadcrumbs`.
+  [#1160](https://github.com/bugsnag/bugsnag-cocoa/pull/1160)
+
+## 6.10.3 (2021-08-04)
+
+### Bug fixes
+
+* Fix another rare crash in `bsg_ksmachgetThreadQueueName`.
+  [#1157](https://github.com/bugsnag/bugsnag-cocoa/pull/1157)
+
 ## 6.10.2 (2021-07-14)
 
 ### Bug fixes

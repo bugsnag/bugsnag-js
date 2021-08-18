@@ -157,8 +157,11 @@ static struct bsg_breadcrumb_list_item *g_breadcrumbs_head;
         dispatch_async(BSGGlobalsFileSystemQueue(), ^{
             // Avoid writing breadcrumbs that have already been deleted from the in-memory store.
             // This can occur when breadcrumbs are being added faster than they can be written.
-            unsigned int nextFileNumber = self.nextFileNumber;
-            BOOL isStale = (self.maxBreadcrumbs < nextFileNumber) && (fileNumber < (nextFileNumber - self.maxBreadcrumbs));
+            BOOL isStale;
+            @synchronized (self) {
+                unsigned int nextFileNumber = self.nextFileNumber;
+                isStale = (self.maxBreadcrumbs < nextFileNumber) && (fileNumber < (nextFileNumber - self.maxBreadcrumbs));
+            }
             
             NSError *error = nil;
             

@@ -326,31 +326,41 @@ bool bsg_ksmachgetThreadQueueName(const thread_t thread, char *const buffer,
         return false;
     }
 
-    const char *queue_name = dispatch_queue_get_label(dispatch_queue);
-    if (queue_name == NULL) {
+    // If the thread is being / has recently been destroyed, we can end up with
+    // pointers to deallocated memory. Using vm_read_overwrite allows us to
+    // avoid crashing in this scenario, but we need to check that the copied
+    // data looks like a valid string.
+    const void *ptr = dispatch_queue_get_label(dispatch_queue);
+
+    vm_size_t bytesRead = 0;
+    // Not using bsg_ksmachcopyMem because it does not return bytesRead
+    kr = vm_read_overwrite(mach_task_self(),
+                           (vm_address_t)ptr, (vm_size_t)bufLength - 1,
+                           (vm_address_t)buffer, &bytesRead);
+    if (kr != KERN_SUCCESS) {
         BSG_KSLOG_TRACE("Error while getting dispatch queue name : %p",
                         dispatch_queue);
+        buffer[0] = '\0';
         return false;
     }
-    BSG_KSLOG_TRACE("Dispatch queue name: %s", queue_name);
-    size_t length = strlen(queue_name);
+
+    buffer[bytesRead] = '\0';
+
+    BSG_KSLOG_TRACE("Dispatch queue name: %s", buffer);
 
     // Queue label must be a null terminated string.
     size_t iLabel;
-    for (iLabel = 0; iLabel < length + 1; iLabel++) {
-        if (queue_name[iLabel] < ' ' || queue_name[iLabel] > '~') {
+    for (iLabel = 0; iLabel < bytesRead; iLabel++) {
+        if (buffer[iLabel] < ' ' || buffer[iLabel] > '~') {
             break;
         }
     }
-    if (queue_name[iLabel] != 0) {
+    if (buffer[iLabel] != 0) {
         // Found a non-null, invalid char.
         BSG_KSLOG_TRACE("Queue label contains invalid chars");
+        buffer[0] = '\0';
         return false;
     }
-    bufLength =
-        MIN(length, bufLength - 1); // just strlen, without null-terminator
-    strncpy(buffer, queue_name, bufLength);
-    buffer[bufLength] = 0; // terminate string
     BSG_KSLOG_TRACE("Queue label = %s", buffer);
     return true;
 }
