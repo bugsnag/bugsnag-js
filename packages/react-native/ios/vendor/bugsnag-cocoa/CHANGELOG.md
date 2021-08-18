@@ -1,6 +1,13 @@
 Changelog
 =========
 
+## 6.11.0 (2021-08-18)
+
+### Enhancements
+
+* Add breadcrumbs for `UIScene` notifications.
+  [#1165](https://github.com/bugsnag/bugsnag-cocoa/pull/1165)
+
 ## 6.10.4 (2021-08-11)
 
 ### Bug fixes

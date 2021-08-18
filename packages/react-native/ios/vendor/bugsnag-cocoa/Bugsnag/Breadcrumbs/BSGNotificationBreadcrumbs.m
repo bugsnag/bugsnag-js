@@ -41,18 +41,13 @@ NSString * const BSGNotificationBreadcrumbsMessageAppWillTerminate = @"App Will 
 #endif
         _breadcrumbSink = breadcrumbSink;
         _notificationNameMap = @{
-#if TARGET_OS_TV
             NSUndoManagerDidRedoChangeNotification : @"Redo Operation",
             NSUndoManagerDidUndoChangeNotification : @"Undo Operation",
+#if TARGET_OS_TV
             UIScreenBrightnessDidChangeNotification : @"Screen Brightness Changed",
-            UITableViewSelectionDidChangeNotification : @"TableView Select Change",
-            UIWindowDidBecomeHiddenNotification : @"Window Became Hidden",
             UIWindowDidBecomeKeyNotification : @"Window Became Key",
-            UIWindowDidBecomeVisibleNotification : @"Window Became Visible",
             UIWindowDidResignKeyNotification : @"Window Resigned Key",
 #elif TARGET_OS_IOS
-            NSUndoManagerDidRedoChangeNotification : @"Redo Operation",
-            NSUndoManagerDidUndoChangeNotification : @"Undo Operation",
             UIApplicationDidEnterBackgroundNotification : @"App Did Enter Background",
             UIApplicationDidReceiveMemoryWarningNotification : @"Memory Warning",
             UIApplicationUserDidTakeScreenshotNotification : @"Took Screenshot",
@@ -65,16 +60,11 @@ NSString * const BSGNotificationBreadcrumbsMessageAppWillTerminate = @"App Will 
             UIKeyboardDidShowNotification : @"Keyboard Became Visible",
             UIMenuControllerDidHideMenuNotification : @"Did Hide Menu",
             UIMenuControllerDidShowMenuNotification : @"Did Show Menu",
-            UITableViewSelectionDidChangeNotification : @"TableView Select Change",
             UITextFieldTextDidBeginEditingNotification : @"Began Editing Text",
             UITextFieldTextDidEndEditingNotification : @"Stopped Editing Text",
             UITextViewTextDidBeginEditingNotification : @"Began Editing Text",
             UITextViewTextDidEndEditingNotification : @"Stopped Editing Text",
-            UIWindowDidBecomeHiddenNotification : @"Window Became Hidden",
-            UIWindowDidBecomeVisibleNotification : @"Window Became Visible",
 #elif TARGET_OS_OSX
-            NSUndoManagerDidRedoChangeNotification : @"Redo Operation",
-            NSUndoManagerDidUndoChangeNotification : @"Undo Operation",
             NSApplicationDidBecomeActiveNotification : @"App Became Active",
             NSApplicationDidHideNotification : @"App Did Hide",
             NSApplicationDidResignActiveNotification : @"App Resigned Active",
@@ -92,6 +82,17 @@ NSString * const BSGNotificationBreadcrumbsMessageAppWillTerminate = @"App Will 
             NSWorkspaceScreensDidSleepNotification : @"Workspace Screen Slept",
             NSWorkspaceScreensDidWakeNotification : @"Workspace Screen Awoke",
 #endif
+#if TARGET_OS_IOS || TARGET_OS_TV
+            UISceneWillConnectNotification : @"Scene Will Connect",
+            UISceneDidDisconnectNotification : @"Scene Disconnected",
+            UISceneDidActivateNotification : @"Scene Activated",
+            UISceneWillDeactivateNotification : @"Scene Will Deactivate",
+            UISceneWillEnterForegroundNotification : @"Scene Will Enter Foreground",
+            UISceneDidEnterBackgroundNotification : @"Scene Entered Background",
+            UITableViewSelectionDidChangeNotification : @"TableView Select Change",
+            UIWindowDidBecomeHiddenNotification : @"Window Became Hidden",
+            UIWindowDidBecomeVisibleNotification : @"Window Became Visible",
+#endif
         };
     }
     return self;
@@ -107,20 +108,14 @@ NSString * const BSGNotificationBreadcrumbsMessageAppWillTerminate = @"App Will 
 #endif
 
 - (NSArray<NSNotificationName> *)automaticBreadcrumbStateEvents {
+    return @[
+        NSUndoManagerDidRedoChangeNotification,
+        NSUndoManagerDidUndoChangeNotification,
 #if TARGET_OS_TV
-    return @[
-        NSUndoManagerDidRedoChangeNotification,
-        NSUndoManagerDidUndoChangeNotification,
         UIScreenBrightnessDidChangeNotification,
-        UIWindowDidBecomeHiddenNotification,
         UIWindowDidBecomeKeyNotification,
-        UIWindowDidBecomeVisibleNotification,
         UIWindowDidResignKeyNotification,
-    ];
 #elif TARGET_OS_IOS
-    return @[
-        NSUndoManagerDidRedoChangeNotification,
-        NSUndoManagerDidUndoChangeNotification,
         UIApplicationDidEnterBackgroundNotification,
         UIApplicationDidReceiveMemoryWarningNotification,
         UIApplicationUserDidTakeScreenshotNotification,
@@ -130,11 +125,7 @@ NSString * const BSGNotificationBreadcrumbsMessageAppWillTerminate = @"App Will 
         UIKeyboardDidShowNotification,
         UIMenuControllerDidHideMenuNotification,
         UIMenuControllerDidShowMenuNotification,
-        UIWindowDidBecomeHiddenNotification,
-        UIWindowDidBecomeVisibleNotification,
-    ];
 #elif TARGET_OS_OSX
-    return @[
         NSApplicationDidBecomeActiveNotification,
         NSApplicationDidResignActiveNotification,
         NSApplicationDidHideNotification,
@@ -146,8 +137,18 @@ NSString * const BSGNotificationBreadcrumbsMessageAppWillTerminate = @"App Will 
         NSWindowDidExitFullScreenNotification,
         NSWindowWillCloseNotification,
         NSWindowWillMiniaturizeNotification,
-    ];
 #endif
+#if TARGET_OS_IOS || TARGET_OS_TV
+        UISceneWillConnectNotification,
+        UISceneDidDisconnectNotification,
+        UISceneDidActivateNotification,
+        UISceneWillDeactivateNotification,
+        UISceneWillEnterForegroundNotification,
+        UISceneDidEnterBackgroundNotification,
+        UIWindowDidBecomeHiddenNotification,
+        UIWindowDidBecomeVisibleNotification,
+#endif
+    ];
 }
 
 - (NSArray<NSNotificationName> *)automaticBreadcrumbControlEvents {
@@ -258,6 +259,23 @@ NSString * const BSGNotificationBreadcrumbsMessageAppWillTerminate = @"App Will 
 }
 
 - (void)addBreadcrumbForNotification:(NSNotification *)notification {
+#if (defined(__IPHONE_13_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_13_0) || \
+    (defined(__TVOS_13_0) && __TV_OS_VERSION_MAX_ALLOWED >= __TVOS_13_0)
+    if (@available(iOS 13.0, tvOS 13.0, *)) {
+        if ([notification.name hasPrefix:@"UIScene"] && [notification.object isKindOfClass:UISCENE]) {
+#define BSG_STRING_FROM_CLASS(__CLASS__) __CLASS__ ? NSStringFromClass((Class _Nonnull)__CLASS__) : nil
+            UIScene *scene = notification.object;
+            NSMutableDictionary *metadata = [NSMutableDictionary dictionary];
+            metadata[@"configuration"] = scene.session.configuration.name;
+            metadata[@"delegateClass"] = BSG_STRING_FROM_CLASS(scene.session.configuration.delegateClass);
+            metadata[@"role"] = scene.session.role;
+            metadata[@"sceneClass"] = BSG_STRING_FROM_CLASS(scene.session.configuration.sceneClass);
+            metadata[@"title"] = scene.title.length ? scene.title : nil;
+            [self addBreadcrumbWithType:BSGBreadcrumbTypeState forNotificationName:notification.name metadata:metadata];
+            return;
+        }
+    }
+#endif
     [self addBreadcrumbWithType:BSGBreadcrumbTypeState forNotificationName:notification.name];
 }
 
