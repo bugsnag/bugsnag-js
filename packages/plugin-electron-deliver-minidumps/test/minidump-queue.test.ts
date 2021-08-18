@@ -49,6 +49,82 @@ describe('electron-minidump-delivery: queue', () => {
     })
   })
 
+  describe('push()', () => {
+    const mockFileStore = {
+      listMinidumps: jest.fn().mockResolvedValue([]),
+      deleteMinidump: jest.fn().mockResolvedValue(undefined)
+    }
+
+    it('is a no-op until the first peek', async () => {
+      const queue = new MinidumpQueue(mockFileStore)
+      queue.push({ minidumpPath: 'new-item' })
+      expect(await queue.peek()).toStrictEqual(undefined)
+    })
+
+    it('adds new minidumps', async () => {
+      const queue = new MinidumpQueue(mockFileStore)
+      await queue.peek() // load list
+      const minidump = { minidumpPath: 'new-item' }
+      queue.push(minidump)
+      expect(await queue.peek()).toStrictEqual(minidump)
+    })
+
+    it('disallows adding the same minidump path twice', async () => {
+      const queue = new MinidumpQueue(mockFileStore)
+      await queue.peek() // load list
+
+      const minidump1 = { minidumpPath: 'new-item' }
+      const minidump2 = { minidumpPath: 'new-item' }
+      queue.push(minidump1)
+      queue.push(minidump2)
+      expect(await queue.peek()).toStrictEqual(minidump1)
+      queue.remove(minidump1)
+      expect(await queue.peek()).toStrictEqual(undefined)
+    })
+
+    it('disallows adding the same minidump path after removal', async () => {
+      const queue = new MinidumpQueue(mockFileStore)
+      await queue.peek() // load list
+
+      const minidump1 = { minidumpPath: 'new-item' }
+      const minidump2 = { minidumpPath: 'new-item' }
+      queue.push(minidump1)
+      expect(await queue.peek()).toStrictEqual(minidump1)
+      queue.remove(minidump1)
+      queue.push(minidump2)
+      expect(await queue.peek()).toStrictEqual(undefined)
+    })
+  })
+
+  describe('hasSeen()', () => {
+    let queue: MinidumpQueue
+
+    beforeEach(async () => {
+      const mockFileStore = {
+        listMinidumps: jest.fn().mockResolvedValue([{ minidumpPath: 'something' }]),
+        deleteMinidump: jest.fn().mockResolvedValue(undefined)
+      }
+      queue = new MinidumpQueue(mockFileStore)
+      await queue.peek() // load list
+    })
+
+    it('detects minidumps from disk', async () => {
+      expect(queue.hasSeen('something')).toBeTruthy()
+      expect(queue.hasSeen('something-else')).toBeFalsy()
+    })
+
+    it('detects pushed minidumps', async () => {
+      queue.push({ minidumpPath: 'some-other-thing' })
+      expect(queue.hasSeen('some-other-thing')).toBeTruthy()
+    })
+
+    it('detects removed minidumps', async () => {
+      queue.remove({ minidumpPath: 'something' })
+      expect(await queue.peek()).toStrictEqual(undefined)
+      expect(queue.hasSeen('something')).toBeTruthy()
+    })
+  })
+
   describe('remove()', () => {
     it('is safe when passed null', async () => {
       const mockFileStore = {
