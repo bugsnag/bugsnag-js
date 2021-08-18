@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-react-native-connectivity-breadcrumbs",
-  "version": "7.11.0",
+  "version": "7.12.0",
   "main": "connectivity.js",
   "description": "@bugsnag/js plugin to create breadcrumbs when the network status changes in a React Native app",
   "homepage": "https://www.bugsnag.com/",
