@@ -1,5 +1,12 @@
 # Changelog
 
+## TBC
+
+### Changed
+
+- (react-native): Update bugsnag-cooca to v6.11.0
+  - Add breadcrumbs for `UIScene` notifications. [bugsnag-cooca#1165](https://github.com/bugsnag/bugsnag-cocoa/pull/1165)
+
 ## 7.12.0 (2021-08-18)
 
 ### Changed

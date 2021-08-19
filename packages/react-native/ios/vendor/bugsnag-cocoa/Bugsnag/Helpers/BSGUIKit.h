@@ -14,6 +14,7 @@
 // Calling code should be prepared for classes to not be found when UIKit is not linked.
 #define UIAPPLICATION                                       NSClassFromString(@"UIApplication")
 #define UIDEVICE                                            NSClassFromString(@"UIDevice")
+#define UISCENE                                             NSClassFromString(@"UIScene")
 
 #define UIApplicationDidBecomeActiveNotification            @"UIApplicationDidBecomeActiveNotification"
 #define UIApplicationDidEnterBackgroundNotification         @"UIApplicationDidEnterBackgroundNotification"
@@ -29,6 +30,12 @@
 #define UIKeyboardDidShowNotification                       @"UIKeyboardDidShowNotification"
 #define UIMenuControllerDidHideMenuNotification             @"UIMenuControllerDidHideMenuNotification"
 #define UIMenuControllerDidShowMenuNotification             @"UIMenuControllerDidShowMenuNotification"
+#define UISceneWillConnectNotification                      @"UISceneWillConnectNotification"
+#define UISceneDidDisconnectNotification                    @"UISceneDidDisconnectNotification"
+#define UISceneDidActivateNotification                      @"UISceneDidActivateNotification"
+#define UISceneWillDeactivateNotification                   @"UISceneWillDeactivateNotification"
+#define UISceneWillEnterForegroundNotification              @"UISceneWillEnterForegroundNotification"
+#define UISceneDidEnterBackgroundNotification               @"UISceneDidEnterBackgroundNotification"
 #define UIScreenBrightnessDidChangeNotification             @"UIScreenBrightnessDidChangeNotification"
 #define UITableViewSelectionDidChangeNotification           @"UITableViewSelectionDidChangeNotification"
 #define UITextFieldTextDidBeginEditingNotification          @"UITextFieldTextDidBeginEditingNotification"
