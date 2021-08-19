@@ -1,0 +1,131 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  simple-app
+  
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 3
+    Environment:
+      Variables:
+        BUGSNAG_API_KEY: <YOUR_BUGSNAG_API_KEY>
+
+Resources:
+  
+  AsyncUnhandledExceptionFunctionNode14:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: async/
+      Handler: unhandled-exception.lambdaHandler
+      Runtime: nodejs14.x
+      Events:
+        AsyncUnhandledException:
+          Type: Api
+          Properties:
+            Path: /async/unhandled-exception
+            Method: get
+
+  AsyncHandledExceptionFunctionNode14:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: async/
+      Handler: handled-exception.lambdaHandler
+      Runtime: nodejs14.x
+      Events:
+        AsyncHandledException:
+          Type: Api
+          Properties:
+            Path: /async/handled-exception
+            Method: get
+
+  AsyncPromiseRejectionFunctionNode14:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: async/
+      Handler: promise-rejection.lambdaHandler
+      Runtime: nodejs14.x
+      Events:
+        AsyncPromiseRejection:
+          Type: Api
+          Properties:
+            Path: /async/promise-rejection
+            Method: get
+
+  AsyncTimeoutFunctionNode14:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: async/
+      Handler: timeout.lambdaHandler
+      Runtime: nodejs14.x
+      Events:
+        AsyncTimeout:
+          Type: Api
+          Properties:
+            Path: /async/timeout
+            Method: get
+
+  CallbackUnhandledExceptionFunctionNode14:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: callback/
+      Handler: unhandled-exception.lambdaHandler
+      Runtime: nodejs14.x
+      Events:
+        CallbackUnhandledException:
+          Type: Api
+          Properties:
+            Path: /callback/unhandled-exception
+            Method: get
+
+  CallbackThrownUnhandledExceptionFunctionNode14:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: callback/
+      Handler: thrown-unhandled-exception.lambdaHandler
+      Runtime: nodejs14.x
+      Events:
+        CallbackThrownUnhandledException:
+          Type: Api
+          Properties:
+            Path: /callback/thrown-unhandled-exception
+            Method: get
+
+  CallbackHandledExceptionFunctionNode14:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: callback/
+      Handler: handled-exception.lambdaHandler
+      Runtime: nodejs14.x
+      Events:
+        CallbackHandledException:
+          Type: Api
+          Properties:
+            Path: /callback/handled-exception
+            Method: get
+
+  CallbackPromiseRejectionFunctionNode14:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: callback/
+      Handler: promise-rejection.lambdaHandler
+      Runtime: nodejs14.x
+      Events:
+        CallbackPromiseRejection:
+          Type: Api
+          Properties:
+            Path: /callback/promise-rejection
+            Method: get
+
+  CallbackTimeoutFunctionNode14:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: callback/
+      Handler: timeout.lambdaHandler
+      Runtime: nodejs14.x
+      Events:
+        CallbackPromiseRejection:
+          Type: Api
+          Properties:
+            Path: /callback/timeout
+            Method: get
