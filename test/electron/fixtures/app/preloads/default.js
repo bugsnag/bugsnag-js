@@ -33,8 +33,5 @@ contextBridge.exposeInMainWorld('RunnerAPI', {
   renderProcessCrash: () => {
     process.crash()
   },
-  childProcessCrash: () => {
-    ipcRenderer.send('child-process-crash')
-  },
   preloadStart: Date.now()
 })

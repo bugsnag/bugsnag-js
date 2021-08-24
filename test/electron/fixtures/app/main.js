@@ -1,5 +1,4 @@
 const { join } = require('path')
-const { fork } = require('child_process')
 const {
   uncaughtException,
   unhandledRejection,
@@ -67,11 +66,6 @@ ipcMain.on('main-process-start-session', () => {
 
 ipcMain.on('main-process-console-log', (_event, ...args) => {
   console.log(...args)
-})
-
-ipcMain.on('child-process-crash', () => {
-  const proc = fork(join(__dirname, 'sample-node-crash.js'))
-  proc.on('exit', (code, signal) => console.log(`child exit! ${code} - ${signal}`))
 })
 
 ipcMain.on('mark-launch-complete', () => {

@@ -134,19 +134,3 @@ Feature: Native Errors
     And minidump request 0 contains a form field named "event" matching "minidump-event.json"
     And minidump request 1 contains a file form field named "upload_file_minidump"
     And minidump request 1 contains a form field named "event" matching "second-minidump-event.json"
-
-  @not_linux
-  Scenario: Crash in a child process
-    When I launch an app
-    Then the total requests received by the server matches:
-      | events    | 0 |
-      | minidumps | 0 |
-      | sessions  | 1 |
-
-    When I click "child-process-crash"
-    Then the total requests received by the server matches:
-      | events    | 0 |
-      | minidumps | 1 |
-      | sessions  | 1 |
-    And minidump request 0 contains a file form field named "upload_file_minidump"
-    And minidump request 0 contains a form field named "event" matching "minidump-event.json"
