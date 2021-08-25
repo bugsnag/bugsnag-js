@@ -6,6 +6,9 @@ contextBridge.exposeInMainWorld('RunnerAPI', {
   mainProcessCrash: () => {
     ipcRenderer.send('main-process-crash')
   },
+  delayedMainProcessCrash: () => {
+    ipcRenderer.send('delayed-main-process-crash')
+  },
   mainProcessUnhandledPromiseRejection: () => {
     ipcRenderer.send('main-process-unhandled-promise-rejection')
   },
@@ -26,6 +29,9 @@ contextBridge.exposeInMainWorld('RunnerAPI', {
   },
   mainProcessLastRunInfo: () => {
     ipcRenderer.send('last-run-info-breadcrumb')
+  },
+  renderProcessCrash: () => {
+    process.crash()
   },
   preloadStart: Date.now()
 })

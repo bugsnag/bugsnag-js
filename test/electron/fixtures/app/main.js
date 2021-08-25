@@ -58,6 +58,8 @@ ipcMain.on('main-process-notify', notify)
 
 ipcMain.on('main-process-crash', crash)
 
+ipcMain.on('delayed-main-process-crash', () => setTimeout(() => crash(), 1000))
+
 ipcMain.on('main-process-start-session', () => {
   Bugsnag.startSession()
 })
