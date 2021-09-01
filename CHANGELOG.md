@@ -5,7 +5,12 @@
 ### Changed
 
 - (react-native): Update bugsnag-cooca to v6.11.0
-  - Add breadcrumbs for `UIScene` notifications. [bugsnag-cooca#1165](https://github.com/bugsnag/bugsnag-cocoa/pull/1165)
+  - Add breadcrumbs for `UIScene` notifications. [bugsnag-cocoa#1165](https://github.com/bugsnag/bugsnag-cocoa/pull/1165)
+
+- (react-native): Update bugsnag-android to v5.12.0
+  - The `app.lowMemory` value always report the most recent `onTrimMemory`/`onLowMemory` status [bugsnag-android#1342](https://github.com/bugsnag/bugsnag-android/pull/1342)
+  - Added the `app.memoryTrimLevel` metadata to report a description of the latest `onTrimMemory` status [bugsnag-android#1344](https://github.com/bugsnag/bugsnag-android/pull/1344)
+  - Added `STATE` Breadcrumbs for `onTrimMemory` events [bugsnag-android#1345](https://github.com/bugsnag/bugsnag-android/pull/1345)
 
 ## 7.12.0 (2021-08-18)
 
