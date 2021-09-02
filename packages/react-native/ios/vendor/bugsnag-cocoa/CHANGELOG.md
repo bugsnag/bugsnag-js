@@ -1,6 +1,19 @@
 Changelog
 =========
 
+## 6.12.0 (2021-09-01)
+
+### Enhancements
+
+* Events now include a `thermalState` property in the `device` tab, and unexpected app terminations that occur
+  when the thermal state is critical will now be reported as a "Thermal Kill" rather than Out Of Memory error.
+  [#1171](https://github.com/bugsnag/bugsnag-cocoa/pull/1171)
+
+### Bug fixes
+
+* Fatal app hangs will no longer be reported if the `willTerminateNotification` is received.
+  [#1176](https://github.com/bugsnag/bugsnag-cocoa/pull/1176)
+
 ## 6.11.0 (2021-08-18)
 
 ### Enhancements
@@ -81,7 +94,7 @@ Changelog
   [#1112](https://github.com/bugsnag/bugsnag-cocoa/pull/1112)
 
 * Stop session being reported if app is launched in the background.
-  [#1107](https://github.com/bugsnag/bugsnag-cocoa/pull/1107)
+  [#1108](https://github.com/bugsnag/bugsnag-cocoa/pull/1108)
 
 * Fix KSCrash state storage for apps with no CFBundleName.
   [#1103](https://github.com/bugsnag/bugsnag-cocoa/pull/1103)

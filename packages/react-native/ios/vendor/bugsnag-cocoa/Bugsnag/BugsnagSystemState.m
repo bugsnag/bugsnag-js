@@ -19,8 +19,8 @@
 #import <Bugsnag/Bugsnag.h>
 
 #import "BSGFileLocations.h"
-#import "BSGGlobals.h"
 #import "BSGJSONSerialization.h"
+#import "BSGUtils.h"
 #import "BSG_KSMach.h"
 #import "BSG_KSSystemInfo.h"
 #import "BSG_RFC3339DateTool.h"
@@ -66,6 +66,9 @@ static NSDictionary* loadPreviousState(BugsnagKVStore *kvstore, NSString *jsonPa
             app[key] = value;
         }
     }
+
+    state[SYSTEMSTATE_KEY_DEVICE][SYSTEMSTATE_DEVICE_CRITICAL_THERMAL_STATE] =
+    [kvstore NSBooleanForKey:SYSTEMSTATE_DEVICE_CRITICAL_THERMAL_STATE defaultValue:nil];
 
     return state;
 }
@@ -175,6 +178,9 @@ static NSDictionary *copyDictionary(NSDictionary *launchState) {
         _currentLaunchStateRW = initCurrentState(_kvStore, config);
         _currentLaunchState = [_currentLaunchStateRW copy];
         _consecutiveLaunchCrashes = [_lastLaunchState[InternalKey][ConsecutiveLaunchCrashesKey] unsignedIntegerValue];
+        if (@available(iOS 11.0, tvOS 11.0, *)) {
+            [self setThermalState:NSProcessInfo.processInfo.thermalState];
+        }
         [self syncState:_currentLaunchState];
 
         __weak __typeof__(self) weakSelf = self;
@@ -258,6 +264,14 @@ static NSDictionary *copyDictionary(NSDictionary *launchState) {
     [self.kvStore setBoolean:false forKey:SYSTEMSTATE_APP_IS_LAUNCHING];
 }
 
+- (void)setThermalState:(NSProcessInfoThermalState)thermalState {
+    if (thermalState == NSProcessInfoThermalStateCritical) {
+        [self.kvStore setBoolean:true forKey:SYSTEMSTATE_DEVICE_CRITICAL_THERMAL_STATE];
+    } else {
+        [self.kvStore deleteKey:SYSTEMSTATE_DEVICE_CRITICAL_THERMAL_STATE];
+    }
+}
+
 - (void)setValue:(id)value forAppKey:(NSString *)key {
     [self setValue:value forKey:key inSection:SYSTEMSTATE_KEY_APP];
 }
@@ -281,7 +295,7 @@ static NSDictionary *copyDictionary(NSDictionary *launchState) {
         state = self.currentLaunchState;
     }
     // Run on a BG thread so we don't monopolize the notification queue.
-    dispatch_async(BSGGlobalsFileSystemQueue(), ^(void){
+    dispatch_async(BSGGetFileSystemQueue(), ^(void){
         [self syncState:state];
     });
 }
@@ -302,6 +316,56 @@ static NSDictionary *copyDictionary(NSDictionary *launchState) {
     }
     [self.kvStore purge];
     self.lastLaunchState = loadPreviousState(self.kvStore, self.persistenceFilePath);
+}
+
+// MARK: -
+
+- (BOOL)lastLaunchCriticalThermalState {
+    NSNumber *value = self.lastLaunchState[SYSTEMSTATE_KEY_DEVICE][SYSTEMSTATE_DEVICE_CRITICAL_THERMAL_STATE];
+    return value.boolValue;
+}
+
+- (BOOL)lastLaunchTerminatedUnexpectedly {
+    // App extensions have a different lifecycle and the heuristic used for finding app terminations rooted in fixable code does not apply
+    if ([BSG_KSSystemInfo isRunningInAppExtension]) {
+        return NO;
+    }
+    
+    NSDictionary *currentAppState = self.currentLaunchState[SYSTEMSTATE_KEY_APP];
+    NSDictionary *previousAppState = self.lastLaunchState[SYSTEMSTATE_KEY_APP];
+    NSDictionary *currentDeviceState = self.currentLaunchState[SYSTEMSTATE_KEY_DEVICE];
+    NSDictionary *previousDeviceState = self.lastLaunchState[SYSTEMSTATE_KEY_DEVICE];
+    
+    if ([previousAppState[SYSTEMSTATE_APP_WAS_TERMINATED] boolValue]) {
+        return NO; // The app terminated normally
+    }
+    
+    if ([previousAppState[SYSTEMSTATE_APP_DEBUGGER_IS_ACTIVE] boolValue]) {
+        return NO; // The debugger may have killed the app
+    }
+    
+    // If the app was inactive or in the background, we cannot determine whether the termination was unexpected
+    if (![previousAppState[SYSTEMSTATE_APP_IS_ACTIVE] boolValue] ||
+        ![previousAppState[SYSTEMSTATE_APP_IS_IN_FOREGROUND] boolValue]) {
+        return NO;
+    }
+    
+    // Ignore unexpected terminations that may have been due to the app being upgraded
+    NSString *currentAppVersion = currentAppState[SYSTEMSTATE_APP_VERSION];
+    NSString *currentAppBundleVersion = currentAppState[SYSTEMSTATE_APP_BUNDLE_VERSION];
+    if (!currentAppVersion || ![previousAppState[SYSTEMSTATE_APP_VERSION] isEqualToString:currentAppVersion] ||
+        !currentAppBundleVersion || ![previousAppState[SYSTEMSTATE_APP_BUNDLE_VERSION] isEqualToString:currentAppBundleVersion]) {
+        return NO;
+    }
+    
+    id currentBootTime = currentDeviceState[SYSTEMSTATE_DEVICE_BOOT_TIME];
+    id previousBootTime = previousDeviceState[SYSTEMSTATE_DEVICE_BOOT_TIME];
+    BOOL didReboot = currentBootTime && previousBootTime && ![currentBootTime isEqual:previousBootTime];
+    if (didReboot) {
+        return NO; // The app may have been terminated due to the reboot
+    }
+    
+    return YES;
 }
 
 @end

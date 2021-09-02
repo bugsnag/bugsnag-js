@@ -286,6 +286,9 @@ bool bsg_ksmachgetThreadName(const thread_t thread, char *const buffer,
     // WARNING: This implementation is no longer async-safe!
 
     const pthread_t pthread = pthread_from_mach_thread_np(thread);
+    if (pthread == NULL) {
+        return false;
+    }
     return pthread_getname_np(pthread, buffer, bufLength) == 0;
 }
 
