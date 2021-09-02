@@ -28,6 +28,13 @@
 @property (nonatomic) BOOL ooms;
 
 /**
+ * Determines whether Thermal Kill events should be reported to bugsnag.
+ *
+ * This flag is true by default.
+ */
+@property (nonatomic) BOOL thermalKills;
+
+/**
  * Determines whether NSExceptions should be reported to bugsnag.
  *
  * This flag is true by default.

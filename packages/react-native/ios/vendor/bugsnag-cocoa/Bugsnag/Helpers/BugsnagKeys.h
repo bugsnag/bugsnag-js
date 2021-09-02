@@ -87,6 +87,7 @@ extern NSString *const BSGKeySymbolAddr;
 extern NSString *const BSGKeySymbolAddress;
 extern NSString *const BSGKeySymbolName;
 extern NSString *const BSGKeySystem;
+extern NSString *const BSGKeyThermalState;
 extern NSString *const BSGKeyThreads;
 extern NSString *const BSGKeyTimestamp;
 extern NSString *const BSGKeyType;
