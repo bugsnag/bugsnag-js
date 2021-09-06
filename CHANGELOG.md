@@ -1,6 +1,6 @@
 # Changelog
 
-## TBC
+## 7.13.0 (2021-09-06)
 
 ### Changed
 
