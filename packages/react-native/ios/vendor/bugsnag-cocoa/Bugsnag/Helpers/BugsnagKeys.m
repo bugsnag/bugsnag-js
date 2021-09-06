@@ -86,6 +86,7 @@ NSString *const BSGKeySymbolAddr = @"symbolAddress";
 NSString *const BSGKeySymbolAddress = @"symbol_addr";
 NSString *const BSGKeySymbolName = @"symbol_name";
 NSString *const BSGKeySystem = @"system";
+NSString *const BSGKeyThermalState = @"thermalState";
 NSString *const BSGKeyThreads = @"threads";
 NSString *const BSGKeyTimestamp = @"timestamp";
 NSString *const BSGKeyType = @"type";
