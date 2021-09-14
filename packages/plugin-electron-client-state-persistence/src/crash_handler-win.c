@@ -2,7 +2,7 @@
 
 #include "crash_handler.h"
 
-static void (*registered_handler)(int);
+static void (*registered_handler)(void*);
 static PVOID vectored_handler_token;
 
 // AddVectoredExceptionHandler's initial parameter is a number indicating
@@ -14,13 +14,13 @@ static LONG WINAPI crash_handler(struct _EXCEPTION_POINTERS *info) {
   // vectored handlers can be called for non-crash reasons, so the exception
   // code should be checked to ensure this is a termination.
   if (FAILED(info->ExceptionRecord->ExceptionCode) && registered_handler) {
-    registered_handler(0); // the parameter value is unused, sending a sentinel
+    registered_handler(NULL); // the parameter value is unused, sending a sentinel
   }
 
   return EXCEPTION_CONTINUE_SEARCH;
 }
 
-void becsp_crash_handler_install(void (*func)(int)) {
+void becsp_crash_handler_install(void (*func)(void*)) {
   registered_handler = func;
   vectored_handler_token = AddVectoredExceptionHandler(CALL_FIRST, crash_handler);
 }
@@ -32,6 +32,6 @@ void becsp_crash_handler_uninstall(void) {
   }
 }
 
-void becsp_crash_handler_continue(int context) {
+void becsp_crash_handler_continue(void *context) {
   // not needed on windows as continue handlers are called automatically
 }

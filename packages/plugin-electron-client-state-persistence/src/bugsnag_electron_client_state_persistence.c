@@ -50,7 +50,7 @@ static const char *const keypath_user_id = "user.id";
 static const char *const keypath_user_name = "user.name";
 static const char *const keypath_user_email = "user.email";
 
-static void handle_crash(int context) {
+static void handle_crash(void *context) {
   becsp_persist_to_disk();
   bescp_persist_last_run_info_if_required();
   // Uninstall handlers

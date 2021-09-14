@@ -7,7 +7,7 @@
  *             called from here. The context parameter value is necessary to
  *             invoke bescp_crash_handler_continue().
  */
-void becsp_crash_handler_install(void (*func)(int context));
+void becsp_crash_handler_install(void (*func)(void *context));
 
 /**
  * Remove any registered crash handlers, restoring the system to its previous
@@ -21,4 +21,4 @@ void becsp_crash_handler_uninstall(void);
  *
  * @param context The value passed to the registered crash function
  */
-void becsp_crash_handler_continue(int context);
+void becsp_crash_handler_continue(void *context);
