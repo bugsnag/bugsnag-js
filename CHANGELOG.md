@@ -1,5 +1,12 @@
 # Changelog
 
+## TBC
+
+### Changed
+
+- (react-native): Update bugsnag-cooca to v6.12.1
+  - Fix a regression where the session was not captured at launch if Bugsnag was started before `willFinishLaunchingWithOptions` in iOS apps that do not adopt the UIScene life-cycle. [bugsnag-cooca#1180](https://github.com/bugsnag/bugsnag-cocoa/pull/1180)
+
 ## 7.13.0 (2021-09-06)
 
 ### Changed
