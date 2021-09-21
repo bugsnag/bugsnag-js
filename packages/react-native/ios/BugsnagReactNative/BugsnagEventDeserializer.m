@@ -16,7 +16,7 @@
 #import "BugsnagError+Private.h"
 #import "BugsnagEvent+Private.h"
 #import "BugsnagHandledState.h"
-#import "BugsnagSessionTracker+Private.h"
+#import "BugsnagSessionTracker.h"
 #import "BugsnagStackframe+Private.h"
 #import "BugsnagStacktrace.h"
 #import "BugsnagThread+Private.h"

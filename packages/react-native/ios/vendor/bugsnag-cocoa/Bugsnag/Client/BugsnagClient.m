@@ -65,7 +65,7 @@
 #import "BugsnagNotifier.h"
 #import "BugsnagPluginClient.h"
 #import "BugsnagSession+Private.h"
-#import "BugsnagSessionTracker+Private.h"
+#import "BugsnagSessionTracker.h"
 #import "BugsnagSessionTrackingApiClient.h"
 #import "BugsnagStackframe+Private.h"
 #import "BugsnagStateEvent.h"
@@ -208,7 +208,7 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
             BSGKeyApp: @{BSGKeyIsLaunching: @YES},
             BSGKeyClient: BSGDictionaryWithKeyAndObject(BSGKeyContext, _configuration.context)
         }];
-        self.notifier = [BugsnagNotifier new];
+        _notifier = configuration.notifier ?: [[BugsnagNotifier alloc] init];
         self.systemState = [[BugsnagSystemState alloc] initWithConfiguration:configuration];
 
         BSGFileLocations *fileLocations = [BSGFileLocations current];
@@ -313,7 +313,6 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
     [self.notificationBreadcrumbs start];
 
     NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
-    [self watchLifecycleEvents:center];
 
 #if BSG_PLATFORM_IOS
     [center addObserver:self
@@ -349,13 +348,18 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
                      object:nil];
     }
 
+    [center addObserver:self
+               selector:@selector(applicationWillTerminate:)
+#if BSG_PLATFORM_IOS || BSG_PLATFORM_TVOS
+                   name:UIApplicationWillTerminateNotification
+#elif BSG_PLATFORM_OSX
+                   name:NSApplicationWillTerminateNotification
+#endif
+                 object:nil];
+
     self.started = YES;
 
-    if (bsg_kscrashstate_currentState()->applicationIsInForeground) {
-        [self.sessionTracker startNewSessionIfAutoCaptureEnabled];
-    } else {
-        bsg_log_debug(@"Not starting session because app is not in the foreground");
-    }
+    [self.sessionTracker startWithNotificationCenter:center isInForeground:bsg_kscrashstate_currentState()->applicationIsInForeground];
 
     // Record a "Bugsnag Loaded" message
     [self addAutoBreadcrumbOfType:BSGBreadcrumbTypeState withMessage:@"Bugsnag loaded" andMetadata:nil];
@@ -486,6 +490,7 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
  * Removes observers and listeners to prevent allocations when the app is terminated
  */
 - (void)applicationWillTerminate:(__unused NSNotification *)notification {
+    [[NSNotificationCenter defaultCenter] removeObserver:self.sessionTracker];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [BSGConnectivity stopMonitoring];
 
@@ -493,45 +498,6 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
     [UIDEVICE currentDevice].batteryMonitoringEnabled = NO;
     [[UIDEVICE currentDevice] endGeneratingDeviceOrientationNotifications];
 #endif
-}
-
-- (void)watchLifecycleEvents:(NSNotificationCenter *)center {
-    NSNotificationName foregroundName;
-    NSNotificationName backgroundName;
-    NSNotificationName terminateName;
-
-    #if BSG_PLATFORM_IOS || BSG_PLATFORM_TVOS
-    foregroundName = UIApplicationWillEnterForegroundNotification;
-    backgroundName = UIApplicationDidEnterBackgroundNotification;
-    terminateName = UIApplicationWillTerminateNotification;
-    #elif BSG_PLATFORM_OSX
-    foregroundName = NSApplicationWillBecomeActiveNotification;
-    backgroundName = NSApplicationDidResignActiveNotification;
-    terminateName = NSApplicationWillTerminateNotification;
-    #endif
-
-    [center addObserver:self
-               selector:@selector(applicationWillEnterForeground:)
-                   name:foregroundName
-                 object:nil];
-
-    [center addObserver:self
-               selector:@selector(applicationWillEnterBackground:)
-                   name:backgroundName
-                 object:nil];
-
-    [center addObserver:self
-               selector:@selector(applicationWillTerminate:)
-                   name:terminateName
-                 object:nil];
-}
-
-- (void)applicationWillEnterForeground:(__unused NSNotification *)notification {
-    [self.sessionTracker handleAppForegroundEvent];
-}
-
-- (void)applicationWillEnterBackground:(__unused NSNotification *)notification {
-    [self.sessionTracker handleAppBackgroundEvent];
 }
 
 - (void)thermalStateDidChange:(NSNotification *)notification API_AVAILABLE(ios(11.0), tvos(11.0)) {
@@ -556,6 +522,10 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
     self.lastThermalState = processInfo.thermalState;
 }
 
+// =============================================================================
+// MARK: - Session Tracking
+// =============================================================================
+
 - (void)startSession {
     [self.sessionTracker startNewSession];
 }
@@ -567,6 +537,10 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
 - (BOOL)resumeSession {
     return [self.sessionTracker resumeSession];
 }
+
+// =============================================================================
+// MARK: - Connectivity Listener
+// =============================================================================
 
 /**
  * Monitor the Bugsnag endpoint to detect changes in connectivity,

@@ -8,6 +8,8 @@
 
 #import <Bugsnag/BugsnagConfiguration.h>
 
+@class BugsnagNotifier;
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface BugsnagConfiguration ()
@@ -24,6 +26,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (readonly, nonatomic) NSDictionary<NSString *, id> *dictionaryRepresentation;
 
 @property (copy, nonatomic) BugsnagMetadata *metadata;
+
+@property (nullable, nonatomic) BugsnagNotifier *notifier;
 
 @property (readonly, nullable, nonatomic) NSURL *notifyURL;
 

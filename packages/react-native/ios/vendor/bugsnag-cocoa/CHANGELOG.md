@@ -1,6 +1,14 @@
 Changelog
 =========
 
+## 6.12.1 (2021-09-15)
+
+### Bug fixes
+
+* Fix a regression where the session was not captured at launch if Bugsnag was started before
+  `willFinishLaunchingWithOptions` in iOS apps that do not adopt the UIScene life-cycle.
+  [#1180](https://github.com/bugsnag/bugsnag-cocoa/pull/1180)
+
 ## 6.12.0 (2021-09-01)
 
 ### Enhancements

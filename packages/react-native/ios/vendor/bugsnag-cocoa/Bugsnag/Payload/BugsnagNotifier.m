@@ -15,17 +15,30 @@
 - (instancetype)init {
     if ((self = [super init])) {
 #if BSG_PLATFORM_TVOS
-        self.name = @"tvOS Bugsnag Notifier";
+        _name = @"tvOS Bugsnag Notifier";
 #elif BSG_PLATFORM_IOS
-        self.name = @"iOS Bugsnag Notifier";
+        _name = @"iOS Bugsnag Notifier";
 #elif BSG_PLATFORM_OSX
-        self.name = @"OSX Bugsnag Notifier";
+        _name = @"OSX Bugsnag Notifier";
 #else
-        self.name = @"Bugsnag Objective-C";
+        _name = @"Bugsnag Objective-C";
 #endif
-        self.version = @"6.12.0";
-        self.url = @"https://github.com/bugsnag/bugsnag-cocoa";
-        self.dependencies = [NSMutableArray new];
+        _version = @"6.12.1";
+        _url = @"https://github.com/bugsnag/bugsnag-cocoa";
+        _dependencies = @[];
+    }
+    return self;
+}
+
+- (instancetype)initWithName:(NSString *)name
+                     version:(NSString *)version
+                         url:(NSString *)url
+                dependencies:(NSArray<BugsnagNotifier *> *)dependencies {
+    if ((self = [super init])) {
+        _name = [name copy];
+        _version = [version copy];
+        _url = [url copy];
+        _dependencies = [dependencies copy];
     }
     return self;
 }
