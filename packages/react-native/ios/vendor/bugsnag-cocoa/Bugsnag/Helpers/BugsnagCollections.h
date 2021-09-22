@@ -50,9 +50,9 @@ NSDictionary * BSGDictionaryWithKeyAndObject(NSString *key, id _Nullable object)
  */
 NSDictionary *BSGDictMerge(NSDictionary *source, NSDictionary *destination);
 
-/// Returns a representation of the dictionary that contains only valid JSON.
+/// Returns the dictionary if it contains only valid JSON, or a new dictionary
+/// where invalid values have been replaced by their descriptions.
 /// Any dictionary keys that are not strings will be ignored.
-/// Any values that are not valid JSON will be replaced by a string description.
 NSDictionary * BSGJSONDictionary(NSDictionary *dictionary);
 
 // MARK: - NSSet

@@ -585,9 +585,13 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
 - (void)leaveBreadcrumbWithMessage:(NSString *_Nonnull)message
                           metadata:(NSDictionary *_Nullable)metadata
                            andType:(BSGBreadcrumbType)type {
+    NSDictionary *JSONMetadata = BSGJSONDictionary(metadata ?: @{});
+    if (JSONMetadata != metadata && metadata) {
+        bsg_log_warn("Breadcrumb metadata is not a valid JSON object: %@", metadata);
+    }
     [self addBreadcrumbWithBlock:^(BugsnagBreadcrumb *_Nonnull crumbs) {
         crumbs.message = message;
-        crumbs.metadata = metadata ?: @{};
+        crumbs.metadata = JSONMetadata;
         crumbs.type = type;
     }];
 }
