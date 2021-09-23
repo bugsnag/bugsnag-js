@@ -4,7 +4,9 @@
 
 ### Changed
 
-- (react-native): Update bugsnag-cooca to v6.12.1
+- (react-native): Update bugsnag-cooca to v6.12.2
+  - Stop dropping breadcrumbs when provided invalid metadata (that is not JSON convertible.) [bugsnag-cocoa#1187](https://github.com/bugsnag/bugsnag-cocoa/pull/1187)
+  - Fix Swift fatal error parsing for messages with no filename. [bugsnag-cocoa#1186](https://github.com/bugsnag/bugsnag-cocoa/pull/1186)
   - Fix a regression where the session was not captured at launch if Bugsnag was started before `willFinishLaunchingWithOptions` in iOS apps that do not adopt the UIScene life-cycle. [bugsnag-cooca#1180](https://github.com/bugsnag/bugsnag-cocoa/pull/1180)
 - (react-native): Update bugsnag-android to v5.13.0
   - Capture breadcrumbs for OkHttp network requests
