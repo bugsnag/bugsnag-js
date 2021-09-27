@@ -132,11 +132,24 @@ NSString *BSGParseErrorMessage(NSDictionary *report, NSDictionary *error, NSStri
 
 - (void)updateWithCrashInfoMessage:(NSString *)crashInfoMessage {
     NSArray<NSString *> *patterns = @[
-        // From Swift 2.2: https://github.com/apple/swift/blob/swift-2.2-RELEASE/stdlib/public/stubs/Assert.cpp#L24-L39
+        // From Swift 2.2:
+        //
+        // https://github.com/apple/swift/blob/swift-2.2-RELEASE/stdlib/public/stubs/Assert.cpp#L24-L39
         @"^(assertion failed|fatal error|precondition failed): ((.+): )?file .+, line \\d+\n$",
+        // https://github.com/apple/swift/blob/swift-2.2-RELEASE/stdlib/public/stubs/Assert.cpp#L41-L55
+        @"^(assertion failed|fatal error|precondition failed): ((.+))?\n$",
+        
         // From Swift 4.1: https://github.com/apple/swift/commit/d03a575279cf5c523779ef68f8d7903f09ba901e
+        //
+        // https://github.com/apple/swift/blob/swift-4.1-RELEASE/stdlib/public/stubs/Assert.cpp#L75-L95
         @"^(Assertion failed|Fatal error|Precondition failed): ((.+): )?file .+, line \\d+\n$",
+        // https://github.com/apple/swift/blob/swift-4.1-RELEASE/stdlib/public/stubs/Assert.cpp#L97-L112
+        // https://github.com/apple/swift/blob/swift-5.4-RELEASE/stdlib/public/stubs/Assert.cpp#L65-L80
+        @"^(Assertion failed|Fatal error|Precondition failed): ((.+))?\n$",
+        
         // From Swift 5.4: https://github.com/apple/swift/commit/1a051719e3b1b7c37a856684dd037d482fef8e59
+        //
+        // https://github.com/apple/swift/blob/swift-5.4-RELEASE/stdlib/public/stubs/Assert.cpp#L43-L63
         @"^.+:\\d+: (Assertion failed|Fatal error|Precondition failed)(: (.+))?\n$",
     ];
     

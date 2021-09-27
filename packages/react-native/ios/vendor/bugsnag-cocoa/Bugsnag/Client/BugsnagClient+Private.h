@@ -68,7 +68,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nullable, nonatomic) NSDictionary *metadataFromLastLaunch;
 
-@property (strong, nonatomic) BugsnagNotifier *notifier; // Used in BugsnagReactNative
+@property (readonly, nonatomic) BugsnagNotifier *notifier; // Used in BugsnagReactNative
 
 @property (strong, nonatomic) BugsnagPluginClient *pluginClient;
 

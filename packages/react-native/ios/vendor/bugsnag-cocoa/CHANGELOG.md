@@ -1,6 +1,24 @@
 Changelog
 =========
 
+## 6.12.2 (2021-09-22)
+
+### Bug fixes
+
+* Stop dropping breadcrumbs when provided invalid metadata (that is not JSON convertible.)
+  [#1187](https://github.com/bugsnag/bugsnag-cocoa/pull/1187)
+
+* Fix Swift fatal error parsing for messages with no filename.
+  [#1186](https://github.com/bugsnag/bugsnag-cocoa/pull/1186)
+
+## 6.12.1 (2021-09-15)
+
+### Bug fixes
+
+* Fix a regression where the session was not captured at launch if Bugsnag was started before
+  `willFinishLaunchingWithOptions` in iOS apps that do not adopt the UIScene life-cycle.
+  [#1180](https://github.com/bugsnag/bugsnag-cocoa/pull/1180)
+
 ## 6.12.0 (2021-09-01)
 
 ### Enhancements

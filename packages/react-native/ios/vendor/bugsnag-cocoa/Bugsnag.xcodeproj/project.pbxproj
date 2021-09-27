@@ -1325,7 +1325,6 @@
 		01847D952644140F00ADA4C7 /* BSGInternalErrorReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BSGInternalErrorReporter.m; sourceTree = "<group>"; };
 		01847DAB26441A5E00ADA4C7 /* BSGInternalErrorReporterTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BSGInternalErrorReporterTests.m; sourceTree = "<group>"; };
 		01937CF9257A7B4C00F2DE31 /* Bugsnag+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bugsnag+Private.h"; sourceTree = "<group>"; };
-		01937D09257A7ED000F2DE31 /* BugsnagSessionTracker+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BugsnagSessionTracker+Private.h"; sourceTree = "<group>"; };
 		01937D11257A814D00F2DE31 /* BugsnagMetadata+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BugsnagMetadata+Private.h"; sourceTree = "<group>"; };
 		01937D2E257A83A900F2DE31 /* BugsnagApp+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BugsnagApp+Private.h"; sourceTree = "<group>"; };
 		019480C42625EE9800E833ED /* BSGAppKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BSGAppKit.h; sourceTree = "<group>"; };
@@ -1688,7 +1687,6 @@
 				01CCAEFF25D4151C0057268D /* BugsnagLastRunInfo+Private.h */,
 				00AD1EF82486A17700A27979 /* BugsnagSessionTracker.h */,
 				00AD1F012486A17900A27979 /* BugsnagSessionTracker.m */,
-				01937D09257A7ED000F2DE31 /* BugsnagSessionTracker+Private.h */,
 				CBB0928B2519F891007698BC /* BugsnagSystemState.h */,
 				CBB0928A2519F891007698BC /* BugsnagSystemState.m */,
 				00AD1CF124869EBD00A27979 /* Breadcrumbs */,
