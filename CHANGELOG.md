@@ -1,6 +1,6 @@
 # Changelog
 
-## TBC
+## 7.13.1 (2021-09-27)
 
 ### Changed
 
@@ -22,6 +22,7 @@
     [bugsnag-android#1375](https://github.com/bugsnag/bugsnag-android/pull/1375)
   - Use SystemClock.elapsedRealtime to track `app.durationInForeground`
     [bugsnag-android#1375](https://github.com/bugsnag/bugsnag-android/pull/1375)
+
 ## 7.13.0 (2021-09-06)
 
 ### Changed
