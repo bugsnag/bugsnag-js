@@ -130,6 +130,7 @@ export interface Thread {
   errorReportingThread: boolean
   type: ThreadType
   stacktrace: Stackframe[]
+  state?: string
 }
 
 export interface Stackframe {
