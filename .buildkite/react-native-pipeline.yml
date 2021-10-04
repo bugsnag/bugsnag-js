@@ -24,6 +24,7 @@ steps:
     timeout_in_minutes: 60
     env:
       REACT_NATIVE_VERSION: "rn0.60"
+      LANG: "en_US.UTF-8"
     plugins:
       - docker-compose#v3.3.0:
           run: react-native-android-builder
@@ -37,6 +38,7 @@ steps:
       queue: "opensource-mac-rn"
     env:
       REACT_NATIVE_VERSION: rn0.60
+      LANG: "en_US.UTF-8"
     artifact_paths: build/rn0.60.ipa
     commands:
       - npm run test:build-react-native-ios
@@ -61,6 +63,7 @@ steps:
       queue: "opensource-mac-cocoa-11"
     env:
       REACT_NATIVE_VERSION: rn0.63
+      LANG: "en_US.UTF-8"
     artifact_paths: build/rn0.63.ipa
     commands:
       - npm run test:build-react-native-ios
@@ -85,6 +88,7 @@ steps:
       queue: "opensource-mac-cocoa-11"
     env:
       REACT_NATIVE_VERSION: rn0.64-hermes
+      LANG: "en_US.UTF-8"
     artifact_paths: build/rn0.64-hermes.ipa
     commands:
       - npm run test:build-react-native-ios
@@ -115,6 +119,7 @@ steps:
       REACT_NATIVE_VERSION: rn0.60
       JS_SOURCE_DIR: "react_navigation_js"
       ARTEFACT_NAME: "r_navigation_0.60"
+      LANG: "en_US.UTF-8"
     artifact_paths: build/r_navigation_0.60.ipa
     commands:
       - npm run test:build-react-native-ios
@@ -145,6 +150,7 @@ steps:
       REACT_NATIVE_VERSION: rn0.63
       JS_SOURCE_DIR: "react_navigation_js"
       ARTEFACT_NAME: "r_navigation_0.63"
+      LANG: "en_US.UTF-8"
     artifact_paths: build/r_navigation_0.63.ipa
     commands:
       - npm run test:build-react-native-ios
@@ -175,6 +181,7 @@ steps:
       REACT_NATIVE_VERSION: rn0.60
       JS_SOURCE_DIR: "react_native_navigation_js"
       ARTEFACT_NAME: "r_native_navigation_0.60"
+      LANG: "en_US.UTF-8"
     artifact_paths: build/r_native_navigation_0.60.ipa
     commands:
       - npm run test:build-react-native-ios
@@ -205,6 +212,7 @@ steps:
       REACT_NATIVE_VERSION: rn0.63
       JS_SOURCE_DIR: "react_native_navigation_js"
       ARTEFACT_NAME: "r_native_navigation_0.63"
+      LANG: "en_US.UTF-8"
     artifact_paths: build/r_native_navigation_0.63.ipa
     commands:
       - npm run test:build-react-native-ios
