@@ -7,7 +7,7 @@ Feature: Native Errors
       | minidumps | 0 |
       | sessions  | 1 |
 
-    When I click "main-process-crash"
+    When I click "main-crash-process"
     And I launch an app
     Then the total requests received by the server matches:
       | events    | 0 |
@@ -25,7 +25,7 @@ Feature: Native Errors
       | minidumps | 0 |
       | sessions  | 1 |
 
-    When I click "main-process-crash"
+    When I click "main-crash-process"
     And I launch an app
     Then the total requests received by the server matches:
       | events    | 1 |
@@ -42,7 +42,7 @@ Feature: Native Errors
       | events    | 0 |
       | sessions  | 1 |
 
-    When I click "main-process-crash"
+    When I click "main-crash-process"
     And I launch an app with no network
     Then the total requests received by the server matches:
       | minidumps | 0 |
@@ -63,14 +63,14 @@ Feature: Native Errors
       | events    | 0 |
       | sessions  | 0 |
 
-    When I click "main-process-crash"
+    When I click "main-crash-process"
     And I launch an app
     Then the total requests received by the server matches:
       | minidumps | 0 |
       | events    | 0 |
       | sessions  | 0 |
 
-    When I click "main-process-crash"
+    When I click "main-crash-process"
     And the server becomes reachable
     And I launch an app
     Then the total requests received by the server matches:
@@ -80,21 +80,21 @@ Feature: Native Errors
 
   Scenario: Minidumps are queued for delivery until the network is available
     When I launch an app with no network
-    And I click "main-process-crash"
+    And I click "main-crash-process"
     And I launch an app with no network
     Then the total requests received by the server matches:
       | minidumps | 0 |
       | events    | 0 |
       | sessions  | 0 |
 
-    When I click "main-process-crash"
+    When I click "main-crash-process"
     And I launch an app with no network
     Then the total requests received by the server matches:
       | minidumps | 0 |
       | events    | 0 |
       | sessions  | 0 |
 
-    When I click "main-process-crash"
+    When I click "main-crash-process"
     And I launch an app
     Then the total requests received by the server matches:
       | minidumps | 3 |
@@ -134,3 +134,19 @@ Feature: Native Errors
     And minidump request 0 contains a form field named "event" matching "minidump-event.json"
     And minidump request 1 contains a file form field named "upload_file_minidump"
     And minidump request 1 contains a form field named "event" matching "second-minidump-event.json"
+
+  Scenario Outline: Sending native crashes
+    Given I launch an app
+    And I click "main-crash-<type>"
+    And I wait for 2 seconds
+    And I launch an app
+    Then the total requests received by the server matches:
+      | events    | 1 |
+      | minidumps | 1 |
+      | sessions  | 2 |
+
+    Examples:
+      | type        |
+      | process     |
+      | throw-cpp-exception  |
+      | null-deref           |

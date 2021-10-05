@@ -1,6 +1,8 @@
 const { exec, spawn } = require('child_process')
 const { promisify } = require('util')
 const { randomBytes } = require('crypto')
+const { join } = require('path')
+const { readFile, writeFile } = require('fs').promises
 
 const isWindows = process.platform === 'win32'
 const npmRunner = isWindows ? 'npm.cmd' : 'npm'
@@ -20,8 +22,20 @@ const publish = async (version, retries = 2) => {
     })
 }
 
+const setElectronNativeTestUtilsPublic = async () => {
+  const packageFile = join('packages', 'electron-native-test-helpers', 'package.json')
+  const packageJson = JSON.parse(await readFile(packageFile, 'utf8'))
+  packageJson.private = false
+  packageJson.publishConfig = {
+    access: 'public'
+  }
+
+  await writeFile(packageFile, JSON.stringify(packageJson, null, 2), 'utf8')
+}
+
 module.exports = {
   publishPackages: async () => {
+    await setElectronNativeTestUtilsPublic()
     const id = randomBytes(12).toString('hex')
     const buildVersion = `200.1.0-canary.${id}`
     await publish(buildVersion)

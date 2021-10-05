@@ -2,7 +2,7 @@ const { join } = require('path')
 const {
   uncaughtException,
   unhandledRejection,
-  crash,
+  crashProcess,
   notify
 } = require('./src/errors')
 const Bugsnag = require('@bugsnag/electron')
@@ -56,9 +56,13 @@ ipcMain.on('main-process-uncaught-exception', uncaughtException)
 
 ipcMain.on('main-process-notify', notify)
 
-ipcMain.on('main-process-crash', crash)
+ipcMain.on('main-process-crash', (_event, crashType) => {
+  crashProcess(crashType)
+})
 
-ipcMain.on('delayed-main-process-crash', () => setTimeout(() => crash(), 1000))
+ipcMain.on('delayed-main-process-crash', (_event, crashType) => {
+  setTimeout(() => crashProcess(crashType), 1000)
+})
 
 ipcMain.on('main-process-start-session', () => {
   Bugsnag.startSession()

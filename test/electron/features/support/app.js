@@ -30,6 +30,13 @@ class TestApp {
       'http://0.0.0.0:5539',
       `@bugsnag/electron@${bugsnagVersion}`
     ])
+    await this._exec(npmRunner, [
+      ...installArgs,
+      '--no-package-lock',
+      '--registry',
+      'http://0.0.0.0:5539',
+      `@bugsnag/electron-native-test-helpers@${bugsnagVersion}`
+    ])
   }
 
   buildPath () {

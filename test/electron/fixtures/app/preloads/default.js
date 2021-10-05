@@ -3,8 +3,8 @@ const { contextBridge, ipcRenderer } = require('electron')
 contextBridge.exposeInMainWorld('RunnerAPI', {
   rendererConfig: JSON.parse(process.env.BUGSNAG_RENDERER_CONFIG || '{}'),
   startOffline: process.env.BUGSNAG_RENDERER_OFFLINE,
-  mainProcessCrash: () => {
-    ipcRenderer.send('main-process-crash')
+  mainProcessCrash: (...args) => {
+    ipcRenderer.send('main-process-crash', ...args)
   },
   delayedMainProcessCrash: () => {
     ipcRenderer.send('delayed-main-process-crash')

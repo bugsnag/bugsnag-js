@@ -1,0 +1,33 @@
+{
+  "name": "@bugsnag/electron-native-test-helpers",
+  "version": "7.12.0-rc.0",
+  "main": "index.js",
+  "description": "Native test helpers for @bugsnag/electron",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:bugsnag/bugsnag-js.git"
+  },
+  "private": true,
+  "publishConfig": {
+    "access": "restricted"
+  },
+  "scripts": {
+    "build": "node-gyp configure build",
+    "generate-compile-commands": "node-gyp configure --release -- -f gyp.generator.compile_commands_json.py; mv Release/compile_commands.json .; rm -rf Debug Release"
+  },
+  "gypfile": true,
+  "files": [
+    "binding.gyp",
+    "index.js",
+    "src/native_crashes.js",
+    "src/native_crashes.cpp"
+  ],
+  "dependencies": {
+    "bindings": "^1.5.0"
+  },
+  "devDependencies": {
+    "@bugsnag/core": "^7.12.0-rc.0"
+  },
+  "author": "Bugsnag",
+  "license": "MIT"
+}

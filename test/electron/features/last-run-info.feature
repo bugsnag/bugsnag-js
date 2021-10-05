@@ -4,12 +4,12 @@ Feature: lastRunInfo
       # Crash the app during launch - twice
     Given I launch an app with configuration:
       | bugsnag | zero-launch-duration |
-    And I click "main-process-crash"
+    And I click "main-crash-process"
     And I wait 2 seconds
 
     Then I launch an app with configuration:
       | bugsnag | zero-launch-duration |
-    And I click "main-process-crash"
+    And I click "main-crash-process"
     And I wait 2 seconds
 
     Then I launch an app
@@ -26,7 +26,7 @@ Feature: lastRunInfo
     Given I launch an app with configuration:
       | bugsnag | zero-launch-duration |
     And I click "mark-launch-complete"
-    And I click "main-process-crash"
+    And I click "main-crash-process"
     And I wait 2 seconds
     Then I launch an app
     And I click "last-run-info-breadcrumb"

@@ -9,11 +9,16 @@
     <h1>haha electron go brrr</h1>
     <h2>actions</h2>
     <ul>
-        <li><a href="#" id="main-process-crash" onclick="RunnerAPI.mainProcessCrash()">Crash in main process</a></li>
         <li><a href="#" id="main-process-uncaught-exception" onclick="RunnerAPI.mainProcessUncaughtException()">Uncaught exception in main process</a></li>
         <li><a href="#" id="main-process-unhandled-promise-rejection" onclick="RunnerAPI.mainProcessUnhandledPromiseRejection()">Unhandled promise rejection in main process</a></li>
         <li><a href="#" id="main-notify" onclick="RunnerAPI.mainProcessNotify()">Handled error in main process</a></li>
         <li><a href="#" id="child-process-crash" onclick="RunnerAPI.childProcessCrash()">Crash in child process</a></li>
+    </ul>
+    <ul>
+        <!-- native crashes -->
+        <li><a href="#" id="main-crash-process" onclick="RunnerAPI.mainProcessCrash()">Crash in main process</a></li>
+        <li><a href="#" id="main-crash-throw-cpp-exception" onclick="RunnerAPI.mainProcessCrash('throwCppException')">Throw C++ exception</a></li>
+        <li><a href="#" id="main-crash-null-deref" onclick="RunnerAPI.mainProcessCrash('throwNullDereference')">Dereference NULL</a></li>
     </ul>
     <ul>
         <li><a href="#" id="renderer-uncaught-exception">Uncaught exception in renderer</a></li>
