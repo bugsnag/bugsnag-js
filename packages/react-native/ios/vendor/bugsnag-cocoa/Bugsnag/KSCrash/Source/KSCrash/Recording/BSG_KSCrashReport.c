@@ -37,6 +37,7 @@
 #include "BSG_KSSignalInfo.h"
 #include "BSG_KSString.h"
 #include "BSG_KSMachHeaders.h"
+#include "BSG_KSCrashNames.h"
 
 //#define BSG_kSLogger_LocalLevel TRACE
 #include "BSG_KSLogger.h"
@@ -990,13 +991,16 @@ void bsg_kscrw_i_writeCrashInfoMessage(const BSG_KSCrashReportWriter *const writ
 void bsg_kscrw_i_writeThread(const BSG_KSCrashReportWriter *const writer,
                              const char *const key,
                              const BSG_KSCrash_SentryContext *const crash,
-                             const thread_t thread, const int index,
+                             const thread_t thread,
+                             const int index,
+                             const integer_t threadRunState,
                              const bool writeNotableAddresses) {
     bool isCrashedThread = thread == crash->offendingThread;
     BSG_STRUCT_MCONTEXT_L machineContextBuffer;
     uintptr_t backtraceBuffer[BSG_kMaxBacktraceDepth];
     int backtraceLength = sizeof(backtraceBuffer) / sizeof(*backtraceBuffer);
     int skippedEntries = 0;
+    const char* state = bsg_kscrashthread_state_name(threadRunState);
 
     BSG_STRUCT_MCONTEXT_L *machineContext =
         bsg_kscrw_i_getMachineContext(crash, thread, &machineContextBuffer);
@@ -1015,6 +1019,9 @@ void bsg_kscrw_i_writeThread(const BSG_KSCrashReportWriter *const writer,
         if (machineContext != NULL && isCrashedThread) {
             bsg_kscrw_i_writeRegisters(writer, BSG_KSCrashField_Registers,
                                        machineContext, isCrashedThread);
+        }
+        if (state != NULL) {
+            writer->addStringElement(writer, BSG_KSCrashField_State, state);
         }
         writer->addIntegerElement(writer, BSG_KSCrashField_Index, index);
         writer->addBooleanElement(writer, BSG_KSCrashField_Crashed,
@@ -1050,34 +1057,18 @@ void bsg_kscrw_i_writeAllThreads(const BSG_KSCrashReportWriter *const writer,
                                  const char *const key,
                                  const BSG_KSCrash_SentryContext *const crash,
                                  bool writeNotableAddresses) {
-    const task_t thisTask = mach_task_self();
-    thread_act_array_t threads;
-    mach_msg_type_number_t numThreads;
-    kern_return_t kr;
-
-    if ((kr = task_threads(thisTask, &threads, &numThreads)) != KERN_SUCCESS) {
-        BSG_KSLOG_ERROR("task_threads: %s", mach_error_string(kr));
-        return;
-    }
-
     // Fetch info for all threads.
     writer->beginArray(writer, key);
     {
-        for (mach_msg_type_number_t i = 0; i < numThreads; i++) {
-            thread_t thread = threads[i];
+        for (unsigned i = 0; i < crash->allThreadsCount; i++) {
+            thread_t thread = crash->allThreads[i];
+            integer_t threadRunState = crash->allThreadRunStates[i];
             if (crash->threadTracingEnabled || thread == crash->offendingThread) {
-                bsg_kscrw_i_writeThread(writer, NULL, crash, thread, (int) i, writeNotableAddresses);
+                bsg_kscrw_i_writeThread(writer, NULL, crash, thread, (int) i, threadRunState, writeNotableAddresses);
             }
         }
     }
     writer->endContainer(writer);
-
-    // Clean up.
-    for (mach_msg_type_number_t i = 0; i < numThreads; i++) {
-        mach_port_deallocate(thisTask, threads[i]);
-    }
-    vm_deallocate(thisTask, (vm_address_t)threads,
-                  sizeof(thread_t) * numThreads);
 }
 
 /** Get the index of a thread.
@@ -1088,29 +1079,20 @@ void bsg_kscrw_i_writeAllThreads(const BSG_KSCrashReportWriter *const writer,
  */
 int bsg_kscrw_i_threadIndex(const thread_t thread) {
     int index = -1;
-    const task_t thisTask = mach_task_self();
-    thread_act_array_t threads;
-    mach_msg_type_number_t numThreads;
-    kern_return_t kr;
-
-    if ((kr = task_threads(thisTask, &threads, &numThreads)) != KERN_SUCCESS) {
-        BSG_KSLOG_ERROR("task_threads: %s", mach_error_string(kr));
+    unsigned threadCount = 0;
+    thread_t *threads = bsg_ksmachgetAllThreads(&threadCount);
+    if (threads == NULL) {
         return -1;
     }
 
-    for (mach_msg_type_number_t i = 0; i < numThreads; i++) {
+    for (unsigned i = 0; i < threadCount; i++) {
         if (threads[i] == thread) {
             index = (int)i;
             break;
         }
     }
 
-    // Clean up.
-    for (mach_msg_type_number_t i = 0; i < numThreads; i++) {
-        mach_port_deallocate(thisTask, threads[i]);
-    }
-    vm_deallocate(thisTask, (vm_address_t)threads,
-                  sizeof(thread_t) * numThreads);
+    bsg_ksmachfreeThreads(threads, threadCount);
 
     return index;
 }
@@ -1520,6 +1502,7 @@ void bsg_kscrashreport_writeMinimalReport(
             bsg_kscrw_i_writeThread(
                 writer, BSG_KSCrashField_CrashedThread, &crashContext->crash,
                 crashContext->crash.offendingThread,
+                0,
                 bsg_kscrw_i_threadIndex(crashContext->crash.offendingThread),
                 false);
             bsg_kscrw_i_writeError(writer, BSG_KSCrashField_Error,
@@ -1597,10 +1580,6 @@ void bsg_kscrashreport_writeKSCrashFields(BSG_KSCrash_Context *crashContext, BSG
     }
     writer->endContainer(writer);
 
-    if (crashContext->config.userInfoJSON != NULL) {
-        bsg_kscrw_i_addJSONElement(writer, BSG_KSCrashField_User,
-                crashContext->config.userInfoJSON);
-    }
     bsg_kscrw_i_writeTraceInfo(crashContext, writer);
 }
 

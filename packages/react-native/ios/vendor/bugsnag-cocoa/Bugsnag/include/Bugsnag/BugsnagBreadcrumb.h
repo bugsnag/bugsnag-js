@@ -122,3 +122,12 @@ typedef NS_OPTIONS(NSUInteger, BSGEnabledBreadcrumbType) {
 @property (readwrite, copy, nonnull, nonatomic) NSDictionary *metadata;
 
 @end
+
+#pragma mark -
+
+@protocol BSGBreadcrumbSink <NSObject>
+
+- (void)leaveBreadcrumbWithMessage:(nonnull NSString *)message metadata:(nullable NSDictionary *)metadata andType:(BSGBreadcrumbType)type
+NS_SWIFT_NAME(leaveBreadcrumb(_:metadata:type:));
+
+@end

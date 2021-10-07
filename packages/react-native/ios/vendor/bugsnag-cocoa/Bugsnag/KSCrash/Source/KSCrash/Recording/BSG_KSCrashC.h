@@ -38,6 +38,11 @@ extern "C" {
 
 #include <stdbool.h>
 
+/** Initialize the KSCrash system. Call this once, before any other function.
+ * Note: This gets called automatically by [BSG_KSCrash sharedInstance].
+ */
+void bsg_kscrash_init(void);
+
 /** Install the crash reporter. The reporter will record the next crash and then
  * terminate the program.
  *
@@ -86,13 +91,6 @@ void bsg_kscrash_reinstall(const char *const crashReportFilePath,
                            const char *const recrashReportFilePath,
                            const char *const stateFilePath,
                            const char *const crashID);
-
-/** Set the user-supplied data in JSON format.
- *
- * @param userInfoJSON Pre-baked JSON containing user-supplied information.
- *                     NULL = delete.
- */
-void bsg_kscrash_setUserInfoJSON(const char *const userInfoJSON);
 
 /** Set whether or not to print a stack trace to stdout when a crash occurs.
  *

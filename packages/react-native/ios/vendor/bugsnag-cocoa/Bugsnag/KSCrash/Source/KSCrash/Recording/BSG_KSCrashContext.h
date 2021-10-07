@@ -60,9 +60,6 @@ typedef struct {
     /** System information in JSON format (to be written to the report). */
     char *systemInfoJSON;
 
-    /** User information in JSON format (to be written to the report). */
-    char *userInfoJSON;
-
     /** When writing the crash report, print a stack trace to STDOUT as well. */
     bool printTraceToStdout;
 

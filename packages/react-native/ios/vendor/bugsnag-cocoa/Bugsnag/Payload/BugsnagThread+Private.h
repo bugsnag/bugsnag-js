@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
                       name:(nullable NSString *)name
       errorReportingThread:(BOOL)errorReportingThread
                       type:(BSGThreadType)type
+                     state:(nullable NSString *)state
                 stacktrace:(NSArray<BugsnagStackframe *> *)stacktrace;
 
 - (instancetype)initWithThread:(NSDictionary *)thread binaryImages:(NSArray *)binaryImages;

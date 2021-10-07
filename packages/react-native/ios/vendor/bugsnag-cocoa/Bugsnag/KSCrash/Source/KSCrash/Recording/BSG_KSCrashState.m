@@ -108,7 +108,7 @@ int bsg_kscrashstate_i_onIntegerElement(const char *const name,
 
     if (strcmp(name, BSG_kKeyFormatVersion) == 0) {
         if (value != BSG_kFormatVersion) {
-            BSG_KSLOG_ERROR(@"Expected version 1 but got %lld", value);
+            bsg_log_err(@"Expected version 1 but got %lld", value);
             return BSG_KSJSON_ERROR_INVALID_DATA;
         }
     } else if (strcmp(name, BSG_kKeyLaunchesSinceLastCrash) == 0) {
@@ -178,20 +178,20 @@ bool bsg_kscrashstate_i_loadState(BSG_KSCrash_State *const context,
     }
     NSString *file = [NSFileManager.defaultManager stringWithFileSystemRepresentation:path length:strlen(path)];
     if (!file) {
-        BSG_KSLOG_ERROR(@"Invalid path: %s", path);
+        bsg_log_err(@"Invalid path: %s", path);
         return false;
     }
     NSError *error = nil;
     NSData *data = [NSData dataWithContentsOfFile:file options:0 error:&error];
     if (error != nil) {
         if (!(error.domain == NSCocoaErrorDomain && error.code == NSFileReadNoSuchFileError)) {
-            BSG_KSLOG_ERROR(@"%s: Could not load file: %@", path, error);
+            bsg_log_err(@"%s: Could not load file: %@", path, error);
         }
         return false;
     }
     id objectContext = [BSG_KSJSONCodec decode:data error:&error];
     if (error != nil) {
-        BSG_KSLOG_ERROR(@"%s: Could not load file: %@", path, error);
+        bsg_log_err(@"%s: Could not load file: %@", path, error);
         return false;
     }
 
@@ -223,8 +223,7 @@ bool bsg_kscrashstate_i_saveState(const BSG_KSCrash_State *const state,
                                   const char *const path) {
     int fd = open(path, O_RDWR | O_CREAT | O_TRUNC, 0644);
     if (fd < 0) {
-        BSG_KSLOG_ERROR(@"Could not open file %s for writing: %s", path,
-                        strerror(errno));
+        bsg_log_err(@"Could not open file %s for writing: %s", path, strerror(errno));
         return false;
     }
 
@@ -273,7 +272,7 @@ done:
     close(fd);
 
     if (result != BSG_KSJSON_OK) {
-        BSG_KSLOG_ERROR(@"%s: %s", path, bsg_ksjsonstringForError(result));
+        bsg_log_err(@"%s: %s", path, bsg_ksjsonstringForError(result));
         return false;
     }
     return true;

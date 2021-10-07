@@ -17,6 +17,8 @@
  * Determines whether App Hang events should be reported to bugsnag.
  *
  * This flag is true by default.
+ *
+ * Note: this flag is ignored in App Extensions, where app hang detection is always disabled.
  */
 @property (nonatomic) BOOL appHangs;
 

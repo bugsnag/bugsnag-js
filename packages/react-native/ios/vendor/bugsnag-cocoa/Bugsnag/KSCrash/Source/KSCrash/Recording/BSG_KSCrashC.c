@@ -42,12 +42,14 @@
 #pragma mark - Globals -
 // ============================================================================
 
+/** True if BSG_KSCrash has been initialised. */
+static volatile sig_atomic_t bsg_g_initialised = 0;
+
 /** True if BSG_KSCrash has been installed. */
 static volatile sig_atomic_t bsg_g_installed = 0;
 
 /** Single, global crash context. */
-static BSG_KSCrash_Context bsg_g_crashReportContext = {
-    .config = {.handlingCrashTypes = BSG_KSCrashTypeProductionSafe}};
+static BSG_KSCrash_Context bsg_g_crashReportContext;
 
 /** Path to store the state file. */
 static char *bsg_g_stateFilePath;
@@ -55,6 +57,7 @@ static char *bsg_g_stateFilePath;
 // ============================================================================
 #pragma mark - Utility -
 // ============================================================================
+
 BSG_KSCrash_Context *crashContext(void) {
     return &bsg_g_crashReportContext;
 }
@@ -89,6 +92,13 @@ void bsg_kscrash_i_onCrash(BSG_KSCrash_Context *context) {
 // ============================================================================
 #pragma mark - API -
 // ============================================================================
+
+void bsg_kscrash_init(void) {
+    if (!bsg_g_initialised) {
+        bsg_g_initialised = true;
+        bsg_g_crashReportContext.config.handlingCrashTypes = BSG_KSCrashTypeProductionSafe;
+    }
+}
 
 BSG_KSCrashType bsg_kscrash_install(const char *const crashReportFilePath,
                                     const char *const recrashReportFilePath,
@@ -160,12 +170,6 @@ BSG_KSCrashType bsg_kscrash_setHandlingCrashTypes(BSG_KSCrashType crashTypes) {
     }
 
     return crashTypes;
-}
-
-void bsg_kscrash_setUserInfoJSON(const char *const userInfoJSON) {
-    BSG_KSLOG_TRACE("set userInfoJSON to %p", userInfoJSON);
-    BSG_KSCrash_Context *context = crashContext();
-    bsg_ksstring_replace(&context->config.userInfoJSON, userInfoJSON);
 }
 
 void bsg_kscrash_setPrintTraceToStdout(bool printTraceToStdout) {
