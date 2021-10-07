@@ -39,8 +39,6 @@
  *
  * Allows setting the minimum logging level in the preprocessor.
  *
- * Works in C or Objective-C contexts, with or without ARC, using CLANG or GCC.
- *
  *
  * =====
  * USAGE
@@ -60,47 +58,23 @@
  * #include "BSG_KSLogger.h"
  *
  *
- * Next, call the logger functions from your code (using objective-c strings
- * in objective-C files and regular strings in regular C files):
+ * Next, call the logger functions from your code:
  *
  * Code:
- *    BSG_KSLOG_ERROR(@"Some error message");
- *
- * Prints:
- *    2011-07-16 05:41:01.379 TestApp[4439:f803] ERROR: SomeClass.m (21):
- * -[SomeFunction]: Some error message
- *
- * Code:
- *    BSG_KSLOG_INFO(@"Info about %@", someObject);
- *
- * Prints:
- *    2011-07-16 05:44:05.239 TestApp[4473:f803] INFO : SomeClass.m (20):
- * -[SomeFunction]: Info about <NSObject: 0xb622840>
- *
- *
- * The "BASIC" versions of the macros behave exactly like NSLog() or printf(),
- * except they respect the BSG_KSLogger_Level setting:
- *
- * Code:
- *    BSG_KSLOGBASIC_ERROR(@"A basic log entry");
- *
- * Prints:
- *    2011-07-16 05:44:05.916 TestApp[4473:f803] A basic log entry
- *
- *
- * NOTE: In C files, use "" instead of @"" in the format field. Logging calls
- *       in C files do not print the NSLog preamble:
- *
- * Objective-C version:
- *    BSG_KSLOG_ERROR(@"Some error message");
- *
- *    2011-07-16 05:41:01.379 TestApp[4439:f803] ERROR: SomeClass.m (21):
- * -[SomeFunction]: Some error message
- *
- * C version:
  *    BSG_KSLOG_ERROR("Some error message");
  *
- *    ERROR: SomeClass.c (21): SomeFunction(): Some error message
+ * Prints:
+ *    ERROR: some_file.c:21: some_function(): Some error message
+ *
+ *
+ * The "BASIC" versions of the macros behave exactly like printf(), except they
+ * respect the BSG_KSLogger_Level setting:
+ *
+ * Code:
+ *    BSG_KSLOGBASIC_ERROR("A basic log entry");
+ *
+ * Prints:
+ *    A basic log entry
  *
  *
  * =============
@@ -153,21 +127,7 @@ extern "C" {
 #endif
 
 #include <stdbool.h>
-
-#ifdef __OBJC__
-
-#import <Foundation/Foundation.h>
-
-void bsg_i_kslog_logObjC(const char *level, const char *file, int line,
-                         const char *function, NSString *fmt, ...)
-                                                NS_FORMAT_FUNCTION(5, 6);
-
-void bsg_i_kslog_logObjCBasic(NSString *fmt, ...) NS_FORMAT_FUNCTION(1, 2);
-
-#define i_KSLOG_FULL bsg_i_kslog_logObjC
-#define i_KSLOG_BASIC bsg_i_kslog_logObjCBasic
-
-#else // __OBJC__
+#include <sys/cdefs.h>
 
 void bsg_i_kslog_logC(const char *level, const char *file, int line,
                       const char *function, const char *fmt, ...)
@@ -177,8 +137,6 @@ void bsg_i_kslog_logCBasic(const char *fmt, ...) __printflike(1, 2);
 
 #define i_KSLOG_FULL bsg_i_kslog_logC
 #define i_KSLOG_BASIC bsg_i_kslog_logCBasic
-
-#endif // __OBJC__
 
 /* Back up any existing defines by the same name */
 #ifdef NONE
@@ -225,8 +183,7 @@ void bsg_i_kslog_logCBasic(const char *fmt, ...) __printflike(1, 2);
 #endif
 
 #define a_KSLOG_FULL(LEVEL, FMT, ...)                                          \
-    i_KSLOG_FULL(LEVEL, __FILE__, __LINE__, __PRETTY_FUNCTION__, FMT,          \
-                 ##__VA_ARGS__)
+    i_KSLOG_FULL(LEVEL, __FILE__, __LINE__, __func__, FMT, ##__VA_ARGS__)
 
 // ============================================================================
 #pragma mark - API -
@@ -357,24 +314,6 @@ bool bsg_kslog_setLogFilename(const char *filename, bool overwrite);
 #define TRACE BSG_KSLOG_BAK_TRACE
 #undef BSG_KSLOG_BAK_TRACE
 #endif
-
-#ifdef __OBJC__
-
-#pragma mark - Redirect BSG_KSLOG_* to bsg_log_* so that logging output has a unified format.
-
-#undef BSG_KSLOG_ERROR
-#undef BSG_KSLOG_WARN
-#undef BSG_KSLOG_INFO
-#undef BSG_KSLOG_DEBUG
-#undef BSG_KSLOG_TRACE
-
-#define BSG_KSLOG_ERROR bsg_log_err
-#define BSG_KSLOG_WARN  bsg_log_warn
-#define BSG_KSLOG_INFO  bsg_log_info
-#define BSG_KSLOG_DEBUG bsg_log_debug
-#define BSG_KSLOG_TRACE bsg_log_debug
-
-#endif // __OBJC__
 
 #ifdef __cplusplus
 }

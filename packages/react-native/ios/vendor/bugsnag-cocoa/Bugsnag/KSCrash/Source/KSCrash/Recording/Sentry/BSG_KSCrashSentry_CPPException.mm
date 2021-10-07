@@ -102,14 +102,14 @@ void __cxa_throw(void *thrown_exception, std::type_info *tinfo,
 }
 
 static void CPPExceptionTerminate(void) {
-    BSG_KSLOG_DEBUG(@"Trapped c++ exception");
+    BSG_KSLOG_DEBUG("Trapped c++ exception");
 
     bool isNSException = false;
     char descriptionBuff[DESCRIPTION_BUFFER_LENGTH];
     const char *name = NULL;
     const char *description = NULL;
 
-    BSG_KSLOG_DEBUG(@"Get exception type name.");
+    BSG_KSLOG_DEBUG("Get exception type name.");
     std::type_info *tinfo = __cxxabiv1::__cxa_current_exception_type();
     if (tinfo != NULL) {
         name = tinfo->name();
@@ -118,14 +118,13 @@ static void CPPExceptionTerminate(void) {
     description = descriptionBuff;
     descriptionBuff[0] = 0;
 
-    BSG_KSLOG_DEBUG(@"Discovering what kind of exception was thrown.");
+    BSG_KSLOG_DEBUG("Discovering what kind of exception was thrown.");
     bsg_g_captureNextStackTrace = false;
     try {
         throw;
     } catch (NSException *exception) {
-        BSG_KSLOG_DEBUG(@"Detected NSException. Recording details "
-                        @"and letting the current "
-                        @"NSException handler deal with it.");
+        BSG_KSLOG_DEBUG("Detected NSException. Recording details and letting "
+                        "the current NSException handler deal with it.");
         isNSException = true;
         bsg_recordException(exception);
     } catch (std::exception &exc) {
@@ -162,13 +161,13 @@ static void CPPExceptionTerminate(void) {
         bsg_kscrashsentry_beginHandlingCrash(bsg_g_context);
 
         if (wasHandlingCrash) {
-            BSG_KSLOG_INFO(@"Detected crash in the crash reporter. Restoring "
-                           @"original handlers.");
+            BSG_KSLOG_INFO("Detected crash in the crash reporter. "
+                           "Restoring original handlers.");
             bsg_g_context->crashedDuringCrashHandling = true;
             bsg_kscrashsentry_uninstall((BSG_KSCrashType)BSG_KSCrashTypeAll);
         }
 
-        BSG_KSLOG_DEBUG(@"Suspending all threads.");
+        BSG_KSLOG_DEBUG("Suspending all threads.");
         bsg_kscrashsentry_suspendThreads();
 
         bsg_g_context->crashType = BSG_KSCrashTypeCPPException;
@@ -180,11 +179,11 @@ static void CPPExceptionTerminate(void) {
         bsg_g_context->CPPException.name = name;
         bsg_g_context->crashReason = description;
 
-        BSG_KSLOG_DEBUG(@"Calling main crash handler.");
+        BSG_KSLOG_DEBUG("Calling main crash handler.");
         bsg_g_context->onCrash(crashContext());
 
         BSG_KSLOG_DEBUG(
-            @"Crash handling complete. Restoring original handlers.");
+            "Crash handling complete. Restoring original handlers.");
         bsg_kscrashsentry_uninstall((BSG_KSCrashType)BSG_KSCrashTypeAll);
         bsg_kscrashsentry_resumeThreads();
     }
@@ -199,7 +198,7 @@ static void CPPExceptionTerminate(void) {
 
 extern "C" bool bsg_kscrashsentry_installCPPExceptionHandler(
     BSG_KSCrash_SentryContext *context) {
-    BSG_KSLOG_DEBUG(@"Installing C++ exception handler.");
+    BSG_KSLOG_DEBUG("Installing C++ exception handler.");
 
     if (bsg_g_installed) {
         return true;
@@ -214,7 +213,7 @@ extern "C" bool bsg_kscrashsentry_installCPPExceptionHandler(
 }
 
 extern "C" void bsg_kscrashsentry_uninstallCPPExceptionHandler(void) {
-    BSG_KSLOG_DEBUG(@"Uninstalling C++ exception handler.");
+    BSG_KSLOG_DEBUG("Uninstalling C++ exception handler.");
     if (!bsg_g_installed) {
         return;
     }

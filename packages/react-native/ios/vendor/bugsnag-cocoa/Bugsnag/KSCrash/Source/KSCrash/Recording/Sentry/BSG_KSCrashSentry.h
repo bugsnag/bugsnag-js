@@ -42,6 +42,10 @@ extern "C" {
 #include <signal.h>
 #include <stdbool.h>
 
+// Some structures must be pre-allocated, so we must set an upper limit.
+// Note: Memory usage = 16 bytes per thread, pre-allocated once.
+#define MAX_CAPTURED_THREADS 1000
+
 typedef CF_ENUM(unsigned, BSG_KSCrashReservedTheadType) {
     BSG_KSCrashReservedThreadTypeMachPrimary,
     BSG_KSCrashReservedThreadTypeMachSecondary,
@@ -100,6 +104,19 @@ typedef struct BSG_KSCrash_SentryContext {
 
     /** Length of the stack trace. */
     int stackTraceLength;
+
+    /** All threads at the time of the crash.
+     * Note: This will be a kernel-allocated array that must be manually kernel-deallocated.
+     */
+    thread_t *allThreads;
+    unsigned allThreadsCount;
+
+    /** The run states of all threads at the time of the crash. */
+    integer_t allThreadRunStates[MAX_CAPTURED_THREADS];
+
+    /** Threads that we intend to resume after processing a crash. */
+    thread_t threadsToResume[MAX_CAPTURED_THREADS];
+    unsigned threadsToResumeCount;
 
     struct {
         /** The mach exception type. */
