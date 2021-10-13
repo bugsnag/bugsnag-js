@@ -45,6 +45,14 @@
         return;
     }
     
+    if ([BSG_KSSystemInfo isRunningInAppExtension]) {
+        // App extensions have a different life cycle and environment that make the hang detection mechanism unsuitable.
+        // * Depending on the type of extension, the run loop is not necessarily dedicated to UI.
+        // * The host app or other extensions run by it may trigger false positives.
+        // * The system may kill app extensions without any notification.
+        return;
+    }
+    
     if (NSProcessInfo.processInfo.environment[@"XCTestConfigurationFilePath"]) {
         // Disable functionality during unit testing to avoid crashes that can occur due to there
         // being many leaked BugsnagClient instances and BSGAppHangDetectors running while global

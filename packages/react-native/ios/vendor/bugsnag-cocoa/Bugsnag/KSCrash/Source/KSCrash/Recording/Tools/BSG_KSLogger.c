@@ -1,5 +1,5 @@
 //
-//  BSG_KSLogger.m
+//  BSG_KSLogger.c
 //
 //  Created by Karl Stenerud on 11-06-25.
 //
@@ -24,7 +24,14 @@
 // THE SOFTWARE.
 //
 
-#import "BSG_KSLogger.h"
+#include "BSG_KSLogger.h"
+
+#include <stdarg.h>
+#include <stdio.h>
+#include <string.h>
+#include <sys/errno.h>
+#include <sys/fcntl.h>
+#include <unistd.h>
 
 // ===========================================================================
 #pragma mark - Common -
@@ -216,7 +223,7 @@ __printflike(5, 6)
 void bsg_i_kslog_logC(const char *const level, const char *const file,
                       const int line, const char *const function,
                       const char *const fmt, ...) {
-    writeFmtToLog("%s: %s (%u): %s: ", level, lastPathEntry(file), line,
+    writeFmtToLog("%s: %s:%u: %s(): ", level, lastPathEntry(file), line,
                   function);
     va_list args;
     va_start(args, fmt);
@@ -224,47 +231,4 @@ void bsg_i_kslog_logC(const char *const level, const char *const file,
     va_end(args);
     writeToLog("\n");
     flushLog();
-}
-
-// ===========================================================================
-#pragma mark - Objective-C -
-// ===========================================================================
-
-void bsg_i_kslog_logObjCBasic(NSString *fmt, ...) {
-    if (fmt == nil) {
-        writeToLog("(null)");
-        return;
-    }
-
-    va_list args;
-    va_start(args, fmt);
-    CFStringRef entry = CFStringCreateWithFormatAndArguments(
-        NULL, NULL, (__bridge CFStringRef)fmt, args);
-    va_end(args);
-
-    writeToLog([(__bridge NSString *)entry UTF8String]);
-    writeToLog("\n");
-
-    CFRelease(entry);
-}
-
-void bsg_i_kslog_logObjC(const char *const level, const char *const file,
-                         const int line, const char *const function,
-                         NSString *fmt, ...) {
-    if (fmt == nil) {
-        bsg_i_kslog_logObjCBasic(@"%s: %s (%u): %s: (null)", level,
-                                 lastPathEntry(file), line, function);
-    } else {
-        va_list args;
-        va_start(args, fmt);
-        CFStringRef entry = CFStringCreateWithFormatAndArguments(
-            NULL, NULL, (__bridge CFStringRef)fmt, args);
-        va_end(args);
-
-        bsg_i_kslog_logObjCBasic(@"%s: %s (%u): %s: %@", level,
-                                 lastPathEntry(file), line, function,
-                                 (__bridge id)entry);
-
-        CFRelease(entry);
-    }
 }

@@ -268,6 +268,15 @@ bool bsg_ksmachgetThreadName(const thread_t thread, char *const buffer,
 bool bsg_ksmachgetThreadQueueName(thread_t thread, char *buffer,
                                   size_t bufLength);
 
+/**
+ * Get a thread's current run state.
+ *
+ * @param thread The thread whose queue name to get.
+ *
+ * @return The thread's run state or -1 if an error occurred.
+ */
+integer_t bsg_ksmachgetThreadState(const thread_t thread);
+
 // ============================================================================
 #pragma mark - Utility -
 // ============================================================================
@@ -297,39 +306,69 @@ pthread_t bsg_ksmachpthreadFromMachThread(const thread_t thread);
  */
 thread_t bsg_ksmachmachThreadFromPThread(const pthread_t pthread);
 
-/** Suspend all threads except for the current one.
+/** Get a list of all current threads. This list is kernel-allocated, and so must be freed using bsg_ksmachfreeThreads.
  *
- * @return true if thread suspention was at least partially successful.
+ * @param threadCount pointer to location to store the count of all threads.
+ *
+ * @return A list of threads.
  */
-bool bsg_ksmachsuspendAllThreads(void);
+thread_t *bsg_ksmachgetAllThreads(unsigned *threadCount);
 
-/** Suspend all threads except for the current one and the specified threads.
+/** Free a previously allocated thread list. This should only be called on a thread list allocated from bsg_ksmachgetAllThreads.
  *
- * @param exceptThreads The threads to avoid suspending.
+ * @param threads The list of threads to free.
  *
- * @param exceptThreadsCount The number of threads to avoid suspending.
- *
- * @return true if thread suspention was at least partially successful.
+ * @param threadCount The number of threads in the list.
  */
-bool bsg_ksmachsuspendAllThreadsExcept(thread_t *exceptThreads,
-                                       int exceptThreadsCount);
+void bsg_ksmachfreeThreads(thread_t *threads, unsigned threadCount);
 
-/** Resume all threads except for the current one.
+/** Get the run states of a list of threads.
  *
- * @return true if thread resumption was at least partially successful.
+ * @param threads The threads to get states for.
+ *
+ * @param states A buffer to hold the states.
+ *
+ * @param threadCount The number of threads in the threads list.
  */
-bool bsg_ksmachresumeAllThreads(void);
+void bsg_ksmachgetThreadStates(thread_t *threads, integer_t *states, unsigned threadCount);
 
-/** Resume all threads except for the current one and the specified threads.
+/** Fill out a list containing a source list's contents, with certain threads removed.
  *
- * @param exceptThreads The threads to avoid resuming.
+ * @param srcThreads The threads list to copy.
  *
- * @param exceptThreadsCount The number of threads to avoid resuming.
+ * @param srcThreadCount The number of threads in the source list.
  *
- * @return true if thread resumption was at least partially successful.
+ * @param omitThreads The list of threads to omit when generating the final list.
+ *
+ * @param omitThreadsCount The number of threads in the omit list.
+ *
+ * @param dstThreads The destination list to fill out. Must have at least srcThreadCount entries of space.
+ *
+ * @param maxDstThreads The maximum number of threads that can be stored in dstThreads.
+ *
+ * @return The number of threads put into the destination list.
  */
-bool bsg_ksmachresumeAllThreadsExcept(thread_t *exceptThreads,
-                                      int exceptThreadsCount);
+unsigned bsg_ksmachremoveThreadsFromList(thread_t *srcThreads, unsigned srcThreadCount,
+                                         thread_t *omitThreads, unsigned omitThreadsCount,
+                                         thread_t *dstThreads, unsigned maxDstThreads);
+
+/** Suspend a list of threads.
+ * Note: The current thread cannot be suspended via this function.
+ *
+ * @param threads The list of threads to suspend.
+ *
+ * @param threadsCount The number of threads in the list.
+ */
+void bsg_ksmachsuspendThreads(thread_t *threads, unsigned threadsCount);
+
+/** Resume a list of threads.
+ * Note: The current thread cannot be resumed via this function.
+ *
+ * @param threads The list of threads to suspend.
+ *
+ * @param threadsCount The number of threads in the list.
+ */
+void bsg_ksmachresumeThreads(thread_t *threads, unsigned threadsCount);
 
 /** Copy memory safely. If the memory is not accessible, returns false
  * rather than crashing.

@@ -78,7 +78,6 @@
 #pragma mark - Properties -
 // ============================================================================
 
-@synthesize userInfo = _userInfo;
 @synthesize printTraceToStdout = _printTraceToStdout;
 @synthesize onCrash = _onCrash;
 @synthesize logFilePath = _logFilePath;
@@ -96,6 +95,7 @@
     static id sharedInstance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
+        bsg_kscrash_init();
         sharedInstance = [[self alloc] init];
     });
     return sharedInstance;
@@ -114,24 +114,6 @@
 // ============================================================================
 #pragma mark - API -
 // ============================================================================
-
-- (void)setUserInfo:(NSDictionary *)userInfo {
-    NSError *error = nil;
-    NSData *userInfoJSON = nil;
-    if (userInfo != nil) {
-        userInfoJSON = [self
-            nullTerminated:[BSG_KSJSONCodec encode:userInfo
-                                           options:BSG_KSJSONEncodeOptionSorted
-                                             error:&error]];
-        if (error != NULL) {
-            BSG_KSLOG_ERROR(@"Could not serialize user info: %@", error);
-            return;
-        }
-    }
-
-    _userInfo = userInfo;
-    bsg_kscrash_setUserInfoJSON([userInfoJSON bytes]);
-}
 
 - (void)setPrintTraceToStdout:(bool)printTraceToStdout {
     _printTraceToStdout = printTraceToStdout;
@@ -255,36 +237,6 @@ BSG_SYNTHESIZE_CRASH_STATE_PROPERTY(BOOL, crashedLastLaunch)
         return YES;
     }
     return NO;
-}
-
-// ============================================================================
-#pragma mark - Utility -
-// ============================================================================
-
-
-- (NSMutableData *)nullTerminated:(NSData *)data {
-    if (data == nil) {
-        return NULL;
-    }
-    NSMutableData *mutable = [NSMutableData dataWithData:data];
-    [mutable appendBytes:"\0" length:1];
-    return mutable;
-}
-
-- (const char *)encodeAsJSONString:(id)object {
-    if (object == nil) {
-        return NULL;
-    }
-    NSError *error = nil;
-    NSData *jsonData = [BSG_KSJSONCodec encode:object options:0 error:&error];
-    if (jsonData == nil || error != nil) {
-        BSG_KSLOG_ERROR(@"Error encoding object to JSON: %@", error);
-        // we can still record other useful information from the report
-        return NULL;
-    }
-    NSString *jsonString =
-    [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    return [jsonString cStringUsingEncoding:NSUTF8StringEncoding];
 }
 
 // ============================================================================

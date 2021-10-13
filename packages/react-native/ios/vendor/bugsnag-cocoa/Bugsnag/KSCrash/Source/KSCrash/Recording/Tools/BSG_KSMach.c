@@ -253,7 +253,7 @@ thread_t bsg_ksmachmachThreadFromPThread(const pthread_t pthread) {
     thread_t machThread = 0;
     if (bsg_ksmachcopyMem(&threadStruct->kernel_thread, &machThread,
                           sizeof(machThread)) != KERN_SUCCESS) {
-        BSG_KSLOG_TRACE("Could not copy mach thread from %p",
+        BSG_KSLOG_TRACE("Could not copy mach thread from %u",
                         threadStruct->kernel_thread);
         return 0;
     }
@@ -325,7 +325,7 @@ bool bsg_ksmachgetThreadQueueName(const thread_t thread, char *const buffer,
         bsg_ksmachcopyMem((const void *)dispatch_queue, &junk,
                           sizeof(junk)) != KERN_SUCCESS) {
         BSG_KSLOG_TRACE(
-            "This thread doesn't have a dispatch queue attached : %p", thread);
+            "This thread doesn't have a dispatch queue attached : %u", thread);
         return false;
     }
 
@@ -368,13 +368,31 @@ bool bsg_ksmachgetThreadQueueName(const thread_t thread, char *const buffer,
     return true;
 }
 
+integer_t bsg_ksmachgetThreadState(const thread_t thread) {
+    integer_t infoBuffer[THREAD_BASIC_INFO_COUNT] = {0};
+    thread_info_t info = infoBuffer;
+    mach_msg_type_number_t inOutSize = THREAD_BASIC_INFO_COUNT;
+    kern_return_t kr = 0;
+
+    kr = thread_info(thread, THREAD_BASIC_INFO, info, &inOutSize);
+    if (kr != KERN_SUCCESS) {
+        BSG_KSLOG_TRACE("Error getting thread_info with flavor "
+                        "THREAD_BASIC_INFO from mach thread : %s",
+                        mach_error_string(kr));
+        return -1;
+    }
+
+    thread_basic_info_t basicInfo = (thread_basic_info_t)info;
+    return basicInfo->run_state;
+}
+
 // ============================================================================
 #pragma mark - Utility -
 // ============================================================================
 
 static inline bool isThreadInList(thread_t thread, thread_t *list,
-                                  int listCount) {
-    for (int i = 0; i < listCount; i++) {
+                                  unsigned listCount) {
+    for (unsigned i = 0; i < listCount; i++) {
         if (list[i] == thread) {
             return true;
         }
@@ -382,86 +400,91 @@ static inline bool isThreadInList(thread_t thread, thread_t *list,
     return false;
 }
 
-bool bsg_ksmachsuspendAllThreads(void) {
-    return bsg_ksmachsuspendAllThreadsExcept(NULL, 0);
-}
-
-bool bsg_ksmachsuspendAllThreadsExcept(thread_t *exceptThreads,
-                                       int exceptThreadsCount) {
+thread_t *bsg_ksmachgetAllThreads(unsigned *threadCount) {
     kern_return_t kr;
     const task_t thisTask = mach_task_self();
-    const thread_t thisThread = bsg_ksmachthread_self();
     thread_act_array_t threads;
     mach_msg_type_number_t numThreads;
 
     if ((kr = task_threads(thisTask, &threads, &numThreads)) != KERN_SUCCESS) {
         BSG_KSLOG_ERROR("task_threads: %s", mach_error_string(kr));
-        return false;
+        return NULL;
     }
 
-    for (mach_msg_type_number_t i = 0; i < numThreads; i++) {
-        thread_t thread = threads[i];
-        if (thread != thisThread &&
-            !isThreadInList(thread, exceptThreads, exceptThreadsCount)) {
-            if ((kr = thread_suspend(thread)) != KERN_SUCCESS) {
-                // The thread may have completed running already
-                // Don't treat this as a fatal error.
-                BSG_KSLOG_DEBUG("thread_suspend (%08x): %s", thread,
-                                mach_error_string(kr));
-                // Suppress dead store warning when log level > debug
-                (void)kr;
-            }
-        }
-    }
-
-    for (mach_msg_type_number_t i = 0; i < numThreads; i++) {
-        mach_port_deallocate(thisTask, threads[i]);
-    }
-    vm_deallocate(thisTask, (vm_address_t)threads,
-                  sizeof(thread_t) * numThreads);
-
-    return true;
+    *threadCount = numThreads;
+    return threads;
 }
 
-bool bsg_ksmachresumeAllThreads(void) {
-    return bsg_ksmachresumeAllThreadsExcept(NULL, 0);
-}
-
-bool bsg_ksmachresumeAllThreadsExcept(thread_t *exceptThreads,
-                                      int exceptThreadsCount) {
-    kern_return_t kr;
+void bsg_ksmachfreeThreads(thread_t *threads, unsigned threadCount) {
     const task_t thisTask = mach_task_self();
-    const thread_t thisThread = bsg_ksmachthread_self();
-    thread_act_array_t threads;
-    mach_msg_type_number_t numThreads;
-
-    if ((kr = task_threads(thisTask, &threads, &numThreads)) != KERN_SUCCESS) {
-        BSG_KSLOG_ERROR("task_threads: %s", mach_error_string(kr));
-        return false;
-    }
-
-    for (mach_msg_type_number_t i = 0; i < numThreads; i++) {
-        thread_t thread = threads[i];
-        if (thread != thisThread &&
-            !isThreadInList(thread, exceptThreads, exceptThreadsCount)) {
-            if ((kr = thread_resume(thread)) != KERN_SUCCESS) {
-                // The thread may have completed running already
-                // Don't treat this as a fatal error.
-                BSG_KSLOG_DEBUG("thread_resume (%08x): %s", thread,
-                                 mach_error_string(kr));
-                // Suppress dead store warning when log level > debug
-                (void)kr;
-            }
-        }
-    }
-
-    for (mach_msg_type_number_t i = 0; i < numThreads; i++) {
+    for (unsigned i = 0; i < threadCount; i++) {
         mach_port_deallocate(thisTask, threads[i]);
     }
     vm_deallocate(thisTask, (vm_address_t)threads,
-                  sizeof(thread_t) * numThreads);
+                  sizeof(*threads) * threadCount);
+}
 
-    return true;
+void bsg_ksmachgetThreadStates(thread_t *threads, integer_t *states, unsigned threadCount) {
+    for (unsigned i = 0; i < threadCount; i++) {
+        states[i] = bsg_ksmachgetThreadState(threads[i]);
+    }
+}
+
+unsigned bsg_ksmachremoveThreadsFromList(thread_t *srcThreads, unsigned srcThreadCount,
+                                         thread_t *omitThreads, unsigned omitThreadsCount,
+                                         thread_t *dstThreads, unsigned maxDstThreads) {
+    unsigned int iDst = 0;
+    for (unsigned iSrc = 0; iSrc < srcThreadCount; iSrc++) {
+        if (isThreadInList(srcThreads[iSrc], omitThreads, omitThreadsCount)) {
+            continue;
+        }
+        dstThreads[iDst] = srcThreads[iSrc];
+        iDst++;
+        if (iDst >= maxDstThreads) {
+            break;
+        }
+    }
+    return iDst;
+}
+
+void bsg_ksmachsuspendThreads(thread_t *threads, unsigned threadsCount) {
+    const thread_t thisThread = bsg_ksmachthread_self();
+    for (unsigned i = 0; i < threadsCount; i++) {
+        thread_t thread = threads[i];
+        // IMPORTANT: Never suspend the current thread even if it's in the list!
+        if (thread == thisThread) {
+            continue;
+        }
+        kern_return_t kr = thread_suspend(thread);
+        if (kr != KERN_SUCCESS) {
+            // The thread may have completed running already
+            // Don't treat this as a fatal error.
+            BSG_KSLOG_DEBUG("thread_suspend (%08x): %s", thread,
+                            mach_error_string(kr));
+            // Suppress dead store warning when log level > debug
+            (void)kr;
+        }
+    }
+}
+
+void bsg_ksmachresumeThreads(thread_t *threads, unsigned threadsCount) {
+    const thread_t thisThread = bsg_ksmachthread_self();
+    for (unsigned i = 0; i < threadsCount; i++) {
+        thread_t thread = threads[i];
+        // IMPORTANT: Never resume the current thread even if it's in the list!
+        if (thread == thisThread) {
+            continue;
+        }
+        kern_return_t kr = thread_resume(thread);
+        if (kr != KERN_SUCCESS) {
+            // The thread may have completed running already
+            // Don't treat this as a fatal error.
+            BSG_KSLOG_DEBUG("thread_resume (%08x): %s", thread,
+                            mach_error_string(kr));
+            // Suppress dead store warning when log level > debug
+            (void)kr;
+        }
+    }
 }
 
 kern_return_t bsg_ksmachcopyMem(const void *const src, void *const dst,

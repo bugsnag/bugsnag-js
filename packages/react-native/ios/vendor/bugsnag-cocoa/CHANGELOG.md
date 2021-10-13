@@ -1,6 +1,26 @@
 Changelog
 =========
 
+## 6.14.0 (2021-10-06)
+
+### Enhancements
+
+* Capture and report thread states (running, stopped, waiting, etc.) 
+  [#1200](https://github.com/bugsnag/bugsnag-cocoa/pull/1200)
+
+### Bug fixes
+
+* Disable app hang detection for app extensions.
+  [#1198](https://github.com/bugsnag/bugsnag-cocoa/pull/1198)
+
+## 6.13.0 (2021-09-29)
+
+### Enhancements
+
+* Bugsnag can now automatically capture breadcrumbs for network requests made via `NSURLSession`.
+  To use this functionality, install the `BugsnagNetworkRequestPlugin` plugin and then enable it in your `BugsnagConfiguration`.
+  For more information see [the documentation](https://docs.bugsnag.com/platforms/ios/customizing-breadcrumbs/#capturing-network-requests).
+
 ## 6.12.2 (2021-09-22)
 
 ### Bug fixes

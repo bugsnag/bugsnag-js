@@ -384,9 +384,8 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
     [self.eventUploader uploadStoredEvents];
     
     // App hang detector deliberately started after sendLaunchCrashSynchronously (which by design may itself trigger an app hang)
-    if (self.configuration.enabledErrorTypes.appHangs) {
-        [self startAppHangDetector];
-    }
+    // Note: BSGAppHangDetector itself checks configuration.enabledErrorTypes.appHangs
+    [self startAppHangDetector];
     
     self.configMetadataFromLastLaunch = nil;
     self.metadataFromLastLaunch = nil;
