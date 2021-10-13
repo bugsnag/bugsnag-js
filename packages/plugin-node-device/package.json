@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-node-device",
-  "version": "7.11.0",
+  "version": "7.13.2",
   "main": "device.js",
   "description": "@bugsnag/js plugin to set device info in node",
   "homepage": "https://www.bugsnag.com/",
@@ -18,7 +18,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^7.11.0"
+    "@bugsnag/core": "^7.13.2"
   },
   "peerDependencies": {
     "@bugsnag/core": "^7.0.0"

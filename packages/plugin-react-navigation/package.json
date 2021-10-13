@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-react-navigation",
-  "version": "7.11.0",
+  "version": "7.13.2",
   "main": "react-navigation.js",
   "description": "@bugsnag/react-native plugin to update context and leave breadcrumb when the screen changes",
   "homepage": "https://www.bugsnag.com/",
@@ -22,7 +22,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^7.11.0",
+    "@bugsnag/core": "^7.13.2",
     "@react-navigation/native": "^5.7.3",
     "@types/react": "^16.9.49",
     "@types/react-native": "^0.63.20",
