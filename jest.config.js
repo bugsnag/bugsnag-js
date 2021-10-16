@@ -81,6 +81,7 @@ module.exports = {
       'delivery-node',
       'in-flight',
       'plugin-aws-lambda',
+      'plugin-azure-functions',
       'plugin-express',
       'plugin-koa',
       'plugin-restify',

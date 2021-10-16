@@ -73,6 +73,7 @@
     "packages/in-flight",
     "packages/plugin-app-duration",
     "packages/plugin-aws-lambda",
+    "packages/plugin-azure-functions",
     "packages/plugin-browser-context",
     "packages/plugin-browser-device",
     "packages/plugin-contextualize",
