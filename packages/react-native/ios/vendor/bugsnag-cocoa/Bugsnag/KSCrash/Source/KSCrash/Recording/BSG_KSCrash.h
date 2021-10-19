@@ -36,14 +36,6 @@
  */
 @interface BSG_KSCrash : NSObject
 
-/** A dictionary containing any info you'd like to appear in crash reports. Must
- * contain only JSON-safe data: NSString for keys, and NSDictionary, NSArray,
- * NSString, NSDate, and NSNumber for values.
- *
- * Default: nil
- */
-@property(nonatomic, readwrite, retain) NSDictionary *userInfo;
-
 /** If YES, introspect memory contents during a crash.
  * Any Objective-C objects or C strings near the stack pointer or referenced by
  * cpu registers or exceptions will be recorded in the crash report, along with

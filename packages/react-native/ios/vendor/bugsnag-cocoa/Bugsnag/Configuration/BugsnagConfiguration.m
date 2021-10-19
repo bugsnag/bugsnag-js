@@ -180,7 +180,7 @@ static NSUserDefaults *userDefaults;
     _enabledBreadcrumbTypes = BSGEnabledBreadcrumbTypeAll;
     _launchDurationMillis = 5000;
     _sendLaunchCrashesSynchronously = YES;
-    _maxBreadcrumbs = 25;
+    _maxBreadcrumbs = 50;
     _maxPersistedEvents = 32;
     _maxPersistedSessions = 128;
     _autoTrackSessions = YES;

@@ -32,11 +32,11 @@
 #import "BSGConnectivity.h"
 #import "BSGEventUploader.h"
 #import "BSGFileLocations.h"
-#import "BSGGlobals.h"
 #import "BSGInternalErrorReporter.h"
 #import "BSGJSONSerialization.h"
 #import "BSGNotificationBreadcrumbs.h"
 #import "BSGSerialization.h"
+#import "BSGUtils.h"
 #import "BSG_KSCrash.h"
 #import "BSG_KSCrashC.h"
 #import "BSG_KSCrashReport.h"
@@ -65,7 +65,7 @@
 #import "BugsnagNotifier.h"
 #import "BugsnagPluginClient.h"
 #import "BugsnagSession+Private.h"
-#import "BugsnagSessionTracker+Private.h"
+#import "BugsnagSessionTracker.h"
 #import "BugsnagSessionTrackingApiClient.h"
 #import "BugsnagStackframe+Private.h"
 #import "BugsnagStateEvent.h"
@@ -151,37 +151,6 @@ void BSSerializeDataCrashHandler(const BSG_KSCrashReportWriter *writer, __attrib
 }
 
 /**
- * Convert a device orientation into its Bugsnag string representation
- *
- * @param deviceOrientation The platform device orientation
- *
- * @returns A string representing the device orientation or nil if there's no equivalent
- */
-
-#if BSG_PLATFORM_IOS
-NSString *BSGOrientationNameFromEnum(UIDeviceOrientation deviceOrientation)
-{
-    switch (deviceOrientation) {
-        case UIDeviceOrientationPortraitUpsideDown:
-            return @"portraitupsidedown";
-        case UIDeviceOrientationPortrait:
-            return @"portrait";
-        case UIDeviceOrientationLandscapeRight:
-            return @"landscaperight";
-        case UIDeviceOrientationLandscapeLeft:
-            return @"landscapeleft";
-        case UIDeviceOrientationFaceUp:
-            return @"faceup";
-        case UIDeviceOrientationFaceDown:
-            return @"facedown";
-        case UIDeviceOrientationUnknown:
-            break;
-    }
-    return nil;
-}
-#endif
-
-/**
  Save info about the current session to crash data. Ensures that session
  data is written to unhandled error reports.
 
@@ -216,6 +185,8 @@ void BSGWriteSessionCrashData(BugsnagSession *session) {
 
 @property (readwrite, nullable, nonatomic) BugsnagLastRunInfo *lastRunInfo;
 
+@property (nonatomic) NSProcessInfoThermalState lastThermalState API_AVAILABLE(ios(11.0), tvos(11.0));
+
 @end
 
 
@@ -237,7 +208,7 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
             BSGKeyApp: @{BSGKeyIsLaunching: @YES},
             BSGKeyClient: BSGDictionaryWithKeyAndObject(BSGKeyContext, _configuration.context)
         }];
-        self.notifier = [BugsnagNotifier new];
+        _notifier = configuration.notifier ?: [[BugsnagNotifier alloc] init];
         self.systemState = [[BugsnagSystemState alloc] initWithConfiguration:configuration];
 
         BSGFileLocations *fileLocations = [BSGFileLocations current];
@@ -279,8 +250,14 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
         NSDictionary *systemInfo = [BSG_KSSystemInfo systemInfo];
         [self.metadata addMetadata:BSGParseAppMetadata(@{@"system": systemInfo}) toSection:BSGKeyApp];
         [self.metadata addMetadata:BSGParseDeviceMetadata(@{@"system": systemInfo}) toSection:BSGKeyDevice];
+        if (@available(iOS 11.0, tvOS 11.0, *)) {
+            _lastThermalState = NSProcessInfo.processInfo.thermalState;
+            [self.metadata addMetadata:BSGStringFromThermalState(_lastThermalState)
+                               withKey:BSGKeyThermalState
+                             toSection:BSGKeyDevice];
+        }
 #if BSG_PLATFORM_IOS
-        _lastOrientation = BSGOrientationNameFromEnum([UIDEVICE currentDevice].orientation);
+        _lastOrientation = BSGStringFromDeviceOrientation([UIDEVICE currentDevice].orientation);
         [self.state addMetadata:_lastOrientation withKey:BSGKeyOrientation toSection:BSGKeyDeviceState];
 #endif
         [self.metadata setStorageBuffer:&bsg_g_bugsnag_data.metadataJSON file:_metadataFile];
@@ -336,12 +313,8 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
     [self.notificationBreadcrumbs start];
 
     NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
-    [self watchLifecycleEvents:center];
 
-#if BSG_PLATFORM_TVOS
-    [self addTerminationObserver:UIApplicationWillTerminateNotification];
-
-#elif BSG_PLATFORM_IOS
+#if BSG_PLATFORM_IOS
     [center addObserver:self
                selector:@selector(batteryChanged:)
                    name:UIDeviceBatteryStateDidChangeNotification
@@ -353,12 +326,12 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
                  object:nil];
 
     [center addObserver:self
-               selector:@selector(orientationChanged:)
+               selector:@selector(orientationDidChange:)
                    name:UIDeviceOrientationDidChangeNotification
                  object:nil];
 
     [center addObserver:self
-               selector:@selector(lowMemoryWarning:)
+               selector:@selector(applicationDidReceiveMemoryWarning:)
                    name:UIApplicationDidReceiveMemoryWarningNotification
                  object:nil];
 
@@ -366,29 +339,27 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
     [[UIDEVICE currentDevice] beginGeneratingDeviceOrientationNotifications];
 
     [self batteryChanged:nil];
-    [self addTerminationObserver:UIApplicationWillTerminateNotification];
-
-#elif BSG_PLATFORM_OSX
-    [center addObserver:self
-               selector:@selector(willEnterForeground:)
-                   name:NSApplicationDidBecomeActiveNotification
-                 object:nil];
-
-    [center addObserver:self
-               selector:@selector(willEnterBackground:)
-                   name:NSApplicationDidResignActiveNotification
-                 object:nil];
-
-    [self addTerminationObserver:NSApplicationWillTerminateNotification];
 #endif
+
+    if (@available(iOS 11.0, tvOS 11.0, *)) {
+        [center addObserver:self
+                   selector:@selector(thermalStateDidChange:)
+                       name:NSProcessInfoThermalStateDidChangeNotification
+                     object:nil];
+    }
+
+    [center addObserver:self
+               selector:@selector(applicationWillTerminate:)
+#if BSG_PLATFORM_IOS || BSG_PLATFORM_TVOS
+                   name:UIApplicationWillTerminateNotification
+#elif BSG_PLATFORM_OSX
+                   name:NSApplicationWillTerminateNotification
+#endif
+                 object:nil];
 
     self.started = YES;
 
-    if (bsg_kscrashstate_currentState()->applicationIsInForeground) {
-        [self.sessionTracker startNewSessionIfAutoCaptureEnabled];
-    } else {
-        bsg_log_debug(@"Not starting session because app is not in the foreground");
-    }
+    [self.sessionTracker startWithNotificationCenter:center isInForeground:bsg_kscrashstate_currentState()->applicationIsInForeground];
 
     // Record a "Bugsnag Loaded" message
     [self addAutoBreadcrumbOfType:BSGBreadcrumbTypeState withMessage:@"Bugsnag loaded" andMetadata:nil];
@@ -413,9 +384,8 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
     [self.eventUploader uploadStoredEvents];
     
     // App hang detector deliberately started after sendLaunchCrashSynchronously (which by design may itself trigger an app hang)
-    if (self.configuration.enabledErrorTypes.appHangs) {
-        [self startAppHangDetector];
-    }
+    // Note: BSGAppHangDetector itself checks configuration.enabledErrorTypes.appHangs
+    [self startAppHangDetector];
     
     self.configMetadataFromLastLaunch = nil;
     self.metadataFromLastLaunch = nil;
@@ -456,90 +426,6 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
     }
 }
 
-- (BOOL)shouldReportOOM {
-#if BSGOOMAvailable
-    // Disable if in an app extension, since app extensions have a different
-    // app lifecycle and the heuristic used for finding app terminations rooted
-    // in fixable code does not apply
-    if([BSG_KSSystemInfo isRunningInAppExtension]) {
-        return NO;
-    }
-
-    // autoDetectErrors disables all unhandled event reporting
-    if(!self.configuration.autoDetectErrors) {
-        return NO;
-    }
-
-    // Are OOMs enabled?
-    if(!self.configuration.enabledErrorTypes.ooms) {
-        return NO;
-    }
-
-    return [self didLikelyOOM];
-#else
-    return NO;
-#endif
-}
-
-/**
- * These heuristics aren't 100% guaranteed to be correct, but they're correct often enough to be useful.
- */
-- (BOOL)didLikelyOOM {
-#if BSGOOMAvailable
-    NSDictionary *currAppState = self.systemState.currentLaunchState[SYSTEMSTATE_KEY_APP];
-    NSDictionary *prevAppState = self.systemState.lastLaunchState[SYSTEMSTATE_KEY_APP];
-    NSDictionary *currentDeviceState = self.systemState.currentLaunchState[SYSTEMSTATE_KEY_DEVICE];
-    NSDictionary *previousDeviceState = self.systemState.lastLaunchState[SYSTEMSTATE_KEY_DEVICE];
-    
-    // Disable if a debugger was active, since the development cycle of
-    // starting and restarting an app is also an uncatchable kill
-    if([prevAppState[SYSTEMSTATE_APP_DEBUGGER_IS_ACTIVE] boolValue]) {
-        return NO;
-    }
-
-    // If the app code changed between launches, assume no OOM.
-    NSString *currentAppVersion = currAppState[SYSTEMSTATE_APP_VERSION];
-    if (!currentAppVersion || ![prevAppState[SYSTEMSTATE_APP_VERSION] isEqualToString:currentAppVersion]) {
-        return NO;
-    }
-    NSString *currentAppBundleVersion = currAppState[SYSTEMSTATE_APP_BUNDLE_VERSION];
-    if (!currentAppBundleVersion || ![prevAppState[SYSTEMSTATE_APP_BUNDLE_VERSION] isEqualToString:currentAppBundleVersion]) {
-        return NO;
-    }
-
-    // If the app was inactive or backgrounded, we can't determine if it was OOM or not.
-    if(![prevAppState[SYSTEMSTATE_APP_IS_ACTIVE] boolValue]) {
-        return NO;
-    }
-    if(![prevAppState[SYSTEMSTATE_APP_IS_IN_FOREGROUND] boolValue]) {
-        return NO;
-    }
-
-    // If the app terminated normally, it wasn't an OOM.
-    if([prevAppState[SYSTEMSTATE_APP_WAS_TERMINATED] boolValue]) {
-        return NO;
-    }
-    
-    id currentBootTime = currentDeviceState[SYSTEMSTATE_DEVICE_BOOT_TIME];
-    id previousBootTime = previousDeviceState[SYSTEMSTATE_DEVICE_BOOT_TIME];
-    BOOL didReboot = currentBootTime && previousBootTime && ![currentBootTime isEqual:previousBootTime];
-    if (didReboot) {
-        return NO;
-    }
-    
-    return YES;
-#else
-    return NO;
-#endif
-}
-
-- (void)addTerminationObserver:(NSString *)name {
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(unsubscribeFromNotifications:)
-                                                 name:name
-                                               object:nil];
-}
-
 - (void)computeDidCrashLastLaunch {
     BOOL didCrash = NO;
     
@@ -550,14 +436,24 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
         didCrash = YES;
     }
     // Was the app terminated while the main thread was hung?
-    else if ((self.eventFromLastLaunch = [self loadFatalAppHangEvent])) {
+    else if ((self.eventFromLastLaunch = [self loadAppHangEvent]).unhandled) {
         bsg_log_info(@"Last run terminated during an app hang.");
         didCrash = YES;
     }
-    // Was the app terminated while in the foreground? (probably an OOM)
-    else if ([self shouldReportOOM]) {
-        bsg_log_info(@"Last run terminated abnormally; likely Out Of Memory.");
-        self.eventFromLastLaunch = [self generateOutOfMemoryEvent];
+    else if (self.configuration.autoDetectErrors && self.systemState.lastLaunchTerminatedUnexpectedly) {
+        if (self.systemState.lastLaunchCriticalThermalState) {
+            bsg_log_info(@"Last run terminated during a critical thermal state.");
+            if (self.configuration.enabledErrorTypes.thermalKills) {
+                self.eventFromLastLaunch = [self generateThermalKillEvent];
+            }
+#if BSGOOMAvailable
+        } else {
+            bsg_log_info(@"Last run terminated unexpectedly; possible Out Of Memory.");
+            if (self.configuration.enabledErrorTypes.ooms) {
+                self.eventFromLastLaunch = [self generateOutOfMemoryEvent];
+            }
+#endif
+        }
         didCrash = YES;
     }
     
@@ -592,7 +488,8 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
 /**
  * Removes observers and listeners to prevent allocations when the app is terminated
  */
-- (void)unsubscribeFromNotifications:(__attribute__((unused)) id)sender {
+- (void)applicationWillTerminate:(__unused NSNotification *)notification {
+    [[NSNotificationCenter defaultCenter] removeObserver:self.sessionTracker];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [BSGConnectivity stopMonitoring];
 
@@ -602,36 +499,31 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
 #endif
 }
 
-- (void)watchLifecycleEvents:(NSNotificationCenter *)center {
-    NSString *foregroundName;
-    NSString *backgroundName;
-
-    #if BSG_PLATFORM_IOS || BSG_PLATFORM_TVOS
-    foregroundName = UIApplicationWillEnterForegroundNotification;
-    backgroundName = UIApplicationDidEnterBackgroundNotification;
-    #elif BSG_PLATFORM_OSX
-    foregroundName = NSApplicationWillBecomeActiveNotification;
-    backgroundName = NSApplicationDidFinishLaunchingNotification;
-    #endif
-
-    [center addObserver:self
-               selector:@selector(willEnterForeground:)
-                   name:foregroundName
-                 object:nil];
-
-    [center addObserver:self
-               selector:@selector(willEnterBackground:)
-                   name:backgroundName
-                 object:nil];
+- (void)thermalStateDidChange:(NSNotification *)notification API_AVAILABLE(ios(11.0), tvos(11.0)) {
+    NSProcessInfo *processInfo = notification.object;
+    
+    [self.systemState setThermalState:processInfo.thermalState];
+    
+    NSString *thermalStateString = BSGStringFromThermalState(processInfo.thermalState);
+    
+    [self.metadata addMetadata:thermalStateString
+                       withKey:BSGKeyThermalState
+                     toSection:BSGKeyDevice];
+    
+    NSMutableDictionary *breadcrumbMetadata = [NSMutableDictionary dictionary];
+    breadcrumbMetadata[@"from"] = BSGStringFromThermalState(self.lastThermalState);
+    breadcrumbMetadata[@"to"] = thermalStateString;
+    
+    [self addAutoBreadcrumbOfType:BSGBreadcrumbTypeState
+                      withMessage:@"Thermal State Changed"
+                      andMetadata:breadcrumbMetadata];
+    
+    self.lastThermalState = processInfo.thermalState;
 }
 
-- (void)willEnterForeground:(__attribute__((unused)) id)sender {
-    [self.sessionTracker handleAppForegroundEvent];
-}
-
-- (void)willEnterBackground:(__attribute__((unused)) id)sender {
-    [self.sessionTracker handleAppBackgroundEvent];
-}
+// =============================================================================
+// MARK: - Session Tracking
+// =============================================================================
 
 - (void)startSession {
     [self.sessionTracker startNewSession];
@@ -644,6 +536,10 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
 - (BOOL)resumeSession {
     return [self.sessionTracker resumeSession];
 }
+
+// =============================================================================
+// MARK: - Connectivity Listener
+// =============================================================================
 
 /**
  * Monitor the Bugsnag endpoint to detect changes in connectivity,
@@ -688,9 +584,13 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
 - (void)leaveBreadcrumbWithMessage:(NSString *_Nonnull)message
                           metadata:(NSDictionary *_Nullable)metadata
                            andType:(BSGBreadcrumbType)type {
+    NSDictionary *JSONMetadata = BSGJSONDictionary(metadata ?: @{});
+    if (JSONMetadata != metadata && metadata) {
+        bsg_log_warn("Breadcrumb metadata is not a valid JSON object: %@", metadata);
+    }
     [self addBreadcrumbWithBlock:^(BugsnagBreadcrumb *_Nonnull crumbs) {
         crumbs.message = message;
-        crumbs.metadata = metadata ?: @{};
+        crumbs.metadata = JSONMetadata;
         crumbs.type = type;
     }];
 }
@@ -984,9 +884,9 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
  *
  * @param notification The orientation-change notification
  */
-- (void)orientationChanged:(NSNotification *)notification {
-    UIDeviceOrientation currentDeviceOrientation = [UIDEVICE currentDevice].orientation;
-    NSString *orientation = BSGOrientationNameFromEnum(currentDeviceOrientation);
+- (void)orientationDidChange:(NSNotification *)notification {
+    UIDevice *device = notification.object;
+    NSString *orientation = BSGStringFromDeviceOrientation(device.orientation);
 
     // No orientation, nothing  to be done
     if (!orientation) {
@@ -1000,7 +900,7 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
 
     // Short-circuit the exit if we don't have enough info to record a full breadcrumb
     // or the orientation hasn't changed (false positive).
-    if (!self.lastOrientation || [orientation isEqualToString:self.lastOrientation]) {
+    if (!self.lastOrientation || [self.lastOrientation isEqualToString:orientation]) {
         self.lastOrientation = orientation;
         return;
     }
@@ -1008,17 +908,18 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
     // We have an orientation, it's not a dupe and we have a lastOrientation.
     // Send a breadcrumb and preserve the orientation.
 
+    NSMutableDictionary *breadcrumbMetadata = [NSMutableDictionary dictionary];
+    breadcrumbMetadata[@"from"] = self.lastOrientation;
+    breadcrumbMetadata[@"to"] = orientation;
+
     [self addAutoBreadcrumbOfType:BSGBreadcrumbTypeState
                       withMessage:[self.notificationBreadcrumbs messageForNotificationName:notification.name]
-                      andMetadata:@{
-                          @"from" : self.lastOrientation,
-                          @"to" : orientation
-                      }];
+                      andMetadata:breadcrumbMetadata];
 
     self.lastOrientation = orientation;
 }
 
-- (void)lowMemoryWarning:(__attribute__((unused)) NSNotification *)notif {
+- (void)applicationDidReceiveMemoryWarning:(__unused NSNotification *)notif {
     [self.state addMetadata:[BSG_RFC3339DateTool stringFromDate:[NSDate date]]
                       withKey:BSEventLowMemoryWarning
                     toSection:BSGKeyDeviceState];
@@ -1261,7 +1162,7 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
     self.appHangEvent = nil;
 }
 
-- (nullable BugsnagEvent *)loadFatalAppHangEvent {
+- (nullable BugsnagEvent *)loadAppHangEvent {
     NSError *error = nil;
     NSDictionary *json = [BSGJSONSerialization JSONObjectWithContentsOfFile:BSGFileLocations.current.appHangEvent options:0 error:&error];
     if (!json) {
@@ -1277,6 +1178,15 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
         return nil;
     }
 
+    // Receipt of the willTerminateNotification indicates that an app hang was not the cause of the termination, so treat as non-fatal.
+    if ([self.systemState.lastLaunchState[SYSTEMSTATE_KEY_APP][SYSTEMSTATE_APP_WAS_TERMINATED] boolValue]) {
+        if (self.configuration.appHangThresholdMillis == BugsnagAppHangThresholdFatalOnly) {
+            return nil;
+        }
+        event.session.handledCount++;
+        return event;
+    }
+
     // Update event to reflect that the app hang was fatal.
     event.errors.firstObject.errorMessage = @"The app was terminated while unresponsive";
     // Cannot set event.severity directly because that sets severityReason.type to "userCallbackSetSeverity"
@@ -1290,9 +1200,27 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
     return event;
 }
 
-// MARK: - OOMs
+// MARK: - Event generation
 
 - (BugsnagEvent *)generateOutOfMemoryEvent {
+    return [self generateEventForLastLaunchWithError:
+            [[BugsnagError alloc] initWithErrorClass:@"Out Of Memory"
+                                        errorMessage:@"The app was likely terminated by the operating system while in the foreground"
+                                           errorType:BSGErrorTypeCocoa
+                                          stacktrace:nil]
+                                        handledState:[BugsnagHandledState handledStateWithSeverityReason:LikelyOutOfMemory]];
+}
+
+- (BugsnagEvent *)generateThermalKillEvent {
+    return [self generateEventForLastLaunchWithError:
+            [[BugsnagError alloc] initWithErrorClass:@"Thermal Kill"
+                                        errorMessage:@"The app was terminated by the operating system due to a critical thermal state"
+                                           errorType:BSGErrorTypeCocoa
+                                          stacktrace:nil]
+                                        handledState:[BugsnagHandledState handledStateWithSeverityReason:ThermalKill]];
+}
+
+- (BugsnagEvent *)generateEventForLastLaunchWithError:(BugsnagError *)error handledState:(BugsnagHandledState *)handledState {
     NSDictionary *appDict = self.systemState.lastLaunchState[SYSTEMSTATE_KEY_APP];
     BugsnagAppWithState *app = [BugsnagAppWithState appFromJson:appDict];
     app.dsymUuid = appDict[BSGKeyMachoUUID];
@@ -1319,16 +1247,10 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
     BugsnagSession *session = sessionDict ? [[BugsnagSession alloc] initWithDictionary:sessionDict] : nil;
     session.unhandledCount += 1;
 
-    BugsnagError *error =
-    [[BugsnagError alloc] initWithErrorClass:@"Out Of Memory"
-                                errorMessage:@"The app was likely terminated by the operating system while in the foreground"
-                                   errorType:BSGErrorTypeCocoa
-                                  stacktrace:nil];
-
     BugsnagEvent *event =
     [[BugsnagEvent alloc] initWithApp:app
                                device:device
-                         handledState:[BugsnagHandledState handledStateWithSeverityReason:LikelyOutOfMemory]
+                         handledState:handledState
                                  user:session.user ?: [[BugsnagUser alloc] init]
                              metadata:metadata
                           breadcrumbs:[self.breadcrumbs cachedBreadcrumbs] ?: @[]
@@ -1340,6 +1262,5 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
 
     return event;
 }
-
 
 @end

@@ -253,7 +253,7 @@ thread_t bsg_ksmachmachThreadFromPThread(const pthread_t pthread) {
     thread_t machThread = 0;
     if (bsg_ksmachcopyMem(&threadStruct->kernel_thread, &machThread,
                           sizeof(machThread)) != KERN_SUCCESS) {
-        BSG_KSLOG_TRACE("Could not copy mach thread from %p",
+        BSG_KSLOG_TRACE("Could not copy mach thread from %u",
                         threadStruct->kernel_thread);
         return 0;
     }
@@ -286,6 +286,9 @@ bool bsg_ksmachgetThreadName(const thread_t thread, char *const buffer,
     // WARNING: This implementation is no longer async-safe!
 
     const pthread_t pthread = pthread_from_mach_thread_np(thread);
+    if (pthread == NULL) {
+        return false;
+    }
     return pthread_getname_np(pthread, buffer, bufLength) == 0;
 }
 
@@ -322,37 +325,65 @@ bool bsg_ksmachgetThreadQueueName(const thread_t thread, char *const buffer,
         bsg_ksmachcopyMem((const void *)dispatch_queue, &junk,
                           sizeof(junk)) != KERN_SUCCESS) {
         BSG_KSLOG_TRACE(
-            "This thread doesn't have a dispatch queue attached : %p", thread);
+            "This thread doesn't have a dispatch queue attached : %u", thread);
         return false;
     }
 
-    const char *queue_name = dispatch_queue_get_label(dispatch_queue);
-    if (queue_name == NULL) {
+    // If the thread is being / has recently been destroyed, we can end up with
+    // pointers to deallocated memory. Using vm_read_overwrite allows us to
+    // avoid crashing in this scenario, but we need to check that the copied
+    // data looks like a valid string.
+    const void *ptr = dispatch_queue_get_label(dispatch_queue);
+
+    vm_size_t bytesRead = 0;
+    // Not using bsg_ksmachcopyMem because it does not return bytesRead
+    kr = vm_read_overwrite(mach_task_self(),
+                           (vm_address_t)ptr, (vm_size_t)bufLength - 1,
+                           (vm_address_t)buffer, &bytesRead);
+    if (kr != KERN_SUCCESS) {
         BSG_KSLOG_TRACE("Error while getting dispatch queue name : %p",
                         dispatch_queue);
+        buffer[0] = '\0';
         return false;
     }
-    BSG_KSLOG_TRACE("Dispatch queue name: %s", queue_name);
-    size_t length = strlen(queue_name);
+
+    buffer[bytesRead] = '\0';
+
+    BSG_KSLOG_TRACE("Dispatch queue name: %s", buffer);
 
     // Queue label must be a null terminated string.
     size_t iLabel;
-    for (iLabel = 0; iLabel < length + 1; iLabel++) {
-        if (queue_name[iLabel] < ' ' || queue_name[iLabel] > '~') {
+    for (iLabel = 0; iLabel < bytesRead; iLabel++) {
+        if (buffer[iLabel] < ' ' || buffer[iLabel] > '~') {
             break;
         }
     }
-    if (queue_name[iLabel] != 0) {
+    if (buffer[iLabel] != 0) {
         // Found a non-null, invalid char.
         BSG_KSLOG_TRACE("Queue label contains invalid chars");
+        buffer[0] = '\0';
         return false;
     }
-    bufLength =
-        MIN(length, bufLength - 1); // just strlen, without null-terminator
-    strncpy(buffer, queue_name, bufLength);
-    buffer[bufLength] = 0; // terminate string
     BSG_KSLOG_TRACE("Queue label = %s", buffer);
     return true;
+}
+
+integer_t bsg_ksmachgetThreadState(const thread_t thread) {
+    integer_t infoBuffer[THREAD_BASIC_INFO_COUNT] = {0};
+    thread_info_t info = infoBuffer;
+    mach_msg_type_number_t inOutSize = THREAD_BASIC_INFO_COUNT;
+    kern_return_t kr = 0;
+
+    kr = thread_info(thread, THREAD_BASIC_INFO, info, &inOutSize);
+    if (kr != KERN_SUCCESS) {
+        BSG_KSLOG_TRACE("Error getting thread_info with flavor "
+                        "THREAD_BASIC_INFO from mach thread : %s",
+                        mach_error_string(kr));
+        return -1;
+    }
+
+    thread_basic_info_t basicInfo = (thread_basic_info_t)info;
+    return basicInfo->run_state;
 }
 
 // ============================================================================
@@ -360,8 +391,8 @@ bool bsg_ksmachgetThreadQueueName(const thread_t thread, char *const buffer,
 // ============================================================================
 
 static inline bool isThreadInList(thread_t thread, thread_t *list,
-                                  int listCount) {
-    for (int i = 0; i < listCount; i++) {
+                                  unsigned listCount) {
+    for (unsigned i = 0; i < listCount; i++) {
         if (list[i] == thread) {
             return true;
         }
@@ -369,86 +400,91 @@ static inline bool isThreadInList(thread_t thread, thread_t *list,
     return false;
 }
 
-bool bsg_ksmachsuspendAllThreads(void) {
-    return bsg_ksmachsuspendAllThreadsExcept(NULL, 0);
-}
-
-bool bsg_ksmachsuspendAllThreadsExcept(thread_t *exceptThreads,
-                                       int exceptThreadsCount) {
+thread_t *bsg_ksmachgetAllThreads(unsigned *threadCount) {
     kern_return_t kr;
     const task_t thisTask = mach_task_self();
-    const thread_t thisThread = bsg_ksmachthread_self();
     thread_act_array_t threads;
     mach_msg_type_number_t numThreads;
 
     if ((kr = task_threads(thisTask, &threads, &numThreads)) != KERN_SUCCESS) {
         BSG_KSLOG_ERROR("task_threads: %s", mach_error_string(kr));
-        return false;
+        return NULL;
     }
 
-    for (mach_msg_type_number_t i = 0; i < numThreads; i++) {
-        thread_t thread = threads[i];
-        if (thread != thisThread &&
-            !isThreadInList(thread, exceptThreads, exceptThreadsCount)) {
-            if ((kr = thread_suspend(thread)) != KERN_SUCCESS) {
-                // The thread may have completed running already
-                // Don't treat this as a fatal error.
-                BSG_KSLOG_DEBUG("thread_suspend (%08x): %s", thread,
-                                mach_error_string(kr));
-                // Suppress dead store warning when log level > debug
-                (void)kr;
-            }
-        }
-    }
-
-    for (mach_msg_type_number_t i = 0; i < numThreads; i++) {
-        mach_port_deallocate(thisTask, threads[i]);
-    }
-    vm_deallocate(thisTask, (vm_address_t)threads,
-                  sizeof(thread_t) * numThreads);
-
-    return true;
+    *threadCount = numThreads;
+    return threads;
 }
 
-bool bsg_ksmachresumeAllThreads(void) {
-    return bsg_ksmachresumeAllThreadsExcept(NULL, 0);
-}
-
-bool bsg_ksmachresumeAllThreadsExcept(thread_t *exceptThreads,
-                                      int exceptThreadsCount) {
-    kern_return_t kr;
+void bsg_ksmachfreeThreads(thread_t *threads, unsigned threadCount) {
     const task_t thisTask = mach_task_self();
-    const thread_t thisThread = bsg_ksmachthread_self();
-    thread_act_array_t threads;
-    mach_msg_type_number_t numThreads;
-
-    if ((kr = task_threads(thisTask, &threads, &numThreads)) != KERN_SUCCESS) {
-        BSG_KSLOG_ERROR("task_threads: %s", mach_error_string(kr));
-        return false;
-    }
-
-    for (mach_msg_type_number_t i = 0; i < numThreads; i++) {
-        thread_t thread = threads[i];
-        if (thread != thisThread &&
-            !isThreadInList(thread, exceptThreads, exceptThreadsCount)) {
-            if ((kr = thread_resume(thread)) != KERN_SUCCESS) {
-                // The thread may have completed running already
-                // Don't treat this as a fatal error.
-                BSG_KSLOG_DEBUG("thread_resume (%08x): %s", thread,
-                                 mach_error_string(kr));
-                // Suppress dead store warning when log level > debug
-                (void)kr;
-            }
-        }
-    }
-
-    for (mach_msg_type_number_t i = 0; i < numThreads; i++) {
+    for (unsigned i = 0; i < threadCount; i++) {
         mach_port_deallocate(thisTask, threads[i]);
     }
     vm_deallocate(thisTask, (vm_address_t)threads,
-                  sizeof(thread_t) * numThreads);
+                  sizeof(*threads) * threadCount);
+}
 
-    return true;
+void bsg_ksmachgetThreadStates(thread_t *threads, integer_t *states, unsigned threadCount) {
+    for (unsigned i = 0; i < threadCount; i++) {
+        states[i] = bsg_ksmachgetThreadState(threads[i]);
+    }
+}
+
+unsigned bsg_ksmachremoveThreadsFromList(thread_t *srcThreads, unsigned srcThreadCount,
+                                         thread_t *omitThreads, unsigned omitThreadsCount,
+                                         thread_t *dstThreads, unsigned maxDstThreads) {
+    unsigned int iDst = 0;
+    for (unsigned iSrc = 0; iSrc < srcThreadCount; iSrc++) {
+        if (isThreadInList(srcThreads[iSrc], omitThreads, omitThreadsCount)) {
+            continue;
+        }
+        dstThreads[iDst] = srcThreads[iSrc];
+        iDst++;
+        if (iDst >= maxDstThreads) {
+            break;
+        }
+    }
+    return iDst;
+}
+
+void bsg_ksmachsuspendThreads(thread_t *threads, unsigned threadsCount) {
+    const thread_t thisThread = bsg_ksmachthread_self();
+    for (unsigned i = 0; i < threadsCount; i++) {
+        thread_t thread = threads[i];
+        // IMPORTANT: Never suspend the current thread even if it's in the list!
+        if (thread == thisThread) {
+            continue;
+        }
+        kern_return_t kr = thread_suspend(thread);
+        if (kr != KERN_SUCCESS) {
+            // The thread may have completed running already
+            // Don't treat this as a fatal error.
+            BSG_KSLOG_DEBUG("thread_suspend (%08x): %s", thread,
+                            mach_error_string(kr));
+            // Suppress dead store warning when log level > debug
+            (void)kr;
+        }
+    }
+}
+
+void bsg_ksmachresumeThreads(thread_t *threads, unsigned threadsCount) {
+    const thread_t thisThread = bsg_ksmachthread_self();
+    for (unsigned i = 0; i < threadsCount; i++) {
+        thread_t thread = threads[i];
+        // IMPORTANT: Never resume the current thread even if it's in the list!
+        if (thread == thisThread) {
+            continue;
+        }
+        kern_return_t kr = thread_resume(thread);
+        if (kr != KERN_SUCCESS) {
+            // The thread may have completed running already
+            // Don't treat this as a fatal error.
+            BSG_KSLOG_DEBUG("thread_resume (%08x): %s", thread,
+                            mach_error_string(kr));
+            // Suppress dead store warning when log level > debug
+            (void)kr;
+        }
+    }
 }
 
 kern_return_t bsg_ksmachcopyMem(const void *const src, void *const dst,

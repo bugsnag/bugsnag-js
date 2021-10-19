@@ -1,8 +1,66 @@
 # Changelog
 
-## 7.12.0-rc.0 (2021-08-05)
+## 7.13.2 (2021-10-13)
 
-- (electron) `@bugsnag/electron` will now deliver minidump files from native crashes to Bugsnag
+### Changed
+
+- (react-native): Update bugsnag-android to v5.14.0
+  - Capture and report thread state (running, sleeping, etc.) for Android Runtime and Native threads
+    [bugsnag-android#1367](https://github.com/bugsnag/bugsnag-android/pull/1367)
+    [bugsnag-android#1390](https://github.com/bugsnag/bugsnag-android/pull/1390)
+- (react-native): Update bugsnag-cocoa to v6.14.0
+  - Capture and report thread states (running, stopped, waiting, etc.) [bugsnag-cocoa#1200](https://github.com/bugsnag/bugsnag-cocoa/pull/1200)
+  - Disable app hang detection for app extensions. [bugsnag-cocoa#1198](https://github.com/bugsnag/bugsnag-cocoa/pull/1198)
+
+## 7.13.1 (2021-09-27)
+
+### Changed
+
+- (react-native): Update bugsnag-cooca to v6.12.2
+  - Stop dropping breadcrumbs when provided invalid metadata (that is not JSON convertible.) [bugsnag-cocoa#1187](https://github.com/bugsnag/bugsnag-cocoa/pull/1187)
+  - Fix Swift fatal error parsing for messages with no filename. [bugsnag-cocoa#1186](https://github.com/bugsnag/bugsnag-cocoa/pull/1186)
+  - Fix a regression where the session was not captured at launch if Bugsnag was started before `willFinishLaunchingWithOptions` in iOS apps that do not adopt the UIScene life-cycle. [bugsnag-cooca#1180](https://github.com/bugsnag/bugsnag-cocoa/pull/1180)
+- (react-native): Update bugsnag-android to v5.13.0
+  - Capture breadcrumbs for OkHttp network requests
+    [bugsnag-android#1358](https://github.com/bugsnag/bugsnag-android/pull/1358)
+    [bugsnag-android#1361](https://github.com/bugsnag/bugsnag-android/pull/1361)
+    [bugsnag-android#1363](https://github.com/bugsnag/bugsnag-android/pull/1363)
+    [bugsnag-android#1379](https://github.com/bugsnag/bugsnag-android/pull/1379)
+  - Update project to build using Gradle/AGP 7
+    [bugsnag-android#1354](https://github.com/bugsnag/bugsnag-android/pull/1354)
+  - Increased default breadcrumb collection limit to 50
+    [bugsnag-android#1366](https://github.com/bugsnag/bugsnag-android/pull/1366)
+  - Support integer values in buildUuid
+    [bugsnag-android#1375](https://github.com/bugsnag/bugsnag-android/pull/1375)
+  - Use SystemClock.elapsedRealtime to track `app.durationInForeground`
+    [bugsnag-android#1375](https://github.com/bugsnag/bugsnag-android/pull/1375)
+
+## 7.13.0 (2021-09-06)
+
+### Changed
+
+- (react-native): Update bugsnag-cooca to v6.12.0
+  - Events now include a `thermalState` property in the `device` tab, and unexpected app terminations that occur when the thermal state is critical will now be reported as a "Thermal Kill" rather than Out Of Memory error. [bugsnag-cooca#1171](https://github.com/bugsnag/bugsnag-cocoa/pull/1171)
+  - Fatal app hangs will no longer be reported if the `willTerminateNotification` is received. [bugsnag-cooca#1176](https://github.com/bugsnag/bugsnag-cocoa/pull/1176)
+  - Add breadcrumbs for `UIScene` notifications. [bugsnag-cooca#1165](https://github.com/bugsnag/bugsnag-cocoa/pull/1165)
+- (react-native): Update bugsnag-android to v5.12.0
+  - The `app.lowMemory` value always report the most recent `onTrimMemory`/`onLowMemory` status [bugsnag-android#1342](https://github.com/bugsnag/bugsnag-android/pull/1342)
+  - Added the `app.memoryTrimLevel` metadata to report a description of the latest `onTrimMemory` status [bugsnag-android#1344](https://github.com/bugsnag/bugsnag-android/pull/1344)
+  - Added `STATE` Breadcrumbs for `onTrimMemory` events [bugsnag-android#1345](https://github.com/bugsnag/bugsnag-android/pull/1345)
+
+## 7.12.0 (2021-08-18)
+
+### Changed
+
+- (expo): Add support for Expo SDK v42 [#1488](https://github.com/bugsnag/bugsnag-js/pull/1488)
+- (react-native): Update bugsnag-android to v5.11.0
+  - Add Bugsnag listeners for StrictMode violation detection
+    [bugsnag-android#1331](https://github.com/bugsnag/bugsnag-android/pull/1331)
+  - Address pre-existing StrictMode violations
+  [bugsnag-android#1328](https://github.com/bugsnag/bugsnag-android/pull/1328)
+- (react-native): Update bugsnag-cocoa to v6.10.4
+  - Fix ThreadSanitizer data race in `BugsnagBreadcrumbs`. [bugsnag-cocoa#1160](https://github.com/bugsnag/bugsnag-cocoa/pull/1160)
+  - Fix another rare crash in `bsg_ksmachgetThreadQueueName`. [bugsnag-cocoa#1157](https://github.com/bugsnag/bugsnag-cocoa/pull/1157)
 
 ## 7.11.0 (2021-07-26)
 

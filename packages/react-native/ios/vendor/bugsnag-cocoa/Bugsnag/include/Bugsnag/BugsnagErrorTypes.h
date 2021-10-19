@@ -17,6 +17,8 @@
  * Determines whether App Hang events should be reported to bugsnag.
  *
  * This flag is true by default.
+ *
+ * Note: this flag is ignored in App Extensions, where app hang detection is always disabled.
  */
 @property (nonatomic) BOOL appHangs;
 
@@ -26,6 +28,13 @@
  * This flag is true by default.
  */
 @property (nonatomic) BOOL ooms;
+
+/**
+ * Determines whether Thermal Kill events should be reported to bugsnag.
+ *
+ * This flag is true by default.
+ */
+@property (nonatomic) BOOL thermalKills;
 
 /**
  * Determines whether NSExceptions should be reported to bugsnag.

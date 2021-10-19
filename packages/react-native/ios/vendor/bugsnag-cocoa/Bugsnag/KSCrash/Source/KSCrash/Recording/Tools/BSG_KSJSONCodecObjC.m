@@ -514,7 +514,7 @@ int bsg_ksjsoncodecobjc_i_encodeObject(BSG_KSJSONCodec *codec, id object,
         }
         return result == BSG_KSJSON_OK ? data : nil;
     } @catch (NSException *exception) {
-        BSG_KSLOG_ERROR(@"Could not encode JSON object: %@", exception.description);
+        BSG_KSLOG_ERROR("Could not encode JSON object: %s", exception.description.UTF8String);
         if (error != nil) {
             *error = [NSErrorBSG bsg_errorWithDomain:@"KSJSONCodecObjC" code:0 description:@"%@", exception.description];
         }
@@ -529,7 +529,7 @@ int bsg_ksjsoncodecobjc_i_encodeObject(BSG_KSJSONCodec *codec, id object,
     @try {
         result = [NSJSONSerialization JSONObjectWithData:JSONData options:0 error:error];
     } @catch (NSException *exception) {
-        BSG_KSLOG_ERROR(@"Could not decode JSON object: %@", exception.description);
+        BSG_KSLOG_ERROR("Could not decode JSON object: %s", exception.description.UTF8String);
         if (error != nil) {
             *error = [NSErrorBSG bsg_errorWithDomain:@"KSJSONCodecObjC" code:0 description:@"%@", exception.description];
         }

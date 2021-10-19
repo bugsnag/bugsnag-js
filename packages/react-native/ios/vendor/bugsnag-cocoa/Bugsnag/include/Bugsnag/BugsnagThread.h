@@ -36,6 +36,11 @@ typedef NS_OPTIONS(NSUInteger, BSGThreadType) {
 @property (readonly, nonatomic) BOOL errorReportingThread;
 
 /**
+ * The current state of this thread
+ */
+@property (copy, nullable, nonatomic) NSString *state;
+
+/**
  * Sets a representation of this thread's stacktrace
  */
 @property (copy, nonnull, nonatomic) NSArray<BugsnagStackframe *> *stacktrace;

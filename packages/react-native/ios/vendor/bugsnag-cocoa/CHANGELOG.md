@@ -1,6 +1,78 @@
 Changelog
 =========
 
+## 6.14.0 (2021-10-06)
+
+### Enhancements
+
+* Capture and report thread states (running, stopped, waiting, etc.) 
+  [#1200](https://github.com/bugsnag/bugsnag-cocoa/pull/1200)
+
+### Bug fixes
+
+* Disable app hang detection for app extensions.
+  [#1198](https://github.com/bugsnag/bugsnag-cocoa/pull/1198)
+
+## 6.13.0 (2021-09-29)
+
+### Enhancements
+
+* Bugsnag can now automatically capture breadcrumbs for network requests made via `NSURLSession`.
+  To use this functionality, install the `BugsnagNetworkRequestPlugin` plugin and then enable it in your `BugsnagConfiguration`.
+  For more information see [the documentation](https://docs.bugsnag.com/platforms/ios/customizing-breadcrumbs/#capturing-network-requests).
+
+## 6.12.2 (2021-09-22)
+
+### Bug fixes
+
+* Stop dropping breadcrumbs when provided invalid metadata (that is not JSON convertible.)
+  [#1187](https://github.com/bugsnag/bugsnag-cocoa/pull/1187)
+
+* Fix Swift fatal error parsing for messages with no filename.
+  [#1186](https://github.com/bugsnag/bugsnag-cocoa/pull/1186)
+
+## 6.12.1 (2021-09-15)
+
+### Bug fixes
+
+* Fix a regression where the session was not captured at launch if Bugsnag was started before
+  `willFinishLaunchingWithOptions` in iOS apps that do not adopt the UIScene life-cycle.
+  [#1180](https://github.com/bugsnag/bugsnag-cocoa/pull/1180)
+
+## 6.12.0 (2021-09-01)
+
+### Enhancements
+
+* Events now include a `thermalState` property in the `device` tab, and unexpected app terminations that occur
+  when the thermal state is critical will now be reported as a "Thermal Kill" rather than Out Of Memory error.
+  [#1171](https://github.com/bugsnag/bugsnag-cocoa/pull/1171)
+
+### Bug fixes
+
+* Fatal app hangs will no longer be reported if the `willTerminateNotification` is received.
+  [#1176](https://github.com/bugsnag/bugsnag-cocoa/pull/1176)
+
+## 6.11.0 (2021-08-18)
+
+### Enhancements
+
+* Add breadcrumbs for `UIScene` notifications.
+  [#1165](https://github.com/bugsnag/bugsnag-cocoa/pull/1165)
+
+## 6.10.4 (2021-08-11)
+
+### Bug fixes
+
+* Fix ThreadSanitizer data race in `BugsnagBreadcrumbs`.
+  [#1160](https://github.com/bugsnag/bugsnag-cocoa/pull/1160)
+
+## 6.10.3 (2021-08-04)
+
+### Bug fixes
+
+* Fix another rare crash in `bsg_ksmachgetThreadQueueName`.
+  [#1157](https://github.com/bugsnag/bugsnag-cocoa/pull/1157)
+
 ## 6.10.2 (2021-07-14)
 
 ### Bug fixes
@@ -60,7 +132,7 @@ Changelog
   [#1112](https://github.com/bugsnag/bugsnag-cocoa/pull/1112)
 
 * Stop session being reported if app is launched in the background.
-  [#1107](https://github.com/bugsnag/bugsnag-cocoa/pull/1107)
+  [#1108](https://github.com/bugsnag/bugsnag-cocoa/pull/1108)
 
 * Fix KSCrash state storage for apps with no CFBundleName.
   [#1103](https://github.com/bugsnag/bugsnag-cocoa/pull/1103)

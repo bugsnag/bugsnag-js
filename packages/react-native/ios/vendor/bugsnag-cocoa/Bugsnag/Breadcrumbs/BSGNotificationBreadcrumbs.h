@@ -12,15 +12,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol BSGBreadcrumbSink <NSObject>
-
-- (void)leaveBreadcrumbWithMessage:(NSString *)message metadata:(nullable NSDictionary *)metadata andType:(BSGBreadcrumbType)type;
-
-@end
-
-
-#pragma mark -
-
 extern NSString * const BSGNotificationBreadcrumbsMessageAppWillTerminate;
 
 @interface BSGNotificationBreadcrumbs : NSObject

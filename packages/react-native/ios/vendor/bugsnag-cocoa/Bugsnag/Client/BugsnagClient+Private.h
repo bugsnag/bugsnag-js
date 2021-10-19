@@ -59,7 +59,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) NSMutableDictionary *extraRuntimeInfo;
 
 #if TARGET_OS_IOS
-@property (strong, nonatomic) NSString *lastOrientation;
+@property (strong, nullable, nonatomic) NSString *lastOrientation;
 #endif
 
 @property (strong, nonatomic) BugsnagMetadata *metadata; // Used in BugsnagReactNative
@@ -68,7 +68,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nullable, nonatomic) NSDictionary *metadataFromLastLaunch;
 
-@property (strong, nonatomic) BugsnagNotifier *notifier; // Used in BugsnagReactNative
+@property (readonly, nonatomic) BugsnagNotifier *notifier; // Used in BugsnagReactNative
 
 @property (strong, nonatomic) BugsnagPluginClient *pluginClient;
 
@@ -136,18 +136,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (BugsnagEvent *)generateOutOfMemoryEvent;
 
-/// @return A `BugsnagEvent` if the last run ended with a fatal app hang, `nil` otherwise.
-- (nullable BugsnagEvent *)loadFatalAppHangEvent;
-
 - (void)notifyInternal:(BugsnagEvent *)event block:(nullable BugsnagOnErrorBlock)block;
 
 - (void)removeObserverWithBlock:(BugsnagObserverBlock)block; // Used in BugsnagReactNative
 
-- (BOOL)shouldReportOOM;
-
 - (void)start;
-
-- (void)startAppHangDetector;
 
 @end
 

@@ -17,14 +17,11 @@
 #define NSWORKSPACE                                         NSClassFromString(@"NSWorkspace")
 
 #define NSApplicationDidBecomeActiveNotification            @"NSApplicationDidBecomeActiveNotification"
-#define NSApplicationDidBecomeActiveNotification            @"NSApplicationDidBecomeActiveNotification"
 #define NSApplicationDidFinishLaunchingNotification         @"NSApplicationDidFinishLaunchingNotification"
 #define NSApplicationDidHideNotification                    @"NSApplicationDidHideNotification"
 #define NSApplicationDidResignActiveNotification            @"NSApplicationDidResignActiveNotification"
-#define NSApplicationDidResignActiveNotification            @"NSApplicationDidResignActiveNotification"
 #define NSApplicationDidUnhideNotification                  @"NSApplicationDidUnhideNotification"
 #define NSApplicationWillBecomeActiveNotification           @"NSApplicationWillBecomeActiveNotification"
-#define NSApplicationWillTerminateNotification              @"NSApplicationWillTerminateNotification"
 #define NSApplicationWillTerminateNotification              @"NSApplicationWillTerminateNotification"
 #define NSControlTextDidBeginEditingNotification            @"NSControlTextDidBeginEditingNotification"
 #define NSControlTextDidEndEditingNotification              @"NSControlTextDidEndEditingNotification"

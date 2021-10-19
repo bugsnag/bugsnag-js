@@ -146,24 +146,28 @@ void bsg_kscrashsentry_suspendThreads(void) {
         return;
     }
 
+
     if (bsg_g_context != NULL) {
-        int numThreads = sizeof(bsg_g_context->reservedThreads) /
-                         sizeof(bsg_g_context->reservedThreads[0]);
+        bsg_g_context->allThreads = bsg_ksmachgetAllThreads(&bsg_g_context->allThreadsCount);
+        bsg_ksmachgetThreadStates(bsg_g_context->allThreads, bsg_g_context->allThreadRunStates, bsg_g_context->allThreadsCount);
         BSG_KSLOG_DEBUG(
             "Suspending all threads except for %d reserved threads.",
-            numThreads);
-        if (bsg_ksmachsuspendAllThreadsExcept(bsg_g_context->reservedThreads,
-                                              numThreads)) {
-            BSG_KSLOG_DEBUG("Suspend successful.");
-            bsg_g_threads_are_running = false;
-        }
+                        BSG_KSCrashReservedThreadTypeCount);
+        bsg_g_context->threadsToResumeCount = bsg_ksmachremoveThreadsFromList(bsg_g_context->allThreads,
+                                                                              bsg_g_context->allThreadsCount,
+                                                                              bsg_g_context->reservedThreads,
+                                                                              BSG_KSCrashReservedThreadTypeCount,
+                                                                              bsg_g_context->threadsToResume,
+                                                                              MAX_CAPTURED_THREADS);
+        bsg_ksmachsuspendThreads(bsg_g_context->threadsToResume, bsg_g_context->threadsToResumeCount);
     } else {
         BSG_KSLOG_DEBUG("Suspending all threads.");
-        if (bsg_ksmachsuspendAllThreads()) {
-            BSG_KSLOG_DEBUG("Suspend successful.");
-            bsg_g_threads_are_running = false;
-        }
+        unsigned threadsCount = 0;
+        thread_t *threads = bsg_ksmachgetAllThreads(&threadsCount);
+        bsg_ksmachsuspendThreads(threads, threadsCount);
+        bsg_ksmachfreeThreads(threads, threadsCount);
     }
+    bsg_g_threads_are_running = false;
     BSG_KSLOG_DEBUG("Suspend complete.");
 }
 
@@ -175,22 +179,23 @@ void bsg_kscrashsentry_resumeThreads(void) {
     }
 
     if (bsg_g_context != NULL) {
-        int numThreads = sizeof(bsg_g_context->reservedThreads) /
-                         sizeof(bsg_g_context->reservedThreads[0]);
         BSG_KSLOG_DEBUG("Resuming all threads except for %d reserved threads.",
-                        numThreads);
-        if (bsg_ksmachresumeAllThreadsExcept(bsg_g_context->reservedThreads,
-                                             numThreads)) {
-            BSG_KSLOG_DEBUG("Resume successful.");
-            bsg_g_threads_are_running = true;
+                        BSG_KSCrashReservedThreadTypeCount);
+        bsg_ksmachresumeThreads(bsg_g_context->threadsToResume, bsg_g_context->threadsToResumeCount);
+        bsg_g_context->threadsToResumeCount = 0;
+        if (bsg_g_context->allThreads != NULL) {
+            bsg_ksmachfreeThreads(bsg_g_context->allThreads, bsg_g_context->allThreadsCount);
+            bsg_g_context->allThreads = NULL;
+            bsg_g_context->allThreadsCount = 0;
         }
     } else {
         BSG_KSLOG_DEBUG("Resuming all threads.");
-        if (bsg_ksmachresumeAllThreads()) {
-            BSG_KSLOG_DEBUG("Resume successful.");
-            bsg_g_threads_are_running = true;
-        }
+        unsigned threadsCount = 0;
+        thread_t *threads = bsg_ksmachgetAllThreads(&threadsCount);
+        bsg_ksmachresumeThreads(threads, threadsCount);
+        bsg_ksmachfreeThreads(threads, threadsCount);
     }
+    bsg_g_threads_are_running = true;
     BSG_KSLOG_DEBUG("Resume complete.");
 }
 

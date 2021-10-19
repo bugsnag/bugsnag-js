@@ -6,7 +6,7 @@
 //  Copyright © 2017 Bugsnag. All rights reserved.
 //
 
-#import "BugsnagSessionTracker+Private.h"
+#import "BugsnagSessionTracker.h"
 
 #import "BSG_KSSystemInfo.h"
 #import "BugsnagApp+Private.h"
@@ -20,6 +20,12 @@
 #import "BugsnagSessionTrackingApiClient.h"
 #import "BugsnagSessionTrackingPayload.h"
 #import "BSGFileLocations.h"
+
+#if TARGET_OS_IOS || TARGET_OS_TV
+#import "BSGUIKit.h"
+#elif TARGET_OS_OSX
+#import "BSGAppKit.h"
+#endif
 
 /**
  Number of seconds in background required to make a new session
@@ -58,6 +64,49 @@ NSString *const BSGSessionUpdateNotification = @"BugsnagSessionChanged";
         _extraRuntimeInfo = [NSMutableDictionary new];
     }
     return self;
+}
+
+- (void)startWithNotificationCenter:(NSNotificationCenter *)notificationCenter isInForeground:(BOOL)isInForeground {
+    if (isInForeground) {
+        [self startNewSessionIfAutoCaptureEnabled];
+    } else {
+        bsg_log_debug(@"Not starting session because app is not in the foreground");
+    }
+
+#if TARGET_OS_IOS || TARGET_OS_TV
+
+    [notificationCenter addObserver:self
+               selector:@selector(handleAppForegroundEvent)
+                   name:UIApplicationWillEnterForegroundNotification
+                 object:nil];
+
+    [notificationCenter addObserver:self
+               selector:@selector(handleAppForegroundEvent)
+                   name:UIApplicationDidBecomeActiveNotification
+                 object:nil];
+
+    [notificationCenter addObserver:self
+               selector:@selector(handleAppBackgroundEvent)
+                   name:UIApplicationDidEnterBackgroundNotification
+                 object:nil];
+
+#elif TARGET_OS_OSX
+
+    [notificationCenter addObserver:self
+               selector:@selector(handleAppForegroundEvent)
+                   name:NSApplicationWillBecomeActiveNotification
+                 object:nil];
+
+    [notificationCenter addObserver:self
+               selector:@selector(handleAppForegroundEvent)
+                   name:NSApplicationDidBecomeActiveNotification
+                 object:nil];
+
+    [notificationCenter addObserver:self
+               selector:@selector(handleAppBackgroundEvent)
+                   name:NSApplicationDidResignActiveNotification
+                 object:nil];
+#endif
 }
 
 - (void)setCodeBundleId:(NSString *)codeBundleId {

@@ -38,7 +38,7 @@
  * 
  * Use the static access provided by the Bugsnag class instead.
  */
-@interface BugsnagClient : NSObject<BugsnagMetadataStore>
+@interface BugsnagClient : NSObject<BugsnagMetadataStore, BSGBreadcrumbSink>
 
 /**
  * Initializes the client with the provided configuration.
@@ -109,7 +109,8 @@
  * a type.
  *
  * @param message The log message to leave.
- * @param metadata Additional metadata included with the breadcrumb.
+ * @param metadata Diagnostic data relating to the breadcrumb.
+ *                 Values should be serializable to JSON with NSJSONSerialization.
  * @param type A BSGBreadcrumbTypeValue denoting the type of breadcrumb.
  */
 - (void)leaveBreadcrumbWithMessage:(NSString *_Nonnull)message
