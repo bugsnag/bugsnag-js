@@ -5,6 +5,8 @@ import { createServer, STATUS_CODES, Server, IncomingMessage, ServerResponse } f
 import { makeClientForPlugin } from '@bugsnag/electron-test-helpers'
 import plugin from '..'
 
+jest.setTimeout(10 * 1000)
+
 interface ServerWithPort extends Server { port: number }
 
 let currentServer: ServerWithPort|null = null
