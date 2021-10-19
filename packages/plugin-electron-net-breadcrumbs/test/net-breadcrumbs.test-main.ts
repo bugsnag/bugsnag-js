@@ -262,6 +262,7 @@ const defaultRequestHandler = (statusCode: number) => (req: IncomingMessage, res
 
 async function startServer (statusCode: number, handler = defaultRequestHandler(statusCode)): Promise<ServerWithPort> {
   const server = createServer(handler)
+  server.timeout = 5
   server.keepAliveTimeout = 0
 
   // add a getter for the server port because we need it _everywhere_
