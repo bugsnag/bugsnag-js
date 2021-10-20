@@ -153,5 +153,13 @@ module.exports.schema = {
       isArray(value) && value.length === filter(value, p =>
         (p && typeof p === 'object' && typeof p.load === 'function')
       ).length
+  },
+  featureFlags: {
+    defaultValue: () => [],
+    message: 'should be an array of objects that have a "name" property',
+    validate: value =>
+      isArray(value) && value.length === filter(value, feature =>
+        feature && typeof feature === 'object' && typeof feature.name === 'string'
+      ).length
   }
 }
