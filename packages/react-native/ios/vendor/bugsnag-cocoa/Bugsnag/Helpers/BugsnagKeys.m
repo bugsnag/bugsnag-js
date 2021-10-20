@@ -73,7 +73,6 @@ NSString *const BSGKeyPersistUser = @"persistUser";
 NSString *const BSGKeyProduction = @"production";
 NSString *const BSGKeyReason = @"reason";
 NSString *const BSGKeyRedactedKeys = @"redactedKeys";
-NSString *const BSGKeyRedaction = @"[REDACTED]";
 NSString *const BSGKeyReleaseStage = @"releaseStage";
 NSString *const BSGKeySendThreads = @"sendThreads";
 NSString *const BSGKeySession = @"session";

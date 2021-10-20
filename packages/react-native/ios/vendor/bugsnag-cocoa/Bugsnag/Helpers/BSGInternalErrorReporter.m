@@ -51,6 +51,7 @@ NSString *BSGErrorDescription(NSError *error) {
 @implementation BSGInternalErrorReporter
 
 static BSGInternalErrorReporter *sharedInstance_;
+static void (^ startupBlock_)(BSGInternalErrorReporter *);
 
 + (BSGInternalErrorReporter *)sharedInstance {
     return sharedInstance_;
@@ -58,6 +59,18 @@ static BSGInternalErrorReporter *sharedInstance_;
 
 + (void)setSharedInstance:(BSGInternalErrorReporter *)sharedInstance {
     sharedInstance_ = sharedInstance;
+    if (startupBlock_ && sharedInstance_) {
+        startupBlock_(sharedInstance_);
+        startupBlock_ = nil;
+    }
+}
+
++ (void)performBlock:(void (^)(BSGInternalErrorReporter *))block {
+    if (sharedInstance_) {
+        block(sharedInstance_);
+    } else {
+        startupBlock_ = [block copy];
+    }
 }
 
 - (instancetype)initWithDataSource:(id<BSGInternalErrorReporterDataSource>)dataSource {

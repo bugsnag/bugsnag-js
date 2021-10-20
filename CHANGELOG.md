@@ -1,5 +1,16 @@
 # Changelog
 
+## TBC
+
+### Changed
+
+- (react-native): Update bugsnag-cocoa to v6.14.1
+  - Disable automatic session tracking in app extensions (it was not working as intended.) [bugsnag-cocoa#1211](https://github.com/bugsnag/bugsnag-cocoa/pull/1211)
+  - Stop logging "[ERROR] Failed to install crash handler..." if a debugger is attached. [bugsnag-cocoa#1210](https://github.com/bugsnag/bugsnag-cocoa/pull/1210)
+  - Include the word "request" in network request breadcrumb messages. [bugsnag-cocoa#1209](https://github.com/bugsnag/bugsnag-cocoa/pull/1209)
+  - Prevent a crash that can occur when `-[BSGURLSessionTracingProxy forwardInvocation:]` calls `-[NSInvocation selector]`. [bugsnag-cocoa#1208](https://github.com/bugsnag/bugsnag-cocoa/pull/1208)
+  - Apply `redactedKeys` to breadcrumb metadata. [bugsnag-cocoa#1204](https://github.com/bugsnag/bugsnag-cocoa/pull/1204)
+
 ## 7.13.2 (2021-10-13)
 
 ### Changed
