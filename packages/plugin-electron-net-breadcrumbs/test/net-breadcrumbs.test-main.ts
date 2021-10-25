@@ -5,6 +5,8 @@ import { createServer, STATUS_CODES, Server, IncomingMessage, ServerResponse } f
 import { makeClientForPlugin } from '@bugsnag/electron-test-helpers'
 import plugin from '..'
 
+jest.setTimeout(10 * 1000)
+
 interface ServerWithPort extends Server { port: number }
 
 let currentServer: ServerWithPort|null = null
@@ -12,8 +14,11 @@ let currentServer: ServerWithPort|null = null
 const originalRequest = net.request
 
 describe('plugin: electron net breadcrumbs', () => {
-  afterEach(() => {
-    currentServer?.close()
+  afterEach(async () => {
+    if (currentServer) {
+      await new Promise(resolve => { currentServer.close(resolve) })
+    }
+
     net.request = originalRequest
   })
 
@@ -259,6 +264,8 @@ const defaultRequestHandler = (statusCode: number) => (req: IncomingMessage, res
 
 async function startServer (statusCode: number, handler = defaultRequestHandler(statusCode)): Promise<ServerWithPort> {
   const server = createServer(handler)
+  server.timeout = 5
+  server.keepAliveTimeout = 0
 
   // add a getter for the server port because we need it _everywhere_
   Object.defineProperty(server, 'port', { get: () => (server.address() as AddressInfo).port })
