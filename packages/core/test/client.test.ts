@@ -947,5 +947,142 @@ describe('@bugsnag/core/client', () => {
 
       expect(client._features).toStrictEqual({})
     })
+
+    describe('#addFeatureFlag', () => {
+      it('adds the given flag/variant combination', () => {
+        const client = new Client({ apiKey: 'API_KEY', featureFlags: [{ name: 'a', variant: '1' }] })
+
+        client.addFeatureFlag('a name', 'variant number 1234')
+
+        expect(client._features).toStrictEqual({ a: '1', 'a name': 'variant number 1234' })
+      })
+
+      it('overwrites an existing flag by name', () => {
+        const client = new Client({ apiKey: 'API_KEY' })
+
+        client.addFeatureFlag('a name', 'variant number 1234')
+        client.addFeatureFlag('a name', 'variant number 5678')
+
+        expect(client._features).toStrictEqual({ 'a name': 'variant number 5678' })
+      })
+
+      it('adds the given flag when no variant is passed', () => {
+        const client = new Client({ apiKey: 'API_KEY', featureFlags: [{ name: 'a', variant: '1' }] })
+
+        client.addFeatureFlag('a name')
+
+        expect(client._features).toStrictEqual({ a: '1', 'a name': null })
+      })
+
+      it('adds the given flag when the variant is null', () => {
+        const client = new Client({ apiKey: 'API_KEY', featureFlags: [{ name: 'a', variant: '1' }] })
+
+        client.addFeatureFlag('a name', null)
+
+        expect(client._features).toStrictEqual({ a: '1', 'a name': null })
+      })
+
+      it('does not add the flag if no name is passed', () => {
+        const client = new Client({ apiKey: 'API_KEY', featureFlags: [{ name: 'a', variant: '1' }] })
+
+        // @ts-expect-error
+        client.addFeatureFlag()
+
+        expect(client._features).toStrictEqual({ a: '1' })
+      })
+    })
+
+    describe('#addFeatureFlags', () => {
+      it('adds the given feature flags', () => {
+        const client = new Client({ apiKey: 'API_KEY', featureFlags: [{ name: 'a', variant: '1' }] })
+
+        client.addFeatureFlags([
+          { name: 'abc' },
+          { name: 'xyz', variant: 'yes' },
+          { name: 'aaa', variant: 'no' },
+          { name: 'zzz', variant: 'maybe' },
+          { name: 'idk' }
+        ])
+
+        expect(client._features).toStrictEqual({
+          a: '1',
+          abc: null,
+          xyz: 'yes',
+          aaa: 'no',
+          zzz: 'maybe',
+          idk: null
+        })
+      })
+
+      it('does not add the flags if none are passed', () => {
+        const client = new Client({ apiKey: 'API_KEY', featureFlags: [{ name: 'a', variant: '1' }] })
+
+        client.addFeatureFlags([])
+
+        expect(client._features).toStrictEqual({ a: '1' })
+      })
+
+      it('does not add flags if nothing is passed', () => {
+        const client = new Client({ apiKey: 'API_KEY', featureFlags: [{ name: 'a', variant: '1' }] })
+
+        // @ts-expect-error
+        client.addFeatureFlags()
+
+        expect(client._features).toStrictEqual({ a: '1' })
+      })
+    })
+
+    describe('#clearFeatureFlag', () => {
+      it('removes the given flag', () => {
+        const client = new Client({ apiKey: 'API_KEY', featureFlags: [{ name: 'a', variant: '1' }] })
+
+        client.clearFeatureFlag('a')
+
+        expect(client._features).toStrictEqual({})
+      })
+
+      it('does nothing if there are no flags', () => {
+        const client = new Client({ apiKey: 'API_KEY' })
+
+        client.clearFeatureFlag('a')
+
+        expect(client._features).toStrictEqual({})
+      })
+
+      it('does nothing if the given flag does not exist', () => {
+        const client = new Client({ apiKey: 'API_KEY', featureFlags: [{ name: 'a', variant: '1' }] })
+
+        client.clearFeatureFlag('b')
+
+        expect(client._features).toStrictEqual({ a: '1' })
+      })
+
+      it('does nothing if not given a flag', () => {
+        const client = new Client({ apiKey: 'API_KEY', featureFlags: [{ name: 'a', variant: '1' }] })
+
+        // @ts-expect-error
+        client.clearFeatureFlag()
+
+        expect(client._features).toStrictEqual({ a: '1' })
+      })
+    })
+
+    describe('#clearFeatureFlags', () => {
+      it('removes all flags', () => {
+        const client = new Client({ apiKey: 'API_KEY', featureFlags: [{ name: 'a', variant: '1' }] })
+
+        client.clearFeatureFlags()
+
+        expect(client._features).toStrictEqual({})
+      })
+
+      it('does nothing if there are no flags', () => {
+        const client = new Client({ apiKey: 'API_KEY' })
+
+        client.clearFeatureFlags()
+
+        expect(client._features).toStrictEqual({})
+      })
+    })
   })
 })

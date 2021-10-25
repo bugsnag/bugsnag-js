@@ -141,3 +141,8 @@ export interface Stackframe {
   code?: Record<string, string>
   inProject?: boolean
 }
+
+export interface FeatureFlag {
+  name: string
+  variant?: string | null
+}

@@ -89,6 +89,22 @@ class Client {
     return metadataDelegate.clear(this._metadata, section, key)
   }
 
+  addFeatureFlag (name, variant = null) {
+    featureFlagDelegate.add(this._features, name, variant)
+  }
+
+  addFeatureFlags (featureFlags) {
+    featureFlagDelegate.merge(this._features, featureFlags)
+  }
+
+  clearFeatureFlag (name) {
+    delete this._features[name]
+  }
+
+  clearFeatureFlags () {
+    this._features = {}
+  }
+
   getContext () {
     return this._context
   }
