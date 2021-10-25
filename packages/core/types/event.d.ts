@@ -6,7 +6,8 @@ import {
   Logger,
   User,
   Thread,
-  Stackframe
+  Stackframe,
+  FeatureFlag
 } from './common'
 
 declare class Event {
@@ -45,6 +46,12 @@ declare class Event {
   public addMetadata(section: string, key: string, value: any): void
   public getMetadata(section: string, key?: string): any
   public clearMetadata(section: string, key?: string): void
+
+  // feature flags
+  public addFeatureFlag(name: string, variant?: string | null): void
+  public addFeatureFlags(featureFlags: FeatureFlag[]): void
+  public clearFeatureFlag(name: string): void
+  public clearFeatureFlags(): void
 }
 
 interface HandledState {

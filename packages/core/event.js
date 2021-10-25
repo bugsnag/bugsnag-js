@@ -6,6 +6,7 @@ const reduce = require('./lib/es-utils/reduce')
 const filter = require('./lib/es-utils/filter')
 const assign = require('./lib/es-utils/assign')
 const metadataDelegate = require('./lib/metadata-delegate')
+const featureFlagDelegate = require('./lib/feature-flag-delegate')
 const isError = require('./lib/iserror')
 
 class Event {
@@ -27,6 +28,7 @@ class Event {
     this.threads = []
 
     this._metadata = {}
+    this._features = {}
     this._user = {}
     this._session = undefined
 
@@ -65,6 +67,22 @@ class Event {
 
   clearMetadata (section, key) {
     return metadataDelegate.clear(this._metadata, section, key)
+  }
+
+  addFeatureFlag (name, variant = null) {
+    featureFlagDelegate.add(this._features, name, variant)
+  }
+
+  addFeatureFlags (featureFlags) {
+    featureFlagDelegate.merge(this._features, featureFlags)
+  }
+
+  clearFeatureFlag (name) {
+    delete this._features[name]
+  }
+
+  clearFeatureFlags () {
+    this._features = {}
   }
 
   getUser () {

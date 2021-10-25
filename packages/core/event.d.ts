@@ -16,6 +16,7 @@ interface HandledState {
 export default class EventWithInternals extends Event {
   constructor (errorClass: string, errorMessage: string, stacktrace: any[], handledState?: HandledState, originalError?: Error)
   _metadata: { [key: string]: any }
+  _features: { [key: string]: string | null }
   _user: User
   _handledState: HandledState
   _session?: Session
