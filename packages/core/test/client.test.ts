@@ -878,4 +878,74 @@ describe('@bugsnag/core/client', () => {
       expect(c.getUser()).toEqual({ id: '123', email: 'bug@sn.ag', name: 'Bug S. Nag' })
     })
   })
+
+  describe('feature flags', () => {
+    it('can be set via config', () => {
+      const client = new Client({
+        apiKey: 'API_KEY',
+        featureFlags: [
+          { name: 'a', variant: '1' },
+          { name: 'b' },
+          { name: 'c', variant: 3 }
+        ]
+      })
+
+      expect(client._features).toStrictEqual({ a: '1', b: null, c: '3' })
+    })
+
+    it('requires all flags have a name', () => {
+      const logger = {
+        debug: jest.fn(),
+        warn: jest.fn(),
+        info: jest.fn(),
+        error: jest.fn()
+      }
+
+      const client = new Client({
+        apiKey: 'a123456789012345678901234567890b',
+        logger,
+        featureFlags: [
+          { name: 'a', variant: '1' },
+          { variant: 'b' },
+          { name: 'c', variant: 3 }
+        ]
+      })
+
+      const expectedMessage = [
+        'Invalid configuration',
+        '  - featureFlags should be an array of objects that have a "name" property, got [{"name":"a","variant":"1"},{"variant":"b"},{"name":"c","variant":3}]'
+      ].join('\n')
+
+      expect(client._features).toStrictEqual({})
+      expect(logger.warn).toHaveBeenCalledTimes(1)
+      expect(logger.warn.mock.calls[0][0].message).toBe(expectedMessage)
+    })
+
+    it('is an empty object when not given', () => {
+      const logger = {
+        debug: jest.fn(),
+        warn: jest.fn(),
+        info: jest.fn(),
+        error: jest.fn()
+      }
+
+      const client = new Client({ apiKey: 'a123456789012345678901234567890b', logger })
+
+      expect(client._features).toStrictEqual({})
+      expect(logger.warn).not.toHaveBeenCalled()
+    })
+
+    it.each([undefined, null, 123, 'abc'])('is an empty object when %p is passed', featureFlags => {
+      const logger = {
+        debug: jest.fn(),
+        warn: jest.fn(),
+        info: jest.fn(),
+        error: jest.fn()
+      }
+
+      const client = new Client({ apiKey: 'a123456789012345678901234567890b', logger, featureFlags })
+
+      expect(client._features).toStrictEqual({})
+    })
+  })
 })

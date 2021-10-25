@@ -9,6 +9,7 @@ const reduce = require('./lib/es-utils/reduce')
 const keys = require('./lib/es-utils/keys')
 const assign = require('./lib/es-utils/assign')
 const runCallbacks = require('./lib/callback-runner')
+const featureFlagDelegate = require('./lib/feature-flag-delegate')
 const metadataDelegate = require('./lib/metadata-delegate')
 const runSyncCallbacks = require('./lib/sync-callback-runner')
 const BREADCRUMB_TYPES = require('./lib/breadcrumb-types')
@@ -35,6 +36,7 @@ class Client {
     this._breadcrumbs = []
     this._session = null
     this._metadata = {}
+    this._features = {}
     this._context = undefined
     this._user = {}
 
@@ -133,6 +135,7 @@ class Client {
 
     // update and elevate some options
     this._metadata = assign({}, config.metadata)
+    featureFlagDelegate.merge(this._features, config.featureFlags)
     this._user = assign({}, config.user)
     this._context = config.context
     if (config.logger) this._logger = config.logger
