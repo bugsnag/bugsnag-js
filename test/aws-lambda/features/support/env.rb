@@ -1,4 +1,4 @@
-InstallPlugin
+BeforeAll do
   `command -v sam`
 
   if $? != 0

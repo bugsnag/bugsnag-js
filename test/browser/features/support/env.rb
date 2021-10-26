@@ -20,7 +20,7 @@ Before('@skip_if_local_storage_is_unavailable') do |scenario|
   skip_this_scenario unless Maze.driver.local_storage?
 end
 
-InstallPlugin do
+BeforeAll do
   Maze.config.receive_no_requests_wait = 15
   Maze.config.enforce_bugsnag_integrity = false
 
