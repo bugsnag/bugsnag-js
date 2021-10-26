@@ -1,6 +1,25 @@
 Changelog
 =========
 
+## 6.14.1 (2021-10-20)
+
+### Bug fixes
+
+* Disable automatic session tracking in app extensions (it was not working as intended.)
+  [#1211](https://github.com/bugsnag/bugsnag-cocoa/pull/1211)
+
+* Stop logging "[ERROR] Failed to install crash handler..." if a debugger is attached.
+  [#1210](https://github.com/bugsnag/bugsnag-cocoa/pull/1210)
+
+* Include the word "request" in network request breadcrumb messages.
+  [#1209](https://github.com/bugsnag/bugsnag-cocoa/pull/1209)
+
+* Prevent a crash that can occur when `-[BSGURLSessionTracingProxy forwardInvocation:]` calls `-[NSInvocation selector]`.
+  [#1208](https://github.com/bugsnag/bugsnag-cocoa/pull/1208)
+
+* Apply `redactedKeys` to breadcrumb metadata.
+  [#1204](https://github.com/bugsnag/bugsnag-cocoa/pull/1204)
+
 ## 6.14.0 (2021-10-06)
 
 ### Enhancements

@@ -15,7 +15,9 @@ static void ReportInternalError(NSString *errorClass, NSError *error) {
     NSString *file = @(__FILE__).lastPathComponent;
     NSString *message = BSGErrorDescription(error);
     NSString *groupingHash = [NSString stringWithFormat:@"%@: %@: %@ %ld", file, errorClass, error.domain, (long)error.code];
-    [BSGInternalErrorReporter.sharedInstance reportErrorWithClass:errorClass message:message diagnostics:error.userInfo groupingHash:groupingHash];
+    [BSGInternalErrorReporter performBlock:^(BSGInternalErrorReporter *reporter) {
+        [reporter reportErrorWithClass:errorClass message:message diagnostics:error.userInfo groupingHash:groupingHash];
+    }];
 }
 
 static BOOL ensureDirExists(NSString *path) {
@@ -34,7 +36,6 @@ static BOOL ensureDirExists(NSString *path) {
 
 static NSString *rootDirectory(NSString *fsVersion) {
     // Default to an unusable location that will always fail.
-    static NSString* defaultRootPath = @"/";
     static NSString* rootPath = @"/";
 
     static dispatch_once_t onceToken;
@@ -47,7 +48,7 @@ static NSString *rootDirectory(NSString *fsVersion) {
         NSSearchPathDirectory directory = NSApplicationSupportDirectory;
 #endif
         NSError *error = nil;
-        NSURL *url = [NSFileManager.defaultManager URLForDirectory:directory inDomain:NSUserDomainMask appropriateForURL:nil create:YES error:&error];
+        NSURL *url = [NSFileManager.defaultManager URLForDirectory:directory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:&error];
         if (!url) {
             bsg_log_err(@"Could not locate directory for storage: %@", error);
             return;
@@ -59,10 +60,7 @@ static NSString *rootDirectory(NSString *fsVersion) {
                     NSBundle.mainBundle.bundleIdentifier ?: NSProcessInfo.processInfo.processName,
                     fsVersion];
 
-        // If we can't even create the root dir, all is lost, and no file ops can be allowed.
-        if(!ensureDirExists(rootPath)) {
-            rootPath = defaultRootPath;
-        }
+        ensureDirExists(rootPath);
     });
 
     return rootPath;
@@ -70,11 +68,8 @@ static NSString *rootDirectory(NSString *fsVersion) {
 
 static NSString *getAndCreateSubdir(NSString *rootPath, NSString *relativePath) {
     NSString *subdirPath = [rootPath stringByAppendingPathComponent:relativePath];
-    if (ensureDirExists(subdirPath)) {
-        return subdirPath;
-    }
-    // Make the best of it, just return the root dir.
-    return rootPath;
+    ensureDirExists(subdirPath);
+    return subdirPath;
 }
 
 @implementation BSGFileLocations
