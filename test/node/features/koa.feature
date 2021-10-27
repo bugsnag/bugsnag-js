@@ -1,3 +1,4 @@
+@skip_before_node_8
 Feature: @bugsnag/plugin-koa
 
 Background:

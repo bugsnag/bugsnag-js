@@ -1,4 +1,4 @@
-AfterConfiguration do |_config|
+BeforeAll do
   Maze.config.receive_no_requests_wait = 15 if Maze.config.respond_to? :receive_no_requests_wait=
 end
 

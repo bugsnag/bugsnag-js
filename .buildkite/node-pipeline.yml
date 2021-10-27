@@ -25,7 +25,6 @@ steps:
         run: node-maze-runner
         use-aliases: true
         verbose: true
-        command: ["-e", "koa.feature", "-e", "koa-1x.feature", "-e", "koa_disabled.feature", "-e", "koa-1x_disabled.feature", "-e", "webpack.feature"]
     env:
       NODE_VERSION: "4"
 
@@ -37,7 +36,6 @@ steps:
         run: node-maze-runner
         use-aliases: true
         verbose: true
-        command: ["-e", "koa.feature", "-e", "koa-1x.feature", "-e", "koa_disabled.feature", "-e", "koa-1x_disabled.feature"]
     env:
       NODE_VERSION: "6"
 
