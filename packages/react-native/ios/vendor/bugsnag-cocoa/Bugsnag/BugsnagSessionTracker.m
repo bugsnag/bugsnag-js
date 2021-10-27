@@ -147,6 +147,9 @@ NSString *const BSGSessionUpdateNotification = @"BugsnagSessionChanged";
     } else {
         BOOL stopped = session.isStopped;
         [session resume];
+        if (self.callback) {
+            self.callback(session);
+        }
         [self postUpdateNotice];
         return stopped;
     }

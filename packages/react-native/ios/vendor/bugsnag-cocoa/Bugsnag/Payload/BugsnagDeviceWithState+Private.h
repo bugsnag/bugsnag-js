@@ -6,7 +6,7 @@
 //  Copyright © 2020 Bugsnag Inc. All rights reserved.
 //
 
-#import "BugsnagDeviceWithState.h"
+#import <Bugsnag/BugsnagDeviceWithState.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

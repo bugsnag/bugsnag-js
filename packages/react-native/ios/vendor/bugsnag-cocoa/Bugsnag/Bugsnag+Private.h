@@ -6,7 +6,7 @@
 //  Copyright © 2020 Bugsnag Inc. All rights reserved.
 //
 
-#import "Bugsnag.h"
+#import <Bugsnag/Bugsnag.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

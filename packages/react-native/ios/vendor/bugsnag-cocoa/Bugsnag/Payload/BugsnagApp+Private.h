@@ -6,7 +6,7 @@
 //  Copyright © 2020 Bugsnag Inc. All rights reserved.
 //
 
-#import "BugsnagApp.h"
+#import <Bugsnag/BugsnagApp.h>
 
 @class BugsnagConfiguration;
 
