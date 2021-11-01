@@ -241,6 +241,7 @@ steps:
       SKIP_NAVIGATION_SCENARIOS: "true"
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager
 
   - label: ':ios: RN 0.60 iOS 12 end-to-end tests'
     depends_on: "rn-0-60-ipa"
@@ -264,6 +265,7 @@ steps:
       SKIP_NAVIGATION_SCENARIOS: "true"
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager
 
   - label: ':android: RN 0.63 Android 9 end-to-end tests'
     depends_on: "rn-0-63-apk"
@@ -286,6 +288,7 @@ steps:
       SKIP_NAVIGATION_SCENARIOS: "true"
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager
 
   - label: ':android: RN 0.64 (Hermes) Android 11 end-to-end tests'
     depends_on: "rn-0-64-hermes-apk"
@@ -308,6 +311,7 @@ steps:
       SKIP_NAVIGATION_SCENARIOS: "true"
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager
 
   - label: ':ios: RN 0.63 iOS 12 end-to-end tests'
     depends_on: "rn-0-63-ipa"
@@ -331,6 +335,7 @@ steps:
       SKIP_NAVIGATION_SCENARIOS: "true"
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager
 
   - label: ':ios: RN 0.64 iOS 14 end-to-end tests'
     depends_on: "rn-0-64-ipa"
@@ -354,6 +359,7 @@ steps:
       SKIP_NAVIGATION_SCENARIOS: "true"
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager
 
   - label: ':android: react-navigation 0.60 Android 9 end-to-end tests'
     depends_on: "react-navigation-0-60-apk"
@@ -375,6 +381,7 @@ steps:
         - features/navigation.feature
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager
 
   # See: PLAT-5173
   - label: ':ios: react-navigation 0.60 iOS 13 end-to-end tests'
@@ -399,6 +406,7 @@ steps:
           - features/navigation.feature
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager
 
   - label: ':android: react-navigation 0.63 Android 9 end-to-end tests'
     depends_on: "react-navigation-0-63-apk"
@@ -420,6 +428,7 @@ steps:
         - features/navigation.feature
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager
 
   # See: PLAT-5173
   - label: ':ios: react-navigation 0.63 iOS 13 end-to-end tests'
@@ -444,6 +453,7 @@ steps:
           - features/navigation.feature
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager
 
   - label: ':android: react-native-navigation 0.60 Android 9 end-to-end tests'
     depends_on: "react-native-navigation-0-60-apk"
@@ -465,6 +475,7 @@ steps:
         - features/navigation.feature
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager
 
   # See: PLAT-5173
   - label: ':ios: react-native-navigation 0.60 iOS 13 end-to-end tests'
@@ -489,6 +500,7 @@ steps:
           - features/navigation.feature
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager
 
   - label: ':android: react-native-navigation 0.63 Android 9 end-to-end tests'
     depends_on: "react-native-navigation-0-63-apk"
@@ -510,6 +522,7 @@ steps:
         - features/navigation.feature
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager
 
   # See: PLAT-5173
   - label: ':ios: react-native-navigation 0.63 iOS 13 end-to-end tests'
@@ -534,3 +547,4 @@ steps:
           - features/navigation.feature
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager

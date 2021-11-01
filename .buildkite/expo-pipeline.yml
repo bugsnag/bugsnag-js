@@ -110,6 +110,7 @@ steps:
           - --resilient
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager
 
   - label: ':runner: expo iOS 12'
     depends_on:
@@ -133,6 +134,7 @@ steps:
           - --resilient
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager
 
   - block: "Trigger full test suite"
     key: "trigger-full-suite"
@@ -161,6 +163,7 @@ steps:
           - --resilient
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager
     soft_fail:
       - exit_status: "*"
 
@@ -186,6 +189,7 @@ steps:
           - --resilient
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager
 
   - label: ':runner: expo Android 6'
     depends_on:
@@ -209,6 +213,7 @@ steps:
           - --resilient
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager
 
   - label: ':runner: expo Android 5'
     depends_on:
@@ -232,6 +237,7 @@ steps:
           - --resilient
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager
 
   - label: ':runner: expo iOS 11'
     depends_on:
@@ -256,6 +262,7 @@ steps:
           - --resilient
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager
 
   - label: ':runner: expo iOS 10'
     depends_on:
@@ -279,3 +286,4 @@ steps:
           - --resilient
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager
