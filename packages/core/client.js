@@ -295,6 +295,7 @@ class Client {
     })
     event.context = event.context || this._context
     event._metadata = assign({}, event._metadata, this._metadata)
+    event._features = assign({}, event._features, this._features)
     event._user = assign({}, event._user, this._user)
     event.breadcrumbs = this._breadcrumbs.slice()
 
