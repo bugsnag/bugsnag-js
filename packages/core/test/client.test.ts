@@ -1084,5 +1084,73 @@ describe('@bugsnag/core/client', () => {
         expect(client._features).toStrictEqual({})
       })
     })
+
+    it('includes feature flags in the event payload', done => {
+      const client = new Client({ apiKey: 'API_KEY', featureFlags: [{ name: 'a', variant: '1' }] })
+
+      client._setDelivery(client => ({
+        sendEvent: payload => {
+          const event = payload.events[0].toJSON()
+
+          expect(event.featureFlags).toStrictEqual([
+            { featureFlag: 'a', variant: '1' },
+            { featureFlag: 'b', variant: '2' },
+            { featureFlag: 'c' },
+            { featureFlag: 'd', variant: '3' },
+            { featureFlag: 'e' }
+          ])
+
+          process.nextTick(() => done())
+        },
+        sendSession: () => {}
+      }))
+
+      client.addFeatureFlag('b', '2')
+      client.addFeatureFlags([
+        { name: 'c' },
+        { name: 'this should not be included' },
+        { name: 'd', variant: '3' },
+        { name: 'e', variant: null }
+      ])
+
+      client.clearFeatureFlag('this should not be included')
+
+      client.notify(new Error('oh no'))
+    })
+
+    it('includes feature flags in the event payload added in an onError', done => {
+      const client = new Client({ apiKey: 'API_KEY', featureFlags: [{ name: 'a', variant: '1' }] })
+
+      client._setDelivery(client => ({
+        sendEvent: payload => {
+          const event = payload.events[0].toJSON()
+
+          expect(event.featureFlags).toStrictEqual([
+            { featureFlag: 'a', variant: '1' },
+            { featureFlag: 'b', variant: '2' },
+            { featureFlag: 'c' },
+            { featureFlag: 'd', variant: '3' },
+            { featureFlag: 'e' }
+          ])
+
+          process.nextTick(() => done())
+        },
+        sendSession: () => {}
+      }))
+
+      client.addOnError(event => {
+        event.addFeatureFlag('b', '2')
+        event.addFeatureFlags([
+          { name: 'c' },
+          { name: 'this should not be included' },
+          { name: 'd', variant: '3' },
+          { name: 'e', variant: null }
+        ])
+      })
+
+      client.notify(new Error('oh no'), event => {
+        event.clearFeatureFlag('this should not be included')
+      })
+    })
   })
 })

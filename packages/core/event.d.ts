@@ -7,6 +7,11 @@ interface HandledState {
   severityReason: { type: string }
 }
 
+interface FeatureFlagPayload {
+  featureFlag: string
+  variant?: string
+}
+
 /**
  * Extend the public type definitions with internal declarations.
  *
@@ -38,5 +43,6 @@ export default class EventWithInternals extends Event {
     metaData: { [key: string]: any }
     user: User
     session: Session
+    featureFlags: FeatureFlagPayload[]
   };
 }

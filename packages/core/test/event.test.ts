@@ -315,5 +315,24 @@ describe('@bugsnag/core/event', () => {
         expect(event._features).toStrictEqual({})
       })
     })
+
+    it('includes feature flags in JSON payload', () => {
+      const event = new Event('Err', 'bad', [])
+      event.addFeatureFlag('abc', '123')
+      event.addFeatureFlags([
+        { name: 'x', variant: '9' },
+        { name: 'y' },
+        { name: 'z', variant: '8' }
+      ])
+
+      const payload = event.toJSON()
+
+      expect(payload.featureFlags).toStrictEqual([
+        { featureFlag: 'abc', variant: '123' },
+        { featureFlag: 'x', variant: '9' },
+        { featureFlag: 'y' },
+        { featureFlag: 'z', variant: '8' }
+      ])
+    })
   })
 })
