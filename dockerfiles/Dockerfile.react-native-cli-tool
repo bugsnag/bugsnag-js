@@ -1,5 +1,5 @@
 # CI test image for building the CLI
-FROM node:lts-alpine as react-native-cli-feature-builder
+FROM node:14-alpine as react-native-cli-feature-builder
 
 WORKDIR /app
 

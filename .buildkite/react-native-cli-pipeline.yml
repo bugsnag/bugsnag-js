@@ -24,7 +24,9 @@ steps:
       docker-compose#v3.7.0:
         run: react-native-cli-tool-maze-runner
         use-aliases: true
-        command: ["features/cli-tests"]
+        command:
+          - "features/cli-tests"
+          - "--fail-fast"
     env:
       REACT_NATIVE_VERSION: "rn0_60"
 
@@ -35,7 +37,9 @@ steps:
       docker-compose#v3.7.0:
         run: react-native-cli-tool-maze-runner
         use-aliases: true
-        command: ["features/cli-tests"]
+        command:
+          - "features/cli-tests"
+          - "--fail-fast"
     env:
       REACT_NATIVE_VERSION: "rn0_61"
 
@@ -46,7 +50,9 @@ steps:
       docker-compose#v3.7.0:
         run: react-native-cli-tool-maze-runner
         use-aliases: true
-        command: ["features/cli-tests"]
+        command:
+          - "features/cli-tests"
+          - "--fail-fast"
     env:
       REACT_NATIVE_VERSION: "rn0_62"
 
@@ -57,7 +63,9 @@ steps:
       docker-compose#v3.7.0:
         run: react-native-cli-tool-maze-runner
         use-aliases: true
-        command: ["features/cli-tests"]
+        command:
+          - "features/cli-tests"
+          - "--fail-fast"
     env:
       REACT_NATIVE_VERSION: "rn0_63"
 
@@ -68,7 +76,9 @@ steps:
       docker-compose#v3.7.0:
         run: react-native-cli-tool-maze-runner
         use-aliases: true
-        command: ["features/cli-tests"]
+        command:
+          - "features/cli-tests"
+          - "--fail-fast"
     env:
       REACT_NATIVE_VERSION: "rn0_63_expo_ejected"
 
@@ -79,7 +89,9 @@ steps:
       docker-compose#v3.7.0:
         run: react-native-cli-tool-maze-runner
         use-aliases: true
-        command: ["features/cli-tests"]
+        command:
+          - "features/cli-tests"
+          - "--fail-fast"
     env:
       REACT_NATIVE_VERSION: "rn0_64"
 
