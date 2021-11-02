@@ -315,6 +315,7 @@ steps:
           - features/run-app-tests
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager
 
   - label: ':runner: RN 0.61 Android end-to-end tests'
     depends_on: "rn-0-61-apk"
@@ -334,6 +335,7 @@ steps:
           - features/run-app-tests
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager
 
   - label: ':runner: RN 0.62 Android end-to-end tests'
     depends_on: "rn-0-62-apk"
@@ -353,6 +355,7 @@ steps:
           - features/run-app-tests
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager
 
   - label: ':runner: RN 0.63 Android end-to-end tests'
     depends_on: "rn-0-63-apk"
@@ -372,6 +375,7 @@ steps:
           - features/run-app-tests
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager
 
   - label: ':runner: RN 0.63 Expo (ejected) Android end-to-end tests'
     depends_on: "rn-0-63-expo-ejected-apk"
@@ -391,6 +395,7 @@ steps:
           - features/run-app-tests
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager
 
   - label: ':runner: RN 0.64 Android end-to-end tests (non-Hermes)'
     depends_on: "rn-0-64-apk"
@@ -410,6 +415,7 @@ steps:
           - features/run-app-tests
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager
 
   - label: ':runner: RN 0.64 Android end-to-end tests (Hermes)'
     depends_on: "rn-0-64-hermes-apk"
@@ -429,6 +435,7 @@ steps:
           - features/run-app-tests
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager
 
   #
   # Init, build and notify end-to-end tests - iOS
@@ -451,6 +458,7 @@ steps:
           - features/run-app-tests
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager
 
   - label: ':runner: RN 0.61 iOS end-to-end tests'
     depends_on: "rn-0-61-ipa"
@@ -470,6 +478,7 @@ steps:
           - features/run-app-tests
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager
 
   - label: ':runner: RN 0.62 iOS end-to-end tests'
     depends_on: "rn-0-62-ipa"
@@ -489,6 +498,7 @@ steps:
           - features/run-app-tests
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager
 
   - label: ':runner: RN 0.63 iOS end-to-end tests'
     depends_on: "rn-0-63-ipa"
@@ -508,6 +518,7 @@ steps:
           - features/run-app-tests
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager
 
   - label: ':runner: RN 0.63 Expo (ejected) iOS end-to-end tests'
     depends_on: "rn-0-63-expo-ejected-ipa"
@@ -527,6 +538,7 @@ steps:
           - features/run-app-tests
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager
 
   - label: ':runner: RN 0.64 iOS end-to-end tests (non-Hermes)'
     depends_on: "rn-0-64-ipa"
@@ -546,6 +558,7 @@ steps:
           - features/run-app-tests
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager
 
   - label: ':runner: RN 0.64 iOS end-to-end tests (Hermes)'
     depends_on: "rn-0-64-hermes-ipa"
@@ -565,3 +578,4 @@ steps:
           - features/run-app-tests
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager
