@@ -4,7 +4,8 @@
 
 ### Changed
 
-- (react-native): Update bugsnag-cocoa to v6.14.1
+- (react-native): Update bugsnag-cocoa to v6.14.2
+  - Fix missing `configuration.user` and manually resumed `session` info in unhandled errors. [bugsnag-cocoa#1215](https://github.com/bugsnag/bugsnag-cocoa/pull/1215)
   - Disable automatic session tracking in app extensions (it was not working as intended.) [bugsnag-cocoa#1211](https://github.com/bugsnag/bugsnag-cocoa/pull/1211)
   - Stop logging "[ERROR] Failed to install crash handler..." if a debugger is attached. [bugsnag-cocoa#1210](https://github.com/bugsnag/bugsnag-cocoa/pull/1210)
   - Include the word "request" in network request breadcrumb messages. [bugsnag-cocoa#1209](https://github.com/bugsnag/bugsnag-cocoa/pull/1209)

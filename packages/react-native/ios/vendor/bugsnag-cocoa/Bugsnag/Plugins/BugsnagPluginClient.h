@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "BugsnagPlugin.h"
+#import <Bugsnag/BugsnagPlugin.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

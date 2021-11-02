@@ -6,7 +6,7 @@
 //  Copyright © 2020 Bugsnag Inc. All rights reserved.
 //
 
-#import "BugsnagMetadata.h"
+#import <Bugsnag/BugsnagMetadata.h>
 
 @class BugsnagStateEvent;
 

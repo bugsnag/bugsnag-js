@@ -1,6 +1,13 @@
 Changelog
 =========
 
+## 6.14.2 (2021-10-27)
+
+### Bug fixes
+
+* Fix missing `configuration.user` and manually resumed `session` info in unhandled errors.
+  [#1215](https://github.com/bugsnag/bugsnag-cocoa/pull/1215)
+
 ## 6.14.1 (2021-10-20)
 
 ### Bug fixes

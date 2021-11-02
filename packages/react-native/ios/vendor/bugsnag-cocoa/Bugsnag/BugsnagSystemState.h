@@ -8,7 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-#import "BugsnagConfiguration.h"
+#import <Bugsnag/BugsnagConfiguration.h>
+
 #import "BugsnagKeys.h"
 
 #define SYSTEMSTATE_KEY_APP @"app"
