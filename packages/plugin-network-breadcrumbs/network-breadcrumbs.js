@@ -60,6 +60,11 @@ module.exports = (_ignoredUrls = [], win = window) => {
       }
 
       function handleXHRLoad () {
+        if (this[REQUEST_URL_KEY] === undefined) {
+          client._logger.warn('The request URL is no longer present on this XMLHttpRequest. A breadcrumb cannot be left for this request.')
+          return
+        }
+
         if (includes(ignoredUrls, this[REQUEST_URL_KEY].replace(/\?.*$/, ''))) {
           // don't leave a network breadcrumb from bugsnag notify calls
           return
@@ -77,10 +82,16 @@ module.exports = (_ignoredUrls = [], win = window) => {
       }
 
       function handleXHRError () {
+        if (this[REQUEST_URL_KEY] === undefined) {
+          client._logger.warn('The request URL is no longer present on this XMLHttpRequest. A breadcrumb cannot be left for this request.')
+          return
+        }
+
         if (includes(ignoredUrls, this[REQUEST_URL_KEY].replace(/\?.*$/, ''))) {
           // don't leave a network breadcrumb from bugsnag notify calls
           return
         }
+
         // failed to contact server
         client.leaveBreadcrumb('XMLHttpRequest error', {
           request: `${this[REQUEST_METHOD_KEY]} ${this[REQUEST_URL_KEY]}`
