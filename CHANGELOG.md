@@ -4,6 +4,7 @@
 
 ### Changed
 
+- (expo): Add support for Expo SDK v43 [foolem](https://github.com/foolem) [#1556](https://github.com/bugsnag/bugsnag-js/pull/1556) / [#1566](https://github.com/bugsnag/bugsnag-js/pull/1566)
 - (react-native): Update bugsnag-cocoa to v6.14.2
   - Fix missing `configuration.user` and manually resumed `session` info in unhandled errors. [bugsnag-cocoa#1215](https://github.com/bugsnag/bugsnag-cocoa/pull/1215)
   - Disable automatic session tracking in app extensions (it was not working as intended.) [bugsnag-cocoa#1211](https://github.com/bugsnag/bugsnag-cocoa/pull/1211)
