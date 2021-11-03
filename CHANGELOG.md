@@ -2,6 +2,10 @@
 
 ## TBC
 
+### Fixed
+
+- (plugin-network-breadcrumbs): Fix a crash when request data goes missing [#1564](https://github.com/bugsnag/bugsnag-js/pull/1564)
+
 ### Changed
 
 - (react-native): Update bugsnag-cocoa to v6.14.2
