@@ -41,3 +41,15 @@ When('I let the test page run for up to {int} seconds') do |n|
   txt = Maze.driver.find_element(id: 'bugsnag-test-state').text
   assert_equal('DONE', txt, "Expected #bugsnag-test-state text to be 'DONE'. It was '#{txt}'.")
 end
+
+Then("the event {string} has no variant") do |field_path|
+  list = Maze::Server.errors
+  feature_flag = Maze::Helper.read_key_path(list.current[:body], "events.0.#{field_path}")
+
+  assert_false(feature_flag.nil?, "Feature flag at #{field_path} does not exist!")
+
+  assert_false(
+    feature_flag.key?("variant"),
+    "Feature flag at #{field_path} had a variant, but should not have: #{feature_flag}"
+  )
+end

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <script src="/node_modules/@bugsnag/browser/dist/bugsnag.min.js"></script>
+    <script type="text/javascript">
+      var NOTIFY = decodeURIComponent(window.location.search.match(/NOTIFY=([^&]+)/)[1])
+      var SESSIONS = decodeURIComponent(window.location.search.match(/SESSIONS=([^&]+)/)[1])
+      var API_KEY = decodeURIComponent(window.location.search.match(/API_KEY=([^&]+)/)[1])
+      var shouldClearAllFlags = !!window.location.search.match(/clear_all_flags/)
+
+      Bugsnag.start({
+        apiKey: API_KEY,
+        endpoints: { notify: NOTIFY, sessions: SESSIONS },
+        featureFlags: [
+          { name: 'from config 1', variant: '1234' },
+          { name: 'from config 2' },
+          { name: 'from config 3', variant: 'SHOULD BE REMOVED' }
+        ]
+      })
+
+      Bugsnag.addFeatureFlag('added at runtime 1')
+      Bugsnag.addFeatureFlags([
+        { name: 'added at runtime 2', variant: 'runtime_2' },
+        { name: 'added at runtime 3', variant: 'SHOULD BE REMOVED' },
+        { name: 'added at runtime 4' }
+      ])
+
+      Bugsnag.addOnError(function(event) {
+        event.addFeatureFlag('from global on error 1', 'on error 1')
+
+        event.addFeatureFlags([
+          { name: 'from global on error 2' },
+          { name: 'from global on error 3', variant: 111 }
+        ])
+
+        event.clearFeatureFlag('from config 3')
+        event.clearFeatureFlag('added at runtime 3')
+      })
+    </script>
+  </head>
+  <body>
+    <script>
+      Bugsnag.notify(new Error('bad things'), function(event) {
+        event.addFeatureFlag('from notify on error', 'notify 7636390')
+        event.clearFeatureFlag('from global on error 2')
+
+        if (shouldClearAllFlags) {
+          event.clearFeatureFlags()
+        }
+      })
+    </script>
+  </body>
+</html>
