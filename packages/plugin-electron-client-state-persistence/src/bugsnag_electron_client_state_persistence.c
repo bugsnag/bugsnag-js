@@ -39,6 +39,7 @@ static const char *const key_breadcrumbs = "breadcrumbs";
 static const char *const key_context = "context";
 static const char *const key_device = "device";
 static const char *const key_metadata = "metadata";
+static const char *const key_feature_flags = "featureFlags";
 static const char *const key_session = "session";
 static const char *const key_user = "user";
 static const char *const keypath_user_id = "user.id";
@@ -68,9 +69,16 @@ static void context_lock() { mtx_lock(&g_context.lock); }
 static void context_unlock() { mtx_unlock(&g_context.lock); }
 
 static JSON_Value *initialize_context(const char *state) {
-  const char *object_keys[] = {key_metadata, key_session, key_device, key_app,
-                               key_user};
+  const char *object_keys[] = {
+    key_metadata,
+    key_session,
+    key_device,
+    key_app,
+    key_user
+  };
+
   size_t key_count = sizeof(object_keys) / sizeof(const char *);
+
   if (state) {
     JSON_Value *state_values = json_parse_string(state);
     if (state_values && json_value_get_type(state_values) == JSONObject) {
@@ -80,10 +88,17 @@ static JSON_Value *initialize_context(const char *state) {
       if (context && json_value_get_type(context) != JSONString) {
         json_object_remove(obj, key_context);
       }
+
       JSON_Value *breadcrumbs = json_object_get_value(obj, key_breadcrumbs);
       if (breadcrumbs && json_value_get_type(breadcrumbs) != JSONArray) {
         json_object_remove(obj, key_breadcrumbs);
       }
+
+      JSON_Value *feature_flags = json_object_get_value(obj, key_feature_flags);
+      if (feature_flags && json_value_get_type(feature_flags) != JSONArray) {
+        json_object_remove(obj, key_feature_flags);
+      }
+
       for (size_t index = 0; index < key_count; index++) {
         const char *key = object_keys[index];
         JSON_Value *value = json_object_get_value(obj, key);
@@ -254,6 +269,48 @@ BECSP_STATUS becsp_update_metadata(const char *tab, const char *val) {
 
   serialize_data();
   context_unlock();
+  return status;
+}
+
+BECSP_STATUS becsp_set_feature_flags(const char *feature_flag_json) {
+  if (!g_context.data) {
+    return BECSP_STATUS_NOT_INSTALLED;
+  }
+
+  if (!feature_flag_json) {
+    return BECSP_STATUS_NULL_PARAM;
+  }
+
+  context_lock();
+
+  BECSP_STATUS status = BECSP_STATUS_SUCCESS;
+  JSON_Object *obj = json_value_get_object(g_context.data);
+
+  // Initialize the feature flag array if it's not present or is an invalid type
+  JSON_Value *feature_flag_array = json_object_get_value(obj, key_feature_flags);
+
+  if (!feature_flag_array || json_value_get_type(feature_flag_array) != JSONArray) {
+    json_object_set_value(obj, key_feature_flags, json_value_init_array());
+  }
+
+  JSON_Value *feature_flags = json_parse_string(feature_flag_json);
+
+  if (feature_flags) {
+    if (json_value_get_type(feature_flags) == JSONArray) {
+      // replace the existing feature flag array with a new one; we don't need
+      // to support partial updates
+      json_object_set_value(obj, key_feature_flags, feature_flags);
+    } else {
+      status = BECSP_STATUS_EXPECTED_JSON_ARRAY;
+      json_value_free(feature_flags);
+    }
+  } else {
+    status = BECSP_STATUS_INVALID_JSON;
+  }
+
+  serialize_data();
+  context_unlock();
+
   return status;
 }
 

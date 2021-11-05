@@ -25,6 +25,10 @@ typedef enum {
    */
   BECSP_STATUS_EXPECTED_JSON_OBJECT,
   /**
+   * JSON value sent as a parameter used an unexpected type
+   */
+  BECSP_STATUS_EXPECTED_JSON_ARRAY,
+  /**
    * Required parameter was NULL
    */
   BECSP_STATUS_NULL_PARAM,
@@ -84,6 +88,14 @@ BECSP_STATUS becsp_update_metadata(const char *tab, const char *val);
  * clear
  */
 BECSP_STATUS becsp_set_metadata(const char *metadata);
+
+/**
+ * Set cached feature flags
+ *
+ * @param feature_flags An array of feature flag objects, serialized as JSON
+ *                      e.g. '[{ "featureFlag": "abc", variant: "xyz" }]'
+ */
+BECSP_STATUS becsp_set_feature_flags(const char *feature_flags);
 
 /**
  * Set cached top-level app value
