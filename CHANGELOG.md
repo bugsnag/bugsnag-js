@@ -16,6 +16,10 @@
   - Include the word "request" in network request breadcrumb messages. [bugsnag-cocoa#1209](https://github.com/bugsnag/bugsnag-cocoa/pull/1209)
   - Prevent a crash that can occur when `-[BSGURLSessionTracingProxy forwardInvocation:]` calls `-[NSInvocation selector]`. [bugsnag-cocoa#1208](https://github.com/bugsnag/bugsnag-cocoa/pull/1208)
   - Apply `redactedKeys` to breadcrumb metadata. [bugsnag-cocoa#1204](https://github.com/bugsnag/bugsnag-cocoa/pull/1204)
+- (react-native): Update bugsnag-android to v5.15.0
+  - Avoid reporting false-positive background ANRs with improved foreground detection. [bugsnag-android#1429](https://github.com/bugsnag/bugsnag-android/pull/1429)
+  - Prevent events being attached to phantom sessions when they are blocked by an `OnSessionCallback`. [bugsnag-android#1434](https://github.com/bugsnag/bugsnag-android/pull/1434)
+  - Plugins will correctly mirror metadata added using `addMetadata(String, Map)`. [bugsnag-android#1454](https://github.com/bugsnag/bugsnag-android/pull/1454)
 
 ## 7.13.2 (2021-10-13)
 
@@ -415,7 +419,7 @@ This release adds [`@bugsnag/electron`](http://docs.bugsnag.com/platforms/electr
   - Stop Bugsnag unregistering other signal handlers when catching a mach exception [bugsnag-cocoa#976](https://github.com/bugsnag/bugsnag-cocoa/pull/976)/[bugsnag-cocoa#1002](https://github.com/bugsnag/bugsnag-cocoa/pull/1002)
   - Fix a tvOS file permission error that was introduced in 6.5.1 [bugsnag-cocoa#996](https://github.com/bugsnag/bugsnag-cocoa/pull/996)
   - Fix an analyzer warning [bugsnag-cocoa#994](https://github.com/bugsnag/bugsnag-cocoa/pull/994)
-- (react-native): Store source maps in a temporary directory during Xcode build phases to support source map filenames with whitespace. See [source map upload docs](https://docs.bugsnag.com/platforms/react-native/react-native/showing-full-stacktraces/#source-maps) for info on how to change your build script to utilize this. [#1289](https://github.com/bugsnag/bugsnag-js/pull/1289) 
+- (react-native): Store source maps in a temporary directory during Xcode build phases to support source map filenames with whitespace. See [source map upload docs](https://docs.bugsnag.com/platforms/react-native/react-native/showing-full-stacktraces/#source-maps) for info on how to change your build script to utilize this. [#1289](https://github.com/bugsnag/bugsnag-js/pull/1289)
 
 ### Added
 
