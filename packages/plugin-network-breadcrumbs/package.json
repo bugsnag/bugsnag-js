@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-network-breadcrumbs",
-  "version": "7.13.2",
+  "version": "7.13.3",
   "main": "network-breadcrumbs.js",
   "description": "@bugsnag/js plugin to record browser requests as breadcrumbs",
   "homepage": "https://www.bugsnag.com/",

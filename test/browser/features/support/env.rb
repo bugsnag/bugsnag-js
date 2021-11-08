@@ -51,7 +51,7 @@ BeforeAll do
   Process.detach(pid)
 end
 
-AfterAll do
+at_exit do
   # Stop the web page server
   begin
     Process.kill('KILL', pid)
