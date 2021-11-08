@@ -35,6 +35,11 @@ Use the following plugins and guides to integrate Bugsnag with various framework
 | React | [@bugsnag/plugin-react](packages/plugin-react) | [React docs](https://docs.bugsnag.com/platforms/javascript/react)
 | Angular | [@bugsnag/plugin-angular](packages/plugin-angular) | [Angular docs](https://docs.bugsnag.com/platforms/javascript/angular)
 
+### Desktop
+
+| Framework  | Bugsnag notifier | Documentation |
+| Electron   | [@bugsnag/electron](packages/electron) | [Electron docs](https://docs.bugsnag.com/platforms/electron) |
+
 ### Server
 
 | Framework  | Bugsnag plugin | Documentation |
