@@ -38,6 +38,7 @@ Use the following plugins and guides to integrate Bugsnag with various framework
 ### Desktop
 
 | Framework  | Bugsnag notifier | Documentation |
+| ---------- | ---------------- | --------------|
 | Electron   | [@bugsnag/electron](packages/electron) | [Electron docs](https://docs.bugsnag.com/platforms/electron) |
 
 ### Server
