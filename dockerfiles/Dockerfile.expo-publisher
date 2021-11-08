@@ -1,6 +1,6 @@
 FROM node:12-alpine
 
-RUN apk add --update bash git python
+RUN apk add --update bash git python3
 
 WORKDIR /app
 
