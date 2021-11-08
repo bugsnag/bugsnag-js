@@ -165,8 +165,10 @@ BSG_KSCrashType bsg_kscrash_setHandlingCrashTypes(BSG_KSCrashType crashTypes) {
 
     if (bsg_g_installed) {
         bsg_kscrashsentry_uninstall(~crashTypes);
-        crashTypes = bsg_kscrashsentry_installWithContext(
-            &context->crash, crashTypes, (void(*)(void *))bsg_kscrash_i_onCrash);
+        if (crashTypes) {
+            crashTypes = bsg_kscrashsentry_installWithContext(
+                &context->crash, crashTypes, (void(*)(void *))bsg_kscrash_i_onCrash);
+        }
     }
 
     return crashTypes;

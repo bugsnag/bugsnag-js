@@ -11,6 +11,7 @@
 
 #import "BSGFileLocations.h"
 #import "BSG_KSCrashAdvanced.h"
+#import "BSG_KSMach.h"
 #import "BugsnagConfiguration.h"
 #import "BugsnagErrorTypes.h"
 #import "BugsnagLogger.h"
@@ -28,12 +29,19 @@
     // applies to unhandled errors
     ksCrash.threadTracingEnabled = config.sendThreads != BSGThreadSendPolicyNever;
 
-    BSG_KSCrashType crashTypes = config.autoDetectErrors ? [self mapKSToBSGCrashTypes:config.enabledErrorTypes] : 0;
+    BSG_KSCrashType crashTypes = 0;
+    if (config.autoDetectErrors) {
+        if (bsg_ksmachisBeingTraced()) {
+            bsg_log_info(@"Unhandled errors will not be reported because a debugger is attached");
+        } else {
+            crashTypes = [self mapKSToBSGCrashTypes:config.enabledErrorTypes];
+        }
+    }
 
     // In addition to installing crash handlers, -[BSG_KSCrash install:] initializes various
     // subsystems that Bugsnag relies on, so needs to be called even if autoDetectErrors is disabled.
     if ((![ksCrash install:crashTypes directory:[BSGFileLocations current].kscrashReports] && crashTypes)) {
-        bsg_log_err(@"Failed to install crash handler. No exceptions will be reported!");
+        bsg_log_err(@"Failed to install crash handlers; no exceptions or crashes will be reported");
     }
 }
 

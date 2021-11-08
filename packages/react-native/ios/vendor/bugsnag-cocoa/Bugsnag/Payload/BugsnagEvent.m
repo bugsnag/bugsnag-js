@@ -39,6 +39,7 @@
 #import "BugsnagThread+Private.h"
 #import "BugsnagUser+Private.h"
 
+static NSString * const RedactedMetadataValue = @"[REDACTED]";
 
 id BSGLoadConfigValue(NSDictionary *report, NSString *valueName) {
     NSString *keypath = [NSString stringWithFormat:@"user.config.%@", valueName];
@@ -458,8 +459,17 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
            (self.enabledReleaseStages.count == 0);
 }
 
-- (NSArray *)serializeBreadcrumbs {
-    return [[self breadcrumbs] valueForKeyPath:NSStringFromSelector(@selector(objectValue))];
+- (NSArray<NSDictionary *> *)serializeBreadcrumbsWithRedactedKeys:(NSSet *)redactedKeys {
+    return BSGArrayMap(self.breadcrumbs, ^NSDictionary * (BugsnagBreadcrumb *breadcrumb) {
+        NSMutableDictionary *dictionary = [[breadcrumb objectValue] mutableCopy];
+        NSDictionary *metadata = dictionary[BSGKeyMetadata];
+        NSMutableDictionary *redactedMetadata = [NSMutableDictionary dictionary];
+        for (NSString *key in metadata) {
+            redactedMetadata[key] = [self redactedMetadataValue:metadata[key] forKey:key redactedKeys:redactedKeys];
+        }
+        dictionary[BSGKeyMetadata] = redactedMetadata;
+        return dictionary;
+    });
 }
 
 - (void)attachCustomStacktrace:(NSArray *)frames withType:(NSString *)type {
@@ -540,15 +550,13 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
     });
     
     event[BSGKeyThreads] = [BugsnagThread serializeThreads:self.threads];
-
-    // Build Event
     event[BSGKeySeverity] = BSGFormatSeverity(self.severity);
-    event[BSGKeyBreadcrumbs] = [self serializeBreadcrumbs];
+    event[BSGKeyBreadcrumbs] = [self serializeBreadcrumbsWithRedactedKeys:redactedKeys];
 
-    // add metadata
     NSMutableDictionary *metadata = [[[self metadata] toDictionary] mutableCopy];
     @try {
-        event[BSGKeyMetadata] = [self sanitiseMetadata:metadata redactedKeys:redactedKeys];
+        [self redactKeys:redactedKeys inMetadata:metadata];
+        event[BSGKeyMetadata] = metadata;
     } @catch (NSException *exception) {
         bsg_log_err(@"An exception was thrown while sanitising metadata: %@", exception);
     }
@@ -599,7 +607,7 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
     return event;
 }
 
-- (NSMutableDictionary *)sanitiseMetadata:(NSMutableDictionary *)metadata redactedKeys:(NSSet *)redactedKeys {
+- (void)redactKeys:(NSSet *)redactedKeys inMetadata:(NSMutableDictionary *)metadata {
     for (NSString *sectionKey in [metadata allKeys]) {
         if ([metadata[sectionKey] isKindOfClass:[NSDictionary class]]) {
             metadata[sectionKey] = [metadata[sectionKey] mutableCopy];
@@ -614,21 +622,19 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
 
         if (section != nil) { // redact sensitive metadata values
             for (NSString *objKey in [section allKeys]) {
-                section[objKey] = [self sanitiseMetadataValue:section[objKey] key:objKey redactedKeys:redactedKeys];
+                section[objKey] = [self redactedMetadataValue:section[objKey] forKey:objKey redactedKeys:redactedKeys];
             }
         }
     }
-    return metadata;
 }
 
-- (id)sanitiseMetadataValue:(id)value key:(NSString *)key redactedKeys:(NSSet *)redactedKeys {
-    if ([self isRedactedKey:key redactedKeys:redactedKeys]) {
-        return BSGKeyRedaction;
+- (id)redactedMetadataValue:(id)value forKey:(NSString *)key redactedKeys:(NSSet *)redactedKeys {
+    if ([self redactedKeys:redactedKeys matches:key]) {
+        return RedactedMetadataValue;
     } else if ([value isKindOfClass:[NSDictionary class]]) {
         NSMutableDictionary *nestedDict = [(NSDictionary *)value mutableCopy];
-
         for (NSString *nestedKey in [nestedDict allKeys]) {
-            nestedDict[nestedKey] = [self sanitiseMetadataValue:nestedDict[nestedKey] key:nestedKey redactedKeys:redactedKeys];
+            nestedDict[nestedKey] = [self redactedMetadataValue:nestedDict[nestedKey] forKey:nestedKey redactedKeys:redactedKeys];
         }
         return nestedDict;
     } else {
@@ -636,7 +642,7 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
     }
 }
 
-- (BOOL)isRedactedKey:(NSString *)key redactedKeys:(NSSet *)redactedKeys {
+- (BOOL)redactedKeys:(NSSet *)redactedKeys matches:(NSString *)key {
     for (id obj in redactedKeys) {
         if ([obj isKindOfClass:[NSString class]]) {
             if ([[key lowercaseString] isEqualToString:[obj lowercaseString]]) {

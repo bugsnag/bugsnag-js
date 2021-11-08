@@ -7,7 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "BugsnagSession.h"
+
+#import <Bugsnag/BugsnagSession.h>
 
 @class BugsnagConfiguration;
 @class BugsnagNotifier;

@@ -8,6 +8,7 @@
 
 #import "BugsnagSessionTracker.h"
 
+#import "BSGFileLocations.h"
 #import "BSG_KSSystemInfo.h"
 #import "BugsnagApp+Private.h"
 #import "BugsnagClient+Private.h"
@@ -19,7 +20,6 @@
 #import "BugsnagSessionFileStore.h"
 #import "BugsnagSessionTrackingApiClient.h"
 #import "BugsnagSessionTrackingPayload.h"
-#import "BSGFileLocations.h"
 
 #if TARGET_OS_IOS || TARGET_OS_TV
 #import "BSGUIKit.h"
@@ -67,6 +67,15 @@ NSString *const BSGSessionUpdateNotification = @"BugsnagSessionChanged";
 }
 
 - (void)startWithNotificationCenter:(NSNotificationCenter *)notificationCenter isInForeground:(BOOL)isInForeground {
+    if ([BSG_KSSystemInfo isRunningInAppExtension]) {
+        // UIApplication lifecycle notifications and UIApplicationState, which the automatic session tracking logic
+        // depends on, are not available in app extensions.
+        if (self.config.autoTrackSessions) {
+            bsg_log_info(@"Automatic session tracking is not supported in app extensions");
+        }
+        return;
+    }
+    
     if (isInForeground) {
         [self startNewSessionIfAutoCaptureEnabled];
     } else {
@@ -138,6 +147,9 @@ NSString *const BSGSessionUpdateNotification = @"BugsnagSessionChanged";
     } else {
         BOOL stopped = session.isStopped;
         [session resume];
+        if (self.callback) {
+            self.callback(session);
+        }
         [self postUpdateNotice];
         return stopped;
     }

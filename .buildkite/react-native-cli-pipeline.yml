@@ -24,7 +24,9 @@ steps:
       docker-compose#v3.7.0:
         run: react-native-cli-tool-maze-runner
         use-aliases: true
-        command: ["features/cli-tests"]
+        command:
+          - "features/cli-tests"
+          - "--fail-fast"
     env:
       REACT_NATIVE_VERSION: "rn0_60"
 
@@ -35,7 +37,9 @@ steps:
       docker-compose#v3.7.0:
         run: react-native-cli-tool-maze-runner
         use-aliases: true
-        command: ["features/cli-tests"]
+        command:
+          - "features/cli-tests"
+          - "--fail-fast"
     env:
       REACT_NATIVE_VERSION: "rn0_61"
 
@@ -46,7 +50,9 @@ steps:
       docker-compose#v3.7.0:
         run: react-native-cli-tool-maze-runner
         use-aliases: true
-        command: ["features/cli-tests"]
+        command:
+          - "features/cli-tests"
+          - "--fail-fast"
     env:
       REACT_NATIVE_VERSION: "rn0_62"
 
@@ -57,7 +63,9 @@ steps:
       docker-compose#v3.7.0:
         run: react-native-cli-tool-maze-runner
         use-aliases: true
-        command: ["features/cli-tests"]
+        command:
+          - "features/cli-tests"
+          - "--fail-fast"
     env:
       REACT_NATIVE_VERSION: "rn0_63"
 
@@ -68,7 +76,9 @@ steps:
       docker-compose#v3.7.0:
         run: react-native-cli-tool-maze-runner
         use-aliases: true
-        command: ["features/cli-tests"]
+        command:
+          - "features/cli-tests"
+          - "--fail-fast"
     env:
       REACT_NATIVE_VERSION: "rn0_63_expo_ejected"
 
@@ -79,7 +89,9 @@ steps:
       docker-compose#v3.7.0:
         run: react-native-cli-tool-maze-runner
         use-aliases: true
-        command: ["features/cli-tests"]
+        command:
+          - "features/cli-tests"
+          - "--fail-fast"
     env:
       REACT_NATIVE_VERSION: "rn0_64"
 
@@ -303,6 +315,7 @@ steps:
           - features/run-app-tests
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager
 
   - label: ':runner: RN 0.61 Android end-to-end tests'
     depends_on: "rn-0-61-apk"
@@ -322,6 +335,7 @@ steps:
           - features/run-app-tests
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager
 
   - label: ':runner: RN 0.62 Android end-to-end tests'
     depends_on: "rn-0-62-apk"
@@ -341,6 +355,7 @@ steps:
           - features/run-app-tests
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager
 
   - label: ':runner: RN 0.63 Android end-to-end tests'
     depends_on: "rn-0-63-apk"
@@ -360,6 +375,7 @@ steps:
           - features/run-app-tests
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager
 
   - label: ':runner: RN 0.63 Expo (ejected) Android end-to-end tests'
     depends_on: "rn-0-63-expo-ejected-apk"
@@ -379,6 +395,7 @@ steps:
           - features/run-app-tests
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager
 
   - label: ':runner: RN 0.64 Android end-to-end tests (non-Hermes)'
     depends_on: "rn-0-64-apk"
@@ -398,6 +415,7 @@ steps:
           - features/run-app-tests
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager
 
   - label: ':runner: RN 0.64 Android end-to-end tests (Hermes)'
     depends_on: "rn-0-64-hermes-apk"
@@ -417,6 +435,7 @@ steps:
           - features/run-app-tests
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager
 
   #
   # Init, build and notify end-to-end tests - iOS
@@ -439,6 +458,7 @@ steps:
           - features/run-app-tests
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager
 
   - label: ':runner: RN 0.61 iOS end-to-end tests'
     depends_on: "rn-0-61-ipa"
@@ -458,6 +478,7 @@ steps:
           - features/run-app-tests
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager
 
   - label: ':runner: RN 0.62 iOS end-to-end tests'
     depends_on: "rn-0-62-ipa"
@@ -477,6 +498,7 @@ steps:
           - features/run-app-tests
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager
 
   - label: ':runner: RN 0.63 iOS end-to-end tests'
     depends_on: "rn-0-63-ipa"
@@ -496,6 +518,7 @@ steps:
           - features/run-app-tests
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager
 
   - label: ':runner: RN 0.63 Expo (ejected) iOS end-to-end tests'
     depends_on: "rn-0-63-expo-ejected-ipa"
@@ -515,6 +538,7 @@ steps:
           - features/run-app-tests
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager
 
   - label: ':runner: RN 0.64 iOS end-to-end tests (non-Hermes)'
     depends_on: "rn-0-64-ipa"
@@ -534,6 +558,7 @@ steps:
           - features/run-app-tests
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager
 
   - label: ':runner: RN 0.64 iOS end-to-end tests (Hermes)'
     depends_on: "rn-0-64-hermes-ipa"
@@ -553,3 +578,4 @@ steps:
           - features/run-app-tests
     concurrency: 9
     concurrency_group: 'browserstack-app'
+    concurrency_method: eager

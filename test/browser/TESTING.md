@@ -15,8 +15,8 @@ Use the `local-test-util` to build the test fixture, including the notifier from
 
 The following environment variables need to be set:
 
-- `MAZE_DEVICE_FARM_USERNAME`
-- `MAZE_DEVICE_FARM_ACCESS_KEY`
+- `BROWSER_STACK_USERNAME`
+- `BROWSER_STACK_ACCESS_KEY`
 - `HOST` - the test fixture host, typically `localhost`
 - `API_HOST` - the MazeRunner mock server host, typically `localhost`
 

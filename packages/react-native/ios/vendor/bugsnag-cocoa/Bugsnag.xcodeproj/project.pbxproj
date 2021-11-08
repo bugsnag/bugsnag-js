@@ -873,7 +873,6 @@
 		E74628FD248907C100F92D67 /* BSG_KSJSONCodecObjC.m in Sources */ = {isa = PBXBuildFile; fileRef = 008969082486DAD000DC48C2 /* BSG_KSJSONCodecObjC.m */; };
 		E74628FF248907C100F92D67 /* BSG_KSMachHeaders.c in Sources */ = {isa = PBXBuildFile; fileRef = 008969102486DAD000DC48C2 /* BSG_KSMachHeaders.c */; };
 		E7462900248907C100F92D67 /* NSError+BSG_SimpleConstructor.m in Sources */ = {isa = PBXBuildFile; fileRef = 0089691E2486DAD000DC48C2 /* NSError+BSG_SimpleConstructor.m */; };
-		E7462901248907C100F92D67 /* BSG_KSLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 008969262486DAD000DC48C2 /* BSG_KSLogger.m */; };
 		E7462901248907C100F92D67 /* BSG_KSLogger.c in Sources */ = {isa = PBXBuildFile; fileRef = 008969262486DAD000DC48C2 /* BSG_KSLogger.c */; };
 		E7462902248907C100F92D67 /* BSG_KSCrashState.m in Sources */ = {isa = PBXBuildFile; fileRef = 008969292486DAD000DC48C2 /* BSG_KSCrashState.m */; };
 		E7462904248907C100F92D67 /* BSG_KSCrashIdentifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 008969302486DAD000DC48C2 /* BSG_KSCrashIdentifier.m */; };
@@ -1092,7 +1091,6 @@
 
 /* Begin PBXFileReference section */
 		004E35392487B375007FBAE4 /* Tests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Tests-Bridging-Header.h"; sourceTree = "<group>"; };
-		004E35482487B79B007FBAE4 /* .travis.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .travis.yml; sourceTree = SOURCE_ROOT; };
 		008966A42486D43400DC48C2 /* BugsnagDeviceTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BugsnagDeviceTest.m; sourceTree = "<group>"; };
 		008966A52486D43400DC48C2 /* BugsnagClientPayloadInfoTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BugsnagClientPayloadInfoTest.m; sourceTree = "<group>"; };
 		008966A62486D43400DC48C2 /* BugsnagMetadataRedactionTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BugsnagMetadataRedactionTest.m; sourceTree = "<group>"; };
@@ -1152,7 +1150,6 @@
 		008966E82486D43700DC48C2 /* KSString_Tests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KSString_Tests.m; sourceTree = "<group>"; };
 		008966E92486D43700DC48C2 /* KSCrashIdentifierTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KSCrashIdentifierTests.m; sourceTree = "<group>"; };
 		008966EA2486D43700DC48C2 /* BSG_KSMachTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BSG_KSMachTests.m; sourceTree = "<group>"; };
-		008967AE2486D6E100DC48C2 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile; sourceTree = SOURCE_ROOT; };
 		008967B22486D9D700DC48C2 /* BugsnagBreadcrumbs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BugsnagBreadcrumbs.m; sourceTree = "<group>"; };
 		008967B32486D9D700DC48C2 /* BugsnagBreadcrumbs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BugsnagBreadcrumbs.h; sourceTree = "<group>"; };
 		008967BB2486DA1900DC48C2 /* BugsnagClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BugsnagClient.m; sourceTree = "<group>"; };
@@ -1278,7 +1275,6 @@
 		00896A3F2486DBDD00DC48C2 /* BSGConfigurationBuilderTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BSGConfigurationBuilderTests.m; sourceTree = "<group>"; };
 		00896A432486DBF000DC48C2 /* BugsnagConfigurationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BugsnagConfigurationTests.m; sourceTree = "<group>"; };
 		00AD1C7224869B0E00A27979 /* Bugsnag.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Bugsnag.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		00AD1C7624869B0E00A27979 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../Framework/Info.plist; sourceTree = "<group>"; };
 		00AD1C7B24869B0E00A27979 /* Bugsnag-iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Bugsnag-iOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		00AD1CAD24869C1200A27979 /* Bugsnag.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Bugsnag.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		00AD1CB524869C1200A27979 /* Bugsnag-macOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Bugsnag-macOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1290,16 +1286,8 @@
 		00AD1EFF2486A17900A27979 /* BugsnagCrashSentry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BugsnagCrashSentry.m; sourceTree = "<group>"; };
 		00AD1F002486A17900A27979 /* BugsnagCrashSentry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BugsnagCrashSentry.h; sourceTree = "<group>"; };
 		00AD1F012486A17900A27979 /* BugsnagSessionTracker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BugsnagSessionTracker.m; sourceTree = "<group>"; };
-		00AD209E2486A7CD00A27979 /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; name = module.modulemap; path = ../Framework/module.modulemap; sourceTree = "<group>"; };
 		00E636B2248702A1006CBF1A /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		00E636B3248702A1006CBF1A /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
-		00E636B4248702A1006CBF1A /* UPGRADING.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = UPGRADING.md; path = ../UPGRADING.md; sourceTree = "<group>"; };
-		00E636B8248702DA006CBF1A /* ORGANIZATION.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = ORGANIZATION.md; path = ../ORGANIZATION.md; sourceTree = "<group>"; };
-		00E636B9248702DA006CBF1A /* CONTRIBUTING.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = CONTRIBUTING.md; path = ../CONTRIBUTING.md; sourceTree = "<group>"; };
-		00E636BA248702DA006CBF1A /* CHANGELOG.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = CHANGELOG.md; path = ../CHANGELOG.md; sourceTree = "<group>"; };
-		00E636BB248702DA006CBF1A /* TESTING.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = TESTING.md; path = ../TESTING.md; sourceTree = "<group>"; };
-		00E636C02487031D006CBF1A /* Bugsnag.podspec.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Bugsnag.podspec.json; sourceTree = SOURCE_ROOT; };
-		00E636C12487031D006CBF1A /* docker-compose.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = "docker-compose.yml"; sourceTree = SOURCE_ROOT; };
 		00E636C324878FFC006CBF1A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		010FF28225ED2A8D00E4F2B0 /* BSGAppHangDetector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BSGAppHangDetector.h; sourceTree = "<group>"; };
 		010FF28325ED2A8D00E4F2B0 /* BSGAppHangDetector.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BSGAppHangDetector.m; sourceTree = "<group>"; };
@@ -1673,7 +1661,6 @@
 				00E636B3248702A1006CBF1A /* LICENSE.txt */,
 				00AD1C7424869B0E00A27979 /* Bugsnag */,
 				00AD1C7F24869B0E00A27979 /* Tests */,
-				00AD1CFA24869F2500A27979 /* Extras */,
 				00AD1C7324869B0E00A27979 /* Products */,
 				E746292324890BFE00F92D67 /* Frameworks */,
 			);
@@ -1952,24 +1939,6 @@
 				008968E52486DAB800DC48C2 /* BugsnagSessionFileStore.m */,
 			);
 			path = Storage;
-			sourceTree = "<group>";
-		};
-		00AD1CFA24869F2500A27979 /* Extras */ = {
-			isa = PBXGroup;
-			children = (
-				004E35482487B79B007FBAE4 /* .travis.yml */,
-				00E636BA248702DA006CBF1A /* CHANGELOG.md */,
-				00E636B9248702DA006CBF1A /* CONTRIBUTING.md */,
-				00E636B8248702DA006CBF1A /* ORGANIZATION.md */,
-				00E636BB248702DA006CBF1A /* TESTING.md */,
-				00E636B4248702A1006CBF1A /* UPGRADING.md */,
-				008967AE2486D6E100DC48C2 /* Makefile */,
-				00AD209E2486A7CD00A27979 /* module.modulemap */,
-				00E636C12487031D006CBF1A /* docker-compose.yml */,
-				00E636C02487031D006CBF1A /* Bugsnag.podspec.json */,
-				00AD1C7624869B0E00A27979 /* Info.plist */,
-			);
-			path = Extras;
 			sourceTree = "<group>";
 		};
 		3A700A7E24A63A8E0068CD1B /* include */ = {
@@ -3141,7 +3110,7 @@
 				E74628FD248907C100F92D67 /* BSG_KSJSONCodecObjC.m in Sources */,
 				E74628FF248907C100F92D67 /* BSG_KSMachHeaders.c in Sources */,
 				E7462900248907C100F92D67 /* NSError+BSG_SimpleConstructor.m in Sources */,
-				E7462901248907C100F92D67 /* BSG_KSLogger.m in Sources */,
+				E7462901248907C100F92D67 /* BSG_KSLogger.c in Sources */,
 				E7462901248907C100F92D67 /* BSG_KSLogger.c in Sources */,
 				E7462902248907C100F92D67 /* BSG_KSCrashState.m in Sources */,
 				E7462904248907C100F92D67 /* BSG_KSCrashIdentifier.m in Sources */,
