@@ -128,6 +128,47 @@ describe('persisting changes to disk', () => {
     done()
   })
 
+  it('sets feature flags', async () => {
+    NativeClient.install(filepath, 5)
+
+    NativeClient.updateFeatureFlags([
+      { featureFlag: 'flag 1', variant: 'some variant' },
+      { featureFlag: 'flag 2' },
+      { featureFlag: 'flag 3', variant: 'variant xyz' },
+      { featureFlag: 'flag 4', variant: 'variont' }
+    ])
+
+    NativeClient.persistState()
+
+    const state = await readTempFile()
+
+    expect(state.featureFlags).toStrictEqual([
+      { featureFlag: 'flag 1', variant: 'some variant' },
+      { featureFlag: 'flag 2' },
+      { featureFlag: 'flag 3', variant: 'variant xyz' },
+      { featureFlag: 'flag 4', variant: 'variont' }
+    ])
+  })
+
+  it('clears feature flags', async () => {
+    NativeClient.install(filepath, 5)
+
+    NativeClient.updateFeatureFlags([
+      { featureFlag: 'flag 1', variant: 'some variant' },
+      { featureFlag: 'flag 2' },
+      { featureFlag: 'flag 3', variant: 'variant xyz' },
+      { featureFlag: 'flag 4', variant: 'variont' }
+    ])
+
+    NativeClient.updateFeatureFlags([])
+
+    NativeClient.persistState()
+
+    const state = await readTempFile()
+
+    expect(state.featureFlags).toStrictEqual([])
+  })
+
   it('sets session', async (done) => {
     NativeClient.install(filepath, 5)
     NativeClient.setSession({

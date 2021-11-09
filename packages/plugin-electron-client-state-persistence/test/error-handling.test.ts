@@ -28,6 +28,11 @@ describe('handling poor inputs', () => {
     expect(update).toThrow('expected (object) or (string, object?)')
   })
 
+  it('rejects invalid data type for feature flags', () => {
+    const update = () => NativeClient.updateFeatureFlags('abcd')
+    expect(update).toThrow('expected array')
+  })
+
   it('rejects invalid data type for breadcrumb (int)', () => {
     const update = () => NativeClient.leaveBreadcrumb(80)
     expect(update).toThrow('expected object or string')
@@ -61,6 +66,11 @@ describe('handling poor inputs', () => {
   it('rejects missing parameters in updateMetadata()', () => {
     const update = () => NativeClient.updateMetadata()
     expect(update).toThrow('Wrong number of arguments, expected 1 or 2')
+  })
+
+  it('rejects missing parameters in updateFeatureFlags', () => {
+    const update = () => NativeClient.updateFeatureFlags()
+    expect(update).toThrow('Wrong number of arguments, expected 1')
   })
 
   it('rejects missing parameters in updateContext()', () => {
