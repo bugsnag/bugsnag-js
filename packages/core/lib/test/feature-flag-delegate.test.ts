@@ -192,4 +192,30 @@ describe('feature flag delegate', () => {
       expect(existingFeatures).toStrictEqual({ a: 'z', b: 'x', c: 'c', d: 'd', e: 'oooo' })
     })
   })
+
+  describe('#toEventApi', () => {
+    it('should convert a map into the event API format', () => {
+      const features = {}
+
+      delegate.add(features, 'a', 'b')
+      delegate.merge(features, [
+        { name: 'c', variant: 'd' },
+        { name: 'e' },
+        { name: 'f', variant: 'g' }
+      ])
+
+      expect(features).toStrictEqual({ a: 'b', c: 'd', e: null, f: 'g' })
+
+      expect(delegate.toEventApi(features)).toStrictEqual([
+        { featureFlag: 'a', variant: 'b' },
+        { featureFlag: 'c', variant: 'd' },
+        { featureFlag: 'e' },
+        { featureFlag: 'f', variant: 'g' }
+      ])
+    })
+
+    it('should handle an empty object', () => {
+      expect(delegate.toEventApi({})).toStrictEqual([])
+    })
+  })
 })

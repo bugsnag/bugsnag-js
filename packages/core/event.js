@@ -1,7 +1,6 @@
 const ErrorStackParser = require('./lib/error-stack-parser')
 const StackGenerator = require('stack-generator')
 const hasStack = require('./lib/has-stack')
-const keys = require('./lib/es-utils/keys')
 const map = require('./lib/es-utils/map')
 const reduce = require('./lib/es-utils/reduce')
 const filter = require('./lib/es-utils/filter')
@@ -110,24 +109,9 @@ class Event {
       metaData: this._metadata,
       user: this._user,
       session: this._session,
-      featureFlags: formatFeatureFlags(this._features)
+      featureFlags: featureFlagDelegate.toEventApi(this._features)
     }
   }
-}
-
-const formatFeatureFlags = flags => {
-  return map(
-    keys(flags),
-    name => {
-      const flag = { featureFlag: name }
-
-      if (typeof flags[name] === 'string') {
-        flag.variant = flags[name]
-      }
-
-      return flag
-    }
-  )
 }
 
 // takes a stacktrace.js style stackframe (https://github.com/stacktracejs/stackframe)
