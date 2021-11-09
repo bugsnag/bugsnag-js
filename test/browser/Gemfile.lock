@@ -1,9 +1,9 @@
 GIT
   remote: https://github.com/bugsnag/maze-runner
-  revision: e27004e424b165651f729a574ab21a277c75a355
-  tag: v6.2.1
+  revision: e557877be1d2f3881d93a420aa5582b55923069c
+  tag: v6.4.0
   specs:
-    bugsnag-maze-runner (6.2.1)
+    bugsnag-maze-runner (6.4.0)
       appium_lib (~> 11.2.0)
       cucumber (~> 7.1)
       cucumber-expressions (~> 6.0.0)
