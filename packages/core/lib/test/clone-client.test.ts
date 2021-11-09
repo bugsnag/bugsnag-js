@@ -110,6 +110,22 @@ describe('clone-client', () => {
     expect(original._metadata).toStrictEqual({ abc: { xyz: 123 } })
   })
 
+  it('should clone feature flags', () => {
+    const original = new Client({ apiKey: '123456abcdef123456abcdef123456ab' })
+    original.addFeatureFlag('abc', '123')
+
+    const clone = cloneClient(original)
+
+    expect(clone._features).toStrictEqual({ abc: '123' })
+    expect(clone._features).not.toBe(original._features)
+
+    // changing the clone's feature flags shouldn't affect the original
+    clone.addFeatureFlag('xyz', '999')
+
+    expect(clone._features).toStrictEqual({ abc: '123', xyz: '999' })
+    expect(original._features).toStrictEqual({ abc: '123' })
+  })
+
   it('should clone user information', () => {
     const original = new Client({ apiKey: '123456abcdef123456abcdef123456ab' })
     original.setUser('123', 'abc@example.com', 'abc')
