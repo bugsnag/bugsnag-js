@@ -7,7 +7,13 @@ jest.mock('electron', () => ({
 }))
 
 describe('electron-minidump-delivery: load', () => {
-  const app = { on: jest.fn() }
+  let whenReadyCallback
+
+  const app = {
+    whenReady: () => ({ then (callback) { whenReadyCallback = callback } }),
+    on: jest.fn()
+  }
+
   const net = {}
 
   const filestore = {
@@ -21,6 +27,8 @@ describe('electron-minidump-delivery: load', () => {
   }
 
   const plugin = createPlugin(app, net, filestore, nativeClient)
+
+  afterEach(() => { whenReadyCallback = undefined })
 
   it('should install when configured', () => {
     const client = {
@@ -36,6 +44,7 @@ describe('electron-minidump-delivery: load', () => {
     plugin.load(client)
 
     expect(nativeClient.install).toBeCalledTimes(1)
+    expect(whenReadyCallback).toBeInstanceOf(Function)
   })
 
   it('should not install when autoDetectErrors disabled', () => {
@@ -52,6 +61,7 @@ describe('electron-minidump-delivery: load', () => {
     plugin.load(client)
 
     expect(nativeClient.install).not.toBeCalled()
+    expect(whenReadyCallback).toBeUndefined()
   })
 
   it('should not install when nativeCrashes disabled', () => {
@@ -68,5 +78,6 @@ describe('electron-minidump-delivery: load', () => {
     plugin.load(client)
 
     expect(nativeClient.install).not.toBeCalled()
+    expect(whenReadyCallback).toBeUndefined()
   })
 })
