@@ -108,7 +108,7 @@ steps:
           - --fail-fast
           - --retry=2
           - --resilient
-    concurrency: 9
+    concurrency: 6
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
@@ -132,7 +132,7 @@ steps:
           - --fail-fast
           - --retry=2
           - --resilient
-    concurrency: 9
+    concurrency: 6
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
@@ -161,7 +161,7 @@ steps:
           - --appium-version=1.18.0
           - --capabilities={"appWaitForLaunch":"false"}
           - --resilient
-    concurrency: 9
+    concurrency: 6
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
     soft_fail:
@@ -187,7 +187,7 @@ steps:
           - --fail-fast
           - --retry=2
           - --resilient
-    concurrency: 9
+    concurrency: 6
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
@@ -211,7 +211,7 @@ steps:
           - --fail-fast
           - --retry=2
           - --resilient
-    concurrency: 9
+    concurrency: 6
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
@@ -235,7 +235,7 @@ steps:
           - --fail-fast
           - --retry=2
           - --resilient
-    concurrency: 9
+    concurrency: 6
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
@@ -260,7 +260,7 @@ steps:
           - --fail-fast
           - --retry=2
           - --resilient
-    concurrency: 9
+    concurrency: 6
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
@@ -284,6 +284,6 @@ steps:
           - --fail-fast
           - --retry=2
           - --resilient
-    concurrency: 9
+    concurrency: 6
     concurrency_group: 'browserstack-app'
     concurrency_method: eager

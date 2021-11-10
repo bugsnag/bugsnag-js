@@ -313,7 +313,7 @@ steps:
           - --device=ANDROID_11_0
           - --a11y-locator
           - features/run-app-tests
-    concurrency: 9
+    concurrency: 6
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
@@ -333,7 +333,7 @@ steps:
           - --device=ANDROID_11_0
           - --a11y-locator
           - features/run-app-tests
-    concurrency: 9
+    concurrency: 6
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
@@ -353,7 +353,7 @@ steps:
           - --device=ANDROID_11_0
           - --a11y-locator
           - features/run-app-tests
-    concurrency: 9
+    concurrency: 6
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
@@ -373,7 +373,7 @@ steps:
           - --device=ANDROID_11_0
           - --a11y-locator
           - features/run-app-tests
-    concurrency: 9
+    concurrency: 6
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
@@ -393,7 +393,7 @@ steps:
           - --device=ANDROID_11_0
           - --a11y-locator
           - features/run-app-tests
-    concurrency: 9
+    concurrency: 6
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
@@ -413,7 +413,7 @@ steps:
           - --device=ANDROID_11_0
           - --a11y-locator
           - features/run-app-tests
-    concurrency: 9
+    concurrency: 6
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
@@ -433,7 +433,7 @@ steps:
           - --device=ANDROID_11_0
           - --a11y-locator
           - features/run-app-tests
-    concurrency: 9
+    concurrency: 6
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
@@ -456,7 +456,7 @@ steps:
           - --device=IOS_14
           - --a11y-locator
           - features/run-app-tests
-    concurrency: 9
+    concurrency: 6
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
@@ -476,7 +476,7 @@ steps:
           - --device=IOS_14
           - --a11y-locator
           - features/run-app-tests
-    concurrency: 9
+    concurrency: 6
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
@@ -496,7 +496,7 @@ steps:
           - --device=IOS_14
           - --a11y-locator
           - features/run-app-tests
-    concurrency: 9
+    concurrency: 6
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
@@ -516,7 +516,7 @@ steps:
           - --device=IOS_14
           - --a11y-locator
           - features/run-app-tests
-    concurrency: 9
+    concurrency: 6
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
@@ -536,7 +536,7 @@ steps:
           - --device=IOS_14
           - --a11y-locator
           - features/run-app-tests
-    concurrency: 9
+    concurrency: 6
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
@@ -556,7 +556,7 @@ steps:
           - --device=IOS_14
           - --a11y-locator
           - features/run-app-tests
-    concurrency: 9
+    concurrency: 6
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
@@ -576,6 +576,6 @@ steps:
           - --device=IOS_14
           - --a11y-locator
           - features/run-app-tests
-    concurrency: 9
+    concurrency: 6
     concurrency_group: 'browserstack-app'
     concurrency_method: eager

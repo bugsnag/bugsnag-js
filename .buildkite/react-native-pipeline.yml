@@ -239,7 +239,7 @@ steps:
         - --resilient
     env:
       SKIP_NAVIGATION_SCENARIOS: "true"
-    concurrency: 9
+    concurrency: 6
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
@@ -263,7 +263,7 @@ steps:
         - --resilient
     env:
       SKIP_NAVIGATION_SCENARIOS: "true"
-    concurrency: 9
+    concurrency: 6
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
@@ -286,7 +286,7 @@ steps:
         - --resilient
     env:
       SKIP_NAVIGATION_SCENARIOS: "true"
-    concurrency: 9
+    concurrency: 6
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
@@ -309,7 +309,7 @@ steps:
           - --resilient
     env:
       SKIP_NAVIGATION_SCENARIOS: "true"
-    concurrency: 9
+    concurrency: 6
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
@@ -333,7 +333,7 @@ steps:
         - --resilient
     env:
       SKIP_NAVIGATION_SCENARIOS: "true"
-    concurrency: 9
+    concurrency: 6
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
@@ -357,7 +357,7 @@ steps:
           - --resilient
     env:
       SKIP_NAVIGATION_SCENARIOS: "true"
-    concurrency: 9
+    concurrency: 6
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
@@ -379,7 +379,7 @@ steps:
         - --fail-fast
         - --resilient
         - features/navigation.feature
-    concurrency: 9
+    concurrency: 6
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
@@ -404,7 +404,7 @@ steps:
           - --fail-fast
           - --resilient
           - features/navigation.feature
-    concurrency: 9
+    concurrency: 6
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
@@ -426,7 +426,7 @@ steps:
         - --fail-fast
         - --resilient
         - features/navigation.feature
-    concurrency: 9
+    concurrency: 6
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
@@ -451,7 +451,7 @@ steps:
           - --fail-fast
           - --resilient
           - features/navigation.feature
-    concurrency: 9
+    concurrency: 6
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
@@ -473,7 +473,7 @@ steps:
         - --fail-fast
         - --resilient
         - features/navigation.feature
-    concurrency: 9
+    concurrency: 6
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
@@ -498,7 +498,7 @@ steps:
           - --fail-fast
           - --resilient
           - features/navigation.feature
-    concurrency: 9
+    concurrency: 6
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
@@ -520,7 +520,7 @@ steps:
         - --fail-fast
         - --resilient
         - features/navigation.feature
-    concurrency: 9
+    concurrency: 6
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
@@ -545,6 +545,6 @@ steps:
           - --fail-fast
           - --resilient
           - features/navigation.feature
-    concurrency: 9
+    concurrency: 6
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
