@@ -3,8 +3,8 @@
    LastUpgradeVersion = "1140"
    version = "1.3">
    <BuildAction
-      parallelizeBuildables = "YES"
-      buildImplicitDependencies = "YES">
+      parallelizeBuildables = "NO"
+      buildImplicitDependencies = "NO">
       <BuildActionEntries>
          <BuildActionEntry
             buildForTesting = "YES"
@@ -44,6 +44,16 @@
                BuildableName = "Bugsnag-tvOSTests.xctest"
                BlueprintName = "Bugsnag-tvOSTests"
                ReferencedContainer = "container:Bugsnag.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "CB487AA426D7B172004F6B87"
+               BuildableName = "BugsnagNetworkRequestPlugin-tvOSTests.xctest"
+               BlueprintName = "BugsnagNetworkRequestPlugin-tvOSTests"
+               ReferencedContainer = "container:BugsnagNetworkRequestPlugin/BugsnagNetworkRequestPlugin.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>

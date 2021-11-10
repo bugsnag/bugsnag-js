@@ -39,6 +39,9 @@ FOUNDATION_EXPORT NSString *BSGErrorDescription(NSError *error);
 
 @property (class, nonatomic) BSGInternalErrorReporter *sharedInstance;
 
+/// Runs the block immediately if sharedInstance exists, otherwise runs the block once sharedInstance has been created.
++ (void)performBlock:(void (^)(BSGInternalErrorReporter *))block;
+
 - (instancetype)initWithDataSource:(id<BSGInternalErrorReporterDataSource>)dataSource NS_DESIGNATED_INITIALIZER;
 
 - (instancetype)init UNAVAILABLE_ATTRIBUTE;

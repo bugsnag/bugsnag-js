@@ -74,7 +74,6 @@ extern NSString *const BSGKeyPersistUser;
 extern NSString *const BSGKeyProduction;
 extern NSString *const BSGKeyReason;
 extern NSString *const BSGKeyRedactedKeys;
-extern NSString *const BSGKeyRedaction;
 extern NSString *const BSGKeyReleaseStage;
 extern NSString *const BSGKeySendThreads;
 extern NSString *const BSGKeySession;

@@ -223,6 +223,8 @@ typedef BOOL (^BugsnagOnSessionBlock)(BugsnagSession *_Nonnull session);
  * Determines whether app sessions should be tracked automatically. By default this value is true.
  * If this value is updated after +[Bugsnag start] is called, only subsequent automatic sessions
  * will be captured.
+ *
+ * Note: automatic session tracking is not available in App Extensions.
  */
 @property (nonatomic) BOOL autoTrackSessions;
 

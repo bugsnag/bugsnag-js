@@ -8,8 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-#import "BugsnagSession.h"
-#import "BugsnagConfiguration.h"
+#import <Bugsnag/BugsnagConfiguration.h>
+#import <Bugsnag/BugsnagSession.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
