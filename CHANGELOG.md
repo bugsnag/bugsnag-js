@@ -1,5 +1,15 @@
 # Changelog
 
+## 7.14.0 (2021-11-16)
+
+This release adds support for reporting native crashes to `@bugsnag/electron`.
+
+If you are using modules with native extensions, you can [upload Breakpad symbol files](https://docs.bugsnag.com/platforms/electron/showing-full-stacktraces/#symbolicating-native-errors) to Bugsnag to symbolicate native errors.
+
+Note: Bugsnag On-premise does not currently support uploading minidump files. This will be supported in an upcoming release.
+
+- (electron): Add support for reporting native crashes [#1581](https://github.com/bugsnag/bugsnag-js/pull/1581)
+
 ## 7.13.3 (2021-11-08)
 
 ### Fixed
