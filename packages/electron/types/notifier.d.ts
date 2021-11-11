@@ -18,6 +18,7 @@ interface MainConfig extends Config {
   endpoints?: {
     notify: string
     sessions: string
+    minidumps?: string
   }
   onSendError?: OnSendErrorCallback | OnSendErrorCallback[]
   onUncaughtException?: AfterErrorCallback
