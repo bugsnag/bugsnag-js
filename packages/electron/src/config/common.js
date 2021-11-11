@@ -33,6 +33,8 @@ module.exports.schema = {
       (val && typeof val === 'object') &&
       (
         // notify and sessions must always be set
+        // minidumps isn't required because it was added after the initial launch
+        // so would be a breaking change
         stringWithLength(val.notify) && stringWithLength(val.sessions)
       ) &&
       // ensure no keys other than notify/session/minidumps are set on endpoints object
