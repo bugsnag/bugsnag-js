@@ -18,6 +18,16 @@ module.exports = (app, net, filestore, NativeClient) => ({
       return
     }
 
+    // the minidumps endpoint can only be missing for on-premise users who
+    // haven't configured it as it's not required by the config validation
+    if (typeof client._config.endpoints.minidumps !== 'string') {
+      client._logger.warn(
+        `Invalid configuration. endpoint.minidumps should be a valid URL, got ${typeof client._config.endpoints.minidumps}. Bugsnag will not send minidumps.`
+      )
+
+      return
+    }
+
     const appRunMetadata = filestore.getAppRunMetadata()
 
     // make sure that the Electron CrashReporter is configured

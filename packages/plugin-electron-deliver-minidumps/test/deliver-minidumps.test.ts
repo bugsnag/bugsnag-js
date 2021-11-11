@@ -37,7 +37,18 @@ describe('electron-minidump-delivery: load', () => {
         enabledErrorTypes: {
           nativeCrashes: true
         },
+        endpoints: {
+          notify: 'notify.bugsnag.com',
+          sessions: 'sessions.bugsnag.com',
+          minidumps: 'notify.bugsnag.com'
+        },
         maxBreadcrumbs: 16
+      },
+      _logger: {
+        debug: jest.fn(),
+        info: jest.fn(),
+        warn: jest.fn(),
+        error: jest.fn()
       }
     }
 
@@ -45,6 +56,7 @@ describe('electron-minidump-delivery: load', () => {
 
     expect(nativeClient.install).toBeCalledTimes(1)
     expect(whenReadyCallback).toBeInstanceOf(Function)
+    expect(client._logger.warn).not.toBeCalled()
   })
 
   it('should not install when autoDetectErrors disabled', () => {
@@ -54,7 +66,18 @@ describe('electron-minidump-delivery: load', () => {
         enabledErrorTypes: {
           nativeCrashes: true
         },
+        endpoints: {
+          notify: 'notify.bugsnag.com',
+          sessions: 'sessions.bugsnag.com',
+          minidumps: 'notify.bugsnag.com'
+        },
         maxBreadcrumbs: 16
+      },
+      _logger: {
+        debug: jest.fn(),
+        info: jest.fn(),
+        warn: jest.fn(),
+        error: jest.fn()
       }
     }
 
@@ -62,6 +85,7 @@ describe('electron-minidump-delivery: load', () => {
 
     expect(nativeClient.install).not.toBeCalled()
     expect(whenReadyCallback).toBeUndefined()
+    expect(client._logger.warn).not.toBeCalled()
   })
 
   it('should not install when nativeCrashes disabled', () => {
@@ -71,7 +95,45 @@ describe('electron-minidump-delivery: load', () => {
         enabledErrorTypes: {
           nativeCrashes: false
         },
+        endpoints: {
+          notify: 'notify.bugsnag.com',
+          sessions: 'sessions.bugsnag.com',
+          minidumps: 'notify.bugsnag.com'
+        },
         maxBreadcrumbs: 16
+      },
+      _logger: {
+        debug: jest.fn(),
+        info: jest.fn(),
+        warn: jest.fn(),
+        error: jest.fn()
+      }
+    }
+
+    plugin.load(client)
+
+    expect(nativeClient.install).not.toBeCalled()
+    expect(client._logger.warn).not.toBeCalled()
+  })
+
+  it('should not install when the minidumps endpoint is not configured', () => {
+    const client = {
+      _config: {
+        autoDetectErrors: true,
+        enabledErrorTypes: {
+          nativeCrashes: true
+        },
+        endpoints: {
+          notify: 'notify.bugsnag.com',
+          sessions: 'sessions.bugsnag.com'
+        },
+        maxBreadcrumbs: 16
+      },
+      _logger: {
+        debug: jest.fn(),
+        info: jest.fn(),
+        warn: jest.fn(),
+        error: jest.fn()
       }
     }
 
@@ -79,5 +141,9 @@ describe('electron-minidump-delivery: load', () => {
 
     expect(nativeClient.install).not.toBeCalled()
     expect(whenReadyCallback).toBeUndefined()
+    expect(client._logger.warn).toHaveBeenCalledTimes(1)
+    expect(client._logger.warn).toHaveBeenCalledWith(
+      'Invalid configuration. endpoint.minidumps should be a valid URL, got undefined. Bugsnag will not send minidumps.'
+    )
   })
 })
