@@ -1,6 +1,6 @@
 # Changelog
 
-## 7.14.0 (2021-11-16)
+## 7.14.0 (2021-11-17)
 
 This release adds support for reporting native crashes to `@bugsnag/electron`.
 
