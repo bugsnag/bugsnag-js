@@ -40,6 +40,10 @@ When('I close the app', async () => {
   await global.automator.stop()
 })
 
+When('I wait for {int} second(s)', async (seconds) => {
+  return new Promise((resolve, reject) => { setTimeout(() => resolve(), seconds * 1000) })
+})
+
 Then('the app crashed', async () => {
   expect(global.automator.crashed).toBeTruthy()
 })
@@ -64,6 +68,23 @@ Then('minidump request {int} contains a file form field named {string} matching 
 Then('minidump request {int} contains a file form field named {string}', (index, field) => {
   const req = global.server.minidumpUploads[index]
   expect(req.files[field]).not.toBeUndefined()
+})
+
+Then('minidump request {int} contains a form field named {string}', (index, field) => {
+  const req = global.server.minidumpUploads[index]
+  expect(req.fields[field]).not.toBeUndefined()
+})
+
+Then('minidump request {int} contains a form field named {string} matching {string}', async (index, field, fixture) => {
+  const req = global.server.minidumpUploads[index]
+  const expected = await readFixtureFile(fixture)
+  expect(req.fields).toHaveProperty(field)
+  try {
+    const actual = JSON.parse(req.fields[field])
+    expect([actual]).toContainPayload(expected)
+  } catch (e) {
+    throw new Error(`Could not parse ${field} as JSON: ${e} -- ${req.fields[field]}`)
+  }
 })
 
 Then('the total requests received by the server matches:', async (data) => {
@@ -154,4 +175,8 @@ Then('the event metadata {string} is less than {int}', async (field, max) => {
   expect(metadata[section]).toBeDefined()
   expect(metadata[section][key]).toBeDefined()
   expect(metadata[section][key]).toBeLessThan(max)
+})
+
+Then('I wait {int} seconds', delay => {
+  return new Promise(resolve => setTimeout(resolve, delay * 1000))
 })

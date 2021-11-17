@@ -18,6 +18,7 @@ interface MainConfig extends Config {
   endpoints?: {
     notify: string
     sessions: string
+    minidumps?: string
   }
   onSendError?: OnSendErrorCallback | OnSendErrorCallback[]
   onUncaughtException?: AfterErrorCallback
@@ -35,8 +36,15 @@ interface RendererConfig extends AllowedRendererConfig {
   codeBundleId?: string
 }
 
+interface LastRunInfo {
+  crashed: boolean
+  crashedDuringLaunch: boolean
+  consecutiveLaunchCrashes: number
+}
+
 declare class ElectronClient extends Client {
   markLaunchComplete: () => void
+  readonly lastRunInfo: LastRunInfo | null
 }
 
 interface ElectronBugsnagStatic extends ElectronClient {

@@ -9,9 +9,10 @@ class MockServer {
     this.eventUploads = []
     this.sessionUploads = []
     this.minidumpUploads = []
+    this.awaitingUploads = []
 
     const router = new Router()
-    router.register('/minidumps', 'POST', this.uploadMinidump.bind(this))
+    router.register('/minidump', 'POST', this.uploadMinidump.bind(this))
     router.register('/events', 'POST', this.sendEvent.bind(this))
     router.register('/sessions', 'POST', this.sendSession.bind(this))
 
@@ -23,6 +24,20 @@ class MockServer {
     this.startServer = promisify(this.server.listen.bind(this.server))
   }
 
+  awaitUpload () {
+    return Promise.race([
+      new Promise(resolve => {
+        this.awaitingUploads.push(resolve)
+      }),
+      new Promise((resolve, reject) => setTimeout(reject, 4900))
+    ])
+  }
+
+  _notifyUploads () {
+    this.awaitingUploads.forEach(resolve => resolve())
+    this.awaitingUploads = []
+  }
+
   async uploadMinidump (req, res) {
     const form = formidable()
     form.parse(req, (_err, fields, files) => {
@@ -30,6 +45,7 @@ class MockServer {
       this.minidumpUploads.push({ headers: req.headers, boundary, fields, files })
       res.writeHead(202)
       res.end()
+      this._notifyUploads()
     })
   }
 
@@ -40,6 +56,7 @@ class MockServer {
     req.on('end', () => {
       this.eventUploads.push({ headers: req.headers, body })
       res.end()
+      this._notifyUploads()
     })
   }
 
@@ -50,6 +67,7 @@ class MockServer {
     req.on('end', () => {
       this.sessionUploads.push({ headers: req.headers, body })
       res.end()
+      this._notifyUploads()
     })
   }
 
@@ -110,7 +128,7 @@ class MockServer {
     for (let i = 0; i < this.minidumpUploads.length; i++) {
       const upload = this.minidumpUploads[i]
       const handle = await open(join(directory, `minidump-${i}.log`), 'w+')
-      await this.writeHeaders(handle, upload, '/minidumps')
+      await this.writeHeaders(handle, upload, '/minidump')
       for (const field in upload.fields) {
         await handle.write(`${upload.boundary}\nContent-Disposition: form-data; name="${field}"\n\n${upload.fields[field]}`)
       }
@@ -155,7 +173,9 @@ class Router {
   }
 
   async dispatch (req, res) {
-    const resource = this.resources.find(r => r.path === req.url)
+    // trim the query-string off, if there is one
+    const reqPath = req.url.indexOf('?') !== -1 ? req.url.substring(0, req.url.indexOf('?')) : req.url
+    const resource = this.resources.find(r => r.path === reqPath)
     if (resource) {
       if (resource.method === req.method) {
         await resource.handle(req, res)

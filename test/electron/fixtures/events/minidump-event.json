@@ -1,0 +1,67 @@
+{
+  "payloadVersion": "5",
+  "notifier": {
+    "name": "Bugsnag Electron",
+    "version": "{TYPE:string}",
+    "url": "https://github.com/bugsnag/bugsnag-electron"
+  },
+  "events": [
+    {
+      "app": {
+        "releaseStage": "production",
+        "inForeground": "{TYPE:boolean}",
+        "isLaunching": "{TYPE:boolean}",
+        "type": "{PLATFORM_LINUX:Linux|PLATFORM_MACOS:macOS|PLATFORM_WINDOWS:Windows}",
+        "version": "1.0.2"
+      },
+      "breadcrumbs": [
+        {
+          "type": "state",
+          "name": "App became ready",
+          "timestamp": "{TIMESTAMP}",
+          "metaData": {}
+        },
+        {
+          "name": "Browser window 1 created",
+          "timestamp": "{TIMESTAMP}",
+          "type": "state",
+          "metaData": {
+            "id": "{TYPE:number}",
+            "title": "{TYPE:string}"
+          }
+        }
+      ],
+      "device": {
+        "runtimeVersions": {
+          "node": "{TYPE:string}",
+          "chrome": "{TYPE:string}",
+          "electron": "{TYPE:string}"
+        },
+        "id": "{REGEX:[0-9a-f]{64}}",
+        "locale": "{REGEX:^[a-z]{2}(-[A-Z]{2})?$}",
+        "osVersion": "{REGEX:\\d+\\.\\d+}"
+      },
+      "metadata": {
+        "app": {
+          "name": "Runner",
+          "CFBundleVersion": "{PLATFORM_MACOS:1.0.2}"
+        },
+        "device": {
+          "online": "{TYPE:boolean}",
+          "screenResolution": {
+            "width": "{TYPE:number}",
+            "height": "{TYPE:number}"
+          }
+        }
+      },
+      "session": {
+        "id": "{TYPE:string}",
+        "startedAt": "{TIMESTAMP}",
+        "events": {
+          "handled": 0,
+          "unhandled": 1
+        }
+      }
+    }
+  ]
+}

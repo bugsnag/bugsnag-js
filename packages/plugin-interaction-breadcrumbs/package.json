@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-interaction-breadcrumbs",
-  "version": "7.13.2",
+  "version": "7.14.0-rc.0",
   "main": "interaction-breadcrumbs.js",
   "description": "@bugsnag/js plugin to record UI click events as breadcrumbs",
   "homepage": "https://www.bugsnag.com/",
@@ -18,7 +18,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^7.13.2"
+    "@bugsnag/core": "^7.14.0-rc.0"
   },
   "peerDependencies": {
     "@bugsnag/core": "^7.0.0"
