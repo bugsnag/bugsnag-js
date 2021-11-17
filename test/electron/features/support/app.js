@@ -28,8 +28,7 @@ class TestApp {
       '--no-package-lock',
       '--registry',
       'http://0.0.0.0:5539',
-      `@bugsnag/electron@${bugsnagVersion}`,
-      `@bugsnag/plugin-electron-client-state-persistence@${bugsnagVersion}`
+      `@bugsnag/electron@${bugsnagVersion}`
     ])
   }
 

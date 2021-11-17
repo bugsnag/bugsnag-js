@@ -1,6 +1,12 @@
 const fs = require('fs')
 const { randomBytes } = require('crypto')
 
+// ASCII / UTF-8 byte value for a double-quote '"' character - these appears in Linux minidumps
+const DOUBLE_QUOTE = 0x22
+
+// ASCII / UTF-8 byte value for a carriage-return '\r'
+const CARRIAGE_RETURN = 0x0d
+
 const lookupKey = 'bugsnag_crash_id'
 const lookupKeyLength = lookupKey.length
 const lookupValueLength = 64
@@ -16,10 +22,13 @@ const getIdentifier = (filepath) => {
   // Align to nearest 8 bytes:
   // offset = {length rounded up to nearest multiple of 8}
   const byteOffset = (lookupKeyLength | 0x7) + 1
+  // the maximum number of additional bytes required to detect a form-data/multipart encoded
+  // request in the memory-dump, we see these on Linux minidumps
+  const maxMultipartDetectionLength = 5
   // ensure the chunk size is large enough to contain the entire key, value,
   // and separator. The value may wrap between chunks, but looping and
   // appending a subsequent chunk would then contain the entire value
-  const chunkSize = lookupValueLength + lookupKeyLength + byteOffset
+  const chunkSize = lookupValueLength + lookupKeyLength + byteOffset + maxMultipartDetectionLength
   const filestream = fs.createReadStream(filepath, { highWaterMark: chunkSize })
 
   return new Promise((resolve, reject) => {
@@ -27,7 +36,14 @@ const getIdentifier = (filepath) => {
     let keyIndex = -1
 
     const extractValue = () => {
-      const start = keyIndex + byteOffset
+      const formEncoded = data[keyIndex - 1] === DOUBLE_QUOTE || data[keyIndex + lookupKeyLength] === DOUBLE_QUOTE
+      // check for \r\n vs \n line-terminators in the case of form-encoding
+      // since there are 2 new-lines between the end of the key, as such:
+      // "\r\n\r\n = 5 bytes long
+      // "\n\n     = 3 bytes long
+      const valueOffset = formEncoded && data[keyIndex + lookupKeyLength + 1] === CARRIAGE_RETURN ? 5 : 3
+
+      const start = formEncoded ? keyIndex + lookupKeyLength + valueOffset : keyIndex + byteOffset
       const end = start + lookupValueLength
 
       if (data.length < end) {
@@ -73,7 +89,7 @@ const getIdentifier = (filepath) => {
 }
 
 const validate = (id) => {
-  const format = new RegExp(`^[a-z0-9]{${lookupValueLength}}$`)
+  const format = new RegExp(`^[a-f0-9]{${lookupValueLength}}$`)
   return format.test(id)
 }
 

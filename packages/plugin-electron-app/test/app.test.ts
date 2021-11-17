@@ -757,6 +757,7 @@ interface MakeClientOptions {
   NativeApp?: any
   process?: any
   config?: { launchDurationMillis: number|undefined }
+  filestore?: any
 }
 
 function makeClient ({
@@ -765,17 +766,27 @@ function makeClient ({
   NativeClient = makeNativeClient(),
   process = makeProcess(),
   config = { launchDurationMillis: 0 },
-  NativeApp = makeNativeApp()
+  NativeApp = makeNativeApp(),
+  filestore = makeFileStore()
 }: MakeClientOptions = {}): ReturnType<typeof makeClientForPlugin> {
   return makeClientForPlugin({
     config,
-    plugin: plugin(NativeClient, process, electronApp, BrowserWindow, NativeApp)
+    plugin: plugin(NativeClient, process, electronApp, BrowserWindow, filestore, NativeApp)
   })
 }
 
 function makeNativeClient () {
   return {
-    setApp: jest.fn()
+    install: jest.fn(),
+    setApp: jest.fn(),
+    setLastRunInfo: jest.fn()
+  }
+}
+
+function makeFileStore () {
+  return {
+    getLastRunInfo: jest.fn().mockReturnValue({ crashed: false, crashedDuringLaunch: false, consecutiveLaunchCrashes: 0 }),
+    setLastRunInfo: jest.fn()
   }
 }
 

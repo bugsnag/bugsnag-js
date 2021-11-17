@@ -101,7 +101,7 @@
           "errorClass": "Error",
           "stacktrace": [
             {
-              "lineNumber": 20,
+              "lineNumber": 24,
               "file": "./renderer.js",
               "code": {
                 "1": "{TYPE:string}"
