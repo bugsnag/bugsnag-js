@@ -5,4 +5,6 @@ interface BugsnagInFlight {
   flush (timeoutMs: number): Promise<void>
 }
 
-export default BugsnagInFlight
+declare const BugsnagInFlightPlugin: BugsnagInFlight
+
+export default BugsnagInFlightPlugin
