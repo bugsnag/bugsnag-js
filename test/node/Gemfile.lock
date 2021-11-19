@@ -1,9 +1,9 @@
 GIT
   remote: https://github.com/bugsnag/maze-runner
-  revision: e27004e424b165651f729a574ab21a277c75a355
-  tag: v6.2.1
+  revision: e557877be1d2f3881d93a420aa5582b55923069c
+  tag: v6.4.0
   specs:
-    bugsnag-maze-runner (6.2.1)
+    bugsnag-maze-runner (6.4.0)
       appium_lib (~> 11.2.0)
       cucumber (~> 7.1)
       cucumber-expressions (~> 6.0.0)
@@ -46,7 +46,7 @@ GEM
       cucumber-gherkin (~> 22.0, >= 22.0.0)
       cucumber-messages (~> 17.1, >= 17.1.1)
       cucumber-tag-expressions (~> 4.0, >= 4.0.2)
-    cucumber-create-meta (6.0.2)
+    cucumber-create-meta (6.0.4)
       cucumber-messages (~> 17.1, >= 17.1.1)
       sys-uname (~> 1.2, >= 1.2.2)
     cucumber-cucumber-expressions (14.0.0)
@@ -68,9 +68,9 @@ GEM
       eventmachine (>= 0.12.0)
       websocket-driver (>= 0.5.1)
     ffi (1.15.4)
-    mime-types (3.3.1)
+    mime-types (3.4.1)
       mime-types-data (~> 3.2015)
-    mime-types-data (3.2021.0901)
+    mime-types-data (3.2021.1115)
     mini_portile2 (2.6.1)
     minitest (5.14.4)
     multi_test (0.1.2)
@@ -103,4 +103,4 @@ DEPENDENCIES
   bugsnag-maze-runner!
 
 BUNDLED WITH
-   2.2.20
+   2.2.28
