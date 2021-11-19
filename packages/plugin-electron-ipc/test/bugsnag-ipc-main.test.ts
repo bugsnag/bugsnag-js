@@ -209,23 +209,46 @@ describe('BugsnagIpcMain', () => {
       client.leaveBreadcrumb('hi')
       client.setContext('ctx')
       client.setUser('123', 'jim@jim.com', 'Jim')
+      client.addFeatureFlags([
+        { name: 'flag1' },
+        { name: 'flag2', variant: null },
+        { name: 'flag3', variant: 1234 },
+        { name: 'flag4', variant: 'abc' }
+      ])
 
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       const payloadInfo = await bugsnagIpcMain.getPayloadInfo()
 
       expect(payloadInfo.metadata.nonInternal).toBeUndefined()
       expect(nonInternalCb).not.toHaveBeenCalled()
+      expect(payloadInfo.breadcrumbs).toHaveLength(1)
 
-      expect(payloadInfo.device).toEqual({ id: '123' })
-      expect(payloadInfo.metadata.device).toEqual({ isOutdated: true })
-
-      expect(payloadInfo.app).toEqual({ releaseStage: 'production', name: 'testApp', type: 'test' })
-      expect(payloadInfo.metadata.app).toEqual({ testingMode: 'unit' })
-
-      expect(payloadInfo.breadcrumbs.length).toBe(1)
-      expect(payloadInfo.context).toBe('ctx')
-      expect(payloadInfo.user).toEqual({ id: '123', email: 'jim@jim.com', name: 'Jim' })
-      expect(payloadInfo.shouldSend).toBeUndefined()
+      expect(payloadInfo).toStrictEqual({
+        app: {
+          releaseStage: 'production',
+          name: 'testApp',
+          type: 'test',
+          version: undefined
+        },
+        breadcrumbs: client._breadcrumbs,
+        context: 'ctx',
+        device: { id: '123' },
+        metadata: {
+          app: { testingMode: 'unit' },
+          device: { isOutdated: true }
+        },
+        features: {
+          flag1: null,
+          flag2: null,
+          flag3: '1234',
+          flag4: 'abc'
+        },
+        user: {
+          id: '123',
+          email: 'jim@jim.com',
+          name: 'Jim'
+        }
+      })
     })
 
     it('should return shouldSend=false when a callback returns false', async () => {
