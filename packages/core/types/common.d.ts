@@ -24,6 +24,7 @@ export interface Config {
   logger?: Logger | null
   maxBreadcrumbs?: number
   metadata?: { [key: string]: any }
+  featureFlags?: FeatureFlag[]
   releaseStage?: string
   plugins?: Plugin[]
   user?: User | null
