@@ -886,6 +886,7 @@ describe('@bugsnag/core/client', () => {
         featureFlags: [
           { name: 'a', variant: '1' },
           { name: 'b' },
+          // @ts-expect-error
           { name: 'c', variant: 3 }
         ]
       })
@@ -906,14 +907,15 @@ describe('@bugsnag/core/client', () => {
         logger,
         featureFlags: [
           { name: 'a', variant: '1' },
+          // @ts-expect-error
           { variant: 'b' },
-          { name: 'c', variant: 3 }
+          { name: 'c', variant: '3' }
         ]
       })
 
       const expectedMessage = [
         'Invalid configuration',
-        '  - featureFlags should be an array of objects that have a "name" property, got [{"name":"a","variant":"1"},{"variant":"b"},{"name":"c","variant":3}]'
+        '  - featureFlags should be an array of objects that have a "name" property, got [{"name":"a","variant":"1"},{"variant":"b"},{"name":"c","variant":"3"}]'
       ].join('\n')
 
       expect(client._features).toStrictEqual({})
@@ -943,6 +945,7 @@ describe('@bugsnag/core/client', () => {
         error: jest.fn()
       }
 
+      // @ts-expect-error
       const client = new Client({ apiKey: 'a123456789012345678901234567890b', logger, featureFlags })
 
       expect(client._features).toStrictEqual({})
