@@ -75,6 +75,29 @@ describe('clientStateUpdatesPlugin', () => {
       client.getMetadata('layers', 'strawberry')
     })
 
+    it('propagates feature flag changes', () => {
+      const mockBugsnagIpcRenderer = {
+        addFeatureFlag: jest.fn(),
+        addFeatureFlags: jest.fn(),
+        clearFeatureFlag: jest.fn(),
+        clearFeatureFlags: jest.fn()
+      }
+
+      const client = new Client({ apiKey: '123' }, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], Notifier)
+
+      client.addFeatureFlag('name', 'variant')
+      expect(mockBugsnagIpcRenderer.addFeatureFlag).toHaveBeenCalledWith('name', 'variant')
+
+      client.addFeatureFlags([{ name: 'abc' }])
+      expect(mockBugsnagIpcRenderer.addFeatureFlags).toHaveBeenCalledWith([{ name: 'abc' }])
+
+      client.clearFeatureFlag('name')
+      expect(mockBugsnagIpcRenderer.clearFeatureFlag).toHaveBeenCalledWith('name')
+
+      client.clearFeatureFlags()
+      expect(mockBugsnagIpcRenderer.clearFeatureFlags).toHaveBeenCalledWith()
+    })
+
     it('propagates breadcrumb changes', () => {
       const mockBugsnagIpcRenderer = {
         leaveBreadcrumb: jest.fn()

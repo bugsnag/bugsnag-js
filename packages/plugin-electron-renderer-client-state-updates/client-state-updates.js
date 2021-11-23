@@ -20,6 +20,11 @@ module.exports = (BugsnagIpcRenderer = window.__bugsnag_ipc__) => ({
     client.setContext = safeExec(client, BugsnagIpcRenderer, 'setContext')
     client.addMetadata = safeExec(client, BugsnagIpcRenderer, 'addMetadata')
     client.clearMetadata = safeExec(client, BugsnagIpcRenderer, 'clearMetadata')
+    client.addFeatureFlag = safeExec(client, BugsnagIpcRenderer, 'addFeatureFlag')
+    client.addFeatureFlags = safeExec(client, BugsnagIpcRenderer, 'addFeatureFlags')
+    client.clearFeatureFlag = safeExec(client, BugsnagIpcRenderer, 'clearFeatureFlag')
+    client.clearFeatureFlags = safeExec(client, BugsnagIpcRenderer, 'clearFeatureFlags')
+
     client.startSession = () => {
       safeExec(client, BugsnagIpcRenderer, 'startSession')()
       return client
