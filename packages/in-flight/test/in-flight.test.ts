@@ -5,7 +5,7 @@ import Client, { EventDeliveryPayload, SessionDeliveryPayload } from '@bugsnag/c
 // 'bugsnagInFlight' variable for this test to compile
 import BugsnagInFlightJustForTypescript from '../types/bugsnag-in-flight'
 
-let bugsnagInFlight: BugsnagInFlightJustForTypescript
+let bugsnagInFlight: typeof BugsnagInFlightJustForTypescript
 jest.isolateModules(() => { bugsnagInFlight = require('../src/in-flight') })
 const noop = () => {}
 const id = <T>(a: T) => a
