@@ -229,6 +229,32 @@ safari_13:
     lineNumber: 18
     columnNumber: 25
 
+safari_15:
+  handled:
+    errorClass: 'ReferenceError'
+    errorMessage: "Can't find variable: foo"
+  unhandled_syntax:
+    errorClass: 'SyntaxError'
+    errorMessage: "Unexpected token '!'. Parse error."
+    lineNumber: 18
+    columnNumber: 0
+    file: '/unhandled/script/a.html'
+  unhandled_thrown:
+    errorClass: 'Error'
+    errorMessage: "bad things"
+    lineNumber: 18
+    columnNumber: 22
+  unhandled_undefined_function:
+    errorClass: 'ReferenceError'
+    errorMessage: "Can't find variable: nevergoingtoexist_notinamillionyears"
+    lineNumber: 18
+    columnNumber: 43
+  unhandled_malformed_uri:
+    errorClass: 'URIError'
+    errorMessage: URI error
+    lineNumber: 18
+    columnNumber: 25
+
 iphone_7:
   handled:
     errorClass: 'ReferenceError'
