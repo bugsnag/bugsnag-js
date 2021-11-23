@@ -1,5 +1,11 @@
 # Changelog
 
+## TBD
+
+### Fixed
+
+- (in-flight): Fix Typescript definition exporting a type instead of a value [skirsten](https://github.com/skirsten) [#1587](https://github.com/bugsnag/bugsnag-js/pull/1587)
+
 ## 7.14.0 (2021-11-17)
 
 This release adds support for reporting native crashes to `@bugsnag/electron`.
