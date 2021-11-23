@@ -38,7 +38,7 @@ module.exports = (BugsnagIpcRenderer = window.__bugsnag_ipc__) => ({
     // sync any client state that was set in the renderer config
 
     try {
-      const updates = { metadata: client._metadata }
+      const updates = { metadata: client._metadata, features: client._features }
       const user = client.getUser()
       const context = client.getContext()
       if (context && context.length > 0) {

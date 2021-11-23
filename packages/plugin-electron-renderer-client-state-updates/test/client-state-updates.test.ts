@@ -171,12 +171,14 @@ describe('clientStateUpdatesPlugin', () => {
       const client = new Client({
         apiKey: '123',
         metadata: { section: { key: 'value' } },
+        featureFlags: [{ name: 'abc' }, { name: 'xyz', variant: '123' }],
         context: 'renderer config',
         user: { id: 'ab23' }
       }, undefined, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)])
 
       expect(mockBugsnagIpcRenderer.update).toHaveBeenCalledWith({
         metadata: { section: { key: 'value' } },
+        features: { abc: null, xyz: '123' },
         user: { id: 'ab23' },
         context: 'renderer config'
       })
@@ -195,7 +197,8 @@ describe('clientStateUpdatesPlugin', () => {
       }, undefined, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)])
 
       expect(mockBugsnagIpcRenderer.update).toHaveBeenCalledWith({
-        metadata: { section: { key: 'value' } }
+        metadata: { section: { key: 'value' } },
+        features: {}
       })
     })
 
