@@ -24,8 +24,8 @@ module.exports = class BugsnagIpcMain {
     )
   }
 
-  update ({ context, user, metadata }) {
-    return this.clientStateManager.bulkUpdate({ context, user, metadata })
+  update ({ context, user, metadata, features }) {
+    return this.clientStateManager.bulkUpdate({ context, user, metadata, features })
   }
 
   dispatch (eventObject) {
@@ -160,6 +160,10 @@ module.exports = class BugsnagIpcMain {
       ['addMetadata', this.client.addMetadata.bind(this.client)],
       ['clearMetadata', this.client.clearMetadata.bind(this.client)],
       ['getMetadata', this.client.getMetadata.bind(this.client)],
+      ['addFeatureFlag', this.client.addFeatureFlag.bind(this.client)],
+      ['addFeatureFlags', this.client.addFeatureFlags.bind(this.client)],
+      ['clearFeatureFlag', this.client.clearFeatureFlag.bind(this.client)],
+      ['clearFeatureFlags', this.client.clearFeatureFlags.bind(this.client)],
       ['getUser', this.client.getUser.bind(this.client)],
       ['setUser', this.client.setUser.bind(this.client)],
       ['dispatch', this.dispatch.bind(this)],
