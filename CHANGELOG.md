@@ -4,6 +4,7 @@
 
 ### Fixed
 
+- (plugin-network-breadcrumbs): Fix a crash when request URL is not a string [#1598](https://github.com/bugsnag/bugsnag-js/pull/1598)
 - (in-flight): Fix Typescript definition exporting a type instead of a value [skirsten](https://github.com/skirsten) [#1587](https://github.com/bugsnag/bugsnag-js/pull/1587)
 
 ## 7.14.0 (2021-11-17)
