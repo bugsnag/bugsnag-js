@@ -61,3 +61,6 @@ class BugsnagPluginReactNavigation {
 }
 
 module.exports = BugsnagPluginReactNavigation
+
+// add a default export for ESM modules without interop
+module.exports.default = module.exports
