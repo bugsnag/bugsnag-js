@@ -191,7 +191,7 @@ describe('plugin: electron net breadcrumbs', () => {
   })
 
   it.each([
-    'notify', 'sessions', 'minidump'
+    'notify', 'sessions'
   ])('does nothing when the request is to the %s endpoint', async (endpointName) => {
     currentServer = await startServer(200)
 
@@ -211,6 +211,38 @@ describe('plugin: electron net breadcrumbs', () => {
     })
 
     const request = net.request(url)
+
+    await new Promise(resolve => {
+      request.on('response', (response) => {
+        response.on('data', () => {})
+        response.on('end', resolve)
+      })
+
+      request.end()
+    })
+
+    expect(client._breadcrumbs).toHaveLength(0)
+  })
+
+  it.each('does nothing when the request is to the minidumps endpoint', async () => {
+    currentServer = await startServer(200)
+
+    const url = `http://localhost:${currentServer.port}`
+
+    const client = makeClient({
+      config: {
+        endpoints: {
+          notify: 'https://example.com/notify',
+          sessions: 'https://example.com/sessions',
+          minidumps: url
+        }
+      },
+      schema: {
+        endpoints: { defaultValue: () => ({}), message: '', validate: () => true }
+      }
+    })
+
+    const request = net.request(`${url}?api_key=1234567890`)
 
     await new Promise(resolve => {
       request.on('response', (response) => {

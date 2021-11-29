@@ -187,6 +187,20 @@ steps:
     concurrency: 5
     concurrency_group: 'browserstack'
 
+  - label: ':safari: v15 Browser tests'
+    depends_on: "browser-maze-runner-image"
+    timeout_in_minutes: 10
+    plugins:
+      docker-compose#v3.7.0:
+        run: browser-maze-runner
+        use-aliases: true
+        verbose: true
+        command:
+          - --farm=bs
+          - --browser=safari_15
+    concurrency: 5
+    concurrency_group: 'browserstack'
+
   - label: ':iphone: iOS 10.3 Browser tests'
     depends_on: "browser-maze-runner-image"
     timeout_in_minutes: 20

@@ -13,7 +13,7 @@ class XMLHttpRequest {
     this.status = null
   }
 
-  open (method: string, url: string) {
+  open (method: string, url: string | { toString: () => any }) {
   }
 
   send (fail: boolean, status: number | null = null) {
@@ -223,6 +223,61 @@ describe('plugin: network breadcrumbs', () => {
     expect(client._logger.warn).toHaveBeenCalledWith(
       'The request URL is no longer present on this XMLHttpRequest. A breadcrumb cannot be left for this request.'
     )
+  })
+
+  it('should leave a breadcrumb when the request URL is not a string', () => {
+    const window = { XMLHttpRequest } as unknown as Window & typeof globalThis
+
+    const logger = {
+      debug: jest.fn(),
+      info: jest.fn(),
+      warn: jest.fn(),
+      error: jest.fn()
+    }
+
+    p = plugin([], window)
+    const client = new Client({ apiKey: 'abcabcabcabcabcabcabc1234567890f', logger, plugins: [p] })
+
+    const request = new window.XMLHttpRequest() as unknown as XMLHttpRequest
+    request.open('GET', { toString: () => 'https://example.com' })
+    request.send(false, 200)
+
+    expect(client._breadcrumbs.length).toBe(1)
+    expect(client._breadcrumbs[0]).toEqual(expect.objectContaining({
+      type: 'request',
+      message: 'XMLHttpRequest succeeded',
+      metadata: {
+        status: 200,
+        request: 'GET https://example.com'
+      }
+    }))
+  })
+
+  it('should leave a breadcrumb when the request URL is not a string for a request that errors', () => {
+    const window = { XMLHttpRequest } as unknown as Window & typeof globalThis
+
+    const logger = {
+      debug: jest.fn(),
+      info: jest.fn(),
+      warn: jest.fn(),
+      error: jest.fn()
+    }
+
+    p = plugin([], window)
+    const client = new Client({ apiKey: 'abcabcabcabcabcabcabc1234567890f', logger, plugins: [p] })
+
+    const request = new window.XMLHttpRequest() as unknown as XMLHttpRequest
+    request.open('GET', { toString: () => 'https://example.com' })
+    request.send(true)
+
+    expect(client._breadcrumbs.length).toBe(1)
+    expect(client._breadcrumbs[0]).toEqual(expect.objectContaining({
+      type: 'request',
+      message: 'XMLHttpRequest error',
+      metadata: {
+        request: 'GET https://example.com'
+      }
+    }))
   })
 
   it('should leave a breadcrumb when a fetch() resolves', (done) => {
