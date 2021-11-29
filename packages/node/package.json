@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/node",
-  "version": "7.14.0",
+  "version": "7.14.1",
   "main": "dist/bugsnag.js",
   "types": "types/bugsnag.d.ts",
   "description": "Bugsnag error reporter for Node.js",
@@ -27,8 +27,8 @@
   "devDependencies": {
     "@bugsnag/delivery-node": "^7.14.0",
     "@bugsnag/plugin-app-duration": "^7.14.0",
-    "@bugsnag/plugin-contextualize": "^7.14.0",
-    "@bugsnag/plugin-intercept": "^7.14.0",
+    "@bugsnag/plugin-contextualize": "^7.14.1",
+    "@bugsnag/plugin-intercept": "^7.14.1",
     "@bugsnag/plugin-node-device": "^7.14.0",
     "@bugsnag/plugin-node-in-project": "^7.14.0",
     "@bugsnag/plugin-node-surrounding-code": "^7.14.0",
