@@ -180,3 +180,29 @@ Then('the event metadata {string} is less than {int}', async (field, max) => {
 Then('I wait {int} seconds', delay => {
   return new Promise(resolve => setTimeout(resolve, delay * 1000))
 })
+
+Then('the event contains the following feature flags:', async (table) => {
+  const payloads = readPayloads(global.server.uploadsForType('event'))
+
+  const expected = table.hashes().map((featureFlag) => {
+    // an empty cell in the .feature is parsed as an empty string but really
+    // means that the variant should be missing entirely
+    if (featureFlag.variant === '') {
+      delete featureFlag.variant
+    }
+
+    return featureFlag
+  })
+
+  expect(payloads).toHaveLength(1)
+  expect(payloads[0].events).toHaveLength(1)
+  expect(payloads[0].events[0]).toHaveProperty('featureFlags', expected)
+})
+
+Then('the event has no feature flags', async () => {
+  const payloads = readPayloads(global.server.uploadsForType('event'))
+
+  expect(payloads).toHaveLength(1)
+  expect(payloads[0].events).toHaveLength(1)
+  expect(payloads[0].events[0]).toHaveProperty('featureFlags', [])
+})
