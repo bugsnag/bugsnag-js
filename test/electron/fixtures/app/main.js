@@ -18,6 +18,13 @@ Bugsnag.start(config)
 
 const { app, BrowserWindow, ipcMain } = require('electron')
 
+Bugsnag.addFeatureFlag('from main at runtime', 'runtime 1')
+Bugsnag.addOnError(event => {
+  event.addFeatureFlags([
+    { name: 'from main on error', variant: 'on error 1' }
+  ])
+})
+
 function createWindow () {
   const win = new BrowserWindow({
     width: 800,
@@ -74,4 +81,11 @@ ipcMain.on('mark-launch-complete', () => {
 
 ipcMain.on('last-run-info-breadcrumb', () => {
   Bugsnag.leaveBreadcrumb('last-run-info', Bugsnag.lastRunInfo)
+})
+
+ipcMain.on('main-process-clear-feature-flags', () => {
+  // clear feature flags in a new on error callback to also clear flags from other callbacks
+  Bugsnag.addOnError(event => {
+    event.clearFeatureFlags()
+  })
 })

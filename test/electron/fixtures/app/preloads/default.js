@@ -33,5 +33,8 @@ contextBridge.exposeInMainWorld('RunnerAPI', {
   renderProcessCrash: () => {
     process.crash()
   },
+  mainProcessClearFeatureFlags: () => {
+    ipcRenderer.send('main-process-clear-feature-flags')
+  },
   preloadStart: Date.now()
 })
