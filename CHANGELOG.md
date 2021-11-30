@@ -1,5 +1,24 @@
 # Changelog
 
+## 7.14.1 (2021-11-29)
+
+### Fixed
+
+- (plugin-network-breadcrumbs): Fix a crash when request URL is not a string [#1598](https://github.com/bugsnag/bugsnag-js/pull/1598)
+- (in-flight): Fix Typescript definition exporting a type instead of a value [skirsten](https://github.com/skirsten) [#1587](https://github.com/bugsnag/bugsnag-js/pull/1587)
+- (plugin-electron-net-breadcrumbs): Don't leave breadcrumbs for requests to the minidumps endpoint [#1597](https://github.com/bugsnag/bugsnag-js/pull/1597)
+- Add a `default` export to plugins that were missing one [#1599](https://github.com/bugsnag/bugsnag-js/pull/1599)
+
+## 7.14.0 (2021-11-17)
+
+This release adds support for reporting native crashes to `@bugsnag/electron`.
+
+If you are using modules with native extensions, you can [upload Breakpad symbol files](https://docs.bugsnag.com/platforms/electron/showing-full-stacktraces/#symbolicating-native-errors) to Bugsnag to symbolicate native errors.
+
+Note: Bugsnag On-premise does not currently support uploading minidump files. This will be supported in an upcoming release.
+
+- (electron): Add support for reporting native crashes [#1581](https://github.com/bugsnag/bugsnag-js/pull/1581)
+
 ## 7.13.3 (2021-11-08)
 
 ### Fixed

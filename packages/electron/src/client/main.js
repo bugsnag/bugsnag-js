@@ -4,18 +4,16 @@ const Client = require('@bugsnag/core/client')
 const Event = require('@bugsnag/core/event')
 const Breadcrumb = require('@bugsnag/core/breadcrumb')
 const Session = require('@bugsnag/core/session')
+const {
+  plugin: PluginClientStatePersistence,
+  NativeClient
+} = require('@bugsnag/plugin-electron-client-state-persistence')
 
 const makeDelivery = require('@bugsnag/delivery-electron')
 const { FileStore } = require('@bugsnag/electron-filestore')
 const { schema } = require('../config/main')
 
 Event.__type = 'electronnodejs'
-
-// noop native client for now
-const NativeClient = {
-  setApp () {},
-  setDevice () {}
-}
 
 module.exports = (opts) => {
   const filestore = new FileStore(
@@ -37,13 +35,15 @@ module.exports = (opts) => {
     // errors before any renderer onError callbacks are called
     require('@bugsnag/plugin-internal-callback-marker').FirstPlugin,
     require('@bugsnag/plugin-electron-client-state-manager'),
+    PluginClientStatePersistence(NativeClient),
+    require('@bugsnag/plugin-electron-deliver-minidumps')(electron.app, electron.net, filestore, NativeClient),
     require('@bugsnag/plugin-electron-ipc'),
     require('@bugsnag/plugin-node-uncaught-exception'),
     require('@bugsnag/plugin-node-unhandled-rejection'),
-    require('@bugsnag/plugin-electron-app')(NativeClient, process, electron.app, electron.BrowserWindow),
+    require('@bugsnag/plugin-electron-app')(NativeClient, process, electron.app, electron.BrowserWindow, filestore),
     require('@bugsnag/plugin-electron-app-breadcrumbs')(electron.app, electron.BrowserWindow),
     require('@bugsnag/plugin-electron-device')(electron.app, electron.screen, process, filestore, NativeClient, electron.powerMonitor),
-    require('@bugsnag/plugin-electron-session')(electron.app, electron.BrowserWindow, filestore),
+    require('@bugsnag/plugin-electron-session')(electron.app, electron.BrowserWindow, NativeClient),
     require('@bugsnag/plugin-console-breadcrumbs'),
     require('@bugsnag/plugin-strip-project-root'),
     require('@bugsnag/plugin-electron-process-info')(),
@@ -60,12 +60,13 @@ module.exports = (opts) => {
 
   const bugsnag = new Client(opts, schema, internalPlugins, require('../id'))
 
-  bugsnag._setDelivery(makeDelivery(filestore, electron.net, electron.app))
+  filestore.init().catch(err => bugsnag._logger.warn('Failed to init crash FileStore directories', err))
 
   // expose markLaunchComplete as a method on the Bugsnag client/facade
   const electronApp = bugsnag.getPlugin('electronApp')
   const { markLaunchComplete } = electronApp
   bugsnag.markLaunchComplete = markLaunchComplete
+  bugsnag._setDelivery(makeDelivery(filestore, electron.net, electron.app))
 
   bugsnag._logger.debug('Loaded! In main process.')
   if (bugsnag._isBreadcrumbTypeEnabled('state')) {

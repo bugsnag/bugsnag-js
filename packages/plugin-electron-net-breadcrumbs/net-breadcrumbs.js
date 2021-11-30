@@ -26,7 +26,9 @@ module.exports = net => ({
       const method = request._urlLoaderOptions.method
 
       // don't leave breadcrumbs for Bugsnag endpoints
-      if (ignoredUrls.includes(url)) {
+      // minidump requests will have an 'api_key' query string parameter, which
+      // we need to remove here
+      if (typeof url === 'string' && ignoredUrls.includes(url.replace(/\?.*$/, ''))) {
         return request
       }
 

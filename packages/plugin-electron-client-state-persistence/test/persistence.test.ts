@@ -7,6 +7,7 @@ const { mkdtemp, readFile, rmdir } = promises
 describe('persisting changes to disk', () => {
   let tempdir: string = ''
   let filepath: string = ''
+  let lastRunInfoFilePath: string = ''
 
   const readTempFile = async () => {
     const contents = await readFile(filepath)
@@ -16,6 +17,7 @@ describe('persisting changes to disk', () => {
   beforeEach(async () => {
     tempdir = await mkdtemp('client-sync-')
     filepath = join(tempdir, 'output.json')
+    lastRunInfoFilePath = join(tempdir, 'last-run-info.json')
   })
 
   afterEach(async (done) => {
@@ -25,7 +27,7 @@ describe('persisting changes to disk', () => {
   })
 
   it('sets context', async (done) => {
-    NativeClient.install(filepath, 5)
+    NativeClient.install(filepath, lastRunInfoFilePath, 5)
     NativeClient.updateContext('silverfish')
     NativeClient.persistState()
     const state = await readTempFile()
@@ -34,7 +36,7 @@ describe('persisting changes to disk', () => {
   })
 
   it('sets user fields', async (done) => {
-    NativeClient.install(filepath, 5)
+    NativeClient.install(filepath, lastRunInfoFilePath, 5)
     NativeClient.updateUser('456', 'jo@example.com', 'jo')
     NativeClient.persistState()
     const state = await readTempFile()
@@ -43,7 +45,7 @@ describe('persisting changes to disk', () => {
   })
 
   it('clears user fields', async (done) => {
-    NativeClient.install(filepath, 5)
+    NativeClient.install(filepath, lastRunInfoFilePath, 5)
     NativeClient.updateUser('456', 'jo@example.com', 'jo')
     NativeClient.updateUser('456', 'jo@example.com', null)
     NativeClient.persistState()
@@ -53,7 +55,7 @@ describe('persisting changes to disk', () => {
   })
 
   it('clears context', async (done) => {
-    NativeClient.install(filepath, 5)
+    NativeClient.install(filepath, lastRunInfoFilePath, 5)
     NativeClient.updateContext('silverfish')
     NativeClient.updateContext(null)
     NativeClient.persistState()
@@ -63,7 +65,7 @@ describe('persisting changes to disk', () => {
   })
 
   it('adds breadcrumbs', async (done) => {
-    NativeClient.install(filepath, 5)
+    NativeClient.install(filepath, lastRunInfoFilePath, 5)
     NativeClient.leaveBreadcrumb({ name: 'launch app' })
     NativeClient.leaveBreadcrumb({ name: 'click start' })
     NativeClient.leaveBreadcrumb({ name: 'click pause' })
@@ -84,7 +86,7 @@ describe('persisting changes to disk', () => {
   })
 
   it('sets metadata', async () => {
-    NativeClient.install(filepath, 5)
+    NativeClient.install(filepath, lastRunInfoFilePath, 5)
     NativeClient.updateMetadata({
       terrain: { spawn: 'desert', current: 'cave' },
       location: { x: 4, y: 12 }
@@ -99,7 +101,7 @@ describe('persisting changes to disk', () => {
   })
 
   it('set metadata tab contents', async (done) => {
-    NativeClient.install(filepath, 5)
+    NativeClient.install(filepath, lastRunInfoFilePath, 5)
     NativeClient.updateMetadata('terrain', { spawn: 'desert', current: 'cave' })
     NativeClient.persistState()
 
@@ -114,7 +116,7 @@ describe('persisting changes to disk', () => {
   })
 
   it('clears metadata tab', async (done) => {
-    NativeClient.install(filepath, 5)
+    NativeClient.install(filepath, lastRunInfoFilePath, 5)
     NativeClient.updateMetadata('terrain', { spawn: 'desert', current: 'cave' })
     NativeClient.updateMetadata('device', { size: 256 })
     NativeClient.updateMetadata('terrain')
@@ -170,7 +172,7 @@ describe('persisting changes to disk', () => {
   })
 
   it('sets session', async (done) => {
-    NativeClient.install(filepath, 5)
+    NativeClient.install(filepath, lastRunInfoFilePath, 5)
     NativeClient.setSession({
       id: '9f65c975-8155-456f-91e5-c4c4b3db0555',
       events: { handled: 1, unhandled: 0 },
@@ -195,7 +197,7 @@ describe('persisting changes to disk', () => {
   })
 
   it('has no session by default', async (done) => {
-    NativeClient.install(filepath, 5)
+    NativeClient.install(filepath, lastRunInfoFilePath, 5)
     NativeClient.persistState()
     const state = await readTempFile()
     expect(state.session).toBeUndefined()
@@ -204,7 +206,7 @@ describe('persisting changes to disk', () => {
   })
 
   it('sets app info', async (done) => {
-    NativeClient.install(filepath, 5)
+    NativeClient.install(filepath, lastRunInfoFilePath, 5)
     NativeClient.setApp({
       releaseStage: 'beta1',
       version: '1.0.22'
@@ -221,7 +223,7 @@ describe('persisting changes to disk', () => {
   })
 
   it('sets device info', async (done) => {
-    NativeClient.install(filepath, 5)
+    NativeClient.install(filepath, lastRunInfoFilePath, 5)
     NativeClient.setDevice({
       online: true,
       osName: 'beOS',
@@ -242,7 +244,7 @@ describe('persisting changes to disk', () => {
   })
 
   it('initializes with provided state', async () => {
-    NativeClient.install(filepath, 5, {
+    NativeClient.install(filepath, lastRunInfoFilePath, 5, {
       metadata: { colors: { main: ['yellow', 'green'] } },
       context: 'color picker view',
       title: 'double double, toil and …'
@@ -258,7 +260,7 @@ describe('persisting changes to disk', () => {
   })
 
   it('overrides initial state with new values', async () => {
-    NativeClient.install(filepath, 5, {
+    NativeClient.install(filepath, lastRunInfoFilePath, 5, {
       metadata: { colors: { main: ['yellow', 'green'] } },
       context: 'color picker view',
       title: 'double double, toil and …'
@@ -275,7 +277,7 @@ describe('persisting changes to disk', () => {
   })
 
   it('gracefully handles invalid initial breadcrumb state', async () => {
-    NativeClient.install(filepath, 5, {
+    NativeClient.install(filepath, lastRunInfoFilePath, 5, {
       metadata: { colors: { main: ['yellow', 'green'] } },
       context: 'color picker view',
       breadcrumbs: 'oy'
@@ -290,7 +292,7 @@ describe('persisting changes to disk', () => {
   })
 
   it('gracefully handles invalid initial context', async () => {
-    NativeClient.install(filepath, 5, {
+    NativeClient.install(filepath, lastRunInfoFilePath, 5, {
       metadata: { colors: { main: ['yellow', 'green'] } },
       context: 20
     })
@@ -303,7 +305,7 @@ describe('persisting changes to disk', () => {
   })
 
   it('gracefully handles invalid initial metadata', async () => {
-    NativeClient.install(filepath, 5, {
+    NativeClient.install(filepath, lastRunInfoFilePath, 5, {
       metadata: 'things',
       context: 'side'
     })
@@ -314,7 +316,7 @@ describe('persisting changes to disk', () => {
   })
 
   it('gracefully handles invalid initial user info', async () => {
-    NativeClient.install(filepath, 5, {
+    NativeClient.install(filepath, lastRunInfoFilePath, 5, {
       metadata: { colors: { main: ['yellow', 'green'] } },
       user: ['foo']
     })
@@ -324,5 +326,17 @@ describe('persisting changes to disk', () => {
     expect(state).toEqual({
       metadata: { colors: { main: ['yellow', 'green'] } }
     })
+  })
+
+  it('saves lastRunInfo', async () => {
+    const runInfo = { crashed: false, crashedDuringLaunch: false, consecutiveLaunchCrashes: 0 }
+
+    NativeClient.install(filepath, lastRunInfoFilePath, 5)
+
+    NativeClient.setLastRunInfo(JSON.stringify(runInfo))
+    NativeClient.persistLastRunInfo()
+
+    const loadedRunInfo = JSON.parse(await readFile(lastRunInfoFilePath, 'utf8'))
+    expect(runInfo).toEqual(loadedRunInfo)
   })
 })

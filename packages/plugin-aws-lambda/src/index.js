@@ -153,3 +153,6 @@ function isPromise (value) {
 }
 
 module.exports = BugsnagPluginAwsLambda
+
+// add a default export for ESM modules without interop
+module.exports.default = module.exports

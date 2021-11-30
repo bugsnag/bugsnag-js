@@ -11,7 +11,7 @@ describe('FileStore', () => {
 
   beforeEach(async () => {
     await mkdir(join(crashes, 'reports'), { recursive: true })
-    await mkdir(join(crashes, 'completed'), { recursive: true })
+    await mkdir(join(crashes, 'pending'), { recursive: true })
     store = new FileStore('mykey', fixtures, crashes)
   })
 
@@ -29,7 +29,7 @@ describe('FileStore', () => {
       expect(paths.sessions).toEqual(join(base, 'sessions'))
       expect(paths.device).toEqual(join(base, 'device.json'))
       expect(paths.runinfo).toEqual(join(base, 'runinfo'))
-      expect(dirname(paths.minidumps)).toEqual(crashes)
+      expect(paths.minidumps).toEqual(crashes)
     })
   })
 
@@ -67,6 +67,14 @@ describe('FileStore', () => {
     it('joins runinfo with an ID', () => {
       const infoPath = store.getEventInfoPath('43610a')
       expect(infoPath).toEqual(join(store.getPaths().runinfo, '43610a'))
+    })
+  })
+
+  describe('getBackgroundEventInfoPath()', () => {
+    it('joins runinfo with a filename and an extension', () => {
+      const minidumpPath = process.platform === 'win32' ? 'E:\\some\\path\\myfile.dmp' : '/some/path/myfile.dmp'
+      const path = store.getBackgroundEventInfoPath(minidumpPath)
+      expect(path).toEqual(join(store.getPaths().runinfo, 'myfile.dmp.info'))
     })
   })
 
@@ -148,6 +156,23 @@ describe('FileStore', () => {
       expect(dumps[1].minidumpPath).toEqual(join(base, 'report02.dmp'))
       expect(dumps[1].eventPath).toEqual(join(store.getPaths().runinfo, id))
     })
+
+    it('scans subdirectories', async () => {
+      const base = store.getPaths().minidumps
+
+      await writeFile(join(base, 'some-other-thing.ps'), 'not a crash')
+      await createMinidump('report01.dmp', '')
+      await createMinidump(join('reports', 'report02.dmp'), id)
+      await createMinidump(join('pending', 'report03.dmp'), id)
+
+      const dumps = await store.listMinidumps() as any[]
+      const dumpPaths = dumps.map(d => d.minidumpPath)
+      expect(dumpPaths.sort()).toEqual([
+        join(base, 'report01.dmp'),
+        join(base, 'reports', 'report02.dmp'),
+        join(base, 'pending', 'report03.dmp')
+      ].sort())
+    })
   })
 
   describe('deleteMinidump()', () => {
@@ -199,9 +224,9 @@ describe('FileStore', () => {
     })
   })
 
-  describe('createAppRunMetadata()', () => {
+  describe('getAppRunMetadata()', () => {
     it('generates a key in an expected format', () => {
-      const metadata = store.createAppRunMetadata()
+      const metadata = store.getAppRunMetadata()
       expect(metadata.bugsnag_crash_id).toMatch(/^[0-9a-z]{64}$/)
     })
   })

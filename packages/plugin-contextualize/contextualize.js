@@ -29,3 +29,6 @@ module.exports = {
     return contextualize
   }
 }
+
+// add a default export for ESM modules without interop
+module.exports.default = module.exports

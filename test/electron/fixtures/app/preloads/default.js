@@ -2,8 +2,12 @@ const { contextBridge, ipcRenderer } = require('electron')
 
 contextBridge.exposeInMainWorld('RunnerAPI', {
   rendererConfig: JSON.parse(process.env.BUGSNAG_RENDERER_CONFIG || '{}'),
+  startOffline: process.env.BUGSNAG_RENDERER_OFFLINE,
   mainProcessCrash: () => {
     ipcRenderer.send('main-process-crash')
+  },
+  delayedMainProcessCrash: () => {
+    ipcRenderer.send('delayed-main-process-crash')
   },
   mainProcessUnhandledPromiseRejection: () => {
     ipcRenderer.send('main-process-unhandled-promise-rejection')
@@ -22,6 +26,12 @@ contextBridge.exposeInMainWorld('RunnerAPI', {
   },
   markLaunchComplete: () => {
     ipcRenderer.send('mark-launch-complete')
+  },
+  mainProcessLastRunInfo: () => {
+    ipcRenderer.send('last-run-info-breadcrumb')
+  },
+  renderProcessCrash: () => {
+    process.crash()
   },
   preloadStart: Date.now()
 })

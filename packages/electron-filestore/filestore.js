@@ -2,20 +2,22 @@ const fs = require('fs')
 const { readFileSync, writeFileSync, mkdirSync } = fs
 const { unlink, readdir, access, mkdir } = fs.promises
 const { F_OK } = fs.constants
-const { dirname, join } = require('path')
+const { dirname, join, basename } = require('path')
 const { getIdentifier, createIdentifier, identifierKey } = require('./lib/minidump-io')
 
 class FileStore {
   constructor (apiKey, storageDir, crashDir) {
     const base = join(storageDir, 'bugsnag', apiKey)
-    const isMac = process.platform === 'darwin'
     this._paths = {
       events: join(base, 'events'),
       sessions: join(base, 'sessions'),
       runinfo: join(base, 'runinfo'),
       device: join(base, 'device.json'),
-      minidumps: join(crashDir, isMac ? 'completed' : 'reports')
+      lastRunInfo: join(base, 'last-run-info.json'),
+      minidumps: crashDir
     }
+
+    this._appRunMetadata = { [identifierKey]: createIdentifier() }
   }
 
   // Create directory layout
@@ -30,16 +32,17 @@ class FileStore {
   }
 
   async listMinidumps () {
-    const basepath = this._paths.minidumps
-    return readdir(basepath, { withFileTypes: true })
-      .then(async entries => {
-        const minidumps = entries
-          .filter(entry => entry.isFile() && entry.name.match(/\.dmp$/))
-          .map(async entry => {
-            const minidumpPath = join(basepath, entry.name)
+    return this._listMinidumpFiles()
+      .then(minidumpPaths => {
+        const minidumps = minidumpPaths
+          .map(async minidumpPath => {
             const eventPath = await getIdentifier(minidumpPath)
               .then(async id => {
-                const path = this.getEventInfoPath(id)
+                let path = this.getEventInfoPath(id)
+                if (await fileExists(path)) {
+                  return path
+                }
+                path = this.getBackgroundEventInfoPath(minidumpPath)
                 return await fileExists(path) ? path : null
               })
               .catch(() => null)
@@ -54,8 +57,30 @@ class FileStore {
       })
   }
 
+  async _listMinidumpFiles () {
+    const dirs = [this._paths.minidumps]
+    const minidumpFiles = []
+    while (dirs.length) {
+      const dir = dirs.pop()
+      const entries = await readdir(dir, { withFileTypes: true })
+      for (const entry of entries) {
+        if (entry.isFile() && entry.name.match(/\.dmp$/)) {
+          minidumpFiles.push(join(dir, entry.name))
+        } else if (entry.isDirectory()) {
+          dirs.push(join(dir, entry.name))
+        }
+      }
+    }
+
+    return minidumpFiles
+  }
+
   getEventInfoPath (appRunID) {
     return join(this._paths.runinfo, appRunID)
+  }
+
+  getBackgroundEventInfoPath (minidumpPath) {
+    return join(this._paths.runinfo, `${basename(minidumpPath)}.info`)
   }
 
   async getAppRunID (minidumpPath) {
@@ -120,8 +145,35 @@ class FileStore {
     return device
   }
 
-  createAppRunMetadata () {
-    return { [identifierKey]: createIdentifier() }
+  getLastRunInfo () {
+    try {
+      // similar to getDeviceInfo - the lastRunInfo must be available during tha app-launch phase
+      // as such we use readFileSync to ensure that the data is loaded immediately
+      const contents = readFileSync(this._paths.lastRunInfo)
+      const lastRunInfo = JSON.parse(contents)
+
+      if (typeof lastRunInfo.crashed === 'boolean' &&
+        typeof lastRunInfo.crashedDuringLaunch === 'boolean' &&
+        typeof lastRunInfo.consecutiveLaunchCrashes === 'number') {
+        return lastRunInfo
+      }
+    } catch (e) {
+    }
+
+    return null
+  }
+
+  setLastRunInfo (lastRunInfo = { crashed: false, crashedDuringLaunch: false, consecutiveLaunchCrashes: 0 }) {
+    try {
+      mkdirSync(dirname(this._paths.lastRunInfo), { recursive: true })
+      writeFileSync(this._paths.lastRunInfo, JSON.stringify(lastRunInfo))
+    } catch (e) {
+    }
+    return lastRunInfo
+  }
+
+  getAppRunMetadata () {
+    return this._appRunMetadata
   }
 }
 
