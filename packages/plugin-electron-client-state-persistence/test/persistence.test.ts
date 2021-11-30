@@ -131,7 +131,7 @@ describe('persisting changes to disk', () => {
   })
 
   it('sets feature flags', async () => {
-    NativeClient.install(filepath, 5)
+    NativeClient.install(filepath, lastRunInfoFilePath, 5)
 
     NativeClient.updateFeatureFlags([
       { featureFlag: 'flag 1', variant: 'some variant' },
@@ -153,7 +153,7 @@ describe('persisting changes to disk', () => {
   })
 
   it('clears feature flags', async () => {
-    NativeClient.install(filepath, 5)
+    NativeClient.install(filepath, lastRunInfoFilePath, 5)
 
     NativeClient.updateFeatureFlags([
       { featureFlag: 'flag 1', variant: 'some variant' },
