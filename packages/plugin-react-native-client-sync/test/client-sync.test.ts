@@ -107,6 +107,74 @@ describe('plugin: react native client sync', () => {
       })
       c.leaveBreadcrumb('Spin', { direction: 'ccw', deg: '90' })
     })
+
+    describe('feature flags', () => {
+      it('adds individual feature flags', done => {
+        const c = new Client({
+          apiKey: 'api_key',
+          plugins: [
+            plugin({
+              addFeatureFlag: (name: string, variant?: string) => {
+                expect(name).toBe('feature flag')
+                expect(variant).toBe('flag variant')
+                done()
+              }
+            })
+          ]
+        })
+
+        c.addFeatureFlag('feature flag', 'flag variant')
+      })
+
+      it('adds arrays of feature flags', done => {
+        const c = new Client({
+          apiKey: 'api_key',
+          plugins: [
+            plugin({
+              addFeatureFlags: (flags: { name: string, variant?: string }) => {
+                expect(flags).toStrictEqual([
+                  { name: 'feature flag', variant: 'flag variant' },
+                  { name: 'name only flag' }
+                ])
+                done()
+              }
+            })
+          ]
+        })
+
+        c.addFeatureFlags([
+          { name: 'feature flag', variant: 'flag variant' },
+          { name: 'name only flag' }
+        ])
+      })
+
+      it('clears specific feature flags', done => {
+        const c = new Client({
+          apiKey: 'api_key',
+          plugins: [
+            plugin({
+              clearFeatureFlag: (name: string) => {
+                expect(name).toStrictEqual('feature flag')
+                done()
+              }
+            })
+          ]
+        })
+
+        c.clearFeatureFlag('feature flag')
+      })
+
+      it('clears all feature flags', () => {
+        const clearFeatureFlags = jest.fn()
+        const c = new Client({
+          apiKey: 'api_key',
+          plugins: [plugin({ clearFeatureFlags })]
+        })
+
+        c.clearFeatureFlags()
+        expect(clearFeatureFlags).toHaveBeenCalledTimes(1)
+      })
+    })
   })
 
   describe('native -> JS', () => {
