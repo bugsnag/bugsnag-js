@@ -70,3 +70,10 @@ document.getElementById('renderer-and-main-process-crashes').onclick = () => {
   window.RunnerAPI.delayedMainProcessCrash()
   setTimeout(() => window.RunnerAPI.renderProcessCrash(), 10)
 }
+
+document.getElementById('renderer-clear-feature-flags').onclick = () => {
+  // clear feature flags in a new on error callback to also clear flags from other callbacks
+  Bugsnag.addOnError(event => {
+    event.clearFeatureFlags()
+  })
+}
