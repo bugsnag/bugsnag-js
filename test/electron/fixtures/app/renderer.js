@@ -7,6 +7,13 @@ const Bugsnag = require('@bugsnag/electron')
 Bugsnag.start(window.RunnerAPI.rendererConfig)
 const startupTimestamp = Date.now()
 
+Bugsnag.addFeatureFlag('from renderer at runtime', 'runtime')
+Bugsnag.addOnError(event => {
+  event.addFeatureFlags([
+    { name: 'from renderer on error', variant: 'on error' }
+  ])
+})
+
 function emulateOnlineStatus (online) {
   Object.defineProperty(window.navigator, 'onLine', { value: online, configurable: true })
   window.dispatchEvent(new window.Event(online ? 'online' : 'offline'))
