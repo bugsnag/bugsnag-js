@@ -119,6 +119,24 @@ Then('minidump request {int} contains the following feature flags:', async (inde
   expect(actual.events[0]).toHaveProperty('featureFlags', expected)
 })
 
+Then('minidump request {int} has no feature flags', async (index) => {
+  const request = global.server.minidumpUploads[index]
+
+  expect(request.fields).toHaveProperty('event')
+
+  let actual
+
+  try {
+    actual = JSON.parse(request.fields.event)
+  } catch (e) {
+    throw new Error(`Could not parse event as JSON: ${e} -- ${request.fields.event}`)
+  }
+
+  expect(actual).toHaveProperty('events')
+  expect(actual.events).toHaveLength(1)
+  expect(actual.events[0]).toHaveProperty('featureFlags', [])
+})
+
 Then('the total requests received by the server matches:', async (data) => {
   return requestDelay((done) => {
     const expected = {}

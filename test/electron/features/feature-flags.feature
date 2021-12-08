@@ -197,6 +197,29 @@ Scenario: feature flags are attached to native crashes from the main process
     And minidump request 0 contains a file form field named "upload_file_minidump"
     And minidump request 0 contains a form field named "event" matching "minidump-event.json"
 
+Scenario: feature flags can be cleared entirely in the main process with a native crash
+    Given I launch an app with configuration:
+        | bugsnag         | feature-flags                                            |
+        | renderer_config | { "featureFlags": [{ "name": "from renderer config" }] } |
+    Then the total requests received by the server matches:
+        | events    | 0 |
+        | minidumps | 0 |
+        | sessions  | 1 |
+    When I click "main-process-clear-feature-flags-now"
+    And I click "main-process-crash"
+    And I launch an app
+    Then the total requests received by the server matches:
+        | events    | 0 |
+        | minidumps | 1 |
+        | sessions  | 2 |
+    And the headers of every event request contains:
+        | Bugsnag-API-Key   | 6425093c6530f554a9897d2d7d38e248 |
+        | Content-Type      | application/json                 |
+        | Bugsnag-Integrity | {BODY_SHA1}                      |
+    And minidump request 0 has no feature flags
+    And minidump request 0 contains a file form field named "upload_file_minidump"
+    And minidump request 0 contains a form field named "event" matching "minidump-event.json"
+
 Scenario: feature flags are attached to native crashes from a renderer process
     Given I launch an app with configuration:
         | bugsnag         | feature-flags                                            |
@@ -218,5 +241,28 @@ Scenario: feature flags are attached to native crashes from a renderer process
         | from renderer config       |           |
         | from renderer at runtime 1 | runtime   |
         | from renderer at runtime 2 |           |
+    And minidump request 0 contains a file form field named "upload_file_minidump"
+    And minidump request 0 contains a form field named "event" matching "minidump-event.json"
+
+Scenario: feature flags can be cleared entirely in a renderer process with a native crash
+    Given I launch an app with configuration:
+        | bugsnag         | feature-flags                                            |
+        | renderer_config | { "featureFlags": [{ "name": "from renderer config" }] } |
+    Then the total requests received by the server matches:
+        | events    | 0 |
+        | minidumps | 0 |
+        | sessions  | 1 |
+    When I click "renderer-clear-feature-flags-now"
+    And I click "renderer-process-crash"
+    And I launch an app
+    Then the total requests received by the server matches:
+        | events    | 0 |
+        | minidumps | 1 |
+        | sessions  | 2 |
+    And the headers of every event request contains:
+        | Bugsnag-API-Key   | 6425093c6530f554a9897d2d7d38e248 |
+        | Content-Type      | application/json                 |
+        | Bugsnag-Integrity | {BODY_SHA1}                      |
+    And minidump request 0 has no feature flags
     And minidump request 0 contains a file form field named "upload_file_minidump"
     And minidump request 0 contains a form field named "event" matching "minidump-event.json"

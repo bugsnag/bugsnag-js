@@ -78,4 +78,8 @@ document.getElementById('renderer-clear-feature-flags').onclick = () => {
   })
 }
 
+document.getElementById('renderer-clear-feature-flags-now').onclick = () => {
+  Bugsnag.clearFeatureFlags()
+}
+
 Bugsnag.addFeatureFlag('from renderer at runtime 2')
