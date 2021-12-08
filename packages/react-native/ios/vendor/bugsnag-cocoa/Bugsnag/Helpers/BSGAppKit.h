@@ -15,6 +15,7 @@
 #define NSAPPLICATION                                       NSClassFromString(@"NSApplication")
 #define NSMENUITEM                                          NSClassFromString(@"NSMenuItem")
 #define NSWORKSPACE                                         NSClassFromString(@"NSWorkspace")
+#define NSWINDOW                                            NSClassFromString(@"NSWindow")
 
 #define NSApplicationDidBecomeActiveNotification            @"NSApplicationDidBecomeActiveNotification"
 #define NSApplicationDidFinishLaunchingNotification         @"NSApplicationDidFinishLaunchingNotification"

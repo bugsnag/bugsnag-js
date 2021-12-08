@@ -1,6 +1,45 @@
 Changelog
 =========
 
+## 6.15.1 (2021-12-08)
+
+### Bug fixes
+
+* Fix `UIApplicationState` detection when started from a SwiftUI app's `init()` function.
+  This fixes false positive OOMs on iOS 15 for apps that have been prewarmed without transitioning to the foreground.
+  [#1248](https://github.com/bugsnag/bugsnag-cocoa/pull/1248)
+
+* Load configuration from the plist instead of using defaults when calling Bugsnag.start(withApiKey:)
+  [#1245](https://github.com/bugsnag/bugsnag-cocoa/pull/1245)
+
+## 6.15.0 (2021-12-01)
+
+### Enhancements
+
+* New APIs to allow `OnBreadcrumb`, `OnSendError` and `OnSession` Swift closures to be removed.
+  The following APIs are now deprecated and will be removed in the next major release:
+  * `removeOnBreadcrumb(block:)`
+  * `removeOnSendError(block:)`
+  * `removeOnSession(block:)`
+  [#1240](https://github.com/bugsnag/bugsnag-cocoa/pull/1240)
+
+* Include metadata in breadcrumbs for `UIWindow` / `NSWindow` notifications.
+  [#1238](https://github.com/bugsnag/bugsnag-cocoa/pull/1238)
+
+## 6.14.4 (2021-11-22)
+
+### Bug fixes
+
+* Fix a crash in `-[BSGURLSessionTracingDelegate URLSession:task:didFinishCollectingMetrics:]` for tasks with no request.
+  [#1230](https://github.com/bugsnag/bugsnag-cocoa/pull/1230)
+
+## 6.14.3 (2021-11-03)
+
+### Bug fixes
+
+* Use `LC_FUNCTION_STARTS` to improve symbolication accuracy.
+  [#1214](https://github.com/bugsnag/bugsnag-cocoa/pull/1214)
+
 ## 6.14.2 (2021-10-27)
 
 ### Bug fixes

@@ -1,9 +1,13 @@
 # Changelog
 
-## TBD
+## 7.14.2 (2021-12-09)
 
 ### Changed
 
+- (react-native) Update bugsnag-cocoa to v6.15.1
+  - Fix `UIApplicationState` detection when started from a SwiftUI app's `init()` function [#1248](https://github.com/bugsnag/bugsnag-cocoa/pull/1248)
+  - Load configuration from the plist instead of using defaults when calling Bugsnag.start(withApiKey:) [#1245](https://github.com/bugsnag/bugsnag-cocoa/pull/1245)
+  - Include metadata in breadcrumbs for `UIWindow` / `NSWindow` notifications [#1238](https://github.com/bugsnag/bugsnag-cocoa/pull/1238)
 - (react-native) Update bugsnag-android to v5.16.0
   - Increase resilience of NDK stackframe method capture [#1484](https://github.com/bugsnag/bugsnag-android/pull/1484)
   - `redactedKeys` now correctly apply to metadata on Event breadcrumbs [#1526](https://github.com/bugsnag/bugsnag-android/pull/1526)

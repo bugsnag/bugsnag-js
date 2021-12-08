@@ -26,7 +26,6 @@
 
 #include "BSG_KSBacktrace_Private.h"
 
-#include "BSG_KSDynamicLinker.h"
 #include "BSG_KSMach.h"
 
 /**
@@ -37,30 +36,6 @@
 #if defined(__arm64__)
 #define BSG_PACStrippingMaskArm64e 0x0000000fffffffff
 #endif
-
-/** Remove any pointer tagging from an instruction address
- * On armv7 the least significant bit of the pointer distinguishes
- * between thumb mode (2-byte instructions) and normal mode (4-byte
- * instructions). On arm64 all instructions are 4-bytes wide so the two least
- * significant bytes should always be 0. On x86_64 and i386, instructions are
- * variable length so all bits are signficant.
- */
-#if defined(__arm__)
-#define DETAG_INSTRUCTION_ADDRESS(A) ((A) & ~(1UL))
-#elif defined(__arm64__)
-#define DETAG_INSTRUCTION_ADDRESS(A) ((A) & ~(3UL))
-#else
-#define DETAG_INSTRUCTION_ADDRESS(A) (A)
-#endif
-
-/** Step backwards by one instruction.
- * The backtrace of an objective-C program is expected to contain return
- * addresses not call instructions, as that is what can easily be read from
- * the stack. This is not a problem except for a few cases where the return
- * address is inside a different symbol than the call address.
- */
-#define CALL_INSTRUCTION_FROM_RETURN_ADDRESS(A)                                \
-    (DETAG_INSTRUCTION_ADDRESS((A)) - 1)
 
 /** Represents an entry in a frame list.
  * This is modeled after the various i386/x64 frame walkers in the xnu source,
@@ -225,17 +200,17 @@ int bsg_ksbt_backtraceSelf(uintptr_t *const backtraceBuffer,
 }
 
 void bsg_ksbt_symbolicate(const uintptr_t *const backtraceBuffer,
-                          Dl_info *const symbolsBuffer, const int numEntries,
+                          struct bsg_symbolicate_result *symbolsBuffer, const int numEntries,
                           const int skippedEntries) {
     int i = 0;
 
     if (!skippedEntries && i < numEntries) {
-        bsg_ksdldladdr(backtraceBuffer[i], &symbolsBuffer[i]);
+        bsg_symbolicate(backtraceBuffer[i], &symbolsBuffer[i]);
         i++;
     }
 
     for (; i < numEntries; i++) {
-        bsg_ksdldladdr(CALL_INSTRUCTION_FROM_RETURN_ADDRESS(backtraceBuffer[i]),
+        bsg_symbolicate(CALL_INSTRUCTION_FROM_RETURN_ADDRESS(backtraceBuffer[i]),
                        &symbolsBuffer[i]);
     }
 }
