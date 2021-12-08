@@ -5,6 +5,7 @@ const MinidumpDeliveryLoop = require('./minidump-loop')
 const MinidumpQueue = require('./minidump-queue')
 const sendMinidumpFactory = require('./send-minidump')
 const NetworkStatus = require('@bugsnag/electron-network-status')
+const featureFlagDelegate = require('@bugsnag/core/lib/feature-flag-delegate')
 
 const isEnabledFor = client => client._config.autoDetectErrors && client._config.enabledErrorTypes.nativeCrashes
 
@@ -95,6 +96,7 @@ const takeEventSnapshot = (client) => ({
   context: client._context,
   device: { ...client._device },
   metadata: { ...client._metadata },
+  featureFlags: featureFlagDelegate.toEventApi(client._features),
   severity: 'error',
   severityReason: { type: 'unhandledException' },
   unhandled: true,
