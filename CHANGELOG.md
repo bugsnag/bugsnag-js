@@ -1,5 +1,15 @@
 # Changelog
 
+## TBD
+
+### Changed
+
+- (react-native) Update bugsnag-android to v5.16.0
+  - Increase resilience of NDK stackframe method capture [#1484](https://github.com/bugsnag/bugsnag-android/pull/1484)
+  - `redactedKeys` now correctly apply to metadata on Event breadcrumbs [#1526](https://github.com/bugsnag/bugsnag-android/pull/1526)
+  - Improved the robustness of automatically logged `ERROR` breadcrumbs [#1531](https://github.com/bugsnag/bugsnag-android/pull/1531)
+  - Improve performance on the breadcrumb storage "hot path" by removing Date formatting [#1525](https://github.com/bugsnag/bugsnag-android/pull/1525)
+
 ## 7.14.1 (2021-11-29)
 
 ### Fixed
