@@ -14,12 +14,13 @@ Scenario: feature flags are attached to unhandled errors in the main process
         | Bugsnag-Integrity | {BODY_SHA1}                      |
     And the event contains the following feature flags:
         | featureFlag              | variant    |
-        | from main config 1       | 1234       |
-        | from main config 2       |            |
-        | from main at runtime     | runtime 1  |
-        | from renderer config     |            |
-        | from renderer at runtime | runtime    |
-        | from main on error       | on error 1 |
+        | from main config 1         | 1234       |
+        | from main config 2         |            |
+        | from main at runtime       | runtime 1  |
+        | from renderer config       |            |
+        | from renderer at runtime 1 | runtime    |
+        | from renderer at runtime 2 |            |
+        | from main on error         | on error 1 |
     And the contents of an event request matches "main/uncaught-exception/default.json"
 
 Scenario: feature flags are attached to handled errors in the main process
@@ -36,13 +37,14 @@ Scenario: feature flags are attached to handled errors in the main process
         | Content-Type      | application/json                 |
         | Bugsnag-Integrity | {BODY_SHA1}                      |
     And the event contains the following feature flags:
-        | featureFlag              | variant    |
-        | from main config 1       | 1234       |
-        | from main config 2       |            |
-        | from main at runtime     | runtime 1  |
-        | from renderer config     |            |
-        | from renderer at runtime | runtime    |
-        | from main on error       | on error 1 |
+        | featureFlag                | variant    |
+        | from main config 1         | 1234       |
+        | from main config 2         |            |
+        | from main at runtime       | runtime 1  |
+        | from renderer config       |            |
+        | from renderer at runtime 1 | runtime    |
+        | from renderer at runtime 2 |            |
+        | from main on error         | on error 1 |
     And the contents of an event request matches "main/handled-error/default.json"
 
 Scenario: feature flags can be cleared entirely in the main process with an unhandled error
@@ -91,14 +93,15 @@ Scenario: feature flags are attached to unhandled errors in a renderer process
         | Content-Type      | application/json                 |
         | Bugsnag-Integrity | {BODY_SHA1}                      |
     And the event contains the following feature flags:
-        | featureFlag              | variant    |
-        | from renderer config     |            |
-        | from main config 1       | 1234       |
-        | from main config 2       |            |
-        | from main at runtime     | runtime 1  |
-        | from renderer at runtime | runtime    |
-        | from renderer on error   | on error   |
-        | from main on error       | on error 1 |
+        | featureFlag                | variant    |
+        | from renderer config       |            |
+        | from main config 1         | 1234       |
+        | from main config 2         |            |
+        | from main at runtime       | runtime 1  |
+        | from renderer at runtime 1 | runtime    |
+        | from renderer at runtime 2 |            |
+        | from renderer on error     | on error   |
+        | from main on error         | on error 1 |
     And the contents of an event request matches "renderer/uncaught-exception/default.json"
 
 Scenario: feature flags are attached to handled errors in a renderer process
@@ -115,14 +118,15 @@ Scenario: feature flags are attached to handled errors in a renderer process
         | Content-Type      | application/json                 |
         | Bugsnag-Integrity | {BODY_SHA1}                      |
     And the event contains the following feature flags:
-        | featureFlag              | variant    |
-        | from renderer config     |            |
-        | from main config 1       | 1234       |
-        | from main config 2       |            |
-        | from main at runtime     | runtime 1  |
-        | from renderer at runtime | runtime    |
-        | from renderer on error   | on error   |
-        | from main on error       | on error 1 |
+        | featureFlag                | variant    |
+        | from renderer config       |            |
+        | from main config 1         | 1234       |
+        | from main config 2         |            |
+        | from main at runtime       | runtime 1  |
+        | from renderer at runtime 1 | runtime    |
+        | from renderer at runtime 2 |            |
+        | from renderer on error     | on error   |
+        | from main on error         | on error 1 |
     And the contents of an event request matches "renderer/handled-error/default.json"
 
 Scenario: feature flags can be cleared entirely in a renderer process with an unhandled error

@@ -7,7 +7,7 @@ const Bugsnag = require('@bugsnag/electron')
 Bugsnag.start(window.RunnerAPI.rendererConfig)
 const startupTimestamp = Date.now()
 
-Bugsnag.addFeatureFlag('from renderer at runtime', 'runtime')
+Bugsnag.addFeatureFlag('from renderer at runtime 1', 'runtime')
 Bugsnag.addOnError(event => {
   event.addFeatureFlags([
     { name: 'from renderer on error', variant: 'on error' }
@@ -77,3 +77,5 @@ document.getElementById('renderer-clear-feature-flags').onclick = () => {
     event.clearFeatureFlags()
   })
 }
+
+Bugsnag.addFeatureFlag('from renderer at runtime 2')
