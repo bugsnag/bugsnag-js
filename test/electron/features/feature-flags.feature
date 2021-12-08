@@ -13,7 +13,7 @@ Scenario: feature flags are attached to unhandled errors in the main process
         | Content-Type      | application/json                 |
         | Bugsnag-Integrity | {BODY_SHA1}                      |
     And the event contains the following feature flags:
-        | featureFlag              | variant    |
+        | featureFlag                | variant    |
         | from main config 1         | 1234       |
         | from main config 2         |            |
         | from main at runtime       | runtime 1  |
@@ -171,3 +171,52 @@ Scenario: feature flags can be cleared entirely in a renderer process with a han
         | featureFlag        | variant    |
         | from main on error | on error 1 |
     And the contents of an event request matches "renderer/handled-error/default.json"
+
+Scenario: feature flags are attached to native crashes from the main process
+    Given I launch an app with configuration:
+        | bugsnag         | feature-flags                                            |
+        | renderer_config | { "featureFlags": [{ "name": "from renderer config" }] } |
+    Then the total requests received by the server matches:
+        | events    | 0 |
+        | minidumps | 0 |
+        | sessions  | 1 |
+    When I click "main-process-crash"
+    And I launch an app
+    Then the total requests received by the server matches:
+        | events    | 0 |
+        | minidumps | 1 |
+        | sessions  | 2 |
+    And minidump request 0 contains the following feature flags:
+        | featureFlag                | variant   |
+        | from main config 1         | 1234      |
+        | from main config 2         |           |
+        | from main at runtime       | runtime 1 |
+        | from renderer config       |           |
+        | from renderer at runtime 1 | runtime   |
+        | from renderer at runtime 2 |           |
+    And minidump request 0 contains a file form field named "upload_file_minidump"
+    And minidump request 0 contains a form field named "event" matching "minidump-event.json"
+
+Scenario: feature flags are attached to native crashes from a renderer process
+    Given I launch an app with configuration:
+        | bugsnag         | feature-flags                                            |
+        | renderer_config | { "featureFlags": [{ "name": "from renderer config" }] } |
+    Then the total requests received by the server matches:
+        | events    | 0 |
+        | minidumps | 0 |
+        | sessions  | 1 |
+    When I click "renderer-process-crash"
+    Then the total requests received by the server matches:
+        | events    | 0 |
+        | minidumps | 1 |
+        | sessions  | 1 |
+    And minidump request 0 contains the following feature flags:
+        | featureFlag                | variant   |
+        | from main config 1         | 1234      |
+        | from main config 2         |           |
+        | from main at runtime       | runtime 1 |
+        | from renderer config       |           |
+        | from renderer at runtime 1 | runtime   |
+        | from renderer at runtime 2 |           |
+    And minidump request 0 contains a file form field named "upload_file_minidump"
+    And minidump request 0 contains a form field named "event" matching "minidump-event.json"
