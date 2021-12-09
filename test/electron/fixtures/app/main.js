@@ -89,3 +89,7 @@ ipcMain.on('main-process-clear-feature-flags', () => {
     event.clearFeatureFlags()
   })
 })
+
+ipcMain.on('main-process-clear-feature-flags-now', () => {
+  Bugsnag.clearFeatureFlags()
+})

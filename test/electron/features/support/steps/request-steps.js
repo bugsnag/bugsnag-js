@@ -14,6 +14,18 @@ const readPayloads = (requests) => {
   return requests.map(req => JSON.parse(req.body.trim()))
 }
 
+const featureFlagsTableToExpected = table => {
+  return table.hashes().map((featureFlag) => {
+    // an empty cell in the .feature is parsed as an empty string but really
+    // means that the variant should be missing entirely
+    if (featureFlag.variant === '') {
+      delete featureFlag.variant
+    }
+
+    return featureFlag
+  })
+}
+
 Given('I launch an app', launchConfig, async () => {
   return global.automator.start()
 })
@@ -85,6 +97,44 @@ Then('minidump request {int} contains a form field named {string} matching {stri
   } catch (e) {
     throw new Error(`Could not parse ${field} as JSON: ${e} -- ${req.fields[field]}`)
   }
+})
+
+Then('minidump request {int} contains the following feature flags:', async (index, table) => {
+  const request = global.server.minidumpUploads[index]
+
+  expect(request.fields).toHaveProperty('event')
+
+  let actual
+
+  try {
+    actual = JSON.parse(request.fields.event)
+  } catch (e) {
+    throw new Error(`Could not parse event as JSON: ${e} -- ${request.fields.event}`)
+  }
+
+  const expected = featureFlagsTableToExpected(table)
+
+  expect(actual).toHaveProperty('events')
+  expect(actual.events).toHaveLength(1)
+  expect(actual.events[0]).toHaveProperty('featureFlags', expected)
+})
+
+Then('minidump request {int} has no feature flags', async (index) => {
+  const request = global.server.minidumpUploads[index]
+
+  expect(request.fields).toHaveProperty('event')
+
+  let actual
+
+  try {
+    actual = JSON.parse(request.fields.event)
+  } catch (e) {
+    throw new Error(`Could not parse event as JSON: ${e} -- ${request.fields.event}`)
+  }
+
+  expect(actual).toHaveProperty('events')
+  expect(actual.events).toHaveLength(1)
+  expect(actual.events[0]).toHaveProperty('featureFlags', [])
 })
 
 Then('the total requests received by the server matches:', async (data) => {
@@ -183,16 +233,7 @@ Then('I wait {int} seconds', delay => {
 
 Then('the event contains the following feature flags:', async (table) => {
   const payloads = readPayloads(global.server.uploadsForType('event'))
-
-  const expected = table.hashes().map((featureFlag) => {
-    // an empty cell in the .feature is parsed as an empty string but really
-    // means that the variant should be missing entirely
-    if (featureFlag.variant === '') {
-      delete featureFlag.variant
-    }
-
-    return featureFlag
-  })
+  const expected = featureFlagsTableToExpected(table)
 
   expect(payloads).toHaveLength(1)
   expect(payloads[0].events).toHaveLength(1)
