@@ -8,7 +8,7 @@
 
 ### Changed
 
-- (react-native) Update bugsnag-android to v5.16.0
+- (react-native) Update bugsnag-android to v5.17.0
   - Bump compileSdkVersion to apiLevel 31
     [bugsnag-android#1536](https://github.com/bugsnag/bugsnag-android/pull/1536)
   - Flush in-memory sessions first
