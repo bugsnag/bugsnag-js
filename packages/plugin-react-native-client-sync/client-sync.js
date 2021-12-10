@@ -42,6 +42,34 @@ module.exports = (NativeClient) => ({
       return ret
     }
 
+    const origAddFeatureFlags = client.addFeatureFlags
+    client.addFeatureFlags = function (featureFlags) {
+      const ret = origAddFeatureFlags.apply(this, arguments)
+      NativeClient.addFeatureFlags(featureFlags)
+      return ret
+    }
+
+    const origAddFeatureFlag = client.addFeatureFlag
+    client.addFeatureFlag = function (name, variant) {
+      const ret = origAddFeatureFlag.apply(this, arguments)
+      NativeClient.addFeatureFlag(name, variant)
+      return ret
+    }
+
+    const origClearFeatureFlag = client.clearFeatureFlag
+    client.clearFeatureFlag = function (name) {
+      const ret = origClearFeatureFlag.apply(this, arguments)
+      NativeClient.clearFeatureFlag(name)
+      return ret
+    }
+
+    const origClearFeatureFlags = client.clearFeatureFlags
+    client.clearFeatureFlags = function () {
+      const ret = origClearFeatureFlags.apply(this, arguments)
+      NativeClient.clearFeatureFlags()
+      return ret
+    }
+
     const getEmitter = () => {
       switch (Platform.OS) {
         case 'android':

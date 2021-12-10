@@ -3,7 +3,7 @@ const stringWithLength = require('@bugsnag/core/lib/validators/string-with-lengt
 const rnPackage = require('react-native/package.json')
 const iserror = require('iserror')
 
-const ALLOWED_IN_JS = ['onError', 'onBreadcrumb', 'logger', 'metadata', 'user', 'context', 'codeBundleId', 'plugins']
+const ALLOWED_IN_JS = ['onError', 'onBreadcrumb', 'logger', 'metadata', 'user', 'context', 'codeBundleId', 'plugins', 'featureFlags']
 const allowedErrorTypes = () => ({
   unhandledExceptions: true,
   unhandledRejections: true,
