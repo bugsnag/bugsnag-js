@@ -3,6 +3,7 @@ package com.bugsnag.android
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReadableMap
+import com.facebook.react.bridge.ReadableArray
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -25,6 +26,9 @@ class BugsnagReactNativeTest {
 
     @Mock
     lateinit var map: ReadableMap
+
+    @Mock
+    lateinit var array: ReadableArray
 
     @Mock
     lateinit var promise: Promise
@@ -66,6 +70,34 @@ class BugsnagReactNativeTest {
     fun resumeSession() {
         brn.resumeSession()
         verify(plugin, times(1)).resumeSession()
+    }
+
+    @Test
+    fun addFeatureFlag() {
+        brn.addFeatureFlag("feature flag", "abc123")
+        verify(plugin, times(1)).addFeatureFlag("feature flag", "abc123")
+    }
+
+    @Test
+    fun addFeatureFlags() {
+        `when`(array.size()).thenReturn(1)
+        `when`(array.getMap(eq(0))).thenReturn(map)
+        `when`(map.getString(eq("name"))).thenReturn("feature flag")
+        `when`(map.getString(eq("variant"))).thenReturn("abc123")
+        brn.addFeatureFlags(array)
+        verify(plugin, times(1)).addFeatureFlag("feature flag", "abc123")
+    }
+
+    @Test
+    fun clearFeatureFlag() {
+        brn.clearFeatureFlag("feature flag")
+        verify(plugin, times(1)).clearFeatureFlag("feature flag")
+    }
+
+    @Test
+    fun clearFeatureFlags() {
+        brn.clearFeatureFlags()
+        verify(plugin, times(1)).clearFeatureFlags()
     }
 
     @Test
