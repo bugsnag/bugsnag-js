@@ -98,6 +98,16 @@ module.exports = (NativeClient) => ({
         case 'ContextUpdate':
           origSetContext.call(client, event.data)
           break
+        case 'AddFeatureFlag':
+          origAddFeatureFlag.call(client, event.data.name, event.data.variant)
+          break
+        case 'ClearFeatureFlag':
+          if (event.data && event.data.name) {
+            origClearFeatureFlag.call(client, event.data.name)
+          } else {
+            origClearFeatureFlags.call(client)
+          }
+          break
         default:
       }
     })
