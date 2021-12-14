@@ -65,3 +65,6 @@ export { NativeStackUnhandledScenario } from './scenarios/NativeStackUnhandledSc
 // override_unhandled.feature
 export { HandledOverrideJsErrorScenario } from './scenarios/HandledOverrideJsErrorScenario'
 export { UnhandledOverrideJsErrorScenario } from './scenarios/UnhandledOverrideJsErrorScenario'
+
+// feature_flags.feature
+export { FeatureFlagsScenario } from './scenarios/FeatureFlagsScenario'
