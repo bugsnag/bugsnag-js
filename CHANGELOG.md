@@ -2,6 +2,10 @@
 
 ## TBD
 
+### Fixed
+
+- (react-native-cli): Fix Xcode build error for ejected Expo apps [#1623](https://github.com/bugsnag/bugsnag-js/pull/1623)
+
 ### Changed
 
 - (react-native) Update bugsnag-android to v5.16.0

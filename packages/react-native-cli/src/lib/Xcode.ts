@@ -51,7 +51,12 @@ async function updateBuildReactNativeTask (buildPhaseMap: Record<string, Record<
   let didAnythingUpdate = false
   for (const shellBuildPhaseKey in buildPhaseMap) {
     const phase = buildPhaseMap[shellBuildPhaseKey]
-    if (typeof phase.shellScript === 'string' && phase.shellScript.includes('react-native/scripts/react-native-xcode.sh')) {
+    // The shell script can vary slightly... Vanilla RN projects contain
+    //   ../node_modules/react-native/scripts/react-native-xcode.sh
+    // and ejected Expo projects contain
+    //   `node --print "require('path').dirname(require.resolve('react-native/package.json')) + '/scripts/react-native-xcode.sh'"`
+    // so we need a little leniency
+    if (typeof phase.shellScript === 'string' && phase.shellScript.includes('/react-native-xcode.sh')) {
       let didThisUpdate
       [phase.shellScript, didThisUpdate] = addExtraPackagerArgs(shellBuildPhaseKey, phase.shellScript, logger)
       if (didThisUpdate) {
