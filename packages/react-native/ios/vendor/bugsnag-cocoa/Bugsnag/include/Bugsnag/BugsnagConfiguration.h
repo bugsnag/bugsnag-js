@@ -33,6 +33,11 @@
 #import <Bugsnag/BugsnagMetadataStore.h>
 #import <Bugsnag/BugsnagPlugin.h>
 
+/**
+ * Annotates methods and properties that will be removed in the next major release of Bugsnag.
+ */
+#define BSG_DEPRECATED_WITH_REPLACEMENT(REPLACEMENT) __attribute__((deprecated("", REPLACEMENT)))
+
 @class BugsnagUser;
 @class BugsnagEndpointConfiguration;
 @class BugsnagErrorTypes;
@@ -87,6 +92,11 @@ typedef BOOL (^BugsnagOnErrorBlock)(BugsnagEvent *_Nonnull event);
 typedef BOOL (^BugsnagOnSendErrorBlock)(BugsnagEvent *_Nonnull event);
 
 /**
+ * An opaque object that identifies and allows the removal of a BugsnagOnSendErrorBlock.
+ */
+typedef id<NSObject> BugsnagOnSendErrorRef;
+
+/**
  *  A configuration block for modifying a captured breadcrumb
  *
  *  @param breadcrumb The breadcrumb
@@ -94,11 +104,21 @@ typedef BOOL (^BugsnagOnSendErrorBlock)(BugsnagEvent *_Nonnull event);
 typedef BOOL (^BugsnagOnBreadcrumbBlock)(BugsnagBreadcrumb *_Nonnull breadcrumb);
 
 /**
+ * An opaque object that identifies and allows the removal of a BugsnagOnBreadcrumbBlock.
+ */
+typedef id<NSObject> BugsnagOnBreadcrumbRef;
+
+/**
  * A configuration block for modifying a session. Intended for internal usage only.
  *
  * @param session The session about to be delivered
  */
 typedef BOOL (^BugsnagOnSessionBlock)(BugsnagSession *_Nonnull session);
+
+/**
+ * An opaque object that identifies and allows the removal of a BugsnagOnSessionBlock.
+ */
+typedef id<NSObject> BugsnagOnSessionRef;
 
 // =============================================================================
 // MARK: - BugsnagConfiguration
@@ -343,16 +363,25 @@ typedef BOOL (^BugsnagOnSessionBlock)(BugsnagSession *_Nonnull session);
  *  Add a callback to be invoked before a session is sent to Bugsnag.
  *
  *  @param block A block which can modify the session
+ *
+ *  @returns An opaque reference to the callback which can be passed to `removeOnSession:`
  */
-- (void)addOnSessionBlock:(BugsnagOnSessionBlock _Nonnull)block
+- (BugsnagOnSessionRef)addOnSessionBlock:(BugsnagOnSessionBlock)block
     NS_SWIFT_NAME(addOnSession(block:));
 
 /**
  * Remove a callback that would be invoked before a session is sent to Bugsnag.
  *
- * @param block The block to be removed.
+ * @param callback The opaque reference of the callback, returned by `addOnSessionBlock:`
  */
-- (void)removeOnSessionBlock:(BugsnagOnSessionBlock _Nonnull)block
+- (void)removeOnSession:(BugsnagOnSessionRef)callback
+    NS_SWIFT_NAME(removeOnSession(_:));
+
+/**
+ * Deprecated
+ */
+- (void)removeOnSessionBlock:(BugsnagOnSessionBlock)block
+    BSG_DEPRECATED_WITH_REPLACEMENT("removeOnSession:")
     NS_SWIFT_NAME(removeOnSession(block:));
 
 // =============================================================================
@@ -364,16 +393,25 @@ typedef BOOL (^BugsnagOnSessionBlock)(BugsnagSession *_Nonnull session);
  *  change the report contents as needed
  *
  *  @param block A block which returns YES if the report should be sent
+ *
+ *  @returns An opaque reference to the callback which can be passed to `removeOnSendError:`
  */
-- (void)addOnSendErrorBlock:(BugsnagOnSendErrorBlock _Nonnull)block
+- (BugsnagOnSendErrorRef)addOnSendErrorBlock:(BugsnagOnSendErrorBlock)block
     NS_SWIFT_NAME(addOnSendError(block:));
 
 /**
  * Remove the callback that would be invoked before an event is sent.
  *
- * @param block The block to be removed.
+ * @param callback The opaque reference of the callback, returned by `addOnSendErrorBlock:`
  */
-- (void)removeOnSendErrorBlock:(BugsnagOnSendErrorBlock _Nonnull)block
+- (void)removeOnSendError:(BugsnagOnSendErrorRef)callback
+    NS_SWIFT_NAME(removeOnSendError(_:));
+
+/**
+ * Deprecated
+ */
+- (void)removeOnSendErrorBlock:(BugsnagOnSendErrorBlock)block
+    BSG_DEPRECATED_WITH_REPLACEMENT("removeOnSendError:")
     NS_SWIFT_NAME(removeOnSendError(block:));
 
 // =============================================================================
@@ -385,18 +423,34 @@ typedef BOOL (^BugsnagOnSessionBlock)(BugsnagSession *_Nonnull session);
  *  change the breadcrumb contents as needed
  *
  *  @param block A block which returns YES if the breadcrumb should be captured
+ *
+ *  @returns An opaque reference to the callback which can be passed to `removeOnBreadcrumb:`
  */
-- (void)addOnBreadcrumbBlock:(BugsnagOnBreadcrumbBlock _Nonnull)block
+- (BugsnagOnBreadcrumbRef)addOnBreadcrumbBlock:(BugsnagOnBreadcrumbBlock)block
     NS_SWIFT_NAME(addOnBreadcrumb(block:));
 
 /**
  * Remove the callback that would be invoked when a breadcrumb is captured.
  *
- * @param block The block to be removed.
+ * @param callback The opaque reference of the callback, returned by `addOnBreadcrumbBlock:`
  */
-- (void)removeOnBreadcrumbBlock:(BugsnagOnBreadcrumbBlock _Nonnull)block
+- (void)removeOnBreadcrumb:(BugsnagOnBreadcrumbRef)callback
+    NS_SWIFT_NAME(removeOnBreadcrumb(_:));
+
+/**
+ * Deprecated
+ */
+- (void)removeOnBreadcrumbBlock:(BugsnagOnBreadcrumbBlock)block
+    BSG_DEPRECATED_WITH_REPLACEMENT("removeOnBreadcrumb:")
     NS_SWIFT_NAME(removeOnBreadcrumb(block:));
 
+// =============================================================================
+// MARK: - Plugins
+// =============================================================================
+
+/**
+ * Internal interface for adding custom behavior :nodoc:
+ */
 - (void)addPlugin:(id<BugsnagPlugin> _Nonnull)plugin;
 
 @end

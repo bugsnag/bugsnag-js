@@ -26,14 +26,7 @@ typedef NS_ENUM(NSInteger, BugsnagApiClientDeliveryStatus) {
 
 @interface BugsnagApiClient : NSObject
 
-- (instancetype)initWithSession:(nullable NSURLSession *)session queueName:(NSString *)queueName;
-
-/**
- * Send outstanding reports
- */
-- (void)flushPendingData;
-
-- (NSOperation *)deliveryOperation;
+- (instancetype)initWithSession:(nullable NSURLSession *)session;
 
 - (void)sendJSONPayload:(NSDictionary *)payload
                 headers:(NSDictionary<BugsnagHTTPHeaderName, NSString *> *)headers
@@ -41,8 +34,6 @@ typedef NS_ENUM(NSInteger, BugsnagApiClientDeliveryStatus) {
       completionHandler:(void (^)(BugsnagApiClientDeliveryStatus status, NSError * _Nullable error))completionHandler;
 
 + (NSString *)SHA1HashStringWithData:(NSData *)data;
-
-@property (readonly, nonatomic) NSOperationQueue *sendQueue;
 
 @end
 

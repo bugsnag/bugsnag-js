@@ -34,6 +34,7 @@ extern "C" {
 #include "BSG_KSArchSpecific.h"
 #include "BSG_KSBacktrace.h"
 
+#include <stdbool.h>
 #include <sys/ucontext.h>
 
 /** Point at which bsg_ksbt_backtraceLength() will give up trying to count.
