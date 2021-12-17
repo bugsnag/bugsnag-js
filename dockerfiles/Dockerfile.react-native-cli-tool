@@ -16,7 +16,7 @@ RUN npx lerna run build --scope @bugsnag/react-native-cli
 RUN npm pack --verbose packages/react-native-cli/
 
 # The maze-runner test image
-FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v6-cli as react-native-cli-maze-runner
+FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner:tms-use-maze-check-cli as react-native-cli-maze-runner
 
 WORKDIR /app
 
