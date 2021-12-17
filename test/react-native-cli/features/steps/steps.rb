@@ -106,7 +106,7 @@ Then('bugsnag source maps library is not in the package.json file') do
   json = parse_package_json
 
   Maze.check.include(json, 'devDependencies')
-  refute_include(json['devDependencies'], '@bugsnag/source-maps')
+  Maze.check.refute_include(json['devDependencies'], '@bugsnag/source-maps')
 end
 
 Then('the iOS build has not been modified to upload source maps') do
@@ -198,7 +198,7 @@ Then('bugsnag react-native is not in the package.json file') do
   json = parse_package_json
 
   Maze.check.include(json, 'dependencies')
-  refute_include(json['dependencies'], '@bugsnag/react-native')
+  Maze.check.refute_include(json['dependencies'], '@bugsnag/react-native')
 end
 
 Then('the iOS app contains the bugsnag initialisation code') do
