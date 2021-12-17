@@ -29,14 +29,14 @@ When('I run the React Native service interactively') do
   step("I run the service '#{current_fixture}' interactively")
 end
 
-When("I notify a handled JavaScript error") do
+When('I notify a handled JavaScript error') do
   steps %Q{
     Given the element "js_notify" is present within 60 seconds
     And I click the element "js_notify"
   }
 end
 
-When("I notify a handled native error") do
+When('I notify a handled native error') do
   steps %Q{
     Given the element "native_notify" is present within 60 seconds
     And I click the element "native_notify"
@@ -87,36 +87,36 @@ def parse_package_json
   JSON.parse(json.join("\n"))
 end
 
-Then("bugsnag source maps library is in the package.json file") do
+Then('bugsnag source maps library is in the package.json file') do
   json = parse_package_json
 
-  assert_includes(json, "devDependencies")
-  assert_includes(json["devDependencies"], "@bugsnag/source-maps")
+  Maze.check.include(json, 'devDependencies')
+  Maze.check.include(json['devDependencies'], '@bugsnag/source-maps')
 end
 
-Then("bugsnag source maps library version {string} is in the package.json file") do |expected|
+Then('bugsnag source maps library version {string} is in the package.json file') do |expected|
   json = parse_package_json
 
-  assert_includes(json, "devDependencies")
-  assert_includes(json["devDependencies"], "@bugsnag/source-maps")
-  assert_equal(json["devDependencies"]["@bugsnag/source-maps"], expected)
+  Maze.check.include(json, 'devDependencies')
+  Maze.check.include(json['devDependencies'], '@bugsnag/source-maps')
+  Maze.check.equal(json['devDependencies']['@bugsnag/source-maps'], expected)
 end
 
-Then("bugsnag source maps library is not in the package.json file") do
+Then('bugsnag source maps library is not in the package.json file') do
   json = parse_package_json
 
-  assert_includes(json, "devDependencies")
-  refute_includes(json["devDependencies"], "@bugsnag/source-maps")
+  Maze.check.include(json, 'devDependencies')
+  refute_include(json['devDependencies'], '@bugsnag/source-maps')
 end
 
-Then("the iOS build has not been modified to upload source maps") do
+Then('the iOS build has not been modified to upload source maps') do
   filename = "ios/#{current_fixture}.xcodeproj/project.pbxproj"
 
   step("the interactive file '#{filename}' does not contain 'EXTRA_PACKAGER_ARGS=\"--sourcemap-output $TMPDIR/$(md5 -qs \"$CONFIGURATION_BUILD_DIR\")-main.jsbundle.map\"'")
   step("the interactive file '#{filename}' does not contain 'Upload source maps to Bugsnag'")
 end
 
-Then("the iOS build has been modified to upload source maps") do
+Then('the iOS build has been modified to upload source maps') do
   filename = "ios/#{current_fixture}.xcodeproj/project.pbxproj"
 
   steps %Q{
@@ -127,7 +127,7 @@ Then("the iOS build has been modified to upload source maps") do
   }
 end
 
-Then("the iOS build has been modified to upload source maps to {string}") do |expected_endpoint|
+Then('the iOS build has been modified to upload source maps to {string}') do |expected_endpoint|
   filename = "ios/#{current_fixture}.xcodeproj/project.pbxproj"
 
   steps %Q{
@@ -138,7 +138,7 @@ Then("the iOS build has been modified to upload source maps to {string}") do |ex
   }
 end
 
-Then("the Android build has not been modified to upload source maps") do
+Then('the Android build has not been modified to upload source maps') do
   steps %Q{
     Then the interactive file 'android/app/build.gradle' does not contain 'uploadReactNativeMappings = true'
     And the interactive file 'android/app/build.gradle' does not contain 'endpoint = '
@@ -146,7 +146,7 @@ Then("the Android build has not been modified to upload source maps") do
   }
 end
 
-Then("the Android build has been modified to upload source maps") do
+Then('the Android build has been modified to upload source maps') do
   steps %Q{
     Then the interactive file 'android/app/build.gradle' contains 'uploadReactNativeMappings = true'
     And the interactive file 'android/app/build.gradle' does not contain 'endpoint = '
@@ -154,54 +154,54 @@ Then("the Android build has been modified to upload source maps") do
   }
 end
 
-Then("the Android build has been modified to upload source maps to {string}") do |expected_endpoint|
+Then('the Android build has been modified to upload source maps to {string}') do |expected_endpoint|
   step("the interactive file 'android/app/build.gradle' contains 'uploadReactNativeMappings = true'")
   step("the interactive file 'android/app/build.gradle' contains 'endpoint = \"#{expected_endpoint}\"'")
 end
 
-Then("the Android build has been modified to upload builds to {string}") do |expected_endpoint|
+Then('the Android build has been modified to upload builds to {string}') do |expected_endpoint|
   step("the interactive file 'android/app/build.gradle' contains 'releasesEndpoint = \"#{expected_endpoint}\"'")
 end
 
-Then("the Bugsnag Android Gradle plugin is not installed") do
-  rootGradle = "android/build.gradle"
-  appGradle = "android/app/build.gradle"
+Then('the Bugsnag Android Gradle plugin is not installed') do
+  rootGradle = 'android/build.gradle'
+  appGradle = 'android/app/build.gradle'
 
   step("the interactive file '#{rootGradle}' does not contain 'classpath(\"com.bugsnag:bugsnag-android-gradle-plugin:'")
   step("the interactive file '#{appGradle}' does not contain 'apply plugin: \"com.bugsnag.android.gradle\"'")
 end
 
-Then("the Bugsnag Android Gradle plugin is installed") do
-  rootGradle = "android/build.gradle"
-  appGradle = "android/app/build.gradle"
+Then('the Bugsnag Android Gradle plugin is installed') do
+  rootGradle = 'android/build.gradle'
+  appGradle = 'android/app/build.gradle'
 
   step("the interactive file '#{rootGradle}' contains 'classpath(\"com.bugsnag:bugsnag-android-gradle-plugin:'")
   step("the interactive file '#{appGradle}' contains 'apply plugin: \"com.bugsnag.android.gradle\"'")
 end
 
-Then("bugsnag react-native is in the package.json file") do
+Then('bugsnag react-native is in the package.json file') do
   json = parse_package_json
 
-  assert_includes(json, "dependencies")
-  assert_includes(json["dependencies"], "@bugsnag/react-native")
+  Maze.check.include(json, 'dependencies')
+  Maze.check.include(json['dependencies'], '@bugsnag/react-native')
 end
 
-Then("bugsnag react-native version {string} is in the package.json file") do |expected|
+Then('bugsnag react-native version {string} is in the package.json file') do |expected|
   json = parse_package_json
 
-  assert_includes(json, "dependencies")
-  assert_includes(json["dependencies"], "@bugsnag/react-native")
-  assert_equal(json["dependencies"]["@bugsnag/react-native"], expected)
+  Maze.check.include(json, 'dependencies')
+  Maze.check.include(json['dependencies'], '@bugsnag/react-native')
+  Maze.check.equal(json['dependencies']['@bugsnag/react-native'], expected)
 end
 
-Then("bugsnag react-native is not in the package.json file") do
+Then('bugsnag react-native is not in the package.json file') do
   json = parse_package_json
 
-  assert_includes(json, "dependencies")
-  refute_includes(json["dependencies"], "@bugsnag/react-native")
+  Maze.check.include(json, 'dependencies')
+  refute_include(json['dependencies'], '@bugsnag/react-native')
 end
 
-Then("the iOS app contains the bugsnag initialisation code") do
+Then('the iOS app contains the bugsnag initialisation code') do
   filename = "ios/#{current_fixture}/AppDelegate.m"
 
   step("the interactive file '#{filename}' contains '#import <Bugsnag/Bugsnag.h>'")
@@ -216,26 +216,26 @@ def get_android_main_application_path(current_fixture)
   end
 end
 
-Then("the Android app contains the bugsnag initialisation code") do
+Then('the Android app contains the bugsnag initialisation code') do
   filename = get_android_main_application_path current_fixture
   step("the interactive file '#{filename}' contains 'import com.bugsnag.android.Bugsnag;'")
   step("the interactive file '#{filename}' contains 'Bugsnag.start(this);'")
 end
 
-Then("the iOS app does not contain the bugsnag initialisation code") do
+Then('the iOS app does not contain the bugsnag initialisation code') do
   filename = "ios/#{current_fixture}/AppDelegate.m"
 
   step("the interactive file '#{filename}' does not contain '#import <Bugsnag/Bugsnag.h>'")
   step("the interactive file '#{filename}' does not contain '[Bugsnag start];'")
 end
 
-Then("the Android app does not contain the bugsnag initialisation code") do
+Then('the Android app does not contain the bugsnag initialisation code') do
   filename = get_android_main_application_path current_fixture
   step("the interactive file '#{filename}' does not contain 'import com.bugsnag.android.Bugsnag;'")
   step("the interactive file '#{filename}' does not contain 'Bugsnag.start(this);'")
 end
 
-Then("the JavaScript layer contains the bugsnag initialisation code") do
+Then('the JavaScript layer contains the bugsnag initialisation code') do
   steps %Q{
     Then the interactive file 'index.js' contains:
       """
@@ -245,7 +245,7 @@ Then("the JavaScript layer contains the bugsnag initialisation code") do
   }
 end
 
-Then("the JavaScript layer does not contain the bugsnag initialisation code") do
+Then('the JavaScript layer does not contain the bugsnag initialisation code') do
   steps %Q{
     Then the interactive file 'index.js' does not contain:
       """
@@ -255,7 +255,7 @@ Then("the JavaScript layer does not contain the bugsnag initialisation code") do
   }
 end
 
-Then("the modified files are as expected after running the insert command") do
+Then('the modified files are as expected after running the insert command') do
   steps %Q{
     When I input "git status --porcelain" interactively
     Then I wait for the interactive shell to output the following lines in stdout
@@ -267,7 +267,7 @@ Then("the modified files are as expected after running the insert command") do
   }
 end
 
-Then("the modified files are as expected after running the configure command") do
+Then('the modified files are as expected after running the configure command') do
   steps %Q{
     When I input "git status --porcelain" interactively
     Then I wait for the interactive shell to output the following lines in stdout
@@ -278,7 +278,7 @@ Then("the modified files are as expected after running the configure command") d
   }
 end
 
-Then("there are no modified files in git") do
+Then('there are no modified files in git') do
   uuid = SecureRandom.uuid
 
   steps %Q{
@@ -311,7 +311,7 @@ def parse_xml_file(path)
   REXML::Document.new(xml.join("\n"))
 end
 
-Then("the iOS app contains the bugsnag API key {string}") do |expected|
+Then('the iOS app contains the bugsnag API key {string}') do |expected|
   xml = parse_xml_file("ios/#{current_fixture}/Info.plist")
 
   # This XPath does the following:
@@ -321,35 +321,35 @@ Then("the iOS app contains the bugsnag API key {string}") do |expected|
   # 'get_text' will then fetch the text content of the first element
   actual_api_key = xml.get_text('//key[text()="bugsnag"]/following-sibling::dict/string')
 
-  assert_equal(expected, actual_api_key.to_s)
+  Maze.check.equal(expected, actual_api_key.to_s)
 end
 
-Then("the Android app contains the bugsnag API key {string}") do |expected|
-  xml = parse_xml_file("android/app/src/main/AndroidManifest.xml")
+Then('the Android app contains the bugsnag API key {string}') do |expected|
+  xml = parse_xml_file('android/app/src/main/AndroidManifest.xml')
 
   element = xml.get_elements('//meta-data[@android:name="com.bugsnag.android.API_KEY"]').first
-  actual_api_key = element["android:value"]
+  actual_api_key = element['android:value']
 
-  assert_equal(expected, actual_api_key.to_s)
+  Maze.check.equal(expected, actual_api_key.to_s)
 end
 
-Then("the iOS app does not contain a bugsnag API key") do
+Then('the iOS app does not contain a bugsnag API key') do
   xml = parse_xml_file("ios/#{current_fixture}/Info.plist")
 
   actual_api_key = xml.get_text('//key[text()="bugsnag"]/following-sibling::dict/string')
 
-  assert_nil(actual_api_key)
+  Maze.check.nil(actual_api_key)
 end
 
-Then("the Android app does not contain a bugsnag API key") do
-  xml = parse_xml_file("android/app/src/main/AndroidManifest.xml")
+Then('the Android app does not contain a bugsnag API key') do
+  xml = parse_xml_file('android/app/src/main/AndroidManifest.xml')
 
   element = xml.get_elements('//meta-data[@android:name="com.bugsnag.android.API_KEY"]').first
 
-  assert_nil(element)
+  Maze.check.nil(element)
 end
 
-Then("the iOS app contains the bugsnag notify URL {string}") do |expected|
+Then('the iOS app contains the bugsnag notify URL {string}') do |expected|
   xml = parse_xml_file("ios/#{current_fixture}/Info.plist")
 
   # This XPath does the following:
@@ -362,69 +362,69 @@ Then("the iOS app contains the bugsnag notify URL {string}") do |expected|
   # 'get_text' will then fetch the text content of the first element
   actual = xml.get_text('//key[text()="bugsnag"]/following-sibling::dict/key[text()="endpoints"]/following-sibling::dict/key[text()="notify"]/following-sibling::string[1]')
 
-  assert_equal(expected, actual.to_s)
+  Maze.check.equal(expected, actual.to_s)
 end
 
-Then("the Android app contains the bugsnag notify URL {string}") do |expected|
-  xml = parse_xml_file("android/app/src/main/AndroidManifest.xml")
+Then('the Android app contains the bugsnag notify URL {string}') do |expected|
+  xml = parse_xml_file('android/app/src/main/AndroidManifest.xml')
 
   element = xml.get_elements('//meta-data[@android:name="com.bugsnag.android.ENDPOINT_NOTIFY"]').first
-  actual = element["android:value"]
+  actual = element['android:value']
 
-  assert_equal(expected, actual.to_s)
+  Maze.check.equal(expected, actual.to_s)
 end
 
-Then("the iOS app does not contain a bugsnag notify URL") do
+Then('the iOS app does not contain a bugsnag notify URL') do
   xml = parse_xml_file("ios/#{current_fixture}/Info.plist")
 
   actual = xml.get_text('//key[text()="bugsnag"]/following-sibling::dict/key[text()="endpoints"]/following-sibling::dict/key[text()="notify"]/following-sibling::string[1]')
 
-  assert_nil(actual)
+  Maze.check.nil(actual)
 end
 
-Then("the Android app does not contain a bugsnag notify URL") do
-  xml = parse_xml_file("android/app/src/main/AndroidManifest.xml")
+Then('the Android app does not contain a bugsnag notify URL') do
+  xml = parse_xml_file('android/app/src/main/AndroidManifest.xml')
 
   element = xml.get_elements('//meta-data[@android:name="com.bugsnag.android.ENDPOINT_NOTIFY"]').first
 
-  assert_nil(element)
+  Maze.check.nil(element)
 end
 
-Then("the iOS app contains the bugsnag sessions URL {string}") do |expected|
+Then('the iOS app contains the bugsnag sessions URL {string}') do |expected|
   xml = parse_xml_file("ios/#{current_fixture}/Info.plist")
 
   actual = xml.get_text('//key[text()="bugsnag"]/following-sibling::dict/key[text()="endpoints"]/following-sibling::dict/key[text()="sessions"]/following-sibling::string[1]')
 
-  assert_equal(expected, actual.to_s)
+  Maze.check.equal(expected, actual.to_s)
 end
 
-Then("the Android app contains the bugsnag sessions URL {string}") do |expected|
-  xml = parse_xml_file("android/app/src/main/AndroidManifest.xml")
+Then('the Android app contains the bugsnag sessions URL {string}') do |expected|
+  xml = parse_xml_file('android/app/src/main/AndroidManifest.xml')
 
   element = xml.get_elements('//meta-data[@android:name="com.bugsnag.android.ENDPOINT_SESSIONS"]').first
-  actual = element["android:value"]
+  actual = element['android:value']
 
-  assert_equal(expected, actual.to_s)
+  Maze.check.equal(expected, actual.to_s)
 end
 
-Then("the iOS app does not contain a bugsnag sessions URL") do
+Then('the iOS app does not contain a bugsnag sessions URL') do
   xml = parse_xml_file("ios/#{current_fixture}/Info.plist")
 
   actual = xml.get_text('//key[text()="bugsnag"]/following-sibling::dict/key[text()="endpoints"]/following-sibling::dict/key[text()="sessions"]/following-sibling::string[1]')
 
-  assert_nil(actual)
+  Maze.check.nil(actual)
 end
 
-Then("the Android app does not contain a bugsnag sessions URL") do
-  xml = parse_xml_file("android/app/src/main/AndroidManifest.xml")
+Then('the Android app does not contain a bugsnag sessions URL') do
+  xml = parse_xml_file('android/app/src/main/AndroidManifest.xml')
 
   element = xml.get_elements('//meta-data[@android:name="com.bugsnag.android.ENDPOINT_SESSIONS"]').first
 
-  assert_nil(element)
+  Maze.check.nil(element)
 end
 
 Then('the Content-Type header is valid multipart form-data') do
   expected = /^multipart\/form-data; boundary=--------------------------\d+$/
   actual = Maze::Server.builds.current[:request]['content-type']
-  assert_match(expected, actual)
+  Maze.check.match(expected, actual)
 end
