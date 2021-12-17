@@ -76,6 +76,7 @@ NSString *const BSGKeyRedactedKeys = @"redactedKeys";
 NSString *const BSGKeyReleaseStage = @"releaseStage";
 NSString *const BSGKeySendThreads = @"sendThreads";
 NSString *const BSGKeySession = @"session";
+NSString *const BSGKeySessions = @"sessions";
 NSString *const BSGKeySessionsEndpoint = @"sessions";
 NSString *const BSGKeySeverity = @"severity";
 NSString *const BSGKeySeverityReason = @"severityReason";

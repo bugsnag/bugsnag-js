@@ -29,7 +29,6 @@
 #include "BSG_KSBacktrace_Private.h"
 #include "BSG_KSCrashReportFields.h"
 #include "BSG_KSCrashReportVersion.h"
-#include "BSG_KSDynamicLinker.h"
 #include "BSG_KSFileUtils.h"
 #include "BSG_KSJSONCodec.h"
 #include "BSG_KSMach.h"
@@ -43,7 +42,9 @@
 #include "BSG_KSLogger.h"
 #include "BSG_KSCrashContext.h"
 #include "BSG_KSCrashSentry.h"
+#include "BSG_Symbolicate.h"
 
+#include <mach-o/loader.h>
 #include <sys/time.h>
 
 #ifdef __arm64__
@@ -525,27 +526,27 @@ void bsg_kscrw_i_logCrashType(
  *
  * @param entryNum The backtrace entry number.
  *
- * @param address The program counter value (instruction address).
+ * @param address The program counter or return address value.
  *
- * @param dlInfo Information about the nearest symbols to the address.
+ * @param info Information about the function that contains the address.
  */
 void bsg_kscrw_i_logBacktraceEntry(const int entryNum, const uintptr_t address,
-                                   const Dl_info *const dlInfo) {
+                                   struct bsg_symbolicate_result *info) {
     char faddrBuff[20];
     char saddrBuff[20];
 
-    const char *fname = bsg_ksfulastPathEntry(dlInfo->dli_fname);
-    if (fname == NULL) {
-        sprintf(faddrBuff, BSG_POINTER_FMT, (uintptr_t)dlInfo->dli_fbase);
+    const char *fname = info->image ? bsg_ksfulastPathEntry(info->image->name) : NULL;
+    if (fname == NULL && info->image) {
+        sprintf(faddrBuff, BSG_POINTER_FMT, (uintptr_t)info->image->header);
         fname = faddrBuff;
     }
 
-    uintptr_t offset = address - (uintptr_t)dlInfo->dli_saddr;
-    const char *sname = dlInfo->dli_sname;
-    if (sname == NULL) {
-        sprintf(saddrBuff, BSG_POINTER_SHORT_FMT, (uintptr_t)dlInfo->dli_fbase);
+    uintptr_t offset = address - (uintptr_t)info->function_address;
+    const char *sname = info->function_name;
+    if (sname == NULL && info->image) {
+        sprintf(saddrBuff, BSG_POINTER_SHORT_FMT, (uintptr_t)info->image->header);
         sname = saddrBuff;
-        offset = address - (uintptr_t)dlInfo->dli_fbase;
+        offset = address - (uintptr_t)info->image->header;
     }
 
     BSG_KSLOGBASIC_ALWAYS(BSG_TRACE_FMT, entryNum, fname, address, sname,
@@ -562,7 +563,7 @@ void bsg_kscrw_i_logBacktrace(const uintptr_t *const backtrace,
                               const int backtraceLength,
                               const int skippedEntries) {
     if (backtraceLength > 0) {
-        Dl_info symbolicated[backtraceLength];
+        struct bsg_symbolicate_result symbolicated[backtraceLength];
         bsg_ksbt_symbolicate(backtrace, symbolicated, backtraceLength,
                              skippedEntries);
 
@@ -726,23 +727,24 @@ void bsg_kscrw_i_writeAddressReferencedByString(
  */
 void bsg_kscrw_i_writeBacktraceEntry(
     const BSG_KSCrashReportWriter *const writer, const char *const key,
-    const uintptr_t address, const Dl_info *const info) {
+    const uintptr_t address, struct bsg_symbolicate_result *info) {
     writer->beginObject(writer, key);
     {
-        if (info->dli_saddr != NULL) {
-            if (info->dli_fname != NULL) {
-                writer->addStringElement(writer, BSG_KSCrashField_ObjectName,
-                                         bsg_ksfulastPathEntry(info->dli_fname));
-            }
+        if (info->image && info->image->header) {
             writer->addUIntegerElement(writer, BSG_KSCrashField_ObjectAddr,
-                                       (uintptr_t)info->dli_fbase);
-            if (info->dli_sname != NULL) {
-                const char *sname = info->dli_sname;
-                writer->addStringElement(writer, BSG_KSCrashField_SymbolName,
-                                         sname);
-            }
+                                       (uintptr_t)info->image->header);
+        }
+        if (info->image && info->image->name) {
+            writer->addStringElement(writer, BSG_KSCrashField_ObjectName,
+                                     bsg_ksfulastPathEntry(info->image->name));
+        }
+        if (info->function_address) {
             writer->addUIntegerElement(writer, BSG_KSCrashField_SymbolAddr,
-                                       (uintptr_t)info->dli_saddr);
+                                       info->function_address);
+        }
+        if (info->function_name) {
+            writer->addStringElement(writer, BSG_KSCrashField_SymbolName,
+                                     info->function_name);
         }
         writer->addUIntegerElement(writer, BSG_KSCrashField_InstructionAddr,
                                    address);
@@ -773,7 +775,7 @@ void bsg_kscrw_i_writeBacktrace(const BSG_KSCrashReportWriter *const writer,
         writer->beginArray(writer, BSG_KSCrashField_Contents);
         {
             if (backtraceLength > 0) {
-                Dl_info symbolicated[backtraceLength];
+                struct bsg_symbolicate_result symbolicated[backtraceLength];
                 bsg_ksbt_symbolicate(backtrace, symbolicated, backtraceLength,
                                      skippedEntries);
 

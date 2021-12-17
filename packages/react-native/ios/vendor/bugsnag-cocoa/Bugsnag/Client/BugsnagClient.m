@@ -66,7 +66,6 @@
 #import "BugsnagPluginClient.h"
 #import "BugsnagSession+Private.h"
 #import "BugsnagSessionTracker.h"
-#import "BugsnagSessionTrackingApiClient.h"
 #import "BugsnagStackframe+Private.h"
 #import "BugsnagStateEvent.h"
 #import "BugsnagSystemState.h"
@@ -621,24 +620,38 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
 // MARK: - onSession
 // =============================================================================
 
-- (void)addOnSessionBlock:(BugsnagOnSessionBlock _Nonnull)block {
-    [self.configuration addOnSessionBlock:block];
+- (nonnull BugsnagOnSessionRef)addOnSessionBlock:(nonnull BugsnagOnSessionBlock)block {
+    return [self.configuration addOnSessionBlock:block];
+}
+
+- (void)removeOnSession:(nonnull BugsnagOnSessionRef)callback {
+    [self.configuration removeOnSession:callback];
 }
 
 - (void)removeOnSessionBlock:(BugsnagOnSessionBlock _Nonnull )block {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     [self.configuration removeOnSessionBlock:block];
+#pragma clang diagnostic pop
 }
 
 // =============================================================================
 // MARK: - onBreadcrumb
 // =============================================================================
 
-- (void)addOnBreadcrumbBlock:(BugsnagOnBreadcrumbBlock _Nonnull)block {
-    [self.configuration addOnBreadcrumbBlock:block];
+- (nonnull BugsnagOnBreadcrumbRef)addOnBreadcrumbBlock:(nonnull BugsnagOnBreadcrumbBlock)block {
+    return [self.configuration addOnBreadcrumbBlock:block];
+}
+
+- (void)removeOnBreadcrumb:(nonnull BugsnagOnBreadcrumbRef)callback {
+    [self.configuration removeOnBreadcrumb:callback];
 }
 
 - (void)removeOnBreadcrumbBlock:(BugsnagOnBreadcrumbBlock _Nonnull)block {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     [self.configuration removeOnBreadcrumbBlock:block];
+#pragma clang diagnostic pop
 }
 
 // =============================================================================

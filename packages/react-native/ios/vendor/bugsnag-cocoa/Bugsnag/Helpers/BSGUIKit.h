@@ -15,6 +15,7 @@
 #define UIAPPLICATION                                       NSClassFromString(@"UIApplication")
 #define UIDEVICE                                            NSClassFromString(@"UIDevice")
 #define UISCENE                                             NSClassFromString(@"UIScene")
+#define UIWINDOW                                            NSClassFromString(@"UIWindow")
 
 #define UIApplicationDidBecomeActiveNotification            @"UIApplicationDidBecomeActiveNotification"
 #define UIApplicationDidEnterBackgroundNotification         @"UIApplicationDidEnterBackgroundNotification"

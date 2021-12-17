@@ -22,6 +22,10 @@
   - `redactedKeys` now correctly apply to metadata on Event breadcrumbs [bugsnag-android#1526](https://github.com/bugsnag/bugsnag-android/pull/1526)
   - Improved the robustness of automatically logged `ERROR` breadcrumbs [bugsnag-android#1531](https://github.com/bugsnag/bugsnag-android/pull/1531)
   - Improve performance on the breadcrumb storage "hot path" by removing Date formatting [bugsnag-android#1525](https://github.com/bugsnag/bugsnag-android/pull/1525)
+- (react-native): Update bugsnag-cocoa to v6.15.1
+  - Load configuration from the plist instead of using defaults when calling Bugsnag.start(withApiKey:) [#1245](https://github.com/bugsnag/bugsnag-cocoa/pull/1245)
+  - Include metadata in breadcrumbs for `UIWindow` / `NSWindow` notifications. [#1238](https://github.com/bugsnag/bugsnag-cocoa/pull/1238)
+  - Use `LC_FUNCTION_STARTS` to improve symbolication accuracy. [#1214](https://github.com/bugsnag/bugsnag-cocoa/pull/1214)
 
 ## 7.14.1 (2021-11-29)
 

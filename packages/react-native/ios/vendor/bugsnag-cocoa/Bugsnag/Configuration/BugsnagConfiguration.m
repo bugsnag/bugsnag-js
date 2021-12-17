@@ -279,38 +279,71 @@ static NSUserDefaults *userDefaults;
 // MARK: - onSendBlock
 // =============================================================================
 
-- (void)addOnSendErrorBlock:(BugsnagOnSendErrorBlock _Nonnull)block {
-    [(NSMutableArray *)self.onSendBlocks addObject:[block copy]];
+- (BugsnagOnSendErrorRef)addOnSendErrorBlock:(BugsnagOnSendErrorBlock)block {
+    BugsnagOnSendErrorBlock callback = [block copy];
+    [self.onSendBlocks addObject:callback];
+    return callback;
 }
 
-- (void)removeOnSendErrorBlock:(BugsnagOnSendErrorBlock _Nonnull )block
-{
-    [(NSMutableArray *)self.onSendBlocks removeObject:block];
+- (void)removeOnSendError:(BugsnagOnSendErrorRef)callback {
+    if (![callback isKindOfClass:NSClassFromString(@"NSBlock")]) {
+        bsg_log_err(@"Invalid object type passed to %@", NSStringFromSelector(_cmd));
+        return;
+    }
+    [self.onSendBlocks removeObject:(id)callback];
+}
+
+- (void)removeOnSendErrorBlock:(BugsnagOnSendErrorBlock)block {
+    [self.onSendBlocks removeObject:block];
 }
 
 // =============================================================================
 // MARK: - onSessionBlock
 // =============================================================================
 
-- (void)addOnSessionBlock:(BugsnagOnSessionBlock)block {
-    [(NSMutableArray *)self.onSessionBlocks addObject:[block copy]];
+- (BugsnagOnSessionRef)addOnSessionBlock:(BugsnagOnSessionBlock)block {
+    BugsnagOnSessionBlock callback = [block copy];
+    [self.onSessionBlocks addObject:callback];
+    return callback;
+}
+
+- (void)removeOnSession:(BugsnagOnSessionRef)callback {
+    if (![callback isKindOfClass:NSClassFromString(@"NSBlock")]) {
+        bsg_log_err(@"Invalid object type passed to %@", NSStringFromSelector(_cmd));
+        return;
+    }
+    [self.onSessionBlocks removeObject:(id)callback];
 }
 
 - (void)removeOnSessionBlock:(BugsnagOnSessionBlock)block {
-    [(NSMutableArray *)self.onSessionBlocks removeObject:block];
+    [self.onSessionBlocks removeObject:block];
 }
 
 // =============================================================================
 // MARK: - onBreadcrumbBlock
 // =============================================================================
 
-- (void)addOnBreadcrumbBlock:(BugsnagOnBreadcrumbBlock _Nonnull)block {
-    [(NSMutableArray *)self.onBreadcrumbBlocks addObject:[block copy]];
+- (BugsnagOnBreadcrumbRef)addOnBreadcrumbBlock:(BugsnagOnBreadcrumbBlock)block {
+    BugsnagOnBreadcrumbBlock callback = [block copy];
+    [self.onBreadcrumbBlocks addObject:callback];
+    return callback;
 }
 
-- (void)removeOnBreadcrumbBlock:(BugsnagOnBreadcrumbBlock _Nonnull)block {
-    [(NSMutableArray *)self.onBreadcrumbBlocks removeObject:block];
+- (void)removeOnBreadcrumb:(BugsnagOnBreadcrumbRef)callback {
+    if (![callback isKindOfClass:NSClassFromString(@"NSBlock")]) {
+        bsg_log_err(@"Invalid object type passed to %@", NSStringFromSelector(_cmd));
+        return;
+    }
+    [self.onBreadcrumbBlocks removeObject:(id)callback];
 }
+
+- (void)removeOnBreadcrumbBlock:(BugsnagOnBreadcrumbBlock)block {
+    [self.onBreadcrumbBlocks removeObject:block];
+}
+
+// =============================================================================
+// MARK: -
+// =============================================================================
 
 - (NSDictionary *)sessionApiHeaders {
     return @{BugsnagHTTPHeaderNameApiKey: self.apiKey ?: @"",
