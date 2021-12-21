@@ -21,7 +21,7 @@ RUN npm pack --verbose packages/plugin-koa/
 RUN npm pack --verbose packages/plugin-restify/
 
 # The maze-runner node tests
-FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner:tms-use-maze-check-cli as node-maze-runner
+FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v6-cli as node-maze-runner
 WORKDIR /app/
 COPY packages/node/ .
 COPY test/node/features test/node/features
