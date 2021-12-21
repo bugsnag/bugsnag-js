@@ -8,11 +8,9 @@
 
 #import <Bugsnag/BugsnagMetadata.h>
 
-@class BugsnagStateEvent;
-
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void (^BugsnagObserverBlock)(BugsnagStateEvent *event);
+typedef void (^ BSGMetadataObserver)(BugsnagMetadata *);
 
 @interface BugsnagMetadata ()
 
@@ -20,15 +18,13 @@ typedef void (^BugsnagObserverBlock)(BugsnagStateEvent *event);
 
 @property (readonly, nonatomic) NSMutableDictionary *dictionary;
 
+@property (nullable, nonatomic) BSGMetadataObserver observer;
+
 #pragma mark Methods
 
 - (NSDictionary *)toDictionary;
 
 - (instancetype)deepCopy;
-
-- (void)addObserverWithBlock:(BugsnagObserverBlock)block;
-
-- (void)removeObserverWithBlock:(BugsnagObserverBlock)block;
 
 @end
 
