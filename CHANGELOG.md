@@ -1,5 +1,32 @@
 # Changelog
 
+## TBD
+
+### Fixed
+
+- (react-native-cli): Fix Xcode build error for ejected Expo apps [#1623](https://github.com/bugsnag/bugsnag-js/pull/1623)
+
+### Changed
+
+- (react-native) Update bugsnag-android to v5.17.0
+  - Bump compileSdkVersion to apiLevel 31
+    [bugsnag-android#1536](https://github.com/bugsnag/bugsnag-android/pull/1536)
+  - Flush in-memory sessions first
+    [bugsnag-android#1538](https://github.com/bugsnag/bugsnag-android/pull/1538)
+  - Avoid unnecessary network connectivity change breadcrumb
+    [bugsnag-android#1540](https://github.com/bugsnag/bugsnag-android/pull/1540)
+    [bugsnag-android#1546](https://github.com/bugsnag/bugsnag-android/pull/1546)
+  - Clear native stacktrace memory in `bugsnag_notify_env` before attempting to unwind the stack
+    [bugsnag-android#1543](https://github.com/bugsnag/bugsnag-android/pull/1543)
+  - Increase resilience of NDK stackframe method capture [bugsnag-android#1484](https://github.com/bugsnag/bugsnag-android/pull/1484)
+  - `redactedKeys` now correctly apply to metadata on Event breadcrumbs [bugsnag-android#1526](https://github.com/bugsnag/bugsnag-android/pull/1526)
+  - Improved the robustness of automatically logged `ERROR` breadcrumbs [bugsnag-android#1531](https://github.com/bugsnag/bugsnag-android/pull/1531)
+  - Improve performance on the breadcrumb storage "hot path" by removing Date formatting [bugsnag-android#1525](https://github.com/bugsnag/bugsnag-android/pull/1525)
+- (react-native): Update bugsnag-cocoa to v6.15.1
+  - Load configuration from the plist instead of using defaults when calling Bugsnag.start(withApiKey:) [#1245](https://github.com/bugsnag/bugsnag-cocoa/pull/1245)
+  - Include metadata in breadcrumbs for `UIWindow` / `NSWindow` notifications. [#1238](https://github.com/bugsnag/bugsnag-cocoa/pull/1238)
+  - Use `LC_FUNCTION_STARTS` to improve symbolication accuracy. [#1214](https://github.com/bugsnag/bugsnag-cocoa/pull/1214)
+
 ## 7.14.1 (2021-11-29)
 
 ### Fixed

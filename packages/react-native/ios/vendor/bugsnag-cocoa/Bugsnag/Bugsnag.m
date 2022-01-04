@@ -49,7 +49,8 @@ static BugsnagClient *bsg_g_bugsnag_client = NULL;
 }
 
 + (BugsnagClient *_Nonnull)startWithApiKey:(NSString *_Nonnull)apiKey {
-    BugsnagConfiguration *configuration = [[BugsnagConfiguration alloc] initWithApiKey:apiKey];
+    BugsnagConfiguration *configuration = [BugsnagConfiguration loadConfig];
+    configuration.apiKey = apiKey;
     return [self startWithConfiguration:configuration];
 }
 
@@ -313,10 +314,18 @@ static BugsnagClient *bsg_g_bugsnag_client = NULL;
     }
 }
 
-+ (void)addOnSessionBlock:(BugsnagOnSessionBlock _Nonnull)block
-{
++ (nonnull BugsnagOnSessionRef)addOnSessionBlock:(nonnull BugsnagOnSessionBlock)block {
     if ([self bugsnagStarted]) {
-        [self.client addOnSessionBlock:block];
+        return [self.client addOnSessionBlock:block];
+    } else {
+        // We need to return something from this nonnull method; simulate what would have happened.
+        return [block copy];
+    }
+}
+
++ (void)removeOnSession:(nonnull BugsnagOnSessionRef)callback {
+    if ([self bugsnagStarted]) {
+        [self.client removeOnSession:callback];
     }
 }
 
@@ -340,9 +349,18 @@ static BugsnagClient *bsg_g_bugsnag_client = NULL;
 // MARK: - OnBreadcrumb
 // =============================================================================
 
-+ (void)addOnBreadcrumbBlock:(BugsnagOnBreadcrumbBlock _Nonnull)block {
++ (nonnull BugsnagOnBreadcrumbRef)addOnBreadcrumbBlock:(nonnull BugsnagOnBreadcrumbBlock)block {
     if ([self bugsnagStarted]) {
-        [self.client addOnBreadcrumbBlock:block];
+        return [self.client addOnBreadcrumbBlock:block];
+    } else {
+        // We need to return something from this nonnull method; simulate what would have happened.
+        return [block copy];
+    }
+}
+
++ (void)removeOnBreadcrumb:(nonnull BugsnagOnBreadcrumbRef)callback {
+    if ([self bugsnagStarted]) {
+        [self.client removeOnBreadcrumb:callback];
     }
 }
 

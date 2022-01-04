@@ -27,10 +27,17 @@ static void ReportInternalError(NSString *errorClass, NSString *message, NSDicti
     // offsets which would lead to some types of errors not being grouped at all; e.g.
     // - "Invalid value around character 229194."
     // - "No string key for value in object around character 94208."
+    // - "No string key for value in object around line 1, column 161315." (iOS 15+)
     // - "Unable to convert data to string around character 158259."
     // - "Unterminated string around character 22568."
     //
-    NSString *groupingMessage = [message componentsSeparatedByString:@" around character "].firstObject;
+    NSString *groupingMessage = message;
+    for (NSString *separator in @[@" around character ", @" around line"]) {
+        if ([message containsString:separator]) {
+            groupingMessage = [message componentsSeparatedByString:separator].firstObject;
+            break;
+        }
+    }
     NSString *groupingHash = [NSString stringWithFormat:@"BSGEventUploadKSCrashReportOperation.m: %@: %@", errorClass, groupingMessage];
     [BSGInternalErrorReporter.sharedInstance reportErrorWithClass:errorClass message:message diagnostics:diagnostics groupingHash:groupingHash];
 }
