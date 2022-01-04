@@ -13,7 +13,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class BugsnagSessionTrackingApiClient;
+@class BSGSessionUploader;
 
 typedef void (^SessionTrackerCallback)(BugsnagSession *_Nullable newSession);
 

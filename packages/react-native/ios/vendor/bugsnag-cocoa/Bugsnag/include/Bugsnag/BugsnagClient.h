@@ -184,19 +184,28 @@ NS_SWIFT_NAME(leaveBreadcrumb(_:metadata:type:));
 // =============================================================================
 
 /**
-* Add a callback that would be invoked before a session is sent to Bugsnag.
-*
-* @param block The block to be added.
-*/
-- (void)addOnSessionBlock:(BugsnagOnSessionBlock _Nonnull)block
+ *  Add a callback to be invoked before a session is sent to Bugsnag.
+ *
+ *  @param block A block which can modify the session
+ *
+ *  @returns An opaque reference to the callback which can be passed to `removeOnSession:`
+ */
+- (nonnull BugsnagOnSessionRef)addOnSessionBlock:(nonnull BugsnagOnSessionBlock)block
     NS_SWIFT_NAME(addOnSession(block:));
 
 /**
  * Remove a callback that would be invoked before a session is sent to Bugsnag.
  *
- * @param block The block to be removed.
+ * @param callback The opaque reference of the callback, returned by `addOnSessionBlock:`
+ */
+- (void)removeOnSession:(nonnull BugsnagOnSessionRef)callback
+    NS_SWIFT_NAME(removeOnSession(_:));
+
+/**
+ * Deprecated
  */
 - (void)removeOnSessionBlock:(BugsnagOnSessionBlock _Nonnull )block
+    BSG_DEPRECATED_WITH_REPLACEMENT("removeOnSession:")
     NS_SWIFT_NAME(removeOnSession(block:));
 
 // =============================================================================
@@ -211,7 +220,7 @@ NS_SWIFT_NAME(leaveBreadcrumb(_:metadata:type:));
 /**
  * @return YES if Bugsnag has been started and the previous launch crashed
  */
-- (BOOL)appDidCrashLastLaunch __attribute__((deprecated("use 'lastRunInfo.crashed' instead")));
+- (BOOL)appDidCrashLastLaunch BSG_DEPRECATED_WITH_REPLACEMENT("lastRunInfo.crashed");
 
 /**
  * Information about the last run of the app, and whether it crashed.
@@ -255,16 +264,25 @@ NS_SWIFT_NAME(leaveBreadcrumb(_:metadata:type:));
  *  change the breadcrumb contents as needed
  *
  *  @param block A block which returns YES if the breadcrumb should be captured
+ *
+ *  @returns An opaque reference to the callback which can be passed to `removeOnBreadcrumb:`
  */
-- (void)addOnBreadcrumbBlock:(BugsnagOnBreadcrumbBlock _Nonnull)block
+- (nonnull BugsnagOnBreadcrumbRef)addOnBreadcrumbBlock:(nonnull BugsnagOnBreadcrumbBlock)block
     NS_SWIFT_NAME(addOnBreadcrumb(block:));
 
 /**
  * Remove the callback that would be invoked when a breadcrumb is captured.
  *
- * @param block The block to be removed.
+ * @param callback The opaque reference of the callback, returned by `addOnBreadcrumbBlock:`
+ */
+- (void)removeOnBreadcrumb:(nonnull BugsnagOnBreadcrumbRef)callback
+    NS_SWIFT_NAME(removeOnBreadcrumb(_:));
+
+/**
+ * Deprecated
  */
 - (void)removeOnBreadcrumbBlock:(BugsnagOnBreadcrumbBlock _Nonnull)block
+    BSG_DEPRECATED_WITH_REPLACEMENT("removeOnBreadcrumb:")
     NS_SWIFT_NAME(removeOnBreadcrumb(block:));
 
 @end

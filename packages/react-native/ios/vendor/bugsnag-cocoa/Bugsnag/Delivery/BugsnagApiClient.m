@@ -42,30 +42,11 @@ typedef NS_ENUM(NSInteger, HTTPStatusCode) {
 
 @implementation BugsnagApiClient
 
-- (instancetype)initWithSession:(nullable NSURLSession *)session queueName:(NSString *)queueName {
+- (instancetype)initWithSession:(nullable NSURLSession *)session {
     if ((self = [super init])) {
-        _sendQueue = [NSOperationQueue new];
-        _sendQueue.maxConcurrentOperationCount = 1;
-        if ([_sendQueue respondsToSelector:@selector(qualityOfService)]) {
-            _sendQueue.qualityOfService = NSQualityOfServiceUtility;
-        }
-        _sendQueue.name = queueName;
         _session = session ?: [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration ephemeralSessionConfiguration]];
     }
     return self;
-}
-
-- (void)flushPendingData {
-    [self.sendQueue cancelAllOperations];
-    NSOperation *delay = [NSBlockOperation blockOperationWithBlock:^{ [NSThread sleepForTimeInterval:1]; }];
-    NSOperation *deliver = [self deliveryOperation];
-    [deliver addDependency:delay];
-    [self.sendQueue addOperations:@[delay, deliver] waitUntilFinished:NO];
-}
-
-- (NSOperation *)deliveryOperation {
-    bsg_log_err(@"Should override deliveryOperation in subclass");
-    return [NSOperation new];
 }
 
 #pragma mark - Delivery
@@ -161,10 +142,6 @@ typedef NS_ENUM(NSInteger, HTTPStatusCode) {
             md[5], md[6], md[7], md[8], md[9],
             md[10], md[11], md[12], md[13], md[14],
             md[15], md[16], md[17], md[18], md[19]];
-}
-
-- (void)dealloc {
-    [self.sendQueue cancelAllOperations];
 }
 
 @end

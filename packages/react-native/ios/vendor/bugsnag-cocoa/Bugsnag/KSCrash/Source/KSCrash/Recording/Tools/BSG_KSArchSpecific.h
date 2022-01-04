@@ -36,12 +36,6 @@ extern "C" {
 
 #include <sys/_structs.h>
 
-#ifdef __LP64__
-#define BSG_STRUCT_NLIST struct nlist_64
-#else
-#define BSG_STRUCT_NLIST struct nlist
-#endif
-
 #ifdef __arm64__
 #define BSG_STRUCT_MCONTEXT_L _STRUCT_MCONTEXT64
 #else
