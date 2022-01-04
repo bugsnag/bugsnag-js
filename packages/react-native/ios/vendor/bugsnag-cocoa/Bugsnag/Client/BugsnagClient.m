@@ -182,6 +182,8 @@ void BSGWriteSessionCrashData(BugsnagSession *session) {
 
 @property (weak, nonatomic) NSTimer *appLaunchTimer;
 
+@property (readonly, nonatomic) BSGFeatureFlagStore *featureFlagStore;
+
 @property (readwrite, nullable, nonatomic) BugsnagLastRunInfo *lastRunInfo;
 
 @property (nonatomic) NSProcessInfoThermalState lastThermalState API_AVAILABLE(ios(11.0), tvos(11.0));
@@ -208,9 +210,14 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
             [_configuration setUser:[BSG_KSSystemInfo deviceAndAppHash] withEmail:_configuration.user.email andName:_configuration.user.name];
         }
         
+        _featureFlagStore = [configuration.featureFlagStore mutableCopy];
+        
         _state = [[BugsnagMetadata alloc] initWithDictionary:@{
             BSGKeyApp: @{BSGKeyIsLaunching: @YES},
-            BSGKeyClient: BSGDictionaryWithKeyAndObject(BSGKeyContext, _configuration.context),
+            BSGKeyClient: @{
+                BSGKeyContext: _configuration.context ?: [NSNull null],
+                BSGKeyFeatureFlags: BSGFeatureFlagStoreToJSON(_featureFlagStore),
+            },
             BSGKeyUser: [configuration.user toJson]
         }];
         
@@ -819,6 +826,13 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
         [event.metadata addMetadata:deviceFields toSection:BSGKeyDevice];
     }
 
+    // App hang events will already contain feature flags
+    if (!event.featureFlagStore.count) {
+        @synchronized (self.featureFlagStore) {
+            event.featureFlagStore = [self.featureFlagStore mutableCopy];
+        }
+    }
+
     BOOL originalUnhandledValue = event.unhandled;
     @try {
         if (block != nil && !block(event)) { // skip notifying if callback false
@@ -966,6 +980,43 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+// MARK: - <BugsnagFeatureFlagStore>
+
+- (void)addFeatureFlagWithName:(NSString *)name variant:(nullable NSString *)variant {
+    @synchronized (self.featureFlagStore) {
+        BSGFeatureFlagStoreAddFeatureFlag(self.featureFlagStore, name, variant);
+        [self.state addMetadata:BSGFeatureFlagStoreToJSON(self.featureFlagStore) withKey:BSGKeyFeatureFlags toSection:BSGKeyClient];
+    }
+}
+
+- (void)addFeatureFlagWithName:(NSString *)name {
+    @synchronized (self.featureFlagStore) {
+        BSGFeatureFlagStoreAddFeatureFlag(self.featureFlagStore, name, nil);
+        [self.state addMetadata:BSGFeatureFlagStoreToJSON(self.featureFlagStore) withKey:BSGKeyFeatureFlags toSection:BSGKeyClient];
+    }
+}
+
+- (void)addFeatureFlags:(NSArray<BugsnagFeatureFlag *> *)featureFlags {
+    @synchronized (self.featureFlagStore) {
+        BSGFeatureFlagStoreAddFeatureFlags(self.featureFlagStore, featureFlags);
+        [self.state addMetadata:BSGFeatureFlagStoreToJSON(self.featureFlagStore) withKey:BSGKeyFeatureFlags toSection:BSGKeyClient];
+    }
+}
+
+- (void)clearFeatureFlagWithName:(NSString *)name {
+    @synchronized (self.featureFlagStore) {
+        BSGFeatureFlagStoreClear(self.featureFlagStore, name);
+        [self.state addMetadata:BSGFeatureFlagStoreToJSON(self.featureFlagStore) withKey:BSGKeyFeatureFlags toSection:BSGKeyClient];
+    }
+}
+
+- (void)clearFeatureFlags {
+    @synchronized (self.featureFlagStore) {
+        BSGFeatureFlagStoreClear(self.featureFlagStore, nil);
+        [self.state addMetadata:BSGFeatureFlagStoreToJSON(self.featureFlagStore) withKey:BSGKeyFeatureFlags toSection:BSGKeyClient];
+    }
 }
 
 // MARK: - <BugsnagMetadataStore>
@@ -1155,6 +1206,10 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
                               session:self.sessionTracker.runningSession];
 
     self.appHangEvent.context = self.context;
+
+    @synchronized (self.featureFlagStore) {
+        self.appHangEvent.featureFlagStore = [self.featureFlagStore mutableCopy];
+    }
     
     [self.appHangEvent symbolicateIfNeeded];
     
@@ -1275,6 +1330,9 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
                               session:session];
 
     event.context = self.stateMetadataFromLastLaunch[BSGKeyClient][BSGKeyContext];
+
+    id featureFlags = self.stateMetadataFromLastLaunch[BSGKeyClient][BSGKeyFeatureFlags];
+    event.featureFlagStore = BSGFeatureFlagStoreFromJSON(featureFlags);
 
     return event;
 }

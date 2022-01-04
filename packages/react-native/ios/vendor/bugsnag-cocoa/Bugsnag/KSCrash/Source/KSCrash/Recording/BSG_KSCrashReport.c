@@ -622,7 +622,9 @@ void bsg_kscrw_i_writeTraceInfo(const BSG_KSCrash_Context *crashContext,
 
 bool bsg_kscrw_i_exceedsBufferLen(const size_t length);
 
-void bsg_kscrashreport_writeKSCrashFields(BSG_KSCrash_Context *crashContext, BSG_KSCrashReportWriter *writer);
+void bsg_kscrashreport_writeKSCrashFields(BSG_KSCrash_Context *crashContext,
+                                          BSG_KSCrashReportWriter *writer,
+                                          const char *const path);
 
 /** Write the contents of a memory location.
  * Also writes meta information about the data.
@@ -1164,6 +1166,21 @@ void bsg_kscrw_i_writeMemoryInfo(const BSG_KSCrashReportWriter *const writer,
     writer->endContainer(writer);
 }
 
+void bsg_kscrw_i_writeDiskInfo(const BSG_KSCrashReportWriter *const writer,
+                               const char *const key,
+                               const char *const path) {
+    uint64_t freeDisk, size;
+    if (!bsg_ksfuStatfs(path, &freeDisk, &size)) {
+        return;
+    }
+    writer->beginObject(writer, key);
+    {
+        bsg_kscrw_i_addUIntegerElement(writer, BSG_KSCrashField_Free, freeDisk);
+        bsg_kscrw_i_addUIntegerElement(writer, BSG_KSCrashField_Size, size);
+    }
+    writer->endContainer(writer);
+}
+
 /** Write information about the error leading to the crash to the report.
  *
  * @param writer The writer.
@@ -1511,6 +1528,13 @@ void bsg_kscrashreport_writeMinimalReport(
                                    &crashContext->crash);
         }
         writer->endContainer(writer);
+
+        BSG_Mach_Header_Info *image = bsg_mach_headers_get_self_image();
+        if (image) {
+            writer->beginArray(writer, BSG_KSCrashField_BinaryImages);
+            bsg_kscrw_i_writeBinaryImage(writer, NULL, image);
+            writer->endContainer(writer);
+        }
     }
     writer->endContainer(writer);
 
@@ -1547,7 +1571,7 @@ void bsg_kscrashreport_writeStandardReport(
                 writer, BSG_KSCrashField_Report, BSG_KSCrashReportType_Standard,
                 crashContext->config.crashID, crashContext->config.processName);
 
-        bsg_kscrashreport_writeKSCrashFields(crashContext, writer);
+        bsg_kscrashreport_writeKSCrashFields(crashContext, writer, path);
 
         if (crashContext->config.onCrashNotify != NULL) {
             // NOTE: The deny list for BSG_KSCrashField_UserAtCrash children in BugsnagEvent.m
@@ -1566,7 +1590,10 @@ void bsg_kscrashreport_writeStandardReport(
     close(fd);
 }
 
-void bsg_kscrashreport_writeKSCrashFields(BSG_KSCrash_Context *crashContext, BSG_KSCrashReportWriter *writer) {
+void bsg_kscrashreport_writeKSCrashFields(BSG_KSCrash_Context *crashContext,
+                                          BSG_KSCrashReportWriter *writer,
+                                          const char *const path) {
+
     bsg_kscrw_i_writeProcessState(writer, BSG_KSCrashField_ProcessState);
 
     if (crashContext->config.systemInfoJSON != NULL) {
@@ -1579,6 +1606,7 @@ void bsg_kscrashreport_writeKSCrashFields(BSG_KSCrash_Context *crashContext, BSG
         bsg_kscrw_i_writeMemoryInfo(writer, BSG_KSCrashField_Memory);
         bsg_kscrw_i_writeAppStats(writer, BSG_KSCrashField_AppStats,
                 &crashContext->state);
+        bsg_kscrw_i_writeDiskInfo(writer, BSG_KSCrashField_Disk, path);
     }
     writer->endContainer(writer);
 

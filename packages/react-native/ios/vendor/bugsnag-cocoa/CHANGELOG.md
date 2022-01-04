@@ -1,6 +1,13 @@
 Changelog
 =========
 
+## TBD
+
+### Bug fixes
+
+* Fix some potential deadlocks that could occur if a crash handler crashes.
+  [#1252](https://github.com/bugsnag/bugsnag-cocoa/pull/1252)
+
 ## 6.15.1 (2021-12-08)
 
 ### Bug fixes

@@ -70,6 +70,11 @@ BSG_Mach_Header_Info *bsg_mach_headers_get_images(void);
 BSG_Mach_Header_Info *bsg_mach_headers_get_main_image(void);
 
 /**
+ * Returns the image that contains KSCrash.
+ */
+BSG_Mach_Header_Info *bsg_mach_headers_get_self_image(void);
+
+/**
  * Called when a binary image is loaded.
  */
 void bsg_mach_headers_add_image(const struct mach_header *mh, intptr_t slide);
