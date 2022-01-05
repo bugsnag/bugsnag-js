@@ -28,7 +28,6 @@
 
 #import "BSG_KSSystemInfo.h"
 #import "BSG_KSSystemInfoC.h"
-#import "BSG_KSDynamicLinker.h"
 #import "BSG_KSMachHeaders.h"
 #import "BSG_KSJSONCodecObjC.h"
 #import "BSG_KSMach.h"
@@ -41,6 +40,8 @@
 #import "BSG_KSCrash.h"
 
 #import <CommonCrypto/CommonDigest.h>
+#import <mach-o/dyld.h>
+
 #if BSG_PLATFORM_IOS || BSG_PLATFORM_TVOS
 #import "BSGUIKit.h"
 #endif
@@ -452,6 +453,7 @@ static NSDictionary * bsg_systemversion() {
 }
 
 #if BSG_PLATFORM_IOS || BSG_PLATFORM_TVOS
+
 + (UIApplicationState)currentAppState {
     // Only checked outside of app extensions since sharedApplication is
     // unavailable to extension UIKit APIs
@@ -459,24 +461,32 @@ static NSDictionary * bsg_systemversion() {
         return UIApplicationStateActive;
     }
 
-    UIApplicationState(^getState)(void) = ^() {
+    UIApplication * (^ getSharedApplication)(void) = ^() {
         // Calling this API indirectly to avoid a compile-time check that
         // [UIApplication sharedApplication] is not called from app extensions
         // (which is handled above)
-        UIApplication *app = [UIAPPLICATION performSelector:@selector(sharedApplication)];
-        return [app applicationState];
+        return [UIAPPLICATION performSelector:@selector(sharedApplication)];
     };
 
+    __block UIApplication *application = nil;
     if ([[NSThread currentThread] isMainThread]) {
-        return getState();
+        application = getSharedApplication();
     } else {
         // [UIApplication sharedApplication] is a main thread-only API
-        __block UIApplicationState state;
         dispatch_sync(dispatch_get_main_queue(), ^{
-            state = getState();
+            application = getSharedApplication();
         });
-        return state;
     }
+    
+    // There will be no UIApplication if UIApplicationMain() has not yet been
+    // called. This happens if started from a SwiftUI app's init() function or
+    // UIKit app's main() function. Returning UIApplicationStateActive (0) would
+    // be higly misleading, so we must check for this condition.
+    if (!application) {
+        return UIApplicationStateBackground;
+    }
+    
+    return application.applicationState;
 }
 
 + (BOOL)isInForeground:(UIApplicationState)state {
@@ -493,6 +503,7 @@ static NSDictionary * bsg_systemversion() {
     return state == UIApplicationStateInactive
         || state == UIApplicationStateActive;
 }
+
 #endif
 
 @end

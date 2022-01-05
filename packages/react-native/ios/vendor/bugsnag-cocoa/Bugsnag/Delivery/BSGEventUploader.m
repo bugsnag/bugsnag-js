@@ -41,7 +41,7 @@
 
 - (instancetype)initWithConfiguration:(BugsnagConfiguration *)configuration notifier:(BugsnagNotifier *)notifier {
     if ((self = [super init])) {
-        _apiClient = [[BugsnagApiClient alloc] initWithSession:configuration.session queueName:@""];
+        _apiClient = [[BugsnagApiClient alloc] initWithSession:configuration.session];
         _configuration = configuration;
         _eventsDirectory = [BSGFileLocations current].events;
         _kscrashReportsDirectory = [BSGFileLocations current].kscrashReports;

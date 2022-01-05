@@ -48,9 +48,6 @@ typedef struct bsg_mach_image {
     /// True if the image has been unloaded and should be ignored
     bool unloaded;
 
-    /// True if this image is a program with an entry point; i.e. LC_MAIN or LC_UNIXTHREAD
-    bool isMain;
-
     /// The next image in the linked list
     struct bsg_mach_image *next;
 } BSG_Mach_Header_Info;
@@ -61,11 +58,6 @@ typedef struct bsg_mach_image {
   * Resets mach header data
  */
 void bsg_mach_headers_initialize(void);
-
-/**
-  * Registers with dyld to keep data updated when libraries are loaded and unloaded
- */
-void bsg_mach_headers_register_for_changes(void);
 
 /**
  * Returns the head of the link list of headers
@@ -112,15 +104,6 @@ BSG_Mach_Header_Info *bsg_mach_headers_image_named(const char *const imageName, 
  *         should not happen unless the header or image is corrupt).
  */
 uintptr_t bsg_mach_headers_first_cmd_after_header(const struct mach_header *header);
-
-/** Get the segment base address of the specified image.
- *
- * This is required for any symtab command offsets.
- *
- * @param header The header to get commands for.
- * @return The image's base address, or 0 if none was found.
- */
-uintptr_t bsg_mach_headers_image_at_base_of_image_index(const struct mach_header *header);
 
 /** Get the __crash_info message of the specified image.
  *

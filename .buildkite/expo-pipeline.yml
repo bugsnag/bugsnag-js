@@ -43,6 +43,8 @@ steps:
             - expo-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-latest
 
   - label:  ':docker: Build expo APK builder'
+    # TODO: Pending PLAT-7743
+    skip: Pending PLAT-7743
     key: "expo-android-builder"
     timeout_in_minutes: 40
     env:
@@ -60,6 +62,8 @@ steps:
             - expo-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-android-builder-latest
 
   - label:  ':docker: Build expo APK'
+    # TODO: Pending PLAT-7743
+    skip: Pending PLAT-7743
     key: "build-expo-apk"
     depends_on:
       - "publish-expo-app"
@@ -90,6 +94,8 @@ steps:
       - test/expo/scripts/build-ios.sh
 
   - label: ':runner: expo Android 9'
+    # TODO: Pending PLAT-7743
+    skip: Pending PLAT-7743
     depends_on:
       - "build-expo-apk"
       - "expo-maze-runner-image"
@@ -98,6 +104,7 @@ steps:
       artifacts#v1.2.0:
         download: "build/output.apk"
       docker-compose#v3.7.0:
+        pull: expo-maze-runner
         run: expo-maze-runner
         use-aliases: true
         command:
@@ -121,6 +128,7 @@ steps:
       artifacts#v1.2.0:
         download: "build/output.ipa"
       docker-compose#v3.7.0:
+        pull: expo-maze-runner
         run: expo-maze-runner
         use-aliases: true
         command:
@@ -140,6 +148,8 @@ steps:
     key: "trigger-full-suite"
 
   - label: ':runner: expo Android 8'
+    # TODO: Pending PLAT-7743
+    skip: Pending PLAT-7743
     depends_on:
       - "trigger-full-suite"
       - "build-expo-apk"
@@ -149,6 +159,7 @@ steps:
       artifacts#v1.2.0:
         download: "build/output.apk"
       docker-compose#v3.7.0:
+        pull: expo-maze-runner
         run: expo-maze-runner
         use-aliases: true
         command:
@@ -168,6 +179,8 @@ steps:
       - exit_status: "*"
 
   - label: ':runner: expo Android 7'
+    # TODO: Pending PLAT-7743
+    skip: Pending PLAT-7743
     depends_on:
       - "trigger-full-suite"
       - "build-expo-apk"
@@ -177,6 +190,7 @@ steps:
       artifacts#v1.2.0:
         download: "build/output.apk"
       docker-compose#v3.7.0:
+        pull: expo-maze-runner
         run: expo-maze-runner
         use-aliases: true
         command:
@@ -192,6 +206,8 @@ steps:
     concurrency_method: eager
 
   - label: ':runner: expo Android 6'
+    # TODO: Pending PLAT-7743
+    skip: Pending PLAT-7743
     depends_on:
       - "trigger-full-suite"
       - "build-expo-apk"
@@ -201,6 +217,7 @@ steps:
       artifacts#v1.2.0:
         download: "build/output.apk"
       docker-compose#v3.7.0:
+        pull: expo-maze-runner
         run: expo-maze-runner
         use-aliases: true
         command:
@@ -216,6 +233,8 @@ steps:
     concurrency_method: eager
 
   - label: ':runner: expo Android 5'
+    # TODO: Pending PLAT-7743
+    skip: Pending PLAT-7743
     depends_on:
       - "trigger-full-suite"
       - "build-expo-apk"
@@ -225,6 +244,7 @@ steps:
       artifacts#v1.2.0:
         download: "build/output.apk"
       docker-compose#v3.7.0:
+        pull: expo-maze-runner
         run: expo-maze-runner
         use-aliases: true
         command:
@@ -249,6 +269,7 @@ steps:
       artifacts#v1.2.0:
         download: "build/output.ipa"
       docker-compose#v3.7.0:
+        pull: expo-maze-runner
         run: expo-maze-runner
         use-aliases: true
         command:
@@ -274,6 +295,7 @@ steps:
       artifacts#v1.2.0:
         download: "build/output.ipa"
       docker-compose#v3.7.0:
+        pull: expo-maze-runner
         run: expo-maze-runner
         use-aliases: true
         command:

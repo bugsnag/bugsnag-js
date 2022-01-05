@@ -25,6 +25,10 @@ NSString *_Nullable BSGStringFromDeviceOrientation(UIDeviceOrientation orientati
 API_AVAILABLE(ios(11.0), tvos(11.0))
 NSString *_Nullable BSGStringFromThermalState(NSProcessInfoThermalState thermalState);
 
+static inline NSString * _Nullable BSGStringFromClass(Class _Nullable cls) {
+    return cls ? NSStringFromClass((Class _Nonnull)cls) : nil;
+}
+
 NS_ASSUME_NONNULL_END
 
 __END_DECLS
