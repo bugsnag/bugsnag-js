@@ -1,3 +1,5 @@
+const makeSafe = require('./make-safe')
+
 module.exports = (client, NativeClient) => ({
   sendEvent: (payload, cb = () => {}) => {
     const event = payload.events[0]
@@ -17,10 +19,10 @@ module.exports = (client, NativeClient) => ({
       app: event.app,
       device: event.device,
       threads: event.threads,
-      breadcrumbs: event.breadcrumbs,
+      breadcrumbs: makeSafe(event.breadcrumbs),
       context: event.context,
       user: event._user,
-      metadata: event._metadata,
+      metadata: makeSafe(event._metadata),
       groupingHash: event.groupingHash,
       apiKey: event.apiKey,
       nativeStack: nativeStack
