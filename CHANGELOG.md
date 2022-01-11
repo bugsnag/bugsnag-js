@@ -4,6 +4,7 @@
 
 ### Changed
 
+- (expo): Add support for Expo SDK v44 [#1640](https://github.com/bugsnag/bugsnag-js/pull/1640)
 - (react-native) Update bugsnag-android to v5.18.0
   - Improve the memory use and performance overhead when handling the delivery response status codes
     [bugsnag-android#1558](https://github.com/bugsnag/bugsnag-android/pull/1558)
