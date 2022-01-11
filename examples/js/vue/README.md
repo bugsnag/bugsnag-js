@@ -25,7 +25,7 @@ docker build -t bugsnag-js-example-vue . && \
 docker run -p 5000:5000 -it bugsnag-js-example-vue
 ```
 
-__Note__: remember to replace `YOUR_API_KEY` in `src/lib/bugsnag.js` with your own!
+__Note__: remember to replace `YOUR_API_KEY` in `src/main.js` with your own!
 
 ### Without docker
 
