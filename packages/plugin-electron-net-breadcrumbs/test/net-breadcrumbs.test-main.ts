@@ -13,7 +13,7 @@ let currentServer: ServerWithPort|null = null
 
 const originalRequest = net.request
 
-describe('plugin: electron net breadcrumbs', () => {
+describe.skip('plugin: electron net breadcrumbs', () => {
   afterEach(async () => {
     if (currentServer) {
       await new Promise(resolve => { currentServer.close(resolve) })
@@ -224,7 +224,7 @@ describe('plugin: electron net breadcrumbs', () => {
     expect(client._breadcrumbs).toHaveLength(0)
   })
 
-  it.each('does nothing when the request is to the minidumps endpoint', async () => {
+  it('does nothing when the request is to the minidumps endpoint', async () => {
     currentServer = await startServer(200)
 
     const url = `http://localhost:${currentServer.port}`
