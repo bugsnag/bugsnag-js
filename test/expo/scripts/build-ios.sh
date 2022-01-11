@@ -7,7 +7,7 @@ rm -rf $BUILDKITE_BUILD_CHECKOUT_PATH/build/*
 
 cd test/expo/features/fixtures/test-app
 
-npx turtle build:ios \
+./node_modules/.bin/turtle build:ios \
   -c ./app.json \
   --team-id $APPLE_TEAM_ID \
   --dist-p12-path $EXPO_P12_PATH \
