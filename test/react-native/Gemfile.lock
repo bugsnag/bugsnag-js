@@ -1,9 +1,9 @@
 GIT
   remote: https://github.com/bugsnag/maze-runner
-  revision: fe12189f83aad154f54221ee0fcd41b483d3c0d1
-  tag: v6.8.0
+  revision: 4979ecccf0b3f21fa4f9cb439191081993ae5704
+  tag: v6.9.0
   specs:
-    bugsnag-maze-runner (6.8.0)
+    bugsnag-maze-runner (6.9.0)
       appium_lib (~> 11.2.0)
       bugsnag (~> 6.24)
       cucumber (~> 7.1)
@@ -111,12 +111,11 @@ GEM
       cucumber-messages (~> 17.1, >= 17.1.0)
     cucumber-messages (17.1.1)
     cucumber-tag-expressions (4.1.0)
-    cucumber-wire (6.2.0)
+    cucumber-wire (6.2.1)
       cucumber-core (~> 10.1, >= 10.1.0)
       cucumber-cucumber-expressions (~> 14.0, >= 14.0.0)
-      cucumber-messages (~> 17.1, >= 17.1.1)
     curb (0.9.11)
-    diff-lcs (1.4.4)
+    diff-lcs (1.5.0)
     escape (0.0.4)
     ethon (0.12.0)
       ffi (>= 1.3.0)
@@ -134,16 +133,16 @@ GEM
     json (2.5.1)
     mime-types (3.4.1)
       mime-types-data (~> 3.2015)
-    mime-types-data (3.2021.1115)
-    mini_portile2 (2.6.1)
+    mime-types-data (3.2022.0105)
+    mini_portile2 (2.7.1)
     minitest (5.14.3)
     molinillo (0.6.6)
     multi_test (0.1.2)
     nanaimo (0.3.0)
     nap (1.1.0)
     netrc (0.11.0)
-    nokogiri (1.12.5)
-      mini_portile2 (~> 2.6.1)
+    nokogiri (1.13.0)
+      mini_portile2 (~> 2.7.0)
       racc (~> 1.4)
     optimist (3.0.1)
     os (1.0.1)
@@ -185,4 +184,4 @@ DEPENDENCIES
   cocoapods
 
 BUNDLED WITH
-   2.2.13
+   2.3.0
