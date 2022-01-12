@@ -80,6 +80,13 @@ export default class App extends Component {
     scenario.run()
   }
 
+  runCommand = async () => {
+    let response = await fetch('http://bs-local.com:9339/command');
+    let responseJson = await response.json();
+
+    console.log(`Received command: ${responseJson}`)
+  }
+
   startBugsnag = async () => {
     console.log(`Starting Bugsnag for scenario: ${this.state.currentScenario}`)
     console.log(`  with MetaData: ${this.state.scenarioMetaData}`)
@@ -117,6 +124,11 @@ export default class App extends Component {
             accessibilityLabel='run_scenario'
             title='Start Bugsnag and run scenario'
             onPress={this.startScenario}/>
+
+          <Button style={styles.clickyButton}
+                  accessibilityLabel='run_command'
+                  title='Run Command'
+                  onPress={this.runCommand}/>
 
           <Text>Configuration</Text>
           <TextInput placeholder='Notify endpoint'
