@@ -21,5 +21,8 @@
     "@babel/core": "^7.12.9",
     "turtle-cli": "~0.24.3"
   },
+  "resolutions": {
+    "promise": "8.0.2"
+  },
   "private": true
 }
