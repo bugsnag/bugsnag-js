@@ -1,12 +1,14 @@
-When("I run {string}") do |event_type|
-  steps %Q{
-    Given the element "scenario_name" is present within 60 seconds
-    When I clear and send the keys "#{event_type}" to the element "scenario_name"
-    And I click the element "run_scenario"
+When('I run {string}') do |event_type|
+  command = {
+    action: 'run_scenario',
+    scenario_name: event_type
   }
+  Maze::Server.commands.add command
+
+  step 'I click the element "run_command"'
 end
 
-When("I run {string} and relaunch the app") do |event_type|
+When('I run {string} and relaunch the app') do |event_type|
   steps %Q{
     When I run "#{event_type}"
     And I clear any error dialogue
@@ -14,39 +16,34 @@ When("I run {string} and relaunch the app") do |event_type|
   }
 end
 
-When("I relaunch the app") do
+When('I relaunch the app') do
   # This step should only be used when the app has crashed, but the notifier needs a little
   # time to write the crash report before being forced to reopen.  From trials, 2s was not enough.
   sleep(5)
   Maze.driver.launch_app
 end
 
-When("I clear any error dialogue") do
+When('I clear any error dialogue') do
   # Error dialogue is auto-cleared on IOS
-  next unless Maze.driver.capabilities["os"] == 'android'
+  next unless Maze.driver.capabilities['os'] == 'android'
 
   driver = Maze.driver
-  driver.click_element("android:id/button1") if driver.wait_for_element("android:id/button1", 3)
-  driver.click_element("android:id/aerr_close") if driver.wait_for_element("android:id/aerr_close", 3)
-  driver.click_element("android:id/aerr_restart") if driver.wait_for_element("android:id/aerr_restart", 3)
+  driver.click_element('android:id/button1') if driver.wait_for_element('android:id/button1', 3)
+  driver.click_element('android:id/aerr_close') if driver.wait_for_element('android:id/aerr_close', 3)
+  driver.click_element('android:id/aerr_restart') if driver.wait_for_element('android:id/aerr_restart', 3)
 end
 
-When("I configure Bugsnag for {string}") do |event_type|
-  steps %Q{
-    Given the element "scenario_name" is present within 60 seconds
-    When I clear and send the keys "#{event_type}" to the element "scenario_name"
-    And I click the element "start_bugsnag"
+When('I configure Bugsnag for {string}') do |event_type|
+  command = {
+    action: 'start_bugsnag',
+    scenario_name: event_type
   }
+  Maze::Server.commands.add command
+
+  step 'I click the element "run_command"'
 end
 
-When("I configure the app to run in the {string} state") do |event_metadata|
-  steps %Q{
-    Given the element "scenario_metadata" is present
-    And I clear and send the keys "#{event_metadata}" to the element "scenario_metadata"
-  }
-end
-
-Then("the event {string} equals one of:") do |field_path, table|
+Then('the event {string} equals one of:') do |field_path, table|
   payload = Maze::Server.errors.current[:body]
   actual_value = Maze::Helper.read_key_path(payload, "events.0.#{field_path}")
   valid_values = table.raw.flatten
@@ -54,7 +51,7 @@ Then("the event {string} equals one of:") do |field_path, table|
                   "#{field_path} value: #{actual_value} did not match the given list: #{valid_values}")
 end
 
-Then("the {word} payload field {string} equals one of:") do |request_type, field_path, table|
+Then('the {word} payload field {string} equals one of:') do |request_type, field_path, table|
   payload = Maze::Server.list_for(request_type).current[:body]
   actual_value = Maze::Helper.read_key_path(payload, field_path)
   valid_values = table.raw.flatten
@@ -62,7 +59,7 @@ Then("the {word} payload field {string} equals one of:") do |request_type, field
                   "#{field_path} value: #{actual_value} did not match the given list: #{valid_values}")
 end
 
-Then("the following sets are present in the current {word} payloads:") do |request_type, data_table|
+Then('the following sets are present in the current {word} payloads:') do |request_type, data_table|
   expected_values = data_table.hashes
   requests = Maze::Server.list_for(request_type)
   Maze.check.equal(expected_values.length, requests.size_all)

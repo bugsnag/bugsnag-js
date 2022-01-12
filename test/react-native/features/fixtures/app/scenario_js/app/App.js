@@ -62,11 +62,9 @@ export default class App extends Component {
     return new Promise(resolve => setTimeout(resolve, ms))
   }
 
-  startScenario = async () => {
-    console.log(`Running scenario: ${this.state.currentScenario}`)
-    console.log(`  with MetaData: ${this.state.scenarioMetaData}`)
-    const scenarioName = this.state.currentScenario
-    const scenarioMetaData = this.state.scenarioMetaData
+  startScenario = async (scenarioName, scenarioMetaData) => {
+    console.log(`Running scenario: ${scenarioName}`)
+    console.log(`  with MetaData: ${scenarioMetaData}`)
     const configuration = this.getConfiguration()
     const jsConfig = {}
     const scenario = new Scenarios[scenarioName](configuration, scenarioMetaData, jsConfig)
@@ -80,18 +78,9 @@ export default class App extends Component {
     scenario.run()
   }
 
-  runCommand = async () => {
-    let response = await fetch('http://bs-local.com:9339/command');
-    let responseJson = await response.json();
-
-    console.log(`Received command: ${responseJson}`)
-  }
-
-  startBugsnag = async () => {
-    console.log(`Starting Bugsnag for scenario: ${this.state.currentScenario}`)
-    console.log(`  with MetaData: ${this.state.scenarioMetaData}`)
-    const scenarioName = this.state.currentScenario
-    const scenarioMetaData = this.state.scenarioMetaData
+  startBugsnag = async (scenarioName, scenarioMetaData) => {
+    console.log(`Starting Bugsnag for scenario: ${scenarioName}`)
+    console.log(`  with MetaData: ${scenarioMetaData}`)
     const configuration = this.getConfiguration()
 
     const jsConfig = {}
@@ -102,24 +91,25 @@ export default class App extends Component {
     Bugsnag.start(jsConfig)
   }
 
+  runCommand = async () => {
+    let response = await fetch('http://bs-local.com:9339/command');
+    console.log(`Received command: ${response}`)
+    let responseJson = await response.json();
+
+    switch (responseJson.action) {
+      case 'run_scenario':
+        await this.startScenario(responseJson.scenario_name);
+      case 'start_bugsnag':
+        await this.startBugsnag(responseJson.scenario_name);
+    }
+  }
+
   render () {
     return (
       <View style={styles.container}>
         <View style={styles.child}>
           <Text>React-native end-to-end test app</Text>
-          <TextInput style={styles.textInput}
-            placeholder='Scenario Name'
-            accessibilityLabel='scenario_name'
-            onChangeText={this.setScenario}/>
-          <TextInput style={styles.textInput}
-            placeholder='Scenario Metadata'
-            accessibilityLabel='scenario_metadata'
-            onChangeText={this.setScenarioMetaData}/>
 
-          <Button style={styles.clickyButton}
-            accessibilityLabel='start_bugsnag'
-            title='Start Bugsnag only'
-            onPress={this.startBugsnag}/>
           <Button style={styles.clickyButton}
             accessibilityLabel='run_scenario'
             title='Start Bugsnag and run scenario'
