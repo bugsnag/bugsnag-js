@@ -30,7 +30,6 @@
 #import "BSGSerialization.h"
 #import "BSGUtils.h"
 #import "BugsnagLogger.h"
-#import "BugsnagStateEvent.h"
 
 
 @interface BugsnagMetadata ()
@@ -60,7 +59,9 @@
         _dictionary = [self sanitizeDictionary:dict];
         self.stateEventBlocks = [NSMutableArray new];
     }
-    [self notifyObservers];
+    if (self.observer) {
+        self.observer(self);
+    }
     return self;
 }
 
@@ -106,27 +107,6 @@
     @synchronized (self) {
         return [self.dictionary mutableCopy];
     }
-}
-
-- (void)notifyObservers {
-    for (BugsnagObserverBlock callback in self.stateEventBlocks) {
-        BugsnagStateEvent *event = [[BugsnagStateEvent alloc] initWithName:kStateEventMetadata data:self];
-        callback(event);
-    }
-}
-
-- (void)addObserverWithBlock:(BugsnagObserverBlock _Nonnull)block {
-    // Make a copy to avoid concurrency issues
-    NSMutableArray *newStateEventBlocks = [self.stateEventBlocks mutableCopy];
-    [newStateEventBlocks addObject:[block copy]];
-    self.stateEventBlocks = newStateEventBlocks;
-}
-
-- (void)removeObserverWithBlock:(BugsnagObserverBlock _Nonnull)block {
-    // Make a copy to avoid concurrency issues
-    NSMutableArray *newStateEventBlocks = [self.stateEventBlocks mutableCopy];
-    [newStateEventBlocks removeObject:block];
-    self.stateEventBlocks = newStateEventBlocks;
 }
 
 // MARK: - <NSCopying>
@@ -247,7 +227,9 @@
     if (self.buffer || self.file) {
         [self serialize];
     }
-    [self notifyObservers];
+    if (self.observer) {
+        self.observer(self);
+    }
 }
 
 - (void)setStorageBuffer:(char * _Nullable *)buffer file:(NSString *)file {

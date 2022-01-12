@@ -26,8 +26,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-NSNumber *BSGDeviceFreeSpace(NSSearchPathDirectory directory);
-
 NSMutableDictionary *BSGParseDeviceMetadata(NSDictionary *event);
 
 NS_ASSUME_NONNULL_END

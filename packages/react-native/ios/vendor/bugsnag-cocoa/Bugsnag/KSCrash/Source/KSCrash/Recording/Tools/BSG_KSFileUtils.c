@@ -31,6 +31,7 @@
 
 #include <errno.h>
 #include <string.h>
+#include <sys/mount.h>
 #include <unistd.h>
 
 const char *bsg_ksfulastPathEntry(const char *const path) {
@@ -79,5 +80,15 @@ bool bsg_ksfuwriteBytesToFD(const int fd, const char *const bytes,
       }
     }
 
+    return true;
+}
+
+bool bsg_ksfuStatfs(const char *path, uint64_t *free, uint64_t *total) {
+    struct statfs st;
+    if (statfs(path, &st) != 0) {
+        return false;
+    }
+    *free = st.f_bsize * st.f_bavail;
+    *total = st.f_bsize * st.f_blocks;
     return true;
 }

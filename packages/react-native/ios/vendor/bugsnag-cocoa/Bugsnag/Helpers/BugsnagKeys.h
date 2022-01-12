@@ -38,6 +38,8 @@ extern NSString *const BSGKeyException;
 extern NSString *const BSGKeyExceptionName;
 extern NSString *const BSGKeyExceptions;
 extern NSString *const BSGKeyExtraRuntimeInfo;
+extern NSString *const BSGKeyFeatureFlag;
+extern NSString *const BSGKeyFeatureFlags;
 extern NSString *const BSGKeyFrameAddress;
 extern NSString *const BSGKeyGroupingHash;
 extern NSString *const BSGKeyId;
@@ -96,6 +98,7 @@ extern NSString *const BSGKeyUnhandledOverridden;
 extern NSString *const BSGKeyUrl;
 extern NSString *const BSGKeyUser;
 extern NSString *const BSGKeyUuid;
+extern NSString *const BSGKeyVariant;
 extern NSString *const BSGKeyVersion;
 extern NSString *const BSGKeyWarning;
 

@@ -15,6 +15,22 @@
     [bugsnag-android#1563](https://github.com/bugsnag/bugsnag-android/pull/1563)
   - Catch IOException when logging response status code
     [bugsnag-android#1567](https://github.com/bugsnag/bugsnag-android/pull/1567)
+- (react-native) Update bugsnag-cocoa to v6.16.0
+  - New APIs to support forthcoming feature flag and experiment functionality. For more information, please see https://docs.bugsnag.com/product/features-experiments
+    [bugsnag-cocoa#1279](https://github.com/bugsnag/bugsnag-cocoa/pull/1279)
+  - Fix missing user.id in OOM events with no active session.
+    [bugsnag-cocoa#1274](https://github.com/bugsnag/bugsnag-cocoa/pull/1274)
+  - Improve crash report writing performance and size on disk.
+    [bugsnag-cocoa#1273](https://github.com/bugsnag/bugsnag-cocoa/pull/1273)
+  - Detect hangs during launch of UIScene based apps.
+    [bugsnag-cocoa#1263](https://github.com/bugsnag/bugsnag-cocoa/pull/1263)
+  - Stop persisting changes made by `OnSendError` callbacks if delivery needs to be retried.
+    [bugsnag-cocoa#1262](https://github.com/bugsnag/bugsnag-cocoa/pull/1262)
+  - Fix incorrect `device.freeDisk` in crash errors.
+    [bugsnag-cocoa#1256](https://github.com/bugsnag/bugsnag-cocoa/pull/1256)
+  - Fix some potential deadlocks that could occur if a crash handler crashes.
+    [bugsnag-cocoa#1252](https://github.com/bugsnag/bugsnag-cocoa/pull/1252)
+
 
 ## 7.14.2 (2022-01-05)
 

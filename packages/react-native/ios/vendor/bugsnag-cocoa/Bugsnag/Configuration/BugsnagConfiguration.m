@@ -97,6 +97,7 @@ static NSUserDefaults *userDefaults;
     [copy setMaxPersistedEvents:self.maxPersistedEvents];
     [copy setMaxPersistedSessions:self.maxPersistedSessions];
     [copy setMaxBreadcrumbs:self.maxBreadcrumbs];
+    [copy setFeatureFlagStore:self.featureFlagStore];
     [copy setMetadata:self.metadata];
     [copy setEndpoints:self.endpoints];
     [copy setOnCrashHandler:self.onCrashHandler];
@@ -167,6 +168,7 @@ static NSUserDefaults *userDefaults;
     if (apiKey) {
         [self setApiKey:apiKey];
     }
+    _featureFlagStore = [[BSGFeatureFlagStore alloc] init];
     _metadata = [[BugsnagMetadata alloc] init];
     _endpoints = [BugsnagEndpointConfiguration new];
     _autoDetectErrors = YES;
@@ -236,6 +238,7 @@ static NSUserDefaults *userDefaults;
     _bundleVersion = dictionaryRepresentation[BSGKeyBundleVersion];
     _context = dictionaryRepresentation[BSGKeyContext];
     _enabledReleaseStages = dictionaryRepresentation[BSGKeyEnabledReleaseStages];
+    _featureFlagStore = [[BSGFeatureFlagStore alloc] init];
     _releaseStage = dictionaryRepresentation[BSGKeyReleaseStage];
     return self;
 }
@@ -605,6 +608,28 @@ static NSUserDefaults *userDefaults;
 
 - (void)addPlugin:(id<BugsnagPlugin> _Nonnull)plugin {
     [self.plugins addObject:plugin];
+}
+
+// MARK: - <BugsnagFeatureFlagStore>
+
+- (void)addFeatureFlagWithName:(NSString *)name variant:(nullable NSString *)variant {
+    BSGFeatureFlagStoreAddFeatureFlag(self.featureFlagStore, name, variant);
+}
+
+- (void)addFeatureFlagWithName:(NSString *)name {
+    BSGFeatureFlagStoreAddFeatureFlag(self.featureFlagStore, name, nil);
+}
+
+- (void)addFeatureFlags:(NSArray<BugsnagFeatureFlag *> *)featureFlags {
+    BSGFeatureFlagStoreAddFeatureFlags(self.featureFlagStore, featureFlags);
+}
+
+- (void)clearFeatureFlagWithName:(NSString *)name {
+    BSGFeatureFlagStoreClear(self.featureFlagStore, name);
+}
+
+- (void)clearFeatureFlags {
+    BSGFeatureFlagStoreClear(self.featureFlagStore, nil);
 }
 
 // MARK: - <MetadataStore>

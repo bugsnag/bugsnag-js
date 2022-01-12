@@ -29,6 +29,7 @@
 #import "BSG_KSSystemInfo.h"
 #import "BSG_KSSystemInfoC.h"
 #import "BSG_KSMachHeaders.h"
+#import "BSG_KSFileUtils.h"
 #import "BSG_KSJSONCodecObjC.h"
 #import "BSG_KSMach.h"
 #import "BSG_KSSysCtl.h"
@@ -431,6 +432,19 @@ static NSDictionary * bsg_systemversion() {
         @BSG_KSCrashField_Usable: @(bsg_ksmachusableMemory()),
         @BSG_KSSystemField_Size: [self int64Sysctl:@"hw.memsize"]
     };
+
+    NSString *dir = NSSearchPathForDirectoriesInDomains(
+        NSCachesDirectory, NSUserDomainMask, YES).firstObject;
+    const char *path = dir.fileSystemRepresentation;
+    if (path) {
+        uint64_t dfree, size;
+        if (bsg_ksfuStatfs(path, &dfree, &size)) {
+            sysInfo[@BSG_KSSystemField_Disk] = @{
+                @ BSG_KSCrashField_Free: @(dfree),
+                @ BSG_KSCrashField_Size: @(size)
+            };
+        }
+    }
 
     NSDictionary *statsInfo = [[BSG_KSCrash sharedInstance] captureAppStats];
     sysInfo[@BSG_KSCrashField_AppStats] = statsInfo;

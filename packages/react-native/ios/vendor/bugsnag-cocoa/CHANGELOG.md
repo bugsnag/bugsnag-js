@@ -1,6 +1,38 @@
 Changelog
 =========
 
+## 6.16.0 (2022-01-12)
+
+### Enhancements
+
+* New APIs to support forthcoming feature flag and experiment functionality.
+  For more information, please see https://docs.bugsnag.com/product/features-experiments
+  [#1279](https://github.com/bugsnag/bugsnag-cocoa/pull/1279)
+
+### Bug fixes
+
+* Fix missing user.id in OOM events with no active session.
+  [#1274](https://github.com/bugsnag/bugsnag-cocoa/pull/1274)
+
+* Improve crash report writing performance and size on disk.
+  [#1273](https://github.com/bugsnag/bugsnag-cocoa/pull/1273)
+
+## 6.15.2 (2022-01-05)
+
+### Bug fixes
+
+* Detect hangs during launch of UIScene based apps.
+  [#1263](https://github.com/bugsnag/bugsnag-cocoa/pull/1263)
+
+* Stop persisting changes made by `OnSendError` callbacks if delivery needs to be retried.
+  [#1262](https://github.com/bugsnag/bugsnag-cocoa/pull/1262)
+
+* Fix incorrect `device.freeDisk` in crash errors.
+  [#1256](https://github.com/bugsnag/bugsnag-cocoa/pull/1256)
+
+* Fix some potential deadlocks that could occur if a crash handler crashes.
+  [#1252](https://github.com/bugsnag/bugsnag-cocoa/pull/1252)
+
 ## 6.15.1 (2021-12-08)
 
 ### Bug fixes

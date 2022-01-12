@@ -221,19 +221,19 @@ void *ksmachexc_i_handleExceptions(void *const userData) {
         thread_suspend(bsg_ksmachthread_self());
     }
 
-    for (;;) {
+    while (bsg_g_installed) {
         BSG_KSLOG_DEBUG("Waiting for mach exception");
 
         // Wait for a message.
-        kern_return_t kr = mach_msg(
+        mach_msg_return_t result = mach_msg(
             &exceptionMessage.header, MACH_RCV_MSG, 0, sizeof(exceptionMessage),
             bsg_g_exceptionPort, MACH_MSG_TIMEOUT_NONE, MACH_PORT_NULL);
-        if (kr == KERN_SUCCESS) {
+        if (result == MACH_MSG_SUCCESS) {
             break;
         }
 
         // Loop and try again on failure.
-        BSG_KSLOG_ERROR("mach_msg: %s", mach_error_string(kr));
+        BSG_KSLOG_ERROR("mach_msg: %d", result);
     }
 
     BSG_KSLOG_DEBUG("Trapped mach exception code 0x%llx, subcode 0x%llx",
@@ -442,6 +442,15 @@ void bsg_kscrashsentry_uninstallMachHandler(void) {
 
     bsg_ksmachexc_i_restoreExceptionPorts();
 
+    bsg_g_installed = 0;
+
+    if (bsg_g_context->handlingCrash) {
+        // Terminating a thread that is currently handling an exception message
+        // can cause a deadlock, so let's not do that!
+        BSG_KSLOG_DEBUG("Not cancelling exception threads.");
+        return;
+    }
+
     thread_t thread_self = bsg_ksmachthread_self();
 
     if (bsg_g_primaryPThread != 0 && bsg_g_primaryMachThread != thread_self) {
@@ -464,9 +473,6 @@ void bsg_kscrashsentry_uninstallMachHandler(void) {
         bsg_g_secondaryMachThread = 0;
         bsg_g_secondaryPThread = 0;
     }
-
-    BSG_KSLOG_DEBUG("Mach exception handlers uninstalled.");
-    bsg_g_installed = 0;
 }
 
 #else
