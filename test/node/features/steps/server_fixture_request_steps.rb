@@ -23,7 +23,7 @@ When('I open the URL {string} and get a {int} response') do |url, expected_respo
     $logger.debug $!.inspect
   end
 
-  assert_same(
+  Maze.check.equal(
     expected_response_code,
     response.code.to_i,
     <<~TEXT

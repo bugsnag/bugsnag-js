@@ -1,6 +1,4 @@
 require 'yaml'
-require 'test/unit'
-include Test::Unit::Assertions
 
 def get_test_url(path)
   host = ENV['HOST']

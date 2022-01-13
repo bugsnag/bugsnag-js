@@ -50,20 +50,22 @@ Then("the event {string} equals one of:") do |field_path, table|
   payload = Maze::Server.errors.current[:body]
   actual_value = Maze::Helper.read_key_path(payload, "events.0.#{field_path}")
   valid_values = table.raw.flatten
-  assert_true(valid_values.include?(actual_value), "#{field_path} value: #{actual_value} did not match the given list: #{valid_values}")
+  Maze.check.true(valid_values.include?(actual_value),
+                  "#{field_path} value: #{actual_value} did not match the given list: #{valid_values}")
 end
 
 Then("the {word} payload field {string} equals one of:") do |request_type, field_path, table|
   payload = Maze::Server.list_for(request_type).current[:body]
   actual_value = Maze::Helper.read_key_path(payload, field_path)
   valid_values = table.raw.flatten
-  assert_true(valid_values.include?(actual_value), "#{field_path} value: #{actual_value} did not match the given list: #{valid_values}")
+  Maze.check.true(valid_values.include?(actual_value),
+                  "#{field_path} value: #{actual_value} did not match the given list: #{valid_values}")
 end
 
 Then("the following sets are present in the current {word} payloads:") do |request_type, data_table|
   expected_values = data_table.hashes
   requests = Maze::Server.list_for(request_type)
-  assert_equal(expected_values.length, requests.size_all)
+  Maze.check.equal(expected_values.length, requests.size_all)
   payload_values = requests.all.map do |request|
     payload_hash = {}
     data_table.headers.each_with_object(payload_hash) do |field_path, payload_hash|
@@ -72,6 +74,7 @@ Then("the following sets are present in the current {word} payloads:") do |reque
     payload_hash
   end
   expected_values.each do |expected_data|
-    assert_true(payload_values.include?(expected_data), "#{expected_data} was not found in any of the current payloads")
+    Maze.check.true(payload_values.include?(expected_data),
+                    "#{expected_data} was not found in any of the current payloads")
   end
 end
