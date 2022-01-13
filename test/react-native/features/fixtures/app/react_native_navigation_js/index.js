@@ -99,10 +99,6 @@ export default class AppScreen extends Component {
             placeholder='Scenario Name'
             accessibilityLabel='scenario_name'
             onChangeText={this.setScenario} />
-          <TextInput style={styles.textInput}
-            placeholder='Scenario Metadata'
-            accessibilityLabel='scenario_metadata'
-            onChangeText={this.setScenarioMetaData} />
           <Button style={styles.clickyButton}
             accessibilityLabel='start_bugsnag'
             title='Start Bugsnag only'
