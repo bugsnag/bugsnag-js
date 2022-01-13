@@ -54,7 +54,7 @@ export default class App extends Component {
   }
 
   startScenario = async () => {
-    const scenarioName = this.state.currentScenario;
+    const scenarioName = this.state.currentScenario
     console.log(`Running scenario: ${scenarioName}`)
     const configuration = this.getConfiguration()
     const jsConfig = {}
@@ -70,7 +70,7 @@ export default class App extends Component {
   }
 
   startBugsnag = async () => {
-    const scenarioName = this.state.currentScenario;
+    const scenarioName = this.state.currentScenario
     console.log(`Starting Bugsnag for scenario: ${scenarioName}`)
     const configuration = this.getConfiguration()
 
@@ -83,16 +83,18 @@ export default class App extends Component {
   }
 
   runCommand = async () => {
-    let response = await fetch('http://bs-local.com:9339/command');
+    const response = await global.fetch('http://bs-local.com:9339/command')
     console.log(`Received command: ${response}`)
-    let responseJson = await response.json();
+    const responseJson = await response.json()
 
-    this.state.currentScenario = responseJson.scenario_name;
+    this.state.currentScenario = responseJson.scenario_name
     switch (responseJson.action) {
       case 'run_scenario':
-        await this.startScenario();
+        await this.startScenario()
+        break
       case 'start_bugsnag':
-        await this.startBugsnag();
+        await this.startBugsnag()
+        break
     }
   }
 
@@ -116,9 +118,9 @@ export default class App extends Component {
             onPress={this.startScenario}/>
 
           <Button style={styles.clickyButton}
-                  accessibilityLabel='run_command'
-                  title='Run Command'
-                  onPress={this.runCommand}/>
+            accessibilityLabel='run_command'
+            title='Run Command'
+            onPress={this.runCommand}/>
 
           <Text>Configuration</Text>
           <TextInput placeholder='Notify endpoint'
