@@ -87,7 +87,9 @@ export default class App extends Component {
     console.log(`Received command: ${response}`)
     const responseJson = await response.json()
 
-    this.state.currentScenario = responseJson.scenario_name
+    this.setState({
+      currentScenario: responseJson.scenario_name
+    })
     switch (responseJson.action) {
       case 'run_scenario':
         await this.startScenario()
@@ -105,8 +107,7 @@ export default class App extends Component {
           <Text>React-native end-to-end test app</Text>
           <TextInput style={styles.textInput}
             placeholder='Scenario Name'
-            accessibilityLabel='scenario_name'
-            value={this.state.value}/>
+            accessibilityLabel='scenario_name'/>
 
           <Button style={styles.clickyButton}
             accessibilityLabel='start_bugsnag'
