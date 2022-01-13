@@ -14,6 +14,7 @@ module.exports = {
   resolver: {
     extraNodeModules: {
       'expo': resolve(__dirname, 'node_modules/expo'),
+      'expo-modules-core': resolve(__dirname, 'node_modules/expo-modules-core'),
       'react-native': resolve(__dirname, 'node_modules/react-native'),
       'react': resolve(__dirname, 'node_modules/react'),
       '@babel/runtime': resolve(__dirname, 'node_modules/@babel/runtime'),
