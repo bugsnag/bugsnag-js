@@ -39,5 +39,5 @@ When('I let the test page run for up to {int} seconds') do |n|
         )
   }
   txt = Maze.driver.find_element(id: 'bugsnag-test-state').text
-  assert_equal('DONE', txt, "Expected #bugsnag-test-state text to be 'DONE'. It was '#{txt}'.")
+  Maze.check.equal('DONE', txt, "Expected #bugsnag-test-state text to be 'DONE'. It was '#{txt}'.")
 end

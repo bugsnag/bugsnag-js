@@ -104,6 +104,7 @@ steps:
       artifacts#v1.2.0:
         download: "build/output.apk"
       docker-compose#v3.7.0:
+        pull: expo-maze-runner
         run: expo-maze-runner
         use-aliases: true
         command:
@@ -127,6 +128,7 @@ steps:
       artifacts#v1.2.0:
         download: "build/output.ipa"
       docker-compose#v3.7.0:
+        pull: expo-maze-runner
         run: expo-maze-runner
         use-aliases: true
         command:
@@ -157,6 +159,7 @@ steps:
       artifacts#v1.2.0:
         download: "build/output.apk"
       docker-compose#v3.7.0:
+        pull: expo-maze-runner
         run: expo-maze-runner
         use-aliases: true
         command:
@@ -187,6 +190,7 @@ steps:
       artifacts#v1.2.0:
         download: "build/output.apk"
       docker-compose#v3.7.0:
+        pull: expo-maze-runner
         run: expo-maze-runner
         use-aliases: true
         command:
@@ -213,6 +217,7 @@ steps:
       artifacts#v1.2.0:
         download: "build/output.apk"
       docker-compose#v3.7.0:
+        pull: expo-maze-runner
         run: expo-maze-runner
         use-aliases: true
         command:
@@ -239,6 +244,7 @@ steps:
       artifacts#v1.2.0:
         download: "build/output.apk"
       docker-compose#v3.7.0:
+        pull: expo-maze-runner
         run: expo-maze-runner
         use-aliases: true
         command:
@@ -263,6 +269,7 @@ steps:
       artifacts#v1.2.0:
         download: "build/output.ipa"
       docker-compose#v3.7.0:
+        pull: expo-maze-runner
         run: expo-maze-runner
         use-aliases: true
         command:
@@ -288,6 +295,7 @@ steps:
       artifacts#v1.2.0:
         download: "build/output.ipa"
       docker-compose#v3.7.0:
+        pull: expo-maze-runner
         run: expo-maze-runner
         use-aliases: true
         command:

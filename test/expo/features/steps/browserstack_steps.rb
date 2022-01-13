@@ -1,7 +1,7 @@
 Then("the event {string} equals one of:") do |field, expected|
   key_path = "events.0.#{field}"
   value = Maze::Helper.read_key_path(Maze::Server.errors.current[:body], key_path)
-  assert_includes(expected.raw.flatten, value)
+  Maze.check.include(expected.raw.flatten, value)
 end
 
 Then("the event does not have a {string} breadcrumb named {string}") do |type, name|
@@ -20,5 +20,5 @@ Then("the event {string} equals the current OS name") do |field_path|
   key_path = "events.0.#{field_path}"
   actual_value = Maze::Helper.read_key_path(Maze::Server.errors.current[:body], key_path)
 
-  assert_equal(expected, actual_value)
+  Maze.check.equal(expected, actual_value)
 end

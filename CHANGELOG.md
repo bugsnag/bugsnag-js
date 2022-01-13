@@ -2,6 +2,23 @@
 
 ## TBD
 
+### Changed
+
+- (expo): Add support for Expo SDK v44 [#1640](https://github.com/bugsnag/bugsnag-js/pull/1640)
+- (react-native) Update bugsnag-android to v5.18.0
+  - Improve the memory use and performance overhead when handling the delivery response status codes
+    [bugsnag-android#1558](https://github.com/bugsnag/bugsnag-android/pull/1558)
+  - Harden ndk layer through use of const keyword
+    [bugsnag-android#1566](https://github.com/bugsnag/bugsnag-android/pull/1566)
+  - Delete persisted NDK events earlier in delivery process
+    [bugsnag-android#1562](https://github.com/bugsnag/bugsnag-android/pull/1562)
+  - Add null checks for strlen()
+    [bugsnag-android#1563](https://github.com/bugsnag/bugsnag-android/pull/1563)
+  - Catch IOException when logging response status code
+    [bugsnag-android#1567](https://github.com/bugsnag/bugsnag-android/pull/1567)
+
+## 7.14.2 (2022-01-05)
+
 ### Fixed
 
 - (react-native-cli): Fix Xcode build error for ejected Expo apps [#1623](https://github.com/bugsnag/bugsnag-js/pull/1623)
