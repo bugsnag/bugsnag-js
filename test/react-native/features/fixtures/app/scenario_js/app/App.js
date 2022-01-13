@@ -15,7 +15,6 @@ export default class App extends Component {
     super(props)
     this.state = {
       currentScenario: '',
-      scenarioMetaData: '',
       apiKey: '12312312312312312312312312312312',
       notifyEndpoint: 'http://bs-local.com:9339/notify',
       sessionsEndpoint: 'http://bs-local.com:9339/sessions'
@@ -31,14 +30,6 @@ export default class App extends Component {
       },
       autoTrackSessions: false
     }
-  }
-
-  setScenario = newScenario => {
-    this.setState(() => ({ currentScenario: newScenario }))
-  }
-
-  setScenarioMetaData = newScenarioMetaData => {
-    this.setState(() => ({ scenarioMetaData: newScenarioMetaData }))
   }
 
   setApiKey = newApiKey => {
@@ -62,12 +53,12 @@ export default class App extends Component {
     return new Promise(resolve => setTimeout(resolve, ms))
   }
 
-  startScenario = async (scenarioName, scenarioMetaData) => {
+  startScenario = async () => {
+    const scenarioName = this.state.currentScenario;
     console.log(`Running scenario: ${scenarioName}`)
-    console.log(`  with MetaData: ${scenarioMetaData}`)
     const configuration = this.getConfiguration()
     const jsConfig = {}
-    const scenario = new Scenarios[scenarioName](configuration, scenarioMetaData, jsConfig)
+    const scenario = new Scenarios[scenarioName](configuration, jsConfig)
     console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${JSON.stringify(jsConfig)} (js)`)
     await NativeModules.BugsnagTestInterface.startBugsnag(configuration)
     Bugsnag.start(jsConfig)
@@ -78,14 +69,14 @@ export default class App extends Component {
     scenario.run()
   }
 
-  startBugsnag = async (scenarioName, scenarioMetaData) => {
+  startBugsnag = async () => {
+    const scenarioName = this.state.currentScenario;
     console.log(`Starting Bugsnag for scenario: ${scenarioName}`)
-    console.log(`  with MetaData: ${scenarioMetaData}`)
     const configuration = this.getConfiguration()
 
     const jsConfig = {}
     // eslint-disable-next-line no-new
-    new Scenarios[scenarioName](configuration, scenarioMetaData, jsConfig)
+    new Scenarios[scenarioName](configuration, jsConfig)
     console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${JSON.stringify(jsConfig)} (js)`)
     await NativeModules.BugsnagTestInterface.startBugsnag(configuration)
     Bugsnag.start(jsConfig)
@@ -96,11 +87,12 @@ export default class App extends Component {
     console.log(`Received command: ${response}`)
     let responseJson = await response.json();
 
+    this.state.currentScenario = responseJson.scenario_name;
     switch (responseJson.action) {
       case 'run_scenario':
-        await this.startScenario(responseJson.scenario_name);
+        await this.startScenario();
       case 'start_bugsnag':
-        await this.startBugsnag(responseJson.scenario_name);
+        await this.startBugsnag();
     }
   }
 
@@ -109,7 +101,15 @@ export default class App extends Component {
       <View style={styles.container}>
         <View style={styles.child}>
           <Text>React-native end-to-end test app</Text>
+          <TextInput style={styles.textInput}
+            placeholder='Scenario Name'
+            accessibilityLabel='scenario_name'
+            value={this.state.value}/>
 
+          <Button style={styles.clickyButton}
+            accessibilityLabel='start_bugsnag'
+            title='Start Bugsnag only'
+            onPress={this.startBugsnag}/>
           <Button style={styles.clickyButton}
             accessibilityLabel='run_scenario'
             title='Start Bugsnag and run scenario'

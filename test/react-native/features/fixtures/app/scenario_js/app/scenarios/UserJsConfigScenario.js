@@ -2,7 +2,7 @@ import Scenario from './Scenario'
 import Bugsnag from '@bugsnag/react-native'
 
 export class UserJsConfigScenario extends Scenario {
-  constructor (configuration, extraData, jsConfig) {
+  constructor (configuration, jsConfig) {
     super()
     jsConfig.user = {
       id: '123',

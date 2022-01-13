@@ -2,7 +2,7 @@ import Scenario from './Scenario'
 import Bugsnag from '@bugsnag/react-native'
 
 export class SessionJsControlledManualJsScenario extends Scenario {
-  constructor (configuration, _extraData, _jsConfig) {
+  constructor (configuration, _jsConfig) {
     super()
     configuration.autoTrackSessions = false
   }

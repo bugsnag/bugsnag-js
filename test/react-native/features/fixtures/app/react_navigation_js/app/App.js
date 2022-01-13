@@ -44,10 +44,6 @@ export default class App extends Component {
     this.setState(() => ({ currentScenario: newScenario }))
   }
 
-  setScenarioMetaData = newScenarioMetaData => {
-    this.setState(() => ({ scenarioMetaData: newScenarioMetaData }))
-  }
-
   setApiKey = newApiKey => {
     this.setState(() => ({ apiKey: newApiKey }))
   }
@@ -67,9 +63,7 @@ export default class App extends Component {
 
   startScenario = () => {
     console.log(`Running scenario: ${this.state.currentScenario}`)
-    console.log(`  with MetaData: ${this.state.scenarioMetaData}`)
     const scenarioName = this.state.currentScenario
-    const scenarioMetaData = this.state.scenarioMetaData
     const configuration = this.getConfiguration()
     const jsConfig = defaultJsConfig()
     const scenario = new Scenarios[scenarioName](configuration, scenarioMetaData, jsConfig)
@@ -84,7 +78,6 @@ export default class App extends Component {
 
   startBugsnag = () => {
     console.log(`Starting Bugsnag for scenario: ${this.state.currentScenario}`)
-    console.log(`  with MetaData: ${this.state.scenarioMetaData}`)
     const scenarioName = this.state.currentScenario
     const scenarioMetaData = this.state.scenarioMetaData
     const configuration = this.getConfiguration()
@@ -107,10 +100,6 @@ export default class App extends Component {
             placeholder='Scenario Name'
             accessibilityLabel='scenario_name'
             onChangeText={this.setScenario}/>
-          <TextInput style={styles.textInput}
-            placeholder='Scenario Metadata'
-            accessibilityLabel='scenario_metadata'
-            onChangeText={this.setScenarioMetaData}/>
 
           <Button style={styles.clickyButton}
             accessibilityLabel='start_bugsnag'
