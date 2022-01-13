@@ -17,7 +17,6 @@ export default class AppScreen extends Component {
     super(props)
     this.state = {
       currentScenario: '',
-      scenarioMetaData: '',
       apiKey: '12312312312312312312312312312312',
       notifyEndpoint: 'http://bs-local.com:9339/notify',
       sessionsEndpoint: 'http://bs-local.com:9339/sessions',
@@ -36,22 +35,12 @@ export default class AppScreen extends Component {
     }
   }
 
-  setScenario = newScenario => {
-    this.state.currentScenario = newScenario
-  }
-
-  setScenarioMetaData = newScenarioMetaData => {
-    this.state.scenarioMetaData = newScenarioMetaData
-  }
-
   startScenario = () => {
     console.log(`Running scenario: ${this.state.currentScenario}`)
-    console.log(`  with MetaData: ${this.state.scenarioMetaData}`)
     const scenarioName = this.state.currentScenario
-    const scenarioMetaData = this.state.scenarioMetaData
     const configuration = this.getConfiguration()
     const jsConfig = defaultJsConfig()
-    const scenario = new Scenarios[scenarioName](configuration, scenarioMetaData, jsConfig)
+    const scenario = new Scenarios[scenarioName](configuration, jsConfig)
     console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${jsConfig} (js)`)
     NativeModules.BugsnagTestInterface.startBugsnag(configuration)
       .then(() => {
@@ -76,18 +65,34 @@ export default class AppScreen extends Component {
 
   startBugsnag = () => {
     console.log(`Starting Bugsnag for scenario: ${this.state.currentScenario}`)
-    console.log(`  with MetaData: ${this.state.scenarioMetaData}`)
     const scenarioName = this.state.currentScenario
-    const scenarioMetaData = this.state.scenarioMetaData
     const configuration = this.getConfiguration()
     const jsConfig = defaultJsConfig()
-    const scenario = new Scenarios[scenarioName](configuration, scenarioMetaData, jsConfig)
+    const scenario = new Scenarios[scenarioName](configuration, jsConfig)
     console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${jsConfig} (js)`)
     NativeModules.BugsnagTestInterface.startBugsnag(configuration)
       .then(() => {
         Bugsnag.start(jsConfig)
         this.state.scenario = scenario
       })
+  }
+
+  runCommand = async () => {
+    const response = await global.fetch('http://bs-local.com:9339/command')
+    console.log(`Received command: ${response}`)
+    const responseJson = await response.json()
+
+    this.setState({
+      currentScenario: responseJson.scenario_name
+    })
+    switch (responseJson.action) {
+      case 'run_scenario':
+        await this.startScenario()
+        break
+      case 'start_bugsnag':
+        await this.startBugsnag()
+        break
+    }
   }
 
   render () {
@@ -98,15 +103,11 @@ export default class AppScreen extends Component {
           <TextInput style={styles.textInput}
             placeholder='Scenario Name'
             accessibilityLabel='scenario_name'
-            onChangeText={this.setScenario} />
+            value={this.state.currentScenario} />
           <Button style={styles.clickyButton}
-            accessibilityLabel='start_bugsnag'
-            title='Start Bugsnag only'
-            onPress={this.startBugsnag}/>
-          <Button style={styles.clickyButton}
-            accessibilityLabel='run_scenario'
-            title='Start Bugsnag and run scenario'
-            onPress={this.startScenario}/>
+            accessibilityLabel='run_command'
+            title='Run Command'
+            onPress={this.runCommand}/>
 
           <Text>Configuration</Text>
           <TextInput placeholder='Notify endpoint'

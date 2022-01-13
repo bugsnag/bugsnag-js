@@ -39,10 +39,6 @@ export default class App extends Component {
     }
   }
 
-  setScenario = newScenario => {
-    this.setState(() => ({ currentScenario: newScenario }))
-  }
-
   setApiKey = newApiKey => {
     this.setState(() => ({ apiKey: newApiKey }))
   }
@@ -89,6 +85,24 @@ export default class App extends Component {
       })
   }
 
+  runCommand = async () => {
+    const response = await global.fetch('http://bs-local.com:9339/command')
+    console.log(`Received command: ${response}`)
+    const responseJson = await response.json()
+
+    this.setState({
+      currentScenario: responseJson.scenario_name
+    })
+    switch (responseJson.action) {
+      case 'run_scenario':
+        await this.startScenario()
+        break
+      case 'start_bugsnag':
+        await this.startBugsnag()
+        break
+    }
+  }
+
   waiting () {
     return (
       <View style={styles.container}>
@@ -97,16 +111,11 @@ export default class App extends Component {
           <TextInput style={styles.textInput}
             placeholder='Scenario Name'
             accessibilityLabel='scenario_name'
-            onChangeText={this.setScenario}/>
-
+            value={this.state.currentScenario}/>
           <Button style={styles.clickyButton}
-            accessibilityLabel='start_bugsnag'
-            title='Start Bugsnag only'
-            onPress={this.startBugsnag}/>
-          <Button style={styles.clickyButton}
-            accessibilityLabel='run_scenario'
-            title='Start Bugsnag and run scenario'
-            onPress={this.startScenario}/>
+            accessibilityLabel='run_command'
+            title='Run Command'
+            onPress={this.runCommand}/>
 
           <Text>Configuration</Text>
           <TextInput placeholder='Notify endpoint'

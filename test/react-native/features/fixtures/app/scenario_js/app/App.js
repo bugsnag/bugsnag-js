@@ -107,17 +107,8 @@ export default class App extends Component {
           <Text>React-native end-to-end test app</Text>
           <TextInput style={styles.textInput}
             placeholder='Scenario Name'
-            accessibilityLabel='scenario_name'/>
-
-          <Button style={styles.clickyButton}
-            accessibilityLabel='start_bugsnag'
-            title='Start Bugsnag only'
-            onPress={this.startBugsnag}/>
-          <Button style={styles.clickyButton}
-            accessibilityLabel='run_scenario'
-            title='Start Bugsnag and run scenario'
-            onPress={this.startScenario}/>
-
+            accessibilityLabel='scenario_name'
+            value={this.state.currentScenario} />
           <Button style={styles.clickyButton}
             accessibilityLabel='run_command'
             title='Run Command'
