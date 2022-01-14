@@ -1,12 +1,11 @@
 const bugsnagInFlight = require('@bugsnag/in-flight')
-const BugsnagPluginBrowserSession = require('@bugsnag/plugin-browser-session')
+const clone = require('@bugsnag/core/lib/clone-client')
 
 const BugsnagPluginAzureFunctions = {
   name: 'azureFunctions',
 
   load (client) {
     bugsnagInFlight.trackInFlight(client)
-    client._loadPlugin(BugsnagPluginBrowserSession)
 
     return {
       createHandler ({ flushTimeoutMs = 2000 } = {}) {
@@ -23,15 +22,22 @@ function wrapHandler (client, flushTimeoutMs, handler) {
   const appDurationPlugin = client.getPlugin('appDuration')
 
   return async function (context, ...args) {
+    // Get a client to be scoped to this function invocation. If sessions are enabled, use the
+    // resumeSession() call to get a session client, otherwise, clone the existing client.
+    const functionClient = client._config.autoTrackSessions ? client.resumeSession() : clone(client)
+
     if (appDurationPlugin) {
       appDurationPlugin.reset()
     }
 
-    client.addMetadata('Azure Function context', context)
+    // Attach the client to the context
+    context.bugsnag = functionClient
 
-    if (client._config.autoTrackSessions) {
-      client.startSession()
-    }
+    // Add global metadata attach the context
+    functionClient.addOnError(event => {
+      event.addMetadata('Azure Function context', context)
+      event.clearMetadata('Azure Function context', 'bugsnag')
+    })
 
     try {
       return await handler(context, ...args)
@@ -43,9 +49,9 @@ function wrapHandler (client, flushTimeoutMs, handler) {
           severityReason: { type: 'unhandledException' }
         }
 
-        const event = client.Event.create(err, true, handledState, 'azure functions plugin', 1)
+        const event = functionClient.Event.create(err, true, handledState, 'azure functions plugin', 1)
 
-        client._notify(event)
+        functionClient._notify(event)
       }
 
       throw err
@@ -53,7 +59,7 @@ function wrapHandler (client, flushTimeoutMs, handler) {
       try {
         await bugsnagInFlight.flush(flushTimeoutMs)
       } catch (err) {
-        client._logger.error(`Delivery may be unsuccessful: ${err.message}`)
+        functionClient._logger.error(`Delivery may be unsuccessful: ${err.message}`)
       }
     }
   }
