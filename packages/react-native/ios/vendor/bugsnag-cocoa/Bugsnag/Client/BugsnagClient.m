@@ -57,6 +57,7 @@
 #import "BugsnagError+Private.h"
 #import "BugsnagErrorTypes.h"
 #import "BugsnagEvent+Private.h"
+#import "BugsnagFeatureFlag.h"
 #import "BugsnagHandledState.h"
 #import "BugsnagKeys.h"
 #import "BugsnagLastRunInfo+Private.h"
@@ -67,7 +68,6 @@
 #import "BugsnagSession+Private.h"
 #import "BugsnagSessionTracker.h"
 #import "BugsnagStackframe+Private.h"
-#import "BugsnagStateEvent.h"
 #import "BugsnagSystemState.h"
 #import "BugsnagThread+Private.h"
 #import "BugsnagUser+Private.h"
@@ -282,35 +282,6 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
         BSGInternalErrorReporter.sharedInstance = [[BSGInternalErrorReporter alloc] initWithDataSource:self];
     }
     return self;
-}
-
-- (void)addObserverWithBlock:(BugsnagObserverBlock _Nonnull)observer {
-    [self.stateEventBlocks addObject:[observer copy]];
-
-    // additionally listen for metadata updates
-    [self.metadata addObserverWithBlock:observer];
-
-    // sync the new observer with changes to metadata so far
-    BugsnagStateEvent *event = [[BugsnagStateEvent alloc] initWithName:kStateEventMetadata data:self.metadata];
-    observer(event);
-
-    NSDictionary *userJson = [self.user toJson];
-    observer([[BugsnagStateEvent alloc] initWithName:kStateEventUser data:userJson]);
-
-    observer([[BugsnagStateEvent alloc] initWithName:kStateEventContext data:self.context]);
-}
-
-- (void)removeObserverWithBlock:(BugsnagObserverBlock _Nonnull)observer {
-    [self.stateEventBlocks removeObject:observer];
-
-    // additionally remove metadata listener
-    [self.metadata removeObserverWithBlock:observer];
-}
-
-- (void)notifyObservers:(BugsnagStateEvent *)event {
-    for (BugsnagObserverBlock callback in self.stateEventBlocks) {
-        callback(event);
-    }
 }
 
 - (void)start {
@@ -620,7 +591,9 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
     [self.configuration setUser:userId withEmail:email andName:name];
     NSDictionary *userJson = [self.user toJson];
     [self.state addMetadata:userJson toSection:BSGKeyUser];
-    [self notifyObservers:[[BugsnagStateEvent alloc] initWithName:kStateEventUser data:userJson]];
+    if (self.observer) {
+        self.observer(BSGClientObserverUpdateUser, self.user);
+    }
 }
 
 // =============================================================================
@@ -668,7 +641,9 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
 - (void)setContext:(nullable NSString *)context {
     self.configuration.context = context;
     [self.state addMetadata:context withKey:BSGKeyContext toSection:BSGKeyClient];
-    [self notifyObservers:[[BugsnagStateEvent alloc] initWithName:kStateEventContext data:context]];
+    if (self.observer) {
+        self.observer(BSGClientObserverUpdateContext, context);
+    }
 }
 
 - (NSString *)context {
@@ -989,12 +964,18 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
         BSGFeatureFlagStoreAddFeatureFlag(self.featureFlagStore, name, variant);
         [self.state addMetadata:BSGFeatureFlagStoreToJSON(self.featureFlagStore) withKey:BSGKeyFeatureFlags toSection:BSGKeyClient];
     }
+    if (self.observer) {
+        self.observer(BSGClientObserverAddFeatureFlag, [BugsnagFeatureFlag flagWithName:name variant:variant]);
+    }
 }
 
 - (void)addFeatureFlagWithName:(NSString *)name {
     @synchronized (self.featureFlagStore) {
         BSGFeatureFlagStoreAddFeatureFlag(self.featureFlagStore, name, nil);
         [self.state addMetadata:BSGFeatureFlagStoreToJSON(self.featureFlagStore) withKey:BSGKeyFeatureFlags toSection:BSGKeyClient];
+    }
+    if (self.observer) {
+        self.observer(BSGClientObserverAddFeatureFlag, [BugsnagFeatureFlag flagWithName:name]);
     }
 }
 
@@ -1003,6 +984,11 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
         BSGFeatureFlagStoreAddFeatureFlags(self.featureFlagStore, featureFlags);
         [self.state addMetadata:BSGFeatureFlagStoreToJSON(self.featureFlagStore) withKey:BSGKeyFeatureFlags toSection:BSGKeyClient];
     }
+    if (self.observer) {
+        for (BugsnagFeatureFlag *featureFlag in featureFlags) {
+            self.observer(BSGClientObserverAddFeatureFlag, featureFlag);
+        }
+    }
 }
 
 - (void)clearFeatureFlagWithName:(NSString *)name {
@@ -1010,12 +996,18 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
         BSGFeatureFlagStoreClear(self.featureFlagStore, name);
         [self.state addMetadata:BSGFeatureFlagStoreToJSON(self.featureFlagStore) withKey:BSGKeyFeatureFlags toSection:BSGKeyClient];
     }
+    if (self.observer) {
+        self.observer(BSGClientObserverClearFeatureFlag, name);
+    }
 }
 
 - (void)clearFeatureFlags {
     @synchronized (self.featureFlagStore) {
         BSGFeatureFlagStoreClear(self.featureFlagStore, nil);
         [self.state addMetadata:BSGFeatureFlagStoreToJSON(self.featureFlagStore) withKey:BSGKeyFeatureFlags toSection:BSGKeyClient];
+    }
+    if (self.observer) {
+        self.observer(BSGClientObserverClearFeatureFlag, nil);
     }
 }
 
@@ -1074,7 +1066,7 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
     return device;
 }
 
-// MARK: - methods used by React Native for collecting payload data
+// MARK: - methods used by React Native
 
 - (NSDictionary *)collectAppWithState {
     return [[self generateAppWithState:[BSG_KSSystemInfo systemInfo]] toDict];
@@ -1125,6 +1117,27 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
         self.extraRuntimeInfo[key] = info;
     }
     [self.state addMetadata:self.extraRuntimeInfo withKey:BSGKeyExtraRuntimeInfo toSection:BSGKeyDevice];
+}
+
+- (void)setObserver:(BSGClientObserver)observer {
+    _observer = observer;
+    if (observer) {
+        observer(BSGClientObserverUpdateContext, self.context);
+        observer(BSGClientObserverUpdateUser, self.user);
+        
+        observer(BSGClientObserverUpdateMetadata, self.metadata);
+        self.metadata.observer = ^(BugsnagMetadata *metadata) {
+            observer(BSGClientObserverUpdateMetadata, metadata);
+        };
+        
+        @synchronized (self.featureFlagStore) {
+            for (NSString *name in self.featureFlagStore) {
+                observer(BSGClientObserverAddFeatureFlag, [BugsnagFeatureFlag flagWithName:name variant:self.featureFlagStore[name]]);
+            }
+        }
+    } else {
+        self.metadata.observer = nil;
+    }
 }
 
 // =============================================================================

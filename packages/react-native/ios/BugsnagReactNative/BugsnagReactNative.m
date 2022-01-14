@@ -97,6 +97,40 @@ RCT_EXPORT_METHOD(resumeSession) {
     [Bugsnag resumeSession];
 }
 
+RCT_EXPORT_METHOD(addFeatureFlags:(NSArray *)readableArray) {
+    NSMutableArray *array = [NSMutableArray new];
+    if(readableArray == nil) {
+        for(NSDictionary *feature in readableArray) {
+            NSString *name = feature[@"name"];
+            NSString *variant = feature[@"variant"];
+            
+            BugsnagFeatureFlag *featureFlag = [BugsnagFeatureFlag flagWithName:name variant:variant];
+            if(featureFlag != nil) {
+                [array addObject:featureFlag];
+            }
+        }
+    }
+    
+    [Bugsnag addFeatureFlags:array];
+}
+
+RCT_EXPORT_METHOD(addFeatureFlag:(NSString *)name
+                     withVariant:(NSString *)variant) {
+    if(name != nil) {
+        [Bugsnag addFeatureFlagWithName:name variant:variant];
+    }
+}
+
+RCT_EXPORT_METHOD(clearFeatureFlag:(NSString *)name) {
+    if(name != nil) {
+        [Bugsnag clearFeatureFlagWithName:name];
+    }
+}
+
+RCT_EXPORT_METHOD(clearFeatureFlags) {
+    [Bugsnag clearFeatureFlags];
+}
+
 RCT_EXPORT_METHOD(getPayloadInfo:(NSDictionary *)options
                          resolve:(RCTPromiseResolveBlock)resolve
                           reject:(RCTPromiseRejectBlock)reject) {
