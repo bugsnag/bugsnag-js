@@ -10,8 +10,7 @@ Scenario: Catching an Unhandled error
   And the exception "message" equals "UnhandledJsErrorScenario"
 
 Scenario: Catching an Unhandled promise rejection
-  When I run "UnhandledJsPromiseRejectionScenario" and relaunch the crashed app
-  And I configure Bugsnag for "UnhandledJsPromiseRejectionScenario"
+  When I run "UnhandledJsPromiseRejectionScenario"
   Then I wait to receive an error
   And the exception "errorClass" equals "Error"
   And the exception "type" equals "reactnativejs"
