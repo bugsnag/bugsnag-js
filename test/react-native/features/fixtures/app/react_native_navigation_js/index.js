@@ -53,6 +53,19 @@ export default class AppScreen extends Component {
     const jsConfig = defaultJsConfig()
     const scenario = new Scenarios[scenarioName](configuration, scenarioMetaData, jsConfig)
     console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${jsConfig} (js)`)
+    Navigation.setRoot({
+      root: {
+        stack: {
+          children: [
+            {
+              component: {
+                name: 'Home'
+              }
+            }
+          ]
+        }
+      }
+    })
     this.state.scenario = scenario
     scenario.run()
   }
@@ -68,19 +81,6 @@ export default class AppScreen extends Component {
     console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${jsConfig} (js)`)
     NativeModules.BugsnagTestInterface.startBugsnag(configuration)
       .then(() => {
-        Navigation.setRoot({
-          root: {
-            stack: {
-              children: [
-                {
-                  component: {
-                    name: 'Home'
-                  }
-                }
-              ]
-            }
-          }
-        })
         Bugsnag.start(jsConfig)
         this.state.scenario = scenario
       })
