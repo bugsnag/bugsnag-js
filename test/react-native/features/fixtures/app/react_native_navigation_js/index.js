@@ -53,6 +53,19 @@ export default class AppScreen extends Component {
     const jsConfig = defaultJsConfig()
     const scenario = new Scenarios[scenarioName](configuration, scenarioMetaData, jsConfig)
     console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${jsConfig} (js)`)
+    this.state.scenario = scenario
+    scenario.run()
+  }
+
+  startBugsnag = () => {
+    console.log(`Starting Bugsnag for scenario: ${this.state.currentScenario}`)
+    console.log(`  with MetaData: ${this.state.scenarioMetaData}`)
+    const scenarioName = this.state.currentScenario
+    const scenarioMetaData = this.state.scenarioMetaData
+    const configuration = this.getConfiguration()
+    const jsConfig = defaultJsConfig()
+    const scenario = new Scenarios[scenarioName](configuration, scenarioMetaData, jsConfig)
+    console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${jsConfig} (js)`)
     NativeModules.BugsnagTestInterface.startBugsnag(configuration)
       .then(() => {
         Navigation.setRoot({
@@ -68,23 +81,6 @@ export default class AppScreen extends Component {
             }
           }
         })
-        Bugsnag.start(jsConfig)
-        this.state.scenario = scenario
-        scenario.run()
-      })
-  }
-
-  startBugsnag = () => {
-    console.log(`Starting Bugsnag for scenario: ${this.state.currentScenario}`)
-    console.log(`  with MetaData: ${this.state.scenarioMetaData}`)
-    const scenarioName = this.state.currentScenario
-    const scenarioMetaData = this.state.scenarioMetaData
-    const configuration = this.getConfiguration()
-    const jsConfig = defaultJsConfig()
-    const scenario = new Scenarios[scenarioName](configuration, scenarioMetaData, jsConfig)
-    console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${jsConfig} (js)`)
-    NativeModules.BugsnagTestInterface.startBugsnag(configuration)
-      .then(() => {
         Bugsnag.start(jsConfig)
         this.state.scenario = scenario
       })
@@ -105,11 +101,11 @@ export default class AppScreen extends Component {
             onChangeText={this.setScenarioMetaData} />
           <Button style={styles.clickyButton}
             accessibilityLabel='start_bugsnag'
-            title='Start Bugsnag only'
+            title='Start Bugsnag'
             onPress={this.startBugsnag}/>
           <Button style={styles.clickyButton}
             accessibilityLabel='run_scenario'
-            title='Start Bugsnag and run scenario'
+            title='Run scenario'
             onPress={this.startScenario}/>
 
           <Text>Configuration</Text>
