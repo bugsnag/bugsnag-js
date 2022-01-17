@@ -74,12 +74,8 @@ export default class App extends Component {
     const jsConfig = defaultJsConfig()
     const scenario = new Scenarios[scenarioName](configuration, scenarioMetaData, jsConfig)
     console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${JSON.stringify(jsConfig)} (js)`)
-    NativeModules.BugsnagTestInterface.startBugsnag(configuration)
-      .then(() => {
-        Bugsnag.start(jsConfig)
-        this.setState({ scenario: scenario })
-        scenario.run()
-      })
+    this.setState({ scenario : scenario })
+    scenario.run()
   }
 
   startBugsnag = () => {
@@ -91,11 +87,10 @@ export default class App extends Component {
     const jsConfig = defaultJsConfig()
     const scenario = new Scenarios[scenarioName](configuration, scenarioMetaData, jsConfig)
     console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${JSON.stringify(jsConfig)} (js)`)
-    NativeModules.BugsnagTestInterface.startBugsnag(configuration)
-      .then(() => {
-        Bugsnag.start(jsConfig)
-        this.setState({ scenario: scenario })
-      })
+    NativeModules.BugsnagTestInterface.startBugsnag(configuration).then(() => {
+      this.setState({ scenario : scenario })
+      Bugsnag.start(jsConfig)
+    })
   }
 
   waiting () {
