@@ -85,12 +85,13 @@ export default class App extends Component {
     const scenarioMetaData = this.state.scenarioMetaData
     const configuration = this.getConfiguration()
     const jsConfig = defaultJsConfig()
-    const scenario = new Scenarios[scenarioName](configuration, scenarioMetaData, jsConfig)
+    // eslint-disable-next-line no-new
+    new Scenarios[scenarioName](configuration, scenarioMetaData, jsConfig)
     console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${JSON.stringify(jsConfig)} (js)`)
-    NativeModules.BugsnagTestInterface.startBugsnag(configuration).then(() => {
-      this.setState({ scenario: scenario })
-      Bugsnag.start(jsConfig)
-    })
+    NativeModules.BugsnagTestInterface.startBugsnag(configuration)
+      .then(() => {
+        Bugsnag.start(jsConfig)
+      })
   }
 
   waiting () {
@@ -113,7 +114,7 @@ export default class App extends Component {
             onPress={this.startBugsnag}/>
           <Button style={styles.clickyButton}
             accessibilityLabel='run_scenario'
-            title='Start Bugsnag and run scenario'
+            title='Run scenario'
             onPress={this.startScenario}/>
 
           <Text>Configuration</Text>
