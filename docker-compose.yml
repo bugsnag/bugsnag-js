@@ -249,6 +249,7 @@ services:
     volumes:
       - ./build:/app/build
       - ./test/react-native/features/:/app/features
+      - ./test/react-native/maze_output:/app/maze_output
 
   react-native-cli-maze-runner:
     image: 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v6-cli
