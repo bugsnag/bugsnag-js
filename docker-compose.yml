@@ -154,6 +154,7 @@ services:
         - REGISTRY_URL
         - REG_BASIC_CREDENTIAL
         - REG_NPM_EMAIL
+        - MAVEN_REPO_URL
     environment:
       - DEBUG
       - BRANCH_NAME
