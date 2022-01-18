@@ -1,6 +1,6 @@
 FROM node:12-alpine
 
-RUN apk add --update bash git python3
+RUN apk add --update bash git python3 yarn
 
 WORKDIR /app
 
@@ -23,6 +23,6 @@ COPY test/expo/features test/expo/features
 COPY test/expo/scripts test/expo/scripts
 
 WORKDIR /app/test/expo/features/fixtures/test-app
-RUN npm install
+RUN yarn install
 
 CMD node_modules/.bin/expo login -u $EXPO_USERNAME -p $EXPO_PASSWORD && node_modules/.bin/expo publish --release-channel $EXPO_RELEASE_CHANNEL

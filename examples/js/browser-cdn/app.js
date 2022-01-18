@@ -17,7 +17,7 @@ document.getElementById('jsUnhandled').addEventListener('click', sendUnhandled)
 // here are some other helpful configuration details:
 Bugsnag.start({
   // get your own api key at bugsnag.com
-  apiKey: '6eccabc796ef28a154314498f79b724e',
+  apiKey: 'YOUR_API_KEY',
 
   // if you track deploys or use source maps, make sure to set the correct version.
   appVersion: '1.2.3',

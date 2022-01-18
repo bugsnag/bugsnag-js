@@ -21,7 +21,7 @@ Scenario: Navigating screens causes breadcrumbs and context to be updated
 
   When I trigger an unhandled error
   And I wait for 5 seconds
-  And I relaunch the app
+  And I relaunch the app after a crash
   And I configure Bugsnag for "ReactNavigationBreadcrumbsEnabledScenario"
   And I wait to receive an error
   Then the exception "message" equals "DetailsNavigationUnhandledError"
@@ -48,7 +48,7 @@ Scenario: Navigating when navigation breadcrumbs are disabled only updates conte
   And I discard the oldest error
 
   When I trigger an unhandled error
-  And I relaunch the app
+  And I relaunch the app after a crash
   And I configure Bugsnag for "ReactNavigationBreadcrumbsDisabledScenario"
   And I wait to receive an error
   Then the exception "message" equals "DetailsNavigationUnhandledError"
