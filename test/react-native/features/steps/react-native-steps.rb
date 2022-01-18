@@ -1,16 +1,3 @@
-def wait_for_true
-  # max_attempts = 300
-  max_attempts = 100
-  attempts = 0
-  assertion_passed = false
-  until (attempts >= max_attempts) || assertion_passed
-    attempts += 1
-    assertion_passed = yield
-    sleep 0.1
-  end
-  # raise 'Assertion not passed in 30s' unless assertion_passed
-end
-
 When('I run {string}') do |event_type|
   steps %Q{
     Given the element "scenario_name" is present within 60 seconds
@@ -29,15 +16,15 @@ When('I run {string} and relaunch the crashed app') do |event_type|
 end
 
 Then('the app is not running') do
-  wait_for_true do
+  Maze::Wait.new(interval: 1, timeout: 10).until do
     case Maze::Helper.get_current_platform
     when 'ios'
       state = Maze.driver.app_state('org.reactjs.native.example.reactnative')
-      $logger.info state
+      $logger.info "The app is #{state}"
       state == :not_running
     when 'android'
       state = Maze.driver.app_state('com.reactnative')
-      $logger.info state
+      $logger.info "The app is #{state}"
       # workaround for faulty app state detection in appium v1.23 and lower on
       # Android where an app that is not running is detected to be running in
       # the background
