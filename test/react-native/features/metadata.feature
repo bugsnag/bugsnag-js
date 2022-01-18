@@ -27,7 +27,7 @@ Scenario: Setting metadata (native unhandled)
   When I run "MetadataNativeUnhandledScenario"
   And I wait for 2 seconds
   And I clear any error dialogue
-  And I relaunch the app
+  And I relaunch the app after a crash
   And I configure Bugsnag for "MetadataNativeUnhandledScenario"
   Then I wait to receive an error
   And the event "exceptions.0.errorClass" equals the platform-dependent string:
