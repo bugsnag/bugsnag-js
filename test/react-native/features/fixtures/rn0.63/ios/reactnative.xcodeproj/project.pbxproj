@@ -19,6 +19,8 @@
 		6591A4CD251156330040A5FA /* NativeStackUnhandledScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = 6591A4CB251156330040A5FA /* NativeStackUnhandledScenario.m */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		846B588ABB4674ABAB757586 /* libPods-reactnative-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 371411D2A466FE231036920D /* libPods-reactnative-tvOS.a */; };
+		96A7D74E2799DD1A0043AAB6 /* NativeFeatureFlagsScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = 96A7D74A2799DD1A0043AAB6 /* NativeFeatureFlagsScenario.m */; };
+		96A7D74F2799DD1A0043AAB6 /* FeatureFlagsNativeCrashScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = 96A7D74D2799DD1A0043AAB6 /* FeatureFlagsNativeCrashScenario.m */; };
 		9DE3655056EB996BD94DFAB3 /* libPods-reactnative-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7734725AC8FF4FE1ECBDC08A /* libPods-reactnative-tvOSTests.a */; };
 		A1F389D224C875E000C30B50 /* BugsnagModule.m in Sources */ = {isa = PBXBuildFile; fileRef = A1F389D124C875E000C30B50 /* BugsnagModule.m */; };
 		A1F389E824C875FF00C30B50 /* AppNativeHandledScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = A1F389D424C875FF00C30B50 /* AppNativeHandledScenario.m */; };
@@ -85,6 +87,10 @@
 		7ACFF03E09F562E6DC4E6F8D /* Pods-reactnative-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-reactnative-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-reactnative-tvOSTests/Pods-reactnative-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = reactnative/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8FE91473D7AC052F10151CD4 /* Pods-reactnative-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-reactnative-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-reactnative-tvOS/Pods-reactnative-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
+		96A7D74A2799DD1A0043AAB6 /* NativeFeatureFlagsScenario.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NativeFeatureFlagsScenario.m; sourceTree = "<group>"; };
+		96A7D74B2799DD1A0043AAB6 /* NativeFeatureFlagsScenario.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NativeFeatureFlagsScenario.h; sourceTree = "<group>"; };
+		96A7D74C2799DD1A0043AAB6 /* FeatureFlagsNativeCrashScenario.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeatureFlagsNativeCrashScenario.h; sourceTree = "<group>"; };
+		96A7D74D2799DD1A0043AAB6 /* FeatureFlagsNativeCrashScenario.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeatureFlagsNativeCrashScenario.m; sourceTree = "<group>"; };
 		A1F389D024C875E000C30B50 /* BugsnagModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BugsnagModule.h; path = "../../ios-module/BugsnagModule.h"; sourceTree = "<group>"; };
 		A1F389D124C875E000C30B50 /* BugsnagModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BugsnagModule.m; path = "../../ios-module/BugsnagModule.m"; sourceTree = "<group>"; };
 		A1F389D424C875FF00C30B50 /* AppNativeHandledScenario.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppNativeHandledScenario.m; sourceTree = "<group>"; };
@@ -256,6 +262,10 @@
 		A1F389D324C875E900C30B50 /* Scenarios */ = {
 			isa = PBXGroup;
 			children = (
+				96A7D74C2799DD1A0043AAB6 /* FeatureFlagsNativeCrashScenario.h */,
+				96A7D74D2799DD1A0043AAB6 /* FeatureFlagsNativeCrashScenario.m */,
+				96A7D74B2799DD1A0043AAB6 /* NativeFeatureFlagsScenario.h */,
+				96A7D74A2799DD1A0043AAB6 /* NativeFeatureFlagsScenario.m */,
 				A1F389D924C875FF00C30B50 /* AppNativeHandledScenario.h */,
 				A1F389D424C875FF00C30B50 /* AppNativeHandledScenario.m */,
 				A1F389D824C875FF00C30B50 /* AppNativeUnhandledScenario.h */,
@@ -673,6 +683,7 @@
 				A1F389E924C875FF00C30B50 /* UserNativeClientScenario.m in Sources */,
 				01815B632578F91900541817 /* NativeStackHandledScenario.swift in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				96A7D74E2799DD1A0043AAB6 /* NativeFeatureFlagsScenario.m in Sources */,
 				A1F389ED24C875FF00C30B50 /* BreadcrumbsNativeManualScenario.m in Sources */,
 				A1F63D2924CE541100C31ABC /* StartSessionScenario.m in Sources */,
 				A1F389F624C87F5000C30B50 /* MetadataNativeUnhandledScenario.m in Sources */,
@@ -685,6 +696,7 @@
 				A1F389F024C875FF00C30B50 /* DeviceNativeHandledScenario.m in Sources */,
 				A1F389F124C875FF00C30B50 /* ContextNativeCustomScenario.m in Sources */,
 				A1F389F724C87F5000C30B50 /* MetadataNativeScenario.m in Sources */,
+				96A7D74F2799DD1A0043AAB6 /* FeatureFlagsNativeCrashScenario.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
