@@ -124,7 +124,7 @@ steps:
     depends_on: 'package-js'
     timeout_in_minutes: 20
     plugins:
-      - artifacts#v1.2.0:
+      - artifacts#v1.5.0:
           download: min_packages.tar
       - docker-compose#v3.9.0:
           build:

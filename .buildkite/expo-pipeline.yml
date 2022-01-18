@@ -101,7 +101,7 @@ steps:
       - "expo-maze-runner-image"
     timeout_in_minutes: 50
     plugins:
-      artifacts#v1.2.0:
+      artifacts#v1.5.0:
         download: "build/output.apk"
       docker-compose#v3.9.0:
         pull: expo-maze-runner
@@ -125,7 +125,7 @@ steps:
       - "expo-maze-runner-image"
     timeout_in_minutes: 50
     plugins:
-      artifacts#v1.2.0:
+      artifacts#v1.5.0:
         download: "build/output.ipa"
       docker-compose#v3.9.0:
         pull: expo-maze-runner
@@ -156,7 +156,7 @@ steps:
       - "expo-maze-runner-image"
     timeout_in_minutes: 50
     plugins:
-      artifacts#v1.2.0:
+      artifacts#v1.5.0:
         download: "build/output.apk"
       docker-compose#v3.9.0:
         pull: expo-maze-runner
@@ -187,7 +187,7 @@ steps:
       - "expo-maze-runner-image"
     timeout_in_minutes: 50
     plugins:
-      artifacts#v1.2.0:
+      artifacts#v1.5.0:
         download: "build/output.apk"
       docker-compose#v3.9.0:
         pull: expo-maze-runner
@@ -214,7 +214,7 @@ steps:
       - "expo-maze-runner-image"
     timeout_in_minutes: 50
     plugins:
-      artifacts#v1.2.0:
+      artifacts#v1.5.0:
         download: "build/output.apk"
       docker-compose#v3.9.0:
         pull: expo-maze-runner
@@ -241,7 +241,7 @@ steps:
       - "expo-maze-runner-image"
     timeout_in_minutes: 50
     plugins:
-      artifacts#v1.2.0:
+      artifacts#v1.5.0:
         download: "build/output.apk"
       docker-compose#v3.9.0:
         pull: expo-maze-runner
@@ -266,7 +266,7 @@ steps:
       - "expo-maze-runner-image"
     timeout_in_minutes: 50
     plugins:
-      artifacts#v1.2.0:
+      artifacts#v1.5.0:
         download: "build/output.ipa"
       docker-compose#v3.9.0:
         pull: expo-maze-runner
@@ -292,7 +292,7 @@ steps:
       - "expo-maze-runner-image"
     timeout_in_minutes: 50
     plugins:
-      artifacts#v1.2.0:
+      artifacts#v1.5.0:
         download: "build/output.ipa"
       docker-compose#v3.9.0:
         pull: expo-maze-runner
