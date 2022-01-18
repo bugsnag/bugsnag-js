@@ -21,6 +21,8 @@ steps:
     depends_on: "cli-maze-image"
     timeout_in_minutes: 20
     plugins:
+      artifacts#v1.5.0:
+        upload: ./test/react-native-cli/maze_output/**/*
       docker-compose#v3.9.0:
         pull: react-native-cli-tool-maze-runner
         run: react-native-cli-tool-maze-runner
@@ -35,6 +37,8 @@ steps:
     depends_on: "cli-maze-image"
     timeout_in_minutes: 20
     plugins:
+      artifacts#v1.5.0:
+        upload: ./test/react-native-cli/maze_output/**/*
       docker-compose#v3.9.0:
         pull: react-native-cli-tool-maze-runner
         run: react-native-cli-tool-maze-runner
@@ -49,6 +53,8 @@ steps:
     depends_on: "cli-maze-image"
     timeout_in_minutes: 20
     plugins:
+      artifacts#v1.5.0:
+        upload: ./test/react-native-cli/maze_output/**/*
       docker-compose#v3.9.0:
         pull: react-native-cli-tool-maze-runner
         run: react-native-cli-tool-maze-runner
@@ -63,6 +69,8 @@ steps:
     depends_on: "cli-maze-image"
     timeout_in_minutes: 20
     plugins:
+      artifacts#v1.5.0:
+        upload: ./test/react-native-cli/maze_output/**/*
       docker-compose#v3.9.0:
         pull: react-native-cli-tool-maze-runner
         run: react-native-cli-tool-maze-runner
@@ -77,6 +85,8 @@ steps:
     depends_on: "cli-maze-image"
     timeout_in_minutes: 20
     plugins:
+      artifacts#v1.5.0:
+        upload: ./test/react-native-cli/maze_output/**/*
       docker-compose#v3.9.0:
         pull: react-native-cli-tool-maze-runner
         run: react-native-cli-tool-maze-runner
@@ -91,6 +101,8 @@ steps:
     depends_on: "cli-maze-image"
     timeout_in_minutes: 20
     plugins:
+      artifacts#v1.5.0:
+        upload: ./test/react-native-cli/maze_output/**/*
       docker-compose#v3.9.0:
         pull: react-native-cli-tool-maze-runner
         run: react-native-cli-tool-maze-runner
@@ -309,6 +321,7 @@ steps:
     plugins:
       artifacts#v1.5.0:
         download: "build/rn0_60.apk"
+        upload: ./test/react-native-cli/maze_output/**/*
       docker-compose#v3.9.0:
         pull: react-native-cli-maze-runner
         run: react-native-cli-maze-runner
@@ -329,6 +342,7 @@ steps:
     plugins:
       artifacts#v1.5.0:
         download: "build/rn0_61.apk"
+        upload: ./test/react-native-cli/maze_output/**/*
       docker-compose#v3.9.0:
         pull: react-native-cli-maze-runner
         run: react-native-cli-maze-runner
@@ -349,6 +363,7 @@ steps:
     plugins:
       artifacts#v1.5.0:
         download: "build/rn0_62.apk"
+        upload: ./test/react-native-cli/maze_output/**/*
       docker-compose#v3.9.0:
         pull: react-native-cli-maze-runner
         run: react-native-cli-maze-runner
@@ -369,6 +384,7 @@ steps:
     plugins:
       artifacts#v1.5.0:
         download: "build/rn0_63.apk"
+        upload: ./test/react-native-cli/maze_output/**/*
       docker-compose#v3.9.0:
         pull: react-native-cli-maze-runner
         run: react-native-cli-maze-runner
@@ -389,6 +405,7 @@ steps:
     plugins:
       artifacts#v1.5.0:
         download: "build/rn0_63_expo_ejected.apk"
+        upload: ./test/react-native-cli/maze_output/**/*
       docker-compose#v3.9.0:
         pull: react-native-cli-maze-runner
         run: react-native-cli-maze-runner
@@ -409,6 +426,7 @@ steps:
     plugins:
       artifacts#v1.5.0:
         download: "build/rn0_64.apk"
+        upload: ./test/react-native-cli/maze_output/**/*
       docker-compose#v3.9.0:
         pull: react-native-cli-maze-runner
         run: react-native-cli-maze-runner
@@ -429,6 +447,7 @@ steps:
     plugins:
       artifacts#v1.5.0:
         download: "build/rn0_64_hermes.apk"
+        upload: ./test/react-native-cli/maze_output/**/*
       docker-compose#v3.9.0:
         pull: react-native-cli-maze-runner
         run: react-native-cli-maze-runner
@@ -452,6 +471,7 @@ steps:
     plugins:
       artifacts#v1.5.0:
         download: "build/rn0_60.ipa"
+        upload: ./test/react-native-cli/maze_output/**/*
       docker-compose#v3.9.0:
         pull: react-native-cli-maze-runner
         run: react-native-cli-maze-runner
@@ -472,6 +492,7 @@ steps:
     plugins:
       artifacts#v1.5.0:
         download: "build/rn0_61.ipa"
+        upload: ./test/react-native-cli/maze_output/**/*
       docker-compose#v3.9.0:
         pull: react-native-cli-maze-runner
         run: react-native-cli-maze-runner
@@ -492,6 +513,7 @@ steps:
     plugins:
       artifacts#v1.5.0:
         download: "build/rn0_62.ipa"
+        upload: ./test/react-native-cli/maze_output/**/*
       docker-compose#v3.9.0:
         pull: react-native-cli-maze-runner
         run: react-native-cli-maze-runner
@@ -512,6 +534,7 @@ steps:
     plugins:
       artifacts#v1.5.0:
         download: "build/rn0_63.ipa"
+        upload: ./test/react-native-cli/maze_output/**/*
       docker-compose#v3.9.0:
         pull: react-native-cli-maze-runner
         run: react-native-cli-maze-runner
@@ -532,6 +555,7 @@ steps:
     plugins:
       artifacts#v1.5.0:
         download: "build/rn0_63_expo_ejected.ipa"
+        upload: ./test/react-native-cli/maze_output/**/*
       docker-compose#v3.9.0:
         pull: react-native-cli-maze-runner
         run: react-native-cli-maze-runner
@@ -552,6 +576,7 @@ steps:
     plugins:
       artifacts#v1.5.0:
         download: "build/rn0_64.ipa"
+        upload: ./test/react-native-cli/maze_output/**/*
       docker-compose#v3.9.0:
         pull: react-native-cli-maze-runner
         run: react-native-cli-maze-runner
@@ -572,6 +597,7 @@ steps:
     plugins:
       artifacts#v1.5.0:
         download: "build/rn0_64_hermes.ipa"
+        upload: ./test/react-native-cli/maze_output/**/*
       docker-compose#v3.9.0:
         pull: react-native-cli-maze-runner
         run: react-native-cli-maze-runner

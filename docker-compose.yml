@@ -198,6 +198,7 @@ services:
           - maze-runner
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - ./test/react-native-cli/maze_output:/app/maze_output
 
   react-native-cli-android-builder:
     build:
@@ -272,6 +273,7 @@ services:
     volumes:
       - ./build:/app/build
       - ./test/react-native-cli/features/:/app/features/
+      - ./test/react-native-cli/maze_output:/app/maze_output
 
   release:
     build:
