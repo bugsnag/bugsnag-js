@@ -53,25 +53,21 @@ export default class AppScreen extends Component {
     const jsConfig = defaultJsConfig()
     const scenario = new Scenarios[scenarioName](configuration, scenarioMetaData, jsConfig)
     console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${jsConfig} (js)`)
-    NativeModules.BugsnagTestInterface.startBugsnag(configuration)
-      .then(() => {
-        Navigation.setRoot({
-          root: {
-            stack: {
-              children: [
-                {
-                  component: {
-                    name: 'Home'
-                  }
-                }
-              ]
+    Navigation.setRoot({
+      root: {
+        stack: {
+          children: [
+            {
+              component: {
+                name: 'Home'
+              }
             }
-          }
-        })
-        Bugsnag.start(jsConfig)
-        this.state.scenario = scenario
-        scenario.run()
-      })
+          ]
+        }
+      }
+    })
+    this.state.scenario = scenario
+    scenario.run()
   }
 
   startBugsnag = () => {
@@ -105,11 +101,11 @@ export default class AppScreen extends Component {
             onChangeText={this.setScenarioMetaData} />
           <Button style={styles.clickyButton}
             accessibilityLabel='start_bugsnag'
-            title='Start Bugsnag only'
+            title='Start Bugsnag'
             onPress={this.startBugsnag}/>
           <Button style={styles.clickyButton}
             accessibilityLabel='run_scenario'
-            title='Start Bugsnag and run scenario'
+            title='Run scenario'
             onPress={this.startScenario}/>
 
           <Text>Configuration</Text>

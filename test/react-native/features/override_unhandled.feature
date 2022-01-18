@@ -14,7 +14,7 @@ Scenario: Non-fatal error overridden to unhandled
     And the event "session.events.unhandled" equals 1
 
 Scenario: Fatal error overridden to handled
-    When I run "UnhandledOverrideJsErrorScenario" and relaunch the app
+    When I run "UnhandledOverrideJsErrorScenario" and relaunch the crashed app
     And I configure Bugsnag for "UnhandledOverrideJsErrorScenario"
     Then I wait to receive an error
     And I wait to receive a session
