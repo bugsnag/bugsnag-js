@@ -27,7 +27,7 @@ Scenario: Handled JS error
   And the error payload field "events.0.device.totalMemory" is greater than 0
 
 Scenario: Unhandled JS error
-  When I run "DeviceJsUnhandledScenario" and relaunch the app
+  When I run "DeviceJsUnhandledScenario" and relaunch the crashed app
   And I configure Bugsnag for "DeviceJsUnhandledScenario"
   Then I wait to receive an error
   And the exception "errorClass" equals "Error"
@@ -78,7 +78,7 @@ Scenario: Handled native error
   And the error payload field "events.0.device.totalMemory" is greater than 0
 
 Scenario: Unhandled native error
-  When I run "DeviceNativeUnhandledScenario" and relaunch the app
+  When I run "DeviceNativeUnhandledScenario" and relaunch the crashed app
   And I configure Bugsnag for "DeviceNativeUnhandledScenario"
   Then I wait to receive an error
   And the exception "errorClass" equals "NSException"

@@ -63,12 +63,8 @@ export default class App extends Component {
     const jsConfig = defaultJsConfig()
     const scenario = new Scenarios[scenarioName](configuration, jsConfig)
     console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${JSON.stringify(jsConfig)} (js)`)
-    NativeModules.BugsnagTestInterface.startBugsnag(configuration)
-      .then(() => {
-        Bugsnag.start(jsConfig)
-        this.setState({ scenario: scenario })
-        scenario.run()
-      })
+    this.setState({ scenario: scenario })
+    scenario.run()
   }
 
   startBugsnag = () => {
@@ -76,12 +72,12 @@ export default class App extends Component {
     const scenarioName = this.state.currentScenario
     const configuration = this.getConfiguration()
     const jsConfig = defaultJsConfig()
-    const scenario = new Scenarios[scenarioName](configuration, jsConfig)
+    // eslint-disable-next-line no-new
+    new Scenarios[scenarioName](configuration, jsConfig)
     console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${JSON.stringify(jsConfig)} (js)`)
     NativeModules.BugsnagTestInterface.startBugsnag(configuration)
       .then(() => {
         Bugsnag.start(jsConfig)
-        this.setState({ scenario: scenario })
       })
   }
 

@@ -28,7 +28,7 @@ Scenario: Setting user in JS via event
   And the event "user.id" equals "123"
 
 Scenario: Setting user in native via client
-  When I run "UserNativeClientScenario" and relaunch the app
+  When I run "UserNativeClientScenario" and relaunch the crashed app
   And I configure Bugsnag for "UserNativeClientScenario"
   Then I wait to receive an error
   And the event "exceptions.0.errorClass" equals the platform-dependent string:
@@ -40,7 +40,7 @@ Scenario: Setting user in native via client
   And the event "user.id" equals "123"
 
 Scenario: Setting user in JS via client and sending Native error
-  When I run "UserJsNativeScenario" and relaunch the app
+  When I run "UserJsNativeScenario" and relaunch the crashed app
   And I configure Bugsnag for "UserJsNativeScenario"
   Then I wait to receive an error
   And the event "exceptions.0.errorClass" equals the platform-dependent string:

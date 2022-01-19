@@ -49,27 +49,17 @@ export default class App extends Component {
     this.setState({ sessionsEndpoint: 'https://sessions.bugsnag.com' })
   }
 
-  timeout (ms) {
-    return new Promise(resolve => setTimeout(resolve, ms))
-  }
-
-  startScenario = async () => {
+  runScenario = () => {
+    console.log(`Running scenario: ${this.state.currentScenario}`)
     const scenarioName = this.state.currentScenario
-    console.log(`Running scenario: ${scenarioName}`)
     const configuration = this.getConfiguration()
     const jsConfig = {}
     const scenario = new Scenarios[scenarioName](configuration, jsConfig)
     console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${JSON.stringify(jsConfig)} (js)`)
-    await NativeModules.BugsnagTestInterface.startBugsnag(configuration)
-    Bugsnag.start(jsConfig)
-    // The notifier needs a little time to synch to the native layer, otherwise flakes occur - however it's also
-    // important that the scenario waits longer than this period before relaunching the app (see the Cucumber step
-    // 'I relaunch the app').
-    await this.timeout(2000)
     scenario.run()
   }
 
-  startBugsnag = async () => {
+  startBugsnag = () => {
     const scenarioName = this.state.currentScenario
     console.log(`Starting Bugsnag for scenario: ${scenarioName}`)
     const configuration = this.getConfiguration()
@@ -78,8 +68,10 @@ export default class App extends Component {
     // eslint-disable-next-line no-new
     new Scenarios[scenarioName](configuration, jsConfig)
     console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${JSON.stringify(jsConfig)} (js)`)
-    await NativeModules.BugsnagTestInterface.startBugsnag(configuration)
-    Bugsnag.start(jsConfig)
+
+    NativeModules.BugsnagTestInterface.startBugsnag(configuration).then(() => {
+      Bugsnag.start(jsConfig)
+    })
   }
 
   runCommand = async () => {

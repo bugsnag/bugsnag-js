@@ -8,18 +8,35 @@ When('I run {string}') do |event_type|
   step 'I click the element "run_command"'
 end
 
-When('I run {string} and relaunch the app') do |event_type|
-  steps %Q{
+When('I run {string} and relaunch the crashed app') do |event_type|
+  steps %(
     When I run "#{event_type}"
     And I clear any error dialogue
-    And I relaunch the app
-  }
+    And I relaunch the app after a crash
+  )
 end
 
-When('I relaunch the app') do
-  # This step should only be used when the app has crashed, but the notifier needs a little
-  # time to write the crash report before being forced to reopen.  From trials, 2s was not enough.
-  sleep(5)
+Then('the app is not running') do
+  Maze::Wait.new(interval: 1, timeout: 10).until do
+    case Maze::Helper.get_current_platform
+    when 'ios'
+      state = Maze.driver.app_state('org.reactjs.native.example.reactnative')
+      $logger.info "The app is #{state}"
+      state == :not_running
+    when 'android'
+      state = Maze.driver.app_state('com.reactnative')
+      $logger.info "The app is #{state}"
+      # workaround for faulty app state detection in appium v1.23 and lower on
+      # Android where an app that is not running is detected to be running in
+      # the background
+      state == :not_running || state == :running_in_background
+    end
+  end
+end
+
+When('I relaunch the app after a crash') do
+  # Wait for the app to stop running before relaunching
+  step 'the app is not running'
   Maze.driver.launch_app
 end
 
