@@ -176,7 +176,7 @@ steps:
     key: "react-native-navigation-0-60-ipa"
     timeout_in_minutes: 60
     agents:
-      queue: "opensource-mac-rn"
+      queue: "opensource-mac-cocoa-11"
     env:
       REACT_NATIVE_VERSION: rn0.60
       JS_SOURCE_DIR: "react_native_navigation_js"
