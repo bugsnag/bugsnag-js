@@ -20,7 +20,7 @@
 
 ## 7.15.0 (2022-01-18)
 
-- This release was broken and has been unpublished from npm
+- This release is broken and has been deprecated on npm
 
 ## 7.14.2 (2022-01-05)
 
