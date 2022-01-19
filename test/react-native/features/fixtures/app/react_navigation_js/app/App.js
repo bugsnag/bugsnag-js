@@ -90,11 +90,11 @@ export default class App extends Component {
       currentScenario: responseJson.scenario_name
     })
     switch (responseJson.action) {
-      case 'run_scenario':
-        await this.startScenario()
-        break
       case 'start_bugsnag':
         await this.startBugsnag()
+        break
+      case 'run_scenario':
+        await this.runScenario()
         break
     }
   }

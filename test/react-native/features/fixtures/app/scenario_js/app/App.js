@@ -49,16 +49,6 @@ export default class App extends Component {
     this.setState({ sessionsEndpoint: 'https://sessions.bugsnag.com' })
   }
 
-  runScenario = () => {
-    console.log(`Running scenario: ${this.state.currentScenario}`)
-    const scenarioName = this.state.currentScenario
-    const configuration = this.getConfiguration()
-    const jsConfig = {}
-    const scenario = new Scenarios[scenarioName](configuration, jsConfig)
-    console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${JSON.stringify(jsConfig)} (js)`)
-    scenario.run()
-  }
-
   startBugsnag = () => {
     const scenarioName = this.state.currentScenario
     console.log(`Starting Bugsnag for scenario: ${scenarioName}`)
@@ -74,6 +64,16 @@ export default class App extends Component {
     })
   }
 
+  runScenario = () => {
+    console.log(`Running scenario: ${this.state.currentScenario}`)
+    const scenarioName = this.state.currentScenario
+    const configuration = this.getConfiguration()
+    const jsConfig = {}
+    const scenario = new Scenarios[scenarioName](configuration, jsConfig)
+    console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${JSON.stringify(jsConfig)} (js)`)
+    scenario.run()
+  }
+
   runCommand = async () => {
     const response = await global.fetch('http://bs-local.com:9339/command')
     console.log(`Received command: ${response}`)
@@ -83,11 +83,11 @@ export default class App extends Component {
       currentScenario: responseJson.scenario_name
     })
     switch (responseJson.action) {
-      case 'run_scenario':
-        await this.startScenario()
-        break
       case 'start_bugsnag':
         await this.startBugsnag()
+        break
+      case 'run_scenario':
+        await this.runScenario()
         break
     }
   }

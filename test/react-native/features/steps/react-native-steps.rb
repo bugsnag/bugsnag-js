@@ -1,10 +1,21 @@
+When('I configure Bugsnag for {string}') do |event_type|
+  command = {
+    action: 'start_bugsnag',
+    scenario_name: event_type
+  }
+  Maze::Server.commands.add command
+
+  step 'I click the element "run_command"'
+end
+
 When('I run {string}') do |event_type|
+  step "I configure Bugsnag for \"#{event_type}\""
+
   command = {
     action: 'run_scenario',
     scenario_name: event_type
   }
   Maze::Server.commands.add command
-
   step 'I click the element "run_command"'
 end
 
@@ -48,16 +59,6 @@ When('I clear any error dialogue') do
   driver.click_element('android:id/button1') if driver.wait_for_element('android:id/button1', 3)
   driver.click_element('android:id/aerr_close') if driver.wait_for_element('android:id/aerr_close', 3)
   driver.click_element('android:id/aerr_restart') if driver.wait_for_element('android:id/aerr_restart', 3)
-end
-
-When('I configure Bugsnag for {string}') do |event_type|
-  command = {
-    action: 'start_bugsnag',
-    scenario_name: event_type
-  }
-  Maze::Server.commands.add command
-
-  step 'I click the element "run_command"'
 end
 
 Then('the event {string} equals one of:') do |field_path, table|
