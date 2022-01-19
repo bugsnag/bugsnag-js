@@ -99,5 +99,28 @@ describe('delivery: react native makeSafe', () => {
       const result = makeSafe(values)
       expect(result).toStrictEqual([{ container: '[Circular]' }])
     })
+
+    it('when nested in objects within arrays', () => {
+      const metaData: any = {
+        from: 'javascript'
+      }
+
+      // ensure that circular references are safely handled
+      metaData.circle = metaData
+
+      const array = [{
+        someObject: metaData
+      }]
+
+      const result = makeSafe(array)
+      expect(result).toStrictEqual([
+        {
+          someObject: {
+            from: 'javascript',
+            circle: '[Circular]'
+          }
+        }
+      ])
+    })
   })
 })

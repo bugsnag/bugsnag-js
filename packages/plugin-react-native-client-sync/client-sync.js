@@ -1,4 +1,5 @@
 const { DeviceEventEmitter, NativeEventEmitter, NativeModules, Platform } = require('react-native')
+const makeSafe = require('@bugsnag/delivery-react-native/make-safe')
 
 module.exports = (NativeClient) => ({
   load: (client) => {
@@ -7,7 +8,7 @@ module.exports = (NativeClient) => ({
       // to JSON() method doesn't get called before passing the object over the
       // bridge. This happens in the remote debugger and means the "message"
       // property is incorrectly named "name"
-      NativeClient.leaveBreadcrumb({ ...breadcrumb })
+      NativeClient.leaveBreadcrumb(makeSafe(breadcrumb))
     }, true)
 
     const origSetUser = client.setUser
@@ -30,7 +31,7 @@ module.exports = (NativeClient) => ({
       if (typeof key === 'object') {
         NativeClient.addMetadata(section, key)
       } else {
-        NativeClient.addMetadata(section, { [key]: value })
+        NativeClient.addMetadata(section, { [key]: makeSafe(value) })
       }
       return ret
     }
