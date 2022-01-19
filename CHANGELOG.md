@@ -1,6 +1,6 @@
 # Changelog
 
-## 7.15.0 (2022-01-18)
+## 7.15.1 (2022-01-18)
 
 ### Changed
 
@@ -17,6 +17,10 @@
     [bugsnag-android#1563](https://github.com/bugsnag/bugsnag-android/pull/1563)
   - Catch IOException when logging response status code
     [bugsnag-android#1567](https://github.com/bugsnag/bugsnag-android/pull/1567)
+
+## 7.15.0 (2022-01-18)
+
+- This release is broken and has been deprecated on npm
 
 ## 7.14.2 (2022-01-05)
 
