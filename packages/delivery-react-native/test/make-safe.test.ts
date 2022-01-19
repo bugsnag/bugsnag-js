@@ -1,7 +1,7 @@
 import makeSafe from '../make-safe'
 
 describe('delivery: react native makeSafe', () => {
-  it.only('leaves simple types intact', () => {
+  it('leaves simple types intact', () => {
     const symbol = Symbol('symbol_field')
     const date = new Date()
     const data: any = {
@@ -22,11 +22,12 @@ describe('delivery: react native makeSafe', () => {
       [symbol]: 'some value',
       map: new Map([['key', 'value']]),
       _null: null,
-      _undefined: undefined,
+      _undefined: undefined
     }
 
     const result = makeSafe(data)
 
+    /* eslint-disable-next-line @typescript-eslint/no-dynamic-delete */
     delete data[symbol] // we don't copy Symbol keys over
     expect(result).toStrictEqual({
       ...data,
@@ -35,7 +36,7 @@ describe('delivery: react native makeSafe', () => {
       // maps iterate as arrays of arrays
       map: [
         ['key', 'value']
-      ],
+      ]
     })
   })
 
