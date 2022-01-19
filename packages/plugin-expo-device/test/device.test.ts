@@ -19,14 +19,14 @@ describe('plugin: expo device', () => {
         platform: { android: {} },
         manifest: { sdkVersion: SDK_VERSION },
         expoVersion: EXPO_VERSION,
-        systemVersion: ANDROID_VERSION,
         appOwnership: 'standalone'
       }
     }))
     jest.doMock('expo-device', () => ({
       manufacturer: 'Google',
       modelName: 'Pixel 4',
-      isDevice: true
+      isDevice: true,
+      osVersion: ANDROID_VERSION
     }))
     jest.doMock('react-native', () => ({
       Dimensions: {
@@ -84,7 +84,7 @@ describe('plugin: expo device', () => {
 
     jest.doMock('expo-constants', () => ({
       default: {
-        platform: { ios: { model: IOS_MODEL, platform: IOS_PLATFORM, systemVersion: IOS_VERSION } },
+        platform: { ios: {} },
         manifest: { sdkVersion: SDK_VERSION },
         expoVersion: EXPO_VERSION,
         appOwnership: 'expo'
@@ -92,7 +92,10 @@ describe('plugin: expo device', () => {
     }))
     jest.doMock('expo-device', () => ({
       manufacturer: 'Apple',
-      isDevice: false
+      isDevice: false,
+      modelName: IOS_MODEL,
+      modelId: IOS_PLATFORM,
+      osVersion: IOS_VERSION
     }))
     jest.doMock('react-native', () => ({
       Dimensions: {
@@ -142,13 +145,10 @@ describe('plugin: expo device', () => {
     const REACT_NATIVE_VERSION = '0.57.1'
     const SDK_VERSION = '32.3.0'
     const EXPO_VERSION = '2.10.4'
-    const IOS_MODEL = 'iPhone 7 Plus'
-    const IOS_PLATFORM = 'iPhone1,1'
-    const IOS_VERSION = '11.2'
 
     jest.doMock('expo-constants', () => ({
       default: {
-        platform: { ios: { model: IOS_MODEL, platform: IOS_PLATFORM, systemVersion: IOS_VERSION } },
+        platform: { ios: {} },
         manifest: { sdkVersion: SDK_VERSION },
         expoVersion: EXPO_VERSION,
         appOwnership: 'expo'
@@ -191,14 +191,11 @@ describe('plugin: expo device', () => {
     const REACT_NATIVE_VERSION = '0.57.1'
     const SDK_VERSION = '32.3.0'
     const EXPO_VERSION = '2.10.4'
-    const IOS_MODEL = 'iPhone 7 Plus'
-    const IOS_PLATFORM = 'iPhone1,1'
-    const IOS_VERSION = '11.2'
 
     jest.doMock('expo-constants', () => ({
       default: {
         installationId: '123',
-        platform: { ios: { model: IOS_MODEL, platform: IOS_PLATFORM, systemVersion: IOS_VERSION } },
+        platform: { ios: {} },
         manifest: { sdkVersion: SDK_VERSION },
         expoVersion: EXPO_VERSION,
         appOwnership: 'expo'
@@ -242,9 +239,7 @@ describe('plugin: expo device', () => {
     const REACT_NATIVE_VERSION = '0.57.1'
     const SDK_VERSION = '32.3.0'
     const EXPO_VERSION = '2.10.4'
-    const IOS_MODEL = 'iPhone 7 Plus'
-    const IOS_PLATFORM = 'iPhone1,1'
-    const IOS_VERSION = '11.2'
+
     class Dimensions {
       _listeners: { change: Array<(payload: { screen: { width: number, height: number}, window: {} }) => void> } = { change: [] }
       _width!: number;
@@ -277,7 +272,7 @@ describe('plugin: expo device', () => {
 
     jest.doMock('expo-constants', () => ({
       default: {
-        platform: { ios: { model: IOS_MODEL, platform: IOS_PLATFORM, system: IOS_VERSION } },
+        platform: { ios: {} },
         manifest: { sdkVersion: SDK_VERSION },
         expoVersion: EXPO_VERSION,
         appOwnership: 'guest'

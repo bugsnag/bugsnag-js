@@ -24,15 +24,10 @@ module.exports = {
     const device = {
       id: Constants.installationId,
       manufacturer: Device.manufacturer,
-      // On a real device these two seem equivalent, however on a simulator
-      // 'Constants' is a bit more useful as it returns 'Simulator' whereas
-      // 'Device' just returns 'iPhone'
-      model: Constants.platform.ios
-        ? Constants.platform.ios.model
-        : Device.modelName,
-      modelNumber: Constants.platform.ios ? Constants.platform.ios.platform : undefined,
+      model: Device.modelName,
+      modelNumber: Device.modelId || undefined,
       osName: Platform.OS,
-      osVersion: Constants.platform.ios ? Constants.platform.ios.systemVersion : Constants.systemVersion,
+      osVersion: Device.osVersion,
       runtimeVersions: {
         reactNative: rnVersion,
         expoApp: Constants.expoVersion,
