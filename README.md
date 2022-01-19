@@ -6,7 +6,7 @@ Learn more about [JavaScript error reporting](https://www.bugsnag.com/platforms/
 
 ---
 
-This is a monorepo (managed with [Lerna](https://lernajs.io/)) containing our universal error reporting client [`@bugsnag/js`](/packages/js), our Expo client [`@bugsnag/expo`](/packages/expo) and our React Native client [`@bugsnag/react-native`](/packages/react-native), along with:
+This is a monorepo (managed with [Lerna](https://lerna.js.org/) containing our universal error reporting client [`@bugsnag/js`](/packages/js), our Expo client [`@bugsnag/expo`](/packages/expo) and our React Native client [`@bugsnag/react-native`](/packages/react-native), along with:
 
 - the core Bugsnag libraries for reporting errors ([`@bugsnag/core`](/packages/core))
 - plugins for supporting various frameworks (e.g. [`@bugsnag/plugin-react`](/packages/plugin-react))
