@@ -3,7 +3,7 @@ import Bugsnag from '@bugsnag/react-native'
 import { NativeModules } from 'react-native'
 
 export class MetadataNativeUnhandledScenario extends Scenario {
-  constructor (configuration, _extraData, _jsConfig) {
+  constructor (configuration, _jsConfig) {
     super()
     configuration.configMetaData = {
       some_data: 'set via config',

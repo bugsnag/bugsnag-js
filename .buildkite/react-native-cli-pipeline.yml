@@ -230,6 +230,7 @@ steps:
       queue: 'opensource-mac-rn'
     env:
       DEBUG: true
+      LANG: "en_US.UTF-8"
     artifact_paths: build/rn0_60.ipa
     commands:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_60
@@ -241,6 +242,7 @@ steps:
       queue: 'opensource-mac-rn'
     env:
       DEBUG: true
+      LANG: "en_US.UTF-8"
     artifact_paths: build/rn0_61.ipa
     commands:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_61
@@ -252,6 +254,7 @@ steps:
       queue: 'opensource-mac-rn'
     env:
       DEBUG: true
+      LANG: "en_US.UTF-8"
     artifact_paths: build/rn0_62.ipa
     commands:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_62
@@ -263,6 +266,7 @@ steps:
       queue: 'opensource-mac-rn'
     env:
       DEBUG: true
+      LANG: "en_US.UTF-8"
     artifact_paths: build/rn0_63.ipa
     commands:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_63
@@ -274,6 +278,7 @@ steps:
       queue: 'opensource-mac-cocoa-11'
     env:
       DEBUG: true
+      LANG: "en_US.UTF-8"
     artifact_paths: build/rn0_63_expo_ejected.ipa
     commands:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_63_expo_ejected
@@ -285,6 +290,7 @@ steps:
       queue: 'opensource-mac-cocoa-11'
     env:
       DEBUG: true
+      LANG: "en_US.UTF-8"
     artifact_paths: build/rn0_64.ipa
     commands:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_64
@@ -296,6 +302,7 @@ steps:
       queue: 'opensource-mac-cocoa-11'
     env:
       DEBUG: true
+      LANG: "en_US.UTF-8"
     artifact_paths: build/rn0_64_hermes.ipa
     commands:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_64_hermes
