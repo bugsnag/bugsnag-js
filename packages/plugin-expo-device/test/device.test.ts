@@ -20,13 +20,13 @@ describe('plugin: expo device', () => {
         manifest: { sdkVersion: SDK_VERSION },
         expoVersion: EXPO_VERSION,
         systemVersion: ANDROID_VERSION,
-        isDevice: true,
         appOwnership: 'standalone'
       }
     }))
     jest.doMock('expo-device', () => ({
       manufacturer: 'Google',
-      modelName: 'Pixel 4'
+      modelName: 'Pixel 4',
+      isDevice: true
     }))
     jest.doMock('react-native', () => ({
       Dimensions: {
@@ -87,12 +87,12 @@ describe('plugin: expo device', () => {
         platform: { ios: { model: IOS_MODEL, platform: IOS_PLATFORM, systemVersion: IOS_VERSION } },
         manifest: { sdkVersion: SDK_VERSION },
         expoVersion: EXPO_VERSION,
-        isDevice: false,
         appOwnership: 'expo'
       }
     }))
     jest.doMock('expo-device', () => ({
-      manufacturer: 'Apple'
+      manufacturer: 'Apple',
+      isDevice: false
     }))
     jest.doMock('react-native', () => ({
       Dimensions: {
@@ -151,12 +151,12 @@ describe('plugin: expo device', () => {
         platform: { ios: { model: IOS_MODEL, platform: IOS_PLATFORM, systemVersion: IOS_VERSION } },
         manifest: { sdkVersion: SDK_VERSION },
         expoVersion: EXPO_VERSION,
-        isDevice: false,
         appOwnership: 'expo'
       }
     }))
     jest.doMock('expo-device', () => ({
-      manufacturer: 'Apple'
+      manufacturer: 'Apple',
+      isDevice: true
     }))
     jest.doMock('react-native', () => ({
       Dimensions: {
@@ -201,12 +201,12 @@ describe('plugin: expo device', () => {
         platform: { ios: { model: IOS_MODEL, platform: IOS_PLATFORM, systemVersion: IOS_VERSION } },
         manifest: { sdkVersion: SDK_VERSION },
         expoVersion: EXPO_VERSION,
-        isDevice: false,
         appOwnership: 'expo'
       }
     }))
     jest.doMock('expo-device', () => ({
-      manufacturer: 'Apple'
+      manufacturer: 'Apple',
+      isDevice: true
     }))
     jest.doMock('react-native', () => ({
       Dimensions: {
@@ -280,11 +280,10 @@ describe('plugin: expo device', () => {
         platform: { ios: { model: IOS_MODEL, platform: IOS_PLATFORM, system: IOS_VERSION } },
         manifest: { sdkVersion: SDK_VERSION },
         expoVersion: EXPO_VERSION,
-        isDevice: true,
         appOwnership: 'guest'
       }
     }))
-    jest.doMock('expo-device', () => ({}))
+    jest.doMock('expo-device', () => ({ isDevice: true }))
 
     jest.doMock('react-native', () => ({
       Dimensions: d,

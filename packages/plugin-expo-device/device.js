@@ -51,7 +51,7 @@ module.exports = {
     client.addOnError(event => {
       event.device = { ...event.device, time: new Date(), orientation, ...device }
       event.addMetadata('device', {
-        isDevice: Constants.isDevice,
+        isDevice: Device.isDevice,
         appOwnership: Constants.appOwnership
       })
       addDefaultAppType(event)
