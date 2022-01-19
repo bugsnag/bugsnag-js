@@ -20,6 +20,7 @@
     "@bugsnag/core": "^7.15.1"
   },
   "dependencies": {
+    "expo-application": "~4.0.1",
     "expo-constants": "~13.0.0"
   },
   "peerDependencies": {
