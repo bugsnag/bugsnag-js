@@ -239,10 +239,11 @@ steps:
     key: 'rn-0-60-ipa'
     timeout_in_minutes: 30
     agents:
-      queue: 'opensource-mac-rn'
+      queue: 'opensource-mac-cocoa-11'
     env:
       DEBUG: true
       LANG: "en_US.UTF-8"
+      DEVELOPER_DIR: "/Applications/Xcode11.7.app"
     artifact_paths: build/rn0_60.ipa
     commands:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_60
@@ -251,10 +252,11 @@ steps:
     key: 'rn-0-61-ipa'
     timeout_in_minutes: 30
     agents:
-      queue: 'opensource-mac-rn'
+      queue: 'opensource-mac-cocoa-11'
     env:
       DEBUG: true
       LANG: "en_US.UTF-8"
+      DEVELOPER_DIR: "/Applications/Xcode11.7.app"
     artifact_paths: build/rn0_61.ipa
     commands:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_61
@@ -263,10 +265,11 @@ steps:
     key: 'rn-0-62-ipa'
     timeout_in_minutes: 30
     agents:
-      queue: 'opensource-mac-rn'
+      queue: 'opensource-mac-cocoa-11'
     env:
       DEBUG: true
       LANG: "en_US.UTF-8"
+      DEVELOPER_DIR: "/Applications/Xcode11.7.app"
     artifact_paths: build/rn0_62.ipa
     commands:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_62
@@ -275,10 +278,11 @@ steps:
     key: 'rn-0-63-ipa'
     timeout_in_minutes: 30
     agents:
-      queue: 'opensource-mac-rn'
+      queue: 'opensource-mac-cocoa-11'
     env:
       DEBUG: true
       LANG: "en_US.UTF-8"
+      DEVELOPER_DIR: "/Applications/Xcode11.7.app"
     artifact_paths: build/rn0_63.ipa
     commands:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_63
