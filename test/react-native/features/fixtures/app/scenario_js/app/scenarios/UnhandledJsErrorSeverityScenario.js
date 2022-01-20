@@ -1,7 +1,7 @@
 import Scenario from './Scenario'
 
 export class UnhandledJsErrorSeverityScenario extends Scenario {
-  constructor (configuration, extraData, jsConfig) {
+  constructor (configuration, jsConfig) {
     super()
     jsConfig.onError = (event) => {
       event.severity = 'info'
