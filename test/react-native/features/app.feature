@@ -24,7 +24,7 @@ Scenario: Handled JS error
   | ios     | iOS     |
 
 Scenario: Unhandled JS error
-  When I run "AppJsUnhandledScenario" and relaunch the app
+  When I run "AppJsUnhandledScenario" and relaunch the crashed app
   And I configure Bugsnag for "AppJsUnhandledScenario"
   Then I wait to receive an error
   And the exception "errorClass" equals "Error"
@@ -73,7 +73,7 @@ Scenario: Handled native error
   | ios     | iOS     |
 
 Scenario: Unhandled native error
-  When I run "AppNativeUnhandledScenario" and relaunch the app
+  When I run "AppNativeUnhandledScenario" and relaunch the crashed app
   And I configure Bugsnag for "AppNativeUnhandledScenario"
   Then I wait to receive an error
   And the event "exceptions.0.errorClass" equals the platform-dependent string:

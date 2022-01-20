@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/delivery-expo",
-  "version": "7.14.0",
+  "version": "7.15.1",
   "main": "delivery.js",
   "description": "@bugsnag/js delivery mechanism to send events and sessions from Expo, using the FileSystem API to cache and retry sending failed payloads",
   "homepage": "https://www.bugsnag.com/",
@@ -22,7 +22,7 @@
     "expo-file-system": "~13.1.0"
   },
   "devDependencies": {
-    "@bugsnag/core": "^7.14.0"
+    "@bugsnag/core": "^7.15.1"
   },
   "peerDependencies": {
     "@bugsnag/core": "^7.0.0"
