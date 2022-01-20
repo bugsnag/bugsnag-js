@@ -184,6 +184,7 @@ steps:
       JS_SOURCE_DIR: "react_native_navigation_js"
       ARTEFACT_NAME: "r_native_navigation_0.60"
       LANG: "en_US.UTF-8"
+      DEVELOPER_DIR: "/Applications/Xcode11.7.app"
     artifact_paths: build/r_native_navigation_0.60.ipa
     commands:
       - npm run test:build-react-native-ios
