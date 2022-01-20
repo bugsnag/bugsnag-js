@@ -68,3 +68,5 @@ export { UnhandledOverrideJsErrorScenario } from './scenarios/UnhandledOverrideJ
 
 // feature_flags.feature
 export { FeatureFlagsScenario } from './scenarios/FeatureFlagsScenario'
+export { FeatureFlagsNativeCrashScenario } from './scenarios/FeatureFlagsNativeCrashScenario'
+export { NativeFeatureFlagsScenario } from './scenarios/NativeFeatureFlagsScenario'
