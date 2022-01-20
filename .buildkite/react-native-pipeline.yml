@@ -7,11 +7,11 @@ steps:
     key: "android-builder-image"
     timeout_in_minutes: 30
     plugins:
-      - docker-compose#v3.3.0:
+      - docker-compose#v3.9.0:
           build: react-native-android-builder
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
           cache-from:  react-native-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
-      - docker-compose#v3.3.0:
+      - docker-compose#v3.9.0:
           push: react-native-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
 
   #
@@ -26,7 +26,7 @@ steps:
       REACT_NATIVE_VERSION: "rn0.60"
       LANG: "en_US.UTF-8"
     plugins:
-      - docker-compose#v3.3.0:
+      - docker-compose#v3.9.0:
           run: react-native-android-builder
     artifact_paths:
       - build/rn0.60.apk
@@ -51,7 +51,7 @@ steps:
     env:
       REACT_NATIVE_VERSION: "rn0.63"
     plugins:
-      - docker-compose#v3.3.0:
+      - docker-compose#v3.9.0:
           run: react-native-android-builder
     artifact_paths:
       - build/rn0.63.apk
@@ -76,7 +76,7 @@ steps:
     env:
       REACT_NATIVE_VERSION: "rn0.64-hermes"
     plugins:
-      - docker-compose#v3.3.0:
+      - docker-compose#v3.9.0:
           run: react-native-android-builder
     artifact_paths:
       - build/rn0.64-hermes.apk
@@ -103,7 +103,7 @@ steps:
       JS_SOURCE_DIR: "react_navigation_js"
       ARTEFACT_NAME: "r_navigation_0.60"
     plugins:
-      - docker-compose#v3.3.0:
+      - docker-compose#v3.9.0:
           run: react-native-android-builder
     artifact_paths:
       - build/r_navigation_0.60.apk
@@ -134,7 +134,7 @@ steps:
       JS_SOURCE_DIR: "react_navigation_js"
       ARTEFACT_NAME: "r_navigation_0.63"
     plugins:
-      - docker-compose#v3.3.0:
+      - docker-compose#v3.9.0:
           run: react-native-android-builder
     artifact_paths:
       - build/r_navigation_0.63.apk
@@ -165,7 +165,7 @@ steps:
       JS_SOURCE_DIR: "react_native_navigation_js"
       ARTEFACT_NAME: "r_native_navigation_0.60"
     plugins:
-      - docker-compose#v3.3.0:
+      - docker-compose#v3.9.0:
           run: react-native-android-builder
     artifact_paths:
       - build/r_native_navigation_0.60.apk
@@ -196,7 +196,7 @@ steps:
       JS_SOURCE_DIR: "react_native_navigation_js"
       ARTEFACT_NAME: "r_native_navigation_0.63"
     plugins:
-      - docker-compose#v3.3.0:
+      - docker-compose#v3.9.0:
           run: react-native-android-builder
     artifact_paths:
       - build/r_native_navigation_0.63.apk
@@ -224,9 +224,10 @@ steps:
     depends_on: "rn-0-60-apk"
     timeout_in_minutes: 60
     plugins:
-      artifacts#v1.2.0:
+      artifacts#v1.5.0:
         download: "build/rn0.60.apk"
-      docker-compose#v3.3.0:
+        upload: ./test/react-native/maze_output/**/*
+      docker-compose#v3.9.0:
         pull: react-native-maze-runner
         run: react-native-maze-runner
         use-aliases: true
@@ -247,9 +248,10 @@ steps:
     depends_on: "rn-0-60-ipa"
     timeout_in_minutes: 60
     plugins:
-      artifacts#v1.2.0:
+      artifacts#v1.5.0:
         download: "build/rn0.60.ipa"
-      docker-compose#v3.7.0:
+        upload: ./test/react-native/maze_output/**/*
+      docker-compose#v3.9.0:
         pull: react-native-maze-runner
         run: react-native-maze-runner
         use-aliases: true
@@ -271,9 +273,10 @@ steps:
     depends_on: "rn-0-63-apk"
     timeout_in_minutes: 60
     plugins:
-      artifacts#v1.2.0:
+      artifacts#v1.5.0:
         download: "build/rn0.63.apk"
-      docker-compose#v3.3.0:
+        upload: ./test/react-native/maze_output/**/*
+      docker-compose#v3.9.0:
         pull: react-native-maze-runner
         run: react-native-maze-runner
         use-aliases: true
@@ -294,9 +297,10 @@ steps:
     depends_on: "rn-0-64-hermes-apk"
     timeout_in_minutes: 60
     plugins:
-      artifacts#v1.2.0:
+      artifacts#v1.5.0:
         download: "build/rn0.64-hermes.apk"
-      docker-compose#v3.3.0:
+        upload: ./test/react-native/maze_output/**/*
+      docker-compose#v3.9.0:
         pull: react-native-maze-runner
         run: react-native-maze-runner
         use-aliases: true
@@ -317,9 +321,10 @@ steps:
     depends_on: "rn-0-63-ipa"
     timeout_in_minutes: 60
     plugins:
-      artifacts#v1.2.0:
+      artifacts#v1.5.0:
         download: "build/rn0.63.ipa"
-      docker-compose#v3.7.0:
+        upload: ./test/react-native/maze_output/**/*
+      docker-compose#v3.9.0:
         pull: react-native-maze-runner
         run: react-native-maze-runner
         use-aliases: true
@@ -341,9 +346,10 @@ steps:
     depends_on: "rn-0-64-ipa"
     timeout_in_minutes: 60
     plugins:
-      artifacts#v1.2.0:
+      artifacts#v1.5.0:
         download: "build/rn0.64-hermes.ipa"
-      docker-compose#v3.7.0:
+        upload: ./test/react-native/maze_output/**/*
+      docker-compose#v3.9.0:
         pull: react-native-maze-runner
         run: react-native-maze-runner
         use-aliases: true
@@ -365,9 +371,10 @@ steps:
     depends_on: "react-navigation-0-60-apk"
     timeout_in_minutes: 60
     plugins:
-      artifacts#v1.2.0:
+      artifacts#v1.5.0:
         download: "build/r_navigation_0.60.apk"
-      docker-compose#v3.3.0:
+        upload: ./test/react-native/maze_output/**/*
+      docker-compose#v3.9.0:
         pull: react-native-maze-runner
         run: react-native-maze-runner
         use-aliases: true
@@ -389,9 +396,10 @@ steps:
     depends_on: "react-navigation-0-60-ipa"
     timeout_in_minutes: 60
     plugins:
-      artifacts#v1.2.0:
+      artifacts#v1.5.0:
         download: "build/r_navigation_0.60.ipa"
-      docker-compose#v3.7.0:
+        upload: ./test/react-native/maze_output/**/*
+      docker-compose#v3.9.0:
         pull: react-native-maze-runner
         run: react-native-maze-runner
         use-aliases: true
@@ -412,9 +420,10 @@ steps:
     depends_on: "react-navigation-0-63-apk"
     timeout_in_minutes: 60
     plugins:
-      artifacts#v1.2.0:
+      artifacts#v1.5.0:
         download: "build/r_navigation_0.63.apk"
-      docker-compose#v3.3.0:
+        upload: ./test/react-native/maze_output/**/*
+      docker-compose#v3.9.0:
         pull: react-native-maze-runner
         run: react-native-maze-runner
         use-aliases: true
@@ -436,9 +445,10 @@ steps:
     depends_on: "react-navigation-0-63-ipa"
     timeout_in_minutes: 60
     plugins:
-      artifacts#v1.2.0:
+      artifacts#v1.5.0:
         download: "build/r_navigation_0.63.ipa"
-      docker-compose#v3.7.0:
+        upload: ./test/react-native/maze_output/**/*
+      docker-compose#v3.9.0:
         pull: react-native-maze-runner
         run: react-native-maze-runner
         use-aliases: true
@@ -459,9 +469,10 @@ steps:
     depends_on: "react-native-navigation-0-60-apk"
     timeout_in_minutes: 60
     plugins:
-      artifacts#v1.2.0:
+      artifacts#v1.5.0:
         download: "build/r_native_navigation_0.60.apk"
-      docker-compose#v3.3.0:
+        upload: ./test/react-native/maze_output/**/*
+      docker-compose#v3.9.0:
         pull: react-native-maze-runner
         run: react-native-maze-runner
         use-aliases: true
@@ -483,9 +494,10 @@ steps:
     depends_on: "react-native-navigation-0-60-ipa"
     timeout_in_minutes: 60
     plugins:
-      artifacts#v1.2.0:
+      artifacts#v1.5.0:
         download: "build/r_native_navigation_0.60.ipa"
-      docker-compose#v3.7.0:
+        upload: ./test/react-native/maze_output/**/*
+      docker-compose#v3.9.0:
         pull: react-native-maze-runner
         run: react-native-maze-runner
         use-aliases: true
@@ -506,9 +518,10 @@ steps:
     depends_on: "react-native-navigation-0-63-apk"
     timeout_in_minutes: 60
     plugins:
-      artifacts#v1.2.0:
+      artifacts#v1.5.0:
         download: "build/r_native_navigation_0.63.apk"
-      docker-compose#v3.3.0:
+        upload: ./test/react-native/maze_output/**/*
+      docker-compose#v3.9.0:
         pull: react-native-maze-runner
         run: react-native-maze-runner
         use-aliases: true
@@ -530,9 +543,10 @@ steps:
     depends_on: "react-native-navigation-0-63-ipa"
     timeout_in_minutes: 60
     plugins:
-      artifacts#v1.2.0:
+      artifacts#v1.5.0:
         download: "build/r_native_navigation_0.63.ipa"
-      docker-compose#v3.7.0:
+        upload: ./test/react-native/maze_output/**/*
+      docker-compose#v3.9.0:
         pull: react-native-maze-runner
         run: react-native-maze-runner
         use-aliases: true

@@ -17,7 +17,6 @@ export default class AppScreen extends Component {
     super(props)
     this.state = {
       currentScenario: '',
-      scenarioMetaData: '',
       apiKey: '12312312312312312312312312312312',
       notifyEndpoint: 'http://bs-local.com:9339/notify',
       sessionsEndpoint: 'http://bs-local.com:9339/sessions',
@@ -40,18 +39,12 @@ export default class AppScreen extends Component {
     this.state.currentScenario = newScenario
   }
 
-  setScenarioMetaData = newScenarioMetaData => {
-    this.state.scenarioMetaData = newScenarioMetaData
-  }
-
   startScenario = () => {
     console.log(`Running scenario: ${this.state.currentScenario}`)
-    console.log(`  with MetaData: ${this.state.scenarioMetaData}`)
     const scenarioName = this.state.currentScenario
-    const scenarioMetaData = this.state.scenarioMetaData
     const configuration = this.getConfiguration()
     const jsConfig = defaultJsConfig()
-    const scenario = new Scenarios[scenarioName](configuration, scenarioMetaData, jsConfig)
+    const scenario = new Scenarios[scenarioName](configuration, jsConfig)
     console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${jsConfig} (js)`)
     Navigation.setRoot({
       root: {
@@ -72,12 +65,10 @@ export default class AppScreen extends Component {
 
   startBugsnag = () => {
     console.log(`Starting Bugsnag for scenario: ${this.state.currentScenario}`)
-    console.log(`  with MetaData: ${this.state.scenarioMetaData}`)
     const scenarioName = this.state.currentScenario
-    const scenarioMetaData = this.state.scenarioMetaData
     const configuration = this.getConfiguration()
     const jsConfig = defaultJsConfig()
-    const scenario = new Scenarios[scenarioName](configuration, scenarioMetaData, jsConfig)
+    const scenario = new Scenarios[scenarioName](configuration, jsConfig)
     console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${jsConfig} (js)`)
     NativeModules.BugsnagTestInterface.startBugsnag(configuration)
       .then(() => {
@@ -95,10 +86,6 @@ export default class AppScreen extends Component {
             placeholder='Scenario Name'
             accessibilityLabel='scenario_name'
             onChangeText={this.setScenario} />
-          <TextInput style={styles.textInput}
-            placeholder='Scenario Metadata'
-            accessibilityLabel='scenario_metadata'
-            onChangeText={this.setScenarioMetaData} />
           <Button style={styles.clickyButton}
             accessibilityLabel='start_bugsnag'
             title='Start Bugsnag'

@@ -1,7 +1,7 @@
 import Scenario from './Scenario'
 
 export class SessionAutoDisabledScenario extends Scenario {
-  constructor (configuration, extraData, jsConfig) {
+  constructor (configuration, jsConfig) {
     super()
     configuration.autoTrackSessions = false
   }
