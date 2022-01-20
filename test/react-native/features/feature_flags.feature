@@ -24,7 +24,7 @@ Scenario: Sends handled exception which includes feature flags added in the noti
 
 Scenario: Sends unhandled exception which includes feature flags added in the notify callback
   When I configure the app to run in the "unhandled callback" state
-  And I run "FeatureFlagsScenario" and relaunch the app
+  And I run "FeatureFlagsScenario" and relaunch the crashed app
   And I configure Bugsnag for "FeatureFlagsScenario"
   Then I wait to receive an error
   And the exception "errorClass" equals "Error"
@@ -44,7 +44,7 @@ Scenario: Sends no feature flags after clearFeatureFlags()
   And event 0 has no feature flags
 
 Scenario: Sends JS feature flags in a native crash
-  When I run "FeatureFlagsNativeCrashScenario" and relaunch the app
+  When I run "FeatureFlagsNativeCrashScenario" and relaunch the crashed app
   And I configure Bugsnag for "FeatureFlagsNativeCrashScenario"
   Then I wait to receive an error
   And the event "exceptions.0.errorClass" equals the platform-dependent string:
