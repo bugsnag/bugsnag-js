@@ -16,11 +16,11 @@ steps:
     key: 'android-builder-base'
     timeout_in_minutes: 30
     plugins:
-      - docker-compose#v3.3.0:
+      - docker-compose#v3.9.0:
           build: android-builder-base
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
           cache-from:  android-builder-base:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:android-builder-base
-      - docker-compose#v3.3.0:
+      - docker-compose#v3.9.0:
           push: android-builder-base:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:android-builder-base
 
   #
@@ -31,7 +31,7 @@ steps:
     key: 'package-js'
     timeout_in_minutes: 3
     plugins:
-      - docker-compose#v3.7.0:
+      - docker-compose#v3.9.0:
           run: minimal-packager
     artifact_paths: min_packages.tar
 
@@ -39,7 +39,7 @@ steps:
     key: 'publish-js'
     timeout_in_minutes: 30
     plugins:
-      - docker-compose#v3.3.0:
+      - docker-compose#v3.9.0:
           build: publisher
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
     env:
@@ -124,16 +124,16 @@ steps:
     depends_on: 'package-js'
     timeout_in_minutes: 20
     plugins:
-      - artifacts#v1.2.0:
+      - artifacts#v1.5.0:
           download: min_packages.tar
-      - docker-compose#v3.7.0:
+      - docker-compose#v3.9.0:
           build:
             - ci
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
           cache-from:
             - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base-${BRANCH_NAME}
             - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base
-      - docker-compose#v3.7.0:
+      - docker-compose#v3.9.0:
           push:
             - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base-${BRANCH_NAME}
             - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base
@@ -143,7 +143,7 @@ steps:
     depends_on: 'ci-image'
     timeout_in_minutes: 10
     plugins:
-      docker-compose#v3.7.0:
+      docker-compose#v3.9.0:
         run: ci
     command: 'npm run test:lint'
 
@@ -152,7 +152,7 @@ steps:
     depends_on: 'ci-image'
     timeout_in_minutes: 10
     plugins:
-      docker-compose#v3.7.0:
+      docker-compose#v3.9.0:
         run: ci
     command: 'npm run test:unit'
 
@@ -161,6 +161,6 @@ steps:
     depends_on: 'ci-image'
     timeout_in_minutes: 10
     plugins:
-      docker-compose#v3.7.0:
+      docker-compose#v3.9.0:
         run: ci
     command: 'npm run test:types'

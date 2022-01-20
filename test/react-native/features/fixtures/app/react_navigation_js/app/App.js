@@ -21,7 +21,6 @@ export default class App extends Component {
     super(props)
     this.state = {
       currentScenario: '',
-      scenarioMetaData: '',
       apiKey: '12312312312312312312312312312312',
       notifyEndpoint: 'http://bs-local.com:9339/notify',
       sessionsEndpoint: 'http://bs-local.com:9339/sessions',
@@ -44,10 +43,6 @@ export default class App extends Component {
     this.setState(() => ({ currentScenario: newScenario }))
   }
 
-  setScenarioMetaData = newScenarioMetaData => {
-    this.setState(() => ({ scenarioMetaData: newScenarioMetaData }))
-  }
-
   setApiKey = newApiKey => {
     this.setState(() => ({ apiKey: newApiKey }))
   }
@@ -67,12 +62,10 @@ export default class App extends Component {
 
   startScenario = () => {
     console.log(`Running scenario: ${this.state.currentScenario}`)
-    console.log(`  with MetaData: ${this.state.scenarioMetaData}`)
     const scenarioName = this.state.currentScenario
-    const scenarioMetaData = this.state.scenarioMetaData
     const configuration = this.getConfiguration()
     const jsConfig = defaultJsConfig()
-    const scenario = new Scenarios[scenarioName](configuration, scenarioMetaData, jsConfig)
+    const scenario = new Scenarios[scenarioName](configuration, jsConfig)
     console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${JSON.stringify(jsConfig)} (js)`)
     this.setState({ scenario: scenario })
     scenario.run()
@@ -80,13 +73,11 @@ export default class App extends Component {
 
   startBugsnag = () => {
     console.log(`Starting Bugsnag for scenario: ${this.state.currentScenario}`)
-    console.log(`  with MetaData: ${this.state.scenarioMetaData}`)
     const scenarioName = this.state.currentScenario
-    const scenarioMetaData = this.state.scenarioMetaData
     const configuration = this.getConfiguration()
     const jsConfig = defaultJsConfig()
     // eslint-disable-next-line no-new
-    new Scenarios[scenarioName](configuration, scenarioMetaData, jsConfig)
+    new Scenarios[scenarioName](configuration, jsConfig)
     console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${JSON.stringify(jsConfig)} (js)`)
     NativeModules.BugsnagTestInterface.startBugsnag(configuration)
       .then(() => {
@@ -103,10 +94,6 @@ export default class App extends Component {
             placeholder='Scenario Name'
             accessibilityLabel='scenario_name'
             onChangeText={this.setScenario}/>
-          <TextInput style={styles.textInput}
-            placeholder='Scenario Metadata'
-            accessibilityLabel='scenario_metadata'
-            onChangeText={this.setScenarioMetaData}/>
 
           <Button style={styles.clickyButton}
             accessibilityLabel='start_bugsnag'

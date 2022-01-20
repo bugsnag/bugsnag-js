@@ -5,13 +5,13 @@ steps:
     env:
       EXPO_RELEASE_CHANNEL: ${BUILDKITE_BUILD_ID}
     plugins:
-      - docker-compose#v3.7.0:
+      - docker-compose#v3.9.0:
           build: expo-publisher
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
           cache-from:
             - expo-publisher:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-publisher-${BRANCH_NAME}
             - expo-publisher:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-publisher-latest
-      - docker-compose#v3.7.0:
+      - docker-compose#v3.9.0:
           push:
             - expo-publisher:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-publisher-${BRANCH_NAME}
             - expo-publisher:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-publisher-latest
@@ -25,19 +25,19 @@ steps:
     env:
       EXPO_RELEASE_CHANNEL: ${BUILDKITE_BUILD_ID}
     plugins:
-      - docker-compose#v3.7.0:
+      - docker-compose#v3.9.0:
           run: expo-publisher
 
   - label: ':docker: Build expo maze runner image'
     key: "expo-maze-runner-image"
     timeout_in_minutes: 10
     plugins:
-      - docker-compose#v3.7.0:
+      - docker-compose#v3.9.0:
           build: expo-maze-runner
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
           cache-from:
             - expo-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
-      - docker-compose#v3.7.0:
+      - docker-compose#v3.9.0:
           push:
             - expo-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
             - expo-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-latest
@@ -50,13 +50,13 @@ steps:
     env:
       EXPO_RELEASE_CHANNEL: ${BUILDKITE_BUILD_ID}
     plugins:
-      - docker-compose#v3.7.0:
+      - docker-compose#v3.9.0:
           build: expo-android-builder
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
           cache-from:
             - expo-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-android-builder-${BRANCH_NAME}
             - expo-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-android-builder-latest
-      - docker-compose#v3.7.0:
+      - docker-compose#v3.9.0:
           push:
             - expo-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-android-builder-${BRANCH_NAME}
             - expo-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-android-builder-latest
@@ -75,7 +75,7 @@ steps:
       EXPO_RELEASE_CHANNEL: ${BUILDKITE_BUILD_ID}
     artifact_paths: build/output.apk
     plugins:
-      - docker-compose#v3.7.0:
+      - docker-compose#v3.9.0:
           run: expo-android-builder
           cache-from:
             - expo-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:expo-android-builder-latest
@@ -101,9 +101,9 @@ steps:
       - "expo-maze-runner-image"
     timeout_in_minutes: 50
     plugins:
-      artifacts#v1.2.0:
+      artifacts#v1.5.0:
         download: "build/output.apk"
-      docker-compose#v3.7.0:
+      docker-compose#v3.9.0:
         pull: expo-maze-runner
         run: expo-maze-runner
         use-aliases: true
@@ -125,9 +125,9 @@ steps:
       - "expo-maze-runner-image"
     timeout_in_minutes: 50
     plugins:
-      artifacts#v1.2.0:
+      artifacts#v1.5.0:
         download: "build/output.ipa"
-      docker-compose#v3.7.0:
+      docker-compose#v3.9.0:
         pull: expo-maze-runner
         run: expo-maze-runner
         use-aliases: true
@@ -156,9 +156,9 @@ steps:
       - "expo-maze-runner-image"
     timeout_in_minutes: 50
     plugins:
-      artifacts#v1.2.0:
+      artifacts#v1.5.0:
         download: "build/output.apk"
-      docker-compose#v3.7.0:
+      docker-compose#v3.9.0:
         pull: expo-maze-runner
         run: expo-maze-runner
         use-aliases: true
@@ -187,9 +187,9 @@ steps:
       - "expo-maze-runner-image"
     timeout_in_minutes: 50
     plugins:
-      artifacts#v1.2.0:
+      artifacts#v1.5.0:
         download: "build/output.apk"
-      docker-compose#v3.7.0:
+      docker-compose#v3.9.0:
         pull: expo-maze-runner
         run: expo-maze-runner
         use-aliases: true
@@ -214,9 +214,9 @@ steps:
       - "expo-maze-runner-image"
     timeout_in_minutes: 50
     plugins:
-      artifacts#v1.2.0:
+      artifacts#v1.5.0:
         download: "build/output.apk"
-      docker-compose#v3.7.0:
+      docker-compose#v3.9.0:
         pull: expo-maze-runner
         run: expo-maze-runner
         use-aliases: true
@@ -241,9 +241,9 @@ steps:
       - "expo-maze-runner-image"
     timeout_in_minutes: 50
     plugins:
-      artifacts#v1.2.0:
+      artifacts#v1.5.0:
         download: "build/output.apk"
-      docker-compose#v3.7.0:
+      docker-compose#v3.9.0:
         pull: expo-maze-runner
         run: expo-maze-runner
         use-aliases: true
@@ -266,9 +266,9 @@ steps:
       - "expo-maze-runner-image"
     timeout_in_minutes: 50
     plugins:
-      artifacts#v1.2.0:
+      artifacts#v1.5.0:
         download: "build/output.ipa"
-      docker-compose#v3.7.0:
+      docker-compose#v3.9.0:
         pull: expo-maze-runner
         run: expo-maze-runner
         use-aliases: true
@@ -292,9 +292,9 @@ steps:
       - "expo-maze-runner-image"
     timeout_in_minutes: 50
     plugins:
-      artifacts#v1.2.0:
+      artifacts#v1.5.0:
         download: "build/output.ipa"
-      docker-compose#v3.7.0:
+      docker-compose#v3.9.0:
         pull: expo-maze-runner
         run: expo-maze-runner
         use-aliases: true
