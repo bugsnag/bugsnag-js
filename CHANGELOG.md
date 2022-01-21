@@ -1,10 +1,11 @@
 # Changelog
 
-## TBD
+## 7.15.1 (2022-01-18)
 
 ### Changed
 
 - (expo): Add support for Expo SDK v44 [#1640](https://github.com/bugsnag/bugsnag-js/pull/1640)
+- (expo): Update expo @bugsnag/source-maps dependency [#1637](https://github.com/bugsnag/bugsnag-js/pull/1637)
 - (react-native) Update bugsnag-android to v5.18.0
   - Improve the memory use and performance overhead when handling the delivery response status codes
     [bugsnag-android#1558](https://github.com/bugsnag/bugsnag-android/pull/1558)
@@ -16,6 +17,10 @@
     [bugsnag-android#1563](https://github.com/bugsnag/bugsnag-android/pull/1563)
   - Catch IOException when logging response status code
     [bugsnag-android#1567](https://github.com/bugsnag/bugsnag-android/pull/1567)
+
+## 7.15.0 (2022-01-18)
+
+- This release is broken and has been deprecated on npm
 
 ## 7.14.2 (2022-01-05)
 

@@ -2,7 +2,7 @@ import Scenario from './Scenario'
 import Bugsnag from '@bugsnag/react-native'
 
 export class AppConfigEnabledReleaseStagesScenario extends Scenario {
-  constructor (configuration, extraData, jsConfig) {
+  constructor (configuration, jsConfig) {
     super()
     configuration.releaseStage = 'preprod'
     configuration.enabledReleaseStages = ['preprod', 'production']

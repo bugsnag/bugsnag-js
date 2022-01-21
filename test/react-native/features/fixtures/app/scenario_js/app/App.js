@@ -22,6 +22,10 @@ export default class App extends Component {
     }
   }
 
+  setScenarioMetaData = newScenarioMetaData => {
+    this.setState(() => ({ scenarioMetaData: newScenarioMetaData }))
+  }
+
   getConfiguration = () => {
     return {
       apiKey: this.state.apiKey,
@@ -35,10 +39,6 @@ export default class App extends Component {
 
   setScenario = newScenario => {
     this.setState(() => ({ currentScenario: newScenario }))
-  }
-
-  setScenarioMetaData = newScenarioMetaData => {
-    this.setState(() => ({ scenarioMetaData: newScenarioMetaData }))
   }
 
   setApiKey = newApiKey => {
@@ -58,41 +58,33 @@ export default class App extends Component {
     this.setState({ sessionsEndpoint: 'https://sessions.bugsnag.com' })
   }
 
-  timeout (ms) {
-    return new Promise(resolve => setTimeout(resolve, ms))
-  }
-
-  startScenario = async () => {
+  runScenario = () => {
     console.log(`Running scenario: ${this.state.currentScenario}`)
-    console.log(`  with MetaData: ${this.state.scenarioMetaData}`)
+    console.log(` with MetaData: ${this.state.scenarioMetaData}`)
     const scenarioName = this.state.currentScenario
     const scenarioMetaData = this.state.scenarioMetaData
     const configuration = this.getConfiguration()
     const jsConfig = {}
-    const scenario = new Scenarios[scenarioName](configuration, scenarioMetaData, jsConfig)
+    const scenario = new Scenarios[scenarioName](configuration, jsConfig, scenarioMetaData)
     console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${JSON.stringify(jsConfig)} (js)`)
-    await NativeModules.BugsnagTestInterface.startBugsnag(configuration)
-    Bugsnag.start(jsConfig)
-    // The notifier needs a little time to synch to the native layer, otherwise flakes occur - however it's also
-    // important that the scenario waits longer than this period before relaunching the app (see the Cucumber step
-    // 'I relaunch the app').
-    await this.timeout(2000)
     scenario.run()
   }
 
-  startBugsnag = async () => {
+  startBugsnag = () => {
     console.log(`Starting Bugsnag for scenario: ${this.state.currentScenario}`)
-    console.log(`  with MetaData: ${this.state.scenarioMetaData}`)
+    console.log(` with MetaData: ${this.state.scenarioMetaData}`)
     const scenarioName = this.state.currentScenario
     const scenarioMetaData = this.state.scenarioMetaData
     const configuration = this.getConfiguration()
 
     const jsConfig = {}
     // eslint-disable-next-line no-new
-    new Scenarios[scenarioName](configuration, scenarioMetaData, jsConfig)
+    new Scenarios[scenarioName](configuration, jsConfig, scenarioMetaData)
     console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${JSON.stringify(jsConfig)} (js)`)
-    await NativeModules.BugsnagTestInterface.startBugsnag(configuration)
-    Bugsnag.start(jsConfig)
+
+    NativeModules.BugsnagTestInterface.startBugsnag(configuration).then(() => {
+      Bugsnag.start(jsConfig)
+    })
   }
 
   render () {
@@ -111,12 +103,12 @@ export default class App extends Component {
 
           <Button style={styles.clickyButton}
             accessibilityLabel='start_bugsnag'
-            title='Start Bugsnag only'
+            title='Start Bugsnag'
             onPress={this.startBugsnag}/>
           <Button style={styles.clickyButton}
             accessibilityLabel='run_scenario'
-            title='Start Bugsnag and run scenario'
-            onPress={this.startScenario}/>
+            title='Run scenario'
+            onPress={this.runScenario}/>
 
           <Text>Configuration</Text>
           <TextInput placeholder='Notify endpoint'
