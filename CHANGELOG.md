@@ -1,5 +1,11 @@
 # Changelog
 
+## TBD
+
+### Changed
+
+- (expo): Avoid using deprecated constants [#1665](https://github.com/bugsnag/bugsnag-js/pull/1665)
+
 ## 7.15.1 (2022-01-18)
 
 ### Changed
