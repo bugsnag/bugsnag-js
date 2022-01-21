@@ -62,6 +62,15 @@ static void ReportInternalError(NSString *errorClass, NSString *message, NSDicti
         NSMutableDictionary *diagnostics = [NSMutableDictionary dictionary];
         diagnostics[@"data"] = [data base64EncodedStringWithOptions:0];
         diagnostics[@"file"] = self.file;
+        NSDictionary<NSFileAttributeKey, id> *fileAttributes = [NSFileManager.defaultManager attributesOfItemAtPath:self.file error:nil];
+        if (fileAttributes) {
+            NSDate *creationDate = fileAttributes[NSFileCreationDate];
+            NSDate *modificationDate = fileAttributes[NSFileModificationDate];
+            if (creationDate && modificationDate) {
+                // The amount of time spent writing the file could indicate why the process never completed
+                diagnostics[@"modificationInterval"] = @([modificationDate timeIntervalSinceDate:creationDate]);
+            }
+        }
         ReportInternalError(@"JSON parsing error", BSGErrorDescription(error), diagnostics);
         if (errorPtr) {
             *errorPtr = error;

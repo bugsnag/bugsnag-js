@@ -35,6 +35,7 @@ extern "C" {
 #endif
 
 #include <stdbool.h>
+#include <stdint.h>
 #include <sys/types.h>
 
 /** Get the last entry in a file path. Assumes UNIX style separators.
@@ -63,6 +64,18 @@ bool bsg_ksfuwriteBytesToFD(const int fd, const char *bytes, ssize_t length);
  * @param fd The file descriptor
  */
 bool bsg_ksfuflushWriteBuffer(const int fd);
+
+/**
+ * Get file system statistics.
+ *
+ * @param path  The path name of any file or directory within the file system.
+ * @param free  A pointer to where the number of free bytes availalable to a
+ *              non-superuser (corresponding to NSFileSystemFreeSize) should be
+ *              written.
+ * @param total A pointer to where the total number of bytes in the file system
+ *              should be written.
+ */
+bool bsg_ksfuStatfs(const char *path, uint64_t *free, uint64_t *total);
 
 #ifdef __cplusplus
 }

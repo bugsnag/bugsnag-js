@@ -8,6 +8,8 @@
 
 #import <Bugsnag/BugsnagConfiguration.h>
 
+#import "BSGFeatureFlagStore.h"
+
 @class BugsnagNotifier;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -24,6 +26,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (class, nonatomic) NSUserDefaults *userDefaults;
 
 @property (readonly, nonatomic) NSDictionary<NSString *, id> *dictionaryRepresentation;
+
+@property (nonatomic) BSGFeatureFlagStore *featureFlagStore;
 
 @property (copy, nonatomic) BugsnagMetadata *metadata;
 

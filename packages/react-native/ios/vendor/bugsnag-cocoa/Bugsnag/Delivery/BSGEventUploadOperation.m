@@ -76,8 +76,13 @@ typedef NS_ENUM(NSUInteger, BSGEventUploadOperationState) {
         return;
     }
     
+    NSDictionary *_Nullable originalPayload = nil;
     for (BugsnagOnSendErrorBlock block in configuration.onSendBlocks) {
         @try {
+            if (!originalPayload) {
+                // If OnSendError modifies the event and delivery fails, we need to persist the original state of the event.
+                originalPayload = [event toJsonWithRedactedKeys:configuration.redactedKeys];
+            }
             if (!block(event)) {
                 [self deleteEvent];
                 completionHandler();
@@ -96,6 +101,11 @@ typedef NS_ENUM(NSUInteger, BSGEventUploadOperationState) {
         [self deleteEvent];
         completionHandler();
         return;
+    }
+    
+    if ([originalPayload isEqual:eventPayload]) {
+        // Save memory if payload has not changed
+        originalPayload = nil;
     }
     
     NSString *apiKey = event.apiKey ?: configuration.apiKey;
@@ -131,7 +141,7 @@ typedef NS_ENUM(NSUInteger, BSGEventUploadOperationState) {
             case BugsnagApiClientDeliveryStatusFailed:
                 bsg_log_debug(@"Upload failed; will retry event %@", self.name);
                 if (self.shouldStoreEventPayloadForRetry) {
-                    [delegate storeEventPayload:eventPayload];
+                    [delegate storeEventPayload:originalPayload ?: eventPayload];
                 }
                 break;
                 

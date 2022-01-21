@@ -34,6 +34,7 @@
 #define BSG_KSSystemField_BundleVersion "CFBundleVersion"
 #define BSG_KSSystemField_CPUArch "cpu_arch"
 #define BSG_KSSystemField_DeviceAppHash "device_app_hash"
+#define BSG_KSSystemField_Disk "disk"
 #define BSG_KSSystemField_Jailbroken "jailbroken"
 #define BSG_KSSystemField_Machine "machine"
 #define BSG_KSSystemField_Memory "memory"

@@ -11,11 +11,16 @@
 #import "BSGEventUploadKSCrashReportOperation.h"
 #import "BSGEventUploadObjectOperation.h"
 #import "BSGFileLocations.h"
+#import "BSGInternalErrorReporter.h"
 #import "BSGJSONSerialization.h"
 #import "BSGUtils.h"
 #import "BugsnagConfiguration.h"
 #import "BugsnagEvent+Private.h"
 #import "BugsnagLogger.h"
+
+
+static NSString * const CrashReportPrefix = @"CrashReport-";
+static NSString * const RecrashReportPrefix = @"RecrashReport-";
 
 
 @interface BSGEventUploader () <BSGEventUploadOperationDelegate>
@@ -89,6 +94,7 @@
     }
     bsg_log_debug(@"Will scan stored events");
     [self.scanQueue addOperationWithBlock:^{
+        [self processRecrashReports];
         NSMutableArray<NSString *> *sortedFiles = [self sortedEventFiles];
         [self deleteExcessFiles:sortedFiles];
         NSArray<BSGEventUploadFileOperation *> *operations = [self uploadOperationsWithFiles:sortedFiles];
@@ -105,6 +111,7 @@
 }
 
 - (void)uploadLatestStoredEvent:(void (^)(void))completionHandler {
+    [self processRecrashReports];
     NSString *latestFile = [self sortedEventFiles].lastObject;
     BSGEventUploadFileOperation *operation = latestFile ? [self uploadOperationsWithFiles:@[latestFile]].lastObject : nil;
     if (!operation) {
@@ -117,6 +124,52 @@
 }
 
 // MARK: - Implementation
+
+- (void)processRecrashReports {
+    NSError *error = nil;
+    NSString *directory = self.kscrashReportsDirectory;
+    NSFileManager *fileManager = [[NSFileManager alloc] init];
+    
+    NSArray<NSString *> *entries = [fileManager contentsOfDirectoryAtPath:directory error:&error];
+    if (!entries) {
+        bsg_log_err(@"%@", error);
+        return;
+    }
+    
+    // Limit to reporting a single recrash to prevent potential for consuming too many resources
+    BOOL didReportRecrash = NO;
+    
+    for (NSString *filename in entries) {
+        if (![filename hasPrefix:RecrashReportPrefix] ||
+            ![filename.pathExtension isEqual:@"json"]) {
+            continue;
+        }
+        
+        NSString *path = [directory stringByAppendingPathComponent:filename];
+        if (!didReportRecrash) {
+            id recrashReport = [BSGJSONSerialization JSONObjectWithContentsOfFile:path options:0 error:&error];
+            if ([recrashReport isKindOfClass:[NSDictionary class]]) {
+                bsg_log_debug(@"Reporting %@", filename);
+                [BSGInternalErrorReporter.sharedInstance reportRecrash:recrashReport];
+                didReportRecrash = YES;
+            }
+        }
+        bsg_log_debug(@"Deleting %@", filename);
+        if (![fileManager removeItemAtPath:path error:&error]) {
+            bsg_log_err(@"%@", error);
+        }
+        
+        // Delete the report to prevent reporting a "JSON parsing error"
+        NSString *crashReportFilename = [filename stringByReplacingOccurrencesOfString:RecrashReportPrefix withString:CrashReportPrefix];
+        NSString *crashReportPath = [directory stringByAppendingPathComponent:crashReportFilename];
+        if (![BSGJSONSerialization JSONObjectWithContentsOfFile:crashReportPath options:0 error:nil]) {
+            bsg_log_info(@"Deleting unparsable %@", crashReportFilename);
+            if (![fileManager removeItemAtPath:crashReportPath error:&error]) {
+                bsg_log_err(@"%@", error);
+            }
+        }
+    }
+}
 
 /// Returns the stored event files sorted from oldest to most recent.
 - (NSMutableArray<NSString *> *)sortedEventFiles {

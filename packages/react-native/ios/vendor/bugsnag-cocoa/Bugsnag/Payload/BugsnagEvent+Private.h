@@ -8,6 +8,8 @@
 
 #import <Bugsnag/BugsnagEvent.h>
 
+#import "BSGFeatureFlagStore.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface BugsnagEvent ()
@@ -28,6 +30,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// Raw error data added to metadata.
 @property (readwrite, copy, nullable, nonatomic) NSDictionary *error;
+
+@property (readwrite, strong, nonnull, nonatomic) BSGFeatureFlagStore *featureFlagStore;
 
 /// The event state (whether the error is handled/unhandled.)
 @property (readwrite, nonatomic) BugsnagHandledState *handledState;

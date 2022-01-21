@@ -15,7 +15,7 @@ extern "C" {
 #include <stdint.h>
 
 struct bsg_symbolicate_result {
-    const struct bsg_mach_image *image;
+    struct bsg_mach_image *image;
     uintptr_t function_address;
     const char *function_name;
 };
