@@ -2,7 +2,7 @@ import Scenario from './Scenario'
 import Bugsnag from '@bugsnag/react-native'
 
 export class FeatureFlagsScenario extends Scenario {
-  constructor (configuration, extraData, jsConfig) {
+  constructor (configuration, jsConfig, extraData) {
     super()
     this.extraData = extraData
 
