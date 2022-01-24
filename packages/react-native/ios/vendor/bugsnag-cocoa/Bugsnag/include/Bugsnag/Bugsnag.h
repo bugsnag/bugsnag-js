@@ -35,6 +35,7 @@
 #import <Bugsnag/BugsnagError.h>
 #import <Bugsnag/BugsnagErrorTypes.h>
 #import <Bugsnag/BugsnagEvent.h>
+#import <Bugsnag/BugsnagFeatureFlag.h>
 #import <Bugsnag/BugsnagLastRunInfo.h>
 #import <Bugsnag/BugsnagMetadata.h>
 #import <Bugsnag/BugsnagPlugin.h>
@@ -292,6 +293,24 @@
 + (void)setUser:(NSString *_Nullable)userId
        withEmail:(NSString *_Nullable)email
        andName:(NSString *_Nullable)name;
+
+// =============================================================================
+// MARK: - Feature flags
+// =============================================================================
+
++ (void)addFeatureFlagWithName:(nonnull NSString *)name variant:(nullable NSString *)variant
+    NS_SWIFT_NAME(addFeatureFlag(name:variant:));
+
++ (void)addFeatureFlagWithName:(nonnull NSString *)name
+    NS_SWIFT_NAME(addFeatureFlag(name:));
+
++ (void)addFeatureFlags:(nonnull NSArray<BugsnagFeatureFlag *> *)featureFlags
+    NS_SWIFT_NAME(addFeatureFlags(_:));
+
++ (void)clearFeatureFlagWithName:(nonnull NSString *)name
+    NS_SWIFT_NAME(clearFeatureFlag(name:));
+
++ (void)clearFeatureFlags;
 
 // =============================================================================
 // MARK: - onSession

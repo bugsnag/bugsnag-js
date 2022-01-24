@@ -25,8 +25,6 @@ FOUNDATION_EXPORT NSString *BSGErrorDescription(NSError *error);
 
 @property (readonly, nonatomic) BugsnagConfiguration *configuration;
 
-@property (readonly, nonatomic) BugsnagNotifier *notifier;
-
 - (BugsnagAppWithState *)generateAppWithState:(NSDictionary *)systemInfo;
 
 - (BugsnagDeviceWithState *)generateDeviceWithState:(NSDictionary *)systemInfo;
@@ -62,6 +60,8 @@ FOUNDATION_EXPORT NSString *BSGErrorDescription(NSError *error);
             diagnostics:(nullable NSDictionary<NSString *, id> *)diagnostics
            groupingHash:(nullable NSString *)groupingHash;
 
+- (void)reportRecrash:(NSDictionary *)recrashReport;
+
 // Private
 
 - (nullable BugsnagEvent *)eventWithErrorClass:(NSString *)errorClass
@@ -72,6 +72,8 @@ FOUNDATION_EXPORT NSString *BSGErrorDescription(NSError *error);
 - (nullable BugsnagEvent *)eventWithException:(NSException *)exception
                                   diagnostics:(nullable NSDictionary<NSString *, id> *)diagnostics
                                  groupingHash:(nullable NSString *)groupingHash;
+
+- (nullable BugsnagEvent *)eventWithRecrashReport:(NSDictionary *)recrashReport;
 
 - (nullable NSURLRequest *)requestForEvent:(BugsnagEvent *)event error:(NSError * __autoreleasing *)errorPtr;
 

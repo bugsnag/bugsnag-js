@@ -27,7 +27,7 @@ static NSString * _Nullable FormatMemoryAddress(NSNumber * _Nullable address) {
 
 @implementation BugsnagStackframe
 
-+ (NSDictionary *_Nullable)findImageAddr:(unsigned long)addr inImages:(NSArray *)images {
+static NSDictionary * _Nullable FindImage(NSArray *images, uintptr_t addr) {
     for (NSDictionary *image in images) {
         if ([(NSNumber *)image[BSGKeyImageAddress] unsignedLongValue] == addr) {
             return image;
@@ -80,7 +80,7 @@ static NSString * _Nullable FormatMemoryAddress(NSNumber * _Nullable address) {
     frame.isPc = [dict[BSGKeyIsPC] boolValue];
     frame.isLr = [dict[BSGKeyIsLR] boolValue];
 
-    NSDictionary *image = [self findImageAddr:[frame.machoLoadAddress unsignedLongValue] inImages:binaryImages];
+    NSDictionary *image = FindImage(binaryImages, (uintptr_t)frame.machoLoadAddress.unsignedLongLongValue);
     if (image != nil) {
         frame.machoUuid = image[BSGKeyUuid];
         frame.machoVmAddress = image[BSGKeyImageVmAddress];
@@ -93,7 +93,7 @@ static NSString * _Nullable FormatMemoryAddress(NSNumber * _Nullable address) {
         // Ignore invalid link register frames.
         // For EXC_BREAKPOINT mach exceptions the link register does not contain an instruction address.
         return nil;
-    } else {
+    } else if (/* Don't warn for recrash reports */ binaryImages.count > 1) {
         bsg_log_warn(@"BugsnagStackframe: no image found for address %@", FormatMemoryAddress(frame.machoLoadAddress));
     }
     

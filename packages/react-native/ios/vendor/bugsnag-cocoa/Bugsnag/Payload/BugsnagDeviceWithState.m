@@ -35,26 +35,6 @@ NSMutableDictionary *BSGParseDeviceMetadata(NSDictionary *event) {
     return device;
 }
 
-/**
- * Calculates the amount of free disk space on the device in bytes, for a given directory.
- * @param directory the directory whose disk space should be queried
- * @return free space in the number of bytes, or nil if this information could not be found
- */
-NSNumber *BSGDeviceFreeSpace(NSSearchPathDirectory directory) {
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSArray *searchPaths = NSSearchPathForDirectoriesInDomains(directory, NSUserDomainMask, true);
-    NSString *path = [searchPaths lastObject];
-
-    NSError *error;
-    NSDictionary *fileSystemAttrs =
-            [fileManager attributesOfFileSystemForPath:path error:&error];
-
-    if (!fileSystemAttrs) {
-        bsg_log_warn(@"Failed to read free disk space: %@", error);
-    }
-    return fileSystemAttrs[NSFileSystemFreeSize];
-}
-
 @implementation BugsnagDeviceWithState
 
 + (BugsnagDeviceWithState *) deviceFromJson:(NSDictionary *)json {
@@ -89,7 +69,7 @@ NSNumber *BSGDeviceFreeSpace(NSSearchPathDirectory directory) {
     [self populateFields:device dictionary:event];
     device.orientation = [event valueForKeyPath:@"user.state.deviceState.orientation"];
     device.freeMemory = [event valueForKeyPath:@"system." BSG_KSSystemField_Memory "." BSG_KSCrashField_Free];
-    device.freeDisk = BSGDeviceFreeSpace(NSCachesDirectory);
+    device.freeDisk = [event valueForKeyPath:@"system." BSG_KSSystemField_Disk "." BSG_KSCrashField_Free];
 
     NSString *val = [event valueForKeyPath:@"report.timestamp"];
 

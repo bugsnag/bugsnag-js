@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface BugsnagUser ()
 
-- (instancetype)initWithDictionary:(NSDictionary *)dict;
+- (instancetype)initWithDictionary:(nullable NSDictionary *)dict;
 
 - (instancetype)initWithUserId:(nullable NSString *)userId name:(nullable NSString *)name emailAddress:(nullable NSString *)emailAddress;
 

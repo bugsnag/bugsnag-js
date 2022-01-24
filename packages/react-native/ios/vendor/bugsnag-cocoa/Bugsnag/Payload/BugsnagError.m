@@ -106,7 +106,7 @@ NSString *BSGParseErrorMessage(NSDictionary *report, NSDictionary *error, NSStri
         _errorClass = errorClass;
         _errorMessage = errorMessage;
         _typeString = BSGSerializeErrorType(errorType);
-        _stacktrace = stacktrace;
+        _stacktrace = stacktrace ?: @[];
     }
     return self;
 }

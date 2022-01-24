@@ -26,7 +26,7 @@
 
 #include "BSG_KSCrashState.h"
 
-#include "BSG_KSFileUtils.h"
+#include "BSG_KSFile.h"
 #include "BSG_KSJSONCodec.h"
 #include "BSG_KSJSONCodecObjC.h"
 #include "BSG_KSMach.h"
@@ -154,8 +154,7 @@ int bsg_kscrashstate_i_onEndData(__unused void *const userData) {
  */
 int bsg_kscrashstate_i_addJSONData(const char *const data, const size_t length,
                                    void *const userData) {
-    const int fd = *((int *)userData);
-    const bool success = bsg_ksfuwriteBytesToFD(fd, data, (ssize_t)length);
+    bool success = BSG_KSFileWrite(userData, data, length);
     return success ? BSG_KSJSON_OK : BSG_KSJSON_ERROR_CANNOT_ADD_DATA;
 }
 
@@ -227,9 +226,13 @@ bool bsg_kscrashstate_i_saveState(const BSG_KSCrash_State *const state,
         return false;
     }
 
+    BSG_KSFile file;
+    char buffer[256];
+    BSG_KSFileInit(&file, fd, buffer, sizeof(buffer) / sizeof(*buffer));
+
     BSG_KSJSONEncodeContext JSONContext;
     bsg_ksjsonbeginEncode(&JSONContext, false, bsg_kscrashstate_i_addJSONData,
-                          &fd);
+                          &file);
 
     int result;
     if ((result = bsg_ksjsonbeginObject(&JSONContext, NULL)) != BSG_KSJSON_OK) {
@@ -269,6 +272,7 @@ bool bsg_kscrashstate_i_saveState(const BSG_KSCrash_State *const state,
     result = bsg_ksjsonendEncode(&JSONContext);
 
 done:
+    BSG_KSFileFlush(&file);
     close(fd);
 
     if (result != BSG_KSJSON_OK) {

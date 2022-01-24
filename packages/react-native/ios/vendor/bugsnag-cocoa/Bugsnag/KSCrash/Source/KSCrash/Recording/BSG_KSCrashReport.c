@@ -29,6 +29,7 @@
 #include "BSG_KSBacktrace_Private.h"
 #include "BSG_KSCrashReportFields.h"
 #include "BSG_KSCrashReportVersion.h"
+#include "BSG_KSFile.h"
 #include "BSG_KSFileUtils.h"
 #include "BSG_KSJSONCodec.h"
 #include "BSG_KSMach.h"
@@ -308,8 +309,7 @@ void bsg_kscrw_i_endContainer(const BSG_KSCrashReportWriter *const writer) {
 
 int bsg_kscrw_i_addJSONData(const char *const data, const size_t length,
                             void *const userData) {
-    const int fd = *((int *)userData);
-    const bool success = bsg_ksfuwriteBytesToFD(fd, data, (ssize_t)length);
+    bool success = BSG_KSFileWrite(userData, data, length);
     return success ? BSG_KSJSON_OK : BSG_KSJSON_ERROR_CANNOT_ADD_DATA;
 }
 
@@ -622,7 +622,9 @@ void bsg_kscrw_i_writeTraceInfo(const BSG_KSCrash_Context *crashContext,
 
 bool bsg_kscrw_i_exceedsBufferLen(const size_t length);
 
-void bsg_kscrashreport_writeKSCrashFields(BSG_KSCrash_Context *crashContext, BSG_KSCrashReportWriter *writer);
+void bsg_kscrashreport_writeKSCrashFields(BSG_KSCrash_Context *crashContext,
+                                          BSG_KSCrashReportWriter *writer,
+                                          const char *const path);
 
 /** Write the contents of a memory location.
  * Also writes meta information about the data.
@@ -731,6 +733,7 @@ void bsg_kscrw_i_writeBacktraceEntry(
     writer->beginObject(writer, key);
     {
         if (info->image && info->image->header) {
+            info->image->inCrashReport = true;
             writer->addUIntegerElement(writer, BSG_KSCrashField_ObjectAddr,
                                        (uintptr_t)info->image->header);
         }
@@ -1138,7 +1141,7 @@ void bsg_kscrw_i_writeBinaryImages(const BSG_KSCrashReportWriter *const writer,
     writer->beginArray(writer, key);
     {
         for (BSG_Mach_Header_Info *img = bsg_mach_headers_get_images(); img != NULL; img = img->next) {
-            if (!img->unloaded) {
+            if (img->inCrashReport) {
                 bsg_kscrw_i_writeBinaryImage(writer, NULL, img);
             }
         }
@@ -1160,6 +1163,21 @@ void bsg_kscrw_i_writeMemoryInfo(const BSG_KSCrashReportWriter *const writer,
                                    bsg_ksmachusableMemory());
         writer->addUIntegerElement(writer, BSG_KSCrashField_Free,
                                    bsg_ksmachfreeMemory());
+    }
+    writer->endContainer(writer);
+}
+
+void bsg_kscrw_i_writeDiskInfo(const BSG_KSCrashReportWriter *const writer,
+                               const char *const key,
+                               const char *const path) {
+    uint64_t freeDisk, size;
+    if (!bsg_ksfuStatfs(path, &freeDisk, &size)) {
+        return;
+    }
+    writer->beginObject(writer, key);
+    {
+        bsg_kscrw_i_addUIntegerElement(writer, BSG_KSCrashField_Free, freeDisk);
+        bsg_kscrw_i_addUIntegerElement(writer, BSG_KSCrashField_Size, size);
     }
     writer->endContainer(writer);
 }
@@ -1484,14 +1502,18 @@ void bsg_kscrashreport_writeMinimalReport(
 
     bsg_kscrw_i_updateStackOverflowStatus(crashContext);
 
+    BSG_KSFile file;
+    char buffer[512];
+    BSG_KSFileInit(&file, fd, buffer, sizeof(buffer) / sizeof(*buffer));
+
     BSG_KSJSONEncodeContext jsonContext;
-    jsonContext.userData = &fd;
+    jsonContext.userData = &file;
     BSG_KSCrashReportWriter concreteWriter;
     BSG_KSCrashReportWriter *writer = &concreteWriter;
     bsg_kscrw_i_prepareReportWriter(writer, &jsonContext);
 
     bsg_ksjsonbeginEncode(bsg_getJsonContext(writer), false,
-                          bsg_kscrw_i_addJSONData, &fd);
+                          bsg_kscrw_i_addJSONData, &file);
 
     writer->beginObject(writer, BSG_KSCrashField_Report);
     {
@@ -1511,11 +1533,19 @@ void bsg_kscrashreport_writeMinimalReport(
                                    &crashContext->crash);
         }
         writer->endContainer(writer);
+
+        BSG_Mach_Header_Info *image = bsg_mach_headers_get_self_image();
+        if (image) {
+            writer->beginArray(writer, BSG_KSCrashField_BinaryImages);
+            bsg_kscrw_i_writeBinaryImage(writer, NULL, image);
+            writer->endContainer(writer);
+        }
     }
     writer->endContainer(writer);
 
     bsg_ksjsonendEncode(bsg_getJsonContext(writer));
 
+    BSG_KSFileFlush(&file);
     close(fd);
 }
 
@@ -1532,14 +1562,18 @@ void bsg_kscrashreport_writeStandardReport(
 
     bsg_kscrw_i_updateStackOverflowStatus(crashContext);
 
+    BSG_KSFile file;
+    char buffer[4096];
+    BSG_KSFileInit(&file, fd, buffer, sizeof(buffer) / sizeof(*buffer));
+
     BSG_KSJSONEncodeContext jsonContext;
-    jsonContext.userData = &fd;
+    jsonContext.userData = &file;
     BSG_KSCrashReportWriter concreteWriter;
     BSG_KSCrashReportWriter *writer = &concreteWriter;
     bsg_kscrw_i_prepareReportWriter(writer, &jsonContext);
 
     bsg_ksjsonbeginEncode(bsg_getJsonContext(writer), false,
-                          bsg_kscrw_i_addJSONData, &fd);
+                          bsg_kscrw_i_addJSONData, &file);
 
     writer->beginObject(writer, BSG_KSCrashField_Report);
     {
@@ -1547,7 +1581,7 @@ void bsg_kscrashreport_writeStandardReport(
                 writer, BSG_KSCrashField_Report, BSG_KSCrashReportType_Standard,
                 crashContext->config.crashID, crashContext->config.processName);
 
-        bsg_kscrashreport_writeKSCrashFields(crashContext, writer);
+        bsg_kscrashreport_writeKSCrashFields(crashContext, writer, path);
 
         if (crashContext->config.onCrashNotify != NULL) {
             // NOTE: The deny list for BSG_KSCrashField_UserAtCrash children in BugsnagEvent.m
@@ -1563,10 +1597,14 @@ void bsg_kscrashreport_writeStandardReport(
 
     bsg_ksjsonendEncode(bsg_getJsonContext(writer));
 
+    BSG_KSFileFlush(&file);
     close(fd);
 }
 
-void bsg_kscrashreport_writeKSCrashFields(BSG_KSCrash_Context *crashContext, BSG_KSCrashReportWriter *writer) {
+void bsg_kscrashreport_writeKSCrashFields(BSG_KSCrash_Context *crashContext,
+                                          BSG_KSCrashReportWriter *writer,
+                                          const char *const path) {
+
     bsg_kscrw_i_writeProcessState(writer, BSG_KSCrashField_ProcessState);
 
     if (crashContext->config.systemInfoJSON != NULL) {
@@ -1579,6 +1617,7 @@ void bsg_kscrashreport_writeKSCrashFields(BSG_KSCrash_Context *crashContext, BSG
         bsg_kscrw_i_writeMemoryInfo(writer, BSG_KSCrashField_Memory);
         bsg_kscrw_i_writeAppStats(writer, BSG_KSCrashField_AppStats,
                 &crashContext->state);
+        bsg_kscrw_i_writeDiskInfo(writer, BSG_KSCrashField_Disk, path);
     }
     writer->endContainer(writer);
 
@@ -1595,12 +1634,14 @@ void bsg_kscrw_i_writeTraceInfo(const BSG_KSCrash_Context *crashContext,
                                 const BSG_KSCrashReportWriter *writer) {
     const BSG_KSCrash_SentryContext *crash = &crashContext->crash;
 
-    bsg_kscrw_i_writeBinaryImages(writer, BSG_KSCrashField_BinaryImages);
     writer->beginObject(writer, BSG_KSCrashField_Crash);
     {
+        bsg_kscrw_i_writeError(writer, BSG_KSCrashField_Error, crash);
         bsg_kscrw_i_writeAllThreads(writer, BSG_KSCrashField_Threads, crash,
                 crashContext->config.introspectionRules.enabled);
-        bsg_kscrw_i_writeError(writer, BSG_KSCrashField_Error,crash);
     }
     writer->endContainer(writer);
+
+    // Called *after* writeAllThreads() so that we know which images to include
+    bsg_kscrw_i_writeBinaryImages(writer, BSG_KSCrashField_BinaryImages);
 }

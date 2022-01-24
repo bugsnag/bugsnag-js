@@ -17,6 +17,7 @@
 
 #import <Foundation/Foundation.h>
 
+#import "BSGFeatureFlagStore.h"
 #import "BSGSerialization.h"
 #import "BSG_KSCrashReportFields.h"
 #import "BSG_RFC3339DateTool.h"
@@ -171,6 +172,7 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
         _metadata = metadata;
         _breadcrumbs = breadcrumbs;
         _errors = errors;
+        _featureFlagStore = [[BSGFeatureFlagStore alloc] init];
         _threads = threads;
         _session = [session copy];
     }
@@ -198,6 +200,8 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
         _errors = BSGDeserializeArrayOfObjects(json[BSGKeyExceptions], ^id _Nullable(NSDictionary * _Nonnull dict) {
             return [BugsnagError errorFromJson:dict];
         }) ?: @[];
+
+        _featureFlagStore = BSGFeatureFlagStoreFromJSON(json[BSGKeyFeatureFlags]);
 
         _groupingHash = BSGDeserializeString(json[BSGKeyGroupingHash]);
 
@@ -374,6 +378,7 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
     obj.enabledReleaseStages = BSGLoadConfigValue(event, BSGKeyEnabledReleaseStages);
     obj.releaseStage = BSGParseReleaseStage(event);
     obj.deviceAppHash = deviceAppHash;
+    obj.featureFlagStore = BSGFeatureFlagStoreFromJSON([event valueForKeyPath:@"user.state.client.featureFlags"]);
     obj.context = [event valueForKeyPath:@"user.state.client.context"];
     obj.customException = BSGParseCustomException(event, [errors[0].errorClass copy], [errors[0].errorMessage copy]);
     obj.error = error;
@@ -397,6 +402,7 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
     }
     _apiKey = BSGDeserializeString(json[BSGKeyApiKey]);
     _context = BSGDeserializeString(json[BSGKeyContext]);
+    _featureFlagStore = [[BSGFeatureFlagStore alloc] init];
     _groupingHash = BSGDeserializeString(json[BSGKeyGroupingHash]);
     _error = [self getMetadataFromSection:BSGKeyError];
 
@@ -565,6 +571,7 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
     event[BSGKeyApp] = [self.app toDict];
 
     event[BSGKeyContext] = [self context];
+    event[BSGKeyFeatureFlags] = BSGFeatureFlagStoreToJSON(self.featureFlagStore);
     event[BSGKeyGroupingHash] = self.groupingHash;
 
     event[BSGKeyUnhandled] = @(self.handledState.unhandled);
@@ -678,6 +685,28 @@ NSDictionary *BSGParseCustomException(NSDictionary *report,
 
 - (void)setUnhandled:(BOOL)unhandled {
     self.handledState.unhandled = unhandled;
+}
+
+// MARK: - <BugsnagFeatureFlagStore>
+
+- (void)addFeatureFlagWithName:(NSString *)name variant:(nullable NSString *)variant {
+    BSGFeatureFlagStoreAddFeatureFlag(self.featureFlagStore, name, variant);
+}
+
+- (void)addFeatureFlagWithName:(NSString *)name {
+    BSGFeatureFlagStoreAddFeatureFlag(self.featureFlagStore, name, nil);
+}
+
+- (void)addFeatureFlags:(NSArray<BugsnagFeatureFlag *> *)featureFlags {
+    BSGFeatureFlagStoreAddFeatureFlags(self.featureFlagStore, featureFlags);
+}
+
+- (void)clearFeatureFlagWithName:(NSString *)name {
+    BSGFeatureFlagStoreClear(self.featureFlagStore, name);
+}
+
+- (void)clearFeatureFlags {
+    BSGFeatureFlagStoreClear(self.featureFlagStore, nil);
 }
 
 // MARK: - <BugsnagMetadataStore>
