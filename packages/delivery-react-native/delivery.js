@@ -1,3 +1,5 @@
+const derecursify = require('@bugsnag/core/lib/derecursify')
+
 module.exports = (client, NativeClient) => ({
   sendEvent: (payload, cb = () => {}) => {
     const event = payload.events[0]
@@ -17,10 +19,10 @@ module.exports = (client, NativeClient) => ({
       app: event.app,
       device: event.device,
       threads: event.threads,
-      breadcrumbs: event.breadcrumbs,
+      breadcrumbs: derecursify(event.breadcrumbs),
       context: event.context,
       user: event._user,
-      metadata: event._metadata,
+      metadata: derecursify(event._metadata),
       groupingHash: event.groupingHash,
       apiKey: event.apiKey,
       nativeStack: nativeStack

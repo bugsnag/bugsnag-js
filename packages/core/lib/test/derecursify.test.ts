@@ -1,4 +1,4 @@
-import makeSafe from '../make-safe'
+import derecursift from '../derecursify'
 
 describe('delivery: react native makeSafe', () => {
   it('leaves simple types intact', () => {
@@ -25,7 +25,7 @@ describe('delivery: react native makeSafe', () => {
       _undefined: undefined
     }
 
-    const result = makeSafe(data)
+    const result = derecursift(data)
 
     /* eslint-disable-next-line @typescript-eslint/no-dynamic-delete */
     delete data[symbol] // we don't copy Symbol keys over
@@ -50,13 +50,13 @@ describe('delivery: react native makeSafe', () => {
         enumerable: true
       })
 
-      const result = makeSafe(object)
+      const result = derecursift(object)
       expect(result).toStrictEqual({ badProperty: '[Throws: failure]' })
     })
 
     it('when they are properties', () => {
       const value = { errorProp: new Error('something wrong') }
-      const result = makeSafe(value)
+      const result = derecursift(value)
       expect(result).toStrictEqual({ errorProp: { name: 'Error', message: 'something wrong' } })
     })
   })
@@ -66,7 +66,7 @@ describe('delivery: react native makeSafe', () => {
       const object: { self?: any } = {}
       object.self = object
 
-      const result = makeSafe(object)
+      const result = derecursift(object)
       expect(result).toStrictEqual({ self: '[Circular]' })
     })
 
@@ -77,7 +77,7 @@ describe('delivery: react native makeSafe', () => {
 
       outer.inner.parent = outer
 
-      const result = makeSafe(outer)
+      const result = derecursift(outer)
       expect(result).toStrictEqual({ inner: { parent: '[Circular]' } })
     })
 
@@ -85,7 +85,7 @@ describe('delivery: react native makeSafe', () => {
       const array: any[] = [{}, {}]
       array[0].circularRef = array
 
-      const result = makeSafe(array)
+      const result = derecursift(array)
       expect(result).toStrictEqual([{ circularRef: '[Circular]' }, {}])
     })
 
@@ -96,7 +96,7 @@ describe('delivery: react native makeSafe', () => {
 
       object.container = values
 
-      const result = makeSafe(values)
+      const result = derecursift(values)
       expect(result).toStrictEqual([{ container: '[Circular]' }])
     })
 
@@ -112,7 +112,7 @@ describe('delivery: react native makeSafe', () => {
         someObject: metaData
       }]
 
-      const result = makeSafe(array)
+      const result = derecursift(array)
       expect(result).toStrictEqual([
         {
           someObject: {
