@@ -11,7 +11,7 @@ module.exports = {
     // pre serialise config outside of the sync IPC call so we avoid unnecessary computation while the process is blocked
     let configStr
     const updateConfigStr = () => {
-      configStr = serializeConfigForRenderer(client._config, client._metadata, client.getUser(), client.getContext())
+      configStr = serializeConfigForRenderer(client._config, client._metadata, client._features, client.getUser(), client.getContext())
     }
     updateConfigStr()
 

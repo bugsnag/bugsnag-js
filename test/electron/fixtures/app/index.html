@@ -52,5 +52,12 @@
         <li><a href="#" id="page-title-clear" onclick="document.title = ''">Clear the page title</a></li>
         <li><a href="#" id="set-context">Manually call setContext() in renderer</a></li>
     </ul>
+    <ul>
+        <li><a href="#" id="main-process-clear-feature-flags" onclick="RunnerAPI.mainProcessClearFeatureFlags()">clear feature flags in an on error in main process</a></li>
+        <li><a href="#" id="renderer-clear-feature-flags">clear feature flags in an on error in renderer</a></li>
+
+        <li><a href="#" id="main-process-clear-feature-flags-now" onclick="RunnerAPI.mainProcessClearFeatureFlagsNow()">immediately clear feature flags in main process</a></li>
+        <li><a href="#" id="renderer-clear-feature-flags-now">immediately clear feature flags in renderer</a></li>
+    </ul>
 </body>
 </html>

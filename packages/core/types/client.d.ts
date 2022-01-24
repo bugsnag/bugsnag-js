@@ -5,7 +5,8 @@ import {
   OnErrorCallback,
   OnSessionCallback,
   OnBreadcrumbCallback,
-  User
+  User,
+  FeatureFlag
 } from './common'
 import Event from './event'
 import Session from './session'
@@ -38,6 +39,12 @@ declare class Client {
   public addMetadata(section: string, key: string, value: any): void;
   public getMetadata(section: string, key?: string): any;
   public clearMetadata(section: string, key?: string): void;
+
+  // feature flags
+  public addFeatureFlag(name: string, variant?: string | null): void
+  public addFeatureFlags(featureFlags: FeatureFlag[]): void
+  public clearFeatureFlag(name: string): void
+  public clearFeatureFlags(): void
 
   // context
   public getContext(): string | undefined;

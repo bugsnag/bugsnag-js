@@ -77,8 +77,11 @@
           "errorClass": "ReferenceError",
           "stacktrace": [
             {
-              "lineNumber": 315,
-              "file": "events.js"
+              "file": "./src/errors.js",
+              "lineNumber": 6,
+              "code": {
+                "1": "{TYPE:string}"
+              }
             }
           ],
           "type": "electronnodejs"

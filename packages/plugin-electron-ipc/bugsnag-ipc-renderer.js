@@ -13,8 +13,8 @@ const BugsnagIpcRenderer = {
   config: null,
   process: null,
 
-  update ({ context, user, metadata }) {
-    return safeInvoke(false, 'update', { context, user, metadata })
+  update ({ context, user, metadata, features }) {
+    return safeInvoke(false, 'update', { context, user, metadata, features })
   },
 
   getContext () {
@@ -35,6 +35,22 @@ const BugsnagIpcRenderer = {
 
   getMetadata (...args) {
     return safeInvoke(true, 'getMetadata', ...args)
+  },
+
+  addFeatureFlag (...args) {
+    return safeInvoke(false, 'addFeatureFlag', ...args)
+  },
+
+  addFeatureFlags (...args) {
+    return safeInvoke(false, 'addFeatureFlags', ...args)
+  },
+
+  clearFeatureFlag (...args) {
+    return safeInvoke(false, 'clearFeatureFlag', ...args)
+  },
+
+  clearFeatureFlags () {
+    return safeInvoke(false, 'clearFeatureFlags')
   },
 
   getUser () {

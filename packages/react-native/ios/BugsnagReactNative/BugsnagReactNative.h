@@ -31,6 +31,12 @@
 - (void)pauseSession;
 - (void)resumeSession;
 
+- (void)addFeatureFlags:(NSArray *)readableArray;
+- (void)addFeatureFlag:(NSString *)name
+           withVariant:(NSString *)variant;
+- (void)clearFeatureFlag:(NSString *)name;
+- (void)clearFeatureFlags;
+
 - (void)dispatch:(NSDictionary *)payload
          resolve:(RCTPromiseResolveBlock)resolve
           reject:(RCTPromiseRejectBlock)reject;

@@ -15,10 +15,15 @@ export default class App extends Component {
     super(props)
     this.state = {
       currentScenario: '',
+      scenarioMetaData: '',
       apiKey: '12312312312312312312312312312312',
       notifyEndpoint: 'http://bs-local.com:9339/notify',
       sessionsEndpoint: 'http://bs-local.com:9339/sessions'
     }
+  }
+
+  setScenarioMetaData = newScenarioMetaData => {
+    this.setState(() => ({ scenarioMetaData: newScenarioMetaData }))
   }
 
   getConfiguration = () => {
@@ -55,22 +60,26 @@ export default class App extends Component {
 
   runScenario = () => {
     console.log(`Running scenario: ${this.state.currentScenario}`)
+    console.log(` with MetaData: ${this.state.scenarioMetaData}`)
     const scenarioName = this.state.currentScenario
+    const scenarioMetaData = this.state.scenarioMetaData
     const configuration = this.getConfiguration()
     const jsConfig = {}
-    const scenario = new Scenarios[scenarioName](configuration, jsConfig)
+    const scenario = new Scenarios[scenarioName](configuration, jsConfig, scenarioMetaData)
     console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${JSON.stringify(jsConfig)} (js)`)
     scenario.run()
   }
 
   startBugsnag = () => {
     console.log(`Starting Bugsnag for scenario: ${this.state.currentScenario}`)
+    console.log(` with MetaData: ${this.state.scenarioMetaData}`)
     const scenarioName = this.state.currentScenario
+    const scenarioMetaData = this.state.scenarioMetaData
     const configuration = this.getConfiguration()
 
     const jsConfig = {}
     // eslint-disable-next-line no-new
-    new Scenarios[scenarioName](configuration, jsConfig)
+    new Scenarios[scenarioName](configuration, jsConfig, scenarioMetaData)
     console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${JSON.stringify(jsConfig)} (js)`)
 
     NativeModules.BugsnagTestInterface.startBugsnag(configuration).then(() => {
@@ -87,6 +96,10 @@ export default class App extends Component {
             placeholder='Scenario Name'
             accessibilityLabel='scenario_name'
             onChangeText={this.setScenario}/>
+          <TextInput style={styles.textInput}
+            placeholder='Scenario Metadata'
+            accessibilityLabel='scenario_metadata'
+            onChangeText={this.setScenarioMetaData}/>
 
           <Button style={styles.clickyButton}
             accessibilityLabel='start_bugsnag'
