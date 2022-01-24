@@ -16,6 +16,8 @@ describe('plugin: expo app', () => {
   it('should should use revisionId if defined (all platforms)', done => {
     const VERSION = '1.0.0'
     const REVISION_ID = '1.0.0-r132432'
+
+    jest.doMock('expo-application', () => ({}))
     jest.doMock('expo-constants', () => ({
       default: {
         platform: {},
@@ -39,13 +41,14 @@ describe('plugin: expo app', () => {
     c.notify(new Error('flip'))
   })
 
-  it('should should use versionCode if defined (android)', done => {
+  it('should record nativeVersionCode on android', done => {
     const VERSION_CODE = '1.0'
 
+    jest.doMock('expo-application', () => ({ nativeBuildVersion: VERSION_CODE }))
     jest.doMock('expo-constants', () => ({
       default: {
         platform: {
-          android: { versionCode: VERSION_CODE }
+          android: {}
         },
         manifest: { version: '1.0.0' },
         appOwnership: 'standalone'
@@ -68,13 +71,14 @@ describe('plugin: expo app', () => {
     c.notify(new Error('flip'))
   })
 
-  it('should should use bundleVersion if defined (ios)', done => {
+  it('should record nativeBundleVersion on ios', done => {
     const BUNDLE_VERSION = '1.0'
 
+    jest.doMock('expo-application', () => ({ nativeBuildVersion: BUNDLE_VERSION }))
     jest.doMock('expo-constants', () => ({
       default: {
         platform: {
-          ios: { buildNumber: BUNDLE_VERSION }
+          ios: {}
         },
         manifest: { version: '1.0.0' },
         appOwnership: 'standalone'
@@ -103,6 +107,7 @@ describe('plugin: expo app', () => {
       currentState: 'active'
     }
 
+    jest.doMock('expo-application', () => ({}))
     jest.doMock('expo-constants', () => ({
       default: {
         platform: {},
@@ -152,6 +157,7 @@ describe('plugin: expo app', () => {
   it('includes duration in event.app', done => {
     const start = Date.now()
 
+    jest.doMock('expo-application', () => ({}))
     jest.doMock('expo-constants', () => ({
       default: {
         platform: {},

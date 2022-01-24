@@ -1,3 +1,4 @@
+const Application = require('expo-application')
 const Constants = require('expo-constants').default
 const { AppState } = require('react-native')
 
@@ -16,12 +17,14 @@ module.exports = {
     })
 
     let nativeBundleVersion, nativeVersionCode
+
     if (Constants.appOwnership === 'standalone') {
-      if (Constants.platform.ios && Constants.platform.ios.buildNumber) {
-        nativeBundleVersion = Constants.platform.ios.buildNumber
+      if (Constants.platform.ios) {
+        nativeBundleVersion = Application.nativeBuildVersion
       }
-      if (Constants.platform.android && Constants.platform.android.versionCode) {
-        nativeVersionCode = Constants.platform.android.versionCode
+
+      if (Constants.platform.android) {
+        nativeVersionCode = Application.nativeBuildVersion
       }
     }
 

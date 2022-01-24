@@ -8,6 +8,7 @@
 
 #include "BSG_KSCrashNames.h"
 #include <mach/thread_info.h>
+#include <stdio.h>
 
 static const char* thread_state_names[] = {
     // Defined in mach/thread_info.h
