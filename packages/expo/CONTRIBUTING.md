@@ -9,6 +9,7 @@ When a new version of the Expo SDK is released, the dependencies we use must be 
 The following modules are currently used:
 
 - `@react-native-community/netinfo` (`@bugsnag/delivery-expo`, `@bugsnsag/plugin-react-native-connectivity-breadcrumbs`)
+- `expo-application` (`@bugsnag/plugin-expo-app`)
 - `expo-constants` (`@bugsnag/expo`, `@bugsnag/plugin-expo-app`, `@bugsnag/plugin-expo-device`)
 - `expo-crypto` (`@bugsnag/expo`, `@bugsnag/delivery-expo`)
 - `expo-device` (`@bugsnag/plugin-expo-device`)

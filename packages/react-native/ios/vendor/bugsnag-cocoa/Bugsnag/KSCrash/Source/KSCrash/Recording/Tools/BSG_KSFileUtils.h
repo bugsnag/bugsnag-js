@@ -35,6 +35,7 @@ extern "C" {
 #endif
 
 #include <stdbool.h>
+#include <stdint.h>
 #include <sys/types.h>
 
 /** Get the last entry in a file path. Assumes UNIX style separators.

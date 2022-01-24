@@ -39,7 +39,7 @@ RCT_EXPORT_MODULE();
                 };
             }
             break;
-            
+
         case BSGClientObserverClearFeatureFlag:
             if ([value isKindOfClass:[NSString class]]) {
                 return @{
@@ -52,7 +52,7 @@ RCT_EXPORT_MODULE();
                 };
             }
             break;
-            
+
         case BSGClientObserverUpdateContext:
             if ([value isKindOfClass:[NSString class]] || !value) {
                 return @{
@@ -61,7 +61,7 @@ RCT_EXPORT_MODULE();
                 };
             }
             break;
-            
+
         case BSGClientObserverUpdateMetadata:
             if ([value isKindOfClass:[BugsnagMetadata class]]) {
                 return @{
@@ -70,7 +70,7 @@ RCT_EXPORT_MODULE();
                 };
             }
             break;
-            
+
         case BSGClientObserverUpdateUser:
             if ([value isKindOfClass:[BugsnagUser class]]) {
                 return @{
@@ -80,7 +80,7 @@ RCT_EXPORT_MODULE();
             }
             break;
     }
-    
+
     return nil;
 }
 

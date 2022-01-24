@@ -1,5 +1,31 @@
 # Changelog
 
+## TBD
+
+### Changed
+
+- (expo): Avoid using deprecated constants [#1665](https://github.com/bugsnag/bugsnag-js/pull/1665)
+- (react-native) Update bugsnag-cocoa to v6.16.1
+  - New APIs to support forthcoming feature flag and experiment functionality. For more information, please see https://docs.bugsnag.com/product/features-experiments
+    [bugsnag-cocoa#1279](https://github.com/bugsnag/bugsnag-cocoa/pull/1279)
+  - Fix missing imports when building with `CLANG_ENABLE_MODULES=NO`
+    [bugsnag-cocoa#1284](https://github.com/bugsnag/bugsnag-cocoa/pull/1284)
+  - Fix missing user.id in OOM events with no active session.
+    [bugsnag-cocoa#1274](https://github.com/bugsnag/bugsnag-cocoa/pull/1274)
+  - Improve crash report writing performance and size on disk.
+    [bugsnag-cocoa#1273](https://github.com/bugsnag/bugsnag-cocoa/pull/1273)
+    [bugsnag-cocoa#1281](https://github.com/bugsnag/bugsnag-cocoa/pull/1281)
+  - Detect hangs during launch of UIScene based apps.
+    [bugsnag-cocoa#1263](https://github.com/bugsnag/bugsnag-cocoa/pull/1263)
+  - Stop persisting changes made by `OnSendError` callbacks if delivery needs to be retried.
+    [bugsnag-cocoa#1262](https://github.com/bugsnag/bugsnag-cocoa/pull/1262)
+  - Fix incorrect `device.freeDisk` in crash errors.
+    [bugsnag-cocoa#1256](https://github.com/bugsnag/bugsnag-cocoa/pull/1256)
+  - Fix some potential deadlocks that could occur if a crash handler crashes.
+    [bugsnag-cocoa#1252](https://github.com/bugsnag/bugsnag-cocoa/pull/1252)
+  - Fix missing imports when building with `CLANG_ENABLE_MODULES=NO`
+    [bugsnag-cocoa#1284](https://github.com/bugsnag/bugsnag-cocoa/pull/1284)
+
 ## 7.15.1 (2022-01-18)
 
 ### Changed

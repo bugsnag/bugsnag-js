@@ -97,6 +97,7 @@ static NSUserDefaults *userDefaults;
     [copy setMaxPersistedEvents:self.maxPersistedEvents];
     [copy setMaxPersistedSessions:self.maxPersistedSessions];
     [copy setMaxBreadcrumbs:self.maxBreadcrumbs];
+    [copy setNotifier:self.notifier];
     [copy setFeatureFlagStore:self.featureFlagStore];
     [copy setMetadata:self.metadata];
     [copy setEndpoints:self.endpoints];

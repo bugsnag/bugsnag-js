@@ -25,7 +25,7 @@ typedef struct bsg_mach_image {
 
     /// The mach_header or mach_header_64
     ///
-    /// This is also the memory address where the image has been loaded by dyld, including slide.
+    /// This is also the memory address where the __TEXT segment has been loaded by dyld, including slide.
     const struct mach_header *header;
 
     /// The vmaddr specified for the __TEXT segment
@@ -47,6 +47,9 @@ typedef struct bsg_mach_image {
 
     /// True if the image has been unloaded and should be ignored
     bool unloaded;
+    
+    /// True if the image is referenced by the current crash report.
+    bool inCrashReport;
 
     /// The next image in the linked list
     struct bsg_mach_image *next;
