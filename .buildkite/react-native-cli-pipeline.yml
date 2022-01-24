@@ -243,7 +243,7 @@ steps:
     env:
       DEBUG: true
       LANG: "en_US.UTF-8"
-      DEVELOPER_DIR: "/Applications/Xcode11.7.app"
+      DEVELOPER_DIR: "/Applications/Xcode11.app"
     artifact_paths: build/rn0_60.ipa
     commands:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_60
@@ -256,7 +256,7 @@ steps:
     env:
       DEBUG: true
       LANG: "en_US.UTF-8"
-      DEVELOPER_DIR: "/Applications/Xcode11.7.app"
+      DEVELOPER_DIR: "/Applications/Xcode11.app"
     artifact_paths: build/rn0_61.ipa
     commands:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_61
@@ -269,7 +269,7 @@ steps:
     env:
       DEBUG: true
       LANG: "en_US.UTF-8"
-      DEVELOPER_DIR: "/Applications/Xcode11.7.app"
+      DEVELOPER_DIR: "/Applications/Xcode11.app"
     artifact_paths: build/rn0_62.ipa
     commands:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_62
@@ -282,7 +282,7 @@ steps:
     env:
       DEBUG: true
       LANG: "en_US.UTF-8"
-      DEVELOPER_DIR: "/Applications/Xcode11.7.app"
+      DEVELOPER_DIR: "/Applications/Xcode11.app"
     artifact_paths: build/rn0_63.ipa
     commands:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_63
@@ -295,6 +295,7 @@ steps:
     env:
       DEBUG: true
       LANG: "en_US.UTF-8"
+      DEVELOPER_DIR: "/Applications/Xcode12.app"
     artifact_paths: build/rn0_63_expo_ejected.ipa
     commands:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_63_expo_ejected
@@ -307,6 +308,7 @@ steps:
     env:
       DEBUG: true
       LANG: "en_US.UTF-8"
+      DEVELOPER_DIR: "/Applications/Xcode12.app"
     artifact_paths: build/rn0_64.ipa
     commands:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_64
@@ -319,6 +321,7 @@ steps:
     env:
       DEBUG: true
       LANG: "en_US.UTF-8"
+      DEVELOPER_DIR: "/Applications/Xcode12.app"
     artifact_paths: build/rn0_64_hermes.ipa
     commands:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_64_hermes

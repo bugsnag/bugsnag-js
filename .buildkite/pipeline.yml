@@ -7,6 +7,8 @@ steps:
     timeout_in_minutes: 20
     agents:
       queue: opensource-mac-cocoa-11
+    env:
+      DEVELOPER_DIR: "/Applications/Xcode12.app"
     command: scripts/license_finder.sh
 
   #
