@@ -2,13 +2,7 @@
 
 #import "Bugsnag+Private.h"
 #import "BugsnagClient+Private.h"
-#import "BugsnagStateEvent.h"
-
-typedef void (^BugsnagObserverBlock)(BugsnagStateEvent *_Nonnull event);
-
-@interface BugsnagReactNativeEmitter ()
-@property BugsnagObserverBlock observerBlock;
-@end
+#import "BugsnagUser+Private.h"
 
 @implementation BugsnagReactNativeEmitter
 
@@ -20,40 +14,74 @@ RCT_EXPORT_MODULE();
 
 - (void)startObserving {
     __weak __typeof__(self) weakSelf = self;
-    self.observerBlock = ^(BugsnagStateEvent * _Nonnull event) {
-        if (weakSelf) {
-            NSDictionary *data = [weakSelf serializeStateChangeData:event];
+    Bugsnag.client.observer = ^(BSGClientObserverEvent event, id value) {
+        NSDictionary *data = [weakSelf serializeClientObserverEvent:event withValue:value];
+        if (data) {
             [weakSelf sendEventWithName:@"bugsnag::sync" body:data];
         }
     };
-    [[Bugsnag client] addObserverWithBlock:self.observerBlock];
 }
 
 - (void)stopObserving {
-    [[Bugsnag client] removeObserverWithBlock:self.observerBlock];
+    Bugsnag.client.observer = nil;
 }
 
-- (NSDictionary *)serializeStateChangeData:(BugsnagStateEvent *)event {
-    id obj;
+- (NSDictionary *)serializeClientObserverEvent:(BSGClientObserverEvent)event withValue:(id)value {
+    switch (event) {
+        case BSGClientObserverAddFeatureFlag:
+            if ([value isKindOfClass:[BugsnagFeatureFlag class]]) {
+                return @{
+                    @"type": @"AddFeatureFlag",
+                    @"data": [NSDictionary dictionaryWithObjectsAndKeys:
+                              ((BugsnagFeatureFlag *)value).name, @"name",
+                              ((BugsnagFeatureFlag *)value).variant, @"variant",
+                              nil]
+                };
+            }
+            break;
 
-    if ([@"ContextUpdate" isEqualToString:event.type]) {
-        obj = event.data;
-    } else if ([@"UserUpdate" isEqualToString:event.type]) {
-        obj = event.data;
-    } else if ([@"MetadataUpdate" isEqualToString:event.type]) {
-        BugsnagMetadata *metadata = event.data;
-        obj = [metadata toDictionary];
+        case BSGClientObserverClearFeatureFlag:
+            if ([value isKindOfClass:[NSString class]]) {
+                return @{
+                    @"type": @"ClearFeatureFlag",
+                    @"data": @{@"name": value}
+                };
+            } else if (!value) {
+                return @{
+                    @"type": @"ClearFeatureFlag"
+                };
+            }
+            break;
+
+        case BSGClientObserverUpdateContext:
+            if ([value isKindOfClass:[NSString class]] || !value) {
+                return @{
+                    @"type": @"ContextUpdate",
+                    @"data": value ?: [NSNull null]
+                };
+            }
+            break;
+
+        case BSGClientObserverUpdateMetadata:
+            if ([value isKindOfClass:[BugsnagMetadata class]]) {
+                return @{
+                    @"type": @"MetadataUpdate",
+                    @"data": [((BugsnagMetadata *)value) toDictionary]
+                };
+            }
+            break;
+
+        case BSGClientObserverUpdateUser:
+            if ([value isKindOfClass:[BugsnagUser class]]) {
+                return @{
+                    @"type": @"UserUpdate",
+                    @"data": [((BugsnagUser *)value) toJson]
+                };
+            }
+            break;
     }
 
-    NSMutableDictionary *dict = [NSMutableDictionary new];
-    dict[@"type"] = event.type;
-
-    if (obj != nil) {
-        dict[@"data"] = obj;
-    } else {
-        dict[@"data"] = [NSNull null];
-    }
-    return dict;
+    return nil;
 }
 
 @end

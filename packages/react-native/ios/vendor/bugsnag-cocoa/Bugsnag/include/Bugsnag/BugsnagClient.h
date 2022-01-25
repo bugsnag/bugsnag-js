@@ -28,6 +28,7 @@
 
 #import <Bugsnag/BugsnagConfiguration.h>
 #import <Bugsnag/BugsnagLastRunInfo.h>
+#import <Bugsnag/BugsnagFeatureFlagStore.h>
 #import <Bugsnag/BugsnagMetadata.h>
 #import <Bugsnag/BugsnagMetadataStore.h>
 
@@ -38,7 +39,7 @@
  * 
  * Use the static access provided by the Bugsnag class instead.
  */
-@interface BugsnagClient : NSObject<BugsnagMetadataStore, BSGBreadcrumbSink>
+@interface BugsnagClient : NSObject<BSGBreadcrumbSink, BugsnagFeatureFlagStore, BugsnagMetadataStore>
 
 /**
  * Initializes the client with the provided configuration.

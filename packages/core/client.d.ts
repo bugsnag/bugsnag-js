@@ -50,6 +50,7 @@ export default class ClientWithInternals<T extends Config = Config> extends Clie
   _user: User
 
   _metadata: { [key: string]: any }
+  _features: { [key: string]: string | null }
 
   startSession(): ClientWithInternals
   resumeSession(): ClientWithInternals

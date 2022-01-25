@@ -13,6 +13,7 @@ import ManualBreadcrumbs from './app/manual_breadcrumbs'
 import DeviceFeature from './app/device'
 import Sessions from './app/sessions'
 import NetworkBreadcrumbs from './app/network_breadcrumbs'
+import FeatureFlags from './app/feature_flags'
 import * as ScreenOrientation from 'expo-screen-orientation';
 
 const SCENARIOS = [
@@ -28,7 +29,8 @@ const SCENARIOS = [
   'manualBreadcrumbs',
   'deviceFeature',
   'sessions',
-  'networkBreadcrumbs'
+  'networkBreadcrumbs',
+  'featureFlags'
 ]
 
 export default class App extends React.Component {
@@ -43,31 +45,33 @@ export default class App extends React.Component {
   renderScenario() {
     switch (this.state.scenario) {
       case 'handled':
-        return (<Handled></Handled>)
+        return <Handled />
       case 'unhandled':
-        return (<Unhandled></Unhandled>)
+        return <Unhandled />
       case 'errorBoundary':
-        return (<ErrorBoundary></ErrorBoundary>)
+        return <ErrorBoundary />
       case 'appFeature':
-        return (<AppFeature></AppFeature>)
+        return <AppFeature />
       case 'appStateBreadcrumbs':
-        return (<AppStateBreadcrumbs></AppStateBreadcrumbs>)
+        return <AppStateBreadcrumbs />
       case 'userFeature':
-        return (<UserFeature></UserFeature>)
+        return <UserFeature />
       case 'consoleBreadcrumbs':
-        return (<ConsoleBreadcrumbs></ConsoleBreadcrumbs>)
+        return <ConsoleBreadcrumbs />
       case 'ignoreEvent':
-        return (<IgnoreEvent></IgnoreEvent>)
+        return <IgnoreEvent />
       case 'metadataFeature':
-        return (<MetadataFeature></MetadataFeature>)
+        return <MetadataFeature />
       case 'manualBreadcrumbs':
-        return (<ManualBreadcrumbs></ManualBreadcrumbs>)
+        return <ManualBreadcrumbs />
       case 'deviceFeature':
-        return (<DeviceFeature></DeviceFeature>)
+        return <DeviceFeature />
       case 'sessions':
-        return (<Sessions></Sessions>)
+        return <Sessions />
       case 'networkBreadcrumbs':
-        return (<NetworkBreadcrumbs></NetworkBreadcrumbs>)
+        return <NetworkBreadcrumbs />
+      case 'featureFlags':
+        return <FeatureFlags />
     }
     return this.renderScenarioOptions()
   }

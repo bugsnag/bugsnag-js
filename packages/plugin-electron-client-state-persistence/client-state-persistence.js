@@ -1,3 +1,5 @@
+const featureFlagDelegate = require('@bugsnag/core/lib/feature-flag-delegate')
+
 module.exports = {
   NativeClient: require('bindings')('bugsnag_pecsp_bindings'),
   plugin: (NativeClient) => ({
@@ -39,6 +41,16 @@ module.exports = {
       clientStateManager.emitter.on('MetadataReplace', (metadata) => {
         try {
           NativeClient.updateMetadata(metadata)
+        } catch (e) {
+          client._logger.error(e)
+        }
+      })
+
+      clientStateManager.emitter.on('FeatureFlagUpdate', features => {
+        try {
+          // convert the feature flags to the Event API format, so they are
+          // ready to send immediately
+          NativeClient.updateFeatureFlags(featureFlagDelegate.toEventApi(features))
         } catch (e) {
           client._logger.error(e)
         }

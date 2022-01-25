@@ -89,6 +89,9 @@ static bool throw_error_from_status(napi_env env, BECSP_STATUS status) {
   case BECSP_STATUS_EXPECTED_JSON_OBJECT:
     napi_throw_type_error(env, code, "Wrong argument type, expected object");
     break;
+  case BECSP_STATUS_EXPECTED_JSON_ARRAY:
+    napi_throw_type_error(env, code, "Wrong argument type, expected array");
+    break;
   case BECSP_STATUS_NULL_PARAM:
     napi_throw_type_error(env, code, "Expected argument to be non-null");
     break;
@@ -317,6 +320,41 @@ static napi_value UpdateMetadata(napi_env env, napi_callback_info info) {
   return NULL;
 }
 
+static napi_value UpdateFeatureFlags(napi_env env, napi_callback_info info) {
+  size_t argc = 1;
+  napi_value args[1];
+  napi_status status = napi_get_cb_info(env, info, &argc, args, NULL, NULL);
+  assert(status == napi_ok);
+
+  if (argc < 1) {
+    napi_throw_type_error(
+      env,
+      NULL,
+      "Wrong number of arguments, expected 1"
+    );
+
+    return NULL;
+  }
+
+  bool is_array;
+  status = napi_is_array(env, args[0], &is_array);
+  assert(status == napi_ok);
+
+  if (is_array) {
+    char *feature_flags = read_string_value(env, json_stringify(env, args[0]), true);
+    throw_error_from_status(env, becsp_set_feature_flags(feature_flags));
+    free(feature_flags);
+  } else {
+    napi_throw_type_error(
+      env,
+      NULL,
+      "Wrong argument type, expected array"
+    );
+  }
+
+  return NULL;
+}
+
 static napi_value SetApp(napi_env env, napi_callback_info info) {
   size_t argc = 1;
   napi_value args[1];
@@ -422,6 +460,10 @@ napi_value Init(napi_env env, napi_value exports) {
   assert(status == napi_ok);
 
   desc = DECLARE_NAPI_METHOD("updateMetadata", UpdateMetadata);
+  status = napi_define_properties(env, exports, 1, &desc);
+  assert(status == napi_ok);
+
+  desc = DECLARE_NAPI_METHOD("updateFeatureFlags", UpdateFeatureFlags);
   status = napi_define_properties(env, exports, 1, &desc);
   assert(status == napi_ok);
 

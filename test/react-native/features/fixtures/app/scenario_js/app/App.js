@@ -22,6 +22,10 @@ export default class App extends Component {
     }
   }
 
+  setScenarioMetaData = newScenarioMetaData => {
+    this.setState(() => ({ scenarioMetaData: newScenarioMetaData }))
+  }
+
   getConfiguration = () => {
     return {
       apiKey: this.state.apiKey,
@@ -35,10 +39,6 @@ export default class App extends Component {
 
   setScenario = newScenario => {
     this.setState(() => ({ currentScenario: newScenario }))
-  }
-
-  setScenarioMetaData = newScenarioMetaData => {
-    this.setState(() => ({ scenarioMetaData: newScenarioMetaData }))
   }
 
   setApiKey = newApiKey => {
@@ -60,26 +60,26 @@ export default class App extends Component {
 
   runScenario = () => {
     console.log(`Running scenario: ${this.state.currentScenario}`)
-    console.log(`  with MetaData: ${this.state.scenarioMetaData}`)
+    console.log(` with MetaData: ${this.state.scenarioMetaData}`)
     const scenarioName = this.state.currentScenario
     const scenarioMetaData = this.state.scenarioMetaData
     const configuration = this.getConfiguration()
     const jsConfig = {}
-    const scenario = new Scenarios[scenarioName](configuration, scenarioMetaData, jsConfig)
+    const scenario = new Scenarios[scenarioName](configuration, jsConfig, scenarioMetaData)
     console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${JSON.stringify(jsConfig)} (js)`)
     scenario.run()
   }
 
   startBugsnag = () => {
     console.log(`Starting Bugsnag for scenario: ${this.state.currentScenario}`)
-    console.log(`  with MetaData: ${this.state.scenarioMetaData}`)
+    console.log(` with MetaData: ${this.state.scenarioMetaData}`)
     const scenarioName = this.state.currentScenario
     const scenarioMetaData = this.state.scenarioMetaData
     const configuration = this.getConfiguration()
 
     const jsConfig = {}
     // eslint-disable-next-line no-new
-    new Scenarios[scenarioName](configuration, scenarioMetaData, jsConfig)
+    new Scenarios[scenarioName](configuration, jsConfig, scenarioMetaData)
     console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${JSON.stringify(jsConfig)} (js)`)
 
     NativeModules.BugsnagTestInterface.startBugsnag(configuration).then(() => {
