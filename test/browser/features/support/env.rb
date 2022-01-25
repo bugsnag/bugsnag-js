@@ -1,10 +1,20 @@
 require 'yaml'
 
-def get_test_url path
+def get_test_url(path)
   host = ENV['HOST']
   notify = "http://#{ENV['API_HOST']}:#{Maze.config.port}/notify"
   sessions = "http://#{ENV['API_HOST']}:#{Maze.config.port}/sessions"
-  "http://#{host}:#{FIXTURES_SERVER_PORT}#{path}?NOTIFY=#{notify}&SESSIONS=#{sessions}&API_KEY=#{$api_key}"
+  config_query_string = "NOTIFY=#{notify}&SESSIONS=#{sessions}&API_KEY=#{$api_key}"
+
+  uri = URI("http://#{host}:#{FIXTURES_SERVER_PORT}#{path}")
+
+  if uri.query
+    uri.query += "&#{config_query_string}"
+  else
+    uri.query = config_query_string
+  end
+
+  uri.to_s
 end
 
 def get_error_message id

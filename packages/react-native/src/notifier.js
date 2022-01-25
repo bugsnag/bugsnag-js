@@ -80,6 +80,10 @@ const _createClient = (opts, jsOpts) => {
     bugsnag.setContext(opts.context)
   }
 
+  if (opts.featureFlags && opts.featureFlags !== opts._originalValues.featureFlags) {
+    bugsnag.addFeatureFlags(opts.featureFlags)
+  }
+
   if (opts.metadata && opts.metadata !== opts._originalValues.metadata) {
     Object.keys(opts.metadata).forEach(k => bugsnag.addMetadata(k, opts.metadata[k]))
   }

@@ -56,14 +56,88 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
     client.clearMetadata('section', 'key')
   })
 
+  it('should emit events when a feature flag is added', done => {
+    const client = new Client({ apiKey: '123' }, {}, [stateManager], Notifier)
+    const { emitter } = client.getPlugin('clientStateManager')
+
+    emitter.on('FeatureFlagUpdate', payload => {
+      expect(payload).toStrictEqual({
+        'flag name': 'variant name'
+      })
+
+      done()
+    })
+
+    client.addFeatureFlag('flag name', 'variant name')
+  })
+
+  it('should emit events when a feature flag is cleared', done => {
+    const client = new Client({ apiKey: '123' }, {}, [stateManager], Notifier)
+    const { emitter } = client.getPlugin('clientStateManager')
+
+    client.addFeatureFlag('flag name 1', 'variant name 1')
+    client.addFeatureFlag('flag name 2', 'variant name 2')
+
+    emitter.on('FeatureFlagUpdate', payload => {
+      expect(payload).toStrictEqual({
+        'flag name 2': 'variant name 2'
+      })
+
+      done()
+    })
+
+    client.clearFeatureFlag('flag name 1')
+  })
+
+  it('should emit events when feature flags are added', done => {
+    const client = new Client({ apiKey: '123' }, {}, [stateManager], Notifier)
+    const { emitter } = client.getPlugin('clientStateManager')
+
+    emitter.on('FeatureFlagUpdate', payload => {
+      expect(payload).toStrictEqual({
+        'flag name': 'variant name',
+        'another flag name': 'another variant name',
+        'etc etc': 'etc'
+      })
+
+      done()
+    })
+
+    client.addFeatureFlags([
+      { name: 'flag name', variant: 'variant name' },
+      { name: 'another flag name', variant: 'another variant name' },
+      { name: 'etc etc', variant: 'etc' }
+    ])
+  })
+
+  it('should emit events when feature flags are cleared', done => {
+    const client = new Client({ apiKey: '123' }, {}, [stateManager], Notifier)
+    const { emitter } = client.getPlugin('clientStateManager')
+
+    client.addFeatureFlags([
+      { name: 'flag name', variant: 'variant name' },
+      { name: 'another flag name', variant: 'another variant name' },
+      { name: 'etc etc', variant: 'etc' }
+    ])
+
+    emitter.on('FeatureFlagUpdate', payload => {
+      expect(payload).toStrictEqual({})
+      done()
+    })
+
+    client.clearFeatureFlags()
+  })
+
   it('should support bulk updates (all values)', () => {
     const client = new Client({ apiKey: '123' }, {}, [stateManager], Notifier)
     const { emitter, bulkUpdate } = client.getPlugin('clientStateManager')
 
     const metadataCb = jest.fn()
+    const featuresCb = jest.fn()
     const contextCb = jest.fn()
     const userCb = jest.fn()
 
+    emitter.on('FeatureFlagUpdate', featuresCb)
     emitter.on('MetadataReplace', metadataCb)
     emitter.on('ContextUpdate', contextCb)
     emitter.on('UserUpdate', userCb)
@@ -76,7 +150,16 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
       context: 'ctx',
       metadata: {
         section: { key: 'value' }
+      },
+      features: {
+        'flag name 1': 'variant name 1',
+        'flag name 2': 'variant name 2'
       }
+    })
+
+    expect(featuresCb).toHaveBeenCalledWith({
+      'flag name 1': 'variant name 1',
+      'flag name 2': 'variant name 2'
     })
 
     expect(metadataCb).toHaveBeenCalledWith({ section: { key: 'value' } })

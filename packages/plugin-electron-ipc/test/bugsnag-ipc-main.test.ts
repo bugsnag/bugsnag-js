@@ -105,6 +105,62 @@ describe('BugsnagIpcMain', () => {
       expect(event.returnValue).toEqual('X')
     })
 
+    it('works for adding a single feature flag', () => {
+      const client = new Client({ apiKey: '123' }, {}, [mockClientStateManagerPlugin], Notifier)
+      client.addFeatureFlag = jest.fn()
+
+      const bugsnagIpcMain = new BugsnagIpcMain(client)
+      const stubWebContents = { /* this would be a WebContents instance */ }
+
+      bugsnagIpcMain.handle({ sender: stubWebContents }, 'addFeatureFlag', JSON.stringify('flag name'), JSON.stringify('variant value'))
+
+      expect(client.addFeatureFlag).toHaveBeenCalledWith('flag name', 'variant value')
+    })
+
+    it('works for adding multiple feature flags', () => {
+      const client = new Client({ apiKey: '123' }, {}, [mockClientStateManagerPlugin], Notifier)
+      client.addFeatureFlags = jest.fn()
+
+      const bugsnagIpcMain = new BugsnagIpcMain(client)
+      const stubWebContents = { /* this would be a WebContents instance */ }
+
+      bugsnagIpcMain.handle(
+        { sender: stubWebContents },
+        'addFeatureFlags',
+        JSON.stringify([{ name: 'abc', variant: '123' }, { name: 'xyz', variant: '987' }, { name: 'ooo' }])
+      )
+
+      expect(client.addFeatureFlags).toHaveBeenCalledWith([
+        { name: 'abc', variant: '123' },
+        { name: 'xyz', variant: '987' },
+        { name: 'ooo' }
+      ])
+    })
+
+    it('works for clearing a single feature flag', () => {
+      const client = new Client({ apiKey: '123' }, {}, [mockClientStateManagerPlugin], Notifier)
+      client.clearFeatureFlag = jest.fn()
+
+      const bugsnagIpcMain = new BugsnagIpcMain(client)
+      const stubWebContents = { /* this would be a WebContents instance */ }
+
+      bugsnagIpcMain.handle({ sender: stubWebContents }, 'clearFeatureFlag', JSON.stringify('flag name'))
+
+      expect(client.clearFeatureFlag).toHaveBeenCalledWith('flag name')
+    })
+
+    it('works for clearing all feature flags', () => {
+      const client = new Client({ apiKey: '123' }, {}, [mockClientStateManagerPlugin], Notifier)
+      client.clearFeatureFlags = jest.fn()
+
+      const bugsnagIpcMain = new BugsnagIpcMain(client)
+      const stubWebContents = { /* this would be a WebContents instance */ }
+
+      bugsnagIpcMain.handle({ sender: stubWebContents }, 'clearFeatureFlags')
+
+      expect(client.clearFeatureFlags).toHaveBeenCalled()
+    })
+
     it('works for managing sessions', () => {
       const client = new Client({ apiKey: '123' }, {}, [mockClientStateManagerPlugin], Notifier)
       client._sessionDelegate = { startSession: jest.fn(), resumeSession: jest.fn(), pauseSession: jest.fn() }
@@ -140,19 +196,27 @@ describe('BugsnagIpcMain', () => {
       const client = new Client({ apiKey: '123' }, {}, [{
         name: 'clientStateManager',
         load: () => ({
-          bulkUpdate: ({ context, user, metadata }: { context?: string, user?: User, metadata: Record<string, unknown>}) => {
+          bulkUpdate: ({ context, user, metadata, features }: { context?: string, user?: User, metadata: Record<string, unknown>}) => {
             expect(context).toEqual('current context')
             expect(user).toEqual({ name: 'merrich' })
             expect(metadata).toEqual({ electron: { procs: 3 } })
+            expect(features).toEqual({ flag1: 'variant1', flag2: null })
             done()
           }
         })
       }], Notifier)
+
       const bugsnagIpcMain = new BugsnagIpcMain(client)
+
       bugsnagIpcMain.handle(
         {},
         'update',
-        JSON.stringify({ context: 'current context', user: { name: 'merrich' }, metadata: { electron: { procs: 3 } } })
+        JSON.stringify({
+          context: 'current context',
+          user: { name: 'merrich' },
+          metadata: { electron: { procs: 3 } },
+          features: { flag1: 'variant1', flag2: null }
+        })
       )
     })
 
@@ -209,23 +273,46 @@ describe('BugsnagIpcMain', () => {
       client.leaveBreadcrumb('hi')
       client.setContext('ctx')
       client.setUser('123', 'jim@jim.com', 'Jim')
+      client.addFeatureFlags([
+        { name: 'flag1' },
+        { name: 'flag2', variant: null },
+        { name: 'flag3', variant: 1234 },
+        { name: 'flag4', variant: 'abc' }
+      ])
 
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       const payloadInfo = await bugsnagIpcMain.getPayloadInfo()
 
       expect(payloadInfo.metadata.nonInternal).toBeUndefined()
       expect(nonInternalCb).not.toHaveBeenCalled()
+      expect(payloadInfo.breadcrumbs).toHaveLength(1)
 
-      expect(payloadInfo.device).toEqual({ id: '123' })
-      expect(payloadInfo.metadata.device).toEqual({ isOutdated: true })
-
-      expect(payloadInfo.app).toEqual({ releaseStage: 'production', name: 'testApp', type: 'test' })
-      expect(payloadInfo.metadata.app).toEqual({ testingMode: 'unit' })
-
-      expect(payloadInfo.breadcrumbs.length).toBe(1)
-      expect(payloadInfo.context).toBe('ctx')
-      expect(payloadInfo.user).toEqual({ id: '123', email: 'jim@jim.com', name: 'Jim' })
-      expect(payloadInfo.shouldSend).toBeUndefined()
+      expect(payloadInfo).toStrictEqual({
+        app: {
+          releaseStage: 'production',
+          name: 'testApp',
+          type: 'test',
+          version: undefined
+        },
+        breadcrumbs: client._breadcrumbs,
+        context: 'ctx',
+        device: { id: '123' },
+        metadata: {
+          app: { testingMode: 'unit' },
+          device: { isOutdated: true }
+        },
+        features: {
+          flag1: null,
+          flag2: null,
+          flag3: '1234',
+          flag4: 'abc'
+        },
+        user: {
+          id: '123',
+          email: 'jim@jim.com',
+          name: 'Jim'
+        }
+      })
     })
 
     it('should return shouldSend=false when a callback returns false', async () => {

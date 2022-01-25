@@ -20,6 +20,11 @@ module.exports = (BugsnagIpcRenderer = window.__bugsnag_ipc__) => ({
     client.setContext = safeExec(client, BugsnagIpcRenderer, 'setContext')
     client.addMetadata = safeExec(client, BugsnagIpcRenderer, 'addMetadata')
     client.clearMetadata = safeExec(client, BugsnagIpcRenderer, 'clearMetadata')
+    client.addFeatureFlag = safeExec(client, BugsnagIpcRenderer, 'addFeatureFlag')
+    client.addFeatureFlags = safeExec(client, BugsnagIpcRenderer, 'addFeatureFlags')
+    client.clearFeatureFlag = safeExec(client, BugsnagIpcRenderer, 'clearFeatureFlag')
+    client.clearFeatureFlags = safeExec(client, BugsnagIpcRenderer, 'clearFeatureFlags')
+
     client.startSession = () => {
       safeExec(client, BugsnagIpcRenderer, 'startSession')()
       return client
@@ -33,7 +38,7 @@ module.exports = (BugsnagIpcRenderer = window.__bugsnag_ipc__) => ({
     // sync any client state that was set in the renderer config
 
     try {
-      const updates = { metadata: client._metadata }
+      const updates = { metadata: client._metadata, features: client._features }
       const user = client.getUser()
       const context = client.getContext()
       if (context && context.length > 0) {

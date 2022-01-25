@@ -9,10 +9,14 @@ Bugsnag.start({
     notify: process.env.BUGSNAG_NOTIFY_ENDPOINT,
     sessions: process.env.BUGSNAG_SESSIONS_ENDPOINT
   },
+  featureFlags: [
+    { name: 'from config 1', variant: '1234' },
+    { name: 'from config 2' },
+    { name: 'from config 3', variant: 'SHOULD BE REMOVED' }
+  ],
   autoTrackSessions: false,
   plugins: [bugsnagExpress]
 })
-
 
 var middleware = Bugsnag.getPlugin('express')
 
@@ -73,6 +77,35 @@ app.get('/handled', function (req, res, next) {
 
 app.post('/bodytest', bodyParser.urlencoded(), function (req, res, next) {
   throw new Error('request body')
+})
+
+app.post('/features/unhandled', bodyParser.urlencoded(), function (req, res, next) {
+  // the request body is an object of feature flag name -> variant
+  const featureFlags = Object.keys(req.body).map(name => ({ name, variant: req.body[name] }))
+
+  req.bugsnag.addFeatureFlags(featureFlags)
+  req.bugsnag.clearFeatureFlag('from config 3')
+
+  if (req.body.hasOwnProperty('clearAllFeatureFlags')) {
+    req.bugsnag.clearFeatureFlags()
+  }
+
+  throw new Error('oh no')
+})
+
+app.post('/features/handled', bodyParser.urlencoded(), function (req, res, next) {
+  // the request body is an object of feature flag name -> variant
+  const featureFlags = Object.keys(req.body).map(name => ({ name, variant: req.body[name] }))
+
+  req.bugsnag.addFeatureFlags(featureFlags)
+  req.bugsnag.clearFeatureFlag('from config 3')
+
+  if (req.body.hasOwnProperty('clearAllFeatureFlags')) {
+    req.bugsnag.clearFeatureFlags()
+  }
+
+  req.bugsnag.notify(new Error('oh no'))
+  res.end('OK')
 })
 
 app.use(middleware.errorHandler)

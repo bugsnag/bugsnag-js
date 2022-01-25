@@ -9,6 +9,7 @@ const reduce = require('./lib/es-utils/reduce')
 const keys = require('./lib/es-utils/keys')
 const assign = require('./lib/es-utils/assign')
 const runCallbacks = require('./lib/callback-runner')
+const featureFlagDelegate = require('./lib/feature-flag-delegate')
 const metadataDelegate = require('./lib/metadata-delegate')
 const runSyncCallbacks = require('./lib/sync-callback-runner')
 const BREADCRUMB_TYPES = require('./lib/breadcrumb-types')
@@ -35,6 +36,7 @@ class Client {
     this._breadcrumbs = []
     this._session = null
     this._metadata = {}
+    this._features = {}
     this._context = undefined
     this._user = {}
 
@@ -87,6 +89,22 @@ class Client {
     return metadataDelegate.clear(this._metadata, section, key)
   }
 
+  addFeatureFlag (name, variant = null) {
+    featureFlagDelegate.add(this._features, name, variant)
+  }
+
+  addFeatureFlags (featureFlags) {
+    featureFlagDelegate.merge(this._features, featureFlags)
+  }
+
+  clearFeatureFlag (name) {
+    delete this._features[name]
+  }
+
+  clearFeatureFlags () {
+    this._features = {}
+  }
+
   getContext () {
     return this._context
   }
@@ -133,6 +151,7 @@ class Client {
 
     // update and elevate some options
     this._metadata = assign({}, config.metadata)
+    featureFlagDelegate.merge(this._features, config.featureFlags)
     this._user = assign({}, config.user)
     this._context = config.context
     if (config.logger) this._logger = config.logger
@@ -276,6 +295,7 @@ class Client {
     })
     event.context = event.context || this._context
     event._metadata = assign({}, event._metadata, this._metadata)
+    event._features = assign({}, event._features, this._features)
     event._user = assign({}, event._user, this._user)
     event.breadcrumbs = this._breadcrumbs.slice()
 

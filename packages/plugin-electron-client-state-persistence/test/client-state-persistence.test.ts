@@ -135,6 +135,88 @@ describe('plugin: electron client sync', () => {
     }))
   })
 
+  it('updates feature flags', () => {
+    const updateFeatureFlags = jest.fn()
+
+    const client = new Client({
+      apiKey: 'api_key',
+      plugins: [
+        stateManager,
+        plugin({ updateFeatureFlags })
+      ]
+    })
+
+    client.addFeatureFlag('a', 'b')
+    client.addFeatureFlags([{ name: 'c', variant: null }, { name: 'd', variant: 'e' }])
+
+    expect(client._features).toStrictEqual({ a: 'b', c: null, d: 'e' })
+
+    expect(updateFeatureFlags).toHaveBeenCalledTimes(2)
+    expect(updateFeatureFlags).toHaveBeenNthCalledWith(1, [{ featureFlag: 'a', variant: 'b' }])
+    expect(updateFeatureFlags).toHaveBeenNthCalledWith(2, [
+      { featureFlag: 'a', variant: 'b' },
+      { featureFlag: 'c' },
+      { featureFlag: 'd', variant: 'e' }
+    ])
+  })
+
+  it('clears a single feature flag', () => {
+    const updateFeatureFlags = jest.fn()
+
+    const client = new Client({
+      apiKey: 'api_key',
+      plugins: [
+        stateManager,
+        plugin({ updateFeatureFlags })
+      ]
+    })
+
+    client.addFeatureFlag('a', 'b')
+    client.addFeatureFlags([{ name: 'c', variant: null }, { name: 'd', variant: 'e' }])
+    client.clearFeatureFlag('d')
+
+    expect(client._features).toStrictEqual({ a: 'b', c: null })
+
+    expect(updateFeatureFlags).toHaveBeenCalledTimes(3)
+    expect(updateFeatureFlags).toHaveBeenNthCalledWith(1, [{ featureFlag: 'a', variant: 'b' }])
+    expect(updateFeatureFlags).toHaveBeenNthCalledWith(2, [
+      { featureFlag: 'a', variant: 'b' },
+      { featureFlag: 'c' },
+      { featureFlag: 'd', variant: 'e' }
+    ])
+    expect(updateFeatureFlags).toHaveBeenNthCalledWith(3, [
+      { featureFlag: 'a', variant: 'b' },
+      { featureFlag: 'c' }
+    ])
+  })
+
+  it('clears all feature flags', () => {
+    const updateFeatureFlags = jest.fn()
+
+    const client = new Client({
+      apiKey: 'api_key',
+      plugins: [
+        stateManager,
+        plugin({ updateFeatureFlags })
+      ]
+    })
+
+    client.addFeatureFlag('a', 'b')
+    client.addFeatureFlags([{ name: 'c', variant: null }, { name: 'd', variant: 'e' }])
+    client.clearFeatureFlags()
+
+    expect(client._features).toStrictEqual({})
+
+    expect(updateFeatureFlags).toHaveBeenCalledTimes(3)
+    expect(updateFeatureFlags).toHaveBeenNthCalledWith(1, [{ featureFlag: 'a', variant: 'b' }])
+    expect(updateFeatureFlags).toHaveBeenNthCalledWith(2, [
+      { featureFlag: 'a', variant: 'b' },
+      { featureFlag: 'c' },
+      { featureFlag: 'd', variant: 'e' }
+    ])
+    expect(updateFeatureFlags).toHaveBeenNthCalledWith(3, [])
+  })
+
   function loggingClient (NativeClient: object): [Client, Logger] {
     const logger = {
       debug: jest.fn(),
@@ -196,6 +278,19 @@ describe('plugin: electron client sync', () => {
     })
     client.setUser('404', 'tim@example.com', undefined)
     const error = logger.error as jest.Mock<Function>
+    expect(error.mock.calls.length).toBe(1)
+    expect(error.mock.calls[0][0].message).toContain('wrong thing')
+  })
+
+  it('logs errors thrown from updating feature flags', () => {
+    const [client, logger] = loggingClient({
+      updateFeatureFlags: () => { throw new Error('wrong thing') }
+    })
+
+    client.addFeatureFlag('a', 'b')
+
+    const error = logger.error as jest.Mock<Function>
+
     expect(error.mock.calls.length).toBe(1)
     expect(error.mock.calls[0][0].message).toContain('wrong thing')
   })

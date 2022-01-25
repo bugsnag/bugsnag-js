@@ -28,6 +28,31 @@ RCT_EXPORT_MODULE();
 
 - (NSDictionary *)serializeClientObserverEvent:(BSGClientObserverEvent)event withValue:(id)value {
     switch (event) {
+        case BSGClientObserverAddFeatureFlag:
+            if ([value isKindOfClass:[BugsnagFeatureFlag class]]) {
+                return @{
+                    @"type": @"AddFeatureFlag",
+                    @"data": [NSDictionary dictionaryWithObjectsAndKeys:
+                              ((BugsnagFeatureFlag *)value).name, @"name",
+                              ((BugsnagFeatureFlag *)value).variant, @"variant",
+                              nil]
+                };
+            }
+            break;
+
+        case BSGClientObserverClearFeatureFlag:
+            if ([value isKindOfClass:[NSString class]]) {
+                return @{
+                    @"type": @"ClearFeatureFlag",
+                    @"data": @{@"name": value}
+                };
+            } else if (!value) {
+                return @{
+                    @"type": @"ClearFeatureFlag"
+                };
+            }
+            break;
+
         case BSGClientObserverUpdateContext:
             if ([value isKindOfClass:[NSString class]] || !value) {
                 return @{

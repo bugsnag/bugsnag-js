@@ -96,6 +96,46 @@ describe('BugsnagIpcRenderer', () => {
     )
   })
 
+  it('should call ipcRenderer correctly for addFeatureFlag', async () => {
+    await BugsnagIpcRenderer.addFeatureFlag('name', 'variant')
+
+    expect(electron.ipcRenderer.invoke).toHaveBeenCalledWith(
+      CHANNEL_RENDERER_TO_MAIN,
+      'addFeatureFlag',
+      JSON.stringify('name'),
+      JSON.stringify('variant')
+    )
+  })
+
+  it('should call ipcRenderer correctly for addFeatureFlags', async () => {
+    await BugsnagIpcRenderer.addFeatureFlags([{ name: 'name', variant: 'variant' }])
+
+    expect(electron.ipcRenderer.invoke).toHaveBeenCalledWith(
+      CHANNEL_RENDERER_TO_MAIN,
+      'addFeatureFlags',
+      JSON.stringify([{ name: 'name', variant: 'variant' }])
+    )
+  })
+
+  it('should call ipcRenderer correctly for clearFeatureFlag', async () => {
+    await BugsnagIpcRenderer.clearFeatureFlag('name')
+
+    expect(electron.ipcRenderer.invoke).toHaveBeenCalledWith(
+      CHANNEL_RENDERER_TO_MAIN,
+      'clearFeatureFlag',
+      JSON.stringify('name')
+    )
+  })
+
+  it('should call ipcRenderer correctly for clearFeatureFlags', async () => {
+    await BugsnagIpcRenderer.clearFeatureFlags()
+
+    expect(electron.ipcRenderer.invoke).toHaveBeenCalledWith(
+      CHANNEL_RENDERER_TO_MAIN,
+      'clearFeatureFlags'
+    )
+  })
+
   it('should call ipcRenderer correctly for payload info', async () => {
     await BugsnagIpcRenderer.getPayloadInfo()
     expect(electron.ipcRenderer.invoke).toHaveBeenCalledWith(CHANNEL_RENDERER_TO_MAIN, 'getPayloadInfo')

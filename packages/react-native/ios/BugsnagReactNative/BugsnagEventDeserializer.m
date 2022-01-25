@@ -47,6 +47,17 @@
     if (payload[@"apiKey"]) {
         event.apiKey = payload[@"apiKey"];
     }
+    
+    NSArray *featureFlags = payload[@"featureFlags"];
+    if (featureFlags != nil) {
+        for (NSDictionary *flag in featureFlags) {
+            NSString *name = flag[@"featureFlag"];
+            
+            if(name != nil) {
+                [event addFeatureFlagWithName:name variant:flag[@"variant"]];
+            }
+        }
+    }
 
     NSDictionary *error = payload[@"errors"][0];
 

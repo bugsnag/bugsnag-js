@@ -23,6 +23,7 @@ module.exports = (client, NativeClient) => ({
       metadata: event._metadata,
       groupingHash: event.groupingHash,
       apiKey: event.apiKey,
+      featureFlags: event.toJSON().featureFlags,
       nativeStack: nativeStack
     }).then(() => cb()).catch(cb)
   },
