@@ -2,6 +2,10 @@
 
 ## TBD
 
+### Added
+
+- New APIs to support forthcoming feature flag and experiment functionality. For more information, please see https://docs.bugsnag.com/product/features-experiments.
+
 ### Changed
 
 - (expo): Avoid using deprecated constants [#1665](https://github.com/bugsnag/bugsnag-js/pull/1665)
