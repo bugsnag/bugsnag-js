@@ -65,6 +65,102 @@ steps:
     concurrency: 5
     concurrency_group: 'browserstack'
 
+  - label: ':chrome: v43 Browser tests'
+    depends_on: "browser-maze-runner-image"
+    timeout_in_minutes: 20
+    plugins:
+      docker-compose#v3.9.0:
+        pull: browser-maze-runner
+        run: browser-maze-runner
+        use-aliases: true
+        verbose: true
+        command:
+          - --farm=bs
+          - --browser=chrome_43
+          - --verbose
+    concurrency: 5
+    concurrency_group: 'browserstack'
+
+  - label: ':chrome: v43 Browser tests'
+    depends_on: "browser-maze-runner-image"
+    timeout_in_minutes: 20
+    plugins:
+      docker-compose#v3.9.0:
+        pull: browser-maze-runner
+        run: browser-maze-runner
+        use-aliases: true
+        verbose: true
+        command:
+          - --farm=bs
+          - --browser=chrome_43
+          - --verbose
+    concurrency: 5
+    concurrency_group: 'browserstack'
+
+  - label: ':chrome: v43 Browser tests'
+    depends_on: "browser-maze-runner-image"
+    timeout_in_minutes: 20
+    plugins:
+      docker-compose#v3.9.0:
+        pull: browser-maze-runner
+        run: browser-maze-runner
+        use-aliases: true
+        verbose: true
+        command:
+          - --farm=bs
+          - --browser=chrome_43
+          - --verbose
+    concurrency: 5
+    concurrency_group: 'browserstack'
+
+  - label: ':chrome: v43 Browser tests'
+    depends_on: "browser-maze-runner-image"
+    timeout_in_minutes: 20
+    plugins:
+      docker-compose#v3.9.0:
+        pull: browser-maze-runner
+        run: browser-maze-runner
+        use-aliases: true
+        verbose: true
+        command:
+          - --farm=bs
+          - --browser=chrome_43
+          - --verbose
+    concurrency: 5
+    concurrency_group: 'browserstack'
+
+  - label: ':chrome: v43 Browser tests'
+    depends_on: "browser-maze-runner-image"
+    timeout_in_minutes: 20
+    plugins:
+      docker-compose#v3.9.0:
+        pull: browser-maze-runner
+        run: browser-maze-runner
+        use-aliases: true
+        verbose: true
+        command:
+          - --farm=bs
+          - --browser=chrome_43
+          - --verbose
+    concurrency: 5
+    concurrency_group: 'browserstack'
+
+  - label: ':chrome: v43 Browser tests'
+    depends_on: "browser-maze-runner-image"
+    timeout_in_minutes: 20
+    plugins:
+      docker-compose#v3.9.0:
+        pull: browser-maze-runner
+        run: browser-maze-runner
+        use-aliases: true
+        verbose: true
+        command:
+          - --farm=bs
+          - --browser=chrome_43
+          - --verbose
+    concurrency: 5
+    concurrency_group: 'browserstack'
+
   # - label: ':chrome: v61 Browser tests'
   #   depends_on: "browser-maze-runner-image"
   #   timeout_in_minutes: 20
