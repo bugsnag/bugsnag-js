@@ -26,6 +26,8 @@ steps:
         run: browser-maze-runner
         use-aliases: true
         verbose: true
+        env:
+          DEBUG=true
         command:
           - --farm=bs
           - --browser=chrome_43
@@ -42,6 +44,8 @@ steps:
         run: browser-maze-runner
         use-aliases: true
         verbose: true
+        env:
+          DEBUG=true
         command:
           - --farm=bs
           - --browser=chrome_43
@@ -58,6 +62,8 @@ steps:
         run: browser-maze-runner
         use-aliases: true
         verbose: true
+        env:
+          DEBUG=true
         command:
           - --farm=bs
           - --browser=chrome_43
@@ -74,6 +80,8 @@ steps:
         run: browser-maze-runner
         use-aliases: true
         verbose: true
+        env:
+          DEBUG=true
         command:
           - --farm=bs
           - --browser=chrome_43
@@ -90,6 +98,8 @@ steps:
         run: browser-maze-runner
         use-aliases: true
         verbose: true
+        env:
+          DEBUG=true
         command:
           - --farm=bs
           - --browser=chrome_43
@@ -106,6 +116,8 @@ steps:
         run: browser-maze-runner
         use-aliases: true
         verbose: true
+        env:
+          DEBUG=true
         command:
           - --farm=bs
           - --browser=chrome_43
@@ -122,6 +134,8 @@ steps:
         run: browser-maze-runner
         use-aliases: true
         verbose: true
+        env:
+          DEBUG=true
         command:
           - --farm=bs
           - --browser=chrome_43
@@ -138,6 +152,8 @@ steps:
         run: browser-maze-runner
         use-aliases: true
         verbose: true
+        env:
+          DEBUG=true
         command:
           - --farm=bs
           - --browser=chrome_43
@@ -154,6 +170,8 @@ steps:
         run: browser-maze-runner
         use-aliases: true
         verbose: true
+        env:
+          DEBUG=true
         command:
           - --farm=bs
           - --browser=chrome_43
