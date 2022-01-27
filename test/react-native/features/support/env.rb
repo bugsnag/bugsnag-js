@@ -1,5 +1,6 @@
 BeforeAll do
-  Maze.config.receive_no_requests_wait = 15 if Maze.config.respond_to? :receive_no_requests_wait=
+  Maze.config.receive_no_requests_wait = 15
+  Maze.config.receive_requests_wait = 60 # Theoretical maximum on Android
 end
 
 Before('@android_only') do |scenario|
