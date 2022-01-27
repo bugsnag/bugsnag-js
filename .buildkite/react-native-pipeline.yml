@@ -143,9 +143,7 @@ steps:
     artifact_paths:
       - build/r_navigation_0.63.apk
 
-  # See: PLAT-5173
   - label: ':ios: Build react-navigation 0.63 ipa'
-    skip: "See PLAT-5173"
     key: "react-navigation-0-63-ipa"
     timeout_in_minutes: 60
     agents:
@@ -446,9 +444,7 @@ steps:
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
-  # See: PLAT-5173
-  - label: ':ios: react-navigation 0.63 iOS 13 end-to-end tests'
-    skip: "See PLAT-5173"
+  - label: ':ios: react-navigation 0.63 iOS 14 end-to-end tests'
     depends_on: "react-navigation-0-63-ipa"
     timeout_in_minutes: 60
     plugins:
@@ -462,9 +458,9 @@ steps:
         command:
           - --app=build/r_navigation_0.63.ipa
           - --farm=bs
-          - --device=IOS_13
+          - --device=IOS_14
           - --a11y-locator
-          - --appium-version=1.18.0
+          - --appium-version=1.21.0
           - --fail-fast
           - --resilient
           - features/navigation.feature

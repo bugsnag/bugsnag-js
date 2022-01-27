@@ -138,7 +138,10 @@ public class BugsnagModule extends ReactContextBaseJavaModule {
         } else {
             Set<BreadcrumbType> enabledBreadcrumbTypes = new HashSet<BreadcrumbType>();
             ReadableArray ar = options.getArray("enabledBreadcrumbTypes");
-            for (int i = 0; i < ar.size(); i++) enabledBreadcrumbTypes.add(BreadcrumbType.valueOf(ar.getString(i)));
+            for (int i = 0; i < ar.size(); i++) {
+                BreadcrumbType type = BreadcrumbType.valueOf(ar.getString(i).toUpperCase());
+                enabledBreadcrumbTypes.add(type);
+            }
             config.setEnabledBreadcrumbTypes(enabledBreadcrumbTypes);
         }
       }
