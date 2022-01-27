@@ -30,6 +30,7 @@ steps:
         command:
           - "features/cli-tests"
           - "--fail-fast"
+          - "--retry=2"
     env:
       REACT_NATIVE_VERSION: "rn0_60"
 
@@ -46,6 +47,7 @@ steps:
         command:
           - "features/cli-tests"
           - "--fail-fast"
+          - "--retry=2"
     env:
       REACT_NATIVE_VERSION: "rn0_61"
 
@@ -62,6 +64,7 @@ steps:
         command:
           - "features/cli-tests"
           - "--fail-fast"
+          - "--retry=2"
     env:
       REACT_NATIVE_VERSION: "rn0_62"
 
@@ -78,6 +81,7 @@ steps:
         command:
           - "features/cli-tests"
           - "--fail-fast"
+          - "--retry=2"
     env:
       REACT_NATIVE_VERSION: "rn0_63"
 
@@ -94,6 +98,7 @@ steps:
         command:
           - "features/cli-tests"
           - "--fail-fast"
+          - "--retry=2"
     env:
       REACT_NATIVE_VERSION: "rn0_63_expo_ejected"
 
@@ -110,6 +115,7 @@ steps:
         command:
           - "features/cli-tests"
           - "--fail-fast"
+          - "--retry=2"
     env:
       REACT_NATIVE_VERSION: "rn0_64"
 
