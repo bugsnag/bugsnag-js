@@ -25,24 +25,9 @@ BeforeAll do
   ERRORS = YAML::load open 'features/fixtures/browser_errors.yml'
   FIXTURES_SERVER_PORT = '9020'
 
-  # start a web server to serve fixtures
-  if ENV['DEBUG']
-    pid = Process.spawn({"PORT"=>FIXTURES_SERVER_PORT},
-                        'ruby features/lib/server.rb')
-  else
-    DEV_NULL = Gem.win_platform? ? 'NUL' : '/dev/null'
-    pid = Process.spawn({"PORT"=>FIXTURES_SERVER_PORT},
-                        'ruby features/lib/server.rb',
-                        :out => DEV_NULL,
-                        :err => DEV_NULL)
-  end
-  Process.detach(pid)
-end
+  Maze.config.document_server_root = File.expand_path File.join(__dir__, '..', 'fixtures')
+  Maze.config.document_server_bind_address = 'localhost'
+  Maze.config.document_server_port = FIXTURES_SERVER_PORT
 
-at_exit do
-  # Stop the web page server
-  begin
-    Process.kill('KILL', pid)
-  rescue
-  end
+  Maze::DocumentServer.start
 end
