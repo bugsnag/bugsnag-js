@@ -26,8 +26,6 @@ BeforeAll do
   FIXTURES_SERVER_PORT = '9020'
 
   Maze.config.document_server_root = File.expand_path File.join(__dir__, '..', 'fixtures')
-  Maze.config.document_server_bind_address = 'localhost'
+  Maze.config.document_server_bind_address = '0.0.0.0'
   Maze.config.document_server_port = FIXTURES_SERVER_PORT
-
-  Maze::DocumentServer.start
 end
