@@ -28,8 +28,9 @@ steps:
         run: react-native-cli-tool-maze-runner
         use-aliases: true
         command:
-          - "features/cli-tests"
-          - "--fail-fast"
+          - --fail-fast
+          - --retry=2
+          - features/cli-tests
     env:
       REACT_NATIVE_VERSION: "rn0_60"
 
@@ -44,8 +45,9 @@ steps:
         run: react-native-cli-tool-maze-runner
         use-aliases: true
         command:
-          - "features/cli-tests"
-          - "--fail-fast"
+          - --fail-fast
+          - --retry=2
+          - features/cli-tests
     env:
       REACT_NATIVE_VERSION: "rn0_61"
 
@@ -60,8 +62,9 @@ steps:
         run: react-native-cli-tool-maze-runner
         use-aliases: true
         command:
-          - "features/cli-tests"
-          - "--fail-fast"
+          - --fail-fast
+          - --retry=2
+          - features/cli-tests
     env:
       REACT_NATIVE_VERSION: "rn0_62"
 
@@ -76,8 +79,9 @@ steps:
         run: react-native-cli-tool-maze-runner
         use-aliases: true
         command:
-          - "features/cli-tests"
-          - "--fail-fast"
+          - --fail-fast
+          - --retry=2
+          - features/cli-tests
     env:
       REACT_NATIVE_VERSION: "rn0_63"
 
@@ -92,8 +96,9 @@ steps:
         run: react-native-cli-tool-maze-runner
         use-aliases: true
         command:
-          - "features/cli-tests"
-          - "--fail-fast"
+          - --fail-fast
+          - --retry=2
+          - features/cli-tests
     env:
       REACT_NATIVE_VERSION: "rn0_63_expo_ejected"
 
@@ -108,8 +113,9 @@ steps:
         run: react-native-cli-tool-maze-runner
         use-aliases: true
         command:
-          - "features/cli-tests"
-          - "--fail-fast"
+          - --fail-fast
+          - --retry=2
+          - features/cli-tests
     env:
       REACT_NATIVE_VERSION: "rn0_64"
 

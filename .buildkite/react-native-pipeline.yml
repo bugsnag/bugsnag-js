@@ -225,7 +225,7 @@ steps:
   #
   # End-to-end tests
   #
-  - label: ':android: RN 0.60 Android 9 end-to-end tests'
+  - label: ':android: RN 0.60 Android 11 end-to-end tests'
     depends_on: "rn-0-60-apk"
     timeout_in_minutes: 60
     plugins:
@@ -239,10 +239,9 @@ steps:
         command:
         - --app=build/rn0.60.apk
         - --farm=bs
-        - --device=ANDROID_9_0
+        - --device=ANDROID_11_0
         - --a11y-locator
         - --fail-fast
-        - --resilient
     env:
       SKIP_NAVIGATION_SCENARIOS: "true"
     concurrency: 9
@@ -267,14 +266,13 @@ steps:
         - --a11y-locator
         - --appium-version=1.18.0
         - --fail-fast
-        - --resilient
     env:
       SKIP_NAVIGATION_SCENARIOS: "true"
     concurrency: 9
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
-  - label: ':android: RN 0.63 Android 9 end-to-end tests'
+  - label: ':android: RN 0.63 Android 11 end-to-end tests'
     depends_on: "rn-0-63-apk"
     timeout_in_minutes: 60
     plugins:
@@ -288,10 +286,9 @@ steps:
         command:
         - --app=build/rn0.63.apk
         - --farm=bs
-        - --device=ANDROID_9_0
+        - --device=ANDROID_11_0
         - --a11y-locator
         - --fail-fast
-        - --resilient
     env:
       SKIP_NAVIGATION_SCENARIOS: "true"
     concurrency: 9
@@ -315,7 +312,6 @@ steps:
           - --device=ANDROID_11_0
           - --a11y-locator
           - --fail-fast
-          - --resilient
     env:
       SKIP_NAVIGATION_SCENARIOS: "true"
     concurrency: 9
@@ -340,7 +336,6 @@ steps:
         - --a11y-locator
         - --appium-version=1.18.0
         - --fail-fast
-        - --resilient
     env:
       SKIP_NAVIGATION_SCENARIOS: "true"
     concurrency: 9
@@ -365,14 +360,13 @@ steps:
           - --a11y-locator
           - --appium-version=1.18.0
           - --fail-fast
-          - --resilient
     env:
       SKIP_NAVIGATION_SCENARIOS: "true"
     concurrency: 9
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
-  - label: ':android: react-navigation 0.60 Android 9 end-to-end tests'
+  - label: ':android: react-navigation 0.60 Android 11 end-to-end tests'
     depends_on: "react-navigation-0-60-apk"
     timeout_in_minutes: 60
     plugins:
@@ -386,10 +380,9 @@ steps:
         command:
         - --app=build/r_navigation_0.60.apk
         - --farm=bs
-        - --device=ANDROID_9_0
+        - --device=ANDROID_11_0
         - --a11y-locator
         - --fail-fast
-        - --resilient
         - features/navigation.feature
     concurrency: 9
     concurrency_group: 'browserstack-app'
@@ -415,13 +408,12 @@ steps:
           - --a11y-locator
           - --appium-version=1.18.0
           - --fail-fast
-          - --resilient
           - features/navigation.feature
     concurrency: 9
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
-  - label: ':android: react-navigation 0.63 Android 9 end-to-end tests'
+  - label: ':android: react-navigation 0.63 Android 11 end-to-end tests'
     depends_on: "react-navigation-0-63-apk"
     timeout_in_minutes: 60
     plugins:
@@ -435,10 +427,9 @@ steps:
         command:
         - --app=build/r_navigation_0.63.apk
         - --farm=bs
-        - --device=ANDROID_9_0
+        - --device=ANDROID_11_0
         - --a11y-locator
         - --fail-fast
-        - --resilient
         - features/navigation.feature
     concurrency: 9
     concurrency_group: 'browserstack-app'
@@ -462,13 +453,12 @@ steps:
           - --a11y-locator
           - --appium-version=1.21.0
           - --fail-fast
-          - --resilient
           - features/navigation.feature
     concurrency: 9
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
-  - label: ':android: react-native-navigation 0.60 Android 9 end-to-end tests'
+  - label: ':android: react-native-navigation 0.60 Android 11 end-to-end tests'
     depends_on: "react-native-navigation-0-60-apk"
     timeout_in_minutes: 60
     plugins:
@@ -482,10 +472,9 @@ steps:
         command:
         - --app=build/r_native_navigation_0.60.apk
         - --farm=bs
-        - --device=ANDROID_9_0
+        - --device=ANDROID_11_0
         - --a11y-locator
         - --fail-fast
-        - --resilient
         - features/navigation.feature
     concurrency: 9
     concurrency_group: 'browserstack-app'
@@ -511,13 +500,12 @@ steps:
           - --appium-version=1.18.0
           - --a11y-locator
           - --fail-fast
-          - --resilient
           - features/navigation.feature
     concurrency: 9
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
-  - label: ':android: react-native-navigation 0.63 Android 9 end-to-end tests'
+  - label: ':android: react-native-navigation 0.63 Android 11 end-to-end tests'
     depends_on: "react-native-navigation-0-63-apk"
     timeout_in_minutes: 60
     plugins:
@@ -531,10 +519,9 @@ steps:
         command:
         - --app=build/r_native_navigation_0.63.apk
         - --farm=bs
-        - --device=ANDROID_9_0
+        - --device=ANDROID_11_0
         - --a11y-locator
         - --fail-fast
-        - --resilient
         - features/navigation.feature
     concurrency: 9
     concurrency_group: 'browserstack-app'
@@ -560,7 +547,6 @@ steps:
           - --a11y-locator
           - --appium-version=1.18.0
           - --fail-fast
-          - --resilient
           - features/navigation.feature
     concurrency: 9
     concurrency_group: 'browserstack-app'
