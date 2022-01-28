@@ -43,6 +43,8 @@ at_exit do
   # Stop the web page server
   begin
     Process.kill('KILL', pid)
-  rescue
+  rescue => e
+    pp "ERROR SHUTTING DOWN SERVER"
+    pp e
   end
 end
