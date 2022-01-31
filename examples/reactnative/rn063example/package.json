@@ -10,7 +10,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@bugsnag/react-native": "7.16.0",
+    "@bugsnag/react-native": "^7.16.0",
     "react": "16.13.1",
     "react-native": "0.63.0"
   },
