@@ -36,6 +36,7 @@ struct crashreporter_annotations_t {
 static void bsg_mach_headers_register_dyld_images(void);
 static void bsg_mach_headers_register_for_changes(void);
 static intptr_t bsg_mach_headers_compute_slide(const struct mach_header *header);
+static bool bsg_mach_headers_contains_address(BSG_Mach_Header_Info *image, vm_address_t address);
 static const char * bsg_mach_headers_get_path(const struct mach_header *header);
 
 static const struct dyld_all_image_infos *g_all_image_infos;
@@ -45,6 +46,8 @@ static const struct dyld_all_image_infos *g_all_image_infos;
 static BSG_Mach_Header_Info *bsg_g_mach_headers_images_head;
 static BSG_Mach_Header_Info *bsg_g_mach_headers_images_tail;
 static dispatch_queue_t bsg_g_serial_queue;
+
+static BSG_Mach_Header_Info *g_self_image;
 
 BSG_Mach_Header_Info *bsg_mach_headers_get_images() {
     if (!bsg_g_mach_headers_images_head) {
@@ -64,6 +67,10 @@ BSG_Mach_Header_Info *bsg_mach_headers_get_main_image() {
     return NULL;
 }
 
+BSG_Mach_Header_Info *bsg_mach_headers_get_self_image(void) {
+    return g_self_image;
+}
+
 void bsg_mach_headers_initialize() {
     
     // Clear any existing headers to reset the head/tail pointers
@@ -76,6 +83,7 @@ void bsg_mach_headers_initialize() {
     bsg_g_mach_headers_images_head = NULL;
     bsg_g_mach_headers_images_tail = NULL;
     bsg_g_serial_queue = dispatch_queue_create("com.bugsnag.mach-headers", DISPATCH_QUEUE_SERIAL);
+    g_self_image = NULL;
 }
 
 static void bsg_mach_headers_register_dyld_images() {
@@ -201,6 +209,9 @@ void bsg_mach_headers_add_image(const struct mach_header *header, intptr_t slide
                     bsg_g_mach_headers_images_tail->next = newImage;
                 }
                 bsg_g_mach_headers_images_tail = newImage;
+                if (bsg_mach_headers_contains_address(newImage, (vm_address_t)bsg_mach_headers_add_image)) {
+                    g_self_image = newImage;
+                }
             });
         } else {
             free(newImage);
@@ -249,12 +260,7 @@ BSG_Mach_Header_Info *bsg_mach_headers_image_named(const char *const imageName, 
 
 BSG_Mach_Header_Info *bsg_mach_headers_image_at_address(const uintptr_t address) {
     for (BSG_Mach_Header_Info *img = bsg_mach_headers_get_images(); img; img = img->next) {
-        if (img->unloaded == true) {
-            continue;
-        }
-        uintptr_t imageAddress = (uintptr_t)img->header;
-        if (address >= imageAddress &&
-            address < (imageAddress + img->imageSize)) {
+        if (bsg_mach_headers_contains_address(img, address)) {
             return img;
         }
     }
@@ -366,6 +372,14 @@ static intptr_t bsg_mach_headers_compute_slide(const struct mach_header *header)
         cmdPtr += loadCmd->cmdsize;
     }
     return 0;
+}
+
+static bool bsg_mach_headers_contains_address(BSG_Mach_Header_Info *img, vm_address_t address) {
+    if (img->unloaded) {
+        return false;
+    }
+    vm_address_t imageStart = (vm_address_t)img->header;
+    return address >= imageStart && address < (imageStart + img->imageSize);
 }
 
 static const char * bsg_mach_headers_get_path(const struct mach_header *header) {

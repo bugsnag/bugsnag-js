@@ -29,6 +29,7 @@
 #import <Bugsnag/BSG_KSCrashReportWriter.h>
 #import <Bugsnag/BugsnagBreadcrumb.h>
 #import <Bugsnag/BugsnagEvent.h>
+#import <Bugsnag/BugsnagFeatureFlagStore.h>
 #import <Bugsnag/BugsnagMetadata.h>
 #import <Bugsnag/BugsnagMetadataStore.h>
 #import <Bugsnag/BugsnagPlugin.h>
@@ -127,7 +128,7 @@ typedef id<NSObject> BugsnagOnSessionRef;
 /**
  * Contains user-provided configuration, including API key and endpoints.
  */
-@interface BugsnagConfiguration : NSObject <BugsnagMetadataStore>
+@interface BugsnagConfiguration : NSObject <BugsnagFeatureFlagStore, BugsnagMetadataStore>
 
 /**
  * Create a new configuration from the main bundle's infoDictionary, using keys nested under

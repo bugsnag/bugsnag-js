@@ -22,6 +22,7 @@
 @interface BSGAppHangDetector ()
 
 @property (weak, nonatomic) id<BSGAppHangDetectorDelegate> delegate;
+@property (nonatomic) BOOL runLoopIsRunning;
 @property (nonatomic) BOOL recordAllThreads;
 @property (nonatomic) CFRunLoopObserverRef observer;
 @property (atomic) dispatch_time_t processingDeadline;
@@ -81,6 +82,7 @@
                 // Each iteration indicates a separate unit of work so the hang detection should be reset accordingly.
                 dispatch_semaphore_signal(self.processingFinished);
             }
+            self.runLoopIsRunning = YES;
             self.processingDeadline = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(threshold * NSEC_PER_SEC));
             dispatch_semaphore_signal(self.processingStarted);
             isProcessing = YES;
@@ -104,9 +106,9 @@
     self.observer = CFRunLoopObserverCreateWithHandler(NULL, activities, true, order, observerBlock);
     
     // Start monitoring immediately so that app hangs during launch can be detected.
-    // Note that because scene-based apps start in UIApplicationStateBackground, hangs in
-    // -[AppDelegate application:didFinishLaunchingWithOptions:] will be ignored.
-    observerBlock(self.observer, kCFRunLoopAfterWaiting);
+    self.processingDeadline = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(threshold * NSEC_PER_SEC));
+    dispatch_semaphore_signal(self.processingStarted);
+    isProcessing = YES;
     
     CFRunLoopAddObserver(CFRunLoopGetMain(), self.observer, kCFRunLoopCommonModes);
     
@@ -146,7 +148,9 @@
         }
 #endif
         
-        if (shouldReportAppHang && !bsg_kscrashstate_currentState()->applicationIsInForeground) {
+        // Ignore background state if the runloop has not yet ticked so that hangs in `didFinishLaunching` in UIScene-based
+        // apps are detected. UIScene-based apps always start in UIApplicationStateBackground, unlike those without scenes.
+        if (shouldReportAppHang && !bsg_kscrashstate_currentState()->applicationIsInForeground && self.runLoopIsRunning) {
             bsg_log_debug(@"Ignoring app hang because app is in the background");
             shouldReportAppHang = NO;
         }

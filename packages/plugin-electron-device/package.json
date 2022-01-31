@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-electron-device",
-  "version": "7.15.1",
+  "version": "7.16.0",
   "main": "device.js",
   "description": "@bugsnag/electron plugin to collect device information",
   "repository": {
@@ -14,8 +14,8 @@
     "device.js"
   ],
   "devDependencies": {
-    "@bugsnag/core": "^7.15.1",
-    "@bugsnag/electron-test-helpers": "^7.15.1"
+    "@bugsnag/core": "^7.16.0",
+    "@bugsnag/electron-test-helpers": "^7.16.0"
   },
   "peerDependencies": {
     "@bugsnag/core": "^7.9.2"

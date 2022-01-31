@@ -13,15 +13,16 @@ describe('plugin: electron renderer event data', () => {
     expect(onError).not.toHaveBeenCalled()
   })
 
-  it('sets context, breadcrumbs, app, device, user and metadata from the main process', async () => {
+  it('sets context, breadcrumbs, app, device, user, feature flags and metadata from the main process', async () => {
     const context = 'abc context xyz'
     const breadcrumbs = [new Breadcrumb('message', { metadata: true }, 'manual')]
     const app = { abc: 123 }
     const device = { xyz: 456 }
     const user = { id: '10293847' }
+    const features = { flag1: 'variant1' }
     const metadata = { meta: { data: true } }
 
-    const { sendEvent } = makeClient({ context, breadcrumbs, app, device, user, metadata })
+    const { sendEvent } = makeClient({ context, breadcrumbs, app, device, user, features, metadata })
 
     const event = await sendEvent()
 
@@ -30,6 +31,7 @@ describe('plugin: electron renderer event data', () => {
     expect(event.app).toStrictEqual({ ...app, releaseStage: 'production', type: undefined, version: undefined, codeBundleId: undefined })
     expect(event.device).toStrictEqual(device)
     expect(event.getUser()).toStrictEqual(user)
+    expect(event._features).toStrictEqual(features)
     expect(event.getMetadata('meta')).toStrictEqual(metadata.meta)
   })
 

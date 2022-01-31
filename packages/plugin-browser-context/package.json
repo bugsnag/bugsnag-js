@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-browser-context",
-  "version": "7.15.1",
+  "version": "7.16.0",
   "main": "context.js",
   "description": "@bugsnag/js plugin to set event context in browsers",
   "homepage": "https://www.bugsnag.com/",
@@ -17,7 +17,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^7.15.1"
+    "@bugsnag/core": "^7.16.0"
   },
   "peerDependencies": {
     "@bugsnag/core": "^7.0.0"

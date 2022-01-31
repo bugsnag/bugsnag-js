@@ -150,15 +150,13 @@ void bsg_kscrashsentry_suspendThreads(void) {
     if (bsg_g_context != NULL) {
         bsg_g_context->allThreads = bsg_ksmachgetAllThreads(&bsg_g_context->allThreadsCount);
         bsg_ksmachgetThreadStates(bsg_g_context->allThreads, bsg_g_context->allThreadRunStates, bsg_g_context->allThreadsCount);
-        BSG_KSLOG_DEBUG(
-            "Suspending all threads except for %d reserved threads.",
-                        BSG_KSCrashReservedThreadTypeCount);
         bsg_g_context->threadsToResumeCount = bsg_ksmachremoveThreadsFromList(bsg_g_context->allThreads,
                                                                               bsg_g_context->allThreadsCount,
                                                                               bsg_g_context->reservedThreads,
                                                                               BSG_KSCrashReservedThreadTypeCount,
                                                                               bsg_g_context->threadsToResume,
                                                                               MAX_CAPTURED_THREADS);
+        BSG_KSLOG_DEBUG("Suspending %d of %d threads.", bsg_g_context->threadsToResumeCount, bsg_g_context->allThreadsCount);
         bsg_ksmachsuspendThreads(bsg_g_context->threadsToResume, bsg_g_context->threadsToResumeCount);
     } else {
         BSG_KSLOG_DEBUG("Suspending all threads.");
@@ -179,8 +177,7 @@ void bsg_kscrashsentry_resumeThreads(void) {
     }
 
     if (bsg_g_context != NULL) {
-        BSG_KSLOG_DEBUG("Resuming all threads except for %d reserved threads.",
-                        BSG_KSCrashReservedThreadTypeCount);
+        BSG_KSLOG_DEBUG("Resuming %d of %d threads.", bsg_g_context->threadsToResumeCount, bsg_g_context->allThreadsCount);
         bsg_ksmachresumeThreads(bsg_g_context->threadsToResume, bsg_g_context->threadsToResumeCount);
         bsg_g_context->threadsToResumeCount = 0;
         if (bsg_g_context->allThreads != NULL) {
@@ -203,12 +200,15 @@ void bsg_kscrashsentry_clearContext(BSG_KSCrash_SentryContext *context) {
     void (*onCrash)(void *) = context->onCrash;
     bool threadTracingEnabled = context->threadTracingEnabled;
     bool reportWhenDebuggerIsAttached = context->reportWhenDebuggerIsAttached;
+    thread_t reservedThreads[BSG_KSCrashReservedThreadTypeCount];
+    memcpy(reservedThreads, context->reservedThreads, sizeof(reservedThreads));
 
     memset(context, 0, sizeof(*context));
     context->onCrash = onCrash;
 
     context->threadTracingEnabled = threadTracingEnabled;
     context->reportWhenDebuggerIsAttached = reportWhenDebuggerIsAttached;
+    memcpy(context->reservedThreads, reservedThreads, sizeof(reservedThreads));
 }
 
 void bsg_kscrashsentry_beginHandlingCrash(BSG_KSCrash_SentryContext *context) {

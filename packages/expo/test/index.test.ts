@@ -16,6 +16,8 @@ jest.mock('../../plugin-expo-device/node_modules/expo-constants', () => ({
   }
 }))
 
+jest.mock('../../plugin-expo-app/node_modules/expo-application', () => ({}))
+
 jest.mock('../../plugin-expo-app/node_modules/expo-constants', () => ({
   default: {
     platform: {},

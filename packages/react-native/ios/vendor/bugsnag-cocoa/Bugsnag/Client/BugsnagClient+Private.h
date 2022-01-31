@@ -25,6 +25,16 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef NS_ENUM(NSInteger, BSGClientObserverEvent) {
+    BSGClientObserverAddFeatureFlag,    // value: BugsnagFeatureFlag
+    BSGClientObserverClearFeatureFlag,  // value: NSString
+    BSGClientObserverUpdateContext,     // value: NSString
+    BSGClientObserverUpdateMetadata,    // value: BugsnagMetadata
+    BSGClientObserverUpdateUser,        // value: BugsnagUser
+};
+
+typedef void (^ BSGClientObserver)(BSGClientObserverEvent event, _Nullable id value);
+
 @interface BugsnagClient ()
 
 #pragma mark Properties
@@ -114,11 +124,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic) BugsnagUser *user;
 
+@property (nullable, nonatomic) BSGClientObserver observer; // Used in BugsnagReactNative
+
 #pragma mark Methods
 
 - (void)addBreadcrumbWithBlock:(void (^)(BugsnagBreadcrumb *))block;
-
-- (void)addObserverWithBlock:(BugsnagObserverBlock)block; // Used in BugsnagReactNative
 
 - (void)addRuntimeVersionInfo:(NSString *)info withKey:(NSString *)key;
 
@@ -137,8 +147,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (BugsnagEvent *)generateOutOfMemoryEvent;
 
 - (void)notifyInternal:(BugsnagEvent *)event block:(nullable BugsnagOnErrorBlock)block;
-
-- (void)removeObserverWithBlock:(BugsnagObserverBlock)block; // Used in BugsnagReactNative
 
 - (void)start;
 

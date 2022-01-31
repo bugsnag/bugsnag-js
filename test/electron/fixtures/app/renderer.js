@@ -7,6 +7,13 @@ const Bugsnag = require('@bugsnag/electron')
 Bugsnag.start(window.RunnerAPI.rendererConfig)
 const startupTimestamp = Date.now()
 
+Bugsnag.addFeatureFlag('from renderer at runtime 1', 'runtime')
+Bugsnag.addOnError(event => {
+  event.addFeatureFlags([
+    { name: 'from renderer on error', variant: 'on error' }
+  ])
+})
+
 function emulateOnlineStatus (online) {
   Object.defineProperty(window.navigator, 'onLine', { value: online, configurable: true })
   window.dispatchEvent(new window.Event(online ? 'online' : 'offline'))
@@ -63,3 +70,16 @@ document.getElementById('renderer-and-main-process-crashes').onclick = () => {
   window.RunnerAPI.delayedMainProcessCrash()
   setTimeout(() => window.RunnerAPI.renderProcessCrash(), 10)
 }
+
+document.getElementById('renderer-clear-feature-flags').onclick = () => {
+  // clear feature flags in a new on error callback to also clear flags from other callbacks
+  Bugsnag.addOnError(event => {
+    event.clearFeatureFlags()
+  })
+}
+
+document.getElementById('renderer-clear-feature-flags-now').onclick = () => {
+  Bugsnag.clearFeatureFlags()
+}
+
+Bugsnag.addFeatureFlag('from renderer at runtime 2')

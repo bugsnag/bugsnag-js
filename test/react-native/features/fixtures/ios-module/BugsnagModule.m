@@ -62,7 +62,29 @@ BugsnagConfiguration *createConfiguration(NSDictionary * options) {
     [config setEnabledReleaseStages:[NSSet setWithArray:options[@"enabledReleaseStages"]]];
   }
   if (options[@"enabledBreadcrumbTypes"] && ![options[@"enabledBreadcrumbTypes"] isEqual:[NSNull null]]) {
-    [config setEnabledBreadcrumbTypes:[NSSet setWithArray:options[@"enabledBreadcrumbTypes"]]];
+    BSGEnabledBreadcrumbType types = BSGEnabledBreadcrumbTypeNone;
+
+    for (NSString *const type in options[@"enabledBreadcrumbTypes"]) {
+      NSString *lcType = [type lowercaseString];
+      NSLog(@"Enabling breadcrumb type: %@", lcType);
+
+      if ([lcType isEqualToString:@"navigation"]) {
+        types |= BSGEnabledBreadcrumbTypeNavigation;
+      } else if ([lcType isEqualToString:@"request"]) {
+        types |= BSGEnabledBreadcrumbTypeRequest;
+      } else if ([lcType isEqualToString:@"process"]) {
+        types |= BSGEnabledBreadcrumbTypeProcess;
+      } else if ([lcType isEqualToString:@"log"]) {
+        types |= BSGEnabledBreadcrumbTypeLog;
+      } else if ([lcType isEqualToString:@"user"]) {
+        types |= BSGEnabledBreadcrumbTypeUser;
+      } else if ([lcType isEqualToString:@"state"]) {
+        types |= BSGEnabledBreadcrumbTypeState;
+      } else if ([lcType isEqualToString:@"error"]) {
+        types |= BSGEnabledBreadcrumbTypeError;
+      }
+    }
+    [config setEnabledBreadcrumbTypes:types];
   }
   if (options[@"configMetaData"] != nil) {
     NSDictionary *configMetaData = options[@"configMetaData"];

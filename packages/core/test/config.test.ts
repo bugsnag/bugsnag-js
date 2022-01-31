@@ -56,4 +56,36 @@ describe('@bugsnag/core/config', () => {
       })).toBe(false)
     })
   })
+
+  describe('featureFlags', () => {
+    it.each([
+      undefined,
+      null,
+      1234,
+      'hello',
+      { name: 'example' },
+      { length: 1000 }
+    ])('fails when the supplied value is not an array (%p)', value => {
+      const validator = config.schema.featureFlags.validate
+
+      expect(validator(value)).toBe(false)
+    })
+
+    it('fails when a value does not have a "name"', () => {
+      const validator = config.schema.featureFlags.validate
+
+      expect(validator([{ name: 'hello' }, { notName: 'oops' }])).toBe(false)
+    })
+
+    it('passes when all values have a "name"', () => {
+      const validator = config.schema.featureFlags.validate
+      const featureFlags = [
+        { name: 'hello' },
+        { name: 'abc', variant: 'xyz' },
+        { name: 'hi' }
+      ]
+
+      expect(validator(featureFlags)).toBe(true)
+    })
+  })
 })

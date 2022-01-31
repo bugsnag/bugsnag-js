@@ -223,6 +223,40 @@ static BugsnagClient *bsg_g_bugsnag_client = NULL;
 }
 
 // =============================================================================
+// MARK: - <BugsnagFeatureFlagStore>
+// =============================================================================
+
++ (void)addFeatureFlagWithName:(NSString *)name variant:(nullable NSString *)variant {
+    if ([self bugsnagStarted]) {
+        [self.client addFeatureFlagWithName:name variant:variant];
+    }
+}
+
++ (void)addFeatureFlagWithName:(NSString *)name {
+    if ([self bugsnagStarted]) {
+        [self.client addFeatureFlagWithName:name];
+    }
+}
+
++ (void)addFeatureFlags:(NSArray<BugsnagFeatureFlag *> *)featureFlags {
+    if ([self bugsnagStarted]) {
+        [self.client addFeatureFlags:featureFlags];
+    }
+}
+
++ (void)clearFeatureFlagWithName:(NSString *)name {
+    if ([self bugsnagStarted]) {
+        [self.client clearFeatureFlagWithName:name];
+    }
+}
+
++ (void)clearFeatureFlags {
+    if ([self bugsnagStarted]) {
+        [self.client clearFeatureFlags];
+    }
+}
+
+// =============================================================================
 // MARK: - <BugsnagClassLevelMetadataStore>
 // =============================================================================
 

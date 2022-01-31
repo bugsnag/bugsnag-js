@@ -114,6 +114,7 @@
 #pragma mark - Memory -
 
 #define BSG_KSCrashField_Free "free"
+#define BSG_KSCrashField_Size "size"
 #define BSG_KSCrashField_Usable "usable"
 
 #pragma mark - Error -
@@ -170,6 +171,7 @@
 #pragma mark Standard
 #define BSG_KSCrashField_AppStats "application_stats"
 #define BSG_KSCrashField_BinaryImages "binary_images"
+#define BSG_KSCrashField_Disk "disk"
 #define BSG_KSCrashField_SystemAtCrash "system_atcrash"
 #define BSG_KSCrashField_System "system"
 #define BSG_KSCrashField_Memory "memory"

@@ -24,8 +24,8 @@ module.exports = class BugsnagIpcMain {
     )
   }
 
-  update ({ context, user, metadata }) {
-    return this.clientStateManager.bulkUpdate({ context, user, metadata })
+  update ({ context, user, metadata, features }) {
+    return this.clientStateManager.bulkUpdate({ context, user, metadata, features })
   }
 
   dispatch (eventObject) {
@@ -102,6 +102,7 @@ module.exports = class BugsnagIpcMain {
       }
       event.context = event.context || this.client._context
       event._metadata = { ...event._metadata, ...this.client._metadata }
+      event._features = { ...event._features, ...this.client._features }
       event._user = { ...event._user, ...this.client._user }
       event.breadcrumbs = this.client._breadcrumbs.slice()
 
@@ -112,8 +113,8 @@ module.exports = class BugsnagIpcMain {
         if (!shouldSend) return resolve({ shouldSend: false })
 
         // extract just the properties we want from the event
-        const { app, breadcrumbs, context, device, _metadata, _user } = event
-        resolve({ app, breadcrumbs, context, device, metadata: _metadata, user: _user })
+        const { app, breadcrumbs, context, device, _metadata, _features, _user } = event
+        resolve({ app, breadcrumbs, context, device, metadata: _metadata, features: _features, user: _user })
       })
     })
   }
@@ -159,6 +160,10 @@ module.exports = class BugsnagIpcMain {
       ['addMetadata', this.client.addMetadata.bind(this.client)],
       ['clearMetadata', this.client.clearMetadata.bind(this.client)],
       ['getMetadata', this.client.getMetadata.bind(this.client)],
+      ['addFeatureFlag', this.client.addFeatureFlag.bind(this.client)],
+      ['addFeatureFlags', this.client.addFeatureFlags.bind(this.client)],
+      ['clearFeatureFlag', this.client.clearFeatureFlag.bind(this.client)],
+      ['clearFeatureFlags', this.client.clearFeatureFlags.bind(this.client)],
       ['getUser', this.client.getUser.bind(this.client)],
       ['setUser', this.client.setUser.bind(this.client)],
       ['dispatch', this.dispatch.bind(this)],
