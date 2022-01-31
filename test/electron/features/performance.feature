@@ -1,5 +1,5 @@
+@flaky
 Feature: Startup performance
-
     Scenario Outline: Notifier starts in a reasonable time frame
         Given I launch an app with configuration:
             | bugsnag | <config> |
