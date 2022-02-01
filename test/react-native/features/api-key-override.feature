@@ -1,5 +1,4 @@
-@ios_only
-Feature: iOS API key override
+Feature: API key override
 
 Scenario: Handled JS error overrides API key
   When I run "EventApiKeyOverrideScenario"
