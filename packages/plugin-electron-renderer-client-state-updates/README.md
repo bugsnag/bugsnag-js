@@ -1,4 +1,4 @@
-# @bugsnag/plugin-electron-renderer-client-sync
+# @bugsnag/plugin-electron-renderer-client-state-updates
 
 This plugin interacts with the IPC layer injected to the browser environment by `@bugsnag/plugin-electron-ipc`.
 

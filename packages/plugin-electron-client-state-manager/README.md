@@ -1,4 +1,4 @@
-# @bugsnag/plugin-client-state-manager
+# @bugsnag/plugin-electron-client-state-manager
 
 This plugin provides a wrapper around the parts of state that need to be synchronised, providing a way for listeners to be notified of changes.
 

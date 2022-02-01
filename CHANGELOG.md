@@ -1,10 +1,26 @@
 # Changelog
 
-## TBD
+### TBD
 
 ### Fixed
 
 - (react-native) Handle circular references in metadata before it's sent to the native notifier layer [#1673](https://github.com/bugsnag/bugsnag-js/pull/1673)
+
+### Changed
+- (react-native) Update bugsnag-android to v5.19.2
+  - New APIs to support forthcoming feature flag and experiment functionality. For more information, please see https://docs.bugsnag.com/product/features-experiments.
+  - Explicitly define Kotlin api/language versions
+    [bugsnag-android#1564](https://github.com/bugsnag/bugsnag-android/pull/1564)
+  - Build project with Kotlin 1.4, maintain compat with Kotlin 1.3
+    [bugsnag-android#1565](https://github.com/bugsnag/bugsnag-android/pull/1565)
+  - Discarded unhandled exceptions are propagated to any previously registered handlers
+    [bugsnag-android#1584](https://github.com/bugsnag/bugsnag-android/pull/1584)
+  - Fix SIGABRT crashes caused by race conditions in the NDK layer
+    [bugsnag-android#1585](https://github.com/bugsnag/bugsnag-android/pull/1585)
+  - Fixed an issue where feature-flags were not always sent if an OnSendCallback was configured
+    [bugsnag-android#1589](https://github.com/bugsnag/bugsnag-android/pull/1589)
+  - Fix a bug where api keys set in React Native callbacks were ignored
+    [bugsnag-android#1592](https://github.com/bugsnag/bugsnag-android/pull/1592)
 
 ## 7.16.0 (2022-01-25)
 
