@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/delivery-react-native",
-  "version": "7.16.0",
+  "version": "7.16.1",
   "main": "delivery.js",
   "description": "@bugsnag/js delivery mechanism for React Native",
   "homepage": "https://www.bugsnag.com/",
@@ -17,7 +17,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^7.16.0"
+    "@bugsnag/core": "^7.16.1"
   },
   "peerDependencies": {
     "@bugsnag/core": "^7.0.0"

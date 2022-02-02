@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-stackframe-path-normaliser",
-  "version": "7.16.0",
+  "version": "7.16.1",
   "main": "path-normaliser.js",
   "description": "@bugsnag/js plugin to normalise file paths in stackframes",
   "homepage": "https://www.bugsnag.com/",
@@ -17,6 +17,6 @@
     "@bugsnag/core": "^7.0.0"
   },
   "devDependencies": {
-    "@bugsnag/core": "^7.16.0"
+    "@bugsnag/core": "^7.16.1"
   }
 }

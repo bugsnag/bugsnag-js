@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-react-native-app-state-breadcrumbs",
-  "version": "7.16.0",
+  "version": "7.16.1",
   "main": "app-state.js",
   "description": "@bugsnag/js plugin to create breadcrumbs when a React Native app enters the foreground/background",
   "homepage": "https://www.bugsnag.com/",
@@ -17,7 +17,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^7.16.0"
+    "@bugsnag/core": "^7.16.1"
   },
   "peerDependencies": {
     "@bugsnag/core": "^7.0.0"
