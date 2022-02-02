@@ -7,7 +7,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 export class ReactNavigationBreadcrumbsDisabledScenario extends Scenario {
   constructor (configuration, _jsConfig) {
     super()
-    configuration.enabledBreadcrumbTypes = []
+    configuration.enabledBreadcrumbTypes = ['process', 'request', 'log']
   }
 
   view () {

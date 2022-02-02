@@ -1,4 +1,5 @@
 const { DeviceEventEmitter, NativeEventEmitter, NativeModules, Platform } = require('react-native')
+const derecursify = require('@bugsnag/core/lib/derecursify')
 
 module.exports = (NativeClient) => ({
   load: (client) => {
@@ -7,7 +8,7 @@ module.exports = (NativeClient) => ({
       // to JSON() method doesn't get called before passing the object over the
       // bridge. This happens in the remote debugger and means the "message"
       // property is incorrectly named "name"
-      NativeClient.leaveBreadcrumb({ ...breadcrumb })
+      NativeClient.leaveBreadcrumb(derecursify(breadcrumb))
     }, true)
 
     const origSetUser = client.setUser
@@ -28,9 +29,9 @@ module.exports = (NativeClient) => ({
     client.addMetadata = function (section, key, value) {
       const ret = origAddMetadata.apply(this, arguments)
       if (typeof key === 'object') {
-        NativeClient.addMetadata(section, key)
+        NativeClient.addMetadata(section, derecursify(key))
       } else {
-        NativeClient.addMetadata(section, { [key]: value })
+        NativeClient.addMetadata(section, { [key]: derecursify(value) })
       }
       return ret
     }

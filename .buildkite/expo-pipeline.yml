@@ -114,7 +114,6 @@ steps:
           - --a11y-locator
           - --fail-fast
           - --retry=2
-          - --resilient
     concurrency: 9
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
@@ -139,7 +138,6 @@ steps:
           - --appium-version=1.16.0
           - --fail-fast
           - --retry=2
-          - --resilient
     concurrency: 9
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
@@ -171,7 +169,6 @@ steps:
           - --retry=2
           - --appium-version=1.18.0
           - --capabilities={"appWaitForLaunch":"false"}
-          - --resilient
     concurrency: 9
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
@@ -200,7 +197,6 @@ steps:
           - --a11y-locator
           - --fail-fast
           - --retry=2
-          - --resilient
     concurrency: 9
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
@@ -227,7 +223,6 @@ steps:
           - --a11y-locator
           - --fail-fast
           - --retry=2
-          - --resilient
     concurrency: 9
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
@@ -254,7 +249,6 @@ steps:
           - --a11y-locator
           - --fail-fast
           - --retry=2
-          - --resilient
     concurrency: 9
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
@@ -280,7 +274,6 @@ steps:
           - --appium-version=1.16.0
           - --fail-fast
           - --retry=2
-          - --resilient
     concurrency: 9
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
@@ -305,7 +298,6 @@ steps:
           - --a11y-locator
           - --fail-fast
           - --retry=2
-          - --resilient
     concurrency: 9
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
