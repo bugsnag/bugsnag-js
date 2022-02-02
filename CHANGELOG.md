@@ -2,6 +2,10 @@
 
 ### TBD
 
+### Fixed
+
+- (react-native) Handle circular references in metadata before it's sent to the native notifier layer [#1673](https://github.com/bugsnag/bugsnag-js/pull/1673)
+
 ### Changed
 - (react-native) Update bugsnag-android to v5.19.2
   - New APIs to support forthcoming feature flag and experiment functionality. For more information, please see https://docs.bugsnag.com/product/features-experiments.

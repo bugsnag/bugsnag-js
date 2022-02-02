@@ -3,6 +3,7 @@
     "name": "oh crumbs",
     "timestamp": "^\\d{4}\\-\\d{2}\\-\\d{2}T\\d{2}:\\d{2}:[\\d\\.]+Z?$",
     "metaData": {
-        "from": "javascript"
+        "from": "javascript",
+        "circle": "[Circular]"
     }
 }

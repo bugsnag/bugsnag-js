@@ -46,8 +46,16 @@ describe('delivery: react native', () => {
       }
     }
     const c = new Client({ apiKey: 'api_key' })
+
+    const metaData: any = {
+      from: 'javascript'
+    }
+
+    // ensure that circular references in metadata are safely handled
+    metaData.circle = metaData
+
     c._setDelivery(client => delivery(client, NativeClient))
-    c.leaveBreadcrumb('hi')
+    c.leaveBreadcrumb('hi', metaData, 'state')
     c.setContext('test screen')
     c.setUser('123')
     c.notify(new Error('oh no'), (e) => {
@@ -65,6 +73,10 @@ describe('delivery: react native', () => {
       expect(sent[0].threads).toEqual([])
       expect(sent[0].breadcrumbs.length).toBe(1)
       expect(sent[0].breadcrumbs[0].message).toBe('hi')
+      expect(sent[0].breadcrumbs[0].metadata).toStrictEqual({
+        from: 'javascript',
+        circle: '[Circular]'
+      })
       expect(sent[0].context).toBe('test screen')
       expect(sent[0].user).toEqual({ id: '123', email: undefined, name: undefined })
       expect(sent[0].metadata).toEqual({})
