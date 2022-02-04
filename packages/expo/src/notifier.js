@@ -28,7 +28,7 @@ const internalPlugins = [
   require('@bugsnag/plugin-expo-device'),
   require('@bugsnag/plugin-expo-app'),
   require('@bugsnag/plugin-console-breadcrumbs'),
-  require('@bugsnag/plugin-network-breadcrumbs')([NET_INFO_REACHABILITY_URL, Constants.manifest.logUrl]),
+  require('@bugsnag/plugin-network-breadcrumbs')([NET_INFO_REACHABILITY_URL, Constants.manifest?.logUrl || Constants.manifest2?.extra?.expoGo?.logUrl]),
   require('@bugsnag/plugin-react-native-app-state-breadcrumbs'),
   require('@bugsnag/plugin-react-native-connectivity-breadcrumbs'),
   require('@bugsnag/plugin-react-native-orientation-breadcrumbs'),
