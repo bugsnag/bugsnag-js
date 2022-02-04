@@ -31,6 +31,8 @@ module.exports = {
     client.addOnSession(session => {
       if (Constants.manifest.revisionId) {
         session.app.codeBundleId = Constants.manifest.revisionId
+      } else if (Constants.manifest2?.extra?.expoClient?.revisionId) {
+        session.app.codeBundleId = Constants.manifest2.extra.expoClient.revisionId
       }
     })
 
