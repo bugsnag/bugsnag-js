@@ -65,7 +65,7 @@ steps:
     env:
       REACT_NATIVE_VERSION: rn0.63
       LANG: "en_US.UTF-8"
-      DEVELOPER_DIR: "/Applications/Xcode12.app"
+      DEVELOPER_DIR: "/Applications/Xcode13.app"
     artifact_paths: build/rn0.63.ipa
     commands:
       - npm run test:build-react-native-ios
@@ -91,7 +91,7 @@ steps:
     env:
       REACT_NATIVE_VERSION: rn0.64-hermes
       LANG: "en_US.UTF-8"
-      DEVELOPER_DIR: "/Applications/Xcode12.app"
+      DEVELOPER_DIR: "/Applications/Xcode13.app"
     artifact_paths: build/rn0.64-hermes.ipa
     commands:
       - npm run test:build-react-native-ios
@@ -153,7 +153,7 @@ steps:
       JS_SOURCE_DIR: "react_navigation_js"
       ARTEFACT_NAME: "r_navigation_0.63"
       LANG: "en_US.UTF-8"
-      DEVELOPER_DIR: "/Applications/Xcode12.app"
+      DEVELOPER_DIR: "/Applications/Xcode13.app"
     artifact_paths: build/r_navigation_0.63.ipa
     commands:
       - npm run test:build-react-native-ios
@@ -217,7 +217,7 @@ steps:
       JS_SOURCE_DIR: "react_native_navigation_js"
       ARTEFACT_NAME: "r_native_navigation_0.63"
       LANG: "en_US.UTF-8"
-      DEVELOPER_DIR: "/Applications/Xcode12.app"
+      DEVELOPER_DIR: "/Applications/Xcode13.app"
     artifact_paths: build/r_native_navigation_0.63.ipa
     commands:
       - npm run test:build-react-native-ios
