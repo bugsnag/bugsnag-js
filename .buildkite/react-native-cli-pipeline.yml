@@ -245,7 +245,7 @@ steps:
     key: 'rn-0-60-ipa'
     timeout_in_minutes: 30
     agents:
-      queue: 'opensource-mac-cocoa-11'
+      queue: "opensource-mac-cocoa-10-15"
     env:
       DEBUG: true
       LANG: "en_US.UTF-8"
@@ -258,7 +258,7 @@ steps:
     key: 'rn-0-61-ipa'
     timeout_in_minutes: 30
     agents:
-      queue: 'opensource-mac-cocoa-11'
+      queue: "opensource-mac-cocoa-10-15"
     env:
       DEBUG: true
       LANG: "en_US.UTF-8"
@@ -271,7 +271,7 @@ steps:
     key: 'rn-0-62-ipa'
     timeout_in_minutes: 30
     agents:
-      queue: 'opensource-mac-cocoa-11'
+      queue: "opensource-mac-cocoa-10-15"
     env:
       DEBUG: true
       LANG: "en_US.UTF-8"
