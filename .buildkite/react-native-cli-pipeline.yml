@@ -245,7 +245,7 @@ steps:
     key: 'rn-0-60-ipa'
     timeout_in_minutes: 30
     agents:
-      queue: 'opensource-mac-cocoa-11'
+      queue: "opensource-mac-cocoa-10-15"
     env:
       DEBUG: true
       LANG: "en_US.UTF-8"
@@ -258,7 +258,7 @@ steps:
     key: 'rn-0-61-ipa'
     timeout_in_minutes: 30
     agents:
-      queue: 'opensource-mac-cocoa-11'
+      queue: "opensource-mac-cocoa-10-15"
     env:
       DEBUG: true
       LANG: "en_US.UTF-8"
@@ -271,7 +271,7 @@ steps:
     key: 'rn-0-62-ipa'
     timeout_in_minutes: 30
     agents:
-      queue: 'opensource-mac-cocoa-11'
+      queue: "opensource-mac-cocoa-10-15"
     env:
       DEBUG: true
       LANG: "en_US.UTF-8"
@@ -284,11 +284,11 @@ steps:
     key: 'rn-0-63-ipa'
     timeout_in_minutes: 30
     agents:
-      queue: 'opensource-mac-cocoa-11'
+      queue: "opensource-arm-mac-cocoa-12"
     env:
       DEBUG: true
       LANG: "en_US.UTF-8"
-      DEVELOPER_DIR: "/Applications/Xcode11.app"
+      DEVELOPER_DIR: "/Applications/Xcode13.app"
     artifact_paths: build/rn0_63.ipa
     commands:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_63
@@ -297,11 +297,11 @@ steps:
     key: 'rn-0-63-expo-ejected-ipa'
     timeout_in_minutes: 30
     agents:
-      queue: 'opensource-mac-cocoa-11'
+      queue: "opensource-arm-mac-cocoa-12"
     env:
       DEBUG: true
       LANG: "en_US.UTF-8"
-      DEVELOPER_DIR: "/Applications/Xcode12.app"
+      DEVELOPER_DIR: "/Applications/Xcode13.app"
     artifact_paths: build/rn0_63_expo_ejected.ipa
     commands:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_63_expo_ejected
@@ -310,11 +310,11 @@ steps:
     key: 'rn-0-64-ipa'
     timeout_in_minutes: 30
     agents:
-      queue: 'opensource-mac-cocoa-11'
+      queue: "opensource-arm-mac-cocoa-12"
     env:
       DEBUG: true
       LANG: "en_US.UTF-8"
-      DEVELOPER_DIR: "/Applications/Xcode12.app"
+      DEVELOPER_DIR: "/Applications/Xcode13.app"
     artifact_paths: build/rn0_64.ipa
     commands:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_64
@@ -323,11 +323,11 @@ steps:
     key: 'rn-0-64-hermes-ipa'
     timeout_in_minutes: 60
     agents:
-      queue: 'opensource-mac-cocoa-11'
+      queue: "opensource-arm-mac-cocoa-12"
     env:
       DEBUG: true
       LANG: "en_US.UTF-8"
-      DEVELOPER_DIR: "/Applications/Xcode12.app"
+      DEVELOPER_DIR: "/Applications/Xcode13.app"
     artifact_paths: build/rn0_64_hermes.ipa
     commands:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_64_hermes
