@@ -1,9 +1,7 @@
 import { FileStore } from '..'
 import { basename, dirname, join } from 'path'
-import { promises } from 'fs'
+import { mkdir, readFile, rm, writeFile } from 'fs/promises'
 import { tmpdir } from 'os'
-
-const { mkdir, readFile, rm, writeFile } = promises
 
 describe('FileStore', () => {
   const fixtures = join(tmpdir(), 'fixtures', 'storage')

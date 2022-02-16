@@ -1,7 +1,7 @@
-import { promises, constants } from 'fs'
+import { constants } from 'fs'
+import { access, mkdtemp, readdir, readFile, rm, writeFile } from 'fs/promises'
 import { join } from 'path'
 import PayloadQueue from '../queue'
-const { access, mkdtemp, readdir, readFile, rmdir, writeFile } = promises
 const { F_OK } = constants
 
 const invalidDir = () => process.platform === 'win32' ? '6:\\non\\existent' : '/dev/null/non/existent'
@@ -14,7 +14,7 @@ describe('delivery: electron -> queue', () => {
   })
 
   afterEach(async () => {
-    await rmdir(tempdir, { recursive: true })
+    await rm(tempdir, { recursive: true })
   })
 
   describe('init()', () => {

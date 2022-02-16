@@ -1,8 +1,6 @@
-import { promises } from 'fs'
+import { mkdtemp, rm, writeFile } from 'fs/promises'
 import { join } from 'path'
 import sendMinidumpFactory from '../send-minidump'
-
-const { mkdtemp, rmdir, writeFile } = promises
 
 const client = {
   _config: {
@@ -21,7 +19,7 @@ describe('electron-minidump-delivery: sendMinidump', () => {
     minidumpsPath = await mkdtemp('send-minidumps-')
   })
 
-  afterEach(() => rmdir(minidumpsPath, { recursive: true }))
+  afterEach(() => rm(minidumpsPath, { recursive: true }))
 
   it('sends minidump successfully', async () => {
     const net = {
