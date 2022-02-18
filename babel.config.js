@@ -26,6 +26,7 @@ module.exports = api => {
 
   plugins.push(
     ['@babel/plugin-transform-arrow-functions'],
+    ['@babel/plugin-transform-block-scoping'],
     ['@babel/plugin-transform-classes', { loose: true }],
     ['@babel/plugin-transform-computed-properties', { loose: true }],
     ['@babel/plugin-transform-destructuring', { loose: true }],
