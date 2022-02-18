@@ -10,7 +10,7 @@
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
     "es3ify-webpack-plugin": "0.0.1",
-    "uglifyjs-webpack-plugin": "2.0.1",
+    "uglifyjs-webpack-plugin": "2.2.0",
     "react": "^16.5.0",
     "react-dom": "^16.5.0",
     "webpack": "^4.8.1",

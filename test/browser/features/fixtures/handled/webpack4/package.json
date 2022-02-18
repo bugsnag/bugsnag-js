@@ -6,7 +6,7 @@
   },
   "dependencies": {
     "es3ify-webpack-plugin": "0.0.1",
-    "uglifyjs-webpack-plugin": "2.0.1",
+    "uglifyjs-webpack-plugin": "2.2.0",
     "webpack": "^4.8.1",
     "webpack-cli": "^3.1.2"
   }
