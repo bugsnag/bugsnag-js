@@ -221,7 +221,7 @@ describe('delivery: expo -> queue', () => {
         // eslint-disable-next-line jest/no-try-expect
         expect(e).toBeTruthy()
         // eslint-disable-next-line jest/no-try-expect
-        expect(e.message).toBe('fleerp')
+        expect((e as Error).message).toBe('fleerp')
         didErr = true
       }
       expect(didErr).toBe(true)

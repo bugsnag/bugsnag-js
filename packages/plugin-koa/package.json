@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@bugsnag/core": "^7.16.0",
-    "@types/koa": "^2.11.3"
+    "@types/koa": "2.11.3"
   },
   "dependencies": {
     "iserror": "^0.0.2"

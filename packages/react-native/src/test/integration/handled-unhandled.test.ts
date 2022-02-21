@@ -40,16 +40,12 @@ import rnPromise from '@bugsnag/plugin-react-native-unhandled-rejection/node_mod
 // eslint-disable-next-line
 import Bugsnag from '../../..'
 
-declare global {
-  namespace NodeJS { // eslint-disable-line
-    interface Global {
-      ErrorUtils: {
-        setGlobalHandler: (fn: Function) => void
-        getGlobalHandler: () => Function
-      }
-    }
-  }
+interface ErrorUtilsType {
+  setGlobalHandler: (fn: Function) => void
+  getGlobalHandler: () => Function
 }
+
+declare var ErrorUtils: ErrorUtilsType
 
 // we can only start bugsnag once per file, because it installs global handlers
 // and doesn't have a way to uninstall itself
@@ -58,7 +54,7 @@ beforeAll(() => {
   jest.spyOn(console, 'warn').mockImplementation(() => {})
 
   // leaving the default handler intact causes simulated unhandled errors to fail tests
-  global.ErrorUtils.setGlobalHandler(() => {})
+  ErrorUtils.setGlobalHandler(() => {})
   Bugsnag.start()
 })
 
@@ -80,7 +76,7 @@ describe('@bugsnag/react-native: handled and unhandled errors', () => {
   it('should send an unhandled error', (done) => {
     // we can't actually throw an error as that will fail the test, but we can
     // send an error to the handler that Bugsnag has hooked into
-    global.ErrorUtils.getGlobalHandler()(new Error('hi'))
+    ErrorUtils.getGlobalHandler()(new Error('hi'))
     setTimeout(() => {
       expect(NativeModules.BugsnagReactNative._events.length).toBe(1)
       expect(NativeModules.BugsnagReactNative._events[0].errors[0].errorMessage).toBe('hi')

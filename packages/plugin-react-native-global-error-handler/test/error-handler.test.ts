@@ -3,7 +3,14 @@ import plugin from '../'
 
 import Client from '@bugsnag/core/client'
 
-class MockErrorUtils {
+interface ErrorUtilsType {
+  setGlobalHandler: (fn: (err: Error) => void) => void
+  getGlobalHandler: () => (err: Error) => void
+}
+
+declare var ErrorUtils: ErrorUtilsType
+
+class MockErrorUtils implements ErrorUtilsType {
   _globalHandler: ((err: Error) => void) | null;
 
   constructor () {
@@ -15,7 +22,7 @@ class MockErrorUtils {
   }
 
   getGlobalHandler () {
-    return this._globalHandler
+    return this._globalHandler!
   }
 }
 
@@ -28,9 +35,9 @@ describe('plugin: react native global error handler', () => {
   })
 
   it('should warn if ErrorUtils is not defined', done => {
-    const errorUtils = global.ErrorUtils
+    const errorUtils = ErrorUtils
     // @ts-ignore
-    global.ErrorUtils = undefined
+    ErrorUtils = undefined
     const client = new Client({
       apiKey: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
       logger: {
@@ -38,7 +45,7 @@ describe('plugin: react native global error handler', () => {
         info: () => {},
         warn: msg => {
           expect(msg).toMatch(/ErrorUtils/)
-          global.ErrorUtils = errorUtils
+          ErrorUtils = errorUtils
           done()
         },
         error: () => {}

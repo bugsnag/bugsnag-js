@@ -107,9 +107,9 @@ describe('expo-cli: install', () => {
       await install('yarn', 'latest', projectRoot)
       expect('should not be here').toBe(false)
     } catch (e) {
-      expect(e.message).toMatch(/Command exited with non-zero exit code/)
-      expect(e.message).toMatch(/some data on stdout/)
-      expect(e.message).toMatch(/some data on stderr/)
+      expect((e as Error).message).toMatch(/Command exited with non-zero exit code/)
+      expect((e as Error).message).toMatch(/some data on stdout/)
+      expect((e as Error).message).toMatch(/some data on stderr/)
       await clean()
     }
   })
@@ -144,7 +144,7 @@ describe('expo-cli: install', () => {
       await install('yarn', 'latest', projectRoot)
       expect('should not be here').toBe(false)
     } catch (e) {
-      expect(e.message).toMatch(/floop/)
+      expect((e as Error).message).toMatch(/floop/)
       await clean()
     }
   })
@@ -161,7 +161,7 @@ describe('expo-cli: install', () => {
       await install(undefined, 'latest', projectRoot)
       expect('should not be here').toBe(false)
     } catch (e) {
-      expect(e.message).toMatch(/Don’t know what command to use for /)
+      expect((e as Error).message).toMatch(/Don’t know what command to use for /)
       await clean()
     }
   })

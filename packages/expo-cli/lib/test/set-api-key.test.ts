@@ -31,7 +31,7 @@ describe('expo-cli: set-api-key', () => {
       await setApiKey('AABBCCDD', projectRoot)
       expect('should not be here').toBe(false)
     } catch (e) {
-      expect(e.message).toMatch(/^Couldn’t find app\.json in/)
+      expect((e as Error).message).toMatch(/^Couldn’t find app\.json in/)
       await clean()
     }
   })
@@ -42,7 +42,7 @@ describe('expo-cli: set-api-key', () => {
       await setApiKey('AABBCCDD', projectRoot)
       expect('should not be here').toBe(false)
     } catch (e) {
-      expect(e.message).toMatch(/it wasn’t valid JSON/)
+      expect((e as Error).message).toMatch(/it wasn’t valid JSON/)
       await clean()
     }
   })
@@ -52,7 +52,7 @@ describe('expo-cli: set-api-key', () => {
       await setApiKey('AABBCCDD' /* projectRoot is required */)
       expect('should not be here').toBe(false)
     } catch (e) {
-      expect(e.message).toMatch(/The "path" argument must be of type string/)
+      expect((e as Error).message).toMatch(/The "path" argument must be of type string/)
     }
   })
 })
