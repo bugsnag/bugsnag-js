@@ -3,6 +3,6 @@
 cat - | ../../node_modules/.bin/uglifyjs \
   --compress \
   --mangle \
-  --ie8 \
+  --ie \
   --source-map "includeSources,content=inline,url=$(basename "$1").map" \
   --output "$1"
