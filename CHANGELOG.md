@@ -1,5 +1,11 @@
 # Changelog
 
+### TBD
+
+### Changed
+
+- (plugin-react-navigation): Allow React Navigation v6 as a peer dependency [#1691](https://github.com/bugsnag/bugsnag-js/pull/1691)
+
 ### 7.16.1 (2022-02-02)
 
 ### Fixed
