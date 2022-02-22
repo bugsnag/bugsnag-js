@@ -1,8 +1,6 @@
-import { promises } from 'fs'
+import { mkdtemp, readFile, rm } from 'fs/promises'
 import { join } from 'path'
 import { NativeClient } from '..'
-
-const { mkdtemp, readFile, rmdir } = promises
 
 describe('persisting changes to disk', () => {
   let tempdir: string = ''
@@ -22,7 +20,7 @@ describe('persisting changes to disk', () => {
 
   afterEach(async (done) => {
     NativeClient.uninstall()
-    await rmdir(tempdir, { recursive: true })
+    await rm(tempdir, { recursive: true })
     done()
   })
 
