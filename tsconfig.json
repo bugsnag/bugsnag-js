@@ -78,7 +78,7 @@
     "packages/plugin-contextualize",
     "packages/plugin-expo-app",
     "packages/expo-cli",
-    "packages/plugin-expo",
+    "packages/expo",
     "packages/plugin-expo-device",
     "packages/plugin-navigation-breadcrumbs",
     "packages/plugin-network-breadcrumbs",

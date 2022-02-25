@@ -105,20 +105,17 @@ const API_KEY = '030bab153e7c2349be364d23b5ae93b5'
 
 describe('expo notifier', () => {
   let Bugsnag: typeof BugsnagExpoStatic
-  let _delivery
+  let _delivery = {
+    sendSession: jest.fn((p, cb?: () => void) => { cb?.() }),
+    sendEvent: jest.fn((p, cb?: () => void) => { cb?.() })
+  }
 
   beforeAll(() => {
     jest.spyOn(console, 'debug').mockImplementation(() => {})
   })
 
   beforeEach(() => {
-    (delivery as jest.MockedFunction<typeof delivery>).mockImplementation(() => {
-      _delivery = {
-        sendSession: jest.fn((p, cb?: () => void) => { cb?.() }),
-        sendEvent: jest.fn((p, cb?: () => void) => { cb?.() })
-      }
-      return _delivery
-    })
+    (delivery as jest.MockedFunction<typeof delivery>).mockImplementation(() => _delivery)
 
     jest.isolateModules(() => {
       Bugsnag = require('..')
