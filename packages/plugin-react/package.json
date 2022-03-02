@@ -19,8 +19,7 @@
   ],
   "scripts": {
     "clean": "rm -fr dist && mkdir dist",
-    "build": "npm run clean && ../../bin/bundle src/index.js --standalone=BugsnagPluginReact | ../../bin/extract-source-map dist/bugsnag-react.js",
-    "postversion": "npm run build"
+    "build": "npm run clean && ../../bin/bundle src/index.js --standalone=BugsnagPluginReact | ../../bin/extract-source-map dist/bugsnag-react.js"
   },
   "author": "Bugsnag",
   "license": "MIT",

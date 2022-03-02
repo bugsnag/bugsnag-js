@@ -10,8 +10,7 @@
   },
   "scripts": {
     "clean": "rm -fr dist",
-    "build": "npm run clean && tsc -p tsconfig.build.json",
-    "preversion": "npm run build"
+    "build": "npm run clean && tsc -p tsconfig.build.json"
   },
   "files": [
     "bin",

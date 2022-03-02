@@ -25,6 +25,10 @@ cd /app/bugsnag-js
 npm ci
 npm run bootstrap -- --ci
 
+npx lerna run build \
+    --ignore @bugsnag/plugin-electron-app \
+    --ignore @bugsnag/plugin-electron-client-state-persistence
+
 # check if the browser package changed – if it didn't we don't need to upload to the CDN
 BROWSER_PACKAGE_CHANGED=$(npx lerna changed --parseable | grep -c packages/js$ || test $? = 1;)
 
