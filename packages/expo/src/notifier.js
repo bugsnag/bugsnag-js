@@ -43,17 +43,22 @@ const Bugsnag = {
     if (typeof opts === 'string') opts = { apiKey: opts }
     if (!opts) opts = {}
 
-    // attempt to fetch apiKey from app.json if we didn't get one explicitly passed
-    if (!opts.apiKey &&
-      Constants.manifest &&
-      Constants.manifest.extra &&
-      Constants.manifest.extra.bugsnag &&
-      Constants.manifest.extra.bugsnag.apiKey) {
-      opts.apiKey = Constants.manifest.extra.bugsnag.apiKey
+    // read the api key from app.json if one is not explicitly passed
+    if (!opts.apiKey) {
+      if (Constants.manifest?.extra?.bugsnag?.apiKey) {
+        opts.apiKey = Constants.manifest.extra.bugsnag.apiKey
+      } else if (Constants.manifest2?.extra?.expoClient?.extra?.bugsnag?.apiKey) {
+        opts.apiKey = Constants.manifest2.extra.expoClient.extra.bugsnag.apiKey
+      }
     }
 
-    if (!opts.appVersion && Constants.manifest && Constants.manifest.version) {
-      opts.appVersion = Constants.manifest.version
+    // read the version from app.json if one is not explicitly passed
+    if (!opts.appVersion) {
+      if (Constants.manifest?.version) {
+        opts.appVersion = Constants.manifest.version
+      } else if (Constants.manifest2?.extra?.expoClient?.version) {
+        opts.appVersion = Constants.manifest2.extra.expoClient.version
+      }
     }
 
     const bugsnag = new Client(opts, schema, internalPlugins, { name, version, url })

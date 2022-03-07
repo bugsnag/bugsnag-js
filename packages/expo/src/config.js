@@ -5,9 +5,14 @@ const Constants = require('expo-constants').default
 
 // If the developer property is not present in the manifest, it means the app is
 // not connected to a development tool and is either a published app running in
-// the Expo client, or a standalone app (we also assume production for a missing
-// manifest, but that should never happen)
-const IS_PRODUCTION = !Constants.manifest || !Constants.manifest.developer
+// the Expo client, or a standalone app
+let IS_PRODUCTION = true
+
+if (Constants.manifest) {
+  IS_PRODUCTION = !Constants.manifest.developer
+} else if (Constants.manifest2) {
+  IS_PRODUCTION = !Constants.manifest2?.extra?.expoGo?.developer
+}
 
 // The app can still run in production "mode" in development environments, in which
 // cases the global boolean __DEV__ will be set to true
