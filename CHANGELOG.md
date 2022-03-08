@@ -2,6 +2,10 @@
 
 ### TBD
 
+### Fixed
+
+- (expo): preliminary support for the Expo EAS Update. Please send us feedback on how we can improve our support! [kennethlynne](https://github.com/kennethlynne) [#1686](https://github.com/bugsnag/bugsnag-js/pull/1686) [#1695](https://github.com/bugsnag/bugsnag-js/pull/1695)
+
 ### Changed
 
 - (plugin-react-navigation): Allow React Navigation v6 as a peer dependency [#1691](https://github.com/bugsnag/bugsnag-js/pull/1691)
