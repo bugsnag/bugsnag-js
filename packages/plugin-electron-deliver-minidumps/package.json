@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-electron-deliver-minidumps",
-  "version": "7.16.1",
+  "version": "7.16.2",
   "main": "deliver-minidumps.js",
   "description": "@bugsnag/electron plugin to deliver minidumps to Bugsnag",
   "homepage": "https://www.bugsnag.com/",

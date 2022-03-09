@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/node",
-  "version": "7.16.1",
+  "version": "7.16.2",
   "main": "dist/bugsnag.js",
   "types": "types/bugsnag.d.ts",
   "description": "Bugsnag error reporter for Node.js",

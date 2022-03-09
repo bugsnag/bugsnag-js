@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/react-native-cli",
-  "version": "7.15.1",
+  "version": "7.16.2",
   "description": "A tool to help integrate Bugsnag with a React Native app",
   "bin": {
     "bugsnag-react-native-cli": "bin/cli"

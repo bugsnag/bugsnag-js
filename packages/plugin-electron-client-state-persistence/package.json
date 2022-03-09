@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-electron-client-state-persistence",
-  "version": "7.16.1",
+  "version": "7.16.2",
   "main": "client-state-persistence.js",
   "description": "@bugsnag/electron plugin to sync information between JS and native layer",
   "homepage": "https://www.bugsnag.com/",

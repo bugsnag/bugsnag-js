@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/delivery-electron",
-  "version": "7.16.1",
+  "version": "7.16.2",
   "main": "delivery.js",
   "description": "@bugsnag/electron delivery mechanism to send events, sessions, and crash dumps from Electron apps",
   "homepage": "https://www.bugsnag.com/",
