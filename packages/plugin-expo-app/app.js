@@ -29,8 +29,10 @@ module.exports = {
     }
 
     client.addOnSession(session => {
-      if (Constants.manifest.revisionId) {
+      if (Constants.manifest?.revisionId) {
         session.app.codeBundleId = Constants.manifest.revisionId
+      } else if (Constants.manifest2?.extra?.expoClient?.revisionId) {
+        session.app.codeBundleId = Constants.manifest2.extra.expoClient.revisionId
       }
     })
 
@@ -47,8 +49,10 @@ module.exports = {
 
       event.addMetadata('app', { nativeBundleVersion, nativeVersionCode })
 
-      if (Constants.manifest.revisionId) {
+      if (Constants.manifest?.revisionId) {
         event.app.codeBundleId = Constants.manifest.revisionId
+      } else if (Constants.manifest2?.extra?.expoClient?.revisionId) {
+        event.app.codeBundleId = Constants.manifest2.extra.expoClient.revisionId
       }
     }, true)
   }

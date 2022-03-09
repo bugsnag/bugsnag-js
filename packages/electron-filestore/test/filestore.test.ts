@@ -1,12 +1,11 @@
 import { FileStore } from '..'
 import { basename, dirname, join } from 'path'
-import { promises } from 'fs'
-
-const { mkdir, readFile, rmdir, writeFile } = promises
+import { mkdir, readFile, rm, writeFile } from 'fs/promises'
+import { tmpdir } from 'os'
 
 describe('FileStore', () => {
-  const fixtures = join(__dirname, 'fixtures', 'storage')
-  const crashes = join(__dirname, 'fixtures', 'crashes')
+  const fixtures = join(tmpdir(), 'fixtures', 'storage')
+  const crashes = join(tmpdir(), 'fixtures', 'crashes')
   let store: FileStore
 
   beforeEach(async () => {
@@ -16,8 +15,8 @@ describe('FileStore', () => {
   })
 
   afterEach(async () => {
-    await rmdir(fixtures, { recursive: true })
-    await rmdir(crashes, { recursive: true })
+    await rm(fixtures, { recursive: true, force: true })
+    await rm(crashes, { recursive: true, force: true })
   })
 
   describe('getPaths()', () => {

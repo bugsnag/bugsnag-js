@@ -8,8 +8,7 @@
     "url": "git@github.com:bugsnag/bugsnag-js.git"
   },
   "scripts": {
-    "build": "browserify preload.js --exclude electron --bare -o dist/preload.bundle.js",
-    "postversion": "npm run build"
+    "build": "browserify preload.js --exclude electron --bare -o dist/preload.bundle.js"
   },
   "publishConfig": {
     "access": "public"

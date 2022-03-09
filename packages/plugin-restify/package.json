@@ -19,8 +19,7 @@
   "scripts": {
     "clean": "rm -fr dist && mkdir dist",
     "build": "npm run clean && npm run build:dist",
-    "build:dist": "../../bin/bundle src/restify.js --node --exclude=iserror --standalone=bugsnag-restify | ../../bin/extract-source-map dist/bugsnag-restify.js",
-    "postversion": "npm run build"
+    "build:dist": "../../bin/bundle src/restify.js --node --exclude=iserror --standalone=bugsnag-restify | ../../bin/extract-source-map dist/bugsnag-restify.js"
   },
   "author": "Bugsnag",
   "license": "MIT",

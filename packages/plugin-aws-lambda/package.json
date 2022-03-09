@@ -18,8 +18,7 @@
   ],
   "scripts": {
     "clean": "rm -fr dist && mkdir dist",
-    "build": "npm run clean && ../../bin/bundle src/index.js --node --standalone=BugsnagPluginAwsLambda | ../../bin/extract-source-map dist/bugsnag-aws-lambda.js",
-    "postversion": "npm run build"
+    "build": "npm run clean && ../../bin/bundle src/index.js --node --standalone=BugsnagPluginAwsLambda | ../../bin/extract-source-map dist/bugsnag-aws-lambda.js"
   },
   "author": "Bugsnag",
   "license": "MIT",

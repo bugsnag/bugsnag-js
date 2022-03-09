@@ -32,6 +32,6 @@
   },
   "peerDependencies": {
     "@bugsnag/core": "^7.0.0",
-    "@react-navigation/native": "^5.0"
+    "@react-navigation/native": "^5.0 || ^6.0"
   }
 }

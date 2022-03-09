@@ -6,9 +6,8 @@ import { EventDeliveryPayload } from '@bugsnag/core/client'
 import { Client } from '@bugsnag/core'
 import PayloadQueue from '../queue'
 import PayloadDeliveryLoop from '../payload-loop'
-import { promises } from 'fs'
+import { mkdtemp, rm } from 'fs/promises'
 import EventEmitter from 'events'
-const { mkdtemp, rmdir } = promises
 
 const noopLogger = {
   debug: () => {},
@@ -77,8 +76,8 @@ describe('delivery: electron', () => {
 
   afterEach(async () => {
     const paths = filestore.getPaths()
-    await rmdir(paths.events, { recursive: true })
-    await rmdir(paths.sessions, { recursive: true })
+    await rm(paths.events, { recursive: true })
+    await rm(paths.sessions, { recursive: true })
   })
 
   it('sends events successfully', done => {

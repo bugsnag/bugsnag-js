@@ -25,8 +25,7 @@
     "build": "npm run clean && npm run build:esm2015 && npm run build:esm5",
     "build:esm2015": "ngc -p tsconfig.json",
     "build:esm5": "ngc -p tsconfig.esm5.json",
-    "test:types": "npm run build",
-    "postversion": "npm run build"
+    "test:types": "npm run build"
   },
   "author": "Bugsnag",
   "license": "MIT",
