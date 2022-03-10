@@ -75,10 +75,11 @@ module.exports = {
 }
 
 const getRequestAndMetadataFromReq = req => {
-  const requestInfo = extractRequestInfo(req)
+  const { body, ...requestInfo } = extractRequestInfo(req)
   return {
     metadata: requestInfo,
     request: {
+      body,
       clientIp: requestInfo.clientIp,
       headers: requestInfo.headers,
       httpMethod: requestInfo.httpMethod,
