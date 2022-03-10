@@ -15,7 +15,8 @@
   "files": [
     "lib",
     "types",
-    "*.js"
+    "*.js",
+    "*.ts"
   ],
   "author": "Bugsnag",
   "license": "MIT",
