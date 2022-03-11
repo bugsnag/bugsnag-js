@@ -9,16 +9,18 @@ Globals:
     Timeout: 3
     Environment:
       Variables:
-        BUGSNAG_API_KEY: <YOUR_BUGSNAG_API_KEY>
+        BUGSNAG_API_KEY: <YOUR_API_KEY>
 
 Resources:
   
-  AsyncUnhandledExceptionFunctionNode14:
+  AsyncUnhandledException:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: async/
+      CodeUri: async/unhandled-exception
       Handler: unhandled-exception.lambdaHandler
       Runtime: nodejs14.x
+      Layers:
+        - !Ref NodeDependenciesLayer
       Events:
         AsyncUnhandledException:
           Type: Api
@@ -26,12 +28,14 @@ Resources:
             Path: /async/unhandled-exception
             Method: get
 
-  AsyncHandledExceptionFunctionNode14:
+  AsyncHandledException:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: async/
+      CodeUri: async/handled-exception
       Handler: handled-exception.lambdaHandler
       Runtime: nodejs14.x
+      Layers:
+        - !Ref NodeDependenciesLayer
       Events:
         AsyncHandledException:
           Type: Api
@@ -39,12 +43,14 @@ Resources:
             Path: /async/handled-exception
             Method: get
 
-  AsyncPromiseRejectionFunctionNode14:
+  AsyncPromiseRejection:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: async/
+      CodeUri: async/promise-rejection
       Handler: promise-rejection.lambdaHandler
       Runtime: nodejs14.x
+      Layers:
+        - !Ref NodeDependenciesLayer
       Events:
         AsyncPromiseRejection:
           Type: Api
@@ -52,12 +58,14 @@ Resources:
             Path: /async/promise-rejection
             Method: get
 
-  AsyncTimeoutFunctionNode14:
+  AsyncTimeout:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: async/
+      CodeUri: async/timeout
       Handler: timeout.lambdaHandler
       Runtime: nodejs14.x
+      Layers:
+        - !Ref NodeDependenciesLayer
       Events:
         AsyncTimeout:
           Type: Api
@@ -65,12 +73,14 @@ Resources:
             Path: /async/timeout
             Method: get
 
-  CallbackUnhandledExceptionFunctionNode14:
+  CallbackUnhandledException:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: callback/
+      CodeUri: callback/unhandled-exception
       Handler: unhandled-exception.lambdaHandler
       Runtime: nodejs14.x
+      Layers:
+        - !Ref NodeDependenciesLayer
       Events:
         CallbackUnhandledException:
           Type: Api
@@ -78,12 +88,14 @@ Resources:
             Path: /callback/unhandled-exception
             Method: get
 
-  CallbackThrownUnhandledExceptionFunctionNode14:
+  CallbackThrownUnhandledException:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: callback/
+      CodeUri: callback/thrown-unhandled-exception
       Handler: thrown-unhandled-exception.lambdaHandler
       Runtime: nodejs14.x
+      Layers:
+        - !Ref NodeDependenciesLayer
       Events:
         CallbackThrownUnhandledException:
           Type: Api
@@ -91,12 +103,14 @@ Resources:
             Path: /callback/thrown-unhandled-exception
             Method: get
 
-  CallbackHandledExceptionFunctionNode14:
+  CallbackHandledException:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: callback/
+      CodeUri: callback/handled-exception
       Handler: handled-exception.lambdaHandler
       Runtime: nodejs14.x
+      Layers:
+        - !Ref NodeDependenciesLayer
       Events:
         CallbackHandledException:
           Type: Api
@@ -104,12 +118,14 @@ Resources:
             Path: /callback/handled-exception
             Method: get
 
-  CallbackPromiseRejectionFunctionNode14:
+  CallbackPromiseRejection:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: callback/
+      CodeUri: callback/promise-rejection
       Handler: promise-rejection.lambdaHandler
       Runtime: nodejs14.x
+      Layers:
+        - !Ref NodeDependenciesLayer
       Events:
         CallbackPromiseRejection:
           Type: Api
@@ -117,15 +133,26 @@ Resources:
             Path: /callback/promise-rejection
             Method: get
 
-  CallbackTimeoutFunctionNode14:
+  CallbackTimeout:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: callback/
+      CodeUri: callback/timeout
       Handler: timeout.lambdaHandler
       Runtime: nodejs14.x
+      Layers:
+        - !Ref NodeDependenciesLayer
       Events:
         CallbackPromiseRejection:
           Type: Api
           Properties:
             Path: /callback/timeout
             Method: get
+  
+  NodeDependenciesLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: node-dependencies-layer
+      Description: Dependencies for the Lambda Functions
+      ContentUri: dependencies-layer/
+      CompatibleRuntimes:
+        - nodejs14.x

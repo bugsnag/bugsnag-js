@@ -1,9 +1,0 @@
-{
-  "name": "simple-app",
-  "version": "1.0.0",
-  "description": "simple lambda app for testing",
-  "dependencies": {
-    "@bugsnag/js": "^7.11.0",
-    "@bugsnag/plugin-aws-lambda": "^7.11.0"
-  }
-}

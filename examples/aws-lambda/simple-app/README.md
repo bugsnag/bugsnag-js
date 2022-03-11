@@ -22,6 +22,12 @@ cd bugsnag-js/examples/aws-lambda/simple-app
 
 Replace `<YOUR_BUGSNAG_API_KEY>` in `template.yaml` with your own.
 
+### Install dependencies
+A Lambda layer is used to share dependencies (Bugsnag) across the functions. From the project root, install the dependecies before invoking the functions:
+```
+cd dependecies-layer
+npm install
+```
 ### Build
 ```
 sam build
@@ -32,6 +38,9 @@ To run all the functions on a local server:
 ```
 sam local start-api --host '127.0.0.1' -p '3000'
 ```
+To avoid building the dependency layer image on each invocation, you can use the `--warm-containers [EAGER | LAZY]` option. `EAGER` loads the layer containers for all functions at startup + persists them between invocations. `LAZY` only loads the layer containers when each function is first invoked, and then persists them for further invocations.
+
+
 Hit a function endpoint:
 ```
 curl -X GET 'http://127.0.0.1:3000/async/handled-exception'
@@ -41,10 +50,23 @@ To test a single function using a sample [Event](https://docs.aws.amazon.com/lam
 ```
 sam local invoke "<RESOURCE_NAME>" -e <path/to/event.json>
 ```
-e.g. to run the `CallbackHandledExceptionFunctionNode14` function:
+e.g. to run the `CallbackHandledException` function:
 ```
-sam local invoke "CallbackHandledExceptionFunctionNode14" -e events/callback/handled-exception.json
+sam local invoke "CallbackHandledException" -e events/callback/handled-exception.json
 ```
+
+### Available functions
+Function Name | Expected Response Code-Message
+--- | ---
+ `AsyncUnhandledException`| 502 - Internal server error
+ `AsyncHandledException` | 200 - Did not crash!
+ `AsyncPromiseRejection` | 502 - Internal server error
+ `AsyncTimeout` | 502 - Internal server error
+ `CallbackUnhandledException` | 502 - Internal server error
+ `CallbackThrownUnhandledException` | 502 - Internal server error
+ `CallbackHandledException` | 200 - Did not crash!
+ `CallbackPromiseRejection` | 502 - Internal server error
+ `CallbackTimeout` | 502 - Internal server error
 
 ## Known issues
 
