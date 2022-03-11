@@ -56,19 +56,17 @@ sam local invoke "CallbackHandledException" -e events/callback/handled-exception
 ```
 
 ### Available functions
-Function Name | Expected Response Code-Message
---- | ---
- `AsyncUnhandledException`| 502 - Internal server error
- `AsyncHandledException` | 200 - Did not crash!
- `AsyncPromiseRejection` | 502 - Internal server error
- `AsyncTimeout` | 502 - Internal server error
- `CallbackUnhandledException` | 502 - Internal server error
- `CallbackThrownUnhandledException` | 502 - Internal server error
- `CallbackHandledException` | 200 - Did not crash!
- `CallbackPromiseRejection` | 502 - Internal server error
- `CallbackTimeout` | 502 - Internal server error
 
-## Known issues
-
-- There is a bug with the SAM CLI that prevents Bugsnag from notifying you of timeouts when running the functions with the SAM CLI, see https://github.com/aws/aws-sam-cli/issues/2519. Timeout examples have been included and should work when deployed to AWS.
+Bugsnag's `createHandler` supports both [`async`](https://docs.aws.amazon.com/lambda/latest/dg/nodejs-handler.html#nodejs-handler-async) and [`callback`](https://docs.aws.amazon.com/lambda/latest/dg/nodejs-handler.html#nodejs-handler-sync) handlers. Examples are given for both types of handler.
+Function Name | Expected Response Code & Message | Purpose
+--- | --- | ---
+ `AsyncUnhandledException`| 502 - Internal server error | Error returned from the handler
+ `AsyncHandledException` | 200 - Did not crash! | Call to `Bugsnag.notify` inside the handler, successful response
+ `AsyncPromiseRejection` | 502 - Internal server error | Promise rejected inside handler
+ `AsyncTimeout` | 502 - Internal server error | Function times out - Bugsnag notifies [`lambdaTimeoutNotifyMs`](https://docs.bugsnag.com/platforms/javascript/aws-lambda/#lambdatimeoutnotifyms) before timeout
+ `CallbackUnhandledException` | 502 - Internal server error |  Error returned using handler's callback function
+ `CallbackThrownUnhandledException` | 502 - Internal server error | Error thrown inside the handler
+ `CallbackHandledException` | 200 - Did not crash! | Call to `Bugsnag.notify` inside the handler, successful response
+ `CallbackPromiseRejection` | 502 - Internal server error | Promise rejected inside handler
+ `CallbackTimeout` | 502 - Internal server error | Function times out - Bugsnag notifies [`lambdaTimeoutNotifyMs`](https://docs.bugsnag.com/platforms/javascript/aws-lambda/#lambdatimeoutnotifyms) before timeout
 
