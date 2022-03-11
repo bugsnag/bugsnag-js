@@ -18,6 +18,8 @@ var server = restify.createServer()
 
 server.pre(middleware.requestHandler)
 
+server.use(restify.plugins.bodyParser());
+
 // If the server hasn't started sending something within 2 seconds
 // it probably won't. So end the request and hurry the failing test
 // along.
@@ -77,6 +79,10 @@ server.get('/internal', function (req, res, next) {
 server.get('/handled', function (req, res, next) {
   req.bugsnag.notify(new Error('handled'))
   res.end('OK')
+})
+
+server.post('/bodytest', function (req, res, next) {
+  throw new Error('request body')
 })
 
 server.on('restifyError', middleware.errorHandler)

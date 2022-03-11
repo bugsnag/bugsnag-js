@@ -24,10 +24,10 @@ module.exports = {
       req.bugsnag = requestClient
 
       // extract request info and pass it to the relevant bugsnag properties
-      const { request, metadata } = getRequestAndMetadataFromReq(req)
-      requestClient.addMetadata('request', metadata)
       requestClient.addOnError((event) => {
+        const { request, metadata } = getRequestAndMetadataFromReq(req)
         event.request = { ...event.request, ...request }
+        requestClient.addMetadata('request', metadata)
       }, true)
 
       if (!client._config.autoDetectErrors) return next()
@@ -77,15 +77,16 @@ module.exports = {
 }
 
 const getRequestAndMetadataFromReq = req => {
-  const requestInfo = extractRequestInfo(req)
+  const { body, ...requestInfo } = extractRequestInfo(req)
   return {
     metadata: requestInfo,
     request: {
+      body,
       clientIp: requestInfo.clientIp,
       headers: requestInfo.headers,
       httpMethod: requestInfo.httpMethod,
       url: requestInfo.url,
-      referer: requestInfo.referer
+      referer: requestInfo.referer // Not part of the notifier spec for request but leaving for backwards compatibility
     }
   }
 }
