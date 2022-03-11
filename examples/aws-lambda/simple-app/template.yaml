@@ -17,7 +17,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: async/unhandled-exception
-      Handler: unhandled-exception.lambdaHandler
+      Handler: async-unhandled-exception.lambdaHandler
       Runtime: nodejs14.x
       Layers:
         - !Ref NodeDependenciesLayer
@@ -32,7 +32,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: async/handled-exception
-      Handler: handled-exception.lambdaHandler
+      Handler: async-handled-exception.lambdaHandler
       Runtime: nodejs14.x
       Layers:
         - !Ref NodeDependenciesLayer
@@ -47,7 +47,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: async/promise-rejection
-      Handler: promise-rejection.lambdaHandler
+      Handler: async-promise-rejection.lambdaHandler
       Runtime: nodejs14.x
       Layers:
         - !Ref NodeDependenciesLayer
@@ -62,7 +62,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: async/timeout
-      Handler: timeout.lambdaHandler
+      Handler: async-timeout.lambdaHandler
       Runtime: nodejs14.x
       Layers:
         - !Ref NodeDependenciesLayer
@@ -77,7 +77,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: callback/unhandled-exception
-      Handler: unhandled-exception.lambdaHandler
+      Handler: callback-unhandled-exception.lambdaHandler
       Runtime: nodejs14.x
       Layers:
         - !Ref NodeDependenciesLayer
@@ -92,7 +92,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: callback/thrown-unhandled-exception
-      Handler: thrown-unhandled-exception.lambdaHandler
+      Handler: callback-thrown-unhandled-exception.lambdaHandler
       Runtime: nodejs14.x
       Layers:
         - !Ref NodeDependenciesLayer
@@ -107,7 +107,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: callback/handled-exception
-      Handler: handled-exception.lambdaHandler
+      Handler: callback-handled-exception.lambdaHandler
       Runtime: nodejs14.x
       Layers:
         - !Ref NodeDependenciesLayer
@@ -122,7 +122,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: callback/promise-rejection
-      Handler: promise-rejection.lambdaHandler
+      Handler: callback-promise-rejection.lambdaHandler
       Runtime: nodejs14.x
       Layers:
         - !Ref NodeDependenciesLayer
@@ -137,7 +137,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: callback/timeout
-      Handler: timeout.lambdaHandler
+      Handler: callback-timeout.lambdaHandler
       Runtime: nodejs14.x
       Layers:
         - !Ref NodeDependenciesLayer
@@ -153,6 +153,6 @@ Resources:
     Properties:
       LayerName: node-dependencies-layer
       Description: Dependencies for the Lambda Functions
-      ContentUri: dependencies-layer/
+      ContentUri: callback-dependencies-layer/
       CompatibleRuntimes:
         - nodejs14.x
