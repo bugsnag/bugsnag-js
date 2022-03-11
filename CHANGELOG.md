@@ -1,5 +1,16 @@
 # Changelog
 
+## TBD
+
+### Changed
+
+- (react-native) Update bugsnag-android to v5.20.0
+  - The number of threads reported can now be limited using `Configuration.setMaxReportedThreads` (defaulting to 200)
+    [bugsnag-android#1607](https://github.com/bugsnag/bugsnag-android/pull/1607)
+  - Improved the performance and stability of the NDK and ANR plugins by caching JNI references on start
+    [bugsnag-android#1596](https://github.com/bugsnag/bugsnag-android/pull/1596)
+    [bugsnag-android#1601](https://github.com/bugsnag/bugsnag-android/pull/1601)
+
 ### v7.16.2 (2022-03-09)
 
 ### Fixed
