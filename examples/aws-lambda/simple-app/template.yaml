@@ -64,6 +64,7 @@ Resources:
       CodeUri: async/timeout
       Handler: async-timeout.lambdaHandler
       Runtime: nodejs14.x
+      Timeout: 3
       Layers:
         - !Ref NodeDependenciesLayer
       Events:
@@ -124,6 +125,7 @@ Resources:
       CodeUri: callback/promise-rejection
       Handler: callback-promise-rejection.lambdaHandler
       Runtime: nodejs14.x
+      Timeout: 3
       Layers:
         - !Ref NodeDependenciesLayer
       Events:
