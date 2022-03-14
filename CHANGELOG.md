@@ -1,6 +1,14 @@
 # Changelog
 
-### v7.16.2 (2022-03-09)
+## Unreleased
+
+
+### Fixed
+
+- (plugin-express): send the request body (if present) as `event.request.body` rather than `event.metadata.request.body` [#1702](https://github.com/bugsnag/bugsnag-js/pull/1702)
+- (plugin-restify): Include request body [#1701](https://github.com/bugsnag/bugsnag-js/pull/1701)
+
+## v7.16.2 (2022-03-09)
 
 ### Fixed
 
@@ -10,7 +18,7 @@
 
 - (plugin-react-navigation): Allow React Navigation v6 as a peer dependency [#1691](https://github.com/bugsnag/bugsnag-js/pull/1691)
 
-### 7.16.1 (2022-02-02)
+## 7.16.1 (2022-02-02)
 
 ### Fixed
 
