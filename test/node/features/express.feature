@@ -116,5 +116,5 @@ Scenario: adding body to request metadata
   And the exception "message" equals "request body"
   And the exception "type" equals "nodejs"
   And the "file" of stack frame 0 equals "scenarios/app.js"
-  And the event "metaData.request.body.data" equals "in_request_body"
+  And the event "request.body.data" equals "in_request_body"
   And the event "request.httpMethod" equals "POST"
