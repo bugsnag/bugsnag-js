@@ -27,7 +27,7 @@ docker build -t bugsnag-js-example-angular . && \
 docker run -p 4200:4200 -it bugsnag-js-example-angular
 ```
 
-__Note__: remember to replace `YOUR_API_KEY` in `src/lib/bugsnag.js` with your own!
+__Note__: remember to replace `YOUR_API_KEY` in `src/app/app.module.ts` with your own!
 
 ### Without docker
 Ensure you have a version of Node.js >=4 on your machine.
