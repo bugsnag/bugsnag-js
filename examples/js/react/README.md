@@ -29,10 +29,17 @@ __Note__: remember to replace `YOUR_API_KEY` in `src/lib/bugsnag.js` with your o
 
 ### Without docker
 
-Ensure you have a version of Node.js >=4 on your machine.
+To create an optimized production build, ensure you have a version of Node.js >=4 on your machine:
 
 ```
 npm install
 npm run serve
+```
+
+or alternatively, to run a development server that automatically reloads the page when you make changes to the code:0
+
+```
+npm install
+npm start
 ```
 __Note__: remember to replace `YOUR_API_KEY` in `src/index.js` with your own!
