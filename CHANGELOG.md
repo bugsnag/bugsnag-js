@@ -4,12 +4,20 @@
 
 ### Changed
 
-- (react-native) Update bugsnag-android to v5.20.0
+- (react-native) Update bugsnag-android to v5.21.0
   - The number of threads reported can now be limited using `Configuration.setMaxReportedThreads` (defaulting to 200)
     [bugsnag-android#1607](https://github.com/bugsnag/bugsnag-android/pull/1607)
   - Improved the performance and stability of the NDK and ANR plugins by caching JNI references on start
     [bugsnag-android#1596](https://github.com/bugsnag/bugsnag-android/pull/1596)
     [bugsnag-android#1601](https://github.com/bugsnag/bugsnag-android/pull/1601)
+  - Fix inconsistencies in stack trace quality for C/C++ events. Resolves a few
+    cases where file and line number information was not resolving to the correct
+    locations. This change may result in grouping changes to more correctly
+    highlight the root cause of an event.
+    [bugsnag-android#1605](https://github.com/bugsnag/bugsnag-android/pull/1605)
+    [bugsnag-android#1606](https://github.com/bugsnag/bugsnag-android/pull/1606)
+  - Fixed an issue where an uncaught exception on the main thread could in rare cases trigger an ANR.
+    [bugsnag-android#1624](https://github.com/bugsnag/bugsnag-android/pull/1624)
 
 ### Fixed
 
