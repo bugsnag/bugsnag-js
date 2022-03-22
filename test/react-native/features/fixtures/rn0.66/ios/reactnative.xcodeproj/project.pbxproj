@@ -13,6 +13,7 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		939747824B4F4894FD4D50D8 /* libPods-reactnative-reactnativeTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 20C89E6229FC2113568EA66F /* libPods-reactnative-reactnativeTests.a */; };
+		A1A3C2EF27EB3B4900C3970C /* BugsnagModule.m in Sources */ = {isa = PBXBuildFile; fileRef = A1A3C2ED27EB3B4900C3970C /* BugsnagModule.m */; };
 		A1EC7FD927E263EB00F3A43D /* DeviceNativeUnhandledScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = A1EC7FB427E263EA00F3A43D /* DeviceNativeUnhandledScenario.m */; };
 		A1EC7FDA27E263EB00F3A43D /* MetadataNativeScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = A1EC7FB527E263EA00F3A43D /* MetadataNativeScenario.m */; };
 		A1EC7FDB27E263EB00F3A43D /* ResumeSessionScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = A1EC7FB627E263EA00F3A43D /* ResumeSessionScenario.m */; };
@@ -60,6 +61,8 @@
 		80BFE61C6DDE190E5F610D7B /* libPods-reactnative.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-reactnative.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = reactnative/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		92E48BF7E227F55B41E49285 /* Pods-reactnative-reactnativeTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-reactnative-reactnativeTests.debug.xcconfig"; path = "Target Support Files/Pods-reactnative-reactnativeTests/Pods-reactnative-reactnativeTests.debug.xcconfig"; sourceTree = "<group>"; };
+		A1A3C2ED27EB3B4900C3970C /* BugsnagModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BugsnagModule.m; path = "../../ios-module/BugsnagModule.m"; sourceTree = "<group>"; };
+		A1A3C2EE27EB3B4900C3970C /* BugsnagModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BugsnagModule.h; path = "../../ios-module/BugsnagModule.h"; sourceTree = "<group>"; };
 		A1EC7FB427E263EA00F3A43D /* DeviceNativeUnhandledScenario.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DeviceNativeUnhandledScenario.m; path = "../../ios-module/Scenarios/DeviceNativeUnhandledScenario.m"; sourceTree = "<group>"; };
 		A1EC7FB527E263EA00F3A43D /* MetadataNativeScenario.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MetadataNativeScenario.m; path = "../../ios-module/Scenarios/MetadataNativeScenario.m"; sourceTree = "<group>"; };
 		A1EC7FB627E263EA00F3A43D /* ResumeSessionScenario.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ResumeSessionScenario.m; path = "../../ios-module/Scenarios/ResumeSessionScenario.m"; sourceTree = "<group>"; };
@@ -142,6 +145,8 @@
 		13B07FAE1A68108700A75B9A /* reactnative */ = {
 			isa = PBXGroup;
 			children = (
+				A1A3C2EE27EB3B4900C3970C /* BugsnagModule.h */,
+				A1A3C2ED27EB3B4900C3970C /* BugsnagModule.m */,
 				A1EC7FB327E263D000F3A43D /* Scenarios */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -516,6 +521,7 @@
 				A1EC7FDC27E263EB00F3A43D /* HandledNativeErrorScenario.m in Sources */,
 				A1EC7FEA27E263EB00F3A43D /* StartSessionScenario.m in Sources */,
 				A1EC7FDD27E263EB00F3A43D /* Scenario.m in Sources */,
+				A1A3C2EF27EB3B4900C3970C /* BugsnagModule.m in Sources */,
 				A1EC7FE627E263EB00F3A43D /* DeviceNativeHandledScenario.m in Sources */,
 				A1EC7FD927E263EB00F3A43D /* DeviceNativeUnhandledScenario.m in Sources */,
 				A1EC7FE027E263EB00F3A43D /* PauseSessionScenario.m in Sources */,
@@ -606,6 +612,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 372ZUL2ZB7;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = reactnative/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -633,6 +640,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 372ZUL2ZB7;
 				INFOPLIST_FILE = reactnative/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

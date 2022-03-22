@@ -13,6 +13,7 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		592D521757C5896BC91C0112 /* libPods-reactnative-reactnativeTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EC2797B4BECEA598ED30C19 /* libPods-reactnative-reactnativeTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		A1A3C2F227EB3B6900C3970C /* BugsnagModule.m in Sources */ = {isa = PBXBuildFile; fileRef = A1A3C2F027EB3B6900C3970C /* BugsnagModule.m */; };
 		A1EC7FA027E2639000F3A43D /* NativeFeatureFlagsScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = A1EC7F7D27E2638F00F3A43D /* NativeFeatureFlagsScenario.m */; };
 		A1EC7FA127E2639000F3A43D /* ContextNativeCustomScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = A1EC7F7E27E2638F00F3A43D /* ContextNativeCustomScenario.m */; };
 		A1EC7FA227E2639000F3A43D /* DeviceNativeHandledScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = A1EC7F8027E2638F00F3A43D /* DeviceNativeHandledScenario.m */; };
@@ -62,6 +63,8 @@
 		7EC2797B4BECEA598ED30C19 /* libPods-reactnative-reactnativeTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-reactnative-reactnativeTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = reactnative/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		85EB70F5722E07E10A4C2B0E /* Pods-reactnative-reactnativeTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-reactnative-reactnativeTests.release.xcconfig"; path = "Target Support Files/Pods-reactnative-reactnativeTests/Pods-reactnative-reactnativeTests.release.xcconfig"; sourceTree = "<group>"; };
+		A1A3C2F027EB3B6900C3970C /* BugsnagModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BugsnagModule.m; path = "../../ios-module/BugsnagModule.m"; sourceTree = "<group>"; };
+		A1A3C2F127EB3B6900C3970C /* BugsnagModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BugsnagModule.h; path = "../../ios-module/BugsnagModule.h"; sourceTree = "<group>"; };
 		A1EC7F7B27E2638F00F3A43D /* NativeFeatureFlagsScenario.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NativeFeatureFlagsScenario.h; path = "../../ios-module/Scenarios/NativeFeatureFlagsScenario.h"; sourceTree = "<group>"; };
 		A1EC7F7C27E2638F00F3A43D /* MetadataNativeUnhandledScenario.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MetadataNativeUnhandledScenario.h; path = "../../ios-module/Scenarios/MetadataNativeUnhandledScenario.h"; sourceTree = "<group>"; };
 		A1EC7F7D27E2638F00F3A43D /* NativeFeatureFlagsScenario.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NativeFeatureFlagsScenario.m; path = "../../ios-module/Scenarios/NativeFeatureFlagsScenario.m"; sourceTree = "<group>"; };
@@ -142,6 +145,8 @@
 		13B07FAE1A68108700A75B9A /* reactnative */ = {
 			isa = PBXGroup;
 			children = (
+				A1A3C2F127EB3B6900C3970C /* BugsnagModule.h */,
+				A1A3C2F027EB3B6900C3970C /* BugsnagModule.m */,
 				A1EC7F7A27E2637300F3A43D /* Scenarios */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -516,6 +521,7 @@
 				A1EC7FA327E2639000F3A43D /* AppNativeUnhandledScenario.m in Sources */,
 				A1EC7FA827E2639000F3A43D /* Scenario.m in Sources */,
 				A1EC7FAE27E2639100F3A43D /* MetadataNativeScenario.m in Sources */,
+				A1A3C2F227EB3B6900C3970C /* BugsnagModule.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				A1EC7FA927E2639100F3A43D /* BreadcrumbsNativeManualScenario.m in Sources */,
@@ -606,6 +612,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 372ZUL2ZB7;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = reactnative/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -633,6 +640,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 372ZUL2ZB7;
 				INFOPLIST_FILE = reactnative/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

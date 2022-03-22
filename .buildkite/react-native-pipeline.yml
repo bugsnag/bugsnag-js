@@ -396,14 +396,14 @@ steps:
     timeout_in_minutes: 60
     plugins:
       artifacts#v1.5.0:
-        download: "build/rn0.66-hermes.ipa"
+        download: "build/rn0.66.ipa"
         upload: ./test/react-native/maze_output/**/*
       docker-compose#v3.9.0:
         pull: react-native-maze-runner
         run: react-native-maze-runner
         use-aliases: true
         command:
-          - --app=build/rn0.66-hermes.ipa
+          - --app=build/rn0.66.ipa
           - --farm=bs
           - --device=IOS_14
           - --a11y-locator
