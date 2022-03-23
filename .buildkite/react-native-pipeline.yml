@@ -360,7 +360,6 @@ steps:
           - --farm=bs
           - --device=ANDROID_11_0
           - --a11y-locator
-          - --fail-fast
     env:
       SKIP_NAVIGATION_SCENARIOS: "true"
     concurrency: 9
@@ -432,7 +431,6 @@ steps:
           - --device=IOS_14
           - --a11y-locator
           - --appium-version=1.18.0
-          - --fail-fast
     env:
       SKIP_NAVIGATION_SCENARIOS: "true"
     concurrency: 9
