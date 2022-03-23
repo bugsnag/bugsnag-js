@@ -12,6 +12,7 @@ module.exports = {
     rnPromise.enable({
       allRejections: true,
       onUnhandled: (id, error) => {
+        console.log("I AM HERE IN THE UNHANDLED ERROR HANDLER!!")
         const event = client.Event.create(error, false, {
           severity: 'error',
           unhandled: true,
