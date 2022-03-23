@@ -109,8 +109,8 @@ steps:
     artifact_paths:
       - build/rn0.67-hermes.apk
 
-  - label: ':ios: Build RN 0.67 ipa'
-    key: "rn-0-67-ipa"
+  - label: ':ios: Build RN 0.67 (hermes) ipa'
+    key: "rn-0-67-hermes-ipa"
     timeout_in_minutes: 60
     agents:
       queue: "opensource-arm-mac-cocoa-12"
@@ -363,6 +363,7 @@ steps:
           - --fail-fast
     env:
       SKIP_NAVIGATION_SCENARIOS: "true"
+      HERMES: "true"
     concurrency: 9
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
@@ -415,8 +416,8 @@ steps:
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
-  - label: ':ios: RN 0.67 iOS 14 end-to-end tests'
-    depends_on: "rn-0-67-ipa"
+  - label: ':ios: RN 0.67 (hermes) iOS 14 end-to-end tests'
+    depends_on: "rn-0-67-hermes-ipa"
     timeout_in_minutes: 60
     plugins:
       artifacts#v1.5.0:
@@ -435,6 +436,7 @@ steps:
           - --fail-fast
     env:
       SKIP_NAVIGATION_SCENARIOS: "true"
+      HERMES: "true"
     concurrency: 9
     concurrency_group: 'browserstack-app'
     concurrency_method: eager

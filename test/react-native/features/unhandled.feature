@@ -9,6 +9,8 @@ Scenario: Catching an Unhandled error
   And the event "unhandled" is true
   And the exception "message" equals "UnhandledJsErrorScenario"
 
+# Skip until PLAT-8236 is complete
+@skip_hermes
 Scenario: Catching an Unhandled promise rejection
   When I run "UnhandledJsPromiseRejectionScenario"
   Then I wait to receive an error

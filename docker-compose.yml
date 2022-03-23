@@ -244,6 +244,7 @@ services:
       BROWSER_STACK_USERNAME:
       BROWSER_STACK_ACCESS_KEY:
       SKIP_NAVIGATION_SCENARIOS:
+      HERMES:
     networks:
       default:
         aliases:
