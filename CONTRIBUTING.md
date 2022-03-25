@@ -150,3 +150,24 @@ VERSION=preminor \
 Prereleases will automatically be published to npm with the dist tag `next` and browser bundles are automatically uploaded to the CDN.
 
 The dist tag ensures that prereleases are not installed by unsuspecting users who do not specify a version – npm automatically adds the `latest` tag to a published module unless one is specified.
+
+### Release issues
+
+#### Failed to publish all packages
+
+Problem: `lerna publish` failed part-way through meaning not all packages were published.
+
+To remedy this:
+ - First work out whether a cdn upload is required as the check used in `release.sh` is no longer valid since the `lerna version` step took place.
+ - Then re-run using the `RETRY_PUBLISH` and `FORCE_CDN_UPLOAD` flags as required:
+
+```
+GITHUB_USER=<your github username> \
+GITHUB_ACCESS_TOKEN=<generate a personal access token> \
+AWS_ACCESS_KEY_ID=xxx \
+AWS_SECRET_ACCESS_KEY=xxx \
+RELEASE_BRANCH=master \
+RETRY_PUBLISH=1 \
+FORCE_CDN_UPLOAD=1 \
+  docker-compose run release
+```
