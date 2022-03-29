@@ -44,6 +44,17 @@ services:
         aliases:
           - maze-runner
 
+  rn0_63_expo_ejected:
+    build:
+      context: rn0_63_expo_ejected
+      dockerfile: ../Dockerfile
+    environment:
+      DEBUG:
+    networks:
+      default:
+        aliases:
+          - maze-runner
+
   rn0_64:
     build:
       context: rn0_64
@@ -55,9 +66,53 @@ services:
         aliases:
           - maze-runner
 
-  rn0_63_expo_ejected:
+  rn0_65:
     build:
-      context: rn0_63_expo_ejected
+      context: rn0_65
+      dockerfile: ../Dockerfile
+    environment:
+      DEBUG:
+    networks:
+      default:
+        aliases:
+          - maze-runner
+
+  rn0_66:
+    build:
+      context: rn0_64
+      dockerfile: ../Dockerfile
+    environment:
+      DEBUG:
+    networks:
+      default:
+        aliases:
+          - maze-runner
+
+  # rn0_66_expo_ejected:
+  #   build:
+  #     context: rn0_66_expo_ejected
+  #     dockerfile: ../Dockerfile
+  #   environment:
+  #     DEBUG:
+  #   networks:
+  #     default:
+  #       aliases:
+  #         - maze-runner
+
+  rn0_67:
+    build:
+      context: rn0_67
+      dockerfile: ../Dockerfile
+    environment:
+      DEBUG:
+    networks:
+      default:
+        aliases:
+          - maze-runner
+
+  rn0_67_hermes:
+    build:
+      context: rn0_67_hermes
       dockerfile: ../Dockerfile
     environment:
       DEBUG:
