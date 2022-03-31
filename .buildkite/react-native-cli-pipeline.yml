@@ -170,6 +170,23 @@ steps:
     env:
       REACT_NATIVE_VERSION: "rn0_67"
 
+  - label: ':runner: RN 0.68 CLI tests'
+    depends_on: "cli-maze-image"
+    timeout_in_minutes: 20
+    plugins:
+      artifacts#v1.5.0:
+        upload: ./test/react-native-cli/maze_output/**/*
+      docker-compose#v3.9.0:
+        pull: react-native-cli-tool-maze-runner
+        run: react-native-cli-tool-maze-runner
+        use-aliases: true
+        command:
+          - --fail-fast
+          - --retry=2
+          - features/cli-tests
+    env:
+      REACT_NATIVE_VERSION: "rn0_68"
+
   #
   # Built app test fixtures - Android
   #
@@ -304,7 +321,7 @@ steps:
     artifact_paths:
       - build/rn0_66.apk
 
-  - label: ':android: Init and build RN 0.67 apk (Non-hermes)'
+  - label: ':android: Init and build RN 0.67 apk'
     key: 'rn-0-67-apk'
     depends_on:
       - 'android-builder-image'
@@ -319,20 +336,35 @@ steps:
     artifact_paths:
       - build/rn0_67.apk
 
-  - label: ':android: Init and build RN 0.67 apk (Hermes)'
-    key: 'rn-0-67-hermes-apk'
+  - label: ':android: Init and build RN 0.68 apk (Non-hermes)'
+    key: 'rn-0-68-apk'
     depends_on:
       - 'android-builder-image'
     timeout_in_minutes: 15
     env:
       DEBUG: true
-      REACT_NATIVE_VERSION: rn0_67_hermes
+      REACT_NATIVE_VERSION: rn0_68
     plugins:
       - docker-compose#v3.9.0:
           run: react-native-cli-android-builder
           command: ["features/build-app-tests/build-android-app.feature"]
     artifact_paths:
-      - build/rn0_67_hermes.apk
+      - build/rn0_68.apk
+
+  - label: ':android: Init and build RN 0.68 apk (Hermes)'
+    key: 'rn-0-68-hermes-apk'
+    depends_on:
+      - 'android-builder-image'
+    timeout_in_minutes: 15
+    env:
+      DEBUG: true
+      REACT_NATIVE_VERSION: rn0_68_hermes
+    plugins:
+      - docker-compose#v3.9.0:
+          run: react-native-cli-android-builder
+          command: ["features/build-app-tests/build-android-app.feature"]
+    artifact_paths:
+      - build/rn0_68_hermes.apk
 
   #
   # Built app test fixtures - iOS
@@ -441,7 +473,7 @@ steps:
     commands:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_66
 
-  - label: ':ios: Init and build RN 0.67 ipa (Non-hermes)'
+  - label: ':ios: Init and build RN 0.67 ipa'
     key: 'rn-0-67-ipa'
     timeout_in_minutes: 30
     agents:
@@ -454,8 +486,21 @@ steps:
     commands:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_67
 
-  - label: ':ios: Init and build RN 0.67 ipa (Hermes)'
-    key: 'rn-0-67-hermes-ipa'
+  - label: ':ios: Init and build RN 0.68 ipa (Non-hermes)'
+    key: 'rn-0-68-ipa'
+    timeout_in_minutes: 30
+    agents:
+      queue: "opensource-arm-mac-cocoa-12"
+    env:
+      DEBUG: true
+      LANG: "en_US.UTF-8"
+      DEVELOPER_DIR: "/Applications/Xcode13.app"
+    artifact_paths: build/rn0_68.ipa
+    commands:
+      - test/react-native-cli/scripts/init-and-build-test.sh rn0_68
+
+  - label: ':ios: Init and build RN 0.68 ipa (Hermes)'
+    key: 'rn-0-68-hermes-ipa'
     timeout_in_minutes: 60
     agents:
       queue: "opensource-arm-mac-cocoa-12"
@@ -463,9 +508,9 @@ steps:
       DEBUG: true
       LANG: "en_US.UTF-8"
       DEVELOPER_DIR: "/Applications/Xcode13.app"
-    artifact_paths: build/rn0_67_hermes.ipa
+    artifact_paths: build/rn0_68_hermes.ipa
     commands:
-      - test/react-native-cli/scripts/init-and-build-test.sh rn0_67_hermes
+      - test/react-native-cli/scripts/init-and-build-test.sh rn0_68_hermes
 
   #
   # Init, build and notify end-to-end tests - Android
@@ -638,7 +683,7 @@ steps:
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
-  - label: ':runner: RN 0.67 Android end-to-end tests (Non-hermes)'
+  - label: ':runner: RN 0.67 Android end-to-end tests'
     depends_on: "rn-0-67-apk"
     timeout_in_minutes: 10
     plugins:
@@ -659,19 +704,40 @@ steps:
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
-  - label: ':runner: RN 0.67 Android end-to-end tests (Hermes)'
-    depends_on: "rn-0-67-hermes-apk"
+  - label: ':runner: RN 0.68 Android end-to-end tests (Non-hermes)'
+    depends_on: "rn-0-68-apk"
     timeout_in_minutes: 10
     plugins:
       artifacts#v1.5.0:
-        download: "build/rn0_67_hermes.apk"
+        download: "build/rn0_68.apk"
         upload: ./test/react-native-cli/maze_output/**/*
       docker-compose#v3.9.0:
         pull: react-native-cli-maze-runner
         run: react-native-cli-maze-runner
         use-aliases: true
         command:
-          - --app=build/rn0_67_hermes.apk
+          - --app=build/rn0_68.apk
+          - --farm=bs
+          - --device=ANDROID_12_0
+          - --a11y-locator
+          - features/run-app-tests
+    concurrency: 9
+    concurrency_group: 'browserstack-app'
+    concurrency_method: eager
+
+  - label: ':runner: RN 0.68 Android end-to-end tests (Hermes)'
+    depends_on: "rn-0-68-hermes-apk"
+    timeout_in_minutes: 10
+    plugins:
+      artifacts#v1.5.0:
+        download: "build/rn0_68_hermes.apk"
+        upload: ./test/react-native-cli/maze_output/**/*
+      docker-compose#v3.9.0:
+        pull: react-native-cli-maze-runner
+        run: react-native-cli-maze-runner
+        use-aliases: true
+        command:
+          - --app=build/rn0_68_hermes.apk
           - --farm=bs
           - --device=ANDROID_12_0
           - --a11y-locator
@@ -851,7 +917,7 @@ steps:
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
-  - label: ':runner: RN 0.67 iOS end-to-end tests (Non-hermes)'
+  - label: ':runner: RN 0.67 iOS end-to-end tests'
     depends_on: "rn-0-67-ipa"
     timeout_in_minutes: 10
     plugins:
@@ -872,19 +938,40 @@ steps:
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
-  - label: ':runner: RN 0.67 iOS end-to-end tests (Hermes)'
-    depends_on: "rn-0-67-hermes-ipa"
+  - label: ':runner: RN 0.68 iOS end-to-end tests (Non-hermes)'
+    depends_on: "rn-0-68-ipa"
     timeout_in_minutes: 10
     plugins:
       artifacts#v1.5.0:
-        download: "build/rn0_67_hermes.ipa"
+        download: "build/rn0_68.ipa"
         upload: ./test/react-native-cli/maze_output/**/*
       docker-compose#v3.9.0:
         pull: react-native-cli-maze-runner
         run: react-native-cli-maze-runner
         use-aliases: true
         command:
-          - --app=build/rn0_67_hermes.ipa
+          - --app=build/rn0_68.ipa
+          - --farm=bs
+          - --device=IOS_14
+          - --a11y-locator
+          - features/run-app-tests
+    concurrency: 9
+    concurrency_group: 'browserstack-app'
+    concurrency_method: eager
+
+  - label: ':runner: RN 0.68 iOS end-to-end tests (Hermes)'
+    depends_on: "rn-0-68-hermes-ipa"
+    timeout_in_minutes: 10
+    plugins:
+      artifacts#v1.5.0:
+        download: "build/rn0_68_hermes.ipa"
+        upload: ./test/react-native-cli/maze_output/**/*
+      docker-compose#v3.9.0:
+        pull: react-native-cli-maze-runner
+        run: react-native-cli-maze-runner
+        use-aliases: true
+        command:
+          - --app=build/rn0_68_hermes.ipa
           - --farm=bs
           - --device=IOS_14
           - --a11y-locator

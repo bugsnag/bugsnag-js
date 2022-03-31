@@ -99,9 +99,20 @@ services:
         aliases:
           - maze-runner
 
-  rn0_67_hermes:
+  rn0_68:
     build:
-      context: rn0_67_hermes
+      context: rn0_68
+      dockerfile: ../Dockerfile
+    environment:
+      DEBUG:
+    networks:
+      default:
+        aliases:
+          - maze-runner
+
+  rn0_68_hermes:
+    build:
+      context: rn0_68_hermes
       dockerfile: ../Dockerfile
     environment:
       DEBUG:
