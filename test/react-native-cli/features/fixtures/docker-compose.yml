@@ -79,7 +79,7 @@ services:
 
   rn0_66:
     build:
-      context: rn0_64
+      context: rn0_66
       dockerfile: ../Dockerfile
     environment:
       DEBUG:
@@ -87,17 +87,6 @@ services:
       default:
         aliases:
           - maze-runner
-
-  # rn0_66_expo_ejected:
-  #   build:
-  #     context: rn0_66_expo_ejected
-  #     dockerfile: ../Dockerfile
-  #   environment:
-  #     DEBUG:
-  #   networks:
-  #     default:
-  #       aliases:
-  #         - maze-runner
 
   rn0_67:
     build:
