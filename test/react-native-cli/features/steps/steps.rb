@@ -202,7 +202,9 @@ Then('bugsnag react-native is not in the package.json file') do
 end
 
 Then('the iOS app contains the bugsnag initialisation code') do
-  filename = "ios/#{current_fixture}/AppDelegate.m"
+  # We expect either `AppDelegate.m` or `AppDelegate.mm` since RN0.68
+  file_ext = current_fixture.include?('68') ? 'mm' : 'm'
+  filename = "ios/#{current_fixture}/AppDelegate#{file_ext}"
 
   step("the interactive file '#{filename}' contains '#import <Bugsnag/Bugsnag.h>'")
   step("the interactive file '#{filename}' contains '[Bugsnag start];'")
@@ -223,7 +225,8 @@ Then('the Android app contains the bugsnag initialisation code') do
 end
 
 Then('the iOS app does not contain the bugsnag initialisation code') do
-  filename = "ios/#{current_fixture}/AppDelegate.m"
+  file_ext = current_fixture.include?('68') ? 'mm' : 'm'
+  filename = "ios/#{current_fixture}/AppDelegate#{file_ext}"
 
   step("the interactive file '#{filename}' does not contain '#import <Bugsnag/Bugsnag.h>'")
   step("the interactive file '#{filename}' does not contain '[Bugsnag start];'")
@@ -256,13 +259,14 @@ Then('the JavaScript layer does not contain the bugsnag initialisation code') do
 end
 
 Then('the modified files are as expected after running the insert command') do
+  file_ext = current_fixture.include?('68') ? 'mm' : 'm'
   steps %Q{
     When I input "git status --porcelain" interactively
     Then I wait for the interactive shell to output the following lines in stdout
       """
       M #{get_android_main_application_path current_fixture}
       M index.js
-      M ios/#{current_fixture}/AppDelegate.m
+      M ios/#{current_fixture}/AppDelegate.#{file_ext}
       """
   }
 end
