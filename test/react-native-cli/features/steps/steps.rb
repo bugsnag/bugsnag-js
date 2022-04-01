@@ -204,7 +204,7 @@ end
 Then('the iOS app contains the bugsnag initialisation code') do
   # We expect either `AppDelegate.m` or `AppDelegate.mm` since RN0.68
   file_ext = current_fixture.include?('68') ? 'mm' : 'm'
-  filename = "ios/#{current_fixture}/AppDelegate#{file_ext}"
+  filename = "ios/#{current_fixture}/AppDelegate.#{file_ext}"
 
   step("the interactive file '#{filename}' contains '#import <Bugsnag/Bugsnag.h>'")
   step("the interactive file '#{filename}' contains '[Bugsnag start];'")
@@ -226,7 +226,7 @@ end
 
 Then('the iOS app does not contain the bugsnag initialisation code') do
   file_ext = current_fixture.include?('68') ? 'mm' : 'm'
-  filename = "ios/#{current_fixture}/AppDelegate#{file_ext}"
+  filename = "ios/#{current_fixture}/AppDelegate.#{file_ext}"
 
   step("the interactive file '#{filename}' does not contain '#import <Bugsnag/Bugsnag.h>'")
   step("the interactive file '#{filename}' does not contain '[Bugsnag start];'")
