@@ -73,11 +73,6 @@ export interface SessionPayload {
   sessions: Session[]
 }
 
-export type NotifiableError = Error
-| { errorClass: string, errorMessage: string }
-| { name: string, message: string }
-| string
-
 export type BreadcrumbType = 'error' | 'log' | 'manual' | 'navigation' | 'process' | 'request' | 'state' | 'user';
 
 interface Device {

@@ -1,6 +1,5 @@
 import Breadcrumb from './breadcrumb'
 import {
-  NotifiableError,
   BreadcrumbType,
   OnErrorCallback,
   OnSessionCallback,
@@ -16,7 +15,7 @@ declare class Client {
 
   // reporting errors
   public notify(
-    error: NotifiableError,
+    error: Error,
     onError?: OnErrorCallback,
     cb?: (err: any, event: Event) => void
   ): void;
