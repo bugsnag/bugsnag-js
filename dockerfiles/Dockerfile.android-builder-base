@@ -1,4 +1,4 @@
-FROM openjdk:8-jdk-buster
+FROM openjdk:11-jdk-buster
 
 # OS setup
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
@@ -6,11 +6,15 @@ RUN apt-get update && apt-get install -y gradle jq git-core build-essential open
 
 # Android tools
 WORKDIR /sdk
-RUN wget https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip -q \
-    && unzip -q sdk-tools-linux-4333796.zip \
-    && rm sdk-tools-linux-4333796.zip
+RUN wget https://dl.google.com/android/repository/commandlinetools-linux-8092744_latest.zip -q
+RUN unzip -q commandlinetools-linux-8092744_latest.zip
+RUN rm commandlinetools-linux-8092744_latest.zip
+RUN cd cmdline-tools \
+    && mkdir tools \
+    && mv lib bin source.properties tools
 
-ENV PATH="${PATH}:/sdk/tools:/sdk/tools/bin"
+ENV ANDROID_HOME=/sdk
+ENV PATH="${PATH}:/sdk/cmdline-tools/tools:/sdk/cmdline-tools/tools/bin"
 
 RUN yes | sdkmanager "platform-tools" "build-tools;28.0.3"
 ENV PATH="${PATH}:/sdk/platform-tools"
