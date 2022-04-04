@@ -322,7 +322,7 @@ steps:
     concurrency_method: eager
 
   - label: ':android: RN 0.67 Android 11 end-to-end tests'
-    depends_on: "rn-0-68-apk"
+    depends_on: "rn-0-67-apk"
     timeout_in_minutes: 60
     plugins:
       artifacts#v1.5.0:
