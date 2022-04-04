@@ -40,7 +40,7 @@ npx lerna run build \
 # check if the browser package changed – if it didn't we don't need to upload to the CDN
 BROWSER_PACKAGE_CHANGED=$(npx lerna changed --parseable | grep -c packages/js$ || test $? = 1;)
 
-if [ "$RETRY_PUBLISH" -eq 1 ]; then
+if [ -v RETRY_PUBLISH ]; then
   npx lerna publish from-package
 else 
   case $VERSION in
@@ -54,6 +54,6 @@ else
   esac
 fi
 
-if [ "$BROWSER_PACKAGE_CHANGED" -eq 1 ] || [ "$FORCE_CDN_UPLOAD" -eq 1]; then
+if [ "$BROWSER_PACKAGE_CHANGED" -eq 1 ] || [  -v FORCE_CDN_UPLOAD ]; then
   npm run cdn-upload
 fi
