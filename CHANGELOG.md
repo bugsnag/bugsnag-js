@@ -1,6 +1,39 @@
 # Changelog
 
-### v7.16.2 (2022-03-09)
+## v7.16.3 (2022-04-05)
+
+### Changed
+
+- (react-native) Update bugsnag-android to v5.22.0
+  - The number of threads reported can now be limited using `Configuration.setMaxReportedThreads` (defaulting to 200)
+    [bugsnag-android#1607](https://github.com/bugsnag/bugsnag-android/pull/1607)
+  - Improved the performance and stability of the NDK and ANR plugins by caching JNI references on start
+    [bugsnag-android#1596](https://github.com/bugsnag/bugsnag-android/pull/1596)
+    [bugsnag-android#1601](https://github.com/bugsnag/bugsnag-android/pull/1601)
+  - Fix inconsistencies in stack trace quality for C/C++ events. Resolves a few
+    cases where file and line number information was not resolving to the correct
+    locations. This change may result in grouping changes to more correctly
+    highlight the root cause of an event.
+    [bugsnag-android#1605](https://github.com/bugsnag/bugsnag-android/pull/1605)
+    [bugsnag-android#1606](https://github.com/bugsnag/bugsnag-android/pull/1606)
+  - Fixed an issue where an uncaught exception on the main thread could in rare cases trigger an ANR.
+    [bugsnag-android#1624](https://github.com/bugsnag/bugsnag-android/pull/1624)
+  - Added `Bugsnag.isStarted()` to test whether the Bugsnag client is in the middle of initializing. This can be used to guard uses of the Bugsnag API that are either on separate threads early in the app's start-up and so not guaranteed to be executed after `Bugsnag.start` has completed, or where Bugsnag may not have been started at all due to some internal app logic.
+    [slack-jallen](https://github.com/slack-jallen):[#1621](https://github.com/bugsnag/bugsnag-android/pull/1621)
+    [bugsnag-android#1640](https://github.com/bugsnag/bugsnag-android/pull/1640)
+  - Events and Sessions will be discarded if they cannot be uploaded and are older than 60 days or larger than 1MB
+    [bugsnag-android#1633](https://github.com/bugsnag/bugsnag-android/pull/1633)
+  - Fixed potentially [thread-unsafe access](https://github.com/bugsnag/bugsnag-android/issues/883) when invoking `Bugsnag` static methods across different threads whilst `Bugsnag.start` is still in-flight. It is now safe to call any `Bugsnag` static method once `Bugsnag.start` has _begun_ executing, as access to the client singleton is controlled by a lock, so the new `isStarted` method (see above) should only be required where it cannot be determined whether the call to `Bugsnag.start` has begun or you do not want to wait.
+  - [bugsnag-android#1638](https://github.com/bugsnag/bugsnag-android/pull/1638)
+  - Calling `bugsnag_event_set_context` with NULL `context` correctly clears the event context again
+    [bugsnag-android#1637](https://github.com/bugsnag/bugsnag-android/pull/1637)
+
+### Fixed
+
+- (plugin-express): send the request body (if present) as `event.request.body` rather than `event.metadata.request.body` [#1702](https://github.com/bugsnag/bugsnag-js/pull/1702)
+- (plugin-restify): Include request body [#1701](https://github.com/bugsnag/bugsnag-js/pull/1701)
+
+## v7.16.2 (2022-03-09)
 
 ### Fixed
 
@@ -10,7 +43,7 @@
 
 - (plugin-react-navigation): Allow React Navigation v6 as a peer dependency [#1691](https://github.com/bugsnag/bugsnag-js/pull/1691)
 
-### 7.16.1 (2022-02-02)
+## 7.16.1 (2022-02-02)
 
 ### Fixed
 

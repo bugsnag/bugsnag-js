@@ -4,13 +4,18 @@ BeforeAll do
 end
 
 Before('@android_only') do |scenario|
-  skip_this_scenario("Skipping scenario") if Maze.driver.capabilities["os"] == 'ios'
+  skip_this_scenario("Skipping scenario") if Maze.driver.capabilities["os"].eql?('ios')
 end
 
 Before('@ios_only') do |scenario|
-  skip_this_scenario("Skipping scenario") if Maze.driver.capabilities["os"] == 'android'
+  skip_this_scenario("Skipping scenario") if Maze.driver.capabilities["os"].eql?('android')
 end
 
 Before('@navigation') do |scenario|
-  skip_this_scenario("Skipping scenario") if ENV['SKIP_NAVIGATION_SCENARIOS'] == 'true'
+  skip_this_scenario("Skipping scenario") if ENV['SKIP_NAVIGATION_SCENARIOS'].eql?('true')
+end
+
+# Require until PLAT-8236 is implemented
+Before('@skip_hermes') do |_scenario|
+  skip_this_scenario("Skipping scenario") if ENV['HERMES'].eql?('true')
 end
