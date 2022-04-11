@@ -74,12 +74,11 @@ steps:
   - label: 'Trigger Expo pipeline'
     if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
     depends_on: 'publish-js'
-    trigger: 'bugsnag-js-expo'
+    trigger: 'bugsnag-expo'
     build:
-      branch: '${BUILDKITE_BRANCH}'
-      commit: '${BUILDKITE_COMMIT}'
-      message: '${BUILDKITE_MESSAGE}'
-    async: true
+      env:
+        BUGSNAG_JS_BRANCH: '${BUILDKITE_BRANCH}'
+        BUGSNAG_JS_COMMIT: '${BUILDKITE_COMMIT}'
 
   - label: 'Trigger React Native pipeline'
     depends_on:
