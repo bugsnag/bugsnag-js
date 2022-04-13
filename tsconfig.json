@@ -38,11 +38,7 @@
     /* Module Resolution Options */
     // "moduleResolution": "node",            /* Specify module resolution strategy: 'node' (Node.js) or 'classic' (TypeScript pre-1.6). */
     "baseUrl": "./",                       /* Base directory to resolve non-absolute module names. */
-    "paths": {
-      "@unimodules/core": [
-        "packages/expo/unimodules-core.d.ts"
-      ],
-    },                           /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */
+    // "paths": {},                           /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */
     // "rootDirs": [],                        /* List of root folders whose combined content represents the structure of the project at runtime. */
     // "typeRoots": [                         /* List of folders to include type definitions from. */
     //   "node_modules/@types",
@@ -65,7 +61,6 @@
   },
   "include": [
     "packages/core",
-    "packages/delivery-expo",
     "packages/delivery-node",
     "packages/delivery-react-native",
     "packages/delivery-x-domain-request",
@@ -76,10 +71,6 @@
     "packages/plugin-browser-context",
     "packages/plugin-browser-device",
     "packages/plugin-contextualize",
-    "packages/plugin-expo-app",
-    "packages/expo-cli",
-    "packages/plugin-expo",
-    "packages/plugin-expo-device",
     "packages/plugin-navigation-breadcrumbs",
     "packages/plugin-network-breadcrumbs",
     "packages/plugin-react-native-app-state-breadcrumbs",

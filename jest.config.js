@@ -18,8 +18,6 @@ module.exports = {
     '!**/dist/**',
     '!**/packages/js/**',
     '!<rootDir>/packages/plugin-angular/**/*',
-    '!<rootDir>/packages/expo-cli/lib/test/fixtures/**/*',
-    '!<rootDir>/packages/expo-cli/lib/test/lib/**/*',
     '!<rootDir>/packages/react-native/src/test/setup.js',
     '!<rootDir>/packages/plugin-node-surrounding-code/test/fixtures/**/*'
   ],
@@ -70,13 +68,6 @@ module.exports = {
         '<rootDir>/packages/react-native/src/test/setup.js'
       ]
     }),
-    project('expo', [
-      'delivery-expo',
-      'expo',
-      'expo-cli',
-      'plugin-expo-app',
-      'plugin-expo-device'
-    ]),
     project('node plugins', [
       'delivery-node',
       'in-flight',

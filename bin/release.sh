@@ -27,13 +27,11 @@ npm run bootstrap -- --ci
 
 npx lerna run build \
   --scope @bugsnag/node \
-  --scope @bugsnag/browser \
-  --scope @bugsnag/expo
+  --scope @bugsnag/browser
   
 npx lerna run build \
   --ignore @bugsnag/node\
   --ignore @bugsnag/browser \
-  --ignore @bugsnag/expo \
   --ignore @bugsnag/plugin-electron-app \
   --ignore @bugsnag/plugin-electron-client-state-persistence
 

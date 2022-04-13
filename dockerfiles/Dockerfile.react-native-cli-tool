@@ -6,7 +6,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 
-COPY babel.config.js lerna.json .eslintignore .eslintrc.js jest.config.js tsconfig.json packages/expo/unimodules-core.d.ts ./
+COPY babel.config.js lerna.json .eslintignore .eslintrc.js jest.config.js tsconfig.json ./
 COPY bin ./bin
 COPY packages ./packages
 

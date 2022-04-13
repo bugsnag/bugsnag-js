@@ -1,12 +1,12 @@
 # Bugsnag error monitoring & reporting for JavaScript
 
-Automatically detect JavaScript errors in the browser, Node.js, React Native and Expo, with plugins for React, Vue, Angular, Express, Restify and Koa. Get cross-platform error detection for handled and unhandled errors with real-time error alerts and detailed diagnostic reports.
+Automatically detect JavaScript errors in the browser, Node.js and React Native, with plugins for React, Vue, Angular, Express, Restify and Koa. Get cross-platform error detection for handled and unhandled errors with real-time error alerts and detailed diagnostic reports.
 
 Learn more about [JavaScript error reporting](https://www.bugsnag.com/platforms/javascript/) and [React Native error reporting](https://www.bugsnag.com/platforms/react-native-error-reporting/) from Bugsnag.
 
 ---
 
-This is a monorepo (managed with [Lerna](https://lerna.js.org/) containing our universal error reporting client [`@bugsnag/js`](/packages/js), our Expo client [`@bugsnag/expo`](/packages/expo) and our React Native client [`@bugsnag/react-native`](/packages/react-native), along with:
+This is a monorepo (managed with [Lerna](https://lerna.js.org/) containing our universal error reporting client [`@bugsnag/js`](/packages/js), and our React Native client [`@bugsnag/react-native`](/packages/react-native), along with:
 
 - the core Bugsnag libraries for reporting errors ([`@bugsnag/core`](/packages/core))
 - plugins for supporting various frameworks (e.g. [`@bugsnag/plugin-react`](/packages/plugin-react))
@@ -53,7 +53,6 @@ Use the following plugins and guides to integrate Bugsnag with various framework
 
 | Framework  | Bugsnag notifier | Documentation |
 | ---------- | -------------- | --------------|
-| Expo | [@bugsnag/expo](packages/expo)  | [Expo docs](https://docs.bugsnag.com/platforms/react-native/expo/) |
 | React Native | [@bugsnag/react-native](packages/react-native) | [React Native docs](https://docs.bugsnag.com/platforms/react-native/react-native/) |
 
 ## Support

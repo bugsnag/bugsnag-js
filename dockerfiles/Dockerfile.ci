@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install --unsafe-perm
 
-COPY babel.config.js lerna.json .eslintignore .eslintrc.js jest.config.js tsconfig.json packages/expo/unimodules-core.d.ts ./
+COPY babel.config.js lerna.json .eslintignore .eslintrc.js jest.config.js tsconfig.json ./
 ADD min_packages.tar .
 COPY bin ./bin
 RUN npx lerna bootstrap
