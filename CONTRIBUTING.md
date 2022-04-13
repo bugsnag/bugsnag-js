@@ -79,9 +79,7 @@ Once the release PR has been approved:
 You are now ready to make the release. Releases are done using Docker and Docker compose. You do not need to have the release branch checked out on your local machine to make a release – the container pulls a fresh clone of the repo down from GitHub. Prerequisites:
 
 - You will need to clone the repository and have Docker running on your local machine.
-- Ensure you are logged in to npm and that you have access to publish to the following on npm
-  - any packages in the `@bugsnag` namespace
-  - the `bugsnag-expo-cli` package
+- Ensure you are logged in to npm and that you have access to publish packages in the `@bugsnag` namespace
 - Ensure you have an AWS key pair with access to our S3 bucket and cloudfront distribution. Export these in your environment as `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` (if you're going to publish to the CDN)
 - Ensure your `.gitconfig` file in your home directory is configured to contain your name and email address
 - Generate a [personal access token](https://github.com/settings/tokens/new) on GitHub and store it somewhere secure

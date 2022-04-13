@@ -79,7 +79,6 @@ __Your session will periodically expire__, so you'll need to run this command to
 
 For further details, see the `TESTING.md` for individual platforms:
 - [Browser](./test/browser/TESTING.md)
-- [Expo](./test/expo/TESTING.md)
 - [Node](./test/node/TESTING.md)
 - [React Native](./test/react-native/TESTING.md)
 - [React Native CLI](./test/react-native-cli/TESTING.md)

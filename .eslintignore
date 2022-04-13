@@ -8,6 +8,5 @@ packages/react-native/android/build/reports
 packages/**/features
 packages/**/fixtures
 test/browser
-test/expo
 test/node
 test/react-native-cli/features/fixtures
