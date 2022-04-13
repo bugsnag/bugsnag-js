@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* reactnativeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* reactnativeTests.m */; };
+		0154E1FE2806DFEE009044E4 /* RCTFatalScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = 0154E1FD2806DFEE009044E4 /* RCTFatalScenario.m */; };
+		0154E1FF2806DFEE009044E4 /* RCTFatalScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = 0154E1FD2806DFEE009044E4 /* RCTFatalScenario.m */; };
 		0186104D257900FF00FCB626 /* NativeStackHandledScenario.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0186104C257900FF00FCB626 /* NativeStackHandledScenario.swift */; };
 		0186104E257900FF00FCB626 /* NativeStackHandledScenario.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0186104C257900FF00FCB626 /* NativeStackHandledScenario.swift */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
@@ -65,6 +67,7 @@
 		00E356EE1AD99517003FC87E /* reactnativeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = reactnativeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* reactnativeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = reactnativeTests.m; sourceTree = "<group>"; };
+		0154E1FD2806DFEE009044E4 /* RCTFatalScenario.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTFatalScenario.m; sourceTree = "<group>"; };
 		0186104C257900FF00FCB626 /* NativeStackHandledScenario.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NativeStackHandledScenario.swift; sourceTree = "<group>"; };
 		05F6C73355E0C5E95435B68E /* Pods-reactnative-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-reactnative-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-reactnative-tvOS/Pods-reactnative-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* reactnative.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = reactnative.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -263,10 +266,6 @@
 		A145176724A7A1F500C6FC6E /* Scenarios */ = {
 			isa = PBXGroup;
 			children = (
-				96A7D7502799DF700043AAB6 /* FeatureFlagsNativeCrashScenario.h */,
-				96A7D7512799DF700043AAB6 /* FeatureFlagsNativeCrashScenario.m */,
-				96A7D7532799DF700043AAB6 /* NativeFeatureFlagsScenario.h */,
-				96A7D7522799DF700043AAB6 /* NativeFeatureFlagsScenario.m */,
 				A1BFB36624BCEE0200394C5D /* AppNativeHandledScenario.h */,
 				A1BFB36724BCEE0200394C5D /* AppNativeHandledScenario.m */,
 				A1BFB36424BCEE0200394C5D /* AppNativeUnhandledScenario.h */,
@@ -279,17 +278,22 @@
 				A181223D24C59F4D0073596F /* DeviceNativeHandledScenario.m */,
 				A181224024C59F4D0073596F /* DeviceNativeUnhandledScenario.h */,
 				A181223F24C59F4D0073596F /* DeviceNativeUnhandledScenario.m */,
+				96A7D7502799DF700043AAB6 /* FeatureFlagsNativeCrashScenario.h */,
+				96A7D7512799DF700043AAB6 /* FeatureFlagsNativeCrashScenario.m */,
 				A1CC9DE324B3D76A002A4760 /* HandledNativeErrorScenario.h */,
 				A1CC9DE224B3D76A002A4760 /* HandledNativeErrorScenario.m */,
 				A1F389CA24C6192500C30B50 /* MetadataNativeScenario.h */,
 				A1F389CB24C6192500C30B50 /* MetadataNativeScenario.m */,
 				A1F389CD24C73B6000C30B50 /* MetadataNativeUnhandledScenario.h */,
 				A1F389CE24C73B6000C30B50 /* MetadataNativeUnhandledScenario.m */,
+				96A7D7532799DF700043AAB6 /* NativeFeatureFlagsScenario.h */,
+				96A7D7522799DF700043AAB6 /* NativeFeatureFlagsScenario.m */,
 				0186104C257900FF00FCB626 /* NativeStackHandledScenario.swift */,
 				6591A4D32511602C0040A5FA /* NativeStackUnhandledScenario.h */,
 				6591A4D22511602C0040A5FA /* NativeStackUnhandledScenario.m */,
 				A1F63D1C24CE53EE00C31ABC /* PauseSessionScenario.h */,
 				A1F63D1D24CE53EE00C31ABC /* PauseSessionScenario.m */,
+				0154E1FD2806DFEE009044E4 /* RCTFatalScenario.m */,
 				A1F63D1F24CE53EE00C31ABC /* ResumeSessionScenario.h */,
 				A1F63D1E24CE53EE00C31ABC /* ResumeSessionScenario.m */,
 				A145176924A7A20300C6FC6E /* Scenario.h */,
@@ -667,6 +671,7 @@
 				6555A23024C7329600CC41ED /* UserNativeClientScenario.m in Sources */,
 				A145176A24A7A20300C6FC6E /* Scenario.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				0154E1FE2806DFEE009044E4 /* RCTFatalScenario.m in Sources */,
 				A145176624A7A1F000C6FC6E /* BugsnagModule.m in Sources */,
 				A1F63D2024CE53EE00C31ABC /* StartSessionScenario.m in Sources */,
 				96A7D7542799DF700043AAB6 /* FeatureFlagsNativeCrashScenario.m in Sources */,
@@ -692,6 +697,7 @@
 			files = (
 				0186104E257900FF00FCB626 /* NativeStackHandledScenario.swift in Sources */,
 				2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */,
+				0154E1FF2806DFEE009044E4 /* RCTFatalScenario.m in Sources */,
 				2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

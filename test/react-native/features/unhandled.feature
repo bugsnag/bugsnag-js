@@ -40,3 +40,12 @@ Scenario: Updating severity on an unhandled JS error
   And the exception "message" equals "UnhandledJsErrorSeverityScenario"
   And the event "unhandled" is true
   And the event "severity" equals "info"
+
+@ios_only
+Scenario: Reporting an unhandled Objective-C exception raise by RCTFatal
+  When I run "RCTFatalScenario" and relaunch the crashed app
+  And I configure Bugsnag for "RCTFatalScenario"
+  Then I wait to receive an error
+  And the exception "errorClass" matches "RCTFatalException: .*"
+  And the event "unhandled" is true
+  And the event "severity" equals "error"

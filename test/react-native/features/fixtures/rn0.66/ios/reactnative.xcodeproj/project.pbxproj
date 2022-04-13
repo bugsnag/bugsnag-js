@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* reactnativeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* reactnativeTests.m */; };
+		0154E1FC2806DFE5009044E4 /* RCTFatalScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = 0154E1FB2806DFE5009044E4 /* RCTFatalScenario.m */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
@@ -50,6 +51,7 @@
 		00E356EE1AD99517003FC87E /* reactnativeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = reactnativeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* reactnativeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = reactnativeTests.m; sourceTree = "<group>"; };
+		0154E1FB2806DFE5009044E4 /* RCTFatalScenario.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RCTFatalScenario.m; path = "../../ios-module/Scenarios/RCTFatalScenario.m"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* reactnative.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = reactnative.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = reactnative/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = reactnative/AppDelegate.m; sourceTree = "<group>"; };
@@ -240,6 +242,7 @@
 				A1EC7FC527E263EA00F3A43D /* NativeStackUnhandledScenario.m */,
 				A1EC7FD827E263EB00F3A43D /* PauseSessionScenario.h */,
 				A1EC7FC027E263EA00F3A43D /* PauseSessionScenario.m */,
+				0154E1FB2806DFE5009044E4 /* RCTFatalScenario.m */,
 				A1EC7FD227E263EB00F3A43D /* ResumeSessionScenario.h */,
 				A1EC7FB627E263EA00F3A43D /* ResumeSessionScenario.m */,
 				A1EC7FC127E263EA00F3A43D /* Scenario.h */,
@@ -522,6 +525,7 @@
 				A1EC7FEA27E263EB00F3A43D /* StartSessionScenario.m in Sources */,
 				A1EC7FDD27E263EB00F3A43D /* Scenario.m in Sources */,
 				A1A3C2EF27EB3B4900C3970C /* BugsnagModule.m in Sources */,
+				0154E1FC2806DFE5009044E4 /* RCTFatalScenario.m in Sources */,
 				A1EC7FE627E263EB00F3A43D /* DeviceNativeHandledScenario.m in Sources */,
 				A1EC7FD927E263EB00F3A43D /* DeviceNativeUnhandledScenario.m in Sources */,
 				A1EC7FE027E263EB00F3A43D /* PauseSessionScenario.m in Sources */,

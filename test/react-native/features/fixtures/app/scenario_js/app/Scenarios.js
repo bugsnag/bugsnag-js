@@ -7,6 +7,7 @@ export { UnhandledNativeErrorScenario } from './scenarios/UnhandledNativeErrorSc
 export { UnhandledJsErrorScenario } from './scenarios/UnhandledJsErrorScenario'
 export { UnhandledJsErrorSeverityScenario } from './scenarios/UnhandledJsErrorSeverityScenario'
 export { UnhandledJsPromiseRejectionScenario } from './scenarios/UnhandledJsPromiseRejectionScenario'
+export { RCTFatalScenario } from './scenarios/RCTFatalScenario'
 
 // api-key-ios.feature
 export { EventApiKeyOverrideScenario } from './scenarios/EventApiKeyOverrideScenario'
