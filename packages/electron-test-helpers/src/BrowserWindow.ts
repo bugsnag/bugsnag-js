@@ -40,6 +40,7 @@ export interface BrowserWindow {
   on: (event: BrowserWindowEvent, callback: Function) => void
   getSize: () => Size
   getPosition: () => Position
+  isDestroyed: () => boolean
 
   _emit: (event: string, ...args: any[]) => void
   readonly callbacks: { [event in BrowserWindowEvent]: Function[] }
@@ -107,15 +108,41 @@ export function makeBrowserWindow ({ windows = [], focusedWindow = null } = {}):
     }
 
     on (event: BrowserWindowEvent, callback: Function): void {
+      this._assertNotDestroyed()
+
       this.callbacks[event].push(callback)
     }
 
     getSize (): Size {
+      this._assertNotDestroyed()
+
       return this.size
     }
 
     getPosition (): Position {
+      this._assertNotDestroyed()
+
       return this.position
+    }
+
+    destroy (): void {
+      // > Force closing the window, the unload and beforeunload event won't be
+      // > emitted for the web page, and close event will also not be emitted for
+      // > this window, but it guarantees the closed event will be emitted.
+      // > https://www.electronjs.org/docs/latest/api/browser-window#windestroy
+      this._emit('closed')
+
+      this._isDestroyed = true
+    }
+
+    isDestroyed (): boolean {
+      return this._isDestroyed
+    }
+
+    _assertNotDestroyed (): void {
+      if (this._isDestroyed) {
+        throw new TypeError('Object has been destroyed')
+      }
     }
 
     _emit (event: string, ...args: any[]): void {
