@@ -72,6 +72,20 @@ module.exports = (app, BrowserWindow) => ({
 })
 
 function attachBrowserWindowListeners (leaveBreadcrumb, browserWindow) {
+  // the moved event fires too frequently to add a breadcrumb each time
+  const onMoved = debounce(() => {
+    // it's possible for the window to be destroyed at this point because we
+    // debounce this callback. If we try to use 'getPosition' when the window is
+    // destroyed then we'll will raise a TypeError, so we bail out instead
+    if (browserWindow.isDestroyed()) {
+      return
+    }
+
+    const [left, top] = browserWindow.getPosition()
+
+    leaveBreadcrumb('was moved', browserWindow, { left, top })
+  }, 250, debounceOptions)
+
   // when the 'closed' event fires we aren't allowed to read from the browserWindow,
   // so we cache the values we care about in the 'close' event instead
   // we don't use the close event for the breadcrumb as it can be cancelled
@@ -83,6 +97,9 @@ function attachBrowserWindowListeners (leaveBreadcrumb, browserWindow) {
   })
 
   browserWindow.on('closed', () => {
+    // cancel the onMoved callback in case it's still scheduled to run
+    onMoved.cancel()
+
     leaveBreadcrumb('closed', lastKnownState)
   })
 
@@ -116,12 +133,7 @@ function attachBrowserWindowListeners (leaveBreadcrumb, browserWindow) {
     leaveBreadcrumb('was resized', browserWindow, { width, height })
   })
 
-  // the moved event fires too frequently to add a breadcrumb each time
-  browserWindow.on('moved', debounce(() => {
-    const [left, top] = browserWindow.getPosition()
-
-    leaveBreadcrumb('was moved', browserWindow, { left, top })
-  }, 250, debounceOptions))
+  browserWindow.on('moved', onMoved)
 
   browserWindow.on('enter-full-screen', () => {
     leaveBreadcrumb('went full-screen', browserWindow)

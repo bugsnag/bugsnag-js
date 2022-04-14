@@ -41,6 +41,7 @@ export interface BrowserWindow {
   getSize: () => Size
   getPosition: () => Position
   isDestroyed: () => boolean
+  destroy: () => void
 
   _emit: (event: string, ...args: any[]) => void
   readonly callbacks: { [event in BrowserWindowEvent]: Function[] }
@@ -139,7 +140,7 @@ export function makeBrowserWindow ({ windows = [], focusedWindow = null } = {}):
       return this._isDestroyed
     }
 
-    _assertNotDestroyed (): void {
+    private _assertNotDestroyed (): void {
       if (this._isDestroyed) {
         throw new TypeError('Object has been destroyed')
       }

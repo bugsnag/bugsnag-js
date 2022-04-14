@@ -254,6 +254,27 @@ describe('plugin: electron app breadcrumbs', () => {
         expect(client._breadcrumbs[0]).toMatchBreadcrumb(breadcrumb)
       })
 
+      it('moved with a destroyed window', () => {
+        const app = makeApp()
+        const BrowserWindow = makeBrowserWindow()
+        const window = new BrowserWindow(7575, 'bbb', { position: { top: 463, left: 817 } })
+
+        const client = makeClient({ app, BrowserWindow })
+
+        // destroy the window before emitting the 'moved' event; this can happen
+        // when closing the window just after moving it, as we debounce the
+        // 'moved' event callback
+        window.destroy()
+        window._emit('moved')
+
+        // the 'destroy' method will fire the 'closed' event, but the 'moved'
+        // event should be ignored as this window was destroyed before it settled
+        const breadcrumb = new Breadcrumb('Browser window 7575 closed', { id: 7575, title: 'bbb' }, 'state')
+
+        expect(client._breadcrumbs).toHaveLength(1)
+        expect(client._breadcrumbs[0]).toMatchBreadcrumb(breadcrumb)
+      })
+
       it('enter-full-screen', () => {
         const app = makeApp()
         const BrowserWindow = makeBrowserWindow()
