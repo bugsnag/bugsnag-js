@@ -4,6 +4,7 @@
 
 ### Fixed
 
+- (plugin-react) Add 'children' prop to BugsnagErrorBoundary [#1723](https://github.com/bugsnag/bugsnag-js/pull/1723)
 - (react-native) Fix reporting of `RCTFatal()` crashes on iOS. [#1719](https://github.com/bugsnag/bugsnag-js/pull/1719)
 
 ## v7.16.3 (2022-04-05)

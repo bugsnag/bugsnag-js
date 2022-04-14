@@ -9,6 +9,7 @@ declare class BugsnagPluginReact {
 }
 
 export type BugsnagErrorBoundary = React.ComponentType<{
+  children?: React.ReactNode | undefined
   onError?: OnErrorCallback
   FallbackComponent?: React.ComponentType<{
     error: Error
