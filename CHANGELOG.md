@@ -5,6 +5,7 @@
 ### Fixed
 
 - (react-native) Fix reporting of `RCTFatal()` crashes on iOS. [#1719](https://github.com/bugsnag/bugsnag-js/pull/1719)
+- (plugin-electron-app-breadcrumbs) Fix a TypeError caused by using a BrowserWindow object after it is destroyed [#1722](https://github.com/bugsnag/bugsnag-js/pull/1722)
 
 ## v7.16.3 (2022-04-05)
 
