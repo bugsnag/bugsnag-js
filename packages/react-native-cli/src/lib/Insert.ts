@@ -44,19 +44,34 @@ export async function insertJs (projectRoot: string, logger: Logger): Promise<vo
 
 export async function insertIos (projectRoot: string, logger: Logger): Promise<void> {
   logger.info('Adding Bugsnag to the iOS layer')
+
   const iosDir = path.join(projectRoot, 'ios')
-  let xcodeprojDir
+  let appDelegatePath
+
   try {
-    xcodeprojDir = (await fs.readdir(iosDir)).find(p => p.endsWith('.xcodeproj'))
+    const xcodeprojDir = (await fs.readdir(iosDir)).find(p => p.endsWith('.xcodeproj'))
+
     if (!xcodeprojDir) {
-      logger.warn(FAIL_MSG('AppDelegate.m'))
+      logger.warn(FAIL_MSG('AppDelegate'))
       return
     }
+
+    const appDelegateDirectory = path.join(iosDir, xcodeprojDir.replace(/\.xcodeproj$/, ''))
+
+    // handle both AppDelegate.m and AppDelegate.mm (RN 0.68+)
+    const appDelegateFile = (await fs.readdir(appDelegateDirectory)).find(p => p.startsWith('AppDelegate.m'))
+
+    if (!appDelegateFile) {
+      logger.warn(FAIL_MSG('AppDelegate'))
+      return
+    }
+
+    appDelegatePath = path.join(iosDir, xcodeprojDir.replace(/\.xcodeproj$/, ''), appDelegateFile)
   } catch (e) {
-    logger.error(FAIL_MSG('AppDelegate.m'))
+    logger.error(FAIL_MSG('AppDelegate'))
     return
   }
-  const appDelegatePath = path.join(iosDir, xcodeprojDir.replace(/\.xcodeproj$/, ''), 'AppDelegate.m')
+
   try {
     const appDelegate = await fs.readFile(appDelegatePath, 'utf8')
 
@@ -67,14 +82,21 @@ export async function insertIos (projectRoot: string, logger: Logger): Promise<v
 
     const appDelegateWithImport = `${BUGSNAG_COCOA_IMPORT}\n${appDelegate}`
     const appLaunchRes = COCOA_APP_LAUNCH_REGEX.exec(appDelegateWithImport)
+
     if (!appLaunchRes) {
-      logger.warn(FAIL_MSG('AppDelegate.m'))
+      logger.warn(FAIL_MSG(path.basename(appDelegatePath)))
       return
     }
-    await fs.writeFile(appDelegatePath, appDelegateWithImport.replace(appLaunchRes[1], `${appLaunchRes[1]}  ${BUGSNAG_COCOA_INIT}\n\n`), 'utf8')
+
+    await fs.writeFile(
+      appDelegatePath,
+      appDelegateWithImport.replace(appLaunchRes[1], `${appLaunchRes[1]}  ${BUGSNAG_COCOA_INIT}\n\n`),
+      'utf8'
+    )
+
     logger.success('Done')
   } catch (e) {
-    logger.error(FAIL_MSG('AppDelegate.m'))
+    logger.error(FAIL_MSG(path.basename(appDelegatePath)))
   }
 }
 

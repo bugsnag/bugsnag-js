@@ -73,7 +73,10 @@ test('insertJs(): already present', async () => {
 test('insertIos(): success', async () => {
   type readdir = (path: string) => Promise<string[]>
   const readdirMock = fs.readdir as unknown as jest.MockedFunction<readdir>
-  readdirMock.mockResolvedValue(['BugsnagReactNativeCliTest.xcodeproj'])
+
+  readdirMock
+    .mockResolvedValueOnce(['BugsnagReactNativeCliTest.xcodeproj'])
+    .mockResolvedValueOnce(['a', 'b', 'AppDelegate.m', 'c', 'd'])
 
   const appDelegate = await loadFixture(path.join(__dirname, 'fixtures', 'AppDelegate-before.m'))
   const readFileMock = fs.readFile as jest.MockedFunction<typeof fs.readFile>
@@ -94,7 +97,10 @@ test('insertIos(): success', async () => {
 test('insertIos(): already present', async () => {
   type readdir = (path: string) => Promise<string[]>
   const readdirMock = fs.readdir as unknown as jest.MockedFunction<readdir>
-  readdirMock.mockResolvedValue(['BugsnagReactNativeCliTest.xcodeproj'])
+
+  readdirMock
+    .mockResolvedValueOnce(['BugsnagReactNativeCliTest.xcodeproj'])
+    .mockResolvedValueOnce(['a', 'b', 'AppDelegate.mm', 'c', 'd'])
 
   const appDelegate = await loadFixture(path.join(__dirname, 'fixtures', 'AppDelegate-after.m'))
   const readFileMock = fs.readFile as jest.MockedFunction<typeof fs.readFile>
@@ -104,7 +110,7 @@ test('insertIos(): already present', async () => {
   writeFileMock.mockResolvedValue()
 
   await insertIos('/random/path', logger)
-  expect(readFileMock).toHaveBeenCalledWith('/random/path/ios/BugsnagReactNativeCliTest/AppDelegate.m', 'utf8')
+  expect(readFileMock).toHaveBeenCalledWith('/random/path/ios/BugsnagReactNativeCliTest/AppDelegate.mm', 'utf8')
   expect(writeFileMock).not.toHaveBeenCalled()
 
   expect(logger.warn).toHaveBeenCalledWith('Bugsnag is already included, skipping')
@@ -113,7 +119,10 @@ test('insertIos(): already present', async () => {
 test('insertIos(): failure to locate file', async () => {
   type readdir = (path: string) => Promise<string[]>
   const readdirMock = fs.readdir as unknown as jest.MockedFunction<readdir>
-  readdirMock.mockResolvedValue(['BugsnagReactNativeCliTest.xcodeproj'])
+
+  readdirMock
+    .mockResolvedValueOnce(['BugsnagReactNativeCliTest.xcodeproj'])
+    .mockResolvedValueOnce(['a', 'b', 'not-an-AppDelegate.x', 'c', 'd'])
 
   const readFileMock = fs.readFile as jest.MockedFunction<typeof fs.readFile>
   readFileMock.mockRejectedValue(await generateNotFoundError())
@@ -121,10 +130,10 @@ test('insertIos(): failure to locate file', async () => {
   const writeFileMock = fs.writeFile as jest.MockedFunction<typeof fs.writeFile>
 
   await insertIos('/random/path', logger)
-  expect(readFileMock).toHaveBeenCalledWith('/random/path/ios/BugsnagReactNativeCliTest/AppDelegate.m', 'utf8')
+  expect(readFileMock).not.toHaveBeenCalled()
   expect(writeFileMock).not.toHaveBeenCalled()
 
-  expect(logger.error).toHaveBeenCalledWith(expect.stringContaining('Failed to update "AppDelegate.m" automatically.'))
+  expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining('Failed to update "AppDelegate" automatically.'))
 })
 
 test('insertIos(): failure to locate project directory', async () => {
@@ -139,7 +148,7 @@ test('insertIos(): failure to locate project directory', async () => {
   expect(readFileMock).not.toHaveBeenCalled()
   expect(writeFileMock).not.toHaveBeenCalled()
 
-  expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining('Failed to update "AppDelegate.m" automatically.'))
+  expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining('Failed to update "AppDelegate" automatically.'))
 })
 
 test('insertIos(): project directory error', async () => {
@@ -154,23 +163,26 @@ test('insertIos(): project directory error', async () => {
   expect(readFileMock).not.toHaveBeenCalled()
   expect(writeFileMock).not.toHaveBeenCalled()
 
-  expect(logger.error).toHaveBeenCalledWith(expect.stringContaining('Failed to update "AppDelegate.m" automatically.'))
+  expect(logger.error).toHaveBeenCalledWith(expect.stringContaining('Failed to update "AppDelegate" automatically.'))
 })
 
 test('insertIos(): no identifiable app launch method', async () => {
   type readdir = (path: string) => Promise<string[]>
   const readdirMock = fs.readdir as unknown as jest.MockedFunction<readdir>
-  readdirMock.mockResolvedValue(['BugsnagReactNativeCliTest.xcodeproj'])
+
+  readdirMock
+    .mockResolvedValueOnce(['BugsnagReactNativeCliTest.xcodeproj'])
+    .mockResolvedValueOnce(['a', 'b', 'AppDelegate.mm', 'c', 'd'])
 
   const readFileMock = fs.readFile as jest.MockedFunction<typeof fs.readFile>
   readFileMock.mockResolvedValue('not good objective c')
   const writeFileMock = fs.writeFile as jest.MockedFunction<typeof fs.writeFile>
 
   await insertIos('/random/path', logger)
-  expect(readFileMock).toHaveBeenCalledWith('/random/path/ios/BugsnagReactNativeCliTest/AppDelegate.m', 'utf8')
+  expect(readFileMock).toHaveBeenCalledWith('/random/path/ios/BugsnagReactNativeCliTest/AppDelegate.mm', 'utf8')
   expect(writeFileMock).not.toHaveBeenCalled()
 
-  expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining('Failed to update "AppDelegate.m" automatically.'))
+  expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining('Failed to update "AppDelegate.mm" automatically.'))
 })
 
 test('insertAndroid(): success', async () => {
