@@ -17,6 +17,21 @@ steps:
           push:
             - browser-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-browser-${BRANCH_NAME}
 
+  - label: ':chrome: v30 Browser tests'
+    depends_on: "browser-maze-runner-image"
+    timeout_in_minutes: 20
+    plugins:
+      docker-compose#v3.9.0:
+        pull: browser-maze-runner
+        run: browser-maze-runner
+        use-aliases: true
+        verbose: true
+        command:
+          - --farm=bs
+          - --browser=chrome_30
+    concurrency: 5
+    concurrency_group: 'browserstack'
+
   - label: ':chrome: v43 Browser tests'
     depends_on: "browser-maze-runner-image"
     timeout_in_minutes: 20
@@ -228,6 +243,51 @@ steps:
           - --browser=iphone_7
     env:
       HOST: "bs-local.com"
+    concurrency: 5
+    concurrency_group: 'browserstack'
+
+  - label: ':android: Google Nexus 5 Browser tests'
+    depends_on: "browser-maze-runner-image"
+    timeout_in_minutes: 20
+    plugins:
+      docker-compose#v3.9.0:
+        pull: browser-maze-runner
+        run: browser-maze-runner
+        use-aliases: true
+        verbose: true
+        command:
+          - --farm=bs
+          - --browser=android_nexus5
+    concurrency: 5
+    concurrency_group: 'browserstack'
+
+  - label: ':android: Samsung Galaxy S6 Browser tests'
+    depends_on: "browser-maze-runner-image"
+    timeout_in_minutes: 20
+    plugins:
+      docker-compose#v3.9.0:
+        pull: browser-maze-runner
+        run: browser-maze-runner
+        use-aliases: true
+        verbose: true
+        command:
+          - --farm=bs
+          - --browser=android_s6
+    concurrency: 5
+    concurrency_group: 'browserstack'
+
+  - label: ':android: Samsung Galaxy S7 Browser tests'
+    depends_on: "browser-maze-runner-image"
+    timeout_in_minutes: 20
+    plugins:
+      docker-compose#v3.9.0:
+        pull: browser-maze-runner
+        run: browser-maze-runner
+        use-aliases: true
+        verbose: true
+        command:
+          - --farm=bs
+          - --browser=android_s7
     concurrency: 5
     concurrency_group: 'browserstack'
 
