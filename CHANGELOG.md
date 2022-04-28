@@ -1,5 +1,15 @@
 # Changelog
 
+## TBD
+
+### Changed
+
+- (react-native) Update bugsnag-android to v5.22.1
+  - Max reported threads can now be configured using manifest meta-data "com.bugsnag.android. MAX_REPORTED_THREADS"
+    [bugsnag-android#1655](https://github.com/bugsnag/bugsnag-android/pull/1655)
+  - Small improvement to startup performance (Bugsnag.start)
+    [bugsnag-android#1648](https://github.com/bugsnag/bugsnag-android/pull/1648)
+
 ## v7.16.4 (2022-05-03)
 
 - (expo) This release marks a change in the version scheme used by `@bugsnag/expo` and a move to its own repo, [`bugsnag-expo`](https://github.com/bugsnag/bugsnag-expo)
