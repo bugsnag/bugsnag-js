@@ -269,7 +269,7 @@ iphone_6s:
     errorClass: 'Error'
     errorMessage: "Error: bad things"
     lineNumber: 18
-    columnNumber: 22
+    columnNumber: 36
   unhandled_undefined_function:
     errorClass: 'ReferenceError'
     errorMessage: "Can't find variable: nevergoingtoexist_notinamillionyears"
