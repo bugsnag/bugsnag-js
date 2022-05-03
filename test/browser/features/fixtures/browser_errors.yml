@@ -267,7 +267,7 @@ iphone_6s:
     file: '/unhandled/script/a.html'
   unhandled_thrown:
     errorClass: 'Error'
-    errorMessage: "bad things"
+    errorMessage: "Error: bad things"
     lineNumber: 18
     columnNumber: 22
   unhandled_undefined_function:
