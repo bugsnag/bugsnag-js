@@ -1,6 +1,6 @@
 # Changelog
 
-## TBC
+## v7.16.4 (2022-05-03)
 
 - (expo) This release marks a change in the version scheme used by `@bugsnag/expo` and a move to its own repo, [`bugsnag-expo`](https://github.com/bugsnag/bugsnag-expo)
 
