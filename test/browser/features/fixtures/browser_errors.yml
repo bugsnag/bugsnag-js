@@ -518,7 +518,7 @@ chrome_30:
     errorClass: 'SyntaxError'
     errorMessage: "Unexpected token !"
     lineNumber: 18
-    columnNumber: 13
+    columnNumber: 12
     file: '/unhandled/script/a.html'
   unhandled_thrown:
     errorClass: 'Error'
@@ -534,7 +534,7 @@ chrome_30:
     errorClass: 'URIError'
     errorMessage: URI malformed
     lineNumber: 18
-    columnNumber: 7
+    columnNumber: 6
 
 chrome_32:
   handled:
