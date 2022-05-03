@@ -79,9 +79,7 @@ Once the release PR has been approved:
 You are now ready to make the release. Releases are done using Docker and Docker compose. You do not need to have the release branch checked out on your local machine to make a release – the container pulls a fresh clone of the repo down from GitHub. Prerequisites:
 
 - You will need to clone the repository and have Docker running on your local machine.
-- Ensure you are logged in to npm and that you have access to publish to the following on npm
-  - any packages in the `@bugsnag` namespace
-  - the `bugsnag-expo-cli` package
+- Ensure you are logged in to npm and that you have access to publish packages in the `@bugsnag` namespace
 - Ensure you have an AWS key pair with access to our S3 bucket and cloudfront distribution. Export these in your environment as `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` (if you're going to publish to the CDN)
 - Ensure your `.gitconfig` file in your home directory is configured to contain your name and email address
 - Generate a [personal access token](https://github.com/settings/tokens/new) on GitHub and store it somewhere secure
@@ -150,3 +148,24 @@ VERSION=preminor \
 Prereleases will automatically be published to npm with the dist tag `next` and browser bundles are automatically uploaded to the CDN.
 
 The dist tag ensures that prereleases are not installed by unsuspecting users who do not specify a version – npm automatically adds the `latest` tag to a published module unless one is specified.
+
+### Release issues
+
+#### Failed to publish all packages
+
+Problem: `lerna publish` failed part-way through meaning not all packages were published.
+
+To remedy this:
+ - First work out whether a cdn upload is required as the check used in `release.sh` is no longer valid since the `lerna version` step took place.
+ - Then re-run using the `RETRY_PUBLISH` and `FORCE_CDN_UPLOAD` flags as required:
+
+```
+GITHUB_USER=<your github username> \
+GITHUB_ACCESS_TOKEN=<generate a personal access token> \
+AWS_ACCESS_KEY_ID=xxx \
+AWS_SECRET_ACCESS_KEY=xxx \
+RELEASE_BRANCH=master \
+RETRY_PUBLISH=1 \
+FORCE_CDN_UPLOAD=1 \
+  docker-compose run release
+```
