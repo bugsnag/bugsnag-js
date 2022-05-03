@@ -20,6 +20,7 @@
 
 - (plugin-react) Add 'children' prop to BugsnagErrorBoundary [#1723](https://github.com/bugsnag/bugsnag-js/pull/1723)
 - (react-native) Fix reporting of `RCTFatal()` crashes on iOS. [#1719](https://github.com/bugsnag/bugsnag-js/pull/1719)
+- (react-native-cli) Fix 'insert' command with RN 0.68+ [#1726](https://github.com/bugsnag/bugsnag-js/pull/1726)
 - (plugin-electron-app-breadcrumbs) Fix a TypeError caused by using a BrowserWindow object after it is destroyed [#1722](https://github.com/bugsnag/bugsnag-js/pull/1722)
 
 ## v7.16.3 (2022-04-05)
