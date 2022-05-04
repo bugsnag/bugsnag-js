@@ -21,7 +21,7 @@ When('the exception matches the {string} values for the current browser') do |fi
 end
 
 When('the test should run in this browser') do
-  wait = Selenium::WebDriver::Wait.new(timeout: 10)
+  wait = Selenium::WebDriver::Wait.new(timeout: 15)
   wait.until {
     Maze.driver.find_element(id: 'bugsnag-test-should-run') &&
         Maze.driver.find_element(id: 'bugsnag-test-should-run').text != 'PENDING'

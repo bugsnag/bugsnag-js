@@ -16,308 +16,308 @@ steps:
       - docker-compose#v3.9.0:
           push:
             - browser-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-browser-${BRANCH_NAME}
-
-  - label: ':chrome: v30 Browser tests'
-    depends_on: "browser-maze-runner-image"
-    timeout_in_minutes: 20
-    plugins:
-      docker-compose#v3.9.0:
-        pull: browser-maze-runner
-        run: browser-maze-runner
-        use-aliases: true
-        verbose: true
-        command:
-          - --farm=bs
-          - --browser=chrome_30
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':chrome: v32 Browser tests'
-    depends_on: "browser-maze-runner-image"
-    timeout_in_minutes: 20
-    plugins:
-      docker-compose#v3.9.0:
-        pull: browser-maze-runner
-        run: browser-maze-runner
-        use-aliases: true
-        verbose: true
-        command:
-          - --farm=bs
-          - --browser=chrome_32
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':chrome: v34 Browser tests'
-    depends_on: "browser-maze-runner-image"
-    timeout_in_minutes: 20
-    plugins:
-      docker-compose#v3.9.0:
-        pull: browser-maze-runner
-        run: browser-maze-runner
-        use-aliases: true
-        verbose: true
-        command:
-          - --farm=bs
-          - --browser=chrome_34
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':chrome: v36 Browser tests'
-    depends_on: "browser-maze-runner-image"
-    timeout_in_minutes: 20
-    plugins:
-      docker-compose#v3.9.0:
-        pull: browser-maze-runner
-        run: browser-maze-runner
-        use-aliases: true
-        verbose: true
-        command:
-          - --farm=bs
-          - --browser=chrome_36
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':chrome: v38 Browser tests'
-    depends_on: "browser-maze-runner-image"
-    timeout_in_minutes: 20
-    plugins:
-      docker-compose#v3.9.0:
-        pull: browser-maze-runner
-        run: browser-maze-runner
-        use-aliases: true
-        verbose: true
-        command:
-          - --farm=bs
-          - --browser=chrome_38
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':chrome: v40 Browser tests'
-    depends_on: "browser-maze-runner-image"
-    timeout_in_minutes: 20
-    plugins:
-      docker-compose#v3.9.0:
-        pull: browser-maze-runner
-        run: browser-maze-runner
-        use-aliases: true
-        verbose: true
-        command:
-          - --farm=bs
-          - --browser=chrome_40
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':chrome: v42 Browser tests'
-    depends_on: "browser-maze-runner-image"
-    timeout_in_minutes: 20
-    plugins:
-      docker-compose#v3.9.0:
-        pull: browser-maze-runner
-        run: browser-maze-runner
-        use-aliases: true
-        verbose: true
-        command:
-          - --farm=bs
-          - --browser=chrome_42
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':chrome: v43 Browser tests'
-    depends_on: "browser-maze-runner-image"
-    timeout_in_minutes: 20
-    plugins:
-      docker-compose#v3.9.0:
-        pull: browser-maze-runner
-        run: browser-maze-runner
-        use-aliases: true
-        verbose: true
-        command:
-          - --farm=bs
-          - --browser=chrome_43
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':chrome: v61 Browser tests'
-    depends_on: "browser-maze-runner-image"
-    timeout_in_minutes: 20
-    plugins:
-      docker-compose#v3.9.0:
-        pull: browser-maze-runner
-        run: browser-maze-runner
-        use-aliases: true
-        verbose: true
-        command:
-          - --farm=bs
-          - --browser=chrome_61
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':chrome: latest Browser tests'
-    depends_on: "browser-maze-runner-image"
-    timeout_in_minutes: 20
-    plugins:
-      docker-compose#v3.9.0:
-        pull: browser-maze-runner
-        run: browser-maze-runner
-        use-aliases: true
-        verbose: true
-        command:
-          - --farm=bs
-          - --browser=chrome_latest
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':ie: v8 Browser tests'
-    depends_on: "browser-maze-runner-image"
-    timeout_in_minutes: 20
-    plugins:
-      docker-compose#v3.9.0:
-        pull: browser-maze-runner
-        run: browser-maze-runner
-        use-aliases: true
-        verbose: true
-        command:
-          - --farm=bs
-          - --browser=ie_8
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':ie: v9 Browser tests'
-    depends_on: "browser-maze-runner-image"
-    timeout_in_minutes: 20
-    plugins:
-      docker-compose#v3.9.0:
-        pull: browser-maze-runner
-        run: browser-maze-runner
-        use-aliases: true
-        verbose: true
-        command:
-          - --farm=bs
-          - --browser=ie_9
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':ie: v10 Browser tests'
-    depends_on: "browser-maze-runner-image"
-    timeout_in_minutes: 20
-    plugins:
-      docker-compose#v3.9.0:
-        pull: browser-maze-runner
-        run: browser-maze-runner
-        use-aliases: true
-        verbose: true
-        command:
-          - --farm=bs
-          - --browser=ie_10
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':ie: v11 Browser tests'
-    depends_on: "browser-maze-runner-image"
-    timeout_in_minutes: 20
-    plugins:
-      docker-compose#v3.9.0:
-        pull: browser-maze-runner
-        run: browser-maze-runner
-        use-aliases: true
-        verbose: true
-        command:
-          - --farm=bs
-          - --browser=ie_11
-    env:
-      HOST: 'localhost' # IE11 needs the host set to localhost for some reason!ß
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':edge: v14 Browser tests'
-    depends_on: "browser-maze-runner-image"
-    timeout_in_minutes: 20
-    plugins:
-      docker-compose#v3.9.0:
-        pull: browser-maze-runner
-        run: browser-maze-runner
-        use-aliases: true
-        verbose: true
-        command:
-          - --farm=bs
-          - --browser=edge_14
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':edge: v15 Browser tests'
-    depends_on: "browser-maze-runner-image"
-    timeout_in_minutes: 20
-    plugins:
-      docker-compose#v3.9.0:
-        pull: browser-maze-runner
-        run: browser-maze-runner
-        use-aliases: true
-        verbose: true
-        command:
-          - --farm=bs
-          - --browser=edge_15
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':safari: v6 Browser tests'
-    depends_on: "browser-maze-runner-image"
-    timeout_in_minutes: 20
-    plugins:
-      docker-compose#v3.9.0:
-        pull: browser-maze-runner
-        run: browser-maze-runner
-        use-aliases: true
-        verbose: true
-        command:
-          - --farm=bs
-          - --browser=safari_6
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':safari: v10 Browser tests'
-    depends_on: "browser-maze-runner-image"
-    timeout_in_minutes: 20
-    plugins:
-      docker-compose#v3.9.0:
-        pull: browser-maze-runner
-        run: browser-maze-runner
-        use-aliases: true
-        verbose: true
-        command:
-          - --farm=bs
-          - --browser=safari_10
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':safari: v13 Browser tests'
-    depends_on: "browser-maze-runner-image"
-    timeout_in_minutes: 20
-    plugins:
-      docker-compose#v3.9.0:
-        pull: browser-maze-runner
-        run: browser-maze-runner
-        use-aliases: true
-        verbose: true
-        command:
-          - --farm=bs
-          - --browser=safari_13
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':safari: v15 Browser tests'
-    depends_on: "browser-maze-runner-image"
-    timeout_in_minutes: 20
-    plugins:
-      docker-compose#v3.9.0:
-        pull: browser-maze-runner
-        run: browser-maze-runner
-        use-aliases: true
-        verbose: true
-        command:
-          - --farm=bs
-          - --browser=safari_15
-    concurrency: 5
-    concurrency_group: 'browserstack'
+#
+#  - label: ':chrome: v30 Browser tests'
+#    depends_on: "browser-maze-runner-image"
+#    timeout_in_minutes: 20
+#    plugins:
+#      docker-compose#v3.9.0:
+#        pull: browser-maze-runner
+#        run: browser-maze-runner
+#        use-aliases: true
+#        verbose: true
+#        command:
+#          - --farm=bs
+#          - --browser=chrome_30
+#    concurrency: 5
+#    concurrency_group: 'browserstack'
+#
+#  - label: ':chrome: v32 Browser tests'
+#    depends_on: "browser-maze-runner-image"
+#    timeout_in_minutes: 20
+#    plugins:
+#      docker-compose#v3.9.0:
+#        pull: browser-maze-runner
+#        run: browser-maze-runner
+#        use-aliases: true
+#        verbose: true
+#        command:
+#          - --farm=bs
+#          - --browser=chrome_32
+#    concurrency: 5
+#    concurrency_group: 'browserstack'
+#
+#  - label: ':chrome: v34 Browser tests'
+#    depends_on: "browser-maze-runner-image"
+#    timeout_in_minutes: 20
+#    plugins:
+#      docker-compose#v3.9.0:
+#        pull: browser-maze-runner
+#        run: browser-maze-runner
+#        use-aliases: true
+#        verbose: true
+#        command:
+#          - --farm=bs
+#          - --browser=chrome_34
+#    concurrency: 5
+#    concurrency_group: 'browserstack'
+#
+#  - label: ':chrome: v36 Browser tests'
+#    depends_on: "browser-maze-runner-image"
+#    timeout_in_minutes: 20
+#    plugins:
+#      docker-compose#v3.9.0:
+#        pull: browser-maze-runner
+#        run: browser-maze-runner
+#        use-aliases: true
+#        verbose: true
+#        command:
+#          - --farm=bs
+#          - --browser=chrome_36
+#    concurrency: 5
+#    concurrency_group: 'browserstack'
+#
+#  - label: ':chrome: v38 Browser tests'
+#    depends_on: "browser-maze-runner-image"
+#    timeout_in_minutes: 20
+#    plugins:
+#      docker-compose#v3.9.0:
+#        pull: browser-maze-runner
+#        run: browser-maze-runner
+#        use-aliases: true
+#        verbose: true
+#        command:
+#          - --farm=bs
+#          - --browser=chrome_38
+#    concurrency: 5
+#    concurrency_group: 'browserstack'
+#
+#  - label: ':chrome: v40 Browser tests'
+#    depends_on: "browser-maze-runner-image"
+#    timeout_in_minutes: 20
+#    plugins:
+#      docker-compose#v3.9.0:
+#        pull: browser-maze-runner
+#        run: browser-maze-runner
+#        use-aliases: true
+#        verbose: true
+#        command:
+#          - --farm=bs
+#          - --browser=chrome_40
+#    concurrency: 5
+#    concurrency_group: 'browserstack'
+#
+#  - label: ':chrome: v42 Browser tests'
+#    depends_on: "browser-maze-runner-image"
+#    timeout_in_minutes: 20
+#    plugins:
+#      docker-compose#v3.9.0:
+#        pull: browser-maze-runner
+#        run: browser-maze-runner
+#        use-aliases: true
+#        verbose: true
+#        command:
+#          - --farm=bs
+#          - --browser=chrome_42
+#    concurrency: 5
+#    concurrency_group: 'browserstack'
+#
+#  - label: ':chrome: v43 Browser tests'
+#    depends_on: "browser-maze-runner-image"
+#    timeout_in_minutes: 20
+#    plugins:
+#      docker-compose#v3.9.0:
+#        pull: browser-maze-runner
+#        run: browser-maze-runner
+#        use-aliases: true
+#        verbose: true
+#        command:
+#          - --farm=bs
+#          - --browser=chrome_43
+#    concurrency: 5
+#    concurrency_group: 'browserstack'
+#
+#  - label: ':chrome: v61 Browser tests'
+#    depends_on: "browser-maze-runner-image"
+#    timeout_in_minutes: 20
+#    plugins:
+#      docker-compose#v3.9.0:
+#        pull: browser-maze-runner
+#        run: browser-maze-runner
+#        use-aliases: true
+#        verbose: true
+#        command:
+#          - --farm=bs
+#          - --browser=chrome_61
+#    concurrency: 5
+#    concurrency_group: 'browserstack'
+#
+#  - label: ':chrome: latest Browser tests'
+#    depends_on: "browser-maze-runner-image"
+#    timeout_in_minutes: 20
+#    plugins:
+#      docker-compose#v3.9.0:
+#        pull: browser-maze-runner
+#        run: browser-maze-runner
+#        use-aliases: true
+#        verbose: true
+#        command:
+#          - --farm=bs
+#          - --browser=chrome_latest
+#    concurrency: 5
+#    concurrency_group: 'browserstack'
+#
+#  - label: ':ie: v8 Browser tests'
+#    depends_on: "browser-maze-runner-image"
+#    timeout_in_minutes: 20
+#    plugins:
+#      docker-compose#v3.9.0:
+#        pull: browser-maze-runner
+#        run: browser-maze-runner
+#        use-aliases: true
+#        verbose: true
+#        command:
+#          - --farm=bs
+#          - --browser=ie_8
+#    concurrency: 5
+#    concurrency_group: 'browserstack'
+#
+#  - label: ':ie: v9 Browser tests'
+#    depends_on: "browser-maze-runner-image"
+#    timeout_in_minutes: 20
+#    plugins:
+#      docker-compose#v3.9.0:
+#        pull: browser-maze-runner
+#        run: browser-maze-runner
+#        use-aliases: true
+#        verbose: true
+#        command:
+#          - --farm=bs
+#          - --browser=ie_9
+#    concurrency: 5
+#    concurrency_group: 'browserstack'
+#
+#  - label: ':ie: v10 Browser tests'
+#    depends_on: "browser-maze-runner-image"
+#    timeout_in_minutes: 20
+#    plugins:
+#      docker-compose#v3.9.0:
+#        pull: browser-maze-runner
+#        run: browser-maze-runner
+#        use-aliases: true
+#        verbose: true
+#        command:
+#          - --farm=bs
+#          - --browser=ie_10
+#    concurrency: 5
+#    concurrency_group: 'browserstack'
+#
+#  - label: ':ie: v11 Browser tests'
+#    depends_on: "browser-maze-runner-image"
+#    timeout_in_minutes: 20
+#    plugins:
+#      docker-compose#v3.9.0:
+#        pull: browser-maze-runner
+#        run: browser-maze-runner
+#        use-aliases: true
+#        verbose: true
+#        command:
+#          - --farm=bs
+#          - --browser=ie_11
+#    env:
+#      HOST: 'localhost' # IE11 needs the host set to localhost for some reason!ß
+#    concurrency: 5
+#    concurrency_group: 'browserstack'
+#
+#  - label: ':edge: v14 Browser tests'
+#    depends_on: "browser-maze-runner-image"
+#    timeout_in_minutes: 20
+#    plugins:
+#      docker-compose#v3.9.0:
+#        pull: browser-maze-runner
+#        run: browser-maze-runner
+#        use-aliases: true
+#        verbose: true
+#        command:
+#          - --farm=bs
+#          - --browser=edge_14
+#    concurrency: 5
+#    concurrency_group: 'browserstack'
+#
+#  - label: ':edge: v15 Browser tests'
+#    depends_on: "browser-maze-runner-image"
+#    timeout_in_minutes: 20
+#    plugins:
+#      docker-compose#v3.9.0:
+#        pull: browser-maze-runner
+#        run: browser-maze-runner
+#        use-aliases: true
+#        verbose: true
+#        command:
+#          - --farm=bs
+#          - --browser=edge_15
+#    concurrency: 5
+#    concurrency_group: 'browserstack'
+#
+#  - label: ':safari: v6 Browser tests'
+#    depends_on: "browser-maze-runner-image"
+#    timeout_in_minutes: 20
+#    plugins:
+#      docker-compose#v3.9.0:
+#        pull: browser-maze-runner
+#        run: browser-maze-runner
+#        use-aliases: true
+#        verbose: true
+#        command:
+#          - --farm=bs
+#          - --browser=safari_6
+#    concurrency: 5
+#    concurrency_group: 'browserstack'
+#
+#  - label: ':safari: v10 Browser tests'
+#    depends_on: "browser-maze-runner-image"
+#    timeout_in_minutes: 20
+#    plugins:
+#      docker-compose#v3.9.0:
+#        pull: browser-maze-runner
+#        run: browser-maze-runner
+#        use-aliases: true
+#        verbose: true
+#        command:
+#          - --farm=bs
+#          - --browser=safari_10
+#    concurrency: 5
+#    concurrency_group: 'browserstack'
+#
+#  - label: ':safari: v13 Browser tests'
+#    depends_on: "browser-maze-runner-image"
+#    timeout_in_minutes: 20
+#    plugins:
+#      docker-compose#v3.9.0:
+#        pull: browser-maze-runner
+#        run: browser-maze-runner
+#        use-aliases: true
+#        verbose: true
+#        command:
+#          - --farm=bs
+#          - --browser=safari_13
+#    concurrency: 5
+#    concurrency_group: 'browserstack'
+#
+#  - label: ':safari: v15 Browser tests'
+#    depends_on: "browser-maze-runner-image"
+#    timeout_in_minutes: 20
+#    plugins:
+#      docker-compose#v3.9.0:
+#        pull: browser-maze-runner
+#        run: browser-maze-runner
+#        use-aliases: true
+#        verbose: true
+#        command:
+#          - --farm=bs
+#          - --browser=safari_15
+#    concurrency: 5
+#    concurrency_group: 'browserstack'
 
   - label: ':iphone: iOS 9 Browser tests'
     depends_on: "browser-maze-runner-image"
@@ -336,141 +336,141 @@ steps:
     concurrency: 5
     concurrency_group: 'browserstack'
 
-  - label: ':iphone: iOS 10.3 Browser tests'
-    depends_on: "browser-maze-runner-image"
-    timeout_in_minutes: 20
-    plugins:
-      docker-compose#v3.9.0:
-        pull: browser-maze-runner
-        run: browser-maze-runner
-        use-aliases: true
-        verbose: true
-        command:
-          - --farm=bs
-          - --browser=iphone_7
-    env:
-      HOST: "bs-local.com"
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':iphone: iOS 15.4 Browser tests'
-    depends_on: "browser-maze-runner-image"
-    timeout_in_minutes: 20
-    plugins:
-      docker-compose#v3.9.0:
-        pull: browser-maze-runner
-        run: browser-maze-runner
-        use-aliases: true
-        verbose: true
-        command:
-          - --farm=bs
-          - --browser=iphone_13
-    env:
-      HOST: "bs-local.com"
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':android: Google Nexus 5 Browser tests'
-    depends_on: "browser-maze-runner-image"
-    timeout_in_minutes: 20
-    plugins:
-      docker-compose#v3.9.0:
-        pull: browser-maze-runner
-        run: browser-maze-runner
-        use-aliases: true
-        verbose: true
-        command:
-          - --farm=bs
-          - --browser=android_nexus5
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':android: Samsung Galaxy S6 Browser tests'
-    depends_on: "browser-maze-runner-image"
-    timeout_in_minutes: 20
-    plugins:
-      docker-compose#v3.9.0:
-        pull: browser-maze-runner
-        run: browser-maze-runner
-        use-aliases: true
-        verbose: true
-        command:
-          - --farm=bs
-          - --browser=android_s6
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':android: Samsung Galaxy S7 Browser tests'
-    depends_on: "browser-maze-runner-image"
-    timeout_in_minutes: 20
-    plugins:
-      docker-compose#v3.9.0:
-        pull: browser-maze-runner
-        run: browser-maze-runner
-        use-aliases: true
-        verbose: true
-        command:
-          - --farm=bs
-          - --browser=android_s7
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':android: Samsung Galaxy S8 Browser tests'
-    depends_on: "browser-maze-runner-image"
-    timeout_in_minutes: 20
-    plugins:
-      docker-compose#v3.9.0:
-        pull: browser-maze-runner
-        run: browser-maze-runner
-        use-aliases: true
-        verbose: true
-        command:
-          - --farm=bs
-          - --browser=android_s8
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':firefox: v30 Browser tests'
-    depends_on: "browser-maze-runner-image"
-    timeout_in_minutes: 20
-    plugins:
-      docker-compose#v3.9.0:
-        pull: browser-maze-runner
-        run: browser-maze-runner
-        use-aliases: true
-        verbose: true
-        command:
-          - --farm=bs
-          - --browser=firefox_30
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':firefox: v56 Browser tests'
-    depends_on: "browser-maze-runner-image"
-    timeout_in_minutes: 20
-    plugins:
-      docker-compose#v3.9.0:
-        pull: browser-maze-runner
-        run: browser-maze-runner
-        use-aliases: true
-        verbose: true
-        command:
-          - --farm=bs
-          - --browser=firefox_56
-    concurrency: 5
-    concurrency_group: 'browserstack'
-
-  - label: ':firefox: latest Browser tests'
-    depends_on: "browser-maze-runner-image"
-    timeout_in_minutes: 20
-    plugins:
-      docker-compose#v3.9.0:
-        pull: browser-maze-runner
-        run: browser-maze-runner
-        use-aliases: true
-        verbose: true
-        command:
-          - --farm=bs
-          - --browser=firefox_latest
-    concurrency: 5
-    concurrency_group: 'browserstack'
+#  - label: ':iphone: iOS 10.3 Browser tests'
+#    depends_on: "browser-maze-runner-image"
+#    timeout_in_minutes: 20
+#    plugins:
+#      docker-compose#v3.9.0:
+#        pull: browser-maze-runner
+#        run: browser-maze-runner
+#        use-aliases: true
+#        verbose: true
+#        command:
+#          - --farm=bs
+#          - --browser=iphone_7
+#    env:
+#      HOST: "bs-local.com"
+#    concurrency: 5
+#    concurrency_group: 'browserstack'
+#
+#  - label: ':iphone: iOS 15.4 Browser tests'
+#    depends_on: "browser-maze-runner-image"
+#    timeout_in_minutes: 20
+#    plugins:
+#      docker-compose#v3.9.0:
+#        pull: browser-maze-runner
+#        run: browser-maze-runner
+#        use-aliases: true
+#        verbose: true
+#        command:
+#          - --farm=bs
+#          - --browser=iphone_13
+#    env:
+#      HOST: "bs-local.com"
+#    concurrency: 5
+#    concurrency_group: 'browserstack'
+#
+#  - label: ':android: Google Nexus 5 Browser tests'
+#    depends_on: "browser-maze-runner-image"
+#    timeout_in_minutes: 20
+#    plugins:
+#      docker-compose#v3.9.0:
+#        pull: browser-maze-runner
+#        run: browser-maze-runner
+#        use-aliases: true
+#        verbose: true
+#        command:
+#          - --farm=bs
+#          - --browser=android_nexus5
+#    concurrency: 5
+#    concurrency_group: 'browserstack'
+#
+#  - label: ':android: Samsung Galaxy S6 Browser tests'
+#    depends_on: "browser-maze-runner-image"
+#    timeout_in_minutes: 20
+#    plugins:
+#      docker-compose#v3.9.0:
+#        pull: browser-maze-runner
+#        run: browser-maze-runner
+#        use-aliases: true
+#        verbose: true
+#        command:
+#          - --farm=bs
+#          - --browser=android_s6
+#    concurrency: 5
+#    concurrency_group: 'browserstack'
+#
+#  - label: ':android: Samsung Galaxy S7 Browser tests'
+#    depends_on: "browser-maze-runner-image"
+#    timeout_in_minutes: 20
+#    plugins:
+#      docker-compose#v3.9.0:
+#        pull: browser-maze-runner
+#        run: browser-maze-runner
+#        use-aliases: true
+#        verbose: true
+#        command:
+#          - --farm=bs
+#          - --browser=android_s7
+#    concurrency: 5
+#    concurrency_group: 'browserstack'
+#
+#  - label: ':android: Samsung Galaxy S8 Browser tests'
+#    depends_on: "browser-maze-runner-image"
+#    timeout_in_minutes: 20
+#    plugins:
+#      docker-compose#v3.9.0:
+#        pull: browser-maze-runner
+#        run: browser-maze-runner
+#        use-aliases: true
+#        verbose: true
+#        command:
+#          - --farm=bs
+#          - --browser=android_s8
+#    concurrency: 5
+#    concurrency_group: 'browserstack'
+#
+#  - label: ':firefox: v30 Browser tests'
+#    depends_on: "browser-maze-runner-image"
+#    timeout_in_minutes: 20
+#    plugins:
+#      docker-compose#v3.9.0:
+#        pull: browser-maze-runner
+#        run: browser-maze-runner
+#        use-aliases: true
+#        verbose: true
+#        command:
+#          - --farm=bs
+#          - --browser=firefox_30
+#    concurrency: 5
+#    concurrency_group: 'browserstack'
+#
+#  - label: ':firefox: v56 Browser tests'
+#    depends_on: "browser-maze-runner-image"
+#    timeout_in_minutes: 20
+#    plugins:
+#      docker-compose#v3.9.0:
+#        pull: browser-maze-runner
+#        run: browser-maze-runner
+#        use-aliases: true
+#        verbose: true
+#        command:
+#          - --farm=bs
+#          - --browser=firefox_56
+#    concurrency: 5
+#    concurrency_group: 'browserstack'
+#
+#  - label: ':firefox: latest Browser tests'
+#    depends_on: "browser-maze-runner-image"
+#    timeout_in_minutes: 20
+#    plugins:
+#      docker-compose#v3.9.0:
+#        pull: browser-maze-runner
+#        run: browser-maze-runner
+#        use-aliases: true
+#        verbose: true
+#        command:
+#          - --farm=bs
+#          - --browser=firefox_latest
+#    concurrency: 5
+#    concurrency_group: 'browserstack'
