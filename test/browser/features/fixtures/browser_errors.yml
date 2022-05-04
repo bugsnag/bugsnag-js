@@ -277,7 +277,7 @@ iphone_6s:
     columnNumber: 43
   unhandled_malformed_uri:
     errorClass: 'Error'
-    errorMessage: URI error
+    errorMessage: "URIError: URI error"
     lineNumber: 18
     columnNumber: 25
 
