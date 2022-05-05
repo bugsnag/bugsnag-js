@@ -1,6 +1,16 @@
 # Changelog
 
-## TBC
+## TBD
+
+### Changed
+
+- (react-native) Update bugsnag-android to v5.22.1
+  - Max reported threads can now be configured using manifest meta-data "com.bugsnag.android. MAX_REPORTED_THREADS"
+    [bugsnag-android#1655](https://github.com/bugsnag/bugsnag-android/pull/1655)
+  - Small improvement to startup performance (Bugsnag.start)
+    [bugsnag-android#1648](https://github.com/bugsnag/bugsnag-android/pull/1648)
+
+## v7.16.4 (2022-05-03)
 
 - (expo) This release marks a change in the version scheme used by `@bugsnag/expo` and a move to its own repo, [`bugsnag-expo`](https://github.com/bugsnag/bugsnag-expo)
 
@@ -10,6 +20,7 @@
 
 - (plugin-react) Add 'children' prop to BugsnagErrorBoundary [#1723](https://github.com/bugsnag/bugsnag-js/pull/1723)
 - (react-native) Fix reporting of `RCTFatal()` crashes on iOS. [#1719](https://github.com/bugsnag/bugsnag-js/pull/1719)
+- (react-native-cli) Fix 'insert' command with RN 0.68+ [#1726](https://github.com/bugsnag/bugsnag-js/pull/1726)
 - (plugin-electron-app-breadcrumbs) Fix a TypeError caused by using a BrowserWindow object after it is destroyed [#1722](https://github.com/bugsnag/bugsnag-js/pull/1722)
 
 ## v7.16.3 (2022-04-05)
