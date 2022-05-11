@@ -28,5 +28,10 @@
   },
   "peerDependencies": {
     "@bugsnag/core": "^7.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@bugsnag/core": {
+      "optional": true
+    }
   }
 }

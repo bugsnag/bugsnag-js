@@ -11,6 +11,7 @@
     [bugsnag-android#1648](https://github.com/bugsnag/bugsnag-android/pull/1648)
   - Fixed NDK stack-traces for libraries linked after `Bugsnag.start` was called
     [bugsnag-android#1671](https://github.com/bugsnag/bugsnag-android/pull/1671)
+- (plugin-react|plugin-vue|plugin-react-navigation|plugin-react-native-navigation) Set `@bugsnag/core` to be an optional peer dependency to avoid unmet peer dependency warnings [#1735](https://github.com/bugsnag/bugsnag-js/pull/1735)
 
 ## v7.16.4 (2022-05-03)
 
