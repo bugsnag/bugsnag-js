@@ -151,4 +151,12 @@ describe('browser notifier', () => {
       done()
     })
   })
+
+  it('indicates whether or not the client is started', (done) => {
+    const Bugsnag = getBugsnag()
+    expect(Bugsnag.isStarted).toBe(false)
+    Bugsnag.start(API_KEY)
+    expect(Bugsnag.isStarted).toBe(true)
+    done()
+  })
 })
