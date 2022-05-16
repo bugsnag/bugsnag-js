@@ -50,6 +50,7 @@ declare class ElectronClient extends Client {
 interface ElectronBugsnagStatic extends ElectronClient {
   start: (apiKeyOrOpts?: string | MainConfig | RendererConfig) => Client
   createClient: (apiKeyOrOpts?: string | MainConfig | RendererConfig) => Client
+  isStarted: boolean
 }
 
 declare const Bugsnag: ElectronBugsnagStatic
