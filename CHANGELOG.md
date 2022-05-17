@@ -2,6 +2,10 @@
 
 ## TBD
 
+### Added
+
+- Added `isStarted` property to notifiers to check whether Bugsnag has initialized [#1737](https://github.com/bugsnag/bugsnag-js/pull/1737)
+
 ### Changed
 
 - (react-native) Update bugsnag-android to v5.22.3
