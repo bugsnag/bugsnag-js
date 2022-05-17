@@ -29,6 +29,11 @@ beforeAll(() => {
   }
 })
 
+beforeEach(() => {
+  // @ts-ignore:
+  Bugsnag._client = null
+})
+
 describe('@bugsnag/electron notifier', () => {
   describe('isStarted', () => {
     it('returns false when the notifier has not been started', () => {
