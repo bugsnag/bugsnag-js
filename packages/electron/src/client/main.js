@@ -16,7 +16,8 @@ const { schema } = require('../config/main')
 Event.__type = 'electronnodejs'
 
 module.exports = (opts) => {
-  // Sanity check api key has been provided
+  // check api key has been provided as we need it to create the FileStore
+  // which happens before the API key is validated
   if (typeof opts.apiKey !== 'string') {
     throw new Error('No Bugsnag API Key set')
   }
