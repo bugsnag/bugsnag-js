@@ -16,6 +16,11 @@ const { schema } = require('../config/main')
 Event.__type = 'electronnodejs'
 
 module.exports = (opts) => {
+  // Sanity check api key has been provided
+  if (typeof opts.apiKey !== 'string') {
+    throw new Error('No Bugsnag API Key set')
+  }
+
   const filestore = new FileStore(
     opts.apiKey,
     electron.app.getPath('userCache'),
