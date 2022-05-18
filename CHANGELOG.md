@@ -18,6 +18,7 @@
   - Small performance improvements to `Bugnag.start`
     [bugsnag-android#1680](https://github.com/bugsnag/bugsnag-android/pull/1680)
 - (plugin-react|plugin-vue|plugin-react-navigation|plugin-react-native-navigation) Set `@bugsnag/core` to be an optional peer dependency to avoid unmet peer dependency warnings [#1735](https://github.com/bugsnag/bugsnag-js/pull/1735)
+- (electron) Improved error message when no apiKey is provided to Bugsnag.start() [#1738](https://github.com/bugsnag/bugsnag-js/pull/1738)
 - (plugin-simple-throttle) Warning message added when error handler has exceeded `maxEvents` [#1739](https://github.com/bugsnag/bugsnag-js/pull/1739)
 
 ## v7.16.4 (2022-05-03)
