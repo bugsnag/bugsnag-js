@@ -4,9 +4,9 @@ const Index = () => (
   <div style={{ maxWidth: 700, margin: '0 auto' }}>
     <h2>Bugsnag next.js Example</h2>
     <p>
-      This example demonstrates how to record unhandled exceptions in your code
-      with Bugsnag. There are several test pages below that result in various
-      kinds of unhandled exceptions.
+      This example demonstrates how to record exceptions in your code with Bugsnag.
+      There are several test pages below that result in various kinds of unhandled
+       and handled exceptions.
     </p>
     <p>
       <strong>Important:</strong> exceptions in development mode take a
@@ -17,7 +17,7 @@ const Index = () => (
       </a>
     </p>
     <ol>
-      <li>API route exceptions/transactions</li>
+      <li>API route exceptions</li>
       <ol>
         <li>
           API has a top-of-module Promise that rejects, but its result is not
@@ -45,7 +45,7 @@ const Index = () => (
           </a>
         </li>
       </ol>
-      <li>SSR exceptions/transactions</li>
+      <li>SSR exceptions</li>
       <ol>
         <li>
           getServerSideProps throws an Error.
