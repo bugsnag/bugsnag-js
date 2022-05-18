@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/electron",
-  "version": "7.16.4",
+  "version": "7.16.5",
   "main": "src/notifier.js",
   "types": "types/notifier.d.ts",
   "description": "@bugsnag/electron notifier",

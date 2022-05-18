@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-react-native-navigation",
-  "version": "7.16.1",
+  "version": "7.16.5",
   "main": "react-native-navigation.js",
   "types": "types/react-native-navigation.d.ts",
   "description": "@bugsnag/react-native plugin for integration with react-native-navigation",
