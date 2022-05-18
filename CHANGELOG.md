@@ -1,6 +1,6 @@
 # Changelog
 
-## TBD
+## v7.16.5 (2022-05-18)
 
 ### Added
 
@@ -21,7 +21,10 @@
     [bugsnag-android#1683](https://github.com/bugsnag/bugsnag-android/pull/1683)
   - Small performance improvements to `Bugnag.start`
     [bugsnag-android#1680](https://github.com/bugsnag/bugsnag-android/pull/1680)
+- (react-native-cli) Fix 'insert' command with RN 0.68+ [#1726](https://github.com/bugsnag/bugsnag-js/pull/1726)
 - (plugin-react|plugin-vue|plugin-react-navigation|plugin-react-native-navigation) Set `@bugsnag/core` to be an optional peer dependency to avoid unmet peer dependency warnings [#1735](https://github.com/bugsnag/bugsnag-js/pull/1735)
+- (electron) Improved error message when no apiKey is provided to Bugsnag.start() [#1738](https://github.com/bugsnag/bugsnag-js/pull/1738)
+- (plugin-simple-throttle) Warning message added when error handler has exceeded `maxEvents` [#1739](https://github.com/bugsnag/bugsnag-js/pull/1739)
 
 ## v7.16.4 (2022-05-03)
 
@@ -33,7 +36,6 @@
 
 - (plugin-react) Add 'children' prop to BugsnagErrorBoundary [#1723](https://github.com/bugsnag/bugsnag-js/pull/1723)
 - (react-native) Fix reporting of `RCTFatal()` crashes on iOS. [#1719](https://github.com/bugsnag/bugsnag-js/pull/1719)
-- (react-native-cli) Fix 'insert' command with RN 0.68+ [#1726](https://github.com/bugsnag/bugsnag-js/pull/1726)
 - (plugin-electron-app-breadcrumbs) Fix a TypeError caused by using a BrowserWindow object after it is destroyed [#1722](https://github.com/bugsnag/bugsnag-js/pull/1722)
 
 ## v7.16.3 (2022-04-05)
