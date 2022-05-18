@@ -11,14 +11,14 @@ describe('node notifier', () => {
     Bugsnag._client = null
   })
 
-  describe('isStarted', () => {
+  describe('isStarted()', () => {
     it('returns false when the notifier has not been initialised', () => {
-      expect(Bugsnag.isStarted).toBe(false)
+      expect(Bugsnag.isStarted()).toBe(false)
     })
 
     it('returns true when the notifier has been initialised', () => {
       Bugsnag.start('abcd12abcd12abcd12abcd12abcd12abcd')
-      expect(Bugsnag.isStarted).toBe(true)
+      expect(Bugsnag.isStarted()).toBe(true)
     })
   })
 })

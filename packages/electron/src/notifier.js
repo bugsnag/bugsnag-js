@@ -35,7 +35,7 @@ const Bugsnag = {
 
     return Bugsnag._client
   },
-  get isStarted () {
+  isStarted: () => {
     return Bugsnag._client != null
   }
 }

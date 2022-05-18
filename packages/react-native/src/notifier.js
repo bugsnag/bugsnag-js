@@ -148,7 +148,7 @@ const Bugsnag = {
 
     return stubClient
   },
-  get isStarted () {
+  isStarted: () => {
     return Bugsnag._client != null
   }
 }

@@ -93,8 +93,8 @@ describe('react native notifier', () => {
     })
   })
   it('indicates whether or not the client is started', () => {
-    expect(Bugsnag.isStarted).toBe(false)
+    expect(Bugsnag.isStarted()).toBe(false)
     Bugsnag.start()
-    expect(Bugsnag.isStarted).toBe(true)
+    expect(Bugsnag.isStarted()).toBe(true)
   })
 })

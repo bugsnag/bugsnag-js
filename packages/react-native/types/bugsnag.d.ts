@@ -11,7 +11,7 @@ type ReactNativeConfig = Pick<ReactNativeSchema, Configurable>
 
 interface ReactNativeBugsnagStatic extends Client {
   start(jsOpts?: ReactNativeConfig): Client
-  isStarted: boolean
+  isStarted(): boolean
 }
 
 declare const Bugsnag: ReactNativeBugsnagStatic

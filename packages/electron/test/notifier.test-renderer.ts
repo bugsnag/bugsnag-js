@@ -35,17 +35,17 @@ beforeEach(() => {
 })
 
 describe('@bugsnag/electron notifier', () => {
-  describe('isStarted', () => {
+  describe('isStarted()', () => {
     it('returns false when the notifier has not been started', () => {
-      expect(Bugsnag.isStarted).toBe(false)
+      expect(Bugsnag.isStarted()).toBe(false)
     })
 
     it('returns true when the notifier has been started', () => {
       Bugsnag.start({
         // mock logger to nullify console debug in test output
-        logger: { debug: () => null, info: () => null, warn: () => null, error: () => null }
+        logger: { debug: jest.fn(), info: jest.fn(), warn: jest.fn(), error: jest.fn() }
       })
-      expect(Bugsnag.isStarted).toBe(true)
+      expect(Bugsnag.isStarted()).toBe(true)
     })
   })
 })

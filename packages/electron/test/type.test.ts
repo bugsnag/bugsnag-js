@@ -94,7 +94,7 @@ describe.skip('@bugsnag/electron types', () => {
         sendCode: false
       })
       Bugsnag.markLaunchComplete()
-      const isStarted = Bugsnag.isStarted
+      const isStarted = Bugsnag.isStarted()
       console.log(isStarted)
     })
   })

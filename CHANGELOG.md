@@ -1,10 +1,12 @@
 # Changelog
 
-## v7.16.5 (2022-05-18)
+## TBD
 
 ### Added
 
-- Added `isStarted` property to notifiers to check whether Bugsnag has initialized [#1737](https://github.com/bugsnag/bugsnag-js/pull/1737)
+- Added `Bugsnag.isStarted()` to check whether Bugsnag has initialized [#1737](https://github.com/bugsnag/bugsnag-js/pull/1737)
+
+## v7.16.5 (2022-05-18)
 
 ### Changed
 
