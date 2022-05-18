@@ -12,7 +12,10 @@ module.exports = {
     // add onError hook
     client.addOnError((event) => {
       // have max events been sent already?
-      if (n >= client._config.maxEvents) return false
+      if (n >= client._config.maxEvents) {
+        client._logger.warn(`Cancelling event send due to maxEvents per session limit of ${client._config.maxEvents} being reached`)
+        return false
+      }
       n++
     })
 
