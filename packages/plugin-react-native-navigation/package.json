@@ -27,6 +27,11 @@
     "@bugsnag/core": "^7.0.0",
     "react-native-navigation": "2 - 7"
   },
+  "peerDependenciesMeta": {
+    "@bugsnag/core": {
+      "optional": true
+    }
+  },
   "scripts": {
     "test:types": "tsc -p tsconfig.json"
   }

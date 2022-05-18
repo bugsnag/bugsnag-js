@@ -1,5 +1,27 @@
 # Changelog
 
+## v7.16.5 (2022-05-18)
+
+### Changed
+
+- (react-native) Update bugsnag-android to v5.22.3
+  - Max reported threads can now be configured using manifest meta-data "com.bugsnag.android. MAX_REPORTED_THREADS"
+    [bugsnag-android#1655](https://github.com/bugsnag/bugsnag-android/pull/1655)
+  - Small improvement to startup performance (Bugsnag.start)
+    [bugsnag-android#1648](https://github.com/bugsnag/bugsnag-android/pull/1648)
+  - Fixed NDK stack-traces for libraries linked after `Bugsnag.start` was called
+    [bugsnag-android#1671](https://github.com/bugsnag/bugsnag-android/pull/1671)
+  - Fixed concurrency bug that could be triggered via the React Native plugin
+    [bugsnag-android#1679](https://github.com/bugsnag/bugsnag-android/pull/1679)
+  - Correctly report `device.locationStatus` on Android 12 onwards using `LocationManager.isLocationEnabled`
+    [bugsnag-android#1683](https://github.com/bugsnag/bugsnag-android/pull/1683)
+  - Small performance improvements to `Bugnag.start`
+    [bugsnag-android#1680](https://github.com/bugsnag/bugsnag-android/pull/1680)
+- (react-native-cli) Fix 'insert' command with RN 0.68+ [#1726](https://github.com/bugsnag/bugsnag-js/pull/1726)
+- (plugin-react|plugin-vue|plugin-react-navigation|plugin-react-native-navigation) Set `@bugsnag/core` to be an optional peer dependency to avoid unmet peer dependency warnings [#1735](https://github.com/bugsnag/bugsnag-js/pull/1735)
+- (electron) Improved error message when no apiKey is provided to Bugsnag.start() [#1738](https://github.com/bugsnag/bugsnag-js/pull/1738)
+- (plugin-simple-throttle) Warning message added when error handler has exceeded `maxEvents` [#1739](https://github.com/bugsnag/bugsnag-js/pull/1739)
+
 ## v7.16.4 (2022-05-03)
 
 - (expo) This release marks a change in the version scheme used by `@bugsnag/expo` and a move to its own repo, [`bugsnag-expo`](https://github.com/bugsnag/bugsnag-expo)
