@@ -1,6 +1,7 @@
-import { start, getServerlessHandler } from '../../lib/bugsnag';
+import Bugsnag from '@bugsnag/js'
+import { start, getServerlessHandler } from '../../lib/bugsnag'
 
-start();
+start()
 const serverlessHandler = getServerlessHandler()
 
 async function handler(req, res) {
