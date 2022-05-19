@@ -282,12 +282,12 @@ class Client {
     return types === null || includes(types, type)
   }
 
-  notify (maybeError, onError, cb = noop) {
+  notify (maybeError, onError, postReportCallback = noop) {
     const event = Event.create(maybeError, true, undefined, 'notify()', this._depth + 1, this._logger)
-    this._notify(event, onError, cb)
+    this._notify(event, onError, postReportCallback)
   }
 
-  _notify (event, onError, cb = noop) {
+  _notify (event, onError, postReportCallback = noop) {
     event.app = assign({}, event.app, {
       releaseStage: this._config.releaseStage,
       version: this._config.appVersion,
@@ -302,7 +302,7 @@ class Client {
     // exit early if events should not be sent on the current releaseStage
     if (this._config.enabledReleaseStages !== null && !includes(this._config.enabledReleaseStages, this._config.releaseStage)) {
       this._logger.warn('Event not sent due to releaseStage/enabledReleaseStages configuration')
-      return cb(null, event)
+      return postReportCallback(null, event)
     }
 
     const originalSeverity = event.severity
@@ -319,7 +319,7 @@ class Client {
 
       if (!shouldSend) {
         this._logger.debug('Event not sent due to onError callback')
-        return cb(null, event)
+        return postReportCallback(null, event)
       }
 
       if (this._isBreadcrumbTypeEnabled('error')) {
@@ -349,7 +349,7 @@ class Client {
         apiKey: event.apiKey || this._config.apiKey,
         notifier: this._notifier,
         events: [event]
-      }, (err) => cb(err, event))
+      }, (err) => postReportCallback(err, event))
     })
   }
 }

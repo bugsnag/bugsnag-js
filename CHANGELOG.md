@@ -1,5 +1,11 @@
 # Changelog
 
+## TBD
+
+### Changed
+
+- Update type definitions for `Bugsnag.notify()` [#1743](https://github.com/bugsnag/bugsnag-js/pull/1743)
+
 ## v7.16.5 (2022-05-18)
 
 ### Changed
