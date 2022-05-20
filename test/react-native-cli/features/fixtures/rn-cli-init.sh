@@ -1,5 +1,4 @@
 #!/usr/bin/expect -f
-
 set timeout -1
 set notifierVersion [lindex $argv 0];
 set rnVersion [lindex $argv 1];

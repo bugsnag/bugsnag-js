@@ -428,3 +428,9 @@ Then('the Content-Type header is valid multipart form-data') do
   actual = Maze::Server.builds.current[:request]['content-type']
   Maze.check.match(expected, actual)
 end
+
+When('I expect {string} I send {string}') do |what_to_expect, response|
+  current_shell = Maze::Runner.interactive_session
+  success = current_shell.run_command("expect-wrapper.sh #{what_to_expect} #{response}")
+  Maze.check.true(success, 'The terminal had already closed')
+end
