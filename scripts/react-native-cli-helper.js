@@ -30,7 +30,7 @@ module.exports = {
 
     // Use Expect to run the init command interactively
     common.changeDir(`${destFixtures}`)
-    const initCommand = `./rn-cli-init-android.sh ${version} ${rnVersion}`
+    const initCommand = `./rn-cli-init.exp ${version} ${rnVersion} Android`
     common.run(initCommand, true)
 
     // Native layer
@@ -64,7 +64,7 @@ module.exports = {
 
     // Use Expect to run the init command interactively
     common.changeDir(`${initialDir}/${fixturesDir}`)
-    common.run(`./rn-cli-init-ios.sh ${version} ${rnVersion}`, true)
+    common.run(`./rn-cli-init.exp ${version} ${rnVersion} IOS`, true)
 
     // Clean and build the archive
     common.changeDir(`${initialDir}/${fixturesDir}/${rnVersion}/ios`)
