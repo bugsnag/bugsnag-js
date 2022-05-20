@@ -98,7 +98,7 @@ static void bsg_mach_headers_register_dyld_images() {
         intptr_t dyldImageSlide = bsg_mach_headers_compute_slide(g_all_image_infos->dyldImageLoadAddress);
         bsg_mach_headers_add_image(g_all_image_infos->dyldImageLoadAddress, dyldImageSlide);
 
-#if TARGET_IPHONE_SIMULATOR
+#if TARGET_OS_SIMULATOR
         // Get the mach header for `dyld_sim` which is not exposed via the _dyld APIs
         // Note: dladdr() returns `/usr/lib/dyld` as the dli_fname for this image :-?
         if (g_all_image_infos->infoArray &&
@@ -392,7 +392,7 @@ static const char * bsg_mach_headers_get_path(const struct mach_header *header) 
         header == g_all_image_infos->dyldImageLoadAddress) {
         return g_all_image_infos->dyldPath;
     }
-#if TARGET_IPHONE_SIMULATOR
+#if TARGET_OS_SIMULATOR
     if (g_all_image_infos &&
         g_all_image_infos->infoArray &&
         header == g_all_image_infos->infoArray[0].imageLoadAddress) {

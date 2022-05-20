@@ -11,7 +11,7 @@
 #import <Bugsnag/BugsnagConfiguration.h>
 #import <Bugsnag/BugsnagErrorTypes.h>
 
-#import "BSG_KSCrashState.h"
+#import "BSGRunContext.h"
 #import "BSG_KSMach.h"
 #import "BSG_KSSystemInfo.h"
 #import "BugsnagCollections.h"
@@ -22,7 +22,6 @@
 @interface BSGAppHangDetector ()
 
 @property (weak, nonatomic) id<BSGAppHangDetectorDelegate> delegate;
-@property (nonatomic) BOOL runLoopIsRunning;
 @property (nonatomic) BOOL recordAllThreads;
 @property (nonatomic) CFRunLoopObserverRef observer;
 @property (atomic) dispatch_time_t processingDeadline;
@@ -82,7 +81,6 @@
                 // Each iteration indicates a separate unit of work so the hang detection should be reset accordingly.
                 dispatch_semaphore_signal(self.processingFinished);
             }
-            self.runLoopIsRunning = YES;
             self.processingDeadline = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(threshold * NSEC_PER_SEC));
             dispatch_semaphore_signal(self.processingStarted);
             isProcessing = YES;
@@ -148,9 +146,7 @@
         }
 #endif
         
-        // Ignore background state if the runloop has not yet ticked so that hangs in `didFinishLaunching` in UIScene-based
-        // apps are detected. UIScene-based apps always start in UIApplicationStateBackground, unlike those without scenes.
-        if (shouldReportAppHang && !bsg_kscrashstate_currentState()->applicationIsInForeground && self.runLoopIsRunning) {
+        if (shouldReportAppHang && !bsg_runContext->isForeground) {
             bsg_log_debug(@"Ignoring app hang because app is in the background");
             shouldReportAppHang = NO;
         }

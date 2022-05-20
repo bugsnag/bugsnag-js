@@ -57,7 +57,7 @@ static void ReportInternalError(NSString *errorClass, NSString *message, NSDicti
         return nil;
     }
     
-    id json = [BSGJSONSerialization JSONObjectWithData:data options:0 error:&error];
+    NSDictionary *json = BSGJSONDictionaryFromData(data, 0, &error);
     if (!json) {
         NSMutableDictionary *diagnostics = [NSMutableDictionary dictionary];
         diagnostics[@"data"] = [data base64EncodedStringWithOptions:0];
@@ -97,11 +97,6 @@ static void ReportInternalError(NSString *errorClass, NSString *message, NSDicti
 // Methods below were copied from BSG_KSCrashReportStore.m
 
 - (NSMutableDictionary *)fixupCrashReport:(NSDictionary *)report {
-    if (![report isKindOfClass:[NSDictionary class]]) {
-        bsg_log_err(@"Report should be a dictionary, not %@", [report class]);
-        return nil;
-    }
-
     NSMutableDictionary *mutableReport = [report mutableCopy];
     NSMutableDictionary *mutableInfo =
             [report[@BSG_KSCrashField_Report] mutableCopy];

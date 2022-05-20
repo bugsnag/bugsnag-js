@@ -9,11 +9,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 typedef NSString * BugsnagHTTPHeaderName NS_TYPED_ENUM;
 
-extern BugsnagHTTPHeaderName const BugsnagHTTPHeaderNameApiKey;
-extern BugsnagHTTPHeaderName const BugsnagHTTPHeaderNameIntegrity;
-extern BugsnagHTTPHeaderName const BugsnagHTTPHeaderNamePayloadVersion;
-extern BugsnagHTTPHeaderName const BugsnagHTTPHeaderNameSentAt;
-extern BugsnagHTTPHeaderName const BugsnagHTTPHeaderNameStacktraceTypes;
+static BugsnagHTTPHeaderName const BugsnagHTTPHeaderNameApiKey             = @"Bugsnag-Api-Key";
+static BugsnagHTTPHeaderName const BugsnagHTTPHeaderNameIntegrity          = @"Bugsnag-Integrity";
+static BugsnagHTTPHeaderName const BugsnagHTTPHeaderNamePayloadVersion     = @"Bugsnag-Payload-Version";
+static BugsnagHTTPHeaderName const BugsnagHTTPHeaderNameSentAt             = @"Bugsnag-Sent-At";
+static BugsnagHTTPHeaderName const BugsnagHTTPHeaderNameStacktraceTypes    = @"Bugsnag-Stacktrace-Types";
 
 typedef NS_ENUM(NSInteger, BugsnagApiClientDeliveryStatus) {
     /// The payload was delivered successfully and can be deleted.
@@ -28,10 +28,10 @@ typedef NS_ENUM(NSInteger, BugsnagApiClientDeliveryStatus) {
 
 - (instancetype)initWithSession:(nullable NSURLSession *)session;
 
-- (void)sendJSONPayload:(NSDictionary *)payload
-                headers:(NSDictionary<BugsnagHTTPHeaderName, NSString *> *)headers
-                  toURL:(NSURL *)url
-      completionHandler:(void (^)(BugsnagApiClientDeliveryStatus status, NSError * _Nullable error))completionHandler;
+- (nullable NSData *)sendJSONPayload:(NSDictionary *)payload
+                             headers:(NSDictionary<BugsnagHTTPHeaderName, NSString *> *)headers
+                               toURL:(NSURL *)url
+                   completionHandler:(void (^)(BugsnagApiClientDeliveryStatus status, NSError *_Nullable error))completionHandler;
 
 + (NSString *)SHA1HashStringWithData:(NSData *)data;
 

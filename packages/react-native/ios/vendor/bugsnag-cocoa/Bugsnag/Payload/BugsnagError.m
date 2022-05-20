@@ -8,9 +8,9 @@
 
 #import "BugsnagError+Private.h"
 
+#import "BSGKeys.h"
 #import "BSG_KSCrashReportFields.h"
 #import "BugsnagCollections.h"
-#import "BugsnagKeys.h"
 #import "BugsnagLogger.h"
 #import "BugsnagStackframe+Private.h"
 #import "BugsnagStacktrace.h"

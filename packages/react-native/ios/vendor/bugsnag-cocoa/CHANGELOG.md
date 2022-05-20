@@ -1,6 +1,88 @@
 Changelog
 =========
 
+## 6.17.1 (2022-05-18)
+
+### Bug fixes
+
+* Prevent error or session delivery being retried indefinitely.
+  [#1362](https://github.com/bugsnag/bugsnag-cocoa/pull/1362)
+  [#1367](https://github.com/bugsnag/bugsnag-cocoa/pull/1367)
+
+## 6.17.0 (2022-05-11)
+
+### Enhancements
+
+* Add `device.freeMemory` to OOM and Thermal Kill events on iOS 13 and later.
+  [#1357](https://github.com/bugsnag/bugsnag-cocoa/pull/1357)
+
+* Add `device.time` to OOM and Thermal Kill events.
+  [#1355](https://github.com/bugsnag/bugsnag-cocoa/pull/1355)
+
+## 6.16.8 (2022-05-04)
+
+### Changes
+
+* Change minimum supported iOS version to 9.0.
+  [#1352](https://github.com/bugsnag/bugsnag-cocoa/pull/1352)
+
+## 6.16.7 (2022-04-13)
+
+### Bug fixes
+
+* Fix underreporting of `device.totalMemory`, which now matches `NSProcessInfo.physicalMemory`.
+  [#1335](https://github.com/bugsnag/bugsnag-cocoa/pull/1335)
+
+* Skip unnecessary file reading at startup when no unexpected app termination is detected.
+  [#1334](https://github.com/bugsnag/bugsnag-cocoa/pull/1334)
+
+* Fix duplication of `app` and `device` data in session payloads.
+  [#1332](https://github.com/bugsnag/bugsnag-cocoa/pull/1332)
+
+## 6.16.6 (2022-04-06)
+
+### Changes
+
+* Add Flutter notifier support.
+  [#1328](https://github.com/bugsnag/bugsnag-cocoa/pull/1328)
+
+## 6.16.5 (2022-03-30)
+
+### Bug fixes
+
+* Fix `-[NSProxy doesNotRecognizeSelector:]` crash when using `BugsnagNetworkRequestPlugin` in projects that use the New Relic SDK.
+  [#1324](https://github.com/bugsnag/bugsnag-cocoa/pull/1324)
+
+## 6.16.4 (2022-03-02)
+
+### Bug fixes
+
+* Fix crash in `CPPExceptionTerminate()` if `throw` was called without an exception.
+  [#1312](https://github.com/bugsnag/bugsnag-cocoa/pull/1312)
+
+* Fix accuracy of `app.inForeground` and prevent reporting of hangs during background launches.
+  [#1307](https://github.com/bugsnag/bugsnag-cocoa/pull/1307)
+
+## 6.16.3 (2022-02-23)
+
+### Bug fixes
+
+* Fix incorrect OOM session info after manually pausing or stopping a session.
+  [#1301](https://github.com/bugsnag/bugsnag-cocoa/pull/1301)
+
+* Improve accuracy of `metaData.device.lowMemoryWarning`.
+  [#1296](https://github.com/bugsnag/bugsnag-cocoa/pull/1296)
+
+* Stop reporting `SIGPIPE` errors in apps that set `SIG_IGN`.
+  [#1295](https://github.com/bugsnag/bugsnag-cocoa/pull/1295)
+
+## 6.16.2 (2022-01-26)
+
+### Bug fixes
+
+* Improve reliability of crash reporting when multiple crashes occur concurrently.
+  [#1286](https://github.com/bugsnag/bugsnag-cocoa/pull/1286)
+
 ## 6.16.1 (2022-01-19)
 
 ### Bug fixes

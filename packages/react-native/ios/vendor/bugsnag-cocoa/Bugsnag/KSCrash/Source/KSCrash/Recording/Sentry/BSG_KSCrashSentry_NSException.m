@@ -78,30 +78,20 @@ void bsg_recordException(NSException *exception);
  */
 void bsg_ksnsexc_i_handleException(NSException *exception) {
     BSG_KSLOG_DEBUG("Trapped exception %s", exception.description.UTF8String);
-    if (bsg_g_installed) {
-        bool wasHandlingCrash = bsg_g_context->handlingCrash;
-        bsg_kscrashsentry_beginHandlingCrash(bsg_g_context);
-
-        BSG_KSLOG_DEBUG(
-            "Exception handler is installed. Continuing exception handling.");
-
-        if (wasHandlingCrash) {
-            BSG_KSLOG_INFO("Detected crash in the crash reporter. Restoring "
-                           "original handlers.");
-            bsg_g_context->crashedDuringCrashHandling = true;
-            bsg_kscrashsentry_uninstall(BSG_KSCrashTypeAll);
-        }
+    if (bsg_g_installed &&
+        bsg_kscrashsentry_beginHandlingCrash(bsg_ksmachthread_self())) {
 
         bsg_recordException(exception);
 
         BSG_KSLOG_DEBUG(
             "Crash handling complete. Restoring original handlers.");
         bsg_kscrashsentry_uninstall(BSG_KSCrashTypeAll);
+        bsg_kscrashsentry_endHandlingCrash();
+    }
 
-        if (bsg_g_previousUncaughtExceptionHandler != NULL) {
-            BSG_KSLOG_DEBUG("Calling original exception handler.");
-            bsg_g_previousUncaughtExceptionHandler(exception);
-        }
+    if (bsg_g_previousUncaughtExceptionHandler != NULL) {
+        BSG_KSLOG_DEBUG("Calling original exception handler.");
+        bsg_g_previousUncaughtExceptionHandler(exception);
     }
 }
 
@@ -165,9 +155,10 @@ static void (* NSApplication_reportException_imp)(id, SEL, NSException *);
 static void bsg_reportException(id self, SEL _cmd, NSException *exception) {
     BSG_KSLOG_DEBUG("reportException: %s", exception.description.UTF8String);
 
-    bsg_kscrashsentry_beginHandlingCrash(bsg_g_context);
-
-    bsg_recordException(exception);
+    if (bsg_kscrashsentry_beginHandlingCrash(bsg_ksmachthread_self())) {
+        bsg_recordException(exception);
+        bsg_kscrashsentry_endHandlingCrash();
+    }
 
 #if TARGET_OS_MACCATALYST
     // Mac Catalyst apps continue to run after an uncaught exception is thrown
@@ -240,4 +231,8 @@ void bsg_kscrashsentry_uninstallNSExceptionHandler(void) {
 #endif
 
     bsg_g_installed = 0;
+}
+
+bool bsg_kscrashsentry_isNSExceptionHandlerInstalled(void) {
+    return bsg_g_installed;
 }

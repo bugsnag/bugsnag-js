@@ -10,7 +10,7 @@
 
 #import "BugsnagBreadcrumbs.h"
 #import "BugsnagConfiguration+Private.h"
-#import "BugsnagKeys.h"
+#import "BSGKeys.h"
 #import "BSGUtils.h"
 
 #if TARGET_OS_IOS || TARGET_OS_TV
@@ -18,9 +18,6 @@
 #else
 #import "BSGAppKit.h"
 #endif
-
-
-NSString * const BSGNotificationBreadcrumbsMessageAppWillTerminate = @"App Will Terminate";
 
 
 @interface BSGNotificationBreadcrumbs ()
@@ -42,6 +39,7 @@ NSString * const BSGNotificationBreadcrumbsMessageAppWillTerminate = @"App Will 
 #endif
         _breadcrumbSink = breadcrumbSink;
         _notificationNameMap = @{
+            @"NSProcessInfoThermalStateDidChangeNotification" : @"Thermal State Changed", // Using string to avoid availability issues
             NSUndoManagerDidRedoChangeNotification : @"Redo Operation",
             NSUndoManagerDidUndoChangeNotification : @"Undo Operation",
 #if TARGET_OS_TV
@@ -230,6 +228,20 @@ NSString * const BSGNotificationBreadcrumbsMessageAppWillTerminate = @"App Will 
                                       object:nil];
         }
 #endif
+        
+#if TARGET_OS_IOS
+        [self.notificationCenter addObserver:self
+                                    selector:@selector(orientationDidChange:)
+                                        name:UIDeviceOrientationDidChangeNotification
+                                      object:nil];
+#endif
+        
+        if (@available(iOS 11.0, tvOS 11.0, *)) {
+            [self.notificationCenter addObserver:self
+                                        selector:@selector(thermalStateDidChange:)
+                                            name:NSProcessInfoThermalStateDidChangeNotification
+                                          object:nil];
+        }
     }
     
     // Navigation events
@@ -376,6 +388,49 @@ static NSString *nullStringIfBlank(NSString *str) {
     }
     [self addBreadcrumbWithType:BSGBreadcrumbTypeUser forNotificationName:notification.name metadata:metadata];
 #endif
+}
+
+#pragma mark -
+
+#if TARGET_OS_IOS
+
+- (void)orientationDidChange:(NSNotification *)notification {
+    UIDevice *device = notification.object;
+    
+    static UIDeviceOrientation previousOrientation;
+    if (device.orientation == UIDeviceOrientationUnknown ||
+        device.orientation == previousOrientation) {
+        return;
+    }
+    
+    NSMutableDictionary *metadata = [NSMutableDictionary dictionary];
+    metadata[@"from"] = BSGStringFromDeviceOrientation(previousOrientation);
+    metadata[@"to"] =  BSGStringFromDeviceOrientation(device.orientation);
+    previousOrientation = device.orientation;
+    
+    [self addBreadcrumbWithType:BSGBreadcrumbTypeState
+            forNotificationName:notification.name
+                       metadata:metadata];
+}
+
+#endif
+
+- (void)thermalStateDidChange:(NSNotification *)notification API_AVAILABLE(ios(11.0), tvos(11.0)) {
+    NSProcessInfo *processInfo = notification.object;
+    
+    static NSProcessInfoThermalState previousThermalState;
+    if (processInfo.thermalState == previousThermalState) {
+        return;
+    }
+    
+    NSMutableDictionary *metadata = [NSMutableDictionary dictionary];
+    metadata[@"from"] = BSGStringFromThermalState(previousThermalState);
+    metadata[@"to"] = BSGStringFromThermalState(processInfo.thermalState);
+    previousThermalState = processInfo.thermalState;
+    
+    [self addBreadcrumbWithType:BSGBreadcrumbTypeState
+            forNotificationName:notification.name
+                       metadata:metadata];
 }
 
 @end

@@ -101,26 +101,14 @@ static struct sigaction *get_previous_sigaction(int sigNum) {
 void bsg_kssighndl_i_handleSignal(int sigNum, siginfo_t *signalInfo,
                                   void *userContext) {
     BSG_KSLOG_DEBUG("Trapped signal %d", sigNum);
-    if (bsg_g_enabled) {
-        bool wasHandlingCrash = bsg_g_context->handlingCrash;
-        bsg_kscrashsentry_beginHandlingCrash(bsg_g_context);
-
-        BSG_KSLOG_DEBUG(
-            "Signal handler is installed. Continuing signal handling.");
+    if (bsg_g_enabled &&
+        bsg_kscrashsentry_beginHandlingCrash(bsg_ksmachthread_self())) {
 
         BSG_KSLOG_DEBUG("Suspending all threads.");
         bsg_kscrashsentry_suspendThreads();
 
-        if (wasHandlingCrash) {
-            BSG_KSLOG_INFO("Detected crash in the crash reporter. Restoring "
-                           "original handlers.");
-            bsg_g_context->crashedDuringCrashHandling = true;
-            bsg_kscrashsentry_uninstall(BSG_KSCrashTypeAsyncSafe);
-        }
-
         BSG_KSLOG_DEBUG("Filling out context.");
         bsg_g_context->crashType = BSG_KSCrashTypeSignal;
-        bsg_g_context->offendingThread = bsg_ksmachthread_self();
         bsg_g_context->registersAreValid = true;
         bsg_g_context->faultAddress = (uintptr_t)signalInfo->si_addr;
         bsg_g_context->signal.userContext = userContext;
@@ -133,6 +121,7 @@ void bsg_kssighndl_i_handleSignal(int sigNum, siginfo_t *signalInfo,
             "Crash handling complete. Restoring original handlers.");
         bsg_kscrashsentry_uninstall(BSG_KSCrashTypeAsyncSafe);
         bsg_kscrashsentry_resumeThreads();
+        bsg_kscrashsentry_endHandlingCrash();
     }
 
     BSG_KSLOG_DEBUG(
@@ -222,6 +211,11 @@ bool bsg_kscrashsentry_installSignalHandler(
                           NULL);
             }
             goto failed;
+        }
+        if (fatalSignals[i] == SIGPIPE &&
+            bsg_g_previousSignalHandlers[i].sa_handler == SIG_IGN) {
+            BSG_KSLOG_DEBUG("Removing handler for signal %d", fatalSignals[i]);
+            sigaction(fatalSignals[i], &bsg_g_previousSignalHandlers[i], NULL);
         }
     }
     BSG_KSLOG_DEBUG("Signal handlers installed.");

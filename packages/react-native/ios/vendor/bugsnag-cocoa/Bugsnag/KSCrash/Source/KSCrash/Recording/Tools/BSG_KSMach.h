@@ -61,12 +61,6 @@ void bsg_ksmach_init(void);
  */
 uint64_t bsg_ksmachfreeMemory(void);
 
-/** Get the total memory that is currently usable.
- *
- * @return total usable memory.
- */
-uint64_t bsg_ksmachusableMemory(void);
-
 /** Get the current CPU architecture.
  *
  * @return The current architecture.

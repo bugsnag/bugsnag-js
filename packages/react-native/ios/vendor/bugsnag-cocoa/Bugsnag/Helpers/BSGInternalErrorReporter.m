@@ -8,6 +8,7 @@
 
 #import "BSGInternalErrorReporter.h"
 
+#import "BSGKeys.h"
 #import "BSG_KSCrashReportFields.h"
 #import "BSG_KSSystemInfo.h"
 #import "BSG_RFC3339DateTool.h"
@@ -19,7 +20,6 @@
 #import "BugsnagError+Private.h"
 #import "BugsnagEvent+Private.h"
 #import "BugsnagHandledState.h"
-#import "BugsnagKeys.h"
 #import "BugsnagLogger.h"
 #import "BugsnagMetadata+Private.h"
 #import "BugsnagNotifier.h"

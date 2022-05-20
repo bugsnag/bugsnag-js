@@ -24,8 +24,6 @@
 // THE SOFTWARE.
 //
 
-#include "BugsnagPlatformConditional.h"
-
 #include "BSG_KSMach.h"
 
 #include "BSG_KSMachApple.h"
@@ -92,17 +90,6 @@ uint64_t bsg_ksmachfreeMemory(void) {
     vm_size_t pageSize;
     if (bsg_ksmachi_VMStats(&vmStats, &pageSize)) {
         return ((uint64_t)pageSize) * vmStats.free_count;
-    }
-    return 0;
-}
-
-uint64_t bsg_ksmachusableMemory(void) {
-    vm_statistics_data_t vmStats;
-    vm_size_t pageSize;
-    if (bsg_ksmachi_VMStats(&vmStats, &pageSize)) {
-        return ((uint64_t)pageSize) *
-               (vmStats.active_count + vmStats.inactive_count +
-                vmStats.wire_count + vmStats.free_count);
     }
     return 0;
 }

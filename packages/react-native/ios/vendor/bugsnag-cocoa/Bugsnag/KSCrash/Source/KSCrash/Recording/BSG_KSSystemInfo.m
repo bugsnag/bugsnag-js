@@ -24,29 +24,29 @@
 // THE SOFTWARE.
 //
 
-#import "BugsnagPlatformConditional.h"
-
 #import "BSG_KSSystemInfo.h"
-#import "BSG_KSSystemInfoC.h"
-#import "BSG_KSMachHeaders.h"
+
+#import "BSGKeys.h"
+#import "BSG_Jailbreak.h"
+#import "BSG_KSCrash.h"
+#import "BSG_KSCrashC.h"
+#import "BSG_KSCrashReportFields.h"
 #import "BSG_KSFileUtils.h"
 #import "BSG_KSJSONCodecObjC.h"
-#import "BSG_KSMach.h"
-#import "BSG_KSSysCtl.h"
-#import "BugsnagKeys.h"
-#import "BugsnagCollections.h"
 #import "BSG_KSLogger.h"
-#import "BSG_KSCrashReportFields.h"
 #import "BSG_KSMach.h"
-#import "BSG_KSCrash.h"
+#import "BSG_KSMach.h"
+#import "BSG_KSMachHeaders.h"
+#import "BSG_KSSysCtl.h"
+#import "BSG_KSSystemInfoC.h"
+#import "BugsnagCollections.h"
 
 #import <CommonCrypto/CommonDigest.h>
 #import <mach-o/dyld.h>
 
-#if BSG_PLATFORM_IOS || BSG_PLATFORM_TVOS
+#if TARGET_OS_IOS || TARGET_OS_TV
 #import "BSGUIKit.h"
 #endif
-#import "BSG_Jailbreak.h"
 
 
 static inline bool is_jailbroken() {
@@ -72,7 +72,7 @@ static inline bool is_jailbroken() {
  *
  * https://opensource.apple.com/source/xnu/xnu-7195.81.3/libsyscall/wrappers/system-version-compat.c.auto.html
  */
-#if !BSG_PLATFORM_SIMULATOR
+#if !TARGET_OS_SIMULATOR
 static NSDictionary * bsg_systemversion() {
     int fd = -1;
     char buffer[1024] = {0};
@@ -208,7 +208,7 @@ static NSDictionary * bsg_systemversion() {
 + (NSString *)deviceAndAppHash {
     NSMutableData *data = nil;
 
-#if BSG_HAS_UIDEVICE
+#if TARGET_OS_IOS || TARGET_OS_TV
     if ([[UIDEVICE currentDevice]
             respondsToSelector:@selector(identifierForVendor)]) {
         data = [NSMutableData dataWithLength:16];
@@ -399,7 +399,6 @@ static NSDictionary * bsg_systemversion() {
 #endif // TARGET_OS_SIMULATOR
 
     sysInfo[@BSG_KSSystemField_OSVersion] = [self osBuildVersion];
-    sysInfo[@BSG_KSSystemField_BootTime] = [self dateSysctl:@"kern.boottime"];
     sysInfo[@BSG_KSSystemField_BundleID] = infoDict[@"CFBundleIdentifier"];
     sysInfo[@BSG_KSSystemField_BundleName] = infoDict[@"CFBundleName"];
     sysInfo[@BSG_KSSystemField_BundleExecutable] = infoDict[@"CFBundleExecutable"];
@@ -410,7 +409,7 @@ static NSDictionary * bsg_systemversion() {
     sysInfo[@BSG_KSSystemField_BinaryArch] = [self CPUArchForCPUType:header->cputype subType:header->cpusubtype];
     sysInfo[@BSG_KSSystemField_DeviceAppHash] = [self deviceAndAppHash];
 
-#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
+#if TARGET_OS_OSX || TARGET_OS_MACCATALYST || TARGET_OS_SIMULATOR
     // https://developer.apple.com/documentation/apple-silicon/about-the-rosetta-translation-environment
     int proc_translated = 0;
     size_t size = sizeof(proc_translated);
@@ -429,7 +428,6 @@ static NSDictionary * bsg_systemversion() {
     sysInfo[@BSG_KSSystemField_TimeZone] = [[NSTimeZone localTimeZone] abbreviation];
     sysInfo[@BSG_KSSystemField_Memory] = @{
         @BSG_KSCrashField_Free: @(bsg_ksmachfreeMemory()),
-        @BSG_KSCrashField_Usable: @(bsg_ksmachusableMemory()),
         @BSG_KSSystemField_Size: [self int64Sysctl:@"hw.memsize"]
     };
 
@@ -446,7 +444,12 @@ static NSDictionary * bsg_systemversion() {
         }
     }
 
-    NSDictionary *statsInfo = [[BSG_KSCrash sharedInstance] captureAppStats];
+    BSG_KSCrash_State state = crashContext()->state;
+    bsg_kscrashstate_updateDurationStats(&state);
+    NSMutableDictionary *statsInfo = [NSMutableDictionary dictionary];
+    statsInfo[@ BSG_KSCrashField_ActiveTimeSinceLaunch] = @(state.foregroundDurationSinceLaunch);
+    statsInfo[@ BSG_KSCrashField_BGTimeSinceLaunch] = @(state.backgroundDurationSinceLaunch);
+    statsInfo[@ BSG_KSCrashField_AppInFG] = @(state.applicationIsInForeground);
     sysInfo[@BSG_KSCrashField_AppStats] = statsInfo;
     return sysInfo;
 }
@@ -465,60 +468,6 @@ static NSDictionary * bsg_systemversion() {
     // Each Xcode app extension template is preconfigured with the appropriate extension point identifier key.
     return NSBundle.mainBundle.infoDictionary[@"NSExtension"][@"NSExtensionPointIdentifier"] != nil;
 }
-
-#if BSG_PLATFORM_IOS || BSG_PLATFORM_TVOS
-
-+ (UIApplicationState)currentAppState {
-    // Only checked outside of app extensions since sharedApplication is
-    // unavailable to extension UIKit APIs
-    if ([self isRunningInAppExtension]) {
-        return UIApplicationStateActive;
-    }
-
-    UIApplication * (^ getSharedApplication)(void) = ^() {
-        // Calling this API indirectly to avoid a compile-time check that
-        // [UIApplication sharedApplication] is not called from app extensions
-        // (which is handled above)
-        return [UIAPPLICATION performSelector:@selector(sharedApplication)];
-    };
-
-    __block UIApplication *application = nil;
-    if ([[NSThread currentThread] isMainThread]) {
-        application = getSharedApplication();
-    } else {
-        // [UIApplication sharedApplication] is a main thread-only API
-        dispatch_sync(dispatch_get_main_queue(), ^{
-            application = getSharedApplication();
-        });
-    }
-    
-    // There will be no UIApplication if UIApplicationMain() has not yet been
-    // called. This happens if started from a SwiftUI app's init() function or
-    // UIKit app's main() function. Returning UIApplicationStateActive (0) would
-    // be higly misleading, so we must check for this condition.
-    if (!application) {
-        return UIApplicationStateBackground;
-    }
-    
-    return application.applicationState;
-}
-
-+ (BOOL)isInForeground:(UIApplicationState)state {
-    // The app is in the foreground if the current state is "active" or
-    // "inactive". From the UIApplicationState docs:
-    // > UIApplicationStateActive
-    // >   The app is running in the foreground and currently receiving events.
-    // > UIApplicationStateInactive
-    // >   The app is running in the foreground but is not receiving events.
-    // >   This might happen as a result of an interruption or because the app
-    // >   is transitioning to or from the background.
-    // > UIApplicationStateBackground
-    // >   The app is running in the background.
-    return state == UIApplicationStateInactive
-        || state == UIApplicationStateActive;
-}
-
-#endif
 
 @end
 

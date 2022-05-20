@@ -8,12 +8,12 @@
 
 #import "BugsnagThread+Private.h"
 
+#import "BSGKeys.h"
 #import "BSG_KSBacktrace_Private.h"
 #import "BSG_KSCrashReportFields.h"
 #import "BSG_KSCrashSentry_Private.h"
 #import "BSG_KSMach.h"
 #import "BugsnagCollections.h"
-#import "BugsnagKeys.h"
 #import "BugsnagStackframe+Private.h"
 #import "BugsnagStacktrace.h"
 #import "BugsnagThread+Private.h"

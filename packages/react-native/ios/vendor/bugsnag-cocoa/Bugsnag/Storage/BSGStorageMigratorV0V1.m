@@ -13,6 +13,13 @@
 
 @implementation BSGStorageMigratorV0V1
 
+static void RemoveItem(NSFileManager *fileManager, NSString *path) {
+    NSError *error = nil;
+    if (![fileManager removeItemAtPath:path error:&error] && error.code != NSFileNoSuchFileError) {
+        bsg_log_err(@"%@", error);
+    }
+}
+
 + (BOOL) migrate {
     NSString *bundleName = [[NSBundle mainBundle] infoDictionary][@"CFBundleName"];
     NSString *cachesDir = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).firstObject;
@@ -29,12 +36,11 @@
         @"bugsnag/state.json": files.state,
         @"bugsnag/state/system_state.json": files.systemState,
         @"bugsnag/breadcrumbs": files.breadcrumbs,
-        @"bsg_kvstore": files.kvStore,
         [@"Sessions" stringByAppendingPathComponent:bundleName]: files.sessions,
         [@"KSCrashReports" stringByAppendingPathComponent:bundleName]: files.kscrashReports,
     };
 
-    NSFileManager *fm = [NSFileManager defaultManager];
+    NSFileManager *fm = [[NSFileManager alloc] init];
     NSError *err = nil;
     bool success = true;
 
@@ -42,11 +48,7 @@
         NSString *srcPath = [cachesDir stringByAppendingPathComponent:key];
         NSString *dstPath = mappings[key];
         if ([fm fileExistsAtPath:srcPath]) {
-            if([fm fileExistsAtPath:dstPath]) {
-                if(![fm removeItemAtPath:dstPath error:&err]) {
-                    bsg_log_err(@"Could not remove %@: %@", dstPath, err);
-                }
-            }
+            RemoveItem(fm, dstPath);
             if(![fm moveItemAtPath:srcPath toPath:dstPath error:&err]) {
                 bsg_log_err(@"Could not move %@ to %@: %@", srcPath, dstPath, err);
                 success = false;
@@ -66,6 +68,9 @@
             }
         }
     }
+
+    NSString *root = [files.events stringByDeletingLastPathComponent];
+    RemoveItem(fm, [root stringByAppendingPathComponent:@"kvstore"]);
 
     return success;
 }

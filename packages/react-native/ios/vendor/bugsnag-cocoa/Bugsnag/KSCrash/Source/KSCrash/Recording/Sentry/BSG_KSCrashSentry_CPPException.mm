@@ -48,6 +48,7 @@
 extern "C" {
 #endif
 // Internal NSException recorder
+bool bsg_kscrashsentry_isNSExceptionHandlerInstalled(void);
 void bsg_recordException(NSException *exception);
 #ifdef __cplusplus
 }
@@ -107,16 +108,23 @@ static void CPPExceptionTerminate(void) {
     bool isNSException = false;
     char descriptionBuff[DESCRIPTION_BUFFER_LENGTH];
     const char *name = NULL;
-    const char *description = NULL;
+    const char *crashReason = NULL;
 
     BSG_KSLOG_DEBUG("Get exception type name.");
     std::type_info *tinfo = __cxxabiv1::__cxa_current_exception_type();
     if (tinfo != NULL) {
         name = tinfo->name();
+    } else {
+        name = "std::terminate";
+        crashReason = "throw may have been called without an exception";
+        if (!bsg_g_stackTraceCount) {
+            BSG_KSLOG_DEBUG("No exception backtrace");
+            bsg_g_stackTraceCount =
+            backtrace((void **)bsg_g_stackTrace,
+                      sizeof(bsg_g_stackTrace) / sizeof(*bsg_g_stackTrace));
+        }
+        goto after_rethrow; // Using goto to avoid indenting code below
     }
-
-    description = descriptionBuff;
-    descriptionBuff[0] = 0;
 
     BSG_KSLOG_DEBUG("Discovering what kind of exception was thrown.");
     bsg_g_captureNextStackTrace = false;
@@ -127,18 +135,23 @@ static void CPPExceptionTerminate(void) {
                         "the current NSException handler deal with it.");
         isNSException = true;
         // recordException() doesn't call beginHandlingCrash()
-        bsg_kscrashsentry_beginHandlingCrash(bsg_g_context);
-        bsg_recordException(exception);
-        bsg_g_context->handlingCrash = false;
+        if (bsg_kscrashsentry_isNSExceptionHandlerInstalled() &&
+            bsg_kscrashsentry_beginHandlingCrash(bsg_ksmachthread_self())) {
+            bsg_recordException(exception);
+            bsg_kscrashsentry_endHandlingCrash();
+        }
     } catch (std::exception &exc) {
         strlcpy(descriptionBuff, exc.what(), sizeof(descriptionBuff));
+        crashReason = descriptionBuff;
     } catch (std::exception *exc) {
         strlcpy(descriptionBuff, exc->what(), sizeof(descriptionBuff));
+        crashReason = descriptionBuff;
     }
 #define CATCH_VALUE(TYPE, PRINTFTYPE)                                          \
     catch (TYPE value) {                                                       \
         snprintf(descriptionBuff, sizeof(descriptionBuff), "%" #PRINTFTYPE,    \
                  value);                                                       \
+        crashReason = descriptionBuff;                                         \
     }
     CATCH_VALUE(char, d)
     CATCH_VALUE(short, d)
@@ -155,32 +168,24 @@ static void CPPExceptionTerminate(void) {
     CATCH_VALUE(long double, Lf)
     CATCH_VALUE(char *, s)
     catch (...) {
-        description = NULL;
     }
+
+after_rethrow:
     bsg_g_captureNextStackTrace = (bsg_g_installed != 0);
 
-    if (!isNSException) {
-        bool wasHandlingCrash = bsg_g_context->handlingCrash;
-        bsg_kscrashsentry_beginHandlingCrash(bsg_g_context);
-
-        if (wasHandlingCrash) {
-            BSG_KSLOG_INFO("Detected crash in the crash reporter. "
-                           "Restoring original handlers.");
-            bsg_g_context->crashedDuringCrashHandling = true;
-            bsg_kscrashsentry_uninstall((BSG_KSCrashType)BSG_KSCrashTypeAll);
-        }
+    if (!isNSException &&
+        bsg_kscrashsentry_beginHandlingCrash(bsg_ksmachthread_self())) {
 
         BSG_KSLOG_DEBUG("Suspending all threads.");
         bsg_kscrashsentry_suspendThreads();
 
         bsg_g_context->crashType = BSG_KSCrashTypeCPPException;
-        bsg_g_context->offendingThread = bsg_ksmachthread_self();
         bsg_g_context->registersAreValid = false;
         bsg_g_context->stackTrace =
             bsg_g_stackTrace + 1; // Don't record __cxa_throw stack entry
         bsg_g_context->stackTraceLength = bsg_g_stackTraceCount - 1;
         bsg_g_context->CPPException.name = name;
-        bsg_g_context->crashReason = description;
+        bsg_g_context->crashReason = crashReason;
 
         BSG_KSLOG_DEBUG("Calling main crash handler.");
         bsg_g_context->onCrash(crashContext());
@@ -189,6 +194,7 @@ static void CPPExceptionTerminate(void) {
             "Crash handling complete. Restoring original handlers.");
         bsg_kscrashsentry_uninstall((BSG_KSCrashType)BSG_KSCrashTypeAll);
         bsg_kscrashsentry_resumeThreads();
+        bsg_kscrashsentry_endHandlingCrash();
     }
     if (bsg_g_originalTerminateHandler != NULL) {
         bsg_g_originalTerminateHandler();

@@ -1,8 +1,8 @@
 #import "BSGConfigurationBuilder.h"
 
+#import "BSGKeys.h"
 #import "BugsnagConfiguration.h"
 #import "BugsnagEndpointConfiguration.h"
-#import "BugsnagKeys.h"
 #import "BugsnagLogger.h"
 
 static BOOL BSGValueIsBoolean(id object) {

@@ -119,7 +119,7 @@ void bsg_kscrash_setIntrospectMemory(bool introspectMemory);
  * Default: NULL
  */
 void bsg_kscrash_setCrashNotifyCallback(
-    const BSGReportCallback onCrashNotify);
+    const BSG_KSReportWriteCallback onCrashNotify);
 
 /** If YES, user reported exceptions even if a debugger is attached
  *

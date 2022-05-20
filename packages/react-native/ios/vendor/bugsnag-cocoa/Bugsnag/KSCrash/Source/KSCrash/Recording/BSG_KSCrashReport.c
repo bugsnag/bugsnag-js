@@ -1159,8 +1159,6 @@ void bsg_kscrw_i_writeMemoryInfo(const BSG_KSCrashReportWriter *const writer,
                                  const char *const key) {
     writer->beginObject(writer, key);
     {
-        writer->addUIntegerElement(writer, BSG_KSCrashField_Usable,
-                                   bsg_ksmachusableMemory());
         writer->addUIntegerElement(writer, BSG_KSCrashField_Free,
                                    bsg_ksmachfreeMemory());
     }
@@ -1347,20 +1345,6 @@ void bsg_kscrw_i_writeAppStats(const BSG_KSCrashReportWriter *const writer,
     {
         writer->addBooleanElement(writer, BSG_KSCrashField_AppInFG,
                                   state->applicationIsInForeground);
-
-        writer->addIntegerElement(writer, BSG_KSCrashField_LaunchesSinceCrash,
-                                  state->launchesSinceLastCrash);
-        writer->addIntegerElement(writer, BSG_KSCrashField_SessionsSinceCrash,
-                                  state->sessionsSinceLastCrash);
-        writer->addFloatingPointElement(writer,
-                                        BSG_KSCrashField_ActiveTimeSinceCrash,
-                                        state->foregroundDurationSinceLastCrash);
-        writer->addFloatingPointElement(
-            writer, BSG_KSCrashField_BGTimeSinceCrash,
-            state->backgroundDurationSinceLastCrash);
-
-        writer->addIntegerElement(writer, BSG_KSCrashField_SessionsSinceLaunch,
-                                  state->sessionsSinceLaunch);
         writer->addFloatingPointElement(writer,
                                         BSG_KSCrashField_ActiveTimeSinceLaunch,
                                         state->foregroundDurationSinceLaunch);
@@ -1479,12 +1463,6 @@ void bsg_kscrw_i_updateStackOverflowStatus(
     }
 }
 
-void bsg_kscrw_i_callUserCrashHandler(BSG_KSCrash_Context *const crashContext,
-                                      BSG_KSCrashReportWriter *writer) {
-    BSG_KSCrashType type = crashContext->crash.crashType;
-    crashContext->config.onCrashNotify(writer, (int)type);
-}
-
 // ============================================================================
 #pragma mark - Main API -
 // ============================================================================
@@ -1589,7 +1567,7 @@ void bsg_kscrashreport_writeStandardReport(
 
             // Write handled exception report info
             writer->beginObject(writer, BSG_KSCrashField_UserAtCrash);
-            { bsg_kscrw_i_callUserCrashHandler(crashContext, writer); }
+            crashContext->config.onCrashNotify(writer);
             writer->endContainer(writer);
         }
     }

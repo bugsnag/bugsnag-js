@@ -154,9 +154,6 @@ void bsg_kscrash_reinstall(const char *const crashReportFilePath,
     if (!bsg_kscrashstate_init(bsg_g_stateFilePath, &context->state)) {
         BSG_KSLOG_ERROR("Failed to initialize persistent crash state");
     }
-    uint64_t timeNow = mach_absolute_time();
-    context->state.appLaunchTime = timeNow;
-    context->state.lastUpdateDurationsTime = timeNow;
 }
 
 BSG_KSCrashType bsg_kscrash_setHandlingCrashTypes(BSG_KSCrashType crashTypes) {
@@ -183,7 +180,7 @@ void bsg_kscrash_setIntrospectMemory(bool introspectMemory) {
 }
 
 void bsg_kscrash_setCrashNotifyCallback(
-    const BSGReportCallback onCrashNotify) {
+    const BSG_KSReportWriteCallback onCrashNotify) {
     BSG_KSLOG_TRACE("Set onCrashNotify to %p", onCrashNotify);
     crashContext()->config.onCrashNotify = onCrashNotify;
 }

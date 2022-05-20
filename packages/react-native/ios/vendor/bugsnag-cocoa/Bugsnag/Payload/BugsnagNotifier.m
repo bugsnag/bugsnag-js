@@ -6,24 +6,22 @@
 //  Copyright © 2020 Bugsnag. All rights reserved.
 //
 
-#import "BugsnagPlatformConditional.h"
-
 #import "BugsnagNotifier.h"
 
 @implementation BugsnagNotifier
 
 - (instancetype)init {
     if ((self = [super init])) {
-#if BSG_PLATFORM_TVOS
+#if TARGET_OS_TV
         _name = @"tvOS Bugsnag Notifier";
-#elif BSG_PLATFORM_IOS
+#elif TARGET_OS_IOS
         _name = @"iOS Bugsnag Notifier";
-#elif BSG_PLATFORM_OSX
+#elif TARGET_OS_OSX
         _name = @"OSX Bugsnag Notifier";
 #else
         _name = @"Bugsnag Objective-C";
 #endif
-        _version = @"6.16.1";
+        _version = @"6.17.1";
         _url = @"https://github.com/bugsnag/bugsnag-cocoa";
         _dependencies = @[];
     }

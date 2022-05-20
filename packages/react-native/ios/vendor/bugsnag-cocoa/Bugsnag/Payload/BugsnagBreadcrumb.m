@@ -25,11 +25,11 @@
 //
 #import "BSG_RFC3339DateTool.h"
 
+#import "BSGKeys.h"
 #import "BugsnagBreadcrumb+Private.h"
 #import "BugsnagBreadcrumbs.h"
 #import "Bugsnag.h"
 #import "BugsnagLogger.h"
-#import "BugsnagKeys.h"
 
 typedef void (^BSGBreadcrumbConfiguration)(BugsnagBreadcrumb *_Nonnull);
 

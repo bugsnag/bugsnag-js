@@ -25,8 +25,8 @@
 }
 
 - (BugsnagEvent *)loadEventAndReturnError:(NSError * __autoreleasing *)errorPtr {
-    id json = [BSGJSONSerialization JSONObjectWithContentsOfFile:self.file options:0 error:errorPtr];
-    if (![json isKindOfClass:[NSDictionary class]]) {
+    NSDictionary *json = BSGJSONDictionaryFromFile(self.file, 0, errorPtr);
+    if (!json) {
         return nil;
     }
     return [[BugsnagEvent alloc] initWithJson:json];
@@ -43,8 +43,23 @@
     });
 }
 
-- (void)storeEventPayload:(__attribute__((unused)) NSDictionary *)eventPayload {
+- (void)prepareForRetry:(__unused NSDictionary *)payload HTTPBodySize:(NSUInteger)HTTPBodySize {
     // This event was loaded from disk, so nothing needs to be saved.
+    
+    // If the payload is oversized or too old, it should be discarded to prevent retrying indefinitely.
+    
+    if (HTTPBodySize > MaxPersistedSize) {
+        bsg_log_debug(@"Deleting oversized event %@", self.name);
+        [self deleteEvent];
+        return;
+    }
+    
+    NSDictionary *attributes = [NSFileManager.defaultManager attributesOfItemAtPath:self.file error:nil];
+    if (attributes.fileCreationDate.timeIntervalSinceNow < -MaxPersistedAge) { 
+        bsg_log_debug(@"Deleting stale event %@", self.name);
+        [self deleteEvent];
+        return;
+    }
 }
 
 - (NSString *)name {

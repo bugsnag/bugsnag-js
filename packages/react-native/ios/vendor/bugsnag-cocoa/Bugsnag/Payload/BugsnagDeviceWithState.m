@@ -6,8 +6,6 @@
 //  Copyright © 2020 Bugsnag. All rights reserved.
 //
 
-#import "BugsnagPlatformConditional.h"
-
 #import "BSG_KSCrashReportFields.h"
 #import "BSG_KSSystemInfo.h"
 #import "BSG_RFC3339DateTool.h"
@@ -25,7 +23,7 @@ NSMutableDictionary *BSGParseDeviceMetadata(NSDictionary *event) {
     device[@"timezone"] = [event valueForKeyPath:@"system." BSG_KSSystemField_TimeZone];
     device[@"macCatalystiOSVersion"] = [event valueForKeyPath:@"system." BSG_KSSystemField_iOSSupportVersion];
 
-#if BSG_PLATFORM_SIMULATOR
+#if TARGET_OS_SIMULATOR
     device[@"simulator"] = @YES;
 #else
     device[@"simulator"] = @NO;
