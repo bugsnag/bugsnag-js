@@ -19,6 +19,7 @@ jest.mock('react-native', () => ({
       })),
       updateCodeBundleId: jest.fn(),
       resumeSession: jest.fn(),
+      addFeatureFlags: jest.fn(),
       leaveBreadcrumb: jest.fn(),
       getPayloadInfo: jest.fn().mockReturnValue({}),
       dispatch: jest.fn().mockResolvedValue(true)
@@ -92,9 +93,25 @@ describe('react native notifier', () => {
       done()
     })
   })
-  it('indicates whether or not the client is started', () => {
-    expect(Bugsnag.isStarted()).toBe(false)
-    Bugsnag.start()
-    expect(Bugsnag.isStarted()).toBe(true)
+
+  it('supports featureFlags', () => {
+    Bugsnag.start({
+      featureFlags: [
+        { name: 'demo_mode' },
+        { name: 'sample_group', variant: 'abc123' }
+      ]
+    })
+
+    expect(NativeModules.BugsnagReactNative.addFeatureFlags).toHaveBeenCalled()
+  })
+
+  describe('isStarted()', () => {
+    it('returns false when the notifier has not been initialized', () => {
+      expect(Bugsnag.isStarted()).toBe(false)
+    })
+    it('returns true when the notifier has been initialized', () => {
+      Bugsnag.start()
+      expect(Bugsnag.isStarted()).toBe(true)
+    })
   })
 })
