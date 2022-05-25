@@ -1,5 +1,15 @@
 # Changelog
 
+## TBD
+
+### Changed
+
+- (react-native) Update bugsnag-android to v5.22.4
+  - Reverted [bugsnag-android#1680](https://github.com/bugsnag/bugsnag-android/pull/1680) to avoid deadlocks during startup
+    [bugsnag-android#1696](https://github.com/bugsnag/bugsnag-android/pull/1696)
+  - Improved `app.inForeground` reporting for NDK errors
+    [bugsnag-android#1690](https://github.com/bugsnag/bugsnag-android/pull/1690)
+
 ## v7.16.5 (2022-05-18)
 
 ### Changed
