@@ -1,0 +1,1 @@
+- The version of vue in this fixture has been locked down to `~3.0.5` as using higher minor versions was causing CI to fail. Requires further investigation. [PLAT-8515]
