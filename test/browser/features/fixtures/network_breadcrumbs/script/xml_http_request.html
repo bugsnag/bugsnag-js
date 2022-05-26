@@ -17,7 +17,7 @@
 
         function xhrGet(url) {
             return new Promise(function (resolve, reject) {
-                var xhr = new XMLHttpRequest();
+                var xhr = new XMLHttpRequest()
                 xhr.open("GET", url);
                 xhr.onload = function () {
                     if (xhr.status >= 200 && xhr.status < 300) {
@@ -36,8 +36,10 @@
         Promise.all([
             xhrGet("xml_http_request.html"),
             xhrGet("i_dont_exist.html")
-        ]).then(function() {
-            throw new Error("I should have network breadcrumbs attached")
+        ]).then(function () {
+            Bugsnag.notify(new Error("I should have network breadcrumbs attached"))
+        }).catch(function (err) {
+            Bugsnag.notify(err)
         })
 
     </script>
@@ -47,7 +49,7 @@
     <pre id="bugsnag-test-should-run">PENDING</pre>
     <script>
         var el = document.getElementById('bugsnag-test-should-run')
-        el.textContent = el.innerText = (typeof Promise !== 'undefined' && typeof Promise.all !== 'undefined' && 'fetch' in window)
+        el.textContent = el.innerText = (typeof Promise !== 'undefined' && typeof Promise.all !== 'undefined' && 'XMLHttpRequest' in window)
             ? 'YES'
             : 'NO'
     </script>
