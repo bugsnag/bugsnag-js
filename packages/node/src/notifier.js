@@ -71,6 +71,9 @@ const Bugsnag = {
     }
     Bugsnag._client = Bugsnag.createClient(opts)
     return Bugsnag._client
+  },
+  isStarted: () => {
+    return Bugsnag._client != null
   }
 }
 
