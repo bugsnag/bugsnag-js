@@ -6,6 +6,10 @@
 
 - Added `Bugsnag.isStarted()` to check whether Bugsnag has initialized [#1737](https://github.com/bugsnag/bugsnag-js/pull/1737)
 
+### Changed
+
+- Update type definitions for `Bugsnag.notify()` [#1743](https://github.com/bugsnag/bugsnag-js/pull/1743)
+
 ## v7.16.6 (2022-05-25)
 
 ### Changed
