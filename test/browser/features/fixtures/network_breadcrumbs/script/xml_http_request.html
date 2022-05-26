@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="eng-GB">
 
 <head>
+    <title>XHR</title>
     <meta charset="utf-8" />
     <script src="/node_modules/@bugsnag/browser/dist/bugsnag.min.js"></script>
-    <script type="text/javascript">
+    <script>
         var NOTIFY = decodeURIComponent(window.location.search.match(/NOTIFY=([^&]+)/)[1])
         var SESSIONS = decodeURIComponent(window.location.search.match(/SESSIONS=([^&]+)/)[1])
         var API_KEY = decodeURIComponent(window.location.search.match(/API_KEY=([^&]+)/)[1])
@@ -35,7 +36,7 @@
         Promise.all([
             xhrGet("xml_http_request.html"),
             xhrGet("i_dont_exist.html")
-        ]).then(() => {
+        ]).then(function() {
             throw new Error("I should have network breadcrumbs attached")
         })
 
@@ -43,7 +44,6 @@
 </head>
 
 <body>
-    <h1>XML HTTP Request tests</h1>
     <pre id="bugsnag-test-should-run">PENDING</pre>
     <script>
         var el = document.getElementById('bugsnag-test-should-run')
