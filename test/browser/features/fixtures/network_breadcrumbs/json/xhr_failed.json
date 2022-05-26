@@ -1,0 +1,9 @@
+{
+    "type": "request",
+    "name": "XMLHttpRequest failed",
+    "timestamp": "^\\d{4}\\-\\d{2}\\-\\d{2}T\\d{2}:\\d{2}:[\\d\\.]+Z?$",
+    "metaData": {
+        "status": 404,
+        "request": "GET i_dont_exist.html"
+    }
+}

@@ -15,7 +15,7 @@
 
       Promise.all([
         fetch("fetch.html"),
-        fetch("/i_dont_exist.html")
+        fetch("i_dont_exist.html")
       ]).then(() => {
         throw new Error("I should have network breadcrumbs attached")
       })
