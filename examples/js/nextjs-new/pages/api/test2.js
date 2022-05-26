@@ -1,3 +1,9 @@
+/**
+ * API Test 2
+ * 
+ * API has a top-of-module exception.
+ */
+
 import { start, getServerlessHandler } from '../../lib/bugsnag';
 
 start();

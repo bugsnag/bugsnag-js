@@ -1,3 +1,9 @@
+/**
+ * SSR Test 1
+ * 
+ * getServerSideProps throws an Error.
+ */
+
 const Test1 = () => <h1>SSR Test 1</h1>
 
 export function getServerSideProps() {

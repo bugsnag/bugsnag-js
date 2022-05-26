@@ -1,3 +1,9 @@
+/**
+ * SSR Test 4
+ * 
+ * getServerSideProps manually captures an exception from a try/catch.
+ */
+
 import Bugsnag from '@bugsnag/js'
 
 const Test4 = () => <h1>SSR Test 4</h1>

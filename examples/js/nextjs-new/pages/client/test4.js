@@ -1,3 +1,10 @@
+/**
+ * Client Test 4
+ * 
+ * There is an unhandled Promise rejection during React lifecycle.
+ * In this case, when the component mounts.
+ */
+
 import { useEffect } from 'react'
 
 const Test4 = () => {

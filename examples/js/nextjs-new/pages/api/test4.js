@@ -1,3 +1,9 @@
+/**
+ * API Test 4
+ * 
+ * API uses a try/catch to handle an exception and records it.
+ */
+
 import Bugsnag from '@bugsnag/js'
 import { start, getServerlessHandler } from '../../lib/bugsnag'
 

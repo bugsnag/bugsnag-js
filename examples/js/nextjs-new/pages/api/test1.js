@@ -1,3 +1,9 @@
+/**
+ * API Test 1
+ * 
+ * API has a top-of-module Promise that rejects, but its result is not awaited.
+ */
+
 import { start, getServerlessHandler } from '../../lib/bugsnag';
 
 start();

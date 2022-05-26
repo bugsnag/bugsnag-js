@@ -1,16 +1,15 @@
-import Bugsnag from '@bugsnag/js'
+/**
+ * Client Test 5
+ * 
+ * An Error is thrown from an event handler.
+ */
 
 const Test5 = () => (
   <>
     <h1>Client Test 5</h1>
     <button
       onClick={() => {
-        try {
-          // Some operation the button does, but fails
-          throw new Error('Client Test 5')
-        } catch (error) {
-          Bugsnag.notify(error)
-        }
+        throw new Error('Client Test 5')
       }}
     >
       Click me to throw an Error

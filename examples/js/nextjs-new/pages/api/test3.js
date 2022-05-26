@@ -1,3 +1,9 @@
+/**
+ * API Test 3
+ * 
+ * API has has an exception in its request handler.
+ */
+
 import { start, getServerlessHandler } from '../../lib/bugsnag';
 
 start();
