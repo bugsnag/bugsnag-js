@@ -35,11 +35,9 @@
 
         Promise.all([
             xhrGet("xml_http_request.html"),
-            xhrGet("i_dont_exist.html")
+            xhrGet("i_dont_exist.html").catch(function(err){})
         ]).then(function () {
             Bugsnag.notify(new Error("I should have network breadcrumbs attached"))
-        }).catch(function (err) {
-            Bugsnag.notify(err)
         })
 
     </script>
