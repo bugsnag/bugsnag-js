@@ -1,4 +1,4 @@
-@network_breadcrumbs
+@network_breadcrumbs @skip_ie_8 @skip_ie_9
 Feature: Network breadcrumbs
 
   Bugsnag error reports should include breadcrumbs for network requests, including those made using fetch, and xml http requests.
