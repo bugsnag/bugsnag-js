@@ -4,17 +4,10 @@
     <meta charset="utf-8" />
   </head>
   <body>
-    <pre id="bugsnag-test-should-run">PENDING</pre>
     <div id="app">
       <p>{{ message }}</p>
       <span>{{ errr() }}</span>
     </div>
-    <script>
-      var el = document.getElementById('bugsnag-test-should-run')
-      el.textContent = el.innerText = !/MSIE (8)/.test(navigator.userAgent)
-        ? 'YES'
-        : 'NO'
-    </script>
     <script src="dist/app.js"></script>
   </body>
 </html>
