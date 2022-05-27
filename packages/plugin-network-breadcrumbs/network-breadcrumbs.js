@@ -1,10 +1,5 @@
 const BREADCRUMB_TYPE = 'request'
 
-// keys to safely store metadata on the request object
-const REQUEST_SETUP_KEY = 'BS~~S'
-const REQUEST_URL_KEY = 'BS~~U'
-const REQUEST_METHOD_KEY = 'BS~~M'
-
 const includes = require('@bugsnag/core/lib/es-utils/includes')
 
 /*
@@ -31,16 +26,14 @@ module.exports = (_ignoredUrls = [], win = window) => {
 
         // override native open()
         win.XMLHttpRequest.prototype.open = function open (method, url) {
-          // store url and HTTP method for later
-          this[REQUEST_URL_KEY] = url
-          this[REQUEST_METHOD_KEY] = method
+          let requestSetupKey = false
 
           const error = () => handleXHRError(method, url)
           const load = () => handleXHRLoad(method, url, this.status)
 
           // if we have already setup listeners, it means open() was called twice, we need to remove
           // the listeners and recreate them
-          if (this[REQUEST_SETUP_KEY]) {
+          if (requestSetupKey) {
             this.removeEventListener('load', load)
             this.removeEventListener('error', error)
           }
@@ -50,7 +43,7 @@ module.exports = (_ignoredUrls = [], win = window) => {
           // attach error event listener
           this.addEventListener('error', error)
 
-          this[REQUEST_SETUP_KEY] = true
+          requestSetupKey = true
 
           nativeOpen.apply(this, arguments)
         }
