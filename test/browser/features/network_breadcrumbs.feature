@@ -1,22 +1,32 @@
 @network_breadcrumbs
 Feature: Network breadcrumbs
 
-  Scenario: Valid network breadcrumbs when using fetch()
-    When I navigate to the test URL "/network_breadcrumbs/script/fetch.html"
-    And the test should run in this browser
-    And I wait to receive an error
-    Then the error is a valid browser payload for the error reporting API
-    # Successful request
-    And the event contains a breadcrumb matching the JSON fixture in "features/fixtures/network_breadcrumbs/json/fetch_succeeded.json"
-    # Unsuccessful request
-    And the event contains a breadcrumb matching the JSON fixture in "features/fixtures/network_breadcrumbs/json/fetch_failed.json"
+  Bugsnag error reports should include breadcrumbs for network requests, including those made using fetch, and xml http requests.
 
-  Scenario: Valid network breadcrumbs when using xmlHttpRequest
-    When I navigate to the test URL "/network_breadcrumbs/script/xml_http_request.html"
+  Scenario: A fetch request succeeds
+    When I navigate to the test URL "/network_breadcrumbs/script/fetch_success.html"
     And the test should run in this browser
     And I wait to receive an error
     Then the error is a valid browser payload for the error reporting API
-    # Successful request
-    And the event contains a breadcrumb matching the JSON fixture in "features/fixtures/network_breadcrumbs/json/xhr_succeeded.json"
-    # Unsuccessful request
-    And the event contains a breadcrumb matching the JSON fixture in "features/fixtures/network_breadcrumbs/json/xhr_failed.json"
+    And the event contains a breadcrumb matching the JSON fixture in "features/fixtures/network_breadcrumbs/json/fetch_success.json"
+
+  Scenario: A fetch request fails
+    When I navigate to the test URL "/network_breadcrumbs/script/fetch_failure.html"
+    And the test should run in this browser
+    And I wait to receive an error
+    Then the error is a valid browser payload for the error reporting API
+    And the event contains a breadcrumb matching the JSON fixture in "features/fixtures/network_breadcrumbs/json/fetch_failure.json"
+
+  Scenario: An xmlHttpRequest succeeds
+    When I navigate to the test URL "/network_breadcrumbs/script/xhr_success.html"
+    And the test should run in this browser
+    And I wait to receive an error
+    Then the error is a valid browser payload for the error reporting API
+    And the event contains a breadcrumb matching the JSON fixture in "features/fixtures/network_breadcrumbs/json/xhr_success.json"
+
+  Scenario: An xmlHttpRequest fails
+    When I navigate to the test URL "/network_breadcrumbs/script/xhr_failure.html"
+    And the test should run in this browser
+    And I wait to receive an error
+    Then the error is a valid browser payload for the error reporting API
+    And the event contains a breadcrumb matching the JSON fixture in "features/fixtures/network_breadcrumbs/json/xhr_failure.json"

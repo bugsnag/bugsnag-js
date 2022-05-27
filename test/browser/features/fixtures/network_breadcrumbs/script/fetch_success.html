@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-GB">
   <head>
-    <title>Fetch requests</title>
+    <title>Fetch success</title>
     <meta charset="utf-8" />
     <script src="/node_modules/@bugsnag/browser/dist/bugsnag.min.js"></script>
     <script>
@@ -14,11 +14,8 @@
         endpoints: { notify: NOTIFY, sessions: SESSIONS },
       })
 
-      Promise.all([
-        fetch("fetch.html"),
-        fetch("i_dont_exist.html").catch(function(err){})
-      ]).then(function () {
-        Bugsnag.notify(new Error("I should have network breadcrumbs attached"))
+      fetch("fetch_success.html").then(function () {
+        Bugsnag.notify(new Error("This error should have network breadcrumbs attached"))
       })
     
     </script>
@@ -27,7 +24,7 @@
     <pre id="bugsnag-test-should-run">PENDING</pre>
     <script>
       var el = document.getElementById('bugsnag-test-should-run')
-      el.textContent = el.innerText = (typeof Promise !== 'undefined' && typeof Promise.all !== 'undefined' && 'fetch' in window)
+      el.textContent = el.innerText = 'fetch' in window
         ? 'YES'
         : 'NO'
     </script>

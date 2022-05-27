@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+  <head>
+    <title>Fetch failure</title>
+    <meta charset="utf-8" />
+    <script src="/node_modules/@bugsnag/browser/dist/bugsnag.min.js"></script>
+    <script>
+      var NOTIFY = decodeURIComponent(window.location.search.match(/NOTIFY=([^&]+)/)[1])
+      var SESSIONS = decodeURIComponent(window.location.search.match(/SESSIONS=([^&]+)/)[1])
+      var API_KEY = decodeURIComponent(window.location.search.match(/API_KEY=([^&]+)/)[1])
+
+      Bugsnag.start({
+        apiKey: API_KEY,
+        endpoints: { notify: NOTIFY, sessions: SESSIONS },
+      })
+
+      fetch("i_dont_exist.html").then(function () {
+        Bugsnag.notify(new Error("This error should have network breadcrumbs attached"))
+      })
+    
+    </script>
+  </head>
+  <body>
+    <pre id="bugsnag-test-should-run">PENDING</pre>
+    <script>
+      var el = document.getElementById('bugsnag-test-should-run')
+      el.textContent = el.innerText = 'fetch' in window
+        ? 'YES'
+        : 'NO'
+    </script>
+  </body>
+</html>

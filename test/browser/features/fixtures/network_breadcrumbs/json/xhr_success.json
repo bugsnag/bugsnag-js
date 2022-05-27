@@ -1,9 +1,9 @@
 {
     "type": "request",
-    "name": "fetch() succeeded",
+    "name": "XMLHttpRequest succeeded",
     "timestamp": "^\\d{4}\\-\\d{2}\\-\\d{2}T\\d{2}:\\d{2}:[\\d\\.]+Z?$",
     "metaData": {
         "status": 200,
-        "request": "GET fetch.html"
+        "request": "GET xhr_success.html"
     }
 }
