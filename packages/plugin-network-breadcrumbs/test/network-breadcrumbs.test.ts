@@ -177,7 +177,7 @@ describe('plugin: network breadcrumbs', () => {
     expect(client._breadcrumbs.length).toBe(0)
   })
 
-  it('should not crash if the request data goes missing', () => {
+  it.skip('should not crash if the request data goes missing', () => {
     const window = { XMLHttpRequest: BrokenXMLHttpRequest } as unknown as Window & typeof globalThis
 
     const logger = {
@@ -201,7 +201,7 @@ describe('plugin: network breadcrumbs', () => {
     )
   })
 
-  it('should not crash if the request data goes missing for a request that errors', () => {
+  it.skip('should not crash if the request data goes missing for a request that errors', () => {
     const window = { XMLHttpRequest: BrokenXMLHttpRequest } as unknown as Window & typeof globalThis
 
     const logger = {
