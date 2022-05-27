@@ -35,17 +35,20 @@ module.exports = (_ignoredUrls = [], win = window) => {
           this[REQUEST_URL_KEY] = url
           this[REQUEST_METHOD_KEY] = method
 
+          const error = () => handleXHRError(method, url)
+          const load = () => handleXHRLoad(method, url, this.status)
+
           // if we have already setup listeners, it means open() was called twice, we need to remove
           // the listeners and recreate them
           if (this[REQUEST_SETUP_KEY]) {
-            this.removeEventListener('load', handleXHRLoad)
-            this.removeEventListener('error', handleXHRError)
+            this.removeEventListener('load', load)
+            this.removeEventListener('error', error)
           }
 
           // attach load event listener
-          this.addEventListener('load', handleXHRLoad)
+          this.addEventListener('load', load)
           // attach error event listener
-          this.addEventListener('error', handleXHRError)
+          this.addEventListener('error', error)
 
           this[REQUEST_SETUP_KEY] = true
 
@@ -59,9 +62,7 @@ module.exports = (_ignoredUrls = [], win = window) => {
         }
       }
 
-      function handleXHRLoad () {
-        const url = this[REQUEST_URL_KEY]
-
+      function handleXHRLoad (method, url, status) {
         if (url === undefined) {
           client._logger.warn('The request URL is no longer present on this XMLHttpRequest. A breadcrumb cannot be left for this request.')
           return
@@ -74,10 +75,10 @@ module.exports = (_ignoredUrls = [], win = window) => {
           return
         }
         const metadata = {
-          status: this.status,
-          request: `${this[REQUEST_METHOD_KEY]} ${this[REQUEST_URL_KEY]}`
+          status: status,
+          request: `${method} ${url}`
         }
-        if (this.status >= 400) {
+        if (status >= 400) {
           // contacted server but got an error response
           client.leaveBreadcrumb('XMLHttpRequest failed', metadata, BREADCRUMB_TYPE)
         } else {
@@ -85,9 +86,7 @@ module.exports = (_ignoredUrls = [], win = window) => {
         }
       }
 
-      function handleXHRError () {
-        const url = this[REQUEST_URL_KEY]
-
+      function handleXHRError (method, url) {
         if (url === undefined) {
           client._logger.warn('The request URL is no longer present on this XMLHttpRequest. A breadcrumb cannot be left for this request.')
           return
@@ -100,7 +99,7 @@ module.exports = (_ignoredUrls = [], win = window) => {
 
         // failed to contact server
         client.leaveBreadcrumb('XMLHttpRequest error', {
-          request: `${this[REQUEST_METHOD_KEY]} ${this[REQUEST_URL_KEY]}`
+          request: `${method} ${url}`
         }, BREADCRUMB_TYPE)
       }
 
