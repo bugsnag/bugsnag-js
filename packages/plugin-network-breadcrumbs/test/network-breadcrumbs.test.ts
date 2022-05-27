@@ -177,6 +177,7 @@ describe('plugin: network breadcrumbs', () => {
     expect(client._breadcrumbs.length).toBe(0)
   })
 
+  // skipped as it's now not possible to remove the request data as per test case
   it.skip('should not crash if the request data goes missing', () => {
     const window = { XMLHttpRequest: BrokenXMLHttpRequest } as unknown as Window & typeof globalThis
 
@@ -201,6 +202,7 @@ describe('plugin: network breadcrumbs', () => {
     )
   })
 
+  // skipped as it's now not possible to remove the request data as per test case
   it.skip('should not crash if the request data goes missing for a request that errors', () => {
     const window = { XMLHttpRequest: BrokenXMLHttpRequest } as unknown as Window & typeof globalThis
 
