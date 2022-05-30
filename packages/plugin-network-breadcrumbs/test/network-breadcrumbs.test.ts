@@ -35,17 +35,6 @@ class XMLHttpRequest {
   }
 }
 
-class BrokenXMLHttpRequest extends XMLHttpRequest {
-  open (method: string, url: String) {
-    // @ts-ignore
-    delete this['BS~~S']
-    // @ts-ignore
-    delete this['BS~~U']
-    // @ts-ignore
-    delete this['BS~~M']
-  }
-}
-
 // mock fetch
 function fetch (urlOrRequest: string | Request | null | undefined, options: {} | null, fail: boolean, status: number | null = null) {
   return new Promise((resolve, reject) => {
@@ -175,54 +164,6 @@ describe('plugin: network breadcrumbs', () => {
     request.open('GET', client._config.endpoints!.sessions)
     request.send(false, 200)
     expect(client._breadcrumbs.length).toBe(0)
-  })
-
-  it('should not crash if the request data goes missing', () => {
-    const window = { XMLHttpRequest: BrokenXMLHttpRequest } as unknown as Window & typeof globalThis
-
-    const logger = {
-      debug: jest.fn(),
-      info: jest.fn(),
-      warn: jest.fn(),
-      error: jest.fn()
-    }
-
-    p = plugin([], window)
-    const client = new Client({ apiKey: 'abcabcabcabcabcabcabc1234567890f', logger, plugins: [p] })
-
-    const request = new window.XMLHttpRequest() as unknown as XMLHttpRequest
-    request.open('GET', '/')
-    request.send(false, 200)
-
-    expect(client._breadcrumbs.length).toBe(0)
-    expect(client._logger.warn).toHaveBeenCalledTimes(1)
-    expect(client._logger.warn).toHaveBeenCalledWith(
-      'The request URL is no longer present on this XMLHttpRequest. A breadcrumb cannot be left for this request.'
-    )
-  })
-
-  it('should not crash if the request data goes missing for a request that errors', () => {
-    const window = { XMLHttpRequest: BrokenXMLHttpRequest } as unknown as Window & typeof globalThis
-
-    const logger = {
-      debug: jest.fn(),
-      info: jest.fn(),
-      warn: jest.fn(),
-      error: jest.fn()
-    }
-
-    p = plugin([], window)
-    const client = new Client({ apiKey: 'abcabcabcabcabcabcabc1234567890f', logger, plugins: [p] })
-
-    const request = new window.XMLHttpRequest() as unknown as XMLHttpRequest
-    request.open('GET', '/')
-    request.send(true)
-
-    expect(client._breadcrumbs.length).toBe(0)
-    expect(client._logger.warn).toHaveBeenCalledTimes(1)
-    expect(client._logger.warn).toHaveBeenCalledWith(
-      'The request URL is no longer present on this XMLHttpRequest. A breadcrumb cannot be left for this request.'
-    )
   })
 
   it('should leave a breadcrumb when the request URL is not a string', () => {

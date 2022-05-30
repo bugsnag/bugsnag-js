@@ -23,6 +23,7 @@
     [bugsnag-android#1696](https://github.com/bugsnag/bugsnag-android/pull/1696)
   - Improved `app.inForeground` reporting for NDK errors
     [bugsnag-android#1690](https://github.com/bugsnag/bugsnag-android/pull/1690)
+- (plugin-network-breadcrumbs) Improve robustness to losing XHR request data [#1751](https://github.com/bugsnag/bugsnag-js/pull/1751)
 
 ## v7.16.5 (2022-05-18)
 
