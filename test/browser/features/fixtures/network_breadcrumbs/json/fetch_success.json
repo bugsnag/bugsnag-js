@@ -1,0 +1,9 @@
+{
+    "type": "request",
+    "name": "fetch() succeeded",
+    "timestamp": "^\\d{4}\\-\\d{2}\\-\\d{2}T\\d{2}:\\d{2}:[\\d\\.]+Z?$",
+    "metaData": {
+        "status": 200,
+        "request": "GET fetch_success.html"
+    }
+}
