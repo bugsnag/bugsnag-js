@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-simple-throttle",
-  "version": "7.16.5",
+  "version": "7.16.7",
   "main": "throttle.js",
   "description": "@bugsnag/js plugin to prevent too many events from being sent",
   "homepage": "https://www.bugsnag.com/",
@@ -18,7 +18,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^7.16.1"
+    "@bugsnag/core": "^7.16.7"
   },
   "peerDependencies": {
     "@bugsnag/core": "^7.0.0"
