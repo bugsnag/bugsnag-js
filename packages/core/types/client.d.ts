@@ -18,13 +18,13 @@ declare class Client {
   public notify(
     error: NotifiableError,
     onError?: OnErrorCallback,
-    cb?: (err: any, event: Event) => void
+    postReportCallback?: (err: any, event: Event) => void
   ): void;
 
   public _notify(
     event: Event,
     onError?: OnErrorCallback,
-    cb?: (err: any, event: Event) => void,
+    postReportCallback?: (err: any, event: Event) => void,
   ): void;
 
   // breadcrumbs

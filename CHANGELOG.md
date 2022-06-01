@@ -1,5 +1,19 @@
 # Changelog
 
+## v7.16.7 (2022-05-31)
+
+### Added
+
+- Added `Bugsnag.isStarted()` to check whether Bugsnag has initialized [#1737](https://github.com/bugsnag/bugsnag-js/pull/1737)
+
+### Changed
+
+- Update type definitions for `Bugsnag.notify()` [#1743](https://github.com/bugsnag/bugsnag-js/pull/1743)
+
+### Fixed
+
+- (react-native) Fixed Kotlin related [version conflict](https://github.com/bugsnag/bugsnag-js/issues/1734) with Android Gradle Plugin [#1750](https://github.com/bugsnag/bugsnag-js/pull/1750)
+
 ## v7.16.6 (2022-05-25)
 
 ### Changed
@@ -9,6 +23,7 @@
     [bugsnag-android#1696](https://github.com/bugsnag/bugsnag-android/pull/1696)
   - Improved `app.inForeground` reporting for NDK errors
     [bugsnag-android#1690](https://github.com/bugsnag/bugsnag-android/pull/1690)
+- (plugin-network-breadcrumbs) Improve robustness to losing XHR request data [#1751](https://github.com/bugsnag/bugsnag-js/pull/1751)
 
 ## v7.16.5 (2022-05-18)
 

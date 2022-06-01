@@ -28,6 +28,16 @@ Before('@skip_if_local_storage_is_unavailable') do |scenario|
   skip_this_scenario unless Maze.driver.local_storage?
 end
 
+Before('@skip_ie_8') do |scenario|
+  browser = Maze.config.browser
+  skip_this_scenario unless browser != "ie_8"
+end
+
+Before('@skip_ie_9') do |scenario|
+  browser = Maze.config.browser
+  skip_this_scenario unless browser != "ie_9"
+end
+
 BeforeAll do
   Maze.config.receive_no_requests_wait = 15
   Maze.config.enforce_bugsnag_integrity = false
