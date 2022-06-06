@@ -1,17 +1,17 @@
 # Next.js
 
-This is an example project showing how to use the universal `@bugsnag/js` notifier to track server, browser, and vercel serverless errors on a Next.js project.
+This is an example project showing how to use the `@bugsnag/js` notifier to track server, browser, and Vercel serverless errors on a Next.js project.
 
 This example covers various different scenarios where errors can occur in a next.js project. Currently not all scenarios are captured by Bugsnag.
 
-Note: Exceptions in development mode take a different path than in production. These tests should be run on a production build deployed to vercel.
+Note: Exceptions in development mode take a different path than in production. These tests should be run on a production build deployed to Vercel.
 
 ## Configuration
 
 - Create a `.env.local` file and add your project's API key `NEXT_PUBLIC_BUGSNAG_API_KEY=abc123`
 - Create a production build with `npm run build`. This will also upload source maps
 - Run with `npm start`. Use the various pages to trigger different error scenarios
-- Deploy to vercel to verify differences between the types of errors that are captured locally
+- Deploy to Vercel to verify differences between the types of errors that are captured locally
 
 ## Test Cases
 
@@ -36,16 +36,16 @@ Note: Exceptions in development mode take a different path than in production. T
 ## Errors are not captured in some scenarios
 
 With a local production build (`npm run build && npm start`):
-- API Test 2 doesn't work
-- Client Test 1 doesn't work
+- API Test 2 fails
+- Client Test 1 fails
 
-When deployed to vercel:
-- API Test 1, API Test 2 and API Test 4 do not work
-- None of the SSR tests work
+When deployed to Vercel:
+- API Test 1, API Test 2 and API Test 4 fail
+- All of the SSR tests fail
 
 ## Session started twice on page load
 
-This seems to be because nextjs triggers a router (history) change following load and so two requests to sessions.bugsnag.com can be seen on page load. Not currently sure how to prevent this.
+This is because Next.js triggers a router change (`window.history.replaceState`) following load and so two requests to sessions.bugsnag.com can be seen on page load.
 
 ## Source maps
 
