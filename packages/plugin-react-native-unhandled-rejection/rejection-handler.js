@@ -11,11 +11,11 @@ module.exports = {
     if (!client._config.autoDetectErrors || !client._config.enabledErrorTypes.unhandledRejections) return () => { }
 
     if (global && global.HermesInternal && global.HermesInternal.hasPromise()) {
-      const HermesPromise = global.Promise;
+      const HermesPromise = global.Promise
 
       if (__DEV__) {
         if (typeof HermesPromise !== 'function') {
-          console.error('HermesPromise does not exist');
+          console.error('HermesPromise does not exist')
         }
 
         global.HermesInternal.enablePromiseRejectionTracker({
@@ -27,14 +27,12 @@ module.exports = {
               severityReason: { type: 'unhandledPromiseRejection' }
             }, 'promise rejection tracking', 1)
 
-            console.log("caught an unhandled promise rejection with hermes")
-
             client._notify(event)
 
             // adding our own onUnhandled callback means the default handler doesn't get called, so make it happen here
             if (typeof __DEV__ !== 'undefined' && __DEV__) rnInternalOnUnhandled(id, rejection)
           }
-        });
+        })
       }
 
       return
