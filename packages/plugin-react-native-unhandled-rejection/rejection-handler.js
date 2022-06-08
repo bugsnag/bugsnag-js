@@ -32,7 +32,7 @@ module.exports = {
             client._notify(event)
 
             // adding our own onUnhandled callback means the default handler doesn't get called, so make it happen here
-            if (typeof __DEV__ !== 'undefined' && __DEV__) rnInternalOnUnhandled(id, error)
+            if (typeof __DEV__ !== 'undefined' && __DEV__) rnInternalOnUnhandled(id, rejection)
           }
         });
       }
