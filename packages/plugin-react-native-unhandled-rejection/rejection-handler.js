@@ -35,7 +35,7 @@ module.exports = {
         })
       }
 
-      return
+      return () => {}
     }
 
     rnPromise.enable({
