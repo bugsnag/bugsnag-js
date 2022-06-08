@@ -20,71 +20,111 @@
 #import "BugsnagLogger.h"
 
 
-static void ReportInternalError(NSString *errorClass, NSString *message, NSDictionary *diagnostics) {
-    //
-    // NSJSONSerialization deserialization errors unhelpfully all have the same error domain & code - NSCocoaErrorDomain 3840.
-    // Therefore it's more useful to group based on the error description - but some of the descriptions contain character
-    // offsets which would lead to some types of errors not being grouped at all; e.g.
-    // - "Invalid value around character 229194."
-    // - "No string key for value in object around character 94208."
-    // - "No string key for value in object around line 1, column 161315." (iOS 15+)
-    // - "Unable to convert data to string around character 158259."
-    // - "Unterminated string around character 22568."
-    //
-    NSString *groupingMessage = message;
-    for (NSString *separator in @[@" around character ", @" around line"]) {
-        if ([message containsString:separator]) {
-            groupingMessage = [message componentsSeparatedByString:separator].firstObject;
-            break;
+/// Returns a list of the crash report keys present in the valid portion of the JSON data
+static NSArray * CrashReportKeys(NSData *data, NSError *error) {
+    NSString *description = error.userInfo[NSDebugDescriptionErrorKey]; 
+    for (NSString *separator in @[@" around character ", @"around line 1, column "]) {
+        if ([description containsString:separator]) {
+            NSUInteger end = (NSUInteger)[description componentsSeparatedByString:separator].lastObject.intValue;
+            if (!end) {
+                return nil;
+            }
+            NSData *subdata = [data subdataWithRange:NSMakeRange(0, end)];
+            if (!subdata) {
+                return nil;
+            }
+            NSString *string = [[NSString alloc] initWithData:subdata encoding:NSUTF8StringEncoding];
+            if (!string) {
+                return nil;
+            }
+            NSMutableArray *keys = [NSMutableArray array];
+            NSString *pattern = @"\"(report|process|system|system_atcrash|binary_images|crash|threads|error|user_atcrash|config|metaData|state|breadcrumbs)\":";
+            NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:pattern options:0 error:nil];
+            for (NSTextCheckingResult *result in [regex matchesInString:string options:0 range:NSMakeRange(0, string.length)]) {
+                if ([result numberOfRanges] == 2) {
+                    [keys addObject:[string substringWithRange:[result rangeAtIndex:1]]];
+                }
+            }
+            return keys;
         }
     }
-    NSString *groupingHash = [NSString stringWithFormat:@"BSGEventUploadKSCrashReportOperation.m: %@: %@", errorClass, groupingMessage];
-    [BSGInternalErrorReporter.sharedInstance reportErrorWithClass:errorClass message:message diagnostics:diagnostics groupingHash:groupingHash];
+    return nil;
 }
 
 
 @implementation BSGEventUploadKSCrashReportOperation
 
 - (BugsnagEvent *)loadEventAndReturnError:(NSError * __autoreleasing *)errorPtr {
-    NSError *error = nil;
+    __block NSError *error = nil;
+    
+    void (^ reportError)(NSString *, NSData *) = ^(NSString *context, NSData *data) {
+        NSMutableDictionary *diagnostics = [NSMutableDictionary dictionary];
+        diagnostics[@"fileName"] = self.file.lastPathComponent;
+        diagnostics[@"errorInfo"] = error.userInfo;
+        
+        NSDictionary *fileAttributes = [NSFileManager.defaultManager attributesOfItemAtPath:self.file error:nil];
+        diagnostics[@"fileAttributes"] = fileAttributes;
+        
+        NSDate *creationDate = fileAttributes.fileCreationDate;
+        NSDate *modificationDate = fileAttributes.fileModificationDate;
+        if (creationDate && modificationDate) {
+            // The amount of time spent writing the file could indicate why the process never completed
+            diagnostics[@"modificationInterval"] = @([modificationDate timeIntervalSinceDate:creationDate]);
+        }
+        
+        if (data && error.domain == NSCocoaErrorDomain && error.code == NSPropertyListReadCorruptError) {
+            diagnostics[@"keys"] = CrashReportKeys(data, error);
+        }
+        
+        [BSGInternalErrorReporter.sharedInstance
+         reportErrorWithClass:@"Invalid crash report" context:context message:BSGErrorDescription(error) diagnostics:diagnostics];
+    };
     
     NSData *data = [NSData dataWithContentsOfFile:self.file options:0 error:&error];
     if (!data) {
-        ReportInternalError(@"File reading error", BSGErrorDescription(error), error.userInfo);
+        if (!(error.domain == NSCocoaErrorDomain && error.code == NSFileNoSuchFileError)) {
+            reportError(@"File could not be read", nil);
+        }
         if (errorPtr) {
             *errorPtr = error;
         }
         return nil;
     }
     
-    id json = [BSGJSONSerialization JSONObjectWithData:data options:0 error:&error];
+    NSDictionary *json = BSGJSONDictionaryFromData(data, 0, &error);
     if (!json) {
-        NSMutableDictionary *diagnostics = [NSMutableDictionary dictionary];
-        diagnostics[@"data"] = [data base64EncodedStringWithOptions:0];
-        diagnostics[@"file"] = self.file;
-        NSDictionary<NSFileAttributeKey, id> *fileAttributes = [NSFileManager.defaultManager attributesOfItemAtPath:self.file error:nil];
-        if (fileAttributes) {
-            NSDate *creationDate = fileAttributes[NSFileCreationDate];
-            NSDate *modificationDate = fileAttributes[NSFileModificationDate];
-            if (creationDate && modificationDate) {
-                // The amount of time spent writing the file could indicate why the process never completed
-                diagnostics[@"modificationInterval"] = @([modificationDate timeIntervalSinceDate:creationDate]);
-            }
-        }
-        ReportInternalError(@"JSON parsing error", BSGErrorDescription(error), diagnostics);
         if (errorPtr) {
             *errorPtr = error;
         }
+        
+        if (!data.length || !data.bytes) {
+            reportError(@"File is empty", nil);
+            return nil;
+        }
+        
+        if (((const char *)data.bytes)[0] != '{') {
+            reportError(@"Does not start with \"{\"", nil);
+            return nil;
+        }
+        
+        if (((const char *)data.bytes)[data.length - 1] != '}') {
+            reportError(@"Does not end with \"}\"", data);
+            return nil;
+        }
+        
+        reportError(@"JSON parsing error", data);
         return nil;
     }
     
     NSDictionary *crashReport = [self fixupCrashReport:json];
     if (!crashReport) {
-        ReportInternalError(@"Unexpected JSON payload", @"-fixupCrashReport: returned nil", @{@"json": json});
         return nil;
     }
     
     BugsnagEvent *event = [[BugsnagEvent alloc] initWithKSReport:crashReport];
+    if (!event) {
+        reportError(@"Invalid JSON payload", nil);
+    }
     
     if (!event.app.type) {
         // Use current value for crashes from older notifier versions that didn't persist config.appType
@@ -97,11 +137,6 @@ static void ReportInternalError(NSString *errorClass, NSString *message, NSDicti
 // Methods below were copied from BSG_KSCrashReportStore.m
 
 - (NSMutableDictionary *)fixupCrashReport:(NSDictionary *)report {
-    if (![report isKindOfClass:[NSDictionary class]]) {
-        bsg_log_err(@"Report should be a dictionary, not %@", [report class]);
-        return nil;
-    }
-
     NSMutableDictionary *mutableReport = [report mutableCopy];
     NSMutableDictionary *mutableInfo =
             [report[@BSG_KSCrashField_Report] mutableCopy];

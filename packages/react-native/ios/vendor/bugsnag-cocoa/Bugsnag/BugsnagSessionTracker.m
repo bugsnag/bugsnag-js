@@ -17,50 +17,38 @@
 #import "BugsnagDevice+Private.h"
 #import "BugsnagLogger.h"
 #import "BugsnagSession+Private.h"
-
-#if TARGET_OS_IOS || TARGET_OS_TV
-#import "BSGUIKit.h"
-#elif TARGET_OS_OSX
+#import "BSGDefines.h"
 #import "BSGAppKit.h"
-#endif
+#import "BSGWatchKit.h"
+#import "BSGUIKit.h"
 
 /**
  Number of seconds in background required to make a new session
  */
 static NSTimeInterval const BSGNewSessionBackgroundDuration = 30;
 
-NSString *const BSGSessionUpdateNotification = @"BugsnagSessionChanged";
-
 @interface BugsnagSessionTracker ()
 @property (strong, nonatomic) BugsnagConfiguration *config;
 @property (weak, nonatomic) BugsnagClient *client;
 @property (strong, nonatomic) BSGSessionUploader *sessionUploader;
 @property (strong, nonatomic) NSDate *backgroundStartTime;
-
-/**
- * Called when a session is altered
- */
-@property (nonatomic, strong, readonly) SessionTrackerCallback callback;
-
 @property (nonatomic) NSMutableDictionary *extraRuntimeInfo;
 @end
 
 @implementation BugsnagSessionTracker
 
-- (instancetype)initWithConfig:(BugsnagConfiguration *)config
-                        client:(BugsnagClient *)client
-            postRecordCallback:(void(^)(BugsnagSession *))callback {
+- (instancetype)initWithConfig:(BugsnagConfiguration *)config client:(BugsnagClient *)client {
     if ((self = [super init])) {
         _config = config;
         _client = client;
         _sessionUploader = [[BSGSessionUploader alloc] initWithConfig:config notifier:client.notifier];
-        _callback = callback;
         _extraRuntimeInfo = [NSMutableDictionary new];
     }
     return self;
 }
 
 - (void)startWithNotificationCenter:(NSNotificationCenter *)notificationCenter isInForeground:(BOOL)isInForeground {
+#if !TARGET_OS_WATCH
     if ([BSG_KSSystemInfo isRunningInAppExtension]) {
         // UIApplication lifecycle notifications and UIApplicationState, which the automatic session tracking logic
         // depends on, are not available in app extensions.
@@ -69,6 +57,7 @@ NSString *const BSGSessionUpdateNotification = @"BugsnagSessionChanged";
         }
         return;
     }
+#endif
     
     if (isInForeground) {
         [self startNewSessionIfAutoCaptureEnabled];
@@ -76,25 +65,7 @@ NSString *const BSGSessionUpdateNotification = @"BugsnagSessionChanged";
         bsg_log_debug(@"Not starting session because app is not in the foreground");
     }
 
-#if TARGET_OS_IOS || TARGET_OS_TV
-
-    [notificationCenter addObserver:self
-               selector:@selector(handleAppForegroundEvent)
-                   name:UIApplicationWillEnterForegroundNotification
-                 object:nil];
-
-    [notificationCenter addObserver:self
-               selector:@selector(handleAppForegroundEvent)
-                   name:UIApplicationDidBecomeActiveNotification
-                 object:nil];
-
-    [notificationCenter addObserver:self
-               selector:@selector(handleAppBackgroundEvent)
-                   name:UIApplicationDidEnterBackgroundNotification
-                 object:nil];
-
-#elif TARGET_OS_OSX
-
+#if BSG_HAVE_APPKIT
     [notificationCenter addObserver:self
                selector:@selector(handleAppForegroundEvent)
                    name:NSApplicationWillBecomeActiveNotification
@@ -109,6 +80,36 @@ NSString *const BSGSessionUpdateNotification = @"BugsnagSessionChanged";
                selector:@selector(handleAppBackgroundEvent)
                    name:NSApplicationDidResignActiveNotification
                  object:nil];
+#elif BSG_HAVE_WATCHKIT
+    [notificationCenter addObserver:self
+               selector:@selector(handleAppForegroundEvent)
+                   name:WKApplicationWillEnterForegroundNotification
+                 object:nil];
+
+    [notificationCenter addObserver:self
+               selector:@selector(handleAppForegroundEvent)
+                   name:WKApplicationDidBecomeActiveNotification
+                 object:nil];
+
+    [notificationCenter addObserver:self
+               selector:@selector(handleAppBackgroundEvent)
+                   name:WKApplicationDidEnterBackgroundNotification
+                 object:nil];
+#else
+    [notificationCenter addObserver:self
+               selector:@selector(handleAppForegroundEvent)
+                   name:UIApplicationWillEnterForegroundNotification
+                 object:nil];
+
+    [notificationCenter addObserver:self
+               selector:@selector(handleAppForegroundEvent)
+                   name:UIApplicationDidBecomeActiveNotification
+                 object:nil];
+
+    [notificationCenter addObserver:self
+               selector:@selector(handleAppBackgroundEvent)
+                   name:UIApplicationDidEnterBackgroundNotification
+                 object:nil];
 #endif
 }
 
@@ -119,32 +120,22 @@ NSString *const BSGSessionUpdateNotification = @"BugsnagSessionChanged";
 
 #pragma mark - Creating and sending a new session
 
-- (void)startNewSession {
-    [self startNewSessionWithAutoCaptureValue:NO];
-}
-
 - (void)pauseSession {
-    [[self currentSession] stop];
+    self.currentSession.stopped = YES;
 
-    if (self.callback) {
-        self.callback(nil);
-    }
-    [self postUpdateNotice];
+    BSGSessionUpdateRunContext(nil);
 }
 
 - (BOOL)resumeSession {
     BugsnagSession *session = self.currentSession;
 
     if (session == nil) {
-        [self startNewSessionWithAutoCaptureValue:NO];
+        [self startNewSession];
         return NO;
     } else {
         BOOL stopped = session.isStopped;
-        [session resume];
-        if (self.callback) {
-            self.callback(session);
-        }
-        [self postUpdateNotice];
+        session.stopped = NO;
+        BSGSessionUpdateRunContext(session);
         return stopped;
     }
 }
@@ -160,11 +151,11 @@ NSString *const BSGSessionUpdateNotification = @"BugsnagSessionChanged";
 
 - (void)startNewSessionIfAutoCaptureEnabled {
     if (self.config.autoTrackSessions) {
-        [self startNewSessionWithAutoCaptureValue:YES];
+        [self startNewSession];
     }
 }
 
-- (void)startNewSessionWithAutoCaptureValue:(BOOL)isAutoCaptured {
+- (void)startNewSession {
     NSSet<NSString *> *releaseStages = self.config.enabledReleaseStages;
     if (releaseStages != nil && ![releaseStages containsObject:self.config.releaseStage ?: @""]) {
         return;
@@ -182,9 +173,8 @@ NSString *const BSGSessionUpdateNotification = @"BugsnagSessionChanged";
     [device appendRuntimeInfo:self.extraRuntimeInfo];
 
     BugsnagSession *newSession = [[BugsnagSession alloc] initWithId:[[NSUUID UUID] UUIDString]
-                                                          startDate:[NSDate date]
+                                                          startedAt:[NSDate date]
                                                                user:self.client.user
-                                                       autoCaptured:isAutoCaptured
                                                                 app:app
                                                              device:device];
 
@@ -200,10 +190,7 @@ NSString *const BSGSessionUpdateNotification = @"BugsnagSessionChanged";
 
     self.currentSession = newSession;
 
-    if (self.callback) {
-        self.callback(self.currentSession);
-    }
-    [self postUpdateNotice];
+    BSGSessionUpdateRunContext(newSession);
 
     [self.sessionUploader uploadSession:newSession];
 }
@@ -224,22 +211,14 @@ NSString *const BSGSessionUpdateNotification = @"BugsnagSessionChanged";
         self.currentSession = nil;
     } else {
         self.currentSession = [[BugsnagSession alloc] initWithId:sessionId
-                                                       startDate:startedAt
+                                                       startedAt:startedAt
                                                             user:user
-                                                    handledCount:handledCount
-                                                  unhandledCount:unhandledCount
                                                              app:[BugsnagApp new]
                                                           device:[BugsnagDevice new]];
+        self.currentSession.handledCount = handledCount;
+        self.currentSession.unhandledCount = unhandledCount;
     }
-    if (self.callback) {
-        self.callback(self.currentSession);
-    }
-    [self postUpdateNotice];
-}
-
-- (void)postUpdateNotice {
-    [[NSNotificationCenter defaultCenter] postNotificationName:BSGSessionUpdateNotification
-                                                        object:[self.runningSession toDictionary]];
+    BSGSessionUpdateRunContext(self.currentSession);
 }
 
 #pragma mark - Handling events
@@ -269,10 +248,7 @@ NSString *const BSGSessionUpdateNotification = @"BugsnagSessionChanged";
         } else {
             session.handledCount++;
         }
-        if (self.callback) {
-            self.callback(session);
-        }
-        [self postUpdateNotice];
+        BSGSessionUpdateRunContext(session);
     }
 }
 

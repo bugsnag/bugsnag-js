@@ -35,6 +35,7 @@ extern "C" {
 #endif
 
 #include "BSG_Symbolicate.h"
+#include "BSGDefines.h"
 
 #include <mach/mach.h>
 #include <pthread.h>
@@ -67,6 +68,7 @@ extern "C" {
 #define CALL_INSTRUCTION_FROM_RETURN_ADDRESS(A) \
     (DETAG_INSTRUCTION_ADDRESS((A)) - 1)
 
+#if BSG_HAVE_MACH_THREADS
 /** Generate a backtrace on the specified mach thread (async-safe).
  *
  *
@@ -81,34 +83,7 @@ extern "C" {
  */
 int bsg_ksbt_backtraceThread(thread_t thread, uintptr_t *backtraceBuffer,
                              int maxEntries);
-
-/** Generate a backtrace on the specified posix thread (async-safe).
- *
- * @param thread The thread to generate a backtrace for.
- *
- * @param backtraceBuffer A buffer to hold the backtrace.
- *
- * @param maxEntries The maximum number of trace entries to generate (must not
- *                   be larger than backtraceBuffer can hold).
- *
- * @return The number of backtrace entries generated.
- */
-int bsg_ksbt_backtracePthread(pthread_t thread, uintptr_t *backtraceBuffer,
-                              int maxEntries);
-
-/** Generate a backtrace on the currently running thread (async-safe).
- *
- * Note: This function seems to get a bit confused at times due to stack
- *       activity. Use at own risk.
- *
- * @param backtraceBuffer A buffer to hold the backtrace.
- *
- * @param maxEntries The maximum number of trace entries to generate (must not
- *                   be larger than backtraceBuffer can hold).
- *
- * @return The number of backtrace entries generated.
- */
-int bsg_ksbt_backtraceSelf(uintptr_t *backtraceBuffer, int maxEntries);
+#endif
 
 /** Symbolicate a backtrace (async-safe).
  *

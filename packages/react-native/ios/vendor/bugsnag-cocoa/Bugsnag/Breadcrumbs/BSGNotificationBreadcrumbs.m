@@ -10,18 +10,14 @@
 
 #import "BugsnagBreadcrumbs.h"
 #import "BugsnagConfiguration+Private.h"
-#import "BugsnagKeys.h"
+#import "BSGKeys.h"
 #import "BSGUtils.h"
-
-#if TARGET_OS_IOS || TARGET_OS_TV
-#import "BSGUIKit.h"
-#else
+#import "BSGDefines.h"
 #import "BSGAppKit.h"
-#endif
+#import "BSGUIKit.h"
 
-
-NSString * const BSGNotificationBreadcrumbsMessageAppWillTerminate = @"App Will Terminate";
-
+#define BSG_HAVE_TABLE_VIEW    (TARGET_OS_OSX || TARGET_OS_IOS || TARGET_OS_TV)
+#define BSG_HAVE_TEXT_CONTROL  (TARGET_OS_OSX || TARGET_OS_IOS                )
 
 @interface BSGNotificationBreadcrumbs ()
 
@@ -42,6 +38,7 @@ NSString * const BSGNotificationBreadcrumbsMessageAppWillTerminate = @"App Will 
 #endif
         _breadcrumbSink = breadcrumbSink;
         _notificationNameMap = @{
+            @"NSProcessInfoThermalStateDidChangeNotification" : @"Thermal State Changed", // Using string to avoid availability issues
             NSUndoManagerDidRedoChangeNotification : @"Redo Operation",
             NSUndoManagerDidUndoChangeNotification : @"Undo Operation",
 #if TARGET_OS_TV
@@ -153,28 +150,30 @@ NSString * const BSGNotificationBreadcrumbsMessageAppWillTerminate = @"App Will 
 }
 
 - (NSArray<NSNotificationName> *)automaticBreadcrumbControlEvents {
-#if TARGET_OS_TV
+#if !BSG_HAVE_TEXT_CONTROL
     return nil;
-#elif TARGET_OS_IOS
+#elif BSG_HAVE_APPKIT
+    return @[
+        NSControlTextDidBeginEditingNotification,
+        NSControlTextDidEndEditingNotification
+    ];
+#else
     return @[
         UITextFieldTextDidBeginEditingNotification,
         UITextFieldTextDidEndEditingNotification,
         UITextViewTextDidBeginEditingNotification,
         UITextViewTextDidEndEditingNotification
     ];
-#elif TARGET_OS_OSX
-    return @[
-        NSControlTextDidBeginEditingNotification,
-        NSControlTextDidEndEditingNotification
-    ];
 #endif
 }
 
 - (NSArray<NSNotificationName> *)automaticBreadcrumbTableItemEvents {
-#if TARGET_OS_IOS || TARGET_OS_TV
-    return @[ UITableViewSelectionDidChangeNotification ];
-#elif TARGET_OS_OSX
+#if !BSG_HAVE_TABLE_VIEW
+    return @[];
+#elif BSG_HAVE_APPKIT
     return @[ NSTableViewSelectionDidChangeNotification ];
+#else
+    return @[ UITableViewSelectionDidChangeNotification ];
 #endif
 }
 
@@ -230,6 +229,20 @@ NSString * const BSGNotificationBreadcrumbsMessageAppWillTerminate = @"App Will 
                                       object:nil];
         }
 #endif
+        
+#if TARGET_OS_IOS
+        [self.notificationCenter addObserver:self
+                                    selector:@selector(orientationDidChange:)
+                                        name:UIDeviceOrientationDidChangeNotification
+                                      object:nil];
+#endif
+        
+        if (@available(iOS 11.0, tvOS 11.0, watchOS 4.0, *)) {
+            [self.notificationCenter addObserver:self
+                                        selector:@selector(thermalStateDidChange:)
+                                            name:NSProcessInfoThermalStateDidChangeNotification
+                                          object:nil];
+        }
     }
     
     // Navigation events
@@ -260,8 +273,9 @@ NSString * const BSGNotificationBreadcrumbsMessageAppWillTerminate = @"App Will 
 }
 
 - (BOOL)tryAddSceneNotification:(NSNotification *)notification {
-#if (defined(__IPHONE_13_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_13_0) || \
-    (defined(__TVOS_13_0) && __TV_OS_VERSION_MAX_ALLOWED >= __TVOS_13_0)
+#if !TARGET_OS_WATCH && \
+    ((defined(__IPHONE_13_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_13_0) || \
+    (defined(__TVOS_13_0) && __TV_OS_VERSION_MAX_ALLOWED >= __TVOS_13_0))
     if (@available(iOS 13.0, tvOS 13.0, *)) {
         if ([notification.name hasPrefix:@"UIScene"] && [notification.object isKindOfClass:UISCENE]) {
             UIScene *scene = notification.object;
@@ -281,11 +295,15 @@ NSString * const BSGNotificationBreadcrumbsMessageAppWillTerminate = @"App Will 
     return NO;
 }
 
+#if !TARGET_OS_WATCH
 static NSString *nullStringIfBlank(NSString *str) {
     return str.length == 0 ? nil : str;
 }
+#endif
 
 - (BOOL)tryAddWindowNotification:(NSNotification *)notification {
+#if BSG_HAVE_WINDOW
+
 #if !TARGET_OS_OSX && \
     (defined(__IPHONE_2_0) || (defined(__TVOS_9_0) && __TV_OS_VERSION_MAX_ALLOWED >= __TVOS_9_0))
     if ([notification.name hasPrefix:@"UIWindow"] && [notification.object isKindOfClass:UIWINDOW]) {
@@ -327,6 +345,8 @@ static NSString *nullStringIfBlank(NSString *str) {
         return YES;
     }
 #endif
+
+#endif
     return NO;
 }
 
@@ -341,6 +361,8 @@ static NSString *nullStringIfBlank(NSString *str) {
 }
 
 - (void)addBreadcrumbForTableViewNotification:(__attribute__((unused)) NSNotification *)notification {
+#if BSG_HAVE_TABLE_VIEW
+
 #if TARGET_OS_IOS || TARGET_OS_TV
     NSIndexPath *indexPath = ((UITableView *)notification.object).indexPathForSelectedRow;
     [self addBreadcrumbWithType:BSGBreadcrumbTypeNavigation forNotificationName:notification.name metadata:
@@ -349,6 +371,8 @@ static NSString *nullStringIfBlank(NSString *str) {
     NSTableView *tableView = notification.object;
     [self addBreadcrumbWithType:BSGBreadcrumbTypeNavigation forNotificationName:notification.name metadata:
      tableView ? @{@"selectedRow" : @(tableView.selectedRow), @"selectedColumn" : @(tableView.selectedColumn)} : nil];
+#endif
+
 #endif
 }
 
@@ -376,6 +400,49 @@ static NSString *nullStringIfBlank(NSString *str) {
     }
     [self addBreadcrumbWithType:BSGBreadcrumbTypeUser forNotificationName:notification.name metadata:metadata];
 #endif
+}
+
+#pragma mark -
+
+#if TARGET_OS_IOS
+
+- (void)orientationDidChange:(NSNotification *)notification {
+    UIDevice *device = notification.object;
+    
+    static UIDeviceOrientation previousOrientation;
+    if (device.orientation == UIDeviceOrientationUnknown ||
+        device.orientation == previousOrientation) {
+        return;
+    }
+    
+    NSMutableDictionary *metadata = [NSMutableDictionary dictionary];
+    metadata[@"from"] = BSGStringFromDeviceOrientation(previousOrientation);
+    metadata[@"to"] =  BSGStringFromDeviceOrientation(device.orientation);
+    previousOrientation = device.orientation;
+    
+    [self addBreadcrumbWithType:BSGBreadcrumbTypeState
+            forNotificationName:notification.name
+                       metadata:metadata];
+}
+
+#endif
+
+- (void)thermalStateDidChange:(NSNotification *)notification API_AVAILABLE(ios(11.0), tvos(11.0)) {
+    NSProcessInfo *processInfo = notification.object;
+    
+    static NSProcessInfoThermalState previousThermalState;
+    if (processInfo.thermalState == previousThermalState) {
+        return;
+    }
+    
+    NSMutableDictionary *metadata = [NSMutableDictionary dictionary];
+    metadata[@"from"] = BSGStringFromThermalState(previousThermalState);
+    metadata[@"to"] = BSGStringFromThermalState(processInfo.thermalState);
+    previousThermalState = processInfo.thermalState;
+    
+    [self addBreadcrumbWithType:BSGBreadcrumbTypeState
+            forNotificationName:notification.name
+                       metadata:metadata];
 }
 
 @end

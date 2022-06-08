@@ -23,15 +23,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 //
-#include "BugsnagPlatformConditional.h"
+
+#include "BSGDefines.h"
+
+#if BSG_HAVE_MACH_EXCEPTIONS
 
 #include "BSG_KSCrashSentry_MachException.h"
 
 //#define BSG_KSLogger_LocalLevel TRACE
 #include "BSG_KSLogger.h"
 #include "BSG_KSCrashC.h"
-
-#if BSG_HAS_MACH
 
 #include "BSG_KSMach.h"
 #include "BSG_KSCrashSentry_Private.h"
@@ -238,12 +239,8 @@ void *ksmachexc_i_handleExceptions(void *const userData) {
 
     BSG_KSLOG_DEBUG("Trapped mach exception code 0x%llx, subcode 0x%llx",
                     exceptionMessage.code[0], exceptionMessage.code[1]);
-    if (bsg_g_installed) {
-        bool wasHandlingCrash = bsg_g_context->handlingCrash;
-        bsg_kscrashsentry_beginHandlingCrash(bsg_g_context);
-
-        BSG_KSLOG_DEBUG(
-            "Exception handler is installed. Continuing exception handling.");
+    if (bsg_g_installed &&
+        bsg_kscrashsentry_beginHandlingCrash(exceptionMessage.thread.name)) {
 
         BSG_KSLOG_DEBUG("Suspending all threads");
         bsg_kscrashsentry_suspendThreads();
@@ -264,15 +261,6 @@ void *ksmachexc_i_handleExceptions(void *const userData) {
             bsg_ksmachexc_i_restoreExceptionPorts();
         }
 
-        if (wasHandlingCrash) {
-            BSG_KSLOG_INFO("Detected crash in the crash reporter. Restoring "
-                           "original handlers.");
-            // The crash reporter itself crashed. Make a note of this and
-            // uninstall all handlers so that we don't get stuck in a loop.
-            bsg_g_context->crashedDuringCrashHandling = true;
-            bsg_kscrashsentry_uninstall(BSG_KSCrashTypeAsyncSafe);
-        }
-
         // Fill out crash information
         BSG_KSLOG_DEBUG("Fetching machine state.");
         BSG_STRUCT_MCONTEXT_L machineContext;
@@ -289,7 +277,6 @@ void *ksmachexc_i_handleExceptions(void *const userData) {
 
         BSG_KSLOG_DEBUG("Filling out context.");
         bsg_g_context->crashType = BSG_KSCrashTypeMachException;
-        bsg_g_context->offendingThread = exceptionMessage.thread.name;
         bsg_g_context->registersAreValid = true;
         bsg_g_context->mach.type = exceptionMessage.exception;
         bsg_g_context->mach.code = exceptionMessage.code[0] & (int64_t)MACH_ERROR_CODE_MASK;
@@ -302,6 +289,7 @@ void *ksmachexc_i_handleExceptions(void *const userData) {
             "Crash handling complete. Restoring original handlers.");
         bsg_kscrashsentry_uninstall(BSG_KSCrashTypeAsyncSafe);
         bsg_kscrashsentry_resumeThreads();
+        bsg_kscrashsentry_endHandlingCrash();
     }
 
     BSG_KSLOG_DEBUG("Replying to mach exception message.");
@@ -474,15 +462,5 @@ void bsg_kscrashsentry_uninstallMachHandler(void) {
         bsg_g_secondaryPThread = 0;
     }
 }
-
-#else
-
-bool bsg_kscrashsentry_installMachHandler(
-    __unused BSG_KSCrash_SentryContext *const context) {
-    BSG_KSLOG_WARN("Mach exception handler not available on this platform.");
-    return false;
-}
-
-void bsg_kscrashsentry_uninstallMachHandler(void) {}
 
 #endif

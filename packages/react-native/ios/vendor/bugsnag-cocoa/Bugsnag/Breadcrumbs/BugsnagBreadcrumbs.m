@@ -67,14 +67,13 @@ static struct bsg_breadcrumb_list_item *g_breadcrumbs_head;
         for (struct bsg_breadcrumb_list_item *item = g_breadcrumbs_head; item != NULL; item = item->next) {
             NSError *error = nil;
             NSData *data = [NSData dataWithBytesNoCopy:item->jsonData length:strlen(item->jsonData) freeWhenDone:NO];
-            id JSONObject = [BSGJSONSerialization JSONObjectWithData:data options:0 error:&error];
+            NSDictionary *JSONObject = BSGJSONDictionaryFromData(data, 0, &error);
             if (!JSONObject) {
                 bsg_log_err(@"Unable to parse breadcrumb: %@", error);
                 continue;
             }
-            BugsnagBreadcrumb *breadcrumb = nil;
-            if (![JSONObject isKindOfClass:[NSDictionary class]] ||
-                !(breadcrumb = [BugsnagBreadcrumb breadcrumbFromDict:JSONObject])) {
+            BugsnagBreadcrumb *breadcrumb = [BugsnagBreadcrumb breadcrumbFromDict:JSONObject];
+            if (!breadcrumb) {
                 bsg_log_err(@"Unexpected breadcrumb payload in buffer");
                 continue;
             }
@@ -214,14 +213,10 @@ static struct bsg_breadcrumb_list_item *g_breadcrumbs_head;
 #pragma mark - File storage
 
 - (NSData *)dataForBreadcrumb:(BugsnagBreadcrumb *)breadcrumb {
-    id JSONObject = [breadcrumb objectValue];
-    if (![BSGJSONSerialization isValidJSONObject:JSONObject]) {
-        bsg_log_err(@"Unable to serialize breadcrumb: Not a valid JSON object");
-        return nil;
-    }
+    NSData *data = nil;
     NSError *error = nil;
-    NSData *data = [BSGJSONSerialization dataWithJSONObject:JSONObject options:0 error:&error];
-    if (!data) {
+    NSDictionary *json = [breadcrumb objectValue];
+    if (!json || !(data = BSGJSONDataFromDictionary(json, &error))) {
         bsg_log_err(@"Unable to serialize breadcrumb: %@", error);
     }
     return data;
@@ -265,14 +260,13 @@ static struct bsg_breadcrumb_list_item *g_breadcrumbs_head;
             }
             continue;
         }
-        id JSONObject = [BSGJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        NSDictionary *JSONObject = BSGJSONDictionaryFromData(data, 0, &error);
         if (!JSONObject) {
             bsg_log_err(@"Unable to parse breadcrumb: %@", error);
             continue;
         }
-        BugsnagBreadcrumb *breadcrumb;
-        if (![JSONObject isKindOfClass:[NSDictionary class]] ||
-            !(breadcrumb = [BugsnagBreadcrumb breadcrumbFromDict:JSONObject])) {
+        BugsnagBreadcrumb *breadcrumb = [BugsnagBreadcrumb breadcrumbFromDict:JSONObject];
+        if (!breadcrumb) {
             bsg_log_err(@"Unexpected breadcrumb payload in file %@", file);
             continue;
         }

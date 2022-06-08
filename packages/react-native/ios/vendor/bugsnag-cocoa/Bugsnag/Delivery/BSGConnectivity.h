@@ -24,6 +24,10 @@
 // THE SOFTWARE.
 //
 
+#import "BSGDefines.h"
+
+#if BSG_HAVE_REACHABILITY
+
 #import <Foundation/Foundation.h>
 #import <SystemConfiguration/SystemConfiguration.h>
 
@@ -68,3 +72,5 @@ NSString *BSGConnectivityFlagRepresentation(SCNetworkReachabilityFlags flags);
 BOOL BSGConnectivityShouldReportChange(SCNetworkReachabilityFlags flags);
 
 NS_ASSUME_NONNULL_END
+
+#endif

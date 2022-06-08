@@ -49,7 +49,7 @@
     device.modelNumber = system[@BSG_KSSystemField_Model];
     device.osName = system[@BSG_KSSystemField_SystemName];
     device.osVersion = system[@BSG_KSSystemField_SystemVersion];
-    device.totalMemory = system[@BSG_KSSystemField_Memory][@BSG_KSCrashField_Usable];
+    device.totalMemory = system[@ BSG_KSSystemField_Memory][@ BSG_KSCrashField_Size];
 
     NSMutableDictionary *runtimeVersions = [NSMutableDictionary new];
     runtimeVersions[@"osBuild"] = system[@BSG_KSSystemField_OSVersion];

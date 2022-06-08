@@ -8,11 +8,11 @@
 
 #import "BugsnagStackframe+Private.h"
 
+#import "BSGKeys.h"
 #import "BSG_KSBacktrace.h"
 #import "BSG_KSMachHeaders.h"
 #import "BSG_Symbolicate.h"
 #import "BugsnagCollections.h"
-#import "BugsnagKeys.h"
 #import "BugsnagLogger.h"
 
 BugsnagStackframeType const BugsnagStackframeTypeCocoa = @"cocoa";
@@ -48,6 +48,7 @@ static NSDictionary * _Nullable FindImage(NSArray *images, uintptr_t addr) {
     frame.symbolAddress = [self readInt:json key:BSGKeySymbolAddr];
     frame.machoLoadAddress = [self readInt:json key:BSGKeyMachoLoadAddr];
     frame.type = BSGDeserializeString(json[BSGKeyType]);
+    frame.codeIdentifier = BSGDeserializeString(json[@"codeIdentifier"]);
     frame.columnNumber = BSGDeserializeNumber(json[@"columnNumber"]);
     frame.file = BSGDeserializeString(json[@"file"]);
     frame.inProject = BSGDeserializeNumber(json[@"inProject"]);
@@ -234,6 +235,7 @@ static NSDictionary * _Nullable FindImage(NSArray *images, uintptr_t addr) {
         dict[BSGKeyIsLR] = @(self.isLr);
     }
     dict[BSGKeyType] = self.type;
+    dict[@"codeIdentifier"] = self.codeIdentifier;
     dict[@"columnNumber"] = self.columnNumber;
     dict[@"file"] = self.file;
     dict[@"inProject"] = self.inProject;

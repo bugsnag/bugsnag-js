@@ -37,32 +37,16 @@ extern "C" {
 
 #include <stdbool.h>
 #include <stdint.h>
-#include "BSG_KSCrashType.h"
 
 typedef struct {
 
     // Saved data
-
-    /** Total time elapsed in the foreground since the last crash. */
-    double foregroundDurationSinceLastCrash;
-
-    /** Total time backgrounded elapsed since the last crash. */
-    double backgroundDurationSinceLastCrash;
-
-    /** Number of app launches since the last crash. */
-    int launchesSinceLastCrash;
-
-    /** Number of sessions (launch, resume from suspend) since last crash. */
-    int sessionsSinceLastCrash;
 
     /** Total time elapsed in the foreground since launch. */
     double foregroundDurationSinceLaunch;
 
     /** Total time backgrounded elapsed since launch. */
     double backgroundDurationSinceLaunch;
-
-    /** Number of sessions (launch, resume from suspend) since app launch. */
-    int sessionsSinceLaunch;
 
     /** If true, the application crashed on the previous launch. */
     bool crashedLastLaunch;
@@ -100,10 +84,6 @@ bool bsg_kscrashstate_init(const char *stateFilePath, BSG_KSCrash_State *state);
  *                 it is in the background.
  */
 void bsg_kscrashstate_notifyAppInForeground(bool isInForeground);
-
-/** Notify the crash reporter that the application is terminating.
- */
-void bsg_kscrashstate_notifyAppTerminate(void);
 
 /** Notify the crash reporter that the application has crashed.
  */

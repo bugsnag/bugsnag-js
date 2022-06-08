@@ -154,7 +154,14 @@ void bsg_symbolicate(const uintptr_t instruction_addr, struct bsg_symbolicate_re
         }
         result->function_address = func_start;
     } else {
-        BSG_KSLOG_ERROR("No LC_FUNCTION_STARTS, cannot symbolicate %s", image->name);
+        // If LC_FUNCTION_STARTS has been omitted via ld's `-no_function_starts` option, accurate in-process
+        // symbolication cannot be performed.
+        //
+        // Finding the closest matching symbol table entry can yeild invalid results because some functions
+        // may not have any symbols.
+        //
+        // The back-end will still be able to symbolicate if the dSYM was uploaded.
+        BSG_KSLOG_INFO("No LC_FUNCTION_STARTS, skipping in-process symbolication for %s", image->name);
         return;
     }
     
