@@ -13,8 +13,6 @@ module.exports = {
     if (global && global.HermesInternal && global.HermesInternal.hasPromise()) {
       const HermesPromise = global.Promise;
 
-      console.log("Hermes promise found, monkey patching...")
-
       if (__DEV__) {
         if (typeof HermesPromise !== 'function') {
           console.error('HermesPromise does not exist');
@@ -29,6 +27,8 @@ module.exports = {
               severityReason: { type: 'unhandledPromiseRejection' }
             }, 'promise rejection tracking', 1)
 
+            console.log("caught an unhandled promise rejection with hermes")
+
             client._notify(event)
 
             // adding our own onUnhandled callback means the default handler doesn't get called, so make it happen here
@@ -37,12 +37,8 @@ module.exports = {
         });
       }
 
-      // TODO: Cleanup hermes promise
-      // return () => HermesPromise
       return
     }
-
-    console.log("Hermes promise not found, monkey patching rnPromise...")
 
     rnPromise.enable({
       allRejections: true,
