@@ -32,6 +32,7 @@
 #include "BSG_KSObjC.h"
 #include "BSG_KSString.h"
 #include "BSG_KSSystemInfoC.h"
+#include "BSGDefines.h"
 
 //#define BSG_KSLogger_LocalLevel TRACE
 #include "BSG_KSLogger.h"
@@ -76,10 +77,6 @@ void bsg_kscrash_i_onCrash(BSG_KSCrash_Context *context) {
     BSG_KSLOG_DEBUG("Updating application state to note crash.");
 
     bsg_kscrashstate_notifyAppCrash();
-
-    if (context->config.printTraceToStdout) {
-        bsg_kscrashreport_logCrash(context);
-    }
 
     if (context->crash.crashedDuringCrashHandling) {
         bsg_kscrashreport_writeMinimalReport(context,
@@ -154,9 +151,6 @@ void bsg_kscrash_reinstall(const char *const crashReportFilePath,
     if (!bsg_kscrashstate_init(bsg_g_stateFilePath, &context->state)) {
         BSG_KSLOG_ERROR("Failed to initialize persistent crash state");
     }
-    uint64_t timeNow = mach_absolute_time();
-    context->state.appLaunchTime = timeNow;
-    context->state.lastUpdateDurationsTime = timeNow;
 }
 
 BSG_KSCrashType bsg_kscrash_setHandlingCrashTypes(BSG_KSCrashType crashTypes) {
@@ -174,16 +168,12 @@ BSG_KSCrashType bsg_kscrash_setHandlingCrashTypes(BSG_KSCrashType crashTypes) {
     return crashTypes;
 }
 
-void bsg_kscrash_setPrintTraceToStdout(bool printTraceToStdout) {
-    crashContext()->config.printTraceToStdout = printTraceToStdout;
-}
-
 void bsg_kscrash_setIntrospectMemory(bool introspectMemory) {
     crashContext()->config.introspectionRules.enabled = introspectMemory;
 }
 
 void bsg_kscrash_setCrashNotifyCallback(
-    const BSGReportCallback onCrashNotify) {
+    const BSG_KSReportWriteCallback onCrashNotify) {
     BSG_KSLOG_TRACE("Set onCrashNotify to %p", onCrashNotify);
     crashContext()->config.onCrashNotify = onCrashNotify;
 }
@@ -195,5 +185,9 @@ void bsg_kscrash_setReportWhenDebuggerIsAttached(
 }
 
 void bsg_kscrash_setThreadTracingEnabled(bool threadTracingEnabled) {
+#if BSG_HAVE_MACH_THREADS
     crashContext()->crash.threadTracingEnabled = threadTracingEnabled;
+#else
+    (void)threadTracingEnabled;
+#endif
 }

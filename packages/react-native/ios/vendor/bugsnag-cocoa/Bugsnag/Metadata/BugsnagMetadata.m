@@ -240,7 +240,7 @@
 
 - (void)serialize {
     NSError *error = nil;
-    NSData *data = [BSGJSONSerialization dataWithJSONObject:[self toDictionary] options:0 error:&error];
+    NSData *data = BSGJSONDataFromDictionary([self dictionary], &error);
     if (!data) {
         bsg_log_err(@"%s: %@", __FUNCTION__, error);
         return;

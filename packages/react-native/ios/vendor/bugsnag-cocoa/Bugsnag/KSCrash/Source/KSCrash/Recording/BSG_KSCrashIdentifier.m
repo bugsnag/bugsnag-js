@@ -1,6 +1,6 @@
 #import "BSG_KSCrashIdentifier.h"
 
-#import "BSG_KSCrashAdvanced.h"
+#import "BSG_KSCrash.h"
 
 #import <Foundation/Foundation.h>
 

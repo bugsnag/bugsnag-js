@@ -10,12 +10,12 @@
 
 #import "BSGFileLocations.h"
 #import "BSGInternalErrorReporter.h"
+#import "BSGKeys.h"
 #import "BSG_RFC3339DateTool.h"
 #import "BugsnagAppWithState+Private.h"
 #import "BugsnagConfiguration+Private.h"
 #import "BugsnagError+Private.h"
 #import "BugsnagEvent+Private.h"
-#import "BugsnagKeys.h"
 #import "BugsnagLogger.h"
 #import "BugsnagNotifier.h"
 
@@ -129,6 +129,7 @@ typedef NS_ENUM(NSUInteger, BSGEventUploadOperationState) {
         return;
     }
     
+    __block NSData *HTTPBody =
     [delegate.apiClient sendJSONPayload:requestPayload headers:requestHeaders toURL:notifyURL
                       completionHandler:^(BugsnagApiClientDeliveryStatus status, __attribute__((unused)) NSError *deliveryError) {
         
@@ -139,10 +140,8 @@ typedef NS_ENUM(NSUInteger, BSGEventUploadOperationState) {
                 break;
                 
             case BugsnagApiClientDeliveryStatusFailed:
-                bsg_log_debug(@"Upload failed; will retry event %@", self.name);
-                if (self.shouldStoreEventPayloadForRetry) {
-                    [delegate storeEventPayload:originalPayload ?: eventPayload];
-                }
+                bsg_log_debug(@"Upload failed retryably for event %@", self.name);
+                [self prepareForRetry:originalPayload ?: eventPayload HTTPBodySize:HTTPBody.length];
                 break;
                 
             case BugsnagApiClientDeliveryStatusUndeliverable:
@@ -161,6 +160,11 @@ typedef NS_ENUM(NSUInteger, BSGEventUploadOperationState) {
     // Must be implemented by all subclasses
     [self doesNotRecognizeSelector:_cmd];
     return nil;
+}
+
+- (void)prepareForRetry:(__unused NSDictionary *)payload HTTPBodySize:(__unused NSUInteger)HTTPBodySize {
+    // Must be implemented by all subclasses
+    [self doesNotRecognizeSelector:_cmd];
 }
 
 - (void)deleteEvent {

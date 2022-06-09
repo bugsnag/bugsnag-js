@@ -7,9 +7,6 @@
 //
 
 #import "BSGJSONSerialization.h"
-#import "BugsnagLogger.h"
-
-@implementation BSGJSONSerialization
 
 static NSError* wrapException(NSException* exception) {
     return [NSError errorWithDomain:@"BSGJSONSerializationErrorDomain" code:1 userInfo:@{
@@ -17,76 +14,62 @@ static NSError* wrapException(NSException* exception) {
     }];
 }
 
-+ (BOOL)isValidJSONObject:(nullable id)obj {
+BOOL BSGJSONDictionaryIsValid(NSDictionary *obj, NSError **error) {
     @try {
-        return obj && [NSJSONSerialization isValidJSONObject:(id _Nonnull)obj];
+        if (![obj isKindOfClass:[NSDictionary class]] ||
+            ![NSJSONSerialization isValidJSONObject:(id _Nonnull)obj]) {
+            if (error) {
+                *error = [NSError errorWithDomain:@"BSGJSONSerializationErrorDomain" code:0 userInfo:@{
+                    NSLocalizedDescriptionKey: @"Not a valid JSON object"}];
+            }
+            return NO;
+        }
+        return YES;
     } @catch (NSException *exception) {
+        if (error) {
+            *error = wrapException(exception);
+        }
         return NO;
     }
 }
 
-+ (nullable NSData *)dataWithJSONObject:(id)obj options:(NSJSONWritingOptions)opt error:(NSError * __autoreleasing *)error {
+NSData *_Nullable BSGJSONDataFromDictionary(NSDictionary *obj, NSError **error) {
+    if (!BSGJSONDictionaryIsValid(obj, error)) {
+        return nil;
+    }
     @try {
-        return [NSJSONSerialization dataWithJSONObject:obj options:opt error:error];
+        return [NSJSONSerialization dataWithJSONObject:(id _Nonnull)obj options:0 error:error];
     } @catch (NSException *exception) {
         if (error) {
             *error = wrapException(exception);
         }
         return nil;
     }
+    return nil;
 }
 
-+ (nullable id)JSONObjectWithData:(NSData *)data options:(NSJSONReadingOptions)opt error:(NSError * __autoreleasing *)error {
+NSDictionary *_Nullable BSGJSONDictionaryFromData(NSData *data, NSJSONReadingOptions opt, NSError **error) {
     @try {
-        return [NSJSONSerialization JSONObjectWithData:data options:opt error:error];
+        id obj = [NSJSONSerialization JSONObjectWithData:data options:opt error:error];
+        return [obj isKindOfClass:[NSDictionary class]] ? obj : nil;
     } @catch (NSException *exception) {
         if (error) {
             *error = wrapException(exception);
         }
         return nil;
     }
+    return nil;
 }
 
-+ (NSInteger)writeJSONObject:(id)obj toStream:(NSOutputStream *)stream options:(NSJSONWritingOptions)opt error:(NSError * __autoreleasing *)error {
-    @try {
-        return [NSJSONSerialization writeJSONObject:obj toStream:stream options:opt error:error];
-    } @catch (NSException *exception) {
-        if (error) {
-            *error = wrapException(exception);
-        }
-        return 0;
-    }
-}
-
-+ (nullable id)JSONObjectWithStream:(NSInputStream *)stream options:(NSJSONReadingOptions)opt error:(NSError * __autoreleasing *)error {
-    @try {
-        return [NSJSONSerialization JSONObjectWithStream:stream options:opt error:error];
-    } @catch (NSException *exception) {
-        if (error) {
-            *error = wrapException(exception);
-        }
-        return nil;
-    }
-}
-
-+ (BOOL)writeJSONObject:(id)JSONObject toFile:(NSString *)file options:(NSJSONWritingOptions)options error:(NSError * __autoreleasing *)errorPtr {
-    if (![BSGJSONSerialization isValidJSONObject:JSONObject]) {
-        if (errorPtr) {
-            *errorPtr = [NSError errorWithDomain:@"BSGJSONSerializationErrorDomain" code:0 userInfo:@{
-                NSLocalizedDescriptionKey: @"Not a valid JSON object"}];
-        }
-        return NO;
-    }
-    NSData *data = [BSGJSONSerialization dataWithJSONObject:JSONObject options:options error:errorPtr];
+BOOL BSGJSONWriteToFileAtomically(NSDictionary *JSONObject, NSString *file, NSError **errorPtr) {
+    NSData *data = BSGJSONDataFromDictionary(JSONObject, errorPtr);
     return [data writeToFile:file options:NSDataWritingAtomic error:errorPtr];
 }
 
-+ (nullable id)JSONObjectWithContentsOfFile:(NSString *)file options:(NSJSONReadingOptions)options error:(NSError * __autoreleasing *)errorPtr {
+NSDictionary *_Nullable BSGJSONDictionaryFromFile(NSString *file, NSJSONReadingOptions options, NSError **errorPtr) {
     NSData *data = [NSData dataWithContentsOfFile:file options:0 error:errorPtr];
     if (!data) {
         return nil;
     }
-    return [BSGJSONSerialization JSONObjectWithData:data options:options error:errorPtr];
+    return BSGJSONDictionaryFromData(data, options, errorPtr);
 }
-
-@end

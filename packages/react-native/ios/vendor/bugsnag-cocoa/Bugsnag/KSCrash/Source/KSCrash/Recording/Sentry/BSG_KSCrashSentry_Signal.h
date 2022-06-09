@@ -34,6 +34,10 @@
 extern "C" {
 #endif
 
+#include "BSGDefines.h"
+
+#if BSG_HAVE_SIGNAL
+
 #include "BSG_KSCrashSentry.h"
 
 /** Install our custom signal handler.
@@ -47,6 +51,8 @@ bool bsg_kscrashsentry_installSignalHandler(BSG_KSCrash_SentryContext *context);
 /** Uninstall our custom signal handlers and restore the previous ones.
  */
 void bsg_kscrashsentry_uninstallSignalHandler(void);
+
+#endif
 
 #ifdef __cplusplus
 }

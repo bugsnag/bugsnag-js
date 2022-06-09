@@ -115,7 +115,6 @@
 
 #define BSG_KSCrashField_Free "free"
 #define BSG_KSCrashField_Size "size"
-#define BSG_KSCrashField_Usable "usable"
 
 #pragma mark - Error -
 
@@ -145,14 +144,9 @@
 
 #pragma mark - App Stats -
 
-#define BSG_KSCrashField_ActiveTimeSinceCrash "active_time_since_last_crash"
 #define BSG_KSCrashField_ActiveTimeSinceLaunch "active_time_since_launch"
 #define BSG_KSCrashField_AppInFG "application_in_foreground"
-#define BSG_KSCrashField_BGTimeSinceCrash "background_time_since_last_crash"
 #define BSG_KSCrashField_BGTimeSinceLaunch "background_time_since_launch"
-#define BSG_KSCrashField_LaunchesSinceCrash "launches_since_last_crash"
-#define BSG_KSCrashField_SessionsSinceCrash "sessions_since_last_crash"
-#define BSG_KSCrashField_SessionsSinceLaunch "sessions_since_launch"
 
 #pragma mark - Report -
 

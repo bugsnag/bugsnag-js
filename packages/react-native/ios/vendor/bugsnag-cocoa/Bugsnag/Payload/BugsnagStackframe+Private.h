@@ -31,8 +31,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic) BOOL needsSymbolication;
 
-// MARK: - Properties not used for Cocoa stack frames, but used by React Native and Unity.
+// MARK: - Properties for Flutter, React Native, or Unity notifiers.
 
+@property (copy, nullable, nonatomic) NSString *codeIdentifier;
 @property (strong, nullable, nonatomic) NSNumber *columnNumber;
 @property (copy, nullable, nonatomic) NSString *file;
 @property (strong, nullable, nonatomic) NSNumber *inProject;

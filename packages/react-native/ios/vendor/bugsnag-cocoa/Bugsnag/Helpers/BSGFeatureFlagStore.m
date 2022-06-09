@@ -8,8 +8,8 @@
 
 #import "BSGFeatureFlagStore.h"
 
+#import "BSGKeys.h"
 #import "BugsnagFeatureFlag.h"
-#import "BugsnagKeys.h"
 
 void BSGFeatureFlagStoreAddFeatureFlag(BSGFeatureFlagStore *store, NSString *name, NSString *_Nullable variant) {
     store[name] = variant ?: [NSNull null];

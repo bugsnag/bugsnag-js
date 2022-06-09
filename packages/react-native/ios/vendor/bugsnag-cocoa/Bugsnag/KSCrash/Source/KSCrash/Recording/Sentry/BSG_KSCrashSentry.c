@@ -24,8 +24,6 @@
 // THE SOFTWARE.
 //
 
-#include "BugsnagPlatformConditional.h"
-
 #include "BSG_KSCrashSentry.h"
 #include "BSG_KSCrashSentry_Private.h"
 
@@ -35,6 +33,9 @@
 #include "BSG_KSCrashSentry_Signal.h"
 #include "BSG_KSLogger.h"
 #include "BSG_KSMach.h"
+#include "BSGDefines.h"
+
+#include <stdatomic.h>
 
 // ============================================================================
 #pragma mark - Globals -
@@ -47,16 +48,18 @@ typedef struct {
 } BSG_CrashSentry;
 
 static BSG_CrashSentry bsg_g_sentries[] = {
-#if BSG_HAS_MACH
+#if BSG_HAVE_MACH_EXCEPTIONS
     {
         BSG_KSCrashTypeMachException, bsg_kscrashsentry_installMachHandler,
         bsg_kscrashsentry_uninstallMachHandler,
     },
 #endif
+#if BSG_HAVE_SIGNAL
     {
         BSG_KSCrashTypeSignal, bsg_kscrashsentry_installSignalHandler,
         bsg_kscrashsentry_uninstallSignalHandler,
     },
+#endif
     {
         BSG_KSCrashTypeCPPException,
         bsg_kscrashsentry_installCPPExceptionHandler,
@@ -73,10 +76,12 @@ static size_t bsg_g_sentriesCount =
 /** Context to fill with crash information. */
 static BSG_KSCrash_SentryContext *bsg_g_context = NULL;
 
+#if BSG_HAVE_MACH_THREADS
 /** Keeps track of whether threads have already been suspended or not.
  * This won't handle multiple suspends in a row.
  */
 static bool bsg_g_threads_are_running = true;
+#endif
 
 // ============================================================================
 #pragma mark - API -
@@ -139,6 +144,7 @@ void bsg_kscrashsentry_uninstall(BSG_KSCrashType crashTypes) {
 #pragma mark - Private API -
 // ============================================================================
 
+#if BSG_HAVE_MACH_THREADS
 void bsg_kscrashsentry_suspendThreads(void) {
     BSG_KSLOG_DEBUG("Suspending threads.");
     if (!bsg_g_threads_are_running) {
@@ -195,6 +201,7 @@ void bsg_kscrashsentry_resumeThreads(void) {
     bsg_g_threads_are_running = true;
     BSG_KSLOG_DEBUG("Resume complete.");
 }
+#endif
 
 void bsg_kscrashsentry_clearContext(BSG_KSCrash_SentryContext *context) {
     void (*onCrash)(void *) = context->onCrash;
@@ -211,7 +218,50 @@ void bsg_kscrashsentry_clearContext(BSG_KSCrash_SentryContext *context) {
     memcpy(context->reservedThreads, reservedThreads, sizeof(reservedThreads));
 }
 
-void bsg_kscrashsentry_beginHandlingCrash(BSG_KSCrash_SentryContext *context) {
-    bsg_kscrashsentry_clearContext(context);
-    context->handlingCrash = true;
+// Set to true once _endHandlingCrash() has been called and it is safe to resume
+// any secondary crashed threads.
+static atomic_bool bsg_g_didHandleCrash;
+
+bool bsg_kscrashsentry_beginHandlingCrash(const thread_t offender) {
+    static _Atomic(thread_t) firstOffender;
+    static thread_t firstHandlingThread;
+
+    thread_t expected = 0;
+    if (atomic_compare_exchange_strong(&firstOffender, &expected, offender)) {
+        firstHandlingThread = bsg_ksmachthread_self();
+        BSG_KSLOG_DEBUG("Handling app crash in thread 0x%x", offender);
+        bsg_kscrashsentry_clearContext(bsg_g_context);
+        bsg_g_context->handlingCrash = true;
+        bsg_g_context->offendingThread = offender;
+        return true;
+    }
+
+    if (offender == firstHandlingThread) {
+        BSG_KSLOG_INFO("Detected crash in the crash reporter. "
+                       "Restoring original handlers.");
+        bsg_kscrashsentry_uninstall(BSG_KSCrashTypeAsyncSafe);
+
+        // Reset the context to write a recrash report.
+        bsg_kscrashsentry_clearContext(bsg_g_context);
+        bsg_g_context->crashedDuringCrashHandling = true;
+        bsg_g_context->handlingCrash = true;
+        bsg_g_context->offendingThread = offender;
+        return true;
+    }
+
+    BSG_KSLOG_DEBUG("Ignoring secondary app crash in thread 0x%x", offender);
+    // Block this thread to prevent the crash handling thread from being
+    // interrupted while writing the crash report. If we allowed the default
+    // handler to be triggered for this thread, the process would be killed
+    // before the crash report can be written. The process will be killed by the
+    // default handler once the handling thread has finished and threads resume.
+    while (!atomic_load(&bsg_g_didHandleCrash)) {
+        usleep(USEC_PER_SEC / 10);
+    }
+    return false;
+}
+
+void bsg_kscrashsentry_endHandlingCrash(void) {
+    BSG_KSLOG_DEBUG("Noting completion of crash handling");
+    atomic_store(&bsg_g_didHandleCrash, true);
 }
