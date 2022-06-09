@@ -26,7 +26,6 @@
 
 #import <Foundation/Foundation.h>
 
-#import "BSG_KSCrashReportWriter.h"
 #import "BSG_KSCrashType.h"
 
 /**
@@ -35,15 +34,6 @@
  * The crash reports will be located in $APP_HOME/Library/Caches/KSCrashReports
  */
 @interface BSG_KSCrash : NSObject
-
-/** If YES, introspect memory contents during a crash.
- * Any Objective-C objects or C strings near the stack pointer or referenced by
- * cpu registers or exceptions will be recorded in the crash report, along with
- * their contents.
- *
- * Default: YES
- */
-@property(nonatomic, readwrite, assign) bool introspectMemory;
 
 /** Get the singleton instance of the crash reporter.
  */
@@ -57,26 +47,4 @@
  */
 - (BSG_KSCrashType)install:(BSG_KSCrashType)crashTypes directory:(NSString *)directory;
 
-/**
- * Collects information about the application's foreground state (duration in foreground/background)
- */
-- (NSDictionary *)captureAppStats;
-
-/** If YES, reports will be sent even if a debugger is attached
- *
- * Default: NO
- */
-@property(nonatomic, readwrite, assign) BOOL reportWhenDebuggerIsAttached;
-
-/**
-* The methodology used for tracing threads.
- */
-@property(nonatomic, readwrite, assign) BOOL threadTracingEnabled;
-
 @end
-
-//! Project version number for BSG_KSCrashFramework.
-FOUNDATION_EXPORT const double BSG_KSCrashFrameworkVersionNumber;
-
-//! Project version string for BSG_KSCrashFramework.
-FOUNDATION_EXPORT const unsigned char BSG_KSCrashFrameworkVersionString[];

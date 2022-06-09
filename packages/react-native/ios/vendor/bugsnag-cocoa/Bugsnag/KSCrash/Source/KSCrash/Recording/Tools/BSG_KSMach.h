@@ -35,6 +35,7 @@ extern "C" {
 #endif
 
 #include "BSG_KSArchSpecific.h"
+#include "BSGDefines.h"
 
 #include <mach/mach.h>
 #include <pthread.h>
@@ -60,12 +61,6 @@ void bsg_ksmach_init(void);
  * @return total free memory.
  */
 uint64_t bsg_ksmachfreeMemory(void);
-
-/** Get the total memory that is currently usable.
- *
- * @return total usable memory.
- */
-uint64_t bsg_ksmachusableMemory(void);
 
 /** Get the current CPU architecture.
  *
@@ -93,6 +88,7 @@ const char *bsg_ksmachkernelReturnCodeName(const kern_return_t returnCode);
 #pragma mark - Thread State Info -
 // ============================================================================
 
+#if BSG_HAVE_MACH_THREADS
 /** Fill in state information about a thread.
  *
  * @param thread The thread to get information about.
@@ -108,6 +104,7 @@ const char *bsg_ksmachkernelReturnCodeName(const kern_return_t returnCode);
 bool bsg_ksmachfillState(thread_t thread, thread_state_t state,
                          thread_state_flavor_t flavor,
                          mach_msg_type_number_t stateCount);
+#endif
 
 /** Get the frame pointer for a machine context.
  * The frame pointer marks the top of the call stack.
@@ -153,6 +150,7 @@ uintptr_t bsg_ksmachlinkRegister(const BSG_STRUCT_MCONTEXT_L *machineContext);
  */
 uintptr_t bsg_ksmachfaultAddress(const BSG_STRUCT_MCONTEXT_L *machineContext);
 
+#if BSG_HAVE_MACH_THREADS
 /** Get a thread's thread state and place it in a machine context.
  *
  * @param thread The thread to fetch state for.
@@ -185,6 +183,7 @@ bool bsg_ksmachfloatState(thread_t thread,
  */
 bool bsg_ksmachexceptionState(thread_t thread,
                               BSG_STRUCT_MCONTEXT_L *machineContext);
+#endif
 
 /** Get the number of normal (not floating point or exception) registers the
  *  currently running CPU has.
@@ -352,6 +351,7 @@ unsigned bsg_ksmachremoveThreadsFromList(thread_t *srcThreads, unsigned srcThrea
                                          thread_t *omitThreads, unsigned omitThreadsCount,
                                          thread_t *dstThreads, unsigned maxDstThreads);
 
+#if BSG_HAVE_MACH_THREADS
 /** Suspend a list of threads.
  * Note: The current thread cannot be suspended via this function.
  *
@@ -369,6 +369,7 @@ void bsg_ksmachsuspendThreads(thread_t *threads, unsigned threadsCount);
  * @param threadsCount The number of threads in the list.
  */
 void bsg_ksmachresumeThreads(thread_t *threads, unsigned threadsCount);
+#endif
 
 /** Copy memory safely. If the memory is not accessible, returns false
  * rather than crashing.

@@ -7,7 +7,8 @@
 //
 
 #import "BugsnagHandledState.h"
-#import "BugsnagKeys.h"
+
+#import "BSGKeys.h"
 
 BSGSeverity BSGParseSeverity(NSString *severity) {
     if ([severity isEqualToString:BSGKeyInfo])

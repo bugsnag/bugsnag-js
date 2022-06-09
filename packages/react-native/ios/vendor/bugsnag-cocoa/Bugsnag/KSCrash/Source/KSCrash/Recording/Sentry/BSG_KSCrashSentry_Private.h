@@ -32,7 +32,9 @@ extern "C" {
 #endif
 
 #include "BSG_KSCrashSentry.h"
+#include "BSGDefines.h"
 
+#if BSG_HAVE_MACH_THREADS
 /** Suspend all non-reserved threads.
  *
  * Reserved threads include the current thread and all threads in
@@ -46,10 +48,32 @@ void bsg_kscrashsentry_suspendThreads(void);
  * "reservedThreads" in the context.
  */
 void bsg_kscrashsentry_resumeThreads(void);
+#endif
 
-/** Prepare the context for handling a new crash.
+/**
+ * Prepares the context for handling a crash.
+ *
+ * Only a single crash report can be written per process lifetime, with the
+ * exception of a crash in a crash handling thread for which a "recrash" report
+ * can be written.
+ *
+ * True is returned if this crash should be processed. The caller should fill in
+ * the context's crash details and call bsg_g_context->onCrash(). The caller
+ * must call endHandlingCrash() once processing is complete. The process is
+ * then expected to die once the default crash handler executes.
+ *
+ * False is returned if a crash has already been handled, to prevent
+ * interrupting its processing and / or overwriting the existing crash report.
+ * In this case the call to beginHandlingCrash() blocks until the crash handling
+ * thread calls endHandlingCrash().
  */
-void bsg_kscrashsentry_beginHandlingCrash(BSG_KSCrash_SentryContext *context);
+bool bsg_kscrashsentry_beginHandlingCrash(const thread_t offender);
+
+/**
+ * Sentries must call this to unblock any sencondary crashed threads that are
+ * waiting in beginHandlingCrash().
+ */
+void bsg_kscrashsentry_endHandlingCrash(void);
 
 /** Clear a crash sentry context.
  */

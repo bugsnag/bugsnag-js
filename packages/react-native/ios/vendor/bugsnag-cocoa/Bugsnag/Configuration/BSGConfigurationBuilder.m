@@ -1,8 +1,8 @@
 #import "BSGConfigurationBuilder.h"
 
-#import "BugsnagConfiguration.h"
+#import "BSGDefines.h"
+#import "BSGKeys.h"
 #import "BugsnagEndpointConfiguration.h"
-#import "BugsnagKeys.h"
 #import "BugsnagLogger.h"
 
 static BOOL BSGValueIsBoolean(id object) {
@@ -10,9 +10,16 @@ static BOOL BSGValueIsBoolean(id object) {
             && CFGetTypeID((__bridge CFTypeRef)object) == CFBooleanGetTypeID();
 }
 
-@implementation BSGConfigurationBuilder
+static void LoadBoolean     (BugsnagConfiguration *config, NSDictionary *options, NSString *key);
+static void LoadString      (BugsnagConfiguration *config, NSDictionary *options, NSString *key);
+static void LoadNumber      (BugsnagConfiguration *config, NSDictionary *options, NSString *key);
+static void LoadStringSet   (BugsnagConfiguration *config, NSDictionary *options, NSString *key);
+static void LoadEndpoints   (BugsnagConfiguration *config, NSDictionary *options);
+static void LoadSendThreads (BugsnagConfiguration *config, NSDictionary *options);
 
-+ (BugsnagConfiguration *)configurationFromOptions:(NSDictionary *)options {
+#pragma mark -
+
+BugsnagConfiguration * BSGConfigurationWithOptions(NSDictionary *options) {
     NSString *apiKey = options[BSGKeyApiKey];
     if (apiKey != nil && ![apiKey isKindOfClass:[NSString class]]) {
         @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"Bugsnag apiKey must be a string" userInfo:nil];
@@ -44,57 +51,54 @@ static BOOL BSGValueIsBoolean(id object) {
         bsg_log_warn(@"Unknown dictionary keys passed in configuration options: %@", unknownKeys);
     }
     
-    [self loadString:config options:options key:BSGKeyAppType];
-    [self loadString:config options:options key:BSGKeyAppVersion];
-    [self loadBoolean:config options:options key:BSGKeyAutoDetectErrors];
-    [self loadBoolean:config options:options key:BSGKeyAutoTrackSessions];
-    [self loadString:config options:options key:BSGKeyBundleVersion];
-    [self loadBoolean:config options:options key:BSGKeyPersistUser];
-    [self loadString:config options:options key:BSGKeyReleaseStage];
-
-    [self loadStringArray:config options:options key:BSGKeyEnabledReleaseStages];
-    [self loadStringArray:config options:options key:BSGKeyRedactedKeys];
-    [self loadEndpoints:config options:options];
-
-    [self loadNumber:config options:options key:BSGKeyMaxBreadcrumbs];
-    [self loadNumber:config options:options key:BSGKeyMaxPersistedEvents];
-    [self loadNumber:config options:options key:BSGKeyMaxPersistedSessions];
-    [self loadSendThreads:config options:options];
+    LoadString      (config, options, BSGKeyAppType);
+    LoadString      (config, options, BSGKeyAppVersion);
+    LoadBoolean     (config, options, BSGKeyAutoDetectErrors);
+    LoadBoolean     (config, options, BSGKeyAutoTrackSessions);
+    LoadString      (config, options, BSGKeyBundleVersion);
+    LoadBoolean     (config, options, BSGKeyPersistUser);
+    LoadString      (config, options, BSGKeyReleaseStage);
+    LoadStringSet   (config, options, BSGKeyEnabledReleaseStages);
+    LoadStringSet   (config, options, BSGKeyRedactedKeys);
+    LoadEndpoints   (config, options);
+    LoadNumber      (config, options, BSGKeyMaxBreadcrumbs);
+    LoadNumber      (config, options, BSGKeyMaxPersistedEvents);
+    LoadNumber      (config, options, BSGKeyMaxPersistedSessions);
+    LoadSendThreads (config, options);
     return config;
 }
 
-+ (void)loadBoolean:(BugsnagConfiguration *)config options:(NSDictionary *)options key:(NSString *)key {
+static void LoadBoolean(BugsnagConfiguration *config, NSDictionary *options, NSString *key) {
     if (BSGValueIsBoolean(options[key])) {
         [config setValue:options[key] forKey:key];
     }
 }
 
-+ (void)loadString:(BugsnagConfiguration *)config options:(NSDictionary *)options key:(NSString *)key {
+static void LoadString(BugsnagConfiguration *config, NSDictionary *options, NSString *key) {
     if (options[key] && [options[key] isKindOfClass:[NSString class]]) {
         [config setValue:options[key] forKey:key];
     }
 }
 
-+ (void)loadNumber:(BugsnagConfiguration *)config options:(NSDictionary *)options key:(NSString *)key {
+static void LoadNumber(BugsnagConfiguration *config, NSDictionary *options, NSString *key) {
     if (options[key] && [options[key] isKindOfClass:[NSNumber class]]) {
         [config setValue:options[key] forKey:key];
     }
 }
 
-+ (void)loadStringArray:(BugsnagConfiguration *)config options:(NSDictionary *)options key:(NSString *)key {
+static void LoadStringSet(BugsnagConfiguration *config, NSDictionary *options, NSString *key) {
     if (options[key] && [options[key] isKindOfClass:[NSArray class]]) {
         NSArray *val = options[key];
-
         for (NSString *obj in val) {
             if (![obj isKindOfClass:[NSString class]]) {
                 return;
             }
         }
-        [config setValue:val forKey:key];
+        [config setValue:[NSSet setWithArray:val] forKey:key];
     }
 }
 
-+ (void)loadEndpoints:(BugsnagConfiguration *)config options:(NSDictionary *)options {
+static void LoadEndpoints(BugsnagConfiguration *config, NSDictionary *options) {
     if (options[BSGKeyEndpoints] && [options[BSGKeyEndpoints] isKindOfClass:[NSDictionary class]]) {
         NSDictionary *endpoints = options[BSGKeyEndpoints];
 
@@ -109,7 +113,8 @@ static BOOL BSGValueIsBoolean(id object) {
     }
 }
 
-+ (void)loadSendThreads:(BugsnagConfiguration *)config options:(NSDictionary *)options {
+static void LoadSendThreads(BugsnagConfiguration *config, NSDictionary *options) {
+#if BSG_HAVE_MACH_THREADS
     if (options[BSGKeySendThreads] && [options[BSGKeySendThreads] isKindOfClass:[NSString class]]) {
         NSString *sendThreads = [options[BSGKeySendThreads] lowercaseString];
 
@@ -121,6 +126,5 @@ static BOOL BSGValueIsBoolean(id object) {
             config.sendThreads = BSGThreadSendPolicyNever;
         }
     }
+#endif
 }
-
-@end

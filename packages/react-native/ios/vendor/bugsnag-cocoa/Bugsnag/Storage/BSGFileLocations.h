@@ -12,7 +12,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface BSGFileLocations : NSObject
 
-@property (readonly, nonatomic) NSString *kvStore;
 @property (readonly, nonatomic) NSString *breadcrumbs;
 @property (readonly, nonatomic) NSString *events;
 @property (readonly, nonatomic) NSString *kscrashReports;
@@ -38,6 +37,11 @@ NS_ASSUME_NONNULL_BEGIN
  * General per-launch metadata
  */
 @property (readonly, nonatomic) NSString *metadata;
+
+/**
+ * BSGRunContext
+ */
+@property (readonly, nonatomic) NSString *runContext;
 
 /**
  * State info that gets added to the low level crash report.

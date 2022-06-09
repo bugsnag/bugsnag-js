@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import "BSGDefines.h"
+
 @class BugsnagAppWithState;
 @class BugsnagConfiguration;
 @class BugsnagDeviceWithState;
@@ -17,7 +19,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /// Returns a concise desription of the error including its domain, code, and debug description or localizedDescription.
-FOUNDATION_EXPORT NSString *BSGErrorDescription(NSError *error);
+BSG_PRIVATE NSString *_Nullable BSGErrorDescription(NSError *_Nullable error);
 
 // MARK: -
 
@@ -35,7 +37,7 @@ FOUNDATION_EXPORT NSString *BSGErrorDescription(NSError *error);
 
 @interface BSGInternalErrorReporter : NSObject
 
-@property (class, nonatomic) BSGInternalErrorReporter *sharedInstance;
+@property (class, nullable, nonatomic) BSGInternalErrorReporter *sharedInstance;
 
 /// Runs the block immediately if sharedInstance exists, otherwise runs the block once sharedInstance has been created.
 + (void)performBlock:(void (^)(BSGInternalErrorReporter *))block;
@@ -47,14 +49,14 @@ FOUNDATION_EXPORT NSString *BSGErrorDescription(NSError *error);
 /// Reports an error to Bugsnag's internal bugsnag-cocoa project dashboard.
 /// @param errorClass The class of error which occurred. This field is used to group the errors together so should not contain any contextual
 /// information that would prevent correct grouping. This would ordinarily be the Exception name when dealing with an exception.
+/// @param context The context to associate with this event. Errors are grouped by errorClass:context
 /// @param message The error message associated with the error. Usually this will contain some information about this specific instance of the error
 /// and is not used to group the errors.
 /// @param diagnostics JSON compatible information to include in the `BugsnagDiagnostics` metadata section.
-/// @param groupingHash String to override Bugsnag's default event grouping. Events sharing the same grouping hash will be grouped together.
 - (void)reportErrorWithClass:(NSString *)errorClass
+                     context:(nullable NSString *)context
                      message:(nullable NSString *)message
-                 diagnostics:(nullable NSDictionary<NSString *, id> *)diagnostics
-                groupingHash:(nullable NSString *)groupingHash;
+                 diagnostics:(nullable NSDictionary<NSString *, id> *)diagnostics;
 
 - (void)reportException:(NSException *)exception
             diagnostics:(nullable NSDictionary<NSString *, id> *)diagnostics
@@ -65,9 +67,9 @@ FOUNDATION_EXPORT NSString *BSGErrorDescription(NSError *error);
 // Private
 
 - (nullable BugsnagEvent *)eventWithErrorClass:(NSString *)errorClass
+                                       context:(nullable NSString *)context
                                        message:(nullable NSString *)message
-                                   diagnostics:(nullable NSDictionary<NSString *, id> *)diagnostics
-                                  groupingHash:(nullable NSString *)groupingHash;
+                                   diagnostics:(nullable NSDictionary<NSString *, id> *)diagnostics;
 
 - (nullable BugsnagEvent *)eventWithException:(NSException *)exception
                                   diagnostics:(nullable NSDictionary<NSString *, id> *)diagnostics

@@ -25,8 +25,13 @@
     return self.event;
 }
 
-- (BOOL)shouldStoreEventPayloadForRetry {
-    return YES;
+- (void)prepareForRetry:(NSDictionary *)payload HTTPBodySize:(NSUInteger)HTTPBodySize {
+    if (HTTPBodySize > MaxPersistedSize) {
+        bsg_log_debug(@"Not persisting %@ because HTTP body size (%lu bytes) exceeds MaxPersistedSize",
+                      self.name, (unsigned long)HTTPBodySize);
+        return;
+    }
+    [self.delegate storeEventPayload:payload];
 }
 
 - (NSString *)name {

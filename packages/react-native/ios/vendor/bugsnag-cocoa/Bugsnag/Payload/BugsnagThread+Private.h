@@ -7,6 +7,7 @@
 //
 
 #import <Bugsnag/BugsnagThread.h>
+#import "BSGDefines.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -33,7 +34,9 @@ NS_ASSUME_NONNULL_BEGIN
                               depth:(NSUInteger)depth
                           errorType:(nullable NSString *)errorType;
 
+#if BSG_HAVE_MACH_THREADS
 + (nullable instancetype)mainThread;
+#endif
 
 + (NSMutableArray *)serializeThreads:(nullable NSArray<BugsnagThread *> *)threads;
 

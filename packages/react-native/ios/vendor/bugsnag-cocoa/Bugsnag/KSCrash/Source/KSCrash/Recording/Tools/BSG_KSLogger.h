@@ -24,7 +24,24 @@
 // THE SOFTWARE.
 //
 
+#ifndef HDR_BSG_KSLogger_h
+#define HDR_BSG_KSLogger_h
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 #include "BugsnagLogger.h"
+
+/**
+ * Enables low-level logging.
+ *
+ * Keep this disabled in production as it increases the binary size.
+ */
+#ifndef BSG_KSLOG_ENABLED
+#define BSG_KSLOG_ENABLED 0
+#endif
 
 /**
  * BSG_KSLogger
@@ -119,13 +136,6 @@
 #pragma mark - (internal) -
 // ============================================================================
 
-#ifndef HDR_BSG_KSLogger_h
-#define HDR_BSG_KSLogger_h
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include <stdbool.h>
 #include <sys/cdefs.h>
 
@@ -179,6 +189,13 @@ void bsg_i_kslog_logCBasic(const char *fmt, ...) __printflike(1, 2);
 #define TRACE BSG_KSLogger_Level_Trace
 
 #ifndef BSG_KSLogger_LocalLevel
+#define BSG_KSLogger_LocalLevel BSG_KSLogger_Level_None
+#endif
+
+#if !BSG_KSLOG_ENABLED
+#undef BSG_LOG_LEVEL
+#define BSG_LOG_LEVEL BSG_KSLogger_Level_None
+#undef BSG_KSLogger_LocalLevel
 #define BSG_KSLogger_LocalLevel BSG_KSLogger_Level_None
 #endif
 

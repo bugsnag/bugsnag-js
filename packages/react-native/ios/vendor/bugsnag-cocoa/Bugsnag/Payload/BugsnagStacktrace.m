@@ -8,7 +8,7 @@
 
 #import "BugsnagStacktrace.h"
 
-#import "BugsnagKeys.h"
+#import "BSGKeys.h"
 #import "BugsnagStackframe+Private.h"
 
 @implementation BugsnagStacktrace

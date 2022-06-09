@@ -27,6 +27,7 @@
 #if defined(__x86_64__)
 
 #include "BSG_KSMach.h"
+#include "BSGDefines.h"
 
 //#define BSG_KSLogger_LocalLevel TRACE
 #include "BSG_KSLogger.h"
@@ -65,6 +66,7 @@ bsg_ksmachlinkRegister(const BSG_STRUCT_MCONTEXT_L *const machineContext
     return 0;
 }
 
+#if BSG_HAVE_MACH_THREADS
 bool bsg_ksmachthreadState(const thread_t thread,
                            BSG_STRUCT_MCONTEXT_L *const machineContext) {
     return bsg_ksmachfillState(thread, (thread_state_t)&machineContext->__ss,
@@ -83,6 +85,7 @@ bool bsg_ksmachexceptionState(const thread_t thread,
                                x86_EXCEPTION_STATE64,
                                x86_EXCEPTION_STATE64_COUNT);
 }
+#endif
 
 int bsg_ksmachnumRegisters(void) { return bsg_g_registerNamesCount; }
 

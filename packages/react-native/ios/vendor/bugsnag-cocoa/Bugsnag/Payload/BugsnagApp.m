@@ -8,8 +8,8 @@
 
 #import "BugsnagApp.h"
 
+#import "BSGKeys.h"
 #import "BSG_KSSystemInfo.h"
-#import "BugsnagKeys.h"
 #import "BugsnagConfiguration.h"
 #import "BugsnagCollections.h"
 
