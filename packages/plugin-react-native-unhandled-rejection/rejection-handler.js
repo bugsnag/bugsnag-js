@@ -8,8 +8,10 @@ const rnPromise = require('promise/setimmediate/rejection-tracking')
 
 module.exports = {
   load: (client) => {
+    // Do not attach any listeners if autoDetectErrors is disabled or unhandledRejections are not an enabled error type
     if (!client._config.autoDetectErrors || !client._config.enabledErrorTypes.unhandledRejections) return () => { }
 
+    // Check if Hermes is available and is being used for promises
     if (global && global.HermesInternal && global.HermesInternal.hasPromise()) {
       global.HermesInternal.enablePromiseRejectionTracker({
         allRejections: true,
@@ -30,6 +32,7 @@ module.exports = {
       return () => { }
     }
 
+    // Otherwise, attach notifier to 'default' promise
     rnPromise.enable({
       allRejections: true,
       onUnhandled: (id, error) => {
