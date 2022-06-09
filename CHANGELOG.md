@@ -1,5 +1,11 @@
 # Changelog
 
+## TBD
+
+### Changed
+
+- (plugin-react-native-unhandled-rejection) Update handler to catch unhandled rejections when using hermes [#1757](https://github.com/bugsnag/bugsnag-js/pull/1757)
+
 ## v7.16.7 (2022-05-31)
 
 ### Added
