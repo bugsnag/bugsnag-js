@@ -9,6 +9,32 @@ const metadataDelegate = require('./lib/metadata-delegate')
 const featureFlagDelegate = require('./lib/feature-flag-delegate')
 const isError = require('./lib/iserror')
 
+function createBugsnagError (errorClass, errorMessage, type, stacktrace) {
+  return {
+    errorClass: ensureString(errorClass),
+    errorMessage: ensureString(errorMessage),
+    type,
+    stacktrace: reduce(stacktrace, (accum, frame) => {
+      const f = formatStackframe(frame)
+      // don't include a stackframe if none of its properties are defined
+      try {
+        if (JSON.stringify(f) === '{}') return accum
+        return accum.concat(f)
+      } catch (e) {
+        return accum
+      }
+    }, [])
+  }
+}
+
+function getCauseStack (error) {
+  if (error.cause) {
+    return [error, ...getCauseStack(error.cause)]
+  } else {
+    return [error]
+  }
+}
+
 class Event {
   constructor (errorClass, errorMessage, stacktrace = [], handledState = defaultHandledState(), originalError) {
     this.apiKey = undefined
@@ -33,21 +59,7 @@ class Event {
     this._session = undefined
 
     this.errors = [
-      {
-        errorClass: ensureString(errorClass),
-        errorMessage: ensureString(errorMessage),
-        type: Event.__type,
-        stacktrace: reduce(stacktrace, (accum, frame) => {
-          const f = formatStackframe(frame)
-          // don't include a stackframe if none of its properties are defined
-          try {
-            if (JSON.stringify(f) === '{}') return accum
-            return accum.concat(f)
-          } catch (e) {
-            return accum
-          }
-        }, [])
-      }
+      createBugsnagError(errorClass, errorMessage, Event.__type, stacktrace)
     ]
 
     // Flags.
@@ -181,6 +193,16 @@ Event.create = function (maybeError, tolerateNonErrors, handledState, component,
   if (error.name === 'InvalidError') {
     event.addMetadata(`${component}`, 'non-error parameter', makeSerialisable(maybeError))
   }
+  if (error.cause) {
+    const causes = getCauseStack(maybeError).slice(1)
+    const normalisedCauses = map(causes, (cause) => {
+      const [error] = normaliseError(cause, tolerateNonErrors, 'error cause')
+      return error
+    })
+    const causeErrors = map(normalisedCauses, (cause) => createBugsnagError(cause.name, cause.message, Event.__type, [])) // do not include stacktrace for error causes
+    event.errors.push(...causeErrors)
+  }
+
   return event
 }
 
@@ -195,8 +217,9 @@ const normaliseError = (maybeError, tolerateNonErrors, component, logger) => {
   let internalFrames = 0
 
   const createAndLogInputError = (reason) => {
-    if (logger) logger.warn(`${component} received a non-error: "${reason}"`)
-    const err = new Error(`${component} received a non-error. See "${component}" tab for more detail.`)
+    const verb = (component === 'error cause' ? 'was' : 'received')
+    if (logger) logger.warn(`${component} ${verb} a non-error: "${reason}"`)
+    const err = new Error(`${component} ${verb} a non-error. See "${component}" tab for more detail.`)
     err.name = 'InvalidError'
     return err
   }
