@@ -51,3 +51,7 @@ This is because nextjs calls `replaceState` following load and so two requests t
 
 - No source maps for server-side code. It doesn't look like next.js generates these anyway.
 - Events generated on the server have source map warnings. This is to do with the project type used in Bugsnag. If a node project type is used then the source map warnings are not shown. It's also possible to avoid this by having separate projects for client and server events (by providing two different API keys).
+
+## Custom Server
+
+Using a custom server is not currently supported.
