@@ -9,32 +9,6 @@ const metadataDelegate = require('./lib/metadata-delegate')
 const featureFlagDelegate = require('./lib/feature-flag-delegate')
 const isError = require('./lib/iserror')
 
-function createBugsnagError (errorClass, errorMessage, type, stacktrace) {
-  return {
-    errorClass: ensureString(errorClass),
-    errorMessage: ensureString(errorMessage),
-    type,
-    stacktrace: reduce(stacktrace, (accum, frame) => {
-      const f = formatStackframe(frame)
-      // don't include a stackframe if none of its properties are defined
-      try {
-        if (JSON.stringify(f) === '{}') return accum
-        return accum.concat(f)
-      } catch (e) {
-        return accum
-      }
-    }, [])
-  }
-}
-
-function getCauseStack (error) {
-  if (error.cause) {
-    return [error, ...getCauseStack(error.cause)]
-  } else {
-    return [error]
-  }
-}
-
 class Event {
   constructor (errorClass, errorMessage, stacktrace = [], handledState = defaultHandledState(), originalError) {
     this.apiKey = undefined
@@ -156,6 +130,32 @@ const defaultHandledState = () => ({
 })
 
 const ensureString = (str) => typeof str === 'string' ? str : ''
+
+function createBugsnagError (errorClass, errorMessage, type, stacktrace) {
+  return {
+    errorClass: ensureString(errorClass),
+    errorMessage: ensureString(errorMessage),
+    type,
+    stacktrace: reduce(stacktrace, (accum, frame) => {
+      const f = formatStackframe(frame)
+      // don't include a stackframe if none of its properties are defined
+      try {
+        if (JSON.stringify(f) === '{}') return accum
+        return accum.concat(f)
+      } catch (e) {
+        return accum
+      }
+    }, [])
+  }
+}
+
+function getCauseStack (error) {
+  if (error.cause) {
+    return [error, ...getCauseStack(error.cause)]
+  } else {
+    return [error]
+  }
+}
 
 // Helpers
 
