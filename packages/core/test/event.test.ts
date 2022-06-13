@@ -1,14 +1,6 @@
 import ErrorStackParser from 'error-stack-parser'
 import Event from '../event'
 
-const causeIsAvailable = () => {
-  const err = new Error()
-  // @ts-ignore
-  err.cause = 'This is a cause'
-  // @ts-ignore
-  return !!err.cause
-}
-
 jest.mock('stack-generator', () => ({
   backtrace: () => [{}, {}]
 }))
@@ -345,51 +337,49 @@ describe('@bugsnag/core/event', () => {
   })
 
   describe('Event.create()', () => {
-    if (causeIsAvailable()) {
-      it('includes causes in the exceptions array', () => {
-        const cause = new Error('I am the cause')
-        // @ts-ignore
-        const err = new Error('I am the error', { cause })
-        // @ts-ignore
-        const event = Event.create(err, true, undefined, 'notify()', 0)
-        expect(event.errors.length).toBe(2)
-        expect(event.errors).toContainEqual({
-          errorClass: 'Error',
-          errorMessage: 'I am the cause',
-          stacktrace: [],
-          type: 'browserjs'
-        })
+    it('includes causes in the exceptions array', () => {
+      const err = new Error('I am the error')
+      // @ts-ignore
+      err.cause = new Error('I am the cause')
+      // @ts-ignore
+      const event = Event.create(err, true, undefined, 'notify()', 0)
+      expect(event.errors.length).toBe(2)
+      expect(event.errors).toContainEqual({
+        errorClass: 'Error',
+        errorMessage: 'I am the cause',
+        stacktrace: [],
+        type: 'browserjs'
       })
+    })
 
-      it('converts a string cause into an exception', () => {
-        const cause = 'I am not a real cause'
-        // @ts-ignore
-        const err = new Error('I am the error', { cause })
-        // @ts-ignore
-        const event = Event.create(err, true, undefined, '', 0)
-        expect(event.errors.length).toBe(2)
-        expect(event.errors).toContainEqual({
-          errorClass: 'Error',
-          errorMessage: 'I am not a real cause',
-          stacktrace: [],
-          type: 'browserjs'
-        })
+    it('converts a string cause into an exception', () => {
+      const err = new Error('I am the error')
+      // @ts-ignore
+      err.cause = 'I am not a real cause'
+      // @ts-ignore
+      const event = Event.create(err, true, undefined, '', 0)
+      expect(event.errors.length).toBe(2)
+      expect(event.errors).toContainEqual({
+        errorClass: 'Error',
+        errorMessage: 'I am not a real cause',
+        stacktrace: [],
+        type: 'browserjs'
       })
+    })
 
-      it('handles invalid cause errors', () => {
-        const cause = { error: 'I am not a real cause' }
-        // @ts-ignore
-        const err = new Error('I am the error', { cause })
-        // @ts-ignore
-        const event = Event.create(err, true, undefined, '', 0)
-        expect(event.errors.length).toBe(2)
-        expect(event.errors).toContainEqual({
-          errorClass: 'InvalidError',
-          errorMessage: 'error cause was a non-error. See "error cause" tab for more detail.',
-          stacktrace: [],
-          type: 'browserjs'
-        })
+    it('handles invalid cause errors', () => {
+      const err = new Error('I am the error')
+      // @ts-ignore
+      err.cause = { error: 'I am not a real cause' }
+      // @ts-ignore
+      const event = Event.create(err, true, undefined, '', 0)
+      expect(event.errors.length).toBe(2)
+      expect(event.errors).toContainEqual({
+        errorClass: 'InvalidError',
+        errorMessage: 'error cause was a non-error. See "error cause" tab for more detail.',
+        stacktrace: [],
+        type: 'browserjs'
       })
-    }
+    })
   })
 })
