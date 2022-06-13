@@ -1,15 +1,15 @@
 /**
- * Client Test 5
+ * Client scenario 5
  * 
  * An Error is thrown from an event handler.
  */
 
-const Test5 = () => (
+const Scenario5 = () => (
   <>
-    <h1>Client Test 5</h1>
+    <h1>Client scenario 5</h1>
     <button
       onClick={() => {
-        throw new Error('Client Test 5')
+        throw new Error('Client scenario 5')
       }}
     >
       Click me to throw an Error
@@ -17,4 +17,4 @@ const Test5 = () => (
   </>
 )
 
-export default Test5
+export default Scenario5

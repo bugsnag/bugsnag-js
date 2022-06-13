@@ -1,5 +1,5 @@
 /**
- * API Test 3
+ * API scenario 3
  * 
  * API has has an exception in its request handler.
  */
@@ -11,7 +11,7 @@ const serverlessHandler = getServerlessHandler()
 
 
 function work() {
-  throw new Error('API Test 3')
+  throw new Error('API scenario 3')
 }
 
 async function handler(req, res) {

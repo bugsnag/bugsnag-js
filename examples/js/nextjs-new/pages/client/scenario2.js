@@ -1,5 +1,5 @@
 /**
- * Client Test 2
+ * Client scenario 2
  * 
  *There is a top-of-module exception. _error.js should render.
  */
@@ -12,11 +12,11 @@
 const env = process.env
 const isProd = env.NODE_ENV === 'production'
 
-const Test2 = () => (
+const Scenario2 = () => (
   <>
-    <h1>Client Test 2</h1>
+    <h1>Client scenario 2</h1>
     <p>isProd: {isProd}</p>
   </>
 )
 
-export default Test2
+export default Scenario2

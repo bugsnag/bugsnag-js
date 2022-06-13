@@ -1,5 +1,5 @@
 /**
- * API Test 4
+ * API scenario 4
  * 
  * API uses a try/catch to handle an exception and records it.
  */
@@ -12,7 +12,7 @@ const serverlessHandler = getServerlessHandler()
 
 async function handler(req, res) {
   try {
-    throw new Error('API Test 4')
+    throw new Error('API scenario 4')
   } catch (error) {
     Bugsnag.notify(error)
   }

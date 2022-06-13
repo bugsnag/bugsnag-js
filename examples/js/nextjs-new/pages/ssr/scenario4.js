@@ -1,16 +1,16 @@
 /**
- * SSR Test 4
+ * SSR scenario 4
  * 
  * getServerSideProps manually captures an exception from a try/catch.
  */
 
 import Bugsnag from '@bugsnag/js'
 
-const Test4 = () => <h1>SSR Test 4</h1>
+const Scenario4 = () => <h1>SSR scenario 4</h1>
 
 export async function getServerSideProps() {
   try {
-    throw new Error('SSR Test 4')
+    throw new Error('SSR scenario 4')
   } catch (error) {
     Bugsnag.notify(error, (event) => {
       event.severity = 'error';
@@ -25,4 +25,4 @@ export async function getServerSideProps() {
   return { props: {} }
 }
 
-export default Test4
+export default Scenario4

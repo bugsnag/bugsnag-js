@@ -4,7 +4,7 @@ This is an example project showing how to use the `@bugsnag/js` notifier to trac
 
 This example covers various different scenarios where errors can occur in a next.js project. Currently not all scenarios are captured by Bugsnag.
 
-Note: Exceptions in development mode take a different path than in production. These tests should be run on a production build deployed to Vercel.
+Note: Exceptions in development mode take a different path than in production. These scenarios should be run on a production build deployed to Vercel.
 
 ## Configuration
 
@@ -17,35 +17,35 @@ Note: Exceptions in development mode take a different path than in production. T
 
 | Test          | Description                                                                                                                                                                    |
 |---------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| /api/test1    | API has a top-of-module Promise that rejects, but its result is not awaited.                                                                                                   |
-| /api/test2    | API has a top-of-module exception.                                                                                                                                             |
-| /api/test3    | API has has an exception in its request handler.                                                                                                                               |
-| /api/test4    | API uses a try/catch to handle an exception and records it.                                                                                                                    |
-| /ssr/test1    | getServerSideProps throws an Error.                                                                                                                                            |
-| /ssr/test2    | getServerSideProps returns a Promise that rejects.                                                                                                                             |
-| /ssr/test3    | getServerSideProps calls a Promise that rejects, but does not handle the rejection or await its result (returning synchronously).                                              |
-| /ssr/test4    | getServerSideProps manually captures an exception from a try/catch.                                                                                                            |
-| /client/test1 | There is a top-of-module Promise that rejects, but its result is not awaited.                                                                                                  |
-| /client/test2 | There is a top-of-module exception. _error.js should render.                                                                                                                   |
-| /client/test3 | There is an exception during React lifecycle that is caught by Next.js's React Error Boundary. In this case, when the component mounts. This should cause _error.js to render. |
-| /client/test4 | There is an unhandled Promise rejection during React lifecycle. In this case, when the component mounts.                                                                       |
-| /client/test5 | An Error is thrown from an event handler.                                                                                                                                      |
+| /api/scenario1    | API has a top-of-module Promise that rejects, but its result is not awaited.                                                                                                   |
+| /api/scenario2    | API has a top-of-module exception.                                                                                                                                             |
+| /api/scenario3    | API has has an exception in its request handler.                                                                                                                               |
+| /api/scenario4    | API uses a try/catch to handle an exception and records it.                                                                                                                    |
+| /ssr/scenario1    | getServerSideProps throws an Error.                                                                                                                                            |
+| /ssr/scenario2    | getServerSideProps returns a Promise that rejects.                                                                                                                             |
+| /ssr/scenario3    | getServerSideProps calls a Promise that rejects, but does not handle the rejection or await its result (returning synchronously).                                              |
+| /ssr/scenario4    | getServerSideProps manually captures an exception from a try/catch.                                                                                                            |
+| /client/scenario1 | There is a top-of-module Promise that rejects, but its result is not awaited.                                                                                                  |
+| /client/scenario2 | There is a top-of-module exception. _error.js should render.                                                                                                                   |
+| /client/scenario3 | There is an exception during React lifecycle that is caught by Next.js's React Error Boundary. In this case, when the component mounts. This should cause _error.js to render. |
+| /client/scenario4 | There is an unhandled Promise rejection during React lifecycle. In this case, when the component mounts.                                                                       |
+| /client/scenario5 | An Error is thrown from an event handler.                                                                                                                                      |
 
 ## Known Issues
 
 ## Errors are not captured in some scenarios
 
 With a local production build (`npm run build && npm start`):
-- API Test 2 fails
-- Client Test 1 fails
+- API scenario 2 fails
+- Client scenario 1 fails
 
 When deployed to Vercel:
-- API Test 1, API Test 2 and API Test 4 fail
-- All of the SSR tests fail
+- API scenario 1, API scenario 2 and API scenario 4 fail
+- All of the SSR scenarios fail
 
 ## Session started twice on page load
 
-This is because Next.js triggers a router change (`window.history.replaceState`) following load and so two requests to sessions.bugsnag.com can be seen on page load.
+This is because nextjs calls `replaceState` following load and so two requests to sessions.bugsnag.com can be seen on page load. We plan to stop `replaceState` from triggering a session by default. In the meantime you can prevent this behaviour by disabling automatic session management and implementing it yourself as required.
 
 ## Source maps
 

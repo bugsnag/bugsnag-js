@@ -1,5 +1,5 @@
 /**
- * API Test 2
+ * API scenario 2
  * 
  * API has a top-of-module exception.
  */
@@ -10,7 +10,7 @@ start();
 const serverlessHandler = getServerlessHandler()
 
 function work() {
-  throw new Error('API Test 2')
+  throw new Error('API scenario 2')
 }
 
 work()
