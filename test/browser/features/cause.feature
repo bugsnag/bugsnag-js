@@ -2,6 +2,7 @@ Feature: Error.cause
 
 Scenario: Error thrown with an assigned Error cause property  
   When I navigate to the test URL "/cause/script/property.html"
+  And the test should run in this browser
   And I wait to receive an error
   Then the error is a valid browser payload for the error reporting API
   And the error payload field "events.0.exceptions.0.errorClass" equals "Error"
