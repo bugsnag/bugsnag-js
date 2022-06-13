@@ -380,6 +380,7 @@ describe('@bugsnag/core/event', () => {
         stacktrace: [],
         type: 'browserjs'
       })
+      expect(event.getMetadata('error cause')).toEqual({ error: 'I am not a real cause' })
     })
   })
 })
