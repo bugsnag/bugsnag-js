@@ -38,6 +38,26 @@ Before('@skip_ie_9') do |scenario|
   skip_this_scenario unless browser != "ie_9"
 end
 
+Before('@skip_ie_10') do |scenario|
+  browser = Maze.config.browser
+  skip_this_scenario unless browser != "ie_10"
+end
+
+Before('@skip_ie_11') do |scenario|
+  browser = Maze.config.browser
+  skip_this_scenario unless browser != "ie_11"
+end
+
+Before('@skip_safari_6') do |scenario|
+  browser = Maze.config.browser
+  skip_this_scenario unless browser != "safari_6"
+end
+
+Before('@skip_firefox_30') do |scenario|
+  browser = Maze.config.browser
+  skip_this_scenario unless browser != "firefox_30"
+end
+
 BeforeAll do
   Maze.config.receive_no_requests_wait = 15
   Maze.config.enforce_bugsnag_integrity = false
