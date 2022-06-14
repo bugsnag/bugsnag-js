@@ -20,7 +20,7 @@ The following environment variables need to be set:
 - `HOST` - the test fixture host, typically `localhost`
 - `API_HOST` - the MazeRunner mock server host, typically `localhost`
 
-The browsers available to test on are the keys in [`browsers.yml`](https://github.com/bugsnag/maze-runner/blob/master/lib/maze/browsers.yml).
+The browsers available to test on are the keys in [`browsers.yml`](https://github.com/bugsnag/maze-runner/blob/main/lib/maze/browsers_bs.yml).
 
 To run all the tests, run the following in `test/browser`:
 
