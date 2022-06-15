@@ -14,7 +14,7 @@ Scenario: Error thrown with an assigned Error cause property
   And the error payload field "events.0.exceptions.1.errorClass" equals "Error"
   And the error payload field "events.0.exceptions.1.message" equals "I am the cause"
   And the error payload field "events.0.exceptions.1.type" equals "browserjs"
-  And the error payload field "events.0.exceptions.1.stacktrace" is an array with 0 elements
+  And the error payload field "events.0.exceptions.1.stacktrace" is a non-empty array
 
 Scenario: Error thrown with an Error cause in the constructor  
   When I navigate to the test URL "/cause/script/constructor.html"
@@ -29,4 +29,4 @@ Scenario: Error thrown with an Error cause in the constructor
   And the error payload field "events.0.exceptions.1.errorClass" equals "Error"
   And the error payload field "events.0.exceptions.1.message" equals "I am the cause"
   And the error payload field "events.0.exceptions.1.type" equals "browserjs"
-  And the error payload field "events.0.exceptions.1.stacktrace" is an array with 0 elements
+  And the error payload field "events.0.exceptions.1.stacktrace" is a non-empty array
