@@ -196,14 +196,14 @@ Event.create = function (maybeError, tolerateNonErrors, handledState, component,
   if (error.cause) {
     const causes = getCauseStack(maybeError).slice(1)
     const normalisedCauses = map(causes, (cause) => {
+      // Only get stacktrace for error causes that are a valid JS Error and already have a stack
+      const stacktrace = (isError(cause) && hasStack(cause)) ? ErrorStackParser.parse(cause) : []
       const [error] = normaliseError(cause, true, 'error cause')
-      if (error.name === 'InvalidError') {
-        event.addMetadata('error cause', makeSerialisable(cause))
-      }
-      return error
+      if (error.name === 'InvalidError') event.addMetadata('error cause', makeSerialisable(cause))
+      return createBugsnagError(error.name, error.message, Event.__type, stacktrace)
     })
-    const causeErrors = map(normalisedCauses, (cause) => createBugsnagError(cause.name, cause.message, Event.__type, [])) // do not include stacktrace for error causes
-    event.errors.push(...causeErrors)
+
+    event.errors.push(...normalisedCauses)
   }
 
   return event
