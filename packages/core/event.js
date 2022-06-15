@@ -196,7 +196,7 @@ Event.create = function (maybeError, tolerateNonErrors, handledState, component,
   if (error.cause) {
     const causes = getCauseStack(maybeError).slice(1)
     const normalisedCauses = map(causes, (cause) => {
-      const [error] = normaliseError(cause, tolerateNonErrors, 'error cause')
+      const [error] = normaliseError(cause, true, 'error cause')
       if (error.name === 'InvalidError') {
         event.addMetadata('error cause', makeSerialisable(cause))
       }
