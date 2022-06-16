@@ -5,6 +5,7 @@
 ### Changed
 
 - (react-native) Update bugsnag-cocoa from v6.16.1 to [v6.18.0](https://github.com/bugsnag/bugsnag-cocoa/blob/master/CHANGELOG.md#6180-2022-06-08)
+- (plugin-react-native-unhandled-rejection) Update handler to catch unhandled rejections when using hermes [#1757](https://github.com/bugsnag/bugsnag-js/pull/1757)
 
 ## v7.16.7 (2022-05-31)
 
