@@ -43,7 +43,7 @@ When deployed to Vercel:
 - API scenario 1, API scenario 2 and API scenario 4 fail
 - All of the SSR scenarios fail
 
-## Session started twice on page load
+### Session started twice on page load
 
 This is because nextjs calls `replaceState` following load and so two requests to sessions.bugsnag.com can be seen on page load. We plan to stop `replaceState` from triggering a session by default. In the meantime you can prevent this behaviour by disabling automatic session management and implementing it yourself as required.
 
