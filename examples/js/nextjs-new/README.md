@@ -47,7 +47,7 @@ When deployed to Vercel:
 
 This is because nextjs calls `replaceState` following load and so two requests to sessions.bugsnag.com can be seen on page load. We plan to stop `replaceState` from triggering a session by default. In the meantime you can prevent this behaviour by disabling automatic session management and implementing it yourself as required.
 
-## Source maps
+### Source maps
 
 - No source maps for server-side code. It doesn't look like next.js generates these anyway.
 - Events generated on the server have source map warnings. This is to do with the project type used in Bugsnag. If a node project type is used then the source map warnings are not shown. It's also possible to avoid this by having separate projects for client and server events (by providing two different API keys).
