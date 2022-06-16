@@ -1,6 +1,6 @@
 # Next.js
 
-This is an example project showing how to use the `@bugsnag/js` notifier to track server, browser, and Vercel serverless errors on a Next.js project.
+This is an example project showing how to use the `@bugsnag/js` notifier to track browser and Vercel serverless errors on a Next.js project. Custom servers are not supported due to the potential for data leakage between concurrent requests.
 
 This example covers various different scenarios where errors can occur in a next.js project. Currently not all scenarios are captured by Bugsnag.
 
