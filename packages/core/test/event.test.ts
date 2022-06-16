@@ -391,10 +391,11 @@ describe('@bugsnag/core/event', () => {
       expect(event.getMetadata('error cause')).toEqual({ error: 'I am not a real cause' })
     })
 
-    it('handles invalid cause errors regardless of tolerateNonErrors', () => {
+    it('tolerates non-errors regardless of tolerateNonErrors being true/false', () => {
       const err = new Error('I am the error')
       // @ts-ignore
       err.cause = 'I am not a real cause'
+
       // @ts-ignore
       const event = Event.create(err, false, undefined, '', 0)
       expect(event.getMetadata('error cause')).toBeUndefined()
