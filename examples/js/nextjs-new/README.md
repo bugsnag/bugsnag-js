@@ -33,7 +33,7 @@ Note: Exceptions in development mode take a different path than in production. T
 
 ## Known Issues
 
-## Errors are not captured in some scenarios
+### Errors are not captured in some scenarios
 
 With a local production build (`npm run build && npm start`):
 - API scenario 2 fails
