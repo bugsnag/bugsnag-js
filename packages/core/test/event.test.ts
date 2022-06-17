@@ -363,22 +363,22 @@ describe('@bugsnag/core/event', () => {
     it('converts a string cause into an exception', () => {
       const err = new Error('I am the error')
       // @ts-ignore
-      err.cause = 'I am not a real cause'
+      err.cause = 'I am the cause'
       // @ts-ignore
       const event = Event.create(err, true, undefined, 'notify()', 0)
       expect(event.errors.length).toBe(2)
       expect(event.errors).toContainEqual({
         errorClass: 'Error',
-        errorMessage: 'I am not a real cause',
+        errorMessage: 'I am the cause',
         stacktrace: [],
         type: 'browserjs'
       })
     })
 
     it('handles invalid cause errors', () => {
-      const err = new Error('I am the error')
+      const err = new Error('I am an error')
       // @ts-ignore
-      err.cause = { error: 'I am not a real cause' }
+      err.cause = { error: 'I am not an Error' }
       // @ts-ignore
       const event = Event.create(err, true, undefined, '', 0)
       expect(event.errors.length).toBe(2)
@@ -388,13 +388,13 @@ describe('@bugsnag/core/event', () => {
         stacktrace: [],
         type: 'browserjs'
       })
-      expect(event.getMetadata('error cause')).toEqual({ error: 'I am not a real cause' })
+      expect(event.getMetadata('error cause')).toEqual({ error: 'I am not an Error' })
     })
 
-    it('tolerates non-errors regardless of tolerateNonErrors being true/false', () => {
-      const err = new Error('I am the error')
+    it('tolerates non-error causes regardless of tolerateNonErrors being true/false', () => {
+      const err = new Error('I am an error')
       // @ts-ignore
-      err.cause = 'I am not a real cause'
+      err.cause = 'I am not an Error'
 
       // @ts-ignore
       const event = Event.create(err, false, undefined, '', 0)
