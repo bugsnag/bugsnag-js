@@ -33,21 +33,7 @@ class Event {
     this._session = undefined
 
     this.errors = [
-      {
-        errorClass: ensureString(errorClass),
-        errorMessage: ensureString(errorMessage),
-        type: Event.__type,
-        stacktrace: reduce(stacktrace, (accum, frame) => {
-          const f = formatStackframe(frame)
-          // don't include a stackframe if none of its properties are defined
-          try {
-            if (JSON.stringify(f) === '{}') return accum
-            return accum.concat(f)
-          } catch (e) {
-            return accum
-          }
-        }, [])
-      }
+      createBugsnagError(errorClass, errorMessage, Event.__type, stacktrace)
     ]
 
     // Flags.
@@ -145,6 +131,32 @@ const defaultHandledState = () => ({
 
 const ensureString = (str) => typeof str === 'string' ? str : ''
 
+function createBugsnagError (errorClass, errorMessage, type, stacktrace) {
+  return {
+    errorClass: ensureString(errorClass),
+    errorMessage: ensureString(errorMessage),
+    type,
+    stacktrace: reduce(stacktrace, (accum, frame) => {
+      const f = formatStackframe(frame)
+      // don't include a stackframe if none of its properties are defined
+      try {
+        if (JSON.stringify(f) === '{}') return accum
+        return accum.concat(f)
+      } catch (e) {
+        return accum
+      }
+    }, [])
+  }
+}
+
+function getCauseStack (error) {
+  if (error.cause) {
+    return [error, ...getCauseStack(error.cause)]
+  } else {
+    return [error]
+  }
+}
+
 // Helpers
 
 Event.getStacktrace = function (error, errorFramesToSkip, backtraceFramesToSkip) {
@@ -181,6 +193,19 @@ Event.create = function (maybeError, tolerateNonErrors, handledState, component,
   if (error.name === 'InvalidError') {
     event.addMetadata(`${component}`, 'non-error parameter', makeSerialisable(maybeError))
   }
+  if (error.cause) {
+    const causes = getCauseStack(error).slice(1)
+    const normalisedCauses = map(causes, (cause) => {
+      // Only get stacktrace for error causes that are a valid JS Error and already have a stack
+      const stacktrace = (isError(cause) && hasStack(cause)) ? ErrorStackParser.parse(cause) : []
+      const [error] = normaliseError(cause, true, 'error cause')
+      if (error.name === 'InvalidError') event.addMetadata('error cause', makeSerialisable(cause))
+      return createBugsnagError(error.name, error.message, Event.__type, stacktrace)
+    })
+
+    event.errors.push(...normalisedCauses)
+  }
+
   return event
 }
 
@@ -195,8 +220,9 @@ const normaliseError = (maybeError, tolerateNonErrors, component, logger) => {
   let internalFrames = 0
 
   const createAndLogInputError = (reason) => {
-    if (logger) logger.warn(`${component} received a non-error: "${reason}"`)
-    const err = new Error(`${component} received a non-error. See "${component}" tab for more detail.`)
+    const verb = (component === 'error cause' ? 'was' : 'received')
+    if (logger) logger.warn(`${component} ${verb} a non-error: "${reason}"`)
+    const err = new Error(`${component} ${verb} a non-error. See "${component}" tab for more detail.`)
     err.name = 'InvalidError'
     return err
   }

@@ -2,6 +2,10 @@
 
 ## TBD
 
+### Added
+
+- Support `Error.cause` [#1759](https://github.com/bugsnag/bugsnag-js/pull/1759)
+
 ### Changed
 
 - (react-native) Update bugsnag-cocoa from v6.16.1 to [v6.18.0](https://github.com/bugsnag/bugsnag-cocoa/blob/master/CHANGELOG.md#6180-2022-06-08)
