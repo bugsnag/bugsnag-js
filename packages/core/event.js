@@ -194,7 +194,7 @@ Event.create = function (maybeError, tolerateNonErrors, handledState, component,
     event.addMetadata(`${component}`, 'non-error parameter', makeSerialisable(maybeError))
   }
   if (error.cause) {
-    const causes = getCauseStack(maybeError).slice(1)
+    const causes = getCauseStack(error).slice(1)
     const normalisedCauses = map(causes, (cause) => {
       // Only get stacktrace for error causes that are a valid JS Error and already have a stack
       const stacktrace = (isError(cause) && hasStack(cause)) ? ErrorStackParser.parse(cause) : []
