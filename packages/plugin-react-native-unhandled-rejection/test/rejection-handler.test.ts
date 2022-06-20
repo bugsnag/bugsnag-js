@@ -9,7 +9,7 @@ import RnPromise from 'promise/setimmediate'
 beforeEach(() => {
   // @ts-ignore
   global.__DEV__ = true
-  jest.spyOn(console, 'warn').mockImplementation(() => {})
+  jest.spyOn(console, 'warn').mockImplementation(() => { })
 })
 
 afterEach(() => {
@@ -35,7 +35,7 @@ describe('plugin: react native rejection handler', () => {
           done()
         }, 0)
       },
-      sendSession: () => {}
+      sendSession: () => { }
     }))
     const stop = plugin.load(c)
     // in the interests of keeping the tests quick, TypeErrors get rejected quicker
@@ -49,6 +49,71 @@ describe('plugin: react native rejection handler', () => {
     stop()
   })
 
+  it('should hook in to the hermes promise rejection tracker', (done) => {
+    // @ts-ignore
+    global.HermesInternal = {
+      hasPromise: jest.fn().mockReturnValue(true),
+      enablePromiseRejectionTracker: jest.fn()
+    }
+
+    expect.assertions(10)
+
+    const c = new Client({ apiKey: 'api_key' })
+    c._setDelivery(client => ({
+      sendEvent: (payload) => {
+        const r = JSON.parse(JSON.stringify(payload))
+        expect(r).toBeTruthy()
+
+        expect(r.events[0].exceptions[0].errorClass).toBe('Error')
+        expect(r.events[0].exceptions[0].errorMessage).toBe('This is an unhandled promise')
+        expect(r.events[0].exceptions[0].type).toBe('browserjs')
+        expect(r.events[0].exceptions[0]).toHaveProperty('stacktrace')
+        expect(r.events[0].severity).toBe('error')
+        expect(r.events[0].severityReason).toEqual({ type: 'unhandledPromiseRejection' })
+        expect(r.events[0].unhandled).toBe(true)
+        setTimeout(() => {
+          expect(console.warn).toHaveBeenCalledWith(expect.stringContaining('Possible Unhandled Promise Rejection'))
+
+          // @ts-ignore
+          delete global.HermesInternal
+
+          done()
+        })
+      },
+      sendSession: () => { }
+    }))
+
+    plugin.load(c)
+
+    // @ts-ignore
+    expect(global.HermesInternal.enablePromiseRejectionTracker).toHaveBeenCalledWith({
+      allRejections: true,
+      onUnhandled: expect.any(Function)
+    })
+
+    // @ts-ignore
+    const onUnhandled = global.HermesInternal.enablePromiseRejectionTracker.mock.calls[0][0].onUnhandled
+    const rejection = new Error('This is an unhandled promise')
+    onUnhandled('someid', rejection)
+  })
+
+  it('should not try to hook in to hermes if not present', () => {
+    // @ts-ignore
+    global.HermesInternal = {
+      hasPromise: jest.fn().mockReturnValue(false),
+      enablePromiseRejectionTracker: jest.fn()
+    }
+
+    const c = new Client({ apiKey: 'api_key' })
+    plugin.load(c)
+
+    // @ts-ignore
+    expect(global.HermesInternal?.enablePromiseRejectionTracker).not.toHaveBeenCalled()
+
+    // @ts-ignore
+    delete global.HermesInternal
+  })
+
   it('should be disabled when autoDetectErrors=false', (done) => {
     expect.assertions(0)
 
@@ -57,7 +122,7 @@ describe('plugin: react native rejection handler', () => {
       sendEvent: (payload) => {
         done(new Error('event should not be sent when autoDetectErrors=false'))
       },
-      sendSession: () => {}
+      sendSession: () => { }
     }))
     const stop = plugin.load(c)
     try {
@@ -81,7 +146,7 @@ describe('plugin: react native rejection handler', () => {
       sendEvent: (payload) => {
         done(new Error('event should not be sent when enabledErrorTypes.unhandledRejections=false'))
       },
-      sendSession: () => {}
+      sendSession: () => { }
     }))
     const stop = plugin.load(c)
     try {

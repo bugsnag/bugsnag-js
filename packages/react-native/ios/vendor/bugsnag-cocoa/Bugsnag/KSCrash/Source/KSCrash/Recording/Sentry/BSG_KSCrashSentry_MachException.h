@@ -34,8 +34,13 @@
 extern "C" {
 #endif
 
+#include "BSGDefines.h"
+
+#if BSG_HAVE_MACH_EXCEPTIONS
+
 #include "BSG_KSCrashSentry.h"
 #include <stdbool.h>
+#include <TargetConditionals.h>
 
 /** Install our custom mach exception handler.
  *
@@ -51,6 +56,8 @@ void bsg_kscrashsentry_uninstallMachHandler(void);
 
 #ifdef __cplusplus
 }
+#endif
+
 #endif
 
 #endif // HDR_KSCrashSentry_MachException_h

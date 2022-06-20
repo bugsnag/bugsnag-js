@@ -68,10 +68,21 @@ typedef NS_ENUM(NSInteger, BSGThreadSendPolicy) {
 };
 
 /**
+ * Types of telemetry that may be sent to Bugsnag for product improvement purposes.
+ */
+typedef NS_OPTIONS(NSUInteger, BSGTelemetryOptions) {
+
+    /**
+     * Errors within the Bugsnag SDK.
+     */
+    BSGTelemetryInternalErrors = (1UL << 0),
+};
+
+/**
  * Setting `BugsnagConfiguration.appHangThresholdMillis` to this value disables the reporting of
  * app hangs that ended before the app was terminated.
  */
-extern const NSUInteger BugsnagAppHangThresholdFatalOnly;
+extern const NSUInteger BugsnagAppHangThresholdFatalOnly API_UNAVAILABLE(watchos);
 
 /**
  *  A configuration block for modifying an error report
@@ -216,7 +227,7 @@ typedef id<NSObject> BugsnagOnSessionRef;
  * BSGThreadSendPolicyNever to disable or BSGThreadSendPolicyUnhandledOnly
  * to only do so for unhandled errors.
  */
-@property (nonatomic) BSGThreadSendPolicy sendThreads;
+@property (nonatomic) BSGThreadSendPolicy sendThreads API_UNAVAILABLE(watchos);
 
 /**
  *  Optional handler invoked when an error or crash occurs
@@ -238,7 +249,7 @@ typedef id<NSObject> BugsnagOnSessionRef;
  * By default this is `BugsnagAppHangThresholdFatalOnly`, and can be set to a minimum of 250
  * milliseconds.
  */
-@property (nonatomic) NSUInteger appHangThresholdMillis;
+@property (nonatomic) NSUInteger appHangThresholdMillis API_UNAVAILABLE(watchos);
 
 /**
  * Determines whether app sessions should be tracked automatically. By default this value is true.
@@ -314,10 +325,6 @@ typedef id<NSObject> BugsnagOnSessionRef;
  * Defaults to True.
  */
 @property (nonatomic) BOOL persistUser;
-
-// -----------------------------------------------------------------------------
-// MARK: - Methods
-// -----------------------------------------------------------------------------
 
 /**
  * A class defining the types of error that are reported. By default,
@@ -444,6 +451,17 @@ typedef id<NSObject> BugsnagOnSessionRef;
 - (void)removeOnBreadcrumbBlock:(BugsnagOnBreadcrumbBlock)block
     BSG_DEPRECATED_WITH_REPLACEMENT("removeOnBreadcrumb:")
     NS_SWIFT_NAME(removeOnBreadcrumb(block:));
+
+// =============================================================================
+// MARK: - Telemetry
+// =============================================================================
+
+/**
+ * The types of telemetry that may be sent to Bugsnag for product improvement purposes.
+ *
+ * By default all types of telemetry are enabled.
+ */
+@property (nonatomic) BSGTelemetryOptions telemetry;
 
 // =============================================================================
 // MARK: - Plugins

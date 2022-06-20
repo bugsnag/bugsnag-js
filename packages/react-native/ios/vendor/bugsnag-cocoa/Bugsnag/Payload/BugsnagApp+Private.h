@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (BugsnagApp *)appWithDictionary:(NSDictionary *)event config:(BugsnagConfiguration *)config codeBundleId:(NSString *)codeBundleId;
 
-+ (BugsnagApp *)deserializeFromJson:(NSDictionary *)json;
++ (BugsnagApp *)deserializeFromJson:(nullable NSDictionary *)json;
 
 + (void)populateFields:(BugsnagApp *)app dictionary:(NSDictionary *)event config:(BugsnagConfiguration *)config codeBundleId:(NSString *)codeBundleId;
 

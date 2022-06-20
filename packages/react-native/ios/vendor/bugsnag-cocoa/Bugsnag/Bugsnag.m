@@ -26,13 +26,13 @@
 
 #import "Bugsnag.h"
 
+#import "BSGKeys.h"
 #import "BSG_KSCrash.h"
 #import "Bugsnag+Private.h"
 #import "BugsnagBreadcrumbs.h"
 #import "BugsnagLogger.h"
 #import "BugsnagClient+Private.h"
 #import "BugsnagConfiguration+Private.h"
-#import "BugsnagKeys.h"
 #import "BugsnagMetadata+Private.h"
 #import "BugsnagPlugin.h"
 #import "BugsnagHandledState.h"

@@ -27,6 +27,7 @@
 #include "BSG_KSBacktrace_Private.h"
 
 #include "BSG_KSMach.h"
+#include "BSGDefines.h"
 
 /**
  * Mask to strip pointer authentication codes from pointers on Arm64e
@@ -170,6 +171,7 @@ int bsg_ksbt_backtraceThreadState(
     return i;
 }
 
+#if BSG_HAVE_MACH_THREADS
 int bsg_ksbt_backtraceThread(const thread_t thread,
                              uintptr_t *const backtraceBuffer,
                              const int maxEntries) {
@@ -182,22 +184,7 @@ int bsg_ksbt_backtraceThread(const thread_t thread,
     return bsg_ksbt_backtraceThreadState(&machineContext, backtraceBuffer, 0,
                                          maxEntries);
 }
-
-int bsg_ksbt_backtracePthread(const pthread_t thread,
-                              uintptr_t *const backtraceBuffer,
-                              const int maxEntries) {
-    const thread_t mach_thread = bsg_ksmachmachThreadFromPThread(thread);
-    if (mach_thread == 0) {
-        return 0;
-    }
-    return bsg_ksbt_backtraceThread(mach_thread, backtraceBuffer, maxEntries);
-}
-
-int bsg_ksbt_backtraceSelf(uintptr_t *const backtraceBuffer,
-                           const int maxEntries) {
-    return bsg_ksbt_backtraceThread(bsg_ksmachthread_self(), backtraceBuffer,
-                                    maxEntries);
-}
+#endif
 
 void bsg_ksbt_symbolicate(const uintptr_t *const backtraceBuffer,
                           struct bsg_symbolicate_result *symbolsBuffer, const int numEntries,

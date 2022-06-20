@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)deviceWithKSCrashReport:(NSDictionary *)event;
 
-+ (instancetype)deserializeFromJson:(NSDictionary *)json;
++ (instancetype)deserializeFromJson:(nullable NSDictionary *)json;
 
 + (void)populateFields:(BugsnagDevice *)device dictionary:(NSDictionary *)event;
 

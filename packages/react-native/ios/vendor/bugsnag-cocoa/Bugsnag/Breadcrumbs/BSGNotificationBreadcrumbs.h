@@ -1,5 +1,5 @@
 //
-//  BSGBreadcrumbsProducer.h
+//  BSGNotificationBreadcrumbs.h
 //  Bugsnag
 //
 //  Created by Nick Dowell on 10/12/2020.
@@ -12,7 +12,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-extern NSString * const BSGNotificationBreadcrumbsMessageAppWillTerminate;
+static NSString * const BSGNotificationBreadcrumbsMessageAppWillTerminate = @"App Will Terminate";
 
 @interface BSGNotificationBreadcrumbs : NSObject
 

@@ -11,15 +11,6 @@
 #import "BSGInternalErrorReporter.h"
 #import "BugsnagLogger.h"
 
-static void ReportInternalError(NSString *errorClass, NSError *error) {
-    NSString *file = @(__FILE__).lastPathComponent;
-    NSString *message = BSGErrorDescription(error);
-    NSString *groupingHash = [NSString stringWithFormat:@"%@: %@: %@ %ld", file, errorClass, error.domain, (long)error.code];
-    [BSGInternalErrorReporter performBlock:^(BSGInternalErrorReporter *reporter) {
-        [reporter reportErrorWithClass:errorClass message:message diagnostics:error.userInfo groupingHash:groupingHash];
-    }];
-}
-
 static BOOL ensureDirExists(NSString *path) {
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSError *error = nil;
@@ -27,7 +18,12 @@ static BOOL ensureDirExists(NSString *path) {
         bsg_log_err(@"Could not create directory %@: %@", path, error);
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
-            ReportInternalError(@"Could not create directory", error);
+            [BSGInternalErrorReporter performBlock:^(BSGInternalErrorReporter *reporter) {
+                [reporter reportErrorWithClass:@"Could not create directory"
+                                       context:path.lastPathComponent
+                                       message:BSGErrorDescription(error)
+                                   diagnostics:error.userInfo];
+            }];
         });
         return NO;
     }
@@ -94,11 +90,11 @@ static NSString *getAndCreateSubdir(NSString *rootPath, NSString *relativePath) 
         _sessions = getAndCreateSubdir(root, @"sessions");
         _breadcrumbs = getAndCreateSubdir(root, @"breadcrumbs");
         _kscrashReports = getAndCreateSubdir(root, @"KSCrashReports");
-        _kvStore = getAndCreateSubdir(root, @"kvstore");
         _appHangEvent = [root stringByAppendingPathComponent:@"app_hang.json"];
         _flagHandledCrash = [root stringByAppendingPathComponent:@"bugsnag_handled_crash.txt"];
         _configuration = [root stringByAppendingPathComponent:@"config.json"];
         _metadata = [root stringByAppendingPathComponent:@"metadata.json"];
+        _runContext = [root stringByAppendingPathComponent:@"run_context"];
         _state = [root stringByAppendingPathComponent:@"state.json"];
         _systemState = [root stringByAppendingPathComponent:@"system_state.json"];
     }

@@ -1,40 +1,39 @@
 //
-//  BugsnagCrashSentry.m
-//  Pods
+//  BSGCrashSentry.m
+//  Bugsnag
 //
 //  Created by Jamie Lynch on 11/08/2017.
 //
 //
 
+#import "BSGCrashSentry.h"
 
-#import "BugsnagCrashSentry.h"
-
+#import "BSGDefines.h"
 #import "BSGFileLocations.h"
-#import "BSG_KSCrashAdvanced.h"
+#import "BSG_KSCrash.h"
+#import "BSG_KSCrashC.h"
 #import "BSG_KSMach.h"
 #import "BugsnagConfiguration.h"
 #import "BugsnagErrorTypes.h"
 #import "BugsnagLogger.h"
 
-@implementation BugsnagCrashSentry
-
-- (void)install:(BugsnagConfiguration *)config onCrash:(BSGReportCallback)onCrash
-{
+void BSGCrashSentryInstall(BugsnagConfiguration *config, BSG_KSReportWriteCallback onCrash) {
     BSG_KSCrash *ksCrash = [BSG_KSCrash sharedInstance];
-    ksCrash.introspectMemory = NO;
-    ksCrash.onCrash = onCrash;
-    ksCrash.maxStoredReports = (int)config.maxPersistedEvents;
 
+    bsg_kscrash_setCrashNotifyCallback(onCrash);
+
+#if BSG_HAVE_MACH_THREADS
     // overridden elsewhere for handled errors, so we can assume that this only
     // applies to unhandled errors
-    ksCrash.threadTracingEnabled = config.sendThreads != BSGThreadSendPolicyNever;
+    bsg_kscrash_setThreadTracingEnabled(config.sendThreads != BSGThreadSendPolicyNever);
+#endif
 
     BSG_KSCrashType crashTypes = 0;
     if (config.autoDetectErrors) {
         if (bsg_ksmachisBeingTraced()) {
             bsg_log_info(@"Unhandled errors will not be reported because a debugger is attached");
         } else {
-            crashTypes = [self mapKSToBSGCrashTypes:config.enabledErrorTypes];
+            crashTypes = BSG_KSCrashTypeFromBugsnagErrorTypes(config.enabledErrorTypes);
         }
     }
 
@@ -53,12 +52,12 @@
  * @param errorTypes The enabled error types
  * @returns A BSG_KSCrashType equivalent (with the above caveats) to the input
  */
-- (BSG_KSCrashType)mapKSToBSGCrashTypes:(BugsnagErrorTypes *)errorTypes
-{
-    return (BSG_KSCrashType) ((errorTypes.unhandledExceptions ? BSG_KSCrashTypeNSException : 0)
-                    | (errorTypes.cppExceptions ? BSG_KSCrashTypeCPPException : 0)
-                    | (errorTypes.signals ? BSG_KSCrashTypeSignal : 0)
-                    | (errorTypes.machExceptions ? BSG_KSCrashTypeMachException : 0));
+BSG_KSCrashType BSG_KSCrashTypeFromBugsnagErrorTypes(BugsnagErrorTypes *errorTypes) {
+    return ((errorTypes.unhandledExceptions ?   BSG_KSCrashTypeNSException : 0)     |
+            (errorTypes.cppExceptions ?         BSG_KSCrashTypeCPPException : 0)    |
+#if !TARGET_OS_WATCH
+            (errorTypes.signals ?               BSG_KSCrashTypeSignal : 0)          |
+            (errorTypes.machExceptions ?        BSG_KSCrashTypeMachException : 0)   |
+#endif
+            0);
 }
-
-@end

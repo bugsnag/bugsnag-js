@@ -8,9 +8,9 @@
 
 #import "BugsnagAppWithState+Private.h"
 
+#import "BSGKeys.h"
 #import "BSG_KSCrashReportFields.h"
 #import "BugsnagApp+Private.h"
-#import "BugsnagKeys.h"
 
 @implementation BugsnagAppWithState
 
@@ -64,7 +64,7 @@
     app.durationInForeground = activeTimeSinceLaunch;
     app.duration = @([activeTimeSinceLaunch longValue] + [backgroundTimeSinceLaunch longValue]);
     app.inForeground = [stats[@BSG_KSCrashField_AppInFG] boolValue];
-    app.isLaunching = [[event valueForKeyPath:@"user.state.app.isLaunching"] boolValue];
+    app.isLaunching = [[event valueForKeyPath:@"user.isLaunching"] boolValue];
     [BugsnagApp populateFields:app dictionary:event config:config codeBundleId:codeBundleId];
     return app;
 }

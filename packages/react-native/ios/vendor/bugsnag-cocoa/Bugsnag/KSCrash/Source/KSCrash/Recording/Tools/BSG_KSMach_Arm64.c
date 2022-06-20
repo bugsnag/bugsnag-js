@@ -27,6 +27,7 @@
 #if defined(__arm64__)
 
 #include "BSG_KSMach.h"
+#include "BSGDefines.h"
 
 //#define BSG_KSLogger_LocalLevel TRACE
 #include "BSG_KSLogger.h"
@@ -46,24 +47,27 @@ static const int bsg_g_exceptionRegisterNamesCount =
 
 uintptr_t
 bsg_ksmachframePointer(const BSG_STRUCT_MCONTEXT_L *const machineContext) {
-    return machineContext->__ss.__fp;
+    // Must cast these because while the machine context always stores all registers
+    // as 64-bit, some watch devices are actually 64-bit with 32-bit addressing.
+    return (uintptr_t)machineContext->__ss.__fp;
 }
 
 uintptr_t
 bsg_ksmachstackPointer(const BSG_STRUCT_MCONTEXT_L *const machineContext) {
-    return machineContext->__ss.__sp;
+    return (uintptr_t)machineContext->__ss.__sp;
 }
 
 uintptr_t bsg_ksmachinstructionAddress(
     const BSG_STRUCT_MCONTEXT_L *const machineContext) {
-    return machineContext->__ss.__pc;
+    return (uintptr_t)machineContext->__ss.__pc;
 }
 
 uintptr_t
 bsg_ksmachlinkRegister(const BSG_STRUCT_MCONTEXT_L *const machineContext) {
-    return machineContext->__ss.__lr;
+    return (uintptr_t)machineContext->__ss.__lr;
 }
 
+#if BSG_HAVE_MACH_THREADS
 bool bsg_ksmachthreadState(const thread_t thread,
                            BSG_STRUCT_MCONTEXT_L *const machineContext) {
     return bsg_ksmachfillState(thread, (thread_state_t)&machineContext->__ss,
@@ -82,6 +86,7 @@ bool bsg_ksmachexceptionState(const thread_t thread,
                                ARM_EXCEPTION_STATE64,
                                ARM_EXCEPTION_STATE64_COUNT);
 }
+#endif
 
 int bsg_ksmachnumRegisters(void) { return bsg_g_registerNamesCount; }
 
@@ -145,7 +150,7 @@ uint64_t bsg_ksmachexceptionRegisterValue(
 
 uintptr_t
 bsg_ksmachfaultAddress(const BSG_STRUCT_MCONTEXT_L *const machineContext) {
-    return machineContext->__es.__far;
+    return (uintptr_t)machineContext->__es.__far;
 }
 
 int bsg_ksmachstackGrowDirection(void) { return -1; }

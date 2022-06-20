@@ -16,6 +16,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/// Persisted events older than this should be deleted upon failure.
+static const NSTimeInterval MaxPersistedAge = 60 * 24 * 60 * 60;
+
+/// Event payloads larger than this should not be persisted.
+static const NSUInteger MaxPersistedSize = 1000000;
+
 @protocol BSGEventUploadOperationDelegate;
 
 /**
@@ -36,13 +42,11 @@ NS_ASSUME_NONNULL_BEGIN
 /// Must be implemented by all subclasses.
 - (nullable BugsnagEvent *)loadEventAndReturnError:(NSError **)errorPtr;
 
-/// Called if the event should not be sent or failed to upload in a non-retrable way.
-///
 /// To be implemented by subclasses that load their data from a file.
 - (void)deleteEvent;
 
-/// Whether the payload should be stored so that it can be retried later.
-@property (readonly, nonatomic) BOOL shouldStoreEventPayloadForRetry;
+/// Must be implemented by all subclasses.
+- (void)prepareForRetry:(NSDictionary *)payload HTTPBodySize:(NSUInteger)HTTPBodySize;
 
 @end
 

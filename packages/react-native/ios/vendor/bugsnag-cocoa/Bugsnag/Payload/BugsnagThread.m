@@ -8,19 +8,21 @@
 
 #import "BugsnagThread+Private.h"
 
+#import "BSGKeys.h"
 #import "BSG_KSBacktrace_Private.h"
 #import "BSG_KSCrashReportFields.h"
 #import "BSG_KSCrashSentry_Private.h"
 #import "BSG_KSMach.h"
 #import "BugsnagCollections.h"
-#import "BugsnagKeys.h"
 #import "BugsnagStackframe+Private.h"
 #import "BugsnagStacktrace.h"
 #import "BugsnagThread+Private.h"
 #import "BSG_KSCrashNames.h"
+#import "BSGDefines.h"
 
 #include <pthread.h>
 
+#if BSG_HAVE_MACH_THREADS
 // Protect access to thread-unsafe bsg_kscrashsentry_suspendThreads()
 static pthread_mutex_t bsg_suspend_threads_mutex = PTHREAD_MUTEX_INITIALIZER;
 
@@ -33,6 +35,7 @@ static void resume_threads() {
     bsg_kscrashsentry_resumeThreads();
     pthread_mutex_unlock(&bsg_suspend_threads_mutex);
 }
+#endif
 
 static NSString * thread_state_name(integer_t threadState) {
     const char* stateCName = bsg_kscrashthread_state_name(threadState);
@@ -46,6 +49,7 @@ struct backtrace_t {
     uintptr_t addresses[kMaxAddresses];
 };
 
+#if BSG_HAVE_MACH_THREADS
 static void backtrace_for_thread(thread_t thread, struct backtrace_t *output) {
     BSG_STRUCT_MCONTEXT_L machineContext = {{0}};
     if (bsg_ksmachthreadState(thread, &machineContext)) {
@@ -54,6 +58,7 @@ static void backtrace_for_thread(thread_t thread, struct backtrace_t *output) {
         output->length = 0;
     }
 }
+#endif
 
 BSGThreadType BSGParseThreadType(NSString *type) {
     return [@"cocoa" isEqualToString:type] ? BSGThreadTypeCocoa : BSGThreadTypeReactNativeJs;
@@ -242,6 +247,7 @@ NSString *BSGSerializeThreadType(BSGThreadType type) {
     }
     bsg_ksmachgetThreadStates(threads, threadStates, threadCount);
 
+#if BSG_HAVE_MACH_THREADS
     suspend_threads();
 
     // While threads are suspended only async-signal-safe functions should be used,
@@ -258,6 +264,7 @@ NSString *BSGSerializeThreadType(BSGThreadType type) {
     }
 
     resume_threads();
+#endif
 
     for (mach_msg_type_number_t i = 0; i < threadCount; i++) {
         BOOL isCurrentThread = MACH_PORT_INDEX(threads[i]) == MACH_PORT_INDEX(bsg_ksmachthread_self());
@@ -302,6 +309,7 @@ cleanup:
                                                index:threadIndex];
 }
 
+#if BSG_HAVE_MACH_THREADS
 + (nullable instancetype)mainThread {
     unsigned threadCount = 0;
     thread_t *threads = bsg_ksmachgetAllThreads(&threadCount);
@@ -339,6 +347,7 @@ cleanup:
     bsg_ksmachfreeThreads(threads, threadCount);
     return object;
 }
+#endif
 
 - (instancetype)initWithMachThread:(thread_t)machThread
                              state:(NSString *)state

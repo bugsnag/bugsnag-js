@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+
+<head>
+    <title>Error.cause in constructor</title>
+    <meta charset="utf-8" />
+    <script src="/node_modules/@bugsnag/browser/dist/bugsnag.min.js"></script>
+    <script>
+        var NOTIFY = decodeURIComponent(window.location.search.match(/NOTIFY=([^&]+)/)[1])
+        var SESSIONS = decodeURIComponent(window.location.search.match(/SESSIONS=([^&]+)/)[1])
+        var API_KEY = decodeURIComponent(window.location.search.match(/API_KEY=([^&]+)/)[1])
+        Bugsnag.start({
+            apiKey: API_KEY,
+            endpoints: { notify: NOTIFY, sessions: SESSIONS }
+        })
+    </script>
+</head>
+
+<body>
+    <pre id="bugsnag-test-should-run">PENDING</pre>
+    <script>
+        function shouldRun() {
+            var err = new Error('error', { cause: new Error('cause') })
+            return !!err.cause
+        }
+        var el = document.getElementById('bugsnag-test-should-run')
+        el.textContent = el.innerText = shouldRun()
+            ? 'YES'
+            : 'NO'
+    </script>
+    <script>
+        var originalCause = new Error('I am the cause')
+        throw new Error('I am the error', { cause: originalCause })
+    </script>
+</body>
+
+</html>

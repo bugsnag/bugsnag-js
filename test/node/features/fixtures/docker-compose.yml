@@ -31,6 +31,21 @@ services:
           - unhandled
     restart: "no"
 
+  cause:
+    build:
+      context: cause
+      args:
+        - NODE_VERSION
+    environment:
+      - BUGSNAG_API_KEY
+      - BUGSNAG_NOTIFY_ENDPOINT
+      - BUGSNAG_SESSIONS_ENDPOINT
+    networks:
+      default:
+        aliases:
+          - cause
+    restart: "no"
+
   surrounding_code:
     build:
       context: surrounding_code
