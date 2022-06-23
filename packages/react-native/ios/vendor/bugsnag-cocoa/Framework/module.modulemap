@@ -1,6 +1,0 @@
-framework module Bugsnag {
-    umbrella header "Bugsnag.h"
-
-    export *
-    module * { export * }
-}
