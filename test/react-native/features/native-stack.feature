@@ -1,7 +1,6 @@
 Feature: Native stacktrace is parsed for promise rejections
 
-# Skip until PLAT-8236 is complete
-@android_only @skip_hermes
+@android_only
 Scenario: Handled JS error with native stacktrace
   When I run "NativeStackHandledScenario"
   Then I wait to receive an error
@@ -32,8 +31,7 @@ Scenario: Handled JS error with native stacktrace
   And the error payload field "events.0.exceptions.0.stacktrace.13.lineNumber" is not null
   And the error payload field "events.0.exceptions.0.stacktrace.13.type" is null
 
-# Skip until PLAT-8236 is complete
-@android_only @skip_hermes
+@android_only
 Scenario: Unhandled JS error with native stacktrace
   When I run "NativeStackUnhandledScenario"
   Then I wait to receive an error
@@ -71,9 +69,7 @@ Scenario: Unhandled JS error with native stacktrace
 #   And the error payload field "events.0.exceptions.1.stacktrace.1.lineNumber" equals 1
 #   And the error payload field "events.0.exceptions.1.stacktrace.2.lineNumber" equals 2
 
-# Skip until PLAT-8236 is complete
-@skip
-@ios_only @skip_hermes
+@ios_only
 Scenario: Handled JS error with native stacktrace
   When I run "NativeStackHandledScenario"
   Then I wait to receive an error
@@ -102,8 +98,7 @@ Scenario: Handled JS error with native stacktrace
   And the error payload field "events.0.exceptions.0.stacktrace.20.lineNumber" is not null
   And the error payload field "events.0.exceptions.0.stacktrace.20.type" is null
 
-# Skip until PLAT-8236 is complete
-@ios_only @skip_hermes
+@ios_only
 Scenario: Unhandled JS error with native stacktrace
   When I run "NativeStackUnhandledScenario"
   Then I wait to receive an error
