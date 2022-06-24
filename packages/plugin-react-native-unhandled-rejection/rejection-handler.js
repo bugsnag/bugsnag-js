@@ -12,7 +12,7 @@ module.exports = {
     if (!client._config.autoDetectErrors || !client._config.enabledErrorTypes.unhandledRejections) return () => { }
 
     // Check if Hermes is available and is being used for promises
-    if (global && global.HermesInternal && global.HermesInternal.hasPromise()) {
+    if (global?.HermesInternal?.hasPromise?.() && global.HermesInternal.enablePromiseRejectionTracker) {
       global.HermesInternal.enablePromiseRejectionTracker({
         allRejections: true,
         onUnhandled: (id, rejection = {}) => {
