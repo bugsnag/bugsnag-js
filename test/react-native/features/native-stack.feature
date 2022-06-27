@@ -25,11 +25,7 @@ Scenario: Handled JS error with native stacktrace
     | runScenario |
 
   # the javascript part follows
-  # on RN 0.60 there are 10 native stackframes, on 0.63 there are 13
-  And the error payload field "events.0.exceptions.0.stacktrace.13.columnNumber" is not null
-  And the error payload field "events.0.exceptions.0.stacktrace.13.file" equals "index.android.bundle"
-  And the error payload field "events.0.exceptions.0.stacktrace.13.lineNumber" is not null
-  And the error payload field "events.0.exceptions.0.stacktrace.13.type" is null
+  And the stacktrace contains "file" equal to "index.android.bundle"
 
 @android_only
 Scenario: Unhandled JS error with native stacktrace
@@ -58,11 +54,7 @@ Scenario: Unhandled JS error with native stacktrace
     | runScenario |
 
   # the javascript part follows
-  # on RN 0.60 there are 10 native stackframes, on 0.63 there are 13
-  And the error payload field "events.0.exceptions.0.stacktrace.13.columnNumber" is not null
-  And the error payload field "events.0.exceptions.0.stacktrace.13.file" equals "index.android.bundle"
-  And the error payload field "events.0.exceptions.0.stacktrace.13.lineNumber" is not null
-  And the error payload field "events.0.exceptions.0.stacktrace.13.type" is null
+  And the stacktrace contains "file" equal to "index.android.bundle"
 
 #   # PLAT-5117 addresses float serialization
 #   And the error payload field "events.0.exceptions.1.stacktrace.0.lineNumber" equals 1
