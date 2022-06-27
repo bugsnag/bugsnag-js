@@ -1,5 +1,11 @@
 # Changelog
 
+## TBD
+
+### Fixed
+
+- (plugin-react-native-unhandled-rejection) Fix TypeError when using react native 0.63 or 0.64 [#1770](https://github.com/bugsnag/bugsnag-js/pull/1770)
+
 ## v7.17.0 (2022-06-20)
 
 ### Added
