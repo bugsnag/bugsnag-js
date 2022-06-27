@@ -12,6 +12,7 @@ module.exports = {
     if (!client._config.autoDetectErrors || !client._config.enabledErrorTypes.unhandledRejections) return () => { }
 
     // Check if Hermes is available and is being used for promises
+    // React Native v0.63 and v0.64 include global.HermesInternal but not 'hasPromise'
     if (global?.HermesInternal?.hasPromise?.() && global.HermesInternal.enablePromiseRejectionTracker) {
       global.HermesInternal.enablePromiseRejectionTracker({
         allRejections: true,
