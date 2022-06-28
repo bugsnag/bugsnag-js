@@ -4,6 +4,7 @@
 
 - (react-native) Update bugsnag-android from v5.22.4 to [v5.23.0](https://github.com/bugsnag/bugsnag-android/blob/master/CHANGELOG.md#5230-2022-06-20)
 - (react-native) Update bugsnag-cocoa from v6.18.0 to [v6.18.1](https://github.com/bugsnag/bugsnag-cocoa/blob/master/CHANGELOG.md#6181-2022-06-22)
+- (react-native) Add 0.69 test fixtures and CI coverage [#1775](https://github.com/bugsnag/bugsnag-js/pull/1775)
 
 ## v7.17.0 (2022-06-20)
 
