@@ -443,6 +443,31 @@ steps:
 #    concurrency: 24
 #    concurrency_group: 'browserstack-app'
 #    concurrency_method: eager
+
+  - label: ':ios: RN 0.69 iOS 14 end-to-end tests'
+    depends_on: "rn-0-69-ipa"
+    timeout_in_minutes: 60
+    plugins:
+      artifacts#v1.5.0:
+        download: "build/rn0.69.ipa"
+        upload: ./test/react-native/maze_output/**/*
+      docker-compose#v3.9.0:
+        pull: react-native-maze-runner
+        run: react-native-maze-runner
+        use-aliases: true
+        command:
+          - --app=build/rn0.69.ipa
+          - --farm=bs
+          - --device=IOS_14
+          - --a11y-locator
+          - --appium-version=1.18.0
+          - --fail-fast
+    env:
+      SKIP_NAVIGATION_SCENARIOS: "true"
+      HERMES: "true"
+    concurrency: 24
+    concurrency_group: 'browserstack-app'
+    concurrency_method: eager
 #
 #  - label: ':ios: RN 0.68 (hermes) iOS 14 end-to-end tests'
 #    depends_on: "rn-0-68-hermes-ipa"
