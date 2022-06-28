@@ -186,6 +186,7 @@ steps:
           - features/cli-tests
     env:
       REACT_NATIVE_VERSION: "rn0_69"
+      DEBUG: 1
 
   #
   # Built app test fixtures - Android
