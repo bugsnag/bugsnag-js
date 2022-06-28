@@ -352,20 +352,20 @@ steps:
 #      - build/rn0_67_hermes.apk
 #
 
-    - label: ':android: Init and build RN 0.69 apk (Non-hermes)'
-      key: 'rn-0-69-apk'
-      depends_on:
-        - 'android-builder-image'
-      timeout_in_minutes: 15
-      env:
-        DEBUG: true
-        REACT_NATIVE_VERSION: rn0_69
-      plugins:
-        - docker-compose#v3.9.0:
-            run: react-native-cli-android-builder
-            command: ["features/build-app-tests/build-android-app.feature"]
-      artifact_paths:
-        - build/rn0_69.apk
+  - label: ':android: Init and build RN 0.69 apk (Non-hermes)'
+    key: 'rn-0-69-apk'
+    depends_on:
+      - 'android-builder-image'
+    timeout_in_minutes: 15
+    env:
+      DEBUG: true
+      REACT_NATIVE_VERSION: rn0_69
+    plugins:
+      - docker-compose#v3.9.0:
+          run: react-native-cli-android-builder
+          command: ["features/build-app-tests/build-android-app.feature"]
+    artifact_paths:
+      - build/rn0_69.apk
 
   #
   # Built app test fixtures - iOS
