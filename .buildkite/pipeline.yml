@@ -92,32 +92,32 @@ steps:
       commit: '${BUILDKITE_COMMIT}'
       message: '${BUILDKITE_MESSAGE}'
     async: true
-#
-#  - label: 'Trigger React Native CLI pipeline'
-#    if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
-#    depends_on:
-#      - 'publish-js'
-#      - 'android-builder-base'
-#    trigger: 'bugsnag-js-react-native-cli'
-#    build:
-#      branch: '${BUILDKITE_BRANCH}'
-#      commit: '${BUILDKITE_COMMIT}'
-#      message: '${BUILDKITE_MESSAGE}'
-#    async: true
-#
-#  - label: ':aws-lambda: AWS Lambda tests'
-#    if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
-#    timeout_in_minutes: 35
-#    agents:
-#      queue: 'opensource-mac-cocoa-10.15'
-#    commands:
-#      # force the NPM registry as the default on CI is artifactory, which can't
-#      # currently install from our lockfile
-#      - npm ci --registry https://registry.npmjs.org
-#      - cd test/aws-lambda
-#      - bundle install
-#      - bundle exec maze-runner
-#
+
+  - label: 'Trigger React Native CLI pipeline'
+    if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
+    depends_on:
+      - 'publish-js'
+      - 'android-builder-base'
+    trigger: 'bugsnag-js-react-native-cli'
+    build:
+      branch: '${BUILDKITE_BRANCH}'
+      commit: '${BUILDKITE_COMMIT}'
+      message: '${BUILDKITE_MESSAGE}'
+    async: true
+
+  - label: ':aws-lambda: AWS Lambda tests'
+    if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
+    timeout_in_minutes: 35
+    agents:
+      queue: 'opensource-mac-cocoa-10.15'
+    commands:
+      # force the NPM registry as the default on CI is artifactory, which can't
+      # currently install from our lockfile
+      - npm ci --registry https://registry.npmjs.org
+      - cd test/aws-lambda
+      - bundle install
+      - bundle exec maze-runner
+
 #  #
 #  # Core tests and checks
 #  #
