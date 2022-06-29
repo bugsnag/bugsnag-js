@@ -96,3 +96,12 @@ Then('the following sets are present in the current {word} payloads:') do |reque
                     "#{expected_data} was not found in any of the current payloads")
   end
 end
+
+Then('the stacktrace contains {string} equal to {string}') do |field_path, expected_value|
+  values = Maze::Helper.read_key_path(Maze::Server.errors.current[:body], "events.0.exceptions.0.stacktrace")
+  found = false
+  values.each do |frame|
+    found = true if Maze::Helper.read_key_path(frame, field_path) == expected_value
+  end
+  fail("No field_path #{field_path} found with value #{expected_value}") unless found
+end
