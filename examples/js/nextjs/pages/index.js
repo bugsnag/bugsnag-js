@@ -1,25 +1,142 @@
-import Head from 'next/head'
+import Link from 'next/link'
 
-import CrashyButton from '../components/CrashyButton'
-import Bugsnag from '../lib/bugsnag'
-
-export default () =>
-  <div>
-    <Head>
-      <title>Bugsnag Next.js Example</title>
-      <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-      <link rel="stylesheet" type="text/css" href="/static/style.css" />
-    </Head>
-    <img width="200" src="/static/bugsnag.png" />
-    <h1>Next.js example</h1>
+const Index = () => (
+  <div style={{ maxWidth: 700, margin: '0 auto' }}>
+    <h2>Bugsnag next.js Example</h2>
     <p>
-      This page is a basic example of how to include <code>@bugsnag/js</code> in a <a href="https://nextjs.org/">Next.js</a> app.
+      This example demonstrates how to record exceptions in your code with Bugsnag.
+      There are several scenario pages below that result in various kinds of unhandled
+       and handled exceptions.
     </p>
-    <div id="buttons">
-      <h3>Send some errors by clicking below:</h3>
-      <button onClick={() => Bugsnag.notify(new Error('bad!'))}>Send handled</button>
-      <button onClick={() => { throw new Error('bad!') }}>Send unhandled</button>
-      <CrashyButton>Trigger a React render error</CrashyButton>
-      <a className="button" href="borked">Send an error from the server</a>
-    </div>
+    <p>
+      <strong>Important:</strong> exceptions in development mode take a
+      different path than in production. These scenarios should be run on a
+      production build (i.e. 'next build').{' '}
+      <a href="https://nextjs.org/docs/advanced-features/custom-error-page#customizing-the-error-page">
+        Read more
+      </a>
+    </p>
+    <ol>
+      <li>API route exceptions</li>
+      <ol>
+        <li>
+          API has a top-of-module Promise that rejects, but its result is not
+          awaited.{' '}
+          <a href="/api/scenario1" target="_blank">
+            Open in a new tab
+          </a>
+        </li>
+        <li>
+          API has a top-of-module exception.
+          <a href="/api/scenario2" target="_blank">
+            Open in a new tab
+          </a>
+        </li>
+        <li>
+          API has has an exception in its request handler.{' '}
+          <a href="/api/scenario3" target="_blank">
+            Open in a new tab
+          </a>
+        </li>
+        <li>
+          API uses a try/catch to handle an exception and records it.{' '}
+          <a href="/api/scenario4" target="_blank">
+            Open in a new tab
+          </a>
+        </li>
+      </ol>
+      <li>SSR exceptions</li>
+      <ol>
+        <li>
+          getServerSideProps throws an Error.
+          <a href="/ssr/scenario1" target="_blank">
+            Open in a new tab
+          </a>{' '}
+          or{' '}
+          <Link href="/ssr/scenario1">
+            <a>Perform client side navigation</a>
+          </Link>
+        </li>
+        <li>
+          getServerSideProps returns a Promise that rejects.
+          <a href="/ssr/scenario2" target="_blank">
+            Open in a new tab
+          </a>
+        </li>
+        <li>
+          getServerSideProps calls a Promise that rejects, but does not handle
+          the rejection or await its result (returning synchronously).
+          <a href="/ssr/scenario3" target="_blank">
+            Open in a new tab
+          </a>
+        </li>
+        <li>
+          getServerSideProps manually captures an exception from a try/catch.
+          {' '}
+          <a href="/ssr/scenario4" target="_blank">
+            Open in a new tab
+          </a>
+        </li>
+      </ol>
+      <li>Client exceptions</li>
+      <ol>
+        <li>
+          There is a top-of-module Promise that rejects, but its result is not
+          awaited.{' '}
+          <Link href="/client/scenario1">
+            <a>Perform client side navigation</a>
+          </Link>{' '}
+          or{' '}
+          <a href="/client/scenario1" target="_blank">
+            Open in a new tab
+          </a>
+        </li>
+        <li>
+          There is a top-of-module exception. _error.js should render.{' '}
+          <Link href="/client/scenario2">
+            <a>Perform client side navigation</a>
+          </Link>{' '}
+          or{' '}
+          <a href="/client/scenario2" target="_blank">
+            Open in a new tab
+          </a>
+        </li>
+        <li>
+          There is an exception during React lifecycle that is caught by
+          Next.js's React Error Boundary. In this case, when the component
+          mounts. This should cause _error.js to render.{' '}
+          <Link href="/client/scenario3">
+            <a>Perform client side navigation</a>
+          </Link>{' '}
+          or{' '}
+          <a href="/client/scenario3" target="_blank">
+            Open in a new tab
+          </a>
+        </li>
+        <li>
+          There is an unhandled Promise rejection during React lifecycle. In
+          this case, when the component mounts.{' '}
+          <Link href="/client/scenario4">
+            <a>Perform client side navigation</a>
+          </Link>{' '}
+          or{' '}
+          <a href="/client/scenario4" target="_blank">
+            Open in a new tab
+          </a>
+        </li>
+        <li>
+          An Error is thrown from an event handler.{' '}
+          <Link href="/client/scenario5">
+            <a>Perform client side navigation</a>
+          </Link>{' '}
+          or{' '}
+          <a href="/client/scenario5" target="_blank">
+            Open in a new tab
+          </a>
+        </li>
+      </ol>
+    </ol>
   </div>
+)
+
+export default Index
