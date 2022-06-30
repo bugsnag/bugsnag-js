@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/react-native",
-  "version": "7.17.1",
+  "version": "7.17.2",
   "main": "src/notifier.js",
   "types": "types/bugsnag.d.ts",
   "description": "Bugsnag error reporter for React Native applications",
