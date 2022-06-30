@@ -5,7 +5,7 @@
 Clone and navigate to this repo:
 
 ```sh
-git clone git@github.com:bugsnag/bugsnag-js.git
+git clone git@github.com:bugsnag/bugsnag-js.git --recursive
 cd bugsnag-js
 ```
 

@@ -69,7 +69,7 @@ Most updates to this repo will be made by Bugsnag employees. We are unable to ac
 
 ```sh
 # Clone the repository
-git clone git@github.com:bugsnag/bugsnag-js.git
+git clone git@github.com:bugsnag/bugsnag-js.git --recursive
 cd bugsnag-js
 
 # Install top-level dependencies

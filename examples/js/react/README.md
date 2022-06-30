@@ -9,7 +9,7 @@ This project was bootstrapped with [`create-react-app`](https://github.com/faceb
 Clone the repo and `cd` into the directory of this example:
 
 ```
-git clone git@github.com:bugsnag/bugsnag-js.git
+git clone git@github.com:bugsnag/bugsnag-js.git --recursive
 cd bugsnag-js/examples/js/react
 ```
 Take a look at…

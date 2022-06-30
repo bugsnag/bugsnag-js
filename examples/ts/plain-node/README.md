@@ -7,7 +7,7 @@ This is an example project showing how to use `@bugsnag/js` with a basic TypeScr
 Clone the repo and `cd` into the directory of this example:
 
 ```
-git clone git@github.com:bugsnag/bugsnag-js.git
+git clone git@github.com:bugsnag/bugsnag-js.git --recursive
 cd bugsnag-js/examples/ts/plain-node
 ```
 

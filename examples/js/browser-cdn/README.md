@@ -7,7 +7,7 @@ This is an example project showing how to use the CDN delivered version of `@bug
 Clone the repo and `cd` into the directory of this example:
 
 ```
-git clone git@github.com:bugsnag/bugsnag-js.git
+git clone git@github.com:bugsnag/bugsnag-js.git --recursive
 cd bugsnag-js/examples/js/browser-cdn
 ```
 
