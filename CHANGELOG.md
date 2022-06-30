@@ -1,5 +1,11 @@
 # Changelog
 
+## v7.17.2 (2022-06-30)
+
+### Fixed
+
+- (react-native) Fixed missing files when installing react-native [#1780](https://github.com/bugsnag/bugsnag-js/pull/1780)
+
 ## v7.17.1 (2022-06-29)
 
 ### Fixed
