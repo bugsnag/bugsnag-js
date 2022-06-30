@@ -9,7 +9,7 @@ We recommend creating two projects in your dashboard, one for the server errors 
 Clone the repo and `cd` into the directory of this example:
 
 ```
-git clone git@github.com:bugsnag/bugsnag-js.git
+git clone git@github.com:bugsnag/bugsnag-js.git --recursive
 cd bugsnag-js/examples/js/nuxtjs
 ```
 

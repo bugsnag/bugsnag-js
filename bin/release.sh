@@ -15,7 +15,7 @@ if [[ -z ${VERSION:-} ]]; then error_missing_field "VERSION"; fi
 if [[ -z ${AWS_ACCESS_KEY_ID:-} ]]; then error_missing_field "AWS_ACCESS_KEY_ID"; fi
 if [[ -z ${AWS_SECRET_ACCESS_KEY:-} ]]; then error_missing_field "AWS_SECRET_ACCESS_KEY"; fi
 
-git clone --single-branch \
+git clone --single-branch --recursive \
   --branch "$RELEASE_BRANCH" \
   https://"$GITHUB_USER":"$GITHUB_ACCESS_TOKEN"@github.com/bugsnag/bugsnag-js.git
 

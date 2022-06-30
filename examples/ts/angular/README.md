@@ -9,7 +9,7 @@ This project was bootstrapped with [`Angular CLI`](https://github.com/angular/an
 Clone the repo and `cd` into the directory of this example:
 
 ```
-git clone git@github.com:bugsnag/bugsnag-js.git
+git clone git@github.com:bugsnag/bugsnag-js.git --recursive
 cd bugsnag-js/examples/ts/angular
 ```
 

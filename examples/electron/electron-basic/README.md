@@ -9,7 +9,7 @@ This example app was created with Electron forge.
 Clone the repo and `cd` into the directory of this example:
 
 ```
-git clone git@github.com:bugsnag/bugsnag-js.git
+git clone git@github.com:bugsnag/bugsnag-js.git --recursive
 cd bugsnag-js/examples/electron/electron-basic
 ```
 

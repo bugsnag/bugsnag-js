@@ -12,7 +12,7 @@ For instructions on how to install and configure Bugsnag in your own application
 
 1. Clone the repo and `cd` into the directory of this example:
     ```
-    git clone git@github.com:bugsnag/bugsnag-js.git
+    git clone git@github.com:bugsnag/bugsnag-js.git --recursive
     cd bugsnag-js/examples/reactnative/rn063example
     npm install
     ```
