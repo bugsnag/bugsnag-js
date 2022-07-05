@@ -1,5 +1,11 @@
 # Changelog
 
+## TBD
+
+### Changed
+
+- (react-native) Update bugsnag-cocoa from v6.18.1 to [v6.19.0](https://github.com/bugsnag/bugsnag-cocoa/blob/master/CHANGELOG.md#6190-2022-06-29)
+
 ## v7.17.2 (2022-06-30)
 
 ### Fixed
