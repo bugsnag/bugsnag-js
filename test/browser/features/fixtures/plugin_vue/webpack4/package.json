@@ -5,7 +5,7 @@
     "build": "webpack"
   },
   "dependencies": {
-    "es3ify-webpack-plugin": "0.0.1",
+    "es3ify-loader": "0.2.0",
     "uglifyjs-webpack-plugin": "2.0.1",
     "vue": "^2.5.17",
     "webpack": "^4.8.1",

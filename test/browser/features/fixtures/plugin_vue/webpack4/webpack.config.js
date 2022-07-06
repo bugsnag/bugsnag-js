@@ -1,6 +1,6 @@
 const path = require('path')
-const Es3ifyPlugin = require('es3ify-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const webpack = require('webpack')
 
 module.exports = {
   entry: { app: './src/app.js' },
@@ -10,7 +10,17 @@ module.exports = {
     filename: '[name].js'
   },
   plugins: [
-    new Es3ifyPlugin(),
-    new UglifyJsPlugin({ sourceMap: true, uglifyOptions: { compress: false, mangle: false, ie8: true } })
+    new UglifyJsPlugin({ sourceMap: true, uglifyOptions: { compress: false, mangle: false, ie8: true } }),
+    new webpack.LoaderOptionsPlugin({
+      options: {
+        loaders: [
+          {
+            test: /\.js$/,
+            include: /\/node_modules\//,
+            loader: 'es3ify'
+          }
+        ]
+      }
+    })
   ]
 }
