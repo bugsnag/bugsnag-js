@@ -51,7 +51,7 @@ services:
       HOST: "${HOST:-maze-runner}"
       API_HOST: "${API_HOST:-maze-runner}"
     env_file:
-      - ${DOCKER_ENV_FILE}
+      - ${DOCKER_ENV_FILE:-test/browser/features/fixtures/null_env}
     networks:
       default:
         aliases:
