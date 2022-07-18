@@ -588,3 +588,83 @@ chrome_latest:
     errorMessage: URI malformed
     lineNumber: 18
     columnNumber: 7
+
+# BitBar exclusive
+
+chrome_102:
+  handled:
+    errorClass: 'ReferenceError'
+    errorMessage: 'foo is not defined'
+  unhandled_syntax:
+    errorClass: 'SyntaxError'
+    errorMessage: "Unexpected token '!'"
+    lineNumber: 18
+    columnNumber: 13
+    file: '/unhandled/script/a.html'
+  unhandled_thrown:
+    errorClass: 'Error'
+    errorMessage: "bad things"
+    lineNumber: 18
+    columnNumber: 13
+  unhandled_undefined_function:
+    errorClass: 'ReferenceError'
+    errorMessage: nevergoingtoexist_notinamillionyears is not defined
+    lineNumber: 18
+    columnNumber: 7
+  unhandled_malformed_uri:
+    errorClass: 'URIError'
+    errorMessage: URI malformed
+    lineNumber: 18
+    columnNumber: 7
+
+edge_102:
+  handled:
+    errorClass: 'ReferenceError'
+    errorMessage: "'foo' is undefined"
+  unhandled_syntax:
+    errorClass: 'Error'
+    errorMessage: "Expected ';'"
+    lineNumber: 18
+    columnNumber: 13
+    file: '/unhandled/script/a.html'
+  unhandled_thrown:
+    errorClass: 'Error'
+    errorMessage: "bad things"
+    lineNumber: 18
+    columnNumber: 7
+  unhandled_undefined_function:
+    errorClass: 'ReferenceError'
+    errorMessage: "'nevergoingtoexist_notinamillionyears' is undefined"
+    lineNumber: 18
+    columnNumber: 7
+  unhandled_malformed_uri:
+    errorClass: 'URIError'
+    errorMessage: "The URI to be decoded is not a valid encoding"
+    lineNumber: 18
+    columnNumber: 7
+
+firefox_101:
+  handled:
+    errorClass: 'ReferenceError'
+    errorMessage: 'foo is not defined'
+  unhandled_syntax:
+    errorClass: 'SyntaxError'
+    errorMessage: "unexpected token: '!'"
+    lineNumber: 18
+    columnNumber: 12
+    file: '/unhandled/script/a.html'
+  unhandled_thrown:
+    errorClass: 'Error'
+    errorMessage: "bad things"
+    lineNumber: 18
+    columnNumber: 13
+  unhandled_undefined_function:
+    errorClass: 'ReferenceError'
+    errorMessage: nevergoingtoexist_notinamillionyears is not defined
+    lineNumber: 18
+    columnNumber: 7
+  unhandled_malformed_uri:
+    errorClass: 'URIError'
+    errorMessage: malformed URI sequence
+    lineNumber: 18
+    columnNumber: 25
