@@ -74,7 +74,7 @@ steps:
         command:
           - --farm=bb
           - --browser=chrome_102
-    concurrency: 1
+    concurrency: 5
     concurrency_group: 'bitbar-web'
 
   # - label: ':ie: v8 Browser tests'
@@ -153,7 +153,7 @@ steps:
           - --browser=ie_11
     env:
       HOST: 'localhost' # IE11 needs the host set to localhost for some reason!ß
-    concurrency: 1
+    concurrency: 5
     concurrency_group: 'bitbar-web'
 
   # - label: ':edge: v14 Browser tests'
@@ -198,7 +198,7 @@ steps:
         command:
           - --farm=bb
           - --browser=edge_102
-    concurrency: 1
+    concurrency: 5
     concurrency_group: 'bitbar-web'
 
   # - label: ':safari: v6 Browser tests'
@@ -273,7 +273,7 @@ steps:
         command:
           - --farm=bb
           - --browser=safari_15
-    concurrency: 1
+    concurrency: 5
     concurrency_group: 'bitbar-web'
 
   # - label: ':iphone: iOS 10.3 Browser tests'
@@ -427,5 +427,5 @@ steps:
         command:
           - --farm=bb
           - --browser=firefox_101
-    concurrency: 1
+    concurrency: 5
     concurrency_group: 'bitbar-web'
