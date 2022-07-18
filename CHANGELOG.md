@@ -5,6 +5,7 @@
 ### Changed
 
 - (react-native) Update bugsnag-cocoa from v6.18.1 to [v6.20.0](https://github.com/bugsnag/bugsnag-cocoa/blob/master/CHANGELOG.md#6200-2022-07-13)
+- (react-native) Update bugsnag-android from v5.23.0 to [v5.24.0](https://github.com/bugsnag/bugsnag-android/blob/master/CHANGELOG.md#5240-2022-06-30)
 
 ## v7.17.2 (2022-06-30)
 
