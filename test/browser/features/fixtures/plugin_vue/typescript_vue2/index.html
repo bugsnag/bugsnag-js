@@ -11,7 +11,12 @@
     </div>
     <script>
       var el = document.getElementById('bugsnag-test-should-run')
-      el.textContent = el.innerText = typeof Proxy !== 'undefined'
+      var isLetSupported = false
+      try {
+        eval('let a = "foo"')
+        isLetSupported = true
+      } catch (e) {}
+      el.textContent = el.innerText = isLetSupported && typeof Proxy !== 'undefined'
         ? 'YES'
         : 'NO'
     </script>
