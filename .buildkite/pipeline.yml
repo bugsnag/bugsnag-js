@@ -3,27 +3,27 @@ steps:
   #
   # License audit
   #
-  # - label: ':copyright: License Audit'
-  #   timeout_in_minutes: 20
-  #   agents:
-  #     queue: opensource-mac-cocoa-11
-  #   env:
-  #     DEVELOPER_DIR: "/Applications/Xcode12.app"
-  #   command: scripts/license_finder.sh
+  - label: ':copyright: License Audit'
+    timeout_in_minutes: 20
+    agents:
+      queue: opensource-mac-cocoa-11
+    env:
+      DEVELOPER_DIR: "/Applications/Xcode12.app"
+    command: scripts/license_finder.sh
 
   #
   # Android builder base - used by React Native and React Native CLI
   #
-  # - label: ':docker: Build Android Builder base image'
-  #   key: 'android-builder-base'
-  #   timeout_in_minutes: 30
-  #   plugins:
-  #     - docker-compose#v3.9.0:
-  #         build: android-builder-base
-  #         image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
-  #         cache-from:  android-builder-base:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:android-builder-base
-  #     - docker-compose#v3.9.0:
-  #         push: android-builder-base:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:android-builder-base
+  - label: ':docker: Build Android Builder base image'
+    key: 'android-builder-base'
+    timeout_in_minutes: 30
+    plugins:
+      - docker-compose#v3.9.0:
+          build: android-builder-base
+          image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
+          cache-from:  android-builder-base:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:android-builder-base
+      - docker-compose#v3.9.0:
+          push: android-builder-base:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:android-builder-base
 
   #
   # Publish/package notifier

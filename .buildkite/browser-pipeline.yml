@@ -25,7 +25,6 @@ steps:
         pull: browser-maze-runner
         run: browser-maze-runner
         use-aliases: true
-        verbose: true
         command:
           - --farm=bs
           - --browser=chrome_30
@@ -40,7 +39,6 @@ steps:
         pull: browser-maze-runner
         run: browser-maze-runner
         use-aliases: true
-        verbose: true
         command:
           - --farm=bs
           - --browser=chrome_43
@@ -55,7 +53,6 @@ steps:
         pull: browser-maze-runner
         run: browser-maze-runner
         use-aliases: true
-        verbose: true
         command:
           - --farm=bs
           - --browser=chrome_61
@@ -70,7 +67,6 @@ steps:
         pull: browser-maze-runner
         run: browser-maze-runner
         use-aliases: true
-        verbose: true
         command:
           - --farm=bb
           - --browser=chrome_102
@@ -85,7 +81,6 @@ steps:
         pull: browser-maze-runner
         run: browser-maze-runner
         use-aliases: true
-        verbose: true
         command:
           - --farm=bs
           - --browser=ie_8
@@ -100,7 +95,6 @@ steps:
         pull: browser-maze-runner
         run: browser-maze-runner
         use-aliases: true
-        verbose: true
         command:
           - --farm=bs
           - --browser=ie_9
@@ -115,7 +109,6 @@ steps:
         pull: browser-maze-runner
         run: browser-maze-runner
         use-aliases: true
-        verbose: true
         command:
           - --farm=bs
           - --browser=ie_10
@@ -130,7 +123,6 @@ steps:
         pull: browser-maze-runner
         run: browser-maze-runner
         use-aliases: true
-        verbose: true
         command:
           - --farm=bb
           - --browser=ie_11
@@ -147,7 +139,6 @@ steps:
         pull: browser-maze-runner
         run: browser-maze-runner
         use-aliases: true
-        verbose: true
         command:
           - --farm=bs
           - --browser=edge_14
@@ -162,7 +153,6 @@ steps:
         pull: browser-maze-runner
         run: browser-maze-runner
         use-aliases: true
-        verbose: true
         command:
           - --farm=bs
           - --browser=edge_15
@@ -177,7 +167,6 @@ steps:
         pull: browser-maze-runner
         run: browser-maze-runner
         use-aliases: true
-        verbose: true
         command:
           - --farm=bb
           - --browser=edge_102
@@ -192,7 +181,6 @@ steps:
         pull: browser-maze-runner
         run: browser-maze-runner
         use-aliases: true
-        verbose: true
         command:
           - --farm=bs
           - --browser=safari_6
@@ -207,7 +195,6 @@ steps:
         pull: browser-maze-runner
         run: browser-maze-runner
         use-aliases: true
-        verbose: true
         command:
           - --farm=bs
           - --browser=safari_10
@@ -222,7 +209,6 @@ steps:
         pull: browser-maze-runner
         run: browser-maze-runner
         use-aliases: true
-        verbose: true
         command:
           - --farm=bs
           - --browser=safari_13
@@ -237,7 +223,6 @@ steps:
         pull: browser-maze-runner
         run: browser-maze-runner
         use-aliases: true
-        verbose: true
         command:
           - --farm=bb
           - --browser=safari_15
@@ -252,7 +237,6 @@ steps:
         pull: browser-maze-runner
         run: browser-maze-runner
         use-aliases: true
-        verbose: true
         command:
           - --farm=bs
           - --browser=iphone_7
@@ -269,7 +253,6 @@ steps:
         pull: browser-maze-runner
         run: browser-maze-runner
         use-aliases: true
-        verbose: true
         command:
           - --farm=bs
           - --browser=iphone_13
@@ -286,7 +269,6 @@ steps:
         pull: browser-maze-runner
         run: browser-maze-runner
         use-aliases: true
-        verbose: true
         command:
           - --farm=bs
           - --browser=android_nexus5
@@ -301,7 +283,6 @@ steps:
         pull: browser-maze-runner
         run: browser-maze-runner
         use-aliases: true
-        verbose: true
         command:
           - --farm=bs
           - --browser=android_s6
@@ -316,7 +297,6 @@ steps:
         pull: browser-maze-runner
         run: browser-maze-runner
         use-aliases: true
-        verbose: true
         command:
           - --farm=bs
           - --browser=android_s7
@@ -331,7 +311,6 @@ steps:
         pull: browser-maze-runner
         run: browser-maze-runner
         use-aliases: true
-        verbose: true
         command:
           - --farm=bs
           - --browser=android_s8
@@ -346,7 +325,6 @@ steps:
         pull: browser-maze-runner
         run: browser-maze-runner
         use-aliases: true
-        verbose: true
         command:
           - --farm=bs
           - --browser=firefox_30
@@ -361,7 +339,6 @@ steps:
         pull: browser-maze-runner
         run: browser-maze-runner
         use-aliases: true
-        verbose: true
         command:
           - --farm=bs
           - --browser=firefox_56
@@ -376,7 +353,6 @@ steps:
         pull: browser-maze-runner
         run: browser-maze-runner
         use-aliases: true
-        verbose: true
         command:
           - --farm=bb
           - --browser=firefox_101
