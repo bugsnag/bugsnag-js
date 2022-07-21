@@ -11,7 +11,16 @@
     </div>
     <script>
       var el = document.getElementById('bugsnag-test-should-run')
-      el.textContent = el.innerText = typeof Proxy !== 'undefined'
+      var isLetSupported = false
+      var hasSafari10Bug = true
+      try {
+        eval('let a = "foo"')
+        isLetSupported = true
+        // See https://bugs.webkit.org/show_bug.cgi?id=171041
+        eval('let e = e => { console.log(e); for (let e of [1, 2, 3]) console.log(e) }')
+        hasSafari10Bug = false
+      } catch (e) {}
+      el.textContent = el.innerText = isLetSupported && !hasSafari10Bug && typeof Proxy !== 'undefined'
         ? 'YES'
         : 'NO'
     </script>

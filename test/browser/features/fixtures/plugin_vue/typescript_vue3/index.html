@@ -12,11 +12,14 @@
     <script>
       var el = document.getElementById('bugsnag-test-should-run')
       var isClassSupported = false
+      var isObjectSpreadSupported = false
       try {
         eval('class Foo extends Object {}')
         isClassSupported = true
+        eval('const a = {}; const b = { ...a }')
+        isObjectSpreadSupported = true
       } catch (e) {}
-      el.textContent = el.innerText = isClassSupported && typeof Proxy !== 'undefined'
+      el.textContent = el.innerText = isClassSupported && isObjectSpreadSupported && typeof Proxy !== 'undefined'
         ? 'YES'
         : 'NO'
     </script>
