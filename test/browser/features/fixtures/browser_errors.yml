@@ -155,6 +155,32 @@ edge_15:
     lineNumber: 18
     columnNumber: 7
 
+edge_17:
+  handled:
+    errorClass: 'ReferenceError'
+    errorMessage: "'foo' is undefined"
+  unhandled_syntax:
+    errorClass: 'Error'
+    errorMessage: "Expected ';'"
+    lineNumber: 18
+    columnNumber: 13
+    file: '/unhandled/script/a.html'
+  unhandled_thrown:
+    errorClass: 'Error'
+    errorMessage: "bad things"
+    lineNumber: 18
+    columnNumber: 7
+  unhandled_undefined_function:
+    errorClass: 'ReferenceError'
+    errorMessage: "'nevergoingtoexist_notinamillionyears' is undefined"
+    lineNumber: 18
+    columnNumber: 7
+  unhandled_malformed_uri:
+    errorClass: 'URIError'
+    errorMessage: "The URI to be decoded is not a valid encoding"
+    lineNumber: 18
+    columnNumber: 7
+
 safari_6:
   handled:
     errorClass: 'ReferenceError'
@@ -458,6 +484,32 @@ firefox_56:
     lineNumber: 18
     columnNumber: 7
 
+firefox_78:
+  handled:
+    errorClass: 'ReferenceError'
+    errorMessage: 'foo is not defined'
+  unhandled_syntax:
+    errorClass: 'SyntaxError'
+    errorMessage: "missing ; before statement"
+    lineNumber: 18
+    columnNumber: 12
+    file: '/unhandled/script/a.html'
+  unhandled_thrown:
+    errorClass: 'Error'
+    errorMessage: "bad things"
+    lineNumber: 18
+    columnNumber: 13
+  unhandled_undefined_function:
+    errorClass: 'ReferenceError'
+    errorMessage: nevergoingtoexist_notinamillionyears is not defined
+    lineNumber: 18
+    columnNumber: 7
+  unhandled_malformed_uri:
+    errorClass: 'URIError'
+    errorMessage: malformed URI sequence
+    lineNumber: 18
+    columnNumber: 7
+
 firefox_latest:
   handled:
     errorClass: 'ReferenceError'
@@ -536,8 +588,59 @@ chrome_43:
     lineNumber: 18
     columnNumber: 7
 
+chrome_53:
+  handled:
+    errorClass: 'ReferenceError'
+    errorMessage: 'foo is not defined'
+  unhandled_syntax:
+    errorClass: 'SyntaxError'
+    errorMessage: "Unexpected token !"
+    lineNumber: 18
+    columnNumber: 13
+    file: '/unhandled/script/a.html'
+  unhandled_thrown:
+    errorClass: 'Error'
+    errorMessage: "bad things"
+    lineNumber: 18
+    columnNumber: 13
+  unhandled_undefined_function:
+    errorClass: 'ReferenceError'
+    errorMessage: nevergoingtoexist_notinamillionyears is not defined
+    lineNumber: 18
+    columnNumber: 7
+  unhandled_malformed_uri:
+    errorClass: 'URIError'
+    errorMessage: URI malformed
+    lineNumber: 18
+    columnNumber: 7
 
 chrome_61:
+  handled:
+    errorClass: 'ReferenceError'
+    errorMessage: 'foo is not defined'
+  unhandled_syntax:
+    errorClass: 'SyntaxError'
+    errorMessage: "Unexpected token !"
+    lineNumber: 18
+    columnNumber: 13
+    file: '/unhandled/script/a.html'
+  unhandled_thrown:
+    errorClass: 'Error'
+    errorMessage: "bad things"
+    lineNumber: 18
+    columnNumber: 13
+  unhandled_undefined_function:
+    errorClass: 'ReferenceError'
+    errorMessage: nevergoingtoexist_notinamillionyears is not defined
+    lineNumber: 18
+    columnNumber: 7
+  unhandled_malformed_uri:
+    errorClass: 'URIError'
+    errorMessage: URI malformed
+    lineNumber: 18
+    columnNumber: 7
+
+chrome_72:
   handled:
     errorClass: 'ReferenceError'
     errorMessage: 'foo is not defined'
