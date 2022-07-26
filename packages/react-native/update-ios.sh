@@ -22,7 +22,6 @@ print_help() {
     echo
     echo "Options:"
     echo "    --version <version> (example: $SCRIPT_NAME --version 6.7.0)"
-    echo "    --sha <version>     (example: $SCRIPT_NAME --sha c8210a3)"
     echo "    --list-versions     (lists all versions available and exits)"
 }
 
@@ -41,8 +40,7 @@ error_missing_field(){
 }
 
 MODE=unset
-GIT_TAG=
-BUGSNAG_COCOA_REPO_DIR=
+VERSION=
 
 # BSD-friendly getopt-style supporting longopt
 while [ $# -gt 0 ]; do
@@ -55,12 +53,7 @@ while [ $# -gt 0 ]; do
             --version)
 				if [ $# -lt 2 ]; then error_missing_field $1; fi
 				MODE=version
-				GIT_TAG=v$2
-				shift;;
-            --sha)
-				if [ $# -lt 2 ]; then error_missing_field $1; fi
-				MODE=sha;
-				GIT_TAG=$2;
+				VERSION=$2
 				shift;;
             -*)
 				error_bad_opt $1;;
@@ -74,16 +67,6 @@ done
 # Script Code
 # -----------
 
-revendor_from_git() {
-	local tag=$1
-	echo "Checking out https://github.com/bugsnag/bugsnag-cocoa.git with tag $tag"
-	pushd "$SCRIPT_DIR/ios/vendor/bugsnag-cocoa" >/dev/null
-	git fetch
-	git checkout --quiet $tag
-	popd >/dev/null
-}
-
-
 case $MODE in
 	unset)
 		print_help
@@ -91,14 +74,12 @@ case $MODE in
 		;;
     list-versions)
         git ls-remote --tags https://github.com/bugsnag/bugsnag-cocoa.git | \
-            grep -v "{}" | awk "{print \$2}" | sed 's/refs\/tags\/v//g' | sed 's/refs\/tags\///g'
+            grep -v "{}" | awk "{print \$2}" | sed 's/refs\/tags\/v//g' | sed 's/refs\/tags\///g' | \
+            sort --version-sort
         exit 0
         ;;
 	version)
-		revendor_from_git $GIT_TAG
-		;;
-	sha)
-		revendor_from_git $GIT_TAG
+		sed -i '' -e "s/s.dependency \"Bugsnag\", \".*\"/s.dependency \"Bugsnag\", \"$VERSION\"/" "$SCRIPT_DIR/BugsnagReactNative.podspec"
 		;;
 	*)
 		echo "BUG: Invalid MODE: $MODE"

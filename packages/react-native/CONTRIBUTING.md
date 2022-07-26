@@ -2,7 +2,7 @@
 
 ## Upgrading native notifier dependencies
 
-Both [`bugsnag-android`](https://github.com/bugnsag/bugsnag-android) and [`bugsnag-cocoa`](https://github.com/bugnsag/bugsnag-cocoa) are vendored into this repository as part of the `@bugsnag/react-native` package. When updates to those notifiers are released, a PR should be make to this repository to vendor the new version.
+When updates to [`bugsnag-android`](https://github.com/bugnsag/bugsnag-android) or [`bugsnag-cocoa`](https://github.com/bugnsag/bugsnag-cocoa) are released, a PR should be make to this repository to the new version.
 
 ### Android
 
@@ -16,11 +16,11 @@ To update the version of the bundled artefacts:
 
 #### iOS
 
-[bugsnag-cocoa](https://github.com/bugnsag/bugsnag-cocoa) source is vendored in `packages/react-native/ios/vendor/bugsnag-cocoa`.
+[bugsnag-cocoa](https://github.com/bugnsag/bugsnag-cocoa) is added as a dependency in `packages/react-native/BugsnagReactNative.podspec`.
 
-To update the version of the bundled notifier source:
+To update the version of the dependency:
 
-- Run the script `packages/react-native/update-ios.sh`. This script accepts version tags, sha, or a local directory, but for releases specify a version (e.g. `packages/react-native/update-ios.sh --version 6.6.2`). This will copy the Cocoa sources and headers into the correct locations.
+- Run the script `packages/react-native/update-ios.sh`. This script accepts version tags (e.g. `packages/react-native/update-ios.sh --version 6.6.2`) and updates the podspec.
 - Update the changelog according to the [contributing guide](../../CONTRIBUTING.md), creating a new `TBD` section if one doesn't exist. Under the section `### Changed` add a new entry: `- (react-native): Update bugsnag-cocoa to v{VERSION}`, indenting one level and including the entire changelog for the version that has been updated. If multiple releases have been made since the version bump, the changelog entries for the interim should be aggregated into one.
 
 ## Development

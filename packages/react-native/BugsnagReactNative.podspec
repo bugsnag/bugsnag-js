@@ -1,7 +1,5 @@
 require "json"
 package = JSON.parse(File.read(File.join(__dir__, "package.json")))
-bugsnag_cocoa_podspec = JSON.parse(File.read(File.join(__dir__, "ios", "vendor", "bugsnag-cocoa", "Bugsnag.podspec.json")))
-bugsnag_cocoa_public_header_files = bugsnag_cocoa_podspec["public_header_files"]
 
 Pod::Spec.new do |s|
   s.name         = "BugsnagReactNative"
@@ -11,12 +9,10 @@ Pod::Spec.new do |s|
   s.homepage     = "https://github.com/bugsnag/"
   s.license      = "MIT"
   s.author       = { "Bugsnag" => "platforms@bugsnag.com" }
-  s.platform     = :ios, "7.0"
+  s.platform     = :ios, "9.0"
   s.source       = { :git => "https://github.com/bugsnag/bugsnag-js.git", :tag => "v#{s.version}" }
-  s.source_files = "ios/BugsnagReactNative/**/*.{h,m}",
-                   "ios/vendor/bugsnag-cocoa/**/*.{h,mm,m,cpp,c}",
-  s.public_header_files = "ios/vendor/bugsnag-cocoa/{#{bugsnag_cocoa_public_header_files.join(',')}}"
-  s.header_dir = 'Bugsnag'
+  s.source_files = "ios/BugsnagReactNative/**/*.{h,m}"
   s.requires_arc = true
+  s.dependency "Bugsnag", "6.21.0"
   s.dependency "React-Core"
 end
