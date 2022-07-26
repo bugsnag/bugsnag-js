@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
   s.homepage     = "https://github.com/bugsnag/"
   s.license      = "MIT"
   s.author       = { "Bugsnag" => "platforms@bugsnag.com" }
-  s.platform     = :ios, "7.0"
+  s.platform     = :ios, "9.0"
   s.source       = { :git => "https://github.com/bugsnag/bugsnag-js.git", :tag => "v#{s.version}" }
   s.source_files = "ios/BugsnagReactNative/**/*.{h,m}",
                    "ios/vendor/bugsnag-cocoa/**/*.{h,mm,m,cpp,c}",
