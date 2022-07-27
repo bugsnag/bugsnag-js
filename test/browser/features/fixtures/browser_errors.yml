@@ -172,7 +172,7 @@ edge_17:
     columnNumber: 7
   unhandled_undefined_function:
     errorClass: 'ReferenceError'
-    errorMessage: "'nevergoingtoexist_notinamillionyears' is undefined"
+    errorMessage: "'nevergoingtoexist_notinamillionyears' is not defined"
     lineNumber: 18
     columnNumber: 7
   unhandled_malformed_uri:
@@ -490,7 +490,7 @@ firefox_78:
     errorMessage: 'foo is not defined'
   unhandled_syntax:
     errorClass: 'SyntaxError'
-    errorMessage: "missing ; before statement"
+    errorMessage: "unexpected token: '!'"
     lineNumber: 18
     columnNumber: 12
     file: '/unhandled/script/a.html'
@@ -508,7 +508,7 @@ firefox_78:
     errorClass: 'URIError'
     errorMessage: malformed URI sequence
     lineNumber: 18
-    columnNumber: 7
+    columnNumber: 25
 
 firefox_latest:
   handled:
