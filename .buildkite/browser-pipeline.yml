@@ -110,7 +110,7 @@ steps:
 
 # BrowserStack tests
 
-  - label: ':chrome: v53 Browser tests'
+  - label: ':chrome: v43 Browser tests'
     depends_on: "browser-maze-runner-v6-image"
     timeout_in_minutes: 20
     plugins:
@@ -120,7 +120,7 @@ steps:
         use-aliases: true
         command:
           - --farm=bs
-          - --browser=chrome_53
+          - --browser=chrome_43
     concurrency: 2
     concurrency_group: 'browserstack'
 
