@@ -158,7 +158,7 @@ edge_15:
 edge_17:
   handled:
     errorClass: 'ReferenceError'
-    errorMessage: "'foo' is undefined"
+    errorMessage: "'foo' is not defined"
   unhandled_syntax:
     errorClass: 'Error'
     errorMessage: "Expected ';'"
