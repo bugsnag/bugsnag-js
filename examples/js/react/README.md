@@ -36,7 +36,7 @@ npm install
 npm run serve
 ```
 
-or alternatively, to run a development server that automatically reloads the page when you make changes to the code:0
+or alternatively, to run a development server that automatically reloads the page when you make changes to the code:
 
 ```
 npm install
