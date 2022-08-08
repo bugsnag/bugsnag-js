@@ -1,11 +1,11 @@
-var Bugsnag = require('@bugsnag/browser')
-var ReactDOM = require('react-dom')
-var React = require('react')
-var config = require('./lib/config')
+import Bugsnag from '@bugsnag/browser'
+import ReactDOM from 'react-dom'
+import React from 'react'
+import { apiKey, endpoints, plugins } from './lib/config'
 
-Bugsnag.start(config)
+Bugsnag.start({ apiKey, endpoints, plugins })
 
-var ErrorBoundary = Bugsnag.getPlugin('react')
+var ErrorBoundary = Bugsnag.getPlugin('react')!.createErrorBoundary();
 
 function onError () {
 }
