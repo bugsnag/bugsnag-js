@@ -149,7 +149,7 @@ describe('plugin: electron client sync', () => {
     client.addFeatureFlag('a', 'b')
     client.addFeatureFlags([{ name: 'c', variant: null }, { name: 'd', variant: 'e' }])
 
-    expect(client._features).toStrictEqual({ a: 'b', c: null, d: 'e' })
+    expect(client._features).toStrictEqual([{ name: 'a', variant: 'b' }, { name: 'c', variant: null }, { name: 'd', variant: 'e' }])
 
     expect(updateFeatureFlags).toHaveBeenCalledTimes(2)
     expect(updateFeatureFlags).toHaveBeenNthCalledWith(1, [{ featureFlag: 'a', variant: 'b' }])
@@ -175,7 +175,7 @@ describe('plugin: electron client sync', () => {
     client.addFeatureFlags([{ name: 'c', variant: null }, { name: 'd', variant: 'e' }])
     client.clearFeatureFlag('d')
 
-    expect(client._features).toStrictEqual({ a: 'b', c: null })
+    expect(client._features).toStrictEqual([{ name: 'a', variant: 'b' }, { name: 'c', variant: null }])
 
     expect(updateFeatureFlags).toHaveBeenCalledTimes(3)
     expect(updateFeatureFlags).toHaveBeenNthCalledWith(1, [{ featureFlag: 'a', variant: 'b' }])
@@ -205,7 +205,7 @@ describe('plugin: electron client sync', () => {
     client.addFeatureFlags([{ name: 'c', variant: null }, { name: 'd', variant: 'e' }])
     client.clearFeatureFlags()
 
-    expect(client._features).toStrictEqual({})
+    expect(client._features).toEqual([])
 
     expect(updateFeatureFlags).toHaveBeenCalledTimes(3)
     expect(updateFeatureFlags).toHaveBeenNthCalledWith(1, [{ featureFlag: 'a', variant: 'b' }])

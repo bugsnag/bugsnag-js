@@ -36,7 +36,7 @@ class Client {
     this._breadcrumbs = []
     this._session = null
     this._metadata = {}
-    this._features = {}
+    this._features = []
     this._context = undefined
     this._user = {}
 
@@ -98,11 +98,11 @@ class Client {
   }
 
   clearFeatureFlag (name) {
-    delete this._features[name]
+    this._features = filter(this._features, (f) => f.name !== name)
   }
 
   clearFeatureFlags () {
-    this._features = {}
+    this._features = []
   }
 
   getContext () {
@@ -295,9 +295,9 @@ class Client {
     })
     event.context = event.context || this._context
     event._metadata = assign({}, event._metadata, this._metadata)
-    event._features = assign({}, event._features, this._features)
     event._user = assign({}, event._user, this._user)
     event.breadcrumbs = this._breadcrumbs.slice()
+    event._features = [...this._features, ...event._features]
 
     // exit early if events should not be sent on the current releaseStage
     if (this._config.enabledReleaseStages !== null && !includes(this._config.enabledReleaseStages, this._config.releaseStage)) {

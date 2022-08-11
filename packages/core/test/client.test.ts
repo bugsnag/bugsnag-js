@@ -891,7 +891,7 @@ describe('@bugsnag/core/client', () => {
         ]
       })
 
-      expect(client._features).toStrictEqual({ a: '1', b: null, c: '3' })
+      expect(client._features).toStrictEqual([{ name: 'a', variant: '1' }, { name: 'b', variant: null }, { name: 'c', variant: '3' }])
     })
 
     it('requires all flags have a name', () => {
@@ -918,7 +918,7 @@ describe('@bugsnag/core/client', () => {
         '  - featureFlags should be an array of objects that have a "name" property, got [{"name":"a","variant":"1"},{"variant":"b"},{"name":"c","variant":"3"}]'
       ].join('\n')
 
-      expect(client._features).toStrictEqual({})
+      expect(client._features).toEqual([])
       expect(logger.warn).toHaveBeenCalledTimes(1)
       expect(logger.warn.mock.calls[0][0].message).toBe(expectedMessage)
     })
@@ -933,7 +933,7 @@ describe('@bugsnag/core/client', () => {
 
       const client = new Client({ apiKey: 'a123456789012345678901234567890b', logger })
 
-      expect(client._features).toStrictEqual({})
+      expect(client._features).toEqual([])
       expect(logger.warn).not.toHaveBeenCalled()
     })
 
@@ -948,7 +948,7 @@ describe('@bugsnag/core/client', () => {
       // @ts-expect-error
       const client = new Client({ apiKey: 'a123456789012345678901234567890b', logger, featureFlags })
 
-      expect(client._features).toStrictEqual({})
+      expect(client._features).toStrictEqual([])
     })
 
     describe('#addFeatureFlag', () => {
@@ -957,7 +957,7 @@ describe('@bugsnag/core/client', () => {
 
         client.addFeatureFlag('a name', 'variant number 1234')
 
-        expect(client._features).toStrictEqual({ a: '1', 'a name': 'variant number 1234' })
+        expect(client._features).toStrictEqual([{ name: 'a', variant: '1' }, { name: 'a name', variant: 'variant number 1234' }])
       })
 
       it('overwrites an existing flag by name', () => {
@@ -966,7 +966,7 @@ describe('@bugsnag/core/client', () => {
         client.addFeatureFlag('a name', 'variant number 1234')
         client.addFeatureFlag('a name', 'variant number 5678')
 
-        expect(client._features).toStrictEqual({ 'a name': 'variant number 5678' })
+        expect(client._features).toStrictEqual([{ name: 'a name', variant: 'variant number 5678' }])
       })
 
       it('adds the given flag when no variant is passed', () => {
@@ -974,7 +974,7 @@ describe('@bugsnag/core/client', () => {
 
         client.addFeatureFlag('a name')
 
-        expect(client._features).toStrictEqual({ a: '1', 'a name': null })
+        expect(client._features).toStrictEqual([{ name: 'a', variant: '1' }, { name: 'a name', variant: null }])
       })
 
       it('adds the given flag when the variant is null', () => {
@@ -982,7 +982,7 @@ describe('@bugsnag/core/client', () => {
 
         client.addFeatureFlag('a name', null)
 
-        expect(client._features).toStrictEqual({ a: '1', 'a name': null })
+        expect(client._features).toStrictEqual([{ name: 'a', variant: '1' }, { name: 'a name', variant: null }])
       })
 
       it('does not add the flag if no name is passed', () => {
@@ -991,7 +991,7 @@ describe('@bugsnag/core/client', () => {
         // @ts-expect-error
         client.addFeatureFlag()
 
-        expect(client._features).toStrictEqual({ a: '1' })
+        expect(client._features).toStrictEqual([{ name: 'a', variant: '1' }])
       })
     })
 
@@ -1007,14 +1007,14 @@ describe('@bugsnag/core/client', () => {
           { name: 'idk' }
         ])
 
-        expect(client._features).toStrictEqual({
-          a: '1',
-          abc: null,
-          xyz: 'yes',
-          aaa: 'no',
-          zzz: 'maybe',
-          idk: null
-        })
+        expect(client._features).toStrictEqual([
+          { name: 'a', variant: '1' },
+          { name: 'abc', variant: null },
+          { name: 'xyz', variant: 'yes' },
+          { name: 'aaa', variant: 'no' },
+          { name: 'zzz', variant: 'maybe' },
+          { name: 'idk', variant: null }
+        ])
       })
 
       it('does not add the flags if none are passed', () => {
@@ -1022,7 +1022,7 @@ describe('@bugsnag/core/client', () => {
 
         client.addFeatureFlags([])
 
-        expect(client._features).toStrictEqual({ a: '1' })
+        expect(client._features).toStrictEqual([{ name: 'a', variant: '1' }])
       })
 
       it('does not add flags if nothing is passed', () => {
@@ -1031,7 +1031,7 @@ describe('@bugsnag/core/client', () => {
         // @ts-expect-error
         client.addFeatureFlags()
 
-        expect(client._features).toStrictEqual({ a: '1' })
+        expect(client._features).toStrictEqual([{ name: 'a', variant: '1' }])
       })
     })
 
@@ -1041,7 +1041,7 @@ describe('@bugsnag/core/client', () => {
 
         client.clearFeatureFlag('a')
 
-        expect(client._features).toStrictEqual({})
+        expect(client._features).toEqual([])
       })
 
       it('does nothing if there are no flags', () => {
@@ -1049,7 +1049,7 @@ describe('@bugsnag/core/client', () => {
 
         client.clearFeatureFlag('a')
 
-        expect(client._features).toStrictEqual({})
+        expect(client._features).toEqual([])
       })
 
       it('does nothing if the given flag does not exist', () => {
@@ -1057,7 +1057,7 @@ describe('@bugsnag/core/client', () => {
 
         client.clearFeatureFlag('b')
 
-        expect(client._features).toStrictEqual({ a: '1' })
+        expect(client._features).toStrictEqual([{ name: 'a', variant: '1' }])
       })
 
       it('does nothing if not given a flag', () => {
@@ -1066,7 +1066,7 @@ describe('@bugsnag/core/client', () => {
         // @ts-expect-error
         client.clearFeatureFlag()
 
-        expect(client._features).toStrictEqual({ a: '1' })
+        expect(client._features).toStrictEqual([{ name: 'a', variant: '1' }])
       })
     })
 
@@ -1076,7 +1076,7 @@ describe('@bugsnag/core/client', () => {
 
         client.clearFeatureFlags()
 
-        expect(client._features).toStrictEqual({})
+        expect(client._features).toStrictEqual([])
       })
 
       it('does nothing if there are no flags', () => {
@@ -1084,7 +1084,7 @@ describe('@bugsnag/core/client', () => {
 
         client.clearFeatureFlags()
 
-        expect(client._features).toStrictEqual({})
+        expect(client._features).toStrictEqual([])
       })
     })
 
@@ -1095,13 +1095,13 @@ describe('@bugsnag/core/client', () => {
         sendEvent: payload => {
           const event = payload.events[0].toJSON()
 
-          expect(event.featureFlags).toStrictEqual([
-            { featureFlag: 'a', variant: '1' },
-            { featureFlag: 'b', variant: '2' },
-            { featureFlag: 'c' },
-            { featureFlag: 'd', variant: '3' },
-            { featureFlag: 'e' }
-          ])
+          expect(event.featureFlags).toEqual(expect.arrayContaining([
+            expect.objectContaining({ featureFlag: 'a', variant: '1' }),
+            expect.objectContaining({ featureFlag: 'b', variant: '2' }),
+            expect.objectContaining({ featureFlag: 'c' }),
+            expect.objectContaining({ featureFlag: 'd', variant: '3' }),
+            expect.objectContaining({ featureFlag: 'e' })
+          ]))
 
           process.nextTick(() => done())
         },
@@ -1128,13 +1128,13 @@ describe('@bugsnag/core/client', () => {
         sendEvent: payload => {
           const event = payload.events[0].toJSON()
 
-          expect(event.featureFlags).toStrictEqual([
-            { featureFlag: 'a', variant: '1' },
-            { featureFlag: 'b', variant: '2' },
-            { featureFlag: 'c' },
-            { featureFlag: 'd', variant: '3' },
-            { featureFlag: 'e' }
-          ])
+          expect(event.featureFlags).toEqual(expect.arrayContaining([
+            expect.objectContaining({ featureFlag: 'a', variant: '1' }),
+            expect.objectContaining({ featureFlag: 'b', variant: '2' }),
+            expect.objectContaining({ featureFlag: 'c' }),
+            expect.objectContaining({ featureFlag: 'd', variant: '3' }),
+            expect.objectContaining({ featureFlag: 'e' })
+          ]))
 
           process.nextTick(() => done())
         },
@@ -1154,6 +1154,36 @@ describe('@bugsnag/core/client', () => {
       client.notify(new Error('oh no'), event => {
         event.clearFeatureFlag('this should not be included')
       })
+    })
+
+    it('preserves the insertion order of feature flags', done => {
+      const client = new Client({ apiKey: 'API_KEY', featureFlags: [{ name: '7', variant: 'first' }] })
+
+      client._setDelivery(client => ({
+        sendEvent: payload => {
+          const event = payload.events[0].toJSON()
+
+          expect(event.featureFlags).toStrictEqual([
+            { featureFlag: '7', variant: 'first' },
+            { featureFlag: 'feature', variant: 'second' },
+            { featureFlag: '3' },
+            { featureFlag: 'e', variant: 'fourth' },
+            { featureFlag: 'a', variant: 'fifth' }
+          ])
+
+          process.nextTick(() => done())
+        },
+        sendSession: () => {}
+      }))
+
+      client.addFeatureFlag('feature', 'second')
+      client.addFeatureFlags([
+        { name: '3' },
+        { name: 'e', variant: 'fourth' },
+        { name: 'a', variant: 'fifth' }
+      ])
+
+      client.notify(new Error('oh no'))
     })
   })
 })

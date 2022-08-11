@@ -28,7 +28,7 @@ class Event {
     this.threads = []
 
     this._metadata = {}
-    this._features = {}
+    this._features = []
     this._user = {}
     this._session = undefined
 
@@ -64,11 +64,11 @@ class Event {
   }
 
   clearFeatureFlag (name) {
-    delete this._features[name]
+    this._features = filter(this._features, (f) => f.name !== name)
   }
 
   clearFeatureFlags () {
-    this._features = {}
+    this._features = []
   }
 
   getUser () {

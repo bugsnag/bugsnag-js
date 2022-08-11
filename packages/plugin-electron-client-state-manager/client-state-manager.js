@@ -88,12 +88,7 @@ module.exports = {
       }
 
       if (features) {
-        // convert feature flags from '{ name: "variant" }' to '[{ name: "name", variant: "variant" }]'
-        // addFeatureFlags wants the latter, but we only have the former when this
-        // function is called by a new renderer
-        client.addFeatureFlags(
-          Object.entries(features).map(([name, variant]) => ({ name, variant }))
-        )
+        client.addFeatureFlags(features)
       }
     }
 

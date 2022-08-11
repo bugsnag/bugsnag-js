@@ -16,10 +16,10 @@ describe('serializeConfigForRenderer() method', () => {
       metadata: { foo: { bar: 'baz' } },
       user: { id: '123' },
       context: 'initial'
-    }, { foo: { bar: 'biz' } }, { flag: '123' }, { id: '456' }, 'secondary'))).toEqual({
+    }, { foo: { bar: 'biz' } }, [{ name: 'flag', variant: '123' }], { id: '456' }, 'secondary'))).toEqual({
       apiKey: '123',
       metadata: { foo: { bar: 'biz' } },
-      features: { flag: '123' },
+      features: [{ name: 'flag', variant: '123' }],
       user: { id: '456' },
       context: 'secondary'
     })

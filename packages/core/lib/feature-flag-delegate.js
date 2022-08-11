@@ -1,9 +1,9 @@
-const map = require('./es-utils/map')
-const keys = require('./es-utils/keys')
 const isArray = require('./es-utils/is-array')
+const reduce = require('./es-utils/reduce')
+const findIndex = require('./es-utils/find-index')
 const jsonStringify = require('@bugsnag/safe-json-stringify')
 
-function add (existingFeatures, name, variant) {
+function add (existingFeatures = [], name, variant) {
   if (typeof name !== 'string') {
     return
   }
@@ -14,7 +14,16 @@ function add (existingFeatures, name, variant) {
     variant = jsonStringify(variant)
   }
 
-  existingFeatures[name] = variant
+  var found = false
+  for (var i = 0; i < existingFeatures.length; i++) {
+    if (existingFeatures[i].name === name) {
+      found = true
+      existingFeatures[i].variant = variant
+      break
+    }
+  }
+
+  if (!found) existingFeatures.push({ name, variant })
 }
 
 function merge (existingFeatures, newFeatures) {
@@ -34,23 +43,20 @@ function merge (existingFeatures, newFeatures) {
   }
 }
 
-// convert feature flags from a map of 'name -> variant' into the format required
+// convert feature flags from a map of { name: 'name', variant: 'variant'} into the format required
 // by the Bugsnag Event API:
 //   [{ featureFlag: 'name', variant: 'variant' }, { featureFlag: 'name 2' }]
 function toEventApi (featureFlags) {
-  return map(
-    keys(featureFlags),
-    name => {
-      const flag = { featureFlag: name }
+  return reduce(featureFlags, (accum, { name, variant }) => {
+    const index = findIndex(accum, ({ featureFlag }) => name === featureFlag)
 
-      // don't add a 'variant' property unless there's actually a value
-      if (typeof featureFlags[name] === 'string') {
-        flag.variant = featureFlags[name]
-      }
-
-      return flag
+    if (index > -1) {
+      if (variant) accum[index].variant = variant
+      return accum
+    } else {
+      return [...accum, { featureFlag: name, ...(variant ? { variant } : {}) }]
     }
-  )
+  }, [])
 }
 
 module.exports = { add, merge, toEventApi }

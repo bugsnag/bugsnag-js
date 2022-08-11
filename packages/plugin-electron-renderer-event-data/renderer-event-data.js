@@ -20,7 +20,7 @@ module.exports = (BugsnagIpcRenderer = window.__bugsnag_ipc__) => ({
       event.breadcrumbs = breadcrumbs
       event.app = { ...event.app, ...app, codeBundleId: client._config.codeBundleId }
       event.device = { ...event.device, ...device }
-      event._features = { ...event._features, ...features }
+      event._features = [...event._features, ...features]
 
       if (!event._user || Object.keys(event._user).length === 0) {
         event._user = user
