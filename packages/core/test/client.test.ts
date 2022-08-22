@@ -1095,13 +1095,13 @@ describe('@bugsnag/core/client', () => {
         sendEvent: payload => {
           const event = payload.events[0].toJSON()
 
-          expect(event.featureFlags).toEqual(expect.arrayContaining([
-            expect.objectContaining({ featureFlag: 'a', variant: '1' }),
-            expect.objectContaining({ featureFlag: 'b', variant: '2' }),
-            expect.objectContaining({ featureFlag: 'c' }),
-            expect.objectContaining({ featureFlag: 'd', variant: '3' }),
-            expect.objectContaining({ featureFlag: 'e' })
-          ]))
+          expect(event.featureFlags).toStrictEqual([
+            { featureFlag: 'a', variant: '1' },
+            { featureFlag: 'b', variant: '2' },
+            { featureFlag: 'c' },
+            { featureFlag: 'd', variant: '3' },
+            { featureFlag: 'e' }
+          ])
 
           process.nextTick(() => done())
         },
