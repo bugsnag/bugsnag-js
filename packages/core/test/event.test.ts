@@ -186,7 +186,7 @@ describe('@bugsnag/core/event', () => {
 
         event.addFeatureFlag('a name', 'variant number 1234')
 
-        expect(event._features).toStrictEqual([{ name: 'a name', variant: 'variant number 1234' }])
+        expect(event._features.toJSON()).toStrictEqual([{ featureFlag: 'a name', variant: 'variant number 1234' }])
       })
 
       it('overwrites an existing flag by name', () => {
@@ -195,7 +195,7 @@ describe('@bugsnag/core/event', () => {
         event.addFeatureFlag('a name', 'variant number 1234')
         event.addFeatureFlag('a name', 'variant number 5678')
 
-        expect(event._features).toStrictEqual([{ name: 'a name', variant: 'variant number 5678' }])
+        expect(event._features.toJSON()).toStrictEqual([{ featureFlag: 'a name', variant: 'variant number 5678' }])
       })
 
       it('adds the given flag when no variant is passed', () => {
@@ -203,7 +203,7 @@ describe('@bugsnag/core/event', () => {
 
         event.addFeatureFlag('a name')
 
-        expect(event._features).toStrictEqual([{ name: 'a name', variant: null }])
+        expect(event._features.toJSON()).toStrictEqual([{ featureFlag: 'a name' }])
       })
 
       it('adds the given flag when the variant is null', () => {
@@ -211,7 +211,7 @@ describe('@bugsnag/core/event', () => {
 
         event.addFeatureFlag('a name', null)
 
-        expect(event._features).toStrictEqual([{ name: 'a name', variant: null }])
+        expect(event._features.toJSON()).toStrictEqual([{ featureFlag: 'a name' }])
       })
 
       it('does not add the flag if no name is passed', () => {
@@ -220,7 +220,7 @@ describe('@bugsnag/core/event', () => {
         // @ts-expect-error
         event.addFeatureFlag()
 
-        expect(event._features).toStrictEqual([])
+        expect(event._features.toJSON()).toStrictEqual([])
       })
     })
 
@@ -236,12 +236,12 @@ describe('@bugsnag/core/event', () => {
           { name: 'idk' }
         ])
 
-        expect(event._features).toStrictEqual([
-          { name: 'abc', variant: null },
-          { name: 'xyz', variant: 'yes' },
-          { name: 'aaa', variant: 'no' },
-          { name: 'zzz', variant: 'maybe' },
-          { name: 'idk', variant: null }
+        expect(event._features.toJSON()).toStrictEqual([
+          { featureFlag: 'abc' },
+          { featureFlag: 'xyz', variant: 'yes' },
+          { featureFlag: 'aaa', variant: 'no' },
+          { featureFlag: 'zzz', variant: 'maybe' },
+          { featureFlag: 'idk' }
         ])
       })
 
@@ -250,7 +250,7 @@ describe('@bugsnag/core/event', () => {
 
         event.addFeatureFlags([])
 
-        expect(event._features).toStrictEqual([])
+        expect(event._features.toJSON()).toStrictEqual([])
       })
 
       it('does not add flags if nothing is passed', () => {
@@ -259,7 +259,7 @@ describe('@bugsnag/core/event', () => {
         // @ts-expect-error
         event.addFeatureFlags()
 
-        expect(event._features).toStrictEqual([])
+        expect(event._features.toJSON()).toStrictEqual([])
       })
     })
 
@@ -269,7 +269,7 @@ describe('@bugsnag/core/event', () => {
 
         event.clearFeatureFlag('a')
 
-        expect(event._features).toStrictEqual([])
+        expect(event._features.toJSON()).toStrictEqual([])
       })
 
       it('does nothing if there are no flags', () => {
@@ -277,7 +277,7 @@ describe('@bugsnag/core/event', () => {
 
         event.clearFeatureFlag('a')
 
-        expect(event._features).toStrictEqual([])
+        expect(event._features.toJSON()).toStrictEqual([])
       })
 
       it('does nothing if the given flag does not exist', () => {
@@ -285,7 +285,7 @@ describe('@bugsnag/core/event', () => {
 
         event.clearFeatureFlag('b')
 
-        expect(event._features).toStrictEqual([])
+        expect(event._features.toJSON()).toStrictEqual([])
       })
 
       it('does nothing if not given a flag', () => {
@@ -294,7 +294,7 @@ describe('@bugsnag/core/event', () => {
         // @ts-expect-error
         event.clearFeatureFlag()
 
-        expect(event._features).toStrictEqual([])
+        expect(event._features.toJSON()).toStrictEqual([])
       })
     })
 
@@ -304,7 +304,7 @@ describe('@bugsnag/core/event', () => {
 
         event.clearFeatureFlags()
 
-        expect(event._features).toStrictEqual([])
+        expect(event._features.toJSON()).toStrictEqual([])
       })
 
       it('does nothing if there are no flags', () => {
@@ -312,7 +312,7 @@ describe('@bugsnag/core/event', () => {
 
         event.clearFeatureFlags()
 
-        expect(event._features).toStrictEqual([])
+        expect(event._features.toJSON()).toStrictEqual([])
       })
     })
 

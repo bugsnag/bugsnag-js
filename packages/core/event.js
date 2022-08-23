@@ -6,8 +6,8 @@ const reduce = require('./lib/es-utils/reduce')
 const filter = require('./lib/es-utils/filter')
 const assign = require('./lib/es-utils/assign')
 const metadataDelegate = require('./lib/metadata-delegate')
-const featureFlagDelegate = require('./lib/feature-flag-delegate')
 const isError = require('./lib/iserror')
+const FeatureFlagDelegate = require('./lib/feature-flag-delegate')
 
 class Event {
   constructor (errorClass, errorMessage, stacktrace = [], handledState = defaultHandledState(), originalError) {
@@ -28,7 +28,7 @@ class Event {
     this.threads = []
 
     this._metadata = {}
-    this._features = []
+    this._features = new FeatureFlagDelegate()
     this._user = {}
     this._session = undefined
 
@@ -56,19 +56,19 @@ class Event {
   }
 
   addFeatureFlag (name, variant = null) {
-    featureFlagDelegate.add(this._features, name, variant)
+    this._features.add(name, variant)
   }
 
   addFeatureFlags (featureFlags) {
-    featureFlagDelegate.merge(this._features, featureFlags)
+    this._features.mergeFrom(new FeatureFlagDelegate(featureFlags))
   }
 
   clearFeatureFlag (name) {
-    this._features = filter(this._features, (f) => f.name !== name)
+    this._features.clear(name)
   }
 
   clearFeatureFlags () {
-    this._features = []
+    this._features = new FeatureFlagDelegate()
   }
 
   getUser () {
@@ -95,7 +95,7 @@ class Event {
       metaData: this._metadata,
       user: this._user,
       session: this._session,
-      featureFlags: featureFlagDelegate.toEventApi(this._features)
+      featureFlags: this._features.toJSON()
     }
   }
 }

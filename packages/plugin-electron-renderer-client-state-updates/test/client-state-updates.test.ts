@@ -1,5 +1,6 @@
 import clientStateUpdatesPlugin from '../client-state-updates'
 import Client from '@bugsnag/core/client'
+import FeatureFlagDelegate from '@bugsnag/core/lib/feature-flag-delegate'
 
 const Notifier = {
   name: 'Bugsnag Electron Test',
@@ -178,7 +179,7 @@ describe('clientStateUpdatesPlugin', () => {
 
       expect(mockBugsnagIpcRenderer.update).toHaveBeenCalledWith({
         metadata: { section: { key: 'value' } },
-        features: [{ name: 'abc', variant: null }, { name: 'xyz', variant: '123' }],
+        features: new FeatureFlagDelegate([{ name: 'abc' }, { name: 'xyz', variant: '123' }]),
         user: { id: 'ab23' },
         context: 'renderer config'
       })
@@ -198,7 +199,7 @@ describe('clientStateUpdatesPlugin', () => {
 
       expect(mockBugsnagIpcRenderer.update).toHaveBeenCalledWith({
         metadata: { section: { key: 'value' } },
-        features: []
+        features: new FeatureFlagDelegate([])
       })
     })
 

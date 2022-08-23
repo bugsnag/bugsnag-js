@@ -1,5 +1,6 @@
 import { Client, OnErrorCallback, Config, Breadcrumb, Session, OnSessionCallback, OnBreadcrumbCallback, Plugin, Device, App, User } from './types'
 import EventWithInternals from './event'
+import FeatureFlagDelegate from './lib/feature-flag-delegate'
 
 interface LoggerConfig {
   debug: (msg: any) => void
@@ -50,7 +51,7 @@ export default class ClientWithInternals<T extends Config = Config> extends Clie
   _user: User
 
   _metadata: { [key: string]: any }
-  _features: [{ [key: string]: string | null } ]
+  _features: FeatureFlagDelegate
 
   startSession(): ClientWithInternals
   resumeSession(): ClientWithInternals

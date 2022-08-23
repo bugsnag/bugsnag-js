@@ -6,7 +6,7 @@ import {
   OnSessionCallback,
   OnBreadcrumbCallback,
   User,
-  FeatureFlag
+  FeatureFlagInternal
 } from './common'
 import Event from './event'
 import Session from './session'
@@ -42,7 +42,7 @@ declare class Client {
 
   // feature flags
   public addFeatureFlag(name: string, variant?: string | null): void
-  public addFeatureFlags(featureFlags: FeatureFlag[]): void
+  public addFeatureFlags(featureFlags: FeatureFlagInternal[]): void
   public clearFeatureFlag(name: string): void
   public clearFeatureFlags(): void
 

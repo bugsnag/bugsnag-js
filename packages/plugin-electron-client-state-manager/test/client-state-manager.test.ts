@@ -61,7 +61,7 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
     const { emitter } = client.getPlugin('clientStateManager')
 
     emitter.on('FeatureFlagUpdate', payload => {
-      expect(payload).toStrictEqual([{ name: 'flag name', variant: 'variant name' }])
+      expect(payload).toStrictEqual([{ featureFlag: 'flag name', variant: 'variant name' }])
 
       done()
     })
@@ -77,7 +77,7 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
     client.addFeatureFlag('flag name 2', 'variant name 2')
 
     emitter.on('FeatureFlagUpdate', payload => {
-      expect(payload).toStrictEqual([{ name: 'flag name 2', variant: 'variant name 2' }])
+      expect(payload).toStrictEqual([{ featureFlag: 'flag name 2', variant: 'variant name 2' }])
 
       done()
     })
@@ -90,7 +90,7 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
     const { emitter } = client.getPlugin('clientStateManager')
 
     emitter.on('FeatureFlagUpdate', payload => {
-      expect(payload).toStrictEqual([{ name: 'flag name', variant: 'variant name' }, { name: 'another flag name', variant: 'another variant name' }, { name: 'etc etc', variant: 'etc' }])
+      expect(payload).toStrictEqual([{ featureFlag: 'flag name', variant: 'variant name' }, { featureFlag: 'another flag name', variant: 'another variant name' }, { featureFlag: 'etc etc', variant: 'etc' }])
 
       done()
     })
@@ -149,7 +149,7 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
       ]
     })
 
-    expect(featuresCb).toHaveBeenCalledWith([{ name: 'flag name 1', variant: 'variant name 1' }, { name: 'flag name 2', variant: 'variant name 2' }])
+    expect(featuresCb).toHaveBeenCalledWith([{ featureFlag: 'flag name 1', variant: 'variant name 1' }, { featureFlag: 'flag name 2', variant: 'variant name 2' }])
 
     expect(metadataCb).toHaveBeenCalledWith({ section: { key: 'value' } })
     expect(contextCb).toHaveBeenCalledWith('ctx')

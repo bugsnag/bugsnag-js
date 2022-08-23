@@ -102,7 +102,7 @@ module.exports = class BugsnagIpcMain {
       }
       event.context = event.context || this.client._context
       event._metadata = { ...event._metadata, ...this.client._metadata }
-      event._features = [...event._features, ...this.client._features]
+      event._features.mergeFrom(this.client._features)
       event._user = { ...event._user, ...this.client._user }
       event.breadcrumbs = this.client._breadcrumbs.slice()
 
@@ -114,7 +114,7 @@ module.exports = class BugsnagIpcMain {
 
         // extract just the properties we want from the event
         const { app, breadcrumbs, context, device, _metadata, _features, _user } = event
-        resolve({ app, breadcrumbs, context, device, metadata: _metadata, features: _features, user: _user })
+        resolve({ app, breadcrumbs, context, device, metadata: _metadata, features: _features.toJSON(), user: _user })
       })
     })
   }

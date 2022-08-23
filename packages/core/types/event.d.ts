@@ -7,7 +7,7 @@ import {
   User,
   Thread,
   Stackframe,
-  FeatureFlag
+  FeatureFlagInternal
 } from './common'
 
 declare class Event {
@@ -49,7 +49,7 @@ declare class Event {
 
   // feature flags
   public addFeatureFlag(name: string, variant?: string | null): void
-  public addFeatureFlags(featureFlags: FeatureFlag[]): void
+  public addFeatureFlags(featureFlags: FeatureFlagInternal[]): void
   public clearFeatureFlag(name: string): void
   public clearFeatureFlags(): void
 }

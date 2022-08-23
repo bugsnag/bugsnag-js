@@ -1,3 +1,4 @@
+import FeatureFlagDelegate from './lib/feature-flag-delegate'
 import { App, Device, Event, Request, Breadcrumb, User, Session } from './types'
 import { Error } from './types/event'
 
@@ -21,7 +22,7 @@ interface FeatureFlagPayload {
 export default class EventWithInternals extends Event {
   constructor (errorClass: string, errorMessage: string, stacktrace: any[], handledState?: HandledState, originalError?: Error)
   _metadata: { [key: string]: any }
-  _features: [{ [key: string]: string | null } ]
+  _features: FeatureFlagDelegate
   _user: User
   _handledState: HandledState
   _session?: Session

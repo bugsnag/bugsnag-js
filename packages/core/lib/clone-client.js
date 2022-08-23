@@ -1,4 +1,5 @@
 const assign = require('./es-utils/assign')
+const FeatureFlagDelegate = require('./feature-flag-delegate')
 
 module.exports = (client) => {
   const clone = new client.Client({}, {}, [], client._notifier)
@@ -9,7 +10,7 @@ module.exports = (client) => {
   // so ensure they are are (shallow) cloned
   clone._breadcrumbs = client._breadcrumbs.slice()
   clone._metadata = assign({}, client._metadata)
-  clone._features = [...client._features]
+  clone._features = new FeatureFlagDelegate(client._features.toJSON())
   clone._user = assign({}, client._user)
   clone._context = client._context
 

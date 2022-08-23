@@ -47,28 +47,28 @@ module.exports = {
     const origAddFeatureFlag = client.addFeatureFlag
     client.addFeatureFlag = (...args) => {
       const ret = origAddFeatureFlag.apply(client, args)
-      emitter.emit('FeatureFlagUpdate', client._features)
+      emitter.emit('FeatureFlagUpdate', client._features.toJSON())
       return ret
     }
 
     const origAddFeatureFlags = client.addFeatureFlags
     client.addFeatureFlags = (...args) => {
       const ret = origAddFeatureFlags.apply(client, args)
-      emitter.emit('FeatureFlagUpdate', client._features)
+      emitter.emit('FeatureFlagUpdate', client._features.toJSON())
       return ret
     }
 
     const origClearFeatureFlag = client.clearFeatureFlag
     client.clearFeatureFlag = (...args) => {
       const ret = origClearFeatureFlag.apply(client, args)
-      emitter.emit('FeatureFlagUpdate', client._features)
+      emitter.emit('FeatureFlagUpdate', client._features.toJSON())
       return ret
     }
 
     const origClearFeatureFlags = client.clearFeatureFlags
     client.clearFeatureFlags = (...args) => {
       const ret = origClearFeatureFlags.apply(client, args)
-      emitter.emit('FeatureFlagUpdate', client._features)
+      emitter.emit('FeatureFlagUpdate', client._features.toJSON())
       return ret
     }
 

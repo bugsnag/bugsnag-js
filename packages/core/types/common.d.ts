@@ -24,7 +24,7 @@ export interface Config {
   logger?: Logger | null
   maxBreadcrumbs?: number
   metadata?: { [key: string]: any }
-  featureFlags?: FeatureFlag[]
+  featureFlags?: FeatureFlagInternal[]
   releaseStage?: string
   plugins?: Plugin[]
   user?: User | null
@@ -143,7 +143,7 @@ export interface Stackframe {
   inProject?: boolean
 }
 
-export interface FeatureFlag {
+export interface FeatureFlagInternal {
   name: string
   variant?: string | null
 }

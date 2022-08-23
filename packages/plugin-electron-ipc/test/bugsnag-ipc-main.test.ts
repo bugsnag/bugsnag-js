@@ -303,10 +303,10 @@ describe('BugsnagIpcMain', () => {
           device: { isOutdated: true }
         },
         features: [
-          { name: 'flag1', variant: null },
-          { name: 'flag2', variant: null },
-          { name: 'flag3', variant: '1234' },
-          { name: 'flag4', variant: 'abc' }
+          { featureFlag: 'flag1' },
+          { featureFlag: 'flag2' },
+          { featureFlag: 'flag3', variant: '1234' },
+          { featureFlag: 'flag4', variant: 'abc' }
         ],
         user: {
           id: '123',

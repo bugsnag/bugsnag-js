@@ -31,13 +31,15 @@ describe('plugin: electron renderer event data', () => {
     expect(event.app).toStrictEqual({ ...app, releaseStage: 'production', type: undefined, version: undefined, codeBundleId: undefined })
     expect(event.device).toStrictEqual(device)
     expect(event.getUser()).toStrictEqual(user)
-    expect(event._features).toStrictEqual(features)
     expect(event.getMetadata('meta')).toStrictEqual(metadata.meta)
+    // @ts-ignore:
+    expect(event._features.toJSON()).toStrictEqual([{ featureFlag: 'flag1', variant: 'variant1' }])
   })
 
   it('prefers pre-existing context from the event', async () => {
     const { client, sendEvent } = makeClient({ context: 'goodbye' })
 
+    // @ts-ignore:
     client.addOnError(event => { event.context = 'hello' }, true)
 
     const event = await sendEvent()
@@ -48,6 +50,7 @@ describe('plugin: electron renderer event data', () => {
   it('prefers pre-existing user from the event', async () => {
     const { client, sendEvent } = makeClient({ user: { id: 123 } })
 
+    // @ts-ignore:
     client.addOnError(event => { event.setUser(456, 'abc@example.com', 'abc') }, true)
 
     const event = await sendEvent()
