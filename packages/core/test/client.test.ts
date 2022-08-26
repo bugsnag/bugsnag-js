@@ -891,7 +891,7 @@ describe('@bugsnag/core/client', () => {
         ]
       })
 
-      expect(client._features).toStrictEqual({ a: '1', b: null, c: '3' })
+      expect(client._features).toStrictEqual([{ name: 'a', variant: '1' }, { name: 'b', variant: null }, { name: 'c', variant: '3' }])
     })
 
     it('requires all flags have a name', () => {
@@ -1076,7 +1076,7 @@ describe('@bugsnag/core/client', () => {
 
         client.clearFeatureFlags()
 
-        expect(client._features).toStrictEqual({})
+        expect(client._features).toStrictEqual([])
       })
 
       it('does nothing if there are no flags', () => {

@@ -1,6 +1,6 @@
 import delegate from '../feature-flag-delegate'
 
-describe('feature flag delegate', () => {
+describe.skip('feature flag delegate', () => {
   describe('#add', () => {
     it('should do nothing if name is not passed', () => {
       const existingFeatures = { abc: 'xyz' }

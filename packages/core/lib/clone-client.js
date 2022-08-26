@@ -9,7 +9,8 @@ module.exports = (client) => {
   // so ensure they are are (shallow) cloned
   clone._breadcrumbs = client._breadcrumbs.slice()
   clone._metadata = assign({}, client._metadata)
-  clone._features = assign({}, client._features)
+  clone._features = [...client._features]
+  clone._featuresIndex = assign({}, client._featuresIndex)
   clone._user = assign({}, client._user)
   clone._context = client._context
 

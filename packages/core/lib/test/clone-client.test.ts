@@ -116,14 +116,14 @@ describe('clone-client', () => {
 
     const clone = cloneClient(original)
 
-    expect(clone._features).toStrictEqual({ abc: '123' })
+    expect(clone._features).toStrictEqual([{ name: 'abc', variant: '123' }])
     expect(clone._features).not.toBe(original._features)
 
     // changing the clone's feature flags shouldn't affect the original
     clone.addFeatureFlag('xyz', '999')
 
-    expect(clone._features).toStrictEqual({ abc: '123', xyz: '999' })
-    expect(original._features).toStrictEqual({ abc: '123' })
+    expect(clone._features).toStrictEqual([{ name: 'abc', variant: '123' }, { name: 'xyz', variant: '999' }])
+    expect(original._features).toStrictEqual([{ name: 'abc', variant: '123' }])
   })
 
   it('should clone user information', () => {
