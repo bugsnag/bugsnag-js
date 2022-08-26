@@ -9,10 +9,10 @@ const reduce = require('./lib/es-utils/reduce')
 const keys = require('./lib/es-utils/keys')
 const assign = require('./lib/es-utils/assign')
 const runCallbacks = require('./lib/callback-runner')
-const featureFlagDelegate = require('./lib/feature-flag-delegate')
 const metadataDelegate = require('./lib/metadata-delegate')
 const runSyncCallbacks = require('./lib/sync-callback-runner')
 const BREADCRUMB_TYPES = require('./lib/breadcrumb-types')
+const { add, clear, merge } = require('./lib/feature-flag-delegate')
 
 const noop = () => {}
 
@@ -36,7 +36,8 @@ class Client {
     this._breadcrumbs = []
     this._session = null
     this._metadata = {}
-    this._features = {}
+    this._featuresIndex = {}
+    this._features = []
     this._context = undefined
     this._user = {}
 
@@ -90,19 +91,20 @@ class Client {
   }
 
   addFeatureFlag (name, variant = null) {
-    featureFlagDelegate.add(this._features, name, variant)
+    add(this._features, this._featuresIndex, name, variant)
   }
 
   addFeatureFlags (featureFlags) {
-    featureFlagDelegate.merge(this._features, featureFlags)
+    merge(this._features, featureFlags, this._featuresIndex)
   }
 
   clearFeatureFlag (name) {
-    delete this._features[name]
+    clear(this._features, this._featuresIndex, name)
   }
 
   clearFeatureFlags () {
-    this._features = {}
+    this._features = []
+    this._featuresIndex = {}
   }
 
   getContext () {
@@ -151,7 +153,7 @@ class Client {
 
     // update and elevate some options
     this._metadata = assign({}, config.metadata)
-    featureFlagDelegate.merge(this._features, config.featureFlags)
+    merge(this._features, config.featureFlags, this._featuresIndex)
     this._user = assign({}, config.user)
     this._context = config.context
     if (config.logger) this._logger = config.logger
@@ -295,9 +297,9 @@ class Client {
     })
     event.context = event.context || this._context
     event._metadata = assign({}, event._metadata, this._metadata)
-    event._features = assign({}, event._features, this._features)
     event._user = assign({}, event._user, this._user)
     event.breadcrumbs = this._breadcrumbs.slice()
+    merge(event._features, this._features, event._featuresIndex)
 
     // exit early if events should not be sent on the current releaseStage
     if (this._config.enabledReleaseStages !== null && !includes(this._config.enabledReleaseStages, this._config.releaseStage)) {

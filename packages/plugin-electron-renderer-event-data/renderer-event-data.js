@@ -1,4 +1,5 @@
 const { stripProjectRoot } = require('@bugsnag/plugin-electron-renderer-strip-project-root')
+const featureFlagDelegate = require('@bugsnag/core/lib/feature-flag-delegate')
 
 module.exports = (BugsnagIpcRenderer = window.__bugsnag_ipc__) => ({
   load: client => {
@@ -20,7 +21,7 @@ module.exports = (BugsnagIpcRenderer = window.__bugsnag_ipc__) => ({
       event.breadcrumbs = breadcrumbs
       event.app = { ...event.app, ...app, codeBundleId: client._config.codeBundleId }
       event.device = { ...event.device, ...device }
-      event._features = { ...event._features, ...features }
+      featureFlagDelegate.merge(event._features, features, event._featuresIndex)
 
       if (!event._user || Object.keys(event._user).length === 0) {
         event._user = user

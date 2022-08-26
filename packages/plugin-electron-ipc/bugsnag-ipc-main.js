@@ -1,6 +1,7 @@
 const Event = require('@bugsnag/core/event')
 const Breadcrumb = require('@bugsnag/core/breadcrumb')
 const runCallbacks = require('@bugsnag/core/lib/callback-runner')
+const featureFlagDelegate = require('@bugsnag/core/lib/feature-flag-delegate')
 
 module.exports = class BugsnagIpcMain {
   constructor (client) {
@@ -94,6 +95,7 @@ module.exports = class BugsnagIpcMain {
   getPayloadInfo () {
     return new Promise((resolve, reject) => {
       const event = new Event('BugsnagInternalError', 'Extracting event info from main process for event in renderer')
+
       event.app = {
         ...event.app,
         releaseStage: this.client._config.releaseStage,
@@ -102,7 +104,7 @@ module.exports = class BugsnagIpcMain {
       }
       event.context = event.context || this.client._context
       event._metadata = { ...event._metadata, ...this.client._metadata }
-      event._features = { ...event._features, ...this.client._features }
+      featureFlagDelegate.merge(event._features, this.client._features, event._featuresIndex)
       event._user = { ...event._user, ...this.client._user }
       event.breadcrumbs = this.client._breadcrumbs.slice()
 

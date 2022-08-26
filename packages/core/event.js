@@ -28,7 +28,8 @@ class Event {
     this.threads = []
 
     this._metadata = {}
-    this._features = {}
+    this._features = []
+    this._featuresIndex = {}
     this._user = {}
     this._session = undefined
 
@@ -56,19 +57,20 @@ class Event {
   }
 
   addFeatureFlag (name, variant = null) {
-    featureFlagDelegate.add(this._features, name, variant)
+    featureFlagDelegate.add(this._features, this._featuresIndex, name, variant)
   }
 
   addFeatureFlags (featureFlags) {
-    featureFlagDelegate.merge(this._features, featureFlags)
+    featureFlagDelegate.merge(this._features, featureFlags, this._featuresIndex)
   }
 
   clearFeatureFlag (name) {
-    delete this._features[name]
+    featureFlagDelegate.clear(this._features, this._featuresIndex, name)
   }
 
   clearFeatureFlags () {
-    this._features = {}
+    this._features = []
+    this._featuresIndex = {}
   }
 
   getUser () {
