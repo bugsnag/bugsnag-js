@@ -61,9 +61,9 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
     const { emitter } = client.getPlugin('clientStateManager')
 
     emitter.on('FeatureFlagUpdate', payload => {
-      expect(payload).toStrictEqual({
-        'flag name': 'variant name'
-      })
+      expect(payload).toStrictEqual([
+        { name: 'flag name', variant: 'variant name' }
+      ])
 
       done()
     })
@@ -79,9 +79,10 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
     client.addFeatureFlag('flag name 2', 'variant name 2')
 
     emitter.on('FeatureFlagUpdate', payload => {
-      expect(payload).toStrictEqual({
-        'flag name 2': 'variant name 2'
-      })
+      expect(payload).toStrictEqual([
+        null,
+        { name: 'flag name 2', variant: 'variant name 2' }
+      ])
 
       done()
     })
@@ -94,11 +95,11 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
     const { emitter } = client.getPlugin('clientStateManager')
 
     emitter.on('FeatureFlagUpdate', payload => {
-      expect(payload).toStrictEqual({
-        'flag name': 'variant name',
-        'another flag name': 'another variant name',
-        'etc etc': 'etc'
-      })
+      expect(payload).toStrictEqual([
+        { name: 'flag name', variant: 'variant name' },
+        { name: 'another flag name', variant: 'another variant name' },
+        { name: 'etc etc', variant: 'etc' }
+      ])
 
       done()
     })
@@ -121,7 +122,7 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
     ])
 
     emitter.on('FeatureFlagUpdate', payload => {
-      expect(payload).toStrictEqual({})
+      expect(payload).toStrictEqual([])
       done()
     })
 
@@ -151,16 +152,16 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
       metadata: {
         section: { key: 'value' }
       },
-      features: {
-        'flag name 1': 'variant name 1',
-        'flag name 2': 'variant name 2'
-      }
+      features: [
+        { name: 'flag name 1', variant: 'variant name 1' },
+        { name: 'flag name 2', variant: 'variant name 2' }
+      ]
     })
 
-    expect(featuresCb).toHaveBeenCalledWith({
-      'flag name 1': 'variant name 1',
-      'flag name 2': 'variant name 2'
-    })
+    expect(featuresCb).toHaveBeenCalledWith([
+      { name: 'flag name 1', variant: 'variant name 1' },
+      { name: 'flag name 2', variant: 'variant name 2' }
+    ])
 
     expect(metadataCb).toHaveBeenCalledWith({ section: { key: 'value' } })
     expect(contextCb).toHaveBeenCalledWith('ctx')

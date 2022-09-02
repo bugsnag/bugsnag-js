@@ -1,9 +1,9 @@
 const map = require('./es-utils/map')
-const keys = require('./es-utils/keys')
+const filter = require('./es-utils/filter')
 const isArray = require('./es-utils/is-array')
 const jsonStringify = require('@bugsnag/safe-json-stringify')
 
-function add (existingFeatures, name, variant) {
+function add (existingFeatures, existingFeatureKeys, name, variant) {
   if (typeof name !== 'string') {
     return
   }
@@ -14,10 +14,17 @@ function add (existingFeatures, name, variant) {
     variant = jsonStringify(variant)
   }
 
-  existingFeatures[name] = variant
+  const existingIndex = existingFeatureKeys[name]
+  if (typeof existingIndex === 'number') {
+    existingFeatures[existingIndex] = { name, variant }
+    return
+  }
+
+  existingFeatures.push({ name, variant })
+  existingFeatureKeys[name] = existingFeatures.length - 1
 }
 
-function merge (existingFeatures, newFeatures) {
+function merge (existingFeatures, newFeatures, existingFeatureKeys) {
   if (!isArray(newFeatures)) {
     return
   }
@@ -30,8 +37,10 @@ function merge (existingFeatures, newFeatures) {
     }
 
     // 'add' will handle if 'name' doesn't exist & 'variant' is optional
-    add(existingFeatures, feature.name, feature.variant)
+    add(existingFeatures, existingFeatureKeys, feature.name, feature.variant)
   }
+
+  return existingFeatures
 }
 
 // convert feature flags from a map of 'name -> variant' into the format required
@@ -39,13 +48,13 @@ function merge (existingFeatures, newFeatures) {
 //   [{ featureFlag: 'name', variant: 'variant' }, { featureFlag: 'name 2' }]
 function toEventApi (featureFlags) {
   return map(
-    keys(featureFlags),
-    name => {
+    filter(featureFlags, Boolean),
+    ({ name, variant }) => {
       const flag = { featureFlag: name }
 
       // don't add a 'variant' property unless there's actually a value
-      if (typeof featureFlags[name] === 'string') {
-        flag.variant = featureFlags[name]
+      if (typeof variant === 'string') {
+        flag.variant = variant
       }
 
       return flag
@@ -53,4 +62,12 @@ function toEventApi (featureFlags) {
   )
 }
 
-module.exports = { add, merge, toEventApi }
+function clear (features, featuresIndex, name) {
+  const existingIndex = featuresIndex[name]
+  if (typeof existingIndex === 'number') {
+    features[existingIndex] = null
+    delete featuresIndex[name]
+  }
+}
+
+module.exports = { add, clear, merge, toEventApi }

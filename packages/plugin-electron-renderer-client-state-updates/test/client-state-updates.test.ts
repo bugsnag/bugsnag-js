@@ -178,7 +178,7 @@ describe('clientStateUpdatesPlugin', () => {
 
       expect(mockBugsnagIpcRenderer.update).toHaveBeenCalledWith({
         metadata: { section: { key: 'value' } },
-        features: { abc: null, xyz: '123' },
+        features: [{ name: 'abc', variant: null }, { name: 'xyz', variant: '123' }],
         user: { id: 'ab23' },
         context: 'renderer config'
       })
@@ -198,7 +198,7 @@ describe('clientStateUpdatesPlugin', () => {
 
       expect(mockBugsnagIpcRenderer.update).toHaveBeenCalledWith({
         metadata: { section: { key: 'value' } },
-        features: {}
+        features: []
       })
     })
 

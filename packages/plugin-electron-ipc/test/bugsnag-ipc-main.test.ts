@@ -1,7 +1,7 @@
 import BugsnagIpcMain from '../bugsnag-ipc-main'
 import Client from '@bugsnag/core/client'
 import InternalEvent from '@bugsnag/core/event'
-import { User, Plugin, Event } from '@bugsnag/core'
+import { User, Plugin, Event, FeatureFlag } from '@bugsnag/core'
 
 const mockClientStateManagerPlugin = {
   name: 'clientStateManager',
@@ -196,11 +196,11 @@ describe('BugsnagIpcMain', () => {
       const client = new Client({ apiKey: '123' }, {}, [{
         name: 'clientStateManager',
         load: () => ({
-          bulkUpdate: ({ context, user, metadata, features }: { context?: string, user?: User, metadata: Record<string, unknown>}) => {
+          bulkUpdate: ({ context, user, metadata, features }: { context?: string, user?: User, metadata: Record<string, unknown>, features: FeatureFlag | null[]}) => {
             expect(context).toEqual('current context')
             expect(user).toEqual({ name: 'merrich' })
             expect(metadata).toEqual({ electron: { procs: 3 } })
-            expect(features).toEqual({ flag1: 'variant1', flag2: null })
+            expect(features).toEqual([{ name: 'flag1', variant: 'variant1' }, { name: 'flag2', variant: null }])
             done()
           }
         })
@@ -215,7 +215,7 @@ describe('BugsnagIpcMain', () => {
           context: 'current context',
           user: { name: 'merrich' },
           metadata: { electron: { procs: 3 } },
-          features: { flag1: 'variant1', flag2: null }
+          features: [{ name: 'flag1', variant: 'variant1' }, { name: 'flag2', variant: null }]
         })
       )
     })
@@ -276,6 +276,7 @@ describe('BugsnagIpcMain', () => {
       client.addFeatureFlags([
         { name: 'flag1' },
         { name: 'flag2', variant: null },
+        // @ts-ignore:
         { name: 'flag3', variant: 1234 },
         { name: 'flag4', variant: 'abc' }
       ])
@@ -301,12 +302,12 @@ describe('BugsnagIpcMain', () => {
           app: { testingMode: 'unit' },
           device: { isOutdated: true }
         },
-        features: {
-          flag1: null,
-          flag2: null,
-          flag3: '1234',
-          flag4: 'abc'
-        },
+        features: [
+          { name: 'flag1', variant: null },
+          { name: 'flag2', variant: null },
+          { name: 'flag3', variant: '1234' },
+          { name: 'flag4', variant: 'abc' }
+        ],
         user: {
           id: '123',
           email: 'jim@jim.com',

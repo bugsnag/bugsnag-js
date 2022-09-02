@@ -1,4 +1,4 @@
-import { App, Device, Event, Request, Breadcrumb, User, Session } from './types'
+import { App, Device, Event, Request, Breadcrumb, User, Session, FeatureFlag } from './types'
 import { Error } from './types/event'
 
 interface HandledState {
@@ -21,7 +21,8 @@ interface FeatureFlagPayload {
 export default class EventWithInternals extends Event {
   constructor (errorClass: string, errorMessage: string, stacktrace: any[], handledState?: HandledState, originalError?: Error)
   _metadata: { [key: string]: any }
-  _features: { [key: string]: string | null }
+  _features: FeatureFlag | null[]
+  _featuresIndex: { [key: string]: number }
   _user: User
   _handledState: HandledState
   _session?: Session

@@ -6,6 +6,7 @@
 
 - (react-native) Update bugsnag-cocoa from v6.20.0 to [v6.22.2](https://github.com/bugsnag/bugsnag-cocoa/blob/master/CHANGELOG.md#6222-2022-08-17)
 - (react-native) Update bugsnag-android from v5.24.0 to [v5.26.0](https://github.com/bugsnag/bugsnag-android/blob/master/CHANGELOG.md#5260-2022-08-18)
+- Refactor feature flags to maintain insertion order [#1802](https://github.com/bugsnag/bugsnag-js/pull/1802)
 
 ## v7.17.3 (2022-07-18)
 
