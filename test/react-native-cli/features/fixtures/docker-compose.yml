@@ -121,6 +121,17 @@ services:
         aliases:
           - maze-runner
 
+  rn0_69_new_arch:
+    build:
+      context: rn0_69_new_arch
+      dockerfile: ../Dockerfile
+    environment:
+      DEBUG:
+    networks:
+      default:
+        aliases:
+          - maze-runner
+
 networks:
   default:
     name: ${NETWORK_NAME:-react-native-cli-maze-runner}
