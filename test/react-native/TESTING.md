@@ -32,7 +32,11 @@ be set accordingly:
 | React native fixture | `REACT_NATIVE_VERSION` |
 |----------------------|------------------------|
 | 0.60                 | `rn0.60`               |
-| 0.63                 | `rn0.63`               |
+| 0.66                 | `rn0.66`               |
+| 0.67                 | `rn0.67`               |
+| 0.68 (hermes)        | `rn0.68-hermes`        |
+| 0.69                 | `rn0.69`               |
+| 0.69 (new arch)      | `rn0.69-new-arch`      |
 
 #### Building the test fixture
 
