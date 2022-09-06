@@ -357,6 +357,7 @@ steps:
         artifact_paths:
           - build/rn0_67.apk
 
+<<<<<<< HEAD
       - label: ":android: Init and build RN 0.67 apk (Hermes)"
         key: "rn-cli-0-67-hermes-apk"
         depends_on:
