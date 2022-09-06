@@ -14,6 +14,8 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		7699B88040F8A987B510C191 /* libPods-reactnative-reactnativeTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-reactnative-reactnativeTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		B656A74228C785050064AE28 /* BugsnagModule.m in Sources */ = {isa = PBXBuildFile; fileRef = B656A74128C785050064AE28 /* BugsnagModule.m */; };
+		B656A74428C7850C0064AE28 /* Scenarios in Resources */ = {isa = PBXBuildFile; fileRef = B656A74328C7850C0064AE28 /* Scenarios */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,6 +45,9 @@
 		5DCACB8F33CDC322A6C60F78 /* libPods-reactnative.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-reactnative.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = reactnative/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-reactnative-reactnativeTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-reactnative-reactnativeTests.release.xcconfig"; path = "Target Support Files/Pods-reactnative-reactnativeTests/Pods-reactnative-reactnativeTests.release.xcconfig"; sourceTree = "<group>"; };
+		B656A74028C785050064AE28 /* BugsnagModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BugsnagModule.h; path = "../../ios-module/BugsnagModule.h"; sourceTree = "<group>"; };
+		B656A74128C785050064AE28 /* BugsnagModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BugsnagModule.m; path = "../../ios-module/BugsnagModule.m"; sourceTree = "<group>"; };
+		B656A74328C7850C0064AE28 /* Scenarios */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Scenarios; path = "../../ios-module/Scenarios"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -86,6 +91,9 @@
 		13B07FAE1A68108700A75B9A /* reactnative */ = {
 			isa = PBXGroup;
 			children = (
+				B656A74028C785050064AE28 /* BugsnagModule.h */,
+				B656A74128C785050064AE28 /* BugsnagModule.m */,
+				B656A74328C7850C0064AE28 /* Scenarios */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -242,6 +250,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B656A74428C7850C0064AE28 /* Scenarios in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 			);
@@ -414,6 +423,7 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				B656A74228C785050064AE28 /* BugsnagModule.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -486,6 +496,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 372ZUL2ZB7;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = reactnative/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -512,6 +523,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 372ZUL2ZB7;
 				INFOPLIST_FILE = reactnative/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
