@@ -148,6 +148,32 @@ steps:
     commands:
       - npm run test:build-react-native-ios
 
+  - label: ':android: Build RN 0.70 apk'
+    key: "rn-0-70-apk"
+    depends_on:
+      - "android-builder-image"
+    timeout_in_minutes: 60
+    env:
+      REACT_NATIVE_VERSION: "rn0.70"
+    plugins:
+      - docker-compose#v3.9.0:
+          run: react-native-android-builder
+    artifact_paths:
+      - build/rn0.70.apk
+
+  - label: ':ios: Build RN 0.70 ipa'
+    key: "rn-0-70-ipa"
+    timeout_in_minutes: 60
+    agents:
+      queue: "opensource-arm-mac-cocoa-12"
+    env:
+      REACT_NATIVE_VERSION: rn0.70
+      LANG: "en_US.UTF-8"
+      DEVELOPER_DIR: "/Applications/Xcode13.app"
+    artifact_paths: build/rn0.70.ipa
+    commands:
+      - npm run test:build-react-native-ios
+
   - label: ':android: Build react-navigation 0.60 apk'
     key: "react-navigation-0-60-apk"
     depends_on:
@@ -300,30 +326,6 @@ steps:
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
-  - label: ':ios: RN 0.60 iOS 12 end-to-end tests'
-    depends_on: "rn-0-60-ipa"
-    timeout_in_minutes: 60
-    plugins:
-      artifacts#v1.5.0:
-        download: "build/rn0.60.ipa"
-        upload: ./test/react-native/maze_output/**/*
-      docker-compose#v3.9.0:
-        pull: react-native-maze-runner
-        run: react-native-maze-runner
-        use-aliases: true
-        command:
-        - --app=build/rn0.60.ipa
-        - --farm=bs
-        - --device=IOS_12
-        - --a11y-locator
-        - --appium-version=1.18.0
-        - --fail-fast
-    env:
-      SKIP_NAVIGATION_SCENARIOS: "true"
-    concurrency: 24
-    concurrency_group: 'browserstack-app'
-    concurrency_method: eager
-
   - label: ':android: RN 0.66 Android 11 end-to-end tests'
     depends_on: "rn-0-66-apk"
     timeout_in_minutes: 60
@@ -371,6 +373,30 @@ steps:
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
+  - label: ':android: RN 0.68 (Hermes) Android 12 end-to-end tests'
+    depends_on: "rn-0-68-hermes-apk"
+    timeout_in_minutes: 60
+    plugins:
+      artifacts#v1.5.0:
+        download: "build/rn0.68-hermes.apk"
+        upload: ./test/react-native/maze_output/**/*
+      docker-compose#v3.9.0:
+        pull: react-native-maze-runner
+        run: react-native-maze-runner
+        use-aliases: true
+        command:
+          - --app=build/rn0.68-hermes.apk
+          - --farm=bs
+          - --device=ANDROID_12_0
+          - --a11y-locator
+          - --fail-fast
+    env:
+      SKIP_NAVIGATION_SCENARIOS: "true"
+      HERMES: "true"
+    concurrency: 24
+    concurrency_group: 'browserstack-app'
+    concurrency_method: eager
+
   - label: ':android: RN 0.69 Android 11 end-to-end tests'
     depends_on: "rn-0-69-apk"
     timeout_in_minutes: 60
@@ -395,19 +421,19 @@ steps:
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
-  - label: ':android: RN 0.68 (Hermes) Android 12 end-to-end tests'
-    depends_on: "rn-0-68-hermes-apk"
+  - label: ':android: RN 0.70 Android 12 end-to-end tests'
+    depends_on: "rn-0-70-apk"
     timeout_in_minutes: 60
     plugins:
       artifacts#v1.5.0:
-        download: "build/rn0.68-hermes.apk"
+        download: "build/rn0.70.apk"
         upload: ./test/react-native/maze_output/**/*
       docker-compose#v3.9.0:
         pull: react-native-maze-runner
         run: react-native-maze-runner
         use-aliases: true
         command:
-          - --app=build/rn0.68-hermes.apk
+          - --app=build/rn0.70.apk
           - --farm=bs
           - --device=ANDROID_12_0
           - --a11y-locator
@@ -415,6 +441,30 @@ steps:
     env:
       SKIP_NAVIGATION_SCENARIOS: "true"
       HERMES: "true"
+    concurrency: 24
+    concurrency_group: 'browserstack-app'
+    concurrency_method: eager
+
+  - label: ':ios: RN 0.60 iOS 12 end-to-end tests'
+    depends_on: "rn-0-60-ipa"
+    timeout_in_minutes: 60
+    plugins:
+      artifacts#v1.5.0:
+        download: "build/rn0.60.ipa"
+        upload: ./test/react-native/maze_output/**/*
+      docker-compose#v3.9.0:
+        pull: react-native-maze-runner
+        run: react-native-maze-runner
+        use-aliases: true
+        command:
+        - --app=build/rn0.60.ipa
+        - --farm=bs
+        - --device=IOS_12
+        - --a11y-locator
+        - --appium-version=1.18.0
+        - --fail-fast
+    env:
+      SKIP_NAVIGATION_SCENARIOS: "true"
     concurrency: 24
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
@@ -468,6 +518,31 @@ steps:
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
+  - label: ':ios: RN 0.68 (hermes) iOS 14 end-to-end tests'
+    depends_on: "rn-0-68-hermes-ipa"
+    timeout_in_minutes: 60
+    plugins:
+      artifacts#v1.5.0:
+        download: "build/rn0.68-hermes.ipa"
+        upload: ./test/react-native/maze_output/**/*
+      docker-compose#v3.9.0:
+        pull: react-native-maze-runner
+        run: react-native-maze-runner
+        use-aliases: true
+        command:
+          - --app=build/rn0.68-hermes.ipa
+          - --farm=bs
+          - --device=IOS_14
+          - --a11y-locator
+          - --appium-version=1.18.0
+          - --fail-fast
+    env:
+      SKIP_NAVIGATION_SCENARIOS: "true"
+      HERMES: "true"
+    concurrency: 24
+    concurrency_group: 'browserstack-app'
+    concurrency_method: eager
+
   - label: ':ios: RN 0.69 iOS 14 end-to-end tests'
     depends_on: "rn-0-69-ipa"
     timeout_in_minutes: 60
@@ -493,19 +568,19 @@ steps:
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
-  - label: ':ios: RN 0.68 (hermes) iOS 14 end-to-end tests'
-    depends_on: "rn-0-68-hermes-ipa"
+  - label: ':ios: RN 0.70 iOS 14 end-to-end tests'
+    depends_on: "rn-0-70-ipa"
     timeout_in_minutes: 60
     plugins:
       artifacts#v1.5.0:
-        download: "build/rn0.68-hermes.ipa"
+        download: "build/rn0.70.ipa"
         upload: ./test/react-native/maze_output/**/*
       docker-compose#v3.9.0:
         pull: react-native-maze-runner
         run: react-native-maze-runner
         use-aliases: true
         command:
-          - --app=build/rn0.68-hermes.ipa
+          - --app=build/rn0.70.ipa
           - --farm=bs
           - --device=IOS_14
           - --a11y-locator
