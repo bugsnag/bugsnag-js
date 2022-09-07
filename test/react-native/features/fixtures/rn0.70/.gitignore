@@ -67,3 +67,4 @@ buck-out/
 /app/
 /output/
 /reactnative.xcarchive/
+index.js
