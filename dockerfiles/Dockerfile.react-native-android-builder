@@ -1,6 +1,6 @@
 FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/js:android-builder-base
 
-RUN apt-get install -y nodejs rsync
+RUN apt-get install -y nodejs rsync libicu-dev
 
 RUN npm i -g run-func
 
