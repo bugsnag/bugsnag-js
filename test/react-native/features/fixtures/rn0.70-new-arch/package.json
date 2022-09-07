@@ -10,7 +10,6 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@bugsnag/react-native": "^7.17.3-react-native-new-arch-fixture.2d3211e74d",
     "react": "18.1.0",
     "react-native": "0.70.0"
   },
