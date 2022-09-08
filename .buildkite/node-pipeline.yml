@@ -24,7 +24,6 @@ steps:
       docker-compose#v3.9.0:
         run: node-maze-runner
         use-aliases: true
-        verbose: true
     env:
       NODE_VERSION: "4"
 
@@ -35,7 +34,6 @@ steps:
       docker-compose#v3.9.0:
         run: node-maze-runner
         use-aliases: true
-        verbose: true
     env:
       NODE_VERSION: "6"
 
@@ -46,7 +44,6 @@ steps:
       docker-compose#v3.9.0:
         run: node-maze-runner
         use-aliases: true
-        verbose: true
     env:
       NODE_VERSION: "8"
 
@@ -57,7 +54,6 @@ steps:
       docker-compose#v3.9.0:
         run: node-maze-runner
         use-aliases: true
-        verbose: true
     env:
       NODE_VERSION: "10"
 
@@ -68,7 +64,6 @@ steps:
       docker-compose#v3.9.0:
         run: node-maze-runner
         use-aliases: true
-        verbose: true
     env:
       NODE_VERSION: "12"
 
@@ -79,6 +74,5 @@ steps:
       docker-compose#v3.9.0:
         run: node-maze-runner
         use-aliases: true
-        verbose: true
     env:
       NODE_VERSION: "14"

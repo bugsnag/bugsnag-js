@@ -19,7 +19,7 @@ describe('plugin: electron renderer event data', () => {
     const app = { abc: 123 }
     const device = { xyz: 456 }
     const user = { id: '10293847' }
-    const features = { flag1: 'variant1' }
+    const features = [{ name: 'flag1', variant: 'variant1' }]
     const metadata = { meta: { data: true } }
 
     const { sendEvent } = makeClient({ context, breadcrumbs, app, device, user, features, metadata })

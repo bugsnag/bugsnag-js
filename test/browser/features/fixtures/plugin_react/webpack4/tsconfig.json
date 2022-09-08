@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "es5", 
+    "module": "commonjs",
+    "jsx": "react",
+    "strict": true, 
+    "moduleResolution": "node",
+    "esModuleInterop": true, 
+    "skipLibCheck": true,   
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true
+  }
+}
