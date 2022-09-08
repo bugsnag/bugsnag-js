@@ -1,18 +1,17 @@
-AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 Description: >
   simple-app
-  
+
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
     Timeout: 3
     Environment:
       Variables:
-        BUGSNAG_API_KEY: <YOUR_API_KEY>
+        BUGSNAG_API_KEY: a12a0c59ed3137195c967a33e3091690
 
 Resources:
-  
   AsyncUnhandledException:
     Type: AWS::Serverless::Function
     Properties:
@@ -149,12 +148,12 @@ Resources:
           Properties:
             Path: /callback/timeout
             Method: get
-  
+
   NodeDependenciesLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
       LayerName: node-dependencies-layer
       Description: Dependencies for the Lambda Functions
-      ContentUri: callback-dependencies-layer/
+      ContentUri: dependencies-layer/
       CompatibleRuntimes:
         - nodejs14.x
