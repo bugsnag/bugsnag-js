@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-restify",
-  "version": "7.17.0",
+  "version": "7.17.4",
   "main": "dist/bugsnag-restify.js",
   "types": "types/bugsnag-restify.d.ts",
   "description": "@bugsnag/js error handling middleware for Restify web servers",
@@ -27,7 +27,7 @@
     "@bugsnag/core": "^7.0.0"
   },
   "devDependencies": {
-    "@bugsnag/core": "^7.17.0",
+    "@bugsnag/core": "^7.17.4",
     "@types/restify": "^8.4.2"
   },
   "dependencies": {

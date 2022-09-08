@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-aws-lambda",
-  "version": "7.17.0",
+  "version": "7.17.4",
   "main": "dist/bugsnag-aws-lambda.js",
   "types": "types/bugsnag-plugin-aws-lambda.d.ts",
   "description": "AWS Lambda support for @bugsnag/node",
@@ -23,11 +23,11 @@
   "author": "Bugsnag",
   "license": "MIT",
   "dependencies": {
-    "@bugsnag/in-flight": "^7.17.0",
-    "@bugsnag/plugin-browser-session": "^7.17.0"
+    "@bugsnag/in-flight": "^7.17.4",
+    "@bugsnag/plugin-browser-session": "^7.17.4"
   },
   "devDependencies": {
-    "@bugsnag/core": "^7.17.0"
+    "@bugsnag/core": "^7.17.4"
   },
   "peerDependencies": {
     "@bugsnag/core": "^7.0.0"

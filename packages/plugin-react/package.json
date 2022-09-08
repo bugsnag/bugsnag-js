@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-react",
-  "version": "7.17.0",
+  "version": "7.17.4",
   "main": "dist/bugsnag-react.js",
   "description": "React integration for @bugsnag/js",
   "browser": "dist/bugsnag-react.js",
@@ -24,7 +24,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^7.17.0"
+    "@bugsnag/core": "^7.17.4"
   },
   "peerDependencies": {
     "@bugsnag/core": "^7.0.0"
