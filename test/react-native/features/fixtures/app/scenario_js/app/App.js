@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 import Bugsnag from '@bugsnag/react-native'
 import * as Scenarios from './Scenarios'
 import {
@@ -10,76 +10,47 @@ import {
   NativeModules
 } from 'react-native'
 
-export default class App extends Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      currentScenario: '',
-      scenarioMetaData: '',
-      apiKey: '12312312312312312312312312312312',
-      notifyEndpoint: 'http://bs-local.com:9339/notify',
-      sessionsEndpoint: 'http://bs-local.com:9339/sessions'
-    }
-  }
+const App = () => {
+  const [currentScenario, setScenario] = useState('')
+  const [scenarioMetaData, setScenarioMetaData] = useState('')
+  const [apiKey, setApiKey] = useState('12312312312312312312312312312312')
+  const [notifyEndpoint, setNotifyEndpoint] = useState('http://bs-local.com:9339/notify')
+  const [sessionsEndpoint, setSessionsEndpoint] = useState('http://bs-local.com:9339/sessions')
 
-  setScenarioMetaData = newScenarioMetaData => {
-    this.setState(() => ({ scenarioMetaData: newScenarioMetaData }))
-  }
-
-  getConfiguration = () => {
+  const getConfiguration = () => {
     return {
-      apiKey: this.state.apiKey,
+      apiKey: apiKey,
       endpoints: {
-        notify: this.state.notifyEndpoint,
-        sessions: this.state.sessionsEndpoint
+        notify: notifyEndpoint,
+        sessions: sessionsEndpoint
       },
       autoTrackSessions: false
     }
   }
 
-  setScenario = newScenario => {
-    this.setState(() => ({ currentScenario: newScenario }))
+  const useRealEndpoints = () => {
+    setNotifyEndpoint('https://notify.bugsnag.com')
+    setSessionsEndpoint('https://sessions.bugsnag.com')
   }
 
-  setApiKey = newApiKey => {
-    this.setState(() => ({ apiKey: newApiKey }))
-  }
-
-  setNotifyEndpoint = newNotifyEndpoint => {
-    this.setState(() => ({ notifyEndpoint: newNotifyEndpoint }))
-  }
-
-  setSessionsEndpoint = newSessionsEndpoint => {
-    this.setState(() => ({ sessionsEndpoint: newSessionsEndpoint }))
-  }
-
-  useRealEndpoints = () => {
-    this.setState({ notifyEndpoint: 'https://notify.bugsnag.com' })
-    this.setState({ sessionsEndpoint: 'https://sessions.bugsnag.com' })
-  }
-
-  runScenario = () => {
-    console.log(`Running scenario: ${this.state.currentScenario}`)
-    console.log(` with MetaData: ${this.state.scenarioMetaData}`)
-    const scenarioName = this.state.currentScenario
-    const scenarioMetaData = this.state.scenarioMetaData
-    const configuration = this.getConfiguration()
+  const runScenario = () => {
+    console.log(`Running scenario: ${currentScenario}`)
+    console.log(` with MetaData: ${scenarioMetaData}`)
+    const configuration = getConfiguration()
     const jsConfig = {}
-    const scenario = new Scenarios[scenarioName](configuration, jsConfig, scenarioMetaData)
+    const scenario = new Scenarios[currentScenario](configuration, jsConfig, scenarioMetaData)
     console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${JSON.stringify(jsConfig)} (js)`)
     scenario.run()
   }
 
-  startBugsnag = () => {
-    console.log(`Starting Bugsnag for scenario: ${this.state.currentScenario}`)
-    console.log(` with MetaData: ${this.state.scenarioMetaData}`)
-    const scenarioName = this.state.currentScenario
-    const scenarioMetaData = this.state.scenarioMetaData
-    const configuration = this.getConfiguration()
+  const startBugsnag = () => {
+    console.log(`Starting Bugsnag for scenario: ${currentScenario}`)
+    console.log(` with MetaData: ${scenarioMetaData}`)
+    const configuration = getConfiguration()
 
     const jsConfig = {}
     // eslint-disable-next-line no-new
-    new Scenarios[scenarioName](configuration, jsConfig, scenarioMetaData)
+    new Scenarios[currentScenario](configuration, jsConfig, scenarioMetaData)
     console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${JSON.stringify(jsConfig)} (js)`)
 
     NativeModules.BugsnagTestInterface.startBugsnag(configuration).then(() => {
@@ -87,54 +58,54 @@ export default class App extends Component {
     })
   }
 
-  render () {
-    return (
-      <View style={styles.container}>
-        <View style={styles.child}>
-          <Text>React-native end-to-end test app</Text>
-          <TextInput style={styles.textInput}
-            placeholder='Scenario Name'
-            accessibilityLabel='scenario_name'
-            onChangeText={this.setScenario}/>
-          <TextInput style={styles.textInput}
-            placeholder='Scenario Metadata'
-            accessibilityLabel='scenario_metadata'
-            onChangeText={this.setScenarioMetaData}/>
+  return (
+    <View style={styles.container}>
+      <View style={styles.child}>
+        <Text>React-native end-to-end test app</Text>
+        <TextInput style={styles.textInput}
+          placeholder='Scenario Name'
+          accessibilityLabel='scenario_name'
+          onChangeText={setScenario}/>
+        <TextInput style={styles.textInput}
+          placeholder='Scenario Metadata'
+          accessibilityLabel='scenario_metadata'
+          onChangeText={setScenarioMetaData}/>
 
-          <Button style={styles.clickyButton}
-            accessibilityLabel='start_bugsnag'
-            title='Start Bugsnag'
-            onPress={this.startBugsnag}/>
-          <Button style={styles.clickyButton}
-            accessibilityLabel='run_scenario'
-            title='Run scenario'
-            onPress={this.runScenario}/>
+        <Button style={styles.clickyButton}
+          accessibilityLabel='start_bugsnag'
+          title='Start Bugsnag'
+          onPress={startBugsnag}/>
+        <Button style={styles.clickyButton}
+          accessibilityLabel='run_scenario'
+          title='Run scenario'
+          onPress={runScenario}/>
 
-          <Text>Configuration</Text>
-          <TextInput placeholder='Notify endpoint'
-            style={styles.textInput}
-            accessibilityLabel='notify_endpoint'
-            value={this.state.notifyEndpoint}
-            onChangeText={this.setNotifyEndpoint}/>
-          <TextInput placeholder='Sessions endpoint'
-            style={styles.textInput}
-            accessibilityLabel='sessions_endpoint'
-            value={this.state.sessionsEndpoint}
-            onChangeText={this.setSessionsEndpoint}/>
-          <TextInput placeholder='API key'
-            style={styles.textInput}
-            accessibilityLabel='api_key'
-            value={this.state.apiKey}
-            onChangeText={this.setApiKey}/>
-          <Button style={styles.clickyButton}
-            accessibilityLabel='use_dashboard_endpoints'
-            title='Use dashboard endpoints'
-            onPress={this.useRealEndpoints}/>
-        </View>
+        <Text>Configuration</Text>
+        <TextInput placeholder='Notify endpoint'
+          style={styles.textInput}
+          accessibilityLabel='notify_endpoint'
+          value={notifyEndpoint}
+          onChangeText={setNotifyEndpoint}/>
+        <TextInput placeholder='Sessions endpoint'
+          style={styles.textInput}
+          accessibilityLabel='sessions_endpoint'
+          value={sessionsEndpoint}
+          onChangeText={setSessionsEndpoint}/>
+        <TextInput placeholder='API key'
+          style={styles.textInput}
+          accessibilityLabel='api_key'
+          value={apiKey}
+          onChangeText={setApiKey}/>
+        <Button style={styles.clickyButton}
+          accessibilityLabel='use_dashboard_endpoints'
+          title='Use dashboard endpoints'
+          onPress={useRealEndpoints}/>
       </View>
-    )
-  }
-};
+    </View>
+  )
+}
+
+export default App
 
 const styles = StyleSheet.create({
   container: {
