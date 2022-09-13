@@ -20,6 +20,7 @@ import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.fabric.ReactNativeConfig;
 import com.facebook.react.uimanager.ViewManagerRegistry;
 import com.reactnative.BuildConfig;
+import com.reactnative.module.BugsnagModulePackage;
 import com.reactnative.newarchitecture.components.MainComponentsRegistry;
 import com.reactnative.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
