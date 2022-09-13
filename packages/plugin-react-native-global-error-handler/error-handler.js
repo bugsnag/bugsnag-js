@@ -4,6 +4,7 @@
 
 module.exports = (ErrorUtils = global.ErrorUtils) => ({
   load: (client) => {
+    client._logger.warn('Adding error handler')
     if (!client._config.autoDetectErrors) return
     if (!client._config.enabledErrorTypes.unhandledExceptions) return
     if (!ErrorUtils) {
@@ -13,6 +14,7 @@ module.exports = (ErrorUtils = global.ErrorUtils) => ({
     const prev = ErrorUtils.getGlobalHandler()
 
     ErrorUtils.setGlobalHandler((error, isFatal) => {
+      client._logger.warn('Creating event.')
       const event = client.Event.create(error, true, {
         severity: 'error',
         unhandled: true,
