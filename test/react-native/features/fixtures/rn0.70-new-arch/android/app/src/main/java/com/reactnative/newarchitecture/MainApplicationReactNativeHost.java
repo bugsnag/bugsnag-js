@@ -51,6 +51,7 @@ public class MainApplicationReactNativeHost extends ReactNativeHost {
     //     packages.add(new TurboReactPackage() { ... });
     // If you have custom Fabric Components, their ViewManagers should also be loaded here
     // inside a ReactPackage.
+    packages.add(new BugsnagModulePackage());
     return packages;
   }
 
