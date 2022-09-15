@@ -288,6 +288,7 @@ class Client {
   }
 
   _notify (event, onError, postReportCallback = noop) {
+    this._logger.warn('Bugsnag JS got _notify call')
     event.app = assign({}, event.app, {
       releaseStage: this._config.releaseStage,
       version: this._config.appVersion,
@@ -318,6 +319,7 @@ class Client {
       if (err) onCallbackError(err)
 
       if (!shouldSend) {
+        this._logger.warn('Event not sent due to onError callback')
         this._logger.debug('Event not sent due to onError callback')
         return postReportCallback(null, event)
       }
