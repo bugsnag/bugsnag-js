@@ -1,8 +1,6 @@
 #import "BugsnagReactNativeEmitter.h"
 
-#import "Bugsnag+Private.h"
-#import "BugsnagClient+Private.h"
-#import "BugsnagUser+Private.h"
+#import "BugsnagInternals.h"
 
 @implementation BugsnagReactNativeEmitter
 

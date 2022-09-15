@@ -8,25 +8,11 @@
 
 #import "BugsnagEventDeserializer.h"
 
-#import "Bugsnag+Private.h"
-#import "BugsnagAppWithState+Private.h"
-#import "BugsnagBreadcrumb+Private.h"
-#import "BugsnagClient+Private.h"
-#import "BugsnagDeviceWithState+Private.h"
-#import "BugsnagError+Private.h"
-#import "BugsnagEvent+Private.h"
-#import "BugsnagHandledState.h"
-#import "BugsnagSessionTracker.h"
-#import "BugsnagStackframe+Private.h"
-#import "BugsnagStacktrace.h"
-#import "BugsnagThread+Private.h"
-#import "BugsnagUser+Private.h"
+#import "BugsnagInternals.h"
 
 @implementation BugsnagEventDeserializer
 
 - (BugsnagEvent *)deserializeEvent:(NSDictionary *)payload {
-    BugsnagClient *client = [Bugsnag client];
-    BugsnagSession *session = client.sessionTracker.runningSession;
     BugsnagMetadata *metadata = [[BugsnagMetadata alloc] initWithDictionary:payload[@"metadata"]];
 
     BugsnagHandledState *handledState = [self deserializeHandledState:payload];
@@ -40,7 +26,7 @@
                                                 breadcrumbs:[self deserializeBreadcrumbs:payload[@"breadcrumbs"]]
                                                      errors:@[[BugsnagError new]]
                                                     threads:[self deserializeThreads:payload[@"threads"]]
-                                                    session:session];
+                                                    session:nil /* set by -[BugsnagClient notifyInternal:block:] */];
     event.context = payload[@"context"];
     event.groupingHash = payload[@"groupingHash"];
 
