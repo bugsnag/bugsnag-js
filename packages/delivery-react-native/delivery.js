@@ -11,6 +11,7 @@ module.exports = (client, NativeClient) => ({
         nativeStack = event.originalError.nativeStackAndroid
       }
     }
+    client._logger.warn('Calling RN dispatch')
     NativeClient.dispatch({
       errors: event.errors,
       severity: event.severity,
@@ -28,6 +29,7 @@ module.exports = (client, NativeClient) => ({
       featureFlags: event.toJSON().featureFlags,
       nativeStack: nativeStack
     }).then(() => cb()).catch(cb)
+    client._logger.warn('Finished calling RN dispatch')
   },
   sendSession: () => {
     client._logger.warn('@bugsnag/delivery-react-native sendSession() should never be called', new Error().stack)
