@@ -1,5 +1,11 @@
 # Changelog
 
+## TBD
+
+### Changed
+
+- Added `getFeatureFlags()` to error events [#1815](https://github.com/bugsnag/bugsnag-js/pull/1815)
+
 ## v7.17.4 (2022-09-08)
 
 ### Changed
