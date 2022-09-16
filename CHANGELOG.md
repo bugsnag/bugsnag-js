@@ -4,6 +4,7 @@
 
 ### Changed
 
+- (react-native) Update bugsnag-cocoa from v6.22.3 to [v6.23.0](https://github.com/bugsnag/bugsnag-cocoa/blob/master/CHANGELOG.md#6230-2022-09-14)
 - Added `getFeatureFlags()` to error events [#1815](https://github.com/bugsnag/bugsnag-js/pull/1815)
 
 ## v7.17.4 (2022-09-08)
