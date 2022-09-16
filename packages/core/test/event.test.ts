@@ -180,6 +180,17 @@ describe('@bugsnag/core/event', () => {
   })
 
   describe('feature flags', () => {
+    describe('#getFeatureFlags', () => {
+      it('returns an array of feature flags', () => {
+        const event = new Event('Err', 'super bad error', [])
+
+        event.addFeatureFlag('old feature')
+        event.addFeatureFlag('new feature', '1.0.0')
+
+        expect(event.getFeatureFlags()).toStrictEqual([{ featureFlag: 'old feature' }, { featureFlag: 'new feature', variant: '1.0.0' }])
+      })
+    })
+
     describe('#addFeatureFlag', () => {
       it('adds the given flag/variant combination', () => {
         const event = new Event('Err', 'bad', [])

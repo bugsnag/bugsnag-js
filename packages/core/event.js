@@ -64,6 +64,10 @@ class Event {
     featureFlagDelegate.merge(this._features, featureFlags, this._featuresIndex)
   }
 
+  getFeatureFlags () {
+    return featureFlagDelegate.toEventApi(this._features)
+  }
+
   clearFeatureFlag (name) {
     featureFlagDelegate.clear(this._features, this._featuresIndex, name)
   }
@@ -97,7 +101,7 @@ class Event {
       metaData: this._metadata,
       user: this._user,
       session: this._session,
-      featureFlags: featureFlagDelegate.toEventApi(this._features)
+      featureFlags: this.getFeatureFlags()
     }
   }
 }
