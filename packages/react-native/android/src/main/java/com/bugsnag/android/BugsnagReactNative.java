@@ -189,14 +189,14 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
     }
   }
 
-  @ReactMethod
-  void dispatch(@NonNull ReadableMap payload, @NonNull Promise promise) {
+  @ReactMethod(isBlockingSynchronousMethod = true)
+  boolean dispatch(@NonNull ReadableMap payload) {
     try {
       plugin.dispatch(payload.toHashMap());
-      promise.resolve(true);
+      return true;
     } catch (Throwable exc) {
       logFailure("dispatch", exc);
-      promise.resolve(false);
+      return false;
     }
   }
 
