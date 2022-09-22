@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/electron-test-helpers",
-  "version": "7.17.4",
+  "version": "7.18.0",
   "main": "helpers.ts",
   "description": "Test helpers for @bugsnag/electron",
   "repository": {
@@ -15,7 +15,7 @@
     "helpers.ts"
   ],
   "devDependencies": {
-    "@bugsnag/core": "^7.17.4"
+    "@bugsnag/core": "^7.18.0"
   },
   "author": "Bugsnag",
   "license": "MIT"

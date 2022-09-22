@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-electron-net-breadcrumbs",
-  "version": "7.17.4",
+  "version": "7.18.0",
   "main": "net-breadcrumbs.js",
   "description": "@bugsnag/electron plugin to collect breadcrumbs from requests made with the net module",
   "repository": {
@@ -14,8 +14,8 @@
     "net-breadcrumbs.js"
   ],
   "devDependencies": {
-    "@bugsnag/core": "^7.17.4",
-    "@bugsnag/electron-test-helpers": "^7.17.4"
+    "@bugsnag/core": "^7.18.0",
+    "@bugsnag/electron-test-helpers": "^7.18.0"
   },
   "peerDependencies": {
     "@bugsnag/core": "^7.9.2"

@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-browser-session",
-  "version": "7.17.4",
+  "version": "7.18.0",
   "main": "session.js",
   "description": "@bugsnag/js plugin to enable session tracking in browsers",
   "homepage": "https://www.bugsnag.com/",
@@ -17,7 +17,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^7.17.4"
+    "@bugsnag/core": "^7.18.0"
   },
   "peerDependencies": {
     "@bugsnag/core": "^7.0.0"
