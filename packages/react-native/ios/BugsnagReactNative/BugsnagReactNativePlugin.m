@@ -1,6 +1,6 @@
 #import "BugsnagReactNativePlugin.h"
 
-#import "BugsnagClient+Private.h"
+#import "BugsnagInternals.h"
 
 //
 // BugsnagReactNativePlugin is instantiated by bugsnag-cocoa during its startup:

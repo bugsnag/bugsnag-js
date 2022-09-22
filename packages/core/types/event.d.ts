@@ -48,6 +48,7 @@ declare class Event {
   public clearMetadata(section: string, key?: string): void
 
   // feature flags
+  public getFeatureFlags(): FeatureFlag[]
   public addFeatureFlag(name: string, variant?: string | null): void
   public addFeatureFlags(featureFlags: FeatureFlag[]): void
   public clearFeatureFlag(name: string): void

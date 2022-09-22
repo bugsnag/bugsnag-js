@@ -1,7 +1,6 @@
 #import "BugsnagReactNative.h"
 
-#import "Bugsnag+Private.h"
-#import "BugsnagClient+Private.h"
+#import "BugsnagInternals.h"
 #import "BugsnagReactNativeEmitter.h"
 #import "BugsnagConfigSerializer.h"
 #import "BugsnagEventDeserializer.h"
@@ -29,7 +28,7 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(configure:(NSDictionary *)readableMap) {
     [self updateNotifierInfo:readableMap];
     [self addRuntimeVersionInfo:readableMap];
 
-    BugsnagConfiguration *config = [Bugsnag configuration];
+    BugsnagConfiguration *config = Bugsnag.client.configuration;
     return [self.configSerializer serialize:config];
 }
 
@@ -52,7 +51,7 @@ RCT_EXPORT_METHOD(updateContext:(NSString *)context) {
 }
 
 RCT_EXPORT_METHOD(updateCodeBundleId:(NSString *)codeBundleId) {
-    [Bugsnag updateCodeBundleId:codeBundleId];
+    Bugsnag.client.codeBundleId = codeBundleId;
 }
 
 RCT_EXPORT_METHOD(updateUser:(NSString *)userId
@@ -67,7 +66,7 @@ RCT_EXPORT_METHOD(dispatch:(NSDictionary *)payload
     BugsnagEventDeserializer *deserializer = [BugsnagEventDeserializer new];
     BugsnagEvent *event = [deserializer deserializeEvent:payload];
 
-    [Bugsnag notifyInternal:event block:^BOOL(BugsnagEvent * _Nonnull event) {
+    [Bugsnag.client notifyInternal:event block:^BOOL(BugsnagEvent * _Nonnull event) {
         NSLog(@"Sending event from JS: %@", event);
         return true;
     }];
@@ -77,7 +76,7 @@ RCT_EXPORT_METHOD(dispatch:(NSDictionary *)payload
 RCT_EXPORT_METHOD(leaveBreadcrumb:(NSDictionary *)options) {
     NSString *message = options[@"message"];
     if (message != nil) {
-        BSGBreadcrumbType type = [self breadcrumbTypeFromString:options[@"type"]];
+        BSGBreadcrumbType type = BSGBreadcrumbTypeFromString(options[@"type"]);
         NSDictionary *metadata = options[@"metadata"];
         [Bugsnag leaveBreadcrumbWithMessage:message
                                    metadata:metadata
@@ -136,52 +135,53 @@ RCT_EXPORT_METHOD(getPayloadInfo:(NSDictionary *)options
                           reject:(RCTPromiseRejectBlock)reject) {
     BugsnagClient *client = [Bugsnag client];
     NSMutableDictionary *info = [NSMutableDictionary new];
-    info[@"app"] = [client collectAppWithState];
-    info[@"device"] = [client collectDeviceWithState];
-    info[@"breadcrumbs"] = [client collectBreadcrumbs];
-    BOOL unhandled = [options[@"unhandled"] boolValue];
-    info[@"threads"] = [client collectThreads:unhandled];
+    NSDictionary *systemInfo = BSGGetSystemInfo();
+    info[@"app"] = [[client generateAppWithState:systemInfo] toDict];
+    info[@"device"] = [[client generateDeviceWithState:systemInfo] toDictionary];
+    info[@"breadcrumbs"] = ({
+        NSMutableArray *array = [NSMutableArray new];
+        for (BugsnagBreadcrumb *crumb in [client breadcrumbs]) {
+            NSMutableDictionary *json = [[crumb objectValue] mutableCopy];
+            if (!json) {
+                continue;
+            }
+            // JSON is serialized as 'name', we want as 'message' when passing to RN
+            json[@"message"] = json[@"name"];
+            json[@"name"] = nil;
+            json[@"metadata"] = json[@"metaData"];
+            json[@"metaData"] = nil;
+            [array addObject:json];
+        }
+        array;
+    });
+    info[@"threads"] = ({
+        NSArray *callStack = NSThread.callStackReturnAddresses;
+        if (callStack.count) { // discard `-[BugsnagReactNative getPayloadInfo:resolve:reject:]`
+            callStack = [callStack subarrayWithRange:NSMakeRange(1, callStack.count - 1)];
+        }
+        BOOL unhandled = [options[@"unhandled"] boolValue];
+        BSGThreadSendPolicy policy = client.configuration.sendThreads;
+        BOOL recordAllThreads = policy == BSGThreadSendPolicyAlways
+               || (unhandled && policy == BSGThreadSendPolicyUnhandledOnly);
+        NSArray<BugsnagThread *> *threads = [BugsnagThread allThreads:recordAllThreads callStackReturnAddresses:callStack];
+        [BugsnagThread serializeThreads:threads];
+    });
     resolve(info);
 }
 
 - (void)addRuntimeVersionInfo:(NSDictionary *)info {
     NSString *reactNativeVersion = info[@"reactNativeVersion"];
     NSString *engine = info[@"engine"];
-    [Bugsnag addRuntimeVersionInfo:reactNativeVersion withKey:@"reactNative"];
-    [Bugsnag addRuntimeVersionInfo:engine withKey:@"reactNativeJsEngine"];
-}
-
-- (BSGBreadcrumbType)breadcrumbTypeFromString:(NSString *)value {
-    if ([@"manual" isEqualToString:value]) {
-        return BSGBreadcrumbTypeManual;
-    } else if ([@"error" isEqualToString:value]) {
-        return BSGBreadcrumbTypeError;
-    } else if ([@"log" isEqualToString:value]) {
-       return BSGBreadcrumbTypeLog;
-    } else if ([@"navigation" isEqualToString:value]) {
-        return BSGBreadcrumbTypeNavigation;
-    } else if ([@"process" isEqualToString:value]) {
-        return BSGBreadcrumbTypeProcess;
-    } else if ([@"request" isEqualToString:value]) {
-        return BSGBreadcrumbTypeRequest;
-    } else if ([@"state" isEqualToString:value]) {
-        return BSGBreadcrumbTypeState;
-    } else if ([@"user" isEqualToString:value]) {
-        return BSGBreadcrumbTypeUser;
-    } else {
-        return BSGBreadcrumbTypeManual; // return placeholder value
-    }
+    BugsnagClient *client = [Bugsnag client];
+    [client addRuntimeVersionInfo:reactNativeVersion withKey:@"reactNative"];
+    [client addRuntimeVersionInfo:engine withKey:@"reactNativeJsEngine"];
 }
 
 - (void)updateNotifierInfo:(NSDictionary *)info {
-    NSString *jsVersion = info[@"notifierVersion"];
-    id notifier = [Bugsnag client].notifier;
-    [notifier setValue:jsVersion forKey:@"version"];
-    [notifier setValue:@"Bugsnag React Native" forKey:@"name"];
-    [notifier setValue: @"https://github.com/bugsnag/bugsnag-js" forKey:@"url"];
-
-    NSMutableArray *deps = [NSMutableArray arrayWithObject:[NSClassFromString(@"BugsnagNotifier") new]];
-    [notifier setValue:deps forKey:@"dependencies"];
+    Bugsnag.client.notifier.name = @"Bugsnag React Native";
+    Bugsnag.client.notifier.version = info[@"notifierVersion"];
+    Bugsnag.client.notifier.url = @"https://github.com/bugsnag/bugsnag-js";
+    Bugsnag.client.notifier.dependencies = @[[[BugsnagNotifier alloc] init]];
 }
 
 @end

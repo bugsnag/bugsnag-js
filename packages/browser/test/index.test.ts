@@ -158,4 +158,18 @@ describe('browser notifier', () => {
     Bugsnag.start(API_KEY)
     expect(Bugsnag.isStarted()).toBe(true)
   })
+
+  it('enables accessing feature flags from events passed to onError callback', (done) => {
+    const Bugsnag = getBugsnag()
+    Bugsnag.start(API_KEY)
+    Bugsnag.addFeatureFlag('feature 1', '1.0')
+    Bugsnag.notify(new Error('test error'), (event) => {
+      event.addFeatureFlag('feature 2', '2.0')
+      expect(event.getFeatureFlags()).toStrictEqual([
+        { featureFlag: 'feature 1', variant: '1.0' },
+        { featureFlag: 'feature 2', variant: '2.0' }
+      ])
+      done()
+    })
+  })
 })
