@@ -1,5 +1,11 @@
 # Changelog
 
+## TBD
+
+### Changed
+
+- (plugin-navigation-breadcrumbs) calling `pushState` or `replaceState` no longer triggers a new session [#1820](https://github.com/bugsnag/bugsnag-js/pull/1820)
+
 ## v7.18.0 (2022-09-22)
 
 ### Changed
