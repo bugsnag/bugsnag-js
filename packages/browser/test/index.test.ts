@@ -172,4 +172,32 @@ describe('browser notifier', () => {
       done()
     })
   })
+
+  describe('navigation breadcrumbs', () => {
+    it('resets events on pushState', () => {
+      const Bugsnag = getBugsnag()
+      const client = Bugsnag.createClient('API_KEY')
+      const resetEventCount = jest.spyOn(client, 'resetEventCount')
+
+      window.history.pushState('', '', 'new-url')
+
+      expect(resetEventCount).toHaveBeenCalled()
+
+      resetEventCount.mockReset()
+      resetEventCount.mockRestore()
+    })
+
+    it('does not reset events on replaceState', () => {
+      const Bugsnag = getBugsnag()
+      const client = Bugsnag.createClient('API_KEY')
+      const resetEventCount = jest.spyOn(client, 'resetEventCount')
+
+      window.history.replaceState('', '', 'new-url')
+
+      expect(resetEventCount).not.toHaveBeenCalled()
+
+      resetEventCount.mockReset()
+      resetEventCount.mockRestore()
+    })
+  })
 })
