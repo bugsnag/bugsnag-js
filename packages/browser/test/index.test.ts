@@ -180,7 +180,6 @@ describe('browser notifier', () => {
       const resetEventCount = jest.spyOn(client, 'resetEventCount')
 
       window.history.pushState('', '', 'new-url')
-
       expect(resetEventCount).toHaveBeenCalled()
 
       resetEventCount.mockReset()
@@ -193,11 +192,25 @@ describe('browser notifier', () => {
       const resetEventCount = jest.spyOn(client, 'resetEventCount')
 
       window.history.replaceState('', '', 'new-url')
-
       expect(resetEventCount).not.toHaveBeenCalled()
 
       resetEventCount.mockReset()
       resetEventCount.mockRestore()
+    })
+
+    it('does not start unnecessary sessions', () => {
+      const Bugsnag = getBugsnag()
+      const client = Bugsnag.createClient('API_KEY')
+      const startSession = jest.spyOn(client, 'startSession')
+
+      window.history.replaceState('', '', 'new-url')
+      expect(startSession).not.toHaveBeenCalled()
+
+      window.history.pushState('', '', 'new-url')
+      expect(startSession).not.toHaveBeenCalled()
+
+      startSession.mockReset()
+      startSession.mockRestore()
     })
   })
 })
