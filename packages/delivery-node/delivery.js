@@ -3,8 +3,13 @@ const request = require('./request')
 
 module.exports = (client) => ({
   sendEvent: (event, cb = () => {}) => {
+    const body = payload.event(event, client._config.redactedKeys)
+
     const _cb = err => {
       if (err) client._logger.error(`Event failed to send…\n${(err && err.stack) ? err.stack : err}`, err)
+      if (body.length > 10e5) {
+        client._logger.warn(`Discarding over-sized event (${body.length / 10e5}) after failed delivery`)
+      }
       cb(err)
     }
 
@@ -17,7 +22,7 @@ module.exports = (client) => ({
           'Bugsnag-Payload-Version': '4',
           'Bugsnag-Sent-At': (new Date()).toISOString()
         },
-        body: payload.event(event, client._config.redactedKeys),
+        body,
         agent: client._config.agent
       }, (err, body) => _cb(err))
     } catch (e) {

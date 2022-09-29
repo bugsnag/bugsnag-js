@@ -5,15 +5,26 @@ module.exports = (client, win = window) => ({
     try {
       const url = client._config.endpoints.notify
       const req = new win.XMLHttpRequest()
+      const body = payload.event(event, client._config.redactedKeys)
+
       req.onreadystatechange = function () {
-        if (req.readyState === win.XMLHttpRequest.DONE) cb(null)
+        if (req.readyState === win.XMLHttpRequest.DONE) {
+          const status = req.status
+          if (status === 0 || status >= 400) {
+            client._logger.error('Event failed to send…\n')
+            if (body.length > 10e5) {
+              client._logger.warning(`Discarding over-sized event (${body.length / 10e5}MB) after failed delivery`)
+            }
+          }
+          cb(null)
+        }
       }
       req.open('POST', url)
       req.setRequestHeader('Content-Type', 'application/json')
       req.setRequestHeader('Bugsnag-Api-Key', event.apiKey || client._config.apiKey)
       req.setRequestHeader('Bugsnag-Payload-Version', '4')
       req.setRequestHeader('Bugsnag-Sent-At', (new Date()).toISOString())
-      req.send(payload.event(event, client._config.redactedKeys))
+      req.send(body)
     } catch (e) {
       client._logger.error(e)
     }

@@ -1,5 +1,11 @@
 # Changelog
 
+## TBD
+
+### Changed
+
+- Attempt to send all event and session payloads, regardless of size
+
 ## v7.18.0 (2022-09-22)
 
 ### Changed

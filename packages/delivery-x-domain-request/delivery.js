@@ -3,14 +3,22 @@ const payload = require('@bugsnag/core/lib/json-payload')
 module.exports = (client, win = window) => ({
   sendEvent: (event, cb = () => {}) => {
     const url = getApiUrl(client._config, 'notify', '4', win)
+    const body = payload.event(event, client._config.redactedKeys)
+
     const req = new win.XDomainRequest()
     req.onload = function () {
       cb(null)
     }
+    req.onerror = function () {
+      client._logger.error('Event failed to send…\n')
+      if (body.length > 10e5) {
+        client._logger.warning(`Discarding over-sized event (${body.length / 10e5}MB) after failed delivery`)
+      }
+    }
     req.open('POST', url)
     setTimeout(() => {
       try {
-        req.send(payload.event(event, client._config.redactedKeys))
+        req.send(body)
       } catch (e) {
         client._logger.error(e)
         cb(e)

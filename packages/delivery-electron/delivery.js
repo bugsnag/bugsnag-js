@@ -18,6 +18,11 @@ const delivery = (client, filestore, net, app) => {
       } else {
         const err = new Error(`Bad status code from API: ${response.statusCode}`)
         err.isRetryable = isRetryable(response.statusCode)
+        // do not retry oversized payloads regardless of status code
+        if (body.length > 10e5) {
+          client._logger.warn(`Discarding over-sized event (${body.length / 10e5}) after failed delivery`)
+          err.isRetryable = false
+        }
         cb(err)
       }
     })
