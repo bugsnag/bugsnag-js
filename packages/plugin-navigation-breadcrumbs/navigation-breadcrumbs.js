@@ -27,8 +27,8 @@ module.exports = (win = window) => {
       }, true)
 
       // the only way to know about replaceState/pushState is to wrap them… >_<
-      if (win.history.pushState) wrapHistoryFn(client, win.history, 'pushState', win)
-      if (win.history.replaceState) wrapHistoryFn(client, win.history, 'replaceState', win, true)
+      if (win.history.pushState) wrapHistoryFn(client, win.history, 'pushState', win, true)
+      if (win.history.replaceState) wrapHistoryFn(client, win.history, 'replaceState', win)
     }
   }
 
