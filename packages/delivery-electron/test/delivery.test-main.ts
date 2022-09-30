@@ -207,6 +207,39 @@ describe('delivery: electron', () => {
     })
   })
 
+  it('does not attempt to re-send oversized payloads', done => {
+    // A 401 is considered retryable but this will be override by the payload size check
+    const { requests, server } = mockServer(401)
+    server.listen(err => {
+      expect(err).toBeUndefined()
+
+      const lotsOfEvents: any[] = []
+      while (JSON.stringify(lotsOfEvents).length < 10e5) {
+        lotsOfEvents.push({ errors: [{ errorClass: 'Error', errorMessage: 'long repetitive string'.repeat(1000) }] })
+      }
+      const payload = {
+        events: lotsOfEvents
+      } as unknown as EventDeliveryPayload
+
+      const config = {
+        apiKey: 'aaaaaaaa',
+        endpoints: { notify: `http://localhost:${(server.address() as AddressInfo).port}/notify/` },
+        redactedKeys: []
+      }
+
+      let didLog = false
+      const logger = { error: () => { didLog = true }, info: () => {} }
+      delivery(filestore, net, app)(makeClient(config, logger)).sendEvent(payload, (err: any) => {
+        expect(didLog).toBe(true)
+        expect(enqueueSpy).not.toHaveBeenCalled()
+        expect(err).toBeTruthy()
+        expect(requests.length).toBe(999)
+        server.close()
+        done()
+      })
+    })
+  })
+
   it('handles errors gracefully for sessions (ECONNREFUSED)', done => {
     const payload = {
       events: [{ errors: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }] }]
