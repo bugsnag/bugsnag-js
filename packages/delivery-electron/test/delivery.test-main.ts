@@ -227,13 +227,16 @@ describe('delivery: electron', () => {
         redactedKeys: []
       }
 
-      let didLog = false
-      const logger = { error: () => { didLog = true }, info: () => {} }
+      const logger = { error: jest.fn(), info: () => {}, warn: jest.fn() }
       delivery(filestore, net, app)(makeClient(config, logger)).sendEvent(payload, (err: any) => {
-        expect(didLog).toBe(true)
+        expect(logger.error).toHaveBeenCalledWith(
+          expect.stringContaining('event failed to send…'),
+          expect.stringContaining('Bad status code from API: 401')
+        )
+        expect(logger.warn).toHaveBeenCalledWith('Discarding over-sized event (1.01 MB) after failed delivery')
         expect(enqueueSpy).not.toHaveBeenCalled()
         expect(err).toBeTruthy()
-        expect(requests.length).toBe(999)
+        expect(requests.length).toBe(1)
         server.close()
         done()
       })
