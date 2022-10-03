@@ -11,7 +11,7 @@ module.exports = (client, win = window) => ({
         if (req.readyState === win.XMLHttpRequest.DONE) {
           const status = req.status
           if (status === 0 || status >= 400) {
-            client._logger.error('Event failed to send…\n')
+            client._logger.error('Event failed to send…')
             if (body.length > 10e5) {
               client._logger.warn(`Event oversized (${(body.length / 10e5).toFixed(2)} MB)`)
             }

@@ -10,10 +10,12 @@ module.exports = (client, win = window) => ({
       cb(null)
     }
     req.onerror = function () {
-      client._logger.error('Event failed to send…\n')
+      const err = new Error('Event failed to send')
+      client._logger.error('Event failed to send…', err)
       if (body.length > 10e5) {
         client._logger.warn(`Event oversized (${(body.length / 10e5).toFixed(2)} MB)`)
       }
+      cb(err)
     }
     req.open('POST', url)
     setTimeout(() => {
