@@ -62,7 +62,7 @@ describe('delivery:node', () => {
   })
 
   it('logs failures and large payloads', done => {
-    const { requests, server } = mockServer(400)
+    const { server } = mockServer(400)
     server.listen((err: Error) => {
       expect(err).toBeUndefined()
 
