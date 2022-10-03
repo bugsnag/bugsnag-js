@@ -12,7 +12,7 @@ module.exports = (client, win = window) => ({
     req.onerror = function () {
       client._logger.error('Event failed to send…\n')
       if (body.length > 10e5) {
-        client._logger.warning(`Event oversized (${body.length / 10e5} MB)`)
+        client._logger.warn(`Event oversized (${(body.length / 10e5).toFixed(2)} MB)`)
       }
     }
     req.open('POST', url)

@@ -20,7 +20,7 @@ const delivery = (client, filestore, net, app) => {
         err.isRetryable = isRetryable(response.statusCode)
         // do not retry oversized payloads regardless of status code
         if (body.length > 10e5) {
-          client._logger.warn(`Discarding over-sized event (${body.length / 10e5} MB) after failed delivery`)
+          client._logger.warn(`Discarding over-sized event (${(body.length / 10e5).toFixed(2)} MB) after failed delivery`)
           err.isRetryable = false
         }
         cb(err)

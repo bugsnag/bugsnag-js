@@ -8,7 +8,7 @@ module.exports = (client) => ({
     const _cb = err => {
       if (err) client._logger.error(`Event failed to send…\n${(err && err.stack) ? err.stack : err}`, err)
       if (body.length > 10e5) {
-        client._logger.warn(`Event oversized (${body.length / 10e5} MB)`)
+        client._logger.warn(`Event oversized (${(body.length / 10e5).toFixed(2)} MB)`)
       }
       cb(err)
     }
