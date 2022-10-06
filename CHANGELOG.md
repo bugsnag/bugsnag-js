@@ -4,7 +4,7 @@
 
 ### Changed
 
-- Attempt to send all event and session payloads, regardless of size
+- After trimming, attempt to send all event and session payloads, even if believed oversize
 
 ## v7.18.0 (2022-09-22)
 
