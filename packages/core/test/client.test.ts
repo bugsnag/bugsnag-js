@@ -72,6 +72,46 @@ describe('@bugsnag/core/client', () => {
       expect(client).toBeTruthy()
       expect(logger.warn.mock.calls.length).toBe(0)
     })
+
+    it('prevents sendSession() with invalid endpoint config', done => {
+      // @ts-expect-error
+      const client = new Client({ apiKey: 'API_KEY', endpoints: { notify: '/notify' } })
+
+      client._setDelivery(client => ({
+        sendSession: () => { done('sendSession() should not be called') },
+        sendEvent: () => { }
+      }))
+
+      client.notify(new Error('111'), () => {}, (err, event) => {
+        expect(err).toBe(null)
+        expect(event).toBeTruthy()
+        expect(event.errors[0].errorMessage).toBe('111')
+        done()
+      })
+
+      // give the event loop a tick to see if the event gets sent
+      process.nextTick(() => done())
+    })
+
+    it('prevents sendEvent() with invalid endpoint config', done => {
+      // @ts-expect-error
+      const client = new Client({ apiKey: 'API_KEY', endpoints: { sessions: '/sessions' } })
+
+      client._setDelivery(client => ({
+        sendSession: () => { },
+        sendEvent: () => { done('sendEvent() should not be called') }
+      }))
+
+      client.notify(new Error('111'), () => {}, (err, event) => {
+        expect(err).toBe(null)
+        expect(event).toBeTruthy()
+        expect(event.errors[0].errorMessage).toBe('111')
+        done()
+      })
+
+      // give the event loop a tick to see if the event gets sent
+      process.nextTick(() => done())
+    })
   })
 
   describe('use()', () => {

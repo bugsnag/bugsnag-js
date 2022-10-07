@@ -33,7 +33,7 @@ describe('delivery:XDomainRequest', () => {
     const payload = { sample: 'payload' } as unknown as EventDeliveryPayload
     const config = {
       apiKey: 'aaaaaaaa',
-      endpoints: { notify: '/echo/' },
+      endpoints: { notify: '/echo/', sessions: '/sessions/' },
       redactedKeys: []
     }
     delivery({ logger: {}, _config: config } as unknown as Client, window).sendEvent(payload, (err) => {

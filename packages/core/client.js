@@ -11,6 +11,7 @@ const assign = require('./lib/es-utils/assign')
 const runCallbacks = require('./lib/callback-runner')
 const metadataDelegate = require('./lib/metadata-delegate')
 const runSyncCallbacks = require('./lib/sync-callback-runner')
+const validDeliveryConfiguration = require('./lib/valid-delivery-configuration')
 const BREADCRUMB_TYPES = require('./lib/breadcrumb-types')
 const { add, clear, merge } = require('./lib/feature-flag-delegate')
 
@@ -194,7 +195,9 @@ class Client {
   }
 
   _setDelivery (d) {
-    this._delivery = d(this)
+    if (validDeliveryConfiguration(this)) {
+      this._delivery = d(this)
+    }
   }
 
   startSession () {

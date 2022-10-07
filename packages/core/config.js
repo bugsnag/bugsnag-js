@@ -71,10 +71,6 @@ module.exports.schema = {
     validate: val =>
       // first, ensure it's an object
       (val && typeof val === 'object') &&
-      (
-        // notify and sessions must always be set
-        stringWithLength(val.notify) && stringWithLength(val.sessions)
-      ) &&
       // ensure no keys other than notify/session are set on endpoints object
       filter(keys(val), k => !includes(['notify', 'sessions'], k)).length === 0
   },
