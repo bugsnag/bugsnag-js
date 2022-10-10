@@ -244,18 +244,7 @@ steps:
         concurrency: 5
         concurrency_group: 'browserstack'
 
-      - label: ':android: Android 5.0 Browser tests'
-        timeout_in_minutes: 20
-        plugins:
-          docker-compose#v3.9.0:
-            pull: browser-maze-runner-v6
-            run: browser-maze-runner-v6
-            use-aliases: true
-            command:
-              - --farm=bs
-              - --browser=android_s6
-        concurrency: 5
-        concurrency_group: 'browserstack'
+      # Skipping Android 5 due to test environment stability issues
 
       - label: ':android: Android 6.0 Browser tests'
         timeout_in_minutes: 20
