@@ -11,7 +11,6 @@ const assign = require('./lib/es-utils/assign')
 const runCallbacks = require('./lib/callback-runner')
 const metadataDelegate = require('./lib/metadata-delegate')
 const runSyncCallbacks = require('./lib/sync-callback-runner')
-const validDeliveryConfiguration = require('./lib/valid-delivery-configuration')
 const BREADCRUMB_TYPES = require('./lib/breadcrumb-types')
 const { add, clear, merge } = require('./lib/feature-flag-delegate')
 
@@ -215,12 +214,6 @@ class Client {
       return this
     }
 
-    // exit early if delivery configuration is invalid
-    if (!validDeliveryConfiguration(this)) {
-      this._logger.warn('Session not started due to invalid delivery configuration')
-      return this
-    }
-
     return this._sessionDelegate.startSession(this, session)
   }
 
@@ -312,12 +305,6 @@ class Client {
     // exit early if events should not be sent on the current releaseStage
     if (this._config.enabledReleaseStages !== null && !includes(this._config.enabledReleaseStages, this._config.releaseStage)) {
       this._logger.warn('Event not sent due to releaseStage/enabledReleaseStages configuration')
-      return postReportCallback(null, event)
-    }
-
-    // exit early if delivery configuration is invalid
-    if (!validDeliveryConfiguration(this)) {
-      this._logger.warn('Event not sent due to invalid delivery configuration')
       return postReportCallback(null, event)
     }
 

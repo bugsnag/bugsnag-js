@@ -32,11 +32,6 @@ describe('main process client config schema', () => {
     it('allows valid config', () => {
       expect(schema.endpoints.validate({
         notify: 'http://fakeurl.xyz/n',
-        sessions: 'http://fakeurl.xyz/s'
-      })).toBe(true)
-
-      expect(schema.endpoints.validate({
-        notify: 'http://fakeurl.xyz/n',
         sessions: 'http://fakeurl.xyz/s',
         minidumps: 'http://fakeurl.xyz/m'
       })).toBe(true)

@@ -8,6 +8,11 @@ module.exports = (client) => ({
       cb(err)
     }
 
+    if (client._config.endpoints.notify === null) {
+      const err = new Error('Event not sent due to incomplete endpoint configuration')
+      return _cb(err)
+    }
+
     try {
       request({
         url: client._config.endpoints.notify,
@@ -28,6 +33,11 @@ module.exports = (client) => ({
     const _cb = err => {
       if (err) client._logger.error(`Session failed to send…\n${(err && err.stack) ? err.stack : err}`, err)
       cb(err)
+    }
+
+    if (client._config.endpoints.session === null) {
+      const err = new Error('Session not sent due to incomplete endpoint configuration')
+      return _cb(err)
     }
 
     try {

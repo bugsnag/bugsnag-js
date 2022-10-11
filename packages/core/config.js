@@ -63,14 +63,25 @@ module.exports.schema = {
     validate: listOfFunctions
   },
   endpoints: {
-    defaultValue: () => ({
-      notify: 'https://notify.bugsnag.com',
-      sessions: 'https://sessions.bugsnag.com'
-    }),
+    defaultValue: (endpoints) => {
+      // only apply the default value if no endpoints have been provided, otherwise prevent delivery by setting to null
+      if (typeof endpoints === 'undefined') {
+        return ({
+          notify: 'https://notify.bugsnag.com',
+          sessions: 'https://sessions.bugsnag.com'
+        })
+      } else {
+        return ({ notify: null, sessions: null })
+      }
+    },
     message: 'should be an object containing endpoint URLs { notify, sessions }',
-    validate: val =>
+    validate: (val) =>
       // first, ensure it's an object
       (val && typeof val === 'object') &&
+      (
+        // notify and sessions must always be set
+        stringWithLength(val.notify) && stringWithLength(val.sessions)
+      ) &&
       // ensure no keys other than notify/session are set on endpoints object
       filter(keys(val), k => !includes(['notify', 'sessions'], k)).length === 0
   },

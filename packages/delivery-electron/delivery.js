@@ -65,6 +65,11 @@ const delivery = (client, filestore, net, app) => {
     sendEvent: async (event, cb = () => {}) => {
       const url = client._config.endpoints.notify
 
+      if (url === null) {
+        const err = new Error('Event not sent due to incomplete endpoint configuration')
+        return cb(err)
+      }
+
       let body, opts
       try {
         body = payload.event(event, client._config.redactedKeys)
@@ -99,6 +104,11 @@ const delivery = (client, filestore, net, app) => {
 
     sendSession: async (session, cb = () => {}) => {
       const url = client._config.endpoints.sessions
+
+      if (url === null) {
+        const err = new Error('Session not sent due to incomplete endpoint configuration')
+        return cb(err)
+      }
 
       let body, opts
       try {

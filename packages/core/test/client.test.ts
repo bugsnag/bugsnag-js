@@ -72,44 +72,6 @@ describe('@bugsnag/core/client', () => {
       expect(client).toBeTruthy()
       expect(logger.warn.mock.calls.length).toBe(0)
     })
-
-    it('prevents sendSession() with invalid endpoint config', done => {
-      // @ts-expect-error
-      const client = new Client({ apiKey: 'API_KEY', endpoints: { sessions: '/sessions' } })
-      const sendSession = jest.fn()
-
-      client._setDelivery(client => ({
-        sendSession: () => {
-          sendSession()
-          done('sendSession() should not be called')
-        },
-        sendEvent: () => { }
-      }))
-
-      client.startSession()
-
-      process.nextTick(() => {
-        expect(sendSession).not.toHaveBeenCalled()
-        done()
-      })
-    })
-
-    it('prevents sendEvent() with invalid endpoint config', done => {
-      // @ts-expect-error
-      const client = new Client({ apiKey: 'API_KEY', endpoints: { sessions: '/sessions' } })
-
-      client._setDelivery(client => ({
-        sendSession: () => { },
-        sendEvent: () => { done('sendEvent() should not be called') }
-      }))
-
-      client.notify(new Error('111'), undefined, (err, event) => {
-        expect(err).toBe(null)
-        expect(event).toBeTruthy()
-        expect(event.errors[0].errorMessage).toBe('111')
-        done()
-      })
-    })
   })
 
   describe('use()', () => {

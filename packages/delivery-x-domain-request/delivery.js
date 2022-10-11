@@ -2,6 +2,11 @@ const payload = require('@bugsnag/core/lib/json-payload')
 
 module.exports = (client, win = window) => ({
   sendEvent: (event, cb = () => {}) => {
+    if (client._config.endpoints.notify === null) {
+      const err = new Error('Event not sent due to incomplete endpoint configuration')
+      return cb(err)
+    }
+
     const url = getApiUrl(client._config, 'notify', '4', win)
     const req = new win.XDomainRequest()
     req.onload = function () {
@@ -18,6 +23,11 @@ module.exports = (client, win = window) => ({
     }, 0)
   },
   sendSession: (session, cb = () => {}) => {
+    if (client._config.endpoints.sessions === null) {
+      const err = new Error('Session not sent due to incomplete endpoint configuration')
+      return cb(err)
+    }
+
     const url = getApiUrl(client._config, 'sessions', '1', win)
     const req = new win.XDomainRequest()
     req.onload = function () {
