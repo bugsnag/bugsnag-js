@@ -87,6 +87,53 @@ describe('browser notifier', () => {
     notify.onreadystatechange()
   })
 
+  it('does not send an event with invalid configuration', (done) => {
+    const { session, notify } = mockFetch()
+    const Bugsnag = getBugsnag()
+    // @ts-expect-error
+    Bugsnag.start({ apiKey: API_KEY, endpoints: { notify: 'https://notify.bugsnag.com' } })
+    Bugsnag.notify(new Error('123'), undefined, (err, event) => {
+      if (err) {
+        done(err)
+      }
+
+      expect(event.originalError.message).toBe('123')
+
+      // check no event is sent
+      expect(notify.open).not.toHaveBeenCalled()
+      expect(notify.setRequestHeader).not.toHaveBeenCalled()
+      expect(notify.send).not.toHaveBeenCalled()
+
+      // check no session is sent
+      expect(session.open).not.toHaveBeenCalled()
+      expect(session.setRequestHeader).not.toHaveBeenCalled()
+      expect(session.send).not.toHaveBeenCalled()
+
+      done()
+    })
+
+    session.onreadystatechange()
+    notify.onreadystatechange()
+  })
+
+  it('does not send a session with invalid configuration', (done) => {
+    const { session } = mockFetch()
+    const Bugsnag = getBugsnag()
+    // @ts-expect-error
+    Bugsnag.start({ apiKey: API_KEY, endpoints: { notify: 'https://notify.bugsnag.com' } })
+    Bugsnag.startSession()
+
+    session.onreadystatechange()
+
+    process.nextTick(() => {
+      expect(session.open).not.toHaveBeenCalled()
+      expect(session.setRequestHeader).not.toHaveBeenCalled()
+      expect(session.send).not.toHaveBeenCalled()
+
+      done()
+    })
+  })
+
   it('does not send if false is returned in onError', (done) => {
     const { session, notify } = mockFetch()
     const Bugsnag = getBugsnag()

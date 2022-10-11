@@ -195,9 +195,7 @@ class Client {
   }
 
   _setDelivery (d) {
-    if (validDeliveryConfiguration(this)) {
-      this._delivery = d(this)
-    }
+    this._delivery = d(this)
   }
 
   startSession () {
@@ -216,6 +214,13 @@ class Client {
       this._logger.debug('Session not started due to onSession callback')
       return this
     }
+
+    // exit early if delivery configuration is invalid
+    if (!validDeliveryConfiguration(this)) {
+      this._logger.warn('Session not started due to invalid delivery configuration')
+      return this
+    }
+
     return this._sessionDelegate.startSession(this, session)
   }
 
@@ -307,6 +312,12 @@ class Client {
     // exit early if events should not be sent on the current releaseStage
     if (this._config.enabledReleaseStages !== null && !includes(this._config.enabledReleaseStages, this._config.releaseStage)) {
       this._logger.warn('Event not sent due to releaseStage/enabledReleaseStages configuration')
+      return postReportCallback(null, event)
+    }
+
+    // exit early if delivery configuration is invalid
+    if (!validDeliveryConfiguration(this)) {
+      this._logger.warn('Event not sent due to invalid delivery configuration')
       return postReportCallback(null, event)
     }
 
