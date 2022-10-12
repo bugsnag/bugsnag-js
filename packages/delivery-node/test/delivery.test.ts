@@ -61,6 +61,28 @@ describe('delivery:node', () => {
     })
   })
 
+  it('prevents event delivery with incomplete config', done => {
+    const { requests, server } = mockServer()
+    server.listen((err: Error) => {
+      expect(err).toBeUndefined()
+
+      const payload = { sample: 'payload' } as unknown as EventDeliveryPayload
+      const config = {
+        apiKey: 'aaaaaaaa',
+        endpoints: { notify: null },
+        redactedKeys: []
+      }
+
+      delivery({ _logger: {}, _config: config } as unknown as Client).sendEvent(payload, (err) => {
+        expect(err).toStrictEqual(new Error('Event not sent due to incomplete endpoint configuration'))
+        expect(requests.length).toBe(0)
+
+        server.close()
+        done()
+      })
+    })
+  })
+
   it('sends sessions successfully', done => {
     const { requests, server } = mockServer(202)
     server.listen((err: Error) => {
@@ -82,6 +104,27 @@ describe('delivery:node', () => {
         expect(requests[0].headers['bugsnag-payload-version']).toEqual('1')
         expect(requests[0].headers['bugsnag-sent-at']).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/)
         expect(requests[0].body).toBe(JSON.stringify(payload))
+
+        server.close()
+        done()
+      })
+    })
+  })
+
+  it('prevents session delivery with incomplete config', done => {
+    const { requests, server } = mockServer(202)
+    server.listen((err: Error) => {
+      expect(err).toBeUndefined()
+
+      const payload = { sample: 'payload' } as unknown as EventDeliveryPayload
+      const config = {
+        apiKey: 'aaaaaaaa',
+        endpoints: { notify: null, sessions: null },
+        redactedKeys: []
+      }
+      delivery({ _logger: {}, _config: config } as unknown as Client).sendSession(payload, (err) => {
+        expect(err).toStrictEqual(new Error('Session not sent due to incomplete endpoint configuration'))
+        expect(requests.length).toBe(0)
 
         server.close()
         done()
