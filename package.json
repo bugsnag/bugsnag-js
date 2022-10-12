@@ -76,7 +76,7 @@
     "xvfb-maybe": "^0.2.1"
   },
   "scripts": {
-    "bootstrap": "lerna bootstrap",
+    "bootstrap": "lerna bootstrap --no-ci",
     "cdn-upload": "lerna run cdn-upload --stream",
     "build": "lerna run build --scope '@bugsnag/node' --scope '@bugsnag/browser' && lerna run build --ignore '@bugsnag/node' --ignore '@bugsnag/browser'",
     "build:electron": "lerna run build --scope '@bugsnag/plugin-electron-ipc' --scope '@bugsnag/plugin-electron-app' --scope '@bugsnag/plugin-electron-client-state-persistence'",
