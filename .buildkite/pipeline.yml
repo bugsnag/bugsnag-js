@@ -51,7 +51,7 @@ steps:
     commands:
       # force the NPM registry as the default on CI is artifactory, which can't
       # currently install from our lockfile
-      - npm ci --registry https://registry.npmjs.org
+      - npm install
       - cd test/aws-lambda
       - bundle install
       - bundle exec maze-runner

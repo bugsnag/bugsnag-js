@@ -40,10 +40,10 @@ jobs:
     - run: npm install electron@${{ matrix.electron }} --no-audit --progress=false --no-save
       env:
         PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
-    - run: npm ci --no-audit --progress=false
+    - run: npm install --no-audit --progress=false
       env:
         PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
-    - run: npx lerna bootstrap
+    - run: npx lerna bootstrap --no-ci
     - run: npm run build:electron
       shell: bash
     - run: sudo apt-get install cppcheck --assume-yes

@@ -11,7 +11,7 @@ RUN npm install
 COPY babel.config.js lerna.json .eslintignore .eslintrc.js jest.config.js tsconfig.json ./
 ADD min_packages.tar .
 COPY bin ./bin
-RUN npx lerna bootstrap
+RUN npx lerna bootstrap --no-ci
 COPY packages ./packages
 RUN npm run build
 
