@@ -15,17 +15,22 @@
   </head>
   <body>
     <script>
-      var big = {}
+      function repeat(s, n){
+        var a = [];
+        while(a.length < n){
+            a.push(s);
+        }
+        return a.join('');
+      }
+
+      var big = {};
       var i = 0;
       while (JSON.stringify(big).length < 5*10e5) {
         big['entry'+i] = repeat('long repetitive string', 1000);
         i++;
       }
-      Bugsnag.leaveBreadcrumb('big thing', big)
-      Bugsnag.notify({ name: 'some name', message: 'some message'}, function(event) {
-      }, function() {
-        console.log('done callback')
-      })
+      Bugsnag.leaveBreadcrumb('big thing', big);
+      Bugsnag.notify(new Error('big things'));
     </script>
   </body>
 </html>

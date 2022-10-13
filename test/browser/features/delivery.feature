@@ -1,10 +1,10 @@
 Feature: Delivery of errors
 
   Scenario: Delivery is attempted oversized payloads
-    Given I set the HTTP status code to 400
     When I navigate to the test URL "/delivery/script/a.html"
+    And I wait for 20 seconds
+    And I set the HTTP status code to 500
     And I wait to receive an error
-    And I wait for the fixture to process the response
     
     # Check that Bugsnag is discarding the event
     And I wait to receive a log
