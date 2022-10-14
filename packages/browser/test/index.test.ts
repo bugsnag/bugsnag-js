@@ -94,24 +94,6 @@ describe('browser notifier', () => {
     Bugsnag.start({ apiKey: API_KEY, endpoints: { notify: 'https://notify.bugsnag.com' } })
     Bugsnag.notify(new Error('123'), undefined, (err, event) => {
       expect(err).toStrictEqual('Event not sent due to incomplete endpoint configuration')
-
-      // if (err) {
-      //   done(err)
-      // }
-
-      // expect(event.originalError.message).toBe('123')
-
-      // // check no event is sent
-      // expect(notify.open).not.toHaveBeenCalled()
-      // expect(notify.setRequestHeader).not.toHaveBeenCalled()
-      // expect(notify.send).not.toHaveBeenCalled()
-
-      // // check no session is sent
-      // expect(session.open).not.toHaveBeenCalled()
-      // expect(session.setRequestHeader).not.toHaveBeenCalled()
-      // expect(session.send).not.toHaveBeenCalled()
-
-      // done()
     })
 
     session.onreadystatechange()
