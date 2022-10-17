@@ -12,7 +12,7 @@ const failureOutputDir = join(__dirname, '../../../.cucumber-failures')
 // Allow a longer timeout for this step, which packages the app to run the tests
 // The upper bound for timeouts is only really an issue on lower-resourced
 // containers, and should otherwise complete in a few seconds.
-BeforeAll({ timeout: 420 * 1000 }, async () => {
+BeforeAll({ timeout: 720 * 1000 }, async () => {
   global.success = true
   global.server = new MockServer()
 
