@@ -57,40 +57,6 @@ services:
         aliases:
           - maze-runner
 
-  browser-maze-runner-v6:
-    build:
-      context: .
-      dockerfile: dockerfiles/Dockerfile.browser-v6
-      target: browser-maze-runner
-      args:
-        - BUILDKITE_BUILD_NUMBER
-    environment:
-      BUILDKITE:
-      BUILDKITE_BRANCH:
-      BUILDKITE_BUILD_CREATOR:
-      BUILDKITE_BUILD_NUMBER:
-      BUILDKITE_BUILD_URL:
-      BUILDKITE_LABEL:
-      BUILDKITE_MESSAGE:
-      BUILDKITE_PIPELINE_NAME:
-      BUILDKITE_REPO:
-      BUILDKITE_RETRY_COUNT:
-      BUILDKITE_STEP_KEY:
-      MAZE_BUGSNAG_API_KEY:
-      MAZE_TMS_URI:
-      MAZE_TMS_TOKEN:
-      DEBUG:
-      BROWSER_STACK_USERNAME:
-      BROWSER_STACK_ACCESS_KEY:
-      HOST: "${HOST:-maze-runner}"
-      API_HOST: "${API_HOST:-maze-runner}"
-    env_file:
-      - ${DOCKER_ENV_FILE:-test/browser/features/fixtures/null_env}
-    networks:
-      default:
-        aliases:
-          - maze-runner
-
   node-maze-runner:
     build:
       context: .
