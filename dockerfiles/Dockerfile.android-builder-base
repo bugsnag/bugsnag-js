@@ -20,8 +20,6 @@ ENV PATH="${PATH}:/sdk/cmdline-tools/tools:/sdk/cmdline-tools/tools/bin"
 RUN yes | sdkmanager "platform-tools" "build-tools;33.0.0"
 ENV PATH="${PATH}:/sdk/platform-tools"
 
-RUN ln -s /sdk/build-tools/33.0.0/d8 /sdk/build-tools/33.0.0/dx \
-
 ENV ANDROID_HOME="/sdk/"
 ENV GRADLE_OPTS="-Dorg.gradle.daemon=false"
 
@@ -33,3 +31,5 @@ WORKDIR /app/gradle
 RUN wget -q https://services.gradle.org/distributions/gradle-5.1.1-all.zip \
             https://services.gradle.org/distributions/gradle-5.4.1-all.zip \
             https://services.gradle.org/distributions/gradle-6.2-all.zip
+
+RUN ln -s /sdk/build-tools/33.0.0/d8 /sdk/build-tools/33.0.0/dx
