@@ -21,7 +21,7 @@ class TestApp {
     // install this first. electron has a lengthy postinstall script, and doing
     // a bare `npm install` first will wildcard to the latest / last version
     // installed, doubling the install time
-    await this._exec(npmRunner, [...installArgs, `electron@${electronVersion}`], {}, 300)
+    await this._exec(npmRunner, [...installArgs, `electron@${electronVersion}`], {}, 180)
     await this._exec(npmRunner, [...installArgs], {}, 500)
     await this._exec(npmRunner, [
       ...installArgs,
@@ -29,7 +29,7 @@ class TestApp {
       '--registry',
       'http://0.0.0.0:5539',
       `@bugsnag/electron@${bugsnagVersion}`
-    ])
+    ], {}, 180)
   }
 
   buildPath () {
