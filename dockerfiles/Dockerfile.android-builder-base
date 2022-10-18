@@ -6,11 +6,12 @@ RUN apt-get update && apt-get install -y gradle jq git-core build-essential open
 
 # Android tools
 WORKDIR /sdk
-RUN wget https://dl.google.com/android/repository/commandlinetools-linux-8092744_latest.zip -q
-RUN unzip -q commandlinetools-linux-8092744_latest.zip
-RUN rm commandlinetools-linux-8092744_latest.zip
+RUN wget https://dl.google.com/android/repository/commandlinetools-linux-8512546_latest.zip -q
+RUN unzip -q commandlinetools-linux-8512546_latest.zip
+RUN rm commandlinetools-linux-8512546_latest.zip
 RUN cd cmdline-tools \
     && mkdir tools \
+    && ln -s tools latest \
     && mv lib bin source.properties tools
 
 ENV ANDROID_HOME=/sdk
