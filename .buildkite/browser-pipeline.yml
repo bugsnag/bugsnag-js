@@ -215,6 +215,7 @@ steps:
         concurrency_group: 'browserstack'
 
       - label: ':android: Android 4.4 Browser tests'
+        skip: Skipped pending PLAT-9069
         timeout_in_minutes: 20
         plugins:
           docker-compose#v3.9.0:
