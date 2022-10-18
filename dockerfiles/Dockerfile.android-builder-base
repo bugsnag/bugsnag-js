@@ -32,3 +32,6 @@ WORKDIR /app/gradle
 RUN wget -q https://services.gradle.org/distributions/gradle-5.1.1-all.zip \
             https://services.gradle.org/distributions/gradle-5.4.1-all.zip \
             https://services.gradle.org/distributions/gradle-6.2-all.zip
+
+RUN ln -s /sdk/build-tools/33.0.0/d8 /sdk/build-tools/33.0.0/dx \
+    && ln -s /sdk/build-tools/33.0.0/lib/d8.jar /sdk/build-tools/33.0.0/lib/dx.jar
