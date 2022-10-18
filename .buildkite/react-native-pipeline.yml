@@ -180,7 +180,7 @@ steps:
     commands:
       - npm run test:build-react-native-ios
 
-  - label: ':android: Build react-navigation 0.96 apk'
+  - label: ':android: Build react-navigation 0.69 apk'
     key: "react-navigation-0-69-apk"
     depends_on:
       - "android-builder-image"
