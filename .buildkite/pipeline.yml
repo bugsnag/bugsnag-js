@@ -60,6 +60,14 @@ steps:
       commit: '${BUILDKITE_COMMIT}'
       message: '${BUILDKITE_MESSAGE}'
 
+  - label: 'Trigger Electron pipeline'
+    if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
+    trigger: 'bugsnag-js-electron'
+    build:
+      branch: '${BUILDKITE_BRANCH}'
+      commit: '${BUILDKITE_COMMIT}'
+      message: '${BUILDKITE_MESSAGE}'
+
   - label: 'Trigger Node pipeline'
     if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
     depends_on: 'package-js'
