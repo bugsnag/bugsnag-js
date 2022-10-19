@@ -17,23 +17,6 @@ steps:
           push:
             - browser-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-browser-${BRANCH_NAME}
 
-  - label:  ':docker: Build browser maze runner v6 image'
-    key: "browser-maze-runner-v6-image"
-    timeout_in_minutes: 20
-    plugins:
-      - artifacts#v1.5.0:
-          download: min_packages.tar
-          build: ${BUILDKITE_TRIGGERED_FROM_BUILD_ID}
-      - docker-compose#v3.9.0:
-          build:
-            - browser-maze-runner-v6
-          image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
-          cache-from:
-            - browser-maze-runner-v6:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-browser-v6-${BRANCH_NAME}
-      - docker-compose#v3.9.0:
-          push:
-            - browser-maze-runner-v6:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-browser-v6-${BRANCH_NAME}
-
 # BitBar tests
 
   - group: BitBar web tests
@@ -108,14 +91,14 @@ steps:
 
 # BrowserStack tests
   - group: BrowserStack web tests
-    depends_on: "browser-maze-runner-v6-image"
+    depends_on: "browser-maze-runner-image"
     steps:
       - label: ':chrome: v43 Browser tests'
         timeout_in_minutes: 20
         plugins:
           docker-compose#v3.9.0:
-            pull: browser-maze-runner-v6
-            run: browser-maze-runner-v6
+            pull: browser-maze-runner
+            run: browser-maze-runner
             use-aliases: true
             command:
               - --farm=bs
@@ -127,8 +110,8 @@ steps:
         timeout_in_minutes: 20
         plugins:
           docker-compose#v3.9.0:
-            pull: browser-maze-runner-v6
-            run: browser-maze-runner-v6
+            pull: browser-maze-runner
+            run: browser-maze-runner
             use-aliases: true
             command:
               - --farm=bs
@@ -140,8 +123,8 @@ steps:
         timeout_in_minutes: 20
         plugins:
           docker-compose#v3.9.0:
-            pull: browser-maze-runner-v6
-            run: browser-maze-runner-v6
+            pull: browser-maze-runner
+            run: browser-maze-runner
             use-aliases: true
             command:
               - --farm=bs
@@ -153,8 +136,8 @@ steps:
         timeout_in_minutes: 20
         plugins:
           docker-compose#v3.9.0:
-            pull: browser-maze-runner-v6
-            run: browser-maze-runner-v6
+            pull: browser-maze-runner
+            run: browser-maze-runner
             use-aliases: true
             command:
               - --farm=bs
@@ -166,8 +149,8 @@ steps:
         timeout_in_minutes: 20
         plugins:
           docker-compose#v3.9.0:
-            pull: browser-maze-runner-v6
-            run: browser-maze-runner-v6
+            pull: browser-maze-runner
+            run: browser-maze-runner
             use-aliases: true
             command:
               - --farm=bs
@@ -179,8 +162,8 @@ steps:
         timeout_in_minutes: 20
         plugins:
           docker-compose#v3.9.0:
-            pull: browser-maze-runner-v6
-            run: browser-maze-runner-v6
+            pull: browser-maze-runner
+            run: browser-maze-runner
             use-aliases: true
             command:
               - --farm=bs
@@ -192,8 +175,8 @@ steps:
         timeout_in_minutes: 20
         plugins:
           docker-compose#v3.9.0:
-            pull: browser-maze-runner-v6
-            run: browser-maze-runner-v6
+            pull: browser-maze-runner
+            run: browser-maze-runner
             use-aliases: true
             command:
               - --farm=bs
@@ -205,8 +188,8 @@ steps:
         timeout_in_minutes: 20
         plugins:
           docker-compose#v3.9.0:
-            pull: browser-maze-runner-v6
-            run: browser-maze-runner-v6
+            pull: browser-maze-runner
+            run: browser-maze-runner
             use-aliases: true
             command:
               - --farm=bs
@@ -220,8 +203,8 @@ steps:
         timeout_in_minutes: 20
         plugins:
           docker-compose#v3.9.0:
-            pull: browser-maze-runner-v6
-            run: browser-maze-runner-v6
+            pull: browser-maze-runner
+            run: browser-maze-runner
             use-aliases: true
             command:
               - --farm=bs
@@ -232,11 +215,12 @@ steps:
         concurrency_group: 'browserstack'
 
       - label: ':android: Android 4.4 Browser tests'
+        skip: Skipped pending PLAT-9069
         timeout_in_minutes: 20
         plugins:
           docker-compose#v3.9.0:
-            pull: browser-maze-runner-v6
-            run: browser-maze-runner-v6
+            pull: browser-maze-runner
+            run: browser-maze-runner
             use-aliases: true
             command:
               - --farm=bs
@@ -250,8 +234,8 @@ steps:
         timeout_in_minutes: 20
         plugins:
           docker-compose#v3.9.0:
-            pull: browser-maze-runner-v6
-            run: browser-maze-runner-v6
+            pull: browser-maze-runner
+            run: browser-maze-runner
             use-aliases: true
             command:
               - --farm=bs
@@ -263,8 +247,8 @@ steps:
         timeout_in_minutes: 20
         plugins:
           docker-compose#v3.9.0:
-            pull: browser-maze-runner-v6
-            run: browser-maze-runner-v6
+            pull: browser-maze-runner
+            run: browser-maze-runner
             use-aliases: true
             command:
               - --farm=bs
@@ -276,8 +260,8 @@ steps:
         timeout_in_minutes: 20
         plugins:
           docker-compose#v3.9.0:
-            pull: browser-maze-runner-v6
-            run: browser-maze-runner-v6
+            pull: browser-maze-runner
+            run: browser-maze-runner
             use-aliases: true
             command:
               - --farm=bs
