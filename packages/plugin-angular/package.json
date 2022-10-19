@@ -36,7 +36,7 @@
     "@angular/core": "^7.2.15",
     "@bugsnag/js": "^7.18.0",
     "rxjs": "^6.0.0",
-    "typescript": "^3.2.4",
+    "typescript": "<3.3.0",
     "zone.js": "^0.8.26"
   },
   "peerDependencies": {
