@@ -6,9 +6,9 @@ steps:
   - label: 'Electron tests - macOS - Node 14'
     timeout_in_minutes: 40
     agents:
-      queue: macos-12-arm
+      queue: macos-11
     env:
-      DEVELOPER_DIR: "/Applications/Xcode14.app"
+      DEVELOPER_DIR: "/Applications/Xcode12.app"
       ELECTRON_VERSION: "^20.0.0"
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
       START_LOCAL_NPM: 1
