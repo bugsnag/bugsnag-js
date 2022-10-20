@@ -47,27 +47,6 @@ steps:
     env:
       BUILD_RN_WITH_LATEST_NATIVES: ${BUILD_RN_WITH_LATEST_NATIVES}
 
-
-  #
-  # Trigger individual pipelines
-  #
-  - label: 'Trigger Browser pipeline'
-    if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
-    depends_on: 'package-js'
-    trigger: 'bugsnag-js-browser'
-    build:
-      branch: '${BUILDKITE_BRANCH}'
-      commit: '${BUILDKITE_COMMIT}'
-      message: '${BUILDKITE_MESSAGE}'
-
-  - label: 'Trigger Electron pipeline'
-    if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
-    trigger: 'bugsnag-js-electron'
-    build:
-      branch: '${BUILDKITE_BRANCH}'
-      commit: '${BUILDKITE_COMMIT}'
-      message: '${BUILDKITE_MESSAGE}'
-
   - label: 'Trigger Node pipeline'
     if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
     depends_on: 'package-js'
@@ -171,3 +150,16 @@ steps:
       docker-compose#v3.9.0:
         run: ci
     command: 'npm run test:types'
+
+  - label: 'Upload Browser steps'
+    if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
+    depends_on: 'package-js'
+    commands:
+      - buildkite-agent annotate --style "info" "Browser Tests"
+      - buildkite-agent pipeline upload .buildkite/browser-pipeline.yml
+
+  - label: 'Upload Electron steps'
+    if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
+    commands:
+      - buildkite-agent annotate --style "info" "Electron Tests"
+      - buildkite-agent pipeline upload .buildkite/electron-pipeline.yml
