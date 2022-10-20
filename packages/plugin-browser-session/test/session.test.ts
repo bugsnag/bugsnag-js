@@ -77,20 +77,6 @@ describe('plugin: sessions', () => {
     setTimeout(done, 150)
   })
 
-  it('uses default endpoints when session endpoint is not set', () => {
-    const logger = { debug: () => {}, info: () => {}, warn: jest.fn(), error: () => {} }
-    const c = new Client({
-      apiKey: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-      releaseStage: 'foo',
-      // @ts-expect-error
-      endpoints: { notify: '/foo' },
-      autoTrackSessions: false,
-      logger
-    }, undefined, [plugin], VALID_NOTIFIER)
-    expect(c._config.endpoints!.sessions).toBe('https://sessions.bugsnag.com')
-    expect(logger.warn).toHaveBeenNthCalledWith(1, new Error('Invalid configuration\n  - endpoints should be an object containing endpoint URLs { notify, sessions }, got {"notify":"/foo"}'))
-  })
-
   it('supports pausing and resuming sessions', (done) => {
     const payloads: EventDeliveryPayload[] = []
     const c = new Client({

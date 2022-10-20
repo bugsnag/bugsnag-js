@@ -4,6 +4,10 @@ module.exports = (client, win = window) => ({
   sendEvent: (event, cb = () => {}) => {
     try {
       const url = client._config.endpoints.notify
+      if (url === null) {
+        const err = new Error('Event not sent due to incomplete endpoint configuration')
+        return cb(err)
+      }
       const req = new win.XMLHttpRequest()
       req.onreadystatechange = function () {
         if (req.readyState === win.XMLHttpRequest.DONE) cb(null)
@@ -21,6 +25,10 @@ module.exports = (client, win = window) => ({
   sendSession: (session, cb = () => {}) => {
     try {
       const url = client._config.endpoints.sessions
+      if (url === null) {
+        const err = new Error('Session not sent due to incomplete endpoint configuration')
+        return cb(err)
+      }
       const req = new win.XMLHttpRequest()
       req.onreadystatechange = function () {
         if (req.readyState === win.XMLHttpRequest.DONE) cb(null)
