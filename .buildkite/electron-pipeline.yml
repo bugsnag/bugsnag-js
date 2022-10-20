@@ -8,9 +8,10 @@ steps:
     agents:
       queue: macos-12-arm
     env:
+      DEVELOPER_DIR: "/Applications/Xcode14.app"
+      ELECTRON_VERSION: "^20.0.0"
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
       START_LOCAL_NPM: 1
-      ELECTRON_VERSION: "^20.0.0"
       VERBOSE: 1
     commands:
       - npm install electron@^20.0.0 --no-audit --progress=false --no-save
