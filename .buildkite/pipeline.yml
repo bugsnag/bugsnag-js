@@ -47,15 +47,6 @@ steps:
     env:
       BUILD_RN_WITH_LATEST_NATIVES: ${BUILD_RN_WITH_LATEST_NATIVES}
 
-  - label: 'Trigger Node pipeline'
-    if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
-    depends_on: 'package-js'
-    trigger: 'bugsnag-js-node'
-    build:
-      branch: '${BUILDKITE_BRANCH}'
-      commit: '${BUILDKITE_COMMIT}'
-      message: '${BUILDKITE_MESSAGE}'
-
   - label: 'Trigger Expo pipeline'
     if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
     depends_on: 'publish-js'
@@ -66,27 +57,6 @@ steps:
         BUGSNAG_JS_COMMIT: '${BUILDKITE_COMMIT}'
         # a branch name that's safe to use as a docker cache identifier
         BUGSNAG_JS_CACHE_SAFE_BRANCH_NAME: '${BRANCH_NAME}'
-
-  - label: 'Trigger React Native pipeline'
-    depends_on:
-      - 'publish-js'
-      - 'android-builder-base'
-    trigger: 'bugsnag-js-react-native'
-    build:
-      branch: '${BUILDKITE_BRANCH}'
-      commit: '${BUILDKITE_COMMIT}'
-      message: '${BUILDKITE_MESSAGE}'
-
-  - label: 'Trigger React Native CLI pipeline'
-    if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
-    depends_on:
-      - 'publish-js'
-      - 'android-builder-base'
-    trigger: 'bugsnag-js-react-native-cli'
-    build:
-      branch: '${BUILDKITE_BRANCH}'
-      commit: '${BUILDKITE_COMMIT}'
-      message: '${BUILDKITE_MESSAGE}'
 
   - label: ':aws-lambda: AWS Lambda tests'
     if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
@@ -151,15 +121,34 @@ steps:
         run: ci
     command: 'npm run test:types'
 
-  - label: 'Upload Browser steps'
+  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: BROWSER STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
     if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
     depends_on: 'package-js'
     commands:
-      - buildkite-agent annotate --style "info" "Browser Tests"
       - buildkite-agent pipeline upload .buildkite/browser-pipeline.yml
 
-  - label: 'Upload Electron steps'
+  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: ELECTRON STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
     if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
     commands:
-      - buildkite-agent annotate --job "$BUILDKITE_JOB_ID" --style "info" "Electron Tests"
       - buildkite-agent pipeline upload .buildkite/electron-pipeline.yml
+
+  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: NODE STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
+    if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
+    depends_on: 'package-js'
+    commands:
+      - buildkite-agent pipeline upload .buildkite/node-pipeline.yml
+
+  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: REACT NATIVE STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
+    depends_on:
+      - 'publish-js'
+      - 'android-builder-base'
+    commands:
+      - buildkite-agent pipeline upload .buildkite/react-native-pipeline.yml
+
+  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: REACT NATIVE CLI STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
+    if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
+    depends_on:
+      - 'publish-js'
+      - 'android-builder-base'
+    commands:
+      - buildkite-agent pipeline upload .buildkite/react-native-cli-pipeline.yml
