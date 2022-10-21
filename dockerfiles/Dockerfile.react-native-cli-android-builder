@@ -2,11 +2,7 @@ FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/js:android-builder-base
 
 RUN apt-get update && apt-get install -y nodejs rsync expect \
                                          # Dependencies for MazeRunner
-                                         ruby-full apt-utils docker-compose wget unzip bash bundler \
-                                         # Needed by nokogiri (a dependency of appium_lib)
-                                         zlib1g libpng-dev zlibc zlib1g zlib1g-dev curl \
-                                         # Needed by curb (a dependency of Cucumber)
-                                         libcurl4 libcurl4-openssl-dev
+                                         ruby-full apt-utils docker-compose wget unzip bash bundler libcurl4 libcurl4-openssl-dev
 
 RUN npm i -g run-func
 
