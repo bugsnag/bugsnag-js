@@ -3,7 +3,7 @@ steps:
   #
   # Android builder
   #
-  - label: ':docker: Build RN Android Builder image'
+  - label: ":docker: Build RN Android Builder image"
     key: "android-builder-image"
     timeout_in_minutes: 30
     plugins:
@@ -17,7 +17,7 @@ steps:
   #
   # Test fixtures
   #
-  - label: ':android: Build RN 0.60 apk'
+  - label: ":android: Build RN 0.60 apk"
     key: "rn-0-60-apk"
     depends_on:
       - "android-builder-image"
@@ -31,7 +31,7 @@ steps:
     artifact_paths:
       - build/rn0.60.apk
 
-  - label: ':ios: Build RN 0.60 ipa'
+  - label: ":ios: Build RN 0.60 ipa"
     key: "rn-0-60-ipa"
     timeout_in_minutes: 60
     agents:
@@ -44,7 +44,7 @@ steps:
     commands:
       - npm run test:build-react-native-ios
 
-  - label: ':android: Build RN 0.66 apk'
+  - label: ":android: Build RN 0.66 apk"
     key: "rn-0-66-apk"
     depends_on:
       - "android-builder-image"
@@ -57,7 +57,7 @@ steps:
     artifact_paths:
       - build/rn0.66.apk
 
-  - label: ':ios: Build RN 0.66 ipa'
+  - label: ":ios: Build RN 0.66 ipa"
     key: "rn-0-66-ipa"
     timeout_in_minutes: 60
     agents:
@@ -70,7 +70,7 @@ steps:
     commands:
       - npm run test:build-react-native-ios
 
-  - label: ':android: Build RN 0.67 apk'
+  - label: ":android: Build RN 0.67 apk"
     key: "rn-0-67-apk"
     depends_on:
       - "android-builder-image"
@@ -83,7 +83,7 @@ steps:
     artifact_paths:
       - build/rn0.67.apk
 
-  - label: ':ios: Build RN 0.67 ipa'
+  - label: ":ios: Build RN 0.67 ipa"
     key: "rn-0-67-ipa"
     timeout_in_minutes: 60
     agents:
@@ -96,7 +96,7 @@ steps:
     commands:
       - npm run test:build-react-native-ios
 
-  - label: ':android: Build RN 0.68 Hermes apk'
+  - label: ":android: Build RN 0.68 Hermes apk"
     key: "rn-0-68-hermes-apk"
     depends_on:
       - "android-builder-image"
@@ -109,7 +109,7 @@ steps:
     artifact_paths:
       - build/rn0.68-hermes.apk
 
-  - label: ':ios: Build RN 0.68 Hermes ipa'
+  - label: ":ios: Build RN 0.68 Hermes ipa"
     key: "rn-0-68-hermes-ipa"
     timeout_in_minutes: 60
     agents:
@@ -122,7 +122,7 @@ steps:
     commands:
       - npm run test:build-react-native-ios
 
-  - label: ':android: Build RN 0.69 apk'
+  - label: ":android: Build RN 0.69 apk"
     key: "rn-0-69-apk"
     depends_on:
       - "android-builder-image"
@@ -135,7 +135,7 @@ steps:
     artifact_paths:
       - build/rn0.69.apk
 
-  - label: ':ios: Build RN 0.69 ipa'
+  - label: ":ios: Build RN 0.69 ipa"
     key: "rn-0-69-ipa"
     timeout_in_minutes: 60
     agents:
@@ -148,7 +148,7 @@ steps:
     commands:
       - npm run test:build-react-native-ios
 
-  - label: ':android: Build react-navigation 0.60 apk'
+  - label: ":android: Build react-navigation 0.60 apk"
     key: "react-navigation-0-60-apk"
     depends_on:
       - "android-builder-image"
@@ -164,7 +164,7 @@ steps:
       - build/r_navigation_0.60.apk
 
   # See: PLAT-5173
-  - label: ':ios: Build react-navigation 0.60 ipa'
+  - label: ":ios: Build react-navigation 0.60 ipa"
     skip: "See PLAT-5173"
     key: "react-navigation-0-60-ipa"
     timeout_in_minutes: 60
@@ -180,7 +180,7 @@ steps:
     commands:
       - npm run test:build-react-native-ios
 
-  - label: ':android: Build react-navigation 0.66 apk'
+  - label: ":android: Build react-navigation 0.66 apk"
     key: "react-navigation-0-66-apk"
     depends_on:
       - "android-builder-image"
@@ -195,7 +195,7 @@ steps:
     artifact_paths:
       - build/r_navigation_0.66.apk
 
-  - label: ':ios: Build react-navigation 0.66 ipa'
+  - label: ":ios: Build react-navigation 0.66 ipa"
     key: "react-navigation-0-66-ipa"
     timeout_in_minutes: 60
     agents:
@@ -210,7 +210,7 @@ steps:
     commands:
       - npm run test:build-react-native-ios
 
-  - label: ':android: Build react-native-navigation 0.60 apk'
+  - label: ":android: Build react-native-navigation 0.60 apk"
     key: "react-native-navigation-0-60-apk"
     depends_on:
       - "android-builder-image"
@@ -226,7 +226,7 @@ steps:
       - build/r_native_navigation_0.60.apk
 
   # See: PLAT-5173
-  - label: ':ios: Build react-native-navigation 0.60 ipa'
+  - label: ":ios: Build react-native-navigation 0.60 ipa"
     skip: "See PLAT-5173"
     key: "react-native-navigation-0-60-ipa"
     timeout_in_minutes: 60
@@ -242,7 +242,7 @@ steps:
     commands:
       - npm run test:build-react-native-ios
 
-  - label: ':android: Build react-native-navigation 0.66 apk'
+  - label: ":android: Build react-native-navigation 0.66 apk"
     key: "react-native-navigation-0-66-apk"
     depends_on:
       - "android-builder-image"
@@ -258,7 +258,7 @@ steps:
       - build/r_native_navigation_0.66.apk
 
   # See: PLAT-5173
-  - label: ':ios: Build react-native-navigation 0.66 ipa'
+  - label: ":ios: Build react-native-navigation 0.66 ipa"
     skip: "See PLAT-5173"
     key: "react-native-navigation-0-66-ipa"
     timeout_in_minutes: 60
@@ -277,7 +277,7 @@ steps:
   #
   # End-to-end tests
   #
-  - label: ':android: RN 0.60 Android 11 end-to-end tests'
+  - label: ":android: RN 0.60 Android 11 end-to-end tests"
     depends_on: "rn-0-60-apk"
     timeout_in_minutes: 60
     plugins:
@@ -297,10 +297,10 @@ steps:
     env:
       SKIP_NAVIGATION_SCENARIOS: "true"
     concurrency: 24
-    concurrency_group: 'browserstack-app'
+    concurrency_group: "browserstack-app"
     concurrency_method: eager
 
-  - label: ':ios: RN 0.60 iOS 12 end-to-end tests'
+  - label: ":ios: RN 0.60 iOS 12 end-to-end tests"
     depends_on: "rn-0-60-ipa"
     timeout_in_minutes: 60
     plugins:
@@ -321,10 +321,10 @@ steps:
     env:
       SKIP_NAVIGATION_SCENARIOS: "true"
     concurrency: 24
-    concurrency_group: 'browserstack-app'
+    concurrency_group: "browserstack-app"
     concurrency_method: eager
 
-  - label: ':android: RN 0.66 Android 11 end-to-end tests'
+  - label: ":android: RN 0.66 Android 11 end-to-end tests"
     depends_on: "rn-0-66-apk"
     timeout_in_minutes: 60
     plugins:
@@ -344,10 +344,10 @@ steps:
     env:
       SKIP_NAVIGATION_SCENARIOS: "true"
     concurrency: 24
-    concurrency_group: 'browserstack-app'
+    concurrency_group: "browserstack-app"
     concurrency_method: eager
 
-  - label: ':android: RN 0.67 Android 11 end-to-end tests'
+  - label: ":android: RN 0.67 Android 11 end-to-end tests"
     depends_on: "rn-0-67-apk"
     timeout_in_minutes: 60
     plugins:
@@ -368,10 +368,10 @@ steps:
       SKIP_NAVIGATION_SCENARIOS: "true"
       HERMES: "true"
     concurrency: 24
-    concurrency_group: 'browserstack-app'
+    concurrency_group: "browserstack-app"
     concurrency_method: eager
 
-  - label: ':android: RN 0.69 Android 11 end-to-end tests'
+  - label: ":android: RN 0.69 Android 11 end-to-end tests"
     depends_on: "rn-0-69-apk"
     timeout_in_minutes: 60
     plugins:
@@ -392,10 +392,10 @@ steps:
       SKIP_NAVIGATION_SCENARIOS: "true"
       HERMES: "true"
     concurrency: 24
-    concurrency_group: 'browserstack-app'
+    concurrency_group: "browserstack-app"
     concurrency_method: eager
 
-  - label: ':android: RN 0.68 (Hermes) Android 12 end-to-end tests'
+  - label: ":android: RN 0.68 (Hermes) Android 12 end-to-end tests"
     depends_on: "rn-0-68-hermes-apk"
     timeout_in_minutes: 60
     plugins:
@@ -416,10 +416,10 @@ steps:
       SKIP_NAVIGATION_SCENARIOS: "true"
       HERMES: "true"
     concurrency: 24
-    concurrency_group: 'browserstack-app'
+    concurrency_group: "browserstack-app"
     concurrency_method: eager
 
-  - label: ':ios: RN 0.66 iOS 14 end-to-end tests'
+  - label: ":ios: RN 0.66 iOS 14 end-to-end tests"
     depends_on: "rn-0-66-ipa"
     timeout_in_minutes: 60
     plugins:
@@ -440,10 +440,10 @@ steps:
     env:
       SKIP_NAVIGATION_SCENARIOS: "true"
     concurrency: 24
-    concurrency_group: 'browserstack-app'
+    concurrency_group: "browserstack-app"
     concurrency_method: eager
 
-  - label: ':ios: RN 0.67 iOS 14 end-to-end tests'
+  - label: ":ios: RN 0.67 iOS 14 end-to-end tests"
     depends_on: "rn-0-67-ipa"
     timeout_in_minutes: 60
     plugins:
@@ -465,10 +465,10 @@ steps:
       SKIP_NAVIGATION_SCENARIOS: "true"
       HERMES: "true"
     concurrency: 24
-    concurrency_group: 'browserstack-app'
+    concurrency_group: "browserstack-app"
     concurrency_method: eager
 
-  - label: ':ios: RN 0.69 iOS 14 end-to-end tests'
+  - label: ":ios: RN 0.69 iOS 14 end-to-end tests"
     depends_on: "rn-0-69-ipa"
     timeout_in_minutes: 60
     plugins:
@@ -490,10 +490,10 @@ steps:
       SKIP_NAVIGATION_SCENARIOS: "true"
       HERMES: "true"
     concurrency: 24
-    concurrency_group: 'browserstack-app'
+    concurrency_group: "browserstack-app"
     concurrency_method: eager
 #
-  - label: ':ios: RN 0.68 (hermes) iOS 14 end-to-end tests'
+  - label: ":ios: RN 0.68 (hermes) iOS 14 end-to-end tests"
     depends_on: "rn-0-68-hermes-ipa"
     timeout_in_minutes: 60
     plugins:
@@ -515,10 +515,10 @@ steps:
       SKIP_NAVIGATION_SCENARIOS: "true"
       HERMES: "true"
     concurrency: 24
-    concurrency_group: 'browserstack-app'
+    concurrency_group: "browserstack-app"
     concurrency_method: eager
 
-  - label: ':android: react-navigation 0.60 Android 11 end-to-end tests'
+  - label: ":android: react-navigation 0.60 Android 11 end-to-end tests"
     depends_on: "react-navigation-0-60-apk"
     timeout_in_minutes: 60
     plugins:
@@ -537,11 +537,11 @@ steps:
         - --fail-fast
         - features/navigation.feature
     concurrency: 24
-    concurrency_group: 'browserstack-app'
+    concurrency_group: "browserstack-app"
     concurrency_method: eager
 
   # See: PLAT-5173
-  - label: ':ios: react-navigation 0.60 iOS 13 end-to-end tests'
+  - label: ":ios: react-navigation 0.60 iOS 13 end-to-end tests"
     skip: "See PLAT-5173"
     depends_on: "react-navigation-0-60-ipa"
     timeout_in_minutes: 60
@@ -562,10 +562,10 @@ steps:
           - --fail-fast
           - features/navigation.feature
     concurrency: 24
-    concurrency_group: 'browserstack-app'
+    concurrency_group: "browserstack-app"
     concurrency_method: eager
 
-  - label: ':android: react-navigation 0.66 Android 11 end-to-end tests'
+  - label: ":android: react-navigation 0.66 Android 11 end-to-end tests"
     depends_on: "react-navigation-0-66-apk"
     timeout_in_minutes: 60
     plugins:
@@ -584,10 +584,10 @@ steps:
         - --fail-fast
         - features/navigation.feature
     concurrency: 24
-    concurrency_group: 'browserstack-app'
+    concurrency_group: "browserstack-app"
     concurrency_method: eager
 
-  - label: ':ios: react-navigation 0.66 iOS 14 end-to-end tests'
+  - label: ":ios: react-navigation 0.66 iOS 14 end-to-end tests"
     depends_on: "react-navigation-0-66-ipa"
     timeout_in_minutes: 60
     plugins:
@@ -607,10 +607,10 @@ steps:
           - --fail-fast
           - features/navigation.feature
     concurrency: 24
-    concurrency_group: 'browserstack-app'
+    concurrency_group: "browserstack-app"
     concurrency_method: eager
 
-  - label: ':android: react-native-navigation 0.60 Android 11 end-to-end tests'
+  - label: ":android: react-native-navigation 0.60 Android 11 end-to-end tests"
     depends_on: "react-native-navigation-0-60-apk"
     timeout_in_minutes: 60
     plugins:
@@ -629,11 +629,11 @@ steps:
         - --fail-fast
         - features/navigation.feature
     concurrency: 24
-    concurrency_group: 'browserstack-app'
+    concurrency_group: "browserstack-app"
     concurrency_method: eager
 
   # See: PLAT-5173
-  - label: ':ios: react-native-navigation 0.60 iOS 13 end-to-end tests'
+  - label: ":ios: react-native-navigation 0.60 iOS 13 end-to-end tests"
     skip: "See PLAT-5173"
     depends_on: "react-native-navigation-0-60-ipa"
     timeout_in_minutes: 60
@@ -654,10 +654,10 @@ steps:
           - --fail-fast
           - features/navigation.feature
     concurrency: 24
-    concurrency_group: 'browserstack-app'
+    concurrency_group: "browserstack-app"
     concurrency_method: eager
 
-  - label: ':android: react-native-navigation 0.66 Android 11 end-to-end tests'
+  - label: ":android: react-native-navigation 0.66 Android 11 end-to-end tests"
     depends_on: "react-native-navigation-0-66-apk"
     timeout_in_minutes: 60
     plugins:
@@ -676,11 +676,11 @@ steps:
         - --fail-fast
         - features/navigation.feature
     concurrency: 24
-    concurrency_group: 'browserstack-app'
+    concurrency_group: "browserstack-app"
     concurrency_method: eager
 
   # See: PLAT-5173
-  - label: ':ios: react-native-navigation 0.66 iOS 13 end-to-end tests'
+  - label: ":ios: react-native-navigation 0.66 iOS 13 end-to-end tests"
     skip: "See PLAT-5173"
     depends_on: "react-native-navigation-0-66-ipa"
     timeout_in_minutes: 60
@@ -701,5 +701,5 @@ steps:
           - --fail-fast
           - features/navigation.feature
     concurrency: 24
-    concurrency_group: 'browserstack-app'
+    concurrency_group: "browserstack-app"
     concurrency_method: eager

@@ -1,6 +1,6 @@
 steps:
 
-  - label:  ':docker: Build node maze runner image'
+  - label:  ":docker: Build node maze runner image"
     key: "node-maze-runner-image"
     timeout_in_minutes: 20
     plugins:
@@ -17,7 +17,7 @@ steps:
           push:
             - node-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-node-${BRANCH_NAME}
 
-  - label: ':node: Node 4'
+  - label: ":node: Node 4"
     depends_on: "node-maze-runner-image"
     timeout_in_minutes: 30
     plugins:
@@ -27,7 +27,7 @@ steps:
     env:
       NODE_VERSION: "4"
 
-  - label: ':node: Node 6'
+  - label: ":node: Node 6"
     depends_on: "node-maze-runner-image"
     timeout_in_minutes: 30
     plugins:
@@ -37,7 +37,7 @@ steps:
     env:
       NODE_VERSION: "6"
 
-  - label: ':node: Node 8'
+  - label: ":node: Node 8"
     depends_on: "node-maze-runner-image"
     timeout_in_minutes: 30
     plugins:
@@ -47,7 +47,7 @@ steps:
     env:
       NODE_VERSION: "8"
 
-  - label: ':node: Node 10'
+  - label: ":node: Node 10"
     depends_on: "node-maze-runner-image"
     timeout_in_minutes: 30
     plugins:
@@ -57,7 +57,7 @@ steps:
     env:
       NODE_VERSION: "10"
 
-  - label: ':node: Node 12'
+  - label: ":node: Node 12"
     depends_on: "node-maze-runner-image"
     timeout_in_minutes: 30
     plugins:
@@ -67,7 +67,7 @@ steps:
     env:
       NODE_VERSION: "12"
 
-  - label: ':node: Node 14'
+  - label: ":node: Node 14"
     depends_on: "node-maze-runner-image"
     timeout_in_minutes: 30
     plugins:
