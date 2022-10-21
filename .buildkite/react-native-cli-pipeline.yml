@@ -203,7 +203,7 @@ steps:
           push: react-native-cli-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
 
   - label: ":android: Init and build RN 0.60 apk"
-    key: "rn-0-60-apk"
+    key: "rn-cli-0-60-apk"
     depends_on:
       - "android-builder-cli-image"
     timeout_in_minutes: 15
@@ -218,7 +218,7 @@ steps:
       - build/rn0_60.apk
 
   - label: ":android: Init and build RN 0.61 apk"
-    key: "rn-0-61-apk"
+    key: "rn-cli-0-61-apk"
     depends_on:
       - "android-builder-cli-image"
     timeout_in_minutes: 15
@@ -233,7 +233,7 @@ steps:
       - build/rn0_61.apk
 
   - label: ":android: Init and build RN 0.62 apk"
-    key: "rn-0-62-apk"
+    key: "rn-cli-0-62-apk"
     depends_on:
       - "android-builder-cli-image"
     timeout_in_minutes: 15
@@ -248,7 +248,7 @@ steps:
       - build/rn0_62.apk
 
   - label: ":android: Init and build RN 0.63 apk"
-    key: "rn-0-63-apk"
+    key: "rn-cli-0-63-apk"
     depends_on:
       - "android-builder-cli-image"
     timeout_in_minutes: 15
@@ -263,7 +263,7 @@ steps:
       - build/rn0_63.apk
 
   - label: ":android: Init and build RN 0.63 Expo (ejected) apk"
-    key: "rn-0-63-expo-ejected-apk"
+    key: "rn-cli-0-63-expo-ejected-apk"
     depends_on:
       - "android-builder-cli-image"
     timeout_in_minutes: 15
@@ -278,7 +278,7 @@ steps:
       - build/rn0_63_expo_ejected.apk
 
   - label: ":android: Init and build RN 0.64 apk"
-    key: "rn-0-64-apk"
+    key: "rn-cli-0-64-apk"
     depends_on:
       - "android-builder-cli-image"
     timeout_in_minutes: 15
@@ -293,7 +293,7 @@ steps:
       - build/rn0_64.apk
 
   - label: ":android: Init and build RN 0.65 apk"
-    key: "rn-0-65-apk"
+    key: "rn-cli-0-65-apk"
     depends_on:
       - "android-builder-cli-image"
     timeout_in_minutes: 15
@@ -308,7 +308,7 @@ steps:
       - build/rn0_65.apk
 
   - label: ":android: Init and build RN 0.66 apk"
-    key: "rn-0-66-apk"
+    key: "rn-cli-0-66-apk"
     depends_on:
       - "android-builder-cli-image"
     timeout_in_minutes: 15
@@ -323,7 +323,7 @@ steps:
       - build/rn0_66.apk
 
   - label: ":android: Init and build RN 0.67 apk (Non-hermes)"
-    key: "rn-0-67-apk"
+    key: "rn-cli-0-67-apk"
     depends_on:
       - "android-builder-cli-image"
     timeout_in_minutes: 15
@@ -338,7 +338,7 @@ steps:
       - build/rn0_67.apk
 
   - label: ":android: Init and build RN 0.67 apk (Hermes)"
-    key: "rn-0-67-hermes-apk"
+    key: "rn-cli-0-67-hermes-apk"
     depends_on:
       - "android-builder-cli-image"
     timeout_in_minutes: 15
@@ -354,7 +354,7 @@ steps:
 
 
   - label: ":android: Init and build RN 0.69 apk (Non-hermes)"
-    key: "rn-0-69-apk"
+    key: "rn-cli-0-69-apk"
     depends_on:
       - "android-builder-cli-image"
     timeout_in_minutes: 15
@@ -372,7 +372,7 @@ steps:
   # Built app test fixtures - iOS
   #
   - label: ":ios: Init and build RN 0.60 ipa"
-    key: "rn-0-60-ipa"
+    key: "rn-cli-0-60-ipa"
     timeout_in_minutes: 30
     agents:
       queue: "opensource-mac-cocoa-10.15"
@@ -385,7 +385,7 @@ steps:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_60
 
   - label: ":ios: Init and build RN 0.61 ipa"
-    key: "rn-0-61-ipa"
+    key: "rn-cli-0-61-ipa"
     timeout_in_minutes: 30
     agents:
       queue: "opensource-mac-cocoa-10.15"
@@ -398,7 +398,7 @@ steps:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_61
 
   - label: ":ios: Init and build RN 0.62 ipa"
-    key: "rn-0-62-ipa"
+    key: "rn-cli-0-62-ipa"
     timeout_in_minutes: 30
     agents:
       queue: "opensource-mac-cocoa-10.15"
@@ -411,7 +411,7 @@ steps:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_62
 
   - label: ":ios: Init and build RN 0.63 ipa"
-    key: "rn-0-63-ipa"
+    key: "rn-cli-0-63-ipa"
     timeout_in_minutes: 30
     agents:
       queue: "opensource-arm-mac-cocoa-12"
@@ -424,7 +424,7 @@ steps:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_63
 
   - label: ":ios: Init and build RN 0.63 Expo (ejected) ipa"
-    key: "rn-0-63-expo-ejected-ipa"
+    key: "rn-cli-0-63-expo-ejected-ipa"
     timeout_in_minutes: 30
     agents:
       queue: "opensource-arm-mac-cocoa-12"
@@ -437,7 +437,7 @@ steps:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_63_expo_ejected
 
   - label: ":ios: Init and build RN 0.64 ipa"
-    key: "rn-0-64-ipa"
+    key: "rn-cli-0-64-ipa"
     timeout_in_minutes: 30
     agents:
       queue: "opensource-arm-mac-cocoa-12"
@@ -450,7 +450,7 @@ steps:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_64
 
   - label: ":ios: Init and build RN 0.65 ipa"
-    key: "rn-0-65-ipa"
+    key: "rn-cli-0-65-ipa"
     timeout_in_minutes: 30
     agents:
       queue: "opensource-arm-mac-cocoa-12"
@@ -463,7 +463,7 @@ steps:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_65
 
   - label: ":ios: Init and build RN 0.66 ipa"
-    key: "rn-0-66-ipa"
+    key: "rn-cli-0-66-ipa"
     timeout_in_minutes: 30
     agents:
       queue: "opensource-arm-mac-cocoa-12"
@@ -476,7 +476,7 @@ steps:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_66
 
   - label: ":ios: Init and build RN 0.67 ipa (Non-hermes)"
-    key: "rn-0-67-ipa"
+    key: "rn-cli-0-67-ipa"
     timeout_in_minutes: 30
     agents:
       queue: "opensource-arm-mac-cocoa-12"
@@ -489,7 +489,7 @@ steps:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_67
 
   - label: ":ios: Init and build RN 0.67 ipa (Hermes)"
-    key: "rn-0-67-hermes-ipa"
+    key: "rn-cli-0-67-hermes-ipa"
     timeout_in_minutes: 60
     agents:
       queue: "opensource-arm-mac-cocoa-12"
@@ -502,7 +502,7 @@ steps:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_67_hermes
 
   - label: ":ios: Init and build RN 0.69 ipa (Non-hermes)"
-    key: "rn-0-69-ipa"
+    key: "rn-cli-0-69-ipa"
     timeout_in_minutes: 30
     agents:
       queue: "opensource-arm-mac-cocoa-12"
@@ -518,7 +518,7 @@ steps:
   # Init, build and notify end-to-end tests - Android
   #
   - label: ":runner: RN 0.60 Android end-to-end tests"
-    depends_on: "rn-0-60-apk"
+    depends_on: "rn-cli-0-60-apk"
     timeout_in_minutes: 10
     plugins:
       artifacts#v1.5.0:
@@ -539,7 +539,7 @@ steps:
     concurrency_method: eager
 
   - label: ":runner: RN 0.61 Android end-to-end tests"
-    depends_on: "rn-0-61-apk"
+    depends_on: "rn-cli-0-61-apk"
     timeout_in_minutes: 10
     plugins:
       artifacts#v1.5.0:
@@ -560,7 +560,7 @@ steps:
     concurrency_method: eager
 
   - label: ":runner: RN 0.62 Android end-to-end tests"
-    depends_on: "rn-0-62-apk"
+    depends_on: "rn-cli-0-62-apk"
     timeout_in_minutes: 10
     plugins:
       artifacts#v1.5.0:
@@ -581,7 +581,7 @@ steps:
     concurrency_method: eager
 
   - label: ":runner: RN 0.63 Android end-to-end tests"
-    depends_on: "rn-0-63-apk"
+    depends_on: "rn-cli-0-63-apk"
     timeout_in_minutes: 10
     plugins:
       artifacts#v1.5.0:
@@ -602,7 +602,7 @@ steps:
     concurrency_method: eager
 
   - label: ":runner: RN 0.63 Expo (ejected) Android end-to-end tests"
-    depends_on: "rn-0-63-expo-ejected-apk"
+    depends_on: "rn-cli-0-63-expo-ejected-apk"
     timeout_in_minutes: 10
     plugins:
       artifacts#v1.5.0:
@@ -623,7 +623,7 @@ steps:
     concurrency_method: eager
 
   - label: ":runner: RN 0.64 Android end-to-end tests"
-    depends_on: "rn-0-64-apk"
+    depends_on: "rn-cli-0-64-apk"
     timeout_in_minutes: 10
     plugins:
       artifacts#v1.5.0:
@@ -644,7 +644,7 @@ steps:
     concurrency_method: eager
 
   - label: ":runner: RN 0.65 Android end-to-end tests"
-    depends_on: "rn-0-65-apk"
+    depends_on: "rn-cli-0-65-apk"
     timeout_in_minutes: 10
     plugins:
       artifacts#v1.5.0:
@@ -665,7 +665,7 @@ steps:
     concurrency_method: eager
 
   - label: ":runner: RN 0.66 Android end-to-end tests"
-    depends_on: "rn-0-66-apk"
+    depends_on: "rn-cli-0-66-apk"
     timeout_in_minutes: 10
     plugins:
       artifacts#v1.5.0:
@@ -686,7 +686,7 @@ steps:
     concurrency_method: eager
 
   - label: ":runner: RN 0.67 Android end-to-end tests (Non-hermes)"
-    depends_on: "rn-0-67-apk"
+    depends_on: "rn-cli-0-67-apk"
     timeout_in_minutes: 10
     plugins:
       artifacts#v1.5.0:
@@ -707,7 +707,7 @@ steps:
     concurrency_method: eager
 
   - label: ":runner: RN 0.67 Android end-to-end tests (Hermes)"
-    depends_on: "rn-0-67-hermes-apk"
+    depends_on: "rn-cli-0-67-hermes-apk"
     timeout_in_minutes: 10
     plugins:
       artifacts#v1.5.0:
@@ -728,7 +728,7 @@ steps:
     concurrency_method: eager
 
   - label: ":runner: RN 0.69 Android end-to-end tests (Non-hermes)"
-    depends_on: "rn-0-69-apk"
+    depends_on: "rn-cli-0-69-apk"
     timeout_in_minutes: 10
     plugins:
       artifacts#v1.5.0:
@@ -752,7 +752,7 @@ steps:
   # Init, build and notify end-to-end tests - iOS
   #
   - label: ":runner: RN 0.60 iOS end-to-end tests"
-    depends_on: "rn-0-60-ipa"
+    depends_on: "rn-cli-0-60-ipa"
     timeout_in_minutes: 10
     plugins:
       artifacts#v1.5.0:
@@ -773,7 +773,7 @@ steps:
     concurrency_method: eager
 
   - label: ":runner: RN 0.61 iOS end-to-end tests"
-    depends_on: "rn-0-61-ipa"
+    depends_on: "rn-cli-0-61-ipa"
     timeout_in_minutes: 10
     plugins:
       artifacts#v1.5.0:
@@ -794,7 +794,7 @@ steps:
     concurrency_method: eager
 
   - label: ":runner: RN 0.62 iOS end-to-end tests"
-    depends_on: "rn-0-62-ipa"
+    depends_on: "rn-cli-0-62-ipa"
     timeout_in_minutes: 10
     plugins:
       artifacts#v1.5.0:
@@ -815,7 +815,7 @@ steps:
     concurrency_method: eager
 
   - label: ":runner: RN 0.63 iOS end-to-end tests"
-    depends_on: "rn-0-63-ipa"
+    depends_on: "rn-cli-0-63-ipa"
     timeout_in_minutes: 10
     plugins:
       artifacts#v1.5.0:
@@ -836,7 +836,7 @@ steps:
     concurrency_method: eager
 
   - label: ":runner: RN 0.63 Expo (ejected) iOS end-to-end tests"
-    depends_on: "rn-0-63-expo-ejected-ipa"
+    depends_on: "rn-cli-0-63-expo-ejected-ipa"
     timeout_in_minutes: 10
     plugins:
       artifacts#v1.5.0:
@@ -857,7 +857,7 @@ steps:
     concurrency_method: eager
 
   - label: ":runner: RN 0.64 iOS end-to-end tests"
-    depends_on: "rn-0-64-ipa"
+    depends_on: "rn-cli-0-64-ipa"
     timeout_in_minutes: 10
     plugins:
       artifacts#v1.5.0:
@@ -878,7 +878,7 @@ steps:
     concurrency_method: eager
 
   - label: ":runner: RN 0.65 iOS end-to-end tests"
-    depends_on: "rn-0-65-ipa"
+    depends_on: "rn-cli-0-65-ipa"
     timeout_in_minutes: 10
     plugins:
       artifacts#v1.5.0:
@@ -899,7 +899,7 @@ steps:
     concurrency_method: eager
 
   - label: ":runner: RN 0.66 iOS end-to-end tests"
-    depends_on: "rn-0-66-ipa"
+    depends_on: "rn-cli-0-66-ipa"
     timeout_in_minutes: 10
     plugins:
       artifacts#v1.5.0:
@@ -920,7 +920,7 @@ steps:
     concurrency_method: eager
 
   - label: ":runner: RN 0.67 iOS end-to-end tests (Non-hermes)"
-    depends_on: "rn-0-67-ipa"
+    depends_on: "rn-cli-0-67-ipa"
     timeout_in_minutes: 10
     plugins:
       artifacts#v1.5.0:
@@ -941,7 +941,7 @@ steps:
     concurrency_method: eager
 
   - label: ":runner: RN 0.67 iOS end-to-end tests (Hermes)"
-    depends_on: "rn-0-67-hermes-ipa"
+    depends_on: "rn-cli-0-67-hermes-ipa"
     timeout_in_minutes: 10
     plugins:
       artifacts#v1.5.0:
@@ -962,7 +962,7 @@ steps:
     concurrency_method: eager
 
   - label: ":runner: RN 0.69 iOS end-to-end tests (Non-hermes)"
-    depends_on: "rn-0-69-ipa"
+    depends_on: "rn-cli-0-69-ipa"
     timeout_in_minutes: 10
     plugins:
       artifacts#v1.5.0:
