@@ -192,7 +192,7 @@ steps:
   # Built app test fixtures - Android
   #
   - label: ':docker: Build RN Android Builder image'
-    key: 'android-builder-image'
+    key: 'android-builder-cli-image'
     timeout_in_minutes: 30
     plugins:
       - docker-compose#v3.9.0:
@@ -205,7 +205,7 @@ steps:
   - label: ':android: Init and build RN 0.60 apk'
     key: 'rn-0-60-apk'
     depends_on:
-      - 'android-builder-image'
+      - 'android-builder-cli-image'
     timeout_in_minutes: 15
     env:
       DEBUG: true
@@ -220,7 +220,7 @@ steps:
   - label: ':android: Init and build RN 0.61 apk'
     key: 'rn-0-61-apk'
     depends_on:
-      - 'android-builder-image'
+      - 'android-builder-cli-image'
     timeout_in_minutes: 15
     env:
       DEBUG: true
@@ -235,7 +235,7 @@ steps:
   - label: ':android: Init and build RN 0.62 apk'
     key: 'rn-0-62-apk'
     depends_on:
-      - 'android-builder-image'
+      - 'android-builder-cli-image'
     timeout_in_minutes: 15
     env:
       DEBUG: true
@@ -250,7 +250,7 @@ steps:
   - label: ':android: Init and build RN 0.63 apk'
     key: 'rn-0-63-apk'
     depends_on:
-      - 'android-builder-image'
+      - 'android-builder-cli-image'
     timeout_in_minutes: 15
     env:
       DEBUG: true
@@ -265,7 +265,7 @@ steps:
   - label: ':android: Init and build RN 0.63 Expo (ejected) apk'
     key: 'rn-0-63-expo-ejected-apk'
     depends_on:
-      - 'android-builder-image'
+      - 'android-builder-cli-image'
     timeout_in_minutes: 15
     env:
       DEBUG: true
@@ -280,7 +280,7 @@ steps:
   - label: ':android: Init and build RN 0.64 apk'
     key: 'rn-0-64-apk'
     depends_on:
-      - 'android-builder-image'
+      - 'android-builder-cli-image'
     timeout_in_minutes: 15
     env:
       DEBUG: true
@@ -295,7 +295,7 @@ steps:
   - label: ':android: Init and build RN 0.65 apk'
     key: 'rn-0-65-apk'
     depends_on:
-      - 'android-builder-image'
+      - 'android-builder-cli-image'
     timeout_in_minutes: 15
     env:
       DEBUG: true
@@ -310,7 +310,7 @@ steps:
   - label: ':android: Init and build RN 0.66 apk'
     key: 'rn-0-66-apk'
     depends_on:
-      - 'android-builder-image'
+      - 'android-builder-cli-image'
     timeout_in_minutes: 15
     env:
       DEBUG: true
@@ -325,7 +325,7 @@ steps:
   - label: ':android: Init and build RN 0.67 apk (Non-hermes)'
     key: 'rn-0-67-apk'
     depends_on:
-      - 'android-builder-image'
+      - 'android-builder-cli-image'
     timeout_in_minutes: 15
     env:
       DEBUG: true
@@ -340,7 +340,7 @@ steps:
   - label: ':android: Init and build RN 0.67 apk (Hermes)'
     key: 'rn-0-67-hermes-apk'
     depends_on:
-      - 'android-builder-image'
+      - 'android-builder-cli-image'
     timeout_in_minutes: 15
     env:
       DEBUG: true
@@ -356,7 +356,7 @@ steps:
   - label: ':android: Init and build RN 0.69 apk (Non-hermes)'
     key: 'rn-0-69-apk'
     depends_on:
-      - 'android-builder-image'
+      - 'android-builder-cli-image'
     timeout_in_minutes: 15
     env:
       DEBUG: true
