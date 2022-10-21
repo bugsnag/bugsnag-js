@@ -1,10 +1,8 @@
 steps:
 
   - group: "Browser Tests"
-    depends_on: "browser-maze-runner-image"
     steps:
       - label:  ":docker: Build browser maze runner image"
-        key: "browser-maze-runner-image"
         timeout_in_minutes: 20
         plugins:
           - artifacts#v1.5.0:
@@ -19,6 +17,8 @@ steps:
           - docker-compose#v3.9.0:
               push:
                 - browser-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-browser-${BRANCH_NAME}
+
+      - wait
 
       #
       # BitBar tests
