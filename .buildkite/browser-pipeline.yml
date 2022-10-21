@@ -3,6 +3,7 @@ steps:
   - group: "Browser Tests"
     steps:
       - label:  ":docker: Build browser maze runner image"
+        key: "browser-maze-runner"
         timeout_in_minutes: 20
         plugins:
           - artifacts#v1.5.0:
@@ -18,12 +19,11 @@ steps:
               push:
                 - browser-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-browser-${BRANCH_NAME}
 
-      - wait
-
       #
       # BitBar tests
       #
       - label: ":firefox: 101 Browser tests"
+        depends_on: "browser-maze-runner"
         timeout_in_minutes: 20
         plugins:
           docker-compose#v3.9.0:
@@ -37,6 +37,7 @@ steps:
         concurrency_group: "bitbar-web"
 
       - label: ":chrome: v102 Browser tests"
+        depends_on: "browser-maze-runner"
         timeout_in_minutes: 20
         plugins:
           docker-compose#v3.9.0:
@@ -50,6 +51,7 @@ steps:
         concurrency_group: "bitbar-web"
 
       - label: ":ie: v11 Browser tests"
+        depends_on: "browser-maze-runner"
         timeout_in_minutes: 20
         plugins:
           docker-compose#v3.9.0:
@@ -65,6 +67,7 @@ steps:
         concurrency_group: "bitbar-web"
 
       - label: ":edge: v102 Browser tests"
+        depends_on: "browser-maze-runner"
         timeout_in_minutes: 20
         plugins:
           docker-compose#v3.9.0:
@@ -78,6 +81,7 @@ steps:
         concurrency_group: "bitbar-web"
 
       - label: ":safari: 15 Browser tests"
+        depends_on: "browser-maze-runner"
         timeout_in_minutes: 20
         plugins:
           docker-compose#v3.9.0:
@@ -94,6 +98,7 @@ steps:
       # BrowserStack tests
       #
       - label: ":chrome: v43 Browser tests"
+        depends_on: "browser-maze-runner"
         timeout_in_minutes: 20
         plugins:
           docker-compose#v3.9.0:
@@ -107,6 +112,7 @@ steps:
         concurrency_group: "browserstack"
 
       - label: ":chrome: v72 Browser tests"
+        depends_on: "browser-maze-runner"
         timeout_in_minutes: 20
         plugins:
           docker-compose#v3.9.0:
@@ -120,6 +126,7 @@ steps:
         concurrency_group: "browserstack"
 
       - label: ":ie: v8 Browser tests"
+        depends_on: "browser-maze-runner"
         timeout_in_minutes: 20
         plugins:
           docker-compose#v3.9.0:
@@ -133,6 +140,7 @@ steps:
         concurrency_group: "browserstack"
 
       - label: ":ie: v9 Browser tests"
+        depends_on: "browser-maze-runner"
         timeout_in_minutes: 20
         plugins:
           docker-compose#v3.9.0:
@@ -146,6 +154,7 @@ steps:
         concurrency_group: "browserstack"
 
       - label: ":ie: v10 Browser tests"
+        depends_on: "browser-maze-runner"
         timeout_in_minutes: 20
         plugins:
           docker-compose#v3.9.0:
@@ -159,6 +168,7 @@ steps:
         concurrency_group: "browserstack"
 
       - label: ":edge: v17 Browser tests"
+        depends_on: "browser-maze-runner"
         timeout_in_minutes: 20
         plugins:
           docker-compose#v3.9.0:
@@ -172,6 +182,7 @@ steps:
         concurrency_group: "browserstack"
 
       - label: ":safari: v10 Browser tests"
+        depends_on: "browser-maze-runner"
         timeout_in_minutes: 20
         plugins:
           docker-compose#v3.9.0:
@@ -185,6 +196,7 @@ steps:
         concurrency_group: "browserstack"
 
       - label: ":iphone: iOS 10.3 Browser tests"
+        depends_on: "browser-maze-runner"
         timeout_in_minutes: 20
         plugins:
           docker-compose#v3.9.0:
@@ -200,6 +212,7 @@ steps:
         concurrency_group: "browserstack"
 
       - label: ":iphone: iOS 15.4 Browser tests"
+        depends_on: "browser-maze-runner"
         timeout_in_minutes: 20
         plugins:
           docker-compose#v3.9.0:
@@ -215,6 +228,7 @@ steps:
         concurrency_group: "browserstack"
 
       - label: ":android: Android 4.4 Browser tests"
+        depends_on: "browser-maze-runner"
         skip: Skipped pending PLAT-9069
         timeout_in_minutes: 20
         plugins:
@@ -231,6 +245,7 @@ steps:
       # Skipping Android 5 due to test environment stability issues
 
       - label: ":android: Android 6.0 Browser tests"
+        depends_on: "browser-maze-runner"
         timeout_in_minutes: 20
         plugins:
           docker-compose#v3.9.0:
@@ -244,6 +259,7 @@ steps:
         concurrency_group: "browserstack"
 
       - label: ":android: Android 7.0 Browser tests"
+        depends_on: "browser-maze-runner"
         timeout_in_minutes: 20
         plugins:
           docker-compose#v3.9.0:
@@ -257,6 +273,7 @@ steps:
         concurrency_group: "browserstack"
 
       - label: ":firefox: v78 Browser tests"
+        depends_on: "browser-maze-runner"
         timeout_in_minutes: 20
         plugins:
           docker-compose#v3.9.0:
