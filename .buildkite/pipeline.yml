@@ -64,7 +64,7 @@ steps:
     agents:
       queue: "opensource-mac-cocoa-10.15"
     commands:
-      # force the NPM registry as the default on CI is artifactory, which can"t
+      # force the NPM registry as the default on CI is artifactory, which can't
       # currently install from our lockfile
       - npm ci --registry https://registry.npmjs.org
       - cd test/aws-lambda
