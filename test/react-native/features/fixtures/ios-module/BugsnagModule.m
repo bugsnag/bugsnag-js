@@ -16,6 +16,19 @@
 
 RCT_EXPORT_MODULE(BugsnagTestInterface);
 
+RCT_EXPORT_METHOD(clearPersistentData)
+{
+  NSLog(@"%s", __PRETTY_FUNCTION__);
+  [NSUserDefaults.standardUserDefaults removePersistentDomainForName:NSBundle.mainBundle.bundleIdentifier];
+  NSString *appSupportDir = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES).firstObject;
+  NSString *rootDir = [appSupportDir stringByAppendingPathComponent:@"com.bugsnag.Bugsnag"];
+  NSError *error = nil;
+  if (![NSFileManager.defaultManager removeItemAtPath:rootDir error:&error] &&
+      ![error.domain isEqualToString:NSCocoaErrorDomain] && error.code != NSFileNoSuchFileError) {
+    NSLog(@"%@", error);
+  }
+}
+
 RCT_EXPORT_METHOD(runScenario:(NSString *)scenario
                       resolve:(RCTPromiseResolveBlock)resolve
                         reject:(RCTPromiseRejectBlock)reject)

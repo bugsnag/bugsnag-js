@@ -39,6 +39,10 @@ export default class AppScreen extends Component {
     this.state.currentScenario = newScenario
   }
 
+  clearPersistentData = () => {
+    NativeModules.BugsnagTestInterface.clearPersistentData()
+  }
+
   startScenario = () => {
     console.log(`Running scenario: ${this.state.currentScenario}`)
     const scenarioName = this.state.currentScenario
@@ -86,6 +90,11 @@ export default class AppScreen extends Component {
             placeholder='Scenario Name'
             accessibilityLabel='scenario_name'
             onChangeText={this.setScenario} />
+
+          <Button style={styles.clickyButton}
+            accessibilityLabel='clear_data'
+            title='Clear Persistent Data'
+            onPress={this.clearPersistentData}/>
           <Button style={styles.clickyButton}
             accessibilityLabel='start_bugsnag'
             title='Start Bugsnag'
