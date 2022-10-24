@@ -58,6 +58,10 @@ export default class App extends Component {
     this.setState({ sessionsEndpoint: 'https://sessions.bugsnag.com' })
   }
 
+  clearPersistentData = () => {
+    NativeModules.BugsnagTestInterface.clearPersistentData()
+  }
+
   runScenario = () => {
     console.log(`Running scenario: ${this.state.currentScenario}`)
     console.log(` with MetaData: ${this.state.scenarioMetaData}`)
@@ -101,6 +105,10 @@ export default class App extends Component {
             accessibilityLabel='scenario_metadata'
             onChangeText={this.setScenarioMetaData}/>
 
+          <Button style={styles.clickyButton}
+            accessibilityLabel='clear_data'
+            title='Clear Persistent Data'
+            onPress={this.clearPersistentData}/>
           <Button style={styles.clickyButton}
             accessibilityLabel='start_bugsnag'
             title='Start Bugsnag'
