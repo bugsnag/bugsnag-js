@@ -59,7 +59,14 @@ steps:
       branch: '${BUILDKITE_BRANCH}'
       commit: '${BUILDKITE_COMMIT}'
       message: '${BUILDKITE_MESSAGE}'
-    async: true
+
+  - label: 'Trigger Electron pipeline'
+    if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
+    trigger: 'bugsnag-js-electron'
+    build:
+      branch: '${BUILDKITE_BRANCH}'
+      commit: '${BUILDKITE_COMMIT}'
+      message: '${BUILDKITE_MESSAGE}'
 
   - label: 'Trigger Node pipeline'
     if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
@@ -69,7 +76,6 @@ steps:
       branch: '${BUILDKITE_BRANCH}'
       commit: '${BUILDKITE_COMMIT}'
       message: '${BUILDKITE_MESSAGE}'
-    async: true
 
   - label: 'Trigger Expo pipeline'
     if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
@@ -91,7 +97,6 @@ steps:
       branch: '${BUILDKITE_BRANCH}'
       commit: '${BUILDKITE_COMMIT}'
       message: '${BUILDKITE_MESSAGE}'
-    async: true
 
   - label: 'Trigger React Native CLI pipeline'
     if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
@@ -103,7 +108,6 @@ steps:
       branch: '${BUILDKITE_BRANCH}'
       commit: '${BUILDKITE_COMMIT}'
       message: '${BUILDKITE_MESSAGE}'
-    async: true
 
   - label: ':aws-lambda: AWS Lambda tests'
     if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"

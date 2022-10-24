@@ -1,7 +1,8 @@
 @plugin_vue
 Feature: Vue support
 
-  @skip_ie_8
+  # Skipped on IE <=10, see https://github.com/vuejs/vue/issues/12837
+  @skip_ie_8 @skip_ie_9 @skip_ie_10
   Scenario: basic error handler usage
     When I navigate to the test URL "/plugin_vue/webpack4/index.html"
     Then I wait to receive an error

@@ -6,105 +6,115 @@ const fs = require('fs')
 
 module.exports = {
   buildAndroid: function buildAndroid (sourceFixtures, destFixtures) {
-    const version = process.env.NOTIFIER_VERSION || common.determineVersion()
-    const rnVersion = process.env.REACT_NATIVE_VERSION
-    const registryUrl = process.env.REGISTRY_URL
+    try {
+      const version = process.env.NOTIFIER_VERSION || common.determineVersion()
+      const rnVersion = process.env.REACT_NATIVE_VERSION
+      const registryUrl = process.env.REGISTRY_URL
 
-    let jsSourceDir = 'scenario_js'
-    if (process.env.JS_SOURCE_DIR) {
-      jsSourceDir = process.env.JS_SOURCE_DIR
+      let jsSourceDir = 'scenario_js'
+      if (process.env.JS_SOURCE_DIR) {
+        jsSourceDir = process.env.JS_SOURCE_DIR
+      }
+
+      let artefactName = rnVersion
+      if (process.env.ARTEFACT_NAME) {
+        artefactName = process.env.ARTEFACT_NAME
+      }
+
+      console.log(`Installing notifier version: ${version}`)
+
+      // Copy in files required
+      common.run(`mkdir -p ${destFixtures}/${rnVersion}`)
+      common.run(`rsync -a --no-recursive ${sourceFixtures}/${rnVersion}/* ${destFixtures}/${rnVersion}`, true)
+      common.run(`rsync -a ${sourceFixtures}/${rnVersion}/android ${destFixtures}/${rnVersion}`, true)
+      common.run(`rsync -a ${sourceFixtures}/app/${jsSourceDir}/ ${destFixtures}/${rnVersion}`, true)
+      common.run(`rsync -a ${sourceFixtures}/reactnative ${destFixtures}/${rnVersion}/android/app/src/main/java/com`, true)
+
+      // JavaScript layer
+      common.changeDir(`${destFixtures}/${rnVersion}`)
+      common.run(`npm install --registry ${registryUrl}`, true)
+
+      // Install notifier
+      const command = `npm install @bugsnag/react-native@${version}  --registry ${registryUrl}`
+      common.run(command, true)
+
+      // Install any required secondary files
+      if (fs.existsSync('./install.sh')) {
+        console.log('Installing secondary requirements')
+        common.run(`BUGSNAG_VERSION=${version} ./install.sh`, true)
+      }
+
+      // Native layer
+      common.changeDir('android')
+      common.run('./gradlew assembleRelease', true)
+
+      // Finally, copy the APK back to the host
+      fs.copyFileSync(`${destFixtures}/${rnVersion}/android/app/build/outputs/apk/release/app-release.apk`,
+        `${process.env.PWD}/build/${artefactName}.apk`)
+    } catch (e) {
+      console.error(e, e.stack)
+      process.exit(1)
     }
-
-    let artefactName = rnVersion
-    if (process.env.ARTEFACT_NAME) {
-      artefactName = process.env.ARTEFACT_NAME
-    }
-
-    console.log(`Installing notifier version: ${version}`)
-
-    // Copy in files required
-    common.run(`mkdir -p ${destFixtures}/${rnVersion}`)
-    common.run(`rsync -a --no-recursive ${sourceFixtures}/${rnVersion}/* ${destFixtures}/${rnVersion}`, true)
-    common.run(`rsync -a ${sourceFixtures}/${rnVersion}/android ${destFixtures}/${rnVersion}`, true)
-    common.run(`rsync -a ${sourceFixtures}/app/${jsSourceDir}/ ${destFixtures}/${rnVersion}`, true)
-    common.run(`rsync -a ${sourceFixtures}/reactnative ${destFixtures}/${rnVersion}/android/app/src/main/java/com`, true)
-
-    // JavaScript layer
-    common.changeDir(`${destFixtures}/${rnVersion}`)
-    common.run(`npm install --registry ${registryUrl}`, true)
-
-    // Install notifier
-    const command = `npm install @bugsnag/react-native@${version}  --registry ${registryUrl}`
-    common.run(command, true)
-
-    // Install any required secondary files
-    if (fs.existsSync('./install.sh')) {
-      console.log('Installing secondary requirements')
-      common.run(`BUGSNAG_VERSION=${version} ./install.sh`, true)
-    }
-
-    // Native layer
-    common.changeDir('android')
-    common.run('./gradlew assembleRelease', true)
-
-    // Finally, copy the APK back to the host
-    fs.copyFileSync(`${destFixtures}/${rnVersion}/android/app/build/outputs/apk/release/app-release.apk`,
-                    `${process.env.PWD}/build/${artefactName}.apk`)
   },
   buildIOS: function buildIOS () {
-    const version = process.env.NOTIFIER_VERSION || common.determineVersion()
-    const rnVersion = process.env.REACT_NATIVE_VERSION
-    const registryUrl = process.env.REGISTRY_URL
-    const fixtureDir = 'test/react-native/features/fixtures'
-    const targetDir = `${fixtureDir}/${rnVersion}`
-    const initialDir = process.cwd()
+    try {
+      const version = process.env.NOTIFIER_VERSION || common.determineVersion()
+      const rnVersion = process.env.REACT_NATIVE_VERSION
+      const registryUrl = process.env.REGISTRY_URL
+      const fixtureDir = 'test/react-native/features/fixtures'
+      const targetDir = `${fixtureDir}/${rnVersion}`
+      const initialDir = process.cwd()
 
-    let jsSourceDir = 'scenario_js'
-    if (process.env.JS_SOURCE_DIR) {
-      jsSourceDir = process.env.JS_SOURCE_DIR
+      let jsSourceDir = 'scenario_js'
+      if (process.env.JS_SOURCE_DIR) {
+        jsSourceDir = process.env.JS_SOURCE_DIR
+      }
+
+      let artefactName = rnVersion
+      if (process.env.ARTEFACT_NAME) {
+        artefactName = process.env.ARTEFACT_NAME
+      }
+
+      // We're not in docker so check the above are set
+      if (rnVersion === undefined || registryUrl === undefined) {
+        throw new Error('Both REACT_NATIVE_VERSION and REGISTRY_URL environment variables must be set')
+      }
+
+      // Copy the JS code into the test fixture
+      console.log(`Copying JS app data from ${fixtureDir}/app to ${targetDir}`)
+      common.run(`rsync -a ${fixtureDir}/app/${jsSourceDir}/ ${targetDir}`, true)
+
+      // JavaScript layer
+      console.log(`Changing directory to: ${targetDir} and running "npm install"`)
+      common.changeDir(`${targetDir}`)
+      common.run(`npm install --registry ${registryUrl}`, true)
+
+      // Install notifier
+      console.log(`Installing notifier: ${version}`)
+      const command = `npm install @bugsnag/react-native@${version}  --registry ${registryUrl}`
+      common.run(command, true)
+
+      // Install any required secondary files
+      if (fs.existsSync('./install.sh')) {
+        common.run(`BUGSNAG_VERSION=${version} ./install.sh`, true)
+      }
+
+      // Performing local build steps
+      console.log('Locating local build script')
+      if (!fs.existsSync('./build.sh')) {
+        throw new Error('Local iOS build file at ./build.sh could not be found')
+      }
+      common.run('./build.sh', true)
+
+      // Copy file out to build directory
+      common.changeDir(initialDir)
+      if (!fs.existsSync('build')) {
+        common.run('mkdir build')
+      }
+      fs.copyFileSync(`${targetDir}/output/output.ipa`, `build/${artefactName}.ipa`)
+    } catch (e) {
+      console.error(e, e.stack)
+      process.exit(1)
     }
-
-    let artefactName = rnVersion
-    if (process.env.ARTEFACT_NAME) {
-      artefactName = process.env.ARTEFACT_NAME
-    }
-
-    // We're not in docker so check the above are set
-    if (rnVersion === undefined || registryUrl === undefined) {
-      throw new Error('Both REACT_NATIVE_VERSION and REGISTRY_URL environment variables must be set')
-    }
-
-    // Copy the JS code into the test fixture
-    console.log(`Copying JS app data from ${fixtureDir}/app to ${targetDir}`)
-    common.run(`rsync -a ${fixtureDir}/app/${jsSourceDir}/ ${targetDir}`, true)
-
-    // JavaScript layer
-    console.log(`Changing directory to: ${targetDir} and running "npm install"`)
-    common.changeDir(`${targetDir}`)
-    common.run(`npm install --registry ${registryUrl}`, true)
-
-    // Install notifier
-    console.log(`Installing notifier: ${version}`)
-    const command = `npm install @bugsnag/react-native@${version}  --registry ${registryUrl}`
-    common.run(command, true)
-
-    // Install any required secondary files
-    if (fs.existsSync('./install.sh')) {
-      common.run(`BUGSNAG_VERSION=${version} ./install.sh`, true)
-    }
-
-    // Performing local build steps
-    console.log('Locating local build script')
-    if (!fs.existsSync('./build.sh')) {
-      throw new Error('Local iOS build file at ./build.sh could not be found')
-    }
-    common.run('./build.sh', true)
-
-    // Copy file out to build directory
-    common.changeDir(initialDir)
-    if (!fs.existsSync('build')) {
-      common.run('mkdir build')
-    }
-    fs.copyFileSync(`${targetDir}/output/output.ipa`, `build/${artefactName}.ipa`)
   }
 }
