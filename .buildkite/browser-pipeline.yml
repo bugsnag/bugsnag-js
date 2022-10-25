@@ -8,7 +8,6 @@ steps:
         plugins:
           - artifacts#v1.5.0:
               download: min_packages.tar
-              build: ${BUILDKITE_TRIGGERED_FROM_BUILD_ID}
           - docker-compose#v3.9.0:
               build:
                 - browser-maze-runner
