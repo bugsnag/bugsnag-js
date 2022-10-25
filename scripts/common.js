@@ -33,16 +33,9 @@ module.exports = {
     // Get the current version from lerna.json
     const lernaVersion = lerna.version.match(/^[1-9][0-9]*\.[0-9]+\.[0-9]+/)[0]
 
-    // Base version for RN integration builds on the current time
-    if (process.env.BUILD_RN_WITH_LATEST_NATIVES) {
-      const timestamp = Math.round(Date.now() / 1000)
+    // Distinguish from local use
+    const ciIndicator = (process.env.BUILDKITE ? 'ci-' : '')
 
-      return `${lernaVersion}-rn-integration.${timestamp}`
-    } else {
-      // Distinguish from local use
-      const ciIndicator = (process.env.BUILDKITE ? 'ci-' : '')
-
-      return `${lernaVersion}-${ciIndicator}${branchName}.${commitId}`
-    }
+    return `${lernaVersion}-${ciIndicator}${branchName}.${commitId}`
   }
 }
