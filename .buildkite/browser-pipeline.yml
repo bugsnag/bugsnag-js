@@ -229,11 +229,12 @@ steps:
 
       - label: ":android: Android 4.4 Browser tests"
         depends_on: "browser-maze-runner"
+        skip: Skipped pending PLAT-9069
         timeout_in_minutes: 20
         plugins:
           docker-compose#v3.9.0:
-            pull: browser-legacy-maze-runner
-            run: browser-legacy-maze-runner
+            pull: browser-maze-runner
+            run: browser-maze-runner
             use-aliases: true
             command:
               - --farm=bs
