@@ -17,7 +17,6 @@ services:
         - REG_NPM_EMAIL
         - PUBLISH_URL
         - BRANCH_NAME
-        - BUILD_RN_WITH_LATEST_NATIVES
   ci:
     build:
       context: .
