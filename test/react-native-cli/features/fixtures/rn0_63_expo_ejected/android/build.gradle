@@ -9,7 +9,7 @@ buildscript {
     }
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
     dependencies {
         classpath("com.android.tools.build:gradle:4.1.0")
@@ -32,7 +32,16 @@ allprojects {
         }
 
         google()
-        jcenter()
+        if (System.getenv('MAVEN_REPO_URL') && System.getenv('MAVEN_REPO_CREDS')) {
+            def decodedCreds = new String(System.getenv('MAVEN_REPO_CREDS').decodeBase64(), 'UTF-8').split(':')
+            maven {
+                url(System.getenv('MAVEN_REPO_URL'))
+                credentials {
+                    username decodedCreds[0]
+                    password decodedCreds[1]
+                }
+            }
+        }
         maven { url 'https://www.jitpack.io' }
     }
 }
