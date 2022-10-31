@@ -30,6 +30,7 @@ allprojects {
             url("$rootDir/../node_modules/jsc-android/dist")
         }
 
+        mavenCentral()
         google()
         if (System.getenv('MAVEN_REPO_URL') && System.getenv('MAVEN_REPO_CREDS')) {
             def decodedCreds = new String(System.getenv('MAVEN_REPO_CREDS').decodeBase64(), 'UTF-8').split(':')
