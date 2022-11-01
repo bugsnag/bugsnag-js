@@ -3,7 +3,7 @@ steps:
   #
   # License audit
   #
-  - label: ':copyright: License Audit'
+  - label: ":copyright: License Audit"
     timeout_in_minutes: 20
     agents:
       queue: opensource-mac-cocoa-11
@@ -14,8 +14,8 @@ steps:
   #
   # Android builder base - used by React Native and React Native CLI
   #
-  - label: ':docker: Build Android Builder base image'
-    key: 'android-builder-base'
+  - label: ":docker: Build Android Builder base image"
+    key: "android-builder-base"
     timeout_in_minutes: 30
     plugins:
       - docker-compose#v3.9.0:
@@ -28,84 +28,26 @@ steps:
   #
   # Publish/package notifier
   #
-  - label: ':docker: Prepare package.json'
-    if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
-    key: 'package-js'
+  - label: ":docker: Prepare package.json"
+    key: "package-js"
     timeout_in_minutes: 3
     plugins:
       - docker-compose#v3.9.0:
           run: minimal-packager
     artifact_paths: min_packages.tar
 
-  - label: ':docker: Build and publish JS packages'
-    key: 'publish-js'
+  - label: ":docker: Build and publish JS packages"
+    key: "publish-js"
     timeout_in_minutes: 30
     plugins:
       - docker-compose#v3.9.0:
           build: publisher
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
-    env:
-      BUILD_RN_WITH_LATEST_NATIVES: ${BUILD_RN_WITH_LATEST_NATIVES}
 
-
-  #
-  # Trigger individual pipelines
-  #
-  - label: 'Trigger Browser pipeline'
-    if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
-    depends_on: 'package-js'
-    trigger: 'bugsnag-js-browser'
-    build:
-      branch: '${BUILDKITE_BRANCH}'
-      commit: '${BUILDKITE_COMMIT}'
-      message: '${BUILDKITE_MESSAGE}'
-
-  - label: 'Trigger Node pipeline'
-    if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
-    depends_on: 'package-js'
-    trigger: 'bugsnag-js-node'
-    build:
-      branch: '${BUILDKITE_BRANCH}'
-      commit: '${BUILDKITE_COMMIT}'
-      message: '${BUILDKITE_MESSAGE}'
-
-  - label: 'Trigger Expo pipeline'
-    if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
-    depends_on: 'publish-js'
-    trigger: 'bugsnag-expo'
-    build:
-      env:
-        BUGSNAG_JS_BRANCH: '${BUILDKITE_BRANCH}'
-        BUGSNAG_JS_COMMIT: '${BUILDKITE_COMMIT}'
-        # a branch name that's safe to use as a docker cache identifier
-        BUGSNAG_JS_CACHE_SAFE_BRANCH_NAME: '${BRANCH_NAME}'
-
-  - label: 'Trigger React Native pipeline'
-    depends_on:
-      - 'publish-js'
-      - 'android-builder-base'
-    trigger: 'bugsnag-js-react-native'
-    build:
-      branch: '${BUILDKITE_BRANCH}'
-      commit: '${BUILDKITE_COMMIT}'
-      message: '${BUILDKITE_MESSAGE}'
-
-  - label: 'Trigger React Native CLI pipeline'
-    if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
-    depends_on:
-      - 'publish-js'
-      - 'android-builder-base'
-    trigger: 'bugsnag-js-react-native-cli'
-    build:
-      branch: '${BUILDKITE_BRANCH}'
-      commit: '${BUILDKITE_COMMIT}'
-      message: '${BUILDKITE_MESSAGE}'
-
-  - label: ':aws-lambda: AWS Lambda tests'
-    if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
+  - label: ":aws-lambda: AWS Lambda tests"
     timeout_in_minutes: 35
     agents:
-      queue: 'opensource-mac-cocoa-10.15'
+      queue: "opensource-mac-cocoa-10.15"
     commands:
       # force the NPM registry as the default on CI is artifactory, which can't
       # currently install from our lockfile
@@ -117,10 +59,9 @@ steps:
   #
   # Core tests and checks
   #
-  - label: ':docker: Build CI image'
-    if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
-    key: 'ci-image'
-    depends_on: 'package-js'
+  - label: ":docker: Build CI image"
+    key: "ci-image"
+    depends_on: "package-js"
     timeout_in_minutes: 20
     plugins:
       - artifacts#v1.5.0:
@@ -137,29 +78,70 @@ steps:
             - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base-${BRANCH_NAME}
             - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base
 
-  - label: 'Lint'
-    if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
-    depends_on: 'ci-image'
+  - label: "Lint"
+    depends_on: "ci-image"
     timeout_in_minutes: 10
     plugins:
       docker-compose#v3.9.0:
         run: ci
-    command: 'npm run test:lint'
+    command: "npm run test:lint"
 
-  - label: 'Unit tests'
-    if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
-    depends_on: 'ci-image'
+  - label: "Unit tests"
+    depends_on: "ci-image"
     timeout_in_minutes: 10
     plugins:
       docker-compose#v3.9.0:
         run: ci
-    command: 'npm run test:unit'
+    command: "npm run test:unit"
 
-  - label: 'Type checks/tests'
-    if: build.env("BUILD_RN_WITH_LATEST_NATIVES") != "true"
-    depends_on: 'ci-image'
+  - label: "Type checks/tests"
+    depends_on: "ci-image"
     timeout_in_minutes: 10
     plugins:
       docker-compose#v3.9.0:
         run: ci
-    command: 'npm run test:types'
+    command: "npm run test:types"
+
+  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: BROWSER STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
+    depends_on: "package-js"
+    commands:
+      - buildkite-agent pipeline upload .buildkite/browser-pipeline.yml
+
+  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: ELECTRON STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
+    commands:
+      - buildkite-agent pipeline upload .buildkite/electron-pipeline.yml
+
+  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: NODE STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
+    depends_on: "package-js"
+    commands:
+      - buildkite-agent pipeline upload .buildkite/node-pipeline.yml
+
+  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: REACT NATIVE (ANDROID) STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
+    depends_on:
+      - "publish-js"
+      - "android-builder-base"
+    commands:
+      - buildkite-agent pipeline upload .buildkite/react-native-android-pipeline.yml
+
+  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: REACT NATIVE (IOS) STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
+    depends_on:
+      - "publish-js"
+    commands:
+      - buildkite-agent pipeline upload .buildkite/react-native-ios-pipeline.yml
+
+  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: REACT NATIVE CLI STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
+    depends_on:
+      - "publish-js"
+      - "android-builder-base"
+    commands:
+      - buildkite-agent pipeline upload .buildkite/react-native-cli-pipeline.yml
+
+  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: EXPO PIPELINE :large_blue_circle: :large_blue_circle: :large_blue_circle:"
+    depends_on: "publish-js"
+    trigger: "bugsnag-expo"
+    build:
+      env:
+        BUGSNAG_JS_BRANCH: "${BUILDKITE_BRANCH}"
+        BUGSNAG_JS_COMMIT: "${BUILDKITE_COMMIT}"
+        # a branch name that"s safe to use as a docker cache identifier
+        BUGSNAG_JS_CACHE_SAFE_BRANCH_NAME: "${BRANCH_NAME}"
