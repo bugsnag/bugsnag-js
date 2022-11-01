@@ -9,11 +9,4 @@ target 'rn0_63_expo_ejected' do
   config = use_native_modules!
 
   use_react_native!(:path => config["reactNativePath"])
-
-  if !ENV['CI']
-    use_flipper!({ 'Flipper' => '0.80.0' })
-    post_install do |installer|
-      flipper_post_install(installer)
-    end
-  end
 end

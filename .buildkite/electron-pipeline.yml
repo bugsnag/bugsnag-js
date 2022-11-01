@@ -1,42 +1,44 @@
 steps:
 
-  #
-  # Node 14
-  #
-  - label: 'Electron 12 tests - macOS - Node 14'
-    timeout_in_minutes: 40
-    agents:
-      queue: macos-11
-    env:
-      DEVELOPER_DIR: "/Applications/Xcode12.app"
-      ELECTRON_VERSION: "^12.0.0"
-      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
-      START_LOCAL_NPM: 1
-      VERBOSE: 1
-    commands:
-      - npm install electron@${ELECTRON_VERSION} --no-audit --progress=false --no-save
-      - npm ci --no-audit --progress=false
-      - npx lerna bootstrap
-      - npm run build:electron
-      - defaults write com.apple.CrashReporter DialogType none
-      - npm run test:unit:electron-runner
-      - npm run test:electron
+  - group: "Electron Tests"
+    steps:
+      #
+      # Node 14
+      #
+      - label: "Electron 12 tests - macOS - Node 14"
+        timeout_in_minutes: 40
+        agents:
+          queue: macos-11
+        env:
+          DEVELOPER_DIR: "/Applications/Xcode12.app"
+          ELECTRON_VERSION: "^12.0.0"
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+          START_LOCAL_NPM: 1
+          VERBOSE: 1
+        commands:
+          - npm install electron@${ELECTRON_VERSION} --no-audit --progress=false --no-save
+          - npm ci --no-audit --progress=false
+          - npx lerna bootstrap
+          - npm run build:electron
+          - defaults write com.apple.CrashReporter DialogType none
+          - npm run test:unit:electron-runner
+          - npm run test:electron
 
-  - label: 'Electron 20 tests - macOS - Node 14'
-    timeout_in_minutes: 40
-    agents:
-      queue: macos-11
-    env:
-      DEVELOPER_DIR: "/Applications/Xcode12.app"
-      ELECTRON_VERSION: "^20.0.0"
-      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
-      START_LOCAL_NPM: 1
-      VERBOSE: 1
-    commands:
-      - npm install electron@${ELECTRON_VERSION} --no-audit --progress=false --no-save
-      - npm ci --no-audit --progress=false
-      - npx lerna bootstrap
-      - npm run build:electron
-      - defaults write com.apple.CrashReporter DialogType none
-      - npm run test:unit:electron-runner
-      - npm run test:electron
+      - label: "Electron 20 tests - macOS - Node 14"
+        timeout_in_minutes: 40
+        agents:
+          queue: macos-11
+        env:
+          DEVELOPER_DIR: "/Applications/Xcode12.app"
+          ELECTRON_VERSION: "^20.0.0"
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+          START_LOCAL_NPM: 1
+          VERBOSE: 1
+        commands:
+          - npm install electron@${ELECTRON_VERSION} --no-audit --progress=false --no-save
+          - npm ci --no-audit --progress=false
+          - npx lerna bootstrap
+          - npm run build:electron
+          - defaults write com.apple.CrashReporter DialogType none
+          - npm run test:unit:electron-runner
+          - npm run test:electron
