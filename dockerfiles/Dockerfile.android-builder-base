@@ -1,4 +1,4 @@
-FROM openjdk:11-jdk-buster
+FROM openjdk:11-jdk-bullseye
 
 # OS setup
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
@@ -6,17 +6,19 @@ RUN apt-get update && apt-get install -y gradle jq git-core build-essential open
 
 # Android tools
 WORKDIR /sdk
-RUN wget https://dl.google.com/android/repository/commandlinetools-linux-8092744_latest.zip -q
-RUN unzip -q commandlinetools-linux-8092744_latest.zip
-RUN rm commandlinetools-linux-8092744_latest.zip
+RUN wget https://dl.google.com/android/repository/commandlinetools-linux-8512546_latest.zip -q
+RUN unzip -q commandlinetools-linux-8512546_latest.zip
+RUN rm commandlinetools-linux-8512546_latest.zip
 RUN cd cmdline-tools \
     && mkdir tools \
+    && ln -s tools latest \
     && mv lib bin source.properties tools
 
 ENV ANDROID_HOME=/sdk
 ENV PATH="${PATH}:/sdk/cmdline-tools/tools:/sdk/cmdline-tools/tools/bin"
 
 RUN yes | sdkmanager "platform-tools" "build-tools;28.0.3"
+RUN yes | sdkmanager "platform-tools" "build-tools;33.0.0"
 ENV PATH="${PATH}:/sdk/platform-tools"
 
 ENV ANDROID_HOME="/sdk/"
@@ -30,3 +32,6 @@ WORKDIR /app/gradle
 RUN wget -q https://services.gradle.org/distributions/gradle-5.1.1-all.zip \
             https://services.gradle.org/distributions/gradle-5.4.1-all.zip \
             https://services.gradle.org/distributions/gradle-6.2-all.zip
+
+RUN ln -s /sdk/build-tools/33.0.0/d8 /sdk/build-tools/33.0.0/dx \
+    && ln -s /sdk/build-tools/33.0.0/lib/d8.jar /sdk/build-tools/33.0.0/lib/dx.jar
