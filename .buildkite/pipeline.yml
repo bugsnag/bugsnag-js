@@ -136,12 +136,35 @@ steps:
     commands:
       - buildkite-agent pipeline upload .buildkite/react-native-cli-pipeline.yml
 
-  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: EXPO PIPELINE :large_blue_circle: :large_blue_circle: :large_blue_circle:"
+  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: EXPO 46 PIPELINE :large_blue_circle: :large_blue_circle: :large_blue_circle:"
     depends_on: "publish-js"
     trigger: "bugsnag-expo"
     build:
+      branch: v46-next
       env:
         BUGSNAG_JS_BRANCH: "${BUILDKITE_BRANCH}"
         BUGSNAG_JS_COMMIT: "${BUILDKITE_COMMIT}"
-        # a branch name that"s safe to use as a docker cache identifier
+        # a branch name that's safe to use as a docker cache identifier
+        BUGSNAG_JS_CACHE_SAFE_BRANCH_NAME: "${BRANCH_NAME}"
+
+  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: EXPO 45 PIPELINE :large_blue_circle: :large_blue_circle: :large_blue_circle:"
+    depends_on: "publish-js"
+    trigger: "bugsnag-expo"
+    build:
+      branch: v45-next
+      env:
+        BUGSNAG_JS_BRANCH: "${BUILDKITE_BRANCH}"
+        BUGSNAG_JS_COMMIT: "${BUILDKITE_COMMIT}"
+        # a branch name that's safe to use as a docker cache identifier
+        BUGSNAG_JS_CACHE_SAFE_BRANCH_NAME: "${BRANCH_NAME}"
+
+  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: EXPO 44 PIPELINE :large_blue_circle: :large_blue_circle: :large_blue_circle:"
+    depends_on: "publish-js"
+    trigger: "bugsnag-expo"
+    build:
+      branch: v44-next
+      env:
+        BUGSNAG_JS_BRANCH: "${BUILDKITE_BRANCH}"
+        BUGSNAG_JS_COMMIT: "${BUILDKITE_COMMIT}"
+        # a branch name that's safe to use as a docker cache identifier
         BUGSNAG_JS_CACHE_SAFE_BRANCH_NAME: "${BRANCH_NAME}"
