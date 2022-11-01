@@ -1,8 +1,11 @@
 # Changelog
 
-## v7.18.2 (2022-10-31)
+## v7.18.2 (2022-11-01)
+
+### Changed
 
 - (react-native) Update bugsnag-cocoa from v6.24.0 to [v6.25.0](https://github.com/bugsnag/bugsnag-cocoa/blob/master/CHANGELOG.md#6240-2022-10-05)
+- (react-native) Remove dependency on jCenter [#1856](https://github.com/bugsnag/bugsnag-js/pull/1856)
 
 ## v7.18.1 (2022-10-24)
 
