@@ -17,7 +17,7 @@ steps:
           VERBOSE: 1
         commands:
           - npm install electron@${ELECTRON_VERSION} --no-audit --progress=false --no-save
-          - npm ci --no-audit --progress=false
+          - npm install --no-audit --progress=false
           - npx lerna bootstrap
           - npm run build:electron
           - defaults write com.apple.CrashReporter DialogType none
@@ -36,7 +36,7 @@ steps:
           VERBOSE: 1
         commands:
           - npm install electron@${ELECTRON_VERSION} --no-audit --progress=false --no-save
-          - npm ci --no-audit --progress=false
+          - npm install --no-audit --progress=false
           - npx lerna bootstrap
           - npm run build:electron
           - defaults write com.apple.CrashReporter DialogType none
