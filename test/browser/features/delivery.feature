@@ -8,4 +8,4 @@ Feature: Delivery of errors
 
     # Check that Bugsnag is discarding the event
     And I wait to receive a log
-    And the log payload field "response" equals 400
+    And the log payload field "response" equals "Notify complete"
