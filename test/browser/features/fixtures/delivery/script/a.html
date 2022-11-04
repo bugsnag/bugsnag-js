@@ -6,6 +6,7 @@
     <script type="text/javascript">
       var NOTIFY = decodeURIComponent(window.location.search.match(/NOTIFY=([^&]+)/)[1])
       var SESSIONS = decodeURIComponent(window.location.search.match(/SESSIONS=([^&]+)/)[1])
+      
       var API_KEY = decodeURIComponent(window.location.search.match(/API_KEY=([^&]+)/)[1])
       Bugsnag.start({
         apiKey: API_KEY,
@@ -30,7 +31,16 @@
         i++;
       }
       Bugsnag.leaveBreadcrumb('big thing', big);
-      Bugsnag.notify(new Error('big things'));
+      Bugsnag.notify(new Error('big things'), null, function (err, event) {
+        var LOGS = decodeURIComponent(window.location.search.match(/LOGS=([^&]+)/)[1])
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", LOGS);
+        xhr.setRequestHeader('Content-Type', 'application/json')
+
+        xhr.send(JSON.stringify({
+          "response": err.status
+        }))
+      });
     </script>
   </body>
 </html>
