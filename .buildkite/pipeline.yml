@@ -124,8 +124,8 @@ steps:
       - buildkite-agent pipeline upload .buildkite/react-native-android-pipeline.yml
 
   - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: REACT NATIVE (IOS) STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
-    depends_on:
-      - "publish-js"
+#    depends_on:
+#      - "publish-js"
     commands:
       - buildkite-agent pipeline upload .buildkite/react-native-ios-pipeline.yml
 
