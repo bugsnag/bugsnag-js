@@ -1,5 +1,11 @@
 # Changelog
 
+## TBD
+
+### Fixed
+
+- (plugin-angular) Prevent excess change detection cycles when calling `Bugsnag.notify` [#1861](https://github.com/bugsnag/bugsnag-js/pull/1861)
+
 ## v7.18.2 (2022-11-01)
 
 ### Changed
