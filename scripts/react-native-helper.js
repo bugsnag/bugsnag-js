@@ -7,6 +7,7 @@ const fs = require('fs')
 module.exports = {
   buildAndroid: function buildAndroid (sourceFixtures, destFixtures) {
     try {
+      common.naveUse()
       const version = process.env.NOTIFIER_VERSION || common.determineVersion()
       const rnVersion = process.env.REACT_NATIVE_VERSION
       const registryUrl = process.env.REGISTRY_URL
@@ -58,6 +59,7 @@ module.exports = {
   },
   buildIOS: function buildIOS () {
     try {
+      common.naveUse()
       const version = process.env.NOTIFIER_VERSION || common.determineVersion()
       const rnVersion = process.env.REACT_NATIVE_VERSION
       const registryUrl = process.env.REGISTRY_URL

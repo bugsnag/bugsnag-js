@@ -152,6 +152,7 @@ services:
       - NOTIFIER_VERSION
       - ARTEFACT_NAME
       - JS_SOURCE_DIR
+      - NODE_VERSION
     networks:
       default:
         aliases:
@@ -206,6 +207,7 @@ services:
       - REACT_NATIVE_VERSION
       - MAVEN_REPO_URL
       - MAVEN_REPO_CREDS
+      - NODE_VERSION
     networks:
       default:
         aliases:

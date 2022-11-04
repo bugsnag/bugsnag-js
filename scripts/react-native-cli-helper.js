@@ -7,6 +7,7 @@ const fs = require('fs')
 module.exports = {
   buildAndroid: function buildAndroid (sourceFixturesIn, destFixturesIn) {
     try {
+      common.naveUse()
       const baseDir = process.env.PWD
       const sourceFixtures = `${baseDir}/${sourceFixturesIn}`
       const destFixtures = `${baseDir}/${destFixturesIn}`
@@ -49,6 +50,7 @@ module.exports = {
   },
   buildIOS: function buildIOS () {
     try {
+      common.naveUse()
       const version = process.env.NOTIFIER_VERSION || common.determineVersion()
       const rnVersion = process.env.REACT_NATIVE_VERSION
       const fixturesDir = 'features/fixtures'

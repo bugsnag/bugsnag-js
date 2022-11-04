@@ -35,5 +35,11 @@ module.exports = {
     const ciIndicator = (process.env.BUILDKITE ? 'ci-' : '')
 
     return `${lernaVersion}-${ciIndicator}${branchName}.${commitId}`
+  },
+  naveUse: function naveUse () {
+    // On Buildkite, ensure a Node version has been "nave used"
+    if (process.env.BUILDKITE) {
+      this.run('[ "${IN_SUBSHELL}" != "$0" ] && exec env IN_SUBSHELL="$0" nave use "${NODE_VERSION:-14}" bash "$0" "$@" || :', true)
+    }
   }
 }
