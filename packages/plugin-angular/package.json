@@ -30,12 +30,12 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@angular/cli": "^7.3.9",
-    "@angular/compiler": "^7.2.15",
-    "@angular/compiler-cli": "^7.2.15",
-    "@angular/core": "^7.2.15",
+    "@angular/cli": "^7",
+    "@angular/compiler": "^7",
+    "@angular/compiler-cli": "^7",
+    "@angular/core": "^7",
     "@bugsnag/js": "^7.18.0",
-    "rxjs": "^6.0.0",
+    "rxjs": "^6",
     "typescript": "<3.3.0",
     "zone.js": "^0.8.26"
   },

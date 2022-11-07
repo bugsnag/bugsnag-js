@@ -11,6 +11,7 @@
     "outDir": "./dist/esm2015",
     "rootDir": "./src",
     "strict": true,
+    "typeRoots": ["./node_modules/@types"],
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
