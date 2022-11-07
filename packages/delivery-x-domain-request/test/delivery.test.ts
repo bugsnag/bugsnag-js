@@ -33,7 +33,7 @@ describe('delivery:XDomainRequest', () => {
     const payload = { sample: 'payload' } as unknown as EventDeliveryPayload
     const config = {
       apiKey: 'aaaaaaaa',
-      endpoints: { notify: '/echo/' },
+      endpoints: { notify: '/echo/', sessions: '/sessions/' },
       redactedKeys: []
     }
     delivery({ logger: {}, _config: config } as unknown as Client, window).sendEvent(payload, (err) => {
@@ -44,6 +44,40 @@ describe('delivery:XDomainRequest', () => {
         /\/echo\/\?apiKey=aaaaaaaa&payloadVersion=4&sentAt=\d{4}-\d{2}-\d{2}T\d{2}%3A\d{2}%3A\d{2}\.\d{3}Z/
       )
       expect(requests[0].data).toBe(JSON.stringify(payload))
+      done()
+    })
+  })
+
+  it('prevents event delivery with incomplete config', done => {
+    const requests: XDomainRequest[] = []
+
+    // mock XDomainRequest class
+    function XDomainRequest (this: XDomainRequest) {
+      this.method = null
+      this.url = null
+      this.data = null
+      requests.push(this)
+    }
+    XDomainRequest.DONE = 4
+    XDomainRequest.prototype.open = function (method: string, url: string) {
+      this.method = method
+      this.url = url
+    }
+    XDomainRequest.prototype.send = function (data: string) {
+      this.data = data
+      this.onload()
+    }
+
+    const window = { XDomainRequest, location: { protocol: 'https://' } } as unknown as Window
+    const payload = { sample: 'payload' } as unknown as EventDeliveryPayload
+    const config = {
+      apiKey: 'aaaaaaaa',
+      endpoints: { notify: null },
+      redactedKeys: []
+    }
+    delivery({ logger: {}, _config: config } as unknown as Client, window).sendEvent(payload, (err) => {
+      expect(err).toStrictEqual(new Error('Event not sent due to incomplete endpoint configuration'))
+      expect(requests.length).toBe(0)
       done()
     })
   })
@@ -107,6 +141,40 @@ describe('delivery:XDomainRequest', () => {
         /\/sessions\/\?apiKey=aaaaaaaa&payloadVersion=1&sentAt=\d{4}-\d{2}-\d{2}T\d{2}%3A\d{2}%3A\d{2}\.\d{3}Z/
       )
       expect(requests[0].data).toBe(JSON.stringify(payload))
+      done()
+    })
+  })
+
+  it('prevents session delivery with incomplete config', done => {
+    const requests: XDomainRequest[] = []
+
+    // mock XDomainRequest class
+    function XDomainRequest (this: XDomainRequest, t: typeof window) {
+      this.method = null
+      this.url = null
+      this.data = null
+      requests.push(this)
+    }
+    XDomainRequest.DONE = 4
+    XDomainRequest.prototype.open = function (method: string, url: string) {
+      this.method = method
+      this.url = url
+    }
+    XDomainRequest.prototype.send = function (data: string) {
+      this.data = data
+      this.onload()
+    }
+
+    const window = { XDomainRequest, location: { protocol: 'https://' } } as unknown as Window
+    const payload = { sample: 'payload' } as unknown as SessionDeliveryPayload
+    const config = {
+      apiKey: 'aaaaaaaa',
+      endpoints: { sessions: null },
+      redactedKeys: []
+    }
+    delivery({ logger: {}, _config: config } as unknown as Client, window).sendSession(payload, (err) => {
+      expect(err).toStrictEqual(new Error('Session not sent due to incomplete endpoint configuration'))
+      expect(requests.length).toBe(0)
       done()
     })
   })

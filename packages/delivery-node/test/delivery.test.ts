@@ -1,7 +1,7 @@
 import delivery from '../'
 import http from 'http'
 import { Client } from '@bugsnag/core'
-import { EventDeliveryPayload } from '@bugsnag/core/client'
+import { EventDeliveryPayload, SessionDeliveryPayload } from '@bugsnag/core/client'
 import { AddressInfo } from 'net'
 
 interface Request {
@@ -61,12 +61,34 @@ describe('delivery:node', () => {
     })
   })
 
+  it('prevents event delivery with incomplete config', done => {
+    const { requests, server } = mockServer()
+    server.listen((err: Error) => {
+      expect(err).toBeUndefined()
+
+      const payload = { sample: 'payload' } as unknown as EventDeliveryPayload
+      const config = {
+        apiKey: 'aaaaaaaa',
+        endpoints: { notify: null, sessions: null },
+        redactedKeys: []
+      }
+
+      delivery({ _logger: { error: jest.fn() }, _config: config } as unknown as Client).sendEvent(payload, (err) => {
+        expect(err).toStrictEqual(new Error('Event not sent due to incomplete endpoint configuration'))
+        expect(requests.length).toBe(0)
+
+        server.close()
+        done()
+      })
+    })
+  })
+
   it('sends sessions successfully', done => {
     const { requests, server } = mockServer(202)
     server.listen((err: Error) => {
       expect(err).toBeUndefined()
 
-      const payload = { sample: 'payload' } as unknown as EventDeliveryPayload
+      const payload = { sample: 'payload' } as unknown as SessionDeliveryPayload
       const config = {
         apiKey: 'aaaaaaaa',
         endpoints: { notify: 'blah', sessions: `http://0.0.0.0:${(server.address() as AddressInfo).port}/sessions/` },
