@@ -49,8 +49,6 @@ allprojects {
               password decodedCreds[1]
             }
           }
-        } else {
-          jcenter()
         }
 
         maven { url 'https://www.jitpack.io' }

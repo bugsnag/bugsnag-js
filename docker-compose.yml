@@ -17,7 +17,6 @@ services:
         - REG_NPM_EMAIL
         - PUBLISH_URL
         - BRANCH_NAME
-        - BUILD_RN_WITH_LATEST_NATIVES
   ci:
     build:
       context: .
@@ -48,6 +47,49 @@ services:
       DEBUG:
       BROWSER_STACK_USERNAME:
       BROWSER_STACK_ACCESS_KEY:
+      BROWSER_STACK_BROWSERS_USERNAME:
+      BROWSER_STACK_BROWSERS_ACCESS_KEY:
+      BROWSER_STACK_DEVICES_USERNAME:
+      BROWSER_STACK_DEVICES_ACCESS_KEY:
+      HOST: "${HOST:-maze-runner}"
+      API_HOST: "${API_HOST:-maze-runner}"
+    env_file:
+      - ${DOCKER_ENV_FILE:-test/browser/features/fixtures/null_env}
+    networks:
+      default:
+        aliases:
+          - maze-runner
+
+  browser-maze-runner-legacy:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile.browser
+      target: browser-maze-runner-legacy
+      args:
+        - BUILDKITE_BUILD_NUMBER
+    environment:
+      BUILDKITE:
+      BUILDKITE_BRANCH:
+      BUILDKITE_BUILD_CREATOR:
+      BUILDKITE_BUILD_NUMBER:
+      BUILDKITE_BUILD_URL:
+      BUILDKITE_LABEL:
+      BUILDKITE_MESSAGE:
+      BUILDKITE_PIPELINE_NAME:
+      BUILDKITE_REPO:
+      BUILDKITE_RETRY_COUNT:
+      BUILDKITE_STEP_KEY:
+      MAZE_BUGSNAG_API_KEY:
+      MAZE_TMS_URI:
+      MAZE_TMS_TOKEN:
+      DEBUG:
+      BROWSER_STACK_USERNAME:
+      BROWSER_STACK_ACCESS_KEY:
+      BROWSER_STACK_BROWSERS_USERNAME:
+      BROWSER_STACK_BROWSERS_ACCESS_KEY:
+      BROWSER_STACK_DEVICES_USERNAME:
+      BROWSER_STACK_DEVICES_ACCESS_KEY:
+      USE_LEGACY_DRIVER: 1
       HOST: "${HOST:-maze-runner}"
       API_HOST: "${API_HOST:-maze-runner}"
     env_file:
@@ -162,6 +204,8 @@ services:
       - BUILDKITE
       - REGISTRY_URL
       - REACT_NATIVE_VERSION
+      - MAVEN_REPO_URL
+      - MAVEN_REPO_CREDS
     networks:
       default:
         aliases:
@@ -189,6 +233,10 @@ services:
       DEBUG:
       BROWSER_STACK_USERNAME:
       BROWSER_STACK_ACCESS_KEY:
+      BROWSER_STACK_BROWSERS_USERNAME:
+      BROWSER_STACK_BROWSERS_ACCESS_KEY:
+      BROWSER_STACK_DEVICES_USERNAME:
+      BROWSER_STACK_DEVICES_ACCESS_KEY:
       SKIP_NAVIGATION_SCENARIOS:
       HERMES:
     networks:
@@ -201,7 +249,7 @@ services:
       - ./test/react-native/maze_output:/app/maze_output
 
   react-native-cli-maze-runner:
-    image: 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v6-cli
+    image: 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v7-cli
     environment:
       BUILDKITE:
       BUILDKITE_BRANCH:
@@ -218,6 +266,10 @@ services:
       DEBUG:
       BROWSER_STACK_USERNAME:
       BROWSER_STACK_ACCESS_KEY:
+      BROWSER_STACK_BROWSERS_USERNAME:
+      BROWSER_STACK_BROWSERS_ACCESS_KEY:
+      BROWSER_STACK_DEVICES_USERNAME:
+      BROWSER_STACK_DEVICES_ACCESS_KEY:
     volumes:
       - ./build:/app/build
       - ./test/react-native-cli/features/:/app/features/

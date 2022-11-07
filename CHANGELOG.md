@@ -6,12 +6,19 @@
 
 - (plugin-navigation-breadcrumbs) calling `pushState` or `replaceState` no longer triggers a new session when `autoTrackSessions` is enabled [#1820](https://github.com/bugsnag/bugsnag-js/pull/1820)
 
-## TBD
+## v7.18.2 (2022-11-01)
+
+### Changed
+
+- (react-native) Update bugsnag-cocoa from v6.24.0 to [v6.25.0](https://github.com/bugsnag/bugsnag-cocoa/blob/master/CHANGELOG.md#6240-2022-10-05)
+- (react-native) Remove dependency on jCenter [#1856](https://github.com/bugsnag/bugsnag-js/pull/1856)
+
+## v7.18.1 (2022-10-24)
 
 ### Changed
 
 - (react-native) Update bugsnag-cocoa from v6.23.1 to [v6.24.0](https://github.com/bugsnag/bugsnag-cocoa/blob/master/CHANGELOG.md#6240-2022-10-05)
-- (react-native) Update bugsnag-android from v5.26.0 to [v5.28.0](https://github.com/bugsnag/bugsnag-android/blob/master/CHANGELOG.md#5280-2022-10-13)
+- (react-native) Update bugsnag-android from v5.26.0 to [v5.28.1](https://github.com/bugsnag/bugsnag-android/blob/master/CHANGELOG.md#5281-2022-10-19)
 
 ## v7.18.0 (2022-09-22)
 
