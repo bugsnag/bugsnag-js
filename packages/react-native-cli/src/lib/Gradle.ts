@@ -49,7 +49,7 @@ export async function modifyRootBuildGradle (projectRoot: string, pluginVersion:
       GRADLE_PLUGIN_IMPORT_REGEX,
       logger
     )
-  } catch (e) {
+  } catch (e: any) {
     if (e.message === 'Pattern not found') {
       logger.warn(
         `The gradle file was in an unexpected format and so couldn't be updated automatically.
@@ -86,7 +86,7 @@ export async function modifyAppBuildGradle (projectRoot: string, logger: Logger)
       GRADLE_PLUGIN_APPLY_REGEX,
       logger
     )
-  } catch (e) {
+  } catch (e: any) {
     if (e.message === 'Pattern not found') {
       logger.warn(
         `The gradle file was in an unexpected format and so couldn't be updated automatically.
@@ -143,7 +143,7 @@ export async function enableReactNativeMappings (
         logger
       )
     }
-  } catch (e) {
+  } catch (e: any) {
     if (e.message === 'Pattern not found') {
       logger.warn(
         `The gradle file was in an unexpected format and so couldn't be updated automatically.
@@ -196,7 +196,7 @@ async function addUploadEndpoint (appBuildGradlePath: string, uploadEndpoint: st
       UPLOAD_ENDPOINT_REGEX,
       logger
     )
-  } catch (e) {
+  } catch (e: any) {
     if (e.message === 'Pattern not found') {
       logger.warn(
         `The gradle file was in an unexpected format and so couldn't be updated automatically.
@@ -237,7 +237,7 @@ async function addBuildEndpoint (appBuildGradlePath: string, buildEndpoint: stri
       BUILD_ENDPOINT_REGEX,
       logger
     )
-  } catch (e) {
+  } catch (e: any) {
     if (e.message === 'Pattern not found') {
       logger.warn(
         `The gradle file was in an unexpected format and so couldn't be updated automatically.
