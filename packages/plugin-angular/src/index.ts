@@ -1,15 +1,16 @@
 import { ErrorHandler, Injectable } from '@angular/core'
 import Bugsnag, { Client, Plugin } from '@bugsnag/js'
 
-// That's the `global.Zone` exposed when the `zone.js` package is used.
+// angular uses zones to watch for changes in asynchronous tasks so it can
+// update the UI in response
+// Bugsnag uses a lot of asynchronous tasks when notifying, which trigger change
+// detection multiple times. This causes a potential performance problem, so we
+// need to run `notify` outside of the current zone if zones are being used
+// see https://angular.io/guide/zone
 declare const Zone: any
 
-// There're 2 types of Angular applications:
-// 1) zone-full (by default)
-// 2) zone-less
-// The developer can avoid importing the `zone.js` package and tells Angular that
-// he is responsible for running the change detection by himself. This is done by
-// "nooping" the zone through `CompilerOptions` when bootstrapping the root module.
+// zones are optional, so we need to detect if they are being used
+// see https://angular.io/guide/zone#noopzone
 const isNgZoneEnabled = typeof Zone !== 'undefined' && !!Zone.current
 
 @Injectable()
@@ -57,16 +58,12 @@ const plugin: Plugin = {
 
     client._notify = function (event) {
       if (isNgZoneEnabled) {
-        // The `Zone.root.run` basically will run all asynchronous tasks in the most parent zone.
-        // The Angular's zone is forked from the `Zone.root`. In this case, `zone.js` won't
-        // trigger change detection, and `ApplicationRef.tick()` will not be run.
-        // Caretaker note: we're using `Zone.root` as opposed to `NgZone.runOutsideAngular` since this
-        // will require injecting the `NgZone` facade. That will create a breaking change for
-        // projects already using the `BugsnagErrorHandler`.
+        // run notify in the root zone to avoid triggering change detection
         Zone.root.run(() => {
           originalNotify(event)
         })
       } else {
+        // if zones are not enabled, change detection will not run anyway
         originalNotify(event)
       }
     }
