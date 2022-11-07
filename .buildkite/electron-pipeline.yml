@@ -18,7 +18,7 @@ steps:
         commands:
           - npm install electron@${ELECTRON_VERSION} --no-audit --progress=false --no-save
           - npm install --no-audit --progress=false
-          - npx lerna bootstrap
+          - npx lerna bootstrap --no-ci
           - npm run build:electron
           - defaults write com.apple.CrashReporter DialogType none
           - npm run test:unit:electron-runner
@@ -37,7 +37,7 @@ steps:
         commands:
           - npm install electron@${ELECTRON_VERSION} --no-audit --progress=false --no-save
           - npm install --no-audit --progress=false
-          - npx lerna bootstrap
+          - npx lerna bootstrap --no-ci
           - npm run build:electron
           - defaults write com.apple.CrashReporter DialogType none
           - npm run test:unit:electron-runner
