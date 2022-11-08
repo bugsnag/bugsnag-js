@@ -57,15 +57,15 @@ const plugin: Plugin = {
     const originalNotify = client._notify
 
     client._notify = function () {
-      const notifyArguments = arguments
+      const originalArguments = arguments as any
       if (isNgZoneEnabled) {
         // run notify in the root zone to avoid triggering change detection
         Zone.root.run(() => {
-          originalNotify(notifyArguments)
+          originalNotify(originalArguments)
         })
       } else {
         // if zones are not enabled, change detection will not run anyway
-        originalNotify(notifyArguments)
+        originalNotify(originalArguments)
       }
     }
 
