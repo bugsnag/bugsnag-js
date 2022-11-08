@@ -25,7 +25,7 @@ var app = express()
 
 function sendLog(body) {
   const postData = JSON.stringify(body)
-  const logUrl = new URL(process.env.BUGSNAG_LOG_ENDPOINT)
+  const logUrl = new URL(process.env.BUGSNAG_LOGS_ENDPOINT)
   const options = {
     hostname: logUrl.hostname,
     path: logUrl.pathname,

@@ -4,9 +4,9 @@ Background:
   Given I store the api key in the environment variable "BUGSNAG_API_KEY"
   And I store the notify endpoint in the environment variable "BUGSNAG_NOTIFY_ENDPOINT"
   And I store the sessions endpoint in the environment variable "BUGSNAG_SESSIONS_ENDPOINT"
-  And I store the logs endpoint in the environment variable "BUGSNAG_LOG_ENDPOINT"
+  And I store the logs endpoint in the environment variable "BUGSNAG_LOGS_ENDPOINT"
 
-Scenario: adding feature flags for an unhandled error
+Scenario: Delivery for an oversized error is not retried
   Given I start the service "express"
   And I wait for the host "express" to open port "80"
   And I set the HTTP status code for the next "POST" request to 400
