@@ -193,6 +193,7 @@ steps:
             command:
               - --farm=bs
               - --browser=ie_10
+              - --capabilities={"browserstack.consoleLogs":"error"}
         concurrency: 2
         concurrency_group: "browserstack"
 

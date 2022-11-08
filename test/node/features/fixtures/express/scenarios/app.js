@@ -2,6 +2,7 @@ var Bugsnag = require('@bugsnag/node')
 var bugsnagExpress = require('@bugsnag/plugin-express')
 var express = require('express')
 var bodyParser = require('body-parser')
+var http = require('node:http')
 
 Bugsnag.start({
   apiKey: process.env.BUGSNAG_API_KEY,
@@ -21,6 +22,29 @@ Bugsnag.start({
 var middleware = Bugsnag.getPlugin('express')
 
 var app = express()
+
+function sendLog(body) {
+  const postData = JSON.stringify(body)
+  const logUrl = new URL(process.env.BUGSNAG_LOG_ENDPOINT)
+  const options = {
+    hostname: logUrl.hostname,
+    path: logUrl.pathname,
+    port: logUrl.port,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }
+
+  const req = http.request(options, (res) => {
+    res.on('end', () => {
+      console.log('Send complete')
+    })
+
+    req.write(postData)
+    req.end()
+  })
+}
 
 app.use(middleware.requestHandler)
 
@@ -68,6 +92,15 @@ app.get('/string-as-error', function (req, res, next) {
 
 app.get('/throw-non-error', function (req, res, next) {
   throw 1 // eslint-disable-line
+})
+
+app.get('/oversized', function (req, res, next) {
+  req.bugsnag.notify(new Error('handled', null, function (err, event) {
+    sendLog({
+      "response": "Notify complete"
+    })
+  }));
+  res.end('OK')
 })
 
 app.get('/handled', function (req, res, next) {
