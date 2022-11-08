@@ -33,7 +33,13 @@
       Bugsnag.leaveBreadcrumb('big thing', big);
       Bugsnag.notify(new Error('big things'), null, function (err, event) {
         var LOGS = decodeURIComponent(window.location.search.match(/LOGS=([^&]+)/)[1])
-        const xhr = new XMLHttpRequest();
+        var xhr;
+        if (typeof window.XMLHttpRequest === 'function') {
+            xhr  = new XMLHttpRequest();
+        }
+        else {
+            xhr = new ActiveXObject("Microsoft.XMLHTTP");
+        }
         xhr.open("POST", LOGS);
         xhr.setRequestHeader('Content-Type', 'application/json')
 
