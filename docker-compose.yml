@@ -206,6 +206,7 @@ services:
       - REACT_NATIVE_VERSION
       - MAVEN_REPO_URL
       - MAVEN_REPO_CREDS
+      - NOTIFIER_VERSION
     networks:
       default:
         aliases:
