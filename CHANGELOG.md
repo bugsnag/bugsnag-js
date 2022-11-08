@@ -1,5 +1,11 @@
 # Changelog
 
+## TBD
+
+### Enhancements
+
+- (react-native) Update bugsnag-android from v5.28.1 to [v5.28.2](https://github.com/bugsnag/bugsnag-android/blob/master/CHANGELOG.md#5282-2022-11-08)
+
 ## v7.18.2 (2022-11-01)
 
 ### Changed
