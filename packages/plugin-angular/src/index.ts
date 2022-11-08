@@ -56,15 +56,16 @@ const plugin: Plugin = {
   load: (client: Client): ErrorHandler => {
     const originalNotify = client._notify
 
-    client._notify = function (event) {
+    client._notify = function () {
+      const notifyArguments = arguments
       if (isNgZoneEnabled) {
         // run notify in the root zone to avoid triggering change detection
         Zone.root.run(() => {
-          originalNotify(event)
+          originalNotify(notifyArguments)
         })
       } else {
         // if zones are not enabled, change detection will not run anyway
-        originalNotify(event)
+        originalNotify(notifyArguments)
       }
     }
 
