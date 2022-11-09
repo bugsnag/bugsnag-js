@@ -1,5 +1,6 @@
 Feature: Delivery of errors
 
+  @skip_ie_10
   Scenario: Delivery is attempted oversized payloads
     When I navigate to the test URL "/delivery/script/a.html"
     And I set the HTTP status code for the next "POST" request to 400

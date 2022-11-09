@@ -6,6 +6,7 @@ Background:
   And I store the sessions endpoint in the environment variable "BUGSNAG_SESSIONS_ENDPOINT"
   And I store the logs endpoint in the environment variable "BUGSNAG_LOGS_ENDPOINT"
 
+@skip
 Scenario: Delivery for an oversized error is not retried
   Given I start the service "express"
   And I wait for the host "express" to open port "80"
