@@ -11,19 +11,19 @@ steps:
       DEVELOPER_DIR: "/Applications/Xcode12.app"
       NODE_VERSION: "{{matrix.node_version}}"
       ELECTRON_VERSION: "{{matrix.electron_version}}"
-      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
-      START_LOCAL_NPM: 1
-      VERBOSE: 1
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
+      START_LOCAL_NPM: "1"
+      VERBOSE: "1"
     matrix:
       setup:
         electron_version:
-          - "12.0.0"
-          - "20.0.0"
+          - "^12.0.0"
+          - "^20.0.0"
         node_version:
           - "12"
           - "14"
     commands:
-      - node -v
+      - echo "Running on Node `node -v`"
       - npm install electron@${ELECTRON_VERSION} --no-audit --progress=false --no-save
       - npm ci --no-audit --progress=false
       - npx lerna bootstrap
