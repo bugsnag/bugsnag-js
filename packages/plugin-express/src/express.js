@@ -46,7 +46,8 @@ module.exports = {
         }
       })
 
-      return dom.run(next)
+      // probably should check if clientContext is set first
+      client._clientContext.run(requestClient, () => dom.run(next))
     }
 
     const errorHandler = (err, req, res, next) => {

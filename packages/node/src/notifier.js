@@ -2,6 +2,8 @@ const name = 'Bugsnag Node'
 const version = '__VERSION__'
 const url = 'https://github.com/bugsnag/bugsnag-js'
 
+const { AsyncLocalStorage } = require('node:async_hooks')
+
 const Client = require('@bugsnag/core/client')
 const Event = require('@bugsnag/core/event')
 const Session = require('@bugsnag/core/session')
@@ -43,6 +45,8 @@ const internalPlugins = [
   pluginStackframePathNormaliser
 ]
 
+const clientContext = new AsyncLocalStorage()
+
 const Bugsnag = {
   _client: null,
   createClient: (opts) => {
@@ -52,15 +56,22 @@ const Bugsnag = {
 
     const bugsnag = new Client(opts, schema, internalPlugins, { name, version, url })
 
+    // probably need to make sure this is also referenced in clones
+    // but not sure how to do that yet since clone is in core and this
+    // is node-specific
+    bugsnag._clientContext = clientContext
+
     bugsnag._setDelivery(delivery)
 
     bugsnag._logger.debug('Loaded!')
 
-    bugsnag.leaveBreadcrumb = function () {
-      bugsnag._logger.warn('Breadcrumbs are not supported in Node.js yet')
-    }
+    // bugsnag.leaveBreadcrumb = function () {
+    //   bugsnag._logger.warn('Breadcrumbs are not supported in Node.js yet')
+    // }
 
-    bugsnag._config.enabledBreadcrumbTypes = []
+    // needs to be null.
+    // if left undefined we end up in a nasty crash loop
+    bugsnag._config.enabledBreadcrumbTypes = null
 
     return bugsnag
   },
@@ -80,10 +91,15 @@ const Bugsnag = {
 Object.keys(Client.prototype).forEach((m) => {
   if (/^_/.test(m)) return
   Bugsnag[m] = function () {
-    if (!Bugsnag._client) return console.error(`Bugsnag.${m}() was called before Bugsnag.start()`)
-    Bugsnag._client._depth += 1
-    const ret = Bugsnag._client[m].apply(Bugsnag._client, arguments)
-    Bugsnag._client._depth -= 1
+    // if we are in an async context, use the client from that context
+    const client = clientContext.getStore() || Bugsnag._client
+
+    if (!client) return console.error(`Bugsnag.${m}() was called before Bugsnag.start()`)
+
+    client._depth += 1
+    const ret = client[m].apply(client, arguments)
+    client._depth -= 1
+
     return ret
   }
 })
