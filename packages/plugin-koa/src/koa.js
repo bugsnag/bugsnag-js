@@ -1,3 +1,5 @@
+/* eslint node/no-deprecated-api: [error, {ignoreModuleItems: ["domain"]}] */
+const domain = require('domain')
 const clone = require('@bugsnag/core/lib/clone-client')
 const extractRequestInfo = require('./request-info')
 
@@ -14,6 +16,8 @@ module.exports = {
   name: 'koa',
   load: client => {
     const requestHandler = async (ctx, next) => {
+      const dom = domain.create()
+
       // Get a client to be scoped to this request. If sessions are enabled, use the
       // resumeSession() call to get a session client, otherwise, clone the existing client.
       const requestClient = client._config.autoTrackSessions ? client.resumeSession() : clone(client)
@@ -27,7 +31,21 @@ module.exports = {
         event.addMetadata('request', metadata)
       }, true)
 
+      // unhandled errors caused by this request
+      dom.on('error', (err) => {
+        const event = client.Event.create(err, false, handledState, 'koa middleware', 1)
+        ctx.bugsnag._notify(event, () => {}, (e, event) => {
+          if (e) client._logger.error('Failed to send event to Bugsnag')
+          ctx.bugsnag._config.onUncaughtException(err, event, client._logger)
+        })
+        if (!ctx.response.headersSent) {
+          ctx.response.status = 500
+        }
+      })
+
+      dom.enter()
       await next()
+      dom.exit()
     }
 
     requestHandler.v1 = function * (next) {
