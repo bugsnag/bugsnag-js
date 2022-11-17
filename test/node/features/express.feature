@@ -33,6 +33,9 @@ Scenario: an asynchronous thrown error in a route
   And the exception "message" equals "async"
   And the exception "type" equals "nodejs"
   And the "file" of stack frame 0 equals "scenarios/app.js"
+  And the event "request.url" equals "http://express/async"
+  And the event "request.httpMethod" equals "GET"
+  And the event "request.clientIp" is not null
 
 Scenario: an error passed to next(err)
   Then I open the URL "http://express/next"
@@ -45,6 +48,9 @@ Scenario: an error passed to next(err)
   And the exception "message" equals "next"
   And the exception "type" equals "nodejs"
   And the "file" of stack frame 0 equals "scenarios/app.js"
+  And the event "request.url" equals "http://express/next"
+  And the event "request.httpMethod" equals "GET"
+  And the event "request.clientIp" is not null
 
 Scenario: a synchronous promise rejection in a route
   Then I open the URL "http://express/rejection-sync"
@@ -57,6 +63,9 @@ Scenario: a synchronous promise rejection in a route
   And the exception "message" equals "reject sync"
   And the exception "type" equals "nodejs"
   And the "file" of stack frame 0 equals "scenarios/app.js"
+  And the event "request.url" equals "http://express/rejection-sync"
+  And the event "request.httpMethod" equals "GET"
+  And the event "request.clientIp" is not null
 
 Scenario: an asynchronous promise rejection in a route
   Then I open the URL "http://express/rejection-async"
@@ -69,6 +78,9 @@ Scenario: an asynchronous promise rejection in a route
   And the exception "message" equals "reject async"
   And the exception "type" equals "nodejs"
   And the "file" of stack frame 0 equals "scenarios/app.js"
+  And the event "request.url" equals "http://express/rejection-async"
+  And the event "request.httpMethod" equals "GET"
+  And the event "request.clientIp" is not null
 
 Scenario: a string passed to next(err)
   Then I open the URL "http://express/string-as-error"
@@ -80,6 +92,9 @@ Scenario: a string passed to next(err)
   And the exception "errorClass" equals "InvalidError"
   And the exception "message" matches "^express middleware received a non-error\."
   And the exception "type" equals "nodejs"
+  And the event "request.url" equals "http://express/string-as-error"
+  And the event "request.httpMethod" equals "GET"
+  And the event "request.clientIp" is not null
 
 Scenario: throwing non-Error error
   Then I open the URL "http://express/throw-non-error"
@@ -91,6 +106,9 @@ Scenario: throwing non-Error error
   And the exception "errorClass" equals "InvalidError"
   And the exception "message" matches "^express middleware received a non-error\."
   And the exception "type" equals "nodejs"
+  And the event "request.url" equals "http://express/throw-non-error"
+  And the event "request.httpMethod" equals "GET"
+  And the event "request.clientIp" is not null
 
 Scenario: a handled error passed to req.bugsnag.notify()
   Then I open the URL "http://express/handled"

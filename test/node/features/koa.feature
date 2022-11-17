@@ -25,8 +25,8 @@ Scenario: a synchronous thrown error in a route
   And the event "metaData.error_handler.before" is true
   And the event "metaData.error_handler.after" is null
 
-Scenario: an asynchronous thrown error in a route
-  Then I open the URL "http://koa/async-err" and get a 500 response
+Scenario: a promise rejection in a route
+  Then I open the URL "http://koa/promise-rejection" and get a 500 response
   And I wait to receive an error
   Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is true
@@ -120,3 +120,33 @@ Scenario: adding body to request metadata
   And the event "request.httpVersion" equals "1.1"
   And the event "metaData.error_handler.before" is true
   And the event "metaData.error_handler.after" is null
+
+Scenario: a thrown error in an async callback
+  Then I open the URL "http://koa/throw-async-callback" and get a 200 response
+  And I wait to receive an error
+  Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
+  And the event "unhandled" is true
+  And the event "severity" equals "error"
+  And the event "severityReason.type" equals "unhandledException"
+  And the exception "errorClass" equals "Error"
+  And the exception "message" equals "error in async callback"
+  And the event "request.url" equals "http://koa/throw-async-callback"
+  And the event "request.httpMethod" equals "GET"
+
+Scenario: a handled promise rejection in an async callback
+  Then I open the URL "http://koa/reject-async-callback" and get a 200 response
+  And I wait to receive an error
+  Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
+  And the event "unhandled" is true
+  And the event "severity" equals "error"
+  And the event "severityReason.type" equals "unhandledException"
+  And the exception "errorClass" equals "Error"
+
+Scenario: an unhandled promise rejection in an async callback
+  Then I open the URL "http://koa/unhandled-reject-async-callback" and get a 200 response
+  And I wait to receive an error
+  Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
+  And the event "unhandled" is true
+  And the event "severity" equals "error"
+  And the event "severityReason.type" equals "unhandledException"
+  And the exception "errorClass" equals "Error"
