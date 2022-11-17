@@ -104,7 +104,7 @@ services:
       context: .
       dockerfile: dockerfiles/Dockerfile.node
       target: node-maze-runner
-    command: --fail-fast --retry 2
+    command: --fail-fast --retry 2 --verbose
     environment:
       BUILDKITE:
       BUILDKITE_BRANCH:
