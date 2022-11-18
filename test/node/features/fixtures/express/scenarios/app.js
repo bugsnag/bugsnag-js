@@ -2,7 +2,13 @@ var Bugsnag = require('@bugsnag/node')
 var bugsnagExpress = require('@bugsnag/plugin-express')
 var express = require('express')
 var bodyParser = require('body-parser')
-var http = require('node:http')
+
+var node_version = process.version.match(/^v(\d+\.\d+)/)[1]
+if (parseFloat(node_version) > 12) {
+  var http = require('node:http')
+} else {
+  var http = require('http')
+}
 
 Bugsnag.start({
   apiKey: process.env.BUGSNAG_API_KEY,
