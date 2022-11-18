@@ -62,9 +62,9 @@ app.use(async (ctx, next) => {
       throw new Error('error in async callback')
     }, 100)
     ctx.body = 'ok'
-  } else if (ctx.path === '/unhandled-reject-async-callback') {
+  } else if (ctx.path === '/unhandled-rejection-async-callback') {
     setTimeout(function () {
-      Promise.reject(new Error('unhandled reject in async callback'))
+      Promise.reject(new Error('unhandled rejection in async callback'))
     }, 100)
     ctx.body = 'ok'
   } else {

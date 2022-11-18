@@ -1,4 +1,3 @@
-const domain = require('domain') // eslint-disable-line
 const extractRequestInfo = require('./request-info')
 const clone = require('@bugsnag/core/lib/clone-client')
 const handledState = {
@@ -14,8 +13,6 @@ module.exports = {
   name: 'restify',
   load: client => {
     const requestHandler = (req, res, next) => {
-      const dom = domain.create()
-
       // Get a client to be scoped to this request. If sessions are enabled, use the
       // resumeSession() call to get a session client, otherwise, clone the existing client.
       const requestClient = client._config.autoTrackSessions ? client.resumeSession() : clone(client)
@@ -32,24 +29,11 @@ module.exports = {
 
       if (!client._config.autoDetectErrors) return next()
 
-      // unhandled errors caused by this request
-      dom.on('error', (err) => {
-        const event = client.Event.create(err, false, handledState, 'restify middleware', 1)
-        req.bugsnag._notify(event, () => {}, (e, event) => {
-          if (e) client._logger.error('Failed to send event to Bugsnag')
-          req.bugsnag._config.onUncaughtException(err, event, client._logger)
-        })
-        if (!res.headersSent) {
-          const body = 'Internal server error'
-          res.writeHead(500, {
-            'Content-Length': Buffer.byteLength(body),
-            'Content-Type': 'text/plain'
-          })
-          res.end(body)
-        }
-      })
-
-      return dom.run(next)
+      if (client._clientContext) {
+        client._clientContext.run(requestClient, () => next())
+      } else {
+        next()
+      }
     }
 
     const errorHandler = (req, res, err, cb) => {

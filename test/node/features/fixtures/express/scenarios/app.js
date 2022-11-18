@@ -62,6 +62,13 @@ app.get('/rejection-async', function (req, res, next) {
   }, 100)
 })
 
+app.get('/unhandled-rejection-async-callback', function (req, res, next) {
+  setTimeout(function () {
+    Promise.reject(new Error('unhandled rejection in async callback'))
+  }, 100)
+  res.end('OK')
+})
+
 app.get('/string-as-error', function (req, res, next) {
   next('errrr')
 })
@@ -106,6 +113,16 @@ app.post('/features/handled', bodyParser.urlencoded(), function (req, res, next)
 
   req.bugsnag.notify(new Error('oh no'))
   res.end('OK')
+})
+
+app.get('/breadcrumbs_a', function (req, res) {
+  Bugsnag.leaveBreadcrumb('For the first URL')
+  throw new Error('Error in /breadcrumbs_a')
+})
+
+app.get('/breadcrumbs_b', function (req, res) {
+  Bugsnag.leaveBreadcrumb('For the second URL')
+  throw new Error('Error in /breadcrumbs_b')
 })
 
 app.use(middleware.errorHandler)

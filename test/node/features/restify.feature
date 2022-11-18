@@ -33,6 +33,9 @@ Scenario: an asynchronous thrown error in a route
   And the exception "message" equals "async"
   And the exception "type" equals "nodejs"
   And the "file" of stack frame 0 equals "scenarios/app.js"
+  And the event "request.url" equals "http://restify/async"
+  And the event "request.httpMethod" equals "GET"
+  And the event "request.clientIp" is not null
 
 Scenario: an error passed to next(err)
   Then I open the URL "http://restify/next"
@@ -45,6 +48,9 @@ Scenario: an error passed to next(err)
   And the exception "message" equals "next"
   And the exception "type" equals "nodejs"
   And the "file" of stack frame 0 equals "scenarios/app.js"
+  And the event "request.url" equals "http://restify/next"
+  And the event "request.httpMethod" equals "GET"
+  And the event "request.clientIp" is not null
 
 Scenario: throwing non-Error error
   Then I open the URL "http://restify/throw-non-error"
@@ -56,6 +62,9 @@ Scenario: throwing non-Error error
   And the exception "errorClass" equals "InvalidError"
   And the exception "message" matches "^restify middleware received a non-error\."
   And the exception "type" equals "nodejs"
+  And the event "request.url" equals "http://restify/throw-non-error"
+  And the event "request.httpMethod" equals "GET"
+  And the event "request.clientIp" is not null
 
 Scenario: an explicit 404
   When I open the URL "http://restify/not-found"
@@ -63,6 +72,9 @@ Scenario: an explicit 404
   Then the session is valid for the session reporting API version "1" for the "Bugsnag Node" notifier
   And the session payload has a valid sessions array
   And the sessionCount "sessionsStarted" equals 1
+  And the event "request.url" equals "http://restify/not-found"
+  And the event "request.httpMethod" equals "GET"
+  And the event "request.clientIp" is not null
 
 Scenario: an explicit internal server error
   Then I open the URL "http://restify/internal"
@@ -75,6 +87,9 @@ Scenario: an explicit internal server error
   And the exception "message" equals "oh noes!"
   And the exception "type" equals "nodejs"
   And the "file" of stack frame 0 equals "scenarios/app.js"
+  And the event "request.url" equals "http://restify/internal"
+  And the event "request.httpMethod" equals "GET"
+  And the event "request.clientIp" is not null
 
 Scenario: a handled error passed to req.bugsnag.notify()
   Then I open the URL "http://restify/handled"
@@ -89,6 +104,18 @@ Scenario: a handled error passed to req.bugsnag.notify()
   And the event "request.url" equals "http://restify/handled"
   And the event "request.httpMethod" equals "GET"
   And the event "request.clientIp" is not null
+
+Scenario: an unhandled promise rejection in an async callback
+  Then I open the URL "http://restify/unhandled-reject-async-callback" and get a 200 response
+  And I wait to receive an error
+  Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
+  And the event "unhandled" is true
+  And the event "severity" equals "error"
+  And the event "severityReason.type" equals "unhandledPromiseRejection"
+  And the exception "errorClass" equals "Error"
+  And the exception "message" equals "unhandled reject in async callback"
+  And the event "request.url" equals "http://restify/unhandled-reject-async-callback"
+  And the event "request.httpMethod" equals "GET"
 
 Scenario: adding body to request metadata
   When I POST the data "data=in_request_body" to the URL "http://restify/bodytest"
