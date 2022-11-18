@@ -99,7 +99,6 @@ services:
     environment:
       - BUGSNAG_API_KEY
       - BUGSNAG_NOTIFY_ENDPOINT
-      - BUGSNAG_LOGS_ENDPOINT
       - BUGSNAG_SESSIONS_ENDPOINT
     networks:
       default:

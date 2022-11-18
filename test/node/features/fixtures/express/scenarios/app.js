@@ -3,13 +3,6 @@ var bugsnagExpress = require('@bugsnag/plugin-express')
 var express = require('express')
 var bodyParser = require('body-parser')
 
-var node_version = process.version.match(/^v(\d+\.\d+)/)[1]
-if (parseFloat(node_version) > 12) {
-  var http = require('node:http')
-} else {
-  var http = require('http')
-}
-
 Bugsnag.start({
   apiKey: process.env.BUGSNAG_API_KEY,
   endpoints: {
@@ -28,28 +21,6 @@ Bugsnag.start({
 var middleware = Bugsnag.getPlugin('express')
 
 var app = express()
-
-function sendLog(body) {
-  const postData = JSON.stringify(body)
-  const logUrl = new URL(process.env.BUGSNAG_LOGS_ENDPOINT)
-  const options = {
-    hostname: logUrl.hostname,
-    path: logUrl.pathname,
-    port: logUrl.port,
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  }
-
-  const req = http.request(options, (res) => {
-    res.on('end', () => {
-      console.log('Send complete')
-    })
-  })
-  req.write(postData)
-  req.end()
-}
 
 app.use(middleware.requestHandler)
 
@@ -97,32 +68,6 @@ app.get('/string-as-error', function (req, res, next) {
 
 app.get('/throw-non-error', function (req, res, next) {
   throw 1 // eslint-disable-line
-})
-
-app.get('/oversized', function (req, res, next) {
-  function repeat(s, n){
-    var a = [];
-    while(a.length < n){
-        a.push(s);
-    }
-    return a.join('');
-  }
-
-  var big = {};
-  var i = 0;
-  while (JSON.stringify(big).length < 5*10e5) {
-    big['entry'+i] = repeat('long repetitive string', 1000);
-    i++;
-  }
-  req.bugsnag.addMetadata('big data', big)
-  req.bugsnag.notify(new Error('oversized'), null, function (err, event) {
-    setTimeout(() => {
-      sendLog({
-        "response": "Notify complete"
-      })
-    }, 1000)
-  });
-  res.end('OK')
 })
 
 app.get('/handled', function (req, res, next) {
