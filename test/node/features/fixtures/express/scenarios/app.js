@@ -43,16 +43,10 @@ function sendLog(body) {
   }
 
   console.log(options)
+  const req = http.request(options)
+  req.write(postData)
+  req.end()
 }
-
-//   const req = http.request(options, (res) => {
-//     res.on('end', () => {
-//       console.log('Send complete')
-//     })
-//   })
-//   req.write(postData)
-//   req.end()
-// }
 
 app.use(middleware.requestHandler)
 
