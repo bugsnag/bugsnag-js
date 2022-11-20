@@ -99,31 +99,31 @@ app.get('/throw-non-error', function (req, res, next) {
   throw 1 // eslint-disable-line
 })
 
-// app.get('/oversized', function (req, res, next) {
-//   function repeat(s, n){
-//     var a = [];
-//     while(a.length < n){
-//         a.push(s);
-//     }
-//     return a.join('');
-//   }
+app.get('/oversized', function (req, res, next) {
+  function repeat(s, n){
+    var a = [];
+    while(a.length < n){
+        a.push(s);
+    }
+    return a.join('');
+  }
 
-//   var big = {};
-//   var i = 0;
-//   while (JSON.stringify(big).length < 5*10e5) {
-//     big['entry'+i] = repeat('long repetitive string', 1000);
-//     i++;
-//   }
-//   req.bugsnag.addMetadata('big data', big)
-//   req.bugsnag.notify(new Error('oversized'), null, function (err, event) {
-//     setTimeout(() => {
-//       sendLog({
-//         "response": "Notify complete"
-//       })
-//     }, 1000)
-//   });
-//   res.end('OK')
-// })
+  var big = {};
+  var i = 0;
+  while (JSON.stringify(big).length < 5*10e5) {
+    big['entry'+i] = repeat('long repetitive string', 1000);
+    i++;
+  }
+  req.bugsnag.addMetadata('big data', big)
+  req.bugsnag.notify(new Error('oversized'), null, function (err, event) {
+    setTimeout(() => {
+      // sendLog({
+      //   "response": "Notify complete"
+      // })
+    }, 1000)
+  });
+  res.end('OK')
+})
 
 app.get('/handled', function (req, res, next) {
   req.bugsnag.notify(new Error('handled'))
