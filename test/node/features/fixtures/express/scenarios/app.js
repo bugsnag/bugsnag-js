@@ -30,19 +30,20 @@ var middleware = Bugsnag.getPlugin('express')
 var app = express()
 
 function sendLog(body) {
+  const postData = JSON.stringify(body)
+  const logUrl = new URL(process.env.BUGSNAG_LOGS_ENDPOINT)
+  const options = {
+    hostname: logUrl.hostname,
+    path: logUrl.pathname,
+    port: logUrl.port,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }
 
+  console.log(options)
 }
-//   const postData = JSON.stringify(body)
-//   const logUrl = new URL(process.env.BUGSNAG_LOGS_ENDPOINT)
-//   const options = {
-//     hostname: logUrl.hostname,
-//     path: logUrl.pathname,
-//     port: logUrl.port,
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/json'
-//     }
-//   }
 
 //   const req = http.request(options, (res) => {
 //     res.on('end', () => {
