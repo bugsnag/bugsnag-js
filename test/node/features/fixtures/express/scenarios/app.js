@@ -4,7 +4,7 @@ var express = require('express')
 var bodyParser = require('body-parser')
 
 var node_version = process.version.match(/^v(\d+\.\d+)/)[1]
-if (parseFloat(node_version) > 12) {
+if (parseFloat(node_version) > 14) {
   var http = require('node:http')
 } else {
   var http = require('http')
@@ -29,7 +29,9 @@ var middleware = Bugsnag.getPlugin('express')
 
 var app = express()
 
-// function sendLog(body) {
+function sendLog(body) {
+
+}
 //   const postData = JSON.stringify(body)
 //   const logUrl = new URL(process.env.BUGSNAG_LOGS_ENDPOINT)
 //   const options = {
@@ -117,9 +119,9 @@ app.get('/oversized', function (req, res, next) {
   req.bugsnag.addMetadata('big data', big)
   req.bugsnag.notify(new Error('oversized'), null, function (err, event) {
     setTimeout(() => {
-      // sendLog({
-      //   "response": "Notify complete"
-      // })
+      sendLog({
+        "response": "Notify complete"
+      })
     }, 1000)
   });
   res.end('OK')
