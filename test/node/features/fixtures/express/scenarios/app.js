@@ -4,7 +4,7 @@ var express = require('express')
 var bodyParser = require('body-parser')
 
 var node_version = process.version.match(/^v(\d+\.\d+)/)[1]
-if (parseFloat(node_version) > 12) {
+if (parseFloat(node_version) > 14) {
   var http = require('node:http')
 } else {
   var http = require('http')
@@ -42,13 +42,10 @@ function sendLog(body) {
     }
   }
 
-  const req = http.request(options, (res) => {
-    res.on('end', () => {
-      console.log('Send complete')
-    })
-  })
+  const req = http.request(options)
   req.write(postData)
   req.end()
+  console.log('Log delivered')
 }
 
 app.use(middleware.requestHandler)
