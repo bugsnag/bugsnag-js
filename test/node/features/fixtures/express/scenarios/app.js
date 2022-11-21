@@ -112,13 +112,14 @@ app.get('/oversized', function (req, res, next) {
   //   i++;
   // }
   // req.bugsnag.addMetadata('big data', big)
-  req.bugsnag.notify(new Error('oversized'), null, function (err, event) {
-    setTimeout(() => {
-      sendLog({
-        "response": "Notify complete"
-      })
-    }, 1000)
-  });
+  req.bugsnag.notify(new Error('oversized'))
+  // , null, function (err, event) {
+  //   setTimeout(() => {
+  //     sendLog({
+  //       "response": "Notify complete"
+  //     })
+  //   }, 1000)
+  // });
   res.end('OK')
 })
 
