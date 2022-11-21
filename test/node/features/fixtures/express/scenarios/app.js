@@ -13,7 +13,7 @@ if (parseFloat(node_version) > 14) {
 if (parseFloat(node_version) > 12) {
   var url = URL
 } else {
-  var url = require('url').url
+  var url = require('url').Url
 }
 
 Bugsnag.start({
