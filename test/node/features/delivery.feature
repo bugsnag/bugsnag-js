@@ -10,7 +10,7 @@ Scenario: Delivery for an oversized error is not retried
   Given I start the service "express"
   And I wait for the host "express" to open port "80"
   And I set the HTTP status code for the next "POST" request to 400
-  When I open the URL "http://express/features/oversized"
+  When I open the URL "http://express/oversized"
   And I wait for 5 seconds
   Then I wait to receive an error
 
