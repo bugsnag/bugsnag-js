@@ -97,21 +97,21 @@ app.get('/throw-non-error', function (req, res, next) {
 })
 
 app.get('/oversized', function (req, res, next) {
-  function repeat(s, n){
-    var a = [];
-    while(a.length < n){
-        a.push(s);
-    }
-    return a.join('');
-  }
+  // function repeat(s, n){
+  //   var a = [];
+  //   while(a.length < n){
+  //       a.push(s);
+  //   }
+  //   return a.join('');
+  // }
 
-  var big = {};
-  var i = 0;
-  while (JSON.stringify(big).length < 5*10e5) {
-    big['entry'+i] = repeat('long repetitive string', 1000);
-    i++;
-  }
-  req.bugsnag.addMetadata('big data', big)
+  // var big = {};
+  // var i = 0;
+  // while (JSON.stringify(big).length < 5*10e5) {
+  //   big['entry'+i] = repeat('long repetitive string', 1000);
+  //   i++;
+  // }
+  // req.bugsnag.addMetadata('big data', big)
   req.bugsnag.notify(new Error('oversized'), null, function (err, event) {
     setTimeout(() => {
       sendLog({
