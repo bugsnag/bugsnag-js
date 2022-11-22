@@ -78,3 +78,23 @@ steps:
             use-aliases: true
         env:
           NODE_VERSION: "14"
+
+      - label: ":node: Node 16"
+        depends_on: "node-maze-runner-image"
+        timeout_in_minutes: 30
+        plugins:
+          docker-compose#v3.9.0:
+            run: node-maze-runner
+            use-aliases: true
+        env:
+          NODE_VERSION: "16"
+
+      - label: ":node: Node 18"
+        depends_on: "node-maze-runner-image"
+        timeout_in_minutes: 30
+        plugins:
+          docker-compose#v3.9.0:
+            run: node-maze-runner
+            use-aliases: true
+        env:
+          NODE_VERSION: "18"
