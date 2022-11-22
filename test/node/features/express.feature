@@ -124,7 +124,8 @@ Scenario: a handled error passed to req.bugsnag.notify()
   And the event "request.httpMethod" equals "GET"
   And the event "request.clientIp" is not null
 
-Scenario: an unhandled promise rejection in an async callback
+@skip_before_node_16
+Scenario: an unhandled promise rejection in an async callback (with request context)
   Then I open the URL "http://express/unhandled-rejection-async-callback" and get a 200 response
   And I wait to receive an error
   Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
@@ -135,7 +136,17 @@ Scenario: an unhandled promise rejection in an async callback
   And the exception "message" equals "unhandled rejection in async callback"
   And the event "request.url" equals "http://express/unhandled-rejection-async-callback"
   And the event "request.httpMethod" equals "GET"
-  
+
+Scenario: an unhandled promise rejection in an async callback (without request context)
+  Then I open the URL "http://express/unhandled-rejection-async-callback" and get a 200 response
+  And I wait to receive an error
+  Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
+  And the event "unhandled" is true
+  And the event "severity" equals "error"
+  And the event "severityReason.type" equals "unhandledPromiseRejection"
+  And the exception "errorClass" equals "Error"
+  And the exception "message" equals "unhandled rejection in async callback"
+
 Scenario: adding body to request metadata
   When I POST the data "data=in_request_body" to the URL "http://express/bodytest"
   And I wait to receive an error
@@ -153,7 +164,7 @@ Scenario: Breadcrumbs from one request do not appear in another
   When I open the URL "http://express/breadcrumbs_a"
   And I wait to receive an error
   Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
-  And the event has a "manual" breadcrumb with message "For the first URL"
+  And the event has a "manual" breadcrumb named "For the first URL"
   And the event "request.url" equals "http://express/breadcrumbs_a"
   And the event "request.httpMethod" equals "GET"
   And the event "request.clientIp" is not null
@@ -162,8 +173,8 @@ Scenario: Breadcrumbs from one request do not appear in another
   And I open the URL "http://express/breadcrumbs_b"
   And I wait to receive an error
   Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
-  And the event has a "manual" breadcrumb with message "For the second URL"
-  And the event does not have a "manual" breadcrumb with message "For the first URL"
+  And the event has a "manual" breadcrumb named "For the second URL"
+  And the event does not have a "manual" breadcrumb named "For the first URL"
   And the event "request.url" equals "http://express/breadcrumbs_b"
   And the event "request.httpMethod" equals "GET"
   And the event "request.clientIp" is not null
