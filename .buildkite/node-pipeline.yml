@@ -19,46 +19,6 @@ steps:
               push:
                 - node-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-node-${BRANCH_NAME}
 
-      - label: ":node: Node 4"
-        depends_on: "node-maze-runner-image"
-        timeout_in_minutes: 30
-        plugins:
-          docker-compose#v3.9.0:
-            run: node-maze-runner
-            use-aliases: true
-        env:
-          NODE_VERSION: "4"
-
-      - label: ":node: Node 6"
-        depends_on: "node-maze-runner-image"
-        timeout_in_minutes: 30
-        plugins:
-          docker-compose#v3.9.0:
-            run: node-maze-runner
-            use-aliases: true
-        env:
-          NODE_VERSION: "6"
-
-      - label: ":node: Node 8"
-        depends_on: "node-maze-runner-image"
-        timeout_in_minutes: 30
-        plugins:
-          docker-compose#v3.9.0:
-            run: node-maze-runner
-            use-aliases: true
-        env:
-          NODE_VERSION: "8"
-
-      - label: ":node: Node 10"
-        depends_on: "node-maze-runner-image"
-        timeout_in_minutes: 30
-        plugins:
-          docker-compose#v3.9.0:
-            run: node-maze-runner
-            use-aliases: true
-        env:
-          NODE_VERSION: "10"
-
       - label: ":node: Node 12"
         depends_on: "node-maze-runner-image"
         timeout_in_minutes: 30
