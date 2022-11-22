@@ -127,13 +127,14 @@ Scenario: a thrown error in an async callback
   Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is true
   And the event "severity" equals "error"
-  And the event "severityReason.type" equals "unhandledErrorMiddleware"
+  And the event "severityReason.type" equals "unhandledException"
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "error in async callback"
   And the event "request.url" equals "http://koa/throw-async-callback"
   And the event "request.httpMethod" equals "GET"
 
-Scenario: an unhandled promise rejection in an async callback
+@skip_before_node_16
+Scenario: an unhandled promise rejection in an async callback (with request context)
   Then I open the URL "http://koa/unhandled-rejection-async-callback" and get a 200 response
   And I wait to receive an error
   Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
@@ -142,5 +143,15 @@ Scenario: an unhandled promise rejection in an async callback
   And the event "severityReason.type" equals "unhandledPromiseRejection"
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "unhandled rejection in async callback"
-  And the event "request.url" equals "http://koa//unhandled-rejection-async-callback"
+  And the event "request.url" equals "http://koa/unhandled-rejection-async-callback"
   And the event "request.httpMethod" equals "GET"
+
+Scenario: an unhandled promise rejection in an async callback (without request context)
+  Then I open the URL "http://koa/unhandled-rejection-async-callback" and get a 200 response
+  And I wait to receive an error
+  Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
+  And the event "unhandled" is true
+  And the event "severity" equals "error"
+  And the event "severityReason.type" equals "unhandledPromiseRejection"
+  And the exception "errorClass" equals "Error"
+  And the exception "message" equals "unhandled rejection in async callback"
