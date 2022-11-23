@@ -10,12 +10,6 @@ if (parseFloat(node_version) > 14) {
   var http = require('http')
 }
 
-if (parseFloat(node_version) > 12) {
-  var url = URL
-} else {
-  var url = require('url').Url
-}
-
 Bugsnag.start({
   apiKey: process.env.BUGSNAG_API_KEY,
   endpoints: {
@@ -37,7 +31,12 @@ var app = express()
 
 function sendLog(body) {
   const postData = JSON.stringify(body)
-  const logUrl = new url(process.env.BUGSNAG_LOGS_ENDPOINT)
+  if (parseFloat(node_version) > 12) {
+    var logUrl = new URL(process.env.BUGSNAG_LOGS_ENDPOINT)
+  } else {
+    var url = require('url')
+    var logUrl = url.parse(process.env.BUGSNAG_LOGS_ENDPOINT)
+  }
   const options = {
     hostname: logUrl.hostname,
     path: logUrl.pathname,
