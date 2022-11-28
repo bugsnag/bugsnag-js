@@ -299,6 +299,7 @@ class Client {
     event._features = assign({}, event._features, this._features)
     event._user = assign({}, event._user, this._user)
     event.breadcrumbs = this._breadcrumbs.slice()
+    this._logger.info('Checking release stage / enabled')
 
     // exit early if events should not be sent on the current releaseStage
     if (this._config.enabledReleaseStages !== null && !includes(this._config.enabledReleaseStages, this._config.releaseStage)) {
@@ -315,7 +316,9 @@ class Client {
     }
 
     const callbacks = [].concat(this._cbs.e).concat(onError)
+    this._logger.info('runCallbacks', callbacks)
     runCallbacks(callbacks, event, onCallbackError, (err, shouldSend) => {
+      this._logger.info('runCallbacks complete', shouldSend, err)
       if (err) onCallbackError(err)
 
       if (!shouldSend) {
@@ -346,6 +349,8 @@ class Client {
         this._session._track(event)
         event._session = this._session
       }
+
+      this._logger.info('Sending event for delivery with', this._delivery)
 
       this._delivery.sendEvent({
         apiKey: event.apiKey || this._config.apiKey,
