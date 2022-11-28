@@ -317,7 +317,9 @@ class Client {
     }
 
     const callbacks = [].concat(this._cbs.e).concat(onError)
+    this._logger.info('runCallbacks', callbacks)
     runCallbacks(callbacks, event, onCallbackError, (err, shouldSend) => {
+      this._logger.info('runCallbacks complete', shouldSend, err)
       if (err) onCallbackError(err)
 
       if (!shouldSend) {
@@ -348,6 +350,8 @@ class Client {
         this._session._track(event)
         event._session = this._session
       }
+
+      this._logger.info('Sending event for delivery with', this._delivery)
 
       this._delivery.sendEvent({
         apiKey: event.apiKey || this._config.apiKey,

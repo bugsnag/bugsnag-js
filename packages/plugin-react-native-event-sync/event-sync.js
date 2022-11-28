@@ -1,21 +1,31 @@
 module.exports = (NativeClient) => ({
   load: (client) => {
-    client.addOnError(async event => {
-      const {
-        threads,
-        breadcrumbs,
-        app,
-        device,
-        deviceMetadata,
-        appMetadata
-      } = await NativeClient.getPayloadInfo({ unhandled: event.unhandled })
+    client.addOnError(event => {
+      console.log('in event-sync callback, invoking getPayloadInfo', NativeClient && typeof NativeClient.getPayloadInfo, NativeClient)
+      try {
+        const {
+          threads,
+          breadcrumbs,
+          app,
+          device,
+          deviceMetadata,
+          appMetadata
+        } = NativeClient.getPayloadInfo({ unhandled: event.unhandled })
 
-      event.breadcrumbs = breadcrumbs
-      event.app = { ...event.app, ...app }
-      event.device = { ...event.device, ...device }
-      event.threads = threads
-      event.addMetadata('device', deviceMetadata)
-      event.addMetadata('app', appMetadata)
+        console.log('continue with error-sync callback')
+
+        event.breadcrumbs = breadcrumbs
+        event.app = { ...event.app, ...app }
+        event.device = { ...event.device, ...device }
+        event.threads = threads
+        event.addMetadata('device', deviceMetadata)
+        event.addMetadata('app', appMetadata)
+      } catch(e) {
+        console.log('error while trying to sync-up event data', e)
+        throw e
+      }
+
+      console.log('finished with error-sync callback')
     }, true)
   }
 })

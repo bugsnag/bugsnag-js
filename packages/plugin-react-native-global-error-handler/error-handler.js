@@ -21,7 +21,10 @@ module.exports = (ErrorUtils = global.ErrorUtils) => ({
         severityReason: { type: 'unhandledException' }
       }, 'ErrorUtils globalHandler', 1)
       event.attemptImmediateDelivery = false
-      client._notify(event, () => {}, () => {
+      client._notify(event, (err) => {
+        console.log('GlobalHanlder onError', err)
+      }, () => {
+        client._logger.warn('delegating to previous Global Handler')
         if (typeof prev === 'function') prev(error, isFatal)
       })
     })

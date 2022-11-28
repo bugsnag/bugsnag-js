@@ -12,24 +12,29 @@ module.exports = (client, NativeClient) => ({
       }
     }
     client._logger.warn('Calling RN dispatch')
-    NativeClient.dispatch({
-      errors: event.errors,
-      severity: event.severity,
-      severityReason: event._handledState.severityReason,
-      unhandled: event.unhandled,
-      app: event.app,
-      device: event.device,
-      threads: event.threads,
-      breadcrumbs: derecursify(event.breadcrumbs),
-      context: event.context,
-      user: event._user,
-      metadata: derecursify(event._metadata),
-      groupingHash: event.groupingHash,
-      apiKey: event.apiKey,
-      featureFlags: event.toJSON().featureFlags,
-      nativeStack: nativeStack
-    }).then(() => cb()).catch(cb)
-    client._logger.warn('Finished calling RN dispatch')
+    try {
+      NativeClient.dispatch({
+        errors: event.errors,
+        severity: event.severity,
+        severityReason: event._handledState.severityReason,
+        unhandled: event.unhandled,
+        app: event.app,
+        device: event.device,
+        threads: event.threads,
+        breadcrumbs: derecursify(event.breadcrumbs),
+        context: event.context,
+        user: event._user,
+        metadata: derecursify(event._metadata),
+        groupingHash: event.groupingHash,
+        apiKey: event.apiKey,
+        featureFlags: event.toJSON().featureFlags,
+        nativeStack: nativeStack
+      })
+    } finally {
+      cb()
+    }
+
+    client._logger.warn('Finished sending error to NativeClient')
   },
   sendSession: () => {
     client._logger.warn('@bugsnag/delivery-react-native sendSession() should never be called', new Error().stack)

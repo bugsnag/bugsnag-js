@@ -203,15 +203,17 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
     }
   }
 
-  @ReactMethod
-  void getPayloadInfo(@NonNull ReadableMap payload, @NonNull Promise promise) {
+  @ReactMethod(isBlockingSynchronousMethod = true)
+  WritableMap getPayloadInfo(@NonNull ReadableMap payload) {
     try {
+      logger.i("getPayloadInfo(" + payload + ")");
       boolean unhandled = payload.getBoolean("unhandled");
       Map<String, Object> info = plugin.getPayloadInfo(unhandled);
-      promise.resolve(ReactNativeCompat.toWritableMap(info));
+      logger.i("getPayloadInfo(" + payload + ") -> " + info);
+      return ReactNativeCompat.toWritableMap(info);
     } catch (Throwable exc) {
       logFailure("dispatch", exc);
-      promise.resolve(null);
+      return null;
     }
   }
 
