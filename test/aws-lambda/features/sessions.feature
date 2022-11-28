@@ -45,3 +45,16 @@ Scenario Outline: no session is sent when autoTrackSessions is false
         | AsyncHandledExceptionFunctionNode12      |
         | CallbackHandledExceptionFunctionNode14   |
         | CallbackHandledExceptionFunctionNode12   |
+
+@serverless-express-app
+Scenario Outline: lambda and express plugins maintain request context when autoTrackSessions is true
+    Given I setup the environment
+    And I set environment variable "BUGSNAG_AUTO_TRACK_SESSIONS" to "true"
+    When I invoke the "ExpressFunction" lambda in "features/fixtures/serverless-express-app" with the "events/unhandled-async.json" event
+    When I wait to receive an error
+    Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
+    And the event "request.url" equals "https:///unhandled-async"
+    And I discard the oldest error
+    Then I invoke the "ExpressFunction" lambda in "features/fixtures/serverless-express-app" with the "events/unhandled-next.json" event
+    When I wait to receive an error
+    And the event "request.url" equals "https:///unhandled-next"

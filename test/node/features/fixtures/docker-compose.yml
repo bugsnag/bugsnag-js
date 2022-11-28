@@ -122,6 +122,22 @@ services:
     restart: "no"
     entrypoint: "node scenarios/app-disabled"
 
+  express-auto-sessions:
+    build:
+      context: express
+      args:
+        - NODE_VERSION
+    environment:
+      - BUGSNAG_API_KEY
+      - BUGSNAG_NOTIFY_ENDPOINT
+      - BUGSNAG_SESSIONS_ENDPOINT
+    networks:
+      default:
+        aliases:
+          - express-auto-sessions
+    restart: "no"
+    entrypoint: "node scenarios/app-auto-sessions"
+
   restify:
     build:
       context: restify
