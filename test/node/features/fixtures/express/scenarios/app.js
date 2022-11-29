@@ -115,7 +115,7 @@ app.get('/oversized', function (req, res, next) {
 
   var big = {};
   var i = 0;
-  while (JSON.stringify(big).length < 5*10e5) {
+  while (JSON.stringify(big).length < 2*10e5) {
     big['entry'+i] = repeat('long repetitive string', 1000);
     i++;
   }

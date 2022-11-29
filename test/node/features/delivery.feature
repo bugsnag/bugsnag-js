@@ -18,4 +18,4 @@ Scenario: Delivery for an oversized error is not retried
   And I wait to receive 3 logs
   Then I discard the oldest log
   Then I discard the oldest log
-  And the log payload field "message" equals "Event oversized (5.02 MB)"
+  And the log payload field "message" equals "Event oversized (2.01 MB)"

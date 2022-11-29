@@ -6,11 +6,57 @@
     <script type="text/javascript">
       var NOTIFY = decodeURIComponent(window.location.search.match(/NOTIFY=([^&]+)/)[1])
       var SESSIONS = decodeURIComponent(window.location.search.match(/SESSIONS=([^&]+)/)[1])
-      
       var API_KEY = decodeURIComponent(window.location.search.match(/API_KEY=([^&]+)/)[1])
+      var LOGS = decodeURIComponent(window.location.search.match(/LOGS=([^&]+)/)[1])
+      
+      var logSendInProgress = false
+      var queue = []
+      
+      function sendLog(level, message) {
+        if (logSendInProgress) {
+          queue.push([level, message])
+          return
+        }
+        
+        logSendInProgress = true
+
+        var xhr;
+        if (typeof window.XMLHttpRequest === 'function') {
+            xhr  = new XMLHttpRequest();
+        }
+        else {
+            xhr = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xhr.onreadystatechange = function() {
+          switch (xhr.readyState) {
+            case 4: { // completed
+                if (queue.length > 0) {
+                  var next = queue.shift()
+                  setTimeout(function () { sendLog(next[0], next[1]) })
+                }
+                logSendInProgress = false
+                break;
+            }
+          }
+        };
+        xhr.open("POST", LOGS);
+        xhr.setRequestHeader('Content-Type', 'application/json')
+
+        xhr.send(JSON.stringify({ level: level, message: message }))
+      }
+
+      var remoteLogger = {
+        debug: function () { }, // ignore the loaded message as it gets confused with the POST 400 response of the notify
+        info: function (message) { sendLog('info', message) },
+        warn: function (message) { sendLog('warn', message) },
+        error: function (message) { sendLog('error', message) }
+      }
+
       Bugsnag.start({
         apiKey: API_KEY,
-        endpoints: { notify: NOTIFY, sessions: SESSIONS }
+        endpoints: { notify: NOTIFY, sessions: SESSIONS },
+        logger: remoteLogger,
+        autoTrackSessions: false,
       })
     </script>
   </head>
@@ -26,27 +72,12 @@
 
       var big = {};
       var i = 0;
-      while (JSON.stringify(big).length < 5*10e5) {
+      while (JSON.stringify(big).length < 2*10e5) {
         big['entry'+i] = repeat('long repetitive string', 1000);
         i++;
       }
       Bugsnag.leaveBreadcrumb('big thing', big);
-      Bugsnag.notify(new Error('big things'), null, function (err, event) {
-        var LOGS = decodeURIComponent(window.location.search.match(/LOGS=([^&]+)/)[1])
-        var xhr;
-        if (typeof window.XMLHttpRequest === 'function') {
-            xhr  = new XMLHttpRequest();
-        }
-        else {
-            xhr = new ActiveXObject("Microsoft.XMLHTTP");
-        }
-        xhr.open("POST", LOGS);
-        xhr.setRequestHeader('Content-Type', 'application/json')
-
-        xhr.send(JSON.stringify({
-          "response": "Notify complete"
-        }))
-      });
+      Bugsnag.notify(new Error('big things'));
     </script>
   </body>
 </html>

@@ -39,5 +39,8 @@ contextBridge.exposeInMainWorld('RunnerAPI', {
   mainProcessClearFeatureFlagsNow: () => {
     ipcRenderer.send('main-process-clear-feature-flags-now')
   },
+  oversizedNotify: () => {
+    ipcRenderer.send('oversized-notify')
+  },
   preloadStart: Date.now()
 })
