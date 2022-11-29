@@ -3,11 +3,37 @@ var bugsnagExpress = require('@bugsnag/plugin-express')
 var express = require('express')
 var bodyParser = require('body-parser')
 
-var node_version = process.version.match(/^v(\d+\.\d+)/)[1]
-if (parseFloat(node_version) > 14) {
-  var http = require('node:http')
-} else {
-  var http = require('http')
+const nodeVersion = process.version.match(/^v(\d+\.\d+)/)[1]
+
+const http = parseFloat(nodeVersion) > 14 ? require('node:http') : require('http')
+
+const logUrl = parseFloat(nodeVersion) > 12 
+  ? new URL(process.env.BUGSNAG_LOGS_ENDPOINT)
+  : require('url').parse(process.env.BUGSNAG_LOGS_ENDPOINT)
+
+function sendLog(level, message) {
+  const postData = JSON.stringify({ level, message })
+
+  const options = {
+    hostname: logUrl.hostname,
+    path: logUrl.pathname,
+    port: logUrl.port,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }
+
+  const req = http.request(options)
+  req.write(postData)
+  req.end()
+}
+
+const remoteLogger = {
+  debug: (message) => sendLog('debug', message),
+  info: (message) => sendLog('info', message),
+  warn: (message) => sendLog('warn', message),
+  error: (message) => sendLog('error', message)
 }
 
 Bugsnag.start({
@@ -22,36 +48,13 @@ Bugsnag.start({
     { name: 'from config 3', variant: 'SHOULD BE REMOVED' }
   ],
   autoTrackSessions: false,
-  plugins: [bugsnagExpress]
+  plugins: [bugsnagExpress],
+  logger: remoteLogger,
 })
 
 var middleware = Bugsnag.getPlugin('express')
 
 var app = express()
-
-function sendLog(body) {
-  const postData = JSON.stringify(body)
-  if (parseFloat(node_version) > 12) {
-    var logUrl = new URL(process.env.BUGSNAG_LOGS_ENDPOINT)
-  } else {
-    var url = require('url')
-    var logUrl = url.parse(process.env.BUGSNAG_LOGS_ENDPOINT)
-  }
-  const options = {
-    hostname: logUrl.hostname,
-    path: logUrl.pathname,
-    port: logUrl.port,
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  }
-
-  const req = http.request(options)
-  req.write(postData)
-  req.end()
-  console.log('Log delivered')
-}
 
 app.use(middleware.requestHandler)
 
@@ -116,14 +119,8 @@ app.get('/oversized', function (req, res, next) {
     big['entry'+i] = repeat('long repetitive string', 1000);
     i++;
   }
-  req.bugsnag.addMetadata('big data', big)
-  req.bugsnag.notify(new Error('oversized'), null, function (err, event) {
-    setTimeout(() => {
-      sendLog({
-        "response": "Notify complete"
-      })
-    }, 1000)
-  });
+  req.bugsnag.leaveBreadcrumb('big thing', big);
+  req.bugsnag.notify(new Error('oversized'));
   res.end('OK')
 })
 

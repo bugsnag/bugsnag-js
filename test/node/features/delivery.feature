@@ -15,5 +15,7 @@ Scenario: Delivery for an oversized error is not retried
   Then I wait to receive an error
 
   # Check that Bugsnag is discarding the event
-  And I wait to receive a log
-  And the log payload field "response" equals "Notify complete"
+  And I wait to receive 3 logs
+  Then I discard the oldest log
+  Then I discard the oldest log
+  And the log payload field "message" equals "Event oversized (5.02 MB)"
