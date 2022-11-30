@@ -15,9 +15,4 @@ describe('delivery:fetch', () => {
     expect(true).toBeTruthy()
     done()
   })
-
-  it.skip('sends sessions successfully', done => {
-    expect(true).toBeTruthy()
-    done()
-  })
 })
