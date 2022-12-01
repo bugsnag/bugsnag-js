@@ -14,8 +14,15 @@ Scenario: Delivery for an oversized error is not retried
   And I wait for 5 seconds
   Then I wait to receive an error
 
-  # Check that Bugsnag is discarding the event
+  # Check that Bugsnag is discarding the event based on the log output
   And I wait to receive 3 logs
   Then I discard the oldest log
   Then I discard the oldest log
   And the log payload field "message" equals "Event oversized (2.01 MB)"
+  
+  # Check that resend is not attempted next load (e.g. for when persistence/retry is supported in node)
+  Then I stop all docker services
+  And I discard the oldest error
+  And I start the service "express"
+  And I wait for the host "express" to open port "80"
+  Then I should receive no errors

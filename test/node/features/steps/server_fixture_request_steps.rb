@@ -33,3 +33,7 @@ When('I open the URL {string} and get a {int} response') do |url, expected_respo
     TEXT
   )
 end
+
+When('I stop all docker services') do
+  Maze::Docker.down_all_services
+end
