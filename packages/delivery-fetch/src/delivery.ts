@@ -1,7 +1,9 @@
 import payload from '@bugsnag/core/lib/json-payload'
 
+type DeliveryCallback = (err?: Error | null) => void
+
 export default (client: any) => ({
-  sendEvent: (event: any, cb = () => {}) => {
+  sendEvent: (event: any, cb: DeliveryCallback = () => { }) => {
     const url = client._config.endpoints.notify
 
     fetch(url, {
@@ -15,9 +17,12 @@ export default (client: any) => ({
       body: payload.event(event, client._config.redactedKeys)
     }).catch(err => {
       client._logger.error(err)
+      cb(err)
+    }).then(() => {
+      cb(null)
     })
   },
-  sendSession: (session: any, cb = () => {}) => {
+  sendSession: (session: any, cb: DeliveryCallback = () => { }) => {
     const url = client._config.endpoints.sessions
 
     fetch(url, {
@@ -31,6 +36,9 @@ export default (client: any) => ({
       body: payload.session(session, client._config.redactedKeys)
     }).catch(err => {
       client._logger.error(err)
+      cb(err)
+    }).then(() => {
+      cb(null)
     })
   }
 })

@@ -26,6 +26,7 @@ module.exports = {
   ],
   projects: [
     project('core', ['core']),
+    project('workers', ['worker', 'delivery-fetch']),
     project('shared plugins', ['plugin-app-duration', 'plugin-stackframe-path-normaliser']),
     project('browser', [
       'browser',
