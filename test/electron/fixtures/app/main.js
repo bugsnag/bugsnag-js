@@ -3,8 +3,7 @@ const {
   uncaughtException,
   unhandledRejection,
   crash,
-  notify,
-  oversizedNotify
+  notify
 } = require('./src/errors')
 const Bugsnag = require('@bugsnag/electron')
 const configFile = process.env.BUGSNAG_CONFIG || 'default'
@@ -94,5 +93,3 @@ ipcMain.on('main-process-clear-feature-flags', () => {
 ipcMain.on('main-process-clear-feature-flags-now', () => {
   Bugsnag.clearFeatureFlags()
 })
-
-ipcMain.on('oversized-notify', oversizedNotify)
