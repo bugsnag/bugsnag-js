@@ -140,7 +140,8 @@ steps:
     depends_on: "publish-js"
     trigger: "bugsnag-expo"
     build:
-      branch: "v47/next"
+      # don't specify 'branch' here so we build the default branch in the expo
+      # repo, which should be the most up-to-date @bugsnag/expo version
       env:
         BUGSNAG_JS_BRANCH: "${BUILDKITE_BRANCH}"
         BUGSNAG_JS_COMMIT: "${BUILDKITE_COMMIT}"
