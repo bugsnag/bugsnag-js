@@ -1,3 +1,4 @@
+import clone from '@bugsnag/core/lib/clone-client'
 import Client, { EventDeliveryPayload, SessionDeliveryPayload } from '@bugsnag/core/client'
 
 // The in-flight package has module level state which can leak between tests
@@ -43,6 +44,44 @@ describe('@bugsnag/in-flight', () => {
     expect(sendSession).not.toHaveBeenCalled()
   })
 
+  it('can track in-flight events after a client is cloned', () => {
+    const client = new Client({ apiKey: 'AN_API_KEY' })
+
+    // eslint thinks this is never reassigned, but it clearly is
+    let cloned: Client // eslint-disable-line prefer-const
+
+    const payloads: EventDeliveryPayload[] = []
+    const sendSession = jest.fn()
+
+    client._setDelivery(() => ({
+      sendEvent: (payload, cb) => {
+        expect(cloned._depth).toBe(2)
+        payloads.push(payload)
+        cb()
+      },
+      sendSession
+    }))
+
+    bugsnagInFlight.trackInFlight(client)
+
+    expect(payloads.length).toBe(0)
+
+    const onError = jest.fn()
+    const callback = jest.fn()
+
+    cloned = clone(client)
+
+    expect(cloned._depth).toBe(1)
+
+    cloned.notify(new Error('xyz'), onError, callback)
+
+    expect(cloned._depth).toBe(1)
+    expect(onError).toHaveBeenCalledTimes(1)
+    expect(callback).toHaveBeenCalledTimes(1)
+    expect(payloads.length).toBe(1)
+    expect(sendSession).not.toHaveBeenCalled()
+  })
+
   it('tracks in-flight sessions', () => {
     const client = new Client({ apiKey: 'AN_API_KEY' })
     const payloads: SessionDeliveryPayload[] = []
@@ -82,6 +121,49 @@ describe('@bugsnag/in-flight', () => {
     expect(client._sessionDelegate.startSession).toHaveBeenCalledTimes(1)
     expect(client._sessionDelegate.pauseSession).not.toHaveBeenCalled()
     expect(client._sessionDelegate.resumeSession).not.toHaveBeenCalled()
+  })
+
+  it('tracks in-flight sessions after a client has been cloned', () => {
+    const client = new Client({ apiKey: 'AN_API_KEY' })
+    const payloads: SessionDeliveryPayload[] = []
+    const sendEvent = jest.fn()
+    const callback = jest.fn()
+
+    client._sessionDelegate = {
+      startSession: jest.fn(function (client, session) {
+        client._delivery.sendSession(session, callback)
+
+        return client
+      }),
+      pauseSession: jest.fn(),
+      resumeSession: jest.fn()
+    }
+
+    client._setDelivery(() => ({
+      sendEvent,
+      sendSession: (payload, cb) => {
+        payloads.push(payload)
+        cb()
+      }
+    }))
+
+    bugsnagInFlight.trackInFlight(client)
+
+    expect(payloads.length).toBe(0)
+    expect(callback).not.toHaveBeenCalled()
+    expect(client._sessionDelegate.startSession).not.toHaveBeenCalled()
+    expect(client._sessionDelegate.pauseSession).not.toHaveBeenCalled()
+    expect(client._sessionDelegate.resumeSession).not.toHaveBeenCalled()
+
+    const cloned = clone(client)
+
+    cloned.startSession()
+
+    expect(payloads.length).toBe(1)
+    expect(callback).toHaveBeenCalledTimes(1)
+    expect(cloned._sessionDelegate.startSession).toHaveBeenCalledTimes(1)
+    expect(cloned._sessionDelegate.pauseSession).not.toHaveBeenCalled()
+    expect(cloned._sessionDelegate.resumeSession).not.toHaveBeenCalled()
   })
 
   it('tracks all in-flight requests', () => {
