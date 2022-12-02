@@ -18,7 +18,8 @@ var server = restify.createServer()
 
 server.pre(middleware.requestHandler)
 
-server.use(restify.plugins.bodyParser());
+server.use(restify.plugins.bodyParser())
+server.use(restify.plugins.queryParser())
 
 // If the server hasn't started sending something within 2 seconds
 // it probably won't. So end the request and hurry the failing test
@@ -34,8 +35,8 @@ server.get('/', function (req, res) {
   res.end('ok')
 })
 
-server.get('/sync', function (req, res) {
-  throw new Error('sync')
+server.get('/sync/:message', function (req, res) {
+  throw new Error(req.params.message)
 })
 
 server.get('/async', function (req, res) {
