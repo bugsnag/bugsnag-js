@@ -41,7 +41,7 @@ module.exports = {
       requestClient.addOnError((event) => {
         const { request, metadata } = getRequestAndMetadataFromCtx(this)
         event.request = { ...event.request, ...request }
-        requestClient.addMetadata('request', metadata)
+        event.addMetadata('request', metadata)
       }, true)
 
       yield next
