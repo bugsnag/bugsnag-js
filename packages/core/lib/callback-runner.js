@@ -21,7 +21,7 @@ module.exports = (callbacks, event, onCallbackError, cb) => {
             setTimeout(() => {
               onCallbackError(err)
               return cb(null, true)
-            }, 0)
+            }, 1)
           }
           return ret.then(
             // resolve
@@ -35,7 +35,7 @@ module.exports = (callbacks, event, onCallbackError, cb) => {
                   console.log('cb threw an Error', e)
                   throw e
                 }
-              }, 0)
+              }, 1)
             },
             // reject
             onError
