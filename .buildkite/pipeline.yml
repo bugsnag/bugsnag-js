@@ -136,7 +136,7 @@ steps:
     commands:
       - buildkite-agent pipeline upload .buildkite/react-native-cli-pipeline.yml
 
-  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: EXPO PIPELINE :large_blue_circle: :large_blue_circle: :large_blue_circle:"
+  - label: "@bugsnag/expo latest"
     depends_on: "publish-js"
     trigger: "bugsnag-expo"
     build:
@@ -148,7 +148,7 @@ steps:
         # a branch name that's safe to use as a docker cache identifier
         BUGSNAG_JS_CACHE_SAFE_BRANCH_NAME: "${BRANCH_NAME}"
 
-  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: EXPO 46 PIPELINE :large_blue_circle: :large_blue_circle: :large_blue_circle:"
+  - label: "@bugsnag/expo v46-next"
     depends_on: "publish-js"
     trigger: "bugsnag-expo"
     build:
@@ -159,7 +159,7 @@ steps:
         # a branch name that's safe to use as a docker cache identifier
         BUGSNAG_JS_CACHE_SAFE_BRANCH_NAME: "${BRANCH_NAME}"
 
-  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: EXPO 45 PIPELINE :large_blue_circle: :large_blue_circle: :large_blue_circle:"
+  - label: "@bugsnag/expo v45-next"
     depends_on: "publish-js"
     trigger: "bugsnag-expo"
     build:
