@@ -37,7 +37,7 @@ end
 When('I relaunch the app after a crash') do
   # Wait for the app to stop running before relaunching
   step 'the app is not running'
-  Maze.driver.launch_app
+  Maze.driver.activate_app Maze.driver.app_id
 end
 
 When('I clear any error dialogue') do
