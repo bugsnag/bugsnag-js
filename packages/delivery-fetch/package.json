@@ -3,24 +3,23 @@
     "author": "Bugsnag",
     "version": "7.18.0",
     "main": "dist/delivery.js",
-    "description": "@bugsnag/js delivery mechanism for service workers",
+    "description": "@bugsnag/js delivery mechanism using the fetch API",
     "homepage": "https://www.bugsnag.com/",
     "repository": {
-      "type": "git",
-      "url": "git@github.com:bugsnag/bugsnag-js.git"
+        "type": "git",
+        "url": "git@github.com:bugsnag/bugsnag-js.git"
     },
     "publishConfig": {
-      "access": "public"
+        "access": "public"
     },
     "license": "MIT",
     "devDependencies": {
-      "@bugsnag/core": "^7.18.0"
+        "@bugsnag/core": "^7.18.0"
     },
     "peerDependencies": {
-      "@bugsnag/core": "^7.0.0"
+        "@bugsnag/core": "^7.0.0"
     },
     "scripts": {
         "build": "rm -rf ./dist && tsc -p tsconfig.build.json"
     }
-  }
-  
+}
