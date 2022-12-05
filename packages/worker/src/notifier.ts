@@ -5,7 +5,7 @@ import { schema as coreSchema } from '@bugsnag/core/config'
 import delivery from '@bugsnag/delivery-fetch'
 
 const name = 'Bugsnag JavaScript'
-const version = '__VERSION__'
+const version = '7.18.0' // TODO: Get version dynamically
 const url = 'https://github.com/bugsnag/bugsnag-js'
 
 // extend the base config schema with some worker-specific options
