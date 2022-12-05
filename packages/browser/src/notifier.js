@@ -16,7 +16,7 @@ const schema = assign({}, require('@bugsnag/core/config').schema, require('./con
 
 const pluginWindowOnerror = require('@bugsnag/plugin-window-onerror')
 const pluginUnhandledRejection = require('@bugsnag/plugin-window-unhandled-rejection')
-const pluginApp = require('@bugsnag/plugin-app-duration')
+const pluginAppDuration = require('@bugsnag/plugin-app-duration')
 const pluginDevice = require('@bugsnag/plugin-browser-device')
 const pluginContext = require('@bugsnag/plugin-browser-context')
 const pluginRequest = require('@bugsnag/plugin-browser-request')
@@ -43,7 +43,7 @@ const Bugsnag = {
 
     const internalPlugins = [
       // add browser-specific plugins
-      pluginApp,
+      pluginAppDuration,
       pluginDevice(),
       pluginContext(),
       pluginRequest(),
