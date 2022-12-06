@@ -7,8 +7,7 @@ import preventDiscard from './prevent-discard'
 
 const name = 'Bugsnag JavaScript'
 const url = 'https://github.com/bugsnag/bugsnag-js'
-// eslint-disable-next-line no-undef
-const version = '__VERSION__' // Replaced at compile time with webpack
+const version = __VERSION__ // eslint-disable-line no-undef
 
 // extend the base config schema with some worker-specific options
 const schema = { ...coreSchema, ...config }

@@ -22,6 +22,7 @@ const testConfig = {
 describe('worker notifier', () => {
   beforeAll(() => {
     mockFetch()
+    typedGlobal.__VERSION__ = ''
     jest.spyOn(console, 'debug').mockImplementation(() => {})
     jest.spyOn(console, 'warn').mockImplementation(() => {})
   })
