@@ -8,12 +8,12 @@ import preventDiscard from './prevent-discard'
 const name = 'Bugsnag JavaScript'
 const url = 'https://github.com/bugsnag/bugsnag-js'
 // eslint-disable-next-line no-undef
-const version = __VERSION__ // Replaced at compile time with webpack
+const version = '__VERSION__' // Replaced at compile time with webpack
 
 // extend the base config schema with some worker-specific options
 const schema = { ...coreSchema, ...config }
 
-const Bugsnag = {
+export const Bugsnag = {
   createClient: (opts) => {
     // handle very simple use case where user supplies just the api key as a string
     if (typeof opts === 'string') opts = { apiKey: opts }
