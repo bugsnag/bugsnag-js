@@ -115,3 +115,8 @@ Then('the stacktrace contains {string} equal to {string}') do |field_path, expec
   end
   fail("No field_path #{field_path} found with value #{expected_value}") unless found
 end
+
+# TODO: PLAT-9328 Refactor into Maze Runner
+When('I set the screen orientation to {word}') do |rotation|
+  Maze.driver.set_rotation(rotation.to_sym)
+end
