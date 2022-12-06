@@ -2,7 +2,8 @@
 Feature: Android Device data
 
 Scenario: Handled JS error
-  When I run "DeviceJsHandledScenario"
+  When I set the screen orientation to portrait
+  And I run "DeviceJsHandledScenario"
   Then I wait to receive an error
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "DeviceJsHandledScenario"
@@ -25,7 +26,8 @@ Scenario: Handled JS error
   And the event "device.time" is a timestamp
 
 Scenario: Unhandled JS error
-  When I run "DeviceJsUnhandledScenario" and relaunch the crashed app
+  When I set the screen orientation to portrait
+  And I run "DeviceJsUnhandledScenario" and relaunch the crashed app
   And I configure Bugsnag for "DeviceJsUnhandledScenario"
   Then I wait to receive an error
   And the exception "errorClass" equals "Error"
@@ -49,7 +51,8 @@ Scenario: Unhandled JS error
   And the event "device.time" is a timestamp
 
 Scenario: Handled native error
-  When I run "DeviceNativeHandledScenario"
+  When I set the screen orientation to portrait
+  And I run "DeviceNativeHandledScenario"
   And I configure Bugsnag for "DeviceNativeHandledScenario"
   Then I wait to receive an error
   And the exception "errorClass" equals "java.lang.RuntimeException"
@@ -73,7 +76,8 @@ Scenario: Handled native error
   And the event "device.time" is a timestamp
 
 Scenario: Unhandled native error
-  When I run "DeviceNativeUnhandledScenario" and relaunch the crashed app
+  When I set the screen orientation to portrait
+  And I run "DeviceNativeUnhandledScenario" and relaunch the crashed app
   And I configure Bugsnag for "DeviceNativeUnhandledScenario"
   Then I wait to receive an error
   And the exception "errorClass" equals "java.lang.RuntimeException"
