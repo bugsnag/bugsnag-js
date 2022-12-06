@@ -76,72 +76,10 @@ describe('worker notifier', () => {
     })
   })
 
-  //     it('accepts all config options', (done) => {
-  //       const Bugsnag = getBugsnag()
-  //       Bugsnag.start({
-  //         apiKey: API_KEY,
-  //         appVersion: '1.2.3',
-  //         appType: 'worker',
-  //         autoDetectErrors: true,
-  //         enabledErrorTypes: {
-  //           unhandledExceptions: true,
-  //           unhandledRejections: true
-  //         },
-  //         onError: [
-  //           event => true
-  //         ],
-  //         onBreadcrumb: (b: Breadcrumb) => {
-  //           return false
-  //         },
-  //         onSession: (s: Session) => {
-  //           return true
-  //         },
-  //         endpoints: { notify: 'https://notify.bugsnag.com', sessions: 'https://sessions.bugsnag.com' },
-  //         autoTrackSessions: true,
-  //         enabledReleaseStages: ['zzz'],
-  //         releaseStage: 'production',
-  //         maxBreadcrumbs: 20,
-  //         enabledBreadcrumbTypes: ['manual', 'log', 'request'],
-  //         user: null,
-  //         metadata: {},
-  //         logger: undefined,
-  //         redactedKeys: ['foo', /bar/],
-  //         collectUserIp: true,
-  //         maxEvents: 10,
-  //         generateAnonymousId: false,
-  //         trackInlineScripts: true
-  //       })
-
-  //       Bugsnag.notify(new Error('123'), (event) => {
-  //         return false
-  //       }, (err, event) => {
-  //         if (err) {
-  //           done(err)
-  //         }
-  //         expect(event.breadcrumbs.length).toBe(0)
-  //         expect(event.originalError.message).toBe('123')
-  //         done()
-  //       })
-  //     })
-
   it('indicates whether or not the client is started', () => {
     const Bugsnag = getBugsnag()
     expect(Bugsnag.isStarted()).toBe(false)
     Bugsnag.start(testConfig)
     expect(Bugsnag.isStarted()).toBe(true)
   })
-
-//     it('enables accessing feature flags from events passed to onError callback', (done) => {
-//       const Bugsnag = getBugsnag()
-//       Bugsnag.start(API_KEY)
-//       Bugsnag.addFeatureFlag('feature 1', '1.0')
-//       Bugsnag.notify(new Error('test error'), (event) => {
-//         event.addFeatureFlag('feature 2', '2.0')
-//         expect(event.getFeatureFlags()).toStrictEqual([
-//           { featureFlag: 'feature 1', variant: '1.0' },
-//           { featureFlag: 'feature 2', variant: '2.0' }
-//         ])
-//         done()
-//       })
-//     })
 })
