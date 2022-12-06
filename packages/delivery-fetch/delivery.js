@@ -13,11 +13,11 @@ const delivery = (client) => ({
         'Bugsnag-Sent-At': (new Date()).toISOString()
       },
       body: payload.event(event, client._config.redactedKeys)
+    }).then(() => {
+      cb(null)
     }).catch(err => {
       client._logger.error(err)
       cb(err)
-    }).then(() => {
-      cb(null)
     })
   },
   sendSession: (session, cb = () => { }) => {
@@ -32,11 +32,11 @@ const delivery = (client) => ({
         'Bugsnag-Sent-At': (new Date()).toISOString()
       },
       body: payload.session(session, client._config.redactedKeys)
+    }).then(() => {
+      cb(null)
     }).catch(err => {
       client._logger.error(err)
       cb(err)
-    }).then(() => {
-      cb(null)
     })
   }
 })
