@@ -1,4 +1,4 @@
-import delivery from '../types/delivery'
+import delivery from '../delivery'
 import type { Client } from '@bugsnag/core'
 import type { EventDeliveryPayload } from '@bugsnag/core/client'
 
