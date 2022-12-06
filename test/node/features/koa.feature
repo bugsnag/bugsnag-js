@@ -9,7 +9,7 @@ Background:
   And I wait for the host "koa" to open port "80"
 
 Scenario: a synchronous thrown error in a route
-  Then I open the URL "http://koa/err" and get a 500 response
+  Then I open the URL "http://koa/err?a=1&b=2" and get a 500 response
   And I wait to receive an error
   Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is true
@@ -19,11 +19,15 @@ Scenario: a synchronous thrown error in a route
   And the exception "message" equals "noooop"
   And the exception "type" equals "nodejs"
   And the "file" of stack frame 0 equals "scenarios/app.js"
-  And the event "request.url" equals "http://koa/err"
+  And the event "request.url" equals "http://koa/err?a=1&b=2"
   And the event "request.httpMethod" equals "GET"
   And the event "request.clientIp" is not null
   And the event "metaData.error_handler.before" is true
   And the event "metaData.error_handler.after" is null
+  And the event "metaData.request.path" equals "/err?a=1&b=2"
+  And the event "metaData.request.query.a" equals "1"
+  And the event "metaData.request.query.b" equals "2"
+  And the event "metaData.request.connection" is not null
 
 Scenario: an asynchronous thrown error in a route
   Then I open the URL "http://koa/async-err" and get a 500 response
