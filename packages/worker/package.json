@@ -17,10 +17,7 @@
     ],
     "scripts": {
         "size": "./bin/size",
-        "clean": "rm -fr dist && mkdir dist",
-        "build": "webpack",
-        "cdn-upload": "./bin/cdn-upload",
-        "test:types": "tsc -p tsconfig.json"
+        "build": "webpack"
     },
     "author": "Bugsnag",
     "license": "MIT",

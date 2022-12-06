@@ -1,0 +1,83 @@
+#!/usr/bin/env node
+process.on('unhandledRejection', err => console.error(err))
+
+const knox = require('knox')
+const cf = require('cloudfront')
+const version = require('../package.json').version
+const { promisify } = require('util')
+const { relative } = require('path')
+const semver = require('semver')
+
+const s3Client = knox.createClient({
+  key: process.env.AWS_ACCESS_KEY_ID,
+  secret: process.env.AWS_SECRET_ACCESS_KEY,
+  bucket: 'bugsnagcdn'
+})
+
+const cfClient = cf.createClient(
+  process.env.AWS_ACCESS_KEY_ID,
+  process.env.AWS_SECRET_ACCESS_KEY
+)
+
+const headers = {
+  'Cache-Control': 'public, max-age=315360000',
+  'Access-Control-Allow-Origin': '*',
+  'x-amz-acl': 'public-read'
+}
+
+const putFile = promisify(s3Client.putFile.bind(s3Client))
+
+const upload = async (localPath, remotePath) => {
+  const relativePath = relative('..', localPath)
+  console.log(`uploading ${relativePath} -> ${remotePath}`)
+
+  const response = await putFile(localPath, remotePath, headers)
+
+  // Knox doesn't error if the request fails, so we need to check if this was a successful upload
+  if (response.statusCode >= 400) {
+    throw new Error(`Failed to upload ${relativePath}: ${response.statusCode} ${response.statusMessage}`)
+  }
+
+  return response
+}
+
+const invalidate = (paths) => {
+  console.log(`invaliding CloudFront cache for the following objects:\n${paths.join('\n')}`)
+  return promisify(cfClient.createInvalidation.bind(cfClient))('E205JDPNKONLN7', `bugsnag-js@${version}`, paths)
+}
+
+const run = async () => {
+  // track the uploaded paths so the cache can be invalidated afterwards
+  const uploaded = []
+  const track = p => {
+    uploaded.push(p)
+    return p
+  }
+
+  // always upload canonical versions
+  await upload(`${__dirname}/../dist/bugsnag.js`, track(`/v${version}/bugsnag.js`))
+  await upload(`${__dirname}/../dist/bugsnag.js.map`, track(`/v${version}/bugsnag.js.map`))
+  await upload(`${__dirname}/../dist/bugsnag.min.js`, track(`/v${version}/bugsnag.min.js`))
+  await upload(`${__dirname}/../dist/bugsnag.min.js.map`, track(`/v${version}/bugsnag.min.js.map`))
+
+  const isUnstable = semver.prerelease(version) !== null
+  if (!isUnstable) {
+    // if this is a release (as opposed to a prerelease), update the major/minor aliases
+    const major = `v${semver.major(version)}`
+    await upload(`${__dirname}/../dist/bugsnag.js`, track(`/${major}/bugsnag.js`))
+    await upload(`${__dirname}/../dist/bugsnag.js.map`, track(`/${major}/bugsnag.js.map`))
+    await upload(`${__dirname}/../dist/bugsnag.min.js`, track(`/${major}/bugsnag.min.js`))
+    await upload(`${__dirname}/../dist/bugsnag.min.js.map`, track(`/${major}/bugsnag.min.js.map`))
+
+    const minor = `v${semver.major(version)}.${semver.minor(version)}`
+    await upload(`${__dirname}/../dist/bugsnag.js`, track(`/${minor}/bugsnag.js`))
+    await upload(`${__dirname}/../dist/bugsnag.js.map`, track(`/${minor}/bugsnag.js.map`))
+    await upload(`${__dirname}/../dist/bugsnag.min.js`, track(`/${minor}/bugsnag.min.js`))
+    await upload(`${__dirname}/../dist/bugsnag.min.js.map`, track(`/${minor}/bugsnag.min.js.map`))
+  }
+
+  // invalidate caches for all of the uploaded files
+  await invalidate(uploaded)
+}
+
+run()
