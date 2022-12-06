@@ -1,35 +1,28 @@
 
-import type { Config, Plugin } from '@bugsnag/core'
 import Client from '@bugsnag/core/client'
 import { schema as coreSchema } from '@bugsnag/core/config'
 import delivery from '@bugsnag/delivery-fetch'
+import config from './config'
+import preventDiscard from './prevent-discard'
 
 const name = 'Bugsnag JavaScript'
-const version = '7.18.0' // TODO: Get version dynamically
 const url = 'https://github.com/bugsnag/bugsnag-js'
+// eslint-disable-next-line no-undef
+const version = __VERSION__ // Replaced at compile time with webpack
 
 // extend the base config schema with some worker-specific options
-const schema = { ...coreSchema }
+const schema = { ...coreSchema, ...config }
 
-// TODO: Fix interface - extend off ClientWithInternals?
-interface Notifier {
-  _client: Client | null
-  createClient: (opts: {}) => Client
-  start: (opts: {}) => Client
-  isStarted: () => Boolean
-}
-
-const Bugsnag: Notifier = {
-  _client: null,
-  createClient: (opts: {}) => {
+const Bugsnag = {
+  createClient: (opts) => {
     // handle very simple use case where user supplies just the api key as a string
     if (typeof opts === 'string') opts = { apiKey: opts }
     if (!opts) opts = {}
 
-    const internalPlugins: Plugin[] = []
+    const internalPlugins = [preventDiscard]
 
     // configure a client with user supplied options
-    const bugsnag = new Client(opts as Config, schema, internalPlugins, { name, version, url })
+    const bugsnag = new Client(opts, schema, internalPlugins, { name, version, url })
 
     bugsnag._setDelivery(delivery)
 

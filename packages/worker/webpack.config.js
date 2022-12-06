@@ -1,9 +1,11 @@
 const path = require('path')
+const pkg = require('./package.json')
+const { DefinePlugin } = require('webpack')
 
 module.exports = {
-  entry: './src/notifier.ts',
-  mode: 'development',
-  devtool: 'inline-source-map',
+  entry: './src/notifier.js',
+  mode: 'production',
+  // devtool: 'inline-source-map',
   experiments: {
     outputModule: true
   },
@@ -24,5 +26,10 @@ module.exports = {
         loader: 'ts-loader'
       }
     ]
-  }
+  },
+
+  plugins: [new DefinePlugin({
+    // Replace __VERSION__ with actual version number
+    __VERSION__: JSON.stringify(pkg.version)
+  })]
 }

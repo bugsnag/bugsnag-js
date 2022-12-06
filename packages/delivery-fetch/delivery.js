@@ -1,12 +1,10 @@
 import payload from '@bugsnag/core/lib/json-payload'
 
-type DeliveryCallback = (err?: Error | null) => void
-
-export default (client: any) => ({
-  sendEvent: (event: any, cb: DeliveryCallback = () => { }) => {
+const delivery = (client) => ({
+  sendEvent: (event, cb = () => {}) => {
     const url = client._config.endpoints.notify
 
-    fetch(url, {
+    global.fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -22,10 +20,10 @@ export default (client: any) => ({
       cb(null)
     })
   },
-  sendSession: (session: any, cb: DeliveryCallback = () => { }) => {
+  sendSession: (session, cb = () => { }) => {
     const url = client._config.endpoints.sessions
 
-    fetch(url, {
+    global.fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -42,3 +40,5 @@ export default (client: any) => ({
     })
   }
 })
+
+export default delivery

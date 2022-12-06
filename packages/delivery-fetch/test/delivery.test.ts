@@ -1,5 +1,6 @@
-import delivery from '../src/delivery'
+import delivery from '../types/delivery'
 import type { Client } from '@bugsnag/core'
+import type { EventDeliveryPayload } from '@bugsnag/core/client'
 
 // Prevent typescript from complaining about fetch not existing on global object
 const globalAny: any = global
@@ -16,7 +17,7 @@ describe('delivery:fetch', () => {
       redactedKeys: []
     }
 
-    const payload = { sample: 'payload' }
+    const payload = { sample: 'payload' } as unknown as EventDeliveryPayload
 
     delivery({ logger: {}, _config: config } as unknown as Client).sendEvent(payload, (err) => {
       expect(err).toBe(null)
