@@ -255,7 +255,7 @@ safari_13:
     lineNumber: 18
     columnNumber: 25
 
-safari_15:
+safari_16:
   handled:
     errorClass: 'ReferenceError'
     errorMessage: "Can't find variable: foo"
@@ -694,7 +694,7 @@ chrome_latest:
 
 # BitBar exclusive
 
-chrome_102:
+chrome_108:
   handled:
     errorClass: 'ReferenceError'
     errorMessage: 'foo is not defined'
@@ -720,7 +720,7 @@ chrome_102:
     lineNumber: 18
     columnNumber: 7
 
-edge_102:
+edge_106:
   handled:
     errorClass: 'ReferenceError'
     errorMessage: 'foo is not defined'
@@ -746,7 +746,7 @@ edge_102:
     lineNumber: 18
     columnNumber: 7
 
-firefox_101:
+firefox_107:
   handled:
     errorClass: 'ReferenceError'
     errorMessage: 'foo is not defined'
