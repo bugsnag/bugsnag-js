@@ -10,6 +10,10 @@
 
 - (plugin-express|plugin-koa|plugin-restify) Fix parts of request metadata being missing from some events [#1879](https://github.com/bugsnag/bugsnag-js/pull/1879)
 
+## TBD
+
+- (react-native) Update bugsnag-cocoa from v6.25.0 to [v6.25.1](https://github.com/bugsnag/bugsnag-cocoa/blob/master/CHANGELOG.md#6251-2022-12-07)
+
 ## v7.18.2 (2022-11-01)
 
 ### Changed
