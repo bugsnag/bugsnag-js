@@ -43,10 +43,15 @@ end
 
 When('I relaunch the app after a crash') do
   state = wait_for_app_state :not_running
+  # TODO: Really we should be using terminate_app/activate_app with the newer Appium client,
+  #       but for some reason they seem to make some scenarios flaky (presumably due to the
+  #       nature of how/when they close the app).
   if state != :not_running
-    Maze.driver.terminate_app Maze.driver.app_id
+    Maze.driver.close_app
+    # Maze.driver.terminate_app Maze.driver.app_id
   end
-  Maze.driver.activate_app Maze.driver.app_id
+  Maze.driver.launch_app
+  # Maze.driver.activate_app Maze.driver.app_id
 end
 
 When('I clear any error dialogue') do
@@ -114,9 +119,4 @@ Then('the stacktrace contains {string} equal to {string}') do |field_path, expec
     found = true if Maze::Helper.read_key_path(frame, field_path) == expected_value
   end
   fail("No field_path #{field_path} found with value #{expected_value}") unless found
-end
-
-# TODO: PLAT-9328 Refactor into Maze Runner
-When('I set the screen orientation to {word}') do |rotation|
-  Maze.driver.set_rotation(rotation.to_sym)
 end
