@@ -5,7 +5,7 @@ import delivery from '@bugsnag/delivery-fetch'
 import config from './config'
 import preventDiscard from './prevent-discard'
 
-const name = 'Bugsnag JavaScript'
+const name = 'Bugsnag Worker'
 const url = 'https://github.com/bugsnag/bugsnag-js'
 const version = __VERSION__ // eslint-disable-line no-undef
 

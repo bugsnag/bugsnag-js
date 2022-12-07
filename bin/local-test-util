@@ -126,7 +126,7 @@ async function buildNotifiers (notifier) {
 async function packNotifiers (notifier) {
   const notifiers = notifier
     ? [ notifier ]
-    : [ 'js', 'browser', 'node', 'plugin-angular', 'plugin-react', 'plugin-vue' ]
+    : [ 'js', 'browser', 'node', 'worker', 'plugin-angular', 'plugin-react', 'plugin-vue' ]
   for (const n of notifiers) {
     await ex(`npm`, [ `pack`, `--verbose`, `packages/${n}/` ])
   }
@@ -134,7 +134,7 @@ async function packNotifiers (notifier) {
 
 async function installNotifiers (notifier) {
   trace('install notifiers')
-  if (notifier && ![ 'browser', 'plugin-vue', 'plugin-react' ].includes(notifier)) return
+  if (notifier && ![ 'browser', 'plugin-vue', 'plugin-react', 'worker' ].includes(notifier)) return
   await ex(`npm`, [
     `install`,
     `--no-package-lock`,
@@ -145,6 +145,7 @@ async function installNotifiers (notifier) {
     ]
     : [
       `../../../../bugsnag-browser-${require('../packages/browser/package.json').version}.tgz`,
+      `../../../../bugsnag-worker-${require('../packages/worker/package.json').version}.tgz`,
       `../../../../bugsnag-plugin-react-${require('../packages/plugin-react/package.json').version}.tgz`,
       `../../../../bugsnag-plugin-vue-${require('../packages/plugin-vue/package.json').version}.tgz`
     ]
@@ -155,7 +156,7 @@ async function installNotifiers (notifier) {
 
 async function installNgNotifier (notifier) {
   trace('install ng notifier')
-  if (notifier && ![ 'browser', 'node', 'js', 'plugin-angular' ].includes(notifier)) return
+  if (notifier && ![ 'browser', 'node', 'js', 'plugin-angular', 'worker' ].includes(notifier)) return
   await ex(`npm`, [
     `install`,
     `--no-package-lock`,
@@ -163,6 +164,7 @@ async function installNgNotifier (notifier) {
     `../../../../../../bugsnag-browser-${require('../packages/browser/package.json').version}.tgz`,
     `../../../../../../bugsnag-js-${require('../packages/js/package.json').version}.tgz`,
     `../../../../../../bugsnag-node-${require('../packages/node/package.json').version}.tgz`,
+    `../../../../../../bugsnag-worker-${require('../packages/worker/package.json').version}.tgz`,
     `../../../../../../bugsnag-plugin-angular-${require('../packages/plugin-angular/package.json').version}.tgz`
   ], {
     cwd: `${__dirname}/../test/browser/features/fixtures/plugin_angular/ng`
