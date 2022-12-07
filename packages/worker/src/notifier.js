@@ -46,11 +46,9 @@ export const Bugsnag = {
 Object.getOwnPropertyNames(Client.prototype).forEach(method => {
   // skip private methods
   if (/^_/.test(method) || method === 'constructor') return
-  // @ts-ignore:
   Bugsnag[method] = function () {
     if (!Bugsnag._client) return console.log(`Bugsnag.${method}() was called before Bugsnag.start()`)
     Bugsnag._client._depth += 1
-    // @ts-ignore:
     const ret = Bugsnag._client[method].apply(Bugsnag._client, arguments)
     Bugsnag._client._depth -= 1
     return ret
