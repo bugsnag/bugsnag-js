@@ -287,4 +287,91 @@ describe('@bugsnag/core/lib/clone-client', () => {
       expect(cloned._sessionDelegate).toBe(original._sessionDelegate)
     })
   })
+
+  describe('registerCallback', () => {
+    it('allows registering callbacks that are called when a client is cloned', () => {
+      const callback1 = jest.fn()
+      const callback2 = jest.fn()
+      const callback3 = jest.fn()
+
+      clone.registerCallback(callback1)
+      clone.registerCallback(callback2)
+      clone.registerCallback(callback3)
+
+      const original = new Client({ apiKey })
+
+      expect(callback1).not.toHaveBeenCalled()
+      expect(callback2).not.toHaveBeenCalled()
+      expect(callback3).not.toHaveBeenCalled()
+
+      clone(original)
+
+      expect(callback1).toHaveBeenCalledTimes(1)
+      expect(callback2).toHaveBeenCalledTimes(1)
+      expect(callback3).toHaveBeenCalledTimes(1)
+
+      clone(original)
+
+      expect(callback1).toHaveBeenCalledTimes(2)
+      expect(callback2).toHaveBeenCalledTimes(2)
+      expect(callback3).toHaveBeenCalledTimes(2)
+    })
+
+    it('passes the clone to the callbacks', () => {
+      const callback1 = jest.fn()
+      const callback2 = jest.fn()
+      const callback3 = jest.fn()
+
+      clone.registerCallback(callback1)
+      clone.registerCallback(callback2)
+      clone.registerCallback(callback3)
+
+      const original = new Client({ apiKey })
+
+      expect(callback1).not.toHaveBeenCalled()
+      expect(callback2).not.toHaveBeenCalled()
+      expect(callback3).not.toHaveBeenCalled()
+
+      const cloned = clone(original)
+
+      expect(callback1).toHaveBeenCalledWith(cloned)
+      expect(callback2).toHaveBeenCalledWith(cloned)
+      expect(callback3).toHaveBeenCalledWith(cloned)
+
+      const cloned2 = clone(original)
+
+      expect(callback1).toHaveBeenCalledWith(cloned2)
+      expect(callback2).toHaveBeenCalledWith(cloned2)
+      expect(callback3).toHaveBeenCalledWith(cloned2)
+
+      // the callbacks should not be called with the original client
+      expect(callback1).not.toHaveBeenCalledWith(original)
+      expect(callback2).not.toHaveBeenCalledWith(original)
+      expect(callback3).not.toHaveBeenCalledWith(original)
+    })
+
+    it('calls callbacks in the order they are registered', () => {
+      const order: string[] = []
+
+      const callback1 = () => { order.push('callback1') }
+      const callback2 = () => { order.push('callback2') }
+      const callback3 = () => { order.push('callback3') }
+
+      clone.registerCallback(callback1)
+      clone.registerCallback(callback2)
+      clone.registerCallback(callback3)
+
+      const original = new Client({ apiKey })
+
+      expect(order).toEqual([])
+
+      clone(original)
+
+      expect(order).toEqual(['callback1', 'callback2', 'callback3'])
+
+      clone(original)
+
+      expect(order).toEqual(['callback1', 'callback2', 'callback3', 'callback1', 'callback2', 'callback3'])
+    })
+  })
 })
