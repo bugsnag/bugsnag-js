@@ -56,59 +56,57 @@ describe('plugin: aws lambda sessions', () => {
     })
   })
 
-  ;['express', 'koa', 'restify'].forEach(serverPlugin => {
-    describe(`with server plugin (${serverPlugin})`, () => {
-      it('can start a session', () => {
-        const client = createClient(serverPlugin)
+  describe.each(['express', 'koa', 'restify'])('with server plugin (%s)', serverPlugin => {
+    it('can start a session', () => {
+      const client = createClient(serverPlugin)
 
-        expect(client._session).toBeNull()
+      expect(client._session).toBeNull()
 
-        const cloned = client.startSession()
+      const cloned = client.startSession()
 
-        expect(cloned).not.toBe(client)
-        expect(client._session).toBeNull()
-        expect(cloned._session).toBeInstanceOf(Session)
-        // @ts-ignore
-        expect(cloned._session.toJSON()).toEqual({
-          events: {
-            handled: 0,
-            unhandled: 0
-          },
-          id: expect.any(String),
-          startedAt: expect.any(Date)
-        })
+      expect(cloned).not.toBe(client)
+      expect(client._session).toBeNull()
+      expect(cloned._session).toBeInstanceOf(Session)
+      // @ts-ignore
+      expect(cloned._session.toJSON()).toEqual({
+        events: {
+          handled: 0,
+          unhandled: 0
+        },
+        id: expect.any(String),
+        startedAt: expect.any(Date)
       })
+    })
 
-      it('can pause and resume a session', () => {
-        const client = createClient(serverPlugin)
+    it('can pause and resume a session', () => {
+      const client = createClient(serverPlugin)
 
-        expect(client._session).toBeNull()
+      expect(client._session).toBeNull()
 
-        const cloned = client.startSession()
+      const cloned = client.startSession()
 
-        expect(client._session).toBeNull()
-        expect(cloned._session).toBeInstanceOf(Session)
-        const expectedSession = cloned._session
+      expect(client._session).toBeNull()
+      expect(cloned._session).toBeInstanceOf(Session)
+      const expectedSession = cloned._session
 
-        cloned.pauseSession()
+      cloned.pauseSession()
 
-        expect(cloned._session).toBeNull()
+      expect(cloned._session).toBeNull()
 
-        // as there is a paused session, resumeSession should NOT clone again
-        const resumeSessionClient = cloned.resumeSession()
+      // as there is a paused session, resumeSession should NOT clone again
+      const resumeSessionClient = cloned.resumeSession()
 
-        expect(cloned._session).toBe(expectedSession)
-        expect(resumeSessionClient).toBe(cloned)
-      })
+      expect(cloned._session).toBe(expectedSession)
+      expect(resumeSessionClient).toBe(cloned)
+    })
 
-      it('clones the client with resumeSession if there is no active session', () => {
-        const client = createClient(serverPlugin)
-        const cloned = client.resumeSession()
+    it('clones the client with resumeSession if there is no active session', () => {
+      const client = createClient(serverPlugin)
+      const cloned = client.resumeSession()
 
-        expect(cloned).not.toBe(client)
-        expect(cloned._session).toBeInstanceOf(Session)
-        expect(client._session).toBeNull()
-      })
+      expect(cloned).not.toBe(client)
+      expect(cloned._session).toBeInstanceOf(Session)
+      expect(client._session).toBeNull()
     })
   })
 })
