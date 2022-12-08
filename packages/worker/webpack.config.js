@@ -4,8 +4,8 @@ const { DefinePlugin } = require('webpack')
 
 module.exports = {
   entry: './src/notifier.js',
-  mode: 'development',
-  devtool: 'inline-source-map',
+  mode: 'production',
+  // devtool: 'inline-source-map',
   experiments: {
     outputModule: true
   },
