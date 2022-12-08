@@ -85,6 +85,11 @@ project.ext.react = [
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
+apply plugin: "com.facebook.react"
+
+react {
+    jsRootDir = rootProject.file("../")
+}
 
 /**
  * Set this to true to create two separate APKs instead of one:
@@ -184,7 +189,7 @@ android {
         afterEvaluate {
             // If you wish to add a custom TurboModule or component locally,
             // you should uncomment this line.
-            // preBuild.dependsOn("generateCodegenArtifactsFromSchema")
+            preBuild.dependsOn("generateCodegenArtifactsFromSchema")
             preDebugBuild.dependsOn(packageReactNdkDebugLibs)
             preReleaseBuild.dependsOn(packageReactNdkReleaseLibs)
 

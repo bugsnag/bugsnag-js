@@ -1,6 +1,14 @@
 module.exports = (NativeClient) => ({
   load: (client) => {
     client.addOnError(event => {
+      if(global.MazeRunnerNative && global.MazeRunnerNative.getMessage) {
+        console.log('in event-sync callback, invoking MazeRunnerNative.getMessage')
+        global.MazeRunnerNative.getMessage(event.toString())
+          .then(result => {
+            console.log('event-sync returned from MazeRunnerNative.getMessage', result)
+          })
+      }
+
       console.log('in event-sync callback, invoking getPayloadInfo', NativeClient && typeof NativeClient.getPayloadInfo, NativeClient)
       return NativeClient.getPayloadInfo({ unhandled: event.unhandled })
         .then(({
