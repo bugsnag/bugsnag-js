@@ -5,7 +5,6 @@ const { DefinePlugin } = require('webpack')
 module.exports = {
   entry: './src/notifier.js',
   mode: 'production',
-  // devtool: 'inline-source-map',
   experiments: {
     outputModule: true
   },
@@ -24,16 +23,6 @@ module.exports = {
       {
         test: /\.ts/,
         loader: 'ts-loader'
-      },
-      {
-        test: /\.m?js$/,
-        exclude: /(node_modules|bower_components)/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: ['@babel/preset-env']
-          }
-        }
       }
     ]
   },
