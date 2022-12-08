@@ -1,3 +1,5 @@
+@skip_ie_8 @skip_ie_9
+
 Feature: worker notifier
 
 Scenario: notifying from within a worker
