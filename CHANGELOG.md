@@ -9,6 +9,7 @@
 ### Fixed
 
 - (plugin-express|plugin-koa|plugin-restify) Fix parts of request metadata being missing from some events [#1879](https://github.com/bugsnag/bugsnag-js/pull/1879)
+- (plugin-aws-lambda) Fix a bug when used with a server plugin (Express, Koa or Restify) causing internal callbacks to be added multiple times and reporting the wrong request data [#1887](https://github.com/bugsnag/bugsnag-js/pull/1887)
 
 ## v7.18.2 (2022-11-01)
 

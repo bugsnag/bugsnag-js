@@ -11,7 +11,7 @@ app.get('/', (request, response) => {
 })
 
 app.get('/handled', (request, response) => {
-  Bugsnag.notify('no crashing here')
+  request.bugsnag.notify('no crashing here')
 
   response.json({ message: 'did not crash :)' })
 })
