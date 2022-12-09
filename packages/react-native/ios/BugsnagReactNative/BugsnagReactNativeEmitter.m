@@ -52,10 +52,14 @@ RCT_EXPORT_MODULE();
             break;
 
         case BSGClientObserverUpdateContext:
-            if ([value isKindOfClass:[NSString class]] || !value) {
+            if ([value isKindOfClass:[NSString class]]) {
                 return @{
                     @"type": @"ContextUpdate",
-                    @"data": value ?: [NSNull null]
+                    @"data": value
+                };
+            } else {
+                return @{
+                    @"type": @"ContextUpdate"
                 };
             }
             break;
