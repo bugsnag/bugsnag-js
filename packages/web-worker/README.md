@@ -1,4 +1,4 @@
-# @bugsnag/worker
+# @bugsnag/web-worker
 
 This package contains the web worker / service worker implementation of the Bugsnag notifier for JavaScript.
 
