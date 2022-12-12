@@ -7,7 +7,7 @@ import config from './config'
 import pluginDeviceDetails from './device-details'
 import pluginPreventDiscard from './prevent-discard'
 
-const name = 'Bugsnag Worker'
+const name = 'Bugsnag Web Worker'
 const url = 'https://github.com/bugsnag/bugsnag-js'
 const version = __VERSION__ // eslint-disable-line no-undef
 
