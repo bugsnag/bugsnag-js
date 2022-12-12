@@ -40,7 +40,7 @@ class MockServer {
   }
 
   _statusCode () {
-    statusCode = this.responseStatusCode
+    var statusCode = this.responseStatusCode
     this.responseStatusCode = 202
     return statusCode
   }
