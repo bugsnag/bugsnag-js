@@ -29,7 +29,7 @@ WORKDIR /app/test/browser/features/fixtures
 RUN npm install --no-package-lock --no-save ../../../../bugsnag-browser-*.tgz
 RUN npm install --no-package-lock --no-save ../../../../bugsnag-plugin-react-*.tgz
 RUN npm install --no-package-lock --no-save ../../../../bugsnag-plugin-vue-*.tgz
-RUN npm install --no-package-lock --no-save ../../../../bugsnag-worker-*.tgz
+RUN npm install --no-package-lock --no-save ../../../../bugsnag-web-worker-*.tgz
 WORKDIR plugin_angular/ng
 RUN npm install --no-package-lock --no-save \
   ../../../../../../bugsnag-plugin-angular-*.tgz  \

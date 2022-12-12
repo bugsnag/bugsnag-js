@@ -145,7 +145,7 @@ async function installNotifiers (notifier) {
     ]
     : [
       `../../../../bugsnag-browser-${require('../packages/browser/package.json').version}.tgz`,
-      `../../../../bugsnag-worker-${require('../packages/web-worker/package.json').version}.tgz`,
+      `../../../../bugsnag-web-worker-${require('../packages/web-worker/package.json').version}.tgz`,
       `../../../../bugsnag-plugin-react-${require('../packages/plugin-react/package.json').version}.tgz`,
       `../../../../bugsnag-plugin-vue-${require('../packages/plugin-vue/package.json').version}.tgz`
     ]
@@ -164,7 +164,7 @@ async function installNgNotifier (notifier) {
     `../../../../../../bugsnag-browser-${require('../packages/browser/package.json').version}.tgz`,
     `../../../../../../bugsnag-js-${require('../packages/js/package.json').version}.tgz`,
     `../../../../../../bugsnag-node-${require('../packages/node/package.json').version}.tgz`,
-    `../../../../../../bugsnag-worker-${require('../packages/web-worker/package.json').version}.tgz`,
+    `../../../../../../bugsnag-web-worker-${require('../packages/web-worker/package.json').version}.tgz`,
     `../../../../../../bugsnag-plugin-angular-${require('../packages/plugin-angular/package.json').version}.tgz`
   ], {
     cwd: `${__dirname}/../test/browser/features/fixtures/plugin_angular/ng`
