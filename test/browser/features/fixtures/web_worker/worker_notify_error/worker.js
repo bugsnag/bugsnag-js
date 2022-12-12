@@ -1,6 +1,6 @@
 import Bugsnag from "/node_modules/@bugsnag/worker/dist/notifier.js"
 
-onmessage = function (e) {
+onmessage = (e) => {
     const { type, payload } = e.data
     switch (type) {
         case 'bugsnag-start':

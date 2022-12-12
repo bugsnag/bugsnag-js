@@ -19,7 +19,7 @@
   <body>
     <script>
         var worker = new Worker('worker.js', { type: 'module' })
-        worker.onmessage = function () { worker.postMessage({ type: 'bugsnag-notify' }) } 
+        worker.onmessage = () => { worker.postMessage({ type: 'bugsnag-notify' }) } 
         worker.postMessage({ type: 'bugsnag-start', payload: { NOTIFY, SESSIONS, API_KEY } })
     </script>
   </body>
