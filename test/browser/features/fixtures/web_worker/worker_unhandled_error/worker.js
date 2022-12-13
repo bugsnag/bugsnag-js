@@ -15,8 +15,6 @@ onmessage = function (e) {
             break;
         case 'bugsnag-throw':
             throw new Error('I am an error')
-            break;
         default:
-            console.log(action)
     } 
 }

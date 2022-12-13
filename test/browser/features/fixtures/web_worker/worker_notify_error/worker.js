@@ -17,6 +17,5 @@ onmessage = function (e) {
             Bugsnag.notify(new Error('I am an error'))
             break;
         default:
-            console.log(action)
     } 
 }
