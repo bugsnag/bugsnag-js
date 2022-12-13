@@ -10,7 +10,7 @@ This package is free software released under the MIT License. See [LICENSE.txt](
 
 ```js
 // worker.js
-import Bugsnag from "/node_modules/@bugsnag/worker/dist/notifier.js"
+import Bugsnag from "/node_modules/@bugsnag/web-worker/dist/notifier.js"
 
 Bugsnag.start({
     apiKey: YOUR_API_KEY

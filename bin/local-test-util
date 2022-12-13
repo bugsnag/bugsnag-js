@@ -126,7 +126,7 @@ async function buildNotifiers (notifier) {
 async function packNotifiers (notifier) {
   const notifiers = notifier
     ? [ notifier ]
-    : [ 'js', 'browser', 'node', 'worker', 'plugin-angular', 'plugin-react', 'plugin-vue' ]
+    : [ 'js', 'browser', 'node', 'web-worker', 'plugin-angular', 'plugin-react', 'plugin-vue' ]
   for (const n of notifiers) {
     await ex(`npm`, [ `pack`, `--verbose`, `packages/${n}/` ])
   }
@@ -134,7 +134,7 @@ async function packNotifiers (notifier) {
 
 async function installNotifiers (notifier) {
   trace('install notifiers')
-  if (notifier && ![ 'browser', 'plugin-vue', 'plugin-react', 'worker' ].includes(notifier)) return
+  if (notifier && ![ 'browser', 'plugin-vue', 'plugin-react', 'web-worker' ].includes(notifier)) return
   await ex(`npm`, [
     `install`,
     `--no-package-lock`,
@@ -156,7 +156,7 @@ async function installNotifiers (notifier) {
 
 async function installNgNotifier (notifier) {
   trace('install ng notifier')
-  if (notifier && ![ 'browser', 'node', 'js', 'plugin-angular', 'worker' ].includes(notifier)) return
+  if (notifier && ![ 'browser', 'node', 'js', 'plugin-angular', 'web-worker' ].includes(notifier)) return
   await ex(`npm`, [
     `install`,
     `--no-package-lock`,
