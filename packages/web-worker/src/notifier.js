@@ -6,6 +6,7 @@ import pluginClientIp from '@bugsnag/plugin-client-ip'
 import config from './config'
 import pluginDeviceDetails from './device-details'
 import pluginPreventDiscard from './prevent-discard'
+import unhandled from './unhandled'
 
 const name = 'Bugsnag Web Worker'
 const url = 'https://github.com/bugsnag/bugsnag-js'
@@ -20,7 +21,7 @@ export const Bugsnag = {
     if (typeof opts === 'string') opts = { apiKey: opts }
     if (!opts) opts = {}
 
-    const internalPlugins = [pluginClientIp, pluginDeviceDetails, pluginPreventDiscard]
+    const internalPlugins = [pluginClientIp, pluginDeviceDetails, pluginPreventDiscard, unhandled]
 
     // configure a client with user supplied options
     const bugsnag = new Client(opts, schema, internalPlugins, { name, version, url })
