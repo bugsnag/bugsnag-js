@@ -1,4 +1,4 @@
-@skip_ie_8 @skip_ie_9 @skip_ie_10 @skip_ie_11 @skip_chrome_43 @skip_chrome_72 @skip_edge_17 @skip_firefox_78 @skip_firefox_107 @skip_safari_10
+@skip_ie_8 @skip_ie_9 @skip_ie_10 @skip_ie_11 @skip_chrome_43 @skip_chrome_72 @skip_edge_17 @skip_firefox_78 @skip_firefox_107 @skip_safari_10 @skip_iphone_7
 
 Feature: worker notifier
 
