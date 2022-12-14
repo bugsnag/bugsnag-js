@@ -48,6 +48,9 @@ steps:
             command:
               - --farm=bb
               - --browser=firefox_107
+          artifacts#v1.5.0:
+            upload:
+              - "./test/browser/maze_output/failed/**/*"
         concurrency: 5
         concurrency_group: "bitbar-web"
 
@@ -64,7 +67,7 @@ steps:
               - --browser=chrome_108
           artifacts#v1.5.0:
             upload:
-              - "./test/browser/maze_output/**/*"
+              - "./test/browser/maze_output/failed/**/*"
         concurrency: 5
         concurrency_group: "bitbar-web"
 
@@ -79,6 +82,9 @@ steps:
             command:
               - --farm=bb
               - --browser=ie_11
+          artifacts#v1.5.0:
+            upload:
+              - "./test/browser/maze_output/failed/**/*"
         env:
           HOST: "localhost" # IE11 needs the host set to localhost for some reason
         concurrency: 5
@@ -95,6 +101,9 @@ steps:
             command:
               - --farm=bb
               - --browser=edge_106
+          artifacts#v1.5.0:
+            upload:
+              - "./test/browser/maze_output/failed/**/*"
         concurrency: 5
         concurrency_group: "bitbar-web"
 
@@ -109,6 +118,9 @@ steps:
             command:
               - --farm=bb
               - --browser=safari_16
+          artifacts#v1.5.0:
+            upload:
+              - "./test/browser/maze_output/failed/**/*"
         concurrency: 5
         concurrency_group: "bitbar-web"
 
@@ -126,6 +138,9 @@ steps:
             command:
               - --farm=bs
               - --browser=android_nexus5
+          artifacts#v1.5.0:
+            upload:
+              - "./test/browser/maze_output/failed/**/*"
         concurrency: 5
         concurrency_group: "browserstack"
 
@@ -140,6 +155,9 @@ steps:
             command:
               - --farm=bs
               - --browser=chrome_43
+          artifacts#v1.5.0:
+            upload:
+              - "./test/browser/maze_output/failed/**/*"
         concurrency: 2
         concurrency_group: "browserstack"
 
@@ -154,6 +172,9 @@ steps:
             command:
               - --farm=bs
               - --browser=chrome_72
+          artifacts#v1.5.0:
+            upload:
+              - "./test/browser/maze_output/failed/**/*"
         concurrency: 2
         concurrency_group: "browserstack"
 
@@ -168,6 +189,9 @@ steps:
             command:
               - --farm=bs
               - --browser=ie_8
+          artifacts#v1.5.0:
+            upload:
+              - "./test/browser/maze_output/failed/**/*"
         concurrency: 2
         concurrency_group: "browserstack"
 
@@ -182,6 +206,9 @@ steps:
             command:
               - --farm=bs
               - --browser=ie_9
+          artifacts#v1.5.0:
+            upload:
+              - "./test/browser/maze_output/failed/**/*"
         concurrency: 2
         concurrency_group: "browserstack"
 
@@ -196,6 +223,9 @@ steps:
             command:
               - --farm=bs
               - --browser=ie_10
+          artifacts#v1.5.0:
+            upload:
+              - "./test/browser/maze_output/failed/**/*"
         concurrency: 2
         concurrency_group: "browserstack"
 
@@ -210,6 +240,9 @@ steps:
             command:
               - --farm=bs
               - --browser=edge_17
+          artifacts#v1.5.0:
+            upload:
+              - "./test/browser/maze_output/failed/**/*"
         concurrency: 2
         concurrency_group: "browserstack"
 
@@ -224,6 +257,9 @@ steps:
             command:
               - --farm=bs
               - --browser=safari_10
+          artifacts#v1.5.0:
+            upload:
+              - "./test/browser/maze_output/failed/**/*"
         concurrency: 2
         concurrency_group: "browserstack"
 
@@ -238,6 +274,9 @@ steps:
             command:
               - --farm=bs
               - --browser=iphone_7
+          artifacts#v1.5.0:
+            upload:
+              - "./test/browser/maze_output/failed/**/*"
         env:
           HOST: "bs-local.com"
         concurrency: 2
@@ -254,6 +293,9 @@ steps:
             command:
               - --farm=bs
               - --browser=iphone_13
+          artifacts#v1.5.0:
+            upload:
+              - "./test/browser/maze_output/failed/**/*"
         env:
           HOST: "bs-local.com"
         concurrency: 5
@@ -270,6 +312,9 @@ steps:
             command:
               - --farm=bs
               - --browser=android_s7
+          artifacts#v1.5.0:
+            upload:
+              - "./test/browser/maze_output/failed/**/*"
         concurrency: 5
         concurrency_group: "browserstack"
 
@@ -284,6 +329,9 @@ steps:
             command:
               - --farm=bs
               - --browser=android_s8
+          artifacts#v1.5.0:
+            upload:
+              - "./test/browser/maze_output/failed/**/*"
         concurrency: 2
         concurrency_group: "browserstack"
 
@@ -298,5 +346,8 @@ steps:
             command:
               - --farm=bs
               - --browser=firefox_78
+          artifacts#v1.5.0:
+            upload:
+              - "./test/browser/maze_output/failed/**/*"
         concurrency: 2
         concurrency_group: "browserstack"
