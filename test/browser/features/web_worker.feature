@@ -18,8 +18,5 @@ Scenario: setting collectUserIp option to false
   When I navigate to the test URL "/web_worker/ip_redaction"
   And I wait to receive an error
   Then the error is a valid browser payload for the error reporting API
-  And the event "device.id" is not null
-  And the error payload field "events.0.device.id" is stored as the value "device_id"
   And the event "request.clientIp" equals "[REDACTED]"
-  And the event "user.id" is not null
-  And the error payload field "events.0.user.id" equals the stored value "device_id"
+  And the event "user.id" equals "[REDACTED]"
