@@ -11,5 +11,5 @@ Scenario: notifying from within a worker
 
 Scenario: unhandled error in worker
   When I navigate to the test URL "/web_worker/worker_unhandled_error"
-  Then I wait to receive an error
-  And the error is a valid browser payload for the error reporting API
+  And I wait to receive at least 1 error
+  Then the error is a valid browser payload for the error reporting API
