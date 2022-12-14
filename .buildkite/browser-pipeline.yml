@@ -64,7 +64,7 @@ steps:
               - --browser=chrome_108
           artifacts#v1.5.0:
             upload:
-              - "maze_output/failed/**/*"
+              - "./test/browser/maze_output/**/*"
         concurrency: 5
         concurrency_group: "bitbar-web"
 
