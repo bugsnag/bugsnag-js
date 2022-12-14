@@ -39,7 +39,7 @@ steps:
       #
       - label: ":firefox: v107 Browser tests"
         depends_on: "browser-maze-runner"
-        timeout_in_minutes: 20
+        timeout_in_minutes: 30
         plugins:
           docker-compose#v3.9.0:
             pull: browser-maze-runner
@@ -53,7 +53,7 @@ steps:
 
       - label: ":chrome: v108 Browser tests"
         depends_on: "browser-maze-runner"
-        timeout_in_minutes: 20
+        timeout_in_minutes: 30
         plugins:
           docker-compose#v3.9.0:
             pull: browser-maze-runner
@@ -70,7 +70,7 @@ steps:
 
       - label: ":ie: v11 Browser tests"
         depends_on: "browser-maze-runner"
-        timeout_in_minutes: 20
+        timeout_in_minutes: 30
         plugins:
           docker-compose#v3.9.0:
             pull: browser-maze-runner
@@ -86,7 +86,7 @@ steps:
 
       - label: ":edge: v106 Browser tests"
         depends_on: "browser-maze-runner"
-        timeout_in_minutes: 20
+        timeout_in_minutes: 30
         plugins:
           docker-compose#v3.9.0:
             pull: browser-maze-runner
@@ -100,7 +100,7 @@ steps:
 
       - label: ":safari: 16 Browser tests"
         depends_on: "browser-maze-runner"
-        timeout_in_minutes: 20
+        timeout_in_minutes: 30
         plugins:
           docker-compose#v3.9.0:
             pull: browser-maze-runner
@@ -117,7 +117,7 @@ steps:
       #
       - label: ":android: Android 4.4 Browser tests"
         depends_on: "browser-maze-runner-legacy"
-        timeout_in_minutes: 20
+        timeout_in_minutes: 30
         plugins:
           docker-compose#v3.9.0:
             pull: browser-maze-runner-legacy
@@ -131,7 +131,7 @@ steps:
 
       - label: ":chrome: v43 Browser tests"
         depends_on: "browser-maze-runner"
-        timeout_in_minutes: 20
+        timeout_in_minutes: 30
         plugins:
           docker-compose#v3.9.0:
             pull: browser-maze-runner
@@ -145,7 +145,7 @@ steps:
 
       - label: ":chrome: v72 Browser tests"
         depends_on: "browser-maze-runner"
-        timeout_in_minutes: 20
+        timeout_in_minutes: 30
         plugins:
           docker-compose#v3.9.0:
             pull: browser-maze-runner
@@ -159,7 +159,7 @@ steps:
 
       - label: ":ie: v8 Browser tests"
         depends_on: "browser-maze-runner"
-        timeout_in_minutes: 20
+        timeout_in_minutes: 30
         plugins:
           docker-compose#v3.9.0:
             pull: browser-maze-runner
@@ -173,7 +173,7 @@ steps:
 
       - label: ":ie: v9 Browser tests"
         depends_on: "browser-maze-runner"
-        timeout_in_minutes: 20
+        timeout_in_minutes: 30
         plugins:
           docker-compose#v3.9.0:
             pull: browser-maze-runner
@@ -187,7 +187,7 @@ steps:
 
       - label: ":ie: v10 Browser tests"
         depends_on: "browser-maze-runner"
-        timeout_in_minutes: 20
+        timeout_in_minutes: 30
         plugins:
           docker-compose#v3.9.0:
             pull: browser-maze-runner
@@ -201,7 +201,7 @@ steps:
 
       - label: ":edge: v17 Browser tests"
         depends_on: "browser-maze-runner"
-        timeout_in_minutes: 20
+        timeout_in_minutes: 30
         plugins:
           docker-compose#v3.9.0:
             pull: browser-maze-runner
@@ -215,7 +215,7 @@ steps:
 
       - label: ":safari: v10 Browser tests"
         depends_on: "browser-maze-runner"
-        timeout_in_minutes: 20
+        timeout_in_minutes: 30
         plugins:
           docker-compose#v3.9.0:
             pull: browser-maze-runner
@@ -229,7 +229,7 @@ steps:
 
       - label: ":iphone: iOS 10.3 Browser tests"
         depends_on: "browser-maze-runner"
-        timeout_in_minutes: 20
+        timeout_in_minutes: 30
         plugins:
           docker-compose#v3.9.0:
             pull: browser-maze-runner
@@ -245,7 +245,7 @@ steps:
 
       - label: ":iphone: iOS 15.4 Browser tests"
         depends_on: "browser-maze-runner"
-        timeout_in_minutes: 20
+        timeout_in_minutes: 30
         plugins:
           docker-compose#v3.9.0:
             pull: browser-maze-runner
@@ -261,7 +261,7 @@ steps:
 
       - label: ":android: Android 6.0 Browser tests"
         depends_on: "browser-maze-runner"
-        timeout_in_minutes: 20
+        timeout_in_minutes: 30
         plugins:
           docker-compose#v3.9.0:
             pull: browser-maze-runner
@@ -275,7 +275,7 @@ steps:
 
       - label: ":android: Android 7.0 Browser tests"
         depends_on: "browser-maze-runner"
-        timeout_in_minutes: 20
+        timeout_in_minutes: 30
         plugins:
           docker-compose#v3.9.0:
             pull: browser-maze-runner
@@ -289,7 +289,7 @@ steps:
 
       - label: ":firefox: v78 Browser tests"
         depends_on: "browser-maze-runner"
-        timeout_in_minutes: 20
+        timeout_in_minutes: 30
         plugins:
           docker-compose#v3.9.0:
             pull: browser-maze-runner
