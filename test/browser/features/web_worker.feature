@@ -4,8 +4,8 @@ Feature: worker notifier
 
 Scenario: notifying from within a worker
   When I navigate to the test URL "/web_worker/worker_notify_error"
-  Then I wait to receive an error
-  And the error is a valid browser payload for the error reporting API
+  And I wait to receive an error
+  Then the error is a valid browser payload for the error reporting API
   And the exception "errorClass" equals "Error"
   And the exception "errorMessage" equals "I am an error"
 
@@ -13,3 +13,13 @@ Scenario: unhandled error in worker
   When I navigate to the test URL "/web_worker/worker_unhandled_error"
   And I wait to receive an error
   Then the error is a valid browser payload for the error reporting API
+
+Scenario: setting collectUserIp option to false
+  When I navigate to the test URL "/web_worker/ip_redaction"
+  And I wait to receive an error
+  Then the error is a valid browser payload for the error reporting API
+  And the event "device.id" is not null
+  And the error payload field "events.0.device.id" is stored as the value "device_id"
+  And the event "request.clientIp" equals "[REDACTED]"
+  And the event "user.id" is not null
+  And the error payload field "events.0.user.id" equals the stored value "device_id"
