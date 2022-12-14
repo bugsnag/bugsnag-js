@@ -15,4 +15,4 @@ Scenario: unhandled error in worker
   Then I wait to receive an error
   And the error is a valid browser payload for the error reporting API
   And the exception "errorClass" equals "Event: error"
-  And the exception "errorMessage" equals "I am an error"
+  And the exception "errorMessage" equals "Uncaught Error: I am an error"
