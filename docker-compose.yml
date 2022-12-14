@@ -59,6 +59,8 @@ services:
       default:
         aliases:
           - maze-runner
+    volumes:
+      - ./test/browser/maze_output:/app/maze_output
 
   browser-maze-runner-legacy:
     build:
