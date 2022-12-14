@@ -21,7 +21,6 @@
         var worker = new Worker('worker.js', { type: 'module' })
         worker.onmessage = function () { worker.postMessage({ type: 'bugsnag-throw' }) } 
         worker.postMessage({ type: 'bugsnag-start', payload: { NOTIFY, SESSIONS, API_KEY } })
-        worker.onerror = function(e) { e.preventDefault() }
     </script>
   </body>
 </html>
