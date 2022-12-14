@@ -62,6 +62,9 @@ steps:
             command:
               - --farm=bb
               - --browser=chrome_108
+          artifacts#v1.5.0:
+            upload:
+              - "maze_output/failed/**/*"
         concurrency: 5
         concurrency_group: "bitbar-web"
 
