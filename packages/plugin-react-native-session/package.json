@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-react-native-session",
-  "version": "7.18.0",
+  "version": "7.19.0-alpha.0",
   "main": "session.js",
   "description": "@bugsnag/react-native session implementation (which delegates all functionality to the native client)",
   "homepage": "https://www.bugsnag.com/",
@@ -17,7 +17,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^7.18.0"
+    "@bugsnag/core": "^7.19.0-alpha.0"
   },
   "peerDependencies": {
     "@bugsnag/core": "^7.0.0"

@@ -1,6 +1,6 @@
 {
     "name": "@bugsnag/web-worker",
-    "version": "7.18.0",
+    "version": "7.19.0-alpha.0",
     "description": "Bugsnag error reporter for JavaScript web workers and service workers",
     "homepage": "https://www.bugsnag.com/",
     "main": "dist/notifier.js",
@@ -22,9 +22,9 @@
     "author": "Bugsnag",
     "license": "MIT",
     "devDependencies": {
-        "@bugsnag/core": "^7.18.0",
-        "@bugsnag/delivery-fetch": "^7.18.0",
-        "@bugsnag/plugin-client-ip": "^7.18.0",
+        "@bugsnag/core": "^7.19.0-alpha.0",
+        "@bugsnag/delivery-fetch": "^7.19.0-alpha.0",
+        "@bugsnag/plugin-client-ip": "^7.19.0-alpha.0",
         "ts-loader": "^9.4.1",
         "typescript": "^4.9.3",
         "webpack": "^5.75.0",
