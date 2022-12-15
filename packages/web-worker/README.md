@@ -11,7 +11,7 @@ We would welcome feedback on this package via GitHub or directly to our [Support
 This early release offers basic functionality for web workers and service workers, with the intent to support Chrome extension development using manifest v3. Using this library, you will be able to:
 
 - notify errors from within service workers and web workers, including browser extensions
-- notify unhandled errors from service workers and web workers, excluding Chrome browser extensions
+- detect and automatically notify unhandled errors from service workers and web workers, excluding Chrome browser extensions
 
 Due to limitations in the Chrome Runtime API, it is not possible to catch unhandled errors so you will need to catch these from within your code and notify these errors manually.
 
@@ -39,7 +39,7 @@ function myFunction() {
 }
 ```
 
-Within a web worker, unhandled errors will also bubble up to the script that initialised the worker, so if you are also using Bugsnag in the parent script, you may wish to prevent these errors from being reported a second time:
+Within a web worker, unhandled errors will also bubble up to the script that initialized the worker, so if you are also using Bugsnag in the parent script, you may wish to prevent these errors from being reported a second time:
 
 ```js
 const worker = new Worker('worker.js', { type: 'module' })
