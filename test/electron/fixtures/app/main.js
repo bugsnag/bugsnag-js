@@ -64,21 +64,21 @@ ipcMain.on('main-process-uncaught-exception', uncaughtException)
 ipcMain.on('main-process-notify', notify)
 
 ipcMain.on('main-process-oversized', () => {
-  function repeat(s, n){
-    var a = [];
-    while(a.length < n){
-        a.push(s);
+  function repeat (s, n) {
+    var a = []
+    while (a.length < n) {
+      a.push(s)
     }
-    return a.join('');
+    return a.join('')
   }
 
-  var big = {};
-  var i = 0;
-  while (JSON.stringify(big).length < 2*10e5) {
-    big['entry'+i] = repeat('long repetitive string', 1000);
-    i++;
+  var big = {}
+  var i = 0
+  while (JSON.stringify(big).length < 2 * 10e5) {
+    big['entry' + i] = repeat('long repetitive string', 1000)
+    i++
   }
-  Bugsnag.leaveBreadcrumb('big thing', big);
+  Bugsnag.leaveBreadcrumb('big thing', big)
   notify()
 })
 
