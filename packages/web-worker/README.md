@@ -6,11 +6,34 @@ This package contains the web worker / service worker implementation of the Bugs
 
 This package is free software released under the MIT License. See [LICENSE.txt](./LICENSE.txt) for details.
 
-## Basic usage
+## Features and limitations
+
+This early release offers basic functionality for web workers and service workers, with the intent to support chrome extension development using manifest v3. Using this notifier, you will be able to:
+
+- notify errors from within service workers and web workers
+- notify unhandled errors from service workers and web workers
+
+The notifier does not currently catch unhandled errors from within the chrome runtime API, so you will need to catch and notify these errors manually.
+
+Within a web worker, unhandled errors will also bubble up to the script that initialised the worker, so if you are also using Bugsnag in the parent script, you may wish to prevent these errors from being reported a second time
 
 ```js
-// worker.js
-import Bugsnag from "/node_modules/@bugsnag/web-worker/dist/notifier.js"
+const worker = new Worker('worker.js', { type: 'module' })
+worker.onerror = function (e) {
+    e.preventDefault()
+}
+```
+
+## Installation
+
+```bash
+npm i @bugsnag/web-worker@next
+```
+
+## Usage
+
+```js
+import Bugsnag from "@bugsnag/web-worker"
 
 Bugsnag.start({
     apiKey: YOUR_API_KEY
@@ -20,7 +43,7 @@ function myFunction() {
     try {
         // something that will throw an error
     } catch (err) {
-        Bugsnag.notify(new Error(err))
+        Bugsnag.notify(err)
     }
 }
 ```
