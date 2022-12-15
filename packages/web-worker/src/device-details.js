@@ -23,13 +23,6 @@ module.exports = {
       }
       if (!client._config.collectUserIp) setDefaultUserId(event)
     }, true)
-  },
-  configSchema: {
-    generateAnonymousId: {
-      validate: value => value === true || value === false,
-      defaultValue: () => true,
-      message: 'should be true|false'
-    }
   }
 }
 

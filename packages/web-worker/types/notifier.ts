@@ -1,8 +1,7 @@
 import type { Client, Config, BugsnagStatic } from '@bugsnag/core'
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface WorkerConfig extends Config {
-  // TODO: Add relevant worker related properties
+  collectUserIp?: boolean
 }
 
 interface WorkerBugsnagStatic extends BugsnagStatic {

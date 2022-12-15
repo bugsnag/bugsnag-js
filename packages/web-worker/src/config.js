@@ -5,7 +5,7 @@ const assign = require('@bugsnag/core/lib/es-utils/assign')
 module.exports = {
   appType: {
     ...schema.appType,
-    defaultValue: () => 'worker-js'
+    defaultValue: () => 'workerjs'
   },
   logger: assign({}, schema.logger, {
     defaultValue: () =>

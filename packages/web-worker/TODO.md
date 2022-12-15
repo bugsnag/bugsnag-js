@@ -3,3 +3,4 @@
 - [] Reconsider prevent discard by default
 - [] Sourcemapping with browser extensions - do we need to strip the hash from the filepath?
 - [] How do we show code in a stacktrace if you don't build your script?
+- [] Check how to manage anonymous id within web workers and service workers (indexed db)
