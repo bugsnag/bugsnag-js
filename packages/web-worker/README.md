@@ -1,28 +1,19 @@
 # @bugsnag/web-worker
 
-This package contains the web worker / service worker implementation of the Bugsnag notifier for JavaScript.
+This package contains the web worker / service worker implementation of the Bugsnag library.
 
-## License
+**This package is still in the beta phase, so should be used with caution in production apps.**
 
-This package is free software released under the MIT License. See [LICENSE.txt](./LICENSE.txt) for details.
+We would welcome feedback on this package via GitHub or directly to our [Support](mailto:support@bugsnag.com) team.
 
 ## Features and limitations
 
-This early release offers basic functionality for web workers and service workers, with the intent to support chrome extension development using manifest v3. Using this notifier, you will be able to:
+This early release offers basic functionality for web workers and service workers, with the intent to support Chrome extension development using manifest v3. Using this library, you will be able to:
 
-- notify errors from within service workers and web workers
-- notify unhandled errors from service workers and web workers
+- notify errors from within service workers and web workers, including browser extensions
+- notify unhandled errors from service workers and web workers, excluding Chrome browser extensions
 
-The notifier does not currently catch unhandled errors from within the chrome runtime API, so you will need to catch and notify these errors manually.
-
-Within a web worker, unhandled errors will also bubble up to the script that initialised the worker, so if you are also using Bugsnag in the parent script, you may wish to prevent these errors from being reported a second time
-
-```js
-const worker = new Worker('worker.js', { type: 'module' })
-worker.onerror = function (e) {
-    e.preventDefault()
-}
-```
+Due to limitations in the Chrome Runtime API, it is not possible to catch unhandled errors so you will need to catch these from within your code and notify these errors manually.
 
 ## Installation
 
@@ -47,3 +38,16 @@ function myFunction() {
     }
 }
 ```
+
+Within a web worker, unhandled errors will also bubble up to the script that initialised the worker, so if you are also using Bugsnag in the parent script, you may wish to prevent these errors from being reported a second time:
+
+```js
+const worker = new Worker('worker.js', { type: 'module' })
+worker.onerror = function (e) {
+    e.preventDefault()
+}
+```
+
+## License
+
+This package is free software released under the MIT License. See [LICENSE.txt](./LICENSE.txt) for details.
