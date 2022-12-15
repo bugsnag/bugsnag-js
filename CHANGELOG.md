@@ -6,7 +6,7 @@
 
 - (react-native) Update bugsnag-android from v5.28.1 to [v5.28.3](https://github.com/bugsnag/bugsnag-android/blob/master/CHANGELOG.md#5283-2022-11-16)
 - (delivery-fetch) Create fetch based notifier delivery package [#1878](https://github.com/bugsnag/bugsnag-js/pull/1878)
-- (worker) Create worker notifier package to facilitate changes to google chrome extension development [#1878](https://github.com/bugsnag/bugsnag-js/pull/1878)
+- (web-worker) Create web-worker notifier package to facilitate changes in google chrome extension development using [manifest v3](https://developer.chrome.com/docs/extensions/mv3/intro) [#1878](https://github.com/bugsnag/bugsnag-js/pull/1878)
 
 ### Fixed
 
