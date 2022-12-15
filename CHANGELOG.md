@@ -7,6 +7,11 @@
 - After trimming, attempt to send all event and session payloads, even if believed oversize
 - (react-native) Update bugsnag-android from v5.28.1 to [v5.28.3](https://github.com/bugsnag/bugsnag-android/blob/master/CHANGELOG.md#5283-2022-11-16)
 
+### Fixed
+
+- (plugin-express|plugin-koa|plugin-restify) Fix parts of request metadata being missing from some events [#1879](https://github.com/bugsnag/bugsnag-js/pull/1879)
+- (plugin-aws-lambda) Fix a bug when used with a server plugin (Express, Koa or Restify) causing internal callbacks to be added multiple times and reporting the wrong request data [#1887](https://github.com/bugsnag/bugsnag-js/pull/1887)
+
 ## v7.18.2 (2022-11-01)
 
 ### Changed

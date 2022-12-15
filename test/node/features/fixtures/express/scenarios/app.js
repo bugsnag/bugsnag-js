@@ -72,8 +72,8 @@ app.get('/', function (req, res) {
   res.end('ok')
 })
 
-app.get('/sync', function (req, res) {
-  throw new Error('sync')
+app.get('/sync/:message', function (req, res) {
+  throw new Error(req.params.message)
 })
 
 app.get('/async', function (req, res) {

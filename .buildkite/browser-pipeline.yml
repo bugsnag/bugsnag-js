@@ -37,7 +37,7 @@ steps:
       #
       # BitBar tests
       #
-      - label: ":firefox: 101 Browser tests"
+      - label: ":firefox: v107 Browser tests"
         depends_on: "browser-maze-runner"
         timeout_in_minutes: 20
         plugins:
@@ -47,11 +47,11 @@ steps:
             use-aliases: true
             command:
               - --farm=bb
-              - --browser=firefox_101
+              - --browser=firefox_107
         concurrency: 5
         concurrency_group: "bitbar-web"
 
-      - label: ":chrome: v102 Browser tests"
+      - label: ":chrome: v108 Browser tests"
         depends_on: "browser-maze-runner"
         timeout_in_minutes: 20
         plugins:
@@ -61,7 +61,7 @@ steps:
             use-aliases: true
             command:
               - --farm=bb
-              - --browser=chrome_102
+              - --browser=chrome_108
         concurrency: 5
         concurrency_group: "bitbar-web"
 
@@ -81,7 +81,7 @@ steps:
         concurrency: 5
         concurrency_group: "bitbar-web"
 
-      - label: ":edge: v102 Browser tests"
+      - label: ":edge: v106 Browser tests"
         depends_on: "browser-maze-runner"
         timeout_in_minutes: 20
         plugins:
@@ -91,11 +91,11 @@ steps:
             use-aliases: true
             command:
               - --farm=bb
-              - --browser=edge_102
+              - --browser=edge_106
         concurrency: 5
         concurrency_group: "bitbar-web"
 
-      - label: ":safari: 15 Browser tests"
+      - label: ":safari: 16 Browser tests"
         depends_on: "browser-maze-runner"
         timeout_in_minutes: 20
         plugins:
@@ -105,7 +105,7 @@ steps:
             use-aliases: true
             command:
               - --farm=bb
-              - --browser=safari_15
+              - --browser=safari_16
         concurrency: 5
         concurrency_group: "bitbar-web"
 

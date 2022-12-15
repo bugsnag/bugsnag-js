@@ -3,12 +3,17 @@ BeforeAll do
   Maze.config.receive_requests_wait = 30
 end
 
-Before('@android_only') do |scenario|
-  skip_this_scenario("Skipping scenario") if Maze.driver.capabilities["os"].eql?('ios')
+Before do
+  # See https://www.browserstack.com/docs/app-automate/appium/troubleshooting/app-orientation-issues
+  Maze.driver.set_rotation(:portrait)
 end
 
-Before('@ios_only') do |scenario|
-  skip_this_scenario("Skipping scenario") if Maze.driver.capabilities["os"].eql?('android')
+Before('@android_only') do |_scenario|
+  skip_this_scenario("Skipping scenario") unless Maze::Helper.get_current_platform == 'android'
+end
+
+Before('@ios_only') do |_scenario|
+  skip_this_scenario("Skipping scenario") unless Maze::Helper.get_current_platform == 'ios'
 end
 
 Before('@navigation') do |scenario|
