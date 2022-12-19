@@ -10,7 +10,7 @@ Feature: Delivery of errors
             | Bugsnag-API-Key   | 6425093c6530f554a9897d2d7d38e248 |
             | Content-Type      | application/json                 |
             | Bugsnag-Integrity | {BODY_SHA1}                      |
-        # Check that resend is not attempted next load (e.g. for when persistence/retry is supported in node)
+        # Check that resend is not attempted next load
         When I close the app
         And I launch an app
         Then the total requests received by the server matches:
