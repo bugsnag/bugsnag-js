@@ -89,7 +89,7 @@ document.getElementById('renderer-clear-user').onclick = () => {
 }
 
 document.getElementById('renderer-clear-context').onclick = () => {
-  Bugsnag.setContext(null)
+  Bugsnag.setContext()
 }
 
 document.getElementById('renderer-clear-metadata').onclick = () => {
