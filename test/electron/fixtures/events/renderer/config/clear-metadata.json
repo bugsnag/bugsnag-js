@@ -43,7 +43,8 @@
             "width": "{TYPE:number}",
             "height": "{TYPE:number}"
           }
-        }
+        },
+        "renderer": "{TYPE:undefined}"
       },
       "severity": "warning",
       "unhandled": false,

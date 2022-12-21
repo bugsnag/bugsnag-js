@@ -29,7 +29,9 @@
         "osVersion": "{REGEX:\\d+\\.\\d+}"
       },
       "user": {
-        "id": "{REGEX:[0-9a-f]{64}}"
+        "id": "{REGEX:[0-9a-f]{64}}",
+        "name": "{TYPE:undefined}",
+        "email": "{TYPE:undefined}"
       },
       "metaData": {
         "app": {
