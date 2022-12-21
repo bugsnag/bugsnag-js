@@ -85,7 +85,7 @@ document.getElementById('renderer-clear-feature-flags-now').onclick = () => {
 Bugsnag.addFeatureFlag('from renderer at runtime 2')
 
 document.getElementById('renderer-clear-user').onclick = () => {
-  Bugsnag.setUser('', '', '')
+  Bugsnag.setUser()
 }
 
 document.getElementById('renderer-clear-context').onclick = () => {
