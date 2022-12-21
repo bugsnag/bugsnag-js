@@ -202,25 +202,6 @@ describe('clientStateUpdatesPlugin', () => {
       })
     })
 
-    it('does not store state in renderer client', () => {
-      const mockBugsnagIpcRenderer = {
-        update: jest.fn()
-      }
-
-      const client = new Client({
-        apiKey: '123',
-        metadata: { section: { key: 'value' } },
-        featureFlags: [{ name: 'abc' }, { name: 'xyz', variant: '123' }],
-        context: 'renderer config',
-        user: { id: 'ab23' }
-      }, undefined, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)])
-
-      expect(client._metadata).toEqual({})
-      expect(client._user).toEqual({})
-      expect(client._features).toStrictEqual([])
-      expect(client._context).toEqual(undefined)
-    })
-
     it('starts sessions', () => {
       const mockBugsnagIpcRenderer = { startSession: jest.fn() }
 
