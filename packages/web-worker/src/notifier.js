@@ -3,10 +3,10 @@ import Client from '@bugsnag/core/client'
 import { schema as coreSchema } from '@bugsnag/core/config'
 import delivery from '@bugsnag/delivery-fetch'
 import pluginClientIp from '@bugsnag/plugin-client-ip'
+import pluginWindowOnError from '@bugsnag/plugin-window-onerror'
 import config from './config'
 import pluginDeviceDetails from './device-details'
 import pluginPreventDiscard from './prevent-discard'
-import unhandled from './unhandled'
 
 const name = 'Bugsnag Web Worker'
 const url = 'https://github.com/bugsnag/bugsnag-js'
@@ -21,7 +21,8 @@ export const Bugsnag = {
     if (typeof opts === 'string') opts = { apiKey: opts }
     if (!opts) opts = {}
 
-    const internalPlugins = [pluginClientIp, pluginDeviceDetails, pluginPreventDiscard, unhandled]
+    // eslint-disable-next-line no-undef
+    const internalPlugins = [pluginClientIp, pluginDeviceDetails, pluginPreventDiscard, pluginWindowOnError(self)]
 
     // configure a client with user supplied options
     const bugsnag = new Client(opts, schema, internalPlugins, { name, version, url })
