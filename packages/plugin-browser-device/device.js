@@ -36,7 +36,7 @@ module.exports = (nav = navigator, screen = window.screen) => ({
 
     if (screen && screen.orientation && screen.orientation.type) {
       device.orientation = screen.orientation.type
-    } else {
+    } else if (document) {
       device.orientation =
         document.documentElement.clientWidth > document.documentElement.clientHeight
           ? 'landscape'

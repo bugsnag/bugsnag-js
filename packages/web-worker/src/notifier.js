@@ -5,7 +5,7 @@ import delivery from '@bugsnag/delivery-fetch'
 import pluginClientIp from '@bugsnag/plugin-client-ip'
 import pluginWindowOnError from '@bugsnag/plugin-window-onerror'
 import config from './config'
-import pluginDeviceDetails from './device-details'
+import pluginBrowserDevice from '@bugsnag/plugin-browser-device'
 import pluginPreventDiscard from './prevent-discard'
 
 const name = 'Bugsnag Web Worker'
@@ -22,7 +22,7 @@ export const Bugsnag = {
     if (!opts) opts = {}
 
     // eslint-disable-next-line no-undef
-    const internalPlugins = [pluginClientIp, pluginDeviceDetails, pluginPreventDiscard, pluginWindowOnError(self)]
+    const internalPlugins = [pluginClientIp, pluginBrowserDevice, pluginPreventDiscard, pluginWindowOnError(self)]
 
     // configure a client with user supplied options
     const bugsnag = new Client(opts, schema, internalPlugins, { name, version, url })
