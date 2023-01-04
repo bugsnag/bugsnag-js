@@ -1,4 +1,3 @@
-const cuid = require('@bugsnag/cuid')
 const assign = require('@bugsnag/core/lib/es-utils/assign')
 const BUGSNAG_ANONYMOUS_ID_KEY = 'bugsnag-anonymous-id'
 
@@ -14,20 +13,21 @@ const getDeviceId = () => {
       return id
     }
 
-    id = cuid()
+    id = require('@bugsnag/cuid')()
 
     storage.setItem(BUGSNAG_ANONYMOUS_ID_KEY, id)
 
     return id
   } catch (err) {
     // If localStorage is not available (e.g. because it's disabled) then give up
+    return undefined
   }
 }
 
 /*
  * Automatically detects browser device details
  */
-module.exports = (nav = navigator, screen = window.screen) => ({
+module.exports = (nav = navigator, screen = window && window.screen) => ({
   load: (client) => {
     const device = {
       locale: nav.browserLanguage || nav.systemLanguage || nav.userLanguage || nav.language,
@@ -36,11 +36,15 @@ module.exports = (nav = navigator, screen = window.screen) => ({
 
     if (screen && screen.orientation && screen.orientation.type) {
       device.orientation = screen.orientation.type
-    } else if (document) {
-      device.orientation =
+    } else {
+      try {
+        device.orientation =
         document.documentElement.clientWidth > document.documentElement.clientHeight
           ? 'landscape'
           : 'portrait'
+      } catch (err) {
+        // do nothing
+      }
     }
 
     if (client._config.generateAnonymousId) {
