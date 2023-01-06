@@ -28,41 +28,17 @@ Before('@skip_if_local_storage_is_unavailable') do |scenario|
   skip_this_scenario unless Maze.driver.local_storage?
 end
 
-Before('@skip_ie_8') do |scenario|
-  browser = Maze.config.browser
-  skip_this_scenario unless browser != "ie_8"
-end
+ERRORS = YAML::load_file('features/fixtures/browser_errors.yml')
 
-Before('@skip_ie_9') do |scenario|
-  browser = Maze.config.browser
-  skip_this_scenario unless browser != "ie_9"
+ERRORS.keys.each do |browser|
+  Before("@skip_#{browser}") do |scenario|
+    skip_this_scenario if Maze.config.browser == browser
+  end
 end
-
-Before('@skip_ie_10') do |scenario|
-  browser = Maze.config.browser
-  skip_this_scenario unless browser != "ie_10"
-end
-
-Before('@skip_ie_11') do |scenario|
-  browser = Maze.config.browser
-  skip_this_scenario unless browser != "ie_11"
-end
-
-Before('@skip_safari_6') do |scenario|
-  browser = Maze.config.browser
-  skip_this_scenario unless browser != "safari_6"
-end
-
-Before('@skip_firefox_30') do |scenario|
-  browser = Maze.config.browser
-  skip_this_scenario unless browser != "firefox_30"
-end
-
 BeforeAll do
   Maze.config.receive_no_requests_wait = 15
   Maze.config.enforce_bugsnag_integrity = false
 
-  ERRORS = YAML::load open 'features/fixtures/browser_errors.yml'
   FIXTURES_SERVER_PORT = '9020'
 
   # start a web server to serve fixtures
