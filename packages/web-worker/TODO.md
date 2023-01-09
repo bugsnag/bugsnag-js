@@ -1,5 +1,5 @@
-- [] Update existing packages to support worker notifier (window-onerror, plugin-browser-device)
-- [] Separate browser extension requirements into standalone plugin
+- [x] Update existing packages to support worker notifier (window-onerror, plugin-browser-device)
+- [x] Separate browser extension requirements into standalone plugin
 - [] Reconsider prevent discard by default
 - [] Sourcemapping with browser extensions - do we need to strip the hash from the filepath?
 - [] How do we show code in a stacktrace if you don't build your script?
