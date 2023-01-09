@@ -31,6 +31,7 @@ module.exports = {
       'browser',
       'delivery-x-domain-request',
       'delivery-xml-http-request',
+      'delivery-fetch',
       'plugin-react',
       'plugin-vue',
       'plugin-browser-context',
