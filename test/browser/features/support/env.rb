@@ -4,7 +4,8 @@ def get_test_url(path)
   host = ENV['HOST']
   notify = "http://#{ENV['API_HOST']}:#{Maze.config.port}/notify"
   sessions = "http://#{ENV['API_HOST']}:#{Maze.config.port}/sessions"
-  config_query_string = "NOTIFY=#{notify}&SESSIONS=#{sessions}&API_KEY=#{$api_key}"
+  logs = "http://#{ENV['API_HOST']}:#{Maze.config.port}/logs"
+  config_query_string = "NOTIFY=#{notify}&SESSIONS=#{sessions}&API_KEY=#{$api_key}&LOGS=#{logs}"
 
   uri = URI("http://#{host}:#{FIXTURES_SERVER_PORT}#{path}")
 
