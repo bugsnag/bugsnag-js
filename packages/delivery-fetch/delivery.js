@@ -8,7 +8,7 @@ const delivery = (client, fetch = global.fetch) => ({
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Bugsnag-Api-Key': client._config.apiKey,
+        'Bugsnag-Api-Key': event.apiKey || client._config.apiKey,
         'Bugsnag-Payload-Version': '4',
         'Bugsnag-Sent-At': (new Date()).toISOString()
       },
