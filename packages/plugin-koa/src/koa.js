@@ -27,7 +27,11 @@ module.exports = {
         event.addMetadata('request', metadata)
       }, true)
 
-      await next()
+      if (client._clientContext) {
+        await client._clientContext.run(requestClient, () => next())
+      } else {
+        await next()
+      }
     }
 
     requestHandler.v1 = function * (next) {

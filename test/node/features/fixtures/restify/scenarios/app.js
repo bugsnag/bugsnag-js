@@ -18,7 +18,7 @@ var server = restify.createServer()
 
 server.pre(middleware.requestHandler)
 
-server.use(restify.plugins.bodyParser())
+server.use(restify.plugins.bodyParser());
 server.use(restify.plugins.queryParser())
 
 // If the server hasn't started sending something within 2 seconds
@@ -31,15 +31,15 @@ server.use(function (req, res, next) {
   next()
 })
 
-server.get('/', function (req, res) {
+server.get('/', function (req, res, next) {
   res.end('ok')
 })
 
-server.get('/sync/:message', function (req, res) {
+server.get('/sync/:message', function (req, res, next) {
   throw new Error(req.params.message)
 })
 
-server.get('/async', function (req, res) {
+server.get('/async', function (req, res, next) {
   setTimeout(function () {
     throw new Error('async')
   }, 100)
@@ -58,11 +58,22 @@ server.get('/rejection-async', function (req, res, next) {
     Promise.reject(new Error('reject async')).catch(next)
   }, 100)
 })
+
+server.get('/unhandled-rejection-async-callback', function (req, res, next) {
+  setTimeout(function () {
+    Promise.reject(new Error('unhandled rejection in async callback'))
+  }, 100)
+  res.setHeader('Content-Type', 'text/html')
+  res.writeHead(200)
+  res.end('OK')
+  next()
+})
+
 //
 // app.get('/string-as-error', function (req, res, next) {
 //   next('errrr')
 // })
-//
+
 server.get('/throw-non-error', function (req, res, next) {
   throw 1 // eslint-disable-line
 })
@@ -79,7 +90,10 @@ server.get('/internal', function (req, res, next) {
 
 server.get('/handled', function (req, res, next) {
   req.bugsnag.notify(new Error('handled'))
+  res.setHeader('Content-Type', 'text/html')
+  res.writeHead(200)
   res.end('OK')
+  next()
 })
 
 server.post('/bodytest', function (req, res, next) {

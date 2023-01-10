@@ -4,14 +4,17 @@ module.exports = {
     if (!client._config.autoDetectErrors) return
     if (!client._config.enabledErrorTypes.unhandledExceptions) return
     _handler = err => {
-      const event = client.Event.create(err, false, {
+      // if we are in an async context, use the client from that context
+      const c = (client._clientContext && client._clientContext.getStore()) ? client._clientContext.getStore() : client
+
+      const event = c.Event.create(err, false, {
         severity: 'error',
         unhandled: true,
         severityReason: { type: 'unhandledException' }
       }, 'uncaughtException handler', 1)
-      client._notify(event, () => {}, (e, event) => {
-        if (e) client._logger.error('Failed to send event to Bugsnag')
-        client._config.onUncaughtException(err, event, client._logger)
+      c._notify(event, () => {}, (e, event) => {
+        if (e) c._logger.error('Failed to send event to Bugsnag')
+        c._config.onUncaughtException(err, event, c._logger)
       })
     }
     process.on('uncaughtException', _handler)

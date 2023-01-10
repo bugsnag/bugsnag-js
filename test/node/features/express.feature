@@ -9,7 +9,7 @@ Background:
   And I wait for the host "express" to open port "80"
 
 Scenario: a synchronous thrown error in a route
-  Then I open the URL "http://express/sync/hello?a=1&b=2"
+  Then I open the URL "http://express/sync/hello?a=1&b=2" tolerating any error
   And I wait to receive an error
   Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is true
@@ -28,17 +28,20 @@ Scenario: a synchronous thrown error in a route
   And the event "metaData.request.connection" is not null
 
 Scenario: an asynchronous thrown error in a route
-  Then I open the URL "http://express/async"
+  Then I open the URL "http://express/async" tolerating any error
   And I wait to receive an error
   Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is true
   And the event "severity" equals "error"
-  And the event "severityReason.type" equals "unhandledErrorMiddleware"
+  And the event "severityReason.type" equals "unhandledException"
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "async"
   And the exception "type" equals "nodejs"
   And the "file" of stack frame 0 equals "scenarios/app.js"
   And the event "metaData.request.query" is null
+  And the event "request.url" equals "http://express/async"
+  And the event "request.httpMethod" equals "GET"
+  And the event "request.clientIp" is not null
 
 Scenario: an error passed to next(err)
   Then I open the URL "http://express/next"
@@ -51,6 +54,9 @@ Scenario: an error passed to next(err)
   And the exception "message" equals "next"
   And the exception "type" equals "nodejs"
   And the "file" of stack frame 0 equals "scenarios/app.js"
+  And the event "request.url" equals "http://express/next"
+  And the event "request.httpMethod" equals "GET"
+  And the event "request.clientIp" is not null
 
 Scenario: a synchronous promise rejection in a route
   Then I open the URL "http://express/rejection-sync"
@@ -63,6 +69,9 @@ Scenario: a synchronous promise rejection in a route
   And the exception "message" equals "reject sync"
   And the exception "type" equals "nodejs"
   And the "file" of stack frame 0 equals "scenarios/app.js"
+  And the event "request.url" equals "http://express/rejection-sync"
+  And the event "request.httpMethod" equals "GET"
+  And the event "request.clientIp" is not null
 
 Scenario: an asynchronous promise rejection in a route
   Then I open the URL "http://express/rejection-async"
@@ -75,6 +84,9 @@ Scenario: an asynchronous promise rejection in a route
   And the exception "message" equals "reject async"
   And the exception "type" equals "nodejs"
   And the "file" of stack frame 0 equals "scenarios/app.js"
+  And the event "request.url" equals "http://express/rejection-async"
+  And the event "request.httpMethod" equals "GET"
+  And the event "request.clientIp" is not null
 
 Scenario: a string passed to next(err)
   Then I open the URL "http://express/string-as-error"
@@ -86,6 +98,9 @@ Scenario: a string passed to next(err)
   And the exception "errorClass" equals "InvalidError"
   And the exception "message" matches "^express middleware received a non-error\."
   And the exception "type" equals "nodejs"
+  And the event "request.url" equals "http://express/string-as-error"
+  And the event "request.httpMethod" equals "GET"
+  And the event "request.clientIp" is not null
 
 Scenario: throwing non-Error error
   Then I open the URL "http://express/throw-non-error"
@@ -97,6 +112,9 @@ Scenario: throwing non-Error error
   And the exception "errorClass" equals "InvalidError"
   And the exception "message" matches "^express middleware received a non-error\."
   And the exception "type" equals "nodejs"
+  And the event "request.url" equals "http://express/throw-non-error"
+  And the event "request.httpMethod" equals "GET"
+  And the event "request.clientIp" is not null
 
 Scenario: a handled error passed to req.bugsnag.notify()
   Then I open the URL "http://express/handled"
@@ -111,6 +129,29 @@ Scenario: a handled error passed to req.bugsnag.notify()
   And the event "request.url" equals "http://express/handled"
   And the event "request.httpMethod" equals "GET"
   And the event "request.clientIp" is not null
+
+@skip_before_node_16
+Scenario: an unhandled promise rejection in an async callback (with request context)
+  Then I open the URL "http://express/unhandled-rejection-async-callback" and get a 200 response
+  And I wait to receive an error
+  Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
+  And the event "unhandled" is true
+  And the event "severity" equals "error"
+  And the event "severityReason.type" equals "unhandledPromiseRejection"
+  And the exception "errorClass" equals "Error"
+  And the exception "message" equals "unhandled rejection in async callback"
+  And the event "request.url" equals "http://express/unhandled-rejection-async-callback"
+  And the event "request.httpMethod" equals "GET"
+
+Scenario: an unhandled promise rejection in an async callback (without request context)
+  Then I open the URL "http://express/unhandled-rejection-async-callback" and get a 200 response
+  And I wait to receive an error
+  Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
+  And the event "unhandled" is true
+  And the event "severity" equals "error"
+  And the event "severityReason.type" equals "unhandledPromiseRejection"
+  And the exception "errorClass" equals "Error"
+  And the exception "message" equals "unhandled rejection in async callback"
 
 Scenario: adding body to request metadata
   When I POST the data "data=in_request_body" to the URL "http://express/bodytest"
