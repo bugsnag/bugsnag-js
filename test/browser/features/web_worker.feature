@@ -13,7 +13,7 @@ Scenario: unhandled error in worker
   When I navigate to the test URL "/web_worker/worker_unhandled_error"
   And I wait to receive an error
   Then the error is a valid browser payload for the error reporting API
-  And the exception "stacktrace" equals "test"
+  And the error payload field "events.0.exceptions.0.stacktrace" is a non-empty array
 
 Scenario: setting collectUserIp option to false
   When I navigate to the test URL "/web_worker/ip_redaction"
