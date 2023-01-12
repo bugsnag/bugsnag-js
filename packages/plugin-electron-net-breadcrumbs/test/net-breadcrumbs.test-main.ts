@@ -13,7 +13,7 @@ let currentServer: ServerWithPort|null = null
 
 const originalRequest = net.request
 
-describe.skip('plugin: electron net breadcrumbs', () => {
+describe('plugin: electron net breadcrumbs', () => {
   afterEach(async () => {
     if (currentServer) {
       await new Promise(resolve => { currentServer.close(resolve) })
@@ -44,7 +44,7 @@ describe.skip('plugin: electron net breadcrumbs', () => {
 
     const expected = new Breadcrumb(
       `net.request ${successOrFailure}`,
-      { request: `GET ${url}/`, status },
+      { request: `GET ${url}/`, status, duration: expect.any(Number) },
       'request'
     )
 
@@ -74,7 +74,7 @@ describe.skip('plugin: electron net breadcrumbs', () => {
 
     const expected = new Breadcrumb(
       `net.request ${successOrFailure}`,
-      { request: `${method} ${url}`, status },
+      { request: `${method} ${url}`, status, duration: expect.any(Number) },
       'request'
     )
 
@@ -107,7 +107,7 @@ describe.skip('plugin: electron net breadcrumbs', () => {
 
     const expected = new Breadcrumb(
       `net.request ${successOrFailure}`,
-      { request: `GET http://localhost:${currentServer.port}/`, status },
+      { request: `GET http://localhost:${currentServer.port}/`, status, duration: expect.any(Number) },
       'request'
     )
 
@@ -182,7 +182,7 @@ describe.skip('plugin: electron net breadcrumbs', () => {
 
     const expected = new Breadcrumb(
       'net.request error',
-      { request: `GET ${url}`, error: "Attempted to redirect, but redirect policy was 'error'" },
+      { request: `GET ${url}`, error: "Attempted to redirect, but redirect policy was 'error'", duration: expect.any(Number) },
       'request'
     )
 

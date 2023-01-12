@@ -32,12 +32,20 @@ module.exports = net => ({
         return request
       }
 
+      const originalEnd = request.end
+      let requestStart
+
+      request.end = (...args) => {
+        requestStart = new Date()
+        originalEnd.apply(request, args)
+      }
+
       request.on('response', response => {
         const success = response.statusCode < 400
 
         client.leaveBreadcrumb(
           `net.request ${success ? 'succeeded' : 'failed'}`,
-          { request: `${method} ${url}`, status: response.statusCode },
+          { request: `${method} ${url}`, status: response.statusCode, duration: getDuration(requestStart) },
           BREADCRUMB_REQUEST
         )
       })
@@ -45,7 +53,7 @@ module.exports = net => ({
       request.on('abort', () => {
         client.leaveBreadcrumb(
           'net.request aborted',
-          { request: `${method} ${url}` },
+          { request: `${method} ${url}`, duration: getDuration(requestStart) },
           BREADCRUMB_REQUEST
         )
       })
@@ -53,7 +61,7 @@ module.exports = net => ({
       request.on('error', (error) => {
         client.leaveBreadcrumb(
           'net.request error',
-          { request: `${method} ${url}`, error: error.message },
+          { request: `${method} ${url}`, error: error.message, duration: getDuration(requestStart) },
           BREADCRUMB_REQUEST
         )
       })
@@ -62,3 +70,5 @@ module.exports = net => ({
     }
   }
 })
+
+const getDuration = (startTime) => startTime && new Date() - startTime
