@@ -54,6 +54,12 @@ module.exports = {
         'standard'
       ]
     },
+    {
+      files: ['**/*.test.js'],
+      extends: ['standard'],
+      plugins: ['eslint-plugin-jest'],
+      env: { jest: true }
+    },
     // linting for ts files
     {
       files: ['**/*.ts'],

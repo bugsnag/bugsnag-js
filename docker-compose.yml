@@ -59,6 +59,8 @@ services:
       default:
         aliases:
           - maze-runner
+    volumes:
+      - ./test/browser/maze_output:/app/test/browser/maze_output
 
   browser-maze-runner-legacy:
     build:
@@ -98,6 +100,8 @@ services:
       default:
         aliases:
           - maze-runner
+    volumes:
+      - ./test/browser/maze_output:/app/test/browser/maze_output
 
   node-maze-runner:
     build:
@@ -217,7 +221,7 @@ services:
       - ./test/react-native-cli/features/:/app/features
 
   react-native-maze-runner:
-    image: 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v6-cli
+    image: 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v7-cli
     environment:
       BUILDKITE:
       BUILDKITE_BRANCH:

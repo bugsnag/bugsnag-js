@@ -18,7 +18,7 @@ Scenario: Error thrown with a cause in the constructor
   And the error payload field "events.0.exceptions.1.errorClass" equals "Error"
   And the error payload field "events.0.exceptions.1.message" equals "I am the cause"
   And the error payload field "events.0.exceptions.1.type" equals "nodejs"
-  And the error payload field "events.0.exceptions.1.stacktrace" is an non-empty array
+  And the error payload field "events.0.exceptions.1.stacktrace" is a non-empty array
 
 Scenario: Error thrown with a cause assigned
   When I run the service "cause" with the command "node scenarios/error_assignment"

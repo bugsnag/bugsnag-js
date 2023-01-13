@@ -8,6 +8,7 @@ interface MockXMLHttpRequest {
   data: string | null
   headers: { [key: string]: string }
   readyState: string | null
+  status: number
 }
 
 describe('delivery:XMLHttpRequest', () => {
@@ -43,7 +44,7 @@ describe('delivery:XMLHttpRequest', () => {
       endpoints: { notify: '/echo/' },
       redactedKeys: []
     }
-    delivery({ logger: {}, _config: config } as unknown as Client, { XMLHttpRequest } as unknown as Window).sendEvent(payload, (err: any) => {
+    delivery({ _logger: {}, _config: config } as unknown as Client, { XMLHttpRequest } as unknown as Window).sendEvent(payload, (err: any) => {
       expect(err).toBe(null)
       expect(requests.length).toBe(1)
       expect(requests[0].method).toBe('POST')
@@ -96,6 +97,56 @@ describe('delivery:XMLHttpRequest', () => {
     })
   })
 
+  it('logs failures and large payloads', done => {
+    const requests: MockXMLHttpRequest[] = []
+
+    // mock XMLHttpRequest class
+    function XMLHttpRequest (this: MockXMLHttpRequest) {
+      this.method = null
+      this.url = null
+      this.data = null
+      this.headers = {}
+      this.readyState = null
+      this.status = 0
+      requests.push(this)
+    }
+    XMLHttpRequest.DONE = 4
+    XMLHttpRequest.prototype.open = function (method: string, url: string) {
+      this.method = method
+      this.url = url
+    }
+    XMLHttpRequest.prototype.setRequestHeader = function (key: string, val: string) {
+      this.headers[key] = val
+    }
+    XMLHttpRequest.prototype.send = function (data: string) {
+      this.data = data
+      this.readyState = XMLHttpRequest.DONE
+      this.status = 400
+      this.onreadystatechange()
+    }
+
+    const lotsOfEvents: any[] = []
+    while (JSON.stringify(lotsOfEvents).length < 10e5) {
+      lotsOfEvents.push({ errors: [{ errorClass: 'Error', errorMessage: 'long repetitive string'.repeat(1000) }] })
+    }
+    const payload = {
+      events: lotsOfEvents
+    } as unknown as EventDeliveryPayload
+    const config = {
+      apiKey: 'aaaaaaaa',
+      endpoints: { notify: '/echo/' },
+      redactedKeys: []
+    }
+    const logger = { error: jest.fn(), warn: jest.fn() }
+
+    delivery({ _logger: logger, _config: config } as unknown as Client, { XMLHttpRequest } as unknown as Window).sendEvent(payload, (err: any) => {
+      expect(err).toBe(null)
+      expect(logger.error).toHaveBeenCalledWith('Event failed to send…')
+      expect(logger.warn).toHaveBeenCalledWith('Event oversized (1.01 MB)')
+      done()
+    })
+  })
+
   it('sends sessions successfully', done => {
     const requests: MockXMLHttpRequest[] = []
 
@@ -128,7 +179,7 @@ describe('delivery:XMLHttpRequest', () => {
       endpoints: { notify: '/', sessions: '/echo/' },
       redactedKeys: []
     }
-    delivery({ _config: config, logger: {} } as unknown as Client, { XMLHttpRequest } as unknown as Window).sendSession(payload, (err) => {
+    delivery({ _config: config, _logger: {} } as unknown as Client, { XMLHttpRequest } as unknown as Window).sendSession(payload, (err) => {
       expect(err).toBe(null)
       expect(requests.length).toBe(1)
       expect(requests[0].method).toBe('POST')
