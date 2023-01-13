@@ -93,7 +93,7 @@ describe('browser notifier', () => {
     // @ts-expect-error
     Bugsnag.start({ apiKey: API_KEY, endpoints: { notify: 'https://notify.bugsnag.com' } })
     Bugsnag.notify(new Error('123'), undefined, (err, event) => {
-      expect(err).toStrictEqual('Event not sent due to incomplete endpoint configuration')
+      expect(err).toStrictEqual(new Error('Event not sent due to incomplete endpoint configuration'))
     })
 
     session.onreadystatechange()
