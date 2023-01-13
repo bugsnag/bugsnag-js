@@ -23,7 +23,6 @@ module.exports = (_ignoredUrls = [], win = window) => {
       function monkeyPatchXMLHttpRequest () {
         if (!('addEventListener' in win.XMLHttpRequest.prototype)) return
         const nativeOpen = win.XMLHttpRequest.prototype.open
-        const nativeSend = win.XMLHttpRequest.prototype.send
 
         // override native open()
         win.XMLHttpRequest.prototype.open = function open (method, url) {
@@ -46,12 +45,13 @@ module.exports = (_ignoredUrls = [], win = window) => {
 
           requestSetupKey = true
 
+          const oldSend = this.send
           let requestStart
 
-          // override send for this XMLHttpRequest instance
+          // override send() for this XMLHttpRequest instance
           this.send = function send () {
             requestStart = new Date()
-            nativeSend.apply(this, arguments)
+            oldSend.apply(this, arguments)
           }
 
           nativeOpen.apply(this, arguments)
