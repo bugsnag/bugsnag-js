@@ -1,6 +1,6 @@
 # @bugsnag/delivery-fetch
 
-This package contains the fetch implementation of the Bugsnag notifier delivery system for JavaScript.
+This package contains the fetch implementation of the BugSnag notifier delivery system for JavaScript.
 
 ## License
 
