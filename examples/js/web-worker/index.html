@@ -4,16 +4,29 @@
   <meta charset="utf-8">
   <title>@bugsnag/web-worker: Web Worker example</title>
   <link rel="stylesheet" type="text/css" href="/index.css" />
-  <script defer type="module" src="/script.js"></script>
+  <script defer type="module" src="/web-script.js"></script>
+  <script defer type="module" src="/service-script.js"></script>
 </head>
 <body>
   <img width="200" src="/bugsnag.png"/>
   <h1>Web Worker example</h1>
   <p>
-    This an example of how to include <code>@bugsnag/web-worker</code> in a Web Worker.
+    This an example of how to include <code>@bugsnag/web-worker</code> in a Web Worker and a Service Worker.
   </p>
-  <button id="handledError">Trigger handled error within Web Worker</button>
-  <br>
-  <button id="unhandledError">Trigger unhandled error within Web Worker</button>
+  <section>
+    <div>
+      <h2>Web Worker</h2>
+      <button id="handledErrorWebWrkr">Throw handled error</button>
+      <br>
+      <button id="unhandledErrorWebWrkr">Throw unhandled error</button>
+      <br>
+    </div>
+    <div>
+      <h2>Service Worker</h2>
+      <button id="handledErrorServWrkr">Throw handled error</button>
+      <br>
+      <button id="unhandledErrorServWrkr">Throw unhandled error</button>
+    </div>  
+  </section>
 </body>
 </html>
