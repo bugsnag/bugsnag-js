@@ -1,6 +1,6 @@
 import delivery from '../delivery'
 import type { Client } from '@bugsnag/core'
-import type { EventDeliveryPayload, SessionDeliveryPayload } from '@bugsnag/core/client'
+import { EventDeliveryPayload, SessionDeliveryPayload } from '@bugsnag/core/client'
 
 const globalAny: any = global
 
@@ -101,6 +101,34 @@ describe('delivery:fetch', () => {
       expect(err).not.toBeNull()
       expect(err).toStrictEqual(new Error('failed to deliver'))
       expect(mockError).toHaveBeenCalledWith(new Error('failed to deliver'))
+      done()
+    })
+  })
+
+  it('prioritises API key set on an event', done => {
+    globalAny.fetch = jest.fn(() => Promise.resolve({ json: Promise.resolve }))
+
+    const config = {
+      apiKey: 'aaaaaaaa',
+      endpoints: { notify: '/echo/' },
+      redactedKeys: []
+    }
+
+    const payload = { sample: 'payload', apiKey: 'bbbbbbbb' } as unknown as EventDeliveryPayload
+
+    delivery({ _logger: {}, _config: config } as unknown as Client).sendEvent(payload, (err) => {
+      expect(err).toBeNull()
+      expect(globalAny.fetch).toHaveBeenCalled()
+      expect(globalAny.fetch).toHaveBeenCalledWith('/echo/', expect.objectContaining({
+        method: 'POST',
+        body: expect.stringMatching(JSON.stringify(payload)),
+        headers: expect.objectContaining({
+          'Bugsnag-Api-Key': 'bbbbbbbb',
+          'Bugsnag-Payload-Version': '4',
+          'Bugsnag-Sent-At': expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/),
+          'Content-Type': 'application/json'
+        })
+      }))
       done()
     })
   })
