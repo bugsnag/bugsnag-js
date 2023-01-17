@@ -27,7 +27,10 @@
     "@bugsnag/plugin-browser-session": "^7.18.0"
   },
   "devDependencies": {
-    "@bugsnag/core": "^7.18.0"
+    "@bugsnag/core": "^7.18.0",
+    "@types/aws-lambda": "^8.10.76",
+    "@vendia/serverless-express": "^4.10.1",
+    "express": "^4.18.2"
   },
   "peerDependencies": {
     "@bugsnag/core": "^7.0.0"

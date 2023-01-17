@@ -106,6 +106,42 @@ describe('delivery:XDomainRequest', () => {
     })
   })
 
+  it('logs failures and large payloads', done => {
+    // mock XDomainRequest class
+    function XDomainRequest () {
+    }
+    XDomainRequest.prototype.open = function (method: string, url: string) {
+      this.method = method
+      this.url = url
+    }
+    XDomainRequest.prototype.send = function (method: string, url: string) {
+      this.onerror()
+    }
+    const window = { XDomainRequest, location: { protocol: 'https://' } } as unknown as Window
+
+    const lotsOfEvents: any[] = []
+    while (JSON.stringify(lotsOfEvents).length < 10e5) {
+      lotsOfEvents.push({ errors: [{ errorClass: 'Error', errorMessage: 'long repetitive string'.repeat(1000) }] })
+    }
+    const payload = {
+      events: lotsOfEvents
+    } as unknown as EventDeliveryPayload
+
+    const config = {
+      apiKey: 'aaaaaaaa',
+      endpoints: { notify: '/echo/', sessions: '/sessions/' },
+      redactedKeys: []
+    }
+    const logger = { error: jest.fn(), warn: jest.fn() }
+    delivery({ _logger: logger, _config: config } as unknown as Client, window).sendEvent(payload, (err) => {
+      const expectedError = new Error('Event failed to send')
+      expect(err).toStrictEqual(expectedError)
+      expect(logger.error).toHaveBeenCalledWith('Event failed to send…', expectedError)
+      expect(logger.warn).toHaveBeenCalledWith('Event oversized (1.01 MB)')
+      done()
+    })
+  })
+
   it('sends sessions successfully', done => {
     const requests: XDomainRequest[] = []
 

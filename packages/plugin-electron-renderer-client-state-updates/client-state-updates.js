@@ -52,6 +52,13 @@ module.exports = (BugsnagIpcRenderer = window.__bugsnag_ipc__) => ({
       client._logger.error(e)
     }
 
+    // Clear synched state from the renderer config
+    client._metadata = {}
+    client._featuresIndex = {}
+    client._features = []
+    client._context = undefined
+    client._user = {}
+
     // use main process state once configured properties are synched
 
     client.getContext = safeExec(client, BugsnagIpcRenderer, 'getContext')

@@ -16,28 +16,42 @@ When('I run {string} and relaunch the crashed app') do |event_type|
   }
 end
 
-Then('the app is not running') do
-  Maze::Wait.new(interval: 1, timeout: 10).until do
-    case Maze::Helper.get_current_platform
-    when 'ios'
-      state = Maze.driver.app_state('org.reactjs.native.example.reactnative')
-      $logger.info "The app is #{state}"
-      state == :not_running
-    when 'android'
-      state = Maze.driver.app_state('com.reactnative')
-      $logger.info "The app is #{state}"
-      # workaround for faulty app state detection in appium v1.23 and lower on
-      # Android where an app that is not running is detected to be running in
-      # the background
-      state == :not_running || state == :running_in_background
-    end
+# Waits for up to 10 seconds for the app to stop running.  It seems that Appium doesn't always
+# get the state correct (e.g. when backgrounding the app, or on old Android versions), so we
+# don't fail if it still says running after the time allowed.
+def wait_for_app_state(expected_state)
+  max_attempts = 20
+  attempts = 0
+  state = get_app_state
+  until (attempts >= max_attempts) || state == expected_state
+    attempts += 1
+    state = get_app_state
+    sleep 0.5
+  end
+  $logger.warn "App state #{state} instead of #{expected_state} after 10s" unless state == expected_state
+  state
+end
+
+def get_app_state
+  case Maze::Helper.get_current_platform
+  when 'ios'
+    Maze.driver.app_state('org.reactjs.native.example.reactnative')
+  when 'android'
+    Maze.driver.app_state('com.reactnative')
   end
 end
 
 When('I relaunch the app after a crash') do
-  # Wait for the app to stop running before relaunching
-  step 'the app is not running'
+  state = wait_for_app_state :not_running
+  # TODO: Really we should be using terminate_app/activate_app with the newer Appium client,
+  #       but for some reason they seem to make some scenarios flaky (presumably due to the
+  #       nature of how/when they close the app).
+  if state != :not_running
+    Maze.driver.close_app
+    # Maze.driver.terminate_app Maze.driver.app_id
+  end
   Maze.driver.launch_app
+  # Maze.driver.activate_app Maze.driver.app_id
 end
 
 When('I clear any error dialogue') do

@@ -8,14 +8,24 @@ module.exports = (client, win = window) => ({
     }
 
     const url = getApiUrl(client._config, 'notify', '4', win)
+    const body = payload.event(event, client._config.redactedKeys)
+
     const req = new win.XDomainRequest()
     req.onload = function () {
       cb(null)
     }
+    req.onerror = function () {
+      const err = new Error('Event failed to send')
+      client._logger.error('Event failed to send…', err)
+      if (body.length > 10e5) {
+        client._logger.warn(`Event oversized (${(body.length / 10e5).toFixed(2)} MB)`)
+      }
+      cb(err)
+    }
     req.open('POST', url)
     setTimeout(() => {
       try {
-        req.send(payload.event(event, client._config.redactedKeys))
+        req.send(body)
       } catch (e) {
         client._logger.error(e)
         cb(e)
