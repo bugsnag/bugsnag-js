@@ -2,10 +2,6 @@
 
 This package contains the web worker / service worker implementation of the BugSnag library.
 
-**This package is still in the beta phase, so should be used with caution in production apps.**
-
-We would welcome feedback on this package via GitHub or directly to our [Support](mailto:support@bugsnag.com) team.
-
 ## Features and limitations
 
 This early release offers basic functionality for web workers and service workers, with the intent to support Chrome extension development using manifest v3. Using this library, you will be able to:
