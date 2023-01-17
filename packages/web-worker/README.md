@@ -1,6 +1,6 @@
 # @bugsnag/web-worker
 
-This package contains the web worker / service worker implementation of the Bugsnag library.
+This package contains the web worker / service worker implementation of the BugSnag library.
 
 **This package is still in the beta phase, so should be used with caution in production apps.**
 
@@ -37,7 +37,7 @@ function myFunction() {
 }
 ```
 
-Within a web worker, unhandled errors will also bubble up to the script that initialized the worker, so if you are also using Bugsnag in the parent script, you may wish to prevent these errors from being reported a second time:
+Within a web worker, unhandled errors will also bubble up to the script that initialized the worker, so if you are also using BugSnag in the parent script, you may wish to prevent these errors from being reported a second time:
 
 ```js
 const worker = new Worker('worker.js', { type: 'module' })
