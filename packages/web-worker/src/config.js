@@ -12,7 +12,11 @@ module.exports = {
       (typeof console !== 'undefined' && typeof console.debug === 'function')
         ? getPrefixedConsole()
         : undefined
-  })
+  }),
+  autoTrackSessions: {
+    ...schema.autoTrackSessions,
+    defaultValue: val => false
+  }
 }
 
 const getPrefixedConsole = () => {
