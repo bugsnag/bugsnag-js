@@ -1,7 +1,7 @@
 {
     "name": "@bugsnag/web-worker",
     "version": "7.18.0",
-    "description": "Bugsnag error reporter for JavaScript web workers and service workers",
+    "description": "BugSnag error reporter for JavaScript web workers and service workers",
     "homepage": "https://www.bugsnag.com/",
     "main": "dist/notifier.js",
     "repository": {
