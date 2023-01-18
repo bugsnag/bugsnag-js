@@ -22,7 +22,7 @@ export const Bugsnag = {
     if (!opts) opts = {}
 
     // eslint-disable-next-line no-undef
-    const internalPlugins = [pluginClientIp, pluginBrowserDevice(navigator, null), pluginPreventDiscard, pluginWindowOnError(self)]
+    const internalPlugins = [pluginClientIp, pluginBrowserDevice(navigator, null), pluginPreventDiscard, pluginWindowOnError(self, 'worker onerror')]
 
     // configure a client with user supplied options
     const bugsnag = new Client(opts, schema, internalPlugins, { name, version, url })
