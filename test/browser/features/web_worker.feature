@@ -29,3 +29,9 @@ Scenario: unhandled promise rejection
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "broken promises"
   And event 0 is unhandled
+
+Scenario: setting autoTrackSessions option to true
+  When I navigate to the test URL "/web_worker/auto_track_sessions"
+  And I wait to receive a session
+  Then the session is a valid browser payload for the session tracking API
+  
