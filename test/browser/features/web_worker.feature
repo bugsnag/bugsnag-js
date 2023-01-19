@@ -21,3 +21,11 @@ Scenario: setting collectUserIp option to false
   Then the error is a valid browser payload for the error reporting API
   And the event "request.clientIp" equals "[REDACTED]"
   And the event "user.id" equals "[REDACTED]"
+
+Scenario: unhandled promise rejection
+  When I navigate to the test URL "/web_worker/unhandled_promise_rejection"
+  And I wait to receive an error
+  Then the error is a valid browser payload for the error reporting API
+  And the exception "errorClass" equals "Error"
+  And the exception "message" equals "broken promises"
+  And event 0 is unhandled
