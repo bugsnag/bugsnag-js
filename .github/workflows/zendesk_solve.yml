@@ -1,0 +1,7 @@
+on:
+  repository_dispatch:
+    types:
+      - zendesk-solving-issue
+jobs:
+  zendesk_comment:
+    uses: bugsnag/support-zendesk-integration/.github/workflows/zendesk_solve.yml@main

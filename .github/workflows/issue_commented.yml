@@ -1,0 +1,8 @@
+on:
+  issue_comment:
+    types: [created]
+jobs:
+  issue_created:
+    uses: bugsnag/support-zendesk-integration/.github/workflows/issue_commented.yml@main
+    secrets:
+      ZENDESK_BASIC_AUTH: ${{ secrets.ZENDESK_BASIC_AUTH }}
