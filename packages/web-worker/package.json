@@ -25,6 +25,7 @@
         "@bugsnag/core": "^7.18.0",
         "@bugsnag/delivery-fetch": "^7.18.0",
         "@bugsnag/plugin-browser-device": "^7.18.0",
+        "@bugsnag/plugin-browser-session": "^7.18.0",
         "@bugsnag/plugin-client-ip": "^7.18.0",
         "@bugsnag/plugin-window-onerror": "^7.18.0",
         "@bugsnag/plugin-window-unhandled-rejection": "^7.18.0",
