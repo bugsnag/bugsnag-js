@@ -9,13 +9,15 @@ This early release offers basic functionality for web workers and service worker
 - notify errors from within service workers and web workers, including browser extensions
 - detect and automatically notify unhandled errors from service workers and web workers, excluding Chrome browser extensions due to limitations in the Chrome Runtime API.
 
-## Installation
+## Getting tarted
+
+### Installation
 
 ```bash
 npm i @bugsnag/web-worker
 ```
 
-## Usage
+### Usage
 
 ```js
 import Bugsnag from "@bugsnag/web-worker"
@@ -33,14 +35,7 @@ function myFunction() {
 }
 ```
 
-Within a web worker, unhandled errors will also bubble up to the script that initialized the worker, so if you are also using BugSnag in the parent script, you may wish to prevent these errors from being reported a second time:
-
-```js
-const worker = new Worker('worker.js', { type: 'module' })
-worker.onerror = function (e) {
-    e.preventDefault()
-}
-```
+Check out the [documentation](https://docs.bugsnag.com/platforms/javascript/web-worker/)
 
 ## License
 
