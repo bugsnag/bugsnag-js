@@ -82,6 +82,43 @@ describe('worker notifier', () => {
     Bugsnag.start(testConfig)
     expect(Bugsnag.isStarted()).toBe(true)
   })
+
+  describe('session management', () => {
+    it('successfully starts a session', (done) => {
+      const Bugsnag = getBugsnag()
+      Bugsnag.start(API_KEY)
+      Bugsnag.startSession()
+
+      expect(typedGlobal.fetch).toHaveBeenCalledWith('https://sessions.bugsnag.com', expect.objectContaining({
+        method: 'POST',
+        headers: expect.objectContaining({
+          'Bugsnag-Api-Key': API_KEY,
+          'Bugsnag-Payload-Version': '1',
+          'Bugsnag-Sent-At': expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/),
+          'Content-Type': 'application/json'
+        })
+      }))
+
+      done()
+    })
+
+    it('automatically starts a session', (done) => {
+      const Bugsnag = getBugsnag()
+      Bugsnag.start({ apiKey: API_KEY, autoTrackSessions: true })
+
+      expect(typedGlobal.fetch).toHaveBeenCalledWith('https://sessions.bugsnag.com', expect.objectContaining({
+        method: 'POST',
+        headers: expect.objectContaining({
+          'Bugsnag-Api-Key': API_KEY,
+          'Bugsnag-Payload-Version': '1',
+          'Bugsnag-Sent-At': expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/),
+          'Content-Type': 'application/json'
+        })
+      }))
+
+      done()
+    })
+  })
 })
 
 describe('prevent-discard', () => {
