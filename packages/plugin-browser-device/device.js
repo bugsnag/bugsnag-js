@@ -1,7 +1,7 @@
 const assign = require('@bugsnag/core/lib/es-utils/assign')
 const BUGSNAG_ANONYMOUS_ID_KEY = 'bugsnag-anonymous-id'
 
-const getDeviceId = (win = window) => {
+const getDeviceId = (win) => {
   try {
     const storage = win.localStorage
 
@@ -38,7 +38,7 @@ module.exports = (nav = navigator, win = window) => ({
       device.orientation = win.screen.orientation.type
     } else if (win && win.document) {
       device.orientation =
-        window.document.documentElement.clientWidth > window.document.documentElement.clientHeight
+        win.document.documentElement.clientWidth > win.document.documentElement.clientHeight
           ? 'landscape'
           : 'portrait'
     }
