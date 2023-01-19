@@ -12,7 +12,7 @@ This early release offers basic functionality for web workers and service worker
 ## Installation
 
 ```bash
-npm i @bugsnag/web-worker@next
+npm i @bugsnag/web-worker
 ```
 
 ## Usage
