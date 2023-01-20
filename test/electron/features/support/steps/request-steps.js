@@ -40,7 +40,8 @@ Given('I launch an app with configuration:', launchConfig, (data) => {
   return global.automator.start({
     BUGSNAG_CONFIG: setup.bugsnag,
     BUGSNAG_PRELOAD: setup.preload,
-    BUGSNAG_RENDERER_CONFIG: setup.renderer_config
+    BUGSNAG_RENDERER_CONFIG: setup.renderer_config,
+    SERVER_ADDRESS: `http://localhost:${global.server.port}`
   })
 })
 

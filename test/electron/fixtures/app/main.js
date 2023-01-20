@@ -45,9 +45,17 @@ function createWindow () {
 }
 
 function makeSimpleGetRequest (fail = false) {
-  const url = fail ? 'https://non.existent.url/' : 'https://google.com/'
+  const url = fail
+    ? `${process.env.SERVER_ADDRESS}/fail`
+    : `${process.env.SERVER_ADDRESS}/success`
+
   const request = net.request(url)
   request.on('response', notify)
+  request.end()
+}
+
+function networkRequestError () {
+  const request = net.request('http://locahost:65536/')
   request.on('error', notify)
   request.end()
 }
@@ -105,4 +113,8 @@ ipcMain.on('main-process-clear-feature-flags-now', () => {
 
 ipcMain.on('main-process-get-request', (_event, fail) => {
   makeSimpleGetRequest(fail)
+})
+
+ipcMain.on('main-process-request-error', () => {
+  networkRequestError()
 })

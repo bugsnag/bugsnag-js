@@ -42,5 +42,8 @@ contextBridge.exposeInMainWorld('RunnerAPI', {
   mainProcessGetRequest: (fail) => {
     ipcRenderer.send('main-process-get-request', fail)
   },
+  mainProcessRequestError: () => {
+    ipcRenderer.send('main-process-request-error')
+  },
   preloadStart: Date.now()
 })

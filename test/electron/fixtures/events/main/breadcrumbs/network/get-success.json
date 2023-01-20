@@ -60,7 +60,7 @@
           "name": "net.request succeeded",
           "timestamp": "{TIMESTAMP}",
           "metaData": {
-            "request" : "GET https://google.com/",
+            "request": "{REGEX:^GET http:\\/\\/localhost:\\d{4}\\/success$}",
             "status": 200,
             "duration": "{TYPE:number}"
           }
@@ -83,4 +83,3 @@
     }
   ]
 }
-

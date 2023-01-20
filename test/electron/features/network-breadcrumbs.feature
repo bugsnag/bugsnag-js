@@ -17,4 +17,5 @@ Feature: Automatic breadcrumbs for network requests
             | request           |
             | get-success       |
             | get-failure       |
+            | error             |
             

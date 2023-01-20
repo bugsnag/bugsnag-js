@@ -57,11 +57,10 @@
       "breadcrumbs": [
         {
           "type": "request",
-          "name": "net.request failed",
+          "name": "net.request error",
           "timestamp": "{TIMESTAMP}",
           "metaData": {
-            "request": "{REGEX:^GET http:\\/\\/localhost:\\d{4}\\/fail$}",
-            "status": 404,
+            "request" : "GET http://locahost:65536/",
             "duration": "{TYPE:number}"
           }
         }
