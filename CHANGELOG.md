@@ -9,6 +9,7 @@
 - (delivery-fetch) Create fetch based delivery package [#1894](https://github.com/bugsnag/bugsnag-js/pull/1894)
 - (web-worker) Create web-worker notifier package [#1896](https://github.com/bugsnag/bugsnag-js/pull/1896)
 - (plugin-browser-device) Refactor parameters for improved guarding [#1896](https://github.com/bugsnag/bugsnag-js/pull/1896)
+- (web-worker) Add unhandled promise rejection plugin [#1907](https://github.com/bugsnag/bugsnag-js/pull/1907)
 
 ### Fixed
 
