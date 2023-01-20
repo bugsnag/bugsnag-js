@@ -1,7 +1,7 @@
 import { createServer, IncomingHttpHeaders, STATUS_CODES } from 'http'
 import { app, net } from 'electron'
 import { AddressInfo } from 'net'
-import delivery from '../'
+import delivery from '../delivery'
 import { EventDeliveryPayload } from '@bugsnag/core/client'
 import { Client } from '@bugsnag/core'
 import PayloadQueue from '../queue'
@@ -112,6 +112,30 @@ describe('delivery: electron', () => {
     })
   })
 
+  it('prevents event delivery with incomplete config', done => {
+    const { requests, server } = mockServer()
+    // @ts-expect-error the types for 'listen' don't include this overload
+    server.listen(0, 'localhost', (err: any) => {
+      expect(err).toBeUndefined()
+
+      const payload = {
+        events: [{ errors: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }] }]
+      } as unknown as EventDeliveryPayload
+      const config = {
+        apiKey: 'aaaaaaaa',
+        endpoints: { notify: null },
+        redactedKeys: []
+      }
+      delivery(filestore, net, app)(makeClient(config)).sendEvent(payload, (err) => {
+        expect(err).toStrictEqual(new Error('Event not sent due to incomplete endpoint configuration'))
+        expect(requests.length).toBe(0)
+
+        server.close()
+        done()
+      })
+    })
+  })
+
   it('sends sessions successfully', done => {
     const { requests, server } = mockServer(202)
     // @ts-expect-error the types for 'listen' don't include this overload
@@ -137,6 +161,30 @@ describe('delivery: electron', () => {
         expect(requests[0].headers['bugsnag-payload-version']).toEqual('1')
         expect(requests[0].headers['bugsnag-sent-at']).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/)
         expect(requests[0].body).toBe(JSON.stringify(payload))
+
+        server.close()
+        done()
+      })
+    })
+  })
+
+  it('prevents session delivery with incomplete config', done => {
+    const { requests, server } = mockServer(202)
+    // @ts-expect-error the types for 'listen' don't include this overload
+    server.listen(0, 'localhost', (err: any) => {
+      expect(err).toBeUndefined()
+
+      const payload = {
+        events: [{ errors: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }] }]
+      } as unknown as EventDeliveryPayload
+      const config = {
+        apiKey: 'aaaaaaaa',
+        endpoints: { notify: null, sessions: null },
+        redactedKeys: []
+      }
+      delivery(filestore, net, app)(makeClient(config)).sendSession(payload, (err: any) => {
+        expect(err).toStrictEqual(new Error('Session not sent due to incomplete endpoint configuration'))
+        expect(requests.length).toBe(0)
 
         server.close()
         done()
