@@ -35,7 +35,7 @@ function myFunction() {
 }
 ```
 
-Check out the [documentation](https://docs.bugsnag.com/platforms/javascript/web-worker/)
+For further information check out the [documentation](https://docs.bugsnag.com/platforms/javascript/web-worker/).
 
 ## License
 
