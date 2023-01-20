@@ -1,3 +1,4 @@
+/* eslint-env worker, serviceworker */
 
 import Client from '@bugsnag/core/client'
 import { schema as coreSchema } from '@bugsnag/core/config'
@@ -26,8 +27,8 @@ export const Bugsnag = {
       pluginClientIp,
       pluginBrowserDevice(navigator, null),
       pluginPreventDiscard,
-      pluginWindowOnError(self, 'worker onerror'), // eslint-disable-line no-undef
-      pluginWindowUnhandledRejection(self) // eslint-disable-line no-undef
+      pluginWindowOnError(self, 'worker onerror'),
+      pluginWindowUnhandledRejection(self)
     ]
 
     // configure a client with user supplied options
