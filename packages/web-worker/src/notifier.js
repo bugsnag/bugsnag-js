@@ -1,9 +1,11 @@
+/* eslint-env worker, serviceworker */
 
 import Client from '@bugsnag/core/client'
 import { schema as coreSchema } from '@bugsnag/core/config'
 import delivery from '@bugsnag/delivery-fetch'
 import pluginClientIp from '@bugsnag/plugin-client-ip'
 import pluginWindowOnError from '@bugsnag/plugin-window-onerror'
+import pluginWindowUnhandledRejection from '@bugsnag/plugin-window-unhandled-rejection'
 import config from './config'
 import pluginBrowserDevice from '@bugsnag/plugin-browser-device'
 import pluginPreventDiscard from './prevent-discard'
@@ -21,8 +23,13 @@ export const Bugsnag = {
     if (typeof opts === 'string') opts = { apiKey: opts }
     if (!opts) opts = {}
 
-    // eslint-disable-next-line no-undef
-    const internalPlugins = [pluginClientIp, pluginBrowserDevice(navigator, null), pluginPreventDiscard, pluginWindowOnError(self, 'worker onerror')]
+    const internalPlugins = [
+      pluginClientIp,
+      pluginBrowserDevice(navigator, null),
+      pluginPreventDiscard,
+      pluginWindowOnError(self, 'worker onerror'),
+      pluginWindowUnhandledRejection(self)
+    ]
 
     // configure a client with user supplied options
     const bugsnag = new Client(opts, schema, internalPlugins, { name, version, url })
