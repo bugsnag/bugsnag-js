@@ -6,7 +6,9 @@
 
 - After trimming, attempt to send all event and session payloads, even if believed oversize [#1823](https://github.com/bugsnag/bugsnag-js/pull/1823)
 - (react-native) Update bugsnag-android from v5.28.1 to [v5.28.3](https://github.com/bugsnag/bugsnag-android/blob/master/CHANGELOG.md#5283-2022-11-16)
-- (delivery-fetch) Create fetch based notifier delivery package [#1894](https://github.com/bugsnag/bugsnag-js/pull/1894)
+- (delivery-fetch) Create fetch based delivery package [#1894](https://github.com/bugsnag/bugsnag-js/pull/1894)
+- (web-worker) Create web-worker notifier package [#1896](https://github.com/bugsnag/bugsnag-js/pull/1896)
+- (plugin-browser-device) Refactor parameters for improved guarding [#1896](https://github.com/bugsnag/bugsnag-js/pull/1896)
 
 ### Fixed
 
