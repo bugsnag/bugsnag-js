@@ -87,6 +87,9 @@ describe('worker notifier', () => {
     it('successfully starts a session', (done) => {
       const Bugsnag = getBugsnag()
       Bugsnag.start(API_KEY)
+
+      expect(typedGlobal.fetch).not.toHaveBeenCalled()
+
       Bugsnag.startSession()
 
       expect(typedGlobal.fetch).toHaveBeenCalledWith('https://sessions.bugsnag.com', expect.objectContaining({
