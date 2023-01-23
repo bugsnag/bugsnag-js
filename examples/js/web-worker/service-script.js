@@ -9,7 +9,7 @@ const registerWorker = () => {
         console.log('Service Worker not supported')
         return
     } else {
-        navigator.serviceWorker.register('/service-worker.js')
+        navigator.serviceWorker.register('/service-worker.js', { type: 'module' })
         .then( function(registration) {
             console.log('Service Worker registered. Scope is:', registration.scope)
 
