@@ -17,7 +17,7 @@ module.exports = {
     // Avoid including '@bugsnag/plugin-aws-lambda' module in the client side bundle
     // See https://arunoda.me/blog/ssr-and-server-only-modules
     if (!isServer) {
-      config.plugins.push(new webpack.IgnorePlugin(/@bugsnag\/plugin-aws-lambda/));
+      config.plugins.push(new webpack.IgnorePlugin({resourceRegExp: /@bugsnag\/plugin-aws-lambda/}));
     }
 
     // Upload source maps on production build
