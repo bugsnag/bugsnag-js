@@ -18,28 +18,28 @@ var server = restify.createServer()
 
 server.pre(middleware.requestHandler)
 
-server.use(restify.plugins.bodyParser());
+server.use(restify.plugins.bodyParser())
 server.use(restify.plugins.queryParser())
 
 // If the server hasn't started sending something within 2 seconds
 // it probably won't. So end the request and hurry the failing test
 // along.
-server.use(function (req, res, next) {
+server.use(function (req, res) {
   setTimeout(function () {
     if (!res.headersSent) return res.sendStatus(500)
   }, 2000)
   next()
 })
 
-server.get('/', function (req, res, next) {
+server.get('/', function (req, res) {
   res.end('ok')
 })
 
-server.get('/sync/:message', function (req, res, next) {
+server.get('/sync/:message', function (req, res) {
   throw new Error(req.params.message)
 })
 
-server.get('/async', function (req, res, next) {
+server.get('/async', function (req, res) {
   setTimeout(function () {
     throw new Error('async')
   }, 100)
@@ -69,7 +69,6 @@ server.get('/unhandled-rejection-async-callback', function (req, res, next) {
   next()
 })
 
-//
 // app.get('/string-as-error', function (req, res, next) {
 //   next('errrr')
 // })

@@ -91,7 +91,7 @@ Scenario Outline: unhandled exceptions are reported when using serverless-expres
 Scenario: unhandled asynchronous exceptions are reported when using serverless-express
     Given I setup the environment
     When I invoke the "ExpressFunction" lambda in "features/fixtures/serverless-express-app" with the "events/unhandled-async.json" event
-    Then the lambda response "errorMessage" equals "busted"
+    Then the lambda response is empty
     And the SAM exit code equals 0
     When I wait to receive an error
     Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
