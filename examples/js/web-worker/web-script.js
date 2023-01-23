@@ -1,5 +1,5 @@
 // const Bugsnag =  require('/node_modules/@bugsnag/js/browser/notifier.js')
-// Bugsnag.start('ed0820ec954fcc35c3bc4f18fd36b206')
+// Bugsnag.start('YOUR_API_KEY')
 
 const worker = new Worker('web-worker.js', {type: 'module'})
 
