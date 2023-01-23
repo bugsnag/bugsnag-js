@@ -1,5 +1,15 @@
 # Changelog
 
+## v8.0.0 (TBD)
+
+### Fixed
+
+- (plugin-angular) Prevent excess change detection cycles when calling `Bugsnag.notify` [#1861](https://github.com/bugsnag/bugsnag-js/pull/1861)
+
+### Changed
+
+- (plugin-navigation-breadcrumbs) calling `pushState` or `replaceState` no longer triggers a new session when `autoTrackSessions` is enabled [#1820](https://github.com/bugsnag/bugsnag-js/pull/1820)
+
 ## TBD
 
 ### Changed
