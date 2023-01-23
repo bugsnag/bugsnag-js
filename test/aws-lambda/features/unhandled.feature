@@ -66,8 +66,8 @@ Scenario Outline: unhandled exceptions thrown async are reported
     And the session "startedAt" is a timestamp
 
     Examples:
-        | lambda                                         | type     | file                          | node-version | trace-length |
-        | AsyncAsyncUnhandledExceptionFunctionNode14     | async    | async-unhandled-exception.js  | 14           | 4            |
+        | lambda                                     | type  | file                         | node-version | trace-length |
+        | AsyncAsyncUnhandledExceptionFunctionNode14 | async | async-unhandled-exception.js | 14           | 4            |
 
 @simple-app
 Scenario Outline: no error is reported when autoDetectErrors is false
