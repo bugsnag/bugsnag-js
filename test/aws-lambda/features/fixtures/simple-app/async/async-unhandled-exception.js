@@ -18,6 +18,13 @@ const handler = async (event, context) => {
   setTimeout(() => {
     throw new Error('Oh no!')
   }, 100)
+
+  await new Promise(resolve => setTimeout(resolve, 1000))
+
+  return {
+    statusCode: 200,
+    body: JSON.stringify({ message: 'Did not crash immediately!' })
+  }
 }
 
 module.exports.lambdaHandler = bugsnagHandler(handler)

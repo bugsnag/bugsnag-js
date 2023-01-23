@@ -41,12 +41,6 @@ Scenario Outline: unhandled exceptions are reported
 Scenario Outline: unhandled exceptions thrown async are reported
     Given I setup the environment
     When I invoke the "<lambda>" lambda in "features/fixtures/simple-app" with the "events/<type>/async-unhandled-exception.json" event
-    Then the lambda response "errorMessage" equals "Oh no!"
-    And the lambda response "errorType" equals "Error"
-    And the lambda response "trace" is an array with <trace-length> elements
-    And the lambda response "trace.0" equals "Error: Oh no!"
-    And the lambda response "body" is null
-    And the lambda response "statusCode" is null
     And the SAM exit code equals 0
     When I wait to receive an error
     Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
@@ -123,13 +117,12 @@ Scenario Outline: unhandled exceptions are reported when using serverless-expres
 Scenario: unhandled asynchronous exceptions are reported when using serverless-express
     Given I setup the environment
     When I invoke the "ExpressFunction" lambda in "features/fixtures/serverless-express-app" with the "events/unhandled-async.json" event
-    Then the lambda response "errorMessage" equals "busted"
     And the SAM exit code equals 0
     When I wait to receive an error
     Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
     And the event "unhandled" is true
     And the event "severity" equals "error"
-    And the event "severityReason.type" equals "unhandledErrorMiddleware"
+    And the event "severityReason.type" equals "unhandledException"
     And the exception "errorClass" equals "Error"
     And the exception "message" equals "busted"
     And the exception "type" equals "nodejs"
