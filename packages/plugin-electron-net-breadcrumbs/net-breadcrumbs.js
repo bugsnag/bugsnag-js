@@ -32,11 +32,19 @@ module.exports = net => ({
         return request
       }
 
-      const originalEnd = request.end
       let requestStart
 
+      // For chunked requests the request begins on the first write operation,
+      // otherwise the request begins when the request is finalised
+      const originalWrite = request.write
+      request.write = (...args) => {
+        if (request.chunkedEncoding && !requestStart) requestStart = new Date()
+        originalWrite.apply(request, args)
+      }
+
+      const originalEnd = request.end
       request.end = (...args) => {
-        requestStart = new Date()
+        if (!requestStart) requestStart = new Date()
         originalEnd.apply(request, args)
       }
 
