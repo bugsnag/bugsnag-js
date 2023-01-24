@@ -1,6 +1,6 @@
 # Web-Worker
 
-This is an example project showing how to use `@bugsnag/web-worker` with a web worker.
+This is an example project showing how to use `@bugsnag/web-worker` with a web worker or service worker.
 
 The project contains 2 pages, both of which spawn their own dedicated web worker and service worker.
 
