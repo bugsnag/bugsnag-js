@@ -1,12 +1,10 @@
-// const Bugsnag =  require('/node_modules/@bugsnag/js/browser/notifier.js')
-// Bugsnag.start('YOUR_API_KEY')
-
-const worker = new Worker('web-worker.js', {type: 'module'})
+const worker = new Worker('web-app-reports-web-worker.js', {type: 'module'})
 
 // Within a web worker, unhandled errors will also bubble up to 
-// the script that initialized the worker, so if you are also 
-// using BugSnag in the parent script (here), you may wish to prevent 
-// these errors from being reported a second time by using `preventDefault()`:
+// the script that initialized the worker. Since we are also 
+// using BugSnag in the parent script (see `web-app-reports-unandled.html`),
+// you may wish to prevent these errors from being reported a second time
+// by using `preventDefault()`:
 
 worker.onerror = function (e) {
     e.preventDefault()  

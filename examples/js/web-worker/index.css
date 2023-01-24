@@ -10,6 +10,11 @@ body {
     justify-content: center;
   }
 
+  .navigation {
+    margin-top: 90px;
+    /* align-items: flex-end; */
+  }
+
   div {
     display: flex;
     flex-direction: column;
