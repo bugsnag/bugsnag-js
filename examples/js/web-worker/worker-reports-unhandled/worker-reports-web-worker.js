@@ -1,5 +1,5 @@
 import Bugsnag from '/node_modules/@bugsnag/web-worker/dist/notifier.js'
-Bugsnag.start('ed0820ec954fcc35c3bc4f18fd36b206')
+Bugsnag.start('YOUR_API_KEY')
 
 onmessage = function(message) {
     if(message.data === 'Handled error in Web Worker') {
