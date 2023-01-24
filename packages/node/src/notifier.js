@@ -26,7 +26,6 @@ const pluginNodeDevice = require('@bugsnag/plugin-node-device')
 const pluginNodeUncaughtException = require('@bugsnag/plugin-node-uncaught-exception')
 const pluginNodeUnhandledRejection = require('@bugsnag/plugin-node-unhandled-rejection')
 const pluginIntercept = require('@bugsnag/plugin-intercept')
-const pluginContextualize = require('@bugsnag/plugin-contextualize')
 const pluginStackframePathNormaliser = require('@bugsnag/plugin-stackframe-path-normaliser')
 
 const internalPlugins = [
@@ -39,7 +38,6 @@ const internalPlugins = [
   pluginNodeUncaughtException,
   pluginNodeUnhandledRejection,
   pluginIntercept,
-  pluginContextualize,
   pluginStackframePathNormaliser
 ]
 

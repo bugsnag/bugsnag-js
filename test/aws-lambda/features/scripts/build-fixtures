@@ -22,7 +22,6 @@ BUGSNAG_PACKAGES = [
   "node",
   "plugin-app-duration",
   "plugin-aws-lambda",
-  "plugin-contextualize",
   "plugin-express",
   "plugin-intercept",
   "plugin-node-device",

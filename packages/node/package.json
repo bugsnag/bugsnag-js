@@ -26,7 +26,6 @@
   "devDependencies": {
     "@bugsnag/delivery-node": "^7.18.0",
     "@bugsnag/plugin-app-duration": "^7.18.0",
-    "@bugsnag/plugin-contextualize": "^7.18.0",
     "@bugsnag/plugin-intercept": "^7.18.0",
     "@bugsnag/plugin-node-device": "^7.18.0",
     "@bugsnag/plugin-node-in-project": "^7.18.0",

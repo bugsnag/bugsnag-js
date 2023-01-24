@@ -70,7 +70,6 @@
     "packages/plugin-aws-lambda",
     "packages/plugin-browser-context",
     "packages/plugin-browser-device",
-    "packages/plugin-contextualize",
     "packages/plugin-navigation-breadcrumbs",
     "packages/plugin-network-breadcrumbs",
     "packages/plugin-react-native-app-state-breadcrumbs",

@@ -75,7 +75,6 @@ module.exports = {
       'plugin-express',
       'plugin-koa',
       'plugin-restify',
-      'plugin-contextualize',
       'plugin-server-*',
       'plugin-strip-project-root',
       'plugin-intercept',

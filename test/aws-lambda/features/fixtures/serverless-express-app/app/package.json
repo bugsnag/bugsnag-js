@@ -12,7 +12,6 @@
         "@bugsnag/node": "bugsnag-node.tgz",
         "@bugsnag/plugin-app-duration": "bugsnag-plugin-app-duration.tgz",
         "@bugsnag/plugin-aws-lambda": "bugsnag-plugin-aws-lambda.tgz",
-        "@bugsnag/plugin-contextualize": "bugsnag-plugin-contextualize.tgz",
         "@bugsnag/plugin-express": "bugsnag-plugin-express.tgz",
         "@bugsnag/plugin-intercept": "bugsnag-plugin-intercept.tgz",
         "@bugsnag/plugin-node-device": "bugsnag-plugin-node-device.tgz",
