@@ -1,6 +1,6 @@
 import Bugsnag from '/node_modules/@bugsnag/web-worker/dist/notifier.js'
 Bugsnag.start({
-    apiKey: 'ed0820ec954fcc35c3bc4f18fd36b206',
+    apiKey: 'YOUR_API_KEY',
     autoDetectErrors: true,
     autoTrackSessions: true
   })
