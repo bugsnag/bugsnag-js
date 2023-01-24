@@ -8,6 +8,7 @@ import pluginWindowOnError from '@bugsnag/plugin-window-onerror'
 import pluginWindowUnhandledRejection from '@bugsnag/plugin-window-unhandled-rejection'
 import config from './config'
 import pluginBrowserDevice from '@bugsnag/plugin-browser-device'
+import pluginBrowserSession from '@bugsnag/plugin-browser-session'
 import pluginPreventDiscard from './prevent-discard'
 
 const name = 'Bugsnag Web Worker'
@@ -24,8 +25,9 @@ export const Bugsnag = {
     if (!opts) opts = {}
 
     const internalPlugins = [
-      pluginClientIp,
       pluginBrowserDevice(navigator, null),
+      pluginBrowserSession,
+      pluginClientIp,
       pluginPreventDiscard,
       pluginWindowOnError(self, 'worker onerror'),
       pluginWindowUnhandledRejection(self)
@@ -38,7 +40,9 @@ export const Bugsnag = {
 
     bugsnag._logger.debug('Loaded!')
 
-    return bugsnag
+    return bugsnag._config.autoTrackSessions
+      ? bugsnag.startSession()
+      : bugsnag
   },
   start: (opts) => {
     if (Bugsnag._client) {
