@@ -9,6 +9,7 @@
 ### Changed
 
 - (plugin-navigation-breadcrumbs) calling `pushState` or `replaceState` no longer triggers a new session when `autoTrackSessions` is enabled [#1820](https://github.com/bugsnag/bugsnag-js/pull/1820)
+- Removed node plugin `plugin-contextualize` [#1911](https://github.com/bugsnag/bugsnag-js/pull/1911)
 
 ## TBD
 
