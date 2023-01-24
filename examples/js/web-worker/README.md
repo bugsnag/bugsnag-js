@@ -22,7 +22,7 @@ Take a look at…
 - [`web-app-reports-web-worker.js`](web-app-reports-unhandled/web-app-reports-web-worker.js) to see how to `autoDetectErrors` and `autoTrackSessions`
 - [`web-app-reports-web-script.js`](web-app-reports-unhandled/web-app-reports-web-script.js) to see how to prevent duplicate events being reported when also using BugSnag in the parent script that initializes the worker
 
-Firstly, replace `YOUR_API_KEY` with your own in [`web-app-reports-unhandled.html](web-app-reports-unhandled/web-app-reports-unhandled.html), [`web-app-reports-web-worker.js`](web-app-reports-unhandled/web-app-reports-web-worker.js) and [`web-app-reports-service-worker.js`](web-app-reports-unhandled/web-app-reports-service-worker.js) if you wish to use BugSnag in both the web app AND workers.
+Firstly, replace `YOUR_API_KEY` with your own in [`web-app-reports-unhandled.html`](web-app-reports-unhandled/web-app-reports-unhandled.html), [`web-app-reports-web-worker.js`](web-app-reports-unhandled/web-app-reports-web-worker.js) and [`web-app-reports-service-worker.js`](web-app-reports-unhandled/web-app-reports-service-worker.js) if you wish to use BugSnag in both the web app AND workers.
 
 And/or replace `YOUR_API_KEY` with your own in [`worker-reports-web-worker.js`](worker-reports-unhandled/worker-reports-web-worker.js) and [`worker-reports-service-worker.js`](worker-reports-unhandled/worker-reports-service-worker.js) if you wish to ONLY use BugSnag in the workers.
 
