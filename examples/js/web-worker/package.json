@@ -2,7 +2,7 @@
   "name": "web-worker",
   "version": "1.0.0",
   "scripts": {
-    "start": "serve . -p 8067 -n"
+    "start": "serve . -p 8066 -n"
   },
   "dependencies": {
     "@bugsnag/js": "^7.18.0",
