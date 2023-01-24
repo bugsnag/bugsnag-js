@@ -8,11 +8,30 @@ body {
   section {
     display: flex;
     justify-content: center;
+    text-align: center;
   }
 
   .navigation {
     margin-top: 90px;
-    /* align-items: flex-end; */
+    justify-content: center;
+  }
+
+  a {
+    margin: 0 2rem 0 2rem;
+    font-size: 16px;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    background-color: rgba(73, 73, 228, 1);
+    color: #FFF;
+    padding: .5rem;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+  }
+
+  img {
+    display: block;
+    margin: auto;
   }
 
   div {
