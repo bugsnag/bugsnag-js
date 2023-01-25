@@ -1,17 +1,17 @@
 #!/usr/bin/env node
 process.on('unhandledRejection', err => console.error(err))
 
-// const knox = require('knox')
-// const cf = require('cloudfront')
-// const { promisify } = require('util')
-// const { relative } = require('path')
+const knox = require('knox')
+const cf = require('cloudfront')
+const { promisify } = require('util')
+const { relative } = require('path')
 const semver = require('semver')
 
-// const s3Client = knox.createClient({
-//     key: process.env.AWS_ACCESS_KEY_ID,
-//     secret: process.env.AWS_SECRET_ACCESS_KEY,
-//     bucket: 'bugsnagcdn'
-// })
+const s3Client = knox.createClient({
+    key: process.env.AWS_ACCESS_KEY_ID,
+    secret: process.env.AWS_SECRET_ACCESS_KEY,
+    bucket: 'bugsnagcdn'
+})
 
 const cfClient = cf.createClient(
     process.env.AWS_ACCESS_KEY_ID,
@@ -31,7 +31,6 @@ const headers = {
   'Access-Control-Allow-Origin': '*',
   'x-amz-acl': 'public-read'
 }
-
 
 console.log(`upload files for ${packageName} ${packageVersion}...`)
 
@@ -53,7 +52,7 @@ const upload = async (localPath, remotePath) => {
 
 const invalidate = (paths) => {
   console.log(`invalidating CloudFront cache for the following objects:\n${paths.join('\n')}`)
-  return promisify(cfClient.createInvalidation.bind(cfClient))(invalidationKey, `bugsnag-js@${version}`, paths) // TODO: How to get the package name? i.e. bugsnag-js
+  return promisify(cfClient.createInvalidation.bind(cfClient))(invalidationKey, `bugsnag-js@${version}`, paths) // TODO: Do we need to get the package name? i.e. bugsnag-js
 }
 
 const run = async () => {
