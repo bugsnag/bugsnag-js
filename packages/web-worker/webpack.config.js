@@ -5,14 +5,17 @@ const { DefinePlugin } = require('webpack')
 module.exports = {
   entry: './src/notifier.js',
   mode: 'production',
-  experiments: {
-    outputModule: true
+  devtool: 'source-map',
+  optimization: {
+    minimize: false
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'notifier.js',
+    filename: 'bugsnag.web-worker.js',
     library: {
-      type: 'module'
+      name: 'Bugsnag',
+      type: 'umd',
+      export: 'default'
     }
   },
   resolve: {

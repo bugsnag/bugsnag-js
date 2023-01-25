@@ -3,7 +3,7 @@
     "version": "7.18.0",
     "description": "BugSnag error reporter for JavaScript web workers and service workers",
     "homepage": "https://www.bugsnag.com/",
-    "main": "dist/notifier.js",
+    "main": "dist/bugsnag.web-worker.js",
     "repository": {
         "type": "git",
         "url": "git@github.com:bugsnag/bugsnag-js.git"
@@ -15,9 +15,22 @@
         "dist",
         "types"
     ],
+    "keywords": [
+        "worker",
+        "webworker",
+        "web worker",
+        "web-worker",
+        "serviceworker",
+        "service worker",
+        "service-worker"
+    ],
     "scripts": {
-        "size": "./bin/size",
-        "build": "webpack"
+        "clean": "rm -fr dist && mkdir dist",
+        "build": "npm run clean && npm run build:dist && npm run build:dist:min",
+        "build:dist": "webpack",
+        "build:dist:min": "webpack --optimization-minimize --output-filename=bugsnag.web-worker.min.js",
+        "size": "../../bin/size dist/bugsnag.web-worker.min.js",
+        "cdn-upload": "../../bin/cdn-upload dist/*"
     },
     "author": "Bugsnag",
     "license": "MIT",

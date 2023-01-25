@@ -1,4 +1,4 @@
-import Bugsnag from "/node_modules/@bugsnag/web-worker/dist/notifier.js"
+importScripts("/node_modules/@bugsnag/web-worker/dist/bugsnag.web-worker.min.js")
 
 onmessage = function (e) {
     const { type, payload } = e.data

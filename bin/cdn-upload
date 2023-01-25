@@ -7,10 +7,19 @@ const { promisify } = require('util')
 const { relative } = require('path')
 const semver = require('semver')
 
+// INPUT PARAMETERS
+const packageDir = process.cwd()
+const packageJson = require(packageDir + "/package.json")
+const packageName = packageJson.name
+const packageVersion = packageJson.version
+const bucketName = 'bugsnagcdn'
+const distributionId = 'E205JDPNKONLN7'
+const files = process.argv.slice(2)
+
 const s3Client = knox.createClient({
     key: process.env.AWS_ACCESS_KEY_ID,
     secret: process.env.AWS_SECRET_ACCESS_KEY,
-    bucket: 'bugsnagcdn'
+    bucket: bucketName
 })
 
 const s3Headers = {
@@ -23,14 +32,6 @@ const cfClient = cf.createClient(
     process.env.AWS_ACCESS_KEY_ID,
     process.env.AWS_SECRET_ACCESS_KEY
 )
-
-// INPUT PARAMETERS
-const packageDir = process.cwd()
-const packageJson = require(packageDir + "/package.json")
-const packageName = packageJson.name
-const packageVersion = packageJson.version
-const distributionId = 'E205JDPNKONLN7'
-const files = process.argv.slice(2)
 
 const putFile = promisify(s3Client.putFile.bind(s3Client))
 
