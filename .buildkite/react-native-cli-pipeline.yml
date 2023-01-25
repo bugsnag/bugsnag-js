@@ -405,22 +405,6 @@ steps:
         artifact_paths:
           - build/rn0_70.apk
 
-      #
-      # Built app test fixtures - iOS
-      #
-      - label: ':ios: Init and build RN 0.60 ipa'
-        key: 'rn-0-60-ipa'
-        timeout_in_minutes: 30
-        agents:
-          queue: "opensource-mac-cocoa-10.15"
-        env:
-          DEBUG: true
-          LANG: "en_US.UTF-8"
-          DEVELOPER_DIR: "/Applications/Xcode11.app"
-        artifact_paths: build/rn0_60.ipa
-        commands:
-          - test/react-native-cli/scripts/init-and-build-test.sh rn0_60
-
       - label: ":android: Init and build RN 0.69 apk (Non-hermes)"
         key: "rn-cli-0-69-apk"
         depends_on:
