@@ -290,7 +290,6 @@ class Client {
   }
 
   _notify (event, onError, postReportCallback = noop) {
-    this._logger.warn('Bugsnag JS got _notify call')
     event.app = assign({}, event.app, {
       releaseStage: this._config.releaseStage,
       version: this._config.appVersion,
@@ -317,13 +316,10 @@ class Client {
     }
 
     const callbacks = [].concat(this._cbs.e).concat(onError)
-    this._logger.info('runCallbacks', callbacks)
     runCallbacks(callbacks, event, onCallbackError, (err, shouldSend) => {
-      this._logger.info('runCallbacks complete', shouldSend, err)
       if (err) onCallbackError(err)
 
       if (!shouldSend) {
-        this._logger.warn('Event not sent due to onError callback')
         this._logger.debug('Event not sent due to onError callback')
         return postReportCallback(null, event)
       }
@@ -350,8 +346,6 @@ class Client {
         this._session._track(event)
         event._session = this._session
       }
-
-      this._logger.info('Sending event for delivery with', this._delivery)
 
       this._delivery.sendEvent({
         apiKey: event.apiKey || this._config.apiKey,

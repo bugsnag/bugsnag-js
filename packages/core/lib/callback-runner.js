@@ -11,40 +11,24 @@ module.exports = (callbacks, event, onCallbackError, cb) => {
     try {
       // if function appears sync…
       if (fn.length !== 2) {
-        console.log('function appears sync', fn.toString())
         const ret = fn(event)
         // check if it returned a "thenable" (promise)
         if (ret && typeof ret.then === 'function') {
-          console.log('Promise return... thening it', ret)
-          const onError = err => {
-            console.log('Promise.reject - setTimeout')
-            setTimeout(() => {
-              onCallbackError(err)
-              return cb(null, true)
-            }, 0)
-          }
           return ret.then(
             // resolve
-            val => {
-              console.log('setting timeout for resolve callback')
-              setTimeout(() => {
-                console.log('running cb')
-                try {
-                  return cb(null, val)
-                } catch(e) {
-                  console.log('cb threw an Error', e)
-                  throw e
-                }
-              }, 0)
-            },
+            val => setTimeout(() => cb(null, val)),
             // reject
-            onError
-          ).catch(onError)
+            err => {
+              setTimeout(() => {
+                onCallbackError(err)
+                return cb(null, true)
+              })
+            }
+          )
         }
         return cb(null, ret)
       }
       // if function is async…
-      console.log('function appears async')
       fn(event, (err, result) => {
         if (err) {
           onCallbackError(err)
@@ -53,7 +37,6 @@ module.exports = (callbacks, event, onCallbackError, cb) => {
         cb(null, result)
       })
     } catch (e) {
-      console.log('caught an error, heading for onCallbackError', e)
       onCallbackError(e)
       cb(null)
     }

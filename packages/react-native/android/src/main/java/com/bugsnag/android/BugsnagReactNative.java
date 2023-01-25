@@ -193,9 +193,7 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
   boolean dispatch(@NonNull ReadableMap payload) {
     try {
       Map<String, Object> payloadMap = payload.toHashMap();
-      logger.i("dispatch: Sending payload to bugsnag-android: " + ((java.util.List<Object>) payloadMap.get("errors")).get(0));
       plugin.dispatch(payloadMap);
-      logger.i("dispatch: Payload sent to bugsnag-android, returning from dispatch");
       return true;
     } catch (Throwable exc) {
       logFailure("dispatch", exc);
@@ -206,10 +204,8 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
   @ReactMethod
   void getPayloadInfo(@NonNull ReadableMap payload, @NonNull Promise promise) {
     try {
-      logger.i("getPayloadInfo(" + payload + ")");
       boolean unhandled = payload.getBoolean("unhandled");
       Map<String, Object> info = plugin.getPayloadInfo(unhandled);
-      logger.i("getPayloadInfo(" + payload + ") -> " + info);
       promise.resolve(ReactNativeCompat.toWritableMap(info));
     } catch (Throwable exc) {
       logFailure("dispatch", exc);
