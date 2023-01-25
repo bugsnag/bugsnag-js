@@ -1,3 +1,5 @@
+/* eslint-env worker, serviceworker */
+
 const extensionRegex = /^(chrome|moz|safari|safari-web)-extension:/
 
 module.exports = {
