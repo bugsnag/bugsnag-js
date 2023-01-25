@@ -20,12 +20,13 @@
     "types"
   ],
   "scripts": {
-    "size": "./bin/size",
+    "size": "../../bin/size dist/bugsnag.min.js",
     "clean": "rm -fr dist && mkdir dist",
     "build": "npm run clean && npm run build:dist && npm run build:dist:min",
     "build:dist": "cross-env NODE_ENV=production bash -c '../../bin/bundle src/notifier.js --standalone=Bugsnag | ../../bin/extract-source-map dist/bugsnag.js'",
     "build:dist:min": "cross-env NODE_ENV=production bash -c '../../bin/bundle src/notifier.js --standalone=Bugsnag | ../../bin/minify dist/bugsnag.min.js'",
-    "cdn-upload": "./bin/cdn-upload"
+    "cdn-upload": "./bin/cdn-upload",
+    "test-upload": "../../bin/cdn-upload dist/*"
   },
   "author": "Bugsnag",
   "license": "MIT",

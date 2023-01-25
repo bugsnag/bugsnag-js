@@ -1,0 +1,95 @@
+#!/usr/bin/env node
+process.on('unhandledRejection', err => console.error(err))
+
+// const knox = require('knox')
+// const cf = require('cloudfront')
+// const { promisify } = require('util')
+// const { relative } = require('path')
+const semver = require('semver')
+
+// const s3Client = knox.createClient({
+//     key: process.env.AWS_ACCESS_KEY_ID,
+//     secret: process.env.AWS_SECRET_ACCESS_KEY,
+//     bucket: 'bugsnagcdn'
+// })
+
+const cfClient = cf.createClient(
+    process.env.AWS_ACCESS_KEY_ID,
+    process.env.AWS_SECRET_ACCESS_KEY
+)
+
+// INPUT PARAMETERS
+const packageDir = process.cwd()
+const packageJson = require(packageDir + "/package.json")
+const packageName = packageJson.name
+const packageVersion = packageJson.version
+const invalidationKey = 'E205JDPNKONLN7' // replace with input argument?
+const files = process.argv.slice(2)
+
+const headers = {
+  'Cache-Control': 'public, max-age=315360000',
+  'Access-Control-Allow-Origin': '*',
+  'x-amz-acl': 'public-read'
+}
+
+
+console.log(`upload files for ${packageName} ${packageVersion}...`)
+
+const putFile = promisify(s3Client.putFile.bind(s3Client))
+
+const upload = async (localPath, remotePath) => {
+  const relativePath = relative('..', localPath)
+  console.log(`uploading ${relativePath} -> ${remotePath}`)
+
+  const response = await putFile(localPath, remotePath, headers)
+
+  // Knox doesn't error if the request fails, so we need to check if this was a successful upload
+  if (response.statusCode >= 400) {
+    throw new Error(`Failed to upload ${relativePath}: ${response.statusCode} ${response.statusMessage}`)
+  }
+
+  return response
+}
+
+const invalidate = (paths) => {
+  console.log(`invalidating CloudFront cache for the following objects:\n${paths.join('\n')}`)
+  return promisify(cfClient.createInvalidation.bind(cfClient))(invalidationKey, `bugsnag-js@${version}`, paths) // TODO: How to get the package name? i.e. bugsnag-js
+}
+
+const run = async () => {
+  // track the uploaded paths so the cache can be invalidated afterwards
+  const uploaded = []
+  const track = p => {
+    uploaded.push(p)
+    return p
+  }
+
+  // always upload canonical versions
+  files.forEach(file => {
+      console.log(`upload ${packageDir}/${file} to /v${packageVersion}/${file.replace('dist/','')}`)
+      //   await upload(filepath, track(s3filepath))
+  })
+
+  const isUnstable = semver.prerelease(packageVersion) !== null
+  if (!isUnstable) {
+    // if this is a release (as opposed to a prerelease), update the major/minor aliases
+    const major = `v${semver.major(packageVersion)}`
+    files.forEach(file => {
+        console.log(`upload ${packageDir}/${file} to /${major}/${file.replace('dist/','')}`)
+        //   await upload(${packageDir}/${file}, track(/${major}/${file}))
+
+    })
+
+    const minor = `v${semver.major(packageVersion)}.${semver.minor(packageVersion)}`
+    files.forEach(file => {
+        console.log(`upload ${packageDir}/${file} to /${minor}/${file.replace('dist/','')}`)
+        // await upload(${packageDir}/${file}, track(/${minor}/${file}))
+    })
+  }
+
+  // invalidate caches for all of the uploaded files
+//   await invalidate(uploaded)
+}
+
+run()
+
