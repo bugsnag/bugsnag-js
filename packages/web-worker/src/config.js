@@ -1,3 +1,5 @@
+/* eslint-env worker, serviceworker */
+
 const { schema } = require('@bugsnag/core/config')
 const map = require('@bugsnag/core/lib/es-utils/map')
 const assign = require('@bugsnag/core/lib/es-utils/assign')
