@@ -3,6 +3,39 @@ var bugsnagExpress = require('@bugsnag/plugin-express')
 var express = require('express')
 var bodyParser = require('body-parser')
 
+const nodeVersion = process.version.match(/^v(\d+\.\d+)/)[1]
+
+const http = parseFloat(nodeVersion) > 14 ? require('node:http') : require('http')
+
+const logUrl = parseFloat(nodeVersion) > 12 
+  ? new URL(process.env.BUGSNAG_LOGS_ENDPOINT)
+  : require('url').parse(process.env.BUGSNAG_LOGS_ENDPOINT)
+
+function sendLog(level, message) {
+  const postData = JSON.stringify({ level, message })
+
+  const options = {
+    hostname: logUrl.hostname,
+    path: logUrl.pathname,
+    port: logUrl.port,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }
+
+  const req = http.request(options)
+  req.write(postData)
+  req.end()
+}
+
+const remoteLogger = {
+  debug: (message) => sendLog('debug', message),
+  info: (message) => sendLog('info', message),
+  warn: (message) => sendLog('warn', message),
+  error: (message) => sendLog('error', message)
+}
+
 Bugsnag.start({
   apiKey: process.env.BUGSNAG_API_KEY,
   endpoints: {
@@ -15,7 +48,8 @@ Bugsnag.start({
     { name: 'from config 3', variant: 'SHOULD BE REMOVED' }
   ],
   autoTrackSessions: false,
-  plugins: [bugsnagExpress]
+  plugins: [bugsnagExpress],
+  logger: remoteLogger,
 })
 
 var middleware = Bugsnag.getPlugin('express')
@@ -38,8 +72,8 @@ app.get('/', function (req, res) {
   res.end('ok')
 })
 
-app.get('/sync', function (req, res) {
-  throw new Error('sync')
+app.get('/sync/:message', function (req, res) {
+  throw new Error(req.params.message)
 })
 
 app.get('/async', function (req, res) {
@@ -68,6 +102,26 @@ app.get('/string-as-error', function (req, res, next) {
 
 app.get('/throw-non-error', function (req, res, next) {
   throw 1 // eslint-disable-line
+})
+
+app.get('/oversized', function (req, res, next) {
+  function repeat(s, n){
+    var a = [];
+    while(a.length < n){
+        a.push(s);
+    }
+    return a.join('');
+  }
+
+  var big = {};
+  var i = 0;
+  while (JSON.stringify(big).length < 2*10e5) {
+    big['entry'+i] = repeat('long repetitive string', 1000);
+    i++;
+  }
+  req.bugsnag.leaveBreadcrumb('big thing', big);
+  req.bugsnag.notify(new Error('oversized'));
+  res.end('OK')
 })
 
 app.get('/handled', function (req, res, next) {

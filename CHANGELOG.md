@@ -1,5 +1,19 @@
 # Changelog
 
+## 7.19.0 (2023-01-26)
+
+### Changed
+
+- (react-native) Update bugsnag-cocoa from v6.25.0 to [v6.25.2](https://github.com/bugsnag/bugsnag-cocoa/blob/master/CHANGELOG.md#6252-2023-01-18)
+- After trimming, attempt to send all event and session payloads, even if believed oversize [#1823](https://github.com/bugsnag/bugsnag-js/pull/1823)
+- (react-native) Update bugsnag-android from v5.28.1 to [v5.28.3](https://github.com/bugsnag/bugsnag-android/blob/master/CHANGELOG.md#5283-2022-11-16)
+
+### Fixed
+
+- (plugin-express|plugin-koa|plugin-restify) Fix parts of request metadata being missing from some events [#1879](https://github.com/bugsnag/bugsnag-js/pull/1879)
+- (plugin-aws-lambda) Fix a bug when used with a server plugin (Express, Koa or Restify) causing internal callbacks to be added multiple times and reporting the wrong request data [#1887](https://github.com/bugsnag/bugsnag-js/pull/1887)
+- (plugin-electron-renderer-client-state-updates) Fix a bug where state set in renderer config could not be cleared or updated [#1893](https://github.com/bugsnag/bugsnag-js/pull/1893)
+
 ## v7.18.2 (2022-11-01)
 
 ### Changed

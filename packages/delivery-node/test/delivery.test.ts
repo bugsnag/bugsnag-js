@@ -61,6 +61,38 @@ describe('delivery:node', () => {
     })
   })
 
+  it('logs failures and large payloads', done => {
+    const { server } = mockServer(400)
+    server.listen((err: Error) => {
+      expect(err).toBeUndefined()
+
+      const lotsOfEvents: any[] = []
+      while (JSON.stringify(lotsOfEvents).length < 10e5) {
+        lotsOfEvents.push({ errors: [{ errorClass: 'Error', errorMessage: 'long repetitive string'.repeat(1000) }] })
+      }
+      const payload = {
+        events: lotsOfEvents
+      } as unknown as EventDeliveryPayload
+
+      const config = {
+        apiKey: 'aaaaaaaa',
+        endpoints: { notify: `http://0.0.0.0:${(server.address() as AddressInfo).port}/notify/` },
+        redactedKeys: []
+      }
+
+      const logger = { error: jest.fn(), warn: jest.fn() }
+
+      delivery({ _logger: logger, _config: config } as unknown as Client).sendEvent(payload, (err) => {
+        expect(err).toStrictEqual(new Error('Bad statusCode from API: 400\nOK'))
+        expect(logger.error).toHaveBeenCalledWith(expect.stringContaining('Event failed to send…'), expect.any(Error))
+        expect(logger.warn).toHaveBeenCalledWith('Event oversized (1.01 MB)')
+
+        server.close()
+        done()
+      })
+    })
+  })
+
   it('sends sessions successfully', done => {
     const { requests, server } = mockServer(202)
     server.listen((err: Error) => {

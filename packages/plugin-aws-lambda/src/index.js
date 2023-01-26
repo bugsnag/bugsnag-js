@@ -1,6 +1,7 @@
 const bugsnagInFlight = require('@bugsnag/in-flight')
-const BugsnagPluginBrowserSession = require('@bugsnag/plugin-browser-session')
+const BugsnagPluginAwsLambdaSession = require('./session')
 const LambdaTimeoutApproaching = require('./lambda-timeout-approaching')
+const isServerPluginLoaded = require('./is-server-plugin-loaded')
 
 // JS timers use a signed 32 bit integer for the millisecond parameter. SAM's
 // "local invoke" has a bug that means it exceeds this amount, resulting in
@@ -12,7 +13,7 @@ const BugsnagPluginAwsLambda = {
 
   load (client) {
     bugsnagInFlight.trackInFlight(client)
-    client._loadPlugin(BugsnagPluginBrowserSession)
+    client._loadPlugin(BugsnagPluginAwsLambdaSession)
 
     // Reset the app duration between invocations, if the plugin is loaded
     const appDurationPlugin = client.getPlugin('appDuration')
@@ -89,7 +90,10 @@ function wrapHandler (client, flushTimeoutMs, lambdaTimeoutNotifyMs, handler) {
 
     client.addMetadata('AWS Lambda context', context)
 
-    if (client._config.autoTrackSessions) {
+    // track sessions if autoTrackSessions is enabled and no server plugin is
+    // loaded - the server plugins handle starting sessions automatically, so
+    // we don't need to start one as well
+    if (client._config.autoTrackSessions && !isServerPluginLoaded(client)) {
       client.startSession()
     }
 

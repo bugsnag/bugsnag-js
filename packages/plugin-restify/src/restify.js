@@ -27,7 +27,7 @@ module.exports = {
       requestClient.addOnError((event) => {
         const { request, metadata } = getRequestAndMetadataFromReq(req)
         event.request = { ...event.request, ...request }
-        requestClient.addMetadata('request', metadata)
+        event.addMetadata('request', metadata)
       }, true)
 
       if (!client._config.autoDetectErrors) return next()

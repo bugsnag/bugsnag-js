@@ -37,9 +37,9 @@ steps:
       #
       # BitBar tests
       #
-      - label: ":firefox: 101 Browser tests"
+      - label: ":firefox: v107 Browser tests"
         depends_on: "browser-maze-runner"
-        timeout_in_minutes: 20
+        timeout_in_minutes: 30
         plugins:
           docker-compose#v3.9.0:
             pull: browser-maze-runner
@@ -47,13 +47,16 @@ steps:
             use-aliases: true
             command:
               - --farm=bb
-              - --browser=firefox_101
+              - --browser=firefox_107
+          artifacts#v1.5.0:
+            upload:
+              - "./test/browser/maze_output/failed/**/*"
         concurrency: 5
         concurrency_group: "bitbar-web"
 
-      - label: ":chrome: v102 Browser tests"
+      - label: ":chrome: v108 Browser tests"
         depends_on: "browser-maze-runner"
-        timeout_in_minutes: 20
+        timeout_in_minutes: 30
         plugins:
           docker-compose#v3.9.0:
             pull: browser-maze-runner
@@ -61,13 +64,16 @@ steps:
             use-aliases: true
             command:
               - --farm=bb
-              - --browser=chrome_102
+              - --browser=chrome_108
+          artifacts#v1.5.0:
+            upload:
+              - "./test/browser/maze_output/failed/**/*"
         concurrency: 5
         concurrency_group: "bitbar-web"
 
       - label: ":ie: v11 Browser tests"
         depends_on: "browser-maze-runner"
-        timeout_in_minutes: 20
+        timeout_in_minutes: 30
         plugins:
           docker-compose#v3.9.0:
             pull: browser-maze-runner
@@ -76,14 +82,17 @@ steps:
             command:
               - --farm=bb
               - --browser=ie_11
+          artifacts#v1.5.0:
+            upload:
+              - "./test/browser/maze_output/failed/**/*"
         env:
           HOST: "localhost" # IE11 needs the host set to localhost for some reason
         concurrency: 5
         concurrency_group: "bitbar-web"
 
-      - label: ":edge: v102 Browser tests"
+      - label: ":edge: v106 Browser tests"
         depends_on: "browser-maze-runner"
-        timeout_in_minutes: 20
+        timeout_in_minutes: 30
         plugins:
           docker-compose#v3.9.0:
             pull: browser-maze-runner
@@ -91,21 +100,10 @@ steps:
             use-aliases: true
             command:
               - --farm=bb
-              - --browser=edge_102
-        concurrency: 5
-        concurrency_group: "bitbar-web"
-
-      - label: ":safari: 15 Browser tests"
-        depends_on: "browser-maze-runner"
-        timeout_in_minutes: 20
-        plugins:
-          docker-compose#v3.9.0:
-            pull: browser-maze-runner
-            run: browser-maze-runner
-            use-aliases: true
-            command:
-              - --farm=bb
-              - --browser=safari_15
+              - --browser=edge_106
+          artifacts#v1.5.0:
+            upload:
+              - "./test/browser/maze_output/failed/**/*"
         concurrency: 5
         concurrency_group: "bitbar-web"
 
@@ -114,7 +112,7 @@ steps:
       #
       - label: ":android: Android 4.4 Browser tests"
         depends_on: "browser-maze-runner-legacy"
-        timeout_in_minutes: 20
+        timeout_in_minutes: 30
         plugins:
           docker-compose#v3.9.0:
             pull: browser-maze-runner-legacy
@@ -123,12 +121,15 @@ steps:
             command:
               - --farm=bs
               - --browser=android_nexus5
+          artifacts#v1.5.0:
+            upload:
+              - "./test/browser/maze_output/failed/**/*"
         concurrency: 5
         concurrency_group: "browserstack"
 
       - label: ":chrome: v43 Browser tests"
         depends_on: "browser-maze-runner"
-        timeout_in_minutes: 20
+        timeout_in_minutes: 30
         plugins:
           docker-compose#v3.9.0:
             pull: browser-maze-runner
@@ -137,12 +138,15 @@ steps:
             command:
               - --farm=bs
               - --browser=chrome_43
+          artifacts#v1.5.0:
+            upload:
+              - "./test/browser/maze_output/failed/**/*"
         concurrency: 2
         concurrency_group: "browserstack"
 
       - label: ":chrome: v72 Browser tests"
         depends_on: "browser-maze-runner"
-        timeout_in_minutes: 20
+        timeout_in_minutes: 30
         plugins:
           docker-compose#v3.9.0:
             pull: browser-maze-runner
@@ -151,12 +155,15 @@ steps:
             command:
               - --farm=bs
               - --browser=chrome_72
+          artifacts#v1.5.0:
+            upload:
+              - "./test/browser/maze_output/failed/**/*"
         concurrency: 2
         concurrency_group: "browserstack"
 
       - label: ":ie: v8 Browser tests"
         depends_on: "browser-maze-runner"
-        timeout_in_minutes: 20
+        timeout_in_minutes: 30
         plugins:
           docker-compose#v3.9.0:
             pull: browser-maze-runner
@@ -165,12 +172,15 @@ steps:
             command:
               - --farm=bs
               - --browser=ie_8
+          artifacts#v1.5.0:
+            upload:
+              - "./test/browser/maze_output/failed/**/*"
         concurrency: 2
         concurrency_group: "browserstack"
 
       - label: ":ie: v9 Browser tests"
         depends_on: "browser-maze-runner"
-        timeout_in_minutes: 20
+        timeout_in_minutes: 30
         plugins:
           docker-compose#v3.9.0:
             pull: browser-maze-runner
@@ -179,12 +189,15 @@ steps:
             command:
               - --farm=bs
               - --browser=ie_9
+          artifacts#v1.5.0:
+            upload:
+              - "./test/browser/maze_output/failed/**/*"
         concurrency: 2
         concurrency_group: "browserstack"
 
       - label: ":ie: v10 Browser tests"
         depends_on: "browser-maze-runner"
-        timeout_in_minutes: 20
+        timeout_in_minutes: 30
         plugins:
           docker-compose#v3.9.0:
             pull: browser-maze-runner
@@ -193,12 +206,15 @@ steps:
             command:
               - --farm=bs
               - --browser=ie_10
+          artifacts#v1.5.0:
+            upload:
+              - "./test/browser/maze_output/failed/**/*"
         concurrency: 2
         concurrency_group: "browserstack"
 
       - label: ":edge: v17 Browser tests"
         depends_on: "browser-maze-runner"
-        timeout_in_minutes: 20
+        timeout_in_minutes: 30
         plugins:
           docker-compose#v3.9.0:
             pull: browser-maze-runner
@@ -207,12 +223,15 @@ steps:
             command:
               - --farm=bs
               - --browser=edge_17
+          artifacts#v1.5.0:
+            upload:
+              - "./test/browser/maze_output/failed/**/*"
         concurrency: 2
         concurrency_group: "browserstack"
 
       - label: ":safari: v10 Browser tests"
         depends_on: "browser-maze-runner"
-        timeout_in_minutes: 20
+        timeout_in_minutes: 30
         plugins:
           docker-compose#v3.9.0:
             pull: browser-maze-runner
@@ -221,12 +240,32 @@ steps:
             command:
               - --farm=bs
               - --browser=safari_10
+          artifacts#v1.5.0:
+            upload:
+              - "./test/browser/maze_output/failed/**/*"
+        concurrency: 2
+        concurrency_group: "browserstack"
+
+      - label: ":safari: 16 Browser tests"
+        depends_on: "browser-maze-runner"
+        timeout_in_minutes: 30
+        plugins:
+          docker-compose#v3.9.0:
+            pull: browser-maze-runner
+            run: browser-maze-runner
+            use-aliases: true
+            command:
+              - --farm=bs
+              - --browser=safari_16
+          artifacts#v1.5.0:
+            upload:
+              - "./test/browser/maze_output/failed/**/*"
         concurrency: 2
         concurrency_group: "browserstack"
 
       - label: ":iphone: iOS 10.3 Browser tests"
         depends_on: "browser-maze-runner"
-        timeout_in_minutes: 20
+        timeout_in_minutes: 30
         plugins:
           docker-compose#v3.9.0:
             pull: browser-maze-runner
@@ -235,6 +274,9 @@ steps:
             command:
               - --farm=bs
               - --browser=iphone_7
+          artifacts#v1.5.0:
+            upload:
+              - "./test/browser/maze_output/failed/**/*"
         env:
           HOST: "bs-local.com"
         concurrency: 2
@@ -242,7 +284,7 @@ steps:
 
       - label: ":iphone: iOS 15.4 Browser tests"
         depends_on: "browser-maze-runner"
-        timeout_in_minutes: 20
+        timeout_in_minutes: 30
         plugins:
           docker-compose#v3.9.0:
             pull: browser-maze-runner
@@ -251,6 +293,9 @@ steps:
             command:
               - --farm=bs
               - --browser=iphone_13
+          artifacts#v1.5.0:
+            upload:
+              - "./test/browser/maze_output/failed/**/*"
         env:
           HOST: "bs-local.com"
         concurrency: 5
@@ -258,7 +303,7 @@ steps:
 
       - label: ":android: Android 6.0 Browser tests"
         depends_on: "browser-maze-runner"
-        timeout_in_minutes: 20
+        timeout_in_minutes: 30
         plugins:
           docker-compose#v3.9.0:
             pull: browser-maze-runner
@@ -267,12 +312,15 @@ steps:
             command:
               - --farm=bs
               - --browser=android_s7
+          artifacts#v1.5.0:
+            upload:
+              - "./test/browser/maze_output/failed/**/*"
         concurrency: 5
         concurrency_group: "browserstack"
 
       - label: ":android: Android 7.0 Browser tests"
         depends_on: "browser-maze-runner"
-        timeout_in_minutes: 20
+        timeout_in_minutes: 30
         plugins:
           docker-compose#v3.9.0:
             pull: browser-maze-runner
@@ -281,12 +329,15 @@ steps:
             command:
               - --farm=bs
               - --browser=android_s8
+          artifacts#v1.5.0:
+            upload:
+              - "./test/browser/maze_output/failed/**/*"
         concurrency: 2
         concurrency_group: "browserstack"
 
       - label: ":firefox: v78 Browser tests"
         depends_on: "browser-maze-runner"
-        timeout_in_minutes: 20
+        timeout_in_minutes: 30
         plugins:
           docker-compose#v3.9.0:
             pull: browser-maze-runner
@@ -295,5 +346,8 @@ steps:
             command:
               - --farm=bs
               - --browser=firefox_78
+          artifacts#v1.5.0:
+            upload:
+              - "./test/browser/maze_output/failed/**/*"
         concurrency: 2
         concurrency_group: "browserstack"
