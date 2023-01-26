@@ -4,6 +4,7 @@
     "description": "BugSnag error reporter for JavaScript web workers and service workers",
     "homepage": "https://www.bugsnag.com/",
     "main": "dist/bugsnag.web-worker.js",
+    "types": "types/notifier.ts",
     "repository": {
         "type": "git",
         "url": "git@github.com:bugsnag/bugsnag-js.git"
