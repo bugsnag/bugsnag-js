@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { Component } from 'react'
 import Bugsnag from '@bugsnag/react-native'
 import * as Scenarios from './Scenarios'
 import {
@@ -10,27 +10,43 @@ import {
   NativeModules
 } from 'react-native'
 
-const App = () => {
-  const [currentScenario, setScenario] = useState('')
-  const [scenarioMetaData, setScenarioMetaData] = useState('')
-  const [apiKey, setApiKey] = useState('12312312312312312312312312312312')
-  const [notifyEndpoint, setNotifyEndpoint] = useState('http://bs-local.com:9339/notify')
-  const [sessionsEndpoint, setSessionsEndpoint] = useState('http://bs-local.com:9339/sessions')
+export default class App extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      currentScenario: '',
+      scenarioMetaData: '',
+      apiKey: '12312312312312312312312312312312',
+      notifyEndpoint: 'http://bs-local.com:9339/notify',
+      sessionsEndpoint: 'http://bs-local.com:9339/sessions'
+    }
+  }
 
-  const getConfiguration = () => {
+  setScenarioMetaData = newScenarioMetaData => {
+    this.setState(() => ({ scenarioMetaData: newScenarioMetaData }))
+  }
+
+  getConfiguration = () => {
     return {
-      apiKey: apiKey,
+      apiKey: this.state.apiKey,
       endpoints: {
-        notify: notifyEndpoint,
-        sessions: sessionsEndpoint
+        notify: this.state.notifyEndpoint,
+        sessions: this.state.sessionsEndpoint
       },
       autoTrackSessions: false
     }
   }
 
-  const useRealEndpoints = () => {
-    setNotifyEndpoint('https://notify.bugsnag.com')
-    setSessionsEndpoint('https://sessions.bugsnag.com')
+  setScenario = newScenario => {
+    this.setState(() => ({ currentScenario: newScenario }))
+  }
+
+  setApiKey = newApiKey => {
+    this.setState(() => ({ apiKey: newApiKey }))
+  }
+
+  setNotifyEndpoint = newNotifyEndpoint => {
+    this.setState(() => ({ notifyEndpoint: newNotifyEndpoint }))
   }
 
   setSessionsEndpoint = newSessionsEndpoint => {
@@ -53,19 +69,21 @@ const App = () => {
     const scenarioMetaData = this.state.scenarioMetaData
     const configuration = this.getConfiguration()
     const jsConfig = {}
-    const scenario = new Scenarios[currentScenario](configuration, jsConfig, scenarioMetaData)
+    const scenario = new Scenarios[scenarioName](configuration, jsConfig, scenarioMetaData)
     console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${JSON.stringify(jsConfig)} (js)`)
     scenario.run()
   }
 
-  const startBugsnag = () => {
-    console.log(`Starting Bugsnag for scenario: ${currentScenario}`)
-    console.log(` with MetaData: ${scenarioMetaData}`)
-    const configuration = getConfiguration()
+  startBugsnag = () => {
+    console.log(`Starting Bugsnag for scenario: ${this.state.currentScenario}`)
+    console.log(` with MetaData: ${this.state.scenarioMetaData}`)
+    const scenarioName = this.state.currentScenario
+    const scenarioMetaData = this.state.scenarioMetaData
+    const configuration = this.getConfiguration()
 
     const jsConfig = {}
     // eslint-disable-next-line no-new
-    new Scenarios[currentScenario](configuration, jsConfig, scenarioMetaData)
+    new Scenarios[scenarioName](configuration, jsConfig, scenarioMetaData)
     console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${JSON.stringify(jsConfig)} (js)`)
 
     NativeModules.BugsnagTestInterface.startBugsnag(configuration).then(() => {
@@ -122,11 +140,9 @@ const App = () => {
             onPress={this.useRealEndpoints}/>
         </View>
       </View>
-    </View>
-  )
-}
-
-export default App
+    )
+  }
+};
 
 const styles = StyleSheet.create({
   container: {
