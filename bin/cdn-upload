@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 process.on('unhandledRejection', err => console.error(err))
 
-const knox = require('knox')
-const cf = require('cloudfront')
-const { promisify } = require('util')
-const { relative } = require('path')
+const fs = require('fs')
+const path = require('path')
 const semver = require('semver')
+const S3 = require('aws-sdk/clients/s3')
+const Cloudfront = require('aws-sdk/clients/cloudfront')
 
 // INPUT PARAMETERS
 const packageDir = process.cwd()
@@ -14,82 +14,83 @@ const packageName = packageJson.name
 const packageVersion = packageJson.version
 const bucketName = 'bugsnagcdn'
 const distributionId = 'E205JDPNKONLN7'
+const callerReference = `${packageName}@${packageVersion}`
 const files = process.argv.slice(2)
 
-const s3Client = knox.createClient({
-    key: process.env.AWS_ACCESS_KEY_ID,
-    secret: process.env.AWS_SECRET_ACCESS_KEY,
-    bucket: bucketName
-})
+const s3Client = new S3()
+const cloudFrontClient = new Cloudfront()
 
-const s3Headers = {
-  'Cache-Control': 'public, max-age=315360000',
-  'Access-Control-Allow-Origin': '*',
-  'x-amz-acl': 'public-read'
-}
-
-const cfClient = cf.createClient(
-    process.env.AWS_ACCESS_KEY_ID,
-    process.env.AWS_SECRET_ACCESS_KEY
-)
-
-const putFile = promisify(s3Client.putFile.bind(s3Client))
 
 const upload = async (localPath, remotePath) => {
-  const relativePath = relative('..', localPath)
+  const relativePath = path.relative('..', localPath)
   console.log(`uploading ${relativePath} -> ${remotePath}`)
-
-  const response = await putFile(localPath, remotePath, s3Headers)
-
-  // Knox doesn't error if the request fails, so we need to check if this was a successful upload
-  if (response.statusCode >= 400) {
-    throw new Error(`Failed to upload ${relativePath}: ${response.statusCode} ${response.statusMessage}`)
-  }
+  
+  const fileStream = await fs.createReadStream(localPath)
+  const response = await s3Client.putObject({ 
+    Bucket: bucketName, 
+    Key: remotePath, 
+    Body: fileStream,
+    ACL: 'public-read',
+    CacheControl: 'public, max-age=315360000'
+    // TODO: Is it possible to add the Access-Control-Allow-Origin header?
+    //   'Access-Control-Allow-Origin': '*',
+  }).promise()
 
   return response
 }
 
-const invalidate = (paths) => {
+const invalidate = async (paths) => {
   console.log(`invalidating CloudFront cache for the following objects:\n${paths.join('\n')}`)
-  return promisify(cfClient.createInvalidation.bind(cfClient))(distributionId, `${packageName}@${packageVersion}`, paths)
+  const response = await cloudFrontClient.createInvalidation({
+    DistributionId: distributionId,
+    InvalidationBatch: {
+      CallerReference: callerReference,
+      Paths: {
+        Quantity: paths.length,
+        Items: paths
+      }
+    } 
+  }).promise()
+
+  return response
 }
 
-const getFilename = (filepath) => filepath.replace('dist/', '')
-
-const getLocalPath = (filepath) => `${packageDir}/${filepath}`
+// const getLocalPath = (filepath) => `${packageDir}/${filepath}`
+const getLocalPath = (filepath) =>  path.relative(packageDir, filepath)
 
 const run = async () => {
   // track the uploaded paths so the cache can be invalidated afterwards
   const uploaded = []
-  const track = p => {
-    uploaded.push(p)
-    return p
+  const track = filepath => {
+    // invalidation paths must start with /
+    uploaded.push(`/${filepath}`)
+    return filepath
   }
 
   // always upload canonical versions
-  files.forEach(async file => {
+  for (const file of files) {
     const localPath = getLocalPath(file)
-    const uploadPath = `/v${packageVersion}/${getFilename(file)}`
+    const uploadPath = `v${packageVersion}/${path.basename(file)}`
     await upload(localPath, track(uploadPath))
-  })
+  }
 
   const isUnstable = semver.prerelease(packageVersion) !== null
   if (!isUnstable) {
     // if this is a release (as opposed to a prerelease), update the major/minor aliases
     const major = `v${semver.major(packageVersion)}`
     
-    files.forEach(async file => {
+    for (const file of files) {
       const localPath = getLocalPath(file)
-      const uploadPath = `/${major}/${getFilename(file)}`
+      const uploadPath = `${major}/${path.basename(file)}`
       await upload(localPath, track(uploadPath))
-    })
+    }
 
     const minor = `v${semver.major(packageVersion)}.${semver.minor(packageVersion)}`
-    files.forEach(async file => {
+    for (const file of files) {
       const localPath = getLocalPath(file)
-      const uploadPath = `/${minor}/${getFilename(file)}`
+      const uploadPath = `${minor}/${path.basename(file)}`
       await upload(localPath, track(uploadPath))
-    })
+    }
   }
 
   // invalidate caches for all of the uploaded files

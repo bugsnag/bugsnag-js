@@ -4,6 +4,7 @@
     "description": "BugSnag error reporter for JavaScript web workers and service workers",
     "homepage": "https://www.bugsnag.com/",
     "main": "dist/bugsnag.web-worker.js",
+    "module": "dist/bugsnag.web-worker.js",
     "types": "types/notifier.ts",
     "repository": {
         "type": "git",
@@ -30,6 +31,8 @@
         "build": "npm run clean && npm run build:dist && npm run build:dist:min",
         "build:dist": "webpack",
         "build:dist:min": "webpack --optimization-minimize --output-filename=bugsnag.web-worker.min.js",
+        "build:dist:esm": "webpack --config esm.config.js",
+        "build:dist:esm.min": "webpack --config esm.config.js --optimization-minimize --output-filename=bugsnag.web-worker.min.mjs",
         "size": "../../bin/size dist/bugsnag.web-worker.min.js",
         "cdn-upload": "../../bin/cdn-upload dist/*"
     },
