@@ -1,8 +1,9 @@
-import Bugsnag from "/node_modules/@bugsnag/web-worker/dist/notifier.js"
+importScripts("/node_modules/@bugsnag/web-worker/dist/bugsnag.web-worker.min.js")
 
 onmessage = function (e) {
-    const { type, payload } = e.data
-    switch (type) {
+    var payload = e.data.payload
+
+    switch (e.data.type) {
         case 'bugsnag-start':
             Bugsnag.start({
                 apiKey: payload.API_KEY,
