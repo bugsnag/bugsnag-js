@@ -85,6 +85,32 @@ steps:
         artifact_paths:
           - build/rn0.69.apk
 
+      - label: ":android: Build RN 0.70 apk"
+        key: "rn-0-70-apk"
+        depends_on:
+          - "android-builder-image"
+        timeout_in_minutes: 60
+        env:
+          REACT_NATIVE_VERSION: "rn0.70"
+        plugins:
+          - docker-compose#v3.9.0:
+              run: react-native-android-builder
+        artifact_paths:
+          - build/rn0.70.apk
+
+      - label: ":android: Build RN 0.70 new architecture apk"
+        key: "rn-0-70-new-arch-apk"
+        depends_on:
+          - "android-builder-image"
+        timeout_in_minutes: 60
+        env:
+          REACT_NATIVE_VERSION: "rn0.70-new-arch"
+        plugins:
+          - docker-compose#v3.9.0:
+              run: react-native-android-builder
+        artifact_paths:
+          - build/rn0.70-new-arch.apk
+
       - label: ":android: Build react-navigation 0.60 apk"
         key: "react-navigation-0-60-apk"
         depends_on:
@@ -255,6 +281,54 @@ steps:
             use-aliases: true
             command:
               - --app=build/rn0.68-hermes.apk
+              - --farm=bs
+              - --device=ANDROID_12_0
+              - --a11y-locator
+              - --fail-fast
+        env:
+          SKIP_NAVIGATION_SCENARIOS: "true"
+          HERMES: "true"
+        concurrency: 24
+        concurrency_group: "browserstack-app"
+        concurrency_method: eager
+
+      - label: ":android: RN 0.70 Android 12 end-to-end tests"
+        depends_on: "rn-0-70-apk"
+        timeout_in_minutes: 60
+        plugins:
+          artifacts#v1.5.0:
+            download: "build/rn0.70.apk"
+            upload: ./test/react-native/maze_output/**/*
+          docker-compose#v3.9.0:
+            pull: react-native-maze-runner
+            run: react-native-maze-runner
+            use-aliases: true
+            command:
+              - --app=build/rn0.70.apk
+              - --farm=bs
+              - --device=ANDROID_12_0
+              - --a11y-locator
+              - --fail-fast
+        env:
+          SKIP_NAVIGATION_SCENARIOS: "true"
+          HERMES: "true"
+        concurrency: 24
+        concurrency_group: "browserstack-app"
+        concurrency_method: eager
+
+      - label: ":android: RN 0.70 new architecture Android 12 end-to-end tests"
+        depends_on: "rn-0-70-new-arch-apk"
+        timeout_in_minutes: 60
+        plugins:
+          artifacts#v1.5.0:
+            download: "build/rn0.70-new-arch.apk"
+            upload: ./test/react-native/maze_output/**/*
+          docker-compose#v3.9.0:
+            pull: react-native-maze-runner
+            run: react-native-maze-runner
+            use-aliases: true
+            command:
+              - --app=build/rn0.70-new-arch.apk
               - --farm=bs
               - --device=ANDROID_12_0
               - --a11y-locator

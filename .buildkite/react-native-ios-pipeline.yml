@@ -71,6 +71,32 @@ steps:
         commands:
           - npm run test:build-react-native-ios
 
+      - label: ":ios: Build RN 0.70 ipa"
+        key: "rn-0-70-ipa"
+        timeout_in_minutes: 60
+        agents:
+          queue: "opensource-arm-mac-cocoa-12"
+        env:
+          REACT_NATIVE_VERSION: rn0.70
+          LANG: "en_US.UTF-8"
+          DEVELOPER_DIR: "/Applications/Xcode13.app"
+        artifact_paths: build/rn0.70.ipa
+        commands:
+          - npm run test:build-react-native-ios
+
+      - label: ":ios: Build RN 0.70 new architecture ipa"
+        key: "rn-0-70-new-arch-ipa"
+        timeout_in_minutes: 60
+        agents:
+          queue: "opensource-arm-mac-cocoa-12"
+        env:
+          REACT_NATIVE_VERSION: rn0.70-new-arch
+          LANG: "en_US.UTF-8"
+          DEVELOPER_DIR: "/Applications/Xcode13.app"
+        artifact_paths: build/rn0.70-new-arch.ipa
+        commands:
+          - npm run test:build-react-native-ios
+
       # See: PLAT-5173
       - label: ":ios: Build react-navigation 0.60 ipa"
         skip: "See PLAT-5173"
@@ -226,6 +252,56 @@ steps:
             use-aliases: true
             command:
               - --app=build/rn0.69.ipa
+              - --farm=bs
+              - --device=IOS_14
+              - --a11y-locator
+              - --appium-version=1.18.0
+              - --fail-fast
+        env:
+          SKIP_NAVIGATION_SCENARIOS: "true"
+          HERMES: "true"
+        concurrency: 24
+        concurrency_group: "browserstack-app"
+        concurrency_method: eager
+
+      - label: ":ios: RN 0.70 iOS 14 end-to-end tests"
+        depends_on: "rn-0-70-ipa"
+        timeout_in_minutes: 60
+        plugins:
+          artifacts#v1.5.0:
+            download: "build/rn0.70.ipa"
+            upload: ./test/react-native/maze_output/**/*
+          docker-compose#v3.9.0:
+            pull: react-native-maze-runner
+            run: react-native-maze-runner
+            use-aliases: true
+            command:
+              - --app=build/rn0.70.ipa
+              - --farm=bs
+              - --device=IOS_14
+              - --a11y-locator
+              - --appium-version=1.18.0
+              - --fail-fast
+        env:
+          SKIP_NAVIGATION_SCENARIOS: "true"
+          HERMES: "true"
+        concurrency: 24
+        concurrency_group: "browserstack-app"
+        concurrency_method: eager
+
+      - label: ":ios: RN 0.70 new architecture iOS 14 end-to-end tests"
+        depends_on: "rn-0-70-new-arch-ipa"
+        timeout_in_minutes: 60
+        plugins:
+          artifacts#v1.5.0:
+            download: "build/rn0.70-new-arch.ipa"
+            upload: ./test/react-native/maze_output/**/*
+          docker-compose#v3.9.0:
+            pull: react-native-maze-runner
+            run: react-native-maze-runner
+            use-aliases: true
+            command:
+              - --app=build/rn0.70-new-arch.ipa
               - --farm=bs
               - --device=IOS_14
               - --a11y-locator
