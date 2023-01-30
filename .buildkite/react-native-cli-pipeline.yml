@@ -373,7 +373,7 @@ steps:
           - build/rn0_67_hermes.apk
   
       - label: ':android: Init and build RN 0.70 apk'
-        key: 'rn-0-70-apk'
+        key: 'rn-cli-0-70-apk'
         depends_on:
           - 'android-builder-image'
         timeout_in_minutes: 15
