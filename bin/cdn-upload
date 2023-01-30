@@ -85,7 +85,7 @@ const run = async () => {
       await upload(localPath, track(uploadPath))
     }
 
-    const minor = `v${semver.major(packageVersion)}.${semver.minor(packageVersion)}`
+    const minor = `v${major}.${semver.minor(packageVersion)}`
     for (const file of files) {
       const localPath = getLocalPath(file)
       const uploadPath = `${minor}/${path.basename(file)}`
