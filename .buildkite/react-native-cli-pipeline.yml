@@ -523,7 +523,7 @@ steps:
           - test/react-native-cli/scripts/init-and-build-test.sh rn0_67
 
       - label: ':ios: Init and build RN 0.70 ipa (Non-hermes)'
-        key: 'rn-0-70-ipa'
+        key: 'rn-cli-0-70-ipa'
         timeout_in_minutes: 30
         agents:
           queue: "opensource-arm-mac-cocoa-12"
