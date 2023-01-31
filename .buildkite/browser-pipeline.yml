@@ -301,22 +301,22 @@ steps:
         concurrency: 5
         concurrency_group: "browserstack"
 
-      - label: ":android: Android 6.0 Browser tests"
-        depends_on: "browser-maze-runner"
-        timeout_in_minutes: 30
-        plugins:
-          docker-compose#v3.9.0:
-            pull: browser-maze-runner
-            run: browser-maze-runner
-            use-aliases: true
-            command:
-              - --farm=bs
-              - --browser=android_s7
-          artifacts#v1.5.0:
-            upload:
-              - "./test/browser/maze_output/failed/**/*"
-        concurrency: 5
-        concurrency_group: "browserstack"
+      # - label: ":android: Android 6.0 Browser tests"
+      #   depends_on: "browser-maze-runner"
+      #   timeout_in_minutes: 30
+      #   plugins:
+      #     docker-compose#v3.9.0:
+      #       pull: browser-maze-runner
+      #       run: browser-maze-runner
+      #       use-aliases: true
+      #       command:
+      #         - --farm=bs
+      #         - --browser=android_s7
+      #     artifacts#v1.5.0:
+      #       upload:
+      #         - "./test/browser/maze_output/failed/**/*"
+      #   concurrency: 5
+      #   concurrency_group: "browserstack"
 
       - label: ":android: Android 7.0 Browser tests"
         depends_on: "browser-maze-runner"

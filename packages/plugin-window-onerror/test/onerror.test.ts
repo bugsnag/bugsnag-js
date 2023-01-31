@@ -36,6 +36,20 @@ describe('plugin: window onerror', () => {
     expect(client).toBe(client)
   })
 
+  it('accepts a component as the second argument', () => {
+    const client = new Client({ apiKey: 'API_KEY_YEAH', plugins: [plugin(window, 'test onerror')] })
+    const payloads: EventDeliveryPayload[] = []
+    client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload), sendSession: () => {} }))
+
+    const evt = { type: 'error', detail: 'something bad happened' } as unknown as Event
+    window.onerror(evt)
+
+    expect(payloads.length).toBe(1)
+    const event = payloads[0].events[0].toJSON()
+    expect(event.metaData['window onerror']).toBeUndefined()
+    expect(event.metaData['test onerror']).toBeDefined()
+  })
+
   describe('window.onerror function', () => {
     it('captures uncaught errors in timer callbacks', done => {
       const client = new Client({ apiKey: 'API_KEY_YEAH', plugins: [plugin(window)] })

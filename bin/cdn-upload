@@ -1,0 +1,91 @@
+#!/usr/bin/env node
+const fs = require('fs')
+const path = require('path')
+const semver = require('semver')
+const S3 = require('aws-sdk/clients/s3')
+const Cloudfront = require('aws-sdk/clients/cloudfront')
+
+// INPUT PARAMETERS
+const packageDir = process.cwd()
+const packageJson = require(packageDir + "/package.json")
+const packageName = packageJson.name
+const packageVersion = packageJson.version
+const bucketName = process.env.BUCKET_NAME || 'bugsnagcdn'
+const distributionId = process.env.DISTRIBUTION_ID || 'E205JDPNKONLN7'
+const callerReference = `${packageName}@${packageVersion}`
+const files = process.argv.slice(2)
+
+const s3Client = new S3()
+const cloudFrontClient = new Cloudfront()
+
+const upload = async (localPath, remotePath) => {
+  const relativePath = path.relative('..', localPath)
+  console.log(`uploading ${relativePath} -> ${remotePath}`)
+  
+  const fileStream = await fs.createReadStream(localPath)
+  const response = await s3Client.putObject({ 
+    Bucket: bucketName, 
+    Key: remotePath, 
+    Body: fileStream,
+    CacheControl: 'public, max-age=315360000',
+    ContentType: 'application/javascript'
+  }).promise()
+
+  return response
+}
+
+const invalidate = async (paths) => {
+  console.log(`invalidating CloudFront cache for the following objects:\n${paths.join('\n')}`)
+  const response = await cloudFrontClient.createInvalidation({
+    DistributionId: distributionId,
+    InvalidationBatch: {
+      CallerReference: callerReference,
+      Paths: {
+        Quantity: paths.length,
+        Items: paths
+      }
+    } 
+  }).promise()
+
+  return response
+}
+
+const run = async () => {
+  // track the uploaded paths so the cache can be invalidated afterwards
+  const uploaded = []
+  const track = filepath => {
+    // invalidation paths must start with /
+    uploaded.push(`/${filepath}`)
+    return filepath
+  }
+
+  // always upload canonical versions
+  for (const file of files) {
+    const localPath = `${packageDir}/${file}`
+    const uploadPath = `v${packageVersion}/${path.basename(file)}`
+    await upload(localPath, track(uploadPath))
+  }
+  
+  const isUnstable = semver.prerelease(packageVersion) !== null
+  if (!isUnstable) {
+    // if this is a release (as opposed to a prerelease), update the major/minor aliases
+    const major = `v${semver.major(packageVersion)}`
+    for (const file of files) {
+      const localPath = `${packageDir}/${file}`
+      const uploadPath = `${major}/${path.basename(file)}`
+      await upload(localPath, track(uploadPath))
+    }
+    
+    const minor = `${major}.${semver.minor(packageVersion)}`
+    for (const file of files) {
+      const localPath = `${packageDir}/${file}`
+      const uploadPath = `${minor}/${path.basename(file)}`
+      await upload(localPath, track(uploadPath))
+    }
+  }
+
+  // invalidate caches for all of the uploaded files
+  await invalidate(uploaded)
+}
+
+run()

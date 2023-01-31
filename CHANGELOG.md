@@ -1,5 +1,18 @@
 # Changelog
 
+## 7.20.0 (2023-01-31)
+
+This release adds support for service workers and web workers [#1915](https://github.com/bugsnag/bugsnag-js/pull/1915)
+
+### Enhancements
+
+- (delivery-fetch) Create fetch based delivery package [#1894](https://github.com/bugsnag/bugsnag-js/pull/1894)
+- (web-worker) Create web-worker notifier package [#1896](https://github.com/bugsnag/bugsnag-js/pull/1896)
+
+### Changes
+
+- (plugin-browser-device) Refactor parameters for improved guarding [#1896](https://github.com/bugsnag/bugsnag-js/pull/1896)
+
 ## 7.19.0 (2023-01-26)
 
 ### Changed
