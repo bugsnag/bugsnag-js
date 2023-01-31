@@ -1,6 +1,4 @@
 #!/usr/bin/env node
-process.on('unhandledRejection', err => console.error(err))
-
 const fs = require('fs')
 const path = require('path')
 const semver = require('semver')
