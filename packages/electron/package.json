@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/electron",
-  "version": "7.19.0",
+  "version": "7.20.0",
   "main": "src/notifier.js",
   "types": "types/notifier.d.ts",
   "description": "@bugsnag/electron notifier",
@@ -44,7 +44,7 @@
     "@bugsnag/plugin-node-unhandled-rejection": "^7.19.0",
     "@bugsnag/plugin-stackframe-path-normaliser": "^7.19.0",
     "@bugsnag/plugin-strip-project-root": "^7.19.0",
-    "@bugsnag/plugin-window-onerror": "^7.19.0",
+    "@bugsnag/plugin-window-onerror": "^7.20.0",
     "@bugsnag/plugin-window-unhandled-rejection": "^7.19.0"
   }
 }
