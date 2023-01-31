@@ -20,7 +20,6 @@ const files = process.argv.slice(2)
 const s3Client = new S3()
 const cloudFrontClient = new Cloudfront()
 
-
 const upload = async (localPath, remotePath) => {
   const relativePath = path.relative('..', localPath)
   console.log(`uploading ${relativePath} -> ${remotePath}`)
@@ -30,8 +29,8 @@ const upload = async (localPath, remotePath) => {
     Bucket: bucketName, 
     Key: remotePath, 
     Body: fileStream,
-    ACL: 'public-read',
-    CacheControl: 'public, max-age=315360000'
+    CacheControl: 'public, max-age=315360000',
+    ContentType: 'application/javascript'
   }).promise()
 
   return response
@@ -64,25 +63,24 @@ const run = async () => {
 
   // always upload canonical versions
   for (const file of files) {
-    const localPath = path.relative(packageDir, file)
+    const localPath = `${packageDir}/${file}`
     const uploadPath = `v${packageVersion}/${path.basename(file)}`
     await upload(localPath, track(uploadPath))
   }
-
+  
   const isUnstable = semver.prerelease(packageVersion) !== null
   if (!isUnstable) {
     // if this is a release (as opposed to a prerelease), update the major/minor aliases
     const major = `v${semver.major(packageVersion)}`
-    
     for (const file of files) {
-      const localPath = path.relative(packageDir, file)
+      const localPath = `${packageDir}/${file}`
       const uploadPath = `${major}/${path.basename(file)}`
       await upload(localPath, track(uploadPath))
     }
-
-    const minor = `v${major}.${semver.minor(packageVersion)}`
+    
+    const minor = `${major}.${semver.minor(packageVersion)}`
     for (const file of files) {
-      const localPath = path.relative(packageDir, file)
+      const localPath = `${packageDir}/${file}`
       const uploadPath = `${minor}/${path.basename(file)}`
       await upload(localPath, track(uploadPath))
     }
