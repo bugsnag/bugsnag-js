@@ -1,0 +1,54 @@
+{
+    "name": "@bugsnag/web-worker",
+    "version": "7.18.0",
+    "description": "BugSnag error reporter for JavaScript web workers and service workers",
+    "homepage": "https://www.bugsnag.com/",
+    "main": "dist/bugsnag.web-worker.js",
+    "module": "dist/bugsnag.web-worker.js",
+    "types": "types/notifier.ts",
+    "repository": {
+        "type": "git",
+        "url": "git@github.com:bugsnag/bugsnag-js.git"
+    },
+    "publishConfig": {
+        "access": "public"
+    },
+    "files": [
+        "dist",
+        "types"
+    ],
+    "keywords": [
+        "worker",
+        "webworker",
+        "web worker",
+        "web-worker",
+        "serviceworker",
+        "service worker",
+        "service-worker"
+    ],
+    "scripts": {
+        "clean": "rm -fr dist && mkdir dist",
+        "build": "npm run clean && npm run build:dist && npm run build:dist:min",
+        "build:dist": "webpack",
+        "build:dist:min": "webpack --optimization-minimize --output-filename=bugsnag.web-worker.min.js",
+        "build:dist:esm": "webpack --config esm.config.js",
+        "build:dist:esm.min": "webpack --config esm.config.js --optimization-minimize --output-filename=bugsnag.web-worker.min.mjs",
+        "size": "../../bin/size dist/bugsnag.web-worker.min.js",
+        "cdn-upload": "../../bin/cdn-upload dist/*"
+    },
+    "author": "Bugsnag",
+    "license": "MIT",
+    "devDependencies": {
+        "@bugsnag/core": "^7.18.0",
+        "@bugsnag/delivery-fetch": "^7.18.0",
+        "@bugsnag/plugin-browser-device": "^7.18.0",
+        "@bugsnag/plugin-browser-session": "^7.18.0",
+        "@bugsnag/plugin-client-ip": "^7.18.0",
+        "@bugsnag/plugin-window-onerror": "^7.18.0",
+        "@bugsnag/plugin-window-unhandled-rejection": "^7.18.0",
+        "ts-loader": "^9.4.1",
+        "typescript": "^4.9.3",
+        "webpack": "^5.75.0",
+        "webpack-cli": "^5.0.0"
+    }
+}

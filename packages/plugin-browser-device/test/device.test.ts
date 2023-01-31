@@ -11,7 +11,7 @@ import { schema } from '@bugsnag/core/config'
 declare class SessionWithDevice extends Session { public device: Device }
 
 const navigator = { language: 'en-GB', userAgent: 'testing browser 1.2.3' } as unknown as Navigator
-const screen = { orientation: { type: 'landscape-primary' } } as unknown as Screen
+const mockWindow = { screen: { orientation: { type: 'landscape-primary' } } } as unknown as Window & typeof globalThis
 const noop = () => {}
 const id = <T>(a: T) => a
 
@@ -35,7 +35,7 @@ describe('plugin: device', () => {
   })
 
   it('should capture the screen orientation if possible and add it to the event', () => {
-    const client = new Client({ apiKey: 'API_KEY_YEAH' }, undefined, [plugin(navigator, screen)])
+    const client = new Client({ apiKey: 'API_KEY_YEAH' }, undefined, [plugin(navigator, mockWindow)])
     const payloads: EventDeliveryPayload[] = []
 
     expect(client._cbs.e).toHaveLength(1)
@@ -79,7 +79,7 @@ describe('plugin: device', () => {
   })
 
   it('should capture the screen orientation if possible and add it to the session', () => {
-    const client = new Client({ apiKey: 'API_KEY_YEAH' }, undefined, [plugin(navigator, screen)])
+    const client = new Client({ apiKey: 'API_KEY_YEAH' }, undefined, [plugin(navigator, mockWindow)])
     const payloads: SessionDeliveryPayload[] = []
     client._sessionDelegate = {
       startSession: (client, session) => {

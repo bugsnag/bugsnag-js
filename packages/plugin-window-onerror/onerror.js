@@ -2,7 +2,7 @@
  * Automatically notifies Bugsnag when window.onerror is called
  */
 
-module.exports = (win = window) => ({
+module.exports = (win = window, component = 'window onerror') => ({
   load: (client) => {
     if (!client._config.autoDetectErrors) return
     if (!client._config.enabledErrorTypes.unhandledExceptions) return
@@ -22,7 +22,7 @@ module.exports = (win = window) => ({
         if (error) {
           // if the last parameter (error) was supplied, this is a modern browser's
           // way of saying "this value was thrown and not caught"
-          event = client.Event.create(error, true, handledState, 'window onerror', 1)
+          event = client.Event.create(error, true, handledState, component, 1)
           decorateStack(event.errors[0].stacktrace, url, lineNo, charNo)
         } else if (
           // This complex case detects "error" events that are typically synthesised
@@ -43,17 +43,17 @@ module.exports = (win = window) => ({
           // default to empty string (the event will fill it with a placeholder)
           const message = messageOrEvent.message || messageOrEvent.detail || ''
 
-          event = client.Event.create({ name, message }, true, handledState, 'window onerror', 1)
+          event = client.Event.create({ name, message }, true, handledState, component, 1)
 
           // provide the original thing onerror received – not our error-like object we passed to _notify
           event.originalError = messageOrEvent
 
           // include the raw input as metadata – it might contain more info than we extracted
-          event.addMetadata('window onerror', { event: messageOrEvent, extraParameters: url })
+          event.addMetadata(component, { event: messageOrEvent, extraParameters: url })
         } else {
           // Lastly, if there was no "error" parameter this event was probably from an old
           // browser that doesn't support that. Instead we need to generate a stacktrace.
-          event = client.Event.create(messageOrEvent, true, handledState, 'window onerror', 1)
+          event = client.Event.create(messageOrEvent, true, handledState, component, 1)
           decorateStack(event.errors[0].stacktrace, url, lineNo, charNo)
         }
 
