@@ -1,4 +1,4 @@
-const worker = new Worker('worker-reports-web-worker.js', {type: 'module'})
+const worker = new Worker('worker-reports-web-worker.js')
 
 const handledErrorBtn = document.querySelector('#handledErrorWebWrkr')
 const unhandledErrorBtn = document.querySelector('#unhandledErrorWebWrkr')

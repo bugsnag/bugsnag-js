@@ -1,5 +1,6 @@
-import Bugsnag from '/node_modules/@bugsnag/web-worker/dist/notifier.js'
-Bugsnag.start('YOUR_API_KEY')
+importScripts('//d2wy8f7a9ursnm.cloudfront.net/v7/bugsnag.web-worker.min.js')
+
+Bugsnag.start('ed0820ec954fcc35c3bc4f18fd36b206')
 
 addEventListener('message', (message) => {
     if (message.data === 'Handled error in Service Worker') {

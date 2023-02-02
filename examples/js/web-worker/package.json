@@ -4,10 +4,6 @@
   "scripts": {
     "start": "serve . -p 8066 -n"
   },
-  "dependencies": {
-    "@bugsnag/js": "^7.18.0",
-    "@bugsnag/web-worker": "^7.19.0-alpha.0"
-  },
   "devDependencies": {
     "serve": "^14.1.2"
   }
