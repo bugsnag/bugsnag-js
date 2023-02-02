@@ -1,5 +1,5 @@
-const handledErrorBtn = document.querySelector('#handledErrorServWrkr')
-const unhandledErrorBtn = document.querySelector('#unhandledErrorServWrkr')
+const handledErrorServWrkr = document.querySelector('#handledErrorServWrkr')
+const unhandledErrorServWrkr = document.querySelector('#unhandledErrorServWrkr')
 
 const registerWorker = () => {
     if (!('serviceWorker' in navigator)) {
@@ -9,12 +9,12 @@ const registerWorker = () => {
         .then( function(registration) {
             console.log('Service Worker registered. Scope is:', registration.scope)
 
-            handledErrorBtn.addEventListener('click', (event) => {
+            handledErrorServWrkr.addEventListener('click', (event) => {
                 navigator.serviceWorker.ready.then( function(registration) {
                 registration.active.postMessage('Handled error in Service Worker')
                   })
             })
-            unhandledErrorBtn.addEventListener('click', (event) => {
+            unhandledErrorServWrkr.addEventListener('click', (event) => {
                 navigator.serviceWorker.ready.then( function(registration) {
                 registration.active.postMessage('Unhandled error in Service Worker')
                   })

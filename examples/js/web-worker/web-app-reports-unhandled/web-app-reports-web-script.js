@@ -10,13 +10,13 @@ const worker = new Worker('web-app-reports-web-worker.js')
 //     e.preventDefault()  
 // }
 
-const handledErrorBtn = document.querySelector('#handledErrorWebWrkr')
-const unhandledErrorBtn = document.querySelector('#unhandledErrorWebWrkr')
+const handledErrorWebWrkr = document.querySelector('#handledErrorWebWrkr')
+const unhandledErrorWebWrkr = document.querySelector('#unhandledErrorWebWrkr')
 
-handledErrorBtn.addEventListener('click', (event) => {
+handledErrorWebWrkr.addEventListener('click', (event) => {
     worker.postMessage('Handled error in Web Worker')
 })
 
-unhandledErrorBtn.addEventListener('click', (event) => {
+unhandledErrorWebWrkr.addEventListener('click', (event) => {
     worker.postMessage('Unhandled error in Web Worker')
 })
