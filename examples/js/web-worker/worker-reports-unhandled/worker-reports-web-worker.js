@@ -1,6 +1,10 @@
 importScripts('//d2wy8f7a9ursnm.cloudfront.net/v7/bugsnag.web-worker.min.js')
 
-Bugsnag.start('YOUR_API_KEY')
+Bugsnag.start({
+    apiKey: 'YOUR_API_KEY',
+    autoDetectErrors: true,
+    autoTrackSessions: true
+  })
 
 onmessage = function(message) {
     if(message.data === 'Handled error in Web Worker') {
