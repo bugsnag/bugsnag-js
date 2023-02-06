@@ -4,7 +4,7 @@
 
 ### Changes
 
-- (web-worker) Update default configuration to not always capture unhandled errors [#1919](https://github.com/bugsnag/bugsnag-js/pull/1919)
+- (web-worker) Change default configuration for autoDetectErrors to false [#1919](https://github.com/bugsnag/bugsnag-js/pull/1919)
 
 ## 7.20.0 (2023-01-31)
 
