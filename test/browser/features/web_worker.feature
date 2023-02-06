@@ -14,8 +14,12 @@ Feature: worker notifier
     And the exception "errorMessage" equals "I am an error"
     And I should receive no sessions
 
-  Scenario: unhandled error in worker
-    When I navigate to the test URL "/web_worker/worker_unhandled_error"
+  Scenario: config.autoDetectErrors defaults to false
+    Given I navigate to the test URL "/web_worker/worker_auto_detect_errors/default"
+    Then I should receive no errors
+ 
+  Scenario: setting config.autoDetectErrors option to true
+    Given I navigate to the test URL "/web_worker/worker_auto_detect_errors/enabled"
     And I wait to receive an error
     Then the error is a valid browser payload for the error reporting API
     And the error payload field "events.0.exceptions.0.stacktrace" is a non-empty array
