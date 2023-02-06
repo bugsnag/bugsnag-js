@@ -7,6 +7,7 @@ onmessage = function (e) {
         case 'bugsnag-start':
             Bugsnag.start({
                 apiKey: payload.API_KEY,
+                autoDetectErrors: true,
                 endpoints: {
                     notify: payload.NOTIFY,
                     sessions: payload.SESSIONS

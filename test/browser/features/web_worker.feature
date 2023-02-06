@@ -30,7 +30,7 @@ Feature: worker notifier
     And I should receive no sessions
 
   Scenario: unhandled promise rejection
-    When I navigate to the test URL "/web_worker/unhandled_promise_rejection"
+    When I navigate to the test URL "/web_worker/worker_unhandled_promise_rejection"
     And I wait to receive an error
     Then the error is a valid browser payload for the error reporting API
     And the exception "errorClass" equals "Error"
