@@ -7,6 +7,7 @@ onmessage = function (e) {
         case 'bugsnag-start':
             Bugsnag.start({
                 apiKey: payload.API_KEY,
+                autoDetectErrors: true,
                 endpoints: {
                     notify: payload.NOTIFY,
                     sessions: payload.SESSIONS
@@ -14,9 +15,8 @@ onmessage = function (e) {
             })
             postMessage('bugsnag-ready')
             break;
-        case 'bugsnag-notify':
-            Promise.reject(new Error('broken promises'))
-            break;
+        case 'bugsnag-throw':
+            throw new Error('I am an error')
         default:
     } 
 }

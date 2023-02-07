@@ -1,5 +1,11 @@
 # Changelog
 
+## TBD
+
+### Changes
+
+- (web-worker) Change default configuration for autoDetectErrors to false [#1919](https://github.com/bugsnag/bugsnag-js/pull/1919)
+
 ## 7.20.0 (2023-01-31)
 
 This release adds support for service workers and web workers [#1915](https://github.com/bugsnag/bugsnag-js/pull/1915)
