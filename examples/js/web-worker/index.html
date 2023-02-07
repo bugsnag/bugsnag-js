@@ -4,16 +4,54 @@
   <meta charset="utf-8">
   <title>@bugsnag/web-worker: Web Worker example</title>
   <link rel="stylesheet" type="text/css" href="/index.css" />
+  <script src="//d2wy8f7a9ursnm.cloudfront.net/v7/bugsnag.min.js"></script>
+  <script>Bugsnag.start({
+    apiKey: 'ed0820ec954fcc35c3bc4f18fd36b206',
+    // onError: function (event) {
+    //   if (event.data === 'Unhandled error in worker-no-propagation.js') {
+    //     workerNoPropagation.onerror = function (e) {
+    //       e.preventDefault()  
+    //     }
+    //   }
+    //   console.log(event)
+    // }
+  })</script>
 </head>
 <body>
   <img width="100" src="/bugsnag.png"/>
-  <h1>Web Worker example</h1>
+  <h1>Web and service worker example</h1>
   <p>
     This an example of how to include <code>@bugsnag/web-worker</code> in a web worker and a service worker.
   </p>
-  <section class="navigation">
-      <a href="/worker-reports-unhandled/index.html">Page where ONLY workers use BugSnag</a>
-      <a href="/web-app-reports-unhandled/index.html">Page where workers AND web app use BugSnag</a>
-</section>
+  <h3>
+    This app has 2 web workers and 1 service worker. 1 web worker leaves unhandled errors to propagate to the web page
+    and be reported here, while the other has propagation disabled and reports its own unhandled errors.
+  </h3>
+  <section>
+    <div>
+      <h2>Web Worker with Propagation</h2>
+      <button id="handledErrorWebWrkrProp">Throw handled error</button>
+      <br>
+      <button id="unhandledErrorWebWrkrProp">Throw unhandled error</button>
+      <br>
+    </div>
+    <div>
+      <h2>Web Worker without Propagation</h2>
+      <button id="handledErrorWebWrkrNoProp">Throw handled error</button>
+      <br>
+      <button id="unhandledErrorWebWrkrNoProp">Throw unhandled error</button>
+      <br>
+    </div>
+    <div>
+      <h2>Service Worker</h2>
+      <button id="handledErrorServWrkr">Throw handled error</button>
+      <br>
+      <button id="unhandledErrorServWrkr">Throw unhandled error</button>
+    </div>  
+  </section>
+
+  <script src="service-worker-registration.js"></script>
+  <script src="worker-registration.js"></script>
+  
 </body>
 </html>
