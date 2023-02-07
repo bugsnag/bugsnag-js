@@ -5,17 +5,7 @@
   <title>@bugsnag/web-worker: Web Worker example</title>
   <link rel="stylesheet" type="text/css" href="/index.css" />
   <script src="//d2wy8f7a9ursnm.cloudfront.net/v7/bugsnag.min.js"></script>
-  <script>Bugsnag.start({
-    apiKey: 'ed0820ec954fcc35c3bc4f18fd36b206',
-    // onError: function (event) {
-    //   if (event.data === 'Unhandled error in worker-no-propagation.js') {
-    //     workerNoPropagation.onerror = function (e) {
-    //       e.preventDefault()  
-    //     }
-    //   }
-    //   console.log(event)
-    // }
-  })</script>
+  <script>Bugsnag.start('YOUR_API_KEY')</script>
 </head>
 <body>
   <img width="100" src="/bugsnag.png"/>

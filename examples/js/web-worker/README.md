@@ -10,7 +10,9 @@ If you choose to enable automatic error detection in the `web-worker` using the 
 
 Similarly, the BugSnag `web-worker` package does not report sessions by default. If you are using a worker hosted in your own web app the sessions should be managed by the host web app as it is this that users engage with directly. However, if you wish to treat the worker independently from the host web app, automatic session tracking can be enabled in the `web-worker` package using the [`autoTrackSessions` configuration option](https://docs.bugsnag.com/platforms/javascript/configuration-options/#autotracksessions).
 
-In the case of this example, [`worker-propagation.js`](worker-propagation.js) has both `autoDetectErrors` and `autoTrackSessions` set to `false`, leaving the web app to be responsible for reporting. [`worker-no-propagation.js`](worker-no-propagation.js) has `autoDetectErrors` and `autoTrackSessions` set to `true`, while utilising `preventDefault` in the parent script to stop any error propagation, ensuring that this worker will only be reported by itself.
+In the case of this example, [`worker-propagation.js`](worker-propagation.js) has both `autoDetectErrors` and `autoTrackSessions` set to `false`, leaving the web app responsible for reporting. [`worker-no-propagation.js`](worker-no-propagation.js) has `autoDetectErrors` and `autoTrackSessions` set to `true`, while utilising `preventDefault` in the [parent script](worker-registration.js) to stop any error propagation. This ensures that this worker will only be reported by itself.
+
+Unhandled errors in service workers will never propagate to the web app, so [`service-worker.js`](service-worker.js) is also set up to report its own errors.
 
 ## Usage
 
@@ -21,13 +23,7 @@ git clone git@github.com:bugsnag/bugsnag-js.git --recursive
 cd bugsnag-js/examples/js/web-worker
 ```
 
-Take a look at…
-- Any file with the `worker.js` suffix to see how to start and configure BugSnag within a worker
-- [`web-app-reports-web-script.js`](web-app-reports-unhandled/web-app-reports-web-script.js) to see how to prevent duplicate events being reported when also using BugSnag in the parent script that initializes the worker
-
-Firstly, replace `YOUR_API_KEY` with your own in [`web-app-reports-unhandled.html`](web-app-reports-unhandled/web-app-reports-unhandled.html), [`web-app-reports-web-worker.js`](web-app-reports-unhandled/web-app-reports-web-worker.js) and [`web-app-reports-service-worker.js`](web-app-reports-unhandled/web-app-reports-service-worker.js) if you wish to use BugSnag in both the web app AND workers.
-
-And/or replace `YOUR_API_KEY` with your own in [`worker-reports-web-worker.js`](worker-reports-unhandled/worker-reports-web-worker.js) and [`worker-reports-service-worker.js`](worker-reports-unhandled/worker-reports-service-worker.js) if you wish to ONLY use BugSnag in the workers.
+Firstly, replace `YOUR_API_KEY` with your own in [`index.html`](index.html), [`worker-propagation.js`](worker-propagation.js), [`worker-no-propagation.js`](worker-no-propagation.js) and [`service-worker.js`](service-worker.js).
 
 ### Running the Example
 
@@ -38,4 +34,4 @@ npm install
 npm start
 ```
 
-Once started, it will serve a landing page at http://localhost:8066 with links to the 2 pages that spawn their own workers.
+Once started, it will serve the app at http://localhost:8066 with handled and unhandled error buttons for each worker.

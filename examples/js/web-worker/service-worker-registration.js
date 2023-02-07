@@ -11,12 +11,12 @@ const registerWorker = () => {
 
             handledErrorServWrkr.addEventListener('click', (event) => {
                 navigator.serviceWorker.ready.then( function(registration) {
-                registration.active.postMessage('Handled error in Service Worker')
+                registration.active.postMessage('Handled error in service-worker.js')
                   })
             })
             unhandledErrorServWrkr.addEventListener('click', (event) => {
                 navigator.serviceWorker.ready.then( function(registration) {
-                registration.active.postMessage('Unhandled error in Service Worker')
+                registration.active.postMessage('Unhandled error in service-worker.js')
                   })
             })
         })
