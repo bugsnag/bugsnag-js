@@ -1,7 +1,7 @@
 importScripts('//d2wy8f7a9ursnm.cloudfront.net/v7/bugsnag.web-worker.min.js')
 
 Bugsnag.start({
-    apiKey: 'YOUR_API_KEY',
+    apiKey: 'ed0820ec954fcc35c3bc4f18fd36b206',
     autoDetectErrors: true,
     autoTrackSessions: true
   })

@@ -5,7 +5,7 @@ const registerWorker = () => {
     if (!('serviceWorker' in navigator)) {
         console.log('Service Worker not supported')
     } else {
-        navigator.serviceWorker.register('worker-reports-service-worker.js')
+        navigator.serviceWorker.register('service-worker.js')
         .then( function(registration) {
             console.log('Service Worker registered. Scope is:', registration.scope)
 

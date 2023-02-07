@@ -1,4 +1,4 @@
-const worker = new Worker('web-app-reports-web-worker.js')
+const worker = new Worker('worker.js')
 
 // Within a web worker, unhandled errors will also bubble up to 
 // the script that initialized the worker. Since we are also 
