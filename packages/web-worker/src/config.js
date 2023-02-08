@@ -17,7 +17,11 @@ module.exports = {
   }),
   autoTrackSessions: {
     ...schema.autoTrackSessions,
-    defaultValue: val => false
+    defaultValue: () => false
+  },
+  autoDetectErrors: {
+    ...schema.autoTrackSessions,
+    defaultValue: () => false
   }
 }
 
