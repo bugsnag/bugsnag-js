@@ -1,6 +1,6 @@
 {
     "name": "@bugsnag/web-worker",
-    "version": "7.20.0",
+    "version": "7.20.1",
     "description": "BugSnag error reporter for JavaScript web workers and service workers",
     "homepage": "https://www.bugsnag.com/",
     "main": "dist/bugsnag.web-worker.js",
