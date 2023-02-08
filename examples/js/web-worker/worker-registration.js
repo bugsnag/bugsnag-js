@@ -8,26 +8,26 @@ const workerNoPropagation = new Worker('worker-no-propagation.js')
 // from `worker-no-propagation.js`, because this worker is
 // currently responsible for reporting its own unhandled errors:
 
-workerNoPropagation.onerror = function (e) {
+workerNoPropagation.onerror = (e) => {
     e.preventDefault()  
 }
 
 const handledErrorWebWrkrProp = document.querySelector('#handledErrorWebWrkrProp')
 const unhandledErrorWebWrkrProp = document.querySelector('#unhandledErrorWebWrkrProp')
+
 const handledErrorWebWrkrNoProp = document.querySelector('#handledErrorWebWrkrNoProp')
 const unhandledErrorWebWrkrNoProp = document.querySelector('#unhandledErrorWebWrkrNoProp')
 
-handledErrorWebWrkrProp.addEventListener('click', (event) => {
+handledErrorWebWrkrProp.addEventListener('click', () => {
     workerPropagation.postMessage('Handled error in worker-propagation.js')
 })
-
-unhandledErrorWebWrkrProp.addEventListener('click', (event) => {
+unhandledErrorWebWrkrProp.addEventListener('click', () => {
     workerPropagation.postMessage('Unhandled error in worker-propagation.js')
 })
-handledErrorWebWrkrNoProp.addEventListener('click', (event) => {
+
+handledErrorWebWrkrNoProp.addEventListener('click', () => {
     workerNoPropagation.postMessage('Handled error in worker-no-propagation.js')
 })
-
-unhandledErrorWebWrkrNoProp.addEventListener('click', (event) => {
+unhandledErrorWebWrkrNoProp.addEventListener('click', () => {
     workerNoPropagation.postMessage('Unhandled error in worker-no-propagation.js')
 })

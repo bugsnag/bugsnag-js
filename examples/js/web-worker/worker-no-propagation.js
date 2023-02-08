@@ -6,7 +6,7 @@ Bugsnag.start({
     autoTrackSessions: true
   })
 
-self.onmessage = function(message) {
+self.onmessage = (message) => {
     if(message.data === 'Handled error in worker-no-propagation.js') {
         Bugsnag.leaveBreadcrumb('Handled error breadcrumb from worker-no-propagation.js')
         console.log(message)

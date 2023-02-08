@@ -10,33 +10,31 @@
 <body>
   <img width="100" src="/bugsnag.png"/>
   <h1>Web and service worker example</h1>
-  <p>
-    This an example of how to include <code>@bugsnag/web-worker</code> in a web worker and a service worker.
-  </p>
+  <p>This an example of how to include <code>@bugsnag/web-worker</code> in a web worker and a service worker.</p>
   <h3>
-    This app has 2 web workers and 1 service worker. 1 web worker leaves unhandled errors to propagate to the web page
+    This app has 2 web workers and 1 service worker. 1 web worker leaves unhandled errors to propagate to the browser context
     and be reported here, while the other has propagation disabled and reports its own unhandled errors.
   </h3>
+  <p>
+    You can unregister the current service worker by pressing the 'Unregister' button.
+    Simply refresh the page to instantiate the new service worker.
+  </p>
   <section>
     <div>
       <h2>Web Worker with Propagation</h2>
       <button id="handledErrorWebWrkrProp">Throw handled error</button>
-      <br>
       <button id="unhandledErrorWebWrkrProp">Throw unhandled error</button>
-      <br>
     </div>
     <div>
       <h2>Web Worker without Propagation</h2>
       <button id="handledErrorWebWrkrNoProp">Throw handled error</button>
-      <br>
       <button id="unhandledErrorWebWrkrNoProp">Throw unhandled error</button>
-      <br>
     </div>
     <div>
       <h2>Service Worker</h2>
       <button id="handledErrorServWrkr">Throw handled error</button>
-      <br>
       <button id="unhandledErrorServWrkr">Throw unhandled error</button>
+      <button id="unregister">Unregister</button>
     </div>  
   </section>
 
