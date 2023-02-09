@@ -16,7 +16,10 @@
         endpoints: { notify: NOTIFY, sessions: SESSIONS },
       })
 
-      fetch(url).then(function () {
+      fetch(url, {
+        method: "POST",
+        body: new URLSearchParams("foo=1&bar=🙂")
+      }).then(function () {
         Bugsnag.notify(new Error("This error should have network breadcrumbs attached"))
       })
     
@@ -26,7 +29,7 @@
     <pre id="bugsnag-test-should-run">PENDING</pre>
     <script>
       var el = document.getElementById('bugsnag-test-should-run')
-      el.textContent = el.innerText = 'fetch' in window
+      el.textContent = el.innerText = 'fetch' in window && 'URLSearchParams' in window
         ? 'YES'
         : 'NO'
     </script>
