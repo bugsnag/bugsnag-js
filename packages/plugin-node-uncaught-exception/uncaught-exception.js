@@ -1,3 +1,5 @@
+const { maybeUseFallbackStack } = require('@bugsnag/core/lib/node-fallback-stack')
+
 let _handler
 module.exports = {
   load: client => {
@@ -6,6 +8,10 @@ module.exports = {
     _handler = err => {
       // if we are in an async context, use the client from that context
       const c = (client._clientContext && client._clientContext.getStore()) ? client._clientContext.getStore() : client
+
+      // check if the stacktrace has no context, if so, if so append the frames we created earlier
+      // see plugin-contextualize for where this is created
+      if (err.stack && c.fallbackStack) maybeUseFallbackStack(err, c.fallbackStack)
 
       const event = c.Event.create(err, false, {
         severity: 'error',
