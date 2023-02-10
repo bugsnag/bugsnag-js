@@ -263,7 +263,7 @@ steps:
         concurrency: 2
         concurrency_group: "browserstack"
 
-      - label: ":iphone: iOS 10.3 Browser tests"
+      - label: ":iphone: iOS 11 Browser tests"
         depends_on: "browser-maze-runner"
         timeout_in_minutes: 30
         plugins:
@@ -273,7 +273,7 @@ steps:
             use-aliases: true
             command:
               - --farm=bs
-              - --browser=iphone_7
+              - --browser=iphone_x
           artifacts#v1.5.0:
             upload:
               - "./test/browser/maze_output/failed/**/*"

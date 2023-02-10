@@ -181,7 +181,7 @@ safari_16:
     lineNumber: 18
     columnNumber: 25
 
-iphone_7:
+iphone_x:
   handled:
     errorClass: 'ReferenceError'
     errorMessage: "Can't find variable: foo"
