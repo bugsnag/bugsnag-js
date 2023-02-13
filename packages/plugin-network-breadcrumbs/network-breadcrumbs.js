@@ -206,13 +206,13 @@ module.exports = (_ignoredUrls = [], win = window) => {
 
   const getByteLength = (body) => {
     // body could be any of the types listed here: https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/send#parameters
-    // Omit content length metadata if body is an unsupported type
+    // ReadableStreams cannot be read safely and it's difficult to get an accurate byte length for FormData and Document inputs
     if ((body === null || typeof body === 'undefined') ||
       (win.ReadableStream && body instanceof win.ReadableStream) ||
       (win.FormData && body instanceof win.FormData) ||
       (win.Document && body instanceof win.Document)) return undefined
 
-    // See if we can get the byte length directly
+    // Try to read the byte length directly
     if (typeof body.byteLength === 'number') {
       // ArrayBuffer, DataView, TypedArray
       return body.byteLength
@@ -222,10 +222,11 @@ module.exports = (_ignoredUrls = [], win = window) => {
       return undefined
     }
 
-    // Stringify the input and construct a Blob to get the utf-8 encoded byte length
-    // This may fail if the input object has no prototype or a broken toString
     try {
+      // do a simple stringification - this may fail if the input object has no prototype or a broken toString
       const stringified = String(body)
+
+      // use a Blob to get the utf-8 encoded byte length
       return new win.Blob([stringified]).size
     } catch (e) {
       return undefined
