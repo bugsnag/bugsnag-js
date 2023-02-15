@@ -2,8 +2,34 @@
 
 ## TBD
 
+### Changes
+
+- (react-native) Update bugsnag-android from v5.28.3 to [v5.28.4](https://github.com/bugsnag/bugsnag-android/blob/master/CHANGELOG.md#5284-2023-02-08)
+
+## 7.20.1 (2023-02-08)
+
+### Changes
+
+- (web-worker) Change default configuration for autoDetectErrors to false [#1919](https://github.com/bugsnag/bugsnag-js/pull/1919)
+
+## 7.20.0 (2023-01-31)
+
+This release adds support for service workers and web workers [#1915](https://github.com/bugsnag/bugsnag-js/pull/1915)
+
+### Enhancements
+
+- (delivery-fetch) Create fetch based delivery package [#1894](https://github.com/bugsnag/bugsnag-js/pull/1894)
+- (web-worker) Create web-worker notifier package [#1896](https://github.com/bugsnag/bugsnag-js/pull/1896)
+
+### Changes
+
+- (plugin-browser-device) Refactor parameters for improved guarding [#1896](https://github.com/bugsnag/bugsnag-js/pull/1896)
+
+## 7.19.0 (2023-01-26)
+
 ### Changed
 
+- (react-native) Update bugsnag-cocoa from v6.25.0 to [v6.25.2](https://github.com/bugsnag/bugsnag-cocoa/blob/master/CHANGELOG.md#6252-2023-01-18)
 - After trimming, attempt to send all event and session payloads, even if believed oversize [#1823](https://github.com/bugsnag/bugsnag-js/pull/1823)
 - (react-native) Update bugsnag-android from v5.28.1 to [v5.28.3](https://github.com/bugsnag/bugsnag-android/blob/master/CHANGELOG.md#5283-2022-11-16)
 
@@ -11,6 +37,7 @@
 
 - (plugin-express|plugin-koa|plugin-restify) Fix parts of request metadata being missing from some events [#1879](https://github.com/bugsnag/bugsnag-js/pull/1879)
 - (plugin-aws-lambda) Fix a bug when used with a server plugin (Express, Koa or Restify) causing internal callbacks to be added multiple times and reporting the wrong request data [#1887](https://github.com/bugsnag/bugsnag-js/pull/1887)
+- (plugin-electron-renderer-client-state-updates) Fix a bug where state set in renderer config could not be cleared or updated [#1893](https://github.com/bugsnag/bugsnag-js/pull/1893)
 
 ## v7.18.2 (2022-11-01)
 
