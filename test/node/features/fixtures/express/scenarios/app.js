@@ -169,6 +169,16 @@ app.post('/features/handled', bodyParser.urlencoded(), function (req, res, next)
   res.end('OK')
 })
 
+app.get('/breadcrumbs_a', function (req, res) {
+  Bugsnag.leaveBreadcrumb('For the first URL', { message: 'For the first URL' })
+  throw new Error('Error in /breadcrumbs_a')
+})
+
+app.get('/breadcrumbs_b', function (req, res) {
+  Bugsnag.leaveBreadcrumb('For the second URL', { message: 'For the second URL' })
+  throw new Error('Error in /breadcrumbs_b')
+})
+
 app.use(middleware.errorHandler)
 
 app.listen(80)
