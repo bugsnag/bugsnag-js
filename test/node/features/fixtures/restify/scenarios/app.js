@@ -24,7 +24,7 @@ server.use(restify.plugins.queryParser())
 // If the server hasn't started sending something within 2 seconds
 // it probably won't. So end the request and hurry the failing test
 // along.
-server.use(function (req, res) {
+server.use(function (req, res, next) {
   setTimeout(function () {
     if (!res.headersSent) return res.sendStatus(500)
   }, 2000)

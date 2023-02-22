@@ -33,7 +33,7 @@ Scenario: an asynchronous thrown error in a route
   Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is true
   And the event "severity" equals "error"
-  And the event "severityReason.type" equals "unhandledException"
+  And the event "severityReason.type" equals "unhandledErrorMiddleware"
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "async"
   And the exception "type" equals "nodejs"
