@@ -23,14 +23,4 @@ end
       )
     end
   end
-
-  Before("@skip_after_node_#{version}") do
-  actual_version = ENV['NODE_VERSION'].to_i
-
-  if actual_version > version
-    skip_this_scenario(
-      "Skipping scenario on Node #{actual_version}"
-    )
-  end
-end
 end
