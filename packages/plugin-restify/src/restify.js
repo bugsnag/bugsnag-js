@@ -25,8 +25,7 @@ module.exports = {
         const { request, metadata } = getRequestAndMetadataFromReq(req)
         event.request = { ...event.request, ...request }
         event.addMetadata('request', metadata)
-        if (event.unhandled) {
-          event.severity = 'error'
+        if (event._handledState.severityReason.type === 'unhandledException') {
           event._handledState = handledState
         }
       }, true)
