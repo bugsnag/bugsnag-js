@@ -25,15 +25,12 @@ module.exports = {
         const { request, metadata } = getRequestAndMetadataFromReq(req)
         event.request = { ...event.request, ...request }
         event.addMetadata('request', metadata)
+        if (event._handledState.severityReason.type === 'unhandledException') {
+          event._handledState = handledState
+        }
       }, true)
 
-      if (!client._config.autoDetectErrors) return next()
-
-      if (client._clientContext) {
-        client._clientContext.run(requestClient, () => next())
-      } else {
-        next()
-      }
+      client._clientContext.run(requestClient, next)
     }
 
     const errorHandler = (req, res, err, cb) => {

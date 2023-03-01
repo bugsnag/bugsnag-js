@@ -16,7 +16,10 @@
         endpoints: { notify: NOTIFY, sessions: SESSIONS },
       })
 
-      fetch(url).then(function () {
+      fetch(url, {
+        method: "POST",
+        body: new Int8Array(16)
+      }).then(function () {
         Bugsnag.notify(new Error("This error should have network breadcrumbs attached"))
       })
     
