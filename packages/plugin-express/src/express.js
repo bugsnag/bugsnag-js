@@ -31,7 +31,7 @@ module.exports = {
         }
       }, true)
 
-      client._clientContext.run(requestClient, () => next())
+      client._clientContext.run(requestClient, next)
     }
 
     const errorHandler = (err, req, res, next) => {
