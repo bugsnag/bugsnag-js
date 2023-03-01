@@ -45,9 +45,9 @@ const BugsnagPluginAwsLambda = {
 
       // This relies on our unhandled rejection plugin adding its listener first
       // using process.prependListener, so we can call it first instead of AWS'
-      process.on('uncaughtException', async (reason, promise) => {
+      process.on('uncaughtException', async (err, origin) => {
         for (const listener of listeners) {
-          await listener.call(process, reason, promise)
+          await listener.call(process, err, origin)
         }
       })
     }
