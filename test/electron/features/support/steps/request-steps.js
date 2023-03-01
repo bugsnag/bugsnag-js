@@ -5,7 +5,7 @@ const { readFixtureFile } = require('../utils')
 const expect = require('../utils/expect')
 const { applySourcemaps } = require('../utils/source-mapper')
 
-const REQUEST_RESOLUTION_TIMEOUT = 3000
+const REQUEST_RESOLUTION_TIMEOUT = 5000
 const launchConfig = { timeout: 30 * 1000 }
 const requestDelay = (callback) => new Promise((resolve, reject) => {
   setTimeout(() => callback(resolve), REQUEST_RESOLUTION_TIMEOUT)
@@ -40,7 +40,8 @@ Given('I launch an app with configuration:', launchConfig, (data) => {
   return global.automator.start({
     BUGSNAG_CONFIG: setup.bugsnag,
     BUGSNAG_PRELOAD: setup.preload,
-    BUGSNAG_RENDERER_CONFIG: setup.renderer_config
+    BUGSNAG_RENDERER_CONFIG: setup.renderer_config,
+    SERVER_ADDRESS: `http://localhost:${global.server.port}`
   })
 })
 

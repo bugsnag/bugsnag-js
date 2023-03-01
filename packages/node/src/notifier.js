@@ -45,11 +45,6 @@ const internalPlugins = [
   pluginStackframePathNormaliser
 ]
 
-// Used to store and retrieve the request-scoped client which makes it easy to obtain the request-scoped client
-// from anywhere in the codebase e.g. when calling Bugsnag.leaveBreadcrumb() or even within the global unhandled
-// promise rejection handler.
-const clientContext = new AsyncLocalStorage()
-
 const Bugsnag = {
   _client: null,
   createClient: (opts) => {
@@ -59,7 +54,10 @@ const Bugsnag = {
 
     const bugsnag = new Client(opts, schema, internalPlugins, { name, version, url })
 
-    bugsnag._clientContext = clientContext
+    // Used to store and retrieve the request-scoped client which makes it easy to obtain the request-scoped client
+    // from anywhere in the codebase e.g. when calling Bugsnag.leaveBreadcrumb() or even within the global unhandled
+    // promise rejection handler.
+    bugsnag._clientContext = new AsyncLocalStorage()
 
     bugsnag._setDelivery(delivery)
 

@@ -1,4 +1,5 @@
 const { join } = require('path')
+const { net } = require('electron')
 const {
   uncaughtException,
   unhandledRejection,
@@ -41,6 +42,22 @@ function createWindow () {
 
   // eslint-disable-next-line no-undef
   win.loadFile(join(__dirname, htmlRelativePath))
+}
+
+function makeSimpleGetRequest (fail = false) {
+  const url = fail
+    ? `${process.env.SERVER_ADDRESS}/fail`
+    : `${process.env.SERVER_ADDRESS}/success`
+
+  const request = net.request(url)
+  request.on('response', notify)
+  request.end()
+}
+
+function networkRequestError () {
+  const request = net.request('http://locahost:65536/')
+  request.on('error', notify)
+  request.end()
 }
 
 app.whenReady().then(createWindow)
@@ -92,4 +109,12 @@ ipcMain.on('main-process-clear-feature-flags', () => {
 
 ipcMain.on('main-process-clear-feature-flags-now', () => {
   Bugsnag.clearFeatureFlags()
+})
+
+ipcMain.on('main-process-get-request', (_event, fail) => {
+  makeSimpleGetRequest(fail)
+})
+
+ipcMain.on('main-process-request-error', () => {
+  networkRequestError()
 })

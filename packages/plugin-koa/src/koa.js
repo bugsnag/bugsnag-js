@@ -25,13 +25,13 @@ module.exports = {
         const { request, metadata } = getRequestAndMetadataFromCtx(ctx)
         event.request = { ...event.request, ...request }
         event.addMetadata('request', metadata)
+        if (event._handledState.severityReason.type === 'unhandledException') {
+          event.severity = 'error'
+          event._handledState = handledState
+        }
       }, true)
 
-      if (client._clientContext) {
-        await client._clientContext.run(requestClient, () => next())
-      } else {
-        await next()
-      }
+      await client._clientContext.run(requestClient, next)
     }
 
     requestHandler.v1 = function * (next) {

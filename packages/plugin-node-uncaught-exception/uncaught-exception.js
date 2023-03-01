@@ -18,12 +18,15 @@ module.exports = {
         unhandled: true,
         severityReason: { type: 'unhandledException' }
       }, 'uncaughtException handler', 1)
-      c._notify(event, () => {}, (e, event) => {
-        if (e) c._logger.error('Failed to send event to Bugsnag')
-        c._config.onUncaughtException(err, event, c._logger)
+      return new Promise(resolve => {
+        c._notify(event, () => {}, (e, event) => {
+          if (e) c._logger.error('Failed to send event to Bugsnag')
+          c._config.onUncaughtException(err, event, c._logger)
+          resolve()
+        })
       })
     }
-    process.on('uncaughtException', _handler)
+    process.prependListener('uncaughtException', _handler)
   },
   destroy: () => {
     process.removeListener('uncaughtException', _handler)
