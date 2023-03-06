@@ -2,6 +2,8 @@ const name = 'Bugsnag Node'
 const version = '__VERSION__'
 const url = 'https://github.com/bugsnag/bugsnag-js'
 
+const { AsyncLocalStorage } = require('async_hooks')
+
 const Client = require('@bugsnag/core/client')
 const Event = require('@bugsnag/core/event')
 const Session = require('@bugsnag/core/session')
@@ -51,6 +53,11 @@ const Bugsnag = {
     if (!opts) opts = {}
 
     const bugsnag = new Client(opts, schema, internalPlugins, { name, version, url })
+
+    // Used to store and retrieve the request-scoped client which makes it easy to obtain the request-scoped client
+    // from anywhere in the codebase e.g. when calling Bugsnag.leaveBreadcrumb() or even within the global unhandled
+    // promise rejection handler.
+    bugsnag._clientContext = new AsyncLocalStorage()
 
     bugsnag._setDelivery(delivery)
 

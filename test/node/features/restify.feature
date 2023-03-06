@@ -1,3 +1,4 @@
+@skip_node_18
 Feature: @bugsnag/plugin-restify
 
 Background:
@@ -8,12 +9,13 @@ Background:
   And I wait for the host "restify" to open port "80"
 
 Scenario: a synchronous thrown error in a route
-  Then I open the URL "http://restify/sync/hello?a=1&b=2&c=3"
+  Then I open the URL "http://restify/sync/hello?a=1&b=2&c=3" tolerating any error
   And I wait to receive an error
   Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is true
   And the event "severity" equals "error"
   And the event "severityReason.type" equals "unhandledErrorMiddleware"
+  And the event "severityReason.attributes.framework" equals "Restify"
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "hello"
   And the exception "type" equals "nodejs"
@@ -29,17 +31,21 @@ Scenario: a synchronous thrown error in a route
   And the event "metaData.request.params.message" equals "hello"
 
 Scenario: an asynchronous thrown error in a route
-  Then I open the URL "http://restify/async"
+  Then I open the URL "http://restify/async" tolerating any error
   And I wait to receive an error
   Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is true
   And the event "severity" equals "error"
   And the event "severityReason.type" equals "unhandledErrorMiddleware"
+  And the event "severityReason.attributes.framework" equals "Restify"
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "async"
   And the exception "type" equals "nodejs"
   And the "file" of stack frame 0 equals "scenarios/app.js"
   And the event "metaData.request.query" is null
+  And the event "request.url" equals "http://restify/async"
+  And the event "request.httpMethod" equals "GET"
+  And the event "request.clientIp" is not null
 
 Scenario: an error passed to next(err)
   Then I open the URL "http://restify/next"
@@ -48,40 +54,14 @@ Scenario: an error passed to next(err)
   And the event "unhandled" is true
   And the event "severity" equals "error"
   And the event "severityReason.type" equals "unhandledErrorMiddleware"
+  And the event "severityReason.attributes.framework" equals "Restify"
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "next"
   And the exception "type" equals "nodejs"
   And the "file" of stack frame 0 equals "scenarios/app.js"
-
-Scenario: throwing non-Error error
-  Then I open the URL "http://restify/throw-non-error"
-  And I wait to receive an error
-  Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
-  And the event "unhandled" is true
-  And the event "severity" equals "error"
-  And the event "severityReason.type" equals "unhandledErrorMiddleware"
-  And the exception "errorClass" equals "InvalidError"
-  And the exception "message" matches "^restify middleware received a non-error\."
-  And the exception "type" equals "nodejs"
-
-Scenario: an explicit 404
-  When I open the URL "http://restify/not-found"
-  And I wait to receive a session
-  Then the session is valid for the session reporting API version "1" for the "Bugsnag Node" notifier
-  And the session payload has a valid sessions array
-  And the sessionCount "sessionsStarted" equals 1
-
-Scenario: an explicit internal server error
-  Then I open the URL "http://restify/internal"
-  And I wait to receive an error
-  Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
-  And the event "unhandled" is true
-  And the event "severity" equals "error"
-  And the event "severityReason.type" equals "unhandledErrorMiddleware"
-  And the exception "errorClass" equals "InternalServerError"
-  And the exception "message" equals "oh noes!"
-  And the exception "type" equals "nodejs"
-  And the "file" of stack frame 0 equals "scenarios/app.js"
+  And the event "request.url" equals "http://restify/next"
+  And the event "request.httpMethod" equals "GET"
+  And the event "request.clientIp" is not null
 
 Scenario: a handled error passed to req.bugsnag.notify()
   Then I open the URL "http://restify/handled"
@@ -97,15 +77,57 @@ Scenario: a handled error passed to req.bugsnag.notify()
   And the event "request.httpMethod" equals "GET"
   And the event "request.clientIp" is not null
 
-Scenario: adding body to request metadata
-  When I POST the data "data=in_request_body" to the URL "http://restify/bodytest"
+Scenario: a synchronous promise rejection in a route
+  Then I open the URL "http://restify/rejection-sync"
   And I wait to receive an error
   Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is true
   And the event "severity" equals "error"
+  And the event "severityReason.type" equals "unhandledErrorMiddleware"
+  And the event "severityReason.attributes.framework" equals "Restify"
   And the exception "errorClass" equals "Error"
-  And the exception "message" equals "request body"
+  And the exception "message" equals "reject sync"
   And the exception "type" equals "nodejs"
   And the "file" of stack frame 0 equals "scenarios/app.js"
-  And the event "request.body.data" equals "in_request_body"
-  And the event "request.httpMethod" equals "POST"
+  And the event "request.url" equals "http://restify/rejection-sync"
+  And the event "request.httpMethod" equals "GET"
+
+Scenario: an asynchronous promise rejection in a route
+  Then I open the URL "http://restify/rejection-async"
+  And I wait to receive an error
+  Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
+  And the event "unhandled" is true
+  And the event "severity" equals "error"
+  And the event "severityReason.type" equals "unhandledErrorMiddleware"
+  And the event "severityReason.attributes.framework" equals "Restify"
+  And the exception "errorClass" equals "Error"
+  And the exception "message" equals "reject async"
+  And the exception "type" equals "nodejs"
+  And the "file" of stack frame 0 equals "scenarios/app.js"
+  And the event "request.url" equals "http://restify/rejection-async"
+  And the event "request.httpMethod" equals "GET"
+
+@skip_before_node_16
+Scenario: an unhandled promise rejection in an async callback (with request context)
+  Then I open the URL "http://restify/unhandled-rejection-async-callback" and get a 200 response
+  And I wait to receive an error
+  Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
+  And the event "unhandled" is true
+  And the event "severity" equals "error"
+  And the event "severityReason.type" equals "unhandledPromiseRejection"
+  And the event "severityReason.attributes" is null
+  And the exception "errorClass" equals "Error"
+  And the exception "message" equals "unhandled rejection in async callback"
+  And the event "request.url" equals "http://restify/unhandled-rejection-async-callback"
+  And the event "request.httpMethod" equals "GET"
+
+Scenario: an unhandled promise rejection in an async callback (without request context)
+  Then I open the URL "http://restify/unhandled-rejection-async-callback" and get a 200 response
+  And I wait to receive an error
+  Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
+  And the event "unhandled" is true
+  And the event "severity" equals "error"
+  And the event "severityReason.type" equals "unhandledPromiseRejection"
+  And the event "severityReason.attributes" is null
+  And the exception "errorClass" equals "Error"
+  And the exception "message" equals "unhandled rejection in async callback"

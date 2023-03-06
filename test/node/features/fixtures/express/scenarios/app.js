@@ -96,6 +96,13 @@ app.get('/rejection-async', function (req, res, next) {
   }, 100)
 })
 
+app.get('/unhandled-rejection-async-callback', function (req, res, next) {
+  setTimeout(function () {
+    Promise.reject(new Error('unhandled rejection in async callback'))
+  }, 100)
+  res.end('OK')
+})
+
 app.get('/string-as-error', function (req, res, next) {
   next('errrr')
 })

@@ -46,7 +46,7 @@ export default class ClientWithInternals<T extends Config = Config> extends Clie
   _breadcrumbs: Breadcrumb[]
   _delivery: Delivery
   _setDelivery: (handler: (client: Client) => Delivery) => void
-
+  _clientContext: any
   _user: User
 
   _metadata: { [key: string]: any }

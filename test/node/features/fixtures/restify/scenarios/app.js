@@ -58,11 +58,21 @@ server.get('/rejection-async', function (req, res, next) {
     Promise.reject(new Error('reject async')).catch(next)
   }, 100)
 })
-//
+
+server.get('/unhandled-rejection-async-callback', function (req, res, next) {
+  setTimeout(function () {
+    Promise.reject(new Error('unhandled rejection in async callback'))
+  }, 100)
+  res.setHeader('Content-Type', 'text/html')
+  res.writeHead(200)
+  res.end('OK')
+  next()
+})
+
 // app.get('/string-as-error', function (req, res, next) {
 //   next('errrr')
 // })
-//
+
 server.get('/throw-non-error', function (req, res, next) {
   throw 1 // eslint-disable-line
 })
@@ -79,7 +89,10 @@ server.get('/internal', function (req, res, next) {
 
 server.get('/handled', function (req, res, next) {
   req.bugsnag.notify(new Error('handled'))
+  res.setHeader('Content-Type', 'text/html')
+  res.writeHead(200)
   res.end('OK')
+  next()
 })
 
 server.post('/bodytest', function (req, res, next) {

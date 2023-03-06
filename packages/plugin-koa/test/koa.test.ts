@@ -43,6 +43,7 @@ describe('plugin: koa', () => {
 
       client._sessionDelegate = { startSession, pauseSession, resumeSession }
       client._logger = logger()
+      client._clientContext = { run: jest.fn() }
 
       const middleware = client.getPlugin('koa')
 
@@ -61,7 +62,7 @@ describe('plugin: koa', () => {
       expect(pauseSession).not.toHaveBeenCalled()
       expect(resumeSession).toHaveBeenCalledTimes(1)
       expect(context.bugsnag).toBe(client)
-      expect(next).toHaveBeenCalledTimes(1)
+      expect(client._clientContext.run).toHaveBeenCalledWith(expect.any(Client), next)
     })
 
     it('should record metadata from the request', async () => {
@@ -104,12 +105,13 @@ describe('plugin: koa', () => {
         },
         ip: '1.2.3.4'
       } as any
+      client._clientContext = { run: jest.fn() }
 
       const next = jest.fn()
 
       await middleware.requestHandler(context, next)
 
-      expect(next).toHaveBeenCalledTimes(1)
+      expect(client._clientContext.run).toHaveBeenCalledWith(expect.any(Client), next)
 
       const event: Event = await new Promise(resolve => {
         client.notify(new Error('abc'), noop, (_, event) => resolve(event as Event))
@@ -160,6 +162,7 @@ describe('plugin: koa', () => {
         },
         sendSession: noop
       }))
+      client._clientContext = { run: jest.fn() }
 
       const middleware = client.getPlugin('koa')
 
@@ -177,7 +180,7 @@ describe('plugin: koa', () => {
 
       await middleware.requestHandler(context, next)
 
-      expect(next).toHaveBeenCalledTimes(1)
+      expect(client._clientContext.run).toHaveBeenCalledWith(expect.any(Client), next)
 
       const event: Event = await new Promise(resolve => {
         client.notify(new Error('abc'), noop, (_, event) => resolve(event as Event))
@@ -218,6 +221,7 @@ describe('plugin: koa', () => {
 
       client._sessionDelegate = { startSession, pauseSession, resumeSession }
       client._logger = logger()
+      client._clientContext = { run: jest.fn() }
 
       const middleware = client.getPlugin('koa')
 
@@ -235,7 +239,7 @@ describe('plugin: koa', () => {
       expect(startSession).not.toHaveBeenCalled()
       expect(pauseSession).not.toHaveBeenCalled()
       expect(resumeSession).not.toHaveBeenCalled()
-      expect(next).toHaveBeenCalledTimes(1)
+      expect(client._clientContext.run).toHaveBeenCalledWith(expect.any(Client), next)
 
       // the Client should be cloned to ensure any manually started sessions
       // do not leak between requests
