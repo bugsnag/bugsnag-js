@@ -15,6 +15,7 @@ Scenario: a synchronous thrown error in a route
   And the event "unhandled" is true
   And the event "severity" equals "error"
   And the event "severityReason.type" equals "unhandledErrorMiddleware"
+  And the event "severityReason.attributes.framework" equals "Koa"
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "noooop"
   And the exception "type" equals "nodejs"
@@ -36,6 +37,7 @@ Scenario: a promise rejection in a route
   And the event "unhandled" is true
   And the event "severity" equals "error"
   And the event "severityReason.type" equals "unhandledErrorMiddleware"
+  And the event "severityReason.attributes.framework" equals "Koa"
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "async noooop"
   And the exception "type" equals "nodejs"
@@ -50,6 +52,7 @@ Scenario: An error created with with ctx.throw()
   And the event "unhandled" is true
   And the event "severity" equals "error"
   And the event "severityReason.type" equals "unhandledErrorMiddleware"
+  And the event "severityReason.attributes.framework" equals "Koa"
   And the exception "errorClass" equals "InternalServerError"
   And the exception "message" equals "thrown"
   And the exception "type" equals "nodejs"
@@ -65,6 +68,7 @@ Scenario: an error thrown before the requestHandler middleware
   And the event "unhandled" is true
   And the event "severity" equals "error"
   And the event "severityReason.type" equals "unhandledErrorMiddleware"
+  And the event "severityReason.attributes.framework" equals "Koa"
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "nope"
   And the exception "type" equals "nodejs"
@@ -79,6 +83,7 @@ Scenario: throwing non-Error error
   And the event "unhandled" is true
   And the event "severity" equals "error"
   And the event "severityReason.type" equals "unhandledErrorMiddleware"
+  And the event "severityReason.attributes.framework" equals "Koa"
   And the exception "errorClass" equals "Error"
   And the exception "message" equals 'non-error thrown: \\"error\\"'
   And the exception "type" equals "nodejs"
@@ -131,7 +136,8 @@ Scenario: a thrown error in an async callback
   Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is true
   And the event "severity" equals "error"
-  And the event "severityReason.type" equals "unhandledException"
+  And the event "severityReason.type" equals "unhandledErrorMiddleware"
+  And the event "severityReason.attributes.framework" equals "Koa"
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "error in async callback"
   And the event "request.url" equals "http://koa/throw-async-callback"
@@ -145,6 +151,7 @@ Scenario: an unhandled promise rejection in an async callback (with request cont
   And the event "unhandled" is true
   And the event "severity" equals "error"
   And the event "severityReason.type" equals "unhandledPromiseRejection"
+  And the event "severityReason.attributes" is null
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "unhandled rejection in async callback"
   And the event "request.url" equals "http://koa/unhandled-rejection-async-callback"
@@ -157,5 +164,6 @@ Scenario: an unhandled promise rejection in an async callback (without request c
   And the event "unhandled" is true
   And the event "severity" equals "error"
   And the event "severityReason.type" equals "unhandledPromiseRejection"
+  And the event "severityReason.attributes" is null
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "unhandled rejection in async callback"

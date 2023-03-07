@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+
+<head>
+    <title>XHR Success</title>
+    <meta charset="utf-8" />
+    <script src="/node_modules/@bugsnag/browser/dist/bugsnag.min.js"></script>
+    <script>
+        var NOTIFY = decodeURIComponent(window.location.search.match(/NOTIFY=([^&]+)/)[1])
+        var SESSIONS = decodeURIComponent(window.location.search.match(/SESSIONS=([^&]+)/)[1])
+        var API_KEY = decodeURIComponent(window.location.search.match(/API_KEY=([^&]+)/)[1])
+        var REFLECT = decodeURIComponent(window.location.search.match(/REFLECT=([^&]+)/)[1])
+        var url = REFLECT + "?status=200&delay_ms=0"
+
+        Bugsnag.start({
+            apiKey: API_KEY,
+            endpoints: { notify: NOTIFY, sessions: SESSIONS },
+        })
+
+        function notify () {
+            Bugsnag.notify(new Error("This error should have network breadcrumbs attached!!!"))    
+        }
+
+        var xhr = new XMLHttpRequest()
+        xhr.onloadend = notify
+        xhr.open("POST", url)
+        xhr.send("foo=1&bar=🙂")
+
+    </script>
+</head>
+
+<body>
+    <pre id="bugsnag-test-should-run">PENDING</pre>
+    <script>
+        var el = document.getElementById('bugsnag-test-should-run')
+        el.textContent = el.innerText = 'XMLHttpRequest' in window && 'addEventListener' in window.XMLHttpRequest.prototype && 'onerror' in window.XMLHttpRequest.prototype
+            ? 'YES'
+            : 'NO'
+    </script>
+</body>
+
+</html>

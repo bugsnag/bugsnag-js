@@ -15,6 +15,7 @@ Scenario: a synchronous thrown error in a route
   And the event "unhandled" is true
   And the event "severity" equals "error"
   And the event "severityReason.type" equals "unhandledErrorMiddleware"
+  And the event "severityReason.attributes.framework" equals "Express/Connect"
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "hello"
   And the exception "type" equals "nodejs"
@@ -33,7 +34,8 @@ Scenario: an asynchronous thrown error in a route
   Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is true
   And the event "severity" equals "error"
-  And the event "severityReason.type" equals "unhandledException"
+  And the event "severityReason.type" equals "unhandledErrorMiddleware"
+  And the event "severityReason.attributes.framework" equals "Express/Connect"
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "async"
   And the exception "type" equals "nodejs"
@@ -50,6 +52,7 @@ Scenario: an error passed to next(err)
   And the event "unhandled" is true
   And the event "severity" equals "error"
   And the event "severityReason.type" equals "unhandledErrorMiddleware"
+  And the event "severityReason.attributes.framework" equals "Express/Connect"
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "next"
   And the exception "type" equals "nodejs"
@@ -65,6 +68,7 @@ Scenario: a synchronous promise rejection in a route
   And the event "unhandled" is true
   And the event "severity" equals "error"
   And the event "severityReason.type" equals "unhandledErrorMiddleware"
+  And the event "severityReason.attributes.framework" equals "Express/Connect"
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "reject sync"
   And the exception "type" equals "nodejs"
@@ -80,6 +84,7 @@ Scenario: an asynchronous promise rejection in a route
   And the event "unhandled" is true
   And the event "severity" equals "error"
   And the event "severityReason.type" equals "unhandledErrorMiddleware"
+  And the event "severityReason.attributes.framework" equals "Express/Connect"
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "reject async"
   And the exception "type" equals "nodejs"
@@ -95,6 +100,7 @@ Scenario: a string passed to next(err)
   And the event "unhandled" is true
   And the event "severity" equals "error"
   And the event "severityReason.type" equals "unhandledErrorMiddleware"
+  And the event "severityReason.attributes.framework" equals "Express/Connect"
   And the exception "errorClass" equals "InvalidError"
   And the exception "message" matches "^express middleware received a non-error\."
   And the exception "type" equals "nodejs"
@@ -109,6 +115,7 @@ Scenario: throwing non-Error error
   And the event "unhandled" is true
   And the event "severity" equals "error"
   And the event "severityReason.type" equals "unhandledErrorMiddleware"
+  And the event "severityReason.attributes.framework" equals "Express/Connect"
   And the exception "errorClass" equals "InvalidError"
   And the exception "message" matches "^express middleware received a non-error\."
   And the exception "type" equals "nodejs"
@@ -138,6 +145,7 @@ Scenario: an unhandled promise rejection in an async callback (with request cont
   And the event "unhandled" is true
   And the event "severity" equals "error"
   And the event "severityReason.type" equals "unhandledPromiseRejection"
+  And the event "severityReason.attributes" is null
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "unhandled rejection in async callback"
   And the event "request.url" equals "http://express/unhandled-rejection-async-callback"
@@ -150,6 +158,7 @@ Scenario: an unhandled promise rejection in an async callback (without request c
   And the event "unhandled" is true
   And the event "severity" equals "error"
   And the event "severityReason.type" equals "unhandledPromiseRejection"
+  And the event "severityReason.attributes" is null
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "unhandled rejection in async callback"
 

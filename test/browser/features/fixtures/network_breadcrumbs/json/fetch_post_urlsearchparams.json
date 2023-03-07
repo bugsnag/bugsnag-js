@@ -1,0 +1,11 @@
+{
+    "type": "request",
+    "name": "fetch() succeeded",
+    "timestamp": "^\\d{4}\\-\\d{2}\\-\\d{2}T\\d{2}:\\d{2}:[\\d\\.]+Z?$",
+    "metaData": {
+        "status": 200,
+        "request": "^POST http:\\/\\/.*:\\d{4}\\/reflect\\?status=200\\&delay_ms=0$",
+        "duration": "NUMBER",
+        "requestContentLength": 22
+    }
+}

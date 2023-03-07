@@ -15,6 +15,7 @@ class MockServer {
     router.register('/minidump', 'POST', this.uploadMinidump.bind(this))
     router.register('/events', 'POST', this.sendEvent.bind(this))
     router.register('/sessions', 'POST', this.sendSession.bind(this))
+    router.register('/success', 'GET', this.handleGetRequest.bind(this))
 
     this.server = http.createServer(router.dispatch.bind(router))
     this.router = router
@@ -69,6 +70,11 @@ class MockServer {
       res.end()
       this._notifyUploads()
     })
+  }
+
+  async handleGetRequest (req, res) {
+    res.writeHead(200)
+    res.end()
   }
 
   async start () {
