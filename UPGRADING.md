@@ -1,6 +1,49 @@
 Upgrading
 =========
 
+## 7.x to 8.x
+
+### node
+
+This version contains major improvements to the node notifier, including making the top-level `Bugsnag` static interface context-aware and enabling breadcrumbs for node projects.
+
+Thw minimum supported node version is now v12.17.0.
+
+#### context-aware `Bugsnag` calls
+
+When using `plugin-express`, `plugin-koa`, `plugin-restify`, or `plugin-contextualize` a clone of the top-level Bugsnag client is made so that any changes made to the client (such as attaching metadata) only affect the scope of a particular context (a request in the case of the web server plugins, and a function call in the case of `plugin-contextualize`). Prior to v8 calls made to the top-level `Bugsnag` object were not aware of this context so users had to ensure they were calling methods on the correct client instance, i.e. that attached to `req.bugsnag`. This isn't ideal because if you wanted to call notify in some function deep in a call stack you would have to pass `req.bugsnag` all the way down as calling `Bugsnag.notify` would not have contained the request metadata gathered by the plugin. With v8 top-level calls to `Bugsnag` are now context-aware. This means you can call `Bugsnag.notify` (or `Bugsnag.leaveBreadcrumb` etc), and if it was called within a context the call will be forwarded to the correct cloned version of that client (i.e. for the particular request from which the call originated).
+
+Express
+
+```diff
+app.get('/handled', function (req, res) {
+- req.bugsnag.notify(new Error('handled'))
++ Bugsnag.notify(new Error('handled'))
+})
+```
+
+Koa
+
+```diff
+app.use(async (ctx, next) => {
+  if (ctx.path === '/handled') {
+-    ctx.bugsnag.notify(new Error('handled'))
++    Bugsnag.notify(new Error('handled'))
+    await next()
+  } else {
+    await next()
+  }
+})
+```
+
+Note: `req.bugsnag` (or `ctx.bugsnag` in koa) is still present in v8 but marked as deprecated and may be removed in a later version.
+
+#### breadcrumb support
+
+Breadcrumb support has been enabled for node. This means you can call `Bugsnag.leaveBreacrumb` to attach short log statements to each error report to help diagnose what events led to the error.
+
+Currently no breadcrumbs are automatically collected in node.
+
 ## `bugsnag-react-native@*` to `@bugsnag/react-native@7.3`
 
 As of `v7.3` of the [`bugsnag-js` monorepo](https://github.com/bugsnag/bugsnag-js) it contains Bugsnag's SDK for React Native. This additional notifier joins `@bugsnag/js` and `@bugsnag/expo` in its unified version scheme, so the first version of `@bugsnag/react-native` is `v7.3.0`.
