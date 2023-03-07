@@ -126,13 +126,13 @@ app.get('/oversized', function (req, res, next) {
     big['entry'+i] = repeat('long repetitive string', 1000);
     i++;
   }
-  req.bugsnag.leaveBreadcrumb('big thing', big);
-  req.bugsnag.notify(new Error('oversized'));
+  Bugsnag.leaveBreadcrumb('big thing', big);
+  Bugsnag.notify(new Error('oversized'));
   res.end('OK')
 })
 
 app.get('/handled', function (req, res, next) {
-  req.bugsnag.notify(new Error('handled'))
+  Bugsnag.notify(new Error('handled'))
   res.end('OK')
 })
 
@@ -144,11 +144,11 @@ app.post('/features/unhandled', bodyParser.urlencoded(), function (req, res, nex
   // the request body is an object of feature flag name -> variant
   const featureFlags = Object.keys(req.body).map(name => ({ name, variant: req.body[name] }))
 
-  req.bugsnag.addFeatureFlags(featureFlags)
-  req.bugsnag.clearFeatureFlag('from config 3')
+  Bugsnag.addFeatureFlags(featureFlags)
+  Bugsnag.clearFeatureFlag('from config 3')
 
   if (req.body.hasOwnProperty('clearAllFeatureFlags')) {
-    req.bugsnag.clearFeatureFlags()
+    Bugsnag.clearFeatureFlags()
   }
 
   throw new Error('oh no')
@@ -158,14 +158,14 @@ app.post('/features/handled', bodyParser.urlencoded(), function (req, res, next)
   // the request body is an object of feature flag name -> variant
   const featureFlags = Object.keys(req.body).map(name => ({ name, variant: req.body[name] }))
 
-  req.bugsnag.addFeatureFlags(featureFlags)
-  req.bugsnag.clearFeatureFlag('from config 3')
+  Bugsnag.addFeatureFlags(featureFlags)
+  Bugsnag.clearFeatureFlag('from config 3')
 
   if (req.body.hasOwnProperty('clearAllFeatureFlags')) {
-    req.bugsnag.clearFeatureFlags()
+    Bugsnag.clearFeatureFlags()
   }
 
-  req.bugsnag.notify(new Error('oh no'))
+  Bugsnag.notify(new Error('oh no'))
   res.end('OK')
 })
 
