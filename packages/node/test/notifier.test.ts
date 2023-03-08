@@ -22,7 +22,7 @@ describe('node notifier', () => {
     })
   })
 
-  describe('addMetaData()', () => {
+  describe('addMetadata()', () => {
     it('adds metadata to the client', () => {
       Bugsnag.start('abcd12abcd12abcd12abcd12abcd12abcd')
       Bugsnag.addMetadata('test', { meta: 'data' })
@@ -47,7 +47,7 @@ describe('node notifier', () => {
     })
   })
 
-  describe('getMetaData()', () => {
+  describe('getMetadata()', () => {
     it('retrieves metadata previously set on the client', () => {
       Bugsnag.start('abcd12abcd12abcd12abcd12abcd12abcd')
       Bugsnag.addMetadata('test', { meta: 'data' })
@@ -77,7 +77,7 @@ describe('node notifier', () => {
     })
   })
 
-  describe('clearMetaData()', () => {
+  describe('clearMetadata()', () => {
     it('clears metadata previously set on the client', () => {
       Bugsnag.start('abcd12abcd12abcd12abcd12abcd12abcd')
       Bugsnag.addMetadata('test', { meta: 'data' })
