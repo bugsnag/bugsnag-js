@@ -1,6 +1,5 @@
-/* eslint node/no-deprecated-api: [error, {ignoreModuleItems: ["domain"]}] */
-const domain = require('domain')
-const { getStack, maybeUseFallbackStack } = require('@bugsnag/core/lib/node-fallback-stack')
+const { getStack } = require('@bugsnag/core/lib/node-fallback-stack')
+const clone = require('@bugsnag/core/lib/clone-client')
 
 module.exports = {
   name: 'contextualize',
@@ -9,21 +8,16 @@ module.exports = {
       // capture a stacktrace in case a resulting error has nothing
       const fallbackStack = getStack()
 
-      const dom = domain.create()
-      dom.on('error', err => {
-        // check if the stacktrace has no context, if so, if so append the frames we created earlier
-        if (err.stack) maybeUseFallbackStack(err, fallbackStack)
-        const event = client.Event.create(err, true, {
-          severity: 'error',
-          unhandled: true,
-          severityReason: { type: 'unhandledException' }
-        }, 'contextualize()', 1)
-        client._notify(event, onError, (e, event) => {
-          if (e) client._logger.error('Failed to send event to Bugsnag')
-          client._config.onUncaughtException(err, event, client._logger)
-        })
-      })
-      process.nextTick(() => dom.run(fn))
+      const clonedClient = clone(client)
+
+      // add the stacktrace to the cloned client so it can be used later
+      // by the uncaught exception handler. Note the unhandled rejection
+      // handler does not need this because it gets a stacktrace
+      clonedClient.fallbackStack = fallbackStack
+
+      clonedClient.addOnError(onError)
+
+      client._clientContext.run(clonedClient, fn)
     }
 
     return contextualize
