@@ -47,8 +47,8 @@ public class BugsnagModule extends ReactContextBaseJavaModule {
       promise.resolve(true);
   }
 
-  @ReactMethod
-  public void startBugsnag(ReadableMap options, Promise promise) {
+  @ReactMethod(isBlockingSynchronousMethod = true)
+  public void startBugsnag(ReadableMap options) {
     Configuration bugsnagConfig = createConfiguration(options);
     bugsnagConfig.setLogger(new Logger() {
       private static final String TAG = "Bugsnag";
@@ -94,7 +94,6 @@ public class BugsnagModule extends ReactContextBaseJavaModule {
       }
     });
     Bugsnag.start(reactContext, bugsnagConfig);
-    promise.resolve(true);
   }
 
   private Configuration createConfiguration(ReadableMap options) {

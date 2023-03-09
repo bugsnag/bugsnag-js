@@ -53,9 +53,8 @@ const App = () => {
     new Scenarios[currentScenario](configuration, jsConfig, scenarioMetaData)
     console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${JSON.stringify(jsConfig)} (js)`)
 
-    NativeModules.BugsnagTestInterface.startBugsnag(configuration).then(() => {
-      Bugsnag.start(jsConfig)
-    })
+    NativeModules.BugsnagTestInterface.startBugsnag(configuration)
+    Bugsnag.start(jsConfig)
   }
 
   return (
