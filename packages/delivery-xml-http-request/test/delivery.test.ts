@@ -58,6 +58,44 @@ describe('delivery:XMLHttpRequest', () => {
     })
   })
 
+  it('calls back with an error when report sending fails', done => {
+    const requests: MockXMLHttpRequest[] = []
+
+    // mock XMLHttpRequest class
+    function XMLHttpRequest (this: MockXMLHttpRequest) {
+      this.method = null
+      this.url = null
+      this.data = null
+      this.headers = {}
+      this.readyState = null
+      requests.push(this)
+    }
+    XMLHttpRequest.DONE = 4
+    XMLHttpRequest.prototype.open = function (method: string, url: string) {
+      this.method = method
+      this.url = url
+    }
+    XMLHttpRequest.prototype.setRequestHeader = function (key: string, val: string) {
+      this.headers[key] = val
+    }
+    XMLHttpRequest.prototype.send = function (data: string) {
+      throw new Error('send error')
+    }
+
+    const payload = { sample: 'payload' } as unknown as EventDeliveryPayload
+    const config = {
+      apiKey: 'aaaaaaaa',
+      endpoints: { notify: '/echo/', sessions: '/sessions/' },
+      redactedKeys: []
+    }
+
+    delivery({ _logger: { error: jest.fn(), warn: jest.fn() }, _config: config } as unknown as Client, { XMLHttpRequest } as unknown as Window).sendEvent(payload, (err: any) => {
+      expect(err).not.toBe(null)
+      expect(err.message).toBe('send error')
+      done()
+    })
+  })
+
   it('logs failures and large payloads', done => {
     const requests: MockXMLHttpRequest[] = []
 
@@ -101,8 +139,9 @@ describe('delivery:XMLHttpRequest', () => {
     const logger = { error: jest.fn(), warn: jest.fn() }
 
     delivery({ _logger: logger, _config: config } as unknown as Client, { XMLHttpRequest } as unknown as Window).sendEvent(payload, (err: any) => {
-      expect(err).toBe(null)
-      expect(logger.error).toHaveBeenCalledWith('Event failed to send…')
+      const expectedError = new Error('Event failed to send')
+      expect(err).toStrictEqual(expectedError)
+      expect(logger.error).toHaveBeenCalledWith('Event failed to send…', expectedError)
       expect(logger.warn).toHaveBeenCalledWith('Event oversized (1.01 MB)')
       done()
     })
