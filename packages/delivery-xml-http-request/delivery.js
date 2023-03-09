@@ -11,20 +11,29 @@ module.exports = (client, win = window) => ({
         if (req.readyState === win.XMLHttpRequest.DONE) {
           const status = req.status
           if (status === 0 || status >= 400) {
-            client._logger.error('Event failed to send…')
+            const err = new Error('Event failed to send')
+            client._logger.error('Event failed to send…', err)
             if (body.length > 10e5) {
               client._logger.warn(`Event oversized (${(body.length / 10e5).toFixed(2)} MB)`)
             }
+            cb(err)
+            return
           }
           cb(null)
         }
       }
+
       req.open('POST', url)
       req.setRequestHeader('Content-Type', 'application/json')
       req.setRequestHeader('Bugsnag-Api-Key', event.apiKey || client._config.apiKey)
       req.setRequestHeader('Bugsnag-Payload-Version', '4')
       req.setRequestHeader('Bugsnag-Sent-At', (new Date()).toISOString())
-      req.send(body)
+      try {
+        req.send(body)
+      } catch (err) {
+        client._logger.error(err)
+        cb(err)
+      }
     } catch (e) {
       client._logger.error(e)
     }
