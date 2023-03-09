@@ -5,6 +5,7 @@
 ### Changes
 
 - (react-native) Update bugsnag-android from v5.28.3 to [v5.28.4](https://github.com/bugsnag/bugsnag-android/blob/master/CHANGELOG.md#5284-2023-02-08)
+- (delivery-xml-http-request) Ensure delivery errors are passed to the post report callback [#1938](https://github.com/bugsnag/bugsnag-js/pull/1938)
 
 ## 7.20.1 (2023-02-08)
 
