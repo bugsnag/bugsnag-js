@@ -1,14 +1,5 @@
 const payload = require('@bugsnag/core/lib/json-payload')
 
-function deliveryFailed (client, body, cb) {
-  const err = new Error('Event failed to send')
-  client._logger.error('Event failed to send…', err)
-  if (body.length > 10e5) {
-    client._logger.warn(`Event oversized (${(body.length / 10e5).toFixed(2)} MB)`)
-  }
-  cb(err)
-}
-
 module.exports = (client, win = window) => ({
   sendEvent: (event, cb = () => {}) => {
     try {
@@ -20,15 +11,16 @@ module.exports = (client, win = window) => ({
         if (req.readyState === win.XMLHttpRequest.DONE) {
           const status = req.status
           if (status === 0 || status >= 400) {
-            deliveryFailed(client, body, cb)
+            const err = new Error(`Request failed with status ${status}`)
+            client._logger.error('Event failed to send…', err)
+            if (body.length > 10e5) {
+              client._logger.warn(`Event oversized (${(body.length / 10e5).toFixed(2)} MB)`)
+            }
+            cb(err)
           } else {
             cb(null)
           }
         }
-      }
-
-      req.onerror = function () {
-        deliveryFailed(client, body, cb)
       }
 
       req.open('POST', url)
