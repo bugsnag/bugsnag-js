@@ -7,7 +7,7 @@ interface MockXMLHttpRequest {
   url: string | null
   data: string | null
   headers: { [key: string]: string }
-  readyState: string | null
+  readyState: number | null
   status: number
 }
 
@@ -21,21 +21,33 @@ describe('delivery:XMLHttpRequest', () => {
       this.url = null
       this.data = null
       this.headers = {}
-      this.readyState = null
+      this.readyState = XMLHttpRequest.UNSENT
       requests.push(this)
     }
+    XMLHttpRequest.UNSENT = 0
+    XMLHttpRequest.OPENED = 1
+    XMLHttpRequest.HEADERS_RECEIVED = 2
+    XMLHttpRequest.LOADING = 3
     XMLHttpRequest.DONE = 4
     XMLHttpRequest.prototype.open = function (method: string, url: string) {
       this.method = method
       this.url = url
+      this.readyState = XMLHttpRequest.OPENED
+      this.onreadystatechange()
     }
     XMLHttpRequest.prototype.setRequestHeader = function (key: string, val: string) {
       this.headers[key] = val
     }
     XMLHttpRequest.prototype.send = function (data: string) {
       this.data = data
-      this.readyState = XMLHttpRequest.DONE
+      this.readyState = XMLHttpRequest.HEADERS_RECEIVED
       this.onreadystatechange()
+
+      setTimeout(() => {
+        this.status = 200
+        this.readyState = XMLHttpRequest.DONE
+        this.onreadystatechange()
+      }, 500)
     }
 
     const payload = { sample: 'payload' } as unknown as EventDeliveryPayload
@@ -44,6 +56,7 @@ describe('delivery:XMLHttpRequest', () => {
       endpoints: { notify: '/echo/' },
       redactedKeys: []
     }
+
     delivery({ _logger: {}, _config: config } as unknown as Client, { XMLHttpRequest } as unknown as Window).sendEvent(payload, (err: any) => {
       expect(err).toBe(null)
       expect(requests.length).toBe(1)
@@ -67,23 +80,33 @@ describe('delivery:XMLHttpRequest', () => {
       this.url = null
       this.data = null
       this.headers = {}
-      this.readyState = null
-      this.status = 0
+      this.readyState = XMLHttpRequest.UNSENT
       requests.push(this)
     }
+    XMLHttpRequest.UNSENT = 0
+    XMLHttpRequest.OPENED = 1
+    XMLHttpRequest.HEADERS_RECEIVED = 2
+    XMLHttpRequest.LOADING = 3
     XMLHttpRequest.DONE = 4
     XMLHttpRequest.prototype.open = function (method: string, url: string) {
       this.method = method
       this.url = url
+      this.readyState = XMLHttpRequest.OPENED
+      this.onreadystatechange()
     }
     XMLHttpRequest.prototype.setRequestHeader = function (key: string, val: string) {
       this.headers[key] = val
     }
     XMLHttpRequest.prototype.send = function (data: string) {
       this.data = data
-      this.readyState = XMLHttpRequest.DONE
-      this.status = 500 // server error
+      this.readyState = XMLHttpRequest.HEADERS_RECEIVED
       this.onreadystatechange()
+
+      setTimeout(() => {
+        this.status = 500
+        this.readyState = XMLHttpRequest.DONE
+        this.onreadystatechange()
+      }, 500)
     }
 
     const logger = { error: jest.fn(), warn: jest.fn() }
@@ -94,8 +117,8 @@ describe('delivery:XMLHttpRequest', () => {
       redactedKeys: []
     }
 
-    delivery({ _logger: logger, _config: config } as unknown as Client, { XMLHttpRequest } as unknown as Window).sendEvent(payload, (err: any) => {
-      const expectedError = new Error('Event failed to send')
+    delivery({ _logger: logger, _config: config } as unknown as Client, { XMLHttpRequest } as unknown as Window).sendEvent(payload, (err?: Error | null) => {
+      const expectedError = new Error('Request failed with status 500')
       expect(err).toStrictEqual(expectedError)
       expect(logger.error).toHaveBeenCalledWith('Event failed to send…', expectedError)
       done()
@@ -111,23 +134,35 @@ describe('delivery:XMLHttpRequest', () => {
       this.url = null
       this.data = null
       this.headers = {}
-      this.readyState = null
-      this.status = 0
+      this.readyState = XMLHttpRequest.UNSENT
       requests.push(this)
     }
+    XMLHttpRequest.UNSENT = 0
+    XMLHttpRequest.OPENED = 1
+    XMLHttpRequest.HEADERS_RECEIVED = 2
+    XMLHttpRequest.LOADING = 3
     XMLHttpRequest.DONE = 4
     XMLHttpRequest.prototype.open = function (method: string, url: string) {
       this.method = method
       this.url = url
+      this.ready = XMLHttpRequest.OPENED
+      this.onreadystatechange()
     }
     XMLHttpRequest.prototype.setRequestHeader = function (key: string, val: string) {
       this.headers[key] = val
     }
     XMLHttpRequest.prototype.send = function (data: string) {
       this.data = data
-      this.readyState = XMLHttpRequest.DONE
-      this.status = 400
+      this.readyState = XMLHttpRequest.HEADERS_RECEIVED
       this.onreadystatechange()
+      this.readyState = XMLHttpRequest.LOADING
+      this.onreadystatechange()
+
+      setTimeout(() => {
+        this.status = 400
+        this.readyState = XMLHttpRequest.DONE
+        this.onreadystatechange()
+      }, 500)
     }
 
     const lotsOfEvents: any[] = []
@@ -145,7 +180,7 @@ describe('delivery:XMLHttpRequest', () => {
     const logger = { error: jest.fn(), warn: jest.fn() }
 
     delivery({ _logger: logger, _config: config } as unknown as Client, { XMLHttpRequest } as unknown as Window).sendEvent(payload, (err: any) => {
-      const expectedError = new Error('Event failed to send')
+      const expectedError = new Error('Request failed with status 400')
       expect(err).toStrictEqual(expectedError)
       expect(logger.error).toHaveBeenCalledWith('Event failed to send…', expectedError)
       expect(logger.warn).toHaveBeenCalledWith('Event oversized (1.01 MB)')
@@ -162,21 +197,35 @@ describe('delivery:XMLHttpRequest', () => {
       this.url = null
       this.data = null
       this.headers = {}
-      this.readyState = null
+      this.readyState = XMLHttpRequest.UNSENT
       requests.push(this)
     }
+    XMLHttpRequest.UNSENT = 0
+    XMLHttpRequest.OPENED = 1
+    XMLHttpRequest.HEADERS_RECEIVED = 2
+    XMLHttpRequest.LOADING = 3
     XMLHttpRequest.DONE = 4
     XMLHttpRequest.prototype.open = function (method: string, url: string) {
       this.method = method
       this.url = url
+      this.readyState = XMLHttpRequest.OPENED
+      this.onreadystatechange()
     }
     XMLHttpRequest.prototype.setRequestHeader = function (key: string, val: string) {
       this.headers[key] = val
     }
     XMLHttpRequest.prototype.send = function (data: string) {
       this.data = data
-      this.readyState = XMLHttpRequest.DONE
+      this.readyState = XMLHttpRequest.HEADERS_RECEIVED
       this.onreadystatechange()
+      this.readyState = XMLHttpRequest.LOADING
+      this.onreadystatechange()
+
+      setTimeout(() => {
+        this.status = 200
+        this.readyState = XMLHttpRequest.DONE
+        this.onreadystatechange()
+      }, 500)
     }
 
     const payload = { sample: 'payload' } as unknown as EventDeliveryPayload
