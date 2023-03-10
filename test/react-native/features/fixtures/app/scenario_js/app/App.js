@@ -10,6 +10,8 @@ import {
   NativeModules
 } from 'react-native'
 
+const pendingBugsnagStart = Symbol('pendingBugsnagStart')
+
 export default class App extends Component {
   constructor (props) {
     super(props)
@@ -66,7 +68,7 @@ export default class App extends Component {
     NativeModules.BugsnagTestInterface.clearPersistentData()
   }
 
-  runScenario = () => {
+  runScenario = async () => {
     console.log(`Running scenario: ${this.state.currentScenario}`)
     console.log(` with MetaData: ${this.state.scenarioMetaData}`)
     const scenarioName = this.state.currentScenario
@@ -75,6 +77,13 @@ export default class App extends Component {
     const jsConfig = {}
     const scenario = new Scenarios[scenarioName](configuration, jsConfig, scenarioMetaData)
     console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${JSON.stringify(jsConfig)} (js)`)
+
+    const pendingStart = this[pendingBugsnagStart]
+    if (pendingStart) {
+      // the native layer might still be starting - wait for it to complete
+      await pendingStart
+    }
+
     scenario.run()
   }
 
@@ -90,7 +99,8 @@ export default class App extends Component {
     new Scenarios[scenarioName](configuration, jsConfig, scenarioMetaData)
     console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${JSON.stringify(jsConfig)} (js)`)
 
-    NativeModules.BugsnagTestInterface.startBugsnag(configuration).then(() => {
+    // do *not* use setState here - it just leads back to more race conditions
+    this[pendingBugsnagStart] = NativeModules.BugsnagTestInterface.startBugsnag(configuration).then(() => {
       Bugsnag.start(jsConfig)
     })
   }
