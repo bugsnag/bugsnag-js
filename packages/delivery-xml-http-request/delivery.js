@@ -1,5 +1,14 @@
 const payload = require('@bugsnag/core/lib/json-payload')
 
+function deliveryFailed (client, body, cb) {
+  const err = new Error('Event failed to send')
+  client._logger.error('Event failed to send…', err)
+  if (body.length > 10e5) {
+    client._logger.warn(`Event oversized (${(body.length / 10e5).toFixed(2)} MB)`)
+  }
+  cb(err)
+}
+
 module.exports = (client, win = window) => ({
   sendEvent: (event, cb = () => {}) => {
     try {
@@ -11,16 +20,15 @@ module.exports = (client, win = window) => ({
         if (req.readyState === win.XMLHttpRequest.DONE) {
           const status = req.status
           if (status === 0 || status >= 400) {
-            const err = new Error('Event failed to send')
-            client._logger.error('Event failed to send…', err)
-            if (body.length > 10e5) {
-              client._logger.warn(`Event oversized (${(body.length / 10e5).toFixed(2)} MB)`)
-            }
-            cb(err)
-            return
+            deliveryFailed(client, body, cb)
+          } else {
+            cb(null)
           }
-          cb(null)
         }
+      }
+
+      req.onerror = function () {
+        deliveryFailed(client, body, cb)
       }
 
       req.open('POST', url)
@@ -28,12 +36,7 @@ module.exports = (client, win = window) => ({
       req.setRequestHeader('Bugsnag-Api-Key', event.apiKey || client._config.apiKey)
       req.setRequestHeader('Bugsnag-Payload-Version', '4')
       req.setRequestHeader('Bugsnag-Sent-At', (new Date()).toISOString())
-      try {
-        req.send(body)
-      } catch (err) {
-        client._logger.error(err)
-        cb(err)
-      }
+      req.send(body)
     } catch (e) {
       client._logger.error(e)
     }

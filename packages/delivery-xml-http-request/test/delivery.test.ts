@@ -68,6 +68,7 @@ describe('delivery:XMLHttpRequest', () => {
       this.data = null
       this.headers = {}
       this.readyState = null
+      this.status = 0
       requests.push(this)
     }
     XMLHttpRequest.DONE = 4
@@ -79,19 +80,24 @@ describe('delivery:XMLHttpRequest', () => {
       this.headers[key] = val
     }
     XMLHttpRequest.prototype.send = function (data: string) {
-      throw new Error('send error')
+      this.data = data
+      this.readyState = XMLHttpRequest.DONE
+      this.status = 500 // server error
+      this.onreadystatechange()
     }
 
-    const payload = { sample: 'payload' } as unknown as EventDeliveryPayload
+    const logger = { error: jest.fn(), warn: jest.fn() }
+    const payload = { events: [] } as unknown as EventDeliveryPayload
     const config = {
       apiKey: 'aaaaaaaa',
-      endpoints: { notify: '/echo/', sessions: '/sessions/' },
+      endpoints: { notify: '/echo/' },
       redactedKeys: []
     }
 
-    delivery({ _logger: { error: jest.fn(), warn: jest.fn() }, _config: config } as unknown as Client, { XMLHttpRequest } as unknown as Window).sendEvent(payload, (err: any) => {
-      expect(err).not.toBe(null)
-      expect(err.message).toBe('send error')
+    delivery({ _logger: logger, _config: config } as unknown as Client, { XMLHttpRequest } as unknown as Window).sendEvent(payload, (err: any) => {
+      const expectedError = new Error('Event failed to send')
+      expect(err).toStrictEqual(expectedError)
+      expect(logger.error).toHaveBeenCalledWith('Event failed to send…', expectedError)
       done()
     })
   })
