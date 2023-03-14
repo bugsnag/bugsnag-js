@@ -50,6 +50,10 @@ npx lerna run build \
   --ignore @bugsnag/plugin-electron-app \
   --ignore @bugsnag/plugin-electron-client-state-persistence
 
+# push latest git tag
+TAG=$(git describe --tags --abbrev=0)
+git push origin $TAG
+
 # publish
 npx lerna publish from-package
 
