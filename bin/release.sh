@@ -55,7 +55,11 @@ TAG=$(git describe --tags --abbrev=0)
 git push origin $TAG
 
 # publish
-npx lerna publish from-package
+if [ ! RETRY_PUBLISH ]; then
+  npx lerna publish from-git
+else
+  npx lerna publish from-package
+fi
 
 # check if CDN packages changed – if they didn't we don't need to upload to the CDN
 BROWSER_PACKAGE_CHANGED=$(npx lerna changed --parseable | grep -c packages/js$ || test $? = 1;)
