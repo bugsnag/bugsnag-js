@@ -27,7 +27,7 @@ npm ci
 npm run bootstrap -- --ci
 
 # increment package version numbers
-if [ ! RETRY_PUBLISH ]; then
+if [ -z "$RETRY_PUBLISH" ]; then
   case $VERSION in
     "prerelease" | "prepatch" | "preminor" | "premajor")
       npx lerna version "$VERSION" --dist-tag next --no-push
@@ -55,7 +55,7 @@ TAG=$(git describe --tags --abbrev=0)
 git push origin $TAG
 
 # publish
-if [ ! RETRY_PUBLISH ]; then
+if [ -z "$RETRY_PUBLISH" ]; then
   npx lerna publish from-git
 else
   npx lerna publish from-package
