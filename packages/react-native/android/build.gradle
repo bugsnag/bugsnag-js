@@ -24,6 +24,10 @@ android {
     buildToolsVersion safeExtGet('buildToolsVersion', '28.0.3')
     compileSdkVersion safeExtGet('compileSdkVersion', 28)
 
+    if (android.hasProperty('namespace')) {
+        namespace 'com.bugsnag.reactnative'
+    }
+
     defaultConfig {
         minSdkVersion safeExtGet('minSdkVersion', 16)
         targetSdkVersion safeExtGet('targetSdkVersion', 28)
