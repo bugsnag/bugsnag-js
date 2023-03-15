@@ -50,9 +50,8 @@ npx lerna run build \
   --ignore @bugsnag/plugin-electron-app \
   --ignore @bugsnag/plugin-electron-client-state-persistence
 
-# push latest git tag
-TAG=$(git describe --tags --abbrev=0)
-git push origin $TAG
+# push git tags
+git push origin --tags
 
 # publish
 if [ -z "$RETRY_PUBLISH" ]; then
