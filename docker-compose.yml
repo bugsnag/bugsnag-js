@@ -131,6 +131,7 @@ services:
       - BUILDKITE
       - REGISTRY_URL
       - REACT_NATIVE_VERSION
+      - RN_NEW_ARCH
       - NOTIFIER_VERSION
       - ARTEFACT_NAME
       - JS_SOURCE_DIR

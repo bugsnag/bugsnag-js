@@ -83,7 +83,7 @@ export default class App extends Component {
       await pendingStartPromise
     }
 
-    scenario.run()
+    setTimeout(() => scenario.run(), 1)
   }
 
   startBugsnag = () => {

@@ -18,7 +18,9 @@ import java.util.Map;
 
 import static com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter;
 
-public class BugsnagReactNative extends ReactContextBaseJavaModule {
+class BugsnagReactNativeImpl {
+
+  static final String MODULE_NAME = "BugsnagReactNative";
 
   private static final String UPDATE_CONTEXT = "ContextUpdate";
   private static final String UPDATE_USER = "UserUpdate";
@@ -34,8 +36,7 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
   private BugsnagReactNativePlugin plugin;
   private Logger logger;
 
-  public BugsnagReactNative(ReactApplicationContext reactContext) {
-    super(reactContext);
+  public BugsnagReactNativeImpl(ReactApplicationContext reactContext) {
     this.reactContext = reactContext;
   }
 
@@ -43,17 +44,10 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
     logger.e("Failed to call " + msg + " on bugsnag-plugin-react-native, continuing", exc);
   }
 
-  @Override
-  public String getName() {
-    return "BugsnagReactNative";
-  }
-
-  @ReactMethod
   public void configureAsync(ReadableMap env, Promise promise) {
     promise.resolve(configure(env));
   }
 
-  @ReactMethod(isBlockingSynchronousMethod = true)
   public WritableMap configure(ReadableMap env) {
     Client client;
     try {
@@ -108,7 +102,6 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
     bridge.emit(SYNC_KEY, map);
   }
 
-  @ReactMethod
   void updateCodeBundleId(@Nullable String id) {
     try {
       plugin.updateCodeBundleId(id);
@@ -117,7 +110,6 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
     }
   }
 
-  @ReactMethod
   void leaveBreadcrumb(@NonNull ReadableMap map) {
     try {
       plugin.leaveBreadcrumb(map.toHashMap());
@@ -126,7 +118,6 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
     }
   }
 
-  @ReactMethod
   void startSession() {
     try {
       plugin.startSession();
@@ -135,7 +126,6 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
     }
   }
 
-  @ReactMethod
   void pauseSession() {
     try {
       plugin.pauseSession();
@@ -144,7 +134,6 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
     }
   }
 
-  @ReactMethod
   void resumeSession() {
     try {
       plugin.resumeSession();
@@ -153,7 +142,6 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
     }
   }
 
-  @ReactMethod
   void updateContext(@Nullable String context) {
     try {
       plugin.updateContext(context);
@@ -162,7 +150,6 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
     }
   }
 
-  @ReactMethod
   void addMetadata(@NonNull String section, @Nullable ReadableMap data) {
     try {
       plugin.addMetadata(section, data != null ? data.toHashMap() : null);
@@ -171,7 +158,6 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
     }
   }
 
-  @ReactMethod
   void clearMetadata(@NonNull String section, @Nullable String key) {
     try {
       plugin.clearMetadata(section, key);
@@ -180,7 +166,6 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
     }
   }
 
-  @ReactMethod
   void updateUser(@Nullable String id, @Nullable String email, @Nullable String name) {
     try {
       plugin.updateUser(id, email, name);
@@ -189,7 +174,6 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
     }
   }
 
-  @ReactMethod
   void dispatch(@NonNull ReadableMap payload, @NonNull Promise promise) {
     try {
       plugin.dispatch(payload.toHashMap());
@@ -200,7 +184,6 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
     }
   }
 
-  @ReactMethod
   void getPayloadInfo(@NonNull ReadableMap payload, @NonNull Promise promise) {
     try {
       boolean unhandled = payload.getBoolean("unhandled");
@@ -212,7 +195,6 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
     }
   }
 
-  @ReactMethod
   void addFeatureFlag(@NonNull String name, @Nullable String variant) {
     try {
       plugin.addFeatureFlag(name, variant);
@@ -221,7 +203,6 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
     }
   }
 
-  @ReactMethod
   void addFeatureFlags(@NonNull ReadableArray flags) {
     try {
       final int flagCount = flags.size();
@@ -238,7 +219,6 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
     }
   }
 
-  @ReactMethod
   void clearFeatureFlag(@NonNull String name) {
     try {
       plugin.clearFeatureFlag(name);
@@ -247,7 +227,6 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
     }
   }
 
-  @ReactMethod
   void clearFeatureFlags() {
     try {
       plugin.clearFeatureFlags();

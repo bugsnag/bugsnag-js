@@ -1,5 +1,4 @@
-const NativeModules = require('react-native').NativeModules
-const NativeClient = NativeModules.BugsnagReactNative
+const { NativeClient } = require('./native')
 
 const REMOTE_DEBUGGING_WARNING = `Bugsnag cannot initialize synchronously when running in the remote debugger.
 

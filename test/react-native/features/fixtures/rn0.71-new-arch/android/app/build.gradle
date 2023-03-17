@@ -90,6 +90,10 @@ def reactNativeArchitectures() {
     return value ? value.split(",") : ["armeabi-v7a", "x86", "x86_64", "arm64-v8a"]
 }
 
+def isNewArchitectureEnabled() {
+  project.hasProperty("newArchEnabled") && project.newArchEnabled == "true"
+}
+
 android {
     ndkVersion rootProject.ext.ndkVersion
 
@@ -147,6 +151,10 @@ android {
             }
 
         }
+    }
+
+    if (isNewArchitectureEnabled()) {
+        preBuild.dependsOn("generateCodegenArtifactsFromSchema")
     }
 }
 

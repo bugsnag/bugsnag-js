@@ -10,7 +10,6 @@ import java.util.List;
 
 public class BugsnagPackage implements ReactPackage {
 
-    @SuppressWarnings("rawtypes") // the ReactPackage interface uses a raw type, ignore it
     @Override
     public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
         return Collections.emptyList();

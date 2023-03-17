@@ -1,20 +1,28 @@
-buildscript {
-    ext {
-        androidToolsVersion = '3.5.3'
-    }
-    repositories {
-        google()
-        mavenCentral()
-        maven { // add this to use snapshots
-            url "https://oss.sonatype.org/content/repositories/snapshots/"
-        }
-    }
-    dependencies {
-        classpath "com.android.tools.build:gradle:${project.ext.androidToolsVersion}"
-    }
+//buildscript {
+//    ext {
+//        androidToolsVersion = '3.5.3'
+//    }
+//    repositories {
+//        google()
+//        mavenCentral()
+//        gradlePluginPortal()
+//        maven { // add this to use snapshots
+//            url "https://oss.sonatype.org/content/repositories/snapshots/"
+//        }
+//    }
+//    dependencies {
+//        classpath "com.android.tools.build:gradle:${project.ext.androidToolsVersion}"
+//    }
+//}
+
+def isNewArchitectureEnabled() {
+    return project.hasProperty("newArchEnabled") && project.newArchEnabled == "true"
 }
 
 apply plugin: 'com.android.library'
+if (isNewArchitectureEnabled()) {
+    apply plugin: 'com.facebook.react'
+}
 
 def safeExtGet(prop, fallback) {
     rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
@@ -34,12 +42,22 @@ android {
         versionCode 1
         versionName '7.0.0'
         consumerProguardFiles 'proguard-rules.pro'
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
     lintOptions {
         abortOnError true
         warningsAsErrors true
-        baseline file("lint-baseline.xml")
+        baseline file('lint-baseline.xml')
+    }
+
+    sourceSets {
+        main {
+            if (isNewArchitectureEnabled() || safeExtGet('bugsnagdev', false)) {
+                java.srcDirs += ['src/newarch/java']
+            } else {
+                java.srcDirs += ['src/oldarch/java']
+            }
+        }
     }
 }
 
@@ -68,6 +86,11 @@ if (safeExtGet("bugsnagdev", false)) {
     project.logger.lifecycle("Development mode enabled, searching for dependencies at top of monorepo.")
     facebookRepo = "$rootDir/../../../node_modules/react-native/android"
     bugsnagRepo = "$rootDir"
+    if (isNewArchitectureEnabled()) {
+        react {
+            codegenDir = file("$rootDir/../../../node_modules/react-native-codegen")
+        }
+    }
 }
 
 allprojects {
