@@ -3,6 +3,10 @@ import plugin from '../'
 import Client from '@bugsnag/core/client'
 import Breadcrumb from '@bugsnag/core/breadcrumb'
 
+const lotsOfWhitespace = ' '.repeat(100000)
+const lotsOfText = 'a'.repeat(100000)
+const veryBigButton = '<button>' + lotsOfWhitespace + lotsOfText + lotsOfWhitespace + lotsOfText + lotsOfWhitespace + '</button>'
+
 describe('plugin: interaction breadcrumbs', () => {
   beforeEach(() => {
     document.body.innerHTML = '<div><button class="button">Click me</button></div>'
@@ -156,14 +160,8 @@ describe('plugin: interaction breadcrumbs', () => {
     ])
   })
 
-  it("doesn't strip trailing whitespace after the character limit", () => {
-    document.body.innerHTML = `
-      <button>
-
-        a          b ${' '.repeat(200)} c
-
-      </button>
-    `
+  it('handles an empty element', () => {
+    document.body.innerHTML = '<button></button>'
 
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: null, plugins: [plugin(window)] })
 
@@ -173,10 +171,43 @@ describe('plugin: interaction breadcrumbs', () => {
     expect(c._breadcrumbs).toStrictEqual([
       new Breadcrumb(
         'UI click',
-        {
-          targetText: 'a          b                                                                                                                           (...)',
-          targetSelector: 'BUTTON'
-        },
+        { targetText: '', targetSelector: 'BUTTON' },
+        'user',
+        expect.any(Date)
+      )
+    ])
+  })
+
+  it('handles an all-whitespace element', () => {
+    document.body.innerHTML = '<button>    \n\t \t \r\n    </button>'
+
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: null, plugins: [plugin(window)] })
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    document.querySelector('button')!.click()
+
+    expect(c._breadcrumbs).toStrictEqual([
+      new Breadcrumb(
+        'UI click',
+        { targetText: '', targetSelector: 'BUTTON' },
+        'user',
+        expect.any(Date)
+      )
+    ])
+  })
+
+  it('handles very large elements', () => {
+    document.body.innerHTML = veryBigButton
+
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: null, plugins: [plugin(window)] })
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    document.querySelector('button')!.click()
+
+    expect(c._breadcrumbs).toStrictEqual([
+      new Breadcrumb(
+        'UI click',
+        { targetText: 'a'.repeat(135) + '(...)', targetSelector: 'BUTTON' },
         'user',
         expect.any(Date)
       )

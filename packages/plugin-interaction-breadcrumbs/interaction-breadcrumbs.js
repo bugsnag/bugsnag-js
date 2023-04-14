@@ -21,12 +21,23 @@ module.exports = (win = window) => ({
   }
 })
 
-// extract text content from a element
-const getNodeText = el => {
+const trimStart = /^\s+/
+const trimEnd = /(^|[^\s])\s+$/
+
+function getNodeText (el) {
   let text = el.textContent || el.innerText || ''
-  if (!text && (el.type === 'submit' || el.type === 'button')) text = el.value
-  text = text.replace(/^\s+|\s+$/g, '') // trim whitespace
-  return truncate(text, 140)
+
+  if (!text && (el.type === 'submit' || el.type === 'button')) {
+    text = el.value
+  }
+
+  text = text.replace(trimStart, '').replace(trimEnd, '$1')
+
+  if (text.length > 140) {
+    return text.slice(0, 135) + '(...)'
+  }
+
+  return text
 }
 
 // Create a label from tagname, id and css class of the element
@@ -51,10 +62,4 @@ function getNodeSelector (el, win) {
   // try prepending the parent node selector
   if (el.parentNode) return `${getNodeSelector(el.parentNode, win)} > ${parts.join('')}`
   return parts.join('')
-}
-
-function truncate (value, length) {
-  const ommision = '(...)'
-  if (value && value.length <= length) return value
-  return value.slice(0, length - ommision.length) + ommision
 }
