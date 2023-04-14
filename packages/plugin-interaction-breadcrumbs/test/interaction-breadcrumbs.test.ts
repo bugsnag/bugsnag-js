@@ -213,4 +213,40 @@ describe('plugin: interaction breadcrumbs', () => {
       )
     ])
   })
+
+  it('can read text from the value of an empty "submit" input', () => {
+    document.body.innerHTML = '<input type="submit" value="  some text  ">'
+
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: null, plugins: [plugin(window)] })
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    document.querySelector('input')!.click()
+
+    expect(c._breadcrumbs).toStrictEqual([
+      new Breadcrumb(
+        'UI click',
+        { targetText: 'some text', targetSelector: 'INPUT' },
+        'user',
+        expect.any(Date)
+      )
+    ])
+  })
+
+  it('can read text from the value of an empty "button" input', () => {
+    document.body.innerHTML = '<input type="button" value="  some text  ">'
+
+    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: null, plugins: [plugin(window)] })
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    document.querySelector('input')!.click()
+
+    expect(c._breadcrumbs).toStrictEqual([
+      new Breadcrumb(
+        'UI click',
+        { targetText: 'some text', targetSelector: 'INPUT' },
+        'user',
+        expect.any(Date)
+      )
+    ])
+  })
 })
