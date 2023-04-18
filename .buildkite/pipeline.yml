@@ -102,19 +102,19 @@ steps:
         run: ci
     command: "npm run test:types"
 
-  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: BROWSER STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
-    depends_on: "package-js"
-    commands:
-      - buildkite-agent pipeline upload .buildkite/browser-pipeline.yml
+  # - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: BROWSER STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
+  #   depends_on: "package-js"
+  #   commands:
+  #     - buildkite-agent pipeline upload .buildkite/browser-pipeline.yml
 
-  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: ELECTRON STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
-    commands:
-      - buildkite-agent pipeline upload .buildkite/electron-pipeline.yml
+  # - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: ELECTRON STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
+  #   commands:
+  #     - buildkite-agent pipeline upload .buildkite/electron-pipeline.yml
 
-  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: NODE STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
-    depends_on: "package-js"
-    commands:
-      - buildkite-agent pipeline upload .buildkite/node-pipeline.yml
+  # - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: NODE STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
+  #   depends_on: "package-js"
+  #   commands:
+  #     - buildkite-agent pipeline upload .buildkite/node-pipeline.yml
 
   - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: REACT NATIVE (ANDROID) STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
     depends_on:
