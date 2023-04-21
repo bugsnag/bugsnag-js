@@ -90,7 +90,7 @@ steps:
         concurrency: 5
         concurrency_group: "bitbar-web"
 
-      - label: ":edge: v106 Browser tests"
+      - label: ":edge: v107 Browser tests"
         depends_on: "browser-maze-runner"
         timeout_in_minutes: 30
         plugins:
@@ -100,7 +100,7 @@ steps:
             use-aliases: true
             command:
               - --farm=bb
-              - --browser=edge_106
+              - --browser=edge_107
           artifacts#v1.5.0:
             upload:
               - "./test/browser/maze_output/failed/**/*"

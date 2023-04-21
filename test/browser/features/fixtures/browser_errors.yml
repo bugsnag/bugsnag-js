@@ -417,7 +417,7 @@ chrome_108:
     lineNumber: 18
     columnNumber: 7
 
-edge_106:
+edge_107:
   handled:
     errorClass: 'ReferenceError'
     errorMessage: 'foo is not defined'
