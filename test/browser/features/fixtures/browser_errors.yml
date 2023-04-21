@@ -391,7 +391,7 @@ chrome_72:
 
 # BitBar exclusive
 
-chrome_108:
+chrome_latest:
   handled:
     errorClass: 'ReferenceError'
     errorMessage: 'foo is not defined'
@@ -443,7 +443,7 @@ edge_latest:
     lineNumber: 18
     columnNumber: 7
 
-firefox_107:
+firefox_latest:
   handled:
     errorClass: 'ReferenceError'
     errorMessage: 'foo is not defined'
