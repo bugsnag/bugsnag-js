@@ -167,7 +167,7 @@ steps:
             - --fail-fast
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
-        concurrency: 24
+        concurrency: 5
         concurrency_group: "browserstack-app"
         concurrency_method: eager
 
@@ -190,7 +190,7 @@ steps:
             - --fail-fast
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
-        concurrency: 24
+        concurrency: 5
         concurrency_group: "browserstack-app"
         concurrency_method: eager
 
@@ -214,7 +214,7 @@ steps:
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
           HERMES: "true"
-        concurrency: 24
+        concurrency: 5
         concurrency_group: "browserstack-app"
         concurrency_method: eager
 
@@ -238,7 +238,7 @@ steps:
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
           HERMES: "true"
-        concurrency: 24
+        concurrency: 5
         concurrency_group: "browserstack-app"
         concurrency_method: eager
 
@@ -262,7 +262,7 @@ steps:
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
           HERMES: "true"
-        concurrency: 24
+        concurrency: 5
         concurrency_group: "browserstack-app"
         concurrency_method: eager
 
@@ -284,7 +284,7 @@ steps:
             - --a11y-locator
             - --fail-fast
             - features/navigation.feature
-        concurrency: 24
+        concurrency: 5
         concurrency_group: "browserstack-app"
         concurrency_method: eager
 
@@ -306,7 +306,7 @@ steps:
             - --a11y-locator
             - --fail-fast
             - features/navigation.feature
-        concurrency: 24
+        concurrency: 5
         concurrency_group: "browserstack-app"
         concurrency_method: eager
 
@@ -328,7 +328,7 @@ steps:
             - --a11y-locator
             - --fail-fast
             - features/navigation.feature
-        concurrency: 24
+        concurrency: 5
         concurrency_group: "browserstack-app"
         concurrency_method: eager
 
@@ -350,6 +350,6 @@ steps:
             - --a11y-locator
             - --fail-fast
             - features/navigation.feature
-        concurrency: 24
+        concurrency: 5
         concurrency_group: "browserstack-app"
         concurrency_method: eager

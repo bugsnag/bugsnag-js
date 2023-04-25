@@ -6,6 +6,7 @@ const { promisify } = require('util')
 
 class MockServer {
   constructor () {
+    this.responseStatusCode = 202
     this.eventUploads = []
     this.sessionUploads = []
     this.minidumpUploads = []
@@ -38,19 +39,25 @@ class MockServer {
     this.awaitingUploads = []
   }
 
+  _statusCode () {
+    var statusCode = this.responseStatusCode
+    this.responseStatusCode = 202
+    return statusCode
+  }
+
   async uploadMinidump (req, res) {
     const form = formidable()
     form.parse(req, (_err, fields, files) => {
       const boundary = this.readBoundary(req.headers['content-type'])
       this.minidumpUploads.push({ headers: req.headers, boundary, fields, files })
-      res.writeHead(202)
+      res.writeHead(this._statusCode())
       res.end()
       this._notifyUploads()
     })
   }
 
   async sendEvent (req, res) {
-    res.writeHead(202)
+    res.writeHead(this._statusCode())
     let body = ''
     req.on('data', (chunk) => { body += chunk })
     req.on('end', () => {
@@ -61,7 +68,7 @@ class MockServer {
   }
 
   async sendSession (req, res) {
-    res.writeHead(202)
+    res.writeHead(this._statusCode())
     let body = ''
     req.on('data', (chunk) => { body += chunk })
     req.on('end', () => {

@@ -26,6 +26,10 @@ const featureFlagsTableToExpected = table => {
   })
 }
 
+Given('I set the next http status code to {int}', (responseCode) => {
+  global.server.responseStatusCode = responseCode
+})
+
 Given('I launch an app', launchConfig, async () => {
   return global.automator.start()
 })
