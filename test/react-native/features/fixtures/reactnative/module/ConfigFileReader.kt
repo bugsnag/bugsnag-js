@@ -1,12 +1,16 @@
 package com.reactnative.module
 
 import android.content.Context
+import org.json.JSONObject
+import java.io.File
+import java.io.IOException
 
 class ConfigFileReader {
 
     fun getMazeRunnerAddress(context: Context): String {
         val externalFilesDir = context.getExternalFilesDir(null)
         val configFile = File(externalFilesDir, "fixture_config.json")
+        var mazeAddress: String? = null
         log("Attempting to read Maze Runner address from config file ${configFile.path}")
 
         // Poll for the fixture config file
