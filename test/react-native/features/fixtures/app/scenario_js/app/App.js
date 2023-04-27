@@ -13,6 +13,8 @@ import {
 export default class App extends Component {
   constructor (props) {
     super(props)
+    var config = NativeModules.BugsnagTestInterface.getFixtureConfig()
+    console.log(config)
     this.state = {
       currentScenario: '',
       scenarioMetaData: '',
