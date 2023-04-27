@@ -13,7 +13,7 @@ import {
 export default class App extends Component {
   constructor (props) {
     super(props)
-    var config = NativeModules.BugsnagTestInterface.getFixtureConfig()
+    var address = NativeModules.BugsnagTestInterface.getMazeRunnerAddress()
     console.log(config)
     this.state = {
       currentScenario: '',
