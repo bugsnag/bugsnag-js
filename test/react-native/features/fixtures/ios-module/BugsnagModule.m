@@ -47,6 +47,13 @@ RCT_EXPORT_METHOD(startBugsnag:(NSDictionary *)options
   resolve(nil);
 }
 
+RCT_EXPORT_METHOD(getMazeRunnerAddress
+                  resolve:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject)
+{
+  
+}
+
 @end
 
 BugsnagConfiguration *createConfiguration(NSDictionary * options) {
