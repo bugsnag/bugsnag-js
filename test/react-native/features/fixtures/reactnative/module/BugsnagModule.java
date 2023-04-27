@@ -120,12 +120,9 @@ public class BugsnagModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public String getFixtureConfig() {
-    Int configFileTimeout = 5000;
-    File externalFilesDir = reactContext.getExternalFilesDir(null);
-    File configFile = new File(externalFilesDir, "fixture_config.json");
-    Log.i("Bugsnag", "Attempting to read Maze Runner address from config file");
-    return("Hello");
+  public String getMazeRunnerAddress() {
+    ConfigFileReader configReader = new ConfigFileReader();
+    return configReader.getMazeRunnerAddress(reactContext)
   }
 
   private Configuration createConfiguration(ReadableMap options) {
