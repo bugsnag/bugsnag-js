@@ -122,7 +122,7 @@ public class BugsnagModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public String getMazeRunnerAddress() {
     ConfigFileReader configReader = new ConfigFileReader();
-    return configReader.getMazeRunnerAddress(reactContext)
+    return configReader.getMazeRunnerAddress(reactContext);
   }
 
   private Configuration createConfiguration(ReadableMap options) {
