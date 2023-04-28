@@ -14,7 +14,6 @@ export default class App extends Component {
   constructor (props) {
     super(props)
     var address = NativeModules.BugsnagTestInterface.getMazeRunnerAddress()
-    console.log(config)
     this.state = {
       currentScenario: '',
       scenarioMetaData: '',
