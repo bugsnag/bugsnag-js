@@ -1,6 +1,7 @@
 package com.reactnative.module
 
 import android.content.Context
+import android.util.Log
 import org.json.JSONObject
 import java.io.File
 import java.io.IOException
