@@ -14,7 +14,7 @@ export default class App extends Component {
   constructor (props) {
     super(props)
     address = this.getDefaultEndpoint()
-    console.log(address)
+    console.log(`Got address: ${address}`)
     this.state = {
       currentScenario: '',
       scenarioMetaData: '',
