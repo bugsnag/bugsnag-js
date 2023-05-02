@@ -35,6 +35,7 @@ class ConfigFileReader {
             Log.i("Bugsnag", "Failed to read Maze Runner address from config file, reverting to legacy address")
             mazeAddress = "bs-local.com:9339"
         }
+        Log.i("Bugsnag", "Returning mazeAddress $mazeAddress")
         return mazeAddress
     }
 
