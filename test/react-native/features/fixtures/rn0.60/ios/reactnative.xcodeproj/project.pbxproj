@@ -36,6 +36,8 @@
 		A1BFB36824BCEE0200394C5D /* AppNativeUnhandledScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = A1BFB36524BCEE0200394C5D /* AppNativeUnhandledScenario.m */; };
 		A1BFB36924BCEE0200394C5D /* AppNativeHandledScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = A1BFB36724BCEE0200394C5D /* AppNativeHandledScenario.m */; };
 		A1CC9DE424B3D76A002A4760 /* HandledNativeErrorScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = A1CC9DE224B3D76A002A4760 /* HandledNativeErrorScenario.m */; };
+		A1CDDB372A0162C8002C8872 /* ConfigFileReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1CDDB362A0162C8002C8872 /* ConfigFileReader.swift */; };
+		A1CDDB382A0162C8002C8872 /* ConfigFileReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1CDDB362A0162C8002C8872 /* ConfigFileReader.swift */; };
 		A1E567AA24BE167800886226 /* ContextNativeCustomScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = A1E567A924BE167800886226 /* ContextNativeCustomScenario.m */; };
 		A1F389CC24C6192500C30B50 /* MetadataNativeScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = A1F389CB24C6192500C30B50 /* MetadataNativeScenario.m */; };
 		A1F389CF24C73B6000C30B50 /* MetadataNativeUnhandledScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = A1F389CE24C73B6000C30B50 /* MetadataNativeUnhandledScenario.m */; };
@@ -114,6 +116,8 @@
 		A1BFB36724BCEE0200394C5D /* AppNativeHandledScenario.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppNativeHandledScenario.m; sourceTree = "<group>"; };
 		A1CC9DE224B3D76A002A4760 /* HandledNativeErrorScenario.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HandledNativeErrorScenario.m; sourceTree = "<group>"; };
 		A1CC9DE324B3D76A002A4760 /* HandledNativeErrorScenario.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HandledNativeErrorScenario.h; sourceTree = "<group>"; };
+		A1CDDB362A0162C8002C8872 /* ConfigFileReader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConfigFileReader.swift; path = "../../ios-module/ConfigFileReader.swift"; sourceTree = "<group>"; };
+		A1CDDB392A017E27002C8872 /* ConfigFileReader-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "ConfigFileReader-Bridging-Header.h"; path = "../../ios-module/ConfigFileReader-Bridging-Header.h"; sourceTree = "<group>"; };
 		A1E567A824BE167800886226 /* ContextNativeCustomScenario.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContextNativeCustomScenario.h; sourceTree = "<group>"; };
 		A1E567A924BE167800886226 /* ContextNativeCustomScenario.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContextNativeCustomScenario.m; sourceTree = "<group>"; };
 		A1F389CA24C6192500C30B50 /* MetadataNativeScenario.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MetadataNativeScenario.h; sourceTree = "<group>"; };
@@ -188,6 +192,8 @@
 		13B07FAE1A68108700A75B9A /* reactnative */ = {
 			isa = PBXGroup;
 			children = (
+				A1CDDB392A017E27002C8872 /* ConfigFileReader-Bridging-Header.h */,
+				A1CDDB362A0162C8002C8872 /* ConfigFileReader.swift */,
 				A145176724A7A1F500C6FC6E /* Scenarios */,
 				A145176424A7A1F000C6FC6E /* BugsnagModule.h */,
 				A145176524A7A1F000C6FC6E /* BugsnagModule.m */,
@@ -683,6 +689,7 @@
 				A1E567AA24BE167800886226 /* ContextNativeCustomScenario.m in Sources */,
 				A1F389CC24C6192500C30B50 /* MetadataNativeScenario.m in Sources */,
 				A1BFB36824BCEE0200394C5D /* AppNativeUnhandledScenario.m in Sources */,
+				A1CDDB372A0162C8002C8872 /* ConfigFileReader.swift in Sources */,
 				A1BFB36324BC6D3400394C5D /* UnhandledNativeErrorScenario.m in Sources */,
 				6591A4D62511602C0040A5FA /* NativeStackUnhandledScenario.m in Sources */,
 				A181223C24C0BF5B0073596F /* BreadcrumbsNativeManualScenario.m in Sources */,
@@ -696,6 +703,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0186104E257900FF00FCB626 /* NativeStackHandledScenario.swift in Sources */,
+				A1CDDB382A0162C8002C8872 /* ConfigFileReader.swift in Sources */,
 				2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */,
 				0154E1FF2806DFEE009044E4 /* RCTFatalScenario.m in Sources */,
 				2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */,
