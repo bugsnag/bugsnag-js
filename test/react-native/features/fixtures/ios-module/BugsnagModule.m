@@ -10,6 +10,7 @@
 
 #import <Bugsnag/Bugsnag.h>
 #import "BugsnagModule.h"
+#import "ConfigFileReader-Bridging-Header.h"
 #import "Scenario.h"
 
 @implementation BugsnagModule
@@ -47,11 +48,10 @@ RCT_EXPORT_METHOD(startBugsnag:(NSDictionary *)options
   resolve(nil);
 }
 
-RCT_EXPORT_METHOD(getMazeRunnerAddress
-                  resolve:(RCTPromiseResolveBlock)resolve
-                  reject:(RCTPromiseRejectBlock)reject)
+RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(getMazeRunnerAddress)
 {
-  
+  ConfigFileReader *configReader = [ConfigFileReader alloc]
+  return [configReader loadMazeRunnerAddress]
 }
 
 @end
