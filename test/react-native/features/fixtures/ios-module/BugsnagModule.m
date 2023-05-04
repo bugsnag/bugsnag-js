@@ -9,8 +9,8 @@
 #import <Foundation/Foundation.h>
 
 #import <Bugsnag/Bugsnag.h>
+#import <reactnative/reactnative-Swift.h>
 #import "BugsnagModule.h"
-#import "ConfigFileReader-Bridging-Header.h"
 #import "Scenario.h"
 
 @implementation BugsnagModule
@@ -46,12 +46,6 @@ RCT_EXPORT_METHOD(startBugsnag:(NSDictionary *)options
   BugsnagConfiguration *scenarioConfig = createConfiguration(options);
   [Bugsnag startWithConfiguration:scenarioConfig];
   resolve(nil);
-}
-
-RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(getMazeRunnerAddress)
-{
-  ConfigFileReader *configReader = [ConfigFileReader alloc]
-  return [configReader loadMazeRunnerAddress]
 }
 
 @end

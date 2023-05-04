@@ -13,8 +13,6 @@ import {
 export default class App extends Component {
   constructor (props) {
     super(props)
-    address = this.getDefaultEndpoint()
-    console.log(`Got address: ${address}`)
     this.state = {
       currentScenario: '',
       scenarioMetaData: '',
@@ -22,10 +20,6 @@ export default class App extends Component {
       notifyEndpoint: '',
       sessionsEndpoint: ''
     }
-  }
-
-  getDefaultEndpoint = async() => {
-    return await NativeModules.BugsnagTestInterface.getMazeRunnerAddress()
   }
 
   setScenarioMetaData = newScenarioMetaData => {

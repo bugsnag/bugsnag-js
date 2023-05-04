@@ -121,8 +121,7 @@ public class BugsnagModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void getMazeRunnerAddress(Promise promise) {
-    ConfigFileReader configReader = new ConfigFileReader();
-    String mazeAddress = configReader.getMazeRunnerAddress(reactContext);
+    
     promise.resolve(mazeAddress);
   }
 
