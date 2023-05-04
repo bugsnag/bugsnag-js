@@ -22,4 +22,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface ConfigFileReader : NSObject
+- (instancetype)init;
+- (NSString *)loadMazeRunnerAddress;
+@end
+
 NS_ASSUME_NONNULL_END
