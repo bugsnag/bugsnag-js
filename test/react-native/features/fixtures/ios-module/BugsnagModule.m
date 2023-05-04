@@ -55,15 +55,17 @@ BugsnagConfiguration *createConfiguration(NSDictionary * options) {
       NSLog(@"key: %@, value: %@ \n", key, [options objectForKey:key]);
   }
   BugsnagConfiguration *config = [[BugsnagConfiguration alloc] initWithApiKey:options[@"apiKey"]];
+  NSString *notifyEndpoint;
+  NSString *sessionsEndpoint;
   if (options[@"endpoints"] != nil) {
     NSDictionary *endpointsIn = options[@"endpoints"];
-    NSString *notifyEndpoint = endpointsIn[@"notify"];
-    NSString *sessionsEndpoint = endpointsIn[@"sessions"];
+    notifyEndpoint = endpointsIn[@"notify"];
+    sessionsEndpoint = endpointsIn[@"sessions"];
   } else {
     ConfigFileReader *fileReader = [ConfigFileReader alloc];
     NSString *baseAddress = [fileReader loadMazeRunnerAddress];
-    NSString *notifyEndpoint = [NSString stringWithFormat:@"http://%@/notify", baseAddress];
-    NSString *notifyEndpoint = [NSString stringWithFormat:@"http://%@/sessions", baseAddress];
+    notifyEndpoint = [NSString stringWithFormat:@"http://%@/notify", baseAddress];
+    notifyEndpoint = [NSString stringWithFormat:@"http://%@/sessions", baseAddress];
   }
   BugsnagEndpointConfiguration *endpoints = [[BugsnagEndpointConfiguration alloc] initWithNotify:notifyEndpoint sessions:sessionsEndpoint];
   
