@@ -119,12 +119,6 @@ public class BugsnagModule extends ReactContextBaseJavaModule {
     promise.resolve(true);
   }
 
-  @ReactMethod
-  public void getMazeRunnerAddress(Promise promise) {
-    
-    promise.resolve(mazeAddress);
-  }
-
   private Configuration createConfiguration(ReadableMap options) {
       Configuration config = new Configuration(options.getString("apiKey"));
       config.setAutoTrackSessions(options.getBoolean("autoTrackSessions"));
