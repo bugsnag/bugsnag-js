@@ -11,6 +11,7 @@
 #import <Bugsnag/Bugsnag.h>
 #import "BugsnagModule.h"
 #import "Scenario.h"
+#import "reactnative-swift.h"
 
 @implementation BugsnagModule
 
