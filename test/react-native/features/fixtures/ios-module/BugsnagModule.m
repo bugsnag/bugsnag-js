@@ -9,8 +9,8 @@
 #import <Foundation/Foundation.h>
 
 #import <Bugsnag/Bugsnag.h>
+#import <reactnative/reactnative-Swift.h>
 #import "BugsnagModule.h"
-#import "ConfigFileReader-Bridging-Header.h"
 #import "Scenario.h"
 
 @implementation BugsnagModule
@@ -48,12 +48,6 @@ RCT_EXPORT_METHOD(startBugsnag:(NSDictionary *)options
   resolve(nil);
 }
 
-RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(getMazeRunnerAddress)
-{
-  ConfigFileReader *configReader = [ConfigFileReader alloc]
-  return [configReader loadMazeRunnerAddress]
-}
-
 @end
 
 BugsnagConfiguration *createConfiguration(NSDictionary * options) {
@@ -62,10 +56,18 @@ BugsnagConfiguration *createConfiguration(NSDictionary * options) {
       NSLog(@"key: %@, value: %@ \n", key, [options objectForKey:key]);
   }
   BugsnagConfiguration *config = [[BugsnagConfiguration alloc] initWithApiKey:options[@"apiKey"]];
-  NSDictionary *endpointsIn = options[@"endpoints"];
-  NSString *notifyEndpoint = endpointsIn[@"notify"];
-  NSString *sessionsEndpoint = endpointsIn[@"sessions"];
+  if (options[@"endpoints"] != nil) {
+    NSDictionary *endpointsIn = options[@"endpoints"];
+    NSString *notifyEndpoint = endpointsIn[@"notify"];
+    NSString *sessionsEndpoint = endpointsIn[@"sessions"];
+  } else {
+    ConfigFileReader *fileReader = [ConfigFileReader alloc];
+    NSString *baseAddress = [fileReader loadMazeRunnerAddress];
+    NSString *notifyEndpoint = [NSString stringWithFormat:@"http://%@/notify", baseAddress];
+    NSString *notifyEndpoint = [NSString stringWithFormat:@"http://%@/sessions", baseAddress];
+  }
   BugsnagEndpointConfiguration *endpoints = [[BugsnagEndpointConfiguration alloc] initWithNotify:notifyEndpoint sessions:sessionsEndpoint];
+  
   [config setEndpoints:endpoints];
   [config setAutoTrackSessions:[[options objectForKey:@"autoTrackSessions"]boolValue]];
   config.enabledErrorTypes.ooms = NO; // Set by default, will add an override as required
