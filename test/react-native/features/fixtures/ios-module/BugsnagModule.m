@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #import <Bugsnag/Bugsnag.h>
+#import "reactnative-Swift.h"
 #import "BugsnagModule.h"
 #import "Scenario.h"
 
