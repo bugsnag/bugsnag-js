@@ -6,22 +6,12 @@ const {
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   productionBrowserSourceMaps: true,
-  webpack(config, { buildId, isServer, webpack }) {
+  webpack(config, { buildId, webpack }) {
     config.plugins.push(
       new webpack.DefinePlugin({
         'process.env.NEXT_BUILD_ID': JSON.stringify(buildId),
       }),
     )
-
-    // Avoid including '@bugsnag/plugin-aws-lambda' module in the client side bundle
-    // See https://arunoda.me/blog/ssr-and-server-only-modules
-    if (!isServer) {
-      config.plugins.push(
-        new webpack.IgnorePlugin({
-          resourceRegExp: /@bugsnag\/plugin-aws-lambda/,
-        }),
-      )
-    }
 
     // Upload source maps on production build
     if (
