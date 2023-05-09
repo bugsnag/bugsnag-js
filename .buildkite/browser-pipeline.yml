@@ -96,6 +96,11 @@ steps:
           - iphone_13
           - android_s8 # Android 7
           - firefox_78
+          # TODO: Remove these as part of PLAT-10093
+          - ie_11
+          - chrome_latest
+          - firefox_latest
+          - edge_latest
         depends_on: "browser-maze-runner"
         timeout_in_minutes: 30
         plugins:
