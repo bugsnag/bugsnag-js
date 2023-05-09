@@ -38,6 +38,7 @@ steps:
       # BitBar tests
       #
       - label: ":bitbar: {{matrix}} Browser tests"
+        skip: Skipped pending PLAT-10093
         depends_on: "browser-maze-runner"
         matrix:
           - firefox_latest
@@ -59,6 +60,7 @@ steps:
         concurrency_group: "bitbar-web"
 
       - label: ":bitbar: ie_11 Browser tests"
+        skip: Skipped pending PLAT-10093
         depends_on: "browser-maze-runner"
         timeout_in_minutes: 30
         plugins:
