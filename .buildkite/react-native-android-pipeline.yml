@@ -287,10 +287,18 @@ steps:
             pull: react-native-maze-runner
             run: react-native-maze-runner
             service-ports: true
+<<<<<<< HEAD
             command:
             - --app=build/r_navigation_0.60.apk
             - --farm=bb
             - --device=ANDROID_10|ANDROID_11|ANDROID_12
+=======
+            use-aliases: true
+            command:
+            - --app=build/r_navigation_0.60.apk
+            - --farm=bs
+            - --device=ANDROID_11
+>>>>>>> 2671d967d (Trial run of android pipeline on BitBar)
             - --a11y-locator
             - --fail-fast
             - --no-tunnel
