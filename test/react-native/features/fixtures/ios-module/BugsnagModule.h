@@ -17,10 +17,4 @@ BugsnagConfiguration *createConfiguration(NSDictionary * options);
 
 @end
 
-@interface ConfigFileReader : NSObject
-- (instancetype)init;
-- (NSString *)loadMazeRunnerAddress;
-@end
-
-
 #endif /* BugsnagModule_h */

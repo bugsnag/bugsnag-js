@@ -63,8 +63,7 @@ BugsnagConfiguration *createConfiguration(NSDictionary * options) {
     notifyEndpoint = endpointsIn[@"notify"];
     sessionsEndpoint = endpointsIn[@"sessions"];
   } else {
-    ConfigFileReader *fileReader = [ConfigFileReader alloc];
-    NSString *baseAddress = [fileReader loadMazeRunnerAddress];
+    NSString *baseAddress = @"bs-local.com:9339";
     notifyEndpoint = [NSString stringWithFormat:@"http://%@/notify", baseAddress];
     notifyEndpoint = [NSString stringWithFormat:@"http://%@/sessions", baseAddress];
   }
