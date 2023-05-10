@@ -38,6 +38,7 @@ steps:
       # BitBar tests
       #
       - label: ":bitbar: {{matrix}} Browser tests"
+        skip: Skipped pending PLAT-10093
         depends_on: "browser-maze-runner"
         matrix:
           - firefox_latest
@@ -57,8 +58,10 @@ steps:
               - "./test/browser/maze_output/failed/**/*"
         concurrency: 5
         concurrency_group: "bitbar-web"
+        concurrency_method: eager
 
       - label: ":bitbar: ie_11 Browser tests"
+        skip: Skipped pending PLAT-10093
         depends_on: "browser-maze-runner"
         timeout_in_minutes: 30
         plugins:
@@ -74,6 +77,7 @@ steps:
               - "./test/browser/maze_output/failed/**/*"
         concurrency: 5
         concurrency_group: "bitbar-web"
+        concurrency_method: eager
         env:
           HOST: "localhost" # IE11 needs the host set to localhost for some reason
 
@@ -94,6 +98,10 @@ steps:
           - iphone_13
           - android_s8 # Android 7
           - firefox_78
+          # TODO: Remove these as part of PLAT-10093
+          - chrome_latest
+          - firefox_latest
+          - edge_latest
         depends_on: "browser-maze-runner"
         timeout_in_minutes: 30
         plugins:
@@ -109,3 +117,25 @@ steps:
               - "./test/browser/maze_output/failed/**/*"
         concurrency: 2
         concurrency_group: "browserstack"
+        concurrency_method: eager
+
+      # TODO: Remove this as part of PLAT-10093
+      - label: ":browserstack: ie_11 tests"
+        depends_on: "browser-maze-runner"
+        timeout_in_minutes: 30
+        plugins:
+          docker-compose#v3.9.0:
+            pull: browser-maze-runner
+            run: browser-maze-runner
+            use-aliases: true
+            command:
+              - --farm=bs
+              - --browser=ie_11
+          artifacts#v1.5.0:
+            upload:
+              - "./test/browser/maze_output/failed/**/*"
+        concurrency: 2
+        concurrency_group: "browserstack"
+        concurrency_method: eager
+        env:
+          HOST: "localhost" # IE11 needs the host set to localhost for some reason
