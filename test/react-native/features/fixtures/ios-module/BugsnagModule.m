@@ -58,15 +58,17 @@ BugsnagConfiguration *createConfiguration(NSDictionary * options) {
   BugsnagConfiguration *config = [[BugsnagConfiguration alloc] initWithApiKey:options[@"apiKey"]];
   NSString *notifyEndpoint;
   NSString *sessionsEndpoint;
-  if (options[@"endpoints"] != nil) {
+  if (options[@"endpoints"] != nil && options[@"endpoints"][@"notify"] != nil && options[@"endpoints"][@"sessions"] != nil) {
     NSDictionary *endpointsIn = options[@"endpoints"];
     notifyEndpoint = endpointsIn[@"notify"];
     sessionsEndpoint = endpointsIn[@"sessions"];
   } else {
     NSString *baseAddress = @"bs-local.com:9339";
     notifyEndpoint = [NSString stringWithFormat:@"http://%@/notify", baseAddress];
-    notifyEndpoint = [NSString stringWithFormat:@"http://%@/sessions", baseAddress];
+    sessionsEndpoint = [NSString stringWithFormat:@"http://%@/sessions", baseAddress];
   }
+  NSLog(@"Notify endpoint set to: %@\n", notifyEndpoint);
+  NSLog(@"Sessions endpoint set to: %@\n", sessionsEndpoint);
   BugsnagEndpointConfiguration *endpoints = [[BugsnagEndpointConfiguration alloc] initWithNotify:notifyEndpoint sessions:sessionsEndpoint];
   
   [config setEndpoints:endpoints];
