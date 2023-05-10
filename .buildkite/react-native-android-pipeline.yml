@@ -188,7 +188,7 @@ steps:
             use-aliases: true
             command:
             - --app=build/rn0.66.apk
-            - --farm=bs
+            - --farm=bb
             - --device=ANDROID_11
             - --a11y-locator
             - --fail-fast
@@ -214,7 +214,7 @@ steps:
             use-aliases: true
             command:
               - --app=build/rn0.67.apk
-              - --farm=bs
+              - --farm=bb
               - --device=ANDROID_11
               - --a11y-locator
               - --fail-fast
@@ -241,7 +241,7 @@ steps:
             use-aliases: true
             command:
               - --app=build/rn0.69.apk
-              - --farm=bs
+              - --farm=bb
               - --device=ANDROID_11
               - --a11y-locator
               - --fail-fast
@@ -268,7 +268,7 @@ steps:
             use-aliases: true
             command:
               - --app=build/rn0.68-hermes.apk
-              - --farm=bs
+              - --farm=bb
               - --device=ANDROID_12
               - --a11y-locator
               - --fail-fast
@@ -295,7 +295,7 @@ steps:
             use-aliases: true
             command:
             - --app=build/r_navigation_0.60.apk
-            - --farm=bs
+            - --farm=bb
             - --device=ANDROID_11
             - --a11y-locator
             - --fail-fast
@@ -320,7 +320,7 @@ steps:
             use-aliases: true
             command:
             - --app=build/r_navigation_0.66.apk
-            - --farm=bs
+            - --farm=bb
             - --device=ANDROID_11
             - --a11y-locator
             - --fail-fast
@@ -345,7 +345,7 @@ steps:
             use-aliases: true
             command:
             - --app=build/r_native_navigation_0.60.apk
-            - --farm=bs
+            - --farm=bb
             - --device=ANDROID_11
             - --a11y-locator
             - --fail-fast
@@ -370,7 +370,7 @@ steps:
             use-aliases: true
             command:
             - --app=build/r_native_navigation_0.66.apk
-            - --farm=bs
+            - --farm=bb
             - --device=ANDROID_11
             - --a11y-locator
             - --fail-fast
