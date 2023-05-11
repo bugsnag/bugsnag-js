@@ -159,7 +159,6 @@ steps:
             pull: react-native-maze-runner
             run: react-native-maze-runner
             service-ports: true
-            use-aliases: true
             command:
             - --app=build/rn0.60.apk
             - --farm=bb
@@ -185,7 +184,6 @@ steps:
             pull: react-native-maze-runner
             run: react-native-maze-runner
             service-ports: true
-            use-aliases: true
             command:
             - --app=build/rn0.66.apk
             - --farm=bb
@@ -211,7 +209,6 @@ steps:
             pull: react-native-maze-runner
             run: react-native-maze-runner
             service-ports: true
-            use-aliases: true
             command:
               - --app=build/rn0.67.apk
               - --farm=bb
@@ -238,7 +235,6 @@ steps:
             pull: react-native-maze-runner
             run: react-native-maze-runner
             service-ports: true
-            use-aliases: true
             command:
               - --app=build/rn0.69.apk
               - --farm=bb
@@ -265,7 +261,6 @@ steps:
             pull: react-native-maze-runner
             run: react-native-maze-runner
             service-ports: true
-            use-aliases: true
             command:
               - --app=build/rn0.68-hermes.apk
               - --farm=bb
@@ -292,7 +287,6 @@ steps:
             pull: react-native-maze-runner
             run: react-native-maze-runner
             service-ports: true
-            use-aliases: true
             command:
             - --app=build/r_navigation_0.60.apk
             - --farm=bb
@@ -317,7 +311,6 @@ steps:
             pull: react-native-maze-runner
             run: react-native-maze-runner
             service-ports: true
-            use-aliases: true
             command:
             - --app=build/r_navigation_0.66.apk
             - --farm=bb
@@ -342,7 +335,6 @@ steps:
             pull: react-native-maze-runner
             run: react-native-maze-runner
             service-ports: true
-            use-aliases: true
             command:
             - --app=build/r_native_navigation_0.60.apk
             - --farm=bb
@@ -367,7 +359,6 @@ steps:
             pull: react-native-maze-runner
             run: react-native-maze-runner
             service-ports: true
-            use-aliases: true
             command:
             - --app=build/r_native_navigation_0.66.apk
             - --farm=bb

@@ -217,6 +217,7 @@ services:
       - ./build:/app/build
       - ./test/react-native/features/:/app/features
       - ./test/react-native/maze_output:/app/maze_output
+      - /var/run/docker.sock:/var/run/docker.sock
 
   react-native-cli-maze-runner:
     image: 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v7-cli
