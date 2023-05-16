@@ -51,9 +51,3 @@ FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v7
 
 COPY --from=browser-feature-builder /app/test/browser /app/test/browser/
 WORKDIR /app/test/browser
-
-# The maze-runner legacy browser tests (JSON-WP protocol)
-FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v7-cli-legacy as browser-maze-runner-legacy
-
-COPY --from=browser-feature-builder /app/test/browser /app/test/browser/
-WORKDIR /app/test/browser
