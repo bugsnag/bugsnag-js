@@ -85,27 +85,6 @@ services:
     volumes:
       - ./test/browser/maze_output:/app/test/browser/maze_output
 
-  browser-maze-runner-legacy:
-    build:
-      context: .
-      dockerfile: dockerfiles/Dockerfile.browser
-      target: browser-maze-runner-legacy
-      args:
-        - BUILDKITE_BUILD_NUMBER
-    environment:
-      <<: *common-environment
-      USE_LEGACY_DRIVER: 1
-      HOST: "${HOST:-maze-runner}"
-      API_HOST: "${API_HOST:-maze-runner}"
-    env_file:
-      - ${DOCKER_ENV_FILE:-test/browser/features/fixtures/null_env}
-    networks:
-      default:
-        aliases:
-          - maze-runner
-    volumes:
-      - ./test/browser/maze_output:/app/test/browser/maze_output
-
   node-maze-runner:
     build:
       context: .
